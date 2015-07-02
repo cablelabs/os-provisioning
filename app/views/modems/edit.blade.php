@@ -1,10 +1,14 @@
-@extends ('layouts.default')
+@extends ('layouts.split')
 
-@section('content')
+@section('content_top')
 
+		{{ HTML::linkRoute('modem.index', 'List') }} /	{{ HTML::linkRoute('modem.edit', 'Modem-'.$modem->hostname, array($modem->id)) }}
+
+@stop
+
+@section('content_left')
+	
 	{{ Form::model($modem, array('route' => array('modem.update', $modem->id), 'method' => 'put')) }}
-
-		<a href=edit>Modem-{{ $modem->hostname }}</a>
 
 		<h2>Edit Modem</h2>
 		<table>
@@ -42,5 +46,10 @@
 
 	{{ Form::submit('Save') }}
 	{{ Form::close() }}
-	
+@stop
+
+@section('content_right')
+
+	<h1>Hallo Welt</h1>
+
 @stop
