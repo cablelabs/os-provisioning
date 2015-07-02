@@ -5,8 +5,9 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.2.*",
-		"way/generators": "^3.0",
-		"fzaninotto/faker": "1.5.*@dev"
+		"way/generators": "~2.0",
+		"fzaninotto/faker": "1.5.*@dev",
+		"soapbox/laravel-formatter": "2.x"
 	},
 	"autoload": {
 		"classmap": [
