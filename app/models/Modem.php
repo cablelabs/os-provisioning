@@ -14,6 +14,11 @@ class Modem extends \Eloquent {
 	// Don't forget to fill this array
 	protected $fillable = ['hostname', 'contract_id', 'mac', 'status', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent'];
 
+	public function endpoints ()
+	{
+		return $this->hasMany('Endpoint');
+	}
+
     public static function boot()
     {
         parent::boot();
@@ -28,6 +33,13 @@ class ModemObserver {
     {
         exec("logger \"update on Modem with ID \"".$modem->id);
     }
+
+    public function deleting ($modem)
+    {
+    	$id = $modem->id;
+    	
+    	Endpoint::where('modem_id', '=', $id)->delete();
+    } 
 
 
 }

@@ -38,9 +38,9 @@ class ModemsController extends \BaseController {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		Modem::create($data);
+		$id = Modem::create($data)->id;
 
-		return Redirect::route('modems.index');
+		return Redirect::route('modem.edit', $id);
 	}
 
 	/**
@@ -113,7 +113,7 @@ class ModemsController extends \BaseController {
 		else
 			Modem::destroy($id);
 
-		return Redirect::route('modem.index');
+		return Redirect::back();
 	}
 
 

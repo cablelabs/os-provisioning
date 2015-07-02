@@ -13,3 +13,6 @@
 
 Route::resource('modem', 'ModemsController');
 Route::post('modem/json', 'ModemsController@json');
+
+Route::resource('endpoint', 'EndpointsController');
+Route::post('endpoint/json', 'EndpointsController@json');
