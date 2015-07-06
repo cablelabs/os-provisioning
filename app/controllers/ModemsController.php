@@ -81,10 +81,17 @@ class ModemsController extends \BaseController {
 
 		$validator = Validator::make($data = Input::all(), Modem::$rules);
 
+
 		if (Input::get('network_access') == '1')
 			$modem->network_access = 1;
 		else
 			$modem->network_access = 0;
+
+		if (Input::get('public') == '1')
+			$modem->public = 1;
+		else
+			$modem->public = 0;
+		
 
 		if ($validator->fails())
 		{

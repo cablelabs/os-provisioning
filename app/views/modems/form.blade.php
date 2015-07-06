@@ -13,6 +13,11 @@
 		</tr>
 
 		<tr>
+			<td>{{ Form::label('public', 'Public CPE') }}</td>
+			<td>{{ Form::checkbox('public', 1) }}</td>
+		</tr>
+
+		<tr>
 			<td>{{ Form::label('network_access', 'Network Access') }}</td>
 			<td>{{ Form::checkbox('network_access', 1) }}</td>
 		</tr>

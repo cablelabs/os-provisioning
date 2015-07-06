@@ -19,6 +19,7 @@ class CreateModemsTable extends Migration {
 			$table->integer('contract_id')->unsigned();
 			$table->string('mac')->sizeof(17);
 			$table->integer('status');
+			$table->boolean('public');
 			$table->boolean('network_access');
 			$table->string('serial_num');
 			$table->string('inventar_num');
@@ -26,6 +27,8 @@ class CreateModemsTable extends Migration {
 			$table->integer('parent');
 			$table->timestamps();
 		});
+
+		DB::update("ALTER TABLE modems AUTO_INCREMENT = 100000;");
 	}
 
 

@@ -14,4 +14,43 @@ class Endpoint extends \Eloquent {
 	{
 		return $this->belongsTo('Modem');
 	}
+
+    public static function boot()
+    {
+        parent::boot();
+
+        Endpoint::observe(new EndpointObserver);
+    }
+}
+
+
+class EndpointObserver {
+
+    public function updated($endpoint)
+    {
+        exec("logger \"update on Endpoint with ID \"".$endpoint->id);
+
+        $file = 'endpoints.conf';
+
+        $ret = File::put($file, '');
+
+        foreach (endpoint::where('public', 1)->with('modem')->get() as $endpoint) 
+        {
+            $id   = $endpoint->id;
+            $mac  = $endpoint->mac;
+            $modem_mac = $endpoint->modem->mac;
+            $host = $endpoint->hostname;
+
+            if ($endpoint->public)
+            {
+            	$data  = "\n".'subclass "Client-Public" '.$modem_mac.';';
+            
+	            $ret = File::append($file, $data);
+	            if ($ret === false)
+	            {
+	                die("Error writing to file");
+	            }  
+	        }    
+        }
+    }
 }

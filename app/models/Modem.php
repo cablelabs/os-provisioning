@@ -12,7 +12,7 @@ class Modem extends \Eloquent {
 	];
 
 	// Don't forget to fill this array
-	protected $fillable = ['hostname', 'contract_id', 'mac', 'status', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent'];
+	protected $fillable = ['hostname', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent'];
 
 	public function endpoints ()
 	{
@@ -31,7 +31,41 @@ class ModemObserver {
 
     public function updated($modem)
     {
-        exec("logger \"update on Modem with ID \"".$modem->id);
+        exec("logger \"update on Modem\"");
+
+        $file_cm = 'modems.conf';
+        $file_ep = 'endpoints.conf';
+
+        $ret = File::put($file_cm, '');
+        $ret = File::put($file_ep, '');
+
+        foreach (Modem::all() as $modem) 
+        {
+            $id   = $modem->id;
+            $mac  = $modem->mac;
+            $host = $modem->hostname;
+
+            $data_cm = "\n".'host modem-'.$id.' { hardware ethernet '.$mac.'; filename "cm-'.$id.'.cfg"; option host-name "modem-'.$id.'"; }';
+         
+            /* CM */
+            $ret = File::append($file_cm, $data_cm);
+            if ($ret === false)
+            {
+                die("Error writing to file");
+            }
+
+            /* Endpoint */
+            if ($modem->public)
+            {
+                $data_ep  = "\n".'subclass "Client-Public" '.$mac.'; # CM id:'.$id;
+            
+                $ret = File::append($file_ep, $data_ep);
+                if ($ret === false)
+                {
+                    die("Error writing to file");
+                }  
+            }       
+        }
     }
 
     public function deleting ($modem)
