@@ -31,7 +31,7 @@ class ModemsController extends \BaseController {
 	 */
 	public function store()
 	{
-		$validator = Validator::make($data = Input::all(), Modem::$rules);
+		$validator = Validator::make($data = Input::all(), Modem::rules());
 
 		if ($validator->fails())
 		{
@@ -79,7 +79,7 @@ class ModemsController extends \BaseController {
 	{
 		$modem = Modem::findOrFail($id);
 
-		$validator = Validator::make($data = Input::all(), Modem::$rules);
+		$validator = Validator::make($data = Input::all(), Modem::rules($id));
 
 
 		if (Input::get('network_access') == '1')

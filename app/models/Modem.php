@@ -3,13 +3,14 @@
 class Modem extends \Eloquent {
 
 	// Add your validation rules here
-	public static $rules = [
-		'hostname' => 'required|string'
-		// 'contract_id' => 'required|integer',
-		// 'mac' => 'required',
-		// 'network_access' => 'required|boolean',
-		// 'contract_id' => 'integer'
-	];
+    // see: http://stackoverflow.com/questions/22405762/laravel-update-model-with-unique-validation-rule-for-attribute
+    public static function rules($id = null)
+    {
+        return array(
+            'hostname' => 'required|string',
+            'mac' => 'required|unique:modems,mac,'.$id
+        );
+    }
 
 	// Don't forget to fill this array
 	protected $fillable = ['hostname', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent'];

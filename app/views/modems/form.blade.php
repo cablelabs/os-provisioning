@@ -10,6 +10,7 @@
 		<tr>
 			<td>{{ Form::label('mac', 'MAC address') }}</td>
 			<td>{{ Form::text ('mac') }}</td>
+			<td>{{ $errors->first('mac') }}</td>
 		</tr>
 
 		<tr>
