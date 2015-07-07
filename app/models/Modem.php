@@ -33,8 +33,9 @@ class ModemObserver {
     {
         exec("logger \"update on Modem\"");
 
-        $file_cm = 'modems.conf';
-        $file_ep = 'endpoints.conf';
+        $dir     = '../config/';
+        $file_cm = $dir.'modems.conf';
+        $file_ep = $dir.'endpoints.conf';
 
         $ret = File::put($file_cm, '');
         $ret = File::put($file_ep, '');
@@ -66,6 +67,7 @@ class ModemObserver {
                 }  
             }       
         }
+
     }
 
     public function deleting ($modem)
