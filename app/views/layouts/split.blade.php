@@ -1,5 +1,8 @@
 @extends ('layouts.default')
 
+@include ('layouts.header')
+
+<hr>
 
 @section ('content')
 

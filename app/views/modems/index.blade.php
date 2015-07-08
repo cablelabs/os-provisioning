@@ -1,6 +1,12 @@
-@extends ('layouts.default')
+@extends ('layouts.split')
 
-@section('content')
+@section('content_top')
+
+		{{ HTML::linkRoute('modem.index', 'Modems') }}
+
+@stop
+
+@section('content_left')
 
 	<h1>Modem List</h1>
 

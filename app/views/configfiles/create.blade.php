@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-		{{ HTML::linkRoute('configfile.index', 'configfiles') }}
+		{{ HTML::linkRoute('configfile.index', 'Configfiles') }}
 
 @stop
 

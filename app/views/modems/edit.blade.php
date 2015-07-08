@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-		{{ HTML::linkRoute('modem.index', 'Modems') }} /	{{ HTML::linkRoute('modem.edit', 'Modem-'.$modem->hostname, array($modem->id)) }}
+		{{ HTML::linkRoute('modem.index', 'Modems') }} / {{ HTML::linkRoute('modem.edit', 'Modem-'.$modem->hostname, array($modem->id)) }}
 
 @stop
 
@@ -22,6 +22,7 @@
 
 	{{ Form::open(array('route' => 'endpoint.create', 'method' => 'GET')) }}
 	{{ Form::hidden ('modem_id', $modem->id) }}
+	{{ Form::hidden ('modem_hostname', $modem->hostname) }}
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}
 

@@ -2,6 +2,7 @@
 
 @section('content_top')
 
+	{{ HTML::linkRoute('configfile.index', 'Configfile') }} / {{ HTML::linkRoute('configfile.edit', 'configfile-'.$configfile->name, array($configfile->id)) }}
 	
 @stop
 

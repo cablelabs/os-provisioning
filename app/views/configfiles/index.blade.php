@@ -1,6 +1,12 @@
-@extends ('layouts.default')
+@extends ('layouts.split')
 
-@section('content')
+@section('content_top')
+
+	{{ HTML::linkRoute('configfile.index', 'Configfile') }}
+	
+@stop
+
+@section('content_left')
 
 	{{ Form::open(array('route' => 'configfile.create', 'method' => 'GET')) }}
 	{{ Form::submit('Create') }}

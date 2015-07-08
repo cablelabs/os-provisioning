@@ -1,6 +1,12 @@
-@extends ('layouts.default')
+@extends ('layouts.split')
 
-@section('content')
+@section('content_top')
+
+		{{ HTML::linkRoute('endpoint.index', 'Endpoints') }}
+
+@stop
+
+@section('content_left')
 
 	{{ Form::open(array('route' => array('endpoint.destroy', 0), 'method' => 'delete')) }}
 

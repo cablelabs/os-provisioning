@@ -2,7 +2,8 @@
 
 @section('content_top')
 
-		{{ HTML::linkRoute('endpoint.index', 'endpoints') }}
+		{{ HTML::linkRoute('modem.index', 'Modems') }} / 
+		{{ HTML::linkRoute('modem.edit', 'Modem-'.$_GET['modem_hostname'], $_GET['modem_id']) }}
 
 @stop
 
