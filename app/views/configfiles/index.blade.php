@@ -7,6 +7,8 @@
 @stop
 
 @section('content_left')
+	
+	<h2>Configfile</h2>
 
 	{{ Form::open(array('route' => 'configfile.create', 'method' => 'GET')) }}
 	{{ Form::submit('Create') }}

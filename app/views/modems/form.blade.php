@@ -1,5 +1,4 @@
 
-		<h2>Edit Modem</h2>
 		<table>
 		<tr>
 			<td>{{ Form::label('hostname', 'Hostname') }}</td>

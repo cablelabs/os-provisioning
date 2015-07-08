@@ -1,4 +1,4 @@
-		<h2>Edit endpoint</h2>
+
 		<table>
 		<tr>
 			 {{ isset($_GET['modem_id']) ? Form::hidden ('modem_id', $_GET['modem_id']) : '' }}

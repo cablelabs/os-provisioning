@@ -1,6 +1,4 @@
 
-		<h2>Config File</h2>
-
 		<table>
 		<tr>
 			<td>{{ Form::label('name', 'Name') }}</td>

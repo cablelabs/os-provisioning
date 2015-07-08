@@ -8,6 +8,8 @@
 
 @section('content_left')
 
+	<h2>Endpoints</h2>
+
 	{{ Form::open(array('route' => array('endpoint.destroy', 0), 'method' => 'delete')) }}
 
 		@foreach ($endpoints as $endpoint)

@@ -8,7 +8,7 @@
 
 @section('content_left')
 
-	<h1>Modem List</h1>
+	<h2>Modem List</h2>
 
 	{{ Form::open(array('route' => 'modem.create', 'method' => 'GET')) }}
 	{{ Form::submit('Create') }}

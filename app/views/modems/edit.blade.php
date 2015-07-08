@@ -7,7 +7,9 @@
 @stop
 
 @section('content_left')
-	
+
+	<h2>Edit Modem</h2>	
+
 	{{ Form::model($modem, array('route' => array('modem.update', $modem->id), 'method' => 'put')) }}
 
 		@include('modems.form', $modem)
@@ -18,7 +20,7 @@
 
 @section('content_right')
 
-	<h1>CPE Stuff ..</h1>
+	<h2>Endpoints</h2>
 
 	{{ Form::open(array('route' => 'endpoint.create', 'method' => 'GET')) }}
 	{{ Form::hidden ('modem_id', $modem->id) }}
