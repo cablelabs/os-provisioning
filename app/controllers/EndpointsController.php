@@ -1,5 +1,8 @@
 <?php
 
+use Models\Endpoint;
+use Models\Modem;
+
 class EndpointsController extends \BaseController {
 
 	/**

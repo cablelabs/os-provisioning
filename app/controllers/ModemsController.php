@@ -1,5 +1,7 @@
 <?php
 
+use Models\Modem;
+use Models\Endpoint;
 use Models\Configfile;
 
 class ModemsController extends \BaseController {

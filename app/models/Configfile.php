@@ -20,6 +20,6 @@ class Configfile extends \Eloquent {
 
 	public function endpoints ()
 	{
-		return $this->hasMany('Modem');
+		return $this->hasMany('Models\Modem');
 	}
 }

@@ -1,5 +1,8 @@
 <?php
 
+namespace Models;
+use File;
+
 class Modem extends \Eloquent {
 
 	// Add your validation rules here
@@ -17,12 +20,12 @@ class Modem extends \Eloquent {
 
 	public function endpoints ()
 	{
-		return $this->hasMany('Endpoint');
+		return $this->hasMany('Models\Endpoint');
 	}
 
     public function configfile ()
     {
-        return $this->belongsTo('Configfile');
+        return $this->belongsTo('Models\Configfile');
     }
 
     public static function boot()

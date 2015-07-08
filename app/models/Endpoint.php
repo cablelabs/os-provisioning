@@ -1,5 +1,8 @@
 <?php
 
+namespace Models;
+
+
 class Endpoint extends \Eloquent {
 
 	// Add your validation rules here
@@ -12,7 +15,7 @@ class Endpoint extends \Eloquent {
 
 	public function modem ()
 	{
-		return $this->belongsTo('Modem');
+		return $this->belongsTo('Models\Modem');
 	}
 
     public static function boot()
