@@ -13,12 +13,17 @@ class Modem extends \Eloquent {
     }
 
 	// Don't forget to fill this array
-	protected $fillable = ['hostname', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent'];
+	protected $fillable = ['hostname', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent', 'configfile_id'];
 
 	public function endpoints ()
 	{
 		return $this->hasMany('Endpoint');
 	}
+
+    public function configfile ()
+    {
+        return $this->belongsTo('Configfile');
+    }
 
     public static function boot()
     {

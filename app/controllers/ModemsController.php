@@ -1,5 +1,7 @@
 <?php
 
+use Models\Configfile;
+
 class ModemsController extends \BaseController {
 
 	/**
@@ -21,7 +23,14 @@ class ModemsController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('modems.create');
+
+		$configfiles = array();
+		foreach (Configfile::all() as $cf)
+		{
+			$configfiles[$cf->id] = $cf->name;	
+		}
+
+		return View::make('modems.create')->with('configfiles', $configfiles);
 	}
 
 	/**
@@ -65,8 +74,14 @@ class ModemsController extends \BaseController {
 	public function edit($id)
 	{
 		$modem = Modem::find($id);
+		
+		$configfiles = array();
+		foreach (Configfile::all() as $cf)
+		{
+			$configfiles[$cf->id] = $cf->name;	
+		}
 
-		return View::make('modems.edit', compact('modem'));
+		return View::make('modems.edit', compact('modem'))->with('configfiles', $configfiles);
 	}
 
 	/**

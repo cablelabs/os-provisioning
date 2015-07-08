@@ -1,5 +1,7 @@
 <?php
 
+use Models\Configfile;
+
 class ConfigfilesController extends \BaseController {
 
 	/**

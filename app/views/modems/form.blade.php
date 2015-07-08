@@ -12,7 +12,10 @@
 			<td>{{ Form::text ('mac') }}</td>
 			<td>{{ $errors->first('mac') }}</td>
 		</tr>
-
+		<tr>
+			<td>{{ Form::label('configfile_id', 'Configfile') }}</td>
+			<td>{{ Form::select('configfile_id', $configfiles) }}</td>
+		</tr>
 		<tr>
 			<td>{{ Form::label('public', 'Public CPE') }}</td>
 			<td>{{ Form::checkbox('public', 1) }}</td>

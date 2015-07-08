@@ -25,6 +25,7 @@ class CreateModemsTable extends Migration {
 			$table->string('inventar_num');
 			$table->text('description');
 			$table->integer('parent');
+			$table->integer('configfile_id')->unsigned();
 			$table->timestamps();
 		});
 
