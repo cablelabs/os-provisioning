@@ -17,11 +17,10 @@ class ExampleTest extends TestCase {
 
 		$this->assertTrue($this->client->getResponse()->isOk());
 
-		$cm = Modem::first();
-		$ep = Endpoint::first();
-		
+		$cm  = Modem::first();
+
 		$cf = Configfile::find(22);
-		$cf->text_make($cm, $ep);
+		echo $cf->text_make($cm);
 	}
 
 }
