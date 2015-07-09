@@ -86,7 +86,7 @@ class Configfile extends \Eloquent {
 		$result = '';
 		foreach ($rows as $row)
 			if (!preg_match("/\\{[^\\{]*\\}/im", $row))
-				$result .= "\n".$row;
+				$result .= "\r\n\t".$row;
 		
 		return $result;
 	}

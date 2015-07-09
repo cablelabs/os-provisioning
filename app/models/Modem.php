@@ -79,10 +79,16 @@ class ModemObserver {
             }  
 
             /* Configfile */
-            $configfile = $modem->configfile;
-            $endpoints  = $modem->endpoints; # array ?
+            $id = $modem->id;
+            $cf = $modem->configfile;
+            $cf_file = $dir."cm-$id.conf";
 
+            $text = "Main\n{\n\t".$cf->text_make($modem)."\n}";
+
+            if ($cf)
+                $ret = File::put($cf_file, $text);
             
+            exec("cd /var/www/lara/config && ./docsis -e $cf_file keyfile cm-$id.cfg");
 
         }
 
