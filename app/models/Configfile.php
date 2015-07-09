@@ -2,6 +2,10 @@
 
 namespace Models;
 
+use Log;
+use DB;
+use Schema;
+
 class Configfile extends \Eloquent {
 
 	// Add your validation rules here

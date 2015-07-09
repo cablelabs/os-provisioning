@@ -1,5 +1,9 @@
 <?php
 
+use Models\Configfile;
+use Models\Modem;
+use Models\Endpoint;
+
 class ExampleTest extends TestCase {
 
 	/**

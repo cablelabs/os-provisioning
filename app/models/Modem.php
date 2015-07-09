@@ -1,7 +1,9 @@
 <?php
 
 namespace Models;
+
 use File;
+use Log;
 
 class Modem extends \Eloquent {
 
