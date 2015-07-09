@@ -16,6 +16,12 @@ class ExampleTest extends TestCase {
 		$crawler = $this->client->request('GET', '/');
 
 		$this->assertTrue($this->client->getResponse()->isOk());
+
+		$cm = Modem::first();
+		$ep = Endpoint::first();
+		
+		$cf = Configfile::find(22);
+		$cf->text_make($cm, $ep);
 	}
 
 }

@@ -51,7 +51,7 @@ class ModemObserver {
         $ret = File::put($file_cm, '');
         $ret = File::put($file_ep, '');
 
-        foreach (Modem::all() as $modem) 
+        foreach (Modem::with('endpoints', 'configfile')->get() as $modem) 
         {
             $id   = $modem->id;
             $mac  = $modem->mac;
@@ -76,7 +76,14 @@ class ModemObserver {
                 {
                     die("Error writing to file");
                 }  
-            }       
+            }  
+
+            /* Configfile */
+            $configfile = $modem->configfile;
+            $endpoints  = $modem->endpoints; # array ?
+
+            
+
         }
 
     }
