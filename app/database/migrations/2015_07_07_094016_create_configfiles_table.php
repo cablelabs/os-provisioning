@@ -19,7 +19,8 @@ class CreateConfigfilesTable extends Migration {
 			$table->text('text');
 			$table->enum('type', array('generic', 'network', 'vendor', 'user'));
 			$table->enum('device', array('cm', 'mta'));
-			$table->integer('parent')->unsigned();
+			$table->enum('public', array('yes', 'no'));
+			$table->integer('parent_id')->unsigned();
 			$table->timestamps();
 		});
 	}

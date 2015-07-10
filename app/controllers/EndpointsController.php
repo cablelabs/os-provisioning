@@ -6,6 +6,17 @@ use Models\Modem;
 class EndpointsController extends \BaseController {
 
 	/**
+	 * Make Checkbox Default Input
+	 * see: see http://forumsarchive.laravel.io/viewtopic.php?id=11627
+	 */
+	private function default_input ($data)
+	{
+		if(!isset($data['public']))$data['public']=0;
+
+		return $data;
+	}
+
+	/**
 	 * Display a listing of endpoints
 	 *
 	 * @return Response
@@ -34,7 +45,7 @@ class EndpointsController extends \BaseController {
 	 */
 	public function store()
 	{
-		$validator = Validator::make($data = Input::all(), Endpoint::$rules);
+		$validator = Validator::make($data = $this->default_input(Input::all()), Endpoint::$rules);
 
 		if ($validator->fails())
 		{
@@ -82,12 +93,7 @@ class EndpointsController extends \BaseController {
 	{
 		$endpoint = Endpoint::findOrFail($id);
 
-		$validator = Validator::make($data = Input::all(), Endpoint::$rules);
-
-		if (Input::get('public') == '1')
-			$endpoint->public = 1;
-		else
-			$endpoint->public = 0;
+		$validator = Validator::make($data = $this->default_input(Input::all()), Endpoint::$rules);
 
 		if ($validator->fails())
 		{

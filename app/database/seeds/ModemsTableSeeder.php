@@ -2,6 +2,7 @@
 
 // Composer: "fzaninotto/faker": "v1.3.0"
 use Faker\Factory as Faker;
+use Models\Modem;
 
 class ModemsTableSeeder extends Seeder {
 

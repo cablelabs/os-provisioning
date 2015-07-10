@@ -7,6 +7,40 @@ use Models\Configfile;
 class ModemsController extends \BaseController {
 
 	/**
+	 * Make Checkbox Default Input
+	 * see: see http://forumsarchive.laravel.io/viewtopic.php?id=11627
+	 */
+	private function default_input ($data)
+	{
+		if(!isset($data['public']))$data['public']=0;
+		if(!isset($data['network_access']))$data['network_access']=0;
+
+		return $data;
+	}
+
+	/**
+	 * return all Configfile Objects for CMs
+	 */
+	private function configfiles ()
+	{
+		return Configfile::where('device', '=', 'CM')->where('public', '=', 'yes')->get();
+	}
+
+	/**
+	 * return a list [id => name] of all Configfile for CMs
+	 */
+	private function configfiles_list ()
+	{
+		$ret = array();
+		foreach ($this->configfiles() as $cf)
+		{
+			$ret[$cf->id] = $cf->name;	
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * Display a listing of modems
 	 *
 	 * @return Response
@@ -25,14 +59,7 @@ class ModemsController extends \BaseController {
 	 */
 	public function create()
 	{
-
-		$configfiles = array();
-		foreach (Configfile::all() as $cf)
-		{
-			$configfiles[$cf->id] = $cf->name;	
-		}
-
-		return View::make('modems.create')->with('configfiles', $configfiles);
+		return View::make('modems.create')->with('configfiles', $this->configfiles_list());
 	}
 
 	/**
@@ -42,7 +69,7 @@ class ModemsController extends \BaseController {
 	 */
 	public function store()
 	{
-		$validator = Validator::make($data = Input::all(), Modem::rules());
+		$validator = Validator::make($data = $this->default_input(Input::all()), Modem::rules());
 
 		if ($validator->fails())
 		{
@@ -77,13 +104,7 @@ class ModemsController extends \BaseController {
 	{
 		$modem = Modem::find($id);
 		
-		$configfiles = array();
-		foreach (Configfile::all() as $cf)
-		{
-			$configfiles[$cf->id] = $cf->name;	
-		}
-
-		return View::make('modems.edit', compact('modem'))->with('configfiles', $configfiles);
+		return View::make('modems.edit', compact('modem'))->with('configfiles', $this->configfiles_list());
 	}
 
 	/**
@@ -96,20 +117,8 @@ class ModemsController extends \BaseController {
 	{
 		$modem = Modem::findOrFail($id);
 
-		$validator = Validator::make($data = Input::all(), Modem::rules($id));
-
-
-		if (Input::get('network_access') == '1')
-			$modem->network_access = 1;
-		else
-			$modem->network_access = 0;
-
-		if (Input::get('public') == '1')
-			$modem->public = 1;
-		else
-			$modem->public = 0;
+		$validator = Validator::make($data = $this->default_input(Input::all()), Modem::rules($id));
 		
-
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
@@ -131,6 +140,7 @@ class ModemsController extends \BaseController {
 		if ($id == 0)
 		{
 			// bulk delete
+			// TODO: put to base controller -> make it generic
 			foreach (Input::all()['ids'] as $id => $val)
 				Modem::destroy($id);
 		}
@@ -139,7 +149,5 @@ class ModemsController extends \BaseController {
 
 		return Redirect::back();
 	}
-
-
-
+	
 }

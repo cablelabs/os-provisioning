@@ -13,11 +13,18 @@ class Endpoint extends \Eloquent {
 	// Don't forget to fill this array
 	protected $fillable = ['hostname', 'mac', 'public', 'description', 'modem_id'];
 
+    /**
+     * all Relationships:
+     */
 	public function modem ()
 	{
 		return $this->belongsTo('Models\Modem');
 	}
-
+    
+    /**
+     * BOOT:
+     * - init modem observer
+     */
     public static function boot()
     {
         parent::boot();
@@ -28,32 +35,19 @@ class Endpoint extends \Eloquent {
 
 
 class EndpointObserver {
+    
+    public function created($endpoint)
+    {
+        // $endpoint->modem->make_dhcp();
+    }
 
     public function updated($endpoint)
     {
-        exec("logger \"update on Endpoint with ID \"".$endpoint->id);
+        // $endpoint->modem->make_dhcp();
+    }
 
-        $file = 'endpoints.conf';
-
-        $ret = File::put($file, '');
-
-        foreach (endpoint::where('public', 1)->with('modem')->get() as $endpoint) 
-        {
-            $id   = $endpoint->id;
-            $mac  = $endpoint->mac;
-            $modem_mac = $endpoint->modem->mac;
-            $host = $endpoint->hostname;
-
-            if ($endpoint->public)
-            {
-            	$data  = "\n".'subclass "Client-Public" '.$modem_mac.';';
-            
-	            $ret = File::append($file, $data);
-	            if ($ret === false)
-	            {
-	                die("Error writing to file");
-	            }  
-	        }    
-        }
+    public function deleted($endpoint)
+    {
+        // $endpoint->modem->make_dhcp();
     }
 }

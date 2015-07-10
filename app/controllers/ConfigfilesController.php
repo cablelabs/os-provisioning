@@ -23,7 +23,7 @@ class ConfigfilesController extends \BaseController {
 	 */
 	public function create()
 	{
-		$parents = array();
+		$parents = array('0' => 'Null');
 		foreach (Configfile::all() as $cf)
 		{
 			$parents[$cf->id] = $cf->name;	
@@ -74,7 +74,7 @@ class ConfigfilesController extends \BaseController {
 	{
 		$configfile = Configfile::find($id);
 
-		$parents = array();
+		$parents = array('0' => 'Null');
 		foreach (Configfile::all() as $cf)
 		{
 			if ($cf->id != $id)

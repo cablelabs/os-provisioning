@@ -17,26 +17,43 @@ class Configfile extends \Eloquent {
     }
 
 	// Don't forget to fill this array
-	protected $fillable = ['name', 'text', 'device', 'type', 'parent'];
+	protected $fillable = ['name', 'text', 'device', 'type', 'parent_id', 'public'];
 
 
+    /**
+     * all Relationships:
+     */
 	public function modem ()
 	{
 		return $this->hasMany('Models\Modem');
 	}
 
-	public function text_make ($m)
+	public function get_parent ()
 	{
+		return Configfile::find($this->parent_id);
+	}
+
+
+    /**
+     * Internal Helper:
+     *   Make Configfile Content for $this Object /
+     *   without recursive objects
+     */
+	private function __text_make ($m)
+	{
+		if (!$m)
+			return false;
 		
 		/*
-		 *
+		 * all objects must be an array like a[xyz] = object
+		 * NOTE: 1. add new relations here
 		 */
 		$modems    = array ($m);
 		$endpoints = $m->endpoints;
 
-
 		/*
-		 *
+		 * generate Table array
+		 * NOTE: 2. add new relations here
 		 */
 		$tables_a ['modems'][0]    = Schema::getColumnListing('modems');
 
@@ -46,7 +63,7 @@ class Configfile extends \Eloquent {
 
 
 		/*
-		 *
+		 * Generate search and replace array
 		 */
 		$replace = array();
 
@@ -59,36 +76,52 @@ class Configfile extends \Eloquent {
 			
 				foreach ($table as $entry)
 				{
-					# _translation matrix
-					$tlm[$i]['table']  = $name;
-					$tlm[$i]['field']  = $entry;
-					$tlm[$i]['search'] = $name.'.'.$entry;	
-					$search[$i]        = '{'.$tlm[$i]['search'].'.'.$j.'}';
-
+					$search[$i]  = '{'.$name.'.'.$entry.'.'.$j.'}';
 					$replace[$i] = $replace_a->{$entry};
+					
 					$i++;
 				}
 			}
 		}	
 
-		/* debug */
-		// print_r($search); print_r($replace);
+		// DEBUG: print_r($search); print_r($replace);
 
 		/*
-		 *
+		 * Search and Replace Configfile TEXT
 		 */		
 		$text = str_replace($search, $replace, $this->text);
 		$rows = explode("\n", $text);
 		
 		/*
-		 *
+		 * Delete all with {xyz} content which can not be replaced
 		 */
 		$result = '';
 		foreach ($rows as $row)
 			if (!preg_match("/\\{[^\\{]*\\}/im", $row))
-				$result .= "\r\n\t".$row;
+				$result .= "\n\t".$row;
 		
+		/*
+		 * return
+		 */
 		return $result;
+	}
+
+    /**
+     * Make Configfile Content
+     */
+	public function text_make($m)
+	{
+		$p = $this;
+		$t = '';
+
+		do {
+			echo ($p->id);
+			$t .= $p->__text_make($m);
+
+			$p  = $p->get_parent();
+		} while ($p);
+
+		return $t;
 	}
 
 }

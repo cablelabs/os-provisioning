@@ -15,8 +15,13 @@
 			<td>{{ Form::select('device', array('cm' => 'CM', 'mta' => 'MTA')) }}</td>
 		</tr>
 		<tr>
-			<td>{{ Form::label('parent', 'Parent Configfile') }}</td>
-			<td>{{ Form::select('parent', $parents) }}</td>
+			<td>{{ Form::label('parent_id', 'Parent Configfile') }}</td>
+			<td>{{ Form::select('parent_id', $parents) }}</td>
+		</tr>
+		<tr>
+			<td>{{ Form::label('public', 'Public Use') }}</td>
+			<td>{{ Form::select ('public', array('yes' => 'Yes', 'no' => 'No')) }}</td>
+			<td>{{ $errors->first('public') }}</td>
 		</tr>
 		<tr>
 			<td>{{ Form::label('text', 'Config File Parameters') }}</td>
