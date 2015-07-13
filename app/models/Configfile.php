@@ -115,9 +115,7 @@ class Configfile extends \Eloquent {
 		$t = '';
 
 		do {
-			echo ($p->id);
 			$t .= $p->__text_make($m);
-
 			$p  = $p->get_parent();
 		} while ($p);
 

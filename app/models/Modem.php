@@ -51,7 +51,7 @@ class Modem extends \Eloquent {
      */
     public function make_dhcp ()
     {
-        $dir     = '../config/';
+        $dir = '/etc/dhcp/nms/';
         $file_cm = $dir.'modems.conf';
         $file_ep = $dir.'endpoints.conf';
 
@@ -65,7 +65,7 @@ class Modem extends \Eloquent {
             $host  = $modem->hostname;
             
             /* CM */
-            $data_cm = "\n".'host modem-'.$id.' { hardware ethernet '.$mac.'; filename "cm-'.$id.'.cfg"; option host-name "modem-'.$id.'"; }'; 
+            $data_cm = "\n".'host modem-'.$id.' { hardware ethernet '.$mac.'; filename "cm/cm-'.$id.'.cfg"; option host-name "modem-'.$id.'"; }'; 
             $ret = File::append($file_cm, $data_cm);
             if ($ret === false)
                 die("Error writing to file");
@@ -94,7 +94,7 @@ class Modem extends \Eloquent {
         $host  = $modem->hostname;
 
         /* Configfile */
-        $dir     = '../config/';
+        $dir     = '/tftpboot/cm/';
         $cf_file = $dir."cm-$id.conf";
 
         $cf = $modem->configfile;
@@ -104,8 +104,13 @@ class Modem extends \Eloquent {
 
         $text = "Main\n{\n\t".$cf->text_make($modem)."\n}";
         $ret  = File::put($cf_file, $text);
-            
-        exec("cd /var/www/lara/config && ./docsis -e $cf_file keyfile cm-$id.cfg");
+
+        
+        if ($ret === false)
+                die("Error writing to file");
+         
+        Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg");   
+        exec("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg");
     }
 
     /**
