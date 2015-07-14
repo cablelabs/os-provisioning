@@ -3,6 +3,7 @@
 use Models\Modem;
 use Models\Endpoint;
 use Models\Configfile;
+use Models\Quality;
 
 class ModemsController extends \BaseController {
 
@@ -41,6 +42,19 @@ class ModemsController extends \BaseController {
 	}
 
 	/**
+	 * return a list of all qualitie profiles
+	 */
+	private function qualities_list ()
+	{
+		$ret = array();
+		foreach (Quality::all() as $q)
+		{
+			$ret[$q->id] = $q->name;	
+		} 
+		return $ret;
+	}
+
+	/**
 	 * Display a listing of modems
 	 *
 	 * @return Response
@@ -59,7 +73,7 @@ class ModemsController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('modems.create')->with('configfiles', $this->configfiles_list());
+		return View::make('modems.create')->with('configfiles', $this->configfiles_list())->with('qualities', $this->qualities_list());
 	}
 
 	/**
@@ -104,7 +118,7 @@ class ModemsController extends \BaseController {
 	{
 		$modem = Modem::find($id);
 		
-		return View::make('modems.edit', compact('modem'))->with('configfiles', $this->configfiles_list());
+		return View::make('modems.edit', compact('modem'))->with('configfiles', $this->configfiles_list())->with('qualities', $this->qualities_list());
 	}
 
 	/**

@@ -26,6 +26,7 @@ class CreateModemsTable extends Migration {
 			$table->text('description');
 			$table->integer('parent');
 			$table->integer('configfile_id')->unsigned();
+			$table->integer('quality_id')->unsigned();
 			$table->timestamps();
 		});
 

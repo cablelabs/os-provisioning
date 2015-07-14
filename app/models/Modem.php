@@ -18,7 +18,7 @@ class Modem extends \Eloquent {
     }
 
 	// Don't forget to fill this array
-	protected $fillable = ['hostname', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent', 'configfile_id'];
+	protected $fillable = ['hostname', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent', 'configfile_id', 'quality_id'];
 
 
     /**
@@ -32,6 +32,11 @@ class Modem extends \Eloquent {
     public function configfile ()
     {
         return $this->belongsTo('Models\Configfile');
+    }
+
+    public function quality()
+    {
+        return $this->belongsTo("Models\Quality");
     }
 
 
@@ -146,7 +151,7 @@ class ModemObserver
         $modem->make_configfile();
     }
 
-    public function deleted($endpoint)
+    public function deleted($modem)
     {
         $modem->make_dhcp();
     } 

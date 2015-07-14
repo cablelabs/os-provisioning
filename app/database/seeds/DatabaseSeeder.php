@@ -13,7 +13,8 @@ class DatabaseSeeder extends Seeder {
 
 		$this->call('ModemsTableSeeder');
 		$this->call('EndpointsTableSeeder');
-		$this->call('ConfigfilesTableSeeder');
+		//$this->call('ConfigfilesTableSeeder');
+		$this->call('QualitiesTableSeeder');
 	}
 
 }

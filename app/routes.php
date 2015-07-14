@@ -19,3 +19,5 @@ Route::resource('endpoint', 'EndpointsController');
 Route::post('endpoint/json', 'EndpointsController@json');
 
 Route::resource('configfile', 'ConfigfilesController');
+
+Route::resource('quality', 'QualitiesController');

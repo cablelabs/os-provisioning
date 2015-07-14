@@ -50,6 +50,7 @@ class Configfile extends \Eloquent {
 		 */
 		$modems    = array ($m);
 		$endpoints = $m->endpoints;
+		$qualities = array ($m->quality);
 
 		/*
 		 * generate Table array
@@ -60,6 +61,8 @@ class Configfile extends \Eloquent {
 		$i = 0;
 		foreach ($endpoints as $endpoint)
 			$tables_a['endpoints'][$i++] = Schema::getColumnListing('endpoints');
+
+		$tables_a ['qualities'][0] = Schema::getColumnListing('qualities');
 
 
 		/*

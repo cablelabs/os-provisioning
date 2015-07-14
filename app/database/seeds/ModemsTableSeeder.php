@@ -20,7 +20,9 @@ class ModemsTableSeeder extends Seeder {
 				'public' => (rand(0,100) < 5 ? 1 : 0),
 				'serial_num' => $faker->sentence(),
 				'inventar_num' => $faker->sentence(),
-				'contract_id' => rand(1,500)
+				'contract_id' => rand(1,500),
+				'configfile_id' => rand(1,10),
+				'quality_id' => rand(1,10)
 			]);
 		}
 	}

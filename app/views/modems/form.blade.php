@@ -24,6 +24,10 @@
 			<td>{{ Form::label('network_access', 'Network Access') }}</td>
 			<td>{{ Form::checkbox('network_access', 1) }}</td>
 		</tr>
+		<tr>
+			<td>{{ Form::label('quality_id', 'Qualities') }}</td>
+			<td>{{ Form::select('quality_id', $qualities) }}</td>
+		</tr>
 
 		<tr>
 			<td>{{ Form::label('serial_num', 'Serial Number') }}</td>
