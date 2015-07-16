@@ -11,7 +11,9 @@ class EndpointsController extends \BaseController {
 	 */
 	private function default_input ($data)
 	{
+		/* depracted:
 		if(!isset($data['public']))$data['public']=0;
+		*/
 
 		return $data;
 	}
@@ -45,16 +47,16 @@ class EndpointsController extends \BaseController {
 	 */
 	public function store()
 	{
-		$validator = Validator::make($data = $this->default_input(Input::all()), Endpoint::$rules);
+		$validator = Validator::make($data = $this->default_input(Input::all()), Endpoint::rules());
 
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		Endpoint::create($data);
+		$id = Endpoint::create($data)->id;
 
-		return Redirect::route('modem.edit', $data['modem_id']);
+		return Redirect::route('endpoint.edit', $id);
 	}
 
 	/**
@@ -93,7 +95,7 @@ class EndpointsController extends \BaseController {
 	{
 		$endpoint = Endpoint::findOrFail($id);
 
-		$validator = Validator::make($data = $this->default_input(Input::all()), Endpoint::$rules);
+		$validator = Validator::make($data = $this->default_input(Input::all()), Endpoint::rules($id));
 
 		if ($validator->fails())
 		{

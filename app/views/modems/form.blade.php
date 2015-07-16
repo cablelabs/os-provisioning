@@ -1,8 +1,13 @@
 
 		<table>
 		<tr>
+			<td>{{ Form::label('name', 'Name') }}</td>
+			<td>{{ Form::text ('name') }}</td>
+			<td>{{ $errors->first('name') }}</td>
+		</tr>
+		<tr>
 			<td>{{ Form::label('hostname', 'Hostname') }}</td>
-			<td>{{ Form::text ('hostname') }}</td>
+			<td>{{ Form::text ('hostname',null, array('readonly')) }}</td>
 			<td>{{ $errors->first('hostname') }}</td>
 		</tr>
 

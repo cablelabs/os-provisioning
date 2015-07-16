@@ -5,6 +5,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
 use Models\Modem;
+use Models\Endpoint;
 
 class dhcpCommand extends Command {
 
@@ -41,6 +42,9 @@ class dhcpCommand extends Command {
 	{
 		$m = Modem::first();
 		$m->make_dhcp();
+
+		$e = Endpoint::first();
+		$e->make_dhcp();
 	}
 
 	/**

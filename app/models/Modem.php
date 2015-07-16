@@ -12,22 +12,24 @@ class Modem extends \Eloquent {
     public static function rules($id = null)
     {
         return array(
-            'hostname' => 'required|string',
             'mac' => 'required|unique:modems,mac,'.$id
         );
     }
 
 	// Don't forget to fill this array
-	protected $fillable = ['hostname', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent', 'configfile_id', 'quality_id'];
+	protected $fillable = ['hostname', 'name', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent', 'configfile_id', 'quality_id'];
 
 
     /**
      * all Relationships:
      */
+
+/* depracted:
 	public function endpoints ()
 	{
 		return $this->hasMany('Models\Endpoint');
 	}
+*/
 
     public function configfile ()
     {
@@ -57,20 +59,20 @@ class Modem extends \Eloquent {
     public function make_dhcp ()
     {
         $dir = '/etc/dhcp/nms/';
-        $file_cm = $dir.'modems.conf';
-        $file_ep = $dir.'endpoints.conf';
+        $file_cm = $dir.'modems-host.conf';
+        $file_ep = $dir.'modems-clients-public.conf';
 
         $ret = File::put($file_cm, '');
         $ret = File::put($file_ep, '');
         
-        foreach (Modem::with('endpoints', 'configfile')->get() as $modem) 
+        foreach (Modem::all() as $modem) 
         {
             $id    = $modem->id;
             $mac   = $modem->mac;
             $host  = $modem->hostname;
             
             /* CM */
-            $data_cm = "\n".'host modem-'.$id.' { hardware ethernet '.$mac.'; filename "cm/cm-'.$id.'.cfg"; option host-name "modem-'.$id.'"; }'; 
+            $data_cm = "\n".'host cm-'.$id.' { hardware ethernet '.$mac.'; filename "cm/cm-'.$id.'.cfg"; ddns-hostname "cm-'.$id.'"; }'; 
             $ret = File::append($file_cm, $data_cm);
             if ($ret === false)
                 die("Error writing to file");
@@ -82,8 +84,7 @@ class Modem extends \Eloquent {
              
                 $ret = File::append($file_ep, $data_ep);
                 if ($ret === false)
-                    die("Error writing to file");
-                
+                    die("Error writing to file");             
             }  
         }
     }
@@ -143,6 +144,13 @@ class ModemObserver
     {
         $modem->make_dhcp();
         $modem->make_configfile();
+        $modem->hostname = 'cm-'.$modem->id;
+        $modem->save();
+    }
+
+    public function updating($modem)
+    {
+        $modem->hostname = 'cm-'.$modem->id;
     }
 
     public function updated($modem)
@@ -159,6 +167,8 @@ class ModemObserver
     // Delete all Endpoints under CM ..
     public function deleting ($modem)
     {
+        /* depracted:
         Endpoint::where('modem_id', '=', $modem->id)->delete();
+        */
     }
 }

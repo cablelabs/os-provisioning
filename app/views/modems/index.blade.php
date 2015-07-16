@@ -24,7 +24,7 @@
 				<tr>
 					<td> 
 						{{ Form::checkbox('ids['.$modem->id.']') }}
-						<a href=modem/{{$modem->id}}/edit>{{'Modem-'.$modem->hostname}}</a> 
+						<a href=modem/{{$modem->id}}/edit>{{''.(($modem->name == '') ? $modem->hostname : 'cm-'.$modem->name)}}</a> 
 					</td>
 				</tr>
 

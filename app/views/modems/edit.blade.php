@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-		{{ HTML::linkRoute('modem.index', 'Modems') }} / {{ HTML::linkRoute('modem.edit', 'Modem-'.$modem->hostname, array($modem->id)) }}
+		{{ HTML::linkRoute('modem.index', 'Modems') }} / {{ HTML::linkRoute('modem.edit', $modem->hostname, array($modem->id)) }}
 
 @stop
 
@@ -20,6 +20,7 @@
 
 @section('content_right')
 
+{{-- 
 	<h2>Endpoints</h2>
 
 	{{ Form::open(array('route' => 'endpoint.create', 'method' => 'GET')) }}
@@ -36,7 +37,7 @@
 				<tr>
 					<td> 
 						{{ Form::checkbox('ids['.$endpoint->id.']') }}
-						{{ HTML::linkRoute('endpoint.edit', 'Endpoint-'.$endpoint->hostname, $endpoint->id) }}
+						{{ HTML::linkRoute('endpoint.edit', $endpoint->hostname, $endpoint->id) }}
 					</td>
 				</tr>
 				</table>
@@ -45,6 +46,6 @@
 
 	{{ Form::submit('Delete') }}
 	{{ Form::close() }}
-
+--}}
 
 @stop

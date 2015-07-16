@@ -16,12 +16,15 @@ class CreateEndpointsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('hostname');
+			$table->string('name');
 			$table->string('mac',17);
 			$table->text('description');
 			$table->enum('type', array('cpe','mta'));
 			$table->boolean('public');
-			$table->integer('modem_id')->unsigned();
+			// $table->integer('modem_id')->unsigned(); // depracted
 			$table->timestamps();
+
+			DB::update("ALTER TABLE endpoints AUTO_INCREMENT = 200000;");
 		});
 	}
 

@@ -10,6 +10,10 @@
 
 	<h2>Endpoints</h2>
 
+	{{ Form::open(array('route' => 'endpoint.create', 'method' => 'GET')) }}
+	{{ Form::submit('Create') }}
+	{{ Form::close() }}
+
 	{{ Form::open(array('route' => array('endpoint.destroy', 0), 'method' => 'delete')) }}
 
 		@foreach ($endpoints as $endpoint)
@@ -18,7 +22,7 @@
 				<tr>
 					<td> 
 						{{ Form::checkbox('ids['.$endpoint->id.']') }}
-						<a href=endpoint/{{$endpoint->id}}/edit>{{$endpoint->hostname}}</a> 
+						{{ HTML::linkRoute('endpoint.edit', $endpoint->hostname, $endpoint->id) }}
 					</td>
 				</tr>
 				</table>

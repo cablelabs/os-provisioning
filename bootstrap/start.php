@@ -26,7 +26,7 @@ $app = new Illuminate\Foundation\Application;
 
 $env = $app->detectEnvironment(array(
 
-	'local' => array('homestead', 'provlx01'),
+	'local' => array('homestead', 'ns1.test.erznet.tv'),
 
 ));
 

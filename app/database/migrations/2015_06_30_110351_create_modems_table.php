@@ -15,6 +15,7 @@ class CreateModemsTable extends Migration {
 		Schema::create('modems', function(Blueprint $table)
 		{
 			$table->increments('id');
+			$table->string('name');
 			$table->string('hostname');
 			$table->integer('contract_id')->unsigned();
 			$table->string('mac')->sizeof(17);

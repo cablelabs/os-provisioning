@@ -49,20 +49,26 @@ class Configfile extends \Eloquent {
 		 * NOTE: 1. add new relations here
 		 */
 		$modems    = array ($m);
-		$endpoints = $m->endpoints;
 		$qualities = array ($m->quality);
+
+/* depracted:
+		$endpoints = $m->endpoints;
+*/
 
 		/*
 		 * generate Table array
 		 * NOTE: 2. add new relations here
 		 */
 		$tables_a ['modems'][0]    = Schema::getColumnListing('modems');
+		$tables_a ['qualities'][0] = Schema::getColumnListing('qualities');		
 
+/* depracted:
 		$i = 0;
 		foreach ($endpoints as $endpoint)
 			$tables_a['endpoints'][$i++] = Schema::getColumnListing('endpoints');
+*/
 
-		$tables_a ['qualities'][0] = Schema::getColumnListing('qualities');
+		
 
 
 		/*
