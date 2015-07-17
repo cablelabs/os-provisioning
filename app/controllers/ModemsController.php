@@ -54,6 +54,7 @@ class ModemsController extends \BaseController {
 		return $ret;
 	}
 
+
 	/**
 	 * Display a listing of modems
 	 *
@@ -65,6 +66,96 @@ class ModemsController extends \BaseController {
 
 		return View::make('modems.index', compact('modems'));
 	}
+
+
+	/**
+	 * Ping
+	 *
+	 * @return Response
+	 */
+	public function ping($id)
+	{
+		$modem = Modem::find($id);
+		$hostname = $modem->hostname;
+		
+		if (!exec ('ping -c5 -i0.2 '.$hostname, $ret))
+			$ret = array ('Modem is Offline');
+
+		return View::make('modems.ping', compact('modem'))->with('out', $ret);
+	}
+
+	
+	/**
+	 * Monitoring
+	 *
+	 * @return Response
+	 */
+	public function monitoring($id)
+	{
+		$modem = Modem::find($id);
+
+		return View::make('modems.monitoring', compact('modem'));
+	}
+
+
+	/**
+	 * Leases
+	 *
+	 * @return Response
+	 */
+	public function lease($id)
+	{
+		$modem = Modem::find($id);
+		$mac   = $modem->mac;
+
+		// parse dhcpd.lease file
+		$file   = file_get_contents('/var/lib/dhcpd/dhcpd.leases');
+		$string = preg_replace( "/\r|\n/", "", $file );
+		preg_match_all('/{(.*?)}/', $string, $section);
+
+		$ret = array();
+		$i   = 0;
+
+		// fetch all lines matching hw mac
+		foreach (array_reverse($section[0]) as $s)
+		{
+		    if(strpos($s, 'hardware ethernet '.$mac)) 
+		    {
+		    	if ($i == 0)
+		    		array_push($ret, "<b>Active Lease:</b>");
+
+		    	if ($i == 1)
+		    		array_push($ret, "<br><br><b>Old Leases:</b>");
+
+		    	// push matching results 
+		        array_push($ret, str_replace('{', '{<br>', str_replace(';', ';<br>', $s)));
+
+		        $i++;
+		    }
+		}
+
+		// view
+		return View::make('modems.lease', compact('modem'))->with('out', $ret);
+	}
+
+
+	/**
+	 * Log
+	 *
+	 * @return Response
+	 */
+	public function log($id)
+	{
+		$modem = Modem::find($id);
+		$hostname = $modem->hostname;
+		$mac      = $modem->mac;
+		
+		if (!exec ('cat /var/log/messages | egrep "('.$mac.'|'.$hostname.')" | tail -n 100  | sort -r', $ret))
+			$ret = array ('no logging');
+
+		return View::make('modems.log', compact('modem'))->with('out', $ret);
+	}
+	
 
 	/**
 	 * Show the form for creating a new modem

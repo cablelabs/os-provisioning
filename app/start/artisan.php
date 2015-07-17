@@ -13,3 +13,4 @@
 
 Artisan::add(new dhcpCommand);
 Artisan::add(new configfileCommand);
+Artisan::add(new cactiCommand);

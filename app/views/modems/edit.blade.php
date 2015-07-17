@@ -1,10 +1,6 @@
 @extends ('layouts.split')
 
-@section('content_top')
-
-		{{ HTML::linkRoute('modem.index', 'Modems') }} / {{ HTML::linkRoute('modem.edit', $modem->hostname, array($modem->id)) }}
-
-@stop
+@include ('modems.header')
 
 @section('content_left')
 
@@ -16,6 +12,7 @@
 	
 	{{ Form::submit('Save') }}
 	{{ Form::close() }}
+	
 @stop
 
 @section('content_right')
