@@ -7,6 +7,9 @@ use Models\Qualitiy;
 
 class ExampleTest extends TestCase {
 
+
+
+
 	/**
 	 * A basic functional test example.
 	 *
@@ -14,20 +17,17 @@ class ExampleTest extends TestCase {
 	 */
 	public function testBasicExample()
 	{
-		/*
-		$crawler = $this->client->request('GET', '/');
+		$this->routeContains ();
+		
+		$this->routeContains ('modem');
 
-		$this->assertTrue($this->client->getResponse()->isOk());
+		$this->routeContains ('endpoint');
 
-		$cm  = Modem::first();
+		$this->routeContains ('configfile');
 
-		$cf = Configfile::find(22);
-		echo $cf->text_make($cm);
-		*/
-
-		$cm = Modem::first();
-		$q  = $cm->quality;
-		print_r($q);
+		$this->routeContains ('quality');
 	}
+
+
 
 }
