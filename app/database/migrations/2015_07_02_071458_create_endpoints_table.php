@@ -23,9 +23,9 @@ class CreateEndpointsTable extends Migration {
 			$table->boolean('public');
 			// $table->integer('modem_id')->unsigned(); // depracted
 			$table->timestamps();
-
-			DB::update("ALTER TABLE endpoints AUTO_INCREMENT = 200000;");
 		});
+
+		DB::update("ALTER TABLE endpoints AUTO_INCREMENT = 200000;");
 	}
 
 
