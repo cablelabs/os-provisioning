@@ -13,7 +13,7 @@ class ModemTest extends TestCase {
 
 	public function testEdit()
 	{
-		$m = Modem::orderby('id', 'DESC')->first()->id;
+		$m = Modem::first()->id;
 		$this->routeContains ("modem/$m/edit");
 	}
 
@@ -23,4 +23,16 @@ class ModemTest extends TestCase {
 		$this->routeContains ("modem/$m", 'DELETE');
 	}
 
+	public function testDhcp()
+	{
+		$m = Modem::first();
+		$this->assertTrue($m->make_dhcp());
+	}
+
+	public function testConfigfile()
+	{
+		$m = Modem::first();
+		$this->assertTrue($m->make_configfile());
+		$this->assertTrue($m->make_configfile_all());
+	}
 }

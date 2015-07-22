@@ -23,4 +23,10 @@ class EndpointTest extends TestCase {
 		$this->routeContains ("endpoint/$m", 'DELETE');
 	}
 
+	public function testDhcp()
+	{
+		$m = Endpoint::first();
+		$this->assertTrue($m->make_dhcp());
+	}
+
 }

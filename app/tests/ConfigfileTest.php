@@ -1,7 +1,7 @@
 <?php
 
 use Models\Configfile;
-
+use Models\Modem;
 
 class ConfigfileTest extends TestCase {
 
@@ -23,4 +23,10 @@ class ConfigfileTest extends TestCase {
 		$this->routeContains ("configfile/$m", 'DELETE');
 	}
 
+	public function testConfigfileText()
+	{
+		$m = Configfile::first();
+		$this->assertTrue(is_string($m->text_make(Modem::first())));	
+		$this->assertNotEmpty($m->text_make(Modem::first()));
+	}
 }

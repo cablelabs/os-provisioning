@@ -1,7 +1,7 @@
 <?php
 
 
-class ExampleTest extends TestCase {
+class StartTest extends TestCase {
 
 	public function testIndex()
 	{

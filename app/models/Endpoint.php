@@ -61,6 +61,8 @@ class Endpoint extends \Eloquent {
             if ($ret === false)
                 die("Error writing to file");
         }
+        
+        return ($ret > 0 ? true : false);
     }    
 }
 

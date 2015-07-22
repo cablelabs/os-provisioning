@@ -87,6 +87,8 @@ class Modem extends \Eloquent {
                     die("Error writing to file");             
             }  
         }
+
+        return ($ret > 0 ? true : false);
     }
 
     /**
@@ -116,7 +118,9 @@ class Modem extends \Eloquent {
                 die("Error writing to file");
          
         Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg");   
-        exec("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg");
+        exec("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg", $out, $ret);
+
+        return ($ret == 0 ? true : false);
     }
 
     /**
@@ -125,7 +129,12 @@ class Modem extends \Eloquent {
     public function make_configfile_all()
     {
         foreach (Modem::all() as $modem) 
-            $modem->make_configfile();
+        {
+            if (!$modem->make_configfile())
+                return false;
+        }
+
+        return true;
     }
 }
 
