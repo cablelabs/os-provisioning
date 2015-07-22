@@ -13,7 +13,7 @@
 	{{ Form::open(array('route' => 'quality.create', 'method' => 'GET')) }}
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}
-	
+
 
 	{{ Form::open(array('route' => array('quality.destroy', 0), 'method' => 'delete')) }}
 

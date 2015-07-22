@@ -99,6 +99,60 @@ class ModemsController extends \BaseController {
 
 
 	/**
+	 * Search String in dhcpd.lease file and
+	 * return the matching host
+	 *
+	 * TODO: make a seperate class for dhcpd
+	 * lease stuff (search, replace, ..)
+	 *
+	 * @return Response
+	 */
+	public function search_lease ($search)
+	{
+		// parse dhcpd.lease file
+		$file   = file_get_contents('/var/lib/dhcpd/dhcpd.leases');
+		$string = preg_replace( "/\r|\n/", "", $file );
+		preg_match_all('/lease(.*?)}/', $string, $section);
+
+		$ret = array();
+		$i   = 0;
+
+		// fetch all lines matching hw mac
+		foreach (array_reverse(array_unique($section[0])) as $s)
+		{
+		    if(strpos($s, $search)) 
+		    {
+		    	/*
+		    	if ($i == 0)
+		    		array_push($ret, "<b>Last Lease:</b>");
+
+		    	if ($i == 1)
+		    		array_push($ret, "<br><br><b>Old Leases:</b>");
+				*/
+
+		    	// push matching results 
+		        array_push($ret, str_replace('{', '{<br>', str_replace(';', ';<br>', $s)));
+		        $i++;
+
+if (0)
+{
+		        // TODO: convert string to array and convert return
+		        $a = explode(';', str_replace ('{', ';', $s));
+
+		     	if (!isset($ret[$a[0]]))
+		     		$ret[$a[0]] = array();   
+
+		        array_push($ret[$a[0]], $a);
+}
+
+		    }
+		}
+
+		return $ret;
+	}
+
+
+	/**
 	 * Leases
 	 *
 	 * @return Response
@@ -106,33 +160,8 @@ class ModemsController extends \BaseController {
 	public function lease($id)
 	{
 		$modem = Modem::find($id);
-		$mac   = $modem->mac;
-
-		// parse dhcpd.lease file
-		$file   = file_get_contents('/var/lib/dhcpd/dhcpd.leases');
-		$string = preg_replace( "/\r|\n/", "", $file );
-		preg_match_all('/{(.*?)}/', $string, $section);
-
-		$ret = array();
-		$i   = 0;
-
-		// fetch all lines matching hw mac
-		foreach (array_reverse($section[0]) as $s)
-		{
-		    if(strpos($s, 'hardware ethernet '.$mac)) 
-		    {
-		    	if ($i == 0)
-		    		array_push($ret, "<b>Active Lease:</b>");
-
-		    	if ($i == 1)
-		    		array_push($ret, "<br><br><b>Old Leases:</b>");
-
-		    	// push matching results 
-		        array_push($ret, str_replace('{', '{<br>', str_replace(';', ';<br>', $s)));
-
-		        $i++;
-		    }
-		}
+		$mac  = $modem->mac;
+		$ret  = $this->search_lease('hardware ethernet '.$mac);
 
 		// view
 		return View::make('modems.lease', compact('modem'))->with('out', $ret);
@@ -208,8 +237,11 @@ class ModemsController extends \BaseController {
 	public function edit($id)
 	{
 		$modem = Modem::find($id);
-		
-		return View::make('modems.edit', compact('modem'))->with('configfiles', $this->configfiles_list())->with('qualities', $this->qualities_list());
+		$mac   = $modem->mac;
+
+		$ret = $this->search_lease('agent.remote-id '.$mac);
+
+		return View::make('modems.edit', compact('modem'))->with('configfiles', $this->configfiles_list())->with('qualities', $this->qualities_list())->with('out', $ret);
 	}
 
 	/**

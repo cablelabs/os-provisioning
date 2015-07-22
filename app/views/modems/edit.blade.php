@@ -17,6 +17,19 @@
 
 @section('content_right')
 
+		@foreach ($out as $line)
+
+				<table>
+				<tr>
+					<td> 
+						{{$line}}
+					</td>
+				</tr>
+
+				</table>
+			
+		@endforeach
+
 {{-- 
 	<h2>Endpoints</h2>
 

@@ -3,12 +3,13 @@
 @include ('modems.header')
 
 @section('content_left')
+
 		@foreach ($out as $line)
 
 				<table>
 				<tr>
 					<td> 
-						{{$line}}
+						{{$line}}<br><br>
 					</td>
 				</tr>
 
