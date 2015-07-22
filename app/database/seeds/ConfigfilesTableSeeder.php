@@ -13,7 +13,8 @@ class ConfigfilesTableSeeder extends Seeder {
 		foreach(range(1, 10) as $index)
 		{
 			Configfile::create([
-				'name' => $faker->colorName()
+				'name' => $faker->colorName(),
+				'text' => 'SnmpMibObject sysLocation.0 String "Test Lab" ;'
 			]);
 		}
 	}
