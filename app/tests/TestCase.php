@@ -17,9 +17,11 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 		return require __DIR__.'/../../bootstrap/start.php';
 	}
 
-	protected function routeContains ($r = '/', $s = 'Das Monster')
+	protected function routeContains ($r = '/', $req = 'GET', $s = 'Das Monster')
 	{
-		$crawler = $this->client->request('GET', $r);
+		echo "\nTest route $req on $r";
+
+		$crawler = $this->client->request($req, $r);
 
 		$this->assertTrue($this->client->getResponse()->isOk());
 
