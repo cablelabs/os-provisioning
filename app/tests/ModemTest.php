@@ -30,6 +30,11 @@ class ModemTest extends TestCase {
 		$this->routeContains ("modem/$m/edit");
 	}
 
+	public function testCreate()
+	{
+		$this->routeContains ("modem/create");
+	}
+
 	public function testDelete()
 	{
 		$m = Modem::orderby('id', 'DESC')->first()->id;

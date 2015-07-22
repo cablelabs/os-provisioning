@@ -23,6 +23,11 @@ class EndpointTest extends TestCase {
 		$this->routeContains ("endpoint/$m/edit");
 	}
 
+	public function testCreate()
+	{
+		$this->routeContains ("endpoint/create");
+	}
+
 	public function testDelete()
 	{
 		$m = Endpoint::orderby('id', 'DESC')->first()->id;

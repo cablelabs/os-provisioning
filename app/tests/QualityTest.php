@@ -17,6 +17,11 @@ class qualityTest extends TestCase {
 		$this->routeContains ("quality/$m/edit");
 	}
 
+	public function testCreate()
+	{
+		$this->routeContains ("quality/create");
+	}
+
 	public function testDelete()
 	{
 		$m = Quality::orderby('id', 'DESC')->first()->id;

@@ -24,6 +24,11 @@ class ConfigfileTest extends TestCase {
 		$this->routeContains ("configfile/$m/edit");
 	}
 
+	public function testCreate()
+	{
+		$this->routeContains ("configfile/create");
+	}
+
 	public function testDelete()
 	{
 		$m = Configfile::orderby('id', 'DESC')->first()->id;
