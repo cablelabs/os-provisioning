@@ -123,7 +123,7 @@ class ConfigfilesController extends \BaseController {
 		else
 			Configfile::destroy($id);
 
-		return Redirect::back();
+		return $this->index();
 	}
 
 }

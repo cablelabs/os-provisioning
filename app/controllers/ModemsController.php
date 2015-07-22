@@ -252,7 +252,7 @@ class ModemsController extends \BaseController {
 		else
 			Modem::destroy($id);
 
-		return Redirect::back();
+		return $this->index();
 	}
 	
 }

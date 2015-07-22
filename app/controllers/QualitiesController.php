@@ -111,7 +111,7 @@ class QualitiesController extends \BaseController {
 		else
 			Quality::destroy($id);
 
-		return Redirect::back();
+		return $this->index();
 	}
 
 }

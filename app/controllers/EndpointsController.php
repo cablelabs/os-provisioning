@@ -124,7 +124,7 @@ class EndpointsController extends \BaseController {
 		else
 			Endpoint::destroy($id);
 
-		return Redirect::back();
+		return $this->index();
 	}
 
 }
