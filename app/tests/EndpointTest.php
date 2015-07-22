@@ -5,6 +5,12 @@ use Models\Endpoint;
 
 class EndpointTest extends TestCase {
 
+	public function testDhcp()
+	{
+		$m = Endpoint::first();
+		$this->assertTrue($m->make_dhcp());
+	}
+
 	public function testIndex()
 	{
 		$this->routeContains ();
@@ -21,12 +27,6 @@ class EndpointTest extends TestCase {
 	{
 		$m = Endpoint::orderby('id', 'DESC')->first()->id;
 		$this->routeContains ("endpoint/$m", 'DELETE');
-	}
-
-	public function testDhcp()
-	{
-		$m = Endpoint::first();
-		$this->assertTrue($m->make_dhcp());
 	}
 
 }
