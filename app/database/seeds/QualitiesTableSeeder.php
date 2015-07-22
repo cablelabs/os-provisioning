@@ -9,16 +9,14 @@ class QualitiesTableSeeder extends Seeder {
 	public function run()
 	{
 		$faker = Faker::create();
-		$i = 0;
 
 		foreach(range(1, 10) as $index)
 		{
 			Quality::create([
-				'name' => 'QOS-'.$i,
-				'ds_rate_max' => rand(0,100000000),
-				'us_rate_max' => rand(0,10000000)
+				'name' => 'QOS-'.$index,
+				'ds_rate_max' => rand(1,100),
+				'us_rate_max' => rand(1,10)
 			]);
-			$i++;
 		}
 	}
 
