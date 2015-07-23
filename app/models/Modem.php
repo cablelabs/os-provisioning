@@ -91,6 +91,7 @@ class Modem extends \Eloquent {
         return ($ret > 0 ? true : false);
     }
 
+
     /**
      * Make Configfile for a single CM
      */
@@ -131,7 +132,7 @@ class Modem extends \Eloquent {
         foreach (Modem::all() as $modem) 
         {
             if (!$modem->make_configfile())
-                return false;
+                Log::warning("failed to build/write configfile for modem cm-".$modem->id);
         }
 
         return true;

@@ -46,29 +46,20 @@ class Configfile extends \Eloquent {
 		
 		/*
 		 * all objects must be an array like a[xyz] = object
-		 * NOTE: 1. add new relations here
+		 *
+		 * INFO:
+		 * - variable names _must_ match tables_a[xyz] coloumn 
+		 * - if modem sql relations are not valid a warning will
+		 *   be printed
 		 */
 		$modems    = array ($m);
 		$qualities = array ($m->quality);
 
-/* depracted:
-		$endpoints = $m->endpoints;
-*/
-
 		/*
-		 * generate Table array
-		 * NOTE: 2. add new relations here
+		 * generate Table array with SQL columns
 		 */
 		$tables_a ['modems'][0]    = Schema::getColumnListing('modems');
 		$tables_a ['qualities'][0] = Schema::getColumnListing('qualities');		
-
-/* depracted:
-		$i = 0;
-		foreach ($endpoints as $endpoint)
-			$tables_a['endpoints'][$i++] = Schema::getColumnListing('endpoints');
-*/
-
-		
 
 
 		/*
@@ -81,15 +72,20 @@ class Configfile extends \Eloquent {
 		{
 			foreach ($tables as $j => $table)
 			{
-				$replace_a = DB::select ("SELECT * FROM ".$name." WHERE id = ?", array(${$name}[$j]->id))[0];
-			
-				foreach ($table as $entry)
-				{
-					$search[$i]  = '{'.$name.'.'.$entry.'.'.$j.'}';
-					$replace[$i] = $replace_a->{$entry};
-					
-					$i++;
-				}
+				if (isset(${$name}[$j]->id))
+				{	
+					$replace_a = DB::select ("SELECT * FROM ".$name." WHERE id = ?", array(${$name}[$j]->id))[0];
+
+					foreach ($table as $entry)
+					{
+						$search[$i]  = '{'.$name.'.'.$entry.'.'.$j.'}';
+						$replace[$i] = $replace_a->{$entry};
+						
+						$i++;
+					}
+				} 
+				else
+					Log::warning ('modem cm-'.$m->id.' has no valid '.$name.' entry');
 			}
 		}	
 
