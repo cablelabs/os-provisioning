@@ -52,12 +52,15 @@ return array(
 			'prefix'   => '',
 		),
 
+		/*
+		 * TODO: fix global setting !
+		 */
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'forge',
-			'username'  => 'forge',
-			'password'  => '',
+			'database'  => 'db_lara',
+			'username'  => 'root',
+			'password'  => 'password',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
