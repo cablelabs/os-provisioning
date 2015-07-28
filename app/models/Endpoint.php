@@ -10,7 +10,7 @@ class Endpoint extends \Eloquent {
     public static function rules($id = null)
     {
         return array(
-            'mac' => 'required|unique:endpoints,mac,'.$id,
+            'mac' => 'required|mac|unique:endpoints,mac,'.$id,
             'hostname' => 'unique:endpoints,hostname,'.$id
         );
     }

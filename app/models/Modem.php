@@ -12,7 +12,7 @@ class Modem extends \Eloquent {
     public static function rules($id = null)
     {
         return array(
-            'mac' => 'required|unique:modems,mac,'.$id
+            'mac' => 'required|mac|unique:modems,mac,'.$id
         );
     }
 

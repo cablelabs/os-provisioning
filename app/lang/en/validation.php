@@ -88,6 +88,8 @@ return array(
 		),
 	),
 
+	"mac" => "No valid MAC address",
+
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Attributes
