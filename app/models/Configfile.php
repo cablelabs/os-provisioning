@@ -12,7 +12,8 @@ class Configfile extends \Eloquent {
 	public static function rules($id = null)
     {
         return array(
-            'name' => 'required|unique:configfiles,name,'.$id
+            'name' => 'required|unique:configfiles,name,'.$id,
+            'text' => 'docsis'
         );
     }
 
