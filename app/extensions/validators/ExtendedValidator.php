@@ -37,8 +37,6 @@ class ExtendedValidator extends Validator
 
 	/*
 	 * DOCSIS configfile validation
-	 * TODO: quick & dirty implementation
-	 *       use sub-functions & stuff
 	 */
 	public function validateDocsis ($attribute, $value, $parameters)
 	{
@@ -47,16 +45,23 @@ class ExtendedValidator extends Validator
         $cf_file = $dir."dummy-validator.conf";
 
 		/*
-		 * Delete all {xyz} content - 
-		 * TODO: will not be tested !
-		 *       better way will be to replace with default values.
+		 * Replace all {xyz} content  
 		 */
 		$rows = explode("\n", $value);
 		$s = '';
 		foreach ($rows as $row)
-			if (!preg_match("/\\{[^\\{]*\\}/im", $row))
-				$s .= "\n\t".$row;
+		{
+			if (preg_match("/(string)/i", $row))
+				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", '"text"', $row);
+			elseif (preg_match("/(ipaddress)/i", $row))
+				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", '1.1.1.1', $row);
+			else
+				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", '1', $row);
+		}
 		
+		/*
+		 * Write Dummy File and try to encode
+		 */
         $text = "Main\n{\n\t".$s."\n}";
         $ret  = File::put($cf_file, $text);
         
@@ -66,6 +71,9 @@ class ExtendedValidator extends Validator
         Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-dummy-validator.cfg");   
         exec("rm -f $dir/dummy-validator.cfg && /usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg 2>&1", $outs, $ret);
 
+        /*
+         * Parse Errors
+         */
         $report = '';
         foreach ($outs as $out)
         	$report .= "\n$out";
