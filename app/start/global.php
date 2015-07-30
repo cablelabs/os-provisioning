@@ -17,6 +17,7 @@ ClassLoader::addDirectories(array(
 	app_path().'/controllers',
 	app_path().'/models',
 	app_path().'/database/seeds',
+	app_path().'/extensions/validators',
 
 ));
 
@@ -79,4 +80,13 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
-require_once app_path().'/extensions/validators/ExtendedValidator.php'; 
+
+
+/*
+ * Extend Validator Class
+ * see extensions/validators/..
+ */
+Validator::resolver(function($translator, $data, $rules, $messages)
+{
+    return new ExtendedValidator($translator, $data, $rules, $messages);
+});
