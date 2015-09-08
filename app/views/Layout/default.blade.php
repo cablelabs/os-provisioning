@@ -1,19 +1,15 @@
 <!doctype html>
 <html>
+
   <head>
     <meta charset="utf-8">
-    <title>Beispiel zum header-Element</title>
-	<style>
-	  body {margin: 3em;}
-	  header {background: #eee; padding: 1em;}
-	  article {padding: 2em;}
-	</style>
+    <title>Das Monster</title>
+      @include ('bootstrap.header')
   </head>
  
   <body> 
-
-  <!-- field for displaying content -->
-  @yield('content')
-  
+    @yield ('content')
+    @include ('bootstrap.footer')
   </body>
+
 </html>
