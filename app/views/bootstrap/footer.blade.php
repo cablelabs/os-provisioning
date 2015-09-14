@@ -27,7 +27,7 @@
       <script src="{{asset('components/assets-admin/js/apps.min.js')}}"></script>
       <!-- ================== END PAGE LEVEL JS ================== -->
 
- <!-- 
+
       <script>
         $(document).ready(function() {
           App.init();
@@ -35,4 +35,3 @@
         });
       </script>
 
-  -->

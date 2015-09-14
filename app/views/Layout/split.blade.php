@@ -15,12 +15,16 @@
 
 <hr>
 
-	<table>
-		<tr>
-			<td width="400" valign="top">@yield('content_left')</td> 
-			<td width="50"></td>
-			<td width="400" valign="top">@yield('content_right')</td>
-		</tr>
-	</table>
+<div class="row">
+
+	@include ('bootstrap.panel', array ('content' => 'content_left', 'md' => 8))
+
+
+
+	@include ('bootstrap.panel', array ('content' => 'content_right', 'md' => 4))
+
+</div>
+
+
 
 @stop

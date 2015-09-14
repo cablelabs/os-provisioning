@@ -14,7 +14,11 @@
 </p>
 
 <hr>
+<div class="row">
 
-	@yield('content_left')
+	@include ('bootstrap.panel', array ('content' => 'content_left', 'md' => 12))
+
+
+</div>
 
 @stop
