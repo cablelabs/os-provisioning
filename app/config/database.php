@@ -53,14 +53,14 @@ return array(
 		),
 
 		/*
-		 * TODO: fix global setting !
+		 * get global settings partly from /.env.php
 		 */
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => 'localhost',
-			'database'  => 'db_lara',
-			'username'  => 'lara',
-			'password'  => 'password',
+			'host'      => $_ENV['dbHostFromDotenv'],
+			'database'  => $_ENV['dbDatabaseFromDotenv'],
+			'username'  => $_ENV['dbUsernameFromDotenv'],
+			'password'  => $_ENV['dbPasswordFromDotenv'],
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
