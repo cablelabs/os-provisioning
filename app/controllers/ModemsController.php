@@ -5,6 +5,7 @@ use Models\Endpoint;
 use Models\Configfile;
 use Models\Quality;
 
+
 class ModemsController extends \BaseController {
 
 	/**

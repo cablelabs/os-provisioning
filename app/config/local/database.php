@@ -18,14 +18,17 @@ return array(
 	|
 	*/
 
+    /*
+     * get local settings partly from /.env.local.php
+     */
 	'connections' => array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => 'localhost',
-			'database'  => 'db_lara',
-			'username'  => 'root',
-			'password'  => 'password',
+			'host'      => $_ENV['dbHostFromDotenv'],
+			'database'  => $_ENV['dbDatabaseFromDotenv'],
+			'username'  => $_ENV['dbUsernameFromDotenv'],
+			'password'  => $_ENV['dbPasswordFromDotenv'],
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

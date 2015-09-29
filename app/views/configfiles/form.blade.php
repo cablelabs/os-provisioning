@@ -25,8 +25,8 @@
 		</tr>
 		<tr>
 			<td>{{ Form::label('text', 'Config File Parameters') }}</td>
-			<td>{{ Form::textarea ('text') }}</td>
-			<td>{{ $errors->first('text') }}</td>
+			<td>{{ Form::textarea ('text', null, ['size' => '100x30']) }}</td>
+			<td><font color="red">{{ $errors->first('text') }}</font></td>
 		</tr>
 
 		</table>

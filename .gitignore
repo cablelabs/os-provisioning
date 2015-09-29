@@ -9,3 +9,6 @@ composer.lock
 Thumbs.db
 *.sublime*
 *.fuse_hidden*
+
+# temporary vim files
+*.swp
