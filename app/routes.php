@@ -19,6 +19,7 @@ Route::get('modem/{modem}/log', array ('as' => 'modem.log', 'uses' => 'ModemsCon
 Route::get('modem/{modem}/lease', array ('as' => 'modem.lease', 'uses' => 'ModemsController@lease'));
 Route::post('modem/json', 'ModemsController@json');
 Route::resource('modem', 'ModemsController');
+Route::resource('cmts', 'CmtsGwsController');
 
 
 Route::resource('endpoint', 'EndpointsController');
