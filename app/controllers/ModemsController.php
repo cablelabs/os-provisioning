@@ -52,6 +52,7 @@ class ModemsController extends \BaseController {
 		{
 			$ret[$q->id] = $q->name;	
 		} 
+
 		return $ret;
 	}
 
@@ -82,7 +83,9 @@ class ModemsController extends \BaseController {
 		if (!exec ('ping -c5 -i0.2 '.$hostname, $ret))
 			$ret = array ('Modem is Offline');
 
-		return View::make('modems.ping', compact('modem'))->with('out', $ret);
+		//return View::make('modems.ping', compact('modem'))->with('out', $ret);	
+		return View::make('modems.ping', compact('modem', 'ret'));
+
 	}
 
 	
@@ -240,9 +243,9 @@ if (0)
 		$modem = Modem::find($id);
 		$mac   = $modem->mac;
 
-		$ret = $this->search_lease('agent.remote-id '.$mac);
+		$out = $this->search_lease('agent.remote-id '.$mac);
 
-		return View::make('modems.edit', compact('modem'))->with('configfiles', $this->configfiles_list())->with('qualities', $this->qualities_list())->with('out', $ret);
+		return View::make('modems.edit', compact('modem', 'out'))->with('configfiles', $this->configfiles_list())->with('qualities', $this->qualities_list());
 	}
 
 	/**

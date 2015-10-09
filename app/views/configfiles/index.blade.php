@@ -13,7 +13,7 @@
 	{{ Form::open(array('route' => 'configfile.create', 'method' => 'GET')) }}
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}
-	
+
 
 	{{ Form::open(array('route' => array('configfile.destroy', 0), 'method' => 'delete')) }}
 
@@ -30,6 +30,8 @@
 			
 		@endforeach
 
+	<br>
+	
 	{{ Form::submit('Delete') }}
 	{{ Form::close() }}
 

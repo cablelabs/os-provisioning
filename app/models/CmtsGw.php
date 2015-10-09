@@ -8,6 +8,16 @@ class CmtsGw extends \Eloquent {
 	];
 
 	// Don't forget to fill this array
-	protected $fillable = [];
+	protected $fillable = ['hostname', 'type', 'ip', 'community_rw', 'community_ro', 'company', 'state', 'monitoring'];
+	// columns in database that shall not be able to alter
+	// protected $guarded = [];
 
+    /**
+     * Relationships:
+     */
+
+    public function ippools ()
+    {
+        return $this->hasMany('IpPool');
+    }
 }

@@ -3,19 +3,20 @@
 class CmtsGwsController extends \BaseController {
 
 	/**
-	 * Display a listing of cmtsgws
+	 * Display a listing of CmtsGws
 	 *
 	 * @return Response
 	 */
 	public function index()
 	{
-		$cmtsgws = CmtsGw::all();
+		$CmtsGws = CmtsGw::all();	// = "select * from cmts_gws;"
 
-		return View::make('cmtsgws.index', compact('cmtsgws'));
+		return View::make('cmtsgws.index', compact('CmtsGws'));
+		// compact() makes passed variables available to the view - like ->with($variable) statement
 	}
 
 	/**
-	 * Show the form for creating a new cmtsgw
+	 * Show the form for creating a new CmtsGw
 	 *
 	 * @return Response
 	 */
@@ -25,83 +26,96 @@ class CmtsGwsController extends \BaseController {
 	}
 
 	/**
-	 * Store a newly created cmtsgw in storage.
+	 * Store a newly created CmtsGw in storage.
 	 *
 	 * @return Response
 	 */
 	public function store()
 	{
-		$validator = Validator::make($data = Input::all(), Cmtsgw::$rules);
+		$validator = Validator::make($data = Input::all(), CmtsGw::$rules);
 
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		Cmtsgw::create($data);
+		CmtsGw::create($data);
 
-		return Redirect::route('cmtsgws.index');
+		return Redirect::route('cmts.index');
 	}
 
 	/**
-	 * Display the specified cmtsgw.
+	 * Display the specified CmtsGw.
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function show($id)
 	{
-		$cmtsgw = Cmtsgw::findOrFail($id);
+		$CmtsGw = CmtsGw::findOrFail($id);
 
-		return View::make('cmtsgws.show', compact('cmtsgw'));
+		return View::make('cmtsgws.show', compact('CmtsGw'));
 	}
 
 	/**
-	 * Show the form for editing the specified cmtsgw.
+	 * Show the form for editing the specified CmtsGw.
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function edit($id)
 	{
-		$cmtsgw = Cmtsgw::find($id);
+		$CmtsGw = CmtsGw::find($id);
+		//$CmtsGw = CmtsGw::all();
+		//$CmtsGw = CmtsGw::with('ippools')->get();
+		$CmtsGw = CmtsGw::with('ippools')->find($id);	// string inside "with"-statement has to match the public method name
 
-		return View::make('cmtsgws.edit', compact('cmtsgw'));
+		return View::make('cmtsgws.edit', compact('CmtsGw'));
 	}
 
 	/**
-	 * Update the specified cmtsgw in storage.
+	 * Update the specified CmtsGw in storage.
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function update($id)
 	{
-		$cmtsgw = Cmtsgw::findOrFail($id);
+		$CmtsGw = CmtsGw::findOrFail($id);
 
-		$validator = Validator::make($data = Input::all(), Cmtsgw::$rules);
+dd($CmtsGw);
+		$validator = Validator::make($data = Input::all(), CmtsGw::$rules);
 
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$cmtsgw->update($data);
+		$CmtsGw->update($data);
 
-		return Redirect::route('cmtsgws.index');
+		return Redirect::route('cmts.index');
 	}
 
 	/**
-	 * Remove the specified cmtsgw from storage.
+	 * Remove the specified CmtsGw from storage.
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function destroy($id)
 	{
-		Cmtsgw::destroy($id);
+		if ($id == 0)
+		{
+			// bulk delete
+			// TODO: put to base controller -> make it generic
+			foreach (Input::all()['ids'] as $id => $val)
+				CmtsGw::destroy($id);
+		}
+		else
+			CmtsGw::destroy($id);
 
-		return Redirect::route('cmtsgws.index');
+		return $this->index();
+		//return Redirect::route('cmts.index'); 
 	}
 
 }
