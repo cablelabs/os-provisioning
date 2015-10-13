@@ -22,6 +22,8 @@ class CreateMtasTable extends Migration {
 			$table->enum('type', ['sip','packetcable']);
 			$table->timestamps();
 		});
+
+		DB::update("ALTER TABLE mtas AUTO_INCREMENT = 100000;");
 	}
 
 

@@ -2,8 +2,76 @@
 
 use Models\Mta;
 use Models\Modem;
+use Models\Configfile;
 
 class MtasController extends \BaseController {
+
+	// all currently available mta types
+	public $MTA_TYPES = array(
+		'sip' => "sip",
+		'packetcable' => "packetcable",
+	);
+
+
+	/**
+	 * return all modem objects
+	 */
+	private function modems()
+	{
+		return Modem::get();
+	}
+
+
+	/**
+	 * return a list [id => hostname] of all modems
+	 */
+	private function modems_list($selected_modem)
+	{
+		$data = array();
+		$data[0] = null;
+		foreach ($this->modems() as $modem)
+		{
+			$data[$modem->id] = $modem->hostname;
+		}
+
+		$ret = array(
+			'data' => $data,
+			'selected' => $selected_modem,
+		);
+
+		return $ret;
+	}
+
+
+	/**
+	 * return all Configfile Objects for MTAs
+	 */
+	private function configfiles()
+	{
+		return Configfile::where('device', '=', 'mta')->where('public', '=', 'yes')->get();
+	}
+
+
+	/**
+	 * return a list [id => name] of all Configfile for MTAt
+	 */
+	private function configfiles_list($selected_configfile)
+	{
+		$data = array();
+		$data[0] = null;
+		foreach ($this->configfiles() as $cf)
+		{
+			$data[$cf->id] = $cf->name;
+		}
+
+		$ret = array(
+			'data' => $data,
+			'selected' => $selected_configfile,
+		);
+
+		return $ret;
+	}
+
 
 	/**
 	 * Display a listing of mtas
@@ -17,6 +85,7 @@ class MtasController extends \BaseController {
 		return View::make('mtas.index', compact('mtas'));
 	}
 
+
 	/**
 	 * Show the form for creating a new mta
 	 *
@@ -24,8 +93,9 @@ class MtasController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('mtas.create');
+		return View::make('mtas.create')->with('configfiles', $this->configfiles_list())->with('modems', $this->modems_list());
 	}
+
 
 	/**
 	 * Store a newly created mta in storage.
@@ -41,10 +111,11 @@ class MtasController extends \BaseController {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		Mta::create($data);
+		$id = Mta::create($data)->id;
 
-		return Redirect::route('mtas.index');
+		return Redirect::route('mtas.edit', $id);
 	}
+
 
 	/**
 	 * Display the specified mta.
@@ -59,6 +130,7 @@ class MtasController extends \BaseController {
 		return View::make('mtas.show', compact('mta'));
 	}
 
+
 	/**
 	 * Show the form for editing the specified mta.
 	 *
@@ -69,8 +141,15 @@ class MtasController extends \BaseController {
 	{
 		$mta = Mta::find($id);
 
-		return View::make('mtas.edit', compact('mta'));
+		$mta_types = array();
+		$mta_types['data'] = $this->MTA_TYPES;
+		$mta_types['selected'] = $mta['type'];
+
+
+		return View::make('mtas.edit', compact('mta'))->with('configfiles', $this->configfiles_list($mta['configfile_id']))->with('modems', $this->modems_list($mta['modem_id']))->with('mta_types', $mta_types);
+;
 	}
+
 
 	/**
 	 * Update the specified mta in storage.
@@ -93,6 +172,7 @@ class MtasController extends \BaseController {
 
 		return Redirect::route('mtas.index');
 	}
+
 
 	/**
 	 * Remove the specified mta from storage.

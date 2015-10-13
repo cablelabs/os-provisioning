@@ -15,7 +15,7 @@ class MtasTableSeeder extends Seeder {
 			Mta::create([
 				'mac' => $faker->macAddress(),
 				'type' => (rand(0, 1) == 1 ? 1 : 2),
-				'modem_id' => (100000 + $index),
+				'modem_id' => (100000 + $index - 1),
 			]);
 		}
 	}
