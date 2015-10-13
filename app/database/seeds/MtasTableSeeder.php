@@ -10,14 +10,12 @@ class MtasTableSeeder extends Seeder {
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, 10) as $index)
+		foreach(range(1, 5) as $index)
 		{
 			Mta::create([
 				'mac' => $faker->macAddress(),
-				'type' => (rand(0, 1) == 1 ? 'sip' : 'packetcable'),
-				'configfile_id' => rand(1,10),
+				'type' => (rand(0, 1) == 1 ? 1 : 2),
 				'modem_id' => (100000 + $index),
-				'hostname' => "mta-".(100000 + $index),
 			]);
 		}
 	}
