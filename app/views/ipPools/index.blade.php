@@ -16,9 +16,6 @@
 	
 	{{ Form::open(array('route' => array('ipPool.destroy', 0), 'method' => 'delete')) }}
 
-<!-- 	{{ var_dump($hostnames) }}
-	{{ $hostnames[1] }} -->
-
 		@foreach ($ippools as $pool)
 
 			<table>

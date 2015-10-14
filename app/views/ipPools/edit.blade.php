@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute('ipPool.index', 'IP-Pool') }} / {{ HTML::linkRoute('ipPool.edit', 'IpPool-'.$ippool->cmts_gw_id, array($ippool->id)) }}
+	{{ HTML::linkRoute('ipPool.index', 'IP-Pool') }} / {{ HTML::linkRoute('ipPool.edit', 'IP-Pool: '.$hostnames[$ippool->cmts_gw_id].'-'.$ippool->id, array($ippool->id)) }}
 
 @stop
 

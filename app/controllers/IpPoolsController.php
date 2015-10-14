@@ -14,26 +14,6 @@ class IpPoolsController extends \BaseController {
 		return View::make('ipPools.index', compact('ippools', 'hostnames'));
 	}
 
-	/**
-	 * return all cmts hostnames for ip pools
-	 * @author Nino Ryschawy
-	 * @param
-	 * @return $hostnames 		array of hostnames of all cmts`s ordered by their id
-	 */
-	private function cmts_hostnames ()
-	{
-		// $cmts_gws = CmtsGw::all(); //select('id', 'hostname');		-- doesnt work as is
-		$cmts_gws = DB::table('cmts_gws')->select('id', 'hostname')->get();
-		$hostnames = array();
-
-		foreach ($cmts_gws as $host)
-		{
-			$hostnames[$host->id] = $host->hostname;
-		}
-
-		return $hostnames;
-	}
-
 
 	/**
 	 * Show the form for creating a new ippool
@@ -81,20 +61,6 @@ class IpPoolsController extends \BaseController {
 		return Redirect::route('ipPool.index');
 	}
 
-	/**
-	 * Display the specified ippool.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		$ippool = IpPool::findOrFail($id);
-
-		return View::make('ipPools.show', compact('ippool'));
-	}
-
-
 
 	/**
 	 * Update the specified ippool in storage.
@@ -141,5 +107,27 @@ class IpPoolsController extends \BaseController {
 		return $this->index();
 		//return Redirect::route('ipPool.index');
 	}
+
+	/**
+	 * return all cmts hostnames for ip pools
+	 * @author Nino Ryschawy
+	 * @param
+	 * @return $hostnames 		array of hostnames of all cmts`s ordered by their id
+	 */
+	private function cmts_hostnames ()
+	{
+		$cmts_gws = DB::table('cmts_gws')->select('id', 'hostname')->get();
+		// $cmts_gws = IpPool::lists('cmts_gw_id', 'id');		-- doesnt work, but is shown in getting started vids
+
+		$hostnames = array();
+
+		foreach ($cmts_gws as $host)
+		{
+			$hostnames[$host->id] = $host->hostname;
+		}
+
+		return $hostnames;
+	}
+
 
 }

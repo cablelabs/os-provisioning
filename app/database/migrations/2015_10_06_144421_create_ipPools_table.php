@@ -17,6 +17,8 @@ class CreateIpPoolsTable extends Migration {
 			$table->increments('id');
 			$table->integer('cmts_gw_id')->unsigned();
 			$table->enum('type', array('CM', 'CPEPub', 'CPEPriv', 'MTA')); 	// (cm, cpePub, cpePriv, mta)
+			$table->string('net')->sizeof(20);
+			$table->string('netmask')->sizeof(20);
 			$table->string('ip_pool_start')->sizeof(20);
 			$table->string('ip_pool_end')->sizeof(20);
 			$table->string('router_ip')->sizeof(20);

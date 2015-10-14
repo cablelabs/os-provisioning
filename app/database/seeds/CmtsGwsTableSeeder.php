@@ -9,10 +9,10 @@ class CmtsGwsTableSeeder extends Seeder {
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, 10) as $index)
+		foreach(range(1, 5) as $index)
 		{
 			CmtsGw::create([
-				'hostname' => $faker->word,
+				'hostname' => $faker->unique->state,
 				'type' => "cmts",
 				'ip' => $faker->ipv4(),
 				'community_rw' => "private",

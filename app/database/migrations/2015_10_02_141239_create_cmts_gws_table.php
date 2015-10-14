@@ -16,8 +16,7 @@ class CreateCmtsGwsTable extends Migration {
 			$table->increments('id');
 			$table->string('hostname');
 			$table->string('type');
-			$table->string('startIp');
-			$table->string('endIp');
+			$table->string('ip');		// bundle ip
 			$table->string('community_rw');
 			$table->string('community_ro');
 			$table->string('company');

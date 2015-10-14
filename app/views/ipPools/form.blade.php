@@ -6,7 +6,19 @@
 
 <tr>
 	<td>{{ Form::label('type', 'Type') }}</td>
-	<td>{{ Form::select ('type', array( 'CM' => 'Cable Modem', 'CPEPriv' => 'CPE Private', 'CPEPub' => 'CPE Public', 'mta' => 'MTA')) }}</td>
+	<td>{{ Form::select ('type', array( 'CM' => 'Cable Modem', 'CPEPriv' => 'CPE Private', 'CPEPub' => 'CPE Public', 'MTA' => 'MTA')) }}</td>
+</tr>
+
+<tr>
+	<td>{{ Form::label('net', 'Net') }}</td>
+	<td>{{ Form::text ('net') }}</td>
+	<td>{{ $errors->first('net') }}</td>
+</tr>
+
+<tr>
+	<td>{{ Form::label('netmask', 'Netmask') }}</td>
+	<td>{{ Form::text ('netmask') }}</td>
+	<td>{{ $errors->first('netmask') }}</td>
 </tr>
 
 <tr>

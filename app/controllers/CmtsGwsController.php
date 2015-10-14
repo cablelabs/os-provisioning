@@ -25,6 +25,22 @@ class CmtsGwsController extends \BaseController {
 		return View::make('cmtsgws.create');
 	}
 
+
+	/**
+	 * Show the form for editing the specified CmtsGw.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		$CmtsGw = CmtsGw::find($id);
+		$CmtsGw = CmtsGw::with('ippools')->find($id);	// string inside "with"-statement has to match the public method name
+
+		return View::make('cmtsgws.edit', compact('CmtsGw'));
+	}
+
+
 	/**
 	 * Store a newly created CmtsGw in storage.
 	 *
@@ -44,34 +60,6 @@ class CmtsGwsController extends \BaseController {
 		return Redirect::route('cmts.index');
 	}
 
-	/**
-	 * Display the specified CmtsGw.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		$CmtsGw = CmtsGw::findOrFail($id);
-
-		return View::make('cmtsgws.show', compact('CmtsGw'));
-	}
-
-	/**
-	 * Show the form for editing the specified CmtsGw.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		$CmtsGw = CmtsGw::find($id);
-		//$CmtsGw = CmtsGw::all();
-		//$CmtsGw = CmtsGw::with('ippools')->get();
-		$CmtsGw = CmtsGw::with('ippools')->find($id);	// string inside "with"-statement has to match the public method name
-
-		return View::make('cmtsgws.edit', compact('CmtsGw'));
-	}
 
 	/**
 	 * Update the specified CmtsGw in storage.
