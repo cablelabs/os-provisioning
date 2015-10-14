@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder {
 		$this->call('EndpointsTableSeeder');
 		$this->call('CmtsGwsTableSeeder');
 		$this->call('IpPoolsTableSeeder');
+		$this->call('MtasTableSeeder');
 	}
 
 }

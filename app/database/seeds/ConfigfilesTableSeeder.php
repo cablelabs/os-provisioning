@@ -15,6 +15,7 @@ class ConfigfilesTableSeeder extends Seeder {
 			Configfile::create([
 				'name' => $faker->colorName(),
 				'parent_id' => 0,
+				'device' => (rand(0,100) > 30 ? 1 : 2),
 				'text' => 'SnmpMibObject sysLocation.0 String "Test Lab" ;'
 			]);
 		}
