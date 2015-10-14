@@ -1,5 +1,7 @@
 @extends ('layouts.split')
 
+@include ('mtas.header')
+
 @section('content_top')
 
 		{{ HTML::linkRoute('mta.index', 'MTAs') }}
@@ -8,11 +10,13 @@
 
 @section('content_left')
 
-	{{ Form::open(array('route' => array('mta.store', 0), 'method' => 'POST')) }}
+	<h2>Edit MTA</h2>
 
-		@include('mtas.form', array ('mta' => null))
+	{{ Form::model($mta, array('route' => array('mta.update', $mta->id), 'method' => 'put')) }}
 
-	{{ Form::submit('Create') }}
+		@include('mtas.form', $mta)
+
+	{{ Form::submit('Save') }}
 	{{ Form::close() }}
 
 @stop

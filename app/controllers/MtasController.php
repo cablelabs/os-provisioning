@@ -6,13 +6,6 @@ use Models\Configfile;
 
 class MtasController extends \BaseController {
 
-	// all currently available mta types
-	public $MTA_TYPES = array(
-		'sip' => "sip",
-		'packetcable' => "packetcable",
-	);
-
-
 	/**
 	 * return all modem objects
 	 */
@@ -25,19 +18,13 @@ class MtasController extends \BaseController {
 	/**
 	 * return a list [id => hostname] of all modems
 	 */
-	private function modems_list($selected_modem)
+	private function modems_list()
 	{
-		$data = array();
-		$data[0] = null;
+		$ret = array();
 		foreach ($this->modems() as $modem)
 		{
-			$data[$modem->id] = $modem->hostname;
+			$ret[$modem->id] = $modem->hostname;
 		}
-
-		$ret = array(
-			'data' => $data,
-			'selected' => $selected_modem,
-		);
 
 		return $ret;
 	}
@@ -55,19 +42,13 @@ class MtasController extends \BaseController {
 	/**
 	 * return a list [id => name] of all Configfile for MTAt
 	 */
-	private function configfiles_list($selected_configfile)
+	private function configfiles_list()
 	{
-		$data = array();
-		$data[0] = null;
+		$ret = array();
 		foreach ($this->configfiles() as $cf)
 		{
-			$data[$cf->id] = $cf->name;
+			$ret[$cf->id] = $cf->name;
 		}
-
-		$ret = array(
-			'data' => $data,
-			'selected' => $selected_configfile,
-		);
 
 		return $ret;
 	}
@@ -93,7 +74,7 @@ class MtasController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('mtas.create')->with('configfiles', $this->configfiles_list())->with('modems', $this->modems_list());
+		return View::make('mtas.create')->with('configfiles', $this->configfiles_list())->with('modems', $this->modems_list())->with('mta_types', Mta::getPossibleEnumValues('type', true));
 	}
 
 
@@ -104,7 +85,7 @@ class MtasController extends \BaseController {
 	 */
 	public function store()
 	{
-		$validator = Validator::make($data = Input::all(), Mta::$rules);
+		$validator = Validator::make($data = Input::all(), Mta::rules());
 
 		if ($validator->fails())
 		{
@@ -113,7 +94,7 @@ class MtasController extends \BaseController {
 
 		$id = Mta::create($data)->id;
 
-		return Redirect::route('mtas.edit', $id);
+		return Redirect::route('mta.edit', $id);
 	}
 
 
@@ -139,14 +120,9 @@ class MtasController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		$mta = Mta::find($id);
+		$mta = Mta::findOrFail($id);
 
-		$mta_types = array();
-		$mta_types['data'] = $this->MTA_TYPES;
-		$mta_types['selected'] = $mta['type'];
-
-
-		return View::make('mtas.edit', compact('mta'))->with('configfiles', $this->configfiles_list($mta['configfile_id']))->with('modems', $this->modems_list($mta['modem_id']))->with('mta_types', $mta_types);
+		return View::make('mtas.edit', compact('mta'))->with('configfiles', $this->configfiles_list())->with('modems', $this->modems_list())->with('mta_types', Mta::getPossibleEnumValues('type', true));
 ;
 	}
 
@@ -161,7 +137,7 @@ class MtasController extends \BaseController {
 	{
 		$mta = Mta::findOrFail($id);
 
-		$validator = Validator::make($data = Input::all(), Mta::$rules);
+		$validator = Validator::make($data = Input::all(), Mta::rules($id));
 
 		if ($validator->fails())
 		{
@@ -170,7 +146,7 @@ class MtasController extends \BaseController {
 
 		$mta->update($data);
 
-		return Redirect::route('mtas.index');
+		return Redirect::route('mta.index');
 	}
 
 
@@ -182,9 +158,16 @@ class MtasController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		Mta::destroy($id);
+		if ($id == 0)
+		{
+			// bulk delete
+			foreach (Input::all()['ids'] as $id => $val)
+				Mta::destroy($id);
+		}
+		else
+			Mta::destroy($id);
 
-		return Redirect::route('mtas.index');
+		return Redirect::route('mta.index');
 	}
 
 }
