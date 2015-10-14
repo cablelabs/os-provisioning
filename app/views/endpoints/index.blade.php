@@ -29,6 +29,8 @@
 			
 		@endforeach
 
+	<br>
+	
 	{{ Form::submit('Delete') }}
 	{{ Form::close() }}
 

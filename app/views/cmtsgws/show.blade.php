@@ -1,0 +1,1 @@
+/var/www/lara/app/views/cmts_gws/show.blade.php

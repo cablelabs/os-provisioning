@@ -13,11 +13,11 @@ class DatabaseSeeder extends Seeder {
 
 		$this->call('ConfigfilesTableSeeder');
 		$this->call('QualitiesTableSeeder');
-		
 		$this->call('ModemsTableSeeder');
 		$this->call('EndpointsTableSeeder');
+		$this->call('CmtsGwsTableSeeder');
+		$this->call('IpPoolsTableSeeder');
 		$this->call('MtasTableSeeder');
-
 	}
 
 }

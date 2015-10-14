@@ -14,8 +14,6 @@
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}
 	
-	<br>
-
 	{{ Form::open(array('route' => array('modem.destroy', 0), 'method' => 'delete')) }}
 
 		@foreach ($modems as $modem)
@@ -31,6 +29,9 @@
 				</table>
 			
 		@endforeach
+
+	<br>
+
 
 	{{ Form::submit('Delete') }}
 	{{ Form::close() }}

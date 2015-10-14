@@ -12,6 +12,7 @@
  
   <body> 
 
+  <!-- field for displaying content -->
   @yield('content')
   
   </body>

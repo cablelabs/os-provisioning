@@ -1,0 +1,1 @@
+/var/www/lara/app/views/ipPools/show.blade.php

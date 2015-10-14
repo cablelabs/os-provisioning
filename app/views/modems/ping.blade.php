@@ -3,7 +3,7 @@
 @include ('modems.header')
 
 @section('content_left')
-		@foreach ($out as $line)
+		@foreach ($ret as $line)
 
 				<table>
 				<tr>
