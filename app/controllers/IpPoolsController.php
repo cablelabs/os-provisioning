@@ -1,5 +1,8 @@
 <?php
 
+use Models\CmtsGw;
+use Models\IpPool;
+
 class IpPoolsController extends \BaseController {
 
 	/**

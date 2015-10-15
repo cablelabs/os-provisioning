@@ -1,5 +1,7 @@
 <?php
 
+namespace Models;
+
 class CmtsGw extends \Eloquent {
 
 	// Add your validation rules here
