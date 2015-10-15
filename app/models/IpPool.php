@@ -1,5 +1,7 @@
 <?php
 
+namespace Models;
+
 class IpPool extends \Eloquent {
 
 	// Add your validation rules here
@@ -25,7 +27,7 @@ class IpPool extends \Eloquent {
 
     public function cmts ()
     {
-        return $this->belongsTo('CmtsGw');
+        return $this->belongsTo('Models\CmtsGw');
     }
     
 }
