@@ -3,7 +3,7 @@
 use Models\CmtsDownstream;
 use Models\CmtsGw;
 
-class CmtsDownstreamsController extends \BaseController {
+class CmtsDownstreamsController extends \SnmpController {
 
 
 
@@ -11,11 +11,11 @@ class CmtsDownstreamsController extends \BaseController {
 	{
 
     	return array (
-	    	array('frequency', '.1.3.6.1.2.1.10.127.1.1.1.1.2.'.$index),
-	    	array('modulation', '.1.3.6.1.2.1.10.127.1.1.1.1.4.'.$index, array('3' => 'qam64', '4' => 'qam256')),
-	    	array('power', '.1.3.6.1.2.1.10.127.1.1.1.1.6.'.$index),
-	    	array('alias', '.1.3.6.1.2.1.31.1.1.1.18.'.$index),
-	    	array('description', '.1.3.6.1.2.1.2.2.1.2.'.$index)
+	    	array('frequency', '.1.3.6.1.2.1.10.127.1.1.1.1.2.'.$index, 'i'),
+	    	array('modulation', '.1.3.6.1.2.1.10.127.1.1.1.1.4.'.$index, 'i', array('3' => 'qam64', '4' => 'qam256')),
+	    	array('power', '.1.3.6.1.2.1.10.127.1.1.1.1.6.'.$index, 'i'),
+	    	array('alias', '.1.3.6.1.2.1.31.1.1.1.18.'.$index, 's'),
+	    	array('description', '.1.3.6.1.2.1.2.2.1.2.'.$index, 's')
     	);
 
     }
@@ -86,11 +86,8 @@ class CmtsDownstreamsController extends \BaseController {
 	{
 		$cmtsdownstream = CmtsDownstream::find($id);
 
-		$snmp = new SnmpController($cmtsdownstream, $this->mibs($cmtsdownstream->index),'10.42.253.254', 'public');
-
-		//$snmp->dd();
-
-		$snmp->snmp_get_all();
+		$this->snmp_init($cmtsdownstream, $this->mibs($cmtsdownstream->index),'10.42.253.254', 'public');
+		$this->snmp_get_all();
 
 		return View::make('cmtsdownstream.edit', compact('cmtsdownstream'));
 	}
@@ -113,6 +110,9 @@ class CmtsDownstreamsController extends \BaseController {
 		}
 
 		$cmtsdownstream->update($data);
+
+		$this->snmp_init($cmtsdownstream, $this->mibs($cmtsdownstream->index),'10.42.253.254', 'public');
+		$this->snmp_set_all();
 
 		return Redirect::route('cmtsdownstream.index');
 	}

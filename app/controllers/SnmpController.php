@@ -1,6 +1,6 @@
 <?php
 
-class SnmpController {
+class SnmpController extends \BaseController {
 
 	private $ip;
 	private $comm_ro;
@@ -11,28 +11,11 @@ class SnmpController {
 
 	private $model;
 
-	protected $mibs = array ();
+	private $mibs = array ();
 
 
-	public function snmp_set_ip ($ip, $ro = 'public', $rw = 'private')
-	{
-		$this->ip = $ip;
-		$this->comm_ro = $ro;
-		$this->comm_rw = $rw;
-	}	
 
-	public function snmp_set_mibs($mibs)
-	{
-		$this->mibs=$mibs;
-	}
-
-	public function snmp_set_model ($model)
-	{
-		$this->model = $model;
-	}
-
-
-	public function __construct ($model = null, $mibs = null, $ip = null, $ro = 'public', $rw = 'private')
+	public function snmp_init ($model = null, $mibs = null, $ip = null, $ro = 'public', $rw = 'private')
 	{
 		$this->model = $model;
 		$this->mibs  = $mibs;
@@ -42,13 +25,19 @@ class SnmpController {
 		$this->comm_rw = $rw;
 	}
 
+	public function __construct ($model = null, $mibs = null, $ip = null, $ro = 'public', $rw = 'private')
+	{
+		$this->snmp_init ($model, $mibs, $ip, $ro, $rw);
+	}
+
 
 	public function snmp_get ($field, $oid, $list = null)
 	{
-		Log::info('snmp: get '.$this->snmp_log().' '.$oid);
 		$this->snmp_def_mode();
 
 		$a = snmpget($this->ip, $this->comm_ro, $oid, $this->timeout, $this->retry);
+
+		Log::info('snmp: get '.$this->snmp_log().' '.$oid.' '.$a);
 
 		if (!$a)
 			return false;
@@ -62,12 +51,15 @@ class SnmpController {
 	}
 
 
-	public function snmp_set ($field, $oid, $type, $value)
+	public function snmp_set ($field, $oid, $type, $list = null)
 	{
-		Log::info('snmp: set diff '.$this->snmp_log().' '.$oid.' '.$type);
 		$this->snmp_def_mode();
+		$value = $this->model->{$field};
 
-		$x = snmpget ($this->comm_ro, $oid, $this->timeout, $this->retry);
+		if($list)
+			$value = array_search($value, $list);
+
+		$x = snmpget ($this->ip, $this->comm_ro, $oid, $this->timeout, $this->retry);
 
 		if ($x === FALSE)
 		{
@@ -76,29 +68,27 @@ class SnmpController {
 
 		if ($x == $value)
 		{
-			# debug ("snmpsetdiff no change must be transmit");
 			return false;
 		}
 
-		return snmpset($this->ip, $this->comm_rw, $oid, $type, $value, $this->timeout, $this->retry);
-	}
-
-
-	public function snmp_def_mode()
-	{
-        snmp_set_quick_print(TRUE);
-        snmp_set_oid_numeric_print(TRUE);
-        snmp_set_valueretrieval(SNMP_VALUE_PLAIN);
-        snmp_set_oid_output_format (SNMP_OID_OUTPUT_NUMERIC);
+		Log::info('snmp: set diff '.$this->snmp_log().' '.$oid.' '.$type.' '.$value.' '.$x);
+		// return snmpset($this->ip, $this->comm_rw, $oid, $type, $value, $this->timeout, $this->retry);
 	}
 
 
     public function snmp_get_all()
     {
-    	foreach ($this->mibs as $mib) {
-    		$this->snmp_get($mib[0], $mib[1], isset($mib[2]) ? $mib[2]:null);
-    	}
-    	
+    	foreach ($this->mibs as $mib) 
+    		$this->snmp_get($mib[0], $mib[1], isset($mib[3]) ? $mib[3]:null);
+
+    	$this->model->save();
+    }
+
+
+    public function snmp_set_all()
+    {
+    	foreach ($this->mibs as $mib) 
+    		$this->snmp_set($mib[0], $mib[1], $mib[2], isset($mib[3]) ? $mib[3]:null);
     }
 
 
@@ -112,5 +102,14 @@ class SnmpController {
     {
     	return $this->ip;
     }
+
+
+	private function snmp_def_mode()
+	{
+        snmp_set_quick_print(TRUE);
+        snmp_set_oid_numeric_print(TRUE);
+        snmp_set_valueretrieval(SNMP_VALUE_PLAIN);
+        snmp_set_oid_output_format (SNMP_OID_OUTPUT_NUMERIC);
+	}
 
 }
