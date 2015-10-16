@@ -18,6 +18,11 @@ class DatabaseSeeder extends Seeder {
 		$this->call('CmtsGwsTableSeeder');
 		$this->call('IpPoolsTableSeeder');
 		$this->call('MtasTableSeeder');
+
+		// change owner of files that need to be editable for apache on updates
+		system('/bin/chown -R apache /tftpboot/cm');
+		system('/bin/chown -R apache /etc/dhcp/nms/cmts_gws');
+
 	}
 
 }

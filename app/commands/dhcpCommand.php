@@ -42,9 +42,17 @@ class dhcpCommand extends Command {
 	{
 		$m = Modem::first();
 		$m->make_dhcp();
+		/* TODO: do for each modem a make_dhcp($modem) when function got updated for single usage*/
 
 		$e = Endpoint::first();
 		$e->make_dhcp();
+
+		$c = CmtsGw::all();
+		foreach ($c as $cmts) {
+			if ($cmts->id == 0)
+				continue;
+			$cmts->make_dhcp_conf();
+		}
 	}
 
 	/**

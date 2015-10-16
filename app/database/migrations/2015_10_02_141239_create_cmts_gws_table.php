@@ -36,6 +36,14 @@ class CreateCmtsGwsTable extends Migration {
 	public function down()
 	{
 		Schema::drop('cmts_gws');
+
+		// remove all through dhcpCommand created cmts config files
+		$files = glob('/etc/dhcp/nms/cmts_gws/*');              // get all files in dir
+		foreach ($files as $file) 
+		{
+			if(is_file($file))
+			unlink($file);                                                  // delete file
+		}
 	}
 
 }

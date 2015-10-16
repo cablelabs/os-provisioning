@@ -2,6 +2,7 @@
 
 // Composer: "fzaninotto/faker": "v1.3.0"
 use Faker\Factory as Faker;
+use Models\CmtsGw;
 
 class CmtsGwsTableSeeder extends Seeder {
 
@@ -18,9 +19,9 @@ class CmtsGwsTableSeeder extends Seeder {
 				'community_rw' => "private",
 				'community_ro' => "public",
 				'company' => str_random(10)
-/*				'network'
-				'state'
-				'monitoring'*/
+				// 'network'
+				// 'state'
+				// 'monitoring'
 
 			]);
 		}
