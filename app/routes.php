@@ -35,3 +35,5 @@ Route::resource('configfile', 'ConfigfilesController');
 Route::resource('quality', 'QualitiesController');
 
 Route::resource('mta', 'MtasController');
+
+Route::resource('cmtsdownstream', 'CmtsDownstreamsController');
