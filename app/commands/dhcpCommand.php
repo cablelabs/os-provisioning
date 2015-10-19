@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 use Models\Modem;
 use Models\Endpoint;
+use Models\CmtsGw;
 
 class dhcpCommand extends Command {
 
@@ -48,6 +49,8 @@ class dhcpCommand extends Command {
 		$e->make_dhcp();
 
 		$c = CmtsGw::all();
+		$c->del_cmts_includes();
+
 		foreach ($c as $cmts) {
 			if ($cmts->id == 0)
 				continue;

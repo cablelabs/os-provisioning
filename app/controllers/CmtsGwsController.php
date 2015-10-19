@@ -13,6 +13,7 @@ class CmtsGwsController extends \BaseController {
 	public function index()
 	{
 		$CmtsGws = CmtsGw::all();
+		// $c = CmtsGw::lists('id');		// fetches only the column id as an array
 
 		return View::make('cmtsgws.index', compact('CmtsGws'));
 		// compact() makes passed variables available to the view - like ->with($variable) statement

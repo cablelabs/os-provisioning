@@ -9,6 +9,8 @@ class CmtsGw extends \Eloquent {
 
 	// Add your validation rules here
 	public static $rules = [
+		 'hostname' => 'unique:cmts_gws,hostname',		// unique: table, column
+		// 'ip' => 'unique:cmts_gws,ip'
 		// 'title' => 'required'
 	];
 
@@ -144,34 +146,81 @@ class CmtsGw extends \Eloquent {
 	{
 
 		$file = '/etc/dhcp/nms/cmts_gws/'.$this->hostname.'.conf';
-		unlink($file);
+		if (file_exists($file)) unlink($file);
 
 		$lines = file('/etc/dhcp/dhcpd.conf');
 
 		foreach($lines as $key => $line)
 		{
 			// line found
-			if(strpos($file, $line) !== false)
+			if(strpos($line, $file) !== false)
 			{
+				if ($lines[$key-1] == "")
+					$lines[$key-1] = str_replace(PHP_EOL, "", $lines[$key-1]);
 				unset($lines[$key]);
 			}
 		}
 
 		$data = implode(array_values($lines));
 
-		$file_dhcp_conf = fopen('/etc/dhcp/dhcp-test.conf', 'w');
+		$file_dhcp_conf = fopen('/etc/dhcp/dhcpd.conf', 'w');
 		fwrite($file_dhcp_conf, $data);
 		fclose($file_dhcp_conf);
 
-		// set all relevant ip pools to cmts_gw_id = 0
+		// set all relevant ip pools to cmts_gw_id = 0 (to first cmts_id under development)
+		// TODO: set first_cmts_id to zero!
 		$first_cmts_id = CmtsGw::first()->id;
 		DB::update('UPDATE ip_pools SET cmts_gw_id='.$first_cmts_id.' where cmts_gw_id='.$this->id.';');
-//TODO: set to first cmts id to proof under development
-
-		// DB::update('ALTER TABLE ip_pools SET cmts_gw_id=0 where cmts_gw_id='.$this->id.';');
-		// $ippools = IpPool::where('cmts_gw_id', '=', $this->id)->get();
 
 	}
+
+	/**
+	 * Deletes all cmts include statements in global dhcpd.conf
+	 *
+	 * @return
+	 * @author Nino Ryschawy
+	 */
+	private function del_cmts_includes()
+	{
+		$file_path = '/etc/dhcp/dhcpd.conf';
+		$include_str = '/etc/dhcp/nms/cmts_gws/';
+
+		// copy file as backup
+		copy($file_path, $file_path.'_backup');
+
+		$lines = file($file_path);
+		$data = '';
+		$bool = true;
+		$i = 0;
+
+		foreach($lines as $key => $line)
+		{
+			// if it's an cmts include line
+			if(strpos($line, $include_str) !== false)
+			{
+				// remove all empty lines only the first time an cmts include statement was found
+				do
+				{
+					if (!$bool)
+						break;
+					$lines[$key - $i] = str_replace(PHP_EOL, "", $lines[$key - $i]);
+					$i++;
+				} while (($lines[$key - $i] == "\n") || ($lines[$key - $i] == ""));
+				
+				unset($lines[$key]);
+				$bool = false;
+
+			}
+		}
+
+		$data = implode(array_values($lines));
+
+		$file = fopen($file_path, 'w');
+		fwrite($file, $data);
+		fclose($file);
+
+	}
+
 }
 
 
