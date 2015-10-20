@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-		{{ HTML::linkRoute('modem.index', 'Modems') }}
+		{{ HTML::linkRoute('Modem.index', 'Modems') }}
 
 @stop
 
@@ -22,7 +22,7 @@
 				<tr>
 					<td> 
 						{{ Form::checkbox('ids['.$modem->id.']') }}
-						{{ HTML::linkRoute('Modem.edit', $modem->name, $modem->id) }}
+						{{ HTML::linkRoute('Modem.edit', $modem->hostname, $modem->id) }}
 					</td>
 				</tr>
 

@@ -94,7 +94,7 @@ class MtaController extends \BaseController {
 
 		$id = Mta::create($data)->id;
 
-		return Redirect::route('mta.edit', $id);
+		return Redirect::route('Mta.edit', $id);
 	}
 
 
@@ -146,7 +146,7 @@ class MtaController extends \BaseController {
 
 		$mta->update($data);
 
-		return Redirect::route('mta.index');
+		return Redirect::route('Mta.index');
 	}
 
 
@@ -167,7 +167,7 @@ class MtaController extends \BaseController {
 		else
 			Mta::destroy($id);
 
-		return Redirect::route('mta.index');
+		return Redirect::route('Mta.index');
 	}
 
 }

@@ -216,7 +216,7 @@ if (0)
 
 		$id = Modem::create($data)->id;
 
-		return Redirect::route('modem.edit', $id);
+		return Redirect::route('Modem.edit', $id);
 	}
 
 	/**
@@ -267,7 +267,7 @@ if (0)
 
 		$modem->update($data);
 
-		return Redirect::route('modem.edit', $id);
+		return Redirect::route('Modem.edit', $id);
 	}
 
 	/**

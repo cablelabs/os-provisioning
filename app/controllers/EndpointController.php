@@ -56,7 +56,7 @@ class EndpointController extends \BaseController {
 
 		$id = Endpoint::create($data)->id;
 
-		return Redirect::route('endpoint.edit', $id);
+		return Redirect::route('Endpoint.edit', $id);
 	}
 
 	/**
@@ -104,7 +104,7 @@ class EndpointController extends \BaseController {
 
 		$endpoint->update($data);
 
-		return Redirect::route('endpoint.edit', $id);
+		return Redirect::route('Endpoint.edit', $id);
 	}
 
 	/**

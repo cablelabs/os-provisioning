@@ -6,7 +6,7 @@
 
 	<h2>Edit Modem</h2>	
 
-	{{ Form::model($modem, array('route' => array('modem.update', $modem->id), 'method' => 'put')) }}
+	{{ Form::model($modem, array('route' => array('Modem.update', $modem->id), 'method' => 'put')) }}
 
 		@include('Modem.form', $modem)
 	

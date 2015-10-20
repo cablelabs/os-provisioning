@@ -2,13 +2,13 @@
 
 @section('content_top')
 
-		{{ HTML::linkRoute('modem.index', 'Modems') }}
+		{{ HTML::linkRoute('Modem.index', 'Modems') }}
 
 @stop
 
 @section('content_left')
 	
-	{{ Form::open(array('route' => array('modem.store', 0), 'method' => 'POST')) }}
+	{{ Form::open(array('route' => array('Modem.store', 0), 'method' => 'POST')) }}
 
 		@include('Modem.form', array ('modem' => null))
 	

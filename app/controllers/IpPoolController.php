@@ -63,7 +63,7 @@ class IpPoolController extends \BaseController {
 
 		IpPool::create($data);
 
-		return Redirect::route('ipPool.index');
+		return Redirect::route('IpPool.index');
 	}
 
 
@@ -88,7 +88,7 @@ class IpPoolController extends \BaseController {
 
 		$ippool->update($data);
 
-		return Redirect::route('ipPool.index');
+		return Redirect::route('IpPool.index');
 	}
 
 	/**
@@ -110,7 +110,7 @@ class IpPoolController extends \BaseController {
 			IpPool::destroy($id);
 
 		return $this->index();
-		//return Redirect::route('ipPool.index');
+		//return Redirect::route('IpPool.index');
 	}
 
 	/**
