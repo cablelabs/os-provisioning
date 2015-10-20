@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute('ipPool.index', 'IP-Pools') }}
+	{{ HTML::linkRoute('IpPool.index', 'IP-Pools') }}
 
 @stop
 
@@ -15,7 +15,7 @@
 
 	--}}
 
-	{{ Form::open(array('route' => array('ipPool.store', 0), 'method' => 'POST')) }}
+	{{ Form::open(array('route' => array('IpPool.store', 0), 'method' => 'POST')) }}
 
 		@include('ipPools.form', array ('ipPool' => null))
 	

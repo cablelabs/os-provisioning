@@ -1,10 +1,10 @@
 @extends ('Layout.split')
 
-@include ('mtas.header')
+@include ('Mta.header')
 
 @section('content_top')
 
-		{{ HTML::linkRoute('mta.index', 'MTAs') }}
+		{{ HTML::linkRoute('Mta.index', 'MTAs') }}
 
 @stop
 
@@ -12,9 +12,9 @@
 
 	<h2>Edit MTA</h2>
 
-	{{ Form::model($mta, array('route' => array('mta.update', $mta->id), 'method' => 'put')) }}
+	{{ Form::model($mta, array('route' => array('Mta.update', $mta->id), 'method' => 'put')) }}
 
-		@include('mtas.form', $mta)
+		@include('Mta.form', $mta)
 
 	{{ Form::submit('Save') }}
 	{{ Form::close() }}

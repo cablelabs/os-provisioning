@@ -1,5 +1,5 @@
 @section('content_top')
 
-	{{ HTML::linkRoute('mta.index', 'MTAs') }} / {{ HTML::linkRoute('mta.edit', $mta->hostname, array($mta->id)) }}
+	{{ HTML::linkRoute('Mta.index', 'MTAs') }} / {{ HTML::linkRoute('Mta.edit', $mta->hostname, array($mta->id)) }}
 
 @stop

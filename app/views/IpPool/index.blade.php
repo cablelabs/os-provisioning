@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-		{{ HTML::linkRoute('ipPool.index', 'IP-Pools') }}
+		{{ HTML::linkRoute('IpPool.index', 'IP-Pools') }}
 
 @stop
 
@@ -10,11 +10,11 @@
 
 	<h2>IP-Pools</h2>
 
-	{{ Form::open(array('route' => 'ipPool.create', 'method' => 'GET')) }}
+	{{ Form::open(array('route' => 'IpPool.create', 'method' => 'GET')) }}
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}
 	
-	{{ Form::open(array('route' => array('ipPool.destroy', 0), 'method' => 'delete')) }}
+	{{ Form::open(array('route' => array('IpPool.destroy', 0), 'method' => 'delete')) }}
 
 		@foreach ($ip_pools as $pool)
 
@@ -22,7 +22,7 @@
 			<tr>
 				<td> 
 					{{ Form::checkbox('ids['.$pool->id.']') }}
-					<a href=ipPool/{{$pool->id}}/edit>{{ $pool->cmts->hostname.'-'.$pool->id }}</a>
+					{{ HTML::linkRoute('IpPool.edit', $pool->cmts->hostname, $pool->id) }}
 
 				</td>
 			</tr>

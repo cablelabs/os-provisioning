@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute('configfile.index', 'Configfile') }}
+	{{ HTML::linkRoute('Configfile.index', 'Configfile') }}
 	
 @stop
 
@@ -10,12 +10,12 @@
 	
 	<h2>Configfile</h2>
 
-	{{ Form::open(array('route' => 'configfile.create', 'method' => 'GET')) }}
+	{{ Form::open(array('route' => 'Configfile.create', 'method' => 'GET')) }}
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}
 
 
-	{{ Form::open(array('route' => array('configfile.destroy', 0), 'method' => 'delete')) }}
+	{{ Form::open(array('route' => array('Configfile.destroy', 0), 'method' => 'delete')) }}
 
 		@foreach ($configfiles as $configfile)
 
@@ -23,7 +23,7 @@
 				<tr>
 					<td> 
 						{{ Form::checkbox('ids['.$configfile->id.']') }}
-						<a href=configfile/{{$configfile->id}}/edit>{{$configfile->name}}</a> 
+						{{ HTML::linkRoute('Configfile.edit', $configfile->name, $configfile->id) }}
 					</td>
 				</tr>
 				</table>

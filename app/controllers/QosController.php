@@ -42,7 +42,7 @@ class QosController extends \BaseController {
 
 		$id = Quality::create($data)->id;
 
-		return Redirect::route('quality.edit', $id)->with(DB::getQueryLog());
+		return Redirect::route('Qos.edit', $id)->with(DB::getQueryLog());
 	}
 
 	/**
@@ -90,7 +90,7 @@ class QosController extends \BaseController {
 
 		$quality->update($data);
 
-		return Redirect::route('quality.edit', $id)->with(DB::getQueryLog());
+		return Redirect::route('Qos.edit', $id)->with(DB::getQueryLog());
 	}
 
 	/**

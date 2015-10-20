@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-		{{ HTML::linkRoute('endpoint.index', 'Endpoints') }}
+		{{ HTML::linkRoute('Endpoint.index', 'Endpoints') }}
 
 @stop
 
@@ -10,7 +10,7 @@
 
 	<h2>Create Endpoints</h2>
 	
-	{{ Form::open(array('route' => array('endpoint.store', 0), 'method' => 'POST')) }}
+	{{ Form::open(array('route' => array('Endpoint.store', 0), 'method' => 'POST')) }}
 
 		@include('endpoints.form', array ('endpoint' => null))
 	

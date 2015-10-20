@@ -48,7 +48,7 @@ class ConfigfileController extends \BaseController {
 
 		$id = Configfile::create($data)->id;
 
-		return Redirect::route('configfile.edit', $id);
+		return View::make('Configfile.edit', $id);
 	}
 
 	/**
@@ -81,6 +81,7 @@ class ConfigfileController extends \BaseController {
 				$parents[$cf->id] = $cf->name;	
 		}
 
+
 		return View::make('Configfile.edit', compact('configfile'))->with('parents',$parents);
 	}
 
@@ -103,7 +104,7 @@ class ConfigfileController extends \BaseController {
 
 		$configfile->update($data);
 
-		return Redirect::route('configfile.edit', $id)->with(DB::getQueryLog());
+		return View::make('Configfile.edit', $id)->with(DB::getQueryLog());
 	}
 
 	/**

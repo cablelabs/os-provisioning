@@ -4,7 +4,7 @@
 
 @section('content_top')
 
-		{{ HTML::linkRoute('mta.index', 'MTAs') }}
+		{{ HTML::linkRoute('Mta.index', 'MTAs') }}
 
 @stop
 
@@ -12,7 +12,7 @@
 
 	<h2>Create MTA</h2>
 
-	{{ Form::open(array('route' => array('mta.store', 0), 'method' => 'POST')) }}
+	{{ Form::open(array('route' => array('Mta.store', 0), 'method' => 'POST')) }}
 
 		@include('mtas.form', array('mta' => null))
 

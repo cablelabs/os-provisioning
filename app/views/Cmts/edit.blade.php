@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute('cmts.index', 'CMTS') }} / {{ HTML::linkRoute('cmts.edit', 'CMTS-'.$CmtsGw->hostname, $CmtsGw->id) }}
+	{{ HTML::linkRoute('Cmts.index', 'CMTS') }} / {{ HTML::linkRoute('Cmts.edit', 'CMTS-'.$CmtsGw->hostname, $CmtsGw->id) }}
 	
 @stop
 
@@ -10,9 +10,9 @@
 
 	<h2>Edit CMTS</h2>
 	
-	{{ Form::model($CmtsGw, array('route' => array('cmts.update', $CmtsGw->id), 'method' => 'put')) }}
+	{{ Form::model($CmtsGw, array('route' => array('Cmts.update', $CmtsGw->id), 'method' => 'put')) }}
 
-		@include('cmtsgws.form', $CmtsGw)
+		@include('Cmts.form', $CmtsGw)
 
 	{{ Form::submit('Save') }}
 	{{ Form::close() }}
@@ -26,7 +26,7 @@
 	@foreach ($CmtsGw->ippools as $pool)
 
 		{{-- HTML::linkRoute(Route, Name, Id als Variable in Url) --}}
-		{{ HTML::linkRoute('ipPool.edit', $pool->id, $pool->id) }}
+		{{ HTML::linkRoute('IpPool.edit', $pool->id, $pool->id) }}
 	
 	@endforeach
 

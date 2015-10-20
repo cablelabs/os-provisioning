@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-		{{ HTML::linkRoute('cmts.index', 'CMTS') }}
+		{{ HTML::linkRoute('Cmts.index', 'CMTS') }}
 
 @stop
 
@@ -10,11 +10,11 @@
 
 	<h2>CMTS List</h2>
 
-	{{ Form::open(array('route' => 'cmts.create', 'method' => 'GET')) }}
+	{{ Form::open(array('route' => 'Cmts.create', 'method' => 'GET')) }}
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}
 	
-	{{ Form::open(array('route' => array('cmts.destroy', 0), 'method' => 'delete')) }}
+	{{ Form::open(array('route' => array('Cmts.destroy', 0), 'method' => 'delete')) }}
 
 		@foreach ($CmtsGws as $CmtsGw)
 
@@ -22,7 +22,7 @@
 				<tr>
 					<td> 
 						{{ Form::checkbox('ids['.$CmtsGw->id.']') }}
-						<a href=cmts/{{$CmtsGw->id}}/edit>{{''.(($CmtsGw->name == '') ? $CmtsGw->hostname : 'cm-'.$CmtsGw->name)}}</a>
+						{{ HTML::linkRoute('Cmts.edit', (($CmtsGw->name == '') ? $CmtsGw->hostname : 'cm-'.$CmtsGw->name), $CmtsGw->id) }}
 					</td>
 				</tr>
 

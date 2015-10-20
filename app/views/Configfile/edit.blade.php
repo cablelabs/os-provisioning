@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute('configfile.index', 'Configfile') }} / {{ HTML::linkRoute('configfile.edit', 'configfile-'.$configfile->name, array($configfile->id)) }}
+	{{ HTML::linkRoute('Configfile.index', 'Configfile') }} / {{ HTML::linkRoute('Configfile.edit', 'configfile-'.$configfile->name, array($configfile->id)) }}
 	
 @stop
 
@@ -10,9 +10,9 @@
 
 	<h2>Edit Configfile</h2>
 	
-	{{ Form::model($configfile, array('route' => array('configfile.update', $configfile->id), 'method' => 'put')) }}
+	{{ Form::model($configfile, array('route' => array('Configfile.update', $configfile->id), 'method' => 'put')) }}
 
-		@include('configfiles.form', $configfile)
+		@include('Configfile.form', $configfile)
 
 	{{ Form::submit('Save') }}
 	{{ Form::close() }}

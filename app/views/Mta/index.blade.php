@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-		{{ HTML::linkRoute('mta.index', 'MTAs') }}
+		{{ HTML::linkRoute('Mta.index', 'MTAs') }}
 
 @stop
 
@@ -10,11 +10,11 @@
 
 	<h2>MTAs</h2>
 
-	{{ Form::open(array('route' => 'mta.create', 'method' => 'GET')) }}
+	{{ Form::open(array('route' => 'Mta.create', 'method' => 'GET')) }}
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}
 
-	{{ Form::open(array('route' => array('mta.destroy', 0), 'method' => 'delete')) }}
+	{{ Form::open(array('route' => array('Mta.destroy', 0), 'method' => 'delete')) }}
 
 		@foreach ($mtas as $mta)
 
@@ -22,7 +22,7 @@
 				<tr>
 					<td>
 						{{ Form::checkbox('ids['.$mta->id.']') }}
-						{{ HTML::linkRoute('mta.edit', $mta->hostname, $mta->id) }}
+						{{ HTML::linkRoute('Mta.edit', $mta->hostname, $mta->id) }}
 					</td>
 				</tr>
 				</table>

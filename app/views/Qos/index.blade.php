@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute('quality.index', 'quality') }}
+	{{ HTML::linkRoute('Qos.index', 'quality') }}
 	
 @stop
 
@@ -10,12 +10,12 @@
 	
 	<h2>quality</h2>
 
-	{{ Form::open(array('route' => 'quality.create', 'method' => 'GET')) }}
+	{{ Form::open(array('route' => 'Qos.create', 'method' => 'GET')) }}
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}
 
 
-	{{ Form::open(array('route' => array('quality.destroy', 0), 'method' => 'delete')) }}
+	{{ Form::open(array('route' => array('Qos.destroy', 0), 'method' => 'delete')) }}
 
 		@foreach ($qualities as $quality)
 
@@ -23,7 +23,7 @@
 				<tr>
 					<td> 
 						{{ Form::checkbox('ids['.$quality->id.']') }}
-						<a href=quality/{{$quality->id}}/edit>{{$quality->name}}</a> 
+						{{ HTML::linkRoute('Qos.edit', $quality->name, $quality->id) }}
 					</td>
 				</tr>
 				</table>

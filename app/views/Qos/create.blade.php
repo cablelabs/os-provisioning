@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-		{{ HTML::linkRoute('quality.index', 'qualitys') }}
+		{{ HTML::linkRoute('Qos.index', 'qualitys') }}
 
 @stop
 
@@ -10,7 +10,7 @@
 
 	<h2>Create quality</h2>	
 
-	{{ Form::open(array('route' => array('quality.store', 0), 'method' => 'POST')) }}
+	{{ Form::open(array('route' => array('Qos.store', 0), 'method' => 'POST')) }}
 
 		@include('qualities.form', array ('quality' => null))
 	

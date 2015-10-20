@@ -13,25 +13,25 @@
 Route::get('', 'ModemController@index');
 
 // Modem
-Route::get('modem/{modem}/ping', array ('as' => 'modem.ping', 'uses' => 'ModemController@ping'));
-Route::get('modem/{modem}/monitoring', array ('as' => 'modem.monitoring', 'uses' => 'ModemController@monitoring'));
+Route::get('modem/{modem}/ping', array ('as' => 'Modem.ping', 'uses' => 'ModemController@ping'));
+Route::get('modem/{modem}/monitoring', array ('as' => 'Modem.monitoring', 'uses' => 'ModemController@monitoring'));
 // array (name, function of Controller)
-Route::get('modem/{modem}/log', array ('as' => 'modem.log', 'uses' => 'ModemController@log'));
-Route::get('modem/{modem}/lease', array ('as' => 'modem.lease', 'uses' => 'ModemController@lease'));
+Route::get('modem/{modem}/log', array ('as' => 'Modem.log', 'uses' => 'ModemController@log'));
+Route::get('modem/{modem}/lease', array ('as' => 'Modem.lease', 'uses' => 'ModemController@lease'));
 Route::post('modem/json', 'ModemController@json');
 
 // routes controller with predefined methods
 // add array('only' => array('edit', 'update')) as third parameter to only allow these routes
-Route::resource('modem', 'ModemController');
-Route::resource('cmts', 'CmtsController');  
-Route::resource('ipPool', 'IpPoolController');  
+Route::resource('Modem', 'ModemController');
+Route::resource('Cmts', 'CmtsController');  
+Route::resource('IpPool', 'IpPoolController');  
 
 
-Route::resource('endpoint', 'EndpointController');
-Route::post('endpoint/json', 'EndpointController@json');
+Route::resource('Endpoint', 'EndpointController');
+#Route::post('endpoint/json', 'EndpointController@json');
 
-Route::resource('configfile', 'ConfigfileController');
+Route::resource('Configfile', 'ConfigfileController');
 
-Route::resource('quality', 'QosController');
+Route::resource('Qos', 'QosController');
 
-Route::resource('mta', 'MtaController');
+Route::resource('Mta', 'MtaController');
