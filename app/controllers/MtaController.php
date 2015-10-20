@@ -4,7 +4,7 @@ use Models\Mta;
 use Models\Modem;
 use Models\Configfile;
 
-class MtasController extends \BaseController {
+class MtaController extends \BaseController {
 
 	/**
 	 * return all modem objects

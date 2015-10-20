@@ -6,7 +6,7 @@ use Models\Configfile;
 use Models\Quality;
 
 
-class ModemsController extends \BaseController {
+class ModemController extends \BaseController {
 
 	/**
 	 * Make Checkbox Default Input

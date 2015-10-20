@@ -3,7 +3,7 @@
 use Models\CmtsGw;
 use Models\IpPool;
 
-class CmtsGwsController extends \BaseController {
+class CmtsController extends \BaseController {
 
 	/**
 	 * Display a listing of CmtsGws

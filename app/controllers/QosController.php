@@ -2,7 +2,7 @@
 
 use Models\Quality;
 
-class QualitiesController extends \BaseController {
+class QosController extends \BaseController {
 
 	/**
 	 * Display a listing of qualities

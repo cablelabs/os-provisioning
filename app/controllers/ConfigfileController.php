@@ -2,7 +2,7 @@
 
 use Models\Configfile;
 
-class ConfigfilesController extends \BaseController {
+class ConfigfileController extends \BaseController {
 
 	/**
 	 * Display a listing of configfiles

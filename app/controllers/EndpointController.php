@@ -3,7 +3,7 @@
 use Models\Endpoint;
 use Models\Modem;
 
-class EndpointsController extends \BaseController {
+class EndpointController extends \BaseController {
 
 	/**
 	 * Make Checkbox Default Input
