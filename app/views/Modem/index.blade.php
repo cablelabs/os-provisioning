@@ -10,11 +10,11 @@
 
 	<h2>Modem List</h2>
 
-	{{ Form::open(array('route' => 'modem.create', 'method' => 'GET')) }}
+	{{ Form::open(array('route' => 'Modem.create', 'method' => 'GET')) }}
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}
 	
-	{{ Form::open(array('route' => array('modem.destroy', 0), 'method' => 'delete')) }}
+	{{ Form::open(array('route' => array('Modem.destroy', 0), 'method' => 'delete')) }}
 
 		@foreach ($modems as $modem)
 

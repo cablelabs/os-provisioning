@@ -10,7 +10,7 @@
 	
 	{{ Form::open(array('route' => array('modem.store', 0), 'method' => 'POST')) }}
 
-		@include('modems.form', array ('modem' => null))
+		@include('Modem.form', array ('modem' => null))
 	
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}

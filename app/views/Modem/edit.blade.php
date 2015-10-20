@@ -1,6 +1,6 @@
 @extends ('Layout.split')
 
-@include ('modems.header')
+@include ('Modem.header')
 
 @section('content_left')
 
@@ -8,7 +8,7 @@
 
 	{{ Form::model($modem, array('route' => array('modem.update', $modem->id), 'method' => 'put')) }}
 
-		@include('modems.form', $modem)
+		@include('Modem.form', $modem)
 	
 	{{ Form::submit('Save') }}
 	{{ Form::close() }}

@@ -1,6 +1,6 @@
 @extends ('Layout.single')
 
-@include ('modems.header')
+@include ('Modem.header')
 
 @section('content_left')
 		@foreach ($out as $line)
