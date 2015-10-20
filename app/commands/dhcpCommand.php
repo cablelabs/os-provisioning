@@ -41,19 +41,24 @@ class dhcpCommand extends Command {
 	 */
 	public function fire()
 	{
+		// Modems
 		$m = Modem::first();
-		$m->make_dhcp();
-		/* TODO: do for each modem a make_dhcp($modem) when function got updated for single usage*/
+		$m->del_dhcp_conf_file();
+		$m->make_dhcp_cm_all();
+		
 
+		/* TODO: do for each endpoint when function got updated for single usage*/
+		// Endpoints
 		$e = Endpoint::first();
 		$e->make_dhcp();
 
-		$c = CmtsGw::all();
-		$c->del_cmts_includes();
 
-		foreach ($c as $cmts) {
-			if ($cmts->id == 0)
-				continue;
+		// CMTS's
+		$c = CmtsGw::all();
+		$c->first()->del_cmts_includes();
+
+		foreach ($c as $cmts) 
+		{
 			$cmts->make_dhcp_conf();
 		}
 	}

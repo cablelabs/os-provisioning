@@ -56,6 +56,11 @@ class CmtsGw extends \Eloquent {
 	{
 		$file_dhcp_conf = '/etc/dhcp/dhcpd.conf';
 		$file = '/etc/dhcp/nms/cmts_gws/'.$this->hostname.'.conf';
+
+		if ($this->id == '0')
+			return -1;
+
+		// TODO: $ippools = this->ippools;
 		$ippools = IpPool::where('cmts_gw_id', '=', $this->id)->get();
 
 
@@ -180,7 +185,7 @@ class CmtsGw extends \Eloquent {
 	 * @return
 	 * @author Nino Ryschawy
 	 */
-	private function del_cmts_includes()
+	public function del_cmts_includes()
 	{
 		$file_path = '/etc/dhcp/dhcpd.conf';
 		$include_str = '/etc/dhcp/nms/cmts_gws/';
