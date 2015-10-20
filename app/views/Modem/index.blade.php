@@ -1,4 +1,4 @@
-@extends ('layouts.split')
+@extends ('Layout.split')
 
 @section('content_top')
 
@@ -22,7 +22,7 @@
 				<tr>
 					<td> 
 						{{ Form::checkbox('ids['.$modem->id.']') }}
-						<a href=modem/{{$modem->id}}/edit>{{''.(($modem->name == '') ? $modem->hostname : 'cm-'.$modem->name)}}</a> 
+						{{ HTML::linkRoute('Modem.edit', $modem->name, $modem->id) }}
 					</td>
 				</tr>
 

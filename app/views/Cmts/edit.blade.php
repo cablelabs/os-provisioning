@@ -1,4 +1,4 @@
-@extends ('layouts.split')
+@extends ('Layout.split')
 
 @section('content_top')
 

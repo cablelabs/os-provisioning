@@ -1,6 +1,6 @@
 <!-- Begin of app/views/mtas/create.blade.php -->
 
-@extends('layouts.split')
+@extends('Layout.split')
 
 @section('content_top')
 

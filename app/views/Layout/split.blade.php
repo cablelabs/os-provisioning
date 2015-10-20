@@ -1,6 +1,6 @@
-@extends ('layouts.default')
+@extends ('Layout.default')
 
-@include ('layouts.header')
+@include ('Layout.header')
 
 <hr>
 

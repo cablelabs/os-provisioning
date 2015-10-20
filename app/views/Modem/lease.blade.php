@@ -1,4 +1,4 @@
-@extends ('layouts.single')
+@extends ('Layout.single')
 
 @include ('modems.header')
 
