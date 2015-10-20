@@ -23,14 +23,6 @@ class Modem extends \Eloquent {
     /**
      * all Relationships:
      */
-
-/* depracted:
-	public function endpoints ()
-	{
-		return $this->hasMany('Models\Endpoint');
-	}
-*/
-
     public function configfile ()
     {
         return $this->belongsTo('Models\Configfile');
@@ -53,39 +45,111 @@ class Modem extends \Eloquent {
         Modem::observe(new ModemObserver);
     }
 
+
+    /**
+     * Define global constant for dhcp config file of modems
+     */
+    const CONF_FILE_PATH = '/etc/dhcp/nms/modems-host.conf';
+
+
     /**
      * Make DHCP config files for all CMs including EPs
+     *
+     * @author Nino Ryschawy
      */
-    public function make_dhcp ()
+    private function generate_cm_update_entry($id, $mac)
     {
-        $dir = '/etc/dhcp/nms/';
-        $file_cm = $dir.'modems-host.conf';
-        $file_ep = $dir.'modems-clients-public.conf';
+        return "\n".'host cm-'.$id.' { hardware ethernet '.$mac.'; filename "cm/cm-'.$id.'.cfg"; ddns-hostname "cm-'.$id.'"; }';
+    }
 
-        $ret = File::put($file_cm, '');
-        $ret = File::put($file_ep, '');
+
+    /**
+     * Deletes the configfile with all modem dhcp entries for refresh the config through artisan nms:dhcp command
+     *
+     * @author Nino Ryschawy
+     */
+    public function del_dhcp_conf_file()
+    {
+        if (file_exists(self::CONF_FILE_PATH)) unlink(self::CONF_FILE_PATH);
+    }
+
+
+    /**
+     * Creates or updates DHCP config file entry for a single CM in the dhcp CM config file
+     *
+     * @author Nino Ryschawy
+     */
+    public function make_dhcp_cm()
+    {
+        $id    = $this->id;
+        $mac   = $this->mac;
+
+        if ($id == 0)
+            return -1;
+
+        // search file for already existing host-string
+        $search_str = 'host cm-'.$id;
+        $updated = false;
+        $ret = 1;
+
+        if (file_exists(self::CONF_FILE_PATH))
+        {
+            $lines = file(self::CONF_FILE_PATH);
+
+            foreach ($lines as $key => $line) 
+            {
+                // entry already exists - update!
+                if (strpos($line, $search_str) !== false )
+                {
+                    $lines[$key] = $this->generate_cm_update_entry($id, $mac);
+                    $updated = true;
+                }
+            }
+        }
+
+        if ($updated)
+        {
+            // write file
+            $data = implode(array_values($lines));
+            $file_cm = fopen(self::CONF_FILE_PATH, 'w');
+
+            fwrite($file_cm, $data);
+            fclose($file_cm);
+        }
+        else
+        {
+            // add new entry
+            $data = $this->generate_cm_update_entry($id, $mac);
+            $ret = File::append(self::CONF_FILE_PATH, $data);
+            if ($ret === false)
+                die("Error writing to file");
+        }        
+
+        return ($ret > 0 ? true : false);
+    }
+
+
+    /**
+     * Make DHCP config files for all CMs including EPs
+     *
+     * @author Torsten Schmidt
+     */
+    public function make_dhcp_cm_all ()
+    {
+        $ret = File::put(self::CONF_FILE_PATH, '');
         
         foreach (Modem::all() as $modem) 
         {
             $id    = $modem->id;
             $mac   = $modem->mac;
-            $host  = $modem->hostname;
-            
-            /* CM */
-            $data_cm = "\n".'host cm-'.$id.' { hardware ethernet '.$mac.'; filename "cm/cm-'.$id.'.cfg"; ddns-hostname "cm-'.$id.'"; }'; 
-            $ret = File::append($file_cm, $data_cm);
-            if ($ret === false)
-                die("Error writing to file");
 
-            /* Endpoint */
-            if ($modem->public)
-            {
-                $data_ep  = "\n".'subclass "Client-Public" '.$mac.'; # CM id:'.$id;
-             
-                $ret = File::append($file_ep, $data_ep);
-                if ($ret === false)
-                    die("Error writing to file");             
-            }  
+            if ($id == 0)
+                continue;
+            
+            $data = $modem->generate_cm_update_entry($id, $mac);
+            $ret = File::append(self::CONF_FILE_PATH, $data);
+            if ($ret === false)
+                die("Error writing to file"); 
         }
 
         return ($ret > 0 ? true : false);
@@ -117,7 +181,7 @@ class Modem extends \Eloquent {
         
         if ($ret === false)
                 die("Error writing to file");
-         
+        
         Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg");   
         exec("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg", $out, $ret);
 
@@ -129,8 +193,11 @@ class Modem extends \Eloquent {
      */
     public function make_configfile_all()
     {
-        foreach (Modem::all() as $modem) 
+        $m = Modem::all();
+        foreach ($m as $modem) 
         {
+            if ($modem->id == 0)
+                continue;
             if (!$modem->make_configfile())
                 Log::warning("failed to build/write configfile for modem cm-".$modem->id);
         }
@@ -152,7 +219,7 @@ class ModemObserver
 {
     public function created($modem)
     {
-        $modem->make_dhcp();
+        $modem->make_dhcp_cm();
         $modem->make_configfile();
         $modem->hostname = 'cm-'.$modem->id;
         $modem->save();
@@ -165,13 +232,13 @@ class ModemObserver
 
     public function updated($modem)
     {
-        $modem->make_dhcp();
+        $modem->make_dhcp_cm();
         $modem->make_configfile();
     }
 
     public function deleted($modem)
     {
-        $modem->make_dhcp();
+        $modem->make_dhcp_cm();
     } 
 
     // Delete all Endpoints under CM ..
