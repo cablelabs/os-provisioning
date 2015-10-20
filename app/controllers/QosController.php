@@ -13,7 +13,7 @@ class QosController extends \BaseController {
 	{
 		$qualities = Quality::all();
 
-		return View::make('qualities.index', compact('qualities'));
+		return View::make('Qos.index', compact('qualities'));
 	}
 
 	/**
@@ -23,7 +23,7 @@ class QosController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('qualities.create');
+		return View::make('Qos.create');
 	}
 
 	/**
@@ -55,7 +55,7 @@ class QosController extends \BaseController {
 	{
 		$quality = Quality::findOrFail($id);
 
-		return View::make('qualities.show', compact('quality'));
+		return View::make('Qos.show', compact('quality'));
 	}
 
 	/**
@@ -68,7 +68,7 @@ class QosController extends \BaseController {
 	{
 		$quality = Quality::find($id);
 
-		return View::make('qualities.edit', compact('quality'));
+		return View::make('Qos.edit', compact('quality'));
 	}
 
 	/**

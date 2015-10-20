@@ -27,7 +27,7 @@ class EndpointController extends \BaseController {
 	{
 		$endpoints = Endpoint::all();
 
-		return View::make('endpoints.index', compact('endpoints'));
+		return View::make('Endpoint.index', compact('endpoints'));
 	}
 
 	/**
@@ -37,7 +37,7 @@ class EndpointController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('endpoints.create');
+		return View::make('Endpoint.create');
 	}
 
 	/**
@@ -69,7 +69,7 @@ class EndpointController extends \BaseController {
 	{
 		$endpoint = Endpoint::findOrFail($id);
 
-		return View::make('endpoints.show', compact('endpoint'));
+		return View::make('Endpoint.show', compact('endpoint'));
 	}
 
 	/**
@@ -82,7 +82,7 @@ class EndpointController extends \BaseController {
 	{
 		$endpoint = Endpoint::find($id);
 
-		return View::make('endpoints.edit', compact('endpoint'));
+		return View::make('Endpoint.edit', compact('endpoint'));
 	}
 
 	/**

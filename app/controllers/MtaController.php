@@ -63,7 +63,7 @@ class MtaController extends \BaseController {
 	{
 		$mtas = Mta::all();
 
-		return View::make('mtas.index', compact('mtas'));
+		return View::make('Mta.index', compact('mtas'));
 	}
 
 
@@ -74,7 +74,7 @@ class MtaController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('mtas.create')->with('configfiles', $this->configfiles_list())->with('modems', $this->modems_list())->with('mta_types', Mta::getPossibleEnumValues('type', true));
+		return View::make('Mta.create')->with('configfiles', $this->configfiles_list())->with('modems', $this->modems_list())->with('mta_types', Mta::getPossibleEnumValues('type', true));
 	}
 
 
@@ -108,7 +108,7 @@ class MtaController extends \BaseController {
 	{
 		$mta = Mta::findOrFail($id);
 
-		return View::make('mtas.show', compact('mta'));
+		return View::make('Mta.show', compact('mta'));
 	}
 
 
@@ -122,7 +122,7 @@ class MtaController extends \BaseController {
 	{
 		$mta = Mta::findOrFail($id);
 
-		return View::make('mtas.edit', compact('mta'))->with('configfiles', $this->configfiles_list())->with('modems', $this->modems_list())->with('mta_types', Mta::getPossibleEnumValues('type', true));
+		return View::make('Mta.edit', compact('mta'))->with('configfiles', $this->configfiles_list())->with('modems', $this->modems_list())->with('mta_types', Mta::getPossibleEnumValues('type', true));
 ;
 	}
 

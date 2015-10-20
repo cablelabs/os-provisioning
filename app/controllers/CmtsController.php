@@ -15,7 +15,7 @@ class CmtsController extends \BaseController {
 		$CmtsGws = CmtsGw::all();
 		// $c = CmtsGw::lists('id');		// fetches only the column id as an array
 
-		return View::make('cmtsgws.index', compact('CmtsGws'));
+		return View::make('Cmts.index', compact('CmtsGws'));
 		// compact() makes passed variables available to the view - like ->with($variable) statement
 	}
 
@@ -26,7 +26,7 @@ class CmtsController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('cmtsgws.create');
+		return View::make('Cmts.create');
 	}
 
 
@@ -40,7 +40,7 @@ class CmtsController extends \BaseController {
 	{
 		$CmtsGw = CmtsGw::find($id);
 
-		return View::make('cmtsgws.edit', compact('CmtsGw'));
+		return View::make('Cmts.edit', compact('CmtsGw'));
 	}
 
 

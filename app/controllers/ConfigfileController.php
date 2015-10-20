@@ -13,7 +13,7 @@ class ConfigfileController extends \BaseController {
 	{
 		$configfiles = Configfile::all();
 
-		return View::make('configfiles.index', compact('configfiles'));
+		return View::make('Configfile.index', compact('configfiles'));
 	}
 
 	/**
@@ -29,7 +29,7 @@ class ConfigfileController extends \BaseController {
 			$parents[$cf->id] = $cf->name;	
 		}
 		
-		return View::make('configfiles.create')->with('parents', $parents);
+		return View::make('Configfile.create')->with('parents', $parents);
 	}
 
 	/**
@@ -61,7 +61,7 @@ class ConfigfileController extends \BaseController {
 	{
 		$configfile = Configfile::findOrFail($id);
 
-		return View::make('configfiles.show', compact('configfile'));
+		return View::make('Configfile.show', compact('configfile'));
 	}
 
 	/**
@@ -81,7 +81,7 @@ class ConfigfileController extends \BaseController {
 				$parents[$cf->id] = $cf->name;	
 		}
 
-		return View::make('configfiles.edit', compact('configfile'))->with('parents',$parents);
+		return View::make('Configfile.edit', compact('configfile'))->with('parents',$parents);
 	}
 
 	/**

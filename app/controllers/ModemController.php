@@ -66,7 +66,7 @@ class ModemController extends \BaseController {
 	{
 		$modems = Modem::all();
 
-		return View::make('modems.index', compact('modems'));
+		return View::make('Modem.index', compact('modems'));
 	}
 
 
@@ -83,8 +83,8 @@ class ModemController extends \BaseController {
 		if (!exec ('ping -c5 -i0.2 '.$hostname, $ret))
 			$ret = array ('Modem is Offline');
 
-		//return View::make('modems.ping', compact('modem'))->with('out', $ret);	
-		return View::make('modems.ping', compact('modem', 'ret'));
+		//return View::make('Modem.ping', compact('modem'))->with('out', $ret);	
+		return View::make('Modem.ping', compact('modem', 'ret'));
 
 	}
 
@@ -98,7 +98,7 @@ class ModemController extends \BaseController {
 	{
 		$modem = Modem::find($id);
 
-		return View::make('modems.monitoring', compact('modem'));
+		return View::make('Modem.monitoring', compact('modem'));
 	}
 
 
@@ -168,7 +168,7 @@ if (0)
 		$ret  = $this->search_lease('hardware ethernet '.$mac);
 
 		// view
-		return View::make('modems.lease', compact('modem'))->with('out', $ret);
+		return View::make('Modem.lease', compact('modem'))->with('out', $ret);
 	}
 
 
@@ -186,7 +186,7 @@ if (0)
 		if (!exec ('cat /var/log/messages | egrep "('.$mac.'|'.$hostname.')" | tail -n 100  | sort -r', $ret))
 			$ret = array ('no logging');
 
-		return View::make('modems.log', compact('modem'))->with('out', $ret);
+		return View::make('Modem.log', compact('modem'))->with('out', $ret);
 	}
 	
 
@@ -197,7 +197,7 @@ if (0)
 	 */
 	public function create()
 	{
-		return View::make('modems.create')->with('configfiles', $this->configfiles_list())->with('qualities', $this->qualities_list());
+		return View::make('Modem.create')->with('configfiles', $this->configfiles_list())->with('qualities', $this->qualities_list());
 	}
 
 	/**
@@ -229,7 +229,7 @@ if (0)
 	{
 		$modem = Modem::findOrFail($id);
 
-		return View::make('modems.show', compact('modem'));
+		return View::make('Modem.show', compact('modem'));
 	}
 
 	/**
@@ -245,7 +245,7 @@ if (0)
 
 		$out = $this->search_lease('agent.remote-id '.$mac);
 
-		return View::make('modems.edit', compact('modem', 'out'))->with('configfiles', $this->configfiles_list())->with('qualities', $this->qualities_list());
+		return View::make('Modem.edit', compact('modem', 'out'))->with('configfiles', $this->configfiles_list())->with('qualities', $this->qualities_list());
 	}
 
 	/**

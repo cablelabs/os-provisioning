@@ -14,7 +14,7 @@ class IpPoolController extends \BaseController {
 	{
 		$ip_pools = IpPool::all();
 		$hostnames = $this->cmts_hostnames();
-		return View::make('ipPools.index', compact('ip_pools', 'hostnames'));
+		return View::make('IpPool.index', compact('ip_pools', 'hostnames'));
 	}
 
 
@@ -26,7 +26,7 @@ class IpPoolController extends \BaseController {
 	public function create()
 	{
 		$hostnames = $this->cmts_hostnames();
-		return View::make('ipPools.create', compact('hostnames'));
+		return View::make('IpPool.create', compact('hostnames'));
 	}
 
 
@@ -42,7 +42,7 @@ class IpPoolController extends \BaseController {
 		$ip_pool = IpPool::find($id);
 		$hostnames = $this->cmts_hostnames();
 
-		return View::make('ipPools.edit', compact('ip_pool', 'hostnames'));
+		return View::make('IpPool.edit', compact('ip_pool', 'hostnames'));
 	}
 
 
