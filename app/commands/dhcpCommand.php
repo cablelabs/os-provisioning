@@ -43,15 +43,12 @@ class dhcpCommand extends Command {
 	{
 		// Modems
 		$m = Modem::first();
-		$m->del_dhcp_conf_file();
+		$m->del_dhcp_conf_files();
 		$m->make_dhcp_cm_all();
-		
 
-		/* TODO: do for each endpoint when function got updated for single usage*/
 		// Endpoints
 		$e = Endpoint::first();
 		$e->make_dhcp();
-
 
 		// CMTS's
 		$c = CmtsGw::all();
