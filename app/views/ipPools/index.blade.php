@@ -16,13 +16,14 @@
 	
 	{{ Form::open(array('route' => array('ipPool.destroy', 0), 'method' => 'delete')) }}
 
-		@foreach ($ippools as $pool)
+		@foreach ($ip_pools as $pool)
 
 			<table>
 			<tr>
 				<td> 
 					{{ Form::checkbox('ids['.$pool->id.']') }}
-					<a href=ipPool/{{$pool->id}}/edit>{{ $hostnames[$pool->cmts_gw_id].'-'.$pool->id }}</a>
+					<a href=ipPool/{{$pool->id}}/edit>{{ $pool->cmts->hostname.'-'.$pool->id }}</a>
+
 				</td>
 			</tr>
 

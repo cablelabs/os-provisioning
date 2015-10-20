@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 use Models\Modem;
 use Models\Endpoint;
+use Models\CmtsGw;
 
 class dhcpCommand extends Command {
 
@@ -40,11 +41,23 @@ class dhcpCommand extends Command {
 	 */
 	public function fire()
 	{
+		// Modems
 		$m = Modem::first();
-		$m->make_dhcp();
+		$m->del_dhcp_conf_files();
+		$m->make_dhcp_cm_all();
 
+		// Endpoints
 		$e = Endpoint::first();
 		$e->make_dhcp();
+
+		// CMTS's
+		$c = CmtsGw::all();
+		$c->first()->del_cmts_includes();
+
+		foreach ($c as $cmts) 
+		{
+			$cmts->make_dhcp_conf();
+		}
 	}
 
 	/**

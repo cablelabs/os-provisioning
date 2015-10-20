@@ -12,9 +12,9 @@ class IpPoolsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$ippools = IpPool::all();
+		$ip_pools = IpPool::all();
 		$hostnames = $this->cmts_hostnames();
-		return View::make('ipPools.index', compact('ippools', 'hostnames'));
+		return View::make('ipPools.index', compact('ip_pools', 'hostnames'));
 	}
 
 
@@ -38,9 +38,11 @@ class IpPoolsController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		$ippool = IpPool::find($id);
+	
+		$ip_pool = IpPool::find($id);
 		$hostnames = $this->cmts_hostnames();
-		return View::make('ipPools.edit', compact('ippool', 'hostnames'));
+
+		return View::make('ipPools.edit', compact('ip_pool', 'hostnames'));
 	}
 
 
@@ -120,7 +122,6 @@ class IpPoolsController extends \BaseController {
 	private function cmts_hostnames ()
 	{
 		$cmts_gws = DB::table('cmts_gws')->select('id', 'hostname')->get();
-		// $cmts_gws = IpPool::lists('cmts_gw_id', 'id');		-- doesnt work, but is shown in getting started vids
 
 		$hostnames = array();
 

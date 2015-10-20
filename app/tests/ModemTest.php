@@ -8,7 +8,7 @@ class ModemTest extends TestCase {
 	public function testDhcp()
 	{
 		$m = Modem::first();
-		$this->assertTrue($m->make_dhcp());
+		$this->assertTrue($m->make_dhcp_cm_all());
 	}
 
 	public function testConfigfile()
