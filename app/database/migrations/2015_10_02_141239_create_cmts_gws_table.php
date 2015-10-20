@@ -37,8 +37,8 @@ class CreateCmtsGwsTable extends Migration {
 	 */
 	public function down()
 	{
-		$c = CmtsGw::all();
-		$c->first()->del_cmts_includes();
+		$c = CmtsGw::first();
+		$c->del_cmts_includes();
 
 		Schema::drop('cmts_gws');
 
