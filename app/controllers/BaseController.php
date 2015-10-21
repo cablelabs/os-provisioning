@@ -60,4 +60,40 @@ class BaseController extends Controller {
 			return Redirect::route($view);
 	}
 
+	/**
+	 * Generic function to build a list with key of id
+	 * @param $array 	
+	 * @return $ret 	list
+	 */
+	protected function html_list ($array, $column)
+	{
+		$ret = array();
+
+		foreach ($array as $a)
+		{
+			$ret[$a->id] = $a->{$column};	
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Generic store function an Object with name $name
+	 * @param $name 	Name of Object
+	 * @return $ret 	list
+	 */
+	// TODO: look for $name if it works as object template
+	// protected function store($name)
+	// {
+	// 	$validator = Validator::make($data = $this->default_input(Input::all()), $name::rules());
+
+	// 	if ($validator->fails())
+	// 	{
+	// 		return Redirect::back()->withErrors($validator)->withInput();
+	// 	}
+
+	// 	$id = $name::create($data)->id;
+
+	// 	return Redirect::route($name.'.edit', $id);
+	// }	
 }

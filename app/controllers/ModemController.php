@@ -28,47 +28,6 @@ class ModemController extends \BaseController {
 		return Configfile::where('device', '=', 'CM')->where('public', '=', 'yes')->get();
 	}
 
-	/**
-	 * return a list [id => name] of all Configfile for CMs
-	 */
-	private function configfiles_list ()
-	{
-		$ret = array();
-		foreach ($this->configfiles() as $cf)
-		{
-			$ret[$cf->id] = $cf->name;	
-		}
-
-		return $ret;
-	}
-
-	/**
-	 * return a list of all qualitie profiles
-	 */
-	private function qualities_list ()
-	{
-		$ret = array();
-		foreach (Quality::all() as $q)
-		{
-			$ret[$q->id] = $q->name;	
-		} 
-
-		return $ret;
-	}
-
-
-	/**
-	 * Display a listing of modems
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		$modems = Modem::all();
-
-		return View::make('Modem.index', compact('modems'));
-	}
-
 
 	/**
 	 * Ping
@@ -184,11 +143,24 @@ if (0)
 		$mac      = $modem->mac;
 		
 		if (!exec ('cat /var/log/messages | egrep "('.$mac.'|'.$hostname.')" | tail -n 100  | sort -r', $ret))
-			$ret = array ('no logging');
+			$out = array ('no logging');
 
-		return View::make('Modem.log', compact('modem'))->with('out', $ret);
+		return View::make('Modem.log', compact('modem', 'out'));
 	}
 	
+
+	/**
+	 * Display a listing of modems
+	 *
+	 * @return Response
+	 */
+	public function index()
+	{
+		$modems = Modem::all();
+
+		return View::make('Modem.index', compact('modems'));
+	}
+
 
 	/**
 	 * Show the form for creating a new modem
@@ -197,8 +169,30 @@ if (0)
 	 */
 	public function create()
 	{
-		return View::make('Modem.create')->with('configfiles', $this->configfiles_list())->with('qualities', $this->qualities_list());
+		$configfiles = $this->html_list($this->configfiles(), 'name');
+		$qualities = $this->html_list(Quality::all(), 'name');
+
+		return View::make('Modem.create', compact('configfiles', 'qualities'));
 	}
+
+
+	/**
+	 * Show the form for editing the specified modem.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		$modem = Modem::find($id);
+		$mac   = $modem->mac;
+		$out = $this->search_lease('agent.remote-id '.$mac);
+		$configfiles = $this->html_list($this->configfiles(), 'name');
+		$qualities = $this->html_list(Quality::all(), 'name');
+
+		return View::make('Modem.edit', compact('modem', 'out', 'configfiles', 'qualities'));
+	}
+
 
 	/**
 	 * Store a newly created modem in storage.
@@ -219,34 +213,6 @@ if (0)
 		return Redirect::route('Modem.edit', $id);
 	}
 
-	/**
-	 * Display the specified modem.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		$modem = Modem::findOrFail($id);
-
-		return View::make('Modem.show', compact('modem'));
-	}
-
-	/**
-	 * Show the form for editing the specified modem.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		$modem = Modem::find($id);
-		$mac   = $modem->mac;
-
-		$out = $this->search_lease('agent.remote-id '.$mac);
-
-		return View::make('Modem.edit', compact('modem', 'out'))->with('configfiles', $this->configfiles_list())->with('qualities', $this->qualities_list());
-	}
 
 	/**
 	 * Update the specified modem in storage.
