@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder {
 		$this->call('CmtsGwsTableSeeder');
 		$this->call('IpPoolsTableSeeder');
 		$this->call('MtasTableSeeder');
+		$this->call('PhonenumbersTableSeeder');
 
 		// change owner of files that need to be editable for apache on updates
 		system('/bin/chown -R apache /tftpboot/cm');

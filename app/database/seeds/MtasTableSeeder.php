@@ -4,6 +4,7 @@
 use Faker\Factory as Faker;
 use Models\Mta;
 
+# don't forget to add Seeder in DatabaseSeeder.php
 class MtasTableSeeder extends Seeder {
 
 	public function run()

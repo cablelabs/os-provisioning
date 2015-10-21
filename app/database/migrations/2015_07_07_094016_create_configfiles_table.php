@@ -21,8 +21,19 @@ class CreateConfigfilesTable extends Migration {
 			$table->enum('device', array('cm', 'mta'));
 			$table->enum('public', array('yes', 'no'));
 			$table->integer('parent_id')->unsigned();
+			$table->boolean('is_dummy')->default(0);
 			$table->timestamps();
+			$table->softDeletes();
 		});
+
+		# insert a dummy for each enum value
+		$enum_devices = array(
+			1 => 'cm',
+			2 => 'mta',
+		);
+		foreach($enum_devices as $i => $v) {
+			DB::update("INSERT INTO configfiles (name,device,is_dummy,deleted_at) VALUES('dummy-cfg-".$v."',".$i.",1,NOW());");
+		}
 	}
 
 

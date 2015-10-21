@@ -2,7 +2,12 @@
 
 namespace Models;
 
+// Model not found? execute composer dump-autoload in lara root dir
 class Mta extends \BaseModel {
+
+	// for soft deleting => move to BaseModel?
+	use \Illuminate\Database\Eloquent\SoftDeletingTrait;
+	protected $dates = ['deleted_at'];
 
 	// Add your validation rules here
 	public static function rules($id=null)
