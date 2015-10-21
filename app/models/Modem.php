@@ -7,17 +7,21 @@ use Log;
 
 class Modem extends \Eloquent {
 
+    // The associated SQL table for this Model
+    protected $table = 'modem';
+
+
 	// Add your validation rules here
     // see: http://stackoverflow.com/questions/22405762/laravel-update-model-with-unique-validation-rule-for-attribute
     public static function rules($id = null)
     {
         return array(
-            'mac' => 'required|mac|unique:modems,mac,'.$id
+            'mac' => 'required|mac|unique:modem,mac,'.$id
         );
     }
 
 	// Don't forget to fill this array
-	protected $fillable = ['hostname', 'name', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent', 'configfile_id', 'quality_id'];
+	protected $fillable = ['hostname', 'name', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent', 'configfile_id', 'qos_id'];
 
 
     /**
@@ -28,9 +32,9 @@ class Modem extends \Eloquent {
         return $this->belongsTo('Models\Configfile');
     }
 
-    public function quality()
+    public function qos()
     {
-        return $this->belongsTo("Models\Quality");
+        return $this->belongsTo("Models\Qos");
     }
 
 
@@ -165,6 +169,21 @@ class Modem extends \Eloquent {
 
         return true;
     }
+
+    /**
+     * Deletes Configfile of a modem
+     */
+    protected function delete_configfile()
+    {
+        $file['1'] = 'cm-'.$this->id.'cfg';
+        $file['2'] = 'cm-'.$this->id.'conf';
+
+        foreach ($file as $f) 
+        {
+            if (file_exists($f)) unlink($file);
+        }
+    }
+
 }
 
 
@@ -200,6 +219,7 @@ class ModemObserver
     public function deleted($modem)
     {
         $modem->make_dhcp_cm_all();
+        $modem->delete_configfile();
     } 
 
     // Delete all Endpoints under CM ..

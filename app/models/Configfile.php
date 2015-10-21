@@ -8,6 +8,10 @@ use Schema;
 
 class Configfile extends \Eloquent {
 
+    // The associated SQL table for this Model
+    protected $table = 'configfile';
+    
+
 	// Add your validation rules here
 	public static function rules($id = null)
     {
@@ -53,14 +57,14 @@ class Configfile extends \Eloquent {
 		 * - if modem sql relations are not valid a warning will
 		 *   be printed
 		 */
-		$modems    = array ($m);
-		$qualities = array ($m->quality);
+		$modem  = array ($m);
+		$qos    = array ($m->qos);
 
 		/*
 		 * generate Table array with SQL columns
 		 */
-		$tables_a ['modems'][0]    = Schema::getColumnListing('modems');
-		$tables_a ['qualities'][0] = Schema::getColumnListing('qualities');		
+		$tables_a ['modem'][0] = Schema::getColumnListing('modems');
+		$tables_a ['qos'][0]   = Schema::getColumnListing('qos');		
 
 
 		/*

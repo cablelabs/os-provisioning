@@ -10,30 +10,31 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
-Route::get('', 'ModemsController@index');
+Route::get('', 'ModemController@index');
 
 // Modem
-Route::get('modem/{modem}/ping', array ('as' => 'modem.ping', 'uses' => 'ModemsController@ping'));
-Route::get('modem/{modem}/monitoring', array ('as' => 'modem.monitoring', 'uses' => 'ModemsController@monitoring'));
+Route::get('modem/{modem}/ping', array ('as' => 'Modem.ping', 'uses' => 'ModemController@ping'));
+Route::get('modem/{modem}/monitoring', array ('as' => 'Modem.monitoring', 'uses' => 'ModemController@monitoring'));
 // array (name, function of Controller)
-Route::get('modem/{modem}/log', array ('as' => 'modem.log', 'uses' => 'ModemsController@log'));
-Route::get('modem/{modem}/lease', array ('as' => 'modem.lease', 'uses' => 'ModemsController@lease'));
-Route::post('modem/json', 'ModemsController@json');
+Route::get('modem/{modem}/log', array ('as' => 'Modem.log', 'uses' => 'ModemController@log'));
+Route::get('modem/{modem}/lease', array ('as' => 'Modem.lease', 'uses' => 'ModemController@lease'));
+Route::post('modem/json', 'ModemController@json');
 
 // routes controller with predefined methods
 // add array('only' => array('edit', 'update')) as third parameter to only allow these routes
-Route::resource('modem', 'ModemsController');
-Route::resource('cmts', 'CmtsGwsController');  
-Route::resource('ipPool', 'IpPoolsController');  
+Route::resource('Modem', 'ModemController');
+Route::resource('Cmts', 'CmtsController');  
+Route::resource('IpPool', 'IpPoolController');  
 
 
-Route::resource('endpoint', 'EndpointsController');
-Route::post('endpoint/json', 'EndpointsController@json');
+Route::resource('Endpoint', 'EndpointController');
+#Route::post('endpoint/json', 'EndpointController@json');
 
-Route::resource('configfile', 'ConfigfilesController');
+Route::resource('Configfile', 'ConfigfileController');
 
-Route::resource('quality', 'QualitiesController');
+Route::resource('Qos', 'QosController');
 
-Route::resource('mta', 'MtasController');
 
-Route::resource('cmtsdownstream', 'CmtsDownstreamsController');
+Route::resource('CmtsDownstream', 'CmtsDownstreamsController');
+Route::resource('Mta', 'MtaController');
+

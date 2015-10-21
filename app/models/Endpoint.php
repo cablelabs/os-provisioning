@@ -6,6 +6,8 @@ use File;
 
 class Endpoint extends \Eloquent {
 
+    // The associated SQL table for this Model
+    protected $table = 'endpoint';
 
     public static function rules($id = null)
     {
