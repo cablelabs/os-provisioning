@@ -42,7 +42,6 @@ class ModemController extends \BaseController {
 		if (!exec ('ping -c5 -i0.2 '.$hostname, $ret))
 			$ret = array ('Modem is Offline');
 
-		//return View::make('Modem.ping', compact('modem'))->with('out', $ret);	
 		return View::make('Modem.ping', compact('modem', 'ret'));
 
 	}
