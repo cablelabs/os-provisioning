@@ -31,7 +31,7 @@ class CmtsDownstreamsController extends \SnmpController {
 	{
 		$cmtsdownstreams = CmtsDownstream::all();
 
-		return View::make('cmtsdownstream.index', compact('cmtsdownstreams'));
+		return View::make('CmtsDownstream.index', compact('cmtsdownstreams'));
 	}
 
 	/**
@@ -41,7 +41,7 @@ class CmtsDownstreamsController extends \SnmpController {
 	 */
 	public function create()
 	{
-		return View::make('cmtsdownstream.create');
+		return View::make('CmtsDownstream.create');
 	}
 
 	/**
@@ -60,11 +60,11 @@ class CmtsDownstreamsController extends \SnmpController {
 
 		CmtsDownstream::create($data);
 
-		return Redirect::route('cmtsdownstream.index');
+		return Redirect::route('CmtsDownstream.index');
 	}
 
 	/**
-	 * Display the specified cmtsdownstream.
+	 * Display the specified CmtsDownstream.
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -73,11 +73,11 @@ class CmtsDownstreamsController extends \SnmpController {
 	{
 		$cmtsdownstream = CmtsDownstream::findOrFail($id);
 
-		return View::make('cmtsdownstream.show', compact('cmtsdownstream'));
+		return View::make('CmtsDownstream.show', compact('cmtsdownstream'));
 	}
 
 	/**
-	 * Show the form for editing the specified cmtsdownstream.
+	 * Show the form for editing the specified CmtsDownstream.
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -89,7 +89,7 @@ class CmtsDownstreamsController extends \SnmpController {
 		$this->snmp_init($cmtsdownstream, $this->mibs($cmtsdownstream->index),'10.42.253.254', 'public');
 		$this->snmp_get_all();
 
-		return View::make('cmtsdownstream.edit', compact('cmtsdownstream'));
+		return View::make('CmtsDownstream.edit', compact('cmtsdownstream'));
 	}
 
 	/**
@@ -114,7 +114,7 @@ class CmtsDownstreamsController extends \SnmpController {
 		$this->snmp_init($cmtsdownstream, $this->mibs($cmtsdownstream->index),'10.42.253.254', 'public');
 		$this->snmp_set_all();
 
-		return Redirect::route('cmtsdownstream.index');
+		return Redirect::route('CmtsDownstream.index');
 	}
 
 	/**
@@ -127,7 +127,7 @@ class CmtsDownstreamsController extends \SnmpController {
 	{
 		CmtsDownstream::destroy($id);
 
-		return Redirect::route('cmtsdownstream.index');
+		return Redirect::route('CmtsDownstream.index');
 	}
 
 }

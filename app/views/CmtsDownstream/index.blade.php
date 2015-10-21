@@ -1,8 +1,8 @@
-@extends ('layouts.split')
+@extends ('Layout.split')
 
 @section('content_top')
 
-		{{ HTML::linkRoute('cmtsdownstream.index', 'CMTS') }}
+		{{ HTML::linkRoute('CmtsDownstream.index', 'CMTS') }}
 
 @stop
 
@@ -10,11 +10,11 @@
 
 	<h2>CMTS - Downstream List</h2>
 
-	{{ Form::open(array('route' => 'cmtsdownstream.create', 'method' => 'GET')) }}
+	{{ Form::open(array('route' => 'CmtsDownstream.create', 'method' => 'GET')) }}
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}
 	
-	{{ Form::open(array('route' => array('cmtsdownstream.destroy', 0), 'method' => 'delete')) }}
+	{{ Form::open(array('route' => array('CmtsDownstream.destroy', 0), 'method' => 'delete')) }}
 
 		@foreach ($cmtsdownstreams as $cmtsdownstream)
 
@@ -22,7 +22,7 @@
 				<tr>
 					<td> 
 						{{ Form::checkbox('ids['.$cmtsdownstream->id.']') }}
-						<a href=cmtsdownstream/{{$cmtsdownstream->id}}/edit>{{$cmtsdownstream->alias}} </a>
+						{{ HTML::linkRoute('CmtsDownstream.edit', $cmtsdownstream->alias, $cmtsdownstream->id) }}
 					</td>
 				</tr>
 

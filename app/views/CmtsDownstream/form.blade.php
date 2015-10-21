@@ -20,20 +20,19 @@
 	<td>{{ Form::text ('frequency') }}</td> 
 	<td>{{ $errors->first('frequency') }}</td>
 </tr>
-		<tr>
-			<td>{{ Form::label('modulation', 'Modulation') }}</td>
-			<td>{{ Form::select ('modulation', array('qam64' => 'qam64', 'qam256' => 'qam256')) }}</td>
-			<td>{{ $errors->first('modulation') }}</td>
-		</tr>
 <tr>
+	<td>{{ Form::label('modulation', 'Modulation') }}</td>
+	<td>{{ Form::select ('modulation', array('qam64' => 'qam64', 'qam256' => 'qam256')) }}</td>
+	<td>{{ $errors->first('modulation') }}</td>
+</tr>
 	<td>{{ Form::label('power', 'Power') }}</td>
 	<td>{{ Form::text ('power') }}</td> 
 	<td>{{ $errors->first('power') }}</td>
 </tr>
 <tr>
-	<td>{{ Form::label('cmts_gws_id', 'CMTS') }}</td>
-	<td>{{ Form::text ('cmts_gws_id') }}</td> 
-	<td>{{ $errors->first('cmts_gws_id') }}</td>
+	<td>{{ Form::label('cmts_id', 'CMTS') }}</td>
+	<td>{{ Form::text ('cmts_id') }}</td> 
+	<td>{{ $errors->first('cmts_id') }}</td>
 </tr>
 
 </table>
