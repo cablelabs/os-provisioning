@@ -12,7 +12,8 @@ class CmtsGwsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$CmtsGws = CmtsGw::all();	// = "select * from cmts_gws;"
+		$CmtsGws = CmtsGw::all();
+		// $c = CmtsGw::lists('id');		// fetches only the column id as an array
 
 		return View::make('cmtsgws.index', compact('CmtsGws'));
 		// compact() makes passed variables available to the view - like ->with($variable) statement
@@ -38,7 +39,6 @@ class CmtsGwsController extends \BaseController {
 	public function edit($id)
 	{
 		$CmtsGw = CmtsGw::find($id);
-		$CmtsGw = CmtsGw::with('ippools')->find($id);	// string inside "with"-statement has to match the public method name
 
 		return View::make('cmtsgws.edit', compact('CmtsGw'));
 	}
@@ -74,7 +74,7 @@ class CmtsGwsController extends \BaseController {
 	{
 		$CmtsGw = CmtsGw::findOrFail($id);
 
-dd($CmtsGw);
+		//dd($CmtsGw);
 		$validator = Validator::make($data = Input::all(), CmtsGw::$rules);
 
 		if ($validator->fails())

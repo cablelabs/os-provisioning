@@ -25,9 +25,53 @@ class IpPool extends \Eloquent {
      * Relationships:
      */
 
-    public function cmts ()
+    public function cmts()
     {
-        return $this->belongsTo('Models\CmtsGw');
+        return $this->belongsTo('Models\CmtsGw', 'cmts_gw_id');
     }
+
+
+        /**
+     * BOOT:
+     * - init cmts observer
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        IpPool::observe(new IpPoolObserver);
+    }
+
     
+}
+
+
+/**
+ * IP-Pool Observer Class
+ * Handles changes on IP-Pools
+ *
+ * can handle   'creating', 'created', 'updating', 'updated',
+ *              'deleting', 'deleted', 'saving', 'saved',
+ *              'restoring', 'restored',
+ */
+class IpPoolObserver 
+{
+    public function created($pool)
+    {
+        // fetch cmts object that is related to the created ippool and make dhcp conf
+        $cmts = $pool->cmts;
+        $cmts->make_dhcp_conf();
+    }
+
+    public function updated($pool)
+    {
+        $cmts = $pool->cmts;
+        $cmts->make_dhcp_conf();
+    }
+
+    public function deleted($pool)
+    {
+        $cmts = $pool->cmts;
+        $cmts->make_dhcp_conf();
+    }
 }

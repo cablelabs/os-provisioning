@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
+use Models\CmtsGw;
+
 class CreateCmtsGwsTable extends Migration {
 	/**
 	 * Run the migrations.
@@ -35,7 +37,20 @@ class CreateCmtsGwsTable extends Migration {
 	 */
 	public function down()
 	{
+		$c = CmtsGw::first();
+		$c->del_cmts_includes();
+
 		Schema::drop('cmts_gws');
+
+		// remove all through dhcpCommand created cmts config files
+		$files = glob('/etc/dhcp/nms/cmts_gws/*');              // get all files in dir
+		foreach ($files as $file) 
+		{
+			if(is_file($file))
+			unlink($file);                                                  // delete file
+		}
+
+
 	}
 
 }
