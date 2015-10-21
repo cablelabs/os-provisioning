@@ -6,19 +6,6 @@ use Models\Modem;
 class EndpointController extends \BaseController {
 
 	/**
-	 * Make Checkbox Default Input
-	 * see: see http://forumsarchive.laravel.io/viewtopic.php?id=11627
-	 */
-	private function default_input ($data)
-	{
-		/* depracted:
-		if(!isset($data['public']))$data['public']=0;
-		*/
-
-		return $data;
-	}
-
-	/**
 	 * Display a listing of endpoints
 	 *
 	 * @return Response
@@ -40,37 +27,6 @@ class EndpointController extends \BaseController {
 		return View::make('Endpoint.create');
 	}
 
-	/**
-	 * Store a newly created endpoint in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		$validator = Validator::make($data = $this->default_input(Input::all()), Endpoint::rules());
-
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$id = Endpoint::create($data)->id;
-
-		return Redirect::route('Endpoint.edit', $id);
-	}
-
-	/**
-	 * Display the specified endpoint.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		$endpoint = Endpoint::findOrFail($id);
-
-		return View::make('Endpoint.show', compact('endpoint'));
-	}
 
 	/**
 	 * Show the form for editing the specified endpoint.
@@ -85,6 +41,27 @@ class EndpointController extends \BaseController {
 		return View::make('Endpoint.edit', compact('endpoint'));
 	}
 
+
+	/**
+	 * Store a newly created endpoint in storage.
+	 *
+	 * @return Response
+	 */
+	public function store()
+	{
+		$validator = Validator::make(Input::all(), Endpoint::rules());
+
+		if ($validator->fails())
+		{
+			return Redirect::back()->withErrors($validator)->withInput();
+		}
+
+		$id = Endpoint::create($data)->id;
+
+		return Redirect::route('Endpoint.edit', $id);
+	}
+
+
 	/**
 	 * Update the specified endpoint in storage.
 	 *
@@ -95,7 +72,7 @@ class EndpointController extends \BaseController {
 	{
 		$endpoint = Endpoint::findOrFail($id);
 
-		$validator = Validator::make($data = $this->default_input(Input::all()), Endpoint::rules($id));
+		$validator = Validator::make(Input::all(), Endpoint::rules($id));
 
 		if ($validator->fails())
 		{

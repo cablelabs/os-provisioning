@@ -12,7 +12,7 @@
 	
 	{{ Form::open(array('route' => array('Endpoint.store', 0), 'method' => 'POST')) }}
 
-		@include('endpoints.form', array ('endpoint' => null))
+		@include('Endpoint.form', array ('endpoint' => null))
 	
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}
