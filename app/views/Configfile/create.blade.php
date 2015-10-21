@@ -12,7 +12,7 @@
 
 	{{ Form::open(array('route' => array('Configfile.store', 0), 'method' => 'POST')) }}
 
-		@include('configfiles.form', array ('configfile' => null))
+		@include('Configfile.form', array ('configfile' => null))
 	
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}
