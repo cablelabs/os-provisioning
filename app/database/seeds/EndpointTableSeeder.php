@@ -4,7 +4,7 @@
 use Faker\Factory as Faker;
 use Models\Endpoint;
 
-class EndpointsTableSeeder extends Seeder {
+class EndpointTableSeeder extends Seeder {
 
 	public function run()
 	{

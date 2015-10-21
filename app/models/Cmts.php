@@ -7,6 +7,9 @@ use DB;
 
 class Cmts extends \Eloquent {
 
+	// The associated SQL table for this Model
+    protected $table = 'cmts';
+
 	// Add your validation rules here
 	public static function rules($id = null)
     {

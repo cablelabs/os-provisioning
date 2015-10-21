@@ -1,6 +1,6 @@
 <?php
 
-use Models\Quality;
+use Models\Qos;
 
 class QosController extends \BaseController {
 
@@ -11,7 +11,7 @@ class QosController extends \BaseController {
 	 */
 	public function index()
 	{
-		$qualities = Quality::all();
+		$qualities = Qos::all();
 
 		return View::make('Qos.index', compact('qualities'));
 	}
@@ -35,7 +35,7 @@ class QosController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		$quality = Quality::find($id);
+		$quality = Qos::find($id);
 
 		return View::make('Qos.edit', compact('quality'));
 	}
@@ -47,14 +47,14 @@ class QosController extends \BaseController {
 	 */
 	public function store()
 	{
-		$validator = Validator::make($data = Input::all(), Quality::$rules);
+		$validator = Validator::make($data = Input::all(), Qos::$rules);
 
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$id = Quality::create($data)->id;
+		$id = Qos::create($data)->id;
 
 		return Redirect::route('Qos.edit', $id)->with(DB::getQueryLog());
 	}
@@ -68,9 +68,9 @@ class QosController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		$quality = Quality::findOrFail($id);
+		$quality = Qos::findOrFail($id);
 
-		$validator = Validator::make($data = Input::all(), Quality::$rules);
+		$validator = Validator::make($data = Input::all(), Qos::$rules);
 
 		if ($validator->fails())
 		{
@@ -96,10 +96,10 @@ class QosController extends \BaseController {
 			// bulk delete
 			// TODO: put to base controller -> make it generic
 			foreach (Input::all()['ids'] as $id => $val)
-				Quality::destroy($id);
+				Qos::destroy($id);
 		}
 		else
-			Quality::destroy($id);
+			Qos::destroy($id);
 
 		return $this->index();
 	}

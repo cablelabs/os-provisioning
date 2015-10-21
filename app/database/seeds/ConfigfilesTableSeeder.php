@@ -4,7 +4,7 @@
 use Faker\Factory as Faker;
 use Models\Configfile;
 
-class ConfigfilesTableSeeder extends Seeder {
+class ConfigfileTableSeeder extends Seeder {
 
 	public function run()
 	{

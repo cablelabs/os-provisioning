@@ -4,6 +4,9 @@ namespace Models;
 
 class Mta extends \BaseModel {
 
+    // The associated SQL table for this Model
+    protected $table = 'mta';
+
 	// Add your validation rules here
 	public static function rules($id=null)
 	{

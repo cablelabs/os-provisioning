@@ -4,7 +4,7 @@
 use Faker\Factory as Faker;
 use Models\Modem;
 
-class ModemsTableSeeder extends Seeder {
+class ModemTableSeeder extends Seeder {
 
 	public function run()
 	{
@@ -21,7 +21,7 @@ class ModemsTableSeeder extends Seeder {
 				'inventar_num' => $faker->sentence(),
 				'contract_id' => rand(1,500),
 				'configfile_id' => rand(1,10),
-				'quality_id' => rand(1,10)
+				'qos_id' => rand(1,10)
 			]);
 		}
 	}

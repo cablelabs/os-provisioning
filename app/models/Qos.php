@@ -3,7 +3,10 @@
 namespace Models;
 use Log;
 
-class Quality extends \Eloquent {
+class Qos extends \Eloquent {
+
+    // The associated SQL table for this Model
+    protected $table = 'qos';
 
 	// Add your validation rules here
 	public static $rules = [
@@ -28,16 +31,16 @@ class Quality extends \Eloquent {
     {
         parent::boot();
 
-        Quality::observe(new QualityObserver);
+        Qos::observe(new QosObserver);
     }
 }
 
 /**
- * Quality Observer Class
+ * Qos Observer Class
  * Handles changes on CMs
  *
  */
-class QualityObserver 
+class QosObserver 
 {
     public function creating($q)
     {

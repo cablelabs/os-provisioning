@@ -4,6 +4,9 @@ namespace Models;
 
 class IpPool extends \Eloquent {
 
+    // The associated SQL table for this Model
+    protected $table = 'ippool';
+
 	// Add your validation rules here
 	public static $rules = [
         'net' => 'ip',

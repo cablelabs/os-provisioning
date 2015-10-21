@@ -4,7 +4,7 @@
 use Faker\Factory as Faker;
 use Models\IpPool;
 
-class IpPoolsTableSeeder extends Seeder {
+class IpPoolTableSeeder extends Seeder {
 
 	public function run()
 	{

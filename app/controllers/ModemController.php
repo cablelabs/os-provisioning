@@ -3,7 +3,7 @@
 use Models\Modem;
 use Models\Endpoint;
 use Models\Configfile;
-use Models\Quality;
+use Models\Qos;
 
 
 class ModemController extends \BaseController {
@@ -169,7 +169,7 @@ if (0)
 	public function create()
 	{
 		$configfiles = $this->html_list($this->configfiles(), 'name');
-		$qualities = $this->html_list(Quality::all(), 'name');
+		$qualities = $this->html_list(Qos::all(), 'name');
 
 		return View::make('Modem.create', compact('configfiles', 'qualities'));
 	}
@@ -187,7 +187,7 @@ if (0)
 		$mac   = $modem->mac;
 		$out = $this->search_lease('agent.remote-id '.$mac);
 		$configfiles = $this->html_list($this->configfiles(), 'name');
-		$qualities = $this->html_list(Quality::all(), 'name');
+		$qualities = $this->html_list(Qos::all(), 'name');
 
 		return View::make('Modem.edit', compact('modem', 'out', 'configfiles', 'qualities'));
 	}
