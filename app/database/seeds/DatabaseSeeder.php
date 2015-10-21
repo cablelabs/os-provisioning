@@ -11,13 +11,13 @@ class DatabaseSeeder extends Seeder {
 	{
 		Eloquent::unguard();
 
-		$this->call('ConfigfilesTableSeeder');
-		$this->call('QualitiesTableSeeder');
-		$this->call('ModemsTableSeeder');
-		$this->call('EndpointsTableSeeder');
-		$this->call('CmtsGwsTableSeeder');
-		$this->call('IpPoolsTableSeeder');
-		$this->call('MtasTableSeeder');
+		$this->call('ConfigfileTableSeeder');
+		$this->call('QosTableSeeder');
+		$this->call('ModemTableSeeder');
+		$this->call('EndpointTableSeeder');
+		$this->call('CmtsTableSeeder');
+		$this->call('IpPoolTableSeeder');
+		$this->call('MtaTableSeeder');
 
 		// change owner of files that need to be editable for apache on updates
 		system('/bin/chown -R apache /tftpboot/cm');

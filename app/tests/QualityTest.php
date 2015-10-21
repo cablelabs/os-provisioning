@@ -1,6 +1,6 @@
 <?php
 
-use Models\Quality;
+use Models\Qos;
 
 
 class qualityTest extends TestCase {
@@ -13,7 +13,7 @@ class qualityTest extends TestCase {
 
 	public function testEdit()
 	{
-		$m = Quality::orderby('id', 'DESC')->first()->id;
+		$m = Qos::orderby('id', 'DESC')->first()->id;
 		$this->routeContains ("quality/$m/edit");
 	}
 
@@ -24,7 +24,7 @@ class qualityTest extends TestCase {
 
 	public function testDelete()
 	{
-		$m = Quality::orderby('id', 'DESC')->first()->id;
+		$m = Qos::orderby('id', 'DESC')->first()->id;
 		$this->routeContains ("quality/$m", 'DELETE');
 	}
 
