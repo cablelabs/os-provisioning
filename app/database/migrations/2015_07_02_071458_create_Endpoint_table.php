@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateEndpointsTable extends Migration {
+class CreateEndpointTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,7 +12,7 @@ class CreateEndpointsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('endpoints', function(Blueprint $table)
+		Schema::create('endpoint', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->string('hostname');
@@ -25,7 +25,7 @@ class CreateEndpointsTable extends Migration {
 			$table->timestamps();
 		});
 
-		DB::update("ALTER TABLE endpoints AUTO_INCREMENT = 200000;");
+		DB::update("ALTER TABLE endpoint AUTO_INCREMENT = 200000;");
 	}
 
 
@@ -36,7 +36,7 @@ class CreateEndpointsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('endpoints');
+		Schema::drop('endpoint');
 	}
 
 }

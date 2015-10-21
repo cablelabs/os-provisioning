@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateIpPoolsTable extends Migration {
+class CreateIpPoolTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,7 +12,7 @@ class CreateIpPoolsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('ip_pools', function(Blueprint $table)
+		Schema::create('ippool', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->integer('cmts_id')->unsigned();
@@ -39,7 +39,7 @@ class CreateIpPoolsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('ip_pools');
+		Schema::drop('ippool');
 	}
 
 }

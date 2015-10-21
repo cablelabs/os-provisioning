@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateConfigfilesTable extends Migration {
+class CreateConfigfileTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,7 +12,7 @@ class CreateConfigfilesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('configfiles', function(Blueprint $table)
+		Schema::create('configfile', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->string('name');
@@ -33,7 +33,7 @@ class CreateConfigfilesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('configfiles');
+		Schema::drop('configfile');
 	}
 
 }

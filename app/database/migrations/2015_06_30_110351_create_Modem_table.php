@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateModemsTable extends Migration {
+class CreateModemTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,7 +12,7 @@ class CreateModemsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('modems', function(Blueprint $table)
+		Schema::create('modem', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->string('name');
@@ -27,11 +27,11 @@ class CreateModemsTable extends Migration {
 			$table->text('description');
 			$table->integer('parent');
 			$table->integer('configfile_id')->unsigned();
-			$table->integer('quality_id')->unsigned();
+			$table->integer('qos_id')->unsigned();
 			$table->timestamps();
 		});
 
-		DB::update("ALTER TABLE modems AUTO_INCREMENT = 100000;");
+		DB::update("ALTER TABLE modem AUTO_INCREMENT = 100000;");
 	}
 
 
@@ -42,7 +42,7 @@ class CreateModemsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('modems');
+		Schema::drop('modem');
 	}
 
 }

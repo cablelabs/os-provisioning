@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateQualitiesTable extends Migration {
+class CreateQosTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,7 +12,7 @@ class CreateQualitiesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('qualities', function(Blueprint $table)
+		Schema::create('qos', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->float('ds_rate_max');
@@ -32,7 +32,7 @@ class CreateQualitiesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('qualities');
+		Schema::drop('qos');
 	}
 
 }

@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateMtasTable extends Migration {
+class CreateMtaTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,7 +12,7 @@ class CreateMtasTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('mtas', function(Blueprint $table)
+		Schema::create('mta', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->integer('modem_id')->unsigned();
@@ -23,7 +23,7 @@ class CreateMtasTable extends Migration {
 			$table->timestamps();
 		});
 
-		DB::update("ALTER TABLE mtas AUTO_INCREMENT = 100000;");
+		DB::update("ALTER TABLE mta AUTO_INCREMENT = 100000;");
 	}
 
 
@@ -34,7 +34,7 @@ class CreateMtasTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('mtas');
+		Schema::drop('mta');
 	}
 
 }
