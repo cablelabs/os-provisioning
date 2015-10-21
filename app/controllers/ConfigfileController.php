@@ -29,7 +29,7 @@ class ConfigfileController extends \BaseController {
 			$parents[$cf->id] = $cf->name;	
 		}
 		
-		return View::make('Configfile.create')->with('parents', $parents);
+		return View::make('Configfile.create', compact('parents'));
 	}
 
 	/**
@@ -51,18 +51,6 @@ class ConfigfileController extends \BaseController {
 		return View::make('Configfile.edit', $id);
 	}
 
-	/**
-	 * Display the specified configfile.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		$configfile = Configfile::findOrFail($id);
-
-		return View::make('Configfile.show', compact('configfile'));
-	}
 
 	/**
 	 * Show the form for editing the specified configfile.
