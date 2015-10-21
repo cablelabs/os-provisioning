@@ -16,41 +16,11 @@ class MtaController extends \BaseController {
 
 
 	/**
-	 * return a list [id => hostname] of all modems
-	 */
-	private function modems_list()
-	{
-		$ret = array();
-		foreach ($this->modems() as $modem)
-		{
-			$ret[$modem->id] = $modem->hostname;
-		}
-
-		return $ret;
-	}
-
-
-	/**
 	 * return all Configfile Objects for MTAs
 	 */
 	private function configfiles()
 	{
 		return Configfile::where('device', '=', 'mta')->where('public', '=', 'yes')->get();
-	}
-
-
-	/**
-	 * return a list [id => name] of all Configfile for MTAt
-	 */
-	private function configfiles_list()
-	{
-		$ret = array();
-		foreach ($this->configfiles() as $cf)
-		{
-			$ret[$cf->id] = $cf->name;
-		}
-
-		return $ret;
 	}
 
 
@@ -74,9 +44,29 @@ class MtaController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('Mta.create')->with('configfiles', $this->configfiles_list())->with('modems', $this->modems_list())->with('mta_types', Mta::getPossibleEnumValues('type', true));
+		$configfiles = $this->html_list($this->configfiles(), 'name');
+		$modems = $this->html_list($this->modems(), 'hostname');
+		$mta_types = Mta::getPossibleEnumValues('type', true);
+
+		return View::make('Mta.create', compact('configfiles', 'modems', 'mta_types')); 
 	}
 
+
+	/**
+	 * Show the form for editing the specified mta.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		$mta = Mta::findOrFail($id);
+		$configfiles = $this->html_list($this->configfiles(), 'name');
+		$modems = $this->html_list($this->modems(), 'hostname');
+		$mta_types = Mta::getPossibleEnumValues('type', true);
+
+		return View::make('Mta.edit', compact('mta', 'configfiles', 'modems', 'mta_types')); 
+	}
 
 	/**
 	 * Store a newly created mta in storage.
@@ -95,35 +85,6 @@ class MtaController extends \BaseController {
 		$id = Mta::create($data)->id;
 
 		return Redirect::route('Mta.edit', $id);
-	}
-
-
-	/**
-	 * Display the specified mta.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		$mta = Mta::findOrFail($id);
-
-		return View::make('Mta.show', compact('mta'));
-	}
-
-
-	/**
-	 * Show the form for editing the specified mta.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		$mta = Mta::findOrFail($id);
-
-		return View::make('Mta.edit', compact('mta'))->with('configfiles', $this->configfiles_list())->with('modems', $this->modems_list())->with('mta_types', Mta::getPossibleEnumValues('type', true));
-;
 	}
 
 

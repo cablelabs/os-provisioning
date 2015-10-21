@@ -14,7 +14,7 @@
 
 	{{ Form::open(array('route' => array('Mta.store', 0), 'method' => 'POST')) }}
 
-		@include('mtas.form', array('mta' => null))
+		@include('Mta.form', array('mta' => null))
 
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}
