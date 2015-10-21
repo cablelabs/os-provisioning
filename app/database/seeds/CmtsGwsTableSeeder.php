@@ -2,9 +2,9 @@
 
 // Composer: "fzaninotto/faker": "v1.3.0"
 use Faker\Factory as Faker;
-use Models\CmtsGw;
+use Models\Cmts;
 
-class CmtsGwsTableSeeder extends Seeder {
+class CmtsTableSeeder extends Seeder {
 
 	public function run()
 	{
@@ -12,7 +12,7 @@ class CmtsGwsTableSeeder extends Seeder {
 
 		foreach(range(1, 5) as $index)
 		{
-			CmtsGw::create([
+			Cmts::create([
 				'hostname' => $faker->unique->state,
 				'type' => "cmts",
 				'ip' => $faker->ipv4(),

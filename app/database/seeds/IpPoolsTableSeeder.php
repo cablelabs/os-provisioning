@@ -15,7 +15,7 @@ class IpPoolsTableSeeder extends Seeder {
 		foreach(range(1, 10) as $index)
 		{
 			IpPool::create([
-				'cmts_gw_id' => rand(1,5),
+				'cmts_id' => rand(1,5),
 				'type' => rand(0,4),
 				'net' => '10.'.$m.'.'.$n.'.0',
 				'netmask' => '255.255.255.0',

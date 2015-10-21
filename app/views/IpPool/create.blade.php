@@ -17,7 +17,7 @@
 
 	{{ Form::open(array('route' => array('IpPool.store', 0), 'method' => 'POST')) }}
 
-		@include('ipPools.form', array ('ipPool' => null))
+		@include('IpPool.form', array ('ipPool' => null))
 	
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}

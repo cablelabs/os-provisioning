@@ -1,6 +1,6 @@
 <?php
 
-use Models\CmtsGw;
+use Models\Cmts;
 use Models\IpPool;
 
 class IpPoolController extends \BaseController {
@@ -121,16 +121,18 @@ class IpPoolController extends \BaseController {
 	 */
 	private function cmts_hostnames ()
 	{
-		$cmts_gws = DB::table('cmts_gws')->select('id', 'hostname')->get();
+		$cmts_gws = DB::table('cmts')->select('id', 'hostname')->get();
+		return $this->html_list($cmts_gws, 'hostname');
+		return $this->html_list(Cmts::select('id', 'hostname'), 'hostname');
 
-		$hostnames = array();
+		// $hostnames = array();
 
-		foreach ($cmts_gws as $host)
-		{
-			$hostnames[$host->id] = $host->hostname;
-		}
+		// foreach ($cmts_gws as $host)
+		// {
+		// 	$hostnames[$host->id] = $host->hostname;
+		// }
 
-		return $hostnames;
+		// return $hostnames;
 	}
 
 

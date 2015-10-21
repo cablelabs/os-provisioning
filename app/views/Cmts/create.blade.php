@@ -12,7 +12,7 @@
 	
 	{{ Form::open(array('route' => array('Cmts.store', 0), 'method' => 'POST')) }}
 
-		@include('cmtsgws.form', array ('cmts' => null))
+		@include('Cmts.form', array ('cmts' => null))
 	
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}

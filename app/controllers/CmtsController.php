@@ -1,26 +1,24 @@
 <?php
 
-use Models\CmtsGw;
+use Models\Cmts;
 use Models\IpPool;
 
 class CmtsController extends \BaseController {
 
 	/**
-	 * Display a listing of CmtsGws
+	 * Display a listing of Cmts
 	 *
 	 * @return Response
 	 */
 	public function index()
 	{
-		$CmtsGws = CmtsGw::all();
-		// $c = CmtsGw::lists('id');		// fetches only the column id as an array
+		$cmts = Cmts::all();
 
-		return View::make('Cmts.index', compact('CmtsGws'));
-		// compact() makes passed variables available to the view - like ->with($variable) statement
+		return View::make('Cmts.index', compact('cmts'));
 	}
 
 	/**
-	 * Show the form for creating a new CmtsGw
+	 * Show the form for creating a new Cmts
 	 *
 	 * @return Response
 	 */
@@ -31,64 +29,64 @@ class CmtsController extends \BaseController {
 
 
 	/**
-	 * Show the form for editing the specified CmtsGw.
+	 * Show the form for editing the specified Cmts.
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function edit($id)
 	{
-		$CmtsGw = CmtsGw::find($id);
+		$cmts = Cmts::find($id);
 
-		return View::make('Cmts.edit', compact('CmtsGw'));
+		return View::make('Cmts.edit', compact('cmts'));
 	}
 
 
 	/**
-	 * Store a newly created CmtsGw in storage.
+	 * Store a newly created Cmts in storage.
 	 *
 	 * @return Response
 	 */
 	public function store()
 	{
-		$validator = Validator::make($data = Input::all(), CmtsGw::$rules);
+		$validator = Validator::make($data = Input::all(), Cmts::rules());
 
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		CmtsGw::create($data);
+		Cmts::create($data);
 
-		return Redirect::route('cmts.index');
+		return Redirect::route('Cmts.index');
 	}
 
 
 	/**
-	 * Update the specified CmtsGw in storage.
+	 * Update the specified Cmts in storage.
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function update($id)
 	{
-		$CmtsGw = CmtsGw::findOrFail($id);
+		$cmts = Cmts::findOrFail($id);
 
-		//dd($CmtsGw);
-		$validator = Validator::make($data = Input::all(), CmtsGw::$rules);
+		//dd($Cmts);
+		$validator = Validator::make($data = Input::all(), Cmts::rules($id));
 
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$CmtsGw->update($data);
+		$cmts->update($data);
 
-		return Redirect::route('cmts.index');
+		return Redirect::route('Cmts.index');
 	}
 
 	/**
-	 * Remove the specified CmtsGw from storage.
+	 * Remove the specified Cmts from storage.
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -100,13 +98,13 @@ class CmtsController extends \BaseController {
 			// bulk delete
 			// TODO: put to base controller -> make it generic
 			foreach (Input::all()['ids'] as $id => $val)
-				CmtsGw::destroy($id);
+				Cmts::destroy($id);
 		}
 		else
-			CmtsGw::destroy($id);
+			Cmts::destroy($id);
 
 		return $this->index();
-		//return Redirect::route('cmts.index'); 
+		//return Redirect::route('Cmts.index'); 
 	}
 
 }

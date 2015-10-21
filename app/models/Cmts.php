@@ -5,14 +5,15 @@ namespace Models;
 use File;
 use DB;
 
-class CmtsGw extends \Eloquent {
+class Cmts extends \Eloquent {
 
 	// Add your validation rules here
-	public static $rules = [
-		 'hostname' => 'unique:cmts_gws,hostname',		// unique: table, column
-		// 'ip' => 'unique:cmts_gws,ip'
-		// 'title' => 'required'
-	];
+	public static function rules($id = null)
+    {
+        return array(
+			'hostname' => 'unique:cmts,hostname,'.$id  	// unique: table, column
+        );
+    }
 
 	// Don't forget to fill this array
 	protected $fillable = ['hostname', 'type', 'ip', 'community_rw', 'community_ro', 'company', 'state', 'monitoring'];
@@ -28,7 +29,7 @@ class CmtsGw extends \Eloquent {
     {
         parent::boot();
 
-        CmtsGw::observe(new CmtsObserver);
+        Cmts::observe(new CmtsObserver);
     }
 
 
@@ -61,7 +62,7 @@ class CmtsGw extends \Eloquent {
 			return -1;
 
 		// TODO: $ippools = this->ippools;
-		$ippools = IpPool::where('cmts_gw_id', '=', $this->id)->get();
+		$ippools = IpPool::where('cmts_id', '=', $this->id)->get();
 
 
 		File::put($file, 'shared-network "'.$this->hostname.'"'."\n".'{'."\n\t");
@@ -141,7 +142,7 @@ class CmtsGw extends \Eloquent {
 
 	/**
 	 * Deletes the calling object/cmts in DB and removes the include statement from the global dhcpd.conf
-	 * Also sets the related IP-Pools to 
+	 * Also sets the related IP-Pools to zero
 	 *
 	 * @author Nino Ryschawy
 	 * @param
@@ -172,10 +173,10 @@ class CmtsGw extends \Eloquent {
 		fwrite($file_dhcp_conf, $data);
 		fclose($file_dhcp_conf);
 
-		// set all relevant ip pools to cmts_gw_id = 0 (to first cmts_id under development)
+		// set all relevant ip pools to cmts_id = 0 (to first cmts_id under development)
 		// TODO: set first_cmts_id to zero!
-		$first_cmts_id = CmtsGw::first()->id;
-		DB::update('UPDATE ip_pools SET cmts_gw_id='.$first_cmts_id.' where cmts_gw_id='.$this->id.';');
+		$first_cmts_id = Cmts::first()->id;
+		DB::update('UPDATE ip_pools SET cmts_id='.$first_cmts_id.' where cmts_id='.$this->id.';');
 
 	}
 

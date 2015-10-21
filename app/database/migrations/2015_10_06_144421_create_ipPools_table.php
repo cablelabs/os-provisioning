@@ -15,7 +15,7 @@ class CreateIpPoolsTable extends Migration {
 		Schema::create('ip_pools', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('cmts_gw_id')->unsigned();
+			$table->integer('cmts_id')->unsigned();
 			$table->enum('type', array('CM', 'CPEPub', 'CPEPriv', 'MTA')); 	// (cm, cpePub, cpePriv, mta)
 			$table->string('net')->sizeof(20);
 			$table->string('netmask')->sizeof(20);

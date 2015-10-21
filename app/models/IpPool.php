@@ -18,7 +18,7 @@ class IpPool extends \Eloquent {
 	];
 
 	// Don't forget to fill this array
-	protected $fillable = ['cmts_gw_id', 'type', 'net', 'netmask', 'ip_pool_start', 'ip_pool_end', 'router_ip', 'broadcast_ip', 'dns1_ip', 'dns2_ip', 'dns3_ip', 'optional'];
+	protected $fillable = ['cmts_id', 'type', 'net', 'netmask', 'ip_pool_start', 'ip_pool_end', 'router_ip', 'broadcast_ip', 'dns1_ip', 'dns2_ip', 'dns3_ip', 'optional'];
 
 
     /**
@@ -27,7 +27,7 @@ class IpPool extends \Eloquent {
 
     public function cmts()
     {
-        return $this->belongsTo('Models\CmtsGw', 'cmts_gw_id');
+        return $this->belongsTo('Models\Cmts', 'cmts_id');
     }
 
 

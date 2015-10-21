@@ -16,13 +16,13 @@
 	
 	{{ Form::open(array('route' => array('Cmts.destroy', 0), 'method' => 'delete')) }}
 
-		@foreach ($CmtsGws as $CmtsGw)
+		@foreach ($cmts as $gw)
 
 				<table>
 				<tr>
 					<td> 
-						{{ Form::checkbox('ids['.$CmtsGw->id.']') }}
-						{{ HTML::linkRoute('Cmts.edit', (($CmtsGw->name == '') ? $CmtsGw->hostname : 'cm-'.$CmtsGw->name), $CmtsGw->id) }}
+						{{ Form::checkbox('ids['.$gw->id.']') }}
+						{{ HTML::linkRoute('Cmts.edit', (($gw->name == '') ? $gw->hostname : 'cm-'.$gw->name), $gw->id) }}
 					</td>
 				</tr>
 

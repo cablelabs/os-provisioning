@@ -1,7 +1,7 @@
 <table>
 <tr>
-	<td>{{ Form::label('cmts_gw_id', 'CMTS Hostname') }}</td>
-	<td>{{ Form::select('cmts_gw_id', $hostnames) }}	
+	<td>{{ Form::label('cmts_id', 'CMTS Hostname') }}</td>
+	<td>{{ Form::select('cmts_id', $hostnames) }}	
 </tr>
 
 <tr>
