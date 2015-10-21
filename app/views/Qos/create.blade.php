@@ -12,7 +12,7 @@
 
 	{{ Form::open(array('route' => array('Qos.store', 0), 'method' => 'POST')) }}
 
-		@include('qualities.form', array ('quality' => null))
+		@include('Qos.form', array ('quality' => null))
 	
 	{{ Form::submit('Create') }}
 	{{ Form::close() }}

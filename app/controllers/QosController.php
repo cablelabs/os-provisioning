@@ -26,6 +26,20 @@ class QosController extends \BaseController {
 		return View::make('Qos.create');
 	}
 
+
+	/**
+	 * Show the form for editing the specified quality.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		$quality = Quality::find($id);
+
+		return View::make('Qos.edit', compact('quality'));
+	}
+
 	/**
 	 * Store a newly created quality in storage.
 	 *
@@ -45,31 +59,6 @@ class QosController extends \BaseController {
 		return Redirect::route('Qos.edit', $id)->with(DB::getQueryLog());
 	}
 
-	/**
-	 * Display the specified quality.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		$quality = Quality::findOrFail($id);
-
-		return View::make('Qos.show', compact('quality'));
-	}
-
-	/**
-	 * Show the form for editing the specified quality.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		$quality = Quality::find($id);
-
-		return View::make('Qos.edit', compact('quality'));
-	}
 
 	/**
 	 * Update the specified quality in storage.
@@ -92,6 +81,7 @@ class QosController extends \BaseController {
 
 		return Redirect::route('Qos.edit', $id)->with(DB::getQueryLog());
 	}
+
 
 	/**
 	 * Remove the specified modem from storage.
