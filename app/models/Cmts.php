@@ -64,9 +64,7 @@ class Cmts extends \Eloquent {
 		if ($this->id == '0')
 			return -1;
 
-		// TODO: $ippools = this->ippools;
-		$ippools = IpPool::where('cmts_id', '=', $this->id)->get();
-
+		$ippools = $this->ippools;
 
 		File::put($file, 'shared-network "'.$this->hostname.'"'."\n".'{'."\n\t");
 

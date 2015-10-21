@@ -39,6 +39,14 @@ class configfileCommand extends Command {
 	 */
 	public function fire()
 	{
+		// remove all config files
+		$files = glob('/tftpboot/cm/*');              // get all files in dir
+		foreach ($files as $file) 
+		{
+			if(is_file($file))
+			unlink($file);
+		}
+
 		$cms = Modem::all();
 
 		$i = 1; 
