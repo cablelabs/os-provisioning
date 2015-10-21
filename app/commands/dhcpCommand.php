@@ -51,14 +51,6 @@ class dhcpCommand extends Command {
 		$e->make_dhcp();
 
 		// CMTS's
-		// remove all through cmts config files
-		$files = glob('/etc/dhcp/nms/cmts_gws/*');		// get all files in dir
-		foreach ($files as $file) 
-		{
-			if(is_file($file))
-			unlink($file);
-		}
-
 		$c = Cmts::all();
 		$c->first()->del_cmts_includes();
 

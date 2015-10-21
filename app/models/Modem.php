@@ -169,6 +169,21 @@ class Modem extends \Eloquent {
 
         return true;
     }
+
+    /**
+     * Deletes Configfile of a modem
+     */
+    protected function delete_configfile()
+    {
+        $file['1'] = 'cm-'.$this->id.'cfg';
+        $file['2'] = 'cm-'.$this->id.'conf';
+
+        foreach ($file as $f) 
+        {
+            if (file_exists($f)) unlink($file);
+        }
+    }
+
 }
 
 
@@ -204,6 +219,7 @@ class ModemObserver
     public function deleted($modem)
     {
         $modem->make_dhcp_cm_all();
+        $modem->delete_configfile();
     } 
 
     // Delete all Endpoints under CM ..

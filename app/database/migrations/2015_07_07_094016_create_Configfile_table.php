@@ -34,6 +34,14 @@ class CreateConfigfileTable extends Migration {
 	public function down()
 	{
 		Schema::drop('configfile');
+
+		// remove all config files
+		$files = glob('/tftpboot/cm/*');              // get all files in dir
+		foreach ($files as $file) 
+		{
+			if(is_file($file))
+			unlink($file);
+		}
 	}
 
 }
