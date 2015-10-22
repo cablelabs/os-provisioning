@@ -8,6 +8,10 @@
 	{{ HTML::linkRoute('Configfile.index', 'Configfiles') }} |
 	{{ HTML::linkRoute('Qos.index', 'QoS') }} |
 	{{ HTML::linkRoute('Cmts.index', 'CMTS') }} |
-	{{ HTML::linkRoute('IpPool.index', 'IP-Pools') }} |
-	{{ HTML::linkRoute('CmtsDownstream.index', 'CMTS-DS') }}
+	{{ HTML::linkRoute('IpPool.index', 'IP-Pools') }} 
+
+	<br>
+
+	{{ HTML::linkRoute('CmtsDownstream.index', 'CMTS-DS') }} |
+	{{ HTML::linkRoute('SnmpMib.index', 'SNMP-Mib') }}
 </p>

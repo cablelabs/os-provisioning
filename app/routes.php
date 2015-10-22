@@ -34,7 +34,7 @@ Route::resource('Configfile', 'ConfigfileController');
 
 Route::resource('Qos', 'QosController');
 
-
+Route::resource('SnmpMib', 'SnmpMibController');
 Route::resource('CmtsDownstream', 'CmtsDownstreamController');
-Route::resource('Mta', 'MtaController');
 
+Route::resource('Mta', 'MtaController');
