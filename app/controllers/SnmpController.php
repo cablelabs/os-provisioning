@@ -79,7 +79,7 @@ class SnmpController extends \BaseController {
     public function snmp_get_all()
     {
     	foreach ($this->mibs as $mib) 
-    		$this->snmp_get($mib[0], $mib[1], isset($mib[3]) ? $mib[3]:null);
+    		$this->snmp_get($mib[1], $mib[2], isset($mib[4]) ? $mib[4]:null);
 
     	$this->model->save();
     }
@@ -88,7 +88,7 @@ class SnmpController extends \BaseController {
     public function snmp_set_all()
     {
     	foreach ($this->mibs as $mib) 
-    		$this->snmp_set($mib[0], $mib[1], $mib[2], isset($mib[3]) ? $mib[3]:null);
+    		$this->snmp_set($mib[1], $mib[2], $mib[3], isset($mib[4]) ? $mib[4]:null);
     }
 
 

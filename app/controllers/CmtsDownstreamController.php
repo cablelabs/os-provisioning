@@ -11,11 +11,11 @@ class CmtsDownstreamController extends \SnmpController {
 	{
 
     	return array (
-	    	array('frequency', '.1.3.6.1.2.1.10.127.1.1.1.1.2.'.$index, 'i'),
-	    	array('modulation', '.1.3.6.1.2.1.10.127.1.1.1.1.4.'.$index, 'i', array('3' => 'qam64', '4' => 'qam256')),
-	    	array('power', '.1.3.6.1.2.1.10.127.1.1.1.1.6.'.$index, 'i'),
-	    	array('alias', '.1.3.6.1.2.1.31.1.1.1.18.'.$index, 's'),
-	    	array('description', '.1.3.6.1.2.1.2.2.1.2.'.$index, 's')
+	    	array('input',  'frequency', '.1.3.6.1.2.1.10.127.1.1.1.1.2.'.$index, 'i'),
+	    	array('select', 'modulation', '.1.3.6.1.2.1.10.127.1.1.1.1.4.'.$index, 'i', array('3' => 'qam64', '4' => 'qam256')),
+	    	array('input',  'power', '.1.3.6.1.2.1.10.127.1.1.1.1.6.'.$index, 'i'),
+	    	array('input',  'alias', '.1.3.6.1.2.1.31.1.1.1.18.'.$index, 's'),
+	    	array('input',  'description', '.1.3.6.1.2.1.2.2.1.2.'.$index, 's')
     	);
 
     }
@@ -89,7 +89,9 @@ class CmtsDownstreamController extends \SnmpController {
 		$this->snmp_init($cmtsdownstream, $this->mibs($cmtsdownstream->index),'10.42.253.254', 'public');
 		$this->snmp_get_all();
 
-		return View::make('CmtsDownstream.edit', compact('cmtsdownstream'));
+		$objects = $this->mibs($id);
+
+		return View::make('CmtsDownstream.edit', compact('cmtsdownstream', 'objects'));
 	}
 
 	/**
