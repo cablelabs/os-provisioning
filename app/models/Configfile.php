@@ -16,7 +16,7 @@ class Configfile extends \Eloquent {
 	public static function rules($id = null)
     {
         return array(
-            'name' => 'required|unique:configfiles,name,'.$id,
+            'name' => 'required|unique:configfile,name,'.$id,
             'text' => 'docsis'
         );
     }
@@ -63,7 +63,7 @@ class Configfile extends \Eloquent {
 		/*
 		 * generate Table array with SQL columns
 		 */
-		$tables_a ['modem'][0] = Schema::getColumnListing('modems');
+		$tables_a ['modem'][0] = Schema::getColumnListing('modem');
 		$tables_a ['qos'][0]   = Schema::getColumnListing('qos');		
 
 

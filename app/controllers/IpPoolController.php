@@ -24,6 +24,11 @@ class IpPoolController extends \BaseController {
 		$ip_pools = IpPool::all();
 		$hostnames = $this->html_list($this->cmts_hostnames(), 'hostname');
 
+		// dd($ip_pools->cmts->first());
+		// foreach ($ip_pools as $cmts) 
+		// {
+		// 	var_dump($cmts);//->hostname);
+		// }
 		return View::make('IpPool.index', compact('ip_pools', 'hostnames'));
 	}
 
