@@ -36,5 +36,6 @@ Route::resource('Qos', 'QosController');
 
 Route::resource('SnmpMib', 'SnmpMibController');
 Route::resource('CmtsDownstream', 'CmtsDownstreamController');
+Route::resource('DeviceType', 'DeviceTypeController');
 
 Route::resource('Mta', 'MtaController');

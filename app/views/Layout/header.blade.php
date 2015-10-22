@@ -13,5 +13,6 @@
 	<br>
 
 	{{ HTML::linkRoute('CmtsDownstream.index', 'CMTS-DS') }} |
-	{{ HTML::linkRoute('SnmpMib.index', 'SNMP-Mib') }}
+	{{ HTML::linkRoute('SnmpMib.index', 'SNMP-Mib') }} | 
+	{{ HTML::linkRoute('DeviceType.index', 'Device Types') }}
 </p>
