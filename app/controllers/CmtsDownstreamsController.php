@@ -3,7 +3,7 @@
 use Models\CmtsDownstream;
 use Models\CmtsGw;
 
-class CmtsDownstreamsController extends \SnmpController {
+class CmtsDownstreamController extends \SnmpController {
 
 
 

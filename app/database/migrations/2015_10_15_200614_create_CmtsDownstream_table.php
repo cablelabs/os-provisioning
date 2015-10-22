@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateCmtsDownstreamsTable extends Migration {
+class CreateCmtsDownstreamTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,10 +12,10 @@ class CreateCmtsDownstreamsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('cmts_downstreams', function(Blueprint $table)
+		Schema::create('cmtsdownstream', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('cmts_gws_id')->unsigned();
+			$table->integer('cmts_id')->unsigned();
 			$table->integer('index')->unsigned();
 			$table->string('alias');
 			$table->string('description');
@@ -34,7 +34,7 @@ class CreateCmtsDownstreamsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('cmts_downstreams');
+		Schema::drop('cmtsdownstream');
 	}
 
 }

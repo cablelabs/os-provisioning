@@ -7,6 +7,10 @@ use Log;
 
 class CmtsDownstream extends \BaseModel {
 
+
+	// The associated SQL table for this Model
+    protected $table = 'cmtsdownstream';
+
 	// Add your validation rules here
 	public static $rules = [
 		// 'title' => 'required'
