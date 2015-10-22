@@ -177,7 +177,7 @@ class Cmts extends \Eloquent {
 		// set all relevant ip pools to cmts_id = 0 (to first cmts_id under development)
 		// TODO: set first_cmts_id to zero!
 		$first_cmts_id = Cmts::first()->id;
-		DB::update('UPDATE ip_pools SET cmts_id='.$first_cmts_id.' where cmts_id='.$this->id.';');
+		DB::update('UPDATE ippool SET cmts_id='.$first_cmts_id.' where cmts_id='.$this->id.';');
 
 	}
 

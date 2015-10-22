@@ -12,10 +12,10 @@ class Mta extends \BaseModel {
 	{
 		return array(
 			'mac' => 'required|mac',
-			'modem_id' => 'required|exists:modems,id|min:1',
-			'configfile_id' => 'required|exists:configfiles,id|min:1',
+			'modem_id' => 'required|exists:modem,id|min:1',
+			'configfile_id' => 'required|exists:configfile,id|min:1',
 			/* 'hostname' => 'required|unique:mtas,hostname,'.$id, */
-			'type' => 'required|exists:mtas,type',
+			'type' => 'required|exists:mta,type',
 		);
 	}
 

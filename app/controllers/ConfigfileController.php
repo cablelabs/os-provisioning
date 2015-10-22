@@ -69,8 +69,7 @@ class ConfigfileController extends \BaseController {
 				$parents[$cf->id] = $cf->name;	
 		}
 
-
-		return View::make('Configfile.edit', compact('configfile'))->with('parents',$parents);
+		return View::make('Configfile.edit', compact('configfile', 'parents'));
 	}
 
 	/**

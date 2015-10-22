@@ -49,7 +49,9 @@ class EndpointController extends \BaseController {
 	 */
 	public function store()
 	{
-		$validator = Validator::make(Input::all(), Endpoint::rules());
+		$data = Input::all();
+
+		$validator = Validator::make($data, Endpoint::rules());
 
 		if ($validator->fails())
 		{
@@ -71,8 +73,9 @@ class EndpointController extends \BaseController {
 	public function update($id)
 	{
 		$endpoint = Endpoint::findOrFail($id);
+		$data = Input::all();
 
-		$validator = Validator::make(Input::all(), Endpoint::rules($id));
+		$validator = Validator::make($data, Endpoint::rules($id));
 
 		if ($validator->fails())
 		{
