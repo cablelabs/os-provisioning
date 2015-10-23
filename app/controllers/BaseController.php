@@ -1,5 +1,6 @@
 <?php
 
+
 class BaseController extends Controller {
 
 	protected $output_format; 
@@ -96,4 +97,111 @@ class BaseController extends Controller {
 
 	// 	return Redirect::route($name.'.edit', $id);
 	// }	
+
+
+	protected function get_model_name()
+	{
+		// TODO: generic replace ..
+		return explode ('Controller', Route::getCurrentRoute()->getActionName())[0];
+
+	}
+
+	protected function get_model ()
+	{
+		$classname = $this->get_model_name();
+
+		if (!$classname)
+			return null;
+
+		$classname = 'Models\\'.$classname;
+		$obj = new $classname;
+
+		return $obj;
+	}
+
+	protected function get_controller_name()
+	{
+		return explode('@', Route::getCurrentRoute()->getActionName())[0];
+	}
+
+	protected function get_controller()
+	{
+		$classname = $this->get_controller_name();
+
+		if (!$classname)
+			return null;
+
+		$obj = new $classname;
+		return $obj;
+	}
+
+	protected function get_view_name()
+	{
+		return $this->get_model_name(); 
+	}
+
+	protected function get_view_var()
+	{
+		return strtolower($this->get_view_name());
+	}
+
+
+	/**
+	 * Show the form for editing the specified mta.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		${$this->get_view_var()} = $this->get_model()->findOrFail($id);
+
+		return View::make($this->get_view_name().'.edit', compact($this->get_view_var()))->with($this->get_controller()->html_list_array()); 
+	}
+
+
+	/**
+	 * Update the specified data in storage.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function update($id)
+	{
+		$obj = $this->get_model()->findOrFail($id);
+
+		$validator = Validator::make($data = Input::all(), $obj::rules($id));
+
+		if ($validator->fails())
+		{
+			return Redirect::back()->withErrors($validator)->withInput();
+		}
+
+		$obj->update($data);
+
+		return Redirect::route($this->get_view_name().'.index');
+	}
+
+
+
+	/**
+	 * Remove the specified modem from storage.
+	 *
+	 * @param  int  $id: bulk delete if == 0
+	 * @return Response
+	 */
+	public function destroy($id)
+	{
+		if ($id == 0)
+		{
+			// bulk delete
+			foreach (Input::all()['ids'] as $id => $val)
+				$this->get_model()->destroy($id);
+		}
+		else
+			$this->get_model()->destroy($id);
+
+		return $this->index();
+	}
+	
 }

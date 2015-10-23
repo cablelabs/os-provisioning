@@ -6,6 +6,16 @@ use Models\Configfile;
 
 class MtaController extends \BaseController {
 
+	protected function html_list_array ()
+	{
+		$ret = array (
+				'configfiles' => $this->html_list($this->configfiles(), 'name'),
+				'modems' => $this->html_list($this->modems(), 'hostname'),
+				'mta_types' => Mta::getPossibleEnumValues('type', true)
+			);
+		return $ret;
+	}
+
 	/**
 	 * return all modem objects
 	 */
@@ -52,21 +62,6 @@ class MtaController extends \BaseController {
 	}
 
 
-	/**
-	 * Show the form for editing the specified mta.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		$mta = Mta::findOrFail($id);
-		$configfiles = $this->html_list($this->configfiles(), 'name');
-		$modems = $this->html_list($this->modems(), 'hostname');
-		$mta_types = Mta::getPossibleEnumValues('type', true);
-
-		return View::make('Mta.edit', compact('mta', 'configfiles', 'modems', 'mta_types')); 
-	}
 
 	/**
 	 * Store a newly created mta in storage.
@@ -85,29 +80,6 @@ class MtaController extends \BaseController {
 		$id = Mta::create($data)->id;
 
 		return Redirect::route('Mta.edit', $id);
-	}
-
-
-	/**
-	 * Update the specified mta in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		$mta = Mta::findOrFail($id);
-
-		$validator = Validator::make($data = Input::all(), Mta::rules($id));
-
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$mta->update($data);
-
-		return Redirect::route('Mta.index');
 	}
 
 
