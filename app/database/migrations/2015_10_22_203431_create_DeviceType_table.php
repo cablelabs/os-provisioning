@@ -32,7 +32,7 @@ class CreateDeviceTypeTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('DeviceType');
+		Schema::drop(strtolower('DeviceType'));
 	}
 
 }

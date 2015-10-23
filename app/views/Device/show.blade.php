@@ -1,0 +1,1 @@
+/var/www/lara/app/views/Device/show.blade.php

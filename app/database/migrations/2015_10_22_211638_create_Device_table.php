@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateDeviceTypeTable extends Migration {
+class CreateDeviceTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,14 +12,18 @@ class CreateDeviceTypeTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create(strtolower('DeviceType'), function(Blueprint $table)
+		Schema::create(strtolower('Device'), function(Blueprint $table)
 		{
 			$table->increments('id');
+			$table->integer('devicetype_id')->unsigned();
 			$table->string('name');
-			$table->string('vendor');
-			$table->string('version');
+			$table->string('ip', 15);
+			$table->string('community_ro', 45);
+			$table->string('community_rw', 45);
+			$table->string('address1');
+			$table->string('address2');
+			$table->string('address3');
 			$table->text('description');
-			$table->integer('parent_id')->unsigned();
 			$table->timestamps();
 		});
 	}
@@ -32,7 +36,7 @@ class CreateDeviceTypeTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('DeviceType');
+		Schema::drop(strtolower('Device'));
 	}
 
 }
