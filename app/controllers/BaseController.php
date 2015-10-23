@@ -5,29 +5,6 @@ class BaseController extends Controller {
 
 	protected $output_format; 
 
-	/**
-	 * Setup the layout used by the controller.
-	 *
-	 * @return void
-	 */
-	protected function setupLayout()
-	{
-		if ( ! is_null($this->layout))
-		{
-			$this->layout = View::make($this->layout);
-		}
-	}
-
-
-	/**
-	 *  Testing Parent Functions, call with parent::update() 
-	 *  in sub classes ..
-	 */
-	protected function update($id)
-	{
-		exec ("logger \"call to update base controller\"");
-	}
-
 
 	/**
 	 *  json abstraction layer
@@ -61,44 +38,12 @@ class BaseController extends Controller {
 			return Redirect::route($view);
 	}
 
-	/**
-	 * Generic function to build a list with key of id
-	 * @param $array 	
-	 * @return $ret 	list
-	 */
-	protected function html_list ($array, $column)
-	{
-		$ret = array();
-
-		foreach ($array as $a)
-		{
-			$ret[$a->id] = $a->{$column};	
-		}
-
-		return $ret;
-	}
 
 	/**
-	 * Generic store function an Object with name $name
-	 * @param $name 	Name of Object
-	 * @return $ret 	list
+	 * Gets class name
+	 * @param
+	 * @return
 	 */
-	// TODO: look for $name if it works as object template
-	// protected function store($name)
-	// {
-	// 	$validator = Validator::make($data = $this->default_input(Input::all()), $name::rules());
-
-	// 	if ($validator->fails())
-	// 	{
-	// 		return Redirect::back()->withErrors($validator)->withInput();
-	// 	}
-
-	// 	$id = $name::create($data)->id;
-
-	// 	return Redirect::route($name.'.edit', $id);
-	// }	
-
-
 	protected function get_model_name()
 	{
 		// TODO: generic replace ..
@@ -106,7 +51,7 @@ class BaseController extends Controller {
 
 	}
 
-	protected function get_model ()
+	protected function get_model_obj ()
 	{
 		$classname = $this->get_model_name();
 
@@ -124,7 +69,7 @@ class BaseController extends Controller {
 		return explode('@', Route::getCurrentRoute()->getActionName())[0];
 	}
 
-	protected function get_controller()
+	protected function get_controller_obj()
 	{
 		$classname = $this->get_controller_name();
 
@@ -147,16 +92,64 @@ class BaseController extends Controller {
 
 
 	/**
-	 * Show the form for editing the specified mta.
+	 * Display a listing of modems
+	 *
+	 * @return Response
+	 */
+	public function index()
+	{
+		${$this->get_view_var().'s'} = $this->get_model_obj()->all();
+
+		return View::make($this->get_view_name().'.index', compact($this->get_view_var().'s'));
+	}
+
+
+
+	/**
+	 * Show the form for creating a new model item
+	 *
+	 * @return Response
+	 */
+	public function create()
+	{
+		return View::make($this->get_view_name().'.create')->with($this->get_model_obj()->html_list_array());
+	}
+
+
+	/**
+	 * Generic store function an Object with name $name
+	 * @param $name 	Name of Object
+	 * @return $ret 	list
+	 */
+	// TODO: look for $name if it works as object template
+	protected function store()
+	{
+		$obj = $this->get_model_obj();
+
+		$validator = Validator::make($data = $this->get_controller_obj()->default_input(Input::all()), $obj::rules());
+
+		if ($validator->fails())
+		{
+			return Redirect::back()->withErrors($validator)->withInput();
+		}
+
+		$id = $obj::create($data)->id;
+
+		return Redirect::route($this->get_view_name().'.edit', $id);
+	}
+
+
+	/**
+	 * Show the editing form of the calling Object
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function edit($id)
 	{
-		${$this->get_view_var()} = $this->get_model()->findOrFail($id);
+		${$this->get_view_var()} = $this->get_model_obj()->findOrFail($id);
 
-		return View::make($this->get_view_name().'.edit', compact($this->get_view_var()))->with($this->get_controller()->html_list_array()); 
+		return View::make($this->get_view_name().'.edit', compact($this->get_view_var()))->with($this->get_model_obj()->html_list_array()); 
 	}
 
 
@@ -168,10 +161,10 @@ class BaseController extends Controller {
 	 */
 	public function update($id)
 	{
-		$obj = $this->get_model()->findOrFail($id);
 
-		$validator = Validator::make($data = Input::all(), $obj::rules($id));
+		$obj = $this->get_model_obj()->findOrFail($id);
 
+		$validator = Validator::make($data = $this->get_controller_obj()->default_input(Input::all()), $obj::rules($id));
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
@@ -196,10 +189,10 @@ class BaseController extends Controller {
 		{
 			// bulk delete
 			foreach (Input::all()['ids'] as $id => $val)
-				$this->get_model()->destroy($id);
+				$this->get_model_obj()->destroy($id);
 		}
 		else
-			$this->get_model()->destroy($id);
+			$this->get_model_obj()->destroy($id);
 
 		return $this->index();
 	}

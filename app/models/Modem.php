@@ -4,8 +4,9 @@ namespace Models;
 
 use File;
 use Log;
+use Models\Qos;
 
-class Modem extends \Eloquent {
+class Modem extends \BaseModel {
 
     // The associated SQL table for this Model
     protected $table = 'modem';
@@ -22,6 +23,25 @@ class Modem extends \Eloquent {
 
 	// Don't forget to fill this array
 	protected $fillable = ['hostname', 'name', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent', 'configfile_id', 'qos_id'];
+
+
+    /**
+     * return all Configfile Objects for CMs
+     */
+    private function configfiles ()
+    {
+        return Configfile::where('device', '=', 'CM')->where('public', '=', 'yes')->get();
+    }
+
+
+    public function html_list_array ()
+    {
+        $ret = array (
+                'configfiles' => $this->html_list($this->configfiles(), 'name'),
+                'qualities' => $this->html_list(Qos::all(), 'name')
+            );
+        return $ret;
+    }
 
 
     /**
@@ -173,7 +193,7 @@ class Modem extends \Eloquent {
     /**
      * Deletes Configfile of a modem
      */
-    protected function delete_configfile()
+    public function delete_configfile()
     {
         $file['1'] = 'cm-'.$this->id.'cfg';
         $file['2'] = 'cm-'.$this->id.'conf';

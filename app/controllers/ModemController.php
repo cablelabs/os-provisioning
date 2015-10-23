@@ -8,11 +8,13 @@ use Models\Qos;
 
 class ModemController extends \BaseController {
 
+
 	/**
+	 * TODO: make generic
 	 * Make Checkbox Default Input
 	 * see: see http://forumsarchive.laravel.io/viewtopic.php?id=11627
 	 */
-	private function default_input ($data)
+	protected function default_input ($data)
 	{
 		if(!isset($data['public']))$data['public']=0;
 		if(!isset($data['network_access']))$data['network_access']=0;
@@ -20,13 +22,6 @@ class ModemController extends \BaseController {
 		return $data;
 	}
 
-	/**
-	 * return all Configfile Objects for CMs
-	 */
-	private function configfiles ()
-	{
-		return Configfile::where('device', '=', 'CM')->where('public', '=', 'yes')->get();
-	}
 
 
 	/**
@@ -146,114 +141,5 @@ if (0)
 
 		return View::make('Modem.log', compact('modem', 'out'));
 	}
-	
 
-	/**
-	 * Display a listing of modems
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		$modems = Modem::all();
-
-		return View::make('Modem.index', compact('modems'));
-	}
-
-
-	/**
-	 * Show the form for creating a new modem
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		$configfiles = $this->html_list($this->configfiles(), 'name');
-		$qualities = $this->html_list(Qos::all(), 'name');
-
-		return View::make('Modem.create', compact('configfiles', 'qualities'));
-	}
-
-
-	/**
-	 * Show the form for editing the specified modem.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		$modem = Modem::find($id);
-		$mac   = $modem->mac;
-		$out = $this->search_lease('agent.remote-id '.$mac);
-		$configfiles = $this->html_list($this->configfiles(), 'name');
-		$qualities = $this->html_list(Qos::all(), 'name');
-
-		return View::make('Modem.edit', compact('modem', 'out', 'configfiles', 'qualities'));
-	}
-
-
-	/**
-	 * Store a newly created modem in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		$validator = Validator::make($data = $this->default_input(Input::all()), Modem::rules());
-
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$id = Modem::create($data)->id;
-
-		return Redirect::route('Modem.edit', $id);
-	}
-
-
-	/**
-	 * Update the specified modem in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		$modem = Modem::findOrFail($id);
-
-		$validator = Validator::make($data = $this->default_input(Input::all()), Modem::rules($id));
-		
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$modem->update($data);
-
-		return Redirect::route('Modem.edit', $id);
-	}
-
-	/**
-	 * Remove the specified modem from storage.
-	 *
-	 * @param  int  $id: bulk delete if == 0
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		if ($id == 0)
-		{
-			// bulk delete
-			// TODO: put to base controller -> make it generic
-			foreach (Input::all()['ids'] as $id => $val)
-				Modem::destroy($id);
-		}
-		else
-			Modem::destroy($id);
-
-		return $this->index();
-	}
-	
 }
