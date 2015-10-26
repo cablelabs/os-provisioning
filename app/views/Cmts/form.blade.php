@@ -54,6 +54,9 @@
 </tr>
 
 <tr>
+	<td><br></td>
+</tr>
+<tr>
 	<td>{{ Form::submit('Save') }}</td>
 	<td id='success_msg'>{{ Session::get('message') }}</td>
 </tr>

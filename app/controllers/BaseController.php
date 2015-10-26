@@ -126,7 +126,7 @@ class BaseController extends Controller {
 		$view_header 	= $obj->get_view_header();
 
 		// proof if there is a special view for the calling model
-		if (View::exists($this->get_view_name()))
+		if (View::exists($this->get_view_name().'.create'))
 			$view_path = $this->get_view_name().'.create';
 		else
 			$view_path = 'Generic.create';
@@ -177,13 +177,24 @@ class BaseController extends Controller {
 	public function edit($id)
 	{
 		$obj = $this->get_model_obj();
-		${$this->get_view_var()} = $obj->findOrFail($id);
+		//${$this->get_view_var()} = $obj->findOrFail($id);
+
+		// transfer model_name, view_header, view_var
+		$model_name 	= $this->get_model_name();
+		$view_header 	= $obj->get_view_header();
+		$view_var 		= $obj->findOrFail($id);
+
+		// proof if there is a special view for the calling model
+		if (View::exists($this->get_view_name().'.edit'))
+			$view_path = $this->get_view_name().'.edit';
+		else
+			$view_path = 'Generic.edit';
 
 		// proof if we need to transfer data to the view for this model
 		if (method_exists($obj, 'html_list_array'))
-			return View::make($this->get_view_name().'.edit', compact($this->get_view_var()))->with($obj->html_list_array());
+			return View::make($view_path, compact('model_name', 'view_var', 'view_header'))->with($obj->html_list_array());
 		else
-			return View::make($this->get_view_name().'.edit', compact($this->get_view_var()));
+			return View::make($view_path, compact('model_name', 'view_var', 'view_header'));
 	}
 
 

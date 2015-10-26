@@ -1,28 +1,9 @@
-@extends ('Layout.split')
-
-@section('content_top')
-
-	{{ HTML::linkRoute('Cmts.index', 'CMTS') }} / {{ HTML::linkRoute('Cmts.edit', 'CMTS-'.$cmts->hostname, $cmts->id) }}
-	
-@stop
-
-@section('content_left')
-
-	<h2>Edit CMTS</h2>
-	
-	{{ Form::model($cmts, array('route' => array('Cmts.update', $cmts->id), 'method' => 'put')) }}
-
-		@include('Cmts.form', $cmts)
-
-	{{ Form::close() }}
-
-@stop
-
+@extends('Generic.edit')
 @section('content_right')
 	
 	<h2>IP Pools</h2>
 
-	@foreach ($cmts->ippools as $pool)
+	@foreach ($view_var->ippools as $pool)
 
 		{{ HTML::linkRoute('IpPool.edit', $pool->id, $pool->id) }}
 	
