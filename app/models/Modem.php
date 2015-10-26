@@ -33,7 +33,9 @@ class Modem extends \BaseModel {
         return Configfile::where('device', '=', 'CM')->where('public', '=', 'yes')->get();
     }
 
-
+    /**
+     * Returns the data array for all views of the model
+     */
     public function html_list_array ()
     {
         $ret = array (

@@ -16,7 +16,7 @@
 	
 	{{ Form::open(array('route' => array('Cmts.destroy', 0), 'method' => 'delete')) }}
 
-		@foreach ($cmts as $gw)
+		@foreach ($cmtss as $gw)
 
 				<table>
 				<tr>

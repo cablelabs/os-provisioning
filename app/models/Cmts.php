@@ -5,7 +5,7 @@ namespace Models;
 use File;
 use DB;
 
-class Cmts extends \Eloquent {
+class Cmts extends \BaseModel {
 
 	// The associated SQL table for this Model
     protected $table = 'cmts';
@@ -22,6 +22,18 @@ class Cmts extends \Eloquent {
 	protected $fillable = ['hostname', 'type', 'ip', 'community_rw', 'community_ro', 'company', 'state', 'monitoring'];
 	// columns in database that shall not be able to alter
 	// protected $guarded = [];
+
+
+    /**
+     * Returns the data array for all views of the model
+     */
+	public function html_list_array ()
+    {
+        $ret = array (
+
+            );
+        return $ret;
+    }
 
 
     /**
