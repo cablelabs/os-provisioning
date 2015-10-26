@@ -9,9 +9,12 @@ class Qos extends \Eloquent {
     protected $table = 'qos';
 
 	// Add your validation rules here
-	public static $rules = [
-		'name' => 'required'
-	];
+	public static function rules($id = null)
+    {
+        return array(
+            'name' => 'required'
+        );
+    }
 
 	// Don't forget to fill this array
 	protected $fillable = ['ds_rate_max', 'us_rate_max', 'name'];

@@ -17,7 +17,7 @@
 
 	{{ Form::open(array('route' => array('Qos.destroy', 0), 'method' => 'delete')) }}
 
-		@foreach ($qualities as $quality)
+		@foreach ($qoss as $quality)
 
 				<table>
 				<tr>
