@@ -92,7 +92,7 @@ class BaseController extends Controller {
 
 
 	/**
-	 * Display a listing of modems
+	 * Display a listing of all objects of the calling model
 	 *
 	 * @return Response
 	 */
@@ -117,16 +117,20 @@ class BaseController extends Controller {
 
 
 	/**
-	 * Generic store function an Object with name $name
+	 * Generic store function - stores an object of the calling model
 	 * @param $name 	Name of Object
 	 * @return $ret 	list
 	 */
-	// TODO: look for $name if it works as object template
 	protected function store()
 	{
 		$obj = $this->get_model_obj();
 
-		$validator = Validator::make($data = $this->get_controller_obj()->default_input(Input::all()), $obj::rules());
+		// proof if Model has/needs a default_input($data) function
+		if (function_exists('default_input'))
+			$validator = Validator::make($data = $this->get_controller_obj()->default_input(Input::all()), $obj::rules());
+		else
+			$validator = Validator::make($data = Input::all(), $obj::rules());
+
 
 		if ($validator->fails())
 		{
@@ -149,7 +153,7 @@ class BaseController extends Controller {
 	{
 		${$this->get_view_var()} = $this->get_model_obj()->findOrFail($id);
 
-		return View::make($this->get_view_name().'.edit', compact($this->get_view_var()))->with($this->get_model_obj()->html_list_array()); 
+		return View::make($this->get_view_name().'.edit', compact($this->get_view_var()))->with($this->get_model_obj()->html_list_array());
 	}
 
 
@@ -161,10 +165,15 @@ class BaseController extends Controller {
 	 */
 	public function update($id)
 	{
-
 		$obj = $this->get_model_obj()->findOrFail($id);
 
-		$validator = Validator::make($data = $this->get_controller_obj()->default_input(Input::all()), $obj::rules($id));
+		// proof if Model has/needs a default_input($data) function
+		if (function_exists('default_input'))
+			$validator = Validator::make($data = $this->get_controller_obj()->default_input(Input::all()), $obj::rules($id));
+		else
+			$validator = Validator::make($data = Input::all(), $obj::rules($id));
+
+
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
