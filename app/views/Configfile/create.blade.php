@@ -8,7 +8,7 @@
 
 @section('content_left')
 
-	<h2>Create COnfigfile</h2>	
+	<h2>Create Configfile</h2>	
 
 	{{ Form::open(array('route' => array('Configfile.store', 0), 'method' => 'POST')) }}
 

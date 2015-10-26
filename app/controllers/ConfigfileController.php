@@ -4,33 +4,6 @@ use Models\Configfile;
 
 class ConfigfileController extends \BaseController {
 
-	/**
-	 * Display a listing of configfiles
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		$configfiles = Configfile::all();
-
-		return View::make('Configfile.index', compact('configfiles'));
-	}
-
-	/**
-	 * Show the form for creating a new configfile
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		$parents = array('0' => 'Null');
-		foreach (Configfile::all() as $cf)
-		{
-			$parents[$cf->id] = $cf->name;	
-		}
-		
-		return View::make('Configfile.create', compact('parents'));
-	}
 
 	/**
 	 * Store a newly created configfile in storage.
@@ -92,26 +65,6 @@ class ConfigfileController extends \BaseController {
 		$configfile->update($data);
 
 		return View::make('Configfile.edit', $id)->with(DB::getQueryLog());
-	}
-
-	/**
-	 * Remove the specified configfile from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		if ($id == 0)
-		{
-			// bulk delete
-			foreach (Input::all()['ids'] as $id => $val)
-				Configfile::destroy($id);
-		}
-		else
-			Configfile::destroy($id);
-
-		return $this->index();
 	}
 
 }

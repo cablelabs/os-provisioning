@@ -26,6 +26,33 @@ class Configfile extends \Eloquent {
 
 
     /**
+     * returns a list of possible parent configfiles
+     * Nearly the same like html_list method of BaseModel but needs zero element in front 
+     */
+    private function parents_list ()
+    {
+        $parents = array('0' => 'Null');
+		foreach (Configfile::all() as $cf)
+		{
+			$parents[$cf->id] = $cf->name;	
+		}
+		return $parents;
+    }
+
+    /**
+     * Returns the data array that has to be transfered to all views of the model
+     */
+    public function html_list_array ()
+    {
+        $ret = array (
+                'parents' => $this->parents_list()
+            );
+        return $ret;
+    }
+
+
+
+    /**
      * all Relationships:
      */
 	public function modem ()
