@@ -7,6 +7,8 @@
 */
 ?>
 
+<script>setTimeout("document.getElementById('success_msg').style.display='none';", 2500);</script>
+
 <table>
 <tr>
 	<td>{{ Form::label('hostname', 'Hostname') }}</td>
@@ -49,6 +51,11 @@
 <tr>
 	<td>{{ Form::label('monitoring', 'Monitoring') }}</td>
 	<td>{{ Form::text ('monitoring') }}</td>
+</tr>
+
+<tr>
+	<td>{{ Form::submit('Save') }}</td>
+	<td id='success_msg'>{{ Session::get('message') }}</td>
 </tr>
 
 </table>

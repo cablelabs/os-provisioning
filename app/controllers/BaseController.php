@@ -146,7 +146,7 @@ class BaseController extends Controller {
 
 		$id = $obj::create($data)->id;
 
-		return Redirect::route($this->get_view_name().'.edit', $id);
+		return Redirect::route($this->get_view_name().'.edit', $id)->with('message', 'Created!');
 	}
 
 
@@ -194,7 +194,7 @@ class BaseController extends Controller {
 
 		$obj->update($data);
 
-		return Redirect::route($this->get_view_name().'.index');
+		return Redirect::route($this->get_view_name().'.edit', $id)->with('message', 'Updated!');
 	}
 
 

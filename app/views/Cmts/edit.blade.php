@@ -14,7 +14,6 @@
 
 		@include('Cmts.form', $cmts)
 
-	{{ Form::submit('Save') }}
 	{{ Form::close() }}
 
 @stop
@@ -25,7 +24,6 @@
 
 	@foreach ($cmts->ippools as $pool)
 
-		{{-- HTML::linkRoute(Route, Name, Id als Variable in Url) --}}
 		{{ HTML::linkRoute('IpPool.edit', $pool->id, $pool->id) }}
 	
 	@endforeach

@@ -14,7 +14,6 @@
 
 		@include('Cmts.form', array ('cmts' => null))
 	
-	{{ Form::submit('Create') }}
 	{{ Form::close() }}
 
 @stop
