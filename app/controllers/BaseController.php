@@ -112,9 +112,11 @@ class BaseController extends Controller {
 	 */
 	public function create()
 	{
+		$obj = $this->get_model_obj();
+
 		// proof if we need to transfer data to the view for this model
-		if (function_exists('html_list_array'))
-			return View::make($this->get_view_name().'.create')->with($this->get_model_obj()->html_list_array());
+		if (method_exists($obj, 'html_list_array'))
+			return View::make($this->get_view_name().'.create')->with($obj->html_list_array());
 		else
 			return View::make($this->get_view_name().'.create');
 	}
@@ -128,10 +130,11 @@ class BaseController extends Controller {
 	protected function store()
 	{
 		$obj = $this->get_model_obj();
+		$controller = $this->get_controller_obj();
 
 		// proof if Model has/needs a default_input($data) function
-		if (function_exists('default_input'))
-			$validator = Validator::make($data = $this->get_controller_obj()->default_input(Input::all()), $obj::rules());
+		if (method_exists($controller, 'default_input'))
+			$validator = Validator::make($data = $controller->default_input(Input::all()), $obj::rules());
 		else
 			$validator = Validator::make($data = Input::all(), $obj::rules());
 
@@ -155,11 +158,12 @@ class BaseController extends Controller {
 	 */
 	public function edit($id)
 	{
-		${$this->get_view_var()} = $this->get_model_obj()->findOrFail($id);
+		$obj = $this->get_model_obj();
+		${$this->get_view_var()} = $obj->findOrFail($id);
 
 		// proof if we need to transfer data to the view for this model
-		if (function_exists('html_list_array'))
-			return View::make($this->get_view_name().'.edit', compact($this->get_view_var()))->with($this->get_model_obj()->html_list_array());
+		if (method_exists($obj, 'html_list_array'))
+			return View::make($this->get_view_name().'.edit', compact($this->get_view_var()))->with($obj->html_list_array());
 		else
 			return View::make($this->get_view_name().'.edit', compact($this->get_view_var()));
 	}
@@ -174,10 +178,11 @@ class BaseController extends Controller {
 	public function update($id)
 	{
 		$obj = $this->get_model_obj()->findOrFail($id);
+		$controller = $this->get_controller_obj();
 
 		// proof if Model has/needs a default_input($data) function
-		if (function_exists('default_input'))
-			$validator = Validator::make($data = $this->get_controller_obj()->default_input(Input::all()), $obj::rules($id));
+		if (method_exists($controller, 'default_input'))
+			$validator = Validator::make($data = $controller->default_input(Input::all()), $obj::rules($id));
 		else
 			$validator = Validator::make($data = Input::all(), $obj::rules($id));
 
