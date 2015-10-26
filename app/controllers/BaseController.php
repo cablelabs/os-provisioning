@@ -98,9 +98,17 @@ class BaseController extends Controller {
 	 */
 	public function index()
 	{
-		${$this->get_view_var().'s'} = $this->get_model_obj()->all();
+		$obj = $this->get_model_obj();
+		
+		$model_name 	= $this->get_model_name();
+		$view_var   	= $obj->all();
+		$view_header  	= $obj->get_view_header();
 
-		return View::make($this->get_view_name().'.index', compact($this->get_view_var().'s'));
+		// proof if the calling Model has a special index view - if not call the generic view
+		if (View::exists($this->get_view_name().'.index'))
+			return View::make($this->get_view_name().'.index', compact('model_name', 'view_header', 'view_var'));
+		else
+			return View::make('Generic.index', compact('model_name', 'view_header', 'view_var'));			
 	}
 
 
