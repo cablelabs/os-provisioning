@@ -112,7 +112,11 @@ class BaseController extends Controller {
 	 */
 	public function create()
 	{
-		return View::make($this->get_view_name().'.create')->with($this->get_model_obj()->html_list_array());
+		// proof if we need to transfer data to the view for this model
+		if (function_exists('html_list_array'))
+			return View::make($this->get_view_name().'.create')->with($this->get_model_obj()->html_list_array());
+		else
+			return View::make($this->get_view_name().'.create');
 	}
 
 
@@ -153,7 +157,11 @@ class BaseController extends Controller {
 	{
 		${$this->get_view_var()} = $this->get_model_obj()->findOrFail($id);
 
-		return View::make($this->get_view_name().'.edit', compact($this->get_view_var()))->with($this->get_model_obj()->html_list_array());
+		// proof if we need to transfer data to the view for this model
+		if (function_exists('html_list_array'))
+			return View::make($this->get_view_name().'.edit', compact($this->get_view_var()))->with($this->get_model_obj()->html_list_array());
+		else
+			return View::make($this->get_view_name().'.edit', compact($this->get_view_var()));
 	}
 
 

@@ -25,18 +25,6 @@ class Cmts extends \BaseModel {
 
 
     /**
-     * Returns the data array for all views of the model
-     */
-	public function html_list_array ()
-    {
-        $ret = array (
-
-            );
-        return $ret;
-    }
-
-
-    /**
      * BOOT:
      * - init cmts observer
      */
