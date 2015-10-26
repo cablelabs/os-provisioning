@@ -122,11 +122,21 @@ class BaseController extends Controller {
 	{
 		$obj = $this->get_model_obj();
 
+		$model_name 	= $this->get_model_name();
+		$view_header 	= $obj->get_view_header();
+
+		// proof if there is a special view for the calling model
+		if (View::exists($this->get_view_name()))
+			$view_path = $this->get_view_name().'.create';
+		else
+			$view_path = 'Generic.create';
+
 		// proof if we need to transfer data to the view for this model
 		if (method_exists($obj, 'html_list_array'))
-			return View::make($this->get_view_name().'.create')->with($obj->html_list_array());
+			return View::make($view_path, compact('model_name', 'view_header'))->with($obj->html_list_array());
 		else
-			return View::make($this->get_view_name().'.create');
+			return View::make($view_path, compact('model_name', 'view_header'));
+
 	}
 
 
