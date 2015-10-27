@@ -136,7 +136,7 @@ class Modem extends \Eloquent {
         if (!$cf)
             return false;
 
-        $text = "Main\n{\n\t".$cf->text_make($modem)."\n}";
+        $text = "Main\n{\n\t".$cf->text_make($modem, "modem")."\n}";
         $ret  = File::put($cf_file, $text);
 
         

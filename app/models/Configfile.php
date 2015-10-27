@@ -40,64 +40,87 @@ class Configfile extends \Eloquent {
      *   Make Configfile Content for $this Object /
      *   without recursive objects
      */
-	private function __text_make ($m)
+	private function __text_make ($device, $type)
 	{
-		if (!$m)
+		$type = strtolower($type);
+		if (!$device)
 			return false;
-		
-		/*
-		 * all objects must be an array like a[xyz] = object
-		 *
-		 * INFO:
-		 * - variable names _must_ match tables_a[xyz] coloumn 
-		 * - if modem sql relations are not valid a warning will
-		 *   be printed
-		 */
-		$modems    = array ($m);
-		$qualities = array ($m->quality);
 
-		/*
-		 * generate Table array with SQL columns
-		 */
-		$tables_a ['modems'][0]    = Schema::getColumnListing('modems');
-		$tables_a ['qualities'][0] = Schema::getColumnListing('qualities');		
+		switch ($type) {
 
+		case "modem":
 
+			/*
+			 * all objects must be an array like a[xyz] = object
+			 *
+			 * INFO:
+			 * - variable names _must_ match tables_a[xyz] coloumn
+			 * - if modem sql relations are not valid a warning will
+			 *   be printed
+			 */
+			$modems    = array ($device);
+			$qualities = array ($device->quality);
+
+			/*
+			 * generate Table array with SQL columns
+			 */
+			$db_schemata ['modems'][0]    = Schema::getColumnListing('modems');
+			$db_schemata ['modems'][1]    = Schema::getColumnListing('modems');
+			$db_schemata ['qualities'][0] = Schema::getColumnListing('qualities');
+			break;
+
+		case "mta":
+			break;
+
+		default:
+			return false;
+
+		}
+
+		return $this->__text_make_now($device, $type, $db_schemata);
+	}
+
+	private function __text_make_now ($device, $type, $db_schemata)
+	{
 		/*
 		 * Generate search and replace array
 		 */
+		$search = array();
 		$replace = array();
 
 		$i = 0;
-		foreach ($tables_a as $name => $tables) 
+		foreach ($db_schemata as $table => $columns_multi)
 		{
-			foreach ($tables as $j => $table)
-			{
-				if (isset(${$name}[$j]->id))
-				{	
-					$replace_a = DB::select ("SELECT * FROM ".$name." WHERE id = ?", array(${$name}[$j]->id))[0];
+PENG!
+echo "<pre>"; dd($table); echo "</pre>";
 
-					foreach ($table as $entry)
+			foreach ($columns_multi as $j => $columns)
+			{
+				if (isset(${$table}[$j]->id))
+				{
+					$replace_a = DB::select ("SELECT * FROM ".$table." WHERE id = ?", array(${$table}[$j]->id))[0];
+
+					foreach ($columns as $entry)
 					{
-						$search[$i]  = '{'.$name.'.'.$entry.'.'.$j.'}';
+						$search[$i]  = '{'.$table.'.'.$entry.'.'.$j.'}';
 						$replace[$i] = $replace_a->{$entry};
-						
+
 						$i++;
 					}
-				} 
+				}
 				else
-					Log::warning ('modem cm-'.$m->id.' has no valid '.$name.' entry');
+					Log::warning ($type.' '.$device->hostname.' has no valid '.$table.' entry');
 			}
-		}	
+		}
 
 		// DEBUG: print_r($search); print_r($replace);
 
 		/*
 		 * Search and Replace Configfile TEXT
-		 */		
+		 */
 		$text = str_replace($search, $replace, $this->text);
 		$rows = explode("\n", $text);
-		
+
 		/*
 		 * Delete all with {xyz} content which can not be replaced
 		 */
@@ -105,7 +128,7 @@ class Configfile extends \Eloquent {
 		foreach ($rows as $row)
 			if (!preg_match("/\\{[^\\{]*\\}/im", $row))
 				$result .= "\n\t".$row;
-		
+
 		/*
 		 * return
 		 */
@@ -115,13 +138,13 @@ class Configfile extends \Eloquent {
     /**
      * Make Configfile Content
      */
-	public function text_make($m)
+	public function text_make($device, $type)
 	{
 		$p = $this;
 		$t = '';
 
 		do {
-			$t .= $p->__text_make($m);
+			$t .= $p->__text_make($device, $type);
 			$p  = $p->get_parent();
 		} while ($p);
 
