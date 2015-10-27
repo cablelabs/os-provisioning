@@ -56,7 +56,6 @@ class BaseController extends Controller {
 	{
 		// TODO: generic replace ..
 		return explode ('Controller', Route::getCurrentRoute()->getActionName())[0];
-
 	}
 
 	protected function get_model_obj ()
@@ -144,8 +143,6 @@ class BaseController extends Controller {
 			$form_path = $this->get_view_name().'.form';
 
 		return View::make($view_path, compact('model_name', 'view_header', 'form_fields', 'form_path'))->with($obj->html_list_array());
-
-
 	}
 
 
