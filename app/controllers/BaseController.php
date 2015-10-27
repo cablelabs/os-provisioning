@@ -9,7 +9,7 @@ class BaseController extends Controller {
 	/**
 	 * Returns a default input data array, that shall be overwritten from the appropriate model controller if needed
 	 */
-	private function default_input($data)
+	protected function default_input($data)
 	{
 		return $data;
 	}

@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute($model_name.'.index', $view_header) }} / {{ HTML::linkRoute($model_name.'.edit', $view_header.'-'.$view_var->hostname, $view_var->id) }}
+	{{ HTML::linkRoute($model_name.'.index', $view_header) }} / {{ HTML::linkRoute($model_name.'.edit', $view_var->get_view_link_title(), $view_var->id) }}
 	
 @stop
 

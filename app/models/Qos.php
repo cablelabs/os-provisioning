@@ -3,7 +3,7 @@
 namespace Models;
 use Log;
 
-class Qos extends \Eloquent {
+class Qos extends \BaseModel {
 
     // The associated SQL table for this Model
     protected $table = 'qos';
@@ -20,15 +20,29 @@ class Qos extends \Eloquent {
 	protected $fillable = ['ds_rate_max', 'us_rate_max', 'name'];
 
 
+    /**
+     * Relations
+     */
 	public function modem()
 	{
 		return $this->hasMany("Models\Modem");
 	}
+    
 
+    // Name of View
+    public static function get_view_header()
+    {
+        return 'QoS';
+    }
+
+    // link title in index view
+    public function get_view_link_title()
+    {
+        return $this->name;
+    }
 
     /**
-     * BOOT:
-     * - init quality observer
+     * BOOT: init quality observer
      */
     public static function boot()
     {
