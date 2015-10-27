@@ -32,7 +32,7 @@ class BaseController extends Controller {
 
 
 	/**
-	 *  Maybe a generic redirect is a option, but
+	 *  Maybe a generic redirect is an option, but
 	 *  howto handle fails etc. ?
 	 */
 	protected function generic_return ($view, $param = null)	
@@ -114,8 +114,8 @@ class BaseController extends Controller {
 		// proof if the calling Model has a special index view - if not call the generic view
 		if (View::exists($this->get_view_name().'.index'))
 			return View::make($this->get_view_name().'.index', compact('model_name', 'view_header', 'view_var'));
-		else
-			return View::make('Generic.index', compact('model_name', 'view_header', 'view_var'));			
+
+		return View::make('Generic.index', compact('model_name', 'view_header', 'view_var'));			
 	}
 
 
@@ -131,6 +131,7 @@ class BaseController extends Controller {
 
 		$model_name 	= $this->get_model_name();
 		$view_header 	= $obj->get_view_header();
+		// form_fields contain description of fields and the data of the fields
 		$form_fields	= $this->get_controller_obj()->get_form_fields();
 
 		$view_path = 'Generic.create';
@@ -142,7 +143,7 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		return View::make($view_path, compact('model_name', 'view_header', 'form_fields', 'form_path'))->with($obj->html_list_array());
+		return View::make($view_path, compact('model_name', 'view_header', 'form_fields', 'form_path'));
 	}
 
 
@@ -195,7 +196,7 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 			
-		return View::make($view_path, compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields'))->with($obj->html_list_array());
+		return View::make($view_path, compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields'));
 	}
 
 
@@ -210,12 +211,7 @@ class BaseController extends Controller {
 		$obj = $this->get_model_obj()->findOrFail($id);
 		$controller = $this->get_controller_obj();
 
-		// proof if Model has/needs a default_input($data) function
-		//if (method_exists($controller, 'default_input'))
 		$validator = Validator::make($data = $controller->default_input(Input::all()), $obj::rules($id));
-		// else
-		// 	$validator = Validator::make($data = Input::all(), $obj::rules($id));
-
 
 		if ($validator->fails())
 		{

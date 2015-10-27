@@ -28,26 +28,26 @@ class IpPool extends \BaseModel {
 	protected $fillable = ['cmts_id', 'type', 'net', 'netmask', 'ip_pool_start', 'ip_pool_end', 'router_ip', 'broadcast_ip', 'dns1_ip', 'dns2_ip', 'dns3_ip', 'optional'];
 
 
+    // Name of View
+    public static function get_view_header()
+    {
+        return 'IP-Pools';
+    }
+
+    // link title in index view
+    public function get_view_link_title()
+    {
+        return $this->html_list($this->cmts_hostnames(), 'hostname')[$this->cmts_id].'-'.$this->id;
+    }
+
+
     /**
      * Returns all cmts hostnames for ip pools as an array
      */
-    private function cmts_hostnames ()
+    public function cmts_hostnames ()
     {
         return DB::table('cmts')->select('id', 'hostname')->get();
     }
-
-
-    /**
-     * Returns the data array for all views of the model
-     */
-    public function html_list_array ()
-    {
-        $ret = array (
-                'hostnames' => $this->html_list($this->cmts_hostnames(), 'hostname')
-            );
-        return $ret;
-    }
-
 
 
     /**
@@ -60,7 +60,7 @@ class IpPool extends \BaseModel {
     }
 
 
-        /**
+    /**
      * BOOT:
      * - init cmts observer
      */

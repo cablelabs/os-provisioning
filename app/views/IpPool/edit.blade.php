@@ -2,24 +2,19 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute('IpPool.index', 'IP-Pool') }} / {{ HTML::linkRoute('IpPool.edit', 'IP-Pool: '.$ippool->cmts->hostname.'-'.$ippool->id, array($ippool->id)) }}
-
+	{{ HTML::linkRoute($model_name.'.index', $view_header) }} / {{ HTML::linkRoute($model_name.'.edit', 'IP-Pool: '.$view_var->cmts->hostname.$view_var->id, $view_var->id) }}
+	
 @stop
 
 @section('content_left')
 
-	<h2>Edit IP-Pool</h2>
+	{{ '<h2>Edit '.$view_header.'</h2>' }}
+	
+	{{ Form::model($view_var, array('route' => array($model_name.'.update', $view_var->id), 'method' => 'put')) }}
 
-	{{-- Form model populates the form fields with the array of the model (in this case $ippool) --}}	
-	{{ Form::model($ippool, array('route' => array('IpPool.update', $ippool->id), 'method' => 'put')) }}
+		@include($form_path, $view_var)
 
-		@include('IpPool.form', $ippool)
-
-	{{ Form::submit('Save') }}
 	{{ Form::close() }}
 
 @stop
 
-@section('content_right')
-
-@stop
