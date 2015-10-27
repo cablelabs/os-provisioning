@@ -8,7 +8,7 @@ class EndpointController extends \BaseController {
     /**
      * defines the formular fields for the edit and create view
      */
-	public function get_form_fields()
+	public function get_form_fields($model = null)
 	{
 		// label has to be the same like column in sql table
 		return array(

@@ -185,7 +185,7 @@ class BaseController extends Controller {
 		$model_name 	= $this->get_model_name();
 		$view_header 	= $obj->get_view_header();
 		$view_var 		= $obj->findOrFail($id);
-		$form_fields	= $this->get_controller_obj()->get_form_fields();
+		$form_fields	= $this->get_controller_obj()->get_form_fields($view_var);
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';

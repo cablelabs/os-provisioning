@@ -4,67 +4,28 @@ use Models\Configfile;
 
 class ConfigfileController extends \BaseController {
 
-
-	/**
-	 * Store a newly created configfile in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
+    /**
+     * defines the formular fields for the edit and create view
+     */
+	public function get_form_fields($model = null)
 	{
-		$validator = Validator::make($data = Input::all(), Configfile::rules());
-
-		if ($validator->fails())
+		if ($model)
+			$parents = $model->parents_list();
+		else
 		{
-			return Redirect::back()->withErrors($validator)->withInput();
+			$model = new Configfile; 
+			$parents = $model->first()->parents_list_all();
 		}
 
-		$id = Configfile::create($data)->id;
-
-		return View::make('Configfile.edit', $id);
-	}
-
-
-	/**
-	 * Show the form for editing the specified configfile.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		$configfile = Configfile::find($id);
-
-		$parents = array('0' => 'Null');
-		foreach (Configfile::all() as $cf)
-		{
-			if ($cf->id != $id)
-				$parents[$cf->id] = $cf->name;	
-		}
-
-		return View::make('Configfile.edit', compact('configfile', 'parents'));
-	}
-
-	/**
-	 * Update the specified configfile in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		$configfile = Configfile::findOrFail($id);
-
-		$validator = Validator::make($data = Input::all(), Configfile::rules($id));
-
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$configfile->update($data);
-
-		return View::make('Configfile.edit', $id)->with(DB::getQueryLog());
+		// label has to be the same like column in sql table
+		return array(
+			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
+			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => array('generic' => 'generic', 'network' => 'network', 'vendor' => 'vendor', 'user' => 'user')),
+			array('form_type' => 'select', 'name' => 'device', 'description' => 'Device', 'value' => array('cm' => 'CM', 'mta' => 'MTA')),
+			array('form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Configfile', 'value' => $parents),
+			array('form_type' => 'select', 'name' => 'public', 'description' => 'Public Use', 'value' => array('yes' => 'Yes', 'no' => 'No')),
+			array('form_type' => 'textarea', 'name' => 'text', 'description' => 'Config File Parameters'),
+		);
 	}
 
 }
