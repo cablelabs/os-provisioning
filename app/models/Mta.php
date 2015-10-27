@@ -41,6 +41,14 @@ class Mta extends \BaseModel {
 		return $this->belongsTo('Models\Modem');
 	}
 
+	/**
+	 * link with phonenumbers
+	 */
+	public function phonenumbers()
+	{
+		return $this->hasMany('Models\Phonenumber');
+	}
+
     /**
      * BOOT:
      * - init mta observer

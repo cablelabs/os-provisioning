@@ -67,7 +67,14 @@ class PhonenumbersController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('phonenumbers.create')->with('mtas', $this->mtas_list_with_dummies())->with('country_codes', Phonenumber::getPossibleEnumValues('country_code'));
+		// set mta_id if given (if phonenumber creation is started from mta edit view)
+		$mta_id = Input::get('mta_id', 0);
+		// don't use is_int as form data is always a string!
+		if (!is_numeric($mta_id)) {
+			$mta_id = 0;
+		}
+
+		return View::make('phonenumbers.create')->with('mtas', $this->mtas_list_with_dummies())->with('country_codes', Phonenumber::getPossibleEnumValues('country_code'))->with('mta_id', $mta_id);
 	}
 
 	/**

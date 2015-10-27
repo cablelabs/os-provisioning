@@ -15,7 +15,7 @@
 	</tr>
 	<tr>
 		<td>{{ Form::label('mta_id', 'MTA') }}</td>
-		<td>{{ Form::select('mta_id', $mtas) }}</td>
+		<td>{{ Form::select('mta_id', $mtas, $mta_id) }}</td>
 	</tr>
 	<tr>
 		<td>{{ Form::label('port', 'Port') }}</td>

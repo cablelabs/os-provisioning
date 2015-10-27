@@ -1,8 +1,9 @@
 <?php
 
-use Models\Mta;
-use Models\Modem;
 use Models\Configfile;
+use Models\Modem;
+use Models\Mta;
+use Models\Phonenumber;
 
 class MtasController extends \BaseController {
 
@@ -122,7 +123,10 @@ class MtasController extends \BaseController {
 	{
 		$mta = Mta::findOrFail($id);
 
-		return View::make('mtas.edit', compact('mta'))->with('configfiles', $this->configfiles_list())->with('modems', $this->modems_list())->with('mta_types', Mta::getPossibleEnumValues('type', true));
+		// method phonenumbers have to be defined in model Mta
+		$phonenumbers = Mta::find($id)->phonenumbers;
+
+		return View::make('mtas.edit', compact('mta'))->with('configfiles', $this->configfiles_list())->with('modems', $this->modems_list())->with('mta_types', Mta::getPossibleEnumValues('type', true))->with('phonenumbers', $phonenumbers);
 ;
 	}
 
