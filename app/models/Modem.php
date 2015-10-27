@@ -41,21 +41,17 @@ class Modem extends \BaseModel {
     /**
      * return all Configfile Objects for CMs
      */
-    private function configfiles ()
+    public function configfiles ()
     {
         return Configfile::where('device', '=', 'CM')->where('public', '=', 'yes')->get();
     }
 
     /**
-     * Returns the data array for all views of the model
+     * return all Configfile Objects for CMs
      */
-    public function html_list_array ()
+    public function qualities ()
     {
-        $ret = array (
-                'configfiles' => $this->html_list($this->configfiles(), 'name'),
-                'qualities' => $this->html_list(Qos::all(), 'name')
-            );
-        return $ret;
+        return QoS::all();
     }
 
 

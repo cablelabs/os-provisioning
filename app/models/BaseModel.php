@@ -63,7 +63,7 @@ class BaseModel extends \Eloquent
 	 * @param $array 	
 	 * @return $ret 	list
 	 */
-	protected function html_list ($array, $column)
+	public function html_list ($array, $column)
 	{
 		$ret = array();
 
