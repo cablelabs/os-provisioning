@@ -24,6 +24,19 @@ class Modem extends \BaseModel {
 	// Don't forget to fill this array
 	protected $fillable = ['hostname', 'name', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent', 'configfile_id', 'qos_id'];
 
+    
+    // Name of View
+    public static function get_view_header()
+    {
+        return 'Modems';
+    }
+
+    // link title in index view
+    public function get_view_link_title()
+    {
+        return $this->hostname;
+    }
+
 
     /**
      * return all Configfile Objects for CMs

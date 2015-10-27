@@ -6,7 +6,12 @@
 
 	<tr>
 		<td>{{ Form::label($field["name"], $field["description"]) }}</td>
-		<td>{{ Form::$field["form_type"] ($field["name"]) }}</td>
+		<td><?php 
+			if (array_key_exists('value', $field))
+				echo Form::$field["form_type"]($field["name"], $field["value"]);
+			else
+				echo Form::$field["form_type"] ($field["name"]);?>
+			</td>
 		<td>{{ $errors->first('name') }}</td>
 	</tr>
 
