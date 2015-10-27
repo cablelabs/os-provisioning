@@ -12,7 +12,7 @@
 	
 	{{ Form::open(array('route' => array($model_name.'.store', 0), 'method' => 'POST')) }}
 
-		@include($model_name.'.form', array ('cmts' => null))
+		@include($form_path, array ('cmts' => null))
 	
 	{{ Form::close() }}
 

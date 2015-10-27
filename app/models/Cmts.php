@@ -36,10 +36,8 @@ class Cmts extends \BaseModel {
 		return $this->hostname;
 	}
 
-
     /**
-     * BOOT:
-     * - init cmts observer
+     * BOOT - init cmts observer
      */
     public static function boot()
     {

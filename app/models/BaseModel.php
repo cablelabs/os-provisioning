@@ -5,6 +5,14 @@
  */
 class BaseModel extends \Eloquent
 {
+    /**
+     * Returns an empty data array for all views of the model
+     * The apropriate model shall overwrite that array if data is needed in a view
+     */
+    public function html_list_array ()
+    {
+        return null;
+    }
 
 	/**
 	 *	This returns an array with all possible enum values.

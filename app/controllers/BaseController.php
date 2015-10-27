@@ -3,12 +3,20 @@
 
 class BaseController extends Controller {
 
-	protected $output_format; 
+	protected $output_format;
+
+
+	/**
+	 * Returns a default input data array, that shall be overwritten from the appropriate model controller if needed
+	 */
+	private function default_input($data)
+	{
+		return $data;
+	}
 
 
 	/**
 	 *  json abstraction layer
-	 *  
 	 */
 	protected function json ()	
 	{
@@ -124,18 +132,19 @@ class BaseController extends Controller {
 
 		$model_name 	= $this->get_model_name();
 		$view_header 	= $obj->get_view_header();
+		$form_fields	= $this->get_controller_obj()->get_form_fields();
+
+		$view_path = 'Generic.create';
+		$form_path = 'Generic.form';
 
 		// proof if there is a special view for the calling model
 		if (View::exists($this->get_view_name().'.create'))
 			$view_path = $this->get_view_name().'.create';
-		else
-			$view_path = 'Generic.create';
+		if (View::exists($this->get_view_name().'.form'))
+			$form_path = $this->get_view_name().'.form';
 
-		// proof if we need to transfer data to the view for this model
-		if (method_exists($obj, 'html_list_array'))
-			return View::make($view_path, compact('model_name', 'view_header'))->with($obj->html_list_array());
-		else
-			return View::make($view_path, compact('model_name', 'view_header'));
+		return View::make($view_path, compact('model_name', 'view_header', 'form_fields', 'form_path'))->with($obj->html_list_array());
+
 
 	}
 
@@ -150,12 +159,7 @@ class BaseController extends Controller {
 		$obj = $this->get_model_obj();
 		$controller = $this->get_controller_obj();
 
-		// proof if Model has/needs a default_input($data) function
-		if (method_exists($controller, 'default_input'))
-			$validator = Validator::make($data = $controller->default_input(Input::all()), $obj::rules());
-		else
-			$validator = Validator::make($data = Input::all(), $obj::rules());
-
+		$validator = Validator::make($data = $controller->default_input(Input::all()), $obj::rules());
 
 		if ($validator->fails())
 		{
@@ -183,18 +187,18 @@ class BaseController extends Controller {
 		$model_name 	= $this->get_model_name();
 		$view_header 	= $obj->get_view_header();
 		$view_var 		= $obj->findOrFail($id);
+		$form_fields	= $this->get_controller_obj()->get_form_fields();
 
-		// proof if there is a special view for the calling model
+		$view_path = 'Generic.edit';
+		$form_path = 'Generic.form';
+
+		// proof if there are special views for the calling model
 		if (View::exists($this->get_view_name().'.edit'))
 			$view_path = $this->get_view_name().'.edit';
-		else
-			$view_path = 'Generic.edit';
-
-		// proof if we need to transfer data to the view for this model
-		if (method_exists($obj, 'html_list_array'))
-			return View::make($view_path, compact('model_name', 'view_var', 'view_header'))->with($obj->html_list_array());
-		else
-			return View::make($view_path, compact('model_name', 'view_var', 'view_header'));
+		if (View::exists($this->get_view_name().'.form'))
+			$form_path = $this->get_view_name().'.form';
+			
+		return View::make($view_path, compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields'))->with($obj->html_list_array());
 	}
 
 
@@ -210,10 +214,10 @@ class BaseController extends Controller {
 		$controller = $this->get_controller_obj();
 
 		// proof if Model has/needs a default_input($data) function
-		if (method_exists($controller, 'default_input'))
-			$validator = Validator::make($data = $controller->default_input(Input::all()), $obj::rules($id));
-		else
-			$validator = Validator::make($data = Input::all(), $obj::rules($id));
+		//if (method_exists($controller, 'default_input'))
+		$validator = Validator::make($data = $controller->default_input(Input::all()), $obj::rules($id));
+		// else
+		// 	$validator = Validator::make($data = Input::all(), $obj::rules($id));
 
 
 		if ($validator->fails())
@@ -229,7 +233,7 @@ class BaseController extends Controller {
 
 
 	/**
-	 * Remove the specified modem from storage.
+	 * Removes a specified model object from storage
 	 *
 	 * @param  int  $id: bulk delete if == 0
 	 * @return Response

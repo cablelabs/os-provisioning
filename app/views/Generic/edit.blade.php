@@ -12,7 +12,7 @@
 	
 	{{ Form::model($view_var, array('route' => array($model_name.'.update', $view_var->id), 'method' => 'put')) }}
 
-		@include($model_name.'.form', $view_var)
+		@include($form_path, $view_var)
 
 	{{ Form::close() }}
 
