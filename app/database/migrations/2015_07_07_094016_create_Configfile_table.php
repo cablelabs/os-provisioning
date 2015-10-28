@@ -21,6 +21,7 @@ class CreateConfigfileTable extends Migration {
 			$table->enum('device', array('cm', 'mta'));
 			$table->enum('public', array('yes', 'no'));
 			$table->integer('parent_id')->unsigned();
+			$table->string('firmware')->default("");
 			$table->timestamps();
 		});
 	}
@@ -35,12 +36,17 @@ class CreateConfigfileTable extends Migration {
 	{
 		Schema::drop('configfile');
 
-		// remove all config files
-		$files = glob('/tftpboot/cm/*');              // get all files in dir
-		foreach ($files as $file) 
-		{
+		// remove all config and firmware files
+		$files = array();
+		$files['cm'] = glob('/tftpboot/cm/*');              // get all files in dir
+		$files['mta'] = glob('/tftpboot/mta/*');              // get all files in dir
+		$files['fw'] = glob('/tftpboot/fw/*');              // get all files in dir
+
+		foreach ($files as $type) {
+			foreach ($type as $file) {
 			if(is_file($file))
-			unlink($file);
+				unlink($file);
+			}
 		}
 	}
 

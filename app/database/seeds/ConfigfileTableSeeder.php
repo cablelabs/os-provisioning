@@ -19,6 +19,12 @@ class ConfigfileTableSeeder extends Seeder {
 				'text' => 'SnmpMibObject sysLocation.0 String "Test Lab" ;'
 			]);
 		}
+
+		$firmware_dummies = array("fw_dummy1_v3.7.12.bin", "fw_dummy2_v1.7-fix12.bin");
+
+		foreach ($firmware_dummies as $firmware_dummy) {
+			touch("/tftpboot/fw/".$firmware_dummy);
+		}
 	}
 
 }
