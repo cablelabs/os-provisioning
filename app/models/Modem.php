@@ -124,6 +124,8 @@ class Modem extends \BaseModel {
      */
     public function make_dhcp_cm_all ()
     {        
+        $this->del_dhcp_conf_files();
+        
         foreach (Modem::all() as $modem) 
         {
             $id    = $modem->id;
@@ -206,12 +208,13 @@ class Modem extends \BaseModel {
      */
     public function delete_configfile()
     {
-        $file['1'] = 'cm-'.$this->id.'cfg';
-        $file['2'] = 'cm-'.$this->id.'conf';
+        $dir = '/tftpboot/cm/';
+        $file['1'] = $dir.'cm-'.$this->id.'.cfg';
+        $file['2'] = $dir.'cm-'.$this->id.'.conf';
 
         foreach ($file as $f) 
         {
-            if (file_exists($f)) unlink($file);
+            if (file_exists($f)) unlink($f);
         }
     }
 
@@ -250,14 +253,11 @@ class ModemObserver
     public function deleted($modem)
     {
         $modem->make_dhcp_cm_all();
-        $modem->delete_configfile();
     } 
 
     // Delete all Endpoints under CM ..
     public function deleting ($modem)
     {
-        /* depracted:
-        Endpoint::where('modem_id', '=', $modem->id)->delete();
-        */
+        $modem->delete_configfile();
     }
 }

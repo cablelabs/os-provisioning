@@ -90,33 +90,34 @@ class Cmts extends \BaseModel {
 			$range = $pool->ip_pool_start.' '.$pool->ip_pool_end;
 			$router = $pool->router_ip;
 			$type = $pool->type;
+			$options = $pool->optional;
 
 
 			$data = "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
-			$data .= "\n\t\t".'option routers '.$router;
-			$data .= "\n\t\t".'option broadcast address '.$broadcast_addr;
+			$data .= "\n\t\t".'option routers '.$router.';';
+			$data .= "\n\t\t".'option broadcast address '.$broadcast_addr.';';
 			$data .= "\n\n\t\t".'pool'."\n\t\t".'{';
-			$data .= "\n\t\t\t".'range '.$range."\n";
+			$data .= "\n\t\t\t".'range '.$range.';'."\n";
 
 			switch ($type)
 			{
 				case 'CM':
-					$data .= "\n\t\t\t".'allow members of "CM"';
+					$data .= "\n\t\t\t".'allow members of "CM";';
 					break;
 
 				case 'CPEPub':
-					$data .= "\n\t\t\t".'allow members of "Client"';
-					$data .= "\n\t\t\t".'deny members of "Client-Public"';
+					$data .= "\n\t\t\t".'allow members of "Client";';
+					$data .= "\n\t\t\t".'deny members of "Client-Public";';
 					break;
 
 				case 'CPEPriv':
-					$data .= "\n\t\t\t".'allow members of "Client-Public"';
-					$data .= "\n\t\t\t".'allow known-clients';
+					$data .= "\n\t\t\t".'allow members of "Client-Public";';
+					$data .= "\n\t\t\t".'allow known-clients;';
 					break;
 
 				case 'MTA':
-					$data .= "\n\t\t\t".'allow members of "MTA"';
-					$data .= "\n\t\t\t".'allow known-clients';
+					$data .= "\n\t\t\t".'allow members of "MTA";';
+					$data .= "\n\t\t\t".'allow known-clients;';
 					break;
 
 				default:
@@ -126,6 +127,11 @@ class Cmts extends \BaseModel {
 
 			$data .= "\n\t\t".'}';
 			$data .= "\n\t".'}'."\n";
+
+			// append additional options
+			if ($options)
+					$data .= "\n".$options."\n";
+
 			File::append($file, $data);
 		}
 
