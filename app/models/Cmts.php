@@ -5,7 +5,7 @@ namespace Models;
 use File;
 use DB;
 
-class Cmts extends \Eloquent {
+class Cmts extends \BaseModel {
 
 	// The associated SQL table for this Model
     protected $table = 'cmts';
@@ -24,9 +24,20 @@ class Cmts extends \Eloquent {
 	// protected $guarded = [];
 
 
+	// Name of View
+	public static function get_view_header()
+	{
+		return 'CMTS';
+	}
+
+	// link title in index view
+	public function get_view_link_title()
+	{
+		return $this->hostname;
+	}
+
     /**
-     * BOOT:
-     * - init cmts observer
+     * BOOT - init cmts observer
      */
     public static function boot()
     {

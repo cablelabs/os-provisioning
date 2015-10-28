@@ -4,8 +4,9 @@ namespace Models;
 
 use File;
 use Log;
+use Models\Qos;
 
-class Modem extends \Eloquent {
+class Modem extends \BaseModel {
 
     // The associated SQL table for this Model
     protected $table = 'modem';
@@ -22,6 +23,36 @@ class Modem extends \Eloquent {
 
 	// Don't forget to fill this array
 	protected $fillable = ['hostname', 'name', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent', 'configfile_id', 'qos_id'];
+
+    
+    // Name of View
+    public static function get_view_header()
+    {
+        return 'Modems';
+    }
+
+    // link title in index view
+    public function get_view_link_title()
+    {
+        return $this->hostname;
+    }
+
+
+    /**
+     * return all Configfile Objects for CMs
+     */
+    public function configfiles ()
+    {
+        return Configfile::where('device', '=', 'CM')->where('public', '=', 'yes')->get();
+    }
+
+    /**
+     * return all Configfile Objects for CMs
+     */
+    public function qualities ()
+    {
+        return QoS::all();
+    }
 
 
     /**
@@ -173,7 +204,7 @@ class Modem extends \Eloquent {
     /**
      * Deletes Configfile of a modem
      */
-    protected function delete_configfile()
+    public function delete_configfile()
     {
         $file['1'] = 'cm-'.$this->id.'cfg';
         $file['2'] = 'cm-'.$this->id.'conf';
