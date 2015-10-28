@@ -6,9 +6,12 @@ composer.lock
 .env.*.php
 .env.php
 .DS_Store
-Thumbs.db
 *.sublime*
 *.fuse_hidden*
+Thumbs.db
 
 # temporary vim files
 *.swp
+
+# sublime trash dir
+.Trash-1000/

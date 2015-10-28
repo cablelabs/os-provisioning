@@ -8,32 +8,68 @@ use Log;
 // Model not found? execute composer dump-autoload in lara root dir
 class Mta extends \BaseModel {
 
+
 	// for soft deleting => move to BaseModel?
 	use \Illuminate\Database\Eloquent\SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
+
+    // The associated SQL table for this Model
+    protected $table = 'mta';
+
 
 	// Add your validation rules here
 	public static function rules($id=null)
 	{
 		return array(
 			'mac' => 'required|mac',
-			'modem_id' => 'required|exists:modems,id|min:1',
-			'configfile_id' => 'required|exists:configfiles,id|min:1',
-			/* 'hostname' => 'required|unique:mtas,hostname,'.$id, */
-			'type' => 'required|exists:mtas,type',
+			'modem_id' => 'required|exists:modem,id|min:1',
+			'configfile_id' => 'required|exists:configfile,id|min:1',
+			// 'hostname' => 'required|unique:mta,hostname,'.$id, 
+			'type' => 'required|exists:mta,type'
 		);
 	}
 
 	// Don't forget to fill this array
 	protected $fillable = ['mac', 'hostname', 'modem_id', 'configfile_id', 'type'];
 
+	// Name of View
+	public static function get_view_header()
+	{
+		return 'MTAs';
+	}
+
+	// link title in index view
+	public function get_view_link_title()
+	{
+		return $this->hostname;
+	}
+
 
 	/**
+	 * return all modem objects
+	 */
+	public function modems()
+	{
+		return Modem::get();
+	}
+
+	/**
+	 * return all Configfile Objects for MTAs
+	 */
+	public function configfiles()
+	{
+		return Configfile::where('device', '=', 'mta')->where('public', '=', 'yes')->get();
+	}
+
+
+	/**
+	 * All Relations
+	 *
 	 * link with configfiles
 	 */
 	public function configfile()
 	{
-		return $this->belongsTo('Models\Configfile');
+		return $this->belongsTo('Models\Configfile', 'configfile_id');
 	}
 
 	/**
@@ -41,7 +77,7 @@ class Mta extends \BaseModel {
 	 */
 	public function modem()
 	{
-		return $this->belongsTo('Models\Modem');
+		return $this->belongsTo('Models\Modem', 'modem_id');
 	}
 
 	/**
@@ -51,6 +87,7 @@ class Mta extends \BaseModel {
 	{
 		return $this->hasMany('Models\Phonenumber');
 	}
+
 
 	/**
 	 * BOOT:
@@ -126,7 +163,7 @@ class Mta extends \BaseModel {
  *
  * @author Patrick Reichel
  */
-class MTAObserver
+class MtaObserver
 {
 	public function created($mta)
 	{

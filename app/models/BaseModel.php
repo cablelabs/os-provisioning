@@ -48,4 +48,22 @@ class BaseModel extends \Eloquent
 
 		return $enum_values;
 	}
+
+
+	/**
+	 * Generic function to build a list with key of id
+	 * @param $array 	
+	 * @return $ret 	list
+	 */
+	public function html_list ($array, $column)
+	{
+		$ret = array();
+
+		foreach ($array as $a)
+		{
+			$ret[$a->id] = $a->{$column};	
+		}
+
+		return $ret;
+	}	
 }

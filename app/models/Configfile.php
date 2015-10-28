@@ -6,20 +6,76 @@ use Log;
 use DB;
 use Schema;
 
-class Configfile extends \Eloquent {
+class Configfile extends \BaseModel {
+
+    // The associated SQL table for this Model
+    protected $table = 'configfile';
+    
 
 	// Add your validation rules here
 	public static function rules($id = null)
     {
         return array(
             'name' => 'required|unique:configfiles,name,'.$id,
-			// TODO: apapt docsis validator for mta files
-            'text' => 'docsis'
+			// TODO: adapt docsis validator for mta files
+            'name' => 'required|unique:configfile,name,'.$id,
+            // 'text' => 'docsis'
         );
     }
 
 	// Don't forget to fill this array
 	protected $fillable = ['name', 'text', 'device', 'type', 'parent_id', 'public'];
+
+
+    // Name of View
+    public static function get_view_header()
+    {
+        return 'Configfiles';
+    }
+
+    // link title in index view
+    public function get_view_link_title()
+    {
+        return $this->name;
+    }
+
+    /**
+     * TODO: make one function
+     * returns a list of possible parent configfiles
+     * Nearly the same like html_list method of BaseModel but needs zero element in front 
+     */
+    public function parents_list ()
+    {
+        $parents = array('0' => 'Null');
+		foreach (Configfile::all() as $cf)
+		{
+			if ($cf->id != $this->id)
+				$parents[$cf->id] = $cf->name;	
+		}
+		return $parents;
+    }
+
+    public function parents_list_all ()
+    {
+        $parents = array('0' => 'Null');
+		foreach (Configfile::all() as $cf)
+		{
+			$parents[$cf->id] = $cf->name;	
+		}
+		return $parents;
+    }
+
+    /**
+     * Returns the data array that has to be transfered to all views of the model
+     */
+    public function html_list_array ()
+    {
+        $ret = array (
+                'parents' => $this->parents_list()
+            );
+        return $ret;
+    }
+
 
 
     /**
@@ -45,6 +101,25 @@ class Configfile extends \Eloquent {
 	{
 		// normalize type
 		$type = strtolower($type);
+		if (!$device)
+			return false;
+		
+		/*
+		 * all objects must be an array like a[xyz] = object
+		 *
+		 * INFO:
+		 * - variable names _must_ match tables_a[xyz] coloumn 
+		 * - if modem sql relations are not valid a warning will
+		 *   be printed
+		 */
+		$modem  = array ($device);
+		$qos    = array ($device->qos);
+
+		/*
+		 * generate Table array with SQL columns
+		 */
+		$tables_a ['modem'][0] = Schema::getColumnListing('modem');
+		$tables_a ['qos'][0]   = Schema::getColumnListing('qos');		
 
 		// we need a device to make the config for
 		if (!$device)
@@ -64,12 +139,12 @@ class Configfile extends \Eloquent {
 				 * - if modem sql relations are not valid a warning will
 				 *   be printed
 				 */
-				$modems    = array ($device);
-				$qualities = array ($device->quality);
+				$modem    = array ($device);
+				$quality = array ($device->quality);
 
 				// write table descriptions to array
-				$db_schemata ['modems'][0]    = Schema::getColumnListing('modems');
-				$db_schemata ['qualities'][0] = Schema::getColumnListing('qualities');
+				$db_schemata ['modem'][0]    = Schema::getColumnListing('modem');
+				$db_schemata ['quality'][0] = Schema::getColumnListing('quality');
 				break;
 
 			// this is for mtas
@@ -78,14 +153,14 @@ class Configfile extends \Eloquent {
 				// same as above – arrays for later generic use
 				// their have to match
 				$mtas = array($device);
-				$phonenumbers = array($device->phonenumbers);
-				$phonenumbers = $phonenumbers[0];
+				$phonenumber = array($device->phonenumber);
+				$phonenumber = $phonenumber[0];
 
 				// get desription of table mtas
-				$db_schemata['mtas'][0] = Schema::getColumnListing('mtas');
+				$db_schemata['mta'][0] = Schema::getColumnListing('mta');
 				// get description of table phonennumbers; one subarray per (possible) number
-				for ($i = 0; $i < count($phonenumbers); $i++) {
-					$db_schemata['phonenumbers'][$i] = Schema::getColumnListing('phonenumbers');
+				for ($i = 0; $i < count($phonenumber); $i++) {
+					$db_schemata['phonenumber'][$i] = Schema::getColumnListing('phonenumber');
 				}
 				break;
 

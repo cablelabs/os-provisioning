@@ -5,10 +5,18 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.2.*",
-		"way/generators": "~2.0",
 		"fzaninotto/faker": "1.5.*@dev",
+		"way/generators": "dev-v.2.6.1-adaptions",
 		"soapbox/laravel-formatter": "2.x"
 	},
+
+	"repositories": [
+                {
+                        "type" : "vcs",
+                        "url": "https://devel.roetzer-engineering.com:3128/stash/scm/pro/laravel-4-generators.git"
+                }
+	],
+
 	"autoload": {
 		"classmap": [
 			"app/commands",

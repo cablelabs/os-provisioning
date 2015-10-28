@@ -4,20 +4,55 @@ namespace Models;
 
 use File;
 use Log;
+use Models\Qos;
 
-class Modem extends \Eloquent {
+class Modem extends \BaseModel {
+
+    // The associated SQL table for this Model
+    protected $table = 'modem';
+
 
 	// Add your validation rules here
     // see: http://stackoverflow.com/questions/22405762/laravel-update-model-with-unique-validation-rule-for-attribute
     public static function rules($id = null)
     {
         return array(
-            'mac' => 'required|mac|unique:modems,mac,'.$id
+            'mac' => 'required|mac|unique:modem,mac,'.$id
         );
     }
 
 	// Don't forget to fill this array
-	protected $fillable = ['hostname', 'name', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent', 'configfile_id', 'quality_id'];
+	protected $fillable = ['hostname', 'name', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent', 'configfile_id', 'qos_id'];
+
+    
+    // Name of View
+    public static function get_view_header()
+    {
+        return 'Modems';
+    }
+
+    // link title in index view
+    public function get_view_link_title()
+    {
+        return $this->hostname;
+    }
+
+
+    /**
+     * return all Configfile Objects for CMs
+     */
+    public function configfiles ()
+    {
+        return Configfile::where('device', '=', 'CM')->where('public', '=', 'yes')->get();
+    }
+
+    /**
+     * return all Configfile Objects for CMs
+     */
+    public function qualities ()
+    {
+        return QoS::all();
+    }
 
 
     /**
@@ -28,9 +63,9 @@ class Modem extends \Eloquent {
         return $this->belongsTo('Models\Configfile');
     }
 
-    public function quality()
+    public function qos()
     {
-        return $this->belongsTo("Models\Quality");
+        return $this->belongsTo("Models\Qos");
     }
 
 
@@ -88,8 +123,10 @@ class Modem extends \Eloquent {
      * @author Torsten Schmidt
      */
     public function make_dhcp_cm_all ()
-    {
-        foreach (Modem::all() as $modem)
+    {        
+        $this->del_dhcp_conf_files();
+        
+        foreach (Modem::all() as $modem) 
         {
             $id    = $modem->id;
             $mac   = $modem->mac;
@@ -165,6 +202,22 @@ class Modem extends \Eloquent {
 
         return true;
     }
+
+    /**
+     * Deletes Configfile of a modem
+     */
+    public function delete_configfile()
+    {
+        $dir = '/tftpboot/cm/';
+        $file['1'] = $dir.'cm-'.$this->id.'.cfg';
+        $file['2'] = $dir.'cm-'.$this->id.'.conf';
+
+        foreach ($file as $f) 
+        {
+            if (file_exists($f)) unlink($f);
+        }
+    }
+
 }
 
 
@@ -205,8 +258,6 @@ class ModemObserver
     // Delete all Endpoints under CM ..
     public function deleting ($modem)
     {
-        /* depracted:
-        Endpoint::where('modem_id', '=', $modem->id)->delete();
-        */
+        $modem->delete_configfile();
     }
 }
