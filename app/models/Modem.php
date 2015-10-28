@@ -82,22 +82,22 @@ class Modem extends \Eloquent {
 
 
     /**
-     * Make DHCP config files for all CMs including EPs - used in dhcpCommand after deleting 
+     * Make DHCP config files for all CMs including EPs - used in dhcpCommand after deleting
      * the config files with all entries
      *
      * @author Torsten Schmidt
      */
     public function make_dhcp_cm_all ()
-    {        
-        foreach (Modem::all() as $modem) 
+    {
+        foreach (Modem::all() as $modem)
         {
             $id    = $modem->id;
             $mac   = $modem->mac;
 
             if ($id == 0)
                 continue;
-            
-            // all        
+
+            // all
             $data = $modem->generate_cm_update_entry($id, $mac);
             $ret = File::append(self::CONF_FILE_PATH, $data);
             if ($ret === false)
@@ -109,8 +109,8 @@ class Modem extends \Eloquent {
                 $data = $modem->generate_cm_update_entry_pub($id, $mac);
                 $ret = File::append(self::CONF_FILE_PATH_PUB, $data);
                 if ($ret === false)
-                    die("Error writing to file");             
-            }  
+                    die("Error writing to file");
+            }
         }
 
         return ($ret > 0 ? true : false);
@@ -139,11 +139,11 @@ class Modem extends \Eloquent {
         $text = "Main\n{\n\t".$cf->text_make($modem, "modem")."\n}";
         $ret  = File::put($cf_file, $text);
 
-        
+
         if ($ret === false)
                 die("Error writing to file");
-        
-        Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg");   
+
+        Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg");
         exec("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg", $out, $ret);
 
         return ($ret == 0 ? true : false);
@@ -155,7 +155,7 @@ class Modem extends \Eloquent {
     public function make_configfile_all()
     {
         $m = Modem::all();
-        foreach ($m as $modem) 
+        foreach ($m as $modem)
         {
             if ($modem->id == 0)
                 continue;
@@ -176,7 +176,7 @@ class Modem extends \Eloquent {
  *              'deleting', 'deleted', 'saving', 'saved',
  *              'restoring', 'restored',
  */
-class ModemObserver 
+class ModemObserver
 {
     public function created($modem)
     {
@@ -200,7 +200,7 @@ class ModemObserver
     public function deleted($modem)
     {
         $modem->make_dhcp_cm_all();
-    } 
+    }
 
     // Delete all Endpoints under CM ..
     public function deleting ($modem)

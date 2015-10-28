@@ -36,7 +36,7 @@ class ModemsController extends \BaseController {
 		$ret = array();
 		foreach ($this->configfiles() as $cf)
 		{
-			$ret[$cf->id] = $cf->name;	
+			$ret[$cf->id] = $cf->name;
 		}
 
 		return $ret;
@@ -50,8 +50,8 @@ class ModemsController extends \BaseController {
 		$ret = array();
 		foreach (Quality::all() as $q)
 		{
-			$ret[$q->id] = $q->name;	
-		} 
+			$ret[$q->id] = $q->name;
+		}
 
 		return $ret;
 	}
@@ -79,16 +79,16 @@ class ModemsController extends \BaseController {
 	{
 		$modem = Modem::find($id);
 		$hostname = $modem->hostname;
-		
+
 		if (!exec ('ping -c5 -i0.2 '.$hostname, $ret))
 			$ret = array ('Modem is Offline');
 
-		//return View::make('modems.ping', compact('modem'))->with('out', $ret);	
+		//return View::make('modems.ping', compact('modem'))->with('out', $ret);
 		return View::make('modems.ping', compact('modem', 'ret'));
 
 	}
 
-	
+
 	/**
 	 * Monitoring
 	 *
@@ -124,7 +124,7 @@ class ModemsController extends \BaseController {
 		// fetch all lines matching hw mac
 		foreach (array_reverse(array_unique($section[0])) as $s)
 		{
-		    if(strpos($s, $search)) 
+		    if(strpos($s, $search))
 		    {
 		    	/*
 		    	if ($i == 0)
@@ -134,7 +134,7 @@ class ModemsController extends \BaseController {
 		    		array_push($ret, "<br><br><b>Old Leases:</b>");
 				*/
 
-		    	// push matching results 
+		    	// push matching results
 		        array_push($ret, str_replace('{', '{<br>', str_replace(';', ';<br>', $s)));
 		        $i++;
 
@@ -144,7 +144,7 @@ if (0)
 		        $a = explode(';', str_replace ('{', ';', $s));
 
 		     	if (!isset($ret[$a[0]]))
-		     		$ret[$a[0]] = array();   
+		     		$ret[$a[0]] = array();
 
 		        array_push($ret[$a[0]], $a);
 }
@@ -182,13 +182,13 @@ if (0)
 		$modem = Modem::find($id);
 		$hostname = $modem->hostname;
 		$mac      = $modem->mac;
-		
+
 		if (!exec ('cat /var/log/messages | egrep "('.$mac.'|'.$hostname.')" | tail -n 100  | sort -r', $ret))
 			$ret = array ('no logging');
 
 		return View::make('modems.log', compact('modem'))->with('out', $ret);
 	}
-	
+
 
 	/**
 	 * Show the form for creating a new modem
@@ -259,7 +259,7 @@ if (0)
 		$modem = Modem::findOrFail($id);
 
 		$validator = Validator::make($data = $this->default_input(Input::all()), Modem::rules($id));
-		
+
 		if ($validator->fails())
 		{
 			return Redirect::back()->withErrors($validator)->withInput();
@@ -290,5 +290,5 @@ if (0)
 
 		return $this->index();
 	}
-	
+
 }

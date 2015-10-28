@@ -13,6 +13,7 @@ class Configfile extends \Eloquent {
     {
         return array(
             'name' => 'required|unique:configfiles,name,'.$id,
+			// TODO: apapt docsis validator for mta files
             'text' => 'docsis'
         );
     }
@@ -42,68 +43,82 @@ class Configfile extends \Eloquent {
      */
 	private function __text_make ($device, $type)
 	{
+		// normalize type
 		$type = strtolower($type);
+
+		// we need a device to make the config for
 		if (!$device)
 			return false;
 
+		// using the given type we decide what to do
 		switch ($type) {
 
-		case "modem":
+			// this is for modem's config files
+			case "modem":
 
-			/*
-			 * all objects must be an array like a[xyz] = object
-			 *
-			 * INFO:
-			 * - variable names _must_ match tables_a[xyz] coloumn
-			 * - if modem sql relations are not valid a warning will
-			 *   be printed
-			 */
-			$modems    = array ($device);
-			$qualities = array ($device->quality);
+				/*
+				 * all objects must be an array like a[xyz] = object
+				 *
+				 * INFO:
+				 * - variable names _must_ match database table names and key in db_schemata[key (later we will use this array vars through dynamic variable names calling them by the current table name]
+				 * - if modem sql relations are not valid a warning will
+				 *   be printed
+				 */
+				$modems    = array ($device);
+				$qualities = array ($device->quality);
 
-			/*
-			 * generate Table array with SQL columns
-			 */
-			$db_schemata ['modems'][0]    = Schema::getColumnListing('modems');
-			$db_schemata ['modems'][1]    = Schema::getColumnListing('modems');
-			$db_schemata ['qualities'][0] = Schema::getColumnListing('qualities');
-			break;
+				// write table descriptions to array
+				$db_schemata ['modems'][0]    = Schema::getColumnListing('modems');
+				$db_schemata ['qualities'][0] = Schema::getColumnListing('qualities');
+				break;
 
-		case "mta":
-			break;
+			// this is for mtas
+			case "mta":
 
-		default:
-			return false;
+				// same as above – arrays for later generic use
+				// their have to match
+				$mtas = array($device);
+				$phonenumbers = array($device->phonenumbers);
+				$phonenumbers = $phonenumbers[0];
 
-		}
+				// get desription of table mtas
+				$db_schemata['mtas'][0] = Schema::getColumnListing('mtas');
+				// get description of table phonennumbers; one subarray per (possible) number
+				for ($i = 0; $i < count($phonenumbers); $i++) {
+					$db_schemata['phonenumbers'][$i] = Schema::getColumnListing('phonenumbers');
+				}
+				break;
 
-		return $this->__text_make_now($device, $type, $db_schemata);
-	}
+			// this is for unknown types – atm we do nothing
+			default:
+				return false;
 
-	private function __text_make_now ($device, $type, $db_schemata)
-	{
-		/*
-		 * Generate search and replace array
-		 */
+		}	// switch
+
+		// Generate search and replace arrays
 		$search = array();
 		$replace = array();
 
 		$i = 0;
-		foreach ($db_schemata as $table => $columns_multi)
-		{
-PENG!
-echo "<pre>"; dd($table); echo "</pre>";
 
-			foreach ($columns_multi as $j => $columns)
+		// loop over all schemata; they can exist multiple times per table
+		foreach ($db_schemata as $table => $columns_multiple)
+		{
+			// loop over all schema descriptions of the current table
+			foreach ($columns_multiple as $j => $columns)
 			{
+				// use the data arrays created before, calling them by current table name
+				// fill temporary replacement array with database values
 				if (isset(${$table}[$j]->id))
 				{
-					$replace_a = DB::select ("SELECT * FROM ".$table." WHERE id = ?", array(${$table}[$j]->id))[0];
+					$replace_tmp = DB::select ("SELECT * FROM ".$table." WHERE id = ?", array(${$table}[$j]->id))[0];
 
-					foreach ($columns as $entry)
+					// loop over each column and check if there is something to replace
+					// column is used generic to get values
+					foreach ($columns as $column)
 					{
-						$search[$i]  = '{'.$table.'.'.$entry.'.'.$j.'}';
-						$replace[$i] = $replace_a->{$entry};
+						$search[$i]  = '{'.$table.'.'.$column.'.'.$j.'}';
+						$replace[$i] = $replace_tmp->{$column};
 
 						$i++;
 					}
@@ -112,8 +127,6 @@ echo "<pre>"; dd($table); echo "</pre>";
 					Log::warning ($type.' '.$device->hostname.' has no valid '.$table.' entry');
 			}
 		}
-
-		// DEBUG: print_r($search); print_r($replace);
 
 		/*
 		 * Search and Replace Configfile TEXT
