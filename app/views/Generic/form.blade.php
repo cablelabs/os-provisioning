@@ -12,7 +12,7 @@
 			else
 				echo Form::$field["form_type"] ($field["name"]);?>
 			</td>
-		<td>{{ $errors->first('name') }}</td>
+		<td>{{ $errors->first($field["name"]) }}</td>
 	</tr>
 
 	@endforeach
