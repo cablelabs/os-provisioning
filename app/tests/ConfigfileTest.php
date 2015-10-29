@@ -8,8 +8,8 @@ class ConfigfileTest extends TestCase {
 	public function testConfigfileText()
 	{
 		$m = Configfile::first();
-		$this->assertTrue(is_string($m->text_make(Modem::first())));	
-		$this->assertNotEmpty($m->text_make(Modem::first()));
+		$this->assertTrue(is_string($m->text_make(Modem::first(), "modem")));	
+		$this->assertNotEmpty($m->text_make(Modem::first(), "modem"));
 	}
 
 	public function testIndex()

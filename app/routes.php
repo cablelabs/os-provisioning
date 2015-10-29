@@ -22,16 +22,13 @@ Route::post('modem/json', 'ModemController@json');
 
 // routes controller with predefined methods
 // add array('only' => array('edit', 'update')) as third parameter to only allow these routes
+
 Route::resource('Modem', 'ModemController');
 Route::resource('Cmts', 'CmtsController');  
 Route::resource('IpPool', 'IpPoolController');  
-
-
 Route::resource('Endpoint', 'EndpointController');
 #Route::post('endpoint/json', 'EndpointController@json');
-
 Route::resource('Configfile', 'ConfigfileController');
-
 Route::resource('Qos', 'QosController');
 
 Route::resource('SnmpMib', 'SnmpMibController');
@@ -39,4 +36,5 @@ Route::resource('CmtsDownstream', 'CmtsDownstreamController');
 Route::resource('DeviceType', 'DeviceTypeController');
 Route::resource('Device', 'DeviceController');
 
+Route::resource('Phonenumber', 'PhonenumberController');
 Route::resource('Mta', 'MtaController');

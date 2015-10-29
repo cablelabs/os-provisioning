@@ -18,14 +18,14 @@ class BaseController extends Controller {
 	/**
 	 *  json abstraction layer
 	 */
-	protected function json ()	
+	protected function json ()
 	{
 		$this->output_format = 'json';
 
 		$data = Input::all();
 		$id   = $data['id'];
 		$func = $data['function'];
-		
+
 		if ($func == 'update')
 			return $this->update($id);
 	}
@@ -35,7 +35,7 @@ class BaseController extends Controller {
 	 *  Maybe a generic redirect is an option, but
 	 *  howto handle fails etc. ?
 	 */
-	protected function generic_return ($view, $param = null)	
+	protected function generic_return ($view, $param = null)
 	{
 		if ($this->output_format == 'json')
 			return $param;
@@ -89,7 +89,7 @@ class BaseController extends Controller {
 
 	protected function get_view_name()
 	{
-		return $this->get_model_name(); 
+		return $this->get_model_name();
 	}
 
 	protected function get_view_var()
@@ -99,6 +99,35 @@ class BaseController extends Controller {
 
 
 	/**
+	 * Handle file uploads.
+	 * - check if a file is uploaded
+	 * - if so:
+	 *   - move file to dst_path
+	 *   - overwrite base_field in Input with filename
+	 *
+	 * @param base_field Input field to be processed
+	 * @param dst_path Path to move uploaded file in
+	 * @author Patrick Reichel
+	 */
+	protected function handle_file_upload($base_field, $dst_path) {
+
+		$upload_field = $base_field."_upload";
+
+		if (Input::hasFile($upload_field)) {
+
+			// get filename
+			$filename = Input::file($upload_field)->getClientOriginalName();
+
+			// move file
+			Input::file($upload_field)->move($dst_path, $filename);
+
+			// place filename as chosen value in Input field
+			Input::merge(array($base_field => $filename));
+		}
+
+	}
+
+	/**
 	 * Display a listing of all objects of the calling model
 	 *
 	 * @return Response
@@ -106,7 +135,7 @@ class BaseController extends Controller {
 	public function index()
 	{
 		$obj = $this->get_model_obj();
-		
+
 		$model_name 	= $this->get_model_name();
 		$view_var   	= $obj->all();
 		$view_header  	= $obj->get_view_header();
@@ -115,7 +144,7 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.index'))
 			return View::make($this->get_view_name().'.index', compact('model_name', 'view_header', 'view_var'));
 
-		return View::make('Generic.index', compact('model_name', 'view_header', 'view_var'));			
+		return View::make('Generic.index', compact('model_name', 'view_header', 'view_var'));
 	}
 
 
@@ -154,6 +183,7 @@ class BaseController extends Controller {
 	 */
 	protected function store()
 	{
+		// dd(Input::all());
 		$obj = $this->get_model_obj();
 		$controller = $this->get_controller_obj();
 
@@ -195,7 +225,7 @@ class BaseController extends Controller {
 			$view_path = $this->get_view_name().'.edit';
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
-			
+
 		return View::make($view_path, compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields'));
 	}
 
@@ -208,6 +238,8 @@ class BaseController extends Controller {
 	 */
 	public function update($id)
 	{
+				// dd(Input::all());
+
 		$obj = $this->get_model_obj()->findOrFail($id);
 		$controller = $this->get_controller_obj();
 
@@ -244,5 +276,5 @@ class BaseController extends Controller {
 
 		return $this->index();
 	}
-	
+
 }

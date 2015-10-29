@@ -12,6 +12,10 @@ class CreateModemTable extends Migration {
 	 */
 	public function up()
 	{
+		$dir = '/tftpboot/cm';
+		if(!is_dir($dir))
+			mkdir ($dir, '0755');
+		
 		Schema::create('modem', function(Blueprint $table)
 		{
 			$table->increments('id');
