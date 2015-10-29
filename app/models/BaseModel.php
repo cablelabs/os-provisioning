@@ -7,6 +7,15 @@ class BaseModel extends \Eloquent
 {
 
 	/**
+	 * Basefunction for generic use - is needed to place the related html links generically in the edit & create views
+	 * Place this function in the appropriate model and return the relation to the model it belongs
+	 */
+	public function view_belongs_to ()
+	{
+		return null;
+	}
+
+	/**
 	 *	This returns an array with all possible enum values.
 	 *	Use this instead of hardcoding it e.g. in your view (where it has to be
 	 *		changed with changing/extending enum definition in database)

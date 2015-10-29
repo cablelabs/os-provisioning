@@ -5,6 +5,13 @@ use Models\Mta;
 
 class PhonenumberController extends \BaseController {
 
+
+	/**
+	 * if set to true a create button on index view is available - set to true in BaseController as standard
+	 */
+    protected $index_create_allowed = false;
+
+
     /**
      * defines the formular fields for the edit and create view
      */
@@ -22,43 +29,8 @@ class PhonenumberController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'port', 'description' => 'Port'),
 			array('form_type' => 'text', 'name' => 'username', 'description' => 'Username'),
 			array('form_type' => 'select', 'name' => 'password', 'description' => 'Password'),
-			array('form_type' => 'select', 'name' => 'active', 'description' => 'Active?', 'value' => array( '1' => 'Yes', '0' => 'No')),
+			array('form_type' => 'select', 'name' => 'active', 'description' => 'Active?', 'value' => array( '1' => 'Yes', '0' => 'No'))
 		);
 	}
-
-
-
-	/**
-	 * Show the form for creating a new phonenumber
-	 *
-	 * @return Response
-	 */
-	// public function create()
-	// {
-	// 	// set mta_id if given (if phonenumber creation is started from mta edit view)
-	// 	$mta_id = Input::get('mta_id', 0);
-	// 	// don't use is_int as form data is always a string!
-	// 	if (!is_numeric($mta_id)) {
-	// 		$mta_id = 0;
-	// 	}
-
-	// 	return View::make('phonenumbers.create')->with('mtas', $this->mtas_list_with_dummies())->with('country_codes', Phonenumber::getPossibleEnumValues('country_code'))->with('mta_id', $mta_id);
-	// }
-
-
-
-	/**
-	 * Show the form for editing the specified phonenumber.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	// public function edit($id)
-	// {
-	// 	$phonenumber = Phonenumber::findOrFail($id);
-
-	// 	return View::make('phonenumbers.edit', compact('phonenumber'))->with('mtas', $this->mtas_list_with_dummies())->with('country_codes', Phonenumber::getPossibleEnumValues('country_code'));
-	// }
-
 
 }

@@ -65,6 +65,7 @@ class Configfile extends \BaseModel {
 		return $parents;
     }
 
+
 	/**
 	 * Returns all available firmware files (via directory listing)
 	 * @author Patrick Reichel
@@ -84,18 +85,6 @@ class Configfile extends \BaseModel {
 		}
 		return $firmware_files;
 	}
-
-
-    /**
-     * Returns the data array that has to be transfered to all views of the model
-     */
-    public function html_list_array ()
-    {
-        $ret = array (
-                'parents' => $this->parents_list()
-            );
-        return $ret;
-    }
 
 
 

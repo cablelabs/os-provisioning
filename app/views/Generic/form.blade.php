@@ -12,6 +12,11 @@
 				$value = $field["value"];
 			if (array_key_exists('options', $field))
 				$options = $field["options"];
+			if (isset($_GET[$field['name']]))
+			{
+				echo Form::hidden ($field["name"], $_GET[$field['name']]);
+				continue;
+			}
 		?>
 
 		<tr>

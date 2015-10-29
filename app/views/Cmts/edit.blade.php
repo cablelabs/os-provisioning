@@ -1,12 +1,3 @@
 @extends('Generic.edit')
-@section('content_right')
-	
-	<h2>IP Pools</h2>
 
-	@foreach ($view_var->ippools as $pool)
-
-		{{ HTML::linkRoute('IpPool.edit', $pool->id, $pool->id) }}
-	
-	@endforeach
-
-@stop
+@include('Generic.relation', ['relations' => $view_var->ippools, 'view' => 'IpPool', 'key' =>'cmts_id' ])

@@ -1,10 +1,35 @@
 @extends ('Layout.split')
 
-@section('content_top')
+@if (!isset($own_top))
+	@section('content_top')
 
-	{{ HTML::linkRoute($model_name.'.index', $view_header) }} / {{ HTML::linkRoute($model_name.'.edit', $view_var->get_view_link_title(), $view_var->id) }}
+		{{ HTML::linkRoute($model_name.'.index', $view_header) }}: 
 
-@stop
+		<?php
+			/**
+			 * Shows the html links of the related objects recursivly
+			 */ 
+			$s = '';
+			$parent = $view_var;
+			do
+			{
+				$parent = $parent->view_belongs_to();
+				
+				if ($parent)
+				{
+					$view = explode('\\',get_class($parent))[1];
+					$s = HTML::linkRoute($view.'.edit', $parent->get_view_link_title(), $parent->id).' / '.$s;
+				}
+			}
+			while ($parent);
+
+			echo $s;
+		?>
+
+		{{ HTML::linkRoute($model_name.'.edit', $view_var->get_view_link_title(), $view_var->id) }}
+
+	@stop
+@endif
 
 @section('content_left')
 

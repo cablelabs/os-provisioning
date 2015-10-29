@@ -88,6 +88,11 @@ class Mta extends \BaseModel {
 		return $this->hasMany('Models\Phonenumber');
 	}
 
+	// belongs to a modem - see BaseModel for explanation
+	public function view_belongs_to ()
+	{
+		return $this->modem;
+	}
 
 	/**
 	 * BOOT:

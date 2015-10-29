@@ -5,6 +5,8 @@ class BaseController extends Controller {
 
 	protected $output_format;
 
+	protected $index_create_allowed = true;
+
 
 	/**
 	 * Returns a default input data array, that shall be overwritten from the appropriate model controller if needed
@@ -140,11 +142,14 @@ class BaseController extends Controller {
 		$view_var   	= $obj->all();
 		$view_header  	= $obj->get_view_header();
 
-		// proof if the calling Model has a special index view - if not call the generic view
-		if (View::exists($this->get_view_name().'.index'))
-			return View::make($this->get_view_name().'.index', compact('model_name', 'view_header', 'view_var'));
+		$create_allowed = $this->get_controller_obj()->index_create_allowed;
 
-		return View::make('Generic.index', compact('model_name', 'view_header', 'view_var'));
+		$view_path = 'Generic.index';
+		
+		if (View::exists($this->get_view_name().'.index'))
+			$view_path = $this->get_view_name().'.index';
+
+		return View::make($view_path, compact('model_name', 'view_header', 'view_var', 'create_allowed'));
 	}
 
 
@@ -161,7 +166,7 @@ class BaseController extends Controller {
 		$model_name 	= $this->get_model_name();
 		$view_header 	= $obj->get_view_header();
 		// form_fields contain description of fields and the data of the fields
-		$form_fields	= $this->get_controller_obj()->get_form_fields();
+		$form_fields	= $this->get_controller_obj()->get_form_fields($obj);
 
 		$view_path = 'Generic.create';
 		$form_path = 'Generic.form';
