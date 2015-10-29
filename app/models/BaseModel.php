@@ -16,6 +16,20 @@ class BaseModel extends \Eloquent
 	}
 
 	/**
+	 * Basefunction for returning all objects that a model can have a relation to
+	 * Place this function in the model where the edit/create view shall show all related objects
+	 *
+	 * @author Nino Ryschawy 
+	 *
+	 * @return an array with the appropriate hasMany()-functions of the model
+	 */
+	public function view_has_many ()
+	{
+		return array();
+	}
+	
+
+	/**
 	 *	This returns an array with all possible enum values.
 	 *	Use this instead of hardcoding it e.g. in your view (where it has to be
 	 *		changed with changing/extending enum definition in database)
