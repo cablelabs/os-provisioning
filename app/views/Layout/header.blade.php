@@ -5,6 +5,7 @@
 	{{ HTML::linkRoute('Modem.index', 'Modems') }} |
 	{{ HTML::linkRoute('Endpoint.index', 'Endpoints') }} |
 	{{ HTML::linkRoute('Mta.index', 'MTAs') }} |
+	{{ HTML::linkRoute('Phonenumber.index', 'Phonenumbers') }} | 
 	{{ HTML::linkRoute('Configfile.index', 'Configfiles') }} |
 	{{ HTML::linkRoute('Qos.index', 'QoS') }} |
 	{{ HTML::linkRoute('Cmts.index', 'CMTS') }} |

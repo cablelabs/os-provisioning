@@ -4,16 +4,27 @@
 
 	@foreach($form_fields as $field)
 
-	<tr>
-		<td>{{ Form::label($field["name"], $field["description"]) }}</td>
-		<td><?php 
+		<?php
+			$value   = null;
+			$options = null;
+
 			if (array_key_exists('value', $field))
-				echo Form::$field["form_type"]($field["name"], $field["value"]);
-			else
-				echo Form::$field["form_type"] ($field["name"]);?>
+				$value = $field["value"];
+			if (array_key_exists('options', $field))
+				$options = $field["options"];
+		?>
+
+		<tr>
+			<td>{{ Form::label($field["name"], $field["description"]) }}</td>
+			<td>
+				<?php
+					if 		(!$value && !$options) 	echo Form::$field["form_type"]($field["name"]);
+					elseif 	($value && !$options) 	echo Form::$field["form_type"]($field["name"], $value);
+					elseif 	($options) 				echo Form::$field["form_type"]($field["name"], $value, $options);
+				?>
 			</td>
-		<td>{{ $errors->first($field["name"]) }}</td>
-	</tr>
+			<td>{{ $errors->first($field["name"]) }}</td>
+		</tr>
 
 	@endforeach
 

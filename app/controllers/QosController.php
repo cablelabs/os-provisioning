@@ -9,8 +9,6 @@ class QosController extends \BaseController {
      */
 	public function get_form_fields($model = null)
 	{
-		$qos = new Qos;
-
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),

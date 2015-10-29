@@ -1,22 +1,25 @@
-@extends ('Layout.split')
+@extends('Generic.edit')
 
-@include ('Mta.header')
+@section('content_right')
 
-@section('content_top')
+	Assigned phonenumbers:
+	<ul>
+	@if (count($view_var) === 0)
+		<li>None</li>
+	@else
 
-		{{ HTML::linkRoute('Mta.index', 'MTAs') }}
+		@foreach ($view_var->phonenumbers as $phonenumber)
+			<li>
+				{{ HTML::linkRoute('Phonenumber.edit', $phonenumber->get_view_link_title(), $phonenumber->id) }}
+				(Port {{ $phonenumber->port }})
+			</li>
+		@endforeach
+	@endif
+	</ul>
 
-@stop
-
-@section('content_left')
-
-	<h2>Edit MTA</h2>
-
-	{{ Form::model($mta, array('route' => array('Mta.update', $mta->id), 'method' => 'put')) }}
-
-		@include('Mta.form', $mta)
-
-	{{ Form::submit('Save') }}
+	{{ Form::open(array('route' => 'Phonenumber.create', 'method' => 'GET')) }}
+	{{ Form::hidden('mta_id', $view_var->id) }}
+	{{ Form::submit('Create phonenumber') }}
 	{{ Form::close() }}
 
 @stop

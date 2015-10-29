@@ -17,12 +17,13 @@ class DatabaseSeeder extends Seeder {
 		$this->call('EndpointTableSeeder');
 		$this->call('CmtsTableSeeder');
 		$this->call('IpPoolTableSeeder');
+		$this->call('PhonenumberTableSeeder');
 		$this->call('MtaTableSeeder');
 
 		// change owner of files that need to be editable for apache on updates
 		system('/bin/chown -R apache /tftpboot/cm');
+		system('/bin/chown -R apache /tftpboot/mta');
 		system('/bin/chown -R apache /etc/dhcp/');
-
 	}
 
 }

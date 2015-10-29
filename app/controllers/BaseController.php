@@ -183,6 +183,7 @@ class BaseController extends Controller {
 	 */
 	protected function store()
 	{
+		// dd(Input::all());
 		$obj = $this->get_model_obj();
 		$controller = $this->get_controller_obj();
 
@@ -237,6 +238,8 @@ class BaseController extends Controller {
 	 */
 	public function update($id)
 	{
+				// dd(Input::all());
+
 		$obj = $this->get_model_obj()->findOrFail($id);
 		$controller = $this->get_controller_obj();
 

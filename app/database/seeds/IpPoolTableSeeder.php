@@ -8,7 +8,6 @@ class IpPoolTableSeeder extends Seeder {
 
 	public function run()
 	{
-		$faker = Faker::create();
 		$m = 0;
 		$n = 0;
 
