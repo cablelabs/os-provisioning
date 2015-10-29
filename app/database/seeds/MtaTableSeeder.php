@@ -4,6 +4,7 @@
 use Faker\Factory as Faker;
 use Models\Mta;
 
+
 class MtaTableSeeder extends Seeder {
 
 	public function run()

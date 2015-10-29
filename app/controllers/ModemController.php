@@ -13,17 +13,18 @@ class ModemController extends \BaseController {
      */
 	public function get_form_fields($model = null)
 	{
-		$modem = new Modem;
+		if (!$model)
+			$model = new Modem;
 
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
-			array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname'),
+			array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly']),
 			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC adress'),
-			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $modem->first()->html_list($modem->configfiles(), 'name')),
+			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list($model->configfiles(), 'name')),
 			array('form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'),
 			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Network Access', 'value' => '1'),
-			array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'Company', 'value' => $modem->first()->html_list($modem->qualities(), 'name')),
+			array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'Company', 'value' => $model->html_list($model->qualities(), 'name')),
 			array('form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number'),
 			array('form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'),
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')

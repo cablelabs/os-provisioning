@@ -10,11 +10,12 @@ class IpPoolController extends \BaseController {
      */
 	public function get_form_fields($model = null)
 	{
-		$ippool = new IpPool;
+		if (!$model)
+			$model = new IpPool;
 
 		// label has to be the same like column in sql table
 		return array(
-			array('form_type' => 'select', 'name' => 'cmts_id', 'description' => 'CMTS Hostname', 'value' => $ippool->html_list($ippool->cmts_hostnames(), 'hostname')),
+			array('form_type' => 'select', 'name' => 'cmts_id', 'description' => 'CMTS Hostname', 'value' => $model->html_list($model->cmts_hostnames(), 'hostname')),
 			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => array( 'CM' => 'Cable Modem', 'CPEPriv' => 'CPE Private', 'CPEPub' => 'CPE Public', 'MTA' => 'MTA')),
 			array('form_type' => 'text', 'name' => 'net', 'description' => 'Net'),
 			array('form_type' => 'text', 'name' => 'netmask', 'description' => 'Netmask'),
