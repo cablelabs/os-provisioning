@@ -52,6 +52,12 @@ class Phonenumber extends \BaseModel {
 		return $this->belongsTo('Models\Mta', 'mta_id');
 	}
 
+	// belongs to an mta
+	public function view_belongs_to ()
+	{
+		return $this->mta;
+	}
+
 
 	/**
 	 * return all mta objects
