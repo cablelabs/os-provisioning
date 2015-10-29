@@ -8,11 +8,34 @@ use Models\Qos;
 
 class ModemController extends \BaseController {
 
+    /**
+     * defines the formular fields for the edit and create view
+     */
+	public function get_form_fields($model = null)
+	{
+		$modem = new Modem;
+
+		// label has to be the same like column in sql table
+		return array(
+			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
+			array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname'),
+			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC adress'),
+			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $modem->first()->html_list($modem->configfiles(), 'name')),
+			array('form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'),
+			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Network Access', 'value' => '1'),
+			array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'Company', 'value' => $modem->first()->html_list($modem->qualities(), 'name')),
+			array('form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number'),
+			array('form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'),
+			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
+		);
+	}
+
 	/**
+	 * TODO: make generic
 	 * Make Checkbox Default Input
 	 * see: see http://forumsarchive.laravel.io/viewtopic.php?id=11627
 	 */
-	private function default_input ($data)
+	protected function default_input ($data)
 	{
 		if(!isset($data['public']))$data['public']=0;
 		if(!isset($data['network_access']))$data['network_access']=0;
@@ -20,13 +43,6 @@ class ModemController extends \BaseController {
 		return $data;
 	}
 
-	/**
-	 * return all Configfile Objects for CMs
-	 */
-	private function configfiles ()
-	{
-		return Configfile::where('device', '=', 'CM')->where('public', '=', 'yes')->get();
-	}
 
 
 	/**
@@ -146,114 +162,5 @@ if (0)
 
 		return View::make('Modem.log', compact('modem', 'out'));
 	}
-	
 
-	/**
-	 * Display a listing of modems
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		$modems = Modem::all();
-
-		return View::make('Modem.index', compact('modems'));
-	}
-
-
-	/**
-	 * Show the form for creating a new modem
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		$configfiles = $this->html_list($this->configfiles(), 'name');
-		$qualities = $this->html_list(Qos::all(), 'name');
-
-		return View::make('Modem.create', compact('configfiles', 'qualities'));
-	}
-
-
-	/**
-	 * Show the form for editing the specified modem.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		$modem = Modem::find($id);
-		$mac   = $modem->mac;
-		$out = $this->search_lease('agent.remote-id '.$mac);
-		$configfiles = $this->html_list($this->configfiles(), 'name');
-		$qualities = $this->html_list(Qos::all(), 'name');
-
-		return View::make('Modem.edit', compact('modem', 'out', 'configfiles', 'qualities'));
-	}
-
-
-	/**
-	 * Store a newly created modem in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		$validator = Validator::make($data = $this->default_input(Input::all()), Modem::rules());
-
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$id = Modem::create($data)->id;
-
-		return Redirect::route('Modem.edit', $id);
-	}
-
-
-	/**
-	 * Update the specified modem in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		$modem = Modem::findOrFail($id);
-
-		$validator = Validator::make($data = $this->default_input(Input::all()), Modem::rules($id));
-		
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$modem->update($data);
-
-		return Redirect::route('Modem.edit', $id);
-	}
-
-	/**
-	 * Remove the specified modem from storage.
-	 *
-	 * @param  int  $id: bulk delete if == 0
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		if ($id == 0)
-		{
-			// bulk delete
-			// TODO: put to base controller -> make it generic
-			foreach (Input::all()['ids'] as $id => $val)
-				Modem::destroy($id);
-		}
-		else
-			Modem::destroy($id);
-
-		return $this->index();
-	}
-	
 }

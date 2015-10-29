@@ -4,7 +4,7 @@ namespace Models;
 
 use File;
 
-class Endpoint extends \Eloquent {
+class Endpoint extends \BaseModel {
 
     // The associated SQL table for this Model
     protected $table = 'endpoint';
@@ -12,24 +12,33 @@ class Endpoint extends \Eloquent {
     public static function rules($id = null)
     {
         return array(
-            'mac' => 'required|mac|unique:endpoints,mac,'.$id,
-            'hostname' => 'unique:endpoints,hostname,'.$id
+            'mac' => 'required|mac|unique:endpoint,mac,'.$id,
+            'hostname' => 'unique:endpoint,hostname,'.$id
         );
     }
 
 	// Don't forget to fill this array
 	protected $fillable = ['hostname', 'name', 'mac', 'public', 'description'];
 
+    
+    // Name of View
+    public static function get_view_header()
+    {
+        return 'Endpoints';
+    }
+
+    // link title in index view
+    public function get_view_link_title()
+    {
+        return $this->hostname;
+    }
+
+
+
     /**
      * all Relationships:
      */
 
-/* depracted:
-	public function modem ()
-	{
-		return $this->belongsTo('Models\Modem');
-	}
-*/
 
     /**
      * BOOT:

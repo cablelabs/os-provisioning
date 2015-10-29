@@ -12,15 +12,46 @@ class Mta extends \BaseModel {
 	{
 		return array(
 			'mac' => 'required|mac',
-			'modem_id' => 'required|exists:modems,id|min:1',
-			'configfile_id' => 'required|exists:configfiles,id|min:1',
+			'modem_id' => 'required|exists:modem,id|min:1',
+			'configfile_id' => 'required|exists:configfile,id|min:1',
 			/* 'hostname' => 'required|unique:mtas,hostname,'.$id, */
-			'type' => 'required|exists:mtas,type',
+			'type' => 'required|exists:mta,type',
 		);
 	}
 
 	// Don't forget to fill this array
 	protected $fillable = ['mac', 'hostname', 'modem_id', 'configfile_id', 'type'];
+
+
+    /**
+     * Returns the data array needed for all views of the model
+     */
+	public function html_list_array ()
+	{
+		$ret = array (
+				'configfiles' => $this->html_list($this->configfiles(), 'name'),
+				'modems' => $this->html_list($this->modems(), 'hostname'),
+				'mta_types' => Mta::getPossibleEnumValues('type', true)
+			);
+		return $ret;
+	}
+
+	/**
+	 * return all modem objects
+	 */
+	private function modems()
+	{
+		return Modem::get();
+	}
+
+
+	/**
+	 * return all Configfile Objects for MTAs
+	 */
+	private function configfiles()
+	{
+		return Configfile::where('device', '=', 'mta')->where('public', '=', 'yes')->get();
+	}
 
 
 	/**

@@ -4,8 +4,9 @@ namespace Models;
 
 use File;
 use Log;
+use Models\Qos;
 
-class Modem extends \Eloquent {
+class Modem extends \BaseModel {
 
     // The associated SQL table for this Model
     protected $table = 'modem';
@@ -22,6 +23,36 @@ class Modem extends \Eloquent {
 
 	// Don't forget to fill this array
 	protected $fillable = ['hostname', 'name', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent', 'configfile_id', 'qos_id'];
+
+    
+    // Name of View
+    public static function get_view_header()
+    {
+        return 'Modems';
+    }
+
+    // link title in index view
+    public function get_view_link_title()
+    {
+        return $this->hostname;
+    }
+
+
+    /**
+     * return all Configfile Objects for CMs
+     */
+    public function configfiles ()
+    {
+        return Configfile::where('device', '=', 'CM')->where('public', '=', 'yes')->get();
+    }
+
+    /**
+     * return all Configfile Objects for CMs
+     */
+    public function qualities ()
+    {
+        return QoS::all();
+    }
 
 
     /**
@@ -93,6 +124,8 @@ class Modem extends \Eloquent {
      */
     public function make_dhcp_cm_all ()
     {        
+        $this->del_dhcp_conf_files();
+        
         foreach (Modem::all() as $modem) 
         {
             $id    = $modem->id;
@@ -173,14 +206,15 @@ class Modem extends \Eloquent {
     /**
      * Deletes Configfile of a modem
      */
-    protected function delete_configfile()
+    public function delete_configfile()
     {
-        $file['1'] = 'cm-'.$this->id.'cfg';
-        $file['2'] = 'cm-'.$this->id.'conf';
+        $dir = '/tftpboot/cm/';
+        $file['1'] = $dir.'cm-'.$this->id.'.cfg';
+        $file['2'] = $dir.'cm-'.$this->id.'.conf';
 
         foreach ($file as $f) 
         {
-            if (file_exists($f)) unlink($file);
+            if (file_exists($f)) unlink($f);
         }
     }
 
@@ -219,14 +253,11 @@ class ModemObserver
     public function deleted($modem)
     {
         $modem->make_dhcp_cm_all();
-        $modem->delete_configfile();
     } 
 
     // Delete all Endpoints under CM ..
     public function deleting ($modem)
     {
-        /* depracted:
-        Endpoint::where('modem_id', '=', $modem->id)->delete();
-        */
+        $modem->delete_configfile();
     }
 }

@@ -1,4 +1,3 @@
-
 		<table>
 		<tr>
 			<td>{{ Form::label('name', 'Name') }}</td>

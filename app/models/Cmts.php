@@ -5,7 +5,7 @@ namespace Models;
 use File;
 use DB;
 
-class Cmts extends \Eloquent {
+class Cmts extends \BaseModel {
 
 	// The associated SQL table for this Model
     protected $table = 'cmts';
@@ -24,9 +24,20 @@ class Cmts extends \Eloquent {
 	// protected $guarded = [];
 
 
+	// Name of View
+	public static function get_view_header()
+	{
+		return 'CMTS';
+	}
+
+	// link title in index view
+	public function get_view_link_title()
+	{
+		return $this->hostname;
+	}
+
     /**
-     * BOOT:
-     * - init cmts observer
+     * BOOT - init cmts observer
      */
     public static function boot()
     {
@@ -79,33 +90,34 @@ class Cmts extends \Eloquent {
 			$range = $pool->ip_pool_start.' '.$pool->ip_pool_end;
 			$router = $pool->router_ip;
 			$type = $pool->type;
+			$options = $pool->optional;
 
 
 			$data = "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
-			$data .= "\n\t\t".'option routers '.$router;
-			$data .= "\n\t\t".'option broadcast address '.$broadcast_addr;
+			$data .= "\n\t\t".'option routers '.$router.';';
+			$data .= "\n\t\t".'option broadcast address '.$broadcast_addr.';';
 			$data .= "\n\n\t\t".'pool'."\n\t\t".'{';
-			$data .= "\n\t\t\t".'range '.$range."\n";
+			$data .= "\n\t\t\t".'range '.$range.';'."\n";
 
 			switch ($type)
 			{
 				case 'CM':
-					$data .= "\n\t\t\t".'allow members of "CM"';
+					$data .= "\n\t\t\t".'allow members of "CM";';
 					break;
 
 				case 'CPEPub':
-					$data .= "\n\t\t\t".'allow members of "Client"';
-					$data .= "\n\t\t\t".'deny members of "Client-Public"';
+					$data .= "\n\t\t\t".'allow members of "Client";';
+					$data .= "\n\t\t\t".'deny members of "Client-Public";';
 					break;
 
 				case 'CPEPriv':
-					$data .= "\n\t\t\t".'allow members of "Client-Public"';
-					$data .= "\n\t\t\t".'allow known-clients';
+					$data .= "\n\t\t\t".'allow members of "Client-Public";';
+					$data .= "\n\t\t\t".'allow known-clients;';
 					break;
 
 				case 'MTA':
-					$data .= "\n\t\t\t".'allow members of "MTA"';
-					$data .= "\n\t\t\t".'allow known-clients';
+					$data .= "\n\t\t\t".'allow members of "MTA";';
+					$data .= "\n\t\t\t".'allow known-clients;';
 					break;
 
 				default:
@@ -115,6 +127,11 @@ class Cmts extends \Eloquent {
 
 			$data .= "\n\t\t".'}';
 			$data .= "\n\t".'}'."\n";
+
+			// append additional options
+			if ($options)
+					$data .= "\n".$options."\n";
+
 			File::append($file, $data);
 		}
 
@@ -177,7 +194,7 @@ class Cmts extends \Eloquent {
 		// set all relevant ip pools to cmts_id = 0 (to first cmts_id under development)
 		// TODO: set first_cmts_id to zero!
 		$first_cmts_id = Cmts::first()->id;
-		DB::update('UPDATE ip_pools SET cmts_id='.$first_cmts_id.' where cmts_id='.$this->id.';');
+		DB::update('UPDATE ippool SET cmts_id='.$first_cmts_id.' where cmts_id='.$this->id.';');
 
 	}
 

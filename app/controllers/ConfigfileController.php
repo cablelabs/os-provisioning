@@ -4,115 +4,28 @@ use Models\Configfile;
 
 class ConfigfileController extends \BaseController {
 
-	/**
-	 * Display a listing of configfiles
-	 *
-	 * @return Response
-	 */
-	public function index()
+    /**
+     * defines the formular fields for the edit and create view
+     */
+	public function get_form_fields($model = null)
 	{
-		$configfiles = Configfile::all();
-
-		return View::make('Configfile.index', compact('configfiles'));
-	}
-
-	/**
-	 * Show the form for creating a new configfile
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		$parents = array('0' => 'Null');
-		foreach (Configfile::all() as $cf)
-		{
-			$parents[$cf->id] = $cf->name;	
-		}
-		
-		return View::make('Configfile.create', compact('parents'));
-	}
-
-	/**
-	 * Store a newly created configfile in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		$validator = Validator::make($data = Input::all(), Configfile::rules());
-
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$id = Configfile::create($data)->id;
-
-		return View::make('Configfile.edit', $id);
-	}
-
-
-	/**
-	 * Show the form for editing the specified configfile.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		$configfile = Configfile::find($id);
-
-		$parents = array('0' => 'Null');
-		foreach (Configfile::all() as $cf)
-		{
-			if ($cf->id != $id)
-				$parents[$cf->id] = $cf->name;	
-		}
-
-
-		return View::make('Configfile.edit', compact('configfile'))->with('parents',$parents);
-	}
-
-	/**
-	 * Update the specified configfile in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		$configfile = Configfile::findOrFail($id);
-
-		$validator = Validator::make($data = Input::all(), Configfile::rules($id));
-
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$configfile->update($data);
-
-		return View::make('Configfile.edit', $id)->with(DB::getQueryLog());
-	}
-
-	/**
-	 * Remove the specified configfile from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		if ($id == 0)
-		{
-			// bulk delete
-			foreach (Input::all()['ids'] as $id => $val)
-				Configfile::destroy($id);
-		}
+		if ($model)
+			$parents = $model->parents_list();
 		else
-			Configfile::destroy($id);
+		{
+			$model = new Configfile; 
+			$parents = $model->first()->parents_list_all();
+		}
 
-		return $this->index();
+		// label has to be the same like column in sql table
+		return array(
+			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
+			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => array('generic' => 'generic', 'network' => 'network', 'vendor' => 'vendor', 'user' => 'user')),
+			array('form_type' => 'select', 'name' => 'device', 'description' => 'Device', 'value' => array('cm' => 'CM', 'mta' => 'MTA')),
+			array('form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Configfile', 'value' => $parents),
+			array('form_type' => 'select', 'name' => 'public', 'description' => 'Public Use', 'value' => array('yes' => 'Yes', 'no' => 'No')),
+			array('form_type' => 'textarea', 'name' => 'text', 'description' => 'Config File Parameters'),
+		);
 	}
 
 }
