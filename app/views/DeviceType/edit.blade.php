@@ -1,24 +1,21 @@
-@extends ('Layout.split')
-
-@section('content_top')
-
-	{{ HTML::linkRoute('DeviceType.index', 'snmpmib') }} / {{ HTML::linkRoute('DeviceType.edit', 'devicetype-'.$devicetype->name, array($devicetype->id)) }}
-	
-@stop
-
-@section('content_left')
-
-	<h2>Edit SNMP MIB</h2>
-	
-	{{ Form::model($devicetype, array('route' => array('DeviceType.update', $devicetype->id), 'method' => 'put')) }}
-
-		@include('DeviceType.form', $devicetype)
-
-	{{ Form::submit('Save') }}
-	{{ Form::close() }}
-
-@stop
-
+@extends('Generic.edit')
 @section('content_right')
+	
+	<h2>Devices</h2>
 
+	@foreach ($view_var->devices as $device)
+
+		<li>{{ HTML::linkRoute('Device.edit', $device->get_view_link_title(), $device->id) }}</li>
+	
+	@endforeach
+
+
+
+	<h2>SNMP MIB</h2>
+
+	@foreach ($view_var->snmpmibs as $snmpmib)
+
+		<li>{{ HTML::linkRoute('SnmpMib.edit', $snmpmib->get_view_link_title(), $snmpmib->id) }}</li>
+	
+	@endforeach
 @stop

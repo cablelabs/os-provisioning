@@ -1,84 +1,29 @@
 <?php
 
+use Models\Device;
+
 class DeviceController extends \BaseController {
 
-	/**
-	 * Display a listing of Device
-	 *
-	 * @return Response
-	 */
-	public function index()
+    /**
+     * defines the formular fields for the edit and create view
+     */
+	public function get_form_fields($model = null)
 	{
-		$devices = Device::all();
+		if (!$model)
+			$model = new Device;
 
-		return View::make('Device.index', compact('devices'));
-	}
-
-	/**
-	 * Show the form for creating a new Device
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		return View::make('Device.create');
-	}
-
-	/**
-	 * Store a newly created Device in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		$validator = Validator::make($data = Input::all(), Device::$rules);
-
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		Device::create($data);
-
-		return Redirect::route('Device.index');
-	}
-
-
-	/**
-	 * Show the form for editing the specified Device.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		$device = Device::find($id);
-
-		return View::make('Device.edit', compact('device'));
-	}
-
-	/**
-	 * Update the specified Device in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		$device = Device::findOrFail($id);
-
-		$validator = Validator::make($data = Input::all(), Device::$rules);
-
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$device->update($data);
-
-		$success = 1;
-
-		return View::make('Device.edit', compact('device', 'success'));
+		// label has to be the same like column in sql table
+		return array(
+			array('form_type' => 'select', 'name' => 'devicetype_id', 'description' => 'Name', 'value' => $model->html_list($model->devicetypes(), 'name')),
+			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
+			array('form_type' => 'text', 'name' => 'ip', 'description' => 'IP address'),
+			array('form_type' => 'text', 'name' => 'community_ro', 'description' => 'Community RO'),
+			array('form_type' => 'text', 'name' => 'community_rw', 'description' => 'Community RW'),
+			array('form_type' => 'text', 'name' => 'address1', 'description' => 'Address Line 1'),
+			array('form_type' => 'text', 'name' => 'address2', 'description' => 'Address Line 2'),
+			array('form_type' => 'text', 'name' => 'address3', 'description' => 'Address Line 3'),
+			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
+		);
 	}
 
 

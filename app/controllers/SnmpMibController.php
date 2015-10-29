@@ -1,107 +1,35 @@
 <?php
 
+use Models\SnmpMib;
+
 class SnmpMibController extends \BaseController {
 
-	/**
-	 * Display a listing of snmpmib
-	 *
-	 * @return Response
-	 */
-	public function index()
+    /**
+     * defines the formular fields for the edit and create view
+     */
+	public function get_form_fields($model = null)
 	{
-		$snmpmibs = SnmpMib::all();
+		if (!$model)
+			$model = new SnmpMib;
 
-		return View::make('SnmpMib.index', compact('snmpmibs'));
-	}
+		// label has to be the same like column in sql table
+		return array(
+			array('form_type' => 'select', 'name' => 'devicetype_id', 'description' => 'Device Type', 'value' => $model->html_list($model->devicetypes(), 'name')),
+			
+			array('form_type' => 'text', 'name' => 'oid', 'description' => 'SNMP Oid'),
+			array('form_type' => 'text', 'name' => 'field', 'description' => 'Field Name'),
+			
+			array('form_type' => 'select', 'name' => 'html_type', 'description' => 'HTML Type', 'value' => ['input','select','groupbox','textarea']),
+			array('form_type' => 'text', 'name' => 'html_frame', 'description' => 'HTML Frame'),
+			array('form_type' => 'text', 'name' => 'html_properties', 'description' => 'HTML Properties'),
 
-	/**
-	 * Show the form for creating a new snmpmib
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		return View::make('SnmpMib.create');
-	}
-
-	/**
-	 * Store a newly created snmpmib in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		$validator = Validator::make($data = Input::all(), SnmpMib::$rules);
-
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		SnmpMib::create($data);
-
-		return Redirect::route('SnmpMib.index');
-	}
-
-	/**
-	 * Display the specified SnmpMib.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		$snmpmib = SnmpMib::findOrFail($id);
-
-		return View::make('SnmpMib.show', compact('snmpmib'));
-	}
-
-	/**
-	 * Show the form for editing the specified SnmpMib.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		$snmpmib = SnmpMib::find($id);
-
-		return View::make('SnmpMib.edit', compact('snmpmib'));
-	}
-
-	/**
-	 * Update the specified snmpmib in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		$snmpmib = SnmpMib::findOrFail($id);
-
-		$validator = Validator::make($data = Input::all(), SnmpMib::$rules);
-
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-
-		$snmpmib->update($data);
-
-		return Redirect::route('SnmpMib.index');
-	}
-
-	/**
-	 * Remove the specified snmpmib from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		SnmpMib::destroy($id);
-
-		return Redirect::route('SnmpMib.index');
+			array('form_type' => 'select', 'name' => 'oid_table', 'description' => 'SNMP Table Element', 'value' => ['0' => 'No', '1' => 'Yes']),
+			array('form_type' => 'select', 'name' => 'type', 'description' => 'SNMP Type', 'value' => ['i','u','s','x','d','n','o','t','a','b']),
+			array('form_type' => 'text', 'name' => 'type_array', 'description' => 'Type Array (?)'),
+			array('form_type' => 'textarea', 'name' => 'phpcode_pre', 'description' => 'PHP Code Pre-SNMP-Execution'),
+			array('form_type' => 'textarea', 'name' => 'phpcode_post', 'description' => 'PHP Code Post-SNMP-Execution'),
+			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'),
+		);
 	}
 
 }
