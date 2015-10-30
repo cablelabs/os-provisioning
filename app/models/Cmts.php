@@ -60,7 +60,7 @@ class Cmts extends \BaseModel {
     public function view_has_many()
     {
     	return array(
-    		'0' => $this->ippools
+    		'IpPool' => $this->ippools
     	);
     }
 
