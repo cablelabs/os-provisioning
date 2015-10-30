@@ -272,8 +272,15 @@ class CmtsObserver
         $cmts->make_dhcp_conf();
     }
 
+    public function updating($cmts)
+    {
+    	$tmp = Cmts::find($cmts->id);
+    	$tmp->delete_cmts();
+    }
+
     public function updated($cmts)
     {
+    	//dd($cmts->hostname);
         $cmts->make_dhcp_conf();
     }
 

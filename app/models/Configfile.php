@@ -70,8 +70,8 @@ class Configfile extends \BaseModel {
 	 * Returns all available firmware files (via directory listing)
 	 * @author Patrick Reichel
 	 */
-	public function firmware_files() {
-
+	public function firmware_files() 
+	{
 		// get all available files
 		$firmware_files_raw = glob("/tftpboot/fw/*");
 		$firmware_files = array(null => "None");

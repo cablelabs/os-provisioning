@@ -12,9 +12,13 @@ class CreateModemTable extends Migration {
 	 */
 	public function up()
 	{
+		// creates directory for modem config files and sets rights
 		$dir = '/tftpboot/cm';
 		if(!is_dir($dir))
 			mkdir ($dir, '0755');
+		system('/bin/chown -R apache /tftpboot/cm');
+		system('/bin/chown -R apache /etc/dhcp/');
+
 		
 		Schema::create('modem', function(Blueprint $table)
 		{
