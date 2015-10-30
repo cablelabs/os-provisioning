@@ -113,13 +113,14 @@ class Cmts extends \BaseModel {
 					$data .= "\n\t\t\t".'allow members of "CM";';
 					break;
 
-				case 'CPEPub':
+				case 'CPEPriv':
 					$data .= "\n\t\t\t".'allow members of "Client";';
 					$data .= "\n\t\t\t".'deny members of "Client-Public";';
 					break;
 
-				case 'CPEPriv':
+				case 'CPEPub':
 					$data .= "\n\t\t\t".'allow members of "Client-Public";';
+					$data .= "\n\t\t\t".'allow unknown-clients;';
 					$data .= "\n\t\t\t".'allow known-clients;';
 					break;
 
