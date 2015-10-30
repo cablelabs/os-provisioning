@@ -94,6 +94,14 @@ class Mta extends \BaseModel {
 		return $this->modem;
 	}
 
+	// returns all objects that are related to a cmts
+	public function view_has_many()
+	{
+		return array(
+			'0' => $this->phonenumbers,
+		);
+	}
+
 	/**
 	 * BOOT:
 	 * - init mta observer
