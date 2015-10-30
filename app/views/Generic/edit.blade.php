@@ -48,14 +48,18 @@
 
 @foreach($view_var->view_has_many() as $relations)
 
-	<?php
-		$view = explode('\\', get_class($relations[0]))[1];
-		$key = strtolower($model_name).'_id';
-	?>
-	@include('Generic.relation', [$relations, $view, $key])
-	
-	<br> </br>
+	@if(isset($relations[0]))
 
+		<?php
+			$view = explode('\\', get_class($relations[0]))[1];
+			$key = strtolower($model_name).'_id';
+		?>
+		@include('Generic.relation', [$relations, $view, $key])
+		
+		<br> </br>
+
+	@endif
+	
 @endforeach
 
 @stop
