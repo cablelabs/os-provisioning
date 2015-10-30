@@ -39,8 +39,9 @@ class CreateConfigfileTable extends Migration {
 			1 => 'cm',
 			2 => 'mta',
 		);
-		foreach($enum_devices as $i => $v) {
-			DB::update("INSERT INTO configfile (name, device, is_dummy, deleted_at) VALUES('dummy-cfg-".$v."',".$i.",1,NOW());");
+		foreach($enum_devices as $i => $v) 
+		{
+			DB::update("INSERT INTO configfile (name, text, device, is_dummy, deleted_at) VALUES('dummy-cfg-".$v."', 'SnmpMibObject sysLocation.0 String \"Test Lab\" ;', ".$i.",1,NOW());");
 		}
 	}
 
