@@ -72,6 +72,14 @@ class Modem extends \BaseModel {
     {
         return $this->hasMany('Models\Mta');
     }
+    
+    // returns all objects that are related to a cmts
+    public function view_has_many()
+    {
+        return array(
+            '0' => $this->mtas
+        );
+    }
 
     /**
      * BOOT:

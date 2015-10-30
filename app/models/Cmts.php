@@ -56,6 +56,14 @@ class Cmts extends \BaseModel {
         return $this->hasMany('Models\IpPool');
     }
 
+    // returns all objects that are related to a cmts
+    public function view_has_many()
+    {
+    	return array(
+    		'0' => $this->ippools
+    	);
+    }
+
 
 	/**
 	 * auto generates the dhcp conf file for a specified cmts and 
