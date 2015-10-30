@@ -12,7 +12,7 @@ class IpPool extends \BaseModel {
     public static function rules($id = null)
     {
         return array(
-            'net' => 'ip',
+            'net' => 'required|ip',
             'netmask' => 'ip',
             'ip_pool_start' => 'ip' ,
             'ip_pool_end' => 'ip' ,
@@ -37,6 +37,7 @@ class IpPool extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
+        return $this->net.' - '.$this->netmask;
         return $this->html_list($this->cmts_hostnames(), 'hostname')[$this->cmts_id].'-'.$this->id;
     }
 
@@ -58,7 +59,12 @@ class IpPool extends \BaseModel {
     {
         return $this->belongsTo('Models\Cmts', 'cmts_id');
     }
-
+    
+    // belongs to a cmts - see BaseModel for explanation
+    public function view_belongs_to ()
+    {
+        return $this->cmts;
+    }
 
     /**
      * BOOT:

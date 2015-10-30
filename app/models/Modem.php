@@ -68,6 +68,10 @@ class Modem extends \BaseModel {
         return $this->belongsTo("Models\Qos");
     }
 
+    public function mtas()
+    {
+        return $this->hasMany('Models\Mta');
+    }
 
     /**
      * BOOT:

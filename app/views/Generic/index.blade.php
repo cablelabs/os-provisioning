@@ -10,9 +10,13 @@
 
 	{{ '<h2>'.$view_header.' List</h2>' }}
 
-	{{ Form::open(array('route' => $model_name.'.create', 'method' => 'GET')) }}
-	{{ Form::submit('Create') }}
-	{{ Form::close() }}
+	@if ($create_allowed)
+
+		{{ Form::open(array('route' => $model_name.'.create', 'method' => 'GET')) }}
+		{{ Form::submit('Create') }}
+		{{ Form::close() }}
+
+	@endif
 
 	{{ Form::open(array('route' => array($model_name.'.destroy', 0), 'method' => 'delete')) }}
 

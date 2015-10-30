@@ -1,26 +1,10 @@
 @extends('Generic.edit')
 
-@section('content_right')
-
-	Assigned phonenumbers:
-	<ul>
-	@if (count($view_var) === 0)
-		<li>None</li>
-	@else
-
-		@foreach ($view_var->phonenumbers as $phonenumber)
-			<li>
-				{{ HTML::linkRoute('Phonenumber.edit', $phonenumber->get_view_link_title(), $phonenumber->id) }}
-				(Port {{ $phonenumber->port }})
-			</li>
-		@endforeach
-	@endif
-	</ul>
-
-	{{ Form::open(array('route' => 'Phonenumber.create', 'method' => 'GET')) }}
-	{{ Form::hidden('mta_id', $view_var->id) }}
-	{{ Form::submit('Create phonenumber') }}
-	{{ Form::close() }}
-
+{{--
+@section('content_top')
+	{{ HTML::linkRoute('Modem.edit', $view_var->modem->hostname, $view_var->modem->id) }} / 
+	{{ HTML::linkRoute($model_name.'.edit', $view_var->get_view_link_title(), $view_var->id) }}
 @stop
+--}}
 
+@include('Generic.relation', ['relations' => $view_var->phonenumbers, 'view' => 'Phonenumber', 'key' =>'mta_id' ])
