@@ -77,7 +77,7 @@ class Modem extends \BaseModel {
     public function view_has_many()
     {
         return array(
-            '0' => $this->mtas
+            'Mta' => $this->mtas
         );
     }
 

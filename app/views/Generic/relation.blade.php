@@ -1,5 +1,12 @@
 
-{{ 'Assigned: '.$relations[0]->get_view_header() }}
+Assigned
+
+<?php 
+	$model_name = 'Models\\'.$view;
+	$model = new $model_name;
+	echo $model->get_view_header();
+?>
+
 <ul>
 	@foreach ($relations as $relation)
 		<li>
