@@ -164,6 +164,9 @@ class Cmts extends \BaseModel {
 		{
 			File::append($file_dhcp_conf, "\n".'include "'.$file.'";');
 		}
+
+		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
+        system('/bin/chown -R apache /etc/dhcp/');
 	}
 
 	/**
@@ -280,7 +283,6 @@ class CmtsObserver
 
     public function updated($cmts)
     {
-    	//dd($cmts->hostname);
         $cmts->make_dhcp_conf();
     }
 

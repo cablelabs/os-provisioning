@@ -111,6 +111,7 @@ class Configfile extends \BaseModel {
 	{
 		// normalize type
 		$type = strtolower($type);
+		// we need a device to make the config for
 		if (!$device)
 			return false;
 
@@ -122,18 +123,6 @@ class Configfile extends \BaseModel {
 		 * - if modem sql relations are not valid a warning will
 		 *   be printed
 		 */
-		$modem  = array ($device);
-		$qos    = array ($device->qos);
-
-		/*
-		 * generate Table array with SQL columns
-		 */
-		$tables_a ['modem'][0] = Schema::getColumnListing('modem');
-		$tables_a ['qos'][0]   = Schema::getColumnListing('qos');
-
-		// we need a device to make the config for
-		if (!$device)
-			return false;
 
 		// using the given type we decide what to do
 		switch ($type) {
@@ -141,20 +130,14 @@ class Configfile extends \BaseModel {
 			// this is for modem's config files
 			case "modem":
 
-				/*
-				 * all objects must be an array like a[xyz] = object
-				 *
-				 * INFO:
-				 * - variable names _must_ match database table names and key in db_schemata[key (later we will use this array vars through dynamic variable names calling them by the current table name]
-				 * - if modem sql relations are not valid a warning will
-				 *   be printed
-				 */
-				$modem    = array ($device);
-				$quality = array ($device->quality);
+				$modem  = array ($device);
+				$qos 	= array ($device->qos);
 
-				// write table descriptions to array
-				$db_schemata ['modem'][0]    = Schema::getColumnListing('modem');
-				$db_schemata ['quality'][0] = Schema::getColumnListing('quality');
+				/*
+				 * generate Table array with SQL columns
+				 */
+				$db_schemata ['modem'][0] 	= Schema::getColumnListing('modem');
+				$db_schemata ['qos'][0] 	= Schema::getColumnListing('qos');
 				break;
 
 			// this is for mtas
@@ -166,7 +149,7 @@ class Configfile extends \BaseModel {
 				$phonenumber = array($device->phonenumber);
 				$phonenumber = $phonenumber[0];
 
-				// get desription of table mtas
+				// get description of table mtas
 				$db_schemata['mta'][0] = Schema::getColumnListing('mta');
 				// get description of table phonennumbers; one subarray per (possible) number
 				for ($i = 0; $i < count($phonenumber); $i++) {
@@ -229,6 +212,7 @@ class Configfile extends \BaseModel {
 		foreach ($rows as $row)
 			if (!preg_match("/\\{[^\\{]*\\}/im", $row))
 				$result .= "\n\t".$row;
+
 
 		/*
 		 * return

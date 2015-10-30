@@ -12,7 +12,7 @@ class CreateMtaTable extends Migration {
 	 */
 	public function up()
 	{
-		// creates directory for mta config files and sets rights
+		// creates directory for mta config files and changes owner
 		$dir = '/tftpboot/mta';
 		if(!is_dir($dir))
 			mkdir ($dir, '0755');

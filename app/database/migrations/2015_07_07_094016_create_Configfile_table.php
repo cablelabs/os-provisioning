@@ -12,7 +12,7 @@ class CreateConfigfileTable extends Migration {
 	 */
 	public function up()
 	{
-		// creates directory for firmware files and sets rights
+		// creates directory for firmware files and changes owner
 		$dir = '/tftpboot/fw';
 		if(!is_dir($dir))
 			mkdir ($dir, '0755');

@@ -12,7 +12,7 @@ class CreateModemTable extends Migration {
 	 */
 	public function up()
 	{
-		// creates directory for modem config files and sets rights
+		// creates directory for modem config files and changes owner
 		$dir = '/tftpboot/cm';
 		if(!is_dir($dir))
 			mkdir ($dir, '0755');
