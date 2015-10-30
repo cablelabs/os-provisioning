@@ -52,4 +52,9 @@ class SnmpMib extends \BaseModel {
         return DeviceType::all();
     }
 
+
+	public function view_belongs_to ()
+	{
+		return $this->devicetype;
+	}
 }

@@ -52,4 +52,13 @@ class DeviceType extends \BaseModel {
 	{
 		return $this->hasMany('Models\SnmpMib', 'devicetype_id');
 	}
+
+    // returns all objects that are related to a DeviceType
+    public function view_has_many()
+    {
+        return array(
+            'Device' => $this->devices,
+            'SnmpMib' => $this->snmpmibs
+        );
+    }	
 }

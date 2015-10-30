@@ -48,6 +48,11 @@ class Device extends \BaseModel {
 		return $this->belongsTo('Models\DeviceType');
 	}
 
+	public function view_belongs_to ()
+	{
+		return $this->devicetype;
+	}
+
     /**
      * return all DeviceType Objects for Device
      */
