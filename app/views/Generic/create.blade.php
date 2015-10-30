@@ -5,31 +5,37 @@
 
 		{{ HTML::linkRoute($model_name.'.index', $view_header) }}: 
 
-		<?php
-			/**
-			 * Shows the html links of the related objects recursivly
-			 */ 
-			$s = '';
+		@if(isset($_GET) && $_GET != array())
 
-			$key      = array_keys($_GET)[0];
-			$class    = 'Models\\'.ucwords(explode ('_id', $key)[0]);
-			$view_var = new $class;
+			<?php
+				/**
+				 * Shows the html links of the related objects recursivly
+				 */ 
+				$s = '';
 
-			$parent   = $view_var->find($_GET[$key]);
+				$key      = array_keys($_GET)[0];
+				$class    = 'Models\\'.ucwords(explode ('_id', $key)[0]);
+				$view_var = new $class;
 
-			while ($parent)
-			{
-				if ($parent)
+				$parent   = $view_var->find($_GET[$key]);
+
+				while ($parent)
 				{
-					$view = explode('\\',get_class($parent))[1];
-					$s = HTML::linkRoute($view.'.edit', $parent->get_view_link_title(), $parent->id).' / '.$s;
-				}
+					if ($parent)
+					{
+						$view = explode('\\',get_class($parent))[1];
+						$s = HTML::linkRoute($view.'.edit', $parent->get_view_link_title(), $parent->id).' / '.$s;
+					}
 
-				$parent = $parent->view_belongs_to();
-			}
-			
-			echo $s.' Create';
-		?>
+					$parent = $parent->view_belongs_to();
+				}
+				
+				echo $s;
+			?>
+
+		@endif
+
+		{{ 'Create'}}
 
 	@stop
 @endif
