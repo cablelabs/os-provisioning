@@ -2,7 +2,7 @@
 
 use Models\Device;
 
-class DeviceController extends \BaseController {
+class DeviceController extends \SnmpController {
 
     /**
      * defines the formular fields for the edit and create view
@@ -26,5 +26,70 @@ class DeviceController extends \BaseController {
 		);
 	}
 
+
+	/**
+	 * Controlling Read Function
+	 *
+	 * @param id the Device id
+	 * @author Torsten Schmidt
+	 */
+	public function controlling_edit($id)
+	{
+		// Init Device Model
+		$device = Device::findOrFail($id);
+
+		// Init SnmpController
+		$snmp = new SnmpController;
+		$snmp->init ($device);
+
+		// Get Html Form Fields for generic View
+		$form_fields = $snmp->snmp_get_all();
+
+		// Init View
+		$obj = $this->get_model_obj();
+		$model_name  = $this->get_model_name();
+		$view_header = ': '.$device->name;
+		$view_var 	 = $obj->findOrFail($id);
+
+		$view_path = 'Device.controlling';
+		$form_path = 'Generic.form';
+		$form_update = 'Device.controlling_update';
+
+
+		return View::make($view_path, compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'form_update'));
+	}
+
+
+	/**
+	 * Controlling Update Function
+	 *
+	 * @param id the Device id
+	 * @author Torsten Schmidt
+	 */
+	public function controlling_update($id)
+	{
+		$device = Device::findOrFail($id);
+
+		// TODO: validation
+		$validator = Validator::make($data = $this->default_input(Input::all()), $device::rules($id));
+
+/*
+		if ($validator->fails())
+		{
+			return Redirect::back()->withErrors($validator)->withInput();
+		}
+*/
+
+		// Init SnmpController
+		$snmp = new SnmpController;
+		$snmp->init ($device);
+
+		// Set Html Form Fields for generic View
+
+		$snmp->snmp_set_all($data);
+		
+
+		return Redirect::route('Device.controlling_update', $id)->with('message', 'Updated!');
+	}
 
 }

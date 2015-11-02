@@ -15,5 +15,6 @@
 
 	{{ HTML::linkRoute('DeviceType.index', 'Device Types') }} |
 	{{ HTML::linkRoute('Device.index', 'Devices') }} |
-	{{ HTML::linkRoute('SnmpMib.index', 'SNMP Mibs') }} 
+	{{ HTML::linkRoute('SnmpMib.index', 'SNMP Mibs') }} |
+	{{ HTML::linkRoute('SnmpValue.index', 'SNMP Value') }} 
 </p>

@@ -16,7 +16,7 @@ class CreateSnmpMibTable extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('devicetype_id')->unsigned();
-			$table->enum('html_type', ['input','select','groupbox','textarea']);
+			$table->enum('html_type', ['text','select','groupbox','textarea']);
 			$table->string('html_frame',16);
 			$table->text('html_properties');
 			$table->integer('html_id')->unsigned(); // for feature use

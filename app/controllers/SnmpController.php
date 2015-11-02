@@ -1,109 +1,230 @@
 <?php
 
-class SnmpController extends \BaseController {
+use Models\SnmpValue;
+use Models\SnmpMib;
 
-	private $ip;
-	private $comm_ro;
-	private $comm_rw;
+class SnmpController extends BaseController{
 
 	private $timeout = 300000;
 	private $retry = 1;
 
-	private $model;
-
-	private $mibs = array ();
+	private $device;
 
 
-
-	public function snmp_init ($model = null, $mibs = null, $ip = null, $ro = 'public', $rw = 'private')
+	/**
+	 * Init SnmpController with a certain Device Model and
+	 * a MIB Array
+	 *
+	 * @param device the Device Model
+	 * @param mibs the MIB array
+	 *
+	 * @author Torsten Schmidt
+	 */
+	public function init ($device = null)
 	{
-		$this->model = $model;
-		$this->mibs  = $mibs;
+		$this->device = $device;
 
-		$this->ip = $ip;
-		$this->comm_ro = $ro;
-		$this->comm_rw = $rw;
-	}
-
-	public function __construct ($model = null, $mibs = null, $ip = null, $ro = 'public', $rw = 'private')
-	{
-		$this->snmp_init ($model, $mibs, $ip, $ro, $rw);
-	}
-
-
-	public function snmp_get ($field, $oid, $list = null)
-	{
 		$this->snmp_def_mode();
+	}
 
-		$a = snmpget($this->ip, $this->comm_ro, $oid, $this->timeout, $this->retry);
 
-		Log::info('snmp: get '.$this->snmp_log().' '.$oid.' '.$a);
+	/**
+	 * Create or Update SnmpValue Object which corresponds
+	 * to $snmpmib and $this->device with $value
+	 *
+	 * @param snmpmib the SnmpMib Object
+	 * @param value from snmpget command for this snmpmib object
+	 * @return the snmpmib->id
+	 *
+	 * @author Torsten Schmidt
+	 */
+	private function snmp_value_set ($snmpmib, $value)
+	{
+		$obj = SnmpValue::where('device_id', '=', $this->device->id)->
+						  where('snmpmib_id','=', $snmpmib->id)->
+						  where('oid_index', '=', $snmpmib->oid)->get();
 
-		if (!$a)
+		if (isset($obj[0]))
+			$obj = $obj[0];
+		else
+		{
+			$obj = new SnmpValue;
+			$obj->device_id  = $this->device->id;
+			$obj->snmpmib_id = $snmpmib->id;
+			$obj->oid_index  = $snmpmib->oid;
+		}
+
+		$obj->value = $value;
+		
+		if (!$obj->save())
 			return false;
 
-		if ($list)
-			$this->model->{$field} = $list[$a];
-		else
-			$this->model->{$field} = $a;
-
-		return $a;
+		return $obj->id;
 	}
 
 
-	public function snmp_set ($field, $oid, $type, $list = null)
+	/**
+	 * Create or Update SnmpValue Object which corresponds
+	 * to $snmpmib and $this->device with $value
+	 *
+	 * @param string encoded array like "3:qam64;4:qam256"
+	 * @return encoded array of string like [3]=>"qam64", [4]=>"qam256"
+	 * @author Torsten Schmidt
+	 */
+	private function string_to_array ($s)
 	{
-		$this->snmp_def_mode();
-		$value = $this->model->{$field};
+		$ret = array();
+		foreach (explode (';', $s) as $line)
+			$ret[explode(':', $line)[0]] = explode(':', $line)[1];
+		return $ret;
+	}
 
-		if($list)
-			$value = array_search($value, $list);
 
-		$x = snmpget ($this->ip, $this->comm_ro, $oid, $this->timeout, $this->retry);
+	/**
+	 * The SNMP Walk Function
+	 *
+	 * make a snmpwalk over the entire $snmpmib->oid 
+	 * and create/update related SnmpValue Objects
+	 *
+	 * @param snmpmib the SnmpMib Object
+	 * @return array of snmpwalk over oid in format [SnmpValue object id, snmp value] 
+	 *
+	 * @author Torsten Schmidt
+	 */
+	public function snmp_walk ($snmpmib)
+	{
+		// Walk
+		$walk = snmpwalkoid($this->device->ip, $this->device->community_ro, $snmpmib->oid, $this->timeout, $this->retry);
+
+		// Log
+		Log::info('snmp: get '.$this->snmp_log().' '.$snmpmib->oid.' '.implode(' ',$walk));
+
+		// Fetch Walk and write result to SnmpValue Objects (DB)
+		$ret = array();
+		foreach ($walk as $snmpmib->oid => $v)
+		{
+			if (!$v)
+				return false;
+
+			$b = $this->snmp_value_set($snmpmib, $v);
+
+			if (!$b)
+				return false;
+
+			array_push($ret, [$b, $v]);
+		}
+
+		return $ret;
+	}
+
+
+	/**
+	 * The SNMP Set Function
+	 *
+	 * snmpset the $snmpvalue object with $snmpvalue->value
+	 *
+	 * Note: performs snmpsetdiff
+	 *
+	 * @param snmpvalue the SnmpValue Object
+	 * @return true if success, otherwise false 
+	 *
+	 * @author Torsten Schmidt
+	 */
+	public function snmp_set ($snmpvalue)
+	{
+		$x = snmpget ($this->device->ip, $this->device->community_ro, $snmpvalue->oid_index, $this->timeout, $this->retry);
+
+		var_dump(' ', $x);
 
 		if ($x === FALSE)
-		{
 			return FALSE;
-		}
 
-		if ($x == $value)
-		{
-			return false;
-		}
+		if ($x == $snmpvalue->value)
+			return TRUE;
 
-		Log::info('snmp: set diff '.$this->snmp_log().' '.$oid.' '.$type.' '.$value.' '.$x);
-		// return snmpset($this->ip, $this->comm_rw, $oid, $type, $value, $this->timeout, $this->retry);
+		$snmpmib = SnmpMib::findOrFail($snmpvalue->snmpmib_id);
+
+		Log::info('snmp: set diff '.$this->snmp_log().' '.$snmpvalue->oid_index.' '.$snmpmib->type.' '.$snmpvalue->value.' '.$x);
+		// return snmpset($this->device->ip, $this->device->community_rw, $oid, $type, $value, $this->timeout, $this->retry);
 	}
 
 
+	/**
+	 * Get all SNMP Values of this Controller
+	 * and save results in SnmpValue Object
+	 *
+	 * @return form_fields array for generic edit view function
+	 *
+	 * @author Torsten Schmidt
+	 */
     public function snmp_get_all()
     {
-    	foreach ($this->mibs as $mib) 
-    		$this->snmp_get($mib[1], $mib[2], isset($mib[4]) ? $mib[4]:null);
+    	$ret = array();
 
-    	$this->model->save();
+    	foreach ($this->device->devicetype->snmpmibs as $mib)  
+    	{
+    		foreach ($this->snmp_walk($mib) as $a)
+    		{
+    			$options = null;
+    			$value = $a[1];
+
+    			if($mib->type_array)
+    			{
+    				$options = $a[1];
+    				$value = $this->string_to_array($mib->type_array);
+    			}
+
+    			array_push($ret, ['form_type' => $mib->html_type, 'name' => 'field_'.$a[0], 'description' => $mib->field, 'value' => $value, 'options' => $options]);
+    		}
+    	}
+
+    	return $ret;
     }
 
 
-    public function snmp_set_all()
+	/**
+	 * Perform a SNMP set of all SNMP Values for this Controller
+	 *
+	 * @param data the HTML data array in form array of ['field_<SnmpValue ID>' => <value>]
+	 * @return form_fields array for generic edit view function
+	 *
+	 * @author Torsten Schmidt
+	 */
+    public function snmp_set_all($data)
     {
-    	foreach ($this->mibs as $mib) 
-    		$this->snmp_set($mib[1], $mib[2], $mib[3], isset($mib[4]) ? $mib[4]:null);
+    	foreach ($data as $field => $value)
+    	{
+    		var_dump($value);
+    		if (explode ('_', $field)[0] == 'field')
+    		{
+    			// explode data
+    			$id = explode ('_', $field)[1];
+	    		$snmpmib = SnmpValue::findOrFail($id);
+	    		$snmpmib->value = $value;
+	    		$snmpmib->save();
+
+	    		// The SET command
+	    		$this->snmp_set($snmpmib);
+    		}
+    	}
+
+    	return true;
     }
 
-
-    public function dd()
-    {
-    	dd ($this->ip, $this->comm_ro, $this->comm_rw, $this->timeout, $this->retry, $this->model, $this->mibs);
-    }
 
 
     private function snmp_log()
     {
-    	return $this->ip;
+    	return $this->device->ip;
     }
 
 
+	/**
+	 * Set PHP SNMP Default Values
+	 * Note: Must be only called once per Object Init
+	 *
+	 * @author Torsten Schmidt
+	 */
 	private function snmp_def_mode()
 	{
         snmp_set_quick_print(TRUE);
