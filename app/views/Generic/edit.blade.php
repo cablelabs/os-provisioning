@@ -46,7 +46,11 @@
 
 @section('content_right')
 
-@foreach($view_var->view_has_many() as $view => $relations)
+	{{ Form::open(array('route' => array($model_name.'.destroy', $view_var->id), 'method' => 'delete')) }}
+	{{ Form::submit('Delete this '.$model_name) }}
+	{{ Form::close() }}
+
+	@foreach($view_var->view_has_many() as $view => $relations)
 
 		<?php
 			$key = strtolower($model_name).'_id';
@@ -54,8 +58,7 @@
 		@include('Generic.relation', [$relations, $view, $key])
 		
 		<br> </br>
-
-	
-@endforeach
+		
+	@endforeach
 
 @stop
