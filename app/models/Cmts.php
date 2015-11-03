@@ -103,7 +103,7 @@ class Cmts extends \BaseModel {
 
 			$data = "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
 			$data .= "\n\t\t".'option routers '.$router.';';
-			$data .= "\n\t\t".'option broadcast address '.$broadcast_addr.';';
+			$data .= "\n\t\t".'option broadcast-address '.$broadcast_addr.';';
 			$data .= "\n\n\t\t".'pool'."\n\t\t".'{';
 			$data .= "\n\t\t\t".'range '.$range.';'."\n";
 
@@ -111,6 +111,7 @@ class Cmts extends \BaseModel {
 			{
 				case 'CM':
 					$data .= "\n\t\t\t".'allow members of "CM";';
+					$data .= "\n\t\t\t".'allow known-clients;';
 					break;
 
 				case 'CPEPriv':
@@ -135,16 +136,18 @@ class Cmts extends \BaseModel {
 			}
 
 			$data .= "\n\t\t".'}';
-			$data .= "\n\t".'}'."\n";
 
 			// append additional options
 			if ($options)
-					$data .= "\n".$options."\n";
+					$data .= "\n\n\t\t".$options;
+
+			
+			$data .= "\n\t".'}'."\n";
 
 			File::append($file, $data);
 		}
 
-		File::append($file, "\n".'}'."\n");
+		File::append($file, '}'."\n");
 
 
 		// append include statement in dhcpd.conf if not yet done
@@ -168,6 +171,9 @@ class Cmts extends \BaseModel {
 
 		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
         system('/bin/chown -R apache /etc/dhcp/');
+
+        // restart server with new config until we use dhcpctl (or OMAPI, or omshell)
+        system('systemctl restart dhcpd.service');      	//doesnt work as is - rights??
 	}
 
 	/**
