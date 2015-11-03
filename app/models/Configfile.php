@@ -109,27 +109,13 @@ class Configfile extends \BaseModel {
 	*/
 	private function __text_make ($device, $type)
 	{
+		// array to extend the configfile; e.g. for firmware
+		$config_extensions = array();
+
 		// normalize type
 		$type = strtolower($type);
 		if (!$device)
 			return false;
-
-		/*
-		 * all objects must be an array like a[xyz] = object
-		 *
-		 * INFO:
-		 * - variable names _must_ match tables_a[xyz] coloumn
-		 * - if modem sql relations are not valid a warning will
-		 *   be printed
-		 */
-		$modem  = array ($device);
-		$qos    = array ($device->qos);
-
-		/*
-		 * generate Table array with SQL columns
-		 */
-		$tables_a ['modem'][0] = Schema::getColumnListing('modem');
-		$tables_a ['qos'][0]   = Schema::getColumnListing('qos');
 
 		// we need a device to make the config for
 		if (!$device)
@@ -150,21 +136,27 @@ class Configfile extends \BaseModel {
 				 *   be printed
 				 */
 				$modem    = array ($device);
-				$quality = array ($device->quality);
+				$qos = array ($device->qos);
 
 				// write table descriptions to array
 				$db_schemata ['modem'][0]    = Schema::getColumnListing('modem');
-				$db_schemata ['quality'][0] = Schema::getColumnListing('quality');
+				$db_schemata ['qos'][0] = Schema::getColumnListing('qos');
+
+				// if there is a specific firmware: add entries for upgrade
+				if ($this->firmware) {
+					array_push($config_extensions, 'SnmpMibObject docsDevSwFilename.0 String "fw/'.$this->firmware.'"; /* firmware file to download */');
+					array_push($config_extensions, 'SnmpMibObject docsDevSwAdminStatus.0 Integer 2; /* allow provisioning upgrade */');
+				}
+
 				break;
 
 			// this is for mtas
 			case "mta":
 
 				// same as above – arrays for later generic use
-				// their have to match
-				$mtas = array($device);
-				$phonenumber = array($device->phonenumber);
-				$phonenumber = $phonenumber[0];
+				// they have to match database table names
+				$mta = array($device);
+				$phonenumber = Phonenumber::where('mta_id', '=', $device->id)->get();
 
 				// get desription of table mtas
 				$db_schemata['mta'][0] = Schema::getColumnListing('mta');
@@ -221,6 +213,8 @@ class Configfile extends \BaseModel {
 		$text = str_replace($search, $replace, $this->text);
 		$rows = explode("\n", $text);
 
+		// finally: append extensions; they have to be an array with one entry per line
+		$rows = array_merge($rows, $config_extensions);
 
 		/*
 		 * Delete all with {xyz} content which can not be replaced
