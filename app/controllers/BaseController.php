@@ -243,7 +243,7 @@ class BaseController extends Controller {
 	 */
 	public function update($id)
 	{
-				// dd(Input::all());
+		// dd(Input::all());
 
 		$obj = $this->get_model_obj()->findOrFail($id);
 		$controller = $this->get_controller_obj();
@@ -279,7 +279,7 @@ class BaseController extends Controller {
 		else
 			$this->get_model_obj()->destroy($id);
 
-		return $this->index();
+		return Redirect::back();
 	}
 
 }

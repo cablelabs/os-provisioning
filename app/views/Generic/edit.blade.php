@@ -41,14 +41,16 @@
 
 	{{ Form::close() }}
 
-@stop
-
-
-@section('content_right')
+	<!-- <br> </br> -->
 
 	{{ Form::open(array('route' => array($model_name.'.destroy', $view_var->id), 'method' => 'delete')) }}
 	{{ Form::submit('Delete this '.$model_name) }}
 	{{ Form::close() }}
+
+@stop
+
+
+@section('content_right')
 
 	@foreach($view_var->view_has_many() as $view => $relations)
 
