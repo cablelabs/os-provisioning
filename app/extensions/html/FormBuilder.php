@@ -156,6 +156,11 @@ class FormBuilder extends IlluminateFormBuilder {
     }
 
 
+    public function open(array $options = array()) 
+    {
+        $options['class'] ='form_open'; // Note: this avoids form input fields with large distances
+        return parent::open($options);
+    }
 
     /**
      * Determine whether the form element with the given name
