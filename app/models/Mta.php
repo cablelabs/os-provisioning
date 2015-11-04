@@ -140,8 +140,11 @@ class Mta extends \BaseModel {
 		if ($ret === false)
 			die("Error writing to file ".$dir.$cf_file);
 
-		Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/mta-$id.cfg");
-		exec("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/mta-$id.cfg", $out, $ret);
+		Log::info("/usr/local/bin/docsis -p $cf_file $dir/../keyfile $dir/mta-$id.cfg");
+		exec("/usr/local/bin/docsis -p $cf_file $dir/../keyfile $dir/mta-$id.cfg", $out, $ret);
+
+		// change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
+		system('/bin/chown -R apache /tftpboot/mta');
 
 		return ($ret == 0 ? true : false);
 	}

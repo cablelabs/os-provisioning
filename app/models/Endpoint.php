@@ -73,6 +73,9 @@ class Endpoint extends \BaseModel {
                 die("Error writing to file");
         }
         
+        // chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
+        system('/bin/chown -R apache /etc/dhcp/');
+        
         return ($ret > 0 ? true : false);
     }    
 }

@@ -12,9 +12,11 @@ class CreateMtaTable extends Migration {
 	 */
 	public function up()
 	{
+		// creates directory for mta config files and changes owner
 		$dir = '/tftpboot/mta';
 		if(!is_dir($dir))
 			mkdir ($dir, '0755');
+		system('/bin/chown -R apache /tftpboot/mta');
 
 		Schema::create('mta', function(Blueprint $table)
 		{

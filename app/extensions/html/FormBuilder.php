@@ -79,7 +79,7 @@ class FormBuilder extends IlluminateFormBuilder {
         if (isset($options['style']) && $options['style'] == 'simple')
             $s = parent::submit($value, $options);
         else
-            $s = '<div class="form-group">
+            $s = '<div class="form-group col-md-12">
     			<label class="col-md-3 control-label"></label>
     			<div class="">'.parent::submit($value, $options).
     			'</div>

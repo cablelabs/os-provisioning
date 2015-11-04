@@ -44,8 +44,7 @@
 
 @section('content_right')
 
-
-	<?php $view_header = 'Assigned' ?>
+	<?php $view_header_right = 'Assigned' ?>
 
 	@foreach($view_var->view_has_many() as $view => $relations)
 
@@ -54,15 +53,13 @@
 
 				$model_name = 'Models\\'.$view;
 				$model = new $model_name;
-				$view_header .= ' '.$model->get_view_header();
+				$view_header_right .= ' '.$model->get_view_header();
 			?>
-
 
 			@include('Generic.relation', [$relations, $view, $key])
 			
 			<br> </br>
-
-		
+	
 	@endforeach
 
 @stop

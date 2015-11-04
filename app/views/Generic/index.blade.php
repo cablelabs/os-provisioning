@@ -21,7 +21,7 @@
 	{{ Form::closeDivClass() }}
 
 
-	{{ Form::openDivClass(3) }}
+	{{ Form::openDivClass(12) }}
 
 		{{ Form::open(array('route' => array($model_name.'.destroy', 0), 'method' => 'delete')) }}
 
@@ -40,9 +40,12 @@
 
 		<br>
 
-		{{ Form::submit('Delete', ['style' => 'simple']) }}
-		{{ Form::close() }}
+		{{ Form::openDivClass(3) }}
+			{{ Form::submit('Delete', ['style' => 'simple']) }}
+			{{ Form::close() }}
+
+		{{ Form::closeDivClass() }}
 
 	{{ Form::closeDivClass() }}
-</div>
+
 @stop

@@ -10,7 +10,7 @@ class ModemTableSeeder extends Seeder {
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, 10) as $index)
+		foreach(range(1, 3) as $index)
 		{
 			Modem::create([
 				'mac' => $faker->macAddress(),
