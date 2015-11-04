@@ -1,26 +1,12 @@
 @extends ('Layout.default')
 
-@include ('Layout.header')
-
-<hr>
-
 @section ('content')
 
-@yield('content_top')
+<div class="row">
 
-<hr>
-<p align="right">
-	@yield('content_top_2')
-</p>
+	@include ('bootstrap.panel', array ('content' => 'content_left', 'md' => 6))
+	@include ('bootstrap.panel', array ('content' => 'content_right', 'md' => 3))
 
-<hr>
-
-	<table>
-		<tr>
-			<td width="400" valign="top">@yield('content_left')</td> 
-			<td width="50"></td>
-			<td width="400" valign="top">@yield('content_right')</td>
-		</tr>
-	</table>
+</div>
 
 @stop

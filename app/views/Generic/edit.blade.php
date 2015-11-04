@@ -33,8 +33,6 @@
 
 @section('content_left')
 
-	{{ '<h2>Edit '.$view_header.'</h2>' }}
-
 	{{ Form::model($view_var, array('route' => array($model_name.'.update', $view_var->id), 'method' => 'put', 'files' => true)) }}
 
 		@include($form_path, $view_var)
@@ -46,16 +44,25 @@
 
 @section('content_right')
 
-@foreach($view_var->view_has_many() as $view => $relations)
 
-		<?php
-			$key = strtolower($model_name).'_id';
-		?>
-		@include('Generic.relation', [$relations, $view, $key])
+	<?php $view_header = 'Assigned' ?>
+
+	@foreach($view_var->view_has_many() as $view => $relations)
+
+			<?php
+				$key = strtolower($model_name).'_id';
+
+				$model_name = 'Models\\'.$view;
+				$model = new $model_name;
+				$view_header .= ' '.$model->get_view_header();
+			?>
+
+
+			@include('Generic.relation', [$relations, $view, $key])
+			
+			<br> </br>
+
 		
-		<br> </br>
-
-	
-@endforeach
+	@endforeach
 
 @stop
