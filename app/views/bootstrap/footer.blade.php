@@ -31,7 +31,7 @@
       <script>
         $(document).ready(function() {
           App.init();
-          Dashboard.init();
+          <!-- Dashboard.init(); -->
         });
       </script>
 

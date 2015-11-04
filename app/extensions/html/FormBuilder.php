@@ -4,6 +4,7 @@ namespace Acme\html;
 
 use Illuminate\Html\FormBuilder as IlluminateFormBuilder;
 use Session;
+use Log;
 
 class FormBuilder extends IlluminateFormBuilder {
 
@@ -71,12 +72,15 @@ class FormBuilder extends IlluminateFormBuilder {
     public function submit($value = NULL, $options = array())
     {
         $options = $this->appendClassToOptions('form-control btn btn-sm btn-success', $options);
-
-        $s = '<div class="form-group">
-			<label class="col-md-3 control-label">Submit</label>
-			<div class="col-md-9">'.parent::submit($value, $options).
-			'</div>
-			</div>';
+        
+        if (isset($options['style']) && $options['style'] == 'simple')
+            $s = parent::submit($value, $options);
+        else
+            $s = '<div class="form-group">
+    			<label class="col-md-3 control-label"></label>
+    			<div class="">'.parent::submit($value, $options).
+    			'</div>
+    			</div>';
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.
@@ -218,7 +222,7 @@ class FormBuilder extends IlluminateFormBuilder {
         // set it to an empty string.
         $label = $label ? $this->label($name, $label) : '';
 
-        return '<div'.$this->html->attributes($options).'>'.$label;
+        return $this->openDivClass(12).'<div'.$this->html->attributes($options).'>'.$label;
     }
 
 
@@ -235,8 +239,20 @@ class FormBuilder extends IlluminateFormBuilder {
         $errors = $this->getFormattedErrors($name);
 
         // Append the errors to the group and close it out.
-        return $errors.'</div>';
+        return $errors.'</div>'.$this->closeDivClass();
     }
+
+
+    public function openDivClass($col = 9)
+    {
+        return '<div class="col-md-'.$col.'">';
+    }
+
+    public function closeDivClass()
+    {
+        return '</div>';
+    }
+
 
 
 }
