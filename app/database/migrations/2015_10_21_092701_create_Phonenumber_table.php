@@ -11,8 +11,8 @@ class CreatePhonenumberTable extends Migration {
 	function __construct() {
 
 		// get and instanciate of index maker
-		require_once(getcwd()."/app/database/helpers/fulltext_index.php");
-		$this->fim = new FullindexMaker($this->tablename);
+		require_once(getcwd()."/app/extensions/database/FulltextIndexMaker.php");
+		$this->fim = new FulltextIndexMaker($this->tablename);
 	}
 
 	/**

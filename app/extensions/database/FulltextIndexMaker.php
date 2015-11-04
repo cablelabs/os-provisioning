@@ -1,6 +1,6 @@
 <?php
 
-class FullindexMaker {
+class FulltextIndexMaker {
 
 	/**
 	 * include this in your migrations file to build FULLTEXT indexes
@@ -37,4 +37,5 @@ class FullindexMaker {
 			DB::statement("CREATE FULLTEXT INDEX ".$this->tablename."_all ON ".$this->tablename." (".implode(', ', $this->index).")");
 		}
 	}
+
 }

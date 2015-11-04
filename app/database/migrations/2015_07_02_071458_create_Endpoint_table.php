@@ -8,8 +8,12 @@ class CreateEndpointTable extends Migration {
 	// name of the table to create
 	private $tablename = "endpoint";
 
-	// array for fields to be in the FULLTEXT index (only types char, string and text!)
-	private $index = array();
+	function __construct() {
+
+		// get and instanciate of index maker
+		require_once(getcwd()."/app/extensions/database/FulltextIndexMaker.php");
+		$this->fim = new FulltextIndexMaker($this->tablename);
+	}
 
 	/**
 	 * Run the migrations.
@@ -23,22 +27,20 @@ class CreateEndpointTable extends Migration {
 			$table->engine = 'MyISAM'; // InnoDB doesn't support fulltext index in MariaDB < 10.0.5
 			$table->increments('id');
 			$table->string('hostname');
-				array_push($this->index, "hostname");
+				$this->fim->add("hostname");
 			$table->string('name');
-				array_push($this->index, "name");
+				$this->fim->add("name");
 			$table->string('mac',17);
 			$table->text('description');
-				array_push($this->index, "description");
+				$this->fim->add("description");
 			$table->enum('type', array('cpe','mta'));
 			$table->boolean('public');
 			// $table->integer('modem_id')->unsigned(); // depracted
 			$table->timestamps();
 		});
 
-		// add fulltext index for all given fields
-		if (isset($this->index) && (count($this->index) > 0)) {
-			DB::statement("CREATE FULLTEXT INDEX ".$this->tablename."_all ON ".$this->tablename." (".implode(', ', $this->index).")");
-		}
+		// create FULLTEXT index including the given
+		$this->fim->make_index();
 
 		DB::update("ALTER TABLE ".$this->tablename." AUTO_INCREMENT = 200000;");
 	}
