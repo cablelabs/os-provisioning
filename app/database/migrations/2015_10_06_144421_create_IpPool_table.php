@@ -8,8 +8,12 @@ class CreateIpPoolTable extends Migration {
 	// name of the table to create
 	private $tablename = "ippool";
 
-	// array for fields to be in the FULLTEXT index (only types char, string and text!)
-	private $index = array();
+	function __construct() {
+
+		// get and instanciate of index maker
+		require_once(getcwd()."/app/database/helpers/fulltext_index.php");
+		$this->fim = new FullindexMaker($this->tablename);
+	}
 
 	/**
 	 * Run the migrations.
@@ -25,32 +29,31 @@ class CreateIpPoolTable extends Migration {
 			$table->integer('cmts_id')->unsigned();
 			$table->enum('type', array('CM', 'CPEPub', 'CPEPriv', 'MTA')); 	// (cm, cpePub, cpePriv, mta)
 			$table->string('net')->sizeof(20);
-				array_push($this->index, "net");
+				$this->fim->add("net");
 			$table->string('netmask')->sizeof(20);
-				array_push($this->index, "netmask");
+				$this->fim->add("netmask");
 			$table->string('ip_pool_start')->sizeof(20);
-				array_push($this->index, "ip_pool_start");
+				$this->fim->add("ip_pool_start");
 			$table->string('ip_pool_end')->sizeof(20);
-				array_push($this->index, "ip_pool_end");
+				$this->fim->add("ip_pool_end");
 			$table->string('router_ip')->sizeof(20);
-				array_push($this->index, "router_ip");
+				$this->fim->add("router_ip");
 			$table->string('broadcast_ip')->sizeof(20);
-				array_push($this->index, "broadcast_ip");
+				$this->fim->add("broadcast_ip");
 			$table->string('dns1_ip')->sizeof(20);
-				array_push($this->index, "dns1_ip");
+				$this->fim->add("dns1_ip");
 			$table->string('dns2_ip')->sizeof(20);
-				array_push($this->index, "dns2_ip");
+				$this->fim->add("dns2_ip");
 			$table->string('dns3_ip')->sizeof(20);
-				array_push($this->index, "dns3_ip");
+				$this->fim->add("dns3_ip");
 			$table->text('optional');
-				array_push($this->index, "optional");
+				$this->fim->add("optional");
 			$table->timestamps();
 		});
 
-		// add fulltext index for all given fields
-		if (isset($this->index) && (count($this->index) > 0)) {
-			DB::statement("CREATE FULLTEXT INDEX ".$this->tablename."_all ON ".$this->tablename." (".implode(', ', $this->index).")");
-		}
+		// create FULLTEXT index including the given
+		$this->fim->make_index();
+
 	}
 
 

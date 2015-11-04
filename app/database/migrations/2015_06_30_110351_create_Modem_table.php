@@ -8,8 +8,12 @@ class CreateModemTable extends Migration {
 	// name of the table to create
 	private $tablename = "modem";
 
-	// array for fields to be in the FULLTEXT index (only types char, string and text!)
-	private $index = array();
+	function __construct() {
+
+		// get and instanciate of index maker
+		require_once(getcwd()."/app/database/helpers/fulltext_index.php");
+		$this->fim = new FullindexMaker($this->tablename);
+	}
 
 	/**
 	 * Run the migrations.
@@ -27,31 +31,29 @@ class CreateModemTable extends Migration {
 			$table->engine = 'MyISAM'; // InnoDB doesn't support fulltext index in MariaDB < 10.0.5
 			$table->increments('id');
 			$table->string('name');
-				array_push($this->index, "name");
+				$this->fim->add("name");
 			$table->string('hostname');
-				array_push($this->index, "hostname");
+				$this->fim->add("hostname");
 			$table->integer('contract_id')->unsigned();
 			$table->string('mac')->sizeof(17);
-				array_push($this->index, "mac");
+				$this->fim->add("mac");
 			$table->integer('status');
 			$table->boolean('public');
 			$table->boolean('network_access');
 			$table->string('serial_num');
-				array_push($this->index, "serial_num");
+				$this->fim->add("serial_num");
 			$table->string('inventar_num');
-				array_push($this->index, "inventar_num");
+				$this->fim->add("inventar_num");
 			$table->text('description');
-				array_push($this->index, "description");
+				$this->fim->add("description");
 			$table->integer('parent');
 			$table->integer('configfile_id')->unsigned();
 			$table->integer('qos_id')->unsigned();
 			$table->timestamps();
 		});
 
-		// add fulltext index for all given fields
-		if (isset($this->index) && (count($this->index) > 0)) {
-			DB::statement("CREATE FULLTEXT INDEX ".$this->tablename."_all ON ".$this->tablename." (".implode(', ', $this->index).")");
-		}
+		// create FULLTEXT index including the given
+		$this->fim->make_index();
 
 		DB::update("ALTER TABLE ".$this->tablename." AUTO_INCREMENT = 100000;");
 	}

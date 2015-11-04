@@ -8,8 +8,12 @@ class CreateMtaTable extends Migration {
 	// name of the table to create
 	private $tablename = "mta";
 
-	// array for fields to be in the FULLTEXT index (only types char, string and text!)
-	private $index = array();
+	function __construct() {
+
+		// get and instanciate of index maker
+		require_once(getcwd()."/app/database/helpers/fulltext_index.php");
+		$this->fim = new FullindexMaker($this->tablename);
+	}
 
 	/**
 	 * Run the migrations.
@@ -28,9 +32,9 @@ class CreateMtaTable extends Migration {
 			$table->increments('id');
 			$table->integer('modem_id')->unsigned()->default(1);
 			$table->string('mac', 17);
-				array_push($this->index, "mac");
+				$this->fim->add("mac");
 			$table->string('hostname');
-				array_push($this->index, "hostname");
+				$this->fim->add("hostname");
 			$table->integer('configfile_id')->unsigned()->default(1);
 			$table->enum('type', ['sip','packetcable']);
 			$table->boolean('is_dummy')->default(0);
@@ -39,10 +43,8 @@ class CreateMtaTable extends Migration {
 
 		});
 
-		// add fulltext index for all given fields
-		if (isset($this->index) && (count($this->index) > 0)) {
-			DB::statement("CREATE FULLTEXT INDEX ".$this->tablename."_all ON ".$this->tablename." (".implode(', ', $this->index).")");
-		}
+		// create FULLTEXT index including the given
+		$this->fim->make_index();
 
 		# insert a dummy mta for each type
 		$enum_types = array(

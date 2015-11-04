@@ -8,8 +8,12 @@ class CreatePhonenumberTable extends Migration {
 	// name of the table to create
 	private $tablename = "phonenumber";
 
-	// array for fields to be in the FULLTEXT index (only types char, string and text!)
-	private $index = array();
+	function __construct() {
+
+		// get and instanciate of index maker
+		require_once(getcwd()."/app/database/helpers/fulltext_index.php");
+		$this->fim = new FullindexMaker($this->tablename);
+	}
 
 	/**
 	 * Run the migrations.
@@ -26,11 +30,11 @@ class CreatePhonenumberTable extends Migration {
 			$table->tinyInteger('port')->unsigned();
 			$table->enum('country_code', ['0049']);
 			$table->string('prefix_number');
-				array_push($this->index, "prefix_number");
+				$this->fim->add("prefix_number");
 			$table->string('number');
-				array_push($this->index, "number");
+				$this->fim->add("number");
 			$table->string('username')->nullable();
-				array_push($this->index, "username");
+				$this->fim->add("username");
 			$table->string('password')->nullable();
 				// => passwords not in index :-)
 			$table->boolean('active');
@@ -39,10 +43,8 @@ class CreatePhonenumberTable extends Migration {
 			$table->softDeletes();
 		});
 
-		// add fulltext index for all given fields
-		if (isset($this->index) && (count($this->index) > 0)) {
-			DB::statement("CREATE FULLTEXT INDEX ".$this->tablename."_all ON ".$this->tablename." (".implode(', ', $this->index).")");
-		}
+		// create FULLTEXT index including the given
+		$this->fim->make_index();
 
 		// insert dummy number
 		DB::update("INSERT INTO ".$this->tablename." (prefix_number,number,active,is_dummy,deleted_at) VALUES('0000','00000',1,1,NOW());");

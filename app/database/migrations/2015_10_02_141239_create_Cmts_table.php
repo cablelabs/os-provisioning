@@ -10,8 +10,12 @@ class CreateCmtsTable extends Migration {
 	// name of the table to create
 	private $tablename = "cmts";
 
-	// array for fields to be in the FULLTEXT index (only types char, string and text!)
-	private $index = array();
+	function __construct() {
+
+		// get and instanciate of index maker
+		require_once(getcwd()."/app/database/helpers/fulltext_index.php");
+		$this->fim = new FullindexMaker($this->tablename);
+	}
 
 	/**
 	 * Run the migrations.
@@ -25,22 +29,25 @@ class CreateCmtsTable extends Migration {
 			$table->engine = 'MyISAM'; // InnoDB doesn't support fulltext index in MariaDB < 10.0.5
 			$table->increments('id');
 			$table->string('hostname');
-				array_push($this->index, "hostname");
+				$this->fim->add("hostname");
 			$table->string('type');
-				array_push($this->index, "type");
+				$this->fim->add("type");
 			$table->string('ip');		// bundle ip
-				array_push($this->index, "ip");
+				$this->fim->add("ip");
 			$table->string('community_rw');
-				array_push($this->index, "community_rw");
+				$this->fim->add("community_rw");
 			$table->string('community_ro');
-				array_push($this->index, "community_ro");
+				$this->fim->add("community_ro");
 			$table->string('company');
-				array_push($this->index, "company");
+				$this->fim->add("company");
 			$table->integer('network');
 			$table->integer('state');
 			$table->integer('monitoring');
 			$table->timestamps();		// created_at and updated_at
 		});
+
+		// create FULLTEXT index including the given
+		$this->fim->make_index();
 
 		// add fulltext index for all given fields
 		if (isset($this->index) && (count($this->index) > 0)) {

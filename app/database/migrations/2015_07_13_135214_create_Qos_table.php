@@ -8,8 +8,12 @@ class CreateQosTable extends Migration {
 	// name of the table to create
 	private $tablename = "qos";
 
-	// array for fields to be in the FULLTEXT index (only types char, string and text!)
-	private $index = array();
+	function __construct() {
+
+		// get and instanciate of index maker
+		require_once(getcwd()."/app/database/helpers/fulltext_index.php");
+		$this->fim = new FullindexMaker($this->tablename);
+	}
 
 	/**
 	 * Run the migrations.
@@ -27,14 +31,12 @@ class CreateQosTable extends Migration {
 			$table->integer('ds_rate_max_help')->unsigned();
 			$table->integer('us_rate_max_help')->unsigned();
 			$table->string('name');
-				array_push($this->index, "name");
+				$this->fim->add("name");
 			$table->timestamps();
 		});
 
-		// add fulltext index for all given fields
-		if (isset($this->index) && (count($this->index) > 0)) {
-			DB::statement("CREATE FULLTEXT INDEX ".$this->tablename."_all ON ".$this->tablename." (".implode(', ', $this->index).")");
-		}
+		// create FULLTEXT index including the given
+		$this->fim->make_index();
 	}
 
 
