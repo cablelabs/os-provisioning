@@ -30,5 +30,14 @@ Route::resource('Endpoint', 'EndpointController');
 #Route::post('endpoint/json', 'EndpointController@json');
 Route::resource('Configfile', 'ConfigfileController');
 Route::resource('Qos', 'QosController');
+
+Route::resource('SnmpMib', 'SnmpMibController');
+Route::resource('SnmpValue', 'SnmpValueController');
+Route::resource('CmtsDownstream', 'CmtsDownstreamController');
+Route::resource('DeviceType', 'DeviceTypeController');
+Route::resource('Device', 'DeviceController');
+Route::get('Device/{modem}/controlling', array ('as' => 'Device.controlling_edit', 'uses' => 'DeviceController@controlling_edit'));
+Route::put('Device/{modem}/controlling', array ('as' => 'Device.controlling_update', 'uses' => 'DeviceController@controlling_update'));
+
 Route::resource('Phonenumber', 'PhonenumberController');
 Route::resource('Mta', 'MtaController');
