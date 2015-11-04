@@ -1,4 +1,4 @@
-@extends ('Layout.split')
+@extends ('Layout.single')
 
 @section('content_top')
 
@@ -8,35 +8,44 @@
 
 @section('content_left')
 
-	{{ '<h2>'.$view_header.' List</h2>' }}
+	{{ Form::openDivClass(12) }}
+		{{ Form::openDivClass(3) }}
+			@if ($create_allowed)
 
-	@if ($create_allowed)
+				{{ Form::open(array('route' => $model_name.'.create', 'method' => 'GET')) }}
+				{{ Form::submit('Create', ['style' => 'simple']) }}
+				{{ Form::close() }}
 
-		{{ Form::open(array('route' => $model_name.'.create', 'method' => 'GET')) }}
-		{{ Form::submit('Create') }}
-		{{ Form::close() }}
+			@endif
+		{{ Form::closeDivClass() }}
+	{{ Form::closeDivClass() }}
 
-	@endif
 
-	{{ Form::open(array('route' => array($model_name.'.destroy', 0), 'method' => 'delete')) }}
+	{{ Form::openDivClass(12) }}
 
-	<table>
-	@foreach ($view_var as $object)
-		<tr>
-			<td>
-				{{ Form::checkbox('ids['.$object->id.']') }}
-			</td>
-			<td>
-				{{ HTML::linkRoute($model_name.'.edit', $object->get_view_link_title(), $object->id) }}
-			</td>
-		</tr>
-	@endforeach
-	</table>
+		{{ Form::open(array('route' => array($model_name.'.destroy', 0), 'method' => 'delete')) }}
 
-	<br>
+		<table>
+		@foreach ($view_var as $object)
+			<tr>
+				<td>
+					{{ Form::checkbox('ids['.$object->id.']') }}
+				</td>
+				<td>
+					{{ HTML::linkRoute($model_name.'.edit', $object->get_view_link_title(), $object->id) }}
+				</td>
+			</tr>
+		@endforeach
+		</table>
 
-	{{ Form::submit('Delete') }}
-	{{ Form::close() }}
+		<br>
 
+		{{ Form::openDivClass(3) }}
+			{{ Form::submit('Delete', ['style' => 'simple']) }}
+			{{ Form::close() }}
+
+		{{ Form::closeDivClass() }}
+
+	{{ Form::closeDivClass() }}
 
 @stop

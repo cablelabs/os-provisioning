@@ -109,11 +109,15 @@ class Configfile extends \BaseModel {
 	*/
 	private function __text_make ($device, $type)
 	{
+		// array to extend the configfile; e.g. for firmware
+		$config_extensions = array();
+
 		// normalize type
 		$type = strtolower($type);
 		// we need a device to make the config for
 		if (!$device)
 			return false;
+
 
 		/*
 		 * all objects must be an array like a[xyz] = object
@@ -123,6 +127,7 @@ class Configfile extends \BaseModel {
 		 * - if modem sql relations are not valid a warning will
 		 *   be printed
 		 */
+
 
 		// using the given type we decide what to do
 		switch ($type) {
@@ -138,16 +143,22 @@ class Configfile extends \BaseModel {
 				 */
 				$db_schemata ['modem'][0] 	= Schema::getColumnListing('modem');
 				$db_schemata ['qos'][0] 	= Schema::getColumnListing('qos');
+
+				// if there is a specific firmware: add entries for upgrade
+				if ($this->firmware) {
+					array_push($config_extensions, 'SnmpMibObject docsDevSwFilename.0 String "fw/'.$this->firmware.'"; /* firmware file to download */');
+					array_push($config_extensions, 'SnmpMibObject docsDevSwAdminStatus.0 Integer 2; /* allow provisioning upgrade */');
+				}
+
 				break;
 
 			// this is for mtas
 			case "mta":
 
 				// same as above – arrays for later generic use
-				// their have to match
-				$mtas = array($device);
-				$phonenumber = array($device->phonenumber);
-				$phonenumber = $phonenumber[0];
+				// they have to match database table names
+				$mta = array($device);
+				$phonenumber = Phonenumber::where('mta_id', '=', $device->id)->get();
 
 				// get description of table mtas
 				$db_schemata['mta'][0] = Schema::getColumnListing('mta');
@@ -204,6 +215,8 @@ class Configfile extends \BaseModel {
 		$text = str_replace($search, $replace, $this->text);
 		$rows = explode("\n", $text);
 
+		// finally: append extensions; they have to be an array with one entry per line
+		$rows = array_merge($rows, $config_extensions);
 
 		/*
 		 * Delete all with {xyz} content which can not be replaced

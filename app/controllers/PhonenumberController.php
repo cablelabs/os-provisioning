@@ -28,7 +28,7 @@ class PhonenumberController extends \BaseController {
 			array('form_type' => 'select', 'name' => 'mta_id', 'description' => 'MTA', 'value' => $model->mtas_list_with_dummies()),
 			array('form_type' => 'text', 'name' => 'port', 'description' => 'Port'),
 			array('form_type' => 'text', 'name' => 'username', 'description' => 'Username'),
-			array('form_type' => 'select', 'name' => 'password', 'description' => 'Password'),
+			array('form_type' => 'text', 'name' => 'password', 'description' => 'Password'),
 			array('form_type' => 'select', 'name' => 'active', 'description' => 'Active?', 'value' => array( '1' => 'Yes', '0' => 'No'))
 		);
 	}
