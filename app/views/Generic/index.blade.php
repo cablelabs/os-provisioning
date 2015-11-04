@@ -10,6 +10,10 @@
 
 	{{ '<h2>'.$view_header.' List</h2>' }}
 
+	{{ Form::model(null, array('route' => $model_name.'.fulltextSearch', 'method' => 'GET')) }}
+		@include('Generic.searchform')
+	{{ Form::close() }}
+
 	@if ($create_allowed)
 
 		{{ Form::open(array('route' => $model_name.'.create', 'method' => 'GET')) }}

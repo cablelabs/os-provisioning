@@ -35,6 +35,7 @@
 
 	{{ '<h2>Edit '.$view_header.'</h2>' }}
 
+	{{ $form_path }}
 	{{ Form::model($view_var, array('route' => array($model_name.'.update', $view_var->id), 'method' => 'put', 'files' => true)) }}
 
 		@include($form_path, $view_var)

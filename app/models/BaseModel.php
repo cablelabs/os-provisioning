@@ -19,7 +19,7 @@ class BaseModel extends \Eloquent
 	 * Basefunction for returning all objects that a model can have a relation to
 	 * Place this function in the model where the edit/create view shall show all related objects
 	 *
-	 * @author Nino Ryschawy 
+	 * @author Nino Ryschawy
 	 *
 	 * @return an array with the appropriate hasMany()-functions of the model
 	 */
@@ -27,7 +27,7 @@ class BaseModel extends \Eloquent
 	{
 		return array();
 	}
-	
+
 
 	/**
 	 *	This returns an array with all possible enum values.
@@ -72,10 +72,123 @@ class BaseModel extends \Eloquent
 		return $enum_values;
 	}
 
+	/**
+	 * Get the names of all fulltext indexed database columns.
+	 * They have to be passed as a param to a MATCH-AGAINST query
+	 *
+	 * @param $table database to get index columns from
+	 * @return comma separated string of columns
+	 * @author Patrick Reichel
+	 */
+	protected function _getFulltextIndexColumns($table) {
+
+		$cols = array();
+		$indexes = DB::select(DB::raw('SHOW INDEX FROM '.$table));
+		foreach ($indexes as $index) {
+			if (($index->Key_name == $table.'_fulltext_all') && $index->Index_type == 'FULLTEXT') {
+				array_push($cols, $index->Column_name);
+			}
+		}
+
+		$cols = implode(',', $cols);
+		return $cols;
+	}
+
+
+	/**
+	 * Get all database fields
+	 *
+	 * @param table database table to get structure from
+	 * @return comma separated string of columns
+	 * @author Patrick Reichel
+	 */
+	protected function _getTableColumns($table) {
+
+		$fields = array();
+		$cols = DB::select( DB::raw('SHOW COLUMNS FROM '.$table.' WHERE Field = "'.$name.'"'));
+		foreach ($cols as $col) {
+			array_push($result, $col->Field);
+		}
+
+		$fields = implode(',', $fields);
+		return $fields;
+	}
+
+
+	/**
+	 * Switch to decide with search algo shall be used
+	 * Here we can add other conditions (e.g. to force mode simple on mac search or %truncation)
+	 */
+	protected function _chooseFulltextSearchAlgo($mode, $query) {
+
+		// search query is left truncated => simple search
+		if ((strpos($query, "%") === 0) || (strpos($query, "*") === 0)) {
+			$mode = 'simple';
+			// select * from modem where CONCAT(mac, description, id) LIKE "%100001%";
+		}
+
+		// query contains . or : => IP or MAC => simple search
+		if ((strpos($query, ":") !== false) || (strpos($query, ".") !== false)) {
+			$mode = 'simple';
+		}
+
+		return $mode;
+	}
+
+
+	/**
+	 * Get results for a fulltext search
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function getFulltextSearchResults($scope, $mode, $query) {
+
+		$mode = $this->_chooseFulltextSearchAlgo($mode, $query);
+
+		if ($mode == 'simple') {
+
+			if ($scope == 'all') {
+				echo "Implement searching over all database tables";
+			}
+			else {
+				$result = 'to get';
+				CRASH;
+			}
+		}
+		elseif (strpos($mode, 'index_') === 0) {
+
+			if ($scope == 'all') {
+				echo "Implement searching over all database tables";
+			}
+			else {
+				$indexed_cols = $this->_getFulltextIndexColumns($this->getTable());
+
+				if ("index_natural" == $mode) {
+					$mode = "IN NATURAL MODE";
+				}
+				elseif ("index_boolean" == $mode) {
+					$mode = "IN BOOLEAN MODE";
+				}
+				else {
+					$mode = "IN BOOLEAN MODE";
+				}
+
+				$result = $this->whereRaw("MATCH(".$indexed_cols.") AGAINST(? ".$mode.")", array($query))->get();
+			}
+		}
+		else {
+			$result = null;
+		}
+
+		echo "DEBUG<br><pre>";
+		dd($result);
+		return $result;
+
+	}
 
 	/**
 	 * Generic function to build a list with key of id
-	 * @param $array 	
+	 * @param $array
 	 * @return $ret 	list
 	 */
 	public function html_list ($array, $column)
@@ -84,9 +197,9 @@ class BaseModel extends \Eloquent
 
 		foreach ($array as $a)
 		{
-			$ret[$a->id] = $a->{$column};	
+			$ret[$a->id] = $a->{$column};
 		}
 
 		return $ret;
-	}	
+	}
 }

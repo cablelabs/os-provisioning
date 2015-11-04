@@ -34,7 +34,7 @@ class FulltextIndexMaker {
 
 		// add fulltext index for all given fields
 		if (isset($this->index) && (count($this->index) > 0)) {
-			DB::statement("CREATE FULLTEXT INDEX ".$this->tablename."_all ON ".$this->tablename." (".implode(', ', $this->index).")");
+			DB::statement("CREATE FULLTEXT INDEX ".$this->tablename."_fulltext_all ON ".$this->tablename." (".implode(', ', $this->index).")");
 		}
 	}
 
