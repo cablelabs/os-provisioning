@@ -48,7 +48,7 @@ class DeviceController extends \SnmpController {
 		// Init View
 		$obj = $this->get_model_obj();
 		$model_name  = $this->get_model_name();
-		$view_header = ': '.$device->name;
+		$view_header = 'Edit: '.$device->name;
 		$view_var 	 = $obj->findOrFail($id);
 
 		$view_path = 'Device.controlling';

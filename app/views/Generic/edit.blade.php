@@ -33,8 +33,6 @@
 
 @section('content_left')
 
-	{{ '<h2>Edit '.$view_header.'</h2>' }}
-
 	<?php
 		if (!isset($form_update))
 			$form_update = $model_name.'.update';
