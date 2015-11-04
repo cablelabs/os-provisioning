@@ -173,7 +173,7 @@ class Cmts extends \BaseModel {
         system('/bin/chown -R apache /etc/dhcp/');
 
         // restart server with new config until we use dhcpctl (or OMAPI, or omshell)
-        system('systemctl restart dhcpd.service');      	//doesnt work as is - rights??
+        // system('systemctl restart dhcpd.service');      	//doesnt work as is - rights??
 	}
 
 	/**
