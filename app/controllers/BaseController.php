@@ -140,7 +140,7 @@ class BaseController extends Controller {
 
 		$model_name 	= $this->get_model_name();
 		$view_var   	= $obj->all();
-		$view_header  	= $obj->get_view_header();
+		$view_header  	= $obj->get_view_header().' List';
 
 		$create_allowed = $this->get_controller_obj()->index_create_allowed;
 
@@ -164,7 +164,7 @@ class BaseController extends Controller {
 		$obj = $this->get_model_obj();
 
 		$model_name 	= $this->get_model_name();
-		$view_header 	= $obj->get_view_header();
+		$view_header 	= 'Create '.$obj->get_view_header();
 		// form_fields contain description of fields and the data of the fields
 		$form_fields	= $this->get_controller_obj()->get_form_fields($obj);
 
@@ -218,7 +218,7 @@ class BaseController extends Controller {
 
 		// transfer model_name, view_header, view_var
 		$model_name 	= $this->get_model_name();
-		$view_header 	= $obj->get_view_header();
+		$view_header 	= 'Edit '.$obj->get_view_header();
 		$view_var 		= $obj->findOrFail($id);
 		$form_fields	= $this->get_controller_obj()->get_form_fields($view_var);
 
@@ -243,7 +243,7 @@ class BaseController extends Controller {
 	 */
 	public function update($id)
 	{
-				// dd(Input::all());
+		// dd(Input::all());
 
 		$obj = $this->get_model_obj()->findOrFail($id);
 		$controller = $this->get_controller_obj();
@@ -279,7 +279,7 @@ class BaseController extends Controller {
 		else
 			$this->get_model_obj()->destroy($id);
 
-		return $this->index();
+		return Redirect::back();
 	}
 
 }

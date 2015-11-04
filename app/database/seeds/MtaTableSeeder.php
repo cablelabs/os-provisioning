@@ -11,7 +11,7 @@ class MtaTableSeeder extends Seeder {
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, 5) as $index)
+		foreach(range(1, 2) as $index)
 		{
 			Mta::create([
 				'mac' => $faker->macAddress(),

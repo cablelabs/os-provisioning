@@ -42,11 +42,9 @@
 
 @section('content_left')
 
-	{{ '<h2>Create '.$model_name.'</h2>' }}
-
 	{{ Form::open(array('route' => array($model_name.'.store', 0), 'method' => 'POST', 'files' => true)) }}
 
-		@include($form_path, array ('cmts' => null))
+		@include($form_path)
 
 	{{ Form::close() }}
 

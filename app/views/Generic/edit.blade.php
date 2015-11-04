@@ -51,16 +51,22 @@
 
 @section('content_right')
 
-@foreach($view_var->view_has_many() as $view => $relations)
+	<?php $view_header_right = 'Assigned' ?>
 
-		<?php
-			$key = strtolower($model_name).'_id';
-		?>
-		@include('Generic.relation', [$relations, $view, $key])
-		
-		<br> </br>
+	@foreach($view_var->view_has_many() as $view => $relations)
 
+			<?php
+				$key = strtolower($model_name).'_id';
+
+				$model_name = 'Models\\'.$view;
+				$model = new $model_name;
+				$view_header_right .= ' '.$model->get_view_header();
+			?>
+
+			@include('Generic.relation', [$relations, $view, $key])
+			
+			<br> </br>
 	
-@endforeach
+	@endforeach
 
 @stop

@@ -12,6 +12,13 @@ class CreateConfigfileTable extends Migration {
 	 */
 	public function up()
 	{
+		// creates directory for firmware files and changes owner
+		$dir = '/tftpboot/fw';
+		if(!is_dir($dir))
+			mkdir ($dir, '0755');
+		system('/bin/chown -R apache /tftpboot/fw');
+
+
 		Schema::create('configfile', function(Blueprint $table)
 		{
 			$table->increments('id');
@@ -32,8 +39,9 @@ class CreateConfigfileTable extends Migration {
 			1 => 'cm',
 			2 => 'mta',
 		);
-		foreach($enum_devices as $i => $v) {
-			DB::update("INSERT INTO configfile (name, device, is_dummy, deleted_at) VALUES('dummy-cfg-".$v."',".$i.",1,NOW());");
+		foreach($enum_devices as $i => $v) 
+		{
+			DB::update("INSERT INTO configfile (name, text, device, is_dummy, deleted_at) VALUES('dummy-cfg-".$v."', 'SnmpMibObject sysLocation.0 String \"Test Lab\" ;', ".$i.",1,NOW());");
 		}
 	}
 

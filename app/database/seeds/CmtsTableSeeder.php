@@ -10,7 +10,7 @@ class CmtsTableSeeder extends Seeder {
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, 5) as $index)
+		foreach(range(1, 2) as $index)
 		{
 			Cmts::create([
 				'hostname' => $faker->unique->state,

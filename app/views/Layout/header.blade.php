@@ -1,20 +1,29 @@
+	@include ('bootstrap.menu', array(
+		'header' => 'Das Monster', 
+		'menus' => array (
+			'Modems' => 'Modem.index',
+			'Endpoints' => 'Endpoint.index',
+			'Mta' => 'Mta.index',
+			'Phonenumber' => 'Phonenumber.index',
+			'Configfile' => 'Configfile.index',
+			'QoS' => 'Qos.index',
+			'CMTS' => 'Cmts.index',
+			'Ip-Pool' => 'IpPool.index',
+			'Device' => 'Device.index',
+			'DeviceType' => 'DeviceType.index',
+			'SnmpMib' => 'SnmpMib.index',
+			'SnmpValue' => 'SnmpValue.index'
+	)))
+	<hr><hr>
 
-	<h1 align=center>Das Monster</h1>
 
-<p align=right>
-	{{ HTML::linkRoute('Modem.index', 'Modems') }} |
-	{{ HTML::linkRoute('Endpoint.index', 'Endpoints') }} |
-	{{ HTML::linkRoute('Mta.index', 'MTAs') }} |
-	{{ HTML::linkRoute('Phonenumber.index', 'Phonenumbers') }} | 
-	{{ HTML::linkRoute('Configfile.index', 'Configfiles') }} |
-	{{ HTML::linkRoute('Qos.index', 'QoS') }} |
-	{{ HTML::linkRoute('Cmts.index', 'CMTS') }} |
-	{{ HTML::linkRoute('IpPool.index', 'IP-Pools') }} 
-
-	<br>
-
-	{{ HTML::linkRoute('DeviceType.index', 'Device Types') }} |
-	{{ HTML::linkRoute('Device.index', 'Devices') }} |
-	{{ HTML::linkRoute('SnmpMib.index', 'SNMP Mibs') }} |
-	{{ HTML::linkRoute('SnmpValue.index', 'SNMP Value') }} 
-</p>
+	<div class="col-md-6">
+		@yield('content_top')
+	</div>
+	
+	<div class="col-md-6">
+		<p align="right">
+			@yield('content_top_2')
+		</p>
+	</div>
+	<hr>

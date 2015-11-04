@@ -34,7 +34,7 @@ class Modem extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
-        return $this->hostname;
+        return $this->hostname.' - '.$this->mac;
     }
 
 
@@ -162,6 +162,9 @@ class Modem extends \BaseModel {
             }
         }
 
+        // chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
+        system('/bin/chown -R apache /etc/dhcp/');
+
         return ($ret > 0 ? true : false);
     }
 
@@ -194,6 +197,9 @@ class Modem extends \BaseModel {
 
         Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg");
         exec("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg", $out, $ret);
+
+        // change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
+        system('/bin/chown -R apache /tftpboot/cm');
 
         return ($ret == 0 ? true : false);
     }

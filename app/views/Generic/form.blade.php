@@ -1,6 +1,5 @@
 <script>setTimeout("document.getElementById('success_msg').style.display='none';", 2500);</script>
 
-<table>
 
 	@foreach($form_fields as $field)
 
@@ -19,23 +18,16 @@
 			}
 		?>
 
-		<tr>
-			<td>{{ Form::label($field["name"], $field["description"]) }}</td>
-			<td>
-				<?php
-					if 		(!$value && !$options) 	echo Form::$field["form_type"]($field["name"]);
-					elseif 	($value && !$options) 	echo Form::$field["form_type"]($field["name"], $value);
-					elseif 	($options) 				echo Form::$field["form_type"]($field["name"], $value, $options);
-				?>
-			</td>
-			<td>{{ $errors->first($field["name"]) }}</td>
-		</tr>
+		{{ Form::openGroup($field["name"], $field["description"]) }}
+			<?php
+				if 		(!$value && !$options) 	echo Form::$field["form_type"]($field["name"]);
+				elseif 	($value && !$options) 	echo Form::$field["form_type"]($field["name"], $value);
+				elseif 	($options) 				echo Form::$field["form_type"]($field["name"], $value, $options);
+			?>
+		{{ Form::closeGroup() }}
 
 	@endforeach
 
-	<tr>
-		<td>{{ Form::submit('Save') }}</td>
-		<td id='success_msg'>{{ Session::get('message') }}</td>
-	</tr>
+	{{ Form::submit('Save') }}
 
-</table>
+	<h3 id='success_msg'>{{ Session::get('message') }}</h3>

@@ -103,7 +103,7 @@ class Cmts extends \BaseModel {
 
 			$data = "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
 			$data .= "\n\t\t".'option routers '.$router.';';
-			$data .= "\n\t\t".'option broadcast address '.$broadcast_addr.';';
+			$data .= "\n\t\t".'option broadcast-address '.$broadcast_addr.';';
 			$data .= "\n\n\t\t".'pool'."\n\t\t".'{';
 			$data .= "\n\t\t\t".'range '.$range.';'."\n";
 
@@ -111,21 +111,23 @@ class Cmts extends \BaseModel {
 			{
 				case 'CM':
 					$data .= "\n\t\t\t".'allow members of "CM";';
+					$data .= "\n\t\t\t".'#allow known-clients;';
 					break;
 
-				case 'CPEPub':
+				case 'CPEPriv':
 					$data .= "\n\t\t\t".'allow members of "Client";';
 					$data .= "\n\t\t\t".'deny members of "Client-Public";';
 					break;
 
-				case 'CPEPriv':
+				case 'CPEPub':
 					$data .= "\n\t\t\t".'allow members of "Client-Public";';
-					$data .= "\n\t\t\t".'allow known-clients;';
+					$data .= "\n\t\t\t".'allow unknown-clients;';
+					$data .= "\n\t\t\t".'#allow known-clients;';
 					break;
 
 				case 'MTA':
 					$data .= "\n\t\t\t".'allow members of "MTA";';
-					$data .= "\n\t\t\t".'allow known-clients;';
+					$data .= "\n\t\t\t".'#allow known-clients;';
 					break;
 
 				default:
@@ -134,16 +136,18 @@ class Cmts extends \BaseModel {
 			}
 
 			$data .= "\n\t\t".'}';
-			$data .= "\n\t".'}'."\n";
 
 			// append additional options
 			if ($options)
-					$data .= "\n".$options."\n";
+					$data .= "\n\n\t\t".$options;
+
+			
+			$data .= "\n\t".'}'."\n";
 
 			File::append($file, $data);
 		}
 
-		File::append($file, "\n".'}'."\n");
+		File::append($file, '}'."\n");
 
 
 		// append include statement in dhcpd.conf if not yet done
@@ -164,6 +168,12 @@ class Cmts extends \BaseModel {
 		{
 			File::append($file_dhcp_conf, "\n".'include "'.$file.'";');
 		}
+
+		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
+        system('/bin/chown -R apache /etc/dhcp/');
+
+        // restart server with new config until we use dhcpctl (or OMAPI, or omshell)
+        // system('systemctl restart dhcpd.service');      	//doesnt work as is - rights??
 	}
 
 	/**
@@ -270,6 +280,12 @@ class CmtsObserver
     {
   		// only create new config file
         $cmts->make_dhcp_conf();
+    }
+
+    public function updating($cmts)
+    {
+    	$tmp = Cmts::find($cmts->id);
+    	$tmp->delete_cmts();
     }
 
     public function updated($cmts)
