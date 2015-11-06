@@ -102,4 +102,73 @@ class BaseModel extends \Eloquent
 	{
 		return 'Need to be Set !';
 	}
+
+
+	/**
+	 *	Returns a array of all children objects of $this object
+	 *  Note: - Must be called from object context
+	 *        - this requires straight forward names of tables an
+	 *          forgein key, like modem and modem_id.
+	 *
+	 *	@author Torsten Schmidt
+	 *
+	 *	@return array off all children objects
+	 */
+	public function get_all_children()
+	{
+		$relations = array();
+
+		// Lookup all SQL Tables
+		foreach (DB::select('SHOW TABLES') as $table)
+		{
+			// Lookup SQL Fields for current $table
+			foreach (Schema::getColumnListing($table->Tables_in_db_lara) as $column)
+			{
+				// check if $coloumn is actual table name object added by '_id'
+				if ($column == $this->table.'_id')
+				{
+					// get all objects with $column
+					foreach (DB::select('SELECT id FROM '.$table->Tables_in_db_lara.' WHERE '.$column.'='.$this->id) as $child)
+					{
+						$class_child_name = 'Models\\'.ucfirst($table->Tables_in_db_lara);
+						$class = new $class_child_name;
+						array_push($relations, $class->find($child->id));
+					}
+				}
+			}
+		}
+
+		return $relations;
+	}
+
+
+	/**
+	 *	Recursive delete of all children objects
+	 *
+	 *	@author Torsten Schmidt
+	 *
+	 *	@return true if success
+	 *  
+	 *  TODO: return state should take care of deleted children
+	 */
+	public function delete()
+	{
+		dd( $this->getArrayableItems() );
+		foreach ($this->get_all_children() as $child)
+			$child->delete();
+
+		return parent::delete();
+	}
+
+
+	/**
+	 * 
+	 */
+	public static function destroy($ids)
+	{
+		$instance = new static;
+
+		foreach ($ids as $id => $help)
+			$instance->findOrFail($id)->delete();
+	}
 }

@@ -274,10 +274,10 @@ class BaseController extends Controller {
 		{
 			// bulk delete
 			foreach (Input::all()['ids'] as $id => $val)
-				$this->get_model_obj()->destroy($id);
+				$this->get_model_obj()->findOrFail($id)->delete();
 		}
 		else
-			$this->get_model_obj()->destroy($id);
+			$this->get_model_obj()->findOrFail($id)->delete();
 
 		return Redirect::back();
 	}
