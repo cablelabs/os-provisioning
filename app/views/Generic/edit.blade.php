@@ -41,10 +41,14 @@
 
 @stop
 
-
+{{-- We should add a new section for each relation --}}
 @section('content_right')
 
-	<?php $view_header_right = 'Assigned' ?>
+	<?php 
+
+		if ($view_var->view_has_many())
+			$view_header_right = '';
+	?>
 
 	@foreach($view_var->view_has_many() as $view => $relations)
 
@@ -53,12 +57,14 @@
 
 				$model_name = 'Models\\'.$view;
 				$model = new $model_name;
-				$view_header_right .= ' '.$model->get_view_header();
+				$view_header_right .= ' Assigned '.$model->get_view_header();
 			?>
 
 			@include('Generic.relation', [$relations, $view, $key])
 			
 			<br> </br>
+			<hr> <hr>
+
 	
 	@endforeach
 
