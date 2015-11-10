@@ -105,6 +105,20 @@ class BaseController extends Controller {
 	}
 
 
+	private function get_view_header_links ()
+	{
+		$ret = array();
+		$modules = Module::enabled();
+		
+		foreach ($modules as $module) 
+		{
+			foreach (Config::get($module->getName().'::header') as $line)
+				array_push($ret, $line);
+		}
+
+		return $ret;
+	}
+
 	/**
 	 * Handle file uploads.
 	 * - check if a file is uploaded
@@ -151,11 +165,12 @@ class BaseController extends Controller {
 		$create_allowed = $this->get_controller_obj()->index_create_allowed;
 
 		$view_path = 'Generic.index';
-		
-		if (View::exists($this->get_view_name().'.index'))
-			$view_path = $this->get_view_name().'.index';
+		$view_header_links = $this->get_view_header_links();
 
-		return View::make($view_path, compact('model_name', 'view_header', 'view_var', 'create_allowed', 'route_name'));
+		if (View::exists($this->get_view_name().'.index'))
+			$view_path = $this->get_view_name().'.index';		
+
+		return View::make($view_path, compact('model_name', 'view_header', 'view_var', 'create_allowed', 'route_name', 'view_header_links'));
 	}
 
 
@@ -177,6 +192,7 @@ class BaseController extends Controller {
 
 		$view_path = 'Generic.create';
 		$form_path = 'Generic.form';
+		$view_header_links = $this->get_view_header_links();
 
 		// proof if there is a special view for the calling model
 		if (View::exists($this->get_view_name().'.create'))
@@ -184,7 +200,7 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		return View::make($view_path, compact('model_name', 'view_header', 'form_fields', 'form_path', 'route_name'));
+		return View::make($view_path, compact('model_name', 'view_header', 'form_fields', 'form_path', 'route_name', 'view_header_links'));
 	}
 
 
@@ -232,6 +248,7 @@ class BaseController extends Controller {
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';
+		$view_header_links = $this->get_view_header_links();
 
 		// proof if there are special views for the calling model
 		if (View::exists($this->get_view_name().'.edit'))
@@ -239,7 +256,7 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		return View::make($view_path, compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'route_name'));
+		return View::make($view_path, compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'route_name', 'view_header_links'));
 	}
 
 

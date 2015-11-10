@@ -105,8 +105,13 @@
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>
-              @foreach ($menus as $menu => $link)
-                <li><a href="{{route($link)}}">{{ $menu }}</a></li>
+
+              @foreach ($menus as $menu)
+                @foreach ($menu as $a)
+                  @foreach ($a as $name => $link)
+                    <li><a href="{{route($link)}}">{{ $name }}</a></li>
+                  @endforeach
+                @endforeach
               @endforeach
             </ul>
           </li>
