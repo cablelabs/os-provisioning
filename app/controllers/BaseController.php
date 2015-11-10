@@ -57,7 +57,7 @@ class BaseController extends Controller {
 	protected function get_model_name()
 	{
 		// TODO: generic replace ..
-		return explode ('Controller', Route::getCurrentRoute()->getActionName())[0];
+		return 'Models\\'.explode ('Controller', Route::getCurrentRoute()->getActionName())[0];
 	}
 
 	protected function get_model_obj ()
@@ -67,7 +67,7 @@ class BaseController extends Controller {
 		if (!$classname)
 			return null;
 
-		$classname = 'Models\\'.$classname;
+		$classname = $classname;
 		$obj = new $classname;
 
 		return $obj;
@@ -101,7 +101,7 @@ class BaseController extends Controller {
 
 	protected function get_route_name()
 	{
-		return $this->get_model_name();
+		return explode('\\', $this->get_model_name())[1];
 	}
 
 

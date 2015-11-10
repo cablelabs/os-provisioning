@@ -54,10 +54,9 @@
 	@foreach($view_var->view_has_many() as $view => $relations)
 
 			<?php
-				$key = strtolower($model_name).'_id';
-
-				$model_name = 'Models\\'.$view;
 				$model = new $model_name;
+				$key   = strtolower($model->table).'_id';
+				
 				$view_header_right .= ' '.$model->get_view_header();
 			?>
 
