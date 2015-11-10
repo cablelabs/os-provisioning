@@ -89,4 +89,17 @@ class BaseModel extends \Eloquent
 
 		return $ret;
 	}	
+
+
+	// Placeholder
+	public static function get_view_header()
+	{
+		return 'Need to be Set !';
+	}
+
+	// Placeholder
+	public function get_view_link_title()
+	{
+		return 'Need to be Set !';
+	}
 }

@@ -8,9 +8,14 @@
 			'Configfile' => 'Configfile.index',
 			'QoS' => 'Qos.index',
 			'CMTS' => 'Cmts.index',
-			'Ip-Pool' => 'IpPool.index'
+			'Ip-Pool' => 'IpPool.index',
+			'Device' => 'Device.index',
+			'DeviceType' => 'DeviceType.index',
+			'SnmpMib' => 'SnmpMib.index',
+			'SnmpValue' => 'SnmpValue.index'
 	)))
 	<hr><hr>
+
 
 	<div class="col-md-6">
 		@yield('content_top')

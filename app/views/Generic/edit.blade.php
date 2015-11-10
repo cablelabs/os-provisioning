@@ -33,7 +33,12 @@
 
 @section('content_left')
 
-	{{ Form::model($view_var, array('route' => array($model_name.'.update', $view_var->id), 'method' => 'put', 'files' => true)) }}
+	<?php
+		if (!isset($form_update))
+			$form_update = $model_name.'.update';
+	?>
+
+	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true)) }}
 
 		@include($form_path, $view_var)
 
