@@ -266,6 +266,8 @@ class ModemObserver
     {
         $modem->make_dhcp_cm_all();
         $modem->make_configfile();
+        // restart modem - TODO: get community string and domain name from global config page, NOTE: OID from MIB: DOCS-CABLE-DEV-MIB::docsDevResetNow
+        snmpset($modem->hostname.'.test2.erznet.tv', "public", "1.3.6.1.2.1.69.1.1.3.0", "i", "1");
     }
 
     public function deleted($modem)
