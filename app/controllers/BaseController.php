@@ -99,6 +99,11 @@ class BaseController extends Controller {
 		return strtolower($this->get_view_name());
 	}
 
+	protected function get_route_name()
+	{
+		return $this->get_model_name();
+	}
+
 
 	/**
 	 * Handle file uploads.
@@ -141,6 +146,7 @@ class BaseController extends Controller {
 		$model_name 	= $this->get_model_name();
 		$view_var   	= $obj->all();
 		$view_header  	= $obj->get_view_header().' List';
+		$route_name 	= $this->get_route_name();
 
 		$create_allowed = $this->get_controller_obj()->index_create_allowed;
 
@@ -149,7 +155,7 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.index'))
 			$view_path = $this->get_view_name().'.index';
 
-		return View::make($view_path, compact('model_name', 'view_header', 'view_var', 'create_allowed'));
+		return View::make($view_path, compact('model_name', 'view_header', 'view_var', 'create_allowed', 'route_name'));
 	}
 
 
@@ -164,6 +170,7 @@ class BaseController extends Controller {
 		$obj = $this->get_model_obj();
 
 		$model_name 	= $this->get_model_name();
+		$route_name 	= $this->get_route_name();
 		$view_header 	= 'Create '.$obj->get_view_header();
 		// form_fields contain description of fields and the data of the fields
 		$form_fields	= $this->get_controller_obj()->get_form_fields($obj);
@@ -177,7 +184,7 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		return View::make($view_path, compact('model_name', 'view_header', 'form_fields', 'form_path'));
+		return View::make($view_path, compact('model_name', 'view_header', 'form_fields', 'form_path', 'route_name'));
 	}
 
 
@@ -218,6 +225,7 @@ class BaseController extends Controller {
 
 		// transfer model_name, view_header, view_var
 		$model_name 	= $this->get_model_name();
+		$route_name 	= $this->get_route_name();
 		$view_header 	= 'Edit '.$obj->get_view_header();
 		$view_var 		= $obj->findOrFail($id);
 		$form_fields	= $this->get_controller_obj()->get_form_fields($view_var);
@@ -231,7 +239,7 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		return View::make($view_path, compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields'));
+		return View::make($view_path, compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'route_name'));
 	}
 
 

@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-		{{ HTML::linkRoute($model_name.'.index', $view_header) }}
+	{{ HTML::linkRoute($route_name.'.index', $view_header) }}
 
 @stop
 
@@ -12,7 +12,7 @@
 		{{ Form::openDivClass(3) }}
 			@if ($create_allowed)
 
-				{{ Form::open(array('route' => $model_name.'.create', 'method' => 'GET')) }}
+				{{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
 				{{ Form::submit('Create', ['style' => 'simple']) }}
 				{{ Form::close() }}
 
@@ -23,7 +23,7 @@
 
 	{{ Form::openDivClass(12) }}
 
-		{{ Form::open(array('route' => array($model_name.'.destroy', 0), 'method' => 'delete')) }}
+		{{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete')) }}
 
 		<table>
 		@foreach ($view_var as $object)
@@ -32,7 +32,7 @@
 					{{ Form::checkbox('ids['.$object->id.']') }}
 				</td>
 				<td>
-					{{ HTML::linkRoute($model_name.'.edit', $object->get_view_link_title(), $object->id) }}
+					{{ HTML::linkRoute($route_name.'.edit', $object->get_view_link_title(), $object->id) }}
 				</td>
 			</tr>
 		@endforeach

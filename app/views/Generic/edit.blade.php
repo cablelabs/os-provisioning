@@ -3,7 +3,7 @@
 @if (!isset($own_top))
 	@section('content_top')
 
-		{{ HTML::linkRoute($model_name.'.index', $view_header) }}: 
+		{{ HTML::linkRoute($route_name.'.index', $view_header) }}: 
 
 		<?php
 			/**
@@ -26,7 +26,7 @@
 			echo $s;
 		?>
 
-		{{ HTML::linkRoute($model_name.'.edit', $view_var->get_view_link_title(), $view_var->id) }}
+		{{ HTML::linkRoute($route_name.'.edit', $view_var->get_view_link_title(), $view_var->id) }}
 
 	@stop
 @endif
@@ -35,7 +35,7 @@
 
 	<?php
 		if (!isset($form_update))
-			$form_update = $model_name.'.update';
+			$form_update = $route_name.'.update';
 	?>
 
 	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true)) }}

@@ -3,7 +3,7 @@
 @if (!isset($own_top))
 	@section('content_top')
 
-		{{ HTML::linkRoute($model_name.'.index', $view_header) }}: 
+		{{ HTML::linkRoute($route_name.'.index', $view_header) }}: 
 
 		@if(isset($_GET) && $_GET != array())
 
@@ -42,7 +42,7 @@
 
 @section('content_left')
 
-	{{ Form::open(array('route' => array($model_name.'.store', 0), 'method' => 'POST', 'files' => true)) }}
+	{{ Form::open(array('route' => array($route_name.'.store', 0), 'method' => 'POST', 'files' => true)) }}
 
 		@include($form_path)
 
