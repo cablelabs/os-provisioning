@@ -10,10 +10,16 @@ class BaseModuleController extends BaseController {
 	}
 
 
+	protected function __get_model_name()
+	{
+		return explode ('Controller', explode ('\\', explode ('@', Route::getCurrentRoute()->getActionName())[0])[4])[0];
+	}
+
 	protected function get_model_name()
 	{
+		// Note: returns namespace of Model 
 		// quick and dirty :)
-		return $this->get_mvc_path().'\\Entities\\'.explode ('Controller', explode ('\\', explode ('@', Route::getCurrentRoute()->getActionName())[0])[4])[0];
+		return $this->get_mvc_path().'\\Entities\\'.$this->__get_model_name();
 	}
 
 
@@ -25,7 +31,7 @@ class BaseModuleController extends BaseController {
 
 	protected function get_view_name()
 	{
-		return explode ('\\', $this->get_model_name())[3];
+		return strtolower(explode ('\\', $this->get_model_name())[1]).'::'.$this->__get_model_name();
 	}
 
 

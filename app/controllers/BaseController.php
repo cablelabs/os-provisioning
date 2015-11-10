@@ -91,7 +91,7 @@ class BaseController extends Controller {
 
 	protected function get_view_name()
 	{
-		return $this->get_model_name();
+		return explode ('\\', $this->get_model_name())[1];
 	}
 
 	protected function get_view_var()
