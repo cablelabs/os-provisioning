@@ -10,7 +10,11 @@
 
 	{{ '<h2>'.$view_header.' List</h2>' }}
 
-	{{ Form::model(null, array('route' => $model_name.'.fulltextSearch', 'method' => 'GET')) }}
+	<?php
+		// searchscope for following form is the current model
+		$scope = $model_name;
+	?>
+	{{ Form::model(null, array('route'=>$model_name.'.fulltextSearch', 'method'=>'GET')) }}
 		@include('Generic.searchform')
 	{{ Form::close() }}
 
@@ -31,7 +35,13 @@
 				{{ Form::checkbox('ids['.$object->id.']') }}
 			</td>
 			<td>
-				{{ HTML::linkRoute($model_name.'.edit', $object->get_view_link_title(), $object->id) }}
+<?php
+	// TODO: move away from view!!
+		$cur_model_complete = get_class($object);
+		$cur_model_parts = explode('\\', $cur_model_complete);
+		$cur_model = array_pop($cur_model_parts);
+?>
+				{{ HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id) }}
 			</td>
 		</tr>
 	@endforeach

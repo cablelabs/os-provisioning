@@ -96,21 +96,74 @@ class BaseModel extends \Eloquent
 
 
 	/**
+	 * Get all models
+	 *
+	 * @return array of all models except base models
+	 * @author Patrick Reichel
+	 */
+	protected function _getModels() {
+		$exclude = array('BaseModel');
+
+		$dir = app_path('models');
+		$models = glob($dir."/*.php");
+
+		$result = array();
+		foreach ($models as $model) {
+			$model = str_replace(app_path('models')."/", "", $model);
+			$model = str_replace(".php", "", $model);
+			if (array_search($model, $exclude) === FALSE) {
+				array_push($result, "Models\\".$model);
+			}
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * Performs a fulltext search in simple mode
+	 *
+	 * @param $array with models to search in
+	 * @param $query query to search for
+	 * @return search result
+	 * @author Patrick Reichel
+	 */
+	protected function _doSimpleSearch($models, $query) {
+
+		foreach ($models as $model) {
+
+			// get the database table used for given model
+			$tmp = new $model;
+			$table = $tmp->getTable();
+			$cols = $model::getTableColumns($table);
+
+			$tmp_result = $model::whereRaw("CONCAT_WS('|', ".$cols.") LIKE ?", array($query))->get();
+			if (!isset($result)) {
+				$result = $tmp_result;
+			}
+			else {
+				$result = $result->merge($tmp_result);
+			}
+		}
+		return $result;
+	}
+
+	/**
 	 * Get all database fields
 	 *
 	 * @param table database table to get structure from
 	 * @return comma separated string of columns
 	 * @author Patrick Reichel
 	 */
-	protected function _getTableColumns($table) {
+	public static function getTableColumns($table) {
 
-		$fields = array();
-		$cols = DB::select( DB::raw('SHOW COLUMNS FROM '.$table.' WHERE Field = "'.$name.'"'));
+		$tmp_res = array();
+		$cols = DB::select( DB::raw('SHOW COLUMNS FROM '.$table));
 		foreach ($cols as $col) {
-			array_push($result, $col->Field);
+			array_push($tmp_res, $table.".".$col->Field);
 		}
 
-		$fields = implode(',', $fields);
+		$fields = implode(',', $tmp_res);
 		return $fields;
 	}
 
@@ -122,13 +175,12 @@ class BaseModel extends \Eloquent
 	protected function _chooseFulltextSearchAlgo($mode, $query) {
 
 		// search query is left truncated => simple search
-		if ((strpos($query, "%") === 0) || (strpos($query, "*") === 0)) {
+		if ((Str::startsWith($query, "%")) || (Str::startsWith($query, "*"))) {
 			$mode = 'simple';
-			// select * from modem where CONCAT(mac, description, id) LIKE "%100001%";
 		}
 
 		// query contains . or : => IP or MAC => simple search
-		if ((strpos($query, ":") !== false) || (strpos($query, ".") !== false)) {
+		if ((Str::contains($query, ":")) || (Str::contains($query, "."))) {
 			$mode = 'simple';
 		}
 
@@ -143,19 +195,31 @@ class BaseModel extends \Eloquent
 	 */
 	public function getFulltextSearchResults($scope, $mode, $query) {
 
+		// some searches cannot be performed against fulltext index
 		$mode = $this->_chooseFulltextSearchAlgo($mode, $query);
 
 		if ($mode == 'simple') {
 
+			// replace wildcard chars
+			$query = str_replace("*", "%", $query);
+			// wrap with wildcards (if not given) => necessary because of the concatenation of all table rows
+			if (!Str::startsWith($query, "%")) {
+				$query = "%".$query;
+			}
+			if (!Str::endsWith($query, "%")) {
+				$query = $query."%";
+			}
+
 			if ($scope == 'all') {
-				echo "Implement searching over all database tables";
+				$models = $this->_getModels();
 			}
 			else {
-				$result = 'to get';
-				CRASH;
+				$models = array(get_class($this));
 			}
+
+			$result = $this->_doSimpleSearch($models, $query);
 		}
-		elseif (strpos($mode, 'index_') === 0) {
+		elseif (Str::startsWith($mode, 'index_')) {
 
 			if ($scope == 'all') {
 				echo "Implement searching over all database tables";
@@ -163,6 +227,7 @@ class BaseModel extends \Eloquent
 			else {
 				$indexed_cols = $this->_getFulltextIndexColumns($this->getTable());
 
+				# for a description of search modes check https://mariadb.com/kb/en/mariadb/fulltext-index-overview
 				if ("index_natural" == $mode) {
 					$mode = "IN NATURAL MODE";
 				}
@@ -173,6 +238,7 @@ class BaseModel extends \Eloquent
 					$mode = "IN BOOLEAN MODE";
 				}
 
+				# search is against the fulltext index
 				$result = $this->whereRaw("MATCH(".$indexed_cols.") AGAINST(? ".$mode.")", array($query))->get();
 			}
 		}
@@ -180,8 +246,8 @@ class BaseModel extends \Eloquent
 			$result = null;
 		}
 
-		echo "DEBUG<br><pre>";
-		dd($result);
+		/* echo "$query at $scope in mode $mode<br><pre>"; */
+		/* dd($result); */
 		return $result;
 
 	}
