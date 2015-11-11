@@ -4,6 +4,7 @@ namespace Models;
 
 use File;
 use Log;
+use Exception;
 use Models\Qos;
 
 class Modem extends \BaseModel {
@@ -254,27 +255,26 @@ class ModemObserver
         $modem->make_dhcp_cm_all();
         $modem->make_configfile();
         $modem->hostname = 'cm-'.$modem->id;
-        $modem->save();
-    }
-
-    public function updating($modem)
-    {
-        $modem->hostname = 'cm-'.$modem->id;
+        $modem->save();     // forces to call the updated method of the observer
     }
 
     public function updated($modem)
     {
         $modem->make_dhcp_cm_all();
         $modem->make_configfile();
-        // restart modem - TODO: get community string and domain name from global config page, NOTE: OID from MIB: DOCS-CABLE-DEV-MIB::docsDevResetNow
-        // try
-        // {
-        //     snmpset($modem->hostname.'.test2.erznet.tv', "public", "1.3.6.1.2.1.69.1.1.3.0", "i", "1"); 
-        // } catch (Exception $e)
-        // {
-        //     dd ($e);
-        //     echo 'Exception: '.$e->getMessage();
-        // }
+
+        // if hostname cant be resolved we dont want to have an php error
+        try
+        {
+            // restart modem - TODO: get community string and domain name from global config page, NOTE: OID from MIB: DOCS-CABLE-DEV-MIB::docsDevResetNow
+            snmpset($modem->hostname.'.test2.erznet.tv', "public", "1.3.6.1.2.1.69.1.1.3.0", "i", "1"); 
+        }
+        catch (Exception $e)
+        {
+            // only ignore error with this error message (catch exception with this string) 
+            if (!strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known"))
+                throw $e;
+        }
     }
 
     public function deleted($modem)
