@@ -9,7 +9,7 @@ use Schema;
 class Configfile extends \BaseModel {
 
     // The associated SQL table for this Model
-    protected $table = 'configfile';
+    public $table = 'configfile';
 
 
 	// Add your validation rules here

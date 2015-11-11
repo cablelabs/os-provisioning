@@ -6,8 +6,9 @@
 	"require": {
 		"laravel/framework": "4.2.*",
 		"fzaninotto/faker": "1.5.*@dev",
-		"way/generators": "dev-v.2.6.1-adaptions",
-		"soapbox/laravel-formatter": "2.x"
+		"way/generators": "dev-feature/v.2.6.1-testing",
+		"soapbox/laravel-formatter": "2.x",
+		"pingpong/modules": "1.*"
 	},
 
 	"repositories": [
@@ -27,8 +28,9 @@
 			"app/tests/TestCase.php"
 		],
 		"psr-4": {
-        	"Acme\\": "app/extensions/"
-    	}
+			"Acme\\": "app/extensions/",
+			"Modules\\": "Modules"
+		}
 	},
 	"scripts": {
 		"post-install-cmd": [

@@ -1,8 +1,15 @@
 <?php
 
-use Models\Device;
+namespace Modules\HfcSnmp\Http\Controllers;
 
-class DeviceController extends \SnmpController {
+use Modules\HfcSnmp\Entities\Device;
+use View;
+use Validator;
+use Input;
+use Redirect;
+
+
+class DeviceController extends SnmpController {
 
     /**
      * defines the formular fields for the edit and create view
@@ -30,6 +37,9 @@ class DeviceController extends \SnmpController {
 	/**
 	 * Controlling Read Function
 	 *
+	 * TODO: split SNMP Stuff from device specific stuff
+	 *       and do not return a View -> instead call BaseController@edit
+	 *
 	 * @param id the Device id
 	 * @author Torsten Schmidt
 	 */
@@ -50,13 +60,17 @@ class DeviceController extends \SnmpController {
 		$model_name  = $this->get_model_name();
 		$view_header = 'Edit: '.$device->name;
 		$view_var 	 = $obj->findOrFail($id);
+		$route_name  = $this->get_route_name();
+		$view_header_links = $this->get_view_header_links();
 
-		$view_path = 'Device.controlling';
+		$view_path = 'hfcsnmp::Device.controlling';
 		$form_path = 'Generic.form';
 		$form_update = 'Device.controlling_update';
 
+		//dd(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'form_update'));
 
-		return View::make($view_path, compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'form_update'));
+
+		return View::make($view_path, compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'form_update', 'route_name', 'view_header_links'));
 	}
 
 

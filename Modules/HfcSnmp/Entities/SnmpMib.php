@@ -1,10 +1,10 @@
 <?php
 
-namespace Models;
+namespace Modules\HfcSnmp\Entities;
 
 class SnmpMib extends \BaseModel {
 
-	protected $table = 'snmpmib';
+	public $table = 'snmpmib';
 
 	// Add your validation rules here
 	public static $rules = [
@@ -41,7 +41,7 @@ class SnmpMib extends \BaseModel {
 	 */
 	public function devicetype()
 	{
-		return $this->belongsTo('Models\DeviceType');
+		return $this->belongsTo('Modules\HfcSnmp\Entities\DeviceType');
 	}
 
     /**

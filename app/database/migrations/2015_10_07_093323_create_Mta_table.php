@@ -5,6 +5,16 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateMtaTable extends Migration {
 
+	// name of the table to create
+	private $tablename = "mta";
+
+	function __construct() {
+
+		// get and instanciate of index maker
+		require_once(getcwd()."/app/extensions/database/FulltextIndexMaker.php");
+		$this->fim = new FulltextIndexMaker($this->tablename);
+	}
+
 	/**
 	 * Run the migrations.
 	 *
@@ -18,12 +28,15 @@ class CreateMtaTable extends Migration {
 			mkdir ($dir, '0755');
 		system('/bin/chown -R apache /tftpboot/mta');
 
-		Schema::create('mta', function(Blueprint $table)
+		Schema::create($this->tablename, function(Blueprint $table)
 		{
+			$table->engine = 'MyISAM'; // InnoDB doesn't support fulltext index in MariaDB < 10.0.5
 			$table->increments('id');
 			$table->integer('modem_id')->unsigned()->default(1);
 			$table->string('mac', 17);
+				$this->fim->add("mac");
 			$table->string('hostname');
+				$this->fim->add("hostname");
 			$table->integer('configfile_id')->unsigned()->default(1);
 			$table->enum('type', ['sip','packetcable']);
 			$table->boolean('is_dummy')->default(0);
@@ -32,17 +45,20 @@ class CreateMtaTable extends Migration {
 
 		});
 
+		// create FULLTEXT index including the given
+		$this->fim->make_index();
+
 		# insert a dummy mta for each type
 		$enum_types = array(
 			1 => 'sip',
 			2 => 'packetcable',
 		);
-		
+
 		foreach($enum_types as $i => $v) {
-			DB::update("INSERT INTO mta (hostname, type, is_dummy, deleted_at) VALUES('dummy-mta-".$v."',".$i.",1,NOW());");
+			DB::update("INSERT INTO ".$this->tablename." (hostname, type, is_dummy, deleted_at) VALUES('dummy-mta-".$v."',".$i.",1,NOW());");
 		}
 
-		DB::update("ALTER TABLE mta AUTO_INCREMENT = 100000;");
+		DB::update("ALTER TABLE ".$this->tablename." AUTO_INCREMENT = 100000;");
 	}
 
 
@@ -53,7 +69,7 @@ class CreateMtaTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('mta');
+		Schema::drop($this->tablename);
 	}
 
 }

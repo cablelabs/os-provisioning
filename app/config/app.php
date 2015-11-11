@@ -123,6 +123,7 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Way\Generators\GeneratorsServiceProvider',
 		'Acme\html\HtmlServiceProvider',
+		'Pingpong\Modules\ModulesServiceProvider',
 
 	),
 
@@ -190,6 +191,7 @@ return array(
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
+		'Module'          => 'Pingpong\Modules\Facades\Module',
 
 	),
 

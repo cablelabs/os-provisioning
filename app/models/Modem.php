@@ -10,7 +10,7 @@ use Models\Qos;
 class Modem extends \BaseModel {
 
     // The associated SQL table for this Model
-    protected $table = 'modem';
+    public $table = 'modem';
 
 
 	// Add your validation rules here

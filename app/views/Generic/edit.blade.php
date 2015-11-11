@@ -3,7 +3,7 @@
 @if (!isset($own_top))
 	@section('content_top')
 
-		{{ HTML::linkRoute($model_name.'.index', $view_header) }}: 
+		{{ HTML::linkRoute($route_name.'.index', $view_header) }}: 
 
 		<?php
 			/**
@@ -17,7 +17,9 @@
 				
 				if ($parent)
 				{
-					$view = explode('\\',get_class($parent))[1];
+					// Need to be tested !
+					$tmp = explode('\\',get_class($parent));
+					$view = end($tmp);
 					$s = HTML::linkRoute($view.'.edit', $parent->get_view_link_title(), $parent->id).' / '.$s;
 				}
 			}
@@ -26,7 +28,7 @@
 			echo $s;
 		?>
 
-		{{ HTML::linkRoute($model_name.'.edit', $view_var->get_view_link_title(), $view_var->id) }}
+		{{ HTML::linkRoute($route_name.'.edit', $view_var->get_view_link_title(), $view_var->id) }}
 
 	@stop
 @endif
@@ -35,7 +37,7 @@
 
 	<?php
 		if (!isset($form_update))
-			$form_update = $model_name.'.update';
+			$form_update = $route_name.'.update';
 	?>
 
 	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true)) }}
@@ -58,10 +60,8 @@
 	@foreach($view_var->view_has_many() as $view => $relations)
 
 			<?php
-				$key = strtolower($model_name).'_id';
-
-				$model_name = 'Models\\'.$view;
 				$model = new $model_name;
+				$key   = strtolower($model->table).'_id';
 				$view_header_right .= ' Assigned '.$model->get_view_header();
 			?>
 

@@ -7,7 +7,7 @@ use File;
 class Endpoint extends \BaseModel {
 
     // The associated SQL table for this Model
-    protected $table = 'endpoint';
+    public $table = 'endpoint';
 
     public static function rules($id = null)
     {
