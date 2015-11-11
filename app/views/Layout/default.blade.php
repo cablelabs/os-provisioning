@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Beispiel zum header-Element</title>
+    <title>Das Monster</title>
 	<style>
 	  body {margin: 3em;}
 	  header {background: #eee; padding: 1em;}

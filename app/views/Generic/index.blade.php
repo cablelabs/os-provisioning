@@ -28,6 +28,10 @@
 
 	{{ Form::open(array('route' => array($model_name.'.destroy', 0), 'method' => 'delete')) }}
 
+	@if (isset($query) && isset($scope))
+		<h4>Matches for <tt>{{ $query }}</tt> in <tt>{{ $scope }}</tt></h4>
+	@endif
+
 	<table>
 	@foreach ($view_var as $object)
 		<tr>
