@@ -1,11 +1,12 @@
 <?php
 
-namespace Models;
+namespace Modules\HfcSnmp\Entities;
+
 
 class Device extends \BaseModel {
 
 	// The associated SQL table for this Model
-	protected $table = 'device';
+	public $table = 'device';
 
 
 	// Add your validation rules here
@@ -45,7 +46,7 @@ class Device extends \BaseModel {
 	 */
 	public function devicetype()
 	{
-		return $this->belongsTo('Models\DeviceType');
+		return $this->belongsTo('Modules\HfcSnmp\Entities\DeviceType');
 	}
 
 	public function view_belongs_to ()

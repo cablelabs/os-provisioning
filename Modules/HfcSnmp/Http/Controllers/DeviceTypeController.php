@@ -1,6 +1,8 @@
 <?php
 
-class DeviceTypeController extends \BaseController {
+namespace Modules\HfcSnmp\Http\Controllers;
+
+class DeviceTypeController extends \BaseModuleController {
 
     /**
      * defines the formular fields for the edit and create view

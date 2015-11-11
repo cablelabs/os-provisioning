@@ -1,11 +1,11 @@
 <?php
 
-namespace Models;
+namespace Modules\HfcSnmp\Entities;
 
 class SnmpValue extends \BaseModel {
 
 	// The associated SQL table for this Model
-	protected $table = 'snmpvalue';
+	public $table = 'snmpvalue';
 
 	// Don't forget to fill this array
 	protected $fillable = ['device_id', 'snmpmib_id', 'value', 'oid_index'];

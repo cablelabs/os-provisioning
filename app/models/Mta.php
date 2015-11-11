@@ -14,7 +14,7 @@ class Mta extends \BaseModel {
 	protected $dates = ['deleted_at'];
 
     // The associated SQL table for this Model
-    protected $table = 'mta';
+    public $table = 'mta';
 
 
 	// Add your validation rules here

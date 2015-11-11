@@ -6,7 +6,7 @@ use DB;
 class IpPool extends \BaseModel {
 
     // The associated SQL table for this Model
-    protected $table = 'ippool';
+    public $table = 'ippool';
 
     // Add your validation rules here
     public static function rules($id = null)

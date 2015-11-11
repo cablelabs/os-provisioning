@@ -6,7 +6,7 @@ use Log;
 class Qos extends \BaseModel {
 
     // The associated SQL table for this Model
-    protected $table = 'qos';
+    public $table = 'qos';
 
 	// Add your validation rules here
 	public static function rules($id = null)

@@ -1,9 +1,13 @@
 <?php
 
-use Models\SnmpValue;
-use Models\SnmpMib;
+namespace Modules\HfcSnmp\Http\Controllers;
 
-class SnmpController extends BaseController{
+use Modules\HfcSnmp\Entities\SnmpValue;
+use Modules\HfcSnmp\Entities\SnmpMib;
+
+use Log;
+
+class SnmpController extends \BaseModuleController{
 
 	private $timeout = 300000;
 	private $retry = 1;
