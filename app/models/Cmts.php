@@ -101,7 +101,7 @@ class Cmts extends \BaseModel {
 			$options = $pool->optional;
 
 
-			$data = "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
+			$data .= "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
 			$data .= "\n\t\t".'option routers '.$router.';';
 			$data .= "\n\t\t".'option broadcast-address '.$broadcast_addr.';';
 			$data .= "\n\n\t\t".'pool'."\n\t\t".'{';
@@ -111,23 +111,24 @@ class Cmts extends \BaseModel {
 			{
 				case 'CM':
 					$data .= "\n\t\t\t".'allow members of "CM";';
-					$data .= "\n\t\t\t".'#allow known-clients;';
+					$data .= "\n\t\t\t".'deny unknown-clients;';
 					break;
 
 				case 'CPEPriv':
 					$data .= "\n\t\t\t".'allow members of "Client";';
 					$data .= "\n\t\t\t".'deny members of "Client-Public";';
+					// $data .= "\n\t\t\t".'allow known-clients;';
 					break;
 
 				case 'CPEPub':
 					$data .= "\n\t\t\t".'allow members of "Client-Public";';
 					$data .= "\n\t\t\t".'allow unknown-clients;';
-					$data .= "\n\t\t\t".'#allow known-clients;';
+					// $data .= "\n\t\t\t".'allow known-clients;';
 					break;
 
 				case 'MTA':
 					$data .= "\n\t\t\t".'allow members of "MTA";';
-					$data .= "\n\t\t\t".'#allow known-clients;';
+					// $data .= "\n\t\t\t".'allow known-clients;';
 					break;
 
 				default:
