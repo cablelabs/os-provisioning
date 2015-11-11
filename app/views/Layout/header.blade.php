@@ -10,11 +10,7 @@
 				['Configfile' => 'Configfile.index'],
 				['QoS' => 'Qos.index'],
 				['CMTS' => 'Cmts.index'],
-				['Ip-Pool' => 'IpPool.index'],
-				['Device' => 'Device.index'],
-				['DeviceType' => 'DeviceType.index'],
-				['SnmpMib' => 'SnmpMib.index'],
-				['SnmpValue' => 'SnmpValue.index']
+				['Ip-Pool' => 'IpPool.index']
 			),
 			$view_header_links
 		)

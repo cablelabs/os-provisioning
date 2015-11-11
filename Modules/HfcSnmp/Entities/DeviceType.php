@@ -1,12 +1,11 @@
 <?php
 
-namespace Models;
-
+namespace Modules\HfcSnmp\Entities;
 
 class DeviceType extends \BaseModel {
 
 	// The associated SQL table for this Model
-	protected $table = 'devicetype';
+	public $table = 'devicetype';
 
 
 	// Add your validation rules here
@@ -42,7 +41,7 @@ class DeviceType extends \BaseModel {
 	 */
 	public function devices()
 	{
-		return $this->hasMany('Models\Device', 'devicetype_id');
+		return $this->hasMany('Modules\HfcSnmp\Entities\Device', 'devicetype_id');
 	}
 
 	/**
@@ -50,7 +49,7 @@ class DeviceType extends \BaseModel {
 	 */
 	public function snmpmibs()
 	{
-		return $this->hasMany('Models\SnmpMib', 'devicetype_id');
+		return $this->hasMany('Modules\HfcSnmp\Entities\SnmpMib', 'devicetype_id');
 	}
 
     // returns all objects that are related to a DeviceType

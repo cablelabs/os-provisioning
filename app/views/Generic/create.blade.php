@@ -15,6 +15,10 @@
 
 				$key      = array_keys($_GET)[0];
 				$class    = 'Models\\'.ucwords(explode ('_id', $key)[0]);
+
+				if(!class_exists($class))
+					$class = 'Modules\HfcSnmp\Entities\\'.ucwords(explode ('_id', $key)[0]);
+
 				$view_var = new $class;
 
 				$parent   = $view_var->find($_GET[$key]);
@@ -23,8 +27,8 @@
 				{
 					if ($parent)
 					{
-						$view = explode('\\',get_class($parent))[1];
-						$s = HTML::linkRoute($view.'.edit', $parent->get_view_link_title(), $parent->id).' / '.$s;
+						$view = explode('\\',get_class($parent));
+						$s = HTML::linkRoute(end($view).'.edit', $parent->get_view_link_title(), $parent->id).' / '.$s;
 					}
 
 					$parent = $parent->view_belongs_to();

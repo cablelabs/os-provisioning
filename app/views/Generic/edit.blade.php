@@ -17,7 +17,9 @@
 				
 				if ($parent)
 				{
-					$view = explode('\\',get_class($parent))[1];
+					// Need to be tested !
+					$tmp = explode('\\',get_class($parent));
+					$view = end($tmp);
 					$s = HTML::linkRoute($view.'.edit', $parent->get_view_link_title(), $parent->id).' / '.$s;
 				}
 			}

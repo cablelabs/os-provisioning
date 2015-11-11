@@ -105,7 +105,7 @@ class BaseController extends Controller {
 	}
 
 
-	private function get_view_header_links ()
+	public function get_view_header_links ()
 	{
 		$ret = array();
 		$modules = Module::enabled();
@@ -224,7 +224,7 @@ class BaseController extends Controller {
 
 		$id = $obj::create($data)->id;
 
-		return Redirect::route($this->get_view_name().'.edit', $id)->with('message', 'Created!');
+		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Created!');
 	}
 
 
@@ -282,7 +282,7 @@ class BaseController extends Controller {
 
 		$obj->update($data);
 
-		return Redirect::route($this->get_view_name().'.edit', $id)->with('message', 'Updated!');
+		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Updated!');
 	}
 
 
