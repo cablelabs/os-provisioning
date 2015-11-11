@@ -12,7 +12,7 @@
 
 	<?php
 		// searchscope for following form is the current model
-		$scope = $model_name;
+		$next_scope = $model_name;
 	?>
 	{{ Form::model(null, array('route'=>$model_name.'.fulltextSearch', 'method'=>'GET')) }}
 		@include('Generic.searchform')

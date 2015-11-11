@@ -12,7 +12,7 @@
 	{{ HTML::linkRoute('IpPool.index', 'IP-Pools') }}
 	<?php
 		// searchscope for following form is 'all' => search within all models
-		$scope = 'all';
+		$next_scope = 'all';
 	?>
 	{{ Form::model(null, array('route'=>$model_name.'.fulltextSearch', 'method'=>'GET')) }}
 		@include('Generic.searchform')

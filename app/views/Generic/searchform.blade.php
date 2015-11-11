@@ -7,8 +7,8 @@
 			<span>{{ Form::radio('mode', 'index_boolean') }}&nbsp;BOOL</span>
 			<span>{{ Form::radio('mode', 'index_natural') }}&nbsp;NAT</span>
 			--}}
-		<span>{{ Form::hidden('scope', Str::lower($scope)) }}</span>
-		<span>{{ Form::submit('Search '.Str::lower($scope)) }}</span>
+		<span>{{ Form::hidden('scope', Str::lower($next_scope)) }}</span>
+		<span>{{ Form::submit('Search '.Str::lower($next_scope)) }}</span>
 			{{-- no help needed for simple search
 			<span><a href="https://mariadb.com/kb/en/mariadb/fulltext-index-overview" target="_blank">Search help</a>
 			--}}

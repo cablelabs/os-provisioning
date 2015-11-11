@@ -160,9 +160,6 @@ class BaseController extends Controller {
 
 		$view_var = $obj->getFulltextSearchResults($scope, $mode, $query);
 
-		/* $old_query = $query; */
-		/* $old_scope = $scope; */
-
 		return View::make($view_path, compact('model_name', 'view_header', 'view_var', 'create_allowed', 'query', 'scope'));
 
 	}
