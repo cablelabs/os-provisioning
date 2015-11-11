@@ -9,7 +9,7 @@ use Models\Qos;
 class Modem extends \BaseModel {
 
     // The associated SQL table for this Model
-    protected $table = 'modem';
+    public $table = 'modem';
 
 
 	// Add your validation rules here
@@ -266,6 +266,15 @@ class ModemObserver
     {
         $modem->make_dhcp_cm_all();
         $modem->make_configfile();
+        // restart modem - TODO: get community string and domain name from global config page, NOTE: OID from MIB: DOCS-CABLE-DEV-MIB::docsDevResetNow
+        // try
+        // {
+        //     snmpset($modem->hostname.'.test2.erznet.tv', "public", "1.3.6.1.2.1.69.1.1.3.0", "i", "1"); 
+        // } catch (Exception $e)
+        // {
+        //     dd ($e);
+        //     echo 'Exception: '.$e->getMessage();
+        // }
     }
 
     public function deleted($modem)

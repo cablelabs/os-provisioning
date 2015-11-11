@@ -7,7 +7,7 @@ class Phonenumber extends \BaseModel {
 
 
     // The associated SQL table for this Model
-    protected $table = 'phonenumber';
+    public $table = 'phonenumber';
 
 
 	// for soft deleting => move to BaseModel?

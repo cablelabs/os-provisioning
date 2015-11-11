@@ -45,10 +45,15 @@ class FormBuilder extends IlluminateFormBuilder {
      */
     public function input($type, $name, $value = null, $options = array())
     {
+
+
         if($type == 'hidden')
             return parent::input($type, $name, $value, $options);
 
         $options = $this->appendClassToOptions('form-control', $options);
+
+        if (isset($options['style']) && $options['style'] == 'simple')
+            return parent::input($type, $name, $value, $options);
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.

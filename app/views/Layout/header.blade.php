@@ -19,6 +19,9 @@
 	<hr><hr>
 
 
+	<hr>
+
+
 	<div class="col-md-6">
 		@yield('content_top')
 	</div>

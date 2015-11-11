@@ -12,17 +12,22 @@
           </button>
         </div>
         <!-- end mobile sidebar expand / collapse button -->
-        
-        <!-- begin header navigation right -->
+    
+
         <ul class="nav navbar-nav navbar-right">
-          <li>
-            <form class="navbar-form full-width hidden-xs">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Enter keyword" />
-                <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
-              </div>
-            </form>
-          </li>
+        <li>
+            <?php
+              // searchscope for following form is 'all' => search within all models
+              $next_scope = 'all';
+            ?>
+                 
+            {{ Form::model(null, array('route'=>$route_name.'.fulltextSearch', 'method'=>'GET')) }}
+              @include('Generic.searchform')
+            {{ Form::close() }}
+
+            <!--   <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button> -->
+        </li>
+
           <li class="dropdown">
             <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
               <i class="fa fa-bell-o"></i>

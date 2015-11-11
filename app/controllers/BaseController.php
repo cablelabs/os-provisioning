@@ -149,6 +149,44 @@ class BaseController extends Controller {
 	}
 
 	/**
+	 * Perform a fulltext search.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function fulltextSearch() {
+
+		$obj = $this->get_model_obj();
+
+		$model_name 	= $this->get_model_name();
+		$view_header  	= $obj->get_view_header();
+		$route_name     = $this->get_route_name();
+		$view_header_links = $this->get_view_header_links();
+
+		$create_allowed = $this->get_controller_obj()->index_create_allowed;
+
+		$view_path = 'Generic.index';
+
+		if (View::exists($this->get_view_name().'.index'))
+			$view_path = $this->get_view_name().'.index';
+
+
+		// get the search scope
+		$scope = Input::get('scope');
+
+		// get the mode to use and transform to sql syntax
+		$mode = Input::get('mode');
+
+		// get the query to search for
+		$query = Input::get('query');
+
+		$view_var = $obj->getFulltextSearchResults($scope, $mode, $query);
+
+		return View::make($view_path, compact('model_name', 'view_header', 'view_var', 'create_allowed', 'query', 'scope', 'route_name', 'view_header_links'));
+
+	}
+
+
+	/**
 	 * Display a listing of all objects of the calling model
 	 *
 	 * @return Response
@@ -166,6 +204,7 @@ class BaseController extends Controller {
 
 		$view_path = 'Generic.index';
 		$view_header_links = $this->get_view_header_links();
+
 
 		if (View::exists($this->get_view_name().'.index'))
 			$view_path = $this->get_view_name().'.index';		

@@ -20,6 +20,16 @@ Route::get('modem/{modem}/log', array ('as' => 'Modem.log', 'uses' => 'ModemCont
 Route::get('modem/{modem}/lease', array ('as' => 'Modem.lease', 'uses' => 'ModemController@lease'));
 Route::post('modem/json', 'ModemController@json');
 
+// Searches
+Route::get('modem/fulltextSearch', array('as' => 'Modem.fulltextSearch', 'uses' => 'ModemController@fulltextSearch'));
+Route::get('cmts/fulltextSearch', array('as' => 'Cmts.fulltextSearch', 'uses' => 'CmtsController@fulltextSearch'));
+Route::get('ippool/fulltextSearch', array('as' => 'IpPool.fulltextSearch', 'uses' => 'IpPoolController@fulltextSearch'));
+Route::get('endpoint/fulltextSearch', array('as' => 'Endpoint.fulltextSearch', 'uses' => 'EndpointController@fulltextSearch'));
+Route::get('configfile/fulltextSearch', array('as' => 'Configfile.fulltextSearch', 'uses' => 'ConfigfileController@fulltextSearch'));
+Route::get('qos/fulltextSearch', array('as' => 'Qos.fulltextSearch', 'uses' => 'QosController@fulltextSearch'));
+Route::get('phonenumber/fulltextSearch', array('as' => 'Phonenumber.fulltextSearch', 'uses' => 'PhonenumberController@fulltextSearch'));
+Route::get('mta/fulltextSearch', array('as' => 'Mta.fulltextSearch', 'uses' => 'MtaController@fulltextSearch'));
+
 // routes controller with predefined methods
 // add array('only' => array('edit', 'update')) as third parameter to only allow these routes
 
