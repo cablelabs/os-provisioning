@@ -70,8 +70,8 @@ class Configfile extends \BaseModel {
 	 * Returns all available firmware files (via directory listing)
 	 * @author Patrick Reichel
 	 */
-	public function firmware_files() {
-
+	public function firmware_files() 
+	{
 		// get all available files
 		$firmware_files_raw = glob("/tftpboot/fw/*");
 		$firmware_files = array(null => "None");
@@ -114,12 +114,20 @@ class Configfile extends \BaseModel {
 
 		// normalize type
 		$type = strtolower($type);
-		if (!$device)
-			return false;
-
 		// we need a device to make the config for
 		if (!$device)
 			return false;
+
+
+		/*
+		 * all objects must be an array like a[xyz] = object
+		 *
+		 * INFO:
+		 * - variable names _must_ match tables_a[xyz] coloumn
+		 * - if modem sql relations are not valid a warning will
+		 *   be printed
+		 */
+
 
 		// using the given type we decide what to do
 		switch ($type) {
@@ -127,20 +135,14 @@ class Configfile extends \BaseModel {
 			// this is for modem's config files
 			case "modem":
 
-				/*
-				 * all objects must be an array like a[xyz] = object
-				 *
-				 * INFO:
-				 * - variable names _must_ match database table names and key in db_schemata[key (later we will use this array vars through dynamic variable names calling them by the current table name]
-				 * - if modem sql relations are not valid a warning will
-				 *   be printed
-				 */
-				$modem    = array ($device);
-				$qos = array ($device->qos);
+				$modem  = array ($device);
+				$qos 	= array ($device->qos);
 
-				// write table descriptions to array
-				$db_schemata ['modem'][0]    = Schema::getColumnListing('modem');
-				$db_schemata ['qos'][0] = Schema::getColumnListing('qos');
+				/*
+				 * generate Table array with SQL columns
+				 */
+				$db_schemata ['modem'][0] 	= Schema::getColumnListing('modem');
+				$db_schemata ['qos'][0] 	= Schema::getColumnListing('qos');
 
 				// if there is a specific firmware: add entries for upgrade
 				if ($this->firmware) {
@@ -158,7 +160,7 @@ class Configfile extends \BaseModel {
 				$mta = array($device);
 				$phonenumber = Phonenumber::where('mta_id', '=', $device->id)->get();
 
-				// get desription of table mtas
+				// get description of table mtas
 				$db_schemata['mta'][0] = Schema::getColumnListing('mta');
 				// get description of table phonennumbers; one subarray per (possible) number
 				for ($i = 0; $i < count($phonenumber); $i++) {
@@ -223,6 +225,7 @@ class Configfile extends \BaseModel {
 		foreach ($rows as $row)
 			if (!preg_match("/\\{[^\\{]*\\}/im", $row))
 				$result .= "\n\t".$row;
+
 
 		/*
 		 * return

@@ -9,12 +9,12 @@ class PhonenumberTableSeeder extends Seeder {
 
 	public function run()
 	{
-		foreach(range(3, 7) as $index)
+		foreach(range(0, 4) as $index)
 		{
 			Phonenumber::create([
 				'prefix_number' => "03725",
 				'number' => rand(100,999999),
-				'mta_id' => $index,
+				'mta_id' => 100000 + $index,
 				'port' => 1,
 				'active' => 1,
 			]);

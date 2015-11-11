@@ -1,26 +1,16 @@
 @extends ('Layout.default')
 
-@include ('Layout.header')
-
-<hr>
-
 @section ('content')
 
-@yield('content_top')
+<div class="row col-md-12">
 
-<hr>
-<p align="right">
-	@yield('content_top_2')
-</p>
+	{{-- We need to include sections dynamically: always content left and if needed content right - more than 1 time possible --}}
+	@include ('bootstrap.panel', array ('content' => 'content_left', 'view_header' => $view_header, 'md' => 6))
+	@if (isset($view_header_right))
+		@include ('bootstrap.panel', array ('content' => 'content_right', 'view_header' => $view_header_right, 'md' => 3))
+	@endif
 
-<hr>
 
-	<table>
-		<tr>
-			<td width="400" valign="top">@yield('content_left')</td> 
-			<td width="50"></td>
-			<td width="400" valign="top">@yield('content_right')</td>
-		</tr>
-	</table>
+</div>
 
 @stop

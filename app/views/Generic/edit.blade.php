@@ -33,10 +33,12 @@
 
 @section('content_left')
 
-	{{ '<h2>Edit '.$view_header.'</h2>' }}
+	<?php
+		if (!isset($form_update))
+			$form_update = $model_name.'.update';
+	?>
 
-	{{ $form_path }}
-	{{ Form::model($view_var, array('route' => array($model_name.'.update', $view_var->id), 'method' => 'put', 'files' => true)) }}
+	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true)) }}
 
 		@include($form_path, $view_var)
 
@@ -44,19 +46,31 @@
 
 @stop
 
-
+{{-- We should add a new section for each relation --}}
 @section('content_right')
 
-@foreach($view_var->view_has_many() as $view => $relations)
+	<?php 
 
-		<?php
-			$key = strtolower($model_name).'_id';
-		?>
-		@include('Generic.relation', [$relations, $view, $key])
-		
-		<br> </br>
+		if ($view_var->view_has_many())
+			$view_header_right = '';
+	?>
+
+	@foreach($view_var->view_has_many() as $view => $relations)
+
+			<?php
+				$key = strtolower($model_name).'_id';
+
+				$model_name = 'Models\\'.$view;
+				$model = new $model_name;
+				$view_header_right .= ' Assigned '.$model->get_view_header();
+			?>
+
+			@include('Generic.relation', [$relations, $view, $key])
+			
+			<br> </br>
+			<hr> <hr>
 
 	
-@endforeach
+	@endforeach
 
 @stop
