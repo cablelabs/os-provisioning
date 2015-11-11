@@ -14,7 +14,16 @@
 			'SnmpMib' => 'SnmpMib.index',
 			'SnmpValue' => 'SnmpValue.index'
 	)))
-	<hr><hr>
+	<hr>
+		<!-- TODO: Move global search form -->
+		<?php
+			// searchscope for following form is 'all' => search within all models
+			$next_scope = 'all';
+		?>
+		{{ Form::model(null, array('route'=>$model_name.'.fulltextSearch', 'method'=>'GET')) }}
+			@include('Generic.searchform')
+		{{ Form::close() }}
+	<hr>
 
 
 	<div class="col-md-6">
