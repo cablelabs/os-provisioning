@@ -2,6 +2,7 @@
 
 namespace Models;
 use DB;
+use Models\Cmts;
 
 class IpPool extends \BaseModel {
 
@@ -100,7 +101,11 @@ class IpPoolObserver
 
     public function updated($pool)
     {
-        $pool->cmts->make_dhcp_conf();
+       $pool->cmts->make_dhcp_conf();
+
+        // make dhcp conf of old cmts if relation got changed
+        if ($pool["original"]["cmts_id"] != $pool["attributes"]["cmts_id"])
+            $cmts_old = Cmts::find($pool["original"]["cmts_id"])->make_dhcp_conf();
     }
 
     public function deleted($pool)

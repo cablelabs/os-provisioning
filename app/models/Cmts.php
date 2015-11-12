@@ -8,7 +8,7 @@ use DB;
 class Cmts extends \BaseModel {
 
 	// The associated SQL table for this Model
-    public $table = 'cmts';
+    protected $table = 'cmts';
 
 	// Add your validation rules here
 	public static function rules($id = null)
@@ -85,7 +85,17 @@ class Cmts extends \BaseModel {
 
 		$ippools = $this->ippools;
 
-		File::put($file, 'shared-network "'.$this->hostname.'"'."\n".'{'."\n\t");
+		// don't create a shared network for a cmts without ipppools
+		if (!$ippools->has('0'))
+		{
+			// delete old cmts file if one exists
+			if (file_exists($file))
+				unlink($file);
+			return -1;
+		}
+
+
+		File::put($file, 'shared-network "'.$this->hostname.'"'."\n".'{'."\n");
 
 		foreach ($ippools as $pool) {
 
@@ -101,7 +111,7 @@ class Cmts extends \BaseModel {
 			$options = $pool->optional;
 
 
-			$data .= "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
+			$data = "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
 			$data .= "\n\t\t".'option routers '.$router.';';
 			$data .= "\n\t\t".'option broadcast-address '.$broadcast_addr.';';
 			$data .= "\n\n\t\t".'pool'."\n\t\t".'{';
