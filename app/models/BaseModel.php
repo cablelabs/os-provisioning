@@ -357,15 +357,16 @@ class BaseModel extends \Eloquent
 					// get all objects with $column
 					foreach (DB::select('SELECT id FROM '.$table->Tables_in_db_lara.' WHERE '.$column.'='.$this->id) as $child)
 					{
-						$class_child_name = 'Models\\'.ucfirst($table->Tables_in_db_lara);
+						$class_child_name = current(preg_grep('|.*?'.$table->Tables_in_db_lara.'.*?|i', $this->_getModels()));
 						$class = new $class_child_name;
+
 						array_push($relations, $class->find($child->id));
 					}
 				}
 			}
 		}
 
-		return $relations;
+		return array_filter ($relations);
 	}
 
 
@@ -380,7 +381,7 @@ class BaseModel extends \Eloquent
 	 */
 	public function delete()
 	{
-		dd( $this->getArrayableItems() );
+		// dd( $this->get_all_children() );
 		foreach ($this->get_all_children() as $child)
 			$child->delete();
 
