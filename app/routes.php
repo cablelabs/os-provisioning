@@ -27,8 +27,6 @@ Route::get('ippool/fulltextSearch', array('as' => 'IpPool.fulltextSearch', 'uses
 Route::get('endpoint/fulltextSearch', array('as' => 'Endpoint.fulltextSearch', 'uses' => 'EndpointController@fulltextSearch'));
 Route::get('configfile/fulltextSearch', array('as' => 'Configfile.fulltextSearch', 'uses' => 'ConfigfileController@fulltextSearch'));
 Route::get('qos/fulltextSearch', array('as' => 'Qos.fulltextSearch', 'uses' => 'QosController@fulltextSearch'));
-Route::get('phonenumber/fulltextSearch', array('as' => 'Phonenumber.fulltextSearch', 'uses' => 'PhonenumberController@fulltextSearch'));
-Route::get('mta/fulltextSearch', array('as' => 'Mta.fulltextSearch', 'uses' => 'MtaController@fulltextSearch'));
 
 // routes controller with predefined methods
 // add array('only' => array('edit', 'update')) as third parameter to only allow these routes
@@ -40,7 +38,3 @@ Route::resource('Endpoint', 'EndpointController');
 #Route::post('endpoint/json', 'EndpointController@json');
 Route::resource('Configfile', 'ConfigfileController');
 Route::resource('Qos', 'QosController');
-
-
-Route::resource('Phonenumber', 'PhonenumberController');
-Route::resource('Mta', 'MtaController');

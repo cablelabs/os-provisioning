@@ -103,7 +103,7 @@ class BaseController extends Controller {
 	{
 		return explode('\\', $this->get_model_name())[1];
 	}
-
+	
 
 	public function get_view_header_links ()
 	{

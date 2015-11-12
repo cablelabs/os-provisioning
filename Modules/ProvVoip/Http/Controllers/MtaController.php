@@ -1,10 +1,13 @@
 <?php
 
-use Models\Mta;
+namespace Modules\ProvVoip\Http\Controllers;
+
+use Modules\ProvVoip\Entities\Mta;
 use Models\Modem;
 use Models\Configfile;
 
-class MtaController extends \BaseController {
+
+class MtaController extends \BaseModuleController {
 
 
 	protected $index_create_allowed = false;

@@ -6,6 +6,8 @@ use Log;
 use DB;
 use Schema;
 
+use Modules\ProvVoip\Entities\Phonenumber;
+
 class Configfile extends \BaseModel {
 
     // The associated SQL table for this Model

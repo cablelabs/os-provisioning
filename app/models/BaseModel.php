@@ -5,6 +5,27 @@
  */
 class BaseModel extends \Eloquent
 {
+	/**
+	 * check if module exists
+	 *
+	 * Note: This function should be used in relational functions like hasMany() or view_has_many()
+	 * 
+	 * @author Torsten Schmidt
+	 *
+	 * @param  Modulename
+	 * @return true if module exists and is active otherwise false
+	 */
+	public function module_is_active($modulename)
+	{
+		$modules = \Module::enabled();
+        
+		foreach ($modules as $module) 
+			if ($module->getLowerName() == strtolower($modulename))
+				return true;
+
+        return false;
+	}
+
 
 	/**
 	 * Basefunction for generic use - is needed to place the related html links generically in the edit & create views

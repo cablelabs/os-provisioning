@@ -1,6 +1,6 @@
 <?php
 
-namespace Models;
+namespace Modules\ProvVoip\Entities;
 
 // Model not found? execute composer dump-autoload in lara root dir
 class Phonenumber extends \BaseModel {
@@ -49,7 +49,7 @@ class Phonenumber extends \BaseModel {
 	 */
 	public function mta()
 	{
-		return $this->belongsTo('Models\Mta', 'mta_id');
+		return $this->belongsTo('Modules\ProvVoip\Entities\Mta', 'mta_id');
 	}
 
 	// belongs to an mta
