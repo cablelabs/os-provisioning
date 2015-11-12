@@ -1,9 +1,11 @@
 <?php
 
-use Models\Phonenumber;
-use Models\Mta;
+namespace Modules\ProvVoip\Http\Controllers;
 
-class PhonenumberController extends \BaseController {
+use Modules\ProvVoip\Entities\Phonenumber;
+use Modules\ProvVoip\Entities\Mta;
+
+class PhonenumberController extends \BaseModuleController {
 
 
 	/**

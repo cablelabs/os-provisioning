@@ -70,15 +70,21 @@ class Modem extends \BaseModel {
 
     public function mtas()
     {
-        return $this->hasMany('Models\Mta');
+        if ($this->module_is_active('ProvVoip'))
+            return $this->hasMany('Modules\ProvVoip\Entities\Mta');
+
+        return null;
     }
     
     // returns all objects that are related to a cmts
     public function view_has_many()
     {
-        return array(
-            'Mta' => $this->mtas
-        );
+        if ($this->module_is_active('ProvVoip'))
+            return array(
+                    'Mta' => $this->mtas
+                );
+
+        return array();
     }
 
     /**

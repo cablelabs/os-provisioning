@@ -5,6 +5,27 @@
  */
 class BaseModel extends \Eloquent
 {
+	/**
+	 * check if module exists
+	 *
+	 * Note: This function should be used in relational functions like hasMany() or view_has_many()
+	 * 
+	 * @author Torsten Schmidt
+	 *
+	 * @param  Modulename
+	 * @return true if module exists and is active otherwise false
+	 */
+	public function module_is_active($modulename)
+	{
+		$modules = \Module::enabled();
+        
+		foreach ($modules as $module) 
+			if ($module->getLowerName() == strtolower($modulename))
+				return true;
+
+        return false;
+	}
+
 
 	/**
 	 * Basefunction for generic use - is needed to place the related html links generically in the edit & create views
@@ -99,20 +120,47 @@ class BaseModel extends \Eloquent
 	 * Get all models
 	 *
 	 * @return array of all models except base models
-	 * @author Patrick Reichel
+	 * @author Patrick Reichel, 
+	 *         Torsten Schmidt: add modules path
 	 */
 	protected function _getModels() {
 		$exclude = array('BaseModel');
+		$result = array();
 
+		/*
+		 * Search all Models in /models Models Path
+		 */
 		$dir = app_path('models');
 		$models = glob($dir."/*.php");
 
-		$result = array();
 		foreach ($models as $model) {
 			$model = str_replace(app_path('models')."/", "", $model);
 			$model = str_replace(".php", "", $model);
 			if (array_search($model, $exclude) === FALSE) {
 				array_push($result, "Models\\".$model);
+			}
+		}
+
+		/*
+		 * Search all Models in /Modules/../Entities Path
+		 */
+		$dirs = array();
+		$modules = Module::enabled();
+		foreach ($modules as $module)
+			array_push($dirs, $module->getPath().'/Entities'); 
+
+		foreach ($dirs as $dir)
+		{
+			$models = glob($dir."/*.php");
+
+			foreach ($models as $model) {
+				preg_match ("|/var/www/lara/Modules/(.*?)/Entities/|", $model, $module_array);
+				$module = $module_array[1];
+				$model = preg_replace("|/var/www/lara/Modules/(.*?)/Entities/|", "", $model);
+				$model = str_replace(".php", "", $model);
+				if (array_search($model, $exclude) === FALSE) {
+					array_push($result, "Modules\\$module\Entities\\".$model);
+				}
 			}
 		}
 
