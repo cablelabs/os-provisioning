@@ -111,6 +111,7 @@ class Mta extends \BaseModel {
 		parent::boot();
 
 		Mta::observe(new MtaObserver);
+		Mta::observe(new \SystemdObserver);
 	}
 
 	/**

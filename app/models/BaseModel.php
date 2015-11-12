@@ -282,3 +282,49 @@ class BaseModel extends \Eloquent
 		return 'Need to be Set !';
 	}
 }
+
+
+/**
+ * Base Observer Class
+ * Handles changes on Model Gateways
+ *
+ */
+class SystemdObserver
+{
+
+	// insert all services that need to be restarted after a model changed there configuration in that array
+	private $services = array('dhcpd');
+
+    public function created($model)
+    {
+    	if (!is_dir(storage_path('systemd')))
+    		mkdir(storage_path('systemd'));
+
+    	foreach ($this->services as $service)
+    	{
+			touch(storage_path('systemd/'.$service));
+    	}
+	}
+
+    public function updated($model)
+    {
+    	if (!is_dir(storage_path('systemd')))
+    		mkdir(storage_path('systemd'));
+
+    	foreach ($this->services as $service)
+    	{
+			touch(storage_path('systemd/'.$service));
+    	}
+    }
+
+    public function deleted($model)
+    {
+    	if (!is_dir(storage_path('systemd')))
+    		mkdir(storage_path('systemd'));
+
+    	foreach ($this->services as $service)
+    	{
+			touch(storage_path('systemd/'.$service));
+    	}
+    }
+}

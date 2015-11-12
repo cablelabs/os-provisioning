@@ -44,6 +44,7 @@ class Cmts extends \BaseModel {
         parent::boot();
 
         Cmts::observe(new CmtsObserver);
+        Cmts::observe(new \SystemdObserver);
     }
 
 
@@ -85,15 +86,12 @@ class Cmts extends \BaseModel {
 
 		$ippools = $this->ippools;
 
-		// don't create a shared network for a cmts without ipppools
+		// if a cmts doesn't have an ippool the file has to be empty
 		if (!$ippools->has('0'))
 		{
-			// delete old cmts file if one exists
-			if (file_exists($file))
-				unlink($file);
+			File::put($file, '');
 			return -1;
 		}
-
 
 		File::put($file, 'shared-network "'.$this->hostname.'"'."\n".'{'."\n");
 
@@ -189,7 +187,7 @@ class Cmts extends \BaseModel {
 
 	/**
 	 * Deletes the calling object/cmts in DB and removes the include statement from the global dhcpd.conf
-	 * Also sets the related IP-Pools to zero
+	 * Also sets the related IP-Pools to cmts_id=0
 	 *
 	 * @author Nino Ryschawy
 	 * @param
@@ -285,10 +283,11 @@ class Cmts extends \BaseModel {
  *              'deleting', 'deleted', 'saving', 'saved',
  *              'restoring', 'restored',
  */
-class CmtsObserver 
+class CmtsObserver
 {
     public function created($cmts)
     {
+    	// dd(\Route::getCurrentRoute()->getActionName(), $this);
   		// only create new config file
         $cmts->make_dhcp_conf();
     }
