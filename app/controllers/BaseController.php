@@ -319,6 +319,7 @@ class BaseController extends Controller {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
+		$obj->touch();			// update timestamp, this forces to run all observer's
 		$obj->update($data);
 
 		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Updated!');
