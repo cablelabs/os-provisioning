@@ -4,14 +4,14 @@
 use Faker\Factory as Faker;
 use Models\IpPool;
 
-class IpPoolTableSeeder extends Seeder {
+class IpPoolTableSeeder extends BaseSeeder {
 
 	public function run()
 	{
 		$m = 0;
 		$n = 0;
 
-		foreach(range(1, 2) as $index)
+		foreach(range(1, $this->max_seed_l2) as $index)
 		{
 			IpPool::create([
 				'cmts_id' => rand(1,2),

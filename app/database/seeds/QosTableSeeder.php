@@ -4,11 +4,11 @@
 use Faker\Factory as Faker;
 use Models\Qos;
 
-class QosTableSeeder extends Seeder {
+class QosTableSeeder extends BaseSeeder {
 
 	public function run()
 	{
-		foreach(range(1, 10) as $index)
+		foreach(range(1, $this->max_seed_l2) as $index)
 		{
 			Qos::create([
 				'name' => 'QOS-'.$index,
