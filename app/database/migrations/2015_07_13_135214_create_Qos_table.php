@@ -3,17 +3,11 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateQosTable extends Migration {
+class CreateQosTable extends BaseMigration {
 
 	// name of the table to create
-	private $tablename = "qos";
+	protected $tablename = "qos";
 
-	function __construct() {
-
-		// get and instanciate of index maker
-		require_once(getcwd()."/app/extensions/database/FulltextIndexMaker.php");
-		$this->fim = new FulltextIndexMaker($this->tablename);
-	}
 
 	/**
 	 * Run the migrations.
@@ -24,19 +18,18 @@ class CreateQosTable extends Migration {
 	{
 		Schema::create($this->tablename, function(Blueprint $table)
 		{
-			$table->engine = 'MyISAM'; // InnoDB doesn't support fulltext index in MariaDB < 10.0.5
-			$table->increments('id');
+			$this->up_table_generic($table);
+
 			$table->float('ds_rate_max');
 			$table->float('us_rate_max');
 			$table->integer('ds_rate_max_help')->unsigned();
 			$table->integer('us_rate_max_help')->unsigned();
 			$table->string('name');
-				$this->fim->add("name");
-			$table->timestamps();
 		});
 
-		// create FULLTEXT index including the given
-		$this->fim->make_index();
+		$this->set_fim_fields(['name']);
+
+		return parent::up();
 	}
 
 

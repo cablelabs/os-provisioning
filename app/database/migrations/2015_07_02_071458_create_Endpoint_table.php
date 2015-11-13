@@ -3,17 +3,10 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateEndpointTable extends Migration {
+class CreateEndpointTable extends BaseMigration {
 
 	// name of the table to create
-	private $tablename = "endpoint";
-
-	function __construct() {
-
-		// get and instanciate of index maker
-		require_once(getcwd()."/app/extensions/database/FulltextIndexMaker.php");
-		$this->fim = new FulltextIndexMaker($this->tablename);
-	}
+	protected $tablename = "endpoint";
 
 	/**
 	 * Run the migrations.
@@ -24,25 +17,22 @@ class CreateEndpointTable extends Migration {
 	{
 		Schema::create($this->tablename, function(Blueprint $table)
 		{
-			$table->engine = 'MyISAM'; // InnoDB doesn't support fulltext index in MariaDB < 10.0.5
-			$table->increments('id');
+			$this->up_table_generic($table);
+
 			$table->string('hostname');
-				$this->fim->add("hostname");
 			$table->string('name');
-				$this->fim->add("name");
 			$table->string('mac',17);
 			$table->text('description');
-				$this->fim->add("description");
 			$table->enum('type', array('cpe','mta'));
 			$table->boolean('public');
+
 			// $table->integer('modem_id')->unsigned(); // depracted
-			$table->timestamps();
 		});
 
-		// create FULLTEXT index including the given
-		$this->fim->make_index();
-
-		DB::update("ALTER TABLE ".$this->tablename." AUTO_INCREMENT = 200000;");
+		$this->set_fim_fields(['hostname', 'name', 'description']);
+		$this->set_auto_increment (200000);
+		
+		return parent::up();
 	}
 
 

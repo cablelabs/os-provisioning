@@ -5,17 +5,11 @@ use Illuminate\Database\Schema\Blueprint;
 
 use Models\Cmts;
 
-class CreateCmtsTable extends Migration {
+class CreateCmtsTable extends BaseMigration {
 
 	// name of the table to create
-	private $tablename = "cmts";
+	protected $tablename = "cmts";
 
-	function __construct() {
-
-		// get and instanciate of index maker
-		require_once(getcwd()."/app/extensions/database/FulltextIndexMaker.php");
-		$this->fim = new FulltextIndexMaker($this->tablename);
-	}
 
 	/**
 	 * Run the migrations.
@@ -26,33 +20,27 @@ class CreateCmtsTable extends Migration {
 	{
 		Schema::create($this->tablename, function(Blueprint $table)
 		{
-			$table->engine = 'MyISAM'; // InnoDB doesn't support fulltext index in MariaDB < 10.0.5
-			$table->increments('id');
+			$this->up_table_generic($table);
+
 			$table->string('hostname');
-				$this->fim->add("hostname");
 			$table->string('type');
-				$this->fim->add("type");
 			$table->string('ip');		// bundle ip
-				$this->fim->add("ip");
 			$table->string('community_rw');
-				$this->fim->add("community_rw");
 			$table->string('community_ro');
-				$this->fim->add("community_ro");
 			$table->string('company');
-				$this->fim->add("company");
 			$table->integer('network');
 			$table->integer('state');
 			$table->integer('monitoring');
-			$table->timestamps();		// created_at and updated_at
 		});
 
-		// create FULLTEXT index including the given
-		$this->fim->make_index();
+		$this->set_fim_fields(['hostname', 'type', 'ip', 'community_ro', 'community_rw', 'company']);
 
 		// add fulltext index for all given fields
-		if (isset($this->index) && (count($this->index) > 0)) {
+		// TODO: remove ?
+		if (isset($this->index) && (count($this->index) > 0))
 			DB::statement("CREATE FULLTEXT INDEX ".$this->tablename."_all ON ".$this->tablename." (".implode(', ', $this->index).")");
-		}
+
+		return parent::up();
 	}
 
 
@@ -64,7 +52,8 @@ class CreateCmtsTable extends Migration {
 	public function down()
 	{
 		$c = Cmts::first();
-		if ($c) $c->del_cmts_includes();
+		if ($c) 
+			$c->del_cmts_includes();
 
 		Schema::drop($this->tablename);
 
@@ -73,7 +62,7 @@ class CreateCmtsTable extends Migration {
 		foreach ($files as $file)
 		{
 			if(is_file($file))
-			unlink($file);
+				unlink($file);
 		}
 	}
 
