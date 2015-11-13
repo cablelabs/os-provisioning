@@ -3,7 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateSnmpMibTable extends Migration {
+class CreateSnmpMibTable extends BaseMigration {
+
+
+	// name of the table to create
+	protected $tablename = "snmpmib";
+
 
 	/**
 	 * Run the migrations.
@@ -14,7 +19,8 @@ class CreateSnmpMibTable extends Migration {
 	{
 		Schema::create('snmpmib', function(Blueprint $table)
 		{
-			$table->increments('id');
+			$this->up_table_generic($table);
+
 			$table->integer('devicetype_id')->unsigned();
 			$table->enum('html_type', ['text','select','groupbox','textarea']);
 			$table->string('html_frame',16);
@@ -28,8 +34,9 @@ class CreateSnmpMibTable extends Migration {
 			$table->text('phpcode_pre');
 			$table->text('phpcode_post');
 			$table->text('description');
-			$table->timestamps();
 		});
+
+		return parent::up();
 	}
 
 

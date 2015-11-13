@@ -1,7 +1,10 @@
-<?php namespace Modules\hfcsnmp\Database\Seeders;
+<?php 
+
+namespace Modules\HfcSnmp\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+
 
 class HfcSnmpDatabaseSeeder extends Seeder {
 
@@ -14,7 +17,9 @@ class HfcSnmpDatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 		
-		// $this->call("OthersTableSeeder");
+		$this->call("Modules\HfcSnmp\Database\Seeders\DeviceTableSeeder");
+		$this->call("Modules\HfcSnmp\Database\Seeders\DeviceTypeTableSeeder");
+		$this->call("Modules\HfcSnmp\Database\Seeders\SnmpMibTableSeeder");
 	}
 
 }
