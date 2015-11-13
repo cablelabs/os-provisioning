@@ -1,4 +1,6 @@
-<?php namespace Modules\provvoip\Database\Seeders;
+<?php 
+
+namespace Modules\ProvVoip\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +16,8 @@ class ProvVoipDatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 		
-		// $this->call("OthersTableSeeder");
+		$this->call('Modules\ProvVoip\Database\Seeders\PhonenumberTableSeeder');
+		$this->call('Modules\ProvVoip\Database\Seeders\MtaTableSeeder');
 	}
 
 }

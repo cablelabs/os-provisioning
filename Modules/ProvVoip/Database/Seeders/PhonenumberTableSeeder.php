@@ -1,11 +1,13 @@
 <?php
 
+namespace Modules\ProvVoip\Database\Seeders;
+
 // Composer: "fzaninotto/faker": "v1.3.0"
 use Faker\Factory as Faker;
-use Models\Phonenumber;
+use Modules\ProvVoip\Entities\Phonenumber;
 
 # don't forget to add Seeder in DatabaseSeeder.php
-class PhonenumberTableSeeder extends Seeder {
+class PhonenumberTableSeeder extends \Seeder {
 
 	public function run()
 	{

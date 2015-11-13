@@ -1,11 +1,13 @@
 <?php
 
+namespace Modules\ProvVoip\Database\Seeders;
+
 // Composer: "fzaninotto/faker": "v1.3.0"
 use Faker\Factory as Faker;
-use Models\Mta;
+use Modules\ProvVoip\Entities\Mta;
 
 
-class MtaTableSeeder extends Seeder {
+class MtaTableSeeder extends \Seeder {
 
 	public function run()
 	{
