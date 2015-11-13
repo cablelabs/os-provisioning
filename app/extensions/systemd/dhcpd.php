@@ -1,12 +1,12 @@
 <?php
-
 /**
- * This file restarts the dhcpd server after checking if the syntax of the configuration is correct
+ * Restarts the dhcpd server after checking for correct syntax of the config
  */
-// int $ret;
 
-echo 'hello';
 
-exec("/usr/sbin/dhcpd -t", $ret);
+// check config
+exec("/usr/sbin/dhcpd -t &>/dev/null", $out, $ret);
 
-// var_dump($ret);
+// restart server
+if ($ret == 0)
+	exec("systemctl restart dhcpd");

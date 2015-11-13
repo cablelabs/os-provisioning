@@ -9,43 +9,42 @@
 /* Don't forget to insert all needed services here! */
 $services = array('dhcpd');
 
-// dir with files that indicate that the config of a service has changed - NOTE: How to use app_path() from Laravel ??
-$dir = '/var/www/lara/app/storage/systemd/';
-// $dir = app_path('storage/systemd');
 
-// dir with the restart scripts
+// contains the restart-indicating files
+$dir = '/var/www/lara/app/storage/systemd/';
+
+// contains restart scripts
 $dir_scripts = '/var/www/lara/app/extensions/systemd/';
-// $dir_scripts = app_path('extensions/systemd');
 
 $i = 0;
 
 while (1)
 {
-
-	// start from beginning at end of array
-	if (!array_key_exists($i, $services))
-		$i = 0;
-
-	// proof if indication file exists, if so execute the restart script
-	if (file_exists($dir.$services[$i]))
+	foreach ($services as $service) 
 	{
-		echo $dir_scripts.$services[$i].'.php';
-		if (!file_exists($dir_scripts.$services[$i].'.php'))
+		// proof if indication file exists, if so execute the restart script
+		if (file_exists($dir.$service))
 		{
-			// TODO: print to log file
-			echo 'Error: service restart script not found!';
-			continue;
+			if (!file_exists($dir_scripts.$service.'.php'))
+			{
+				// TODO: print to log file
+				// echo 'Error: service restart script not found!';
+				continue;
+			}
+
+			// proof if this script is already/still running
+			if (!exec("ps -aux | grep $service.php | grep -v grep"))	// when nothing is returned the script isnt running
+			{
+				unlink($dir.$service);
+				// echo "restarted $service";
+				exec('php -f '.$dir_scripts.$service.'.php &>/dev/null &');
+			}			
 		}
-		// execute in background
-		exec('php -f '.$dir_scripts.$services[$i].'.php &');
-		unlink($dir.$services[$i]);
-		echo 'file deleted';
 	}
-
-	// test output
-	echo $i;
-
-	$i++;
 
 	sleep(1);
 }
+
+
+
+
