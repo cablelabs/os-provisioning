@@ -5,6 +5,8 @@
  */
 class BaseModel extends \Eloquent
 {
+	use SoftDeletingTrait;
+
 	/**
 	 * check if module exists
 	 *
