@@ -9,6 +9,7 @@ composer.lock
 *.sublime*
 *.fuse_hidden*
 Thumbs.db
+app/storage/systemd/
 
 # temporary vim files
 *.swp
