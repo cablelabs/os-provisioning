@@ -260,11 +260,16 @@ class Modem extends \BaseModel {
             // only ignore error with this error message (catch exception with this string) 
             if (!strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known"))
             {
-                // redirect back with corresponding message over flash, needs to be saved as it's normally only saved when the session middleware terminates successfully
-                $resp = \Redirect::back()->with('message', 'Could not restart Modem! (maybe not online?)'); 
-                \Session::driver()->save();         // \ is like writing "use Session;" before class statement
-                $resp->send();
-                exit();
+                // check if observer is called from HTML Update, otherwise skip
+                if (\Request::method() == 'PUT') 
+                {
+                    // redirect back with corresponding message over flash, needs to be saved as it's normally only saved when the session middleware terminates successfully
+                    $resp = \Redirect::back()->with('message', 'Could not restart Modem! (maybe not online?)'); 
+                    \Session::driver()->save();         // \ is like writing "use Session;" before class statement
+                    $resp->send();
+
+                    exit();
+                }
             }
         }
     }
