@@ -11,6 +11,18 @@
 |
 */
 
-Artisan::add(new dhcpCommand);
-Artisan::add(new configfileCommand);
+
 Artisan::add(new cactiCommand);
+
+
+/*
+ * TODO: This is only a workaround and should be moved to Module context
+ */
+
+$m = new \BaseModel;
+
+if ($m->module_is_active('ProvBase'))
+{
+	Artisan::add(new Modules\ProvBase\Console\dhcpCommand);
+	Artisan::add(new Modules\ProvBase\Console\configfileCommand);
+}

@@ -1,28 +1,28 @@
 <?php
 
+namespace Modules\provbase\Console;
+
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-use Models\Modem;
-use Models\Endpoint;
-use Models\Cmts;
+use Modules\ProvBase\Entities\Modem;
 
-class dhcpCommand extends Command {
+class configfileCommand extends Command {
 
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'nms:dhcp';
+	protected $name = 'nms:configfile';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'make the DHCP config';
+	protected $description = 'make alle configfiles';
 
 	/**
 	 * Create a new command instance.
@@ -41,23 +41,17 @@ class dhcpCommand extends Command {
 	 */
 	public function fire()
 	{
-		// Modems
-		$m = Modem::first();
-		$m->del_dhcp_conf_files();
-		$m->make_dhcp_cm_all();
+		$cms = Modem::all();
 
-		// Endpoints
-		$e = Endpoint::first();
-		$e->make_dhcp();
+		$i = 1; 
+		$num = count ($cms);
 
-		// CMTS's
-		$c = Cmts::all();
-		$c->first()->del_cmts_includes();
-
-		foreach ($c as $cmts) 
+		foreach ($cms as $cm)
 		{
-			$cmts->make_dhcp_conf();
+			echo "create config files: $i/$num \r"; $i++;
+			$cm->make_configfile();
 		}
+		echo "\n";
 	}
 
 	/**
