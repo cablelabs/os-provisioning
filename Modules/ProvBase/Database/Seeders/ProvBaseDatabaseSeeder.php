@@ -1,4 +1,6 @@
-<?php namespace Modules\provbase\Database\Seeders;
+<?php 
+
+namespace Modules\ProvBase\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +16,12 @@ class ProvBaseDatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 		
-		// $this->call("OthersTableSeeder");
+		$this->call('Modules\ProvBase\Database\Seeders\ConfigfileTableSeeder');
+		$this->call('Modules\ProvBase\Database\Seeders\QosTableSeeder');
+		$this->call('Modules\ProvBase\Database\Seeders\ModemTableSeeder');
+		$this->call('Modules\ProvBase\Database\Seeders\EndpointTableSeeder');
+		$this->call('Modules\ProvBase\Database\Seeders\CmtsTableSeeder');
+		$this->call('Modules\ProvBase\Database\Seeders\IpPoolTableSeeder');
 	}
 
 }

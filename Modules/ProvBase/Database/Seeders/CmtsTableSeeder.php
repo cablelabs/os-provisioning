@@ -1,10 +1,12 @@
 <?php
 
+namespace Modules\ProvBase\Database\Seeders;
+
 // Composer: "fzaninotto/faker": "v1.3.0"
 use Faker\Factory as Faker;
 use Modules\ProvBase\Entities\Cmts;
 
-class CmtsTableSeeder extends BaseSeeder {
+class CmtsTableSeeder extends \BaseSeeder {
 
 	public function run()
 	{

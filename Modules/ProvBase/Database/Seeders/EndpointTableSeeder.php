@@ -1,10 +1,12 @@
 <?php
 
+namespace Modules\ProvBase\Database\Seeders;
+
 // Composer: "fzaninotto/faker": "v1.3.0"
 use Faker\Factory as Faker;
 use Modules\ProvBase\Entities\Endpoint;
 
-class EndpointTableSeeder extends BaseSeeder {
+class EndpointTableSeeder extends \BaseSeeder {
 
 	public function run()
 	{
