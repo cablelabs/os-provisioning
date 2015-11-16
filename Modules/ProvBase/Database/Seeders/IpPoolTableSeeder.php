@@ -13,10 +13,10 @@ class IpPoolTableSeeder extends \BaseSeeder {
 		$m = 0;
 		$n = 0;
 
-		foreach(range(1, $this->max_seed_l2) as $index)
+		foreach(range(1, $this->max_seed) as $index)
 		{
 			IpPool::create([
-				'cmts_id' => rand(1,2),
+				'cmts_id' => rand(1,$this->max_seed_l2),
 				'type' => rand(0,3),
 				'net' => '10.'.$m.'.'.$n.'.0',
 				'netmask' => '255.255.255.0',

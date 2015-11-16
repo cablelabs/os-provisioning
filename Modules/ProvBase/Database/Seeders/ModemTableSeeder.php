@@ -22,8 +22,8 @@ class ModemTableSeeder extends \BaseSeeder {
 				'serial_num' => $faker->sentence(),
 				'inventar_num' => $faker->sentence(),
 				'contract_id' => rand(1,500),
-				'configfile_id' => rand(1,10),
-				'qos_id' => rand(1,10)
+				'configfile_id' => rand(1,$this->max_seed_l2),
+				'qos_id' => rand(1,$this->max_seed_l2)
 			]);
 		}
 	}
