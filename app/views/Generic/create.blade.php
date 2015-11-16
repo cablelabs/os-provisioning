@@ -13,11 +13,9 @@
 				 */ 
 				$s = '';
 
-				$key      = array_keys($_GET)[0];
-				$class    = 'Models\\'.ucwords(explode ('_id', $key)[0]);
-
-				if(!class_exists($class))
-					$class = 'Modules\HfcSnmp\Entities\\'.ucwords(explode ('_id', $key)[0]);
+				$key        = array_keys($_GET)[0];
+				$class_name = ucwords(explode ('_id', $key)[0]);
+				$class      = current(preg_grep ('|.*?'.$class_name.'|i', BaseModel::_getModels()));
 
 				$view_var = new $class;
 

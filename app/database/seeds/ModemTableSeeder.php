@@ -4,13 +4,13 @@
 use Faker\Factory as Faker;
 use Models\Modem;
 
-class ModemTableSeeder extends Seeder {
+class ModemTableSeeder extends BaseSeeder {
 
 	public function run()
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, 3) as $index)
+		foreach(range(1, $this->max_seed) as $index)
 		{
 			Modem::create([
 				'mac' => $faker->macAddress(),

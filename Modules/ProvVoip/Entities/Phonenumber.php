@@ -1,18 +1,13 @@
 <?php
 
-namespace Models;
+namespace Modules\ProvVoip\Entities;
 
 // Model not found? execute composer dump-autoload in lara root dir
 class Phonenumber extends \BaseModel {
 
-
     // The associated SQL table for this Model
     public $table = 'phonenumber';
 
-
-	// for soft deleting => move to BaseModel?
-	use \Illuminate\Database\Eloquent\SoftDeletingTrait;
-	protected $dates = ['deleted_at'];
 
 	// Add your validation rules here
 	public static function rules($id=null)
@@ -49,7 +44,7 @@ class Phonenumber extends \BaseModel {
 	 */
 	public function mta()
 	{
-		return $this->belongsTo('Models\Mta', 'mta_id');
+		return $this->belongsTo('Modules\ProvVoip\Entities\Mta', 'mta_id');
 	}
 
 	// belongs to an mta

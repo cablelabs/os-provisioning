@@ -1,17 +1,19 @@
 <?php
 
+namespace Modules\ProvVoip\Database\Seeders;
+
 // Composer: "fzaninotto/faker": "v1.3.0"
 use Faker\Factory as Faker;
-use Models\Mta;
+use Modules\ProvVoip\Entities\Mta;
 
 
-class MtaTableSeeder extends Seeder {
+class MtaTableSeeder extends \BaseSeeder {
 
 	public function run()
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, 2) as $index)
+		foreach(range(1, $this->max_seed) as $index)
 		{
 			Mta::create([
 				'mac' => $faker->macAddress(),

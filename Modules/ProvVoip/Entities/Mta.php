@@ -1,17 +1,15 @@
 <?php
 
-namespace Models;
+namespace Modules\ProvVoip\Entities;
 
 use File;
 use Log;
 
+use Models\Modem;
+use Models\Configfile;
+
 // Model not found? execute composer dump-autoload in lara root dir
 class Mta extends \BaseModel {
-
-
-	// for soft deleting => move to BaseModel?
-	use \Illuminate\Database\Eloquent\SoftDeletingTrait;
-	protected $dates = ['deleted_at'];
 
     // The associated SQL table for this Model
     public $table = 'mta';
@@ -85,7 +83,7 @@ class Mta extends \BaseModel {
 	 */
 	public function phonenumbers()
 	{
-		return $this->hasMany('Models\Phonenumber');
+		return $this->hasMany('Modules\ProvVoip\Entities\Phonenumber');
 	}
 
 	// belongs to a modem - see BaseModel for explanation

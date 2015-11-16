@@ -4,13 +4,13 @@
 use Faker\Factory as Faker;
 use Models\Cmts;
 
-class CmtsTableSeeder extends Seeder {
+class CmtsTableSeeder extends BaseSeeder {
 
 	public function run()
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, 2) as $index)
+		foreach(range(1, $this->max_seed_l2) as $index)
 		{
 			Cmts::create([
 				'hostname' => $faker->unique->state,
