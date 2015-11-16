@@ -8,7 +8,7 @@ use DB;
 class Cmts extends \BaseModel {
 
 	// The associated SQL table for this Model
-    public $table = 'cmts';
+    protected $table = 'cmts';
 
 	// Add your validation rules here
 	public static function rules($id = null)
@@ -44,6 +44,7 @@ class Cmts extends \BaseModel {
         parent::boot();
 
         Cmts::observe(new CmtsObserver);
+        Cmts::observe(new \SystemdObserver);
     }
 
 
@@ -85,7 +86,14 @@ class Cmts extends \BaseModel {
 
 		$ippools = $this->ippools;
 
-		File::put($file, 'shared-network "'.$this->hostname.'"'."\n".'{'."\n\t");
+		// if a cmts doesn't have an ippool the file has to be empty
+		if (!$ippools->has('0'))
+		{
+			File::put($file, '');
+			return -1;
+		}
+
+		File::put($file, 'shared-network "'.$this->hostname.'"'."\n".'{'."\n");
 
 		foreach ($ippools as $pool) {
 
@@ -101,7 +109,7 @@ class Cmts extends \BaseModel {
 			$options = $pool->optional;
 
 
-			$data .= "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
+			$data = "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
 			$data .= "\n\t\t".'option routers '.$router.';';
 			$data .= "\n\t\t".'option broadcast-address '.$broadcast_addr.';';
 			$data .= "\n\n\t\t".'pool'."\n\t\t".'{';
@@ -179,7 +187,7 @@ class Cmts extends \BaseModel {
 
 	/**
 	 * Deletes the calling object/cmts in DB and removes the include statement from the global dhcpd.conf
-	 * Also sets the related IP-Pools to zero
+	 * Also sets the related IP-Pools to cmts_id=0
 	 *
 	 * @author Nino Ryschawy
 	 * @param
@@ -275,10 +283,11 @@ class Cmts extends \BaseModel {
  *              'deleting', 'deleted', 'saving', 'saved',
  *              'restoring', 'restored',
  */
-class CmtsObserver 
+class CmtsObserver
 {
     public function created($cmts)
     {
+    	// dd(\Route::getCurrentRoute()->getActionName(), $this);
   		// only create new config file
         $cmts->make_dhcp_conf();
     }
