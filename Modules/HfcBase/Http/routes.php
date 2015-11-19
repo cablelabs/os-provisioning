@@ -1,6 +1,5 @@
 <?php
 
-Route::group(['prefix' => 'hfcbase', 'namespace' => 'Modules\HfcBase\Http\Controllers'], function()
-{
-	Route::get('/', 'HfcBaseController@index');
-});
+
+Route::resource('Tree', 'Modules\HfcBase\Http\Controllers\TreeController');
+Route::get('tree/fulltextSearch', array('as' => 'Tree.fulltextSearch', 'uses' => 'Modules\HfcBase\Http\Controllers\TreeController@fulltextSearch'));

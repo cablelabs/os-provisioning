@@ -36,6 +36,16 @@ class ExtendedValidator extends Validator
 
 
 	/*
+	 * Geoposition validation
+	 * see: http://stackoverflow.com/questions/7113745/what-regex-expression-will-check-gps-values
+	 */
+	public function validateGeopos ($attribute, $value, $parameters)
+	{
+		return preg_match ('/(-?[\d]{1,2}\.[\d]{0,12},?){2}/', $value);
+	}
+
+
+	/*
 	 * DOCSIS configfile validation
 	 */
 	public function validateDocsis ($attribute, $value, $parameters)

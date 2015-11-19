@@ -6,4 +6,6 @@ class BaseSeeder extends Seeder {
 
 	protected $max_seed_l2 = 4;	// maximum seed level 2
 
+	protected $max_seed_big = 100;
+
 }
