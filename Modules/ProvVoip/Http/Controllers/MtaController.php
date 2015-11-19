@@ -3,8 +3,8 @@
 namespace Modules\ProvVoip\Http\Controllers;
 
 use Modules\ProvVoip\Entities\Mta;
-use Models\Modem;
-use Models\Configfile;
+use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\Configfile;
 
 
 class MtaController extends \BaseModuleController {

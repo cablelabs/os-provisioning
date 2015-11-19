@@ -5,8 +5,8 @@ namespace Modules\ProvVoip\Entities;
 use File;
 use Log;
 
-use Models\Modem;
-use Models\Configfile;
+use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\Configfile;
 
 // Model not found? execute composer dump-autoload in lara root dir
 class Mta extends \BaseModel {
@@ -67,7 +67,7 @@ class Mta extends \BaseModel {
 	 */
 	public function configfile()
 	{
-		return $this->belongsTo('Models\Configfile', 'configfile_id');
+		return $this->belongsTo('Modules\ProvBase\Entities\Configfile', 'configfile_id');
 	}
 
 	/**
@@ -75,7 +75,7 @@ class Mta extends \BaseModel {
 	 */
 	public function modem()
 	{
-		return $this->belongsTo('Models\Modem', 'modem_id');
+		return $this->belongsTo('Modules\ProvBase\Entities\Modem', 'modem_id');
 	}
 
 	/**

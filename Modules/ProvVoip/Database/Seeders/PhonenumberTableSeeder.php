@@ -16,7 +16,7 @@ class PhonenumberTableSeeder extends \BaseSeeder {
 			Phonenumber::create([
 				'prefix_number' => "03725",
 				'number' => rand(100,999999),
-				'mta_id' => 100000 + $index,
+				'mta_id' => rand(300000, 300000 + $this->max_seed),
 				'port' => 1,
 				'active' => 1,
 			]);
