@@ -2,7 +2,7 @@
 
 namespace Modules\HfcBase\Http\Controllers;
 
-use Modules\HfcBase\Entities;
+use Modules\HfcBase\Entities\Tree;
 
 class TreeController extends \BaseModuleController {
 

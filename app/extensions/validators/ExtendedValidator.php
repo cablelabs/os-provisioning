@@ -41,7 +41,7 @@ class ExtendedValidator extends Validator
 	 */
 	public function validateGeopos ($attribute, $value, $parameters)
 	{
-		return preg_match ('/(-?[\d]{1,2}\.[\d]{0,12},?){2}/', $value);
+		return preg_match ('/(-?[\d]{1,3}\.[\d]{0,12},?){2}/', $value);
 	}
 
 
