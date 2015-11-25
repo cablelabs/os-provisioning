@@ -19,9 +19,12 @@ class CreateAuthusermetaTable extends BaseMigration {
 
 			$this->up_table_generic($table);
 
-			$table->string('user_id');
-			$table->string('meta_id');
+			$table->string('user_id')->index();
+			$table->string('meta_id')->index();
 		});
+
+		DB::update("INSERT INTO ".$this->tablename." (user_id, meta_id) VALUES(1, 1);");
+		DB::update("INSERT INTO ".$this->tablename." (user_id, meta_id) VALUES(1, 2);");
 	}
 
 	/**

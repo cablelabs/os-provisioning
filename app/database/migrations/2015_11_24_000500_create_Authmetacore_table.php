@@ -19,9 +19,12 @@ class CreateAuthmetacoreTable extends BaseMigration {
 
 			$this->up_table_generic($table);
 
-			$table->string('meta_id');
-			$table->string('core_id');
-			$table->enum('type', array('read', 'write'));
+			$table->string('meta_id')->index();
+			$table->string('core_id')->index();
+			$table->boolean('view')->default(0);
+			$table->boolean('add')->default(0);
+			$table->boolean('edit')->default(0);
+			$table->boolean('delete')->default(0);
 		});
 	}
 
