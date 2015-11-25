@@ -7,7 +7,7 @@
 		@include ('bootstrap.header')
 	</head>
 
-	<body> 
+	<body <?php if(isset($body_onload)) echo "onload=$body_onload()";?> > 
 
 		<div id="page-container" class="fade page-sidebar-fixed page-header-fixed in">
 

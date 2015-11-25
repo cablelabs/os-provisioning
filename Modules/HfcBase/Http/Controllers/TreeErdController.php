@@ -241,8 +241,10 @@ class TreeErdController extends TreeController {
 	    #
 	    # TODO: Customer
 	    #
-	if (0)
+	if ($tree->module_is_active ('HfcCustomer'))
 	{
+		
+
 	    $n = 0;
 		foreach ($trees as $tree) 
 		{
@@ -252,14 +254,14 @@ class TreeErdController extends TreeController {
 			$url  = "../customer/customer.php?treenr=$idtree";
 	        $n++;
 
-			$state = ms_state ("parent = $idtree");
+			$state = ModemHelper::ms_state ("tree_id = $idtree");
 			if ($state != -1)
 			{
-				$color = ms_state_to_color ($state);
-				$num = ms_num("parent = $idtree");
-				$numa = ms_num_all("parent = $idtree");
-				$cri = ms_cri("parent = $idtree");
-				$avg = ms_avg("parent = $idtree");
+				$color = ModemHelper::ms_state_to_color ($state);
+				$num   = ModemHelper::ms_num("tree_id = $idtree");
+				$numa  = ModemHelper::ms_num_all("tree_id = $idtree");
+				$cri   = ModemHelper::ms_cri("tree_id = $idtree");
+				$avg   = ModemHelper::ms_avg("tree_id = $idtree");
 
 				$file .= "\n node [label = \"$numa\\n$num/$cri\\n$avg\", shape = circle, style = filled, color=$color, URL=\"$url\", target=\"".$this->html_target."\"];";
 				$file .= " \"C$idtree\"";
