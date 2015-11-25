@@ -36,7 +36,7 @@ class TreeErdController extends TreeController {
 	 * The Html Link Target
 	 * TODO: make or use a global var ore define
 	 */
-	private $html_target = '_blank';
+	private $html_target = '';
 	
 
 
@@ -243,15 +243,13 @@ class TreeErdController extends TreeController {
 	    #
 	if ($tree->module_is_active ('HfcCustomer'))
 	{
-		
-
 	    $n = 0;
 		foreach ($trees as $tree) 
 		{
 	        $idtree = $tree->id;
 	        $id = $tree->id;
 	        $type = $tree->type;
-			$url  = "../customer/customer.php?treenr=$idtree";
+			$url  = "../../../Customer/tree_id/$idtree";
 	        $n++;
 
 			$state = ModemHelper::ms_state ("tree_id = $idtree");

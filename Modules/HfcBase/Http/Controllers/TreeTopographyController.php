@@ -30,7 +30,7 @@ class TreeTopographyController extends TreeController {
 	 * The Html Link Target
 	 * TODO: make or use a global var ore define
 	 */
-	private $html_target = '_blank';
+	private $html_target = '';
 
 
 	/*
@@ -351,7 +351,7 @@ class TreeTopographyController extends TreeController {
 							$pro  = round(100 * $num / $numa,0);
 							$cri  = ModemHelper::ms_cri("tree_id = $id");
 							$avg  = ModemHelper::ms_avg("tree_id = $id");
-							$url  = "../customer/customer.php?treenr=$id";
+							$url  = "../../../Customer/tree_id/$id";
 
 							$kml_file .= "Amp/Node: $name<br><br>Number All CM: $numa<br>Number Online CM: $num ($pro %)<br>Number Critical CM: $cri<br>US Level Average: $avg<br><br><a href=\"$url\" target=\"".$this->html_target."\" alt=\"\">Show all Customers</a>";
 

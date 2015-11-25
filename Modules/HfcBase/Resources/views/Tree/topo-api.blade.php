@@ -127,7 +127,7 @@ function clk_init_1()
 			return;
 		}
 
-		if (!descr.contains(':'))
+		if (!descr.contains('='))
 			// window.open("mapdia.header.php?kml="+descr, "_blank",
 			// "directories=no, status= no, fullscreen=no, location=no, menubar=no, resizeable=yes, scrollbars=yes, status=no, titlebar=no, toolbar=no, left=50, top=50, width=300, height=300");
 			window.open("../../erd/pos/"+descr, "_bank");
@@ -139,7 +139,7 @@ function clk_init_1()
 			if (lines > 15)
 				height = 400;
 
-			alert ("Modem Positioning System", descr, {left:50, top:50, width:document.width-50, height:height>0?height:document.height-50});
+			alert ("Modem Positioning System", descr, {width:300});
 		}
 		select.unselectAll(); // Skip UnSelect option, allows multiple clicks to one element
 	}

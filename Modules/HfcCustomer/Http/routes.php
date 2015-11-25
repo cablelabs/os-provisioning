@@ -1,6 +1,4 @@
 <?php
 
-Route::group(['prefix' => 'hfccustomer', 'namespace' => 'Modules\HfcCustomer\Http\Controllers'], function()
-{
-	Route::get('/', 'HfcCustomerController@index');
-});
+
+Route::get('Customer/{field}/{search}', array('as' => 'CustomerTopo.show', 'uses' => 'Modules\HfcCustomer\Http\Controllers\CustomerTopoController@show'));
