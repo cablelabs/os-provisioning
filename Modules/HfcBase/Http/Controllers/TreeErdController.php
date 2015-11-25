@@ -2,6 +2,7 @@
 
 namespace Modules\HfcBase\Http\Controllers;
 
+use Modules\HfcCustomer\Entities\ModemHelper;
 use Modules\HfcBase\Entities\Tree;
 
 /*
@@ -17,7 +18,7 @@ class TreeErdController extends TreeController {
 	 * Local tmp folder required for generating the images
 	 * app/storage/modules
 	 */
-	private $path_rel = '/modules/hfc/erd/';
+	private $path_rel = '/modules/Hfcbase/erd/';
 
 	// the absolute path: public_path().$this->path_rel
 	private $path;
@@ -95,8 +96,13 @@ class TreeErdController extends TreeController {
 	 */
 	public function show($field, $search)
 	{
+		// prepare search
+		$s = "$field='$search'";
+		if($field == 'all')
+			$s = 'id>2';
+
 		// Generate SVG file 
-		$this->graph_generate ("$field='$search'");
+		$this->graph_generate ($s);
 
 		// Prepare and display SVG
 		$is_pos = $this->_is_valid_geopos($search);
@@ -105,7 +111,13 @@ class TreeErdController extends TreeController {
 		$file   = $this->path_rel.'/'.$this->filename;
 		$usemap = str_replace ('alt', 'onContextMenu="return getEl(this.id)" alt', file_get_contents(asset($file.'.map'))); 
 
-		return \View::make('hfcbase::Tree.erd', compact('file', 'target', 'is_pos', 'gid', 'usemap', 'search'));
+		$view_header = "Entity Relation Diagram";
+		$route_name  = 'Tree';
+
+		$panel_right = [['name' => 'Entity Diagram', 'route' => 'TreeErd.show', 'link' => [$field, $search]], 
+						['name' => 'Topography', 'route' => 'TreeTopo.show', 'link' => [$field, $search]]];
+
+		return \View::make('hfcbase::Tree.erd', $this->compact_prep_view(compact('route_name', 'file', 'target', 'is_pos', 'gid', 'usemap', 'search', 'view_header', 'panel_right', 'view_var')));
 	}
 
 

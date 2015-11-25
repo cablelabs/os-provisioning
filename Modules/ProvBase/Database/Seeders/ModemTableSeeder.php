@@ -23,7 +23,11 @@ class ModemTableSeeder extends \BaseSeeder {
 				'inventar_num' => $faker->sentence(),
 				'contract_id' => rand(1,500),
 				'configfile_id' => rand(1,$this->max_seed_l2),
-				'qos_id' => rand(1,$this->max_seed_l2)
+				'qos_id' => rand(1,$this->max_seed_l2),
+				'tree_id' => rand(3,$this->max_seed_big),
+				'status' => (rand(0,10) > 2 ? rand(300,620) : 0),
+				'x' => 13 + $faker->longitude() / 10,
+				'y' => 50 + $faker->latitude() / 10,
 			]);
 		}
 	}

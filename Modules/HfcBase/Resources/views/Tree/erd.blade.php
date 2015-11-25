@@ -1,13 +1,15 @@
-<html>
+@extends ('Layout.single')
+
+@section('content_left')
+
 <head>
 <meta http-equiv="refresh" content="60" >
 <meta http-equiv="Pragma" content="no-cache">
-<style type="text/css"> @import url("../../main.css"); </style>
-<link href="../../alert.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="{{asset('/modules/Hfcbase/alert.css')}}" rel="stylesheet" type="text/css" media="screen" />
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-<script type="text/javascript" src="../../jquery.min.js"></script>
-<script type="text/javascript" src="../../alert.js"></script>
+<script type="text/javascript" src="{{asset('/modules/Hfcbase/jquery.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('/modules/Hfcbase/alert.js')}}"></script>
 
 <script type="text/javascript">
 
@@ -29,7 +31,7 @@
 
 <body>
 
-	<img usemap="#tree{{$gid}}" src="<?php echo (asset($file.'.svg')); ?>"></img>
+	<img usemap="#tree{{$gid}}" src="{{asset("$file.svg")}}"></img>
 
 	<?php 
 		echo $usemap;
@@ -41,4 +43,4 @@
 
 </body>
 
-</html>
+@stop

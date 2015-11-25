@@ -9,11 +9,18 @@
 
 	<body> 
 
-		@include ('Layout.header')
-		
-		@yield ('content')
-		
-		@include ('bootstrap.footer')
+		<div id="page-container" class="fade page-sidebar-fixed page-header-fixed in">
+
+			@include ('Layout.header')
+
+			@include ('bootstrap.sidebar')
+			
+			<div id="content" class="content">
+				@yield ('content')
+			</div>
+			
+			@include ('bootstrap.footer')	
+		</div>
 
 	</body>
 

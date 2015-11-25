@@ -39,6 +39,26 @@ class TreeTableSeeder extends \BaseSeeder {
 	}
 
 
+	private function pos_dumping($trees)
+	{
+		foreach ($trees as $tree) 
+		{
+			$children = $tree->get_children();
+			$this->pos_dumping($children);
+
+			if (isset($pos) && rand(0,10) > 7)
+			{
+				$tree->pos = $pos;
+				$tree->save();
+
+				echo "\r\n change pos of tree with id ".$tree->id;
+			}
+
+			$pos = $tree->pos;
+		}
+	}
+
+
 	public function run()
 	{
 		$faker = Faker::create();
@@ -46,6 +66,9 @@ class TreeTableSeeder extends \BaseSeeder {
 
 		foreach(range(1, $this->max_seed_big) as $index)
 		{
+			$x = 13 + $faker->longitude() / 10;
+			$y = 50 + $faker->latitude() / 10;
+
 			Tree::create([
 				'name' => $faker->domainWord(),
 				'ip' => $faker->ipv4(),
@@ -53,12 +76,14 @@ class TreeTableSeeder extends \BaseSeeder {
 				'state' => $this->state(rand(0,10)),
 				'parent' => rand (2,$i++),
 				'descr' => $faker->sentence(),
-				'pos' => $faker->latitude().','.$faker->longitude(),
+				'pos' => $x.','.$y,
 				'link' => url()
 			]);
 		}
 
 		$root = Tree::find(2);
+
+		// Make top level elements of type NET, second level of type CLUSTER
 		foreach ($root->get_children() as $net) 
 		{
 			$net->type = 'NET';
@@ -70,6 +95,8 @@ class TreeTableSeeder extends \BaseSeeder {
 				$cluster->save();
 			}
 		}
+
+		$this->pos_dumping (Tree::where('type', '=', 'NET')->get());
 	}
 
 }

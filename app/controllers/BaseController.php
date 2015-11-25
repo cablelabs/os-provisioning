@@ -67,6 +67,9 @@ class BaseController extends Controller {
 		if (!$classname)
 			return null;
 
+		if (!class_exists($classname))
+			return null;
+
 		$classname = $classname;
 		$obj = new $classname;
 
@@ -83,6 +86,9 @@ class BaseController extends Controller {
 		$classname = $this->get_controller_name();
 
 		if (!$classname)
+			return null;
+
+		if (!class_exists($classname))
 			return null;
 
 		$obj = new $classname;
@@ -148,6 +154,45 @@ class BaseController extends Controller {
 
 	}
 
+
+	/**
+	 * Set required default Variables for View
+	 * Use it like:
+	 *   View::make('Route.Name', $this->compact_prep_view(compact('ownvar1', 'ownvar2')));
+	 *
+	 * @author Torsten Schmidt
+	 */
+	public function compact_prep_view ()
+	{
+		$a     = func_get_args()[0];
+
+		$model = $this->get_model_obj();
+		if (!$model)
+			$model = new BaseModel;
+
+		if(!isset($a['networks']))
+		{
+			$a['networks'] = [];
+			if ($model->module_is_active('HfcBase'))
+				$a['networks'] = Modules\HfcBase\Entities\Tree::get_all_net();
+		}
+
+		if(!isset($a['view_header_links']))
+			$a['view_header_links'] = $this->get_view_header_links();
+
+		if(!isset($a['route_name']))
+			$a['route_name'] = $this->get_route_name();
+
+		if(!isset($a['model_name']))
+			$a['model_name'] = $this->get_model_name();
+
+		if(!isset($a['view_header']))
+			$a['view_header'] = $model->get_view_header();
+
+		return $a;
+	}
+
+
 	/**
 	 * Perform a fulltext search.
 	 *
@@ -156,11 +201,6 @@ class BaseController extends Controller {
 	public function fulltextSearch() {
 
 		$obj = $this->get_model_obj();
-
-		$model_name 	= $this->get_model_name();
-		$view_header  	= $obj->get_view_header();
-		$route_name     = $this->get_route_name();
-		$view_header_links = $this->get_view_header_links();
 
 		$create_allowed = $this->get_controller_obj()->index_create_allowed;
 
@@ -181,7 +221,7 @@ class BaseController extends Controller {
 
 		$view_var = $obj->getFulltextSearchResults($scope, $mode, $query);
 
-		return View::make($view_path, compact('model_name', 'view_header', 'view_var', 'create_allowed', 'query', 'scope', 'route_name', 'view_header_links'));
+		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed', 'query', 'scope')));
 
 	}
 
@@ -205,12 +245,12 @@ class BaseController extends Controller {
 		$view_path = 'Generic.index';
 		$view_header_links = $this->get_view_header_links();
 
-
 		if (View::exists($this->get_view_name().'.index'))
 			$view_path = $this->get_view_name().'.index';		
 
-		return View::make($view_path, compact('model_name', 'view_header', 'view_var', 'create_allowed', 'route_name', 'view_header_links'));
+		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed')));
 	}
+
 
 
 
@@ -223,8 +263,6 @@ class BaseController extends Controller {
 	{
 		$obj = $this->get_model_obj();
 
-		$model_name 	= $this->get_model_name();
-		$route_name 	= $this->get_route_name();
 		$view_header 	= 'Create '.$obj->get_view_header();
 		// form_fields contain description of fields and the data of the fields
 		$form_fields	= $this->get_controller_obj()->get_form_fields($obj);
@@ -239,7 +277,7 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		return View::make($view_path, compact('model_name', 'view_header', 'form_fields', 'form_path', 'route_name', 'view_header_links'));
+		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_header', 'form_fields', 'form_path')));
 	}
 
 
@@ -279,15 +317,12 @@ class BaseController extends Controller {
 		//${$this->get_view_var()} = $obj->findOrFail($id);
 
 		// transfer model_name, view_header, view_var
-		$model_name 	= $this->get_model_name();
-		$route_name 	= $this->get_route_name();
 		$view_header 	= 'Edit '.$obj->get_view_header();
 		$view_var 		= $obj->findOrFail($id);
 		$form_fields	= $this->get_controller_obj()->get_form_fields($view_var);
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';
-		$view_header_links = $this->get_view_header_links();
 
 		// proof if there are special views for the calling model
 		if (View::exists($this->get_view_name().'.edit'))
@@ -295,7 +330,7 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		return View::make($view_path, compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'route_name', 'view_header_links'));
+		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields')));
 	}
 
 

@@ -36,6 +36,15 @@ class Tree extends \BaseModel {
 		return $this->id.' : '.$this->type.' : '.$this->name.' '.$this->state.' - '.$this->get_native_fibre();
 	}	
 
+    public function modems()
+    {
+        if ($this->module_is_active('ProvBase'))
+            return $this->hasMany('Modules\ProvBase\Entities\Modem');
+
+        return null;
+    }
+
+
 	/**
 	 * TODO: make one function
 	 * returns a list of possible parent configfiles
@@ -91,6 +100,15 @@ class Tree extends \BaseModel {
     }
 
 
+    public static function get_all_net ()
+    {
+    	return Tree::where('type', '=', 'NET')->get();
+    }
+
+    public function get_all_cluster_to_net ()
+    {
+    	return Tree::where('type', '=', 'CLUSTER')->where('net','=',$this->id)->get();
+    }
 
 	/**
 	 * Returns all available firmware files (via directory listing)
