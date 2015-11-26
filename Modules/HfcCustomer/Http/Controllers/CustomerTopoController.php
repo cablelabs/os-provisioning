@@ -91,6 +91,48 @@ class CustomerTopoController extends TreeController {
 	private $file_end = "</Document></kml>";
 
 
+	/*
+	 * Constructor: Set local vars
+	 */
+	public function __construct()
+	{ 
+		$this->path     = public_path().$this->path_rel;
+		$this->filename = sha1(uniqid(mt_rand(), true)).'.kml';
+		$this->file     = $this->path.'/'.$this->filename;
+	}
+
+
+	/*
+	* Show Cluster or Network Entity Relation Diagram
+	*
+	* @param field: search field name in tree table
+	* @param search: the search value to look in tree table $field
+	* @return view with SVG image
+	*
+	* @author: Torsten Schmidt
+	*/
+	public function show($field, $search)
+	{
+		// prepare search
+		$s = "$field='$search'";
+		if($field == 'all')
+			$s = 'id>2';
+
+		// Generate SVG file 
+		$this->kml_generate (Modem::whereRaw($s));
+
+		// Prepare and Topography Map
+		$target = $this->html_target;
+		$file   = $this->path_rel.'/'.$this->filename;
+
+		$route_name  = 'Tree';
+		$view_header = "Topography - Modems";
+		$body_onload = 'init_for_map';
+
+		return \View::make('hfcbase::Tree.topo', $this->compact_prep_view(compact('file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search')));
+	}
+
+
 	#
 	# MAIN FUNC
 	# exists during historical requirement of multpi Prov Support (should be depracted)

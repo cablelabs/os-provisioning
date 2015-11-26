@@ -31,14 +31,22 @@
 
 <body>
 
-	<img usemap="#tree{{$gid}}" src="{{asset("$file.svg")}}"></img>
+	@section('content_top')
+		{{ HTML::linkRoute('TreeErd.show', $view_header, [$field, $search]) }}
+	@stop
 
-	<?php 
-		echo $usemap;
+	@include ('hfcbase::Tree.search')
 
-		if ($is_pos)
-	        echo "<div align=\"right\"> <a target=".$target." href=\"tree.add.php?pos=$search\">Add Device</a></div>";
-	?>
+	{{ Form::openDivClass(12) }}
+		<img usemap="#tree{{$gid}}" src="{{asset("$file.svg")}}"></img>
+
+		<?php 
+			echo $usemap;
+
+			if ($is_pos)
+		        echo "<div align=\"right\"> <a target=".$target." href=\"tree.add.php?pos=$search\">Add Device</a></div>";
+		?>
+	{{ Form::closeDivClass() }}
 
 
 </body>

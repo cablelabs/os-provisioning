@@ -97,7 +97,7 @@ class TreeTopographyController extends TreeController {
 		$panel_right = [['name' => 'Entity Diagram', 'route' => 'TreeErd.show', 'link' => [$field, $search]], 
 						['name' => 'Topography', 'route' => 'TreeTopo.show', 'link' => [$field, $search]]];
 
-		return \View::make('hfcbase::Tree.topo', $this->compact_prep_view(compact('file', 'target', 'route_name', 'view_header', 'panel_right', 'body_onload')));
+		return \View::make('hfcbase::Tree.topo', $this->compact_prep_view(compact('file', 'target', 'route_name', 'view_header', 'panel_right', 'body_onload', 'field', 'search')));
 	}
 
 
