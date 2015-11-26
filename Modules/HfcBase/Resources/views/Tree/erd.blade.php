@@ -42,7 +42,10 @@
 			echo $usemap;
 
 			if ($is_pos)
-		        echo "<div align=\"right\"> <a target=".$target." href=\"tree.add.php?pos=$search\">Add Device</a></div>";
+			{		
+				$url = \Request::root().'/Tree/create?pos='.$search;
+				echo "<h4><div align=\"center\"> <a href=$url>Add Device</a></div></h4>";
+			}
 		?>
 	{{ Form::closeDivClass() }}
 

@@ -4,6 +4,8 @@ namespace Modules\HfcBase\Http\Controllers;
 
 use Modules\HfcBase\Entities\Tree;
 
+use Acme\php\ArrayHelper;
+
 
 /*
  * Tree Topography Controller
@@ -12,58 +14,23 @@ use Modules\HfcBase\Entities\Tree;
  *
  * @author: Torsten Schmidt
  */
-class TreeTopographyController extends TreeController {
+class TreeTopographyController extends HfcBaseController {
 
 	/*
-	 * Local tmp folder required for generating the images
+	 * Local tmp folder required for generating the kml files
 	 * app/storage/modules
 	 */
 	private $path_rel = '/modules/Hfcbase/kml/';
 
-	// the absolute path: public_path().$this->path_rel
-	private $path;
-
-	// filename, will be based on a random hash function
-	private $file;
-
-	/*
-	 * The Html Link Target
-	 * TODO: make or use a global var ore define
-	 */
-	private $html_target = '';
-
-
-	/*
-	 * Search if $value is in $array field $index
-	 *
-	 * @param: array: array to search
-	 * @param: array: the array[].index field to search in
-	 * @param: array: search pattern
-	 * @return: the found element, otherwise null
-	 *
-	 * @author: Torsten Schmidt
-	 *
-	 * TODO: move to a own Array Helpers Class
-	 */
-    private static function objArraySearch($array, $index, $value)
-    {
-        foreach($array as $arrayInf) {
-            if($arrayInf->{$index} == $value) {
-                return $arrayInf;
-            }
-        }
-        return null;
-    }
-    
 
 	/*
 	 * Constructor: Set local vars
 	 */
 	public function __construct()
 	{ 
-		$this->path     = public_path().$this->path_rel;
-		$this->filename = sha1(uniqid(mt_rand(), true)).'.kml';
-		$this->file     = $this->path.'/'.$this->filename;
+		$this->filename = sha1(uniqid(mt_rand(), true)).'kml';	// the filename based on a random hash
+		$this->path     = public_path().$this->path_rel;		// absolute path
+		$this->file     = $this->path.'/'.$this->filename;		// absolute path of file
 	}
 
 
@@ -88,7 +55,7 @@ class TreeTopographyController extends TreeController {
 
 		// Prepare and Topography Map
 		$target = $this->html_target;
-		$file   = $this->path_rel.'/'.$this->filename.'.tmp';
+		$file   = $this->path_rel.'/'.$this->filename;
 
 		$route_name  = 'Tree';
 		$view_header = "Topography";
@@ -273,7 +240,7 @@ class TreeTopographyController extends TreeController {
 			if ($pos2 == null || 
 				$pos2 == '' || 
 				$pos2 == '0,0' || 
-				!$this->objArraySearch($trees, 'id', $tree->get_parent()->id))
+				!ArrayHelper::objArraySearch($trees, 'id', $tree->get_parent()->id))
 					continue;
 
 			# Line Color - Style
@@ -443,7 +410,7 @@ class TreeTopographyController extends TreeController {
 		#
 		# Write KML File ..
 		# 
-		$handler = fOpen($this->file.'.tmp', "w");
+		$handler = fOpen($this->file, "w");
 		fWrite($handler , $kml_file);
 		fClose($handler); // Datei schließen
 

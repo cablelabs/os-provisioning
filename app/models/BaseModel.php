@@ -170,6 +170,11 @@ class BaseModel extends \Eloquent
 	}
 
 
+	protected function _guess_model_name ($s)
+	{
+		return current(preg_grep ('|.*?'.$s.'$|i', $this->_getModels()));
+	}
+
 	/*
 	 * Preselect a sql field while searching
 	 *

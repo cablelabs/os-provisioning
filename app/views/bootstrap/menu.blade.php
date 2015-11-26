@@ -17,7 +17,7 @@
         </div>
         <!-- end mobile sidebar expand / collapse button -->
     
-        <div class="col-md-4">
+        <div class="col-md-5">
 
               <br>
               <h4>

@@ -10,29 +10,33 @@
 			<?php
 				/**
 				 * Shows the html links of the related objects recursivly
+				 * TODO: should be moved either to controller or somewhere else
 				 */ 
 				$s = '';
 
 				$key        = array_keys($_GET)[0];
 				$class_name = ucwords(explode ('_id', $key)[0]);
-				$class      = current(preg_grep ('|.*?'.$class_name.'|i', BaseModel::_getModels()));
+				$class      = BaseModel::_guess_model_name($class_name);
 
-				$view_var = new $class;
-
-				$parent   = $view_var->find($_GET[$key]);
-
-				while ($parent)
+				if (class_exists($class))
 				{
-					if ($parent)
-					{
-						$view = explode('\\',get_class($parent));
-						$s = HTML::linkRoute(end($view).'.edit', $parent->get_view_link_title(), $parent->id).' / '.$s;
-					}
+					$view_var = new $class;
+					$parent   = $view_var->find($_GET[$key]);
 
-					$parent = $parent->view_belongs_to();
+
+					while ($parent)
+					{
+						if ($parent)
+						{
+							$view = explode('\\',get_class($parent));
+							$s = HTML::linkRoute(end($view).'.edit', $parent->get_view_link_title(), $parent->id).' / '.$s;
+						}
+
+						$parent = $parent->view_belongs_to();
+					}
+					
+					echo $s;
 				}
-				
-				echo $s;
 			?>
 
 		@endif

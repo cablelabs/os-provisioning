@@ -269,7 +269,6 @@ class BaseController extends Controller {
 
 		$view_path = 'Generic.create';
 		$form_path = 'Generic.form';
-		$view_header_links = $this->get_view_header_links();
 
 		// proof if there is a special view for the calling model
 		if (View::exists($this->get_view_name().'.create'))
@@ -277,7 +276,7 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_header', 'form_fields', 'form_path')));
+		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path')));
 	}
 
 

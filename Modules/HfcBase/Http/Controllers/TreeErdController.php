@@ -5,6 +5,8 @@ namespace Modules\HfcBase\Http\Controllers;
 use Modules\HfcCustomer\Entities\ModemHelper;
 use Modules\HfcBase\Entities\Tree;
 
+use Acme\php\ArrayHelper;
+
 /*
  * Tree Erd (Entity Relation Diagram) Controller
  *
@@ -12,7 +14,7 @@ use Modules\HfcBase\Entities\Tree;
  *
  * @author: Torsten Schmidt
  */
-class TreeErdController extends TreeController {
+class TreeErdController extends HfcBaseController {
 
 	/*
 	 * Local tmp folder required for generating the images
@@ -20,47 +22,11 @@ class TreeErdController extends TreeController {
 	 */
 	private $path_rel = '/modules/Hfcbase/erd/';
 
-	// the absolute path: public_path().$this->path_rel
-	private $path;
-
-	// filename, will be based on a random hash function
-	private $filename;
-
 	// graph id used for graphviz (svg) naming and html map
 	private $graph_id;
 
 	// SVG image size setting
 	private $graph_size = '(*,*)';
-
-	/*
-	 * The Html Link Target
-	 * TODO: make or use a global var ore define
-	 */
-	private $html_target = '';
-	
-
-
-	/*
-	 * Search if $value is in $array field $index
-	 *
-	 * @param: array: array to search
-	 * @param: array: the array[].index field to search in
-	 * @param: array: search pattern
-	 * @return: the found element, otherwise null
-	 *
-	 * @author: Torsten Schmidt
-	 *
-	 * TODO: move to a own Array Helpers Class
-	 */
-    private static function objArraySearch($array, $index, $value)
-    {
-        foreach($array as $arrayInf) {
-            if($arrayInf->{$index} == $value) {
-                return $arrayInf;
-            }
-        }
-        return null;
-    }
     
 
     /*
@@ -80,8 +46,11 @@ class TreeErdController extends TreeController {
     public function __construct()
     {
     	$this->graph_id = rand(0, 1000000);
-		$this->filename = sha1(uniqid(mt_rand(), true));
-		$this->path = public_path().$this->path_rel;
+
+    	// Note: we create several files with differnt endings *.dot, *.svg, *.map
+		$this->filename = sha1(uniqid(mt_rand(), true));	// the filename based on a random hash
+		$this->path     = public_path().$this->path_rel;	// absolute path
+		$this->file     = $this->path.'/'.$this->filename;	// absolute path of file
     }
 
 
@@ -233,60 +202,59 @@ class TreeErdController extends TreeController {
 				$style='';
 			}
 
-			if ($parent > 2 && $this->objArraySearch($trees, 'id', $parent))
+			if ($parent > 2 && ArrayHelper::objArraySearch($trees, 'id', $parent))
 				$file .= "\n  \"$parent\" -> \"$tree->id\" [color = $color,$style]";
 
 		}
 
-	    #
-	    # TODO: Customer
-	    #
-	if ($tree->module_is_active ('HfcCustomer'))
-	{
-	    $n = 0;
-		foreach ($trees as $tree) 
+
+		#
+		# TODO: Customer
+		#
+		if ($tree->module_is_active ('HfcCustomer'))
 		{
-	        $idtree = $tree->id;
-	        $id = $tree->id;
-	        $type = $tree->type;
-			$url  = \Request::root()."/Customer/tree_id/$idtree";
-	        $n++;
-
-			$state = ModemHelper::ms_state ("tree_id = $idtree");
-			if ($state != -1)
+		    $n = 0;
+			foreach ($trees as $tree) 
 			{
-				$color = ModemHelper::ms_state_to_color ($state);
-				$num   = ModemHelper::ms_num("tree_id = $idtree");
-				$numa  = ModemHelper::ms_num_all("tree_id = $idtree");
-				$cri   = ModemHelper::ms_cri("tree_id = $idtree");
-				$avg   = ModemHelper::ms_avg("tree_id = $idtree");
+		        $idtree = $tree->id;
+		        $id = $tree->id;
+		        $type = $tree->type;
+				$url  = \Request::root()."/Customer/tree_id/$idtree";
+		        $n++;
 
-				$file .= "\n node [label = \"$numa\\n$num/$cri\\n$avg\", shape = circle, style = filled, color=$color, URL=\"$url\", target=\"".$this->html_target."\"];";
-				$file .= " \"C$idtree\"";
+				$state = ModemHelper::ms_state ("tree_id = $idtree");
+				if ($state != -1)
+				{
+					$color = ModemHelper::ms_state_to_color ($state);
+					$num   = ModemHelper::ms_num("tree_id = $idtree");
+					$numa  = ModemHelper::ms_num_all("tree_id = $idtree");
+					$cri   = ModemHelper::ms_cri("tree_id = $idtree");
+					$avg   = ModemHelper::ms_avg("tree_id = $idtree");
 
-				$file .= "\n \"$id\" -> C$idtree [color = green]";
+					$file .= "\n node [label = \"$numa\\n$num/$cri\\n$avg\", shape = circle, style = filled, color=$color, URL=\"$url\", target=\"".$this->html_target."\"];";
+					$file .= " \"C$idtree\"";
+					$file .= "\n \"$id\" -> C$idtree [color = green]";
+				}
 			}
 		}
-	}
 
 
 		$date = date('l jS \of F Y H:i:s A');
-		$file .= "\nlabel = \" - Entity Relation Diagram - \\n$date\";\n fontsize=20;";
-		$file .= "
-		}
-		";
+		$file .= "\nlabel = \" - Entity Relation Diagram - \\n$date\";\n fontsize=20;\n\n}";
 
 		#
-		# Write Files ..
+		# Write Base Files *.dot for SVG translation ..
 		#
-		$path = $this->path; # use relative path directory
-		$handler = fOpen($path.'/'.$this->filename.'.dot', "w");
+		$fn = $this->file;
+		$handler = fOpen($fn.'.dot', "w");
 		fWrite($handler , $file);
 		fClose($handler); // Datei schließen
 
-		exec (" dot -v -Tcmapx -o $path/$this->filename.map -Tsvg -o $path/$this->filename.svg $path/$this->filename.dot 1>$path/$this->filename.log 2>&1 && 
-				echo \"<IMG SRC=\"$this->filename.svg\" USEMAP=#tree$gid />\" > $path/$this->filename.html && 
-				cat $path/$this->filename.map | sed 's/alt/onContextMenu\=\"return\ getEl\(this.id\)\"\ alt/g' >> $path/$this->filename.html");
+		#
+		# Create SVG
+		# Debug File: Add o exec: '1>$fn.log 2>&1';
+		#
+		exec ("dot -v -Tcmapx -o $fn.map -Tsvg -o $fn.svg $fn.dot");
 	}
 
 }

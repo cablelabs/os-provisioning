@@ -4,7 +4,7 @@ namespace Modules\HfcBase\Http\Controllers;
 
 use Modules\HfcBase\Entities\Tree;
 
-class TreeController extends \BaseModuleController {
+class TreeController extends HfcBaseController {
 
     /**
      * defines the formular fields for the edit and create view
