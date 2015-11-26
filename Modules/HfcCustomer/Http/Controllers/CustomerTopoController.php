@@ -8,10 +8,11 @@ use Modules\HfcBase\Http\Controllers\TreeController;
 use Modules\HfcBase\Entities\Tree;
 use Modules\ProvBase\Entities\Modem;
 
+
 /*
- * Tree Erd (Entity Relation Diagram) Controller
+ * Show Customers (Modems) on Topography
  *
- * One Object represents one SVG Graph
+ * One Object Represents one Topography View - KML File
  *
  * @author: Torsten Schmidt
  */
@@ -102,15 +103,15 @@ class CustomerTopoController extends TreeController {
 	}
 
 
-	/*
-	* Show Cluster or Network Entity Relation Diagram
-	*
-	* @param field: search field name in tree table
-	* @param search: the search value to look in tree table $field
-	* @return view with SVG image
-	*
-	* @author: Torsten Schmidt
-	*/
+	/**
+	 * Show Modems matching Modem sql $field = $value
+	 *
+	 * @param field: search field name in tree table
+	 * @param search: the search value to look in tree table $field
+	 * @return view with SVG image
+	 *
+	 * @author: Torsten Schmidt
+	 */
 	public function show($field, $search)
 	{
 		// prepare search
@@ -118,8 +119,39 @@ class CustomerTopoController extends TreeController {
 		if($field == 'all')
 			$s = 'id>2';
 
+		return $this->show_modems(Modem::whereRaw($s), $field, $search);
+	}
+
+
+	/*
+	* Show Customer in Rectangle
+	*
+	* @param field: search field name in tree table
+	* @param search: the search value to look in tree table $field
+	* @return view with SVG image
+	*
+	* @author: Torsten Schmidt
+	*/
+	public function showRect($x1, $x2, $y1, $y2)
+	{
+		return $this->show_modems(Modem::whereRaw("(($x1 < x) AND (x < $x2) AND ($y1 < y) AND (y < $y2))"));
+	}
+
+
+	/*
+	* Show Modems om Topography
+	*
+	* @param modems the preselected Modem model, like Modem::where()
+	* @param field search field name in tree table, only for display
+	* @param search the search value to look in tree table $field, only for display
+	* @return view with SVG image
+	*
+	* @author: Torsten Schmidt
+	*/
+	public function show_modems($modems, $field=null, $search=null)
+	{
 		// Generate SVG file 
-		$this->kml_generate (Modem::whereRaw($s));
+		$this->kml_generate ($modems);
 
 		// Prepare and Topography Map
 		$target = $this->html_target;
@@ -133,28 +165,15 @@ class CustomerTopoController extends TreeController {
 	}
 
 
-	#
-	# MAIN FUNC
-	# exists during historical requirement of multpi Prov Support (should be depracted)
-	#
+
+	/**
+	 * Generate KML File with Customer Modems Inside
+	 *
+	 * @param modems the Modem models to display, like Modem::where()
+	 *
+	 * @author: Torsten Schmidt
+	 */
 	private function kml_generate($modems)
-	{
-		# Start KML File
-		$file  = $this->file_pre;
-		$file .= $this->_kml_generate($modems);
-		$file .= $this->file_end;
-
-		# Write Files ..
-		$handler = fOpen($this->file, "w");
-		fWrite($handler , $file);
-		fClose($handler);
-	}
-
-		
-	#
-	# SUB
-	#
-	private function _kml_generate($modems)
 	{
 		$x = 0;
 		$y = 0;
@@ -162,8 +181,7 @@ class CustomerTopoController extends TreeController {
 		$hf    = '';
 		$str   = '';
 		$descr = '';
-		$file  = '';
-
+		$file  = $this->file_pre;
 
 		foreach ($modems->orderByRaw('10000000*x+y')->get() as $modem)
 		{
@@ -250,7 +268,7 @@ else
 }
 
 			# add descr line
-			$descr .= "<a target=\"".$this->html_target."\" href='../../Modem/$mid/edit'>$mac</a>, $vertragsnr, $nachname, $hf<br>";
+			$descr .= "<a target=\"".$this->html_target."\" href='".\Request::root()."/Modem/$mid/edit'>$mac</a>, $vertragsnr, $nachname, $hf<br>";
 			$num += 1;
 		}
 
@@ -274,7 +292,12 @@ else
 		}
 
 
-		return $file;
+		
+		# Write Files ..
+		$file .= $this->file_end;
+		$handler = fOpen($this->file, "w");
+		fWrite($handler , $file);
+		fClose($handler);
 		
 	}
 

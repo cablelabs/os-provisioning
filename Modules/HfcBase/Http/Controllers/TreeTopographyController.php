@@ -2,13 +2,13 @@
 
 namespace Modules\HfcBase\Http\Controllers;
 
-use Modules\HfcCustomer\Entities\ModemHelper;
 use Modules\HfcBase\Entities\Tree;
+
 
 /*
  * Tree Topography Controller
  *
- * One Object represents one SVG Graph
+ * One Object represents one Topography View KML File
  *
  * @author: Torsten Schmidt
  */
@@ -307,6 +307,8 @@ class TreeTopographyController extends TreeController {
 		#
 		if ($tree->module_is_active ('HfcCustomer'))
 		{
+			$modem_helper = 'Modules\HfcCustomer\Entities\ModemHelper';
+
 			$n = 0;
 			foreach ($trees as $tree) 
 			{
@@ -314,13 +316,13 @@ class TreeTopographyController extends TreeController {
 				$name     = $tree->name;
 				$pos_tree = $tree->pos;
 
-				$pos = ModemHelper::ms_avg_pos('tree_id='.$tree->id);
+				$pos = $modem_helper::ms_avg_pos('tree_id='.$tree->id);
 
 				if ($pos['x'])
 				{			
 					$xavg = $pos['x'];
 					$yavg = $pos['y'];			
-					$icon = ModemHelper::ms_state_to_color(ModemHelper::ms_state ("tree_id = $id"));		
+					$icon = $modem_helper::ms_state_to_color($modem_helper::ms_state ("tree_id = $id"));		
 					$icon .= '-CUS';
 
 					# Draw Line - Customer - Amp
@@ -346,12 +348,12 @@ class TreeTopographyController extends TreeController {
 						<name></name>
 						<description><![CDATA[";
 
-							$num  = ModemHelper::ms_num("tree_id = $id");
-							$numa = ModemHelper::ms_num_all("tree_id = $id");
+							$num  = $modem_helper::ms_num("tree_id = $id");
+							$numa = $modem_helper::ms_num_all("tree_id = $id");
 							$pro  = round(100 * $num / $numa,0);
-							$cri  = ModemHelper::ms_cri("tree_id = $id");
-							$avg  = ModemHelper::ms_avg("tree_id = $id");
-							$url  = "../../../Customer/tree_id/$id";
+							$cri  = $modem_helper::ms_cri("tree_id = $id");
+							$avg  = $modem_helper::ms_avg("tree_id = $id");
+							$url  = \Request::root()."/Customer/tree_id/$id";
 
 							$kml_file .= "Amp/Node: $name<br><br>Number All CM: $numa<br>Number Online CM: $num ($pro %)<br>Number Critical CM: $cri<br>US Level Average: $avg<br><br><a href=\"$url\" target=\"".$this->html_target."\" alt=\"\">Show all Customers</a>";
 

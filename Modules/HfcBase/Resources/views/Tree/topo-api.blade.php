@@ -8,6 +8,8 @@ var osm;
 var Layers = [];
 var select;
 
+var global_url = "<?php echo Request::root(); ?>/";
+
 
 /*
  * Google Cards ? 
@@ -130,7 +132,7 @@ function clk_init_1()
 		if (!descr.contains('='))
 			// window.open("mapdia.header.php?kml="+descr, "_blank",
 			// "directories=no, status= no, fullscreen=no, location=no, menubar=no, resizeable=yes, scrollbars=yes, status=no, titlebar=no, toolbar=no, left=50, top=50, width=300, height=300");
-			window.open("../../erd/pos/"+descr, "_bank");
+			window.open(global_url + "Tree/erd/pos/"+descr, "_bank");
 		else
 		{
 			var lines = descr.split("<br>").length;
@@ -239,8 +241,8 @@ function clk_init_2()
 
 			alert('Modem Positioning System',
 			      'Lat: ' + minLat + ' to ' + maxLat+ '<br>Lng: ' + minLng + ' to ' + maxLng + '<br><br>' +  
-			      '<li><a target="_bank" ?> href="../customer/customer.php?xmin=' + minLng + '&xmax=' + maxLng + '&ymin=' + minLat + '&ymax=' + maxLat + '">Show Customer in Rectangle</a><br>' + 
-			      '</li><li><a target="_bank" href=\"../customer/mps.php?mp_sys_operation=mp_op_Add&rect=(x > ' + x1 + ' AND x < ' + x2 + ') AND (y > ' + y1 + ' AND y < ' +y2 + ')\">Add Modem Positioning Rule</a>' +
+			      '<li><a target="_bank" href="'+ global_url + 'CustomerRect/' + minLng + '/' + maxLng + '/' + minLat + '/' + maxLat + '">Show Customer in Rectangle</a><br>' + 
+			      '</li><li><a target="_bank" href="../customer/mps.php?mp_sys_operation=mp_op_Add&rect=(x > ' + x1 + ' AND x < ' + x2 + ') AND (y > ' + y1 + ' AND y < ' +y2 + ')">Add Modem Positioning Rule</a>' +
 			      '</li><br>(x > ' + x1 + ' AND x <  ' + x2 + ') AND (y > ' + y1 + ' AND y < ' + y2 + ')', {width:500} );
 
                     }

@@ -13,11 +13,15 @@
 </head>
 
 
+
 @section('content_top')
 	{{ HTML::linkRoute('TreeTopo.show', $view_header, [$field, $search]) }}
 @stop
 
 @section('content_left')
+
+	@include ('hfcbase::Tree.search')
+
 	<div class="col-md-12" id="map" style="height: 80%;"></div>
 @stop
 

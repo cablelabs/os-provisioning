@@ -249,7 +249,7 @@ class TreeErdController extends TreeController {
 	        $idtree = $tree->id;
 	        $id = $tree->id;
 	        $type = $tree->type;
-			$url  = "../../../Customer/tree_id/$idtree";
+			$url  = \Request::root()."/Customer/tree_id/$idtree";
 	        $n++;
 
 			$state = ModemHelper::ms_state ("tree_id = $idtree");
