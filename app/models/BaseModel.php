@@ -170,15 +170,55 @@ class BaseModel extends \Eloquent
 	}
 
 
+	/*
+	 * Preselect a sql field while searching
+	 *
+	 * Note: If $field is 'net' or 'cluster' we perform a net and cluster specific search
+	 * This requires the searched model to have a tree_id coloumn
+	 *
+	 * @param $field sql field for pre selection
+	 * @param $field sql search value for pre selection
+	 * @return sql search statement, could be included in a normal while()
+	 * @author Torsten Schmidt
+	 */
+	private function __preselect_search($field, $value)
+	{
+		$ret = '1';
+
+		if ($field && $value)
+		{
+			$ret = $field.'='.$value;
+
+			if($this->module_is_active('Hfcbase'))
+			{
+				if ($field == 'net' || $field == 'cluster')
+				{
+					$ret = 'tree_id IN(-1';
+					foreach (Modules\HfcBase\Entities\Tree::where($field, '=', $value)->get() as $tree) 
+						$ret .= ','.$tree->id;
+					$ret .= ')';
+				}
+			}
+		}
+
+		return $ret;
+	}
+
+
 	/**
 	 * Performs a fulltext search in simple mode
 	 *
 	 * @param $array with models to search in
 	 * @param $query query to search for
+	 * @param $preselect_field sql field for pre selection
+	 * @param $preselect_field sql search value for pre selection
 	 * @return search result
-	 * @author Patrick Reichel
+	 * @author Patrick Reichel, 
+	 *         Torsten Schmidt: add preselection
 	 */
-	protected function _doSimpleSearch($models, $query) {
+	protected function _doSimpleSearch($models, $query, $preselect_field=null, $preselect_value=null) 
+	{
+		$preselect = $this->__preselect_search($preselect_field, $preselect_value);
 
 		foreach ($models as $model) {
 
@@ -187,7 +227,7 @@ class BaseModel extends \Eloquent
 			$table = $tmp->getTable();
 			$cols = $model::getTableColumns($table);
 
-			$tmp_result = $model::whereRaw("CONCAT_WS('|', ".$cols.") LIKE ?", array($query))->get();
+			$tmp_result = $model::whereRaw("($preselect) AND CONCAT_WS('|', ".$cols.") LIKE ?", array($query))->get();
 			if (!isset($result)) {
 				$result = $tmp_result;
 			}
@@ -243,7 +283,7 @@ class BaseModel extends \Eloquent
 	 *
 	 * @author Patrick Reichel
 	 */
-	public function getFulltextSearchResults($scope, $mode, $query) {
+	public function getFulltextSearchResults($scope, $mode, $query, $preselect_field = null, $preselect_value = null) {
 
 		// some searches cannot be performed against fulltext index
 		$mode = $this->_chooseFulltextSearchAlgo($mode, $query);
@@ -267,7 +307,7 @@ class BaseModel extends \Eloquent
 				$models = array(get_class($this));
 			}
 
-			$result = $this->_doSimpleSearch($models, $query);
+			$result = $this->_doSimpleSearch($models, $query, $preselect_field, $preselect_value);
 		}
 		elseif (Str::startsWith($mode, 'index_')) {
 

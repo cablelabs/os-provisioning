@@ -219,7 +219,7 @@ class BaseController extends Controller {
 		// get the query to search for
 		$query = Input::get('query');
 
-		$view_var = $obj->getFulltextSearchResults($scope, $mode, $query);
+		$view_var = $obj->getFulltextSearchResults($scope, $mode, $query, Input::get('preselect_field'), Input::get('preselect_value'));
 
 		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed', 'query', 'scope')));
 
