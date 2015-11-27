@@ -28,7 +28,7 @@ return array(
 	|
 	*/
 
-	'model' => 'User',
+	'model' => 'Authuser',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ return array(
 	|
 	*/
 
-	'table' => 'users',
+	'table' => 'authuser',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -62,7 +62,7 @@ return array(
 
 		'email' => 'emails.auth.reminder',
 
-		'table' => 'password_reminders',
+		'table' => 'authreminders',
 
 		'expire' => 60,
 

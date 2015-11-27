@@ -10,3 +10,9 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
+
+// Auth => login form
+Route::get('login', array('uses' => 'AuthController@showLogin'));
+
+// Auth => process form data
+Route::post('login', array('uses' => 'AuthController@doLogin'));
