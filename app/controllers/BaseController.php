@@ -103,7 +103,7 @@ class BaseController extends Controller {
 	{
 		return explode('\\', $this->get_model_name())[1];
 	}
-
+	
 
 	public function get_view_header_links ()
 	{
@@ -319,6 +319,7 @@ class BaseController extends Controller {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
+		$obj->touch();			// update timestamp, this forces to run all observer's
 		$obj->update($data);
 
 		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Updated!');
@@ -338,10 +339,10 @@ class BaseController extends Controller {
 		{
 			// bulk delete
 			foreach (Input::all()['ids'] as $id => $val)
-				$this->get_model_obj()->destroy($id);
+				$this->get_model_obj()->findOrFail($id)->delete();
 		}
 		else
-			$this->get_model_obj()->destroy($id);
+			$this->get_model_obj()->findOrFail($id)->delete();
 
 		return Redirect::back();
 	}

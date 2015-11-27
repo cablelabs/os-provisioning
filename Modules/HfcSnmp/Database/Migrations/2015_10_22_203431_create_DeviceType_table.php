@@ -3,7 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateDeviceTypeTable extends Migration {
+class CreateDeviceTypeTable extends BaseMigration {
+
+
+	// name of the table to create
+	protected $tablename = "devicetype";
+
 
 	/**
 	 * Run the migrations.
@@ -14,14 +19,16 @@ class CreateDeviceTypeTable extends Migration {
 	{
 		Schema::create(strtolower('DeviceType'), function(Blueprint $table)
 		{
-			$table->increments('id');
+			$this->up_table_generic($table);
+
 			$table->string('name');
 			$table->string('vendor');
 			$table->string('version');
 			$table->text('description');
 			$table->integer('parent_id')->unsigned();
-			$table->timestamps();
 		});
+
+		return parent::up();
 	}
 
 

@@ -3,7 +3,11 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateDeviceTable extends Migration {
+class CreateDeviceTable extends BaseMigration {
+
+	// name of the table to create
+	protected $tablename = "device";
+
 
 	/**
 	 * Run the migrations.
@@ -14,7 +18,8 @@ class CreateDeviceTable extends Migration {
 	{
 		Schema::create(strtolower('Device'), function(Blueprint $table)
 		{
-			$table->increments('id');
+			$this->up_table_generic($table);
+
 			$table->integer('devicetype_id')->unsigned();
 			$table->string('name');
 			$table->string('ip', 15);
@@ -24,8 +29,9 @@ class CreateDeviceTable extends Migration {
 			$table->string('address2');
 			$table->string('address3');
 			$table->text('description');
-			$table->timestamps();
 		});
+
+		return parent::up();
 	}
 
 
