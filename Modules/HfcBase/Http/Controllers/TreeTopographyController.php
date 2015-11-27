@@ -51,11 +51,10 @@ class TreeTopographyController extends HfcBaseController {
 			$s = 'id>2';
 
 		// Generate SVG file 
-		$this->kml_generate ($s);
+		$file = $this->kml_generate (Tree::whereRaw($s));
 
 		// Prepare and Topography Map
 		$target = $this->html_target;
-		$file   = $this->path_rel.'/'.$this->filename;
 
 		$route_name  = 'Tree';
 		$view_header = "Topography";
@@ -68,15 +67,226 @@ class TreeTopographyController extends HfcBaseController {
 	}
 
 
-	#
-	# KML Func
-	#
-	protected function kml_generate($s, $layer='')
+	/*
+	 * Generate the KML File
+	 *
+	 * @param _trees: The Tree Objects to be displayed, without ->get() call
+	 * @return the path of the generated *.kml file, could be included via asset ()
+	 *
+	 * @author: Torsten Schmidt
+	 */
+	public function kml_generate($_trees)
 	{
-		$s = "(id>2) AND ($s)";
-		$p = asset('modules/Hfcbase/kml');
-		$r = 1234567;
-		$kml_file = "
+		$file = $this->file_pre(asset('modules/Hfcbase/kml'));
+
+		#
+		# Note: OpenLayer draws kml file in parse order, 
+		# this requires to build kml files in the following order:
+		#  a) Lines
+		#  b) Customer Lines
+		#  c) Customer Bubbles
+		#  d) Pos Elements (Amps, Nodes ..)
+
+		#
+		# Draw: Parent - Child - Relationship
+		#
+		$trees = $_trees->orderBy('pos')->get();
+		foreach ($trees as $tree) 
+		{
+			$pos1   = $tree->pos;	
+			$pos2   = $tree->get_parent()->pos;
+			$name   = $tree->id;
+			$parent = $tree->parent;
+			$type   = $tree->type;
+			$tp     = $tree->tp;
+
+			# skip empty pos and lines to elements not in search string
+			if ($pos2 == null || 
+				$pos2 == '' || 
+				$pos2 == '0,0' || 
+				!ArrayHelper::objArraySearch($trees, 'id', $tree->get_parent()->id))
+					continue;
+
+			# Line Color - Style
+			$style = '#BLACKLINE';
+			if ($type == 'AMP' || $tp == 'FOSTRA')
+				$style = '#REDLINE';
+
+			if ($type == 'NODE')
+				$style = '#BLUELINE';
+
+			# Draw Line
+			$file .= "
+
+			<Placemark>
+				<name>$parent -> $name</name>
+				<description><![CDATA[]]></description>
+				<styleUrl>$style</styleUrl>
+				<LineString>
+					<tessellate>1</tessellate>
+					<coordinates>
+						$pos1,0.000000
+						$pos2,0.000000
+					</coordinates>
+				</LineString>
+			</Placemark>";
+		}
+
+
+		#
+		# Customer
+		#
+		if ($tree->module_is_active ('HfcCustomer'))
+		{
+			$modem_helper = 'Modules\HfcCustomer\Entities\ModemHelper';
+
+			$n = 0;
+			foreach ($trees as $tree) 
+			{
+				$id       = $tree->id;
+				$name     = $tree->name;
+				$pos_tree = $tree->pos;
+
+				$pos = $modem_helper::ms_avg_pos('tree_id='.$tree->id);
+
+				if ($pos['x'])
+				{			
+					$xavg = $pos['x'];
+					$yavg = $pos['y'];			
+					$icon = $modem_helper::ms_state_to_color($modem_helper::ms_state ("tree_id = $id"));		
+					$icon .= '-CUS';
+
+					# Draw Line - Customer - Amp
+					$file .= "
+
+					<Placemark>
+						<name></name>
+						<description><![CDATA[]]></description>
+						<styleUrl>#BLACKLINE2</styleUrl>
+						<LineString>
+							<tessellate>1</tessellate>
+							<coordinates>
+								$xavg,$yavg,0.000000
+								$pos_tree,0.000000
+							</coordinates>
+						</LineString>
+					</Placemark>";
+
+					# Draw Customer Marker
+					$file .= 
+					"
+					<Placemark>
+						<name></name>
+						<description><![CDATA[";
+
+							$num  = $modem_helper::ms_num("tree_id = $id");
+							$numa = $modem_helper::ms_num_all("tree_id = $id");
+							$pro  = round(100 * $num / $numa,0);
+							$cri  = $modem_helper::ms_cri("tree_id = $id");
+							$avg  = $modem_helper::ms_avg("tree_id = $id");
+							$url  = \Request::root()."/Customer/tree_id/$id";
+
+							$file .= "Amp/Node: $name<br><br>Number All CM: $numa<br>Number Online CM: $num ($pro %)<br>Number Critical CM: $cri<br>US Level Average: $avg<br><br><a href=\"$url\" target=\"".$this->html_target."\" alt=\"\">Show all Customers</a>";
+
+							$file .= "]]></description>
+							<styleUrl>#$icon</styleUrl>
+							<Point>
+								<coordinates>$xavg,$yavg,0.000000</coordinates>
+							</Point>
+						</Placemark>";
+				}
+			}
+		}
+
+
+		#
+		# Fetch unique Geo Positions ..
+		#
+		$p1 = '';
+
+		foreach ($trees as $tree) 
+		{
+			$p2  = $tree->pos;
+			
+			if ($p1 != $p2)
+			{
+				$rstate  = 0;
+				$ystate  = 0;
+				$router  = 0;
+				$fiber   = 0;
+
+				$file .= "
+					<Placemark>
+					<name></name>
+					<description><![CDATA[";
+			}
+
+			$type  = $tree->type;
+			$parent= $tree->get_parent()->id;
+
+			if ($tree->state == 'YELLOW')
+				$ystate += 1;
+
+			if ($tree->state == 'RED')
+				$rstate += 1;
+
+			if (($type == 'CMTS') || ($type == 'CLUSTER') || ($type == 'DATA') || ($type == 'NET'))
+				$router += 1;
+
+			if ($type == 'NODE')
+				$fiber += 1;
+
+			if ($p1 != $p2) 
+			{
+
+				$icon = 'OK';
+				if ($ystate)
+					$icon = 'YELLOW';
+				if ($rstate)
+					$icon = 'RED';
+
+				if ($router)
+					$icon .= '-ROUTER';
+				else if ($fiber)
+					$icon .= '-FIB';
+				else if ($parent == 1)
+					$icon = 'blue-CUS';
+			
+				$file .= "$p2";
+				$file .= "]]></description>
+				<styleUrl>#$icon</styleUrl>
+				<Point>
+					<coordinates>$p2,0.000000</coordinates>
+				</Point>
+				</Placemark>";
+			}
+
+			$p1 = $p2;
+		}
+
+
+		#
+		# Write KML File ..
+		# 
+		$file .= $this->file_post;
+		$handler = fOpen($this->file, "w");
+		fWrite($handler , $file);
+		fClose($handler); // Datei schließen
+
+		return $this->path_rel.'/'.$this->filename;
+	}
+
+
+	private $file_post = "
+
+			</Document>
+		</kml>";
+
+
+	private function file_pre ($p) 
+	{
+		return "
+
 		<kml xmlns=\"http://earth.google.com/kml/2.2\">
 		<Document>
 			<name>mbg - amplifier</name>
@@ -214,206 +424,5 @@ class TreeTopographyController extends HfcBaseController {
 			</Style>
 
 			";
-
-		#
-		# Note: OpenLayer draws kml file in parse order, 
-		# this requires to build kml files in the following order:
-		#  a) Lines
-		#  b) Customer Lines
-		#  c) Customer Bubbles
-		#  d) Pos Elements (Amps, Nodes ..)
-
-		#
-		# Draw: Parent - Child - Relationship
-		#
-		$trees = Tree::whereRaw($s)->orderBy('pos')->get();
-		foreach ($trees as $tree) 
-		{
-			$pos1   = $tree->pos;	
-			$pos2   = $tree->get_parent()->pos;
-			$name   = $tree->id;
-			$parent = $tree->parent;
-			$type   = $tree->type;
-			$tp     = $tree->tp;
-
-			# skip empty pos and lines to elements not in search string
-			if ($pos2 == null || 
-				$pos2 == '' || 
-				$pos2 == '0,0' || 
-				!ArrayHelper::objArraySearch($trees, 'id', $tree->get_parent()->id))
-					continue;
-
-			# Line Color - Style
-			$style = '#BLACKLINE';
-			if ($type == 'AMP' || $tp == 'FOSTRA')
-				$style = '#REDLINE';
-
-			if ($type == 'NODE')
-				$style = '#BLUELINE';
-
-			  # Draw Line
-			$kml_file .= "
-
-			<Placemark>
-				<name>$parent -> $name</name>
-				<description><![CDATA[]]></description>
-				<styleUrl>$style</styleUrl>
-				<LineString>
-					<tessellate>1</tessellate>
-					<coordinates>
-						$pos1,0.000000
-						$pos2,0.000000
-					</coordinates>
-				</LineString>
-			</Placemark>";
-		}
-
-
-		#
-		# Customer
-		#
-		if ($tree->module_is_active ('HfcCustomer'))
-		{
-			$modem_helper = 'Modules\HfcCustomer\Entities\ModemHelper';
-
-			$n = 0;
-			foreach ($trees as $tree) 
-			{
-				$id       = $tree->id;
-				$name     = $tree->name;
-				$pos_tree = $tree->pos;
-
-				$pos = $modem_helper::ms_avg_pos('tree_id='.$tree->id);
-
-				if ($pos['x'])
-				{			
-					$xavg = $pos['x'];
-					$yavg = $pos['y'];			
-					$icon = $modem_helper::ms_state_to_color($modem_helper::ms_state ("tree_id = $id"));		
-					$icon .= '-CUS';
-
-					# Draw Line - Customer - Amp
-					$kml_file .= "
-
-					<Placemark>
-						<name></name>
-						<description><![CDATA[]]></description>
-						<styleUrl>#BLACKLINE2</styleUrl>
-						<LineString>
-							<tessellate>1</tessellate>
-							<coordinates>
-								$xavg,$yavg,0.000000
-								$pos_tree,0.000000
-							</coordinates>
-						</LineString>
-					</Placemark>";
-
-					# Draw Customer Marker
-					$kml_file .= 
-					"
-					<Placemark>
-						<name></name>
-						<description><![CDATA[";
-
-							$num  = $modem_helper::ms_num("tree_id = $id");
-							$numa = $modem_helper::ms_num_all("tree_id = $id");
-							$pro  = round(100 * $num / $numa,0);
-							$cri  = $modem_helper::ms_cri("tree_id = $id");
-							$avg  = $modem_helper::ms_avg("tree_id = $id");
-							$url  = \Request::root()."/Customer/tree_id/$id";
-
-							$kml_file .= "Amp/Node: $name<br><br>Number All CM: $numa<br>Number Online CM: $num ($pro %)<br>Number Critical CM: $cri<br>US Level Average: $avg<br><br><a href=\"$url\" target=\"".$this->html_target."\" alt=\"\">Show all Customers</a>";
-
-							$kml_file .= "]]></description>
-							<styleUrl>#$icon</styleUrl>
-							<Point>
-								<coordinates>$xavg,$yavg,0.000000</coordinates>
-							</Point>
-						</Placemark>";
-				}
-			}
-		}
-
-
-		#
-		# Fetch unique Geo Positions ..
-		#
-		$p1 = '';
-
-		foreach ($trees as $tree) 
-		{
-			$p2  = $tree->pos;
-			
-			if ($p1 != $p2)
-			{
-				$rstate  = 0;
-				$ystate  = 0;
-				$router  = 0;
-				$fiber   = 0;
-
-				$kml_file .= "
-					<Placemark>
-					<name></name>
-					<description><![CDATA[";
-			}
-
-			$type  = $tree->type;
-			$parent= $tree->get_parent()->id;
-
-			if ($tree->state == 'YELLOW')
-				$ystate += 1;
-
-			if ($tree->state == 'RED')
-				$rstate += 1;
-
-			if (($type == 'CMTS') || ($type == 'CLUSTER') || ($type == 'DATA') || ($type == 'NET'))
-				$router += 1;
-
-			if ($type == 'NODE')
-				$fiber += 1;
-
-			if ($p1 != $p2) 
-			{
-
-				$icon = 'OK';
-				if ($ystate)
-					$icon = 'YELLOW';
-				if ($rstate)
-					$icon = 'RED';
-
-				if ($router)
-					$icon .= '-ROUTER';
-				else if ($fiber)
-					$icon .= '-FIB';
-				else if ($parent == 1)
-					$icon = 'blue-CUS';
-			
-				$kml_file .= "$p2";
-				$kml_file .= "]]></description>
-				<styleUrl>#$icon</styleUrl>
-				<Point>
-					<coordinates>$p2,0.000000</coordinates>
-				</Point>
-				</Placemark>";
-			}
-
-			$p1 = $p2;
-		}
-
-
-		# End of KML-File
-		$kml_file .= "
-
-			</Document>
-		</kml>";
-
-		#
-		# Write KML File ..
-		# 
-		$handler = fOpen($this->file, "w");
-		fWrite($handler , $kml_file);
-		fClose($handler); // Datei schließen
-
-		return;
 	}
 }

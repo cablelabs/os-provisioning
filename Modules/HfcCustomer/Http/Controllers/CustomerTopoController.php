@@ -30,12 +30,6 @@ class CustomerTopoController extends TreeController {
 	// filename, will be based on a random hash function
 	private $filename;
 
-	/*
-	 * The Html Link Target
-	 * TODO: make or use a global var ore define
-	 */
-	private $html_target = '';
-
 
 	/*
 	 * File Specific Stuff
@@ -151,12 +145,10 @@ class CustomerTopoController extends TreeController {
 	public function show_modems($modems, $field=null, $search=null)
 	{
 		// Generate SVG file 
-		$this->kml_generate ($modems);
+		$file = $this->kml_generate ($modems);
 
 		// Prepare and Topography Map
-		$target = $this->html_target;
-		$file   = $this->path_rel.'/'.$this->filename;
-
+		$target      = $this->html_target;
 		$route_name  = 'Tree';
 		$view_header = "Topography - Modems";
 		$body_onload = 'init_for_map';
@@ -170,10 +162,11 @@ class CustomerTopoController extends TreeController {
 	 * Generate KML File with Customer Modems Inside
 	 *
 	 * @param modems the Modem models to display, like Modem::where()
+	 * @returns the path of the generated *.kml file to be included via asset ()
 	 *
 	 * @author: Torsten Schmidt
 	 */
-	private function kml_generate($modems)
+	public function kml_generate($modems)
 	{
 		$x = 0;
 		$y = 0;
@@ -299,6 +292,7 @@ else
 		fWrite($handler , $file);
 		fClose($handler);
 		
+		return $this->path_rel.'/'.$this->filename;
 	}
 
 }

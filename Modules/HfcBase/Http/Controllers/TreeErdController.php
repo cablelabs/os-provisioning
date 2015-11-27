@@ -71,13 +71,12 @@ class TreeErdController extends HfcBaseController {
 			$s = 'id>2';
 
 		// Generate SVG file 
-		$this->graph_generate ($s);
+		$file = $this->graph_generate (Tree::whereRaw($s));
 
 		// Prepare and display SVG
 		$is_pos = $this->_is_valid_geopos($search);
 		$gid    = $this->graph_id;
 		$target = $this->html_target;
-		$file   = $this->path_rel.'/'.$this->filename;
 		$usemap = str_replace ('alt', 'onContextMenu="return getEl(this.id)" alt', file_get_contents(asset($file.'.map'))); 
 
 		$view_header = "Entity Relation Diagram";
@@ -93,20 +92,19 @@ class TreeErdController extends HfcBaseController {
 	/*
 	 * Generate the SVG and HTML Map File
 	 *
-	 * @param s: sql search string
-	 * @param search: the search value to look in tree table $field
-	 * @return view with SVG image
+	 * @param _trees: The Tree Objects to be displayed, without ->get() call
+	 * @return the path of the generated file(s) without ending
+	 *         this files could be included via asset ()
 	 *
 	 * @author: Torsten Schmidt
 	 */
-	protected function graph_generate($s, $layer='')
+	public function graph_generate($_trees)
 	{
 
 		#
 		# INIT
 		#
 		$gid = $this->graph_id;
-		$s   = "(id>2) AND ($s)";
 
 		$file = "digraph tree$gid {
 
@@ -122,7 +120,7 @@ class TreeErdController extends HfcBaseController {
 		$n  = 0;
 		$p1 = '';
 
-		$trees = Tree::whereRaw($s)->orderBy('pos')->get();
+		$trees = $_trees->where('id', '>', '2')->orderBy('pos')->get();
 
 		foreach ($trees as $tree) 
 		{
@@ -255,6 +253,8 @@ class TreeErdController extends HfcBaseController {
 		# Debug File: Add o exec: '1>$fn.log 2>&1';
 		#
 		exec ("dot -v -Tcmapx -o $fn.map -Tsvg -o $fn.svg $fn.dot");
+
+		return $this->path_rel.'/'.$this->filename;
 	}
 
 }
