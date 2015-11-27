@@ -47,6 +47,90 @@ class ModemController extends \BaseModuleController {
 	}
 
 
+	/**
+	 * Display a listing of all Modem objects
+	 *
+	 * Changes to BaseController: Topography Mode when HfcCustomer Module is active
+	 *
+	 * @author Torsten Schmidt
+	 */
+	public function index()
+	{
+		if(!$this->get_model_obj()->module_is_active ('HfcCustomer'))
+			return parent::index();
+
+		$modems = Modem::where('id', '>', '0');
+
+		if (\Input::get('topo') == '1')
+		{
+			// Generate KML file 
+			$customer = new \Modules\HfcCustomer\Http\Controllers\CustomerTopoController;
+			$file     = $customer->kml_generate ($modems);
+
+			$view_header_right = 'Topography';
+			$body_onload       = 'init_for_map';
+		}
+
+		// Prepare
+		$panel_right = [['name' => 'List', 'route' => 'Modem.index', 'link' => ['topo' => '0']], 
+						['name' => 'Topography', 'route' => 'Modem.index', 'link' => ['topo' => '1']]];
+
+		$target      = ''; // TODO: use global define
+		$view_var    = $modems->get();
+		$route_name  = 'Modem';
+		$view_header = "Modems";
+		$create_allowed = $this->index_create_allowed;
+
+		return \View::make('provbase::Modem.index', $this->compact_prep_view(compact('panel_right', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search')));
+	}
+
+
+	/**
+	 * Perform a fulltext search.
+	 *
+	 * Changes to BaseController: Topography Mode when HfcCustomer Module is active
+	 *
+	 * @author Torsten Schmidt
+	 */
+	public function fulltextSearch() 
+	{
+		$obj    = $this->get_model_obj();
+
+		if(!$obj->module_is_active ('HfcCustomer'))
+			return parent::fulltextSearch();
+
+		// get the search scope
+		$scope = \Input::get('scope');
+		$mode  = \Input::get('mode');
+		$query = \Input::get('query');
+		$pre_f = \Input::get('preselect_field');
+		$pre_v = \Input::get('preselect_value');
+
+		// perform search
+		$modems = $obj->getFulltextSearchResults($scope, $mode, $query, $pre_f, $pre_v);
+
+		// generate Topography
+		if (\Input::get('topo') == '1')
+		{
+			// Generate KML file 
+			$customer = new \Modules\HfcCustomer\Http\Controllers\CustomerTopoController;
+			$file     = $customer->kml_generate ($modems);
+
+			$view_header_right = 'Topography';
+			$body_onload       = 'init_for_map';
+		}
+
+		$panel_right = [['name' => 'List', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '0', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]], 
+						['name' => 'Topography', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '1', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]]];
+
+		$view_var    = $modems->get();
+		$route_name  = 'Modem';
+		$view_header = "Modems";
+		$create_allowed = $this->index_create_allowed;
+
+		return \View::make('provbase::Modem.index', $this->compact_prep_view(compact('panel_right', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search')));
+	}
+
 
 	/**
 	 * Ping

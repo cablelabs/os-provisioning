@@ -219,7 +219,7 @@ class BaseController extends Controller {
 		// get the query to search for
 		$query = Input::get('query');
 
-		$view_var = $obj->getFulltextSearchResults($scope, $mode, $query, Input::get('preselect_field'), Input::get('preselect_value'));
+		$view_var = $obj->getFulltextSearchResults($scope, $mode, $query, Input::get('preselect_field'), Input::get('preselect_value'))->get();
 
 		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed', 'query', 'scope')));
 
@@ -235,16 +235,12 @@ class BaseController extends Controller {
 	{
 		$obj = $this->get_model_obj();
 
-		$model_name 	= $this->get_model_name();
 		$view_var   	= $obj->all();
 		$view_header  	= $obj->get_view_header().' List';
-		$route_name 	= $this->get_route_name();
 
 		$create_allowed = $this->get_controller_obj()->index_create_allowed;
 
 		$view_path = 'Generic.index';
-		$view_header_links = $this->get_view_header_links();
-
 		if (View::exists($this->get_view_name().'.index'))
 			$view_path = $this->get_view_name().'.index';		
 

@@ -1,5 +1,6 @@
 {{ Form::openDivClass(9) }}
-	{{ Form::text('query', '', array('style' => 'simple')) }}
+	<?php $query = (isset($_GET['query']) ? $_GET['query'] : '') ?>
+	{{ Form::text('query', $query, array('style' => 'simple')) }}
 {{ Form::closeDivClass() }}
 
 {{ Form::openDivClass(3) }}
@@ -14,7 +15,7 @@
 		--}}
 	{{ Form::hidden('scope', Str::lower($next_scope)) }}
 
-	<?php $button_text = ($next_scope == 'all' ? '?' : 'Search '.Str::lower($next_scope)) ?>
+	<?php $button_text = ($next_scope == 'all' ? '?' : 'Search') ?>
 
 	{{ Form::submit($button_text, ['style' => 'simple', 'class' => 'fa fa-search'] ) }}
 

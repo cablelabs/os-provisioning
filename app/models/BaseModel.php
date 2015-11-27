@@ -232,7 +232,7 @@ class BaseModel extends \Eloquent
 			$table = $tmp->getTable();
 			$cols = $model::getTableColumns($table);
 
-			$tmp_result = $model::whereRaw("($preselect) AND CONCAT_WS('|', ".$cols.") LIKE ?", array($query))->get();
+			$tmp_result = $model::whereRaw("($preselect) AND CONCAT_WS('|', ".$cols.") LIKE ?", array($query));
 			if (!isset($result)) {
 				$result = $tmp_result;
 			}
@@ -334,7 +334,7 @@ class BaseModel extends \Eloquent
 				}
 
 				# search is against the fulltext index
-				$result = $this->whereRaw("MATCH(".$indexed_cols.") AGAINST(? ".$mode.")", array($query))->get();
+				$result = $this->whereRaw("MATCH(".$indexed_cols.") AGAINST(? ".$mode.")", array($query));
 			}
 		}
 		else {
