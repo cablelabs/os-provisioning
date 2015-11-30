@@ -1,7 +1,8 @@
 <?php
 
-use PermissionErrors;
-use Illuminate\Auth;
+use Illuminate\Auth\Guard;
+
+require_once(app_path().'/Exceptions.php');
 
 
 /**
@@ -11,32 +12,34 @@ class BaseModel extends \Eloquent
 {
 	use SoftDeletingTrait;
 
-	private permissions = array();
+	protected $permissions = array();
 
 	/**
 	 * Constructor
 	 */
-	public __construct() {
+	public function __construct() {
 
 		// check if user has enough rights to instantiate the model
-		_check_rights();
+		$this->_check_rights();
 	}
 
 
 	/**
 	 * Check current users rights
 	 */
-	protected _check_rights() {
+	protected function _check_rights() {
 
 		// setting default rights
-		foreach ($case in array('model', 'net')) {
+		foreach (array('model', 'net') as $case) {
 			$this->permissions[$case] = array();
-			foreach ($perm in array('create', 'delete', 'read', 'write')) {
-				$this-permissions[$case][$perm] = False;
+			foreach (array('create', 'delete', 'read', 'write') as $perm) {
+				$this->permissions[$case][$perm] = False;
 			}
 		};
 
 		// check if a user is logged in
+		HIER WEITER:
+			warum ist bei Instanziierung kein Nutzer da???
 		if (!Auth::check()) {
 			throw new NoLoginError("No user logged in");
 		}
