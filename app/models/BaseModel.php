@@ -1,5 +1,9 @@
 <?php
 
+use PermissionErrors;
+use Illuminate\Auth;
+
+
 /**
  *	Class to add functionality – use instead of Eloquent for your models
  */
@@ -7,11 +11,47 @@ class BaseModel extends \Eloquent
 {
 	use SoftDeletingTrait;
 
+	private permissions = array();
+
+	/**
+	 * Constructor
+	 */
+	public __construct() {
+
+		// check if user has enough rights to instantiate the model
+		_check_rights();
+	}
+
+
+	/**
+	 * Check current users rights
+	 */
+	protected _check_rights() {
+
+		// setting default rights
+		foreach ($case in array('model', 'net')) {
+			$this->permissions[$case] = array();
+			foreach ($perm in array('create', 'delete', 'read', 'write')) {
+				$this-permissions[$case][$perm] = False;
+			}
+		};
+
+		// check if a user is logged in
+		if (!Auth::check()) {
+			throw new NoLoginError("No user logged in");
+		}
+
+		/* if ___NO_MODEL_RIGHTS___	{ */
+		/* 	throw new NoModelPermissionError("Not enough rights"); */
+		/* } */
+	}
+
+
 	/**
 	 * check if module exists
 	 *
 	 * Note: This function should be used in relational functions like hasMany() or view_has_many()
-	 * 
+	 *
 	 * @author Torsten Schmidt
 	 *
 	 * @param  Modulename
@@ -20,8 +60,8 @@ class BaseModel extends \Eloquent
 	public function module_is_active($modulename)
 	{
 		$modules = \Module::enabled();
-        
-		foreach ($modules as $module) 
+
+		foreach ($modules as $module)
 			if ($module->getLowerName() == strtolower($modulename))
 				return true;
 
@@ -122,7 +162,7 @@ class BaseModel extends \Eloquent
 	 * Get all models
 	 *
 	 * @return array of all models except base models
-	 * @author Patrick Reichel, 
+	 * @author Patrick Reichel,
 	 *         Torsten Schmidt: add modules path
 	 */
 	protected function _getModels() {
@@ -149,7 +189,7 @@ class BaseModel extends \Eloquent
 		$dirs = array();
 		$modules = Module::enabled();
 		foreach ($modules as $module)
-			array_push($dirs, $module->getPath().'/Entities'); 
+			array_push($dirs, $module->getPath().'/Entities');
 
 		foreach ($dirs as $dir)
 		{
@@ -317,7 +357,7 @@ class BaseModel extends \Eloquent
 		}
 
 		return $ret;
-	}	
+	}
 
 
 	// Placeholder
@@ -378,7 +418,7 @@ class BaseModel extends \Eloquent
 	 *	@author Torsten Schmidt
 	 *
 	 *	@return true if success
-	 *  
+	 *
 	 *  TODO: return state should take care of deleted children
 	 */
 	public function delete()
@@ -392,7 +432,7 @@ class BaseModel extends \Eloquent
 
 
 	/**
-	 * 
+	 *
 	 */
 	public static function destroy($ids)
 	{
