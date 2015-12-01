@@ -77,6 +77,14 @@ class Modem extends \BaseModel {
         return null;
     }
     
+    public function tree()
+    {
+        if ($this->module_is_active('HfcBase'))
+            return $this->belongsTo('Modules\HfcBase\Entities\Tree');
+
+        return null;
+    }
+
     // returns all objects that are related to a cmts
     public function view_has_many()
     {

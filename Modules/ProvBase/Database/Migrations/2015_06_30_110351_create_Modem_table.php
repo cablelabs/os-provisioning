@@ -38,10 +38,12 @@ class CreateModemTable extends BaseMigration {
 			$table->string('inventar_num');	
 			$table->text('description');
 			$table->integer('parent');
-			$table->integer('configfile_id')->unsigned();
+			$table->integer('configfile_id')->unsigned();		
+			$table->integer('tree_id')->unsigned();
 			$table->integer('qos_id')->unsigned();
-
-			
+			$table->float('x');
+			$table->float('y');
+		
 		});
 
 		$this->set_fim_fields(['name', 'hostname', 'mac', 'serial_num', 'inventar_num', 'description']);

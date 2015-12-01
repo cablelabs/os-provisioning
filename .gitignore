@@ -10,6 +10,7 @@ composer.lock
 *.fuse_hidden*
 Thumbs.db
 app/storage/systemd/
+app/storage/hfc/
 
 # temporary vim files
 *.swp

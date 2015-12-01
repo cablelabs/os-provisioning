@@ -10,20 +10,9 @@
         <script src="{{asset('components/assets-admin/crossbrowserjs/excanvas.min.js')}}"></script>
       <![endif]-->
       <script src="{{asset('components/assets-admin/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
-      <script src="{{asset('components/assets-admin/plugins/jquery-cookie/jquery.cookie.js')}}"></script>
       <!-- ================== END BASE JS ================== -->
 
       <!-- ================== BEGIN PAGE LEVEL JS ================== -->
-      <script src="{{asset('components/assets-admin/plugins/gritter/js/jquery.gritter.js')}}"></script>
-      <script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.min.js')}}"></script>
-      <script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.time.min.js')}}"></script>
-      <script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.resize.min.js')}}"></script>
-      <script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.pie.min.js')}}"></script>
-      <script src="{{asset('components/assets-admin/plugins/sparkline/jquery.sparkline.js')}}"></script>
-      <script src="{{asset('components/assets-admin/plugins/jquery-jvectormap/jquery-jvectormap-1.2.2.min.js')}}"></script>
-      <script src="{{asset('components/assets-admin/plugins/jquery-jvectormap/jquery-jvectormap-world-mill-en.js')}}"></script>
-      <script src="{{asset('components/assets-admin/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')}}"></script>
-      <script src="{{asset('components/assets-admin/js/dashboard.min.js')}}"></script>
       <script src="{{asset('components/assets-admin/js/apps.min.js')}}"></script>
       <!-- ================== END PAGE LEVEL JS ================== -->
 

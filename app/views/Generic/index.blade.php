@@ -1,4 +1,4 @@
-@extends ('Layout.single')
+@extends ('Layout.split84')
 
 @section('content_top')
 

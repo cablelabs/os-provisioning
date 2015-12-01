@@ -10,9 +10,20 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
+
+
+
+
         </div>
         <!-- end mobile sidebar expand / collapse button -->
     
+        <div class="col-md-5">
+
+              <br>
+              <h4>
+                @yield('content_top')
+              </h4>
+        </div>
 
         <ul class="nav navbar-nav navbar-right">
         <li>

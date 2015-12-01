@@ -26,3 +26,8 @@ if ($m->module_is_active('ProvBase'))
 	Artisan::add(new Modules\ProvBase\Console\dhcpCommand);
 	Artisan::add(new Modules\ProvBase\Console\configfileCommand);
 }
+
+if ($m->module_is_active('HfcBase'))
+{
+	Artisan::add(new Modules\HfcBase\Console\TreeBuildCommand);
+}

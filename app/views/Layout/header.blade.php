@@ -9,19 +9,3 @@
 		)
 	))
 
-	<hr><hr>
-
-
-	<hr>
-
-
-	<div class="col-md-6">
-		@yield('content_top')
-	</div>
-	
-	<div class="col-md-6">
-		<p align="right">
-			@yield('content_top_2')
-		</p>
-	</div>
-	<hr>

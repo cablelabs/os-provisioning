@@ -1,3 +1,7 @@
-@extends ('Generic.edit')
+<?php 
+$panel_right = [['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]], 
+				['name' => 'Analyses', 'route' => 'Modem.ping', 'link' => [$view_var->id]]];
 
-@include ('provbase::Modem.header')
+?>
+
+@extends ('Generic.edit')
