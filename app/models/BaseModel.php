@@ -404,7 +404,7 @@ class BaseModel extends \Eloquent
 					// get all objects with $column
 					foreach (DB::select('SELECT id FROM '.$table->Tables_in_db_lara.' WHERE '.$column.'='.$this->id) as $child)
 					{
-						$class_child_name = current(preg_grep('|.*?'.$table->Tables_in_db_lara.'.*?|i', $this->_getModels()));
+						$class_child_name = $this->_guess_model_name ($table->Tables_in_db_lara);
 						$class = new $class_child_name;
 
 						array_push($relations, $class->find($child->id));
@@ -452,6 +452,8 @@ class BaseModel extends \Eloquent
 /**
  * Base Observer Class
  * Handles changes on Model Gateways
+ *
+ * TODO: place it somewhere else ..
  *
  */
 class SystemdObserver
