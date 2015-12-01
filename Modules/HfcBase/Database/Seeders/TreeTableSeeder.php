@@ -97,6 +97,8 @@ class TreeTableSeeder extends \BaseSeeder {
 		}
 
 		$this->pos_dumping (Tree::where('type', '=', 'NET')->get());
+
+		Tree::relation_index_build_all(1);
 	}
 
 }

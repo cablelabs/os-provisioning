@@ -16,12 +16,12 @@
 	 */
 	function getEl (id)
 	{
-	        target = '_blank';
+			url    = '<?php echo \Request::root() ?>'
 	        kml    = 0;
 
-	        alert ("Element Number: "+id, "<li><a target="+target+" href=tree.php?tree_sys_operation=tree_op_Change&tree_sys_rec="+id+"&kml="+kml+">Change</a></li>" + 
-	                                      "<li><a target="+target+" href=tree.php?tree_sys_operation=tree_op_Delete&tree_sys_rec="+id+"&kml="+kml+">Delete </a></li>" + 
-	                                      "<li><a target=_blank href=details.php?id="+id+">Details</a>", {width:150});
+	        alert ("Element Number: "+id, "<li><a href="+url+"/Tree/"+id+"/edit>Change</a></li>" + 
+	                                      "<li><a href="+url+"/Tree/"+id+"/delete>Delete </a></li>" + 
+	                                      "<li><a href=details.php?id="+id+">Details</a>", {width:150});
 	        return false;
 	}
 

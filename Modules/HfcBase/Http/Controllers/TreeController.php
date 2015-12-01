@@ -44,30 +44,50 @@ class TreeController extends HfcBaseController {
 		);
 	}
 
-	/**
-	 * Overwrites the base method => we need to handle file uploads
-	 * @author Torsten Schmidt, copy from Patrick Reichel Tree
-	 */
-	protected function store() {
 
+	/**
+	 * Overwrites the base method 
+	 */
+	protected function store() 
+	{
 		// check and handle uploaded KML files
 		$this->handle_file_upload('kml_file', $this->get_model_obj()->kml_path);
 
-		// finally: call base method
-		return parent::store();
+		// call base method
+		$ret = parent::store();
+
+		Tree::relation_index_build_all();
+
+		return $ret;
 	}
 
 	/**
-	 * Overwrites the base method => we need to handle file uploads
-	 * @author Torsten Schmidt, copy from Patrick Reichel Tree
+	 * Overwrites the base method 
 	 */
-	public function update($id) {
-
+	public function update($id) 
+	{
 		// check and handle uploaded KML files
 		$this->handle_file_upload('kml_file', $this->get_model_obj()->kml_path);
 
-		// finally: call base method
-		return parent::update($id);
+		// call base method
+		$ret = parent::update($id);
+
+		Tree::relation_index_build_all();
+
+		return $ret;
+	}
+
+	/**
+	 * Overwrites the base method 
+	 */
+	public function destroy ($id)
+	{
+		// call base method
+		$ret = parent::destroy($id);
+
+		Tree::relation_index_build_all();
+
+		return $ret;
 	}
 
 }

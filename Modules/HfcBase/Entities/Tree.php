@@ -33,7 +33,7 @@ class Tree extends \BaseModel {
 	// link title in index view
 	public function get_view_link_title()
 	{
-		return $this->id.' : '.$this->type.' : '.$this->name.' '.$this->state.' - '.$this->get_native_fibre();
+		return $this->id.' : '.$this->type.' : '.$this->name.' '.$this->state.' - '.$this->get_native_cluster();
 	}	
 
     public function modems()
@@ -141,8 +141,6 @@ class Tree extends \BaseModel {
 
 		do
 		{
-            
-
             if (!is_object($p))
                 return 0;
 
@@ -153,7 +151,7 @@ class Tree extends \BaseModel {
 		} while ($i++ < $this->max_parents);
     }
 
-    public function get_native_fibre ()
+    public function get_native_cluster ()
     {
         return $this->_get_native_helper('CLUSTER');
     }
@@ -170,50 +168,41 @@ class Tree extends \BaseModel {
     }
 
 
-    /**
-     * BOOT:
-     * - init tree observer
-     */
-    public static function boot()
+	/**
+	 * Build net and cluster index for $this Tree Objects
+	 */
+    public function relation_index_build ()
     {
-        parent::boot();
-
-        Tree::observe(new TreeObserver);
+        $tree->net     = $tree->get_native_net();
+        $tree->cluster = $tree->get_native_cluster();
     }
 
 
-    public function build ()
+	/**
+	 * Build net and cluster index for all Tree Objects
+	 *
+	 * @params call_from_cmd: set if called from artisan cmd for state info
+	 */
+    public static function relation_index_build_all ($call_from_cmd = 0)
     {
-        $tree->net   = $tree->get_native_net();
-        $tree->cluster = $tree->get_native_fibre();
-    }
-}
+    	$trees = Tree::all();
 
+		\Log::info('nms: build net and cluster index of all tree objects');
+		
+		$i = 1; 
+		$num = count ($trees);
+		
+		foreach ($trees as $tree)
+		{
+			$debug = "nms: tree - rebuild net and cluster index $i of $num - id ".$tree->id;
+	        \Log::debug($debug);
 
-/**
- * Tree Observer Class
- * Handles changes on CMs
- *
- * can handle   'creating', 'created', 'updating', 'updated',
- *              'deleting', 'deleted', 'saving', 'saved',
- *              'restoring', 'restored',
- */
-class TreeObserver
-{
+	        if ($call_from_cmd)
+	        	echo "$debug\r"; $i++;
 
+	        $tree->update(['net' => $tree->get_native_net(), 'cluster' => $tree->get_native_cluster()]);
+		}
 
-    public function created($tree)
-    {  
-        //$tree->build_all();
-        $tree->save();
-    }
-
-    public function updating($tree)
-    {
-        //$tree->build_all();
-    }
-
-    public function deleted($tree)
-    {
+		echo "\n";
     }
 }

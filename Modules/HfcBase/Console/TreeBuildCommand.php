@@ -24,7 +24,7 @@ class TreeBuildCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $description = 'make the DHCP config';
+	protected $description = 'HfcBase: Tree - build net and cluster index';
 
 	/**
 	 * Create a new command instance.
@@ -43,24 +43,9 @@ class TreeBuildCommand extends Command {
 	 */
 	public function fire()
 	{
-		$s = 'id > 0';
-		echo "\r\n ms_num     = ".ModemHelper::ms_num($s);
-		echo "\r\n ms_num_all = ".ModemHelper::ms_num_all($s);
-		echo "\r\n ms_avg     = ".ModemHelper::ms_avg($s);
-		echo "\r\n ms_cri     = ".ModemHelper::ms_cri($s);
-		echo "\r\n ms_state   = ".ModemHelper::ms_state($s);
-
+		Tree::relation_index_build_all(1);
 
 		return;
-
-		foreach (Tree::where('id', '>', '2')->get() as $tree) 
-		{
-	        $tree->net   = $tree->get_native_net();
-	        $tree->cluster = $tree->get_native_fibre();
-	        $tree->save();
-
-	        echo "\r\n".$tree->id.' '.$tree->net.' '.$tree->cluster;
-		}
 	}
 
 	/**
