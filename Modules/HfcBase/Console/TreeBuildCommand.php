@@ -43,7 +43,10 @@ class TreeBuildCommand extends Command {
 	 */
 	public function fire()
 	{
-		Tree::relation_index_build_all(1);
+		if ($this->option('debug'))
+			dd("debug");
+
+		Tree::relation_index_build_all(2);
 
 		return;
 	}
@@ -68,7 +71,7 @@ class TreeBuildCommand extends Command {
 	protected function getOptions()
 	{
 		return array(
-			// array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
+			array('debug', 'd', InputOption::VALUE_OPTIONAL, 'Debug Net and Cluster Outputs', 0),
 		);
 	}
 

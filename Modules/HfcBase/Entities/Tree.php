@@ -197,12 +197,17 @@ class Tree extends \BaseModel {
 			$debug = "nms: tree - rebuild net and cluster index $i of $num - id ".$tree->id;
 	        \Log::debug($debug);
 
-	        if ($call_from_cmd)
+	        $tree->update(['net' => $tree->get_native_net(), 'cluster' => $tree->get_native_cluster()]);
+
+	        if ($call_from_cmd == 1)
 	        	echo "$debug\r"; $i++;
 
-	        $tree->update(['net' => $tree->get_native_net(), 'cluster' => $tree->get_native_cluster()]);
+	        if ($call_from_cmd == 2)
+	        	echo "\n$debug - net:".$tree->net.', clu:'.$tree->cluster;
+
 		}
 
 		echo "\n";
     }
+
 }

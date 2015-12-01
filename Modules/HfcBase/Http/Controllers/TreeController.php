@@ -90,4 +90,18 @@ class TreeController extends HfcBaseController {
 		return $ret;
 	}
 
+	/**
+	 * Overwrites the base method 
+	 * Usage: ERD - right click - delete
+	 * Note: needs special GET route in routes.php
+	 */
+    public function delete ($id)
+    {
+    	parent::destroy($id);
+
+    	Tree::relation_index_build_all();
+
+    	return \Redirect::back();
+    }
+
 }

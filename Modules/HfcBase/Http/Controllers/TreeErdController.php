@@ -73,6 +73,9 @@ class TreeErdController extends HfcBaseController {
 		// Generate SVG file 
 		$file = $this->graph_generate (Tree::whereRaw($s));
 
+		if(!$file)
+			return \View::make('error');
+
 		// Prepare and display SVG
 		$is_pos = $this->_is_valid_geopos($search);
 		$gid    = $this->graph_id;
@@ -114,14 +117,17 @@ class TreeErdController extends HfcBaseController {
 	{
 		";
 
-		#
-		# Node
-		#
 		$n  = 0;
 		$p1 = '';
 
 		$trees = $_trees->where('id', '>', '2')->orderBy('pos')->get();
 
+		if (!$trees->count())
+			return null;
+
+		#
+		# Node
+		#
 		foreach ($trees as $tree) 
 		{
 			$id = $tree->id;
@@ -184,7 +190,11 @@ class TreeErdController extends HfcBaseController {
 		#
 		foreach ($trees as $tree) 
 		{
-			$parent = $tree->get_parent()->id;
+			$_parent = $tree->get_parent();
+			$parent = 0;
+			if ($_parent)
+				$parent = $_parent->id;
+
 			$type = $tree->type;
 			$tp   = $tree->tp;
 			$color = 'black';
