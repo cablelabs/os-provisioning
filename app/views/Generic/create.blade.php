@@ -15,7 +15,7 @@
 
 				$key        = array_keys($_GET)[0];
 				$class_name = ucwords(explode ('_id', $key)[0]);
-				$class      = current(preg_grep ('|.*?'.$class_name.'|i', BaseModel::_getModels()));
+				$class      = current(preg_grep ('|.*?'.$class_name.'|i', BaseModel::get_models()));
 
 				$view_var = new $class;
 

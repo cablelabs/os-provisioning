@@ -25,7 +25,7 @@ class Authuser extends BaseModel implements UserInterface, RemindableInterface {
 	 * Get all the meta entities (roles, clients) the user belongs to
 	 */
 	protected function _meta() {
-		return $this->belongsToMany('AuthMeta', 'authusermeta');
+		return $this->belongsToMany('Authmeta', 'authusermeta', 'user_id', 'meta_id');
 	}
 
 	/**
@@ -33,7 +33,15 @@ class Authuser extends BaseModel implements UserInterface, RemindableInterface {
 	 * Roles are meta entities mapping users to models
 	 */
 	public function roles() {
-		return $this->_meta->where('type', 'is', 'role');
+		return $this->_meta()->where('type', 'LIKE', 'role')->get();
+		/* return $this->_meta()->where('type', 'is', 'role')->get(); */
+	}
+
+	/**
+	 * Get all model information related to a given roll
+	 */
+	protected function _role_models($role_id) {
+		return Authmeta::cores_by_meta($role_id, 'model');
 	}
 
 	/**
@@ -41,8 +49,9 @@ class Authuser extends BaseModel implements UserInterface, RemindableInterface {
 	 * Clients are meta entities mapping users to nets
 	 */
 	public function clients() {
-		return $this->_meta->where('type', 'is', 'client');
+		return $this->_meta()->where('type', 'LIKE', 'client');
 	}
+
 
 	/**
 	 * Get a matrix containing user rights for models.
@@ -50,7 +59,44 @@ class Authuser extends BaseModel implements UserInterface, RemindableInterface {
 	 * @return two dimensional array [modelname][rights]
 	 */
 	public function models() {
-		echo "TODO";
+
+		$permissions = array();
+		$perm_types = array('view', 'create', 'edit', 'delete');
+
+		// get data for each role a user has
+		foreach ($this->roles() as $role) {
+
+			// get all models for the current role
+			$models = $this->_role_models($role['id']);
+
+			// get permissions per model
+			foreach ($models as $model) {
+
+				$name = $model->name;
+
+				// create entry without permissions if model not exists
+				if (!array_key_exists($name, $permissions)) {
+					$perm = array();
+					foreach($perm_types as $perm_type) {
+						$perm[$perm_type] = 0;
+					}
+					$permissions[$name] = $perm;
+				}
+
+
+				// use highest rights for the model
+				// as a user can hold many roles there can be different permissions for a task
+				foreach ($perm_types as $perm_type) {
+					$permissions[$name][$perm_type] = max($permissions[$name][$perm_type], $model->{$perm_type});
+				}
+
+			}
+
+			echo "<pre>";
+			print_r($permissions);
+			echo "</pre>";
+		}
+		exit(1);
 	}
 
 	/**
@@ -72,6 +118,10 @@ class Authuser extends BaseModel implements UserInterface, RemindableInterface {
 	 * @return True if asked access is allowed, else false
 	 */
 	public function hasModel($model, $access) {
+
+
+		$this->models();
+		return $model." !!";
 
 		$usermodels = $this->models();
 

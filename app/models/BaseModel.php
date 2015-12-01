@@ -1,53 +1,11 @@
 <?php
 
-use Illuminate\Auth\Guard;
-
-require_once(app_path().'/Exceptions.php');
-
-
 /**
  *	Class to add functionality – use instead of Eloquent for your models
  */
 class BaseModel extends \Eloquent
 {
 	use SoftDeletingTrait;
-
-	protected $permissions = array();
-
-	/**
-	 * Constructor
-	 */
-	public function __construct() {
-
-		// check if user has enough rights to instantiate the model
-		$this->_check_rights();
-	}
-
-
-	/**
-	 * Check current users rights
-	 */
-	protected function _check_rights() {
-
-		// setting default rights
-		foreach (array('model', 'net') as $case) {
-			$this->permissions[$case] = array();
-			foreach (array('create', 'delete', 'read', 'write') as $perm) {
-				$this->permissions[$case][$perm] = False;
-			}
-		};
-
-		// check if a user is logged in
-		HIER WEITER:
-			warum ist bei Instanziierung kein Nutzer da???
-		if (!Auth::check()) {
-			throw new NoLoginError("No user logged in");
-		}
-
-		/* if ___NO_MODEL_RIGHTS___	{ */
-		/* 	throw new NoModelPermissionError("Not enough rights"); */
-		/* } */
-	}
 
 
 	/**
@@ -168,7 +126,7 @@ class BaseModel extends \Eloquent
 	 * @author Patrick Reichel,
 	 *         Torsten Schmidt: add modules path
 	 */
-	protected function _getModels() {
+	public static function get_models() {
 		$exclude = array('BaseModel');
 		$result = array();
 
@@ -304,7 +262,7 @@ class BaseModel extends \Eloquent
 			}
 
 			if ($scope == 'all') {
-				$models = $this->_getModels();
+				$models = $this->get_models();
 			}
 			else {
 				$models = array(get_class($this));
@@ -402,7 +360,7 @@ class BaseModel extends \Eloquent
 					// get all objects with $column
 					foreach (DB::select('SELECT id FROM '.$table->Tables_in_db_lara.' WHERE '.$column.'='.$this->id) as $child)
 					{
-						$class_child_name = current(preg_grep('|.*?'.$table->Tables_in_db_lara.'.*?|i', $this->_getModels()));
+						$class_child_name = current(preg_grep('|.*?'.$table->Tables_in_db_lara.'.*?|i', $this->get_models()));
 						$class = new $class_child_name;
 
 						array_push($relations, $class->find($child->id));

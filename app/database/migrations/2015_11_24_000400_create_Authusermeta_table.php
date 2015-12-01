@@ -19,10 +19,16 @@ class CreateAuthusermetaTable extends BaseMigration {
 
 			$this->up_table_generic($table);
 
-			$table->string('user_id')->index();
-			$table->string('meta_id')->index();
+			$table->integer('user_id')->unsigned();
+			$table->integer('meta_id')->unsigned();
+
+			$table->foreign('user_id')->references('id')->on('authuser');
+			$table->foreign('meta_id')->references('id')->on('authmeta');
+
+			$table->unique(array('user_id', 'meta_id'));
 		});
 
+		// the following “seeding” is needed in every case – even if the seeders will not be run!
 		DB::update("INSERT INTO ".$this->tablename." (user_id, meta_id) VALUES(1, 1);");
 		DB::update("INSERT INTO ".$this->tablename." (user_id, meta_id) VALUES(1, 2);");
 	}

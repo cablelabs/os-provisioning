@@ -10,7 +10,7 @@ class PermissionDeniedError extends Exception {
 /**
  * Error to use if user is not logged in
  */
-class NoLoginError extends PermissionDeniedError {
+class NoAuthenticatedUserError extends PermissionDeniedError {
 }
 
 

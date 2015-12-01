@@ -1,5 +1,6 @@
 <?php
 
+require_once(app_path().'/Exceptions.php');
 
 class BaseController extends Controller {
 
@@ -7,6 +8,35 @@ class BaseController extends Controller {
 
 	protected $index_create_allowed = true;
 
+	public function __construct() {
+		$this->_check_permissions("write");
+	}
+
+	/**
+	 * Check if user has permission to continue
+	 *
+	 * @param $access [view|create|edit|delete]
+	 */
+	protected function _check_permissions($access) {
+
+		// get the currently authenticated user
+		$user = Auth::getUser();
+		$user = Authuser::find(1);
+
+		// no user logged in
+		if (is_null($user)) {
+			throw new NoAuthenticatedUserError("No user logged in");
+		}
+
+		dd($user->hasModel($this->get_model_name(), "write"));
+		// $access allowed on current model?
+		/* if (!$user->hasModel($this->get_model_name(), $access) { */
+		/* 	throw new NoModelPermissionError(Auth::id(), "No permission to ".$access." in ".$this->get_model_name()); */
+		/* } */
+
+		// $access allowed on current net
+		// TODO!!
+	}
 
 	/**
 	 * Returns a default input data array, that shall be overwritten from the appropriate model controller if needed
