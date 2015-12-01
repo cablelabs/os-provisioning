@@ -80,7 +80,14 @@ class TreeErdController extends HfcBaseController {
 		$is_pos = $this->_is_valid_geopos($search);
 		$gid    = $this->graph_id;
 		$target = $this->html_target;
-		$usemap = str_replace ('alt', 'onContextMenu="return getEl(this.id)" alt', file_get_contents(asset($file.'.map'))); 
+
+		$arrContextOptions=array(
+  			"ssl"=>array(
+		        	"verify_peer"=>false,
+			        "verify_peer_name"=>false,
+			),
+		);
+		$usemap = str_replace ('alt', 'onContextMenu="return getEl(this.id)" alt', file_get_contents(asset($file.'.map'), false, stream_context_create($arrContextOptions))); 
 
 		$view_header = "Entity Relation Diagram";
 		$route_name  = 'Tree';
