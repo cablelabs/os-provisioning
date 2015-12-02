@@ -8,34 +8,75 @@ class BaseController extends Controller {
 
 	protected $index_create_allowed = true;
 
-	public function __construct() {
-		$this->_check_permissions("write");
-	}
+	protected $permissions = null;
+	protected $permission_cores = array('model', 'net');
+
 
 	/**
-	 * Check if user has permission to continue
+	 * Get permissions array from model.
+	 * This will overwrite an existing array.
+	 *
+	 * @throws NoAuthenticatedUserError if no user is logged in
+	 */
+	protected function _get_permissions() {
+
+		// get the currently authenticated user
+		$cur_user = Auth::user();
+
+		$this->permissions = array();
+
+		// no user logged in
+		if (is_null($cur_user)) {
+			throw new NoAuthenticateduserError("No user logged in");
+		}
+
+		// get permissions for each role from model
+		$this->permissions['model'] = $cur_user->get_model_permissions();
+	}
+
+
+	/**
+	 * Check if user has permission to continue.
+	 * Use this method to protect your methods
+	 *
+	 * @author Patrick Reichel
 	 *
 	 * @param $access [view|create|edit|delete]
+	 *
+	 * @throws NoAuthenticatedUserError if no user is logged in
+	 * @throws NoModelPermissionError if user is not allowed to acces the model
+	 * @throws InvalidPermissionsRequest if permission request is invalid
+	 * @throws InsufficientRightsError if user has not the specific right needed to perform an action
 	 */
 	protected function _check_permissions($access) {
 
 		// get the currently authenticated user
-		$user = Auth::getUser();
-		$user = Authuser::find(1);
+		$cur_user = Auth::user();
+
+		$cur_model = $this->get_model_name();
 
 		// no user logged in
-		if (is_null($user)) {
-			throw new NoAuthenticatedUserError("No user logged in");
+		if (is_null($cur_user)) {
+			throw new NoAuthenticateduserError("No user logged in");
 		}
 
-		dd($user->hasModel($this->get_model_name(), "write"));
-		// $access allowed on current model?
-		/* if (!$user->hasModel($this->get_model_name(), $access) { */
-		/* 	throw new NoModelPermissionError(Auth::id(), "No permission to ".$access." in ".$this->get_model_name()); */
-		/* } */
+		// build permissions array for easy access to user rights
+		if (is_null($this->permissions)) {
+			$this->_get_permissions();
+		}
 
-		// $access allowed on current net
-		// TODO!!
+		// check model rights
+		if (!array_key_exists($cur_model, $this->permissions['model'])) {
+			throw new NoModelPermissionError('Access to model '.$cur_model.' not allowed.');
+		}
+		if (!array_key_exists($access, $this->permissions['model'][$cur_model])) {
+			throw new InvalidPermissionsRequest('Something went wrong asking for '.$access.' right in '.$model.'.');
+		}
+		if ($this->permissions['model'][$cur_model][$access] == 0) {
+			throw new InsufficientRightsError('You are not allowed to '.$access.' in '.$cur_model.'.');
+		}
+
+		// TODO: check net rights
 	}
 
 	/**
@@ -133,14 +174,14 @@ class BaseController extends Controller {
 	{
 		return explode('\\', $this->get_model_name())[1];
 	}
-	
+
 
 	public function get_view_header_links ()
 	{
 		$ret = array();
 		$modules = Module::enabled();
-		
-		foreach ($modules as $module) 
+
+		foreach ($modules as $module)
 		{
 			foreach (Config::get($module->getName().'::header') as $line)
 				array_push($ret, $line);
@@ -223,6 +264,13 @@ class BaseController extends Controller {
 	 */
 	public function index()
 	{
+		try {
+			$this->_check_permissions("view");
+		}
+		catch (PermissionDeniedError $ex) {
+			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
+		}
+
 		$obj = $this->get_model_obj();
 
 		$model_name 	= $this->get_model_name();
@@ -235,9 +283,11 @@ class BaseController extends Controller {
 		$view_path = 'Generic.index';
 		$view_header_links = $this->get_view_header_links();
 
+		// TODO: show only entries a user has at view rights on model and net!!
+		Log::warning('Showing only index() elements a user can access is not yet implemented');
 
 		if (View::exists($this->get_view_name().'.index'))
-			$view_path = $this->get_view_name().'.index';		
+			$view_path = $this->get_view_name().'.index';
 
 		return View::make($view_path, compact('model_name', 'view_header', 'view_var', 'create_allowed', 'route_name', 'view_header_links'));
 	}
@@ -251,6 +301,13 @@ class BaseController extends Controller {
 	 */
 	public function create()
 	{
+		try {
+			$this->_check_permissions("create");
+		}
+		catch (PermissionDeniedError $ex) {
+			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
+		}
+
 		$obj = $this->get_model_obj();
 
 		$model_name 	= $this->get_model_name();
@@ -280,6 +337,13 @@ class BaseController extends Controller {
 	 */
 	protected function store()
 	{
+		try {
+			$this->_check_permissions("create");
+		}
+		catch (PermissionDeniedError $ex) {
+			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
+		}
+
 		// dd(Input::all());
 		$obj = $this->get_model_obj();
 		$controller = $this->get_controller_obj();
@@ -305,6 +369,14 @@ class BaseController extends Controller {
 	 */
 	public function edit($id)
 	{
+		try {
+			// this needs view rights; edit rights are checked in store/update methods!
+			$this->_check_permissions("view");
+		}
+		catch (PermissionDeniedError $ex) {
+			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
+		}
+
 		$obj = $this->get_model_obj();
 		//${$this->get_view_var()} = $obj->findOrFail($id);
 
@@ -337,6 +409,13 @@ class BaseController extends Controller {
 	 */
 	public function update($id)
 	{
+		try {
+			$this->_check_permissions("edit");
+		}
+		catch (PermissionDeniedError $ex) {
+			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
+		}
+
 		// dd(Input::all());
 
 		$obj = $this->get_model_obj()->findOrFail($id);
@@ -365,6 +444,13 @@ class BaseController extends Controller {
 	 */
 	public function destroy($id)
 	{
+		try {
+			$this->_check_permissions("delete");
+		}
+		catch (PermissionDeniedError $ex) {
+			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
+		}
+
 		if ($id == 0)
 		{
 			// bulk delete

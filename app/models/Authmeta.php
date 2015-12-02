@@ -22,6 +22,7 @@ class Authmeta extends BaseModel {
 		return DB::table('authmetacore')
 					->join('authcores', 'authmetacore.core_id', '=', 'authcores.id')
 					->select('authcores.name', 'authmetacore.view', 'authmetacore.create', 'authmetacore.edit', 'authmetacore.delete')
+					->where('authmetacore.meta_id', '=', $meta_id)
 					->where('authcores.type', 'LIKE', $core_type)
 					->get();
 	}
