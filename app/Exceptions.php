@@ -4,8 +4,19 @@
  * Basic permission error
  */
 class PermissionDeniedError extends Exception {
-}
 
+	/**
+	 * Constructor.
+	 * Adds logging
+	 */
+	public function __construct($message=null, $code=0, Exception $previous=null) {
+
+		parent::__construct($message, $code, $previous);
+
+		// Log every problem with permission
+		Log::warning($message);
+	}
+}
 
 /**
  * Error to use if user is not logged in
@@ -13,6 +24,11 @@ class PermissionDeniedError extends Exception {
 class NoAuthenticatedUserError extends PermissionDeniedError {
 }
 
+/**
+ * Error to use if something is wrong with the request
+ */
+class InvalidPermissionsRequest extends PermissionDeniedError {
+}
 
 /**
  * Error to use if access to model is not allowed
@@ -26,27 +42,8 @@ class NoModelPermissionError extends PermissionDeniedError {
 class NoNetPermissionError extends PermissionDeniedError {
 }
 
-
 /**
- * Error to use if reading is not allowed
+ * Error to use if requested action (read, write, etc.) is not allowed
  */
-class NoReadPermissionError extends PermissionDeniedError {
-}
-
-/**
- * Error to use if writing is not allowed
- */
-class NoWritePermissionError extends PermissionDeniedError {
-}
-
-/**
- * Error to use if deleting is not allowed
- */
-class NoDeletePermissionError extends PermissionDeniedError {
-}
-
-/**
- * Error to use if creating is not allowed
- */
-class NoCreatePermissionError extends PermissionDeniedError {
+class InsufficientRightsError extends PermissionDeniedError {
 }

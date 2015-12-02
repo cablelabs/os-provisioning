@@ -127,7 +127,14 @@ class BaseModel extends \Eloquent
 	 *         Torsten Schmidt: add modules path
 	 */
 	public static function get_models() {
-		$exclude = array('BaseModel');
+
+		// models to be excluded from search
+		$exclude = array(
+			'BaseModel',
+			'Authuser',
+			'Authmeta',
+			'Authcore'
+		);
 		$result = array();
 
 		/*
