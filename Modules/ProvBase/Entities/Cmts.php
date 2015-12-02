@@ -90,7 +90,7 @@ class Cmts extends \BaseModel {
 		if (!$ippools->has('0'))
 		{
 			File::put($file, '');
-			return -1;
+			goto _exit;
 		}
 
 		File::put($file, 'shared-network "'.$this->hostname.'"'."\n".'{'."\n");
@@ -178,11 +178,10 @@ class Cmts extends \BaseModel {
 			File::append($file_dhcp_conf, "\n".'include "'.$file.'";');
 		}
 
+
+_exit:
 		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
         system('/bin/chown -R apache /etc/dhcp/');
-
-        // restart server with new config until we use dhcpctl (or OMAPI, or omshell)
-        // system('systemctl restart dhcpd.service');      	//doesnt work as is - rights??
 	}
 
 	/**
