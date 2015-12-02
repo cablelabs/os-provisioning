@@ -24,6 +24,7 @@ class PermissionDeniedError extends Exception {
 class NoAuthenticatedUserError extends PermissionDeniedError {
 }
 
+<<<<<<< HEAD
 /**
  * Error to use if something is wrong with the request
  */
@@ -42,6 +43,8 @@ class NoModelPermissionError extends PermissionDeniedError {
 class NoNetPermissionError extends PermissionDeniedError {
 }
 
+=======
+>>>>>>> d18569773f09123c6990e86ca53f6387b9901ad7
 /**
  * Error to use if requested action (read, write, etc.) is not allowed
  */
