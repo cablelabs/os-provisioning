@@ -349,7 +349,12 @@ class BaseController extends Controller {
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
-		$obj->touch();			// update timestamp, this forces to run all observer's
+		// update timestamp, this forces to run all observer's
+		// Note: calling touch() forces a direct save() which calls all observers before we update $data
+		//       when exit in middleware to a new view page (like Modem restart) this kill update process
+		$data['updated_at'] = Carbon\Carbon::now(Config::get('app.timezone'));
+
+		// the Update
 		$obj->update($data);
 
 		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Updated!');
