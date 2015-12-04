@@ -118,8 +118,9 @@ class BaseController extends Controller {
 		
 		foreach ($modules as $module) 
 		{
-			foreach (Config::get($module->getName().'::header') as $line)
-				array_push($ret, $line);
+			if (File::exists($module->getPath().'/Config/header.php'))
+				foreach (Config::get($module->getName().'::header') as $line)
+					array_push($ret, $line);
 		}
 
 		return $ret;
