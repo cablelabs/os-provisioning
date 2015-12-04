@@ -69,6 +69,16 @@ class Modem extends \BaseModel {
         return $this->belongsTo("Modules\ProvBase\Entities\Qos");
     }
 
+    public function contract()
+    {
+        return $this->belongsTo('Modules\ProvBase\Entities\Contract', 'contract_id');
+    }
+
+    public function contracts()
+    {
+        return Contract::get();
+    }
+
     public function mtas()
     {
         if ($this->module_is_active('ProvVoip'))
@@ -85,7 +95,15 @@ class Modem extends \BaseModel {
         return null;
     }
 
-    // returns all objects that are related to a cmts
+
+    /*
+     * Relation Views
+     */
+    public function view_belongs_to ()
+    {
+        return $this->contract;
+    }
+
     public function view_has_many()
     {
         if ($this->module_is_active('ProvVoip'))
@@ -95,6 +113,7 @@ class Modem extends \BaseModel {
 
         return array();
     }
+
 
     /**
      * BOOT:

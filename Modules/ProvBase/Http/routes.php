@@ -20,6 +20,8 @@ Route::group(array('before' => 'auth'), function() {
 	Route::get('endpoint/fulltextSearch', array('as' => 'Endpoint.fulltextSearch', 'uses' => 'Modules\ProvBase\Http\Controllers\EndpointController@fulltextSearch'));
 	Route::get('configfile/fulltextSearch', array('as' => 'Configfile.fulltextSearch', 'uses' => 'Modules\ProvBase\Http\Controllers\ConfigfileController@fulltextSearch'));
 	Route::get('qos/fulltextSearch', array('as' => 'Qos.fulltextSearch', 'uses' => 'Modules\ProvBase\Http\Controllers\QosController@fulltextSearch'));
+	Route::get('contract/fulltextSearch', array('as' => 'Contract.fulltextSearch', 'uses' => 'Modules\ProvBase\Http\Controllers\ContractController@fulltextSearch'));
+
 
 	// routes controller with predefined methods
 	// add array('only' => array('edit', 'update')) as third parameter to only allow these routes
@@ -31,5 +33,6 @@ Route::group(array('before' => 'auth'), function() {
 	#Route::post('endpoint/json', 'Modules\ProvBase\Http\Controllers\EndpointController@json');
 	Route::resource('Configfile', 'Modules\ProvBase\Http\Controllers\ConfigfileController');
 	Route::resource('Qos', 'Modules\ProvBase\Http\Controllers\QosController');
+	Route::resource('Contract', 'Modules\ProvBase\Http\Controllers\ContractController');
 
 });

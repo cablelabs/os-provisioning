@@ -15,13 +15,11 @@ class ModemController extends \BaseModuleController {
      */
 	public function get_form_fields($model = null)
 	{
-		if (!$model)
-			$model = new Modem;
-
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
 			array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly']),
+			array('form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'value' => $model->html_list($model->contracts(), 'id')),
 			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC adress'),
 			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list($model->configfiles(), 'name')),
 			array('form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'),

@@ -29,6 +29,11 @@
 			?>
 		{{ Form::closeGroup() }}
 
+		<?php
+			if (array_key_exists('space', $field))
+				echo "<div class=col-md-12>_</div>";
+		?>
+
 	@endforeach
 
 	{{ Form::submit('Save') }}

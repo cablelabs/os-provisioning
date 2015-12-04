@@ -20,9 +20,9 @@
         <div class="col-md-5">
 
               <br>
-              <h4>
+              <h5>
                 @yield('content_top')
-              </h4>
+              </h5>
         </div>
 
         <ul class="nav navbar-nav navbar-right">
