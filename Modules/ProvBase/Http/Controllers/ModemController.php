@@ -79,7 +79,10 @@ class ModemController extends \BaseModuleController {
 		$view_header = "Modems";
 		$create_allowed = $this->index_create_allowed;
 
-		return \View::make('provbase::Modem.index', $this->compact_prep_view(compact('panel_right', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search')));
+		$preselect_field = \Input::get('preselect_field');
+		$preselect_value = \Input::get('preselect_value');
+
+		return \View::make('provbase::Modem.index', $this->compact_prep_view(compact('panel_right', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search', 'preselect_field', 'preselect_value')));
 	}
 
 
@@ -103,9 +106,14 @@ class ModemController extends \BaseModuleController {
 		$query = \Input::get('query');
 		$pre_f = \Input::get('preselect_field');
 		$pre_v = \Input::get('preselect_value');
+		$pre_t = '';
 
-		// perform search
-		$modems = $obj->getFulltextSearchResults($scope, $mode, $query, $pre_f, $pre_v);
+		// perform Modem search
+		$modems = $obj->getFulltextSearchResults($scope, $mode, $query, $pre_f, $pre_v)[0];
+		
+		// perform contract search
+		$obj = new \Modules\ProvBase\Entities\Contract;
+		$contracts = $obj->getFulltextSearchResults('contract', $mode, $query, $pre_f, $pre_v)[0];
 
 		// generate Topography
 		if (\Input::get('topo') == '1')
@@ -118,15 +126,22 @@ class ModemController extends \BaseModuleController {
 			$body_onload       = 'init_for_map';
 		}
 
+		if ($pre_f && $pre_v)
+			$pre_t = ' Search in '.strtoupper($pre_f).' '.\Modules\HfcBase\Entities\Tree::find($pre_v)->name;
+
 		$panel_right = [['name' => 'List', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '0', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]], 
 						['name' => 'Topography', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '1', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]]];
 
-		$view_var    = $modems[0]->get();
+		$view_var    = $modems->get();
+		$view_var    = $view_var->merge($contracts->get());
 		$route_name  = 'Modem';
-		$view_header = "Modems";
+		$view_header = 'Modems '.$pre_t;
 		$create_allowed = $this->index_create_allowed;
 
-		return \View::make('provbase::Modem.index', $this->compact_prep_view(compact('panel_right', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search')));
+		$preselect_field = \Input::get('preselect_field');
+		$preselect_value = \Input::get('preselect_value');
+
+		return \View::make('provbase::Modem.index', $this->compact_prep_view(compact('panel_right', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search', 'preselect_field', 'preselect_value')));
 	}
 
 

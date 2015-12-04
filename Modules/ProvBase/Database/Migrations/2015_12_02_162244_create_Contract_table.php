@@ -50,6 +50,8 @@ class CreateContractTable extends BaseMigration {
 			$table->boolean('create_invoice');
 			$table->string('login', 32);
 			$table->string('password', 32);
+			$table->integer('net');
+			$table->integer('cluster');
 			$table->text('description');
 		});
 

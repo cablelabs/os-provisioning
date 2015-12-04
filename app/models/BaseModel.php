@@ -186,7 +186,7 @@ class BaseModel extends \Eloquent
 	 * @return sql search statement, could be included in a normal while()
 	 * @author Torsten Schmidt
 	 */
-	private function __preselect_search($field, $value)
+	private function __preselect_search($field, $value, $model)
 	{
 		$ret = '1';
 
@@ -196,7 +196,7 @@ class BaseModel extends \Eloquent
 
 			if($this->module_is_active('Hfcbase'))
 			{
-				if ($field == 'net' || $field == 'cluster')
+				if (($model[0] == 'Modules\ProvBase\Entities\Modem') && ($field == 'net' || $field == 'cluster'))
 				{
 					$ret = 'tree_id IN(-1';
 					foreach (Modules\HfcBase\Entities\Tree::where($field, '=', $value)->get() as $tree) 
@@ -223,7 +223,7 @@ class BaseModel extends \Eloquent
 	 */
 	protected function _doSimpleSearch($_models, $query, $preselect_field=null, $preselect_value=null) 
 	{
-		$preselect = $this->__preselect_search($preselect_field, $preselect_value);
+		$preselect = $this->__preselect_search($preselect_field, $preselect_value, $_models);
 
 		/*
 		 * Model Checking: Prepare $models array: skip Models without a valid SQL table

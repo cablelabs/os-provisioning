@@ -27,7 +27,6 @@
 	{{ Form::openDivClass(12) }}
 		{{ Form::openDivClass(3) }}
 			@if ($create_allowed)
-
 				{{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
 				{{ Form::submit('Create', ['style' => 'simple']) }}
 				{{ Form::close() }}

@@ -1,6 +1,12 @@
 {{ Form::openDivClass(9) }}
 	<?php $query = (isset($_GET['query']) ? $_GET['query'] : '') ?>
 	{{ Form::text('query', $query, array('style' => 'simple')) }}
+
+	@if (isset($preselect_field))
+		{{ Form::hidden('preselect_field', $preselect_field) }}
+		{{ Form::hidden('preselect_value', $preselect_value) }}
+	@endif
+	
 {{ Form::closeDivClass() }}
 
 {{ Form::openDivClass(3) }}
