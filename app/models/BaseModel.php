@@ -217,28 +217,49 @@ class BaseModel extends \Eloquent
 	 * @param $query query to search for
 	 * @param $preselect_field sql field for pre selection
 	 * @param $preselect_field sql search value for pre selection
-	 * @return search result
+	 * @return search result: array of whereRaw() results, this means array of class Illuminate\Database\Quer\Builder objects
 	 * @author Patrick Reichel, 
-	 *         Torsten Schmidt: add preselection
+	 *         Torsten Schmidt: add preselection, add Model checking
 	 */
-	protected function _doSimpleSearch($models, $query, $preselect_field=null, $preselect_value=null) 
+	protected function _doSimpleSearch($_models, $query, $preselect_field=null, $preselect_value=null) 
 	{
 		$preselect = $this->__preselect_search($preselect_field, $preselect_value);
 
-		foreach ($models as $model) {
+		/*
+		 * Model Checking: Prepare $models array: skip Models without a valid SQL table
+		 */
+		$models = [];
+		foreach ($_models as $model)
+		{
+			if (!class_exists($model))
+				continue;
 
+			$tmp = new $model;
+
+			if (!property_exists($tmp, 'table'))
+				continue;
+
+			if (!Schema::hasTable($tmp->table))
+				continue;
+
+			array_push ($models, $model);
+		}
+
+		/*
+		 * Perform the search
+		 */
+		$result = [];
+		foreach ($models as $model) 
+		{
 			// get the database table used for given model
 			$tmp = new $model;
 			$table = $tmp->getTable();
 			$cols = $model::getTableColumns($table);
 
 			$tmp_result = $model::whereRaw("($preselect) AND CONCAT_WS('|', ".$cols.") LIKE ?", array($query));
-			if (!isset($result)) {
-				$result = $tmp_result;
-			}
-			else {
-				$result = $result->merge($tmp_result);
-			}
+			if ($tmp_result) 
+				array_push($result, $tmp_result);
+
 		}
 		return $result;
 	}
@@ -285,6 +306,8 @@ class BaseModel extends \Eloquent
 
 	/**
 	 * Get results for a fulltext search
+	 *
+	 * @return search result array of whereRaw() results, this means array of class Illuminate\Database\Quer\Builder objects
 	 *
 	 * @author Patrick Reichel
 	 */
@@ -334,7 +357,7 @@ class BaseModel extends \Eloquent
 				}
 
 				# search is against the fulltext index
-				$result = $this->whereRaw("MATCH(".$indexed_cols.") AGAINST(? ".$mode.")", array($query));
+				$result = [$this->whereRaw("MATCH(".$indexed_cols.") AGAINST(? ".$mode.")", array($query))];
 			}
 		}
 		else {

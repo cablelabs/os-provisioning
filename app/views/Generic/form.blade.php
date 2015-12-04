@@ -7,10 +7,13 @@
 			$value   = null;
 			$options = null;
 
+			// prepare $options and $value 
 			if (array_key_exists('value', $field))
 				$value = $field["value"];
 			if (array_key_exists('options', $field))
 				$options = $field["options"];
+
+			// hide "hidden" fields and continue
 			if (isset($_GET[$field['name']]))
 			{
 				echo Form::hidden ($field["name"], $_GET[$field['name']]);

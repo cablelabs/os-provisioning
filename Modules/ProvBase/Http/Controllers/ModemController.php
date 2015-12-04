@@ -123,7 +123,7 @@ class ModemController extends \BaseModuleController {
 		$panel_right = [['name' => 'List', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '0', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]], 
 						['name' => 'Topography', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '1', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]]];
 
-		$view_var    = $modems->get();
+		$view_var    = $modems[0]->get();
 		$route_name  = 'Modem';
 		$view_header = "Modems";
 		$create_allowed = $this->index_create_allowed;
