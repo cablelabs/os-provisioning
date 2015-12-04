@@ -1,18 +1,19 @@
 <?php 
 
-use Illuminate\Validation\Validator;
 use Models\Configfiles;
 
 
 /*
  * Our own ExtendedValidator Class
  *
+ * IMPORTANT: add Validator::extend('xyz', 'ExtendedValidator@validateXyz'); to app/start/global.php
  *
- * Extended Validator is loaded in start/global.php
- * and will be used as normal Validator.
- * TODO: Maybe we should use a service provider instead ?
+ * TODO: Use it with service provider API
+ *
+ * Note: problem is that while loading multiple external Validator classes 
+ * we can not extend the entire Validator class. This should be fixed with service provider API (?)
  */
-class ExtendedValidator extends Validator
+class ExtendedValidator
 {
 	/*
 	 * MAC validation

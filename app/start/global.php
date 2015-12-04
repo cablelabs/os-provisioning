@@ -86,7 +86,9 @@ require app_path().'/filters.php';
  * Extend Validator Class
  * see extensions/validators/..
  */
-Validator::resolver(function($translator, $data, $rules, $messages)
-{
-    return new ExtendedValidator($translator, $data, $rules, $messages);
-});
+Validator::extend('ip', 'ExtendedValidator@validateIpaddr');
+Validator::extend('mac', 'ExtendedValidator@validateMac');
+Validator::extend('geopos', 'ExtendedValidator@validateGeopos');
+Validator::extend('docsis', 'ExtendedValidator@validateDocsis');
+
+
