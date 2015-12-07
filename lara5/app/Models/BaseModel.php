@@ -1,11 +1,14 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+
 /**
  *	Class to add functionality – use instead of Eloquent for your models
  */
-class BaseModel extends \Eloquent
+class BaseModel extends Eloquent
 {
-	use SoftDeletingTrait;
+	use SoftDeletes;
 
 	/**
 	 * check if module exists

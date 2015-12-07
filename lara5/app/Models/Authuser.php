@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Auth\UserTrait;
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableTrait;
-use Illuminate\Auth\Reminders\RemindableInterface;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 /**
  * Model holding user data for authentication
@@ -15,11 +15,10 @@ use Illuminate\Auth\Reminders\RemindableInterface;
  *	b) Is the queried entity (e.g. modem) in a network the user is allowed to read from/write in?
  *	c) If man wants to create/edit/delete an entity model AND net must allow writing!
  */
-class Authuser extends BaseModel implements UserInterface, RemindableInterface {
+class Authuser extends BaseModel implements AuthenticatableContract, CanResetPasswordContract {
 /* class Authuser extends BaseModel implements RemindableInterface { */
 
-	use UserTrait;
-	use RemindableTrait;
+	use Authenticatable, CanResetPassword;
 
 	/**
 	 * Get all the meta entities (roles, clients) the user belongs to
