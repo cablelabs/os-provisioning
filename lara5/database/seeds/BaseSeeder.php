@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Database\Seeder;
+
 class BaseSeeder extends Seeder {
 
 	protected $max_seed = 10;

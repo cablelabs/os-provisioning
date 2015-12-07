@@ -200,6 +200,7 @@ return [
 		'Form'      => 'Collective\Html\FormFacade',
 		'Html'      => 'Collective\Html\HtmlFacade',
 		'HTML'      => 'Collective\Html\HtmlFacade',
+		'Str'       => 'Illuminate\Support\Str',
 
 		'BaseModuleController' => 'App\Http\Controllers\BaseModuleController',
 		'HtmlServiceProvider'  => 'Acme\html\HtmlServiceProvider',
