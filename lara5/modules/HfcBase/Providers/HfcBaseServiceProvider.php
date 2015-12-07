@@ -18,7 +18,7 @@ class HfcBaseServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		\View::addNamespace('hfcbase', __DIR__.'/../Resources/views');
 	}
 
 	/**

@@ -11,6 +11,7 @@ class ProvBaseServiceProvider extends ServiceProvider {
 	 */
 	protected $defer = false;
 
+
 	/**
 	 * Register the service provider.
 	 *
@@ -18,7 +19,7 @@ class ProvBaseServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		\View::addNamespace('provbase', __DIR__.'/../Resources/views');
 	}
 
 	/**

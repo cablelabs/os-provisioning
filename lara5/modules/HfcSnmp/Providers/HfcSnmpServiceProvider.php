@@ -18,7 +18,7 @@ class HfcSnmpServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		\View::addNamespace('hfcsnmp', __DIR__.'/../Resources/views');
 	}
 
 	/**

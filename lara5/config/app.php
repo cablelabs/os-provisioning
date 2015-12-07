@@ -148,6 +148,7 @@ return [
 
 		'Pingpong\Modules\ModulesServiceProvider',
 		'Collective\Html\HtmlServiceProvider',
+		'Acme\html\HtmlServiceProvider',
 	],
 
 	/*
@@ -198,8 +199,10 @@ return [
 		'Module'    => 'Pingpong\Modules\Facades\Module',
 		'Form'      => 'Collective\Html\FormFacade',
 		'Html'      => 'Collective\Html\HtmlFacade',
+		'HTML'      => 'Collective\Html\HtmlFacade',
 
 		'BaseModuleController' => 'App\Http\Controllers\BaseModuleController',
+		'HtmlServiceProvider'  => 'Acme\html\HtmlServiceProvider',
 	],
 
 ];

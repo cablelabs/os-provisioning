@@ -18,7 +18,7 @@ class ProvVoipServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		\View::addNamespace('provvoip', __DIR__.'/../Resources/views');
 	}
 
 	/**

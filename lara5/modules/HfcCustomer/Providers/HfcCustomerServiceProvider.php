@@ -18,7 +18,7 @@ class HfcCustomerServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		\View::addNamespace('hfccustomer', __DIR__.'/../Resources/views');
 	}
 
 	/**

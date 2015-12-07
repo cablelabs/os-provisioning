@@ -24,7 +24,8 @@
 		],
 		"psr-4": {
 			"App\\": "app/",
-			"Modules\\": "modules"
+			"Modules\\": "modules",
+			"Acme\\": "app/extensions/",
 		}
 	},
 	"autoload-dev": {

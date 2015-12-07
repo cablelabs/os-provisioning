@@ -8,5 +8,6 @@
 | This file will loaded automatically.
 |
 */
+App::register('Modules\ProvVoip\Providers\ProvVoipServiceProvider');
 
 require __DIR__ . '/Http/routes.php';
