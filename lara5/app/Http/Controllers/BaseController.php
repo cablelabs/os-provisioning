@@ -1,5 +1,11 @@
 <?php
 
+namespace App\Http\Controllers;
+
+use Module;
+use Config;
+use File;
+use View;
 
 class BaseController extends Controller {
 
@@ -175,7 +181,7 @@ class BaseController extends Controller {
 		{
 			$a['networks'] = [];
 			if ($model->module_is_active('HfcBase'))
-				$a['networks'] = Modules\HfcBase\Entities\Tree::get_all_net();
+				$a['networks'] = \Modules\HfcBase\Entities\Tree::get_all_net();
 		}
 
 		if(!isset($a['view_header_links']))

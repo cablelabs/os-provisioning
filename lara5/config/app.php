@@ -146,6 +146,8 @@ return [
 		'App\Providers\RouteServiceProvider',
 
 		'Pingpong\Modules\ModulesServiceProvider',
+
+		'BaseModuleController' => 'App\Http\Controllers\BaseModuleController',
 	],
 
 	/*

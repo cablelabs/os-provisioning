@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Controllers;
+use Route;
 
 class BaseModuleController extends BaseController {
 
