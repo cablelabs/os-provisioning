@@ -125,8 +125,15 @@ class BaseController extends Controller {
 		foreach ($modules as $module) 
 		{
 			if (File::exists($module->getPath().'/Config/header.php'))
-				foreach (Config::get($module->getName().'::header') as $line)
+			{
+				/*
+				 * TODO: use Config::get() 
+				 *       this needs to fix namespace problems first
+				 */
+				$lines = include ($module->getPath().'/Config/header.php');
+				foreach ($lines as $line)
 					array_push($ret, $line);
+			}
 		}
 
 		return $ret;
