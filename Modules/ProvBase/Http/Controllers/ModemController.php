@@ -24,7 +24,14 @@ class ModemController extends \BaseModuleController {
 			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list($model->configfiles(), 'name')),
 			array('form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'),
 			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Network Access', 'value' => '1'),
-			array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'Quality', 'value' => $model->html_list($model->qualities(), 'name')),
+			array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'Quality', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1'),
+
+			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname'),
+			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname'),
+			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street'),
+			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode'),
+			array('form_type' => 'text', 'name' => 'city', 'description' => 'City', 'space' => '1'),
+
 			array('form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number'),
 			array('form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'),
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
@@ -89,7 +96,9 @@ class ModemController extends \BaseModuleController {
 	/**
 	 * Perform a fulltext search.
 	 *
-	 * Changes to BaseController: Topography Mode when HfcCustomer Module is active
+	 * Changes to BaseController: 
+	 *  - Topography Mode when HfcCustomer Module is active
+	 *  - also search for Contracts while searching for Modems
 	 *
 	 * @author Torsten Schmidt
 	 */

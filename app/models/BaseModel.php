@@ -330,6 +330,7 @@ class BaseModel extends \Eloquent
 
 			if ($scope == 'all') {
 				$models = $this->_getModels();
+				$preselect_field = $preselect_value = null;
 			}
 			else {
 				$models = array(get_class($this));

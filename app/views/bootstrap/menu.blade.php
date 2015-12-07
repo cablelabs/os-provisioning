@@ -30,9 +30,10 @@
             <?php
               // searchscope for following form is 'all' => search within all models
               $next_scope = 'all';
+              $preselect_field = $preselect_value = null; // drop pre-selection
             ?>
                  
-            {{ Form::model(null, array('route'=>$route_name.'.fulltextSearch', 'method'=>'GET')) }}
+            {{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET')) }}
               @include('Generic.searchform')
             {{ Form::close() }}
 

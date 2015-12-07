@@ -16,3 +16,10 @@ Route::get('login', array('uses' => 'AuthController@showLogin'));
 
 // Auth => process form data
 Route::post('login', array('uses' => 'AuthController@doLogin'));
+
+
+// Authentification is necessary before accessing a route
+Route::group(array('before' => 'auth'), function() {
+	// Base routes for global search
+	Route::get('base/fulltextSearch', array('as' => 'Base.fulltextSearch', 'uses' => 'BaseController@fulltextSearch'));
+});

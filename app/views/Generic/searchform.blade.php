@@ -21,7 +21,7 @@
 		--}}
 	{{ Form::hidden('scope', Str::lower($next_scope)) }}
 
-	<?php $button_text = ($next_scope == 'all' ? '?' : 'Search') ?>
+	<?php $button_text = (isset ($button_text) ? $button_text : ($next_scope == 'all' ? '?' : 'Search')) ?>
 
 	{{ Form::submit($button_text, ['style' => 'simple', 'class' => 'fa fa-search'] ) }}
 

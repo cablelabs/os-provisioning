@@ -5,6 +5,7 @@ namespace Modules\ProvBase\Database\Seeders;
 // Composer: "fzaninotto/faker": "v1.3.0"
 use Faker\Factory as Faker;
 use Modules\ProvBase\Entities\IpPool;
+use Modules\ProvBase\Entities\Cmts;
 
 class IpPoolTableSeeder extends \BaseSeeder {
 
@@ -16,7 +17,7 @@ class IpPoolTableSeeder extends \BaseSeeder {
 		foreach(range(1, $this->max_seed) as $index)
 		{
 			IpPool::create([
-				'cmts_id' => rand(1,$this->max_seed_l2),
+				'cmts_id' => CMTS::all()->random(1)->id,
 				'type' => rand(0,3),
 				'net' => '10.'.$m.'.'.$n.'.0',
 				'netmask' => '255.255.255.0',
