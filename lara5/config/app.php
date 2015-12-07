@@ -13,7 +13,7 @@ return [
 	|
 	*/
 
-	'debug' => env('APP_DEBUG'),
+	'debug' =>  env('APP_DEBUG'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -135,6 +135,7 @@ return [
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
+		'Illuminate\Html\HtmlServiceProvider',
 
 		/*
 		 * Application Service Providers...
@@ -146,8 +147,7 @@ return [
 		'App\Providers\RouteServiceProvider',
 
 		'Pingpong\Modules\ModulesServiceProvider',
-
-		'BaseModuleController' => 'App\Http\Controllers\BaseModuleController',
+		'Collective\Html\HtmlServiceProvider',
 	],
 
 	/*
@@ -195,8 +195,11 @@ return [
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
+		'Module'    => 'Pingpong\Modules\Facades\Module',
+		'Form'      => 'Collective\Html\FormFacade',
+		'Html'      => 'Collective\Html\HtmlFacade',
 
-		'Module' => 'Pingpong\Modules\Facades\Module',
+		'BaseModuleController' => 'App\Http\Controllers\BaseModuleController',
 	],
 
 ];
