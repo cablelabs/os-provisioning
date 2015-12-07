@@ -20,9 +20,9 @@
         <div class="col-md-5">
 
               <br>
-              <h4>
+              <h5>
                 @yield('content_top')
-              </h4>
+              </h5>
         </div>
 
         <ul class="nav navbar-nav navbar-right">
@@ -30,9 +30,10 @@
             <?php
               // searchscope for following form is 'all' => search within all models
               $next_scope = 'all';
+              $preselect_field = $preselect_value = null; // drop pre-selection
             ?>
                  
-            {{ Form::model(null, array('route'=>$route_name.'.fulltextSearch', 'method'=>'GET')) }}
+            {{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET')) }}
               @include('Generic.searchform')
             {{ Form::close() }}
 

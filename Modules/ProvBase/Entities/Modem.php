@@ -23,7 +23,8 @@ class Modem extends \BaseModel {
     }
 
 	// Don't forget to fill this array
-	protected $fillable = ['hostname', 'name', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 'inventar_num', 'description', 'parent', 'configfile_id', 'qos_id'];
+	protected $fillable = ['hostname', 'name', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 
+        'inventar_num', 'description', 'parent', 'configfile_id', 'qos_id', 'firstname', 'lastname', 'zip', 'city', 'street'];
 
     
     // Name of View
@@ -69,6 +70,16 @@ class Modem extends \BaseModel {
         return $this->belongsTo("Modules\ProvBase\Entities\Qos");
     }
 
+    public function contract()
+    {
+        return $this->belongsTo('Modules\ProvBase\Entities\Contract', 'contract_id');
+    }
+
+    public function contracts()
+    {
+        return Contract::get();
+    }
+
     public function mtas()
     {
         if ($this->module_is_active('ProvVoip'))
@@ -85,7 +96,15 @@ class Modem extends \BaseModel {
         return null;
     }
 
-    // returns all objects that are related to a cmts
+
+    /*
+     * Relation Views
+     */
+    public function view_belongs_to ()
+    {
+        return $this->contract;
+    }
+
     public function view_has_many()
     {
         if ($this->module_is_active('ProvVoip'))
@@ -95,6 +114,7 @@ class Modem extends \BaseModel {
 
         return array();
     }
+
 
     /**
      * BOOT:

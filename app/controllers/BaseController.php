@@ -118,8 +118,9 @@ class BaseController extends Controller {
 		
 		foreach ($modules as $module) 
 		{
-			foreach (Config::get($module->getName().'::header') as $line)
-				array_push($ret, $line);
+			if (File::exists($module->getPath().'/Config/header.php'))
+				foreach (Config::get($module->getName().'::header') as $line)
+					array_push($ret, $line);
 		}
 
 		return $ret;
@@ -200,16 +201,6 @@ class BaseController extends Controller {
 	 */
 	public function fulltextSearch() {
 
-		$obj = $this->get_model_obj();
-
-		$create_allowed = $this->get_controller_obj()->index_create_allowed;
-
-		$view_path = 'Generic.index';
-
-		if (View::exists($this->get_view_name().'.index'))
-			$view_path = $this->get_view_name().'.index';
-
-
 		// get the search scope
 		$scope = Input::get('scope');
 
@@ -219,7 +210,31 @@ class BaseController extends Controller {
 		// get the query to search for
 		$query = Input::get('query');
 
-		$view_var = $obj->getFulltextSearchResults($scope, $mode, $query, Input::get('preselect_field'), Input::get('preselect_value'))->get();
+		if ($scope == 'all')
+		{
+			$view_path = 'Generic.searchglobal';
+			$obj       = new BaseModel;
+			$view_header = 'Global Search';
+		}
+		else
+		{
+			$obj       = $this->get_model_obj();	
+			$view_path = 'Generic.index';
+
+			if (View::exists($this->get_view_name().'.index'))
+				$view_path = $this->get_view_name().'.index';		
+		}
+
+		$create_allowed = $this->get_controller_obj()->index_create_allowed;
+
+		// perform the search
+		foreach ($obj->getFulltextSearchResults($scope, $mode, $query, Input::get('preselect_field'), Input::get('preselect_value')) as $result)
+		{
+			if(!isset($view_var))
+				$view_var = $result->get();
+			else
+				$view_var = $view_var->merge($result->get());
+		}
 
 		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed', 'query', 'scope')));
 

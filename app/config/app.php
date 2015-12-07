@@ -124,6 +124,7 @@ return array(
 		'Way\Generators\GeneratorsServiceProvider',
 		'Acme\html\HtmlServiceProvider',
 		'Pingpong\Modules\ModulesServiceProvider',
+		'Intervention\Validation\ValidationServiceProvider',
 
 	),
 

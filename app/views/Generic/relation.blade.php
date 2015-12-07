@@ -3,6 +3,15 @@
 
 	{{ Form::open(array('route' => $view.'.create', 'method' => 'GET')) }}
 	{{ Form::hidden($key, $view_var->id) }}
+
+	{{-- Add a hidden form field if create tag is set in $form_fields --}}
+	@foreach($form_fields as $field)
+		<?php 
+			if (array_key_exists('create', $field))
+				echo Form::hidden($field["name"], $view_var->{$field["name"]});
+		?>
+	@endforeach
+
 	{{ Form::submit('Create '.$view, ['style' => 'simple']) }}
 	{{ Form::close() }}
 

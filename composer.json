@@ -8,7 +8,8 @@
 		"fzaninotto/faker": "1.5.*@dev",
 		"way/generators": "dev-feature/v.2.6.1-testing",
 		"soapbox/laravel-formatter": "2.x",
-		"pingpong/modules": "1.*"
+		"pingpong/modules": "1.*",
+		"intervention/validation": "^1.1"
 	},
 
 	"repositories": [

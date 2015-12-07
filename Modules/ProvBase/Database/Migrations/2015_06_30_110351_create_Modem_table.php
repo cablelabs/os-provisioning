@@ -30,6 +30,12 @@ class CreateModemTable extends BaseMigration {
 			$table->string('name');
 			$table->string('hostname');
 			$table->integer('contract_id')->unsigned();
+			$table->string('firstname');
+			$table->string('lastname');
+			$table->string('street');
+			$table->string('zip', 16);
+			$table->string('city');
+			$table->integer('country_id')->unsigned();
 			$table->string('mac')->sizeof(17);
 			$table->integer('status');
 			$table->boolean('public');
