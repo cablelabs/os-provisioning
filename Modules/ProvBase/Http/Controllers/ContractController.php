@@ -23,12 +23,12 @@ class ContractController extends \BaseModuleController {
 		//	array('form_type' => 'text', 'name' => 'number2', 'description' => 'Contract Number 2', 'options' => ['readonly']),
 			array('form_type' => 'text', 'name' => 'salutation', 'description' => 'Salutation'),
 			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
-			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname'),
-			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'space' => '1'),
+			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => '1'),
+			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => '1', 'space' => '1'),
 
-			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street'),
-			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode'),
-			array('form_type' => 'text', 'name' => 'city', 'description' => 'City'),
+			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1'),
+			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1'),
+			array('form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => '1'),
 
 			array('form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'),
 			array('form_type' => 'text', 'name' => 'fax', 'description' => 'Fax'),
