@@ -11,7 +11,10 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		//
+		// use old laravel 4.2 blade tag syntax, NOTE: delete all cached files under storage/views/ when we change this
+		\Blade::setRawTags('{{', '}}');
+		// \Blade::setContentTags('{{{', '}}}');
+		// \Blade::setEscapedContentTags('{{{', '}}}');
 	}
 
 	/**
