@@ -78,7 +78,7 @@
               $name  = $menu['name'];
               $link  = $menu['link'];
             ?>
-            <br>{{ HTML::linkRoute($route, $name, $link); }}
+            <br> {{ HTML::linkRoute($route, $name, $link) }}
           @endforeach
         </h4>
 
