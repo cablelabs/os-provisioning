@@ -22,7 +22,7 @@ class CustomerTopoController extends TreeController {
 	 * Local tmp folder required for generating the images
 	 * app/storage/modules
 	 */
-	private $path_rel = '/modules/Hfccustomer/kml/';
+	private $path_rel = '/modules/hfccustomer/kml/';
 
 	// the absolute path: public_path().$this->path_rel
 	private $path;

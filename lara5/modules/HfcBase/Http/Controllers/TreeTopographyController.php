@@ -20,7 +20,7 @@ class TreeTopographyController extends HfcBaseController {
 	 * Local tmp folder required for generating the kml files
 	 * app/storage/modules
 	 */
-	private $path_rel = '/modules/Hfcbase/kml/';
+	private $path_rel = '/modules/hfcbase/kml/';
 
 
 	/*
@@ -77,7 +77,7 @@ class TreeTopographyController extends HfcBaseController {
 	 */
 	public function kml_generate($_trees)
 	{
-		$file = $this->file_pre(asset('modules/Hfcbase/kml'));
+		$file = $this->file_pre(asset('modules/hfcbase/kml'));
 
 		#
 		# Note: OpenLayer draws kml file in parse order, 

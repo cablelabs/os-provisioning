@@ -20,7 +20,7 @@ class TreeErdController extends HfcBaseController {
 	 * Local tmp folder required for generating the images
 	 * app/storage/modules
 	 */
-	private $path_rel = '/modules/Hfcbase/erd/';
+	private $path_rel = '/modules/hfcbase/erd/';
 
 	// graph id used for graphviz (svg) naming and html map
 	private $graph_id;

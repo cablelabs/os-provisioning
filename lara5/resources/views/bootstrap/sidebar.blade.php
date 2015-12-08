@@ -39,9 +39,9 @@
 	              <span>{{$network->name}}</span> 
 	            </a>
 	            <ul class="sub-menu">
-	            	<li><a href="/lara/Tree/erd/net/{{$network->id}}">Network</a></li>
+	            	<li><a href="{{Request::root()}}/Tree/erd/net/{{$network->id}}">Network</a></li>
 		            @foreach ($network->get_all_cluster_to_net() as $cluster)
-			           <li><a href="/lara/Tree/erd/cluster/{{$cluster->id}}">--{{$cluster->name}}</a></li>
+			           <li><a href="{{Request::root()}}/Tree/erd/cluster/{{$cluster->id}}">--{{$cluster->name}}</a></li>
 			        @endforeach
 		        </ul>
 	          </li>

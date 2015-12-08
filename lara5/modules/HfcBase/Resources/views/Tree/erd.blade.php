@@ -6,8 +6,8 @@
 <meta http-equiv="refresh" content="60" >
 <meta http-equiv="Pragma" content="no-cache">
 
-<link href="{{asset('/modules/Hfcbase/alert.css')}}" rel="stylesheet" type="text/css" media="screen" />
-<script type="text/javascript" src="{{asset('/modules/Hfcbase/alert.js')}}"></script>
+<link href="{{asset('/modules/hfcbase/alert.css')}}" rel="stylesheet" type="text/css" media="screen" />
+<script type="text/javascript" src="{{asset('/modules/hfcbase/alert.js')}}"></script>
 
 <script type="text/javascript">
 
