@@ -1,17 +1,15 @@
 <?php 
 
+namespace Acme\Validators;
+
 use Models\Configfiles;
 
 
 /*
  * Our own ExtendedValidator Class
  *
- * IMPORTANT: add Validator::extend('xyz', 'ExtendedValidator@validateXyz'); to app/start/global.php
- *
- * TODO: Use it with service provider API
- *
- * Note: problem is that while loading multiple external Validator classes 
- * we can not extend the entire Validator class. This should be fixed with service provider API (?)
+ * IMPORTANT: add Validator::extend('xyz', 'ExtendedValidator@validateXyz'); to 
+ * ExtendedValidatorServiceProvider under app/Providers
  */
 class ExtendedValidator
 {
