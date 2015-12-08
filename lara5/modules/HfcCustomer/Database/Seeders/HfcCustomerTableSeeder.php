@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class HfcCustomerDatabaseSeeder extends Seeder {
+class HfcCustomerTableSeeder extends Seeder {
 
 	/**
 	 * Run the database seeds.

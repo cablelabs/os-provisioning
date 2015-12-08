@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
 
-class HfcSnmpDatabaseSeeder extends Seeder {
+class HfcSnmpTableSeeder extends Seeder {
 
 	/**
 	 * Run the database seeds.

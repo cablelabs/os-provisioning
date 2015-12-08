@@ -5,7 +5,7 @@ namespace Modules\HfcBase\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class HfcBaseDatabaseSeeder extends Seeder {
+class HfcBaseTableSeeder extends Seeder {
 
 	/**
 	 * Run the database seeds.
