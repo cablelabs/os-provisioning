@@ -9,6 +9,8 @@ use View;
 use Validator;
 use Input;
 use Redirect;
+use Route;
+use BaseModel;
 
 class BaseController extends Controller {
 
