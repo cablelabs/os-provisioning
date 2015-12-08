@@ -135,7 +135,7 @@ class BaseModel extends Eloquent
 		/*
 		 * Search all Models in /models Models Path
 		 */
-		$dir = app_path('models');
+		$dir = app_path('Models');
 		$models = glob($dir."/*.php");
 
 		foreach ($models as $model) {
@@ -149,6 +149,7 @@ class BaseModel extends Eloquent
 		/*
 		 * Search all Models in /Modules/../Entities Path
 		 */
+		$path = base_path('modules');
 		$dirs = array();
 		$modules = Module::enabled();
 		foreach ($modules as $module)
@@ -159,16 +160,16 @@ class BaseModel extends Eloquent
 			$models = glob($dir."/*.php");
 
 			foreach ($models as $model) {
-				preg_match ("|/var/www/lara/Modules/(.*?)/Entities/|", $model, $module_array);
+				preg_match ("|$path/(.*?)/Entities/|", $model, $module_array);
 				$module = $module_array[1];
-				$model = preg_replace("|/var/www/lara/Modules/(.*?)/Entities/|", "", $model);
+				$model = preg_replace("|$path/(.*?)/Entities/|", "", $model);
 				$model = str_replace(".php", "", $model);
 				if (array_search($model, $exclude) === FALSE) {
 					array_push($result, "Modules\\$module\Entities\\".$model);
 				}
 			}
 		}
-
+		
 		return $result;
 	}
 
