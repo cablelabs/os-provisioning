@@ -15,7 +15,7 @@ class DeviceTableSeeder extends \BaseSeeder {
 		foreach(range(1, $this->max_seed) as $index)
 		{
 			Device::create([
-				'name' => $faker->unique->state,
+				'name' => $faker->unique->name,
 				'ip' => $faker->ipv4,
 				'community_ro' => 'public',
 				'community_rw' => 'private',

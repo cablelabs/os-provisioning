@@ -15,7 +15,7 @@ class CmtsTableSeeder extends \BaseSeeder {
 		foreach(range(1, $this->max_seed_l2) as $index)
 		{
 			Cmts::create([
-				'hostname' => $faker->unique->state,
+				'hostname' => $faker->unique->name,
 				'type' => "cmts",
 				'ip' => $faker->ipv4(),
 				'community_rw' => "private",

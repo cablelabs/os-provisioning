@@ -15,7 +15,7 @@ class DeviceTypeTableSeeder extends \BaseSeeder {
 		foreach(range(1, $this->max_seed) as $index)
 		{
 			DeviceType::create([
-				'name' => $faker->unique->state,
+				'name' => $faker->unique->name,
 			]);
 		}
 	}
