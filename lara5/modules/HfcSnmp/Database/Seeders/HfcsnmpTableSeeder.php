@@ -1,12 +1,12 @@
 <?php 
 
-namespace Modules\HfcSnmp\Database\Seeders;
+namespace Modules\Hfcsnmp\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
 
-class HfcSnmpTableSeeder extends Seeder {
+class HfcsnmpTableSeeder extends Seeder {
 
 	/**
 	 * Run the database seeds.

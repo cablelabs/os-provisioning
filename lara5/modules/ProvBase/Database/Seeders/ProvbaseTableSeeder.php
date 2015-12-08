@@ -1,11 +1,11 @@
 <?php 
 
-namespace Modules\ProvBase\Database\Seeders;
+namespace Modules\Provbase\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class ProvBaseTableSeeder extends Seeder {
+class ProvbaseTableSeeder extends Seeder {
 
 	/**
 	 * Run the database seeds.
