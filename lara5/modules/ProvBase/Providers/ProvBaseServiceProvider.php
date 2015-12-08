@@ -13,6 +13,15 @@ class ProvBaseServiceProvider extends ServiceProvider {
 
 
 	/**
+	 * The artisan commands provided by this module
+	 */
+	protected $commands = [
+		'Modules\ProvBase\Console\dhcpCommand',
+		'Modules\ProvBase\Console\configfileCommand',
+	];
+
+
+	/**
 	 * Register the service provider.
 	 *
 	 * @return void
@@ -20,6 +29,8 @@ class ProvBaseServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		\View::addNamespace('provbase', __DIR__.'/../Resources/views');
+
+		$this->commands($this->commands);
 	}
 
 	/**

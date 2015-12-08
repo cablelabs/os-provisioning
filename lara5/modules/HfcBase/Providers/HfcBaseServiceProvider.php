@@ -11,6 +11,15 @@ class HfcBaseServiceProvider extends ServiceProvider {
 	 */
 	protected $defer = false;
 
+
+        /**
+         * The artisan commands provided by this module
+         */
+        protected $commands = [
+		'Modules\HfcBase\Console\TreeBuildCommand',
+        ];
+
+
 	/**
 	 * Register the service provider.
 	 *
@@ -19,7 +28,10 @@ class HfcBaseServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		\View::addNamespace('hfcbase', __DIR__.'/../Resources/views');
+
+                $this->commands($this->commands);
 	}
+
 
 	/**
 	 * Get the services provided by the provider.
