@@ -1,6 +1,8 @@
 <?php
 
-Route::group(['prefix' => 'provvoipenvia', 'namespace' => 'Modules\ProvVoipEnvia\Http\Controllers'], function()
-{
-	Route::get('/', 'ProvVoipEnviaController@index');
+// Authentification is necessary before accessing a route
+Route::group(array('before' => 'auth'), function() {
+
+	Route::get('/provvoipenvia/ping', array('as' => 'ProvVoipEnvia.ping', 'uses' => 'Modules\ProvVoipEnvia\Http\Controllers\ProvVoipEnviaController@ping'));
+
 });
