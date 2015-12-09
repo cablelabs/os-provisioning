@@ -1,4 +1,4 @@
 <?php
 
-	return 		[['Mta' => 'Mta.index'],
-				['Phonenumber' => 'Phonenumber.index']];
+	return 		[['MTAs' => 'Mta.index'],
+				['Phonenumbers' => 'Phonenumber.index']];

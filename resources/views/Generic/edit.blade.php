@@ -3,7 +3,7 @@
 @if (!isset($own_top))
 	@section('content_top')
 
-		{{ HTML::linkRoute($route_name.'.index', $view_header) }}: 
+		{{ HTML::linkRoute($route_name.'.index', str_replace('Edit', '', $view_header)) }}: 
 
 		<?php
 			/**
@@ -33,6 +33,7 @@
 	@stop
 @endif
 
+
 @section('content_left')
 
 	<?php
@@ -48,29 +49,33 @@
 
 @stop
 
-{{-- We should add a new section for each relation --}}
+
 @section('content_right')
 
 	<?php 
 
 		if ($view_var->view_has_many())
-			$view_header_right = '';
+			$view_header_0 = '';
+		$i = 0;
 	?>
 
-	@foreach($view_var->view_has_many() as $view => $relations)
+	@foreach($view_var->view_has_many() as $view => $relation)
+		
+		<?php
+			$i++;
 
-			<?php
-				$model = new $model_name;
-				$key   = strtolower($model->table).'_id';
-				$view_header_right .= ' Assigned '.$model->get_view_header();
-			?>
+			$model = $relation[0];
+			$key   = strtolower($model->table).'_id';
+			${"view_header_$i"} = " Assigned $view";
+		?>
 
-			@include('Generic.relation', [$relations, $view, $key])
-			
-			<br> </br>
-			<hr> <hr>
-
+		@section("content_$i")
+			@include('Generic.relation', [$relation, $view, $key])
+		@stop
 	
+		@include ('bootstrap.panel', array ('content' => "content_$i", 'view_header' => ${"view_header_$i"}, 'md' => 3))
+
 	@endforeach
 
 @stop
+
