@@ -3,7 +3,15 @@
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\View;
 
+use Modules\ProvVoipEnvia\Entities\ProvVoipEnvia;
+
 class ProvVoipEnviaController extends \BaseModuleController {
+
+	public function __construct() {
+
+		$this->model = new ProvVoipEnvia();
+
+	}
 
 	public function index()
 	{
@@ -21,7 +29,8 @@ class ProvVoipEnviaController extends \BaseModuleController {
 	 */
 	protected function _ask_envia($url, $payload) {
 
-		$curl_options = $this->_get_cur_headers($url, $payload);
+
+		$curl_options = $this->_get_curl_headers($url, $payload);
 
 		// create a new cURL resource
 		$ch = curl_init();
@@ -78,7 +87,7 @@ class ProvVoipEnviaController extends \BaseModuleController {
 	 *
 	 * @return array with cURL options to be set before the request
 	 */
-	protected function _get_cur_headers($url, $payload) {
+	protected function _get_curl_headers($url, $payload) {
 
 		// headers for http request
 		$http_headers = array(
@@ -115,19 +124,34 @@ class ProvVoipEnviaController extends \BaseModuleController {
 
 	}
 
+	/**
+	 * Helper to show the generated XML (in original and pretty shape)
+	 * Use this for debugging the XML output and input
+	 *
+	 * @author Patrick Reichel
+	 */
+	private function __debug_xml($xml) {
+
+		echo "<pre style=\"border: solid 1px #444; padding: 10px\">";
+		echo "<h5>Pretty:</h5>";
+		$dom = new \DOMDocument('1.0');
+		$dom->preserveWhiteSpace = false;
+		$dom->formatOutput = true;
+		$dom->loadXML($xml);
+		echo htmlentities($dom->saveXML());
+		echo "<br><hr>";
+		echo "<h5>Original:</h5>";
+		echo htmlentities($xml);
+		echo "</pre>";
+	}
+
 	public function ping() {
 
 		$url = 'https://www.enviatel.de/portal/api/rest/v1/misc/ping';
 
-		$payload = <<<EOT
-<?xml version="1.0" encoding="UTF-8"?>
-<misc_ping>
-  <reseller_identifier>
-	<username>test_reseller</username>
-	<password>test_password</password>
-  </reseller_identifier>
-</misc_ping>
-EOT;
+		$payload = $this->model->get_xml('ping', null);
+
+		$this->__debug_xml($payload);
 
 		$data = $this->_ask_envia($url, $payload);
 

@@ -3,6 +3,11 @@
 
 class BaseModuleController extends BaseController {
 
+	public function __construct() {
+		parent::__construct();
+	}
+
+
 	public function get_mvc_path()
 	{
 		$a = explode('\\', Route::getCurrentRoute()->getActionName());
