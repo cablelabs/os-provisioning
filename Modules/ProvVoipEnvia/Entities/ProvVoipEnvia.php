@@ -15,7 +15,7 @@ class ProvVoipEnvia extends \BaseModel {
 	 *
 	 * @return XML
 	 */
-	public function get_xml($job, $data) {
+	public function get_xml($job) {
 
 		$this->_create_base_xml_by_topic($job);
 		$this->_create_final_xml_by_topic($job);
@@ -94,6 +94,10 @@ class ProvVoipEnvia extends \BaseModel {
 			'misc_ping' => array(
 				'reseller_identifier',
 			),
+			'misc_get_free_numbers' => array(
+				'reseller_identifier',
+				'filter_data',
+			),
 		);
 
 		// now call the specific method for each second level element
@@ -103,6 +107,11 @@ class ProvVoipEnvia extends \BaseModel {
 		}
 	}
 
+	/**
+	 * Adds the login data of the reseller to the xml
+	 *
+	 * @author Patrick Reichecl
+	 */
 	protected function _add_reseller_identifier() {
 
 		// TODO: add error handling for not existing keys
@@ -113,6 +122,39 @@ class ProvVoipEnvia extends \BaseModel {
 		$inner_xml = $this->xml->addChild('reseller_identifier');
 		$inner_xml->addChild('username', $username);
 		$inner_xml->addChild('password', $password);
+	}
+
+	protected function _add_filter_data() {
+
+		$localareacode = \Input::get('localareacode', null);
+		$baseno = \Input::get('baseno', null);
+
+		// no filters: do nothing
+		if (is_null($localareacode)) {
+			return;
+		}
+
+		// TODO: error handling
+		if (!is_numeric($localareacode)) {
+			throw \Exception("localareacode has to be numeric");
+		}
+
+		// localareacode is valid: add filter
+		$inner_xml = $this->xml->addChild('filter_data');
+		$inner_xml->addChild('localareacode', $localareacode);
+
+		if (is_null($baseno)) {
+			return;
+		}
+
+		// TODO: error handling
+		if (!is_numeric($baseno)) {
+			throw \Exception("baseno has to be numeric");
+		}
+
+		// baseno is valid
+		$inner_xml->addChild('baseno', $baseno);
+
 	}
 
 }

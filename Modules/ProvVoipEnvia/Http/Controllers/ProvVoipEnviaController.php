@@ -27,6 +27,9 @@ class ProvVoipEnviaController extends \BaseModuleController {
 
 		$jobs = array(
 			'misc_ping',
+			'misc_get_free_numbers',
+			'misc_get_free_numbers?localareacode=03725',
+			'misc_get_free_numbers?localareacode=03725&amp;baseno=110',
 		);
 
 		foreach ($jobs as $job) {
@@ -172,6 +175,7 @@ class ProvVoipEnviaController extends \BaseModuleController {
 		// the URLs to use for the jobs to do
 		$urls = array(
 			'misc_ping' => 'https://www.enviatel.de/portal/api/rest/v1/misc/ping',
+			'misc_get_free_numbers' => 'https://www.enviatel.de/portal/api/rest/v1/misc/get_free_numbers',
 		);
 
 		// TODO: improve error handling
@@ -183,7 +187,7 @@ class ProvVoipEnviaController extends \BaseModuleController {
 		$url = $urls[$job];
 
 		// the requests payload (=XML)
-		$payload = $this->model->get_xml($job, null);
+		$payload = $this->model->get_xml($job);
 
 		$this->__debug_xml($payload);
 
