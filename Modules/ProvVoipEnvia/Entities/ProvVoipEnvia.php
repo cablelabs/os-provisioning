@@ -124,6 +124,13 @@ class ProvVoipEnvia extends \BaseModel {
 		$inner_xml->addChild('password', $password);
 	}
 
+
+	/**
+	 * Method to add filter data.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 */
 	protected function _add_filter_data() {
 
 		$localareacode = \Input::get('localareacode', null);
