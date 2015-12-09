@@ -7,15 +7,31 @@ use Modules\ProvVoipEnvia\Entities\ProvVoipEnvia;
 
 class ProvVoipEnviaController extends \BaseModuleController {
 
+	/**
+	 * Constructor.
+	 *
+	 * @author Patrick Reichel
+	 */
 	public function __construct() {
 
 		$this->model = new ProvVoipEnvia();
 
 	}
 
-	public function index()
-	{
-		return View::make('provvoipenvia::index');
+
+	/**
+	 * Overwrite index.
+	 */
+	public function index() {
+		$base = "/lara/provvoipenvia/request";
+
+		$jobs = array(
+			'misc_ping',
+		);
+
+		foreach ($jobs as $job) {
+			echo '<a href="'.$base.'/'.$job.'" target="_self">'.$job.'</a><br>';
+		}
 	}
 
 	/**
@@ -28,7 +44,6 @@ class ProvVoipEnviaController extends \BaseModuleController {
 	 * @return array containing informations about errors, the http status and the received data
 	 */
 	protected function _ask_envia($url, $payload) {
-
 
 		$curl_options = $this->_get_curl_headers($url, $payload);
 
@@ -145,37 +160,140 @@ class ProvVoipEnviaController extends \BaseModuleController {
 		echo "</pre>";
 	}
 
-	public function ping() {
+	/**
+	 * Method to perform a request the envia API.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @param $job comes from the route ([…]/provvoipenvia/request/{job})
+	 */
+	public function request($job) {
 
-		$url = 'https://www.enviatel.de/portal/api/rest/v1/misc/ping';
+		// the URLs to use for the jobs to do
+		$urls = array(
+			'misc_ping' => 'https://www.enviatel.de/portal/api/rest/v1/misc/ping',
+		);
 
-		$payload = $this->model->get_xml('ping', null);
+		// TODO: improve error handling
+		if (!array_key_exists($job, $urls)) {
+			throw new \Exception("Job ".$job." not implemented yet");
+		}
+
+		// the API URL to use for the request
+		$url = $urls[$job];
+
+		// the requests payload (=XML)
+		$payload = $this->model->get_xml($job, null);
 
 		$this->__debug_xml($payload);
 
+		// perform the request and receive the result (meta and content)
 		$data = $this->_ask_envia($url, $payload);
 
 		// major problem!!
 		if ($data['error']) {
-			echo "ERROR! We got an ".$data['error_type'].": ".$data['error_msg'];
+			$this->_handle_curl_error($job, $data);
 		}
 		// got an answer
 		else {
-
-			// http status other than 200 OK => something went wrong
-			if ($data['status'] != 200) {
-				echo "Problem: status code is ".$data['status']."<br>";
-			}
-			// success!!
-			else {
-				echo "Success!!";
-			}
-
-			echo "Return data:<br>";
-			echo "<pre>";
-			echo htmlentities($data['xml']);
-			echo "</pre>";
+			$this->_handle_curl_success($job, $data);
 		}
 
 	}
+
+	/**
+	 * Method to handle exceptions and curl errors
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @param $job job which should have been done
+	 * @param $data collected data from request try
+	 */
+	protected function _handle_curl_error($job, $data) {
+		echo "ERROR! We got an ".$data['error_type'].": ".$data['error_msg']." executing job ".$job;
+	}
+
+	/**
+	 * Method to handle successful request (on cURL level).
+	 * Mainly used to separate further process using the HTTP status code.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @param $job job which should have been done
+	 * @param $data collected data from request try
+	 */
+	protected function _handle_curl_success($job, $data) {
+
+		// success!!
+		if (($data['status'] >= 200) && ($data < 300)) {
+			$this->_handle_request_success($job, $data);
+		}
+		// unauthorized => handle separately
+		elseif ($data['status'] == 401) {
+			$this->_handle_request_failed_401($job, $data);
+		}
+		// other => something went wrong
+		else {
+			$this->_handle_request_failed($job, $data);
+		}
+
+		echo "<hr>";
+		echo "Return data:<br>";
+		echo "<pre>";
+		echo htmlentities($data['xml']);
+		echo "</pre>";
+	}
+
+	/**
+	 * Process rest answers with http error status 401 (Access denied)
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @param $job job which should have been done
+	 * @param $data collected data from request try
+	 */
+	protected function _handle_request_failed_401($job, $data) {
+
+		$errors = $this->model->get_error_messages($data['xml']);
+
+		// TODO: Error output shall be handled via views
+		echo "The following errors occured:<br>";
+		echo "<table style=\"background-color: #faa\">";
+		foreach ($errors as $error) {
+			echo "<tr>";
+			echo "<td>";
+				echo $error['status'];
+			echo "</td>";
+			echo "<td>";
+				echo $error['message'];
+			echo "</td>";
+			echo "</tr>";
+		}
+		echo "</table>";
+	}
+
+	/**
+	 * Process rest answers with http error status (400, 401, e.g.)
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @param $job job which should have been done
+	 * @param $data collected data from request try
+	 */
+	protected function _handle_request_failed($job, $data) {
+
+		echo "Problem: status code is ".$data['status']."<br>";
+	}
+
+	/**
+	 * Process successfully performed REST request.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @param $job job which should have been done
+	 * @param $data collected data from request try
+	 */
+	protected function _handle_request_success($job, $data) {
+	}
+
 }
