@@ -23,13 +23,13 @@
 
 	{{ Form::open(array('route' => array($view.'.destroy', 0), 'method' => 'delete')) }}
 	<table>
-		@foreach ($relations as $relation)
+		@foreach ($relation as $rel_elem)
 			<tr>
 				<td>
-					{{ Form::checkbox('ids['.$relation->id.']') }}
+					{{ Form::checkbox('ids['.$rel_elem->id.']') }}
 				</td>
 				<td>
-					{{ HTML::linkRoute($view.'.edit', $relation->get_view_link_title(), $relation->id) }}
+					{{ HTML::linkRoute($view.'.edit', $rel_elem->get_view_link_title(), $rel_elem->id) }}
 				</td>
 			</tr>
 		@endforeach
