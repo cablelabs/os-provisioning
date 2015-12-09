@@ -1,7 +1,6 @@
 <?php
 
-	return 		[['Device' => 'Device.index'],
-				['DeviceType' => 'DeviceType.index'],
-				['SnmpMib' => 'SnmpMib.index'],
-				['SnmpValue' => 'SnmpValue.index']];
-				
+	return 		[['Devices' => 'Device.index'],
+				['DeviceTypes' => 'DeviceType.index'],
+				['SnmpMibs' => 'SnmpMib.index'],
+				['SnmpValues' => 'SnmpValue.index']];
