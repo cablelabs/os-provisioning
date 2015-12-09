@@ -3,7 +3,7 @@
 @if (!isset($own_top))
 	@section('content_top')
 
-		{{ HTML::linkRoute($route_name.'.index', $view_header) }}: 
+		{{ HTML::linkRoute($route_name.'.index', str_replace('Edit', '', $view_header)) }}: 
 
 		<?php
 			/**
