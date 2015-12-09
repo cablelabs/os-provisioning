@@ -124,8 +124,8 @@ class Modem extends \BaseModel {
     {
         parent::boot();
 
-        Modem::observe(new ModemObserver);
         Modem::observe(new \SystemdObserver);
+        Modem::observe(new ModemObserver);
     }
 
 
@@ -296,6 +296,10 @@ class Modem extends \BaseModel {
                     \Session::driver()->save();         // \ is like writing "use Session;" before class statement
                     $resp->send();
 
+                    /* 
+                     * TODO: replace exit
+                     * This is a security hassard. All Code (Observer etc) which should run after this code will not be executed !
+                     */
                     exit();
                 }
             }
