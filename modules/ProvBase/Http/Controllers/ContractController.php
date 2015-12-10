@@ -38,11 +38,11 @@ class ContractController extends \BaseModuleController {
 
 		if ($this->billing)
 			$b = array(
-				array('form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1'),
+				array('form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1'),
 				array('form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'),	
 				array('form_type' => 'text', 'name' => 'contract_end', 'description' => 'Contract End', 'space' => '1'),
 
-				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list(Qos::all(), 'name')),
+				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list(Qos::all(), 'name')),
 				array('form_type' => 'select', 'name' => 'next_qos_id', 'description' => 'QoS next month', 'value' => $model->html_list(Qos::all(), 'name')),
 				array('form_type' => 'text', 'name' => 'void_id', 'description' => 'Phone ID'),
 				array('form_type' => 'text', 'name' => 'next_voip_id', 'description' => 'Phone ID next month', 'space' => '1'),
