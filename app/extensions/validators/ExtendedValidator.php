@@ -1,18 +1,17 @@
 <?php 
 
-use Illuminate\Validation\Validator;
+namespace Acme\Validators;
+
 use Models\Configfiles;
 
 
 /*
  * Our own ExtendedValidator Class
  *
- *
- * Extended Validator is loaded in start/global.php
- * and will be used as normal Validator.
- * TODO: Maybe we should use a service provider instead ?
+ * IMPORTANT: add Validator::extend('xyz', 'ExtendedValidator@validateXyz'); to 
+ * ExtendedValidatorServiceProvider under app/Providers
  */
-class ExtendedValidator extends Validator
+class ExtendedValidator
 {
 	/*
 	 * MAC validation
@@ -32,6 +31,16 @@ class ExtendedValidator extends Validator
 	public function validateIpaddr ($attribute, $value, $parameters)
 	{
 		return preg_match ('/^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$/', $value);
+	}
+
+
+	/*
+	 * Geoposition validation
+	 * see: http://stackoverflow.com/questions/7113745/what-regex-expression-will-check-gps-values
+	 */
+	public function validateGeopos ($attribute, $value, $parameters)
+	{
+		return preg_match ('/(-?[\d]{1,3}\.[\d]{0,12},?){2}/', $value);
 	}
 
 
