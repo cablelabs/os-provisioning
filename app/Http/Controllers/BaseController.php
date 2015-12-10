@@ -11,6 +11,9 @@ use Input;
 use Redirect;
 use Route;
 use BaseModel;
+use Auth;
+use NoAuthenticateduserError;
+use Log;
 
 require_once(app_path().'/Exceptions.php');
 

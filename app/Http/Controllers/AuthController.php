@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+use Input;
+use Redirect;
+
+
 class AuthController extends BaseController {
 
 	public function showLogin()
@@ -19,7 +24,7 @@ class AuthController extends BaseController {
 		);
 
 		// run the validation rules on the inputs from the form
-		$validator = Validator::make(Input::all(), $rules);
+		$validator = \Validator::make(Input::all(), $rules);
 
 		// if the validator fails, redirect back to the form
 		if ($validator->fails()) {
