@@ -31,9 +31,9 @@ class AuthController extends BaseController {
 
 			// create our user data for the authentication
 			$userdata = array(
-				'login_name'     => Input::get('login_name'),
-				'password'  => Input::get('password'),
-				'active'    => 1,	// user has to be active
+				'login_name' => Input::get('login_name'),
+				'password' => Input::get('password'),
+				'active' => 1,	// user has to be active
 			);
 
 			// attempt to do the login

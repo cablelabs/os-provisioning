@@ -30,9 +30,21 @@ class CreateAuthuserTable extends BaseMigration {
 			$table->string('description');
 			$table->boolean('active')->default(1);
 			$table->rememberToken();
+
+			$table->unique('login_name');
 		});
 
-		DB::update("INSERT INTO ".$this->tablename." (first_name, last_name, email, login_name, password, description) VALUES('superuser', 'initial', 'root@localhost', 'root', '".Hash::make($this->initial_superuser_password)."', 'Superuser to do base config. Initial password is “".$this->initial_superuser_password."” – change this ASAP or delete this user!!');");
+		// the following “seeding” is needed in every case – even if the seeders will not be run!
+		// add superuser => needed to configure the monster
+		DB::table($this->tablename)->insert([
+			'id' => 1,
+			'first_name' => 'superuser',
+			'last_name' => 'initial',
+			'email' => 'root@localhost',
+			'login_name' => 'root',
+			'password' => Hash::make($this->initial_superuser_password),
+			'description' => 'Superuser to do base config. Initial password is “'.$this->initial_superuser_password.'” – change this ASAP or delete this user!!',
+		]);
 
 	}
 

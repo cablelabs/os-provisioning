@@ -5,6 +5,8 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
+require_once(app_path().'/Exceptions.php');
+
 /**
  * Model holding user data for authentication
  *
@@ -22,38 +24,92 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 
 	/**
 	 * Get all the meta entities (roles, clients) the user belongs to
+	 *
+	 * @author Patrick Reichel
 	 */
 	protected function _meta() {
-		return $this->belongsToMany('AuthMeta', 'authusermeta');
+		return $this->belongsToMany('Authmeta', 'authusermeta', 'user_id', 'meta_id');
 	}
 
 	/**
 	 * Get all the users roles.
 	 * Roles are meta entities mapping users to models
+	 *
+	 * @author Patrick Reichel
 	 */
 	public function roles() {
-		return $this->_meta->where('type', 'is', 'role');
+		return $this->_meta()->where('type', 'LIKE', 'role')->get();
+	}
+
+	/**
+	 * Get all model information related to a given roll
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _role_models($role_id) {
+		return Authmeta::cores_by_meta($role_id, 'model');
 	}
 
 	/**
 	 * Get all clients the users belongs to.
 	 * Clients are meta entities mapping users to nets
+	 *
+	 * @author Patrick Reichel
 	 */
 	public function clients() {
-		return $this->_meta->where('type', 'is', 'client');
+		return $this->_meta()->where('type', 'LIKE', 'client');
 	}
+
 
 	/**
 	 * Get a matrix containing user rights for models.
 	 *
+	 * @author Patrick Reichel
+	 *
 	 * @return two dimensional array [modelname][rights]
 	 */
-	public function models() {
-		echo "TODO";
+	public function get_model_permissions() {
+
+		$permissions = array();
+		$perm_types = array('view', 'create', 'edit', 'delete');
+
+		// get data for each role a user has
+		foreach ($this->roles() as $role) {
+
+			// get all models for the current role
+			$models = $this->_role_models($role['id']);
+
+			// get permissions per model
+			foreach ($models as $model) {
+
+				$name = $model->name;
+
+				// create entry without permissions if model not exists
+				if (!array_key_exists($name, $permissions)) {
+					$perm = array();
+					foreach($perm_types as $perm_type) {
+						$perm[$perm_type] = 0;
+					}
+					$permissions[$name] = $perm;
+				}
+
+				// use highest rights for the model
+				// as a user can hold many roles there can be different permissions for a task ⇒ if one role allows access, than access is granted
+				foreach ($perm_types as $perm_type) {
+					$permissions[$name][$perm_type] = max($permissions[$name][$perm_type], $model->{$perm_type});
+				}
+
+			}
+
+		}
+
+		return $permissions;
 	}
 
 	/**
 	 * Get a matrix containing user rights for nets.
+	 *
+	 * @author Patrick Reichel
 	 *
 	 * @return two dimensional array [net][rights]
 	 */
@@ -63,32 +119,29 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 
 
 	/**
-	 * Check if user is allowed to access a model the given way
+	 * Check if user is allowed to access a net the given way
 	 *
-	 * @param $model name of the model
+	 * @author Patrick Reichel
+	 *
+	 * @param $model name of the net
 	 * @param $access_type right needed (create, edit, delete, view)
 	 *
 	 * @return True if asked access is allowed, else false
 	 */
-	public function hasModel($model, $access) {
+	public function has_net($net, $access) {
 
-		$usermodels = $this->models();
-
-		if (!array_key_exists($usermodels)) {
-			return False;
-		}
-
-		if ($usermodels[$model] == 0) {
-			return False;
-		}
-
+		// TODO
+		log.warning('Method “hasNet“ in model Authuser is not yet implemented (returns always true!');
 		return True;
 	}
+
 
 	/**
 	 * Create a user and add meta entities
 	 *
-	 * @var $meta array with meta entities a user should get
+	 * @author Patrick Reichel
+	 *
+	 * @param $metagroups array with meta entities a user should get
 	 */
 	public function makeUser($metagroups) {
 

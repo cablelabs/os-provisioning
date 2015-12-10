@@ -10,11 +10,12 @@ class BaseModel extends Eloquent
 {
 	use SoftDeletes;
 
+
 	/**
 	 * check if module exists
 	 *
 	 * Note: This function should be used in relational functions like hasMany() or view_has_many()
-	 * 
+	 *
 	 * @author Torsten Schmidt
 	 *
 	 * @param  Modulename
@@ -23,8 +24,8 @@ class BaseModel extends Eloquent
 	public function module_is_active($modulename)
 	{
 		$modules = \Module::enabled();
-        
-		foreach ($modules as $module) 
+
+		foreach ($modules as $module)
 			if ($module->getLowerName() == strtolower($modulename))
 				return true;
 
@@ -125,11 +126,18 @@ class BaseModel extends Eloquent
 	 * Get all models
 	 *
 	 * @return array of all models except base models
-	 * @author Patrick Reichel, 
+	 * @author Patrick Reichel,
 	 *         Torsten Schmidt: add modules path
 	 */
-	protected function _getModels() {
-		$exclude = array('BaseModel');
+	public static function get_models() {
+
+		// models to be excluded from search
+		$exclude = array(
+			'BaseModel',
+			'Authuser',
+			'Authmeta',
+			'Authcore'
+		);
 		$result = array();
 
 		/*
@@ -153,7 +161,7 @@ class BaseModel extends Eloquent
 		$dirs = array();
 		$modules = Module::enabled();
 		foreach ($modules as $module)
-			array_push($dirs, $module->getPath().'/Entities'); 
+			array_push($dirs, $module->getPath().'/Entities');
 
 		foreach ($dirs as $dir)
 		{
@@ -176,7 +184,7 @@ class BaseModel extends Eloquent
 
 	protected function _guess_model_name ($s)
 	{
-		return current(preg_grep ('|.*?'.$s.'$|i', $this->_getModels()));
+		return current(preg_grep ('|.*?'.$s.'$|i', $this->get_models()));
 	}
 
 	/*
@@ -333,7 +341,7 @@ class BaseModel extends Eloquent
 			}
 
 			if ($scope == 'all') {
-				$models = $this->_getModels();
+				$models = $this->get_models();
 				$preselect_field = $preselect_value = null;
 			}
 			else {
@@ -390,7 +398,7 @@ class BaseModel extends Eloquent
 		}
 
 		return $ret;
-	}	
+	}
 
 
 	// Placeholder
@@ -451,7 +459,7 @@ class BaseModel extends Eloquent
 	 *	@author Torsten Schmidt
 	 *
 	 *	@return true if success
-	 *  
+	 *
 	 *  TODO: return state should take care of deleted children
 	 */
 	public function delete()
@@ -465,7 +473,7 @@ class BaseModel extends Eloquent
 
 
 	/**
-	 * 
+	 *
 	 */
 	public static function destroy($ids)
 	{

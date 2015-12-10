@@ -31,3 +31,6 @@
 	</tr>
 </table>
 {{ Form::close() }}
+
+</body>
+</html>
