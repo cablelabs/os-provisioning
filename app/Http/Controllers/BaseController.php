@@ -20,6 +20,19 @@ class BaseController extends Controller {
 
 
 	/**
+	 * Constructor
+	 *
+	 * Basically this is a placeholder for eventually later use. I need to 
+	 * overwrite the constructor in a subclass – and want to call the parent
+	 * constructor if there are changes in base classes. But calling the
+	 * parent con is only possible if it is explicitely defined…
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function __construct() {
+	}
+
+	/**
 	 * Returns a default input data array, that shall be overwritten from the appropriate model controller if needed
 	 */
 	protected function default_input($data)
