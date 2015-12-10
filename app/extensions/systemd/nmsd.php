@@ -11,7 +11,8 @@ $services = array('dhcpd');
 
 
 // contains the restart-indicating files
-$dir = '/var/www/lara/app/storage/systemd/';
+// TODO: use laravel path config
+$dir = '/var/www/lara/storage/systemd/';
 
 // contains restart scripts
 $dir_scripts = '/var/www/lara/app/extensions/systemd/';
