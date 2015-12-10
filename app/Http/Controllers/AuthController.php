@@ -7,7 +7,7 @@ class AuthController extends BaseController {
 	public function showLogin()
 	{
 		// show the form
-		return View::make('auth/login');
+		return \View::make('auth/login');
 	}
 
 	public function doLogin()

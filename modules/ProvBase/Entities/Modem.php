@@ -12,6 +12,10 @@ class Modem extends \BaseModel {
     // The associated SQL table for this Model
     public $table = 'modem';
 
+    // TODO: init from global config in __construct()
+    public $community_ro = 'public';
+    public $community_rw = 'public';
+
 
 	// Add your validation rules here
     // see: http://stackoverflow.com/questions/22405762/laravel-update-model-with-unique-validation-rule-for-attribute
@@ -124,8 +128,8 @@ class Modem extends \BaseModel {
     {
         parent::boot();
 
-        Modem::observe(new ModemObserver);
         Modem::observe(new \SystemdObserver);
+        Modem::observe(new ModemObserver);
     }
 
 
@@ -281,7 +285,7 @@ class Modem extends \BaseModel {
         try
         {
             // restart modem - TODO: get community string and domain name from global config page, NOTE: OID from MIB: DOCS-CABLE-DEV-MIB::docsDevResetNow
-            snmpset($modem->hostname.'.test2.erznet.tv', "public", "1.3.6.1.2.1.69.1.1.3.0", "i", "1", 200000, 1);
+            snmpset($this->hostname.'.test2.erznet.tv', $this->community_rw, "1.3.6.1.2.1.69.1.1.3.0", "i", "1", 200000, 1);
         }
         catch (Exception $e)
         {
@@ -296,6 +300,10 @@ class Modem extends \BaseModel {
                     \Session::driver()->save();         // \ is like writing "use Session;" before class statement
                     $resp->send();
 
+                    /* 
+                     * TODO: replace exit
+                     * This is a security hassard. All Code (Observer etc) which should run after this code will not be executed !
+                     */
                     exit();
                 }
             }

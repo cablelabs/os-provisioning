@@ -27,4 +27,26 @@ class ArrayHelper {
         return null;
     }
 
+
+    /* 
+     * Device all entrys of an Array by $div
+     *
+     * @param $array: The Array to split
+     * @param $div: device by $div
+     * @return: The devided array
+     *
+     * @author: Torsten Schmidt
+     */
+    public static function ArrayDiv($array, $div=10)
+    {
+        $ret = [];
+
+        foreach ($array as $a) 
+        {
+            array_push($ret, $a/$div);
+        }
+
+        return $ret;
+    }
+
 }
