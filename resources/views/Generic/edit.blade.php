@@ -64,7 +64,7 @@
 		<?php
 			$i++;
 
-			$model = $relation[0];
+			$model = new $model_name;
 			$key   = strtolower($model->table).'_id';
 			${"view_header_$i"} = " Assigned $view";
 		?>
