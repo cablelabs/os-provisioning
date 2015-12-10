@@ -5,12 +5,15 @@ composer.phar
 composer.lock
 .env.*.php
 .env.php
+/node_modules
+.env
 .DS_Store
 *.sublime*
 *.fuse_hidden*
 Thumbs.db
-app/storage/systemd/
-app/storage/hfc/
+storage/systemd/
+storage/hfc/
+
 
 # temporary vim files
 *.swp
