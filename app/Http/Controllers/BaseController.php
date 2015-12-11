@@ -110,9 +110,18 @@ class BaseController extends Controller {
 
 	/**
 	 * Returns a default input data array, that shall be overwritten from the appropriate model controller if needed
+	 *
+	 * Note: Checkbox Entries will automatically set to 0 if not checked
 	 */
 	protected function default_input($data)
 	{
+		// Checkbox Unset ?
+		foreach ($this->get_form_fields($this->get_model_obj()) as $field) 
+		{
+			if(!isset($data[$field['name']]) && $field['form_type'] == 'checkbox')
+				$data[$field['name']] = 0;
+		}
+
 		return $data;
 	}
 
