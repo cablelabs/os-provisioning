@@ -165,8 +165,7 @@ class BaseController extends Controller {
 	 */
 	protected function get_model_name()
 	{
-		// TODO: generic replace ..
-		return 'Models\\'.explode ('Controller', Route::getCurrentRoute()->getActionName())[0];
+		return explode ('Controller', explode ('\\', explode ('@', Route::getCurrentRoute()->getActionName())[0])[3])[0];
 	}
 
 	protected function get_model_obj ()
@@ -206,7 +205,7 @@ class BaseController extends Controller {
 
 	protected function get_view_name()
 	{
-		return explode ('\\', $this->get_model_name())[1];
+		return explode ('\\', $this->get_model_name())[0];
 	}
 
 	protected function get_view_var()
@@ -216,7 +215,7 @@ class BaseController extends Controller {
 
 	protected function get_route_name()
 	{
-		return explode('\\', $this->get_model_name())[1];
+		return explode('\\', $this->get_model_name())[0];
 	}
 
 
