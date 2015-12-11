@@ -5,12 +5,18 @@
 </head>
 <body style="padding: 50px">
 
-{{ Form::open(array('url' => 'login')) }}
+{{ Form::open(array('url' => 'auth/login')) }}
 <h1>Welcome</h1>
 
 <h3>Please log in to proceed</h3>
 
+
 <!-- if there are login errors, show them here -->
+@if (session('status'))
+    <div class="alert alert-success">
+        {{ session('status') }}
+    </div>
+@endif
 <p>
 	{{ $errors->first('login_name') }}
 	{{ $errors->first('password') }}

@@ -5,7 +5,7 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
-require_once(app_path().'/Exceptions.php');
+// require_once(app_path().'/Exceptions.php');
 
 /**
  * Model holding user data for authentication

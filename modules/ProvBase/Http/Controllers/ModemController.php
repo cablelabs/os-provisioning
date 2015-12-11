@@ -7,6 +7,8 @@ use Modules\ProvBase\Entities\Endpoint;
 use Modules\ProvBase\Entities\Configfile;
 use Modules\ProvBase\Entities\Qos;
 
+use App\Exceptions\AuthExceptions;
+
 
 class ModemController extends \BaseModuleController {
 
@@ -61,6 +63,14 @@ class ModemController extends \BaseModuleController {
 	 */
 	public function index()
 	{
+		try {
+			$this->_check_permissions("view");
+		}
+		catch (Exceptions $ex) {
+			throw new AuthExceptions($e->getMessage());
+		}
+		
+		
 		if(!$this->get_model_obj()->module_is_active ('HfcCustomer'))
 			return parent::index();
 

@@ -3,6 +3,8 @@
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
+use App\Exceptions\AuthExceptions;
+
 class Handler extends ExceptionHandler {
 
 	/**
@@ -36,6 +38,12 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Exception $e)
 	{
+		// Auth Error Messages
+		if ($e instanceof AuthExceptions)
+		{
+			return redirect('auth/denied')->with('status', $e->getMessage());
+		}
+
 		return parent::render($request, $e);
 	}
 

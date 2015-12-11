@@ -15,8 +15,7 @@ use Auth;
 use NoAuthenticateduserError;
 use Log;
 
-require_once(app_path().'/Exceptions.php');
-
+use App\Exceptions\AuthExceptions;
 
 
 class BaseController extends Controller {
@@ -74,7 +73,7 @@ class BaseController extends Controller {
 
 		// no user logged in
 		if (is_null($cur_user)) {
-			throw new NoAuthenticateduserError("No user logged in");
+			throw new AuthExceptions('Login Required');
 		}
 
 		// build permissions array for easy access to user rights
@@ -84,13 +83,13 @@ class BaseController extends Controller {
 
 		// check model rights
 		if (!array_key_exists($cur_model, $this->permissions['model'])) {
-			throw new NoModelPermissionError('Access to model '.$cur_model.' not allowed for user '.$cur_user->login_name.'.');
+			throw new AuthExceptions('Access to model '.$cur_model.' not allowed for user '.$cur_user->login_name.'.');
 		}
 		if (!array_key_exists($access, $this->permissions['model'][$cur_model])) {
-			throw new InvalidPermissionsRequest('Something went wrong asking for '.$access.' right in '.$model.' for user '.$cur_user->login_name.'.');
+			throw new AuthExceptions('Something went wrong asking for '.$access.' right in '.$model.' for user '.$cur_user->login_name.'.');
 		}
 		if ($this->permissions['model'][$cur_model][$access] == 0) {
-			throw new InsufficientRightsError('User '.$cur_user->login_name.' is not allowed to '.$access.' in '.$cur_model.'.');
+			throw new AuthExceptions('User '.$cur_user->login_name.' is not allowed to '.$access.' in '.$cur_model.'.');
 		}
 
 		// TODO: check net rights
@@ -359,8 +358,8 @@ class BaseController extends Controller {
 		try {
 			$this->_check_permissions("view");
 		}
-		catch (PermissionDeniedError $ex) {
-			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
+		catch (Exceptions $ex) {
+			throw new AuthExceptions($e->getMessage());
 		}
 
 		$obj = $this->get_model_obj();

@@ -3,8 +3,6 @@
 // Authentification is necessary before accessing a route
 Route::group(array('before' => 'auth'), function() {
 
-	Route::get('', 'Modules\ProvBase\Http\Controllers\ModemController@index');
-
 	// Modem
 	Route::get('modem/{modem}/ping', array ('as' => 'Modem.ping', 'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@ping'));
 	Route::get('modem/{modem}/monitoring', array ('as' => 'Modem.monitoring', 'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@monitoring'));
@@ -21,7 +19,6 @@ Route::group(array('before' => 'auth'), function() {
 	Route::get('configfile/fulltextSearch', array('as' => 'Configfile.fulltextSearch', 'uses' => 'Modules\ProvBase\Http\Controllers\ConfigfileController@fulltextSearch'));
 	Route::get('qos/fulltextSearch', array('as' => 'Qos.fulltextSearch', 'uses' => 'Modules\ProvBase\Http\Controllers\QosController@fulltextSearch'));
 	Route::get('contract/fulltextSearch', array('as' => 'Contract.fulltextSearch', 'uses' => 'Modules\ProvBase\Http\Controllers\ContractController@fulltextSearch'));
-
 
 	// routes controller with predefined methods
 	// add array('only' => array('edit', 'update')) as third parameter to only allow these routes

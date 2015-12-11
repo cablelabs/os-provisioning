@@ -7,9 +7,19 @@
 
 <h1>Access denied</h1>
 
-<h3>{{ $error_msg }}</h3>
+@if (session('status'))
+    <div class="alert alert-success">
+        {{ session('status') }}
+    </div>
+@endif
 
+<br><br>
 <button onclick="goBack()">Go Back</button>
+
+<br><br>
+<form action="{{Request::root()}}">
+    <input type="submit" value="Login">
+</form>
 
 <script>
 	function goBack() {
