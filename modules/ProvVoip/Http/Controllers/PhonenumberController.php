@@ -27,7 +27,7 @@ class PhonenumberController extends \BaseModuleController {
 			array('form_type' => 'select', 'name' => 'country_code', 'description' => 'Country Code', 'value' => Phonenumber::getPossibleEnumValues('country_code')),
 			array('form_type' => 'text', 'name' => 'prefix_number', 'description' => 'Prefix Number'),
 			array('form_type' => 'text', 'name' => 'number', 'description' => 'Number'),
-			array('form_type' => 'select', 'name' => 'mta_id', 'description' => 'MTA', 'value' => $model->mtas_list_with_dummies()),
+			array('form_type' => 'select', 'name' => 'mta_id', 'description' => 'MTA', 'value' => $model->mtas_list_with_dummies(), 'hidden' => '1'),
 			array('form_type' => 'text', 'name' => 'port', 'description' => 'Port'),
 			array('form_type' => 'text', 'name' => 'username', 'description' => 'Username'),
 			array('form_type' => 'text', 'name' => 'password', 'description' => 'Password'),

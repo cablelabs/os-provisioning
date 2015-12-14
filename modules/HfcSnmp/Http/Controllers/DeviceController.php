@@ -21,7 +21,7 @@ class DeviceController extends SnmpController {
 
 		// label has to be the same like column in sql table
 		return array(
-			array('form_type' => 'select', 'name' => 'devicetype_id', 'description' => 'Name', 'value' => $model->html_list($model->devicetypes(), 'name')),
+			array('form_type' => 'select', 'name' => 'devicetype_id', 'description' => 'Device Type', 'value' => $model->html_list($model->devicetypes(), 'name')),
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
 			array('form_type' => 'text', 'name' => 'ip', 'description' => 'IP address'),
 			array('form_type' => 'text', 'name' => 'community_ro', 'description' => 'Community RO'),
