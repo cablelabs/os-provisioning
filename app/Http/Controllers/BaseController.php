@@ -240,6 +240,10 @@ class BaseController extends Controller {
 		$ret = array();
 		$modules = Module::enabled();
 
+		$lines = include(app_path().'/Config/header.php');
+		foreach ($lines as $line)
+			array_push($ret, $line);
+
 		foreach ($modules as $module)
 		{
 			if (File::exists($module->getPath().'/Config/header.php'))

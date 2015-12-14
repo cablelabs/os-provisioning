@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Route;
+use Module;
 
 class BaseModuleController extends BaseController {
 
@@ -47,4 +48,33 @@ class BaseModuleController extends BaseController {
 		return explode('\\', $this->get_model_name())[3];
 	}
 
+	/*
+	 * Returns Global Config Index Page with links to the configurable Modules
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function glob_conf()
+	{
+    	$modules = Module::enabled();
+        $tmp = get_parent_class();
+        $base_controller = new $tmp;
+        $view_header = 'Modules';
+        $links = [];
+
+        foreach($modules as $module)
+        {
+        	$mod_path = explode('/', $module->getPath());
+			$tmp = end($mod_path);
+
+			$mod_controller_name = 'Modules\\'.$tmp.'\\Http\\Controllers\\'.$tmp.'Controller';
+			$mod_controller = new $mod_controller_name;
+
+			if (method_exists($mod_controller, 'get_form_fields'))
+        		$links[$module->getName()] = $tmp;
+        }
+
+        $route_name = 'Config.index';
+
+    	return \View::make('GlobalConfig.index', $base_controller->compact_prep_view(compact('links', 'view_header', 'route_name')));
+	}
 }
