@@ -3,7 +3,11 @@
 
 	@foreach($form_fields as $field)
 
-		<?php
+		<?php 
+			/*
+			 * Preparations for Form View
+			 * TODO: this should be moves to a sublayer in Controller Context ?
+			 */
 			$value   = null;
 			$options = null;
 
@@ -13,10 +17,31 @@
 			if (array_key_exists('options', $field))
 				$options = $field["options"];
 
-			// hide "hidden" fields and continue
+			/*
+			 * Hide Fields:
+			 *
+			 * 1. Hide fields that are in HTML _GET array.
+			 *    This is required for creating a "relational child" 
+			 *    elements with pre-filled values. This must be first
+			 *    done, otherwise pre-filling does not work
+			 *
+			 *    Example: Mta/create?modem_id=100002 -> creates MTA to Modem id 100002
+			 */
 			if (isset($_GET[$field['name']]))
 			{
 				echo Form::hidden ($field["name"], $_GET[$field['name']]);
+				continue;
+			}
+
+			/* 
+			 * 2. check if hidden is set in get_form_fields()
+			 * 3. globally hide all relation fields 
+			 *    (this means: all fields ending with _id)
+			 */
+			if (array_key_exists('hidden', $field) || 
+				preg_match('/(.*?)_id/', $field['name']))
+			{
+				echo Form::hidden ($field["name"]);
 				continue;
 			}
 		?>

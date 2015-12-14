@@ -455,6 +455,38 @@ class BaseController extends Controller {
 	}
 
 
+	/*
+	 * This function is used to prepare get_form_field array for edit view
+	 * So all general preparation stuff to get_form_fields will be done here. 
+	 *
+	 * Tasks: 
+	 *  1. Add a (*) to fields description if validation rule contains required
+	 *
+	 * @param fields: the get_form_fields array() 
+	 * @return: the modifeyed get_form_fields array()
+	 * @autor: Torsten Schmidt
+	 */
+	protected function _prepare_form_fields($fields)
+	{
+		$ret = [];
+	
+		// get the validation rules for related model object 
+		$rules = $this->get_model_obj()->rules();
+
+		// for all fields
+		foreach ($fields as $field) 
+		{
+			if (isset ($rules[$field['name']]) && // rule exists for actual field ?
+				preg_match('/(.*?)required(.*?)/', $rules[$field['name']])) // contains required ?
+				$field['description'] = $field['description']. ' *'; // append a (*) to field description
+
+			array_push ($ret, $field);
+		}
+
+		return $ret;
+	}
+
+
 	/**
 	 * Show the editing form of the calling Object
 	 *
@@ -477,7 +509,7 @@ class BaseController extends Controller {
 		// transfer model_name, view_header, view_var
 		$view_header 	= 'Edit '.$obj->get_view_header();
 		$view_var 		= $obj->findOrFail($id);
-		$form_fields	= $this->get_controller_obj()->get_form_fields($view_var);
+		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var));
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';
