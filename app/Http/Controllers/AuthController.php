@@ -78,6 +78,9 @@ class AuthController extends BaseController {
 	}
 
 
+	/*
+	 * Logout User
+	 */
 	public function doLogout()
 	{
 		Auth::logout();
@@ -85,6 +88,11 @@ class AuthController extends BaseController {
 		return Redirect::to('auth/login');
 	}
 
+
+	/* 
+	 * This function will be called if user has no access to a certain area
+	 * or has no valid login at all. 
+	 */
 	public function denied()
 	{
 		return \View::make('auth.denied');
