@@ -108,12 +108,16 @@ class BaseController extends Controller {
 	public function __construct() {
 	}
 
+
 	/**
-	 * Returns a default input data array, that shall be overwritten from the appropriate model controller if needed
+	 * Returns a default input data array, that shall be overwritten 
+	 * from the appropriate model controller if needed. 
 	 *
-	 * Note: Checkbox Entries will automatically set to 0 if not checked
+	 * Note: Will be running before Validation
+	 *
+	 * Tasks: Checkbox Entries will automatically set to 0 if not checked
 	 */
-	protected function default_input($data)
+	protected function prepare_input($data)
 	{
 		// Checkbox Unset ?
 		foreach ($this->get_form_fields($this->get_model_obj()) as $field) 
@@ -122,6 +126,18 @@ class BaseController extends Controller {
 				$data[$field['name']] = 0;
 		}
 
+		return $data;
+	}
+
+
+	/**
+	 * Returns a default input data array, that shall be overwritten 
+	 * from the appropriate model controller if needed. 
+	 *
+	 * Note: Will be running _after_ Validation
+	 */
+	protected function prepare_input_post_validation($data)
+	{
 		return $data;
 	}
 
@@ -442,7 +458,10 @@ class BaseController extends Controller {
 		$obj = $this->get_model_obj();
 		$controller = $this->get_controller_obj();
 
-		$validator = Validator::make($data = $controller->default_input(Input::all()), $obj::rules());
+		// Prepare and Validate Input
+		$data      = $controller->prepare_input(Input::all());
+		$validator = Validator::make($data, $obj::rules());
+		$data      = $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails())
 		{
@@ -544,7 +563,10 @@ class BaseController extends Controller {
 		$obj = $this->get_model_obj()->findOrFail($id);
 		$controller = $this->get_controller_obj();
 
-		$validator = Validator::make($data = $controller->default_input(Input::all()), $obj::rules($id));
+		// Prepare and Validate Input
+		$data      = $controller->prepare_input(Input::all());
+		$validator = Validator::make($data, $obj::rules($id));
+		$data      = $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails())
 		{

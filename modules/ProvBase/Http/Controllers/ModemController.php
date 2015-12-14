@@ -40,19 +40,6 @@ class ModemController extends \BaseModuleController {
 		);
 	}
 
-	/**
-	 * TODO: make generic
-	 * Make Checkbox Default Input
-	 * see: see http://forumsarchive.laravel.io/viewtopic.php?id=11627
-	 */
-	protected function default_input ($data)
-	{
-		if(!isset($data['public']))$data['public']=0;
-		if(!isset($data['network_access']))$data['network_access']=0;
-
-		return $data;
-	}
-
 
 	/**
 	 * Display a listing of all Modem objects

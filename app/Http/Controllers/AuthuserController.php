@@ -31,11 +31,11 @@ class AuthuserController extends BaseController {
 	// Don't forget to fill this array
 	//protected $fillable = ['first_name', 'last_name', 'email', 'login_name', 'password', 'active', 'description'];
 
-	public function default_input ($data)
+	public function prepare_input_post_validation ($data)
 	{
 		$data['password'] = \Hash::make($data['password']);
 
-		return parent::default_input($data);
+		return parent::prepare_input($data);
 	}
 
 }
