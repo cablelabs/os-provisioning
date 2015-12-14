@@ -11,7 +11,7 @@ class Contract extends \BaseModel {
 
 	// Don't forget to fill this array
 	protected $fillable = [ 'number', 'number2', 'firstname', 'lastname', 'salutation', 'company', 'street', 'city', 'zip', 
-        'country_id', 'x', 'y', 'phone', 'fax', 'email', 'birthday', 'contract_start', 'contract_end', 'internet_access', 'qos_id', 
+        'country_id', 'x', 'y', 'phone', 'fax', 'email', 'birthday', 'contract_start', 'contract_end', 'network_access', 'qos_id', 
         'next_qos_id', 'voip_id', 'next_voip_id', 'sepa_iban', 'sepa_bic' , 'sepa_holder', 'sepa_institute', 'create_invoice', 
         'login', 'password', 'description' ];
 

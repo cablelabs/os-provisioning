@@ -35,7 +35,7 @@ class ContractTableSeeder extends \BaseSeeder {
 				'birthday' => $faker->dateTimeBetween('-100 years', '-18 years'),
 				'contract_start' => $start_contract,
 				'contract_end' => (rand(0,10) > 8 ? $faker->dateTimeBetween($start_contract, '+1 year') : 0),
-				'internet_access' => $faker->boolean(85),
+				'network_access' => $faker->boolean(85),
 				'qos_id' => rand(0, $this->max_seed_l2),
 				'next_qos_id' => (rand(0,10) > 8 ? rand(0, $this->max_seed_l2) : 0),
 				'voip_id' => rand(0, 2),
