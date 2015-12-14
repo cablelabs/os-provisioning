@@ -12,7 +12,7 @@
 */
 
 // Home Route, This will redirect depending on valid Login
-Route::get('', array('uses' => 'AuthController@home'));
+Route::get('', array('as' => 'Home', 'uses' => 'AuthController@home'));
 
 
 // Auth => login form
@@ -33,4 +33,7 @@ Route::get('auth/denied', array('as' => 'Auth.denied', 'uses' => 'AuthController
 Route::group(array('before' => 'auth'), function() {
 	// Base routes for global search
 	Route::get('base/fulltextSearch', array('as' => 'Base.fulltextSearch', 'uses' => 'BaseController@fulltextSearch'));
+
+	Route::resource('Authuser', 'AuthuserController');
+	Route::get('Authuser/fulltextSearch', array('as' => 'Authuser.fulltextSearch', 'uses' => 'AuthuserController@fulltextSearch'));
 });
