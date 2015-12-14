@@ -425,7 +425,8 @@ class BaseController extends Controller {
 
 		$view_header 	= 'Create '.$obj->get_view_header();
 		// form_fields contain description of fields and the data of the fields
-		$form_fields	= $this->get_controller_obj()->get_form_fields($obj);
+		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj));
+
 
 		$view_path = 'Generic.create';
 		$form_path = 'Generic.form';
@@ -480,6 +481,7 @@ class BaseController extends Controller {
 	 *
 	 * Tasks: 
 	 *  1. Add a (*) to fields description if validation rule contains required
+	 *  2. Add Placeholder YYYY-MM-DD for all date fields 
 	 *
 	 * @param fields: the get_form_fields array() 
 	 * @return: the modifeyed get_form_fields array()
@@ -495,13 +497,21 @@ class BaseController extends Controller {
 		// for all fields
 		foreach ($fields as $field) 
 		{
-			if (isset ($rules[$field['name']]) && // rule exists for actual field ?
-				preg_match('/(.*?)required(.*?)/', $rules[$field['name']])) // contains required ?
-				$field['description'] = $field['description']. ' *'; // append a (*) to field description
+			// rule exists for actual field ?
+			if (isset ($rules[$field['name']])) 
+			{ 
+				// Task 1: Add a (*) to fields description if validation rule contains required
+				if (preg_match('/(.*?)required(.*?)/', $rules[$field['name']]))
+					$field['description'] = $field['description']. ' *';
+
+				// Task 2: Add Placeholder YYYY-MM-DD for all date fields 
+				if (preg_match('/(.*?)date(.*?)/', $rules[$field['name']]))
+					$field['options']['placeholder'] = 'YYYY-MM-DD';			
+			}
 
 			array_push ($ret, $field);
 		}
-
+		
 		return $ret;
 	}
 

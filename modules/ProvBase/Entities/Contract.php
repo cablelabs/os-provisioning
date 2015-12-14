@@ -31,7 +31,7 @@ class Contract extends \BaseModel {
             'email' => 'email',
             'birthday' => 'required|date',
             'contract_start' => 'date',
-            'contract_end' => 'date', // |after:now -> implies we can not change stuff in an out-dated contract
+            'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
             'sepa_iban' => 'iban',
             'sepa_bic' => 'bic',
         );
