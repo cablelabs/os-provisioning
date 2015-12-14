@@ -43,8 +43,9 @@
           <li class="dropdown">
             <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
               <i class="fa fa-bell-o"></i>
-              <span class="label">5</span>
+              <span class="label">0</span>
             </a>
+<!--
             <ul class="dropdown-menu media-list pull-right animated fadeInDown">
               <li class="dropdown-header">Notifications (5)</li>
               <li class="media">
@@ -99,20 +100,19 @@
               </li>
             </ul>
           </li>
-
+-->
           <li class="dropdown navbar-user">
             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
               <img src="{{asset('components/assets-admin/img/user-11.jpg')}}" alt="" /> 
-              <span class="hidden-xs">Torsten Schmidt</span> <b class="caret"></b>
+              <span class="hidden-xs">{{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>
-              <li><a href="javascript:;">Edit Profile</a></li>
-              <li><a href="javascript:;"><span class="badge badge-danger pull-right">2</span> Inbox</a></li>
-              <li><a href="javascript:;">Calendar</a></li>
-              <li><a href="javascript:;">Setting</a></li>
+              <li><a href="{{route('Authuser.edit', \Auth::user()->id)}}">User Settings</a></li>
+              <li><a href="{{route('Authuser.index')}}">User Global Settings</a></li>
+              <!-- <li><a href="javascript:;"><span class="badge badge-danger pull-right">2</span> Inbox</a></li> -->
               <li class="divider"></li>
-              <li><a href="javascript:;">Log Out</a></li>
+              <li><a href="{{route('Auth.logout')}}">Log Out</a></li>
             </ul>
           </li>
 

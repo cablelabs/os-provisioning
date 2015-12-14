@@ -11,15 +11,29 @@
 |
 */
 
+// Home Route, This will redirect depending on valid Login
+Route::get('', array('as' => 'Home', 'uses' => 'AuthController@home'));
+
+
 // Auth => login form
-Route::get('login', array('uses' => 'AuthController@showLogin'));
+Route::get('auth/login', array('as' => 'Auth.login', 'uses' => 'AuthController@showLogin'));
 
 // Auth => process form data
-Route::post('login', array('uses' => 'AuthController@doLogin'));
+Route::post('auth/login', array('as' => 'Auth.login', 'uses' => 'AuthController@doLogin'));
+
+// Auth => Logout
+Route::get ('auth/logout', array('as' => 'Auth.logout', 'uses' => 'AuthController@doLogout'));
+Route::post('auth/logout', array('as' => 'Auth.logout', 'uses' => 'AuthController@doLogout'));
+
+// Auth Denied. For Error Handling
+Route::get('auth/denied', array('as' => 'Auth.denied', 'uses' => 'AuthController@denied'));
 
 
 // Authentification is necessary before accessing a route
 Route::group(array('before' => 'auth'), function() {
 	// Base routes for global search
 	Route::get('base/fulltextSearch', array('as' => 'Base.fulltextSearch', 'uses' => 'BaseController@fulltextSearch'));
+
+	Route::resource('Authuser', 'AuthuserController');
+	Route::get('Authuser/fulltextSearch', array('as' => 'Authuser.fulltextSearch', 'uses' => 'AuthuserController@fulltextSearch'));
 });

@@ -5,7 +5,7 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
-require_once(app_path().'/Exceptions.php');
+// require_once(app_path().'/Exceptions.php');
 
 /**
  * Model holding user data for authentication
@@ -21,6 +21,38 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 /* class Authuser extends BaseModel implements RemindableInterface { */
 
 	use Authenticatable, CanResetPassword;
+
+
+	// The associated SQL table for this Model
+	public $table = 'authusers';
+
+
+	// Add your validation rules here
+	public static function rules($id=null)
+	{
+		return array(
+			'login_name' => 'required|unique:authusers,login_name,'.$id,
+			'password' => 'required|min:6'
+		);
+	}
+
+	// Don't forget to fill this array
+	protected $fillable = ['first_name', 'last_name', 'email', 'login_name', 'password', 'active', 'description'];
+
+
+	// Name of View
+	public static function get_view_header()
+	{
+		return 'Users';
+	}
+
+	// link title in index view
+	public function get_view_link_title()
+	{
+		return $this->login_name;
+	}
+
+
 
 	/**
 	 * Get all the meta entities (roles, clients) the user belongs to
@@ -161,4 +193,45 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 		$this->_meta()->attach($usergroups);
 
 	}
+
+
+	/**
+	 * BOOT:
+	 * - init observer
+	 */
+	public static function boot()
+	{
+		parent::boot();
+
+		Authuser::observe(new \AuthObserver);
+	}
+}
+
+
+/*
+ * Observer Class
+ */
+class AuthObserver
+{
+    public function created($auth)
+    {
+		$id = $auth->id;
+
+		// Create required AuthUserMeta relation, otherwise user can not login
+		DB::update("INSERT INTO authusermeta (user_id, meta_id) VALUES($id, 1);");
+		DB::update("INSERT INTO authusermeta (user_id, meta_id) VALUES($id, 2);");
+    }
+
+    public function deleted($auth)
+    {
+		// Drop AuthUserMeta Relation
+		DB::table('authusermeta')->where('user_id', '=', $auth->id)->delete();
+
+		// Hard Delete this entry. Because in SQL the login_name is unique
+		// a soft deleted login_name entry will cause problems while adding
+		// a new entry
+		//
+		// TODO: use a global define to disable Soft Deletes
+		Authuser::onlyTrashed()->forceDelete();
+    }
 }

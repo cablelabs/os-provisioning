@@ -15,8 +15,7 @@ use Auth;
 use NoAuthenticateduserError;
 use Log;
 
-require_once(app_path().'/Exceptions.php');
-
+use App\Exceptions\AuthExceptions;
 
 
 class BaseController extends Controller {
@@ -74,7 +73,7 @@ class BaseController extends Controller {
 
 		// no user logged in
 		if (is_null($cur_user)) {
-			throw new NoAuthenticateduserError("No user logged in");
+			throw new AuthExceptions('Login Required');
 		}
 
 		// build permissions array for easy access to user rights
@@ -84,13 +83,13 @@ class BaseController extends Controller {
 
 		// check model rights
 		if (!array_key_exists($cur_model, $this->permissions['model'])) {
-			throw new NoModelPermissionError('Access to model '.$cur_model.' not allowed for user '.$cur_user->login_name.'.');
+			throw new AuthExceptions('Access to model '.$cur_model.' not allowed for user '.$cur_user->login_name.'.');
 		}
 		if (!array_key_exists($access, $this->permissions['model'][$cur_model])) {
-			throw new InvalidPermissionsRequest('Something went wrong asking for '.$access.' right in '.$model.' for user '.$cur_user->login_name.'.');
+			throw new AuthExceptions('Something went wrong asking for '.$access.' right in '.$model.' for user '.$cur_user->login_name.'.');
 		}
 		if ($this->permissions['model'][$cur_model][$access] == 0) {
-			throw new InsufficientRightsError('User '.$cur_user->login_name.' is not allowed to '.$access.' in '.$cur_model.'.');
+			throw new AuthExceptions('User '.$cur_user->login_name.' is not allowed to '.$access.' in '.$cur_model.'.');
 		}
 
 		// TODO: check net rights
@@ -111,9 +110,18 @@ class BaseController extends Controller {
 
 	/**
 	 * Returns a default input data array, that shall be overwritten from the appropriate model controller if needed
+	 *
+	 * Note: Checkbox Entries will automatically set to 0 if not checked
 	 */
 	protected function default_input($data)
 	{
+		// Checkbox Unset ?
+		foreach ($this->get_form_fields($this->get_model_obj()) as $field) 
+		{
+			if(!isset($data[$field['name']]) && $field['form_type'] == 'checkbox')
+				$data[$field['name']] = 0;
+		}
+
 		return $data;
 	}
 
@@ -157,8 +165,7 @@ class BaseController extends Controller {
 	 */
 	protected function get_model_name()
 	{
-		// TODO: generic replace ..
-		return 'Models\\'.explode ('Controller', Route::getCurrentRoute()->getActionName())[0];
+		return explode ('Controller', explode ('\\', explode ('@', Route::getCurrentRoute()->getActionName())[0])[3])[0];
 	}
 
 	protected function get_model_obj ()
@@ -198,7 +205,7 @@ class BaseController extends Controller {
 
 	protected function get_view_name()
 	{
-		return explode ('\\', $this->get_model_name())[1];
+		return explode ('\\', $this->get_model_name())[0];
 	}
 
 	protected function get_view_var()
@@ -208,7 +215,7 @@ class BaseController extends Controller {
 
 	protected function get_route_name()
 	{
-		return explode('\\', $this->get_model_name())[1];
+		return explode('\\', $this->get_model_name())[0];
 	}
 
 
@@ -359,8 +366,8 @@ class BaseController extends Controller {
 		try {
 			$this->_check_permissions("view");
 		}
-		catch (PermissionDeniedError $ex) {
-			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
+		catch (Exceptions $ex) {
+			throw new AuthExceptions($e->getMessage());
 		}
 
 		$obj = $this->get_model_obj();

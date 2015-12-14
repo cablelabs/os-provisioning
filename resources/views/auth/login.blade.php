@@ -1,36 +1,61 @@
 <!doctype html>
 <html>
-<head>
-<title>Login</title>
-</head>
-<body style="padding: 50px">
 
-{{ Form::open(array('url' => 'login')) }}
-<h1>Welcome</h1>
+	<head>
+		<meta charset="utf-8">
+		<title>NMS</title>
+		@include ('bootstrap.header')
+	</head>
 
-<h3>Please log in to proceed</h3>
+	@include ('bootstrap.header')	
 
-<!-- if there are login errors, show them here -->
-<p>
-	{{ $errors->first('login_name') }}
-	{{ $errors->first('password') }}
-</p>
+	<body class="pace-top">
 
-<table>
-	<tr>
-		<td>{{ Form::label('login_name', 'Username') }}</td>
-		<td>{{ Form::text('login_name', Input::old('login_name'), array('autofocus'=>'autofocus')) }}</td>
-	</tr>
-	<tr>
-		<td>{{ Form::label('password', 'Password') }}</td>
-		<td>{{ Form::password('password') }}</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>{{ Form::submit('Submit!') }}</td>
-	</tr>
-</table>
-{{ Form::close() }}
+	    <!-- begin login -->
+        <div class="login bg-black animated fadeInDown">
 
-</body>
+            <!-- begin brand -->
+            <div class="login-header">
+                <div class="brand">
+                    <span class="logo"></span> Das Monster
+                    <small>The next Generation NMS</small>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-sign-in"></i>
+                </div>
+            </div>
+
+            <!-- end brand -->
+            <div class="login-content">
+                {{ Form::open(array('url' => 'auth/login')) }}
+
+ 					<div class="form-group m-b-20">
+                    {{ Form::text('login_name', Input::old('login_name'), array('autofocus'=>'autofocus', 'class' => "form-control input-lg", 'placeholder' => 'Username', 'style' => 'simple')) }}
+                    </div>
+
+                    <div class="form-group m-b-20">
+                    {{ Form::password('password', array('autofocus'=>'autofocus', 'class' => "form-control input-lg", 'placeholder' => 'Password', 'style' => 'simple')) }}
+                    </div>
+            <!--
+                    <div class="checkbox m-b-20">
+                        <label>
+                            <input type="checkbox" /> Remember Me
+                        </label>
+                    </div>
+            -->
+                    <div class="login-buttons">
+                        <button type="submit" class="btn btn-success btn-block btn-lg">Sign me in</button>
+                    </div>
+
+
+                {{ Form::close() }}
+            </div>
+        </div>
+        <!-- end login -->
+        
+    </body>
+
+	@include ('bootstrap.footer')	
 </html>
+
+

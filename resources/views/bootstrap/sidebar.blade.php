@@ -10,8 +10,8 @@
               <a href="javascript:;"><img src="assets/img/user-11.jpg" alt="" /></a>
             </div>
             <div class="info">
-              Sean Ngu
-              <small>Front end developer</small>
+              {{\Auth::user()->first_name.' '.\Auth::user()->last_name}}
+              <small>...</small>
             </div>
           </li>
         </ul>
@@ -21,12 +21,12 @@
 
           <li class="nav-header">Navigation</li>
           <li>
-            <a href="index.html"><i class="fa fa-laptop"></i> <span>Dashboard</span></a>
+            <a href="{{route('Home')}}"><i class="fa fa-laptop"></i> <span>Dashboard</span></a>
           </li>
 
           <li>
-            <a href="inbox.html">
-              <span class="badge pull-right">10</span>
+            <a href="{{route('Home')}}">
+              <span class="badge pull-right">0</span>
               <i class="fa fa-inbox"></i> <span>Inbox</span>
             </a>
           </li>

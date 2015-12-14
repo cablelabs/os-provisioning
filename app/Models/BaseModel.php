@@ -134,7 +134,6 @@ class BaseModel extends Eloquent
 		// models to be excluded from search
 		$exclude = array(
 			'BaseModel',
-			'Authuser',
 			'Authmeta',
 			'Authcore'
 		);
@@ -147,10 +146,10 @@ class BaseModel extends Eloquent
 		$models = glob($dir."/*.php");
 
 		foreach ($models as $model) {
-			$model = str_replace(app_path('models')."/", "", $model);
+			$model = str_replace(app_path('Models')."/", "", $model);
 			$model = str_replace(".php", "", $model);
 			if (array_search($model, $exclude) === FALSE) {
-				array_push($result, "Models\\".$model);
+				array_push($result, $model);
 			}
 		}
 
