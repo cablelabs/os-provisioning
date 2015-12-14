@@ -12,6 +12,8 @@ use App\Exceptions\AuthExceptions;
 
 class ModemController extends \BaseModuleController {
 
+	protected $index_create_allowed = false;
+
     /**
      * defines the formular fields for the edit and create view
      */

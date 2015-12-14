@@ -48,9 +48,20 @@
 
 		{{ Form::openGroup($field["name"], $field["description"]) }}
 			<?php
-				if 		(!$value && !$options) 	echo Form::$field["form_type"]($field["name"]);
-				elseif 	($value && !$options) 	echo Form::$field["form_type"]($field["name"], $value);
-				elseif 	($options) 				echo Form::$field["form_type"]($field["name"], $value, $options);
+				/*
+				 * Output the Form Elements
+				 */
+
+				// Checkbox - where pre-checked is enabled
+				if ($field["form_type"] == 'checkbox' && isset($field['checked'])) 
+					echo Form::checkbox($field['name'], $value, null, ((isset($field['checked']) && $field['checked']) ? true : false));
+				else
+				{
+					// All other Form Types
+					if 		(!$value && !$options) 	echo Form::$field["form_type"]($field["name"]);
+					elseif 	($value && !$options) 	echo Form::$field["form_type"]($field["name"], $value);
+					elseif 	($options) 				echo Form::$field["form_type"]($field["name"], $value, $options);
+				}
 			?>
 		{{ Form::closeGroup() }}
 

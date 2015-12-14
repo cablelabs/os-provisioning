@@ -25,7 +25,7 @@ class AuthuserController extends BaseController {
 			array('form_type' => 'text', 'name' => 'first_name', 'description' => 'Firstname'),
 			array('form_type' => 'text', 'name' => 'last_name', 'description' => 'Lastname'),
 			array('form_type' => 'text', 'name' => 'email', 'description' => 'Email'),
-			array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'value' => '1'),
+			array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'value' => '1', 'checked' => true),
 		);
 	}
 	// Don't forget to fill this array
