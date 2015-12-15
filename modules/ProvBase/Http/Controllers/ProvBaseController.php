@@ -17,9 +17,15 @@ class ProvBaseController extends BaseModuleController {
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'text', 'name' => 'prov_server_ip', 'description' => 'Provisioning Server IP'),
-			// array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly']),
-			// array('form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'value' => $model->html_list($model->contracts(), 'id')),
-			// array('form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'),
+			array('form_type' => 'text', 'name' => 'ro_community', 'description' => 'SNMP Read Only Community'),
+			array('form_type' => 'text', 'name' => 'rw_community', 'description' => 'SNMP Read Write Community'),
+
+			array('form_type' => 'text', 'name' => 'domain_name', 'description' => 'Domain Name for Modems'),
+			array('form_type' => 'text', 'name' => 'notif_mail', 'description' => 'Notification Email Address'),
+			
+			array('form_type' => 'text', 'name' => 'startid_contract', 'description' => 'Start ID Contracts'),
+			array('form_type' => 'text', 'name' => 'startid_modem', 'description' => 'Start ID Modems'),
+			array('form_type' => 'text', 'name' => 'startid_endpoint', 'description' => 'Start ID Endpoints'),
 			);
 	}
 	

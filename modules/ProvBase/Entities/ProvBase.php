@@ -8,7 +8,7 @@ class ProvBase extends \BaseModel {
 	protected $table = 'provbase';
 
 	// Don't forget to fill this array
-	protected $fillable = ['provisioning_server'];
+	protected $fillable = ['provisioning_server', 'ro_community', 'rw_community', 'domain_name', 'notif_mail', 'startid_contract', 'startid_modem', 'startid_endpoint'];
 
 	// Add your validation rules here
 	public static function rules($id = null)
@@ -27,7 +27,7 @@ class ProvBase extends \BaseModel {
 	// link title in index view
 	public function get_view_link_title()
 	{
-		return "";
+		return "Prov Base";
 	}	
 
 

@@ -20,6 +20,13 @@ class CreateProvBaseTable extends BaseMigration {
 			$this->up_table_generic($table);
 
 			$table->string('provisioning_server');
+			$table->string('ro_community');
+			$table->string('rw_community');
+			$table->string('notif_mail');
+			$table->string('domain_name');
+			$table->integer('startid_contract')->unsigned();
+			$table->integer('startid_modem')->unsigned();
+			$table->integer('startid_endpoint')->unsigned();
 
 		});
 

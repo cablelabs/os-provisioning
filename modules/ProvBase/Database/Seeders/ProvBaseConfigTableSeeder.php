@@ -10,13 +10,17 @@ class ProvBaseConfigTableSeeder extends \BaseSeeder {
 
 	public function run()
 	{
-		foreach(range(1, $this->max_seed_l2) as $index)
-		{
-			$faker = Faker::create();
-			ProvBase::create([
-				'provisioning_server' => $faker->ipv4(),
-			]);
-		}
+		$faker = Faker::create();
+		ProvBase::create([
+			'provisioning_server' => $faker->ipv4,
+			'ro_community' => 'public',
+			'rw_community' => 'private',
+			'notif_mail' => $faker->email,
+			'domain_name' => 'seeder.domain.com',
+			'startid_contract' => 500000,
+			'startid_modem' => 100000,
+			'startid_endpoint' => 200000,
+		]);
 	}
 
 }
