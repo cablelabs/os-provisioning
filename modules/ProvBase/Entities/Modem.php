@@ -290,7 +290,7 @@ class Modem extends \BaseModel {
         catch (Exception $e)
         {
             // only ignore error with this error message (catch exception with this string) 
-            if (!strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known"))
+            if (strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false)
             {
                 // check if observer is called from HTML Update, otherwise skip
                 if (\Request::method() == 'PUT') 
