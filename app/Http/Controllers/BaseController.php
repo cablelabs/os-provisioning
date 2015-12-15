@@ -425,7 +425,7 @@ class BaseController extends Controller {
 
 		$view_header 	= 'Create '.$obj->get_view_header();
 		// form_fields contain description of fields and the data of the fields
-		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj));
+		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj), $obj);
 
 
 		$view_path = 'Generic.create';
