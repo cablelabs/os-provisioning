@@ -2,9 +2,6 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\View;
-
 use App\Http\Controllers\BaseModuleController;
 
 class ProvBaseController extends BaseModuleController {
