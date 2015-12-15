@@ -1,6 +1,6 @@
 
 	@include ('bootstrap.menu', array(
-		'header' => 'Das Monster', 
+		'header' => $header1, 
 		'menus' => array (
 			'0' => array(
 

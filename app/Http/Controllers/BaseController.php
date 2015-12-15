@@ -14,6 +14,7 @@ use BaseModel;
 use Auth;
 use NoAuthenticateduserError;
 use Log;
+use GlobalConfig;
 
 use App\Exceptions\AuthExceptions;
 
@@ -345,6 +346,8 @@ class BaseController extends Controller {
 
 		if(!isset($a['view_header']))
 			$a['view_header'] = $model->get_view_header();
+
+		$a['header1'] = GlobalConfig::first()->headline1;
 
 		return $a;
 	}
