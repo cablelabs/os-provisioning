@@ -24,6 +24,8 @@ class CreateProvBaseTable extends BaseMigration {
 			$table->string('rw_community');
 			$table->string('notif_mail');
 			$table->string('domain_name');
+			$table->integer('dhcp_def_lease_time')->unsigned();
+			$table->integer('dhcp_max_lease_time')->unsigned();
 			$table->integer('startid_contract')->unsigned();
 			$table->integer('startid_modem')->unsigned();
 			$table->integer('startid_endpoint')->unsigned();

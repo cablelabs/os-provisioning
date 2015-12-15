@@ -19,13 +19,13 @@ class GlobalConfig extends BaseModel {
 	// Name of View
 	public static function get_view_header()
 	{
-		return 'Configuration';
+		return 'Global Config';
 	}
 
 	// link title in index view
 	public function get_view_link_title()
 	{
-		return "Global Configuration";
+		return "Global Config";
 	}	
 
 
