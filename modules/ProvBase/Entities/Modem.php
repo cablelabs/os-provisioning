@@ -26,10 +26,6 @@ class Modem extends \BaseModel {
         );
     }
 
-	// Don't forget to fill this array
-	protected $fillable = ['hostname', 'name', 'contract_id', 'mac', 'status', 'public', 'network_access', 'serial_num', 
-        'inventar_num', 'description', 'parent', 'configfile_id', 'qos_id', 'firstname', 'lastname', 'zip', 'city', 'street'];
-
     
     // Name of View
     public static function get_view_header()

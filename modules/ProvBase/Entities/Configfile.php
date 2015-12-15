@@ -25,9 +25,6 @@ class Configfile extends \BaseModel {
         );
     }
 
-	// Don't forget to fill this array
-	protected $fillable = ['name', 'text', 'device', 'type', 'parent_id', 'public', 'firmware'];
-
 
     // Name of View
     public static function get_view_header()

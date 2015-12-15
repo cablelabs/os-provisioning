@@ -17,9 +17,6 @@ class Endpoint extends \BaseModel {
         );
     }
 
-	// Don't forget to fill this array
-	protected $fillable = ['hostname', 'name', 'mac', 'public', 'description'];
-
     
     // Name of View
     public static function get_view_header()

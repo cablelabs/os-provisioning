@@ -594,9 +594,12 @@ class BaseController extends Controller {
 		// update timestamp, this forces to run all observer's
 		// Note: calling touch() forces a direct save() which calls all observers before we update $data
 		//       when exit in middleware to a new view page (like Modem restart) this kill update process
+		//       so the solution is not to run touch(), we set the updated_at field directly
 		$data['updated_at'] = \Carbon\Carbon::now(Config::get('app.timezone'));
 
-		// the Update
+		// The Update
+		// Note: Eloquent Update requires updated_at to either be in the fillable array or to have a guarded field
+		//       without updated_at field. So we globally use a guarded field from now, to use the update timestamp
 		$obj->update($data);
 
 		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Updated!');

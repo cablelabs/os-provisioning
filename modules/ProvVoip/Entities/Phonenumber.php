@@ -22,9 +22,6 @@ class Phonenumber extends \BaseModel {
 		);
 	}
 
-	// Don't forget to fill this array
-	protected $fillable = ['mta_id', 'port', 'country_code', 'prefix_number', 'number', 'username', 'password', 'active'];
-
 
 	// Name of View
 	public static function get_view_header()

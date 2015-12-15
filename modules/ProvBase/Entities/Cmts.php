@@ -18,11 +18,6 @@ class Cmts extends \BaseModel {
         );
     }
 
-	// Don't forget to fill this array
-	protected $fillable = ['hostname', 'type', 'ip', 'community_rw', 'community_ro', 'company', 'state', 'monitoring'];
-	// columns in database that shall not be able to alter
-	// protected $guarded = [];
-
 
 	// Name of View
 	public static function get_view_header()
