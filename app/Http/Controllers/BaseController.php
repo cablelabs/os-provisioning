@@ -482,12 +482,14 @@ class BaseController extends Controller {
 	 * Tasks: 
 	 *  1. Add a (*) to fields description if validation rule contains required
 	 *  2. Add Placeholder YYYY-MM-DD for all date fields 
+	 *  3. Hide all parent view relation select fields
 	 *
 	 * @param fields: the get_form_fields array() 
+	 * @param model: the model to view. Note: required get_model_obj()->find($id)
 	 * @return: the modifeyed get_form_fields array()
 	 * @autor: Torsten Schmidt
 	 */
-	protected function _prepare_form_fields($fields)
+	protected function _prepare_form_fields($fields, $model)
 	{
 		$ret = [];
 	
@@ -506,12 +508,18 @@ class BaseController extends Controller {
 
 				// Task 2: Add Placeholder YYYY-MM-DD for all date fields 
 				if (preg_match('/(.*?)date(.*?)/', $rules[$field['name']]))
-					$field['options']['placeholder'] = 'YYYY-MM-DD';			
+					$field['options']['placeholder'] = 'YYYY-MM-DD';	
+
 			}
+
+			// 3. Hide all parent view relation select fields
+			if (is_object($model->view_belongs_to()) && 					// does a view relation exists
+				$model->view_belongs_to()->table.'_id' == $field['name'])	// view table name (+_id) == field name ?
+				$field['hidden'] = '1';									// hide
 
 			array_push ($ret, $field);
 		}
-		
+
 		return $ret;
 	}
 
@@ -538,7 +546,7 @@ class BaseController extends Controller {
 		// transfer model_name, view_header, view_var
 		$view_header 	= 'Edit '.$obj->get_view_header();
 		$view_var 		= $obj->findOrFail($id);
-		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var));
+		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var);
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';

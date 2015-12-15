@@ -38,8 +38,7 @@
 			 * 3. globally hide all relation fields 
 			 *    (this means: all fields ending with _id)
 			 */
-			if (array_key_exists('hidden', $field) || 
-				preg_match('/(.*?)_id/', $field['name']))
+			if (array_key_exists('hidden', $field))
 			{
 				echo Form::hidden ($field["name"]);
 				continue;
