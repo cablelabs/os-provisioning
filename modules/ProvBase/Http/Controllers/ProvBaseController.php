@@ -16,7 +16,7 @@ class ProvBaseController extends BaseModuleController {
 	{
 		// label has to be the same like column in sql table
 		return array(
-			array('form_type' => 'text', 'name' => 'prov_server_ip', 'description' => 'Provisioning Server IP'),
+			array('form_type' => 'text', 'name' => 'provisioning_server', 'description' => 'Provisioning Server IP'),
 			array('form_type' => 'text', 'name' => 'ro_community', 'description' => 'SNMP Read Only Community'),
 			array('form_type' => 'text', 'name' => 'rw_community', 'description' => 'SNMP Read Write Community'),
 
