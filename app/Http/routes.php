@@ -38,4 +38,6 @@ Route::group(array('before' => 'auth'), function() {
 	Route::get('Authuser/fulltextSearch', array('as' => 'Authuser.fulltextSearch', 'uses' => 'AuthuserController@fulltextSearch'));
 
 	Route::get('Config', array('as' => 'Config.index', 'uses' => 'BaseModuleController@glob_conf'));
+	Route::resource('GlobalConfig', 'GlobalConfigController');
+
 });

@@ -234,6 +234,27 @@ class BaseController extends Controller {
 		return explode('\\', $this->get_model_name())[0];
 	}
 
+	protected function get_config_modules()
+	{
+		$modules = Module::enabled();
+		$links = ['0' => 'GlobalConfig'];
+
+		foreach($modules as $module)
+        {
+        	$mod_path = explode('/', $module->getPath());
+			$tmp = end($mod_path);
+
+			$mod_controller_name = 'Modules\\'.$tmp.'\\Http\\Controllers\\'.$tmp.'Controller';
+			$mod_controller = new $mod_controller_name;
+
+			if (method_exists($mod_controller, 'get_form_fields'))
+        		$links[] = $tmp;
+        }
+
+        return $links;
+	}
+
+
 
 	public function get_view_header_links ()
 	{
@@ -561,7 +582,9 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields')));
+		$config_routes = $this->get_config_modules();
+
+		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes')));
 	}
 
 
