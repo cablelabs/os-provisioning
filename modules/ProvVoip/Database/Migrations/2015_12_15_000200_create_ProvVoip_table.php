@@ -23,8 +23,12 @@ class CreateProvVoipTable extends BaseMigration {
 
 		});
 
+		DB::update("INSERT INTO ".$this->tablename." (startid_mta) VALUES(300000);");
+
 		return parent::up();
 	}
+
+
 
 
 	/**

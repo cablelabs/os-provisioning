@@ -54,6 +54,7 @@ class ProvBase extends \BaseModel {
 		$data .= 'option domain-name-servers '.$this->provisioning_server.";\n";
 		$data .= 'default-lease-time '.$this->dhcp_def_lease_time.";\n";
 		$data .= 'max-lease-time '.$this->dhcp_max_lease_time.";\n";
+		$data .= 'next-server '.$this->provisioning_server.";\n";
 
 		File::put($file_dhcp_conf, $data);
     }

@@ -30,6 +30,8 @@ class CreateGlobalConfigTable extends BaseMigration {
 
 		});
 
+		DB::update("INSERT INTO ".$this->tablename." (log_level, headline1) VALUES(1, 'Das Monster');");
+
 		return parent::up();
 	}
 

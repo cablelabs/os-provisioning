@@ -32,6 +32,8 @@ class CreateProvBaseTable extends BaseMigration {
 
 		});
 
+		DB::update("INSERT INTO ".$this->tablename." (ro_community, rw_community, domain_name, dhcp_def_lease_time, dhcp_max_lease_time) VALUES('public', 'private', 'first.domain.com', 60, 120);");
+
 		return parent::up();
 	}
 
