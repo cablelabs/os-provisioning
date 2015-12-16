@@ -18,6 +18,7 @@ class ProvBaseServiceProvider extends ServiceProvider {
 	protected $commands = [
 		'Modules\ProvBase\Console\dhcpCommand',
 		'Modules\ProvBase\Console\configfileCommand',
+		'Modules\ProvBase\Console\contractCommand',
 	];
 
 
