@@ -27,8 +27,6 @@ class Mta extends \BaseModel {
 		);
 	}
 
-	// Don't forget to fill this array
-	protected $fillable = ['mac', 'hostname', 'modem_id', 'configfile_id', 'type'];
 
 	// Name of View
 	public static function get_view_header()

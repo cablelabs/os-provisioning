@@ -12,6 +12,8 @@ use App\Exceptions\AuthExceptions;
 
 class ModemController extends \BaseModuleController {
 
+	protected $index_create_allowed = false;
+
     /**
      * defines the formular fields for the edit and create view
      */
@@ -38,19 +40,6 @@ class ModemController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'),
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
 		);
-	}
-
-	/**
-	 * TODO: make generic
-	 * Make Checkbox Default Input
-	 * see: see http://forumsarchive.laravel.io/viewtopic.php?id=11627
-	 */
-	protected function default_input ($data)
-	{
-		if(!isset($data['public']))$data['public']=0;
-		if(!isset($data['network_access']))$data['network_access']=0;
-
-		return $data;
 	}
 
 

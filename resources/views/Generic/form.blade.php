@@ -38,8 +38,7 @@
 			 * 3. globally hide all relation fields 
 			 *    (this means: all fields ending with _id)
 			 */
-			if (array_key_exists('hidden', $field) || 
-				preg_match('/(.*?)_id/', $field['name']))
+			if (array_key_exists('hidden', $field))
 			{
 				echo Form::hidden ($field["name"]);
 				continue;
@@ -48,9 +47,20 @@
 
 		{{ Form::openGroup($field["name"], $field["description"]) }}
 			<?php
-				if 		(!$value && !$options) 	echo Form::$field["form_type"]($field["name"]);
-				elseif 	($value && !$options) 	echo Form::$field["form_type"]($field["name"], $value);
-				elseif 	($options) 				echo Form::$field["form_type"]($field["name"], $value, $options);
+				/*
+				 * Output the Form Elements
+				 */
+
+				// Checkbox - where pre-checked is enabled
+				if ($field["form_type"] == 'checkbox' && isset($field['checked'])) 
+					echo Form::checkbox($field['name'], $value, null, ((isset($field['checked']) && $field['checked']) ? true : false));
+				else
+				{
+					// All other Form Types
+					if 		(!$value && !$options) 	echo Form::$field["form_type"]($field["name"]);
+					elseif 	($value && !$options) 	echo Form::$field["form_type"]($field["name"], $value);
+					elseif 	($options) 				echo Form::$field["form_type"]($field["name"], $value, $options);
+				}
 			?>
 		{{ Form::closeGroup() }}
 

@@ -25,17 +25,16 @@ class AuthuserController extends BaseController {
 			array('form_type' => 'text', 'name' => 'first_name', 'description' => 'Firstname'),
 			array('form_type' => 'text', 'name' => 'last_name', 'description' => 'Lastname'),
 			array('form_type' => 'text', 'name' => 'email', 'description' => 'Email'),
-			array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'value' => '1'),
+			array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'value' => '1', 'checked' => true),
 		);
 	}
-	// Don't forget to fill this array
-	//protected $fillable = ['first_name', 'last_name', 'email', 'login_name', 'password', 'active', 'description'];
 
-	public function default_input ($data)
+
+	public function prepare_input_post_validation ($data)
 	{
 		$data['password'] = \Hash::make($data['password']);
 
-		return parent::default_input($data);
+		return parent::prepare_input($data);
 	}
 
 }

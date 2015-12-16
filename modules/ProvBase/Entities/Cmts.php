@@ -8,7 +8,7 @@ use DB;
 class Cmts extends \BaseModel {
 
 	// The associated SQL table for this Model
-    protected $table = 'cmts';
+	public $table = 'cmts';
 
 	// Add your validation rules here
 	public static function rules($id = null)
@@ -17,11 +17,6 @@ class Cmts extends \BaseModel {
 			'hostname' => 'unique:cmts,hostname,'.$id  	// unique: table, column
         );
     }
-
-	// Don't forget to fill this array
-	protected $fillable = ['hostname', 'type', 'ip', 'community_rw', 'community_ro', 'company', 'state', 'monitoring'];
-	// columns in database that shall not be able to alter
-	// protected $guarded = [];
 
 
 	// Name of View

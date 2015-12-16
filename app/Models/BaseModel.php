@@ -11,6 +11,9 @@ class BaseModel extends Eloquent
 	use SoftDeletes;
 
 
+	// Add Comment here. ..
+	protected $guarded = ['id'];
+
 	/**
 	 * check if module exists
 	 *

@@ -108,12 +108,16 @@ class BaseController extends Controller {
 	public function __construct() {
 	}
 
+
 	/**
-	 * Returns a default input data array, that shall be overwritten from the appropriate model controller if needed
+	 * Returns a default input data array, that shall be overwritten 
+	 * from the appropriate model controller if needed. 
 	 *
-	 * Note: Checkbox Entries will automatically set to 0 if not checked
+	 * Note: Will be running before Validation
+	 *
+	 * Tasks: Checkbox Entries will automatically set to 0 if not checked
 	 */
-	protected function default_input($data)
+	protected function prepare_input($data)
 	{
 		// Checkbox Unset ?
 		foreach ($this->get_form_fields($this->get_model_obj()) as $field) 
@@ -122,6 +126,18 @@ class BaseController extends Controller {
 				$data[$field['name']] = 0;
 		}
 
+		return $data;
+	}
+
+
+	/**
+	 * Returns a default input data array, that shall be overwritten 
+	 * from the appropriate model controller if needed. 
+	 *
+	 * Note: Will be running _after_ Validation
+	 */
+	protected function prepare_input_post_validation($data)
+	{
 		return $data;
 	}
 
@@ -409,7 +425,8 @@ class BaseController extends Controller {
 
 		$view_header 	= 'Create '.$obj->get_view_header();
 		// form_fields contain description of fields and the data of the fields
-		$form_fields	= $this->get_controller_obj()->get_form_fields($obj);
+		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj), $obj);
+
 
 		$view_path = 'Generic.create';
 		$form_path = 'Generic.form';
@@ -442,7 +459,10 @@ class BaseController extends Controller {
 		$obj = $this->get_model_obj();
 		$controller = $this->get_controller_obj();
 
-		$validator = Validator::make($data = $controller->default_input(Input::all()), $obj::rules());
+		// Prepare and Validate Input
+		$data      = $controller->prepare_input(Input::all());
+		$validator = Validator::make($data, $obj::rules());
+		$data      = $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails())
 		{
@@ -461,12 +481,15 @@ class BaseController extends Controller {
 	 *
 	 * Tasks: 
 	 *  1. Add a (*) to fields description if validation rule contains required
+	 *  2. Add Placeholder YYYY-MM-DD for all date fields 
+	 *  3. Hide all parent view relation select fields
 	 *
 	 * @param fields: the get_form_fields array() 
+	 * @param model: the model to view. Note: required get_model_obj()->find($id)
 	 * @return: the modifeyed get_form_fields array()
 	 * @autor: Torsten Schmidt
 	 */
-	protected function _prepare_form_fields($fields)
+	protected function _prepare_form_fields($fields, $model)
 	{
 		$ret = [];
 	
@@ -476,9 +499,23 @@ class BaseController extends Controller {
 		// for all fields
 		foreach ($fields as $field) 
 		{
-			if (isset ($rules[$field['name']]) && // rule exists for actual field ?
-				preg_match('/(.*?)required(.*?)/', $rules[$field['name']])) // contains required ?
-				$field['description'] = $field['description']. ' *'; // append a (*) to field description
+			// rule exists for actual field ?
+			if (isset ($rules[$field['name']])) 
+			{ 
+				// Task 1: Add a (*) to fields description if validation rule contains required
+				if (preg_match('/(.*?)required(.*?)/', $rules[$field['name']]))
+					$field['description'] = $field['description']. ' *';
+
+				// Task 2: Add Placeholder YYYY-MM-DD for all date fields 
+				if (preg_match('/(.*?)date(.*?)/', $rules[$field['name']]))
+					$field['options']['placeholder'] = 'YYYY-MM-DD';	
+
+			}
+
+			// 3. Hide all parent view relation select fields
+			if (is_object($model->view_belongs_to()) && 					// does a view relation exists
+				$model->view_belongs_to()->table.'_id' == $field['name'])	// view table name (+_id) == field name ?
+				$field['hidden'] = '1';									// hide
 
 			array_push ($ret, $field);
 		}
@@ -509,7 +546,7 @@ class BaseController extends Controller {
 		// transfer model_name, view_header, view_var
 		$view_header 	= 'Edit '.$obj->get_view_header();
 		$view_var 		= $obj->findOrFail($id);
-		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var));
+		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var);
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';
@@ -544,7 +581,10 @@ class BaseController extends Controller {
 		$obj = $this->get_model_obj()->findOrFail($id);
 		$controller = $this->get_controller_obj();
 
-		$validator = Validator::make($data = $controller->default_input(Input::all()), $obj::rules($id));
+		// Prepare and Validate Input
+		$data      = $controller->prepare_input(Input::all());
+		$validator = Validator::make($data, $obj::rules($id));
+		$data      = $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails())
 		{
@@ -554,9 +594,12 @@ class BaseController extends Controller {
 		// update timestamp, this forces to run all observer's
 		// Note: calling touch() forces a direct save() which calls all observers before we update $data
 		//       when exit in middleware to a new view page (like Modem restart) this kill update process
+		//       so the solution is not to run touch(), we set the updated_at field directly
 		$data['updated_at'] = \Carbon\Carbon::now(Config::get('app.timezone'));
 
-		// the Update
+		// The Update
+		// Note: Eloquent Update requires updated_at to either be in the fillable array or to have a guarded field
+		//       without updated_at field. So we globally use a guarded field from now, to use the update timestamp
 		$obj->update($data);
 
 		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Updated!');

@@ -17,9 +17,6 @@ class Qos extends \BaseModel {
         );
     }
 
-	// Don't forget to fill this array
-	protected $fillable = ['ds_rate_max', 'us_rate_max', 'name'];
-
 
     /**
      * Relations

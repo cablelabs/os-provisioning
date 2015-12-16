@@ -36,9 +36,6 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 		);
 	}
 
-	// Don't forget to fill this array
-	protected $fillable = ['first_name', 'last_name', 'email', 'login_name', 'password', 'active', 'description'];
-
 
 	// Name of View
 	public static function get_view_header()

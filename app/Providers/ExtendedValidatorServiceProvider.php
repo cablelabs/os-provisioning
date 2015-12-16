@@ -20,6 +20,7 @@ class ExtendedValidatorServiceProvider extends ServiceProvider {
 		$this->app['validator']->extend('mac', 'Acme\Validators\ExtendedValidator@validateMac');
 		$this->app['validator']->extend('geopos', 'Acme\Validators\ExtendedValidator@validateGeopos');
 		$this->app['validator']->extend('docsis', 'Acme\Validators\ExtendedValidator@validateDocsis');
+		$this->app['validator']->extend('dateornull', 'Acme\Validators\ExtendedValidator@validateDateOrNull');
 	}
 
 	/**

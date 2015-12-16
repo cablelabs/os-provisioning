@@ -26,9 +26,6 @@ class IpPool extends \BaseModel {
         );
     }
 
-	// Don't forget to fill this array
-	protected $fillable = ['cmts_id', 'type', 'net', 'netmask', 'ip_pool_start', 'ip_pool_end', 'router_ip', 'broadcast_ip', 'dns1_ip', 'dns2_ip', 'dns3_ip', 'optional'];
-
 
     // Name of View
     public static function get_view_header()
