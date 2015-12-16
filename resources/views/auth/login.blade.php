@@ -17,8 +17,8 @@
             <!-- begin brand -->
             <div class="login-header">
                 <div class="brand">
-                    <span class="logo"></span> Das Monster
-                    <small>The next Generation NMS</small>
+                    <span class="logo"></span> {{ $head1 }}
+                    <small>{{ $head2 }}</small>
                 </div>
                 <div class="icon">
                     <i class="fa fa-sign-in"></i>

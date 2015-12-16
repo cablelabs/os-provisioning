@@ -347,7 +347,9 @@ class BaseController extends Controller {
 		if(!isset($a['view_header']))
 			$a['view_header'] = $model->get_view_header();
 
-		$a['header1'] = GlobalConfig::first()->headline1;
+		$g = GlobalConfig::first();
+		$a['header1'] = $g->headline1;
+		$a['header2'] = $g->headline2;
 
 		return $a;
 	}
