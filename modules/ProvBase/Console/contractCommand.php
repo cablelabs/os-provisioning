@@ -61,6 +61,8 @@ class contractCommand extends Command {
 				$c->monthly_conversion();
 		}
 		echo "\n";
+
+		system('/bin/chown -R apache '.storage_path('logs'));
 	}
 
 	/**
