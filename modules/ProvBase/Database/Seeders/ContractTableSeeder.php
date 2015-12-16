@@ -18,12 +18,18 @@ class ContractTableSeeder extends \BaseSeeder {
 			$start_contract = $faker->dateTimeBetween('-10 years', 'now');
 
 			Contract::create([
+				'customer_number' => 'cust_'.$index,
+				'customer_external_id' => 'foobar'.$index.'_envia',
+				'contract_number' => 'contr_'.$index,
+				'contract_external_id' => 'ab-ae.'.$index.'_envia',
 				'number2' => 'Cu/2015/Q4/-'.$index-1,
 				'firstname' => $faker->firstName,
 				'lastname' => $faker->lastName,
-				'salutation' => (rand(0,10) > 7 ? $faker->title: ''),
+				'salutation' => rand(0, 3),
+				'academic_degree' => rand(0, 3),
 				'company' => (rand(0,10) > 7 ? $faker->company: ''),
 				'street' => $faker->streetName,
+				'house_number' => rand(1, 128),
 				'city' => $faker->city,
 				'zip' => $faker->postcode,
 				'country_id' => 0,
@@ -36,6 +42,7 @@ class ContractTableSeeder extends \BaseSeeder {
 				'contract_start' => $start_contract,
 				'contract_end' => (rand(0,10) > 8 ? $faker->dateTimeBetween($start_contract, '+1 year') : 0),
 				'internet_access' => $faker->boolean(85),
+				'phonebook_entry' => $faker->boolean(50),
 				'qos_id' => rand(0, $this->max_seed_l2),
 				'next_qos_id' => (rand(0,10) > 8 ? rand(0, $this->max_seed_l2) : 0),
 				'voip_id' => rand(0, 2),

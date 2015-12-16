@@ -19,14 +19,18 @@ class ContractController extends \BaseModuleController {
 
 		// label has to be the same like column in sql table
 		$a = array(
-			array('form_type' => 'text', 'name' => 'number', 'description' => 'Contract Number', 'options' => ['readonly']),
+			array('form_type' => 'text', 'name' => 'number', 'description' => 'ID', 'options' => ['readonly']),
+			array('form_type' => 'text', 'name' => 'customer_number', 'description' => 'Customer number', 'create' => '1'),
+			array('form_type' => 'text', 'name' => 'contract_number', 'description' => 'Contract number', 'create' => '1'),
 		//	array('form_type' => 'text', 'name' => 'number2', 'description' => 'Contract Number 2', 'options' => ['readonly']),
-			array('form_type' => 'text', 'name' => 'salutation', 'description' => 'Salutation'),
+			array('form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->getPossibleEnumValues('salutation')),
+			array('form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic degree', 'value' => $model->getPossibleEnumValues('academic_degree')),
 			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
 			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => '1', 'space' => '1'),
 
 			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1'),
+			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House number', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => '1'),
 
@@ -39,6 +43,7 @@ class ContractController extends \BaseModuleController {
 		if ($this->billing)
 			$b = array(
 				array('form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1'),
+				array('form_type' => 'checkbox', 'name' => 'phonebook_entry', 'description' => 'Make phonebook entry', 'value' => '1', 'create' => '1'),
 				array('form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'),	
 				array('form_type' => 'text', 'name' => 'contract_end', 'description' => 'Contract End', 'space' => '1'),
 

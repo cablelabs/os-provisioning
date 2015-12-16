@@ -21,12 +21,18 @@ class CreateContractTable extends BaseMigration {
 			$this->up_table_generic($table);
 
 			$table->integer('number')->unsigned();
+			$table->string('customer_number', 60);
+			$table->string('customer_external_id', 60)->default(NULL);
+			$table->string('contract_number', 60);
+			$table->string('contract_external_id', 60)->default(NULL);
 			$table->string('number2', 32);
 			$table->string('company');
-			$table->string('salutation');
+			$table->enum('salutation', ['Herr', 'Frau', 'Firma', 'Behörde']);
+			$table->enum('academic_degree', ['', 'Dr.', 'Prof. Dr.']);
 			$table->string('firstname');
 			$table->string('lastname');
 			$table->string('street');
+			$table->string('house_number', 8);
 			$table->string('zip', 16);
 			$table->string('city');
 			$table->integer('country_id')->unsigned();
@@ -39,6 +45,7 @@ class CreateContractTable extends BaseMigration {
 			$table->date('contract_start');
 			$table->date('contract_end');
 			$table->boolean('internet_access');
+			$table->boolean('phonebook_entry');
 			$table->integer('qos_id')->unsigned();
 			$table->integer('next_qos_id')->unsigned();
 			$table->integer('voip_id')->unsigned();
