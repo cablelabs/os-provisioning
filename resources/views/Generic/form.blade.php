@@ -1,4 +1,4 @@
-<script>setTimeout("document.getElementById('success_msg').style.display='none';", 4000);</script>
+<script>setTimeout("document.getElementById('success_msg').style.display='none';", 6000);</script>
 
 
 	@foreach($form_fields as $field)

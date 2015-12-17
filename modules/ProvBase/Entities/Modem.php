@@ -6,15 +6,12 @@ use File;
 use Log;
 use Exception;
 use Modules\ProvBase\Entities\Qos;
+use Modules\ProvBase\Entities\ProvBase;
 
 class Modem extends \BaseModel {
 
     // The associated SQL table for this Model
     public $table = 'modem';
-
-    // TODO: init from global config in __construct()
-    public $community_ro = 'public';
-    public $community_rw = 'public';
 
 
 	// Add your validation rules here
@@ -277,22 +274,24 @@ class Modem extends \BaseModel {
      */    
     public function restart_modem()
     {
+        $community_rw = ProvBase::first()->rw_community;
+
         // if hostname cant be resolved we dont want to have an php error
         try
         {
             // restart modem - TODO: get community string and domain name from global config page, NOTE: OID from MIB: DOCS-CABLE-DEV-MIB::docsDevResetNow
-            snmpset($this->hostname.'.test2.erznet.tv', $this->community_rw, "1.3.6.1.2.1.69.1.1.3.0", "i", "1", 200000, 1);
+            snmpset($this->hostname.'.test2.erznet.tv', $community_rw, "1.3.6.1.2.1.69.1.1.3.0", "i", "1", 300000, 1);
         }
         catch (Exception $e)
         {
             // only ignore error with this error message (catch exception with this string) 
-            if (strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false)
+            if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmpset(): No response from") !== false)))
             {
                 // check if observer is called from HTML Update, otherwise skip
                 if (\Request::method() == 'PUT') 
                 {
                     // redirect back with corresponding message over flash, needs to be saved as it's normally only saved when the session middleware terminates successfully
-                    $resp = \Redirect::back()->with('message', 'Could not restart Modem! (maybe not online?)'); 
+                    $resp = \Redirect::back()->with('message', 'Could not restart Modem! (not online? - error in configfile?)'); 
                     \Session::driver()->save();         // \ is like writing "use Session;" before class statement
                     $resp->send();
 
