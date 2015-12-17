@@ -6,23 +6,23 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\Contract;
 
-class configfileCommand extends Command {
+class contractCommand extends Command {
 
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'nms:configfile';
+	protected $name = 'nms:contract';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'make alle configfiles';
+	protected $description = 'Contract Scheduling Command (call with daily or monthly)';
 
 	/**
 	 * Create a new command instance.
@@ -41,32 +41,28 @@ class configfileCommand extends Command {
 	 */
 	public function fire()
 	{
-		// Modem
-		$cms = Modem::all();
+		if (!($this->argument('date') == 'daily' || $this->argument('date') == 'monthly'))
+			return false;
+
+
+		$cs = Contract::all();
 
 		$i = 1; 
-		$num = count ($cms);
+		$num = count ($cs);
 
-		foreach ($cms as $cm)
+		foreach ($cs as $c)
 		{
-			echo "CM: create config files: $i/$num \r"; $i++;
-			$cm->make_configfile();
+			echo "contract month: $i/$num \r"; $i++;
+
+			if ($this->argument('date') == 'daily')
+				$c->daily_conversion();
+
+			if ($this->argument('date') == 'monthly')
+				$c->monthly_conversion();
 		}
 		echo "\n";
 
-
-		// MTA
-		$mtas = \Modules\ProvVoip\Entities\Mta::all();
-
-		$i = 1; 
-		$num = count ($mtas);
-
-		foreach ($mtas as $mta)
-		{
-			echo "MTA: create config files: $i/$num \r"; $i++;
-			$mta->make_configfile();
-		}
-		echo "\n";
+		system('/bin/chown -R apache '.storage_path('logs'));
 	}
 
 	/**
@@ -77,7 +73,7 @@ class configfileCommand extends Command {
 	protected function getArguments()
 	{
 		return array(
-			// array('example', InputArgument::REQUIRED, 'An example argument.'),
+			array('date', InputArgument::REQUIRED, 'daily/monthly'),
 		);
 	}
 

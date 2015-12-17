@@ -5,6 +5,7 @@ namespace Modules\ProvBase\Database\Seeders;
 // Composer: "fzaninotto/faker": "v1.3.0"
 use Faker\Factory as Faker;
 use Modules\ProvBase\Entities\Contract;
+use Modules\ProvBase\Entities\Qos;
 use Faker\Provider\de_DE\Payment;			// SEPA: should not be required in Laravel 5 (L5), see ***
 
 class ContractTableSeeder extends \BaseSeeder {
@@ -36,9 +37,9 @@ class ContractTableSeeder extends \BaseSeeder {
 				'contract_start' => $start_contract,
 				'contract_end' => (rand(0,10) > 8 ? $faker->dateTimeBetween($start_contract, '+1 year') : 0),
 				'network_access' => $faker->boolean(85),
-				'qos_id' => rand(0, $this->max_seed_l2),
-				'next_qos_id' => (rand(0,10) > 8 ? rand(0, $this->max_seed_l2) : 0),
-				'voip_id' => rand(0, 2),
+				'qos_id' => Qos::all()->random(1)->id,
+				'next_qos_id' => (rand(0,10) > 8 ? Qos::all()->random(1)->id : 0),
+				'voip_id' => rand(0, 2),								// TODO: use Envia interface
 				'next_voip_id' => (rand(0,10) > 8 ? rand(0, 2) : 0),
 				'sepa_iban' => Payment::bankAccountNumber(),			// L5: replace with iban ***
 				'sepa_bic' => $faker->swiftBicNumber,

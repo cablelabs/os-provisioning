@@ -515,8 +515,9 @@ class BaseController extends Controller {
 	 *  3. Hide all parent view relation select fields
 	 *
 	 * @param fields: the get_form_fields array() 
-	 * @param model: the model to view. Note: required get_model_obj()->find($id)
+	 * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
 	 * @return: the modifeyed get_form_fields array()
+	 *
 	 * @autor: Torsten Schmidt
 	 */
 	protected function _prepare_form_fields($fields, $model)

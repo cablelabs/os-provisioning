@@ -41,12 +41,12 @@ class ModemTableSeeder extends \BaseSeeder {
 				$country_id= 0;
 			}
 
+			$tree_id = 0;
 			if (\Module::find('HfcBase')->active())
 			{
+				// Note: requires HfcBase to be seeded before this runs
 				if (\Modules\HfcBase\Entities\Tree::all()->count() > 2)
 					$tree_id = \Modules\HfcBase\Entities\Tree::where('id', '>', '2')->get()->random(1)->id;
-				else
-					$tree_id = rand(3, $this->max_seed);
 			}
 
 			Modem::create([
@@ -57,7 +57,7 @@ class ModemTableSeeder extends \BaseSeeder {
 				'serial_num' => $faker->sentence(),
 				'inventar_num' => $faker->sentence(),
 				'contract_id' => $contract_id,
-				'configfile_id' => Configfile::all()->random(1)->id,
+				'configfile_id' => Configfile::where('device', '=', 'cm')->get()->random(1)->id,
 				'qos_id' => Qos::all()->random()->id,
 				'tree_id' => $tree_id,
 				'status' => (rand(0,10) > 2 ? rand(300,620) : 0),

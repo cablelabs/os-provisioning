@@ -39,13 +39,13 @@
 
             <!--   <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button> -->
         </li>
-
+<!--
           <li class="dropdown">
             <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
               <i class="fa fa-bell-o"></i>
               <span class="label">0</span>
             </a>
-<!--
+
             <ul class="dropdown-menu media-list pull-right animated fadeInDown">
               <li class="dropdown-header">Notifications (5)</li>
               <li class="media">
