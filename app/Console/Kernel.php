@@ -60,6 +60,25 @@ class Kernel extends ConsoleKernel {
 			$schedule->command('nms:contract daily')->daily();
 			$schedule->command('nms:contract monthly')->monthly();
 		}
+
+		// Clean Up of HFC Base
+		if ($this->module_is_active ('HfcBase'))
+		{
+			// Rebuid all Configfiles
+			$schedule->call(function () {
+			    exec ('rm -rf '.public_path().'/modules/hfcbase/kml/*.kml');
+			    exec ('rm -rf '.public_path().'/modules/hfcbase/erd/*.*');
+			})->hourly();
+		}
+
+		// Clean Up of HFC Customer
+		if ($this->module_is_active ('HfcCustomer'))
+		{
+			// Rebuid all Configfiles
+			$schedule->call(function () {
+			    exec ('rm -rf '.public_path().'/modules/hfccustomer/kml/*.kml');
+			})->hourly();
+		}
 	}
 
 }
