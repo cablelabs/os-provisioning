@@ -57,7 +57,7 @@ class ModemTableSeeder extends \BaseSeeder {
 				'serial_num' => $faker->sentence(),
 				'inventar_num' => $faker->sentence(),
 				'contract_id' => $contract_id,
-				'configfile_id' => Configfile::all()->random(1)->id,
+				'configfile_id' => Configfile::where('device', '=', 'cm')->get()->random(1)->id,
 				'qos_id' => Qos::all()->random()->id,
 				'tree_id' => $tree_id,
 				'status' => (rand(0,10) > 2 ? rand(300,620) : 0),

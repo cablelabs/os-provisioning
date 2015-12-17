@@ -98,17 +98,6 @@ class Mta extends \BaseModel {
 		);
 	}
 
-	/**
-	 * BOOT:
-	 * - init mta observer
-	 */
-	public static function boot()
-	{
-		parent::boot();
-
-		Mta::observe(new MtaObserver);
-		Mta::observe(new \SystemdObserver);
-	}
 
 	/**
 	 * Make Configfile for a single MTA
@@ -137,8 +126,8 @@ class Mta extends \BaseModel {
 		if ($ret === false)
 			die("Error writing to file ".$dir.$cf_file);
 
-		Log::info("/usr/local/bin/docsis -p $cf_file $dir/../keyfile $dir/mta-$id.cfg");
-		exec("/usr/local/bin/docsis -p $cf_file $dir/../keyfile $dir/mta-$id.cfg", $out, $ret);
+		Log::info("/usr/local/bin/docsis -p $cf_file $dir/mta-$id.cfg");
+		exec("/usr/local/bin/docsis -p $cf_file $dir/mta-$id.cfg >/dev/null 2>&1 &", $out, $ret);
 
 		// change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
 		system('/bin/chown -R apache /tftpboot/mta');
@@ -164,7 +153,21 @@ class Mta extends \BaseModel {
 
 		return true;
 	}
+
+
+	/**
+	 * BOOT:
+	 * - init mta observer
+	 */
+	public static function boot()
+	{
+		parent::boot();
+
+		Mta::observe(new MtaObserver);
+		Mta::observe(new \SystemdObserver);
+	}
 }
+
 
 /**
  * MTA Observer Class

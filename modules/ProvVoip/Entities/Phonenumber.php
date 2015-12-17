@@ -92,4 +92,39 @@ class Phonenumber extends \BaseModel {
 		return $ret;
 	}
 
+
+	/**
+	 * BOOT:
+	 * - init phone observer
+	 */
+	public static function boot()
+	{
+		parent::boot();
+
+		Phonenumber::observe(new PhonenumberObserver);
+	}
+}
+
+
+/**
+ * Phonenumber Observer Class
+ * Handles changes on Phonenumbers
+ *
+ * can handle   'creating', 'created', 'updating', 'updated',
+ *              'deleting', 'deleted', 'saving', 'saved',
+ *              'restoring', 'restored',
+ *
+ * @author Patrick Reichel
+ */
+class PhonenumberObserver
+{
+	public function created($phone)
+	{
+		$phone->mta->make_configfile();
+	}
+
+	public function updated($phone)
+	{
+		$phone->mta->make_configfile();
+	}
 }

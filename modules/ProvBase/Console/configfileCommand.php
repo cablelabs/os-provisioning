@@ -41,6 +41,7 @@ class configfileCommand extends Command {
 	 */
 	public function fire()
 	{
+		// Modem
 		$cms = Modem::all();
 
 		$i = 1; 
@@ -48,8 +49,22 @@ class configfileCommand extends Command {
 
 		foreach ($cms as $cm)
 		{
-			echo "create config files: $i/$num \r"; $i++;
+			echo "CM: create config files: $i/$num \r"; $i++;
 			$cm->make_configfile();
+		}
+		echo "\n";
+
+
+		// MTA
+		$mtas = \Modules\ProvVoip\Entities\Mta::all();
+
+		$i = 1; 
+		$num = count ($mtas);
+
+		foreach ($mtas as $mta)
+		{
+			echo "MTA: create config files: $i/$num \r"; $i++;
+			$mta->make_configfile();
 		}
 		echo "\n";
 	}
