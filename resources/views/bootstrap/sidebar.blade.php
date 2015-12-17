@@ -6,12 +6,13 @@
         <!-- begin sidebar user -->
         <ul class="nav">
           <li class="nav-profile">
-            <div class="image">
+<!--             <div class="image">
               <a href="javascript:;"><img src="assets/img/user-11.jpg" alt="" /></a>
             </div>
+ -->   
             <div class="info">
-              {{\Auth::user()->first_name.' '.\Auth::user()->last_name}}
-              <small>Next Generation NMS</small>
+              {{ $header2 }}
+              <!-- <small>...</small> -->
             </div>
           </li>
         </ul>
