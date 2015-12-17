@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Endpoint;
 use Modules\ProvBase\Entities\Cmts;
+use Modules\ProvBase\Entities\ProvBase;
 
 class dhcpCommand extends Command {
 
@@ -43,6 +44,10 @@ class dhcpCommand extends Command {
 	 */
 	public function fire()
 	{
+		// Global Config part
+		$m = ProvBase::first();
+		$m->make_dhcp_glob_conf();
+
 		// Modems
 		$m = Modem::first();
 		$m->del_dhcp_conf_files();

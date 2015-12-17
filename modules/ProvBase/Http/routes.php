@@ -32,4 +32,6 @@ Route::group(array('before' => 'auth'), function() {
 	Route::resource('Qos', 'Modules\ProvBase\Http\Controllers\QosController');
 	Route::resource('Contract', 'Modules\ProvBase\Http\Controllers\ContractController');
 
+	Route::resource('ProvBase', 'Modules\ProvBase\Http\Controllers\ProvBaseController');
+
 });

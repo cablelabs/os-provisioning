@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Input;
 use Redirect;
+use GlobalConfig;
 
 
 class AuthController extends BaseController {
@@ -14,8 +15,12 @@ class AuthController extends BaseController {
 	 */
 	public function showLogin()
 	{
+		$g = GlobalConfig::first();
+		$head1 = $g->headline1;
+		$head2 = $g->headline2;
+		
 		// show the form
-		return \View::make('auth/login');
+		return \View::make('auth/login', compact('head1', 'head2'));
 	}
 
 

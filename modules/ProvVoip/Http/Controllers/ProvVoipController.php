@@ -1,13 +1,18 @@
-<?php namespace Modules\Provvoip\Http\Controllers;
+<?php 
+namespace Modules\Provvoip\Http\Controllers;
 
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\View;
+use App\Http\Controllers\BaseModuleController;
 
-class ProvVoipController extends Controller {
+class ProvVoipController extends BaseModuleController {
 
-	public function index()
+    /**
+     * defines the formular fields for the edit and create view
+     */
+	public function get_form_fields($model = null)
 	{
-		return View::make('provvoip::index');
-	}
-	
+		// label has to be the same like column in sql table
+		return array(
+			array('form_type' => 'text', 'name' => 'startid_mta', 'description' => 'Start ID MTA´s'),
+			);
+	}	
 }

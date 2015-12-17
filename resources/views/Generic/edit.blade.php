@@ -3,13 +3,20 @@
 @if (!isset($own_top))
 	@section('content_top')
 
-		{{ HTML::linkRoute($route_name.'.index', str_replace('Edit', '', $view_header)) }}: 
 
 		<?php
+
+			$s = HTML::linkRoute($route_name.'.index', str_replace('Edit', '', $view_header));
+			if (in_array($route_name, $config_routes))
+				$s = HTML::linkRoute('Config.index', 'Global Configurations');
+
+			echo $s.': ';
+
 			/**
 			 * Shows the html links of the related objects recursivly
 			 */ 
-			$s = '';
+			$s = "";
+
 			$parent = $view_var;
 			do
 			{

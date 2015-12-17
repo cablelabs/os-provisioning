@@ -16,6 +16,7 @@ class ProvvoipTableSeeder extends Seeder {
 	{
 		Model::unguard();
 		
+		$this->call('Modules\ProvVoip\Database\Seeders\ProvVoipConfigTableSeeder');
 		$this->call('Modules\ProvVoip\Database\Seeders\MtaTableSeeder');
 		$this->call('Modules\ProvVoip\Database\Seeders\PhonenumberTableSeeder');
 	}
