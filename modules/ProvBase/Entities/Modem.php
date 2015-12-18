@@ -274,13 +274,15 @@ class Modem extends \BaseModel {
      */    
     public function restart_modem()
     {
-        $community_rw = ProvBase::first()->rw_community;
+        $config = ProvBase::first();
+        $community_rw = $config->rw_community;
+        $domain = $config->domain_name;
 
         // if hostname cant be resolved we dont want to have an php error
         try
         {
             // restart modem - TODO: get community string and domain name from global config page, NOTE: OID from MIB: DOCS-CABLE-DEV-MIB::docsDevResetNow
-            snmpset($this->hostname.'.test2.erznet.tv', $community_rw, "1.3.6.1.2.1.69.1.1.3.0", "i", "1", 300000, 1);
+            snmpset($this->hostname.'.'.$domain, $community_rw, "1.3.6.1.2.1.69.1.1.3.0", "i", "1", 300000, 1);
         }
         catch (Exception $e)
         {
