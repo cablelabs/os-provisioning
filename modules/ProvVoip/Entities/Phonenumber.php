@@ -95,4 +95,11 @@ class Phonenumber extends \BaseModel {
 		return $ret;
 	}
 
+	/**
+	 * link to management
+	 */
+	public function phonenumbermanagement() {
+		return $this->hasOne('Modules\ProvVoip\Entities\PhonenumberManagement');
+	}
+
 }
