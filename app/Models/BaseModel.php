@@ -11,20 +11,6 @@ class BaseModel extends Eloquent
 	use SoftDeletes;
 
 	/**
-	 * Constructor
-	 *
-	 * Basically this is a placeholder for eventually later use. I need to 
-	 * overwrite the constructor in a subclass – and want to call the parent
-	 * constructor if there are changes in base classes. But calling the
-	 * parent con is only possible if it is explicitely defined…
-	 *
-	 * @author Patrick Reichel
-	 */
-	public function __construct() {
-		parent::__construct();
-	}
-
-	/**
 	 * check if module exists
 	 *
 	 * Note: This function should be used in relational functions like hasMany() or view_has_many()

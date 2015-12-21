@@ -6,7 +6,7 @@ namespace Modules\ProvVoip\Entities;
 class PhonenumberManagement extends \BaseModel {
 
     // The associated SQL table for this Model
-    public $table = 'phonenumber';
+    public $table = 'phonenumbermanagement';
 
 
 	// Add your validation rules here
