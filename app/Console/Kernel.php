@@ -43,6 +43,10 @@ class Kernel extends ConsoleKernel {
 	/**
 	 * Define the application's command schedule.
 	 *
+	 * NOTE: the withoutOverlapping() statement is just for security reasons
+	 * and should never be required. But if a task hangs up, this will avoid
+	 * starting many parallel tasks. (Torsten Schmidt)
+	 *
 	 * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
 	 * @return void
 	 */
@@ -78,6 +82,11 @@ class Kernel extends ConsoleKernel {
 			$schedule->call(function () {
 			    exec ('rm -rf '.public_path().'/modules/hfccustomer/kml/*.kml');
 			})->hourly();
+		}
+
+		if ($this->module_is_active ('ProvMon'))
+		{
+			$schedule->command('nms:cacti')->everyFiveMinutes()->withoutOverlapping();
 		}
 	}
 
