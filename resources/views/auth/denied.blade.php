@@ -19,10 +19,6 @@
 					    {{ session('status') }}
 					@endif
                 </div>
-                <div class="error-desc m-b-20">
-                    The page you're looking for doesn't exist. <br />
-                    Perhaps, there pages will help find what you're looking for.
-                </div>
                 <div>
                     <a href="{{Request::root()}}" class="btn btn-success">Go Back to Home Page</a>
                 </div>
