@@ -38,9 +38,9 @@ class PhonenumberManagement extends \BaseModel {
 					'subscriber_country_id'
 				];
 
-	public function __construct() {
-		parent::__construct();
-	}
+	/* public function __construct() { */
+	/* 	parent::__construct(); */
+	/* } */
 
 
 	// Name of View
@@ -52,16 +52,54 @@ class PhonenumberManagement extends \BaseModel {
 	// link title in index view
 	public function get_view_link_title()
 	{
-		return "(".$this->country_code.") ".$this->prefix_number."/".$this->number;
+		return $this->id;
 	}
 
 	/**
 	 * ALL RELATIONS
-	 * link with mtas
+	 * link with phonenumbers
 	 */
 	public function phonenumber()
 	{
-		return $this->belongsTo('Modules\ProvVoip\Entities\Phonenumber');
+		return $this->belongsTo('Modules\ProvVoip\Entities\Phonenumber', 'phonenumber_id');
+	}
+
+	/**
+	 * link to management
+	 */
+	public function phonenumbermanagement() {
+		return $this->hasOne('Modules\ProvVoip\Entities\PhonenumberManagement');
+	}
+
+	/**
+	 * return a list [id => number] of all phonenumbers
+	 */
+	public function phonenumber_list()
+	{
+		$ret = array();
+		foreach ($this->phonenumber()['phonenumbers'] as $phonenumber)
+		{
+			$ret[$phonenumber->id] = $phonenumber->prefix_number.'/'.$phonemumber->number;
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * return a list [id => number] of all phonenumber
+	 */
+	public function phonenumber_list_with_dummies()
+	{
+		$ret = array();
+		foreach ($this->phonenumber() as $phonenumber_tmp)
+		{
+			foreach ($phonenumber_tmp as $phonenumber)
+			{
+				$ret[$phonenumber->id] = $phonenumber->prefix_number.'/'.$phonemumber->number;
+			}
+		}
+
+		return $ret;
 	}
 
 }

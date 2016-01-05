@@ -13,24 +13,25 @@ class PhonenumberManagementTableSeeder extends \BaseSeeder {
 	{
 		$faker = Faker::create();
 
-		foreach(range(0, 3) as $index)
+		foreach(range(0, $this->max_seed) as $index)
 		{
 			PhonenumberManagement::create([
 				'phonenumber_id' => 300000 + $index,
 				'activation_date' => $faker->dateTimeBetween('-2 years', '+1 year'),
 				'porting_in' => 0,
 				'carrier_in' => '',
-				'deactivation_date' => $faker->dateTimeBetween('now', '+1 year'),
+				'deactivation_date' => (rand(0, 10) > 7 ? $faker->dateTimeBetween('now', '+1 year'): '0000-00-00'),
 				'porting_out' => 0,
 				'carrier_out' => '',
 				'subscriber_company' => (rand(0,10) > 7 ? $faker->company: ''),
+				'subscriber_department' => '',
 				'subscriber_salutation' => rand(1, 4),
 				'subscriber_academic_degree' => rand(1, 3),
 				'subscriber_firstname' => $faker->firstName,
 				'subscriber_lastname' => $faker->lastName,
 				'subscriber_street' => $faker->streetName,
 				'subscriber_house_number' => rand(1, 128),
-				'subscriber_zip' => $faker->postcode,
+				'subscriber_zip' => substr($faker->postcode, 0, 5),
 				'subscriber_city' => $faker->city,
 				'subscriber_country_id' => 1,
 			]);
