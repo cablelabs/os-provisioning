@@ -41,6 +41,7 @@ class BaseModel extends Eloquent
 		return null;
 	}
 
+
 	/**
 	 * Basefunction for returning all objects that a model can have a relation to
 	 * Place this function in the model where the edit/create view shall show all related objects
@@ -50,6 +51,20 @@ class BaseModel extends Eloquent
 	 * @return an array with the appropriate hasMany()-functions of the model
 	 */
 	public function view_has_many ()
+	{
+		return array();
+	}
+
+
+	/**
+	 * Basefunction for returning all objects that a model can have a one-to-one relation to
+	 * Place this function in the model where the edit/create view shall show all related objects
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return an array with the appropriate hasOne()-functions of the model
+	 */
+	public function view_has_one ()
 	{
 		return array();
 	}

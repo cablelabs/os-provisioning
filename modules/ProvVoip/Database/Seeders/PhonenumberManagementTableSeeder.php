@@ -18,7 +18,7 @@ class PhonenumberManagementTableSeeder extends \BaseSeeder {
 			PhonenumberManagement::create([
 				'phonenumber_id' => 300000 + $index,
 				'activation_date' => $faker->dateTimeBetween('-2 years', '+1 year'),
-				'porting_in' => 0,
+				'porting_in' => rand(0, 1),
 				'carrier_in' => '',
 				'deactivation_date' => (rand(0, 10) > 7 ? $faker->dateTimeBetween('now', '+1 year'): '0000-00-00'),
 				'porting_out' => 0,

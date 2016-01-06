@@ -21,6 +21,8 @@ class CreatePhonenumberManagementTable extends BaseMigration {
 			$this->up_table_generic($table);
 
 			$table->integer('phonenumber_id')->unsigned()->default(1);
+			$table->date('order_date');
+			$table->string('order_id')->nullable;
 			$table->date('activation_date');
 			$table->boolean('porting_in')->default(0);
 			$table->string('carrier_in', 16)->nullable;

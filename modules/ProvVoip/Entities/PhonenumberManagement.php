@@ -46,7 +46,7 @@ class PhonenumberManagement extends \BaseModel {
 	// Name of View
 	public static function get_view_header()
 	{
-		return 'Phonenumbers Management';
+		return 'Phonenumber Management';
 	}
 
 	// link title in index view
@@ -61,14 +61,13 @@ class PhonenumberManagement extends \BaseModel {
 	 */
 	public function phonenumber()
 	{
-		return $this->belongsTo('Modules\ProvVoip\Entities\Phonenumber', 'phonenumber_id');
+		return $this->belongsTo('Modules\ProvVoip\Entities\Phonenumber');
 	}
 
-	/**
-	 * link to management
-	 */
-	public function phonenumbermanagement() {
-		return $this->hasOne('Modules\ProvVoip\Entities\PhonenumberManagement');
+	// belongs to an phonenumber
+	public function view_belongs_to ()
+	{
+		return $this->phonenumber;
 	}
 
 	/**

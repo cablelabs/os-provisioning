@@ -54,6 +54,13 @@ class Phonenumber extends \BaseModel {
 	}
 
 
+	// has zero or one management object related
+	public function view_has_one() {
+		return array(
+			'PhonenumberManagement' => $this->phonenumbermanagement,
+		);
+	}
+
 	/**
 	 * return all mta objects
 	 */

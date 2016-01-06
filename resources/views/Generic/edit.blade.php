@@ -3,18 +3,18 @@
 @if (!isset($own_top))
 	@section('content_top')
 
-		{{ HTML::linkRoute($route_name.'.index', str_replace('Edit', '', $view_header)) }}: 
+		{{ HTML::linkRoute($route_name.'.index', str_replace('Edit', '', $view_header)) }}:
 
 		<?php
 			/**
 			 * Shows the html links of the related objects recursivly
-			 */ 
+			 */
 			$s = '';
 			$parent = $view_var;
 			do
 			{
 				$parent = $parent->view_belongs_to();
-				
+
 				if ($parent)
 				{
 					// Need to be tested !
@@ -52,15 +52,16 @@
 
 @section('content_right')
 
-	<?php 
+	<?php
 
 		if ($view_var->view_has_many())
 			$view_header_0 = '';
 		$i = 0;
+		$view_header_0 = '';
 	?>
 
 	@foreach($view_var->view_has_many() as $view => $relation)
-		
+
 		<?php
 			$i++;
 
@@ -72,7 +73,26 @@
 		@section("content_$i")
 			@include('Generic.relation', [$relation, $view, $key])
 		@stop
-	
+
+		@include ('bootstrap.panel', array ('content' => "content_$i", 'view_header' => ${"view_header_$i"}, 'md' => 3))
+
+	@endforeach
+
+	@foreach($view_var->view_has_one() as $view => $relation)
+
+		<?php
+
+			$i++;
+
+			$model = new $model_name;
+			$key   = strtolower($model->table).'_id';
+			${"view_header_$i"} = " Assigned $view";
+		?>
+
+		@section("content_$i")
+			@include('Generic.relation', [$relation, $view, $key])
+		@stop
+
 		@include ('bootstrap.panel', array ('content' => "content_$i", 'view_header' => ${"view_header_$i"}, 'md' => 3))
 
 	@endforeach
