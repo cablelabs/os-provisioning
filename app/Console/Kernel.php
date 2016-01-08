@@ -88,6 +88,11 @@ class Kernel extends ConsoleKernel {
 		{
 			$schedule->command('nms:cacti')->everyFiveMinutes()->withoutOverlapping();
 		}
+
+		// TODO: improve
+		$schedule->call(function () {
+			    exec ('chown -R apache '.storage_path().'/logs');
+			})->dailyAt('00:01');
 	}
 
 }

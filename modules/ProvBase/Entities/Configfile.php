@@ -14,6 +14,9 @@ class Configfile extends \BaseModel {
     public $table = 'configfile';
 
 
+    public $guarded = ['firmware_upload'];
+
+
 	// Add your validation rules here
 	public static function rules($id = null)
     {
@@ -145,6 +148,8 @@ class Configfile extends \BaseModel {
 
 				// if there is a specific firmware: add entries for upgrade
 				if ($this->firmware) {
+					// $server_ip = ProvBase::first()['provisioning_server'];
+					// array_push($config_extensions, "SnmpMibObject docsDevSwServerAddress.0 IPAddress $server_ip ; /* tftp server */");
 					array_push($config_extensions, 'SnmpMibObject docsDevSwFilename.0 String "fw/'.$this->firmware.'"; /* firmware file to download */');
 					array_push($config_extensions, 'SnmpMibObject docsDevSwAdminStatus.0 Integer 2; /* allow provisioning upgrade */');
 				}

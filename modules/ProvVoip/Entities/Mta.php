@@ -19,7 +19,7 @@ class Mta extends \BaseModel {
 	public static function rules($id=null)
 	{
 		return array(
-			'mac' => 'required|mac',
+			'mac' => 'required|mac', //|unique:mta,mac',
 			'modem_id' => 'required|exists:modem,id|min:1',
 			'configfile_id' => 'required|exists:configfile,id|min:1',
 			// 'hostname' => 'required|unique:mta,hostname,'.$id, 

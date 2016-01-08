@@ -94,7 +94,7 @@ class IpPoolObserver
     public function created($pool)
     {
         // fetch cmts object that is related to the created ippool and make dhcp conf
-        if (isset($pool->cmts))
+        // if (isset($pool->cmts))
             $pool->cmts->make_dhcp_conf();
     }
 
