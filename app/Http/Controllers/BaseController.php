@@ -488,6 +488,18 @@ class BaseController extends Controller {
 
 
 	/**
+	 * Add extra data for right box.
+	 * This e.g. is needed to add Envia API urls but can also be used for other topics – simply overwrite this placeholder…
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return array containing extra information, defaults to empty array
+	 */
+	protected function _get_extra_data($view_var) {
+		return array();
+	}
+
+	/**
 	 * Show the editing form of the calling Object
 	 *
 	 * @param  int  $id
@@ -510,6 +522,7 @@ class BaseController extends Controller {
 		$view_header 	= 'Edit '.$obj->get_view_header();
 		$view_var 		= $obj->findOrFail($id);
 		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var));
+		$extra_data = $this->_get_extra_data($view_var);
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';
@@ -520,7 +533,7 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields')));
+		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'extra_data')));
 	}
 
 

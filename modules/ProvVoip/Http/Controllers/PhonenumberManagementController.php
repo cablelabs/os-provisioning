@@ -4,6 +4,7 @@ namespace Modules\ProvVoip\Http\Controllers;
 
 use Modules\ProvVoip\Entities\PhonenumberManagement;
 use Modules\ProvVoip\Entities\Phonenumber;
+use Modules\ProvVoipEnvia\Http\Controllers\ProvVoipEnviaController;
 
 class PhonenumberManagementController extends \BaseModuleController {
 
@@ -42,6 +43,30 @@ class PhonenumberManagementController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'subscriber_city', 'description' => 'Subscriber city'),
 
 		);
+	}
+
+	/**
+	 * Wrapper to get all jobs for the current phonenumber
+	 * This can be used as a switch for several providers like envia etc. – simply check if the module exists :-)
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _get_extra_data($view_var) {
+		return $this->_get_envia_management_jobs($view_var);
+	}
+
+	/**
+	 * Get all management jobs for Envia
+	 *
+	 * @author Patrick Reichel
+	 * @param $model current phonenumber object
+	 * @return array containing linktexts and URLs to perform actions against REST API
+	 */
+	protected function _get_envia_management_jobs($phonenumbermanagement) {
+
+		$provvoipenviacontroller = new ProvVoipEnviaController($phonenumbermanagement);
+
+		return $provvoipenviacontroller->get_jobs_for_view();
 	}
 
 
