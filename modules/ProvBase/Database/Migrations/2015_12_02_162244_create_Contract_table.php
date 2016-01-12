@@ -25,6 +25,8 @@ class CreateContractTable extends BaseMigration {
 			$table->string('customer_external_id', 60)->default(NULL);
 			$table->string('contract_number', 60);
 			$table->string('contract_external_id', 60)->default(NULL);
+			$table->dateTime('contract_ext_creation_date')->nullable()->default(NULL);
+			$table->dateTime('contract_ext_termination_date')->nullable()->default(NULL);
 			$table->string('number2', 32);
 			$table->string('company');
 			$table->enum('salutation', ['Herr', 'Frau', 'Firma', 'Behörde']);

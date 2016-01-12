@@ -1,6 +1,6 @@
 @extends ('Generic.edit')
 
-@section ('content_envia')
+@section ('content_extra')
 
 	@foreach($extra_data as $extra_content)
 
@@ -27,6 +27,6 @@
 @stop
 
 @section ('content_right')
-	@include ('bootstrap.panel', array ('content' => "content_envia", 'view_header' => 'Actions To Envia', 'md' => 6))
+	@include ('bootstrap.panel', array ('content' => "content_extra", 'view_header' => 'Available actions against Envia API', 'md' => 6))
 @stop
 

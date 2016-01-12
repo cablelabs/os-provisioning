@@ -22,11 +22,13 @@ class CreatePhonenumberManagementTable extends BaseMigration {
 
 			$table->integer('phonenumber_id')->unsigned()->default(1);
 			$table->date('order_date');
+			$table->dateTime('voipaccount_ext_creation_date')->nullable()->default(NULL);
 			$table->string('order_id')->nullable;
 			$table->date('activation_date');
 			$table->boolean('porting_in')->default(0);
 			$table->string('carrier_in', 16)->nullable;
 			$table->date('deactivation_date');
+			$table->dateTime('voipaccount_ext_termination_date')->nullable()->default(NULL);
 			$table->boolean('porting_out')->default(0);
 			$table->string('carrier_out', 16)->nullable;
 

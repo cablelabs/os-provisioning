@@ -4,7 +4,7 @@ namespace Modules\ProvVoip\Http\Controllers;
 
 use Modules\ProvVoip\Entities\PhonenumberManagement;
 use Modules\ProvVoip\Entities\Phonenumber;
-use Modules\ProvVoipEnvia\Http\Controllers\ProvVoipEnviaController;
+use Modules\ProvVoipEnvia\Entities\ProvVoipEnvia;
 
 class PhonenumberManagementController extends \BaseModuleController {
 
@@ -64,9 +64,9 @@ class PhonenumberManagementController extends \BaseModuleController {
 	 */
 	protected function _get_envia_management_jobs($phonenumbermanagement) {
 
-		$provvoipenviacontroller = new ProvVoipEnviaController($phonenumbermanagement);
+		$provvoipenvia = new ProvVoipEnvia();
 
-		return $provvoipenviacontroller->get_jobs_for_view();
+		return $provvoipenvia->get_jobs_for_view($phonenumbermanagement);
 	}
 
 
