@@ -166,6 +166,55 @@ class Mta extends \BaseModel {
 		Mta::observe(new MtaObserver);
 		Mta::observe(new \SystemdObserver);
 	}
+
+
+	/**
+	 * Define DHCP Config File for MTA's
+	 */
+	const CONF_FILE_PATH = '/etc/dhcp/nms/mta.conf';
+
+	/**
+	 * Writes all mta entries to dhcp configfile
+	 */
+	public function make_dhcp_mta_all()
+	{
+		$mtas = Mta::all();
+		$data = '';
+
+		foreach ($mtas as $mta)
+		{
+			if ($mta->id == 0)
+				continue;
+
+			$data .= 'host mta-'.$mta->id.' { hardware ethernet '.$mta->mac.'; filename "mta/mta-'.$mta->id.'.cfg"; ddns-hostname "mta-'.$mta->id.'"; option host-name "'.$mta->id.'"; }'."\n";
+		}
+
+		File::put(self::CONF_FILE_PATH, $data);
+		return true;
+	}
+
+    /**
+     * Deletes the configfiles with all mta dhcp entries - used to refresh the config through artisan nms:dhcp command
+     */
+	public function del_dhcp_conf_file()
+	{
+        if (file_exists(self::CONF_FILE_PATH)) unlink(self::CONF_FILE_PATH);
+	}
+
+    /**
+     * Deletes Configfile of one mta
+     */
+    public function delete_configfile()
+    {
+        $dir = '/tftpboot/mta/';
+        $file['1'] = $dir.'mta-'.$this->id.'.cfg';
+        $file['2'] = $dir.'mta-'.$this->id.'.conf';
+
+        foreach ($file as $f) 
+        {
+            if (file_exists($f)) unlink($f);
+        }
+    }
 }
 
 
@@ -185,6 +234,7 @@ class MtaObserver
 	{
 		$mta->hostname = 'mta-'.$mta->id;
         $mta->make_configfile();
+        $mta->make_dhcp_mta_all();
 		$mta->save();
 	}
 
@@ -195,6 +245,14 @@ class MtaObserver
 
 	public function updated($mta)
 	{
+        $mta->make_dhcp_mta_all();
         $mta->make_configfile();
+	}
+
+	public function deleted($mta)
+	{
+        $mta->make_dhcp_mta_all();
+		$mta->delete_configfile();
+
 	}
 }

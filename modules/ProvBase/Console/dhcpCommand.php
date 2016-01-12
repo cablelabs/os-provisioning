@@ -10,6 +10,7 @@ use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Endpoint;
 use Modules\ProvBase\Entities\Cmts;
 use Modules\ProvBase\Entities\ProvBase;
+use Modules\ProvVoip\Entities\Mta;
 
 class dhcpCommand extends Command {
 
@@ -45,17 +46,23 @@ class dhcpCommand extends Command {
 	public function fire()
 	{
 		// Global Config part
-		$m = ProvBase::first();
-		$m->make_dhcp_glob_conf();
+		$g = ProvBase::first();
+		$g->make_dhcp_glob_conf();
 
 		// Modems
-		$m = Modem::first();
-		$m->del_dhcp_conf_files();
-		$m->make_dhcp_cm_all();
+		$cm = Modem::first();
+		$cm->del_dhcp_conf_files();
+		$cm->make_dhcp_cm_all();
 
 		// Endpoints
 		$e = Endpoint::first();
-		$e->make_dhcp();
+		if (isset($e))
+			$e->make_dhcp();
+
+		// Mta's
+		$m = Mta::first();
+		$m->del_dhcp_conf_file();
+		$m->make_dhcp_mta_all();
 
 		// CMTS's
 		$c = Cmts::all();
