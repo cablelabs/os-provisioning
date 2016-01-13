@@ -12,9 +12,13 @@ Thumbs.db
 storage/systemd/
 storage/hfc/
 
-# temporary vim files
-.*.swp
-.*.swo
+# vim (https://github.com/github/gitignore/blob/master/Global/Vim.gitignore)
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
 
 # sublime trash dir
 .Trash-1000/
