@@ -47,6 +47,7 @@ class PhonenumberManagementController extends \BaseModuleController {
 	/**
 	 * Wrapper to get all jobs for the current phonenumber
 	 * This can be used as a switch for several providers like envia etc. – simply check if the module exists :-)
+	 * If no module is active we return the default value “null” – nothing will be shown
 	 *
 	 * @author Patrick Reichel
 	 */
