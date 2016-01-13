@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Http\Controllers;
 
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\Qos;
+use Modules\ProvVoipEnvia\Entities\ProvVoipEnvia;
 
 class ContractController extends \BaseModuleController {
 
@@ -66,4 +67,26 @@ class ContractController extends \BaseModuleController {
 		return array_merge($a, $b, $c);
 	}
 
+	/**
+	 * Wrapper to get all jobs for the current phonenumber
+	 * This can be used as a switch for several providers like envia etc. – simply check if the module exists :-)
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _get_extra_data($view_var) {
+		return $this->_get_envia_management_jobs($view_var);
+	}
+
+	/**
+	 * Get all management jobs for Envia
+	 *
+	 * @author Patrick Reichel
+	 * @param $model current phonenumber object
+	 * @return array containing linktexts and URLs to perform actions against REST API
+	 */
+	protected function _get_envia_management_jobs($contract) {
+
+		$provvoipenvia = new ProvVoipEnvia();
+		return $provvoipenvia->get_jobs_for_view($contract, 'contract');
+	}
 }

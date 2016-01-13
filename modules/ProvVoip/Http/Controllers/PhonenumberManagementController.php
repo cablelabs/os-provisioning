@@ -66,7 +66,7 @@ class PhonenumberManagementController extends \BaseModuleController {
 
 		$provvoipenvia = new ProvVoipEnvia();
 
-		return $provvoipenvia->get_jobs_for_view($phonenumbermanagement);
+		return $provvoipenvia->get_jobs_for_view($phonenumbermanagement, 'phonenumbermanagement');
 	}
 
 

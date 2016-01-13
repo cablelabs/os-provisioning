@@ -99,3 +99,5 @@
 
 @stop
 
+{{-- here man can inject extra data – e.g. actions against Envia Rest API --}}
+{{-- to use this overwrite BaseControllers _get_extra_data() method --}}

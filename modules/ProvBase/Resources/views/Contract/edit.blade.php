@@ -27,7 +27,7 @@
 
 	@stop
 
-	@section ('content_right')
+	@section ('content_right_extra')
 		@include ('bootstrap.panel', array ('content' => "content_extra", 'view_header' => 'Available actions against Envia API', 'md' => 6))
 	@stop
 @endif

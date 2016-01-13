@@ -13,7 +13,8 @@ storage/systemd/
 storage/hfc/
 
 # temporary vim files
-*.swp
+.*.swp
+.*.swo
 
 # sublime trash dir
 .Trash-1000/

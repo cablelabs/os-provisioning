@@ -489,14 +489,14 @@ class BaseController extends Controller {
 
 	/**
 	 * Add extra data for right box.
-	 * This e.g. is needed to add Envia API urls but can also be used for other topics – simply overwrite this placeholder…
+	 * This e.g. is needed to add Envia API urls but can also be used for other topics – simply overwrite this placeholder and return array with extra information instead of null…
 	 *
 	 * @author Patrick Reichel
 	 *
-	 * @return array containing extra information, defaults to empty array
+	 * @return array of arrays containing extra information
 	 */
 	protected function _get_extra_data($view_var) {
-		return array();
+		return null;
 	}
 
 	/**
