@@ -38,7 +38,7 @@ class Configfile extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
-        return $this->name;
+        return $this->device.': '.$this->name;
     }
 
     /**
@@ -101,6 +101,72 @@ class Configfile extends \BaseModel {
 	public function get_parent ()
 	{
 		return Configfile::find($this->parent_id);
+	}
+
+
+	/**
+	 * Return all children Configfiles for $this Configfile
+	 *
+	 * Note: we return a normal array(). Eloquent->where(..)->get() does
+	 *       return a special formated array, which does not work in 
+	 *       make_ordered_tree()
+	 *
+	 * @author Torsten Schmidt
+	 *
+	 * @return all children for $this configfile, null if no children
+	 */
+	public function get_children ()
+	{
+		$ret = [];
+
+		foreach (Configfile::whereRaw('parent_id = '.$this->id)->get() as $a)
+			array_push ($ret, $a);
+
+		return $ret;
+	}
+
+
+	/**
+	 * Return a recursive structured 1d-array for $cfgs Configfiles
+	 * with adapt the Configfile names for Index view
+	 *
+	 * Note: This function is recursive style
+	 *
+	 * @author Torsten Schmidt
+	 *
+	 * @param the configfile's to structrue
+	 * @return the structrued configfile for $cfgs with all children
+	 */
+	public function make_ordered_tree ($cfgs)
+	{
+		$ret = [];
+
+		foreach($cfgs as $cfg)
+		{
+			if ($cfg->get_children())
+			{
+				// push all children and adapt name for index view
+				array_push ($ret, $cfg);
+				foreach ($this->make_ordered_tree($cfg->get_children()) as $a)
+				{
+					$a->name = '- - - - '.$a->name; // adapt name
+					array_push ($ret, $a);
+				}
+			}
+			else
+				array_push ($ret, $cfg);
+	    }
+
+		return $ret;
+	}
+
+
+	/*
+	 * Return a pre-formated index list
+	 */
+	public function index_list ()
+	{
+		return $this->make_ordered_tree ($this->where('parent_id', '=', '0')->orderBy('device')->get());
 	}
 
 

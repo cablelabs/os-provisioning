@@ -37,6 +37,22 @@ class BaseModel extends Eloquent
 
 
 	/**
+	 * This function is a placeholder to write Model specific adaptions to 
+	 * order and/or restructure the Model objects for Index View
+	 *
+	 * Note: for a example see Configfile Model
+	 *
+	 * @author Torsten Schmidt
+	 *
+	 * @return all objects of this model
+	 */
+	public function index_list ()
+	{
+		return $this->all();
+	}
+
+
+	/**
 	 * Basefunction for generic use - is needed to place the related html links generically in the edit & create views
 	 * Place this function in the appropriate model and return the relation to the model it belongs
 	 */
