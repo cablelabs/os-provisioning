@@ -28,8 +28,36 @@ class IpPoolController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'dns1_ip', 'description' => 'DNS1 IP'),
 			array('form_type' => 'text', 'name' => 'dns2_ip', 'description' => 'DNS2 IP'),
 			array('form_type' => 'text', 'name' => 'dns3_ip', 'description' => 'DNS3 IP'),
-			array('form_type' => 'textarea', 'name' => 'optional', 'description' => 'Additional Options')
+			array('form_type' => 'textarea', 'name' => 'optional', 'description' => 'Additional Options'),
+			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
 		);
+	}
+
+    /**
+     * Replaces the placeholders (named like the array key inside the data array/sql columns)
+     * in the rules array with the needed data of the data array;
+     *
+     * used in own validation
+     *
+     * @author Nino Ryschawy
+     */
+	public function prep_rules($rules, $data)
+	{
+		foreach ($rules as $rkey => $description)
+		{
+			foreach ($data as $key => $value)
+			{
+				// search for key of data array in rule descriptions
+				if (($pos = strpos($description, $key)) && substr($description, $pos-1, 1) != "|")
+				{
+					$rules[$rkey] = $description = preg_replace("/$key\b/", "$value", $description);
+					// $rules[$rkey] = substr_replace($description,$value,$pos,strlen($key));	// replaces only once (not like str_replace)
+					// $rules[$rkey] = str_replace($key, $value, $description);
+				}
+			}
+		}
+		// dd($rules, $data);
+		return $rules;
 	}
 
 }

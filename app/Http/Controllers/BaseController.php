@@ -142,6 +142,19 @@ class BaseController extends Controller {
 		return $data;
 	}
 
+	/**
+	 * Returns an array of validation rules in dependence of the formular Input data 
+	 * of the http request, that shall be overwritten from the appropriate model 
+	 * controller if needed. 
+	 *
+	 * Note: Will be running before Validation
+	 */
+	protected function prep_rules($rules, $data)
+	{
+		return $rules;
+	}
+
+
 
 	/**
 	 *  json abstraction layer
@@ -491,7 +504,8 @@ class BaseController extends Controller {
 
 		// Prepare and Validate Input
 		$data      = $controller->prepare_input(Input::all());
-		$validator = Validator::make($data, $obj::rules());
+		$rules = $controller->prep_rules($obj::rules(), $data);
+		$validator = Validator::make($data, $rules);
 		$data      = $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails())
@@ -616,7 +630,8 @@ class BaseController extends Controller {
 
 		// Prepare and Validate Input
 		$data      = $controller->prepare_input(Input::all());
-		$validator = Validator::make($data, $obj::rules($id));
+		$rules = $controller->prep_rules($obj::rules($id), $data);
+		$validator = Validator::make($data, $rules);
 		$data      = $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails())

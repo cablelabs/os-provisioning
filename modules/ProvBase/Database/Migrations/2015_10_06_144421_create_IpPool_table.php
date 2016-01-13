@@ -32,6 +32,7 @@ class CreateIpPoolTable extends BaseMigration {
 			$table->string('dns2_ip')->sizeof(20);
 			$table->string('dns3_ip')->sizeof(20);
 			$table->text('optional');
+			$table->text('description');
 		});
 
 		$this->set_fim_fields(['net', 'netmask', 'ip_pool_start', 'ip_pool_end', 'router_ip', 'broadcast_ip', 'dns1_ip', 'dns2_ip', 'dns3_ip', 'optional']);
