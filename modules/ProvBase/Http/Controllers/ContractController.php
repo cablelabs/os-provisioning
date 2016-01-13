@@ -4,7 +4,6 @@ namespace Modules\ProvBase\Http\Controllers;
 
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\Qos;
-use Modules\ProvVoipEnvia\Entities\ProvVoipEnvia;
 
 class ContractController extends \BaseModuleController {
 
@@ -74,7 +73,13 @@ class ContractController extends \BaseModuleController {
 	 * @author Patrick Reichel
 	 */
 	protected function _get_extra_data($view_var) {
-		return $this->_get_envia_management_jobs($view_var);
+
+		if ($this->get_model_obj()->module_is_active('ProvVoipEnvia')) {
+			return $this->_get_envia_management_jobs($view_var);
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
@@ -86,7 +91,7 @@ class ContractController extends \BaseModuleController {
 	 */
 	protected function _get_envia_management_jobs($contract) {
 
-		$provvoipenvia = new ProvVoipEnvia();
+		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
 		return $provvoipenvia->get_jobs_for_view($contract, 'contract');
 	}
 }
