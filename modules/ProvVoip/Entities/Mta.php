@@ -111,28 +111,76 @@ class Mta extends \BaseModel {
 		$mac = $mta->mac;
 		$hostname = $mta->hostname;
 
-		// Configfile
+		// dir; filenames
 		$dir = '/tftpboot/mta/';
-		$cf_file = $dir."mta-$id.conf";
+		$conf_file     = $dir."mta-$id.conf";
+		$conf_file_pre = $conf_file.'_prehash';
+		$cfg_file      = $dir."mta-$id.cfg";
+		$cfg_file_pre  = $cfg_file.'_prehash';
 
+		// load configfile for modem
 		$cf = $mta->configfile;
 
 		if (!$cf)
-			return false;
+		{
+			Log::info("Error could not load configfile for mta ".$mta->id);
+			goto _failed;
+		}
 
-		$text = "Main\n{\n\t".$cf->text_make($mta, "mta")."\n}";
-		$ret  = File::put($cf_file, $text);
 
-		if ($ret === false)
-			die("Error writing to file ".$dir.$cf_file);
+		/*
+		 * Write and Build configfile (without HASH)
+		 */
+		// Write clear text config file to mta/mta-xyz.conf_prehash
+		$text = "Main\n{\n\tMtaConfigDelimiter 1;\n\t".$cf->text_make($mta, "mta")."\n\tMtaConfigDelimiter 255;\n}";
+		if (!File::put($conf_file_pre, $text))
+		{
+			Log::info('Error writing to file '.$conf_file_pre);
+			goto _failed;
+		}
 
-		Log::info("/usr/local/bin/docsis -p $cf_file $dir/mta-$id.cfg");
-		exec("/usr/local/bin/docsis -p $cf_file $dir/mta-$id.cfg >/dev/null 2>&1 &", $out, $ret);
+		// Build mta/mta-xyz.cfg_prehash without HASH
+		// TODO/Note: HASH Calculation must wait until this step is finished, so threating is not this easy
+		Log::info("/usr/local/bin/docsis -p $conf_file_pre $cfg_file_pre");
+		exec     ("/usr/local/bin/docsis -p $conf_file_pre $cfg_file_pre >/dev/null 2>&1", $out);
+		if (!file_exists($cfg_file_pre))
+		{
+			Log::info('Error failed to build '.$cfg_file_pre);
+			goto _failed;
+		}
+
+
+		/*
+		 * HASH MTA Cfg
+		 */
+		// Build mta/mta-xyz.conf with HASH
+		$hash = sha1_file ($cfg_file_pre);
+		$text = str_replace ('MtaConfigDelimiter 255;', 'MtaConfigDelimiter 255;'."\n\t".'SnmpMibObject pktcMtaDevProvConfigHash.0 HexString 0x'.$hash.';', $text);
+		if (!File::put($conf_file, $text))
+		{
+			Log::info('Error failed write '.$conf_file);
+			goto _failed;
+		}
+
+		// Build mta/mta-xyz.conf with HASH
+		Log::info("/usr/local/bin/docsis -p $conf_file $cfg_file");
+		exec     ("/usr/local/bin/docsis -p $conf_file $cfg_file >/dev/null 2>&1 &", $out);
+		if (!file_exists($cfg_file))
+		{
+			Log::info('Error failed to build '.$cfg_file);
+			goto _failed;
+		}
+
 
 		// change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
 		system('/bin/chown -R apache /tftpboot/mta');
+		return true;
 
-		return ($ret == 0 ? true : false);
+_failed:
+		// change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
+		system('/bin/chown -R apache /tftpboot/mta');
+
+		return false;
 	}
 
 	/**

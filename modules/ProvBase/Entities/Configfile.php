@@ -234,6 +234,7 @@ class Configfile extends \BaseModel {
 				// get Phonenumbers to MTA
 				foreach (Phonenumber::where('mta_id', '=', $device->id)->orderBy('port')->get() as $phone)
 				{
+					$phone->active = ($phone->active ? 1 : 2);
 					// use the port number as primary index key, so {phonenumber.number.1} will be the phone with port 1, not id 1 !
 					$phonenumber[$phone->port] = $phone;
 					// get description of table phonennumbers; one subarray per (possible) number
