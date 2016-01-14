@@ -1,5 +1,6 @@
 <script>setTimeout("document.getElementById('success_msg').style.display='none';", 6000);</script>
 
+	<h4 id='success_msg'>{{ Session::get('message') }}</h4>
 
 	@foreach($form_fields as $field)
 
@@ -72,5 +73,3 @@
 	@endforeach
 
 	{{ Form::submit('Save') }}
-
-	<h3 id='success_msg'>{{ Session::get('message') }}</h3>

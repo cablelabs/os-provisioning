@@ -339,11 +339,7 @@ class ModemObserver
     public function deleted($modem)
     {
         $modem->make_dhcp_cm_all();
-    }
-
-    // Delete all Endpoints under CM ..
-    public function deleting ($modem)
-    {
         $modem->delete_configfile();
+        $modem->restart_modem();
     }
 }
