@@ -15,13 +15,13 @@ class IpPool extends \BaseModel {
     {
         return array(
             'net' => 'required|ip',
-            'netmask' => 'ip',
-            'ip_pool_start' => 'ip' ,
-            'ip_pool_end' => 'ip' ,
-            'router_ip' => 'ip' ,
-            'broadcast_ip' => 'ip' ,
-            'dns1_ip' => 'ip' ,
-            'dns2_ip' => 'ip' ,
+            'netmask' => 'required|ip|netmask',     // netmask must not be in first place!
+            'ip_pool_start' => 'required|ip|ip_in_range:net,netmask|ip_larger:net',   // own validation - see in classes: ExtendedValidator and IpPoolController
+            'ip_pool_end' => 'required|ip|ip_in_range:net,netmask|ip_larger:ip_pool_start',
+            'router_ip' => 'required|ip|ip_in_range:net,netmask|ip_larger:ip_pool_start',
+            'broadcast_ip' => 'ip|ip_in_range:net,netmask|ip_larger:ip_pool_start',
+            'dns1_ip' => 'ip',
+            'dns2_ip' => 'ip',
             'dns3_ip' => 'ip'
         );
     }
