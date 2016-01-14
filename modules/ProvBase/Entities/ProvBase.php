@@ -41,7 +41,7 @@ class ProvBase extends \BaseModel {
         parent::boot();
 
         ProvBase::observe(new ProvBaseObserver);
-        // ProvBase::observe(new \SystemdObserver);
+        ProvBase::observe(new \SystemdObserver);
     }
 
 
@@ -55,6 +55,7 @@ class ProvBase extends \BaseModel {
 		$data .= 'default-lease-time '.$this->dhcp_def_lease_time.";\n";
 		$data .= 'max-lease-time '.$this->dhcp_max_lease_time.";\n";
 		$data .= 'next-server '.$this->provisioning_server.";\n";
+		$data .= 'option log-servers '.$this->provisioning_server.";\n";
 
 		File::put($file_dhcp_conf, $data);
     }

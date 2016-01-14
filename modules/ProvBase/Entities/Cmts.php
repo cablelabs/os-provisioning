@@ -102,11 +102,27 @@ class Cmts extends \BaseModel {
 			$router = $pool->router_ip;
 			$type = $pool->type;
 			$options = $pool->optional;
+			$dns['1'] = $pool->dns1_ip;
+			$dns['2'] = $pool->dns2_ip;
+			$dns['3'] = $pool->dns3_ip;
 
 
 			$data = "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
 			$data .= "\n\t\t".'option routers '.$router.';';
-			$data .= "\n\t\t".'option broadcast-address '.$broadcast_addr.';';
+			if ($broadcast_addr != '')
+				$data .= "\n\t\t".'option broadcast-address '.$broadcast_addr.';';
+			if ($dns['1'] != '' || $dns['2'] != '' || $dns['3'] != '')
+			{
+				$data .= "\n\t\toption domain-name-servers ";
+				$data_tmp = '';
+				foreach ($dns as $ip)
+				{
+					if ($ip != '')
+						$data_tmp .= "$ip, ";
+				}
+				$pos = strrpos($data_tmp, ',');
+				$data .= substr_replace($data_tmp, '', $pos, 1).";";
+			}
 			$data .= "\n\n\t\t".'pool'."\n\t\t".'{';
 			$data .= "\n\t\t\t".'range '.$range.';'."\n";
 
