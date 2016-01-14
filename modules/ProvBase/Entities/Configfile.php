@@ -228,14 +228,18 @@ class Configfile extends \BaseModel {
 				// same as above – arrays for later generic use
 				// they have to match database table names
 				$mta = array($device);
-				$phonenumber = Phonenumber::where('mta_id', '=', $device->id)->get();
-
 				// get description of table mtas
 				$db_schemata['mta'][0] = Schema::getColumnListing('mta');
-				// get description of table phonennumbers; one subarray per (possible) number
-				for ($i = 0; $i < count($phonenumber); $i++) {
-					$db_schemata['phonenumber'][$i] = Schema::getColumnListing('phonenumber');
+
+				// get Phonenumbers to MTA
+				foreach (Phonenumber::where('mta_id', '=', $device->id)->orderBy('port')->get() as $phone)
+				{
+					// use the port number as primary index key, so {phonenumber.number.1} will be the phone with port 1, not id 1 !
+					$phonenumber[$phone->port] = $phone;
+					// get description of table phonennumbers; one subarray per (possible) number
+					$db_schemata['phonenumber'][$phone->port] = Schema::getColumnListing('phonenumber');
 				}
+
 				break;
 
 			// this is for unknown types – atm we do nothing
@@ -260,14 +264,12 @@ class Configfile extends \BaseModel {
 				// fill temporary replacement array with database values
 				if (isset(${$table}[$j]->id))
 				{
-					$replace_tmp = DB::select ("SELECT * FROM ".$table." WHERE id = ?", array(${$table}[$j]->id))[0];
-
 					// loop over each column and check if there is something to replace
 					// column is used generic to get values
 					foreach ($columns as $column)
 					{
 						$search[$i]  = '{'.$table.'.'.$column.'.'.$j.'}';
-						$replace[$i] = $replace_tmp->{$column};
+						$replace[$i] = ${$table}[$j]->{$column};
 
 						$i++;
 					}
@@ -277,7 +279,7 @@ class Configfile extends \BaseModel {
 			}
 		}
 
-		// DEBUG: print_r($search); print_r($replace);
+		// DEBUG: var_dump ($search, $replace);
 
 		/*
 		 * Search and Replace Configfile TEXT
