@@ -126,13 +126,9 @@ class ConfigfileController extends \BaseModuleController {
 			array_push($cf_tree, $cf->search_children());
 		}
 
-		// $depth = $this->inspect_tree_depth($cf_tree);
-
-		// dd($cf_tree);
 		$view_var = $this->create_index_view_data($cf_tree);
-		// dd($view_var);
 
-		return \View::make('provbase::Configfile.index', $this->compact_prep_view(compact('panel_right', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search', 'preselect_field', 'preselect_value')));
+		return \View::make('provbase::Configfile.tree', $this->compact_prep_view(compact('panel_right', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search', 'preselect_field', 'preselect_value')));
 	}
 
 
