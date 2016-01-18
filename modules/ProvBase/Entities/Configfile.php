@@ -38,7 +38,7 @@ class Configfile extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
-        return $this->name;
+        return $this->device.': '.$this->name;
     }
 
     /**
@@ -138,6 +138,72 @@ class Configfile extends \BaseModel {
 
 
 	/**
+	 * Return all children Configfiles for $this Configfile
+	 *
+	 * Note: we return a normal array(). Eloquent->where(..)->get() does
+	 *       return a special formated array, which does not work in 
+	 *       make_ordered_tree()
+	 *
+	 * @author Torsten Schmidt
+	 *
+	 * @return all children for $this configfile, null if no children
+	 */
+	public function get_children ()
+	{
+		$ret = [];
+
+		foreach (Configfile::whereRaw('parent_id = '.$this->id)->get() as $a)
+			array_push ($ret, $a);
+
+		return $ret;
+	}
+
+
+	/**
+	 * Return a recursive structured 1d-array for $cfgs Configfiles
+	 * with adapt the Configfile names for Index view
+	 *
+	 * Note: This function is recursive style
+	 *
+	 * @author Torsten Schmidt
+	 *
+	 * @param the configfile's to structrue
+	 * @return the structrued configfile for $cfgs with all children
+	 */
+	public function make_ordered_tree ($cfgs)
+	{
+		$ret = [];
+
+		foreach($cfgs as $cfg)
+		{
+			if ($cfg->get_children())
+			{
+				// push all children and adapt name for index view
+				array_push ($ret, $cfg);
+				foreach ($this->make_ordered_tree($cfg->get_children()) as $a)
+				{
+					$a->name = '- - - - '.$a->name; // adapt name
+					array_push ($ret, $a);
+				}
+			}
+			else
+				array_push ($ret, $cfg);
+	    }
+
+		return $ret;
+	}
+
+
+	/*
+	 * Return a pre-formated index list
+	 */
+	public function index_list ()
+	{
+		return $this->make_ordered_tree ($this->where('parent_id', '=', '0')->orderBy('device')->get());
+	}
+
+
+	/**
 	* Internal Helper:
 	*   Make Configfile Content for $this Object /
 	*   without recursive objects
@@ -195,14 +261,19 @@ class Configfile extends \BaseModel {
 				// same as above – arrays for later generic use
 				// they have to match database table names
 				$mta = array($device);
-				$phonenumber = Phonenumber::where('mta_id', '=', $device->id)->get();
-
 				// get description of table mtas
 				$db_schemata['mta'][0] = Schema::getColumnListing('mta');
-				// get description of table phonennumbers; one subarray per (possible) number
-				for ($i = 0; $i < count($phonenumber); $i++) {
-					$db_schemata['phonenumber'][$i] = Schema::getColumnListing('phonenumber');
+
+				// get Phonenumbers to MTA
+				foreach (Phonenumber::where('mta_id', '=', $device->id)->orderBy('port')->get() as $phone)
+				{
+					$phone->active = ($phone->active ? 1 : 2);
+					// use the port number as primary index key, so {phonenumber.number.1} will be the phone with port 1, not id 1 !
+					$phonenumber[$phone->port] = $phone;
+					// get description of table phonennumbers; one subarray per (possible) number
+					$db_schemata['phonenumber'][$phone->port] = Schema::getColumnListing('phonenumber');
 				}
+
 				break;
 
 			// this is for unknown types – atm we do nothing
@@ -227,14 +298,12 @@ class Configfile extends \BaseModel {
 				// fill temporary replacement array with database values
 				if (isset(${$table}[$j]->id))
 				{
-					$replace_tmp = DB::select ("SELECT * FROM ".$table." WHERE id = ?", array(${$table}[$j]->id))[0];
-
 					// loop over each column and check if there is something to replace
 					// column is used generic to get values
 					foreach ($columns as $column)
 					{
 						$search[$i]  = '{'.$table.'.'.$column.'.'.$j.'}';
-						$replace[$i] = $replace_tmp->{$column};
+						$replace[$i] = ${$table}[$j]->{$column};
 
 						$i++;
 					}
@@ -244,7 +313,7 @@ class Configfile extends \BaseModel {
 			}
 		}
 
-		// DEBUG: print_r($search); print_r($replace);
+		// DEBUG: var_dump ($search, $replace);
 
 		/*
 		 * Search and Replace Configfile TEXT

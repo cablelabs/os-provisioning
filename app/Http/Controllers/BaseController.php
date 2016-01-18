@@ -431,7 +431,8 @@ class BaseController extends Controller {
 
 		$obj = $this->get_model_obj();
 
-		$view_var   	= $obj->all();
+		$view_var = $obj->index_list();
+
 		$view_header  	= $obj->get_view_header().' List';
 
 		$create_allowed = $this->get_controller_obj()->index_create_allowed;
