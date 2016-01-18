@@ -42,6 +42,19 @@ class Configfile extends \BaseModel {
     }
 
     /**
+     * BOOT:
+     * - init configfile observer
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        Configfile::observe(new ConfigfileObserver);
+    }
+
+
+
+    /**
      * TODO: make one function
      * returns a list of possible parent configfiles
      * Nearly the same like html_list method of BaseModel but needs zero element in front
@@ -68,6 +81,24 @@ class Configfile extends \BaseModel {
     }
 
 
+    /**
+	 * Searches children of a parent configfile and returns them by pushing them to an array
+	 * used for recursive building of the configfiles tree structure
+     */
+    public function search_children()
+	{
+		$id = $this->id;
+		$cf_tree = $children = Configfile::all()->where('parent_id', $id)->all();
+
+		foreach ($children as $key => $cf)
+		{
+			array_push($cf_tree, $cf->search_children());
+		}
+
+		return $cf_tree;
+	}
+
+
 	/**
 	 * Returns all available firmware files (via directory listing)
 	 * @author Patrick Reichel
@@ -91,7 +122,9 @@ class Configfile extends \BaseModel {
 
 
     /**
-     * all Relationships:
+     * all Relationships
+     *
+     * Note: Should be plural on hasMany
      */
 	public function modem ()
 	{
@@ -254,4 +287,76 @@ class Configfile extends \BaseModel {
 		return $t;
 	}
 
+
+	/**
+	* Build the configfiles of the appropriate modems and mtas after a configfile was updated/created/assigned
+	*
+	* @author Nino Ryschawy
+	*/
+	public function build_corresponding_configfiles()
+	{
+		// configfile itself
+		$modems = $this->modem;
+
+		foreach ($modems as $modem)
+		{
+			$modem->make_configfile();
+			$mtas = $modem->mtas;		// This should be a one-to-one relation
+			foreach ($mtas as $mta)
+			{
+				$mta->make_configfile();
+			}
+		}
+
+		// children (the whole tree structure)
+		$id = $this->id;
+		do
+		{
+			// search for all configfiles that have this configfile as parent
+			$children = Configfile::all()->where('parent_id', $id);
+
+			foreach ($children as $child)
+			{
+				$modems = $child->modem;
+				$id = $child->id;
+
+				foreach ($modems as $modem)
+				{
+					$modem->make_configfile();
+					$mtas = $modem->mtas;		// This should be a one-to-one relation
+					foreach ($mtas as $mta)
+					{
+						$mta->make_configfile();
+					}
+				}
+			}
+		} while ($children->all());	
+	}
+
+}
+
+/**
+ * Configfile Observer Class
+ * Handles changes on CMs
+ *
+ * can handle   'creating', 'created', 'updating', 'updated',
+ *              'deleting', 'deleted', 'saving', 'saved',
+ *              'restoring', 'restored',
+ */
+class ConfigfileObserver
+{
+    public function created($configfile)
+    {
+		$configfile->build_corresponding_configfiles();
+    }
+
+    public function updated($configfile)
+    {
+		$configfile->build_corresponding_configfiles();
+    }
+
+    public function deleted($configfile)
+    {
+		$configfile->build_corresponding_configfiles();
+    }
 }

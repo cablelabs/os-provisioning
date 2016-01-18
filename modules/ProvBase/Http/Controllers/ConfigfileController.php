@@ -3,6 +3,8 @@
 namespace Modules\ProvBase\Http\Controllers;
 
 use Modules\ProvBase\Entities\Configfile;
+use Form;
+use HTML;
 
 class ConfigfileController extends \BaseModuleController {
 
@@ -33,6 +35,106 @@ class ConfigfileController extends \BaseModuleController {
 			array('form_type' => 'file', 'name' => 'firmware_upload', 'description' => 'or: Upload firmware file'),
 		);
 	}
+
+	public static $INDEX = 0;
+
+	/**
+	 * writes whole index view data in string
+	 *
+	 * @param array with all configfiles in hierarchical tree structure
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function create_index_view_data($cf_tree)
+	{
+		$data = '';
+		foreach ($cf_tree as $object)
+		{
+			if ($object == [])
+				continue;
+
+			if (is_array($object))
+			{
+				self::$INDEX += 1;
+				$data .= $this->create_index_view_data($object);
+			}
+			else
+				$data .= $this->print_cf_entry($object);
+		}
+		self::$INDEX -= 1;
+		return $data;
+	}
+
+	/**
+	 * writes whole index view data in string
+	 *
+	 * @param configfile or array with configfile(s) and arrays of configfiles
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function print_cf_entry($object)
+	{
+		$cur_model_complete = get_class($object);
+		$cur_model_parts = explode('\\', $cur_model_complete);
+		$cur_model = array_pop($cur_model_parts);
+
+		// $data = '<tr>';
+		$data = '';
+		$cnt = 0;
+		do
+		{
+			$cnt++;
+			// $data .= '<td>&nbsp;&nbsp;&nbsp;</td>';
+			$data .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+			var_dump(self::$INDEX);
+		} while ($cnt <= self::$INDEX);
+
+		// $data .= '<td>'.Form::checkbox('ids['.$object->id.']').'</td>';
+		// $data .= '<td>'.HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id).'</td>';
+		// $data .= '</tr>';
+
+		$data .= Form::checkbox('ids['.$object->id.']', 1, Null, null, ['style' => 'simple']).'&nbsp;&nbsp;';
+		$data .= HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id);
+		$data .= '<br>';
+
+		return $data;
+	}
+
+	/**
+	 * Display a listing of all Configfile objects in hierarchical tree structure
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function index()
+	{
+		try {
+			$this->_check_permissions("view");
+		}
+		catch (Exceptions $ex) {
+			throw new AuthExceptions($e->getMessage());
+		}
+		
+		$create_allowed = $this->index_create_allowed;
+
+		$id = 0;
+		$children = Configfile::all()->where('parent_id', $id)->all();
+
+		$cf_tree = [];
+		foreach ($children as $key => $cf)
+		{
+			array_push($cf_tree, $cf);
+			array_push($cf_tree, $cf->search_children());
+		}
+
+		// $depth = $this->inspect_tree_depth($cf_tree);
+
+		// dd($cf_tree);
+		$view_var = $this->create_index_view_data($cf_tree);
+		// dd($view_var);
+
+		return \View::make('provbase::Configfile.index', $this->compact_prep_view(compact('panel_right', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search', 'preselect_field', 'preselect_value')));
+	}
+
 
 	/**
 	 * Overwrites the base method => we need to handle file uploads
