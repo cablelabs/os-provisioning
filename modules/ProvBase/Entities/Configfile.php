@@ -81,6 +81,24 @@ class Configfile extends \BaseModel {
     }
 
 
+    /**
+	 * Searches children of a parent configfile and returns them by pushing them to an array
+	 * used for recursive building of the configfiles tree structure
+     */
+    public function search_children()
+	{
+		$id = $this->id;
+		$cf_tree = $children = Configfile::all()->where('parent_id', $id)->all();
+
+		foreach ($children as $key => $cf)
+		{
+			array_push($cf_tree, $cf->search_children());
+		}
+
+		return $cf_tree;
+	}
+
+
 	/**
 	 * Returns all available firmware files (via directory listing)
 	 * @author Patrick Reichel

@@ -45,15 +45,14 @@ class FormBuilder extends IlluminateFormBuilder {
      */
     public function input($type, $name, $value = null, $options = array())
     {
-
-
         if($type == 'hidden')
             return parent::input($type, $name, $value, $options);
 
-        $options = $this->appendClassToOptions('form-control', $options);
-
+        // these 2 lines were moved before $options assignment -> in simple form there's no form-control class added - needed for Configfile index view
         if (isset($options['style']) && $options['style'] == 'simple')
             return parent::input($type, $name, $value, $options);
+
+        $options = $this->appendClassToOptions('form-control', $options);
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.
@@ -126,8 +125,12 @@ class FormBuilder extends IlluminateFormBuilder {
      */
     public function checkbox($name, $value = 1, $label = null, $checked = null, $options = array())
     {
-    	$options = ['align' => 'left'];
+        $options['align'] = 'left';
+        $options['class'] = '';
         $checkable = parent::checkbox($name, $value, $checked, $options);
+
+        if (isset($options['style']) && $options['style'] == 'simple')
+            return $checkable;
 
         return $this->appendDiv($checkable);
         // return $this->wrapCheckable($label, 'checkbox', $checkable);

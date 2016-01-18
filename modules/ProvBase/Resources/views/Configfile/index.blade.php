@@ -46,27 +46,11 @@
 				<h4>Matches for <tt>{{ $query }}</tt> in <tt>{{ $scope }}</tt></h4>
 			@endif
 
-			<table>
-			@foreach ($view_var as $object)
-				<tr>
-					<td>
-						{{ Form::checkbox('ids['.$object->id.']') }}
-					</td>
-					<td>
+			<!-- <table> -->
 
-						<?php
-							// TODO: move away from view!!
-							$cur_model_complete = get_class($object);
-							$cur_model_parts = explode('\\', $cur_model_complete);
-							$cur_model = array_pop($cur_model_parts);
-						?>
+			{{ $view_var }}
 
-						{{ HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id) }}
-
-					</td>
-				</tr>
-			@endforeach
-			</table>
+			<!-- </table> -->
 
 			<br>
 
