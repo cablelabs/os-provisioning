@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute($route_name.'.index', $view_header) }}
+	{{ HTML::linkRoute($route_name.'.tree', $view_header) }}
 
 @stop
 
