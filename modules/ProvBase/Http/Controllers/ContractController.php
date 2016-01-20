@@ -78,9 +78,9 @@ class ContractController extends \BaseModuleController {
 		if ($this->get_model_obj()->module_is_active('ProvVoipEnvia')) {
 			return $this->_get_envia_management_jobs($view_var);
 		}
-		else {
-			return null;
-		}
+
+		// default: do nothing
+		return null;
 	}
 
 	/**
@@ -93,6 +93,16 @@ class ContractController extends \BaseModuleController {
 	protected function _get_envia_management_jobs($contract) {
 
 		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
+
+		// check if user has the right to perform actions against Envia API
+		// if not: don't show any actions
+		try {
+			$this->_check_permissions("ext_provider_actions");
+		}
+		catch (PermissionDeniedError $ex) {
+			return null;
+		}
+
 		return $provvoipenvia->get_jobs_for_view($contract, 'contract');
 	}
 }
