@@ -20,11 +20,14 @@ class Configfile extends \BaseModel {
 	// Add your validation rules here
 	public static function rules($id = null)
     {
+    	$device = null;
+    	if ($id)
+    		$device = Configfile::find($id)->device;
+    	// dd($device);
         return array(
-            'name' => 'required|unique:configfiles,name,'.$id,
-			// TODO: adapt docsis validator for mta files
             'name' => 'required|unique:configfile,name,'.$id,
-            // 'text' => 'docsis'
+			// TODO: adapt docsis validator for mta files
+            'text' => "docsis:$device",
         );
     }
 
@@ -129,6 +132,11 @@ class Configfile extends \BaseModel {
 	public function modem ()
 	{
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
+	}
+
+	public function mtas ()
+	{
+		return $this->hasMany('Modules\ProvVoip\Entities\Mta');
 	}
 
 	public function get_parent ()
@@ -365,16 +373,19 @@ class Configfile extends \BaseModel {
 	public function build_corresponding_configfiles()
 	{
 		// configfile itself
+		// NOTE: we only need to proof if Configfile Build fails here -> if it fails we dont need to build the files of the children
 		$modems = $this->modem;
-
 		foreach ($modems as $modem)
 		{
-			$modem->make_configfile();
-			$mtas = $modem->mtas;		// This should be a one-to-one relation
-			foreach ($mtas as $mta)
-			{
-				$mta->make_configfile();
-			}
+			if (!$modem->make_configfile())
+				$modem->redirect_with_message('Build of Configfile failed!!');
+		}
+
+		$mtas = $this->mtas;		// This should be a one-to-one relation
+		foreach ($mtas as $mta)
+		{
+			if (!$mta->make_configfile())
+				$mta->redirect_with_message('Build of Configfile failed!!');
 		}
 
 		// children (the whole tree structure)
@@ -386,17 +397,18 @@ class Configfile extends \BaseModel {
 
 			foreach ($children as $child)
 			{
-				$modems = $child->modem;
 				$id = $child->id;
 
+				$modems = $child->modem;
 				foreach ($modems as $modem)
 				{
 					$modem->make_configfile();
-					$mtas = $modem->mtas;		// This should be a one-to-one relation
-					foreach ($mtas as $mta)
-					{
-						$mta->make_configfile();
-					}
+				}
+
+				$mtas = $this->mtas;		// This should be a one-to-one relation
+				foreach ($mtas as $mta)
+				{
+					$mta->make_configfile();
 				}
 			}
 		} while ($children->all());	

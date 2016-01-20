@@ -213,8 +213,9 @@ class Modem extends \BaseModel {
         $host  = $modem->hostname;
 
         /* Configfile */
-        $dir     = '/tftpboot/cm/';
-        $cf_file = $dir."cm-$id.conf";
+        $dir        = '/tftpboot/cm/';
+        $cf_file    = $dir."cm-$id.conf";
+        $cfg_file   = $dir."cm-$id.cfg";
 
         $cf = $modem->configfile;
 
@@ -228,13 +229,20 @@ class Modem extends \BaseModel {
         if ($ret === false)
                 die("Error writing to file");
 
-        Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg");
-        exec("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg >/dev/null 2>&1 &", $out, $ret);
+        Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file");
+        if (file_exists($cfg_file))
+            unlink($cfg_file);
+
+        // "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
+        exec("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file >/dev/null 2>&1", $out);
 
         // change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
         system('/bin/chown -R apache /tftpboot/cm');
 
-        return ($ret == 0 ? true : false);
+        // docsis tool always returns 0 -> so we need to proof if that way
+        if (file_exists($cfg_file))
+            return true;
+        return false;
     }
 
     /**

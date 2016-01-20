@@ -118,7 +118,7 @@ class Mta extends \BaseModel {
 		$cfg_file      = $dir."mta-$id.cfg";
 		$cfg_file_pre  = $cfg_file.'_prehash';
 
-		// load configfile for modem
+		// load configfile for mta
 		$cf = $mta->configfile;
 
 		if (!$cf)
@@ -164,7 +164,11 @@ class Mta extends \BaseModel {
 
 		// Build mta/mta-xyz.conf with HASH
 		Log::info("/usr/local/bin/docsis -p $conf_file $cfg_file");
-		exec     ("/usr/local/bin/docsis -p $conf_file $cfg_file >/dev/null 2>&1 &", $out);
+		if (file_exists($cfg_file))
+			unlink($cfg_file);
+
+		// "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
+		exec     ("/usr/local/bin/docsis -p $conf_file $cfg_file >/dev/null 2>&1", $out);
 		if (!file_exists($cfg_file))
 		{
 			Log::info('Error failed to build '.$cfg_file);
@@ -294,7 +298,7 @@ class MtaObserver
 	public function updated($mta)
 	{
         $mta->make_dhcp_mta_all();
-        $mta->make_configfile();
+		$mta->make_configfile();
 	}
 
 	public function deleted($mta)
