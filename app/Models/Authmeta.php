@@ -21,7 +21,7 @@ class Authmeta extends BaseModel {
 	public static function cores_by_meta($meta_id, $core_type) {
 		return DB::table('authmetacore')
 					->join('authcores', 'authmetacore.core_id', '=', 'authcores.id')
-					->select('authcores.name', 'authmetacore.view', 'authmetacore.create', 'authmetacore.edit', 'authmetacore.delete')
+					->select('authcores.name', 'authmetacore.view', 'authmetacore.create', 'authmetacore.edit', 'authmetacore.delete', 'authmetacore.ext_provider_actions')
 					->where('authmetacore.meta_id', '=', $meta_id)
 					->where('authcores.type', 'LIKE', $core_type)
 					->get();
