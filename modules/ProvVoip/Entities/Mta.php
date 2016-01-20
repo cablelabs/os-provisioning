@@ -164,16 +164,16 @@ class Mta extends \BaseModel {
 
 		// Build mta/mta-xyz.conf with HASH
 		Log::info("/usr/local/bin/docsis -p $conf_file $cfg_file");
-		if (file_exists($cfg_file))
-			unlink($cfg_file);
 
 		// "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
-		exec     ("/usr/local/bin/docsis -p $conf_file $cfg_file >/dev/null 2>&1", $out);
-		if (!file_exists($cfg_file))
-		{
-			Log::info('Error failed to build '.$cfg_file);
-			goto _failed;
-		}
+		exec     ("/usr/local/bin/docsis -p $conf_file $cfg_file >/dev/null 2>&1 &", $out);
+		
+		// this only is valid when we dont execute docsis in background
+		// if (!file_exists($cfg_file))
+		// {
+		// 	Log::info('Error failed to build '.$cfg_file);
+		// 	goto _failed;
+		// }
 
 
 		// change owner in case command was called from command line via php artisan nms:configfile that changes owner to root

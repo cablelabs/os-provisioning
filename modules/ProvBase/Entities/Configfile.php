@@ -373,19 +373,16 @@ class Configfile extends \BaseModel {
 	public function build_corresponding_configfiles()
 	{
 		// configfile itself
-		// NOTE: we only need to proof if Configfile Build fails here -> if it fails we dont need to build the files of the children
 		$modems = $this->modem;
 		foreach ($modems as $modem)
 		{
-			if (!$modem->make_configfile())
-				$modem->redirect_with_message('Build of Configfile failed!!');
+			$modem->make_configfile();
 		}
 
 		$mtas = $this->mtas;		// This should be a one-to-one relation
 		foreach ($mtas as $mta)
 		{
-			if (!$mta->make_configfile())
-				$mta->redirect_with_message('Build of Configfile failed!!');
+			$mta->make_configfile();
 		}
 
 		// children (the whole tree structure)

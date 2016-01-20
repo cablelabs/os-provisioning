@@ -500,25 +500,6 @@ class BaseModel extends Eloquent
 		foreach ($ids as $id => $help)
 			$instance->findOrFail($id)->delete();
 	}
-
-
-	/**
-	 * Redirects back with a message
-	 * Initial Use is for Configfiles when the Build failed - see Configfile Observer (build_corresponding_configfiles())
-	 */
-	public function redirect_with_message($message)
-	{	
-		// redirect back with corresponding message over flash, needs to be saved as it's normally only saved when the session middleware terminates successfully
-        $resp = \Redirect::back()->with('message', $message); 
-        \Session::driver()->save();
-        $resp->send();
-
-        /* 
-         * TODO: replace exit
-         * This is a security hassard. All Code (Observer etc) which should run after this code will not be executed !
-         */
-        exit();
-	}
 }
 
 
