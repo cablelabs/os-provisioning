@@ -136,23 +136,19 @@ class ExtendedValidator
 		foreach ($rows as $row)
 		{
 			if (preg_match("/(string)/i", $row))
-				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", '"text"', $row);
+				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", 'text', $row);
 			elseif (preg_match("/(ipaddress)/i", $row))
 				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", '1.1.1.1', $row);
 			else
 				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", '1', $row);
 		}
-
-		// replace double " on phonenumbers
-		if ($device == 'mta')
-			$s = str_replace('""','', $s);
 		
 		/*
 		 * Write Dummy File and try to encode
 		 */
         $text = "Main\n{\n\t".$s."\n}";
         $ret  = File::put($cf_file, $text);
-        
+
         if ($ret === false)
                 die("Error writing to file");
 
@@ -166,19 +162,21 @@ class ExtendedValidator
 	        Log::info("Validation: /usr/local/bin/docsis -p $cf_file $dir/dummy-validator.cfg");   
 	        exec("rm -f $dir/dummy-validator.cfg && /usr/local/bin/docsis -p $cf_file $dir/dummy-validator.cfg 2>&1", $outs, $ret);	//return value is always 0
 		}
-        /*
-         * Parse Errors
-         */
-        $report = '';
-        foreach ($outs as $out)
-        {
-        	$report .= "\n$out";
-        }
 
+        /*
+         * Parse Errors - only one error is shown - subtract 3 from line nr
+         */
+        $report = $outs[0];
+        preg_match('/[0-9]+$/', $report, $i);
+        if (isset($i[0]))
+        	$report = preg_replace('/[0-9]+$/', $i[0] - 3, $report);
+        // foreach ($outs as $out)
+        // {
+        // 	$report .= "\n$out";
+        // }
 
         if (!file_exists("$dir/dummy-validator.cfg"))
         {
-        	// dd($value, $text, $report);
         	// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
         	// when laravel calls the actual validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
         	$validator = \func_get_arg(3);
