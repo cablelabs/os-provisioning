@@ -183,7 +183,6 @@ class Mta extends \BaseModel {
 _failed:
 		// change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
 		system('/bin/chown -R apache /tftpboot/mta');
-
 		return false;
 	}
 

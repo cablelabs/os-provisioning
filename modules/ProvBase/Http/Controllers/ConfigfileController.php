@@ -116,11 +116,10 @@ class ConfigfileController extends \BaseModuleController {
 		
 		$create_allowed = $this->index_create_allowed;
 
-		$id = 0;
-		$children = Configfile::all()->where('parent_id', $id)->all();
+		$children = Configfile::all()->where('parent_id', 0)->all();
 
 		$cf_tree = [];
-		foreach ($children as $key => $cf)
+		foreach ($children as $cf)
 		{
 			array_push($cf_tree, $cf);
 			array_push($cf_tree, $cf->search_children());
