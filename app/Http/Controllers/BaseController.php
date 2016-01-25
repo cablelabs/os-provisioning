@@ -151,6 +151,8 @@ class BaseController extends Controller {
 	 */
 	protected function prep_rules($rules, $data)
 	{
+		// add condition to unique rules
+		// dd($rules);
 		return $rules;
 	}
 

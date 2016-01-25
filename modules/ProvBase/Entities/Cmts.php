@@ -14,7 +14,7 @@ class Cmts extends \BaseModel {
 	public static function rules($id = null)
     {
         return array(
-			'hostname' => 'unique:cmts,hostname,'.$id  	// unique: table, column
+			'hostname' => 'unique:cmts,hostname,'.$id.',id,deleted_at,NULL'  	// unique: table, column, exception , (where clause)
         );
     }
 

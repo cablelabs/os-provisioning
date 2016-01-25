@@ -25,7 +25,7 @@ class Configfile extends \BaseModel {
     		$device = Configfile::find($id)->device;
     	// dd($device);
         return array(
-            'name' => 'required|unique:configfile,name,'.$id,
+            'name' => 'required|unique:configfile,name,'.$id.',id,deleted_at,NULL',
 			// TODO: adapt docsis validator for mta files
             'text' => "docsis:$device",
         );

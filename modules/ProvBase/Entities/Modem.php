@@ -19,7 +19,7 @@ class Modem extends \BaseModel {
     public static function rules($id = null)
     {
         return array(
-            'mac' => 'required|mac|unique:modem,mac,'.$id
+            'mac' => 'required|mac|unique:modem,mac,'.$id.',id,deleted_at,NULL'
         );
     }
 
