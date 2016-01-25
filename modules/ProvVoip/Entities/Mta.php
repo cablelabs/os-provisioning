@@ -272,12 +272,13 @@ class MtaObserver
 	{
         $mta->make_dhcp_mta_all();
 		$mta->make_configfile();
+		$mta->modem->restart_modem();
 	}
 
 	public function deleted($mta)
 	{
         $mta->make_dhcp_mta_all();
 		$mta->delete_configfile();
-
+		$mta->modem->restart_modem();
 	}
 }

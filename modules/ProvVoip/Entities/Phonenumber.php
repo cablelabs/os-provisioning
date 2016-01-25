@@ -121,10 +121,18 @@ class PhonenumberObserver
 	public function created($phone)
 	{
 		$phone->mta->make_configfile();
+		$phone->mta->modem->restart_modem();
 	}
 
 	public function updated($phone)
 	{
 		$phone->mta->make_configfile();
+		$phone->mta->modem->restart_modem();
+	}
+
+	public function deleted($phone)
+	{
+		$phone->mta->make_configfile();
+		$phone->mta->modem->restart_modem();
 	}
 }
