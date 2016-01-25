@@ -12,12 +12,17 @@ class Phonenumber extends \BaseModel {
 	// Add your validation rules here
 	public static function rules($id=null)
 	{
+		// Port unique in the appropriate mta (where mta_id=mta_id and deleted_at=NULL)
+		$mta_id = 1;
+		if ($id)
+			$mta_id = Phonenumber::find($id)->mta->id;
+
 		return array(
 			'country_code' => 'required|numeric',
 			'prefix_number' => 'required|numeric',
 			'number' => 'required|numeric',
 			'mta_id' => 'required|exists:mta,id|min:1',
-			'port' => 'required|numeric|min:1',
+			'port' => 'required|numeric|min:1|unique:phonenumber,port,'.$id.',id,deleted_at,NULL,mta_id,'.$mta_id,
 			'active' => 'required|boolean',
 		);
 	}
