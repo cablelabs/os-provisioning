@@ -22,15 +22,15 @@ class CreateContractTable extends BaseMigration {
 
 			$table->integer('number')->unsigned();
 			$table->string('customer_number', 60);
-			$table->string('customer_external_id', 60)->default(NULL);
+			$table->string('customer_external_id', 60)->nullable()->default(NULL);
 			$table->string('contract_number', 60);
-			$table->string('contract_external_id', 60)->default(NULL);
+			$table->string('contract_external_id', 60)->nullable()->default(NULL);
 			$table->dateTime('contract_ext_creation_date')->nullable()->default(NULL);
 			$table->dateTime('contract_ext_termination_date')->nullable()->default(NULL);
 			$table->string('contract_ext_order_id')->default(NULL);
 			$table->string('number2', 32);
 			$table->string('company');
-			$table->enum('salutation', ['Herr', 'Frau', 'Firma', 'Behörde']);
+			$table->enum('salutation', ['Herrn', 'Frau', 'Firma', 'Behörde']);
 			$table->enum('academic_degree', ['', 'Dr.', 'Prof. Dr.']);
 			$table->string('firstname');
 			$table->string('lastname');
@@ -45,8 +45,8 @@ class CreateContractTable extends BaseMigration {
 			$table->string('fax', 100);
 			$table->string('email');
 			$table->date('birthday');
-			$table->date('contract_start');
-			$table->date('contract_end');
+			$table->date('contract_start')->nullable()->default(NULL);
+			$table->date('contract_end')->nullable()->default(NULL);
 			$table->boolean('internet_access');
 			$table->boolean('phonebook_entry');
 			$table->integer('qos_id')->unsigned();

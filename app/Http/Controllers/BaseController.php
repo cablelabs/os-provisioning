@@ -29,6 +29,24 @@ class BaseController extends Controller {
 
 
 	/**
+	 * Constructor
+	 *
+	 * Basically this is a placeholder for eventually later use. I need to 
+	 * overwrite the constructor in a subclass – and want to call the parent
+	 * constructor if there are changes in base classes. But calling the
+	 * parent con is only possible if it is explicitely defined…
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function __construct() {
+
+		// store the called entry method => later needed for different output (echo vs. view)
+		$url = \Request::url();
+		$tmp = explode('provvoipenvia/', $url)[1];
+		$this->entry_method = explode('/', $tmp)[0];
+	}
+
+	/**
 	 * Get permissions array from model.
 	 * This will overwrite an existing array.
 	 *
@@ -93,19 +111,6 @@ class BaseController extends Controller {
 		}
 
 		// TODO: check net rights
-	}
-
-	/**
-	 * Constructor
-	 *
-	 * Basically this is a placeholder for eventually later use. I need to 
-	 * overwrite the constructor in a subclass – and want to call the parent
-	 * constructor if there are changes in base classes. But calling the
-	 * parent con is only possible if it is explicitely defined…
-	 *
-	 * @author Patrick Reichel
-	 */
-	public function __construct() {
 	}
 
 	/**
