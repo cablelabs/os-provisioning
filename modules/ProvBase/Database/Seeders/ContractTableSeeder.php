@@ -19,9 +19,7 @@ class ContractTableSeeder extends \BaseSeeder {
 
 			Contract::create([
 				'customer_number' => 'cust_'.$index,
-				'customer_external_id' => 'foobar'.$index.'_envia',
 				'contract_number' => 'contr_'.$index,
-				'contract_external_id' => 'ab-ae.'.$index.'_envia',
 				'number2' => 'Cu/2015/Q4/-'.$index-1,
 				'firstname' => $faker->firstName,
 				'lastname' => $faker->lastName,
