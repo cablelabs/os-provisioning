@@ -5,10 +5,20 @@ composer.phar
 composer.lock
 .env.*.php
 .env.php
+/node_modules
+.env
 .DS_Store
-Thumbs.db
 *.sublime*
 *.fuse_hidden*
+Thumbs.db
+storage/systemd/
+storage/hfc/
+
 
 # temporary vim files
 *.swp
+
+# sublime trash dir
+.Trash-1000/
+
+sql-reset.sh

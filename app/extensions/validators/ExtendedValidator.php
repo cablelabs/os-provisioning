@@ -1,18 +1,17 @@
 <?php 
 
-use Illuminate\Validation\Validator;
+namespace Acme\Validators;
+
 use Models\Configfiles;
 
 
 /*
  * Our own ExtendedValidator Class
  *
- *
- * Extended Validator is loaded in start/global.php
- * and will be used as normal Validator.
- * TODO: Maybe we should use a service provider instead ?
+ * IMPORTANT: add Validator::extend('xyz', 'ExtendedValidator@validateXyz'); to 
+ * ExtendedValidatorServiceProvider under app/Providers
  */
-class ExtendedValidator extends Validator
+class ExtendedValidator
 {
 	/*
 	 * MAC validation
@@ -32,6 +31,85 @@ class ExtendedValidator extends Validator
 	public function validateIpaddr ($attribute, $value, $parameters)
 	{
 		return preg_match ('/^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$/', $value);
+	}
+
+
+	/**
+	 * Check if ip ($value) is inside the ip range of a net
+	 *
+	 * @param 1 net_ip
+	 * @param 2 netmask
+	 * @return true if inside
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function validateIpInRange ($attribute, $value, $parameters)
+	{
+		// calculate netmask for cidr notation (e.g.: 10.0.0.0/21)
+		$netmask = ip2long($parameters[1]);
+		$base = ip2long('255.255.255.255');
+		// $prefix = 32-log(($netmask ^ $base)+1,2);
+
+		$ip = ip2long($value);
+		$start = ip2long($parameters[0]);
+		// $end = $start + (1 << (32 - $prefix)) -1;
+		$end = $start + (1 << log(($netmask ^ $base)+1,2)) -1;
+
+	    return ($ip >= $start && $ip <= $end);
+	}
+
+
+	/**
+	 * Check if ip ($value) is larger than the one specified in $parameters
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function ipLarger ($attribute, $value, $parameters)
+	{
+		$ip = ip2long($value);
+		$ip2 = ip2long($parameters[0]);
+
+	    return ($ip > $ip2);
+	}
+
+
+	/**
+	 * Check if ip ($value) is larger than the one specified in $parameters
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function netmask ($attribute, $value, $parameters)
+	{
+		$netmask = ip2long($value);
+		$base = ip2long('255.255.255.255');
+		$prefix = log(($netmask ^ $base)+1,2);
+
+		$number = (int) (10000 * $prefix);
+		return is_int($number /= 10000);
+	}
+
+
+	/*
+	 * Geoposition validation
+	 * see: http://stackoverflow.com/questions/7113745/what-regex-expression-will-check-gps-values
+	 */
+	public function validateGeopos ($attribute, $value, $parameters)
+	{
+		return preg_match ('/(-?[\d]{1,3}\.[\d]{0,12},?){2}/', $value);
+	}
+
+
+	/*
+	 * Date or Null
+	 */
+	public function validateDateOrNull ($attribute, $value, $parameters)
+	{
+		if ($value == '0000-00-00')
+			return true;
+
+		// See: http://stackoverflow.com/questions/13194322/php-regex-to-check-date-is-in-yyyy-mm-dd-format
+		$dt = \DateTime::createFromFormat("Y-m-d", $value);
+		return $dt !== false && !array_sum($dt->getLastErrors());
 	}
 
 

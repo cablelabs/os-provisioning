@@ -1,0 +1,17 @@
+{
+    "name": "ProvVoip",
+    "alias": "provvoip",
+    "description": "",
+    "keywords": [
+
+    ],
+    "active": 1,
+    "order": 21,
+    "priority": 0,
+    "providers": [
+
+    ],
+    "files": [
+        "start.php"
+    ]
+}

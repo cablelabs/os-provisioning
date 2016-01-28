@@ -1,0 +1,77 @@
+/**
+ * alert.css - javascript alert replacement v2.3
+ *
+ * (c) 2009-2011 Naden Badalgogtapeh - http://www.naden.de/blog/javascript-alert
+ *
+ */
+/**
+ *
+ */ 
+div.alert-modal {
+  width: 100%;
+  height: 100%;
+  background-color: #ccc;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  opacity: 0.5;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)"; /* IE8 */
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);  /* IE7 */
+}
+/**
+ * wrapper
+ */ 
+div.alert {
+  font-family: Arial;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  padding: 5px;
+  display: none;
+  position: absolute;
+  z-index: 1001;
+}
+/**
+ * title
+ */ 
+div.alert div.title {
+  font-family: Arial;
+  font-weight: bold;
+  background-color: #9e9e9e;
+  color: #fff;
+  padding: 2px;
+}
+/**
+ * body
+ */ 
+div.alert div.body {
+  padding: 5px 0;
+  font-family: Arial;
+  height: 70%;
+  overflow-y: auto;
+}
+/**
+ * button wrapper
+ */ 
+div.alert div.button {
+  text-align: center;
+}
+/**
+ * button
+ */   
+div.alert div.button a:link, 
+div.alert div.button a:active, 
+div.alert div.button a:visited {
+  padding: 2px 4px 2px 4px;
+  background-color: #9e9e9e;
+  text-decoration: none;
+  font-weight: bold;
+  color: #fff;
+}
+/**
+ * button hover
+ */
+div.alert div.button a:hover {
+  background-color: #f0f0f0;
+  color: #9e9e9e;
+}

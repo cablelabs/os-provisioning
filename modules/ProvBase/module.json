@@ -1,0 +1,17 @@
+{
+    "name": "ProvBase",
+    "alias": "provbase",
+    "description": "",
+    "keywords": [
+
+    ],
+    "active": 1,
+    "order": 20,
+    "priority": 0,
+    "providers": [
+
+    ],
+    "files": [
+        "start.php"
+    ]
+}
