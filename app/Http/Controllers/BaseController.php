@@ -40,10 +40,6 @@ class BaseController extends Controller {
 	 */
 	public function __construct() {
 
-		// store the called entry method => later needed for different output (echo vs. view)
-		$url = \Request::url();
-		$tmp = explode('provvoipenvia/', $url)[1];
-		$this->entry_method = explode('/', $tmp)[0];
 	}
 
 	/**
