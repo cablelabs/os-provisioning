@@ -8,7 +8,7 @@ psws=($3)	# array
 
 # Ioncube Settings
 opt="--replace-target --license-check auto --ignore-interface-aliases"
-cmd="/home/rpm/lara/ioncube_encoder/ioncube_encoder.sh"
+cmd="ioncube_encoder.sh"
 
 
 # Base Package Encode Directories 
@@ -33,14 +33,14 @@ mkdir $dest/license
 # Encode Base Package
 psw_count=0
 for dir in "${directorys[@]}"; do
-        $cmd -56 $opt  --with-license $dest/license/Base.txt --passphrase ${psws[$psw_count]} $sour/$dir/ -o $dest/$dir
+        echo $cmd -56 $opt  --with-license $dest/license/Base.txt --passphrase ${psws[$psw_count]} $sour/$dir/ -o $dest/$dir
 done
 
 
 # Encode all Modules
 psw_count=1
 for dir in "${modules[@]}"; do
-        $cmd -56 $opt --with-license $dest/license/$dir.txt --passphrase ${psws[$psw_count]} $sour/modules/$dir/ -o $dest/modules/$dir
+        echo $cmd -56 $opt --with-license $dest/license/$dir.txt --passphrase ${psws[$psw_count]} $sour/modules/$dir/ -o $dest/modules/$dir
         psw_count=$[$psw_count+1]
 done
 
