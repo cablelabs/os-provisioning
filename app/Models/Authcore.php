@@ -11,7 +11,7 @@ class Authcore extends BaseModel {
 	/**
 	 * Update models in database table
 	 */
-	public updateModels() {
+	public function updateModels() {
 
 		print_r($this->get_models());
 	}
