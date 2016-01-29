@@ -20,14 +20,9 @@ class Configfile extends \BaseModel {
 	// Add your validation rules here
 	public static function rules($id = null)
     {
-    	$device = null;
-    	if ($id)
-    		$device = Configfile::find($id)->device;
-    	// dd($device);
         return array(
             'name' => 'required|unique:configfile,name,'.$id.',id,deleted_at,NULL',
-			// TODO: adapt docsis validator for mta files
-            'text' => "docsis:$device",
+            'text' => "docsis",
         );
     }
 

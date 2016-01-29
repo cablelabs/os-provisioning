@@ -36,6 +36,18 @@ class ConfigfileController extends \BaseModuleController {
 		);
 	}
 
+	/**
+	 * Returns validation data array with correct device type for validation of config text
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function prep_rules($rules, $data)
+	{
+		$rules['text'] .= ':'.$data['device'];
+		return $rules;
+	}
+
+
 	public static $INDEX = 0;
 
 	/**
