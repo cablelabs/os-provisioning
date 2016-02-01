@@ -47,7 +47,7 @@ function config ($dir_root)
 
 	$f = '';
 	foreach ($files as $f_from => $f_to)	
-		$f = $dir.'/files/'.$f_from.'='.$f_to;
+		$f .= ' '.$dir.'/files/'.$f_from.'='.$f_to;
 
 	// laod install scripts
 	$scripts = '';
