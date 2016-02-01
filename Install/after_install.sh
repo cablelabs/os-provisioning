@@ -2,7 +2,7 @@ dir="/var/www/lara"
 cd $dir
 
 # access rights
-chown -R $dir/apache $dir/storage/ $dir/bootstrap/cache/
+chown -R apache $dir/apache $dir/storage/ $dir/bootstrap/cache/
 
 
 # adapt .env file
