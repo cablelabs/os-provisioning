@@ -1,7 +1,6 @@
-dir="/var/www/lara"
-
-cd $dir
-composer update
+#dir="/var/www/lara"
+#cd $dir
+#composer update
 
 # access rights
 chown -R apache storage/ bootstrap/cache/
