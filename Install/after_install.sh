@@ -1,9 +1,8 @@
-#dir="/var/www/lara"
-#cd $dir
-#composer update
+dir="/var/www/lara"
+cd $dir
 
 # access rights
-chown -R apache storage/ bootstrap/cache/
+chown -R $dir/apache $dir/storage/ $dir/bootstrap/cache/
 
 
 # adapt .env file
