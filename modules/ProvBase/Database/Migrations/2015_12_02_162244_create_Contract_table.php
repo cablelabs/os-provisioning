@@ -25,9 +25,6 @@ class CreateContractTable extends BaseMigration {
 			$table->string('customer_external_id', 60)->nullable()->default(NULL);
 			$table->string('contract_number', 60);
 			$table->string('contract_external_id', 60)->nullable()->default(NULL);
-			$table->dateTime('contract_ext_creation_date')->nullable()->default(NULL);
-			$table->dateTime('contract_ext_termination_date')->nullable()->default(NULL);
-			$table->string('contract_ext_order_id')->default(NULL);
 			$table->string('number2', 32);
 			$table->string('company');
 			$table->enum('salutation', ['Herrn', 'Frau', 'Firma', 'Behörde']);
@@ -47,6 +44,8 @@ class CreateContractTable extends BaseMigration {
 			$table->date('birthday');
 			$table->date('contract_start')->nullable()->default(NULL);
 			$table->date('contract_end')->nullable()->default(NULL);
+			$table->date('voip_contract_start')->nullable()->default(NULL);
+			$table->date('voip_contract_end')->nullable()->default(NULL);
 			$table->boolean('internet_access');
 			$table->boolean('phonebook_entry');
 			$table->integer('qos_id')->unsigned();
@@ -59,7 +58,7 @@ class CreateContractTable extends BaseMigration {
 			$table->string('sepa_institute');
 			$table->boolean('create_invoice');
 			$table->string('login', 32);
-			$table->string('password', 32);
+			$table->string('password', 64);
 			$table->integer('net');
 			$table->integer('cluster');
 			$table->text('description');

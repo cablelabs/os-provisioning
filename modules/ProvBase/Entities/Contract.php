@@ -10,10 +10,56 @@ class Contract extends \BaseModel {
 	public $table = 'contract';
 
 	// Don't forget to fill this array
-	protected $fillable = [ 'customer_number', 'contract_number', 'number', 'number2', 'firstname', 'lastname', 'salutation', 'company', 'street', 'house_number', 'city', 'zip', 
-        'country_id', 'x', 'y', 'phone', 'fax', 'email', 'birthday', 'contract_start', 'contract_end', 'internet_access', 'qos_id', 
-        'next_qos_id', 'voip_id', 'next_voip_id', 'sepa_iban', 'sepa_bic' , 'sepa_holder', 'sepa_institute', 'create_invoice', 
-        'login', 'password', 'description' ];
+	protected $fillable = [
+
+		// basic data
+		'number',
+		'customer_number',
+		'contract_number',
+		'number2',
+		'company',
+		'salutation',
+		'academic_degree',
+		'firstname',
+		'lastname',
+		'street',
+		'house_number',
+		'city',
+		'zip',
+		'country_id',
+		'x',
+		'y',
+		'phone',
+		'fax',
+		'email',
+		'birthday',
+
+		// for provisoning
+		'internet_access',
+		'contract_start',
+		'contract_end',
+		'qos_id',
+		'next_qos_id',
+
+		// for voip
+		'voip_contract_start',
+		'voip_contract_end',
+		'phonebook_entry',
+		'voip_id',
+		'next_voip_id',
+
+		// for billing
+		'sepa_iban',
+		'sepa_bic',
+		'sepa_holder',
+		'sepa_institute',
+		'create_invoice',
+
+		'login',
+		'password',
+
+		'description',
+	];
 
 
 	// Add your validation rules here
@@ -32,12 +78,14 @@ class Contract extends \BaseModel {
             'birthday' => 'required|date',
             'contract_start' => 'date',
             'contract_end' => 'date', // |after:now -> implies we can not change stuff in an out-dated contract
+            'voip_contract_start' => 'date',
+            'voip_contract_end' => 'date',
             'sepa_iban' => 'iban',
             'sepa_bic' => 'bic',
         );
     }
-    
-    
+
+
     // Name of View
     public static function get_view_header()
     {
@@ -48,7 +96,7 @@ class Contract extends \BaseModel {
     public function get_view_link_title()
     {
         return $this->id.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city;
-    }	
+    }
 
 
     // Relations
@@ -56,6 +104,20 @@ class Contract extends \BaseModel {
     {
         return $this->hasMany('Modules\ProvBase\Entities\Modem');
     }
+
+	/**
+	 * Get relation to external orders.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function external_orders() {
+
+		if ($this->module_is_active('provvoipenvia')) {
+			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder');
+		}
+
+		return null;
+	}
 
     // View Relation.
     public function view_has_many()

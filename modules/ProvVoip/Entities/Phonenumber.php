@@ -109,4 +109,17 @@ class Phonenumber extends \BaseModel {
 		return $this->hasOne('Modules\ProvVoip\Entities\PhonenumberManagement');
 	}
 
+	/**
+	 * Get relation to external orders.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function external_orders() {
+
+		if ($this->module_is_active('provvoipenvia')) {
+			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder');
+		}
+
+		return null;
+	}
 }

@@ -38,10 +38,6 @@ class PhonenumberManagement extends \BaseModel {
 					'subscriber_country_id'
 				];
 
-	/* public function __construct() { */
-	/* 	parent::__construct(); */
-	/* } */
-
 
 	// Name of View
 	public static function get_view_header()

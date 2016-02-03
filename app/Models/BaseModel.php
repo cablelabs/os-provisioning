@@ -10,6 +10,31 @@ class BaseModel extends Eloquent
 {
 	use SoftDeletes;
 
+	public $voip_enabled;
+	public $billing_enabled;
+
+
+	/**
+	 * Constructor.
+	 * Used to set some helper variables.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @param $attributes pass through to Eloquent contstructor.
+	 */
+	public function __construct($attributes = array()) {
+
+		// call Eloquent constructor
+		// $attributes are needed! (or e.g. seeding and creating will not work)
+		parent::__construct($attributes);
+
+		// set helper variables
+		$this->voip_enabled = $this->voip_enabled();
+		$this->billing_enabled = $this->billing_enabled();
+
+	}
+
+
 	/**
 	 * check if module exists
 	 *
@@ -70,6 +95,54 @@ class BaseModel extends Eloquent
 	}
 
 
+	/**
+	 * Check if VoIP is enabled.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return true if one of the VoIP modules is enabled (currently only ProvVoipEnvia), else false
+	 */
+	public function voip_enabled() {
+
+		$voip_modules = array(
+			'ProvVoipEnvia',
+		);
+
+		foreach ($voip_modules as $module) {
+			if ($this->module_is_active($module)) {
+				return True;
+			}
+		}
+
+		return False;
+	}
+
+
+	/**
+	 * Check if billing is enabled.
+	 *
+	 * TODO currently this is a dummy (= we don't have a billing module yet!!)
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return true if one of the billing modules is enabled, else false
+	 */
+	public function billing_enabled() {
+
+		// TODO: delete next line to activate this method!!
+		return True;
+
+		$billing_modules = array(
+		);
+
+		foreach ($billing_modules as $module) {
+			if ($this->module_is_active($module)) {
+				return True;
+			}
+		}
+
+		return False;
+	}
 	/**
 	 *	This returns an array with all possible enum values.
 	 *	Use this instead of hardcoding it e.g. in your view (where it has to be

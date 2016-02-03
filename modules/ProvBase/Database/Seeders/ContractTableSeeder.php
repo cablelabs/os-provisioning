@@ -15,17 +15,17 @@ class ContractTableSeeder extends \BaseSeeder {
 
 		foreach(range(1, $this->max_seed) as $index)
 		{
-			$start_contract = $faker->dateTimeBetween('-10 years', 'now');
+			$start_contract = $faker->dateTimeBetween('-10 years', '+1 year');
 
 			Contract::create([
 				'customer_number' => 'cust_'.$index,
 				'contract_number' => 'contr_'.$index,
 				'number2' => 'Cu/2015/Q4/-'.$index-1,
-				'firstname' => $faker->firstName,
-				'lastname' => $faker->lastName,
+				'company' => (rand(0,10) > 7 ? $faker->company: ''),
 				'salutation' => rand(1, 4),
 				'academic_degree' => rand(1, 3),
-				'company' => (rand(0,10) > 7 ? $faker->company: ''),
+				'firstname' => $faker->firstName,
+				'lastname' => $faker->lastName,
 				'street' => $faker->streetName,
 				'house_number' => rand(1, 128),
 				'city' => $faker->city,
@@ -37,9 +37,9 @@ class ContractTableSeeder extends \BaseSeeder {
 				'fax' => (rand(0,10) > 7 ? $faker->phoneNumber : ''),
 				'email' => $faker->email,
 				'birthday' => $faker->dateTimeBetween('-100 years', '-18 years'),
-				'contract_start' => $start_contract,
-				'contract_end' => (rand(0,10) > 8 ? $faker->dateTimeBetween($start_contract, '+1 year') : 0),
 				'internet_access' => $faker->boolean(85),
+				'contract_start' => $start_contract,
+				'contract_end' => (rand(0,10) > 8 ? $faker->dateTimeBetween($start_contract, '+1 year') : NULL),
 				'phonebook_entry' => $faker->boolean(50),
 				'qos_id' => rand(0, $this->max_seed_l2),
 				'next_qos_id' => (rand(0,10) > 8 ? rand(0, $this->max_seed_l2) : 0),
