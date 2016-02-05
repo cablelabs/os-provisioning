@@ -42,7 +42,7 @@ done
 # Encode all Modules
 psw_count=1
 for dir in "${modules[@]}"; do
-        echo $cmd -56 $opt --with-license /etc/nms/license/$dir.txt --passphrase ${psws[$psw_count]} $sour/modules/$dir/ -o $dest/modules/$dir
+        echo $cmd -56 $opt --with-license /etc/nms/license/$dir.txt --passphrase ${psws[$psw_count]} --copy Resources/ $sour/modules/$dir/ -o $dest/modules/$dir
         psw_count=$[$psw_count+1]
 done
 
