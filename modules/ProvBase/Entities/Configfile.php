@@ -88,7 +88,8 @@ class Configfile extends \BaseModel {
     public function search_children($build = 0)
 	{
 		$id = $this->id;
-		$cf_tree = $children = Configfile::all()->where('parent_id', $id)->all();
+		$children = Configfile::all()->where('parent_id', $id)->all();
+		$cf_tree = [];
 
 		foreach ($children as $cf)
 		{
@@ -98,7 +99,10 @@ class Configfile extends \BaseModel {
 				$cf->search_children(1);
 			}
 			else
+			{
+				array_push($cf_tree, $cf);
 				array_push($cf_tree, $cf->search_children());
+			}
 		}
 
 		return $cf_tree;
