@@ -2,7 +2,7 @@ dir="/var/www/lara"
 cd $dir
 
 # access rights
-chown -R apache $dir/apache $dir/storage/ $dir/bootstrap/cache/
+chown -R apache $dir/storage/ $dir/bootstrap/cache/
 
 
 # adapt .env file
@@ -25,7 +25,7 @@ MAIL_HOST=mailtrap.io
 MAIL_PORT=2525
 MAIL_USERNAME=null
 MAIL_PASSWORD=null
-" > $dir/.env
+" > $dir/.env.demo
 
 # key
 php artisan key:generate

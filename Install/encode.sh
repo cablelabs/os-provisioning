@@ -12,7 +12,9 @@ cmd="ioncube_encoder.sh"
 
 
 # Base Package Encode Directories 
-directorys=( app database resources )
+# NOTE: encoding  views does not work, this leads to no interpretation of blade syntax
+#       blade is not properly decoded in to HTML, it simply prints {{ .. }} to HTML
+directorys=( app database )
 
 # List all Modules
 modules=(`ls $sour/modules`)
