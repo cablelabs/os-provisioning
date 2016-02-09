@@ -33,9 +33,14 @@ class AuthController extends BaseController {
 		if (!Auth::user())
 			return Redirect('auth/login');
 
-		// Redirect to
-		// TODO: Redirect depends on Module
-		return Redirect::to('Modem');
+		// If ProvBase is not installed redirect to Config Page
+		$bm = new \BaseModel;
+		if (!$bm->module_is_active ('ProvBase'))
+			return Redirect::to('Config');
+
+		// Redirect to Default Page
+		// TODO: Redirect to a global overview page
+		return Redirect::to('Contract');
 	}
 
 
