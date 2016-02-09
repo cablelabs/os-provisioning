@@ -1,0 +1,1 @@
+* * * * * root	php /var/www/lara/artisan schedule:run >> /dev/null 2>&1

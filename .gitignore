@@ -3,10 +3,9 @@
 /config
 composer.phar
 composer.lock
-.env.*.php
-.env.php
-/node_modules
+.env.*
 .env
+/node_modules
 .DS_Store
 *.sublime*
 *.fuse_hidden*

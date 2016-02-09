@@ -5,7 +5,8 @@ cd $dir
 chown -R apache $dir/storage/ $dir/bootstrap/cache/
 
 
-# adapt .env file
+# generate .env.demo file
+# NOTE: This is required because gitignore will ignore .env.demo file
 echo "
 APP_ENV=local
 APP_DEBUG=true
@@ -26,6 +27,3 @@ MAIL_PORT=2525
 MAIL_USERNAME=null
 MAIL_PASSWORD=null
 " > $dir/.env.demo
-
-# key
-php artisan key:generate
