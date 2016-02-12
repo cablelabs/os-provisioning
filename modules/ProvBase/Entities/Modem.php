@@ -33,7 +33,7 @@ class Modem extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
-        return $this->hostname.' - '.$this->mac;
+        return $this->hostname.' - '.$this->mac.' - '.$this->name;
     }
 
 
