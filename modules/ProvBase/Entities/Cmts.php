@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Entities;
 
 use File;
 use DB;
+use Acme\php\ArrayHelper;
 
 class Cmts extends \BaseModel {
 
@@ -59,6 +60,45 @@ class Cmts extends \BaseModel {
     		'IpPool' => $this->ippools
     	);
     }
+
+
+
+    /**
+     * Get US SNR of a registered CM
+     * 
+     * @param ip: ip address of cm
+     *
+     * @author Nino Ryschawy
+     */
+    public function get_us_snr($ip)
+    {
+		// find oid of corresponding modem on cmts and get the snr
+		$conf = snmp_get_valueretrieval();
+		if ($this->community_ro != '')
+			$com = $this->community_ro;
+		else
+			$com = ProvBase::first()->ro_community;
+
+		// we need to change the value retrievel for snmprealwalk()
+		snmp_set_valueretrieval(SNMP_VALUE_OBJECT);
+		try
+		{
+			$modem_ips = snmprealwalk($this->ip, $com, '1.3.6.1.4.1.4491.2.1.20.1.3.1.5');	
+		}
+		catch(\Exception $e)
+		{
+			snmp_set_valueretrieval($conf);
+			return ['No response of CMTS'];
+		}
+		snmp_set_valueretrieval($conf);
+		foreach ($modem_ips as $oid => $value)
+		{
+			$cmts_cm_ip = long2ip('0x'.str_replace(["\"", " "], '', $value->value));
+			if ($cmts_cm_ip == $ip)
+				return ArrayHelper::ArrayDiv(snmpwalk($this->ip, $com, str_replace('.1.3.6.1.4.1.4491.2.1.20.1.3.1.5', '1.3.6.1.4.1.4491.2.1.20.1.4.1.4', $oid)));
+		}
+		return ['Could not find CMTS'];
+	}
 
 
 	/**
