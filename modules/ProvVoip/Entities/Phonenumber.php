@@ -5,6 +5,8 @@ namespace Modules\ProvVoip\Entities;
 // Model not found? execute composer dump-autoload in lara root dir
 class Phonenumber extends \BaseModel {
 
+	protected $save_button = 'Save and Restart Modem';
+
     // The associated SQL table for this Model
     public $table = 'phonenumber';
 
