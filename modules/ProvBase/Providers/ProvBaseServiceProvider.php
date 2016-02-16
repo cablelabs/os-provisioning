@@ -19,6 +19,7 @@ class ProvBaseServiceProvider extends ServiceProvider {
 		'Modules\ProvBase\Console\dhcpCommand',
 		'Modules\ProvBase\Console\configfileCommand',
 		'Modules\ProvBase\Console\contractCommand',
+		'Modules\ProvBase\Console\importCommand',
 	];
 
 
