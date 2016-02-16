@@ -481,7 +481,9 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path')));
+		$save_button = 'Save';
+
+		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'save_button')));
 	}
 
 
@@ -587,7 +589,6 @@ class BaseController extends Controller {
 		}
 
 		$obj = $this->get_model_obj();
-		$controller = $this->get_controller_obj();
 		//${$this->get_view_var()} = $obj->findOrFail($id);
 
 		// transfer model_name, view_header, view_var
@@ -605,7 +606,7 @@ class BaseController extends Controller {
 			$form_path = $this->get_view_name().'.form';
 
 		$config_routes = $this->get_config_modules();
-		$save_button = $controller->save_button;
+		$save_button = $this->save_button;
 
 		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button')));
 	}
