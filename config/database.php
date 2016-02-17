@@ -80,13 +80,14 @@ return [
 			'strict'    => false,
 		],
 
-		'pgsql' => [
+		'pgsql-km3' => [
 			'driver'   => 'pgsql',
-			'host'     => env('DB_HOST', 'localhost'),
-			'database' => env('DB_DATABASE', 'forge'),
-			'username' => env('DB_USERNAME', 'forge'),
-			'password' => env('DB_PASSWORD', ''),
+			'host'     => env('DB_IMPORT_HOST', 'localhost'),
+			'database' => env('DB_IMPORT_DATABASE', 'db_nms'),
+			'username' => env('DB_IMPORT_USERNAME', 'schmto'),
+			'password' => env('DB_IMPORT_PASSWORD', ''),
 			'charset'  => 'utf8',
+			'collation' => 'utf8_unicode_ci',
 			'prefix'   => '',
 			'schema'   => 'public',
 		],

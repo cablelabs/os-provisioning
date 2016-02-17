@@ -49,6 +49,7 @@ class CreateModemTable extends BaseMigration {
 			$table->integer('qos_id')->unsigned();
 			$table->float('x');
 			$table->float('y');
+			$table->string('number', 32);	// placeholder: used for km3 import
 		
 		});
 
