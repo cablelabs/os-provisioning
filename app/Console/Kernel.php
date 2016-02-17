@@ -33,8 +33,9 @@ class Kernel extends ConsoleKernel {
 		/* $schedule->command('main:time_delta') */
 		/* 		->everyMinute(); */
 
+
+		// Update database table carriercode with csv data if necessary
 		$schedule->command('provvoip:update_carrier_code_database')
-				/* ->everyMinute(); */
 				->dailyAt('03:24');
 	}
 
