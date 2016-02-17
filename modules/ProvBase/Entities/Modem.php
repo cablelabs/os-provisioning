@@ -19,7 +19,7 @@ class Modem extends \BaseModel {
     public static function rules($id = null)
     {
         return array(
-            'mac' => 'required|mac|unique:modem,mac,'.$id
+            'mac' => 'required|mac|unique:modem,mac,'.$id.',id,deleted_at,NULL'
         );
     }
 
@@ -33,7 +33,7 @@ class Modem extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
-        return $this->hostname.' - '.$this->mac;
+        return $this->hostname.' - '.$this->mac.' - '.$this->name;
     }
 
 
@@ -213,8 +213,9 @@ class Modem extends \BaseModel {
         $host  = $modem->hostname;
 
         /* Configfile */
-        $dir     = '/tftpboot/cm/';
-        $cf_file = $dir."cm-$id.conf";
+        $dir        = '/tftpboot/cm/';
+        $cf_file    = $dir."cm-$id.conf";
+        $cfg_file   = $dir."cm-$id.cfg";
 
         $cf = $modem->configfile;
 
@@ -228,13 +229,22 @@ class Modem extends \BaseModel {
         if ($ret === false)
                 die("Error writing to file");
 
-        Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg");
-        exec("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-$id.cfg >/dev/null 2>&1 &", $out, $ret);
+        Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file");
+        // if (file_exists($cfg_file))
+        //     unlink($cfg_file);
+
+        // "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
+        exec("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file >/dev/null 2>&1 &", $out);
 
         // change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
         system('/bin/chown -R apache /tftpboot/cm');
 
-        return ($ret == 0 ? true : false);
+        // docsis tool always returns 0 -> so we need to proof if that way (only when docsis isnt started in background)
+        // if (file_exists($cfg_file))
+        //     return true;
+        // return false;
+        
+        return true;
     }
 
     /**
@@ -293,7 +303,7 @@ class Modem extends \BaseModel {
                 if (\Request::method() == 'PUT') 
                 {
                     // redirect back with corresponding message over flash, needs to be saved as it's normally only saved when the session middleware terminates successfully
-                    $resp = \Redirect::back()->with('message', 'Could not restart Modem! (not online? - error in configfile?)'); 
+                    $resp = \Redirect::back()->with('message', 'Could not restart Modem! (offline/configfile error?)'); 
                     \Session::driver()->save();         // \ is like writing "use Session;" before class statement
                     $resp->send();
 

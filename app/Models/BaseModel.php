@@ -438,13 +438,17 @@ class BaseModel extends Eloquent
 	 *        - this requires straight forward names of tables an
 	 *          forgein key, like modem and modem_id.
 	 *
+	 *  NOTE: we define exceptions in an array where recursive deletion is disabled
+	 *
 	 *	@author Torsten Schmidt
 	 *
-	 *	@return array off all children objects
+	 *	@return array of all children objects
 	 */
 	public function get_all_children()
 	{
-		$relations = array();
+		$relations = [];
+		// exceptions
+		$exceptions = ['configfile_id'];
 
 		// Lookup all SQL Tables
 		foreach (DB::select('SHOW TABLES') as $table)
@@ -452,9 +456,11 @@ class BaseModel extends Eloquent
 			// Lookup SQL Fields for current $table
 			foreach (Schema::getColumnListing($table->Tables_in_db_lara) as $column)
 			{
-				// check if $coloumn is actual table name object added by '_id'
+				// check if $column is actual table name object added by '_id'
 				if ($column == $this->table.'_id')
 				{
+					if (in_array($column, $exceptions))
+						continue;
 					// get all objects with $column
 					foreach (DB::select('SELECT id FROM '.$table->Tables_in_db_lara.' WHERE '.$column.'='.$this->id) as $child)
 					{

@@ -3,7 +3,8 @@
 namespace Acme\Validators;
 
 use Models\Configfiles;
-
+use File;
+use Log;
 
 /*
  * Our own ExtendedValidator Class
@@ -118,8 +119,13 @@ class ExtendedValidator
 	 */
 	public function validateDocsis ($attribute, $value, $parameters)
 	{
+		// dd($attribute, $value, $parameters);
+
 		/* Configfile */
-        $dir     = '/tftpboot/cm/';
+        $device	 = $parameters[0];
+        if ($device == null)
+        	return false;
+        $dir     = "/tftpboot/$device";
         $cf_file = $dir."dummy-validator.conf";
 
 		/*
@@ -130,7 +136,7 @@ class ExtendedValidator
 		foreach ($rows as $row)
 		{
 			if (preg_match("/(string)/i", $row))
-				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", '"text"', $row);
+				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", 'text', $row);
 			elseif (preg_match("/(ipaddress)/i", $row))
 				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", '1.1.1.1', $row);
 			else
@@ -142,28 +148,45 @@ class ExtendedValidator
 		 */
         $text = "Main\n{\n\t".$s."\n}";
         $ret  = File::put($cf_file, $text);
-        
+
         if ($ret === false)
                 die("Error writing to file");
-         
-        Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-dummy-validator.cfg");   
-        exec("rm -f $dir/dummy-validator.cfg && /usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg 2>&1", $outs, $ret);
+
+        if ($device == 'cm')
+        {
+	        Log::info("Validation: /usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg");   
+	        exec("rm -f $dir/dummy-validator.cfg && /usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg 2>&1", $outs);
+        }
+        elseif ($device == 'mta')
+        {
+	        Log::info("Validation: /usr/local/bin/docsis -p $cf_file $dir/dummy-validator.cfg");   
+	        exec("rm -f $dir/dummy-validator.cfg && /usr/local/bin/docsis -p $cf_file $dir/dummy-validator.cfg 2>&1", $outs, $ret);	//return value is always 0
+		}
 
         /*
-         * Parse Errors
+         * Parse Errors - only one error is shown - subtract 3 from line nr
          */
-        $report = '';
-        foreach ($outs as $out)
-        	$report .= "\n$out";
+        $report = $outs[0];
+        preg_match('/[0-9]+$/', $report, $i);
+        if (isset($i[0]))
+        	$report = preg_replace('/[0-9]+$/', $i[0] - 3, $report);
+        // foreach ($outs as $out)
+        // {
+        // 	$report .= "\n$out";
+        // }
 
         if (!file_exists("$dir/dummy-validator.cfg"))
         {
-        	$this->setCustomMessages(array('docsis' => $report));
+        	// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
+        	// when laravel calls the actual validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
+        	$validator = \func_get_arg(3);
+        	$validator->setCustomMessages(array('docsis' => $report));
         	return false;
         }
         
 		return true;
 	}
+
 }
 
 

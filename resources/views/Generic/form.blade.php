@@ -72,4 +72,4 @@
 
 	@endforeach
 
-	{{ Form::submit('Save') }}
+	{{ Form::submit($save_button) }}

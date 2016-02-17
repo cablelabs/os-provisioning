@@ -56,6 +56,31 @@ class ProvBase extends \BaseModel {
 		$data .= 'max-lease-time '.$this->dhcp_max_lease_time.";\n";
 		$data .= 'next-server '.$this->provisioning_server.";\n";
 		$data .= 'option log-servers '.$this->provisioning_server.";\n";
+		$data .= 'option time-servers '.$this->provisioning_server.";\n";
+
+		$data .= "\n# zone\nzone ".$this->domain_name." {\n\tprimary ".$this->provisioning_server.";\n\tkey dhcpupdate;\n}\n";
+
+		// provisioning server hostname encoding for dhcp
+		$arr = explode('.', system('hostname'));
+		$hostname = '';
+		foreach ($arr as $value)
+		{
+			$nr = strlen($value);
+			if ($nr < 10)
+				$hostname .= "\\00$nr";
+			else if ($nr < 100)
+				$hostname .= "\\0$nr";
+			else
+				$hostname .= "\\$nr";
+			$hostname .= $value;
+		}
+		$hostname .= '\\000';
+
+		$data .= "\n# CLASS Specs for CM, MTA, CPE\n";
+		$data .= 'class "CM" {'."\n\t".'match if (substring(option vendor-class-identifier,0,6) = "docsis");'."\n\toption ccc.dhcp-server-1 ".$this->provisioning_server.";\n}\n\n";
+		$data .= 'class "MTA" {'."\n\t".'match if (substring(option vendor-class-identifier,0,4) = "pktc");'."\n\t".'option ccc.provision-server 0 "'.$hostname.'"; # number of letters before every through dot seperated word'."\n\t".'option ccc.realm 05:42:41:53:49:43:01:31:00;  # BASIC.1'."\n}\n\n";
+		$data .= 'class "Client" {'."\n\t".'match if ((substring(option vendor-class-identifier,0,6) != "docsis") and (substring(option vendor-class-identifier,0,4) != "pktc"));'."\n\t".'spawn with option agent.remote-id; # create a sub-class automatically'."\n\t".'lease limit 4; # max 4 private cpe per cm'."\n}\n\n";
+		$data .= 'class "Client-Public" {'."\n\t".'match if ((substring(option vendor-class-identifier,0,6) != "docsis") and (substring(option vendor-class-identifier,0,4) != "pktc"));'."\n\t".'match pick-first-value (option agent.remote-id);'."\n\t".'lease limit 4; # max 4 public cpe per cm'."\n}\n\n";
 
 		File::put($file_dhcp_conf, $data);
     }
