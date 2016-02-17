@@ -21,10 +21,8 @@ class Configfile extends \BaseModel {
 	public static function rules($id = null)
     {
         return array(
-            'name' => 'required|unique:configfiles,name,'.$id,
-			// TODO: adapt docsis validator for mta files
-            'name' => 'required|unique:configfile,name,'.$id,
-            // 'text' => 'docsis'
+            'name' => 'required|unique:configfile,name,'.$id.',id,deleted_at,NULL',
+            'text' => "docsis",
         );
     }
 
@@ -82,17 +80,29 @@ class Configfile extends \BaseModel {
 
 
     /**
-	 * Searches children of a parent configfile and returns them by pushing them to an array
-	 * used for recursive building of the configfiles tree structure
+	 * Searches children of a parent configfile recursivly to build the whole tree structure of all confifgfiles
+	 *
+	 * @author Nino Ryschawy
+	 * @param boolean variable - if 1 all modems and mtas that belong to the configfile (and their children) are built
      */
-    public function search_children()
+    public function search_children($build = 0)
 	{
 		$id = $this->id;
-		$cf_tree = $children = Configfile::all()->where('parent_id', $id)->all();
+		$children = Configfile::all()->where('parent_id', $id)->all();
+		$cf_tree = [];
 
-		foreach ($children as $key => $cf)
+		foreach ($children as $cf)
 		{
-			array_push($cf_tree, $cf->search_children());
+			if ($build)
+			{
+				$cf->build_corresponding_configfiles();
+				$cf->search_children(1);
+			}
+			else
+			{
+				array_push($cf_tree, $cf);
+				array_push($cf_tree, $cf->search_children());
+			}
 		}
 
 		return $cf_tree;
@@ -129,6 +139,11 @@ class Configfile extends \BaseModel {
 	public function modem ()
 	{
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
+	}
+
+	public function mtas ()
+	{
+		return $this->hasMany('Modules\ProvVoip\Entities\Mta');
 	}
 
 	public function get_parent ()
@@ -364,42 +379,13 @@ class Configfile extends \BaseModel {
 	*/
 	public function build_corresponding_configfiles()
 	{
-		// configfile itself
 		$modems = $this->modem;
-
 		foreach ($modems as $modem)
-		{
 			$modem->make_configfile();
-			$mtas = $modem->mtas;		// This should be a one-to-one relation
-			foreach ($mtas as $mta)
-			{
-				$mta->make_configfile();
-			}
-		}
 
-		// children (the whole tree structure)
-		$id = $this->id;
-		do
-		{
-			// search for all configfiles that have this configfile as parent
-			$children = Configfile::all()->where('parent_id', $id);
-
-			foreach ($children as $child)
-			{
-				$modems = $child->modem;
-				$id = $child->id;
-
-				foreach ($modems as $modem)
-				{
-					$modem->make_configfile();
-					$mtas = $modem->mtas;		// This should be a one-to-one relation
-					foreach ($mtas as $mta)
-					{
-						$mta->make_configfile();
-					}
-				}
-			}
-		} while ($children->all());	
+		$mtas = $this->mtas;		// This should be a one-to-one relation
+		foreach ($mtas as $mta)
+			$mta->make_configfile();
 	}
 
 }
@@ -417,15 +403,19 @@ class ConfigfileObserver
     public function created($configfile)
     {
 		$configfile->build_corresponding_configfiles();
+		// with parameter one the children are built
+		$configfile->search_children(1);
     }
 
     public function updated($configfile)
     {
 		$configfile->build_corresponding_configfiles();
+		$configfile->search_children(1);
     }
 
     public function deleted($configfile)
     {
 		$configfile->build_corresponding_configfiles();
+		$configfile->search_children(1);
     }
 }

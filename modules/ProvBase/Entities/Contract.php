@@ -14,8 +14,8 @@ class Contract extends \BaseModel {
     public static function rules($id = null)
     {
         return array(
-            'number' => 'integer|unique:contract,number,'.$id,
-            'number2' => 'string|unique:contract,number2,'.$id,
+            'number' => 'integer|unique:contract,number,'.$id.',id,deleted_at,NULL',
+            'number2' => 'string|unique:contract,number2,'.$id.',id,deleted_at,NULL',
             'firstname' => 'required',
             'lastname' => 'required',
             'street' => 'required',

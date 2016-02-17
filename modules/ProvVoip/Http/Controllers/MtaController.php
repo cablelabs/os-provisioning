@@ -11,6 +11,7 @@ class MtaController extends \BaseModuleController {
 
 
 	protected $index_create_allowed = false;
+	protected $save_button = 'Save and Restart Modem';
 
     /**
      * defines the formular fields for the edit and create view

@@ -114,11 +114,9 @@ class Mta extends \BaseModel {
 		// dir; filenames
 		$dir = '/tftpboot/mta/';
 		$conf_file     = $dir."mta-$id.conf";
-		$conf_file_pre = $conf_file.'_prehash';
 		$cfg_file      = $dir."mta-$id.cfg";
-		$cfg_file_pre  = $cfg_file.'_prehash';
 
-		// load configfile for modem
+		// load configfile for mta
 		$cf = $mta->configfile;
 
 		if (!$cf)
@@ -127,49 +125,29 @@ class Mta extends \BaseModel {
 			goto _failed;
 		}
 
-
 		/*
-		 * Write and Build configfile (without HASH)
+		 * Write and Build configfile
+		 * NOTE: We use docsis tool version 0.9.9 here where HASH building/adding is already implemented
+		 * For Versions lower than 0.9.8 we have to build it twice and use european OID
+		 * for pktcMtaDevProvConfigHash.0 from excentis packet cable mta mib
 		 */
-		// Write clear text config file to mta/mta-xyz.conf_prehash
-		$text = "Main\n{\n\tMtaConfigDelimiter 1;\n\t".$cf->text_make($mta, "mta")."\n\tMtaConfigDelimiter 255;\n}";
-		if (!File::put($conf_file_pre, $text))
+		$text = "Main\n{\n\tMtaConfigDelimiter 1;".$cf->text_make($mta, "mta")."\n\tMtaConfigDelimiter 255;\n}";
+		if (!File::put($conf_file, $text))
 		{
 			Log::info('Error writing to file '.$conf_file_pre);
 			goto _failed;
 		}
 
-		// Build mta/mta-xyz.cfg_prehash without HASH
-		// TODO/Note: HASH Calculation must wait until this step is finished, so threating is not this easy
-		Log::info("/usr/local/bin/docsis -p $conf_file_pre $cfg_file_pre");
-		exec     ("/usr/local/bin/docsis -p $conf_file_pre $cfg_file_pre >/dev/null 2>&1", $out);
-		if (!file_exists($cfg_file_pre))
-		{
-			Log::info('Error failed to build '.$cfg_file_pre);
-			goto _failed;
-		}
-
-
-		/*
-		 * HASH MTA Cfg
-		 */
-		// Build mta/mta-xyz.conf with HASH
-		$hash = sha1_file ($cfg_file_pre);
-		$text = str_replace ('MtaConfigDelimiter 255;', 'MtaConfigDelimiter 255;'."\n\t".'SnmpMibObject pktcMtaDevProvConfigHash.0 HexString 0x'.$hash.';', $text);
-		if (!File::put($conf_file, $text))
-		{
-			Log::info('Error failed write '.$conf_file);
-			goto _failed;
-		}
-
-		// Build mta/mta-xyz.conf with HASH
-		Log::info("/usr/local/bin/docsis -p $conf_file $cfg_file");
-		exec     ("/usr/local/bin/docsis -p $conf_file $cfg_file >/dev/null 2>&1 &", $out);
-		if (!file_exists($cfg_file))
-		{
-			Log::info('Error failed to build '.$cfg_file);
-			goto _failed;
-		}
+		Log::info("/usr/local/bin/docsis -eu -p $conf_file $cfg_file");
+		// "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
+		exec     ("/usr/local/bin/docsis -eu -p $conf_file $cfg_file >/dev/null 2>&1 &", $out);
+		
+		// this only is valid when we dont execute docsis in background
+		// if (!file_exists($cfg_file))
+		// {
+		// 	Log::info('Error failed to build '.$cfg_file);
+		// 	goto _failed;
+		// }
 
 
 		// change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
@@ -179,7 +157,6 @@ class Mta extends \BaseModel {
 _failed:
 		// change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
 		system('/bin/chown -R apache /tftpboot/mta');
-
 		return false;
 	}
 
@@ -294,13 +271,14 @@ class MtaObserver
 	public function updated($mta)
 	{
         $mta->make_dhcp_mta_all();
-        $mta->make_configfile();
+		$mta->make_configfile();
+		$mta->modem->restart_modem();
 	}
 
 	public function deleted($mta)
 	{
         $mta->make_dhcp_mta_all();
 		$mta->delete_configfile();
-
+		$mta->modem->restart_modem();
 	}
 }

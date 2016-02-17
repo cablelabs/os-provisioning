@@ -22,7 +22,7 @@ use App\Exceptions\AuthExceptions;
 class BaseController extends Controller {
 
 	protected $output_format;
-
+	protected $save_button = 'Save';
 	protected $index_create_allowed = true;
 
 	protected $permissions = null;
@@ -481,7 +481,9 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path')));
+		$save_button = 'Save';
+
+		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'save_button')));
 	}
 
 
@@ -604,8 +606,9 @@ class BaseController extends Controller {
 			$form_path = $this->get_view_name().'.form';
 
 		$config_routes = $this->get_config_modules();
+		$save_button = $this->save_button;
 
-		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes')));
+		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button')));
 	}
 
 
