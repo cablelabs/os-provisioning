@@ -25,12 +25,20 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	 */
 	protected $description = 'Update the database carrier code using the csv file $csv_file';
 
-
-	// the path were the csv file
+	/**
+	 * The path were the csv file is stored.
+	 *
+	 * @var string
+	 */
 	protected $csv_file = '/etc/nms/provvoip/carrier_codes.csv';
 
-	// where to store the hash file for csv comparation
-	// this path is later used by \Storage::…
+	/**
+	 * Path to hash file for csv comparation.
+	 * this path is later used by \Storage::…
+	 * if relative: this is stored in …/lara/storage/app
+	 *
+	 * @var string
+	 */
 	protected $hash_file = 'modules/ProvVoip/carrier_codes__sha1sum';
 
 
@@ -48,7 +56,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	/**
 	 * Execute the console command.
 	 *
-	 * @return mixed
+	 * @return null
 	 */
 	public function fire()
 	{

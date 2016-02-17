@@ -24,6 +24,8 @@ class CreateCarrierCodeTable extends BaseMigration {
 			$table->string('company');
 		});
 
+		DB::update("INSERT INTO ".$this->tablename." (carrier_code, company) VALUES('0', '-');");
+
 		return parent::up();
 	}
 
