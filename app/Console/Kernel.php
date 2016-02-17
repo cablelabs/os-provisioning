@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected $commands = [
 		'App\Console\Commands\Inspire',
+		'App\Console\Commands\TimeDeltaChecker',
 		'\Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand',
 	];
 
@@ -27,9 +28,14 @@ class Kernel extends ConsoleKernel {
 		$schedule->command('inspire')
 				 ->hourly();
 
+		// comment the following in to see the time shifting behaviour of the scheduler;
+		// watch App\Console\Commands\TimeDeltaChecker for more informations
+		/* $schedule->command('main:time_delta') */
+		/* 		->everyMinute(); */
+
 		$schedule->command('provvoip:update_carrier_code_database')
-				->everyMinute();
-				/* ->dailyAt('03:24'); */
+				/* ->everyMinute(); */
+				->dailyAt('03:24');
 	}
 
 }
