@@ -30,8 +30,8 @@ class Contract extends \BaseModel {
 			'sepa_bic' => 'bic',
 			);
 	}
-	
-	
+
+
 	// Name of View
 	public static function get_view_header()
 	{
@@ -42,7 +42,7 @@ class Contract extends \BaseModel {
 	public function get_view_link_title()
 	{
 		return $this->id.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city;
-	}   
+	}
 
 
 	// Relations
@@ -101,7 +101,7 @@ class Contract extends \BaseModel {
 
 
 	/*
-	 * The Daily Scheduling Function 
+	 * The Daily Scheduling Function
 	 *
 	 * Tasks:
 	 *  1. Check if $this contract end date is expired -> disable network_access
@@ -143,7 +143,7 @@ class Contract extends \BaseModel {
 
 
 	/*
-	 * The Monthly Scheduling Function 
+	 * The Monthly Scheduling Function
 	 *
 	 * Tasks:
 	 *  1. monthly QOS transition / change
@@ -191,7 +191,7 @@ class Contract extends \BaseModel {
 		// TODO: Speed-up: Could this be done with a single eloquent update statement ?
 		//       Note: This requires to use the Eloquent Context to run all Observers
 		//       an to rebuild and restart the involved modems
-		foreach ($this->modems as $modem) 
+		foreach ($this->modems as $modem)
 		{
 			$modem->network_access = $this->network_access;
 			$modem->qos_id = $this->qos_id;
