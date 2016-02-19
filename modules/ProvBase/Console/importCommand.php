@@ -56,6 +56,20 @@ class importCommand extends Command {
 	 */
 	public function fire()
 	{
+		// Pre - Testing
+		if (!Qos::first())
+		{
+			$this->error('no QOS entry exists to use');
+			return;
+		}
+
+		if (!Configfile::first())
+		{
+			$this->error('no configfile entry exists to use');
+			return;
+		}
+
+
 		$km3 = \DB::connection('pgsql-km3');
 
 		/*
@@ -111,7 +125,7 @@ class importCommand extends Command {
 			$c->contract_start = $contract->angeschlossen;
 			$c->contract_end   = $contract->abgeklemmt;
 			
-			$c->qos_id      = $this->option('qos');
+			$c->qos_id      = ($this->option('qos') == 0 ? Qos::first()->id : $this->option('qos'));
 			$c->next_qos_id = 0;
 
 			$c->voip_id      = 0; // TODO: translation table required for larger imports
@@ -189,9 +203,10 @@ class importCommand extends Command {
 				$m->street    = $c->street;
 				$m->zip       = $c->zip;
 				$m->city      = $c->city;
+				$m->qos_id    = $c->qos_id;
 
 				$m->contract_id   = $c->id;
-				$m->configfile_id = $this->option('configfile');
+				$m->configfile_id = ($this->option('configfile') == 0 ? Configfile::first()->id : $this->option('configfile'));
 
 
 				// set fields with null input to ''. 
@@ -252,8 +267,8 @@ class importCommand extends Command {
 	protected function getOptions()
 	{
 		return array(
-			array('qos', null, InputOption::VALUE_OPTIONAL, 'QOS id for default QOS, e.g. 1', Qos::first()->id),
-			array('configfile', null, InputOption::VALUE_OPTIONAL, 'Configfile id for default Configfile, e.g. 5', Configfile::first()->id),
+			array('qos', null, InputOption::VALUE_OPTIONAL, 'QOS id for default QOS, e.g. 1', 0),
+			array('configfile', null, InputOption::VALUE_OPTIONAL, 'Configfile id for default Configfile, e.g. 5', 0),
 			array('cluster', null, InputOption::VALUE_OPTIONAL, 'Import only Contracts/Modems from cluster_id, e.g. 160', 0),
 			array('debug', null, InputOption::VALUE_OPTIONAL, '1 enables debug', 0),
 		);
