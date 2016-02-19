@@ -10,8 +10,8 @@ use Modules\ProvBase\Entities\ProvBase;
 
 class Modem extends \BaseModel {
 
-    // The associated SQL table for this Model
-    public $table = 'modem';
+	// The associated SQL table for this Model
+	public $table = 'modem';
 
 
 	// Add your validation rules here

@@ -198,6 +198,9 @@ class importCommand extends Command {
 				$m->description  = $modem->beschreibung;
 				$m->network_access = $modem->network_access;
 
+				$m->x = $modem->x;
+				$m->y = $modem->y;
+
 				$m->firstname = $c->firstname;
 				$m->lastname  = $c->lastname;
 				$m->street    = $c->street;
