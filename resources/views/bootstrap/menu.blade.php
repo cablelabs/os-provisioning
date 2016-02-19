@@ -118,7 +118,7 @@
 
           <li class="dropdown navbar-user">
             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-              <span class="hidden-xs">Main Menu</span> <b class="caret"></b>
+              <span class="hidden-xs">{{ \App\Http\Controllers\BaseController::translate('Main Menu') }}</span> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>
