@@ -5,7 +5,7 @@ namespace Modules\Provbase\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class ProvbaseTableSeeder extends Seeder {
+class ProvbaseDatabaseSeeder extends Seeder {
 
 	/**
 	 * Run the database seeds.
