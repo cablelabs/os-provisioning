@@ -78,6 +78,8 @@ return [
 	"url"                  => "The :attribute format is invalid.",
 	"timezone"             => "The :attribute must be a valid zone.",
 
+	"docsis"             => ":attribute",
+
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Language Lines

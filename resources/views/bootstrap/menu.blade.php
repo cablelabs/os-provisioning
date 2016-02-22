@@ -108,11 +108,11 @@
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>
-              <li><a href="{{route('Authuser.edit', \Auth::user()->id)}}">User Settings</a></li>
-              <li><a href="{{route('Authuser.index')}}">User Global Settings</a></li>
+              <li><a href="{{route('Authuser.edit', \Auth::user()->id)}}">{{trans('messages.user_settings')}}</a></li>
+              <li><a href="{{route('Authuser.index')}}">{{trans('messages.user_glob_settings')}}</a></li>
               <!-- <li><a href="javascript:;"><span class="badge badge-danger pull-right">2</span> Inbox</a></li> -->
               <li class="divider"></li>
-              <li><a href="{{route('Auth.logout')}}">Log Out</a></li>
+              <li><a href="{{route('Auth.logout')}}">{{trans('messages.log_out')}}</a></li>
             </ul>
           </li>
 

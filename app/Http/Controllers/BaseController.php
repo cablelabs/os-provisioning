@@ -416,15 +416,25 @@ class BaseController extends Controller {
 	// TODO: take language from user setting or the language with highest priority from browser
 	protected function get_user_lang()
 	{
-		// default
-		if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+		$user = Auth::user();
+		if (!isset($user))
 			return 'en';
+		$language = Auth::user()->language;
 
-		$languages = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+		if ($language == 'browser')
+		{
+			// default
+			if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+				return 'en';
 
-		return 'de';
+			$languages = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+			if (strpos($languages[0], 'de') !== false)
+				return 'de';
+			else 
+				return 'en';
+		}
 
-		return $languages[0];
+		return $language;
 	}
 
 
