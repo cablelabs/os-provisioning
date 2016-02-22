@@ -3,9 +3,9 @@
 namespace Acme\html;
 
 use Acme\html\FormBuilder;
-use Illuminate\Html\HtmlServiceProvider as IlluminateHtmlServiceProvider;
+use Collective\Html\HtmlServiceProvider as CollectiveHtmlServiceProvider;
 
-class HtmlServiceProvider extends IlluminateHtmlServiceProvider {
+class HtmlServiceProvider extends CollectiveHtmlServiceProvider {
 
     /**
      * Register the form builder instance.
@@ -14,9 +14,11 @@ class HtmlServiceProvider extends IlluminateHtmlServiceProvider {
      */
     protected function registerFormBuilder()
     {
-        $this->app->bindShared('form', function($app)
+        $this->app->singleton('form', function($app)
         {
-            $form = new FormBuilder($app['html'], $app['url'], $app['session.store']->getToken());
+
+            //dd($app);
+            $form = new FormBuilder($app['html'], $app['url'], $app['view'], $app['session.store']->getToken());
 
             return $form->setSessionStore($app['session.store']);
         });
