@@ -36,8 +36,7 @@ class IpPool extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
-        // return $this->net.' - '.$this->netmask;
-        return $this->html_list($this->cmts_hostnames(), 'hostname')[$this->cmts_id].'-'.$this->id;
+        return $this->type.': '.$this->net.' - '.$this->netmask.' - '.$this->html_list($this->cmts_hostnames(), 'hostname')[$this->cmts_id].'-'.$this->id;
     }
 
 
