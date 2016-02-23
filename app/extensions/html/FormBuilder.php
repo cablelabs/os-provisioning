@@ -2,11 +2,11 @@
 
 namespace Acme\html;
 
-use Illuminate\Html\FormBuilder as IlluminateFormBuilder;
+use Collective\Html\FormBuilder as CollectiveFormBuilder;
 use Session;
 use Log;
 
-class FormBuilder extends IlluminateFormBuilder {
+class FormBuilder extends CollectiveFormBuilder {
 
 
     /**
