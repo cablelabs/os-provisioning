@@ -27,7 +27,7 @@ class Endpoint extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
-        return $this->hostname;
+        return $this->hostname.' - '.$this->mac;
     }
 
 
