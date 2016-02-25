@@ -3,6 +3,7 @@
 namespace Modules\ProvBase\Entities;
 
 use Modules\ProvBase\Entities\Qos;
+use Modules\Billingbase\Entities\Price;
 
 class Contract extends \BaseModel {
 
@@ -154,12 +155,12 @@ class Contract extends \BaseModel {
 	 */
 	public function monthly_conversion()
 	{
-		// QOS: monthly QOS change – "Tarifwechsel"
-		if ($this->next_qos_id > 0)
+		// Tariff: monthly Tariff change – "Tarifwechsel"
+		if ($this->next_price_id > 0)
 		{
-			\Log::Info('monthly: contract: change QOS for '.$this->id.' from '.$this->qos_id.' to '.$this->next_qos_id);
-			$this->qos_id = $this->next_qos_id;
-			$this->next_qos_id = 0;
+			\Log::Info('monthly: contract: change Tariff for '.$this->id.' from '.$this->price_id.' to '.$this->next_price_id);
+			$this->price_id = $this->next_price_id;
+			$this->next_price_id = 0;
 
 			$this->save();
 		}
@@ -191,10 +192,15 @@ class Contract extends \BaseModel {
 		// TODO: Speed-up: Could this be done with a single eloquent update statement ?
 		//       Note: This requires to use the Eloquent Context to run all Observers
 		//       an to rebuild and restart the involved modems
+		$bm = new \BaseModel;
+
+		if (!$bm->module_is_active('Billingbase'))
+			return;
+
 		foreach ($this->modems as $modem)
 		{
 			$modem->network_access = $this->network_access;
-			$modem->qos_id = $this->qos_id;
+			$modem->qos_id = Price::find($this->price_id)->qos_id;
 			$modem->save();
 		}
 	}
@@ -228,7 +234,7 @@ class ContractObserver
 		$contract->number = $contract->id;
 		$contract->save();     // forces to call the updated method of the observer
 
-		$contract->push_to_modems(); // should not be run, because a new added contract can not have modems..
+		$contract->push_to_modems(); // should not run, because a new added contract can not have modems..
 	}
 
 	public function updating($contract)

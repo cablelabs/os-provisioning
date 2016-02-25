@@ -25,6 +25,11 @@ class Qos extends \BaseModel {
 	{
 		return $this->hasMany("Modules\ProvBase\Entities\Modem");
 	}
+
+    public function prices()
+    {
+        return $this->hasMany('Modules\Billingbase\Entities\Price');
+    }
     
 
     // Name of View

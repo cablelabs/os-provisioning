@@ -4,19 +4,21 @@ namespace Modules\ProvBase\Http\Controllers;
 
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\Qos;
+use Modules\BillingBase\Entities\Price;
 
 class ContractController extends \BaseModuleController {
 
 	// TODO: temporary helper until we have a global config or billing module or field specific visibility
-	private $billing = 1;
+	// private $billing = 1;
 
 
-	private function _qos_next_month($model)
+	private function _data_tariff($model)
 	{
-		$h = $model->html_list(Qos::all(), 'name');
-		$h['0'] = '';
+		// $h = $model->html_list(Qos::all(), 'name');
+		$h = $model->html_list(Price::where('type', '=', 'Internet')->get(), 'name');
+		// dd($h, Price::where('type', '=', 'Internet')->get());
+		$h[0] = null;
 		asort($h);
-		
 		return $h;
 	}
 
@@ -26,6 +28,7 @@ class ContractController extends \BaseModuleController {
 	public function get_form_fields($model = null)
 	{
 		$r = $a = $b = $c = [];
+		$m = new \BaseModel;
 
 		// label has to be the same like column in sql table
 		$a = array(
@@ -46,16 +49,16 @@ class ContractController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1'),
 		);
 
-		if ($this->billing)
+		if ($m->module_is_active('BillingBase'))
 			$b = array(
 				array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'checked' => true, 'value' => '1', 'create' => '1'),
 				array('form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'), // TODO: create default 'value' => date("Y-m-d")	
 				array('form_type' => 'text', 'name' => 'contract_end', 'description' => 'Contract End', 'space' => '1'),
 
-				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list(Qos::all(), 'name')),
-				array('form_type' => 'select', 'name' => 'next_qos_id', 'description' => 'QoS next month', 'value' => $this->_qos_next_month($model)),
-				array('form_type' => 'text', 'name' => 'voip_id', 'description' => 'Phone ID'),
-				array('form_type' => 'text', 'name' => 'next_voip_id', 'description' => 'Phone ID next month', 'space' => '1'),
+				array('form_type' => 'select', 'name' => 'price_id', 'description' => 'Data Tariff', 'create' => '1', 'value' => $this->_data_tariff($model)),
+				array('form_type' => 'select', 'name' => 'next_price_id', 'description' => 'Data Tariff next month', 'value' => $this->_data_tariff($model)),
+				array('form_type' => 'select', 'name' => 'voip_id', 'description' => 'Voip Tariff', 'value' => Price::getPossibleEnumValues('voip_tariff')),
+				array('form_type' => 'select', 'name' => 'next_voip_id', 'description' => 'Voip Tariff next month', 'value' => Price::getPossibleEnumValues('voip_tariff'), 'space' => '1'),
 
 				array('form_type' => 'text', 'name' => 'sepa_holder', 'description' => 'Bank Account Holder'),
 				array('form_type' => 'text', 'name' => 'sepa_iban', 'description' => 'IBAN'),

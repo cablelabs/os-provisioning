@@ -303,7 +303,7 @@ class Configfile extends \BaseModel {
 
 		$i = 0;
 
-		// loop over all schemata; they can exist multiple times per table
+		// lo all schemata; they can exist multiple times per table
 		foreach ($db_schemata as $table => $columns_multiple)
 		{
 			// loop over all schema descriptions of the current table
