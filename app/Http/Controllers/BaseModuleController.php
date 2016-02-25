@@ -59,7 +59,7 @@ class BaseModuleController extends BaseController {
         $base_controller = new $tmp;
 
         $links = $this->get_config_modules();
-        $view_header = "Global Configurations";
+        $view_header = $this->translate("Global Configurations");
         $route_name = 'Config.index';
 
     	return \View::make('GlobalConfig.index', $base_controller->compact_prep_view(compact('links', 'view_header', 'route_name')));

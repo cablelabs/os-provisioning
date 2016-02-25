@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use Module;
 use Config;
 use File;
@@ -27,6 +28,50 @@ class BaseController extends Controller {
 
 	protected $permissions = null;
 	protected $permission_cores = array('model', 'net');
+
+
+	/**
+	 * Constructor
+	 *
+	 * Basically this is a placeholder for eventually later use. I need to 
+	 * overwrite the constructor in a subclass – and want to call the parent
+	 * constructor if there are changes in base classes. But calling the
+	 * parent con is only possible if it is explicitely defined…
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function __construct() 
+	{
+		// set language
+		App::setLocale($this->get_user_lang());
+	}
+
+	/**
+     * Searches for a string in the language files under resources/lang/ and returns it for the active application language
+     *
+     * @author Nino Ryschawy
+     */
+    public static function translate($string)
+    {
+        // cut the star at the end of value if there is one for the translate function and append it after translation
+        $star = '';
+        if (strpos($string, '*'))
+        {
+            $string = str_replace(' *', '', $string);
+            $star = ' *';
+        }
+
+        if (strpos($string, 'messages.'))
+        	return trans($string).$star;
+
+        $translation = trans("messages.$string");
+        // dd($name, $string, $star, $translation, strpos($translation, "messages."));
+        // found in lang/{}/messages.php
+        if (strpos($translation, 'messages.') === false)
+            return $translation.$star;
+
+        return $string.$star;
+    }
 
 
 	/**
@@ -94,19 +139,6 @@ class BaseController extends Controller {
 		}
 
 		// TODO: check net rights
-	}
-
-	/**
-	 * Constructor
-	 *
-	 * Basically this is a placeholder for eventually later use. I need to 
-	 * overwrite the constructor in a subclass – and want to call the parent
-	 * constructor if there are changes in base classes. But calling the
-	 * parent con is only possible if it is explicitely defined…
-	 *
-	 * @author Patrick Reichel
-	 */
-	public function __construct() {
 	}
 
 
@@ -275,9 +307,16 @@ class BaseController extends Controller {
 		$ret = array();
 		$modules = Module::enabled();
 
-		$lines = include(app_path().'/Config/header.php');
-		foreach ($lines as $line)
-			array_push($ret, $line);
+		$array = include(app_path().'/Config/header.php');
+		foreach ($array as $lines)
+		{
+			// array_push($ret, $lines);
+			foreach ($lines as $k => $line)
+			{
+				$key = $this->translate($k);
+				array_push($ret, [$key => $line]);
+			}
+		}
 
 		foreach ($modules as $module)
 		{
@@ -287,12 +326,18 @@ class BaseController extends Controller {
 				 * TODO: use Config::get() 
 				 *       this needs to fix namespace problems first
 				 */
-				$lines = include ($module->getPath().'/Config/header.php');
-				foreach ($lines as $line)
-					array_push($ret, $line);
+				$array = include ($module->getPath().'/Config/header.php');
+				foreach ($array as $lines)
+				{
+					// array_push($ret, $lines);					
+					foreach ($lines as $k => $line)
+					{
+						$key = $this->translate($k);
+						array_push($ret, [$key => $line]);
+					}
+				}
 			}
 		}
-
 		return $ret;
 	}
 
@@ -351,6 +396,7 @@ class BaseController extends Controller {
 		if(!isset($a['view_header_links']))
 			$a['view_header_links'] = $this->get_view_header_links();
 
+
 		if(!isset($a['route_name']))
 			$a['route_name'] = $this->get_route_name();
 
@@ -366,6 +412,32 @@ class BaseController extends Controller {
 
 		return $a;
 	}
+
+	// TODO: take language from user setting or the language with highest priority from browser
+	protected function get_user_lang()
+	{
+		$user = Auth::user();
+		if (!isset($user))
+			return 'en';
+		$language = Auth::user()->language;
+
+		if ($language == 'browser')
+		{
+			// default
+			if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+				return 'en';
+
+			$languages = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+			if (strpos($languages[0], 'de') !== false)
+				return 'de';
+			else 
+				return 'en';
+		}
+
+		return $language;
+	}
+
+
 
 
 	/**
@@ -433,8 +505,7 @@ class BaseController extends Controller {
 
 		$view_var = $obj->index_list();
 
-		$view_header  	= $obj->get_view_header().' List';
-
+		$view_header  	= $this->translate($obj->get_view_header().' List');
 		$create_allowed = $this->get_controller_obj()->index_create_allowed;
 
 		$view_path = 'Generic.index';
@@ -467,7 +538,8 @@ class BaseController extends Controller {
 
 		$obj = $this->get_model_obj();
 
-		$view_header 	= 'Create '.$obj->get_view_header();
+		// $view_header 	= 'Create '.$obj->get_view_header();
+		$view_header 	= $this->translate('Create ').$this->translate($obj->get_view_header());
 		// form_fields contain description of fields and the data of the fields
 		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj), $obj);
 
@@ -592,7 +664,7 @@ class BaseController extends Controller {
 		//${$this->get_view_var()} = $obj->findOrFail($id);
 
 		// transfer model_name, view_header, view_var
-		$view_header 	= 'Edit '.$obj->get_view_header();
+		$view_header 	= $this->translate('Edit ').$this->translate($obj->get_view_header());
 		$view_var 		= $obj->findOrFail($id);
 		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var);
 
