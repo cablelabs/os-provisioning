@@ -20,6 +20,7 @@ class ProvBaseServiceProvider extends ServiceProvider {
 		'Modules\ProvBase\Console\configfileCommand',
 		'Modules\ProvBase\Console\contractCommand',
 		'Modules\ProvBase\Console\importCommand',
+		'Modules\ProvBase\Console\geocodeCommand',
 	];
 
 

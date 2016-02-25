@@ -5,7 +5,7 @@ namespace Modules\Provvoip\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class ProvvoipTableSeeder extends Seeder {
+class ProvvoipDatabaseSeeder extends Seeder {
 
 	/**
 	 * Run the database seeds.
