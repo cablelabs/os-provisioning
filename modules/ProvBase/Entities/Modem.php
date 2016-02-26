@@ -320,23 +320,56 @@ class Modem extends \BaseModel {
 	}
 
 
-	public function geocode ()
+	/*
+	 * Geocoding API
+	 * Translate a address (like: Deutschland, Marienberg, Waldrand 4) in a geoposition (x,y)
+	 *
+	 * @author: Torsten Schmidt
+	 *
+	 * TODO: move to a seperate extensions class
+	 */
+
+	// private variable to hold the last Geocoding response state
+	// use geocode_last_status()
+	private $geocode_state = null;
+
+
+	/*
+	 * Modem Geocoding Function
+	 * Geocode the modem address value in a geoposition and update values to x,y. Please
+	 * note that the function is working in object context, so no addr parameters are required.
+	 *
+	 * @param save: Update Modem x,y value with a save() to DB. Notice this calls Observer !
+	 * @return: true on success, false if coding fails. For error log see geocode_last_status()
+	 * @author: Torsten Schmidt
+	 *
+	 * TODO: split in a general geocoding function and a modem specific one
+	 */
+	public function geocode ($save = true)
 	{
 		$country = 'Deutschland';
+
+		// Load google key if .ENV is set
+		$key = '';
+		if (isset ($_ENV['GOOGLE_API_KEY']))
+			$key = '&key='.$_ENV['GOOGLE_API_KEY'];
 
 		// url encode the address
 		$address = urlencode($country.', '.$this->street.', '.$this->zip.', '.$this->city);
 
 		// google map geocode api url
-		$url = "http://maps.google.com/maps/api/geocode/json?sensor=false&address={$address}";
+		$url = "https://maps.google.com/maps/api/geocode/json?sensor=false&address={$address}$key";
 
 		// get the json response
 		$resp_json = file_get_contents($url);
 
+		// Log
+		Log::info ('geocode: request '.$url);
+
 		// decode the json
 		$resp = json_decode($resp_json, true);
 
-		// response status will be 'OK', if able to geocode given address 
+		// response status will be 'OK', if able to geocode given address
 		if($resp['status']=='OK')
 		{
 			// get the important data
@@ -347,7 +380,7 @@ class Modem extends \BaseModel {
 			// verify if data is complete
 			if($lati && $longi && $formatted_address)
 			{
-						// put the data in the array
+				// put the data in the array
 				$data_arr = array();
 
 				array_push(
@@ -359,19 +392,38 @@ class Modem extends \BaseModel {
 
 				$this->y = $lati;
 				$this->x = $longi;
+				$this->geocode_state = 'OK';
 
-				$this->save();
+				if ($save)
+					$this->save();
+
+				Log::info('geocode: result '.$lati.','.$longi);
 
 				return $data_arr;
 			}
 			else
+			{
+				$this->geocode_state = 'DATA_VERIFICATION_FAILED';
+				Log::info('geocode: '.$this->geocode_state);
 				return false;
+			}
 		}
 		else
+		{
+			$this->geocode_state = $resp['status'];
+			Log::info('geocode: '.$this->geocode_state);
 			return false;
+		}
 	}
 
 
+	/*
+	 * Return Last Geocoding State / ERROR
+	 */
+	public function geocode_last_status ()
+	{
+		return $this->geocode_state;
+	}
 
 }
 
@@ -388,10 +440,16 @@ class ModemObserver
 {
 	public function created($modem)
 	{
-		$modem->make_dhcp_cm_all();
-		$modem->make_configfile();
 		$modem->hostname = 'cm-'.$modem->id;
-		$modem->save();	 // forces to call the updated method of the observer
+		$modem->save();	 // forces to call the updating/updated method of the observer
+	}
+
+	public function updating($modem)
+	{
+		// Use Updating to set the geopos before a save() is called.
+		// Notice: that we can not call save() in update(). This will re-tricker
+		//         the Observer and re-call update() -> endless loop is the result.
+		$modem->geocode(false);
 	}
 
 	public function updated($modem)
