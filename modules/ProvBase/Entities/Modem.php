@@ -23,7 +23,7 @@ class Modem extends \BaseModel {
 		);
 	}
 
-	
+
 	// Name of View
 	public static function get_view_header()
 	{
@@ -86,7 +86,7 @@ class Modem extends \BaseModel {
 
 		return null;
 	}
-	
+
 	public function tree()
 	{
 		if ($this->module_is_active('HfcBase'))
@@ -138,6 +138,8 @@ class Modem extends \BaseModel {
 	/**
 	 * Returns the config file entry string for a cable modem in dependency of private or public ip
 	 *
+	 * TODO: use object context instead of parameters (Torsten)
+	 *
 	 * @author Nino Ryschawy
 	 */
 	private function generate_cm_update_entry($id, $mac)
@@ -167,13 +169,18 @@ class Modem extends \BaseModel {
 	 * Make DHCP config files for all CMs including EPs - used in dhcpCommand after deleting
 	 * the config files with all entries
 	 *
+	 * TODO: make static function (class context not object)
+	 *
 	 * @author Torsten Schmidt
 	 */
 	public function make_dhcp_cm_all ()
-	{		
+	{
 		$this->del_dhcp_conf_files();
-		
-		foreach (Modem::all() as $modem) 
+
+		// Log
+		Log::info('dhcp: update '.self::CONF_FILE_PATH.', '.self::CONF_FILE_PATH_PUB);
+
+		foreach (Modem::all() as $modem)
 		{
 			$id	= $modem->id;
 			$mac   = $modem->mac;
@@ -231,7 +238,8 @@ class Modem extends \BaseModel {
 		if ($ret === false)
 				die("Error writing to file");
 
-		Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file");
+		Log::info('configfile: update modem '.$this->hostname);
+		Log::info("configfile: /usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file");
 		// if (file_exists($cfg_file))
 		//	 unlink($cfg_file);
 
@@ -245,7 +253,7 @@ class Modem extends \BaseModel {
 		// if (file_exists($cfg_file))
 		//	 return true;
 		// return false;
-		
+
 		return true;
 	}
 
@@ -275,7 +283,7 @@ class Modem extends \BaseModel {
 		$file['1'] = $dir.'cm-'.$this->id.'.cfg';
 		$file['2'] = $dir.'cm-'.$this->id.'.conf';
 
-		foreach ($file as $f) 
+		foreach ($file as $f)
 		{
 			if (file_exists($f)) unlink($f);
 		}
@@ -283,12 +291,15 @@ class Modem extends \BaseModel {
 
 	/**
 	 * Restarts modem through snmpset
-	 */	
+	 */
 	public function restart_modem()
 	{
 		$config = ProvBase::first();
 		$community_rw = $config->rw_community;
 		$domain = $config->domain_name;
+
+		// Log
+		Log::info('restart modem '.$this->hostname);
 
 		// if hostname cant be resolved we dont want to have an php error
 		try
@@ -298,18 +309,18 @@ class Modem extends \BaseModel {
 		}
 		catch (Exception $e)
 		{
-			// only ignore error with this error message (catch exception with this string) 
+			// only ignore error with this error message (catch exception with this string)
 			if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmpset(): No response from") !== false)))
 			{
 				// check if observer is called from HTML Update, otherwise skip
-				if (\Request::method() == 'PUT') 
+				if (\Request::method() == 'PUT')
 				{
 					// redirect back with corresponding message over flash, needs to be saved as it's normally only saved when the session middleware terminates successfully
-					$resp = \Redirect::back()->with('message', 'Could not restart Modem! (offline/configfile error?)'); 
+					$resp = \Redirect::back()->with('message', 'Could not restart Modem! (offline/configfile error?)');
 					\Session::driver()->save();		 // \ is like writing "use Session;" before class statement
 					$resp->send();
 
-					/* 
+					/*
 					 * TODO: replace exit
 					 * This is a security hassard. All Code (Observer etc) which should run after this code will not be executed !
 					 */
