@@ -21,7 +21,7 @@ class Kernel extends ConsoleKernel {
 	 *
 	 * NOTE: this is a copy from BaseModel
 	 *
-	 * TODO: move this to a better place. Or even better: call 
+	 * TODO: move this to a better place. Or even better: call
 	 *       scheduling stuff from a module based context
 	 *
 	 * @author Torsten Schmidt
@@ -53,6 +53,7 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected function schedule(Schedule $schedule)
 	{
+		// ProvBase Schedules
 		if ($this->module_is_active ('ProvBase'))
 		{
 			// Rebuid all Configfiles
@@ -83,6 +84,9 @@ class Kernel extends ConsoleKernel {
 			$schedule->call(function () {
 			    exec ('rm -rf '.public_path().'/modules/hfccustomer/kml/*.kml');
 			})->hourly();
+
+			// Modem Positioning System
+			$schedule->command('nms:mps')->daily();
 		}
 
 		if ($this->module_is_active ('ProvMon'))

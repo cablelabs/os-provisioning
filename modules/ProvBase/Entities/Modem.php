@@ -452,7 +452,7 @@ class ModemObserver
 	public function created($modem)
 	{
 		$modem->hostname = 'cm-'.$modem->id;
-		$modem->save();	 // forces to call the updating/updated method of the observer
+		$modem->save();	 // forces to call the updating() and updated() method of the observer !
 	}
 
 	public function updating($modem)
@@ -461,6 +461,11 @@ class ModemObserver
 		// Notice: that we can not call save() in update(). This will re-tricker
 		//         the Observer and re-call update() -> endless loop is the result.
 		$modem->geocode(false);
+
+		// Refresh MPS rules
+		// Note: does not perform a save() which could trigger observer.
+		if (\BaseModel::__module_is_active('HfcCustomer'))
+			$modem->tree_id = \Modules\Hfccustomer\Entities\Mpr::refresh($modem->id);
 	}
 
 	public function updated($modem)
