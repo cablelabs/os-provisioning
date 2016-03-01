@@ -37,7 +37,24 @@ class BaseModel extends Eloquent
 
 
 	/**
-	 * This function is a placeholder to write Model specific adaptions to 
+	 * check if module exists
+	 * NOTE: this is simply a static pendant to module_is_active(). So call this if required from class context.
+	 *       -> see above
+	 */
+	public static function __module_is_active($modulename)
+	{
+		$modules = \Module::enabled();
+
+		foreach ($modules as $module)
+			if ($module->getLowerName() == strtolower($modulename))
+				return true;
+
+        return false;
+	}
+
+
+	/**
+	 * This function is a placeholder to write Model specific adaptions to
 	 * order and/or restructure the Model objects for Index View
 	 *
 	 * Note: for a example see Configfile Model
@@ -195,7 +212,7 @@ class BaseModel extends Eloquent
 				}
 			}
 		}
-		
+
 		return $result;
 	}
 
@@ -229,7 +246,7 @@ class BaseModel extends Eloquent
 				if (($model[0] == 'Modules\ProvBase\Entities\Modem') && ($field == 'net' || $field == 'cluster'))
 				{
 					$ret = 'tree_id IN(-1';
-					foreach (Modules\HfcBase\Entities\Tree::where($field, '=', $value)->get() as $tree) 
+					foreach (Modules\HfcBase\Entities\Tree::where($field, '=', $value)->get() as $tree)
 						$ret .= ','.$tree->id;
 					$ret .= ')';
 				}
@@ -248,10 +265,10 @@ class BaseModel extends Eloquent
 	 * @param $preselect_field sql field for pre selection
 	 * @param $preselect_field sql search value for pre selection
 	 * @return search result: array of whereRaw() results, this means array of class Illuminate\Database\Quer\Builder objects
-	 * @author Patrick Reichel, 
+	 * @author Patrick Reichel,
 	 *         Torsten Schmidt: add preselection, add Model checking
 	 */
-	protected function _doSimpleSearch($_models, $query, $preselect_field=null, $preselect_value=null) 
+	protected function _doSimpleSearch($_models, $query, $preselect_field=null, $preselect_value=null)
 	{
 		$preselect = $this->__preselect_search($preselect_field, $preselect_value, $_models);
 
@@ -279,7 +296,7 @@ class BaseModel extends Eloquent
 		 * Perform the search
 		 */
 		$result = [];
-		foreach ($models as $model) 
+		foreach ($models as $model)
 		{
 			// get the database table used for given model
 			$tmp = new $model;
@@ -287,7 +304,7 @@ class BaseModel extends Eloquent
 			$cols = $model::getTableColumns($table);
 
 			$tmp_result = $model::whereRaw("($preselect) AND CONCAT_WS('|', ".$cols.") LIKE ?", array($query));
-			if ($tmp_result) 
+			if ($tmp_result)
 				array_push($result, $tmp_result);
 
 		}
