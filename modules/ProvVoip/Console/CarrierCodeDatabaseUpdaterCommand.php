@@ -77,6 +77,17 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 
 
 	/**
+	 * Clears the csv hash file (creates file with no content).
+	 * Use this if you have to force updating the table – e.g. in migration process.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function clear_hash_file() {
+		\Storage::put($this->hash_file, '');
+	}
+
+
+	/**
 	 * Checks if the database has to be updated.
 	 * This is a pessimistic check;
 	 *

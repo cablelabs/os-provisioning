@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use \Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand;
 
 class CreateCarrierCodeTable extends BaseMigration {
 
@@ -25,6 +26,13 @@ class CreateCarrierCodeTable extends BaseMigration {
 		});
 
 		DB::update("INSERT INTO ".$this->tablename." (carrier_code, company) VALUES('0', '-');");
+
+		// empty csv hash (to be sure that newly created table will be filled)
+		$updater = new CarrierCodeDatabaseUpdaterCommand();
+		$updater->clear_hash_file();
+
+		// fill table with carriercodes
+		$updater->fire();
 
 		return parent::up();
 	}
