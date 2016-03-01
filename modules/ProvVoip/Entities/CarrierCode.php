@@ -31,33 +31,48 @@ class CarrierCode extends \BaseModel {
 	 */
 	public function carrier_list()
 	{
+
+		# carrier codes of the carriers to be on top of the list
 		$favorite_carriers = array(
-			'D001', # Telekom
+			'D150', # Telekom
 			'D057', # EnviaTel
 		);
 
-		$carrier_list = array();
-		$fav_list = array();
+		$normal_carrier_list = array();
+		$favorite_carrier_list = array();
 
-		/* foreach ($this::all()->orderBy('company') as $carriercode) */
 		foreach ($this::all()->sortBy('company') as $carrier)
 		{
 			$id = $carrier->id;
-			$company = $carrier->company;
 			$carrier_code = $carrier->carrier_code;
+			$company = $carrier->company;
 
-			if ($id > 1) {
-				# add to carriers
-				$carrier_list[$id] = $company.' ('.$carrier_code.')';
+			$entry = $company;
+			if (boolval($carrier_code)) {
+				$entry .= ' ('.$carrier_code.')';
+			}
 
-				# add to favorites?
-				if (array_search($carrier_code, $favorite_carriers) !== False) {
-					$fav_list[$id] = $company.' ('.$carrier_code.')';
-				}
+			# add to favorite or normal carriers
+			if (array_search($carrier_code, $favorite_carriers) !== False) {
+				$favorite_carrier_list[$id] = $entry;
+			}
+			else {
+				$normal_carrier_list[$id] = $entry;
 			}
 		}
 
-		return array_merge(['0' => '–'], $fav_list, ['0' => '––––––––––––––––'], $carrier_list);
+		// build result array (with favorites on top)
+		// attention! don't change the keys – they refer directly to ids in table carriercode!
+		// therefore we cannot use array_merge
+		$result = array();
+		foreach ($favorite_carrier_list as $id => $entry) {
+			$result[$id] = $entry;
+		}
+		foreach ($normal_carrier_list as $id => $entry) {
+			$result[$id] = $entry;
+		}
+
+		return $result;
 	}
 
 }

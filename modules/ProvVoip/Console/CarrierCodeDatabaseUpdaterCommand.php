@@ -159,6 +159,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 			$code = $entry[0];
 			$company = $entry[1];
 
+			# alter entry if exists, else create new one
 			$cc = CarrierCode::firstOrNew(array('carrier_code' => $code));
 			$cc->carrier_code = $code;
 			$cc->company = $company;
