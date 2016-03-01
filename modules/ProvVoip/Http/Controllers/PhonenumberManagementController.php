@@ -4,6 +4,7 @@ namespace Modules\ProvVoip\Http\Controllers;
 
 use Modules\ProvVoip\Entities\PhonenumberManagement;
 use Modules\ProvVoip\Entities\Phonenumber;
+use Modules\ProvVoip\Entities\CarrierCode;
 
 class PhonenumberManagementController extends \BaseModuleController {
 
@@ -22,15 +23,17 @@ class PhonenumberManagementController extends \BaseModuleController {
 		if (!$model)
 			$model = new PhonenumberManagement;
 
+		$carriercode = new CarrierCode;
+
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'select', 'name' => 'phonenumber_id', 'description' => 'Phonenumber', 'value' => $model->phonenumber_list_with_dummies(), 'hidden' => '1'),
 			array('form_type' => 'text', 'name' => 'activation_date', 'description' => 'Activation date'),
 			array('form_type' => 'checkbox', 'name' => 'porting_in', 'description' => 'Incoming porting'),
-			array('form_type' => 'select', 'name' => 'carrier_in', 'description' => 'Carrier in', 'value' => array('08/15' => 'TODO: store carriers in database', 'DE001' => 'Deutsche Telekom')),
+			array('form_type' => 'select', 'name' => 'carrier_in', 'description' => 'Carrier in', 'value' => $carriercode->carrier_list()),
 			array('form_type' => 'text', 'name' => 'deactivation_date', 'description' => 'Termination date'),
 			array('form_type' => 'checkbox', 'name' => 'porting_out', 'description' => 'Outgoing porting'),
-			array('form_type' => 'select', 'name' => 'carrier_out', 'description' => 'Carrier out', 'value' => array('08/15' => 'TODO: store carriers in database', 'DE001' => 'Deutsche Telekom')),
+			array('form_type' => 'select', 'name' => 'carrier_out', 'description' => 'Carrier out', 'value' => $carriercode->carrier_list()),
 			array('form_type' => 'text', 'name' => 'subscriber_company', 'description' => 'Subscriber company'),
 			array('form_type' => 'select', 'name' => 'subscriber_salutation', 'description' => 'Subscriber salutation', 'value' => PhonenumberManagement::getPossibleEnumValues('subscriber_salutation')),
 			array('form_type' => 'select', 'name' => 'subscriber_academic_degree', 'description' => 'Subscriber academic degree', 'value' => PhonenumberManagement::getPossibleEnumValues('subscriber_academic_degree')),
