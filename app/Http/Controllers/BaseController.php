@@ -561,10 +561,10 @@ class BaseController extends Controller {
 
 	/**
 	 * Generic store function - stores an object of the calling model
-	 * @param $name 	Name of Object
-	 * @return $ret 	list
+	 * @param redirect: if set to false returns id of the new created object (default: true)
+	 * @return: html redirection to edit page (or if param $redirect is false the new added object id)
 	 */
-	protected function store()
+	protected function store($redirect = true)
 	{
 		try {
 			$this->_check_permissions("create");
@@ -589,6 +589,9 @@ class BaseController extends Controller {
 		}
 
 		$id = $obj::create($data)->id;
+
+		if (!$redirect)
+			return $id;
 
 		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Created!');
 	}

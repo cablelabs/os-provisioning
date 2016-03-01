@@ -39,6 +39,10 @@ class ModemController extends \BaseModuleController {
 
 			array('form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number'),
 			array('form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'),
+
+			array('form_type' => 'text', 'name' => 'x', 'description' => 'Geopos X'),
+			array('form_type' => 'text', 'name' => 'y', 'description' => 'Geopos Y'),
+
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
 		);
 	}
