@@ -20,6 +20,7 @@ class PhonenumberManagement extends \BaseModel {
 	// Don't forget to fill this array
 	protected $fillable = [
 					'phonenumber_id',
+					'trcclass',
 					'activation_date',
 					'porting_in',
 					'carrier_in',
@@ -35,7 +36,7 @@ class PhonenumberManagement extends \BaseModel {
 					'subscriber_house_number',
 					'subscriber_zip',
 					'subscriber_city',
-					'subscriber_country_id'
+					'subscriber_country'
 				];
 
 
@@ -97,4 +98,17 @@ class PhonenumberManagement extends \BaseModel {
 		return $ret;
 	}
 
+	/**
+	 * Get relation to trc classes.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function trc_class() {
+
+		if ($this->module_is_active('provvoipenvia')) {
+			return $this->hasOne('Modules\ProvVoipEnvia\Entities\TRCClass', 'trcclass');
+		}
+
+		return null;
+	}
 }

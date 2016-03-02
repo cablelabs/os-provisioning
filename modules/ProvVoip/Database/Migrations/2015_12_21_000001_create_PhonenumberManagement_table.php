@@ -21,6 +21,7 @@ class CreatePhonenumberManagementTable extends BaseMigration {
 			$this->up_table_generic($table);
 
 			$table->integer('phonenumber_id')->unsigned()->default(1);
+			$table->integer('trcclass')->unsigned();
 			$table->date('order_date');
 			$table->dateTime('voipaccount_ext_creation_date')->nullable()->default(NULL);
 			$table->string('voipaccount_ext_order_id')->nullable;
@@ -42,7 +43,7 @@ class CreatePhonenumberManagementTable extends BaseMigration {
 			$table->string('subscriber_house_number', 8);
 			$table->string('subscriber_zip', 16);
 			$table->string('subscriber_city');
-			$table->integer('subscriber_country_id')->unsigned();
+			$table->integer('subscriber_country')->unsigned();
 		});
 
 		$this->set_fim_fields(['subscriber_company', 'subscriber_firstname', 'subscriber_lastname', 'subscriber_street', 'subscriber_house_number', 'subscriber_zip', 'subscriber_city']);

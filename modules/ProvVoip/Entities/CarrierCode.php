@@ -45,7 +45,7 @@ class CarrierCode extends \BaseModel {
 	 *
 	 *	@return array containing all carriers
 	 */
-	public function carrier_list_for_form_select()
+	public static function carrier_list_for_form_select()
 	{
 
 		# carrier codes of the carriers to be on top of the list
