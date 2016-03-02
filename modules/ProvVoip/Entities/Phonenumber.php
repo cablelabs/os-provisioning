@@ -23,7 +23,7 @@ class Phonenumber extends \BaseModel {
 	}
 
 	// Don't forget to fill this array
-	protected $fillable = ['mta_id', 'port', 'country_code', 'prefix_number', 'number', 'username', 'password', 'active'];
+	protected $fillable = ['mta_id', 'port', 'country_code', 'prefix_number', 'number', 'username', 'password', 'sipdomain', 'active'];
 
 
 	// Name of View

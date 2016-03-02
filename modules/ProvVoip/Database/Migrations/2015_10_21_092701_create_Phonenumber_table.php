@@ -27,6 +27,7 @@ class CreatePhonenumberTable extends BaseMigration {
 			$table->string('number');
 			$table->string('username')->nullable();
 			$table->string('password')->nullable();
+			$table->string('sipdomain')->nullable();
 			$table->boolean('active');
 			$table->boolean('is_dummy')->default(0);
 		});
