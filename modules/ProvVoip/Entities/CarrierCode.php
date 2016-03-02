@@ -27,7 +27,7 @@ class CarrierCode extends \BaseModel {
 
 
 	/**
-	 * Return a list [id => carrier (carriercode)] of all carriers.
+	 * Return a list [db_id => carrier (carriercode)] of all carriers.
 	 * This list is prepared for the use in a form's <select>
 	 *	- first comes the default value (=no carrier)
 	 *	- second are the favorites
@@ -42,6 +42,7 @@ class CarrierCode extends \BaseModel {
 
 		# carrier codes of the carriers to be on top of the list
 		# the given sorting will be the sorting of the <select>
+		# TODO: maybe this list should not be hardcoded – can come from configuration dialog or out of .env?
 		$favorite_carriers = array(
 			'D001', # Telekom
 			'D201', # 1&1
@@ -54,10 +55,12 @@ class CarrierCode extends \BaseModel {
 		// get all the carrier code data and put it into arrays
 		foreach (CarrierCode::orderBy('company')->orderBy('carrier_code')->get() as $carrier)
 		{
+			// assign to helper vars to make the rest of the loop easier to understand
 			$id = $carrier->id;
 			$carrier_code = $carrier->carrier_code;
 			$company = $carrier->company;
 
+			// create the string to be shown as <option> in <select>
 			$entry = $company;
 			if (boolval($carrier_code)) {
 				$entry .= ' ('.$carrier_code.')';
@@ -71,9 +74,11 @@ class CarrierCode extends \BaseModel {
 				$no_carrier_list[$id] = $entry;
 			}
 			elseif ($fav_pos !== False) {
+				// indirect assignment – array key is the position in $favorite_carriers; database_id is stored separately
 				$favorite_carrier_list[$fav_pos] = array($id, $entry);
 			}
 			else {
+				// direct assignment
 				$normal_carrier_list[$id] = $entry;
 			}
 		}
@@ -92,12 +97,13 @@ class CarrierCode extends \BaseModel {
 
 		// then add the favorites sorted like in favorite_carriers
 		foreach ($favorite_carrier_list as $fav) {
-			$id = $fav[0];
-			$entry = $fav[1];
+			$id = $fav[0];	// database ID
+			$entry = $fav[1];	// string to be shown in <option>
 			$result[$id] = $entry;
 		}
 
 		// finally add the rest of the carriers
+		// as mentioned above: this has to be done manually to take care of the IDs!
 		foreach ($normal_carrier_list as $id => $entry) {
 			$result[$id] = $entry;
 		}
