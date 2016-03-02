@@ -26,6 +26,14 @@ class CarrierCode extends \BaseModel {
 	protected $fillable = ['carrier_code', 'company'];
 
 
+	public static function is_valid($carrier_code) {
+
+		$pattern = '#^D[0-9a-fA-F]{3}$#';
+
+		return boolval(preg_match($pattern, $carrier_code));
+	}
+
+
 	/**
 	 * Return a list [db_id => carrier (carriercode)] of all carriers.
 	 * This list is prepared for the use in a form's <select>
