@@ -87,6 +87,8 @@ class Kernel extends ConsoleKernel {
 
 			// Modem Positioning System
 			$schedule->command('nms:mps')->daily();
+
+			$schedule->command('nms:modem-refresh --schedule=1 --debug=1')->everyFiveMinutes()->withoutOverlapping();
 		}
 
 		if ($this->module_is_active ('ProvMon'))

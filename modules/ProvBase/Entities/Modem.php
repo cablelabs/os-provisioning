@@ -332,6 +332,76 @@ class Modem extends \BaseModel {
 
 
 	/*
+	 * Refresh Modem State
+	 *
+	 * This function will update the modem->status field with the modem upstream power level
+	 * if online, otherwise it will set the value to 0.
+	 *
+	 * NOTE: This function will be called via artisan command modem-refresh. This command
+	 *       is added to laravel scheduling api to refresh all modem states every 5min.
+	 *
+	 * NOTE: The function is written in a generic manner to fetch more than just upstream power level
+	 *       For more see array $oids inside ..
+	 *
+	 * @param timeout: snmp timeout
+	 * @return: result of snmpget as array of [oid1 => value1, ..]
+	 * @author: Torsten Schmidt
+	 */
+	public function refresh_state ($timeout = 100*1000)
+	{
+		// Load Global Config
+		$config = ProvBase::first();
+		$community_ro = $config->ro_community;
+		$domain = $config->domain_name;
+
+		// Set SNMP default mode
+		// TODO: use a seperate funciton
+		snmp_set_quick_print(TRUE);
+		snmp_set_oid_numeric_print(TRUE);
+		snmp_set_valueretrieval(SNMP_VALUE_PLAIN);
+		snmp_set_oid_output_format (SNMP_OID_OUTPUT_NUMERIC);
+
+		// OID Array to parse
+		// Style: ['modem table field 1' => 'oid1', 'modem table field 2' => 'oid2, ..']
+		$oids = ['status' => '.1.3.6.1.2.1.10.127.1.2.2.1.3.2'];
+
+		// Log
+		// Log::debug('refresh state '.$this->hostname);
+
+		$this->observer_disable();
+
+		// if hostname cant be resolved we dont want to have an php error
+		try
+		{
+			// SNMP request
+			$session = new \SNMP(\SNMP::VERSION_2c, $this->hostname.'.'.$domain, $community_ro,  $timeout);
+			$results = $r = $session->get($oids);
+
+			// parse and update results
+			foreach (array_reverse($oids) as $field => $oid)
+				$this->{$field} = array_pop($r);
+
+			// save
+			$this->save();
+		}
+		catch (Exception $e)
+		{
+			// catch error
+			// set fields to 0
+			foreach (array_reverse($oids) as $field => $oid)
+				$this->{$field} = 0;
+
+			// save
+			$this->save();
+
+			return false;
+		}
+
+		return $results;
+	}
+
+
+	/*
 	 * Geocoding API
 	 * Translate a address (like: Deutschland, Marienberg, Waldrand 4) in a geoposition (x,y)
 	 *
@@ -440,7 +510,7 @@ class Modem extends \BaseModel {
 	/*
 	 * Observer Handling
 	 *
-	 * To disable the update obervers run observer_disable() on object context.
+	 * To disable the update observers run observer_disable() on object context.
 	 * This is useful to avoid running per modem observers on general (unimportant)
 	 * changes. If obersers are enabled, every change on modem object will for example
 	 * restart the modem.
