@@ -436,6 +436,21 @@ class Modem extends \BaseModel {
 		return $this->geocode_state;
 	}
 
+
+	/*
+	 * Observer Handling
+	 *
+	 * To disable the update obervers run observer_disable() on object context.
+	 * This is useful to avoid running per modem observers on general (unimportant)
+	 * changes. If obersers are enabled, every change on modem object will for example
+	 * restart the modem.
+	 */
+	public $observer_enabled = true;
+
+	public function observer_disable()
+	{
+		$this->observer_enabled = false;
+	}
 }
 
 
@@ -457,6 +472,9 @@ class ModemObserver
 
 	public function updating($modem)
 	{
+		if (!$modem->observer_enabled)
+			return;
+
 		// Use Updating to set the geopos before a save() is called.
 		// Notice: that we can not call save() in update(). This will re-tricker
 		//         the Observer and re-call update() -> endless loop is the result.
@@ -470,6 +488,9 @@ class ModemObserver
 
 	public function updated($modem)
 	{
+		if (!$modem->observer_enabled)
+			return;
+
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
 		$modem->restart_modem();
