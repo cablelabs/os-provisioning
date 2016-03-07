@@ -5,8 +5,11 @@ namespace Modules\ProvBase\Http\Controllers;
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\Qos;
 use Modules\BillingBase\Entities\Price;
+use Modules\BillingBase\Entities\Item;
 
 class ContractController extends \BaseModuleController {
+
+	protected $relation_create_button = "Add";
 
 	// TODO: temporary helper until we have a global config or billing module or field specific visibility
 	// private $billing = 1;
@@ -16,7 +19,6 @@ class ContractController extends \BaseModuleController {
 	{
 		// $h = $model->html_list(Qos::all(), 'name');
 		$h = $model->html_list(Price::where('type', '=', 'Internet')->get(), 'name');
-		// dd($h, Price::where('type', '=', 'Internet')->get());
 		$h[0] = null;
 		asort($h);
 		return $h;
@@ -49,7 +51,7 @@ class ContractController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1'),
 		);
 
-		if ($m->module_is_active('BillingBase'))
+		if ($m->module_is_active('Billingbase'))
 			$b = array(
 				array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'checked' => true, 'value' => '1', 'create' => '1'),
 				array('form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'), // TODO: create default 'value' => date("Y-m-d")	
@@ -72,6 +74,18 @@ class ContractController extends \BaseModuleController {
 		);
 
 		return array_merge($a, $b, $c);
+	}
+
+
+	public function edit($id)
+	{
+		$bm = new \BaseModel;
+		if (!$bm->module_is_active('Billingbase'))
+			return parent::edit($id);
+
+		$price_entries = Price::where('type', '=', 'device')->orWhere('type', '=', 'other')->orderBy('type')->get();
+
+		return parent::edit($id)->with('price_entries', $price_entries);
 	}
 
 }

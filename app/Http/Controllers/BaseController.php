@@ -24,6 +24,7 @@ class BaseController extends Controller {
 
 	protected $output_format;
 	protected $save_button = 'Save';
+	protected $relation_create_button = 'Create';
 	protected $index_create_allowed = true;
 
 	protected $permissions = null;
@@ -680,7 +681,9 @@ class BaseController extends Controller {
 		$config_routes = $this->get_config_modules();
 		$save_button = $this->save_button;
 
-		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button')));
+		$relation_create_button = $this->relation_create_button;
+
+		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button', 'relation_create_button')));
 	}
 
 

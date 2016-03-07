@@ -84,5 +84,9 @@
 
 	@endforeach
 
+	@if(isset($price_entries))
+		@include('billingbase::item', [$price_entries])
+	@endif
+
 @stop
 

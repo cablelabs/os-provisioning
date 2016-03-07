@@ -28,7 +28,7 @@
 			 *
 			 *    Example: Mta/create?modem_id=100002 -> creates MTA to Modem id 100002
 			 */
-			if (isset($_GET[$field['name']]))
+			if (isset($_GET[$field['name']]) && (isset($field['hidden']) && $field['hidden']) != '0')
 			{
 				echo Form::hidden ($field["name"], $_GET[$field['name']]);
 				continue;
@@ -39,7 +39,7 @@
 			 * 3. globally hide all relation fields 
 			 *    (this means: all fields ending with _id)
 			 */
-			if (array_key_exists('hidden', $field))
+			if (array_key_exists('hidden', $field) && $field['hidden'] != '0')
 			{
 				echo Form::hidden ($field["name"]);
 				continue;

@@ -3,7 +3,8 @@
 namespace Modules\ProvBase\Entities;
 
 use Modules\ProvBase\Entities\Qos;
-use Modules\Billingbase\Entities\Price;
+use Modules\BillingBase\Entities\Price;
+use Modules\BillingBase\Entities\Item;
 
 class Contract extends \BaseModel {
 
@@ -52,11 +53,17 @@ class Contract extends \BaseModel {
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
 	}
 
+	public function items()
+	{
+		return $this->hasMany('Modules\BillingBase\Entities\Item');
+	}
+
 	// View Relation.
 	public function view_has_many()
 	{
 		return array(
-			'Modem' => $this->modems
+			'Modem' => $this->modems,
+			'Item'	=> $this->items
 			);
 	}
 
