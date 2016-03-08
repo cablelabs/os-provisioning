@@ -24,7 +24,6 @@ class CreatePhonenumberManagementTable extends BaseMigration {
 			$table->integer('trcclass')->unsigned();
 			$table->date('order_date');
 			$table->dateTime('voipaccount_ext_creation_date')->nullable()->default(NULL);
-			$table->string('voipaccount_ext_order_id')->nullable;
 			$table->date('activation_date');
 			$table->boolean('porting_in')->default(0);
 			$table->string('carrier_in', 16)->nullable;
@@ -35,7 +34,7 @@ class CreatePhonenumberManagementTable extends BaseMigration {
 
 			$table->string('subscriber_company');
 			$table->string('subscriber_department');
-			$table->enum('subscriber_salutation', ['Herr', 'Frau', 'Firma', 'Behörde']);
+			$table->enum('subscriber_salutation', ['Herrn', 'Frau', 'Firma', 'Behörde']);
 			$table->enum('subscriber_academic_degree', ['', 'Dr.', 'Prof. Dr.']);
 			$table->string('subscriber_firstname');
 			$table->string('subscriber_lastname');
