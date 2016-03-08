@@ -3,6 +3,7 @@
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use \Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand;
+use \Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand;
 
 class Kernel extends ConsoleKernel {
 
@@ -15,6 +16,7 @@ class Kernel extends ConsoleKernel {
 		'App\Console\Commands\Inspire',
 		'App\Console\Commands\TimeDeltaChecker',
 		'\Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand',
+		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
 	];
 
 	/**
