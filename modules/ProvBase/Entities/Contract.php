@@ -58,12 +58,18 @@ class Contract extends \BaseModel {
 		return $this->hasMany('Modules\BillingBase\Entities\Item');
 	}
 
+	public function sepamandates()
+	{
+		return $this->hasMany('Modules\BillingBase\Entities\SepaMandate');
+	}
+
 	// View Relation.
 	public function view_has_many()
 	{
 		return array(
 			'Modem' => $this->modems,
-			'Item'	=> $this->items
+			'Item'	=> $this->items,
+			'SepaMandate' => $this->sepamandates
 			);
 	}
 
