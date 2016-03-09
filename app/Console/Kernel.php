@@ -38,7 +38,11 @@ class Kernel extends ConsoleKernel {
 
 		// Update database table carriercode with csv data if necessary
 		$schedule->command('provvoip:update_carrier_code_database')
-				->dailyAt('03:24');
+			->dailyAt('03:24');
+
+		// Update status of envia orders
+		$schedule->command('provvoipenvia:update_envia_orders')
+			->dailyAt('03:37');
 	}
 
 }

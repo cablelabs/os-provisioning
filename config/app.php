@@ -26,7 +26,10 @@ return [
 	|
 	*/
 
-	'url' => 'http://localhost',
+	/* 'url' => 'http://localhost', */
+
+	// changed by Patrick Reichel => use this in /modules/ProvVoipEnvia/Console/EnviaOrderUpdaterCommand.php
+	'url' => 'https://localhost/lara',
 
 	/*
 	|--------------------------------------------------------------------------
