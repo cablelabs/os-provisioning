@@ -26,7 +26,7 @@ class UpdateContractQosidFieldTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('', function(Blueprint $table)
+		Schema::table('contract', function(Blueprint $table)
 		{
 			$table->renameColumn('price_id', 'qos_id');
 			$table->renameColumn('next_price_id', 'next_qos_id');
