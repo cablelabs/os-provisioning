@@ -27,8 +27,8 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected function schedule(Schedule $schedule)
 	{
-		$schedule->command('inspire')
-				 ->hourly();
+		/* $schedule->command('inspire') */
+		/* 		 ->hourly(); */
 
 		// comment the following in to see the time shifting behaviour of the scheduler;
 		// watch App\Console\Commands\TimeDeltaChecker for more informations
