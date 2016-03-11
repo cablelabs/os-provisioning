@@ -59,13 +59,13 @@ class ContractController extends \BaseModuleController {
 
 				array('form_type' => 'select', 'name' => 'price_id', 'description' => 'Data Tariff', 'create' => '1', 'value' => $this->_data_tariff($model)),
 				array('form_type' => 'select', 'name' => 'next_price_id', 'description' => 'Data Tariff next month', 'value' => $this->_data_tariff($model)),
-				array('form_type' => 'select', 'name' => 'voip_id', 'description' => 'Voip Tariff', 'value' => Price::getPossibleEnumValues('voip_tariff')),
-				array('form_type' => 'select', 'name' => 'next_voip_id', 'description' => 'Voip Tariff next month', 'value' => Price::getPossibleEnumValues('voip_tariff'), 'space' => '1'),
+				array('form_type' => 'select', 'name' => 'voip_tariff', 'description' => 'Voip Tariff', 'value' => Price::getPossibleEnumValues('voip_tariff')),
+				array('form_type' => 'select', 'name' => 'next_voip_tariff', 'description' => 'Voip Tariff next month', 'value' => Price::getPossibleEnumValues('voip_tariff'), 'space' => '1'),
 
-				array('form_type' => 'text', 'name' => 'sepa_holder', 'description' => 'Bank Account Holder'),
-				array('form_type' => 'text', 'name' => 'sepa_iban', 'description' => 'IBAN'),
-				array('form_type' => 'text', 'name' => 'sepa_bic', 'description' => 'BIC'),
-				array('form_type' => 'text', 'name' => 'sepa_institute', 'description' => 'Bank Institute'),
+				array('form_type' => 'text', 'name' => 'sepa_holder', 'description' => 'Bank Account Holder', 'options' => ['readonly']),
+				array('form_type' => 'text', 'name' => 'sepa_iban', 'description' => 'IBAN', 'options' => ['readonly']),
+				array('form_type' => 'text', 'name' => 'sepa_bic', 'description' => 'BIC', 'options' => ['readonly']),
+				array('form_type' => 'text', 'name' => 'sepa_institute', 'description' => 'Bank Institute', 'options' => ['readonly']),
 				array('form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'value' => '1', 'space' => '1'),
 			);
 
