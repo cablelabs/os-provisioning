@@ -16,6 +16,7 @@ class UpdateContractQosidFieldTable extends Migration {
 		{
 			$table->renameColumn('qos_id', 'price_id');
 			$table->renameColumn('next_qos_id', 'next_price_id');
+			$table->enum('cost_center', ['KM3-ERZ']);
 		});
 
 		// Note: need to use this method because laravel has bugs on changing column type
@@ -34,6 +35,7 @@ class UpdateContractQosidFieldTable extends Migration {
 		{
 			$table->renameColumn('price_id', 'qos_id');
 			$table->renameColumn('next_price_id', 'next_qos_id');
+			$table->dropColumn('cost_center');
 		});
 		
 		DB::update('ALTER TABLE contract CHANGE voip_tariff voip_id INTEGER NOT NULL');
