@@ -13,6 +13,8 @@ class BaseModel extends Eloquent
 	public $voip_enabled;
 	public $billing_enabled;
 
+	protected $fillable = array();
+
 
 	/**
 	 * Constructor.

@@ -33,7 +33,7 @@ class Kernel extends ConsoleKernel {
 		// comment the following in to see the time shifting behaviour of the scheduler;
 		// watch App\Console\Commands\TimeDeltaChecker for more informations
 		/* $schedule->command('main:time_delta') */
-		/* 		->everyMinute(); */
+			/* ->everyMinute(); */
 
 
 		// Update database table carriercode with csv data if necessary
@@ -43,6 +43,7 @@ class Kernel extends ConsoleKernel {
 		// Update status of envia orders
 		$schedule->command('provvoipenvia:update_envia_orders')
 			->dailyAt('03:37');
+			/* ->everyMinute(); */
 	}
 
 }
