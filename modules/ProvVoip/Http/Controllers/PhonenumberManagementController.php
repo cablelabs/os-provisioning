@@ -24,9 +24,6 @@ class PhonenumberManagementController extends \BaseModuleController {
 		if (!$model)
 			$model = new PhonenumberManagement;
 
-		/* $carriercode = new CarrierCode; */
-		/* $trcclass = new TRCClass; */
-
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'select', 'name' => 'phonenumber_id', 'description' => 'Phonenumber', 'value' => $model->phonenumber_list_with_dummies(), 'hidden' => '1'),

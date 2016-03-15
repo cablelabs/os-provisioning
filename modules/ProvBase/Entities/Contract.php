@@ -122,9 +122,15 @@ class Contract extends \BaseModel {
     // View Relation.
     public function view_has_many()
     {
-        return array(
-            'Modem' => $this->modems
-        );
+		$ret = array(
+			'Modem' => $this->modems,
+		);
+
+		if ($this->module_is_active('provvoipenvia')) {
+			$ret['EnviaOrder'] = $this->external_orders;
+		}
+
+		return $ret;
     }
 
 
