@@ -624,7 +624,7 @@ class BaseController extends Controller {
 			if (isset ($rules[$field['name']])) 
 			{ 
 				// Task 1: Add a (*) to fields description if validation rule contains required
-				if (preg_match('/(.*?)required(.*?)/', $rules[$field['name']]))
+				if (preg_match('/(.*?)required(?!_)(.*?)/', $rules[$field['name']]))
 					$field['description'] = $field['description']. ' *';
 
 				// Task 2: Add Placeholder YYYY-MM-DD for all date fields 

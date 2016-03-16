@@ -14,6 +14,15 @@ use Log;
  */
 class ExtendedValidator
 {
+	
+	public function notNull($attribute, $value, $parameters)
+	{
+		if ($value == '' || $value == '0' || $value == null)
+			return false;
+		return true;
+	}
+
+
 	/*
 	 * MAC validation
 	 *
