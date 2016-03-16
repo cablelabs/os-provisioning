@@ -16,7 +16,7 @@ class UpdateContractQosidFieldTable extends Migration {
 		{
 			$table->renameColumn('qos_id', 'price_id');
 			$table->renameColumn('next_qos_id', 'next_price_id');
-			$table->enum('cost_center', ['KM3-ERZ']);
+			$table->enum('cost_center', ['ERZ', 'KM3-ERZ', 'OLB', 'KM3']);
 		});
 
 		// Note: need to use this method because laravel has bugs on changing column type
