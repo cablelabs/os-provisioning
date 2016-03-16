@@ -6,6 +6,7 @@ use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\Qos;
 use Modules\BillingBase\Entities\Price;
 use Modules\BillingBase\Entities\Item;
+use Modules\BillingBase\Entities\CostCenter;
 
 class ContractController extends \BaseModuleController {
 
@@ -62,7 +63,7 @@ class ContractController extends \BaseModuleController {
 				array('form_type' => 'select', 'name' => 'voip_tariff', 'description' => 'Voip Tariff', 'value' => Price::getPossibleEnumValues('voip_tariff')),
 				array('form_type' => 'select', 'name' => 'next_voip_tariff', 'description' => 'Voip Tariff next month', 'value' => Price::getPossibleEnumValues('voip_tariff'), 'space' => '1'),
 
-				array('form_type' => 'select', 'name' => 'cost_center', 'description' => 'Cost Center', 'value' => Contract::getPossibleEnumValues('cost_center')),
+				array('form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $model->html_list(CostCenter::all(), 'name')),
 				array('form_type' => 'text', 'name' => 'sepa_holder', 'description' => 'Bank Account Holder', 'options' => ['readonly']),
 				array('form_type' => 'text', 'name' => 'sepa_iban', 'description' => 'IBAN', 'options' => ['readonly']),
 				array('form_type' => 'text', 'name' => 'sepa_bic', 'description' => 'BIC', 'options' => ['readonly']),

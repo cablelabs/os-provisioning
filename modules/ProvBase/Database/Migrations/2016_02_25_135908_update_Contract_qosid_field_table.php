@@ -16,10 +16,10 @@ class UpdateContractQosidFieldTable extends Migration {
 		{
 			$table->renameColumn('qos_id', 'price_id');
 			$table->renameColumn('next_qos_id', 'next_price_id');
-			$table->enum('cost_center', ['ERZ', 'KM3-ERZ', 'OLB', 'KM3']);
+			$table->integer('costcenter_id')->unsigned();
 		});
 
-		// Note: need to use this method because laravel has bugs on changing column type
+		// NOTE: need to use this method because renaming columns of tables that have enums inside is not yet supported
 		DB::update('ALTER TABLE contract CHANGE voip_id voip_tariff ENUM("", "Flat", "Basic") NOT NULL');
 		DB::update('ALTER TABLE contract CHANGE next_voip_id next_voip_tariff ENUM("", "Flat", "Basic") NOT NULL');
 	}
@@ -33,13 +33,19 @@ class UpdateContractQosidFieldTable extends Migration {
 	{
 		Schema::table('contract', function(Blueprint $table)
 		{
-			$table->renameColumn('price_id', 'qos_id');
-			$table->renameColumn('next_price_id', 'next_qos_id');
-			$table->dropColumn('cost_center');
+			// $table->renameColumn('price_id', 'qos_id');
+			$table->dropColumn('price_id');
+			$table->integer('qos_id');
+			// $table->renameColumn('next_price_id', 'next_qos_id');
+			$table->dropColumn('next_price_id');
+			$table->integer('next_qos_id');
+
+			$table->dropColumn('costcenter_id');
 		});
 		
 		DB::update('ALTER TABLE contract CHANGE voip_tariff voip_id INTEGER NOT NULL');
 		DB::update('ALTER TABLE contract CHANGE next_voip_tariff next_voip_id INTEGER NOT NULL');
+		// DB::update('ALTER TABLE contract DROP costcenter_id');
 	}
 
 }
