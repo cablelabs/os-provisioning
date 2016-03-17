@@ -12,17 +12,29 @@ class ContractController extends \BaseModuleController {
 
 	protected $relation_create_button = "Add";
 
-	// TODO: temporary helper until we have a global config or billing module or field specific visibility
-	// private $billing = 1;
-
 
 	private function _data_tariff($model)
 	{
-		// $h = $model->html_list(Qos::all(), 'name');
 		$h = $model->html_list(Price::where('type', '=', 'Internet')->get(), 'name');
 		$h[0] = null;
-		asort($h);
+		ksort($h);
 		return $h;
+	}
+
+	private function _voip_tariff($model)
+	{
+		$voip_tariff_list = $model->html_list(Price::where('type', '=', 'Voip')->get(), 'name');
+		$voip_tariff_list[0] = null;
+		ksort($voip_tariff_list);
+		return $voip_tariff_list;
+	}
+
+	private function _tv_tariff($model)
+	{
+		$tv_tariff_list = $model->html_list(Price::where('type', '=', 'TV')->get(), 'name');
+		$tv_tariff_list[0] = null;
+		ksort($tv_tariff_list);
+		return $tv_tariff_list;
 	}
 
     /**
@@ -60,8 +72,10 @@ class ContractController extends \BaseModuleController {
 
 				array('form_type' => 'select', 'name' => 'price_id', 'description' => 'Data Tariff', 'create' => '1', 'value' => $this->_data_tariff($model)),
 				array('form_type' => 'select', 'name' => 'next_price_id', 'description' => 'Data Tariff next month', 'value' => $this->_data_tariff($model)),
-				array('form_type' => 'select', 'name' => 'voip_tariff', 'description' => 'Voip Tariff', 'value' => Price::getPossibleEnumValues('voip_tariff')),
-				array('form_type' => 'select', 'name' => 'next_voip_tariff', 'description' => 'Voip Tariff next month', 'value' => Price::getPossibleEnumValues('voip_tariff'), 'space' => '1'),
+				array('form_type' => 'select', 'name' => 'voip_price_id', 'description' => 'Voip Tariff', 'value' => $this->_voip_tariff($model)),
+				array('form_type' => 'select', 'name' => 'next_voip_price_id', 'description' => 'Voip Tariff next month', 'value' => $this->_voip_tariff($model)),
+				array('form_type' => 'select', 'name' => 'tv_price_id', 'description' => 'TV Tariff', 'value' => $this->_tv_tariff($model)),
+				array('form_type' => 'select', 'name' => 'next_tv_price_id', 'description' => 'TV Tariff next month', 'value' => $this->_tv_tariff($model), 'space' => '1'),
 
 				array('form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $model->html_list(CostCenter::all(), 'name')),
 				array('form_type' => 'text', 'name' => 'sepa_holder', 'description' => 'Bank Account Holder', 'options' => ['readonly']),

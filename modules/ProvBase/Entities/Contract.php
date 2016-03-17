@@ -213,7 +213,8 @@ class Contract extends \BaseModel {
 		foreach ($this->modems as $modem)
 		{
 			$modem->network_access = $this->network_access;
-			$modem->qos_id = Price::find($this->price_id)->qos_id;
+			if ($qos_id = Price::find($this->price_id))
+				$modem->qos_id = $qos_id->qos_id;
 			$modem->save();
 		}
 	}
