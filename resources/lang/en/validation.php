@@ -59,7 +59,7 @@ return [
 	],
 	"netmask"               => "This is not a correct netmask",
 	"not_in"               => "The selected :attribute is invalid.",
-	'not_null'               => 'This field has to be set',
+	'not_null'               => 'This field has to be set (not 0)',
 	"numeric"              => "The :attribute must be a number.",
 	"regex"                => "The :attribute format is invalid.",
 	"required"             => "The :attribute field is required.",
