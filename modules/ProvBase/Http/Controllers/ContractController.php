@@ -46,7 +46,7 @@ class ContractController extends \BaseModuleController {
 		$m = new \BaseModel;
 
 		// dd(\Artisan::call('nms:accounting'));
-
+		
 		// label has to be the same like column in sql table
 		$a = array(
 			array('form_type' => 'text', 'name' => 'number', 'description' => 'Contract Number', 'options' => ['readonly']),

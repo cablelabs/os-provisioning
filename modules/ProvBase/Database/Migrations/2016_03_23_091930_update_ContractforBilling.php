@@ -15,7 +15,7 @@ class UpdateContractforBilling extends BaseMigration {
 	{
 		$bm = new \BaseModel;
 
-		if (!$bm->module_is_active('Billingbase'))
+		if ($bm->module_is_active('Billingbase') != true)
 			return;
 
 		Schema::table('contract', function(Blueprint $table)
@@ -38,7 +38,7 @@ class UpdateContractforBilling extends BaseMigration {
 	{
 		$bm = new \BaseModel;
 
-		if (!$bm->module_is_active('Billingbase'))
+		if ($bm->module_is_active('Billingbase') != true)
 			return;
 
 

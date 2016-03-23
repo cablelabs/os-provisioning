@@ -48,6 +48,7 @@ class BaseModel extends Eloquent
 	 */
 	public function index_list ()
 	{
+		return $this->orderBy('id')->get();
 		return $this->all();
 	}
 
