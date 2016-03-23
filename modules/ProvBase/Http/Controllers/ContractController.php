@@ -4,7 +4,7 @@ namespace Modules\ProvBase\Http\Controllers;
 
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\Qos;
-use Modules\BillingBase\Entities\Price;
+use Modules\BillingBase\Entities\Product;
 use Modules\BillingBase\Entities\Item;
 use Modules\BillingBase\Entities\CostCenter;
 
@@ -15,7 +15,7 @@ class ContractController extends \BaseModuleController {
 
 	private function _data_tariff($model)
 	{
-		$h = $model->html_list(Price::where('type', '=', 'Internet')->get(), 'name');
+		$h = $model->html_list(Product::where('type', '=', 'Internet')->get(), 'name');
 		$h[0] = null;
 		ksort($h);
 		return $h;
@@ -23,7 +23,7 @@ class ContractController extends \BaseModuleController {
 
 	private function _voip_tariff($model)
 	{
-		$voip_tariff_list = $model->html_list(Price::where('type', '=', 'Voip')->get(), 'name');
+		$voip_tariff_list = $model->html_list(Product::where('type', '=', 'Voip')->get(), 'name');
 		$voip_tariff_list[0] = null;
 		ksort($voip_tariff_list);
 		return $voip_tariff_list;
@@ -31,7 +31,7 @@ class ContractController extends \BaseModuleController {
 
 	private function _tv_tariff($model)
 	{
-		$tv_tariff_list = $model->html_list(Price::where('type', '=', 'TV')->get(), 'name');
+		$tv_tariff_list = $model->html_list(Product::where('type', '=', 'TV')->get(), 'name');
 		$tv_tariff_list[0] = null;
 		ksort($tv_tariff_list);
 		return $tv_tariff_list;
@@ -44,6 +44,8 @@ class ContractController extends \BaseModuleController {
 	{
 		$r = $a = $b = $c = [];
 		$m = new \BaseModel;
+
+		// dd(\Artisan::call('nms:accounting'));
 
 		// label has to be the same like column in sql table
 		$a = array(
@@ -65,25 +67,36 @@ class ContractController extends \BaseModuleController {
 		);
 
 		if ($m->module_is_active('Billingbase'))
+		{
 			$b = array(
 				array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'checked' => true, 'value' => '1', 'create' => '1'),
 				array('form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'), // TODO: create default 'value' => date("Y-m-d")	
 				array('form_type' => 'text', 'name' => 'contract_end', 'description' => 'Contract End', 'space' => '1'),
-
-				array('form_type' => 'select', 'name' => 'price_id', 'description' => 'Data Tariff', 'create' => '1', 'value' => $this->_data_tariff($model)),
-				array('form_type' => 'select', 'name' => 'next_price_id', 'description' => 'Data Tariff next month', 'value' => $this->_data_tariff($model)),
-				array('form_type' => 'select', 'name' => 'voip_price_id', 'description' => 'Voip Tariff', 'value' => $this->_voip_tariff($model)),
-				array('form_type' => 'select', 'name' => 'next_voip_price_id', 'description' => 'Voip Tariff next month', 'value' => $this->_voip_tariff($model)),
-				array('form_type' => 'select', 'name' => 'tv_price_id', 'description' => 'TV Tariff', 'value' => $this->_tv_tariff($model)),
-				array('form_type' => 'select', 'name' => 'next_tv_price_id', 'description' => 'TV Tariff next month', 'value' => $this->_tv_tariff($model), 'space' => '1'),
-
 				array('form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $model->html_list(CostCenter::all(), 'name')),
+				array('form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'value' => '1', 'space' => '1'),
+
+				// array('form_type' => 'select', 'name' => 'price_id', 'description' => 'Data Tariff', 'create' => '1', 'value' => $this->_data_tariff($model)),
+				// array('form_type' => 'select', 'name' => 'next_price_id', 'description' => 'Data Tariff next month', 'value' => $this->_data_tariff($model)),
+				// array('form_type' => 'select', 'name' => 'voip_price_id', 'description' => 'Voip Tariff', 'value' => $this->_voip_tariff($model)),
+				// array('form_type' => 'select', 'name' => 'next_voip_price_id', 'description' => 'Voip Tariff next month', 'value' => $this->_voip_tariff($model)),
+				// array('form_type' => 'select', 'name' => 'tv_price_id', 'description' => 'TV Tariff', 'value' => $this->_tv_tariff($model)),
+				// array('form_type' => 'select', 'name' => 'next_tv_price_id', 'description' => 'TV Tariff next month', 'value' => $this->_tv_tariff($model), 'space' => '1'),
+
 				array('form_type' => 'text', 'name' => 'sepa_holder', 'description' => 'Bank Account Holder', 'options' => ['readonly']),
 				array('form_type' => 'text', 'name' => 'sepa_iban', 'description' => 'IBAN', 'options' => ['readonly']),
 				array('form_type' => 'text', 'name' => 'sepa_bic', 'description' => 'BIC', 'options' => ['readonly']),
 				array('form_type' => 'text', 'name' => 'sepa_institute', 'description' => 'Bank Institute', 'options' => ['readonly']),
-				array('form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'value' => '1', 'space' => '1'),
 			);
+		}
+		else
+		{
+			$b = array(
+				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list(Qos::all(), 'name')),
+				array('form_type' => 'select', 'name' => 'next_qos_id', 'description' => 'QoS next month', 'value' => $this->_qos_next_month($model)),
+				array('form_type' => 'text', 'name' => 'voip_id', 'description' => 'Phone ID'),
+				array('form_type' => 'text', 'name' => 'next_voip_id', 'description' => 'Phone ID next month', 'space' => '1'),
+			);
+		}
 
 		$c = array (
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'),
@@ -99,9 +112,9 @@ class ContractController extends \BaseModuleController {
 		if (!$bm->module_is_active('Billingbase'))
 			return parent::edit($id);
 
-		$price_entries = Price::where('type', '=', 'device')->orWhere('type', '=', 'other')->orderBy('type')->get();
+		$products = Product::where('type', '=', 'device')->orWhere('type', '=', 'other')->orderBy('type')->get();
 
-		return parent::edit($id)->with('price_entries', $price_entries);
+		return parent::edit($id)->with('products', $products);
 	}
 
 }

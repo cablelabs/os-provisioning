@@ -26,6 +26,7 @@ class ExtendedValidatorServiceProvider extends ServiceProvider {
 		$this->app['validator']->extend('ip_larger', 'Acme\Validators\ExtendedValidator@ipLarger');
 		$this->app['validator']->extend('netmask', 'Acme\Validators\ExtendedValidator@netmask');
 		$this->app['validator']->extend('not_null', 'Acme\Validators\ExtendedValidator@notNull');
+		$this->app['validator']->extend('null_if', 'Acme\Validators\ExtendedValidator@nullIf');
 	}
 
 	/**

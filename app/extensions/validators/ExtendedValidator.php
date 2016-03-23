@@ -17,8 +17,28 @@ class ExtendedValidator
 	
 	public function notNull($attribute, $value, $parameters)
 	{
-		if ($value == '' || $value == '0' || $value == null)
+		if ($value == '' || $value == '0' || $value == null || $value == '0000-00-00')
 			return false;
+		return true;
+	}
+
+	/*
+	 * Checks if value of a data field is zero when another field has specific values (declared in parameters)
+	 * NOTE: the fields name has to be replaced by prep_rules-function of the Controller with the value of the data of this field
+	 */
+	public function nullIf($attribute, $value, $parameters)
+	{
+		$data = $parameters[0];
+		// dd($attribute, $value, $parameters);
+		unset($parameters[0]);
+		
+		if (in_array($data, $parameters))
+		{
+			if ($value == 0 || $value == null)
+				return true;
+			return false;
+		}
+
 		return true;
 	}
 
