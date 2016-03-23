@@ -20,7 +20,7 @@ class UpdateContractforBilling extends BaseMigration {
 
 		Schema::table('contract', function(Blueprint $table)
 		{
-			$table->integer('costcenter_id')->unsigned();
+			$table->integer('costcenter_id');
 			// $table->dropColumn('sepa_iban');
 			// $table->dropColumn('sepa_bic');
 			// $table->dropColumn('sepa_holder');
@@ -44,7 +44,7 @@ class UpdateContractforBilling extends BaseMigration {
 
 		Schema::table('contract', function(Blueprint $table)
 		{
-			$table->dropColumn('costcenter_id');
+			// $table->dropColumn('costcenter_id');
 		});
 		
 	}
