@@ -238,51 +238,6 @@ class Contract extends \BaseModel {
 	}
 
 
-	public function get_contract_validity_arr($last_run)
-	{
-		// contract is out of date
-		$dates = ['today' => date('Y-m-d'),
-			'month' => date('m'),
-			'null' => '0000-00-00',
-		];
-
-		if ($c->contract_start >= $dates['today'] || ($c->contract_end != $dates['null'] && $c->contract_end < $dates['today']))
-			return null;
-
-		$started_lastm  = false;
-		$ratio 			= 0;
-		$expires		= false;
-
-		// contract starts this month
-		if (date('Y-m', strtotime($this->contract_start)) == $dates['month'])
-		{
-			$days_remaining = date('t') - date('d', strtotime($this->contract_start));
-			$logger->addDebug('Contract '.$this->id." starts this month - billing for $days_remaining days");
-			$ratio = $days_remaining/date('t');
-		}
-
-		// contract was created last month after last_run
-		if (date('Y-m-01', strtotime($this->contract_start)) == $last_month && strtotime($this->contract_start) > strtotime($last_run))
-		{
-			$days_remaining = date('t', strtotime($last_month)) - date('d', strtotime($this->contract_start));
-			$logger->addDebug('Contract '.$this->id." was starting last month - billing for additional $days_remaining days");
-			$ratio = $days_remaining/date('t', strtotime($last_month));
-			$started_lastm = true;
-		}
-
-		// contract expires this month - contract ends always on end of month - shall be dynamic???
-		if (date('Y-m', strtotime($this->contract_end)) == $month)
-		{
-			$days_remaining = date('d', strtotime($this->contract_end)) - date('d', strtotime($this_month));
-			// $ratio = $days_remaining/date('t');
-			$logger->addDebug('Contract '.$this->id." expires this month - billing for $days_remaining days");
-			$expires = true;
-		}
-
-		return ['started_lastm' => $started_lastm, 'ratio' => $ratio, 'expires' => $expires];
-	}
-
-
 }
 
 
