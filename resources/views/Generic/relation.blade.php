@@ -48,7 +48,12 @@
 						{{ Form::checkbox('ids['.$rel_elem->id.']') }}
 					</td>
 					<td>
+						{{-- stroke deleted entries and do not link them --}}
+						@if (!is_null($rel_elem->deleted_at))
+							<s>{{ $rel_elem->get_view_link_title() }}</s>
+						@else
 						{{ HTML::linkRoute($view.'.edit', $rel_elem->get_view_link_title(), $rel_elem->id) }}
+						@endif
 					</td>
 				</tr>
 			@endforeach

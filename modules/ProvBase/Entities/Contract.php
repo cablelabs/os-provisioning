@@ -113,7 +113,7 @@ class Contract extends \BaseModel {
 	public function external_orders() {
 
 		if ($this->module_is_active('provvoipenvia')) {
-			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder');
+			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment');
 		}
 
 		return null;
