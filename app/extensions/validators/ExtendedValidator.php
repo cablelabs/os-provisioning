@@ -119,6 +119,14 @@ class ExtendedValidator
 	}
 
 
+	public function inFuture($attribute, $value, $parameters)
+	{
+		// dd($attribute, $value, $parameters);
+
+		return strtotime($value) >= strtotime(date('Y-m-d')) ? true : false;
+	}
+
+
 	/*
 	 * Geoposition validation
 	 * see: http://stackoverflow.com/questions/7113745/what-regex-expression-will-check-gps-values

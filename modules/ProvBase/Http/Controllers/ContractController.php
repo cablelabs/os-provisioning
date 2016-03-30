@@ -112,7 +112,8 @@ class ContractController extends \BaseModuleController {
 		if (!$bm->module_is_active('Billingbase'))
 			return parent::edit($id);
 
-		$products = Product::where('type', '=', 'device')->orWhere('type', '=', 'other')->orderBy('type')->get();
+		// $products = Product::where('type', '=', 'device')->orWhere('type', '=', 'other')->orderBy('type')->get();
+		$products = Product::orderBy('id')->get();
 
 		return parent::edit($id)->with('products', $products);
 	}
