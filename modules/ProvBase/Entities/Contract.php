@@ -238,6 +238,20 @@ class Contract extends \BaseModel {
 	}
 
 
+	/**
+	 * Cross checks start and end dates against actual day - used in accounting Cmd
+	 */
+	public function check_validity($dates)
+	{
+		$start = ($this->contract_start == null || $this->contract_start == $dates['null']) ? $this->created_at : $this->contract_start;
+		if (is_object($start))
+			$start = $start->toDateString();
+		$end = $this->contract_end == $dates['null'] ? null : $this->contract_end;
+
+		return ($start <= $dates['today'] && (!$end || $end >= $dates['today'])) ? true : false;
+	}
+
+
 }
 
 
