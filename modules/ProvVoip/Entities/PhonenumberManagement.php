@@ -111,4 +111,29 @@ class PhonenumberManagement extends \BaseModel {
 
 		return null;
 	}
+
+	/**
+	 * Get relation to external orders.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function external_orders() {
+
+		if ($this->module_is_active('provvoipenvia')) {
+			return $this->phonenumber->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment');
+		}
+
+		return null;
+	}
+
+
+	 // View Relation.
+	public function view_has_many() {
+
+		if ($this->module_is_active('provvoipenvia')) {
+			$ret['EnviaOrder'] = $this->external_orders;
+		}
+
+		return $ret;
+	}
 }
