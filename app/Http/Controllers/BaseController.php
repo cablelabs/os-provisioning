@@ -406,9 +406,12 @@ class BaseController extends Controller {
 		if(!isset($a['view_header']))
 			$a['view_header'] = $model->get_view_header();
 
-		$g = GlobalConfig::first();
-		$a['header1'] = $g->headline1;
-		$a['header2'] = $g->headline2;
+
+		// Get Framework Informations
+		$gc = GlobalConfig::first();
+		$a['framework']['header1'] = $gc->headline1;
+		$a['framework']['header2'] = $gc->headline2;
+		$a['framework']['version'] = $gc->version();
 
 		return $a;
 	}

@@ -9,10 +9,10 @@
 <!--             <div class="image">
               <a href="javascript:;"><img src="assets/img/user-11.jpg" alt="" /></a>
             </div>
- -->   
+ -->
             <div class="info">
-              {{ $header2 }}
-              <!-- <small>...</small> -->
+              {{ $framework['header2'] }}
+              <small>Version {{ $framework['version'] }}</small>
             </div>
           </li>
         </ul>
