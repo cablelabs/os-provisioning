@@ -579,10 +579,10 @@ class BaseController extends Controller {
 		$controller = $this->get_controller_obj();
 
 		// Prepare and Validate Input
-		$data      = $controller->prepare_input(Input::all());
-		$rules = $controller->prep_rules($obj::rules(), $data);
-		$validator = Validator::make($data, $rules);
-		$data      = $controller->prepare_input_post_validation ($data);
+		$data 		= $controller->prepare_input(Input::all());
+		$rules 		= $controller->prep_rules($obj::rules(), $data);
+		$validator  = Validator::make($data, $rules);
+		$data 		= $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails())
 		{
@@ -682,6 +682,8 @@ class BaseController extends Controller {
 		$save_button = $this->save_button;
 
 		$relation_create_button = $this->relation_create_button;
+
+		// dd($this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button', 'relation_create_button')));
 
 		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button', 'relation_create_button')));
 	}

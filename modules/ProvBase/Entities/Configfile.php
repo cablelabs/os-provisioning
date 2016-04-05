@@ -10,82 +10,82 @@ use Modules\ProvVoip\Entities\Phonenumber;
 
 class Configfile extends \BaseModel {
 
-    // The associated SQL table for this Model
-    public $table = 'configfile';
+	// The associated SQL table for this Model
+	public $table = 'configfile';
 
 
-    public $guarded = ['firmware_upload'];
+	public $guarded = ['firmware_upload'];
 
 
 	// Add your validation rules here
 	public static function rules($id = null)
-    {
-        return array(
-            'name' => 'required|unique:configfile,name,'.$id.',id,deleted_at,NULL',
-            'text' => "docsis",
-        );
-    }
+	{
+		return array(
+			'name' => 'required|unique:configfile,name,'.$id.',id,deleted_at,NULL',
+			'text' => "docsis",
+		);
+	}
 
 
-    // Name of View
-    public static function get_view_header()
-    {
-        return 'Configfiles';
-    }
+	// Name of View
+	public static function get_view_header()
+	{
+		return 'Configfiles';
+	}
 
-    // link title in index view
-    public function get_view_link_title()
-    {
-        return $this->device.': '.$this->name;
-    }
+	// link title in index view
+	public function get_view_link_title()
+	{
+		return $this->device.': '.$this->name;
+	}
 
-    /**
-     * BOOT:
-     * - init configfile observer
-     */
-    public static function boot()
-    {
-        parent::boot();
+	/**
+	 * BOOT:
+	 * - init configfile observer
+	 */
+	public static function boot()
+	{
+		parent::boot();
 
-        Configfile::observe(new ConfigfileObserver);
-    }
+		Configfile::observe(new ConfigfileObserver);
+	}
 
 
 
-    /**
-     * TODO: make one function
-     * returns a list of possible parent configfiles
-     * Nearly the same like html_list method of BaseModel but needs zero element in front
-     */
-    public function parents_list ()
-    {
-        $parents = array('0' => 'Null');
+	/**
+	 * TODO: make one function
+	 * returns a list of possible parent configfiles
+	 * Nearly the same like html_list method of BaseModel but needs zero element in front
+	 */
+	public function parents_list ()
+	{
+		$parents = array('0' => 'Null');
 		foreach (Configfile::all() as $cf)
 		{
 			if ($cf->id != $this->id)
 				$parents[$cf->id] = $cf->name;
 		}
 		return $parents;
-    }
+	}
 
-    public function parents_list_all ()
-    {
-        $parents = array('0' => 'Null');
+	public function parents_list_all ()
+	{
+		$parents = array('0' => 'Null');
 		foreach (Configfile::all() as $cf)
 		{
 			$parents[$cf->id] = $cf->name;
 		}
 		return $parents;
-    }
+	}
 
 
-    /**
+	/**
 	 * Searches children of a parent configfile recursivly to build the whole tree structure of all confifgfiles
 	 *
 	 * @author Nino Ryschawy
 	 * @param boolean variable - if 1 all modems and mtas that belong to the configfile (and their children) are built
-     */
-    public function search_children($build = 0)
+	 */
+	public function search_children($build = 0)
 	{
 		$id = $this->id;
 		$children = Configfile::all()->where('parent_id', $id)->all();
@@ -131,11 +131,11 @@ class Configfile extends \BaseModel {
 
 
 
-    /**
-     * all Relationships
-     *
-     * Note: Should be plural on hasMany
-     */
+	/**
+	 * all Relationships
+	 *
+	 * Note: Should be plural on hasMany
+	 */
 	public function modem ()
 	{
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
@@ -203,7 +203,7 @@ class Configfile extends \BaseModel {
 			}
 			else
 				array_push ($ret, $cfg);
-	    }
+		}
 
 		return $ret;
 	}
@@ -400,22 +400,22 @@ class Configfile extends \BaseModel {
  */
 class ConfigfileObserver
 {
-    public function created($configfile)
-    {
+	public function created($configfile)
+	{
 		$configfile->build_corresponding_configfiles();
 		// with parameter one the children are built
 		$configfile->search_children(1);
-    }
+	}
 
-    public function updated($configfile)
-    {
+	public function updated($configfile)
+	{
 		$configfile->build_corresponding_configfiles();
 		$configfile->search_children(1);
-    }
+	}
 
-    public function deleted($configfile)
-    {
+	public function deleted($configfile)
+	{
 		$configfile->build_corresponding_configfiles();
 		$configfile->search_children(1);
-    }
+	}
 }
