@@ -224,7 +224,9 @@ class BaseModel extends Eloquent
 		$exclude = array(
 			'BaseModel',
 			'Authmeta',
-			'Authcore'
+			'Authcore',
+			'TRCClass',	# static data; not for standalone use
+			'CarrierCode', # cron updated data; not for standalone use
 		);
 		$result = array();
 
