@@ -1,12 +1,12 @@
 
-{{ Form::openDivClass(12) }}
+@DivOpen(12)
 
 	{{ Form::open(array('route' => $view.'.create', 'method' => 'GET')) }}
 	{{ Form::hidden($key, $view_var->id) }}
 
 	{{-- Add a hidden form field if create tag is set in $form_fields --}}
 	@foreach($form_fields as $field)
-		<?php 
+		<?php
 			if (array_key_exists('create', $field))
 				echo Form::hidden($field["name"], $view_var->{$field["name"]});
 		?>
@@ -15,11 +15,11 @@
 	{{ Form::submit(\App\Http\Controllers\BaseController::translate('Create ').\App\Http\Controllers\BaseController::translate($view), ['style' => 'simple']) }}
 	{{ Form::close() }}
 
-{{ Form::closeDivClass() }}
+@DivClose()
 
 <br>
 
-{{ Form::openDivClass(12) }}
+@DivOpen(12)
 
 	{{ Form::open(array('route' => array($view.'.destroy', 0), 'method' => 'delete')) }}
 	<table>
@@ -40,4 +40,4 @@
 	{{ Form::submit('Delete', ['style' => 'simple']) }}
 	{{ Form::close() }}
 
-{{ Form::closeDivClass() }}
+@DivClose()

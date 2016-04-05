@@ -9,36 +9,31 @@
 @section('content_left')
 
 	<!-- Search Field -->
-	{{ Form::openDivClass(12) }}
-		<?php
-			// searchscope for following form is the current model
-			$next_scope = $route_name;
-		?>
-		{{ Form::openDivClass(8) }}
+	@DivOpen(12)
+		@DivOpen(6)
 			{{ Form::model(null, array('route'=>$route_name.'.fulltextSearch', 'method'=>'GET')) }}
 				@include('Generic.searchform')
 			{{ Form::close() }}
-		{{ Form::closeDivClass() }}
-	{{ Form::closeDivClass() }}
+		@DivClose()
+	@DivClose()
 
-	<!-- new line -->
-	{{ Form::openDivClass(12) }}
+	@DivOpen(12)
 		<br>
-	{{ Form::closeDivClass() }}
+	@DivClose()
 
 	<!-- Create Form -->
-	{{ Form::openDivClass(12) }}
-		{{ Form::openDivClass(3) }}
+	@DivOpen(12)
+		@DivOpen(3)
 			@if ($create_allowed)
 				{{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
 				{{ Form::submit('Create', ['style' => 'simple']) }}
 				{{ Form::close() }}
 			@endif
-		{{ Form::closeDivClass() }}
-	{{ Form::closeDivClass() }}
+		@DivClose()
+	@DivClose()
 
 	<!-- database entries inside a form with checkboxes to be able to delete one or more entries -->
-	{{ Form::openDivClass(12) }}
+	@DivOpen(12)
 
 		{{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete')) }}
 
@@ -53,16 +48,7 @@
 						{{ Form::checkbox('ids['.$object->id.']') }}
 					</td>
 					<td>
-
-						<?php
-							// TODO: move away from view!!
-							$cur_model_complete = get_class($object);
-							$cur_model_parts = explode('\\', $cur_model_complete);
-							$cur_model = array_pop($cur_model_parts);
-						?>
-
-						{{ HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id) }}
-
+						{{ HTML::linkRoute($route_name.'.edit', $object->get_view_link_title(), $object->id) }}
 					</td>
 				</tr>
 			@endforeach
@@ -71,11 +57,11 @@
 			<br>
 
 		<!-- delete/submit button of form-->
-		{{ Form::openDivClass(3) }}
+		@DivOpen(3)
 			{{ Form::submit('Delete', ['style' => 'simple']) }}
 			{{ Form::close() }}
-		{{ Form::closeDivClass() }}
+		@DivClose()
 
-	{{ Form::closeDivClass() }}
+	@DivClose()
 
 @stop

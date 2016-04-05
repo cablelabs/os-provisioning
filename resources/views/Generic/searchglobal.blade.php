@@ -9,21 +9,20 @@
 @section('content_left')
 
 
-	{{ Form::openDivClass(12) }}
+	@DivOpen(12)
 		<?php
 			// searchscope for following form is the current model
 			$next_scope = 'all';
 		?>
-		{{ Form::openDivClass(6) }}
+		@DivOpen(6)
 			{{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET')) }}
 				@include('Generic.searchform', ['button_text' => 'Search'])
 			{{ Form::close() }}
-		{{ Form::closeDivClass() }}
-	{{ Form::closeDivClass() }}
+		@DivClose()
+	@DivClose()
 
 
-	{{ Form::openDivClass(12) }}
-
+	@DivOpen(12)
 		@if (isset($query))
 			<h4>Global Search: Matches for <tt>'{{ $query }}'</tt></h4>
 		@endif
@@ -49,7 +48,6 @@
 				</tr>
 			@endforeach
 		</table>
-
-	{{ Form::closeDivClass() }}
+	@DivClose()
 
 @stop

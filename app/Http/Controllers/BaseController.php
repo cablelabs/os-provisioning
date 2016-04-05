@@ -33,14 +33,14 @@ class BaseController extends Controller {
 	/**
 	 * Constructor
 	 *
-	 * Basically this is a placeholder for eventually later use. I need to 
+	 * Basically this is a placeholder for eventually later use. I need to
 	 * overwrite the constructor in a subclass – and want to call the parent
 	 * constructor if there are changes in base classes. But calling the
 	 * parent con is only possible if it is explicitely defined…
 	 *
 	 * @author Patrick Reichel
 	 */
-	public function __construct() 
+	public function __construct()
 	{
 		// set language
 		App::setLocale($this->get_user_lang());
@@ -143,8 +143,8 @@ class BaseController extends Controller {
 
 
 	/**
-	 * Returns a default input data array, that shall be overwritten 
-	 * from the appropriate model controller if needed. 
+	 * Returns a default input data array, that shall be overwritten
+	 * from the appropriate model controller if needed.
 	 *
 	 * Note: Will be running before Validation
 	 *
@@ -153,7 +153,7 @@ class BaseController extends Controller {
 	protected function prepare_input($data)
 	{
 		// Checkbox Unset ?
-		foreach ($this->get_form_fields($this->get_model_obj()) as $field) 
+		foreach ($this->get_form_fields($this->get_model_obj()) as $field)
 		{
 			if(!isset($data[$field['name']]) && $field['form_type'] == 'checkbox')
 				$data[$field['name']] = 0;
@@ -164,8 +164,8 @@ class BaseController extends Controller {
 
 
 	/**
-	 * Returns a default input data array, that shall be overwritten 
-	 * from the appropriate model controller if needed. 
+	 * Returns a default input data array, that shall be overwritten
+	 * from the appropriate model controller if needed.
 	 *
 	 * Note: Will be running _after_ Validation
 	 */
@@ -175,9 +175,9 @@ class BaseController extends Controller {
 	}
 
 	/**
-	 * Returns an array of validation rules in dependence of the formular Input data 
-	 * of the http request, that shall be overwritten from the appropriate model 
-	 * controller if needed. 
+	 * Returns an array of validation rules in dependence of the formular Input data
+	 * of the http request, that shall be overwritten from the appropriate model
+	 * controller if needed.
 	 *
 	 * Note: Will be running before Validation
 	 */
@@ -323,13 +323,13 @@ class BaseController extends Controller {
 			if (File::exists($module->getPath().'/Config/header.php'))
 			{
 				/*
-				 * TODO: use Config::get() 
+				 * TODO: use Config::get()
 				 *       this needs to fix namespace problems first
 				 */
 				$array = include ($module->getPath().'/Config/header.php');
 				foreach ($array as $lines)
 				{
-					// array_push($ret, $lines);					
+					// array_push($ret, $lines);
 					foreach ($lines as $k => $line)
 					{
 						$key = $this->translate($k);
@@ -369,6 +369,7 @@ class BaseController extends Controller {
 		}
 
 	}
+
 
 
 	/**
@@ -433,7 +434,7 @@ class BaseController extends Controller {
 			$languages = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
 			if (strpos($languages[0], 'de') !== false)
 				return 'de';
-			else 
+			else
 				return 'en';
 		}
 
@@ -467,11 +468,11 @@ class BaseController extends Controller {
 		}
 		else
 		{
-			$obj       = $this->get_model_obj();	
+			$obj       = $this->get_model_obj();
 			$view_path = 'Generic.index';
 
 			if (View::exists($this->get_view_name().'.index'))
-				$view_path = $this->get_view_name().'.index';		
+				$view_path = $this->get_view_name().'.index';
 		}
 
 		$create_allowed = $this->get_controller_obj()->index_create_allowed;
@@ -602,14 +603,14 @@ class BaseController extends Controller {
 
 	/*
 	 * This function is used to prepare get_form_field array for edit view
-	 * So all general preparation stuff to get_form_fields will be done here. 
+	 * So all general preparation stuff to get_form_fields will be done here.
 	 *
-	 * Tasks: 
+	 * Tasks:
 	 *  1. Add a (*) to fields description if validation rule contains required
-	 *  2. Add Placeholder YYYY-MM-DD for all date fields 
+	 *  2. Add Placeholder YYYY-MM-DD for all date fields
 	 *  3. Hide all parent view relation select fields
 	 *
-	 * @param fields: the get_form_fields array() 
+	 * @param fields: the get_form_fields array()
 	 * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
 	 * @return: the modifeyed get_form_fields array()
 	 *
@@ -618,23 +619,23 @@ class BaseController extends Controller {
 	protected function _prepare_form_fields($fields, $model)
 	{
 		$ret = [];
-	
-		// get the validation rules for related model object 
+
+		// get the validation rules for related model object
 		$rules = $this->get_model_obj()->rules();
 
 		// for all fields
-		foreach ($fields as $field) 
+		foreach ($fields as $field)
 		{
 			// rule exists for actual field ?
-			if (isset ($rules[$field['name']])) 
-			{ 
+			if (isset ($rules[$field['name']]))
+			{
 				// Task 1: Add a (*) to fields description if validation rule contains required
 				if (preg_match('/(.*?)required(.*?)/', $rules[$field['name']]))
 					$field['description'] = $field['description']. ' *';
 
-				// Task 2: Add Placeholder YYYY-MM-DD for all date fields 
+				// Task 2: Add Placeholder YYYY-MM-DD for all date fields
 				if (preg_match('/(.*?)date(.*?)/', $rules[$field['name']]))
-					$field['options']['placeholder'] = 'YYYY-MM-DD';	
+					$field['options']['placeholder'] = 'YYYY-MM-DD';
 
 			}
 
