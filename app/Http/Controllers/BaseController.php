@@ -371,6 +371,47 @@ class BaseController extends Controller {
 	}
 
 
+	/*
+	 * Generate Top Header Link (like e.g. Contract > Modem > Mta > ..)
+	 * Shows the html links of the related objects recursively
+	 *
+	 * @param $route_name: route name of actual controller
+	 * @param $view_header: the view header name
+	 * @param $view_var: the object to generate the link from
+	 * @return: the HTML link line to be directly included in blade
+	 * @author: Torsten Schmidt
+	 */
+	private function _prep_link_header ($route_name, $view_header, $view_var)
+	{
+		$s = "";
+
+		// Recursivly parse all relations from view_var
+		$parent = $view_var;
+		do
+		{
+			if ($parent)
+			{
+				$tmp = explode('\\',get_class($parent));
+				$view = end($tmp);
+
+				$s = \HTML::linkRoute($view.'.edit', $parent->get_view_link_title(), $parent->id).' > '.$s;
+			}
+
+			// get view parent
+			$parent = $parent->view_belongs_to();
+		}
+		while ($parent);
+
+
+		// Base Link to Index Table in front of all relations
+		if (in_array($route_name, $this->get_config_modules()))	// parse: Global Config requires own link
+			$s = \HTML::linkRoute('Config.index', 'Global Configurations').': '.$s;
+		else
+			$s = \HTML::linkRoute($route_name.'.index', $view_header).': '.$s;
+
+		return $s;
+	}
+
 
 	/**
 	 * Set required default Variables for View
@@ -406,6 +447,9 @@ class BaseController extends Controller {
 
 		if(!isset($a['view_header']))
 			$a['view_header'] = $model->get_view_header();
+
+		if(!isset($a['link_header']))
+			$a['link_header'] = '';
 
 
 		// Get Framework Informations
@@ -547,6 +591,14 @@ class BaseController extends Controller {
 		// form_fields contain description of fields and the data of the fields
 		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj), $obj);
 
+		// generate Link header - parse parent object from HTML GET array
+		// TODO: avoid use of HTML GET array for security considerations
+		$key        = array_keys($_GET)[0];
+		$class_name = BaseModel::_guess_model_name(ucwords(explode ('_id', $key)[0]));
+		$class      = new $class_name;
+		$view_var   = $class->find($_GET[$key]);
+		$link_header = $this->_prep_link_header($this->get_route_name(), $view_header, $view_var);
+
 
 		$view_path = 'Generic.create';
 		$form_path = 'Generic.form';
@@ -559,7 +611,7 @@ class BaseController extends Controller {
 
 		$save_button = 'Save';
 
-		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'save_button')));
+		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'save_button', 'link_header')));
 	}
 
 
@@ -674,6 +726,7 @@ class BaseController extends Controller {
 		$view_header 	= $this->translate('Edit ').$this->translate($obj->get_view_header());
 		$view_var 		= $obj->findOrFail($id);
 		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var);
+		$link_header    = $this->_prep_link_header($this->get_route_name(), $view_header, $view_var);
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';
@@ -687,7 +740,7 @@ class BaseController extends Controller {
 		$config_routes = $this->get_config_modules();
 		$save_button = $this->save_button;
 
-		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button')));
+		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button', 'link_header')));
 	}
 
 
