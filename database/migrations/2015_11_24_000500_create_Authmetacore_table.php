@@ -25,7 +25,6 @@ class CreateAuthmetacoreTable extends BaseMigration {
 			$table->boolean('create')->default(0);
 			$table->boolean('edit')->default(0);
 			$table->boolean('delete')->default(0);
-			$table->boolean('ext_provider_actions')->default(0);
 
 			$table->foreign('meta_id')->references('id')->on('authmeta');
 			$table->foreign('core_id')->references('id')->on('authcore');
@@ -46,7 +45,6 @@ class CreateAuthmetacoreTable extends BaseMigration {
 				'create' => 1,
 				'edit' => 1,
 				'delete' => 1,
-				'ext_provider_actions' => 1,
 			]);
 		}
 

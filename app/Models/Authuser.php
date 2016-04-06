@@ -103,7 +103,7 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 	public function get_model_permissions() {
 
 		$permissions = array();
-		$perm_types = array('view', 'create', 'edit', 'delete', 'ext_provider_actions');
+		$perm_types = array('view', 'create', 'edit', 'delete');
 
 		// get data for each role a user has
 		foreach ($this->roles() as $role) {
@@ -156,7 +156,7 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 	 * @author Patrick Reichel
 	 *
 	 * @param $model name of the net
-	 * @param $access_type right needed (create, edit, delete, view, ext_provider_actions)
+	 * @param $access_type right needed (create, edit, delete, view)
 	 *
 	 * @return True if asked access is allowed, else false
 	 */

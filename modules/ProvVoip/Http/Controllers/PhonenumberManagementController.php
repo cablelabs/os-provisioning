@@ -78,7 +78,7 @@ class PhonenumberManagementController extends \BaseModuleController {
 		// check if user has the right to perform actions against Envia API
 		// if not: don't show any actions
 		try {
-			$this->_check_permissions("ext_provider_actions");
+			$this->_check_permissions("view", "Modules\ProvVoipEnvia\Entities\ProvVoipEnvia");
 		}
 		catch (PermissionDeniedError $ex) {
 			return null;

@@ -72,18 +72,22 @@ class BaseController extends Controller {
 	 * @author Patrick Reichel
 	 *
 	 * @param $access [view|create|edit|delete]
+	 * @param $model_to_check model path and name (in format as is stored in database); use current model if not given
 	 *
 	 * @throws NoAuthenticatedUserError if no user is logged in
 	 * @throws NoModelPermissionError if user is not allowed to acces the model
 	 * @throws InvalidPermissionsRequest if permission request is invalid
 	 * @throws InsufficientRightsError if user has not the specific right needed to perform an action
 	 */
-	protected function _check_permissions($access) {
+	protected function _check_permissions($access, $model_to_check=null) {
 
 		// get the currently authenticated user
 		$cur_user = Auth::user();
 
-		$cur_model = $this->get_model_name();
+		// if no model is given: use current model
+		if (is_null($model_to_check)) {
+			$model_to_check = $this->get_model_name();
+		}
 
 		// no user logged in
 		if (is_null($cur_user)) {
@@ -96,14 +100,14 @@ class BaseController extends Controller {
 		}
 
 		// check model rights
-		if (!array_key_exists($cur_model, $this->permissions['model'])) {
-			throw new AuthExceptions('Access to model '.$cur_model.' not allowed for user '.$cur_user->login_name.'.');
+		if (!array_key_exists($model_to_check, $this->permissions['model'])) {
+			throw new AuthExceptions('Access to model '.$model_to_check.' not allowed for user '.$cur_user->login_name.'.');
 		}
-		if (!array_key_exists($access, $this->permissions['model'][$cur_model])) {
-			throw new AuthExceptions('Something went wrong asking for '.$access.' right in '.$model.' for user '.$cur_user->login_name.'.');
+		if (!array_key_exists($access, $this->permissions['model'][$model_to_check])) {
+			throw new AuthExceptions('Something went wrong asking for '.$access.' right in '.$model_to_check.' for user '.$cur_user->login_name.'.');
 		}
-		if ($this->permissions['model'][$cur_model][$access] == 0) {
-			throw new AuthExceptions('User '.$cur_user->login_name.' is not allowed to '.$access.' in '.$cur_model.'.');
+		if ($this->permissions['model'][$model_to_check][$access] == 0) {
+			throw new AuthExceptions('User '.$cur_user->login_name.' is not allowed to '.$access.' in '.$model_to_check.'.');
 		}
 
 		// TODO: check net rights
