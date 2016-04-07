@@ -41,11 +41,11 @@ class ModemController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'),
 
 			array('form_type' => 'text', 'name' => 'x', 'description' => 'Geopos X', 'html' =>
-				"<div class=col-md-12>
+				"<div class=col-md-12 style='background-color:#e0f2f1'>
 				<div class=form-group><label for=x class='col-md-3 control-label'>Geopos X/Y</label>
-				<div class=col-md-4><input class=form-control name=x type=text value='".$model['x']."' id=x></div>"),
+				<div class=col-md-4><input class=form-control name=x type=text value='".$model['x']."' id=x style='background-color:#e0f2f1'></div>"),
 			array('form_type' => 'text', 'name' => 'y', 'description' => 'Geopos Y', 'html' =>
-				"<div class=col-md-4><input class=form-control name=y type=text value='".$model['y']."' id=y></div>
+				"<div class=col-md-4><input class=form-control name=y type=text value='".$model['y']."' id=y style='background-color:#e0f2f1'></div>
 				</div></div>"),
 
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
@@ -77,7 +77,7 @@ class ModemController extends \BaseModuleController {
 
 		if (\Input::get('topo') == '1')
 		{
-			// Generate KML file 
+			// Generate KML file
 			$customer = new \Modules\HfcCustomer\Http\Controllers\CustomerTopoController;
 			$file     = $customer->kml_generate ($modems);
 
@@ -86,7 +86,7 @@ class ModemController extends \BaseModuleController {
 		}
 
 		// Prepare
-		$panel_right = [['name' => 'List', 'route' => 'Modem.index', 'link' => ['topo' => '0']], 
+		$panel_right = [['name' => 'List', 'route' => 'Modem.index', 'link' => ['topo' => '0']],
 						['name' => 'Topography', 'route' => 'Modem.index', 'link' => ['topo' => '1']]];
 
 		$target      = ''; // TODO: use global define
@@ -105,13 +105,13 @@ class ModemController extends \BaseModuleController {
 	/**
 	 * Perform a fulltext search.
 	 *
-	 * Changes to BaseController: 
+	 * Changes to BaseController:
 	 *  - Topography Mode when HfcCustomer Module is active
 	 *  - also search for Contracts while searching for Modems
 	 *
 	 * @author Torsten Schmidt
 	 */
-	public function fulltextSearch() 
+	public function fulltextSearch()
 	{
 		$obj    = $this->get_model_obj();
 
@@ -128,7 +128,7 @@ class ModemController extends \BaseModuleController {
 
 		// perform Modem search
 		$modems = $obj->getFulltextSearchResults($scope, $mode, $query, $pre_f, $pre_v)[0];
-		
+
 		// perform contract search
 		$obj = new \Modules\ProvBase\Entities\Contract;
 		$contracts = $obj->getFulltextSearchResults('contract', $mode, $query, $pre_f, $pre_v)[0];
@@ -136,7 +136,7 @@ class ModemController extends \BaseModuleController {
 		// generate Topography
 		if (\Input::get('topo') == '1')
 		{
-			// Generate KML file 
+			// Generate KML file
 			$customer = new \Modules\HfcCustomer\Http\Controllers\CustomerTopoController;
 			$file     = $customer->kml_generate ($modems);
 
@@ -147,7 +147,7 @@ class ModemController extends \BaseModuleController {
 		if ($pre_f && $pre_v)
 			$pre_t = ' Search in '.strtoupper($pre_f).' '.\Modules\HfcBase\Entities\Tree::find($pre_v)->name;
 
-		$panel_right = [['name' => 'List', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '0', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]], 
+		$panel_right = [['name' => 'List', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '0', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]],
 						['name' => 'Topography', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '1', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]]];
 
 		$view_var    = $modems->get();

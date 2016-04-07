@@ -728,6 +728,11 @@ class BaseController extends Controller {
 	{
 		$ret = [];
 
+		// background color's to toggle through
+		$color_array = ['white', '#c8e6c9', '#fff3e0', '#fbe9e7', '#e0f2f1', '#f3e5f5'];
+		$color = $color_array[0];
+
+
 		foreach ($fields as $field)
 		{
 			$s = '';
@@ -766,13 +771,15 @@ class BaseController extends Controller {
 				goto finish;
 			}
 
-			$s .= \Form::openGroup($field["name"], $field["description"]);
 
 			/*
 			 * Output the Form Elements
 			 */
 			$value   = isset($field["value"]) ? $field["value"] : [];
 			$options = isset($field["options"]) ? $field["options"] : [];
+			array_push($options, 'style="background-color:'.$color.'"');
+
+			$s .= \Form::openGroup($field["name"], $field["description"], [], $color);
 
 			// form_type ?
 			switch ($field["form_type"])
@@ -801,7 +808,11 @@ class BaseController extends Controller {
 
 			// Space Element between fields
 			if (array_key_exists('space', $field))
-				$s .= "<div class=col-md-12>_</div>";
+			{
+				//$s .= "<div class=col-md-12><br></div>";
+				$color_array = array_merge( array(array_pop($color_array)), $color_array);
+				$color = $color_array[0];
+			}
 
 finish:
 			$add = $field;

@@ -174,7 +174,7 @@ class FormBuilder extends CollectiveFormBuilder {
     }
 
 
-    public function open(array $options = array()) 
+    public function open(array $options = array())
     {
         $options['class'] ='form_open'; // Note: this avoids form input fields with large distances
         return parent::open($options);
@@ -223,13 +223,13 @@ class FormBuilder extends CollectiveFormBuilder {
 
         // Return the formatted error message, if the form element has any.
         return $errors->first($this->transformKey($name), '<p align="right" class="help-block">:message</p>');
-    }        
+    }
 
 
     /**
      * Open a new form group.
      */
-    public function openGroup($name, $label = null, $options = array())
+    public function openGroup($name, $label = null, $options = array(), $color = false)
     {
         $options = $this->appendClassToOptions('form-group', $options);
 
@@ -248,7 +248,7 @@ class FormBuilder extends CollectiveFormBuilder {
         // set it to an empty string.
         $label = $label ? $this->label($name, $label) : '';
 
-        return $this->openDivClass(12).'<div'.$this->html->attributes($options).'>'.$label;
+        return $this->openDivClass(12, $color).'<div'.$this->html->attributes($options).'>'.$label;
     }
 
 
@@ -257,7 +257,7 @@ class FormBuilder extends CollectiveFormBuilder {
      */
     public function closeGroup()
     {
-        // Get the last added name from the groupStack and 
+        // Get the last added name from the groupStack and
         // remove it from the array.
         $name = array_pop($this->groupStack);
 
@@ -269,8 +269,11 @@ class FormBuilder extends CollectiveFormBuilder {
     }
 
 
-    public function openDivClass($col = 9)
+    public function openDivClass($col = 9, $color=false)
     {
+        if ($color)
+            return '<div class="col-md-'.$col.'" style="background-color:'.$color.'">';
+
         return '<div class="col-md-'.$col.'">';
     }
 
