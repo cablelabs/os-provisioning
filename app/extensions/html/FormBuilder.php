@@ -11,7 +11,7 @@ class FormBuilder extends CollectiveFormBuilder {
 
     /**
      * An array containing the currently opened form groups.
-     * 
+     *
      * @var array
      */
     protected $groupStack = array();
@@ -25,11 +25,11 @@ class FormBuilder extends CollectiveFormBuilder {
     	return '<div class="col-md-9">'.$s.'</div>';
     }
 
-    
+
     /**
      * Append the given class to the given options array.
      */
-    private function appendClassToOptions($class, array $options = array())
+    private function appendClassToOptions($class, $options = array())
     {
         // If a 'class' is already specified, append the 'form-control'
         // class to it. Otherwise, set the 'class' to 'form-control'.
@@ -84,7 +84,7 @@ class FormBuilder extends CollectiveFormBuilder {
     public function submit($value = NULL, $options = array())
     {
         $options = $this->appendClassToOptions('form-control btn btn-sm btn-success', $options);
-        
+
         $value = \App\Http\Controllers\BaseController::translate($value);
 
         if (isset($options['style']) && $options['style'] == 'simple')

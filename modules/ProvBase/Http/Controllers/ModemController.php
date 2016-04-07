@@ -40,8 +40,13 @@ class ModemController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number'),
 			array('form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'),
 
-			array('form_type' => 'text', 'name' => 'x', 'description' => 'Geopos X'),
-			array('form_type' => 'text', 'name' => 'y', 'description' => 'Geopos Y'),
+			array('form_type' => 'text', 'name' => 'x', 'description' => 'Geopos X', 'html' =>
+				"<div class=col-md-12>
+				<div class=form-group><label for=x class='col-md-3 control-label'>Geopos X/Y</label>
+				<div class=col-md-4><input class=form-control name=x type=text value='".$model['x']."' id=x></div>"),
+			array('form_type' => 'text', 'name' => 'y', 'description' => 'Geopos Y', 'html' =>
+				"<div class=col-md-4><input class=form-control name=y type=text value='".$model['y']."' id=y></div>
+				</div></div>"),
 
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
 		);
@@ -63,8 +68,8 @@ class ModemController extends \BaseModuleController {
 		catch (Exceptions $ex) {
 			throw new AuthExceptions($e->getMessage());
 		}
-		
-		
+
+
 		if(!$this->get_model_obj()->module_is_active ('HfcCustomer'))
 			return parent::index();
 

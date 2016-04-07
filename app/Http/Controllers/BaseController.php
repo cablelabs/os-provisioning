@@ -451,6 +451,8 @@ class BaseController extends Controller {
 		if(!isset($a['link_header']))
 			$a['link_header'] = '';
 
+		if (!isset($a['form_update']))
+			$a['form_update'] = $this->get_route_name().'.update';
 
 		// Get Framework Informations
 		$gc = GlobalConfig::first();
@@ -589,7 +591,7 @@ class BaseController extends Controller {
 		// $view_header 	= 'Create '.$obj->get_view_header();
 		$view_header 	= $this->translate('Create ').$this->translate($obj->get_view_header());
 		// form_fields contain description of fields and the data of the fields
-		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj), $obj);
+		$form_fields	= $this->html_form_field ($this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj), $obj));
 
 		// generate Link header - parse parent object from HTML GET array
 		// TODO: avoid use of HTML GET array for security considerations
@@ -696,9 +698,119 @@ class BaseController extends Controller {
 				$model->view_belongs_to()->table.'_id' == $field['name'])	// view table name (+_id) == field name ?
 				$field['hidden'] = '1';									// hide
 
+			$field['field_value'] = $model[$field['name']];
+
 			array_push ($ret, $field);
 		}
 
+		// dd($ret);
+
+		return $ret;
+	}
+
+
+	/*
+	 * Add ['html'] element to each $fields entry
+	 *
+	 * The html element contains the HTML formated code to display each HTML field.
+	 * You could use 'html' parameter inside the get_form_fields() functions to
+	 * overwrite default behavior. The best advice to use these parameter is to
+	 * debug the return array of this function.
+	 *
+	 * TODO: move too a separate class
+	 *
+	 * @param fields: the prepared get_form_fields array(), each array element represents on (HTML) field
+	 * @return: array() of fields with added ['html'] element containing the preformed html content
+	 *
+	 * @autor: Torsten Schmidt
+	 */
+	protected function html_form_field($fields)
+	{
+		$ret = [];
+
+		foreach ($fields as $field)
+		{
+			$s = '';
+
+			// ignore fields with 'html' parameter
+			if (isset($field['html']))
+			{
+				array_push($ret, $field);
+				continue;
+			}
+
+			/*
+			 * Hide Fields:
+			 *
+			 * 1. Hide fields that are in HTML _GET array.
+			 *    This is required for creating a "relational child"
+			 *    elements with pre-filled values. This must be first
+			 *    done, otherwise pre-filling does not work
+			 *
+			 *    Example: Mta/create?modem_id=100002 -> creates MTA to Modem id 100002
+			 */
+			if (isset($_GET[$field['name']]))
+			{
+				$s .= \Form::hidden ($field["name"], $_GET[$field['name']]);
+				goto finish;
+			}
+
+			/*
+			 * 2. check if hidden is set in get_form_fields()
+			 * 3. globally hide all relation fields
+			 *    (this means: all fields ending with _id)
+			 */
+			if (array_key_exists('hidden', $field))
+			{
+				$s .= \Form::hidden ($field["name"]);
+				goto finish;
+			}
+
+			$s .= \Form::openGroup($field["name"], $field["description"]);
+
+			/*
+			 * Output the Form Elements
+			 */
+			$value   = isset($field["value"]) ? $field["value"] : [];
+			$options = isset($field["options"]) ? $field["options"] : [];
+
+			// form_type ?
+			switch ($field["form_type"])
+			{
+				case 'checkbox' :
+					// Checkbox - where pre-checked is enabled
+					$checked = (isset($field['checked'])) ? $field['checked'] : $field['field_value'];
+					$s .= \Form::checkbox($field['name'], $value, null, $checked);
+					break;
+
+				case 'select' :
+					$s .= \Form::select($field["name"], $value, $field['field_value'], $options);
+					break;
+
+				case 'password' :
+					$s .= \Form::password($field['name']);
+					break;
+
+				default:
+					$value   = $field['field_value'];
+					$s .= \Form::$field["form_type"]($field["name"], $value, $options);
+					break;
+			}
+
+			$s .= \Form::closeGroup();
+
+			// Space Element between fields
+			if (array_key_exists('space', $field))
+				$s .= "<div class=col-md-12>_</div>";
+
+finish:
+			$add = $field;
+			$add['html'] = $s;
+			array_push($ret, $add);
+
+		}
+
+		// dd($ret);
 		return $ret;
 	}
 
@@ -725,7 +837,7 @@ class BaseController extends Controller {
 		// transfer model_name, view_header, view_var
 		$view_header 	= $this->translate('Edit ').$this->translate($obj->get_view_header());
 		$view_var 		= $obj->findOrFail($id);
-		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var);
+		$form_fields	= $this->html_form_field ($this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var));
 		$link_header    = $this->_prep_link_header($this->get_route_name(), $view_header, $view_var);
 
 		$view_path = 'Generic.edit';

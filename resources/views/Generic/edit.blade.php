@@ -11,11 +11,6 @@
 
 @section('content_left')
 
-	<?php
-		if (!isset($form_update))
-			$form_update = $route_name.'.update';
-	?>
-
 	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true)) }}
 
 		@include($form_path, $view_var)

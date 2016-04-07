@@ -16,7 +16,7 @@ class ContractController extends \BaseModuleController {
 		$h = $model->html_list(Qos::all(), 'name');
 		$h['0'] = '';
 		asort($h);
-		
+
 		return $h;
 	}
 
@@ -49,7 +49,7 @@ class ContractController extends \BaseModuleController {
 		if ($this->billing)
 			$b = array(
 				array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'checked' => true, 'value' => '1', 'create' => '1'),
-				array('form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'), // TODO: create default 'value' => date("Y-m-d")	
+				array('form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'), // TODO: create default 'value' => date("Y-m-d")
 				array('form_type' => 'text', 'name' => 'contract_end', 'description' => 'Contract End', 'space' => '1'),
 
 				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list(Qos::all(), 'name')),

@@ -52,12 +52,13 @@ class CreateContractTable extends BaseMigration {
 			$table->string('password', 32);
 			$table->integer('net');
 			$table->integer('cluster');
+			// TODO/NOTE: for contracts with modems in different networks/clusters we need a separate N-to-M table
 			$table->text('description');
 		});
 
 		$this->set_fim_fields(['number2', 'company', 'firstname', 'lastname', 'street', 'zip', 'city', 'phone', 'fax', 'email', 'description', 'sepa_iban']);
 		$this->set_auto_increment(500000);
-		
+
 		return parent::up();
 	}
 
