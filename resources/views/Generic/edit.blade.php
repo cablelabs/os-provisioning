@@ -36,7 +36,7 @@
 
 			$model = new $model_name;
 			$key   = strtolower($model->table).'_id';
-			${"view_header_$i"} = \App\Http\Controllers\BaseController::translate("Assigned").' '.\App\Http\Controllers\BaseController::translate($view);
+			${"view_header_$i"} = \App\Http\Controllers\BaseViewController::translate("Assigned").' '.\App\Http\Controllers\BaseViewController::translate($view);
 		?>
 
 		@section("content_$i")

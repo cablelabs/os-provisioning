@@ -70,7 +70,7 @@ class FormBuilder extends CollectiveFormBuilder {
         // translate the value if necessary
         // $bc = new \App\Http\Controllers\BaseController;
         // $value = $bc->translate($value);
-        $value = \App\Http\Controllers\BaseController::translate($value);
+        $value = \App\Http\Controllers\BaseViewController::translate($value);
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.
@@ -85,7 +85,7 @@ class FormBuilder extends CollectiveFormBuilder {
     {
         $options = $this->appendClassToOptions('form-control btn btn-sm btn-success', $options);
 
-        $value = \App\Http\Controllers\BaseController::translate($value);
+        $value = \App\Http\Controllers\BaseViewController::translate($value);
 
         if (isset($options['style']) && $options['style'] == 'simple')
             $s = parent::submit($value, $options);

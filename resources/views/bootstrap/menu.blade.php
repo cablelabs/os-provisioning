@@ -16,7 +16,7 @@
 
         </div>
         <!-- end mobile sidebar expand / collapse button -->
-    
+
         <div class="col-md-5">
 
               <br>
@@ -32,7 +32,7 @@
               $next_scope = 'all';
               $preselect_field = $preselect_value = null; // drop pre-selection
             ?>
-                 
+
             {{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET')) }}
               @include('Generic.searchform')
             {{ Form::close() }}
@@ -103,7 +103,7 @@
 -->
           <li class="dropdown navbar-user">
             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="{{asset('components/assets-admin/img/user-11.jpg')}}" alt="" /> 
+              <img src="{{asset('components/assets-admin/img/user-11.jpg')}}" alt="" />
               <span class="hidden-xs">{{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
@@ -118,7 +118,7 @@
 
           <li class="dropdown navbar-user">
             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-              <span class="hidden-xs">{{ \App\Http\Controllers\BaseController::translate('Main Menu') }}</span> <b class="caret"></b>
+              <span class="hidden-xs">{{ \App\Http\Controllers\BaseViewController::translate('Main Menu') }}</span> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>

@@ -25,7 +25,7 @@ class BaseModuleController extends BaseController {
 
 	protected function get_model_name()
 	{
-		// Note: returns namespace of Model 
+		// Note: returns namespace of Model
 		// quick and dirty :)
 		return $this->get_mvc_path().'\\Entities\\'.$this->__get_model_name();
 	}
@@ -58,8 +58,8 @@ class BaseModuleController extends BaseController {
         $tmp = get_parent_class();
         $base_controller = new $tmp;
 
-        $links = $this->get_config_modules();
-        $view_header = $this->translate("Global Configurations");
+        $links = BaseController::get_config_modules();
+        $view_header = BaseViewController::translate("Global Configurations");
         $route_name = 'Config.index';
 
     	return \View::make('GlobalConfig.index', $base_controller->compact_prep_view(compact('links', 'view_header', 'route_name')));

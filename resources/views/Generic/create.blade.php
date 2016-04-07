@@ -5,7 +5,7 @@
 
 		{{ $link_header }}
 
-		{{ \App\Http\Controllers\BaseController::translate('Create') }}
+		{{ \App\Http\Controllers\BaseViewController::translate('Create') }}
 
 	@stop
 @endif

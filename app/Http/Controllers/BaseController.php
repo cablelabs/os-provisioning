@@ -43,36 +43,11 @@ class BaseController extends Controller {
 	public function __construct()
 	{
 		// set language
-		App::setLocale($this->get_user_lang());
+		App::setLocale(BaseViewController::get_user_lang());
 	}
 
-	/**
-     * Searches for a string in the language files under resources/lang/ and returns it for the active application language
-     *
-     * @author Nino Ryschawy
-     */
-    public static function translate($string)
-    {
-        // cut the star at the end of value if there is one for the translate function and append it after translation
-        $star = '';
-        if (strpos($string, '*'))
-        {
-            $string = str_replace(' *', '', $string);
-            $star = ' *';
-        }
 
-        if (strpos($string, 'messages.'))
-        	return trans($string).$star;
-
-        $translation = trans("messages.$string");
-        // dd($name, $string, $star, $translation, strpos($translation, "messages."));
-        // found in lang/{}/messages.php
-        if (strpos($translation, 'messages.') === false)
-            return $translation.$star;
-
-        return $string.$star;
-    }
-
+// Auth Stuff: TODO: move to a separate Controller
 
 	/**
 	 * Get permissions array from model.
@@ -142,83 +117,7 @@ class BaseController extends Controller {
 	}
 
 
-	/**
-	 * Returns a default input data array, that shall be overwritten
-	 * from the appropriate model controller if needed.
-	 *
-	 * Note: Will be running before Validation
-	 *
-	 * Tasks: Checkbox Entries will automatically set to 0 if not checked
-	 */
-	protected function prepare_input($data)
-	{
-		// Checkbox Unset ?
-		foreach ($this->get_form_fields($this->get_model_obj()) as $field)
-		{
-			if(!isset($data[$field['name']]) && $field['form_type'] == 'checkbox')
-				$data[$field['name']] = 0;
-		}
-
-		return $data;
-	}
-
-
-	/**
-	 * Returns a default input data array, that shall be overwritten
-	 * from the appropriate model controller if needed.
-	 *
-	 * Note: Will be running _after_ Validation
-	 */
-	protected function prepare_input_post_validation($data)
-	{
-		return $data;
-	}
-
-	/**
-	 * Returns an array of validation rules in dependence of the formular Input data
-	 * of the http request, that shall be overwritten from the appropriate model
-	 * controller if needed.
-	 *
-	 * Note: Will be running before Validation
-	 */
-	protected function prep_rules($rules, $data)
-	{
-		return $rules;
-	}
-
-
-
-	/**
-	 *  json abstraction layer
-	 */
-	protected function json ()
-	{
-		$this->output_format = 'json';
-
-		$data = Input::all();
-		$id   = $data['id'];
-		$func = $data['function'];
-
-		if ($func == 'update')
-			return $this->update($id);
-	}
-
-
-	/**
-	 *  Maybe a generic redirect is an option, but
-	 *  howto handle fails etc. ?
-	 */
-	protected function generic_return ($view, $param = null)
-	{
-		if ($this->output_format == 'json')
-			return $param;
-
-		if (isset($param))
-			return Redirect::route($view, $param);
-		else
-			return Redirect::route($view);
-	}
-
+// Class Relation Functions: TODO: move to a separate Controller (if possible?)
 
 	/**
 	 * Gets class name
@@ -280,7 +179,7 @@ class BaseController extends Controller {
 		return explode('\\', $this->get_model_name())[0];
 	}
 
-	protected function get_config_modules()
+	public static function get_config_modules()
 	{
 		$modules = Module::enabled();
 		$links = ['0' => 'GlobalConfig'];
@@ -301,45 +200,51 @@ class BaseController extends Controller {
 	}
 
 
-
-	public function get_view_header_links ()
+	/**
+	 * Returns a default input data array, that shall be overwritten
+	 * from the appropriate model controller if needed.
+	 *
+	 * Note: Will be running before Validation
+	 *
+	 * Tasks: Checkbox Entries will automatically set to 0 if not checked
+	 */
+	protected function prepare_input($data)
 	{
-		$ret = array();
-		$modules = Module::enabled();
-
-		$array = include(app_path().'/Config/header.php');
-		foreach ($array as $lines)
+		// Checkbox Unset ?
+		foreach ($this->get_form_fields($this->get_model_obj()) as $field)
 		{
-			// array_push($ret, $lines);
-			foreach ($lines as $k => $line)
-			{
-				$key = $this->translate($k);
-				array_push($ret, [$key => $line]);
-			}
+			if(!isset($data[$field['name']]) && $field['form_type'] == 'checkbox')
+				$data[$field['name']] = 0;
 		}
 
-		foreach ($modules as $module)
-		{
-			if (File::exists($module->getPath().'/Config/header.php'))
-			{
-				/*
-				 * TODO: use Config::get()
-				 *       this needs to fix namespace problems first
-				 */
-				$array = include ($module->getPath().'/Config/header.php');
-				foreach ($array as $lines)
-				{
-					// array_push($ret, $lines);
-					foreach ($lines as $k => $line)
-					{
-						$key = $this->translate($k);
-						array_push($ret, [$key => $line]);
-					}
-				}
-			}
-		}
-		return $ret;
+		return $data;
 	}
+
+
+	/**
+	 * Returns a default input data array, that shall be overwritten
+	 * from the appropriate model controller if needed.
+	 *
+	 * Note: Will be running _after_ Validation
+	 */
+	protected function prepare_input_post_validation($data)
+	{
+		return $data;
+	}
+
+
+	/**
+	 * Returns an array of validation rules in dependence of the formular Input data
+	 * of the http request, that shall be overwritten from the appropriate model
+	 * controller if needed.
+	 *
+	 * Note: Will be running before Validation
+	 */
+	protected function prep_rules($rules, $data)
+	{
+		return $rules;
+	}
+
 
 	/**
 	 * Handle file uploads.
@@ -371,48 +276,6 @@ class BaseController extends Controller {
 	}
 
 
-	/*
-	 * Generate Top Header Link (like e.g. Contract > Modem > Mta > ..)
-	 * Shows the html links of the related objects recursively
-	 *
-	 * @param $route_name: route name of actual controller
-	 * @param $view_header: the view header name
-	 * @param $view_var: the object to generate the link from
-	 * @return: the HTML link line to be directly included in blade
-	 * @author: Torsten Schmidt
-	 */
-	private function _prep_link_header ($route_name, $view_header, $view_var)
-	{
-		$s = "";
-
-		// Recursivly parse all relations from view_var
-		$parent = $view_var;
-		do
-		{
-			if ($parent)
-			{
-				$tmp = explode('\\',get_class($parent));
-				$view = end($tmp);
-
-				$s = \HTML::linkRoute($view.'.edit', $parent->get_view_link_title(), $parent->id).' > '.$s;
-			}
-
-			// get view parent
-			$parent = $parent->view_belongs_to();
-		}
-		while ($parent);
-
-
-		// Base Link to Index Table in front of all relations
-		if (in_array($route_name, $this->get_config_modules()))	// parse: Global Config requires own link
-			$s = \HTML::linkRoute('Config.index', 'Global Configurations').': '.$s;
-		else
-			$s = \HTML::linkRoute($route_name.'.index', $view_header).': '.$s;
-
-		return $s;
-	}
-
-
 	/**
 	 * Set required default Variables for View
 	 * Use it like:
@@ -436,7 +299,7 @@ class BaseController extends Controller {
 		}
 
 		if(!isset($a['view_header_links']))
-			$a['view_header_links'] = $this->get_view_header_links();
+			$a['view_header_links'] = BaseViewController::get_view_header_links();
 
 
 		if(!isset($a['route_name']))
@@ -463,31 +326,59 @@ class BaseController extends Controller {
 		return $a;
 	}
 
-	// TODO: take language from user setting or the language with highest priority from browser
-	protected function get_user_lang()
+
+	/*
+	 * This function is used to prepare get_form_field array for edit view
+	 * So all general preparation stuff to get_form_fields will be done here.
+	 *
+	 * Tasks:
+	 *  1. Add a (*) to fields description if validation rule contains required
+	 *  2. Add Placeholder YYYY-MM-DD for all date fields
+	 *  3. Hide all parent view relation select fields
+	 *
+	 * @param fields: the get_form_fields array()
+	 * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
+	 * @return: the modifeyed get_form_fields array()
+	 *
+	 * @autor: Torsten Schmidt
+	 */
+	protected function prepare_form_fields($fields, $model)
 	{
-		$user = Auth::user();
-		if (!isset($user))
-			return 'en';
-		$language = Auth::user()->language;
+		$ret = [];
 
-		if ($language == 'browser')
+		// get the validation rules for related model object
+		$rules = $this->get_model_obj()->rules();
+
+		// for all fields
+		foreach ($fields as $field)
 		{
-			// default
-			if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
-				return 'en';
+			// rule exists for actual field ?
+			if (isset ($rules[$field['name']]))
+			{
+				// Task 1: Add a (*) to fields description if validation rule contains required
+				if (preg_match('/(.*?)required(.*?)/', $rules[$field['name']]))
+					$field['description'] = $field['description']. ' *';
 
-			$languages = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-			if (strpos($languages[0], 'de') !== false)
-				return 'de';
-			else
-				return 'en';
+				// Task 2: Add Placeholder YYYY-MM-DD for all date fields
+				if (preg_match('/(.*?)date(.*?)/', $rules[$field['name']]))
+					$field['options']['placeholder'] = 'YYYY-MM-DD';
+
+			}
+
+			// 3. Hide all parent view relation select fields
+			if (is_object($model->view_belongs_to()) && 					// does a view relation exists
+				$model->view_belongs_to()->table.'_id' == $field['name'])	// view table name (+_id) == field name ?
+				$field['hidden'] = '1';									// hide
+
+			$field['field_value'] = $model[$field['name']];
+
+			array_push ($ret, $field);
 		}
 
-		return $language;
+		// dd($ret);
+
+		return $ret;
 	}
-
-
 
 
 	/**
@@ -555,7 +446,7 @@ class BaseController extends Controller {
 
 		$view_var = $obj->index_list();
 
-		$view_header  	= $this->translate($obj->get_view_header().' List');
+		$view_header  	= BaseViewController::translate($obj->get_view_header().' List');
 		$create_allowed = $this->get_controller_obj()->index_create_allowed;
 
 		$view_path = 'Generic.index';
@@ -568,7 +459,6 @@ class BaseController extends Controller {
 
 		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed')));
 	}
-
 
 
 
@@ -589,9 +479,9 @@ class BaseController extends Controller {
 		$obj = $this->get_model_obj();
 
 		// $view_header 	= 'Create '.$obj->get_view_header();
-		$view_header 	= $this->translate('Create ').$this->translate($obj->get_view_header());
+		$view_header 	= BaseViewController::translate('Create ').BaseViewController::translate($obj->get_view_header());
 		// form_fields contain description of fields and the data of the fields
-		$form_fields	= $this->html_form_field ($this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj), $obj));
+		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj), $obj));
 
 		// generate Link header - parse parent object from HTML GET array
 		// TODO: avoid use of HTML GET array for security considerations
@@ -599,7 +489,7 @@ class BaseController extends Controller {
 		$class_name = BaseModel::_guess_model_name(ucwords(explode ('_id', $key)[0]));
 		$class      = new $class_name;
 		$view_var   = $class->find($_GET[$key]);
-		$link_header = $this->_prep_link_header($this->get_route_name(), $view_header, $view_var);
+		$link_header = BaseViewController::prep_link_header($this->get_route_name(), $view_header, $view_var);
 
 
 		$view_path = 'Generic.create';
@@ -655,177 +545,6 @@ class BaseController extends Controller {
 	}
 
 
-	/*
-	 * This function is used to prepare get_form_field array for edit view
-	 * So all general preparation stuff to get_form_fields will be done here.
-	 *
-	 * Tasks:
-	 *  1. Add a (*) to fields description if validation rule contains required
-	 *  2. Add Placeholder YYYY-MM-DD for all date fields
-	 *  3. Hide all parent view relation select fields
-	 *
-	 * @param fields: the get_form_fields array()
-	 * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
-	 * @return: the modifeyed get_form_fields array()
-	 *
-	 * @autor: Torsten Schmidt
-	 */
-	protected function _prepare_form_fields($fields, $model)
-	{
-		$ret = [];
-
-		// get the validation rules for related model object
-		$rules = $this->get_model_obj()->rules();
-
-		// for all fields
-		foreach ($fields as $field)
-		{
-			// rule exists for actual field ?
-			if (isset ($rules[$field['name']]))
-			{
-				// Task 1: Add a (*) to fields description if validation rule contains required
-				if (preg_match('/(.*?)required(.*?)/', $rules[$field['name']]))
-					$field['description'] = $field['description']. ' *';
-
-				// Task 2: Add Placeholder YYYY-MM-DD for all date fields
-				if (preg_match('/(.*?)date(.*?)/', $rules[$field['name']]))
-					$field['options']['placeholder'] = 'YYYY-MM-DD';
-
-			}
-
-			// 3. Hide all parent view relation select fields
-			if (is_object($model->view_belongs_to()) && 					// does a view relation exists
-				$model->view_belongs_to()->table.'_id' == $field['name'])	// view table name (+_id) == field name ?
-				$field['hidden'] = '1';									// hide
-
-			$field['field_value'] = $model[$field['name']];
-
-			array_push ($ret, $field);
-		}
-
-		// dd($ret);
-
-		return $ret;
-	}
-
-
-	/*
-	 * Add ['html'] element to each $fields entry
-	 *
-	 * The html element contains the HTML formated code to display each HTML field.
-	 * You could use 'html' parameter inside the get_form_fields() functions to
-	 * overwrite default behavior. The best advice to use these parameter is to
-	 * debug the return array of this function.
-	 *
-	 * TODO: move too a separate class
-	 *
-	 * @param fields: the prepared get_form_fields array(), each array element represents on (HTML) field
-	 * @return: array() of fields with added ['html'] element containing the preformed html content
-	 *
-	 * @autor: Torsten Schmidt
-	 */
-	protected function html_form_field($fields)
-	{
-		$ret = [];
-
-		// background color's to toggle through
-		$color_array = ['white', '#c8e6c9', '#fff3e0', '#fbe9e7', '#e0f2f1', '#f3e5f5'];
-		$color = $color_array[0];
-
-
-		foreach ($fields as $field)
-		{
-			$s = '';
-
-			// ignore fields with 'html' parameter
-			if (isset($field['html']))
-			{
-				array_push($ret, $field);
-				continue;
-			}
-
-			/*
-			 * Hide Fields:
-			 *
-			 * 1. Hide fields that are in HTML _GET array.
-			 *    This is required for creating a "relational child"
-			 *    elements with pre-filled values. This must be first
-			 *    done, otherwise pre-filling does not work
-			 *
-			 *    Example: Mta/create?modem_id=100002 -> creates MTA to Modem id 100002
-			 */
-			if (isset($_GET[$field['name']]))
-			{
-				$s .= \Form::hidden ($field["name"], $_GET[$field['name']]);
-				goto finish;
-			}
-
-			/*
-			 * 2. check if hidden is set in get_form_fields()
-			 * 3. globally hide all relation fields
-			 *    (this means: all fields ending with _id)
-			 */
-			if (array_key_exists('hidden', $field))
-			{
-				$s .= \Form::hidden ($field["name"]);
-				goto finish;
-			}
-
-
-			/*
-			 * Output the Form Elements
-			 */
-			$value   = isset($field["value"]) ? $field["value"] : [];
-			$options = isset($field["options"]) ? $field["options"] : [];
-			array_push($options, 'style="background-color:'.$color.'"');
-
-			$s .= \Form::openGroup($field["name"], $field["description"], [], $color);
-
-			// form_type ?
-			switch ($field["form_type"])
-			{
-				case 'checkbox' :
-					// Checkbox - where pre-checked is enabled
-					$checked = (isset($field['checked'])) ? $field['checked'] : $field['field_value'];
-					$s .= \Form::checkbox($field['name'], $value, null, $checked);
-					break;
-
-				case 'select' :
-					$s .= \Form::select($field["name"], $value, $field['field_value'], $options);
-					break;
-
-				case 'password' :
-					$s .= \Form::password($field['name']);
-					break;
-
-				default:
-					$value   = $field['field_value'];
-					$s .= \Form::$field["form_type"]($field["name"], $value, $options);
-					break;
-			}
-
-			$s .= \Form::closeGroup();
-
-			// Space Element between fields
-			if (array_key_exists('space', $field))
-			{
-				//$s .= "<div class=col-md-12><br></div>";
-				$color_array = array_merge( array(array_pop($color_array)), $color_array);
-				$color = $color_array[0];
-			}
-
-finish:
-			$add = $field;
-			$add['html'] = $s;
-			array_push($ret, $add);
-
-		}
-
-		// dd($ret);
-		return $ret;
-	}
-
-
 	/**
 	 * Show the editing form of the calling Object
 	 *
@@ -846,10 +565,10 @@ finish:
 		//${$this->get_view_var()} = $obj->findOrFail($id);
 
 		// transfer model_name, view_header, view_var
-		$view_header 	= $this->translate('Edit ').$this->translate($obj->get_view_header());
+		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($obj->get_view_header());
 		$view_var 		= $obj->findOrFail($id);
-		$form_fields	= $this->html_form_field ($this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var));
-		$link_header    = $this->_prep_link_header($this->get_route_name(), $view_header, $view_var);
+		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var));
+		$link_header    = BaseViewController::prep_link_header($this->get_route_name(), $view_header, $view_var);
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';
@@ -860,7 +579,7 @@ finish:
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		$config_routes = $this->get_config_modules();
+		$config_routes = BaseController::get_config_modules();
 		$save_button = $this->save_button;
 
 		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button', 'link_header')));
@@ -941,4 +660,37 @@ finish:
 		return Redirect::back();
 	}
 
+
+// Deprecated:
+
+	/**
+	 *  json abstraction layer
+	 */
+	protected function json ()
+	{
+		$this->output_format = 'json';
+
+		$data = Input::all();
+		$id   = $data['id'];
+		$func = $data['function'];
+
+		if ($func == 'update')
+			return $this->update($id);
+	}
+
+
+	/**
+	 *  Maybe a generic redirect is an option, but
+	 *  howto handle fails etc. ?
+	 */
+	protected function generic_return ($view, $param = null)
+	{
+		if ($this->output_format == 'json')
+			return $param;
+
+		if (isset($param))
+			return Redirect::route($view, $param);
+		else
+			return Redirect::route($view);
+	}
 }

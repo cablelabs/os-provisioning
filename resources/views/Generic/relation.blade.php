@@ -12,7 +12,7 @@
 		?>
 	@endforeach
 
-	{{ Form::submit(\App\Http\Controllers\BaseController::translate('Create ').\App\Http\Controllers\BaseController::translate($view), ['style' => 'simple']) }}
+	{{ Form::submit(\App\Http\Controllers\BaseViewController::translate('Create ').\App\Http\Controllers\BaseViewController::translate($view), ['style' => 'simple']) }}
 	{{ Form::close() }}
 
 @DivClose()
