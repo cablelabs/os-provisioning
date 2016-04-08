@@ -44,7 +44,7 @@ class ContractController extends \BaseModuleController {
 	{
 		$r = $a = $b = $c = [];
 		$m = new \BaseModel;
-
+	
 		// dd(\Artisan::call('nms:accounting'));
 
 		// label has to be the same like column in sql table

@@ -11,6 +11,8 @@ class Contract extends \BaseModel {
 	// The associated SQL table for this Model
 	public $table = 'contract';
 
+	// flag if contract expires this month - used in accounting command
+	public $expires = false;
 
 	// Add your validation rules here
 	public static function rules($id = null)
