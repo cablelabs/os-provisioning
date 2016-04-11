@@ -254,6 +254,27 @@ class Contract extends \BaseModel {
 	}
 
 
+	// Check if valid mandate exists, add sepa data to ordered structure, log all out of date contracts
+	public function get_valid_mandate()
+	{
+		$mandate = null;
+
+		foreach ($this->sepamandates as $m)
+		{
+			if (!is_object($m))
+				break;
+
+			if ($m->check_validity())
+			{
+				$mandate = $m;
+				break;
+			}
+		}
+
+		return $mandate;
+	}
+
+
 }
 
 
