@@ -39,7 +39,6 @@ class CreateContractTable extends BaseMigration {
 			$table->date('contract_start');
 			$table->date('contract_end');
 			$table->boolean('internet_access');
-			$table->boolean('phonebook_entry');
 			$table->integer('qos_id')->unsigned();
 			$table->integer('next_qos_id')->unsigned();
 			$table->integer('voip_id')->unsigned();
