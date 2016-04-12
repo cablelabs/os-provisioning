@@ -22,7 +22,7 @@ class BaseMigration extends Migration
 
     public function up()
     {
-        
+
     }
 
     protected function set_auto_increment ($i)
@@ -36,9 +36,9 @@ class BaseMigration extends Migration
 	 */
     protected function set_fim_fields($fields)
     {
-        foreach ($fields as $field) 
+        foreach ($fields as $field)
             $this->fim->add($field);
-        
+
         // create FULLTEXT index including the given
         $this->fim->make_index();
     }
