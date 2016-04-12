@@ -144,6 +144,110 @@ class Contract extends \BaseModel {
     }
 
 
+	/**
+	 * Helper to get the contract number.
+	 * As there is no hard coded contract number in database we have to use this mapper. The semantic meaning of number…number4 can be defined in global configuration.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @todo: in this first step the relation is hardcoded within the function. Later on we have to check the mapping against the configuration.
+	 * @return current contract number
+	 */
+	public function contract_number() {
+
+		$contract_number = $this->number;
+
+		return $contract_number;
+
+	}
+
+
+	/**
+	 * Helper to get the customer number.
+	 * As there is no hard coded customer number in database we have to use this mapper. The semantic meaning of number…number4 can be defined in global configuration.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @todo: in this first step the relation is hardcoded within the function. Later on we have to check the mapping against the configuration.
+	 * @return current customer number
+	 */
+	public function customer_number() {
+
+		if (boolval($this->number3)) {
+			$customer_number = $this->number3;
+		}
+		else {
+			$customer_number = $this->number;
+		}
+
+		return $customer_number;
+
+	}
+
+
+	/**
+	 * Helper to define possible salutation values.
+	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function salutation_options() {
+
+		$defaults = [
+			'Herr',
+			'Frau',
+			'Firma',
+			'Behörde',
+		];
+
+		if ($this->module_is_active('provvoipenvia')) {
+
+			$options = [
+				'Herrn',
+				'Frau',
+				'Firma',
+				'Behörde',
+			];
+		}
+		else {
+			$options = $defaults;
+		}
+
+		return $options;
+	}
+
+
+	/**
+	 * Helper to define possible academic degree values.
+	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function academic_degree_options() {
+
+		$defaults = [
+			'',
+			'Dr.',
+			'Prof. Dr.',
+		];
+
+		if ($this->module_is_active('provvoipenvia')) {
+
+			$defaults = [
+				'',
+				'Dr.',
+				'Prof. Dr.',
+			];
+		}
+		else {
+			$options = $defaults;
+		}
+
+		return $options;
+	}
+
+
+
     /**
      * BOOT:
      * - init observer
