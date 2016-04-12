@@ -41,7 +41,8 @@ class Contract extends \BaseModel {
 	// link title in index view
 	public function get_view_link_title()
 	{
-		return $this->id.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city;
+		$old = $this->number2 ? ' - (Old Nr: '.$this->number2.')' : '';
+		return $this->number.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city.$old;
 	}
 
 
@@ -223,9 +224,12 @@ class Contract extends \BaseModel {
  */
 class ContractObserver
 {
+	// start contract numbers from 10000 - TODO: move to global config
+	protected $num = 490000;
+
 	public function created($contract)
 	{
-		$contract->number = $contract->id;
+		$contract->number = $contract->id - $this->num;
 		$contract->save();     // forces to call the updated method of the observer
 
 		$contract->push_to_modems(); // should not be run, because a new added contract can not have modems..
@@ -233,7 +237,7 @@ class ContractObserver
 
 	public function updating($contract)
 	{
-		$contract->number = $contract->id;
+		$contract->number = $contract->id - $this->num;
 	}
 
 	public function updated ($contract)
