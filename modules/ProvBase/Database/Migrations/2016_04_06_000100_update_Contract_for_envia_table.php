@@ -20,8 +20,8 @@ class UpdateContractForEnviaTable extends BaseMigration {
         Schema::table('contract', function(Blueprint $table)
         {
 			$table->string('number', 32)->change();	// was integer in original migration
-			$table->string('number3', 32)->after('number2');
-			$table->string('number4', 32)->after('number3');
+			$table->string('number3', 32)->nullable()->default(NULL)->after('number2');
+			$table->string('number4', 32)->nullable()->default(NULL)->after('number3');
 			$table->string('contract_external_id', 60)->nullable()->default(NULL)->after('number4');
 			$table->string('customer_external_id', 60)->nullable()->default(NULL)->after('contract_external_id');
 			$table->date('contract_ext_creation_date')->nullable()->default(NULL)->after('customer_external_id');
@@ -29,6 +29,7 @@ class UpdateContractForEnviaTable extends BaseMigration {
 			$table->string('academic_degree')->after('salutation');
 			$table->string('house_number', 8)->after('street');
 			$table->boolean('phonebook_entry')->after('internet_access');
+			$table->date('contract_end')->nullable()->default(NULL)->change();
 			$table->string('password', 64)->change();
         });
 
@@ -78,6 +79,7 @@ class UpdateContractForEnviaTable extends BaseMigration {
 				'phonebook_entry',
 			]);
 
+			$table->integer('number')->change();
 			$table->string('password', 32)->change();
         });
     }

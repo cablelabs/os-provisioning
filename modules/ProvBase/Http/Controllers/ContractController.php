@@ -19,13 +19,13 @@ class ContractController extends \BaseModuleController {
 		$a = array(
 
 			// basic data
-			array('form_type' => 'text', 'name' => 'number', 'description' => 'ID', 'options' => ['readonly']),
-			array('form_type' => 'text', 'name' => 'customer_number', 'description' => 'Customer number', 'create' => '1'),
-			array('form_type' => 'text', 'name' => 'contract_number', 'description' => 'Contract number', 'create' => '1'),
-		//	array('form_type' => 'text', 'name' => 'number2', 'description' => 'Contract Number 2', 'options' => ['readonly']),
+			array('form_type' => 'text', 'name' => 'number', 'description' => $model->get_column_description('number'), 'options' => ['readonly']),
+			array('form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2'), 'options' => ['readonly']),
+			array('form_type' => 'text', 'name' => 'number3', 'description' => $model->get_column_description('number3'), 'options' => ['readonly']),
+			array('form_type' => 'text', 'name' => 'number4', 'description' => $model->get_column_description('number4'), 'options' => ['readonly']),
 			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
-			array('form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->salutation_options()),
-			array('form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic degree', 'value' => $model->academic_degree_options()),
+			array('form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options()),
+			array('form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic degree', 'value' => $model->get_academic_degree_options()),
 			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => '1', 'space' => '1'),
 			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1'),
@@ -47,8 +47,8 @@ class ContractController extends \BaseModuleController {
 
 		if ($model->voip_enabled) {
 			$b = array(
-				array('form_type' => 'text', 'name' => 'voip_contract_start', 'description' => 'VoIP Contract Start'),
-				array('form_type' => 'text', 'name' => 'voip_contract_end', 'description' => 'VoIP Contract End'),
+				/* array('form_type' => 'text', 'name' => 'voip_contract_start', 'description' => 'VoIP Contract Start'), */
+				/* array('form_type' => 'text', 'name' => 'voip_contract_end', 'description' => 'VoIP Contract End'), */
 				array('form_type' => 'checkbox', 'name' => 'phonebook_entry', 'description' => 'Make phonebook entry', 'value' => '1', 'create' => '1'),
 
 				/* array('form_type' => 'text', 'name' => 'voip_id', 'description' => 'Phone ID'), */

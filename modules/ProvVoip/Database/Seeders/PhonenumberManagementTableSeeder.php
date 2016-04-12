@@ -33,7 +33,7 @@ class PhonenumberManagementTableSeeder extends \BaseSeeder {
 				'subscriber_house_number' => rand(1, 128),
 				'subscriber_zip' => substr($faker->postcode, 0, 5),
 				'subscriber_city' => $faker->city,
-				'subscriber_country_id' => 1,
+				'subscriber_country' => 1,
 			]);
 		}
 	}

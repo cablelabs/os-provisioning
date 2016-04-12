@@ -170,6 +170,8 @@ class BaseModel extends Eloquent
 
 		// get metadata for the given column and extract enum options
 		$type = DB::select( DB::raw('SHOW COLUMNS FROM '.$instance->getTable().' WHERE Field = "'.$name.'"') )[0]->Type;
+
+		// create array with enum values (all values in brackets after “enum”)
 		preg_match('/^enum\((.*)\)$/', $type, $matches);
 
 		$enum_values = array();

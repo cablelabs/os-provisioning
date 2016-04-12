@@ -14,9 +14,9 @@ class Contract extends \BaseModel {
 
 		// basic data
 		'number',
-		'customer_number',
-		'contract_number',
 		'number2',
+		'number3',
+		'number4',
 		'company',
 		'salutation',
 		'academic_degree',
@@ -66,8 +66,7 @@ class Contract extends \BaseModel {
     public static function rules($id = null)
     {
         return array(
-            'number' => 'integer|unique:contract,number,'.$id,
-            'number2' => 'string|unique:contract,number2,'.$id,
+            'number' => 'string|unique:contract,number,'.$id,
             'firstname' => 'required',
             'lastname' => 'required',
             'street' => 'required',
@@ -76,10 +75,8 @@ class Contract extends \BaseModel {
             'phone' => 'required',
             'email' => 'email',
             'birthday' => 'required|date',
-            'contract_start' => 'date',
+            'contract_start' => 'required|date',
             'contract_end' => 'date', // |after:now -> implies we can not change stuff in an out-dated contract
-            'voip_contract_start' => 'date',
-            'voip_contract_end' => 'date',
             'sepa_iban' => 'iban',
             'sepa_bic' => 'bic',
         );
@@ -191,7 +188,7 @@ class Contract extends \BaseModel {
 	 *
 	 * @author Patrick Reichel
 	 */
-	public function salutation_options() {
+	public function get_salutation_options() {
 
 		$defaults = [
 			'Herr',
@@ -213,7 +210,12 @@ class Contract extends \BaseModel {
 			$options = $defaults;
 		}
 
-		return $options;
+		$result = array();
+		foreach ($options as $option) {
+			$result[$option] = $option;
+		}
+
+		return $result;
 	}
 
 
@@ -223,7 +225,7 @@ class Contract extends \BaseModel {
 	 *
 	 * @author Patrick Reichel
 	 */
-	public function academic_degree_options() {
+	public function get_academic_degree_options() {
 
 		$defaults = [
 			'',
@@ -233,7 +235,7 @@ class Contract extends \BaseModel {
 
 		if ($this->module_is_active('provvoipenvia')) {
 
-			$defaults = [
+			$options = [
 				'',
 				'Dr.',
 				'Prof. Dr.',
@@ -243,9 +245,32 @@ class Contract extends \BaseModel {
 			$options = $defaults;
 		}
 
-		return $options;
+		$result = array();
+		foreach ($options as $option) {
+			$result[$option] = $option;
+		}
+
+		return $result;
 	}
 
+
+	/**
+	 * Helper to map database numberX fields to description
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function get_column_description($col_name) {
+
+		// later use global config to get mapping
+		$mappings = [
+			'number' => 'Contract number',
+			'number2' => 'Contract number legacy',
+			'number3' => 'Customer number',
+			'number4' => 'Customer number legacy',
+		];
+
+		return $mappings[$col_name];
+	}
 
 
     /**

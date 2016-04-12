@@ -18,12 +18,12 @@ class ContractTableSeeder extends \BaseSeeder {
 			$start_contract = $faker->dateTimeBetween('-10 years', '+1 year');
 
 			Contract::create([
-				'customer_number' => 'cust_'.$index,
-				'contract_number' => 'contr_'.$index,
+				'number' => 'contr_'.$index,
 				'number2' => 'Cu/2015/Q4/-'.$index-1,
+				'number3' => 'contr_'.$index,
 				'company' => (rand(0,10) > 7 ? $faker->company: ''),
-				'salutation' => rand(1, 4),
-				'academic_degree' => rand(1, 3),
+				'salutation' => 'Frau',
+				'academic_degree' => '',
 				'firstname' => $faker->firstName,
 				'lastname' => $faker->lastName,
 				'street' => $faker->streetName,
