@@ -30,6 +30,10 @@ class BaseMigration extends Migration
         DB::update("ALTER TABLE ".$this->tablename." AUTO_INCREMENT = $i;");
     }
 
+	/**
+	 * All columnes to be fulltext indexed.
+	 * Attention on updating an existing index: The index will be dropped and re-created – therefore you have to give ALL columns (again)!!
+	 */
     protected function set_fim_fields($fields)
     {
         foreach ($fields as $field) 

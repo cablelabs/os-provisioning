@@ -55,7 +55,20 @@ class CreateContractTable extends BaseMigration {
 			$table->text('description');
 		});
 
-		$this->set_fim_fields(['number2', 'company', 'firstname', 'lastname', 'street', 'zip', 'city', 'phone', 'fax', 'email', 'description', 'sepa_iban']);
+		$this->set_fim_fields([
+			'number2',
+			'company',
+			'firstname',
+			'lastname',
+			'street',
+			'zip',
+			'city',
+			'phone',
+			'fax',
+			'email',
+			'description',
+			'sepa_iban'
+		]);
 		$this->set_auto_increment(500000);
 
 		return parent::up();

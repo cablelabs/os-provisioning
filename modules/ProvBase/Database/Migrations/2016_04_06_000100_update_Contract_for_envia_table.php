@@ -3,7 +3,11 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateContractForEnviaTable extends Migration {
+class UpdateContractForEnviaTable extends BaseMigration {
+
+	// name of the table to create
+	protected $tablename = "contract";
+
 
     /**
 	 * Run the migrations.
@@ -21,14 +25,28 @@ class UpdateContractForEnviaTable extends Migration {
 			$table->string('contract_external_id', 60)->nullable()->default(NULL)->after('number4');
 			$table->string('customer_external_id', 60)->nullable()->default(NULL)->after('contract_external_id');
 			$table->date('contract_ext_creation_date')->nullable()->default(NULL)->after('customer_external_id');
-			$table->date('contract_ext_termination_date')->nullable()->default(NULL)->after('customer_ext_creation_date');
+			$table->date('contract_ext_termination_date')->nullable()->default(NULL)->after('contract_ext_creation_date');
 			$table->string('academic_degree')->after('salutation');
 			$table->string('house_number', 8)->after('street');
 			$table->boolean('phonebook_entry')->after('internet_access');
 			$table->string('password', 64)->change();
         });
 
+		// give all cols to be indexed (old and new ones => the index will be dropped and then created from scratch)
 		$this->set_fim_fields([
+			'number2',
+			'company',
+			'firstname',
+			'lastname',
+			'street',
+			'zip',
+			'city',
+			'phone',
+			'fax',
+			'email',
+			'description',
+			'sepa_iban',
+
 			'number3',
 			'number4',
 			'contract_external_id',
