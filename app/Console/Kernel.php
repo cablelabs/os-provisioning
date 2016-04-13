@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel {
 		'App\Console\Commands\TimeDeltaChecker',
 		'\Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
+		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
 	];
 
 	/**
@@ -43,6 +44,11 @@ class Kernel extends ConsoleKernel {
 		// Update status of envia orders
 		$schedule->command('provvoipenvia:update_envia_orders')
 			->dailyAt('03:37');
+			/* ->everyMinute(); */
+
+		// Update voice data
+		$schedule->command('provvoipenvia:update_voice_data')
+			->dailyAt('03:53');
 			/* ->everyMinute(); */
 	}
 

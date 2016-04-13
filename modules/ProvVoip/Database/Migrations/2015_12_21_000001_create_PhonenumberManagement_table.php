@@ -34,8 +34,8 @@ class CreatePhonenumberManagementTable extends BaseMigration {
 
 			$table->string('subscriber_company');
 			$table->string('subscriber_department');
-			$table->enum('subscriber_salutation', ['Herrn', 'Frau', 'Firma', 'Behörde']);
-			$table->enum('subscriber_academic_degree', ['', 'Dr.', 'Prof. Dr.']);
+			$table->string('subscriber_salutation');
+			$table->string('subscriber_academic_degree');
 			$table->string('subscriber_firstname');
 			$table->string('subscriber_lastname');
 			$table->string('subscriber_street');
