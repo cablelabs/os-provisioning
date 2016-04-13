@@ -5,18 +5,19 @@
 	"license": "MIT",
 	"type": "project",
 	"require": {
-		"laravel/framework": "~5.1.26",
+		"laravel/framework": "5.2.*",
 		"fzaninotto/faker": "~1.5.0",
 		"soapbox/laravel-formatter": "^2.0",
-		"pingpong/modules": "~2.1.5",
-		"laravelcollective/html": "~5.1.9",
-		"illuminate/html": "~5.0.0",
+		"pingpong/modules": "2.2.@dev",
+		"laravelcollective/html": "5.2.*",
 		"intervention/validation": "~1.1.3"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",
 		"phpspec/phpspec": "~2.1",
-		"laracasts/generators": "^1.1"
+		"laracasts/generators": "^1.1",
+		"symfony/dom-crawler": "~3.0",
+		"symfony/css-selector": "~3.0"
 	},
 	"autoload": {
 		"classmap": [

@@ -37,6 +37,9 @@ class BaseModel extends Eloquent
 	}
 
 
+	// Add Comment here. ..
+	protected $guarded = ['id'];
+
 	/**
 	 * check if module exists
 	 *
@@ -56,6 +59,39 @@ class BaseModel extends Eloquent
 				return true;
 
         return false;
+	}
+
+
+	/**
+	 * check if module exists
+	 * NOTE: this is simply a static pendant to module_is_active(). So call this if required from class context.
+	 *       -> see above
+	 */
+	public static function __module_is_active($modulename)
+	{
+		$modules = \Module::enabled();
+
+		foreach ($modules as $module)
+			if ($module->getLowerName() == strtolower($modulename))
+				return true;
+
+        return false;
+	}
+
+
+	/**
+	 * This function is a placeholder to write Model specific adaptions to
+	 * order and/or restructure the Model objects for Index View
+	 *
+	 * Note: for a example see Configfile Model
+	 *
+	 * @author Torsten Schmidt
+	 *
+	 * @return all objects of this model
+	 */
+	public function index_list ()
+	{
+		return $this->all();
 	}
 
 
@@ -321,7 +357,7 @@ class BaseModel extends Eloquent
 	 * @param $query query to search for
 	 * @param $preselect_field sql field for pre selection
 	 * @param $preselect_field sql search value for pre selection
-	 * @return search result: array of whereRaw() results, this means array of Illuminate\Database\Quer\Builder objects
+	 * @return search result: array of whereRaw() results, this means array of class Illuminate\Database\Quer\Builder objects
 	 * @author Patrick Reichel,
 	 *         Torsten Schmidt: add preselection, add Model checking
 	 */
@@ -512,13 +548,17 @@ class BaseModel extends Eloquent
 	 *        - this requires straight forward names of tables an
 	 *          forgein key, like modem and modem_id.
 	 *
+	 *  NOTE: we define exceptions in an array where recursive deletion is disabled
+	 *
 	 *	@author Torsten Schmidt
 	 *
-	 *	@return array off all children objects
+	 *	@return array of all children objects
 	 */
 	public function get_all_children()
 	{
-		$relations = array();
+		$relations = [];
+		// exceptions
+		$exceptions = ['configfile_id'];
 
 		// Lookup all SQL Tables
 		foreach (DB::select('SHOW TABLES') as $table)
@@ -526,9 +566,11 @@ class BaseModel extends Eloquent
 			// Lookup SQL Fields for current $table
 			foreach (Schema::getColumnListing($table->Tables_in_db_lara) as $column)
 			{
-				// check if $coloumn is actual table name object added by '_id'
+				// check if $column is actual table name object added by '_id'
 				if ($column == $this->table.'_id')
 				{
+					if (in_array($column, $exceptions))
+						continue;
 					// get all objects with $column
 					foreach (DB::select('SELECT id FROM '.$table->Tables_in_db_lara.' WHERE '.$column.'='.$this->id) as $child)
 					{

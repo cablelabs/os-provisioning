@@ -11,6 +11,8 @@ composer.lock
 Thumbs.db
 storage/systemd/
 storage/hfc/
+storage/framework/
+*.orig
 
 # vim (https://github.com/github/gitignore/blob/master/Global/Vim.gitignore)
 [._]*.s[a-w][a-z]
@@ -22,3 +24,5 @@ Session.vim
 
 # sublime trash dir
 .Trash-1000/
+
+sql-reset.sh

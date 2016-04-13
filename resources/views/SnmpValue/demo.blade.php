@@ -1,1 +1,0 @@
-/var/www/lara/app/views/SnmpValue/demo.blade.php

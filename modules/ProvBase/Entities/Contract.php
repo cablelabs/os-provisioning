@@ -9,64 +9,12 @@ class Contract extends \BaseModel {
 	// The associated SQL table for this Model
 	public $table = 'contract';
 
-	// Don't forget to fill this array
-	protected $fillable = [
-
-		// basic data
-		'number',
-		'number2',
-		'number3',
-		'number4',
-		'company',
-		'salutation',
-		'academic_degree',
-		'firstname',
-		'lastname',
-		'street',
-		'house_number',
-		'city',
-		'zip',
-		'country_id',
-		'x',
-		'y',
-		'phone',
-		'fax',
-		'email',
-		'birthday',
-
-		// for provisoning
-		'internet_access',
-		'contract_start',
-		'contract_end',
-		'qos_id',
-		'next_qos_id',
-
-		// for voip
-		'voip_contract_start',
-		'voip_contract_end',
-		'phonebook_entry',
-		'voip_id',
-		'next_voip_id',
-
-		// for billing
-		'sepa_iban',
-		'sepa_bic',
-		'sepa_holder',
-		'sepa_institute',
-		'create_invoice',
-
-		'login',
-		'password',
-
-		'description',
-	];
-
 
 	// Add your validation rules here
     public static function rules($id = null)
     {
         return array(
-            'number' => 'string|unique:contract,number,'.$id,
+			'number' => 'string|unique:contract,number,'.$id.',id,deleted_at,NULL',
             'firstname' => 'required',
             'lastname' => 'required',
             'street' => 'required',
@@ -76,7 +24,7 @@ class Contract extends \BaseModel {
             'email' => 'email',
             'birthday' => 'required|date',
             'contract_start' => 'required|date',
-            'contract_end' => 'date', // |after:now -> implies we can not change stuff in an out-dated contract
+            'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
             'sepa_iban' => 'iban',
             'sepa_bic' => 'bic',
         );
@@ -92,14 +40,15 @@ class Contract extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
-        return $this->id.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city;
+		$old = $this->number2 ? ' - (Old Nr: '.$this->number2.')' : '';
+		return $this->number.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city.$old;
     }
 
 
     // Relations
     public function modems()
     {
-        return $this->hasMany('Modules\ProvBase\Entities\Modem');
+		return $this->hasMany('Modules\ProvBase\Entities\Modem');
     }
 
 	/**
@@ -254,6 +203,136 @@ class Contract extends \BaseModel {
 	}
 
 
+	/*
+	 * Convert a 'YYYY-MM-DD' to Carbon Time Object 
+	 *
+	 * We use this to convert a SQL start / end contract date to a carbon
+	 * object. Carbon Time Objects can be compared with lt(), gt(), ..
+	 *
+	 * TODO: move this stuff to extensions
+	 */
+	private function _date_to_carbon ($date)
+	{
+		return \Carbon\Carbon::createFromFormat('Y-m-d', $date);
+	}
+
+
+	/*
+	 * Check if Carbon date is null
+	 *
+	 * NOTE: This is a little bit of pain, but it works.
+	 *       But string compare to '0000' is even more pain and
+	 *       also other tutorials point this out to be a freaky problem.
+	 * See: http://stackoverflow.com/questions/25959324/comparing-null-date-carbon-object-in-laravel-4-blade-templates
+	 *
+	 * TODO: move this stuff to extensions
+	 */
+	private function _date_null ($date)
+	{
+		return !($date->year > 1900);
+	}
+
+
+	/*
+	 * The Daily Scheduling Function
+	 *
+	 * Tasks:
+	 *  1. Check if $this contract end date is expired -> disable network_access
+	 *  2. Check if $this is a new contract and activate it -> enable network_access
+	 *
+	 * @return: none
+	 * @author: Torsten Schmidt
+	 */
+	public function daily_conversion()
+	{
+		$now   = \Carbon\Carbon::now();
+		$start = $this->_date_to_carbon($this->contract_start);
+		$end   = $this->_date_to_carbon($this->contract_end);
+
+
+		// Task 1: Check if $this contract end date is expired -> disable network_access
+		if ($end->lt($now) && !$this->_date_null($end) && $this->network_access == 1)
+		{
+			\Log::Info('daily: contract: disable based on ending contract date for '.$this->id);
+
+			$this->network_access = 0;
+			$this->save();
+		}
+
+		// Task 2: Check if $this is a new contract and activate it -> enable network_access
+		// Note: to avoid enabling contracts which are disabled manually, we also check if
+		//       maximum time beetween start contract and now() is not older than 1 day.
+		// Note: This requires the daily scheduling to run well
+		//       Otherwise the contracts must be enabled manually
+		// TODO: give them a good testing
+		if ($start->lt($now) && !$this->_date_null($start) && $start->diff($now)->days <= 1 && $this->network_access == 0)
+		{
+			\Log::Info('daily: contract: enable contract based on start contract date for '.$this->id);
+
+			$this->network_access = 1;
+			$this->save();
+		}
+	}
+
+
+	/*
+	 * The Monthly Scheduling Function
+	 *
+	 * Tasks:
+	 *  1. monthly QOS transition / change
+	 *  2. monthly VOIP transition / change
+	 *
+	 * @return: none
+	 * @author: Torsten Schmidt
+	 */
+	public function monthly_conversion()
+	{
+		// QOS: monthly QOS change – "Tarifwechsel"
+		if ($this->next_qos_id > 0)
+		{
+			\Log::Info('monthly: contract: change QOS for '.$this->id.' from '.$this->qos_id.' to '.$this->next_qos_id);
+			$this->qos_id = $this->next_qos_id;
+			$this->next_qos_id = 0;
+
+			$this->save();
+		}
+
+		// VOIP: monthly VOIP change
+		if ($this->next_voip_id > 0)
+		{
+			\Log::Info('monthly: contract: change VOIP-ID for '.$this->id.' from '.$this->voip_id.' to '.$this->next_voip_id);
+			$this->voip_id = $this->next_voip_id;
+			$this->next_voip_id = 0;
+
+			$this->save();
+		}
+	}
+
+
+	/*
+	 * Push all settings from Contract layer to the related child Modems (for $this)
+	 * This includes: network_access, qos_id
+	 *
+	 * Note: We call this function from Observer context so a change of the explained
+	 *       fields will push this changes to the child Modems
+	 *
+	 * @return: none
+	 * @author: Torsten Schmidt
+	 */
+	public function push_to_modems()
+	{
+		// TODO: Speed-up: Could this be done with a single eloquent update statement ?
+		//       Note: This requires to use the Eloquent Context to run all Observers
+		//       an to rebuild and restart the involved modems
+		foreach ($this->modems as $modem)
+		{
+			$modem->network_access = $this->network_access;
+			$modem->qos_id = $this->qos_id;
+			$modem->save();
+		}
+	}
+
+
 	/**
 	 * Helper to map database numberX fields to description
 	 *
@@ -272,17 +351,16 @@ class Contract extends \BaseModel {
 		return $mappings[$col_name];
 	}
 
+	/**
+	 * BOOT:
+	 * - init observer
+	 */
+	public static function boot()
+	{
+		parent::boot();
 
-    /**
-     * BOOT:
-     * - init observer
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        Contract::observe(new ContractObserver);
-    }
+		Contract::observe(new ContractObserver);
+	}
 
 }
 
@@ -296,14 +374,29 @@ class Contract extends \BaseModel {
  */
 class ContractObserver
 {
-    public function created($contract)
-    {
-        $contract->number = $contract->id;
-        $contract->save();     // forces to call the updated method of the observer
-    }
+	// start contract numbers from 10000 - TODO: move to global config
+	protected $num = 490000;
 
-    public function updating($contract)
-    {
-        $contract->number = $contract->id;
-    }
+	public function created($contract)
+	{
+		$contract->number = $contract->id - $this->num;
+		$contract->save();     // forces to call the updated method of the observer
+
+		$contract->push_to_modems(); // should not be run, because a new added contract can not have modems..
+	}
+
+	public function updating($contract)
+	{
+		$contract->number = $contract->id - $this->num;
+	}
+
+	public function updated ($contract)
+	{
+		$contract->push_to_modems();
+	}
+
+	public function saved ($contract)
+	{
+		$contract->push_to_modems();
+	}
 }

@@ -14,19 +14,17 @@ class Configfile extends \BaseModel {
     public $table = 'configfile';
 
 
+    public $guarded = ['firmware_upload'];
+
+
 	// Add your validation rules here
 	public static function rules($id = null)
     {
         return array(
-            'name' => 'required|unique:configfiles,name,'.$id,
-			// TODO: adapt docsis validator for mta files
-            'name' => 'required|unique:configfile,name,'.$id,
-            // 'text' => 'docsis'
+            'name' => 'required|unique:configfile,name,'.$id.',id,deleted_at,NULL',
+            'text' => "docsis",
         );
     }
-
-	// Don't forget to fill this array
-	protected $fillable = ['name', 'text', 'device', 'type', 'parent_id', 'public', 'firmware'];
 
 
     // Name of View
@@ -38,8 +36,21 @@ class Configfile extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
-        return $this->name;
+        return $this->device.': '.$this->name;
     }
+
+    /**
+     * BOOT:
+     * - init configfile observer
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        Configfile::observe(new ConfigfileObserver);
+    }
+
+
 
     /**
      * TODO: make one function
@@ -68,6 +79,36 @@ class Configfile extends \BaseModel {
     }
 
 
+    /**
+	 * Searches children of a parent configfile recursivly to build the whole tree structure of all confifgfiles
+	 *
+	 * @author Nino Ryschawy
+	 * @param boolean variable - if 1 all modems and mtas that belong to the configfile (and their children) are built
+     */
+    public function search_children($build = 0)
+	{
+		$id = $this->id;
+		$children = Configfile::all()->where('parent_id', $id)->all();
+		$cf_tree = [];
+
+		foreach ($children as $cf)
+		{
+			if ($build)
+			{
+				$cf->build_corresponding_configfiles();
+				$cf->search_children(1);
+			}
+			else
+			{
+				array_push($cf_tree, $cf);
+				array_push($cf_tree, $cf->search_children());
+			}
+		}
+
+		return $cf_tree;
+	}
+
+
 	/**
 	 * Returns all available firmware files (via directory listing)
 	 * @author Patrick Reichel
@@ -91,16 +132,89 @@ class Configfile extends \BaseModel {
 
 
     /**
-     * all Relationships:
+     * all Relationships
+     *
+     * Note: Should be plural on hasMany
      */
 	public function modem ()
 	{
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
 	}
 
+	public function mtas ()
+	{
+		return $this->hasMany('Modules\ProvVoip\Entities\Mta');
+	}
+
 	public function get_parent ()
 	{
 		return Configfile::find($this->parent_id);
+	}
+
+
+	/**
+	 * Return all children Configfiles for $this Configfile
+	 *
+	 * Note: we return a normal array(). Eloquent->where(..)->get() does
+	 *       return a special formated array, which does not work in 
+	 *       make_ordered_tree()
+	 *
+	 * @author Torsten Schmidt
+	 *
+	 * @return all children for $this configfile, null if no children
+	 */
+	public function get_children ()
+	{
+		$ret = [];
+
+		foreach (Configfile::whereRaw('parent_id = '.$this->id)->get() as $a)
+			array_push ($ret, $a);
+
+		return $ret;
+	}
+
+
+	/**
+	 * Return a recursive structured 1d-array for $cfgs Configfiles
+	 * with adapt the Configfile names for Index view
+	 *
+	 * Note: This function is recursive style
+	 *
+	 * @author Torsten Schmidt
+	 *
+	 * @param the configfile's to structrue
+	 * @return the structrued configfile for $cfgs with all children
+	 */
+	public function make_ordered_tree ($cfgs)
+	{
+		$ret = [];
+
+		foreach($cfgs as $cfg)
+		{
+			if ($cfg->get_children())
+			{
+				// push all children and adapt name for index view
+				array_push ($ret, $cfg);
+				foreach ($this->make_ordered_tree($cfg->get_children()) as $a)
+				{
+					$a->name = '- - - - '.$a->name; // adapt name
+					array_push ($ret, $a);
+				}
+			}
+			else
+				array_push ($ret, $cfg);
+	    }
+
+		return $ret;
+	}
+
+
+	/*
+	 * Return a pre-formated index list
+	 */
+	public function index_list ()
+	{
+		return $this->make_ordered_tree ($this->where('parent_id', '=', '0')->orderBy('device')->get());
 	}
 
 
@@ -148,6 +262,8 @@ class Configfile extends \BaseModel {
 
 				// if there is a specific firmware: add entries for upgrade
 				if ($this->firmware) {
+					// $server_ip = ProvBase::first()['provisioning_server'];
+					// array_push($config_extensions, "SnmpMibObject docsDevSwServerAddress.0 IPAddress $server_ip ; /* tftp server */");
 					array_push($config_extensions, 'SnmpMibObject docsDevSwFilename.0 String "fw/'.$this->firmware.'"; /* firmware file to download */');
 					array_push($config_extensions, 'SnmpMibObject docsDevSwAdminStatus.0 Integer 2; /* allow provisioning upgrade */');
 				}
@@ -160,14 +276,19 @@ class Configfile extends \BaseModel {
 				// same as above – arrays for later generic use
 				// they have to match database table names
 				$mta = array($device);
-				$phonenumber = Phonenumber::where('mta_id', '=', $device->id)->get();
-
 				// get description of table mtas
 				$db_schemata['mta'][0] = Schema::getColumnListing('mta');
-				// get description of table phonennumbers; one subarray per (possible) number
-				for ($i = 0; $i < count($phonenumber); $i++) {
-					$db_schemata['phonenumber'][$i] = Schema::getColumnListing('phonenumber');
+
+				// get Phonenumbers to MTA
+				foreach (Phonenumber::where('mta_id', '=', $device->id)->orderBy('port')->get() as $phone)
+				{
+					$phone->active = ($phone->active ? 1 : 2);
+					// use the port number as primary index key, so {phonenumber.number.1} will be the phone with port 1, not id 1 !
+					$phonenumber[$phone->port] = $phone;
+					// get description of table phonennumbers; one subarray per (possible) number
+					$db_schemata['phonenumber'][$phone->port] = Schema::getColumnListing('phonenumber');
 				}
+
 				break;
 
 			// this is for unknown types – atm we do nothing
@@ -192,14 +313,12 @@ class Configfile extends \BaseModel {
 				// fill temporary replacement array with database values
 				if (isset(${$table}[$j]->id))
 				{
-					$replace_tmp = DB::select ("SELECT * FROM ".$table." WHERE id = ?", array(${$table}[$j]->id))[0];
-
 					// loop over each column and check if there is something to replace
 					// column is used generic to get values
 					foreach ($columns as $column)
 					{
 						$search[$i]  = '{'.$table.'.'.$column.'.'.$j.'}';
-						$replace[$i] = $replace_tmp->{$column};
+						$replace[$i] = ${$table}[$j]->{$column};
 
 						$i++;
 					}
@@ -209,7 +328,7 @@ class Configfile extends \BaseModel {
 			}
 		}
 
-		// DEBUG: print_r($search); print_r($replace);
+		// DEBUG: var_dump ($search, $replace);
 
 		/*
 		 * Search and Replace Configfile TEXT
@@ -252,4 +371,51 @@ class Configfile extends \BaseModel {
 		return $t;
 	}
 
+
+	/**
+	* Build the configfiles of the appropriate modems and mtas after a configfile was updated/created/assigned
+	*
+	* @author Nino Ryschawy
+	*/
+	public function build_corresponding_configfiles()
+	{
+		$modems = $this->modem;
+		foreach ($modems as $modem)
+			$modem->make_configfile();
+
+		$mtas = $this->mtas;		// This should be a one-to-one relation
+		foreach ($mtas as $mta)
+			$mta->make_configfile();
+	}
+
+}
+
+/**
+ * Configfile Observer Class
+ * Handles changes on CMs
+ *
+ * can handle   'creating', 'created', 'updating', 'updated',
+ *              'deleting', 'deleted', 'saving', 'saved',
+ *              'restoring', 'restored',
+ */
+class ConfigfileObserver
+{
+    public function created($configfile)
+    {
+		$configfile->build_corresponding_configfiles();
+		// with parameter one the children are built
+		$configfile->search_children(1);
+    }
+
+    public function updated($configfile)
+    {
+		$configfile->build_corresponding_configfiles();
+		$configfile->search_children(1);
+    }
+
+    public function deleted($configfile)
+    {
+		$configfile->build_corresponding_configfiles();
+		$configfile->search_children(1);
+    }
 }

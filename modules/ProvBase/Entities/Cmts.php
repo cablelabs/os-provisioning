@@ -4,24 +4,20 @@ namespace Modules\ProvBase\Entities;
 
 use File;
 use DB;
+use Acme\php\ArrayHelper;
 
 class Cmts extends \BaseModel {
 
 	// The associated SQL table for this Model
-    protected $table = 'cmts';
+	public $table = 'cmts';
 
 	// Add your validation rules here
 	public static function rules($id = null)
     {
         return array(
-			'hostname' => 'unique:cmts,hostname,'.$id  	// unique: table, column
+			'hostname' => 'required|unique:cmts,hostname,'.$id.',id,deleted_at,NULL'  	// unique: table, column, exception , (where clause)
         );
     }
-
-	// Don't forget to fill this array
-	protected $fillable = ['hostname', 'type', 'ip', 'community_rw', 'community_ro', 'company', 'state', 'monitoring'];
-	// columns in database that shall not be able to alter
-	// protected $guarded = [];
 
 
 	// Name of View
@@ -66,6 +62,45 @@ class Cmts extends \BaseModel {
     }
 
 
+
+    /**
+     * Get US SNR of a registered CM
+     * 
+     * @param ip: ip address of cm
+     *
+     * @author Nino Ryschawy
+     */
+    public function get_us_snr($ip)
+    {
+		// find oid of corresponding modem on cmts and get the snr
+		$conf = snmp_get_valueretrieval();
+		if ($this->community_ro != '')
+			$com = $this->community_ro;
+		else
+			$com = ProvBase::first()->ro_community;
+
+		// we need to change the value retrievel for snmprealwalk()
+		snmp_set_valueretrieval(SNMP_VALUE_OBJECT);
+		try
+		{
+			$modem_ips = snmprealwalk($this->ip, $com, '1.3.6.1.4.1.4491.2.1.20.1.3.1.5');	
+		}
+		catch(\Exception $e)
+		{
+			snmp_set_valueretrieval($conf);
+			return ['No response of CMTS'];
+		}
+		snmp_set_valueretrieval($conf);
+		foreach ($modem_ips as $oid => $value)
+		{
+			$cmts_cm_ip = long2ip('0x'.str_replace(["\"", " "], '', $value->value));
+			if ($cmts_cm_ip == $ip)
+				return ArrayHelper::ArrayDiv(snmpwalk($this->ip, $com, str_replace('.1.3.6.1.4.1.4491.2.1.20.1.3.1.5', '1.3.6.1.4.1.4491.2.1.20.1.4.1.4', $oid)));
+		}
+		return ['Could not find CMTS'];
+	}
+
+
 	/**
 	 * auto generates the dhcp conf file for a specified cmts and 
 	 * adds the appropriate include statement in dhcpd.conf
@@ -107,11 +142,27 @@ class Cmts extends \BaseModel {
 			$router = $pool->router_ip;
 			$type = $pool->type;
 			$options = $pool->optional;
+			$dns['1'] = $pool->dns1_ip;
+			$dns['2'] = $pool->dns2_ip;
+			$dns['3'] = $pool->dns3_ip;
 
 
 			$data = "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
 			$data .= "\n\t\t".'option routers '.$router.';';
-			$data .= "\n\t\t".'option broadcast-address '.$broadcast_addr.';';
+			if ($broadcast_addr != '')
+				$data .= "\n\t\t".'option broadcast-address '.$broadcast_addr.';';
+			if ($dns['1'] != '' || $dns['2'] != '' || $dns['3'] != '')
+			{
+				$data .= "\n\t\toption domain-name-servers ";
+				$data_tmp = '';
+				foreach ($dns as $ip)
+				{
+					if ($ip != '')
+						$data_tmp .= "$ip, ";
+				}
+				$pos = strrpos($data_tmp, ',');
+				$data .= substr_replace($data_tmp, '', $pos, 1).";";
+			}
 			$data .= "\n\n\t\t".'pool'."\n\t\t".'{';
 			$data .= "\n\t\t\t".'range '.$range.';'."\n";
 
@@ -216,12 +267,6 @@ _exit:
 		$file_dhcp_conf = fopen('/etc/dhcp/dhcpd.conf', 'w');
 		fwrite($file_dhcp_conf, $data);
 		fclose($file_dhcp_conf);
-
-		// set all relevant ip pools to cmts_id = 0 (to first cmts_id under development)
-		// TODO: set first_cmts_id to zero!
-		$first_cmts_id = Cmts::first()->id;
-		DB::update('UPDATE ippool SET cmts_id='.$first_cmts_id.' where cmts_id='.$this->id.';');
-
 	}
 
 	/**

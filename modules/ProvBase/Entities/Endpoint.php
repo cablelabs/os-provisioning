@@ -12,13 +12,10 @@ class Endpoint extends \BaseModel {
     public static function rules($id = null)
     {
         return array(
-            'mac' => 'required|mac|unique:endpoint,mac,'.$id,
-            'hostname' => 'unique:endpoint,hostname,'.$id
+            'mac' => 'required|mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL',
+            'hostname' => 'unique:endpoint,hostname,'.$id.',id,deleted_at,NULL'
         );
     }
-
-	// Don't forget to fill this array
-	protected $fillable = ['hostname', 'name', 'mac', 'public', 'description'];
 
     
     // Name of View
@@ -30,7 +27,7 @@ class Endpoint extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
-        return $this->hostname;
+        return $this->hostname.' - '.$this->mac;
     }
 
 

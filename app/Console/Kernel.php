@@ -18,10 +18,41 @@ class Kernel extends ConsoleKernel {
 		'\Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
+		'App\Console\Commands\authCommand',
 	];
+
+
+	/**
+	 * check if module exists
+	 *
+	 * NOTE: this is a copy from BaseModel
+	 *
+	 * TODO: move this to a better place. Or even better: call
+	 *       scheduling stuff from a module based context
+	 *
+	 * @author Torsten Schmidt
+	 *
+	 * @param  Modulename
+	 * @return true if module exists and is active otherwise false
+	 */
+	private function module_is_active($modulename)
+	{
+		$modules = \Module::enabled();
+
+		foreach ($modules as $module)
+			if ($module->getLowerName() == strtolower($modulename))
+				return true;
+
+		return false;
+	}
+
 
 	/**
 	 * Define the application's command schedule.
+	 *
+	 * NOTE: the withoutOverlapping() statement is just for security reasons
+	 * and should never be required. But if a task hangs up, this will avoid
+	 * starting many parallel tasks. (Torsten Schmidt)
 	 *
 	 * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
 	 * @return void
@@ -37,19 +68,74 @@ class Kernel extends ConsoleKernel {
 			/* ->everyMinute(); */
 
 
-		// Update database table carriercode with csv data if necessary
-		$schedule->command('provvoip:update_carrier_code_database')
-			->dailyAt('03:24');
+		if ($this->module_is_active ('ProvVoip')) {
 
-		// Update status of envia orders
-		$schedule->command('provvoipenvia:update_envia_orders')
-			->dailyAt('03:37');
-			/* ->everyMinute(); */
+			// Update database table carriercode with csv data if necessary
+			$schedule->command('provvoip:update_carrier_code_database')
+				->dailyAt('03:24');
+		}
 
-		// Update voice data
-		$schedule->command('provvoipenvia:update_voice_data')
-			->dailyAt('03:53');
-			/* ->everyMinute(); */
+		if ($this->module_is_active ('ProvVoipEnvia')) {
+
+			// Update status of envia orders
+			$schedule->command('provvoipenvia:update_envia_orders')
+				->dailyAt('03:37');
+				/* ->everyMinute(); */
+
+			// Update voice data
+			$schedule->command('provvoipenvia:update_voice_data')
+				->dailyAt('03:53');
+				/* ->everyMinute(); */
+		}
+
+		// ProvBase Schedules
+		if ($this->module_is_active ('ProvBase'))
+		{
+			// Rebuid all Configfiles
+			$schedule->command('nms:configfile')->hourly()->withoutOverlapping();
+
+			// TODO: Reload DHCP
+			$schedule->command('nms:dhcp')->hourly()->withoutOverlapping();
+
+			// Contract
+			$schedule->command('nms:contract daily')->daily();
+			$schedule->command('nms:contract monthly')->monthly();
+		}
+
+		// Clean Up of HFC Base
+		if ($this->module_is_active ('HfcBase'))
+		{
+			// Rebuid all Configfiles
+			$schedule->call(function () {
+			    exec ('rm -rf '.public_path().'/modules/hfcbase/kml/*.kml');
+			    exec ('rm -rf '.public_path().'/modules/hfcbase/erd/*.*');
+			})->hourly();
+		}
+
+		// Clean Up of HFC Customer
+		if ($this->module_is_active ('HfcCustomer'))
+		{
+			// Rebuid all Configfiles
+			$schedule->call(function () {
+			    exec ('rm -rf '.public_path().'/modules/hfccustomer/kml/*.kml');
+			})->hourly();
+
+			// Modem Positioning System
+			$schedule->command('nms:mps')->daily();
+
+			$schedule->command('nms:modem-refresh --schedule=1')->everyFiveMinutes()->withoutOverlapping();
+		}
+
+		if ($this->module_is_active ('ProvMon'))
+		{
+			$schedule->command('nms:cacti')->everyFiveMinutes()->withoutOverlapping();
+		}
+
+		// TODO: improve
+		$schedule->call(function () {
+			    exec ('chown -R apache '.storage_path().'/logs');
+			})->dailyAt('00:01');
+
 	}
 
 }

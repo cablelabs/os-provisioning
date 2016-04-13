@@ -5,7 +5,7 @@ namespace Modules\Provbase\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class ProvbaseTableSeeder extends Seeder {
+class ProvbaseDatabaseSeeder extends Seeder {
 
 	/**
 	 * Run the database seeds.
@@ -23,6 +23,8 @@ class ProvbaseTableSeeder extends Seeder {
 		$this->call('Modules\ProvBase\Database\Seeders\ContractTableSeeder');
 		$this->call('Modules\ProvBase\Database\Seeders\ModemTableSeeder');
 		$this->call('Modules\ProvBase\Database\Seeders\EndpointTableSeeder');
+		$this->call('Modules\ProvBase\Database\Seeders\EndpointTableSeeder');
+		$this->call('Modules\ProvBase\Database\Seeders\ProvBaseConfigTableSeeder');
 	}
 
 }

@@ -28,7 +28,7 @@ class UpdateContractForEnviaTable extends BaseMigration {
 			$table->date('contract_ext_termination_date')->nullable()->default(NULL)->after('contract_ext_creation_date');
 			$table->string('academic_degree')->after('salutation');
 			$table->string('house_number', 8)->after('street');
-			$table->boolean('phonebook_entry')->after('internet_access');
+			$table->boolean('phonebook_entry')->after('network_access');
 			$table->date('contract_end')->nullable()->default(NULL)->change();
 			$table->string('password', 64)->change();
         });

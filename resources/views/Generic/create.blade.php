@@ -3,7 +3,7 @@
 @if (!isset($own_top))
 	@section('content_top')
 
-		{{ HTML::linkRoute($route_name.'.index', str_replace('Create', '', $view_header)) }}: 
+		{{ HTML::linkRoute($route_name.'.index', \App\Http\Controllers\BaseController::translate(trim(str_replace(\App\Http\Controllers\BaseController::translate('Create '), '', $view_header)))) }}: 
 
 		@if(isset($_GET) && $_GET != array())
 
@@ -29,7 +29,7 @@
 						if ($parent)
 						{
 							$view = explode('\\',get_class($parent));
-							$s = HTML::linkRoute(end($view).'.edit', $parent->get_view_link_title(), $parent->id).' / '.$s;
+							$s = HTML::linkRoute(end($view).'.edit', \App\Http\Controllers\BaseController::translate($parent->get_view_link_title()), $parent->id).' / '.$s;
 						}
 
 						$parent = $parent->view_belongs_to();
@@ -41,7 +41,7 @@
 
 		@endif
 
-		{{ 'Create'}}
+		{{ \App\Http\Controllers\BaseController::translate('Create') }}
 
 	@stop
 @endif

@@ -6,12 +6,13 @@
         <!-- begin sidebar user -->
         <ul class="nav">
           <li class="nav-profile">
-            <div class="image">
+<!--             <div class="image">
               <a href="javascript:;"><img src="assets/img/user-11.jpg" alt="" /></a>
             </div>
+ -->
             <div class="info">
-              {{\Auth::user()->first_name.' '.\Auth::user()->last_name}}
-              <small>...</small>
+              {{ $framework['header2'] }}
+              <small>Version {{ $framework['version'] }}</small>
             </div>
           </li>
         </ul>
@@ -30,6 +31,8 @@
               <i class="fa fa-inbox"></i> <span>Inbox</span>
             </a>
           </li>
+
+          <li class="nav-header">Networks</li>
 
           @foreach ($networks as $network)
 	          <li class="has-sub">

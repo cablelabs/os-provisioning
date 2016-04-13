@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Input;
 use Redirect;
+use GlobalConfig;
 
 
 class AuthController extends BaseController {
@@ -14,8 +15,25 @@ class AuthController extends BaseController {
 	 */
 	public function showLogin()
 	{
+		$g = GlobalConfig::first();
+		$head1 = $g->headline1;
+		$head2 = $g->headline2;
+		
 		// show the form
-		return \View::make('auth/login');
+		return \View::make('auth/login', compact('head1', 'head2'));
+	}
+
+
+	private function default_page()
+	{
+		// If ProvBase is not installed redirect to Config Page
+		$bm = new \BaseModel;
+		if (!$bm->module_is_active ('ProvBase'))
+			return Redirect::to('Config');
+
+		// Redirect to Default Page
+		// TODO: Redirect to a global overview page
+		return Redirect::to('Contract');
 	}
 
 
@@ -28,9 +46,7 @@ class AuthController extends BaseController {
 		if (!Auth::user())
 			return Redirect('auth/login');
 
-		// Redirect to
-		// TODO: Redirect depends on Module
-		return Redirect::to('Modem');
+		return $this->default_page();
 	}
 
 
@@ -65,7 +81,7 @@ class AuthController extends BaseController {
 
 			// attempt to do the login
 			if (Auth::attempt($userdata)) {
-				return Redirect::intended('Modem');
+				return $this->default_page();
 			}
 			else {
 

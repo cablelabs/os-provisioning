@@ -39,13 +39,13 @@
 
             <!--   <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button> -->
         </li>
-
+<!--
           <li class="dropdown">
             <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
               <i class="fa fa-bell-o"></i>
               <span class="label">0</span>
             </a>
-<!--
+
             <ul class="dropdown-menu media-list pull-right animated fadeInDown">
               <li class="dropdown-header">Notifications (5)</li>
               <li class="media">
@@ -108,17 +108,17 @@
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>
-              <li><a href="{{route('Authuser.edit', \Auth::user()->id)}}">User Settings</a></li>
-              <li><a href="{{route('Authuser.index')}}">User Global Settings</a></li>
+              <li><a href="{{route('Authuser.edit', \Auth::user()->id)}}">{{trans('messages.user_settings')}}</a></li>
+              <li><a href="{{route('Authuser.index')}}">{{trans('messages.user_glob_settings')}}</a></li>
               <!-- <li><a href="javascript:;"><span class="badge badge-danger pull-right">2</span> Inbox</a></li> -->
               <li class="divider"></li>
-              <li><a href="{{route('Auth.logout')}}">Log Out</a></li>
+              <li><a href="{{route('Auth.logout')}}">{{trans('messages.log_out')}}</a></li>
             </ul>
           </li>
 
           <li class="dropdown navbar-user">
             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-              <span class="hidden-xs">Main Menu</span> <b class="caret"></b>
+              <span class="hidden-xs">{{ \App\Http\Controllers\BaseController::translate('Main Menu') }}</span> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>

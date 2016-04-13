@@ -15,19 +15,16 @@ class IpPool extends \BaseModel {
     {
         return array(
             'net' => 'required|ip',
-            'netmask' => 'ip',
-            'ip_pool_start' => 'ip' ,
-            'ip_pool_end' => 'ip' ,
-            'router_ip' => 'ip' ,
-            'broadcast_ip' => 'ip' ,
-            'dns1_ip' => 'ip' ,
-            'dns2_ip' => 'ip' ,
+            'netmask' => 'required|ip|netmask',     // netmask must not be in first place!
+            'ip_pool_start' => 'required|ip|ip_in_range:net,netmask|ip_larger:net',   // own validation - see in classes: ExtendedValidator and IpPoolController
+            'ip_pool_end' => 'required|ip|ip_in_range:net,netmask|ip_larger:ip_pool_start',
+            'router_ip' => 'required|ip|ip_in_range:net,netmask|ip_larger:ip_pool_start',
+            'broadcast_ip' => 'ip|ip_in_range:net,netmask|ip_larger:ip_pool_start',
+            'dns1_ip' => 'ip',
+            'dns2_ip' => 'ip',
             'dns3_ip' => 'ip'
         );
     }
-
-	// Don't forget to fill this array
-	protected $fillable = ['cmts_id', 'type', 'net', 'netmask', 'ip_pool_start', 'ip_pool_end', 'router_ip', 'broadcast_ip', 'dns1_ip', 'dns2_ip', 'dns3_ip', 'optional'];
 
 
     // Name of View
@@ -39,8 +36,7 @@ class IpPool extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
-        return $this->net.' - '.$this->netmask;
-        return $this->html_list($this->cmts_hostnames(), 'hostname')[$this->cmts_id].'-'.$this->id;
+        return $this->type.': '.$this->net.' - '.$this->netmask.' - '.$this->html_list($this->cmts_hostnames(), 'hostname')[$this->cmts_id].'-'.$this->id;
     }
 
 
@@ -97,7 +93,7 @@ class IpPoolObserver
     public function created($pool)
     {
         // fetch cmts object that is related to the created ippool and make dhcp conf
-        if (isset($pool->cmts))
+        // if (isset($pool->cmts))
             $pool->cmts->make_dhcp_conf();
     }
 

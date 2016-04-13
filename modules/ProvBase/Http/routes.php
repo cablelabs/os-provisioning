@@ -29,9 +29,11 @@ Route::group(array('before' => 'auth'), function() {
 	Route::resource('Endpoint', 'Modules\ProvBase\Http\Controllers\EndpointController');
 	#Route::post('endpoint/json', 'Modules\ProvBase\Http\Controllers\EndpointController@json');
 	Route::resource('Configfile', 'Modules\ProvBase\Http\Controllers\ConfigfileController');
+	Route::get('Configfile_t', ['as' => 'Configfile.tree', 'uses' => 'Modules\ProvBase\Http\Controllers\ConfigfileController@index_tree']);
 	Route::resource('Qos', 'Modules\ProvBase\Http\Controllers\QosController');
 	Route::resource('Contract', 'Modules\ProvBase\Http\Controllers\ContractController');
 
 	Route::resource('EnviaOrder', 'Modules\ProvVoipEnvia\Http\Controllers\EnviaOrderController');
+	Route::resource('ProvBase', 'Modules\ProvBase\Http\Controllers\ProvBaseController');
 
 });

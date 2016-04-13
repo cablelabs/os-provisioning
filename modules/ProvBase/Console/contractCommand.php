@@ -1,26 +1,28 @@
 <?php
 
+namespace Modules\provbase\Console;
+
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-use Models\Modem;
+use Modules\ProvBase\Entities\Contract;
 
-class cactiCommand extends Command {
+class contractCommand extends Command {
 
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'nms:cacti';
+	protected $name = 'nms:contract';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Create cablemodem diagrams';
+	protected $description = 'Contract Scheduling Command (call with daily or monthly)';
 
 	/**
 	 * Create a new command instance.
@@ -39,23 +41,28 @@ class cactiCommand extends Command {
 	 */
 	public function fire()
 	{
-		$cms = Modem::all();
+		if (!($this->argument('date') == 'daily' || $this->argument('date') == 'monthly'))
+			return false;
+
+
+		$cs = Contract::all();
 
 		$i = 1; 
-		$num = count ($cms);
+		$num = count ($cs);
 
-		foreach ($cms as $cm)
+		foreach ($cs as $c)
 		{
-			//echo "create cacti monitoring : $i/$num \r"; $i++;
+			echo "contract month: $i/$num \r"; $i++;
 
-			$name      = $cm->hostname;
-			$hostname  = $name.'.test.erznet.tv';
-			$community = 'public'; # TODO: global config
+			if ($this->argument('date') == 'daily')
+				$c->daily_conversion();
 
-			$cmd = "/var/www/lara/app/scripts/cacti_add.sh $name $hostname $community";
-			echo exec($cmd);
+			if ($this->argument('date') == 'monthly')
+				$c->monthly_conversion();
 		}
 		echo "\n";
+
+		system('/bin/chown -R apache '.storage_path('logs'));
 	}
 
 	/**
@@ -66,7 +73,7 @@ class cactiCommand extends Command {
 	protected function getArguments()
 	{
 		return array(
-			// array('example', InputArgument::REQUIRED, 'An example argument.'),
+			array('date', InputArgument::REQUIRED, 'daily/monthly'),
 		);
 	}
 

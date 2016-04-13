@@ -3,7 +3,8 @@
 namespace Acme\Validators;
 
 use Models\Configfiles;
-
+use File;
+use Log;
 
 /*
  * Our own ExtendedValidator Class
@@ -34,6 +35,61 @@ class ExtendedValidator
 	}
 
 
+	/**
+	 * Check if ip ($value) is inside the ip range of a net
+	 *
+	 * @param 1 net_ip
+	 * @param 2 netmask
+	 * @return true if inside
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function validateIpInRange ($attribute, $value, $parameters)
+	{
+		// calculate netmask for cidr notation (e.g.: 10.0.0.0/21)
+		$netmask = ip2long($parameters[1]);
+		$base = ip2long('255.255.255.255');
+		// $prefix = 32-log(($netmask ^ $base)+1,2);
+
+		$ip = ip2long($value);
+		$start = ip2long($parameters[0]);
+		// $end = $start + (1 << (32 - $prefix)) -1;
+		$end = $start + (1 << log(($netmask ^ $base)+1,2)) -1;
+
+	    return ($ip >= $start && $ip <= $end);
+	}
+
+
+	/**
+	 * Check if ip ($value) is larger than the one specified in $parameters
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function ipLarger ($attribute, $value, $parameters)
+	{
+		$ip = ip2long($value);
+		$ip2 = ip2long($parameters[0]);
+
+	    return ($ip > $ip2);
+	}
+
+
+	/**
+	 * Check if ip ($value) is larger than the one specified in $parameters
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function netmask ($attribute, $value, $parameters)
+	{
+		$netmask = ip2long($value);
+		$base = ip2long('255.255.255.255');
+		$prefix = log(($netmask ^ $base)+1,2);
+
+		$number = (int) (10000 * $prefix);
+		return is_int($number /= 10000);
+	}
+
+
 	/*
 	 * Geoposition validation
 	 * see: http://stackoverflow.com/questions/7113745/what-regex-expression-will-check-gps-values
@@ -45,12 +101,31 @@ class ExtendedValidator
 
 
 	/*
+	 * Date or Null
+	 */
+	public function validateDateOrNull ($attribute, $value, $parameters)
+	{
+		if ($value == '0000-00-00')
+			return true;
+
+		// See: http://stackoverflow.com/questions/13194322/php-regex-to-check-date-is-in-yyyy-mm-dd-format
+		$dt = \DateTime::createFromFormat("Y-m-d", $value);
+		return $dt !== false && !array_sum($dt->getLastErrors());
+	}
+
+
+	/*
 	 * DOCSIS configfile validation
 	 */
 	public function validateDocsis ($attribute, $value, $parameters)
 	{
+		// dd($attribute, $value, $parameters);
+
 		/* Configfile */
-        $dir     = '/tftpboot/cm/';
+        $device	 = $parameters[0];
+        if ($device == null)
+        	return false;
+        $dir     = "/tftpboot/$device";
         $cf_file = $dir."dummy-validator.conf";
 
 		/*
@@ -61,7 +136,7 @@ class ExtendedValidator
 		foreach ($rows as $row)
 		{
 			if (preg_match("/(string)/i", $row))
-				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", '"text"', $row);
+				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", 'text', $row);
 			elseif (preg_match("/(ipaddress)/i", $row))
 				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", '1.1.1.1', $row);
 			else
@@ -73,28 +148,45 @@ class ExtendedValidator
 		 */
         $text = "Main\n{\n\t".$s."\n}";
         $ret  = File::put($cf_file, $text);
-        
+
         if ($ret === false)
                 die("Error writing to file");
-         
-        Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/cm-dummy-validator.cfg");   
-        exec("rm -f $dir/dummy-validator.cfg && /usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg 2>&1", $outs, $ret);
+
+        if ($device == 'cm')
+        {
+	        Log::info("Validation: /usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg");   
+	        exec("rm -f $dir/dummy-validator.cfg && /usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg 2>&1", $outs);
+        }
+        elseif ($device == 'mta')
+        {
+	        Log::info("Validation: /usr/local/bin/docsis -p $cf_file $dir/dummy-validator.cfg");   
+	        exec("rm -f $dir/dummy-validator.cfg && /usr/local/bin/docsis -p $cf_file $dir/dummy-validator.cfg 2>&1", $outs, $ret);	//return value is always 0
+		}
 
         /*
-         * Parse Errors
+         * Parse Errors - only one error is shown - subtract 3 from line nr
          */
-        $report = '';
-        foreach ($outs as $out)
-        	$report .= "\n$out";
+        $report = $outs[0];
+        preg_match('/[0-9]+$/', $report, $i);
+        if (isset($i[0]))
+        	$report = preg_replace('/[0-9]+$/', $i[0] - 3, $report);
+        // foreach ($outs as $out)
+        // {
+        // 	$report .= "\n$out";
+        // }
 
         if (!file_exists("$dir/dummy-validator.cfg"))
         {
-        	$this->setCustomMessages(array('docsis' => $report));
+        	// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
+        	// when laravel calls the actual validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
+        	$validator = \func_get_arg(3);
+        	$validator->setCustomMessages(array('docsis' => $report));
         	return false;
         }
         
 		return true;
 	}
+
 }
 
 

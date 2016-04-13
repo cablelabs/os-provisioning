@@ -12,6 +12,9 @@ use App\Exceptions\AuthExceptions;
 
 class ModemController extends \BaseModuleController {
 
+	protected $index_create_allowed = false;
+	protected $save_button = 'Save and Restart Modem';
+
     /**
      * defines the formular fields for the edit and create view
      */
@@ -26,7 +29,7 @@ class ModemController extends \BaseModuleController {
 			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list($model->configfiles(), 'name')),
 			array('form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'),
 			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Network Access', 'value' => '1'),
-			array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'Quality', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1'),
+			array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1'),
 
 			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname'),
 			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname'),
@@ -36,21 +39,12 @@ class ModemController extends \BaseModuleController {
 
 			array('form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number'),
 			array('form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'),
+
+			array('form_type' => 'text', 'name' => 'x', 'description' => 'Geopos X'),
+			array('form_type' => 'text', 'name' => 'y', 'description' => 'Geopos Y'),
+
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
 		);
-	}
-
-	/**
-	 * TODO: make generic
-	 * Make Checkbox Default Input
-	 * see: see http://forumsarchive.laravel.io/viewtopic.php?id=11627
-	 */
-	protected function default_input ($data)
-	{
-		if(!isset($data['public']))$data['public']=0;
-		if(!isset($data['network_access']))$data['network_access']=0;
-
-		return $data;
 	}
 
 

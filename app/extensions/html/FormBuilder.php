@@ -2,11 +2,11 @@
 
 namespace Acme\html;
 
-use Illuminate\Html\FormBuilder as IlluminateFormBuilder;
+use Collective\Html\FormBuilder as CollectiveFormBuilder;
 use Session;
 use Log;
 
-class FormBuilder extends IlluminateFormBuilder {
+class FormBuilder extends CollectiveFormBuilder {
 
 
     /**
@@ -45,15 +45,14 @@ class FormBuilder extends IlluminateFormBuilder {
      */
     public function input($type, $name, $value = null, $options = array())
     {
-
-
         if($type == 'hidden')
             return parent::input($type, $name, $value, $options);
 
-        $options = $this->appendClassToOptions('form-control', $options);
-
+        // these 2 lines were moved before $options assignment -> in simple form there's no form-control class added - needed for Configfile index view
         if (isset($options['style']) && $options['style'] == 'simple')
             return parent::input($type, $name, $value, $options);
+
+        $options = $this->appendClassToOptions('form-control', $options);
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.
@@ -62,11 +61,16 @@ class FormBuilder extends IlluminateFormBuilder {
 
 
     /**
-     * Create a form input field.
+     * Create a form input field
      */
     public function label($name, $value = null, $options = array())
     {
         $options = $this->appendClassToOptions('col-md-3 control-label', $options);
+
+        // translate the value if necessary
+        // $bc = new \App\Http\Controllers\BaseController;
+        // $value = $bc->translate($value);
+        $value = \App\Http\Controllers\BaseController::translate($value);
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.
@@ -81,6 +85,8 @@ class FormBuilder extends IlluminateFormBuilder {
     {
         $options = $this->appendClassToOptions('form-control btn btn-sm btn-success', $options);
         
+        $value = \App\Http\Controllers\BaseController::translate($value);
+
         if (isset($options['style']) && $options['style'] == 'simple')
             $s = parent::submit($value, $options);
         else
@@ -126,8 +132,12 @@ class FormBuilder extends IlluminateFormBuilder {
      */
     public function checkbox($name, $value = 1, $label = null, $checked = null, $options = array())
     {
-    	$options = ['align' => 'left'];
+        $options['align'] = 'left';
+        $options['class'] = '';
         $checkable = parent::checkbox($name, $value, $checked, $options);
+
+        if (isset($options['style']) && $options['style'] == 'simple')
+            return $checkable;
 
         return $this->appendDiv($checkable);
         // return $this->wrapCheckable($label, 'checkbox', $checkable);
@@ -205,9 +215,11 @@ class FormBuilder extends IlluminateFormBuilder {
             // an emptry string.
             return '';
         }
-
         // Get the errors from the session.
         $errors = Session::get('errors');
+
+        // dd(\App::getLocale());
+
 
         // Return the formatted error message, if the form element has any.
         return $errors->first($this->transformKey($name), '<p align="right" class="help-block">:message</p>');
@@ -221,6 +233,7 @@ class FormBuilder extends IlluminateFormBuilder {
     {
         $options = $this->appendClassToOptions('form-group', $options);
 
+        // dd($name, $label);
         // Append the name of the group to the groupStack.
         $this->groupStack[] = $name;
 

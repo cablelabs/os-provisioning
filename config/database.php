@@ -52,6 +52,8 @@ return [
 			'prefix'   => '',
 		],
 
+		// TODO: don't use root sql user to access lara DB
+		//       we should use a separate user for this.
 		'mysql' => [
 			'driver'    => 'mysql',
 			'host'      => env('DB_HOST', 'localhost'),
@@ -64,13 +66,28 @@ return [
 			'strict'    => false,
 		],
 
-		'pgsql' => [
+		// TODO: adapt ENV settings to access cacti DB with
+		//       the installed Cacti user and not with root
+		'mysql-cacti' => [
+			'driver'    => 'mysql',
+			'host'      => env('DB_HOST', 'localhost'),
+			'database'  => 'cacti',
+			'username'  => env('DB_USERNAME', 'forge'),
+			'password'  => env('DB_PASSWORD', ''),
+			'charset'   => 'utf8',
+			'collation' => 'utf8_unicode_ci',
+			'prefix'    => '',
+			'strict'    => false,
+		],
+
+		'pgsql-km3' => [
 			'driver'   => 'pgsql',
-			'host'     => env('DB_HOST', 'localhost'),
-			'database' => env('DB_DATABASE', 'forge'),
-			'username' => env('DB_USERNAME', 'forge'),
-			'password' => env('DB_PASSWORD', ''),
+			'host'     => env('DB_IMPORT_HOST', 'localhost'),
+			'database' => env('DB_IMPORT_DATABASE', 'db_nms'),
+			'username' => env('DB_IMPORT_USERNAME', 'schmto'),
+			'password' => env('DB_IMPORT_PASSWORD', ''),
 			'charset'  => 'utf8',
+			'collation' => 'utf8_unicode_ci',
 			'prefix'   => '',
 			'schema'   => 'public',
 		],

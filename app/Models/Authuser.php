@@ -31,13 +31,10 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 	public static function rules($id=null)
 	{
 		return array(
-			'login_name' => 'required|unique:authusers,login_name,'.$id,
+			'login_name' => 'required|unique:authusers,login_name,'.$id.',id,deleted_at,NULL',
 			'password' => 'required|min:6'
 		);
 	}
-
-	// Don't forget to fill this array
-	protected $fillable = ['first_name', 'last_name', 'email', 'login_name', 'password', 'active', 'description'];
 
 
 	// Name of View

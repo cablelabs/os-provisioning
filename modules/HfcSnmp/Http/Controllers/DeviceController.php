@@ -85,7 +85,7 @@ class DeviceController extends SnmpController {
 		$device = Device::findOrFail($id);
 
 		// TODO: validation
-		$validator = Validator::make($data = $this->default_input(Input::all()), $device::rules($id));
+		$validator = Validator::make($data = $this->prepare_input(Input::all()), $device::rules($id));
 
 /*
 		if ($validator->fails())

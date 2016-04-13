@@ -19,7 +19,7 @@ class Mta extends \BaseModel {
 	public static function rules($id=null)
 	{
 		return array(
-			'mac' => 'required|mac',
+			'mac' => 'required|mac', //|unique:mta,mac',
 			'modem_id' => 'required|exists:modem,id|min:1',
 			'configfile_id' => 'required|exists:configfile,id|min:1',
 			// 'hostname' => 'required|unique:mta,hostname,'.$id, 
@@ -27,8 +27,6 @@ class Mta extends \BaseModel {
 		);
 	}
 
-	// Don't forget to fill this array
-	protected $fillable = ['mac', 'hostname', 'modem_id', 'configfile_id', 'type'];
 
 	// Name of View
 	public static function get_view_header()
@@ -39,7 +37,7 @@ class Mta extends \BaseModel {
 	// link title in index view
 	public function get_view_link_title()
 	{
-		return $this->hostname;
+		return $this->hostname.' - '.$this->mac;
 	}
 
 
@@ -100,17 +98,6 @@ class Mta extends \BaseModel {
 		);
 	}
 
-	/**
-	 * BOOT:
-	 * - init mta observer
-	 */
-	public static function boot()
-	{
-		parent::boot();
-
-		Mta::observe(new MtaObserver);
-		Mta::observe(new \SystemdObserver);
-	}
 
 	/**
 	 * Make Configfile for a single MTA
@@ -124,28 +111,53 @@ class Mta extends \BaseModel {
 		$mac = $mta->mac;
 		$hostname = $mta->hostname;
 
-		// Configfile
+		// dir; filenames
 		$dir = '/tftpboot/mta/';
-		$cf_file = $dir."mta-$id.conf";
+		$conf_file     = $dir."mta-$id.conf";
+		$cfg_file      = $dir."mta-$id.cfg";
 
+		// load configfile for mta
 		$cf = $mta->configfile;
 
 		if (!$cf)
-			return false;
+		{
+			Log::info("Error could not load configfile for mta ".$mta->id);
+			goto _failed;
+		}
 
-		$text = "Main\n{\n\t".$cf->text_make($mta, "mta")."\n}";
-		$ret  = File::put($cf_file, $text);
+		/*
+		 * Write and Build configfile
+		 * NOTE: We use docsis tool version 0.9.9 here where HASH building/adding is already implemented
+		 * For Versions lower than 0.9.8 we have to build it twice and use european OID
+		 * for pktcMtaDevProvConfigHash.0 from excentis packet cable mta mib
+		 */
+		$text = "Main\n{\n\tMtaConfigDelimiter 1;".$cf->text_make($mta, "mta")."\n\tMtaConfigDelimiter 255;\n}";
+		if (!File::put($conf_file, $text))
+		{
+			Log::info('Error writing to file '.$conf_file_pre);
+			goto _failed;
+		}
 
-		if ($ret === false)
-			die("Error writing to file ".$dir.$cf_file);
+		Log::info("/usr/local/bin/docsis -eu -p $conf_file $cfg_file");
+		// "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
+		exec     ("/usr/local/bin/docsis -eu -p $conf_file $cfg_file >/dev/null 2>&1 &", $out);
+		
+		// this only is valid when we dont execute docsis in background
+		// if (!file_exists($cfg_file))
+		// {
+		// 	Log::info('Error failed to build '.$cfg_file);
+		// 	goto _failed;
+		// }
 
-		Log::info("/usr/local/bin/docsis -p $cf_file $dir/../keyfile $dir/mta-$id.cfg");
-		exec("/usr/local/bin/docsis -p $cf_file $dir/../keyfile $dir/mta-$id.cfg", $out, $ret);
 
 		// change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
 		system('/bin/chown -R apache /tftpboot/mta');
+		return true;
 
-		return ($ret == 0 ? true : false);
+_failed:
+		// change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
+		system('/bin/chown -R apache /tftpboot/mta');
+		return false;
 	}
 
 	/**
@@ -166,7 +178,70 @@ class Mta extends \BaseModel {
 
 		return true;
 	}
+
+
+	/**
+	 * BOOT:
+	 * - init mta observer
+	 */
+	public static function boot()
+	{
+		parent::boot();
+
+		Mta::observe(new MtaObserver);
+		Mta::observe(new \SystemdObserver);
+	}
+
+
+	/**
+	 * Define DHCP Config File for MTA's
+	 */
+	const CONF_FILE_PATH = '/etc/dhcp/nms/mta.conf';
+
+	/**
+	 * Writes all mta entries to dhcp configfile
+	 */
+	public function make_dhcp_mta_all()
+	{
+		$mtas = Mta::all();
+		$data = '';
+
+		foreach ($mtas as $mta)
+		{
+			if ($mta->id == 0)
+				continue;
+
+			$data .= 'host mta-'.$mta->id.' { hardware ethernet '.$mta->mac.'; filename "mta/mta-'.$mta->id.'.cfg"; ddns-hostname "mta-'.$mta->id.'"; option host-name "'.$mta->id.'"; }'."\n";
+		}
+
+		File::put(self::CONF_FILE_PATH, $data);
+		return true;
+	}
+
+    /**
+     * Deletes the configfiles with all mta dhcp entries - used to refresh the config through artisan nms:dhcp command
+     */
+	public function del_dhcp_conf_file()
+	{
+        if (file_exists(self::CONF_FILE_PATH)) unlink(self::CONF_FILE_PATH);
+	}
+
+    /**
+     * Deletes Configfile of one mta
+     */
+    public function delete_configfile()
+    {
+        $dir = '/tftpboot/mta/';
+        $file['1'] = $dir.'mta-'.$this->id.'.cfg';
+        $file['2'] = $dir.'mta-'.$this->id.'.conf';
+
+        foreach ($file as $f) 
+        {
+            if (file_exists($f)) unlink($f);
+        }
+    }
 }
+
 
 /**
  * MTA Observer Class
@@ -184,6 +259,7 @@ class MtaObserver
 	{
 		$mta->hostname = 'mta-'.$mta->id;
         $mta->make_configfile();
+        $mta->make_dhcp_mta_all();
 		$mta->save();
 	}
 
@@ -194,6 +270,15 @@ class MtaObserver
 
 	public function updated($mta)
 	{
-        $mta->make_configfile();
+        $mta->make_dhcp_mta_all();
+		$mta->make_configfile();
+		$mta->modem->restart_modem();
+	}
+
+	public function deleted($mta)
+	{
+        $mta->make_dhcp_mta_all();
+		$mta->delete_configfile();
+		$mta->modem->restart_modem();
 	}
 }
