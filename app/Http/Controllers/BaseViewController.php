@@ -149,6 +149,8 @@ class BaseViewController extends Controller {
 			{
 				case 'checkbox' :
 					// Checkbox - where pre-checked is enabled
+					if ($value == [])
+						$value = 1;
 					$checked = (isset($field['checked'])) ? $field['checked'] : $field['field_value'];
 					$s .= \Form::checkbox($field['name'], $value, null, $checked);
 					break;
