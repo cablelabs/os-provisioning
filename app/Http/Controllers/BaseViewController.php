@@ -83,11 +83,12 @@ class BaseViewController extends Controller {
 	 * TODO: move too a separate class
 	 *
 	 * @param fields: the prepared get_form_fields array(), each array element represents on (HTML) field
+	 * @param context: edit|create - context from which this function is called
 	 * @return: array() of fields with added ['html'] element containing the preformed html content
 	 *
 	 * @autor: Torsten Schmidt
 	 */
-	public static function html_form_field($fields)
+	public static function html_form_field($fields, $context = 'edit')
 	{
 		$ret = [];
 
@@ -151,7 +152,13 @@ class BaseViewController extends Controller {
 					// Checkbox - where pre-checked is enabled
 					if ($value == [])
 						$value = 1;
-					$checked = (isset($field['checked'])) ? $field['checked'] : $field['field_value'];
+
+					if ($context == 'create')
+						// only take care of checked statement if we are called in context create
+						$checked = (isset($field['checked'])) ? $field['checked'] : $field['field_value'];
+					else
+						$checked = $field['field_value'];
+
 					$s .= \Form::checkbox($field['name'], $value, null, $checked);
 					break;
 

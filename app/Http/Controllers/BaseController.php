@@ -481,7 +481,7 @@ class BaseController extends Controller {
 		// $view_header 	= 'Create '.$obj->get_view_header();
 		$view_header 	= BaseViewController::translate('Create ').BaseViewController::translate($obj->get_view_header());
 		// form_fields contain description of fields and the data of the fields
-		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj), $obj));
+		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj), $obj), 'create');
 
 		// generate Link header - parse parent object from HTML GET array
 		// TODO: avoid use of HTML GET array for security considerations
@@ -571,7 +571,7 @@ class BaseController extends Controller {
 		// transfer model_name, view_header, view_var
 		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($obj->get_view_header());
 		$view_var 		= $obj->findOrFail($id);
-		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var));
+		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var), 'edit');
 		$link_header    = BaseViewController::prep_link_header($this->get_route_name(), $view_header, $view_var);
 
 		$view_path = 'Generic.edit';
