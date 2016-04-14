@@ -485,10 +485,14 @@ class BaseController extends Controller {
 
 		// generate Link header - parse parent object from HTML GET array
 		// TODO: avoid use of HTML GET array for security considerations
-		$key        = array_keys($_GET)[0];
-		$class_name = BaseModel::_guess_model_name(ucwords(explode ('_id', $key)[0]));
-		$class      = new $class_name;
-		$view_var   = $class->find($_GET[$key]);
+		$view_var = NULL;
+		if (isset(array_keys($_GET)[0]))
+		{
+			$key        = array_keys($_GET)[0];
+			$class_name = BaseModel::_guess_model_name(ucwords(explode ('_id', $key)[0]));
+			$class      = new $class_name;
+			$view_var   = $class->find($_GET[$key]);
+		}
 		$link_header = BaseViewController::prep_link_header($this->get_route_name(), $view_header, $view_var);
 
 

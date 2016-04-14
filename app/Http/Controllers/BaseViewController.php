@@ -244,22 +244,25 @@ finish:
 	{
 		$s = "";
 
-		// Recursivly parse all relations from view_var
-		$parent = $view_var;
-		do
+		if ($view_var != null)
 		{
-			if ($parent)
+			// Recursivly parse all relations from view_var
+			$parent = $view_var;
+			do
 			{
-				$tmp = explode('\\',get_class($parent));
-				$view = end($tmp);
+				if ($parent)
+				{
+					$tmp = explode('\\',get_class($parent));
+					$view = end($tmp);
 
-				$s = \HTML::linkRoute($view.'.edit', $parent->get_view_link_title(), $parent->id).' > '.$s;
+					$s = \HTML::linkRoute($view.'.edit', $parent->get_view_link_title(), $parent->id).' > '.$s;
+				}
+
+				// get view parent
+				$parent = $parent->view_belongs_to();
 			}
-
-			// get view parent
-			$parent = $parent->view_belongs_to();
+			while ($parent);
 		}
-		while ($parent);
 
 
 		// Base Link to Index Table in front of all relations
