@@ -247,7 +247,9 @@ class FormBuilder extends CollectiveFormBuilder {
 
         // If a label is given, we set it up here. Otherwise, we will just
         // set it to an empty string.
-        $label = $label ? $this->label($name, $label) : '';
+        // NOTE: margin-top style moves label down to same horizontal
+        //       line like html fields on right side (Torsten Schmidt)
+        $label = $label ? $this->label($name, $label, ['style' => 'margin-top: 10px;']) : '';
 
         return $this->openDivClass(12, $color).'<div'.$this->html->attributes($options).'>'.$label;
     }
