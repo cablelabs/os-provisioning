@@ -18,11 +18,12 @@ class FormBuilder extends CollectiveFormBuilder {
 
 
 	/**
-     * Append <div> block with col-md-9
+     * Append <div> block with col-md-8
+     * NOTE: 3: col for label, 8: col for form field, 1: col for help image - if set
      */
-    public function appendDiv($s)
+    public function appendDiv($s, $col = 8)
     {
-    	return '<div class="col-md-9">'.$s.'</div>';
+    	return '<div class="col-md-'.$col.'">'.$s.'</div>';
     }
 
 

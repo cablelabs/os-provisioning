@@ -143,6 +143,11 @@ class BaseViewController extends Controller {
 			$options = isset($field["options"]) ? $field["options"] : [];
 			array_push($options, 'style="background-color:'.$color.'"');
 
+			// Help: add help msg to form fields - mouse on hover
+			if (isset($field['help']))
+				$options["title"] = $field['help'];
+
+			// Open Form Group
 			$s .= \Form::openGroup($field["name"], $field["description"], [], $color);
 
 			// form_type ?
@@ -176,7 +181,14 @@ class BaseViewController extends Controller {
 					break;
 			}
 
+			// Help: add help icon/image behind form field
+			if (isset($field['help']))
+				$s .= '<div title="'.$field['help'].'" name='.$field['name'].'-help class=col-md-1>'.
+				      \HTML::image(asset('images/help.png'), null, ['width' => 20]).'</div>';
+
+			// Close Form Group
 			$s .= \Form::closeGroup();
+
 
 			// Space Element between fields
 			if (array_key_exists('space', $field))
