@@ -28,7 +28,7 @@ class ArrayHelper {
     }
 
 
-    /* 
+    /*
      * Device all entrys of an Array by $div
      *
      * @param $array: The Array to split
@@ -41,12 +41,27 @@ class ArrayHelper {
     {
         $ret = [];
 
-        foreach ($array as $a) 
+        foreach ($array as $a)
         {
             array_push($ret, $a/$div);
         }
 
         return $ret;
+    }
+
+
+    /*
+     * return the rotated array ($a)
+     * Example: [1,2,3,4] -> [4,1,2,3]
+     *
+     * @param $a: The Array to rotate
+     * @return: The rotated/shifted array
+     *
+     * @author: Torsten Schmidt
+     */
+    public static function array_rotate($a)
+    {
+        return array_merge(array(array_pop($a)), $a);
     }
 
 }

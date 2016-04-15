@@ -66,7 +66,7 @@
 
 							if ($i++ % 5 == 0)
 							{
-								$color_array = array_merge( array(array_pop($color_array)), $color_array);
+								$color_array = Acme\php\ArrayHelper::array_rotate($color_array);
 								$class = $color_array[0];
 							}
 						}
@@ -77,6 +77,7 @@
 							{{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple']) }}
 						</td>
 
+						<!-- Parse get_view_link_title()  -->
 						@foreach (is_array($object->get_view_link_title()) ? $object->get_view_link_title()['index'] : [$object->get_view_link_title()] as $field)
 							<td>
 								{{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }}

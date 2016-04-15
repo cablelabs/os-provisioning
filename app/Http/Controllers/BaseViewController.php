@@ -194,7 +194,7 @@ class BaseViewController extends Controller {
 			if (array_key_exists('space', $field))
 			{
 				//$s .= "<div class=col-md-12><br></div>";
-				$color_array = array_merge( array(array_pop($color_array)), $color_array);
+				$color_array = \Acme\php\ArrayHelper::array_rotate ($color_array);
 				$color = $color_array[0];
 			}
 
