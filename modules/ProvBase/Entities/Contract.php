@@ -47,6 +47,7 @@ class Contract extends \BaseModel {
 			$bsclass = 'danger';
 
 		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street],
+		        'index_header' => ['Contract Number', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street'],
 		        'bsclass' => $bsclass,
 		        'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
 	}
@@ -78,7 +79,7 @@ class Contract extends \BaseModel {
 
 
 	/*
-	 * Convert a 'YYYY-MM-DD' to Carbon Time Object 
+	 * Convert a 'YYYY-MM-DD' to Carbon Time Object
 	 *
 	 * We use this to convert a SQL start / end contract date to a carbon
 	 * object. Carbon Time Objects can be compared with lt(), gt(), ..
