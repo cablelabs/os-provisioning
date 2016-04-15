@@ -276,7 +276,15 @@ finish:
 					$tmp = explode('\\',get_class($parent));
 					$view = end($tmp);
 
-					$s = \HTML::linkRoute($view.'.edit', $parent->get_view_link_title(), $parent->id).' > '.$s;
+					// get header field name
+					// NOTE: for historical reasons check if this is a array or a plain string
+					// See: Confluence API  - get_view_link_header()
+					if(is_array($parent->get_view_link_title()))
+						$name = $parent->get_view_link_title()['header'];
+					else
+						$name = $parent->get_view_link_title();
+
+					$s = \HTML::linkRoute($view.'.edit', $name, $parent->id).' > '.$s;
 				}
 
 				// get view parent

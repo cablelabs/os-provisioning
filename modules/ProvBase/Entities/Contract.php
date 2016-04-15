@@ -41,7 +41,14 @@ class Contract extends \BaseModel {
 	// link title in index view
 	public function get_view_link_title()
 	{
-		return $this->id.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city;
+		$bsclass = 'success';
+
+		if ($this->network_access == 0)
+			$bsclass = 'danger';
+
+		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street],
+		        'bsclass' => $bsclass,
+		        'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
 	}
 
 

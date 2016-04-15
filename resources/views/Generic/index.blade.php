@@ -41,17 +41,49 @@
 				<h4>Matches for <tt>{{ $query }}</tt> in <tt>{{ $scope }}</tt></h4>
 			@endif
 
-			<table>
-			@foreach ($view_var as $object)
-				<tr>
-					<td>
-						{{ Form::checkbox('ids['.$object->id.']') }}
-					</td>
-					<td>
-						{{ HTML::linkRoute($route_name.'.edit', $object->get_view_link_title(), $object->id) }}
-					</td>
-				</tr>
-			@endforeach
+			<table class="table">
+
+				<!-- TODO: add concept to parse header fields for index table - like firstname, lastname, ..-->
+				<thead>
+					<tr>
+					<th></th>
+					<th></th>
+					</tr>
+				</thead>
+
+				<?php $color_array = ['success', 'warning', 'danger', 'info']; ?>
+
+				@foreach ($view_var as $object)
+					<?php
+						// Bootstrap Class -> Color Line
+						// TODO: move to controller
+						if (isset($object->get_view_link_title()['bsclass']))
+							$class = $object->get_view_link_title()['bsclass'];
+						else
+						{
+							if (!isset($i))
+								$i = 0;
+
+							if ($i++ % 5 == 0)
+							{
+								$color_array = array_merge( array(array_pop($color_array)), $color_array);
+								$class = $color_array[0];
+							}
+						}
+					?>
+
+					<tr class={{$class}}>
+						<td>
+							{{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple']) }}
+						</td>
+
+						@foreach (is_array($object->get_view_link_title()) ? $object->get_view_link_title()['index'] : [$object->get_view_link_title()] as $field)
+							<td>
+								{{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }}
+							</td>
+						@endforeach
+					</tr>
+				@endforeach
 			</table>
 
 			<br>
