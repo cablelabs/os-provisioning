@@ -33,10 +33,25 @@ class Modem extends \BaseModel {
 	// link title in index view
 	public function get_view_link_title()
 	{
-		if ($this->name != '')
-			return $this->hostname.' - '.$this->mac.' - '.$this->name;
-		return $this->hostname.' - '.$this->mac;
+		$bsclass = 'success';
+		$status = $this->status.' dBmV';
+
+		switch ($this->get_state('int'))
+		{
+			case 0:	$bsclass = 'success'; break; // online
+			case 1: $bsclass = 'warning'; break; // warning
+			case 2: $bsclass = 'danger'; break; // critical
+			case 3: $bsclass = 'danger'; $status = 'offline'; break; // offline
+
+			default: $bsclass = 'danger'; break;
+		}
+
+		return ['index' => [$this->id, $this->mac, $this->lastname, $this->zip, $this->city, $this->street, $status],
+		        'index_header' => ['Modem Number', 'MAC address', 'Lastname', 'Postcode', 'City', 'Street', 'US level'],
+		        'bsclass' => $bsclass,
+		        'header' => $this->id.' - '.$this->mac];
 	}
+
 
 
 	/**
@@ -398,6 +413,28 @@ class Modem extends \BaseModel {
 		}
 
 		return $results;
+	}
+
+
+	/*
+	 * Return actual modem state as string or int
+	 *
+	 * @param return_type: ['string' (default), 'int']
+	 * @return: string [ok, warning, critical, offline] or int [0 -> ok, 1 -> warning, 2 -> critical, 3 -> offline]
+	 * @author: Torsten Schmidt
+	 */
+	public function get_state($return_type = 'string')
+	{
+		if ($this->status == 0)
+			if ($return_type == 'string') return 'offline'; else return 3;
+
+		if ($this->status > \Modules\HfcCustomer\Entities\ModemHelper::$single_critical_us)
+			if ($return_type == 'string') return 'critical'; else return 2;
+
+		if ($this->status > \Modules\HfcCustomer\Entities\ModemHelper::$single_warning_us)
+			if ($return_type == 'string') return 'warning'; else return 1;
+
+		if ($return_type == 'string') return 'ok'; else return 0;
 	}
 
 
