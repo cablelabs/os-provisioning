@@ -118,12 +118,32 @@ class ExtendedValidator
 		return is_int($number /= 10000);
 	}
 
-
-	public function inFuture($attribute, $value, $parameters)
+	/*
+	 * Validates Sepa Creditor Id
+	 * see: https://github.com/AbcAeffchen/SepaUtilities/blob/master/src/SepaUtilities.php
+	 */
+	public function validateCreditorId($attribute, $value, $parameters)
 	{
-		// dd($attribute, $value, $parameters);
+		$country_code = substr($value, 0, 2);
 
-		return strtotime($value) >= strtotime(date('Y-m-d')) ? true : false;
+		// TODO: add more countries, improve by check against check digits
+		$creditor_id_length = array(
+			'AT' => 18,			// Austria
+			'BE' => 20,			// Belgium
+			'DE' => 18,			// Germany
+			'EE' => 20,			// Estonia
+			'ES' => 16,
+			'FR' => 13,
+			'IT' => 23,
+			'LU' => 26,			// Luxembourg
+			'NL' => 19,
+			'PT' => 13,			// Portugal
+			);
+
+		if (strlen($value) != (isset($creditor_id_length[$country_code]) ? $creditor_id_length[$country_code] : 1000))
+			return false;
+
+		return preg_match('#^[a-zA-Z]{2,2}[0-9]{2,2}([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\']){3,3}([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\']){1,28}$#', $value);
 	}
 
 
