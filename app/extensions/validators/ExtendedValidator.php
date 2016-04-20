@@ -5,6 +5,7 @@ namespace Acme\Validators;
 use Models\Configfiles;
 use File;
 use Log;
+use Modules\Billingbase\Entities\Product;
 
 /*
  * Our own ExtendedValidator Class
@@ -241,6 +242,26 @@ class ExtendedValidator
         	return false;
         }
         
+		return true;
+	}
+
+	// $value (field value) must only contain strings of product type enums
+	public function validateProductType($attribute, $value, $parameters)
+	{
+		$types = Product::getPossibleEnumValues('type');
+
+		$tmp   = str_replace([',', '|', '/'], ' ', $value);
+		$prods = explode(' ', $tmp);
+
+		foreach ($prods as $type)
+		{
+			// skip empty strings
+			if (!$type)
+				continue;
+			if (!in_array($type, $types))
+				return false;
+		}
+
 		return true;
 	}
 

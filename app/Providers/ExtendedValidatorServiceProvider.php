@@ -28,6 +28,7 @@ class ExtendedValidatorServiceProvider extends ServiceProvider {
 		$this->app['validator']->extend('not_null', 'Acme\Validators\ExtendedValidator@notNull');
 		$this->app['validator']->extend('null_if', 'Acme\Validators\ExtendedValidator@nullIf');
 		$this->app['validator']->extend('creditor_id', 'Acme\Validators\ExtendedValidator@validateCreditorId');
+		$this->app['validator']->extend('product', 'Acme\Validators\ExtendedValidator@validateProductType');
 	}
 
 	/**
