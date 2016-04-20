@@ -68,6 +68,11 @@ class Contract extends \BaseModel {
 		return $this->belongsTo('Modules\BillingBase\Entities\CostCenter', 'costcenter_id');
 	}
 
+	public function salesman()
+	{
+		return $this->belongsTo('Modules\BillingBase\Entities\Salesman');
+	}
+
 
 	// View Relation.
 	public function view_has_many()
@@ -241,14 +246,15 @@ class Contract extends \BaseModel {
 	/**
 	 * Cross checks start and end dates against actual day - used in accounting Cmd
 	 */
-	public function check_validity($dates)
+	public function check_validity()
 	{
-		$start = ($this->contract_start == null || $this->contract_start == $dates['null']) ? $this->created_at : $this->contract_start;
+		$today = date('Y-m-d');
+		$start = ($this->contract_start == null || $this->contract_start == '0000-00-00') ? $this->created_at : $this->contract_start;
 		if (is_object($start))
 			$start = $start->toDateString();
-		$end = $this->contract_end == $dates['null'] ? null : $this->contract_end;
+		$end = $this->contract_end == '0000-00-00' ? null : $this->contract_end;
 
-		return ($start <= $dates['today'] && (!$end || $end >= $dates['today'])) ? true : false;
+		return ($start <= $today && (!$end || $end >= $today));
 	}
 
 

@@ -7,6 +7,7 @@ use Modules\ProvBase\Entities\Qos;
 use Modules\BillingBase\Entities\Product;
 use Modules\BillingBase\Entities\Item;
 use Modules\BillingBase\Entities\CostCenter;
+use Modules\BillingBase\Entities\Salesman;
 
 class ContractController extends \BaseModuleController {
 
@@ -68,19 +69,17 @@ class ContractController extends \BaseModuleController {
 
 		if ($m->module_is_active('Billingbase'))
 		{
+			$salesman[0] = null;
+			foreach (Salesman::all() as $sm)
+				$salesman[$sm->id] = $sm->firstname.' '. $sm->lastname;
+
 			$b = array(
 				array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'checked' => true, 'value' => '1', 'create' => '1'),
 				array('form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'), // TODO: create default 'value' => date("Y-m-d")	
-				array('form_type' => 'text', 'name' => 'contract_end', 'description' => 'Contract End', 'space' => '1'),
+				array('form_type' => 'text', 'name' => 'contract_end', 'description' => 'Contract End'),
+				array('form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'value' => '1'),
 				array('form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $model->html_list(CostCenter::all(), 'name')),
-				array('form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'value' => '1', 'space' => '1'),
-
-				// array('form_type' => 'select', 'name' => 'price_id', 'description' => 'Data Tariff', 'create' => '1', 'value' => $this->_data_tariff($model)),
-				// array('form_type' => 'select', 'name' => 'next_price_id', 'description' => 'Data Tariff next month', 'value' => $this->_data_tariff($model)),
-				// array('form_type' => 'select', 'name' => 'voip_price_id', 'description' => 'Voip Tariff', 'value' => $this->_voip_tariff($model)),
-				// array('form_type' => 'select', 'name' => 'next_voip_price_id', 'description' => 'Voip Tariff next month', 'value' => $this->_voip_tariff($model)),
-				// array('form_type' => 'select', 'name' => 'tv_price_id', 'description' => 'TV Tariff', 'value' => $this->_tv_tariff($model)),
-				// array('form_type' => 'select', 'name' => 'next_tv_price_id', 'description' => 'TV Tariff next month', 'value' => $this->_tv_tariff($model), 'space' => '1'),
+				array('form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => $salesman, 'space' => '1'),
 
 				array('form_type' => 'text', 'name' => 'sepa_holder', 'description' => 'Bank Account Holder', 'options' => ['readonly']),
 				array('form_type' => 'text', 'name' => 'sepa_iban', 'description' => 'IBAN', 'options' => ['readonly']),

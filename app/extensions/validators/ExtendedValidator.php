@@ -250,7 +250,7 @@ class ExtendedValidator
 	{
 		$types = Product::getPossibleEnumValues('type');
 
-		$tmp   = str_replace([',', '|', '/'], ' ', $value);
+		$tmp   = str_replace([',', '|', '/', ';'], ' ', $value);
 		$prods = explode(' ', $tmp);
 
 		foreach ($prods as $type)
