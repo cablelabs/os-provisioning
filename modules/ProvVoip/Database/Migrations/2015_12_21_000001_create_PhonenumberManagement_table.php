@@ -45,7 +45,15 @@ class CreatePhonenumberManagementTable extends BaseMigration {
 			$table->integer('subscriber_country')->unsigned();
 		});
 
-		$this->set_fim_fields(['subscriber_company', 'subscriber_firstname', 'subscriber_lastname', 'subscriber_street', 'subscriber_house_number', 'subscriber_zip', 'subscriber_city']);
+		$this->set_fim_fields(['subscriber_company',
+			'subscriber_firstname',
+			'subscriber_lastname',
+			'subscriber_street',
+			'subscriber_house_number',
+			'subscriber_zip',
+			'subscriber_city',
+		]);
+
 		$this->set_auto_increment(300000);
 
 		return parent::up();

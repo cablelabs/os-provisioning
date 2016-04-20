@@ -41,7 +41,6 @@ class ContractTableSeeder extends \BaseSeeder {
 				'network_access' => $faker->boolean(85),
 				'contract_start' => $start_contract,
 				'contract_end' => (rand(0,10) > 8 ? $faker->dateTimeBetween($start_contract, '+1 year') : 0),
-				'phonebook_entry' => $faker->boolean(50),
 				'qos_id' => Qos::all()->random(1)->id,
 				'next_qos_id' => (rand(0,10) > 8 ? Qos::all()->random(1)->id : 0),
 				'voip_id' => rand(0, 2),								// TODO: use Envia interface
