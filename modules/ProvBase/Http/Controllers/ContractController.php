@@ -53,7 +53,7 @@ class ContractController extends \BaseModuleController {
 		//	array('form_type' => 'text', 'name' => 'number2', 'description' => 'Contract Number 2', 'options' => ['readonly']),
 			array('form_type' => 'text', 'name' => 'salutation', 'description' => 'Salutation'),
 			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
-			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => '1'),
+			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => '1'),			// create sends key+value to relation (for autofill fields)
 			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => '1', 'space' => '1'),
 
 			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1'),
