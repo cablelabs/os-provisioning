@@ -11,63 +11,195 @@ class Contract extends \BaseModel {
 
 
 	// Add your validation rules here
-	public static function rules($id = null)
-	{
-		return array(
-			'number' => 'integer|unique:contract,number,'.$id.',id,deleted_at,NULL',
-			'number2' => 'string|unique:contract,number2,'.$id.',id,deleted_at,NULL',
-			'firstname' => 'required',
-			'lastname' => 'required',
-			'street' => 'required',
-			'zip' => 'required',
-			'city' => 'required',
-			'phone' => 'required',
-			'email' => 'email',
-			'birthday' => 'required|date',
-			'contract_start' => 'date',
-			'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
-			'sepa_iban' => 'iban',
-			'sepa_bic' => 'bic',
-			);
-	}
+    public static function rules($id = null)
+    {
+        return array(
+			'number' => 'string|unique:contract,number,'.$id.',id,deleted_at,NULL',
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'street' => 'required',
+            'zip' => 'required',
+            'city' => 'required',
+            'phone' => 'required',
+            'email' => 'email',
+            'birthday' => 'required|date',
+            'contract_start' => 'required|date',
+            'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
+            'sepa_iban' => 'iban',
+            'sepa_bic' => 'bic',
+        );
+    }
 
 
-	// Name of View
-	public static function get_view_header()
-	{
-		return 'Contract';
-	}
+    // Name of View
+    public static function get_view_header()
+    {
+        return 'Contract';
+    }
 
-	// link title in index view
-	public function get_view_link_title()
-	{
+    // link title in index view
+    public function get_view_link_title()
+    {
 		$old = $this->number2 ? ' - (Old Nr: '.$this->number2.')' : '';
 		return $this->number.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city.$old;
-	}
+    }
 
 
-	// Relations
-	public function modems()
-	{
+    // Relations
+    public function modems()
+    {
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
-	}
+    }
 
-	// View Relation.
-	public function view_has_many()
-	{
-		return array(
-			'Modem' => $this->modems
-			);
-	}
-
-
-	/*
-	 * Generate use a new user login password
-	 * This does not save the involved model
+	/**
+	 * Get relation to external orders.
+	 *
+	 * @author Patrick Reichel
 	 */
-	public function generate_password($length = 10)
-	{
-		$this->password = \Acme\php\Password::generate_password();
+	public function external_orders() {
+
+		if ($this->module_is_active('provvoipenvia')) {
+			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment');
+		}
+
+		return null;
+	}
+
+    // View Relation.
+    public function view_has_many()
+    {
+		$ret = array(
+			'Modem' => $this->modems,
+		);
+
+		if ($this->module_is_active('provvoipenvia')) {
+			$ret['EnviaOrder'] = $this->external_orders;
+		}
+
+		return $ret;
+    }
+
+
+    /*
+     * Generate use a new user login password
+     * This does not save the involved model
+     */
+    public function generate_password($length = 10)
+    {
+        $this->password = \Acme\php\Password::generate_password();
+    }
+
+
+	/**
+	 * Helper to get the contract number.
+	 * As there is no hard coded contract number in database we have to use this mapper. The semantic meaning of number…number4 can be defined in global configuration.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @todo: in this first step the relation is hardcoded within the function. Later on we have to check the mapping against the configuration.
+	 * @return current contract number
+	 */
+	public function contract_number() {
+
+		$contract_number = $this->number;
+
+		return $contract_number;
+
+	}
+
+
+	/**
+	 * Helper to get the customer number.
+	 * As there is no hard coded customer number in database we have to use this mapper. The semantic meaning of number…number4 can be defined in global configuration.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @todo: in this first step the relation is hardcoded within the function. Later on we have to check the mapping against the configuration.
+	 * @return current customer number
+	 */
+	public function customer_number() {
+
+		if (boolval($this->number3)) {
+			$customer_number = $this->number3;
+		}
+		else {
+			$customer_number = $this->number;
+		}
+
+		return $customer_number;
+
+	}
+
+
+	/**
+	 * Helper to define possible salutation values.
+	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function get_salutation_options() {
+
+		$defaults = [
+			'Herr',
+			'Frau',
+			'Firma',
+			'Behörde',
+		];
+
+		if ($this->module_is_active('provvoipenvia')) {
+
+			$options = [
+				'Herrn',
+				'Frau',
+				'Firma',
+				'Behörde',
+			];
+		}
+		else {
+			$options = $defaults;
+		}
+
+		$result = array();
+		foreach ($options as $option) {
+			$result[$option] = $option;
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * Helper to define possible academic degree values.
+	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function get_academic_degree_options() {
+
+		$defaults = [
+			'',
+			'Dr.',
+			'Prof. Dr.',
+		];
+
+		if ($this->module_is_active('provvoipenvia')) {
+
+			$options = [
+				'',
+				'Dr.',
+				'Prof. Dr.',
+			];
+		}
+		else {
+			$options = $defaults;
+		}
+
+		$result = array();
+		foreach ($options as $option) {
+			$result[$option] = $option;
+		}
+
+		return $result;
 	}
 
 
@@ -200,6 +332,24 @@ class Contract extends \BaseModel {
 		}
 	}
 
+
+	/**
+	 * Helper to map database numberX fields to description
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function get_column_description($col_name) {
+
+		// later use global config to get mapping
+		$mappings = [
+			'number' => 'Contract number',
+			'number2' => 'Contract number legacy',
+			'number3' => 'Customer number',
+			'number4' => 'Customer number legacy',
+		];
+
+		return $mappings[$col_name];
+	}
 
 	/**
 	 * BOOT:

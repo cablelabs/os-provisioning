@@ -29,21 +29,37 @@
 		@endif
 
 		<table>
+			<?php
+			$last_model = "";
+			?>
+
 			@foreach ($view_var as $object)
+					<?php
+						// TODO: move away from view!!
+						$cur_model_complete = get_class($object);
+						$cur_model_parts = explode('\\', $cur_model_complete);
+						$cur_model = array_pop($cur_model_parts);
+					?>
+						@if ($last_model != $cur_model)
+							<tr><td colspan="2" style="border-top: solid 1px #aaaaaa">
+								<h5>{{ $cur_model }}s:</h5>
+							</td></tr>
+						@endif
 				<tr>
 					<td>
 						{{ Form::checkbox('ids['.$object->id.']') }}
 					</td>
 					<td>
-
-						<?php
-							// TODO: move away from view!!
-							$cur_model_complete = get_class($object);
-							$cur_model_parts = explode('\\', $cur_model_complete);
-							$cur_model = array_pop($cur_model_parts);
-						?>
+					<?php
+						$last_model = $cur_model;
+					?>
 
 					{{ HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id) }}
+
+					{{-- show current state if object is enviaorder => later on this can be used to filter orders --}}
+					@if ($cur_model == "EnviaOrder")
+						⇒ <i>{{ $object->orderstatus }}</i>
+					@endif
 
 					</td>
 				</tr>
