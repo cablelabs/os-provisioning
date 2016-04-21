@@ -47,6 +47,22 @@ class BaseController extends Controller {
 	}
 
 
+	/*
+	 * Base Function for Breadcrumb. -> Panel Header Right
+	 * overwrite this function in child controller if required.
+	 *
+	 * NOTE: Breadcrumb means Panel Header Right in Bootstrap language
+	 *
+	 * @param view_var: the model object to be displayed
+	 * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
+	 * @author: Torsten Schmidt
+	 */
+	public function get_form_breadcrumb($view_var)
+	{
+		return null;
+	}
+
+
 // Auth Stuff: TODO: move to a separate Controller
 
 	/**
@@ -583,10 +599,29 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
+		// Breadcrumb: panel header right
+		// TODO: move to a separate function
+		$panel_right = $this->get_form_breadcrumb($view_var);
+		if (\Acme\php\ArrayHelper::array_depth($view_var->view_has_many()) >= 2)
+		{
+			// get actual blade to $b
+			$a = $view_var->view_has_many();
+			$b = current($a);
+			$c = [];
+
+			for ($i = 0; $i < sizeof($view_var->view_has_many()); $i++)
+			{
+				array_push($c, ['name' => key($a), 'route' => $this->get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
+				$b = next($a);
+			}
+
+			$panel_right = ($c);
+		}
+
 		$config_routes = BaseController::get_config_modules();
 		$save_button = $this->save_button;
 
-		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button', 'link_header')));
+		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button', 'link_header', 'panel_right')));
 	}
 
 

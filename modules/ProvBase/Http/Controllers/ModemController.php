@@ -53,10 +53,35 @@ class ModemController extends \BaseModuleController {
 	}
 
 
+	/*
+	 * Modem Controller Breadcrumb. -> Panel Header Right
+	 * See: BaseController native function for more infos
+	 *
+	 * @param view_var: the model object to be displayed
+	 * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
+	 * @author: Torsten Schmidt
+	 */
+	public function get_form_breadcrumb($view_var)
+	{
+		$a = [['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]],
+				['name' => 'Analyses', 'route' => 'Provmon.index', 'link' => [$view_var->id]],
+				['name' => 'CPE-Analysis', 'route' => 'Provmon.cpe', 'link' => [$view_var->id]]];
+
+		// MTA: only show MTA analysis if Modem has MTAs
+		if (isset($view_var->mtas[0]))
+			array_push($a, ['name' => 'MTA-Analysis', 'route' => 'Provmon.mta', 'link' => [$view_var->id]]);
+
+		return $a;
+	}
+
+
 	/**
 	 * Display a listing of all Modem objects
 	 *
 	 * Changes to BaseController: Topography Mode when HfcCustomer Module is active
+	 *
+	 * TODO: - topo mode does not work anymore ?
+	 *       - split / use / exit with BaseController function
 	 *
 	 * @author Torsten Schmidt
 	 */

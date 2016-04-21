@@ -53,9 +53,17 @@ class DeviceType extends \BaseModel {
     // returns all objects that are related to a DeviceType
     public function view_has_many()
     {
-        return array(
-            'Device' => $this->devices,
-            'SnmpMib' => $this->snmpmibs
-        );
-    }	
+    	if (0) // disable
+			return array(
+				'Device' => $this->devices,
+				'SnmpMib' => $this->snmpmibs
+			);
+
+		// Testing view_has_many() new API
+        return [
+            'Test' => ['Device' => $this->devices],
+            'Test2' => ['SnmpMib' => $this->snmpmibs, 'View Stuff' => ['view' => 'test'], 'View 2' => ['view' => 'test'], 'Html Stuff' => ['html' => '<li><a href=google.de>Test</a></li>']],
+            'Test3' => ['SnmpMib' => $this->snmpmibs, 'Device' => $this->devices, 'Hua' => 'test']
+        ];
+    }
 }

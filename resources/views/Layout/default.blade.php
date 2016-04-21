@@ -20,12 +20,7 @@
 				<ol class="breadcrumb pull-right">
 					@if(isset($panel_right))
 						@foreach ($panel_right as $menu)
-							<?php
-				              $route = $menu['route'];
-				              $name  = $menu['name'];
-				              $link  = $menu['link'];
-				            ?>
-				            <li> {{ HTML::linkRoute($route, $name, $link) }}</li>
+				            <li> {{ HTML::linkRoute($menu['route'], $menu['name'], $menu['link']) }}</li>
 						@endforeach
 					@endif
 				</ol>
