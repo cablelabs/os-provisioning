@@ -245,20 +245,19 @@ class Contract extends \BaseModel {
 
 	/**
 	 * Cross checks start and end dates against actual day - used in accounting Cmd
+	 * Calculates start and end dates of this model for parent function of BaseModel
 	 */
-	public function check_validity()
+	public function check_validity($start = null, $end = null)
 	{
-		$today = date('Y-m-d');
-		$start = ($this->contract_start == null || $this->contract_start == '0000-00-00') ? $this->created_at : $this->contract_start;
-		if (is_object($start))
-			$start = $start->toDateString();
-		$end = $this->contract_end == '0000-00-00' ? null : $this->contract_end;
+		$start = ($this->contract_start == null || $this->contract_start == '0000-00-00') ? $this->created_at->toDateString() : $this->contract_start;
+		$start = strtotime($start);
+		$end = $this->contract_end == '0000-00-00' ? null : strtotime($this->contract_end);
 
-		return ($start <= $today && (!$end || $end >= $today));
+		return parent::check_validity($start, $end);
 	}
 
 
-	// Check if valid mandate exists, add sepa data to ordered structure, log all out of date contracts
+	// get actual valid sepa mandate
 	public function get_valid_mandate()
 	{
 		$mandate = null;

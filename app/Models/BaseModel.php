@@ -507,6 +507,23 @@ class BaseModel extends Eloquent
 		foreach ($ids as $id => $help)
 			$instance->findOrFail($id)->delete();
 	}
+
+
+	/**
+	 * Checks if actual day is between a start and end date - used for Billing
+	 *
+	 * @param $start, $end  	as actual unix timestamp (sec from 1970)
+	 * @return true  			if model is actually valid
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function check_validity($start = null, $end = null)
+	{
+		$today = strtotime('today');
+
+		return ($start <= $today && (!$end || $end >= $today));
+	}
+
 }
 
 
