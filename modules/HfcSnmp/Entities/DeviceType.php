@@ -43,7 +43,7 @@ class DeviceType extends \BaseModel {
 	}
 
 	/**
-	 * link with 
+	 * link with
 	 */
 	public function snmpmibs()
 	{

@@ -12,6 +12,7 @@ composer.lock
 Thumbs.db
 storage/systemd/
 storage/hfc/
+storage/framework/
 
 
 # temporary vim files
