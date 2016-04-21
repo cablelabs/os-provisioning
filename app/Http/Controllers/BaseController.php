@@ -263,6 +263,42 @@ class BaseController extends Controller {
 
 
 	/**
+	 * Prepare Breadcrumb - $panel_right header
+	 * Priority Handling: get_form_breadcrumb(), view_has_many()
+	 *
+	 * @param view_var: the view_var parameter from edit() context
+	 * @return panel_right prepared array for default.blade
+	 */
+	protected function prepare_breadcrumb($view_var)
+	{
+		// get_form_breadcrumb()
+		$ret = $this->get_form_breadcrumb($view_var);
+
+		if ($ret)
+			return $ret;
+
+		// view_has_many()
+		if (\Acme\php\ArrayHelper::array_depth($view_var->view_has_many()) >= 2)
+		{
+			// get actual blade to $b
+			$a = $view_var->view_has_many();
+			$b = current($a);
+			$c = [];
+
+			for ($i = 0; $i < sizeof($view_var->view_has_many()); $i++)
+			{
+				array_push($c, ['name' => key($a), 'route' => $this->get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
+				$b = next($a);
+			}
+
+			$ret = ($c);
+		}
+
+		return $ret;
+	}
+
+
+	/**
 	 * Handle file uploads.
 	 * - check if a file is uploaded
 	 * - if so:
@@ -589,6 +625,7 @@ class BaseController extends Controller {
 		$view_var 		= $obj->findOrFail($id);
 		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var), 'edit');
 		$link_header    = BaseViewController::prep_link_header($this->get_route_name(), $view_header, $view_var);
+		$panel_right    = $this->prepare_breadcrumb($view_var);
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';
@@ -599,24 +636,6 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		// Breadcrumb: panel header right
-		// TODO: move to a separate function
-		$panel_right = $this->get_form_breadcrumb($view_var);
-		if (\Acme\php\ArrayHelper::array_depth($view_var->view_has_many()) >= 2)
-		{
-			// get actual blade to $b
-			$a = $view_var->view_has_many();
-			$b = current($a);
-			$c = [];
-
-			for ($i = 0; $i < sizeof($view_var->view_has_many()); $i++)
-			{
-				array_push($c, ['name' => key($a), 'route' => $this->get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
-				$b = next($a);
-			}
-
-			$panel_right = ($c);
-		}
 
 		$config_routes = BaseController::get_config_modules();
 		$save_button = $this->save_button;
