@@ -26,3 +26,6 @@ Session.vim
 .Trash-1000/
 
 sql-reset.sh
+
+# ignore ctags file
+tags
