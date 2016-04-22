@@ -90,4 +90,34 @@ class ArrayHelper {
 		return $max_depth;
 	}
 
+
+	/*
+	 * return the changed array key from $old_key to $new_key in $array
+	 *
+	 * NOTE: This function holds the same order than in $array
+	 * SEE: http://stackoverflow.com/questions/240660/in-php-how-do-you-change-the-key-of-an-array-element
+	 *
+	 * @param $array: the given array
+	 * @param $old_key: old key value to change
+	 * @param $new_key: the new key value
+	 * @return: the key changed $array,
+	 *
+	 * @author: Torsten Schmidt
+	 */
+	public static function change_array_key( $array, $old_key, $new_key)
+	{
+		if(!is_array($array))
+			return $array;
+
+		if(!array_key_exists($old_key, $array))
+			return $array;
+
+		$key_pos = array_search($old_key, array_keys($array));
+		$arr_before = array_slice($array, 0, $key_pos);
+		$arr_after = array_slice($array, $key_pos + 1);
+		$arr_renamed = array($new_key => $array[$old_key]);
+
+		return $arr_before + $arr_renamed + $arr_after;
+	}
+
 }

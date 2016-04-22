@@ -626,6 +626,7 @@ class BaseController extends Controller {
 		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var), 'edit');
 		$link_header    = BaseViewController::prep_link_header($this->get_route_name(), $view_header, $view_var);
 		$panel_right    = $this->prepare_breadcrumb($view_var);
+		$relations      = BaseViewController::prep_right_panels($view_var);
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';
@@ -640,7 +641,7 @@ class BaseController extends Controller {
 		$config_routes = BaseController::get_config_modules();
 		$save_button = $this->save_button;
 
-		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button', 'link_header', 'panel_right')));
+		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button', 'link_header', 'panel_right', 'relations')));
 	}
 
 

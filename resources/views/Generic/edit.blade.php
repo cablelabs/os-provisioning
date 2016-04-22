@@ -22,57 +22,25 @@
 
 @section('content_right')
 
-	<?php
-		// TODO: move to Controller context
-
-		// API: check which API (array) is used
-		if (\Acme\php\ArrayHelper::array_depth($view_var->view_has_many()) < 2)
-		{
-			// old API
-			$relations = $view_var->view_has_many();
-		}
-		else
-		{
-			// new API
-			// TODO: validate Input blade
-			$blade = 0;
-			if(Input::get('blade') != '')
-				$blade = Input::get('blade');
-
-			// get actual blade to $b
-			$a = $view_var->view_has_many();
-			$b = current($a);
-			for ($i = 0; $i < $blade; $i++)
-				$b = next($a);
-
-			$relations = $b;
-		}
-
-
-		$i = 0;
-	?>
-
 	@foreach($relations as $view => $relation)
 
-		<?php
-			$i++;
+		<?php if (!isset($i)) $i = 0; else $i++; ?>
 
-			$model = new $model_name;
-			$key   = strtolower($model->table).'_id';
-			${"view_header_$i"} = \App\Http\Controllers\BaseViewController::translate("Assigned").' '.\App\Http\Controllers\BaseViewController::translate($view);
-		?>
-
+		<!-- The section content for the new Panel -->
 		@section("content_$i")
 			@if (is_object($relation))
-				<!-- old API: directly load relation view -->
-				@include('Generic.relation', [$relation, $view, $key])
+				<!-- old API: directly load relation view. NOTE: old API new class var was view -->
+				@include('Generic.relation', [$relation, 'class' => $view, 'key' => strtolower($view_var->table).'_id'])
 			@elseif (is_array($relation))
 				<!-- new API: parse data -->
 				@if (isset($relation['html']))
-					{{$relation['html'];}}
+					{{$relation['html']}}
 				@endif
 				@if (isset($relation['view']))
 					@include ($relation['view'])
+				@endif
+				@if (isset($relation['class']) && isset($relation['relation']))
+					@include('Generic.relation', ['relation' => $relation['relation'], 'class' => $relation['class'], 'key' => strtolower($view_var->table).'_id'])
 				@endif
 			@else
 				{{$relation}}
@@ -80,7 +48,10 @@
 		@stop
 
 
-		@include ('bootstrap.panel', array ('content' => "content_$i", 'view_header' => ${"view_header_$i"}, 'md' => 3))
+		<!-- The Bootstap Panel to include -->
+		@include ('bootstrap.panel', array ('content' => "content_$i",
+											'view_header' => \App\Http\Controllers\BaseViewController::translate("Assigned").' '.\App\Http\Controllers\BaseViewController::translate($view),
+											'md' => 3))
 
 	@endforeach
 

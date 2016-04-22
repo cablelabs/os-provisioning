@@ -62,7 +62,9 @@ class DeviceType extends \BaseModel {
 		// Testing view_has_many() new API
         return [
             'Test' => ['Device' => $this->devices],
-            'Test2' => ['SnmpMib' => $this->snmpmibs, 'View Stuff' => ['view' => 'test'], 'View 2' => ['view' => 'test'], 'Html Stuff' => ['html' => '<li><a href=google.de>Test</a></li>']],
+            'Test2' => ['Ass SnmpMib' => ['class' => 'SnmpMib', 'relation' => $this->snmpmibs],
+            			'View Stuff' => ['view' => 'test'], 'View 2' => ['view' => 'test'],
+            			'Html Stuff' => ['html' => '<li><a href=google.de>Test</a></li>']],
             'Test3' => ['SnmpMib' => $this->snmpmibs, 'Device' => $this->devices, 'Hua' => 'test']
         ];
     }

@@ -17,6 +17,23 @@ use Log;
 use GlobalConfig;
 
 
+/*
+ * BaseViewController: Is a special Controller which will be a kind of middleware/sub-layer/helper
+ *                     between the classical Controllers and Views.
+
+ * Purpose: This Controller is manly used to reduce the logical hard code php stuff from generic views
+ *          and to bring the view related stuff from BaseController to a better place - BaseViewController.
+ *          This leads to a kind of theoretical sub-layer concept – in fact it is not! See later ..
+ *
+ * At the time it is not a full qualified sub-layer (API) in this manner that all stuff goes through this
+ * Controller, whats between all Controllers and Views. It's more a kind of "Helper" to increase the logical
+ * sructuring. This has the advantage that we do not need a complete re-write.
+
+ * Usage: Most of the function here are used in a simple static context from BaseController like
+ *        BaseViewController::do_prepare_view_xyz().
+ *
+ * @author: Torsten Schmidt
+ */
 class BaseViewController extends Controller {
 
 	/**
@@ -48,6 +65,7 @@ class BaseViewController extends Controller {
 
 
 	// TODO: take language from user setting or the language with highest priority from browser
+	// @Nino Ryschawy
 	public static function get_user_lang()
 	{
 		$user = Auth::user();
@@ -79,8 +97,6 @@ class BaseViewController extends Controller {
 	 * You could use 'html' parameter inside the get_form_fields() functions to
 	 * overwrite default behavior. The best advice to use these parameter is to
 	 * debug the return array of this function.
-	 *
-	 * TODO: move too a separate class
 	 *
 	 * @param fields: the prepared get_form_fields array(), each array element represents on (HTML) field
 	 * @param context: edit|create - context from which this function is called
@@ -210,6 +226,15 @@ finish:
 	}
 
 
+	/*
+	 * Return the global prepared header links for Main Menu
+	 *
+	 * NOTE: this function must take care of installed modules!
+	 *
+	 * @return: array() of header links like [name1 => Route1, ..]
+	 *
+	 * @autor: Torsten Schmidt
+	 */
 	public static function get_view_header_links ()
 	{
 		$ret = array();
@@ -301,5 +326,45 @@ finish:
 			$s = \HTML::linkRoute($route_name.'.index', $view_header).': '.$s;
 
 		return $s;
+	}
+
+
+	/*
+	 * Prepare Rigtht Panels to View
+	 *
+	 * @param $view_var: object/model to be displayed
+	 * @return: array() of fields with added ['html'] element containing the preformed html content
+	 *
+	 * @autor: Torsten Schmidt
+	 */
+	public static function prep_right_panels ($view_var)
+	{
+		// prepare $relations array from view_has_many()
+
+		// API: check which API (array) is used
+		if (\Acme\php\ArrayHelper::array_depth($view_var->view_has_many()) < 2)
+		{
+			// old API
+			$relations = $view_var->view_has_many();
+		}
+		else
+		{
+			// new API: use HTML GET 'blade' to switch between tabs
+			// TODO: validate Input blade
+			$blade = 0;
+			if(Input::get('blade') != '')
+				$blade = Input::get('blade');
+
+			// get actual blade to $b
+			$a = $view_var->view_has_many();
+			$b = current($a);
+			for ($i = 0; $i < $blade; $i++)
+				$b = next($a);
+
+			$relations = $b;
+		}
+
+
+		return ($relations);
 	}
 }
