@@ -43,6 +43,7 @@ class Contract extends \BaseModel {
 	// link title in index view
 	public function get_view_link_title()
 	{
+		// dd($this->get_valid_tariff_id('Voip'));
 		return $this->number.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city;
 	}
 
@@ -133,7 +134,7 @@ class Contract extends \BaseModel {
 	 *  2. Check if $this is a new contract and activate it -> enable network_access
 	 *
 	 * @return: none
-	 * @author: Torsten Schmidt
+	 * @author: Torsten Schmidt, Nino Ryschawy
 	 */
 	public function daily_conversion()
 	{
@@ -164,6 +165,27 @@ class Contract extends \BaseModel {
 			$this->network_access = 1;
 			$this->save();
 		}
+
+
+		// Task 3: Change qos and voip id when tariff changes
+		$qos_id = $this->get_valid_tariff_id('Internet');
+		if ($this->qos_id != $qos_id)
+		{
+			\Log::Info("daily: contract: changed qos_id (tariff) to $qos_id for Contract ".$this->number, [$this->id]);
+			$this->qos_id = $qos_id;
+			$this->save();
+			$this->push_to_modems();
+		}
+
+		$voip_id = $this->get_valid_tariff_id('Voip');
+		if ($this->voip_id != $voip_id)
+		{
+			\Log::Info("daily: contract: changed voip_id (tariff) to $voip_id for Contract ".$this->number, [$this->id]);
+			$this->voip_id = $voip_id;
+			$this->save();
+		}
+
+
 	}
 
 
@@ -179,12 +201,17 @@ class Contract extends \BaseModel {
 	 */
 	public function monthly_conversion()
 	{
+		// with billing module -> daily conversion
+		$bm = new \BaseModel;
+		if ($bm->module_is_active('Billingbase'))
+			return;
+
 		// Tariff: monthly Tariff change – "Tarifwechsel"
-		if ($this->next_price_id > 0)
+		if ($this->next_qos_id > 0)
 		{
-			\Log::Info('monthly: contract: change Tariff for '.$this->id.' from '.$this->price_id.' to '.$this->next_price_id);
-			$this->price_id = $this->next_price_id;
-			$this->next_price_id = 0;
+			\Log::Info('monthly: contract: change Tariff for '.$this->id.' from '.$this->qos_id.' to '.$this->next_qos_id);
+			$this->qos_id = $this->next_qos_id;
+			$this->next_qos_id = 0;
 
 			$this->save();
 		}
@@ -201,7 +228,46 @@ class Contract extends \BaseModel {
 	}
 
 
-	/*
+	/**
+	 * Returns qos/voip id of the last created valid tariff assigned to this contract
+	 *
+	 * @param $type 	product type (e.g. 'Internet', 'Voip')
+	 * @author Nino Ryschawy
+	 */
+	private function get_valid_tariff_id($type)
+	{
+		$prod_ids = Product::get_product_ids($type);
+		$last 	= \Carbon\Carbon::createFromTimestamp(null);
+		$id 	= 0;
+
+		foreach ($this->items as $item)
+		{
+			if (in_array($item->product->id, $prod_ids) && $item->check_validity())
+			{
+				if ($id != 0)
+					\Log::warning("Multiple valid $type tariffs active for Contract ".$this->number, [$this->id]);
+
+				if ($item->created_at->gt($last))
+				{
+					switch ($type)
+					{
+						case 'Internet':
+							$id = $item->product->qos_id; break;
+						case 'Voip':
+							$id = $item->product->voip_id; break;
+						default:
+							return 0;
+					}
+					$last = $item->created_at;
+				}
+			}
+		}
+
+		return $id;
+	}
+
+
+	/**
 	 * Push all settings from Contract layer to the related child Modems (for $this)
 	 * This includes: network_access, qos_id
 	 *
@@ -209,7 +275,7 @@ class Contract extends \BaseModel {
 	 *       fields will push this changes to the child Modems
 	 *
 	 * @return: none
-	 * @author: Torsten Schmidt
+	 * @author: Torsten Schmidt, Nino Ryschawy
 	 */
 	public function push_to_modems()
 	{
@@ -218,14 +284,15 @@ class Contract extends \BaseModel {
 		//       an to rebuild and restart the involved modems
 		$bm = new \BaseModel;
 
-		if (!$bm->module_is_active('Billingbase'))
-			return;
+		$qos_id = $this->qos_id;
+
+		if ($bm->module_is_active('Billingbase'))
+			$qos_id = $this->get_valid_tariff_id('Internet');
 
 		foreach ($this->modems as $modem)
 		{
 			$modem->network_access = $this->network_access;
-			if ($qos_id = Product::find($this->price_id))
-				$modem->qos_id = $qos_id->qos_id;
+			$modem->qos_id = $qos_id;
 			$modem->save();
 		}
 	}

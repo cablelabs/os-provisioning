@@ -206,7 +206,7 @@ class BaseModel extends Eloquent
 		return current(preg_grep ('|.*?'.$s.'$|i', $this->get_models()));
 	}
 
-	/*
+	/**
 	 * Preselect a sql field while searching
 	 *
 	 * Note: If $field is 'net' or 'cluster' we perform a net and cluster specific search
@@ -521,7 +521,7 @@ class BaseModel extends Eloquent
 	{
 		$today = strtotime('today');
 
-		return ($start <= $today && (!$end || $end >= $today));
+		return ($start <= $today) && (!$end || $end >= $today);
 	}
 
 }

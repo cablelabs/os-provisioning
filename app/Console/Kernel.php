@@ -61,7 +61,7 @@ class Kernel extends ConsoleKernel {
 			// TODO: Reload DHCP
 			$schedule->command('nms:dhcp')->hourly()->withoutOverlapping();
 
-			// Contract
+			// Contract - network access, internet (qos) & voip tariff changes
 			$schedule->command('nms:contract daily')->daily();
 			$schedule->command('nms:contract monthly')->monthly();
 		}
