@@ -372,11 +372,16 @@ finish:
 			if(Input::get('blade') != '')
 				$blade = Input::get('blade');
 
-			// get actual blade to $b
+
+			// get actual blade to $b from array of all blades in $a
 			$a = $view_var->view_has_many();
+
+			if (count($a) == 1)
+				return current($a);
+
 			$b = current($a);
 			for ($i = 0; $i < $blade; $i++)
-				$b = next($a);
+				$b = next($a); // move to next blade/tab
 
 			$relations = $b;
 		}

@@ -19,6 +19,7 @@
 
 @stop
 
+<?php $api = App\Http\Controllers\BaseViewController::get_view_has_many_api_version($relations) ?>
 
 @section('content_right')
 
@@ -28,23 +29,34 @@
 
 		<!-- The section content for the new Panel -->
 		@section("content_$i")
-			@if (is_object($relation))
-				<!-- old API: directly load relation view. NOTE: old API new class var was view -->
+
+			<!-- old API: directly load relation view. NOTE: old API new class var was view -->
+			@if ($api == 1)
 				@include('Generic.relation', [$relation, 'class' => $view, 'key' => strtolower($view_var->table).'_id'])
-			@elseif (is_array($relation))
-				<!-- new API: parse data -->
-				@if (isset($relation['html']))
-					{{$relation['html']}}
-				@endif
-				@if (isset($relation['view']))
-					@include ($relation['view'])
-				@endif
-				@if (isset($relation['class']) && isset($relation['relation']))
-					@include('Generic.relation', ['relation' => $relation['relation'], 'class' => $relation['class'], 'key' => strtolower($view_var->table).'_id'])
-				@endif
-			@else
-				{{$relation}}
 			@endif
+
+			<!-- new API: parse data -->
+			@if ($api == 2)
+				@if (is_array($relation))
+
+					<!-- include pure HTML -->
+					@if (isset($relation['html']))
+						{{$relation['html']}}
+					@endif
+
+					<!-- include a view -->
+					@if (isset($relation['view']))
+						@include ($relation['view'])
+					@endif
+
+					<!-- include a relational class/object/table, like Contract->Modem -->
+					@if (isset($relation['class']) && isset($relation['relation']))
+						@include('Generic.relation', ['relation' => $relation['relation'], 'class' => $relation['class'], 'key' => strtolower($view_var->table).'_id'])
+					@endif
+
+				@endif
+			@endif
+
 		@stop
 
 

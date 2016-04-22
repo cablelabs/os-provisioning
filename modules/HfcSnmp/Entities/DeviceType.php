@@ -53,15 +53,17 @@ class DeviceType extends \BaseModel {
     // returns all objects that are related to a DeviceType
     public function view_has_many()
     {
-    	if (0) // disable
+    	if (1) // disable
 			return array(
-				'Device' => $this->devices,
-				'SnmpMib' => $this->snmpmibs
+				'Edit' => [
+					'hua' => ['class' => 'Device', 'relation' => $this->devices],
+					'hua2' => ['class' => 'SnmpMib', 'relation' => $this->snmpmibs]
+				]
 			);
 
 		// Testing view_has_many() new API
         return [
-            'Test' => ['Device' => $this->devices],
+            'Test' => ['hua1' => ['class' => 'Device', 'relation' => $this->devices], 'hua' => ['class' => 'SnmpMib', 'relation' => $this->snmpmibs]],
             'Test2' => ['Ass SnmpMib' => ['class' => 'SnmpMib', 'relation' => $this->snmpmibs],
             			'View Stuff' => ['view' => 'test'], 'View 2' => ['view' => 'test'],
             			'Html Stuff' => ['html' => '<li><a href=google.de>Test</a></li>']],

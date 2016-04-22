@@ -104,7 +104,7 @@ class ArrayHelper {
 	 *
 	 * @author: Torsten Schmidt
 	 */
-	public static function change_array_key( $array, $old_key, $new_key)
+	public static function change_array_key($array, $old_key, $new_key)
 	{
 		if(!is_array($array))
 			return $array;
