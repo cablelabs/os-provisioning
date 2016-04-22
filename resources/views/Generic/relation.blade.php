@@ -3,23 +3,26 @@
 	$route = $class;
 ?>
 
+
 <!-- Create Button: (With hidden add fields if required) -->
-@DivOpen(12)
+@if (!isset($options['hide_create_button']))
+	@DivOpen(12)
 
-	{{ Form::open(array('route' => $route.'.create', 'method' => 'GET')) }}
-	{{ Form::hidden($key, $view_var->id) }}
+		{{ Form::open(array('route' => $route.'.create', 'method' => 'GET')) }}
+		{{ Form::hidden($key, $view_var->id) }}
 
-		{{-- Add a hidden form field if create tag is set in $form_fields --}}
-		@foreach($form_fields as $field)
-			@if (array_key_exists('create', $field))
-				{{ Form::hidden($field["name"], $view_var->{$field["name"]}) }}
-			@endif
-		@endforeach
+			{{-- Add a hidden form field if create tag is set in $form_fields --}}
+			@foreach($form_fields as $field)
+				@if (array_key_exists('create', $field))
+					{{ Form::hidden($field["name"], $view_var->{$field["name"]}) }}
+				@endif
+			@endforeach
 
-	{{ Form::submit(\App\Http\Controllers\BaseViewController::translate('Create ').\App\Http\Controllers\BaseViewController::translate($view), ['style' => 'simple']) }}
-	{{ Form::close() }}
+		{{ Form::submit(\App\Http\Controllers\BaseViewController::translate('Create ').\App\Http\Controllers\BaseViewController::translate($view), ['style' => 'simple']) }}
+		{{ Form::close() }}
 
-@DivClose()
+	@DivClose()
+@endif
 
 
 <!-- The Relation Table and Delete Button -->
@@ -39,7 +42,7 @@
 
 
 		<!-- Delete Button -->
-		@if (isset($relation[0]))
+		@if (!isset($options['hide_delete_button']) && isset($relation[0]))
 			{{ Form::submit('Delete', ['style' => 'simple']) }}
 		@endif
 

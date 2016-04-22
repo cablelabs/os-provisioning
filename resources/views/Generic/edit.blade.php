@@ -30,7 +30,7 @@
 		<!-- The section content for the new Panel -->
 		@section("content_$i")
 
-			<!-- old API: directly load relation view. NOTE: old API new class var was view -->
+			<!-- old API: directly load relation view. NOTE: old API new class var is $view -->
 			@if ($api == 1)
 				@include('Generic.relation', [$relation, 'class' => $view, 'key' => strtolower($view_var->table).'_id'])
 			@endif
@@ -51,7 +51,10 @@
 
 					<!-- include a relational class/object/table, like Contract->Modem -->
 					@if (isset($relation['class']) && isset($relation['relation']))
-						@include('Generic.relation', ['relation' => $relation['relation'], 'class' => $relation['class'], 'key' => strtolower($view_var->table).'_id'])
+						@include('Generic.relation', ['relation' => $relation['relation'],
+													  'class' => $relation['class'],
+													  'key' => strtolower($view_var->table).'_id',
+													  'options' => isset($relation['options']) ? ($relation['options']) : null])
 					@endif
 
 				@endif

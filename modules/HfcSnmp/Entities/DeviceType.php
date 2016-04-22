@@ -16,11 +16,11 @@ class DeviceType extends \BaseModel {
 
 	// Add your validation rules here
 	public static function rules($id = null)
-    {
-        return array(
+	{
+		return array(
 			'name' => 'required'
-        );
-    }
+		);
+	}
 
 	// Name of View
 	public static function get_view_header()
@@ -50,10 +50,10 @@ class DeviceType extends \BaseModel {
 		return $this->hasMany('Modules\HfcSnmp\Entities\SnmpMib', 'devicetype_id');
 	}
 
-    // returns all objects that are related to a DeviceType
-    public function view_has_many()
-    {
-    	if (1) // disable
+	// returns all objects that are related to a DeviceType
+	public function view_has_many()
+	{
+		if (0) // disable
 			return array(
 				'Edit' => [
 					'hua' => ['class' => 'Device', 'relation' => $this->devices],
@@ -61,13 +61,18 @@ class DeviceType extends \BaseModel {
 				]
 			);
 
-		// Testing view_has_many() new API
-        return [
-            'Test' => ['hua1' => ['class' => 'Device', 'relation' => $this->devices], 'hua' => ['class' => 'SnmpMib', 'relation' => $this->snmpmibs]],
-            'Test2' => ['Ass SnmpMib' => ['class' => 'SnmpMib', 'relation' => $this->snmpmibs],
-            			'View Stuff' => ['view' => 'test'], 'View 2' => ['view' => 'test'],
-            			'Html Stuff' => ['html' => '<li><a href=google.de>Test</a></li>']],
-            'Test3' => ['SnmpMib' => $this->snmpmibs, 'Device' => $this->devices, 'Hua' => 'test']
-        ];
-    }
+		// Testing view_has_many() API v2
+		return [
+			'Test' =>  ['Device Class Header' => ['class' => 'Device',
+												  'relation' => $this->devices,
+												  'options' => ['hide_create_button' => 1, 'hide_delete_button' => 1]],
+						'Snmp Mib Header' => ['class' => 'SnmpMib', 'relation' => $this->snmpmibs]],
+			'Test2' => ['SnmpMib Header' => ['class' => 'SnmpMib', 'relation' => $this->snmpmibs],
+						'View Stuff Header' => ['view' => 'test'], 'View 2' => ['view' => 'test'],
+						'Html Stuff Header' => ['html' => '<li><a href=google.de>Test</a></li>']],
+			'Test3' => ['hua' => ['class' => 'Device', 'relation' => $this->devices],
+						'hua2' => ['class' => 'SnmpMib', 'relation' => $this->snmpmibs],
+						'Test Panel' => ['html' => 'HUA']]
+		];
+	}
 }
