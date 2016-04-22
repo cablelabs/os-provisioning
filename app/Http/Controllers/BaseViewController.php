@@ -147,8 +147,15 @@ class BaseViewController extends Controller {
 			 */
 			if (array_key_exists('hidden', $field))
 			{
-				$s .= \Form::hidden ($field["name"]);
-				goto finish;
+				$hidden = $field['hidden'];
+
+				if (($context == 'edit' && strpos($hidden, 'E') !== false) ||
+				   ($context == 'create' && strpos($hidden, 'C') == false) ||
+				   ($hidden == 1 || $hidden == '1'))
+					{
+						$s .= \Form::hidden ($field["name"]);
+						goto finish;
+					}
 			}
 
 
