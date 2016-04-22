@@ -329,6 +329,24 @@ finish:
 	}
 
 
+
+	/*
+	 * Return the API Version of view_has_many() as normal incremental integer
+	 *
+	 * @param view_has_many_array: the returned view_has_many() array
+	 * @return: api version starting from 1, 2, ..
+	 *
+	 * @autor: Torsten Schmidt
+	 */
+	public static function get_view_has_many_api_version ($view_has_many_array)
+	{
+		if (\Acme\php\ArrayHelper::array_depth($view_has_many_array) < 2)
+			return 1;
+
+		return 2;
+	}
+
+
 	/*
 	 * Prepare Rigtht Panels to View
 	 *
@@ -339,17 +357,16 @@ finish:
 	 */
 	public static function prep_right_panels ($view_var)
 	{
-		// prepare $relations array from view_has_many()
+		$api = static::get_view_has_many_api_version($view_var->view_has_many());
 
-		// API: check which API (array) is used
-		if (\Acme\php\ArrayHelper::array_depth($view_var->view_has_many()) < 2)
+		if ($api == 1)
 		{
-			// old API
 			$relations = $view_var->view_has_many();
 		}
-		else
+
+		if ($api == 2)
 		{
-			// new API: use HTML GET 'blade' to switch between tabs
+			// API 2: use HTML GET 'blade' to switch between tabs
 			// TODO: validate Input blade
 			$blade = 0;
 			if(Input::get('blade') != '')
