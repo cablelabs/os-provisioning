@@ -171,7 +171,9 @@ class Contract extends \BaseModel {
 		if (!$bm->module_is_active('Billingbase'))
 			return;
 
-		$qos_id = $this->get_valid_tariff_id('Internet');
+		$qos_id = 0;
+		if ($this->get_valid_tariff('Internet'))
+			$qos_id = $this->get_valid_tariff('Internet')->qos_id;
 		if ($this->qos_id != $qos_id)
 		{
 			\Log::Info("daily: contract: changed qos_id (tariff) to $qos_id for Contract ".$this->number, [$this->id]);
@@ -180,7 +182,10 @@ class Contract extends \BaseModel {
 			$this->push_to_modems();
 		}
 
-		$voip_id = $this->get_valid_tariff_id('Voip');
+		$voip_id = 0;
+		if ($this->get_valid_tariff('Internet'))
+			$voip_id = $this->get_valid_tariff('Internet')->voip_id;
+		$voip_id = $this->get_valid_tariff('Voip')->voip_id;
 		if ($this->voip_id != $voip_id)
 		{
 			\Log::Info("daily: contract: changed voip_id (tariff) to $voip_id for Contract ".$this->number, [$this->id]);
@@ -232,41 +237,45 @@ class Contract extends \BaseModel {
 
 
 	/**
-	 * Returns qos/voip id of the last created valid tariff assigned to this contract
+	 * Returns (qos/voip id of the) last created valid tariff assigned to this contract
 	 *
 	 * @param $type 	product type (e.g. 'Internet', 'Voip')
 	 * @author Nino Ryschawy
 	 */
-	private function get_valid_tariff_id($type)
+	public function get_valid_tariff($type)
 	{
 		$prod_ids = Product::get_product_ids($type);
 		$last 	= \Carbon\Carbon::createFromTimestamp(null);
-		$id 	= 0;
+		// $id 	= 0;
+		$tariff = null;
 
 		foreach ($this->items as $item)
 		{
 			if (in_array($item->product->id, $prod_ids) && $item->check_validity())
 			{
-				if ($id != 0)
+				// if ($id != 0)
+				if ($tariff)
 					\Log::warning("Multiple valid $type tariffs active for Contract ".$this->number, [$this->id]);
 
 				if ($item->created_at->gt($last))
 				{
-					switch ($type)
-					{
-						case 'Internet':
-							$id = $item->product->qos_id; break;
-						case 'Voip':
-							$id = $item->product->voip_id; break;
-						default:
-							return 0;
-					}
+					// switch ($type)
+					// {
+					// 	case 'Internet':
+					// 		$id = $item->product->qos_id; break;
+					// 	case 'Voip':
+					// 		$id = $item->product->voip_id; break;
+					// 	default:
+					// 		return 0;
+					// }
+					$tariff = $item->product;
 					$last = $item->created_at;
 				}
 			}
 		}
 
-		return $id;
+		return $tariff;
+		// return $id;
 	}
 
 
