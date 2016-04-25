@@ -238,15 +238,16 @@ finish:
 	 *
 	 * NOTE: this function must take care of installed modules!
 	 *
-	 * @return: array() of header links like [name1 => Route1, ..]
+	 * @return: array() of header links, like ['module name' => ['page name' => route.entry, ..], ..]
 	 *
-	 * @autor: Torsten Schmidt
+	 * @author: Torsten Schmidt
 	 */
 	public static function get_view_header_links ()
 	{
 		$ret = array();
 		$modules = Module::enabled();
 
+		// global page
 		$array = include(app_path().'/Config/header.php');
 		foreach ($array as $lines)
 		{
@@ -254,10 +255,11 @@ finish:
 			foreach ($lines as $k => $line)
 			{
 				$key = BaseViewController::translate($k);
-				array_push($ret, [$key => $line]);
+				$ret['Global'][$key] = $line;
 			}
 		}
 
+		// foreach module
 		foreach ($modules as $module)
 		{
 			if (File::exists($module->getPath().'/Config/header.php'))
@@ -266,18 +268,21 @@ finish:
 				 * TODO: use Config::get()
 				 *       this needs to fix namespace problems first
 				 */
+				$name = ($module->get('description') == '' ? $module->name : $module->get('description')); // module name
+				$ret[$name] = [];
+
 				$array = include ($module->getPath().'/Config/header.php');
 				foreach ($array as $lines)
 				{
-					// array_push($ret, $lines);
 					foreach ($lines as $k => $line)
 					{
 						$key = BaseViewController::translate($k);
-						array_push($ret, [$key => $line]);
+						$ret[$name][$key] = $line;
 					}
 				}
 			}
 		}
+
 		return $ret;
 	}
 

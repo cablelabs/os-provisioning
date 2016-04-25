@@ -123,13 +123,14 @@
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>
 
-              @foreach ($menus as $menu)
-                @foreach ($menu as $a)
-                  @foreach ($a as $name => $link)
-                    <li><a href="{{route($link)}}">{{ $name }}</a></li>
-                  @endforeach
+                @foreach ($view_header_links as $module_name => $module)
+                  <li><a href="#"><b>{{$module_name}}</b></a>
+                    @foreach ($module as $name => $link)
+                      <a href="{{route($link)}}">&nbsp;&nbsp;&nbsp;&nbsp;{{ $name }}</a>
+                    @endforeach
+                  </li>
                 @endforeach
-              @endforeach
+
             </ul>
           </li>
 

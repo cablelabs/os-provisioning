@@ -1,7 +1,7 @@
 {
     "name": "HfcSnmp",
     "alias": "hfcsnmp",
-    "description": "",
+    "description": "SNMP Module",
     "keywords": [],
     "active": 1,
     "order": 11,

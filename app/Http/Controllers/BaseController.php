@@ -198,7 +198,7 @@ class BaseController extends Controller {
 	public static function get_config_modules()
 	{
 		$modules = Module::enabled();
-		$links = ['0' => 'GlobalConfig'];
+		$links = ['Global Config' => 'GlobalConfig'];
 
 		foreach($modules as $module)
         {
@@ -209,7 +209,7 @@ class BaseController extends Controller {
 			$mod_controller = new $mod_controller_name;
 
 			if (method_exists($mod_controller, 'get_form_fields'))
-        		$links[] = $tmp;
+        		$links[$module->get('description')] = $tmp;
         }
 
         return $links;
