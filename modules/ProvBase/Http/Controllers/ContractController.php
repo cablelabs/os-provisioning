@@ -38,6 +38,15 @@ class ContractController extends \BaseModuleController {
 		return $tv_tariff_list;
 	}
 
+	private function _qos_next_month($model)
+	{
+		$h = $model->html_list(Qos::all(), 'name');
+		$h['0'] = '';
+		asort($h);
+
+		return $h;
+	}
+
     /**
      * defines the formular fields for the edit and create view
      */
@@ -81,10 +90,10 @@ class ContractController extends \BaseModuleController {
 				array('form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $model->html_list(CostCenter::all(), 'name')),
 				array('form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => $salesman, 'space' => '1'),
 
-				array('form_type' => 'text', 'name' => 'sepa_holder', 'description' => 'Bank Account Holder', 'options' => ['readonly']),
-				array('form_type' => 'text', 'name' => 'sepa_iban', 'description' => 'IBAN', 'options' => ['readonly']),
-				array('form_type' => 'text', 'name' => 'sepa_bic', 'description' => 'BIC', 'options' => ['readonly']),
-				array('form_type' => 'text', 'name' => 'sepa_institute', 'description' => 'Bank Institute', 'options' => ['readonly']),
+				// array('form_type' => 'text', 'name' => 'sepa_holder', 'description' => 'Bank Account Holder', 'options' => ['readonly']),
+				// array('form_type' => 'text', 'name' => 'sepa_iban', 'description' => 'IBAN', 'options' => ['readonly']),
+				// array('form_type' => 'text', 'name' => 'sepa_bic', 'description' => 'BIC', 'options' => ['readonly']),
+				// array('form_type' => 'text', 'name' => 'sepa_institute', 'description' => 'Bank Institute', 'options' => ['readonly']),
 			);
 		}
 		else

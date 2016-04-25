@@ -43,7 +43,6 @@ class Contract extends \BaseModel {
 	// link title in index view
 	public function get_view_link_title()
 	{
-		// dd($this->get_valid_tariff_id('Voip'));
 		return $this->number.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city;
 	}
 
@@ -168,6 +167,10 @@ class Contract extends \BaseModel {
 
 
 		// Task 3: Change qos and voip id when tariff changes
+		$bm = new \BaseModel;
+		if (!$bm->module_is_active('Billingbase'))
+			return;
+
 		$qos_id = $this->get_valid_tariff_id('Internet');
 		if ($this->qos_id != $qos_id)
 		{
@@ -267,32 +270,26 @@ class Contract extends \BaseModel {
 	}
 
 
-	/**
+	/*
 	 * Push all settings from Contract layer to the related child Modems (for $this)
 	 * This includes: network_access, qos_id
 	 *
 	 * Note: We call this function from Observer context so a change of the explained
 	 *       fields will push this changes to the child Modems
+	 * Note: This allows only 1 tariff qos_id for all modems
 	 *
 	 * @return: none
-	 * @author: Torsten Schmidt, Nino Ryschawy
+	 * @author: Torsten Schmidt
 	 */
 	public function push_to_modems()
 	{
 		// TODO: Speed-up: Could this be done with a single eloquent update statement ?
 		//       Note: This requires to use the Eloquent Context to run all Observers
 		//       an to rebuild and restart the involved modems
-		$bm = new \BaseModel;
-
-		$qos_id = $this->qos_id;
-
-		if ($bm->module_is_active('Billingbase'))
-			$qos_id = $this->get_valid_tariff_id('Internet');
-
 		foreach ($this->modems as $modem)
 		{
 			$modem->network_access = $this->network_access;
-			$modem->qos_id = $qos_id;
+			$modem->qos_id = $this->qos_id;
 			$modem->save();
 		}
 	}
