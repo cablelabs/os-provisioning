@@ -1,6 +1,16 @@
+{{---
+
+Relation Blade is used inside a Panel Element to display relational class objects on the right window side
+
+@param $relation: the relation array to be displayed, contains one element of $relations element from edit.blade
+@param $key: SQL table key, required for adding new elements with reference to $key table
+@param $class: the class of the object to be used. this will be translated to route name
+               so take care that class = route and vice versa
+
+--}}
 
 <?php
-	$route = $class;
+	$route = $class; // for better reading / understanding
 ?>
 
 

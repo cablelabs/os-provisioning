@@ -1,3 +1,10 @@
+{{--
+
+@param $query: the string query to search for
+@param $scope: scope means context to search in (all | model name, like contract)
+
+--}}
+
 @extends ('Layout.split84')
 
 @section('content_top')
@@ -21,30 +28,45 @@
 		@DivClose()
 	@DivClose()
 
-
 	@DivOpen(12)
 		@if (isset($query))
 			<h4>Global Search: Matches for <tt>'{{ $query }}'</tt></h4>
 		@endif
 
-		<table>
-			@foreach ($view_var as $object)
+
+		<table class="table">
+			<thead>
 				<tr>
-					<td>
-						{{ Form::checkbox('ids['.$object->id.']') }}
-					</td>
-					<td>
+					<td></td>
+					<td>Type</td>
+					<td>Entry</td>
+					<td>Description</td>
+				</tr>
+			</thead>
 
-						<?php
-							// TODO: move away from view!!
-							$cur_model_complete = get_class($object);
-							$cur_model_parts = explode('\\', $cur_model_complete);
-							$cur_model = array_pop($cur_model_parts);
-						?>
+			@foreach ($view_var as $object)
+				<?php
+					// TODO: move away from view!!
+					$cur_model_parts = explode('\\', get_class($object));
+					$cur_model = array_pop($cur_model_parts);
 
-					{{ HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id) }}
+					if (is_array($object->get_view_link_title()))
+					{
+						$link = \HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title()['header'], $object->id);
+						$descr = implode (', ', $object->get_view_link_title()['index']);
+					}
+					else
+					{
+						$link = \HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id);
+						$descr = $object->get_view_link_title();
+					}
+				?>
 
-					</td>
+				<tr class={{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}>
+					<td>{{Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple'])}}</td>
+					<td>{{$cur_model}}</td>
+					<td>{{$link}}</td>
+					<td>{{$descr}}</td>
 				</tr>
 			@endforeach
 		</table>

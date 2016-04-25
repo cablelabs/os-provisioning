@@ -1,8 +1,20 @@
+{{--
+
+@param $route_name: the base route name of this object class
+@param $link_header: the link header description in HTML
+@param $create_allowd: create button allowed?
+@param $view_var: array() of objects to be displayed
+
+@param $query:
+@param $scope:
+
+--}}
+
 @extends ('Layout.split84')
 
 @section('content_top')
 
-	{{ HTML::linkRoute($route_name.'.index', $view_header) }}
+	{{ HTML::linkRoute($route_name.'.index', $link_header) }}
 
 @stop
 
@@ -32,6 +44,7 @@
 		@DivClose()
 	@DivClose()
 
+
 	<!-- database entries inside a form with checkboxes to be able to delete one or more entries -->
 	@DivOpen(12)
 
@@ -50,48 +63,24 @@
 						<!-- Parse get_view_link_title() header_index  -->
 						@if (is_array($view_var[0]->get_view_link_title()) && isset($view_var[0]->get_view_link_title()['index_header']))
 							@foreach ( $view_var[0]->get_view_link_title()['index_header'] as $field)
-								<td>
-									{{ \App\Http\Controllers\BaseViewController::translate($field) }}
-								</td>
+								<td> {{ \App\Http\Controllers\BaseViewController::translate($field) }} </td>
 							@endforeach
 						@endif
 					</tr>
 				</thead>
 
-				<?php $color_array = ['success', 'warning', 'danger', 'info']; ?>
-
+				<!-- Index Table Entries -->
 				@foreach ($view_var as $object)
-					<?php
-						// Bootstrap Class -> Color Line
-						// TODO: move to controller
-						if (isset($object->get_view_link_title()['bsclass']))
-							$class = $object->get_view_link_title()['bsclass'];
-						else
-						{
-							if (!isset($i))
-								$i = 0;
-
-							if ($i++ % 5 == 0)
-							{
-								$color_array = Acme\php\ArrayHelper::array_rotate($color_array);
-								$class = $color_array[0];
-							}
-						}
-					?>
-
-					<tr class={{$class}}>
-						<td>
-							{{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple']) }}
-						</td>
+					<tr class={{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}>
+						<td> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple']) }} </td>
 
 						<!-- Parse get_view_link_title()  -->
 						@foreach (is_array($object->get_view_link_title()) ? $object->get_view_link_title()['index'] : [$object->get_view_link_title()] as $field)
-							<td>
-								{{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }}
-							</td>
+							<td> {{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }} </td>
 						@endforeach
 					</tr>
 				@endforeach
+
 			</table>
 
 			<br>

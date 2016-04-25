@@ -396,4 +396,37 @@ finish:
 
 		return ($relations);
 	}
+
+
+	/*
+	 * Prepare Index Entry Table (<tr>) Colors
+	 *
+	 * @param $object: the object to look at
+	 * @param $rotate_after: rotate color array after number of entries
+	 * @return: bootstrap table index class/color [success|warning|danger|info]
+	 *
+	 * @autor: Torsten Schmidt
+	 */
+	public static function prep_index_entries_color($object, $rotate_after = 5)
+	{
+		static $color_array = ['success', 'warning', 'danger', 'info'];
+		static $i;
+
+		$class = current($color_array);
+
+		// Check if class object has a own color definition
+		if (isset($object->get_view_link_title()['bsclass']))
+			$class = $object->get_view_link_title()['bsclass'];
+		else
+		{
+			// Rotate Color through $color_array every $rotate_after entries
+			if ($i++ % $rotate_after == 0)
+			{
+				$color_array = \Acme\php\ArrayHelper::array_rotate($color_array);
+				$class = $color_array[0];
+			}
+		}
+
+		return $class;
+	}
 }

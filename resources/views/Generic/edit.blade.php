@@ -1,12 +1,22 @@
+{{--
+
+@param $link_header: the link header description in HTML
+
+@param $view_var: the object we are editing
+@param $form_update: the update route which should be called when clicking save
+@param $form_path: the form view to be displayed inside this blade (mostly Generic.edit)
+
+@param $relations: the relations array() returned by prep_right_panels() in BaseViewController
+
+--}}
+
 @extends ('Layout.split')
 
-@if (!isset($own_top))
-	@section('content_top')
+@section('content_top')
 
-		{{ $link_header }}
+	{{ $link_header }}
 
-	@stop
-@endif
+@stop
 
 
 @section('content_left')
@@ -18,6 +28,7 @@
 	{{ Form::close() }}
 
 @stop
+
 
 <?php $api = App\Http\Controllers\BaseViewController::get_view_has_many_api_version($relations) ?>
 

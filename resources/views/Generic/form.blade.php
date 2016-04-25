@@ -1,3 +1,10 @@
+{{--
+
+@param $form_fields: the form fields to be displayed as array()
+@param $save_button: the save button title
+
+--}}
+
 <script>setTimeout("document.getElementById('success_msg').style.display='none';", 6000);</script>
 
 <script type='text/javascript'>

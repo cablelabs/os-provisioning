@@ -369,6 +369,8 @@ class BaseController extends Controller {
 		if (!isset($a['form_update']))
 			$a['form_update'] = $this->get_route_name().'.update';
 
+		$a['save_button'] = $this->save_button;
+
 		// Get Framework Informations
 		$gc = GlobalConfig::first();
 		$a['framework']['header1'] = $gc->headline1;
@@ -439,7 +441,6 @@ class BaseController extends Controller {
 	 * @author Patrick Reichel
 	 */
 	public function fulltextSearch() {
-
 		// get the search scope
 		$scope = Input::get('scope');
 
@@ -476,7 +477,6 @@ class BaseController extends Controller {
 		}
 
 		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed', 'query', 'scope')));
-
 	}
 
 
@@ -498,10 +498,10 @@ class BaseController extends Controller {
 
 		$view_var = $obj->index_list();
 
-		$view_header  	= BaseViewController::translate($obj->get_view_header().' List');
+		$link_header  	= BaseViewController::translate($obj->get_view_header().' List');
 		$create_allowed = $this->get_controller_obj()->index_create_allowed;
-
 		$view_path = 'Generic.index';
+
 
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
@@ -509,7 +509,7 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.index'))
 			$view_path = $this->get_view_name().'.index';
 
-		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed')));
+		return View::make ($view_path, $this->compact_prep_view(compact('link_header', 'view_var', 'create_allowed')));
 	}
 
 
@@ -517,7 +517,7 @@ class BaseController extends Controller {
 	/**
 	 * Show the form for creating a new model item
 	 *
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -557,9 +557,8 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.form'))
 			$form_path = $this->get_view_name().'.form';
 
-		$save_button = 'Save';
 
-		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'save_button', 'link_header')));
+		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'link_header')));
 	}
 
 
@@ -605,7 +604,7 @@ class BaseController extends Controller {
 	 * Show the editing form of the calling Object
 	 *
 	 * @param  int  $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{
@@ -639,9 +638,8 @@ class BaseController extends Controller {
 
 
 		$config_routes = BaseController::get_config_modules();
-		$save_button = $this->save_button;
 
-		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button', 'link_header', 'panel_right', 'relations')));
+		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations')));
 	}
 
 

@@ -1,14 +1,22 @@
+{{--
+
+@param $link_header: the link header description in HTML
+
+@param $form_path: the form view to be displayed inside this blade (mostly Generic.edit)
+@param $route_name: the base route name of this object class which will be added
+
+--}}
+
 @extends ('Layout.split')
 
-@if (!isset($own_top))
-	@section('content_top')
+@section('content_top')
 
-		{{ $link_header }}
+	{{ $link_header }}
 
-		{{ \App\Http\Controllers\BaseViewController::translate('Create') }}
+	{{ \App\Http\Controllers\BaseViewController::translate('Create') }}
 
-	@stop
-@endif
+@stop
+
 
 @section('content_left')
 
