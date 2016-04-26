@@ -166,12 +166,17 @@ class BaseViewController extends Controller {
 			$options = isset($field["options"]) ? $field["options"] : [];
 			array_push($options, 'style="background-color:'.$color.'"');
 
+			// select field: used for jquery (java script) realtime based showing/hiding of fields
+			$select = null;
+			if (isset($field['select']) && is_string($field['select']))
+				$select = ['class' => $field['select']];
+
 			// Help: add help msg to form fields - mouse on hover
 			if (isset($field['help']))
 				$options["title"] = $field['help'];
 
 			// Open Form Group
-			$s .= \Form::openGroup($field["name"], $field["description"], [], $color);
+			$s .= \Form::openGroup($field["name"], $field["description"], $select, $color);
 
 			// form_type ?
 			switch ($field["form_type"])

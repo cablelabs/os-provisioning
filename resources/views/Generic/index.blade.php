@@ -72,7 +72,7 @@
 				<!-- Index Table Entries -->
 				@foreach ($view_var as $object)
 					<tr class={{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}>
-						<td> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple']) }} </td>
+						<td width=50> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple']) }} </td>
 
 						<!-- Parse get_view_link_title()  -->
 						@foreach (is_array($object->get_view_link_title()) ? $object->get_view_link_title()['index'] : [$object->get_view_link_title()] as $field)

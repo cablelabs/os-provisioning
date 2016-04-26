@@ -5,6 +5,7 @@
 		<meta charset="utf-8">
 		<title>NMS</title>
 		@include ('bootstrap.header')
+
 	</head>
 
 	<body <?php if(isset($body_onload)) echo "onload=$body_onload()";?> >
@@ -29,6 +30,7 @@
 			</div>
 
 			@include ('bootstrap.footer')
+			@yield ('java')
 		</div>
 
 	</body>
