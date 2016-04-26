@@ -11,7 +11,16 @@ class PhoneTariff extends \BaseModel {
 
 	public static function get_purchase_tariffs() {
 
-		return array('foo' => 'bar');
+		$ret = array();
+
+		$tariffs = PhoneTariff::where('type', '=', 'purchase')->get();
+
+		foreach ($tariffs as $tariff) {
+			if (boolval($tariff->usable)) {
+				$ret[$tariff->id] = $tariff->name;
+			}
+		}
+		return $ret;
 	}
 
 }
