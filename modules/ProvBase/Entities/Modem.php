@@ -23,7 +23,7 @@ class Modem extends \BaseModel {
 		);
 	}
 
-	
+
 	// Name of View
 	public static function get_view_header()
 	{
@@ -86,7 +86,7 @@ class Modem extends \BaseModel {
 
 		return null;
 	}
-	
+
 	public function tree()
 	{
 		if ($this->module_is_active('HfcBase'))
@@ -138,6 +138,8 @@ class Modem extends \BaseModel {
 	/**
 	 * Returns the config file entry string for a cable modem in dependency of private or public ip
 	 *
+	 * TODO: use object context instead of parameters (Torsten)
+	 *
 	 * @author Nino Ryschawy
 	 */
 	private function generate_cm_update_entry($id, $mac)
@@ -167,13 +169,18 @@ class Modem extends \BaseModel {
 	 * Make DHCP config files for all CMs including EPs - used in dhcpCommand after deleting
 	 * the config files with all entries
 	 *
+	 * TODO: make static function (class context not object)
+	 *
 	 * @author Torsten Schmidt
 	 */
 	public function make_dhcp_cm_all ()
-	{		
+	{
 		$this->del_dhcp_conf_files();
-		
-		foreach (Modem::all() as $modem) 
+
+		// Log
+		Log::info('dhcp: update '.self::CONF_FILE_PATH.', '.self::CONF_FILE_PATH_PUB);
+
+		foreach (Modem::all() as $modem)
 		{
 			$id	= $modem->id;
 			$mac   = $modem->mac;
@@ -231,7 +238,8 @@ class Modem extends \BaseModel {
 		if ($ret === false)
 				die("Error writing to file");
 
-		Log::info("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file");
+		Log::info('configfile: update modem '.$this->hostname);
+		Log::info("configfile: /usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file");
 		// if (file_exists($cfg_file))
 		//	 unlink($cfg_file);
 
@@ -245,7 +253,7 @@ class Modem extends \BaseModel {
 		// if (file_exists($cfg_file))
 		//	 return true;
 		// return false;
-		
+
 		return true;
 	}
 
@@ -275,7 +283,7 @@ class Modem extends \BaseModel {
 		$file['1'] = $dir.'cm-'.$this->id.'.cfg';
 		$file['2'] = $dir.'cm-'.$this->id.'.conf';
 
-		foreach ($file as $f) 
+		foreach ($file as $f)
 		{
 			if (file_exists($f)) unlink($f);
 		}
@@ -283,12 +291,15 @@ class Modem extends \BaseModel {
 
 	/**
 	 * Restarts modem through snmpset
-	 */	
+	 */
 	public function restart_modem()
 	{
 		$config = ProvBase::first();
 		$community_rw = $config->rw_community;
 		$domain = $config->domain_name;
+
+		// Log
+		Log::info('restart modem '.$this->hostname);
 
 		// if hostname cant be resolved we dont want to have an php error
 		try
@@ -298,18 +309,18 @@ class Modem extends \BaseModel {
 		}
 		catch (Exception $e)
 		{
-			// only ignore error with this error message (catch exception with this string) 
+			// only ignore error with this error message (catch exception with this string)
 			if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmpset(): No response from") !== false)))
 			{
 				// check if observer is called from HTML Update, otherwise skip
-				if (\Request::method() == 'PUT') 
+				if (\Request::method() == 'PUT')
 				{
 					// redirect back with corresponding message over flash, needs to be saved as it's normally only saved when the session middleware terminates successfully
-					$resp = \Redirect::back()->with('message', 'Could not restart Modem! (offline/configfile error?)'); 
+					$resp = \Redirect::back()->with('message', 'Could not restart Modem! (offline/configfile error?)');
 					\Session::driver()->save();		 // \ is like writing "use Session;" before class statement
 					$resp->send();
 
-					/* 
+					/*
 					 * TODO: replace exit
 					 * This is a security hassard. All Code (Observer etc) which should run after this code will not be executed !
 					 */
@@ -320,23 +331,126 @@ class Modem extends \BaseModel {
 	}
 
 
-	public function geocode ()
+	/*
+	 * Refresh Modem State
+	 *
+	 * This function will update the modem->status field with the modem upstream power level
+	 * if online, otherwise it will set the value to 0.
+	 *
+	 * NOTE: This function will be called via artisan command modem-refresh. This command
+	 *       is added to laravel scheduling api to refresh all modem states every 5min.
+	 *
+	 * NOTE: The function is written in a generic manner to fetch more than just upstream power level
+	 *       For more see array $oids inside ..
+	 *
+	 * @param timeout: snmp timeout
+	 * @return: result of snmpget as array of [oid1 => value1, ..]
+	 * @author: Torsten Schmidt
+	 */
+	public function refresh_state ($timeout = 100*1000)
+	{
+		// Load Global Config
+		$config = ProvBase::first();
+		$community_ro = $config->ro_community;
+		$domain = $config->domain_name;
+
+		// Set SNMP default mode
+		// TODO: use a seperate funciton
+		snmp_set_quick_print(TRUE);
+		snmp_set_oid_numeric_print(TRUE);
+		snmp_set_valueretrieval(SNMP_VALUE_PLAIN);
+		snmp_set_oid_output_format (SNMP_OID_OUTPUT_NUMERIC);
+
+		// OID Array to parse
+		// Style: ['modem table field 1' => 'oid1', 'modem table field 2' => 'oid2, ..']
+		$oids = ['status' => '.1.3.6.1.2.1.10.127.1.2.2.1.3.2'];
+
+		// Log
+		// Log::debug('refresh state '.$this->hostname);
+
+		$this->observer_disable();
+
+		// if hostname cant be resolved we dont want to have an php error
+		try
+		{
+			// SNMP request
+			$session = new \SNMP(\SNMP::VERSION_2c, $this->hostname.'.'.$domain, $community_ro,  $timeout);
+			$results = $r = $session->get($oids);
+
+			// parse and update results
+			foreach (array_reverse($oids) as $field => $oid)
+				$this->{$field} = array_pop($r);
+
+			// save
+			$this->save();
+		}
+		catch (Exception $e)
+		{
+			// catch error
+			// set fields to 0
+			foreach (array_reverse($oids) as $field => $oid)
+				$this->{$field} = 0;
+
+			// save
+			$this->save();
+
+			return false;
+		}
+
+		return $results;
+	}
+
+
+	/*
+	 * Geocoding API
+	 * Translate a address (like: Deutschland, Marienberg, Waldrand 4) in a geoposition (x,y)
+	 *
+	 * @author: Torsten Schmidt
+	 *
+	 * TODO: move to a seperate extensions class
+	 */
+
+	// private variable to hold the last Geocoding response state
+	// use geocode_last_status()
+	private $geocode_state = null;
+
+
+	/*
+	 * Modem Geocoding Function
+	 * Geocode the modem address value in a geoposition and update values to x,y. Please
+	 * note that the function is working in object context, so no addr parameters are required.
+	 *
+	 * @param save: Update Modem x,y value with a save() to DB. Notice this calls Observer !
+	 * @return: true on success, false if coding fails. For error log see geocode_last_status()
+	 * @author: Torsten Schmidt
+	 *
+	 * TODO: split in a general geocoding function and a modem specific one
+	 */
+	public function geocode ($save = true)
 	{
 		$country = 'Deutschland';
+
+		// Load google key if .ENV is set
+		$key = '';
+		if (isset ($_ENV['GOOGLE_API_KEY']))
+			$key = '&key='.$_ENV['GOOGLE_API_KEY'];
 
 		// url encode the address
 		$address = urlencode($country.', '.$this->street.', '.$this->zip.', '.$this->city);
 
 		// google map geocode api url
-		$url = "http://maps.google.com/maps/api/geocode/json?sensor=false&address={$address}";
+		$url = "https://maps.google.com/maps/api/geocode/json?sensor=false&address={$address}$key";
 
 		// get the json response
 		$resp_json = file_get_contents($url);
 
+		// Log
+		Log::info ('geocode: request '.$url);
+
 		// decode the json
 		$resp = json_decode($resp_json, true);
 
-		// response status will be 'OK', if able to geocode given address 
+		// response status will be 'OK', if able to geocode given address
 		if($resp['status']=='OK')
 		{
 			// get the important data
@@ -347,7 +461,7 @@ class Modem extends \BaseModel {
 			// verify if data is complete
 			if($lati && $longi && $formatted_address)
 			{
-						// put the data in the array
+				// put the data in the array
 				$data_arr = array();
 
 				array_push(
@@ -359,20 +473,54 @@ class Modem extends \BaseModel {
 
 				$this->y = $lati;
 				$this->x = $longi;
+				$this->geocode_state = 'OK';
 
-				$this->save();
+				if ($save)
+					$this->save();
+
+				Log::info('geocode: result '.$lati.','.$longi);
 
 				return $data_arr;
 			}
 			else
+			{
+				$this->geocode_state = 'DATA_VERIFICATION_FAILED';
+				Log::info('geocode: '.$this->geocode_state);
 				return false;
+			}
 		}
 		else
+		{
+			$this->geocode_state = $resp['status'];
+			Log::info('geocode: '.$this->geocode_state);
 			return false;
+		}
 	}
 
 
+	/*
+	 * Return Last Geocoding State / ERROR
+	 */
+	public function geocode_last_status ()
+	{
+		return $this->geocode_state;
+	}
 
+
+	/*
+	 * Observer Handling
+	 *
+	 * To disable the update observers run observer_disable() on object context.
+	 * This is useful to avoid running per modem observers on general (unimportant)
+	 * changes. If obersers are enabled, every change on modem object will for example
+	 * restart the modem.
+	 */
+	public $observer_enabled = true;
+
+	public function observer_disable()
+	{
+		$this->observer_enabled = false;
+	}
 }
 
 
@@ -388,14 +536,31 @@ class ModemObserver
 {
 	public function created($modem)
 	{
-		$modem->make_dhcp_cm_all();
-		$modem->make_configfile();
 		$modem->hostname = 'cm-'.$modem->id;
-		$modem->save();	 // forces to call the updated method of the observer
+		$modem->save();	 // forces to call the updating() and updated() method of the observer !
+	}
+
+	public function updating($modem)
+	{
+		if (!$modem->observer_enabled)
+			return;
+
+		// Use Updating to set the geopos before a save() is called.
+		// Notice: that we can not call save() in update(). This will re-tricker
+		//         the Observer and re-call update() -> endless loop is the result.
+		$modem->geocode(false);
+
+		// Refresh MPS rules
+		// Note: does not perform a save() which could trigger observer.
+		if (\BaseModel::__module_is_active('HfcCustomer'))
+			$modem->tree_id = \Modules\Hfccustomer\Entities\Mpr::refresh($modem->id);
 	}
 
 	public function updated($modem)
 	{
+		if (!$modem->observer_enabled)
+			return;
+
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
 		$modem->restart_modem();

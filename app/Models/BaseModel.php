@@ -10,6 +10,32 @@ class BaseModel extends Eloquent
 {
 	use SoftDeletes;
 
+	public $voip_enabled;
+	public $billing_enabled;
+
+	protected $fillable = array();
+
+
+	/**
+	 * Constructor.
+	 * Used to set some helper variables.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @param $attributes pass through to Eloquent contstructor.
+	 */
+	public function __construct($attributes = array()) {
+
+		// call Eloquent constructor
+		// $attributes are needed! (or e.g. seeding and creating will not work)
+		parent::__construct($attributes);
+
+		// set helper variables
+		$this->voip_enabled = $this->voip_enabled();
+		$this->billing_enabled = $this->billing_enabled();
+
+	}
+
 
 	// Add Comment here. ..
 	protected $guarded = ['id'];
@@ -37,7 +63,24 @@ class BaseModel extends Eloquent
 
 
 	/**
-	 * This function is a placeholder to write Model specific adaptions to 
+	 * check if module exists
+	 * NOTE: this is simply a static pendant to module_is_active(). So call this if required from class context.
+	 *       -> see above
+	 */
+	public static function __module_is_active($modulename)
+	{
+		$modules = \Module::enabled();
+
+		foreach ($modules as $module)
+			if ($module->getLowerName() == strtolower($modulename))
+				return true;
+
+        return false;
+	}
+
+
+	/**
+	 * This function is a placeholder to write Model specific adaptions to
 	 * order and/or restructure the Model objects for Index View
 	 *
 	 * Note: for a example see Configfile Model
@@ -62,6 +105,7 @@ class BaseModel extends Eloquent
 		return null;
 	}
 
+
 	/**
 	 * Basefunction for returning all objects that a model can have a relation to
 	 * Place this function in the model where the edit/create view shall show all related objects
@@ -76,6 +120,66 @@ class BaseModel extends Eloquent
 	}
 
 
+	/**
+	 * Basefunction for returning all objects that a model can have a one-to-one relation to
+	 * Place this function in the model where the edit/create view shall show all related objects
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return an array with the appropriate hasOne()-functions of the model
+	 */
+	public function view_has_one ()
+	{
+		return array();
+	}
+
+
+	/**
+	 * Check if VoIP is enabled.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return true if one of the VoIP modules is enabled (currently only ProvVoipEnvia), else false
+	 */
+	public function voip_enabled() {
+
+		$voip_modules = array(
+			'ProvVoipEnvia',
+		);
+
+		foreach ($voip_modules as $module) {
+			if ($this->module_is_active($module)) {
+				return True;
+			}
+		}
+
+		return False;
+	}
+
+
+	/**
+	 * Check if billing is enabled.
+	 *
+	 * TODO currently this is a dummy (= we don't have a billing module yet!!)
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return true if one of the billing modules is enabled, else false
+	 */
+	public function billing_enabled() {
+
+		$billing_modules = array(
+			'BillingBase',
+		);
+
+		foreach ($billing_modules as $module) {
+			if ($this->module_is_active($module)) {
+				return True;
+			}
+		}
+
+		return False;
+	}
 	/**
 	 *	This returns an array with all possible enum values.
 	 *	Use this instead of hardcoding it e.g. in your view (where it has to be
@@ -101,6 +205,8 @@ class BaseModel extends Eloquent
 
 		// get metadata for the given column and extract enum options
 		$type = DB::select( DB::raw('SHOW COLUMNS FROM '.$instance->getTable().' WHERE Field = "'.$name.'"') )[0]->Type;
+
+		// create array with enum values (all values in brackets after “enum”)
 		preg_match('/^enum\((.*)\)$/', $type, $matches);
 
 		$enum_values = array();
@@ -155,7 +261,9 @@ class BaseModel extends Eloquent
 		$exclude = array(
 			'BaseModel',
 			'Authmeta',
-			'Authcore'
+			'Authcore',
+			'TRCClass',	# static data; not for standalone use
+			'CarrierCode', # cron updated data; not for standalone use
 		);
 		$result = array();
 
@@ -196,7 +304,7 @@ class BaseModel extends Eloquent
 				}
 			}
 		}
-		
+
 		return $result;
 	}
 
@@ -230,7 +338,7 @@ class BaseModel extends Eloquent
 				if (($model[0] == 'Modules\ProvBase\Entities\Modem') && ($field == 'net' || $field == 'cluster'))
 				{
 					$ret = 'tree_id IN(-1';
-					foreach (Modules\HfcBase\Entities\Tree::where($field, '=', $value)->get() as $tree) 
+					foreach (Modules\HfcBase\Entities\Tree::where($field, '=', $value)->get() as $tree)
 						$ret .= ','.$tree->id;
 					$ret .= ')';
 				}
@@ -249,10 +357,10 @@ class BaseModel extends Eloquent
 	 * @param $preselect_field sql field for pre selection
 	 * @param $preselect_field sql search value for pre selection
 	 * @return search result: array of whereRaw() results, this means array of class Illuminate\Database\Quer\Builder objects
-	 * @author Patrick Reichel, 
+	 * @author Patrick Reichel,
 	 *         Torsten Schmidt: add preselection, add Model checking
 	 */
-	protected function _doSimpleSearch($_models, $query, $preselect_field=null, $preselect_value=null) 
+	protected function _doSimpleSearch($_models, $query, $preselect_field=null, $preselect_value=null)
 	{
 		$preselect = $this->__preselect_search($preselect_field, $preselect_value, $_models);
 
@@ -280,7 +388,7 @@ class BaseModel extends Eloquent
 		 * Perform the search
 		 */
 		$result = [];
-		foreach ($models as $model) 
+		foreach ($models as $model)
 		{
 			// get the database table used for given model
 			$tmp = new $model;
@@ -288,7 +396,7 @@ class BaseModel extends Eloquent
 			$cols = $model::getTableColumns($table);
 
 			$tmp_result = $model::whereRaw("($preselect) AND CONCAT_WS('|', ".$cols.") LIKE ?", array($query));
-			if ($tmp_result) 
+			if ($tmp_result)
 				array_push($result, $tmp_result);
 
 		}
@@ -338,7 +446,7 @@ class BaseModel extends Eloquent
 	/**
 	 * Get results for a fulltext search
 	 *
-	 * @return search result array of whereRaw() results, this means array of class Illuminate\Database\Quer\Builder objects
+	 * @return search result array of whereRaw() results, this means array of Illuminate\Database\Quer\Builder objects
 	 *
 	 * @author Patrick Reichel
 	 */

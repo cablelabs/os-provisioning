@@ -56,6 +56,13 @@ class Phonenumber extends \BaseModel {
 	}
 
 
+	// has zero or one management object related
+	public function view_has_one() {
+		return array(
+			'PhonenumberManagement' => $this->phonenumbermanagement,
+		);
+	}
+
 	/**
 	 * return all mta objects
 	 */
@@ -97,6 +104,26 @@ class Phonenumber extends \BaseModel {
 		return $ret;
 	}
 
+	/**
+	 * link to management
+	 */
+	public function phonenumbermanagement() {
+		return $this->hasOne('Modules\ProvVoip\Entities\PhonenumberManagement');
+	}
+
+	/**
+	 * Get relation to external orders.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function external_orders() {
+
+		if ($this->module_is_active('provvoipenvia')) {
+			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder');
+		}
+
+		return null;
+	}
 
 	/**
 	 * BOOT:

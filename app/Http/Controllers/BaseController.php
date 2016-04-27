@@ -41,11 +41,12 @@ class BaseController extends Controller {
 	 *
 	 * @author Patrick Reichel
 	 */
-	public function __construct() 
-	{
+	public function __construct() {
+
 		// set language
 		App::setLocale($this->get_user_lang());
 	}
+
 
 	/**
      * Searches for a string in the language files under resources/lang/ and returns it for the active application language
@@ -105,18 +106,22 @@ class BaseController extends Controller {
 	 * @author Patrick Reichel
 	 *
 	 * @param $access [view|create|edit|delete]
+	 * @param $model_to_check model path and name (in format as is stored in database); use current model if not given
 	 *
 	 * @throws NoAuthenticatedUserError if no user is logged in
 	 * @throws NoModelPermissionError if user is not allowed to acces the model
 	 * @throws InvalidPermissionsRequest if permission request is invalid
 	 * @throws InsufficientRightsError if user has not the specific right needed to perform an action
 	 */
-	protected function _check_permissions($access) {
+	protected function _check_permissions($access, $model_to_check=null) {
 
 		// get the currently authenticated user
 		$cur_user = Auth::user();
 
-		$cur_model = $this->get_model_name();
+		// if no model is given: use current model
+		if (is_null($model_to_check)) {
+			$model_to_check = $this->get_model_name();
+		}
 
 		// no user logged in
 		if (is_null($cur_user)) {
@@ -129,14 +134,14 @@ class BaseController extends Controller {
 		}
 
 		// check model rights
-		if (!array_key_exists($cur_model, $this->permissions['model'])) {
-			throw new AuthExceptions('Access to model '.$cur_model.' not allowed for user '.$cur_user->login_name.'.');
+		if (!array_key_exists($model_to_check, $this->permissions['model'])) {
+			throw new AuthExceptions('Access to model '.$model_to_check.' not allowed for user '.$cur_user->login_name.'.');
 		}
-		if (!array_key_exists($access, $this->permissions['model'][$cur_model])) {
-			throw new AuthExceptions('Something went wrong asking for '.$access.' right in '.$model.' for user '.$cur_user->login_name.'.');
+		if (!array_key_exists($access, $this->permissions['model'][$model_to_check])) {
+			throw new AuthExceptions('Something went wrong asking for '.$access.' right in '.$model_to_check.' for user '.$cur_user->login_name.'.');
 		}
-		if ($this->permissions['model'][$cur_model][$access] == 0) {
-			throw new AuthExceptions('User '.$cur_user->login_name.' is not allowed to '.$access.' in '.$cur_model.'.');
+		if ($this->permissions['model'][$model_to_check][$access] == 0) {
+			throw new AuthExceptions('User '.$cur_user->login_name.' is not allowed to '.$access.' in '.$model_to_check.'.');
 		}
 
 		// TODO: check net rights
@@ -407,9 +412,12 @@ class BaseController extends Controller {
 		if(!isset($a['view_header']))
 			$a['view_header'] = $model->get_view_header();
 
-		$g = GlobalConfig::first();
-		$a['header1'] = $g->headline1;
-		$a['header2'] = $g->headline2;
+
+		// Get Framework Informations
+		$gc = GlobalConfig::first();
+		$a['framework']['header1'] = $gc->headline1;
+		$a['framework']['header2'] = $gc->headline2;
+		$a['framework']['version'] = $gc->version();
 
 		return $a;
 	}
@@ -562,10 +570,10 @@ class BaseController extends Controller {
 
 	/**
 	 * Generic store function - stores an object of the calling model
-	 * @param $name 	Name of Object
-	 * @return $ret 	list
+	 * @param redirect: if set to false returns id of the new created object (default: true)
+	 * @return: html redirection to edit page (or if param $redirect is false the new added object id)
 	 */
-	protected function store()
+	protected function store($redirect = true)
 	{
 		try {
 			$this->_check_permissions("create");
@@ -590,6 +598,9 @@ class BaseController extends Controller {
 		}
 
 		$id = $obj::create($data)->id;
+
+		if (!$redirect)
+			return $id;
 
 		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Created!');
 	}
@@ -646,6 +657,18 @@ class BaseController extends Controller {
 
 
 	/**
+	 * Add extra data for right box.
+	 * This e.g. is needed to add Envia API urls but can also be used for other topics – simply overwrite this placeholder and return array with extra information instead of null…
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return array of arrays containing extra information
+	 */
+	protected function _get_extra_data($view_var) {
+		return null;
+	}
+
+	/**
 	 * Show the editing form of the calling Object
 	 *
 	 * @param  int  $id
@@ -668,6 +691,7 @@ class BaseController extends Controller {
 		$view_header 	= $this->translate('Edit ').$this->translate($obj->get_view_header());
 		$view_var 		= $obj->findOrFail($id);
 		$form_fields	= $this->_prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var);
+		$extra_data = $this->_get_extra_data($view_var);
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';
@@ -681,11 +705,12 @@ class BaseController extends Controller {
 		$config_routes = $this->get_config_modules();
 		$save_button = $this->save_button;
 
+
 		$relation_create_button = $this->relation_create_button;
 
 		// dd($this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button', 'relation_create_button')));
 
-		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button', 'relation_create_button')));
+		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'extra_data', 'config_routes', 'save_button', 'relation_create_button')));
 	}
 
 

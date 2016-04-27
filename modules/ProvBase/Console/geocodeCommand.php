@@ -38,14 +38,23 @@ class geocodeCommand extends Command {
 	/**
 	 * Execute the console command.
 	 *
+	 * Note: We only have to take care of Googles over query limit
+	 *       if we run mutliple requests in a row. So the native geocode()
+	 *       function does not need to take care of this issue
+	 *
 	 * @return mixed
 	 */
 	public function fire()
 	{
 		$bar = $this->output->createProgressBar(Modem::count());
 
-		foreach (Modem::all() as $modem) 
+		// Google over query limit wait counter
+		$wait = 0;
+
+		foreach (Modem::all() as $modem)
 		{
+// Retry on over query limit
+retry:
 			$ret = $modem->geocode();
 
 			if ($this->option('debug'))
@@ -55,10 +64,22 @@ class geocodeCommand extends Command {
 				if ($ret)
 					$this->info (implode (', ', $ret).', '.$info);
 				else
-					$this->error ('error, could not translate, '.$info);
+					$this->error ($modem->geocode_last_status().': error, could not translate, '.$info.' - ');
 			}
 			else
 				$bar->advance();
+
+			// Take care of google over query limit
+			if ($modem->geocode_last_status() == 'OVER_QUERY_LIMIT')
+			{
+				usleep(400*1000); // 400 ms
+				$wait++;
+				goto retry;
+			}
+
+			// Google Standard: 2500 requests per day, 10 per second
+			// see: https://developers.google.com/maps/documentation/geocoding/usage-limits
+			usleep((100 + $wait*10)*1000); // 100, 110, 120, .. ms, one step more per over query limit
 		}
 
 		echo "\n";

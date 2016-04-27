@@ -26,7 +26,25 @@ class GlobalConfig extends BaseModel {
 	public function get_view_link_title()
 	{
 		return "Global Config";
-	}	
+	}
 
+
+	/*
+	 * Get NMS Version
+	 * NOTE: get the actual rpm version of the installed package
+	 *       or branch name and short commit reference of GIT repo
+	 *
+	 * @param: null
+	 * @return: string containing version information
+	 * @author: Torsten Schmidt
+	 */
+	public function version ()
+	{
+		$version = exec("rpm -q lara-base --queryformat '%{version}'");
+		if (preg_match('/not installed/', $version))
+			$version = 'GIT: '.exec('cd '.app_path().' && git rev-parse --abbrev-ref HEAD').' - '.exec('cd '.app_path().' && git rev-parse --short HEAD');
+
+		return $version;
+	}
 
 }

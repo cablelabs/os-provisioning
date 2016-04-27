@@ -31,7 +31,8 @@
                     <!-- Perhaps, there pages will help find what you're looking for. -->
                 </div>
                 <div>
-                    <a href="{{$link}}" class="btn btn-success">Go Back to Home Page</a>
+					<a href="{{$link}}" class="btn btn-success">Go Back to Home Page</a><br><br>
+					<a href="javascript:history.back()" class="btn btn-success">Go Back to previous page.</a>
                 </div>
             </div>
         </div>

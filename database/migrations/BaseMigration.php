@@ -22,7 +22,7 @@ class BaseMigration extends Migration
 
     public function up()
     {
-        
+
     }
 
     protected function set_auto_increment ($i)
@@ -30,11 +30,15 @@ class BaseMigration extends Migration
         DB::update("ALTER TABLE ".$this->tablename." AUTO_INCREMENT = $i;");
     }
 
+	/**
+	 * All columnes to be fulltext indexed.
+	 * Attention on updating an existing index: The index will be dropped and re-created – therefore you have to give ALL columns (again)!!
+	 */
     protected function set_fim_fields($fields)
     {
-        foreach ($fields as $field) 
+        foreach ($fields as $field)
             $this->fim->add($field);
-        
+
         // create FULLTEXT index including the given
         $this->fim->make_index();
     }

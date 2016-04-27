@@ -5,8 +5,8 @@ service tftp
         wait                    = yes
         user                    = root
         server                  = /usr/sbin/in.tftpd
-        server_args             = -s /tftpboot -v           # changed root dir
-        disable                 = no                        # enable
+        server_args             = -s /tftpboot -v
+        disable                 = no
         per_source              = 11
         cps                     = 100 2
         flags                   = IPv4
