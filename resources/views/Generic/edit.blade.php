@@ -85,6 +85,7 @@
 
 	@endforeach
 
+
 	@foreach($view_var->view_has_one() as $view => $relation)
 
 		<?php

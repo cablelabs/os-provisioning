@@ -5,6 +5,7 @@ namespace Acme\Validators;
 use Models\Configfiles;
 use File;
 use Log;
+use Modules\Billingbase\Entities\Product;
 
 /*
  * Our own ExtendedValidator Class
@@ -14,6 +15,35 @@ use Log;
  */
 class ExtendedValidator
 {
+	
+	public function notNull($attribute, $value, $parameters)
+	{
+		if ($value == '' || $value == '0' || $value == null || $value == '0000-00-00')
+			return false;
+		return true;
+	}
+
+	/*
+	 * Checks if value of a data field is zero when another field has specific values (declared in parameters)
+	 * NOTE: the fields name has to be replaced by prep_rules-function of the Controller with the value of the data of this field
+	 */
+	public function nullIf($attribute, $value, $parameters)
+	{
+		$data = $parameters[0];
+		// dd($attribute, $value, $parameters);
+		unset($parameters[0]);
+		
+		if (in_array($data, $parameters))
+		{
+			if ($value == 0 || $value == null)
+				return true;
+			return false;
+		}
+
+		return true;
+	}
+
+
 	/*
 	 * MAC validation
 	 *
@@ -87,6 +117,34 @@ class ExtendedValidator
 
 		$number = (int) (10000 * $prefix);
 		return is_int($number /= 10000);
+	}
+
+	/*
+	 * Validates Sepa Creditor Id
+	 * see: https://github.com/AbcAeffchen/SepaUtilities/blob/master/src/SepaUtilities.php
+	 */
+	public function validateCreditorId($attribute, $value, $parameters)
+	{
+		$country_code = substr($value, 0, 2);
+
+		// TODO: add more countries, improve by check against check digits
+		$creditor_id_length = array(
+			'AT' => 18,			// Austria
+			'BE' => 20,			// Belgium
+			'DE' => 18,			// Germany
+			'EE' => 20,			// Estonia
+			'ES' => 16,
+			'FR' => 13,
+			'IT' => 23,
+			'LU' => 26,			// Luxembourg
+			'NL' => 19,
+			'PT' => 13,			// Portugal
+			);
+
+		if (strlen($value) != (isset($creditor_id_length[$country_code]) ? $creditor_id_length[$country_code] : 1000))
+			return false;
+
+		return preg_match('#^[a-zA-Z]{2,2}[0-9]{2,2}([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\']){3,3}([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\']){1,28}$#', $value);
 	}
 
 
@@ -184,6 +242,26 @@ class ExtendedValidator
         	return false;
         }
         
+		return true;
+	}
+
+	// $value (field value) must only contain strings of product type enums
+	public function validateProductType($attribute, $value, $parameters)
+	{
+		$types = Product::getPossibleEnumValues('type');
+
+		$tmp   = str_replace([',', '|', '/', ';'], ' ', $value);
+		$prods = explode(' ', $tmp);
+
+		foreach ($prods as $type)
+		{
+			// skip empty strings
+			if (!$type)
+				continue;
+			if (!in_array($type, $types))
+				return false;
+		}
+
 		return true;
 	}
 

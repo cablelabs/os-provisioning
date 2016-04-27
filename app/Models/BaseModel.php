@@ -91,6 +91,7 @@ class BaseModel extends Eloquent
 	 */
 	public function index_list ()
 	{
+		return $this->orderBy('id')->get();
 		return $this->all();
 	}
 
@@ -167,10 +168,8 @@ class BaseModel extends Eloquent
 	 */
 	public function billing_enabled() {
 
-		// TODO: delete next line to activate this method!!
-		return True;
-
 		$billing_modules = array(
+			'BillingBase',
 		);
 
 		foreach ($billing_modules as $module) {
@@ -315,7 +314,7 @@ class BaseModel extends Eloquent
 		return current(preg_grep ('|.*?'.$s.'$|i', $this->get_models()));
 	}
 
-	/*
+	/**
 	 * Preselect a sql field while searching
 	 *
 	 * Note: If $field is 'net' or 'cluster' we perform a net and cluster specific search
@@ -616,6 +615,23 @@ class BaseModel extends Eloquent
 		foreach ($ids as $id => $help)
 			$instance->findOrFail($id)->delete();
 	}
+
+
+	/**
+	 * Checks if actual day is between a start and end date - used for Billing
+	 *
+	 * @param $start, $end  	as actual unix timestamp (sec from 1970)
+	 * @return true  			if model is actually valid
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function check_validity($start = null, $end = null)
+	{
+		$today = strtotime('today');
+
+		return ($start <= $today) && (!$end || $end >= $today);
+	}
+
 }
 
 

@@ -24,6 +24,7 @@ class BaseController extends Controller {
 
 	protected $output_format;
 	protected $save_button = 'Save';
+	protected $relation_create_button = 'Create';
 	protected $index_create_allowed = true;
 
 	protected $permissions = null;
@@ -586,10 +587,10 @@ class BaseController extends Controller {
 		$controller = $this->get_controller_obj();
 
 		// Prepare and Validate Input
-		$data      = $controller->prepare_input(Input::all());
-		$rules = $controller->prep_rules($obj::rules(), $data);
-		$validator = Validator::make($data, $rules);
-		$data      = $controller->prepare_input_post_validation ($data);
+		$data 		= $controller->prepare_input(Input::all());
+		$rules 		= $controller->prep_rules($obj::rules(), $data);
+		$validator  = Validator::make($data, $rules);
+		$data 		= $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails())
 		{
@@ -634,7 +635,7 @@ class BaseController extends Controller {
 			if (isset ($rules[$field['name']])) 
 			{ 
 				// Task 1: Add a (*) to fields description if validation rule contains required
-				if (preg_match('/(.*?)required(.*?)/', $rules[$field['name']]))
+				if (preg_match('/(.*?)required(?!_)(.*?)/', $rules[$field['name']]))
 					$field['description'] = $field['description']. ' *';
 
 				// Task 2: Add Placeholder YYYY-MM-DD for all date fields 
@@ -704,7 +705,12 @@ class BaseController extends Controller {
 		$config_routes = $this->get_config_modules();
 		$save_button = $this->save_button;
 
-		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'extra_data', 'config_routes', 'save_button')));
+
+		$relation_create_button = $this->relation_create_button;
+
+		// dd($this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'save_button', 'relation_create_button')));
+
+		return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'extra_data', 'config_routes', 'save_button', 'relation_create_button')));
 	}
 
 
