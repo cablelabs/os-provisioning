@@ -8,6 +8,30 @@ class PhoneTariff extends \BaseModel {
     // The associated SQL table for this Model
 	public $table = 'phonetariff';
 
+	// Add your validation rules here
+	public static function rules($id=null)
+	{
+		// Port unique in the appropriate mta (where mta_id=mta_id and deleted_at=NULL)
+
+		return array(
+			'external_identifier' => 'required',
+			'name' => 'required',
+			'usable' => 'required|boolean',
+		);
+	}
+
+
+	// Name of View
+	public static function get_view_header()
+	{
+		return 'PhoneTariffs';
+	}
+
+	// link title in index view
+	public function get_view_link_title()
+	{
+		return $this->name." (".$this->type.")";
+	}
 
 	/**
 	 * Returns all purchase tariffs that are flagged as usable.

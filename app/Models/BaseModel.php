@@ -265,6 +265,7 @@ class BaseModel extends Eloquent
 			'Authcore',
 			'TRCClass',	# static data; not for standalone use
 			'CarrierCode', # cron updated data; not for standalone use
+			'PhoneTariff',	# static data
 		);
 		$result = array();
 
