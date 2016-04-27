@@ -31,7 +31,9 @@ class DeviceType extends \BaseModel {
 	// link title in index view
 	public function get_view_link_title()
 	{
-		return $this->name;
+		return ['index' => [$this->name, $this->vendor, $this->version],
+		        'index_header' => ['Name', 'Vendor', 'Version'],
+		        'header' => $this->name];
 	}
 
 	/**

@@ -29,9 +29,15 @@ class SnmpMib extends \BaseModel {
 	// link title in index view
 	public function get_view_link_title()
 	{
-		return $this->field.' - '.$this->oid;
+		$devicetype = '';
+		if ($this->devicetype)
+			$devicetype = $this->devicetype->name;
+
+		return ['index' => [$devicetype, $this->field, $this->oid, $this->html_type, $this->description],
+		        'index_header' => ['Device Type', 'Field Name', 'SNMP OID', 'HTML Type', 'Description'],
+		        'header' => $this->field.' - '.$this->oid];
 	}
-	
+
 	/**
 	 * link with devicetype
 	 */

@@ -422,7 +422,7 @@ class BaseController extends Controller {
 			// 3. Hide all parent view relation select fields
 			if (is_object($model->view_belongs_to()) && 					// does a view relation exists
 				$model->view_belongs_to()->table.'_id' == $field['name'])	// view table name (+_id) == field name ?
-				$field['hidden'] = '1';									// hide
+				$field['hidden'] = 1;									// hide
 
 			$field['field_value'] = $model[$field['name']];
 
@@ -685,6 +685,7 @@ class BaseController extends Controller {
 		// Note: Eloquent Update requires updated_at to either be in the fillable array or to have a guarded field
 		//       without updated_at field. So we globally use a guarded field from now, to use the update timestamp
 		$obj->update($data);
+
 
 		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Updated!');
 	}

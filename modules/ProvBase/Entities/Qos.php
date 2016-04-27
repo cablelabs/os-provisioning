@@ -25,7 +25,7 @@ class Qos extends \BaseModel {
 	{
 		return $this->hasMany("Modules\ProvBase\Entities\Modem");
 	}
-    
+
 
     // Name of View
     public static function get_view_header()
@@ -36,7 +36,9 @@ class Qos extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
-        return $this->name;
+        return ['index' => [$this->name, $this->ds_rate_max.' MBit/s', $this->us_rate_max.' MBit/s'],
+                'index_header' => ['Name', 'DS Rate', 'US Rate'],
+                'header' => $this->name];
     }
 
     /**
@@ -55,7 +57,7 @@ class Qos extends \BaseModel {
  * Handles changes on CMs
  *
  */
-class QosObserver 
+class QosObserver
 {
     public function creating($q)
     {
@@ -64,7 +66,7 @@ class QosObserver
     }
 
     public function updating($q)
-    {	
+    {
     	$q->ds_rate_max_help = $q->ds_rate_max * 1024 * 1024;
     	$q->us_rate_max_help = $q->us_rate_max * 1024 * 1024;
     }
