@@ -671,6 +671,7 @@ class BaseController extends Controller {
 
 		if ($validator->fails())
 		{
+			Log::info ('Validation Rule Error: '.$validator->errors());
 			return Redirect::back()->withErrors($validator)->withInput();
 		}
 

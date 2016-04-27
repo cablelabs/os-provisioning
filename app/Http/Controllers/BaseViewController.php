@@ -153,7 +153,7 @@ class BaseViewController extends Controller {
 				   ($context == 'create' && strpos($hidden, 'C') == false) ||
 				   ($hidden == 1 || $hidden == '1'))
 					{
-						$s .= \Form::hidden ($field["name"]);
+						$s .= \Form::hidden ($field["name"], $field['field_value']);
 						goto finish;
 					}
 			}
