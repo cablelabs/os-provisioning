@@ -24,6 +24,7 @@ class Phonenumber extends \BaseModel {
 			'mta_id' => 'required|exists:mta,id|min:1',
 			'port' => 'required|numeric|min:1|unique:phonenumber,port,'.$id.',id,deleted_at,NULL,mta_id,'.$mta_id,
 			'active' => 'required|boolean',
+			// TODO: check if password is secure and matches needs of external APIs (e.g. Envia)
 		);
 	}
 
