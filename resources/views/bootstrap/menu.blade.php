@@ -25,20 +25,25 @@
               </h5>
         </div>
 
+        <!-- global search form -->
         <ul class="nav navbar-nav navbar-right">
-        <li>
-            <?php
-              // searchscope for following form is 'all' => search within all models
-              $next_scope = 'all';
-              $preselect_field = $preselect_value = null; // drop pre-selection
-            ?>
 
-            {{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET')) }}
-              @include('Generic.searchform')
-            {{ Form::close() }}
+          <li>
+            <div class="navbar-form full-width">
 
-            <!--   <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button> -->
-        </li>
+                {{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET'), 'simple') }}
+
+                  {{ Form::hidden('mode', 'simple') }}
+                  {{ Form::hidden('scope', 'all') }}
+
+                  <input type="text" name="query" placeholder="Enter keyword" class="form-control">
+                  <button class="btn btn-search" type="submit"><i class="fa fa-search"></i></button>
+
+                {{ Form::close() }}
+
+            </div>
+          </li>
+
 <!--
           <li class="dropdown">
             <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">

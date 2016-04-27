@@ -106,13 +106,17 @@ class FormBuilder extends CollectiveFormBuilder {
     /**
      * Create a form model field.
      */
-    public function model($model, array $options = array())
+    public function model($model, array $options = array(), $style = 'advanced')
     {
         $options = $this->appendClassToOptions('form-group form-horizontal', $options);
       	if (!isset ($options['method']))
       		$options['method'] = 'put';
 
-        return parent::model($model, $options).'<br>';
+        $fill = '';
+        if ($style == 'advanced')
+            $fill = '<br>';
+
+        return parent::model($model, $options).$fill;
     }
 
 
