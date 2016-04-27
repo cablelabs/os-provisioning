@@ -51,6 +51,16 @@ class Contract extends \BaseModel {
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
     }
 
+	public function phonetariff() {
+
+		if ($this->voip_enabled) {
+			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'purchase_tariff');
+		}
+		else {
+			return null;
+		}
+	}
+
 	/**
 	 * Get relation to external orders.
 	 *
