@@ -51,10 +51,42 @@ class Contract extends \BaseModel {
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
     }
 
-	public function phonetariff() {
+
+	/**
+	 * Get the purchase tariff
+	 */
+	public function phonetariff_purchase() {
 
 		if ($this->voip_enabled) {
 			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'purchase_tariff');
+		}
+		else {
+			return null;
+		}
+	}
+
+
+	/**
+	 * Get the sale tariff
+	 */
+	public function phonetariff_sale() {
+
+		if ($this->voip_enabled) {
+			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'voip_id');
+		}
+		else {
+			return null;
+		}
+	}
+
+
+	/**
+	 * Get the next sale tariff
+	 */
+	public function phonetariff_sale_next() {
+
+		if ($this->voip_enabled) {
+			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_voip_id');
 		}
 		else {
 			return null;

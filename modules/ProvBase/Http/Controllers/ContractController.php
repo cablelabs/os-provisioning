@@ -61,7 +61,7 @@ class ContractController extends \BaseModuleController {
 				/* array('form_type' => 'text', 'name' => 'voip_contract_end', 'description' => 'VoIP Contract End'), */
 				array('form_type' => 'select', 'name' => 'purchase_tariff', 'description' => 'Purchase tariff', 'value' => PhoneTariff::get_purchase_tariffs()),
 
-				/* array('form_type' => 'text', 'name' => 'voip_id', 'description' => 'Phone ID'), */
+				array('form_type' => 'select', 'name' => 'voip_id', 'description' => 'Sale tariff', 'value' => PhoneTariff::get_sale_tariffs()),
 				/* array('form_type' => 'text', 'name' => 'next_voip_id', 'description' => 'Phone ID next month', 'space' => '1'), */
 			);
 		}
