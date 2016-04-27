@@ -10,12 +10,13 @@
 
 @section('content_left')
 
-	<table>
-	@foreach($links as $name)
-		<tr> 
-			<td> {{ HTML::linkRoute($name.'.edit', $name, 1) }} </td>
-		</tr>
-	@endforeach
-	</table>
-
+	<div class="panel-body">
+		<table class="table">
+		@foreach($links as $name)
+			<tr> 
+				<td> {{ HTML::linkRoute($name.'.edit', $name, 1) }} </td>
+			</tr>
+		@endforeach
+		</table>
+	</div>
 @stop
