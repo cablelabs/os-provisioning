@@ -67,6 +67,20 @@ class Contract extends \BaseModel {
 
 
 	/**
+	 * Get the next purchase tariff
+	 */
+	public function phonetariff_purchase_next() {
+
+		if ($this->voip_enabled) {
+			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_purchase_tariff');
+		}
+		else {
+			return null;
+		}
+	}
+
+
+	/**
 	 * Get the sale tariff
 	 */
 	public function phonetariff_sale() {

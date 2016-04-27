@@ -28,8 +28,11 @@ class UpdateContractForTariffInformationTable extends BaseMigration {
 			// not needed anymore – will be part of phonenumbermanagement
 			$table->dropColumn('phonebook_entry');
 
-			// this will holds the reference to purchase tariff (the tariff between external provider and us)
+			// this will hold the reference to purchase tariff (the tariff between external provider and us)
 			$table->integer('purchase_tariff')->after('network_access')->nullable()->default(NULL);
+
+			// this will hold the reference to next purchase tariff (the tariff between external provider and us)
+			$table->integer('next_purchase_tariff')->after('purchase_tariff')->nullable()->default(NULL);
 
 		});
 	}
@@ -46,6 +49,7 @@ class UpdateContractForTariffInformationTable extends BaseMigration {
 		{
 			$table->dropColumn([
 				'purchase_tariff',
+				'next_purchase_tariff',
 			]);
 
 			$table->boolean('phonebook_entry')->after('network_access');
