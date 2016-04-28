@@ -28,7 +28,7 @@ class Device extends \BaseModel {
     }
 
 	// Placeholder
-	public static function get_view_header()
+	public static function view_headline()
 	{
 		return 'Device';
 	}

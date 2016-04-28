@@ -16,7 +16,7 @@ class SnmpValue extends \BaseModel {
     }
 
     // Name of View
-    public static function get_view_header()
+    public static function view_headline()
     {
         return 'Temporary Testing SNMP Values';
     }

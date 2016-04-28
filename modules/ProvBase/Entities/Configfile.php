@@ -28,7 +28,7 @@ class Configfile extends \BaseModel {
 
 
 	// Name of View
-	public static function get_view_header()
+	public static function view_headline()
 	{
 		return 'Configfiles';
 	}
@@ -113,7 +113,7 @@ class Configfile extends \BaseModel {
 	 * Returns all available firmware files (via directory listing)
 	 * @author Patrick Reichel
 	 */
-	public function firmware_files() 
+	public function firmware_files()
 	{
 		// get all available files
 		$firmware_files_raw = glob("/tftpboot/fw/*");
@@ -156,7 +156,7 @@ class Configfile extends \BaseModel {
 	 * Return all children Configfiles for $this Configfile
 	 *
 	 * Note: we return a normal array(). Eloquent->where(..)->get() does
-	 *       return a special formated array, which does not work in 
+	 *       return a special formated array, which does not work in
 	 *       make_ordered_tree()
 	 *
 	 * @author Torsten Schmidt

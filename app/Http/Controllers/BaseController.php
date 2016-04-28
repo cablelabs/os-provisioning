@@ -356,7 +356,7 @@ class BaseController extends Controller {
 		}
 
 		if(!isset($a['view_header_links']))
-			$a['view_header_links'] = BaseViewController::get_view_header_links();
+			$a['view_header_links'] = BaseViewController::view_main_menus();
 
 
 		if(!isset($a['route_name']))
@@ -366,7 +366,7 @@ class BaseController extends Controller {
 			$a['model_name'] = $this->get_model_name();
 
 		if(!isset($a['view_header']))
-			$a['view_header'] = $model->get_view_header();
+			$a['view_header'] = $model->view_headline();
 
 		if(!isset($a['link_header']))
 			$a['link_header'] = '';
@@ -503,7 +503,7 @@ class BaseController extends Controller {
 
 		$view_var = $obj->index_list();
 
-		$link_header  	= BaseViewController::translate($obj->get_view_header().' List');
+		$link_header  	= BaseViewController::translate($obj->view_headline().' List');
 		$create_allowed = $this->get_controller_obj()->index_create_allowed;
 		$view_path = 'Generic.index';
 
@@ -535,8 +535,8 @@ class BaseController extends Controller {
 
 		$obj = $this->get_model_obj();
 
-		// $view_header 	= 'Create '.$obj->get_view_header();
-		$view_header 	= BaseViewController::translate('Create ').BaseViewController::translate($obj->get_view_header());
+		// $view_header 	= 'Create '.$obj->view_headline();
+		$view_header 	= BaseViewController::translate('Create ').BaseViewController::translate($obj->view_headline());
 		// form_fields contain description of fields and the data of the fields
 		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj), $obj), 'create');
 
@@ -688,7 +688,7 @@ class BaseController extends Controller {
 		//${$this->get_view_var()} = $obj->findOrFail($id);
 
 		// transfer model_name, view_header, view_var
-		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($obj->get_view_header());
+		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($obj->view_headline());
 		$view_var 		= $obj->findOrFail($id);
 		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var), 'edit');
 		$link_header    = BaseViewController::prep_link_header($this->get_route_name(), $view_header, $view_var);

@@ -247,7 +247,7 @@ finish:
 	 *
 	 * @author: Torsten Schmidt
 	 */
-	public static function get_view_header_links ()
+	public static function view_main_menus ()
 	{
 		$ret = array();
 		$modules = Module::enabled();
