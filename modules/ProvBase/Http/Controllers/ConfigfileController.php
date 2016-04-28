@@ -41,7 +41,7 @@ class ConfigfileController extends \BaseModuleController {
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function prep_rules($rules, $data)
+	public function prepare_rules($rules, $data)
 	{
 		$rules['text'] .= ':'.$data['device'];
 		return $rules;

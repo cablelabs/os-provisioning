@@ -261,7 +261,7 @@ class BaseController extends Controller {
 	 *
 	 * Note: Will be running before Validation
 	 */
-	protected function prep_rules($rules, $data)
+	protected function prepare_rules($rules, $data)
 	{
 		return $rules;
 	}
@@ -587,7 +587,7 @@ class BaseController extends Controller {
 
 		// Prepare and Validate Input
 		$data 		= $controller->prepare_input(Input::all());
-		$rules 		= $controller->prep_rules($obj::rules(), $data);
+		$rules 		= $controller->prepare_rules($obj::rules(), $data);
 		$validator  = Validator::make($data, $rules);
 		$data 		= $controller->prepare_input_post_validation ($data);
 
@@ -736,7 +736,7 @@ class BaseController extends Controller {
 
 		// Prepare and Validate Input
 		$data      = $controller->prepare_input(Input::all());
-		$rules = $controller->prep_rules($obj::rules($id), $data);
+		$rules = $controller->prepare_rules($obj::rules($id), $data);
 		$validator = Validator::make($data, $rules);
 		$data      = $controller->prepare_input_post_validation ($data);
 
