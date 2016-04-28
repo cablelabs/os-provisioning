@@ -75,8 +75,13 @@
 						<td width=50> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple']) }} </td>
 
 						<!-- Parse get_view_link_title()  -->
+						<?php $i = 0; // display link only on first element ?>
 						@foreach (is_array($object->get_view_link_title()) ? $object->get_view_link_title()['index'] : [$object->get_view_link_title()] as $field)
-							<td> {{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }} </td>
+							@if ($i++ == 0)
+								<td> {{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }} </td>
+							@else
+								<td> {{ $field }} </td>
+							@endif
 						@endforeach
 					</tr>
 				@endforeach
