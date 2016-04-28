@@ -368,8 +368,8 @@ class BaseController extends Controller {
 		if(!isset($a['view_header']))
 			$a['view_header'] = $model->view_headline();
 
-		if(!isset($a['link_header']))
-			$a['link_header'] = '';
+		if(!isset($a['headline']))
+			$a['headline'] = '';
 
 		if (!isset($a['form_update']))
 			$a['form_update'] = $this->get_route_name().'.update';
@@ -503,7 +503,7 @@ class BaseController extends Controller {
 
 		$view_var = $obj->index_list();
 
-		$link_header  	= BaseViewController::translate($obj->view_headline().' List');
+		$headline  	= BaseViewController::translate($obj->view_headline().' List');
 		$create_allowed = $this->get_controller_obj()->index_create_allowed;
 		$view_path = 'Generic.index';
 
@@ -514,7 +514,7 @@ class BaseController extends Controller {
 		if (View::exists($this->get_view_name().'.index'))
 			$view_path = $this->get_view_name().'.index';
 
-		return View::make ($view_path, $this->compact_prep_view(compact('link_header', 'view_var', 'create_allowed')));
+		return View::make ($view_path, $this->compact_prep_view(compact('headline', 'view_var', 'create_allowed')));
 	}
 
 
@@ -538,7 +538,7 @@ class BaseController extends Controller {
 		// $view_header 	= 'Create '.$obj->view_headline();
 		$view_header 	= BaseViewController::translate('Create ').BaseViewController::translate($obj->view_headline());
 		// form_fields contain description of fields and the data of the fields
-		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->view_form_fields($obj), $obj), 'create');
+		$form_fields	= BaseViewController::compute_form_fields ($this->prepare_form_fields ($this->get_controller_obj()->view_form_fields($obj), $obj), 'create');
 
 		// generate Link header - parse parent object from HTML GET array
 		// TODO: avoid use of HTML GET array for security considerations
@@ -550,7 +550,7 @@ class BaseController extends Controller {
 			$class      = new $class_name;
 			$view_var   = $class->find($_GET[$key]);
 		}
-		$link_header = BaseViewController::prep_link_header($this->get_route_name(), $view_header, $view_var);
+		$headline = BaseViewController::compute_headline($this->get_route_name(), $view_header, $view_var);
 
 
 		$view_path = 'Generic.create';
@@ -563,7 +563,7 @@ class BaseController extends Controller {
 			$form_path = $this->get_view_name().'.form';
 
 
-		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'link_header')));
+		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'headline')));
 	}
 
 
@@ -605,55 +605,6 @@ class BaseController extends Controller {
 	}
 
 
-	/*
-	 * This function is used to prepare get_form_field array for edit view
-	 * So all general preparation stuff to view_form_fields will be done here.
-	 *
-	 * Tasks:
-	 *  1. Add a (*) to fields description if validation rule contains required
-	 *  2. Add Placeholder YYYY-MM-DD for all date fields
-	 *  3. Hide all parent view relation select fields
-	 *
-	 * @param fields: the view_form_fields array()
-	 * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
-	 * @return: the modifeyed view_form_fields array()
-	 *
-	 * @autor: Torsten Schmidt
-	 */
-	protected function _prepare_form_fields($fields, $model)
-	{
-		$ret = [];
-
-		// get the validation rules for related model object
-		$rules = $this->get_model_obj()->rules();
-
-		// for all fields
-		foreach ($fields as $field)
-		{
-			// rule exists for actual field ?
-			if (isset ($rules[$field['name']]))
-			{
-				// Task 1: Add a (*) to fields description if validation rule contains required
-				if (preg_match('/(.*?)required(?!_)(.*?)/', $rules[$field['name']]))
-					$field['description'] = $field['description']. ' *';
-
-				// Task 2: Add Placeholder YYYY-MM-DD for all date fields
-				if (preg_match('/(.*?)date(.*?)/', $rules[$field['name']]))
-					$field['options']['placeholder'] = 'YYYY-MM-DD';
-
-			}
-
-			// 3. Hide all parent view relation select fields
-			if (is_object($model->view_belongs_to()) && 					// does a view relation exists
-				$model->view_belongs_to()->table.'_id' == $field['name'])	// view table name (+_id) == field name ?
-				$field['hidden'] = '1';									// hide
-
-			array_push ($ret, $field);
-		}
-
-		return $ret;
-	}
-
 
 	/**
 	 * Add extra data for right box.
@@ -690,8 +641,8 @@ class BaseController extends Controller {
 		// transfer model_name, view_header, view_var
 		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($obj->view_headline());
 		$view_var 		= $obj->findOrFail($id);
-		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->view_form_fields($view_var), $view_var), 'edit');
-		$link_header    = BaseViewController::prep_link_header($this->get_route_name(), $view_header, $view_var);
+		$form_fields	= BaseViewController::compute_form_fields ($this->prepare_form_fields ($this->get_controller_obj()->view_form_fields($view_var), $view_var), 'edit');
+		$headline    = BaseViewController::compute_headline($this->get_route_name(), $view_header, $view_var);
 		$panel_right    = $this->prepare_breadcrumb($view_var);
 		$relations      = BaseViewController::prep_right_panels($view_var);
 
@@ -710,7 +661,7 @@ class BaseController extends Controller {
 
 		$config_routes = BaseController::get_config_modules();
 
-		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations')));
+		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'headline', 'panel_right', 'relations')));
 	}
 
 

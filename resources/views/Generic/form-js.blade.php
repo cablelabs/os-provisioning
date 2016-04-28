@@ -16,7 +16,7 @@ NOTE: - java include section is in default blade at bottom of text
 		/*
 		 * jQuery Plugin for "on Hover" Mouse Events:
 		 * use title option in html element,
-		 * see help msg on BaseViewController->html_form_fields()
+		 * see help msg on BaseViewController->compute_form_fieldss()
 		 */
 		$(function() {
 			$( document ).tooltip();

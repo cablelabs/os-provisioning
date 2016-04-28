@@ -104,7 +104,7 @@ class BaseViewController extends Controller {
 	 *
 	 * @autor: Torsten Schmidt
 	 */
-	public static function html_form_field($fields, $context = 'edit')
+	public static function compute_form_fields($fields, $context = 'edit')
 	{
 		$ret = [];
 
@@ -303,7 +303,7 @@ finish:
 	 * @return: the HTML link line to be directly included in blade
 	 * @author: Torsten Schmidt
 	 */
-	public static function prep_link_header ($route_name, $view_header, $view_var)
+	public static function compute_headline ($route_name, $view_header, $view_var)
 	{
 		$s = "";
 
@@ -320,7 +320,7 @@ finish:
 
 					// get header field name
 					// NOTE: for historical reasons check if this is a array or a plain string
-					// See: Confluence API  - get_view_link_header()
+					// See: Confluence API  - get_view_headline()
 					if(is_array($parent->view_index_label()))
 						$name = $parent->view_index_label()['header'];
 					else

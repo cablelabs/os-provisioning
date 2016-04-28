@@ -1,6 +1,6 @@
 {{--
 
-@param $link_header: the link header description in HTML
+@param $headline: the link header description in HTML
 
 @param $view_var: the object we are editing
 @param $form_update: the update route which should be called when clicking save
@@ -13,7 +13,7 @@
 
 @section('content_top')
 
-	{{ $link_header }}
+	{{ $headline }}
 
 @stop
 

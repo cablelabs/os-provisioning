@@ -1,7 +1,7 @@
 {{--
 
 @param $route_name: the base route name of this object class
-@param $link_header: the link header description in HTML
+@param $headline: the link header description in HTML
 @param $create_allowd: create button allowed?
 @param $view_var: array() of objects to be displayed
 
@@ -14,7 +14,7 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute($route_name.'.index', $link_header) }}
+	{{ HTML::linkRoute($route_name.'.index', $headline) }}
 
 @stop
 

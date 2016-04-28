@@ -86,7 +86,7 @@ class ModemController extends \BaseModuleController {
 	 *
 	 * @author Torsten Schmidt
 	 */
-	public function index()
+	public function _index_todo()
 	{
 		try {
 			$this->_check_permissions("view");
