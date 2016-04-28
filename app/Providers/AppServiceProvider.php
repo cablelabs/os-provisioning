@@ -15,6 +15,15 @@ class AppServiceProvider extends ServiceProvider {
 		\Blade::setRawTags('{{', '}}');
 		// \Blade::setContentTags('{{{', '}}}');
 		// \Blade::setEscapedContentTags('{{{', '}}}');
+
+		\Blade::directive('DivOpen', function($expression) {
+            return "<?php echo Form::openDivClass($expression); ?>";
+        });
+
+
+		\Blade::directive('DivClose', function() {
+            return "<?php echo Form::closeDivClass(); ?>";
+        });
 	}
 
 	/**

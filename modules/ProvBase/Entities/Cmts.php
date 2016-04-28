@@ -29,8 +29,20 @@ class Cmts extends \BaseModel {
 	// link title in index view
 	public function get_view_link_title()
 	{
-		return $this->hostname;
+		$bsclass = 'success';
+
+		// TODO: use cmts state value
+		if ($this->state == 1)
+			$bsclass = 'warning';
+		if ($this->state == 2)
+			$bsclass = 'danger';
+
+		return ['index' => [$this->id, $this->hostname, $this->ip, $this->company, $this->type],
+		        'index_header' => ['ID', 'Hostname', 'IP address', 'Company', 'Type'],
+		        'bsclass' => $bsclass,
+		        'header' => $this->hostname];
 	}
+
 
     /**
      * BOOT - init cmts observer
@@ -65,7 +77,7 @@ class Cmts extends \BaseModel {
 
     /**
      * Get US SNR of a registered CM
-     * 
+     *
      * @param ip: ip address of cm
      *
      * @author Nino Ryschawy
@@ -83,7 +95,7 @@ class Cmts extends \BaseModel {
 		snmp_set_valueretrieval(SNMP_VALUE_OBJECT);
 		try
 		{
-			$modem_ips = snmprealwalk($this->ip, $com, '1.3.6.1.4.1.4491.2.1.20.1.3.1.5');	
+			$modem_ips = snmprealwalk($this->ip, $com, '1.3.6.1.4.1.4491.2.1.20.1.3.1.5');
 		}
 		catch(\Exception $e)
 		{
@@ -102,13 +114,13 @@ class Cmts extends \BaseModel {
 
 
 	/**
-	 * auto generates the dhcp conf file for a specified cmts and 
+	 * auto generates the dhcp conf file for a specified cmts and
 	 * adds the appropriate include statement in dhcpd.conf
-	 * 
+	 *
 	 * (description is automatically taken by phpdoc)
 	 *
 	 * @author Nino Ryschawy
-	 * @param 
+	 * @param
 	 * @return void
 	 */
 	public function make_dhcp_conf ()
@@ -201,7 +213,7 @@ class Cmts extends \BaseModel {
 			if ($options)
 					$data .= "\n\n\t\t".$options;
 
-			
+
 			$data .= "\n\t".'}'."\n";
 
 			File::append($file, $data);
@@ -241,7 +253,7 @@ _exit:
 	 *
 	 * @author Nino Ryschawy
 	 * @param
-	 * @return void 
+	 * @return void
 	 */
 	public function delete_cmts()
 	{
@@ -301,7 +313,7 @@ _exit:
 					$lines[$key - $i] = str_replace(PHP_EOL, "", $lines[$key - $i]);
 					$i++;
 				} while (($lines[$key - $i] == "\n") || ($lines[$key - $i] == ""));
-				
+
 				unset($lines[$key]);
 				$bool = false;
 

@@ -34,11 +34,24 @@ class Phonenumber extends \BaseModel {
 		return 'Phonenumbers';
 	}
 
+
+
 	// link title in index view
-	public function get_view_link_title()
-	{
-		return "(".$this->country_code.") ".$this->prefix_number."/".$this->number;
-	}
+    public function get_view_link_title()
+    {
+        $bsclass = 'success';
+
+        if ($this->active == 0)
+			$bsclass = 'danger';
+
+        // TODO: use mta states.
+        //       Maybe use fast ping to test if online in this funciton?
+
+        return ['index' => [$this->country_code, $this->prefix_number, $this->number, $this->port],
+                'index_header' => ['Name', 'MAC', 'Type', 'Phone Port'],
+                'bsclass' => $bsclass,
+                'header' => 'Port '.$this->port.': '.$this->prefix_number."/".$this->number];
+    }
 
 	/**
 	 * ALL RELATIONS

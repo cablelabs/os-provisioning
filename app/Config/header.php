@@ -1,4 +1,3 @@
 <?php
 
-return 	[['Global Config Page' => 'Config.index']
-	];
+return 	[['Config Page' => 'Config.index']];

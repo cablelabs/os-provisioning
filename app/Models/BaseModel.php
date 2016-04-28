@@ -137,6 +137,9 @@ class BaseModel extends Eloquent
 	/**
 	 * Check if VoIP is enabled.
 	 *
+	 * TODO: - move to Contract/ContractController or use directly,
+	 *         ore use fucntion directly instead of helpers variable
+	 *
 	 * @author Patrick Reichel
 	 *
 	 * @return true if one of the VoIP modules is enabled (currently only ProvVoipEnvia), else false
@@ -160,7 +163,9 @@ class BaseModel extends Eloquent
 	/**
 	 * Check if billing is enabled.
 	 *
-	 * TODO currently this is a dummy (= we don't have a billing module yet!!)
+	 * TODO: - currently this is a dummy (= we don't have a billing module yet!!)
+	 *       - move to Contract/ContractController or use directly,
+	 *         ore use fucntion directly instead of helpers variable
 	 *
 	 * @author Patrick Reichel
 	 *
@@ -180,6 +185,8 @@ class BaseModel extends Eloquent
 
 		return False;
 	}
+
+
 	/**
 	 *	This returns an array with all possible enum values.
 	 *	Use this instead of hardcoding it e.g. in your view (where it has to be
@@ -264,6 +271,7 @@ class BaseModel extends Eloquent
 			'Authcore',
 			'TRCClass',	# static data; not for standalone use
 			'CarrierCode', # cron updated data; not for standalone use
+			'BookingRecords', 'Invoice', 'Sepaxml'
 		);
 		$result = array();
 
@@ -313,6 +321,7 @@ class BaseModel extends Eloquent
 	{
 		return current(preg_grep ('|.*?'.$s.'$|i', $this->get_models()));
 	}
+
 
 	/**
 	 * Preselect a sql field while searching

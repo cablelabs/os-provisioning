@@ -44,6 +44,17 @@ class Contract extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
+		$bsclass = 'success';
+
+		if ($this->network_access == 0)
+			$bsclass = 'danger';
+
+		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street],
+		        'index_header' => ['Contract Number', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street'],
+		        'bsclass' => $bsclass,
+		        'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
+
+    	// deprecated ?
 		$old = $this->number2 ? ' - (Old Nr: '.$this->number2.')' : '';
 		return $this->number.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city.$old;
     }
@@ -173,7 +184,6 @@ class Contract extends \BaseModel {
 
 
 
-
 	/**
 	 * Helper to define possible salutation values.
 	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
@@ -247,7 +257,7 @@ class Contract extends \BaseModel {
 
 
 	/*
-	 * Convert a 'YYYY-MM-DD' to Carbon Time Object 
+	 * Convert a 'YYYY-MM-DD' to Carbon Time Object
 	 *
 	 * We use this to convert a SQL start / end contract date to a carbon
 	 * object. Carbon Time Objects can be compared with lt(), gt(), ..
