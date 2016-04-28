@@ -33,7 +33,6 @@
 			<h4>Global Search: Matches for <tt>'{{ $query }}'</tt></h4>
 		@endif
 
-
 		<table class="table">
 			<thead>
 				<tr>

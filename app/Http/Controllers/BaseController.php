@@ -24,6 +24,7 @@ class BaseController extends Controller {
 
 	protected $output_format;
 	protected $save_button = 'Save';
+	protected $relation_create_button = 'Create';
 	protected $index_create_allowed = true;
 
 	protected $permissions = null;
@@ -95,18 +96,22 @@ class BaseController extends Controller {
 	 * @author Patrick Reichel
 	 *
 	 * @param $access [view|create|edit|delete]
+	 * @param $model_to_check model path and name (in format as is stored in database); use current model if not given
 	 *
 	 * @throws NoAuthenticatedUserError if no user is logged in
 	 * @throws NoModelPermissionError if user is not allowed to acces the model
 	 * @throws InvalidPermissionsRequest if permission request is invalid
 	 * @throws InsufficientRightsError if user has not the specific right needed to perform an action
 	 */
-	protected function _check_permissions($access) {
+	protected function _check_permissions($access, $model_to_check=null) {
 
 		// get the currently authenticated user
 		$cur_user = Auth::user();
 
-		$cur_model = $this->get_model_name();
+		// if no model is given: use current model
+		if (is_null($model_to_check)) {
+			$model_to_check = $this->get_model_name();
+		}
 
 		// no user logged in
 		if (is_null($cur_user)) {
@@ -119,14 +124,14 @@ class BaseController extends Controller {
 		}
 
 		// check model rights
-		if (!array_key_exists($cur_model, $this->permissions['model'])) {
-			throw new AuthExceptions('Access to model '.$cur_model.' not allowed for user '.$cur_user->login_name.'.');
+		if (!array_key_exists($model_to_check, $this->permissions['model'])) {
+			throw new AuthExceptions('Access to model '.$model_to_check.' not allowed for user '.$cur_user->login_name.'.');
 		}
-		if (!array_key_exists($access, $this->permissions['model'][$cur_model])) {
-			throw new AuthExceptions('Something went wrong asking for '.$access.' right in '.$model.' for user '.$cur_user->login_name.'.');
+		if (!array_key_exists($access, $this->permissions['model'][$model_to_check])) {
+			throw new AuthExceptions('Something went wrong asking for '.$access.' right in '.$model_to_check.' for user '.$cur_user->login_name.'.');
 		}
-		if ($this->permissions['model'][$cur_model][$access] == 0) {
-			throw new AuthExceptions('User '.$cur_user->login_name.' is not allowed to '.$access.' in '.$cur_model.'.');
+		if ($this->permissions['model'][$model_to_check][$access] == 0) {
+			throw new AuthExceptions('User '.$cur_user->login_name.' is not allowed to '.$access.' in '.$model_to_check.'.');
 		}
 
 		// TODO: check net rights
@@ -581,10 +586,10 @@ class BaseController extends Controller {
 		$controller = $this->get_controller_obj();
 
 		// Prepare and Validate Input
-		$data      = $controller->prepare_input(Input::all());
-		$rules = $controller->prep_rules($obj::rules(), $data);
-		$validator = Validator::make($data, $rules);
-		$data      = $controller->prepare_input_post_validation ($data);
+		$data 		= $controller->prepare_input(Input::all());
+		$rules 		= $controller->prep_rules($obj::rules(), $data);
+		$validator  = Validator::make($data, $rules);
+		$data 		= $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails())
 		{
@@ -597,6 +602,69 @@ class BaseController extends Controller {
 			return $id;
 
 		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Created!');
+	}
+
+
+	/*
+	 * This function is used to prepare get_form_field array for edit view
+	 * So all general preparation stuff to get_form_fields will be done here.
+	 *
+	 * Tasks:
+	 *  1. Add a (*) to fields description if validation rule contains required
+	 *  2. Add Placeholder YYYY-MM-DD for all date fields
+	 *  3. Hide all parent view relation select fields
+	 *
+	 * @param fields: the get_form_fields array()
+	 * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
+	 * @return: the modifeyed get_form_fields array()
+	 *
+	 * @autor: Torsten Schmidt
+	 */
+	protected function _prepare_form_fields($fields, $model)
+	{
+		$ret = [];
+
+		// get the validation rules for related model object
+		$rules = $this->get_model_obj()->rules();
+
+		// for all fields
+		foreach ($fields as $field)
+		{
+			// rule exists for actual field ?
+			if (isset ($rules[$field['name']]))
+			{
+				// Task 1: Add a (*) to fields description if validation rule contains required
+				if (preg_match('/(.*?)required(?!_)(.*?)/', $rules[$field['name']]))
+					$field['description'] = $field['description']. ' *';
+
+				// Task 2: Add Placeholder YYYY-MM-DD for all date fields
+				if (preg_match('/(.*?)date(.*?)/', $rules[$field['name']]))
+					$field['options']['placeholder'] = 'YYYY-MM-DD';
+
+			}
+
+			// 3. Hide all parent view relation select fields
+			if (is_object($model->view_belongs_to()) && 					// does a view relation exists
+				$model->view_belongs_to()->table.'_id' == $field['name'])	// view table name (+_id) == field name ?
+				$field['hidden'] = '1';									// hide
+
+			array_push ($ret, $field);
+		}
+
+		return $ret;
+	}
+
+
+	/**
+	 * Add extra data for right box.
+	 * This e.g. is needed to add Envia API urls but can also be used for other topics – simply overwrite this placeholder and return array with extra information instead of null…
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return array of arrays containing extra information
+	 */
+	protected function _get_extra_data($view_var) {
+		return null;
 	}
 
 
@@ -626,6 +694,9 @@ class BaseController extends Controller {
 		$link_header    = BaseViewController::prep_link_header($this->get_route_name(), $view_header, $view_var);
 		$panel_right    = $this->prepare_breadcrumb($view_var);
 		$relations      = BaseViewController::prep_right_panels($view_var);
+
+		// TODO: replace
+		$extra_data = $this->_get_extra_data($view_var);
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';

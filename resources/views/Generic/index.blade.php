@@ -61,7 +61,7 @@
 					<tr>
 						<td></td>
 						<!-- Parse get_view_link_title() header_index  -->
-						@if (is_array($view_var[0]->get_view_link_title()) && isset($view_var[0]->get_view_link_title()['index_header']))
+						@if (isset($view_var[0]) && is_array($view_var[0]->get_view_link_title()) && isset($view_var[0]->get_view_link_title()['index_header']))
 							@foreach ($view_var[0]->get_view_link_title()['index_header'] as $field)
 								<td> {{ \App\Http\Controllers\BaseViewController::translate($field) }} </td>
 							@endforeach

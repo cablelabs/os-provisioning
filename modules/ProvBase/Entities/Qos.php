@@ -27,6 +27,12 @@ class Qos extends \BaseModel {
 	}
 
 
+    public function prices()
+    {
+        return $this->hasMany('Modules\Billingbase\Entities\Price');
+    }
+
+
     // Name of View
     public static function get_view_header()
     {

@@ -34,4 +34,5 @@
 		{{-- no help needed for simple search
 			<span><a href="https://mariadb.com/kb/en/mariadb/fulltext-index-overview" target="_blank">Search help</a>
 		--}}
+
 @DivClose()

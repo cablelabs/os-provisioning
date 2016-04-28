@@ -98,7 +98,7 @@ class Mta extends \BaseModel {
 		return $this->modem;
 	}
 
-	// returns all objects that are related to a cmts
+	// returns all objects that are related to a mta
 	public function view_has_many()
 	{
 		return array(

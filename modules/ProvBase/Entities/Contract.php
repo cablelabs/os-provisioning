@@ -4,13 +4,20 @@ namespace Modules\ProvBase\Entities;
 
 use Modules\ProvBase\Entities\Qos;
 
+// TODO: @Nino Ryschawy: directly includes does not work if billing module is disables
+use Modules\BillingBase\Entities\Product;
+use Modules\BillingBase\Entities\Item;
+
 class Contract extends \BaseModel {
 
 	// The associated SQL table for this Model
 	public $table = 'contract';
 
+	// flag if contract expires this month - used in accounting command
+	public $expires = false;
 
 	// Add your validation rules here
+	// TODO: dependencies of active modules (billing)
 	public static function rules($id = null)
 	{
 		return array(
@@ -26,21 +33,21 @@ class Contract extends \BaseModel {
 			'birthday' => 'required|date',
 			'contract_start' => 'date',
 			'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
-			'sepa_iban' => 'iban',
-			'sepa_bic' => 'bic',
+            'sepa_iban' => 'iban',
+            'sepa_bic' => 'bic',
 			);
 	}
 
 
-	// Name of View
-	public static function get_view_header()
-	{
-		return 'Contract';
-	}
+    // Name of View
+    public static function get_view_header()
+    {
+        return 'Contract';
+    }
 
-	// link title in index view
-	public function get_view_link_title()
-	{
+    // link title in index view
+    public function get_view_link_title()
+    {
 		$bsclass = 'success';
 
 		if ($this->network_access == 0)
@@ -50,31 +57,195 @@ class Contract extends \BaseModel {
 		        'index_header' => ['Contract Number', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street'],
 		        'bsclass' => $bsclass,
 		        'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
+
+    	// deprecated ?
+		$old = $this->number2 ? ' - (Old Nr: '.$this->number2.')' : '';
+		return $this->number.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city.$old;
 	}
 
-
-	// Relations
-	public function modems()
-	{
+    // Relations
+    public function modems()
+    {
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
-	}
+    }
 
-	// View Relation.
-	public function view_has_many()
-	{
-		return array(
-			'Modem' => $this->modems
-			);
-	}
-
-
-	/*
-	 * Generate use a new user login password
-	 * This does not save the involved model
+	/**
+	 * Get relation to external orders.
+	 *
+	 * @author Patrick Reichel
 	 */
-	public function generate_password($length = 10)
+	public function external_orders() {
+
+		if ($this->module_is_active('provvoipenvia')) {
+			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment');
+		}
+
+		return null;
+	}
+
+    // View Relation.
+    public function view_has_many()
+    {
+		$ret = array(
+			'Modem' => $this->modems,
+		);
+
+		if ($this->module_is_active('provvoipenvia')) {
+			$ret['EnviaOrder'] = $this->external_orders;
+		}
+
+		if ($this->module_is_active('billingbase'))
+		{
+			$ret['Item'] 		= $this->items;
+			$ret['SepaMandate'] = $this->sepamandates;
+		}
+
+		return $ret;
+    }
+
+
+    /*
+     * Generate use a new user login password
+     * This does not save the involved model
+     */
+    public function generate_password($length = 10)
+    {
+        $this->password = \Acme\php\Password::generate_password();
+    }
+
+
+	/**
+	 * Helper to get the contract number.
+	 * As there is no hard coded contract number in database we have to use this mapper. The semantic meaning of number…number4 can be defined in global configuration.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @todo: in this first step the relation is hardcoded within the function. Later on we have to check the mapping against the configuration.
+	 * @return current contract number
+	 */
+	public function contract_number() {
+
+		$contract_number = $this->number;
+
+		return $contract_number;
+
+	}
+
+
+	/**
+	 * Helper to get the customer number.
+	 * As there is no hard coded customer number in database we have to use this mapper. The semantic meaning of number…number4 can be defined in global configuration.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @todo: in this first step the relation is hardcoded within the function. Later on we have to check the mapping against the configuration.
+	 * @return current customer number
+	 */
+	public function customer_number() {
+
+		if (boolval($this->number3)) {
+			$customer_number = $this->number3;
+		}
+		else {
+			$customer_number = $this->number;
+		}
+
+		return $customer_number;
+
+	}
+
+
+	public function items()
 	{
-		$this->password = \Acme\php\Password::generate_password();
+		return $this->hasMany('Modules\BillingBase\Entities\Item');
+	}
+
+	public function sepamandates()
+	{
+		return $this->hasMany('Modules\BillingBase\Entities\SepaMandate');
+	}
+
+	public function costcenter()
+	{
+		return $this->belongsTo('Modules\BillingBase\Entities\CostCenter', 'costcenter_id');
+	}
+
+	public function salesman()
+	{
+		return $this->belongsTo('Modules\BillingBase\Entities\Salesman');
+	}
+
+
+
+	/**
+	 * Helper to define possible salutation values.
+	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function get_salutation_options() {
+
+		$defaults = [
+			'Herr',
+			'Frau',
+			'Firma',
+			'Behörde',
+		];
+
+		if ($this->module_is_active('provvoipenvia')) {
+
+			$options = [
+				'Herrn',
+				'Frau',
+				'Firma',
+				'Behörde',
+			];
+		}
+		else {
+			$options = $defaults;
+		}
+
+		$result = array();
+		foreach ($options as $option) {
+			$result[$option] = $option;
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * Helper to define possible academic degree values.
+	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function get_academic_degree_options() {
+
+		$defaults = [
+			'',
+			'Dr.',
+			'Prof. Dr.',
+		];
+
+		if ($this->module_is_active('provvoipenvia')) {
+
+			$options = [
+				'',
+				'Dr.',
+				'Prof. Dr.',
+			];
+		}
+		else {
+			$options = $defaults;
+		}
+
+		$result = array();
+		foreach ($options as $option) {
+			$result[$option] = $option;
+		}
+
+		return $result;
 	}
 
 
@@ -116,7 +287,7 @@ class Contract extends \BaseModel {
 	 *  2. Check if $this is a new contract and activate it -> enable network_access
 	 *
 	 * @return: none
-	 * @author: Torsten Schmidt
+	 * @author: Torsten Schmidt, Nino Ryschawy
 	 */
 	public function daily_conversion()
 	{
@@ -147,6 +318,35 @@ class Contract extends \BaseModel {
 			$this->network_access = 1;
 			$this->save();
 		}
+
+
+		// Task 3: Change qos and voip id when tariff changes
+		$bm = new \BaseModel;
+		if (!$bm->module_is_active('Billingbase'))
+			return;
+
+		$qos_id = 0;
+		if ($this->get_valid_tariff('Internet'))
+			$qos_id = $this->get_valid_tariff('Internet')->product->qos_id;
+		if ($this->qos_id != $qos_id)
+		{
+			\Log::Info("daily: contract: changed qos_id (tariff) to $qos_id for Contract ".$this->number, [$this->id]);
+			$this->qos_id = $qos_id;
+			$this->save();
+			$this->push_to_modems();
+		}
+
+		$voip_id = 0;
+		if ($this->get_valid_tariff('Voip'))
+			$voip_id = $this->get_valid_tariff('Voip')->product->voip_id;
+		if ($this->voip_id != $voip_id)
+		{
+			\Log::Info("daily: contract: changed voip_id (tariff) to $voip_id for Contract ".$this->number, [$this->id]);
+			$this->voip_id = $voip_id;
+			$this->save();
+		}
+
+
 	}
 
 
@@ -162,10 +362,15 @@ class Contract extends \BaseModel {
 	 */
 	public function monthly_conversion()
 	{
-		// QOS: monthly QOS change – "Tarifwechsel"
+		// with billing module -> daily conversion
+		$bm = new \BaseModel;
+		if ($bm->module_is_active('Billingbase'))
+			return;
+
+		// Tariff: monthly Tariff change – "Tarifwechsel"
 		if ($this->next_qos_id > 0)
 		{
-			\Log::Info('monthly: contract: change QOS for '.$this->id.' from '.$this->qos_id.' to '.$this->next_qos_id);
+			\Log::Info('monthly: contract: change Tariff for '.$this->id.' from '.$this->qos_id.' to '.$this->next_qos_id);
 			$this->qos_id = $this->next_qos_id;
 			$this->next_qos_id = 0;
 
@@ -184,12 +389,45 @@ class Contract extends \BaseModel {
 	}
 
 
+	/**
+	 * Returns (qos/voip id of the) last created actual valid tariff assigned to this contract
+	 *
+	 * @param $type 	product type (e.g. 'Internet', 'Voip')
+	 * @return $item
+	 * @author Nino Ryschawy
+	 */
+	public function get_valid_tariff($type)
+	{
+		$prod_ids = Product::get_product_ids($type);
+		$last 	= \Carbon\Carbon::createFromTimestamp(null);
+		$tariff = null;			// item
+
+		foreach ($this->items as $item)
+		{
+			if (in_array($item->product->id, $prod_ids) && $item->check_validity())
+			{
+				if ($tariff)
+					\Log::warning("Multiple valid $type tariffs active for Contract ".$this->number, [$this->id]);
+
+				if ($item->created_at->gt($last))
+				{
+					$tariff = $item;
+					$last = $item->created_at;
+				}
+			}
+		}
+
+		return $tariff;
+	}
+
+
 	/*
 	 * Push all settings from Contract layer to the related child Modems (for $this)
 	 * This includes: network_access, qos_id
 	 *
 	 * Note: We call this function from Observer context so a change of the explained
 	 *       fields will push this changes to the child Modems
+	 * Note: This allows only 1 tariff qos_id for all modems
 	 *
 	 * @return: none
 	 * @author: Torsten Schmidt
@@ -209,6 +447,24 @@ class Contract extends \BaseModel {
 
 
 	/**
+	 * Helper to map database numberX fields to description
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function get_column_description($col_name) {
+
+		// later use global config to get mapping
+		$mappings = [
+			'number' => 'Contract number',
+			'number2' => 'Contract number legacy',
+			'number3' => 'Customer number',
+			'number4' => 'Customer number legacy',
+		];
+
+		return $mappings[$col_name];
+	}
+
+	/**
 	 * BOOT:
 	 * - init observer
 	 */
@@ -218,6 +474,42 @@ class Contract extends \BaseModel {
 
 		Contract::observe(new ContractObserver);
 	}
+
+
+	/**
+	 * Cross checks start and end dates against actual day - used in accounting Cmd
+	 * Calculates start and end dates of this model for parent function of BaseModel
+	 */
+	public function check_validity($start = null, $end = null)
+	{
+		$start = ($this->contract_start == null || $this->contract_start == '0000-00-00') ? $this->created_at->toDateString() : $this->contract_start;
+		$start = strtotime($start);
+		$end = $this->contract_end == '0000-00-00' ? null : strtotime($this->contract_end);
+
+		return parent::check_validity($start, $end);
+	}
+
+
+	// get actual valid sepa mandate
+	public function get_valid_mandate()
+	{
+		$mandate = null;
+
+		foreach ($this->sepamandates as $m)
+		{
+			if (!is_object($m))
+				break;
+
+			if ($m->check_validity())
+			{
+				$mandate = $m;
+				break;
+			}
+		}
+
+		return $mandate;
+	}
+
 
 }
 
@@ -231,17 +523,22 @@ class Contract extends \BaseModel {
  */
 class ContractObserver
 {
+
+	// TODO: move to global config
+	// start contract numbers from 10000 - TODO: move to global config
+	protected $num = 490000;
+
 	public function created($contract)
 	{
-		$contract->number = $contract->id;
-		$contract->save();     // forces to call the updated method of the observer
+		$contract->number = $contract->id - $this->num;
 
-		$contract->push_to_modems(); // should not be run, because a new added contract can not have modems..
+		$contract->save();     			// forces to call the updated method of the observer
+		$contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
 	}
 
 	public function updating($contract)
 	{
-		$contract->number = $contract->id;
+		$contract->number = $contract->id - $this->num;
 	}
 
 	public function updated ($contract)

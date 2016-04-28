@@ -10,6 +10,32 @@ class BaseModel extends Eloquent
 {
 	use SoftDeletes;
 
+	public $voip_enabled;
+	public $billing_enabled;
+
+	protected $fillable = array();
+
+
+	/**
+	 * Constructor.
+	 * Used to set some helper variables.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @param $attributes pass through to Eloquent contstructor.
+	 */
+	public function __construct($attributes = array()) {
+
+		// call Eloquent constructor
+		// $attributes are needed! (or e.g. seeding and creating will not work)
+		parent::__construct($attributes);
+
+		// set helper variables
+		$this->voip_enabled = $this->voip_enabled();
+		$this->billing_enabled = $this->billing_enabled();
+
+	}
+
 
 	// Add Comment here. ..
 	protected $guarded = ['id'];
@@ -65,6 +91,7 @@ class BaseModel extends Eloquent
 	 */
 	public function index_list ()
 	{
+		return $this->orderBy('id')->get();
 		return $this->all();
 	}
 
@@ -78,6 +105,7 @@ class BaseModel extends Eloquent
 		return null;
 	}
 
+
 	/**
 	 * Basefunction for returning all objects that a model can have a relation to
 	 * Place this function in the model where the edit/create view shall show all related objects
@@ -89,6 +117,73 @@ class BaseModel extends Eloquent
 	public function view_has_many ()
 	{
 		return array();
+	}
+
+
+	/**
+	 * Basefunction for returning all objects that a model can have a one-to-one relation to
+	 * Place this function in the model where the edit/create view shall show all related objects
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return an array with the appropriate hasOne()-functions of the model
+	 */
+	public function view_has_one ()
+	{
+		return array();
+	}
+
+
+	/**
+	 * Check if VoIP is enabled.
+	 *
+	 * TODO: - move to Contract/ContractController or use directly,
+	 *         ore use fucntion directly instead of helpers variable
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return true if one of the VoIP modules is enabled (currently only ProvVoipEnvia), else false
+	 */
+	public function voip_enabled() {
+
+		$voip_modules = array(
+			'ProvVoipEnvia',
+		);
+
+		foreach ($voip_modules as $module) {
+			if ($this->module_is_active($module)) {
+				return True;
+			}
+		}
+
+		return False;
+	}
+
+
+	/**
+	 * Check if billing is enabled.
+	 *
+	 * TODO: - currently this is a dummy (= we don't have a billing module yet!!)
+	 *       - move to Contract/ContractController or use directly,
+	 *         ore use fucntion directly instead of helpers variable
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return true if one of the billing modules is enabled, else false
+	 */
+	public function billing_enabled() {
+
+		$billing_modules = array(
+			'BillingBase',
+		);
+
+		foreach ($billing_modules as $module) {
+			if ($this->module_is_active($module)) {
+				return True;
+			}
+		}
+
+		return False;
 	}
 
 
@@ -117,6 +212,8 @@ class BaseModel extends Eloquent
 
 		// get metadata for the given column and extract enum options
 		$type = DB::select( DB::raw('SHOW COLUMNS FROM '.$instance->getTable().' WHERE Field = "'.$name.'"') )[0]->Type;
+
+		// create array with enum values (all values in brackets after “enum”)
 		preg_match('/^enum\((.*)\)$/', $type, $matches);
 
 		$enum_values = array();
@@ -171,7 +268,10 @@ class BaseModel extends Eloquent
 		$exclude = array(
 			'BaseModel',
 			'Authmeta',
-			'Authcore'
+			'Authcore',
+			'TRCClass',	# static data; not for standalone use
+			'CarrierCode', # cron updated data; not for standalone use
+			'BookingRecords', 'Invoice', 'Sepaxml'
 		);
 		$result = array();
 
@@ -222,7 +322,8 @@ class BaseModel extends Eloquent
 		return current(preg_grep ('|.*?'.$s.'$|i', $this->get_models()));
 	}
 
-	/*
+
+	/**
 	 * Preselect a sql field while searching
 	 *
 	 * Note: If $field is 'net' or 'cluster' we perform a net and cluster specific search
@@ -354,7 +455,7 @@ class BaseModel extends Eloquent
 	/**
 	 * Get results for a fulltext search
 	 *
-	 * @return search result array of whereRaw() results, this means array of class Illuminate\Database\Quer\Builder objects
+	 * @return search result array of whereRaw() results, this means array of Illuminate\Database\Quer\Builder objects
 	 *
 	 * @author Patrick Reichel
 	 */
@@ -523,6 +624,23 @@ class BaseModel extends Eloquent
 		foreach ($ids as $id => $help)
 			$instance->findOrFail($id)->delete();
 	}
+
+
+	/**
+	 * Checks if actual day is between a start and end date - used for Billing
+	 *
+	 * @param $start, $end  	as actual unix timestamp (sec from 1970)
+	 * @return true  			if model is actually valid
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function check_validity($start = null, $end = null)
+	{
+		$today = strtotime('today');
+
+		return ($start <= $today) && (!$end || $end >= $today);
+	}
+
 }
 
 

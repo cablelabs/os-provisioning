@@ -28,10 +28,11 @@
                 <div class="error-message">{{$message}}</div>
                 <div class="error-desc m-b-20">
                     The page you're looking for doesn't exist. <br />
-                    Perhaps, there pages will help find what you're looking for.
+                    <!-- Perhaps, there pages will help find what you're looking for. -->
                 </div>
                 <div>
-                    <a href="{{$link}}" class="btn btn-success">Go Back to Home Page</a>
+					<a href="{{$link}}" class="btn btn-success">Go Back to Home Page</a><br><br>
+					<a href="javascript:history.back()" class="btn btn-success">Go Back to previous page.</a>
                 </div>
             </div>
         </div>

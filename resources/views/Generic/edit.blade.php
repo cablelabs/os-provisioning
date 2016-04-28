@@ -9,7 +9,6 @@
 @param $relations: the relations array() returned by prep_right_panels() in BaseViewController
 
 --}}
-
 @extends ('Layout.split')
 
 @section('content_top')
@@ -79,7 +78,8 @@
 											'view_header' => \App\Http\Controllers\BaseViewController::translate("Assigned").' '.\App\Http\Controllers\BaseViewController::translate($view),
 											'md' => 3))
 
+
 	@endforeach
 
-@stop
 
+@stop

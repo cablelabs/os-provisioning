@@ -9,8 +9,6 @@ class AuthuserTableSeeder extends \BaseSeeder {
 	public function run()
 	{
 
-		/* $faker = Faker::create(); */
-
 		DB::table('authusers')->insert(array(
 			'id' => 1000,
 			'first_name' => 'modem',

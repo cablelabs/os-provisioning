@@ -3,9 +3,8 @@
 /config
 composer.phar
 composer.lock
-.env.*
-.env
 /node_modules
+.env
 .DS_Store
 *.sublime*
 *.fuse_hidden*
@@ -13,10 +12,15 @@ Thumbs.db
 storage/systemd/
 storage/hfc/
 storage/framework/
+*.orig
 
-
-# temporary vim files
-*.swp
+# vim (https://github.com/github/gitignore/blob/master/Global/Vim.gitignore)
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
 
 # sublime trash dir
 .Trash-1000/
