@@ -125,7 +125,7 @@ class ConfigfileController extends \BaseModuleController {
 		catch (Exceptions $ex) {
 			throw new AuthExceptions($e->getMessage());
 		}
-		
+
 		$create_allowed = $this->index_create_allowed;
 
 		$children = Configfile::all()->where('parent_id', 0)->all();
@@ -139,7 +139,7 @@ class ConfigfileController extends \BaseModuleController {
 
 		$view_var = $this->create_index_view_data($cf_tree);
 
-		return \View::make('provbase::Configfile.tree', $this->compact_prep_view(compact('panel_right', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search', 'preselect_field', 'preselect_value')));
+		return \View::make('provbase::Configfile.tree', $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed')));
 	}
 
 

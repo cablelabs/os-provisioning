@@ -3,6 +3,8 @@
 namespace Modules\ProvBase\Entities;
 
 use Modules\ProvBase\Entities\Qos;
+
+// TODO: @Nino Ryschawy: directly includes does not work if billing module is disables
 use Modules\BillingBase\Entities\Product;
 use Modules\BillingBase\Entities\Item;
 
@@ -46,10 +48,20 @@ class Contract extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
+		$bsclass = 'success';
+
+		if ($this->network_access == 0)
+			$bsclass = 'danger';
+
+		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street],
+		        'index_header' => ['Contract Number', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street'],
+		        'bsclass' => $bsclass,
+		        'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
+
+    	// deprecated ?
 		$old = $this->number2 ? ' - (Old Nr: '.$this->number2.')' : '';
 		return $this->number.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city.$old;
-    }
-
+	}
 
     // Relations
     public function modems()
@@ -141,6 +153,7 @@ class Contract extends \BaseModel {
 		return $customer_number;
 
 	}
+
 
 	public function items()
 	{
@@ -237,7 +250,7 @@ class Contract extends \BaseModel {
 
 
 	/*
-	 * Convert a 'YYYY-MM-DD' to Carbon Time Object 
+	 * Convert a 'YYYY-MM-DD' to Carbon Time Object
 	 *
 	 * We use this to convert a SQL start / end contract date to a carbon
 	 * object. Carbon Time Objects can be compared with lt(), gt(), ..

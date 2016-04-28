@@ -1,52 +1,24 @@
+{{--
+
+@param $link_header: the link header description in HTML
+
+@param $view_var: the object we are editing
+@param $form_update: the update route which should be called when clicking save
+@param $form_path: the form view to be displayed inside this blade (mostly Generic.edit)
+
+@param $relations: the relations array() returned by prep_right_panels() in BaseViewController
+
+--}}
 @extends ('Layout.split')
 
-@if (!isset($own_top))
-	@section('content_top')
+@section('content_top')
 
+	{{ $link_header }}
 
-		<?php
-
-			$s = HTML::linkRoute($route_name.'.index', str_replace('Edit', '', $view_header));
-			if (in_array($route_name, $config_routes))
-				$s = HTML::linkRoute('Config.index', 'Global Configurations');
-
-			echo $s.': ';
-
-			/**
-			 * Shows the html links of the related objects recursivly
-			 */ 
-			$s = "";
-
-			$parent = $view_var;
-			do
-			{
-				$parent = $parent->view_belongs_to();
-
-				if ($parent)
-				{
-					// Need to be tested !
-					$tmp = explode('\\',get_class($parent));
-					$view = end($tmp);
-					$s = HTML::linkRoute($view.'.edit', $parent->get_view_link_title(), $parent->id).' / '.$s;
-				}
-			}
-			while ($parent);
-
-			echo $s;
-		?>
-
-		{{ HTML::linkRoute($route_name.'.edit', $view_var->get_view_link_title(), $view_var->id) }}
-
-	@stop
-@endif
+@stop
 
 
 @section('content_left')
-
-	<?php
-		if (!isset($form_update))
-			$form_update = $route_name.'.update';
-	?>
 
 	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true)) }}
 
@@ -57,52 +29,57 @@
 @stop
 
 
+<?php $api = App\Http\Controllers\BaseViewController::get_view_has_many_api_version($relations) ?>
+
 @section('content_right')
 
-	<?php
+	@foreach($relations as $view => $relation)
 
-		if ($view_var->view_has_many())
-			$view_header_0 = '';
-		$i = 0;
-		$view_header_0 = '';
-	?>
+		<?php if (!isset($i)) $i = 0; else $i++; ?>
 
-	@foreach($view_var->view_has_many() as $view => $relation)
-
-		<?php
-			$i++;
-
-			$model = new $model_name;
-			$key   = strtolower($model->table).'_id';
-			${"view_header_$i"} = \App\Http\Controllers\BaseController::translate("Assigned").' '.\App\Http\Controllers\BaseController::translate($view);
-		?>
-
+		<!-- The section content for the new Panel -->
 		@section("content_$i")
-			@include('Generic.relation', [$relation, $view, $key])
+
+			<!-- old API: directly load relation view. NOTE: old API new class var is $view -->
+			@if ($api == 1)
+				@include('Generic.relation', [$relation, 'class' => $view, 'key' => strtolower($view_var->table).'_id'])
+			@endif
+
+			<!-- new API: parse data -->
+			@if ($api == 2)
+				@if (is_array($relation))
+
+					<!-- include pure HTML -->
+					@if (isset($relation['html']))
+						{{$relation['html']}}
+					@endif
+
+					<!-- include a view -->
+					@if (isset($relation['view']))
+						@include ($relation['view'])
+					@endif
+
+					<!-- include a relational class/object/table, like Contract->Modem -->
+					@if (isset($relation['class']) && isset($relation['relation']))
+						@include('Generic.relation', ['relation' => $relation['relation'],
+													  'class' => $relation['class'],
+													  'key' => strtolower($view_var->table).'_id',
+													  'options' => isset($relation['options']) ? ($relation['options']) : null])
+					@endif
+
+				@endif
+			@endif
+
 		@stop
 
-		@include ('bootstrap.panel', array ('content' => "content_$i", 'view_header' => ${"view_header_$i"}, 'md' => 3))
+
+		<!-- The Bootstap Panel to include -->
+		@include ('bootstrap.panel', array ('content' => "content_$i",
+											'view_header' => \App\Http\Controllers\BaseViewController::translate("Assigned").' '.\App\Http\Controllers\BaseViewController::translate($view),
+											'md' => 3))
+
 
 	@endforeach
 
-
-	@foreach($view_var->view_has_one() as $view => $relation)
-
-		<?php
-
-			$i++;
-
-			$model = new $model_name;
-			$key   = strtolower($model->table).'_id';
-			${"view_header_$i"} = " Assigned $view";
-		?>
-
-		@section("content_$i")
-			@include('Generic.relation', [$relation, $view, $key])
-		@stop
-
-		@include ('bootstrap.panel', array ('content' => "content_$i", 'view_header' => ${"view_header_$i"}, 'md' => 3))
-
-	@endforeach
 
 @stop

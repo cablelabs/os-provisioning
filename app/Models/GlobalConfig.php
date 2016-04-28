@@ -15,7 +15,7 @@ class GlobalConfig extends BaseModel {
 			'mail' => 'email',
 		);
 	}
-	
+
 	// Name of View
 	public static function get_view_header()
 	{

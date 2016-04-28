@@ -33,11 +33,23 @@ class IpPool extends \BaseModel {
         return 'IP-Pools';
     }
 
+
     // link title in index view
     public function get_view_link_title()
     {
-        return $this->type.': '.$this->net.' - '.$this->netmask.' - '.$this->html_list($this->cmts_hostnames(), 'hostname')[$this->cmts_id].'-'.$this->id;
+        $bsclass = 'success';
+
+        if ($this->type == 'CPEPub' || $this->type == 'CPEPriv')
+            $bsclass = 'warning';
+        if ($this->type == 'MTA')
+            $bsclass = 'danger';
+
+        return ['index' => [$this->id, $this->cmts->hostname, $this->type, $this->net, $this->netmask, $this->router_ip, $this->description],
+                'index_header' => ['ID', 'CMTS', 'Type of Pool', 'IP network', 'IP netmask', 'IP router', 'Description'],
+                'bsclass' => $bsclass,
+                'header' => $this->type.': '.$this->net.' / '.$this->netmask];
     }
+
 
 
     /**
@@ -57,7 +69,7 @@ class IpPool extends \BaseModel {
     {
         return $this->belongsTo('Modules\ProvBase\Entities\Cmts', 'cmts_id');
     }
-    
+
     // belongs to a cmts - see BaseModel for explanation
     public function view_belongs_to ()
     {
@@ -76,7 +88,7 @@ class IpPool extends \BaseModel {
         IpPool::observe(new \SystemdObserver);
     }
 
-    
+
 }
 
 
@@ -88,7 +100,7 @@ class IpPool extends \BaseModel {
  *              'deleting', 'deleted', 'saving', 'saved',
  *              'restoring', 'restored',
  */
-class IpPoolObserver 
+class IpPoolObserver
 {
     public function created($pool)
     {

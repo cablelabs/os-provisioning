@@ -33,7 +33,7 @@ class PhonenumberController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'username', 'description' => 'Username'),
 			array('form_type' => 'text', 'name' => 'password', 'description' => 'Password'),
 			array('form_type' => 'text', 'name' => 'sipdomain', 'description' => 'SIP domain'),
-			array('form_type' => 'select', 'name' => 'active', 'description' => 'Active?', 'value' => array( '1' => 'Yes', '0' => 'No'))
+			array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'checked' => true, 'create' => '1')
 		);
 	}
 
@@ -54,6 +54,7 @@ class PhonenumberController extends \BaseModuleController {
 		// default: nothing to do
 		return null;
 	}
+
 
 	/**
 	 * Get all management jobs for Envia
