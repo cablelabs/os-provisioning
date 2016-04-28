@@ -3,8 +3,6 @@
 namespace Modules\ProvBase\Entities;
 
 use Modules\ProvBase\Entities\Qos;
-use Modules\BillingBase\Entities\Product;
-use Modules\BillingBase\Entities\Item;
 
 class Contract extends \BaseModel {
 
@@ -50,27 +48,6 @@ class Contract extends \BaseModel {
 		return $this->number.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city.$old;
     }
 
-
-    // Relations
-    public function modems()
-    {
-		return $this->hasMany('Modules\ProvBase\Entities\Modem');
-    }
-
-	/**
-	 * Get relation to external orders.
-	 *
-	 * @author Patrick Reichel
-	 */
-	public function external_orders() {
-
-		if ($this->module_is_active('provvoipenvia')) {
-			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment');
-		}
-
-		return null;
-	}
-
     // View Relation.
     public function view_has_many()
     {
@@ -90,6 +67,58 @@ class Contract extends \BaseModel {
 
 		return $ret;
     }
+
+
+
+    /*
+     * Relations
+     */
+    public function modems()
+    {
+		return $this->hasMany('Modules\ProvBase\Entities\Modem');
+    }
+
+	/**
+	 * Get relation to external orders.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function external_orders() {
+
+		if ($this->module_is_active('provvoipenvia')) {
+			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment');
+		}
+
+		return null;
+	}
+
+	public function items()
+	{
+		if ($this->module_is_active('billingbase'))
+			return $this->hasMany('Modules\BillingBase\Entities\Item');
+		return null;
+	}
+
+	public function sepamandates()
+	{
+		if ($this->module_is_active('billingbase'))
+			return $this->hasMany('Modules\BillingBase\Entities\SepaMandate');
+		return null;
+	}
+
+	public function costcenter()
+	{
+		if ($this->module_is_active('billingbase'))
+			return $this->belongsTo('Modules\BillingBase\Entities\CostCenter', 'costcenter_id');
+		return null;
+	}
+
+	public function salesman()
+	{
+		if ($this->module_is_active('billingbase'))
+			return $this->belongsTo('Modules\BillingBase\Entities\Salesman');
+		return null;
+	}
 
 
     /*
@@ -142,25 +171,6 @@ class Contract extends \BaseModel {
 
 	}
 
-	public function items()
-	{
-		return $this->hasMany('Modules\BillingBase\Entities\Item');
-	}
-
-	public function sepamandates()
-	{
-		return $this->hasMany('Modules\BillingBase\Entities\SepaMandate');
-	}
-
-	public function costcenter()
-	{
-		return $this->belongsTo('Modules\BillingBase\Entities\CostCenter', 'costcenter_id');
-	}
-
-	public function salesman()
-	{
-		return $this->belongsTo('Modules\BillingBase\Entities\Salesman');
-	}
 
 
 
@@ -308,8 +318,7 @@ class Contract extends \BaseModel {
 
 
 		// Task 3: Change qos and voip id when tariff changes
-		$bm = new \BaseModel;
-		if (!$bm->module_is_active('Billingbase'))
+		if (!$this->module_is_active('Billingbase'))
 			return;
 
 		$qos_id = 0;
@@ -350,8 +359,7 @@ class Contract extends \BaseModel {
 	public function monthly_conversion()
 	{
 		// with billing module -> daily conversion
-		$bm = new \BaseModel;
-		if ($bm->module_is_active('Billingbase'))
+		if ($this->module_is_active('Billingbase'))
 			return;
 
 		// Tariff: monthly Tariff change – "Tarifwechsel"
@@ -385,7 +393,10 @@ class Contract extends \BaseModel {
 	 */
 	public function get_valid_tariff($type)
 	{
-		$prod_ids = Product::get_product_ids($type);
+		if (!$this->module_is_active('Billingbase'))
+			return null;
+
+		$prod_ids = Modules\BillingBase\Entities\Product::get_product_ids($type);
 		$last 	= \Carbon\Carbon::createFromTimestamp(null);
 		$tariff = null;			// item
 
@@ -463,17 +474,11 @@ class Contract extends \BaseModel {
 	}
 
 
-	/**
-	 * Cross checks start and end dates against actual day - used in accounting Cmd
-	 * Calculates start and end dates of this model for parent function of BaseModel
-	 */
-	public function check_validity($start = null, $end = null)
-	{
-		$start = ($this->contract_start == null || $this->contract_start == '0000-00-00') ? $this->created_at->toDateString() : $this->contract_start;
-		$start = strtotime($start);
-		$end = $this->contract_end == '0000-00-00' ? null : strtotime($this->contract_end);
 
-		return parent::check_validity($start, $end);
+	// Checks if item has valid dates in last month
+	public function check_validity($start = '', $end = '')
+	{
+		return parent::check_validity('contract_start', 'contract_end');
 	}
 
 
