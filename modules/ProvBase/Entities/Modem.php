@@ -119,7 +119,7 @@ class Modem extends \BaseModel {
 		return $this->contract;
 	}
 
-	public function view_has_many()
+	public function view_relations()
 	{
 		if ($this->module_is_active('ProvVoip'))
 			return array(

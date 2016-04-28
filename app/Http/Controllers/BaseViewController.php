@@ -348,16 +348,16 @@ finish:
 
 
 	/*
-	 * Return the API Version of view_has_many() as normal incremental integer
+	 * Return the API Version of view_relations() as normal incremental integer
 	 *
-	 * @param view_has_many_array: the returned view_has_many() array
+	 * @param view_relations_array: the returned view_relations() array
 	 * @return: api version starting from 1, 2, ..
 	 *
 	 * @autor: Torsten Schmidt
 	 */
-	public static function get_view_has_many_api_version ($view_has_many_array)
+	public static function get_view_relations_api_version ($view_relations_array)
 	{
-		if (\Acme\php\ArrayHelper::array_depth($view_has_many_array) < 2)
+		if (\Acme\php\ArrayHelper::array_depth($view_relations_array) < 2)
 			return 1;
 
 		return 2;
@@ -374,11 +374,11 @@ finish:
 	 */
 	public static function prep_right_panels ($view_var)
 	{
-		$api = static::get_view_has_many_api_version($view_var->view_has_many());
+		$api = static::get_view_relations_api_version($view_var->view_relations());
 
 		if ($api == 1)
 		{
-			$relations = $view_var->view_has_many();
+			$relations = $view_var->view_relations();
 		}
 
 		if ($api == 2)
@@ -391,7 +391,7 @@ finish:
 
 
 			// get actual blade to $b from array of all blades in $a
-			$a = $view_var->view_has_many();
+			$a = $view_var->view_relations();
 
 			if (count($a) == 1)
 				return current($a);

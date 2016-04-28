@@ -269,7 +269,7 @@ class BaseController extends Controller {
 
 	/**
 	 * Prepare Breadcrumb - $panel_right header
-	 * Priority Handling: get_form_breadcrumb(), view_has_many()
+	 * Priority Handling: get_form_breadcrumb(), view_relations()
 	 *
 	 * @param view_var: the view_var parameter from edit() context
 	 * @return panel_right prepared array for default.blade
@@ -282,15 +282,15 @@ class BaseController extends Controller {
 		if ($ret)
 			return $ret;
 
-		// view_has_many()
-		if (\Acme\php\ArrayHelper::array_depth($view_var->view_has_many()) >= 2)
+		// view_relations()
+		if (\Acme\php\ArrayHelper::array_depth($view_var->view_relations()) >= 2)
 		{
 			// get actual blade to $b
-			$a = $view_var->view_has_many();
+			$a = $view_var->view_relations();
 			$b = current($a);
 			$c = [];
 
-			for ($i = 0; $i < sizeof($view_var->view_has_many()); $i++)
+			for ($i = 0; $i < sizeof($view_var->view_relations()); $i++)
 			{
 				array_push($c, ['name' => key($a), 'route' => $this->get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
 				$b = next($a);

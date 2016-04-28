@@ -53,7 +53,7 @@ class DeviceType extends \BaseModel {
 	}
 
 	// returns all objects that are related to a DeviceType
-	public function view_has_many()
+	public function view_relations()
 	{
 		if (0) // disable
 			return array(
@@ -63,7 +63,7 @@ class DeviceType extends \BaseModel {
 				]
 			);
 
-		// Testing view_has_many() API v2
+		// Testing view_relations() API v2
 		return [
 			'Test' =>  ['Device Class Header' => ['class' => 'Device',
 												  'relation' => $this->devices,

@@ -60,7 +60,7 @@ class Contract extends \BaseModel {
     }
 
     // View Relation.
-    public function view_has_many()
+    public function view_relations()
     {
 		$ret = array(
 			'Modem' => $this->modems,
