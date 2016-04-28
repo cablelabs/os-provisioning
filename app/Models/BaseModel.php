@@ -627,18 +627,21 @@ class BaseModel extends Eloquent
 
 
 	/**
-	 * Checks if actual day is between a start and end date - used for Billing
+	 * Checks if model was valid in last month - used for Billing
 	 *
-	 * @param $start, $end  	as actual unix timestamp (sec from 1970)
-	 * @return true  			if model is actually valid
+	 * @param $start_field, $end_field  	name of sql column of models start & end date
+	 * @return true  						if model had valid dates during last month
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function check_validity($start = null, $end = null)
+	public function check_validity($start_field = '', $end_field = '')
 	{
-		$today = strtotime('today');
+		$start = $this->{$start_field} && $this->{$start_field} != '0000-00-00' ? $this->{$start_field} : $this->created_at->toDateString();
+		$start = strtotime($start);
+		$end = $this->{$end_field} && $this->{$end_field} != '0000-00-00' ? strtotime($this->{$end_field}) : null;
 
-		return ($start <= $today) && (!$end || $end >= $today);
+		// dd($start, $end, date('Y-m-d', $start), date('Y-m-d', $end), $start < strtotime(date('Y-m-01')) && (!$end || $end > strtotime(date('Y-m-01'), strtotime('first day of last month'))));
+		return $start < strtotime(date('Y-m-01')) && (!$end || $end > strtotime(date('Y-m-01'), strtotime('first day of last month')));
 	}
 
 }
