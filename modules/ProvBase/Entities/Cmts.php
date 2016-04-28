@@ -66,7 +66,7 @@ class Cmts extends \BaseModel {
     }
 
     // returns all objects that are related to a cmts
-    public function view_relations()
+    public function view_has_many()
     {
     	return array(
     		'IpPool' => $this->ippools

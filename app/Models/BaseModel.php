@@ -43,7 +43,7 @@ class BaseModel extends Eloquent
 	/**
 	 * check if module exists
 	 *
-	 * Note: This function should be used in relational functions like hasMany() or view_relations()
+	 * Note: This function should be used in relational functions like hasMany() or view_has_many()
 	 *
 	 * @author Torsten Schmidt
 	 *
@@ -114,7 +114,7 @@ class BaseModel extends Eloquent
 	 *
 	 * @return an array with the appropriate hasMany()-functions of the model
 	 */
-	public function view_relations ()
+	public function view_has_many ()
 	{
 		return array();
 	}

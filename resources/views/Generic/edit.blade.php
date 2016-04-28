@@ -29,7 +29,7 @@
 @stop
 
 
-<?php $api = App\Http\Controllers\BaseViewController::get_view_relations_api_version($relations) ?>
+<?php $api = App\Http\Controllers\BaseViewController::get_view_has_many_api_version($relations) ?>
 
 @section('content_right')
 
