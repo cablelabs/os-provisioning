@@ -37,7 +37,7 @@ class ContractController extends \BaseModuleController {
     /**
      * defines the formular fields for the edit and create view
      */
-	public function get_form_fields($model = null)
+	public function view_form_fields($model = null)
 	{
 		$r = $a = $b = $c = $d = [];
 
@@ -164,7 +164,7 @@ class ContractController extends \BaseModuleController {
 			'voip_contract_end',
 		);
 
-		foreach ($this->get_form_fields($this->get_model_obj()) as $field) {
+		foreach ($this->view_form_fields($this->get_model_obj()) as $field) {
 			if (array_key_exists($field['name'], $data)) {
 				if (array_search($field['name'], $nullable_fields) !== False) {
 					if ($data[$field['name']] == '') {

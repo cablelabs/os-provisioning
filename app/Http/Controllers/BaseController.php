@@ -213,7 +213,7 @@ class BaseController extends Controller {
 			$mod_controller_name = 'Modules\\'.$tmp.'\\Http\\Controllers\\'.$tmp.'Controller';
 			$mod_controller = new $mod_controller_name;
 
-			if (method_exists($mod_controller, 'get_form_fields'))
+			if (method_exists($mod_controller, 'view_form_fields'))
         		$links[($module->get('description') == '') ? $tmp : $module->get('description')] = $tmp;
         }
 
@@ -232,7 +232,7 @@ class BaseController extends Controller {
 	protected function prepare_input($data)
 	{
 		// Checkbox Unset ?
-		foreach ($this->get_form_fields($this->get_model_obj()) as $field)
+		foreach ($this->view_form_fields($this->get_model_obj()) as $field)
 		{
 			if(!isset($data[$field['name']]) && $field['form_type'] == 'checkbox')
 				$data[$field['name']] = 0;
@@ -388,16 +388,16 @@ class BaseController extends Controller {
 
 	/*
 	 * This function is used to prepare get_form_field array for edit view
-	 * So all general preparation stuff to get_form_fields will be done here.
+	 * So all general preparation stuff to view_form_fields will be done here.
 	 *
 	 * Tasks:
 	 *  1. Add a (*) to fields description if validation rule contains required
 	 *  2. Add Placeholder YYYY-MM-DD for all date fields
 	 *  3. Hide all parent view relation select fields
 	 *
-	 * @param fields: the get_form_fields array()
+	 * @param fields: the view_form_fields array()
 	 * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
-	 * @return: the modifeyed get_form_fields array()
+	 * @return: the modifeyed view_form_fields array()
 	 *
 	 * @autor: Torsten Schmidt
 	 */
@@ -538,7 +538,7 @@ class BaseController extends Controller {
 		// $view_header 	= 'Create '.$obj->view_headline();
 		$view_header 	= BaseViewController::translate('Create ').BaseViewController::translate($obj->view_headline());
 		// form_fields contain description of fields and the data of the fields
-		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj), $obj), 'create');
+		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->view_form_fields($obj), $obj), 'create');
 
 		// generate Link header - parse parent object from HTML GET array
 		// TODO: avoid use of HTML GET array for security considerations
@@ -607,16 +607,16 @@ class BaseController extends Controller {
 
 	/*
 	 * This function is used to prepare get_form_field array for edit view
-	 * So all general preparation stuff to get_form_fields will be done here.
+	 * So all general preparation stuff to view_form_fields will be done here.
 	 *
 	 * Tasks:
 	 *  1. Add a (*) to fields description if validation rule contains required
 	 *  2. Add Placeholder YYYY-MM-DD for all date fields
 	 *  3. Hide all parent view relation select fields
 	 *
-	 * @param fields: the get_form_fields array()
+	 * @param fields: the view_form_fields array()
 	 * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
-	 * @return: the modifeyed get_form_fields array()
+	 * @return: the modifeyed view_form_fields array()
 	 *
 	 * @autor: Torsten Schmidt
 	 */
@@ -690,7 +690,7 @@ class BaseController extends Controller {
 		// transfer model_name, view_header, view_var
 		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($obj->view_headline());
 		$view_var 		= $obj->findOrFail($id);
-		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var), 'edit');
+		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->view_form_fields($view_var), $view_var), 'edit');
 		$link_header    = BaseViewController::prep_link_header($this->get_route_name(), $view_header, $view_var);
 		$panel_right    = $this->prepare_breadcrumb($view_var);
 		$relations      = BaseViewController::prep_right_panels($view_var);

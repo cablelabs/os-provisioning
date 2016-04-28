@@ -94,11 +94,11 @@ class BaseViewController extends Controller {
 	 * Add ['html'] element to each $fields entry
 	 *
 	 * The html element contains the HTML formated code to display each HTML field.
-	 * You could use 'html' parameter inside the get_form_fields() functions to
+	 * You could use 'html' parameter inside the view_form_fields() functions to
 	 * overwrite default behavior. The best advice to use these parameter is to
 	 * debug the return array of this function.
 	 *
-	 * @param fields: the prepared get_form_fields array(), each array element represents on (HTML) field
+	 * @param fields: the prepared view_form_fields array(), each array element represents on (HTML) field
 	 * @param context: edit|create - context from which this function is called
 	 * @return: array() of fields with added ['html'] element containing the preformed html content
 	 *
@@ -141,7 +141,7 @@ class BaseViewController extends Controller {
 			}
 
 			/*
-			 * 2. check if hidden is set in get_form_fields()
+			 * 2. check if hidden is set in view_form_fields()
 			 * 3. globally hide all relation fields
 			 *    (this means: all fields ending with _id)
 			 */

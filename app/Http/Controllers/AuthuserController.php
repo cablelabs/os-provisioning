@@ -14,7 +14,7 @@ class AuthuserController extends BaseController {
     /**
      * defines the formular fields for the edit and create view
      */
-	public function get_form_fields($model = null)
+	public function view_form_fields($model = null)
 	{
 
 		// label has to be the same like column in sql table

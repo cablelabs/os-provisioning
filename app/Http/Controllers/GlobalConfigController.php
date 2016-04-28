@@ -1,15 +1,15 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
 class GlobalConfigController extends BaseController {
 
 	protected $log_level = ['0 - Emergency', '1 - Alert', '2 - Critical', '3 - Error', '4 - Warning', '5 - Notice', '6 - Info', '7 - Debug'];
-   
+
     /**
      * defines the formular fields for the edit and create view
      */
-	public function get_form_fields($model = null)
+	public function view_form_fields($model = null)
 	{
 		// label has to be the same like column in sql table
 		return array(
@@ -24,5 +24,5 @@ class GlobalConfigController extends BaseController {
 			array('form_type' => 'text', 'name' => 'headline2', 'description' => 'Headline 2'),
 			);
 	}
-	
+
 }
