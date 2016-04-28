@@ -40,7 +40,7 @@ class Qos extends \BaseModel {
     }
 
     // link title in index view
-    public function get_view_link_title()
+    public function view_index_label()
     {
         return ['index' => [$this->name, $this->ds_rate_max.' MBit/s', $this->us_rate_max.' MBit/s'],
                 'index_header' => ['Name', 'DS Rate', 'US Rate'],

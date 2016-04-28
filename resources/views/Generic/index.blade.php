@@ -60,9 +60,9 @@
 				<thead>
 					<tr>
 						<td></td>
-						<!-- Parse get_view_link_title() header_index  -->
-						@if (isset($view_var[0]) && is_array($view_var[0]->get_view_link_title()) && isset($view_var[0]->get_view_link_title()['index_header']))
-							@foreach ($view_var[0]->get_view_link_title()['index_header'] as $field)
+						<!-- Parse view_index_label() header_index  -->
+						@if (isset($view_var[0]) && is_array($view_var[0]->view_index_label()) && isset($view_var[0]->view_index_label()['index_header']))
+							@foreach ($view_var[0]->view_index_label()['index_header'] as $field)
 								<td> {{ \App\Http\Controllers\BaseViewController::translate($field) }} </td>
 							@endforeach
 						@endif
@@ -74,9 +74,9 @@
 					<tr class={{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}>
 						<td width=50> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple']) }} </td>
 
-						<!-- Parse get_view_link_title()  -->
+						<!-- Parse view_index_label()  -->
 						<?php $i = 0; // display link only on first element ?>
-						@foreach (is_array($object->get_view_link_title()) ? $object->get_view_link_title()['index'] : [$object->get_view_link_title()] as $field)
+						@foreach (is_array($object->view_index_label()) ? $object->view_index_label()['index'] : [$object->view_index_label()] as $field)
 							@if ($i++ == 0)
 								<td> {{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }} </td>
 							@else

@@ -321,10 +321,10 @@ finish:
 					// get header field name
 					// NOTE: for historical reasons check if this is a array or a plain string
 					// See: Confluence API  - get_view_link_header()
-					if(is_array($parent->get_view_link_title()))
-						$name = $parent->get_view_link_title()['header'];
+					if(is_array($parent->view_index_label()))
+						$name = $parent->view_index_label()['header'];
 					else
-						$name = $parent->get_view_link_title();
+						$name = $parent->view_index_label();
 
 					$s = \HTML::linkRoute($view.'.edit', $name, $parent->id).' > '.$s;
 				}
@@ -425,8 +425,8 @@ finish:
 		$class = current($color_array);
 
 		// Check if class object has a own color definition
-		if (isset($object->get_view_link_title()['bsclass']))
-			$class = $object->get_view_link_title()['bsclass'];
+		if (isset($object->view_index_label()['bsclass']))
+			$class = $object->view_index_label()['bsclass'];
 		else
 		{
 			// Rotate Color through $color_array every $rotate_after entries

@@ -44,7 +44,7 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 	}
 
 	// link title in index view
-	public function get_view_link_title()
+	public function view_index_label()
 	{
 		return $this->login_name;
 	}

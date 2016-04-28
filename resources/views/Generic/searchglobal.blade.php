@@ -49,15 +49,15 @@
 					$cur_model_parts = explode('\\', get_class($object));
 					$cur_model = array_pop($cur_model_parts);
 
-					if (is_array($object->get_view_link_title()))
+					if (is_array($object->view_index_label()))
 					{
-						$link = \HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title()['header'], $object->id);
-						$descr = implode (', ', $object->get_view_link_title()['index']);
+						$link = \HTML::linkRoute($cur_model.'.edit', $object->view_index_label()['header'], $object->id);
+						$descr = implode (', ', $object->view_index_label()['index']);
 					}
 					else
 					{
-						$link = \HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id);
-						$descr = $object->get_view_link_title();
+						$link = \HTML::linkRoute($cur_model.'.edit', $object->view_index_label(), $object->id);
+						$descr = $object->view_index_label();
 					}
 				?>
 

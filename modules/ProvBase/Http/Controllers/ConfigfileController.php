@@ -102,11 +102,11 @@ class ConfigfileController extends \BaseModuleController {
 		} while ($cnt <= self::$INDEX);
 
 		// $data .= '<td>'.Form::checkbox('ids['.$object->id.']').'</td>';
-		// $data .= '<td>'.HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id).'</td>';
+		// $data .= '<td>'.HTML::linkRoute($cur_model.'.edit', $object->view_index_label(), $object->id).'</td>';
 		// $data .= '</tr>';
 
 		$data .= Form::checkbox('ids['.$object->id.']', 1, Null, null, ['style' => 'simple']).'&nbsp;&nbsp;';
-		$data .= HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id);
+		$data .= HTML::linkRoute($cur_model.'.edit', $object->view_index_label(), $object->id);
 		$data .= '<br>';
 
 		return $data;
