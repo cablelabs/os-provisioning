@@ -17,18 +17,6 @@
 
 
 	@DivOpen(12)
-		<?php
-			// searchscope for following form is the current model
-			$next_scope = 'all';
-		?>
-		@DivOpen(6)
-			{{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET')) }}
-				@include('Generic.searchform', ['button_text' => 'Search'])
-			{{ Form::close() }}
-		@DivClose()
-	@DivClose()
-
-	@DivOpen(12)
 		@if (isset($query))
 			<h4>Global Search: Matches for <tt>'{{ $query }}'</tt></h4>
 		@endif
@@ -36,10 +24,10 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<td></td>
-					<td>Type</td>
-					<td>Entry</td>
-					<td>Description</td>
+					<th></th>
+					<th>Type</th>
+					<th>Entry</th>
+					<th>Description</th>
 				</tr>
 			</thead>
 

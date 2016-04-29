@@ -29,6 +29,12 @@ class FormBuilder extends CollectiveFormBuilder {
 
     /**
      * Append the given class to the given options array.
+     *
+     * @param $class: string to add to html class
+     * @param $options: options array
+     *        NOTE: use '!class' to avoid adding $class variable from FormBuilder functions,
+     *              instead set only this proposed classes
+     * @return: options array with (manipulated) class key
      */
     private function appendClassToOptions($class, $options = array())
     {
@@ -36,6 +42,9 @@ class FormBuilder extends CollectiveFormBuilder {
         // class to it. Otherwise, set the 'class' to 'form-control'.
         $options['class'] = isset($options['class']) ? $options['class'].' ' : '';
         $options['class'] .= $class;
+
+        if (isset($options['!class']))
+            $options['class'] = $options['!class'];
 
         return $options;
     }
@@ -84,18 +93,16 @@ class FormBuilder extends CollectiveFormBuilder {
      */
     public function submit($value = NULL, $options = array())
     {
-        $options = $this->appendClassToOptions('form-control btn btn-sm btn-success', $options);
+        $options = $this->appendClassToOptions('btn btn-primary', $options);
 
         $value = \App\Http\Controllers\BaseViewController::translate($value);
 
         if (isset($options['style']) && $options['style'] == 'simple')
             $s = parent::submit($value, $options);
         else
-            $s = '<div class="form-group col-md-12">
-    			<label class="col-md-3 control-label"></label>
-    			<div class="">'.parent::submit($value, $options).
-    			'</div>
-    			</div>';
+            $s = '<div class="col-md-3"></div>
+                  <div class="col-md-6"><br>'.
+                  parent::submit($value, $options).'</div>';
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.
@@ -183,6 +190,11 @@ class FormBuilder extends CollectiveFormBuilder {
     {
         $options['class'] ='form_open'; // Note: this avoids form input fields with large distances
         return parent::open($options);
+    }
+
+    public function hr($value='')
+    {
+        return "<br><hr style=\"width: 97%; color: #D8D8D8; height: 1px; background-color:#D8D8D8;\"/>";
     }
 
     /**
