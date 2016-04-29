@@ -56,7 +56,12 @@
 
 					<!-- include a view -->
 					@if (isset($relation['view']))
-						@include ($relation['view'])
+						@if (is_string($relation['view']))
+							@include ($relation['view'])
+						@endif
+						@if (is_array($relation['view']))
+							@include ($relation['view']['view'], isset($relation['view']['vars']) ? $relation['view']['vars'] : [])
+						@endif
 					@endif
 
 					<!-- include a relational class/object/table, like Contract->Modem -->
