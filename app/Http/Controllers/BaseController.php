@@ -22,11 +22,18 @@ use App\Exceptions\AuthExceptions;
 
 class BaseController extends Controller {
 
-	protected $output_format;
+	/*
+	 * Default VIEW styling options
+	 * NOTE: All these values could be used in the inheritances classes
+	 */
 	protected $save_button = 'Save';
 	protected $relation_create_button = 'Create';
 	protected $index_create_allowed = true;
+	protected $edit_left_md_size = 4;
 
+
+	// Auth Vars
+	// TODO: move to Auth API
 	protected $permissions = null;
 	protected $permission_cores = array('model', 'net');
 
@@ -374,6 +381,9 @@ class BaseController extends Controller {
 		if (!isset($a['form_update']))
 			$a['form_update'] = $this->get_route_name().'.update';
 
+		if (!isset($a['edit_left_md_size']))
+			$a['edit_left_md_size'] = $this->edit_left_md_size;
+
 		$a['save_button'] = $this->save_button;
 
 		// Get Framework Informations
@@ -642,7 +652,7 @@ class BaseController extends Controller {
 		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($obj->view_headline());
 		$view_var 		= $obj->findOrFail($id);
 		$form_fields	= BaseViewController::compute_form_fields ($this->prepare_form_fields ($this->get_controller_obj()->view_form_fields($view_var), $view_var), 'edit');
-		$headline    = BaseViewController::compute_headline($this->get_route_name(), $view_header, $view_var);
+		$headline       = BaseViewController::compute_headline($this->get_route_name(), $view_header, $view_var);
 		$panel_right    = $this->prepare_breadcrumb($view_var);
 		$relations      = BaseViewController::prep_right_panels($view_var);
 
@@ -743,6 +753,7 @@ class BaseController extends Controller {
 
 
 // Deprecated:
+	protected $output_format;
 
 	/**
 	 *  json abstraction layer
