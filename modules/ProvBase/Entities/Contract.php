@@ -29,65 +29,74 @@ class Contract extends \BaseModel {
 			'birthday' => 'required|date',
 			'contract_start' => 'date',
 			'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
-            'sepa_iban' => 'iban',
-            'sepa_bic' => 'bic',
+			'sepa_iban' => 'iban',
+			'sepa_bic' => 'bic',
 			);
 	}
 
 
-    // Name of View
-    public static function view_headline()
-    {
-        return 'Contract';
-    }
+	// Name of View
+	public static function view_headline()
+	{
+		return 'Contract';
+	}
 
-    // link title in index view
-    public function view_index_label()
-    {
+	// link title in index view
+	public function view_index_label()
+	{
 		$bsclass = 'success';
 
 		if ($this->network_access == 0)
 			$bsclass = 'danger';
 
 		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street],
-		        'index_header' => ['Contract Number', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street'],
-		        'bsclass' => $bsclass,
-		        'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
+				'index_header' => ['Contract Number', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street'],
+				'bsclass' => $bsclass,
+				'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
 
-    	// deprecated ?
+		// deprecated ?
 		$old = $this->number2 ? ' - (Old Nr: '.$this->number2.')' : '';
 		return $this->number.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city.$old;
-    }
+	}
 
-    // View Relation.
-    public function view_has_many()
-    {
-		$ret = array(
-			'Modem' => $this->modems,
-		);
-
-		if ($this->module_is_active('provvoipenvia')) {
-			$ret['EnviaOrder'] = $this->external_orders;
+	// View Relation.
+	public function view_has_many()
+	{
+		if ($this->module_is_active('billingbase'))
+		{
+			$ret['Base']['Modem'] = $this->modems;
+			$ret['Base']['Item']        = $this->items;
+			$ret['Base']['SepaMandate'] = $this->sepamandates;
 		}
+
+		$ret['Technical']['Modem'] = $this->modems;
 
 		if ($this->module_is_active('billingbase'))
 		{
-			$ret['Item'] 		= $this->items;
-			$ret['SepaMandate'] = $this->sepamandates;
+			$ret['Billing']['Item']        = $this->items;
+			$ret['Billing']['SepaMandate'] = $this->sepamandates;
+		}
+
+		if ($this->module_is_active('provvoipenvia'))
+		{
+			$ret['Envia']['EnviaOrder'] = $this->external_orders;
+
+			// TODO: auth - loading controller from model could be a security issue ?
+			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
 		}
 
 		return $ret;
-    }
+	}
 
 
-
-    /*
-     * Relations
-     */
-    public function modems()
-    {
+	/*
+	 * Relations
+	 */
+	public function modems()
+	{
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
-    }
+	}
 
 	/**
 	 * Get relation to external orders.
@@ -132,14 +141,14 @@ class Contract extends \BaseModel {
 	}
 
 
-    /*
-     * Generate use a new user login password
-     * This does not save the involved model
-     */
-    public function generate_password($length = 10)
-    {
-        $this->password = \Acme\php\Password::generate_password();
-    }
+	/*
+	 * Generate use a new user login password
+	 * This does not save the involved model
+	 */
+	public function generate_password($length = 10)
+	{
+		$this->password = \Acme\php\Password::generate_password();
+	}
 
 
 	/**

@@ -68,13 +68,21 @@ class Phonenumber extends \BaseModel {
 		return $this->mta;
 	}
 
+    // View Relation.
+    public function view_has_many()
+    {
+		if ($this->module_is_active('provvoipenvia'))
+		{
+			$ret['Envia']['EnviaOrder'] = $this->external_orders;
+			$ret['Envia']['PhonenumberManagement'] = $this->phonenumbermanagement;
 
-	// has zero or one management object related
-	public function view_has_one() {
-		return array(
-			'PhonenumberManagement' => $this->phonenumbermanagement,
-		);
-	}
+			// TODO: auth - loading controller from model could be a security issue ?
+			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
+		}
+
+		return $ret;
+    }
 
 	/**
 	 * return all mta objects

@@ -204,6 +204,10 @@ class PhonenumberManagement extends \BaseModel {
 
 		if ($this->module_is_active('provvoipenvia')) {
 			$ret['EnviaOrder'] = $this->external_orders;
+
+			// TODO: auth - loading controller from model could be a security issue ?
+			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\PhonenumberManagementController::_get_envia_management_jobs($this);
 		}
 
 		return $ret;
