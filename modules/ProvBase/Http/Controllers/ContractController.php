@@ -63,7 +63,7 @@ class ContractController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'),
 			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1'),
 
-			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1'),
+			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1', 'checked' => 1),
 		);
 
 

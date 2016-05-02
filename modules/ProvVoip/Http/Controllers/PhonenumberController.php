@@ -12,7 +12,7 @@ class PhonenumberController extends \BaseModuleController {
 	 * if set to true a create button on index view is available - set to true in BaseController as standard
 	 */
     protected $index_create_allowed = false;
-	protected $save_button = 'Save and Restart Modem';
+	protected $save_button = 'Save / Restart';
 
 
     /**

@@ -100,9 +100,12 @@ class FormBuilder extends CollectiveFormBuilder {
         if (isset($options['style']) && $options['style'] == 'simple')
             $s = parent::submit($value, $options);
         else
+        {
+            $options['style'] = 'simple'; // style: required to auto width button to text length
             $s = '<div class="col-md-3"></div>
                   <div class="col-md-6"><br>'.
                   parent::submit($value, $options).'</div>';
+        }
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.
