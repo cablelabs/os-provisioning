@@ -91,6 +91,58 @@ class BaseViewController extends Controller {
 
 
 	/*
+	 * This function is used to prepare get_form_field array for edit view
+	 * So all general preparation stuff to view_form_fields will be done here.
+	 *
+	 * Tasks:
+	 *  1. Add a (*) to fields description if validation rule contains required
+	 *  2. Add Placeholder YYYY-MM-DD for all date fields
+	 *  3. Hide all parent view relation select fields
+	 *
+	 * @param fields: the view_form_fields array()
+	 * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
+	 * @return: the modifeyed view_form_fields array()
+	 *
+	 * @autor: Torsten Schmidt
+	 */
+	public static function prepare_form_fields($fields, $model)
+	{
+		$ret = [];
+
+		// get the validation rules for related model object
+		$rules = $model->rules();
+
+		// for all fields
+		foreach ($fields as $field)
+		{
+			// rule exists for actual field ?
+			if (isset ($rules[$field['name']]))
+			{
+				// Task 1: Add a (*) to fields description if validation rule contains required
+				if (preg_match('/(.*?)required(.*?)/', $rules[$field['name']]))
+					$field['description'] = $field['description']. ' *';
+
+				// Task 2: Add Placeholder YYYY-MM-DD for all date fields
+				if (preg_match('/(.*?)date(.*?)/', $rules[$field['name']]))
+					$field['options']['placeholder'] = 'YYYY-MM-DD';
+
+			}
+
+			// 3. Hide all parent view relation select fields
+			if (is_object($model->view_belongs_to()) && 					// does a view relation exists
+				$model->view_belongs_to()->table.'_id' == $field['name'])	// view table name (+_id) == field name ?
+				$field['hidden'] = 1;									// hide
+
+			$field['field_value'] = $model[$field['name']];
+
+			array_push ($ret, $field);
+		}
+
+		return $ret;
+	}
+
+
+	/*
 	 * Add ['html'] element to each $fields entry
 	 *
 	 * The html element contains the HTML formated code to display each HTML field.

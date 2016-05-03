@@ -9,11 +9,16 @@ use Log;
 
 use App\Exceptions\AuthExceptions;
 
-
+/*
+ * Authentication Base Class for Checking active
+ */
 class BaseAuthController extends Controller {
 
 	// The authentication array
 	// This is manly used/required for caching/speed-up
+	// NOTE: static class variables seems to live as long as the php process is running
+	//       this seems to be a kind of hack(?). Advantage is that we can cache requests
+	//       instead of producing many sql requests. Of curse this needs some more testing. (TODO)
 	private static $permissions;
 
 
