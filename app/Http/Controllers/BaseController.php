@@ -216,7 +216,7 @@ class BaseController extends Controller {
 			return $ret;
 
 		// view_has_many()
-		if (\Acme\php\ArrayHelper::array_depth($view_var->view_has_many()) >= 2)
+		if (BaseViewController::get_view_has_many_api_version($view_var->view_has_many()) == 2)
 		{
 			// get actual blade to $b
 			$a = $view_var->view_has_many();
@@ -378,18 +378,16 @@ class BaseController extends Controller {
 
 		$obj = static::get_model_obj();
 
-		$view_var = $obj->index_list();
-
+		$view_var   = $obj->index_list();
 		$headline  	= BaseViewController::translate($obj->view_headline().' List');
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
-		$view_path = 'Generic.index';
 
+		$view_path = 'Generic.index';
+		if (View::exists(static::get_view_name().'.index'))
+			$view_path = static::get_view_name().'.index';
 
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
-
-		if (View::exists(static::get_view_name().'.index'))
-			$view_path = static::get_view_name().'.index';
 
 		return View::make ($view_path, $this->compact_prep_view(compact('headline', 'view_var', 'create_allowed')));
 	}
@@ -405,25 +403,11 @@ class BaseController extends Controller {
 	{
 		BaseAuthController::auth_check('create', $this->get_model_name());
 
-		$obj = static::get_model_obj();
+		$model = static::get_model_obj();
 
-		// $view_header 	= 'Create '.$obj->view_headline();
-		$view_header 	= BaseViewController::translate('Create ').BaseViewController::translate($obj->view_headline());
-		// form_fields contain description of fields and the data of the fields
-		$form_fields	= BaseViewController::compute_form_fields (BaseViewController::prepare_form_fields (static::get_controller_obj()->view_form_fields($obj), $obj), 'create');
-
-		// generate Link header - parse parent object from HTML GET array
-		// TODO: avoid use of HTML GET array for security considerations
-		$view_var = NULL;
-		if (isset(array_keys($_GET)[0]))
-		{
-			$key        = array_keys($_GET)[0];
-			$class_name = BaseModel::_guess_model_name(ucwords(explode ('_id', $key)[0]));
-			$class      = new $class_name;
-			$view_var   = $class->find($_GET[$key]);
-		}
-		$headline = BaseViewController::compute_headline(static::get_route_name(), $view_header, $view_var);
-
+		$view_header = BaseViewController::translate('Create ').BaseViewController::translate($model->view_headline());
+		$headline    = BaseViewController::compute_headline(static::get_route_name(), $view_header, NULL, $_GET);
+		$form_fields = BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($model), $model, 'create');
 
 		$view_path = 'Generic.create';
 		$form_path = 'Generic.form';
@@ -448,7 +432,6 @@ class BaseController extends Controller {
 	{
 		BaseAuthController::auth_check('create', $this->get_model_name());
 
-		// dd(Input::all());
 		$obj = static::get_model_obj();
 		$controller = static::get_controller_obj();
 
@@ -472,20 +455,6 @@ class BaseController extends Controller {
 	}
 
 
-
-	/**
-	 * Add extra data for right box.
-	 * This e.g. is needed to add Envia API urls but can also be used for other topics – simply overwrite this placeholder and return array with extra information instead of null…
-	 *
-	 * @author Patrick Reichel
-	 *
-	 * @return array of arrays containing extra information
-	 */
-	protected function _get_extra_data($view_var) {
-		return null;
-	}
-
-
 	/**
 	 * Show the editing form of the calling Object
 	 *
@@ -496,19 +465,15 @@ class BaseController extends Controller {
 	{
 		BaseAuthController::auth_check('view', $this->get_model_name());
 
-		$obj = static::get_model_obj();
-		//${$this->get_view_var()} = $obj->findOrFail($id);
+		$model    = static::get_model_obj();
+		$view_var = $model->findOrFail($id);
 
-		// transfer model_name, view_header, view_var
-		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($obj->view_headline());
-		$view_var 		= $obj->findOrFail($id);
-		$form_fields	= BaseViewController::compute_form_fields (BaseViewController::prepare_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var), 'edit');
+		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($model->view_headline());
 		$headline       = BaseViewController::compute_headline(static::get_route_name(), $view_header, $view_var);
 		$panel_right    = $this->prepare_breadcrumb($view_var);
+		$form_fields	= BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
 		$relations      = BaseViewController::prep_right_panels($view_var);
 
-		// TODO: replace
-		$extra_data = $this->_get_extra_data($view_var);
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';
@@ -520,9 +485,7 @@ class BaseController extends Controller {
 			$form_path = static::get_view_name().'.form';
 
 
-		$config_routes = BaseController::get_config_modules();
-
-		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'headline', 'panel_right', 'relations')));
+		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations')));
 	}
 
 
@@ -535,14 +498,13 @@ class BaseController extends Controller {
 	public function update($id)
 	{
 		BaseAuthController::auth_check('edit', $this->get_model_name());
-		// dd(Input::all());
 
 		$obj = static::get_model_obj()->findOrFail($id);
 		$controller = static::get_controller_obj();
 
 		// Prepare and Validate Input
 		$data      = $controller->prepare_input(Input::all());
-		$rules = $controller->prepare_rules($obj::rules($id), $data);
+		$rules     = $controller->prepare_rules($obj::rules($id), $data);
 		$validator = Validator::make($data, $rules);
 		$data      = $controller->prepare_input_post_validation ($data);
 

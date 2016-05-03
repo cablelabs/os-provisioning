@@ -156,14 +156,17 @@ class BaseViewController extends Controller {
 	 *
 	 * @autor: Torsten Schmidt
 	 */
-	public static function compute_form_fields($fields, $context = 'edit')
+	public static function compute_form_fields($_fields, $model, $context = 'edit')
 	{
+		// init
 		$ret = [];
 
 		// background color's to toggle through
 		$color_array = ['white', '#c8e6c9', '#fff3e0', '#fbe9e7', '#e0f2f1', '#f3e5f5'];
 		$color = $color_array[0];
 
+		// prepare form fields
+		$fields = static::prepare_form_fields($_fields, $model);
 
 		foreach ($fields as $field)
 		{
@@ -352,16 +355,27 @@ finish:
 	 * @param $route_name: route name of actual controller
 	 * @param $view_header: the view header name
 	 * @param $view_var: the object to generate the link from
+	 * @param $html_get: the HTML GET array. This is only required for create context
 	 * @return: the HTML link line to be directly included in blade
 	 * @author: Torsten Schmidt
 	 */
-	public static function compute_headline ($route_name, $view_header, $view_var)
+	public static function compute_headline ($route_name, $view_header, $view_var, $html_get = null)
 	{
 		$s = "";
 
+		// only for create context: parse headline from HTML _GET context array
+		// TODO: avoid use of HTML GET array for security considerations
+		if (!is_null($html_get) && isset(array_keys($html_get)[0]))
+		{
+			$key        = array_keys($html_get)[0];
+			$class_name = BaseModel::_guess_model_name(ucwords(explode ('_id', $key)[0]));
+			$class      = new $class_name;
+			$view_var   = $class->find($html_get[$key]);
+		}
+
 		if ($view_var != null)
 		{
-			// Recursivly parse all relations from view_var
+			// Recursively parse all relations from view_var
 			$parent = $view_var;
 			do
 			{
@@ -417,7 +431,7 @@ finish:
 
 
 	/*
-	 * Prepare Rigtht Panels to View
+	 * Prepare Right Panels to View
 	 *
 	 * @param $view_var: object/model to be displayed
 	 * @return: array() of fields with added ['html'] element containing the preformed html content
