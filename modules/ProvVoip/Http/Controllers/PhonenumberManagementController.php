@@ -21,8 +21,45 @@ class PhonenumberManagementController extends \BaseModuleController {
      */
 	public function get_form_fields($model = null)
 	{
-		if (!$model)
+		// create
+		if (!$model) {
 			$model = new PhonenumberManagement;
+		}
+
+		// in most cases the subscriber is identical to contract partner ⇒ on create we prefill these values with data from contract
+		if (!$model->exists) {
+			$phonenumber = Phonenumber::findOrFail(\Input::get('phonenumber_id'));
+			$contract = $phonenumber->mta->modem->contract;
+
+			$subscriber = array(
+				'company' => $contract->company,
+				'salutation' => $contract->salutation,
+				'academic_degree' => $contract->academic_degree,
+				'firstname' => $contract->firstname,
+				'lastname' => $contract->lastname,
+				'street' => $contract->street,
+				'house_number' => $contract->house_number,
+				'zip' => $contract->zip,
+				'city' => $contract->city,
+			);
+		}
+		// edit
+		else {
+			$subscriber = array(
+				'company' => $model->subscriber_company,
+				'salutation' => $model->subscriber_salutation,
+				'academic_degree' => $model->subscriber_academic_degree,
+				'firstname' => $model->subscriber_firstname,
+				'lastname' => $model->subscriber_lastname,
+				'street' => $model->subscriber_street,
+				'house_number' => $model->subscriber_house_number,
+				'zip' => $model->subscriber_zip,
+				'city' => $model->subscriber_city,
+			);
+		}
+
+		// preset subscriber data => this comes from model
+
 
 		// label has to be the same like column in sql table
 		return array(
@@ -34,15 +71,15 @@ class PhonenumberManagementController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'deactivation_date', 'description' => 'Termination date'),
 			array('form_type' => 'checkbox', 'name' => 'porting_out', 'description' => 'Outgoing porting'),
 			array('form_type' => 'select', 'name' => 'carrier_out', 'description' => 'Carrier out', 'value' => CarrierCode::carrier_list_for_form_select()),
-			array('form_type' => 'text', 'name' => 'subscriber_company', 'description' => 'Subscriber company'),
-			array('form_type' => 'select', 'name' => 'subscriber_salutation', 'description' => 'Subscriber salutation', 'value' => $model->get_salutation_options()),
-			array('form_type' => 'select', 'name' => 'subscriber_academic_degree', 'description' => 'Subscriber academic degree', 'value' => $model->get_academic_degree_options()),
-			array('form_type' => 'text', 'name' => 'subscriber_firstname', 'description' => 'Subscriber firstname'),
-			array('form_type' => 'text', 'name' => 'subscriber_lastname', 'description' => 'Subscriber lastname'),
-			array('form_type' => 'text', 'name' => 'subscriber_street', 'description' => 'Subscriber street'),
-			array('form_type' => 'text', 'name' => 'subscriber_house_number', 'description' => 'Subscriber house number'),
-			array('form_type' => 'text', 'name' => 'subscriber_zip', 'description' => 'Subscriber zipcode'),
-			array('form_type' => 'text', 'name' => 'subscriber_city', 'description' => 'Subscriber city'),
+			array('form_type' => 'text', 'name' => 'subscriber_company', 'description' => 'Subscriber company', 'value' => $subscriber['company']),
+			array('form_type' => 'select', 'name' => 'subscriber_salutation', 'description' => 'Subscriber salutation', 'value' => $model->get_salutation_options(), 'options' => array('selected' => $subscriber['salutation'])),
+			array('form_type' => 'select', 'name' => 'subscriber_academic_degree', 'description' => 'Subscriber academic degree', 'value' => $model->get_academic_degree_options(), 'options' => array('selected' => $subscriber['academic_degree'])),
+			array('form_type' => 'text', 'name' => 'subscriber_firstname', 'description' => 'Subscriber firstname', 'value' => $subscriber['firstname']),
+			array('form_type' => 'text', 'name' => 'subscriber_lastname', 'description' => 'Subscriber lastname', 'value' => $subscriber['lastname']),
+			array('form_type' => 'text', 'name' => 'subscriber_street', 'description' => 'Subscriber street', 'value' => $subscriber['street']),
+			array('form_type' => 'text', 'name' => 'subscriber_house_number', 'description' => 'Subscriber house number', 'value' => $subscriber['house_number']),
+			array('form_type' => 'text', 'name' => 'subscriber_zip', 'description' => 'Subscriber zipcode', 'value' => $subscriber['zip']),
+			array('form_type' => 'text', 'name' => 'subscriber_city', 'description' => 'Subscriber city', 'value' => $subscriber['city']),
 
 		);
 	}
