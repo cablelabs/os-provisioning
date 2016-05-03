@@ -151,17 +151,57 @@ class Phonenumber extends \BaseModel {
  */
 class PhonenumberObserver
 {
+
+	/**
+	 * For Envia API we create username and login if not given.
+	 * Otherwise Envia will do this – so we would have to ask for this data…
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _create_login_data($phone) {
+
+		$changed = false;
+
+		if ($phone->module_is_active('provvoipenvia') && ($phone->mta->type == 'sip')) {
+
+			if (!boolval($phone->password)) {
+				$phone->password = \Acme\php\Password::generate_password(15, 'envia');
+				$changed = true;
+			}
+
+			// username at Envia defaults to prefixnumber + number – we also do so
+			if (!boolval($phone->username)) {
+				$phone->username = $phone->prefix_number.$phone->number;
+				$changed = true;
+			}
+
+		}
+
+		if ($changed) {
+			$phone->save();
+		}
+
+	}
+
+
 	public function created($phone)
 	{
+		$this->_create_login_data($phone);
+
+		$phone->mta->make_configfile();
+		$phone->mta->modem->restart_modem();
+
+	}
+
+
+	public function updated($phone)
+	{
+		$this->_create_login_data($phone);
+
 		$phone->mta->make_configfile();
 		$phone->mta->modem->restart_modem();
 	}
 
-	public function updated($phone)
-	{
-		$phone->mta->make_configfile();
-		$phone->mta->modem->restart_modem();
-	}
 
 	public function deleted($phone)
 	{
