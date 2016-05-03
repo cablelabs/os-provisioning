@@ -627,22 +627,40 @@ class BaseModel extends Eloquent
 
 
 	/**
-	 * Checks if model was valid in last month - used for Billing
+	 * Checks if model is valid in specific time (used for Billing)
 	 *
-	 * @param $start_field, $end_field  	name of sql column of models start & end date
-	 * @return true  						if model had valid dates during last month
+	 * @param string 	$timespan			year / month / now
+	 * @return Bool  						true, if model had valid dates during last month / year or is actually valid (now)
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function check_validity($start_field = '', $end_field = '')
+	public function check_validity($timespan = 'month')
 	{
-		$start = $this->{$start_field} && $this->{$start_field} != '0000-00-00' ? $this->{$start_field} : $this->created_at->toDateString();
-		$start = strtotime($start);
-		$end = $this->{$end_field} && $this->{$end_field} != '0000-00-00' ? strtotime($this->{$end_field}) : null;
+		// $start = $this->{$start_field} && $this->{$start_field} != '0000-00-00' ? $this->{$start_field} : $this->created_at->toDateString();
+		// $start = strtotime($start);
+		// $end = $this->{$end_field} && $this->{$end_field} != '0000-00-00' ? strtotime($this->{$end_field}) : null;
 
-		// dd($start, $end, date('Y-m-d', $start), date('Y-m-d', $end), $start < strtotime(date('Y-m-01')) && (!$end || $end > strtotime(date('Y-m-01'), strtotime('first day of last month'))));
-		return $start < strtotime(date('Y-m-01')) && (!$end || $end > strtotime(date('Y-m-01'), strtotime('first day of last month')));
+		$start = $this->get_start_time();
+		$end   = $this->get_end_time();
+
+		switch ($timespan)
+		{
+			case 'month':
+				return $start < strtotime(date('Y-m-01')) && (!$end || $end >= strtotime(date('Y-m-01'), strtotime('first day of last month')));
+
+			case 'year':			
+				return $start < strtotime(date('Y-01-01')) && (!$end || $end >= strtotime(date('Y-01-01'), strtotime('last year')));
+
+			case 'now':
+				$now = time();
+				return $start <= $now && (!$end || $end > $now);
+
+			default:
+				\Log::error('Bad timespan param used in function '.__FUNCTION__);
+				break;
+		}
 	}
+
 
 }
 

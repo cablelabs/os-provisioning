@@ -399,8 +399,8 @@ class Contract extends \BaseModel {
 	/**
 	 * Returns (qos/voip id of the) last created actual valid tariff assigned to this contract
 	 *
-	 * @param $type 	product type (e.g. 'Internet', 'Voip')
-	 * @return $item
+	 * @param Enum 	$type 	product type (e.g. 'Internet', 'Voip', 'TV')
+	 * @return object 	item
 	 * @author Nino Ryschawy
 	 */
 	public function get_valid_tariff($type)
@@ -408,21 +408,22 @@ class Contract extends \BaseModel {
 		if (!$this->module_is_active('Billingbase'))
 			return null;
 
-		$prod_ids = Modules\BillingBase\Entities\Product::get_product_ids($type);
-		$last 	= \Carbon\Carbon::createFromTimestamp(null);
+		$prod_ids = \Modules\BillingBase\Entities\Product::get_product_ids($type);
+		$last 	= 0;
 		$tariff = null;			// item
 
 		foreach ($this->items as $item)
 		{
-			if (in_array($item->product->id, $prod_ids) && $item->check_validity())
+			if (in_array($item->product->id, $prod_ids) && $item->actual_valid())
 			{
 				if ($tariff)
 					\Log::warning("Multiple valid $type tariffs active for Contract ".$this->number, [$this->id]);
 
-				if ($item->created_at->gt($last))
+				$start = $item->get_start_time();
+				if ($start > $last)
 				{
 					$tariff = $item;
-					$last = $item->created_at;
+					$last   = $start;
 				}
 			}
 		}
@@ -486,11 +487,26 @@ class Contract extends \BaseModel {
 	}
 
 
-
-	// Checks if item has valid dates in last month
-	public function check_validity($start = '', $end = '')
+	/**
+	 * Returns time in seconds after 1970 of start of item - Note: contract_start field has higher priority than created_at
+	 *
+	 * @return integer
+	 */
+	public function get_start_time()
 	{
-		return parent::check_validity('contract_start', 'contract_end');
+		$date = $this->contract_start && $this->contract_start != '0000-00-00' ? $this->contract_start : $this->created_at->toDateString();
+		return strtotime($date);
+	}
+
+
+	/**
+	 * Returns time in seconds after 1970 of end of item - Note: contract_start field has higher priority than created_at
+	 *
+	 * @return integer
+	 */
+	public function get_end_time()
+	{
+		return $this->contract_end && $this->contract_end != '0000-00-00' ? strtotime($this->contract_end) : null;
 	}
 
 
@@ -498,17 +514,24 @@ class Contract extends \BaseModel {
 	public function get_valid_mandate()
 	{
 		$mandate = null;
+		$last 	 = 0;
 
 		foreach ($this->sepamandates as $m)
 		{
-			if (!is_object($m))
-				break;
+			if (!is_object($m) || !$m->check_validity('now'))
+				continue;
 
-			if ($m->check_validity())
+			if ($mandate)
+				\Log::warning("Multiple valid Sepa Mandates active for Contract ".$this->number, [$this->id]);
+
+			$start = $m->get_start_time();
+
+			if ($start > $last)
 			{
 				$mandate = $m;
-				break;
+				$last   = $start;
 			}
+
 		}
 
 		return $mandate;
