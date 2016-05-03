@@ -34,8 +34,8 @@ class BaseController extends Controller {
 
 	// Auth Vars
 	// TODO: move to Auth API
-	protected $permissions = null;
-	protected $permission_cores = array('model', 'net');
+	// protected $permissions = null;
+	// protected $permission_cores = array('model', 'net');
 
 
 	/**
@@ -71,95 +71,25 @@ class BaseController extends Controller {
 	}
 
 
-// Auth Stuff: TODO: move to a separate Controller
 
-	/**
-	 * Get permissions array from model.
-	 * This will overwrite an existing array.
-	 *
-	 * @throws NoAuthenticatedUserError if no user is logged in
-	 */
-	protected function _get_permissions() {
-
-		// get the currently authenticated user
-		$cur_user = Auth::user();
-
-		$this->permissions = array();
-
-		// no user logged in
-		if (is_null($cur_user)) {
-			throw new NoAuthenticateduserError("No user logged in");
-		}
-
-		// get permissions for each role from model
-		$this->permissions['model'] = $cur_user->get_model_permissions();
-	}
-
-
-	/**
-	 * Check if user has permission to continue.
-	 * Use this method to protect your methods
-	 *
-	 * @author Patrick Reichel
-	 *
-	 * @param $access [view|create|edit|delete]
-	 * @param $model_to_check model path and name (in format as is stored in database); use current model if not given
-	 *
-	 * @throws NoAuthenticatedUserError if no user is logged in
-	 * @throws NoModelPermissionError if user is not allowed to acces the model
-	 * @throws InvalidPermissionsRequest if permission request is invalid
-	 * @throws InsufficientRightsError if user has not the specific right needed to perform an action
-	 */
-	protected function _check_permissions($access, $model_to_check=null) {
-
-		// get the currently authenticated user
-		$cur_user = Auth::user();
-
-		// if no model is given: use current model
-		if (is_null($model_to_check)) {
-			$model_to_check = $this->get_model_name();
-		}
-
-		// no user logged in
-		if (is_null($cur_user)) {
-			throw new AuthExceptions('Login Required');
-		}
-
-		// build permissions array for easy access to user rights
-		if (is_null($this->permissions)) {
-			$this->_get_permissions();
-		}
-
-		// check model rights
-		if (!array_key_exists($model_to_check, $this->permissions['model'])) {
-			throw new AuthExceptions('Access to model '.$model_to_check.' not allowed for user '.$cur_user->login_name.'.');
-		}
-		if (!array_key_exists($access, $this->permissions['model'][$model_to_check])) {
-			throw new AuthExceptions('Something went wrong asking for '.$access.' right in '.$model_to_check.' for user '.$cur_user->login_name.'.');
-		}
-		if ($this->permissions['model'][$model_to_check][$access] == 0) {
-			throw new AuthExceptions('User '.$cur_user->login_name.' is not allowed to '.$access.' in '.$model_to_check.'.');
-		}
-
-		// TODO: check net rights
-	}
-
-
-// Class Relation Functions: TODO: move to a separate Controller (if possible?)
+// Class Relation Functions:
+	// TODO: - move to a separate Controller (if possible?)
+	//       - make all relation functions static, which has the advantage that we can use them in static- and non-static context
 
 	/**
 	 * Gets class name
 	 * @param
 	 * @return
 	 */
-	protected function get_model_name()
+	protected static function get_model_name()
 	{
 		return explode ('Controller', explode ('\\', explode ('@', Route::getCurrentRoute()->getActionName())[0])[3])[0];
 	}
 
+
 	protected function get_model_obj ()
 	{
-		$classname = $this->get_model_name();
+		$classname = static::get_model_name();
 
 		if (!$classname)
 			return null;
@@ -194,7 +124,7 @@ class BaseController extends Controller {
 
 	protected function get_view_name()
 	{
-		return explode ('\\', $this->get_model_name())[0];
+		return explode ('\\', static::get_model_name())[0];
 	}
 
 	protected function get_view_var()
@@ -204,7 +134,7 @@ class BaseController extends Controller {
 
 	protected function get_route_name()
 	{
-		return explode('\\', $this->get_model_name())[0];
+		return explode('\\', static::get_model_name())[0];
 	}
 
 	public static function get_config_modules()
@@ -370,7 +300,7 @@ class BaseController extends Controller {
 			$a['route_name'] = $this->get_route_name();
 
 		if(!isset($a['model_name']))
-			$a['model_name'] = $this->get_model_name();
+			$a['model_name'] = static::get_model_name();
 
 		if(!isset($a['view_header']))
 			$a['view_header'] = $model->view_headline();
@@ -502,12 +432,7 @@ class BaseController extends Controller {
 	 */
 	public function index()
 	{
-		try {
-			$this->_check_permissions("view");
-		}
-		catch (Exceptions $ex) {
-			throw new AuthExceptions($e->getMessage());
-		}
+		BaseAuthController::auth_check('view', $this->get_model_name());
 
 		$obj = $this->get_model_obj();
 
@@ -536,12 +461,7 @@ class BaseController extends Controller {
 	 */
 	public function create()
 	{
-		try {
-			$this->_check_permissions("create");
-		}
-		catch (PermissionDeniedError $ex) {
-			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
-		}
+		BaseAuthController::auth_check('create', $this->get_model_name());
 
 		$obj = $this->get_model_obj();
 
@@ -584,12 +504,7 @@ class BaseController extends Controller {
 	 */
 	protected function store($redirect = true)
 	{
-		try {
-			$this->_check_permissions("create");
-		}
-		catch (PermissionDeniedError $ex) {
-			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
-		}
+		BaseAuthController::auth_check('create', $this->get_model_name());
 
 		// dd(Input::all());
 		$obj = $this->get_model_obj();
@@ -637,13 +552,7 @@ class BaseController extends Controller {
 	 */
 	public function edit($id)
 	{
-		try {
-			// this needs view rights; edit rights are checked in store/update methods!
-			$this->_check_permissions("view");
-		}
-		catch (PermissionDeniedError $ex) {
-			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
-		}
+		BaseAuthController::auth_check('view', $this->get_model_name());
 
 		$obj = $this->get_model_obj();
 		//${$this->get_view_var()} = $obj->findOrFail($id);
@@ -683,13 +592,7 @@ class BaseController extends Controller {
 	 */
 	public function update($id)
 	{
-		try {
-			$this->_check_permissions("edit");
-		}
-		catch (PermissionDeniedError $ex) {
-			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
-		}
-
+		BaseAuthController::auth_check('edit', $this->get_model_name());
 		// dd(Input::all());
 
 		$obj = $this->get_model_obj()->findOrFail($id);
@@ -732,12 +635,7 @@ class BaseController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		try {
-			$this->_check_permissions("delete");
-		}
-		catch (PermissionDeniedError $ex) {
-			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
-		}
+		BaseAuthController::auth_check('delete', $this->get_model_name());
 
 		if ($id == 0)
 		{

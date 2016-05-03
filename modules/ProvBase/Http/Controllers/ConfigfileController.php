@@ -119,12 +119,7 @@ class ConfigfileController extends \BaseModuleController {
 	 */
 	public function index()
 	{
-		try {
-			$this->_check_permissions("view");
-		}
-		catch (Exceptions $ex) {
-			throw new AuthExceptions($e->getMessage());
-		}
+		\App\Http\Controllers\BaseAuthController::auth_check('view', $this->get_model_name());
 
 		$create_allowed = $this->index_create_allowed;
 

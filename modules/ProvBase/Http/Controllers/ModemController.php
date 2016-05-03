@@ -88,13 +88,7 @@ class ModemController extends \BaseModuleController {
 	 */
 	public function _index_todo()
 	{
-		try {
-			$this->_check_permissions("view");
-		}
-		catch (Exceptions $ex) {
-			throw new AuthExceptions($e->getMessage());
-		}
-
+		\App\Http\Controllers\BaseAuthController::auth_check('view', $this->get_model_name());
 
 		if(!$this->get_model_obj()->module_is_active ('HfcCustomer'))
 			return parent::index();

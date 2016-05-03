@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Route;
 use Module;
 
+
+// TODO: make all relation functions static, which has the advantage that we can use them in static- and non-static context
 class BaseModuleController extends BaseController {
 
 	public function __construct() {
@@ -11,41 +13,39 @@ class BaseModuleController extends BaseController {
 	}
 
 
-	public function get_mvc_path()
+	public static function get_mvc_path()
 	{
 		$a = explode('\\', Route::getCurrentRoute()->getActionName());
 		return $a[0].'\\'.$a[1];
 	}
 
 
-	protected function __get_model_name()
+	protected static function __get_model_name()
 	{
 		return explode ('Controller', explode ('\\', explode ('@', Route::getCurrentRoute()->getActionName())[0])[4])[0];
 	}
 
-	protected function get_model_name()
+	protected static function get_model_name()
 	{
 		// Note: returns namespace of Model
 		// quick and dirty :)
-		return $this->get_mvc_path().'\\Entities\\'.$this->__get_model_name();
+		return static::get_mvc_path().'\\Entities\\'.static::__get_model_name();
 	}
-
 
 	protected function get_controller_name()
 	{
 		return explode('@', Route::getCurrentRoute()->getActionName())[0];
 	}
 
-
 	protected function get_view_name()
 	{
-		return strtolower(explode ('\\', $this->get_model_name())[1]).'::'.$this->__get_model_name();
+		return strtolower(explode ('\\', static::get_model_name())[1]).'::'.static::__get_model_name();
 	}
 
 
 	protected function get_route_name()
 	{
-		return explode('\\', $this->get_model_name())[3];
+		return explode('\\', static::get_model_name())[3];
 	}
 
 	/*
