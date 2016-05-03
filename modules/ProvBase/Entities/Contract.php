@@ -9,8 +9,10 @@ class Contract extends \BaseModel {
 	// The associated SQL table for this Model
 	public $table = 'contract';
 
-	// flag if contract expires this month - used in accounting command
-	public $expires = false;
+	// temporary Variables filled during accounting command execution (Billing)
+	public $expires = false;			// flag if contract expires this month - used in accounting command
+	public $charge = [];				// total charge for each different Sepa Account with net and tax values
+
 
 	// Add your validation rules here
 	// TODO: dependencies of active modules (billing)
