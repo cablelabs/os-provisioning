@@ -20,8 +20,8 @@ class UpdatePhonenumberManagementForPhonebookEntriesTable extends BaseMigration 
 		{
 			$table->boolean('phonebook_entry')->default(0);
 			$table->boolean('reverse_search')->default(0);
-			$table->string('phonebook_publish_in_print_media');
-			$table->string('phonebook_publish_in_electronic_media');
+			$table->boolean('phonebook_publish_in_print_media');
+			$table->boolean('phonebook_publish_in_electronic_media');
 			$table->string('phonebook_directory_assistance');
 			$table->string('phonebook_entry_type');
 			$table->string('phonebook_publish_address');
@@ -66,7 +66,6 @@ class UpdatePhonenumberManagementForPhonebookEntriesTable extends BaseMigration 
 			'phonebook_zipcode',
 			'phonebook_city',
 			'phonebook_urban_district',
-			'phonebook_usage',
 			'phonebook_tag',
 		]);
 

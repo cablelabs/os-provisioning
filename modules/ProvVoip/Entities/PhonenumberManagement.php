@@ -14,6 +14,9 @@ class PhonenumberManagement extends \BaseModel {
 	{
 		return array(
 			'phonenumber_id' => 'required|exists:phonenumber,id|min:1',
+			'phonebook_directory_assistance' => 'in:N,S,J',
+			'phonebook_usage' => 'in:T,F,K',
+			TODO: rules for other special cases => write own validators to be flexible (app/extensions/validators/ExtendedValidator.php)
 		);
 	}
 
