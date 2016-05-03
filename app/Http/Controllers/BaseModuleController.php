@@ -5,7 +5,9 @@ use Route;
 use Module;
 
 
-// TODO: make all relation functions static, which has the advantage that we can use them in static- and non-static context
+/*
+ * BaseModuleController: is manly used to adapt the MVC naming to pingpong modules namespace
+ */
 class BaseModuleController extends BaseController {
 
 	public function __construct() {
@@ -32,18 +34,18 @@ class BaseModuleController extends BaseController {
 		return static::get_mvc_path().'\\Entities\\'.static::__get_model_name();
 	}
 
-	protected function get_controller_name()
+	protected static function get_controller_name()
 	{
 		return explode('@', Route::getCurrentRoute()->getActionName())[0];
 	}
 
-	protected function get_view_name()
+	protected static function get_view_name()
 	{
 		return strtolower(explode ('\\', static::get_model_name())[1]).'::'.static::__get_model_name();
 	}
 
 
-	protected function get_route_name()
+	protected static function get_route_name()
 	{
 		return explode('\\', static::get_model_name())[3];
 	}

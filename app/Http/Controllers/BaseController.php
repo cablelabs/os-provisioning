@@ -20,6 +20,9 @@ use GlobalConfig;
 use App\Exceptions\AuthExceptions;
 
 
+/*
+ * BaseController: The Basic Controller in our MVC design.
+ */
 class BaseController extends Controller {
 
 	/*
@@ -74,20 +77,13 @@ class BaseController extends Controller {
 
 // Class Relation Functions:
 	// TODO: - move to a separate Controller (if possible?)
-	//       - make all relation functions static, which has the advantage that we can use them in static- and non-static context
 
-	/**
-	 * Gets class name
-	 * @param
-	 * @return
-	 */
 	protected static function get_model_name()
 	{
 		return explode ('Controller', explode ('\\', explode ('@', Route::getCurrentRoute()->getActionName())[0])[3])[0];
 	}
 
-
-	protected function get_model_obj ()
+	protected static function get_model_obj ()
 	{
 		$classname = static::get_model_name();
 
@@ -103,14 +99,14 @@ class BaseController extends Controller {
 		return $obj;
 	}
 
-	protected function get_controller_name()
+	protected static function get_controller_name()
 	{
 		return explode('@', Route::getCurrentRoute()->getActionName())[0];
 	}
 
-	protected function get_controller_obj()
+	protected static function get_controller_obj()
 	{
-		$classname = $this->get_controller_name();
+		$classname = static::get_controller_name();
 
 		if (!$classname)
 			return null;
@@ -122,17 +118,17 @@ class BaseController extends Controller {
 		return $obj;
 	}
 
-	protected function get_view_name()
+	protected static function get_view_name()
 	{
 		return explode ('\\', static::get_model_name())[0];
 	}
 
-	protected function get_view_var()
+	protected static function get_view_var()
 	{
-		return strtolower($this->get_view_name());
+		return strtolower(static::get_view_name());
 	}
 
-	protected function get_route_name()
+	protected static function get_route_name()
 	{
 		return explode('\\', static::get_model_name())[0];
 	}
@@ -169,7 +165,7 @@ class BaseController extends Controller {
 	protected function prepare_input($data)
 	{
 		// Checkbox Unset ?
-		foreach ($this->view_form_fields($this->get_model_obj()) as $field)
+		foreach ($this->view_form_fields(static::get_model_obj()) as $field)
 		{
 			if(!isset($data[$field['name']]) && $field['form_type'] == 'checkbox')
 				$data[$field['name']] = 0;
@@ -229,7 +225,7 @@ class BaseController extends Controller {
 
 			for ($i = 0; $i < sizeof($view_var->view_has_many()); $i++)
 			{
-				array_push($c, ['name' => key($a), 'route' => $this->get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
+				array_push($c, ['name' => key($a), 'route' => static::get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
 				$b = next($a);
 			}
 
@@ -281,7 +277,7 @@ class BaseController extends Controller {
 	{
 		$a     = func_get_args()[0];
 
-		$model = $this->get_model_obj();
+		$model = static::get_model_obj();
 		if (!$model)
 			$model = new BaseModel;
 
@@ -297,7 +293,7 @@ class BaseController extends Controller {
 
 
 		if(!isset($a['route_name']))
-			$a['route_name'] = $this->get_route_name();
+			$a['route_name'] = static::get_route_name();
 
 		if(!isset($a['model_name']))
 			$a['model_name'] = static::get_model_name();
@@ -309,7 +305,7 @@ class BaseController extends Controller {
 			$a['headline'] = '';
 
 		if (!isset($a['form_update']))
-			$a['form_update'] = $this->get_route_name().'.update';
+			$a['form_update'] = static::get_route_name().'.update';
 
 		if (!isset($a['edit_left_md_size']))
 			$a['edit_left_md_size'] = $this->edit_left_md_size;
@@ -346,7 +342,7 @@ class BaseController extends Controller {
 		$ret = [];
 
 		// get the validation rules for related model object
-		$rules = $this->get_model_obj()->rules();
+		$rules = static::get_model_obj()->rules();
 
 		// for all fields
 		foreach ($fields as $field)
@@ -403,14 +399,14 @@ class BaseController extends Controller {
 		}
 		else
 		{
-			$obj       = $this->get_model_obj();
+			$obj       = static::get_model_obj();
 			$view_path = 'Generic.index';
 
-			if (View::exists($this->get_view_name().'.index'))
-				$view_path = $this->get_view_name().'.index';
+			if (View::exists(static::get_view_name().'.index'))
+				$view_path = static::get_view_name().'.index';
 		}
 
-		$create_allowed = $this->get_controller_obj()->index_create_allowed;
+		$create_allowed = static::get_controller_obj()->index_create_allowed;
 
 		// perform the search
 		foreach ($obj->getFulltextSearchResults($scope, $mode, $query, Input::get('preselect_field'), Input::get('preselect_value')) as $result)
@@ -434,20 +430,20 @@ class BaseController extends Controller {
 	{
 		BaseAuthController::auth_check('view', $this->get_model_name());
 
-		$obj = $this->get_model_obj();
+		$obj = static::get_model_obj();
 
 		$view_var = $obj->index_list();
 
 		$headline  	= BaseViewController::translate($obj->view_headline().' List');
-		$create_allowed = $this->get_controller_obj()->index_create_allowed;
+		$create_allowed = static::get_controller_obj()->index_create_allowed;
 		$view_path = 'Generic.index';
 
 
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
 
-		if (View::exists($this->get_view_name().'.index'))
-			$view_path = $this->get_view_name().'.index';
+		if (View::exists(static::get_view_name().'.index'))
+			$view_path = static::get_view_name().'.index';
 
 		return View::make ($view_path, $this->compact_prep_view(compact('headline', 'view_var', 'create_allowed')));
 	}
@@ -463,12 +459,12 @@ class BaseController extends Controller {
 	{
 		BaseAuthController::auth_check('create', $this->get_model_name());
 
-		$obj = $this->get_model_obj();
+		$obj = static::get_model_obj();
 
 		// $view_header 	= 'Create '.$obj->view_headline();
 		$view_header 	= BaseViewController::translate('Create ').BaseViewController::translate($obj->view_headline());
 		// form_fields contain description of fields and the data of the fields
-		$form_fields	= BaseViewController::compute_form_fields ($this->prepare_form_fields ($this->get_controller_obj()->view_form_fields($obj), $obj), 'create');
+		$form_fields	= BaseViewController::compute_form_fields ($this->prepare_form_fields (static::get_controller_obj()->view_form_fields($obj), $obj), 'create');
 
 		// generate Link header - parse parent object from HTML GET array
 		// TODO: avoid use of HTML GET array for security considerations
@@ -480,17 +476,17 @@ class BaseController extends Controller {
 			$class      = new $class_name;
 			$view_var   = $class->find($_GET[$key]);
 		}
-		$headline = BaseViewController::compute_headline($this->get_route_name(), $view_header, $view_var);
+		$headline = BaseViewController::compute_headline(static::get_route_name(), $view_header, $view_var);
 
 
 		$view_path = 'Generic.create';
 		$form_path = 'Generic.form';
 
 		// proof if there is a special view for the calling model
-		if (View::exists($this->get_view_name().'.create'))
-			$view_path = $this->get_view_name().'.create';
-		if (View::exists($this->get_view_name().'.form'))
-			$form_path = $this->get_view_name().'.form';
+		if (View::exists(static::get_view_name().'.create'))
+			$view_path = static::get_view_name().'.create';
+		if (View::exists(static::get_view_name().'.form'))
+			$form_path = static::get_view_name().'.form';
 
 
 		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'headline')));
@@ -507,8 +503,8 @@ class BaseController extends Controller {
 		BaseAuthController::auth_check('create', $this->get_model_name());
 
 		// dd(Input::all());
-		$obj = $this->get_model_obj();
-		$controller = $this->get_controller_obj();
+		$obj = static::get_model_obj();
+		$controller = static::get_controller_obj();
 
 		// Prepare and Validate Input
 		$data 		= $controller->prepare_input(Input::all());
@@ -526,7 +522,7 @@ class BaseController extends Controller {
 		if (!$redirect)
 			return $id;
 
-		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Created!');
+		return Redirect::route(static::get_route_name().'.edit', $id)->with('message', 'Created!');
 	}
 
 
@@ -554,14 +550,14 @@ class BaseController extends Controller {
 	{
 		BaseAuthController::auth_check('view', $this->get_model_name());
 
-		$obj = $this->get_model_obj();
+		$obj = static::get_model_obj();
 		//${$this->get_view_var()} = $obj->findOrFail($id);
 
 		// transfer model_name, view_header, view_var
 		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($obj->view_headline());
 		$view_var 		= $obj->findOrFail($id);
-		$form_fields	= BaseViewController::compute_form_fields ($this->prepare_form_fields ($this->get_controller_obj()->view_form_fields($view_var), $view_var), 'edit');
-		$headline       = BaseViewController::compute_headline($this->get_route_name(), $view_header, $view_var);
+		$form_fields	= BaseViewController::compute_form_fields ($this->prepare_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var), 'edit');
+		$headline       = BaseViewController::compute_headline(static::get_route_name(), $view_header, $view_var);
 		$panel_right    = $this->prepare_breadcrumb($view_var);
 		$relations      = BaseViewController::prep_right_panels($view_var);
 
@@ -572,10 +568,10 @@ class BaseController extends Controller {
 		$form_path = 'Generic.form';
 
 		// proof if there are special views for the calling model
-		if (View::exists($this->get_view_name().'.edit'))
-			$view_path = $this->get_view_name().'.edit';
-		if (View::exists($this->get_view_name().'.form'))
-			$form_path = $this->get_view_name().'.form';
+		if (View::exists(static::get_view_name().'.edit'))
+			$view_path = static::get_view_name().'.edit';
+		if (View::exists(static::get_view_name().'.form'))
+			$form_path = static::get_view_name().'.form';
 
 
 		$config_routes = BaseController::get_config_modules();
@@ -595,8 +591,8 @@ class BaseController extends Controller {
 		BaseAuthController::auth_check('edit', $this->get_model_name());
 		// dd(Input::all());
 
-		$obj = $this->get_model_obj()->findOrFail($id);
-		$controller = $this->get_controller_obj();
+		$obj = static::get_model_obj()->findOrFail($id);
+		$controller = static::get_controller_obj();
 
 		// Prepare and Validate Input
 		$data      = $controller->prepare_input(Input::all());
@@ -622,7 +618,7 @@ class BaseController extends Controller {
 		$obj->update($data);
 
 
-		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Updated!');
+		return Redirect::route(static::get_route_name().'.edit', $id)->with('message', 'Updated!');
 	}
 
 
@@ -641,10 +637,10 @@ class BaseController extends Controller {
 		{
 			// bulk delete
 			foreach (Input::all()['ids'] as $id => $val)
-				$this->get_model_obj()->findOrFail($id)->delete();
+				static::get_model_obj()->findOrFail($id)->delete();
 		}
 		else
-			$this->get_model_obj()->findOrFail($id)->delete();
+			static::get_model_obj()->findOrFail($id)->delete();
 
 		return Redirect::back();
 	}

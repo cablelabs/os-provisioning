@@ -3,19 +3,9 @@
 namespace App\Http\Controllers;
 
 use App;
-use Module;
-use Config;
-use File;
-use View;
-use Validator;
-use Input;
-use Redirect;
-use Route;
-use BaseModel;
 use Auth;
 use NoAuthenticateduserError;
 use Log;
-use GlobalConfig;
 
 use App\Exceptions\AuthExceptions;
 

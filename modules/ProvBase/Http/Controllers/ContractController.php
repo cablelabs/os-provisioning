@@ -148,7 +148,7 @@ class ContractController extends \BaseModuleController {
 			'voip_contract_end',
 		);
 
-		foreach ($this->view_form_fields($this->get_model_obj()) as $field) {
+		foreach ($this->view_form_fields(static::get_model_obj()) as $field) {
 			if (array_key_exists($field['name'], $data)) {
 				if (array_search($field['name'], $nullable_fields) !== False) {
 					if ($data[$field['name']] == '') {
