@@ -22,6 +22,11 @@ use App\Exceptions\AuthExceptions;
 
 class BaseAuthController extends Controller {
 
+	// The authentication array
+	// This is manly used/required for caching/speed-up
+	private static $permissions;
+
+
 	/**
 	 * Get permissions array from model.
 	 * This will overwrite an existing array.
@@ -29,6 +34,9 @@ class BaseAuthController extends Controller {
 	 * @throws NoAuthenticatedUserError if no user is logged in
 	 */
 	protected static function _get_permissions() {
+
+		if (self::$permissions)
+			return self::$permissions;
 
 		// get the currently authenticated user
 		$cur_user = Auth::user();
@@ -38,8 +46,11 @@ class BaseAuthController extends Controller {
 			throw new NoAuthenticateduserError("No user logged in");
 		}
 
+		Log::debug('get_model_permissions() - parse user auth datas from sql');
+		self::$permissions = $cur_user->get_model_permissions();
+
 		// get permissions for each role from model
-		return $cur_user->get_model_permissions();
+		return self::$permissions;
 	}
 
 
