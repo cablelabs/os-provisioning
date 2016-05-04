@@ -3,10 +3,10 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class UpdatePhonenumberManagementForPhonebookEntriesTable extends BaseMigration {
+class CreatePhonebookEntryTable extends BaseMigration {
 
 	// name of the table to create
-	protected $tablename = "phonenumbermanagement";
+	protected $tablename = "phonebookentry";
 
 
 	/**
@@ -16,8 +16,10 @@ class UpdatePhonenumberManagementForPhonebookEntriesTable extends BaseMigration 
 	 */
 	public function up()
 	{
-		Schema::table($this->tablename, function(Blueprint $table)
+		Schema::create($this->tablename, function(Blueprint $table)
 		{
+			$this->up_table_generic($table);
+
 			$table->boolean('phonebook_entry')->default(0);
 			$table->boolean('reverse_search')->default(0);
 			$table->boolean('phonebook_publish_in_print_media');
@@ -45,14 +47,6 @@ class UpdatePhonenumberManagementForPhonebookEntriesTable extends BaseMigration 
 		});
 
 		$this->set_fim_fields([
-			'subscriber_company',
-			'subscriber_firstname',
-			'subscriber_lastname',
-			'subscriber_street',
-			'subscriber_house_number',
-			'subscriber_zip',
-			'subscriber_city',
-
 			'phonebook_lastname',
 			'phonebook_firstname',
 			'phonebook_company',
@@ -69,8 +63,6 @@ class UpdatePhonenumberManagementForPhonebookEntriesTable extends BaseMigration 
 			'phonebook_tag',
 		]);
 
-		$this->set_auto_increment(300000);
-
 		return parent::up();
 	}
 
@@ -84,5 +76,4 @@ class UpdatePhonenumberManagementForPhonebookEntriesTable extends BaseMigration 
 	{
 		Schema::drop($this->tablename);
 	}
-
 }
