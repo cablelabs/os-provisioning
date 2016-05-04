@@ -68,7 +68,7 @@ class BaseController extends Controller {
 	 * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
 	 * @author: Torsten Schmidt
 	 */
-	public function get_form_breadcrumb($view_var)
+	protected function get_form_breadcrumb($view_var)
 	{
 		return null;
 	}
@@ -428,7 +428,7 @@ class BaseController extends Controller {
 	 * @param redirect: if set to false returns id of the new created object (default: true)
 	 * @return: html redirection to edit page (or if param $redirect is false the new added object id)
 	 */
-	protected function store($redirect = true)
+	public function store($redirect = true)
 	{
 		BaseAuthController::auth_check('create', $this->get_model_name());
 

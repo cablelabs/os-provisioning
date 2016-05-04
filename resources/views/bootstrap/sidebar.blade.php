@@ -64,8 +64,8 @@
     <!-- end #sidebar -->
 
 
-
-@if(isset($panel_right))
+<!-- java script dynamic panel on right top side under tabs/breadcrumbs -->
+@if(isset($panel_right_extra))
     <!-- begin theme-panel -->
     <div class="theme-panel">
       <a href="javascript:;" data-click="theme-panel-expand" class="theme-collapse-btn">
@@ -75,7 +75,7 @@
         <h5 class="m-t-0">Menu</h5>
 
         <h4>
-          @foreach ($panel_right as $menu)
+          @foreach ($panel_right_extra as $menu)
             <?php
               $route = $menu['route'];
               $name  = $menu['name'];

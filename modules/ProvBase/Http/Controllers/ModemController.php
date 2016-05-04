@@ -62,7 +62,7 @@ class ModemController extends \BaseModuleController {
 	 * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
 	 * @author: Torsten Schmidt
 	 */
-	public function get_form_breadcrumb($view_var)
+	protected function get_form_breadcrumb($view_var)
 	{
 		$a = [['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]],
 				['name' => 'Analyses', 'route' => 'Provmon.index', 'link' => [$view_var->id]],

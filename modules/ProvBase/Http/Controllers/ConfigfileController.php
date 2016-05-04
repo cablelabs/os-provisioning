@@ -142,7 +142,7 @@ class ConfigfileController extends \BaseModuleController {
 	 * Overwrites the base method => we need to handle file uploads
 	 * @author Patrick Reichel
 	 */
-	protected function store ($redirect = true) {
+	public function store ($redirect = true) {
 
 		// check and handle uploaded firmware files
 		$this->handle_file_upload('firmware', '/tftpboot/fw/');
