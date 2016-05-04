@@ -16,7 +16,7 @@ class PhonenumberManagement extends \BaseModel {
 			'phonenumber_id' => 'required|exists:phonenumber,id|min:1',
 			'phonebook_directory_assistance' => 'in:N,S,J',
 			'phonebook_usage' => 'in:T,F,K',
-			TODO: rules for other special cases => write own validators to be flexible (app/extensions/validators/ExtendedValidator.php)
+			/* TODO: rules for other special cases => write own validators to be flexible (app/extensions/validators/ExtendedValidator.php) */
 		);
 	}
 
@@ -67,7 +67,10 @@ class PhonenumberManagement extends \BaseModel {
 	// belongs to an phonenumber
 	public function view_belongs_to ()
 	{
-		return $this->phonenumber;
+		return array(
+			$this->phonenumber,
+			$this->phonebookentry,
+		);
 	}
 
 	/**
@@ -129,6 +132,16 @@ class PhonenumberManagement extends \BaseModel {
 		return null;
 	}
 
+
+	/**
+	 * Get relation to trc classes.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function phonebookentry() {
+
+		return $this->hasOne('Modules\ProvVoip\Entities\PhonebookEntry', 'phonebookentry');
+	}
 
 	/**
 	 * Helper to define possible salutation values.

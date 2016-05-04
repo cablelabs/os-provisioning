@@ -142,7 +142,7 @@ class Contract extends \BaseModel {
      */
     public function generate_password($length = 10)
     {
-        $this->password = \Acme\php\Password::generate_password();
+        $this->password = \Acme\php\Password::generate_password($length);
     }
 
 
