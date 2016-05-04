@@ -629,6 +629,8 @@ class BaseModel extends Eloquent
 	/**
 	 * Checks if model is valid in specific time (used for Billing)
 	 *
+	 * Note: Model must have a get_start_time- & get_end_time-Function defined
+	 *
 	 * @param string 	$timespan			year / month / now
 	 * @return Bool  						true, if model had valid dates during last month / year or is actually valid (now)
 	 *
@@ -636,10 +638,6 @@ class BaseModel extends Eloquent
 	 */
 	public function check_validity($timespan = 'month')
 	{
-		// $start = $this->{$start_field} && $this->{$start_field} != '0000-00-00' ? $this->{$start_field} : $this->created_at->toDateString();
-		// $start = strtotime($start);
-		// $end = $this->{$end_field} && $this->{$end_field} != '0000-00-00' ? strtotime($this->{$end_field}) : null;
-
 		$start = $this->get_start_time();
 		$end   = $this->get_end_time();
 

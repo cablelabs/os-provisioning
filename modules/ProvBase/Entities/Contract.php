@@ -333,9 +333,8 @@ class Contract extends \BaseModel {
 		if (!$this->module_is_active('Billingbase'))
 			return;
 
-		$qos_id = 0;
-		if ($this->get_valid_tariff('Internet'))
-			$qos_id = $this->get_valid_tariff('Internet')->product->qos_id;
+		$qos_id = ($tariff = $this->get_valid_tariff('Internet')) ? $tariff->product->qos_id : 0;
+
 		if ($this->qos_id != $qos_id)
 		{
 			\Log::Info("daily: contract: changed qos_id (tariff) to $qos_id for Contract ".$this->number, [$this->id]);
@@ -344,9 +343,8 @@ class Contract extends \BaseModel {
 			$this->push_to_modems();
 		}
 
-		$voip_id = 0;
-		if ($this->get_valid_tariff('Voip'))
-			$voip_id = $this->get_valid_tariff('Voip')->product->voip_id;
+		$voip_id = ($tariff = $this->get_valid_tariff('Voip')) ? $tariff->product->voip_id : 0;
+
 		if ($this->voip_id != $voip_id)
 		{
 			\Log::Info("daily: contract: changed voip_id (tariff) to $voip_id for Contract ".$this->number, [$this->id]);
@@ -414,7 +412,7 @@ class Contract extends \BaseModel {
 
 		foreach ($this->items as $item)
 		{
-			if (in_array($item->product->id, $prod_ids) && $item->actual_valid())
+			if (in_array($item->product->id, $prod_ids) && $item->check_validity('now'))
 			{
 				if ($tariff)
 					\Log::warning("Multiple valid $type tariffs active for Contract ".$this->number, [$this->id]);
@@ -488,9 +486,9 @@ class Contract extends \BaseModel {
 
 
 	/**
-	 * Returns time in seconds after 1970 of start of item - Note: contract_start field has higher priority than created_at
+	 * Returns start time of item - Note: contract_start field has higher priority than created_at
 	 *
-	 * @return integer
+	 * @return integer 		time in seconds after 1970
 	 */
 	public function get_start_time()
 	{
@@ -500,9 +498,9 @@ class Contract extends \BaseModel {
 
 
 	/**
-	 * Returns time in seconds after 1970 of end of item - Note: contract_start field has higher priority than created_at
+	 * Returns start time of item - Note: contract_start field has higher priority than created_at
 	 *
-	 * @return integer
+	 * @return integer 		time in seconds after 1970
 	 */
 	public function get_end_time()
 	{
@@ -510,15 +508,22 @@ class Contract extends \BaseModel {
 	}
 
 
-	// get actual valid sepa mandate
-	public function get_valid_mandate()
+	/**
+	 * Returns valid sepa mandate for specific timespan
+	 *
+	 * @param String 	Timespan - LAST (!!) 'year'/'month' or 'now
+	 * @return Object 	Sepa Mandate
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function get_valid_mandate($timespan = 'month')
 	{
 		$mandate = null;
 		$last 	 = 0;
 
 		foreach ($this->sepamandates as $m)
 		{
-			if (!is_object($m) || !$m->check_validity('now'))
+			if (!is_object($m) || !$m->check_validity($timespan))
 				continue;
 
 			if ($mandate)
