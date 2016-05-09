@@ -69,7 +69,7 @@ class ModemController extends \BaseModuleController {
 				['name' => 'CPE-Analysis', 'route' => 'Provmon.cpe', 'link' => [$view_var->id]]];
 
 		// MTA: only show MTA analysis if Modem has MTAs
-		if (isset($view_var->mtas[0]))
+		if (isset($view_var->mtas) && isset($view_var->mtas[0]))
 			array_push($a, ['name' => 'MTA-Analysis', 'route' => 'Provmon.mta', 'link' => [$view_var->id]]);
 
 		return $a;
