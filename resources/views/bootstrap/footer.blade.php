@@ -10,6 +10,7 @@
         <script src="{{asset('components/assets-admin/crossbrowserjs/excanvas.min.js')}}"></script>
       <![endif]-->
       <script src="{{asset('components/assets-admin/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
+      <script src="{{asset('components/assets-admin/plugins/select2-v4/vendor/select2/select2/dist/js/select2.js')}}"></script>
       <!-- ================== END BASE JS ================== -->
 
       <!-- ================== BEGIN PAGE LEVEL JS ================== -->
@@ -21,6 +22,9 @@
         $(document).ready(function() {
           App.init();
           <!-- Dashboard.init(); -->
+
+          <!-- Select2 Init - intelligent HTML select -->
+          $("select").select2();
         });
       </script>
 
