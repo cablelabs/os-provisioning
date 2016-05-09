@@ -244,7 +244,7 @@ class FormBuilder extends CollectiveFormBuilder {
 
 
         // Return the formatted error message, if the form element has any.
-        return $errors->first($this->transformKey($name), '<p align="right" class="help-block">:message</p>');
+        return $errors->first($this->transformKey($name), '<p align="left" class="help-block">:message</p>');
     }
 
 
@@ -289,7 +289,7 @@ class FormBuilder extends CollectiveFormBuilder {
         $errors = $this->getFormattedErrors($name);
 
         // Append the errors to the group and close it out.
-        return $errors.'</div>'.$this->closeDivClass();
+        return '<div class=col-md-3></div><div class=col-md-8>'.$errors.'</div></div>'.$this->closeDivClass();
     }
 
 
