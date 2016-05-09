@@ -18,13 +18,27 @@
       <!-- ================== END PAGE LEVEL JS ================== -->
 
 
-      <script>
+      <script type="text/javascript">
+
+        /*
+         * global document ready function
+         */
         $(document).ready(function() {
           App.init();
-          <!-- Dashboard.init(); -->
+          // Dashboard.init();
 
-          <!-- Select2 Init - intelligent HTML select -->
+          // Select2 Init - intelligent HTML select
           $("select").select2();
         });
-      </script>
 
+
+        /*
+         * Table on-hover click
+         * NOTE: This automatically adds on-hover click to all table 'tr' elements which are in class 'ClickableRow'.
+         *       Please note that the table needs to be in class 'table-hover' for visual marking.
+         */
+        $('.ClickableRow').click(function () {
+          window.location = $(this).find('a').attr("href");
+        });
+
+      </script>

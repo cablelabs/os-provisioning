@@ -47,7 +47,7 @@
 				<h4>Matches for <tt>'{{ $query }}'</tt> in <tt>{{ $scope }}</tt></h4>
 			@endif
 
-			<table class="table">
+			<table class="table table-hover">
 
 				<!-- TODO: add concept to parse header fields for index table - like firstname, lastname, ..-->
 				<thead>
@@ -64,7 +64,7 @@
 
 				<!-- Index Table Entries -->
 				@foreach ($view_var as $object)
-					<tr class={{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}>
+					<tr class="{{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}} ClickableRow">
 						<td width=50> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple']) }} </td>
 
 						<!-- Parse view_index_label()  -->
@@ -88,4 +88,5 @@
 		{{ Form::submit('Delete', ['!class' => 'btn btn-danger btn-primary m-r-5', 'style' => 'simple']) }}
 		{{ Form::close() }}
 	@DivClose()
+
 @stop
