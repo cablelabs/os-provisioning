@@ -28,7 +28,7 @@ class AuthController extends BaseController {
 	{
 		// If ProvBase is not installed redirect to Config Page
 		$bm = new \BaseModel;
-		if (!$bm->module_is_active ('ProvBase'))
+		if (!\PPModule::is_active ('ProvBase'))
 			return Redirect::to('Config');
 
 		// Redirect to Default Page

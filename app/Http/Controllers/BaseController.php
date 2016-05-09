@@ -284,7 +284,7 @@ class BaseController extends Controller {
 		if(!isset($a['networks']))
 		{
 			$a['networks'] = [];
-			if ($model->module_is_active('HfcBase'))
+			if (\PPModule::is_active('HfcBase'))
 				$a['networks'] = \Modules\HfcBase\Entities\Tree::get_all_net();
 		}
 

@@ -62,7 +62,7 @@ class Contract extends \BaseModel {
 	// View Relation.
 	public function view_has_many()
 	{
-		if ($this->module_is_active('billingbase'))
+		if (\PPModule::is_active('billingbase'))
 		{
 			$ret['Base']['Modem'] = $this->modems;
 			$ret['Base']['Item']        = $this->items;
@@ -71,13 +71,13 @@ class Contract extends \BaseModel {
 
 		$ret['Technical']['Modem'] = $this->modems;
 
-		if ($this->module_is_active('billingbase'))
+		if (\PPModule::is_active('billingbase'))
 		{
 			$ret['Billing']['Item']        = $this->items;
 			$ret['Billing']['SepaMandate'] = $this->sepamandates;
 		}
 
-		if ($this->module_is_active('provvoipenvia'))
+		if (\PPModule::is_active('provvoipenvia'))
 		{
 			$ret['Envia']['EnviaOrder'] = $this->external_orders;
 
@@ -105,7 +105,7 @@ class Contract extends \BaseModel {
 	 */
 	public function external_orders() {
 
-		if ($this->module_is_active('provvoipenvia')) {
+		if (\PPModule::is_active('provvoipenvia')) {
 			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment');
 		}
 
@@ -114,28 +114,28 @@ class Contract extends \BaseModel {
 
 	public function items()
 	{
-		if ($this->module_is_active('billingbase'))
+		if (\PPModule::is_active('billingbase'))
 			return $this->hasMany('Modules\BillingBase\Entities\Item');
 		return null;
 	}
 
 	public function sepamandates()
 	{
-		if ($this->module_is_active('billingbase'))
+		if (\PPModule::is_active('billingbase'))
 			return $this->hasMany('Modules\BillingBase\Entities\SepaMandate');
 		return null;
 	}
 
 	public function costcenter()
 	{
-		if ($this->module_is_active('billingbase'))
+		if (\PPModule::is_active('billingbase'))
 			return $this->belongsTo('Modules\BillingBase\Entities\CostCenter', 'costcenter_id');
 		return null;
 	}
 
 	public function salesman()
 	{
-		if ($this->module_is_active('billingbase'))
+		if (\PPModule::is_active('billingbase'))
 			return $this->belongsTo('Modules\BillingBase\Entities\Salesman');
 		return null;
 	}
@@ -208,7 +208,7 @@ class Contract extends \BaseModel {
 			'Behörde',
 		];
 
-		if ($this->module_is_active('provvoipenvia')) {
+		if (\PPModule::is_active('provvoipenvia')) {
 
 			$options = [
 				'Herrn',
@@ -244,7 +244,7 @@ class Contract extends \BaseModel {
 			'Prof. Dr.',
 		];
 
-		if ($this->module_is_active('provvoipenvia')) {
+		if (\PPModule::is_active('provvoipenvia')) {
 
 			$options = [
 				'',
@@ -337,7 +337,7 @@ class Contract extends \BaseModel {
 
 
 		// Task 3: Change qos and voip id when tariff changes
-		if (!$this->module_is_active('Billingbase'))
+		if (!\PPModule::is_active('Billingbase'))
 			return;
 
 		$qos_id = 0;
@@ -378,7 +378,7 @@ class Contract extends \BaseModel {
 	public function monthly_conversion()
 	{
 		// with billing module -> daily conversion
-		if ($this->module_is_active('Billingbase'))
+		if (\PPModule::is_active('Billingbase'))
 			return;
 
 		// Tariff: monthly Tariff change – "Tarifwechsel"
@@ -412,7 +412,7 @@ class Contract extends \BaseModel {
 	 */
 	public function get_valid_tariff($type)
 	{
-		if (!$this->module_is_active('Billingbase'))
+		if (!\PPModule::is_active('Billingbase'))
 			return null;
 
 		$prod_ids = Modules\BillingBase\Entities\Product::get_product_ids($type);

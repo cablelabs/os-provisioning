@@ -96,7 +96,7 @@ class Modem extends \BaseModel {
 
 	public function mtas()
 	{
-		if ($this->module_is_active('ProvVoip'))
+		if (\PPModule::is_active('ProvVoip'))
 			return $this->hasMany('Modules\ProvVoip\Entities\Mta');
 
 		return null;
@@ -104,7 +104,7 @@ class Modem extends \BaseModel {
 
 	public function tree()
 	{
-		if ($this->module_is_active('HfcBase'))
+		if (\PPModule::is_active('HfcBase'))
 			return $this->belongsTo('Modules\HfcBase\Entities\Tree');
 
 		return null;
@@ -121,7 +121,7 @@ class Modem extends \BaseModel {
 
 	public function view_has_many()
 	{
-		if ($this->module_is_active('ProvVoip'))
+		if (\PPModule::is_active('ProvVoip'))
 			return array(
 					'Mta' => $this->mtas
 				);
@@ -589,7 +589,7 @@ class ModemObserver
 
 		// Refresh MPS rules
 		// Note: does not perform a save() which could trigger observer.
-		if (\BaseModel::__module_is_active('HfcCustomer'))
+		if (\PPModule::is_active('HfcCustomer'))
 			$modem->tree_id = \Modules\Hfccustomer\Entities\Mpr::refresh($modem->id);
 	}
 

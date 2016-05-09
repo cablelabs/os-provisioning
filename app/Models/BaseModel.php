@@ -40,43 +40,6 @@ class BaseModel extends Eloquent
 	// Add Comment here. ..
 	protected $guarded = ['id'];
 
-	/**
-	 * check if module exists
-	 *
-	 * Note: This function should be used in relational functions like hasMany() or view_has_many()
-	 *
-	 * @author Torsten Schmidt
-	 *
-	 * @param  Modulename
-	 * @return true if module exists and is active otherwise false
-	 */
-	public function module_is_active($modulename)
-	{
-		$modules = \Module::enabled();
-
-		foreach ($modules as $module)
-			if ($module->getLowerName() == strtolower($modulename))
-				return true;
-
-        return false;
-	}
-
-
-	/**
-	 * check if module exists
-	 * NOTE: this is simply a static pendant to module_is_active(). So call this if required from class context.
-	 *       -> see above
-	 */
-	public static function __module_is_active($modulename)
-	{
-		$modules = \Module::enabled();
-
-		foreach ($modules as $module)
-			if ($module->getLowerName() == strtolower($modulename))
-				return true;
-
-        return false;
-	}
 
 
 	/**
@@ -151,7 +114,7 @@ class BaseModel extends Eloquent
 		);
 
 		foreach ($voip_modules as $module) {
-			if ($this->module_is_active($module)) {
+			if (\PPModule::is_active($module)) {
 				return True;
 			}
 		}
@@ -178,7 +141,7 @@ class BaseModel extends Eloquent
 		);
 
 		foreach ($billing_modules as $module) {
-			if ($this->module_is_active($module)) {
+			if (\PPModule::is_active($module)) {
 				return True;
 			}
 		}
@@ -342,7 +305,7 @@ class BaseModel extends Eloquent
 		{
 			$ret = $field.'='.$value;
 
-			if($this->module_is_active('Hfcbase'))
+			if(\PPModule::is_active('Hfcbase'))
 			{
 				if (($model[0] == 'Modules\ProvBase\Entities\Modem') && ($field == 'net' || $field == 'cluster'))
 				{

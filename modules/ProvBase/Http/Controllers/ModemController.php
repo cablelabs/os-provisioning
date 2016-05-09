@@ -90,7 +90,7 @@ class ModemController extends \BaseModuleController {
 	{
 		\App\Http\Controllers\BaseAuthController::auth_check('view', $this->get_model_name());
 
-		if(!static::get_model_obj()->module_is_active ('HfcCustomer'))
+		if(!\PPModule::is_active('HfcCustomer'))
 			return parent::index();
 
 		$modems = Modem::where('id', '>', '0');
@@ -135,7 +135,7 @@ class ModemController extends \BaseModuleController {
 	{
 		$obj    = static::get_model_obj();
 
-		if(!$obj->module_is_active ('HfcCustomer'))
+		if(!\PPModule::is_active ('HfcCustomer'))
 			return parent::fulltextSearch();
 
 		// get the search scope

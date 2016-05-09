@@ -71,7 +71,7 @@ class Phonenumber extends \BaseModel {
     // View Relation.
     public function view_has_many()
     {
-		if ($this->module_is_active('provvoipenvia'))
+		if (\PPModule::is_active('provvoipenvia'))
 		{
 			$ret['Envia']['EnviaOrder'] = $this->external_orders;
 			$ret['Envia']['PhonenumberManagement'] = $this->phonenumbermanagement;
@@ -139,7 +139,7 @@ class Phonenumber extends \BaseModel {
 	 */
 	public function external_orders() {
 
-		if ($this->module_is_active('provvoipenvia')) {
+		if (\PPModule::is_active('provvoipenvia')) {
 			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder');
 		}
 
