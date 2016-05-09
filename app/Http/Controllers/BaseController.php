@@ -68,7 +68,7 @@ class BaseController extends Controller {
 	 * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
 	 * @author: Torsten Schmidt
 	 */
-	protected function get_form_breadcrumb($view_var)
+	protected function get_form_tabs($view_var)
 	{
 		return null;
 	}
@@ -202,15 +202,15 @@ class BaseController extends Controller {
 
 	/**
 	 * Prepare Breadcrumb - $panel_right header
-	 * Priority Handling: get_form_breadcrumb(), view_has_many()
+	 * Priority Handling: get_form_tabs(), view_has_many()
 	 *
 	 * @param view_var: the view_var parameter from edit() context
 	 * @return panel_right prepared array for default.blade
 	 */
-	protected function prepare_breadcrumb($view_var)
+	protected function prepare_tabs($view_var)
 	{
-		// get_form_breadcrumb()
-		$ret = $this->get_form_breadcrumb($view_var);
+		// get_form_tabs()
+		$ret = $this->get_form_tabs($view_var);
 
 		if ($ret)
 			return $ret;
@@ -470,7 +470,7 @@ class BaseController extends Controller {
 
 		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($model->view_headline());
 		$headline       = BaseViewController::compute_headline(static::get_route_name(), $view_header, $view_var);
-		$panel_right    = $this->prepare_breadcrumb($view_var);
+		$panel_right    = $this->prepare_tabs($view_var);
 		$form_fields	= BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
 		$relations      = BaseViewController::prep_right_panels($view_var);
 

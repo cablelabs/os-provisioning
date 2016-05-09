@@ -64,7 +64,7 @@
     <!-- end #sidebar -->
 
 
-<!-- java script dynamic panel on right top side under tabs/breadcrumbs -->
+<!-- java script dynamic panel on right top side under tabs -->
 @if(isset($panel_right_extra))
     <!-- begin theme-panel -->
     <div class="theme-panel">

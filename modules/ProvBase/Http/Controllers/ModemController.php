@@ -55,14 +55,14 @@ class ModemController extends \BaseModuleController {
 
 
 	/*
-	 * Modem Controller Breadcrumb. -> Panel Header Right
+	 * Modem Tabs Controller. -> Panel Header Right
 	 * See: BaseController native function for more infos
 	 *
 	 * @param view_var: the model object to be displayed
 	 * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
 	 * @author: Torsten Schmidt
 	 */
-	protected function get_form_breadcrumb($view_var)
+	protected function get_form_tabs($view_var)
 	{
 		$a = [['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]],
 				['name' => 'Analyses', 'route' => 'Provmon.index', 'link' => [$view_var->id]],
