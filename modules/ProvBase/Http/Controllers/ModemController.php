@@ -24,7 +24,7 @@ class ModemController extends \BaseModuleController {
 		return array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
 			array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly']),
-			array('form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract'),
+			array('form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 1),
 			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC adress'),
 			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list($model->configfiles(), 'name')),
 			array('form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'),

@@ -62,6 +62,8 @@ class BaseModel extends Eloquent
 	/**
 	 * Basefunction for generic use - is needed to place the related html links generically in the edit & create views
 	 * Place this function in the appropriate model and return the relation to the model it belongs
+	 *
+	 * NOTE: this function will return null in all create contexts, because at this time no relation exists!
 	 */
 	public function view_belongs_to ()
 	{

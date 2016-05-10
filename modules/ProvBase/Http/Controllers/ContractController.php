@@ -39,6 +39,9 @@ class ContractController extends \BaseModuleController {
      */
 	public function view_form_fields($model = null)
 	{
+		if (!$model)
+			$model = new Contract;
+
 		$r = $a = $b = $c = $d = [];
 
 		// label has to be the same like column in sql table
@@ -66,7 +69,7 @@ class ContractController extends \BaseModuleController {
 			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1', 'checked' => 1),
 		);
 
-
+		// TODO: replace with static command
 		if ($model->voip_enabled) {
 
 			$b = array(
@@ -79,7 +82,7 @@ class ContractController extends \BaseModuleController {
 			);
 		}
 
-		if ($model->billing_enabled) {
+		if (\PPModule::is_active('billingbase')) {
 
 			$c = array(
 				array('form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'), // TODO: create default 'value' => date("Y-m-d")
@@ -87,6 +90,10 @@ class ContractController extends \BaseModuleController {
 				array('form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'value' => '1'),
 				array('form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $model->html_list(CostCenter::all(), 'name')),
 				array('form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => $this->_salesmen(), 'space' => '1'),
+
+				// NOTE: qos is required as hidden field to automatically create modem with correct contract qos class
+				// TODO: @Nino Ryschawy: please review and test while merging ..
+				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list(Qos::all(), 'name'), 'hidden' => 1),
 			);
 		}
 		else

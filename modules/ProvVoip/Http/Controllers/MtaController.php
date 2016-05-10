@@ -22,7 +22,7 @@ class MtaController extends \BaseModuleController {
 		return array(
 			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC address'),
 			array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly']),
-			array('form_type' => 'text', 'name' => 'modem_id', 'description' => 'Modem'),
+			array('form_type' => 'text', 'name' => 'modem_id', 'description' => 'Modem', 'hidden' => 1),
 			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list($model->configfiles(), 'name')),
 			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => Mta::getPossibleEnumValues('type', true)),
 		);
