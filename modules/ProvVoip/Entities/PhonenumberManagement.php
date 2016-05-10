@@ -14,9 +14,6 @@ class PhonenumberManagement extends \BaseModel {
 	{
 		return array(
 			'phonenumber_id' => 'required|exists:phonenumber,id|min:1',
-			'phonebook_directory_assistance' => 'in:N,S,J',
-			'phonebook_usage' => 'in:T,F,K',
-			/* TODO: rules for other special cases => write own validators to be flexible (app/extensions/validators/ExtendedValidator.php) */
 		);
 	}
 
@@ -39,7 +36,7 @@ class PhonenumberManagement extends \BaseModel {
 					'subscriber_house_number',
 					'subscriber_zip',
 					'subscriber_city',
-					'subscriber_country'
+					'subscriber_country',
 				];
 
 
@@ -67,10 +64,7 @@ class PhonenumberManagement extends \BaseModel {
 	// belongs to an phonenumber
 	public function view_belongs_to ()
 	{
-		return array(
-			$this->phonenumber,
-			$this->phonebookentry,
-		);
+		return $this->phonenumber;
 	}
 
 	/**
@@ -140,7 +134,7 @@ class PhonenumberManagement extends \BaseModel {
 	 */
 	public function phonebookentry() {
 
-		return $this->hasOne('Modules\ProvVoip\Entities\PhonebookEntry', 'phonebookentry');
+		return $this->hasOne('Modules\ProvVoip\Entities\PhonebookEntry', 'phonenumbermanagement_id');
 	}
 
 	/**
@@ -212,6 +206,14 @@ class PhonenumberManagement extends \BaseModel {
 		}
 
 		return $result;
+	}
+
+
+	// has zero or one phonebookentry object related
+	public function view_has_one() {
+		return array(
+			'PhonebookEntry' => $this->phonebookentry,
+		);
 	}
 
 

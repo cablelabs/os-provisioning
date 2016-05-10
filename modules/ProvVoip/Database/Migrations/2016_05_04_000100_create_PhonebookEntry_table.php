@@ -20,47 +20,47 @@ class CreatePhonebookEntryTable extends BaseMigration {
 		{
 			$this->up_table_generic($table);
 
-			$table->boolean('phonebook_entry')->default(0);
+			$table->integer('phonenumbermanagement_id')->unsigned();
 			$table->boolean('reverse_search')->default(0);
-			$table->boolean('phonebook_publish_in_print_media');
-			$table->boolean('phonebook_publish_in_electronic_media');
-			$table->string('phonebook_directory_assistance');
-			$table->string('phonebook_entry_type');
-			$table->string('phonebook_publish_address');
+			$table->boolean('publish_in_print_media');
+			$table->boolean('publish_in_electronic_media');
+			$table->string('directory_assistance');
+			$table->string('entry_type');
+			$table->string('publish_address');
 
-			$table->string('phonebook_company');
-			$table->string('phonebook_academic_degree');
-			$table->string('phonebook_noble_rank');
-			$table->string('phonebook_nobiliary_particle');
-			$table->string('phonebook_lastname');
-			$table->string('phonebook_other_name_suffix');
-			$table->string('phonebook_firstname');
+			$table->string('company');
+			$table->string('academic_degree');
+			$table->string('noble_rank');
+			$table->string('nobiliary_particle');
+			$table->string('lastname');
+			$table->string('other_name_suffix');
+			$table->string('firstname');
 
-			$table->string('phonebook_street');
-			$table->string('phonebook_houseno');
-			$table->string('phonebook_zipcode');
-			$table->string('phonebook_city');
-			$table->string('phonebook_urban_district');
-			$table->string('phonebook_business');
-			$table->string('phonebook_usage');
-			$table->string('phonebook_tag');
+			$table->string('street');
+			$table->string('houseno');
+			$table->string('zipcode');
+			$table->string('city');
+			$table->string('urban_district');
+			$table->string('business');
+			$table->string('usage');
+			$table->string('tag');
 		});
 
 		$this->set_fim_fields([
-			'phonebook_lastname',
-			'phonebook_firstname',
-			'phonebook_company',
-			'phonebook_noble_rank',
-			'phonebook_nobiliary_particle',
-			'phonebook_academic_degree',
-			'phonebook_other_name_suffix',
-			'phonebook_business',
-			'phonebook_street',
-			'phonebook_houseno',
-			'phonebook_zipcode',
-			'phonebook_city',
-			'phonebook_urban_district',
-			'phonebook_tag',
+			'lastname',
+			'firstname',
+			'company',
+			'noble_rank',
+			'nobiliary_particle',
+			'academic_degree',
+			'other_name_suffix',
+			'business',
+			'street',
+			'houseno',
+			'zipcode',
+			'city',
+			'urban_district',
+			'tag',
 		]);
 
 		return parent::up();
