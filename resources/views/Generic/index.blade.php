@@ -47,7 +47,7 @@
 				<h4>Matches for <tt>'{{ $query }}'</tt> in <tt>{{ $scope }}</tt></h4>
 			@endif
 
-			<table class="table table-hover">
+			<table class="table table-hover itable">
 
 				<!-- TODO: add concept to parse header fields for index table - like firstname, lastname, ..-->
 				<thead>
@@ -64,17 +64,19 @@
 
 				<!-- Index Table Entries -->
 				@foreach ($view_var as $object)
-					<tr class="{{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}} ClickableRow">
+					<tr class="{{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}">
 						<td width=50> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple']) }} </td>
 
 						<!-- Parse view_index_label()  -->
 						<?php $i = 0; // display link only on first element ?>
 						@foreach (is_array($object->view_index_label()) ? $object->view_index_label()['index'] : [$object->view_index_label()] as $field)
-							@if ($i++ == 0)
-								<td> {{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }} </td>
-							@else
-								<td> {{ $field }} </td>
-							@endif
+							<td class="ClickableTd">
+								@if ($i++ == 0)
+									{{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }}
+								@else
+									{{ $field }}
+								@endif
+							</td>
 						@endforeach
 					</tr>
 				@endforeach

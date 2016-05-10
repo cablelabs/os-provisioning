@@ -10,4 +10,5 @@
       <link href="{{asset('components/assets-admin/css/style-responsive.min.css')}}" rel="stylesheet" />
 
       <link href="{{asset('components/assets-admin/plugins/select2-v4/vendor/select2/select2/dist/css/select2.css')}}" rel="stylesheet" />
+      <link href="{{asset('components/assets-admin/plugins/DataTables/css/data-table.css')}}" rel="stylesheet" />
       <!-- ================== END BASE CSS STYLE ================== -->
