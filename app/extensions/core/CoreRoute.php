@@ -21,7 +21,10 @@ class CoreRoute {
 	{
 		\Route::get(strtolower($name).'/fulltextSearch', array('as' => $name.'.fulltextSearch', 'uses' => $controller.'@fulltextSearch'));
 		\Route::post($name.'/create', array('as' => $name.'.create', 'uses' => $controller.'@create'));
-		\Route::resource($name, $controller, ['only' => ['index', 'create', 'store', 'edit', 'update', 'destroy']]);
+
+		if ($options == [])
+			$options = ['only' => ['index', 'create', 'store', 'edit', 'update', 'destroy']];
+		\Route::resource($name, $controller, $options);
 	}
 
 }
