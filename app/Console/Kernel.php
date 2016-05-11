@@ -136,6 +136,16 @@ class Kernel extends ConsoleKernel {
 			    exec ('chown -R apache '.storage_path().'/logs');
 			})->dailyAt('00:01');
 
+
+		// Create monthly Billing Files and reset flags
+		if ($this->module_is_active ('BillingBase'))
+		{
+			$schedule->call('\Modules\BillingBase\Entities\Item@yearly_conversion')->yearly();
+
+			$rcd = \Modules\BillingBase\Entities\BillingBase::select('rcd')->first()->rcd;
+			$rcd = $rcd ? $rcd : 15;
+			$schedule->command('nms:accounting')->monthlyOn($rcd, '01:00');
+		}
 	}
 
 }
