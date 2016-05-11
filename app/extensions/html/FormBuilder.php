@@ -8,6 +8,8 @@ use Log;
 
 class FormBuilder extends CollectiveFormBuilder {
 
+    private static $layout_form_col_md = ['label'=>4, 'form'=>7, 'help'=>1];
+
 
     /**
      * An array containing the currently opened form groups.
@@ -17,12 +19,21 @@ class FormBuilder extends CollectiveFormBuilder {
     protected $groupStack = array();
 
 
-	/**
-     * Append <div> block with col-md-8
-     * NOTE: 3: col for label, 8: col for form field, 1: col for help image - if set
-     */
-    public function appendDiv($s, $col = 8)
+    public static function get_layout_form_col_md()
     {
+        return static::$layout_form_col_md;
+    }
+
+
+	/**
+     * Append <div> block with col-md-7
+     * NOTE: 4: col for label, 7: col for form field, 1: col for help image - if set
+     */
+    public function appendDiv($s, $col = 7)
+    {
+        if (isset(static::$layout_form_col_md['form']))
+            $col = static::$layout_form_col_md['form'];
+
     	return '<div class="col-md-'.$col.'">'.$s.'</div>';
     }
 
@@ -75,7 +86,11 @@ class FormBuilder extends CollectiveFormBuilder {
      */
     public function label($name, $value = null, $options = array())
     {
-        $options = $this->appendClassToOptions('col-md-3 control-label', $options);
+        $col = 4;
+        if (isset(static::$layout_form_col_md['label']))
+            $col = static::$layout_form_col_md['label'];
+
+        $options = $this->appendClassToOptions('col-md-'.$col.' control-label', $options);
 
         // translate the value if necessary
         // $bc = new \App\Http\Controllers\BaseController;
@@ -118,7 +133,7 @@ class FormBuilder extends CollectiveFormBuilder {
     /**
      * Create a form model field.
      */
-    public function model($model, array $options = array(), $style = 'advanced')
+    public function model($model, array $options = array(), $style = 'simple')
     {
         $options = $this->appendClassToOptions('form-group form-horizontal', $options);
       	if (!isset ($options['method']))
@@ -288,8 +303,13 @@ class FormBuilder extends CollectiveFormBuilder {
         // Get the formatted errors for this form group.
         $errors = $this->getFormattedErrors($name);
 
+        // Get Layout col-md Setting
+        $col = 4;
+        if (isset(static::$layout_form_col_md['label']))
+            $col = static::$layout_form_col_md['label'];
+
         // Append the errors to the group and close it out.
-        return '<div class=col-md-3></div><div class=col-md-8>'.$errors.'</div></div>'.$this->closeDivClass();
+        return '<div class=col-md-'.$col.'></div><div class=col-md-'.(12-$col).'>'.$errors.'</div></div>'.$this->closeDivClass();
     }
 
 

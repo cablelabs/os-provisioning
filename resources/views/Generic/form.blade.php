@@ -5,8 +5,15 @@
 
 --}}
 
+{{-- Error Message --}}
+<?php $col = \Acme\Html\FormBuilder::get_layout_form_col_md()['label'] ?>
+@DivOpen(12)
+	@DivOpen($col)	@DivClose()
+	@DivOpen(12-$col)
+		<h5 style='color:{{ Session::get('message_color') }}' id='success_msg'>{{ Session::get('message') }}</h5>
+	@DivClose()
+@DivClose()
 
-<h4 id='success_msg'>{{ Session::get('message') }}</h4>
 
 @foreach($form_fields as $fields)
 	{{ $fields['html'] }}

@@ -331,7 +331,7 @@ class Modem extends \BaseModel {
 				if (\Request::method() == 'PUT')
 				{
 					// redirect back with corresponding message over flash, needs to be saved as it's normally only saved when the session middleware terminates successfully
-					$resp = \Redirect::back()->with('message', 'Could not restart Modem! (offline/configfile error?)');
+					$resp = \Redirect::back()->with('message', 'Could not restart Modem! (offline?)')->with('message_color', 'orange');
 					\Session::driver()->save();		 // \ is like writing "use Session;" before class statement
 					$resp->send();
 

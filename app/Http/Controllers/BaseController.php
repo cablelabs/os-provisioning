@@ -443,7 +443,8 @@ class BaseController extends Controller {
 
 		if ($validator->fails())
 		{
-			return Redirect::back()->withErrors($validator)->withInput();
+			//
+			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'red')->with($_POST);
 		}
 
 		$id = $obj::create($data)->id;
@@ -511,7 +512,7 @@ class BaseController extends Controller {
 		if ($validator->fails())
 		{
 			Log::info ('Validation Rule Error: '.$validator->errors());
-			return Redirect::back()->withErrors($validator)->withInput();
+			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'red');
 		}
 
 		// update timestamp, this forces to run all observer's
