@@ -406,7 +406,7 @@ class BaseController extends Controller {
 		$model = static::get_model_obj();
 
 		$view_header = BaseViewController::translate('Create ').BaseViewController::translate($model->view_headline());
-		$headline    = BaseViewController::compute_headline(static::get_route_name(), $view_header, NULL, $_GET);
+		$headline    = BaseViewController::compute_headline(static::get_route_name(), $view_header, NULL, $_POST);
 		$form_fields = BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($model), $model, 'create');
 
 		$view_path = 'Generic.create';

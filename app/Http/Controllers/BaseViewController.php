@@ -139,9 +139,9 @@ class BaseViewController extends Controller {
 			// 4. set all field_value's to SQL data
 			$field['field_value'] = $model[$field['name']];
 
-			// 4.(sub-task) auto-fill all field_value's with HTML _GET array if supposed
-			if (isset($_GET[$field['name']]))
-				$field['field_value'] = $_GET[$field['name']];
+			// 4.(sub-task) auto-fill all field_value's with HTML POST array if supposed
+			if (isset($_POST[$field['name']]))
+				$field['field_value'] = $_POST[$field['name']];
 
 			array_push ($ret, $field);
 		}
@@ -343,22 +343,21 @@ finish:
 	 * @param $route_name: route name of actual controller
 	 * @param $view_header: the view header name
 	 * @param $view_var: the object to generate the link from
-	 * @param $html_get: the HTML GET array. This is only required for create context
+	 * @param $html: the HTML POST array. This is only required for create context
 	 * @return: the HTML link line to be directly included in blade
 	 * @author: Torsten Schmidt
 	 */
-	public static function compute_headline ($route_name, $view_header, $view_var, $html_get = null)
+	public static function compute_headline ($route_name, $view_header, $view_var, $html = null)
 	{
 		$s = "";
 
-		// only for create context: parse headline from HTML _GET context array
-		// TODO: avoid use of HTML GET array for security considerations
-		if (!is_null($html_get) && isset(array_keys($html_get)[0]))
+		// only for create context: parse headline from HTML POST context array
+		if (!is_null($html) && isset(array_keys($html)[0]))
 		{
-			$key        = array_keys($html_get)[0];
+			$key        = array_keys($html)[1]; // TODO: test
 			$class_name = BaseModel::_guess_model_name(ucwords(explode ('_id', $key)[0]));
 			$class      = new $class_name;
-			$view_var   = $class->find($html_get[$key]);
+			$view_var   = $class->find($html[$key]);
 		}
 
 		if ($view_var != null)

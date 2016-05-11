@@ -18,7 +18,7 @@ Relation Blade is used inside a Panel Element to display relational class object
 @if (!isset($options['hide_create_button']))
 	@DivOpen(12)
 
-		{{ Form::open(array('route' => $route.'.create', 'method' => 'GET')) }}
+		{{ Form::open(array('route' => $route.'.create', 'method' => 'POST')) }}
 		{{ Form::hidden($key, $view_var->id) }}
 
 			{{-- Add a hidden form field if create tag is set in $form_fields --}}
