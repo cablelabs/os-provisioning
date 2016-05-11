@@ -44,6 +44,9 @@ class CreatePhonebookEntryTable extends BaseMigration {
 			$table->string('business');
 			$table->char('number_usage', 1);
 			$table->string('tag');
+
+			$table->date('external_creation_date')->nullable()->default(NULL);
+			$table->date('external_update_date')->nullable()->default(NULL);
 		});
 
 		$this->set_fim_fields([

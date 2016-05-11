@@ -8,6 +8,11 @@ class Phonenumber extends \BaseModel {
     // The associated SQL table for this Model
     public $table = 'phonenumber';
 
+	public static $foo = array();
+
+	public static function fill_foo() {
+		$foo['bar'] = 'baz';
+	}
 
 	// Add your validation rules here
 	public static function rules($id=null)
