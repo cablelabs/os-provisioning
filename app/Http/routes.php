@@ -31,13 +31,13 @@ Route::get('auth/denied', array('as' => 'Auth.denied', 'uses' => 'AuthController
 
 // Authentification is necessary before accessing a route
 Route::group(array('before' => 'auth'), function() {
+
 	// Base routes for global search
 	Route::get('base/fulltextSearch', array('as' => 'Base.fulltextSearch', 'uses' => 'BaseController@fulltextSearch'));
 
-	Route::resource('Authuser', 'AuthuserController');
-	Route::get('Authuser/fulltextSearch', array('as' => 'Authuser.fulltextSearch', 'uses' => 'AuthuserController@fulltextSearch'));
+	CoreRoute::resource('Authuser', 'AuthuserController');
 
 	Route::get('Config', array('as' => 'Config.index', 'uses' => 'BaseModuleController@glob_conf'));
-	Route::resource('GlobalConfig', 'GlobalConfigController');
+	CoreRoute::resource('GlobalConfig', 'GlobalConfigController');
 
 });
