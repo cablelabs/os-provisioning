@@ -10,25 +10,34 @@ class PhonebookEntry extends \BaseModel {
 
 	public static $config = null;
 
-	why shall config be written to database???
-
-	public function __construct($attributes = array()) {
-
-		parent::__construct($attributes);
-
-		if (is_null($this->config)) {
-			$this->config = static::read_config();
-		}
-
-	}
-
 
 	// Add your validation rules here
+	// Also have a look at PhonebookEntryController@prep_rules!
 	public static function rules($id=null)
 	{
 		return array(
 			'phonenumbermanagement_id' => 'required|exists:phonenumbermanagement,id|min:1',
-			/* TODO: rules for other special cases => write own validators to be flexible (app/extensions/validators/ExtendedValidator.php) */
+			'reverse_search' => 'required|phonebook_one_character_option',
+			'publish_in_print_media' => 'required|phonebook_one_character_option',
+			'publish_in_electronic_media' => 'required|phonebook_one_character_option',
+			'directory_assistance' => 'required|phonebook_one_character_option',
+			'entry_type' => 'required|phonebook_one_character_option',
+			'publish_address' => 'required|phonebook_one_character_option',
+			'company' => 'required_if:entry_type,F',
+			'academic_degree' => 'phonebook_predefined_string',
+			'noble_rank' => 'phonebook_predefined_string',
+			'nobiliary_particle' => 'phonebook_predefined_string',
+			'lastname' => 'required_if:entry_type,P|phonebook_string',
+			'other_name_suffix' => 'phonebook_predefined_string',
+			'firstname' => 'phonebook_string',
+			'street' => 'required|phonebook_string',
+			'houseno' => 'required|phonebook_string',
+			'zipcode' => 'required|phonebook_string',
+			'city' => 'required|phonebook_string',
+			'urban_district' => 'phonebook_string',
+			'business' => 'phonebook_string',
+			'number_usage' => 'required|phonebook_one_character_option',
+			'tag' => 'phonebook_predefined_string',
 		);
 	}
 
@@ -143,6 +152,10 @@ class PhonebookEntry extends \BaseModel {
 	public function get_options_from_list($section) {
 
 		$options = array();
+
+		if (is_null(static::$config)) {
+			static::read_config();
+		};
 
 		foreach (static::$config[$section]['in_list'] as $option) {
 			$options[$option] = $option.' – '.static::$config[$section][$option];

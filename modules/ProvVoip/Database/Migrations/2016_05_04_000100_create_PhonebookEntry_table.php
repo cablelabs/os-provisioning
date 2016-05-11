@@ -21,12 +21,12 @@ class CreatePhonebookEntryTable extends BaseMigration {
 			$this->up_table_generic($table);
 
 			$table->integer('phonenumbermanagement_id')->unsigned();
-			$table->boolean('reverse_search')->default(0);
-			$table->boolean('publish_in_print_media');
-			$table->boolean('publish_in_electronic_media');
-			$table->string('directory_assistance');
-			$table->string('entry_type');
-			$table->string('publish_address');
+			$table->char('reverse_search', 1);
+			$table->char('publish_in_print_media', 1);
+			$table->char('publish_in_electronic_media', 1);
+			$table->char('directory_assistance', 1);
+			$table->char('entry_type', 1);
+			$table->char('publish_address', 1);
 
 			$table->string('company');
 			$table->string('academic_degree');
@@ -42,7 +42,7 @@ class CreatePhonebookEntryTable extends BaseMigration {
 			$table->string('city');
 			$table->string('urban_district');
 			$table->string('business');
-			$table->string('usage');
+			$table->char('number_usage', 1);
 			$table->string('tag');
 		});
 
