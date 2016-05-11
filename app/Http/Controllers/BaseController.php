@@ -236,6 +236,9 @@ class BaseController extends Controller {
 		{
 			if(!isset($data[$field['name']]) && $field['form_type'] == 'checkbox')
 				$data[$field['name']] = 0;
+
+			// trim all inputs as default
+			$data[$field['name']] = trim($data[$field['name']]); 
 		}
 
 		return $data;
@@ -711,7 +714,7 @@ class BaseController extends Controller {
 
 		$config_routes = BaseController::get_config_modules();
 
-		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations')));
+		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations', 'extra_data')));
 	}
 
 
