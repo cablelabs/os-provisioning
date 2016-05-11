@@ -650,8 +650,9 @@ class BaseModel extends Eloquent
 				return $start < strtotime(date('Y-01-01')) && (!$end || $end >= strtotime(date('Y-01-01'), strtotime('last year')));
 
 			case 'now':
-				$now = time();
-				return $start <= $now && (!$end || $end > $now);
+				// $now = time();
+				$now = strtotime('today');
+				return $start <= $now && (!$end || $end >= $now);
 
 			default:
 				\Log::error('Bad timespan param used in function '.__FUNCTION__);
