@@ -336,16 +336,24 @@ finish:
 
 
 
-	/*
+	/**
 	 * Generate Top Header Link (like e.g. Contract > Modem > Mta > ..)
 	 * Shows the html links of the related objects recursively
 	 *
 	 * @param $route_name: route name of actual controller
 	 * @param $view_header: the view header name
 	 * @param $view_var: the object to generate the link from
-	 * @param $html: the HTML POST array. This is only required for create context
-	 * @return: the HTML link line to be directly included in blade
-	 * @author: Torsten Schmidt
+	 * @param $html: the HTML GET array. See note bellow!
+	 * @return the HTML link line to be directly included in blade
+	 * @author Torsten Schmidt
+	 *
+	 * NOTE: in create context we are forced to work with HTML GET array in $html.
+	 *       The first request will also work with POST array, but if validation fails
+	 *       there is no longer any POST array we can work with. Note that POST array is
+	 *       generated in relation.blade.
+	 *
+	 *       To avoid this we must ensure that every relational create send it's correlating
+	 *       model key, like contract_id=xyz in HTML GET request.
 	 */
 	public static function compute_headline ($route_name, $view_header, $view_var, $html = null)
 	{
@@ -354,7 +362,7 @@ finish:
 		// only for create context: parse headline from HTML POST context array
 		if (!is_null($html) && isset(array_keys($html)[0]))
 		{
-			$key        = array_keys($html)[1]; // TODO: test
+			$key        = array_keys($html)[0];
 			$class_name = BaseModel::_guess_model_name(ucwords(explode ('_id', $key)[0]));
 			$class      = new $class_name;
 			$view_var   = $class->find($html[$key]);
