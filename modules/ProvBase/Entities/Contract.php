@@ -46,6 +46,9 @@ class Contract extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
+
+    	// dd(date('Y-m', strtotime(null)), date('Y-m', strtotime('0000-00-00')));
+
 		$bsclass = 'success';
 
 		if ($this->network_access == 0)
@@ -519,7 +522,7 @@ class Contract extends \BaseModel {
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function get_valid_mandate($timespan = 'month')
+	public function get_valid_mandate($timespan = 'now')
 	{
 		$mandate = null;
 		$last 	 = 0;
