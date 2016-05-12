@@ -23,31 +23,6 @@ class Kernel extends ConsoleKernel {
 
 
 	/**
-	 * check if module exists
-	 *
-	 * NOTE: this is a copy from BaseModel
-	 *
-	 * TODO: move this to a better place. Or even better: call
-	 *       scheduling stuff from a module based context
-	 *
-	 * @author Torsten Schmidt
-	 *
-	 * @param  Modulename
-	 * @return true if module exists and is active otherwise false
-	 */
-	private function module_is_active($modulename)
-	{
-		$modules = \Module::enabled();
-
-		foreach ($modules as $module)
-			if ($module->getLowerName() == strtolower($modulename))
-				return true;
-
-		return false;
-	}
-
-
-	/**
 	 * Define the application's command schedule.
 	 *
 	 * NOTE: the withoutOverlapping() statement is just for security reasons
@@ -68,14 +43,14 @@ class Kernel extends ConsoleKernel {
 			/* ->everyMinute(); */
 
 
-		if ($this->module_is_active ('ProvVoip')) {
+		if (\PPModule::is_active ('ProvVoip')) {
 
 			// Update database table carriercode with csv data if necessary
 			$schedule->command('provvoip:update_carrier_code_database')
 				->dailyAt('03:24');
 		}
 
-		if ($this->module_is_active ('ProvVoipEnvia')) {
+		if (\PPModule::is_active ('ProvVoipEnvia')) {
 
 			// Update status of envia orders
 			$schedule->command('provvoipenvia:update_envia_orders')
@@ -89,7 +64,7 @@ class Kernel extends ConsoleKernel {
 		}
 
 		// ProvBase Schedules
-		if ($this->module_is_active ('ProvBase'))
+		if (\PPModule::is_active ('ProvBase'))
 		{
 			// Rebuid all Configfiles
 			$schedule->command('nms:configfile')->hourly()->withoutOverlapping();
@@ -103,7 +78,7 @@ class Kernel extends ConsoleKernel {
 		}
 
 		// Clean Up of HFC Base
-		if ($this->module_is_active ('HfcBase'))
+		if (\PPModule::is_active ('HfcBase'))
 		{
 			// Rebuid all Configfiles
 			$schedule->call(function () {
@@ -113,7 +88,7 @@ class Kernel extends ConsoleKernel {
 		}
 
 		// Clean Up of HFC Customer
-		if ($this->module_is_active ('HfcCustomer'))
+		if (\PPModule::is_active ('HfcCustomer'))
 		{
 			// Rebuid all Configfiles
 			$schedule->call(function () {
@@ -126,7 +101,7 @@ class Kernel extends ConsoleKernel {
 			$schedule->command('nms:modem-refresh --schedule=1')->everyFiveMinutes()->withoutOverlapping();
 		}
 
-		if ($this->module_is_active ('ProvMon'))
+		if (\PPModule::is_active ('ProvMon'))
 		{
 			$schedule->command('nms:cacti')->everyFiveMinutes()->withoutOverlapping();
 		}

@@ -20,15 +20,25 @@ use GlobalConfig;
 use App\Exceptions\AuthExceptions;
 
 
+/*
+ * BaseController: The Basic Controller in our MVC design.
+ */
 class BaseController extends Controller {
 
-	protected $output_format;
+	/*
+	 * Default VIEW styling options
+	 * NOTE: All these values could be used in the inheritances classes
+	 */
 	protected $save_button = 'Save';
 	protected $relation_create_button = 'Create';
 	protected $index_create_allowed = true;
+	protected $edit_left_md_size = 4;
 
-	protected $permissions = null;
-	protected $permission_cores = array('model', 'net');
+
+	// Auth Vars
+	// TODO: move to Auth API
+	// protected $permissions = null;
+	// protected $permission_cores = array('model', 'net');
 
 
 	/**
@@ -58,101 +68,24 @@ class BaseController extends Controller {
 	 * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
 	 * @author: Torsten Schmidt
 	 */
-	public function get_form_breadcrumb($view_var)
+	protected function get_form_tabs($view_var)
 	{
 		return null;
 	}
 
 
-// Auth Stuff: TODO: move to a separate Controller
 
-	/**
-	 * Get permissions array from model.
-	 * This will overwrite an existing array.
-	 *
-	 * @throws NoAuthenticatedUserError if no user is logged in
-	 */
-	protected function _get_permissions() {
+// Class Relation Functions:
+	// TODO: - move to a separate Controller (if possible?)
 
-		// get the currently authenticated user
-		$cur_user = Auth::user();
-
-		$this->permissions = array();
-
-		// no user logged in
-		if (is_null($cur_user)) {
-			throw new NoAuthenticateduserError("No user logged in");
-		}
-
-		// get permissions for each role from model
-		$this->permissions['model'] = $cur_user->get_model_permissions();
-	}
-
-
-	/**
-	 * Check if user has permission to continue.
-	 * Use this method to protect your methods
-	 *
-	 * @author Patrick Reichel
-	 *
-	 * @param $access [view|create|edit|delete]
-	 * @param $model_to_check model path and name (in format as is stored in database); use current model if not given
-	 *
-	 * @throws NoAuthenticatedUserError if no user is logged in
-	 * @throws NoModelPermissionError if user is not allowed to acces the model
-	 * @throws InvalidPermissionsRequest if permission request is invalid
-	 * @throws InsufficientRightsError if user has not the specific right needed to perform an action
-	 */
-	protected function _check_permissions($access, $model_to_check=null) {
-
-		// get the currently authenticated user
-		$cur_user = Auth::user();
-
-		// if no model is given: use current model
-		if (is_null($model_to_check)) {
-			$model_to_check = $this->get_model_name();
-		}
-
-		// no user logged in
-		if (is_null($cur_user)) {
-			throw new AuthExceptions('Login Required');
-		}
-
-		// build permissions array for easy access to user rights
-		if (is_null($this->permissions)) {
-			$this->_get_permissions();
-		}
-
-		// check model rights
-		if (!array_key_exists($model_to_check, $this->permissions['model'])) {
-			throw new AuthExceptions('Access to model '.$model_to_check.' not allowed for user '.$cur_user->login_name.'.');
-		}
-		if (!array_key_exists($access, $this->permissions['model'][$model_to_check])) {
-			throw new AuthExceptions('Something went wrong asking for '.$access.' right in '.$model_to_check.' for user '.$cur_user->login_name.'.');
-		}
-		if ($this->permissions['model'][$model_to_check][$access] == 0) {
-			throw new AuthExceptions('User '.$cur_user->login_name.' is not allowed to '.$access.' in '.$model_to_check.'.');
-		}
-
-		// TODO: check net rights
-	}
-
-
-// Class Relation Functions: TODO: move to a separate Controller (if possible?)
-
-	/**
-	 * Gets class name
-	 * @param
-	 * @return
-	 */
-	protected function get_model_name()
+	protected static function get_model_name()
 	{
 		return explode ('Controller', explode ('\\', explode ('@', Route::getCurrentRoute()->getActionName())[0])[3])[0];
 	}
 
-	protected function get_model_obj ()
+	protected static function get_model_obj ()
 	{
-		$classname = $this->get_model_name();
+		$classname = static::get_model_name();
 
 		if (!$classname)
 			return null;
@@ -166,14 +99,14 @@ class BaseController extends Controller {
 		return $obj;
 	}
 
-	protected function get_controller_name()
+	protected static function get_controller_name()
 	{
 		return explode('@', Route::getCurrentRoute()->getActionName())[0];
 	}
 
-	protected function get_controller_obj()
+	protected static function get_controller_obj()
 	{
-		$classname = $this->get_controller_name();
+		$classname = static::get_controller_name();
 
 		if (!$classname)
 			return null;
@@ -185,19 +118,19 @@ class BaseController extends Controller {
 		return $obj;
 	}
 
-	protected function get_view_name()
+	protected static function get_view_name()
 	{
-		return explode ('\\', $this->get_model_name())[0];
+		return explode ('\\', static::get_model_name())[0];
 	}
 
-	protected function get_view_var()
+	protected static function get_view_var()
 	{
-		return strtolower($this->get_view_name());
+		return strtolower(static::get_view_name());
 	}
 
-	protected function get_route_name()
+	protected static function get_route_name()
 	{
-		return explode('\\', $this->get_model_name())[0];
+		return explode('\\', static::get_model_name())[0];
 	}
 
 	public static function get_config_modules()
@@ -213,7 +146,7 @@ class BaseController extends Controller {
 			$mod_controller_name = 'Modules\\'.$tmp.'\\Http\\Controllers\\'.$tmp.'Controller';
 			$mod_controller = new $mod_controller_name;
 
-			if (method_exists($mod_controller, 'get_form_fields'))
+			if (method_exists($mod_controller, 'view_form_fields'))
         		$links[($module->get('description') == '') ? $tmp : $module->get('description')] = $tmp;
         }
 
@@ -232,7 +165,7 @@ class BaseController extends Controller {
 	protected function prepare_input($data)
 	{
 		// Checkbox Unset ?
-		foreach ($this->get_form_fields($this->get_model_obj()) as $field)
+		foreach ($this->view_form_fields(static::get_model_obj()) as $field)
 		{
 			if(!isset($data[$field['name']]) && $field['form_type'] == 'checkbox')
 				$data[$field['name']] = 0;
@@ -261,7 +194,7 @@ class BaseController extends Controller {
 	 *
 	 * Note: Will be running before Validation
 	 */
-	protected function prep_rules($rules, $data)
+	protected function prepare_rules($rules, $data)
 	{
 		return $rules;
 	}
@@ -269,21 +202,21 @@ class BaseController extends Controller {
 
 	/**
 	 * Prepare Breadcrumb - $panel_right header
-	 * Priority Handling: get_form_breadcrumb(), view_has_many()
+	 * Priority Handling: get_form_tabs(), view_has_many()
 	 *
 	 * @param view_var: the view_var parameter from edit() context
 	 * @return panel_right prepared array for default.blade
 	 */
-	protected function prepare_breadcrumb($view_var)
+	protected function prepare_tabs($view_var)
 	{
-		// get_form_breadcrumb()
-		$ret = $this->get_form_breadcrumb($view_var);
+		// get_form_tabs()
+		$ret = $this->get_form_tabs($view_var);
 
 		if ($ret)
 			return $ret;
 
 		// view_has_many()
-		if (\Acme\php\ArrayHelper::array_depth($view_var->view_has_many()) >= 2)
+		if (BaseViewController::get_view_has_many_api_version($view_var->view_has_many()) == 2)
 		{
 			// get actual blade to $b
 			$a = $view_var->view_has_many();
@@ -292,7 +225,7 @@ class BaseController extends Controller {
 
 			for ($i = 0; $i < sizeof($view_var->view_has_many()); $i++)
 			{
-				array_push($c, ['name' => key($a), 'route' => $this->get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
+				array_push($c, ['name' => key($a), 'route' => static::get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
 				$b = next($a);
 			}
 
@@ -344,35 +277,38 @@ class BaseController extends Controller {
 	{
 		$a     = func_get_args()[0];
 
-		$model = $this->get_model_obj();
+		$model = static::get_model_obj();
 		if (!$model)
 			$model = new BaseModel;
 
 		if(!isset($a['networks']))
 		{
 			$a['networks'] = [];
-			if ($model->module_is_active('HfcBase'))
+			if (\PPModule::is_active('HfcBase'))
 				$a['networks'] = \Modules\HfcBase\Entities\Tree::get_all_net();
 		}
 
 		if(!isset($a['view_header_links']))
-			$a['view_header_links'] = BaseViewController::get_view_header_links();
+			$a['view_header_links'] = BaseViewController::view_main_menus();
 
 
 		if(!isset($a['route_name']))
-			$a['route_name'] = $this->get_route_name();
+			$a['route_name'] = static::get_route_name();
 
 		if(!isset($a['model_name']))
-			$a['model_name'] = $this->get_model_name();
+			$a['model_name'] = static::get_model_name();
 
 		if(!isset($a['view_header']))
-			$a['view_header'] = $model->get_view_header();
+			$a['view_header'] = $model->view_headline();
 
-		if(!isset($a['link_header']))
-			$a['link_header'] = '';
+		if(!isset($a['headline']))
+			$a['headline'] = '';
 
 		if (!isset($a['form_update']))
-			$a['form_update'] = $this->get_route_name().'.update';
+			$a['form_update'] = static::get_route_name().'.update';
+
+		if (!isset($a['edit_left_md_size']))
+			$a['edit_left_md_size'] = $this->edit_left_md_size;
 
 		$a['save_button'] = $this->save_button;
 
@@ -383,60 +319,6 @@ class BaseController extends Controller {
 		$a['framework']['version'] = $gc->version();
 
 		return $a;
-	}
-
-
-	/*
-	 * This function is used to prepare get_form_field array for edit view
-	 * So all general preparation stuff to get_form_fields will be done here.
-	 *
-	 * Tasks:
-	 *  1. Add a (*) to fields description if validation rule contains required
-	 *  2. Add Placeholder YYYY-MM-DD for all date fields
-	 *  3. Hide all parent view relation select fields
-	 *
-	 * @param fields: the get_form_fields array()
-	 * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
-	 * @return: the modifeyed get_form_fields array()
-	 *
-	 * @autor: Torsten Schmidt
-	 */
-	protected function prepare_form_fields($fields, $model)
-	{
-		$ret = [];
-
-		// get the validation rules for related model object
-		$rules = $this->get_model_obj()->rules();
-
-		// for all fields
-		foreach ($fields as $field)
-		{
-			// rule exists for actual field ?
-			if (isset ($rules[$field['name']]))
-			{
-				// Task 1: Add a (*) to fields description if validation rule contains required
-				if (preg_match('/(.*?)required(.*?)/', $rules[$field['name']]))
-					$field['description'] = $field['description']. ' *';
-
-				// Task 2: Add Placeholder YYYY-MM-DD for all date fields
-				if (preg_match('/(.*?)date(.*?)/', $rules[$field['name']]))
-					$field['options']['placeholder'] = 'YYYY-MM-DD';
-
-			}
-
-			// 3. Hide all parent view relation select fields
-			if (is_object($model->view_belongs_to()) && 					// does a view relation exists
-				$model->view_belongs_to()->table.'_id' == $field['name'])	// view table name (+_id) == field name ?
-				$field['hidden'] = 1;									// hide
-
-			$field['field_value'] = $model[$field['name']];
-
-			array_push ($ret, $field);
-		}
-
-		// dd($ret);
-
-		return $ret;
 	}
 
 
@@ -463,14 +345,14 @@ class BaseController extends Controller {
 		}
 		else
 		{
-			$obj       = $this->get_model_obj();
+			$obj       = static::get_model_obj();
 			$view_path = 'Generic.index';
 
-			if (View::exists($this->get_view_name().'.index'))
-				$view_path = $this->get_view_name().'.index';
+			if (View::exists(static::get_view_name().'.index'))
+				$view_path = static::get_view_name().'.index';
 		}
 
-		$create_allowed = $this->get_controller_obj()->index_create_allowed;
+		$create_allowed = static::get_controller_obj()->index_create_allowed;
 
 		// perform the search
 		foreach ($obj->getFulltextSearchResults($scope, $mode, $query, Input::get('preselect_field'), Input::get('preselect_value')) as $result)
@@ -492,29 +374,22 @@ class BaseController extends Controller {
 	 */
 	public function index()
 	{
-		try {
-			$this->_check_permissions("view");
-		}
-		catch (Exceptions $ex) {
-			throw new AuthExceptions($e->getMessage());
-		}
+		BaseAuthController::auth_check('view', $this->get_model_name());
 
-		$obj = $this->get_model_obj();
+		$obj = static::get_model_obj();
 
-		$view_var = $obj->index_list();
+		$view_var   = $obj->index_list();
+		$headline  	= BaseViewController::translate($obj->view_headline().' List');
+		$create_allowed = static::get_controller_obj()->index_create_allowed;
 
-		$link_header  	= BaseViewController::translate($obj->get_view_header().' List');
-		$create_allowed = $this->get_controller_obj()->index_create_allowed;
 		$view_path = 'Generic.index';
-
+		if (View::exists(static::get_view_name().'.index'))
+			$view_path = static::get_view_name().'.index';
 
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
 
-		if (View::exists($this->get_view_name().'.index'))
-			$view_path = $this->get_view_name().'.index';
-
-		return View::make ($view_path, $this->compact_prep_view(compact('link_header', 'view_var', 'create_allowed')));
+		return View::make ($view_path, $this->compact_prep_view(compact('headline', 'view_var', 'create_allowed')));
 	}
 
 
@@ -526,44 +401,25 @@ class BaseController extends Controller {
 	 */
 	public function create()
 	{
-		try {
-			$this->_check_permissions("create");
-		}
-		catch (PermissionDeniedError $ex) {
-			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
-		}
+		BaseAuthController::auth_check('create', $this->get_model_name());
 
-		$obj = $this->get_model_obj();
+		$model = static::get_model_obj();
 
-		// $view_header 	= 'Create '.$obj->get_view_header();
-		$view_header 	= BaseViewController::translate('Create ').BaseViewController::translate($obj->get_view_header());
-		// form_fields contain description of fields and the data of the fields
-		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->get_form_fields($obj), $obj), 'create');
-
-		// generate Link header - parse parent object from HTML GET array
-		// TODO: avoid use of HTML GET array for security considerations
-		$view_var = NULL;
-		if (isset(array_keys($_GET)[0]))
-		{
-			$key        = array_keys($_GET)[0];
-			$class_name = BaseModel::_guess_model_name(ucwords(explode ('_id', $key)[0]));
-			$class      = new $class_name;
-			$view_var   = $class->find($_GET[$key]);
-		}
-		$link_header = BaseViewController::prep_link_header($this->get_route_name(), $view_header, $view_var);
-
+		$view_header = BaseViewController::translate('Create ').BaseViewController::translate($model->view_headline());
+		$headline    = BaseViewController::compute_headline(static::get_route_name(), $view_header, NULL, $_GET);
+		$form_fields = BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($model), $model, 'create');
 
 		$view_path = 'Generic.create';
 		$form_path = 'Generic.form';
 
 		// proof if there is a special view for the calling model
-		if (View::exists($this->get_view_name().'.create'))
-			$view_path = $this->get_view_name().'.create';
-		if (View::exists($this->get_view_name().'.form'))
-			$form_path = $this->get_view_name().'.form';
+		if (View::exists(static::get_view_name().'.create'))
+			$view_path = static::get_view_name().'.create';
+		if (View::exists(static::get_view_name().'.form'))
+			$form_path = static::get_view_name().'.form';
 
 
-		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'link_header')));
+		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'headline')));
 	}
 
 
@@ -572,28 +428,22 @@ class BaseController extends Controller {
 	 * @param redirect: if set to false returns id of the new created object (default: true)
 	 * @return: html redirection to edit page (or if param $redirect is false the new added object id)
 	 */
-	protected function store($redirect = true)
+	public function store($redirect = true)
 	{
-		try {
-			$this->_check_permissions("create");
-		}
-		catch (PermissionDeniedError $ex) {
-			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
-		}
+		BaseAuthController::auth_check('create', $this->get_model_name());
 
-		// dd(Input::all());
-		$obj = $this->get_model_obj();
-		$controller = $this->get_controller_obj();
+		$obj = static::get_model_obj();
+		$controller = static::get_controller_obj();
 
 		// Prepare and Validate Input
 		$data 		= $controller->prepare_input(Input::all());
-		$rules 		= $controller->prep_rules($obj::rules(), $data);
+		$rules 		= $controller->prepare_rules($obj::rules(), $data);
 		$validator  = Validator::make($data, $rules);
 		$data 		= $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails())
 		{
-			return Redirect::back()->withErrors($validator)->withInput();
+			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'red');
 		}
 
 		$id = $obj::create($data)->id;
@@ -601,70 +451,7 @@ class BaseController extends Controller {
 		if (!$redirect)
 			return $id;
 
-		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Created!');
-	}
-
-
-	/*
-	 * This function is used to prepare get_form_field array for edit view
-	 * So all general preparation stuff to get_form_fields will be done here.
-	 *
-	 * Tasks:
-	 *  1. Add a (*) to fields description if validation rule contains required
-	 *  2. Add Placeholder YYYY-MM-DD for all date fields
-	 *  3. Hide all parent view relation select fields
-	 *
-	 * @param fields: the get_form_fields array()
-	 * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
-	 * @return: the modifeyed get_form_fields array()
-	 *
-	 * @autor: Torsten Schmidt
-	 */
-	protected function _prepare_form_fields($fields, $model)
-	{
-		$ret = [];
-
-		// get the validation rules for related model object
-		$rules = $this->get_model_obj()->rules();
-
-		// for all fields
-		foreach ($fields as $field)
-		{
-			// rule exists for actual field ?
-			if (isset ($rules[$field['name']]))
-			{
-				// Task 1: Add a (*) to fields description if validation rule contains required
-				if (preg_match('/(.*?)required(?!_)(.*?)/', $rules[$field['name']]))
-					$field['description'] = $field['description']. ' *';
-
-				// Task 2: Add Placeholder YYYY-MM-DD for all date fields
-				if (preg_match('/(.*?)date(.*?)/', $rules[$field['name']]))
-					$field['options']['placeholder'] = 'YYYY-MM-DD';
-
-			}
-
-			// 3. Hide all parent view relation select fields
-			if (is_object($model->view_belongs_to()) && 					// does a view relation exists
-				$model->view_belongs_to()->table.'_id' == $field['name'])	// view table name (+_id) == field name ?
-				$field['hidden'] = '1';									// hide
-
-			array_push ($ret, $field);
-		}
-
-		return $ret;
-	}
-
-
-	/**
-	 * Add extra data for right box.
-	 * This e.g. is needed to add Envia API urls but can also be used for other topics – simply overwrite this placeholder and return array with extra information instead of null…
-	 *
-	 * @author Patrick Reichel
-	 *
-	 * @return array of arrays containing extra information
-	 */
-	protected function _get_extra_data($view_var) {
-		return null;
+		return Redirect::route(static::get_route_name().'.edit', $id)->with('message', 'Created!')->with('message_color', 'blue');
 	}
 
 
@@ -676,41 +463,29 @@ class BaseController extends Controller {
 	 */
 	public function edit($id)
 	{
-		try {
-			// this needs view rights; edit rights are checked in store/update methods!
-			$this->_check_permissions("view");
-		}
-		catch (PermissionDeniedError $ex) {
-			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
-		}
+		BaseAuthController::auth_check('view', $this->get_model_name());
 
-		$obj = $this->get_model_obj();
-		//${$this->get_view_var()} = $obj->findOrFail($id);
+		$model    = static::get_model_obj();
+		$view_var = $model->findOrFail($id);
 
-		// transfer model_name, view_header, view_var
-		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($obj->get_view_header());
-		$view_var 		= $obj->findOrFail($id);
-		$form_fields	= BaseViewController::html_form_field ($this->prepare_form_fields ($this->get_controller_obj()->get_form_fields($view_var), $view_var), 'edit');
-		$link_header    = BaseViewController::prep_link_header($this->get_route_name(), $view_header, $view_var);
-		$panel_right    = $this->prepare_breadcrumb($view_var);
+		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($model->view_headline());
+		$headline       = BaseViewController::compute_headline(static::get_route_name(), $view_header, $view_var);
+		$panel_right    = $this->prepare_tabs($view_var);
+		$form_fields	= BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
 		$relations      = BaseViewController::prep_right_panels($view_var);
 
-		// TODO: replace
-		$extra_data = $this->_get_extra_data($view_var);
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';
 
 		// proof if there are special views for the calling model
-		if (View::exists($this->get_view_name().'.edit'))
-			$view_path = $this->get_view_name().'.edit';
-		if (View::exists($this->get_view_name().'.form'))
-			$form_path = $this->get_view_name().'.form';
+		if (View::exists(static::get_view_name().'.edit'))
+			$view_path = static::get_view_name().'.edit';
+		if (View::exists(static::get_view_name().'.form'))
+			$form_path = static::get_view_name().'.form';
 
 
-		$config_routes = BaseController::get_config_modules();
-
-		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations')));
+		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations')));
 	}
 
 
@@ -722,28 +497,21 @@ class BaseController extends Controller {
 	 */
 	public function update($id)
 	{
-		try {
-			$this->_check_permissions("edit");
-		}
-		catch (PermissionDeniedError $ex) {
-			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
-		}
+		BaseAuthController::auth_check('edit', $this->get_model_name());
 
-		// dd(Input::all());
-
-		$obj = $this->get_model_obj()->findOrFail($id);
-		$controller = $this->get_controller_obj();
+		$obj = static::get_model_obj()->findOrFail($id);
+		$controller = static::get_controller_obj();
 
 		// Prepare and Validate Input
 		$data      = $controller->prepare_input(Input::all());
-		$rules = $controller->prep_rules($obj::rules($id), $data);
+		$rules     = $controller->prepare_rules($obj::rules($id), $data);
 		$validator = Validator::make($data, $rules);
 		$data      = $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails())
 		{
 			Log::info ('Validation Rule Error: '.$validator->errors());
-			return Redirect::back()->withErrors($validator)->withInput();
+			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'red');
 		}
 
 		// update timestamp, this forces to run all observer's
@@ -758,7 +526,7 @@ class BaseController extends Controller {
 		$obj->update($data);
 
 
-		return Redirect::route($this->get_route_name().'.edit', $id)->with('message', 'Updated!');
+		return Redirect::route(static::get_route_name().'.edit', $id)->with('message', 'Updated!')->with('message_color', 'blue');
 	}
 
 
@@ -771,27 +539,23 @@ class BaseController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		try {
-			$this->_check_permissions("delete");
-		}
-		catch (PermissionDeniedError $ex) {
-			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
-		}
+		BaseAuthController::auth_check('delete', $this->get_model_name());
 
 		if ($id == 0)
 		{
 			// bulk delete
 			foreach (Input::all()['ids'] as $id => $val)
-				$this->get_model_obj()->findOrFail($id)->delete();
+				static::get_model_obj()->findOrFail($id)->delete();
 		}
 		else
-			$this->get_model_obj()->findOrFail($id)->delete();
+			static::get_model_obj()->findOrFail($id)->delete();
 
 		return Redirect::back();
 	}
 
 
 // Deprecated:
+	protected $output_format;
 
 	/**
 	 *  json abstraction layer

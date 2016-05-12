@@ -90,29 +90,94 @@ class BaseViewController extends Controller {
 	}
 
 
-	/*
+	/**
+	 * This function is used to prepare the resulting view_form_field array for edit view.
+	 * So all general preparation stuff to view_form_fields() will be done here.
+	 *
+	 * Tasks:
+	 *  1. Add a (*) to fields description if validation rule contains required
+	 *  2. Add Placeholder YYYY-MM-DD for all date fields
+	 *  3. Hide all parent view relation select fields (works only in edit context)
+	 *  4. auto-fill field_value with correlating model data (from sql)
+	 *
+	 * @param fields: the view_form_fields array()
+	 * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
+	 * @return: the modifeyed view_form_fields array()
+	 *
+	 * @autor: Torsten Schmidt
+	 */
+	public static function prepare_form_fields($fields, $model)
+	{
+		$ret = [];
+
+		// get the validation rules for related model object
+		$rules = $model->rules();
+
+		// for all fields
+		foreach ($fields as $field)
+		{
+			// rule exists for actual field ?
+			if (isset ($rules[$field['name']]))
+			{
+				// 1. Add a (*) to fields description if validation rule contains required
+				if (preg_match('/(.*?)required(.*?)/', $rules[$field['name']]))
+					$field['description'] = $field['description']. ' *';
+
+				// 2. Add Placeholder YYYY-MM-DD for all date fields
+				if (preg_match('/(.*?)date(.*?)/', $rules[$field['name']]))
+					$field['options']['placeholder'] = 'YYYY-MM-DD';
+
+			}
+
+			// 3. Hide all parent view relation select fields (in edit context)
+			//    NOTE: this will not work in create context, because view_belongs_to() returns null !
+			//          Hiding in create context will only work with hard coded 'hidden' => 1 entry in view_form_fields()
+			if (is_object($model->view_belongs_to()) && 					// does a view relation exists
+				$model->view_belongs_to()->table.'_id' == $field['name'])	// view table name (+_id) == field name ?
+				$field['hidden'] = 1;									// hide
+
+			// 4. set all field_value's to SQL data
+			$field['field_value'] = $model[$field['name']];
+
+			// 4.(sub-task) auto-fill all field_value's with HTML POST array if supposed
+			if (isset($_POST[$field['name']]))
+				$field['field_value'] = $_POST[$field['name']];
+
+			array_push ($ret, $field);
+		}
+
+		return $ret;
+	}
+
+
+	/**
 	 * Add ['html'] element to each $fields entry
 	 *
 	 * The html element contains the HTML formated code to display each HTML field.
-	 * You could use 'html' parameter inside the get_form_fields() functions to
+	 * You could use 'html' parameter inside the view_form_fields() functions to
 	 * overwrite default behavior. The best advice to use these parameter is to
-	 * debug the return array of this function.
+	 * debug the return array of this function and adapt it to you requirements.
 	 *
-	 * @param fields: the prepared get_form_fields array(), each array element represents on (HTML) field
+	 * @param fields: the prepared view_form_fields array(), each array element represents on (HTML) field
 	 * @param context: edit|create - context from which this function is called
 	 * @return: array() of fields with added ['html'] element containing the preformed html content
 	 *
 	 * @autor: Torsten Schmidt
 	 */
-	public static function html_form_field($fields, $context = 'edit')
+	public static function compute_form_fields($_fields, $model, $context = 'edit')
 	{
+		// init
 		$ret = [];
 
 		// background color's to toggle through
 		$color_array = ['white', '#c8e6c9', '#fff3e0', '#fbe9e7', '#e0f2f1', '#f3e5f5'];
 		$color = $color_array[0];
 
+		// prepare form fields
+		$fields = static::prepare_form_fields($_fields, $model);
 
+
+		// foreach fields
 		foreach ($fields as $field)
 		{
 			$s = '';
@@ -124,34 +189,14 @@ class BaseViewController extends Controller {
 				continue;
 			}
 
-			/*
-			 * Hide Fields:
-			 *
-			 * 1. Hide fields that are in HTML _GET array.
-			 *    This is required for creating a "relational child"
-			 *    elements with pre-filled values. This must be first
-			 *    done, otherwise pre-filling does not work
-			 *
-			 *    Example: Mta/create?modem_id=100002 -> creates MTA to Modem id 100002
-			 */
-			if (isset($_GET[$field['name']]))
-			{
-				$s .= \Form::hidden ($field["name"], $_GET[$field['name']]);
-				goto finish;
-			}
-
-			/*
-			 * 2. check if hidden is set in get_form_fields()
-			 * 3. globally hide all relation fields
-			 *    (this means: all fields ending with _id)
-			 */
+			// hidden stuff
 			if (array_key_exists('hidden', $field))
 			{
 				$hidden = $field['hidden'];
 
-				if (($context == 'edit' && strpos($hidden, 'E') !== false) ||
-				   ($context == 'create' && strpos($hidden, 'C') == false) ||
-				   ($hidden == 1 || $hidden == '1'))
+				if (($context == 'edit' && strpos($hidden, 'E') !== false) || // hide edit context only?
+				   ($context == 'create' && strpos($hidden, 'C') !== false) || // hide create context only?
+				   ($hidden == 1 || $hidden == '1')) // hide globally?
 					{
 						$s .= \Form::hidden ($field["name"], $field['field_value']);
 						goto finish;
@@ -159,26 +204,24 @@ class BaseViewController extends Controller {
 			}
 
 
-			/*
-			 * Output the Form Elements
-			 */
+			// prepare value and options vars
 			$value   = isset($field["value"]) ? $field["value"] : [];
 			$options = isset($field["options"]) ? $field["options"] : [];
 			array_push($options, 'style="background-color:'.$color.'"');
+
+			// Help: add help msg to form fields - mouse on hover
+			if (isset($field['help']))
+				$options["title"] = $field['help'];
 
 			// select field: used for jquery (java script) realtime based showing/hiding of fields
 			$select = null;
 			if (isset($field['select']) && is_string($field['select']))
 				$select = ['class' => $field['select']];
 
-			// Help: add help msg to form fields - mouse on hover
-			if (isset($field['help']))
-				$options["title"] = $field['help'];
-
 			// Open Form Group
 			$s .= \Form::openGroup($field["name"], $field["description"], $select, $color);
 
-			// form_type ?
+			// Output the Form Elements
 			switch ($field["form_type"])
 			{
 				case 'checkbox' :
@@ -204,8 +247,7 @@ class BaseViewController extends Controller {
 					break;
 
 				default:
-					$value   = $field['field_value'];
-					$s .= \Form::$field["form_type"]($field["name"], $value, $options);
+					$s .= \Form::$field["form_type"]($field["name"], $field['field_value'], $options);
 					break;
 			}
 
@@ -218,7 +260,7 @@ class BaseViewController extends Controller {
 			$s .= \Form::closeGroup();
 
 
-			// Space Element between fields
+			// Space Element between fields and color switching
 			if (array_key_exists('space', $field))
 			{
 				//$s .= "<div class=col-md-12><br></div>";
@@ -227,6 +269,7 @@ class BaseViewController extends Controller {
 			}
 
 finish:
+			// add ['html'] parameter
 			$add = $field;
 			$add['html'] = $s;
 			array_push($ret, $add);
@@ -247,7 +290,7 @@ finish:
 	 *
 	 * @author: Torsten Schmidt
 	 */
-	public static function get_view_header_links ()
+	public static function view_main_menus ()
 	{
 		$ret = array();
 		$modules = Module::enabled();
@@ -293,23 +336,41 @@ finish:
 
 
 
-	/*
+	/**
 	 * Generate Top Header Link (like e.g. Contract > Modem > Mta > ..)
 	 * Shows the html links of the related objects recursively
 	 *
 	 * @param $route_name: route name of actual controller
 	 * @param $view_header: the view header name
 	 * @param $view_var: the object to generate the link from
-	 * @return: the HTML link line to be directly included in blade
-	 * @author: Torsten Schmidt
+	 * @param $html: the HTML GET array. See note bellow!
+	 * @return the HTML link line to be directly included in blade
+	 * @author Torsten Schmidt
+	 *
+	 * NOTE: in create context we are forced to work with HTML GET array in $html.
+	 *       The first request will also work with POST array, but if validation fails
+	 *       there is no longer any POST array we can work with. Note that POST array is
+	 *       generated in relation.blade.
+	 *
+	 *       To avoid this we must ensure that every relational create send it's correlating
+	 *       model key, like contract_id=xyz in HTML GET request.
 	 */
-	public static function prep_link_header ($route_name, $view_header, $view_var)
+	public static function compute_headline ($route_name, $view_header, $view_var, $html = null)
 	{
 		$s = "";
 
+		// only for create context: parse headline from HTML POST context array
+		if (!is_null($html) && isset(array_keys($html)[0]))
+		{
+			$key        = array_keys($html)[0];
+			$class_name = BaseModel::_guess_model_name(ucwords(explode ('_id', $key)[0]));
+			$class      = new $class_name;
+			$view_var   = $class->find($html[$key]);
+		}
+
 		if ($view_var != null)
 		{
-			// Recursivly parse all relations from view_var
+			// Recursively parse all relations from view_var
 			$parent = $view_var;
 			do
 			{
@@ -320,11 +381,11 @@ finish:
 
 					// get header field name
 					// NOTE: for historical reasons check if this is a array or a plain string
-					// See: Confluence API  - get_view_link_header()
-					if(is_array($parent->get_view_link_title()))
-						$name = $parent->get_view_link_title()['header'];
+					// See: Confluence API  - get_view_headline()
+					if(is_array($parent->view_index_label()))
+						$name = $parent->view_index_label()['header'];
 					else
-						$name = $parent->get_view_link_title();
+						$name = $parent->view_index_label();
 
 					$s = \HTML::linkRoute($view.'.edit', $name, $parent->id).' > '.$s;
 				}
@@ -365,7 +426,7 @@ finish:
 
 
 	/*
-	 * Prepare Rigtht Panels to View
+	 * Prepare Right Panels to View
 	 *
 	 * @param $view_var: object/model to be displayed
 	 * @return: array() of fields with added ['html'] element containing the preformed html content
@@ -425,8 +486,8 @@ finish:
 		$class = current($color_array);
 
 		// Check if class object has a own color definition
-		if (isset($object->get_view_link_title()['bsclass']))
-			$class = $object->get_view_link_title()['bsclass'];
+		if (isset($object->view_index_label()['bsclass']))
+			$class = $object->view_index_label()['bsclass'];
 		else
 		{
 			// Rotate Color through $color_array every $rotate_after entries

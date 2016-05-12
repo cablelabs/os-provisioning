@@ -37,8 +37,11 @@ class ContractController extends \BaseModuleController {
     /**
      * defines the formular fields for the edit and create view
      */
-	public function get_form_fields($model = null)
+	public function view_form_fields($model = null)
 	{
+		if (!$model)
+			$model = new Contract;
+
 		$r = $a = $b = $c = $d = [];
 
 		// label has to be the same like column in sql table
@@ -48,7 +51,7 @@ class ContractController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'number', 'description' => $model->get_column_description('number'), 'options' => ['readonly']),
 			array('form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2'), 'options' => ['readonly']),
 			array('form_type' => 'text', 'name' => 'number3', 'description' => $model->get_column_description('number3'), 'options' => ['readonly']),
-			array('form_type' => 'text', 'name' => 'number4', 'description' => $model->get_column_description('number4'), 'options' => ['readonly']),
+			array('form_type' => 'text', 'name' => 'number4', 'description' => $model->get_column_description('number4'), 'options' => ['readonly'], 'space' => 1),
 			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
 			array('form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options()),
 			array('form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic degree', 'value' => $model->get_academic_degree_options()),
@@ -63,10 +66,10 @@ class ContractController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'),
 			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1'),
 
-			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1'),
+			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1', 'checked' => 1),
 		);
 
-
+		// TODO: replace with static command
 		if ($model->voip_enabled) {
 
 			$b = array(
@@ -79,7 +82,7 @@ class ContractController extends \BaseModuleController {
 			);
 		}
 
-		if ($model->billing_enabled) {
+		if (\PPModule::is_active('billingbase')) {
 
 			$c = array(
 				array('form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'), // TODO: create default 'value' => date("Y-m-d")
@@ -87,6 +90,10 @@ class ContractController extends \BaseModuleController {
 				array('form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'value' => '1'),
 				array('form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $model->html_list(CostCenter::all(), 'name')),
 				array('form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => $this->_salesmen(), 'space' => '1'),
+
+				// NOTE: qos is required as hidden field to automatically create modem with correct contract qos class
+				// TODO: @Nino Ryschawy: please review and test while merging ..
+				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list(Qos::all(), 'name'), 'hidden' => 1),
 			);
 		}
 		else
@@ -106,22 +113,6 @@ class ContractController extends \BaseModuleController {
 		return array_merge($a, $b, $c, $d);
 	}
 
-	/**
-	 * Wrapper to get all jobs for the current phonenumber
-	 * This can be used as a switch for several providers like envia etc. – simply check if the module exists :-)
-	 * If no module is active we return the default value “null” – nothing will be shown
-	 *
-	 * @author Patrick Reichel
-	 */
-	protected function _get_extra_data($view_var) {
-
-		if ($this->get_model_obj()->module_is_active('ProvVoipEnvia')) {
-			return $this->_get_envia_management_jobs($view_var);
-		}
-
-		// default: do nothing
-		return null;
-	}
 
 	/**
 	 * Get all management jobs for Envia
@@ -130,14 +121,14 @@ class ContractController extends \BaseModuleController {
 	 * @param $model current phonenumber object
 	 * @return array containing linktexts and URLs to perform actions against REST API
 	 */
-	protected function _get_envia_management_jobs($contract) {
+	public static function _get_envia_management_jobs($contract) {
 
 		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
 
 		// check if user has the right to perform actions against Envia API
 		// if not: don't show any actions
 		try {
-			$this->_check_permissions("view", 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
+			\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
 		}
 		catch (PermissionDeniedError $ex) {
 			return null;
@@ -164,7 +155,7 @@ class ContractController extends \BaseModuleController {
 			'voip_contract_end',
 		);
 
-		foreach ($this->get_form_fields($this->get_model_obj()) as $field) {
+		foreach ($this->view_form_fields(static::get_model_obj()) as $field) {
 			if (array_key_exists($field['name'], $data)) {
 				if (array_search($field['name'], $nullable_fields) !== False) {
 					if ($data[$field['name']] == '') {

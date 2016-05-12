@@ -13,18 +13,18 @@ use App\Exceptions\AuthExceptions;
 class ModemController extends \BaseModuleController {
 
 	protected $index_create_allowed = false;
-	protected $save_button = 'Save and Restart Modem';
+	protected $save_button = 'Save / Restart';
 
     /**
      * defines the formular fields for the edit and create view
      */
-	public function get_form_fields($model = null)
+	public function view_form_fields($model = null)
 	{
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
 			array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly']),
-			array('form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract'),
+			array('form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 1),
 			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC adress'),
 			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list($model->configfiles(), 'name')),
 			array('form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'),
@@ -43,10 +43,10 @@ class ModemController extends \BaseModuleController {
 
 			array('form_type' => 'text', 'name' => 'x', 'description' => 'Geopos X', 'html' =>
 				"<div class=col-md-12 style='background-color:#e0f2f1'>
-				<div class=form-group><label for=x class='col-md-3 control-label'>Geopos X/Y</label>
-				<div class=col-md-4><input class=form-control name=x type=text value='".$model['x']."' id=x style='background-color:#e0f2f1'></div>"),
+				<div class=form-group><label for=x class='col-md-4 control-label' style='margin-top: 10px;'>Geopos X/Y</label>
+				<div class=col-md-3><input class=form-control name=x type=text value='".$model['x']."' id=x style='background-color:#e0f2f1'></div>"),
 			array('form_type' => 'text', 'name' => 'y', 'description' => 'Geopos Y', 'html' =>
-				"<div class=col-md-4><input class=form-control name=y type=text value='".$model['y']."' id=y style='background-color:#e0f2f1'></div>
+				"<div class=col-md-3><input class=form-control name=y type=text value='".$model['y']."' id=y style='background-color:#e0f2f1'></div>
 				</div></div>"),
 
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
@@ -55,21 +55,21 @@ class ModemController extends \BaseModuleController {
 
 
 	/*
-	 * Modem Controller Breadcrumb. -> Panel Header Right
+	 * Modem Tabs Controller. -> Panel Header Right
 	 * See: BaseController native function for more infos
 	 *
 	 * @param view_var: the model object to be displayed
 	 * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
 	 * @author: Torsten Schmidt
 	 */
-	public function get_form_breadcrumb($view_var)
+	protected function get_form_tabs($view_var)
 	{
 		$a = [['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]],
 				['name' => 'Analyses', 'route' => 'Provmon.index', 'link' => [$view_var->id]],
 				['name' => 'CPE-Analysis', 'route' => 'Provmon.cpe', 'link' => [$view_var->id]]];
 
 		// MTA: only show MTA analysis if Modem has MTAs
-		if (isset($view_var->mtas[0]))
+		if (isset($view_var->mtas) && isset($view_var->mtas[0]))
 			array_push($a, ['name' => 'MTA-Analysis', 'route' => 'Provmon.mta', 'link' => [$view_var->id]]);
 
 		return $a;
@@ -86,17 +86,11 @@ class ModemController extends \BaseModuleController {
 	 *
 	 * @author Torsten Schmidt
 	 */
-	public function index()
+	public function _index_todo()
 	{
-		try {
-			$this->_check_permissions("view");
-		}
-		catch (Exceptions $ex) {
-			throw new AuthExceptions($e->getMessage());
-		}
+		\App\Http\Controllers\BaseAuthController::auth_check('view', $this->get_model_name());
 
-
-		if(!$this->get_model_obj()->module_is_active ('HfcCustomer'))
+		if(!\PPModule::is_active('HfcCustomer'))
 			return parent::index();
 
 		$modems = Modem::where('id', '>', '0');
@@ -139,9 +133,9 @@ class ModemController extends \BaseModuleController {
 	 */
 	public function fulltextSearch()
 	{
-		$obj    = $this->get_model_obj();
+		$obj    = static::get_model_obj();
 
-		if(!$obj->module_is_active ('HfcCustomer'))
+		if(!\PPModule::is_active ('HfcCustomer'))
 			return parent::fulltextSearch();
 
 		// get the search scope

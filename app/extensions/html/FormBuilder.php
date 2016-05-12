@@ -8,6 +8,8 @@ use Log;
 
 class FormBuilder extends CollectiveFormBuilder {
 
+    private static $layout_form_col_md = ['label'=>4, 'form'=>7, 'help'=>1];
+
 
     /**
      * An array containing the currently opened form groups.
@@ -17,18 +19,33 @@ class FormBuilder extends CollectiveFormBuilder {
     protected $groupStack = array();
 
 
-	/**
-     * Append <div> block with col-md-8
-     * NOTE: 3: col for label, 8: col for form field, 1: col for help image - if set
-     */
-    public function appendDiv($s, $col = 8)
+    public static function get_layout_form_col_md()
     {
+        return static::$layout_form_col_md;
+    }
+
+
+	/**
+     * Append <div> block with col-md-7
+     * NOTE: 4: col for label, 7: col for form field, 1: col for help image - if set
+     */
+    public function appendDiv($s, $col = 7)
+    {
+        if (isset(static::$layout_form_col_md['form']))
+            $col = static::$layout_form_col_md['form'];
+
     	return '<div class="col-md-'.$col.'">'.$s.'</div>';
     }
 
 
     /**
      * Append the given class to the given options array.
+     *
+     * @param $class: string to add to html class
+     * @param $options: options array
+     *        NOTE: use '!class' to avoid adding $class variable from FormBuilder functions,
+     *              instead set only this proposed classes
+     * @return: options array with (manipulated) class key
      */
     private function appendClassToOptions($class, $options = array())
     {
@@ -36,6 +53,9 @@ class FormBuilder extends CollectiveFormBuilder {
         // class to it. Otherwise, set the 'class' to 'form-control'.
         $options['class'] = isset($options['class']) ? $options['class'].' ' : '';
         $options['class'] .= $class;
+
+        if (isset($options['!class']))
+            $options['class'] = $options['!class'];
 
         return $options;
     }
@@ -66,7 +86,11 @@ class FormBuilder extends CollectiveFormBuilder {
      */
     public function label($name, $value = null, $options = array())
     {
-        $options = $this->appendClassToOptions('col-md-3 control-label', $options);
+        $col = 4;
+        if (isset(static::$layout_form_col_md['label']))
+            $col = static::$layout_form_col_md['label'];
+
+        $options = $this->appendClassToOptions('col-md-'.$col.' control-label', $options);
 
         // translate the value if necessary
         // $bc = new \App\Http\Controllers\BaseController;
@@ -84,18 +108,21 @@ class FormBuilder extends CollectiveFormBuilder {
      */
     public function submit($value = NULL, $options = array())
     {
-        $options = $this->appendClassToOptions('form-control btn btn-sm btn-success', $options);
+        $options = $this->appendClassToOptions('btn btn-primary', $options);
 
         $value = \App\Http\Controllers\BaseViewController::translate($value);
 
         if (isset($options['style']) && $options['style'] == 'simple')
             $s = parent::submit($value, $options);
         else
-            $s = '<div class="form-group col-md-12">
-    			<label class="col-md-3 control-label"></label>
-    			<div class="">'.parent::submit($value, $options).
-    			'</div>
-    			</div>';
+        {
+            $options['style'] = 'simple'; // style: required to auto width button to text length
+            $s = '<div class="col-md-12">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6"><br>'.
+                        parent::submit($value, $options).
+                    '</div></div>';
+        }
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.
@@ -106,7 +133,7 @@ class FormBuilder extends CollectiveFormBuilder {
     /**
      * Create a form model field.
      */
-    public function model($model, array $options = array(), $style = 'advanced')
+    public function model($model, array $options = array(), $style = 'simple')
     {
         $options = $this->appendClassToOptions('form-group form-horizontal', $options);
       	if (!isset ($options['method']))
@@ -185,6 +212,11 @@ class FormBuilder extends CollectiveFormBuilder {
         return parent::open($options);
     }
 
+    public function hr($value='')
+    {
+        return "<br><hr style=\"width: 97%; color: #D8D8D8; height: 1px; background-color:#D8D8D8;\"/>";
+    }
+
     /**
      * Determine whether the form element with the given name
      * has any validation errors.
@@ -227,7 +259,7 @@ class FormBuilder extends CollectiveFormBuilder {
 
 
         // Return the formatted error message, if the form element has any.
-        return $errors->first($this->transformKey($name), '<p align="right" class="help-block">:message</p>');
+        return $errors->first($this->transformKey($name), '<p align="left" class="help-block">:message</p>');
     }
 
 
@@ -271,8 +303,13 @@ class FormBuilder extends CollectiveFormBuilder {
         // Get the formatted errors for this form group.
         $errors = $this->getFormattedErrors($name);
 
+        // Get Layout col-md Setting
+        $col = 4;
+        if (isset(static::$layout_form_col_md['label']))
+            $col = static::$layout_form_col_md['label'];
+
         // Append the errors to the group and close it out.
-        return $errors.'</div>'.$this->closeDivClass();
+        return '<div class=col-md-'.$col.'></div><div class=col-md-'.(12-$col).'>'.$errors.'</div></div>'.$this->closeDivClass();
     }
 
 
