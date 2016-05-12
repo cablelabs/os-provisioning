@@ -407,9 +407,12 @@ class Contract extends \BaseModel {
 			return null;
 
 		$prod_ids = \Modules\BillingBase\Entities\Product::get_product_ids($type);
+		if (!$prod_ids)
+			return null;
+
 		$last 	= 0;
 		$tariff = null;			// item
-
+// dd($prod_ids, $this->items);
 		foreach ($this->items as $item)
 		{
 			if (in_array($item->product->id, $prod_ids) && $item->check_validity('now'))

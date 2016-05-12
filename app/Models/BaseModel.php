@@ -641,10 +641,15 @@ class BaseModel extends Eloquent
 		$start = $this->get_start_time();
 		$end   = $this->get_end_time();
 
+
+// if (get_class($this) == 'Modules\BillingBase\Entities\Item' && $this->contract->id == 500005 && $this->product->type == 'Internet')
+// 	dd($this->product->name, $start < strtotime(date('Y-m-01')), !$end, $end >= strtotime(date('Y-m-01', strtotime('first day of last month'))), date('Y-m-d', $start), date('Y-m-d', $end));
+
+
 		switch ($timespan)
 		{
 			case 'month':
-				return $start < strtotime(date('Y-m-01')) && (!$end || $end >= strtotime(date('Y-m-01'), strtotime('first day of last month')));
+				return $start < strtotime(date('Y-m-01')) && (!$end || $end >= strtotime(date('Y-m-01', strtotime('first day of last month'))));
 
 			case 'year':			
 				return $start < strtotime(date('Y-01-01')) && (!$end || $end >= strtotime(date('Y-01-01'), strtotime('last year')));
