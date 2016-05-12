@@ -207,7 +207,11 @@ class BaseViewController extends Controller {
 			// prepare value and options vars
 			$value   = isset($field["value"]) ? $field["value"] : [];
 			$options = isset($field["options"]) ? $field["options"] : [];
-			array_push($options, 'style="background-color:'.$color.'"');
+
+			// field color
+			if(!isset($options['style']))
+				$options['style'] = '';
+			$options['style'] .= " background-color:$color";
 
 			// Help: add help msg to form fields - mouse on hover
 			if (isset($field['help']))
