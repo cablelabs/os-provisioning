@@ -35,7 +35,7 @@
 
 			<!-- end brand -->
 			<div class="login-content">
-				{{ Form::open(array('url' => 'auth/login')) }}
+				{{ Form::open(array('url' => CoreRoute::$admin_prefix.'/auth/login')) }}
 
 					<!-- Username -->
 					<div class="form-group m-b-20">

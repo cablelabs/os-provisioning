@@ -14,12 +14,13 @@ Relation Blade is used inside a Panel Element to display relational class object
 ?>
 
 
+
 <!-- Create Button: (With hidden add fields if required) -->
 @if (!isset($options['hide_create_button']))
 	@DivOpen(12)
 
 		<!-- Form Open: must send it's correlating parent via GET, see note in BaseViewController::compute_headline() -->
-		{{ Form::open(array('url' => $route.'/create?'.$key.'='.$view_var->id, 'method' => 'POST')) }}
+		{{ Form::open(array('url' => CoreRoute::$admin_prefix.'/'.$route.'/create?'.$key.'='.$view_var->id, 'method' => 'POST')) }}
 		{{ Form::hidden($key, $view_var->id) }}
 
 			{{-- Add a hidden form field if create tag is set in $form_fields --}}

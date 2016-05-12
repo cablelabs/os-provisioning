@@ -1,7 +1,6 @@
 <?php
 
-// Authentification is necessary before accessing a route
-Route::group(array('before' => 'auth'), function() {
+CoreRoute::group([], function() {
 
 	CoreRoute::resource('PhonenumberManagement', 'Modules\ProvVoip\Http\Controllers\PhonenumberManagementController');
 	CoreRoute::resource('Phonenumber', 'Modules\ProvVoip\Http\Controllers\PhonenumberController');

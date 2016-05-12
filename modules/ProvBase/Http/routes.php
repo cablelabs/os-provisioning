@@ -1,7 +1,6 @@
 <?php
 
-// Authentification is necessary before accessing a route
-Route::group(array('before' => 'auth'), function() {
+CoreRoute::group([], function() {
 
 	// Modem
 	Route::get('modem/{modem}/ping', array ('as' => 'Modem.ping', 'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@ping'));

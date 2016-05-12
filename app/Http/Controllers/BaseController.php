@@ -451,7 +451,7 @@ class BaseController extends Controller {
 		if (!$redirect)
 			return $id;
 
-		return Redirect::route(static::get_route_name().'.edit', $id)->with('message', 'Created!');
+		return Redirect::route(static::get_route_name().'.edit', $id)->with('message', 'Created!')->with('message_color', 'blue');
 	}
 
 
@@ -526,7 +526,7 @@ class BaseController extends Controller {
 		$obj->update($data);
 
 
-		return Redirect::route(static::get_route_name().'.edit', $id)->with('message', 'Updated!');
+		return Redirect::route(static::get_route_name().'.edit', $id)->with('message', 'Updated!')->with('message_color', 'blue');
 	}
 
 

@@ -10,6 +10,19 @@ use GlobalConfig;
 
 class AuthController extends BaseController {
 
+	// HTML prefix: must be initialized!
+	private $prefix;
+
+
+	// Constructor
+	public function __construct()
+	{
+		$this->prefix = \CoreRoute::$admin_prefix;
+
+		return parent::__construct();
+	}
+
+
 	/*
 	 * Show Login Page
 	 */
@@ -29,11 +42,11 @@ class AuthController extends BaseController {
 		// If ProvBase is not installed redirect to Config Page
 		$bm = new \BaseModel;
 		if (!\PPModule::is_active ('ProvBase'))
-			return Redirect::to('Config');
+			return Redirect::to($this->prefix.'/Config');
 
 		// Redirect to Default Page
 		// TODO: Redirect to a global overview page
-		return Redirect::to('Contract');
+		return Redirect::to($this->prefix.'/Contract');
 	}
 
 
@@ -44,7 +57,7 @@ class AuthController extends BaseController {
 	{
 		// Check Login
 		if (!Auth::user())
-			return Redirect('auth/login');
+			return Redirect($this->prefix.'/auth/login');
 
 		return $this->default_page();
 	}
@@ -67,7 +80,7 @@ class AuthController extends BaseController {
 		// if the validator fails, redirect back to the form
 		if ($validator->fails()) {
 			$error_text = $validator->errors()->first('login_name').'<br>'.$validator->errors()->first('password');
-			return Redirect::to('auth/login')
+			return Redirect::to($this->prefix.'/auth/login')
 				->withErrors($validator) // send back all errors to the login form
 				->withInput(Input::except('password')) // send back the input (not the password) so that we can repopulate the form
 				->with('status', $error_text);
@@ -88,7 +101,7 @@ class AuthController extends BaseController {
 			else {
 
 				// validation not successful, send back to form
-				return Redirect::to('auth/login')
+				return Redirect::to($this->prefix.'/auth/login')
 					->withInput(Input::except('password')) // send back the input (not the password) so that we can repopulate the form
 					->with('status', 'No valid Login');
 
@@ -105,7 +118,7 @@ class AuthController extends BaseController {
 	{
 		Auth::logout();
 
-		return Redirect::to('auth/login');
+		return Redirect::to($this->prefix.'/auth/login');
 	}
 
 

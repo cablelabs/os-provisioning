@@ -1,7 +1,6 @@
 <?php
 
-// Authentification is necessary before accessing a route
-Route::group(array('before' => 'auth'), function() {
+CoreRoute::group([], function() {
 
 	CoreRoute::resource('SnmpMib', 'Modules\HfcSnmp\Http\Controllers\SnmpMibController');
 	CoreRoute::resource('SnmpValue', 'Modules\HfcSnmp\Http\Controllers\SnmpValueController');
