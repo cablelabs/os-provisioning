@@ -1,10 +1,10 @@
 <?php
 
-CoreRoute::group([], function() {
+BaseRoute::group([], function() {
 
-	CoreRoute::resource('PhonenumberManagement', 'Modules\ProvVoip\Http\Controllers\PhonenumberManagementController');
-	CoreRoute::resource('Phonenumber', 'Modules\ProvVoip\Http\Controllers\PhonenumberController');
-	CoreRoute::resource('Mta', 'Modules\ProvVoip\Http\Controllers\MtaController');
-	CoreRoute::resource('ProvVoip', 'Modules\ProvVoip\Http\Controllers\ProvVoipController');
+	BaseRoute::resource('PhonenumberManagement', 'Modules\ProvVoip\Http\Controllers\PhonenumberManagementController');
+	BaseRoute::resource('Phonenumber', 'Modules\ProvVoip\Http\Controllers\PhonenumberController');
+	BaseRoute::resource('Mta', 'Modules\ProvVoip\Http\Controllers\MtaController');
+	BaseRoute::resource('ProvVoip', 'Modules\ProvVoip\Http\Controllers\ProvVoipController');
 
 });

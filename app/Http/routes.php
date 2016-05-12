@@ -29,14 +29,14 @@ Route::post('admin/auth/logout', array('as' => 'Auth.logout', 'uses' => 'AuthCon
 Route::get('admin/auth/denied', array('as' => 'Auth.denied', 'uses' => 'AuthController@denied'));
 
 // Core Admin API
-CoreRoute::group([], function() {
+BaseRoute::group([], function() {
 
 	// Base routes for global search
 	Route::get('base/fulltextSearch', array('as' => 'Base.fulltextSearch', 'uses' => 'BaseController@fulltextSearch'));
 
-	CoreRoute::resource('Authuser', 'AuthuserController');
+	BaseRoute::resource('Authuser', 'AuthuserController');
 
 	Route::get('Config', array('as' => 'Config.index', 'uses' => 'BaseModuleController@glob_conf'));
-	CoreRoute::resource('GlobalConfig', 'GlobalConfigController');
+	BaseRoute::resource('GlobalConfig', 'GlobalConfigController');
 
 });

@@ -1,11 +1,11 @@
 <?php
 
-CoreRoute::group([], function() {
+BaseRoute::group([], function() {
 
-	CoreRoute::resource('SnmpMib', 'Modules\HfcSnmp\Http\Controllers\SnmpMibController');
-	CoreRoute::resource('SnmpValue', 'Modules\HfcSnmp\Http\Controllers\SnmpValueController');
-	CoreRoute::resource('DeviceType', 'Modules\HfcSnmp\Http\Controllers\DeviceTypeController');
-	CoreRoute::resource('Device', 'Modules\HfcSnmp\Http\Controllers\DeviceController');
+	BaseRoute::resource('SnmpMib', 'Modules\HfcSnmp\Http\Controllers\SnmpMibController');
+	BaseRoute::resource('SnmpValue', 'Modules\HfcSnmp\Http\Controllers\SnmpValueController');
+	BaseRoute::resource('DeviceType', 'Modules\HfcSnmp\Http\Controllers\DeviceTypeController');
+	BaseRoute::resource('Device', 'Modules\HfcSnmp\Http\Controllers\DeviceController');
 
 
 	Route::get('Device/{modem}/controlling', array ('as' => 'Device.controlling_edit', 'uses' => 'Modules\HfcSnmp\Http\Controllers\DeviceController@controlling_edit'));

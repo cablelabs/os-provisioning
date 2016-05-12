@@ -3,11 +3,11 @@
 namespace Acme\core;
 
 /**
- * CoreRoute API
+ * BaseRoute API
  *
  * This Class will be used to create our own http routing functions
  */
-class CoreRoute {
+class BaseRoute {
 
 	// HTML Admin Prefix for https://xyz/lara/admin
 	public static $admin_prefix = 'admin';

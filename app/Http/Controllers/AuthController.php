@@ -17,7 +17,7 @@ class AuthController extends BaseController {
 	// Constructor
 	public function __construct()
 	{
-		$this->prefix = \CoreRoute::$admin_prefix;
+		$this->prefix = \BaseRoute::$admin_prefix;
 
 		return parent::__construct();
 	}

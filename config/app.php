@@ -216,7 +216,7 @@ return [
 		'BaseModuleController' => 'App\Http\Controllers\BaseModuleController',
 		'HtmlServiceProvider'  => 'Acme\html\HtmlServiceProvider',
 		'PPModule' => 'Acme\pingpong\PPModule',
-		'CoreRoute'     => 'Acme\core\CoreRoute',
+		'BaseRoute'     => 'Acme\core\BaseRoute',
 	],
 
 ];
