@@ -15,10 +15,10 @@
 		$message = 'Page not found';
 
 	if (!isset($link))
-		$link = Request::root();
+		$link = Request::root().'/'.\BaseRoute::$admin_prefix;
 ?>
 
-	@include ('bootstrap.header')	
+	@include ('bootstrap.header')
 
 	<body class="pace-top">
 
@@ -37,8 +37,8 @@
             </div>
         </div>
         <!-- end error -->
-        
+
     </body>
 
-	@include ('bootstrap.footer')	
+	@include ('bootstrap.footer')
 </html>

@@ -70,7 +70,7 @@ class BaseAuthController extends Controller {
 
 		// if no model is given: use current model
 		if (is_null($model_to_check)) {
-			$model_to_check = static::get_model_name();
+			$model_to_check = \NamespaceController::get_model_name();
 		}
 
 		// no user logged in
@@ -96,6 +96,19 @@ class BaseAuthController extends Controller {
 	}
 
 
+	/**
+	 * Main Authentication Function
+	 *
+	 * Check if user has permission to continue.
+	 * Use this method to protect your methods
+	 *
+	 * NOTE: This function will (and should be mainly used) from Middleware context
+	 *
+	 * @author Torsten Schmidt
+	 *
+	 * @param $access [view|create|edit|delete]
+	 * @param $model_to_check model path and name (in format as is stored in database); use current model if not given
+	 */
 	public static function auth_check ($access, $model_to_check=null)
 	{
 		try {

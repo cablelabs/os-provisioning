@@ -57,10 +57,10 @@ class DeviceController extends SnmpController {
 
 		// Init View
 		$obj = static::get_model_obj();
-		$model_name  = static::get_model_name();
+		$model_name  = \NamespaceController::get_model_name();
 		$view_header = 'Edit: '.$device->name;
 		$view_var 	 = $obj->findOrFail($id);
-		$route_name  = static::get_route_name();
+		$route_name  = \NamespaceController::get_route_name();
 		$view_header_links = BaseViewController::view_main_menus();
 
 		$view_path = 'hfcsnmp::Device.controlling';

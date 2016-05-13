@@ -119,8 +119,6 @@ class ConfigfileController extends \BaseModuleController {
 	 */
 	public function index()
 	{
-		\App\Http\Controllers\BaseAuthController::auth_check('view', $this->get_model_name());
-
 		$create_allowed = $this->index_create_allowed;
 
 		$children = Configfile::all()->where('parent_id', 0)->all();

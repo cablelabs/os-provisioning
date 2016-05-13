@@ -24,9 +24,17 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $routeMiddleware = [
-		'auth' => 'App\Http\Middleware\Authenticate',
-		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
-		'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
+		// Base Authentication Stuff
+		// @author Torsten Schmidt
+	    'auth.view' => \App\Http\Middleware\BaseAuthViewMiddleware::class,
+	    'auth.create' => \App\Http\Middleware\BaseAuthCreateMiddleware::class,
+	    'auth.edit' => \App\Http\Middleware\BaseAuthEditMiddleware::class,
+	    'auth.delete' => \App\Http\Middleware\BaseAuthDeleteMiddleware::class,
+
+		// L5 defaults:
+		//'auth' => 'App\Http\Middleware\Authenticate',
+		//'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
+		//'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
 	];
 
 }
