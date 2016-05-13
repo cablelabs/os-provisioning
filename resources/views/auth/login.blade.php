@@ -15,7 +15,7 @@
 
 	<!-- Background Image -->
 	<div class="login-cover">
-		<div class="login-cover-image"><img alt="" data-id="login-cover-image" src="{{asset('images/main-pic-1.png')}}"></div>
+		<div class="login-cover-image"><img alt="" data-id="login-cover-image" src="{{asset('images/'.$image)}}"></div>
 		<div class="login-cover-bg"></div>
 	</div>
 

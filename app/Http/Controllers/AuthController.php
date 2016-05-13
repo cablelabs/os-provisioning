@@ -19,8 +19,8 @@ use GlobalConfig;
  */
 class AuthController extends BaseController {
 
-	// URL prefix, Headlines, Login Page after successful login, authentication guarder
-	protected $prefix, $headline1, $headline2, $login_page, $guard;
+	// URL prefix, Headlines, Login Page after successful login, authentication guarder, bg image
+	protected $prefix, $headline1, $headline2, $login_page, $guard, $image;
 
 
 	// Constructor
@@ -31,6 +31,7 @@ class AuthController extends BaseController {
 		$this->headline2 = $g->headline2;
 		$this->prefix = \BaseRoute::$admin_prefix; // url prefix
 		$this->login_page = null; // means jump to normal admin page
+		$this->image = 'main-pic-1.png';
 
 		// @see: L5 documentation for authentication and "Accessing Specific Guard Instances"
 		// @see: config/auth.php
@@ -51,9 +52,10 @@ class AuthController extends BaseController {
 		$head1 = $this->headline1;
 		$head2 = $this->headline2;
 		$prefix = $this->prefix;
+		$image = $this->image;
 
 		// show the form
-		return \View::make('auth/login', compact('head1', 'head2', 'prefix'));
+		return \View::make('auth/login', compact('head1', 'head2', 'prefix', 'image'));
 	}
 
 
