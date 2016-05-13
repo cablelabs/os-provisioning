@@ -10,6 +10,12 @@ use GlobalConfig;
 /**
  * Basic AuthController
  *
+ * IMPORTANT: !!! Auth Class: Always work with guards !!!
+ *            Like: Auth::guard($this->guard)
+ *            Otherwise this enable cross between admin and ccc !
+ *
+ * TODO: use a local helper for Auth::guard($this->guard)
+ *
  * TODO: this controller should not clone from BaseController!
  *       This could be a security hazard!
  *       Better: clone from general Controller API
@@ -89,7 +95,7 @@ class AuthController extends BaseController {
 	public function home()
 	{
 		// Check Login
-		if (!Auth::user())
+		if (!Auth::guard($this->guard)->user())
 			return $this->showLogin();
 
 		// Valid User: goto default page
@@ -143,7 +149,7 @@ class AuthController extends BaseController {
 	 */
 	public function doLogout()
 	{
-		Auth::logout();
+		Auth::guard($this->guard)->logout();
 
 		return Redirect::to($this->prefix.'/auth/login');
 	}
