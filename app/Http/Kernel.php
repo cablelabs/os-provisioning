@@ -33,6 +33,9 @@ class Kernel extends HttpKernel {
 	    'auth.edit' => \App\Http\Middleware\BaseAuthEditMiddleware::class,
 	    'auth.delete' => \App\Http\Middleware\BaseAuthDeleteMiddleware::class,
 
+	    // TODO: check if absence of CCC module will break ?
+	    'ccc.base' => \Modules\Ccc\Http\Middleware\CccBaseMiddleware::class,
+
 		// L5 defaults:
 		//'auth' => 'App\Http\Middleware\Authenticate',
 		//'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',

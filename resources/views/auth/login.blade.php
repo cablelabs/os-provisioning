@@ -35,7 +35,7 @@
 
 			<!-- end brand -->
 			<div class="login-content">
-				{{ Form::open(array('url' => BaseRoute::$admin_prefix.'/auth/login')) }}
+				{{ Form::open(array('url' => $prefix.'/auth/login')) }}
 
 					<!-- Username -->
 					<div class="form-group m-b-20">
