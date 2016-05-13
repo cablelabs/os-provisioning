@@ -77,4 +77,30 @@ class BaseRoute {
 
 		\Route::group($attributes, $callback);
 	}
+
+
+    /**
+     * The following functions are simple helpers to adapt automatic authentication stuff
+     */
+    public static function get($uri, $action = null)
+    {
+    	$action['middleware'] = 'auth.view';
+        return \Route::get($uri, $action);
+    }
+
+
+    // requires edit permissions!!!
+    public static function post($uri, $action = null)
+    {
+    	$action['middleware'] = 'auth.edit';
+        return \Route::post($uri, $action);
+    }
+
+
+    // requires edit permissions!!!
+    public static function put($uri, $action = null)
+    {
+    	$action['middleware'] = 'auth.edit';
+        return \Route::put($uri, $action);
+    }
 }

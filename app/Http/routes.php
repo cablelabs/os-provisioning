@@ -26,17 +26,17 @@ Route::get ('admin/auth/logout', array('as' => 'Auth.logout', 'uses' => 'AuthCon
 Route::post('admin/auth/logout', array('as' => 'Auth.logout', 'uses' => 'AuthController@doLogout'));
 
 // Auth Denied. For Error Handling
-Route::get('admin/auth/denied', array('as' => 'Auth.denied', 'uses' => 'AuthController@denied'));
+BaseRoute::get('admin/auth/denied', array('as' => 'Auth.denied', 'uses' => 'AuthController@denied'));
 
 // Core Admin API
 BaseRoute::group([], function() {
 
 	// Base routes for global search
-	Route::get('base/fulltextSearch', array('as' => 'Base.fulltextSearch', 'uses' => 'BaseController@fulltextSearch'));
+	BaseRoute::get('base/fulltextSearch', array('as' => 'Base.fulltextSearch', 'uses' => 'BaseController@fulltextSearch'));
 
 	BaseRoute::resource('Authuser', 'AuthuserController');
 
-	Route::get('Config', array('as' => 'Config.index', 'uses' => 'BaseModuleController@glob_conf'));
+	BaseRoute::get('Config', array('as' => 'Config.index', 'uses' => 'BaseModuleController@glob_conf'));
 	BaseRoute::resource('GlobalConfig', 'GlobalConfigController');
 
 });
