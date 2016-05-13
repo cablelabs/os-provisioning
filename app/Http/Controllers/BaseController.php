@@ -231,10 +231,14 @@ class BaseController extends Controller {
 	 */
 	protected function prepare_input($data)
 	{
-		// Checkbox Unset ?
 		foreach ($this->get_form_fields($this->get_model_obj()) as $field)
 		{
-			if(!isset($data[$field['name']]) && $field['form_type'] == 'checkbox')
+			// skip file upload fields
+			if ($field['form_type'] == 'file')
+				continue;
+
+			// Checkbox Unset ?
+			if(!isset($data[$field['name']]) && ($field['form_type'] == 'checkbox'))
 				$data[$field['name']] = 0;
 
 			// trim all inputs as default
