@@ -47,7 +47,8 @@ class PhonebookEntry extends \BaseModel {
 		if (is_null(static::$config)) {
 
 			// we have to use the raw scanner because of the special characters like “(”…
-			$config = parse_ini_file('/etc/nms/provvoip/phonebook_entry__config.ini', true, INI_SCANNER_RAW);
+			/* $config = parse_ini_file('/storage/app/config/modules/provvoip/phonebook_entry__config.ini', true, INI_SCANNER_RAW); */
+			$config = parse_ini_string(\Storage::get('config/modules/provvoip/phonebook_entry__config.ini'), true, INI_SCANNER_RAW);
 
 			// with using the raw scanner type we have to convert some values
 			// false is a string in this case – and boolval("false") == true

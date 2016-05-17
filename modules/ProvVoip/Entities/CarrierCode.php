@@ -39,13 +39,14 @@ class CarrierCode extends \BaseModel {
 	 *
 	 *	@return array containing all carriers
 	 */
-	public static function carrier_list_for_form_select()
+	public static function carrier_list_for_form_select($with_empty=True)
 	{
 
 		# carrier codes of the carriers to be on top of the list
 		# the given sorting will be the sorting of the <select>
 		# TODO: maybe this list should not be hardcoded – can come from configuration dialog or out of .env?
 		$favorite_carriers = array(
+			'D057', # EnviaTel; has to be used if no porting is wanted (new number from EnviaTel)
 			'D001', # Telekom
 			'D201', # 1&1
 		);
@@ -92,7 +93,12 @@ class CarrierCode extends \BaseModel {
 
 		// first element is the null element ⇒ this will be selected by default in a new form
 		// so we initialize the result array with the null element
-		$result = $no_carrier_list;
+		if ($with_empty) {
+			$result = $no_carrier_list;
+		}
+		else {
+			$result = array();
+		}
 
 		// sort favorites by key (=position in favorite_carriers) to get correct order
 		ksort($favorite_carrier_list);

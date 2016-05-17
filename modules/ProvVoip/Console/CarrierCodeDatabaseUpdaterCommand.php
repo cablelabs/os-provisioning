@@ -30,7 +30,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $csv_file = '/etc/nms/provvoip/carrier_codes.csv';
+	protected $csv_file = 'modules/config/provvoip/carrier_codes.csv';
 
 	/**
 	 * Path to hash file for csv comparation.
@@ -39,7 +39,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $hash_file = 'modules/ProvVoip/carrier_codes__sha1sum';
+	protected $hash_file = 'modules/config/provvoip/carrier_codes__sha1sum';
 
 
 	/**

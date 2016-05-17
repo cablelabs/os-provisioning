@@ -67,10 +67,10 @@ class PhonenumberManagementController extends \BaseModuleController {
 			array('form_type' => 'select', 'name' => 'trcclass', 'description' => 'TRC class', 'value' => TRCClass::trcclass_list_for_form_select()),
 			array('form_type' => 'text', 'name' => 'activation_date', 'description' => 'Activation date'),
 			array('form_type' => 'checkbox', 'name' => 'porting_in', 'description' => 'Incoming porting'),
-			array('form_type' => 'select', 'name' => 'carrier_in', 'description' => 'Carrier in', 'value' => CarrierCode::carrier_list_for_form_select()),
+			array('form_type' => 'select', 'name' => 'carrier_in', 'description' => 'Carrier in', 'value' => CarrierCode::carrier_list_for_form_select(False), 'help' => 'In case of a new number set this to EnviaTEL'),
 			array('form_type' => 'text', 'name' => 'deactivation_date', 'description' => 'Termination date'),
 			array('form_type' => 'checkbox', 'name' => 'porting_out', 'description' => 'Outgoing porting'),
-			array('form_type' => 'select', 'name' => 'carrier_out', 'description' => 'Carrier out', 'value' => CarrierCode::carrier_list_for_form_select()),
+			array('form_type' => 'select', 'name' => 'carrier_out', 'description' => 'Carrier out', 'value' => CarrierCode::carrier_list_for_form_select(True)),
 
 			array('form_type' => 'text', 'name' => 'subscriber_company', 'description' => 'Subscriber company', 'value' => $subscriber['company']),
 			array('form_type' => 'select', 'name' => 'subscriber_salutation', 'description' => 'Subscriber salutation', 'value' => $model->get_salutation_options(), 'options' => array('selected' => $subscriber['salutation'])),

@@ -240,7 +240,7 @@ class ExtendedValidator
 	public function validatePhonebookPredefinedString($attribute, $value, $parameters) {
 
 		// TODO: make configurable?
-		$path = '/etc/nms/provvoip/';
+		$path = storage_path().'/app/config/modules/provvoip/';
 
 		// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
 		// when laravel calls the actual validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
