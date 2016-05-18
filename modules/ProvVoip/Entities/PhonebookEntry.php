@@ -166,4 +166,28 @@ class PhonebookEntry extends \BaseModel {
 	}
 
 
+	/**
+	 * Helper to get options defined in file.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public static function get_options_from_file($section) {
+
+		$options = array();
+
+		if (is_null(static::$config)) {
+			static::read_config();
+		};
+
+		$entries = explode("\n", \Storage::get('config/modules/provvoip/'.static::$config[$section]['in_file']));
+
+		$options[''] = '';
+		foreach ($entries as $entry) {
+			$options[$entry] = $entry;
+		}
+
+		return $options;
+	}
+
+
 }
