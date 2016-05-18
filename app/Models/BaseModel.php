@@ -10,6 +10,9 @@ class BaseModel extends Eloquent
 {
 	use SoftDeletes;
 
+	// use to enable force delete for inherit models
+	protected $force_delete = 0;
+
 	public $voip_enabled;
 	public $billing_enabled;
 
@@ -561,13 +564,26 @@ class BaseModel extends Eloquent
 
 
 	/**
+	 * Local Helper to differ between soft- and force-deletes
+	 * @return type mixed
+	 */
+	protected function _delete()
+	{
+		if ($this->force_delete)
+			return parent::performDeleteOnModel();
+
+		return parent::delete();
+	}
+
+
+	/**
 	 *	Recursive delete of all children objects
 	 *
 	 *	@author Torsten Schmidt
 	 *
-	 *	@return true if success
+	 *	@return void
 	 *
-	 *  TODO: return state should take care of deleted children
+	 *  @todo return state on success, should also take care of deleted children
 	 */
 	public function delete()
 	{
@@ -575,7 +591,7 @@ class BaseModel extends Eloquent
 		foreach ($this->get_all_children() as $child)
 			$child->delete();
 
-		return parent::delete();
+		$this->_delete();
 	}
 
 
