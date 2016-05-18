@@ -71,6 +71,9 @@ class BaseAuthController extends Controller {
 		// if no model is given: use current model
 		if (is_null($model_to_check)) {
 			$model_to_check = \NamespaceController::get_model_name();
+
+			if($model_to_check == 'Base')
+				$model_to_check = 'GlobalConfig';
 		}
 
 		// no user logged in
