@@ -16,14 +16,14 @@ Route::get('admin', array('as' => 'Home', 'uses' => 'AuthController@home'));
 
 
 // Auth => login form
-Route::get('admin/auth/login', array('as' => 'Auth.login', 'uses' => 'AuthController@showLogin'));
+Route::get('admin/auth/login', array('as' => 'Auth.login', 'uses' => 'AuthController@showLoginForm'));
 
 // Auth => process form data
-Route::post('admin/auth/login', array('as' => 'Auth.login', 'uses' => 'AuthController@doLogin'));
+Route::post('admin/auth/login', array('as' => 'Auth.login', 'uses' => 'AuthController@postLogin'));
 
 // Auth => Logout
-Route::get ('admin/auth/logout', array('as' => 'Auth.logout', 'uses' => 'AuthController@doLogout'));
-Route::post('admin/auth/logout', array('as' => 'Auth.logout', 'uses' => 'AuthController@doLogout'));
+Route::get ('admin/auth/logout', array('as' => 'Auth.logout', 'uses' => 'AuthController@getLogout'));
+Route::post('admin/auth/logout', array('as' => 'Auth.logout', 'uses' => 'AuthController@getLogout'));
 
 // Auth Denied. For Error Handling
 BaseRoute::get('admin/auth/denied', array('as' => 'Auth.denied', 'uses' => 'AuthController@denied'));

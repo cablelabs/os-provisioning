@@ -6,11 +6,32 @@ namespace Acme\core;
  * BaseRoute API
  *
  * This Class will be used to create our own http routing functions
+ *
+ * @author Torsten Schmidt
  */
 class BaseRoute {
 
 	// HTML Admin Prefix for https://xyz/lara/admin
 	public static $admin_prefix = 'admin';
+
+
+	/**
+	 * Return the correct base URL
+	 * @todo move somewhere else
+	 * @return type string the actual base url
+	 */
+	public static function get_base_url()
+	{
+		$url = \Request::root();
+
+		if (\Request::is('admin/*'))
+			return $url.'/admin';
+
+		if (\Request::is('ccc/*'))
+			return $url.'/ccc';
+
+		return $url; // will not work
+	}
 
 
 	/**

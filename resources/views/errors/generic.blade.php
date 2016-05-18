@@ -15,7 +15,8 @@
 		$message = 'Page not found';
 
 	if (!isset($link))
-		$link = Request::root().'/'.\BaseRoute::$admin_prefix;
+		$link = \BaseRoute::get_base_url();
+
 ?>
 
 	@include ('bootstrap.header')

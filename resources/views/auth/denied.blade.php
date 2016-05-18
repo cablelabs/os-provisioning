@@ -7,7 +7,7 @@
 		@include ('bootstrap.header')
 	</head>
 
-	@include ('bootstrap.header')	
+	@include ('bootstrap.header')
 
 	<body class="pace-top">
 
@@ -20,15 +20,15 @@
 					@endif
                 </div>
                 <div>
-                    <a href="{{Request::root()}}" class="btn btn-success">Go Back to Home Page</a>
+                    <a href="{{\BaseRoute::get_base_url()}}" class="btn btn-success">Go Back to Home Page</a>
                 </div>
             </div>
         </div>
         <!-- end error -->
-        
+
     </body>
 
-	@include ('bootstrap.footer')	
+	@include ('bootstrap.footer')
 </html>
 
 

@@ -2,31 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use Auth;
 use Input;
 use Redirect;
 use GlobalConfig;
 
+// NOTE: will not work with default Request class (?) from app.php: Illuminate\Support\Facades\Request
+use Illuminate\Http\Request;
+
+use Illuminate\Foundation\Auth\ThrottlesLogins;
+use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+
 /**
  * Basic AuthController
  *
- * IMPORTANT: !!! Auth Class: Always work with guards !!!
- *            Like: Auth::guard($this->guard)
- *            Otherwise this enable cross between admin and ccc !
- *
- * TODO: use a local helper for Auth::guard($this->guard)
- *
- * TODO: this controller should not clone from BaseController!
- *       This could be a security hazard!
- *       Better: clone from general Controller API
+ * IMPORTANT: !!! do not use Auth:: directly, instead use $this->auth() !!!
+ *            This will take care of the correct authentication API for
+ *            Admin and CCC. Working directly with Auth:: will only work
+ *            for the first (in this case Admin) layer!
  *
  * @author Patrick Reichel (founder)
- * @author Torsten Schmidt (adaptions to PingPong, middleware, CCC)
+ * @author Torsten Schmidt (adaptions to PingPong, middleware, CCC, adapt to L5.2 code like Throttling)
  */
-class AuthController extends BaseController {
+class AuthController extends Controller {
+
+	use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
 	// URL prefix, Headlines, Login Page after successful login, authentication guarder, bg image
 	protected $prefix, $headline1, $headline2, $login_page, $guard, $image;
+
+	// @see usage from Illuminate\Foundation\Auth\AuthenticatesUsers
+	protected $username = 'login_name';
 
 
 	// Constructor
@@ -42,8 +49,29 @@ class AuthController extends BaseController {
 		// @see: L5 documentation for authentication and "Accessing Specific Guard Instances"
 		// @see: config/auth.php
 		$this->guard = 'admin';
+	}
 
-		return parent::__construct();
+
+	/**
+	 * A local helper which MUST be used instead of Auth::
+	 * @return type Auth object (for actual object guard)
+	 * @author Torsten Schmidt
+	 */
+	private function auth()
+	{
+		return Auth::guard($this->guard);
+	}
+
+
+	/**
+	 * Local Helper for Logging
+	 * @param type $text log message
+	 * @param type|string $level [debug|info|warning|..]
+	 * @return type
+	 */
+	private function log($text, $level = 'info')
+	{
+		Log::{$level}('Auth('.$this->guard.'): '.$text);
 	}
 
 
@@ -52,7 +80,7 @@ class AuthController extends BaseController {
 	 *
 	 * @return type view
 	 */
-	public function showLogin()
+	public function showLoginForm()
 	{
 		$g = GlobalConfig::first();
 		$head1 = $this->headline1;
@@ -61,7 +89,7 @@ class AuthController extends BaseController {
 		$image = $this->image;
 
 		// show the form
-		return \View::make('auth/login', compact('head1', 'head2', 'prefix', 'image'));
+		return \View::make('auth.login', compact('head1', 'head2', 'prefix', 'image'));
 	}
 
 
@@ -95,8 +123,8 @@ class AuthController extends BaseController {
 	public function home()
 	{
 		// Check Login
-		if (!Auth::guard($this->guard)->user())
-			return $this->showLogin();
+		if (!$this->auth()->user())
+			return $this->showLoginForm();
 
 		// Valid User: goto default page
 		return $this->default_page();
@@ -104,54 +132,60 @@ class AuthController extends BaseController {
 
 
 	/**
-	 * Perform Login. Check if valid User is logged in
+	 * Perform Login. Check if the requested user is could login
+	 *
+	 * @todo NAT addresses could be blocked by throttle algorithm
+	 * @todo implement a new MVC for IP address access lists
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	public function doLogin()
+	public function postLogin(Request $request)
 	{
-		// validate the info, create rules for the inputs
-		$rules = array(
-			'login_name'    => 'required|string',
-			'password' => 'required|string|min:3' // password can only be alphanumeric and has to be greater than 3 characters
-		);
+		// Validation
+		$this->validateLogin($request);
 
-		// run the validation rules on the inputs from the form
-		$validator = \Validator::make(Input::all(), $rules);
-
-		// if the validator fails, redirect back to the form
-		if ($validator->fails()) {
-			$error_text = $validator->errors()->first('login_name').'<br>'.$validator->errors()->first('password');
-			return Redirect::to($this->prefix.'/auth/login')
-				->withErrors($validator) // send back all errors to the login form
-				->withInput(Input::except('password')) // send back the input (not the password) so that we can repopulate the form
-				->with('status', $error_text);
+		// Authentication Throttling
+		$throttles = $this->isUsingThrottlesLoginsTrait();
+		if ($throttles && $lockedOut = $this->hasTooManyLoginAttempts($request))
+		{
+			$this->log('Block: '.$request->ip().' has reached maximum numbers of retries!', 'warning');
+			return $this->sendLockoutResponse($request);
 		}
 
 		// create our user data for the authentication
-		$userdata = array(
-			'login_name' => Input::get('login_name'),
-			'password' => Input::get('password'),
-			'active' => 1,	// user has to be active
-		);
+		$userdata = $request->only('login_name', 'password');
 
 		// attempt to do the login
-		if (Auth::guard($this->guard)->attempt($userdata))
-			return $this->default_page();
+		if ($this->auth()->attempt($userdata))
+		{
+			$this->log(Input::get('login_name').' has logged in');
+			return $this->default_page(); // login successful
+		}
 
-		// validation not successful, send back to form
+		// Throttling: increase wrong attempts
+		if ($throttles && !$lockedOut)
+			$this->incrementLoginAttempts($request);
+
+		$this->log(Input::get('login_name').' wrong login attempt', 'debug');
+
+		// Login not successful, send back to form
 		return Redirect::to($this->prefix.'/auth/login')
 			->withInput(Input::except('password')) // send back the input (not the password) so that we can repopulate the form
-			->with('status', 'No valid Login');
+			->withErrors(['error_test' => $this->getFailedLoginMessage()]);
 	}
 
 
 	/**
 	 * Logout User
+	 *
+	 * @return \Illuminate\Http\Response
 	 */
-	public function doLogout()
+	public function getLogout()
 	{
-		Auth::guard($this->guard)->logout();
+		$this->redirectAfterLogout = $this->prefix.'/auth/login';
 
-		return Redirect::to($this->prefix.'/auth/login');
+		return $this->logout();
 	}
 
 

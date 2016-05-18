@@ -49,7 +49,11 @@
 
 					<!-- Error Message -->
 					<div class="m-t-20">
-						<p align="center"><font id="error" color="yellow">{{Session::get('status')}}</font></p>
+						<p align="center"><font id="error" color="yellow">
+							@foreach ($errors->all() as $error)
+				                {{ $error }}
+				            @endforeach
+						</font></p>
 					</div>
 					<br>
 
