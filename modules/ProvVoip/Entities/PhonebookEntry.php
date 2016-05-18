@@ -35,7 +35,7 @@ class PhonebookEntry extends \BaseModel {
 			'zipcode' => 'required|phonebook_string',
 			'city' => 'required|phonebook_string',
 			'urban_district' => 'phonebook_string',
-			'business' => 'phonebook_string',
+			'business' => 'phonebook_predefined_string',
 			'number_usage' => 'required|phonebook_one_character_option',
 			'tag' => 'phonebook_predefined_string',
 		);
