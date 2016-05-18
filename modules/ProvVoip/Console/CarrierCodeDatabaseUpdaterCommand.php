@@ -30,7 +30,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $csv_file = 'modules/config/provvoip/carrier_codes.csv';
+	protected $csv_file = 'config/modules/provvoip/carrier_codes.csv';
 
 	/**
 	 * Path to hash file for csv comparation.
@@ -39,7 +39,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $hash_file = 'modules/config/provvoip/carrier_codes__sha1sum';
+	protected $hash_file = 'config/modules/provvoip/carrier_codes__sha1sum';
 
 
 	/**
@@ -98,8 +98,8 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	protected function _have_to_update() {
 
 		// if there is no csv file, we can't update the db…
-		if (!is_readable($this->csv_file)) {
-			Log::warning($this->name.': CSV file with carrier codes does not exist ('.$this->csv_file.')');
+		if(!\Storage::has($this->csv_file)) {
+			Log::warning($this->name.': CSV file with carrier codes does not exist ('.storage_path().'/'.$this->csv_file.')');
 			return false;
 		}
 
@@ -109,7 +109,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 		}
 
 		// check if current csv's checksum differes from the last version
-		$cur_hash  = sha1_file($this->csv_file);
+		$cur_hash  = sha1(\Storage::get($this->csv_file));
 		$last_hash = \Storage::get($this->hash_file);
 
 		if ($cur_hash == $last_hash) {
@@ -131,7 +131,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	protected function _read_csv() {
 
 		try {
-			$this->csv = array_map('str_getcsv', file($this->csv_file));
+			$this->csv = array_map('str_getcsv', str_getcsv(\Storage::get($this->csv_file), "\n"));
 		}
 		catch (Exception $ex) {
 			Log:error($this->name.': Something went wrong reading CSV file ('.$this->csv_file.') => '.$ex->getMessage());
@@ -166,7 +166,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 			$cc->save();
 		}
 
-		$hash = sha1_file($this->csv_file);
+		$hash = sha1(\Storage::get($this->csv_file));
 		\Storage::put($this->hash_file, $hash);
 		Log::info($this->name.': Database carriercodes updated');
 
