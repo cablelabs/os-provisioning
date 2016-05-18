@@ -239,26 +239,20 @@ class ExtendedValidator
 	 */
 	public function validatePhonebookPredefinedString($attribute, $value, $parameters) {
 
-		// TODO: make configurable?
-		$path = storage_path().'/app/config/modules/provvoip/';
-
 		// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
 		// when laravel calls the actual validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
 		$validator = \func_get_arg(3);
 
-		$valid_file = $path.PhonebookEntry::$config[$attribute]['in_file'];
+		// attention: data coming into validators are still htmlencoded from view level!
+		$search = html_entity_decode($value);
 
-		// instead of loading the whole file we use grep -x to get a complete matching line
-		$search = escapeshellarg($value);
-		$count = `grep -cx $search $valid_file`;
-
-		if (intval(trim($count)) == 0) {
+		// use the method that builds the array for the selects => that contains all valid values…
+		if (!array_key_exists($search, PhonebookEntry::get_options_from_file($attribute))) {
 			$validator->setCustomMessages(array('phonebook_predefined_string' => $value.' is not a valid value for '.$attribute));
 			return false;
 		}
 
 		return true;
-
 	}
 
 
