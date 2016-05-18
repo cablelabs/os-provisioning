@@ -11,9 +11,16 @@
 |
 */
 
-// Home Route, This will redirect depending on valid Login
-Route::get('admin', array('as' => 'Home', 'uses' => 'AuthController@home'));
+// Home Route
+Route::get('', array('as' => 'Home', 'uses' => 'WelcomeController@index'));
 
+
+/*
+ * Admin
+ */
+
+// Base Route, This will redirect depending on valid Login
+Route::get('admin', array('as' => 'Home', 'uses' => 'AuthController@home'));
 
 // Auth => login form
 Route::get('admin/auth/login', array('as' => 'Auth.login', 'uses' => 'AuthController@showLoginForm'));

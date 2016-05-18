@@ -20,7 +20,7 @@ class WelcomeController extends Controller {
 	 */
 	public function __construct()
 	{
-		$this->middleware('guest');
+		// $this->middleware('guest');
 	}
 
 	/**
@@ -30,7 +30,14 @@ class WelcomeController extends Controller {
 	 */
 	public function index()
 	{
-		return view('welcome');
+		$g = \GlobalConfig::first();
+		$head1 = $g->headline1;
+		$head2 = $g->headline2;
+
+		if (\App::isLocal())
+			return view('welcome')->with(compact('head1', 'head2'));
+
+		abort(404);
 	}
 
 }
