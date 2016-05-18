@@ -566,10 +566,18 @@ class ContractObserver
 	// start contract numbers from 10000 - TODO: move to global config
 	protected $num = 490000;
 
-	public function created($contract)
+	public function creating($contract)
 	{
 		$contract->number = $contract->id - $this->num;
 
+		// Note: this is only needed when Billing Module is not active - TODO: proof with future static function
+		$contract->sepa_iban = strtoupper($contract->sepa_iban);
+		$contract->sepa_bic  = strtoupper($contract->sepa_bic);
+	}
+
+
+	public function created($contract)
+	{
 		$contract->save();     			// forces to call the updated method of the observer
 		$contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
 	}
@@ -577,6 +585,9 @@ class ContractObserver
 	public function updating($contract)
 	{
 		$contract->number = $contract->id - $this->num;
+
+		$contract->sepa_iban = strtoupper($contract->sepa_iban);
+		$contract->sepa_bic  = strtoupper($contract->sepa_bic);
 	}
 
 	public function updated ($contract)
