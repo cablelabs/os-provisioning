@@ -11,7 +11,7 @@ class ConfigfileController extends \BaseModuleController {
     /**
      * defines the formular fields for the edit and create view
      */
-	public function get_form_fields($model = null)
+	public function view_form_fields($model = null)
 	{
 		if ($model) {
 			$parents = $model->parents_list();
@@ -41,7 +41,7 @@ class ConfigfileController extends \BaseModuleController {
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function prep_rules($rules, $data)
+	public function prepare_rules($rules, $data)
 	{
 		$rules['text'] .= ':'.$data['device'];
 		return $rules;
@@ -102,11 +102,11 @@ class ConfigfileController extends \BaseModuleController {
 		} while ($cnt <= self::$INDEX);
 
 		// $data .= '<td>'.Form::checkbox('ids['.$object->id.']').'</td>';
-		// $data .= '<td>'.HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id).'</td>';
+		// $data .= '<td>'.HTML::linkRoute($cur_model.'.edit', $object->view_index_label(), $object->id).'</td>';
 		// $data .= '</tr>';
 
 		$data .= Form::checkbox('ids['.$object->id.']', 1, Null, null, ['style' => 'simple']).'&nbsp;&nbsp;';
-		$data .= HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id);
+		$data .= HTML::linkRoute($cur_model.'.edit', $object->view_index_label(), $object->id);
 		$data .= '<br>';
 
 		return $data;
@@ -119,12 +119,7 @@ class ConfigfileController extends \BaseModuleController {
 	 */
 	public function index()
 	{
-		try {
-			$this->_check_permissions("view");
-		}
-		catch (Exceptions $ex) {
-			throw new AuthExceptions($e->getMessage());
-		}
+		\App\Http\Controllers\BaseAuthController::auth_check('view', $this->get_model_name());
 
 		$create_allowed = $this->index_create_allowed;
 
@@ -147,7 +142,7 @@ class ConfigfileController extends \BaseModuleController {
 	 * Overwrites the base method => we need to handle file uploads
 	 * @author Patrick Reichel
 	 */
-	protected function store ($redirect = true) {
+	public function store ($redirect = true) {
 
 		// check and handle uploaded firmware files
 		$this->handle_file_upload('firmware', '/tftpboot/fw/');

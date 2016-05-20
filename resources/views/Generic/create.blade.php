@@ -1,6 +1,6 @@
 {{--
 
-@param $link_header: the link header description in HTML
+@param $headline: the link header description in HTML
 
 @param $form_path: the form view to be displayed inside this blade (mostly Generic.edit)
 @param $route_name: the base route name of this object class which will be added
@@ -11,7 +11,7 @@
 
 @section('content_top')
 
-	{{ $link_header }}
+	{{ $headline }}
 
 	{{ \App\Http\Controllers\BaseViewController::translate('Create') }}
 

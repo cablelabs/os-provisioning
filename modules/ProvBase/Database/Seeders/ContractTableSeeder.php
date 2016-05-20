@@ -20,7 +20,7 @@ class ContractTableSeeder extends \BaseSeeder {
 
 			Contract::create([
 				'number' => 'contr_'.$index,
-				'number2' => 'Cu/2015/Q4/-'.$index-1,
+				'number2' => 'Cu/2015/Q4/'.($index-1),
 				'number3' => 'contr_'.$index,
 				'company' => (rand(0,10) > 7 ? $faker->company: ''),
 				'salutation' => 'Frau',

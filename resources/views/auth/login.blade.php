@@ -5,57 +5,75 @@
 		<meta charset="utf-8">
 		<title>NMS</title>
 		@include ('bootstrap.header')
+
+		<script>setTimeout("document.getElementById('error').style.display='none';", 3000);</script>
 	</head>
 
-	@include ('bootstrap.header')	
+	@include ('bootstrap.header')
 
 	<body class="pace-top">
 
-	    <!-- begin login -->
-        <div class="login bg-black animated fadeInDown">
+	<!-- Background Image -->
+	<div class="login-cover">
+		<div class="login-cover-image"><img alt="" data-id="login-cover-image" src="{{asset('images/main-pic-1.png')}}"></div>
+		<div class="login-cover-bg"></div>
+	</div>
 
-            <!-- begin brand -->
-            <div class="login-header">
-                <div class="brand">
-                    <span class="logo"></span> {{ $head1 }}
-                    <small>{{ $head2 }}</small>
-                </div>
-                <div class="icon">
-                    <i class="fa fa-sign-in"></i>
-                </div>
-            </div>
+		<!-- begin login -->
+		<div class="login login-v2 animated fadeInDown">
 
-            <!-- end brand -->
-            <div class="login-content">
-                {{ Form::open(array('url' => 'auth/login')) }}
+			<!-- begin brand -->
+			<div class="login-header">
+				<div class="brand">
+					<span class="logo"></span> {{ $head1 }}
+					<small>{{ $head2 }}</small>
+				</div>
+				<div class="icon">
+					<i class="fa fa-sign-in"></i>
+				</div>
+			</div>
 
- 					<div class="form-group m-b-20">
-                    {{ Form::text('login_name', Input::old('login_name'), array('autofocus'=>'autofocus', 'class' => "form-control input-lg", 'placeholder' => 'Username', 'style' => 'simple')) }}
-                    </div>
+			<!-- end brand -->
+			<div class="login-content">
+				{{ Form::open(array('url' => BaseRoute::$admin_prefix.'/auth/login')) }}
 
-                    <div class="form-group m-b-20">
-                    {{ Form::password('password', array('autofocus'=>'autofocus', 'class' => "form-control input-lg", 'placeholder' => 'Password', 'style' => 'simple')) }}
-                    </div>
-            <!--
-                    <div class="checkbox m-b-20">
-                        <label>
-                            <input type="checkbox" /> Remember Me
-                        </label>
-                    </div>
-            -->
-                    <div class="login-buttons">
-                        <button type="submit" class="btn btn-success btn-block btn-lg">Sign me in</button>
-                    </div>
+					<!-- Username -->
+					<div class="form-group m-b-20">
+					{{ Form::text('login_name', Input::old('login_name'), array('autofocus'=>'autofocus', 'class' => "form-control input-lg", 'placeholder' => 'Username', 'style' => 'simple')) }}
+					</div>
 
+					<!-- Password -->
+					<div class="form-group m-b-20">
+					{{ Form::password('password', array('autofocus'=>'autofocus', 'class' => "form-control input-lg", 'placeholder' => 'Password', 'style' => 'simple')) }}
+					</div>
 
-                {{ Form::close() }}
-            </div>
-        </div>
-        <!-- end login -->
-        
-    </body>
+					<!-- Error Message -->
+					<div class="m-t-20">
+						<p align="center"><font id="error" color="yellow">{{Session::get('status')}}</font></p>
+					</div>
+					<br>
 
-	@include ('bootstrap.footer')	
+			<!-- Remember Me Checkbox is disabled !
+					<div class="checkbox m-b-20">
+						<label>
+							<input type="checkbox" /> Remember Me
+						</label>
+					</div>
+			-->
+
+					<!-- Login Button -->
+					<div class="login-buttons">
+						<button type="submit" class="btn btn-success btn-block btn-lg">Sign me in</button>
+					</div>
+
+				{{ Form::close() }}
+			</div>
+		</div>
+		<!-- end login -->
+
+	</body>
+
+	@include ('bootstrap.footer')
 </html>
 
 

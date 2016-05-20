@@ -1,6 +1,6 @@
 {{--
 
-@param $link_header: the link header description in HTML
+@param $headline: the link header description in HTML
 
 @param $view_var: the object we are editing
 @param $form_update: the update route which should be called when clicking save
@@ -13,7 +13,7 @@
 
 @section('content_top')
 
-	{{ $link_header }}
+	{{ $headline }}
 
 @stop
 
@@ -56,7 +56,12 @@
 
 					<!-- include a view -->
 					@if (isset($relation['view']))
-						@include ($relation['view'])
+						@if (is_string($relation['view']))
+							@include ($relation['view'])
+						@endif
+						@if (is_array($relation['view']))
+							@include ($relation['view']['view'], isset($relation['view']['vars']) ? $relation['view']['vars'] : [])
+						@endif
 					@endif
 
 					<!-- include a relational class/object/table, like Contract->Modem -->

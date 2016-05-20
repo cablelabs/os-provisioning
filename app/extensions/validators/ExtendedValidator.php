@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Acme\Validators;
 
@@ -11,12 +11,12 @@ use IBAN;
 /*
  * Our own ExtendedValidator Class
  *
- * IMPORTANT: add Validator::extend('xyz', 'ExtendedValidator@validateXyz'); to 
+ * IMPORTANT: add Validator::extend('xyz', 'ExtendedValidator@validateXyz'); to
  * ExtendedValidatorServiceProvider under app/Providers
  */
 class ExtendedValidator
 {
-	
+
 	public function notNull($attribute, $value, $parameters)
 	{
 		if ($value == '' || $value == '0' || $value == null || $value == '0000-00-00')
@@ -26,14 +26,14 @@ class ExtendedValidator
 
 	/*
 	 * Checks if value of a data field is zero when another field has specific values (declared in parameters)
-	 * NOTE: the fields name has to be replaced by prep_rules-function of the Controller with the value of the data of this field
+	 * NOTE: the fields name has to be replaced by prepare_rules-function of the Controller with the value of the data of this field
 	 */
 	public function nullIf($attribute, $value, $parameters)
 	{
 		$data = $parameters[0];
 		// dd($attribute, $value, $parameters);
 		unset($parameters[0]);
-		
+
 		if (in_array($data, $parameters))
 		{
 			if ($value == 0 || $value == null)
@@ -188,7 +188,7 @@ class ExtendedValidator
         $cf_file = $dir."dummy-validator.conf";
 
 		/*
-		 * Replace all {xyz} content  
+		 * Replace all {xyz} content
 		 */
 		$rows = explode("\n", $value);
 		$s = '';
@@ -201,7 +201,7 @@ class ExtendedValidator
 			else
 				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", '1', $row);
 		}
-		
+
 		/*
 		 * Write Dummy File and try to encode
 		 */
@@ -213,12 +213,12 @@ class ExtendedValidator
 
         if ($device == 'cm')
         {
-	        Log::info("Validation: /usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg");   
+	        Log::info("Validation: /usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg");
 	        exec("rm -f $dir/dummy-validator.cfg && /usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg 2>&1", $outs);
         }
         elseif ($device == 'mta')
         {
-	        Log::info("Validation: /usr/local/bin/docsis -p $cf_file $dir/dummy-validator.cfg");   
+	        Log::info("Validation: /usr/local/bin/docsis -p $cf_file $dir/dummy-validator.cfg");
 	        exec("rm -f $dir/dummy-validator.cfg && /usr/local/bin/docsis -p $cf_file $dir/dummy-validator.cfg 2>&1", $outs, $ret);	//return value is always 0
 		}
 
@@ -242,7 +242,7 @@ class ExtendedValidator
         	$validator->setCustomMessages(array('docsis' => $report));
         	return false;
         }
-        
+
 		return true;
 	}
 

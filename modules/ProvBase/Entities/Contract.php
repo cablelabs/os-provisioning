@@ -31,67 +31,74 @@ class Contract extends \BaseModel {
 			'birthday' => 'required|date',
 			'contract_start' => 'date',
 			'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
-            'sepa_iban' => 'iban',
-            'sepa_bic' => 'bic',
+			'sepa_iban' => 'iban',
+			'sepa_bic' => 'bic',
 			);
 	}
 
 
-    // Name of View
-    public static function get_view_header()
-    {
-        return 'Contract';
-    }
+	// Name of View
+	public static function view_headline()
+	{
+		return 'Contract';
+	}
 
-    // link title in index view
-    public function get_view_link_title()
-    {
-    	// dd(date('Y-m', strtotime(null)), date('Y-m', strtotime('0000-00-00')));
-
+	// link title in index view
+	public function view_index_label()
+	{
 		$bsclass = 'success';
 
 		if ($this->network_access == 0)
 			$bsclass = 'danger';
 
 		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street],
-		        'index_header' => ['Contract Number', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street'],
-		        'bsclass' => $bsclass,
-		        'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
+				'index_header' => ['Contract Number', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street'],
+				'bsclass' => $bsclass,
+				'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
 
-    	// deprecated ?
+		// deprecated ?
 		$old = $this->number2 ? ' - (Old Nr: '.$this->number2.')' : '';
 		return $this->number.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city.$old;
-    }
+	}
 
-    // View Relation.
-    public function view_has_many()
-    {
-		$ret = array(
-			'Modem' => $this->modems,
-		);
-
-		if ($this->module_is_active('provvoipenvia')) {
-			$ret['EnviaOrder'] = $this->external_orders;
+	// View Relation.
+	public function view_has_many()
+	{
+		if (\PPModule::is_active('billingbase'))
+		{
+			$ret['Base']['Modem'] = $this->modems;
+			$ret['Base']['Item']        = $this->items;
+			$ret['Base']['SepaMandate'] = $this->sepamandates;
 		}
 
-		if ($this->module_is_active('billingbase'))
+		$ret['Technical']['Modem'] = $this->modems;
+
+		if (\PPModule::is_active('billingbase'))
 		{
-			$ret['Item'] 		= $this->items;
-			$ret['SepaMandate'] = $this->sepamandates;
+			$ret['Billing']['Item']        = $this->items;
+			$ret['Billing']['SepaMandate'] = $this->sepamandates;
+		}
+
+		if (\PPModule::is_active('provvoipenvia'))
+		{
+			$ret['Envia']['EnviaOrder'] = $this->external_orders;
+
+			// TODO: auth - loading controller from model could be a security issue ?
+			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
 		}
 
 		return $ret;
-    }
+	}
 
 
-
-    /*
-     * Relations
-     */
-    public function modems()
-    {
+	/*
+	 * Relations
+	 */
+	public function modems()
+	{
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
-    }
+	}
 
 	/**
 	 * Get relation to external orders.
@@ -100,7 +107,7 @@ class Contract extends \BaseModel {
 	 */
 	public function external_orders() {
 
-		if ($this->module_is_active('provvoipenvia')) {
+		if (\PPModule::is_active('provvoipenvia')) {
 			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment');
 		}
 
@@ -109,41 +116,41 @@ class Contract extends \BaseModel {
 
 	public function items()
 	{
-		if ($this->module_is_active('billingbase'))
+		if (\PPModule::is_active('billingbase'))
 			return $this->hasMany('Modules\BillingBase\Entities\Item');
 		return null;
 	}
 
 	public function sepamandates()
 	{
-		if ($this->module_is_active('billingbase'))
+		if (\PPModule::is_active('billingbase'))
 			return $this->hasMany('Modules\BillingBase\Entities\SepaMandate');
 		return null;
 	}
 
 	public function costcenter()
 	{
-		if ($this->module_is_active('billingbase'))
+		if (\PPModule::is_active('billingbase'))
 			return $this->belongsTo('Modules\BillingBase\Entities\CostCenter', 'costcenter_id');
 		return null;
 	}
 
 	public function salesman()
 	{
-		if ($this->module_is_active('billingbase'))
+		if (\PPModule::is_active('billingbase'))
 			return $this->belongsTo('Modules\BillingBase\Entities\Salesman');
 		return null;
 	}
 
 
-    /*
-     * Generate use a new user login password
-     * This does not save the involved model
-     */
-    public function generate_password($length = 10)
-    {
-        $this->password = \Acme\php\Password::generate_password();
-    }
+	/*
+	 * Generate use a new user login password
+	 * This does not save the involved model
+	 */
+	public function generate_password($length = 10)
+	{
+		$this->password = \Acme\php\Password::generate_password();
+	}
 
 
 	/**
@@ -203,7 +210,7 @@ class Contract extends \BaseModel {
 			'Behörde',
 		];
 
-		if ($this->module_is_active('provvoipenvia')) {
+		if (\PPModule::is_active('provvoipenvia')) {
 
 			$options = [
 				'Herrn',
@@ -239,7 +246,7 @@ class Contract extends \BaseModel {
 			'Prof. Dr.',
 		];
 
-		if ($this->module_is_active('provvoipenvia')) {
+		if (\PPModule::is_active('provvoipenvia')) {
 
 			$options = [
 				'',
@@ -332,7 +339,7 @@ class Contract extends \BaseModel {
 
 
 		// Task 3: Change qos and voip id when tariff changes
-		if (!$this->module_is_active('Billingbase'))
+		if (!\PPModule::is_active('Billingbase'))
 			return;
 
 		$qos_id = ($tariff = $this->get_valid_tariff('Internet')) ? $tariff->product->qos_id : 0;
@@ -371,7 +378,7 @@ class Contract extends \BaseModel {
 	public function monthly_conversion()
 	{
 		// with billing module -> daily conversion
-		if ($this->module_is_active('Billingbase'))
+		if (\PPModule::is_active('Billingbase'))
 			return;
 
 		// Tariff: monthly Tariff change – "Tarifwechsel"
@@ -405,7 +412,7 @@ class Contract extends \BaseModel {
 	 */
 	public function get_valid_tariff($type)
 	{
-		if (!$this->module_is_active('Billingbase'))
+		if (!\PPModule::is_active('Billingbase'))
 			return null;
 
 		$prod_ids = \Modules\BillingBase\Entities\Product::get_product_ids($type);

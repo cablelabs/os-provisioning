@@ -9,7 +9,7 @@ class SnmpMibController extends \BaseModuleController {
     /**
      * defines the formular fields for the edit and create view
      */
-	public function get_form_fields($model = null)
+	public function view_form_fields($model = null)
 	{
 		if (!$model)
 			$model = new SnmpMib;
@@ -17,10 +17,10 @@ class SnmpMibController extends \BaseModuleController {
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'select', 'name' => 'devicetype_id', 'description' => 'Device Type', 'value' => $model->html_list($model->devicetypes(), 'name')),
-			
+
 			array('form_type' => 'text', 'name' => 'oid', 'description' => 'SNMP Oid'),
 			array('form_type' => 'text', 'name' => 'field', 'description' => 'Field Name'),
-			
+
 			array('form_type' => 'select', 'name' => 'html_type', 'description' => 'HTML Type', 'value' => ['text'=>'text','select'=>'select','groupbox'=>'groupbox','textarea'=>'textarea']),
 			array('form_type' => 'text', 'name' => 'html_frame', 'description' => 'HTML Frame'),
 			array('form_type' => 'text', 'name' => 'html_properties', 'description' => 'HTML Properties'),

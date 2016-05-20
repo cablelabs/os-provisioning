@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Modules\ProvBase\Http\Controllers;
 
@@ -9,7 +9,7 @@ class ProvBaseController extends BaseModuleController {
     /**
      * defines the formular fields for the edit and create view
      */
-	public function get_form_fields($model = null)
+	public function view_form_fields($model = null)
 	{
 		// label has to be the same like column in sql table
 		return array(
@@ -26,5 +26,5 @@ class ProvBaseController extends BaseModuleController {
 			array('form_type' => 'text', 'name' => 'startid_endpoint', 'description' => 'Start ID Endpoints'),
 			);
 	}
-	
+
 }

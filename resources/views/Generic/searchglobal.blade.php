@@ -17,18 +17,6 @@
 
 
 	@DivOpen(12)
-		<?php
-			// searchscope for following form is the current model
-			$next_scope = 'all';
-		?>
-		@DivOpen(6)
-			{{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET')) }}
-				@include('Generic.searchform', ['button_text' => 'Search'])
-			{{ Form::close() }}
-		@DivClose()
-	@DivClose()
-
-	@DivOpen(12)
 		@if (isset($query))
 			<h4>Global Search: Matches for <tt>'{{ $query }}'</tt></h4>
 		@endif
@@ -36,10 +24,10 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<td></td>
-					<td>Type</td>
-					<td>Entry</td>
-					<td>Description</td>
+					<th></th>
+					<th>Type</th>
+					<th>Entry</th>
+					<th>Description</th>
 				</tr>
 			</thead>
 
@@ -49,15 +37,15 @@
 					$cur_model_parts = explode('\\', get_class($object));
 					$cur_model = array_pop($cur_model_parts);
 
-					if (is_array($object->get_view_link_title()))
+					if (is_array($object->view_index_label()))
 					{
-						$link = \HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title()['header'], $object->id);
-						$descr = implode (', ', $object->get_view_link_title()['index']);
+						$link = \HTML::linkRoute($cur_model.'.edit', $object->view_index_label()['header'], $object->id);
+						$descr = implode (', ', $object->view_index_label()['index']);
 					}
 					else
 					{
-						$link = \HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id);
-						$descr = $object->get_view_link_title();
+						$link = \HTML::linkRoute($cur_model.'.edit', $object->view_index_label(), $object->id);
+						$descr = $object->view_index_label();
 					}
 				?>
 

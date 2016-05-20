@@ -25,13 +25,13 @@ class Modem extends \BaseModel {
 
 
 	// Name of View
-	public static function get_view_header()
+	public static function view_headline()
 	{
 		return 'Modems';
 	}
 
 	// link title in index view
-	public function get_view_link_title()
+	public function view_index_label()
 	{
 		$bsclass = 'success';
 		$status = $this->status.' dBmV';
@@ -96,7 +96,7 @@ class Modem extends \BaseModel {
 
 	public function mtas()
 	{
-		if ($this->module_is_active('ProvVoip'))
+		if (\PPModule::is_active('ProvVoip'))
 			return $this->hasMany('Modules\ProvVoip\Entities\Mta');
 
 		return null;
@@ -104,7 +104,7 @@ class Modem extends \BaseModel {
 
 	public function tree()
 	{
-		if ($this->module_is_active('HfcBase'))
+		if (\PPModule::is_active('HfcBase'))
 			return $this->belongsTo('Modules\HfcBase\Entities\Tree');
 
 		return null;
@@ -121,7 +121,7 @@ class Modem extends \BaseModel {
 
 	public function view_has_many()
 	{
-		if ($this->module_is_active('ProvVoip'))
+		if (\PPModule::is_active('ProvVoip'))
 			return array(
 					'Mta' => $this->mtas
 				);
@@ -331,7 +331,7 @@ class Modem extends \BaseModel {
 				if (\Request::method() == 'PUT')
 				{
 					// redirect back with corresponding message over flash, needs to be saved as it's normally only saved when the session middleware terminates successfully
-					$resp = \Redirect::back()->with('message', 'Could not restart Modem! (offline/configfile error?)');
+					$resp = \Redirect::back()->with('message', 'Could not restart Modem! (offline?)')->with('message_color', 'orange');
 					\Session::driver()->save();		 // \ is like writing "use Session;" before class statement
 					$resp->send();
 
@@ -589,7 +589,7 @@ class ModemObserver
 
 		// Refresh MPS rules
 		// Note: does not perform a save() which could trigger observer.
-		if (\BaseModel::__module_is_active('HfcCustomer'))
+		if (\PPModule::is_active('HfcCustomer'))
 			$modem->tree_id = \Modules\Hfccustomer\Entities\Mpr::refresh($modem->id);
 	}
 

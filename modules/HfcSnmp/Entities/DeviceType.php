@@ -23,13 +23,13 @@ class DeviceType extends \BaseModel {
 	}
 
 	// Name of View
-	public static function get_view_header()
+	public static function view_headline()
 	{
 		return 'Device Type';
 	}
 
 	// link title in index view
-	public function get_view_link_title()
+	public function view_index_label()
 	{
 		return ['index' => [$this->name, $this->vendor, $this->version],
 		        'index_header' => ['Name', 'Vendor', 'Version'],
@@ -70,7 +70,7 @@ class DeviceType extends \BaseModel {
 												  'options' => ['hide_create_button' => 1, 'hide_delete_button' => 1]],
 						'Snmp Mib Header' => ['class' => 'SnmpMib', 'relation' => $this->snmpmibs]],
 			'Test2' => ['SnmpMib Header' => ['class' => 'SnmpMib', 'relation' => $this->snmpmibs],
-						'View Stuff Header' => ['view' => 'test'], 'View 2' => ['view' => 'test'],
+						'View Stuff Header' => ['view' => ['view' => 'test', 'vars' => ['test' => 'Geld']]], 'View 2' => ['view' => 'test'],
 						'Html Stuff Header' => ['html' => '<li><a href=google.de>Test</a></li>']],
 			'Test3' => ['hua' => ['class' => 'Device', 'relation' => $this->devices],
 						'hua2' => ['class' => 'SnmpMib', 'relation' => $this->snmpmibs],
