@@ -46,7 +46,6 @@ class Contract extends \BaseModel {
     // link title in index view
     public function get_view_link_title()
     {
-
     	// dd(date('Y-m', strtotime(null)), date('Y-m', strtotime('0000-00-00')));
 
 		$bsclass = 'success';
