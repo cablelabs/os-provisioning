@@ -75,7 +75,7 @@ class BaseController extends Controller {
 
 
 
-// Class Relation Functions:
+	// Class Relation Functions:
 	// TODO: - move to a separate Controller (if possible?)
 
 	protected static function get_model_name()
@@ -167,8 +167,16 @@ class BaseController extends Controller {
 		// Checkbox Unset ?
 		foreach ($this->view_form_fields(static::get_model_obj()) as $field)
 		{
-			if(!isset($data[$field['name']]) && $field['form_type'] == 'checkbox')
+			// skip file upload fields
+			if ($field['form_type'] == 'file')
+				continue;
+
+			// Checkbox Unset ?
+			if(!isset($data[$field['name']]) && ($field['form_type'] == 'checkbox'))
 				$data[$field['name']] = 0;
+
+			// trim all inputs as default
+			$data[$field['name']] = trim($data[$field['name']]); 
 		}
 
 		return $data;
@@ -485,6 +493,8 @@ class BaseController extends Controller {
 			$form_path = static::get_view_name().'.form';
 
 
+		// $config_routes = BaseController::get_config_modules();
+		// return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations', 'extra_data')));
 		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations')));
 	}
 

@@ -20,6 +20,7 @@ return [
 	'alpha_dash'           => ':attribute darf nur aus Buchstaben, Zahlen, Binde- und Unterstrichen bestehen. Umlaute (ä, ö, ü) und Eszett (ß) sind nicht erlaubt.',
 	'alpha_num'            => ':attribute darf nur aus Buchstaben und Zahlen bestehen.',
 	'array'                => ':attribute muss ein Array sein.',
+	"available" 			=> "Kein Eintrag in Konfigurationsdateien verfügbar - Füllen Sie dieses Feld bitte aus",
 	'before'               => ':attribute muss ein Datum vor dem :date sein.',
 	'between'              => [
 		'numeric' => ':attribute muss zwischen :min & :max liegen.',
