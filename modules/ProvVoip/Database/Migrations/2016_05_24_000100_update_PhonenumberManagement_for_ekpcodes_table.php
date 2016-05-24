@@ -24,11 +24,11 @@ class UpdatePhonenumberManagementForEkpCodesTable extends BaseMigration {
     {
         Schema::table($this->tablename, function(Blueprint $table) {
 
-			$table->integer('carrier_in')->change();
-			$table->integer('carrier_out')->change();
+			$table->integer('carrier_in')->unsigned()->change();
+			$table->integer('carrier_out')->unsigned()->change();
 
-			$table->integer('ekp_in')->after('carrier_in');
-			$table->integer('ekp_out')->after('carrier_out');
+			$table->integer('ekp_in')->unsigned()->after('carrier_in');
+			$table->integer('ekp_out')->unsigned()->after('carrier_out');
 		});
 	}
 

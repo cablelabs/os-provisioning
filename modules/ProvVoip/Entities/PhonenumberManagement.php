@@ -14,6 +14,10 @@ class PhonenumberManagement extends \BaseModel {
 	{
 		return array(
 			'phonenumber_id' => 'required|exists:phonenumber,id|min:1',
+			'trcclass' => 'required|exists:trcclass,id',
+			'carrier_in' => 'required|exists:carriercode,id',
+			'carrier_out' => 'required|exists:carriercode,id',
+			'ekp_in' => 'required|exists:ekpcode,id',
 		);
 	}
 
