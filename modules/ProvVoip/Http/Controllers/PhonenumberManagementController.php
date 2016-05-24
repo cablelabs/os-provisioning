@@ -5,6 +5,7 @@ namespace Modules\ProvVoip\Http\Controllers;
 use Modules\ProvVoip\Entities\PhonenumberManagement;
 use Modules\ProvVoip\Entities\Phonenumber;
 use Modules\ProvVoip\Entities\CarrierCode;
+use Modules\ProvVoip\Entities\EkpCode;
 use Modules\ProvVoipEnvia\Entities\TRCClass;
 
 class PhonenumberManagementController extends \BaseModuleController {
@@ -68,6 +69,7 @@ class PhonenumberManagementController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'activation_date', 'description' => 'Activation date'),
 			array('form_type' => 'checkbox', 'name' => 'porting_in', 'description' => 'Incoming porting'),
 			array('form_type' => 'select', 'name' => 'carrier_in', 'description' => 'Carrier in', 'value' => CarrierCode::carrier_list_for_form_select(False), 'help' => 'In case of a new number set this to EnviaTEL'),
+			array('form_type' => 'select', 'name' => 'ekp_in', 'description' => 'EKP in', 'value' => EkpCode::ekp_list_for_form_select(False), 'help' => 'In case of a new number set this to EnviaTEL'),
 			array('form_type' => 'text', 'name' => 'deactivation_date', 'description' => 'Termination date'),
 			array('form_type' => 'checkbox', 'name' => 'porting_out', 'description' => 'Outgoing porting'),
 			array('form_type' => 'select', 'name' => 'carrier_out', 'description' => 'Carrier out', 'value' => CarrierCode::carrier_list_for_form_select(True)),
