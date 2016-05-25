@@ -42,6 +42,7 @@ class PhonebookEntryController extends \BaseModuleController {
 				'house_number' => $contract->house_number,
 				'zip' => $contract->zip,
 				'city' => $contract->city,
+				'urban_district' => $contract->district,
 			);
 		}
 		// edit
@@ -56,6 +57,7 @@ class PhonebookEntryController extends \BaseModuleController {
 				'house_number' => $model->houseno,
 				'zip' => $model->zipcode,
 				'city' => $model->city,
+				'urban_district' => $model->district,
 			);
 		}
 
@@ -93,7 +95,7 @@ class PhonebookEntryController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'houseno', 'description' => 'House number', 'value' => $phonebook_data['house_number']),
 			array('form_type' => 'text', 'name' => 'zipcode', 'description' => 'Zipcode', 'value' => $phonebook_data['zip']),
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City', 'value' => $phonebook_data['city']),
-			array('form_type' => 'text', 'name' => 'urban_district', 'description' => 'Urban district'),
+			array('form_type' => 'text', 'name' => 'urban_district', 'description' => 'Urban district', 'value' => $phonebook_data['urban_district']),
 			array('form_type' => 'select', 'name' => 'business', 'description' => 'Business', 'value' => $model->get_options_from_file('business')),
 			array('form_type' => 'select', 'name' => 'number_usage', 'description' => 'Number usage', 'value' => $model->get_options_from_list('number_usage')),
 			array('form_type' => 'select', 'name' => 'tag', 'description' => 'Tag', 'value' => $model->get_options_from_file('tag')),

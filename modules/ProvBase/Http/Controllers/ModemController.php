@@ -31,11 +31,17 @@ class ModemController extends \BaseModuleController {
 			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Network Access', 'value' => '1'),
 			array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1'),
 
+			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
+			array('form_type' => 'text', 'name' => 'department', 'description' => 'Department'),
+			array('form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options()),
 			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname'),
 			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname'),
 			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street'),
+			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House number'),
 			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode'),
-			array('form_type' => 'text', 'name' => 'city', 'description' => 'City', 'space' => '1'),
+			array('form_type' => 'text', 'name' => 'city', 'description' => 'City'),
+			array('form_type' => 'text', 'name' => 'district', 'description' => 'District'),
+			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1'),
 
 			array('form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number'),
 			array('form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'),
@@ -63,8 +69,8 @@ class ModemController extends \BaseModuleController {
 		catch (Exceptions $ex) {
 			throw new AuthExceptions($e->getMessage());
 		}
-		
-		
+
+
 		if(!$this->get_model_obj()->module_is_active ('HfcCustomer'))
 			return parent::index();
 
@@ -72,7 +78,7 @@ class ModemController extends \BaseModuleController {
 
 		if (\Input::get('topo') == '1')
 		{
-			// Generate KML file 
+			// Generate KML file
 			$customer = new \Modules\HfcCustomer\Http\Controllers\CustomerTopoController;
 			$file     = $customer->kml_generate ($modems);
 
@@ -81,7 +87,7 @@ class ModemController extends \BaseModuleController {
 		}
 
 		// Prepare
-		$panel_right = [['name' => 'List', 'route' => 'Modem.index', 'link' => ['topo' => '0']], 
+		$panel_right = [['name' => 'List', 'route' => 'Modem.index', 'link' => ['topo' => '0']],
 						['name' => 'Topography', 'route' => 'Modem.index', 'link' => ['topo' => '1']]];
 
 		$target      = ''; // TODO: use global define
@@ -100,13 +106,13 @@ class ModemController extends \BaseModuleController {
 	/**
 	 * Perform a fulltext search.
 	 *
-	 * Changes to BaseController: 
+	 * Changes to BaseController:
 	 *  - Topography Mode when HfcCustomer Module is active
 	 *  - also search for Contracts while searching for Modems
 	 *
 	 * @author Torsten Schmidt
 	 */
-	public function fulltextSearch() 
+	public function fulltextSearch()
 	{
 		$obj    = $this->get_model_obj();
 
@@ -123,7 +129,7 @@ class ModemController extends \BaseModuleController {
 
 		// perform Modem search
 		$modems = $obj->getFulltextSearchResults($scope, $mode, $query, $pre_f, $pre_v)[0];
-		
+
 		// perform contract search
 		$obj = new \Modules\ProvBase\Entities\Contract;
 		$contracts = $obj->getFulltextSearchResults('contract', $mode, $query, $pre_f, $pre_v)[0];
@@ -131,7 +137,7 @@ class ModemController extends \BaseModuleController {
 		// generate Topography
 		if (\Input::get('topo') == '1')
 		{
-			// Generate KML file 
+			// Generate KML file
 			$customer = new \Modules\HfcCustomer\Http\Controllers\CustomerTopoController;
 			$file     = $customer->kml_generate ($modems);
 
@@ -142,7 +148,7 @@ class ModemController extends \BaseModuleController {
 		if ($pre_f && $pre_v)
 			$pre_t = ' Search in '.strtoupper($pre_f).' '.\Modules\HfcBase\Entities\Tree::find($pre_v)->name;
 
-		$panel_right = [['name' => 'List', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '0', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]], 
+		$panel_right = [['name' => 'List', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '0', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]],
 						['name' => 'Topography', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '1', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]]];
 
 		$view_var    = $modems->get();

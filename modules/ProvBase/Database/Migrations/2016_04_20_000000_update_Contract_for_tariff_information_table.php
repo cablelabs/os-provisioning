@@ -34,7 +34,36 @@ class UpdateContractForTariffInformationTable extends BaseMigration {
 			// this will hold the reference to next purchase tariff (the tariff between external provider and us)
 			$table->integer('next_purchase_tariff')->after('purchase_tariff')->nullable()->default(NULL);
 
+			// new in envia API 1.4
+			$table->string('district')->after('city');
+			$table->string('department')->after('company');
+
 		});
+
+		// give all cols to be indexed (old and new ones => the index will be dropped and then created from scratch)
+		$this->set_fim_fields([
+			'number2',
+			'company',
+			'department',
+			'firstname',
+			'lastname',
+			'street',
+			'zip',
+			'city',
+			'district',
+			'phone',
+			'fax',
+			'email',
+			'description',
+			'sepa_iban',
+
+			'number3',
+			'number4',
+			'contract_external_id',
+			'customer_external_id',
+			'academic_degree',
+			'house_number',
+		]);
 	}
 
 
@@ -50,6 +79,8 @@ class UpdateContractForTariffInformationTable extends BaseMigration {
 			$table->dropColumn([
 				'purchase_tariff',
 				'next_purchase_tariff',
+				'district',
+				'department',
 			]);
 
 			$table->boolean('phonebook_entry')->after('network_access');

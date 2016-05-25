@@ -5,6 +5,9 @@ namespace Modules\ProvVoip\Entities;
 // Model not found? execute composer dump-autoload in lara root dir
 class PhonenumberManagement extends \BaseModel {
 
+	// get functions for some address select options
+	use \App\Models\AddressFunctionsTrait;
+
     // The associated SQL table for this Model
     public $table = 'phonenumbermanagement';
 
@@ -141,77 +144,6 @@ class PhonenumberManagement extends \BaseModel {
 	public function phonebookentry() {
 
 		return $this->hasOne('Modules\ProvVoip\Entities\PhonebookEntry', 'phonenumbermanagement_id');
-	}
-
-	/**
-	 * Helper to define possible salutation values.
-	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
-	 *
-	 * @author Patrick Reichel
-	 */
-	public function get_salutation_options() {
-
-		$defaults = [
-			'Herr',
-			'Frau',
-			'Firma',
-			'Behörde',
-		];
-
-		if ($this->module_is_active('provvoipenvia')) {
-
-			$options = [
-				'Herrn',
-				'Frau',
-				'Firma',
-				'Behörde',
-			];
-		}
-		else {
-			$options = $defaults;
-		}
-
-		$result = array();
-		foreach ($options as $option) {
-			$result[$option] = $option;
-		}
-
-		return $result;
-	}
-
-
-	/**
-	 * Helper to define possible academic degree values.
-	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
-	 *
-	 * @author Patrick Reichel
-	 */
-	public function get_academic_degree_options() {
-
-		$defaults = [
-			'',
-			'Dr.',
-			'Prof. Dr.',
-		];
-
-		if ($this->module_is_active('provvoipenvia')) {
-
-			$options = [
-				'',
-				'Dr.',
-				'Prof. Dr.',
-			];
-		}
-		else {
-			$options = $defaults;
-		}
-
-		$result = array();
-		foreach ($options as $option) {
-			$result[$option] = $option;
-		}
-
-		return $result;
 	}
 
 
