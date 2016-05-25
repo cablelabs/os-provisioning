@@ -5,7 +5,7 @@ namespace Modules\ProvBase\Http\Controllers;
 use Modules\ProvBase\Entities\Cmts;
 use Modules\ProvBase\Entities\IpPool;
 
-class CmtsController extends \BaseModuleController {
+class CmtsController extends \BaseController {
 
     /**
      * defines the formular fields for the edit and create view

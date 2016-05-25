@@ -6,7 +6,7 @@ use Modules\ProvBase\Entities\Configfile;
 use Form;
 use HTML;
 
-class ConfigfileController extends \BaseModuleController {
+class ConfigfileController extends \BaseController {
 
     /**
      * defines the formular fields for the edit and create view

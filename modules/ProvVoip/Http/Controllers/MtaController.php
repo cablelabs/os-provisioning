@@ -7,7 +7,7 @@ use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Configfile;
 
 
-class MtaController extends \BaseModuleController {
+class MtaController extends \BaseController {
 
 
 	protected $index_create_allowed = false;

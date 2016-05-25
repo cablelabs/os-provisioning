@@ -213,7 +213,7 @@ return [
 		'HTML'      => 'Collective\Html\HtmlFacade',
 		'Str'       => 'Illuminate\Support\Str',
 
-		'BaseModuleController' => 'App\Http\Controllers\BaseModuleController',
+		'BaseController' => 'App\Http\Controllers\BaseController',
 		'HtmlServiceProvider'  => 'Acme\html\HtmlServiceProvider',
 		'PPModule' => 'Acme\pingpong\PPModule',
 		'BaseRoute'     => 'Acme\core\BaseRoute',
