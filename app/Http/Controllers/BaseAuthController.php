@@ -75,6 +75,10 @@ class BaseAuthController extends Controller {
 			case 'Modules\HfcCustomer\Entities\CustomerTopo': // topography modems
 				$m = 'Modules\ProvBase\Entities\Modem';
 				break;
+
+			case 'App\BaseModule':
+				$m = 'App\GlobalConfig';
+				break;
 		}
 
 		return $m;

@@ -52,7 +52,7 @@ class Cmts extends \BaseModel {
         parent::boot();
 
         Cmts::observe(new CmtsObserver);
-        Cmts::observe(new \SystemdObserver);
+        Cmts::observe(new \App\SystemdObserver);
     }
 
 

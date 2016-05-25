@@ -217,7 +217,9 @@ return [
 		'HtmlServiceProvider'  => 'Acme\html\HtmlServiceProvider',
 		'PPModule' => 'Acme\pingpong\PPModule',
 		'BaseRoute'     => 'Acme\core\BaseRoute',
-		'NamespaceController' => 'App\Http\Controllers\NamespaceController'
+		'NamespaceController' => 'App\Http\Controllers\NamespaceController',
+		'BaseModel' => 'App\BaseModel',
+		'GlobalConfig' => 'App\GlobalConfig'
 	],
 
 ];

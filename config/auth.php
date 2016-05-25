@@ -63,7 +63,7 @@ return [
     'providers' => [
         'admin' => [
             'driver' => 'eloquent',
-            'model' => Authuser::class,
+            'model' => \App\Authuser::class,
         ],
         'ccc' => [
             'driver' => 'eloquent',
