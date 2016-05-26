@@ -3,6 +3,11 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * Updater to add envia related data to contract
+ *
+ * @author Patrick Reichel
+ */
 class UpdateContractForEnviaTable extends BaseMigration {
 
 	// name of the table to create

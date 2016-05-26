@@ -236,6 +236,7 @@ class BaseModel extends Eloquent
 			'Authcore',
 			'TRCClass',	# static data; not for standalone use
 			'CarrierCode', # cron updated data; not for standalone use
+			'EkpCode', # cron updated data; not for standalone use
 			'BookingRecords', 'Invoice', 'Sepaxml'
 		);
 		$result = array();
@@ -616,7 +617,7 @@ class BaseModel extends Eloquent
 			case 'month':
 				return $start < strtotime(date('Y-m-01')) && (!$end || $end >= strtotime(date('Y-m-01', strtotime('first day of last month'))));
 
-			case 'year':			
+			case 'year':
 				return $start < strtotime(date('Y-01-01')) && (!$end || $end >= strtotime(date('Y-01-01'), strtotime('last year')));
 
 			case 'now':

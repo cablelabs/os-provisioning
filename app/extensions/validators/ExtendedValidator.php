@@ -8,6 +8,8 @@ use Log;
 use Modules\Billingbase\Entities\Product;
 use IBAN;
 
+use Modules\ProvVoip\Entities\PhonebookEntry;
+
 /*
  * Our own ExtendedValidator Class
  *
@@ -98,6 +100,7 @@ class ExtendedValidator
 	 */
 	public function ipLarger ($attribute, $value, $parameters)
 	{
+		dd($parameters);
 		$ip = ip2long($value);
 		$ip2 = ip2long($parameters[0]);
 
@@ -264,6 +267,95 @@ class ExtendedValidator
 		}
 
 		return true;
+	}
+
+
+	/**
+	 * Check if given string (freetext) for phonebookentry is valid.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function validatePhonebookString($attribute, $value, $parameters) {
+
+		// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
+		// when laravel calls the actual validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
+		$validator = \func_get_arg(3);
+
+		// for easier access and improved readability: get needed informations out of config
+		$maxlen = PhonebookEntry::$config[$attribute]['maxlen'];
+		$valid = str_split(PhonebookEntry::$config[$attribute]['valid']);
+
+		// check if given value is to long
+		if (strlen($value) > $maxlen) {
+			$validator->setCustomMessages(array('phonebook_string' => $attribute.' to long (max. '.$maxlen.' characters allowed)'));
+			return false;
+		}
+
+		// check all value's characters against the list of valid chars
+		$invalids = array();
+		foreach (str_split($value) as $char) {
+			if (!in_array($char, $valid)) {
+				array_push($invalids, $char);
+			}
+		}
+		// input invalid if at least one invalid character has been found
+		if (boolval($invalids)) {
+			$validator->setCustomMessages(array('phonebook_string' => 'The following characters are not allowed in '.$attribute.': '.implode('', array_unique($invalids))));
+			return false;
+		}
+
+		// all fine => valid
+		return true;
+
+	}
+
+
+	/**
+	 * Check if given string (predefined) for phonebookentry is valid.
+	 * The valid values are defined by Telekom and delivered in several files.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function validatePhonebookPredefinedString($attribute, $value, $parameters) {
+
+		// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
+		// when laravel calls the actual validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
+		$validator = \func_get_arg(3);
+
+		// attention: data coming into validators are still htmlencoded from view level!
+		$search = html_entity_decode($value);
+
+		// use the method that builds the array for the selects => that contains all valid values…
+		if (!array_key_exists($search, PhonebookEntry::get_options_from_file($attribute))) {
+			$validator->setCustomMessages(array('phonebook_predefined_string' => $value.' is not a valid value for '.$attribute));
+			return false;
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Check if given one character option is valid
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function validatePhonebookOneCharacterOption($attribute, $value, $parameters) {
+
+		// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
+		// when laravel calls the actual validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
+		$validator = \func_get_arg(3);
+
+		// get the allowed chars out of config
+		$valid = PhonebookEntry::$config[$attribute]['in_list'];
+
+		if (!in_array($value, $valid)) {
+			$validator->setCustomMessages(array('phonebook_one_character_option' => $value.' is not valid for '.$attribute.' (have to be in ['.implode('', $valid).']).'));
+			return false;
+		}
+
+		return true;
+
 	}
 
 

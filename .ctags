@@ -1,0 +1,6 @@
+--recurse=yes
+--exclude=.git
+--exclude=vendor/*
+--exclude=storage/*
+--exclude=Documenation/*
+--exclude=public/components/*

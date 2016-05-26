@@ -2,11 +2,13 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use \Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand;
 
-class CreateEndpointTable extends BaseMigration {
+class CreateEkpCodeTable extends BaseMigration {
 
 	// name of the table to create
-	protected $tablename = "endpoint";
+	protected $tablename = "ekpcode";
+
 
 	/**
 	 * Run the migrations.
@@ -19,19 +21,17 @@ class CreateEndpointTable extends BaseMigration {
 		{
 			$this->up_table_generic($table);
 
-			$table->string('hostname');
-			$table->string('name');
-			$table->string('mac',17);
-			$table->text('description');
-			$table->enum('type', array('cpe','mta'));
-			$table->boolean('public');
-
-			// $table->integer('modem_id')->unsigned(); // depracted
+			$table->string('ekp_code')->unique();
+			$table->string('company');
 		});
 
-		$this->set_fim_fields(['hostname', 'name', 'description']);
-		$this->set_auto_increment (200000);
-		
+		// empty csv hash (to be sure that newly created table will be filled)
+		$updater = new EkpCodeDatabaseUpdaterCommand();
+		$updater->clear_hash_file();
+
+		// fill table with ekpcodes
+		$updater->fire();
+
 		return parent::up();
 	}
 
@@ -47,3 +47,4 @@ class CreateEndpointTable extends BaseMigration {
 	}
 
 }
+

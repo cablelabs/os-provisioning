@@ -6,6 +6,9 @@ use Modules\ProvBase\Entities\Qos;
 
 class Contract extends \BaseModel {
 
+	// get functions for some address select options
+	use \App\Models\AddressFunctionsTrait;
+
 	// The associated SQL table for this Model
 	public $table = 'contract';
 
@@ -100,6 +103,62 @@ class Contract extends \BaseModel {
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
 	}
 
+
+	/**
+	 * Get the purchase tariff
+	 */
+	public function phonetariff_purchase() {
+
+		if ($this->voip_enabled) {
+			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'purchase_tariff');
+		}
+		else {
+			return null;
+		}
+	}
+
+
+	/**
+	 * Get the next purchase tariff
+	 */
+	public function phonetariff_purchase_next() {
+
+		if ($this->voip_enabled) {
+			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_purchase_tariff');
+		}
+		else {
+			return null;
+		}
+	}
+
+
+	/**
+	 * Get the sale tariff
+	 */
+	public function phonetariff_sale() {
+
+		if ($this->voip_enabled) {
+			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'voip_id');
+		}
+		else {
+			return null;
+		}
+	}
+
+
+	/**
+	 * Get the next sale tariff
+	 */
+	public function phonetariff_sale_next() {
+
+		if ($this->voip_enabled) {
+			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_voip_id');
+		}
+		else {
+			return null;
+		}
+	}
+
 	/**
 	 * Get relation to external orders.
 	 *
@@ -143,14 +202,14 @@ class Contract extends \BaseModel {
 	}
 
 
-	/*
-	 * Generate use a new user login password
-	 * This does not save the involved model
-	 */
-	public function generate_password($length = 10)
-	{
-		$this->password = \Acme\php\Password::generate_password();
-	}
+    /**
+     * Generate use a new user login password
+     * This does not save the involved model
+     */
+    public function generate_password($length=10)
+    {
+        $this->password = \Acme\php\Password::generate_password($length);
+    }
 
 
 	/**
@@ -191,79 +250,6 @@ class Contract extends \BaseModel {
 
 		return $customer_number;
 
-	}
-
-
-
-	/**
-	 * Helper to define possible salutation values.
-	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
-	 *
-	 * @author Patrick Reichel
-	 */
-	public function get_salutation_options() {
-
-		$defaults = [
-			'Herr',
-			'Frau',
-			'Firma',
-			'Behörde',
-		];
-
-		if (\PPModule::is_active('provvoipenvia')) {
-
-			$options = [
-				'Herrn',
-				'Frau',
-				'Firma',
-				'Behörde',
-			];
-		}
-		else {
-			$options = $defaults;
-		}
-
-		$result = array();
-		foreach ($options as $option) {
-			$result[$option] = $option;
-		}
-
-		return $result;
-	}
-
-
-	/**
-	 * Helper to define possible academic degree values.
-	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
-	 *
-	 * @author Patrick Reichel
-	 */
-	public function get_academic_degree_options() {
-
-		$defaults = [
-			'',
-			'Dr.',
-			'Prof. Dr.',
-		];
-
-		if (\PPModule::is_active('provvoipenvia')) {
-
-			$options = [
-				'',
-				'Dr.',
-				'Prof. Dr.',
-			];
-		}
-		else {
-			$options = $defaults;
-		}
-
-		$result = array();
-		foreach ($options as $option) {
-			$result[$option] = $option;
-		}
-
-		return $result;
 	}
 
 
