@@ -43,7 +43,7 @@ BaseRoute::group([], function() {
 
 	BaseRoute::resource('Authuser', 'AuthuserController');
 
-	BaseRoute::get('Config', array('as' => 'Config.index', 'uses' => 'BaseModuleController@glob_conf'));
+	BaseRoute::get('Config', array('as' => 'Config.index', 'uses' => 'GlobalConfigController@index'));
 	BaseRoute::resource('GlobalConfig', 'GlobalConfigController');
 
 });

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Authuser;
+use App\Authuser;
 
 class AuthuserController extends BaseController {
 

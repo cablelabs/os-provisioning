@@ -10,7 +10,7 @@ use Modules\ProvBase\Entities\Qos;
 use App\Exceptions\AuthExceptions;
 
 
-class ModemController extends \BaseModuleController {
+class ModemController extends \BaseController {
 
 	protected $index_create_allowed = false;
 	protected $save_button = 'Save / Restart';

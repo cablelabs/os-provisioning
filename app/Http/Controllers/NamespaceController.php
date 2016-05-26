@@ -70,7 +70,7 @@ class NamespaceController  {
 		if (static::is_module_context())
 			return static::__module_get_mvc_namespace().'\\Entities\\'.static::__module_get_pure_model_name();
 
-		return explode ('Controller', explode ('\\', explode ('@', Route::getCurrentRoute()->getActionName())[0])[3])[0];
+		return 'App\\'.explode ('Controller', explode ('\\', explode ('@', Route::getCurrentRoute()->getActionName())[0])[3])[0];
 	}
 
 
@@ -95,7 +95,7 @@ class NamespaceController  {
 		if (static::is_module_context())
 			return strtolower(explode ('\\', static::get_model_name())[1]).'::'.static::__module_get_pure_model_name();
 
-		return explode ('\\', static::get_model_name())[0];
+		return explode ('\\', static::get_model_name())[1]; // parse xyz from 'App/xyz'
 	}
 
 
@@ -109,7 +109,7 @@ class NamespaceController  {
 		if (static::is_module_context())
 			return explode('\\', static::get_model_name())[3];
 
-		return explode('\\', static::get_model_name())[0];
+		return explode('\\', static::get_model_name())[1]; // parse xyz from 'App/xyz'
 	}
 
 

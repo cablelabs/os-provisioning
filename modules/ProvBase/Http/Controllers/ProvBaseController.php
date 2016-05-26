@@ -2,9 +2,9 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use App\Http\Controllers\BaseModuleController;
+use App\Http\Controllers\BaseController;
 
-class ProvBaseController extends BaseModuleController {
+class ProvBaseController extends BaseController {
 
     /**
      * defines the formular fields for the edit and create view

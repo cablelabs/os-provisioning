@@ -1,5 +1,10 @@
 <?php
 
+namespace App;
+
+use DB;
+use Schema;
+use Module;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
@@ -253,7 +258,7 @@ class BaseModel extends Eloquent
 			$model = str_replace(app_path('Models')."/", "", $model);
 			$model = str_replace(".php", "", $model);
 			if (array_search($model, $exclude) === FALSE) {
-				array_push($result, $model);
+				array_push($result, 'App\\'.$model);
 			}
 		}
 

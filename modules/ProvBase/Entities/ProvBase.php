@@ -43,7 +43,7 @@ class ProvBase extends \BaseModel {
         parent::boot();
 
         ProvBase::observe(new ProvBaseObserver);
-        ProvBase::observe(new \SystemdObserver);
+        ProvBase::observe(new \App\SystemdObserver);
     }
 
 

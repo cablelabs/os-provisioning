@@ -11,7 +11,7 @@ use Modules\BillingBase\Entities\Item;
 use Modules\BillingBase\Entities\CostCenter;
 use Modules\BillingBase\Entities\Salesman;
 
-class ContractController extends \BaseModuleController {
+class ContractController extends \BaseController {
 
 
 	protected $relation_create_button = "Add";

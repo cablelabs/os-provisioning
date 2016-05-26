@@ -197,7 +197,7 @@ _failed:
 		parent::boot();
 
 		Mta::observe(new MtaObserver);
-		Mta::observe(new \SystemdObserver);
+		Mta::observe(new \App\SystemdObserver);
 	}
 
 

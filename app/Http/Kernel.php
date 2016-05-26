@@ -29,10 +29,7 @@ class Kernel extends HttpKernel {
 	protected $routeMiddleware = [
 		// Base Authentication Stuff
 		// @author Torsten Schmidt
-	    'auth.view' => \App\Http\Middleware\BaseAuthViewMiddleware::class,
-	    'auth.create' => \App\Http\Middleware\BaseAuthCreateMiddleware::class,
-	    'auth.edit' => \App\Http\Middleware\BaseAuthEditMiddleware::class,
-	    'auth.delete' => \App\Http\Middleware\BaseAuthDeleteMiddleware::class,
+	    'auth' => \App\Http\Middleware\BaseAuthAdminMiddleware::class,
 
 	    // TODO: check if absence of CCC module will break ?
 	    'ccc.base' => \Modules\Ccc\Http\Middleware\CccBaseMiddleware::class,

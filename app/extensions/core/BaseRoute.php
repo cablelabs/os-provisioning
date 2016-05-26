@@ -55,28 +55,28 @@ class BaseRoute {
 	public static function resource($name, $controller, array $options = [])
 	{
 		// Index
-		\Route::get($name, array('as' => $name.'.index', 'uses' => $controller.'@index', $options, 'middleware' => 'auth.view'));
+		\Route::get($name, array('as' => $name.'.index', 'uses' => $controller.'@index', $options, 'middleware' => 'auth:view'));
 
 		// Store
-		\Route::post($name, array('as' => $name.'.store', 'uses' => $controller.'@store', $options, 'middleware' => 'auth.create'));
+		\Route::post($name, array('as' => $name.'.store', 'uses' => $controller.'@store', $options, 'middleware' => 'auth:create'));
 
 		// Create
-		\Route::get($name.'/create', array('as' => $name.'.create', 'uses' => $controller.'@create', $options, 'middleware' => 'auth.create')); // for viewing
-		\Route::post($name.'/create', array('as' => $name.'.create', 'uses' => $controller.'@create', $options, 'middleware' => 'auth.create'));
+		\Route::get($name.'/create', array('as' => $name.'.create', 'uses' => $controller.'@create', $options, 'middleware' => 'auth:create')); // for viewing
+		\Route::post($name.'/create', array('as' => $name.'.create', 'uses' => $controller.'@create', $options, 'middleware' => 'auth:create'));
 
 		// update
-		\Route::patch("$name/{{$name}}", array('as' => $name.'.update', 'uses' => $controller.'@update', $options, 'middleware' => 'auth.edit'));
-		\Route::put("$name/{{$name}}", array('as' => $name.'.update', 'uses' => $controller.'@update', $options, 'middleware' => 'auth.edit'));
+		\Route::patch("$name/{{$name}}", array('as' => $name.'.update', 'uses' => $controller.'@update', $options, 'middleware' => 'auth:edit'));
+		\Route::put("$name/{{$name}}", array('as' => $name.'.update', 'uses' => $controller.'@update', $options, 'middleware' => 'auth:edit'));
 
 		// delete
-		\Route::delete("$name/{{$name}}", array('as' => $name.'.destroy', 'uses' => $controller.'@destroy', $options, 'middleware' => 'auth.delete'));
+		\Route::delete("$name/{{$name}}", array('as' => $name.'.destroy', 'uses' => $controller.'@destroy', $options, 'middleware' => 'auth:delete'));
 
 		// edit
-		\Route::get("$name/{{$name}}/edit", array('as' => $name.'.edit', 'uses' => $controller.'@edit', $options, 'middleware' => 'auth.edit'));
+		\Route::get("$name/{{$name}}/edit", array('as' => $name.'.edit', 'uses' => $controller.'@edit', $options, 'middleware' => 'auth:edit'));
 
 		// Fulltext Search
 		// TODO: adapt route name to not strtolower() like other functions
-		\Route::get(strtolower($name).'/fulltextSearch', array('as' => $name.'.fulltextSearch', 'uses' => $controller.'@fulltextSearch', $options, 'middleware' => 'auth.view'));
+		\Route::get(strtolower($name).'/fulltextSearch', array('as' => $name.'.fulltextSearch', 'uses' => $controller.'@fulltextSearch', $options, 'middleware' => 'auth:view'));
 	}
 
 
@@ -100,28 +100,28 @@ class BaseRoute {
 	}
 
 
-    /**
-     * The following functions are simple helpers to adapt automatic authentication stuff
-     */
-    public static function get($uri, $action = null)
-    {
-    	$action['middleware'] = 'auth.view';
-        return \Route::get($uri, $action);
-    }
+	/**
+	 * The following functions are simple helpers to adapt automatic authentication stuff
+	 */
+	public static function get($uri, $action = null)
+	{
+		$action['middleware'] = 'auth:view';
+		return \Route::get($uri, $action);
+	}
 
 
-    // requires edit permissions!!!
-    public static function post($uri, $action = null)
-    {
-    	$action['middleware'] = 'auth.edit';
-        return \Route::post($uri, $action);
-    }
+	// requires edit permissions!!!
+	public static function post($uri, $action = null)
+	{
+		$action['middleware'] = 'auth:edit';
+		return \Route::post($uri, $action);
+	}
 
 
-    // requires edit permissions!!!
-    public static function put($uri, $action = null)
-    {
-    	$action['middleware'] = 'auth.edit';
-        return \Route::put($uri, $action);
-    }
+	// requires edit permissions!!!
+	public static function put($uri, $action = null)
+	{
+		$action['middleware'] = 'auth:edit';
+		return \Route::put($uri, $action);
+	}
 }
