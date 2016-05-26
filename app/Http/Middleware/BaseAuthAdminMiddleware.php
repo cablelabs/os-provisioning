@@ -5,18 +5,19 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Http\Controllers\BaseAuthController;
 
-class BaseAuthCreateMiddleware
+class BaseAuthAdminMiddleware
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
+     * @param string $role
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $role=null)
     {
-        BaseAuthController::auth_check('create');
+        BaseAuthController::auth_check($role);
 
         return $next($request);
     }
