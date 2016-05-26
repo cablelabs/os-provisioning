@@ -20,11 +20,13 @@ storage/framework/
 Session.vim
 .netrwhist
 *~
+*.sql
 
 # sublime trash dir
 .Trash-1000/
 
 sql-reset.sh
+cp-script.sh
 
 # ignore ctags file
 tags

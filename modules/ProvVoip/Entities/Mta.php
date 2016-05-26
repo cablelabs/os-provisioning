@@ -22,23 +22,31 @@ class Mta extends \BaseModel {
 			'mac' => 'required|mac', //|unique:mta,mac',
 			'modem_id' => 'required|exists:modem,id|min:1',
 			'configfile_id' => 'required|exists:configfile,id|min:1',
-			// 'hostname' => 'required|unique:mta,hostname,'.$id, 
+			// 'hostname' => 'required|unique:mta,hostname,'.$id,
 			'type' => 'required|exists:mta,type'
 		);
 	}
 
 
 	// Name of View
-	public static function get_view_header()
+	public static function view_headline()
 	{
 		return 'MTAs';
 	}
 
-	// link title in index view
-	public function get_view_link_title()
-	{
-		return $this->hostname.' - '.$this->mac;
-	}
+    // link title in index view
+    public function view_index_label()
+    {
+        $bsclass = 'success';
+
+        // TODO: use mta states.
+        //       Maybe use fast ping to test if online in this funciton?
+
+        return ['index' => [$this->hostname, $this->mac, $this->type, $this->configfile->name],
+                'index_header' => ['Name', 'MAC', 'Type', 'Configfile'],
+                'bsclass' => $bsclass,
+                'header' => $this->hostname.' - '.$this->mac];
+    }
 
 
 	/**
@@ -141,7 +149,7 @@ class Mta extends \BaseModel {
 		Log::info("/usr/local/bin/docsis -eu -p $conf_file $cfg_file");
 		// "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
 		exec     ("/usr/local/bin/docsis -eu -p $conf_file $cfg_file >/dev/null 2>&1 &", $out);
-		
+
 		// this only is valid when we dont execute docsis in background
 		// if (!file_exists($cfg_file))
 		// {
@@ -235,7 +243,7 @@ _failed:
         $file['1'] = $dir.'mta-'.$this->id.'.cfg';
         $file['2'] = $dir.'mta-'.$this->id.'.conf';
 
-        foreach ($file as $f) 
+        foreach ($file as $f)
         {
             if (file_exists($f)) unlink($f);
         }

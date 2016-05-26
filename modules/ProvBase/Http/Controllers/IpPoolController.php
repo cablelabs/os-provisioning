@@ -10,14 +10,14 @@ class IpPoolController extends \BaseModuleController {
     /**
      * defines the formular fields for the edit and create view
      */
-	public function get_form_fields($model = null)
+	public function view_form_fields($model = null)
 	{
 		if (!$model)
 			$model = new IpPool;
 
 		// label has to be the same like column in sql table
 		return array(
-			array('form_type' => 'select', 'name' => 'cmts_id', 'description' => 'CMTS Hostname', 'value' => $model->html_list($model->cmts_hostnames(), 'hostname')),
+			array('form_type' => 'select', 'name' => 'cmts_id', 'description' => 'CMTS Hostname', 'value' => $model->html_list($model->cmts_hostnames(), 'hostname'), 'hidden' => 1),
 			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => array( 'CM' => 'Cable Modem', 'CPEPriv' => 'CPE Private', 'CPEPub' => 'CPE Public', 'MTA' => 'MTA')),
 			array('form_type' => 'text', 'name' => 'net', 'description' => 'Net'),
 			array('form_type' => 'text', 'name' => 'netmask', 'description' => 'Netmask'),
@@ -41,7 +41,7 @@ class IpPoolController extends \BaseModuleController {
      *
      * @author Nino Ryschawy
      */
-	public function prep_rules($rules, $data)
+	public function prepare_rules($rules, $data)
 	{
 		foreach ($rules as $rkey => $description)
 		{

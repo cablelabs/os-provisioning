@@ -28,16 +28,22 @@ class Device extends \BaseModel {
     }
 
 	// Placeholder
-	public static function get_view_header()
+	public static function view_headline()
 	{
 		return 'Device';
 	}
 
 	// Placeholder
-	public function get_view_link_title()
+	public function view_index_label()
 	{
-		return $this->name;
-	}    
+		$devicetype = '';
+		if ($this->devicetype)
+			$devicetype = $this->devicetype->name;
+
+		return ['index' => [$this->name, $devicetype, $this->ip, $this->address1, $this->address2, $this->description],
+		        'index_header' => ['Name', 'Device Type', 'IP address', 'Address 1', 'Address 2', 'Description'],
+		        'header' => $this->name];
+	}
 
 	/**
 	 * link with devicetype

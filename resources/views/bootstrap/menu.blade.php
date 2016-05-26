@@ -16,7 +16,7 @@
 
         </div>
         <!-- end mobile sidebar expand / collapse button -->
-    
+
         <div class="col-md-5">
 
               <br>
@@ -25,20 +25,25 @@
               </h5>
         </div>
 
+        <!-- global search form -->
         <ul class="nav navbar-nav navbar-right">
-        <li>
-            <?php
-              // searchscope for following form is 'all' => search within all models
-              $next_scope = 'all';
-              $preselect_field = $preselect_value = null; // drop pre-selection
-            ?>
-                 
-            {{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET')) }}
-              @include('Generic.searchform')
-            {{ Form::close() }}
 
-            <!--   <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button> -->
-        </li>
+          <li>
+            <div class="navbar-form full-width">
+
+                {{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET'), 'simple') }}
+
+                  {{ Form::hidden('mode', 'simple') }}
+                  {{ Form::hidden('scope', 'all') }}
+
+                  <input type="text" name="query" placeholder="Enter keyword" class="form-control">
+                  <button class="btn btn-search" type="submit"><i class="fa fa-search"></i></button>
+
+                {{ Form::close() }}
+
+            </div>
+          </li>
+
 <!--
           <li class="dropdown">
             <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
@@ -103,7 +108,7 @@
 -->
           <li class="dropdown navbar-user">
             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="{{asset('components/assets-admin/img/user-11.jpg')}}" alt="" /> 
+              <img src="{{asset('components/assets-admin/img/user-11.jpg')}}" alt="" />
               <span class="hidden-xs">{{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
@@ -118,18 +123,19 @@
 
           <li class="dropdown navbar-user">
             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-              <span class="hidden-xs">{{ \App\Http\Controllers\BaseController::translate('Main Menu') }}</span> <b class="caret"></b>
+              <span class="hidden-xs">{{ \App\Http\Controllers\BaseViewController::translate('Main Menu') }}</span> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>
 
-              @foreach ($menus as $menu)
-                @foreach ($menu as $a)
-                  @foreach ($a as $name => $link)
-                    <li><a href="{{route($link)}}">{{ $name }}</a></li>
-                  @endforeach
+                @foreach ($view_header_links as $module_name => $module)
+                  <li><a href="#"><b>{{$module_name}}</b></a>
+                    @foreach ($module as $name => $link)
+                      <a href="{{route($link)}}">&nbsp;&nbsp;&nbsp;&nbsp;{{ $name }}</a>
+                    @endforeach
+                  </li>
                 @endforeach
-              @endforeach
+
             </ul>
           </li>
 

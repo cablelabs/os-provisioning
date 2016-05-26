@@ -10,6 +10,19 @@ use GlobalConfig;
 
 class AuthController extends BaseController {
 
+	// HTML prefix: must be initialized!
+	private $prefix;
+
+
+	// Constructor
+	public function __construct()
+	{
+		$this->prefix = \BaseRoute::$admin_prefix;
+
+		return parent::__construct();
+	}
+
+
 	/*
 	 * Show Login Page
 	 */
@@ -18,7 +31,7 @@ class AuthController extends BaseController {
 		$g = GlobalConfig::first();
 		$head1 = $g->headline1;
 		$head2 = $g->headline2;
-		
+
 		// show the form
 		return \View::make('auth/login', compact('head1', 'head2'));
 	}
@@ -28,12 +41,12 @@ class AuthController extends BaseController {
 	{
 		// If ProvBase is not installed redirect to Config Page
 		$bm = new \BaseModel;
-		if (!$bm->module_is_active ('ProvBase'))
-			return Redirect::to('Config');
+		if (!\PPModule::is_active ('ProvBase'))
+			return Redirect::to($this->prefix.'/Config');
 
 		// Redirect to Default Page
 		// TODO: Redirect to a global overview page
-		return Redirect::to('Contract');
+		return Redirect::to($this->prefix.'/Contract');
 	}
 
 
@@ -44,7 +57,7 @@ class AuthController extends BaseController {
 	{
 		// Check Login
 		if (!Auth::user())
-			return Redirect('auth/login');
+			return Redirect($this->prefix.'/auth/login');
 
 		return $this->default_page();
 	}
@@ -66,9 +79,11 @@ class AuthController extends BaseController {
 
 		// if the validator fails, redirect back to the form
 		if ($validator->fails()) {
-			return Redirect::to('auth/login')
+			$error_text = $validator->errors()->first('login_name').'<br>'.$validator->errors()->first('password');
+			return Redirect::to($this->prefix.'/auth/login')
 				->withErrors($validator) // send back all errors to the login form
-				->withInput(Input::except('password')); // send back the input (not the password) so that we can repopulate the form
+				->withInput(Input::except('password')) // send back the input (not the password) so that we can repopulate the form
+				->with('status', $error_text);
 		}
 		else {
 
@@ -86,7 +101,9 @@ class AuthController extends BaseController {
 			else {
 
 				// validation not successful, send back to form
-				return Redirect::to('auth/login')->with('status', 'No valid Login');
+				return Redirect::to($this->prefix.'/auth/login')
+					->withInput(Input::except('password')) // send back the input (not the password) so that we can repopulate the form
+					->with('status', 'No valid Login');
 
 			}
 
@@ -100,14 +117,14 @@ class AuthController extends BaseController {
 	public function doLogout()
 	{
 		Auth::logout();
-		
-		return Redirect::to('auth/login');
+
+		return Redirect::to($this->prefix.'/auth/login');
 	}
 
 
-	/* 
+	/*
 	 * This function will be called if user has no access to a certain area
-	 * or has no valid login at all. 
+	 * or has no valid login at all.
 	 */
 	public function denied()
 	{

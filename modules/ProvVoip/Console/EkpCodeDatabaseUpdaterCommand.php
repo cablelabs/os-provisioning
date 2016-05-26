@@ -30,7 +30,7 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $csv_file = 'config/modules/provvoip/ekp_codes.csv';
+	protected $csv_file = 'config/provvoip/ekp_codes.csv';
 
 	/**
 	 * Path to hash file for csv comparation.
@@ -39,7 +39,7 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $hash_file = 'config/modules/provvoip/ekp_codes__sha1sum';
+	protected $hash_file = 'config/provvoip/ekp_codes__sha1sum';
 
 
 	/**

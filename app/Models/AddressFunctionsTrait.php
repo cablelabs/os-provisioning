@@ -20,7 +20,7 @@ trait AddressFunctionsTrait {
 			'Behörde',
 		];
 
-		if ($this->module_is_active('provvoipenvia')) {
+		if (\PPModule::is_active('provvoipenvia')) {
 
 			$options = [
 				'Herrn',
@@ -56,7 +56,7 @@ trait AddressFunctionsTrait {
 			'Prof. Dr.',
 		];
 
-		if ($this->module_is_active('provvoipenvia')) {
+		if (\PPModule::is_active('provvoipenvia')) {
 
 			$options = [
 				'',

@@ -40,43 +40,6 @@ class BaseModel extends Eloquent
 	// Add Comment here. ..
 	protected $guarded = ['id'];
 
-	/**
-	 * check if module exists
-	 *
-	 * Note: This function should be used in relational functions like hasMany() or view_has_many()
-	 *
-	 * @author Torsten Schmidt
-	 *
-	 * @param  Modulename
-	 * @return true if module exists and is active otherwise false
-	 */
-	public function module_is_active($modulename)
-	{
-		$modules = \Module::enabled();
-
-		foreach ($modules as $module)
-			if ($module->getLowerName() == strtolower($modulename))
-				return true;
-
-        return false;
-	}
-
-
-	/**
-	 * check if module exists
-	 * NOTE: this is simply a static pendant to module_is_active(). So call this if required from class context.
-	 *       -> see above
-	 */
-	public static function __module_is_active($modulename)
-	{
-		$modules = \Module::enabled();
-
-		foreach ($modules as $module)
-			if ($module->getLowerName() == strtolower($modulename))
-				return true;
-
-        return false;
-	}
 
 
 	/**
@@ -91,6 +54,7 @@ class BaseModel extends Eloquent
 	 */
 	public function index_list ()
 	{
+		return $this->orderBy('id')->get();
 		return $this->all();
 	}
 
@@ -98,6 +62,8 @@ class BaseModel extends Eloquent
 	/**
 	 * Basefunction for generic use - is needed to place the related html links generically in the edit & create views
 	 * Place this function in the appropriate model and return the relation to the model it belongs
+	 *
+	 * NOTE: this function will return null in all create contexts, because at this time no relation exists!
 	 */
 	public function view_belongs_to ()
 	{
@@ -136,6 +102,9 @@ class BaseModel extends Eloquent
 	/**
 	 * Check if VoIP is enabled.
 	 *
+	 * TODO: - move to Contract/ContractController or use directly,
+	 *         ore use fucntion directly instead of helpers variable
+	 *
 	 * @author Patrick Reichel
 	 *
 	 * @return true if one of the VoIP modules is enabled (currently only ProvVoipEnvia), else false
@@ -147,7 +116,7 @@ class BaseModel extends Eloquent
 		);
 
 		foreach ($voip_modules as $module) {
-			if ($this->module_is_active($module)) {
+			if (\PPModule::is_active($module)) {
 				return True;
 			}
 		}
@@ -159,7 +128,9 @@ class BaseModel extends Eloquent
 	/**
 	 * Check if billing is enabled.
 	 *
-	 * TODO currently this is a dummy (= we don't have a billing module yet!!)
+	 * TODO: - currently this is a dummy (= we don't have a billing module yet!!)
+	 *       - move to Contract/ContractController or use directly,
+	 *         ore use fucntion directly instead of helpers variable
 	 *
 	 * @author Patrick Reichel
 	 *
@@ -167,20 +138,20 @@ class BaseModel extends Eloquent
 	 */
 	public function billing_enabled() {
 
-		// TODO: delete next line to activate this method!!
-		return True;
-
 		$billing_modules = array(
+			'BillingBase',
 		);
 
 		foreach ($billing_modules as $module) {
-			if ($this->module_is_active($module)) {
+			if (\PPModule::is_active($module)) {
 				return True;
 			}
 		}
 
 		return False;
 	}
+
+
 	/**
 	 *	This returns an array with all possible enum values.
 	 *	Use this instead of hardcoding it e.g. in your view (where it has to be
@@ -266,6 +237,7 @@ class BaseModel extends Eloquent
 			'TRCClass',	# static data; not for standalone use
 			'CarrierCode', # cron updated data; not for standalone use
 			'EkpCode', # cron updated data; not for standalone use
+			'BookingRecords', 'Invoice', 'Sepaxml'
 		);
 		$result = array();
 
@@ -316,7 +288,8 @@ class BaseModel extends Eloquent
 		return current(preg_grep ('|.*?'.$s.'$|i', $this->get_models()));
 	}
 
-	/*
+
+	/**
 	 * Preselect a sql field while searching
 	 *
 	 * Note: If $field is 'net' or 'cluster' we perform a net and cluster specific search
@@ -335,7 +308,7 @@ class BaseModel extends Eloquent
 		{
 			$ret = $field.'='.$value;
 
-			if($this->module_is_active('Hfcbase'))
+			if(\PPModule::is_active('Hfcbase'))
 			{
 				if (($model[0] == 'Modules\ProvBase\Entities\Modem') && ($field == 'net' || $field == 'cluster'))
 				{
@@ -531,13 +504,13 @@ class BaseModel extends Eloquent
 
 
 	// Placeholder
-	public static function get_view_header()
+	public static function view_headline()
 	{
 		return 'Need to be Set !';
 	}
 
 	// Placeholder
-	public function get_view_link_title()
+	public function view_index_label()
 	{
 		return 'Need to be Set !';
 	}
@@ -617,6 +590,48 @@ class BaseModel extends Eloquent
 		foreach ($ids as $id => $help)
 			$instance->findOrFail($id)->delete();
 	}
+
+
+	/**
+	 * Checks if model is valid in specific time (used for Billing)
+	 *
+	 * Note: Model must have a get_start_time- & get_end_time-Function defined
+	 *
+	 * @param string 	$timespan			year / month / now
+	 * @return Bool  						true, if model had valid dates during last month / year or is actually valid (now)
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function check_validity($timespan = 'month')
+	{
+		$start = $this->get_start_time();
+		$end   = $this->get_end_time();
+
+
+// if (get_class($this) == 'Modules\BillingBase\Entities\Item' && $this->contract->id == 500005 && $this->product->type == 'Internet')
+// 	dd($this->product->name, $start < strtotime(date('Y-m-01')), !$end, $end >= strtotime(date('Y-m-01', strtotime('first day of last month'))), date('Y-m-d', $start), date('Y-m-d', $end));
+
+
+		switch ($timespan)
+		{
+			case 'month':
+				return $start < strtotime(date('Y-m-01')) && (!$end || $end >= strtotime(date('Y-m-01', strtotime('first day of last month'))));
+
+			case 'year':
+				return $start < strtotime(date('Y-01-01')) && (!$end || $end >= strtotime(date('Y-01-01'), strtotime('last year')));
+
+			case 'now':
+				// $now = time();
+				$now = strtotime('today');
+				return $start <= $now && (!$end || $end >= $now);
+
+			default:
+				\Log::error('Bad timespan param used in function '.__FUNCTION__);
+				break;
+		}
+	}
+
+
 }
 
 

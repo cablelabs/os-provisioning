@@ -12,47 +12,96 @@ class Contract extends \BaseModel {
 	// The associated SQL table for this Model
 	public $table = 'contract';
 
+	// temporary Variables filled during accounting command execution (Billing)
+	public $expires = false;			// flag if contract expires this month - used in accounting command
+	public $charge = [];				// total charge for each different Sepa Account with net and tax values
+
 
 	// Add your validation rules here
-    public static function rules($id = null)
-    {
-        return array(
-			'number' => 'string|unique:contract,number,'.$id.',id,deleted_at,NULL',
-            'firstname' => 'required',
-            'lastname' => 'required',
-            'street' => 'required',
-            'zip' => 'required',
-            'city' => 'required',
-            'phone' => 'required',
-            'email' => 'email',
-            'birthday' => 'required|date',
-            'contract_start' => 'required|date',
-            'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
-            'sepa_iban' => 'iban',
-            'sepa_bic' => 'bic',
-        );
-    }
+	// TODO: dependencies of active modules (billing)
+	public static function rules($id = null)
+	{
+		return array(
+			'number' => 'integer|unique:contract,number,'.$id.',id,deleted_at,NULL',
+			'number2' => 'string|unique:contract,number2,'.$id.',id,deleted_at,NULL',
+			'firstname' => 'required',
+			'lastname' => 'required',
+			'street' => 'required',
+			'zip' => 'required',
+			'city' => 'required',
+			'phone' => 'required',
+			'email' => 'email',
+			'birthday' => 'required|date',
+			'contract_start' => 'date',
+			'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
+			'sepa_iban' => 'iban',
+			'sepa_bic' => 'bic',
+			);
+	}
 
 
-    // Name of View
-    public static function get_view_header()
-    {
-        return 'Contract';
-    }
+	// Name of View
+	public static function view_headline()
+	{
+		return 'Contract';
+	}
 
-    // link title in index view
-    public function get_view_link_title()
-    {
+	// link title in index view
+	public function view_index_label()
+	{
+		$bsclass = 'success';
+
+		if ($this->network_access == 0)
+			$bsclass = 'danger';
+
+		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street],
+				'index_header' => ['Contract Number', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street'],
+				'bsclass' => $bsclass,
+				'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
+
+		// deprecated ?
 		$old = $this->number2 ? ' - (Old Nr: '.$this->number2.')' : '';
 		return $this->number.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city.$old;
-    }
+	}
+
+	// View Relation.
+	public function view_has_many()
+	{
+		if (\PPModule::is_active('billingbase'))
+		{
+			$ret['Base']['Modem'] = $this->modems;
+			$ret['Base']['Item']        = $this->items;
+			$ret['Base']['SepaMandate'] = $this->sepamandates;
+		}
+
+		$ret['Technical']['Modem'] = $this->modems;
+
+		if (\PPModule::is_active('billingbase'))
+		{
+			$ret['Billing']['Item']        = $this->items;
+			$ret['Billing']['SepaMandate'] = $this->sepamandates;
+		}
+
+		if (\PPModule::is_active('provvoipenvia'))
+		{
+			$ret['Envia']['EnviaOrder'] = $this->external_orders;
+
+			// TODO: auth - loading controller from model could be a security issue ?
+			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
+		}
+
+		return $ret;
+	}
 
 
-    // Relations
-    public function modems()
-    {
+	/*
+	 * Relations
+	 */
+	public function modems()
+	{
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
-    }
+	}
 
 
 	/**
@@ -117,33 +166,47 @@ class Contract extends \BaseModel {
 	 */
 	public function external_orders() {
 
-		if ($this->module_is_active('provvoipenvia')) {
+		if (\PPModule::is_active('provvoipenvia')) {
 			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment');
 		}
 
 		return null;
 	}
 
-    // View Relation.
-    public function view_has_many()
-    {
-		$ret = array(
-			'Modem' => $this->modems,
-		);
+	public function items()
+	{
+		if (\PPModule::is_active('billingbase'))
+			return $this->hasMany('Modules\BillingBase\Entities\Item');
+		return null;
+	}
 
-		if ($this->module_is_active('provvoipenvia')) {
-			$ret['EnviaOrder'] = $this->external_orders;
-		}
+	public function sepamandates()
+	{
+		if (\PPModule::is_active('billingbase'))
+			return $this->hasMany('Modules\BillingBase\Entities\SepaMandate');
+		return null;
+	}
 
-		return $ret;
-    }
+	public function costcenter()
+	{
+		if (\PPModule::is_active('billingbase'))
+			return $this->belongsTo('Modules\BillingBase\Entities\CostCenter', 'costcenter_id');
+		return null;
+	}
+
+	public function salesman()
+	{
+		if (\PPModule::is_active('billingbase'))
+			return $this->belongsTo('Modules\BillingBase\Entities\Salesman');
+		return null;
+	}
 
 
-    /*
+    /**
      * Generate use a new user login password
      * This does not save the involved model
      */
-    public function generate_password($length = 10)
+    public function generate_password($length=10)
     {
         $this->password = \Acme\php\Password::generate_password($length);
     }
@@ -191,7 +254,7 @@ class Contract extends \BaseModel {
 
 
 	/*
-	 * Convert a 'YYYY-MM-DD' to Carbon Time Object 
+	 * Convert a 'YYYY-MM-DD' to Carbon Time Object
 	 *
 	 * We use this to convert a SQL start / end contract date to a carbon
 	 * object. Carbon Time Objects can be compared with lt(), gt(), ..
@@ -228,7 +291,7 @@ class Contract extends \BaseModel {
 	 *  2. Check if $this is a new contract and activate it -> enable network_access
 	 *
 	 * @return: none
-	 * @author: Torsten Schmidt
+	 * @author: Torsten Schmidt, Nino Ryschawy
 	 */
 	public function daily_conversion()
 	{
@@ -259,6 +322,32 @@ class Contract extends \BaseModel {
 			$this->network_access = 1;
 			$this->save();
 		}
+
+
+		// Task 3: Change qos and voip id when tariff changes
+		if (!\PPModule::is_active('Billingbase'))
+			return;
+
+		$qos_id = ($tariff = $this->get_valid_tariff('Internet')) ? $tariff->product->qos_id : 0;
+
+		if ($this->qos_id != $qos_id)
+		{
+			\Log::Info("daily: contract: changed qos_id (tariff) to $qos_id for Contract ".$this->number, [$this->id]);
+			$this->qos_id = $qos_id;
+			$this->save();
+			$this->push_to_modems();
+		}
+
+		$voip_id = ($tariff = $this->get_valid_tariff('Voip')) ? $tariff->product->voip_id : 0;
+
+		if ($this->voip_id != $voip_id)
+		{
+			\Log::Info("daily: contract: changed voip_id (tariff) to $voip_id for Contract ".$this->number, [$this->id]);
+			$this->voip_id = $voip_id;
+			$this->save();
+		}
+
+
 	}
 
 
@@ -274,10 +363,14 @@ class Contract extends \BaseModel {
 	 */
 	public function monthly_conversion()
 	{
-		// QOS: monthly QOS change – "Tarifwechsel"
+		// with billing module -> daily conversion
+		if (\PPModule::is_active('Billingbase'))
+			return;
+
+		// Tariff: monthly Tariff change – "Tarifwechsel"
 		if ($this->next_qos_id > 0)
 		{
-			\Log::Info('monthly: contract: change QOS for '.$this->id.' from '.$this->qos_id.' to '.$this->next_qos_id);
+			\Log::Info('monthly: contract: change Tariff for '.$this->id.' from '.$this->qos_id.' to '.$this->next_qos_id);
 			$this->qos_id = $this->next_qos_id;
 			$this->next_qos_id = 0;
 
@@ -296,12 +389,52 @@ class Contract extends \BaseModel {
 	}
 
 
+	/**
+	 * Returns (qos/voip id of the) last created actual valid tariff assigned to this contract
+	 *
+	 * @param Enum 	$type 	product type (e.g. 'Internet', 'Voip', 'TV')
+	 * @return object 	item
+	 * @author Nino Ryschawy
+	 */
+	public function get_valid_tariff($type)
+	{
+		if (!\PPModule::is_active('Billingbase'))
+			return null;
+
+		$prod_ids = \Modules\BillingBase\Entities\Product::get_product_ids($type);
+		if (!$prod_ids)
+			return null;
+
+		$last 	= 0;
+		$tariff = null;			// item
+// dd($prod_ids, $this->items);
+		foreach ($this->items as $item)
+		{
+			if (in_array($item->product->id, $prod_ids) && $item->check_validity('now'))
+			{
+				if ($tariff)
+					\Log::warning("Multiple valid $type tariffs active for Contract ".$this->number, [$this->id]);
+
+				$start = $item->get_start_time();
+				if ($start > $last)
+				{
+					$tariff = $item;
+					$last   = $start;
+				}
+			}
+		}
+
+		return $tariff;
+	}
+
+
 	/*
 	 * Push all settings from Contract layer to the related child Modems (for $this)
 	 * This includes: network_access, qos_id
 	 *
 	 * Note: We call this function from Observer context so a change of the explained
 	 *       fields will push this changes to the child Modems
+	 * Note: This allows only 1 tariff qos_id for all modems
 	 *
 	 * @return: none
 	 * @author: Torsten Schmidt
@@ -349,6 +482,65 @@ class Contract extends \BaseModel {
 		Contract::observe(new ContractObserver);
 	}
 
+
+	/**
+	 * Returns start time of item - Note: contract_start field has higher priority than created_at
+	 *
+	 * @return integer 		time in seconds after 1970
+	 */
+	public function get_start_time()
+	{
+		$date = $this->contract_start && $this->contract_start != '0000-00-00' ? $this->contract_start : $this->created_at->toDateString();
+		return strtotime($date);
+	}
+
+
+	/**
+	 * Returns start time of item - Note: contract_start field has higher priority than created_at
+	 *
+	 * @return integer 		time in seconds after 1970
+	 */
+	public function get_end_time()
+	{
+		return $this->contract_end && $this->contract_end != '0000-00-00' ? strtotime($this->contract_end) : null;
+	}
+
+
+	/**
+	 * Returns valid sepa mandate for specific timespan
+	 *
+	 * @param String 	Timespan - LAST (!!) 'year'/'month' or 'now
+	 * @return Object 	Sepa Mandate
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function get_valid_mandate($timespan = 'now')
+	{
+		$mandate = null;
+		$last 	 = 0;
+
+		foreach ($this->sepamandates as $m)
+		{
+			if (!is_object($m) || !$m->check_validity($timespan))
+				continue;
+
+			if ($mandate)
+				\Log::warning("Multiple valid Sepa Mandates active for Contract ".$this->number, [$this->id]);
+
+			$start = $m->get_start_time();
+
+			if ($start > $last)
+			{
+				$mandate = $m;
+				$last   = $start;
+			}
+
+		}
+
+		return $mandate;
+	}
+
+
 }
 
 
@@ -361,20 +553,33 @@ class Contract extends \BaseModel {
  */
 class ContractObserver
 {
+
+	// TODO: move to global config
 	// start contract numbers from 10000 - TODO: move to global config
 	protected $num = 490000;
 
-	public function created($contract)
+	public function creating($contract)
 	{
 		$contract->number = $contract->id - $this->num;
-		$contract->save();     // forces to call the updated method of the observer
 
-		$contract->push_to_modems(); // should not be run, because a new added contract can not have modems..
+		// Note: this is only needed when Billing Module is not active - TODO: proof with future static function
+		$contract->sepa_iban = strtoupper($contract->sepa_iban);
+		$contract->sepa_bic  = strtoupper($contract->sepa_bic);
+	}
+
+
+	public function created($contract)
+	{
+		$contract->save();     			// forces to call the updated method of the observer
+		$contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
 	}
 
 	public function updating($contract)
 	{
 		$contract->number = $contract->id - $this->num;
+
+		$contract->sepa_iban = strtoupper($contract->sepa_iban);
+		$contract->sepa_bic  = strtoupper($contract->sepa_bic);
 	}
 
 	public function updated ($contract)

@@ -17,17 +17,23 @@ class Endpoint extends \BaseModel {
         );
     }
 
-    
+
     // Name of View
-    public static function get_view_header()
+    public static function view_headline()
     {
         return 'Endpoints';
     }
 
     // link title in index view
-    public function get_view_link_title()
+    public function view_index_label()
     {
-        return $this->hostname.' - '.$this->mac;
+        $bsclass = 'success';
+
+
+        return ['index' => [$this->hostname, $this->mac, $this->description],
+                'index_header' => ['Hostname', 'MAC address', 'Description'],
+                'bsclass' => $bsclass,
+                'header' => $this->hostname];
     }
 
 
@@ -58,33 +64,33 @@ class Endpoint extends \BaseModel {
         $file_ep = $dir.'endpoints-host.conf';
 
         $ret = File::put($file_ep, '');
-        
-        foreach (Endpoint::all() as $ep) 
+
+        foreach (Endpoint::all() as $ep)
         {
             $id     = $ep->id;
             $mac    = $ep->mac;
             $host   = $ep->hostname;
-            
-            $data_ep = "\n".'host ep-'.$id.' { hardware ethernet '.$mac.'; ddns-hostname "'.$host.'"; }'; 
+
+            $data_ep = "\n".'host ep-'.$id.' { hardware ethernet '.$mac.'; ddns-hostname "'.$host.'"; }';
             $ret = File::append($file_ep, $data_ep);
             if ($ret === false)
                 die("Error writing to file");
         }
-        
+
         // chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
         system('/bin/chown -R apache /etc/dhcp/');
-        
+
         return ($ret > 0 ? true : false);
-    }    
+    }
 }
 
 
 class EndpointObserver {
-    
+
     public function created($endpoint)
     {
         $endpoint->make_dhcp();
-        
+
         if ($endpoint->hostname == '')
         {
             $endpoint->hostname = 'ep-'.$endpoint->id;

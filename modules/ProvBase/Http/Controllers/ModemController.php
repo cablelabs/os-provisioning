@@ -13,22 +13,23 @@ use App\Exceptions\AuthExceptions;
 class ModemController extends \BaseModuleController {
 
 	protected $index_create_allowed = false;
-	protected $save_button = 'Save and Restart Modem';
+	protected $save_button = 'Save / Restart';
 
     /**
      * defines the formular fields for the edit and create view
      */
-	public function get_form_fields($model = null)
+	public function view_form_fields($model = null)
 	{
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
 			array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly']),
-			array('form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'value' => $model->html_list($model->contracts(), 'id'), 'hidden' => '1'),
+			array('form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 1),
 			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC adress'),
 			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list($model->configfiles(), 'name')),
 			array('form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'),
 			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Network Access', 'value' => '1'),
+			// TODO: change to hidden field when billing module is active?
 			array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1'),
 
 			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
@@ -46,11 +47,38 @@ class ModemController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number'),
 			array('form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'),
 
-			array('form_type' => 'text', 'name' => 'x', 'description' => 'Geopos X'),
-			array('form_type' => 'text', 'name' => 'y', 'description' => 'Geopos Y'),
+			array('form_type' => 'text', 'name' => 'x', 'description' => 'Geopos X', 'html' =>
+				"<div class=col-md-12 style='background-color:#e0f2f1'>
+				<div class=form-group><label for=x class='col-md-4 control-label' style='margin-top: 10px;'>Geopos X/Y</label>
+				<div class=col-md-3><input class=form-control name=x type=text value='".$model['x']."' id=x style='background-color:#e0f2f1'></div>"),
+			array('form_type' => 'text', 'name' => 'y', 'description' => 'Geopos Y', 'html' =>
+				"<div class=col-md-3><input class=form-control name=y type=text value='".$model['y']."' id=y style='background-color:#e0f2f1'></div>
+				</div></div>"),
 
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
 		);
+	}
+
+
+	/*
+	 * Modem Tabs Controller. -> Panel Header Right
+	 * See: BaseController native function for more infos
+	 *
+	 * @param view_var: the model object to be displayed
+	 * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
+	 * @author: Torsten Schmidt
+	 */
+	protected function get_form_tabs($view_var)
+	{
+		$a = [['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]],
+				['name' => 'Analyses', 'route' => 'Provmon.index', 'link' => [$view_var->id]],
+				['name' => 'CPE-Analysis', 'route' => 'Provmon.cpe', 'link' => [$view_var->id]]];
+
+		// MTA: only show MTA analysis if Modem has MTAs
+		if (isset($view_var->mtas) && isset($view_var->mtas[0]))
+			array_push($a, ['name' => 'MTA-Analysis', 'route' => 'Provmon.mta', 'link' => [$view_var->id]]);
+
+		return $a;
 	}
 
 
@@ -59,19 +87,16 @@ class ModemController extends \BaseModuleController {
 	 *
 	 * Changes to BaseController: Topography Mode when HfcCustomer Module is active
 	 *
+	 * TODO: - topo mode does not work anymore ?
+	 *       - split / use / exit with BaseController function
+	 *
 	 * @author Torsten Schmidt
 	 */
-	public function index()
+	public function _index_todo()
 	{
-		try {
-			$this->_check_permissions("view");
-		}
-		catch (Exceptions $ex) {
-			throw new AuthExceptions($e->getMessage());
-		}
+		\App\Http\Controllers\BaseAuthController::auth_check('view', $this->get_model_name());
 
-
-		if(!$this->get_model_obj()->module_is_active ('HfcCustomer'))
+		if(!\PPModule::is_active('HfcCustomer'))
 			return parent::index();
 
 		$modems = Modem::where('id', '>', '0');
@@ -114,9 +139,9 @@ class ModemController extends \BaseModuleController {
 	 */
 	public function fulltextSearch()
 	{
-		$obj    = $this->get_model_obj();
+		$obj    = static::get_model_obj();
 
-		if(!$obj->module_is_active ('HfcCustomer'))
+		if(!\PPModule::is_active ('HfcCustomer'))
 			return parent::fulltextSearch();
 
 		// get the search scope

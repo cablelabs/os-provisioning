@@ -52,6 +52,7 @@ return [
     'Global Config Page' => 'Globale Konfigurationen',
     'Internet Access'	=> 'Internetzugriff',
     'Inventar Number'	=> 'Inventarnummer',
+    'invoice'           => 'Rechnung',    
     'IP address'		=> 'IP Adresse',
     'Language'          => 'Sprache',
     'Lastname'			=> 'Nachname',
@@ -59,7 +60,7 @@ return [
     'log_out'           => 'Ausloggen',
     'MAC Adress'		=> 'MAC Adresse',
     'Main Menu'			=> 'Hauptmenü',
-	'modem_monitoring_error' => 'Möglicherweise war das Modem bis jetzt nicht online. Beachten Sie, dass Diagramme erst ab 
+	'modem_monitoring_error' => 'Möglicherweise war das Modem bis jetzt nicht online. Beachten Sie, dass Diagramme erst ab
 		dem Zeitpunkt verfügbar sind, von dem an das Modem online ist. Wurden alle Diagramme unsauber angezeigt, könnte es
 		sich um ein größeres Problem, wie eine Fehlkonfiguration von Cacti, handeln. Wenden Sie sich dazu an ihren Administrator.',
 	'modem_no_diag'		=> 'Keine Diagramme verfügbar',
@@ -88,7 +89,7 @@ return [
     'Real Time Values'	=> 'Echtzeitwerte',
     'Salutation'		=> 'Anrede',
     'Save'				=> 'Speichern',
-    'Save and Restart Modem' => 'Speichern und Modem Neustarten',
+    'Save / Restart'    => 'Speichern / Neustart',
     'Serial Number'		=> 'Seriennummer',
     'State'				=> 'Status',
     'Street'			=> 'Straße',

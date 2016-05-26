@@ -10,6 +10,8 @@ class ProvBase extends \BaseModel {
 	// The associated SQL table for this Model
 	protected $table = 'provbase';
 
+	public $name = 'Provisioning Basic Config';
+
 	// Don't forget to fill this array
 	protected $fillable = ['provisioning_server', 'ro_community', 'rw_community', 'domain_name', 'notif_mail', 'dhcp_def_lease_time', 'dhcp_max_lease_time', 'startid_contract', 'startid_modem', 'startid_endpoint'];
 
@@ -20,15 +22,15 @@ class ProvBase extends \BaseModel {
 			'provisioning_server' => 'ip',
 		);
 	}
-	
+
 	// Name of View
-	public static function get_view_header()
+	public static function view_headline()
 	{
 		return 'Prov Base Config';
 	}
 
 	// link title in index view
-	public function get_view_link_title()
+	public function view_index_label()
 	{
 		return "Prov Base";
 	}

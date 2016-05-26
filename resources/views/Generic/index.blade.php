@@ -1,81 +1,94 @@
+{{--
+
+@param $route_name: the base route name of this object class
+@param $headline: the link header description in HTML
+@param $create_allowd: create button allowed?
+@param $view_var: array() of objects to be displayed
+
+@param $query:
+@param $scope:
+
+--}}
+
 @extends ('Layout.split84')
 
 @section('content_top')
 
-	{{ HTML::linkRoute($route_name.'.index', $view_header) }}
+	{{ HTML::linkRoute($route_name.'.index', $headline) }}
 
 @stop
 
 @section('content_left')
 
-	<!-- Search Field -->
-	{{ Form::openDivClass(12) }}
-		<?php
-			// searchscope for following form is the current model
-			$next_scope = $route_name;
-		?>
-		{{ Form::openDivClass(8) }}
-			{{ Form::model(null, array('route'=>$route_name.'.fulltextSearch', 'method'=>'GET')) }}
-				@include('Generic.searchform')
-			{{ Form::close() }}
-		{{ Form::closeDivClass() }}
-	{{ Form::closeDivClass() }}
-
-	<!-- new line -->
-	{{ Form::openDivClass(12) }}
-		<br>
-	{{ Form::closeDivClass() }}
-
 	<!-- Create Form -->
-	{{ Form::openDivClass(12) }}
-		{{ Form::openDivClass(3) }}
+	@DivOpen(9)
 			@if ($create_allowed)
 				{{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
 				{{ Form::submit('Create', ['style' => 'simple']) }}
 				{{ Form::close() }}
 			@endif
-		{{ Form::closeDivClass() }}
-	{{ Form::closeDivClass() }}
+	@DivClose()
+
+	<!-- Search -->
+	@DivOpen(3)
+			{{ Form::model(null, array('route'=>$route_name.'.fulltextSearch', 'method'=>'GET'), 'simple') }}
+				@include('Generic.searchform')
+			{{ Form::close() }}
+	@DivClose()
+
+	{{ Form::hr() }}
 
 	<!-- database entries inside a form with checkboxes to be able to delete one or more entries -->
-	{{ Form::openDivClass(12) }}
+	@DivOpen(12)
 
 		{{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete')) }}
 
 			@if (isset($query) && isset($scope))
-				<h4>Matches for <tt>{{ $query }}</tt> in <tt>{{ $scope }}</tt></h4>
+				<h4>Matches for <tt>'{{ $query }}'</tt> in <tt>{{ $scope }}</tt></h4>
 			@endif
 
-			<table>
-			@foreach ($view_var as $object)
-				<tr>
-					<td>
-						{{ Form::checkbox('ids['.$object->id.']') }}
-					</td>
-					<td>
+			<table class="table table-hover itable">
 
-						<?php
-							// TODO: move away from view!!
-							$cur_model_complete = get_class($object);
-							$cur_model_parts = explode('\\', $cur_model_complete);
-							$cur_model = array_pop($cur_model_parts);
-						?>
+				<!-- TODO: add concept to parse header fields for index table - like firstname, lastname, ..-->
+				<thead>
+					<tr role="row">
+						<th></th>
+						<!-- Parse view_index_label() header_index  -->
+						@if (isset($view_var[0]) && is_array($view_var[0]->view_index_label()) && isset($view_var[0]->view_index_label()['index_header']))
+							@foreach ($view_var[0]->view_index_label()['index_header'] as $field)
+								<th> {{ \App\Http\Controllers\BaseViewController::translate($field) }} </th>
+							@endforeach
+						@endif
+					</tr>
+				</thead>
 
-						{{ HTML::linkRoute($cur_model.'.edit', $object->get_view_link_title(), $object->id) }}
+				<!-- Index Table Entries -->
+				@foreach ($view_var as $object)
+					<tr class="{{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}">
+						<td width=50> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple']) }} </td>
 
-					</td>
-				</tr>
-			@endforeach
+						<!-- Parse view_index_label()  -->
+						<?php $i = 0; // display link only on first element ?>
+						@foreach (is_array($object->view_index_label()) ? $object->view_index_label()['index'] : [$object->view_index_label()] as $field)
+							<td class="ClickableTd">
+								@if ($i++ == 0)
+									{{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }}
+								@else
+									{{ $field }}
+								@endif
+							</td>
+						@endforeach
+					</tr>
+				@endforeach
+
 			</table>
 
-			<br>
+	@DivClose()
 
-		<!-- delete/submit button of form-->
-		{{ Form::openDivClass(3) }}
-			{{ Form::submit('Delete', ['style' => 'simple']) }}
-			{{ Form::close() }}
-		{{ Form::closeDivClass() }}
-
-	{{ Form::closeDivClass() }}
+	<!-- delete/submit button of form-->
+	@DivOpen(3)
+		{{ Form::submit('Delete', ['!class' => 'btn btn-danger btn-primary m-r-5', 'style' => 'simple']) }}
+		{{ Form::close() }}
+	@DivClose()
 
 @stop

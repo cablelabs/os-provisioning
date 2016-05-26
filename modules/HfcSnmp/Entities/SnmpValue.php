@@ -14,17 +14,43 @@ class SnmpValue extends \BaseModel {
         return array(
         );
     }
-    
+
     // Name of View
-    public static function get_view_header()
+    public static function view_headline()
     {
         return 'Temporary Testing SNMP Values';
     }
 
     // link title in index view
-    public function get_view_link_title()
+    public function view_index_label()
     {
-        return $this->id.': '.$this->device_id.' - '.$this->snmpmib_id.' - '.$this->oid_index;
-    }	
+        $device = '';
+        if ($this->device)
+            $device = $this->device->name;
+
+        $snmpmib = '';
+        if ($this->snmpmib)
+            $snmpmib = $this->snmpmib->field;
+
+        return ['index' => [$device, $snmpmib, $this->oid_index, $this->value],
+                'index_header' => ['Device Type', 'SNMP MIB Reference', 'SNMP OID Index', 'Value'],
+                'header' => $this->id.': '.$device.' - '.$snmpmib.' - '.$this->oid_index];
+    }
+
+    /**
+     * link with devicetype
+     */
+    public function device()
+    {
+        return $this->belongsTo('Modules\HfcSnmp\Entities\Device');
+    }
+
+    /**
+     * link with snmpmib
+     */
+    public function snmpmib()
+    {
+        return $this->belongsTo('Modules\HfcSnmp\Entities\SnmpMib');
+    }
 
 }

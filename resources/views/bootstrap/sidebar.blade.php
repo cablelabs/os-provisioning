@@ -37,9 +37,9 @@
           @foreach ($networks as $network)
 	          <li class="has-sub">
 	            <a href="javascript:;">
-	              <i class="fa fa-suitcase"></i> 
+	              <i class="fa fa-suitcase"></i>
 	              <b class="caret pull-right"></b>
-	              <span>{{$network->name}}</span> 
+	              <span>{{$network->name}}</span>
 	            </a>
 	            <ul class="sub-menu">
 	            	<li><a href="{{Request::root()}}/Tree/erd/net/{{$network->id}}">Network</a></li>
@@ -51,7 +51,7 @@
 	       @endforeach
 
 
-         
+
           <!-- begin sidebar minify button -->
           <li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
           <!-- end sidebar minify button -->
@@ -64,8 +64,8 @@
     <!-- end #sidebar -->
 
 
-
-@if(isset($panel_right))
+<!-- java script dynamic panel on right top side under tabs -->
+@if(isset($panel_right_extra))
     <!-- begin theme-panel -->
     <div class="theme-panel">
       <a href="javascript:;" data-click="theme-panel-expand" class="theme-collapse-btn">
@@ -75,7 +75,7 @@
         <h5 class="m-t-0">Menu</h5>
 
         <h4>
-          @foreach ($panel_right as $menu)
+          @foreach ($panel_right_extra as $menu)
             <?php
               $route = $menu['route'];
               $name  = $menu['name'];

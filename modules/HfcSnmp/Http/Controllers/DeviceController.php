@@ -14,7 +14,7 @@ class DeviceController extends SnmpController {
     /**
      * defines the formular fields for the edit and create view
      */
-	public function get_form_fields($model = null)
+	public function view_form_fields($model = null)
 	{
 		if (!$model)
 			$model = new Device;
@@ -56,12 +56,12 @@ class DeviceController extends SnmpController {
 		$form_fields = $snmp->snmp_get_all();
 
 		// Init View
-		$obj = $this->get_model_obj();
-		$model_name  = $this->get_model_name();
+		$obj = static::get_model_obj();
+		$model_name  = static::get_model_name();
 		$view_header = 'Edit: '.$device->name;
 		$view_var 	 = $obj->findOrFail($id);
-		$route_name  = $this->get_route_name();
-		$view_header_links = $this->get_view_header_links();
+		$route_name  = static::get_route_name();
+		$view_header_links = BaseViewController::view_main_menus();
 
 		$view_path = 'hfcsnmp::Device.controlling';
 		$form_path = 'Generic.form';
@@ -101,7 +101,7 @@ class DeviceController extends SnmpController {
 		// Set Html Form Fields for generic View
 
 		$snmp->snmp_set_all($data);
-		
+
 
 		return Redirect::route('Device.controlling_update', $id)->with('message', 'Updated!');
 	}

@@ -50,13 +50,13 @@ class PhonenumberManagement extends \BaseModel {
 
 
 	// Name of View
-	public static function get_view_header()
+	public static function view_headline()
 	{
 		return 'Phonenumber Management';
 	}
 
 	// link title in index view
-	public function get_view_link_title()
+	public function view_index_label()
 	{
 		return $this->id;
 	}
@@ -114,7 +114,7 @@ class PhonenumberManagement extends \BaseModel {
 	 */
 	public function trc_class() {
 
-		if ($this->module_is_active('provvoipenvia')) {
+		if (\PPModule::is_active('provvoipenvia')) {
 			return $this->hasOne('Modules\ProvVoipEnvia\Entities\TRCClass', 'trcclass');
 		}
 
@@ -128,7 +128,7 @@ class PhonenumberManagement extends \BaseModel {
 	 */
 	public function external_orders() {
 
-		if ($this->module_is_active('provvoipenvia')) {
+		if (\PPModule::is_active('provvoipenvia')) {
 			return $this->phonenumber->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment');
 		}
 
@@ -137,7 +137,7 @@ class PhonenumberManagement extends \BaseModel {
 
 
 	/**
-	 * Get relation to trc classes.
+	 * Get relation to phonebookentry.
 	 *
 	 * @author Patrick Reichel
 	 */
@@ -158,8 +158,12 @@ class PhonenumberManagement extends \BaseModel {
 	 // View Relation.
 	public function view_has_many() {
 
-		if ($this->module_is_active('provvoipenvia')) {
+		if (\PPModule::is_active('provvoipenvia')) {
 			$ret['EnviaOrder'] = $this->external_orders;
+
+			// TODO: auth - loading controller from model could be a security issue ?
+			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\PhonenumberManagementController::_get_envia_management_jobs($this);
 		}
 
 		return $ret;

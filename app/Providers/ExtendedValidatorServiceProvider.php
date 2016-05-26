@@ -12,7 +12,6 @@ class ExtendedValidatorServiceProvider extends ServiceProvider {
 	*/
 	public function boot()
 	{
-
 		/*
 		 * Extend Validator Class
 		 * see extensions/validators/..
@@ -25,7 +24,11 @@ class ExtendedValidatorServiceProvider extends ServiceProvider {
 		$this->app['validator']->extend('ip_in_range', 'Acme\Validators\ExtendedValidator@validateIpInRange');
 		$this->app['validator']->extend('ip_larger', 'Acme\Validators\ExtendedValidator@ipLarger');
 		$this->app['validator']->extend('netmask', 'Acme\Validators\ExtendedValidator@netmask');
-
+		$this->app['validator']->extend('not_null', 'Acme\Validators\ExtendedValidator@notNull');
+		$this->app['validator']->extend('null_if', 'Acme\Validators\ExtendedValidator@nullIf');
+		$this->app['validator']->extend('creditor_id', 'Acme\Validators\ExtendedValidator@validateCreditorId');
+		$this->app['validator']->extend('product', 'Acme\Validators\ExtendedValidator@validateProductType');
+		$this->app['validator']->extend('available', 'Acme\Validators\ExtendedValidator@validateBicAvailable');
 		$this->app['validator']->extend('phonebook_string', 'Acme\Validators\ExtendedValidator@validatePhonebookString');
 		$this->app['validator']->extend('phonebook_predefined_string', 'Acme\Validators\ExtendedValidator@validatePhonebookPredefinedString');
 		$this->app['validator']->extend('phonebook_one_character_option', 'Acme\Validators\ExtendedValidator@validatePhonebookOneCharacterOption');

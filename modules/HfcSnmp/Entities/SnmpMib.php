@@ -21,17 +21,23 @@ class SnmpMib extends \BaseModel {
     }
 
 	// Name of View
-	public static function get_view_header()
+	public static function view_headline()
 	{
 		return 'SNMP MIB';
 	}
 
 	// link title in index view
-	public function get_view_link_title()
+	public function view_index_label()
 	{
-		return $this->field.' - '.$this->oid;
+		$devicetype = '';
+		if ($this->devicetype)
+			$devicetype = $this->devicetype->name;
+
+		return ['index' => [$devicetype, $this->field, $this->oid, $this->html_type, $this->description],
+		        'index_header' => ['Device Type', 'Field Name', 'SNMP OID', 'HTML Type', 'Description'],
+		        'header' => $this->field.' - '.$this->oid];
 	}
-	
+
 	/**
 	 * link with devicetype
 	 */

@@ -12,13 +12,13 @@ class PhonenumberController extends \BaseModuleController {
 	 * if set to true a create button on index view is available - set to true in BaseController as standard
 	 */
     protected $index_create_allowed = false;
-	protected $save_button = 'Save and Restart Modem';
+	protected $save_button = 'Save / Restart';
 
 
     /**
      * defines the formular fields for the edit and create view
      */
-	public function get_form_fields($model = null)
+	public function view_form_fields($model = null)
 	{
 		if (!$model)
 			$model = new Phonenumber;
@@ -33,27 +33,10 @@ class PhonenumberController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'username', 'description' => 'Username', 'options' => array('placeholder' => 'autofilled if empty')),
 			array('form_type' => 'text', 'name' => 'password', 'description' => 'Password', 'options' => array('placeholder' => 'autofilled if empty')),
 			array('form_type' => 'text', 'name' => 'sipdomain', 'description' => 'SIP domain'),
-			array('form_type' => 'select', 'name' => 'active', 'description' => 'Active?', 'value' => array( '1' => 'Yes', '0' => 'No'))
+			array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'checked' => true, 'create' => '1')
 		);
 	}
 
-
-	/**
-	 * Wrapper to get all jobs for the current phonenumber
-	 * This can be used as a switch for several providers like envia etc. – simply check if the module exists :-)
-	 * If no module is active we return the default value “null” – nothing will be shown
-	 *
-	 * @author Patrick Reichel
-	 */
-	protected function _get_extra_data($view_var) {
-
-		if ($this->get_model_obj()->module_is_active('ProvVoipEnvia')) {
-			return $this->_get_envia_management_jobs($view_var);
-		}
-
-		// default: nothing to do
-		return null;
-	}
 
 	/**
 	 * Get all management jobs for Envia
@@ -62,18 +45,12 @@ class PhonenumberController extends \BaseModuleController {
 	 * @param $model current phonenumber object
 	 * @return array containing linktexts and URLs to perform actions against REST API
 	 */
-	protected function _get_envia_management_jobs($phonenumber) {
+	public static function _get_envia_management_jobs($phonenumber) {
 
 		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
 
 		// check if user has the right to perform actions against Envia API
-		// if not: don't show any actions
-		try {
-			$this->_check_permissions("view", "Modules\ProvVoipEnvia\Entities\ProvVoipEnvia");
-		}
-		catch (PermissionDeniedError $ex) {
-			return null;
-		}
+		\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
 
 		return $provvoipenvia->get_jobs_for_view($phonenumber, 'phonenumber');
 	}
