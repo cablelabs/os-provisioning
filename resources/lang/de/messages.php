@@ -68,6 +68,7 @@ return [
 	'modem_lease_valid' => 'Modem hat einen gültigen Lease',
 	'modem_log_error' => 'Modem ist nicht beim Server registriert - Kein Logeintrag gefunden',
 	'modem_offline'		=> 'Modem ist Offline',
+    'month'             => 'Monat',
     'Net'   			=> 'Netz',
     'Netmask'   		=> 'Netzmaske',
     'Network Access'	=> 'Netzwerkzugriff',

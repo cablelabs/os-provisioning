@@ -266,26 +266,6 @@ class ExtendedValidator
 		return true;
 	}
 
-
-	/**
-	 * Checks if a BIC entry exists in a config/data file
-	 *
-	 * @author Nino Ryschawy
-	 */
-	public function valdidateBicAvailable($attribute, $value, $parameters)
-	{
-		$iban 	 = new IBAN(strtoupper($parameters[0]));
-		$country = strtolower($iban->Country());
-		$bank 	 = $iban->Bank();
-
-		$data = Storage::get('config/billingbase/bic_'.$country.'.csv');
-
-		if (strpos($data, $bank) !== false)
-			return true;
-
-		return false;
-	}
-
 }
 
 
