@@ -5,6 +5,9 @@ namespace Modules\ProvVoip\Entities;
 // Model not found? execute composer dump-autoload in lara root dir
 class PhonenumberManagement extends \BaseModel {
 
+	// get functions for some address select options
+	use \App\Models\AddressFunctionsTrait;
+
     // The associated SQL table for this Model
     public $table = 'phonenumbermanagement';
 
@@ -14,6 +17,10 @@ class PhonenumberManagement extends \BaseModel {
 	{
 		return array(
 			'phonenumber_id' => 'required|exists:phonenumber,id|min:1',
+			'trcclass' => 'required|exists:trcclass,id',
+			'carrier_in' => 'required|exists:carriercode,id',
+			'carrier_out' => 'required|exists:carriercode,id',
+			'ekp_in' => 'required|exists:ekpcode,id',
 		);
 	}
 
@@ -24,9 +31,11 @@ class PhonenumberManagement extends \BaseModel {
 					'activation_date',
 					'porting_in',
 					'carrier_in',
+					'ekp_in',
 					'deactivation_date',
 					'porting_out',
 					'carrier_out',
+					'ekp_out',
 					'subscriber_company',
 					'subscriber_salutation',
 					'subscriber_academic_degree',
@@ -36,7 +45,7 @@ class PhonenumberManagement extends \BaseModel {
 					'subscriber_house_number',
 					'subscriber_zip',
 					'subscriber_city',
-					'subscriber_country'
+					'subscriber_country',
 				];
 
 
@@ -128,74 +137,21 @@ class PhonenumberManagement extends \BaseModel {
 
 
 	/**
-	 * Helper to define possible salutation values.
-	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
+	 * Get relation to phonebookentry.
 	 *
 	 * @author Patrick Reichel
 	 */
-	public function get_salutation_options() {
+	public function phonebookentry() {
 
-		$defaults = [
-			'Herr',
-			'Frau',
-			'Firma',
-			'Behörde',
-		];
-
-		if (\PPModule::is_active('provvoipenvia')) {
-
-			$options = [
-				'Herrn',
-				'Frau',
-				'Firma',
-				'Behörde',
-			];
-		}
-		else {
-			$options = $defaults;
-		}
-
-		$result = array();
-		foreach ($options as $option) {
-			$result[$option] = $option;
-		}
-
-		return $result;
+		return $this->hasOne('Modules\ProvVoip\Entities\PhonebookEntry', 'phonenumbermanagement_id');
 	}
 
 
-	/**
-	 * Helper to define possible academic degree values.
-	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
-	 *
-	 * @author Patrick Reichel
-	 */
-	public function get_academic_degree_options() {
-
-		$defaults = [
-			'',
-			'Dr.',
-			'Prof. Dr.',
-		];
-
-		if (\PPModule::is_active('provvoipenvia')) {
-
-			$options = [
-				'',
-				'Dr.',
-				'Prof. Dr.',
-			];
-		}
-		else {
-			$options = $defaults;
-		}
-
-		$result = array();
-		foreach ($options as $option) {
-			$result[$option] = $option;
-		}
-
-		return $result;
+	// has zero or one phonebookentry object related
+	public function view_has_one() {
+		return array(
+			'PhonebookEntry' => $this->phonebookentry,
+		);
 	}
 
 

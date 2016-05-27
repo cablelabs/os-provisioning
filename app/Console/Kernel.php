@@ -3,6 +3,7 @@
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use \Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand;
+use \Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand;
 use \Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand;
 
 class Kernel extends ConsoleKernel {
@@ -16,6 +17,7 @@ class Kernel extends ConsoleKernel {
 		'App\Console\Commands\Inspire',
 		'App\Console\Commands\TimeDeltaChecker',
 		'\Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand',
+		'\Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
 		'App\Console\Commands\authCommand',
@@ -48,6 +50,10 @@ class Kernel extends ConsoleKernel {
 			// Update database table carriercode with csv data if necessary
 			$schedule->command('provvoip:update_carrier_code_database')
 				->dailyAt('03:24');
+
+			// Update database table ekpcode with csv data if necessary
+			$schedule->command('provvoip:update_ekp_code_database')
+				->dailyAt('03:29');
 		}
 
 		if (\PPModule::is_active ('ProvVoipEnvia')) {
@@ -111,6 +117,19 @@ class Kernel extends ConsoleKernel {
 			    exec ('chown -R apache '.storage_path().'/logs');
 			})->dailyAt('00:01');
 
+
+		// Create monthly Billing Files and reset flags
+		if (\PPModule::is_active ('BillingBase'))
+		{
+			// wrapping into a check if table billingbase exists (if not that crashes on every “php artisan” command – e.g. on migrations
+			if (\Schema::hasTable('billingbase')) {
+				$schedule->call('\Modules\BillingBase\Entities\Item@yearly_conversion')->yearly();
+
+				$rcd = \Modules\BillingBase\Entities\BillingBase::select('rcd')->first()->rcd;
+				$execute = $rcd ? ($rcd - 5 > 0 ? $rcd - 5 : 1) : 15;
+				$schedule->command('nms:accounting')->monthlyOn($execute, '01:00');
+			}
+		}
 	}
 
 }

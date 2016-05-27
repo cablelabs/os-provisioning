@@ -52,6 +52,7 @@ return [
     'Global Config Page' => 'Globale Konfigurationen',
     'Internet Access'	=> 'Internetzugriff',
     'Inventar Number'	=> 'Inventarnummer',
+    'invoice'           => 'Rechnung',    
     'IP address'		=> 'IP Adresse',
     'Language'          => 'Sprache',
     'Lastname'			=> 'Nachname',

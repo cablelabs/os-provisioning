@@ -4,33 +4,33 @@ use Log;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use \Modules\ProvVoip\Entities\CarrierCode;
+use \Modules\ProvVoip\Entities\EkpCode;
 
 /**
- * Class for updating database with carrier codes from csv file
+ * Class for updating database with ekp codes from csv file
  */
-class CarrierCodeDatabaseUpdaterCommand extends Command {
+class EkpCodeDatabaseUpdaterCommand extends Command {
 
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'provvoip:update_carrier_code_database';
+	protected $name = 'provvoip:update_ekp_code_database';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Update the database carrier code using the csv file $csv_file';
+	protected $description = 'Update the database ekp code using the csv file $csv_file';
 
 	/**
 	 * The path were the csv file is stored.
 	 *
 	 * @var string
 	 */
-	protected $csv_file = 'config/provvoip/carrier_codes.csv';
+	protected $csv_file = 'config/provvoip/ekp_codes.csv';
 
 	/**
 	 * Path to hash file for csv comparation.
@@ -39,7 +39,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $hash_file = 'config/provvoip/carrier_codes__sha1sum';
+	protected $hash_file = 'config/provvoip/ekp_codes__sha1sum';
 
 
 	/**
@@ -99,7 +99,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 
 		// if there is no csv file, we can't update the db…
 		if(!\Storage::has($this->csv_file)) {
-			Log::warning($this->name.': CSV file with carrier codes does not exist ('.storage_path().'/'.$this->csv_file.')');
+			Log::warning($this->name.': CSV file with ekp codes does not exist ('.storage_path().'/'.$this->csv_file.')');
 			return false;
 		}
 
@@ -145,8 +145,8 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	/**
 	 * Updates the database table with CSV values.
 	 *
-	 * The only actions we perform is adding new and updating existing carrier codes.
-	 * The deletion of not contained carrier codes would IMO be a bad idea:
+	 * The only actions we perform is adding new and updating existing ekp codes.
+	 * The deletion of not contained ekp codes would IMO be a bad idea:
 	 *     - we lose data if something went wrong in building the csv
 	 *     - some entries in e.g. older phonenumbers refer to non existing (=soft deleted) entries
 	 *     - it general should be no problem to hold the old codes – they simply will not be used anymore in future actions
@@ -160,16 +160,17 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 			$company = $entry[1];
 
 			# alter entry if exists, else create new one
-			$cc = CarrierCode::firstOrNew(array('carrier_code' => $code));
-			$cc->carrier_code = $code;
+			$cc = EkpCode::firstOrNew(array('ekp_code' => $code));
+			$cc->ekp_code = $code;
 			$cc->company = $company;
 			$cc->save();
 		}
 
 		$hash = sha1(\Storage::get($this->csv_file));
 		\Storage::put($this->hash_file, $hash);
-		Log::info($this->name.': Database carriercodes updated');
+		Log::info($this->name.': Database ekpcodes updated');
 
 	}
 
 }
+

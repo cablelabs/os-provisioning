@@ -40,9 +40,9 @@ class CreateContractTable extends BaseMigration {
 			$table->date('contract_end');
 			$table->boolean('network_access');
 			$table->integer('qos_id')->unsigned();
-			$table->integer('next_qos_id')->unsigned();
+			$table->integer('next_qos_id')->unsigned();			// Note: only needed for NMS without Billing
 			$table->integer('voip_id')->unsigned();
-			$table->integer('next_voip_id')->unsigned();
+			$table->integer('next_voip_id')->unsigned();		// Note: only needed for NMS without Billing
 			$table->string('sepa_iban', 34);
 			$table->string('sepa_bic', 11);
 			$table->string('sepa_holder');
