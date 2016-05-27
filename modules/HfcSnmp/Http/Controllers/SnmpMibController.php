@@ -4,7 +4,7 @@ namespace Modules\HfcSnmp\Http\Controllers;
 
 use Models\SnmpMib;
 
-class SnmpMibController extends \BaseModuleController {
+class SnmpMibController extends \BaseController {
 
     /**
      * defines the formular fields for the edit and create view

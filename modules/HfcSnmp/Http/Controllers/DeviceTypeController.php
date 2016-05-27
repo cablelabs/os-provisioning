@@ -2,7 +2,7 @@
 
 namespace Modules\HfcSnmp\Http\Controllers;
 
-class DeviceTypeController extends \BaseModuleController {
+class DeviceTypeController extends \BaseController {
 
     /**
      * defines the formular fields for the edit and create view

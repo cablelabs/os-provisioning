@@ -8,7 +8,7 @@ use Modules\ProvVoip\Entities\CarrierCode;
 use Modules\ProvVoip\Entities\EkpCode;
 use Modules\ProvVoipEnvia\Entities\TRCClass;
 
-class PhonenumberManagementController extends \BaseModuleController {
+class PhonenumberManagementController extends \BaseController {
 
 
 	/**

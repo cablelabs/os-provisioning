@@ -41,7 +41,7 @@ class Handler extends ExceptionHandler {
 		// Auth Error Messages
 		if ($e instanceof AuthExceptions)
 		{
-			return redirect('auth/denied')->with('status', $e->getMessage());
+			return response()->view('auth.denied', ['status' => $e->getMessage()], 403);
 		}
 
 		return parent::render($request, $e);

@@ -1,48 +1,62 @@
+<!doctype html>
 <html>
+
 	<head>
-		<title>Laravel</title>
-		
-		<link href='//fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
+		<meta charset="utf-8">
+		<title>NMS</title>
+		@include ('bootstrap.header')
 
-		<style>
-			body {
-				margin: 0;
-				padding: 0;
-				width: 100%;
-				height: 100%;
-				color: #B0BEC5;
-				display: table;
-				font-weight: 100;
-				font-family: 'Lato';
-			}
-
-			.container {
-				text-align: center;
-				display: table-cell;
-				vertical-align: middle;
-			}
-
-			.content {
-				text-align: center;
-				display: inline-block;
-			}
-
-			.title {
-				font-size: 96px;
-				margin-bottom: 40px;
-			}
-
-			.quote {
-				font-size: 24px;
-			}
-		</style>
+		<script>setTimeout("document.getElementById('error').style.display='none';", 3000);</script>
 	</head>
-	<body>
-		<div class="container">
-			<div class="content">
-				<div class="title">Laravel 5</div>
-				<div class="quote">{{ Inspiring::quote() }}</div>
+
+	@include ('bootstrap.header')
+
+	<body class="pace-top">
+
+	<!-- Background Image -->
+	<div class="login-cover">
+		<div class="login-cover-image"><img alt="" data-id="login-cover-image" src="{{asset('images/main-pic-1.png')}}"></div>
+		<div class="login-cover-bg"></div>
+	</div>
+
+		<!-- begin login -->
+		<div class="login login-v2 animated fadeInDown">
+
+			<!-- begin brand -->
+			<div class="login-header">
+				<div class="brand">
+					<span class="logo"></span> {{ $head1 }}
+					<small>{{ $head2 }}</small>
+				</div>
+				<div class="icon">
+					<i class="fa fa-sign-in"></i>
+				</div>
 			</div>
+
+			<!-- end brand -->
+			<div class="login-content">
+				<div align="center">
+
+					<div class="login-buttons">
+						<a href='admin' class="btn btn-success btn-block btn-lg" role="button">Admin Center</a>
+						<br>
+						<a href='ccc' class="btn btn-success btn-block btn-lg" role="button">Customer Control Center</a>
+					</div>
+
+					<br><br><br>
+					<div class="quote">{{ Inspiring::quote() }}</div>
+
+				</div>
+			</div>
+
 		</div>
+		<!-- end login -->
+
 	</body>
+
+
+
+	<body>
+	</body>
+	@include ('bootstrap.footer')
 </html>

@@ -141,7 +141,7 @@ class Modem extends \BaseModel {
 	{
 		parent::boot();
 
-		Modem::observe(new \SystemdObserver);
+		Modem::observe(new \App\SystemdObserver);
 		Modem::observe(new ModemObserver);
 	}
 

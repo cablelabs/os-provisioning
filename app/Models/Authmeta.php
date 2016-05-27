@@ -1,5 +1,7 @@
 <?php
 
+namespace App;
+
 class Authmeta extends BaseModel {
 
 	public function users() {
@@ -19,7 +21,7 @@ class Authmeta extends BaseModel {
 	 * @return database data
 	 */
 	public static function cores_by_meta($meta_id, $core_type) {
-		return DB::table('authmetacore')
+		return \DB::table('authmetacore')
 					->join('authcores', 'authmetacore.core_id', '=', 'authcores.id')
 					->select('authcores.name', 'authmetacore.view', 'authmetacore.create', 'authmetacore.edit', 'authmetacore.delete')
 					->where('authmetacore.meta_id', '=', $meta_id)

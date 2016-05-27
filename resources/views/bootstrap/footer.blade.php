@@ -31,6 +31,7 @@
           // Select2 Init - intelligent HTML select
           $("select").select2();
 
+          // Intelligent Data Tables
           $('.itable').dataTable( {
             "lengthMenu": [[10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "All"]]
           } );

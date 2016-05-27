@@ -4,7 +4,7 @@ namespace Modules\ProvVoip\Http\Controllers;
 
 use Modules\ProvVoip\Entities\PhoneTariff;
 
-class PhoneTariffController extends \BaseModuleController {
+class PhoneTariffController extends \BaseController {
 
 
     /**

@@ -10,12 +10,15 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $middleware = [
+		// L5 defaults
 		'Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode',
 		'Illuminate\Cookie\Middleware\EncryptCookies',
 		'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
 		'Illuminate\Session\Middleware\StartSession',
 		'Illuminate\View\Middleware\ShareErrorsFromSession',
 		'App\Http\Middleware\VerifyCsrfToken',
+
+		\App\Http\Middleware\BaseAuthMiddleware::class,
 	];
 
 	/**
@@ -24,9 +27,17 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $routeMiddleware = [
-		'auth' => 'App\Http\Middleware\Authenticate',
-		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
-		'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
+		// Base Authentication Stuff
+		// @author Torsten Schmidt
+	    'auth' => \App\Http\Middleware\BaseAuthAdminMiddleware::class,
+
+	    // TODO: check if absence of CCC module will break ?
+	    'ccc.base' => \Modules\Ccc\Http\Middleware\CccBaseMiddleware::class,
+
+		// L5 defaults:
+		//'auth' => 'App\Http\Middleware\Authenticate',
+		//'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
+		//'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
 	];
 
 }

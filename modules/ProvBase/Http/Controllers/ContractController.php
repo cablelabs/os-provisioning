@@ -12,7 +12,7 @@ use Modules\BillingBase\Entities\Item;
 use Modules\BillingBase\Entities\CostCenter;
 use Modules\BillingBase\Entities\Salesman;
 
-class ContractController extends \BaseModuleController {
+class ContractController extends \BaseController {
 
 
 	protected $relation_create_button = "Add";
@@ -169,6 +169,27 @@ class ContractController extends \BaseModuleController {
 		}
 
 		return $data;
+	}
+
+
+
+	/**
+	 * Create and Download Connection Information
+
+	 * @param type $filename download filename, replace '/' with '__' in URL context
+	 * @return type response() - download box from browser
+	 *
+	 * @author Torsten Schmidt
+	 */
+	public function connection_info_download ($id)
+	{
+		// TODO: @Nino Ryschawy: create connection information under storage path
+		//       and set $pdf to created pdf file (recursive under storage/apps)
+		$filename = 'test.pdf';
+
+		$pdf = response()->download(storage_path().'/app/'.$filename);
+
+		return $pdf;
 	}
 
 }

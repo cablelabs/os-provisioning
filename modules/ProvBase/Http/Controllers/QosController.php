@@ -4,7 +4,7 @@ namespace Modules\ProvBase\Http\Controllers;
 
 use Modules\ProvBase\Entities\Qos;
 
-class QosController extends \BaseModuleController {
+class QosController extends \BaseController {
 
     /**
      * defines the formular fields for the edit and create view

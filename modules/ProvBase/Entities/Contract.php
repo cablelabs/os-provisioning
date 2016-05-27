@@ -91,6 +91,12 @@ class Contract extends \BaseModel {
 			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
 		}
 
+		if (\PPModule::is_active('ccc'))
+		{
+			$ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
+			$ret['Create Connection Infos']['Connection Information']['view']['vars'] = $this->ccc();
+		}
+
 		return $ret;
 	}
 
@@ -201,6 +207,13 @@ class Contract extends \BaseModel {
 		return null;
 	}
 
+	public function cccauthuser()
+	{
+		if (\PPModule::is_active('ccc'))
+			return $this->hasOne('Modules\Ccc\Entities\CccAuthuser');
+		return null;
+	}
+
 
     /**
      * Generate use a new user login password
@@ -290,6 +303,8 @@ class Contract extends \BaseModel {
 	 *  1. Check if $this contract end date is expired -> disable network_access
 	 *  2. Check if $this is a new contract and activate it -> enable network_access
 	 *
+	 * TODO: try to avoid the use of multiple saves, instead use one save at the end
+	 *
 	 * @return: none
 	 * @author: Torsten Schmidt, Nino Ryschawy
 	 */
@@ -357,6 +372,8 @@ class Contract extends \BaseModel {
 	 * Tasks:
 	 *  1. monthly QOS transition / change
 	 *  2. monthly VOIP transition / change
+	 *
+	 * TODO: try to avoid the use of multiple saves, instead use one save at the end
 	 *
 	 * @return: none
 	 * @author: Torsten Schmidt
@@ -471,6 +488,30 @@ class Contract extends \BaseModel {
 		return $mappings[$col_name];
 	}
 
+
+	/**
+	 * Create/Update Customer Control Information
+	 *
+	 * @return array with [login, password, contract id)] or bool
+	 * @author Torsten Schmidt
+	 */
+	public function ccc()
+	{
+		if (!\PPModule::is_active('Ccc'))
+			return null;
+
+		if ($this->cccauthuser)
+			$ccc = $this->cccauthuser;
+		else
+		{
+			$ccc = new \Modules\Ccc\Entities\CccAuthuser;
+			$ccc->contract_id = $this->id;
+		}
+
+		return $ccc->save();
+	}
+
+
 	/**
 	 * BOOT:
 	 * - init observer
@@ -572,6 +613,7 @@ class ContractObserver
 	{
 		$contract->save();     			// forces to call the updated method of the observer
 		$contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
+		$contract->ccc();
 	}
 
 	public function updating($contract)

@@ -5,7 +5,7 @@ namespace Modules\ProvVoip\Http\Controllers;
 use Modules\ProvVoip\Entities\Phonenumber;
 use Modules\ProvVoip\Entities\Mta;
 
-class PhonenumberController extends \BaseModuleController {
+class PhonenumberController extends \BaseController {
 
 
 	/**

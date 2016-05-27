@@ -52,7 +52,7 @@ class Endpoint extends \BaseModel {
         parent::boot();
 
         Endpoint::observe(new EndpointObserver);
-        Endpoint::observe(new \SystemdObserver);
+        Endpoint::observe(new \App\SystemdObserver);
     }
 
     /**

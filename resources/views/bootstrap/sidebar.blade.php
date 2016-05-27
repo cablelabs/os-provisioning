@@ -35,20 +35,20 @@
           <li class="nav-header">Networks</li>
 
           @foreach ($networks as $network)
-	          <li class="has-sub">
-	            <a href="javascript:;">
-	              <i class="fa fa-suitcase"></i>
-	              <b class="caret pull-right"></b>
-	              <span>{{$network->name}}</span>
-	            </a>
-	            <ul class="sub-menu">
-	            	<li><a href="{{Request::root()}}/Tree/erd/net/{{$network->id}}">Network</a></li>
-		            @foreach ($network->get_all_cluster_to_net() as $cluster)
-			           <li><a href="{{Request::root()}}/Tree/erd/cluster/{{$cluster->id}}">--{{$cluster->name}}</a></li>
-			        @endforeach
-		        </ul>
-	          </li>
-	       @endforeach
+            <li class="has-sub">
+              <a href="javascript:;">
+                <i class="fa fa-suitcase"></i>
+                <b class="caret pull-right"></b>
+                <span>{{$network->name}}</span>
+              </a>
+              <ul class="sub-menu">
+                <li><a href="{{BaseRoute::get_base_url()}}/Tree/erd/net/{{$network->id}}">Network</a></li>
+                @foreach ($network->get_all_cluster_to_net() as $cluster)
+                 <li><a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}">--{{$cluster->name}}</a></li>
+                @endforeach
+              </ul>
+            </li>
+         @endforeach
 
 
 

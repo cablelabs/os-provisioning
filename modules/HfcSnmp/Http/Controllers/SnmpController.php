@@ -7,7 +7,7 @@ use Modules\HfcSnmp\Entities\SnmpMib;
 
 use Log;
 
-class SnmpController extends \BaseModuleController{
+class SnmpController extends \BaseController{
 
 	private $timeout = 300000;
 	private $retry = 1;
@@ -59,7 +59,7 @@ class SnmpController extends \BaseModuleController{
 		}
 
 		$obj->value = $value;
-		
+
 		if (!$obj->save())
 			return false;
 
@@ -87,11 +87,11 @@ class SnmpController extends \BaseModuleController{
 	/**
 	 * The SNMP Walk Function
 	 *
-	 * make a snmpwalk over the entire $snmpmib->oid 
+	 * make a snmpwalk over the entire $snmpmib->oid
 	 * and create/update related SnmpValue Objects
 	 *
 	 * @param snmpmib the SnmpMib Object
-	 * @return array of snmpwalk over oid in format [SnmpValue object id, snmp value] 
+	 * @return array of snmpwalk over oid in format [SnmpValue object id, snmp value]
 	 *
 	 * @author Torsten Schmidt
 	 */
@@ -130,7 +130,7 @@ class SnmpController extends \BaseModuleController{
 	 * Note: performs snmpsetdiff
 	 *
 	 * @param snmpvalue the SnmpValue Object
-	 * @return true if success, otherwise false 
+	 * @return true if success, otherwise false
 	 *
 	 * @author Torsten Schmidt
 	 */
@@ -165,7 +165,7 @@ class SnmpController extends \BaseModuleController{
     {
     	$ret = array();
 
-    	foreach ($this->device->devicetype->snmpmibs as $mib)  
+    	foreach ($this->device->devicetype->snmpmibs as $mib)
     	{
     		foreach ($this->snmp_walk($mib) as $a)
     		{

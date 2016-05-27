@@ -74,18 +74,9 @@ class BaseController extends Controller {
 	}
 
 
-
-	// Class Relation Functions:
-	// TODO: - move to a separate Controller (if possible?)
-
-	protected static function get_model_name()
-	{
-		return explode ('Controller', explode ('\\', explode ('@', Route::getCurrentRoute()->getActionName())[0])[3])[0];
-	}
-
 	protected static function get_model_obj ()
 	{
-		$classname = static::get_model_name();
+		$classname = \NamespaceController::get_model_name();
 
 		if (!$classname)
 			return null;
@@ -99,14 +90,9 @@ class BaseController extends Controller {
 		return $obj;
 	}
 
-	protected static function get_controller_name()
-	{
-		return explode('@', Route::getCurrentRoute()->getActionName())[0];
-	}
-
 	protected static function get_controller_obj()
 	{
-		$classname = static::get_controller_name();
+		$classname = \NamespaceController::get_controller_name();
 
 		if (!$classname)
 			return null;
@@ -118,20 +104,7 @@ class BaseController extends Controller {
 		return $obj;
 	}
 
-	protected static function get_view_name()
-	{
-		return explode ('\\', static::get_model_name())[0];
-	}
 
-	protected static function get_view_var()
-	{
-		return strtolower(static::get_view_name());
-	}
-
-	protected static function get_route_name()
-	{
-		return explode('\\', static::get_model_name())[0];
-	}
 
 	public static function get_config_modules()
 	{
@@ -139,18 +112,18 @@ class BaseController extends Controller {
 		$links = ['Global Config' => 'GlobalConfig'];
 
 		foreach($modules as $module)
-        {
-        	$mod_path = explode('/', $module->getPath());
+		{
+			$mod_path = explode('/', $module->getPath());
 			$tmp = end($mod_path);
 
 			$mod_controller_name = 'Modules\\'.$tmp.'\\Http\\Controllers\\'.$tmp.'Controller';
 			$mod_controller = new $mod_controller_name;
 
 			if (method_exists($mod_controller, 'view_form_fields'))
-        		$links[($module->get('description') == '') ? $tmp : $module->get('description')] = $tmp;
-        }
+				$links[($module->get('description') == '') ? $tmp : $module->get('description')] = $tmp;
+		}
 
-        return $links;
+		return $links;
 	}
 
 
@@ -176,7 +149,7 @@ class BaseController extends Controller {
 				$data[$field['name']] = 0;
 
 			// trim all inputs as default
-			$data[$field['name']] = trim($data[$field['name']]); 
+			$data[$field['name']] = trim($data[$field['name']]);
 		}
 
 		return $data;
@@ -233,7 +206,7 @@ class BaseController extends Controller {
 
 			for ($i = 0; $i < sizeof($view_var->view_has_many()); $i++)
 			{
-				array_push($c, ['name' => key($a), 'route' => static::get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
+				array_push($c, ['name' => key($a), 'route' => \NamespaceController::get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
 				$b = next($a);
 			}
 
@@ -301,10 +274,10 @@ class BaseController extends Controller {
 
 
 		if(!isset($a['route_name']))
-			$a['route_name'] = static::get_route_name();
+			$a['route_name'] = \NamespaceController::get_route_name();
 
 		if(!isset($a['model_name']))
-			$a['model_name'] = static::get_model_name();
+			$a['model_name'] = \NamespaceController::get_model_name();
 
 		if(!isset($a['view_header']))
 			$a['view_header'] = $model->view_headline();
@@ -313,7 +286,7 @@ class BaseController extends Controller {
 			$a['headline'] = '';
 
 		if (!isset($a['form_update']))
-			$a['form_update'] = static::get_route_name().'.update';
+			$a['form_update'] = \NamespaceController::get_route_name().'.update';
 
 		if (!isset($a['edit_left_md_size']))
 			$a['edit_left_md_size'] = $this->edit_left_md_size;
@@ -356,8 +329,8 @@ class BaseController extends Controller {
 			$obj       = static::get_model_obj();
 			$view_path = 'Generic.index';
 
-			if (View::exists(static::get_view_name().'.index'))
-				$view_path = static::get_view_name().'.index';
+			if (View::exists(\NamespaceController::get_view_name().'.index'))
+				$view_path = \NamespaceController::get_view_name().'.index';
 		}
 
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
@@ -382,8 +355,6 @@ class BaseController extends Controller {
 	 */
 	public function index()
 	{
-		BaseAuthController::auth_check('view', $this->get_model_name());
-
 		$obj = static::get_model_obj();
 
 		$view_var   = $obj->index_list();
@@ -391,8 +362,8 @@ class BaseController extends Controller {
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
 
 		$view_path = 'Generic.index';
-		if (View::exists(static::get_view_name().'.index'))
-			$view_path = static::get_view_name().'.index';
+		if (View::exists(\NamespaceController::get_view_name().'.index'))
+			$view_path = \NamespaceController::get_view_name().'.index';
 
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
@@ -409,22 +380,20 @@ class BaseController extends Controller {
 	 */
 	public function create()
 	{
-		BaseAuthController::auth_check('create', $this->get_model_name());
-
 		$model = static::get_model_obj();
 
 		$view_header = BaseViewController::translate('Create ').BaseViewController::translate($model->view_headline());
-		$headline    = BaseViewController::compute_headline(static::get_route_name(), $view_header, NULL, $_GET);
+		$headline    = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, NULL, $_GET);
 		$form_fields = BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($model), $model, 'create');
 
 		$view_path = 'Generic.create';
 		$form_path = 'Generic.form';
 
 		// proof if there is a special view for the calling model
-		if (View::exists(static::get_view_name().'.create'))
-			$view_path = static::get_view_name().'.create';
-		if (View::exists(static::get_view_name().'.form'))
-			$form_path = static::get_view_name().'.form';
+		if (View::exists(\NamespaceController::get_view_name().'.create'))
+			$view_path = \NamespaceController::get_view_name().'.create';
+		if (View::exists(\NamespaceController::get_view_name().'.form'))
+			$form_path = \NamespaceController::get_view_name().'.form';
 
 
 		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'headline')));
@@ -438,8 +407,6 @@ class BaseController extends Controller {
 	 */
 	public function store($redirect = true)
 	{
-		BaseAuthController::auth_check('create', $this->get_model_name());
-
 		$obj = static::get_model_obj();
 		$controller = static::get_controller_obj();
 
@@ -459,7 +426,7 @@ class BaseController extends Controller {
 		if (!$redirect)
 			return $id;
 
-		return Redirect::route(static::get_route_name().'.edit', $id)->with('message', 'Created!')->with('message_color', 'blue');
+		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', 'Created!')->with('message_color', 'blue');
 	}
 
 
@@ -471,13 +438,11 @@ class BaseController extends Controller {
 	 */
 	public function edit($id)
 	{
-		BaseAuthController::auth_check('view', $this->get_model_name());
-
 		$model    = static::get_model_obj();
 		$view_var = $model->findOrFail($id);
 
 		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($model->view_headline());
-		$headline       = BaseViewController::compute_headline(static::get_route_name(), $view_header, $view_var);
+		$headline       = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var);
 		$panel_right    = $this->prepare_tabs($view_var);
 		$form_fields	= BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
 		$relations      = BaseViewController::prep_right_panels($view_var);
@@ -487,10 +452,10 @@ class BaseController extends Controller {
 		$form_path = 'Generic.form';
 
 		// proof if there are special views for the calling model
-		if (View::exists(static::get_view_name().'.edit'))
-			$view_path = static::get_view_name().'.edit';
-		if (View::exists(static::get_view_name().'.form'))
-			$form_path = static::get_view_name().'.form';
+		if (View::exists(\NamespaceController::get_view_name().'.edit'))
+			$view_path = \NamespaceController::get_view_name().'.edit';
+		if (View::exists(\NamespaceController::get_view_name().'.form'))
+			$form_path = \NamespaceController::get_view_name().'.form';
 
 
 		// $config_routes = BaseController::get_config_modules();
@@ -507,8 +472,6 @@ class BaseController extends Controller {
 	 */
 	public function update($id)
 	{
-		BaseAuthController::auth_check('edit', $this->get_model_name());
-
 		$obj = static::get_model_obj()->findOrFail($id);
 		$controller = static::get_controller_obj();
 
@@ -536,7 +499,7 @@ class BaseController extends Controller {
 		$obj->update($data);
 
 
-		return Redirect::route(static::get_route_name().'.edit', $id)->with('message', 'Updated!')->with('message_color', 'blue');
+		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', 'Updated!')->with('message_color', 'blue');
 	}
 
 
@@ -549,8 +512,6 @@ class BaseController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		BaseAuthController::auth_check('delete', $this->get_model_name());
-
 		if ($id == 0)
 		{
 			// bulk delete

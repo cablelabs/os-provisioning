@@ -1,5 +1,7 @@
 <?php
 
+namespace App;
+
 class GlobalConfig extends BaseModel {
 
 	// The associated SQL table for this Model
