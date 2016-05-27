@@ -315,6 +315,8 @@ class Contract extends \BaseModel {
 	 *  1. Check if $this contract end date is expired -> disable network_access
 	 *  2. Check if $this is a new contract and activate it -> enable network_access
 	 *
+	 * TODO: try to avoid the use of multiple saves, instead use one save at the end
+	 *
 	 * @return: none
 	 * @author: Torsten Schmidt, Nino Ryschawy
 	 */
@@ -384,6 +386,8 @@ class Contract extends \BaseModel {
 	 * Tasks:
 	 *  1. monthly QOS transition / change
 	 *  2. monthly VOIP transition / change
+	 *
+	 * TODO: try to avoid the use of multiple saves, instead use one save at the end
 	 *
 	 * @return: none
 	 * @author: Torsten Schmidt
@@ -498,7 +502,7 @@ class Contract extends \BaseModel {
 	/**
 	 * Create/Update Customer Control Information
 	 *
-	 * @return array with [login, password, contract id)]
+	 * @return array with [login, password, contract id)] or bool
 	 * @author Torsten Schmidt
 	 */
 	public function ccc()
@@ -514,17 +518,7 @@ class Contract extends \BaseModel {
 			$ccc->contract_id = $this->id;
 		}
 
-		$psw = \Acme\php\Password::generate_password();
-
-		$ccc->login_name = $this->number;
-		$ccc->password = \Hash::make($psw);
-		$ccc->first_name = $this->firstname;
-		$ccc->last_name = $this->lastname;
-		$ccc->email = $this->email;
-		$ccc->active = 1; // TODO: deactivate non active customers for login
-		$ccc->save();
-
-		return ['login' => $this->number, 'password' => $psw, 'id' => $this->id];
+		return $ccc->save();
 	}
 
 
