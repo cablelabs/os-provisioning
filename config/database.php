@@ -94,10 +94,10 @@ return [
 
 		'mysql-ccc' => [
 			'driver'    => 'mysql',
-			'host'      => env('CCC_DB_HOST', 'localhost'),
-			'database'  => env('CCC_DB_DATABASE', 'forge'),
-			'username'  => env('CCC_DB_USERNAME', 'forge'),
-			'password'  => env('CCC_DB_PASSWORD', ''),
+			'host'      => env('CCC_DB_HOST', env('DB_HOST', 'localhost')),
+			'database'  => env('CCC_DB_DATABASE', env('DB_DATABASE', 'forge')),
+			'username'  => env('CCC_DB_USERNAME', env('DB_USERNAME', '')),
+			'password'  => env('CCC_DB_PASSWORD', env('DB_PASSWORD', '')),
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
