@@ -1,10 +1,12 @@
 <?php
 
+namespace App;
+
 class Authcore extends BaseModel {
 
 
 	public function metas() {
-		return $this->belongsToMany('Authmeta', 'authmetacore');
+		return $this->belongsToMany('App\Authmeta', 'authmetacore');
 	}
 
 

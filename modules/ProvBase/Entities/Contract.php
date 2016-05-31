@@ -6,6 +6,9 @@ use Modules\ProvBase\Entities\Qos;
 
 class Contract extends \BaseModel {
 
+	// get functions for some address select options
+	use \App\Models\AddressFunctionsTrait;
+
 	// The associated SQL table for this Model
 	public $table = 'contract';
 
@@ -88,6 +91,12 @@ class Contract extends \BaseModel {
 			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
 		}
 
+		if (\PPModule::is_active('ccc'))
+		{
+			$ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
+			$ret['Create Connection Infos']['Connection Information']['view']['vars'] = $this->ccc();
+		}
+
 		return $ret;
 	}
 
@@ -98,6 +107,62 @@ class Contract extends \BaseModel {
 	public function modems()
 	{
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
+	}
+
+
+	/**
+	 * Get the purchase tariff
+	 */
+	public function phonetariff_purchase() {
+
+		if ($this->voip_enabled) {
+			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'purchase_tariff');
+		}
+		else {
+			return null;
+		}
+	}
+
+
+	/**
+	 * Get the next purchase tariff
+	 */
+	public function phonetariff_purchase_next() {
+
+		if ($this->voip_enabled) {
+			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_purchase_tariff');
+		}
+		else {
+			return null;
+		}
+	}
+
+
+	/**
+	 * Get the sale tariff
+	 */
+	public function phonetariff_sale() {
+
+		if ($this->voip_enabled) {
+			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'voip_id');
+		}
+		else {
+			return null;
+		}
+	}
+
+
+	/**
+	 * Get the next sale tariff
+	 */
+	public function phonetariff_sale_next() {
+
+		if ($this->voip_enabled) {
+			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_voip_id');
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
@@ -142,15 +207,22 @@ class Contract extends \BaseModel {
 		return null;
 	}
 
-
-	/*
-	 * Generate use a new user login password
-	 * This does not save the involved model
-	 */
-	public function generate_password($length = 10)
+	public function cccauthuser()
 	{
-		$this->password = \Acme\php\Password::generate_password();
+		if (\PPModule::is_active('ccc'))
+			return $this->hasOne('Modules\Ccc\Entities\CccAuthuser');
+		return null;
 	}
+
+
+    /**
+     * Generate use a new user login password
+     * This does not save the involved model
+     */
+    public function generate_password($length=10)
+    {
+        $this->password = \Acme\php\Password::generate_password($length);
+    }
 
 
 	/**
@@ -194,79 +266,6 @@ class Contract extends \BaseModel {
 	}
 
 
-
-	/**
-	 * Helper to define possible salutation values.
-	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
-	 *
-	 * @author Patrick Reichel
-	 */
-	public function get_salutation_options() {
-
-		$defaults = [
-			'Herr',
-			'Frau',
-			'Firma',
-			'Behörde',
-		];
-
-		if (\PPModule::is_active('provvoipenvia')) {
-
-			$options = [
-				'Herrn',
-				'Frau',
-				'Firma',
-				'Behörde',
-			];
-		}
-		else {
-			$options = $defaults;
-		}
-
-		$result = array();
-		foreach ($options as $option) {
-			$result[$option] = $option;
-		}
-
-		return $result;
-	}
-
-
-	/**
-	 * Helper to define possible academic degree values.
-	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
-	 *
-	 * @author Patrick Reichel
-	 */
-	public function get_academic_degree_options() {
-
-		$defaults = [
-			'',
-			'Dr.',
-			'Prof. Dr.',
-		];
-
-		if (\PPModule::is_active('provvoipenvia')) {
-
-			$options = [
-				'',
-				'Dr.',
-				'Prof. Dr.',
-			];
-		}
-		else {
-			$options = $defaults;
-		}
-
-		$result = array();
-		foreach ($options as $option) {
-			$result[$option] = $option;
-		}
-
-		return $result;
-	}
-
-
 	/*
 	 * Convert a 'YYYY-MM-DD' to Carbon Time Object
 	 *
@@ -303,6 +302,8 @@ class Contract extends \BaseModel {
 	 * Tasks:
 	 *  1. Check if $this contract end date is expired -> disable network_access
 	 *  2. Check if $this is a new contract and activate it -> enable network_access
+	 *
+	 * TODO: try to avoid the use of multiple saves, instead use one save at the end
 	 *
 	 * @return: none
 	 * @author: Torsten Schmidt, Nino Ryschawy
@@ -371,6 +372,8 @@ class Contract extends \BaseModel {
 	 * Tasks:
 	 *  1. monthly QOS transition / change
 	 *  2. monthly VOIP transition / change
+	 *
+	 * TODO: try to avoid the use of multiple saves, instead use one save at the end
 	 *
 	 * @return: none
 	 * @author: Torsten Schmidt
@@ -485,6 +488,30 @@ class Contract extends \BaseModel {
 		return $mappings[$col_name];
 	}
 
+
+	/**
+	 * Create/Update Customer Control Information
+	 *
+	 * @return array with [login, password, contract id)] or bool
+	 * @author Torsten Schmidt
+	 */
+	public function ccc()
+	{
+		if (!\PPModule::is_active('Ccc'))
+			return null;
+
+		if ($this->cccauthuser)
+			$ccc = $this->cccauthuser;
+		else
+		{
+			$ccc = new \Modules\Ccc\Entities\CccAuthuser;
+			$ccc->contract_id = $this->id;
+		}
+
+		return $ccc->save();
+	}
+
+
 	/**
 	 * BOOT:
 	 * - init observer
@@ -586,6 +613,7 @@ class ContractObserver
 	{
 		$contract->save();     			// forces to call the updated method of the observer
 		$contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
+		$contract->ccc();
 	}
 
 	public function updating($contract)

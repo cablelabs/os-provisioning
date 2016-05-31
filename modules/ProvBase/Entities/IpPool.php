@@ -85,7 +85,7 @@ class IpPool extends \BaseModel {
         parent::boot();
 
         IpPool::observe(new IpPoolObserver);
-        IpPool::observe(new \SystemdObserver);
+        IpPool::observe(new \App\SystemdObserver);
     }
 
 

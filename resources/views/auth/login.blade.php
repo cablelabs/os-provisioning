@@ -15,7 +15,7 @@
 
 	<!-- Background Image -->
 	<div class="login-cover">
-		<div class="login-cover-image"><img alt="" data-id="login-cover-image" src="{{asset('images/main-pic-1.png')}}"></div>
+		<div class="login-cover-image"><img alt="" data-id="login-cover-image" src="{{asset('images/'.$image)}}"></div>
 		<div class="login-cover-bg"></div>
 	</div>
 
@@ -35,7 +35,7 @@
 
 			<!-- end brand -->
 			<div class="login-content">
-				{{ Form::open(array('url' => BaseRoute::$admin_prefix.'/auth/login')) }}
+				{{ Form::open(array('url' => $prefix.'/auth/login')) }}
 
 					<!-- Username -->
 					<div class="form-group m-b-20">
@@ -49,7 +49,11 @@
 
 					<!-- Error Message -->
 					<div class="m-t-20">
-						<p align="center"><font id="error" color="yellow">{{Session::get('status')}}</font></p>
+						<p align="center"><font id="error" color="yellow">
+							@foreach ($errors->all() as $error)
+				                {{ $error }}
+				            @endforeach
+						</font></p>
 					</div>
 					<br>
 

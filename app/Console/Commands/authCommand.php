@@ -55,15 +55,15 @@ class authCommand extends Command {
 	{
 		// the following “seeding” is needed in every case – even if the seeders will not be run!
 		// add each existing model
-		foreach (\BaseModel::get_models() as $model) 
+		foreach (\App\BaseModel::get_models() as $model)
 		{
-			\Authcore::updateOrCreate(['name'=>$model], ['type'=>'model']);
+			\App\Authcore::updateOrCreate(['name'=>$model], ['type'=>'model']);
 		}
 
 		// add relations meta<->core for role super_admin
 		$models = \DB::table('authcores')->select('id')->where('type', 'LIKE', 'model')->get();
 		foreach ($models as $model) {
-			\Authmetacore::updateOrCreate(
+			\App\Authmetacore::updateOrCreate(
 				['core_id' => $model->id,
 				 'meta_id' => 1,
 				 'view' => 1,
@@ -76,7 +76,7 @@ class authCommand extends Command {
 		// add relations meta<->core for client every_net
 		$nets = \DB::table('authcores')->select('id')->where('type', 'LIKE', 'net')->get();
 		foreach ($nets as $net) {
-			\Authmetacore::updateOrCreate(
+			\App\Authmetacore::updateOrCreate(
 				['core_id' => $net->id,
 				 'meta_id' => 2,
 				 'view' => 1,

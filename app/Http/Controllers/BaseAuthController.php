@@ -50,6 +50,38 @@ class BaseAuthController extends Controller {
 
 
 	/**
+	 * Return Model to Check
+	 *
+	 * @return type string containing the model to access
+	 * @author Torsten Schmidt
+	 */
+	private static function __model_to_check()
+	{
+		$m = null;
+		$m = \NamespaceController::get_model_name();
+
+		// Rewrite model to check with new assigned Model
+		switch ($m) {
+			case 'Base': // global search
+				$m = 'GlobalConfig';
+				break;
+
+			case 'Modules\HfcBase\Entities\TreeErd': // entity relation diagram
+			case 'Modules\HfcBase\Entities\TreeTopo': // topography tree card
+			case 'Modules\HfcBase\Entities\TreeTopography':
+				$m = 'Modules\HfcBase\Entities\Tree';
+				break;
+
+			case 'Modules\HfcCustomer\Entities\CustomerTopo': // topography modems
+				$m = 'Modules\ProvBase\Entities\Modem';
+				break;
+		}
+
+		return $m;
+	}
+
+
+	/**
 	 * Check if user has permission to continue.
 	 * Use this method to protect your methods
 	 *
@@ -69,9 +101,9 @@ class BaseAuthController extends Controller {
 		$cur_user = Auth::user();
 
 		// if no model is given: use current model
-		if (is_null($model_to_check)) {
-			$model_to_check = static::get_model_name();
-		}
+		if (is_null($model_to_check))
+			$model_to_check = static::__model_to_check();
+
 
 		// no user logged in
 		if (is_null($cur_user)) {
@@ -96,6 +128,19 @@ class BaseAuthController extends Controller {
 	}
 
 
+	/**
+	 * Main Authentication Function
+	 *
+	 * Check if user has permission to continue.
+	 * Use this method to protect your methods
+	 *
+	 * NOTE: This function will (and should be mainly used) from Middleware context
+	 *
+	 * @author Torsten Schmidt
+	 *
+	 * @param $access [view|create|edit|delete]
+	 * @param $model_to_check model path and name (in format as is stored in database); use current model if not given
+	 */
 	public static function auth_check ($access, $model_to_check=null)
 	{
 		try {

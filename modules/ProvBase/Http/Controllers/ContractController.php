@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Http\Controllers;
 
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\Qos;
+use Modules\ProvVoip\Entities\PhoneTariff;
 
 // TODO: @Nino Ryschawy: directly includes does not work if billing module is disables
 use Modules\BillingBase\Entities\Product;
@@ -11,7 +12,7 @@ use Modules\BillingBase\Entities\Item;
 use Modules\BillingBase\Entities\CostCenter;
 use Modules\BillingBase\Entities\Salesman;
 
-class ContractController extends \BaseModuleController {
+class ContractController extends \BaseController {
 
 
 	protected $relation_create_button = "Add";
@@ -52,8 +53,9 @@ class ContractController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2'), 'options' => ['readonly']),
 			array('form_type' => 'text', 'name' => 'number3', 'description' => $model->get_column_description('number3'), 'options' => ['readonly']),
 			array('form_type' => 'text', 'name' => 'number4', 'description' => $model->get_column_description('number4'), 'options' => ['readonly'], 'space' => 1),
-			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
-			array('form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options()),
+			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company', 'create' => '1'),
+			array('form_type' => 'text', 'name' => 'department', 'description' => 'Department', 'create' => '1'),
+			array('form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options(), 'create' => '1'),
 			array('form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic degree', 'value' => $model->get_academic_degree_options()),
 			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => '1', 'space' => '1'),
@@ -61,10 +63,11 @@ class ContractController extends \BaseModuleController {
 			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House number', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => '1'),
+			array('form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'),
 			array('form_type' => 'text', 'name' => 'fax', 'description' => 'Fax'),
 			array('form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'),
-			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1'),
+			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'create' => '1', 'space' => '1'),
 
 			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1', 'checked' => 1),
 		);
@@ -75,9 +78,9 @@ class ContractController extends \BaseModuleController {
 			$b = array(
 				/* array('form_type' => 'text', 'name' => 'voip_contract_start', 'description' => 'VoIP Contract Start'), */
 				/* array('form_type' => 'text', 'name' => 'voip_contract_end', 'description' => 'VoIP Contract End'), */
-				array('form_type' => 'checkbox', 'name' => 'phonebook_entry', 'description' => 'Make phonebook entry', 'value' => '1', 'create' => '1'),
+				array('form_type' => 'select', 'name' => 'purchase_tariff', 'description' => 'Purchase tariff', 'value' => PhoneTariff::get_purchase_tariffs()),
 
-				/* array('form_type' => 'text', 'name' => 'voip_id', 'description' => 'Phone ID'), */
+				array('form_type' => 'select', 'name' => 'voip_id', 'description' => 'Sale tariff', 'value' => PhoneTariff::get_sale_tariffs()),
 				/* array('form_type' => 'text', 'name' => 'next_voip_id', 'description' => 'Phone ID next month', 'space' => '1'), */
 			);
 		}
@@ -177,6 +180,27 @@ class ContractController extends \BaseModuleController {
 		}
 
 		return $data;
+	}
+
+
+
+	/**
+	 * Create and Download Connection Information
+
+	 * @param type $filename download filename, replace '/' with '__' in URL context
+	 * @return type response() - download box from browser
+	 *
+	 * @author Torsten Schmidt
+	 */
+	public function connection_info_download ($id)
+	{
+		// TODO: @Nino Ryschawy: create connection information under storage path
+		//       and set $pdf to created pdf file (recursive under storage/apps)
+		$filename = 'test.pdf';
+
+		$pdf = response()->download(storage_path().'/app/'.$filename);
+
+		return $pdf;
 	}
 
 }

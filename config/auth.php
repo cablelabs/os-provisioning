@@ -11,7 +11,7 @@ return [
     |
     */
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'admin',
         'passwords' => 'users',
     ],
     /*
@@ -31,14 +31,18 @@ return [
     |
     */
     'guards' => [
-        'web' => [
+        'admin' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'admin',
         ],
-        'api' => [
-            'driver' => 'token',
-            'provider' => 'users',
+        'ccc' => [
+            'driver' => 'session',
+            'provider' => 'ccc',
         ],
+        //'api' => [
+        //    'driver' => 'token',
+        //    'provider' => 'users',
+        //],
     ],
     /*
     |--------------------------------------------------------------------------
@@ -57,9 +61,14 @@ return [
     |
     */
     'providers' => [
-        'users' => [
+        'admin' => [
             'driver' => 'eloquent',
-            'model' => Authuser::class,
+            'model' => \App\Authuser::class,
+        ],
+        'ccc' => [
+            'driver' => 'eloquent',
+            // TODO: check if absence of CCC module will break ?
+            'model' => \Modules\Ccc\Entities\CccAuthuser::class,
         ]
     ],
     /*

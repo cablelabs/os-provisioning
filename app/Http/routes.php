@@ -11,32 +11,39 @@
 |
 */
 
-// Home Route, This will redirect depending on valid Login
+// Home Route
+Route::get('', array('as' => 'Home', 'uses' => 'WelcomeController@index'));
+
+
+/*
+ * Admin
+ */
+
+// Base Route, This will redirect depending on valid Login
 Route::get('admin', array('as' => 'Home', 'uses' => 'AuthController@home'));
 
-
 // Auth => login form
-Route::get('admin/auth/login', array('as' => 'Auth.login', 'uses' => 'AuthController@showLogin'));
+Route::get('admin/auth/login', array('as' => 'Auth.login', 'uses' => 'AuthController@showLoginForm'));
 
 // Auth => process form data
-Route::post('admin/auth/login', array('as' => 'Auth.login', 'uses' => 'AuthController@doLogin'));
+Route::post('admin/auth/login', array('as' => 'Auth.login', 'uses' => 'AuthController@postLogin'));
 
 // Auth => Logout
-Route::get ('admin/auth/logout', array('as' => 'Auth.logout', 'uses' => 'AuthController@doLogout'));
-Route::post('admin/auth/logout', array('as' => 'Auth.logout', 'uses' => 'AuthController@doLogout'));
+Route::get ('admin/auth/logout', array('as' => 'Auth.logout', 'uses' => 'AuthController@getLogout'));
+Route::post('admin/auth/logout', array('as' => 'Auth.logout', 'uses' => 'AuthController@getLogout'));
 
 // Auth Denied. For Error Handling
-Route::get('admin/auth/denied', array('as' => 'Auth.denied', 'uses' => 'AuthController@denied'));
+BaseRoute::get('admin/auth/denied', array('as' => 'Auth.denied', 'uses' => 'AuthController@denied'));
 
 // Core Admin API
 BaseRoute::group([], function() {
 
 	// Base routes for global search
-	Route::get('base/fulltextSearch', array('as' => 'Base.fulltextSearch', 'uses' => 'BaseController@fulltextSearch'));
+	BaseRoute::get('base/fulltextSearch', array('as' => 'Base.fulltextSearch', 'uses' => 'BaseController@fulltextSearch'));
 
 	BaseRoute::resource('Authuser', 'AuthuserController');
 
-	Route::get('Config', array('as' => 'Config.index', 'uses' => 'BaseModuleController@glob_conf'));
+	BaseRoute::get('Config', array('as' => 'Config.index', 'uses' => 'GlobalConfigController@index'));
 	BaseRoute::resource('GlobalConfig', 'GlobalConfigController');
 
 });

@@ -10,6 +10,9 @@ use Modules\ProvBase\Entities\ProvBase;
 
 class Modem extends \BaseModel {
 
+	// get functions for some address select options
+	use \App\Models\AddressFunctionsTrait;
+
 	// The associated SQL table for this Model
 	public $table = 'modem';
 
@@ -138,7 +141,7 @@ class Modem extends \BaseModel {
 	{
 		parent::boot();
 
-		Modem::observe(new \SystemdObserver);
+		Modem::observe(new \App\SystemdObserver);
 		Modem::observe(new ModemObserver);
 	}
 
@@ -473,7 +476,7 @@ class Modem extends \BaseModel {
 			$key = '&key='.$_ENV['GOOGLE_API_KEY'];
 
 		// url encode the address
-		$address = urlencode($country.', '.$this->street.', '.$this->zip.', '.$this->city);
+		$address = urlencode($country.', '.$this->street.' '.$this->house_number.', '.$this->zip.', '.$this->city);
 
 		// google map geocode api url
 		$url = "https://maps.google.com/maps/api/geocode/json?sensor=false&address={$address}$key";

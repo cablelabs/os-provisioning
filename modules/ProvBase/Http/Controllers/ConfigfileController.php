@@ -6,7 +6,7 @@ use Modules\ProvBase\Entities\Configfile;
 use Form;
 use HTML;
 
-class ConfigfileController extends \BaseModuleController {
+class ConfigfileController extends \BaseController {
 
     /**
      * defines the formular fields for the edit and create view
@@ -119,8 +119,6 @@ class ConfigfileController extends \BaseModuleController {
 	 */
 	public function index()
 	{
-		\App\Http\Controllers\BaseAuthController::auth_check('view', $this->get_model_name());
-
 		$create_allowed = $this->index_create_allowed;
 
 		$children = Configfile::all()->where('parent_id', 0)->all();

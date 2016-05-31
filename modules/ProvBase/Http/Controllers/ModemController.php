@@ -10,7 +10,7 @@ use Modules\ProvBase\Entities\Qos;
 use App\Exceptions\AuthExceptions;
 
 
-class ModemController extends \BaseModuleController {
+class ModemController extends \BaseController {
 
 	protected $index_create_allowed = false;
 	protected $save_button = 'Save / Restart';
@@ -32,11 +32,17 @@ class ModemController extends \BaseModuleController {
 			// TODO: change to hidden field when billing module is active?
 			array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1'),
 
+			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
+			array('form_type' => 'text', 'name' => 'department', 'description' => 'Department'),
+			array('form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options()),
 			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname'),
 			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname'),
 			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street'),
+			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House number'),
 			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode'),
-			array('form_type' => 'text', 'name' => 'city', 'description' => 'City', 'space' => '1'),
+			array('form_type' => 'text', 'name' => 'city', 'description' => 'City'),
+			array('form_type' => 'text', 'name' => 'district', 'description' => 'District'),
+			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1'),
 
 			array('form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number'),
 			array('form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'),

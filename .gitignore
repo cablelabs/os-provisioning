@@ -12,7 +12,6 @@ Thumbs.db
 storage/systemd/
 storage/hfc/
 storage/framework/
-*.orig
 
 # vim (https://github.com/github/gitignore/blob/master/Global/Vim.gitignore)
 [._]*.s[a-w][a-z]
@@ -28,3 +27,6 @@ Session.vim
 
 sql-reset.sh
 cp-script.sh
+
+# ignore ctags file
+tags

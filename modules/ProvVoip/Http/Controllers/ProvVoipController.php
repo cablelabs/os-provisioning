@@ -1,9 +1,9 @@
 <?php
 namespace Modules\Provvoip\Http\Controllers;
 
-use App\Http\Controllers\BaseModuleController;
+use App\Http\Controllers\BaseController;
 
-class ProvVoipController extends BaseModuleController {
+class ProvVoipController extends BaseController {
 
     /**
      * defines the formular fields for the edit and create view

@@ -25,4 +25,21 @@ class GlobalConfigController extends BaseController {
 			);
 	}
 
+
+	/**
+	 * Returns Global Config Index Page with links to the configurable Modules
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function index()
+	{
+        $tmp = get_parent_class();
+        $base_controller = new $tmp;
+
+        $links = BaseController::get_config_modules();
+        $view_header = BaseViewController::translate("Global Configurations");
+        $route_name = 'Config.index';
+
+		return \View::make('GlobalConfig.index', $base_controller->compact_prep_view(compact('links', 'view_header', 'route_name')));
+	}
 }
