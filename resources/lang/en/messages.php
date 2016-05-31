@@ -21,6 +21,7 @@ return [
 	'modem_lease_valid' 	=> 'Modem has a valid lease',
 	'modem_log_error' 		=> 'Modem was not registering on Server - No log entry found',
 	'modem_offline'			=> 'Modem is Offline',
+	'month' 				=> 'Month',
 	'user_settings'			=> 'User Settings',
 	'user_glob_settings'	=> 'Global User Settings',
 

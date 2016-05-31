@@ -142,6 +142,17 @@ class ContractController extends \BaseController {
 
 
 	/**
+	 * Set contract Start date - TODO: move to default_input(), when it is executed in BaseController
+	 */
+	public function prepare_input($data)
+	{
+		$data['contract_start'] = $data['contract_start'] ? : date('Y-m-d');
+
+		return parent::prepare_input($data);
+	}
+
+
+	/**
 	 * Overwrite BaseController method => not required dates should be set to null if not set
 	 * Otherwise we get entries like 0000-00-00, which cause crashes on validation rules in case of update
 	 *
