@@ -2,6 +2,8 @@
 
 namespace Modules\ProvVoip\Entities;
 
+use Illuminate\Support\Collection;
+
 // Model not found? execute composer dump-autoload in lara root dir
 class PhonenumberManagement extends \BaseModel {
 
@@ -58,7 +60,12 @@ class PhonenumberManagement extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-		return $this->id;
+        $bsclass = 'success';
+
+        return ['index' => [$this->id],
+                'index_header' => ['ID'],
+                'bsclass' => $bsclass,
+                'header' => 'PhonenumberManagement (id '.$this->id.')'];
 	}
 
 	/**
@@ -155,15 +162,35 @@ class PhonenumberManagement extends \BaseModel {
 	}
 
 
-	 // View Relation.
+	// View Relation.
 	public function view_has_many() {
 
 		if (\PPModule::is_active('provvoipenvia')) {
-			$ret['EnviaOrder'] = $this->external_orders;
+			$ret['Envia']['Envia Order']['class'] = 'EnviaOrder';
+			$ret['Envia']['Envia Order']['relation'] = $this->external_orders;
+
+			$ret['Envia']['PhonebookEntry']['class'] = 'PhonebookEntry';
+
+			$relation = $this->phonebookentry;
+
+			// can be created if no one exists, can be deleted if one exists
+			if (is_null($relation)) {
+				$ret['Envia']['PhonebookEntry']['relation'] = new Collection();
+				$ret['Envia']['PhonebookEntry']['options']['hide_delete_button'] = 1;
+			}
+			else {
+				$ret['Envia']['PhonebookEntry']['relation'] = [$relation];
+				$ret['Envia']['PhonebookEntry']['options']['hide_create_button'] = 1;
+			}
+			/* $ret['Envia']['PhonebookEntry']['class'] = 'PhonebookEntry'; */
+			/* $ret['Envia']['PhonebookEntry']['relation'] = $this->phonebookentry; */
 
 			// TODO: auth - loading controller from model could be a security issue ?
 			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\PhonenumberManagementController::_get_envia_management_jobs($this);
+			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberManagementController::_get_envia_management_jobs($this);
+		}
+		else {
+			$ret = array();
 		}
 
 		return $ret;

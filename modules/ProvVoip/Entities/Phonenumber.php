@@ -2,6 +2,8 @@
 
 namespace Modules\ProvVoip\Entities;
 
+use Illuminate\Support\Collection;
+
 // Model not found? execute composer dump-autoload in lara root dir
 class Phonenumber extends \BaseModel {
 
@@ -73,20 +75,21 @@ class Phonenumber extends \BaseModel {
     {
 		if (\PPModule::is_active('provvoipenvia'))
 		{
-			$ret['Envia']['EnviaOrder'] = $this->external_orders;
+			$ret['Envia']['Envia Order']['class'] = 'EnviaOrder';
+			$ret['Envia']['Envia Order']['relation'] = $this->external_orders;
 
-			$ret['Envia']['PhonenumberManagement'] = $this->phonenumbermanagement;
+			$ret['Envia']['PhonenumberManagement']['class'] = 'PhonenumberManagement';
+
+			$relation = $this->phonenumbermanagement;
 
 			// can be created if no one exists, can be deleted if one exists
-			if (is_null($this->phonenumbermanagenemt)) {
-				$ret['Envia']['PhonenumberManagement']['options'] = [
-					'hide_delete_button' => 1,
-				];
+			if (is_null($relation)) {
+				$ret['Envia']['PhonenumberManagement']['relation'] = new Collection();
+				$ret['Envia']['PhonenumberManagement']['options']['hide_delete_button'] = 1;
 			}
 			else {
-				$ret['Envia']['PhonenumberManagement']['options'] = [
-					'hide_create_button' => 1,
-				];
+				$ret['Envia']['PhonenumberManagement']['relation'] = [$relation];
+				$ret['Envia']['PhonenumberManagement']['options']['hide_create_button'] = 1;
 			}
 
 			// TODO: auth - loading controller from model could be a security issue ?
