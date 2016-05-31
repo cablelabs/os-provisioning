@@ -3,6 +3,7 @@
 namespace App;
 
 use DB;
+use Str;
 use Schema;
 use Module;
 use Illuminate\Database\Eloquent\SoftDeletes;

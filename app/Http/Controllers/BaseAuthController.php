@@ -62,8 +62,8 @@ class BaseAuthController extends Controller {
 
 		// Rewrite model to check with new assigned Model
 		switch ($m) {
-			case 'Base': // global search
-				$m = 'GlobalConfig';
+			case 'App\Base': // global search
+				$m = 'App\GlobalConfig';
 				break;
 
 			case 'Modules\HfcBase\Entities\TreeErd': // entity relation diagram
