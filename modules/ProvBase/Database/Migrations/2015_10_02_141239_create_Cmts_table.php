@@ -18,8 +18,10 @@ class CreateCmtsTable extends BaseMigration {
 	 */
 	public function up()
 	{
-		mkdir('/etc/dhcp/nms/cmts_gws', '0700', true);
-		system('chown -R /etc/dhcp/ apache');
+		$dir = '/etc/dhcp/nms/cmts_gws';
+		if (!is_dir($dir))
+			mkdir($dir, '0700', true);
+		system('chown -R apache /etc/dhcp/');
 
 		Schema::create($this->tablename, function(Blueprint $table)
 		{
