@@ -447,10 +447,14 @@ class BaseController extends Controller {
 		$form_fields	= BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
 		$relations      = BaseViewController::prep_right_panels($view_var);
 
+		// we explicitly set the method to call in relation links
+		// if not given we set default to “edit“ to meet former behavior
 		foreach ($relations as $rel_key => $relation) {
-			// if method is not given we set this to default (=edit)
 			if (!array_key_exists('method', $relation)) {
-				$relations[$rel_key]['method'] = 'edit';
+				$method = 'edit';
+			}
+			else {
+				$method = 'show';
 			}
 		}
 
@@ -466,7 +470,7 @@ class BaseController extends Controller {
 
 		// $config_routes = BaseController::get_config_modules();
 		// return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations', 'extra_data')));
-		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations')));
+		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations', 'method')));
 	}
 
 
