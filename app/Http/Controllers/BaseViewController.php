@@ -473,7 +473,6 @@ finish:
 			$relations = $b;
 		}
 
-
 		return ($relations);
 	}
 

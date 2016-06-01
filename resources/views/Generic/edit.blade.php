@@ -37,6 +37,11 @@
 
 		<?php if (!isset($i)) $i = 0; else $i++; ?>
 
+		<?php 
+			// $method will be used to create the links in relation.blade.php
+				$method = $relation['method'];
+		?>
+
 		<!-- The section content for the new Panel -->
 		@section("content_$i")
 

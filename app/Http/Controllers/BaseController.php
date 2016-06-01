@@ -447,6 +447,12 @@ class BaseController extends Controller {
 		$form_fields	= BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
 		$relations      = BaseViewController::prep_right_panels($view_var);
 
+		foreach ($relations as $rel_key => $relation) {
+			// if method is not given we set this to default (=edit)
+			if (!array_key_exists('method', $relation)) {
+				$relations[$rel_key]['method'] = 'edit';
+			}
+		}
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';
