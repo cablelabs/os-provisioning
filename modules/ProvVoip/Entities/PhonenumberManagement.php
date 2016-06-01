@@ -182,8 +182,6 @@ class PhonenumberManagement extends \BaseModel {
 				$ret['Envia']['PhonebookEntry']['relation'] = [$relation];
 				$ret['Envia']['PhonebookEntry']['options']['hide_create_button'] = 1;
 			}
-			/* $ret['Envia']['PhonebookEntry']['class'] = 'PhonebookEntry'; */
-			/* $ret['Envia']['PhonebookEntry']['relation'] = $this->phonebookentry; */
 
 			// TODO: auth - loading controller from model could be a security issue ?
 			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';

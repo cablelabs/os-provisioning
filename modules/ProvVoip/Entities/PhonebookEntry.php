@@ -213,6 +213,7 @@ class PhonebookEntry extends \BaseModel {
 		if (\PPModule::is_active('provvoipenvia')) {
 
 			// TODO: auth - loading controller from model could be a security issue ?
+			$ret['Envia']['Envia API']['html'] = '<h4>Available Envia API jobs</h4>';
 			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
 			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonebookEntryController::_get_envia_management_jobs($this);
 		}
