@@ -73,7 +73,7 @@ class ContractController extends \BaseController {
 		);
 
 		// TODO: replace with static command
-		if ($model->voip_enabled) {
+		if ($model->voip_enabled && !\PPModule::is_active('billingbase')) {
 
 			$b = array(
 				/* array('form_type' => 'text', 'name' => 'voip_contract_start', 'description' => 'VoIP Contract Start'), */
