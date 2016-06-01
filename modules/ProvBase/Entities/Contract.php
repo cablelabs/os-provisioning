@@ -353,7 +353,7 @@ class Contract extends \BaseModel {
 			$this->push_to_modems();
 		}
 
-		$voip_id = ($tariff = $this->get_valid_tariff('Voip')) ? $tariff->product->voip_id : 0;
+		$voip_id = ($tariff = $this->get_valid_tariff('Voip')) ? $tariff->product->voip_sales_tariff_id : 0;
 
 		if ($this->voip_id != $voip_id)
 		{
