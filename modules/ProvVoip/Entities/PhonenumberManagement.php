@@ -166,8 +166,8 @@ class PhonenumberManagement extends \BaseModel {
 	public function view_has_many() {
 
 		if (\PPModule::is_active('provvoipenvia')) {
-			$ret['Envia']['Envia Order']['class'] = 'EnviaOrder';
-			$ret['Envia']['Envia Order']['relation'] = $this->external_orders;
+			$ret['Envia']['EnviaOrder']['class'] = 'EnviaOrder';
+			$ret['Envia']['EnviaOrder']['relation'] = $this->external_orders;
 
 			$ret['Envia']['PhonebookEntry']['class'] = 'PhonebookEntry';
 

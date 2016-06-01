@@ -22,6 +22,24 @@ class PhoneTariff extends \BaseModel {
 
 
 	// Name of View
+	public static function view_headline()
+	{
+		return 'Phone tariffs';
+	}
+
+	// link title in index view
+	public function view_index_label()
+	{
+        $bsclass = 'success';
+
+        return ['index' => [$this->name, $this->type, $this->description, $this->usable],
+                'index_header' => ['Name', 'Type', 'Description', 'Usable'],
+                'bsclass' => $bsclass,
+                'header' => $this->name.' ('.$this->type.')'];
+	}
+
+
+	// Name of View
 	public static function get_view_header()
 	{
 		return 'PhoneTariffs';

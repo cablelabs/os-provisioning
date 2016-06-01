@@ -75,11 +75,6 @@ class Phonenumber extends \BaseModel {
     {
 		if (\PPModule::is_active('provvoipenvia'))
 		{
-			$ret['Envia']['Envia Order']['class'] = 'EnviaOrder';
-			$ret['Envia']['Envia Order']['relation'] = $this->external_orders;
-
-			$ret['Envia']['PhonenumberManagement']['class'] = 'PhonenumberManagement';
-
 			$relation = $this->phonenumbermanagement;
 
 			// can be created if no one exists, can be deleted if one exists
@@ -92,7 +87,10 @@ class Phonenumber extends \BaseModel {
 				$ret['Envia']['PhonenumberManagement']['options']['hide_create_button'] = 1;
 			}
 
+			$ret['Envia']['PhonenumberManagement']['class'] = 'PhonenumberManagement';
+
 			// TODO: auth - loading controller from model could be a security issue ?
+			$ret['Envia']['Envia API']['html'] = '<h4>Available Envia API jobs</h4>';
 			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
 			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
 		}
