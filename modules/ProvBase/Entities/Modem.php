@@ -397,7 +397,7 @@ class Modem extends \BaseModel {
 
 			// parse and update results
 			foreach (array_reverse($oids) as $field => $oid)
-				$this->{$field} = array_pop($r);
+				$this->{$field} = array_pop($r) / 10; 		// TODO: added generic concept for multiplying options @Torsten Schmidt
 
 			// save
 			$this->save();
