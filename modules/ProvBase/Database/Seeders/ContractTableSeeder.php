@@ -49,7 +49,7 @@ class ContractTableSeeder extends \BaseSeeder {
 				'sepa_bic' => $faker->swiftBicNumber,
 				'sepa_holder' => (rand(0,10) > 8 ? $faker->name : ''),
 				'sepa_institute' => $faker->colorName.' Bank',			// L5: use ->bank
-				'create_invoice' => $faker->boolean(10),				// true means invoice will pe send via post office each month
+				'create_invoice' => true,  //$faker->boolean(10),				// true means invoice will pe send via post office each month
 				'login' => $faker->userName,							// for feature use. Now it should same as id
 				'password' => \Acme\php\Password::generate_password(),
 				'description' => $faker->sentence

@@ -18,19 +18,10 @@ class ContractController extends \BaseController {
 	protected $relation_create_button = "Add";
 
 	// TODO: @Nino Ryschawy: add function documentation for the following stuff ..
-	private function _qos_next_month($model)
-	{
-		$h = $model->html_list(Qos::all(), 'name');
-		$h['0'] = '';
-		asort($h);
-
-		return $h;
-	}
-
 	private function _salesmen()
 	{
 		$salesmen[0] = null;
-		foreach (Salesman::all() as $sm)
+		foreach (Salesman::select('id', 'firstname', 'lastname')->get()->all() as $sm)
 			$salesmen[$sm->id] = $sm->firstname.' '. $sm->lastname;
 		return $salesmen;
 	}
@@ -73,7 +64,7 @@ class ContractController extends \BaseController {
 		);
 
 		// TODO: replace with static command
-		if ($model->voip_enabled) {
+		if ($model->voip_enabled && !\PPModule::is_active('billingbase')) {
 
 			$b = array(
 				/* array('form_type' => 'text', 'name' => 'voip_contract_start', 'description' => 'VoIP Contract Start'), */
@@ -91,7 +82,7 @@ class ContractController extends \BaseController {
 				array('form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'), // TODO: create default 'value' => date("Y-m-d")
 				array('form_type' => 'text', 'name' => 'contract_end', 'description' => 'Contract End'),
 				array('form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'value' => '1'),
-				array('form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $model->html_list(CostCenter::all(), 'name')),
+				array('form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => array_merge([0 => null], $model->html_list(CostCenter::all(), 'name'))),
 				array('form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => $this->_salesmen(), 'space' => '1'),
 
 				// NOTE: qos is required as hidden field to automatically create modem with correct contract qos class
@@ -103,7 +94,7 @@ class ContractController extends \BaseController {
 		{
 			$c = array(
 				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list(Qos::all(), 'name')),
-				array('form_type' => 'select', 'name' => 'next_qos_id', 'description' => 'QoS next month', 'value' => $this->_qos_next_month($model)),
+				array('form_type' => 'select', 'name' => 'next_qos_id', 'description' => 'QoS next month', 'value' => array_merge([0 => null], $model->html_list(Qos::all(), 'name'))),
 				array('form_type' => 'text', 'name' => 'voip_id', 'description' => 'Phone ID'),
 				array('form_type' => 'text', 'name' => 'next_voip_id', 'description' => 'Phone ID next month', 'space' => '1'),
 			);
