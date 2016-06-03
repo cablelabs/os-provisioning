@@ -43,7 +43,7 @@ class Modem extends \BaseModel {
 		{
 			case 0:	$bsclass = 'success'; break; // online
 			case 1: $bsclass = 'warning'; break; // warning
-			case 2: $bsclass = 'danger'; break; // critical
+			case 2: $bsclass = 'warning'; break; // critical
 			case 3: $bsclass = 'danger'; $status = 'offline'; break; // offline
 
 			default: $bsclass = 'danger'; break;
