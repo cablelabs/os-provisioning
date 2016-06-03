@@ -512,9 +512,13 @@ class BaseController extends Controller {
 	 */
 	public function destroy($id)
 	{
+		// bulk delete
 		if ($id == 0)
 		{
-			// bulk delete
+			// TODO: show error message in correct blade
+			if (!isset(Input::all()['ids']))
+				return Redirect::back()->with('message', 'No Entry For Deletion specified')->with('message_color', 'red');
+
 			foreach (Input::all()['ids'] as $id => $val)
 				static::get_model_obj()->findOrFail($id)->delete();
 		}
