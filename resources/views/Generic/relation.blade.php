@@ -14,6 +14,13 @@ Relation Blade is used inside a Panel Element to display relational class object
 ?>
 
 
+{{-- Error Message --}}
+@if (Session::get('delete_message') && Session::get('delete_message')['class'] == $class)
+	@DivOpen(12)
+			<h5 style='color:{{ Session::get('delete_message')['color'] }}' id='delete_msg'>{{ Session::get('delete_message')['message'] }}</h5>
+	@DivClose()
+@endif
+
 
 <!-- Create Button: (With hidden add fields if required) -->
 @if (!isset($options['hide_create_button']))

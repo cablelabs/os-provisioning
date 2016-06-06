@@ -512,17 +512,23 @@ class BaseController extends Controller {
 	 */
 	public function destroy($id)
 	{
+		// bulk delete
 		if ($id == 0)
 		{
-			// bulk delete
+			// Error Message when no Model is specified - NOTE: delete_message must be an array of the structure below !
+			if (!isset(Input::all()['ids']))
+				return Redirect::back()->with('delete_message', ['message' => 'No Entry For Deletion specified', 'class' => \NamespaceController::get_route_name(), 'color' => 'red']);
+
 			foreach (Input::all()['ids'] as $id => $val)
 				static::get_model_obj()->findOrFail($id)->delete();
 		}
 		else
 			static::get_model_obj()->findOrFail($id)->delete();
 
-		return Redirect::back();
+		$class = \NamespaceController::get_route_name();
+		return Redirect::back()->with('delete_message', ['message' => 'Successful deleted '.$class, 'class' => $class, 'color' => 'blue']);
 	}
+
 
 
 // Deprecated:
