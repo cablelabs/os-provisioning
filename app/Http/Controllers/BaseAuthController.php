@@ -73,6 +73,7 @@ class BaseAuthController extends Controller {
 				break;
 
 			case 'Modules\HfcCustomer\Entities\CustomerTopo': // topography modems
+			case 'Modules\ProvMon\Entities\ProvMon': 			// modem analyses page
 				$m = 'Modules\ProvBase\Entities\Modem';
 				break;
 		}

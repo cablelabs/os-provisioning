@@ -94,7 +94,8 @@ class Contract extends \BaseModel {
 		if (\PPModule::is_active('ccc'))
 		{
 			$ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
-			$ret['Create Connection Infos']['Connection Information']['view']['vars'] = $this->ccc();
+			// TODO: 
+			// $ret['Create Connection Infos']['Connection Information']['view']['vars'] = $this->ccc();
 		}
 
 		return $ret;

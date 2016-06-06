@@ -11,6 +11,7 @@ NOTE: - java include section is in default blade at bottom of text
 @section ('java')
 
 	<script>setTimeout("document.getElementById('success_msg').style.display='none';", 6000);</script>
+	<script>setTimeout("document.getElementById('delete_msg').style.display='none';", 6000);</script>
 
 	<script type='text/javascript'>
 		/*
