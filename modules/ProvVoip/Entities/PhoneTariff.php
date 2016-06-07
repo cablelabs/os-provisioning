@@ -30,7 +30,13 @@ class PhoneTariff extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-        $bsclass = 'success';
+		if (boolval($this->usable)) {
+	        $bsclass = 'success';
+		}
+		else {
+			$bsclass = 'danger';
+		}
+
 
         return ['index' => [$this->name, $this->type, $this->description, $this->usable],
                 'index_header' => ['Name', 'Type', 'Description', 'Usable'],
