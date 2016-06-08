@@ -107,4 +107,22 @@ class PhonenumberManagementController extends \BaseController {
 		return $provvoipenvia->get_jobs_for_view($phonenumbermanagement, 'phonenumbermanagement');
 	}
 
+
+	/**
+	 * Overwrite BaseController method => not required dates should be set to null if not set
+	 * Otherwise we get entries like 0000-00-00, which cause crashes on validation rules in case of update
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function prepare_input($data, $nullable_fields=[]) {
+
+		$nullable_fields = array(
+			'activation_date',
+			'deactivation_date',
+		);
+
+		$data = parent::prepare_input($data, $nullable_fields);
+
+		return $data;
+	}
 }

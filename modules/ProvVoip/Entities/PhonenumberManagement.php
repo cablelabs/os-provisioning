@@ -23,6 +23,8 @@ class PhonenumberManagement extends \BaseModel {
 			'carrier_in' => 'required|exists:carriercode,id',
 			'carrier_out' => 'required|exists:carriercode,id',
 			'ekp_in' => 'required|exists:ekpcode,id',
+			'activation_date' => 'date',
+			'deactivation_date' => 'date',
 		);
 	}
 

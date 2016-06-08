@@ -134,8 +134,14 @@ class BaseController extends Controller {
 	 * Note: Will be running before Validation
 	 *
 	 * Tasks: Checkbox Entries will automatically set to 0 if not checked
+	 *        Set nullable fields without value given explicitely to null
+	 *
+	 * @author: Torsten Schmidt, Patrick Reichel
+	 *
+	 * @param $data data from form
+	 * @param $nullable array of column names that should be set to null if no value is given (e.g. for dates)
 	 */
-	protected function prepare_input($data)
+	protected function prepare_input($data, $nullable_fields=[])
 	{
 		// Checkbox Unset ?
 		foreach ($this->view_form_fields(static::get_model_obj()) as $field)
@@ -150,6 +156,15 @@ class BaseController extends Controller {
 
 			// trim all inputs as default
 			$data[$field['name']] = trim($data[$field['name']]);
+
+			// set all nullable fields to null if not given
+			if (array_key_exists($field['name'], $data)) {
+				if (array_search($field['name'], $nullable_fields) !== False) {
+					if ($data[$field['name']] == '') {
+						$data[$field['name']] = null;
+					}
+				}
+			}
 		}
 
 		return $data;

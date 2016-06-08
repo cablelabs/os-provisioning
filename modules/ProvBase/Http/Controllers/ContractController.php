@@ -144,11 +144,21 @@ class ContractController extends \BaseController {
 	/**
 	 * Set contract Start date - TODO: move to default_input(), when it is executed in BaseController
 	 */
-	public function prepare_input($data)
+	public function prepare_input($data, $nullable_fields=[])
 	{
 		$data['contract_start'] = $data['contract_start'] ? : date('Y-m-d');
 
-		return parent::prepare_input($data);
+		// set this to null if no value is given
+		$nullable_fields = array(
+			'contract_start',
+			'contract_end',
+			'voip_contract_start',
+			'voip_contract_end',
+		);
+
+		$data = parent::prepare_input($data, $nullable_fields);
+
+		return $data;
 	}
 
 
