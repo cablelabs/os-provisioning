@@ -32,6 +32,7 @@ class BaseController extends Controller {
 	protected $save_button = 'Save';
 	protected $relation_create_button = 'Create';
 	protected $index_create_allowed = true;
+	protected $index_delete_allowed = true;
 	protected $edit_left_md_size = 4;
 
 
@@ -128,20 +129,42 @@ class BaseController extends Controller {
 
 
 	/**
+	 * Set all nullable field without value given to null.
+	 * Use this to e.g. set dates to null (instead of 0000-00-00).
+	 *
+	 * Call this method on demand from your prepare_input()
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @param $nullable_fields array containing fields to check
+	 */
+	protected function _nullify_fields($data, $nullable_fields=[]) {
+
+		foreach ($this->view_form_fields(static::get_model_obj()) as $field)
+		{
+			// set all nullable fields to null if not given
+			if (array_key_exists($field['name'], $data)) {
+				if (array_search($field['name'], $nullable_fields) !== False) {
+					if ($data[$field['name']] == '') {
+						$data[$field['name']] = null;
+					}
+				}
+			}
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Returns a default input data array, that shall be overwritten
 	 * from the appropriate model controller if needed.
 	 *
 	 * Note: Will be running before Validation
 	 *
 	 * Tasks: Checkbox Entries will automatically set to 0 if not checked
-	 *        Set nullable fields without value given explicitely to null
 	 *
-	 * @author: Torsten Schmidt, Patrick Reichel
-	 *
-	 * @param $data data from form
-	 * @param $nullable array of column names that should be set to null if no value is given (e.g. for dates)
 	 */
-	protected function prepare_input($data, $nullable_fields=[])
+	protected function prepare_input($data)
 	{
 		// Checkbox Unset ?
 		foreach ($this->view_form_fields(static::get_model_obj()) as $field)
@@ -157,14 +180,6 @@ class BaseController extends Controller {
 			// trim all inputs as default
 			$data[$field['name']] = trim($data[$field['name']]);
 
-			// set all nullable fields to null if not given
-			if (array_key_exists($field['name'], $data)) {
-				if (array_search($field['name'], $nullable_fields) !== False) {
-					if ($data[$field['name']] == '') {
-						$data[$field['name']] = null;
-					}
-				}
-			}
 		}
 
 		return $data;
@@ -349,6 +364,7 @@ class BaseController extends Controller {
 		}
 
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
+		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
 		// perform the search
 		foreach ($obj->getFulltextSearchResults($scope, $mode, $query, Input::get('preselect_field'), Input::get('preselect_value')) as $result)
@@ -359,7 +375,7 @@ class BaseController extends Controller {
 				$view_var = $view_var->merge($result->get());
 		}
 
-		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed', 'query', 'scope')));
+		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed', 'delete_allowed', 'query', 'scope')));
 	}
 
 
@@ -375,6 +391,7 @@ class BaseController extends Controller {
 		$view_var   = $obj->index_list();
 		$headline  	= BaseViewController::translate($obj->view_headline().' List');
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
+		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
 		$view_path = 'Generic.index';
 		if (View::exists(\NamespaceController::get_view_name().'.index'))
@@ -383,7 +400,7 @@ class BaseController extends Controller {
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
 
-		return View::make ($view_path, $this->compact_prep_view(compact('headline', 'view_var', 'create_allowed')));
+		return View::make ($view_path, $this->compact_prep_view(compact('headline', 'view_var', 'create_allowed', 'delete_allowed')));
 	}
 
 

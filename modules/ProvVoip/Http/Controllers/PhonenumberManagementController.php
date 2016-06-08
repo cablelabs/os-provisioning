@@ -114,14 +114,16 @@ class PhonenumberManagementController extends \BaseController {
 	 *
 	 * @author Patrick Reichel
 	 */
-	protected function prepare_input($data, $nullable_fields=[]) {
+	protected function prepare_input($data) {
+
+		$data = parent::prepare_input($data);
 
 		$nullable_fields = array(
 			'activation_date',
 			'deactivation_date',
 		);
+		$data = $this->_nullify_fields($data, $nullable_fields);
 
-		$data = parent::prepare_input($data, $nullable_fields);
 
 		return $data;
 	}
