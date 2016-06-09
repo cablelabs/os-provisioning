@@ -303,6 +303,7 @@ class Contract extends \BaseModel {
 	 * Tasks:
 	 *  1. Check if $this contract end date is expired -> disable network_access
 	 *  2. Check if $this is a new contract and activate it -> enable network_access
+	 *  3. Change QoS id and Voip id if actual valid (billing-) tariff changes
 	 *
 	 * TODO: try to avoid the use of multiple saves, instead use one save at the end
 	 *
