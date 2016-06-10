@@ -94,8 +94,6 @@ class Contract extends \BaseModel {
 		if (\PPModule::is_active('ccc'))
 		{
 			$ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
-			// TODO: 
-			// $ret['Create Connection Infos']['Connection Information']['view']['vars'] = $this->ccc();
 		}
 
 		return $ret;
@@ -491,28 +489,6 @@ class Contract extends \BaseModel {
 	}
 
 
-	/**
-	 * Create/Update Customer Control Information
-	 *
-	 * @return array with [login, password, contract id)] or bool
-	 * @author Torsten Schmidt
-	 */
-	public function ccc()
-	{
-		if (!\PPModule::is_active('Ccc'))
-			return null;
-
-		if ($this->cccauthuser)
-			$ccc = $this->cccauthuser;
-		else
-		{
-			$ccc = new \Modules\Ccc\Entities\CccAuthuser;
-			$ccc->contract_id = $this->id;
-		}
-
-		return $ccc->save();
-	}
-
 
 	/**
 	 * BOOT:
@@ -615,7 +591,6 @@ class ContractObserver
 	{
 		$contract->save();     			// forces to call the updated method of the observer
 		$contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
-		$contract->ccc();
 	}
 
 	public function updating($contract)

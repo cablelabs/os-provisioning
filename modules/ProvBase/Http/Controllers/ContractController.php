@@ -174,24 +174,4 @@ class ContractController extends \BaseController {
 	}
 
 
-
-	/**
-	 * Create and Download Connection Information
-
-	 * @param type $filename download filename, replace '/' with '__' in URL context
-	 * @return type response() - download box from browser
-	 *
-	 * @author Torsten Schmidt
-	 */
-	public function connection_info_download ($id)
-	{
-		// TODO: @Nino Ryschawy: create connection information under storage path
-		//       and set $pdf to created pdf file (recursive under storage/apps)
-		$filename = 'test.pdf';
-
-		$pdf = response()->download(storage_path().'/app/'.$filename);
-
-		return $pdf;
-	}
-
 }
