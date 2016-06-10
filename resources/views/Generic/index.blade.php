@@ -65,7 +65,12 @@
 				<!-- Index Table Entries -->
 				@foreach ($view_var as $object)
 					<tr class="{{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}">
-						<td width=50> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple']) }} </td>
+
+						@if ($delete_allowed)
+							<td width=50> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple']) }} </td>
+						@else
+							<td/>
+						@endif
 
 						<!-- Parse view_index_label()  -->
 						<?php $i = 0; // display link only on first element ?>
@@ -87,8 +92,10 @@
 
 	<!-- delete/submit button of form-->
 	@DivOpen(3)
-		{{ Form::submit('Delete', ['!class' => 'btn btn-danger btn-primary m-r-5', 'style' => 'simple']) }}
-		{{ Form::close() }}
+		@if ($delete_allowed)
+			{{ Form::submit('Delete', ['!class' => 'btn btn-danger btn-primary m-r-5', 'style' => 'simple']) }}
+			{{ Form::close() }}
+		@endif
 	@DivClose()
 
 @stop

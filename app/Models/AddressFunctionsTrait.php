@@ -22,8 +22,11 @@ trait AddressFunctionsTrait {
 
 		if (\PPModule::is_active('provvoipenvia')) {
 
+			// Envia expects Herrn instead of Herr ⇒ to be as compatible as possible to other use cases
+			// we nevertheless store Herr in database and fix this in XML generation within
+			// ProvVoipEnvia->_add_fields
 			$options = [
-				'Herrn',
+				'Herr',
 				'Frau',
 				'Firma',
 				'Behörde',
