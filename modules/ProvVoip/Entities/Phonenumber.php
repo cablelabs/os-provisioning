@@ -94,6 +94,7 @@ class Phonenumber extends \BaseModel {
 			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
 		}
 
+		$ret['Monitoring']['Cdr'] = $this->cdrs;
 		return $ret;
     }
 
@@ -157,6 +158,14 @@ class Phonenumber extends \BaseModel {
 		}
 
 		return null;
+	}
+
+	/**
+	 * link to monitoring
+	 */
+	public function cdrs()
+	{
+		return $this->hasMany('Modules\VoipMon\Entities\Cdr');
 	}
 
 	/**
