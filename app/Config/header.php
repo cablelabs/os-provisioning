@@ -1,3 +1,5 @@
 <?php
 
-return 	[['Config Page' => 'Config.index']];
+return 	[['Config Page' => 'Config.index',
+		'Logging' => 'GuiLog.index',
+]];
