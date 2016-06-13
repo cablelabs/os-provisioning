@@ -32,6 +32,7 @@ class BaseController extends Controller {
 	protected $save_button = 'Save';
 	protected $relation_create_button = 'Create';
 	protected $index_create_allowed = true;
+	protected $index_delete_allowed = true;
 	protected $edit_left_md_size = 4;
 
 
@@ -360,6 +361,7 @@ class BaseController extends Controller {
 		$view_var   = $obj->index_list();
 		$headline  	= BaseViewController::translate($obj->view_headline().' List');
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
+		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
 		$view_path = 'Generic.index';
 		if (View::exists(\NamespaceController::get_view_name().'.index'))
@@ -368,7 +370,7 @@ class BaseController extends Controller {
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
 
-		return View::make ($view_path, $this->compact_prep_view(compact('headline', 'view_var', 'create_allowed')));
+		return View::make ($view_path, $this->compact_prep_view(compact('headline', 'view_var', 'create_allowed', 'delete_allowed')));
 	}
 
 

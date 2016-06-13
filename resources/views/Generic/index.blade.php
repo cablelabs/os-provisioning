@@ -87,8 +87,10 @@
 
 	<!-- delete/submit button of form-->
 	@DivOpen(3)
-		{{ Form::submit('Delete', ['!class' => 'btn btn-danger btn-primary m-r-5', 'style' => 'simple']) }}
-		{{ Form::close() }}
+		@if ($delete_allowed)
+			{{ Form::submit('Delete', ['!class' => 'btn btn-danger btn-primary m-r-5', 'style' => 'simple']) }}
+			{{ Form::close() }}
+		@endif
 	@DivClose()
 
 @stop

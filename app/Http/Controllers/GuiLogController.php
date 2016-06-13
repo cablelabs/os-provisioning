@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 class GuiLogController extends BaseController {
 
+	protected $index_create_allowed = false;
+	protected $index_delete_allowed = false;
 
     /**
      * defines the formular fields for the edit and create view
