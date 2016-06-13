@@ -116,7 +116,7 @@ return [
 		'mysql-voipmonitor' => [
 			'driver'    => 'mysql',
 			'host'      => env('VOIPMONITOR_DB_HOST', env('DB_HOST', 'localhost')),
-			'database'  => env('VOIPMONITOR_DB_DATABASE', 'voipmonitor'),
+			'database'  => env('VOIPMONITOR_DB_DATABASE', env('DB_DATABASE','voipmonitor')),
 			'username'  => env('VOIPMONITOR_DB_USERNAME', env('DB_USERNAME', 'root')),
 			'password'  => env('VOIPMONITOR_DB_PASSWORD', env('DB_PASSWORD', '')),
 			'charset'   => 'utf8',
