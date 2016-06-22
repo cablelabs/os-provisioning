@@ -612,3 +612,43 @@ class ContractObserver
 		$contract->push_to_modems();
 	}
 }
+
+
+/**
+ * Base updater class for all data that is related to orders and phonenumbers
+ *
+ * @author Patrick Reichel
+ */
+class VoipRelatedDataUpdater {
+
+	/**
+	 * Constructor
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function __construct($contract_id) {
+
+		$this->contract = Contract::findOrFail($contract_id);
+	}
+
+}
+
+/**
+ * Class to update data related to orders and phonenumbers using EnviaOrders as data base.
+ *
+ * @author Patrick Reichel
+ */
+class VoipRelatedDataUpdaterByEnvia extends VoipRelatedDataUpdater {
+
+	/**
+	 * Constructor
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function __construct($contract_id) {
+
+		parent::__construct($contract_id);
+
+		dd(__FILE__, __LINE__, $this->contract);
+	}
+}
