@@ -39,9 +39,45 @@ class Phonenumber extends \BaseModel {
 
 
 	// link title in index view
-    public function view_index_label()
-    {
-        $bsclass = 'success';
+    public function view_index_label(){
+
+		$management = $this->phonenumbermanagement;
+
+		if (is_null($management)) {
+			$state = 'No phonenumbermanagement existing';
+			$bsclass = 'danger';
+			$act = 'n/a';
+			$deact = 'n/a';
+		}
+		else {
+			$act = $management->activation_date;
+			$deact = $management->deactivation_date;
+
+			if ($act > date('c')) {
+				$state = 'Waiting for activation';
+				$bsclass = 'warning';
+			}
+			else {
+				if (!boolval($deact)) {
+					$state = 'Active';
+					$bsclass = 'success';
+				}
+				else {
+					if ($deact > date('c')) {
+						$state = 'Active. Deactivation date set but not reached yet.';
+						$bsclass = 'warning';
+					}
+					else {
+						$state = 'Deactivated.';
+						$bsclass = 'info';
+					}
+				}
+			}
+		}
+
+		// reuse dates for view
+		if (is_null($act)) $act = '-';
+		if (is_null($deact)) $deact = '-';
 
         if ($this->active == 0)
 			$bsclass = 'danger';
@@ -49,8 +85,8 @@ class Phonenumber extends \BaseModel {
         // TODO: use mta states.
         //       Maybe use fast ping to test if online in this funciton?
 
-        return ['index' => [$this->country_code, $this->prefix_number, $this->number, $this->port],
-                'index_header' => ['Name', 'MAC', 'Type', 'Phone Port'],
+        return ['index' => [$this->prefix_number.'/'.$this->number, $act, $deact, $state],
+                'index_header' => ['Number', 'Activation date', 'Deactivation date', 'State'],
                 'bsclass' => $bsclass,
                 'header' => 'Port '.$this->port.': '.$this->prefix_number."/".$this->number];
     }
