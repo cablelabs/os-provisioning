@@ -59,8 +59,9 @@ class Kernel extends ConsoleKernel {
 		if (\PPModule::is_active ('ProvVoipEnvia')) {
 
 			// Update status of envia orders
+			// Do this at the very beginning of a day
 			$schedule->command('provvoipenvia:update_envia_orders')
-				->dailyAt('03:37');
+				->dailyAt('00:01');
 				/* ->everyMinute(); */
 
 			// Update voice data
