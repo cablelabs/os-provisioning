@@ -555,8 +555,6 @@ class Modem extends \BaseModel {
 	 * changes. If obersers are enabled, every change on modem object will for example
 	 * restart the modem.
 	 */
-	public $observer_enabled = true;
-
 	public function observer_disable()
 	{
 		$this->observer_enabled = false;

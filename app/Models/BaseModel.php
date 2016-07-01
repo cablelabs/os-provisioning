@@ -24,6 +24,8 @@ class BaseModel extends Eloquent
 
 	protected $fillable = array();
 
+	
+	public $observer_enabled = true;
 
 	/**
 	 * Constructor.
@@ -672,6 +674,8 @@ class SystemdObserver
 
     public function created($model)
     {
+    	\Log::debug("systemd: observer called from create context");
+
     	if (!is_dir(storage_path('systemd')))
     		mkdir(storage_path('systemd'));
 
@@ -683,6 +687,11 @@ class SystemdObserver
 
     public function updated($model)
     {
+		if (!$model->observer_enabled)
+			return;
+
+    	\Log::debug("systemd: observer called from update context", [get_class($model), $model->id]);
+
     	if (!is_dir(storage_path('systemd')))
     		mkdir(storage_path('systemd'));
 
@@ -694,6 +703,8 @@ class SystemdObserver
 
     public function deleted($model)
     {
+    	\Log::debug("systemd: observer called from delete context");
+
     	if (!is_dir(storage_path('systemd')))
     		mkdir(storage_path('systemd'));
 
