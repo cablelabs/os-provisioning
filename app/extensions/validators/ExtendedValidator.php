@@ -100,7 +100,6 @@ class ExtendedValidator
 	 */
 	public function ipLarger ($attribute, $value, $parameters)
 	{
-		dd($parameters);
 		$ip = ip2long($value);
 		$ip2 = ip2long($parameters[0]);
 
