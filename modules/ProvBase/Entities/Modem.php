@@ -367,6 +367,8 @@ class Modem extends \BaseModel {
 	 */
 	public function refresh_state ($timeout = 100*1000)
 	{
+		\Log::debug('Refresh Modem State', [$this->hostname]);
+
 		// Load Global Config
 		$config = ProvBase::first();
 		$community_ro = $config->ro_community;
@@ -382,9 +384,6 @@ class Modem extends \BaseModel {
 		// OID Array to parse
 		// Style: ['modem table field 1' => 'oid1', 'modem table field 2' => 'oid2, ..']
 		$oids = ['status' => '.1.3.6.1.2.1.10.127.1.2.2.1.3.2'];
-
-		// Log
-		// Log::debug('refresh state '.$this->hostname);
 
 		$this->observer_disable();
 
