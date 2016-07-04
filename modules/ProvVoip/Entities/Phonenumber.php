@@ -68,9 +68,10 @@ class Phonenumber extends \BaseModel {
 		return $this->mta;
 	}
 
-    // View Relation.
-    public function view_has_many()
-    {
+	// View Relation.
+	public function view_has_many()
+	{
+		$ret = array();
 		if (\PPModule::is_active('provvoipenvia'))
 		{
 			$ret['Envia']['EnviaOrder'] = $this->external_orders;
@@ -94,9 +95,12 @@ class Phonenumber extends \BaseModel {
 			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
 		}
 
-		$ret['Monitoring']['Cdr'] = $this->cdrs;
+		if (\PPModule::is_active('voipmon')) {
+			$ret['Monitoring']['Cdr'] = $this->cdrs;
+		}
+
 		return $ret;
-    }
+	}
 
 	/**
 	 * return all mta objects
@@ -162,10 +166,16 @@ class Phonenumber extends \BaseModel {
 
 	/**
 	 * link to monitoring
+	 *
+	 * @author Ole Ernst
 	 */
 	public function cdrs()
 	{
-		return $this->hasMany('Modules\VoipMon\Entities\Cdr');
+		if (\PPModule::is_active('voipmon')) {
+			return $this->hasMany('Modules\VoipMon\Entities\Cdr');
+		}
+
+		return null;
 	}
 
 	/**
