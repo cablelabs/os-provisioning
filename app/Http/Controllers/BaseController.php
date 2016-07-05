@@ -380,6 +380,22 @@ class BaseController extends Controller {
 
 
 	/**
+	 * Overwrite this method in your controllers to inject additional data in your edit view
+	 * Default is an empty array that simply will be ignored on generic views
+	 *
+	 * For an example view EnviaOrder and their edit.blade.php
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return data to be injected; should be an array
+	 */
+	protected function _get_additional_data_for_edit_view($model) {
+
+		return array();
+	}
+
+
+	/**
 	 * Display a listing of all objects of the calling model
 	 *
 	 * @return Response
@@ -479,6 +495,10 @@ class BaseController extends Controller {
 		$form_fields	= BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
 		$relations      = BaseViewController::prep_right_panels($view_var);
 
+		// check if there is additional data to be passed to blade template
+		// on demand overwrite base method _get_additional_data_for_edit_view($model)
+		$additional_data = $this->_get_additional_data_for_edit_view($view_var);
+
 		// we explicitly set the method to call in relation links
 		// if not given we set default to “edit“ to meet former behavior
 		foreach ($relations as $rel_key => $relation) {
@@ -499,10 +519,9 @@ class BaseController extends Controller {
 		if (View::exists(\NamespaceController::get_view_name().'.form'))
 			$form_path = \NamespaceController::get_view_name().'.form';
 
-
 		// $config_routes = BaseController::get_config_modules();
 		// return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations', 'extra_data')));
-		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations', 'method')));
+		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations', 'method', 'additional_data')));
 	}
 
 
