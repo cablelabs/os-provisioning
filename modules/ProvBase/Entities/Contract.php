@@ -293,6 +293,9 @@ class Contract extends \BaseModel {
 	 */
 	private function _date_null ($date)
 	{
+		if (!$date)
+			return True;
+
 		return !($date->year > 1900);
 	}
 
@@ -308,22 +311,22 @@ class Contract extends \BaseModel {
 	 * TODO: try to avoid the use of multiple saves, instead use one save at the end
 	 *
 	 * @return: none
-	 * @author: Torsten Schmidt, Nino Ryschawy
+	 * @author: Torsten Schmidt, Nino Ryschawy, Patrick Reichel
 	 */
 	public function daily_conversion()
 	{
 		$now   = \Carbon\Carbon::now();
-		$start = $this->_date_to_carbon($this->contract_start);
-		$end   = $this->_date_to_carbon($this->contract_end);
-
 
 		// Task 1: Check if $this contract end date is expired -> disable network_access
-		if ($end->lt($now) && !$this->_date_null($end) && $this->network_access == 1)
-		{
-			\Log::Info('daily: contract: disable based on ending contract date for '.$this->id);
+		if ($this->contract_end) {
+			$end  = $this->_date_to_carbon($this->contract_end);
+			if ($end->lt($now) && !$this->_date_null($end) && $this->network_access == 1)
+			{
+				\Log::Info('daily: contract: disable based on ending contract date for '.$this->id);
 
-			$this->network_access = 0;
-			$this->save();
+				$this->network_access = 0;
+				$this->save();
+			}
 		}
 
 		// Task 2: Check if $this is a new contract and activate it -> enable network_access
@@ -332,12 +335,15 @@ class Contract extends \BaseModel {
 		// Note: This requires the daily scheduling to run well
 		//       Otherwise the contracts must be enabled manually
 		// TODO: give them a good testing
-		if ($start->lt($now) && !$this->_date_null($start) && $start->diff($now)->days <= 1 && $this->network_access == 0)
-		{
-			\Log::Info('daily: contract: enable contract based on start contract date for '.$this->id);
+		if ($this->contract_start) {
+			$start = $this->_date_to_carbon($this->contract_start);
+			if ($start->lt($now) && !$this->_date_null($start) && $start->diff($now)->days <= 1 && $this->network_access == 0)
+			{
+				\Log::Info('daily: contract: enable contract based on start contract date for '.$this->id);
 
-			$this->network_access = 1;
-			$this->save();
+				$this->network_access = 1;
+				$this->save();
+			}
 		}
 
 
@@ -364,6 +370,41 @@ class Contract extends \BaseModel {
 			$this->save();
 		}
 
+		$today = \Carbon\Carbon::today();
+		$yesterday = \Carbon\Carbon::yesterday();
+		foreach ($this->items as $item) {
+
+			$item_changed = False;
+
+			// if the startdate is fixed: ignore
+			if (!$item->valid_from_fixed) {
+				// set to today if there is a start date but this is less then today
+				if ($item->valid_from) {
+					$from = $this->_date_to_carbon($item->valid_from);
+					if (!$this->_date_null($from) && $from->lt($today)) {
+						$item->valid_from = $today;
+						$item_changed = True;
+					}
+				}
+			}
+
+			// if the enddate is fixed: ignore
+			if (!$item->valid_to_fixed) {
+				// set to yesterdey if there is an end date less than yesterday
+				if ($item->valid_to) {
+					$to = $this->_date_to_carbon($item->valid_to);
+				    if (!$this->_date_null($to) && $to->lt($yesterday)) {
+						$item->valid_to = $yesterday;
+						$item_changed = True;
+					}
+				}
+			}
+
+			// finally: save the change
+			if ($item_changed) {
+				$item->save();
+			}
+		}
 
 	}
 
