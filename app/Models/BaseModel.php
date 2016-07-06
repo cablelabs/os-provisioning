@@ -8,6 +8,8 @@ use Schema;
 use Module;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use App\Http\Controllers\NamespaceController;
+
 
 /**
  *	Class to add functionality – use instead of Eloquent for your models
@@ -48,6 +50,30 @@ class BaseModel extends Eloquent
 
 	// Add Comment here. ..
 	protected $guarded = ['id'];
+
+
+	/**
+	 * Init Observer
+	 */
+	public static function boot()
+	{
+		parent::boot();
+
+		$model = NamespaceController::get_model_name();
+
+		// App\Auth is booted during authentication and doesnt need/have an observe method
+		// GuiLog has to be excluded to prevent an infinite loop log entry creation
+		if ($model == 'App\Auth' || $model == 'App\GuiLog')
+			return;
+
+		// only add BaseObserver for in GUI requested model - not for related & somehow dependent models
+		if (static::class == $model)
+			$model::observe(new BaseObserver);
+
+
+		// \Log::debug('Called boot() for '.$model, [static::class, debug_backtrace()[0]['file'], debug_backtrace()[0]['function']]);
+		// if ($model::getEventDispatcher()->hasListeners('eloquent.created: '.$model))
+	}
 
 
 
@@ -657,49 +683,142 @@ class BaseModel extends Eloquent
 }
 
 
+
+
+
 /**
- * Base Observer Class
- * Handles changes on Model Gateways
+ * Base Observer Class - Logging of all User Interaction
+ *
+ * @author Nino Ryschawy
+ */
+class BaseObserver
+{
+
+	public function created($model)
+	{
+		$this->add_log_entry($model,__FUNCTION__);
+		return false;
+	}
+
+	public function updated($model)
+	{
+		$this->add_log_entry($model,__FUNCTION__);
+		return false;
+	}
+
+	public function deleted($model)
+	{
+		$this->add_log_entry($model,__FUNCTION__);
+		return false;
+	}
+
+	/**
+	 * Create Log Entry on fired Event
+	 */
+	private function add_log_entry($model, $action)
+	{
+		$user = \Auth::user();
+
+		$model_name = get_class($model);
+		$model_name = explode('\\',$model_name);
+		$model_name = array_pop($model_name);
+
+		$text = '';
+
+		if ($action == 'updated')
+		{
+			// $attributes = $model->getDirty();
+			// unset($attributes['updated_at']);
+
+			// skip following attributes - TODO: 
+			$ignore = array(
+				'updated_at',
+				'password',
+				);
+
+
+			// get changed attributes
+			$arr = [];
+
+			foreach ($model['attributes'] as $key => $value)
+			{
+				if (in_array($key, $ignore))
+					continue;
+
+				$original = $model['original'][$key];
+				if ($original != $value)
+					$arr[] = $key.': '.$original.'->'.$value;
+			}
+
+			$text = implode(', ', $arr);
+		}
+
+		$data = [
+			'authuser_id' => $user ? $user->id : 0,
+			'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
+			'method' 	=> $action,
+			'model' 	=> $model_name,
+			'model_id'  => $model->id,
+			'text' 		=> $text,
+		];
+
+		GuiLog::create($data);
+
+		// dd($model->getObservableEvents(), $model->getEventDispatcher(), $model->getEventDispatcher()->getListeners('eloquent.created: Modules\ProvBase\Entities\Cmts')[0]);
+	}
+
+}
+
+
+
+
+
+/**
+ * Systemd Observer Class - Handles changes on Model Gateways - restarts system services
  *
  * TODO: place it somewhere else ..
- *
  */
 class SystemdObserver
 {
-
 	// insert all services that need to be restarted after a model changed there configuration in that array
 	private $services = array('dhcpd');
 
-    public function created($model)
-    {
-    	if (!is_dir(storage_path('systemd')))
-    		mkdir(storage_path('systemd'));
+	public function created($model)
+	{
+		\Log::debug("systemd: observer called from create context");
 
-    	foreach ($this->services as $service)
-    	{
+		if (!is_dir(storage_path('systemd')))
+			mkdir(storage_path('systemd'));
+
+		foreach ($this->services as $service)
+		{
 			touch(storage_path('systemd/'.$service));
-    	}
+		}
 	}
 
-    public function updated($model)
-    {
-    	if (!is_dir(storage_path('systemd')))
-    		mkdir(storage_path('systemd'));
+	public function updated($model)
+	{
+		\Log::debug("systemd: observer called from update context");
 
-    	foreach ($this->services as $service)
-    	{
+		if (!is_dir(storage_path('systemd')))
+			mkdir(storage_path('systemd'));
+
+		foreach ($this->services as $service)
+		{
 			touch(storage_path('systemd/'.$service));
-    	}
-    }
+		}
+	}
 
-    public function deleted($model)
-    {
-    	if (!is_dir(storage_path('systemd')))
-    		mkdir(storage_path('systemd'));
+	public function deleted($model)
+	{
+		\Log::debug("systemd: observer called from delete context");
 
-    	foreach ($this->services as $service)
-    	{
+		if (!is_dir(storage_path('systemd')))
+			mkdir(storage_path('systemd'));
+
+		foreach ($this->services as $service)
+		{
 			touch(storage_path('systemd/'.$service));
-    	}
-    }
+		}
+	}
 }
