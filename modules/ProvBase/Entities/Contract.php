@@ -175,6 +175,7 @@ class Contract extends \BaseModel {
 		if (!\PPModule::is_active('provvoipenvia')) {
 			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
 		}
+
 		return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->where('ordertype', 'NOT LIKE', 'order/create_attachment');
 
 	}
