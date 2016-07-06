@@ -29,7 +29,12 @@ class NamespaceController  {
 	 */
 	public static function is_module_context()
 	{
-		if (strtolower(explode ('\\', Route::getCurrentRoute()->getActionName())[0]) == 'app')
+		// check if it's a http request at all
+		$route = Route::getCurrentRoute();
+		if (!$route)
+			return false;
+
+		if (strtolower(explode ('\\', $route->getActionName())[0]) == 'app')
 			return false;
 
 		return true;
