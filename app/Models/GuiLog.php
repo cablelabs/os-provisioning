@@ -25,7 +25,17 @@ class GuiLog extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-		return "1";
+        $bsclass = 'info';
+
+        if ($this->method == 'created')
+            $bsclass = 'success';
+        if ($this->method == 'deleted')
+            $bsclass = 'danger';
+
+        return ['index' => [$this->created_at, $this->username, $this->method, $this->model, $this->model_id],
+                'index_header' => ['Time', 'User', 'Action', 'Model', 'ID'],
+                'bsclass' => $bsclass,
+                'header' => $this->username.': '.$this->method.' '.$this->model];
 	}
 
 

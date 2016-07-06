@@ -23,7 +23,8 @@ class CreateGuiLogTable extends BaseMigration {
 			$table->string('username');
 			$table->string('method');
 			$table->string('model');
-			$table->string('text');
+			$table->string('model_id');
+			$table->text('text');
 
 		});
 
