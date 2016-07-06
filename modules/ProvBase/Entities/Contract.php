@@ -85,7 +85,7 @@ class Contract extends \BaseModel {
 		if (\PPModule::is_active('provvoipenvia'))
 		{
 			$ret['Envia']['EnviaOrder']['class'] = 'EnviaOrder';
-			$ret['Envia']['EnviaOrder']['relation'] = $this->external_orders;
+			$ret['Envia']['EnviaOrder']['relation'] = $this->_envia_orders;
 
 			// TODO: auth - loading controller from model could be a security issue ?
 			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
@@ -166,17 +166,17 @@ class Contract extends \BaseModel {
 	}
 
 	/**
-	 * Get relation to external orders.
+	 * Get relation to envia orders.
 	 *
 	 * @author Patrick Reichel
 	 */
-	public function external_orders() {
+	protected function _envia_orders() {
 
-		if (\PPModule::is_active('provvoipenvia')) {
-			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->where('ordertype', 'NOT LIKE', 'order/create_attachment');
+		if (!\PPModule::is_active('provvoipenvia')) {
+			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
 		}
+		return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->where('ordertype', 'NOT LIKE', 'order/create_attachment');
 
-		return null;
 	}
 
 	public function items()
