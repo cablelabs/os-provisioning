@@ -27,10 +27,10 @@ class Kernel extends HttpKernel {
 	protected $routeMiddleware = [
 		// Base Authentication Stuff
 		// @author Torsten Schmidt
-	    'auth' => \App\Http\Middleware\BaseAuthAdminMiddleware::class,
+		'auth' => \App\Http\Middleware\BaseAuthMvcMiddleware::class,
 
-	    // TODO: check if absence of CCC module will break ?
-	    'ccc.base' => \Modules\Ccc\Http\Middleware\CccBaseMiddleware::class,
+		// TODO: check if absence of CCC module will break ?
+		'ccc.base' => \Modules\Ccc\Http\Middleware\CccBaseMiddleware::class,
 
 		// L5 defaults:
 		//'auth' => 'App\Http\Middleware\Authenticate',
