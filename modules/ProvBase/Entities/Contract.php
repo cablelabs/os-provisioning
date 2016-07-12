@@ -187,6 +187,13 @@ class Contract extends \BaseModel {
 		return null;
 	}
 
+	public function items_sorted_by_valid_from_desc()
+	{
+		if (\PPModule::is_active('billingbase'))
+			return $this->hasMany('Modules\BillingBase\Entities\Item')->orderBy('valid_from', 'desc');
+		return null;
+	}
+
 	public function sepamandates()
 	{
 		if (\PPModule::is_active('billingbase'))
@@ -277,6 +284,11 @@ class Contract extends \BaseModel {
 	 */
 	private function _date_to_carbon ($date)
 	{
+		// createFromFormat crashes if nothing given
+		if (!boolval($date)) {
+			return null;
+		}
+
 		return \Carbon\Carbon::createFromFormat('Y-m-d', $date);
 	}
 
@@ -290,11 +302,17 @@ class Contract extends \BaseModel {
 	 * See: http://stackoverflow.com/questions/25959324/comparing-null-date-carbon-object-in-laravel-4-blade-templates
 	 *
 	 * TODO: move this stuff to extensions
+	 *
+	 * Note by Patrick: null dates can either be Carbons or strings with “0000-00-00”/“0000-00-00 00:00:00” or “NULL”
 	 */
 	private function _date_null ($date)
 	{
-		if (!$date)
+		if (!boolval($date))
 			return True;
+
+		if (is_string($date)) {
+			return (\Str::startswith($date, '0000'));
+		}
 
 		return !($date->year > 1900);
 	}
@@ -346,56 +364,94 @@ class Contract extends \BaseModel {
 			}
 		}
 
-
 		// Task 3: Change qos and voip id when tariff changes
-		if (!\PPModule::is_active('Billingbase'))
+		if (\PPModule::is_active('Billingbase')) {
+
+			$qos_id = ($tariff = $this->get_valid_tariff('Internet')) ? $tariff->product->qos_id : 0;
+
+			if ($this->qos_id != $qos_id)
+			{
+				\Log::Info("daily: contract: changed qos_id (tariff) to $qos_id for Contract ".$this->number, [$this->id]);
+				$this->qos_id = $qos_id;
+				$this->save();
+				$this->push_to_modems();
+			}
+
+			$voip_id = ($tariff = $this->get_valid_tariff('Voip')) ? $tariff->product->voip_sales_tariff_id : 0;
+
+			if ($this->voip_id != $voip_id)
+			{
+				\Log::Info("daily: contract: changed voip_id (tariff) to $voip_id for Contract ".$this->number, [$this->id]);
+				$this->voip_id = $voip_id;
+				$this->save();
+			}
+		}
+
+		// Task 4: Check and possibly update item's valid_from and valid_to dates
+		$this->_update_item_dates();
+	}
+
+
+	/**
+	 * This helper updates item dates under the following conditions:
+	 *	- valid_from:
+	 *		- valid_from_fixed is false
+	 *		- valid_from is before tomorrow
+	 *		- if both are true: set to tomorrow
+	 *	- valid_to:
+	 *		- valid_to_fixed is false
+	 *		- valid_to is before today
+	 *		- if both are true: set to today
+	 *
+	 *	This way we ensure:
+	 *		- items with not fixed end dates are valid today 
+	 *		- items with not fixed start dates are not active
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _update_item_dates() {
+
+		// items only exist if Billingbase is enabled
+		if (!\PPModule::is_active('Billingbase')) {
 			return;
-
-		$qos_id = ($tariff = $this->get_valid_tariff('Internet')) ? $tariff->product->qos_id : 0;
-
-		if ($this->qos_id != $qos_id)
-		{
-			\Log::Info("daily: contract: changed qos_id (tariff) to $qos_id for Contract ".$this->number, [$this->id]);
-			$this->qos_id = $qos_id;
-			$this->save();
-			$this->push_to_modems();
 		}
 
-		$voip_id = ($tariff = $this->get_valid_tariff('Voip')) ? $tariff->product->voip_sales_tariff_id : 0;
-
-		if ($this->voip_id != $voip_id)
-		{
-			\Log::Info("daily: contract: changed voip_id (tariff) to $voip_id for Contract ".$this->number, [$this->id]);
-			$this->voip_id = $voip_id;
-			$this->save();
-		}
-
+		// get tomorrow and today as Carbon objects – so they can directly be compared to the dates at items
+		$tomorrow = \Carbon\Carbon::tomorrow();
 		$today = \Carbon\Carbon::today();
-		$yesterday = \Carbon\Carbon::yesterday();
-		foreach ($this->items as $item) {
 
+		// check for each item on contract
+		// attention: update youngest valid_from items first (to avoid problems in relation with
+		// ItemObserver::update() which else set valid_to smaller than valid_from in some cases)!
+		foreach ($this->items_sorted_by_valid_from_desc as $item) {
+
+			// flag to decide if item has to be saved at the end of the loop
 			$item_changed = False;
 
 			// if the startdate is fixed: ignore
-			if (!$item->valid_from_fixed) {
-				// set to today if there is a start date but this is less then today
+			if (!boolval($item->valid_from_fixed)) {
+				// set to tomorrow if there is a start date but this is less then tomorrow
 				if ($item->valid_from) {
 					$from = $this->_date_to_carbon($item->valid_from);
-					if (!$this->_date_null($from) && $from->lt($today)) {
-						$item->valid_from = $today;
+					if (!$this->_date_null($from) && $from->lt($tomorrow)) {
+						$new_date = $tomorrow->toDateString();
+						$item->valid_from = $new_date;
 						$item_changed = True;
+						\Log::Info("daily: contract: changed item ".$item->id." valid_from to ".$new_date." for Contract ".$this->number, [$this->id]);
 					}
 				}
 			}
 
 			// if the enddate is fixed: ignore
-			if (!$item->valid_to_fixed) {
-				// set to yesterdey if there is an end date less than yesterday
+			if (!boolval($item->valid_to_fixed)) {
+				// set to today if there is an end date less than today
 				if ($item->valid_to) {
 					$to = $this->_date_to_carbon($item->valid_to);
-				    if (!$this->_date_null($to) && $to->lt($yesterday)) {
-						$item->valid_to = $yesterday;
+				    if (!$this->_date_null($to) && $to->lt($today)) {
+						$new_date = $today->toDateString();
+						$item->valid_to = $new_date;
 						$item_changed = True;
+						\Log::Info("daily: contract: changed item ".$item->id." valid_to to ".$new_date." for Contract ".$this->number, [$this->id]);
 					}
 				}
 			}
@@ -657,11 +713,19 @@ class ContractObserver
 
 
 /**
- * Base updater class for all data that is related to orders and phonenumbers
+ * Base updater for all data that is related to orders and phonenumbers
  *
  * @author Patrick Reichel
  */
-class VoipRelatedDataUpdater {
+abstract class VoipRelatedDataUpdater {
+
+	// the modules that have to be active to instantiate
+	// set to empty array if no modules are needed
+	protected $modules_to_be_active = ['OverloadThisByTheNeededModules'];
+
+	// Helper flag; set to true if something related to given contract has to be updated
+	protected $has_to_be_updated = True;
+
 
 	/**
 	 * Constructor
@@ -670,17 +734,40 @@ class VoipRelatedDataUpdater {
 	 */
 	public function __construct($contract_id) {
 
+		if (!$this->_check_modules()) {
+			throw new \RuntimeException('Cannot use class '.__CLASS__.' because at least one of the following modules is not active: '.implode(', ', $this->modules_to_be_active));
+		}
+
 		$this->contract = Contract::findOrFail($contract_id);
+	}
+
+
+	/**
+	 * Check if all needed modules are active
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _check_modules() {
+
+		foreach ($this->modules_to_be_active as $module) {
+			if (!\PPModule::is_active($module)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }
 
 /**
- * Class to update data related to orders and phonenumbers using EnviaOrders as data base.
+ * Updater using EnviaOrders as data base.
  *
  * @author Patrick Reichel
  */
 class VoipRelatedDataUpdaterByEnvia extends VoipRelatedDataUpdater {
+
+	protected $modules_to_be_active = ['ProvVoipEnvia'];
 
 	/**
 	 * Constructor
@@ -691,6 +778,6 @@ class VoipRelatedDataUpdaterByEnvia extends VoipRelatedDataUpdater {
 
 		parent::__construct($contract_id);
 
-		dd(__FILE__, __LINE__, $this->contract);
+		/* dd(__FILE__, __LINE__, $this->contract); */
 	}
 }

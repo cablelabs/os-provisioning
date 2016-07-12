@@ -67,7 +67,7 @@ class PhonenumberManagement extends \BaseModel {
         return ['index' => [$this->id],
                 'index_header' => ['ID'],
                 'bsclass' => $bsclass,
-                'header' => 'PhonenumberManagement (id '.$this->id.')'];
+                'header' => 'PhonenumberManagement'];
 	}
 
 	/**
