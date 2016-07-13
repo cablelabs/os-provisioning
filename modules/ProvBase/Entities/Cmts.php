@@ -13,11 +13,11 @@ class Cmts extends \BaseModel {
 
 	// Add your validation rules here
 	public static function rules($id = null)
-    {
-        return array(
+	{
+		return array(
 			'hostname' => 'required|unique:cmts,hostname,'.$id.',id,deleted_at,NULL'  	// unique: table, column, exception , (where clause)
-        );
-    }
+		);
+	}
 
 
 	// Name of View
@@ -38,52 +38,52 @@ class Cmts extends \BaseModel {
 			$bsclass = 'danger';
 
 		return ['index' => [$this->id, $this->hostname, $this->ip, $this->company, $this->type],
-		        'index_header' => ['ID', 'Hostname', 'IP address', 'Company', 'Type'],
-		        'bsclass' => $bsclass,
-		        'header' => $this->hostname];
+				'index_header' => ['ID', 'Hostname', 'IP address', 'Company', 'Type'],
+				'bsclass' => $bsclass,
+				'header' => $this->hostname];
 	}
 
 
-    /**
-     * BOOT - init cmts observer
-     */
-    public static function boot()
-    {
-        parent::boot();
+	/**
+	 * BOOT - init cmts observer
+	 */
+	public static function boot()
+	{
+		parent::boot();
 
-        Cmts::observe(new CmtsObserver);
-        Cmts::observe(new \App\SystemdObserver);
-    }
-
-
-    /**
-     * Relationships:
-     */
-
-    public function ippools ()
-    {
-        return $this->hasMany('Modules\ProvBase\Entities\IpPool');
-    }
-
-    // returns all objects that are related to a cmts
-    public function view_has_many()
-    {
-    	return array(
-    		'IpPool' => $this->ippools
-    	);
-    }
+		Cmts::observe(new CmtsObserver);
+		Cmts::observe(new \App\SystemdObserver);
+	}
 
 
+	/**
+	 * Relationships:
+	 */
 
-    /**
-     * Get US SNR of a registered CM
-     *
-     * @param ip: ip address of cm
-     *
-     * @author Nino Ryschawy
-     */
-    public function get_us_snr($ip)
-    {
+	public function ippools ()
+	{
+		return $this->hasMany('Modules\ProvBase\Entities\IpPool');
+	}
+
+	// returns all objects that are related to a cmts
+	public function view_has_many()
+	{
+		return array(
+			'IpPool' => $this->ippools
+		);
+	}
+
+
+
+	/**
+	 * Get US SNR of a registered CM
+	 *
+	 * @param ip: ip address of cm
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function get_us_snr($ip)
+	{
 		// find oid of corresponding modem on cmts and get the snr
 		$conf = snmp_get_valueretrieval();
 		if ($this->community_ro != '')
@@ -244,7 +244,7 @@ class Cmts extends \BaseModel {
 
 _exit:
 		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
-        system('/bin/chown -R apache /etc/dhcp/');
+		system('/bin/chown -R apache /etc/dhcp/');
 	}
 
 	/**
@@ -341,27 +341,28 @@ _exit:
  */
 class CmtsObserver
 {
-    public function created($cmts)
-    {
-    	// dd(\Route::getCurrentRoute()->getActionName(), $this);
-  		// only create new config file
-        $cmts->make_dhcp_conf();
-    }
+	public function created($cmts)
+	{
+		// dd(\Route::getCurrentRoute()->getActionName(), $this);
+		// only create new config file
+		// dd($cmts);
+		$cmts->make_dhcp_conf();
+	}
 
-    public function updating($cmts)
-    {
-    	$tmp = Cmts::find($cmts->id);
-    	$tmp->delete_cmts();
-    }
+	public function updating($cmts)
+	{
+		$tmp = Cmts::find($cmts->id);
+		$tmp->delete_cmts();
+	}
 
-    public function updated($cmts)
-    {
-        $cmts->make_dhcp_conf();
-    }
+	public function updated($cmts)
+	{
+		$cmts->make_dhcp_conf();
+	}
 
-    public function deleted($cmts)
-    {
-    	// delete the conf file and the include statement in /etc/dhcp/dhcpd.conf
-    	$cmts->delete_cmts();
-    }
+	public function deleted($cmts)
+	{
+		// delete the conf file and the include statement in /etc/dhcp/dhcpd.conf
+		$cmts->delete_cmts();
+	}
 }
