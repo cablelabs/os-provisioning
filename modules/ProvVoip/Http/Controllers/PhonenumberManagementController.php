@@ -32,38 +32,28 @@ class PhonenumberManagementController extends \BaseController {
 			$phonenumber = Phonenumber::findOrFail(\Input::get('phonenumber_id'));
 			$contract = $phonenumber->mta->modem->contract;
 
-			$subscriber = array(
-				'company' => $contract->company,
-				'salutation' => $contract->salutation,
-				'academic_degree' => $contract->academic_degree,
-				'firstname' => $contract->firstname,
-				'lastname' => $contract->lastname,
-				'street' => $contract->street,
-				'house_number' => $contract->house_number,
-				'zip' => $contract->zip,
-				'city' => $contract->city,
+			$init_values = array(
+				'subscriber_company' => $contract->company,
+				'subscriber_salutation' => $contract->salutation,
+				'subscriber_academic_degree' => $contract->academic_degree,
+				'subscriber_firstname' => $contract->firstname,
+				'subscriber_lastname' => $contract->lastname,
+				'subscriber_street' => $contract->street,
+				'subscriber_house_number' => $contract->house_number,
+				'subscriber_zip' => $contract->zip,
+				'subscriber_city' => $contract->city,
 			);
 		}
 		// edit
 		else {
-			$subscriber = array(
-				'company' => $model->subscriber_company,
-				'salutation' => $model->subscriber_salutation,
-				'academic_degree' => $model->subscriber_academic_degree,
-				'firstname' => $model->subscriber_firstname,
-				'lastname' => $model->subscriber_lastname,
-				'street' => $model->subscriber_street,
-				'house_number' => $model->subscriber_house_number,
-				'zip' => $model->subscriber_zip,
-				'city' => $model->subscriber_city,
-			);
+			$init_values = array();
 		}
 
 		// preset subscriber data => this comes from model
 
 
 		// label has to be the same like column in sql table
-		return array(
+		$ret_tmp = array(
 			array('form_type' => 'select', 'name' => 'phonenumber_id', 'description' => 'Phonenumber', 'value' => $model->html_list($model->phonenumber(), 'id'), 'hidden' => '1'),
 			array('form_type' => 'select', 'name' => 'trcclass', 'description' => 'TRC class', 'value' => TRCClass::trcclass_list_for_form_select()),
 			array('form_type' => 'text', 'name' => 'activation_date', 'description' => 'Activation date'),
@@ -74,18 +64,29 @@ class PhonenumberManagementController extends \BaseController {
 			array('form_type' => 'checkbox', 'name' => 'porting_out', 'description' => 'Outgoing porting'),
 			array('form_type' => 'select', 'name' => 'carrier_out', 'description' => 'Carrier out', 'value' => CarrierCode::carrier_list_for_form_select(True)),
 
-			array('form_type' => 'text', 'name' => 'subscriber_company', 'description' => 'Subscriber company', 'value' => $subscriber['company']),
-			array('form_type' => 'select', 'name' => 'subscriber_salutation', 'description' => 'Subscriber salutation', 'value' => $model->get_salutation_options(), 'options' => array('selected' => $subscriber['salutation'])),
-			array('form_type' => 'select', 'name' => 'subscriber_academic_degree', 'description' => 'Subscriber academic degree', 'value' => $model->get_academic_degree_options(), 'options' => array('selected' => $subscriber['academic_degree'])),
-			array('form_type' => 'text', 'name' => 'subscriber_firstname', 'description' => 'Subscriber firstname', 'value' => $subscriber['firstname']),
-			array('form_type' => 'text', 'name' => 'subscriber_lastname', 'description' => 'Subscriber lastname', 'value' => $subscriber['lastname']),
-			array('form_type' => 'text', 'name' => 'subscriber_street', 'description' => 'Subscriber street', 'value' => $subscriber['street']),
-			array('form_type' => 'text', 'name' => 'subscriber_house_number', 'description' => 'Subscriber house number', 'value' => $subscriber['house_number']),
-			array('form_type' => 'text', 'name' => 'subscriber_zip', 'description' => 'Subscriber zipcode', 'value' => $subscriber['zip']),
-			array('form_type' => 'text', 'name' => 'subscriber_city', 'description' => 'Subscriber city', 'value' => $subscriber['city']),
-
-
+			array('form_type' => 'text', 'name' => 'subscriber_company', 'description' => 'Subscriber company'),
+			array('form_type' => 'select', 'name' => 'subscriber_salutation', 'description' => 'Subscriber salutation', 'value' => $model->get_salutation_options()),
+			array('form_type' => 'select', 'name' => 'subscriber_academic_degree', 'description' => 'Subscriber academic degree', 'value' => $model->get_academic_degree_options()),
+			array('form_type' => 'text', 'name' => 'subscriber_firstname', 'description' => 'Subscriber firstname'),
+			array('form_type' => 'text', 'name' => 'subscriber_lastname', 'description' => 'Subscriber lastname'),
+			array('form_type' => 'text', 'name' => 'subscriber_street', 'description' => 'Subscriber street'),
+			array('form_type' => 'text', 'name' => 'subscriber_house_number', 'description' => 'Subscriber house number'),
+			array('form_type' => 'text', 'name' => 'subscriber_zip', 'description' => 'Subscriber zipcode'),
+			array('form_type' => 'text', 'name' => 'subscriber_city', 'description' => 'Subscriber city'),
 		);
+
+		// add init values if set
+		$ret = array();
+		foreach ($ret_tmp as $elem) {
+
+			if (array_key_exists($elem['name'], $init_values)) {
+				$elem['init_value'] = $init_values[$elem['name']];
+			}
+			array_push($ret, $elem);
+		}
+
+		return $ret;
+
 	}
 
 
@@ -96,7 +97,7 @@ class PhonenumberManagementController extends \BaseController {
 	 * @param $model current phonenumber object
 	 * @return array containing linktexts and URLs to perform actions against REST API
 	 */
-	protected function _get_envia_management_jobs($phonenumbermanagement) {
+	public static function _get_envia_management_jobs($phonenumbermanagement) {
 
 		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
 
@@ -106,4 +107,24 @@ class PhonenumberManagementController extends \BaseController {
 		return $provvoipenvia->get_jobs_for_view($phonenumbermanagement, 'phonenumbermanagement');
 	}
 
+
+	/**
+	 * Overwrite BaseController method => not required dates should be set to null if not set
+	 * Otherwise we get entries like 0000-00-00, which cause crashes on validation rules in case of update
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function prepare_input($data) {
+
+		$data = parent::prepare_input($data);
+
+		$nullable_fields = array(
+			'activation_date',
+			'deactivation_date',
+		);
+		$data = $this->_nullify_fields($data, $nullable_fields);
+
+
+		return $data;
+	}
 }

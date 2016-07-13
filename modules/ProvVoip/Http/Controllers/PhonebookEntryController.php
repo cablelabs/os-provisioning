@@ -17,7 +17,7 @@ class PhonebookEntryController extends \BaseController {
     /**
      * defines the formular fields for the edit and create view
      */
-	public function get_form_fields($model = null)
+	public function view_form_fields($model = null)
 	{
 		// create
 		if (!$model) {
@@ -32,33 +32,23 @@ class PhonebookEntryController extends \BaseController {
 			$phonenumbermanagement = PhonenumberManagement::findOrFail(\Input::get('phonenumbermanagement_id'));
 			$contract = $phonenumbermanagement->phonenumber->mta->modem->contract;
 
-			$phonebook_data = array(
+			$init_values = array(
 				'company' => $contract->company,
 				'salutation' => $contract->salutation,
 				'academic_degree' => $contract->academic_degree,
 				'firstname' => $contract->firstname,
 				'lastname' => $contract->lastname,
 				'street' => $contract->street,
-				'house_number' => $contract->house_number,
-				'zip' => $contract->zip,
+				'houseno' => $contract->house_number,
+				'zipcode' => $contract->zip,
 				'city' => $contract->city,
 				'urban_district' => $contract->district,
 			);
+
 		}
 		// edit
 		else {
-			$phonebook_data = array(
-				'company' => $model->company,
-				'salutation' => $model->salutation,
-				'academic_degree' => $model->academic_degree,
-				'firstname' => $model->firstname,
-				'lastname' => $model->lastname,
-				'street' => $model->street,
-				'house_number' => $model->houseno,
-				'zip' => $model->zipcode,
-				'city' => $model->city,
-				'urban_district' => $model->district,
-			);
+			$init_values = array();
 		}
 
 		// helper to set selected correctly
@@ -74,7 +64,7 @@ class PhonebookEntryController extends \BaseController {
 		/* 	} */
 		/* }; */
 
-		return array(
+		$ret_tmp =  array(
 
 			/* todo: write the rest of the form (attention: some special cases!!!) */
 			array('form_type' => 'select', 'name' => 'phonenumbermanagement_id', 'description' => 'PhonenumberManagement', 'value' => $model->html_list($model->phonenumbermanagement(), 'id'), 'hidden' => '1'),
@@ -84,23 +74,35 @@ class PhonebookEntryController extends \BaseController {
 			array('form_type' => 'select', 'name' => 'directory_assistance', 'description' => 'Directory assistance', 'value' => $model->get_options_from_list('directory_assistance')),
 			array('form_type' => 'select', 'name' => 'entry_type', 'description' => 'Entry type', 'value' => $model->get_options_from_list('entry_type')),
 			array('form_type' => 'select', 'name' => 'publish_address', 'description' => 'Publish address', 'value' => $model->get_options_from_list('publish_address')),
-			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company', 'value' => $phonebook_data['company']),
+			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
 			array('form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic degree', 'value' => $model->get_options_from_file('academic_degree')),
 			array('form_type' => 'select', 'name' => 'noble_rank', 'description' => 'Noble rank', 'value' => $model->get_options_from_file('noble_rank')),
 			array('form_type' => 'select', 'name' => 'nobiliary_particle', 'description' => 'Nobiliary particle', 'value' => $model->get_options_from_file('nobiliary_particle')),
-			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'value' => $phonebook_data['lastname']),
+			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname'),
 			array('form_type' => 'text', 'name' => 'other_name_suffix', 'description' => 'Other name suffix'),
-			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'value' => $phonebook_data['firstname']),
-			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'value' => $phonebook_data['street']),
-			array('form_type' => 'text', 'name' => 'houseno', 'description' => 'House number', 'value' => $phonebook_data['house_number']),
-			array('form_type' => 'text', 'name' => 'zipcode', 'description' => 'Zipcode', 'value' => $phonebook_data['zip']),
-			array('form_type' => 'text', 'name' => 'city', 'description' => 'City', 'value' => $phonebook_data['city']),
-			array('form_type' => 'text', 'name' => 'urban_district', 'description' => 'Urban district', 'value' => $phonebook_data['urban_district']),
+			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname'),
+			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street'),
+			array('form_type' => 'text', 'name' => 'houseno', 'description' => 'House number'),
+			array('form_type' => 'text', 'name' => 'zipcode', 'description' => 'Zipcode'),
+			array('form_type' => 'text', 'name' => 'city', 'description' => 'City'),
+			array('form_type' => 'text', 'name' => 'urban_district', 'description' => 'Urban district'),
 			array('form_type' => 'select', 'name' => 'business', 'description' => 'Business', 'value' => $model->get_options_from_file('business')),
 			array('form_type' => 'select', 'name' => 'number_usage', 'description' => 'Number usage', 'value' => $model->get_options_from_list('number_usage')),
 			array('form_type' => 'select', 'name' => 'tag', 'description' => 'Tag', 'value' => $model->get_options_from_file('tag')),
 
 		);
+
+		// add init values if set
+		$ret = array();
+		foreach ($ret_tmp as $elem) {
+
+			if (array_key_exists($elem['name'], $init_values)) {
+				$elem['init_value'] = $init_values[$elem['name']];
+			}
+			array_push($ret, $elem);
+		}
+
+		return $ret;
 
 	}
 
@@ -196,18 +198,12 @@ class PhonebookEntryController extends \BaseController {
 	 * @param $model current phonenumber object
 	 * @return array containing linktexts and URLs to perform actions against REST API
 	 */
-	protected function _get_envia_management_jobs($phonebookentry) {
+	public static function _get_envia_management_jobs($phonebookentry) {
 
 		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
 
 		// check if user has the right to perform actions against Envia API
-		// if not: don't show any actions
-		try {
-			$this->_check_permissions("view", "Modules\ProvVoipEnvia\Entities\ProvVoipEnvia");
-		}
-		catch (PermissionDeniedError $ex) {
-			return null;
-		}
+		\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
 
 		return $provvoipenvia->get_jobs_for_view($phonebookentry, 'phonebookentry');
 	}
