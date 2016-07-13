@@ -44,4 +44,18 @@ class GuiLog extends \BaseModel {
 		return $this->orderBy('id', 'desc')->get();
 	}
 
+
+	/**
+	 * Delete all LogEntries older than a specific timespan - default 3 months
+	 * Hard Delete all Entries older than 6 months
+	 */
+	public static function cleanup($days = 90)
+	{
+		\Log::notice('GuiLog: Execute cleanup() - Delete Log entries older than '.$days.' days - (hard delete older than 180 days)');
+
+		GuiLog::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL '.$days.' DAY)'))->delete();
+		GuiLog::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL 180 DAY)'))->forceDelete();
+		// GuiLog::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL 3 MINUTE)'))->delete();
+	}
+
 }

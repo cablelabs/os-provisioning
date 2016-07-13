@@ -45,6 +45,10 @@ class Kernel extends ConsoleKernel {
 			/* ->everyMinute(); */
 
 
+		// Remove all Log Entries older than 90 days
+		$schedule->call('\App\GuiLog@cleanup')->weekly();
+
+
 		if (\PPModule::is_active ('ProvVoip')) {
 
 			// Update database table carriercode with csv data if necessary
