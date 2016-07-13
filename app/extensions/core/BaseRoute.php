@@ -27,8 +27,8 @@ class BaseRoute {
 		if (\Request::is('admin/*'))
 			return $url.'/admin';
 
-		if (\Request::is('ccc/*'))
-			return $url.'/ccc';
+		if (\Request::is('customer/*'))
+			return $url.'/customer';
 
 		return $url; // will not work
 	}

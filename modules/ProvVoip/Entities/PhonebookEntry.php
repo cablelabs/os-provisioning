@@ -118,15 +118,32 @@ class PhonebookEntry extends \BaseModel {
 	}
 
 	// Name of View
+	public static function view_headline()
+	{
+		return 'Phonebook entry';
+	}
+
+	// Name of View
 	public static function get_view_header()
 	{
 		return 'Phonebook entry';
 	}
 
 	// link title in index view
+	public function view_index_label()
+	{
+        $bsclass = 'success';
+
+        return ['index' => [$this->id],
+                'index_header' => ['ID'],
+                'bsclass' => $bsclass,
+                'header' => 'PhonebookEntry (id'.$this->id.')'];
+	}
+	// link title in index view
 	public function get_view_link_title()
 	{
-		return $this->id;
+		/* return $this->id; */
+		return 'PhonebookEntry';
 	}
 
 	/**
@@ -190,4 +207,20 @@ class PhonebookEntry extends \BaseModel {
 	}
 
 
+	// View Relation.
+	public function view_has_many() {
+
+		if (\PPModule::is_active('provvoipenvia')) {
+
+			// TODO: auth - loading controller from model could be a security issue ?
+			$ret['Envia']['Envia API']['html'] = '<h4>Available Envia API jobs</h4>';
+			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonebookEntryController::_get_envia_management_jobs($this);
+		}
+		else {
+			$ret = array();
+		}
+
+		return $ret;
+	}
 }

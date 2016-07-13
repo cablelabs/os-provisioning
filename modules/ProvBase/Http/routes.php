@@ -21,6 +21,4 @@ BaseRoute::group([], function() {
 	// Configfile: Hierarchical Index Page
 	BaseRoute::get('Configfile_t', ['as' => 'Configfile.tree', 'uses' => 'Modules\ProvBase\Http\Controllers\ConfigfileController@index_tree']);
 
-	// Contract: Download Connection Info
-	BaseRoute::get('contract/conn_info/{id}', array('as' => 'Contract.ConnInfo', 'uses' => 'Modules\ProvBase\Http\Controllers\ContractController@connection_info_download'));
 });
