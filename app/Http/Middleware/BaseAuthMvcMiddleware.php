@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Http\Controllers\BaseAuthController;
 
-class BaseAuthAdminMiddleware
+class BaseAuthMvcMiddleware
 {
     /**
      * Handle an incoming request.

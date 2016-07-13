@@ -143,6 +143,13 @@ class BaseViewController extends Controller {
 			if (isset($_POST[$field['name']]))
 				$field['field_value'] = $_POST[$field['name']];
 
+			// 4. (sub-task)
+			// write explicitly given init_value to field_value
+			// this is needed e.g. by Patrick to prefill new PhonenumberManagement and PhonebookEntry with data from Contract
+			if (array_key_exists('init_value', $field)) {
+				$field['field_value'] = $field['init_value'];
+			}
+
 			array_push ($ret, $field);
 		}
 
@@ -175,7 +182,6 @@ class BaseViewController extends Controller {
 
 		// prepare form fields
 		$fields = static::prepare_form_fields($_fields, $model);
-
 
 		// foreach fields
 		foreach ($fields as $field)
@@ -280,7 +286,6 @@ finish:
 
 		}
 
-		// dd($ret);
 		return $ret;
 	}
 
@@ -467,7 +472,6 @@ finish:
 
 			$relations = $b;
 		}
-
 
 		return ($relations);
 	}

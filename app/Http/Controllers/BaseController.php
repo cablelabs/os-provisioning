@@ -131,12 +131,40 @@ class BaseController extends Controller {
 
 
 	/**
+	 * Set all nullable field without value given to null.
+	 * Use this to e.g. set dates to null (instead of 0000-00-00).
+	 *
+	 * Call this method on demand from your prepare_input()
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @param $nullable_fields array containing fields to check
+	 */
+	protected function _nullify_fields($data, $nullable_fields=[]) {
+
+		foreach ($this->view_form_fields(static::get_model_obj()) as $field)
+		{
+			// set all nullable fields to null if not given
+			if (array_key_exists($field['name'], $data)) {
+				if (array_search($field['name'], $nullable_fields) !== False) {
+					if ($data[$field['name']] == '') {
+						$data[$field['name']] = null;
+					}
+				}
+			}
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Returns a default input data array, that shall be overwritten
 	 * from the appropriate model controller if needed.
 	 *
 	 * Note: Will be running before Validation
 	 *
 	 * Tasks: Checkbox Entries will automatically set to 0 if not checked
+	 *
 	 */
 	protected function prepare_input($data)
 	{
@@ -153,6 +181,7 @@ class BaseController extends Controller {
 
 			// trim all inputs as default
 			$data[$field['name']] = trim($data[$field['name']]);
+
 		}
 
 		return $data;
@@ -338,6 +367,7 @@ class BaseController extends Controller {
 		}
 
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
+		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
 		// perform the search
 		foreach ($obj->getFulltextSearchResults($scope, $mode, $query, Input::get('preselect_field'), Input::get('preselect_value')) as $result)
@@ -348,7 +378,7 @@ class BaseController extends Controller {
 				$view_var = $view_var->merge($result->get());
 		}
 
-		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed', 'query', 'scope')));
+		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed', 'delete_allowed', 'query', 'scope')));
 	}
 
 
@@ -452,6 +482,16 @@ class BaseController extends Controller {
 		$form_fields	= BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
 		$relations      = BaseViewController::prep_right_panels($view_var);
 
+		// we explicitly set the method to call in relation links
+		// if not given we set default to “edit“ to meet former behavior
+		foreach ($relations as $rel_key => $relation) {
+			if (!array_key_exists('method', $relation)) {
+				$method = 'edit';
+			}
+			else {
+				$method = 'show';
+			}
+		}
 
 		$view_path = 'Generic.edit';
 		$form_path = 'Generic.form';
@@ -465,7 +505,7 @@ class BaseController extends Controller {
 
 		// $config_routes = BaseController::get_config_modules();
 		// return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations', 'extra_data')));
-		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations')));
+		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations', 'method')));
 	}
 
 

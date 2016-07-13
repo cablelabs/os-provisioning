@@ -26,6 +26,8 @@ class BaseModel extends Eloquent
 
 	protected $fillable = array();
 
+	
+	public $observer_enabled = true;
 
 	/**
 	 * Constructor.
@@ -440,12 +442,12 @@ class BaseModel extends Eloquent
 	protected function _chooseFulltextSearchAlgo($mode, $query) {
 
 		// search query is left truncated => simple search
-		if ((Str::startsWith($query, "%")) || (Str::startsWith($query, "*"))) {
+		if ((\Str::startsWith($query, "%")) || (\Str::startsWith($query, "*"))) {
 			$mode = 'simple';
 		}
 
 		// query contains . or : => IP or MAC => simple search
-		if ((Str::contains($query, ":")) || (Str::contains($query, "."))) {
+		if ((\Str::contains($query, ":")) || (\Str::contains($query, "."))) {
 			$mode = 'simple';
 		}
 
@@ -470,10 +472,10 @@ class BaseModel extends Eloquent
 			// replace wildcard chars
 			$query = str_replace("*", "%", $query);
 			// wrap with wildcards (if not given) => necessary because of the concatenation of all table rows
-			if (!Str::startsWith($query, "%")) {
+			if (!\Str::startsWith($query, "%")) {
 				$query = "%".$query;
 			}
-			if (!Str::endsWith($query, "%")) {
+			if (!\Str::endsWith($query, "%")) {
 				$query = $query."%";
 			}
 
@@ -487,7 +489,7 @@ class BaseModel extends Eloquent
 
 			$result = $this->_doSimpleSearch($models, $query, $preselect_field, $preselect_value);
 		}
-		elseif (Str::startsWith($mode, 'index_')) {
+		elseif (\Str::startsWith($mode, 'index_')) {
 
 			if ($scope == 'all') {
 				echo "Implement searching over all database tables";
@@ -783,6 +785,7 @@ class SystemdObserver
 	// insert all services that need to be restarted after a model changed there configuration in that array
 	private $services = array('dhcpd');
 
+
 	public function created($model)
 	{
 		\Log::debug("systemd: observer called from create context");
@@ -796,6 +799,7 @@ class SystemdObserver
 		}
 	}
 
+
 	public function updated($model)
 	{
 		\Log::debug("systemd: observer called from update context");
@@ -808,6 +812,7 @@ class SystemdObserver
 			touch(storage_path('systemd/'.$service));
 		}
 	}
+
 
 	public function deleted($model)
 	{
