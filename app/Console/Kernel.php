@@ -130,6 +130,12 @@ class Kernel extends ConsoleKernel {
 				$schedule->command('nms:accounting')->monthlyOn($execute, '01:00');
 			}
 		}
+
+		if (\PPModule::is_active ('VoipMon'))
+		{
+			$schedule->command('voipmon:match_records')->everyFiveMinutes();
+			$schedule->command('voipmon:delete_old_records')->daily();
+		}
 	}
 
 }
