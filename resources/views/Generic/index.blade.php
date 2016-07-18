@@ -95,7 +95,7 @@
 			{{ Form::submit('Delete', ['!class' => 'btn btn-danger btn-primary m-r-5', 'style' => 'simple']) }}
 			{{ Form::close() }}
 		@endif
-		<!-- only show page buttons if we actually use pagnation -->
+		<!-- only show page buttons if we actually use pagination -->
 		@if ($view_var instanceof \Illuminate\Pagination\Paginator)
 			<span class="pull-right">{{ $view_var->links() }}</span>
 		@endif
