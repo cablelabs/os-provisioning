@@ -87,14 +87,17 @@
 				@endforeach
 
 			</table>
-
 	@DivClose()
 
-	<!-- delete/submit button of form-->
-	@DivOpen(3)
+	@DivOpen(12)
+		<!-- delete/submit button of form -->
 		@if ($delete_allowed)
 			{{ Form::submit('Delete', ['!class' => 'btn btn-danger btn-primary m-r-5', 'style' => 'simple']) }}
 			{{ Form::close() }}
+		@endif
+		<!-- only show page buttons if we actually use pagnation -->
+		@if ($view_var instanceof \Illuminate\Pagination\Paginator)
+			<span class="pull-right">{{ $view_var->links() }}</span>
 		@endif
 	@DivClose()
 
