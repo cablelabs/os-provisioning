@@ -8,6 +8,8 @@
  * Background: I tend to have multiple dd() calls on debugging. Sometimes
  * it is hard to find all of those again ;-)
  *
+ * To enable functions within this file run composer dump-auto (if it is autoloaded by composer.json)
+ *
  * @author Patrick Reichel
  */
 function d() {

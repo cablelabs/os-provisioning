@@ -2,6 +2,9 @@
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use \Modules\HfcBase\Http\Controllers\TreeErdController;
+use \Modules\HfcBase\Http\Controllers\TreeTopographyController;
+use \Modules\HfcCustomer\Http\Controllers\CustomerTopoController;
 use \Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand;
 use \Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand;
 use \Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand;
@@ -43,6 +46,10 @@ class Kernel extends ConsoleKernel {
 		// watch App\Console\Commands\TimeDeltaChecker for more informations
 		/* $schedule->command('main:time_delta') */
 			/* ->everyMinute(); */
+
+
+		// Remove all Log Entries older than 90 days
+		$schedule->call('\App\GuiLog@cleanup')->weekly();
 
 
 		if (\PPModule::is_active ('ProvVoip')) {
@@ -93,8 +100,8 @@ class Kernel extends ConsoleKernel {
 		{
 			// Rebuid all Configfiles
 			$schedule->call(function () {
-			    exec ('rm -rf '.public_path().'/modules/hfcbase/kml/*.kml');
-			    exec ('rm -rf '.public_path().'/modules/hfcbase/erd/*.*');
+				\Storage::deleteDirectory(TreeTopographyController::$path_rel);
+				\Storage::deleteDirectory(TreeErdController::$path_rel);
 			})->hourly();
 		}
 
@@ -103,7 +110,7 @@ class Kernel extends ConsoleKernel {
 		{
 			// Rebuid all Configfiles
 			$schedule->call(function () {
-			    exec ('rm -rf '.public_path().'/modules/hfccustomer/kml/*.kml');
+				\Storage::deleteDirectory(CustomerTopoController::$path_rel);
 			})->hourly();
 
 			// Modem Positioning System
@@ -119,7 +126,7 @@ class Kernel extends ConsoleKernel {
 
 		// TODO: improve
 		$schedule->call(function () {
-			    exec ('chown -R apache '.storage_path().'/logs');
+				exec ('chown -R apache '.storage_path('logs'));
 			})->dailyAt('00:01');
 
 
@@ -134,6 +141,12 @@ class Kernel extends ConsoleKernel {
 				$execute = $rcd ? ($rcd - 5 > 0 ? $rcd - 5 : 1) : 15;
 				$schedule->command('nms:accounting')->monthlyOn($execute, '01:00');
 			}
+		}
+
+		if (\PPModule::is_active ('VoipMon'))
+		{
+			$schedule->command('voipmon:match_records')->everyFiveMinutes();
+			$schedule->command('voipmon:delete_old_records')->daily();
 		}
 	}
 

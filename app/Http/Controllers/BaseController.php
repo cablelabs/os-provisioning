@@ -34,6 +34,8 @@ class BaseController extends Controller {
 	protected $index_create_allowed = true;
 	protected $index_delete_allowed = true;
 	protected $edit_left_md_size = 4;
+	protected $edit_view_save_button = true;
+
 
 
 	// Auth Vars
@@ -322,6 +324,7 @@ class BaseController extends Controller {
 			$a['edit_left_md_size'] = $this->edit_left_md_size;
 
 		$a['save_button'] = $this->save_button;
+		$a['edit_view_save_button'] = $this->edit_view_save_button;
 
 		// Get Framework Informations
 		$gc = GlobalConfig::first();
@@ -392,6 +395,31 @@ class BaseController extends Controller {
 	protected function _get_additional_data_for_edit_view($model) {
 
 		return array();
+	}
+
+
+	/**
+	 * Use this in your Controller->view_form_fields() methods to add a first [0 => ''] in front of your options coming from database
+	 * Don't use array_merge for this topic as this will reassing numerical keys and in doing so destroying the mapping of database IDs!!
+	 *
+	 * Watch ProductController for a usage example.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @param $options the options array generated from database
+	 * @param $first_value value to be set at $options[0] – defaults to empty string
+	 *
+	 * @return $options array with 0 element on first position
+	 */
+	protected function _add_empty_first_element_to_options($options, $first_value='') {
+
+		$ret = [0 => $first_value];
+
+		foreach ($options as $key => $value) {
+			$ret[$key] = $value;
+		}
+
+		return $ret;
 	}
 
 

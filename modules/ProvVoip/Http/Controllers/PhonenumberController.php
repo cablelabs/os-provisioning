@@ -39,6 +39,29 @@ class PhonenumberController extends \BaseController {
 
 
 	/**
+	 * Adds the check for unique ports per MTA.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function prepare_rules($rules, $data) {
+
+		// check if there is an phonenumber id (= updating), else set to -1 (a not used database id)
+		$id = $rules['id'];
+		if (!$id) {
+			$id = -1;
+		}
+
+		// remove id from rules
+		unset($rules['id']);
+
+		// verify that the chosen port is unique for this mta
+		$rules['port'] .= '|unique:phonenumber,port,'.$id.',id,deleted_at,NULL,mta_id,'.$data['mta_id'];
+
+		return parent::prepare_rules($rules, $data);
+	}
+
+
+	/**
 	 * Get all management jobs for Envia
 	 *
 	 * @author Patrick Reichel
