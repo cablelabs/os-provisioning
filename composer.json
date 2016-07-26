@@ -34,7 +34,10 @@
 			"App\\": "app/",
 			"Modules\\": "modules",
 			"Acme\\": "app/extensions/"
-		}
+		},
+		"files": [
+			"app/helpers.php"
+		]
 	},
 	"autoload-dev": {
 		"classmap": [

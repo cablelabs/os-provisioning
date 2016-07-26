@@ -26,7 +26,7 @@ class BaseModel extends Eloquent
 
 	protected $fillable = array();
 
-	
+
 	public $observer_enabled = true;
 
 	/**
@@ -71,7 +71,6 @@ class BaseModel extends Eloquent
 		// only add BaseObserver for in GUI requested model - not for related & somehow dependent models
 		if (static::class == $model)
 			$model::observe(new BaseObserver);
-
 
 		// \Log::debug('Called boot() for '.$model, [static::class, debug_backtrace()[0]['file'], debug_backtrace()[0]['function']]);
 		// if ($model::getEventDispatcher()->hasListeners('eloquent.created: '.$model))
@@ -696,23 +695,40 @@ class BaseModel extends Eloquent
 class BaseObserver
 {
 
+
 	public function created($model)
 	{
 		$this->add_log_entry($model,__FUNCTION__);
-		return false;
+
+		// TODO: analyze impacts of different return values
+		//		without return (= return null): all is running, but multiple log entries are created
+		//		return false: only one log entry per change, but created of e.g. PhonenumberObserver is never called (checked this using dd()
+		//		returne true: one log entry, other observers are called
+		// that are our observations so far – we definitely should check if there are other side effects!!
+		// possible hint: the BaseObserver is registered before the model's observers
+		return true;
 	}
+
 
 	public function updated($model)
 	{
 		$this->add_log_entry($model,__FUNCTION__);
-		return false;
+
+		// TODO: analyze impacts of different return values
+		//		⇒ see comment at created
+		return true;
 	}
+
 
 	public function deleted($model)
 	{
 		$this->add_log_entry($model,__FUNCTION__);
-		return false;
+
+		// TODO: analyze impacts of different return values
+		//		⇒ see comment at created
+		return true;
 	}
+
 
 	/**
 	 * Create Log Entry on fired Event
@@ -727,16 +743,21 @@ class BaseObserver
 
 		$text = '';
 
-		if ($action == 'updated')
+		// if really updated (and not updated by model->save() in observer->created() like in contract)
+		if (($action == 'updated') && (!$model->wasRecentlyCreated))
 		{
 			// $attributes = $model->getDirty();
 			// unset($attributes['updated_at']);
 
-			// skip following attributes - TODO: 
+			// skip following attributes - TODO:
 			$ignore = array(
 				'updated_at',
+			);
+
+			// hide the changed data (but log the fact of change)
+			$hide = array(
 				'password',
-				);
+			);
 
 
 			// get changed attributes
@@ -749,7 +770,12 @@ class BaseObserver
 
 				$original = $model['original'][$key];
 				if ($original != $value)
-					$arr[] = $key.': '.$original.'->'.$value;
+					if (in_array($key, $hide)) {
+						$arr[] = $key;
+					}
+					else {
+						$arr[] = $key.': '.$original.'->'.$value;
+					}
 			}
 
 			$text = implode(', ', $arr);

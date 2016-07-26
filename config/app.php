@@ -54,6 +54,7 @@ return [
 	|
 	*/
 
+	/* 'timezone' => 'CET', */
 	'timezone' => 'Europe/Berlin',
 
 	/*

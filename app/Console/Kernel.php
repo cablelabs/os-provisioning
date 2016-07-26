@@ -66,8 +66,9 @@ class Kernel extends ConsoleKernel {
 		if (\PPModule::is_active ('ProvVoipEnvia')) {
 
 			// Update status of envia orders
+			// Do this at the very beginning of a day
 			$schedule->command('provvoipenvia:update_envia_orders')
-				->dailyAt('03:37');
+				->dailyAt('00:01');
 				/* ->everyMinute(); */
 
 			// Update voice data
@@ -85,9 +86,13 @@ class Kernel extends ConsoleKernel {
 			// TODO: Reload DHCP
 			$schedule->command('nms:dhcp')->hourly()->withoutOverlapping();
 
-			// Contract - network access, internet (qos) & voip tariff changes
-			$schedule->command('nms:contract daily')->daily();
-			$schedule->command('nms:contract monthly')->monthly();
+			// Contract - network access, item dates, internet (qos) & voip tariff changes
+			// important!! daily conversion has to be run BEFORE monthly conversion
+			// commands within one call of “artisan schedule:run” should be processed sequentially (AFAIR)
+			// but to force the order we add runtimes: ten minutes difference should be more than enough
+			// TODO: ckeck if this is really needed
+			$schedule->command('nms:contract daily')->daily()->at('00:03');
+			$schedule->command('nms:contract monthly')->monthly()->at('00:13');
 		}
 
 		// Clean Up of HFC Base
