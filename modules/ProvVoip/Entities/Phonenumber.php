@@ -13,20 +13,20 @@ class Phonenumber extends \BaseModel {
 	// Add your validation rules here
 	public static function rules($id=null)
 	{
-		// Port unique in the appropriate mta (where mta_id=mta_id and deleted_at=NULL)
-		$mta_id = 1;
-		if ($id)
-			$mta_id = Phonenumber::find($id)->mta->id;
-
-		return array(
+		$ret = array(
 			'country_code' => 'required|numeric',
 			'prefix_number' => 'required|numeric',
 			'number' => 'required|numeric',
 			'mta_id' => 'required|exists:mta,id|min:1',
-			'port' => 'required|numeric|min:1|unique:phonenumber,port,'.$id.',id,deleted_at,NULL,mta_id,'.$mta_id,
-			'active' => 'required|boolean',
+			'port' => 'required|numeric|min:1',
+			/* 'active' => 'required|boolean', */
 			// TODO: check if password is secure and matches needs of external APIs (e.g. Envia)
 		);
+
+		// inject id to rules (so it is passed to prepare_rules)
+		$ret['id'] = $id;
+
+		return $ret;
 	}
 
 
@@ -37,11 +37,46 @@ class Phonenumber extends \BaseModel {
 	}
 
 
-
 	// link title in index view
-    public function view_index_label()
-    {
-        $bsclass = 'success';
+    public function view_index_label(){
+
+		$management = $this->phonenumbermanagement;
+
+		if (is_null($management)) {
+			$state = 'No phonenumbermanagement existing';
+			$bsclass = 'danger';
+			$act = 'n/a';
+			$deact = 'n/a';
+		}
+		else {
+			$act = $management->activation_date;
+			$deact = $management->deactivation_date;
+
+			if ($act > date('c')) {
+				$state = 'Waiting for activation';
+				$bsclass = 'warning';
+			}
+			else {
+				if (!boolval($deact)) {
+					$state = 'Active';
+					$bsclass = 'success';
+				}
+				else {
+					if ($deact > date('c')) {
+						$state = 'Active. Deactivation date set but not reached yet.';
+						$bsclass = 'warning';
+					}
+					else {
+						$state = 'Deactivated.';
+						$bsclass = 'info';
+					}
+				}
+			}
+		}
+
+		// reuse dates for view
+		if (is_null($act)) $act = '-';
+		if (is_null($deact)) $deact = '-';
 
         if ($this->active == 0)
 			$bsclass = 'danger';
@@ -49,8 +84,8 @@ class Phonenumber extends \BaseModel {
         // TODO: use mta states.
         //       Maybe use fast ping to test if online in this funciton?
 
-        return ['index' => [$this->country_code, $this->prefix_number, $this->number, $this->port],
-                'index_header' => ['Name', 'MAC', 'Type', 'Phone Port'],
+        return ['index' => [$this->prefix_number.'/'.$this->number, $act, $deact, $state],
+                'index_header' => ['Number', 'Activation date', 'Deactivation date', 'State'],
                 'bsclass' => $bsclass,
                 'header' => 'Port '.$this->port.': '.$this->prefix_number."/".$this->number];
     }
@@ -70,9 +105,10 @@ class Phonenumber extends \BaseModel {
 		return $this->mta;
 	}
 
-    // View Relation.
-    public function view_has_many()
-    {
+	// View Relation.
+	public function view_has_many()
+	{
+		$ret = array();
 		if (\PPModule::is_active('provvoipenvia'))
 		{
 			$relation = $this->phonenumbermanagement;
@@ -95,8 +131,12 @@ class Phonenumber extends \BaseModel {
 			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
 		}
 
+		if (\PPModule::is_active('voipmon')) {
+			$ret['Monitoring']['Cdr'] = $this->cdrs;
+		}
+
 		return $ret;
-    }
+	}
 
 	/**
 	 * return all mta objects
@@ -146,15 +186,16 @@ class Phonenumber extends \BaseModel {
 		return $this->hasOne('Modules\ProvVoip\Entities\PhonenumberManagement');
 	}
 
-	/**
-	 * Get relation to external orders.
-	 *
-	 * @author Patrick Reichel
-	 */
-	public function external_orders() {
 
-		if (\PPModule::is_active('provvoipenvia')) {
-			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder');
+	/**
+	 * link to monitoring
+	 *
+	 * @author Ole Ernst
+	 */
+	public function cdrs()
+	{
+		if (\PPModule::is_active('voipmon')) {
+			return $this->hasMany('Modules\VoipMon\Entities\Cdr');
 		}
 
 		return null;
@@ -192,54 +233,55 @@ class PhonenumberObserver
 	 *
 	 * @author Patrick Reichel
 	 */
-	protected function _create_login_data($phone) {
+	protected function _create_login_data($phonenumber) {
 
-		$changed = false;
+		if (\PPModule::is_active('provvoipenvia') && ($phonenumber->mta->type == 'sip')) {
 
-		if (\PPModule::is_active('provvoipenvia') && ($phone->mta->type == 'sip')) {
-
-			if (!boolval($phone->password)) {
-				$phone->password = \Acme\php\Password::generate_password(15, 'envia');
-				$changed = true;
+			if (!boolval($phonenumber->password)) {
+				$phonenumber->password = \Acme\php\Password::generate_password(15, 'envia');
 			}
 
 			// username at Envia defaults to prefixnumber + number – we also do so
-			if (!boolval($phone->username)) {
-				$phone->username = $phone->prefix_number.$phone->number;
-				$changed = true;
+			if (!boolval($phonenumber->username)) {
+				$phonenumber->username = $phonenumber->prefix_number.$phonenumber->number;
 			}
 
 		}
+	}
 
-		if ($changed) {
-			$phone->save();
-		}
+
+	public function creating($phonenumber) {
+
+		$this->_create_login_data($phonenumber);
+	}
+
+
+	public function created($phonenumber)
+	{
+		$phonenumber->mta->make_configfile();
+		$phonenumber->mta->modem->restart_modem();
 
 	}
 
 
-	public function created($phone)
-	{
-		$this->_create_login_data($phone);
+	public function updating($phonenumber) {
 
-		$phone->mta->make_configfile();
-		$phone->mta->modem->restart_modem();
-
+		$this->_create_login_data($phonenumber);
 	}
 
 
-	public function updated($phone)
+	public function updated($phonenumber)
 	{
-		$this->_create_login_data($phone);
+		$this->_create_login_data($phonenumber);
 
-		$phone->mta->make_configfile();
-		$phone->mta->modem->restart_modem();
+		$phonenumber->mta->make_configfile();
+		$phonenumber->mta->modem->restart_modem();
 	}
 
 
-	public function deleted($phone)
+	public function deleted($phonenumber)
 	{
-		$phone->mta->make_configfile();
-		$phone->mta->modem->restart_modem();
+		$phonenumber->mta->make_configfile();
+		$phonenumber->mta->modem->restart_modem();
 	}
 }

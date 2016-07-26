@@ -29,7 +29,12 @@ class NamespaceController  {
 	 */
 	public static function is_module_context()
 	{
-		if (strtolower(explode ('\\', Route::getCurrentRoute()->getActionName())[0]) == 'app')
+		// check if it's a http request at all
+		$route = Route::getCurrentRoute();
+		if (!$route)
+			return false;
+
+		if (strtolower(explode ('\\', $route->getActionName())[0]) == 'app')
 			return false;
 
 		return true;
@@ -43,7 +48,11 @@ class NamespaceController  {
 	 */
 	private static function __module_get_mvc_namespace()
 	{
-		$a = explode('\\', Route::getCurrentRoute()->getActionName());
+		$route = Route::getCurrentRoute();
+		if (!$route)
+			return null;
+
+		$a = explode('\\', $route->getActionName());
 		return $a[0].'\\'.$a[1];
 	}
 
@@ -56,7 +65,9 @@ class NamespaceController  {
 	 */
 	private static function __module_get_pure_model_name()
 	{
-		return explode ('Controller', explode ('\\', explode ('@', Route::getCurrentRoute()->getActionName())[0])[4])[0];
+		$route = Route::getCurrentRoute();
+
+		return $route? explode ('Controller', explode ('\\', explode ('@', $route->getActionName())[0])[4])[0] : null;
 	}
 
 
@@ -70,7 +81,8 @@ class NamespaceController  {
 		if (static::is_module_context())
 			return static::__module_get_mvc_namespace().'\\Entities\\'.static::__module_get_pure_model_name();
 
-		return 'App\\'.explode ('Controller', explode ('\\', explode ('@', Route::getCurrentRoute()->getActionName())[0])[3])[0];
+		$route = Route::getCurrentRoute();
+		return  $route ? 'App\\'.explode ('Controller', explode ('\\', explode ('@', $route->getActionName())[0])[3])[0] : null;
 	}
 
 
@@ -81,7 +93,8 @@ class NamespaceController  {
 	 */
 	public static function get_controller_name()
 	{
-		return explode('@', Route::getCurrentRoute()->getActionName())[0];
+		$route = Route::getCurrentRoute();
+		return $route ? explode('@', $route->getActionName())[0] : null;
 	}
 
 

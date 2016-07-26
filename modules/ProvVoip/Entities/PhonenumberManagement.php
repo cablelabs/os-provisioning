@@ -67,7 +67,7 @@ class PhonenumberManagement extends \BaseModel {
         return ['index' => [$this->id],
                 'index_header' => ['ID'],
                 'bsclass' => $bsclass,
-                'header' => 'PhonenumberManagement (id '.$this->id.')'];
+                'header' => 'PhonenumberManagement'];
 	}
 
 	/**
@@ -131,17 +131,17 @@ class PhonenumberManagement extends \BaseModel {
 	}
 
 	/**
-	 * Get relation to external orders.
+	 * Get relation to envia orders.
 	 *
 	 * @author Patrick Reichel
 	 */
-	public function external_orders() {
+	protected function _envia_orders() {
 
-		if (\PPModule::is_active('provvoipenvia')) {
-			return $this->phonenumber->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment');
+		if (!\PPModule::is_active('provvoipenvia')) {
+			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
 		}
 
-		return null;
+		return $this->phonenumber->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment');
 	}
 
 
@@ -169,7 +169,7 @@ class PhonenumberManagement extends \BaseModel {
 
 		if (\PPModule::is_active('provvoipenvia')) {
 			$ret['Envia']['EnviaOrder']['class'] = 'EnviaOrder';
-			$ret['Envia']['EnviaOrder']['relation'] = $this->external_orders;
+			$ret['Envia']['EnviaOrder']['relation'] = $this->_envia_orders;
 
 			$ret['Envia']['PhonebookEntry']['class'] = 'PhonebookEntry';
 

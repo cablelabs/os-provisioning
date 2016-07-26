@@ -19,7 +19,9 @@
 	{{ $fields['html'] }}
 @endforeach
 
-{{ Form::submit($save_button) }}
+@if ($edit_view_save_button)
+	{{ Form::submit($save_button) }}
+@endif
 
 
 {{-- java script--}}
