@@ -417,7 +417,7 @@ class Contract extends \BaseModel {
 
 
 	/**
-	 * This enables/disables network_access based on existence of currently active items of type Internet
+	 * This enables/disables network_access based on existence of currently active items of types Internet and Voip
 	 *
 	 * @author Patrick Reichel
 	 *
@@ -425,31 +425,41 @@ class Contract extends \BaseModel {
 	protected function _update_network_access_from_items() {
 
 		$contract_changed = False;
-		$active_tariff_info = $this->_get_valid_tariff_item_and_count('Internet');
-		$active_count = $active_tariff_info['count'];
-		$active_item = $active_tariff_info['item'];
 
-		if ($active_count == 0) {
-			// if there is no active item of type internet: disable network_access (if not already done)
+		$active_tariff_info_internet = $this->_get_valid_tariff_item_and_count('Internet');
+		$active_tariff_info_voip = $this->_get_valid_tariff_item_and_count('Voip');
+
+		$active_count_internet = $active_tariff_info_internet['count'];
+		$active_count_voip = $active_tariff_info_voip['count'];
+		$active_count_sum = $active_count_internet + $active_count_voip;
+
+		$active_item_internet = $active_tariff_info_internet['item'];
+		$active_item_voip = $active_tariff_info_voip['item'];
+
+		if ($active_count_sum == 0) {
+			// if there is no active item of type internet or voip: disable network_access (if not already done)
 			if (boolval($this->network_access)) {
 				$this->network_access = 0;
 				$contract_changed = True;
-				\Log::Info('daily: contract: disabling network_access based on active internet items for contract '.$this->id);
+				\Log::Info('daily: contract: disabling network_access based on active internet/voip items for contract '.$this->id);
 			}
 		}
 		else {
 			// changes are only required if not active
 			if (!boolval($this->network_access)) {
 
-				// then we compare the startdate of the most current active internet type item with today
+				// then we compare the startdate of the most current active internet/voip type item with today
 				// if the difference between the two dates is to big we assume that access has been disabled manually – we don't change the state in this case
-				// this follows the philosophy introduced by Torsten within method _update_network_access_from_contract
+				// this follows the philosophy introduced by Torsten within method _update_network_access_from_contract (e.g. lack of payment)
 				$now = \Carbon\Carbon::now();
-				$start = $this->_date_to_carbon($active_item->valid_from);
-				if ($start->diff($now)->days <= 1) {
+				$start = max(
+					$this->_date_to_carbon($active_item_internet->valid_from),
+					$this->_date_to_carbon($active_item_voip->valid_from)
+				);
+				if (($start->diff($now)->days) <= 1) {
 					$this->network_access = 1;
 					$contract_changed = True;
-					\Log::Info('daily: contract: enabling network_access based on active internet items for contract '.$this->id);
+					\Log::Info('daily: contract: enabling network_access based on active internet/voip items for contract '.$this->id);
 				}
 			}
 
