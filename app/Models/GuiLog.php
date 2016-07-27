@@ -58,4 +58,90 @@ class GuiLog extends \BaseModel {
 		// GuiLog::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL 3 MINUTE)'))->delete();
 	}
 
+	public static function log_changes($data) {
+
+		$writer = GuiLogWriter::getInstance();
+		$writer::log_changes($data);
+	}
+
+}
+
+
+/**
+ * This class is used to write log entries to database.
+ * Implemented as singleton to avoid duplicate entries of the same change.
+ * Implementation following http://www.phptherightway.com/pages/Design-Patterns.html
+ *
+ * @author Patrick Reichel
+ *
+ */
+class GuiLogWriter {
+
+	// the reference to the singleton object
+	private static $instance = null;
+
+	private static $changes_logged = array();
+
+	/**
+	 * Constructor.
+	 * Declared private to disable creation of GuiLogWriter objects using the “new” keyword
+	 *
+	 */
+	private function __construct() {
+	}
+
+	/**
+     * Private clone method to prevent cloning of the instance of the
+     * *Singleton* instance.
+     *
+     */
+    private function __clone()
+    {
+    }
+
+    /**
+     * Private unserialize method to prevent unserializing of the *Singleton*
+     * instance.
+     *
+     */
+    private function __wakeup()
+    {
+    }
+
+	/**
+	 * Getter for the GuiLogWriter “object“
+	 */
+	public static function getInstance() {
+
+		if (is_null(static::$instance)) {
+			static::$instance = new static();
+		}
+
+		return static::$instance;
+	}
+
+	public static function log_changes($data) {
+
+		// if this entry has already be written: do nothing
+		if (in_array($data, static::$changes_logged)) {
+			return;
+		}
+
+		// add creation and updating timestamp
+		$datetime = date('c');
+		$datetime = strtolower($datetime);
+		$datetime = str_replace('t', ' ', $datetime);
+		$datetime = explode('+', $datetime)[0];
+		$data['created_at'] = $datetime;
+		$data['updated_at'] = $datetime;
+
+		// log changes to database
+		\DB::table('guilog')->insert($data);
+
+		// store data as saved to prevent multiple entries
+		array_push(static::$changes_logged, $data);
+
+	}
+
+
 }

@@ -61,19 +61,17 @@ class BaseModel extends Eloquent
 	{
 		parent::boot();
 
-		$model = NamespaceController::get_model_name();
+		$model_name = static::class;
 
 		// App\Auth is booted during authentication and doesnt need/have an observe method
 		// GuiLog has to be excluded to prevent an infinite loop log entry creation
-		if ($model == 'App\Auth' || $model == 'App\GuiLog')
+		if ($model_name == 'App\Auth' || $model_name == 'App\GuiLog')
 			return;
 
-		// only add BaseObserver for in GUI requested model - not for related & somehow dependent models
-		if (static::class == $model)
-			$model::observe(new BaseObserver);
+		// we simply add BaseObserver to each model
+		// the real database writing part is in singleton that prevents duplicat log entries
+		$model_name::observe(new BaseObserver);
 
-		// \Log::debug('Called boot() for '.$model, [static::class, debug_backtrace()[0]['file'], debug_backtrace()[0]['function']]);
-		// if ($model::getEventDispatcher()->hasListeners('eloquent.created: '.$model))
 	}
 
 
@@ -790,7 +788,7 @@ class BaseObserver
 			'text' 		=> $text,
 		];
 
-		GuiLog::create($data);
+		GuiLog::log_changes($data);
 
 		// dd($model->getObservableEvents(), $model->getEventDispatcher(), $model->getEventDispatcher()->getListeners('eloquent.created: Modules\ProvBase\Entities\Cmts')[0]);
 	}
