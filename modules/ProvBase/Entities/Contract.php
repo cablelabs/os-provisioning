@@ -452,10 +452,16 @@ class Contract extends \BaseModel {
 				// if the difference between the two dates is to big we assume that access has been disabled manually – we don't change the state in this case
 				// this follows the philosophy introduced by Torsten within method _update_network_access_from_contract (e.g. lack of payment)
 				$now = \Carbon\Carbon::now();
-				$start = max(
-					$this->_date_to_carbon($active_item_internet->valid_from),
-					$this->_date_to_carbon($active_item_voip->valid_from)
-				);
+				
+				$starts = array();
+				if ($active_item_internet) {
+					array_push($starts, $this->_date_to_carbon($active_item_internet->valid_from));
+				}
+				if ($active_item_voip) {
+					array_push($starts, $this->_date_to_carbon($active_item_voip->valid_from));
+				}
+				$start = max($starts);
+
 				if (($start->diff($now)->days) <= 1) {
 					$this->network_access = 1;
 					$contract_changed = True;
