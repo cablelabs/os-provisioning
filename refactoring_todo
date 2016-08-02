@@ -1,0 +1,24 @@
+Database:
+
+	Contract.contract_external_id
+		⇒ move to Modem
+
+	Contract.contract_ext_creation_date
+		⇒ move to Modem
+
+	Contract.contract_ext_termination_date
+		⇒ move to Modem
+
+	EnviaOrder.modem_id
+		⇒ create
+
+
+Refactor:
+
+	ProvVoipEnvia:
+		⇒ contract_available and related stuff ⇒ comes now from modem
+		⇒ at_least_one_contract_available ⇒ new – implement
+		⇒ get_jobs_for_view() ⇒ contract stuff to modem
+
+	Modem:
+		⇒ show Envia box
