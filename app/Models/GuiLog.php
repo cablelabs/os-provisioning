@@ -120,28 +120,83 @@ class GuiLogWriter {
 		return static::$instance;
 	}
 
+
+	/**
+	 * Check if the current data has to be logged.
+	 * As the log message for ONE CHANGE can arrive multiple times we have to check if the change has been
+	 * already logged. Also we have to check if the data has been CHANGED multiple times – then of course
+	 * we have to log it more than once.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return true if we have to log, false else
+	 */
+	protected static function _have_to_log($data) {
+
+		// work on a copy for easier use (e.g. array_pop)
+		$changes_logged = static::$changes_logged;
+
+		// if there is no log entry: log
+		if (!$changes_logged) {
+			return true;
+		}
+
+		// search backwards through the stack and
+		// get the latest log message for this model-ID-method
+		while ($entry = array_pop($changes_logged)) {
+
+			if (
+				($entry['model'] == $data['model'])
+				&&
+				($entry['model_id'] == $data['model_id'])
+				&&
+				($entry['method'] == $data['method'])
+			) {
+				// see if the changes are the same again
+				if ($entry['text'] == $data['text']) {
+					// the latest entry is the same as the current: do nothing
+					return false;
+				}
+				else {
+					// multiple changes detected: log
+					return true;
+				}
+			}
+		}
+
+		// nothing found: log
+		return true;
+	}
+
+	/**
+	 * This makes the log entry.
+	 *
+	 * @author Patrick Reichel
+	 */
 	public static function log_changes($data) {
 
-		// if this entry has already be written: do nothing
-		if (in_array($data, static::$changes_logged)) {
+		// if we have already logged this event: do nothing
+		if (!self::_have_to_log($data)) {
 			return;
 		}
 
-		// add creation and updating timestamp
+		// generate creation and updating timestamp
 		$datetime = date('c');
 		$datetime = strtolower($datetime);
 		$datetime = str_replace('t', ' ', $datetime);
 		$datetime = explode('+', $datetime)[0];
-		$data['created_at'] = $datetime;
-		$data['updated_at'] = $datetime;
+		// add to logging; we work with a copy because in case of multiple entries
+		// we check for equality – but without timestamps!
+		$log_entry = $data;
+		$log_entry['created_at'] = $datetime;
+		$log_entry['updated_at'] = $datetime;
 
 		// log changes to database
-		\DB::table('guilog')->insert($data);
+		\DB::table('guilog')->insert($log_entry);
 
-		// store data as saved to prevent multiple entries
+		// store data as saved to prevent multiple entries for the same event
 		array_push(static::$changes_logged, $data);
 
 	}
-
 
 }
