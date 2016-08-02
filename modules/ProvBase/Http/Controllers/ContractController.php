@@ -82,7 +82,7 @@ class ContractController extends \BaseController {
 				array('form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'), // TODO: create default 'value' => date("Y-m-d")
 				array('form_type' => 'text', 'name' => 'contract_end', 'description' => 'Contract End'),
 				array('form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'value' => '1'),
-				array('form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => array_merge([0 => null], $model->html_list(CostCenter::all(), 'name'))),
+				array('form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $this->_add_empty_first_element_to_options($model->html_list(CostCenter::all(), 'name'))),
 				array('form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => $this->_salesmen(), 'space' => '1'),
 
 				// NOTE: qos is required as hidden field to automatically create modem with correct contract qos class
@@ -94,7 +94,7 @@ class ContractController extends \BaseController {
 		{
 			$c = array(
 				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list(Qos::all(), 'name')),
-				array('form_type' => 'select', 'name' => 'next_qos_id', 'description' => 'QoS next month', 'value' => array_merge([0 => null], $model->html_list(Qos::all(), 'name'))),
+				array('form_type' => 'select', 'name' => 'next_qos_id', 'description' => 'QoS next month', 'value' => $this->_add_empty_first_element_to_options($model->html_list(Qos::all(), 'name'))),
 				array('form_type' => 'text', 'name' => 'voip_id', 'description' => 'Phone ID'),
 				array('form_type' => 'text', 'name' => 'next_voip_id', 'description' => 'Phone ID next month', 'space' => '1'),
 			);
