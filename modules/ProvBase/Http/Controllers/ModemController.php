@@ -60,6 +60,30 @@ class ModemController extends \BaseController {
 	}
 
 
+	/**
+	 * Get all management jobs for Envia
+	 *
+	 * @author Patrick Reichel
+	 * @param $model current modem object
+	 * @return array containing linktexts and URLs to perform actions against REST API
+	 */
+	public static function _get_envia_management_jobs($modem) {
+
+		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
+
+		// check if user has the right to perform actions against Envia API
+		// if not: don't show any actions
+		try {
+			\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
+		}
+		catch (PermissionDeniedError $ex) {
+			return null;
+		}
+
+		return $provvoipenvia->get_jobs_for_view($modem, 'modem');
+	}
+
+
 	/*
 	 * Modem Tabs Controller. -> Panel Header Right
 	 * See: BaseController native function for more infos
@@ -70,9 +94,12 @@ class ModemController extends \BaseController {
 	 */
 	protected function get_form_tabs($view_var)
 	{
-		$a = [['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]],
-				['name' => 'Analyses', 'route' => 'Provmon.index', 'link' => [$view_var->id]],
-				['name' => 'CPE-Analysis', 'route' => 'Provmon.cpe', 'link' => [$view_var->id]]];
+
+		$a = [
+			['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]],
+			['name' => 'Analyses', 'route' => 'Provmon.index', 'link' => [$view_var->id]],
+			['name' => 'CPE-Analysis', 'route' => 'Provmon.cpe', 'link' => [$view_var->id]]
+		];
 
 		// MTA: only show MTA analysis if Modem has MTAs
 		if (isset($view_var->mtas) && isset($view_var->mtas[0]))
