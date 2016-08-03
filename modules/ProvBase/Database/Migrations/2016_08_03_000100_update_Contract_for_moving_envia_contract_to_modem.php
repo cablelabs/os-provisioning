@@ -94,6 +94,5 @@ class UpdateContractForMovingEnviaContractToModem extends BaseMigration {
 			'house_number',
 		]);
 	}
-    }
 
 }
