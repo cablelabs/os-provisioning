@@ -826,7 +826,10 @@ class SystemdObserver
 
 	public function updated($model)
 	{
-		\Log::debug("systemd: observer called from update context");
+		if (!$model->observer_enabled)
+			return;
+
+    	\Log::debug("systemd: observer called from update context", [get_class($model), $model->id]);
 
 		if (!is_dir(storage_path('systemd')))
 			mkdir(storage_path('systemd'));
