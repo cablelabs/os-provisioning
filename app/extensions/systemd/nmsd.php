@@ -7,7 +7,7 @@
 
 
 /* Don't forget to insert all needed services here! */
-$services = array('dhcpd');
+$services = array('dhcpd', 'voipmonitor');
 
 
 // contains the restart-indicating files
@@ -36,7 +36,6 @@ while (1)
 			// proof if this script is already/still running
 			if (!exec("ps -aux | grep $service.php | grep -v grep"))	// when nothing is returned the script isnt running
 			{
-				unlink($dir.$service);
 				// echo "restarted $service";
 				exec('php -f '.$dir_scripts.$service.'.php &>/dev/null &');
 			}			
