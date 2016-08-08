@@ -20,6 +20,9 @@ class ModemController extends \BaseController {
      */
 	public function view_form_fields($model = null)
 	{
+		$pos = explode(',', \Input::get('pos'));
+		if(count($pos) == 2)
+			list($model['x'], $model['y']) = $pos;
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
@@ -29,6 +32,7 @@ class ModemController extends \BaseController {
 			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list($model->configfiles(), 'name')),
 			array('form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'),
 			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Network Access', 'value' => '1'),
+			array('form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'value' => $model->html_list($model->contracts(), 'lastname')),
 			// TODO: change to hidden field when billing module is active?
 			array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1'),
 
