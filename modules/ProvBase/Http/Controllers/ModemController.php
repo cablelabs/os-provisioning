@@ -217,4 +217,24 @@ class ModemController extends \BaseController {
 	}
 
 
+	/**
+	 * Set nullable fields.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function prepare_input($data)
+	{
+		$data = parent::prepare_input($data);
+
+		// set this to null if no value is given
+		$nullable_fields = array(
+			'contract_ext_creation_date',
+			'contract_ext_termination_date',
+			'installation_address_change_date',
+		);
+		$data = $this->_nullify_fields($data, $nullable_fields);
+
+		return $data;
+	}
+
 }
