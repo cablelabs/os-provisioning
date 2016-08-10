@@ -90,6 +90,10 @@ class Contract extends \BaseModel {
 			// TODO: auth - loading controller from model could be a security issue ?
 			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
 			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
+
+			// for better navigation: show modems also in Envia blade
+			$ret['Envia']['Modem']['class'] = 'Modem';
+			$ret['Envia']['Modem']['relation'] = $this->modems;
 		}
 
 		if (\PPModule::is_active('ccc'))
