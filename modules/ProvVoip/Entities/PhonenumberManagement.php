@@ -41,6 +41,7 @@ class PhonenumberManagement extends \BaseModel {
 					'carrier_out',
 					'ekp_out',
 					'subscriber_company',
+					'subscriber_department',
 					'subscriber_salutation',
 					'subscriber_academic_degree',
 					'subscriber_firstname',
@@ -49,6 +50,7 @@ class PhonenumberManagement extends \BaseModel {
 					'subscriber_house_number',
 					'subscriber_zip',
 					'subscriber_city',
+					'subscriber_district',
 					'subscriber_country',
 				];
 
