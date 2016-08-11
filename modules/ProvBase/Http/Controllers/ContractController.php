@@ -40,10 +40,10 @@ class ContractController extends \BaseController {
 		$a = array(
 
 			// basic data
-			array('form_type' => 'text', 'name' => 'number', 'description' => $model->get_column_description('number'), 'options' => ['readonly']),
-			array('form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2'), 'options' => ['readonly']),
-			array('form_type' => 'text', 'name' => 'number3', 'description' => $model->get_column_description('number3'), 'options' => ['readonly']),
-			array('form_type' => 'text', 'name' => 'number4', 'description' => $model->get_column_description('number4'), 'options' => ['readonly'], 'space' => 1),
+			array('form_type' => 'text', 'name' => 'number', 'description' => $model->get_column_description('number')),
+			array('form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2')),
+			array('form_type' => 'text', 'name' => 'number3', 'description' => $model->get_column_description('number3')),
+			array('form_type' => 'text', 'name' => 'number4', 'description' => $model->get_column_description('number4'), 'space' => 1),
 			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'department', 'description' => 'Department', 'create' => '1'),
 			array('form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options(), 'create' => '1'),
