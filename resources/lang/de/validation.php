@@ -44,6 +44,7 @@ return [
 	'integer'              => ':attribute muss eine ganze Zahl sein.',
 	'ip'                   => ':attribute muss eine gültige IP-Adresse sein.',
 	'json'                 => ':attribute muss ein gültiger JSON-String sein.',
+	"mac"				   => "Bitte geben Sie eine gültige MAC Adresse in der Form: aa:bb:cc:dd:ee:ff ein",
 	'max'                  => [
 		'numeric' => ':attribute darf maximal :max sein.',
 		'file'    => ':attribute darf maximal :max Kilobytes groß sein.',

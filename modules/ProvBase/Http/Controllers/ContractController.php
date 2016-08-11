@@ -17,7 +17,11 @@ class ContractController extends \BaseController {
 
 	protected $relation_create_button = "Add";
 
-	// TODO: @Nino Ryschawy: add function documentation for the following stuff ..
+	/**
+	 * Returns the List of Salesmen for the contract to choose from
+	 * 
+	 * @return 	array 	$salesman
+	 */
 	private function _salesmen()
 	{
 		$salesmen[0] = null;
@@ -28,6 +32,8 @@ class ContractController extends \BaseController {
 
     /**
      * defines the formular fields for the edit and create view
+     *
+     * @return 	array
      */
 	public function view_form_fields($model = null)
 	{
@@ -60,7 +66,6 @@ class ContractController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'),
 			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'create' => '1', 'space' => '1'),
 
-			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1', 'checked' => 1),
 		);
 
 		// TODO: replace with static command
@@ -93,6 +98,7 @@ class ContractController extends \BaseController {
 		else
 		{
 			$c = array(
+				array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1', 'checked' => 1),
 				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list(Qos::all(), 'name')),
 				array('form_type' => 'select', 'name' => 'next_qos_id', 'description' => 'QoS next month', 'value' => $this->_add_empty_first_element_to_options($model->html_list(Qos::all(), 'name'))),
 				array('form_type' => 'text', 'name' => 'voip_id', 'description' => 'Phone ID'),
