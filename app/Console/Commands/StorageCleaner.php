@@ -210,19 +210,27 @@ class StorageCleaner extends Command
 			}
 		}
 
+		$elements = array_merge($dirs, $files);
+
 		if (!is_null($delete)) {
-			foreach ($files as $file) {
+			foreach ($elements as $element) {
 
 				// if above the threshold: ignore
-				if ($file >= $delete) {
+				if ($element >= $delete) {
 					continue;
 				}
 
-				$filepath = $path.'/'.$file;
+				$elementpath = $path.'/'.$element;
 
-				if (\File::isFile($filepath)) {
-					\Log::info('Deleting '.$filepath);
-					\File::delete($filepath);
+				// delete .tar.bz2 files older than threshold
+				if (\File::isFile($elementpath)) {
+					\Log::info('Deleting '.$elementpath);
+					\File::delete($elementpath);
+				}
+				// delete directories older than threshold (e.g. in no compression is wanted)
+				elseif (\File::isDirectory($elementpath)) {
+					\Log::info('Deleting '.$elementpath);
+					\File::deleteDirectory($elementpath);
 				}
 			}
 		}
