@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel {
 	protected $commands = [
 		'App\Console\Commands\Inspire',
 		'App\Console\Commands\TimeDeltaChecker',
+		'App\Console\Commands\StorageCleaner',
 		'\Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand',
 		'\Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
@@ -51,6 +52,8 @@ class Kernel extends ConsoleKernel {
 		// Remove all Log Entries older than 90 days
 		$schedule->call('\App\GuiLog@cleanup')->weekly();
 
+		// Command to remove obsolete data in storage
+		$schedule->command('main:storage_cleaner')->dailyAt('04:18');
 
 		if (\PPModule::is_active ('ProvVoip')) {
 
