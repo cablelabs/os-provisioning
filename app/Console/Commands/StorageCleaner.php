@@ -75,12 +75,28 @@ class StorageCleaner extends Command
 				'delete' => '24M', // age threshold for deleting .tar.bz2 files
 			);
 
-			// if also set in .env: overwrite
+			// if compression behavior is also set in .env: overwrite
 			if (array_key_exists('PROVVOIPENVIA__STORE_XML_COMPRESS_AGE', $_ENV)) {
-				$envia_api_xml_thresholds['compress'] = $_ENV['PROVVOIPENVIA__STORE_XML_COMPRESS_AGE'];
+				if (boolval($_ENV['PROVVOIPENVIA__STORE_XML_COMPRESS_AGE'])) {
+					$envia_api_xml_thresholds['compress'] = $_ENV['PROVVOIPENVIA__STORE_XML_COMPRESS_AGE'];
+				}
+				else {
+					if (array_key_exists('compress', $envia_api_xml_thresholds)) {
+						unset($envia_api_xml_thresholds['compress']);
+					}
+				}
 			}
+
+			// if deletion behavior is also set in .env: overwrite
 			if (array_key_exists('PROVVOIPENVIA__STORE_XML_DELETE_AGE', $_ENV)) {
-				$envia_api_xml_thresholds['delete'] = $_ENV['PROVVOIPENVIA__STORE_XML_DELETE_AGE'];
+				if (boolval($_ENV['PROVVOIPENVIA__STORE_XML_DELETE_AGE'])) {
+					$envia_api_xml_thresholds['delete'] = $_ENV['PROVVOIPENVIA__STORE_XML_DELETE_AGE'];
+				}
+				else {
+					if (array_key_exists('delete', $envia_api_xml_thresholds)) {
+						unset($envia_api_xml_thresholds['delete']);
+					}
+				}
 			}
 
 			array_push($this->thresholds, $envia_api_xml_thresholds);
@@ -140,6 +156,10 @@ class StorageCleaner extends Command
 		if (array_key_exists('compress', $data)) {
 			$now = new \DateTime();
 			$compress = $now->sub(new \DateInterval('P'.$data['compress']))->format('Y-m');
+			if ($compress == date('Y-m')) {
+				\Log::warning('Compression threshold seems to be set to zero – will not compress');
+				$compress = null;
+			}
 		}
 		else {
 			$compress = null;
@@ -150,6 +170,10 @@ class StorageCleaner extends Command
 		if (array_key_exists('delete', $data)) {
 			$now = new \DateTime();
 			$delete = $now->sub(new \DateInterval('P'.$data['delete']))->format('Y-m');
+			if ($delete == date('Y-m')) {
+				\Log::warning('Deletion threshold seems to be set to zero – will not delete');
+				$delete = null;
+			}
 		}
 		else {
 			$delete = null;
