@@ -120,11 +120,21 @@ class StorageCleaner extends Command
 
 	/**
 	 * Method for cleanup of monthly folders
-	 * Processes all directories in given path 
+	 * Processes all directories in given path
 	 *
 	 * @author Patrick Reichel
 	 */
 	protected function _monthly_folders($data) {
+
+		if (!array_key_exists('path', $data)) {
+			\Log::error('No path given.');
+			return;
+		}
+
+		if (!\File::isDirectory($data['path'])) {
+			\Log::warning('Path '.$data['path'].' not existing or not a directory');
+			return;
+		}
 
 		// generate the string for compressing (this later on is used by simple < compare)
 		if (array_key_exists('compress', $data)) {
