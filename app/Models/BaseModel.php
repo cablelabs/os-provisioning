@@ -696,6 +696,9 @@ class BaseObserver
 
 	public function created($model)
 	{
+		if (!$model->observer_enabled)
+			return;
+
 		$this->add_log_entry($model,__FUNCTION__);
 
 		// TODO: analyze impacts of different return values
