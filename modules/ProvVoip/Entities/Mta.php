@@ -37,10 +37,10 @@ class Mta extends \BaseModel {
     // link title in index view
     public function view_index_label()
     {
-        $bsclass = 'success';
+        $bsclass = 'info';
 
         // TODO: use mta states.
-        //       Maybe use fast ping to test if online in this funciton?
+        //       Maybe use fast ping to test if online in this function?
 
         return ['index' => [$this->hostname, $this->mac, $this->type, $this->configfile->name],
                 'index_header' => ['Name', 'MAC', 'Type', 'Configfile'],

@@ -42,10 +42,6 @@ return [
 	"image"                => "The :attribute must be an image.",
 	"in"                   => "The selected :attribute is invalid.",
 	"integer"              => "The :attribute must be an integer.",
-	"ip"                   => "This is not a valid IP address of the form: 192.168.0.255",
-	"ip_in_range"		   => "The IP address is not inside the previous specified range",
-	"ip_larger"			   => "The IP address must have a higher number due to address specification in earlier fields",
-	"mac"				   => "The :attribute must be a valid MAC address in form: aa:bb:cc:dd:ee:ff", 
 	"max"                  => [
 		"numeric" => "The :attribute may not be greater than :max.",
 		"file"    => "The :attribute may not be greater than :max kilobytes.",
@@ -59,10 +55,7 @@ return [
 		"string"  => "The :attribute must be at least :min characters.",
 		"array"   => "The :attribute must have at least :min items.",
 	],
-	"netmask"               => "This is not a correct netmask",
 	"not_in"				=> "The selected :attribute is invalid.",
-	'not_null'              => 'This field has to be set (not 0)',
-	'null_if'				=> 'Has to be zero',
 	"numeric"              => "The :attribute must be a number.",
 	"regex"                => "The :attribute format is invalid.",
 	"required"             => "The :attribute field is required.",
@@ -82,7 +75,6 @@ return [
 	"url"                  => "The :attribute format is invalid.",
 	"timezone"             => "The :attribute must be a valid zone.",
 
-	"docsis"             => ":attribute",
 
 	/*
 	|--------------------------------------------------------------------------
@@ -113,5 +105,15 @@ return [
 	*/
 
 	'attributes' => [],
+
+	"docsis"             	=> ":attribute",
+	"ip"                   => "This is not a valid IP address of the form: 192.168.0.255",
+	"ip_in_range"		   => "The IP address is not inside the previous specified range",
+	"ip_larger"			   => "The IP address must have a higher number due to address specification in earlier fields",
+	"mac"				   => "The :attribute must be a valid MAC address in form: aa:bb:cc:dd:ee:ff", 
+	"netmask"               => "This is not a correct netmask",
+	'not_null'              => 'This field has to be set (not 0)',
+	'null_if'				=> 'Has to be zero',
+
 
 ];

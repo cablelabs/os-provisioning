@@ -81,7 +81,7 @@ class Kernel extends ConsoleKernel {
 		if (\PPModule::is_active ('ProvBase'))
 		{
 			// Rebuid all Configfiles
-			$schedule->command('nms:configfile')->hourly()->withoutOverlapping();
+			$schedule->command('nms:configfile')->dailyAt('00:50')->withoutOverlapping();
 
 			// TODO: Reload DHCP
 			$schedule->command('nms:dhcp')->hourly()->withoutOverlapping();

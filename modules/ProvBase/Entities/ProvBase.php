@@ -47,6 +47,12 @@ class ProvBase extends \BaseModel {
     }
 
 
+    /**
+	 * Create the global configuration file for DHCP Server from Global Config Parameters
+	 * Set correct Domain Name on Server from GUI (Permissions via sudoers-file needed!!)
+     *
+     * @author Nino Ryschawy
+     */
     public function make_dhcp_glob_conf()
     {
 		$file_dhcp_conf = '/etc/dhcp/nms/global.conf';
@@ -62,25 +68,50 @@ class ProvBase extends \BaseModel {
 
 		$data .= "\n# zone\nzone ".$this->domain_name." {\n\tprimary ".$this->provisioning_server.";\n\tkey dhcpupdate;\n}\n";
 
+
 		// provisioning server hostname encoding for dhcp
-		$arr = explode('.', system('hostname'));
-		$hostname = '';
+		$fqdn 		= system('hostname');
+		$hostname 	= '';
+		$dhcp_fqdn 	= '';
+
+		if (($pos = strpos($fqdn, $this->domain_name)) !== false)
+		{
+			// correct domain name already set
+			if ($pos == 0)
+				throw new \Exception("Hostname of Server not Set! Please specify a hostname via command line first!", 1);
+		}
+		else
+		{
+			// Set correct fully qualified domain name for server - we expect the hostname to be the first word in previous fqdn
+			$hostname = explode('.', $fqdn);
+
+			if (!isset($hostname[0]))
+				throw new Exception("Hostname of Server not Set! Please specify a hostname via command line first!", 1);
+			else
+				$hostname = $hostname[0];
+
+			$fqdn = $hostname.'.'.$this->domain_name;
+	
+			system('sudo hostnamectl set-hostname '.$fqdn, $ret);
+
+			if ($ret != 0)
+				throw new \Exception("Could not Set FQDN. No Permission? Please add actual version of laravel sudoers file to /etc/sudoers.d/!", 1);
+		}
+
+		$arr = explode('.', $fqdn);
+
+		// encode - every word needs a backslash and it's length as octal number (with leading zero's - up to 3 numbers) in front of itself
 		foreach ($arr as $value)
 		{
 			$nr = strlen($value);
-			if ($nr < 10)
-				$hostname .= "\\00$nr";
-			else if ($nr < 100)
-				$hostname .= "\\0$nr";
-			else
-				$hostname .= "\\$nr";
-			$hostname .= $value;
+			$nr = decoct((int) $nr);
+			$dhcp_fqdn .= sprintf("\%'.03d%s", $nr, $value);
 		}
-		$hostname .= '\\000';
+		$dhcp_fqdn .= '\\000';
 
 		$data .= "\n# CLASS Specs for CM, MTA, CPE\n";
 		$data .= 'class "CM" {'."\n\t".'match if (substring(option vendor-class-identifier,0,6) = "docsis");'."\n\toption ccc.dhcp-server-1 ".$this->provisioning_server.";\n}\n\n";
-		$data .= 'class "MTA" {'."\n\t".'match if (substring(option vendor-class-identifier,0,4) = "pktc");'."\n\t".'option ccc.provision-server 0 "'.$hostname.'"; # number of letters before every through dot seperated word'."\n\t".'option ccc.realm 05:42:41:53:49:43:01:31:00;  # BASIC.1'."\n}\n\n";
+		$data .= 'class "MTA" {'."\n\t".'match if (substring(option vendor-class-identifier,0,4) = "pktc");'."\n\t".'option ccc.provision-server 0 "'.$dhcp_fqdn.'"; # number of letters before every through dot seperated word'."\n\t".'option ccc.realm 05:42:41:53:49:43:01:31:00;  # BASIC.1'."\n}\n\n";
 		$data .= 'class "Client" {'."\n\t".'match if ((substring(option vendor-class-identifier,0,6) != "docsis") and (substring(option vendor-class-identifier,0,4) != "pktc"));'."\n\t".'spawn with option agent.remote-id; # create a sub-class automatically'."\n\t".'lease limit 4; # max 4 private cpe per cm'."\n}\n\n";
 		$data .= 'class "Client-Public" {'."\n\t".'match if ((substring(option vendor-class-identifier,0,6) != "docsis") and (substring(option vendor-class-identifier,0,4) != "pktc"));'."\n\t".'match pick-first-value (option agent.remote-id);'."\n\t".'lease limit 4; # max 4 public cpe per cm'."\n}\n\n";
 
