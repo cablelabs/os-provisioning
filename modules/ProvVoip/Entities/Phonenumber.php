@@ -52,7 +52,11 @@ class Phonenumber extends \BaseModel {
 			$act = $management->activation_date;
 			$deact = $management->deactivation_date;
 
-			if ($act > date('c')) {
+			if (!boolval($act)) {
+				$state = 'No activation date.';
+				$bsclass = 'danger';
+			}
+			elseif ($act > date('c')) {
 				$state = 'Waiting for activation';
 				$bsclass = 'warning';
 			}
@@ -78,11 +82,11 @@ class Phonenumber extends \BaseModel {
 		if (is_null($act)) $act = '-';
 		if (is_null($deact)) $deact = '-';
 
-        if ($this->active == 0)
-			$bsclass = 'danger';
+        /* if ($this->active == 0) */
+			/* $bsclass = 'danger'; */
 
         // TODO: use mta states.
-        //       Maybe use fast ping to test if online in this funciton?
+        //       Maybe use fast ping to test if online in this function?
 
         return ['index' => [$this->prefix_number.'/'.$this->number, $act, $deact, $state],
                 'index_header' => ['Number', 'Activation date', 'Deactivation date', 'State'],
@@ -115,22 +119,22 @@ class Phonenumber extends \BaseModel {
 
 			// can be created if no one exists, can be deleted if one exists
 			if (is_null($relation)) {
-				$ret['main']['PhonenumberManagement']['relation'] = new Collection();
-				$ret['main']['PhonenumberManagement']['options']['hide_delete_button'] = 1;
+				$ret['Main']['PhonenumberManagement']['relation'] = new Collection();
+				$ret['Main']['PhonenumberManagement']['options']['hide_delete_button'] = 1;
 			}
 			else {
-				$ret['main']['PhonenumberManagement']['relation'] = [$relation];
-				$ret['main']['PhonenumberManagement']['options']['hide_create_button'] = 1;
+				$ret['Main']['PhonenumberManagement']['relation'] = [$relation];
+				$ret['Main']['PhonenumberManagement']['options']['hide_create_button'] = 1;
 			}
 
-			$ret['main']['PhonenumberManagement']['class'] = 'PhonenumberManagement';
+			$ret['Main']['PhonenumberManagement']['class'] = 'PhonenumberManagement';
 		}
 
 		if (\PPModule::is_active('provvoipenvia')) {
 			// TODO: auth - loading controller from model could be a security issue ?
-			$ret['main']['Envia API']['html'] = '<h4>Available Envia API jobs</h4>';
-			$ret['main']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-			$ret['main']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
+			$ret['Main']['Envia API']['html'] = '<h4>Available Envia API jobs</h4>';
+			$ret['Main']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+			$ret['Main']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
 		}
 
 		if (\PPModule::is_active('voipmon')) {
@@ -201,6 +205,90 @@ class Phonenumber extends \BaseModel {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Daily conversion for nightly (de)activation of phonenumbers depending on dates in PhonenumberManagement
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function daily_conversion() {
+
+		$changed = False;
+
+		$management = $this->phonenumbermanagement;
+
+		if (is_null($management)) {
+
+			// if there is still no management: deactivate the number
+			if ($this->active) {
+				$this->active = False;
+				$changed = True;
+			}
+		}
+		else {
+
+			// get the dates for this number
+			$act = $management->activation_date;
+			$deact = $management->deactivation_date;
+
+			if (!boolval($act)) {
+
+				// Activation date not yet reached: deactivate
+				if ($this->active) {
+					$this->active = False;
+					$changed = True;
+				}
+			}
+			elseif ($act > date('c')) {
+
+				// Activation date not yet reached: deactivate
+				if ($this->active) {
+					$this->active = False;
+					$changed = True;
+				}
+			}
+			else {
+				if (!boolval($deact)) {
+
+					// activation date today or in the past, no deactivation date: activate
+					if (!$this->active) {
+						$this->active = True;
+						$changed = True;
+					}
+				}
+				else {
+					if ($deact > date('c')) {
+
+						// activation date today or in the past, deactivation date in the future: activate
+						if (!$this->active) {
+							$this->active = True;
+							$changed = True;
+						}
+					}
+					else {
+
+						// deactivation date today or in the past: deactivate
+						if ($this->active) {
+							$this->active = False;
+							$changed = True;
+						}
+					}
+				}
+			}
+		}
+		// write to database if there are changes
+		if ($changed) {
+			if ($this->active) {
+				\Log::info('Activating phonenumber '.$this->prefix_number.'/'.$this->number.' (ID '.$this->id.').');
+			}
+			else {
+				\Log::info('Deactivating phonenumber '.$this->prefix_number.'/'.$this->number.' (ID '.$this->id.').');
+			}
+
+			$this->save();
+		}
+
 	}
 
 	/**
