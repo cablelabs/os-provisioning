@@ -45,12 +45,21 @@ class EkpCode extends \BaseModel {
 		# ekp codes of the ekps to be on top of the list
 		# the given sorting will be the sorting of the <select>
 		# TODO: maybe this list should not be hardcoded – can come from configuration dialog or out of .env?
-		$favorite_ekps = array(
-			'98/112', # EnviaTEL
-			'93/007', # Telekom
-			'12/017', # 1&1
-			'n.v.',	# no EKP known
-		);
+		if (\PPModule::is_active('ProvVoipEnvia')) {
+			$favorite_ekps = array(
+				'98/112', # EnviaTEL
+				'93/007', # Telekom
+				'12/017', # 1&1
+				'n.v.',	# no EKP known
+			);
+		}
+		else {
+			$favorite_ekps = array(
+				'93/007', # Telekom
+				'12/017', # 1&1
+				'n.v.',	# no EKP known
+			);
+		}
 
 		$normal_ekp_list = array();
 		$favorite_ekp_list = array();

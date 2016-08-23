@@ -51,8 +51,14 @@ class PhonenumberManagementController extends \BaseController {
 			$init_values = array();
 		}
 
-		// preset subscriber data => this comes from model
-
+		if (\PPModule::is_active('ProvVoipEnvia')) {
+			$carrier_in_help = 'In case of a new number set this to EnviaTEL';
+			$ekp_in_help = 'In case of a new number set this to EnviaTEL';
+		}
+		else {
+			$carrier_in_help = 'On incoming porting: set to previous Telco';
+			$ekp_in_help = 'On incoming porting: set to previous Telco';
+		}
 
 		// label has to be the same like column in sql table
 		$ret_tmp = array(
@@ -61,13 +67,14 @@ class PhonenumberManagementController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'activation_date', 'description' => 'Activation date'),
 			array('form_type' => 'text', 'name' => 'external_activation_date', 'description' => 'External activation date', 'options' => ['readonly']),
 			array('form_type' => 'checkbox', 'name' => 'porting_in', 'description' => 'Incoming porting'),
-			array('form_type' => 'select', 'name' => 'carrier_in', 'description' => 'Carrier in', 'value' => CarrierCode::carrier_list_for_form_select(False), 'help' => 'In case of a new number set this to EnviaTEL'),
-			array('form_type' => 'select', 'name' => 'ekp_in', 'description' => 'EKP in', 'value' => EkpCode::ekp_list_for_form_select(False), 'help' => 'In case of a new number set this to EnviaTEL'),
+			array('form_type' => 'select', 'name' => 'carrier_in', 'description' => 'Carrier in', 'value' => CarrierCode::carrier_list_for_form_select(False), 'help' => $carrier_in_help),
+			array('form_type' => 'select', 'name' => 'ekp_in', 'description' => 'EKP in', 'value' => EkpCode::ekp_list_for_form_select(False), 'help' => $ekp_in_help),
 			array('form_type' => 'text', 'name' => 'deactivation_date', 'description' => 'Termination date'),
 			array('form_type' => 'text', 'name' => 'external_deactivation_date', 'description' => 'External deactivation date', 'options' => ['readonly']),
 			array('form_type' => 'checkbox', 'name' => 'porting_out', 'description' => 'Outgoing porting'),
 			array('form_type' => 'select', 'name' => 'carrier_out', 'description' => 'Carrier out', 'value' => CarrierCode::carrier_list_for_form_select(True)),
 
+			// preset subscriber data => this comes from model
 			array('form_type' => 'text', 'name' => 'subscriber_company', 'description' => 'Subscriber company'),
 			array('form_type' => 'text', 'name' => 'subscriber_department', 'description' => 'Subscriber department'),
 			array('form_type' => 'select', 'name' => 'subscriber_salutation', 'description' => 'Subscriber salutation', 'value' => $model->get_salutation_options()),
