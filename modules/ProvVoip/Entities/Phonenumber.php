@@ -43,7 +43,7 @@ class Phonenumber extends \BaseModel {
 		$management = $this->phonenumbermanagement;
 
 		if (is_null($management)) {
-			$state = 'No phonenumbermanagement existing';
+			$state = 'No PhonenumberManagement existing!';
 			$bsclass = 'danger';
 			$act = 'n/a';
 			$deact = 'n/a';
@@ -52,8 +52,16 @@ class Phonenumber extends \BaseModel {
 			$act = $management->activation_date;
 			$deact = $management->deactivation_date;
 
+			// deal with legacy problem of zero dates
+			if ($act == '0000-00-00') {
+				$act = null;
+			}
+			if ($deact == '0000-00-00') {
+				$deact = null;
+			}
+
 			if (!boolval($act)) {
-				$state = 'No activation date.';
+				$state = 'No activation date set!';
 				$bsclass = 'danger';
 			}
 			elseif ($act > date('c')) {
@@ -81,9 +89,6 @@ class Phonenumber extends \BaseModel {
 		// reuse dates for view
 		if (is_null($act)) $act = '-';
 		if (is_null($deact)) $deact = '-';
-
-        /* if ($this->active == 0) */
-			/* $bsclass = 'danger'; */
 
         // TODO: use mta states.
         //       Maybe use fast ping to test if online in this function?
@@ -113,8 +118,8 @@ class Phonenumber extends \BaseModel {
 	public function view_has_many()
 	{
 		$ret = array();
-		if (\PPModule::is_active('provvoip'))
-		{
+		if (\PPModule::is_active('provvoip')) {
+
 			$relation = $this->phonenumbermanagement;
 
 			// can be created if no one exists, can be deleted if one exists
