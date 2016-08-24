@@ -43,32 +43,50 @@ class Phonenumber extends \BaseModel {
 		$management = $this->phonenumbermanagement;
 
 		if (is_null($management)) {
-			$state = 'No phonenumbermanagement existing';
+			$state = 'No PhonenumberManagement existing!';
 			$bsclass = 'danger';
 			$act = 'n/a';
 			$deact = 'n/a';
+			$is_active = False;
 		}
 		else {
 			$act = $management->activation_date;
 			$deact = $management->deactivation_date;
 
-			if ($act > date('c')) {
+			// deal with legacy problem of zero dates
+			if ($act == '0000-00-00') {
+				$act = null;
+			}
+			if ($deact == '0000-00-00') {
+				$deact = null;
+			}
+
+			if (!boolval($act)) {
+				$state = 'No activation date set!';
+				$bsclass = 'danger';
+				$is_active = False;
+			}
+			elseif ($act > date('c')) {
 				$state = 'Waiting for activation';
 				$bsclass = 'warning';
+				$is_active = False;
 			}
 			else {
 				if (!boolval($deact)) {
 					$state = 'Active';
 					$bsclass = 'success';
+					$is_active = True;
 				}
 				else {
 					if ($deact > date('c')) {
 						$state = 'Active. Deactivation date set but not reached yet.';
 						$bsclass = 'warning';
+						$is_active = True;
 					}
 					else {
 						$state = 'Deactivated.';
 						$bsclass = 'info';
+						$is_active = False;
 					}
 				}
 			}
@@ -78,11 +96,45 @@ class Phonenumber extends \BaseModel {
 		if (is_null($act)) $act = '-';
 		if (is_null($deact)) $deact = '-';
 
-        if ($this->active == 0)
-			$bsclass = 'danger';
+		// TODO: Delete this overwriting of the state calculated from PhonenumberManagement when
+		// auto (de)activition by cron and PhonenumberManagementObserver is activated!
+        if ($this->active) {
+			$state = 'Phonenumber state: Active.<br><i>PhonenumberManagement state: '.$state.'</i>';
+			if ($bsclass == 'danger') {
+				// error missing or poorly filled management
+				// set explicitely again to clarify my intention
+				$bsclass = 'danger';
+			}
+			else {
+				if ($is_active) {
+					$bsclass = 'success';
+				}
+				else {
+					// something needs attention!
+					$bsclass = 'warning';
+				}
+			}
+		}
+		else {
+			$state = 'Phonenumber state: Inactive.<br><i>PhonenumberManagement state: '.$state.'</i>';
+			if ($bsclass == 'danger') {
+				// error missing or poorly filled management
+				// set explicitely again to clarify my intention
+				$bsclass = 'danger';
+			}
+			else {
+				if ($is_active) {
+					// something needs attention
+					$bsclass = 'warning';
+				}
+				else {
+					$bsclass = 'info';
+				}
+			}
+		}
 
         // TODO: use mta states.
-        //       Maybe use fast ping to test if online in this funciton?
+        //       Maybe use fast ping to test if online in this function?
 
         return ['index' => [$this->prefix_number.'/'.$this->number, $act, $deact, $state],
                 'index_header' => ['Number', 'Activation date', 'Deactivation date', 'State'],
@@ -109,26 +161,29 @@ class Phonenumber extends \BaseModel {
 	public function view_has_many()
 	{
 		$ret = array();
-		if (\PPModule::is_active('provvoipenvia'))
-		{
+		if (\PPModule::is_active('provvoip')) {
+
 			$relation = $this->phonenumbermanagement;
 
 			// can be created if no one exists, can be deleted if one exists
 			if (is_null($relation)) {
-				$ret['Envia']['PhonenumberManagement']['relation'] = new Collection();
-				$ret['Envia']['PhonenumberManagement']['options']['hide_delete_button'] = 1;
+				$ret['Main']['PhonenumberManagement']['relation'] = new Collection();
+				$ret['Main']['PhonenumberManagement']['options']['hide_delete_button'] = 1;
 			}
 			else {
-				$ret['Envia']['PhonenumberManagement']['relation'] = [$relation];
-				$ret['Envia']['PhonenumberManagement']['options']['hide_create_button'] = 1;
+				$ret['Main']['PhonenumberManagement']['relation'] = [$relation];
+				$ret['Main']['PhonenumberManagement']['options']['hide_create_button'] = 1;
 			}
 
-			$ret['Envia']['PhonenumberManagement']['class'] = 'PhonenumberManagement';
+			$ret['Main']['PhonenumberManagement']['class'] = 'PhonenumberManagement';
+		}
+
+		if (\PPModule::is_active('provvoipenvia')) {
 
 			// TODO: auth - loading controller from model could be a security issue ?
-			$ret['Envia']['Envia API']['html'] = '<h4>Available Envia API jobs</h4>';
-			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
+			$ret['Main']['Envia API']['html'] = '<h4>Available Envia API jobs</h4>';
+			$ret['Main']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+			$ret['Main']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
 		}
 
 		if (\PPModule::is_active('voipmon')) {
