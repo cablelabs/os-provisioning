@@ -208,11 +208,22 @@ class Phonenumber extends \BaseModel {
 	}
 
 	/**
-	 * Daily conversion for nightly (de)activation of phonenumbers depending on dates in PhonenumberManagement
+	 * Daily conversion (called by cron job)
 	 *
 	 * @author Patrick Reichel
 	 */
 	public function daily_conversion() {
+
+		$this->set_active_state();
+	}
+
+
+	/**
+	 * (De)Activate phonenumber depending on existance and (de)activation dates in PhonenumberManagement
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function set_active_state() {
 
 		$changed = False;
 
@@ -341,6 +352,9 @@ class PhonenumberObserver
 
 
 	public function creating($phonenumber) {
+
+		// on creating there can not be a phonenumbermanagement – so we can set active state to false in each case
+		$phonenumber->active = 0;
 
 		$this->_create_login_data($phonenumber);
 	}

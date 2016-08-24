@@ -51,6 +51,7 @@ class PhonenumberManagementController extends \BaseController {
 			$init_values = array();
 		}
 
+		// help text for carrier/ekp settings
 		if (\PPModule::is_active('ProvVoipEnvia')) {
 			$carrier_in_help = 'In case of a new number set this to EnviaTEL';
 			$ekp_in_help = 'In case of a new number set this to EnviaTEL';
