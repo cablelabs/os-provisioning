@@ -15,7 +15,7 @@ class EndpointController extends \BaseController {
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly']),
-			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC address'),
+			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address'),
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'),
 
 		);

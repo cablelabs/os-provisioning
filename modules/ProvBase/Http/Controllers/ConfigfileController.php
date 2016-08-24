@@ -31,8 +31,8 @@ class ConfigfileController extends \BaseController {
 			array('form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Configfile', 'value' => $parents),
 			array('form_type' => 'select', 'name' => 'public', 'description' => 'Public Use', 'value' => array('yes' => 'Yes', 'no' => 'No')),
 			array('form_type' => 'textarea', 'name' => 'text', 'description' => 'Config File Parameters'),
-			array('form_type' => 'select', 'name' => 'firmware', 'description' => 'Choose firmware file', 'value' => $firmware_files),
-			array('form_type' => 'file', 'name' => 'firmware_upload', 'description' => 'or: Upload firmware file'),
+			array('form_type' => 'select', 'name' => 'firmware', 'description' => 'Choose Firmware File', 'value' => $firmware_files),
+			array('form_type' => 'file', 'name' => 'firmware_upload', 'description' => 'or: Upload Firmware File'),
 		);
 	}
 

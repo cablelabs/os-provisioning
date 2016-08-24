@@ -457,8 +457,8 @@ class BaseController extends Controller {
 	public function create()
 	{
 		$model = static::get_model_obj();
-
-		$view_header = BaseViewController::translate('Create ').BaseViewController::translate($model->view_headline());
+		//dd(trans('button.Create'));
+		$view_header = BaseViewController::translate($model->view_headline());
 		$headline    = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, NULL, $_GET);
 		$form_fields = BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($model), $model, 'create');
 
@@ -517,7 +517,7 @@ class BaseController extends Controller {
 		$model    = static::get_model_obj();
 		$view_var = $model->findOrFail($id);
 
-		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($model->view_headline());
+		$view_header 	= trans('header.Edit').BaseViewController::translate($model->view_headline());
 		$headline       = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var);
 		$panel_right    = $this->prepare_tabs($view_var);
 		$form_fields	= BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');

@@ -32,7 +32,6 @@ return [
     'Country Code'		=> 'Ländervorwahl',
     'cpe_log_error' 	=> 'ist nicht beim Server registriert - Kein Logeintrag gefunden',
     'Create'			=> 'Erstellen',
-    'Create '			=> 'Erstelle ',
     'Delete'			=> 'Löschen',
     'Description'		=> 'Beschreibung',
     'Device'			=> 'Gerät',
@@ -45,7 +44,7 @@ return [
     'Edit '				=> 'Ändere ',
     'Endpoints'			=> 'Endpunkte',
     'Endpoints List'    => 'Endpunktliste',
-    'Email Address'		=> 'Email-Adresse',
+    'E-Mail Address'	=> 'Email-Adresse',
     'First IP'			=> 'Erste IP',
     'Firstname'			=> 'Vorname',
     'Global Configurations' => 'Globale Konfigurationen',
@@ -60,7 +59,7 @@ return [
     'Lastname'			=> 'Nachname',
     'Last IP'			=> 'Letzte IP',
     'log_out'           => 'Ausloggen',
-    'MAC Adress'		=> 'MAC Adresse',
+    'MAC Address'		=> 'MAC Adresse',
     'Main Menu'			=> 'Hauptmenü',
 	'modem_monitoring_error' => 'Möglicherweise war das Modem bis jetzt nicht online. Beachten Sie, dass Diagramme erst ab
 		dem Zeitpunkt verfügbar sind, von dem an das Modem online ist. Wurden alle Diagramme unsauber angezeigt, könnte es
@@ -102,4 +101,95 @@ return [
     'user_settings'     => 'Nutzereinstellungen',
     'user_glob_settings' => 'Globale Nutzereinstellungen',
     'Vendor'			=> 'Hersteller',
+//Provisioning
+    //Verträge
+    'Academic Degree'   => 'Akademischer Titel',
+    'Contract number'   => 'Vertragsnummer',
+    'Contract number legacy' => 'Vererbte Vertragsnummer', //??
+    'Cost Center'       => 'Kostenstelle',
+    'Create Invoice'    => 'Rechnung erstellen',
+    'Customer number'   => 'Kundennummer',
+    'Customer number legacy'    => 'Vererbte Kundennummer', // ??
+    'Department'        => 'Abteilung',
+    'House Number'      => 'Hausnummer',
+    'Salesman'          => 'Verkäufer',
+        //Buttons
+        'Create Produkt'=> 'Neues Produkt', //Workaround
+        'Create Modem'  => 'Neues Modem',
+        'Create SepaMandate'    => 'Neues SEPA-Mandat',
+    //Items
+    'Accounting Text (optional)'    => 'Verwendungszweck (optional)',
+    'Cost Center (optional)'    => 'Kostenstelle (optional)',
+    'Item'              => 'Produkt',
+    'Product'           => 'Produkt',
+    'Valid from'        => 'Gülig ab',
+    'Valid to'          => 'Gültis bis',
+    //Modems
+    'Configfile'        => 'Konfigurationsdatei',
+    'Mta'               => 'MTA',
+        //Buttons
+        'Create Mta'    => 'Neues MTA',
+    //Configfiles
+    'Configfiles'       => 'Konfigurationsdatei',
+    'Choose Firmware File'  => 'Firmware-Datei auswählen',
+    'Config File Parameters'    => 'Parameter für die Konfigurationsdatei',
+    'or: Upload Firmware File'  => 'oder: Firmware-Datei hochladen',
+    'Parent Configfile' => 'Übergeordnete Konfigurationsdatei',
+    'Public Use'        => 'Öffentliche Nutzung',
+    //CMTS
+    'IpPool'            => 'IP-Bereich',
+        //Buttons
+        'Create IP-Bereich' => 'Neuer IP-Bereich', //Workaround
+    //IP-Pools
+    'IP-Pools'          => 'IP-Bereich',
+    //Phone tariffs
+    'Phone tariffs'     => 'Telefontarife',
+    'External Identifier'  => 'Externer Identifikator', //??
+    'Usable'            => 'Verfügbarkeit', //?? Verwendbar?
+
+//Billing Base
+    //Product Entry
+    'Billing Cycle'     => 'Abrechnungsperiode',
+    'Bundled with VoIP product?'    => 'Mit VoIP-Produkt verknüpft?',
+    'Price (Net)'       => 'Preis (netto)',
+    'Product Entry'     => 'Produktangebote', // Produktenträge
+    //SEPA Accounts
+    'Account Holder'    => 'Kontoinhaber',
+    'Account Name'      => 'Kontoname',
+    'Choose Call Data Record template file' => 'Datenerfassungsvorlage wählen', //??
+    'Choose invoice template file'  => 'Rechnungsvorlage wählen',
+    'CostCenter'        => 'Kostenstelle',
+    'Creditor ID'       => 'Gläubiger ID', //??
+    'Institute'         => 'Kreditinstitut',
+    'Invoice Headline'  => 'Rechnungstitel', //??
+    'Invoice Text for negativ Amount with Sepa Mandate' => 'Rechnungstext für Negativbetrag mit SEPA-Mandat', //?? negativ=> negative
+    'Invoice Text for negativ Amount without Sepa Mandate'  => 'Rechnungstext für Negativbetrag ohne SEPA-Mandat', //??
+    'Invoice Text for positiv Amount with Sepa Mandate' => 'Rechnungstext für Positivbetrag mit SEPA-Mandat', //?? positiv=> positive
+    'Invoice Text for positiv Amount without Sepa Mandate'  => 'Rechnungstext für Positivbetrag ohne SEPA-Mandat', //??
+    'SEPA Account'      => 'SEPA-Konto',
+    'SepaAccount'       => 'SEPA-Konto', // siehe Companies
+    'Upload CDR template'   => 'CDR-Vorlage hochladen',
+    'Upload invoice template'   => 'Rechnungsvorlage hochladen',
+    //Settlement Run Abrechnnungslauf
+  
+    //CostCenter
+    'Associated SEPA Account'   => 'Verknüpftes SEPA-Konto',
+    'Month to create Bill'      => 'Monat der Rechnungserstellung',
+    //Companies
+    'Choose logo'       => 'Logo wählen',
+    'Directorate'       => 'Geschäftsleitung',
+    'Mail address'      => 'Email-Adresse',
+    'Management'        => 'Unternehmensführung',
+    'Registration Court 1'  => 'Regestrierungsgericht 1', //??
+    'Registration Court 2'  => 'Regestrierungsgericht 2', //??
+    'Registration Court 3'  => 'Regestrierungsgericht 3', //??
+    'Sales Tax Id Nr'   => 'Umsatzsteuer ID-Nummer',
+    'Tax Nr'            => 'Steuernummer',
+    'Transfer Reason for Invoices'  => 'Verwendungszweck der Rechnung',
+    'Upload logo'       => 'Logo hochladen',
+    'Web address'       => 'Internet-Adresse',
+    'Zip'               => 'PLZ',
+    //Salesman
+    'Commission in %'    => 'Komission in %',
+    'Product List'      => 'Produktliste',    
 ];

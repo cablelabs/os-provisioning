@@ -17,7 +17,7 @@ class PhoneTariffController extends \BaseController {
 
 		// label has to be the same like column in sql table
 		return array(
-			array('form_type' => 'text', 'name' => 'external_identifier', 'description' => 'External identifier'),
+			array('form_type' => 'text', 'name' => 'external_identifier', 'description' => 'External Identifier'),
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
 			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => PhoneTariff::getPossibleEnumValues('type')),
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'),
