@@ -53,10 +53,12 @@ class PhonenumberManagementController extends \BaseController {
 
 		// help text for carrier/ekp settings
 		if (\PPModule::is_active('ProvVoipEnvia')) {
+			$trc_help = 'If changed here this has to be sent to Envia, too.';
 			$carrier_in_help = 'In case of a new number set this to EnviaTEL';
 			$ekp_in_help = 'In case of a new number set this to EnviaTEL';
 		}
 		else {
+			$trc_help = 'This is for information only. Real changes have to be performed at your Telco.';
 			$carrier_in_help = 'On incoming porting: set to previous Telco';
 			$ekp_in_help = 'On incoming porting: set to previous Telco';
 		}
@@ -64,7 +66,7 @@ class PhonenumberManagementController extends \BaseController {
 		// label has to be the same like column in sql table
 		$ret_tmp = array(
 			array('form_type' => 'select', 'name' => 'phonenumber_id', 'description' => 'Phonenumber', 'value' => $model->html_list($model->phonenumber(), 'id'), 'hidden' => '1'),
-			array('form_type' => 'select', 'name' => 'trcclass', 'description' => 'TRC class', 'value' => TRCClass::trcclass_list_for_form_select()),
+			array('form_type' => 'select', 'name' => 'trcclass', 'description' => 'TRC class', 'value' => TRCClass::trcclass_list_for_form_select(), 'help' => $trc_help),
 			array('form_type' => 'text', 'name' => 'activation_date', 'description' => 'Activation date'),
 			array('form_type' => 'text', 'name' => 'external_activation_date', 'description' => 'External activation date', 'options' => ['readonly']),
 			array('form_type' => 'checkbox', 'name' => 'porting_in', 'description' => 'Incoming porting'),
