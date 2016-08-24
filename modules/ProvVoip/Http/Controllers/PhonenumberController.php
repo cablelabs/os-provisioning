@@ -22,6 +22,20 @@ class PhonenumberController extends \BaseController {
 		if (!$model)
 			$model = new Phonenumber;
 
+		if ($model->active) {
+			$active_state = ' checked="checked"';
+		}
+		else {
+			$active_state = '';
+		}
+
+		if (\PPModule::is_active('provvoipenvia')) {
+			$login_placeholder = 'Autofilled if empty.';
+		}
+		else {
+			$login_placeholder = '';
+		}
+
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'select', 'name' => 'country_code', 'description' => 'Country Code', 'value' => Phonenumber::getPossibleEnumValues('country_code')),
