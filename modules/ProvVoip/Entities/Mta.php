@@ -42,7 +42,7 @@ class Mta extends \BaseModel {
         // TODO: use mta states.
         //       Maybe use fast ping to test if online in this function?
 
-        return ['index' => [$this->hostname, $this->mac, $this->type, $this->configfile->name],
+        return ['index' => [$this->hostname, $this->mac, $this->type, isset($this->configfile) ? $this->configfile->name : 'No Configfile assigned'],
                 'index_header' => ['Name', 'MAC', 'Type', 'Configfile'],
                 'bsclass' => $bsclass,
                 'header' => $this->hostname.' - '.$this->mac];
