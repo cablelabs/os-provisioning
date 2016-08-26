@@ -81,10 +81,10 @@ class Kernel extends ConsoleKernel {
 		if (\PPModule::is_active ('ProvBase'))
 		{
 			// Rebuid all Configfiles
-			$schedule->command('nms:configfile')->dailyAt('00:50')->withoutOverlapping();
+			// $schedule->command('nms:configfile')->dailyAt('00:50')->withoutOverlapping();
 
 			// TODO: Reload DHCP
-			$schedule->command('nms:dhcp')->hourly()->withoutOverlapping();
+			// $schedule->command('nms:dhcp')->dailyAt('01:00')->withoutOverlapping();
 
 			// Contract - network access, item dates, internet (qos) & voip tariff changes
 			// important!! daily conversion has to be run BEFORE monthly conversion
