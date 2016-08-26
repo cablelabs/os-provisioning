@@ -20,7 +20,7 @@
 @endforeach
 
 @if ($edit_view_save_button)
-	{{ Form::submit($save_button) }}
+	{{ Form::submit(trans('view.Button_'.$save_button)) }}
 @endif
 
 

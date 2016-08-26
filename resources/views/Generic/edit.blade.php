@@ -15,6 +15,7 @@
 
 	{{ $headline }}
 
+
 @stop
 
 
@@ -80,7 +81,7 @@
 
 		<!-- The Bootstap Panel to include -->
 		@include ('bootstrap.panel', array ('content' => "content_$i",
-											'view_header' => \App\Http\Controllers\BaseViewController::translate("Assigned").' '.\App\Http\Controllers\BaseViewController::translate($view),
+											'view_header' =>trans('view.Header_Assigned').' '.trans_choice('view.Header_'.$view, 2),
 											'md' => 3))
 
 

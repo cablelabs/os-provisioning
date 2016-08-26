@@ -9,8 +9,7 @@
 
 @section('content_top')
 
-	<h4>Global Search</h4>
-
+	<h4><?php echo trans('view.Header_GlobalSearch'); ?></h4>
 @stop
 
 @section('content_left')
@@ -18,16 +17,19 @@
 
 	@DivOpen(12)
 		@if (isset($query))
-			<h4>Global Search: Matches for <tt>'{{ $query }}'</tt></h4>
+			<h4><?php echo trans('view.Search_MatchesFor'); ?><tt>'{{ $query}}'</tt></h4>
+			<hr>
 		@endif
+	@DivClose()
 
-		<table class="table">
+	@DivOpen(12)
+		<table class="table table-hover itable ClickableTd">
 			<thead>
 				<tr>
 					<th></th>
-					<th>Type</th>
-					<th>Entry</th>
-					<th>Description</th>
+					<th>{{App\Http\Controllers\BaseViewController::translate_label('Type')}}</th>
+					<th>{{App\Http\Controllers\BaseViewController::translate_label('Entry')}}</th>
+					<th>{{App\Http\Controllers\BaseViewController::translate_label('Description')}}</th>
 				</tr>
 			</thead>
 

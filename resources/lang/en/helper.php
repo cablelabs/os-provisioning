@@ -31,7 +31,7 @@ return [
 	'Product_Number_of_Cycles' 		=> 'Take Care!: for all repeatedly payed products the price stands for every charge, for Once payed products the Price is divided by the number of cycles',
 
 	//SalesmanController
-	'Salesman_ProductList'			=> 'Add all Product types he gets provision for - possible: ',
+	'Salesman_ProductList'			=> 'Add all Product types he gets commission for - possible: ',
 
 	//SepaAccountController
 	'SepaAccount_InvoiceHeadline'	=> 'Replaces Headline in Invoices created for this Costcenter',

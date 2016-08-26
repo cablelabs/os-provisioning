@@ -41,7 +41,7 @@ class BaseViewController extends Controller {
      *
      * @author Nino Ryschawy
      */
-    public static function translate($string)
+    public static function translate_label($string)
     {
         // cut the star at the end of value if there is one for the translate function and append it after translation
         $star = '';
@@ -312,7 +312,7 @@ finish:
 			// array_push($ret, $lines);
 			foreach ($lines as $k => $line)
 			{
-				$key = BaseViewController::translate($k);
+				$key = trans('view.Menu_'.$k);
 				$ret['Global'][$key] = $line;
 			}
 		}
@@ -334,7 +334,7 @@ finish:
 				{
 					foreach ($lines as $k => $line)
 					{
-						$key = BaseViewController::translate($k);
+						$key = trans('view.Menu_'.$k);
 						$ret[$name][$key] = $line;
 					}
 				}
@@ -399,7 +399,6 @@ finish:
 
 					$s = \HTML::linkRoute($view.'.edit', $name, $parent->id).' > '.$s;
 				}
-
 				// get view parent
 				$parent = $parent->view_belongs_to();
 			}

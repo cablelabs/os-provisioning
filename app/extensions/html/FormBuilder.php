@@ -88,14 +88,14 @@ class FormBuilder extends CollectiveFormBuilder {
     {
         $col = 4;
         if (isset(static::$layout_form_col_md['label']))
-            $col = static::$layout_form_col_md['label'];
+            $col = static::$layout_form_col_md['label']; 
 
         $options = $this->appendClassToOptions('col-md-'.$col.' control-label', $options);
 
         // translate the value if necessary
         // $bc = new \App\Http\Controllers\BaseController;
         // $value = $bc->translate($value);
-        $value = \App\Http\Controllers\BaseViewController::translate($value);
+        $value = \App\Http\Controllers\BaseViewController::translate_label($value);
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.
@@ -110,7 +110,7 @@ class FormBuilder extends CollectiveFormBuilder {
     {
         $options = $this->appendClassToOptions('btn btn-primary', $options);
 
-        $value = \App\Http\Controllers\BaseViewController::translate($value);
+        //$value = trans('button.'.$value);
 
         if (isset($options['style']) && $options['style'] == 'simple')
             $s = parent::submit($value, $options);

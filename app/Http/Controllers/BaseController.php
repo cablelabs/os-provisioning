@@ -433,7 +433,7 @@ class BaseController extends Controller {
 		$obj = static::get_model_obj();
 
 		$view_var   = $obj->index_list();
-		$headline  	= BaseViewController::translate($obj->view_headline().' List');
+		$headline  	= trans('view.Header_Overview');// OLD: trans_choice('view.Header_'.$obj->view_headline(), 2).': '.trans('view.Header_Overview');
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
 		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
@@ -457,8 +457,7 @@ class BaseController extends Controller {
 	public function create()
 	{
 		$model = static::get_model_obj();
-		//dd(trans('button.Create'));
-		$view_header = BaseViewController::translate($model->view_headline());
+		$view_header = trans_choice('view.Header_'.$model->view_headline(), 1);
 		$headline    = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, NULL, $_GET);
 		$form_fields = BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($model), $model, 'create');
 
@@ -516,8 +515,7 @@ class BaseController extends Controller {
 	{
 		$model    = static::get_model_obj();
 		$view_var = $model->findOrFail($id);
-
-		$view_header 	= trans('header.Edit').BaseViewController::translate($model->view_headline());
+		$view_header 	= trans('view.Header_Edit'.$model->view_headline());
 		$headline       = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var);
 		$panel_right    = $this->prepare_tabs($view_var);
 		$form_fields	= BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
