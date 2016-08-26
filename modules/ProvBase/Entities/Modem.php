@@ -198,6 +198,8 @@ class Modem extends \BaseModel {
 
 		// Log
 		Log::info('dhcp: update '.self::CONF_FILE_PATH.', '.self::CONF_FILE_PATH_PUB);
+		touch(self::CONF_FILE_PATH);
+		touch(self::CONF_FILE_PATH_PUB);
 
 		foreach (Modem::all() as $modem)
 		{
@@ -235,10 +237,10 @@ class Modem extends \BaseModel {
 	 */
 	public function make_configfile ()
 	{
-		$modem = $this;
-		$id	= $modem->id;
-		$mac   = $modem->mac;
-		$host  = $modem->hostname;
+		$modem  = $this;
+		$id		= $modem->id;
+		$mac 	= $modem->mac;
+		$host 	= $modem->hostname;
 
 		/* Configfile */
 		$dir		= '/tftpboot/cm/';
@@ -599,15 +601,17 @@ class ModemObserver
 		if (!$modem->observer_enabled)
 			return;
 
+		// TODO: only restart on system relevant changes
+
+		$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
-		$modem->restart_modem();
 	}
 
 	public function deleted($modem)
 	{
+		$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->delete_configfile();
-		$modem->restart_modem();
 	}
 }
