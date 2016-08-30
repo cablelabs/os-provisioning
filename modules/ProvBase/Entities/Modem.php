@@ -50,10 +50,10 @@ class Modem extends \BaseModel {
 			default: $bsclass = 'danger'; break;
 		}
 
-		return ['index' => [$this->id, $this->mac, $this->lastname, $this->zip, $this->city, $this->street, $status],
-		        'index_header' => ['Modem Number', 'MAC address', 'Lastname', 'Postcode', 'City', 'Street', 'US level'],
+		return ['index' => [$this->id, $this->mac, $this->name, $this->lastname, $this->city, $this->street, $status],
+		        'index_header' => ['Modem Number', 'MAC address', 'Name', 'Lastname', 'City', 'Street', 'US level'],
 		        'bsclass' => $bsclass,
-		        'header' => $this->id.' - '.$this->mac];
+		        'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : '')];
 	}
 
 
