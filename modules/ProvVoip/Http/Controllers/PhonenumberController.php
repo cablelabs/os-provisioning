@@ -23,6 +23,13 @@ class PhonenumberController extends \BaseController {
 		if (!$model)
 			$model = new Phonenumber;
 
+		if (\PPModule::is_active('provvoipenvia')) {
+			$login_placeholder = 'Autofilled if empty.';
+		}
+		else {
+			$login_placeholder = '';
+		}
+
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'select', 'name' => 'country_code', 'description' => 'Country Code', 'value' => Phonenumber::getPossibleEnumValues('country_code')),
@@ -30,8 +37,8 @@ class PhonenumberController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'number', 'description' => 'Number'),
 			array('form_type' => 'select', 'name' => 'mta_id', 'description' => 'MTA', 'value' => $model->mtas_list_with_dummies(), 'hidden' => '1'),
 			array('form_type' => 'text', 'name' => 'port', 'description' => 'Port'),
-			array('form_type' => 'text', 'name' => 'username', 'description' => 'Username', 'options' => array('placeholder' => 'autofilled if empty')),
-			array('form_type' => 'text', 'name' => 'password', 'description' => 'Password', 'options' => array('placeholder' => 'autofilled if empty')),
+			array('form_type' => 'text', 'name' => 'username', 'description' => 'Username', 'options' => array('placeholder' => $login_placeholder)),
+			array('form_type' => 'text', 'name' => 'password', 'description' => 'Password', 'options' => array('placeholder' => $login_placeholder)),
 			array('form_type' => 'text', 'name' => 'sipdomain', 'description' => 'SIP domain'),
 			array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'checked' => true, 'create' => '1')
 		);

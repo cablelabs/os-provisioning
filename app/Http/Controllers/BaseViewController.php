@@ -270,6 +270,8 @@ class BaseViewController extends Controller {
 			$s .= \Form::closeGroup();
 
 
+
+finish:
 			// Space Element between fields and color switching
 			if (array_key_exists('space', $field))
 			{
@@ -278,7 +280,6 @@ class BaseViewController extends Controller {
 				$color = $color_array[0];
 			}
 
-finish:
 			// add ['html'] parameter
 			$add = $field;
 			$add['html'] = $s;
