@@ -345,7 +345,7 @@ class Contract extends \BaseModel {
 			$this->_update_network_access_from_items();
 
 			// Task 3: Check and possibly update item's valid_from and valid_to dates
-			$this->_update_item_dates();
+			$this->_update_inet_voip_dates();
 
 
 			// Task 4: Check and possibly change product related data (qos, voip, purchase_tariff)
@@ -479,7 +479,7 @@ class Contract extends \BaseModel {
 
 
 	/**
-	 * This helper updates dates for all items on this contract under the following conditions:
+	 * This helper updates dates for Internet & Voip items on this contract under the following conditions:
 	 *	- valid_from:
 	 *		- valid_from_fixed is false
 	 *		- valid_from is before tomorrow
@@ -500,7 +500,7 @@ class Contract extends \BaseModel {
 	 *
 	 * @return null
 	 */
-	protected function _update_item_dates() {
+	protected function _update_inet_voip_dates() {
 
 		// items only exist if Billingbase is enabled
 		if (!\PPModule::is_active('Billingbase')) {
@@ -516,6 +516,11 @@ class Contract extends \BaseModel {
 		// ItemObserver::update() which else set valid_to smaller than valid_from in some cases)!
 		// and to avoid “Multipe valid tariffs active” warning
 		foreach ($this->items_sorted_by_valid_from_desc as $item) {
+
+			$type = isset($item->product) ? $item->product->type : '';
+
+			if (!in_array($type, ['Voip', 'Internet']))
+				continue;
 
 			// flag to decide if item has to be saved at the end of the loop
 			$item_changed = False;
@@ -712,7 +717,7 @@ class Contract extends \BaseModel {
 				continue;
 			}
 
-			$type = $item->product->type;
+			$type = isset($item->product) ? $item->product->type : '';
 			// process only particular product types
 			if (!in_array($type, ['Voip', 'Internet'])) {
 				continue;
