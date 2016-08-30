@@ -38,64 +38,29 @@ class dhcpCommand extends Command {
 		parent::__construct();
 	}
 
+
+
 	/**
-	 * Execute the console command.
+	 * Execute the console command - Create global Config & all Entries for Modems, Endpoints & Mtas to get an IP from Server
 	 *
 	 * @return mixed
 	 */
 	public function fire()
 	{
 		// Global Config part
-		$g = ProvBase::first();
-		$g->make_dhcp_glob_conf();
+		ProvBase::first()->make_dhcp_glob_conf();
 
-		// Modems
-		$cm = Modem::first();
-		$cm->del_dhcp_conf_files();
-		$cm->make_dhcp_cm_all();
-
-		// Endpoints
-		$e = Endpoint::first();
-		if (isset($e))
-			$e->make_dhcp();
-
-		// Mta's
-		$m = Mta::first();
-		$m->del_dhcp_conf_file();
-		$m->make_dhcp_mta_all();
+		Modem::make_dhcp_cm_all();
+		Endpoint::make_dhcp();
+		Mta::make_dhcp_mta_all();
 
 		// CMTS's
-		$c = Cmts::all();
-		$c->first()->del_cmts_includes();
-
-		foreach ($c as $cmts) 
-		{
+		Cmts::del_cmts_includes();
+		foreach (Cmts::all() as $cmts)
 			$cmts->make_dhcp_conf();
-		}
+
 	}
 
-	/**
-	 * Get the console command arguments.
-	 *
-	 * @return array
-	 */
-	protected function getArguments()
-	{
-		return array(
-			// array('example', InputArgument::REQUIRED, 'An example argument.'),
-		);
-	}
 
-	/**
-	 * Get the console command options.
-	 *
-	 * @return array
-	 */
-	protected function getOptions()
-	{
-		return array(
-			// array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
-		);
-	}
 
 }

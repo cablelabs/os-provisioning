@@ -70,7 +70,7 @@ class ProvBase extends \BaseModel {
 
 
 		// provisioning server hostname encoding for dhcp
-		$fqdn 		= system('hostname');
+		$fqdn 		= exec('hostname');
 		$hostname 	= '';
 		$dhcp_fqdn 	= '';
 
@@ -92,7 +92,7 @@ class ProvBase extends \BaseModel {
 
 			$fqdn = $hostname.'.'.$this->domain_name;
 	
-			system('sudo hostnamectl set-hostname '.$fqdn, $ret);
+			system('sudo hostnamectl set-hostname '.escapeshellarg($fqdn), $ret);
 
 			if ($ret != 0)
 				throw new \Exception("Could not Set FQDN. No Permission? Please add actual version of laravel sudoers file to /etc/sudoers.d/!", 1);

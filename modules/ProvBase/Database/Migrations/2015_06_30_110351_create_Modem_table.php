@@ -19,9 +19,8 @@ class CreateModemTable extends BaseMigration {
 		// creates directory for modem config files and changes owner
 		$dir = '/tftpboot/cm';
 		if(!is_dir($dir))
-			mkdir ($dir, '0755');
-		system('/bin/chown -R apache /tftpboot/cm');
-		system('/bin/chown -R apache /etc/dhcp/');
+			mkdir ($dir, 0755, true);
+		system('/bin/chown -R apache /etc/dhcp/ '. $dir);
 
 		Schema::create($this->tablename, function(Blueprint $table)
 		{			
