@@ -119,16 +119,16 @@ class Cmts extends \BaseModel {
 	 *
 	 * (description is automatically taken by phpdoc)
 	 *
+	 * TODO: improve performance by collecting data first and put to file once at the end
+	 *
 	 * @author Nino Ryschawy
-	 * @param
-	 * @return void
 	 */
 	public function make_dhcp_conf ()
 	{
 		$file_dhcp_conf = '/etc/dhcp/dhcpd.conf';
 		$file = '/etc/dhcp/nms/cmts_gws/'.$this->hostname.'.conf';
 
-		if ($this->id == '0')
+		if ($this->id == 0)
 			return -1;
 
 		$ippools = $this->ippools;
@@ -287,9 +287,9 @@ _exit:
 	 * @return
 	 * @author Nino Ryschawy
 	 */
-	public function del_cmts_includes()
+	public static function del_cmts_includes()
 	{
-		$file_path = '/etc/dhcp/dhcpd.conf';
+		$file_path   = '/etc/dhcp/dhcpd.conf';
 		$include_str = '/etc/dhcp/nms/cmts_gws/';
 
 		// copy file as backup
@@ -297,7 +297,7 @@ _exit:
 
 		$lines = file($file_path);
 		$data = '';
-		$bool = true;
+		$bool = false;
 		$i = 0;
 
 		foreach($lines as $key => $line)
@@ -308,23 +308,21 @@ _exit:
 				// remove all empty lines only the first time an cmts include statement was found
 				do
 				{
-					if (!$bool)
+					if ($bool)
 						break;
 					$lines[$key - $i] = str_replace(PHP_EOL, "", $lines[$key - $i]);
 					$i++;
 				} while (($lines[$key - $i] == "\n") || ($lines[$key - $i] == ""));
 
 				unset($lines[$key]);
-				$bool = false;
+				$bool = true;
 
 			}
 		}
 
 		$data = implode(array_values($lines));
 
-		$file = fopen($file_path, 'w');
-		fwrite($file, $data);
-		fclose($file);
+		\File::put($file_path, $data);
 
 	}
 

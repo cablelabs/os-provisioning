@@ -58,12 +58,12 @@ class Endpoint extends \BaseModel {
     /**
      * Make DHCP config files for EPs
      */
-    public function make_dhcp ()
+    public static function make_dhcp ()
     {
         $dir = '/etc/dhcp/nms/';
         $file_ep = $dir.'endpoints-host.conf';
 
-        $ret = File::put($file_ep, '');
+        $data = '';
 
         foreach (Endpoint::all() as $ep)
         {
@@ -71,11 +71,12 @@ class Endpoint extends \BaseModel {
             $mac    = $ep->mac;
             $host   = $ep->hostname;
 
-            $data_ep = "\n".'host ep-'.$id.' { hardware ethernet '.$mac.'; ddns-hostname "'.$host.'"; }';
-            $ret = File::append($file_ep, $data_ep);
-            if ($ret === false)
-                die("Error writing to file");
+            $data .= 'host ep-'.$id.' { hardware ethernet '.$mac.'; ddns-hostname "'.$host.'"; }'."\n";
         }
+
+        $ret = File::put($file_ep, $data);
+        if ($ret === false)
+            die("Error writing to file");
 
         // chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
         system('/bin/chown -R apache /etc/dhcp/');
