@@ -209,12 +209,13 @@ _failed:
 	/**
 	 * Writes all mta entries to dhcp configfile
 	 */
-	public function make_dhcp_mta_all()
+	public static function make_dhcp_mta_all()
 	{
-		$mtas = Mta::all();
+		Mta::clear_dhcp_conf_file();
+
 		$data = '';
 
-		foreach ($mtas as $mta)
+		foreach (Mta::all() as $mta)
 		{
 			if ($mta->id == 0)
 				continue;
@@ -229,10 +230,11 @@ _failed:
     /**
      * Deletes the configfiles with all mta dhcp entries - used to refresh the config through artisan nms:dhcp command
      */
-	public function del_dhcp_conf_file()
+	public static function clear_dhcp_conf_file()
 	{
-        if (file_exists(self::CONF_FILE_PATH)) unlink(self::CONF_FILE_PATH);
+		File::put(self::CONF_FILE_PATH, '');
 	}
+
 
     /**
      * Deletes Configfile of one mta

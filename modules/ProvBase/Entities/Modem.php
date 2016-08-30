@@ -161,13 +161,14 @@ class Modem extends \BaseModel {
 	 *
 	 * @author Nino Ryschawy
 	 */
-	private function generate_cm_update_entry($id, $mac)
+	private function generate_cm_update_entry()
 	{
-			return "\n".'host cm-'.$id.' { hardware ethernet '.$mac.'; filename "cm/cm-'.$id.'.cfg"; ddns-hostname "cm-'.$id.'"; }';
+			return 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'"; }'."\n";
 	}
-	private function generate_cm_update_entry_pub($id, $mac)
+
+	private function generate_cm_update_entry_pub()
 	{
-			return "\n".'subclass "Client-Public" '.$mac.'; # CM id:'.$id;
+			return 'subclass "Client-Public" '.$this->mac.'; # CM id:'.$this->id."\n";
 	}
 
 
@@ -176,10 +177,10 @@ class Modem extends \BaseModel {
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function del_dhcp_conf_files()
+	public static function clear_dhcp_conf_files()
 	{
-		if (file_exists(self::CONF_FILE_PATH)) unlink(self::CONF_FILE_PATH);
-		if (file_exists(self::CONF_FILE_PATH_PUB)) unlink(self::CONF_FILE_PATH_PUB);
+		File::put(self::CONF_FILE_PATH, '');
+		File::put(self::CONF_FILE_PATH_PUB, '');
 	}
 
 
@@ -192,38 +193,38 @@ class Modem extends \BaseModel {
 	 *
 	 * @author Torsten Schmidt
 	 */
-	public function make_dhcp_cm_all ()
+	public static function make_dhcp_cm_all ()
 	{
-		$this->del_dhcp_conf_files();
+		Modem::clear_dhcp_conf_files();
 
 		// Log
 		Log::info('dhcp: update '.self::CONF_FILE_PATH.', '.self::CONF_FILE_PATH_PUB);
-		touch(self::CONF_FILE_PATH);
-		touch(self::CONF_FILE_PATH_PUB);
+
+		$data 	  = '';
+		$data_pub = '';
 
 		foreach (Modem::all() as $modem)
 		{
-			$id	= $modem->id;
-			$mac   = $modem->mac;
-
-			if ($id == 0)
+			if ($modem->id == 0)
 				continue;
 
 			// all
-			$data = $modem->generate_cm_update_entry($id, $mac);
-			$ret = File::append(self::CONF_FILE_PATH, $data);
-			if ($ret === false)
-				die("Error writing to file");
+			$data .= $modem->generate_cm_update_entry();
 
 			// public ip
 			if ($modem->public)
-			{
-				$data = $modem->generate_cm_update_entry_pub($id, $mac);
-				$ret = File::append(self::CONF_FILE_PATH_PUB, $data);
-				if ($ret === false)
-					die("Error writing to file");
-			}
+				$data_pub .= $modem->generate_cm_update_entry_pub();
+
 		}
+
+		$ret = File::put(self::CONF_FILE_PATH, $data);
+		if ($ret === false)
+			die("Error writing to file");
+
+		$ret = File::append(self::CONF_FILE_PATH_PUB, $data_pub);
+		if ($ret === false)
+			die("Error writing to file");
+
 
 		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
 		system('/bin/chown -R apache /etc/dhcp/');
