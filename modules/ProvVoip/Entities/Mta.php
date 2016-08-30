@@ -11,8 +11,8 @@ use Modules\ProvBase\Entities\Configfile;
 // Model not found? execute composer dump-autoload in lara root dir
 class Mta extends \BaseModel {
 
-    // The associated SQL table for this Model
-    public $table = 'mta';
+	// The associated SQL table for this Model
+	public $table = 'mta';
 
 
 	// Add your validation rules here
@@ -34,19 +34,25 @@ class Mta extends \BaseModel {
 		return 'MTAs';
 	}
 
-    // link title in index view
-    public function view_index_label()
-    {
-        $bsclass = 'info';
+	// link title in index view
+	public function view_index_label()
+	{
+		$bsclass = 'info';
+		$cf_name = 'No Configfile assigned';			
 
-        // TODO: use mta states.
-        //       Maybe use fast ping to test if online in this function?
+		if (isset($this->configfile))
+			$cf_name = $this->configfile->name;
+		else
+			$bsclass = 'danger';
 
-        return ['index' => [$this->hostname, $this->mac, $this->type, isset($this->configfile) ? $this->configfile->name : 'No Configfile assigned'],
-                'index_header' => ['Name', 'MAC', 'Type', 'Configfile'],
-                'bsclass' => $bsclass,
-                'header' => $this->hostname.' - '.$this->mac];
-    }
+		// TODO: use mta states.
+		//       Maybe use fast ping to test if online in this function?
+
+		return ['index' => [$this->hostname, $this->mac, $this->type, $cf_name],
+				'index_header' => ['Name', 'MAC', 'Type', 'Configfile'],
+				'bsclass' => $bsclass,
+				'header' => $this->hostname.' - '.$this->mac];
+	}
 
 
 	/**
@@ -227,29 +233,29 @@ _failed:
 		return true;
 	}
 
-    /**
-     * Deletes the configfiles with all mta dhcp entries - used to refresh the config through artisan nms:dhcp command
-     */
+	/**
+	 * Deletes the configfiles with all mta dhcp entries - used to refresh the config through artisan nms:dhcp command
+	 */
 	public static function clear_dhcp_conf_file()
 	{
 		File::put(self::CONF_FILE_PATH, '');
 	}
 
 
-    /**
-     * Deletes Configfile of one mta
-     */
-    public function delete_configfile()
-    {
-        $dir = '/tftpboot/mta/';
-        $file['1'] = $dir.'mta-'.$this->id.'.cfg';
-        $file['2'] = $dir.'mta-'.$this->id.'.conf';
+	/**
+	 * Deletes Configfile of one mta
+	 */
+	public function delete_configfile()
+	{
+		$dir = '/tftpboot/mta/';
+		$file['1'] = $dir.'mta-'.$this->id.'.cfg';
+		$file['2'] = $dir.'mta-'.$this->id.'.conf';
 
-        foreach ($file as $f)
-        {
-            if (file_exists($f)) unlink($f);
-        }
-    }
+		foreach ($file as $f)
+		{
+			if (file_exists($f)) unlink($f);
+		}
+	}
 }
 
 
@@ -268,8 +274,8 @@ class MtaObserver
 	public function created($mta)
 	{
 		$mta->hostname = 'mta-'.$mta->id;
-        $mta->make_configfile();
-        $mta->make_dhcp_mta_all();
+		$mta->make_configfile();
+		$mta->make_dhcp_mta_all();
 		$mta->save();
 	}
 
@@ -280,14 +286,14 @@ class MtaObserver
 
 	public function updated($mta)
 	{
-        $mta->make_dhcp_mta_all();
+		$mta->make_dhcp_mta_all();
 		$mta->make_configfile();
 		$mta->modem->restart_modem();
 	}
 
 	public function deleted($mta)
 	{
-        $mta->make_dhcp_mta_all();
+		$mta->make_dhcp_mta_all();
 		$mta->delete_configfile();
 		$mta->modem->restart_modem();
 	}
