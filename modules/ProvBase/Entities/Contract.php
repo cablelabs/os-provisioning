@@ -342,15 +342,17 @@ class Contract extends \BaseModel {
 		}
 		else {
 
-			$this->_update_network_access_from_items();
-
 			// Task 3: Check and possibly update item's valid_from and valid_to dates
 			$this->_update_inet_voip_dates();
 
-
-			// Task 4: Check and possibly change product related data (qos, voip, purchase_tariff)
+			// Task 4: Check and possibly change product related data (qos_id, voip, purchase_tariff)
 			// for this contract depending on the start/end times of its items
 			$this->update_product_related_data($this->items);
+
+			// NOTE: Keep this order! - update network access after all adaptions are made
+			// Task 1 & 2 included
+			$this->_update_network_access_from_items();
+
 
 			// commented out by par for reference ⇒ if all is running this can savely be removed
 			/* $qos_id = ($tariff = $this->get_valid_tariff('Internet')) ? $tariff->product->qos_id : 0; */
@@ -419,8 +421,9 @@ class Contract extends \BaseModel {
 	/**
 	 * This enables/disables network_access based on existence of currently active items of types Internet and Voip
 	 *
-	 * @author Patrick Reichel
+	 * Check also if contract is outdated
 	 *
+	 * @author Patrick Reichel
 	 */
 	protected function _update_network_access_from_items() {
 
@@ -436,8 +439,8 @@ class Contract extends \BaseModel {
 		$active_item_internet = $active_tariff_info_internet['item'];
 		$active_item_voip = $active_tariff_info_voip['item'];
 
-		if ($active_count_sum == 0) {
-			// if there is no active item of type internet or voip: disable network_access (if not already done)
+		if ($active_count_sum == 0 || !$this->check_validity('now')) {
+			// if there is no active item of type internet or voip or contract is outdated: disable network_access (if not already done)
 			if (boolval($this->network_access)) {
 				$this->network_access = 0;
 				$contract_changed = True;
