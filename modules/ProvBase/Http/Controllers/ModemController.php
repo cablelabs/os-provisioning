@@ -20,11 +20,14 @@ class ModemController extends \BaseController {
      */
 	public function view_form_fields($model = null)
 	{
+		$pos = explode(',', \Input::get('pos'));
+		if(count($pos) == 2)
+			list($model['x'], $model['y']) = $pos;
 		// label has to be the same like column in sql table
 		$a = array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
 			array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly'], 'hidden' => 'C'),
-			array('form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 1),
+			array('form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 'E', 'value' => $model->html_list($model->contracts(), 'lastname')),
 			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF']),
 			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list($model->configfiles(), 'name')),
 			array('form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'),
