@@ -85,8 +85,8 @@ return [
 		//Salesman
 	    'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
 	    //Items
-	    'Header_Item'				=> 'Produkt|Produkte',
-	    'Header_EditItem'			=> 'Produkt bearbeiten', //??
+	    'Header_Item'				=> 'Posten|Posten',
+	    'Header_EditItem'			=> 'Posten bearbeiten', //??
 	//SNMP Modul
 	    //Device
 	    'Header_Device'				=> 'Gerät|Geräte',
@@ -144,6 +144,7 @@ return [
 		'Edit'						=> 'Ändere ',
 
 //BUTTON
+		'Button_Create Users'		=> 'Neuer Benutzer',
 		'Sign me in'				=> 'Einloggen',
 		'Button_Create'				=> 'Erstelle',
 		'Button_Delete'				=> 'Markierte Einträge löschen',

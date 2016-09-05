@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+//Chooses und Selects weg
     /*
     |--------------------------------------------------------------------------
     | All other Language Lines - TODO: split descriptions and messages?
@@ -45,6 +45,7 @@ return [
     'Edit '				        => 'Ändere ',
     'Endpoints'			        => 'Endpunkte',
     'Endpoints List'            => 'Endpunktliste',
+    'Entry'                     => 'Eintrag',
     'E-Mail Address'	        => 'Email-Adresse',
     'First IP'			        => 'Erste IP',
     'Firstname'			        => 'Vorname',
@@ -146,7 +147,7 @@ return [
     //Phone tariffs
     'Phone tariffs'     => 'Telefontarife',
     'External Identifier'  => 'Externer Identifikator', //??
-    'Usable'            => 'Verfügbarkeit', //?? Verwendbar?
+    'Usable'            => 'Verfügbar?',
 
 //Billing Base
     //Product Entry
@@ -157,12 +158,12 @@ return [
     //SEPA Accounts
     'Account Holder'    => 'Kontoinhaber',
     'Account Name'      => 'Kontoname',
-    'Choose Call Data Record template file' => 'Datenerfassungsvorlage wählen', //??
-    'Choose invoice template file'  => 'Rechnungsvorlage wählen',
+    'Choose Call Data Record template file' => 'Vorlage für Einzelverbindungsnachweis', 
+    'Choose invoice template file'  => 'Rechnungsvorlage',
     'CostCenter'        => 'Kostenstelle',
-    'Creditor ID'       => 'Gläubiger ID', //??
+    'Creditor ID'       => 'Gläubiger ID',
     'Institute'         => 'Kreditinstitut',
-    'Invoice Headline'  => 'Rechnungstitel', //??
+    'Invoice Headline'  => 'Rechnungstitel',
     'Invoice Text for negativ Amount with Sepa Mandate' => 'Rechnungstext für Negativbetrag mit SEPA-Mandat', //?? negativ=> negative
     'Invoice Text for negativ Amount without Sepa Mandate'  => 'Rechnungstext für Negativbetrag ohne SEPA-Mandat', //??
     'Invoice Text for positiv Amount with Sepa Mandate' => 'Rechnungstext für Positivbetrag mit SEPA-Mandat', //?? positiv=> positive
@@ -181,9 +182,9 @@ return [
     'Directorate'       => 'Geschäftsleitung',
     'Mail address'      => 'Email-Adresse',
     'Management'        => 'Unternehmensführung',
-    'Registration Court 1'  => 'Regestrierungsgericht 1', //??
-    'Registration Court 2'  => 'Regestrierungsgericht 2', //??
-    'Registration Court 3'  => 'Regestrierungsgericht 3', //??
+    'Registration Court 1'  => 'Registergericht 1', 
+    'Registration Court 2'  => 'Registergericht 2',
+    'Registration Court 3'  => 'Registergericht 3',
     'Sales Tax Id Nr'   => 'Umsatzsteuer ID-Nummer',
     'Tax Nr'            => 'Steuernummer',
     'Transfer Reason for Invoices'  => 'Verwendungszweck der Rechnung',

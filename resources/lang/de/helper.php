@@ -47,7 +47,7 @@ return [
 
 	//SalesmanController
 	'Salesman_ProductList'			=> 'Füge alle Produkttypen an, für die eine Provision erzielt werden kann - möglich:', 
-									//'Add all Product types he gets provision for - possible: ',
+									//'Add all Product types he gets for - possible: ',
 
 	//SepaAccountController
 	'SepaAccount_InvoiceHeadline'	=> 'Ersetzt die Überschrift der Rechnung, die für diese Kostenstelle erstellt wird.',

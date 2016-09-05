@@ -55,7 +55,7 @@ class BaseViewController extends Controller {
         	return trans($string).$star;
 
         $translation = trans("messages.$string");
-        // dd($name, $string, $star, $translation, strpos($translation, "messages."));
+
         // found in lang/{}/messages.php
         if (strpos($translation, 'messages.') === false)
             return $translation.$star;
