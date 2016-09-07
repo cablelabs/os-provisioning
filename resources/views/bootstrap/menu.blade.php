@@ -36,7 +36,7 @@
                   {{ Form::hidden('mode', 'simple') }}
                   {{ Form::hidden('scope', 'all') }}
 
-                  <input type="text" name="query" placeholder="<?php echo trans('view.Search_EnterKeyword'); ?>" class="form-control">
+                  <input type="text" name="query" placeholder="<?php echo \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search'); ?>" class="form-control">
                   <button class="btn btn-search" type="submit"><i class="fa fa-search"></i></button>
 
                 {{ Form::close() }}
@@ -113,17 +113,17 @@
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>
-              <li><a href="{{route('Authuser.edit', \Auth::user()->id)}}">{{trans('view.Menu_UserSettings')}}</a></li>
-              <li><a href="{{route('Authuser.index')}}">{{trans('view.Menu_UserGlobSettings')}}</a></li>
+              <li><a href="{{route('Authuser.edit', \Auth::user()->id)}}">{{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}</a></li>
+              <li><a href="{{route('Authuser.index')}}">{{ \App\Http\Controllers\BaseViewController::translate_view('UserGlobSettings', 'Menu')}}</a></li>
               <!-- <li><a href="javascript:;"><span class="badge badge-danger pull-right">2</span> Inbox</a></li> -->
               <li class="divider"></li>
-              <li><a href="{{route('Auth.logout')}}">{{trans('view.Menu_Logout')}}</a></li>
+              <li><a href="{{route('Auth.logout')}}">{{ \App\Http\Controllers\BaseViewController::translate_view('Logout', 'Menu')}}</a></li>
             </ul>
           </li>
 
           <li class="dropdown navbar-user">
             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-              <span class="hidden-xs">{{ trans('view.Menu_MainMenu') }}</span> <b class="caret"></b>
+              <span class="hidden-xs">{{ \App\Http\Controllers\BaseViewController::translate_view('MainMenu', 'Menu') }}</span> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>

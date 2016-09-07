@@ -72,6 +72,7 @@ return [
 	'modem_log_error'           => 'Modem ist nicht beim Server registriert - Kein Logeintrag gefunden',
 	'modem_offline'		        => 'Modem ist Offline',
     'month'                     => 'Monat',
+    'Month'                     => 'Monat',
     'Monthly'                   => 'pro Monat',
     'Net'   			        => 'Netz',
     'Netmask'   		        => 'Netzmaske',
@@ -103,6 +104,7 @@ return [
     'Username'                  => 'Nutzername',
     'Users'                     => 'Nutzer',
     'Vendor'                    => 'Hersteller',
+    'Year'                      => 'Jahr',
 //Provisioning
     //Verträge
     'Academic Degree'   => 'Akademischer Titel',
@@ -122,7 +124,8 @@ return [
     //Items
     'Accounting Text (optional)'    => 'Verwendungszweck (optional)',
     'Cost Center (optional)'    => 'Kostenstelle (optional)',
-    'Item'              => 'Produkt',
+    'Item'              => 'Posten',
+    'Items'             => 'Posten',
     'Product'           => 'Produkt',
     'Valid from'        => 'Gülig ab',
     'Valid to'          => 'Gültis bis',
@@ -193,5 +196,23 @@ return [
     'Zip'               => 'PLZ',
     //Salesman
     'Commission in %'    => 'Komission in %',
-    'Product List'      => 'Produktliste',    
+    'Product List'      => 'Produktliste',
+    //Settlement Run File generation
+    'Contractnr'        => 'Vertragsnummer',
+    'Invoicenr'         => 'Rechnungsnummer',
+    'Calling Number'    => 'Rufnummer',
+    'Called Number'     => 'Angerufene Nummer',
+    'Target Month'      => 'Abrechnungsmonat', 
+    'Date'              => 'Datum', 
+    'Count'             => 'Anzahl',
+    'Tax'               => 'Mehrwertsteuer',//MwSt??
+    // 'RCD' ?????
+    'Currency'          => 'Währung',
+    'Gross'             => 'Brutto',
+    'Net'               => 'Netto',
+    'MandateID'         => 'SEPA Mandatsnummer',
+    'MandateDate'       => 'SEPA Mandatsdatum',
+    'Commission in %'   => 'Provision in %',
+    'Total Fee'         => 'Gesamtgebühr',
+    'Commission Amount' => 'davon Provision',
 ];

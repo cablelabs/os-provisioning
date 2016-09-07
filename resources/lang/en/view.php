@@ -52,35 +52,35 @@ return [
 		'Menu_PhoneTariffs'			=> 'PhoneTariffs',
 
 	//User Settings
-		'Menu_UserSettings'     	=> 'Nutzereinstellungen',
-	    'Menu_UserGlobSettings' 	=> 'Globale Nutzereinstellungen',
-	    'Menu_Logout'               => 'Ausloggen',
+		'Menu_UserSettings'     	=> 'User Settings',
+	    'Menu_UserGlobSettings' 	=> 'Global User Settings',
+	    'Menu_Logout'               => 'Logout',
 
 //HEADER
 	//General
-	    'Header_GlobalSearch'		=> 'Systemweite Suche',
-	    'Header_Overview'			=> 'Übersicht',
-	    'Header_Assigned'			=> 'Zugewiesene',
-	    'Header_Create'				=> 'Erstellen',
+	    'Header_GlobalSearch'		=> 'Global Search',
+	    'Header_Overview'			=> 'Overview',
+	    'Header_Assigned'			=> 'Assigned',
+	    'Header_Create'				=> 'Create',
 	//Module specific
 
 	//Global
 	    //Logs
 	    'Header_Logs'				=> 'Logs',
-	    'Header_EditLogs'			=> 'Log Detail',
+	    'Header_EditLogs'			=> 'Edit Logs',
 	//Billing Base
 	    //Prduct Entry
-	    'Header_Product Entry'		=> 'Produkt|Produktangebot',
-	    'Header_EditProduct Entry'	=> 'Produkt bearbeiten',
+	    'Header_Product Entry'		=> 'Product Entry|Product Entries',
+	    'Header_EditProduct Entry'	=> 'Edit Product Entry',
 	    //SEPA Accounts
-	    'Header_SEPA Account'		=> 'SEPA-Konto|SEPA-Konten', //Workaround decide which one to use
-	    'Header_EditSEPA Account'	=> 'SEPA-Konto bearbeiten',
+	    'Header_SEPA Account'		=> 'SEPA Account|SEPA Accounts', //Workaround decide which one to use
+	    'Header_EditSEPA Account'	=> 'Edit SEPA Account',
 	    //CostCenter
-	    'Header_CostCenter'			=> 'Kostenstelle|Kostenstellen', //Workaround decide which one to use
-	    'Header_Cost Center'		=> 'Kostenstelle|Kostenstellen',
-	    'Header_EditCost Center'	=> 'Kostenstelle bearbeiten',
+	    'Header_CostCenter'			=> 'Cost Center|Cost Centers', //Workaround decide which one to use
+	    'Header_Cost Center'		=> 'Cost Center|Cost Centers',
+	    'Header_EditCost Center'	=> 'Edit Cost Center',
 	    //Company
-	    'Header_EditCompany'		=> 'Firma bearbeiten',
+	    'Header_EditCompany'		=> 'Edit Company',
 		//Salesman
 	    'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
 	    //Items
@@ -143,33 +143,33 @@ return [
 		'Edit'						=> 'Ändere ',
 
 //BUTTON
-		'Sign me in'				=> 'Einloggen',
-		'Button_Create'				=> 'Erstelle',
-		'Button_Delete'				=> 'Markierte Einträge löschen',
-		'Button_Save'				=> 'Speichern',
-		'Button_Save / Restart'		=> 'Speichern / Neustart',
+		'Sign me in'				=> 'Login',
+		'Button_Create'				=> 'Create',
+		'Button_Delete'				=> 'Delete marked Elements',
+		'Button_Save'				=> 'Save',
+		'Button_Save / Restart'		=> 'Save / Restart',
 	//BillingBase
 		//Product List
-		'Button_Create Product Entry'	=> 'Neues Produkt',
+		'Button_Create Product Entry'	=> 'Create Product Entry',
 		//SEPA-Konto
-		'Button_Create SEPA Account'	=> 'Neues SEPA-Konto', //Workaround decide which one to use
-		'Button_Create SepaAccount'		=> 'Neues SEPA-Konto',
+		'Button_Create SEPA Account'	=> 'Create SEPA Account', //Workaround decide which one to use
+		'Button_Create SepaAccount'		=> 'Create SEPA Accounto',
 
 		//CostCenter
-		'Button_Create Cost Center' 	=> 'Neue Kostenstelle', //Workaround decide which one to use
-		'Button_Create CostCenter' 		=> 'Neue Kostenstelle',
+		'Button_Create Cost Center' 	=> 'Create Cost Center', //Workaround decide which one to use
+		'Button_Create CostCenter' 		=> 'Create Cost Center',
 		//Company
-		'Button_Create Company'			=> 'Neue Firma',
+		'Button_Create Company'			=> 'Create Company',
 		//Salesman
-		'Button_Create Salesman'		=> 'Neuer Verkäufer',
+		'Button_Create Salesman'		=> 'Create Salesman',
 		//Item
-		'Button_Create Item'			=> 'Neues Produkt',
+		'Button_Create Item'			=> 'Create Item',
 
 	//SNMP Modul
 	    //Device
-	    'Button_Create Device'			=> 'Neues Gerät',
+	    'Button_Create Device'			=> 'Create Device',
 	    //Device Type
-	    'Button_Create Device Type'		=> 'Neuer Gerätetyp',
+	    'Button_Create Device Type'		=> 'Create Device Type',
 
 	//Provisioning
 		//Contract

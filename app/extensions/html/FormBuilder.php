@@ -110,7 +110,7 @@ class FormBuilder extends CollectiveFormBuilder {
     {
         $options = $this->appendClassToOptions('btn btn-primary', $options);
 
-        //$value = trans('button.'.$value);
+        $value = \App\Http\Controllers\BaseViewController::translate_view($value, 'Button' );
 
         if (isset($options['style']) && $options['style'] == 'simple')
             $s = parent::submit($value, $options);

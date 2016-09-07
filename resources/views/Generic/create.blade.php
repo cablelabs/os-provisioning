@@ -13,7 +13,7 @@
 
 	{{ $headline }}
 
-	{{ trans('view.Header_Create') }}
+	{{ \App\Http\Controllers\BaseViewController::translate_view('Create', 'Header') }}
 
 @stop
 

@@ -63,6 +63,28 @@ class BaseViewController extends Controller {
         return $string.$star;
     }
 
+	/**
+     * Searches for a string in the language files under resources/lang/ and returns it for the active application language
+     *
+     * @author Christian Schramm
+     */
+    public static function translate_view($string, $type, $count = 1)
+    {
+        if (strpos($string, 'view.'.$type.'_'))
+        	return trans($string);
+
+        if ($count == 1)
+        	$translation = trans_choice('view.'.$type.'_'.$string, 1);
+    	else
+    		$translation = trans_choice('view.'.$type.'_'.$string, $count);
+
+        // found in lang/{}/messages.php
+        if (strpos($translation, 'view.'.$type.'_') === false)
+            return $translation;
+
+        return $string;
+    }
+
 
 	// TODO: take language from user setting or the language with highest priority from browser
 	// @Nino Ryschawy
@@ -312,7 +334,7 @@ finish:
 			// array_push($ret, $lines);
 			foreach ($lines as $k => $line)
 			{
-				$key = trans('view.Menu_'.$k);
+				$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
 				$ret['Global'][$key] = $line;
 			}
 		}
@@ -334,7 +356,7 @@ finish:
 				{
 					foreach ($lines as $k => $line)
 					{
-						$key = trans('view.Menu_'.$k);
+						$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
 						$ret[$name][$key] = $line;
 					}
 				}

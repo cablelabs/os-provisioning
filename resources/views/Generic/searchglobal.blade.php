@@ -9,7 +9,7 @@
 
 @section('content_top')
 
-	<h4><?php echo trans('view.Header_GlobalSearch'); ?></h4>
+	<h4><?php echo \App\Http\Controllers\BaseViewController::translate_view('GlobalSearch', 'Header'); ?></h4>
 @stop
 
 @section('content_left')
@@ -17,7 +17,7 @@
 
 	@DivOpen(12)
 		@if (isset($query))
-			<h4><?php echo trans('view.Search_MatchesFor'); ?><tt>'{{ $query}}'</tt></h4>
+			<h4><?php echo \App\Http\Controllers\BaseViewController::translate_view('MatchesFor', 'Search'); ?><tt>'{{ $query}}'</tt></h4>
 			<hr>
 		@endif
 	@DivClose()

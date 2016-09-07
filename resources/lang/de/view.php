@@ -83,10 +83,15 @@ return [
 	    //Company
 	    'Header_EditCompany'		=> 'Firma bearbeiten',
 		//Salesman
+		'Header_Salesman'			=> 'Verkäufer|Verkäufer',
 	    'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
 	    //Items
 	    'Header_Item'				=> 'Posten|Posten',
 	    'Header_EditItem'			=> 'Posten bearbeiten', //??
+
+	    //Settlement Run
+	    'Header_Settlement Run'		=> 'Abrechnnungslauf|Abrechnnungsläufe',
+	    'Header_EditSettlement Run' => 'Abrechnnungslauf bearbeiten',
 	//SNMP Modul
 	    //Device
 	    'Header_Device'				=> 'Gerät|Geräte',
@@ -156,7 +161,6 @@ return [
 		//SEPA-Konto
 		'Button_Create SEPA Account'	=> 'Neues SEPA-Konto', //Workaround decide which one to use
 		'Button_Create SepaAccount'		=> 'Neues SEPA-Konto',
-
 		//CostCenter
 		'Button_Create Cost Center' 	=> 'Neue Kostenstelle', //Workaround decide which one to use
 		'Button_Create CostCenter' 		=> 'Neue Kostenstelle',
@@ -165,7 +169,10 @@ return [
 		//Salesman
 		'Button_Create Salesman'		=> 'Neuer Verkäufer',
 		//Item
-		'Button_Create Item'			=> 'Neues Produkt',
+		'Button_Create Item'			=> 'Neuer Posten',
+
+		//Settlement Run
+		'Button_Rerun Accounting Command for current Month'	=> 'Vorgang für den aktuellen Monat erneut ausführen',
 
 	//SNMP Modul
 	    //Device

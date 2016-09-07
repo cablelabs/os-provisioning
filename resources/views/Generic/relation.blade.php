@@ -37,7 +37,7 @@ Relation Blade is used inside a Panel Element to display relational class object
 				@endif
 			@endforeach
 
-		{{ Form::submit(trans('view.Button_Create '.$view), ['style' => 'simple']) }} <!-- .\App\Http\Controllers\BaseViewController::translate($view) -->
+		{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Create '.$view, 'Button'), ['style' => 'simple']) }} <!-- .\App\Http\Controllers\BaseViewController::translate($view) -->
 		{{ Form::close() }}
 
 	@DivClose()
@@ -62,7 +62,7 @@ Relation Blade is used inside a Panel Element to display relational class object
 
 		<!-- Delete Button -->
 		@if (!isset($options['hide_delete_button']) && isset($relation[0]))
-			{{ Form::submit(trans('view.Button_Delete'), ['!class' => 'btn btn-danger', 'style' => 'simple']) }}
+			{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button'), ['!class' => 'btn btn-danger', 'style' => 'simple']) }}
 		@endif
 
 	{{ Form::close() }}

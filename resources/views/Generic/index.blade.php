@@ -24,7 +24,7 @@
 	@DivOpen(12)
 			@if ($create_allowed)
 				{{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
-				{{ Form::submit(trans('view.Button_Create '.$view_header).' ' , ['style' => 'simple']) }} <!-- .trans_choice('view.Header_'.$view_header,1) -->
+				{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Create '.$view_header, 'Button' ) , ['style' => 'simple']) }} 
 				{{ Form::close() }}
 			@endif
 	@DivClose()
@@ -44,7 +44,8 @@
 		{{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete')) }}
 
 			@if (isset($query) && isset($scope))
-				<h4><?php echo trans('view.Search_MatchesFor'); ?><tt>'{{ $query }}'</tt> <?php echo trans('view.Search_In') ?> <tt>{{ trans_choice('view.Header_'.$view_header, 1); }}</tt></h4>
+				<h4><?php echo trans('view.Search_MatchesFor'); ?><tt>'{{ $query }}'</tt> <?php echo trans('view.Search_In') ?> 
+				<tt>{{ \App\Http\Controllers\BaseViewController::translate_view($view_header, 'Header', 1) }}</tt></h4>
 			@endif
 
 			<table class="table table-hover itable">
@@ -92,7 +93,7 @@
 	@DivOpen(12)
 		<!-- delete/submit button of form -->
 		@if ($delete_allowed)
-			{{ Form::submit(trans('view.Button_Delete'), ['!class' => 'btn btn-danger btn-primary m-r-5', 'style' => 'simple']) }}
+			{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button' ), ['!class' => 'btn btn-danger btn-primary m-r-5', 'style' => 'simple']) }}
 			{{ Form::close() }}
 		@endif
 		<!-- only show page buttons if we actually use pagination -->
