@@ -34,6 +34,7 @@ return [
     'cpe_log_error' 	        => 'ist nicht beim Server registriert - Kein Logeintrag gefunden',
     'Create'			        => 'Erstellen',
     'Delete'			        => 'Löschen',
+    'Day'                       => 'Tag',
     'Description'		        => 'Beschreibung',
     'Device'			        => 'Gerät',
     'Device List'		        => 'Geräteliste',
@@ -105,6 +106,7 @@ return [
     'Users'                     => 'Nutzer',
     'Vendor'                    => 'Hersteller',
     'Year'                      => 'Jahr',
+    'Yes'                       => 'Ja',
 //Provisioning
     //Verträge
     'Academic Degree'   => 'Akademischer Titel',
@@ -117,10 +119,7 @@ return [
     'Department'        => 'Abteilung',
     'House Number'      => 'Hausnummer',
     'Salesman'          => 'Verkäufer',
-        //Buttons
-        'Create Produkt'=> 'Neues Produkt', //Workaround
-        'Create Modem'  => 'Neues Modem',
-        'Create SepaMandate'    => 'Neues SEPA-Mandat',
+
     //Items
     'Accounting Text (optional)'    => 'Verwendungszweck (optional)',
     'Cost Center (optional)'    => 'Kostenstelle (optional)',
@@ -132,8 +131,6 @@ return [
     //Modems
     'Configfile'        => 'Konfigurationsdatei',
     'Mta'               => 'MTA',
-        //Buttons
-        'Create Mta'    => 'Neues MTA',
     //Configfiles
     'Configfiles'       => 'Konfigurationsdatei',
     'Choose Firmware File'  => 'Firmware-Datei auswählen',
@@ -143,10 +140,14 @@ return [
     'Public Use'        => 'Öffentliche Nutzung',
     //CMTS
     'IpPool'            => 'IP-Bereich',
-        //Buttons
-        'Create IP-Bereich' => 'Neuer IP-Bereich', //Workaround
+    'SNMP Private Community String' => 'SNMP privater Community Strin',
+    'SNMP Public Community String' => 'SNMP öffentlicher Community String',
     //IP-Pools
     'IP-Pools'          => 'IP-Bereich',
+    'Type of Pool'      => 'Art des IP-Bereichs',
+    'IP network'        => 'IP Netz',
+    'IP netmask'        => 'IP Netzmaske',
+    'IP router'         => 'IP Router',
     //Phone tariffs
     'Phone tariffs'     => 'Telefontarife',
     'External Identifier'  => 'Externer Identifikator', //??
@@ -154,14 +155,14 @@ return [
 
 //Billing Base
     //Product Entry
-    'Billing Cycle'     => 'Abrechnungsperiode',
+    'Billing Cycle'     => 'Rechnungskreislauf',//'Abrechnungsperiode', ??
     'Bundled with VoIP product?'    => 'Mit VoIP-Produkt verknüpft?',
     'Price (Net)'       => 'Preis (netto)',
     'Product Entry'     => 'Produktangebote', // Produktenträge
     //SEPA Accounts
     'Account Holder'    => 'Kontoinhaber',
     'Account Name'      => 'Kontoname',
-    'Choose Call Data Record template file' => 'Vorlage für Einzelverbindungsnachweis', 
+    'Choose Call Data Record template file' => 'Vorlage für Einzel- verbindungsnachweis', 
     'Choose invoice template file'  => 'Rechnungsvorlage',
     'CostCenter'        => 'Kostenstelle',
     'Creditor ID'       => 'Gläubiger ID',
@@ -176,7 +177,8 @@ return [
     'Upload CDR template'   => 'CDR-Vorlage hochladen',
     'Upload invoice template'   => 'Rechnungsvorlage hochladen',
     //Settlement Run Abrechnnungslauf
-  
+    'Verified'          => 'Überprüft?',
+
     //CostCenter
     'Associated SEPA Account'   => 'Verknüpftes SEPA-Konto',
     'Month to create Bill'      => 'Monat der Rechnungserstellung',
@@ -215,4 +217,13 @@ return [
     'Commission in %'   => 'Provision in %',
     'Total Fee'         => 'Gesamtgebühr',
     'Commission Amount' => 'davon Provision',
+//HFC
+    //MPR
+    'Value (deprecated)' => 'Wert (veraltet)',
+    'Priority (lower runs first)' => 'Priorität (kleinere zuerst)',
+//VOIP
+    //Telefon numbers
+    'Activation date' => 'Aktivierungsdatum',
+    'Deactivation date' => 'Deaktivierungsdatum',
+    'SIP domain' => 'SIP Adresse',
 ];

@@ -31,7 +31,7 @@ class Endpoint extends \BaseModel {
 
 
         return ['index' => [$this->hostname, $this->mac, $this->description],
-                'index_header' => ['Hostname', 'MAC address', 'Description'],
+                'index_header' => ['Hostname', 'MAC Address', 'Description'],
                 'bsclass' => $bsclass,
                 'header' => $this->hostname];
     }

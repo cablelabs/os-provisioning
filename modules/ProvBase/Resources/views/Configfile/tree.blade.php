@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute($route_name.'.tree', $view_header) }}
+	{{ HTML::linkRoute($route_name.'.tree', \App\Http\Controllers\BaseViewController::translate_view('Overview', 'Header')) }} <!--$view_header -->
 
 @stop
 
@@ -23,7 +23,7 @@
 		@DivOpen(3)
 			@if ($create_allowed)
 				{{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
-				{{ Form::submit('Create', ['style' => 'simple']) }}
+				{{Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Create '.$view_header, 'Button' ) , ['style' => 'simple']) }}
 				{{ Form::close() }}
 			@endif
 		@DivClose()
@@ -48,7 +48,7 @@
 
 		<!-- delete/submit button of form-->
 		@DivOpen(3)
-			{{ Form::submit('Delete', ['style' => 'simple']) }}
+			{{ Form::submit('Delete', ['!class' => 'btn btn-danger btn-primary m-r-5', 'style' => 'simple']) }}
 			{{ Form::close() }}
 		@DivClose()
 

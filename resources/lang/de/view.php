@@ -6,6 +6,7 @@ return [
 		'Search_EnterKeyword' 		=> 'Suchbegriff eingeben',
 		'Search_MatchesFor'			=> 'Ergebnisse für',
 		'Search_In'					=> 'in der Tabelle',
+		'Search_Search ...'			=> 'Suchbegriff eingeben ...',
 //jQuery
 		//Translations for this at https://datatables.net/plug-ins/i18n/
 		'jQuery_sEmptyTable'		=> 'Keine Daten in der Tabelle vorhanden',
@@ -34,7 +35,7 @@ return [
 		'Menu_Logging'				=> 'Logs',
 		'Menu_Product List'			=> 'Produktliste',
 		'Menu_SEPA Accounts'		=> 'SEPA-Konten',
-		'Menu_Settlement Run'		=> 'Abrechnnungslauf',
+		'Menu_Settlement Run'		=> 'Abrechnungslauf',
 		'Menu_Cost Center'			=> 'Kostenstelle',
 		'Menu_Companies'			=> 'Unternehmen',
 		'Menu_Salesmen'				=> 'Verkäufer',
@@ -81,7 +82,8 @@ return [
 	    'Header_Cost Center'		=> 'Kostenstelle|Kostenstellen',
 	    'Header_EditCost Center'	=> 'Kostenstelle bearbeiten',
 	    //Company
-	    'Header_EditCompany'		=> 'Firma bearbeiten',
+	    'Header_Company'			=> 'Unternehmen|Unternehmen',
+	    'Header_EditCompany'		=> 'Unternehmen bearbeiten',
 		//Salesman
 		'Header_Salesman'			=> 'Verkäufer|Verkäufer',
 	    'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
@@ -90,13 +92,14 @@ return [
 	    'Header_EditItem'			=> 'Posten bearbeiten', //??
 
 	    //Settlement Run
-	    'Header_Settlement Run'		=> 'Abrechnnungslauf|Abrechnnungsläufe',
-	    'Header_EditSettlement Run' => 'Abrechnnungslauf bearbeiten',
+	    'Header_Settlement Run'		=> 'Abrechnungslauf|Abrechnungsläufe',
+	    'Header_EditSettlement Run' => 'Abrechnungslauf bearbeiten',
 	//SNMP Modul
 	    //Device
 	    'Header_Device'				=> 'Gerät|Geräte',
 	    'Header_EditDevice'			=> 'Gerät bearbeiten',
 	    //Device Type
+	    'Header_Device Type'		=> 'Gerätetyp|Gerätetypen',
 	    'Header_EditDevice Type'	=> 'Gerätetyp bearbeiten',
 	//Provisioning
 		//Contract
@@ -141,6 +144,17 @@ return [
 		'Header_Phone tariffs'		=> 'Telefontarif|Telefontarife',
 		'Header_EditPhone tariffs'	=> 'Telefontarif bearbeiten',
 
+	//HFC ?????
+		//Tree 
+		'Header_Tree Table' 		=> 'Baumelement|Baumtabelle', //??
+		'Header_EditTree Table'		=> 'Baumelement bearbeiten', //??
+		//MPR
+		'Header_Mpr'				=> 'Modem Positionierungsregel|Modem Positionierungsregeln',
+		'Header_Modem Positioning Rule' => 'Modem Positionierungsregel|Modem Positionierungsregeln',
+		'Header_EditModem Positioning Rule' => 'Modem Positionierungsregel bearbeiten',
+		'Header_MprGeopos'			=> 'Geoposition für Modem Positionierungsregel|Geopositionen für Modem Positionierungsregel',
+		'Header_Modem Positioning Rule Geoposition'	=> 'Geoposition für Modem Positionierungsregel|Geopositionen für Modem Positionierungsregel',
+		'Header_EditModem Positioning Rule Geoposition' => 'Geoposition für Modem Positionierungsregel bearbeiten',
 	//Header Relation
 		'Assigned'  				=> 'Zugewiesene',
 	//Header Controler index
@@ -165,13 +179,14 @@ return [
 		'Button_Create Cost Center' 	=> 'Neue Kostenstelle', //Workaround decide which one to use
 		'Button_Create CostCenter' 		=> 'Neue Kostenstelle',
 		//Company
-		'Button_Create Company'			=> 'Neue Firma',
+		'Button_Create Company'			=> 'Neues Unternehmen',
 		//Salesman
 		'Button_Create Salesman'		=> 'Neuer Verkäufer',
 		//Item
 		'Button_Create Item'			=> 'Neuer Posten',
 
 		//Settlement Run
+		'Button_Create Settlement Run'	=> 'Neuer Abrechnungslauf',
 		'Button_Rerun Accounting Command for current Month'	=> 'Vorgang für den aktuellen Monat erneut ausführen',
 
 	//SNMP Modul
@@ -206,4 +221,12 @@ return [
 		'Button_Create Phonenumber'		=> 'Neue Telefonnummer',
 		//Phone tariff
 		'Button_Create Phone tariffs'	=> 'Neuer Telefontarif',
+	//HFC
+		//Tree Table
+		'Button_Create Tree Table'		=> 'Neues Baumelement',
+		//MPR
+		'Button_Create Modem Positioning Rule' => 'Neue Modem Positionierungsregel',
+		'Button_Create Mpr'				=> 'Neue MPR',
+		'Button_Create Modem Positioning Rule Geoposition' => 'Neue Geoposition für Modem Positionierungsregel',
+		'Button_Create MprGeopos'		=> 'Neue MPR-Geoposition',
 ];

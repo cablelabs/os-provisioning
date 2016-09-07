@@ -43,7 +43,7 @@ class ModemController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname'),
 			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname'),
 			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street'),
-			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House number'),
+			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number'),
 			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode'),
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City'),
 			array('form_type' => 'text', 'name' => 'district', 'description' => 'District'),
