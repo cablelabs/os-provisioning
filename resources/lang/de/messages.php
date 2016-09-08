@@ -71,7 +71,6 @@ return [
 	'modem_offline'		        => 'Modem ist Offline',
     'month'                     => 'Monat',
     'Month'                     => 'Monat',
-    'Monthly'                   => 'pro Monat',
     'Net'   			        => 'Netz',
     'Netmask'   		        => 'Netzmaske',
     'Network Access'	        => 'Netzwerkzugriff',
@@ -103,7 +102,6 @@ return [
     'Users'                     => 'Nutzer',
     'Vendor'                    => 'Hersteller',
     'Year'                      => 'Jahr',
-    'Yes'                       => 'Ja',
 //
 //Global
 //
@@ -122,7 +120,7 @@ return [
     'Tax in %'                  => 'Mehrwertsteuer in %',
     'Invoice Number Start'      => 'Start Nummerierung Rechnungen',
     'Split Sepa Transfer-Types' => 'SEPA-Transfertypen aufteilen?',
-    'Mandate Reference'         => 'Mandat Bezugsspalte', //??
+    'Mandate Reference'         => 'Mandatrefferenz', //??
     'e.g.: String - {number}'   => 'z.Bsp.: Sring - {Nummer}',
     'Item Termination only end of month' => 'Posten am ende des Monats löschen?',
     //CCC
@@ -187,17 +185,22 @@ return [
     'IP router'         => 'IP Router',
     //Phone tariffs
     'Phone tariffs'     => 'Telefontarife',
-    'External Identifier'  => 'Externer Identifikator', //??
+    'External Identifier'  => 'Externer Identifikator',
     'Usable'            => 'Verfügbar?',
 
 //
 //Billing Base
 //
     //Product Entry
-    'Billing Cycle'     => 'Rechnungskreislauf',//'Abrechnungsperiode', ??
+    'Billing Cycle'     => 'Rechnungskreislauf',
     'Bundled with VoIP product?'    => 'Mit VoIP-Produkt verknüpft?',
     'Price (Net)'       => 'Preis (netto)',
-    'Product Entry'     => 'Produktangebote', // Produktenträge
+    'Number of Cycles'  => 'Anzahl der Zyklen',
+    'Product Entry'     => 'Produktangebote',
+    'Qos (Data Rate)'   => 'QoS (Datenrate)',
+    'with Tax calculation ?' => 'mit Mehrwertsteuer Berechnung?',
+    'Phone Sales Tariff' => 'Endkunden Telefon Tarif',
+    'Phone Purchase Tariff' => 'Telefon Tarif Einkauf',
     //SEPA Accounts
     'Account Holder'    => 'Kontoinhaber',
     'Account Name'      => 'Kontoname',
@@ -246,8 +249,8 @@ return [
     'Target Month'      => 'Abrechnungsmonat', 
     'Date'              => 'Datum', 
     'Count'             => 'Anzahl',
-    'Tax'               => 'Mehrwertsteuer',//MwSt??
-    // 'RCD' ?????
+    'Tax'               => 'Mehrwertsteuer',//??
+    'RCD'               => 'Fälligkeitsdatum',
     'Currency'          => 'Währung',
     'Gross'             => 'Brutto',
     'Net'               => 'Netto',
@@ -261,17 +264,37 @@ return [
 */
 
 //
-//HFC
+// HFC
 //
     //MPR
-    'Value (deprecated)' => 'Wert (veraltet)',
+    'Value (deprecated)'          => 'Wert (veraltet)',
     'Priority (lower runs first)' => 'Priorität (kleinere zuerst)',
 
 //
-//VOIP
+// VOIP
 //
     //Telefon numbers
-    'Activation date' => 'Aktivierungsdatum',
-    'Deactivation date' => 'Deaktivierungsdatum',
-    'SIP domain' => 'SIP Adresse',
+    'Activation date'       => 'Aktivierungsdatum',
+    'Deactivation date'     => 'Deaktivierungsdatum',
+    'SIP domain'            => 'SIP Adresse',
+//
+// Select Box 
+//
+    //Product Entry
+    'Credit'                    => 'Gutschrift',
+    'Other'                     => 'Sonstige',
+    'Once'                      => 'einmalig',
+    'Monthly'                   => 'pro Monat',
+    'Quarterly'                 => 'pro Quartal',
+    'Yearly'                    => 'pro Jahr',
+    //Tree Table
+
+    //Configfile
+    'generic'                   => 'Allgemein',
+    'network'                   => 'Netzwerk',
+    'vendor'                    => 'Hersteller',
+    'user'                      => 'Nutzer',    
+    'Yes'                       => 'Ja',
+    'No'                        => 'Nein',
 ];
+
