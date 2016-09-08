@@ -430,10 +430,12 @@ class BaseController extends Controller {
 	 */
 	public function index()
 	{
-		$obj = static::get_model_obj();
+		$model = static::get_model_obj();
 
-		$view_var   = $obj->index_list();
-		$headline  	= \App\Http\Controllers\BaseViewController::translate_view('Overview','Header'); // OLD: trans_choice('view.Header_'.$obj->view_headline(), 2).': '.trans('view.Header_Overview');
+		$view_var   = $model->index_list();
+		$view_header = \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
+		$headline  	= \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
+		$b_text		= $model->view_headline();
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
 		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
@@ -444,7 +446,7 @@ class BaseController extends Controller {
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
 
-		return View::make ($view_path, $this->compact_prep_view(compact('headline', 'view_var', 'create_allowed', 'delete_allowed')));
+		return View::make ($view_path, $this->compact_prep_view(compact('headline','view_header', 'view_var', 'create_allowed', 'delete_allowed', 'b_text')));
 	}
 
 

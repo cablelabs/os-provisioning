@@ -80,7 +80,7 @@ return [
 	//
 	//Global'Config
 	    //Global
-	    'Header_Global Configurations' => 'Systemweite Konfigurationen',
+	    'Header_Global Configurations' => 'Systemkonfigurationen',
 	    'Header_Global Config'		=> 'Globale Konfiguration|Globale Konfigurationen',
 	    'Header_EditGlobal Config'	=> 'Globale Konfiguration bearbeiten',
 		'Header_Billing Config'     => 'Moduleinstellungen für Billing Base', 
@@ -95,7 +95,7 @@ return [
     	'Header_EditHfc Base Config'=> 'Moduleinstellungen HFC bearbeiten',
 	    //Logs
 	    'Header_Logs'				=> 'Logs',
-	    'Header_EditLogs'			=> 'Log Detail',
+	    'Header_EditLogs'			=> 'Log Details',
 	//Billing Base
 	    //Prduct Entry
 	    'Header_Product Entry'		=> 'Produkt|Produktangebot',

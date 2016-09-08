@@ -6,4 +6,4 @@
 				<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
 			</div>
 			<h4 class="panel-title"> {{ \App\Http\Controllers\BaseViewController::translate_view( $view_header, 'Header', 2)}}  </h4>
-		</div>
+		</div> 

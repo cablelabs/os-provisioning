@@ -24,7 +24,7 @@
 	@DivOpen(12)
 			@if ($create_allowed)
 				{{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
-				{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Create '.$view_header, 'Button' ) , ['style' => 'simple']) }} 
+				{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Create '.$b_text, 'Button' ) , ['style' => 'simple']) }} 
 				{{ Form::close() }}
 			@endif
 	@DivClose()
