@@ -154,6 +154,9 @@ class FormBuilder extends CollectiveFormBuilder {
     {
         $options = $this->appendClassToOptions('form-control', $options);
 
+        foreach ($list as $key => $value) {
+            $list[$key] = \App\Http\Controllers\BaseViewController::translate_label($value) ;
+        }
         // Call the parent select method so that Laravel can handle
         // the rest of the select set up.
         return $this->appendDiv(parent::select($name, $list, $selected, $options));
