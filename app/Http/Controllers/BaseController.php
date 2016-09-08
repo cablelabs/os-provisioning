@@ -515,7 +515,7 @@ class BaseController extends Controller {
 	{
 		$model    = static::get_model_obj();
 		$view_var = $model->findOrFail($id);
-		$view_header 	= \App\Http\Controllers\BaseViewController::translate_view('Edit'.$model->view_headline(),'Header');
+		$view_header 	= BaseViewController::translate_view('Edit'.$model->view_headline(),'Header');
 		$headline       = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var);
 		$panel_right    = $this->prepare_tabs($view_var);
 		$form_fields	= BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
@@ -544,7 +544,7 @@ class BaseController extends Controller {
 			$view_path = \NamespaceController::get_view_name().'.edit';
 		if (View::exists(\NamespaceController::get_view_name().'.form'))
 			$form_path = \NamespaceController::get_view_name().'.form';
-
+	 	
 		// $config_routes = BaseController::get_config_modules();
 		// return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations', 'extra_data')));
 		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations', 'method', 'additional_data')));

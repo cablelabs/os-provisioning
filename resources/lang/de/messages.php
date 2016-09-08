@@ -50,9 +50,6 @@ return [
     'E-Mail Address'	        => 'Email-Adresse',
     'First IP'			        => 'Erste IP',
     'Firstname'			        => 'Vorname',
-    'Global Configurations'     => 'Globale Konfigurationen',
-    'Global Config'		        => 'Globale Konfiguration',
-    'Global Config Page'        => 'Globale Konfigurationen',
     'IBAN'                      => 'IBAN',
     'Internet Access'	        => 'Internetzugriff',
     'Inventar Number'	        => 'Inventarnummer',
@@ -107,7 +104,47 @@ return [
     'Vendor'                    => 'Hersteller',
     'Year'                      => 'Jahr',
     'Yes'                       => 'Ja',
+//
+//Global
+//
+    'Global Config'             => 'Globale Konfiguration',
+    'VOIP'                      => 'VOIP',
+    'Customer Control Center'   => 'Kundenkontrollzentrum',
+    'Provisioning'              => 'Provisioning',
+    'Billing Base'              => 'Billing Base',
+    'HFC'                       => 'HFC',
+    //Global Config
+    'System Log Level'          => 'System Logging Stufe',
+    'Headline 1'                => 'Überschrift Kopfzeile',
+    'Headline 2'                => 'Überschrift Navigationsleiste',
+    //Billing
+    'Day of Requested Collection Date' => 'Monatlicher Abrechungstag',
+    'Tax in %'                  => 'Mehrwertsteuer in %',
+    'Invoice Number Start'      => 'Start Nummerierung Rechnungen',
+    'Split Sepa Transfer-Types' => 'SEPA-Transfertypen aufteilen?',
+    'Mandate Reference'         => 'Mandat Bezugsspalte', //??
+    'e.g.: String - {number}'   => 'z.Bsp.: Sring - {Nummer}',
+    'Item Termination only end of month' => 'Posten am ende des Monats löschen?',
+    //CCC
+    'Connection Info Template'  => 'Vorlage für Verbingungsinformationen',
+    'Upload Template'           => 'Vorlage hochladen',
+    //HFC
+    'SNMP Read Only Community'  => 'SNMP Read Only Community',
+    'SNMP Read Write Community' => 'SNMP Read Write Community',
+    //Provisioning
+    'Provisioning Server IP'    => 'Provisionierungsserver',
+    'Domain Name for Modems'    => 'Modem Domain Name',
+    'Notification Email Address' => 'Benachrichtigungs E-Mail Adresse',
+    'DHCP Default Lease Time'   => 'DHCP Standard Lease Zeit',
+    'DHCP Max Lease Time'       => 'DHCP Maximale Lease Zeit',
+    'Start ID Contracts'        => 'Start Nummerierung Verträge',
+    'Start ID Modems'           => 'Start Nummerierung Modems',
+    'Start ID Endpoints'        => 'Start Nummerierung Endpunkte',
+    //VOIP
+    'Start ID MTA´s'            => 'Start Nummerierung MTA\'s',
+//    
 //Provisioning
+//
     //Verträge
     'Academic Degree'   => 'Akademischer Titel',
     'Contract number'   => 'Vertragsnummer',
@@ -153,7 +190,9 @@ return [
     'External Identifier'  => 'Externer Identifikator', //??
     'Usable'            => 'Verfügbar?',
 
+//
 //Billing Base
+//
     //Product Entry
     'Billing Cycle'     => 'Rechnungskreislauf',//'Abrechnungsperiode', ??
     'Bundled with VoIP product?'    => 'Mit VoIP-Produkt verknüpft?',
@@ -217,11 +256,20 @@ return [
     'Commission in %'   => 'Provision in %',
     'Total Fee'         => 'Gesamtgebühr',
     'Commission Amount' => 'davon Provision',
+/**
+// Customer Control Center
+*/
+
+//
 //HFC
+//
     //MPR
     'Value (deprecated)' => 'Wert (veraltet)',
     'Priority (lower runs first)' => 'Priorität (kleinere zuerst)',
+
+//
 //VOIP
+//
     //Telefon numbers
     'Activation date' => 'Aktivierungsdatum',
     'Deactivation date' => 'Deaktivierungsdatum',

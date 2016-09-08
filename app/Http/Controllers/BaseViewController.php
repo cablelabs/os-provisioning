@@ -419,7 +419,7 @@ finish:
 					else
 						$name = $parent->view_index_label();
 
-					$s = \HTML::linkRoute($view.'.edit', $name, $parent->id).' > '.$s;
+					$s = \HTML::linkRoute($view.'.edit', BaseViewController::translate_view($name, 'Header'), $parent->id).' > '.$s;
 				}
 				// get view parent
 				$parent = $parent->view_belongs_to();
@@ -430,7 +430,7 @@ finish:
 
 		// Base Link to Index Table in front of all relations
 		if (in_array($route_name, BaseController::get_config_modules()))	// parse: Global Config requires own link
-			$s = \HTML::linkRoute('Config.index', 'Global Configurations').': '.$s;
+			$s = \HTML::linkRoute('Config.index', BaseViewController::translate_view('Global Configurations', 'Header')).': '.$s;
 		else
 			$s = \HTML::linkRoute($route_name.'.index', $view_header).': '.$s;
 

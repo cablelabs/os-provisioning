@@ -2,12 +2,17 @@
 
 return [
 
+//
 //SEARCH
+//
 		'Search_EnterKeyword' 		=> 'Suchbegriff eingeben',
 		'Search_MatchesFor'			=> 'Ergebnisse für',
 		'Search_In'					=> 'in der Tabelle',
 		'Search_Search ...'			=> 'Suchbegriff eingeben ...',
+
+//
 //jQuery
+//
 		//Translations for this at https://datatables.net/plug-ins/i18n/
 		'jQuery_sEmptyTable'		=> 'Keine Daten in der Tabelle vorhanden',
 		'jQuery_sInfo'				=> '_START_ bis _END_ von _TOTAL_ Einträgen',
@@ -28,7 +33,9 @@ return [
 		'jQuery_sLast'				=> ':sSortDescending aktivieren, um Spalte absteigend zu sortieren',
 		'jQuery_All'				=> 'Alle',
 
+//
 //MENU
+//
 	//Main Menu
 		'Menu_MainMenu' 			=> 'Hauptmenü',
 		'Menu_Config Page'			=> 'Globale Konfigurationen',
@@ -58,15 +65,34 @@ return [
 	    'Menu_UserGlobSettings' 	=> 'Globale Nutzereinstellungen',
 	    'Menu_Logout'               => 'Ausloggen',
 
+//
 //HEADER
+//
 	//General
 	    'Header_GlobalSearch'		=> 'Systemweite Suche',
 	    'Header_Overview'			=> 'Übersicht',
 	    'Header_Assigned'			=> 'Zugewiesene',
 	    'Header_Create'				=> 'Erstellen',
+	    'Header_Users'				=> 'Benutzer|Benutzer',
+	    'Header_EditUsers'			=> 'Benutzer bearbeiten',
+	//
 	//Module specific
-
-	//Global
+	//
+	//Global'Config
+	    //Global
+	    'Header_Global Configurations' => 'Systemweite Konfigurationen',
+	    'Header_Global Config'		=> 'Globale Konfiguration|Globale Konfigurationen',
+	    'Header_EditGlobal Config'	=> 'Globale Konfiguration bearbeiten',
+		'Header_Billing Config'     => 'Moduleinstellungen für Billing Base', 
+		'Header_EditBilling Config' => 'Moduleinstellungen für Billing Base bearbeiten',
+		'Header_ProvVoip'			=> 'Moduleinstellungen VOIP',		
+		'Header_EditProvVoip Config'=> 'Moduleinstellungen VOIP bearbeiten',
+		'Header_Ccc Config'			=> 'Moduleinstellungen Kundenkontrollzentrum',
+    	'Header_EditCcc Config'   	=> 'Moduleinstellungen Kundenkontrollzentrum bearbeiten',
+    	'Header_Prov Base'			=> 'Moduleinstellungen Provisioning',
+    	'Header_EditProv Base Config'=> 'Moduleinstellungen Provisioning bearbeiten',
+    	'Header_HfcBase'            => 'Moduleinstellungen HFC',
+    	'Header_EditHfc Base Config'=> 'Moduleinstellungen HFC bearbeiten',
 	    //Logs
 	    'Header_Logs'				=> 'Logs',
 	    'Header_EditLogs'			=> 'Log Detail',
@@ -162,7 +188,9 @@ return [
 		'Create'					=> 'Erstelle ',
 		'Edit'						=> 'Ändere ',
 
+//
 //BUTTON
+//
 		'Button_Create Users'		=> 'Neuer Benutzer',
 		'Sign me in'				=> 'Einloggen',
 		'Button_Create'				=> 'Erstelle',
