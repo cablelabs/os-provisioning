@@ -38,8 +38,9 @@ class BaseViewController extends Controller {
 
 	/**
      * Searches for a string in the language files under resources/lang/ and returns it for the active application language
-     *
-     * @author Nino Ryschawy
+     * Searches for a "*" (required field), deletes it for trans function and appends it at the end
+     * used in everything Form related (Labels, descriptions)
+     * @author Nino Ryschawy, Christian Schramm
      */
     public static function translate_label($string)
     {
@@ -65,7 +66,11 @@ class BaseViewController extends Controller {
 
 	/**
      * Searches for a string in the language files under resources/lang/ and returns it for the active application language
-     *
+     * used in everything view related 
+     * @param string: 	string that is searched in resspurces/lang/{App-language}/view.php
+     * @param type: 	can be Header, Menu, Button, jQuery, Search
+     * @param count: 	standard at 1 , For plural translation - needs to be seperated with pipe "|""
+     *					example: Index Headers -> in view.php: 'Header_Mta'	=> 'MTA|MTAs',
      * @author Christian Schramm
      */
     public static function translate_view($string, $type, $count = 1)
