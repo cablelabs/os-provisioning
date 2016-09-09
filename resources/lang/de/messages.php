@@ -221,6 +221,15 @@ return [
     'Upload invoice template'   => 'Rechnungsvorlage hochladen',
     //Settlement Run Abrechnnungslauf
     'Verified'          => 'Überprüft?',
+    'tariff'            => 'Tarif',
+    'item'              => 'Posten',
+    'sepa'              => 'mit_SEPA',
+    'no_sepa'           => 'ohne_SEPA',
+    'accounting'        => 'Rechungssatzdatei',
+    'booking'           => 'Buchungssatzdatei',
+    'DD'                => 'SEPA Lastschriften',
+    'DC'                => 'SEPA Gutschriften',
+    'salesmen_commission' => 'Provision_Verkaeufer',
 
     //CostCenter
     'Associated SEPA Account'   => 'Verknüpftes SEPA-Konto',
