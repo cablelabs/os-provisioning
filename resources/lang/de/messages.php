@@ -164,6 +164,8 @@ return [
     'Product'           => 'Produkt',
     'Valid from'        => 'Gülig ab',
     'Valid to'          => 'Gültis bis',
+    'Valid from fixed'  => 'Gültig ab fest',
+    'Valid to fixed'    => 'Gültig bis fest',
     //Modems
     'Configfile'        => 'Konfigurationsdatei',
     'Mta'               => 'MTA',
