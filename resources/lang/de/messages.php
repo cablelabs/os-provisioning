@@ -288,7 +288,14 @@ return [
     'Quarterly'                 => 'pro Quartal',
     'Yearly'                    => 'pro Jahr',
     //Tree Table
-
+    'NET'                       => 'Netz',
+    'CMTS'                      => 'CMTS',
+    'DATA'                      => 'Daten',
+    'CLUSTER'                   => 'Cluster',
+    'NODE'                      => 'Knoten',
+    'AMP'                       => 'Verstärker',
+    'None'                      => 'Keins',
+    'Null'                      => 'Nichts ausgewählt',
     //Configfile
     'generic'                   => 'Allgemein',
     'network'                   => 'Netzwerk',
