@@ -38,7 +38,7 @@ return [
 //
 	//Main Menu
 		'Menu_MainMenu' 			=> 'Hauptmenü',
-		'Menu_Config Page'			=> 'Globale Konfigurationen',
+		'Menu_Config Page'			=> 'Systemkonfigurationen',
 		'Menu_Logging'				=> 'Logs',
 		'Menu_Product List'			=> 'Produktliste',
 		'Menu_SEPA Accounts'		=> 'SEPA-Konten',
