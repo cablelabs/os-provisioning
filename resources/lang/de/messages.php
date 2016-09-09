@@ -123,6 +123,7 @@ return [
     'Mandate Reference'         => 'Mandatrefferenz', //??
     'e.g.: String - {number}'   => 'z.Bsp.: Sring - {Nummer}',
     'Item Termination only end of month' => 'Posten am ende des Monats löschen?',
+    'Language for Accounting command' => 'Sprache für Abrechnungslauf-Befehl',
     //CCC
     'Connection Info Template'  => 'Vorlage für Verbingungsinformationen',
     'Upload Template'           => 'Vorlage hochladen',
