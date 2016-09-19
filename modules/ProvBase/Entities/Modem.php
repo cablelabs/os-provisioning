@@ -637,6 +637,9 @@ class ModemObserver
 		$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
+
+		if (\PPModule::is_active ('ProvMon'))
+			\Artisan::call('nms:cacti');
 	}
 
 	public function deleted($modem)
