@@ -451,6 +451,60 @@ class Modem extends \BaseModel {
 		return $results;
 	}
 
+	/*
+	 * Refresh Modem State using cached value of Cacti
+	 *
+	 * This function will update the modem->status field with the modem upstream power level
+	 * if online. Because the last value of Cacti is used, the update is much quicker and doesn't
+	 * generate a superfluous SNMP request.
+	 *
+	 * NOTE: This function will be called via artisan command modem-refresh. This command
+	 *       is added to laravel scheduling api to refresh all modem states every 5min.
+	 *
+	 * @return: maximum power level of all upstream channels or -1 on error
+	 * @author: Ole Ernst
+	 */
+	public function refresh_state_cacti()
+	{
+		// cacti is not installed
+		if(!\PPModule::is_active('provmon'))
+			return -1;
+
+		$path = \DB::connection('mysql-cacti')->table('host')
+			->join('data_local', 'host.id', '=', 'data_local.host_id')
+			->join('data_template_data', 'data_local.id', '=', 'data_template_data.local_data_id')
+			->where('host.description', '=', $this->hostname)
+			->orderBy('data_local.id')
+			->select('data_template_data.data_source_path')->first();
+		// no rrd file for current modem found
+		if(!$path)
+			return -1;
+
+		$output = array();
+		$file = basename($path->data_source_path);
+		exec("rrdtool lastupdate /usr/share/cacti/rra/$file", $output);
+		// unexpected number of lines from rrdtool
+		if(count($output) != 3)
+			return -1;
+
+		$keys = explode(' ', trim(array_shift($output)));
+		$vals = explode(' ', trim(explode(':', array_pop($output))[1]));
+		$res = array_combine($keys, $vals)['maxUsPow'];
+
+		$status = \DB::connection('mysql-cacti')->table('host')
+			->where('description', '=', $this->hostname)
+			->select('status')->first()->status;
+		// modem is offline, if we use last value of cacti instead of setting it
+		// to zero, it would seem as if the modem is still online
+		if($status == 1)
+			$res = 0;
+
+		$this->observer_disable();
+		$this->status = $res;
+		$this->save();
+
+		return $res;
+	}
 
 	/*
 	 * Return actual modem state as string or int
