@@ -54,7 +54,6 @@ return [
     'Internet Access'	        => 'Internetzugriff',
     'Inventar Number'	        => 'Inventarnummer',
     'invoice'                   => 'Rechnung',
-    'Invoices'                  => 'Rechnungen',
     'IP address'		        => 'IP Adresse',
     'Language'                  => 'Sprache',
     'Lastname'			        => 'Nachname',
@@ -232,6 +231,7 @@ return [
     'DD'                => 'SEPA Lastschriften',
     'DC'                => 'SEPA Gutschriften',
     'salesmen_commission' => 'Provision_Verkaeufer',
+    'Invoices'          => 'Rechnungen',
 
     //CostCenter
     'Associated SEPA Account'   => 'Verknüpftes SEPA-Konto',
