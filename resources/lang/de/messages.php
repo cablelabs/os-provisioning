@@ -221,6 +221,7 @@ return [
     'Upload CDR template'   => 'CDR-Vorlage hochladen',
     'Upload invoice template'   => 'Rechnungsvorlage hochladen',
     //Settlement Run Abrechnnungslauf
+    'General'           => 'Allgemein',
     'Verified'          => 'Überprüft?',
     'tariff'            => 'Tarif',
     'item'              => 'Posten',
