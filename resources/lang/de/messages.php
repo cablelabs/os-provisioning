@@ -227,6 +227,7 @@ return [
     'item'              => 'Posten',
     'sepa'              => 'mit_SEPA',
     'no_sepa'           => 'ohne_SEPA',
+    'Call Data Record'  => 'Einzelverbindungsnachweis',
     'accounting'        => 'Rechungssatzdatei',
     'booking'           => 'Buchungssatzdatei',
     'DD'                => 'SEPA Lastschriften',
