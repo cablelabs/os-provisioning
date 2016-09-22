@@ -115,7 +115,7 @@ return [
 	    'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
 	    //Items
 	    'Header_Item'				=> 'Posten|Posten',
-	    'Header_EditItem'			=> 'Posten bearbeiten', //??
+	    'Header_EditItem'			=> 'Posten bearbeiten',
 
 	    //Settlement Run
 	    'Header_Settlement Run'		=> 'Abrechnungslauf|Abrechnungsläufe',
@@ -170,7 +170,7 @@ return [
 		'Header_Phone tariffs'		=> 'Telefontarif|Telefontarife',
 		'Header_EditPhone tariffs'	=> 'Telefontarif bearbeiten',
 
-	//HFC ?????
+	//HFC
 		//Tree 
 		'Header_Tree Table' 		=> 'Baumelement|Baumtabelle', //??
 		'Header_EditTree Table'		=> 'Baumelement bearbeiten', //??

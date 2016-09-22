@@ -119,7 +119,7 @@ return [
     'Tax in %'                  => 'Mehrwertsteuer in %',
     'Invoice Number Start'      => 'Start Nummerierung Rechnungen',
     'Split Sepa Transfer-Types' => 'SEPA-Transfertypen aufteilen?',
-    'Mandate Reference'         => 'Mandatrefferenz', //??
+    'Mandate Reference'         => 'Mandatrefferenz', 
     'e.g.: String - {number}'   => 'z.Bsp.: Sring - {Nummer}',
     'Item Termination only end of month' => 'Posten am ende des Monats löschen?',
     'Language for Accounting command' => 'Sprache für Abrechnungslauf-Befehl',
@@ -146,11 +146,11 @@ return [
     //Verträge
     'Academic Degree'   => 'Akademischer Titel',
     'Contract number'   => 'Vertragsnummer',
-    'Contract number legacy' => 'Vererbte Vertragsnummer', //??
+    'Contract number legacy' => 'Historische Vertragsnummer',
     'Cost Center'       => 'Kostenstelle',
     'Create Invoice'    => 'Rechnung erstellen',
     'Customer number'   => 'Kundennummer',
-    'Customer number legacy'    => 'Vererbte Kundennummer', // ??
+    'Customer number legacy'    => 'Historische Kundennummer',
     'Department'        => 'Abteilung',
     'House Number'      => 'Hausnummer',
     'Salesman'          => 'Verkäufer',
@@ -212,10 +212,10 @@ return [
     'Creditor ID'       => 'Gläubiger ID',
     'Institute'         => 'Kreditinstitut',
     'Invoice Headline'  => 'Rechnungstitel',
-    'Invoice Text for negativ Amount with Sepa Mandate' => 'Rechnungstext für Negativbetrag mit SEPA-Mandat', //?? negativ=> negative
-    'Invoice Text for negativ Amount without Sepa Mandate'  => 'Rechnungstext für Negativbetrag ohne SEPA-Mandat', //??
-    'Invoice Text for positiv Amount with Sepa Mandate' => 'Rechnungstext für Positivbetrag mit SEPA-Mandat', //?? positiv=> positive
-    'Invoice Text for positiv Amount without Sepa Mandate'  => 'Rechnungstext für Positivbetrag ohne SEPA-Mandat', //??
+    'Invoice Text for negative Amount with Sepa Mandate' => 'Rechnungstext für Negativbetrag mit SEPA-Mandat',
+    'Invoice Text for negative Amount without Sepa Mandate'  => 'Rechnungstext für Negativbetrag ohne SEPA-Mandat',
+    'Invoice Text for positive Amount with Sepa Mandate' => 'Rechnungstext für Positivbetrag mit SEPA-Mandat',
+    'Invoice Text for positive Amount without Sepa Mandate'  => 'Rechnungstext für Positivbetrag ohne SEPA-Mandat',
     'SEPA Account'      => 'SEPA-Konto',
     'SepaAccount'       => 'SEPA-Konto', // siehe Companies
     'Upload CDR template'   => 'CDR-Vorlage hochladen',
@@ -261,7 +261,7 @@ return [
     'Target Month'      => 'Abrechnungsmonat', 
     'Date'              => 'Datum', 
     'Count'             => 'Anzahl',
-    'Tax'               => 'Mehrwertsteuer',//??
+    'Tax'               => 'Mehrwertsteuer',
     'RCD'               => 'Fälligkeitsdatum',
     'Currency'          => 'Währung',
     'Gross'             => 'Brutto',
