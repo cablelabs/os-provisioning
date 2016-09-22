@@ -61,72 +61,72 @@ return [
 		'Menu_PhoneTariffs'			=> 'Telefontarife',
 
 	//User Settings
-		'Menu_UserSettings'     	=> 'Nutzereinstellungen',
-	    'Menu_UserGlobSettings' 	=> 'Globale Nutzereinstellungen',
-	    'Menu_Logout'               => 'Ausloggen',
+		'Menu_UserSettings'			=> 'Nutzereinstellungen',
+		'Menu_UserGlobSettings'		=> 'Globale Nutzereinstellungen',
+		'Menu_Logout'				=> 'Ausloggen',
 
 //
 //HEADER
 //
 	//General
-	    'Header_GlobalSearch'		=> 'Systemweite Suche',
-	    'Header_Overview'			=> 'Übersicht',
-	    'Header_Assigned'			=> 'Zugewiesene',
-	    'Header_Create'				=> 'Erstellen',
-	    'Header_Users'				=> 'Benutzer|Benutzer',
-	    'Header_EditUsers'			=> 'Benutzer bearbeiten',
+		'Header_GlobalSearch'		=> 'Systemweite Suche',
+		'Header_Overview'			=> 'Übersicht',
+		'Header_Assigned'			=> 'Zugewiesene',
+		'Header_Create'				=> 'Erstellen',
+		'Header_Users'				=> 'Benutzer|Benutzer',
+		'Header_EditUsers'			=> 'Benutzer bearbeiten',
 	//
 	//Module specific
 	//
 	//Global'Config
-	    //Global
-	    'Header_Global Configurations' => 'Systemkonfigurationen',
-	    'Header_Global Config'		=> 'Globale Konfiguration|Globale Konfigurationen',
-	    'Header_EditGlobal Config'	=> 'Globale Konfiguration bearbeiten',
-		'Header_Billing Config'     => 'Moduleinstellungen für Billing Base', 
+		//Global
+		'Header_Global Configurations' => 'Systemkonfigurationen',
+		'Header_Global Config'		=> 'Globale Konfiguration|Globale Konfigurationen',
+		'Header_EditGlobal Config'	=> 'Globale Konfiguration bearbeiten',
+		'Header_Billing Config'		=> 'Moduleinstellungen für Billing Base', 
 		'Header_EditBilling Config' => 'Moduleinstellungen für Billing Base bearbeiten',
 		'Header_ProvVoip'			=> 'Moduleinstellungen VOIP',		
 		'Header_EditProvVoip Config'=> 'Moduleinstellungen VOIP bearbeiten',
 		'Header_Ccc Config'			=> 'Moduleinstellungen Kundenkontrollzentrum',
-    	'Header_EditCcc Config'   	=> 'Moduleinstellungen Kundenkontrollzentrum bearbeiten',
-    	'Header_Prov Base'			=> 'Moduleinstellungen Provisioning',
-    	'Header_EditProv Base Config'=> 'Moduleinstellungen Provisioning bearbeiten',
-    	'Header_HfcBase'            => 'Moduleinstellungen HFC',
-    	'Header_EditHfc Base Config'=> 'Moduleinstellungen HFC bearbeiten',
-	    //Logs
-	    'Header_Logs'				=> 'Logs',
-	    'Header_EditLogs'			=> 'Log Details',
+		'Header_EditCcc Config'		=> 'Moduleinstellungen Kundenkontrollzentrum bearbeiten',
+		'Header_Prov Base'			=> 'Moduleinstellungen Provisioning',
+		'Header_EditProv Base Config'=> 'Moduleinstellungen Provisioning bearbeiten',
+		'Header_HfcBase'			=> 'Moduleinstellungen HFC',
+		'Header_EditHfc Base Config'=> 'Moduleinstellungen HFC bearbeiten',
+		//Logs
+		'Header_Logs'				=> 'Logs',
+		'Header_EditLogs'			=> 'Log Details',
 	//Billing Base
-	    //Prduct Entry
-	    'Header_Product Entry'		=> 'Produkt|Produktangebot',
-	    'Header_EditProduct Entry'	=> 'Produkt bearbeiten',
-	    //SEPA Accounts
-	    'Header_SEPA Account'		=> 'SEPA-Konto|SEPA-Konten', //Workaround decide which one to use
-	    'Header_EditSEPA Account'	=> 'SEPA-Konto bearbeiten',
-	    //CostCenter
-	    'Header_CostCenter'			=> 'Kostenstelle|Kostenstellen', //Workaround decide which one to use
-	    'Header_Cost Center'		=> 'Kostenstelle|Kostenstellen',
-	    'Header_EditCost Center'	=> 'Kostenstelle bearbeiten',
-	    //Company
-	    'Header_Company'			=> 'Unternehmen|Unternehmen',
-	    'Header_EditCompany'		=> 'Unternehmen bearbeiten',
+		//Prduct Entry
+		'Header_Product Entry'		=> 'Produkt|Produktangebot',
+		'Header_EditProduct Entry'	=> 'Produkt bearbeiten',
+		//SEPA Accounts
+		'Header_SEPA Account'		=> 'SEPA-Konto|SEPA-Konten', //Workaround decide which one to use
+		'Header_EditSEPA Account'	=> 'SEPA-Konto bearbeiten',
+		//CostCenter
+		'Header_CostCenter'			=> 'Kostenstelle|Kostenstellen', //Workaround decide which one to use
+		'Header_Cost Center'		=> 'Kostenstelle|Kostenstellen',
+		'Header_EditCost Center'	=> 'Kostenstelle bearbeiten',
+		//Company
+		'Header_Company'			=> 'Unternehmen|Unternehmen',
+		'Header_EditCompany'		=> 'Unternehmen bearbeiten',
 		//Salesman
 		'Header_Salesman'			=> 'Verkäufer|Verkäufer',
-	    'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
-	    //Items
-	    'Header_Item'				=> 'Posten|Posten',
-	    'Header_EditItem'			=> 'Posten bearbeiten',
+		'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
+		//Items
+		'Header_Item'				=> 'Posten|Posten',
+		'Header_EditItem'			=> 'Posten bearbeiten',
 
-	    //Settlement Run
-	    'Header_Settlement Run'		=> 'Abrechnungslauf|Abrechnungsläufe',
-	    'Header_EditSettlement Run' => 'Abrechnungslauf bearbeiten',
+		//Settlement Run
+		'Header_Settlement Run'		=> 'Abrechnungslauf|Abrechnungsläufe',
+		'Header_EditSettlement Run' => 'Abrechnungslauf bearbeiten',
 	//SNMP Modul
-	    //Device
-	    'Header_Device'				=> 'Gerät|Geräte',
-	    'Header_EditDevice'			=> 'Gerät bearbeiten',
-	    //Device Type
-	    'Header_Device Type'		=> 'Gerätetyp|Gerätetypen',
-	    'Header_EditDevice Type'	=> 'Gerätetyp bearbeiten',
+		//Device
+		'Header_Device'				=> 'Gerät|Geräte',
+		'Header_EditDevice'			=> 'Gerät bearbeiten',
+		//Device Type
+		'Header_Device Type'		=> 'Gerätetyp|Gerätetypen',
+		'Header_EditDevice Type'	=> 'Gerätetyp bearbeiten',
 	//Provisioning
 		//Contract
 		'Header_Contract'			=> 'Vertrag|Verträge',
@@ -154,13 +154,13 @@ return [
 		'Header_EditIpPool'			=> 'IP-Bereich bearbeiten',
 		'Header_IP-Pools'			=> 'IP-Bereich|IP-Bereiche',
 		'Header_EditIP-Pools'		=> 'IP-Bereich bearbeiten',
-		    
+			
 	//VOIP
-	    //MTA
-	    'Header_Mta'				=> 'MTA|MTAs',
-	    'Header_EditMta'			=> 'MTA bearbeiten',
-	    'Header_MTAs'				=> 'MTA|MTAs',
-	    'Header_EditMTAs'			=> 'MTA bearbeiten',
+		//MTA
+		'Header_Mta'				=> 'MTA|MTAs',
+		'Header_EditMta'			=> 'MTA bearbeiten',
+		'Header_MTAs'				=> 'MTA|MTAs',
+		'Header_EditMTAs'			=> 'MTA bearbeiten',
 		//Phonenumber
 		'Header_Phonenumber'		=> 'Telefonnummer|Telefonnummern', //workaround
 		'Header_EditPhonenumber'	=> 'Telefonnummer bearbeiten',
@@ -218,10 +218,10 @@ return [
 		'Button_Rerun Accounting Command for current Month'	=> 'Vorgang für den aktuellen Monat erneut ausführen',
 
 	//SNMP Modul
-	    //Device
-	    'Button_Create Device'			=> 'Neues Gerät',
-	    //Device Type
-	    'Button_Create Device Type'		=> 'Neuer Gerätetyp',
+		//Device
+		'Button_Create Device'			=> 'Neues Gerät',
+		//Device Type
+		'Button_Create Device Type'		=> 'Neuer Gerätetyp',
 
 	//Provisioning
 		//Contract
@@ -244,7 +244,7 @@ return [
 
 	//VOIP
 		//MTA
-		'Button_Create Mta'    			=> 'Neues MTA',
+		'Button_Create Mta'				=> 'Neues MTA',
 		//Phonenumber
 		'Button_Create Phonenumber'		=> 'Neue Telefonnummer',
 		//Phone tariff

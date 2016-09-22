@@ -38,10 +38,10 @@ return [
 	'Item_CreditAmount'				=> 'Gross price actualy - will be changed in future to Net price',
 
 	//ProductController
-  	'Product_Name' 					=> 'Für Kredite ist es möglich einen Typ zuzuweisen, indem der Typname dem Namen des Kredits angefügt wird - z.B.: \'Kredit Gerät\'', 
-  									//'For Credits it is possible to assign a Type by adding the type name to the Name of the Credit - e.g.: \'Credit Device\'',
-  	'Product_Type'					=> 'Alle Felder außer dem Abrechnungszyklus müssen vor eine Änderung des Produkts gelöscht werde! Andernfalls können die Produkte in den meisten Fällen nicht gespeichert werden.',
-  									//'All fields besides Billing Cycle have to be cleared before a type change! Otherwise products can not be saved in most cases',
+	'Product_Name' 					=> 'Für Kredite ist es möglich einen Typ zuzuweisen, indem der Typname dem Namen des Kredits angefügt wird - z.B.: \'Kredit Gerät\'', 
+									//'For Credits it is possible to assign a Type by adding the type name to the Name of the Credit - e.g.: \'Credit Device\'',
+	'Product_Type'					=> 'Alle Felder außer dem Abrechnungszyklus müssen vor eine Änderung des Produkts gelöscht werde! Andernfalls können die Produkte in den meisten Fällen nicht gespeichert werden.',
+									//'All fields besides Billing Cycle have to be cleared before a type change! Otherwise products can not be saved in most cases',
 	'Product_Number_of_Cycles' 		=> 'Achtung! Für alle Produkte, die in einem wiederkehrenden Zyklus bezahlt werden steht der Preis für jede einzelne Zahlung. Für Produkte, die einmalig bezahlt werden wird der Preis durch die Anzahl der Zyklen geteilt.', 
 									//'Take Care!: for all repeatedly payed products the price stands for every charge, for Once payed products the Price is divided by the number of cycles',
 
@@ -58,14 +58,14 @@ return [
  /**
   *	MODULE: ProvBase	
   */
- 	//ModemController
+	//ModemController
 	'Modem_NetworkAccess'			=> 'Deaktivieren/Aktivieren des Netzwerkzugriffs - Achtung: Wenn das Abrechnungsmodul installiert ist, wird diese Checkbox täglich überschrieben, je nach Gültigkeit der Tarif-Option.', 
 									//'Disable/Enable Network Access - Take Care: If Billing-Module is installed this Checkbox will be overwritten daily during check of valid Tariff Item',
 
  /**
   *	MODULE: ProvVoip	
   */
- 	//PhonenumberManagementController
+	//PhonenumberManagementController
 	'PhonenumberManagement_CarrierIn'=> 'Im Falle einer neuen Nummer, setzen Sie diesrs Feld auf EnviaTEL',
 									//'In case of a new number set this to EnviaTEL',
 	'PhonenumberManagement_EkpIn'	=> 'Im Falle einer neuen Nummer, setzen Sie diesrs Feld auf EnviaTEL',

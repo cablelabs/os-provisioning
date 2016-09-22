@@ -52,46 +52,46 @@ return [
 		'Menu_PhoneTariffs'			=> 'PhoneTariffs',
 
 	//User Settings
-		'Menu_UserSettings'     	=> 'User Settings',
-	    'Menu_UserGlobSettings' 	=> 'Global User Settings',
-	    'Menu_Logout'               => 'Logout',
+		'Menu_UserSettings'			=> 'User Settings',
+		'Menu_UserGlobSettings' 	=> 'Global User Settings',
+		'Menu_Logout'				=> 'Logout',
 
 //HEADER
 	//General
-	    'Header_GlobalSearch'		=> 'Global Search',
-	    'Header_Overview'			=> 'Overview',
-	    'Header_Assigned'			=> 'Assigned',
-	    'Header_Create'				=> 'Create',
+		'Header_GlobalSearch'		=> 'Global Search',
+		'Header_Overview'			=> 'Overview',
+		'Header_Assigned'			=> 'Assigned',
+		'Header_Create'				=> 'Create',
 	//Module specific
 
 	//Global
-	    //Logs
-	    'Header_Logs'				=> 'Logs',
-	    'Header_EditLogs'			=> 'Edit Logs',
+		//Logs
+		'Header_Logs'				=> 'Logs',
+		'Header_EditLogs'			=> 'Edit Logs',
 	//Billing Base
-	    //Prduct Entry
-	    'Header_Product Entry'		=> 'Product Entry|Product Entries',
-	    'Header_EditProduct Entry'	=> 'Edit Product Entry',
-	    //SEPA Accounts
-	    'Header_SEPA Account'		=> 'SEPA Account|SEPA Accounts', //Workaround decide which one to use
-	    'Header_EditSEPA Account'	=> 'Edit SEPA Account',
-	    //CostCenter
-	    'Header_CostCenter'			=> 'Cost Center|Cost Centers', //Workaround decide which one to use
-	    'Header_Cost Center'		=> 'Cost Center|Cost Centers',
-	    'Header_EditCost Center'	=> 'Edit Cost Center',
-	    //Company
-	    'Header_EditCompany'		=> 'Edit Company',
+		//Prduct Entry
+		'Header_Product Entry'		=> 'Product Entry|Product Entries',
+		'Header_EditProduct Entry'	=> 'Edit Product Entry',
+		//SEPA Accounts
+		'Header_SEPA Account'		=> 'SEPA Account|SEPA Accounts', //Workaround decide which one to use
+		'Header_EditSEPA Account'	=> 'Edit SEPA Account',
+		//CostCenter
+		'Header_CostCenter'			=> 'Cost Center|Cost Centers', //Workaround decide which one to use
+		'Header_Cost Center'		=> 'Cost Center|Cost Centers',
+		'Header_EditCost Center'	=> 'Edit Cost Center',
+		//Company
+		'Header_EditCompany'		=> 'Edit Company',
 		//Salesman
-	    'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
-	    //Items
-	    'Header_Item'				=> 'Produkt|Produkte',
-	    'Header_EditItem'			=> 'Produkt bearbeiten', //??
+		'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
+		//Items
+		'Header_Item'				=> 'Produkt|Produkte',
+		'Header_EditItem'			=> 'Produkt bearbeiten', //??
 	//SNMP Modul
-	    //Device
-	    'Header_Device'				=> 'Gerät|Geräte',
-	    'Header_EditDevice'			=> 'Gerät bearbeiten',
-	    //Device Type
-	    'Header_EditDevice Type'	=> 'Gerätetyp bearbeiten',
+		//Device
+		'Header_Device'				=> 'Gerät|Geräte',
+		'Header_EditDevice'			=> 'Gerät bearbeiten',
+		//Device Type
+		'Header_EditDevice Type'	=> 'Gerätetyp bearbeiten',
 	//Provisioning
 		//Contract
 		'Header_Contract'			=> 'Vertrag|Verträge',
@@ -119,13 +119,13 @@ return [
 		'Header_EditIpPool'			=> 'IP-Bereich bearbeiten',
 		'Header_IP-Pools'			=> 'IP-Bereich|IP-Bereiche',
 		'Header_EditIP-Pools'		=> 'IP-Bereich bearbeiten',
-		    
+			
 	//VOIP
-	    //MTA
-	    'Header_Mta'				=> 'MTA|MTAs',
-	    'Header_EditMta'			=> 'MTA bearbeiten',
-	    'Header_MTAs'				=> 'MTA|MTAs',
-	    'Header_EditMTAs'			=> 'MTA bearbeiten',
+		//MTA
+		'Header_Mta'				=> 'MTA|MTAs',
+		'Header_EditMta'			=> 'MTA bearbeiten',
+		'Header_MTAs'				=> 'MTA|MTAs',
+		'Header_EditMTAs'			=> 'MTA bearbeiten',
 		//Phonenumber
 		'Header_Phonenumber'		=> 'Telefonnummer|Telefonnummern', //workaround
 		'Header_EditPhonenumber'	=> 'Telefonnummer bearbeiten',
@@ -166,10 +166,10 @@ return [
 		'Button_Create Item'			=> 'Create Item',
 
 	//SNMP Modul
-	    //Device
-	    'Button_Create Device'			=> 'Create Device',
-	    //Device Type
-	    'Button_Create Device Type'		=> 'Create Device Type',
+		//Device
+		'Button_Create Device'			=> 'Create Device',
+		//Device Type
+		'Button_Create Device Type'		=> 'Create Device Type',
 
 	//Provisioning
 		//Contract
@@ -192,7 +192,7 @@ return [
 
 	//VOIP
 		//MTA
-		'Button_Create Mta'    			=> 'Neues MTA',
+		'Button_Create Mta'				=> 'Neues MTA',
 		//Phonenumber
 		'Button_Create Phonenumber'		=> 'Neue Telefonnummer',
 		//Phone tariff
