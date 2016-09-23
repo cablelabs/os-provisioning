@@ -288,6 +288,28 @@ return [
 //
 // ProvVoipEnvia
 //
+	'Created at' 			=> 'Erstellt am',
+	'Last status update'	=> 'Letztes Statusupdate',
+	'Last user interaction' => 'Letzte Nutzerinteraktion',
+	'Method'				=> 'Methode',
+	'Ordertype ID'			=> 'Bestellungsart ID',
+	'Ordertype'				=> 'Bestellungstyp',
+	'Orderstatus ID'		=> 'Bestellungsstatus ID',
+	'Orderstatus'			=> 'Bestellungsstatu',
+	'Orderdate'				=> 'Bestelldatum',
+	'Ordercomment'			=> 'Bestellkommentar',
+	'Envia customer reference' => 'Envia Kundenreferenz',
+	'Envia contract reference' => 'Envia Kontaktreferenz',
+	'Contract ID'			=> 'Vertrag ID',
+	'Phonenumber ID'		=> 'Telefonnummer ID',
+	'Related order ID'		=> 'Zugehörige Bestellung [ID]',
+	'Related order type'	=> 'Zugehöriger Bestellungstyp',
+	'Related order created' => 'Zugehörige Bestellung erstellt',
+	'Related order last updated' => 'Zugehörige Bestellund als letztes aktualisiert',
+	'Related order deleted'	=> 'Zugehöroge Bestellung gelöscht',
+	'Envia Order'			=> 'Envia Bestellung',
+	'Document type'			=> 'Dokumententyp',
+	'Upload document'		=> 'Dokument hochladen',
 
 //
 // VoipMon
