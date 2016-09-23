@@ -49,4 +49,20 @@ return [
  	//PhonenumberManagementController
 	'PhonenumberManagement_CarrierIn'=> 'In case of a new number set this to EnviaTEL',
 	'PhonenumberManagement_EkpIn'	=> 'In case of a new number set this to EnviaTEL',
+/**
+  * MODULE VoipMon
+  */
+	'mos_min_mult10' 				=> 'Minimal Mean Opionion Score experienced during call',
+	'caller' 						=> 'Call direction from Caller to Callee',
+	'a_mos_f1_min_mult10' 			=> 'Minimal Mean Opionion Score experienced during call for a fixed jitter buffer of 50ms',
+	'a_mos_f2_min_mult10' 			=> 'Minimal Mean Opionion Score experienced during call for a fixed jitter buffer of 200ms',
+	'a_mos_adapt_min_mult10' 		=> 'Minimal Mean Opionion Score experienced during call for an adaptive jitter buffer of 500ms',
+	'a_mos_f1_mult10' 				=> 'Average Mean Opionion Score experienced during call for a fixed jitter buffer of 50ms',
+	'a_mos_f2_mult10' 				=> 'Average Mean Opionion Score experienced during call for a fixed jitter buffer of 200ms',
+	'a_mos_adapt_mult10' 			=> 'Average Mean Opionion Score experienced during call for an adaptive jitter buffer of 500ms',
+	'a_sl1' => 'Number of packets experiencing one consecutive packet loss during call',
+	'a_sl9' => 'Number of packets experiencing nine consecutive packet losses during call',
+	'a_d50' => 'Number of packets experiencing a packet delay variation (i.e. jitter) between 50ms and 70ms',
+	'a_d300' => 'Number of packets experiencing a packet delay variation (i.e. jitter) greater than 300ms',
+	'called' => 'Call direction from Callee to Caller',
  ];

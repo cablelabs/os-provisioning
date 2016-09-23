@@ -286,6 +286,50 @@ return [
 	'Deactivation date'     => 'Deaktivierungsdatum',
 	'SIP domain'            => 'SIP Adresse',
 //
+// ProvVoipEnvia
+//
+
+//
+// VoipMon
+//
+	'Call Start'			=> 'Anruf Beginn',
+	'Call End'				=> 'Anruf Ende',
+	'Call Duration/s'		=> 'Anruf Dauer [s]',
+	'min. MOS'				=> 'minimaler MOS',
+	'Packet loss/%'			=> 'Paketverlust [%]',
+	'Jitter/ms'				=> 'Jitter [ms]',
+	'avg. Delay/ms'			=> 'durchschnittl. Verzögerung [ms]',
+	'Caller (-> Callee)'	=> 'Anrufer -> Angerufener',
+	'@Domain'				=> '@Domain',
+	'min. MOS 50ms'			=> 'minimaler MOS pro 50ms',
+	'min. MOS 200ms'		=> 'minimaler MOS pro 200ms',
+	'min. MOS adaptive 500ms'	=> 'minimaler MOS adaptiv pro 500ms',
+	'avg. MOS 50ms'			=> 'durchschnittl. MOS pro 50ms',
+	'avg. MOS 200ms'		=> 'durchschnittl. MOS pro 200ms',
+	'avg. MOS adaptive 500ms'	=> 'durchschnittl. MOS adaptiv pro 500ms',
+	'Received Packets'		=> 'Empfangene Pakete',
+	'Lost Packets'			=> 'Verlorene Pakete',
+	'avg. Delay/ms'			=> 'durchschnittl. Verzögerung [ms]',
+	'avg. Jitter/ms'		=> 'durchschnittl. Jitter [ms]',
+	'max. Jitter/ms'		=> 'maximaler Jitter [ms]',
+	'1 loss in a row'		=> 'Anzahl der Paketverluste',
+	'2 losses in a row'		=> 'Anzahl von 2 aufeinanderfoldenden Paketverlusten',
+	'3 losses in a row'		=> 'Anzahl von 3 aufeinanderfoldenden Paketverlusten',
+	'4 losses in a row'		=> 'Anzahl von 4 aufeinanderfoldenden Paketverlusten',
+	'5 losses in a row'		=> 'Anzahl von 5 aufeinanderfoldenden Paketverlusten',
+	'6 losses in a row'		=> 'Anzahl von 6 aufeinanderfoldenden Paketverlusten',
+	'7 losses in a row'		=> 'Anzahl von 7 aufeinanderfoldenden Paketverlusten',
+	'8 losses in a row'		=> 'Anzahl von 8 aufeinanderfoldenden Paketverlusten',
+	'9 losses in a row'		=> 'Anzahl von 9 aufeinanderfoldenden Paketverlusten',
+	'PDV 50ms - 70ms'		=> 'PDV von 50 bis 70ms',
+	'PDV 70ms - 90ms'		=> 'PDV von 70 bis 90ms',
+	'PDV 90ms - 120ms'		=> 'PDV von 90 bis 120ms',
+	'PDV 120ms - 150ms'		=> 'PDV von 120 bis 150ms',
+	'PDV 150ms - 200ms'		=> 'PDV von 150 bis 200ms',
+	'PDV 200ms - 300ms'		=> 'PDV von 200 bis 300ms',
+	'PDV >300 ms'			=> 'PDV von über 300ms',
+	'Callee (-> Caller)'	=> 'Angerufener -> Anrufer',
+//
 // Select Box 
 //
 	//Product Entry

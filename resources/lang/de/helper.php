@@ -70,4 +70,21 @@ return [
 									//'In case of a new number set this to EnviaTEL',
 	'PhonenumberManagement_EkpIn'	=> 'Im Falle einer neuen Nummer, setzen Sie diesrs Feld auf EnviaTEL',
 									//'In case of a new number set this to EnviaTEL',
+
+/**
+  * MODULE VoipMon
+  */
+	'mos_min_mult10' 				=> 'Minimaler Mean Opionion Score während des Anrufs',
+	'caller' 						=> 'Betrachtrung der Anrufrichtung von Anrufer zu Angerufenem',
+	'a_mos_f1_min_mult10' 			=> 'Minimaler Mean Opionion Score während des Anrufs mit einem festen Jitter-Buffer von 50ms',
+	'a_mos_f2_min_mult10' 			=> 'Minimaler Mean Opionion Score während des Anrufs mit einem festen Jitter-Buffer von 200ms',
+	'a_mos_adapt_min_mult10' 		=> 'Minimaler Mean Opionion Score während des Anrufs mit einem adaptiven Jitter-Buffer von 500ms',
+	'a_mos_f1_mult10' 				=> 'durchschnittl. Mean Opionion Score während des Anrufs mit einem festen Jitter-Buffer von 50ms',
+	'a_mos_f2_mult10' 				=> 'durchschnittl. Mean Opionion Score während des Anrufs mit einem festen Jitter-Buffer von 200ms',
+	'a_mos_adapt_mult10' 			=> 'durchschnittl. Mean Opionion Score während des Anrufs mit einem adaptiven Jitter-Buffer von 500ms',
+	'a_sl1' 						=> 'Anzahl der Pakete, welche einen aufeinander folgenden Paketverlust während des Anrufs aufweisen',
+	'a_sl9' 						=> 'Anzahl der Pakete, welche neun aufeinander folgende Paketverluste während des Anrufs aufweisen',
+	'a_d50' 						=> 'Anzahl der Pakete, welche eine Paketverzögerung (Packet Delay Variation - z.B. Jitter) zwischen 50ms and 70ms aufweisen',
+	'a_d300' 						=> 'Anzahl der Pakete, welche eine Paketverzögerung (Packet Delay Variation - z.B. Jitter) von über 300ms aufweisen',
+	'called' 						=> 'Betrachtrung der Anrufrichtung von Angerufenem zum Anrufer',
 ];
