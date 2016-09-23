@@ -59,6 +59,8 @@ return [
 		'Menu_MTAs' 				=> 'MTAs',
 		'Menu_Phonenumbers'			=> 'Telefonnummern',
 		'Menu_PhoneTariffs'			=> 'Telefontarife',
+		'Menu_Envia orders'			=> 'Envia Bestellungen',
+		'Menu_CDRs'					=> 'EVNs',
 
 	//User Settings
 		'Menu_UserSettings'			=> 'Nutzereinstellungen',
@@ -169,6 +171,8 @@ return [
 		//Phone tariff
 		'Header_Phone tariffs'		=> 'Telefontarif|Telefontarife',
 		'Header_EditPhone tariffs'	=> 'Telefontarif bearbeiten',
+	//ProvVoipEnvia
+		'Header_EnviaOrders'		=> 'Envia Bestellung|Envia Bestellungen',
 
 	//HFC
 		//Tree 
