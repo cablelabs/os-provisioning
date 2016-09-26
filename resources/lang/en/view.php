@@ -39,7 +39,7 @@ return [
 		'Menu_Salesmen'				=> 'Salesmen',
 		'Menu_Tree Table'			=> 'Tree Table',
 		'Menu_Devices'				=> 'Devices',
-		'Menu_DeviceTypes'			=> 'DeviceTypes',
+		'Menu_DeviceTypes'			=> 'Devicetypes',
 		'Menu_Contracts'			=> 'Contracts',
 		'Menu_Modems'				=> 'Modems',
 		'Menu_Endpoints'			=> 'Endpoints',
@@ -84,63 +84,63 @@ return [
 		//Salesman
 		'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
 		//Items
-		'Header_Item'				=> 'Produkt|Produkte',
-		'Header_EditItem'			=> 'Produkt bearbeiten', //??
+		'Header_Item'				=> 'Item|Items',
+		'Header_EditItem'			=> 'Edit Item', //??
 	//SNMP Modul
 		//Device
-		'Header_Device'				=> 'Gerät|Geräte',
-		'Header_EditDevice'			=> 'Gerät bearbeiten',
+		'Header_Device'				=> 'Device|Devices',
+		'Header_EditDevice'			=> 'Edit Device',
 		//Device Type
-		'Header_EditDevice Type'	=> 'Gerätetyp bearbeiten',
+		'Header_EditDevice Type'	=> 'Edit Devicytype',
 	//Provisioning
 		//Contract
-		'Header_Contract'			=> 'Vertrag|Verträge',
-		'Header_EditContract'		=> 'Vertrag bearbeiten',
-		'Header_SepaMandate'		=> 'SEPA-Mandat|SEPA-Mandate',	
+		'Header_Contract'			=> 'Contract|Contracts',
+		'Header_EditContract'		=> 'Edit Contract',
+		'Header_SepaMandate'		=> 'SEPA-Mandate|SEPA-Mandates',	
 		//Modems
 		'Header_Modems'				=> 'Modem|Modems', //workaround
-		'Header_EditModems'			=> 'Modem bearbeiten',
+		'Header_EditModems'			=> 'Edit Modem',
 		'Header_Modem'				=> 'Modem|Modems',
-		'Header_EditModem'			=> 'Modem bearbeiten',
+		'Header_EditModem'			=> 'Edit Modem',
 		//Endpoint
-		'Header_Endpoints'			=> 'Endpunkt|Endpunkte',
-		'Header_EditEndpoints'		=> 'Endpunkt bearbeiten',
+		'Header_Endpoints'			=> 'Endpoint|Endpoints',
+		'Header_EditEndpoints'		=> 'Edit Endpoints',
 		//Configfiles
-		'Header_Configfiles'		=> 'Konfigurationsdatei|Konfigurationsdateien',
-		'Header_EditConfigfiles'	=> 'Konfigurationsdatei bearbeiten',
+		'Header_Configfiles'		=> 'Configfile|Configfiles',
+		'Header_EditConfigfiles'	=> 'Edit Configfile',
 		//QoS
-		'Header_QoS'				=> 'QoS-Regel|QoS-Regeln',
-		'Header_EditQoS'			=> 'QoS-Regel bearbeiten',
+		'Header_QoS'				=> 'QoS-Rule|QoS-Rules',
+		'Header_EditQoS'			=> 'Edit QoS-Rule',
 		//CMTS
 		'Header_CMTS'				=> 'CMTS|CMTSs',
-		'Header_EditCMTS'			=> 'CMTS bearbeiten',
+		'Header_EditCMTS'			=> 'Edit CMTS',
 		//IpPool
-		'Header_IpPool'				=> 'IP-Bereich|IP-Bereiche', //workaround
-		'Header_EditIpPool'			=> 'IP-Bereich bearbeiten',
-		'Header_IP-Pools'			=> 'IP-Bereich|IP-Bereiche',
-		'Header_EditIP-Pools'		=> 'IP-Bereich bearbeiten',
+		'Header_IpPool'				=> 'IP-Pool|IP-Pools',
+		'Header_EditIpPool'			=> 'Edit IP-Pool',
+		'Header_IP-Pools'			=> 'IP-Pool|IP-Pools',
+		'Header_EditIP-Pools'		=> 'Edit IP-Pool',
 			
 	//VOIP
 		//MTA
 		'Header_Mta'				=> 'MTA|MTAs',
-		'Header_EditMta'			=> 'MTA bearbeiten',
+		'Header_EditMta'			=> 'Edit MTA',
 		'Header_MTAs'				=> 'MTA|MTAs',
-		'Header_EditMTAs'			=> 'MTA bearbeiten',
+		'Header_EditMTAs'			=> 'Edit MTA',
 		//Phonenumber
-		'Header_Phonenumber'		=> 'Telefonnummer|Telefonnummern', //workaround
-		'Header_EditPhonenumber'	=> 'Telefonnummer bearbeiten',
-		'Header_Phonenumbers'		=> 'Telefonnummer|Telefonnummern',
-		'Header_EditPhonenumbers'	=> 'Telefonnummer bearbeiten',
+		'Header_Phonenumber'		=> 'Phonenumber|Phonenumbers',
+		'Header_EditPhonenumber'	=> 'Edit Phonenumber',
+		'Header_Phonenumbers'		=> 'Phonenumber|Phonenumbers',
+		'Header_EditPhonenumbers'	=> 'Edit Phonenumber',
 		//Phone tariff
-		'Header_Phone tariffs'		=> 'Telefontarif|Telefontarife',
-		'Header_EditPhone tariffs'	=> 'Telefontarif bearbeiten',
+		'Header_Phone tariffs'		=> 'Phonetariff|Phonetariffs',
+		'Header_EditPhone tariffs'	=> 'Edit Phonetariffs',
 
 	//Header Relation
-		'Assigned'  				=> 'Zugewiesene',
+		// 'Assigned'  				=> 'Zugewiesene',
 	//Header Controler index
-		'SEPA Account' 				=> 'SEPA-Konten',
-		'Create'					=> 'Erstelle ',
-		'Edit'						=> 'Ändere ',
+		// 'SEPA Account' 				=> 'SEPA-Konten',
+		// 'Create'					=> 'Erstelle ',
+		// 'Edit'						=> 'Ändere ',
 
 //BUTTON
 		'Sign me in'				=> 'Login',
@@ -169,32 +169,32 @@ return [
 		//Device
 		'Button_Create Device'			=> 'Create Device',
 		//Device Type
-		'Button_Create Device Type'		=> 'Create Device Type',
+		'Button_Create Device Type'		=> 'Create Devicetype',
 
 	//Provisioning
 		//Contract
-		'Button_Create Contract'		=> 'Neuer Vertrag',
-		'Button_Create SepaMandate'		=> 'Neues SEPA-Mandat',
-		//Modems
-		'Button_Create Modem'			=> 'Neues Modem',
-		//Endpoints
-		'Button_Create Endpoints'		=> 'Neuer Endpunkt',
-		//Configfiles
-		'Button_Create Configfiles'		=> 'Neue Konfigurationsdatei',
-		//QoS
-		'Button_Create QoS'				=> 'Neue QoS-Regel',
-		//CMTS
-		'Button_Create CMTS'			=> 'Neue CMTS',
-		//IpPool
-		'Button_Create IpPool'			=> 'Neuer IP-Bereich', //workaround
-		'Button_Create IP-Pools'		=> 'Neuer IP-Bereich',
+		// 'Button_Create Contract'		=> 'Neuer Vertrag',
+		// 'Button_Create SepaMandate'		=> 'Neues SEPA-Mandat',
+		// //Modems
+		// 'Button_Create Modem'			=> 'Neues Modem',
+		// //Endpoints
+		// 'Button_Create Endpoints'		=> 'Neuer Endpunkt',
+		// //Configfiles
+		// 'Button_Create Configfiles'		=> 'Neue Konfigurationsdatei',
+		// //QoS
+		// 'Button_Create QoS'				=> 'Neue QoS-Regel',
+		// //CMTS
+		// 'Button_Create CMTS'			=> 'Neue CMTS',
+		// //IpPool
+		// 'Button_Create IpPool'			=> 'Neuer IP-Bereich', //workaround
+		// 'Button_Create IP-Pools'		=> 'Neuer IP-Bereich',
 
 
 	//VOIP
 		//MTA
-		'Button_Create Mta'				=> 'Neues MTA',
-		//Phonenumber
-		'Button_Create Phonenumber'		=> 'Neue Telefonnummer',
-		//Phone tariff
-		'Button_Create Phone tariffs'	=> 'Neuer Telefontarif',
+		// 'Button_Create Mta'				=> 'Neues MTA',
+		// //Phonenumber
+		// 'Button_Create Phonenumber'		=> 'Neue Telefonnummer',
+		// //Phone tariff
+		'Button_Create Phone tariffs'	=> 'Create Phonetariffs',
 ];
