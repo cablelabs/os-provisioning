@@ -49,8 +49,9 @@ class ModemController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House number'),
 			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode'),
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City'),
+			array('form_type' => 'text', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => ['placeholder' => 'YYYY-MM-DD']),
 			array('form_type' => 'text', 'name' => 'district', 'description' => 'District'),
-			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1'),
+			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1', 'options' => ['placeholder' => 'YYYY-MM-DD']),
 
 			array('form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number'),
 			array('form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'),
@@ -70,6 +71,30 @@ class ModemController extends \BaseController {
 	}
 
 
+	/**
+	 * Get all management jobs for Envia
+	 *
+	 * @author Patrick Reichel
+	 * @param $model current modem object
+	 * @return array containing linktexts and URLs to perform actions against REST API
+	 */
+	public static function _get_envia_management_jobs($modem) {
+
+		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
+
+		// check if user has the right to perform actions against Envia API
+		// if not: don't show any actions
+		try {
+			\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
+		}
+		catch (PermissionDeniedError $ex) {
+			return null;
+		}
+
+		return $provvoipenvia->get_jobs_for_view($modem, 'modem');
+	}
+
+
 	/*
 	 * Modem Tabs Controller. -> Panel Header Right
 	 * See: BaseController native function for more infos
@@ -80,9 +105,12 @@ class ModemController extends \BaseController {
 	 */
 	protected function get_form_tabs($view_var)
 	{
-		$a = [['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]],
-				['name' => 'Analyses', 'route' => 'Provmon.index', 'link' => [$view_var->id]],
-				['name' => 'CPE-Analysis', 'route' => 'Provmon.cpe', 'link' => [$view_var->id]]];
+
+		$a = [
+			['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]],
+			['name' => 'Analyses', 'route' => 'Provmon.index', 'link' => [$view_var->id]],
+			['name' => 'CPE-Analysis', 'route' => 'Provmon.cpe', 'link' => [$view_var->id]]
+		];
 
 		// MTA: only show MTA analysis if Modem has MTAs
 		if (isset($view_var->mtas) && isset($view_var->mtas[0]))
@@ -198,5 +226,25 @@ class ModemController extends \BaseController {
 		return \View::make('provbase::Modem.index', $this->compact_prep_view(compact('panel_right', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search', 'preselect_field', 'preselect_value')));
 	}
 
+
+	/**
+	 * Set nullable fields.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function prepare_input($data)
+	{
+		$data = parent::prepare_input($data);
+
+		// set this to null if no value is given
+		$nullable_fields = array(
+			'contract_ext_creation_date',
+			'contract_ext_termination_date',
+			'installation_address_change_date',
+		);
+		$data = $this->_nullify_fields($data, $nullable_fields);
+
+		return $data;
+	}
 
 }

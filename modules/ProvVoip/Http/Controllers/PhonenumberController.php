@@ -14,7 +14,6 @@ class PhonenumberController extends \BaseController {
     protected $index_create_allowed = false;
 	protected $save_button = 'Save / Restart';
 
-
     /**
      * defines the formular fields for the edit and create view
      */
@@ -22,6 +21,13 @@ class PhonenumberController extends \BaseController {
 	{
 		if (!$model)
 			$model = new Phonenumber;
+
+		if ($model->active) {
+			$active_state = ' checked="checked"';
+		}
+		else {
+			$active_state = '';
+		}
 
 		if (\PPModule::is_active('provvoipenvia')) {
 			$login_placeholder = 'Autofilled if empty.';
@@ -40,7 +46,20 @@ class PhonenumberController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'username', 'description' => 'Username', 'options' => array('placeholder' => $login_placeholder)),
 			array('form_type' => 'text', 'name' => 'password', 'description' => 'Password', 'options' => array('placeholder' => $login_placeholder)),
 			array('form_type' => 'text', 'name' => 'sipdomain', 'description' => 'SIP domain'),
-			array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'checked' => true, 'create' => '1')
+			array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'html' =>
+				'<div class="col-md-12" style="background-color:white">
+					<div class="form-group"><label for="active" style="margin-top: 10px;" class="col-md-4 control-label">Active</label>
+						<div class="col-md-7"><div class="col-md-7"><input align="left" class=" form-control" name="active" type="checkbox" id="active" onclick="return false"'.$active_state.'>
+						</div>
+					</div>
+					<div title="Automatically set by (de)activation date in phonenumber management" name=active-help class=col-md-1><img src="https://192.168.0.122/lara/images/help.png" width="20"></div>
+					<div class=col-md-4>
+					</div>
+					<div class=col-md-8>
+					</div>
+					</div></div>',
+				'options' => ['help' => 'foo'],
+			),
 		);
 	}
 

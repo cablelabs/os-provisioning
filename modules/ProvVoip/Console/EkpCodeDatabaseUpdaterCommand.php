@@ -161,9 +161,11 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 
 			# alter entry if exists, else create new one
 			$cc = EkpCode::firstOrNew(array('ekp_code' => $code));
-			$cc->ekp_code = $code;
-			$cc->company = $company;
-			$cc->save();
+			if ($cc->company != $company) {
+				$cc->ekp_code = $code;
+				$cc->company = $company;
+				$cc->save();
+			}
 		}
 
 		$hash = sha1(\Storage::get($this->csv_file));

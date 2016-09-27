@@ -7,6 +7,7 @@ use \Modules\HfcBase\Http\Controllers\TreeTopographyController;
 use \Modules\HfcCustomer\Http\Controllers\CustomerTopoController;
 use \Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand;
 use \Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand;
+use \Modules\ProvVoip\Console\PhonenumberCommand;
 use \Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand;
 
 class Kernel extends ConsoleKernel {
@@ -19,8 +20,10 @@ class Kernel extends ConsoleKernel {
 	protected $commands = [
 		'App\Console\Commands\Inspire',
 		'App\Console\Commands\TimeDeltaChecker',
+		'App\Console\Commands\StorageCleaner',
 		'\Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand',
 		'\Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand',
+		'\Modules\ProvVoip\Console\PhonenumberCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
 		'App\Console\Commands\authCommand',
@@ -51,6 +54,8 @@ class Kernel extends ConsoleKernel {
 		// Remove all Log Entries older than 90 days
 		$schedule->call('\App\GuiLog@cleanup')->weekly();
 
+		// Command to remove obsolete data in storage
+		$schedule->command('main:storage_cleaner')->dailyAt('04:18');
 
 		if (\PPModule::is_active ('ProvVoip')) {
 
@@ -141,6 +146,10 @@ class Kernel extends ConsoleKernel {
 				$execute = $rcd ? ($rcd - 5 > 0 ? $rcd - 5 : 1) : 15;
 				$schedule->command('nms:accounting')->monthlyOn($execute, '01:00');
 			}
+		}
+
+		if (\PPModule::is_active('ProvVoip')) {
+			$schedule->command('provvoip:phonenumber')->daily()->at('00:13');
 		}
 
 		if (\PPModule::is_active ('VoipMon'))

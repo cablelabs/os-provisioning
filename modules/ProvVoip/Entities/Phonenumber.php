@@ -47,7 +47,6 @@ class Phonenumber extends \BaseModel {
 			$bsclass = 'danger';
 			$act = 'n/a';
 			$deact = 'n/a';
-			$is_active = False;
 		}
 		else {
 			$act = $management->activation_date;
@@ -64,29 +63,24 @@ class Phonenumber extends \BaseModel {
 			if (!boolval($act)) {
 				$state = 'No activation date set!';
 				$bsclass = 'danger';
-				$is_active = False;
 			}
 			elseif ($act > date('c')) {
 				$state = 'Waiting for activation';
 				$bsclass = 'warning';
-				$is_active = False;
 			}
 			else {
 				if (!boolval($deact)) {
 					$state = 'Active';
 					$bsclass = 'success';
-					$is_active = True;
 				}
 				else {
 					if ($deact > date('c')) {
 						$state = 'Active. Deactivation date set but not reached yet.';
 						$bsclass = 'warning';
-						$is_active = True;
 					}
 					else {
 						$state = 'Deactivated.';
 						$bsclass = 'info';
-						$is_active = False;
 					}
 				}
 			}
@@ -95,43 +89,6 @@ class Phonenumber extends \BaseModel {
 		// reuse dates for view
 		if (is_null($act)) $act = '-';
 		if (is_null($deact)) $deact = '-';
-
-		// TODO: Delete this overwriting of the state calculated from PhonenumberManagement when
-		// auto (de)activition by cron and PhonenumberManagementObserver is activated!
-        if ($this->active) {
-			$state = 'Phonenumber state: Active.<br><i>PhonenumberManagement state: '.$state.'</i>';
-			if ($bsclass == 'danger') {
-				// error missing or poorly filled management
-				// set explicitely again to clarify my intention
-				$bsclass = 'danger';
-			}
-			else {
-				if ($is_active) {
-					$bsclass = 'success';
-				}
-				else {
-					// something needs attention!
-					$bsclass = 'warning';
-				}
-			}
-		}
-		else {
-			$state = 'Phonenumber state: Inactive.<br><i>PhonenumberManagement state: '.$state.'</i>';
-			if ($bsclass == 'danger') {
-				// error missing or poorly filled management
-				// set explicitely again to clarify my intention
-				$bsclass = 'danger';
-			}
-			else {
-				if ($is_active) {
-					// something needs attention
-					$bsclass = 'warning';
-				}
-				else {
-					$bsclass = 'info';
-				}
-			}
-		}
 
         // TODO: use mta states.
         //       Maybe use fast ping to test if online in this function?
@@ -179,7 +136,6 @@ class Phonenumber extends \BaseModel {
 		}
 
 		if (\PPModule::is_active('provvoipenvia')) {
-
 			// TODO: auth - loading controller from model could be a security issue ?
 			$ret['Main']['Envia API']['html'] = '<h4>Available Envia API jobs</h4>';
 			$ret['Main']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
@@ -257,6 +213,101 @@ class Phonenumber extends \BaseModel {
 	}
 
 	/**
+	 * Daily conversion (called by cron job)
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function daily_conversion() {
+
+		$this->set_active_state();
+	}
+
+
+	/**
+	 * (De)Activate phonenumber depending on existance and (de)activation dates in PhonenumberManagement
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function set_active_state() {
+
+		$changed = False;
+
+		$management = $this->phonenumbermanagement;
+
+		if (is_null($management)) {
+
+			// if there is still no management: deactivate the number
+			if ($this->active) {
+				$this->active = False;
+				$changed = True;
+			}
+		}
+		else {
+
+			// get the dates for this number
+			$act = $management->activation_date;
+			$deact = $management->deactivation_date;
+
+			if (!boolval($act)) {
+
+				// Activation date not yet reached: deactivate
+				if ($this->active) {
+					$this->active = False;
+					$changed = True;
+				}
+			}
+			elseif ($act > date('c')) {
+
+				// Activation date not yet reached: deactivate
+				if ($this->active) {
+					$this->active = False;
+					$changed = True;
+				}
+			}
+			else {
+				if (!boolval($deact)) {
+
+					// activation date today or in the past, no deactivation date: activate
+					if (!$this->active) {
+						$this->active = True;
+						$changed = True;
+					}
+				}
+				else {
+					if ($deact > date('c')) {
+
+						// activation date today or in the past, deactivation date in the future: activate
+						if (!$this->active) {
+							$this->active = True;
+							$changed = True;
+						}
+					}
+					else {
+
+						// deactivation date today or in the past: deactivate
+						if ($this->active) {
+							$this->active = False;
+							$changed = True;
+						}
+					}
+				}
+			}
+		}
+		// write to database if there are changes
+		if ($changed) {
+			if ($this->active) {
+				\Log::info('Activating phonenumber '.$this->prefix_number.'/'.$this->number.' (ID '.$this->id.').');
+			}
+			else {
+				\Log::info('Deactivating phonenumber '.$this->prefix_number.'/'.$this->number.' (ID '.$this->id.').');
+			}
+
+			$this->save();
+		}
+
+	}
+
+	/**
 	 * BOOT:
 	 * - init phone observer
 	 */
@@ -306,6 +357,9 @@ class PhonenumberObserver
 
 
 	public function creating($phonenumber) {
+
+		// on creating there can not be a phonenumbermanagement – so we can set active state to false in each case
+		$phonenumber->active = 0;
 
 		$this->_create_login_data($phonenumber);
 	}

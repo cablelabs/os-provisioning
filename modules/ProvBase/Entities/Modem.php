@@ -78,6 +78,22 @@ class Modem extends \BaseModel {
 	/**
 	 * all Relationships:
 	 */
+
+	/**
+	 * Get relation to envia orders.
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _envia_orders() {
+
+		if (!\PPModule::is_active('provvoipenvia')) {
+			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
+		}
+
+		return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->where('ordertype', 'NOT LIKE', 'order/create_attachment');
+
+	}
+
 	public function configfile ()
 	{
 		return $this->belongsTo('Modules\ProvBase\Entities\Configfile');
@@ -125,12 +141,26 @@ class Modem extends \BaseModel {
 
 	public function view_has_many()
 	{
-		if (\PPModule::is_active('ProvVoip'))
-			return array(
-					'Mta' => $this->mtas
-				);
 
-		return array();
+		$ret = array();
+
+		// we use a dummy here as this will be overwritten by ModemController::get_form_tabs()
+		if (\PPModule::is_active('ProvVoip')) {
+			$ret['dummy']['Mta']['class'] = 'Mta';
+			$ret['dummy']['Mta']['relation'] = $this->mtas;
+		}
+
+		if (\PPModule::is_active('provvoipenvia'))
+		{
+			$ret['dummy']['EnviaOrder']['class'] = 'EnviaOrder';
+			$ret['dummy']['EnviaOrder']['relation'] = $this->_envia_orders;
+
+			// TODO: auth - loading controller from model could be a security issue ?
+			$ret['dummy']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+			$ret['dummy']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ModemController::_get_envia_management_jobs($this);
+		}
+
+		return $ret;
 	}
 
 

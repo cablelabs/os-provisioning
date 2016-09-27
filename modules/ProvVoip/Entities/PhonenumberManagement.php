@@ -41,6 +41,7 @@ class PhonenumberManagement extends \BaseModel {
 					'carrier_out',
 					'ekp_out',
 					'subscriber_company',
+					'subscriber_department',
 					'subscriber_salutation',
 					'subscriber_academic_degree',
 					'subscriber_firstname',
@@ -49,6 +50,7 @@ class PhonenumberManagement extends \BaseModel {
 					'subscriber_house_number',
 					'subscriber_zip',
 					'subscriber_city',
+					'subscriber_district',
 					'subscriber_country',
 				];
 
@@ -194,5 +196,46 @@ class PhonenumberManagement extends \BaseModel {
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * BOOT:
+	 * - init phone observer
+	 */
+	public static function boot()
+	{
+		parent::boot();
+
+		PhonenumberManagement::observe(new PhonenumberManagementObserver);
+	}
+}
+
+
+/**
+ * PhonenumberManagement observer class
+ * Handles changes on Phonenumbers
+ *
+ * can handle   'creating', 'created', 'updating', 'updated',
+ *              'deleting', 'deleted', 'saving', 'saved',
+ *              'restoring', 'restored',
+ *
+ * @author Patrick Reichel
+ */
+class PhonenumberManagementObserver
+{
+
+	public function created($phonenumbermanagement)
+	{
+		$phonenumbermanagement->phonenumber->set_active_state();
+	}
+
+	public function updated($phonenumbermanagement)
+	{
+		$phonenumbermanagement->phonenumber->set_active_state();
+	}
+
+	public function deleted($phonenumbermanagement)
+	{
+		$phonenumbermanagement->phonenumber->set_active_state();
 	}
 }

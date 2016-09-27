@@ -90,6 +90,10 @@ class Contract extends \BaseModel {
 			// TODO: auth - loading controller from model could be a security issue ?
 			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
 			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
+
+			// for better navigation: show modems also in Envia blade
+			$ret['Envia']['Modem']['class'] = 'Modem';
+			$ret['Envia']['Modem']['relation'] = $this->modems;
 		}
 
 		if (\PPModule::is_active('ccc'))
@@ -455,7 +459,7 @@ class Contract extends \BaseModel {
 				// if the difference between the two dates is to big we assume that access has been disabled manually – we don't change the state in this case
 				// this follows the philosophy introduced by Torsten within method _update_network_access_from_contract (e.g. lack of payment)
 				$now = \Carbon\Carbon::now();
-				
+
 				$starts = array();
 				if ($active_item_internet) {
 					array_push($starts, $this->_date_to_carbon($active_item_internet->valid_from));
@@ -1013,7 +1017,8 @@ class ContractObserver
 
 	public function updating($contract)
 	{
-		$contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
+		// commented out by par: don't overwrite changes on contract numbers
+		/* $contract->number = $contract->number ? $contract->number : $contract->id - $this->num; */
 
 		$contract->sepa_iban = strtoupper($contract->sepa_iban);
 		$contract->sepa_bic  = strtoupper($contract->sepa_bic);
