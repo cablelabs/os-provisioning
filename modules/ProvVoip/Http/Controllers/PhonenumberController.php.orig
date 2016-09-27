@@ -22,6 +22,7 @@ class PhonenumberController extends \BaseController {
 		if (!$model)
 			$model = new Phonenumber;
 
+<<<<<<< HEAD
 		if ($model->active) {
 			$active_state = ' checked="checked"';
 		}
@@ -36,6 +37,16 @@ class PhonenumberController extends \BaseController {
 			$login_placeholder = '';
 		}
 
+||||||| merged common ancestors
+=======
+		if (\PPModule::is_active('provvoipenvia')) {
+			$login_placeholder = 'Autofilled if empty.';
+		}
+		else {
+			$login_placeholder = '';
+		}
+
+>>>>>>> FETCH_HEAD
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'select', 'name' => 'country_code', 'description' => 'Country Code', 'value' => Phonenumber::getPossibleEnumValues('country_code')),
@@ -46,6 +57,8 @@ class PhonenumberController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'username', 'description' => 'Username', 'options' => array('placeholder' => $login_placeholder)),
 			array('form_type' => 'text', 'name' => 'password', 'description' => 'Password', 'options' => array('placeholder' => $login_placeholder)),
 			array('form_type' => 'text', 'name' => 'sipdomain', 'description' => 'SIP domain'),
+			/* array('form_type' => 'text', 'name' => 'active_state_display', 'description' => 'Active', 'options' => ['readonly', 'placeholder' => $active_state_display], 'help' => 'Set by (de)activation date in phonenumber management'), */
+			/* array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'help' => 'foooo'), */
 			array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'html' =>
 				'<div class="col-md-12" style="background-color:white">
 					<div class="form-group"><label for="active" style="margin-top: 10px;" class="col-md-4 control-label">Active</label>

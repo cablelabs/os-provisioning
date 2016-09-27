@@ -19,8 +19,8 @@ class CreateConfigfileTable extends BaseMigration {
 		// creates directory for firmware files and changes owner
 		$dir = '/tftpboot/fw';
 		if(!is_dir($dir))
-			mkdir ($dir, '0755');
-		system('/bin/chown -R apache /tftpboot/fw');
+			mkdir ($dir, 0755, true);
+		system('/bin/chown -R apache '.$dir);
 
 		Schema::create($this->tablename, function(Blueprint $table)
 		{

@@ -54,7 +54,7 @@ class Contract extends \BaseModel {
 		if ($this->network_access == 0)
 			$bsclass = 'danger';
 
-		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street],
+		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street.' '.$this->house_number],
 				'index_header' => ['Contract Number', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street'],
 				'bsclass' => $bsclass,
 				'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
@@ -346,15 +346,17 @@ class Contract extends \BaseModel {
 		}
 		else {
 
-			$this->_update_network_access_from_items();
-
 			// Task 3: Check and possibly update item's valid_from and valid_to dates
-			$this->_update_item_dates();
+			$this->_update_inet_voip_dates();
 
-
-			// Task 4: Check and possibly change product related data (qos, voip, purchase_tariff)
+			// Task 4: Check and possibly change product related data (qos_id, voip, purchase_tariff)
 			// for this contract depending on the start/end times of its items
 			$this->update_product_related_data($this->items);
+
+			// NOTE: Keep this order! - update network access after all adaptions are made
+			// Task 1 & 2 included
+			$this->_update_network_access_from_items();
+
 
 			// commented out by par for reference ⇒ if all is running this can savely be removed
 			/* $qos_id = ($tariff = $this->get_valid_tariff('Internet')) ? $tariff->product->qos_id : 0; */
@@ -423,8 +425,9 @@ class Contract extends \BaseModel {
 	/**
 	 * This enables/disables network_access based on existence of currently active items of types Internet and Voip
 	 *
-	 * @author Patrick Reichel
+	 * Check also if contract is outdated
 	 *
+	 * @author Patrick Reichel
 	 */
 	protected function _update_network_access_from_items() {
 
@@ -440,8 +443,8 @@ class Contract extends \BaseModel {
 		$active_item_internet = $active_tariff_info_internet['item'];
 		$active_item_voip = $active_tariff_info_voip['item'];
 
-		if ($active_count_sum == 0) {
-			// if there is no active item of type internet or voip: disable network_access (if not already done)
+		if ($active_count_sum == 0 || !$this->check_validity('now')) {
+			// if there is no active item of type internet or voip or contract is outdated: disable network_access (if not already done)
 			if (boolval($this->network_access)) {
 				$this->network_access = 0;
 				$contract_changed = True;
@@ -483,7 +486,7 @@ class Contract extends \BaseModel {
 
 
 	/**
-	 * This helper updates dates for all items on this contract under the following conditions:
+	 * This helper updates dates for Internet & Voip items on this contract under the following conditions:
 	 *	- valid_from:
 	 *		- valid_from_fixed is false
 	 *		- valid_from is before tomorrow
@@ -504,7 +507,7 @@ class Contract extends \BaseModel {
 	 *
 	 * @return null
 	 */
-	protected function _update_item_dates() {
+	protected function _update_inet_voip_dates() {
 
 		// items only exist if Billingbase is enabled
 		if (!\PPModule::is_active('Billingbase')) {
@@ -520,6 +523,11 @@ class Contract extends \BaseModel {
 		// ItemObserver::update() which else set valid_to smaller than valid_from in some cases)!
 		// and to avoid “Multipe valid tariffs active” warning
 		foreach ($this->items_sorted_by_valid_from_desc as $item) {
+
+			$type = isset($item->product) ? $item->product->type : '';
+
+			if (!in_array($type, ['Voip', 'Internet']))
+				continue;
 
 			// flag to decide if item has to be saved at the end of the loop
 			$item_changed = False;
@@ -716,7 +724,7 @@ class Contract extends \BaseModel {
 				continue;
 			}
 
-			$type = $item->product->type;
+			$type = isset($item->product) ? $item->product->type : '';
 			// process only particular product types
 			if (!in_array($type, ['Voip', 'Internet'])) {
 				continue;
@@ -987,14 +995,11 @@ class Contract extends \BaseModel {
 class ContractObserver
 {
 
-	// TODO: move to global config
-	// start contract numbers from 10000 - TODO: move to global config
+	// Start contract numbers from 10000 - TODO: move to global config or remove this after creating number cycle MVC
 	protected $num = 490000;
 
 	public function creating($contract)
 	{
-		$contract->number = $contract->id - $this->num;
-
 		// Note: this is only needed when Billing Module is not active - TODO: proof with future static function
 		$contract->sepa_iban = strtoupper($contract->sepa_iban);
 		$contract->sepa_bic  = strtoupper($contract->sepa_bic);
@@ -1003,13 +1008,17 @@ class ContractObserver
 
 	public function created($contract)
 	{
+		// Note: this only works here because id is not yet assigned in creating function
+		$contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
+
 		$contract->save();     			// forces to call the updated method of the observer
 		$contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
 	}
 
 	public function updating($contract)
 	{
-		$contract->number = $contract->id - $this->num;
+		// commented out by par: don't overwrite changes on contract numbers
+		/* $contract->number = $contract->number ? $contract->number : $contract->id - $this->num; */
 
 		$contract->sepa_iban = strtoupper($contract->sepa_iban);
 		$contract->sepa_bic  = strtoupper($contract->sepa_bic);

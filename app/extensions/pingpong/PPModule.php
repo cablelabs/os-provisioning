@@ -23,4 +23,16 @@ class PPModule
 		return \Module::find($modulename)->active();
 	}
 
+	/**
+	 * disable Ping Pong module
+	 *
+	 * @author Ole Ernst
+	 *
+	 * @param  Modulename
+	 */
+	public static function disable($modulename)
+	{
+		\Module::find($modulename)->disable();
+	}
+
 }
