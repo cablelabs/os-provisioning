@@ -1084,7 +1084,8 @@ class ContractObserver
 
 	public function updating($contract)
 	{
-		$contract->number = $contract->number ? : $contract->id - $this->num;
+		// autocalculate contract number if empty
+		$contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
 
 		if (!\PPModule::is_active('billingbase'))
 		{
