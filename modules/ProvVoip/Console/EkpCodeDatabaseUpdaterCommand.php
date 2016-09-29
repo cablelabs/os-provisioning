@@ -167,6 +167,7 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 
 				// disable observer to stop logging of each change
 				$cc->observer_enabled = false;
+
 				$cc->ekp_code = $code;
 				$cc->company = $company;
 				$cc->save();
@@ -191,7 +192,7 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 				'method' 	=> 'created/updated',
 				'model' 	=> 'EkpCode',
 				'model_id'  => -1,
-				'text' 		=> $changes.' entries in database ekpcodes created/updated',
+				'text' 		=> $changes.' entries created/updated',
 			];
 			GuiLog::log_changes($data);
 		}
