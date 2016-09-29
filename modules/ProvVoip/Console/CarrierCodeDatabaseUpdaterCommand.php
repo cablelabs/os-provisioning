@@ -176,7 +176,11 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 			}
 		}
 
-		// store the current hash file
+		// store the actual hash file
+		$hash = sha1(\Storage::get($this->csv_file));
+		\Storage::put($this->hash_file, $hash);
+
+		// log event summary to logfile
 		$hash = sha1(\Storage::get($this->csv_file));
 		\Storage::put($this->hash_file, $hash);
 
