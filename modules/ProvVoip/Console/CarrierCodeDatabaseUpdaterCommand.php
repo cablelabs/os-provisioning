@@ -5,6 +5,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use \Modules\ProvVoip\Entities\CarrierCode;
+use \App\GuiLog;
 
 /**
  * Class for updating database with carrier codes from csv file
@@ -155,20 +156,46 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	 */
 	protected function _update_table() {
 
+		$changes = 0;
 		foreach ($this->csv as $key => $entry) {
 			$code = $entry[0];
 			$company = $entry[1];
 
 			# alter entry if exists, else create new one
 			$cc = CarrierCode::firstOrNew(array('carrier_code' => $code));
-			$cc->carrier_code = $code;
-			$cc->company = $company;
-			$cc->save();
+			if ($cc->company != $company) {
+
+				// disable observer to stop logging of each change
+				$cc->observer_enabled = false;
+
+				$cc->carrier_code = $code;
+				$cc->company = $company;
+				$cc->save();
+
+				$changes++;
+			}
 		}
 
+		// store the actual hash file
 		$hash = sha1(\Storage::get($this->csv_file));
 		\Storage::put($this->hash_file, $hash);
-		Log::info($this->name.': Database carriercodes updated');
+
+		// log event summary to logfile
+		Log::info($this->name.': '.$changes.' entries in database carriercodes created/updated');
+
+		// log event summary to database (if there are changes)
+		if ($changes > 0) {
+			$user = \Auth::user();
+			$data = [
+				'authuser_id' => $user ? $user->id : 0,
+				'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
+				'method' 	=> 'created/updated',
+				'model' 	=> 'CarrierCode',
+				'model_id'  => -1,
+				'text' 		=> $changes.' entries created/updated',
+			];
+			GuiLog::log_changes($data);
+		}
 
 	}
 
