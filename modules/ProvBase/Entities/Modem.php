@@ -470,19 +470,33 @@ class Modem extends \BaseModel {
 		if(!\PPModule::is_active('provmon'))
 			return -1;
 
-		$path = \DB::connection('mysql-cacti')->table('host')
-			->join('data_local', 'host.id', '=', 'data_local.host_id')
-			->join('data_template_data', 'data_local.id', '=', 'data_template_data.local_data_id')
-			->where('host.description', '=', $this->hostname)
-			->orderBy('data_local.id')
-			->select('data_template_data.data_source_path')->first();
-		// no rrd file for current modem found
+		try {
+			$path = \DB::connection('mysql-cacti')->table('host')
+				->join('data_local', 'host.id', '=', 'data_local.host_id')
+				->join('data_template_data', 'data_local.id', '=', 'data_template_data.local_data_id')
+				->where('host.description', '=', $this->hostname)
+				->orderBy('data_local.id')
+				->select('data_template_data.data_source_path')->first();
+		}
+		catch (\PDOException $e) {
+			// Code 1049 == Unknown database '%s' -> cacti is not installed yet
+			if($e->getCode() == 1049)
+				return -1;
+			// don't catch other PDOExceptions
+			throw $e;
+		}
+
+		// no rrd file for current modem found in DB
 		if(!$path)
 			return -1;
 
+		$file = str_replace('<path_rra>', '/usr/share/cacti/rra', $path->data_source_path);
+		// file does not exist
+		if(!File::exists($file))
+			return -1;
+
 		$output = array();
-		$file = basename($path->data_source_path);
-		exec("rrdtool lastupdate /usr/share/cacti/rra/$file", $output);
+		exec("rrdtool lastupdate $file", $output);
 		// unexpected number of lines from rrdtool
 		if(count($output) != 3)
 			return -1;
