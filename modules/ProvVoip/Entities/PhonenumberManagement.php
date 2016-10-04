@@ -172,6 +172,7 @@ class PhonenumberManagement extends \BaseModel {
 		if (\PPModule::is_active('provvoipenvia')) {
 			$ret['Envia']['EnviaOrder']['class'] = 'EnviaOrder';
 			$ret['Envia']['EnviaOrder']['relation'] = $this->_envia_orders;
+			$ret['Envia']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at Envia';
 
 			$ret['Envia']['PhonebookEntry']['class'] = 'PhonebookEntry';
 
