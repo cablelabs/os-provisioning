@@ -37,7 +37,22 @@ Relation Blade is used inside a Panel Element to display relational class object
 				@endif
 			@endforeach
 
+<<<<<<< HEAD
 		{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Create '.$view, 'Button'), ['style' => 'simple']) }} <!-- .\App\Http\Controllers\BaseViewController::translate($view) -->
+||||||| merged common ancestors
+		{{ Form::submit(\App\Http\Controllers\BaseViewController::translate('Create ').\App\Http\Controllers\BaseViewController::translate($view), ['style' => 'simple']) }}
+=======
+		<?php
+			// check if default create button text shall be overwritten
+			if (!isset($options['create_button_text'])) {
+				$create_button_text = \App\Http\Controllers\BaseViewController::translate('Create ').\App\Http\Controllers\BaseViewController::translate($view);
+			}
+			else {
+				$create_button_text = \App\Http\Controllers\BaseViewController::translate($options['create_button_text']);
+			}
+		?>
+		{{ Form::submit($create_button_text, ['style' => 'simple']) }}
+>>>>>>> Added possibility for customized create/delete button texts.
 		{{ Form::close() }}
 
 	@DivClose()
@@ -62,7 +77,17 @@ Relation Blade is used inside a Panel Element to display relational class object
 
 		<!-- Delete Button -->
 		@if (!isset($options['hide_delete_button']) && isset($relation[0]))
-			{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button'), ['!class' => 'btn btn-danger', 'style' => 'simple']) }}
+
+			<?php
+				// check if default delete button text shall be overwritten
+				if (!isset($options['delete_button_text'])) {
+					$delete_button_text = \App\Http\Controllers\BaseViewController::translate('Delete');
+				}
+				else {
+					$delete_button_text = \App\Http\Controllers\BaseViewController::translate($options['delete_button_text']);
+				}
+			?>
+				{{ Form::submit($delete_button_text, ['!class' => 'btn btn-danger', 'style' => 'simple']) }}
 		@endif
 
 	{{ Form::close() }}
