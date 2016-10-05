@@ -176,7 +176,7 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 			}
 		}
 
-		// store the actual hash file
+		// store the current hash file
 		$hash = sha1(\Storage::get($this->csv_file));
 		\Storage::put($this->hash_file, $hash);
 
