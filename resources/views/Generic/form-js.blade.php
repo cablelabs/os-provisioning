@@ -43,6 +43,18 @@ NOTE: - java include section is in default blade at bottom of text
 
 			@endif
 
+			// current element is a checkbox
+			@if ($field['form_type'] == 'checkbox')
+
+				@include('Generic.form-js-checkbox')
+
+				// the element change function
+				$('#{{$field['name']}}').change(function() {
+					@include('Generic.form-js-checkbox')
+				});
+
+			@endif
+
 		@endforeach
 
 	</script>
