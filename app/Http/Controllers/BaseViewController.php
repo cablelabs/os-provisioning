@@ -259,8 +259,26 @@ class BaseViewController extends Controller {
 			if (isset($field['select']) && is_string($field['select']))
 				$select = ['class' => $field['select']];
 
+			// checkbox field: used for jquery (java script) realtime based showing/hiding of fields
+			$checkbox = null;
+			if (isset($field['checkbox']) &&  is_string($field['checkbox'])) {
+				$checkbox = ['class' => $field['checkbox']];
+			}
+
+			// combine the classes to trigger show/hide from select and checkbox
+			// the result is either null or an array containing the classes in key 'class'
+			$additional_classes = $select;
+			if (is_array($additional_classes)) {
+				if (is_array($checkbox)) {
+					$additional_classes['class'] .= " ".$checkbox['class'];
+				}
+			}
+			else {
+				$additional_classes = $checkbox;
+			}
+
 			// Open Form Group
-			$s .= \Form::openGroup($field["name"], $field["description"], $select, $color);
+			$s .= \Form::openGroup($field["name"], $field["description"], $additional_classes, $color);
 
 			// Output the Form Elements
 			switch ($field["form_type"])
