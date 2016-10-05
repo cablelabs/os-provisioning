@@ -36,27 +36,21 @@ NOTE: - java include section is in default blade at bottom of text
 				{{-- load on document initialization --}}
 				@include('Generic.form-js-select')
 
-				{{-- the element change function --}}
+				// the element change function
 				$('#{{$field['name']}}').change(function() {
 					@include('Generic.form-js-select')
 				});
 
 			@endif
 
-			{{-- current element is a checkbox --}}
+			// current element is a checkbox
 			@if ($field['form_type'] == 'checkbox')
 
-				@if (!isset($form_js_checkbox_blade_included))
-					@include('Generic.form-js-checkbox')
-					<?php $form_js_checkbox_blade_included = True; ?>
-				@endif
+				@include('Generic.form-js-checkbox')
 
-				{{-- call onLoad to initialize the websites visibility states --}}
-				par__toggle_class_visibility_depending_on_checkbox('{{$field['name']}}');
-
-				{{-- call on change of a checkbox --}}
+				// the element change function
 				$('#{{$field['name']}}').change(function() {
-					par__toggle_class_visibility_depending_on_checkbox('{{$field['name']}}');
+					@include('Generic.form-js-checkbox')
 				});
 
 			@endif

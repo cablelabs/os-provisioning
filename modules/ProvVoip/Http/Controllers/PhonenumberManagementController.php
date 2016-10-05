@@ -92,8 +92,12 @@ class PhonenumberManagementController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'activation_date', 'description' => 'Activation date'),
 			array('form_type' => 'text', 'name' => 'external_activation_date', 'description' => 'External activation date', 'options' => ['readonly'], 'hidden' => $hide_flags['external_activation_date']),
 			array('form_type' => 'checkbox', 'name' => 'porting_in', 'description' => 'Incoming porting'),
-			array('form_type' => 'select', 'name' => 'carrier_in', 'description' => 'Carrier in', 'value' => CarrierCode::carrier_list_for_form_select(False), 'help' => $carrier_in_help, 'checkbox' => 'show_on_porting_in'),
-			array('form_type' => 'select', 'name' => 'ekp_in', 'description' => 'EKP in', 'value' => EkpCode::ekp_list_for_form_select(False), 'help' => $ekp_in_help, 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'select', 'name' => 'carrier_in', 'description' => 'Carrier in', 'value' => CarrierCode::carrier_list_for_form_select(False), 'help' => trans('helper.PhonenumberManagement_CarrierIn'), 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'select', 'name' => 'ekp_in', 'description' => 'EKP in', 'value' => EkpCode::ekp_list_for_form_select(False), 'help' => trans('helper.PhonenumberManagement_EkpIn'), 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'text', 'name' => 'deactivation_date', 'description' => 'Termination date'),
+			array('form_type' => 'text', 'name' => 'external_deactivation_date', 'description' => 'External deactivation date', 'options' => ['readonly']),
+			array('form_type' => 'checkbox', 'name' => 'porting_out', 'description' => 'Outgoing porting'),
+			array('form_type' => 'select', 'name' => 'carrier_out', 'description' => 'Carrier out', 'value' => CarrierCode::carrier_list_for_form_select(True), 'checkbox' => 'show_on_porting_out'),
 
 			// preset subscriber data => this comes from model
 			array('form_type' => 'text', 'name' => 'subscriber_company', 'description' => 'Subscriber company', 'checkbox' => 'show_on_porting_in'),
