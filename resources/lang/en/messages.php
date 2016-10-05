@@ -2,20 +2,20 @@
 
 return [
 
-    /*
-    |--------------------------------------------------------------------------
-    | All other Language Lines - TODO: split descriptions and messages?
-    |--------------------------------------------------------------------------
-    */
+	/*
+	|--------------------------------------------------------------------------
+	| All other Language Lines - TODO: split descriptions and messages?
+	|--------------------------------------------------------------------------
+	*/
 
-    // Descriptions of Form Fields in Edit/Create
+	// Descriptions of Form Fields in Edit/Create
 
-	'ccc' 					=> 'Customer Control Center',
+	'ccc'					=> 'Customer Control Center',
 	'cpe_log_error' 		=> 'was not registering on Server - No log entry found',
 	'invoice' 				=> 'Invoice',
-    'Invoices'         		=> 'Invoices',
+	'Invoices'				=> 'Invoices',
 	'log_out'				=> 'Log Out',
-    'modem_monitoring_error' => 'This could be because the Modem was not online until now. Please note that Diagrams are only available
+	'modem_monitoring_error'=> 'This could be because the Modem was not online until now. Please note that Diagrams are only available
 		from the point that a modem was online. If all diagrams did not show properly then it should be a
 		bigger problem and there should be a cacti misconfiguration. Please consider the administrator on bigger problems.',
 	'modem_no_diag'			=> 'No Diagrams available',

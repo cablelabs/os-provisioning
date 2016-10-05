@@ -31,7 +31,7 @@ class ModemController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF']),
 			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list($model->configfiles(), 'name')),
 			array('form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'),
-			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Network Access', 'value' => '1', 'help' => 'Disable/Enable Network Access - Take Care: If Billing-Module is installed this Checkbox will be overwritten daily during check of valid Tariff Item')
+			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Network Access', 'value' => '1', 'help' => trans('helper.Modem_NetworkAccess'))
 			);
 
 		$b = \PPModule::is_active('billingbase') ? 
@@ -46,7 +46,7 @@ class ModemController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname'),
 			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname'),
 			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street'),
-			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House number'),
+			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number'),
 			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode'),
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City'),
 			array('form_type' => 'text', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => ['placeholder' => 'YYYY-MM-DD']),

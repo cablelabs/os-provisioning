@@ -430,10 +430,12 @@ class BaseController extends Controller {
 	 */
 	public function index()
 	{
-		$obj = static::get_model_obj();
+		$model = static::get_model_obj();
 
-		$view_var   = $obj->index_list();
-		$headline  	= BaseViewController::translate($obj->view_headline().' List');
+		$view_var   = $model->index_list();
+		$view_header = \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
+		$headline  	= \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
+		$b_text		= $model->view_headline();
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
 		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
@@ -444,7 +446,7 @@ class BaseController extends Controller {
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
 
-		return View::make ($view_path, $this->compact_prep_view(compact('headline', 'view_var', 'create_allowed', 'delete_allowed')));
+		return View::make ($view_path, $this->compact_prep_view(compact('headline','view_header', 'view_var', 'create_allowed', 'delete_allowed', 'b_text')));
 	}
 
 
@@ -457,9 +459,8 @@ class BaseController extends Controller {
 	public function create()
 	{
 		$model = static::get_model_obj();
-
-		$view_header = BaseViewController::translate('Create ').BaseViewController::translate($model->view_headline());
-		$headline    = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, NULL, $_GET);
+		$view_header = \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline() , 'Header');
+		$headline    = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header , NULL, $_GET);
 		$form_fields = BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($model), $model, 'create');
 
 		$view_path = 'Generic.create';
@@ -516,8 +517,7 @@ class BaseController extends Controller {
 	{
 		$model    = static::get_model_obj();
 		$view_var = $model->findOrFail($id);
-
-		$view_header 	= BaseViewController::translate('Edit ').BaseViewController::translate($model->view_headline());
+		$view_header 	= BaseViewController::translate_view('Edit'.$model->view_headline(),'Header');
 		$headline       = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var);
 		$panel_right    = $this->prepare_tabs($view_var);
 		$form_fields	= BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
@@ -546,7 +546,7 @@ class BaseController extends Controller {
 			$view_path = \NamespaceController::get_view_name().'.edit';
 		if (View::exists(\NamespaceController::get_view_name().'.form'))
 			$form_path = \NamespaceController::get_view_name().'.form';
-
+	 	
 		// $config_routes = BaseController::get_config_modules();
 		// return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations', 'extra_data')));
 		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations', 'method', 'additional_data')));

@@ -20,7 +20,7 @@
 @endforeach
 
 @if ($edit_view_save_button)
-	{{ Form::submit($save_button) }}
+	{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button')) }}
 @endif
 
 
