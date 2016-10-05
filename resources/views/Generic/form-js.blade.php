@@ -46,11 +46,16 @@ NOTE: - java include section is in default blade at bottom of text
 			// current element is a checkbox
 			@if ($field['form_type'] == 'checkbox')
 
-				@include('Generic.form-js-checkbox')
+				@if (!isset($form_js_checkbox_included))
+					@include('Generic.form-js-checkbox')
+					<?php $form_js_checkbox_included = True; ?>
+				@endif
+
+				par__toggle_class_visibility_depending_on_checkbox('{{$field['name']}}');
 
 				// the element change function
 				$('#{{$field['name']}}').change(function() {
-					@include('Generic.form-js-checkbox')
+					par__toggle_class_visibility_depending_on_checkbox('{{$field['name']}}');
 				});
 
 			@endif
