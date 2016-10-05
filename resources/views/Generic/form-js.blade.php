@@ -26,34 +26,35 @@ NOTE: - java include section is in default blade at bottom of text
 
 	<script type="text/javascript">
 
-		// jquery (java script) based realtime showing/hiding of fields
-		// foreach form field
+		{{-- jquery (java script) based realtime showing/hiding of fields --}}
+		{{-- foreach form field --}}
 		@foreach($form_fields as $field)
 
-			// that has a select field with an array() inside
+			{{-- that has a select field with an array() inside --}}
 			@if ((isset($field['select']) && is_array($field['select'])))
 
-				// load on document initialization
+				{{-- load on document initialization --}}
 				@include('Generic.form-js-select')
 
-				// the element change function
+				{{-- the element change function --}}
 				$('#{{$field['name']}}').change(function() {
 					@include('Generic.form-js-select')
 				});
 
 			@endif
 
-			// current element is a checkbox
+			{{-- current element is a checkbox --}}
 			@if ($field['form_type'] == 'checkbox')
 
-				@if (!isset($form_js_checkbox_included))
+				@if (!isset($form_js_checkbox_blade_included))
 					@include('Generic.form-js-checkbox')
-					<?php $form_js_checkbox_included = True; ?>
+					<?php $form_js_checkbox_blade_included = True; ?>
 				@endif
 
+				{{-- call onLoad to initialize the websites visibility states --}}
 				par__toggle_class_visibility_depending_on_checkbox('{{$field['name']}}');
 
-				// the element change function
+				{{-- call on change of a checkbox --}}
 				$('#{{$field['name']}}').change(function() {
 					par__toggle_class_visibility_depending_on_checkbox('{{$field['name']}}');
 				});
