@@ -22,11 +22,11 @@
 
           <li class="nav-header">Navigation</li>
           <li>
-            <a href="{{route('Home')}}"><i class="fa fa-laptop"></i> <span>Dashboard</span></a>
+            <a href="{{route('admin')}}"><i class="fa fa-laptop"></i> <span>Dashboard</span></a>
           </li>
 
           <li>
-            <a href="{{route('Home')}}">
+            <a href="{{route('admin')}}">
               <span class="badge pull-right">0</span>
               <i class="fa fa-inbox"></i> <span>Inbox</span>
             </a>
