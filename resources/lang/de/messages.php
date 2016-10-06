@@ -114,7 +114,7 @@ return [
 	'Split Sepa Transfer-Types'	=> 'SEPA-Transfertypen aufteilen?',
 	'Mandate Reference'			=> 'Mandatrefferenz', 
 	'e.g.: String - {number}'	=> 'z.Bsp.: Sring - {Nummer}',
-	'Item Termination only end of month'=> 'Posten am ende des Monats löschen?',
+	'Item Termination only end of month'=> 'Posten nur am ende des Monats kündigen?',
 	'Language for Accounting command'	=> 'Sprache für Abrechnungslauf-Befehl',
 	//CCC
 	'Connection Info Template'	=> 'Vorlage für Verbingungsinformationen',

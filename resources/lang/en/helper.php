@@ -41,7 +41,7 @@ return [
   *	MODULE: ProvBase	
   */
  	//ModemController
-	'Modem_NetworkAccess'			=> 'Disable/Enable Network Access - Take Care: If Billing-Module is installed this Checkbox will be overwritten daily during check of valid Tariff Item',
+	'Modem_NetworkAccess'			=> 'Disable/Enable Network Access - Take Care: If Billing-Module is installed this Checkbox will be overwritten daily during check of valid Tariff Item when it was not enabled/checked manually',
 
  /**
   *	MODULE: ProvVoip	
