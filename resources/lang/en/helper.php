@@ -37,6 +37,9 @@ return [
 	'SepaAccount_InvoiceHeadline'	=> 'Replaces Headline in Invoices created for this Costcenter',
 	'SepaAccount_InvoiceText'		=> 'The Text of the separate four \'Invoice Text\'-Fields is automatically chosen dependent on the total charge and SEPA Mandate and is set in the appropriate Invoice for the Customer. It is possible to use all data field keys of the Invoice Class as placeholder in the form of {fieldname} to build a kind of template. These are replaced by the actual value of the Invoice.',
 
+	// SettlementrunController
+	'settlement_verification' 		=> 'If activated it\'s not possible to repeat the Settlement Run. Customer Invoices are only visible when this checkbox is activated.',
+
  /**
   *	MODULE: ProvBase	
   */
