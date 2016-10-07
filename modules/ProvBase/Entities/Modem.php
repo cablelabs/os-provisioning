@@ -230,7 +230,7 @@ class Modem extends \BaseModel {
 		// Log
 		Log::info('dhcp: update '.self::CONF_FILE_PATH.', '.self::CONF_FILE_PATH_PUB);
 
-		$data 	  = '';
+		$data     = '';
 		$data_pub = '';
 
 		foreach (Modem::all() as $modem)
@@ -268,15 +268,15 @@ class Modem extends \BaseModel {
 	 */
 	public function make_configfile ()
 	{
-		$modem  = $this;
+		$modems	= $this;
 		$id		= $modem->id;
-		$mac 	= $modem->mac;
-		$host 	= $modem->hostname;
+		$mac	= $modem->mac;
+		$host	= $modem->hostname;
 
 		/* Configfile */
 		$dir		= '/tftpboot/cm/';
 		$cf_file	= $dir."cm-$id.conf";
-		$cfg_file   = $dir."cm-$id.cfg";
+		$cfg_file	= $dir."cm-$id.cfg";
 
 		$cf = $modem->configfile;
 
@@ -430,7 +430,7 @@ class Modem extends \BaseModel {
 
 			// parse and update results
 			foreach (array_reverse($oids) as $field => $oid)
-				$this->{$field} = array_pop($r) / 10; 		// TODO: added generic concept for multiplying options @Torsten Schmidt
+				$this->{$field} = array_pop($r) / 10;	// TODO: added generic concept for multiplying options @Torsten Schmidt
 
 			// save
 			$this->save();
@@ -451,7 +451,7 @@ class Modem extends \BaseModel {
 		return $results;
 	}
 
-	/*
+	/**
 	 * Refresh Modem State using cached value of Cacti
 	 *
 	 * This function will update the modem->status field with the modem upstream power level
@@ -665,11 +665,11 @@ class Modem extends \BaseModel {
 
 /**
  * Modem Observer Class
- * Handles changes on CMs
+ * Handles changes on CMs, can handle:
  *
- * can handle   'creating', 'created', 'updating', 'updated',
- *			  'deleting', 'deleted', 'saving', 'saved',
- *			  'restoring', 'restored',
+ * 'creating', 'created', 'updating', 'updated',
+ * 'deleting', 'deleted', 'saving', 'saved',
+ * 'restoring', 'restored',
  */
 class ModemObserver
 {
