@@ -65,6 +65,7 @@ class ProvBase extends \BaseModel {
 		$data .= 'next-server '.$this->provisioning_server.";\n";
 		$data .= 'option log-servers '.$this->provisioning_server.";\n";
 		$data .= 'option time-servers '.$this->provisioning_server.";\n";
+		$data .= 'option time-offset '.date('Z').";\n";
 
 		$data .= "\n# zone\nzone ".$this->domain_name." {\n\tprimary ".$this->provisioning_server.";\n\tkey dhcpupdate;\n}\n";
 
