@@ -51,6 +51,28 @@ class PhonenumberManagementController extends \BaseController {
 			$init_values = array();
 		}
 
+		// set hide flags for some entries depending on the current state
+		$hide_flags = array(
+			'external_activation_date' => '1',
+			'deactivation_date' => '1',
+			'external_deactivation_date' => '1',
+			'porting_out' => '1',
+		);
+
+		// if activation date is set: show information about external activation and allow deactivation
+		if (!is_null($model->activation_date)) {
+			$hide_flags['external_activation_date'] = '0';
+			$hide_flags['deactivation_date'] = '0';
+			$hide_flags['porting_out'] = '0';
+		}
+
+		// if deactivation is set: show information about external deactivation
+		if (!is_null($model->deactivation_date)) {
+			$hide_flags['external_deactivation_date'] = '0';
+		}
+
+		/* d($model); */
+
 		// help text for carrier/ekp settings
 		if (\PPModule::is_active('ProvVoipEnvia')) {
 			$trc_help = 'If changed here this has to be sent to Envia, too.';
@@ -66,29 +88,30 @@ class PhonenumberManagementController extends \BaseController {
 		// label has to be the same like column in sql table
 		$ret_tmp = array(
 			array('form_type' => 'select', 'name' => 'phonenumber_id', 'description' => 'Phonenumber', 'value' => $model->html_list($model->phonenumber(), 'id'), 'hidden' => '1'),
-			array('form_type' => 'select', 'name' => 'trcclass', 'description' => 'TRC class', 'value' => TRCClass::trcclass_list_for_form_select(), 'help' => $trc_help),
+			array('form_type' => 'select', 'name' => 'trcclass', 'description' => 'TRC class', 'value' => TRCClass::trcclass_list_for_form_select(), 'help' => $trc_help, 'space' => '1'),
 			array('form_type' => 'text', 'name' => 'activation_date', 'description' => 'Activation date'),
-			array('form_type' => 'text', 'name' => 'external_activation_date', 'description' => 'External activation date', 'options' => ['readonly']),
+			array('form_type' => 'text', 'name' => 'external_activation_date', 'description' => 'External activation date', 'options' => ['readonly'], 'hidden' => $hide_flags['external_activation_date']),
 			array('form_type' => 'checkbox', 'name' => 'porting_in', 'description' => 'Incoming porting'),
 			array('form_type' => 'select', 'name' => 'carrier_in', 'description' => 'Carrier in', 'value' => CarrierCode::carrier_list_for_form_select(False), 'help' => trans('helper.PhonenumberManagement_CarrierIn'), 'checkbox' => 'show_on_porting_in'),
 			array('form_type' => 'select', 'name' => 'ekp_in', 'description' => 'EKP in', 'value' => EkpCode::ekp_list_for_form_select(False), 'help' => trans('helper.PhonenumberManagement_EkpIn'), 'checkbox' => 'show_on_porting_in'),
-			array('form_type' => 'text', 'name' => 'deactivation_date', 'description' => 'Termination date'),
-			array('form_type' => 'text', 'name' => 'external_deactivation_date', 'description' => 'External deactivation date', 'options' => ['readonly']),
-			array('form_type' => 'checkbox', 'name' => 'porting_out', 'description' => 'Outgoing porting'),
-			array('form_type' => 'select', 'name' => 'carrier_out', 'description' => 'Carrier out', 'value' => CarrierCode::carrier_list_for_form_select(True), 'checkbox' => 'show_on_porting_out'),
 
 			// preset subscriber data => this comes from model
-			array('form_type' => 'text', 'name' => 'subscriber_company', 'description' => 'Subscriber company'),
-			array('form_type' => 'text', 'name' => 'subscriber_department', 'description' => 'Subscriber department'),
-			array('form_type' => 'select', 'name' => 'subscriber_salutation', 'description' => 'Subscriber salutation', 'value' => $model->get_salutation_options()),
-			array('form_type' => 'select', 'name' => 'subscriber_academic_degree', 'description' => 'Subscriber academic degree', 'value' => $model->get_academic_degree_options()),
-			array('form_type' => 'text', 'name' => 'subscriber_firstname', 'description' => 'Subscriber firstname'),
-			array('form_type' => 'text', 'name' => 'subscriber_lastname', 'description' => 'Subscriber lastname'),
-			array('form_type' => 'text', 'name' => 'subscriber_street', 'description' => 'Subscriber street'),
-			array('form_type' => 'text', 'name' => 'subscriber_house_number', 'description' => 'Subscriber house number'),
-			array('form_type' => 'text', 'name' => 'subscriber_zip', 'description' => 'Subscriber zipcode'),
-			array('form_type' => 'text', 'name' => 'subscriber_city', 'description' => 'Subscriber city'),
-			array('form_type' => 'text', 'name' => 'subscriber_district', 'description' => 'Subscriber district'),
+			array('form_type' => 'text', 'name' => 'subscriber_company', 'description' => 'Subscriber company', 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'text', 'name' => 'subscriber_department', 'description' => 'Subscriber department', 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'select', 'name' => 'subscriber_salutation', 'description' => 'Subscriber salutation', 'value' => $model->get_salutation_options(), 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'select', 'name' => 'subscriber_academic_degree', 'description' => 'Subscriber academic degree', 'value' => $model->get_academic_degree_options(), 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'text', 'name' => 'subscriber_firstname', 'description' => 'Subscriber firstname', 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'text', 'name' => 'subscriber_lastname', 'description' => 'Subscriber lastname', 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'text', 'name' => 'subscriber_street', 'description' => 'Subscriber street', 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'text', 'name' => 'subscriber_house_number', 'description' => 'Subscriber house number', 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'text', 'name' => 'subscriber_zip', 'description' => 'Subscriber zipcode', 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'text', 'name' => 'subscriber_city', 'description' => 'Subscriber city', 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'text', 'name' => 'subscriber_district', 'description' => 'Subscriber district', 'space' => '1', 'checkbox' => 'show_on_porting_in'),
+
+			array('form_type' => 'text', 'name' => 'deactivation_date', 'description' => 'Termination date', 'hidden' => $hide_flags['deactivation_date']),
+			array('form_type' => 'text', 'name' => 'external_deactivation_date', 'description' => 'External deactivation date', 'options' => ['readonly'], 'hidden' => $hide_flags['external_deactivation_date']),
+			array('form_type' => 'checkbox', 'name' => 'porting_out', 'description' => 'Outgoing porting', 'hidden' => $hide_flags['porting_out']),
+			array('form_type' => 'select', 'name' => 'carrier_out', 'description' => 'Carrier out', 'value' => CarrierCode::carrier_list_for_form_select(True), 'checkbox' => 'show_on_porting_out'),
 		);
 
 		// add init values if set
