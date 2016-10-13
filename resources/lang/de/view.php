@@ -118,6 +118,8 @@ return [
 		//Items
 		'Header_Item'				=> 'Posten|Posten',
 		'Header_EditItem'			=> 'Posten bearbeiten',
+		// Invoice
+		'Header_Invoice' 			=> 'Rechnung|Rechnungen',
 
 		//Settlement Run
 		'Header_Settlement Run'		=> 'Abrechnungslauf|Abrechnungsläufe',

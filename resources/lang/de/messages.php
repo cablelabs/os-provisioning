@@ -154,8 +154,8 @@ return [
 	'Item'						=> 'Posten',
 	'Items'						=> 'Posten',
 	'Product'					=> 'Produkt',
-	'Valid from'				=> 'Gülig ab',
-	'Valid to'					=> 'Gültis bis',
+	'Valid from'				=> 'Gültig ab',
+	'Valid to'					=> 'Gültig bis',
 	'Valid from fixed'			=> 'Gültig ab fest',
 	'Valid to fixed'			=> 'Gültig bis fest',
 	//Modems

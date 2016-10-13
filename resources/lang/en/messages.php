@@ -27,4 +27,6 @@ return [
 	'user_settings'			=> 'User Settings',
 	'user_glob_settings'	=> 'Global User Settings',
 
+	'Call Data Record'		=> 'Call Data Record',
+
 ];
