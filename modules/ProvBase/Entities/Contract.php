@@ -3,6 +3,7 @@
 namespace Modules\ProvBase\Entities;
 
 use Modules\ProvBase\Entities\Qos;
+use Modules\BillingBase\Entities\SettlementRun;
 
 class Contract extends \BaseModel {
 
@@ -60,10 +61,6 @@ class Contract extends \BaseModel {
 				'index_header' => ['Contract Number', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street', 'Contract Start'],
 				'bsclass' => $bsclass,
 				'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
-
-		// deprecated ?
-		$old = $this->number2 ? ' - (Old Nr: '.$this->number2.')' : '';
-		return $this->number.' - '.$this->firstname.' '.$this->lastname.' - '.$this->city.$old;
 	}
 
 	// View Relation.
@@ -71,7 +68,7 @@ class Contract extends \BaseModel {
 	{
 		if (\PPModule::is_active('billingbase'))
 		{
-			$ret['Base']['Modem'] = $this->modems;
+			$ret['Base']['Modem'] 		= $this->modems;
 			$ret['Base']['Item']        = $this->items;
 			$ret['Base']['SepaMandate'] = $this->sepamandates;
 		}
@@ -80,8 +77,14 @@ class Contract extends \BaseModel {
 
 		if (\PPModule::is_active('billingbase'))
 		{
-			$ret['Billing']['Item']        = $this->items;
-			$ret['Billing']['SepaMandate'] = $this->sepamandates;
+			$ret['Billing']['Item']['class'] 	= 'Item';
+			$ret['Billing']['Item']['relation']	= $this->items;
+			$ret['Billing']['SepaMandate']['class'] 	= 'SepaMandate';
+			$ret['Billing']['SepaMandate']['relation']  = $this->sepamandates;
+			$ret['Billing']['Invoice']['class'] 	= 'Invoice';
+			$ret['Billing']['Invoice']['relation']  = $this->invoices;
+			$ret['Billing']['Invoice']['options']['hide_delete_button'] = 0;
+			$ret['Billing']['Invoice']['options']['hide_create_button'] = 0;
 		}
 
 		if (\PPModule::is_active('provvoipenvia'))
@@ -218,6 +221,16 @@ class Contract extends \BaseModel {
 	{
 		if (\PPModule::is_active('billingbase'))
 			return $this->belongsTo('Modules\BillingBase\Entities\Salesman');
+		return null;
+	}
+
+	public function invoices()
+	{
+		if (\PPModule::is_active('billingbase'))
+		{
+			$hide = SettlementRun::unverified_files();
+			return $this->hasMany('Modules\BillingBase\Entities\Invoice')->orderBy('year', 'desc')->orderBy('month', 'desc')->whereNotIn('filename', $hide);
+		}
 		return null;
 	}
 
