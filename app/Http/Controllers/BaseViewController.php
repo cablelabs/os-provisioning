@@ -78,10 +78,7 @@ class BaseViewController extends Controller {
         if (strpos($string, 'view.'.$type.'_'))
         	return trans($string);
 
-        if ($count == 1)
-        	$translation = trans_choice('view.'.$type.'_'.$string, 1);
-    	else
-    		$translation = trans_choice('view.'.$type.'_'.$string, $count);
+   		$translation = trans_choice('view.'.$type.'_'.$string, $count);
 
         // found in lang/{}/messages.php
         if (strpos($translation, 'view.'.$type.'_') === false)

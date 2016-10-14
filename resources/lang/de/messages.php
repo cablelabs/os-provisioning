@@ -268,8 +268,13 @@ return [
 	'Total Fee'				=> 'Gesamtgebühr',
 	'Commission Amount'		=> 'davon Provision',
 /**
-// Customer Control Center
-*/
+ * Customer Control Center
+ */
+	'log_out'				=> 'Ausloggen',
+	'password_change'		=> 'Passwort ändern',
+	'password_confirm'		=> 'Password bestätigen',
+	'home' 					=> 'Startseite',
+
 
 //
 // HFC
