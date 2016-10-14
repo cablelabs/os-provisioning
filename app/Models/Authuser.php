@@ -49,7 +49,12 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 	// link title in index view
 	public function view_index_label()
 	{
-		return $this->login_name;
+		// TODO: set color dependent of user permissions
+		// 'bsclass' => $bsclass,
+
+		return ['index' => [$this->login_name, $this->first_name, $this->last_name],
+		        'index_header' => ['Login', 'Firstname', 'Lastname'],
+		        'header' => $this->login_name];
 	}
 
 

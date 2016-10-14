@@ -10,8 +10,10 @@ return [
 
 	// Descriptions of Form Fields in Edit/Create
 
+	'Call Data Record'		=> 'Call Data Record',
 	'ccc'					=> 'Customer Control Center',
 	'cpe_log_error' 		=> 'was not registering on Server - No log entry found',
+	'home' 					=> 'Startseite',
 	'invoice' 				=> 'Invoice',
 	'Invoices'				=> 'Invoices',
 	'log_out'				=> 'Log Out',
@@ -24,6 +26,9 @@ return [
 	'modem_log_error' 		=> 'Modem was not registering on Server - No log entry found',
 	'modem_offline'			=> 'Modem is Offline',
 	'month' 				=> 'Month',
+	'password_change'		=> 'Change Password',
+	'password_confirm'		=> 'Confirm Password',
+
 	'user_settings'			=> 'User Settings',
 	'user_glob_settings'	=> 'Global User Settings',
 

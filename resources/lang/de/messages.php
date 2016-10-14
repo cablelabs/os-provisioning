@@ -114,7 +114,7 @@ return [
 	'Split Sepa Transfer-Types'	=> 'SEPA-Transfertypen aufteilen?',
 	'Mandate Reference'			=> 'Mandatrefferenz', 
 	'e.g.: String - {number}'	=> 'z.Bsp.: Sring - {Nummer}',
-	'Item Termination only end of month'=> 'Posten am ende des Monats löschen?',
+	'Item Termination only end of month'=> 'Posten nur am ende des Monats kündigen?',
 	'Language for Accounting command'	=> 'Sprache für Abrechnungslauf-Befehl',
 	//CCC
 	'Connection Info Template'	=> 'Vorlage für Verbingungsinformationen',
@@ -154,8 +154,8 @@ return [
 	'Item'						=> 'Posten',
 	'Items'						=> 'Posten',
 	'Product'					=> 'Produkt',
-	'Valid from'				=> 'Gülig ab',
-	'Valid to'					=> 'Gültis bis',
+	'Valid from'				=> 'Gültig ab',
+	'Valid to'					=> 'Gültig bis',
 	'Valid from fixed'			=> 'Gültig ab fest',
 	'Valid to fixed'			=> 'Gültig bis fest',
 	//Modems
@@ -268,8 +268,13 @@ return [
 	'Total Fee'				=> 'Gesamtgebühr',
 	'Commission Amount'		=> 'davon Provision',
 /**
-// Customer Control Center
-*/
+ * Customer Control Center
+ */
+	'log_out'				=> 'Ausloggen',
+	'password_change'		=> 'Passwort ändern',
+	'password_confirm'		=> 'Password bestätigen',
+	'home' 					=> 'Startseite',
+
 
 //
 // HFC

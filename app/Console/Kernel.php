@@ -88,8 +88,9 @@ class Kernel extends ConsoleKernel {
 			// Rebuid all Configfiles
 			// $schedule->command('nms:configfile')->dailyAt('00:50')->withoutOverlapping();
 
-			// TODO: Reload DHCP
-			// $schedule->command('nms:dhcp')->dailyAt('01:00')->withoutOverlapping();
+			// TODO: Reload DHCP on clock change (daylight saving) - last sunday in march, last sunday in october
+			$schedule->command('nms:dhcp')->cron('0 4 24,25,26,27,28,29,30,31 3,10 * 0');
+
 
 			// Contract - network access, item dates, internet (qos) & voip tariff changes
 			// important!! daily conversion has to be run BEFORE monthly conversion
@@ -124,11 +125,14 @@ class Kernel extends ConsoleKernel {
 			$schedule->command('nms:modem-refresh --schedule=1')->everyFiveMinutes()->withoutOverlapping();
 		}
 
+
 		// Automatic Power Control based on measured SNR
 		if (\PPModule::is_active ('ProvMon'))
 		{
 			$schedule->command('nms:apc')->everyFiveMinutes()->withoutOverlapping();
+		// 	$schedule->command('nms:cacti')->everyFiveMinutes()->withoutOverlapping();
 		}
+
 
 		// TODO: improve
 		$schedule->call(function () {
