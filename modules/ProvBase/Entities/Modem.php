@@ -230,7 +230,7 @@ class Modem extends \BaseModel {
 		// Log
 		Log::info('dhcp: update '.self::CONF_FILE_PATH.', '.self::CONF_FILE_PATH_PUB);
 
-		$data 	  = '';
+		$data     = '';
 		$data_pub = '';
 
 		foreach (Modem::all() as $modem)
@@ -268,15 +268,15 @@ class Modem extends \BaseModel {
 	 */
 	public function make_configfile ()
 	{
-		$modem  = $this;
+		$modems	= $this;
 		$id		= $modem->id;
-		$mac 	= $modem->mac;
-		$host 	= $modem->hostname;
+		$mac	= $modem->mac;
+		$host	= $modem->hostname;
 
 		/* Configfile */
 		$dir		= '/tftpboot/cm/';
 		$cf_file	= $dir."cm-$id.conf";
-		$cfg_file   = $dir."cm-$id.cfg";
+		$cfg_file	= $dir."cm-$id.cfg";
 
 		$cf = $modem->configfile;
 
@@ -430,7 +430,7 @@ class Modem extends \BaseModel {
 
 			// parse and update results
 			foreach (array_reverse($oids) as $field => $oid)
-				$this->{$field} = array_pop($r) / 10; 		// TODO: added generic concept for multiplying options @Torsten Schmidt
+				$this->{$field} = array_pop($r) / 10;	// TODO: added generic concept for multiplying options @Torsten Schmidt
 
 			// save
 			$this->save();
@@ -451,6 +451,74 @@ class Modem extends \BaseModel {
 		return $results;
 	}
 
+	/**
+	 * Refresh Modem State using cached value of Cacti
+	 *
+	 * This function will update the modem->status field with the modem upstream power level
+	 * if online. Because the last value of Cacti is used, the update is much quicker and doesn't
+	 * generate a superfluous SNMP request.
+	 *
+	 * NOTE: This function will be called via artisan command modem-refresh. This command
+	 *       is added to laravel scheduling api to refresh all modem states every 5min.
+	 *
+	 * @return: maximum power level of all upstream channels or -1 on error
+	 * @author: Ole Ernst
+	 */
+	public function refresh_state_cacti()
+	{
+		// cacti is not installed
+		if(!\PPModule::is_active('provmon'))
+			return -1;
+
+		try {
+			$path = \DB::connection('mysql-cacti')->table('host')
+				->join('data_local', 'host.id', '=', 'data_local.host_id')
+				->join('data_template_data', 'data_local.id', '=', 'data_template_data.local_data_id')
+				->where('host.description', '=', $this->hostname)
+				->orderBy('data_local.id')
+				->select('data_template_data.data_source_path')->first();
+		}
+		catch (\PDOException $e) {
+			// Code 1049 == Unknown database '%s' -> cacti is not installed yet
+			if($e->getCode() == 1049)
+				return -1;
+			// don't catch other PDOExceptions
+			throw $e;
+		}
+
+		// no rrd file for current modem found in DB
+		if(!$path)
+			return -1;
+
+		$file = str_replace('<path_rra>', '/usr/share/cacti/rra', $path->data_source_path);
+		// file does not exist
+		if(!File::exists($file))
+			return -1;
+
+		$output = array();
+		exec("rrdtool lastupdate $file", $output);
+		// unexpected number of lines from rrdtool
+		if(count($output) != 3)
+			return -1;
+
+		$keys = explode(' ', trim(array_shift($output)));
+		$vals = explode(' ', trim(explode(':', array_pop($output))[1]));
+		$res = array_combine($keys, $vals)['maxUsPow'];
+
+		$status = \DB::connection('mysql-cacti')->table('host')
+			->where('description', '=', $this->hostname)
+			->select('status')->first()->status;
+		// modem is offline, if we use last value of cacti instead of setting it
+		// to zero, it would seem as if the modem is still online
+		if($status == 1)
+			$res = 0;
+
+		$this->observer_disable();
+		$this->status = $res;
+		$this->save();
+
+		return $res;
+	}
 
 	/*
 	 * Return actual modem state as string or int
@@ -597,11 +665,11 @@ class Modem extends \BaseModel {
 
 /**
  * Modem Observer Class
- * Handles changes on CMs
+ * Handles changes on CMs, can handle:
  *
- * can handle   'creating', 'created', 'updating', 'updated',
- *			  'deleting', 'deleted', 'saving', 'saved',
- *			  'restoring', 'restored',
+ * 'creating', 'created', 'updating', 'updated',
+ * 'deleting', 'deleted', 'saving', 'saved',
+ * 'restoring', 'restored',
  */
 class ModemObserver
 {
@@ -637,6 +705,9 @@ class ModemObserver
 		$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
+
+		if (\PPModule::is_active ('ProvMon'))
+			\Artisan::call('nms:cacti');
 	}
 
 	public function deleted($modem)

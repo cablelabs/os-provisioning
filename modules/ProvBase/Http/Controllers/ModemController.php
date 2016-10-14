@@ -105,12 +105,15 @@ class ModemController extends \BaseController {
 	 */
 	protected function get_form_tabs($view_var)
 	{
-
 		$a = [
-			['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]],
-			['name' => 'Analyses', 'route' => 'Provmon.index', 'link' => [$view_var->id]],
-			['name' => 'CPE-Analysis', 'route' => 'Provmon.cpe', 'link' => [$view_var->id]]
+			['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]]
 		];
+
+		if(!\PPModule::is_active('ProvMon'))
+			return $a;
+
+		array_push($a, ['name' => 'Analyses', 'route' => 'Provmon.index', 'link' => [$view_var->id]]);
+		array_push($a, ['name' => 'CPE-Analysis', 'route' => 'Provmon.cpe', 'link' => [$view_var->id]]);
 
 		// MTA: only show MTA analysis if Modem has MTAs
 		if (isset($view_var->mtas) && isset($view_var->mtas[0]))

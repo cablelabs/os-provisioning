@@ -124,9 +124,10 @@ class Kernel extends ConsoleKernel {
 			$schedule->command('nms:modem-refresh --schedule=1')->everyFiveMinutes()->withoutOverlapping();
 		}
 
+		// Automatic Power Control based on measured SNR
 		if (\PPModule::is_active ('ProvMon'))
 		{
-			$schedule->command('nms:cacti')->everyFiveMinutes()->withoutOverlapping();
+			$schedule->command('nms:apc')->everyFiveMinutes()->withoutOverlapping();
 		}
 
 		// TODO: improve
