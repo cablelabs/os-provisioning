@@ -268,7 +268,7 @@ class Modem extends \BaseModel {
 	 */
 	public function make_configfile ()
 	{
-		$modems	= $this;
+		$modem	= $this;
 		$id		= $modem->id;
 		$mac	= $modem->mac;
 		$host	= $modem->hostname;
