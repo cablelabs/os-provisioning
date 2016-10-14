@@ -587,8 +587,11 @@ class BaseController extends Controller {
 		//       without updated_at field. So we globally use a guarded field from now, to use the update timestamp
 		$obj->update($data);
 
+		// error msg created while observer execution
+		$msg = \Session::has('error') ? \Session::get('error') : 'Updated';
+		$color = \Session::has('error') ? 'orange' : 'blue';
 
-		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', 'Updated!')->with('message_color', 'blue');
+		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', $msg)->with('message_color', $color);
 	}
 
 

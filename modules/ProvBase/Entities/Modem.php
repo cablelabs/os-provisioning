@@ -191,12 +191,12 @@ class Modem extends \BaseModel {
 	 *
 	 * @author Nino Ryschawy
 	 */
-	private function generate_cm_update_entry()
+	private function generate_cm_dhcp_entry()
 	{
 			return 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'"; }'."\n";
 	}
 
-	private function generate_cm_update_entry_pub()
+	private function generate_cm_dhcp_entry_pub()
 	{
 			return 'subclass "Client-Public" '.$this->mac.'; # CM id:'.$this->id."\n";
 	}
@@ -239,11 +239,11 @@ class Modem extends \BaseModel {
 				continue;
 
 			// all
-			$data .= $modem->generate_cm_update_entry();
+			$data .= $modem->generate_cm_dhcp_entry();
 
 			// public ip
 			if ($modem->public)
-				$data_pub .= $modem->generate_cm_update_entry_pub();
+				$data_pub .= $modem->generate_cm_dhcp_entry_pub();
 
 		}
 
@@ -258,8 +258,6 @@ class Modem extends \BaseModel {
 
 		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
 		system('/bin/chown -R apache /etc/dhcp/');
-
-		return ($ret > 0 ? true : false);
 	}
 
 
@@ -356,30 +354,16 @@ class Modem extends \BaseModel {
 		// if hostname cant be resolved we dont want to have an php error
 		try
 		{
-			// restart modem - TODO: get community string and domain name from global config page, NOTE: OID from MIB: DOCS-CABLE-DEV-MIB::docsDevResetNow
+			// restart modem - NOTE: OID from MIB: DOCS-CABLE-DEV-MIB::docsDevResetNow
 			snmpset($this->hostname.'.'.$domain, $community_rw, "1.3.6.1.2.1.69.1.1.3.0", "i", "1", 300000, 1);
 		}
 		catch (Exception $e)
 		{
 			// only ignore error with this error message (catch exception with this string)
 			if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmpset(): No response from") !== false)))
-			{
-				// check if observer is called from HTML Update, otherwise skip
-				if (\Request::method() == 'PUT')
-				{
-					// redirect back with corresponding message over flash, needs to be saved as it's normally only saved when the session middleware terminates successfully
-					$resp = \Redirect::back()->with('message', 'Could not restart Modem! (offline?)')->with('message_color', 'orange');
-					\Session::driver()->save();		 // \ is like writing "use Session;" before class statement
-					$resp->send();
-
-					/*
-					 * TODO: replace exit
-					 * This is a security hassard. All Code (Observer etc) which should run after this code will not be executed !
-					 */
-					exit();
-				}
-			}
+				\Session::flash('error', 'Could not restart Modem! (offline?)');
 		}
+
 	}
 
 
@@ -632,8 +616,7 @@ class ModemObserver
 		if (!$modem->observer_enabled)
 			return;
 
-		// TODO: only restart on system relevant changes
-
+		// only restart on system relevant changes ? Then it's not that easy to restart modem anymore
 		$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
