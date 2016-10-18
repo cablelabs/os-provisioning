@@ -163,6 +163,10 @@ class BaseViewController extends Controller {
 			// 4. set all field_value's to SQL data
 			$field['field_value'] = $model[$field['name']];
 
+			// 4.(sub-task) auto-fill all field_value's with HTML Input
+			if (\Input::get($field['name']))
+				$field['field_value'] = \Input::get($field['name']);
+
 			// 4.(sub-task) auto-fill all field_value's with HTML POST array if supposed
 			if (isset($_POST[$field['name']]))
 				$field['field_value'] = $_POST[$field['name']];
