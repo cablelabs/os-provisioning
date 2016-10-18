@@ -23,7 +23,7 @@
 			<span>{{ Form::radio('mode', 'index_natural') }}&nbsp;NAT</span>
 		--}}
 
-	<input type="text" name="query" placeholder="Search .." class="form-control">
+	<input type="text" name="query" placeholder="{{ \App\Http\Controllers\BaseViewController::translate_view('Search ...', 'Search') }} " class="form-control">
 
 
 		{{-- no help needed for simple search

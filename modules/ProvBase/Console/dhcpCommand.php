@@ -59,6 +59,15 @@ class dhcpCommand extends Command {
 		foreach (Cmts::all() as $cmts)
 			$cmts->make_dhcp_conf();
 
+		// Restart dhcp server
+		$dir = storage_path('systemd/');
+		if (!is_dir($dir))
+		{
+			mkdir($dir, 0700, true);
+			chown($dir, 'apache');
+		}
+		touch($dir.'dhcpd');
+
 	}
 
 

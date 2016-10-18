@@ -191,12 +191,12 @@ class Modem extends \BaseModel {
 	 *
 	 * @author Nino Ryschawy
 	 */
-	private function generate_cm_update_entry()
+	private function generate_cm_dhcp_entry()
 	{
 			return 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'"; }'."\n";
 	}
 
-	private function generate_cm_update_entry_pub()
+	private function generate_cm_dhcp_entry_pub()
 	{
 			return 'subclass "Client-Public" '.$this->mac.'; # CM id:'.$this->id."\n";
 	}
@@ -230,7 +230,7 @@ class Modem extends \BaseModel {
 		// Log
 		Log::info('dhcp: update '.self::CONF_FILE_PATH.', '.self::CONF_FILE_PATH_PUB);
 
-		$data 	  = '';
+		$data     = '';
 		$data_pub = '';
 
 		foreach (Modem::all() as $modem)
@@ -239,11 +239,11 @@ class Modem extends \BaseModel {
 				continue;
 
 			// all
-			$data .= $modem->generate_cm_update_entry();
+			$data .= $modem->generate_cm_dhcp_entry();
 
 			// public ip
 			if ($modem->public)
-				$data_pub .= $modem->generate_cm_update_entry_pub();
+				$data_pub .= $modem->generate_cm_dhcp_entry_pub();
 
 		}
 
@@ -258,8 +258,6 @@ class Modem extends \BaseModel {
 
 		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
 		system('/bin/chown -R apache /etc/dhcp/');
-
-		return ($ret > 0 ? true : false);
 	}
 
 
@@ -268,15 +266,15 @@ class Modem extends \BaseModel {
 	 */
 	public function make_configfile ()
 	{
-		$modem  = $this;
+		$modem	= $this;
 		$id		= $modem->id;
-		$mac 	= $modem->mac;
-		$host 	= $modem->hostname;
+		$mac	= $modem->mac;
+		$host	= $modem->hostname;
 
 		/* Configfile */
 		$dir		= '/tftpboot/cm/';
 		$cf_file	= $dir."cm-$id.conf";
-		$cfg_file   = $dir."cm-$id.cfg";
+		$cfg_file	= $dir."cm-$id.cfg";
 
 		$cf = $modem->configfile;
 
@@ -356,30 +354,16 @@ class Modem extends \BaseModel {
 		// if hostname cant be resolved we dont want to have an php error
 		try
 		{
-			// restart modem - TODO: get community string and domain name from global config page, NOTE: OID from MIB: DOCS-CABLE-DEV-MIB::docsDevResetNow
+			// restart modem - NOTE: OID from MIB: DOCS-CABLE-DEV-MIB::docsDevResetNow
 			snmpset($this->hostname.'.'.$domain, $community_rw, "1.3.6.1.2.1.69.1.1.3.0", "i", "1", 300000, 1);
 		}
 		catch (Exception $e)
 		{
 			// only ignore error with this error message (catch exception with this string)
 			if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmpset(): No response from") !== false)))
-			{
-				// check if observer is called from HTML Update, otherwise skip
-				if (\Request::method() == 'PUT')
-				{
-					// redirect back with corresponding message over flash, needs to be saved as it's normally only saved when the session middleware terminates successfully
-					$resp = \Redirect::back()->with('message', 'Could not restart Modem! (offline?)')->with('message_color', 'orange');
-					\Session::driver()->save();		 // \ is like writing "use Session;" before class statement
-					$resp->send();
-
-					/*
-					 * TODO: replace exit
-					 * This is a security hassard. All Code (Observer etc) which should run after this code will not be executed !
-					 */
-					exit();
-				}
-			}
+				\Session::flash('error', 'Could not restart Modem! (offline?)');
 		}
+
 	}
 
 
@@ -430,7 +414,7 @@ class Modem extends \BaseModel {
 
 			// parse and update results
 			foreach (array_reverse($oids) as $field => $oid)
-				$this->{$field} = array_pop($r) / 10; 		// TODO: added generic concept for multiplying options @Torsten Schmidt
+				$this->{$field} = array_pop($r) / 10;	// TODO: added generic concept for multiplying options @Torsten Schmidt
 
 			// save
 			$this->save();
@@ -451,6 +435,74 @@ class Modem extends \BaseModel {
 		return $results;
 	}
 
+	/**
+	 * Refresh Modem State using cached value of Cacti
+	 *
+	 * This function will update the modem->status field with the modem upstream power level
+	 * if online. Because the last value of Cacti is used, the update is much quicker and doesn't
+	 * generate a superfluous SNMP request.
+	 *
+	 * NOTE: This function will be called via artisan command modem-refresh. This command
+	 *       is added to laravel scheduling api to refresh all modem states every 5min.
+	 *
+	 * @return: maximum power level of all upstream channels or -1 on error
+	 * @author: Ole Ernst
+	 */
+	public function refresh_state_cacti()
+	{
+		// cacti is not installed
+		if(!\PPModule::is_active('provmon'))
+			return -1;
+
+		try {
+			$path = \DB::connection('mysql-cacti')->table('host')
+				->join('data_local', 'host.id', '=', 'data_local.host_id')
+				->join('data_template_data', 'data_local.id', '=', 'data_template_data.local_data_id')
+				->where('host.description', '=', $this->hostname)
+				->orderBy('data_local.id')
+				->select('data_template_data.data_source_path')->first();
+		}
+		catch (\PDOException $e) {
+			// Code 1049 == Unknown database '%s' -> cacti is not installed yet
+			if($e->getCode() == 1049)
+				return -1;
+			// don't catch other PDOExceptions
+			throw $e;
+		}
+
+		// no rrd file for current modem found in DB
+		if(!$path)
+			return -1;
+
+		$file = str_replace('<path_rra>', '/usr/share/cacti/rra', $path->data_source_path);
+		// file does not exist
+		if(!File::exists($file))
+			return -1;
+
+		$output = array();
+		exec("rrdtool lastupdate $file", $output);
+		// unexpected number of lines from rrdtool
+		if(count($output) != 3)
+			return -1;
+
+		$keys = explode(' ', trim(array_shift($output)));
+		$vals = explode(' ', trim(explode(':', array_pop($output))[1]));
+		$res = array_combine($keys, $vals)['maxUsPow'];
+
+		$status = \DB::connection('mysql-cacti')->table('host')
+			->where('description', '=', $this->hostname)
+			->select('status')->first()->status;
+		// modem is offline, if we use last value of cacti instead of setting it
+		// to zero, it would seem as if the modem is still online
+		if($status == 1)
+			$res = 0;
+
+		$this->observer_disable();
+		$this->status = $res;
+		$this->save();
+
+		return $res;
+	}
 
 	/*
 	 * Return actual modem state as string or int
@@ -597,11 +649,11 @@ class Modem extends \BaseModel {
 
 /**
  * Modem Observer Class
- * Handles changes on CMs
+ * Handles changes on CMs, can handle:
  *
- * can handle   'creating', 'created', 'updating', 'updated',
- *			  'deleting', 'deleted', 'saving', 'saved',
- *			  'restoring', 'restored',
+ * 'creating', 'created', 'updating', 'updated',
+ * 'deleting', 'deleted', 'saving', 'saved',
+ * 'restoring', 'restored',
  */
 class ModemObserver
 {
@@ -632,11 +684,13 @@ class ModemObserver
 		if (!$modem->observer_enabled)
 			return;
 
-		// TODO: only restart on system relevant changes
-
+		// only restart on system relevant changes ? Then it's not that easy to restart modem anymore
 		$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
+
+		if (\PPModule::is_active ('ProvMon'))
+			\Artisan::call('nms:cacti');
 	}
 
 	public function deleted($modem)

@@ -65,7 +65,7 @@ class UpdateContractForMovingEnviaContractToModem extends BaseMigration {
     {
         Schema::table($this->tablename, function(Blueprint $table)
 		{
-			$table->string('contract_external_id')->nullable()->default(NULL)->after('contract_id');
+			$table->string('contract_external_id')->nullable()->default(NULL)->after('number4');
 			$table->date('contract_ext_creation_date')->nullable()->default(NULL)->after('contract_external_id');
 			$table->date('contract_ext_termination_date')->nullable()->default(NULL)->after('contract_ext_creation_date');
         });

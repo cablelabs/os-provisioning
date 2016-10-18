@@ -37,7 +37,7 @@ class GlobalConfigController extends BaseController {
         $base_controller = new $tmp;
 
         $links = BaseController::get_config_modules();
-        $view_header = BaseViewController::translate("Global Configurations");
+        $view_header = BaseViewController::translate_view("Global Configurations", 'Header');
         $route_name = 'Config.index';
 
 		return \View::make('GlobalConfig.index', $base_controller->compact_prep_view(compact('links', 'view_header', 'route_name')));

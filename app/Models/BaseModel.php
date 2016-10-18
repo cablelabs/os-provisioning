@@ -271,7 +271,6 @@ class BaseModel extends Eloquent
 			'TRCClass',	# static data; not for standalone use
 			'CarrierCode', # cron updated data; not for standalone use
 			'EkpCode', # cron updated data; not for standalone use
-			'BookingRecords', 'Invoice', 'Sepaxml'
 		);
 		$result = array();
 
@@ -644,25 +643,29 @@ class BaseModel extends Eloquent
 	 *
 	 * Note: Model must have a get_start_time- & get_end_time-Function defined
 	 *
-	 * @param string 	$timespan			year / month / now
-	 * @return Bool  						true, if model had valid dates during last month / year or is actually valid (now)
+	 * @param 	String 		$timespan		year / month / now
+	 * @param 	Integer 	$type 			1 - Tariff (Inet/Voip/TV) , 0 - No Tariff (Other/Device/Credit)
+	 * @return 	Bool  						true, if model had valid dates during last month / year or is actually valid (now)
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function check_validity($timespan = 'month')
+	public function check_validity($timespan = 'month', $type = 1)
 	{
 		$start = $this->get_start_time();
 		$end   = $this->get_end_time();
 
-
+		$case  = $type ? $timespan : $timespan.$type;
 // if (get_class($this) == 'Modules\BillingBase\Entities\Item' && $this->contract->id == 500005 && $this->product->type == 'Internet')
 // 	dd($this->product->name, $start < strtotime(date('Y-m-01')), !$end, $end >= strtotime(date('Y-m-01', strtotime('first day of last month'))), date('Y-m-d', $start), date('Y-m-d', $end));
 
 
-		switch ($timespan)
+		switch ($case)
 		{
 			case 'month':
 				return $start < strtotime(date('Y-m-01')) && (!$end || $end >= strtotime(date('Y-m-01', strtotime('first day of last month'))));
+
+			case 'month0':
+				return	$end ? date('m', $start) <= date('m', strtotime('first day of last month')) && date('m', $end) >= date('m') : date('m', $start) == date('m', strtotime('first day of last month'));
 
 			case 'year':
 				return $start < strtotime(date('Y-01-01')) && (!$end || $end >= strtotime(date('Y-01-01'), strtotime('last year')));
