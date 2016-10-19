@@ -39,8 +39,8 @@ class PhonenumberController extends \BaseController {
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'select', 'name' => 'country_code', 'description' => 'Country Code', 'value' => Phonenumber::getPossibleEnumValues('country_code')),
-			array('form_type' => 'text', 'name' => 'prefix_number', 'description' => 'Prefix Number'),
-			array('form_type' => 'text', 'name' => 'number', 'description' => 'Number'),
+			array('form_type' => 'text', 'name' => 'prefix_number', 'description' => 'Prefix Number', 'help' => 'Has to be available on modem address.'),
+			array('form_type' => 'text', 'name' => 'number', 'description' => 'Number', 'help' => 'The phonenumber to port or a free number given by your provider.'),
 			array('form_type' => 'select', 'name' => 'mta_id', 'description' => 'MTA', 'value' => $model->mtas_list_with_dummies(), 'hidden' => '1'),
 			array('form_type' => 'text', 'name' => 'port', 'description' => 'Port'),
 			array('form_type' => 'text', 'name' => 'username', 'description' => 'Username', 'options' => array('placeholder' => $login_placeholder)),
