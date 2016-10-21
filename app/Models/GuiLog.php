@@ -41,7 +41,7 @@ class GuiLog extends \BaseModel {
 
 	public function index_list()
 	{
-		return $this->orderBy('id', 'desc')->get();
+		return $this->orderBy('id', 'desc')->simplePaginate(1000);
 	}
 
 
