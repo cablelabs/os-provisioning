@@ -13,6 +13,7 @@ return [
 									//'Sepa Transfers are split to different XML-Files dependent of their transfer type',
 	'BillingBase_ItemTermination'	=> 'Erlaubt es Kunden gebuchte Produkte nur bis zum letzten Tag des Monats zu kündigen.', 
 									//'Allow Customers only to terminate booked products on last day of month',
+	'BillingBase_cdr_offset' 		=> 'Beispiel: 1, wenn die Einzelverbindungsnachweise vom Juni zu den Rechnungen vom Juli gehören; 0, wenn beide für den selben Monat abgerechnet werden; 2, wenn die Einzelverbindungsnachweise vom Januar zu den Rechnungen vom März gehören',
 
 	//CompanyController
 	'Company_Management'			=> 'Trennung der Namen durch Komma.', 
