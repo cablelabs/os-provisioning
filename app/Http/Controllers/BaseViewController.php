@@ -157,8 +157,9 @@ class BaseViewController extends Controller {
 			//    NOTE: this will not work in create context, because view_belongs_to() returns null !
 			//          Hiding in create context will only work with hard coded 'hidden' => 1 entry in view_form_fields()
 			if (is_object($model->view_belongs_to()) && 					// does a view relation exists
-				$model->view_belongs_to()->table.'_id' == $field['name'])	// view table name (+_id) == field name ?
-				$field['hidden'] = 1;									// hide
+				$model->view_belongs_to()->table.'_id' == $field['name'] &&	// view table name (+_id) == field name ?
+				!isset($field['hidden']))									// hidden was not explicitly set
+					$field['hidden'] = '1';
 
 			// 4. set all field_value's to SQL data
 			$field['field_value'] = $model[$field['name']];
@@ -228,9 +229,11 @@ class BaseViewController extends Controller {
 			{
 				$hidden = $field['hidden'];
 
-				if (($context == 'edit' && strpos($hidden, 'E') !== false) || // hide edit context only?
-				   ($context == 'create' && strpos($hidden, 'C') !== false) || // hide create context only?
-				   ($hidden == 1 || $hidden == '1')) // hide globally?
+				if ($hidden =! 0 && ( // == 0 -> explicitly set to always show, no matter if other conditions are met
+					($context == 'edit' && strpos($hidden, 'E') !== false) || // hide edit context only?
+					($context == 'create' && strpos($hidden, 'C') !== false) || // hide create context only?
+					$hidden == 1) // hide globally?
+				)
 					{
 						$s .= \Form::hidden ($field["name"], $field['field_value']);
 						goto finish;
