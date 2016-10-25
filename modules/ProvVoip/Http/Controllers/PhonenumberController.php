@@ -36,6 +36,26 @@ class PhonenumberController extends \BaseController {
 			$login_placeholder = '';
 		}
 
+		// TODO: if there is no phonenumbermanagement: make checkbox changeable – should this be the case or do we want to need a management in each case?
+		if (is_null($model->phonenumbermanagement)) {
+			$active_checkbox = array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'help' => 'If there exists a phonenumber management this checkbox will be changed depending on its (de)activation date.');
+		}
+		else {
+			$active_checkbox = array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'html' =>
+				'<div class="col-md-12" style="background-color:white">
+					<div class="form-group"><label for="active" style="margin-top: 10px;" class="col-md-4 control-label">Active</label>
+						<div class="col-md-7"><div class="col-md-7"><input align="left" class=" form-control" name="active" type="checkbox" id="active" onclick="return false"'.$active_state.'>
+						</div>
+					</div>
+					<div title="Automatically set by (de)activation date in phonenumber management" name=active-help class=col-md-1>'.\HTML::image(asset('images/help.png'), '?', ['width' => 20]).'</div>
+					<div class=col-md-4>
+					</div>
+					<div class=col-md-8>
+					</div>
+					</div></div>',
+				);
+		}
+
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'select', 'name' => 'country_code', 'description' => 'Country Code', 'value' => Phonenumber::getPossibleEnumValues('country_code')),
@@ -46,20 +66,7 @@ class PhonenumberController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'username', 'description' => 'Username', 'options' => array('placeholder' => $login_placeholder)),
 			array('form_type' => 'text', 'name' => 'password', 'description' => 'Password', 'options' => array('placeholder' => $login_placeholder)),
 			array('form_type' => 'text', 'name' => 'sipdomain', 'description' => 'SIP domain'),
-			array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'html' =>
-				'<div class="col-md-12" style="background-color:white">
-					<div class="form-group"><label for="active" style="margin-top: 10px;" class="col-md-4 control-label">Active</label>
-						<div class="col-md-7"><div class="col-md-7"><input align="left" class=" form-control" name="active" type="checkbox" id="active" onclick="return false"'.$active_state.'>
-						</div>
-					</div>
-					<div title="Automatically set by (de)activation date in phonenumber management" name=active-help class=col-md-1><img src="https://192.168.0.122/lara/images/help.png" width="20"></div>
-					<div class=col-md-4>
-					</div>
-					<div class=col-md-8>
-					</div>
-					</div></div>',
-				'options' => ['help' => 'foo'],
-			),
+			$active_checkbox,
 		);
 	}
 
