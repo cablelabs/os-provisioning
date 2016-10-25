@@ -43,10 +43,16 @@ class Phonenumber extends \BaseModel {
 		$management = $this->phonenumbermanagement;
 
 		if (is_null($management)) {
-			$state = 'No PhonenumberManagement existing!';
-			$bsclass = 'danger';
+			if ($this->active) {
+				$state = 'Active.';
+			}
+			else {
+				$state = 'Deactivated.';
+			}
+			$bsclass = 'warning';
 			$act = 'n/a';
 			$deact = 'n/a';
+			$state .= ' No PhonenumberManagement existing!';
 		}
 		else {
 			$act = $management->activation_date;
@@ -237,10 +243,13 @@ class Phonenumber extends \BaseModel {
 		if (is_null($management)) {
 
 			// if there is still no management: deactivate the number
-			if ($this->active) {
-				$this->active = False;
-				$changed = True;
-			}
+			// TODO: decide if a phonenumbermanagement is required in each case or not
+			// until then: don't change the state on missing management
+			/* if ($this->active) { */
+			/* 	$this->active = False; */
+			/* 	$changed = True; */
+			/* } */
+			return;
 		}
 		else {
 
@@ -358,8 +367,9 @@ class PhonenumberObserver
 
 	public function creating($phonenumber) {
 
+		// TODO: ATM we don't force the creation of phonenumbermanagements – if we change our mind we can activate this line again
 		// on creating there can not be a phonenumbermanagement – so we can set active state to false in each case
-		// $phonenumber->active = 0;
+		/* $phonenumber->active = 0; */
 
 		$this->_create_login_data($phonenumber);
 	}
