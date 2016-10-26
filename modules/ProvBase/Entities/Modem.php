@@ -684,7 +684,7 @@ class ModemObserver
 		// Refresh MPS rules
 		// Note: does not perform a save() which could trigger observer.
 		if (\PPModule::is_active('HfcCustomer'))
-			$modem->tree_id = \Modules\Hfccustomer\Entities\Mpr::refresh($modem->id);
+			$modem->tree_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem->id);
 	}
 
 	public function updated($modem)
