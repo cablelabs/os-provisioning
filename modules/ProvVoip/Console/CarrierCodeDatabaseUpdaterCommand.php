@@ -181,10 +181,6 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 		\Storage::put($this->hash_file, $hash);
 
 		// log event summary to logfile
-		$hash = sha1(\Storage::get($this->csv_file));
-		\Storage::put($this->hash_file, $hash);
-
-		// log event summary to logfile
 		Log::info($this->name.': '.$changes.' entries in database carriercodes created/updated');
 
 		// log event summary to database (if there are changes)
