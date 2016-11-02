@@ -18,9 +18,21 @@
 		@section('free_numbers_panel')
 
 			@if (is_array($currently_free_numbers))
+
+				<?php
+					// set flag to include the correct JavaScript function
+					// used in resources/views/Generic/form-js-fill-input-from-href.blade.php
+					$load_input_from_href_filler_for_free_numbers = True;
+				?>
+
+				<h4>Success</h4>
+				<h5>You can click a number to fill the form…</h5>
+				<div id="free_numbers_return">
 				@foreach ($currently_free_numbers as $free_number)
-					{{ $free_number }}<br>
+					<a href="#">{{ $free_number }}</a><br>
+					{{-- {{ $free_number }}<br> --}}
 				@endforeach
+				</div>
 			@elseif (is_string($currently_free_numbers))
 				{{ $currently_free_numbers }}
 			@endif
