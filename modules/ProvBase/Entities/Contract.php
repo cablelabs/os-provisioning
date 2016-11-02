@@ -1056,7 +1056,7 @@ class ContractObserver
 
 	public function updating($contract)
 	{
-		// autocalculate contract number if empty
+		// autocalculate contract number if not given
 		$contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
 
 		$contract->sepa_iban = strtoupper($contract->sepa_iban);
