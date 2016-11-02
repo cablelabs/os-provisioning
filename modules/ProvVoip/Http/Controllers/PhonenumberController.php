@@ -36,7 +36,8 @@ class PhonenumberController extends \BaseController {
 			$login_placeholder = '';
 		}
 
-		// TODO: if there is no phonenumbermanagement: make checkbox changeable – should this be the case or do we want to need a management in each case?
+		// if there is no phonenumbermanagement: make checkbox changeable
+		// TODO: should this be the case or do we want to need a management in each case?
 		if (is_null($model->phonenumbermanagement)) {
 			$active_checkbox = array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'help' => 'If there exists a phonenumber management this checkbox will be changed depending on its (de)activation date.');
 		}
