@@ -2,25 +2,25 @@
 
 return [
  /**
-  *	MODULE: BillingBase	
+  *	MODULE: BillingBase
   */
 	//BillingBaseController
-	'BillingBase_MandateRef'		=> "Eine Vorlage kann mit SQL-Spalten des Auftrags oder mit der Mandat-Tabelle erstellt werden - mögliche Felder: \n", 
+	'BillingBase_MandateRef'		=> "Eine Vorlage kann mit SQL-Spalten des Auftrags oder mit der Mandat-Tabelle erstellt werden - mögliche Felder: \n",
 									// A Template can be built with sql columns of contract or mandate table - possible fields: \n"
-	'BillingBase_InvoiceNrStart' 	=> 'Rechnungsnummer startet jedes neue Jahr mit dieser Nummer.', 
+	'BillingBase_InvoiceNrStart' 	=> 'Rechnungsnummer startet jedes neue Jahr mit dieser Nummer.',
 									//Invoice Number Counter starts every new year with this number'
-	'BillingBase_SplitSEPA'			=> 'SEPA-Überweisungen sind in unterschiedliche XML-Dateien aufgeteilt, abhängig von ihrem Übertragungstyp.', 
+	'BillingBase_SplitSEPA'			=> 'SEPA-Überweisungen sind in unterschiedliche XML-Dateien aufgeteilt, abhängig von ihrem Übertragungstyp.',
 									//'Sepa Transfers are split to different XML-Files dependent of their transfer type',
-	'BillingBase_ItemTermination'	=> 'Erlaubt es Kunden gebuchte Produkte nur bis zum letzten Tag des Monats zu kündigen.', 
+	'BillingBase_ItemTermination'	=> 'Erlaubt es Kunden gebuchte Produkte nur bis zum letzten Tag des Monats zu kündigen.',
 									//'Allow Customers only to terminate booked products on last day of month',
 	'BillingBase_cdr_offset' 		=> 'Beispiel: 1, wenn die Einzelverbindungsnachweise vom Juni zu den Rechnungen vom Juli gehören; 0, wenn beide für den selben Monat abgerechnet werden; 2, wenn die Einzelverbindungsnachweise vom Januar zu den Rechnungen vom März gehören',
 
 	//CompanyController
-	'Company_Management'			=> 'Trennung der Namen durch Komma.', 
+	'Company_Management'			=> 'Trennung der Namen durch Komma.',
 									//'Comma separated list of names',
-	'Company_Directorate'			=> 'Trennung der Namen durch Komma.',	
+	'Company_Directorate'			=> 'Trennung der Namen durch Komma.',
 									//'Comma separated list of names',
-	'Company_TransferReason'		=> 'Vorlage aller Rechnungsklassen als Datenfeld-Schlüssel - Vertrags- und Rechnungsnummer sind standardmäßig ausgewählt.', 
+	'Company_TransferReason'		=> 'Vorlage aller Rechnungsklassen als Datenfeld-Schlüssel - Vertrags- und Rechnungsnummer sind standardmäßig ausgewählt.',
 									//'Template from all Invoice class data field keys - Contract Number and Invoice Nr is default',
 
 	//CostCenterController
@@ -28,7 +28,7 @@ return [
 									//'Default: 6 (June) - if not set. Has to be minimum current month on change to avoid missing payments',
 
 	//ItemController
-	'Item_ProductId'				=> 'Alle Felder außer dem Abrechnungszyklus müssen vor eine Änderung des Produkts gelöscht werde! Andernfalls können die Produkte in den meisten Fällen nicht gespeichert werden.', 
+	'Item_ProductId'				=> 'Alle Felder außer dem Abrechnungszyklus müssen vor eine Änderung des Produkts gelöscht werde! Andernfalls können die Produkte in den meisten Fällen nicht gespeichert werden.',
 									//'All fields besides Billing Cycle have to be cleared before a type change! Otherwise items can not be saved in most cases',
 	'Item_ValidFrom'				=> 'Für einmalige (Zusatz-)Zahlungen kann das Feld genutzt werden, um die Zahlung zu teilen - nur  Jahr und Monat (jjjj.mm) werden berücksichtigt.',
 									//'For One Time Payments the fields can be used to split payment - Only YYYY-MM is considered then!',
@@ -39,15 +39,15 @@ return [
 	'Item_CreditAmount'				=> 'Gross price actualy - will be changed in future to Net price',
 
 	//ProductController
-	'Product_Name' 					=> 'Für Kredite ist es möglich einen Typ zuzuweisen, indem der Typname dem Namen des Kredits angefügt wird - z.B.: \'Kredit Gerät\'', 
+	'Product_Name' 					=> 'Für Kredite ist es möglich einen Typ zuzuweisen, indem der Typname dem Namen des Kredits angefügt wird - z.B.: \'Kredit Gerät\'',
 									//'For Credits it is possible to assign a Type by adding the type name to the Name of the Credit - e.g.: \'Credit Device\'',
 	'Product_Type'					=> 'Alle Felder außer dem Abrechnungszyklus müssen vor eine Änderung des Produkts gelöscht werde! Andernfalls können die Produkte in den meisten Fällen nicht gespeichert werden.',
 									//'All fields besides Billing Cycle have to be cleared before a type change! Otherwise products can not be saved in most cases',
-	'Product_Number_of_Cycles' 		=> 'Achtung! Für alle Produkte, die in einem wiederkehrenden Zyklus bezahlt werden steht der Preis für jede einzelne Zahlung. Für Produkte, die einmalig bezahlt werden wird der Preis durch die Anzahl der Zyklen geteilt.', 
+	'Product_Number_of_Cycles' 		=> 'Achtung! Für alle Produkte, die in einem wiederkehrenden Zyklus bezahlt werden steht der Preis für jede einzelne Zahlung. Für Produkte, die einmalig bezahlt werden wird der Preis durch die Anzahl der Zyklen geteilt.',
 									//'Take Care!: for all repeatedly payed products the price stands for every charge, for Once payed products the Price is divided by the number of cycles',
 
 	//SalesmanController
-	'Salesman_ProductList'			=> 'Füge alle Produkttypen an, für die eine Provision erzielt werden kann - möglich:', 
+	'Salesman_ProductList'			=> 'Füge alle Produkttypen an, für die eine Provision erzielt werden kann - möglich:',
 									//'Add all Product types he gets for - possible: ',
 
 	//SepaAccountController
@@ -59,20 +59,22 @@ return [
 	'settlement_verification' 		=> 'Mit aktivierter Checkbox kann der Abrechnungslauf nicht wiederholt werden. Rechnungen der Kunden werden nur mit aktivierter Checkbox angezeigt.',
 
  /**
-  *	MODULE: ProvBase	
+  *	MODULE: ProvBase
   */
 	//ModemController
-	'Modem_NetworkAccess'			=> 'Deaktivieren/Aktivieren des Netzwerkzugriffs - Achtung: Wenn das Abrechnungsmodul installiert ist, wird diese Checkbox täglich überschrieben, je nach Gültigkeit der Tarif-Option - vorausgesetzt sie wurde nicht manuell gesetzt.', 
+	'Modem_NetworkAccess'			=> 'Deaktivieren/Aktivieren des Netzwerkzugriffs - Achtung: Wenn das Abrechnungsmodul installiert ist, wird diese Checkbox täglich überschrieben, je nach Gültigkeit der Tarif-Option - vorausgesetzt sie wurde nicht manuell gesetzt.',
 									//'Disable/Enable Network Access - Take Care: If Billing-Module is installed this Checkbox will be overwritten daily during check of valid Tariff Item',
 
  /**
-  *	MODULE: ProvVoip	
+  *	MODULE: ProvVoip
   */
 	//PhonenumberManagementController
-	'PhonenumberManagement_CarrierIn'=> 'Im Falle einer neuen Nummer, setzen Sie diesrs Feld auf EnviaTEL',
-									//'In case of a new number set this to EnviaTEL',
-	'PhonenumberManagement_EkpIn'	=> 'Im Falle einer neuen Nummer, setzen Sie diesrs Feld auf EnviaTEL',
-									//'In case of a new number set this to EnviaTEL',
+	'PhonenumberManagement_CarrierIn' => 'Bei eingehender Portierung auf vorherigen Provider setzen. Bei Beantragung einer neuen Rufnummer EnviaTEL auswählen.',
+	'PhonenumberManagement_CarrierInWithEnvia' => 'Bei Beantragung einer neuen Rufnummer setzen Sie dieses Feld auf EnviaTEL.',
+	'PhonenumberManagement_EkpIn' => 'Bei eingehender Portierung auf vorherigen Provider setzen. Bei Beantragung einer neuen Rufnummer EnviaTEL auswählen.',
+	'PhonenumberManagement_EkpInWithEnvia' => 'Bei Beantragung einer neuen Rufnummer setzen Sie dieses Feld auf EnviaTEL.',
+	'PhonenumberManagement_TRC' => 'Nur zur Info: Sperrklassenänderungen müssen beim aktuellen Provider durchgeführt werden.',
+	'PhonenumberManagement_TRCWithEnvia' => 'Sperrklassenänderungen müssen auch bei EnviaTEL vorgenommen werden (Update VoIP account)!',
 
 /**
   * MODULE VoipMon

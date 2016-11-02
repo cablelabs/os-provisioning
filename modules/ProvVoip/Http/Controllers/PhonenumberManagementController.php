@@ -71,18 +71,16 @@ class PhonenumberManagementController extends \BaseController {
 			$hide_flags['external_deactivation_date'] = '0';
 		}
 
-		/* d($model); */
-
 		// help text for carrier/ekp settings
 		if (\PPModule::is_active('ProvVoipEnvia')) {
-			$trc_help = 'If changed here this has to be sent to Envia, too.';
-			$carrier_in_help = 'In case of a new number set this to EnviaTEL';
-			$ekp_in_help = 'In case of a new number set this to EnviaTEL';
+			$trc_help = trans('helper.PhonenumberManagement_TRCWithEnvia');
+			$carrier_in_help = trans('helper.PhonenumberManagement_CarrierInWithEnvia');
+			$ekp_in_help = trans('helper.PhonenumberManagement_EkpInWithEnvia');
 		}
 		else {
-			$trc_help = 'This is for information only. Real changes have to be performed at your Telco.';
-			$carrier_in_help = 'On incoming porting: set to previous Telco';
-			$ekp_in_help = 'On incoming porting: set to previous Telco';
+			$trc_help = trans('helper.PhonenumberManagement_TRC');
+			$carrier_in_help = trans('helper.PhonenumberManagement_CarrierIn');
+			$ekp_in_help = trans('helper.PhonenumberManagement_EkpIn');
 		}
 
 		// label has to be the same like column in sql table
@@ -92,8 +90,8 @@ class PhonenumberManagementController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'activation_date', 'description' => 'Activation date'),
 			array('form_type' => 'text', 'name' => 'external_activation_date', 'description' => 'External activation date', 'options' => ['readonly'], 'hidden' => $hide_flags['external_activation_date']),
 			array('form_type' => 'checkbox', 'name' => 'porting_in', 'description' => 'Incoming porting'),
-			array('form_type' => 'select', 'name' => 'carrier_in', 'description' => 'Carrier in', 'value' => CarrierCode::carrier_list_for_form_select(False), 'help' => trans('helper.PhonenumberManagement_CarrierIn'), 'checkbox' => 'show_on_porting_in'),
-			array('form_type' => 'select', 'name' => 'ekp_in', 'description' => 'EKP in', 'value' => EkpCode::ekp_list_for_form_select(False), 'help' => trans('helper.PhonenumberManagement_EkpIn'), 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'select', 'name' => 'carrier_in', 'description' => 'Carrier in', 'value' => CarrierCode::carrier_list_for_form_select(False), 'help' => $carrier_in_help, 'checkbox' => 'show_on_porting_in'),
+			array('form_type' => 'select', 'name' => 'ekp_in', 'description' => 'EKP in', 'value' => EkpCode::ekp_list_for_form_select(False), 'help' => $ekp_in_help, 'checkbox' => 'show_on_porting_in'),
 
 			// preset subscriber data => this comes from model
 			array('form_type' => 'text', 'name' => 'subscriber_company', 'description' => 'Subscriber company', 'checkbox' => 'show_on_porting_in'),

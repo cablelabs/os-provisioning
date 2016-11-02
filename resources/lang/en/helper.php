@@ -2,7 +2,7 @@
 
 return [
  /**
-  *	MODULE: BillingBase	
+  *	MODULE: BillingBase
   */
 	//BillingBaseController
 	'BillingBase_MandateRef'		=> "A Template can be built with sql columns of contract or mandate table - possible fields: \n",
@@ -42,17 +42,21 @@ return [
 	'settlement_verification' 		=> 'If activated it\'s not possible to repeat the Settlement Run. Customer Invoices are only visible when this checkbox is activated.',
 
  /**
-  *	MODULE: ProvBase	
+  *	MODULE: ProvBase
   */
  	//ModemController
 	'Modem_NetworkAccess'			=> 'Disable/Enable Network Access - Take Care: If Billing-Module is installed this Checkbox will be overwritten daily during check of valid Tariff Item when it was not enabled/checked manually',
 
  /**
-  *	MODULE: ProvVoip	
+  *	MODULE: ProvVoip
   */
  	//PhonenumberManagementController
-	'PhonenumberManagement_CarrierIn'=> 'In case of a new number set this to EnviaTEL',
-	'PhonenumberManagement_EkpIn'	=> 'In case of a new number set this to EnviaTEL',
+	'PhonenumberManagement_CarrierIn' => 'On incoming porting: set to previous Telco.',
+	'PhonenumberManagement_CarrierInWithEnvia' => 'On incoming porting: set to previous Telco. In case of a new number set this to EnviaTEL',
+	'PhonenumberManagement_EkpIn' => 'On incoming porting: set to previous Telco.',
+	'PhonenumberManagement_EkpInWithEnvia' => 'On incoming porting: set to previous Telco. In case of a new number set this to EnviaTEL',
+	'PhonenumberManagement_TRC' => 'This is for information only. Real changes have to be performed at your Telco.',
+	'PhonenumberManagement_TRCWithEnvia' => 'If changed here this has to be sent to Envia, too (Update VoIP account).',
 /**
   * MODULE VoipMon
   */
