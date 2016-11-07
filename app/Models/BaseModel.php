@@ -654,20 +654,23 @@ class BaseModel extends Eloquent
 		$end   = $this->get_end_time();
 
 		$case  = $type ? $timespan : $timespan.$type;
-// if (get_class($this) == 'Modules\BillingBase\Entities\Item' && $this->contract->id == 500005 && $this->product->type == 'Internet')
-// 	dd($this->product->name, $start < strtotime(date('Y-m-01')), !$end, $end >= strtotime(date('Y-m-01', strtotime('first day of last month'))), date('Y-m-d', $start), date('Y-m-d', $end));
 
+		// if (get_class($this) == 'Modules\BillingBase\Entities\Item' && $this->contract->id == 500005 && $this->product->type == 'Internet')
+		// if ($this->id == 102)
+		// dd($this->id, date('m', $start), date('m', strtotime('first day of last month')), date('m', $end), date('m', $start) <= date('m', strtotime('first day of last month')) && date('m', $end) >= date('m') );
 
 		switch ($case)
 		{
 			case 'month':
-				return $start < strtotime(date('Y-m-01')) && (!$end || $end >= strtotime(date('Y-m-01', strtotime('first day of last month'))));
+				return $start < strtotime('midnight first day of this month') && (!$end || $end >= strtotime('midnight first day of last month'));
 
 			case 'month0':
-				return	$end ? date('m', $start) <= date('m', strtotime('first day of last month')) && date('m', $end) >= date('m') : date('m', $start) == date('m', strtotime('first day of last month'));
+				// all items other than tariffs - they are calculated only once even without a specified end date, with end date only on months from start to end
+				return $end ? $start < strtotime('midnight first day of this month') && $end >= strtotime('midnight first day of last month') : date('Y-m', $start) == date('Y-m', strtotime('first day of last month'));
+				// return $end ? fill this : $start < strtotime('midnight first day of this month') && $start >= strtotime('midnight first day of last month');
 
 			case 'year':
-				return $start < strtotime(date('Y-01-01')) && (!$end || $end >= strtotime(date('Y-01-01'), strtotime('last year')));
+				return $start < strtotime('midnight first day of January') && (!$end || $end >= strtotime('midnight first day of January last year'));
 
 			case 'now':
 				// $now = time();
