@@ -813,7 +813,13 @@ class BaseObserver
 /**
  * Systemd Observer Class - Handles changes on Model Gateways - restarts system services
  *
- * TODO: place it somewhere else ..
+ * TODO: 
+ 	* place it somewhere else ...
+ 	* Calling this Observer is practically very bad in case there are more services inserted - then all services will restart even
+ *		if Config didn't change - therefore a distinction is necessary - or more Observers,
+ 	* another Suggestion:
+ 		* place the restart file creation in the appropriate observer itself
+ 		* only place a static function restart_dhcpd here that creates the file
  */
 class SystemdObserver
 {

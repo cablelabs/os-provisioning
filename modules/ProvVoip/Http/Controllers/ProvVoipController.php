@@ -13,6 +13,7 @@ class ProvVoipController extends BaseController {
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'text', 'name' => 'startid_mta', 'description' => 'Start ID MTA´s'),
+			array('form_type' => 'text', 'name' => 'mta_domain', 'description' => 'MTA Domain', 'help' => 'Specify a Domain name here if MTA\'s need a separate Domain for Provisioning'),
 			);
 	}
 }

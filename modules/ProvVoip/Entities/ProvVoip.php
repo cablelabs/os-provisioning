@@ -2,6 +2,8 @@
 
 namespace Modules\ProvVoip\Entities;
 
+use Modules\ProvBase\Entities\ProvBase;
+
 class ProvVoip extends \BaseModel {
 
 	// The associated SQL table for this Model
@@ -29,5 +31,21 @@ class ProvVoip extends \BaseModel {
 		return "ProvVoip";
 	}
 
+    public static function boot()
+    {
+        parent::boot();
 
+        ProvVoip::observe(new ProvVoipObserver);
+        ProvVoip::observe(new \App\SystemdObserver);
+    }
+
+}
+
+
+class ProvVoipObserver
+{
+	public function updated()
+	{
+		ProvBase::first()->make_dhcp_glob_conf();
+	}
 }
