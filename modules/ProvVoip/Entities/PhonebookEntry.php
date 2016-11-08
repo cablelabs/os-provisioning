@@ -166,7 +166,7 @@ class PhonebookEntry extends \BaseModel {
 	 *
 	 * @author Patrick Reichel
 	 */
-	public function get_options_from_list($section) {
+	public function get_options_from_list($section, $with_placeholder=False) {
 
 		$options = array();
 
@@ -174,6 +174,12 @@ class PhonebookEntry extends \BaseModel {
 			static::read_config();
 		};
 
+		// placeholder
+		if ($with_placeholder) {
+			$options[''] = 'n/a – to be set';
+		}
+
+		// the real options
 		foreach (static::$config[$section]['in_list'] as $option) {
 			$options[$option] = $option.' – '.static::$config[$section][$option];
 		}

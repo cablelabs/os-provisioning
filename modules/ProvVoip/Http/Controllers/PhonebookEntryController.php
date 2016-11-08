@@ -68,12 +68,12 @@ class PhonebookEntryController extends \BaseController {
 
 			/* todo: write the rest of the form (attention: some special cases!!!) */
 			array('form_type' => 'select', 'name' => 'phonenumbermanagement_id', 'description' => 'PhonenumberManagement', 'value' => $model->html_list($model->phonenumbermanagement(), 'id'), 'hidden' => '1'),
-			array('form_type' => 'select', 'name' => 'reverse_search', 'description' => 'Reverse search', 'value' => $model->get_options_from_list('reverse_search')),
-			array('form_type' => 'select', 'name' => 'publish_in_print_media', 'description' => 'Entry in print media', 'value' => $model->get_options_from_list('publish_in_print_media')),
-			array('form_type' => 'select', 'name' => 'publish_in_electronic_media', 'description' => 'Entry electronic media', 'value' => $model->get_options_from_list('publish_in_electronic_media')),
-			array('form_type' => 'select', 'name' => 'directory_assistance', 'description' => 'Directory assistance', 'value' => $model->get_options_from_list('directory_assistance')),
-			array('form_type' => 'select', 'name' => 'entry_type', 'description' => 'Entry type', 'value' => $model->get_options_from_list('entry_type')),
-			array('form_type' => 'select', 'name' => 'publish_address', 'description' => 'Publish address', 'value' => $model->get_options_from_list('publish_address')),
+			array('form_type' => 'select', 'name' => 'reverse_search', 'description' => 'Reverse search', 'value' => $model->get_options_from_list('reverse_search', True)),
+			array('form_type' => 'select', 'name' => 'publish_in_print_media', 'description' => 'Entry in print media', 'value' => $model->get_options_from_list('publish_in_print_media', True)),
+			array('form_type' => 'select', 'name' => 'publish_in_electronic_media', 'description' => 'Entry electronic media', 'value' => $model->get_options_from_list('publish_in_electronic_media', True)),
+			array('form_type' => 'select', 'name' => 'directory_assistance', 'description' => 'Directory assistance', 'value' => $model->get_options_from_list('directory_assistance', True)),
+			array('form_type' => 'select', 'name' => 'entry_type', 'description' => 'Entry type', 'value' => $model->get_options_from_list('entry_type', True)),
+			array('form_type' => 'select', 'name' => 'publish_address', 'description' => 'Publish address', 'value' => $model->get_options_from_list('publish_address', True)),
 			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
 			array('form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic degree', 'value' => $model->get_options_from_file('academic_degree')),
 			array('form_type' => 'select', 'name' => 'noble_rank', 'description' => 'Noble rank', 'value' => $model->get_options_from_file('noble_rank')),
@@ -87,7 +87,7 @@ class PhonebookEntryController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City'),
 			array('form_type' => 'text', 'name' => 'urban_district', 'description' => 'Urban district'),
 			array('form_type' => 'select', 'name' => 'business', 'description' => 'Business', 'value' => $model->get_options_from_file('business')),
-			array('form_type' => 'select', 'name' => 'number_usage', 'description' => 'Number usage', 'value' => $model->get_options_from_list('number_usage')),
+			array('form_type' => 'select', 'name' => 'number_usage', 'description' => 'Number usage', 'value' => $model->get_options_from_list('number_usage', True)),
 			array('form_type' => 'select', 'name' => 'tag', 'description' => 'Tag', 'value' => $model->get_options_from_file('tag')),
 
 		);
