@@ -12,6 +12,9 @@ return [
 
 	'Call Data Record'		=> 'Call Data Record',
 	'ccc'					=> 'Customer Control Center',
+
+	'cdr_offset' 			=> 'CDR to Invoice time difference in Months',
+
 	'cpe_log_error' 		=> 'was not registering on Server - No log entry found',
 	'home' 					=> 'Startseite',
 	'invoice' 				=> 'Invoice',
@@ -32,4 +35,6 @@ return [
 	'user_settings'			=> 'User Settings',
 	'user_glob_settings'	=> 'Global User Settings',
 
+	'voip_extracharge_default' => 'Extra Charge Voip Calls default in %',
+	'voip_extracharge_mobile_national' => 'Extra Charge Voip Calls mobile national in %',
 ];
