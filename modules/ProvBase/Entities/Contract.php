@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Entities;
 
 use Modules\ProvBase\Entities\Qos;
 use Modules\BillingBase\Entities\SettlementRun;
+use Modules\BillingBase\Entities\Invoice;
 
 class Contract extends \BaseModel {
 
@@ -228,8 +229,14 @@ class Contract extends \BaseModel {
 	{
 		if (\PPModule::is_active('billingbase'))
 		{
-			$hide = SettlementRun::unverified_files();
-			return $this->hasMany('Modules\BillingBase\Entities\Invoice')->orderBy('year', 'desc')->orderBy('month', 'desc')->whereNotIn('filename', $hide);
+			$srs  = SettlementRun::where('verified', '=', '0')->get(['id'])->pluck('id')->all();
+
+			$hide = $srs ? : 0;
+
+			return $this->hasMany('Modules\BillingBase\Entities\Invoice')->where('contract_id', '=', $this->id)->where('settlementrun_id', '!=', [$hide]);
+
+			// $hide = SettlementRun::unverified_files();
+			// return $this->hasMany('Modules\BillingBase\Entities\Invoice')->orderBy('year', 'desc')->orderBy('month', 'desc')->whereNotIn('filename', $hide);
 		}
 		return null;
 	}

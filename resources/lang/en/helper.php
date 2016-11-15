@@ -5,7 +5,7 @@ return [
   *	MODULE: BillingBase	
   */
 	//BillingBaseController
-	'BillingBase_cdr_offset' 		=> 'Example: Set to 1 if CDRs from June belong to Invoices of July, Zero if it\'s the same month, 2 if CDRs of January belong to Invoices of March',
+	'BillingBase_cdr_offset' 		=> "TAKE CARE: incrementing this when having data from settlement runs leads to overwritten CDRs during next run - make sure to save/rename the history!\n\nExample: Set to 1 if Call Data Records from June belong to Invoices of July, Zero if it's the same month, 2 if CDRs of January belong to Invoices of March.",
  	'BillingBase_extra_charge' 		=> 'Additional mark-on to purchase price. Only when not calculated through provider!',
 	'BillingBase_InvoiceNrStart' 	=> 'Invoice Number Counter starts every new year with this number',
 	'BillingBase_ItemTermination'	=> 'Allow Customers only to terminate booked products on last day of month',
