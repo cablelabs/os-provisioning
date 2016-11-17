@@ -10,7 +10,7 @@ class ProvVoip extends \BaseModel {
 	protected $table = 'provvoip';
 
 	// Don't forget to fill this array
-	protected $fillable = ['startid_mta'];
+	// protected $fillable = ['startid_mta'];
 
 	// Add your validation rules here
 	public static function rules($id = null)
@@ -44,7 +44,7 @@ class ProvVoip extends \BaseModel {
 
 class ProvVoipObserver
 {
-	public function updated()
+	public function updated($provvoip)
 	{
 		ProvBase::first()->make_dhcp_glob_conf();
 	}
