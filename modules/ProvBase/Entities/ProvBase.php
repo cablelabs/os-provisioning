@@ -73,7 +73,7 @@ class ProvBase extends \BaseModel {
 		{
 			// second domain for mta's if existent
 			$mta_domain = \Modules\ProvVoip\Entities\ProvVoip::first()->mta_domain;
-			$data .= $mta_domain ? "\n# zone for voip devices\nzone ".$this->domain_name." {\n\tprimary ".$this->provisioning_server.";\n\tkey dhcpupdate;\n}\n" : "";
+			$data .= $mta_domain ? "\n# zone for voip devices\nzone ".$mta_domain." {\n\tprimary ".$this->provisioning_server.";\n\tkey dhcpupdate;\n}\n" : "";
 		}
 
 
