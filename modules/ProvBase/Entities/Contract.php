@@ -469,7 +469,7 @@ class Contract extends \BaseModel {
 		$active_item_voip = $active_tariff_info_voip['item'];
 
 
-		if ($active_count_sum == 0 || !$this->check_validity('now')) {
+		if ($active_count_sum == 0 || !$this->check_validity('Now')) {
 			// if there is no active item of type internet or voip or contract is outdated: disable network_access (if not already done)
 			if (boolval($this->network_access)) {
 				$this->network_access = 0;
@@ -703,7 +703,7 @@ class Contract extends \BaseModel {
 // dd($prod_ids, $this->items);
 		foreach ($this->items as $item)
 		{
-			if (in_array($item->product->id, $prod_ids) && $item->check_validity('now'))
+			if (in_array($item->product->id, $prod_ids) && $item->check_validity('Now'))
 			{
 				$count++;
 
@@ -1001,7 +1001,7 @@ class Contract extends \BaseModel {
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function get_valid_mandate($timespan = 'now')
+	public function get_valid_mandate($timespan = 'Now')
 	{
 		$mandate = null;
 		$last 	 = 0;

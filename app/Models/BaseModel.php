@@ -642,38 +642,38 @@ class BaseModel extends Eloquent
 	 *
 	 * Note: Model must have a get_start_time- & get_end_time-Function defined
 	 *
-	 * @param 	String 		$timespan		year / month / now
-	 * @param 	Integer 	$type 			1 - Tariff (Inet/Voip/TV) , 0 - No Tariff (Other/Device/Credit)
+	 * @param 	String 		$timespan		Yearly / Quarterly / Monthly / Now  => Enum of Product->billing_cycle
 	 * @return 	Bool  						true, if model had valid dates during last month / year or is actually valid (now)
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function check_validity($timespan = 'month', $type = 1)
+	public function check_validity($timespan = 'Monthly')
 	{
 		$start = $this->get_start_time();
 		$end   = $this->get_end_time();
-
-		$case  = $type ? $timespan : $timespan.$type;
 
 		// if (get_class($this) == 'Modules\BillingBase\Entities\Item' && $this->contract->id == 500005 && $this->product->type == 'Internet')
 		// if ($this->id == 102)
 		// dd($this->id, date('m', $start), date('m', strtotime('first day of last month')), date('m', $end), date('m', $start) <= date('m', strtotime('first day of last month')) && date('m', $end) >= date('m') );
 
-		switch ($case)
+		switch ($timespan)
 		{
-			case 'month':
+			case 'Once':
+				// E.g. one time or splitted payments of items - no open end! With end date: only on months from start to end
+				return $end ? $start < strtotime('midnight first day of this month') && $end >= strtotime('midnight first day of last month') : date('Y-m', $start) == date('Y-m', strtotime('first day of last month'));
+
+			case 'Monthly':
+				// has valid dates in last month - open end possible
 				return $start < strtotime('midnight first day of this month') && (!$end || $end >= strtotime('midnight first day of last month'));
 
-			case 'month0':
-				// all items other than tariffs - they are calculated only once even without a specified end date, with end date only on months from start to end
-				return $end ? $start < strtotime('midnight first day of this month') && $end >= strtotime('midnight first day of last month') : date('Y-m', $start) == date('Y-m', strtotime('first day of last month'));
-				// return $end ? fill this : $start < strtotime('midnight first day of this month') && $start >= strtotime('midnight first day of last month');
+			case 'Quarterly':
+				// TODO: implement
+				break;
 
-			case 'year':
+			case 'Yearly':
 				return $start < strtotime('midnight first day of January') && (!$end || $end >= strtotime('midnight first day of January last year'));
 
-			case 'now':
-				// $now = time();
+			case 'Now':
 				$now = strtotime('today');
 				return $start <= $now && (!$end || $end >= $now);
 
@@ -681,8 +681,10 @@ class BaseModel extends Eloquent
 				\Log::error('Bad timespan param used in function '.__FUNCTION__);
 				break;
 		}
-	}
 
+		return true;
+
+	}
 
 }
 
