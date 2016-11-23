@@ -1047,38 +1047,79 @@ class ContractObserver
 	public function creating($contract)
 	{
 		// Note: this is only needed when Billing Module is not active - TODO: proof with future static function
-		$contract->sepa_iban = strtoupper($contract->sepa_iban);
-		$contract->sepa_bic  = strtoupper($contract->sepa_bic);
+		if (!\PPModule::is_active('billingbase'))
+		{
+			$contract->sepa_iban = strtoupper($contract->sepa_iban);
+			$contract->sepa_bic  = strtoupper($contract->sepa_bic);
+		}
 	}
 
 
 	public function created($contract)
 	{
 		// Note: this only works here because id is not yet assigned in creating function
-		$contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
+		// $contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
+		if (!$contract->number)
+		{
+			$contract->number = $contract->id - $this->num;
+			$contract->observer_enabled = false;
+			$contract->save();     			// forces to call the updating, saving, updated & saved method of the observer
+		}
 
-		$contract->save();     			// forces to call the updated method of the observer
 		$contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
 	}
 
 	public function updating($contract)
 	{
-		// commented out by par: don't overwrite changes on contract numbers
-		/* $contract->number = $contract->number ? $contract->number : $contract->id - $this->num; */
+		$contract->number = $contract->number ? : $contract->id - $this->num;
 
-		$contract->sepa_iban = strtoupper($contract->sepa_iban);
-		$contract->sepa_bic  = strtoupper($contract->sepa_bic);
+		if (!\PPModule::is_active('billingbase'))
+		{
+			$contract->sepa_iban = strtoupper($contract->sepa_iban);
+			$contract->sepa_bic  = strtoupper($contract->sepa_bic);
+		}
 	}
 
 	public function updated ($contract)
 	{
+		if (!$contract->observer_enabled)
+			return;
+
 		$contract->push_to_modems();
+
+		if ($contract['orginal'])
+		{
+			// Note: implement this commented way if there are more checkings for better code structure - but this reduces performance on one of the most used functions of the user!
+			// $changed_fields = $contract->getDirty();
+
+			// Note: isset is way faster regarding the performance than array_key_exists, but returns false if value of key is null which is not important here - See upmost comment on: http://php.net/manual/de/function.array-key-exists.php 
+			// if (isset($changed_fields['number']))
+			if ($contract->number != $contract['original']['number'])
+			{
+				// change customer information - take care - this automatically changes login psw of customer
+				if ($customer = $contract->cccauthuser)
+					$customer->update(); 
+			}
+
+			// if (isset($changed_fields['contract_start']) || isset($changed_fields['contract_end']))
+			if ($contract->contract_start != $contract['original']['contract_start'] || $contract->contract_end != $contract['original']['contract_end'])
+			{
+				$contract->daily_conversion();
+			}
+
+		}
+
 	}
+
 
 	public function saved ($contract)
 	{
+		if (!$contract->observer_enabled)
+			return;
+
 		$contract->push_to_modems();
 	}
+
 }
 
 

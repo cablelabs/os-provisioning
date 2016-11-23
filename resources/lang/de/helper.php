@@ -47,6 +47,7 @@ return [
   */
 	//ModemController
 	'Modem_NetworkAccess'			=> 'Deaktivieren/Aktivieren des Netzwerkzugriffs - Achtung: Wenn das Abrechnungsmodul installiert ist, wird diese Checkbox täglich überschrieben, je nach Gültigkeit der Tarif-Option - vorausgesetzt sie wurde nicht manuell gesetzt.', 
+	'contract_number' 				=> 'Achtung - Kundenkennwort wird bei Änderung automatisch geändert!',
 
  /**
   *	MODULE: ProvVoip	
