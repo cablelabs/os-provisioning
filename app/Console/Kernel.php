@@ -89,8 +89,8 @@ class Kernel extends ConsoleKernel {
 			// $schedule->command('nms:configfile')->dailyAt('00:50')->withoutOverlapping();
 
 			// TODO: Reload DHCP on clock change (daylight saving) - last sunday in march, last sunday in october
-			$schedule->command('nms:dhcp')->cron('0 4 24,25,26,27,28,29,30,31 3,10 * 0');
-
+			// [0] minute, [1] hour, [2] day, [3] month, [4] day of week, [5] year
+			$schedule->command('nms:dhcp')->cron('0 4 24,25,26,27,28,29,30,31 3,10 0 *');
 
 			// Contract - network access, item dates, internet (qos) & voip tariff changes
 			// important!! daily conversion has to be run BEFORE monthly conversion

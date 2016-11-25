@@ -69,6 +69,13 @@ class ProvBase extends \BaseModel {
 
 		$data .= "\n# zone\nzone ".$this->domain_name." {\n\tprimary ".$this->provisioning_server.";\n\tkey dhcpupdate;\n}\n";
 
+		if (\PPModule::is_active('provvoip'))
+		{
+			// second domain for mta's if existent
+			$mta_domain = \Modules\ProvVoip\Entities\ProvVoip::first()->mta_domain;
+			$data .= $mta_domain ? "\n# zone for voip devices\nzone ".$mta_domain." {\n\tprimary ".$this->provisioning_server.";\n\tkey dhcpupdate;\n}\n" : "";
+		}
+
 
 		// provisioning server hostname encoding for dhcp
 		$fqdn 		= exec('hostname');

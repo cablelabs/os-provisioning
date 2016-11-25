@@ -5,11 +5,12 @@ return [
   *	MODULE: BillingBase	
   */
 	//BillingBaseController
-	'BillingBase_MandateRef'		=> "A Template can be built with sql columns of contract or mandate table - possible fields: \n",
+	'BillingBase_cdr_offset' 		=> "TAKE CARE: incrementing this when having data from settlement runs leads to overwritten CDRs during next run - make sure to save/rename the history!\n\nExample: Set to 1 if Call Data Records from June belong to Invoices of July, Zero if it's the same month, 2 if CDRs of January belong to Invoices of March.",
+ 	'BillingBase_extra_charge' 		=> 'Additional mark-on to purchase price. Only when not calculated through provider!',
 	'BillingBase_InvoiceNrStart' 	=> 'Invoice Number Counter starts every new year with this number',
-	'BillingBase_SplitSEPA'			=> 'Sepa Transfers are split to different XML-Files dependent of their transfer type',
 	'BillingBase_ItemTermination'	=> 'Allow Customers only to terminate booked products on last day of month',
-	'BillingBase_cdr_offset' 		=> 'Example: Set to 1 if CDRs from June belong to Invoices of July, Zero if it\'s the same month, 2 if CDRs of January belong to Invoices of March',
+	'BillingBase_MandateRef'		=> "A Template can be built with sql columns of contract or mandate table - possible fields: \n",
+	'BillingBase_SplitSEPA'			=> 'Sepa Transfers are split to different XML-Files dependent of their transfer type',
 
 	//CompanyController
 	'Company_Management'			=> 'Comma separated list of names',
@@ -46,6 +47,7 @@ return [
   */
  	//ModemController
 	'Modem_NetworkAccess'			=> 'Disable/Enable Network Access - Take Care: If Billing-Module is installed this Checkbox will be overwritten daily during check of valid Tariff Item when it was not enabled/checked manually',
+	'contract_number' 				=> 'Attention - Customer login password is changed automatically on changing this field!',
 
  /**
   *	MODULE: ProvVoip	
