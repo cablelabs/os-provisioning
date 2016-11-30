@@ -46,7 +46,7 @@ class ContractController extends \BaseController {
 		$a = array(
 
 			// basic data
-			array('form_type' => 'text', 'name' => 'number', 'description' => $model->get_column_description('number')),
+			array('form_type' => 'text', 'name' => 'number', 'description' => $model->get_column_description('number'), 'help' => trans('helper.contract_number')),
 			array('form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2')),
 			array('form_type' => 'text', 'name' => 'number3', 'description' => $model->get_column_description('number3'), 'help' => 'If left empty contract number will be used as customer number, too.'),
 			array('form_type' => 'text', 'name' => 'number4', 'description' => $model->get_column_description('number4'), 'space' => 1),
@@ -67,6 +67,11 @@ class ContractController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'create' => '1', 'space' => '1'),
 
 		);
+
+		if (!\PPModule::is_active('ccc'))
+		{
+			unset($a[0]['help']);
+		}
 
 		// TODO: replace with static command
 		if ($model->voip_enabled && !\PPModule::is_active('billingbase')) {
