@@ -76,11 +76,13 @@ class StorageCleaner extends Command
 			);
 
 			// if compression behavior is also set in .env: overwrite
-			if (array_key_exists('PROVVOIPENVIA__STORE_XML_COMPRESS_AGE', $_ENV)) {
-				if (boolval($_ENV['PROVVOIPENVIA__STORE_XML_COMPRESS_AGE'])) {
-					$envia_api_xml_thresholds['compress'] = $_ENV['PROVVOIPENVIA__STORE_XML_COMPRESS_AGE'];
+			// don't use $_ENV directly as this will not be populated in scheduled commands
+			$tmp_compress = getenv('PROVVOIPENVIA__STORE_XML_COMPRESS_AGE');
+			if ($tmp_compress !== False) {	// not in .env ⇒ use defaults
+				if (boolval($tmp_compress)) {	// not set to 0
+					$envia_api_xml_thresholds['compress'] = $tmp_compress;
 				}
-				else {
+				else {	// set to 0 ⇒ no compression
 					if (array_key_exists('compress', $envia_api_xml_thresholds)) {
 						unset($envia_api_xml_thresholds['compress']);
 					}
@@ -88,11 +90,12 @@ class StorageCleaner extends Command
 			}
 
 			// if deletion behavior is also set in .env: overwrite
-			if (array_key_exists('PROVVOIPENVIA__STORE_XML_DELETE_AGE', $_ENV)) {
-				if (boolval($_ENV['PROVVOIPENVIA__STORE_XML_DELETE_AGE'])) {
-					$envia_api_xml_thresholds['delete'] = $_ENV['PROVVOIPENVIA__STORE_XML_DELETE_AGE'];
+			$tmp_delete = getenv('PROVVOIPENVIA__STORE_XML_DELETE_AGE');
+			if ($tmp_delete !== False) {	// not in .env ⇒ use defaults
+				if (boolval($tmp_delete)) {	// not set to 0
+					$envia_api_xml_thresholds['delete'] = $tmp_delete;
 				}
-				else {
+				else {	// set to 0 ⇒ no deletion
 					if (array_key_exists('delete', $envia_api_xml_thresholds)) {
 						unset($envia_api_xml_thresholds['delete']);
 					}
@@ -117,6 +120,7 @@ class StorageCleaner extends Command
 		foreach ($this->thresholds as $entry) {
 
 			try {
+				\Log::debug('Calling '.$entry['function'].'() for '.$entry['path']);
 				$function = $entry['function'];
 				$this->${'function'}($entry);
 			}
@@ -223,7 +227,11 @@ class StorageCleaner extends Command
 
 				// compress
 				\Log::info('Compressing '.$dirpath);
-				`tar -jcvf $archivepath $dirpath`;
+				$tar_cmd = "cd $path && tar -jcvf $archivepath $dir";
+				$tar_return = `$tar_cmd`;
+				$tar_return = explode("\n", $tar_return);
+				$tar_return_log = array_slice($tar_return, 0, 3);
+				\Log::debug('Calling "'.$tar_cmd.'" returned '.count($tar_return).' lines, beginning with '.implode('\n ', $tar_return_log));
 
 				if (\File::isFile($archivepath)) {
 					// remove original directory
