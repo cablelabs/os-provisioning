@@ -69,7 +69,7 @@ class BaseAuthController extends Controller {
 			case 'Modules\HfcBase\Entities\TreeErd': // entity relation diagram
 			case 'Modules\HfcBase\Entities\TreeTopo': // topography tree card
 			case 'Modules\HfcBase\Entities\TreeTopography':
-				$m = 'Modules\HfcBase\Entities\Tree';
+				$m = 'Modules\HfcReq\Entities\NetElement';
 				break;
 
 			case 'Modules\HfcCustomer\Entities\CustomerTopo': // topography modems

@@ -345,7 +345,7 @@ class BaseModel extends Eloquent
 				if (($model[0] == 'Modules\ProvBase\Entities\Modem') && ($field == 'net' || $field == 'cluster'))
 				{
 					$ret = 'tree_id IN(-1';
-					foreach (Modules\HfcBase\Entities\Tree::where($field, '=', $value)->get() as $tree)
+					foreach (Modules\HfcReq\Entities\NetElement::where($field, '=', $value)->get() as $tree)
 						$ret .= ','.$tree->id;
 					$ret .= ')';
 				}

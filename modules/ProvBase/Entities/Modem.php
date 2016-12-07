@@ -122,10 +122,11 @@ class Modem extends \BaseModel {
 		return null;
 	}
 
+	// TODO: rename to device - search for all places where this function is used
 	public function tree()
 	{
-		if (\PPModule::is_active('HfcBase'))
-			return $this->belongsTo('Modules\HfcBase\Entities\Tree');
+		if (\PPModule::is_active('HfcReq'))
+			return $this->belongsTo('Modules\HfcReq\Entities\NetElement');
 
 		return null;
 	}
