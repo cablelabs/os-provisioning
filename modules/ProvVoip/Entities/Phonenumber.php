@@ -207,6 +207,23 @@ class Phonenumber extends \BaseModel {
 		return $this->hasOne('Modules\ProvVoip\Entities\PhonenumberManagement');
 	}
 
+	/**
+	 * Phonenumbers can be related to EnviaOrders – if this module is active.
+	 *
+	 * @return	EnviaOrders if module ProvVoipEnvia is enabled, else “null”
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function enviaorders() {
+
+		if (\PPModule::is_active('provvoipenvia')) {
+			return $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'enviaorder_id', 'phonenumber_id');
+		}
+		else {
+			return null;
+		}
+	}
+
 
 	/**
 	 * link to monitoring
