@@ -49,7 +49,7 @@ class ModemController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number'),
 			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode'),
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City'),
-			array('form_type' => 'text', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => ['placeholder' => 'YYYY-MM-DD']),
+			array('form_type' => 'text', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => ['placeholder' => 'YYYY-MM-DD']),  // Date of adress change for notification at telephone provider - important for localisation of emergency calls
 			array('form_type' => 'text', 'name' => 'district', 'description' => 'District'),
 			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1', 'options' => ['placeholder' => 'YYYY-MM-DD']),
 
