@@ -210,18 +210,26 @@ class Phonenumber extends \BaseModel {
 	/**
 	 * Phonenumbers can be related to EnviaOrders – if this module is active.
 	 *
+	 * @param	$withTrashed boolean; if true return also soft deleted orders; default is false
+	 * @param	$whereStatement raw SQL query; default is returning of all orders
 	 * @return	EnviaOrders if module ProvVoipEnvia is enabled, else “null”
 	 *
 	 * @author Patrick Reichel
 	 */
-	public function enviaorders() {
+	public function enviaorders($withTrashed=False, $whereStatement="1") {
 
-		if (\PPModule::is_active('provvoipenvia')) {
-			return $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'enviaorder_id', 'phonenumber_id');
-		}
-		else {
+		if (!\PPModule::is_active('provvoipenvia')) {
 			return null;
 		}
+
+		if ($withTrashed) {
+			$enviaorders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->withTrashed()->whereRaw($whereStatement);
+		}
+		else {
+			$enviaorders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->whereRaw($whereStatement);
+		}
+
+		return $enviaorders;
 	}
 
 

@@ -65,12 +65,13 @@ class PhonenumberManagement extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-        $bsclass = 'success';
+		$bsclass = 'success';
+		$phonenumber = $this->phonenumber;
 
         return ['index' => [$this->id],
                 'index_header' => ['ID'],
                 'bsclass' => $bsclass,
-                'header' => 'PhonenumberManagement'];
+                'header' => 'PhonenumberManagement ('.$phonenumber->prefix_number.'/'.$phonenumber->number.')'];
 	}
 
 	/**
@@ -144,7 +145,8 @@ class PhonenumberManagement extends \BaseModel {
 			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
 		}
 
-		return $this->phonenumber->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment');
+		/* return $this->phonenumber->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment'); */
+		return $this->phonenumber->enviaorders(true, "ordertype NOT LIKE 'order/create_attachment'");
 	}
 
 
