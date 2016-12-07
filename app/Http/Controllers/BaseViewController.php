@@ -66,7 +66,7 @@ class BaseViewController extends Controller {
 
 	/**
      * Searches for a string in the language files under resources/lang/ and returns it for the active application language
-     * used in everything view related 
+     * used in everything view related
      * @param string: 	string that is searched in resspurces/lang/{App-language}/view.php
      * @param type: 	can be Header, Menu, Button, jQuery, Search
      * @param count: 	standard at 1 , For plural translation - needs to be seperated with pipe "|""
@@ -136,6 +136,7 @@ class BaseViewController extends Controller {
 
 		// get the validation rules for related model object
 		$rules = $model->rules();
+		$view_belongs_to = $model->view_belongs_to();
 
 		// for all fields
 		foreach ($fields as $field)
@@ -156,8 +157,9 @@ class BaseViewController extends Controller {
 			// 3. Hide all parent view relation select fields (in edit context)
 			//    NOTE: this will not work in create context, because view_belongs_to() returns null !
 			//          Hiding in create context will only work with hard coded 'hidden' => 1 entry in view_form_fields()
-			if (is_object($model->view_belongs_to()) && 					// does a view relation exists
-				$model->view_belongs_to()->table.'_id' == $field['name'] &&	// view table name (+_id) == field name ?
+			if (is_object($view_belongs_to) && 					// does a view relation exists
+				(!($view_belongs_to instanceof \Illuminate\Support\Collection)) &&	// not a n:m relation (in which case we have an pivot table)
+				($view_belongs_to->table.'_id' == $field['name']) &&	// view table name (+_id) == field name ?
 				!isset($field['hidden']))									// hidden was not explicitly set
 					$field['hidden'] = '1';
 
@@ -404,7 +406,7 @@ finish:
 	 * @param $view_var: the object to generate the link from
 	 * @param $html: the HTML GET array. See note bellow!
 	 * @return the HTML link line to be directly included in blade
-	 * @author Torsten Schmidt
+	 * @author Torsten Schmidt, Patrick Reichel
 	 *
 	 * NOTE: in create context we are forced to work with HTML GET array in $html.
 	 *       The first request will also work with POST array, but if validation fails
@@ -416,7 +418,8 @@ finish:
 	 */
 	public static function compute_headline ($route_name, $view_header, $view_var, $html = null)
 	{
-		$s = "";
+		$breadcrumb_path = "";
+		$breadcrumb_paths = [];
 
 		// only for create context: parse headline from HTML POST context array
 		if (!is_null($html) && isset(array_keys($html)[0]))
@@ -427,41 +430,88 @@ finish:
 			$view_var   = $class->find($html[$key]);
 		}
 
-		if ($view_var != null)
-		{
+		// lambda function to extend the current breadcrumb by its predecessor
+		// code within this function originally written by Torsten
+		$extend_breadcrumb_path = function($breadcrumb_path, $model) {
+
+			// following is the original source code written by Torsten
+			$tmp = explode('\\',get_class($model));
+			$view = end($tmp);
+
+			// get header field name
+			// NOTE: for historical reasons check if this is a array or a plain string
+			// See: Confluence API  - get_view_headline()
+			if(is_array($model->view_index_label()))
+				$name = $model->view_index_label()['header'];
+			else
+				$name = $model->view_index_label();
+
+			if (!$breadcrumb_path) {
+				$glue = '';
+			}
+			else {
+				$glue = ' > ';
+			}
+			$breadcrumb_path = \HTML::linkRoute($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).$glue.$breadcrumb_path;
+
+			return $breadcrumb_path;
+		};
+
+
+		if ($view_var != null) {
+
 			// Recursively parse all relations from view_var
 			$parent = $view_var;
-			do
-			{
-				if ($parent)
-				{
-					$tmp = explode('\\',get_class($parent));
-					$view = end($tmp);
+			while ($parent)	{
 
-					// get header field name
-					// NOTE: for historical reasons check if this is a array or a plain string
-					// See: Confluence API  - get_view_headline()
-					if(is_array($parent->view_index_label()))
-						$name = $parent->view_index_label()['header'];
-					else
-						$name = $parent->view_index_label();
+				if (
+					(!($parent instanceof \Illuminate\Support\Collection))	// if $parent is not a Collection we have a 1:1 or 1:n relation
+					||
+					($parent->count() == 1)	// there is a potential n:m relation, but only one model is really connected
+				) {
+					// this means we have an explicit next step in our breadcrumb path
 
-					$s = \HTML::linkRoute($view.'.edit', BaseViewController::translate_view($name, 'Header'), $parent->id).' > '.$s;
+					// if we got a collection we first have to extract the model
+					if ($parent instanceof \Illuminate\Support\Collection) {
+						$parent = $parent->pop();
+					}
+
+					// add the current model to breadcrumbs
+					$breadcrumb_path = $extend_breadcrumb_path($breadcrumb_path, $parent);
+
+					// get view parent
+					$parent = $parent->view_belongs_to();
 				}
-				// get view parent
-				$parent = $parent->view_belongs_to();
+				else {
+					// $parent is a collection with more than one entry – this means we have a multiple parents
+					// we show breadcrumb paths for all of them, but then stopping further processing
+					foreach ($parent as $p) {
+						array_push($breadcrumb_paths, '… > '.$extend_breadcrumb_path($breadcrumb_path, $p));
+					}
+
+					// don't add more predecessors
+					break;
+				}
 			}
-			while ($parent);
 		}
 
-
 		// Base Link to Index Table in front of all relations
-		if (in_array($route_name, BaseController::get_config_modules()))	// parse: Global Config requires own link
-			$s = \HTML::linkRoute('Config.index', BaseViewController::translate_view('Global Configurations', 'Header')).': '.$s;
-		else
-			$s = \HTML::linkRoute($route_name.'.index', $view_header).': '.$s;
+		if (in_array($route_name, BaseController::get_config_modules())) {	// parse: Global Config requires own link
+			$breadcrumb_path_base = \HTML::linkRoute('Config.index', BaseViewController::translate_view('Global Configurations', 'Header'));
+		}
+		else {
+			$breadcrumb_path_base = \HTML::linkRoute($route_name.'.index', $view_header);
+		}
 
-		return $s;
+		if (!$breadcrumb_paths) {	// if this array is still empty: put the one and only breadcrumb path in this array
+			array_push($breadcrumb_paths, $breadcrumb_path_base.": ".$breadcrumb_path);
+		}
+		else {	// multiple breadcrumb paths: show overture on a single line
+			array_unshift($breadcrumb_paths, $breadcrumb_path_base.":");
+		}
+
+		// show each path on its own line
+		return implode('<br>', $breadcrumb_paths);
 	}
 
 
