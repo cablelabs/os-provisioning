@@ -30,3 +30,4 @@ cp-script.sh
 
 # ignore ctags file
 tags
+/.idea/blade.xml
