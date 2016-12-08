@@ -130,7 +130,7 @@ class Kernel extends ConsoleKernel {
 		if (\PPModule::is_active ('ProvMon'))
 		{
 			$schedule->command('nms:apc')->everyFiveMinutes()->withoutOverlapping();
-		// 	$schedule->command('nms:cacti')->everyFiveMinutes()->withoutOverlapping();
+			$schedule->command('nms:cacti')->daily();
 		}
 
 
