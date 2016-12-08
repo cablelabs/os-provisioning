@@ -266,6 +266,8 @@ class Configfile extends \BaseModel {
 					// array_push($config_extensions, "SnmpMibObject docsDevSwServerAddress.0 IPAddress $server_ip ; /* tftp server */");
 					array_push($config_extensions, 'SnmpMibObject docsDevSwFilename.0 String "fw/'.$this->firmware.'"; /* firmware file to download */');
 					array_push($config_extensions, 'SnmpMibObject docsDevSwAdminStatus.0 Integer 2; /* allow provisioning upgrade */');
+					// array_push($config_extensions, 'SwUpgradeServer $server_ip;');
+					array_push($config_extensions, 'SwUpgradeFilename "fw/'.$this->firmware.'";');
 				}
 
 				break;
