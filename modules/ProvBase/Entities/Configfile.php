@@ -23,6 +23,7 @@ class Configfile extends \BaseModel {
 		return array(
 			'name' => 'required|unique:configfile,name,'.$id.',id,deleted_at,NULL',
 			'text' => "docsis",
+			'cvc' => 'required_with:firmware',
 		);
 	}
 
@@ -110,26 +111,36 @@ class Configfile extends \BaseModel {
 
 
 	/**
-	 * Returns all available firmware files (via directory listing)
+	 * Returns all available files (via directory listing)
 	 * @author Patrick Reichel
 	 */
-	public function firmware_files()
+	public function get_files($folder)
 	{
 		// get all available files
-		$firmware_files_raw = glob("/tftpboot/fw/*");
-		$firmware_files = array(null => "None");
+		$files_raw = glob("/tftpboot/$folder/*");
+		$files = array(null => "None");
 		// extract filename
-		foreach ($firmware_files_raw as $file) {
+		foreach ($files_raw as $file) {
 			if (is_file($file)) {
 				$parts = explode("/", $file);
 				$filename = array_pop($parts);
-				$firmware_files[$filename] = $filename;
+				$files[$filename] = $filename;
 			}
 		}
-		return $firmware_files;
+		return $files;
 	}
 
-
+	/**
+	 * Returns text section of Code Validation Certificate in a human readable format
+	 * while skipping non-relevant sections (i.e. hashes)
+	 * @author Ole Ernst
+	 */
+	public function get_cvc_help() {
+		if (!$this->cvc)
+			return("The Code Validation Certificate 'cvc.der' can be extracted from a firmware image 'fw.img' by issuing:\n\nopenssl pkcs7 -print_certs -inform DER -in fw.img | openssl x509 -outform DER -out cvc.der");
+		exec('openssl x509 -text -inform DER -in /tftpboot/cvc/'.$this->cvc, $cvc_help);
+		return join("\n", array_slice($cvc_help, 0, 11));
+	}
 
 	/**
 	 * all Relationships
@@ -270,6 +281,8 @@ class Configfile extends \BaseModel {
 					array_push($config_extensions, 'SwUpgradeFilename "fw/'.$this->firmware.'";');
 				}
 
+				if ($this->cvc)
+					exec("xxd -p -c 254 /tftpboot/cvc/".$this->cvc." | sed 's/^/MfgCVCData 0x/; s/$/;/'", $config_extensions);
 				break;
 
 			// this is for mtas

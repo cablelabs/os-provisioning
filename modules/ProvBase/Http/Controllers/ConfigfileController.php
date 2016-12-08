@@ -21,7 +21,8 @@ class ConfigfileController extends \BaseController {
 			$model = new Configfile;
 			$parents = $model->first()->parents_list_all();
 		}
-		$firmware_files = $model->firmware_files();
+		$firmware_files = $model->get_files("fw");
+		$cvc_files = $model->get_files("cvc");
 
 		// label has to be the same like column in sql table
 		return array(
@@ -33,6 +34,7 @@ class ConfigfileController extends \BaseController {
 			array('form_type' => 'textarea', 'name' => 'text', 'description' => 'Config File Parameters'),
 			array('form_type' => 'select', 'name' => 'firmware', 'description' => 'Choose Firmware File', 'value' => $firmware_files),
 			array('form_type' => 'file', 'name' => 'firmware_upload', 'description' => 'or: Upload Firmware File'),
+			array('form_type' => 'select', 'name' => 'cvc', 'description' => 'Choose Certificate File', 'value' => $cvc_files, 'help' => $model->get_cvc_help()),
 		);
 	}
 
