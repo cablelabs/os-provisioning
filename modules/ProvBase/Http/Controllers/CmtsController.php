@@ -19,7 +19,7 @@ class CmtsController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'ip', 'description' => 'IP'),
 			array('form_type' => 'text', 'name' => 'community_rw', 'description' => 'SNMP Private Community String'),
 			array('form_type' => 'text', 'name' => 'community_ro', 'description' => 'SNMP Public Community String'),
-			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
+			array('form_type' => 'select', 'name' => 'company', 'description' => 'Company', 'value' => ['Cisco' => 'Cisco']),
 			array('form_type' => 'text', 'name' => 'state', 'description' => 'State'),
 			array('form_type' => 'text', 'name' => 'monitoring', 'description' => 'Monitoring')
 		);

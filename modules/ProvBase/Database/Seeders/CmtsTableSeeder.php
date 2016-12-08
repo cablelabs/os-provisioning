@@ -20,7 +20,7 @@ class CmtsTableSeeder extends \BaseSeeder {
 				'ip' => $faker->ipv4(),
 				'community_rw' => "private",
 				'community_ro' => "public",
-				'company' => str_random(10)
+				'company' => "Cisco"
 				// 'network'
 				// 'state'
 				// 'monitoring'
