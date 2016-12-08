@@ -3,7 +3,7 @@
 namespace Modules\HfcReq\Http\Controllers;
 
 use Modules\HfcReq\Entities\NetElement;
-use Modules\HfcSnmp\Entities\DeviceType;
+use Modules\HfcReq\Entities\DeviceType;
 use Modules\HfcBase\Http\Controllers\HfcBaseController;
 
 class NetElementController extends HfcBaseController {

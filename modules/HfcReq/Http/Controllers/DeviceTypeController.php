@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\HfcSnmp\Http\Controllers;
+namespace Modules\HfcReq\Http\Controllers;
 
 class DeviceTypeController extends \BaseController {
 

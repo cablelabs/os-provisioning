@@ -80,7 +80,7 @@ class NetElement extends \BaseModel {
 
 	public function devicetype()
 	{
-		return $this->belongsTo('Modules\HfcSnmp\Entities\DeviceType');
+		return $this->belongsTo('Modules\HfcReq\Entities\DeviceType');
 	}
 
 	public function view_belongs_to ()
