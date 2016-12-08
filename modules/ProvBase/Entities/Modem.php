@@ -193,7 +193,13 @@ class Modem extends \BaseModel {
 	 */
 	private function generate_cm_dhcp_entry()
 	{
-			return 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'"; }'."\n";
+		$ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
+
+		if(count($this->mtas))
+			$ret .= ' option ccc.dhcp-server-1 '.ProvBase::first()->provisioning_server.';';
+
+		$ret .= "}\n";
+		return $ret;
 	}
 
 	private function generate_cm_dhcp_entry_pub()
