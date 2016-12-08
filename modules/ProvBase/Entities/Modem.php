@@ -659,6 +659,8 @@ class ModemObserver
 {
 	public function created($modem)
 	{
+		if (\PPModule::is_active ('ProvMon'))
+			\Artisan::call('nms:cacti', ['cmts-id' => '0', 'modem-id' => $modem->id]);
 		$modem->hostname = 'cm-'.$modem->id;
 		$modem->save();	 // forces to call the updating() and updated() method of the observer !
 	}
@@ -688,9 +690,6 @@ class ModemObserver
 		$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
-
-		if (\PPModule::is_active ('ProvMon'))
-			\Artisan::call('nms:cacti');
 	}
 
 	public function deleted($modem)

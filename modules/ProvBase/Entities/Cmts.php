@@ -345,6 +345,8 @@ class CmtsObserver
 		// dd(\Route::getCurrentRoute()->getActionName(), $this);
 		// only create new config file
 		// dd($cmts);
+		if (\PPModule::is_active ('ProvMon'))
+			\Artisan::call('nms:cacti', ['modem-id' => '0', 'cmts-id' => $cmts->id]);
 		$cmts->make_dhcp_conf();
 	}
 
