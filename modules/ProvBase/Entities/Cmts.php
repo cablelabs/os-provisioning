@@ -217,6 +217,10 @@ class Cmts extends \BaseModel {
 
 			$data .= "\n\t".'}'."\n";
 
+			$data .= "\n\tsubnet $router netmask 255.255.255.255\n\t{";
+			$data .= "\n\t\tallow leasequery;";
+			$data .= "\n\t}\n";
+
 			File::append($file, $data);
 		}
 
