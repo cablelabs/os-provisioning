@@ -30,6 +30,12 @@ class BaseModel extends Eloquent
 	public $observer_enabled = true;
 
 	/**
+	 * View specific stuff
+	 */
+	// set this variable in model index_list() to true if it shall not be deletable on index page
+	public $index_delete_disabled = false;
+
+	/**
 	 * Constructor.
 	 * Used to set some helper variables.
 	 *

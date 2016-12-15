@@ -68,7 +68,7 @@
 					<tr class="{{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}">
 
 						@if ($delete_allowed)
-							<td width=50> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple']) }} </td>
+							<td width=50> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple', 'disabled' => $object->index_delete_disabled ? 'disabled' : null]) }} </td>
 						@else
 							<td/>
 						@endif
