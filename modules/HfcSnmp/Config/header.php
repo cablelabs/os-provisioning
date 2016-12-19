@@ -1,4 +1,5 @@
 <?php
 
-	return 		['HFC' => ['SnmpMibs' => 'SnmpMib.index',
-				'SnmpValues' => 'SnmpValue.index']];
+	return 		['HFC' => ['MibFile' => 'MibFile.index',
+				// 'SnmpValues' => 'SnmpValue.index'
+				]];

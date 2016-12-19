@@ -2,15 +2,9 @@
 
 namespace Modules\HfcSnmp\Entities;
 
-class SnmpMib extends \BaseModel {
+class OID extends \BaseModel {
 
-	public $table = 'snmpmib';
-
-	// Add your validation rules here
-	public static $rules = [
-		// 'title' => 'required'
-	];
-
+	public $table = 'oid';
 
 	// Add your validation rules here
 	public static function rules($id = null)
@@ -23,15 +17,13 @@ class SnmpMib extends \BaseModel {
 	// Name of View
 	public static function view_headline()
 	{
-		return 'SNMP MIB';
+		return 'MIB-File';
 	}
 
 	// link title in index view
 	public function view_index_label()
 	{
-		$devicetype = '';
-		if ($this->devicetype)
-			$devicetype = $this->devicetype->name;
+		$devicetype = $this->devicetype ? $this->devicetype->name : '';
 
 		return ['index' => [$devicetype, $this->field, $this->oid, $this->html_type, $this->description],
 		        'index_header' => ['Device Type', 'Field Name', 'SNMP OID', 'HTML Type', 'Description'],
