@@ -288,6 +288,7 @@ class MtaObserver
 	{
 		$mta->make_dhcp_mta_all();
 		$mta->make_configfile();
+		$mta->modem->make_configfile();
 		$mta->modem->restart_modem();
 	}
 
@@ -295,6 +296,7 @@ class MtaObserver
 	{
 		$mta->make_dhcp_mta_all();
 		$mta->delete_configfile();
+		$mta->modem->make_configfile();
 		$mta->modem->restart_modem();
 	}
 }
