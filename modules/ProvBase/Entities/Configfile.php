@@ -288,6 +288,20 @@ class Configfile extends \BaseModel {
 				$db_schemata ['modem'][0] 	= Schema::getColumnListing('modem');
 				$db_schemata ['qos'][0] 	= Schema::getColumnListing('qos');
 
+				// only generate cpe entries once for each modem configfile
+				if(!$this->parent_id) {
+					$max_cpe = count($device->mtas) + ($device->telephony_only ? 0 : 1);
+					//MaxCPE MUST be between 1 and 254 according to the standard
+					if($max_cpe < 1)
+						$max_cpe = 1;
+					if($max_cpe > 254)
+						$max_cpe = 254;
+					array_push($config_extensions, "MaxCPE $max_cpe;");
+
+					foreach ($device->mtas as $mta)
+						array_push($config_extensions, 'CpeMacAddress '.$mta->mac.';');
+				}
+
 				// if there is a specific firmware: add entries for upgrade
 				if ($this->firmware) {
 					// $server_ip = ProvBase::first()['provisioning_server'];

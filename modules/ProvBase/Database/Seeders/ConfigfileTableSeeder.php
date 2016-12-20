@@ -115,7 +115,6 @@ BaselinePrivacy
     TEKGraceTime 1800;
     AuthRejectTimeout 60;
 }
-MaxCPE 2;
 UsServiceFlow
 {
     UsServiceFlowRef 101;
