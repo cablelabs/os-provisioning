@@ -503,6 +503,11 @@ class Contract extends \BaseModel {
 
 		}
 
+		if(!$active_count_internet && $active_count_voip) {
+			$this->telephony_only = 1;
+			$contract_changed = True;
+		}
+
 		if ($contract_changed) {
 			$this->save();
 		}
@@ -932,6 +937,7 @@ class Contract extends \BaseModel {
 		foreach ($this->modems as $modem)
 		{
 			$modem->network_access = $this->network_access;
+			$modem->telephony_only = $this->telephony_only;
 			$modem->qos_id = $this->qos_id;
 			$modem->save();
 		}
