@@ -43,6 +43,12 @@ return [
 	'settlement_verification' 		=> 'If activated it\'s not possible to repeat the Settlement Run. Customer Invoices are only visible when this checkbox is activated.',
 
  /**
+  *	MODULE: HfcSnmp
+  */
+	'mib_filename' 					=> 'The Filename is composed by MIB name & Revision. If there is already an existent identical File it\'s not possible to create it again.',
+
+
+ /**
   *	MODULE: ProvBase	
   */
  	//ModemController

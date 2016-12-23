@@ -43,6 +43,11 @@ return [
 	'settlement_verification' 		=> 'Mit aktivierter Checkbox kann der Abrechnungslauf nicht wiederholt werden. Rechnungen der Kunden werden nur mit aktivierter Checkbox angezeigt.',
 
  /**
+  *	MODULE: HfcSnmp
+  */
+	'mib_filename' 					=> 'Der Dateiname setzt sich aus MIB Name und Revision zusammen. Existiert bereits ein MIB-File mit selbem Dateiname und ist identisch, kann dieses nicht erneut angelegt werden.',
+
+ /**
   *	MODULE: ProvBase	
   */
 	//ModemController

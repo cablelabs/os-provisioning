@@ -17,38 +17,42 @@ class OID extends \BaseModel {
 	// Name of View
 	public static function view_headline()
 	{
-		return 'MIB-File';
+		return 'OID';
 	}
 
 	// link title in index view
 	public function view_index_label()
 	{
-		$devicetype = $this->devicetype ? $this->devicetype->name : '';
+		// $devicetype = $this->devicetype ? $this->devicetype->name : '';
 
-		return ['index' => [$devicetype, $this->field, $this->oid, $this->html_type, $this->description],
-		        'index_header' => ['Device Type', 'Field Name', 'SNMP OID', 'HTML Type', 'Description'],
-		        'header' => $this->field.' - '.$this->oid];
+		return ['index' => [$this->name, $this->oid, $this->access],
+		        'index_header' => ['Name', 'OID', 'Access'],
+		        'header' => $this->name.' - '.$this->oid];
+
+
+
+		// return ['index' => [$devicetype, $this->field, $this->oid, $this->html_type, $this->description],
+		//         'index_header' => ['Device Type', 'Field Name', 'SNMP OID', 'HTML Type', 'Description'],
+		//         'header' => $this->field.' - '.$this->oid];
 	}
 
 	/**
-	 * link with devicetype
+	 * Relations
 	 */
-	public function devicetype()
+	public function mibfile()
 	{
-		return $this->belongsTo('Modules\HfcSnmp\Entities\DeviceType');
+		return $this->belongsTo('Modules\HfcSnmp\Entities\MibFile');
 	}
-
-    /**
-     * return all DeviceType Objects for Device
-     */
-    public function devicetypes ()
-    {
-        return DeviceType::all();
-    }
-
 
 	public function view_belongs_to ()
 	{
-		return $this->devicetype;
+		return $this->mibfile;
 	}
+
+
+	// public function index_list ()
+	// {
+	// 	return $this->orderBy('oid');
+	// }
+
 }
