@@ -41,6 +41,23 @@ class MibFile extends \BaseModel {
 				'header' => $this->name];
 	}
 
+	public function view_has_many ()
+	{
+		return array(
+			'OID' => $this->oids,
+		);
+	}
+
+	//Overwrite from BaseModel to add version
+	public function html_list($array, $column)
+	{
+		$ret[0] = null;
+
+		foreach ($array as $a)
+			$ret[$a->id] = $a->{$column}.'--'.$a->version;
+
+		return $ret;
+	}
 
 	/**
 	 * Relations
@@ -49,15 +66,6 @@ class MibFile extends \BaseModel {
 	{
 		return $this->hasMany('Modules\HfcSnmp\Entities\OID', 'mibfile_id')->orderBy('oid');
 	}
-
-
-	public function view_has_many ()
-	{
-		return array(
-			'OID' => $this->oids,
-		);
-	}
-
 
 
 	/**

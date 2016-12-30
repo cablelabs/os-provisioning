@@ -22,6 +22,10 @@ class DeviceType extends \BaseModel {
 		);
 	}
 
+	/**
+	 * View Stuff
+	 */
+
 	// Name of View
 	public static function view_headline()
 	{
@@ -37,6 +41,36 @@ class DeviceType extends \BaseModel {
 		        'header' => $this->name];
 	}
 
+	// returns all objects that are related to a DeviceType
+	public function view_has_many()
+	{
+		// return array(
+		// 	'NetElement' => $this->netelements,
+		// 	'OID' 		=> $this->oids,
+		// );
+		$ret['Base']['NetElement']['class'] 	= 'NetElement';
+		$ret['Base']['NetElement']['relation']  = $this->netelements;
+
+		if (\PPModule::is_active('hfcsnmp'))
+		{
+			// extra page or on Base ??
+			// $ret['Base']['- Assign OIDs from MIB']['view']['view'] = 'hfcreq::devicetype.add_oid_from_mib';
+			// $mibs = \Modules\HfcSnmp\Entities\MibFile::select(['id', 'name', 'version'])->get();
+			// $ret['Base']['- Assign OIDs from MIB']['view']['vars']['list'] = isset($mibs[0]) ? $mibs[0]->html_list($mibs, 'name', true) : [];
+
+			// $ret['Base']['OID']['class'] 	= 'OID';
+			// $ret['Base']['OID']['relation'] = $this->oids;
+			// $ret['Base']['OID']['options']['hide_delete_button'] = 0;
+			// $ret['Base']['OID']['options']['hide_create_button'] = 0;
+			$ret['Base']['OIDs']['view']['view'] = 'hfcreq::devicetype.oids';
+			$ret['Base']['OIDs']['view']['vars']['list'] = $this->oids;
+
+		}
+
+		return $ret;
+	}
+
+
 	/**
 	 * Relations
 	 */
@@ -45,23 +79,13 @@ class DeviceType extends \BaseModel {
 		return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'devicetype_id');
 	}
 
-
-	// returns all objects that are related to a DeviceType
-	public function view_has_many()
+	public function oids()
 	{
-		if (0) // disable
-			return array(
-				'Edit' => [
-					'hua' => ['class' => 'NetElement', 'relation' => $this->netelements],
-				]
-			);
+		return $this->belongsToMany('Modules\HfcSnmp\Entities\OID', 'devicetype_oid', 'devicetype_id', 'oid_id')->orderBy('oid');
+	}
 
-		// Testing view_has_many() API v2
-		return [
-			'Test' =>  ['NetElement Class Header' => ['class' => 'NetElement',
-												  'relation' => $this->netelements,
-												  'options' => ['hide_create_button' => 1, 'hide_delete_button' => 1]]]
-
-		];
+	public function netelementtype()
+	{
+		return $this->belongsTo('Modules\HfcReq\Entities\NetElementType', 'devicetype_id');
 	}
 }

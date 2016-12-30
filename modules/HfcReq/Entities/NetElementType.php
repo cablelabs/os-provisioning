@@ -16,6 +16,10 @@ class NetElementType extends \BaseModel {
 		);
 	}
 
+	/**
+	 * View Stuff
+	 */
+
 	// Name of View
 	public static function view_headline()
 	{
@@ -44,22 +48,23 @@ class NetElementType extends \BaseModel {
 		return $types;
 	}
 
-	/**
-	 * Relations
-	 */
-	public function netelements()
-	{
-		return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'netelement_id');
-	}
-
-	public function devicetypes()
-	{
-		return $this->hasMany('Modules\HfcReq\Entities\DeviceType', 'netelement_id');
-	}
-
 	// returns all objects that are related to a DeviceType
 	public function view_has_many()
 	{
 		return [];
 	}
+
+	/**
+	 * Relations
+	 */
+	public function netelements()
+	{
+		return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'netelementtype_id');
+	}
+
+	public function devicetypes()
+	{
+		return $this->hasMany('Modules\HfcReq\Entities\DeviceType', 'netelementtype_id');
+	}
+
 }

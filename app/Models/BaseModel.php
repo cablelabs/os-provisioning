@@ -570,7 +570,7 @@ class BaseModel extends Eloquent
 	{
 		$relations = [];
 		// exceptions
-		$exceptions = ['configfile_id', 'salesman_id', 'costcenter_id', 'company_id', 'sepaaccount_id', 'product_id', 'mibfile_id'];
+		$exceptions = ['configfile_id', 'salesman_id', 'costcenter_id', 'company_id', 'sepaaccount_id', 'product_id', 'mibfile_id', 'oid_id'];
 
 		// Lookup all SQL Tables
 		foreach (DB::select('SHOW TABLES') as $table)
