@@ -525,16 +525,30 @@ class BaseModel extends Eloquent
 
 	/**
 	 * Generic function to build a list with key of id
-	 * @param $array
-	 * @return $ret 	list
+	 * @param 	Array 			$array 	 		list of Models/Objects
+	 * @param 	String/Array 	$column 		sql column name(s) that contain(s) the description of the entry
+	 * @param 	Bool 			$empty_option 	true it first entry shall be empty
+	 * @return  Array 			$ret 			list
 	 */
-	public function html_list ($array, $column)
+	public function html_list ($array, $columns, $empty_option = false, $separator = '--')
 	{
-		$ret = array();
+		$ret = $empty_option ? [0 => null] : [];
 
+		if (is_string($columns))
+		{
+			foreach ($array as $a)
+				$ret[$a->id] = $a->{$columns};
+
+			return $ret;
+		}
+
+		// column is array
 		foreach ($array as $a)
 		{
-			$ret[$a->id] = $a->{$column};
+			foreach ($column as $key => $c)
+				$desc[$key] = $a->{$c};
+
+			$ret[$a->id] = implode($separator, $desc);
 		}
 
 		return $ret;

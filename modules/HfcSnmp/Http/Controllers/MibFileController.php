@@ -17,7 +17,7 @@ class MibFileController extends \BaseController {
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name', 'hidden' => 'C'),
-			array('form_type' => 'text', 'name' => 'filename', 'description' => 'Filename', 'options' => ['readonly'], 'help' => trans('helper.mib_filename')),
+			array('form_type' => 'text', 'name' => 'filename', 'description' => 'Filename', 'hidden' => 'E', 'options' => ['readonly'], 'help' => trans('helper.mib_filename')),
 			array('form_type' => 'text', 'name' => 'version', 'description' => 'Version | Revision', 'hidden' => 'C'),
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'),
 			array('form_type' => 'file', 'name' => 'mibfile_upload', 'description' => 'Upload MIB-File', 'hidden' => 'E'),

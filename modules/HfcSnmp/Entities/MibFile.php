@@ -49,15 +49,15 @@ class MibFile extends \BaseModel {
 	}
 
 	//Overwrite from BaseModel to add version
-	public function html_list($array, $column)
-	{
-		$ret[0] = null;
+	// public function html_list($array, $column, $empty_option = false)
+	// {
+	// 	$ret[0] = null;
 
-		foreach ($array as $a)
-			$ret[$a->id] = $a->{$column}.'--'.$a->version;
+	// 	foreach ($array as $a)
+	// 		$ret[$a->id] = $a->{$column}.'--'.$a->version;
 
-		return $ret;
-	}
+	// 	return $ret;
+	// }
 
 	/**
 	 * Relations
