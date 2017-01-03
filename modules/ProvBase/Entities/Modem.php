@@ -360,8 +360,13 @@ class Modem extends \BaseModel {
 		catch (Exception $e)
 		{
 			// only ignore error with this error message (catch exception with this string)
-			if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmpset(): No response from") !== false)))
+			if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmpset(): No response from") !== false))) {
 				\Session::flash('error', 'Could not restart Modem! (offline?)');
+			}
+			else {
+				// re-throw all other exceptions
+				throw $e;
+			}
 		}
 
 	}
