@@ -96,7 +96,9 @@ class NetElementType extends \BaseModel {
 
 
 	/**
-	 * Get all Database Entries with relevant data for index view ordered
+	 * Get all Database Entries with relevant data for index view ordered - note the undeletables array in other models!
+	 *
+	 * TODO: use in generic manner in BaseModel
 	 *
 	 * @return 	Multidimensional Array
 	 */
