@@ -200,6 +200,28 @@ class Phonenumber extends \BaseModel {
 		return $ret;
 	}
 
+
+	/**
+	 * return a list [id => hostname, mac and contract information] of all mtas assigned to a contract
+	 */
+	public function mtas_list_only_contract_assigned()
+	{
+		$ret = array();
+		foreach ($this->mtas()['mtas'] as $mta)
+		{
+			$contract = $mta->modem->contract;
+			if (is_null($contract)) {
+				continue;
+			}
+			else {
+				$ret[$mta->id] = $mta->hostname.' ('.$mta->mac.") ⇒ ".$contract->number.": ".$contract->lastname.", ".$contract->firstname;
+			}
+		}
+
+		return $ret;
+	}
+
+
 	/**
 	 * link to management
 	 */
@@ -342,7 +364,7 @@ class Phonenumber extends \BaseModel {
 			}
 
 			$this->save();
-		}
+		};
 
 	}
 
@@ -423,10 +445,111 @@ class PhonenumberObserver
 	{
 		$this->_create_login_data($phonenumber);
 
+		// check if we have a MTA change
+		$this->_check_and_process_mta_change($phonenumber);
+
+		// changes on SIP data (username, password, sipdomain) have to be sent to external providers, too
+		$this->_check_and_process_sip_data_change($phonenumber);
+
+		// rebuild the current mta's configfile and restart the modem – has to be done in each case
 		$phonenumber->mta->make_configfile();
 		$phonenumber->mta->modem->restart_modem();
+
 	}
 
+
+	/**
+	 * Apply changes on assigning a phonenumber to a new MTA.
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _check_and_process_mta_change($phonenumber) {
+
+		$old_mta_id = intval($phonenumber['original']['mta_id']);
+		$new_mta_id = intval($phonenumber->mta_id);
+
+		// if the MTA has not been changed we have nothing to do :-)
+		if ($old_mta_id == $new_mta_id) {
+			return;
+		}
+
+		// get an instance of both MTAs for easier access
+		$old_mta = MTA::findOrFail($old_mta_id);
+		$new_mta = $phonenumber->mta;
+
+		// rebuild old MTA's config and restart the modem (we have to remove all information about this phonenumber)
+		$old_mta->make_configfile();
+		$old_mta->modem->restart_modem();
+
+		// for all possible external providers we have to check if there is data to update, too
+		$this->_check_and_process_mta_change_for_envia($phonenumber, $old_mta, $new_mta);
+
+	}
+
+	/**
+	 * Change Envia related data on assigning a phonenumber to a new MTA.
+	 * Here we have to decide if the change is permanent (customer got new modem) or temporary (e.g. for testing reasons).
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _check_and_process_mta_change_for_envia($phonenumber, $old_mta, $new_mta) {
+
+		// check if module is enabled
+		if (!\PPModule::is_active('provvoipenvia')) {
+			return;
+		}
+
+		// check if new mta is assigned to another contract than the old one
+		// if so: we assume that this is a temporary change only – we don't change any Envia data
+		if ($old_mta->modem->contract->id != $new_mta->modem->contract->id) {
+			return;
+		}
+
+		// the moment we get here we have to do a bunch of Envia data related work
+		$related_orders = $phonenumber->enviaorders();
+And here we go tomorrow!
+		d($related_orders);
+
+	}
+
+
+	/**
+	 * If SIP data has been changed there are probably changes at your provider needed!
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _check_and_process_sip_data_change($phonenumber) {
+
+		if (
+			($phonenumber['original']['username'] != $phonenumber->username)
+			||
+			($phonenumber['original']['password'] != $phonenumber->password)
+			||
+			($phonenumber['original']['sipdomain'] != $phonenumber->sipdomain)
+		) {
+			$this->_check_and_process_sip_data_change_for_envia($phonenumber);
+		}
+
+	}
+
+
+	/**
+	 * If module ProvVoipEnvia is enabled: perform actions for Envia related data
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _check_and_process_sip_data_change_for_envia($phonenumber) {
+
+		// check if module is enabled
+		if (!\PPModule::is_active('provvoipenvia')) {
+			return;
+		}
+
+		// TODO: check if this data can be changed automagically at Envia!
+		$envia_url = "/lara/admin/provvoipenvia/request/voip_account_update?origin=".urlencode(\Request::getUri())."&phonenumber_id=".$phonenumber->id;
+		\Session::push('tmp_info_above_form', 'Autochanging of SIP data at Envia is not implemented yet!<br>You have to do this manually <a href="'.$envia_url.'" target="_self">here</a>');
+
+	}
 
 	public function deleted($phonenumber)
 	{
