@@ -540,7 +540,7 @@ class Contract extends \BaseModel {
 		// attention: update youngest valid_from items first (to avoid problems in relation with
 		// ItemObserver::update() which else set valid_to smaller than valid_from in some cases)!
 		// and to avoid “Multipe valid tariffs active” warning
-		
+
 		foreach ($this->items_sorted_by_valid_from_desc as $item) {
 
 			$type = isset($item->product) ? $item->product->type : '';
@@ -560,7 +560,7 @@ class Contract extends \BaseModel {
 						$new_date = $tomorrow->toDateString();
 						$item->valid_from = $new_date;
 						$item_changed = True;
-						\Log::Info("contract: changing item ".$item->id." valid_from to ".$new_date." for Contract ".$this->number, [$this->id]);
+						\Log::Info("contract: changing item ".$item->id." (".$item->product->name.") valid_from to ".$new_date." for Contract ".$this->number, [$this->id]);
 					}
 				}
 			}
@@ -574,7 +574,7 @@ class Contract extends \BaseModel {
 						$new_date = $today->toDateString();
 						$item->valid_to = $new_date;
 						$item_changed = True;
-						\Log::Info("contract: changing item ".$item->id." valid_to to ".$new_date." for Contract ".$this->number, [$this->id]);
+						\Log::Info("contract: changing item ".$item->id." (".$item->product->name.") valid_to to ".$new_date." for Contract ".$this->number, [$this->id]);
 					}
 				}
 			}
@@ -752,7 +752,7 @@ class Contract extends \BaseModel {
 		foreach ($items as $item) {
 
 			// a given item can be null – check and ignore
-			if (!$item) 
+			if (!$item)
 				continue;
 
 			$type = isset($item->product) ? $item->product->type : '';
