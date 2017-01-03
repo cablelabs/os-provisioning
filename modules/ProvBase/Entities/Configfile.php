@@ -88,6 +88,7 @@ class Configfile extends \BaseModel {
 	public function search_children($build = 0)
 	{
 		$id = $this->id;
+		// TODO: this should not be a database query
 		$children = Configfile::all()->where('parent_id', $id)->all();
 		$cf_tree = [];
 

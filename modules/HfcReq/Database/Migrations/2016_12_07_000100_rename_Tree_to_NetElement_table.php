@@ -23,7 +23,6 @@ class RenameTreeToNetElementTable extends BaseMigration {
 		// add fields to merge tables
 		Schema::table('netelement', function(Blueprint $table)
 		{
-			$table->integer('devicetype_id')->unsigned();
 			$table->integer('netelementtype_id')->unsigned();
 			$table->string('community_ro', 45);
 			$table->string('community_rw', 45);
@@ -72,7 +71,7 @@ class RenameTreeToNetElementTable extends BaseMigration {
 			$table->string('state');
 			$table->integer('state_new');
 			$table->integer('parent');
-			$table->dropColumn(['devicetype_id', 'netelementtype_id', 'community_ro', 'community_rw', 'address1', 'address2', 'address3']);
+			$table->dropColumn(['netelementtype_id', 'community_ro', 'community_rw', 'address1', 'address2', 'address3']);
 		});
 	}
 

@@ -3,7 +3,7 @@
 namespace Modules\HfcReq\Http\Controllers;
 
 use Modules\HfcReq\Entities\NetElement;
-use Modules\HfcReq\Entities\DeviceType;
+use Modules\HfcReq\Entities\NetElementType;
 use Modules\HfcBase\Http\Controllers\HfcBaseController;
 
 class NetElementController extends HfcBaseController {
@@ -27,8 +27,8 @@ class NetElementController extends HfcBaseController {
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
-			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['NET' => 'NET', 'CMTS' => 'CMTS', 'DATA' => 'DATA', 'CLUSTER' => 'CLUSTER', 'NODE' => 'NODE', 'AMP' => 'AMP']),
-			array('form_type' => 'select', 'name' => 'devicetype_id', 'description' => 'Device Type', 'value' => $model->html_list(DeviceType::all(), 'name')),
+			// array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['NET' => 'NET', 'CMTS' => 'CMTS', 'DATA' => 'DATA', 'CLUSTER' => 'CLUSTER', 'NODE' => 'NODE', 'AMP' => 'AMP']),
+			array('form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $model->html_list(NetElementType::all(), 'name')),
 			array('form_type' => 'text', 'name' => 'ip', 'description' => 'IP address'),
 			array('form_type' => 'text', 'name' => 'link', 'description' => 'HTML Link'),
 			array('form_type' => 'text', 'name' => 'pos', 'description' => 'Geoposition'),
@@ -61,7 +61,7 @@ class NetElementController extends HfcBaseController {
 		// call base method
 		$ret = parent::store();
 
-		Device::relation_index_build_all();
+		NetElement::relation_index_build_all();
 
 		return $ret;
 	}
@@ -77,7 +77,7 @@ class NetElementController extends HfcBaseController {
 		// call base method
 		$ret = parent::update($id);
 
-		Device::relation_index_build_all();
+		NetElement::relation_index_build_all();
 
 		return $ret;
 	}
@@ -90,7 +90,7 @@ class NetElementController extends HfcBaseController {
 		// call base method
 		$ret = parent::destroy($id);
 
-		Device::relation_index_build_all();
+		NetElement::relation_index_build_all();
 
 		return $ret;
 	}
@@ -104,7 +104,7 @@ class NetElementController extends HfcBaseController {
     {
     	parent::destroy($id);
 
-    	Device::relation_index_build_all();
+    	NetElement::relation_index_build_all();
 
     	return \Redirect::back();
     }
@@ -114,20 +114,20 @@ class NetElementController extends HfcBaseController {
 	/**
 	 * Controlling Read Function
 	 *
-	 * TODO: split SNMP Stuff from device specific stuff
+	 * TODO: split SNMP Stuff from netelem specific stuff
 	 *       and do not return a View -> instead call BaseController@edit
 	 *
-	 * @param id the Device id
+	 * @param id the NetElement id
 	 * @author Torsten Schmidt
 	 */
 	public function controlling_edit($id)
 	{
-		// Init Device Model
-		$device = Device::findOrFail($id);
+		// Init NetElement Model
+		$netelem = NetElement::findOrFail($id);
 
 		// Init SnmpController
 		$snmp = new SnmpController;
-		$snmp->init ($device);
+		$snmp->init ($netelem);
 
 		// Get Html Form Fields for generic View
 		$form_fields = $snmp->snmp_get_all();
@@ -135,14 +135,14 @@ class NetElementController extends HfcBaseController {
 		// Init View
 		$obj = static::get_model_obj();
 		$model_name  = \NamespaceController::get_model_name();
-		$view_header = 'Edit: '.$device->name;
+		$view_header = 'Edit: '.$netelem->name;
 		$view_var 	 = $obj->findOrFail($id);
 		$route_name  = \NamespaceController::get_route_name();
 		$view_header_links = \BaseViewController::view_main_menus();
 
-		$view_path = 'hfcsnmp::Device.controlling';
+		$view_path = 'hfcsnmp::NetElement.controlling';
 		$form_path = 'Generic.form';
-		$form_update = 'Device.controlling_update';
+		$form_update = 'NetElement.controlling_update';
 
 		//dd(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'form_update'));
 
@@ -154,15 +154,15 @@ class NetElementController extends HfcBaseController {
 	/**
 	 * Controlling Update Function
 	 *
-	 * @param id the Device id
+	 * @param id the NetElement id
 	 * @author Torsten Schmidt
 	 */
 	public function controlling_update($id)
 	{
-		$device = Device::findOrFail($id);
+		$netelem = NetElement::findOrFail($id);
 
 		// TODO: validation
-		$validator = \Validator::make($data = $this->prepare_input(\Input::all()), $device::rules($id));
+		$validator = \Validator::make($data = $this->prepare_input(\Input::all()), $netelem::rules($id));
 
 /*
 		if ($validator->fails())
@@ -173,14 +173,14 @@ class NetElementController extends HfcBaseController {
 
 		// Init SnmpController
 		$snmp = new SnmpController;
-		$snmp->init ($device);
+		$snmp->init ($netelem);
 
 		// Set Html Form Fields for generic View
 
 		$snmp->snmp_set_all($data);
 
 
-		return \Redirect::route('Device.controlling_update', $id)->with('message', 'Updated!');
+		return \Redirect::route('NetElement.controlling_update', $id)->with('message', 'Updated!');
 	}
 
 }

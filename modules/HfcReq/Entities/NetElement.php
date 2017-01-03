@@ -78,14 +78,14 @@ class NetElement extends \BaseModel {
 		return array();
 	}
 
-	public function devicetype()
+	public function netelementtype()
 	{
-		return $this->belongsTo('Modules\HfcReq\Entities\DeviceType');
+		return $this->belongsTo('Modules\HfcReq\Entities\NetElementType');
 	}
 
 	public function view_belongs_to ()
 	{
-		return $this->devicetype;
+		return $this->netelementtype;
 	}
 
 	/**

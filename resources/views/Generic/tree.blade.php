@@ -23,7 +23,7 @@
 		@DivOpen(3)
 			@if ($create_allowed)
 				{{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
-				{{Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Create '.$view_header, 'Button' ) , ['style' => 'simple']) }}
+				{{Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Create '.$b_text, 'Button' ) , ['style' => 'simple']) }}
 				{{ Form::close() }}
 			@endif
 		@DivClose()
@@ -39,12 +39,14 @@
 			@endif
 
 			<!-- <table> -->
+			<br>
 
-			{{ $view_var }}
+			<?php $controller = NameSpaceController::get_controller_name(); ?>
+			
+			{{ $controller::make_tree_table() }}
 
 			<!-- </table> -->
 
-			<br>
 
 		<!-- delete/submit button of form-->
 		@DivOpen(3)
@@ -55,3 +57,7 @@
 	@DivClose()
 
 @stop
+
+
+
+      <!-- <link href="{{asset('components/assets-admin/plugins/jstree/dist/themes/default/style.min.css') }}" rel="stylesheet"> -->

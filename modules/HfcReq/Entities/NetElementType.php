@@ -16,6 +16,7 @@ class NetElementType extends \BaseModel {
 		);
 	}
 
+
 	/**
 	 * View Stuff
 	 */
@@ -29,29 +30,55 @@ class NetElementType extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-		return ['index' => [$this->name],
-		        'index_header' => ['Name'],
-		        'header' => $this->name];
+		// in Tree View returning an array is currently not yet implemented
+		return $this->name;
+
+		// return ['index' => [$this->name],
+		//         'index_header' => ['Name'],
+		//         'header' => $this->name];
 	}
 
 	public function index_list ()
 	{
-		$types = $this->orderBy('id')->get();
-		$undeletables = ['Net', 'Cluster'];
+		// implement Index View as Tree - make sure that a separate index.blade.php is installed that includes the Generic.tree blade
+		// so we can use the Generic BaseController@index function
+		return NetElementType::get_tree_list();
 
-		foreach ($types as $type)
-		{
-			if (in_array($type->name, $undeletables))
-				$type->index_delete_disabled = true;
-		}
+		// $types = $this->orderBy('id')->get();
+		// $undeletables = ['Net', 'Cluster'];
 
-		return $types;
+		// foreach ($types as $type)
+		// {
+		// 	if (in_array($type->name, $undeletables))
+		// 		$type->index_delete_disabled = true;
+		// }
+
+		// return $types;
 	}
 
 	// returns all objects that are related to a DeviceType
 	public function view_has_many()
 	{
-		return [];
+		$ret['Base']['NetElement']['class'] 	= 'NetElement';
+		$ret['Base']['NetElement']['relation']  = $this->netelements;
+
+		if (\PPModule::is_active('hfcsnmp') && $this->parent_id)
+		{
+			// extra page or on Base ??
+			// $ret['Base']['- Assign OIDs from MIB']['view']['view'] = 'hfcreq::netelementtype.add_oid_from_mib';
+			// $mibs = \Modules\HfcSnmp\Entities\MibFile::select(['id', 'name', 'version'])->get();
+			// $ret['Base']['- Assign OIDs from MIB']['view']['vars']['list'] = isset($mibs[0]) ? $mibs[0]->html_list($mibs, 'name', true) : [];
+
+			// $ret['Base']['OID']['class'] 	= 'OID';
+			// $ret['Base']['OID']['relation'] = $this->oids;
+			// $ret['Base']['OID']['options']['hide_delete_button'] = 0;
+			// $ret['Base']['OID']['options']['hide_create_button'] = 0;
+			$ret['Base']['OIDs']['view']['view'] = 'hfcreq::NetElementType.oids';
+			$ret['Base']['OIDs']['view']['vars']['list'] = $this->oids;
+
+		}
+
+		return $ret;
 	}
 
 	/**
@@ -59,12 +86,66 @@ class NetElementType extends \BaseModel {
 	 */
 	public function netelements()
 	{
-		return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'netelementtype_id');
+		return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'devicetype_id');
 	}
 
-	public function devicetypes()
+	public function oids()
 	{
-		return $this->hasMany('Modules\HfcReq\Entities\DeviceType', 'netelementtype_id');
+		return $this->belongsToMany('Modules\HfcSnmp\Entities\OID', 'devicetype_oid', 'devicetype_id', 'oid_id')->orderBy('oid');
+	}
+
+
+	/**
+	 * Get all Database Entries with relevant data for index view ordered
+	 *
+	 * @return 	Multidimensional Array
+	 */
+	public static function get_tree_list()
+	{
+		$netelementtypes = NetElementType::orderBy('parent_id')->orderBy('id')->get(['id', 'parent_id', 'name']);
+		$types = [];
+		$undeletables = ['Net', 'Cluster'];
+
+		foreach ($netelementtypes as $key => $elem)
+		{
+			if ($elem->parent_id)
+				break;
+
+			if (in_array($elem->name, $undeletables))
+				$elem->index_delete_disabled = true;
+
+			$types[]  = $elem;
+			unset($netelementtypes[$key]); 		// increases performance a bit
+
+			$children = $elem->_get_children($netelementtypes);
+			if ($children)
+				$types[] = $children;
+		}
+
+		return $types;
+	}
+
+
+	/**
+	 * Search Children from Collection List of NetElementTypes recursivly
+	 *
+	 * @param 	Collection $objects
+	 * @return 	Array 
+	 */
+	private function _get_children($objects = null)
+	{
+		$children = $objects ? $objects->where('parent_id', $this->id) : [];
+		$arr = [];
+
+		foreach ($children as $key => $elem)
+		{
+			$arr[] = $elem;
+			$tmp   = $elem->_get_children($objects);
+			if ($tmp)
+				$arr[] = $tmp;
+		}
+
+		return $arr;
 	}
 
 }

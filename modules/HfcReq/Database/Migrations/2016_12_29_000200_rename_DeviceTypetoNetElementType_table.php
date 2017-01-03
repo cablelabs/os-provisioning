@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 use Modules\HfcReq\Entities\NetElementType;
 
-class CreateNetElementTypeTable extends BaseMigration {
+class RenameDeviceTypetoNetElementTypeTable extends BaseMigration {
 
 
 	// name of the table to create
@@ -19,11 +19,10 @@ class CreateNetElementTypeTable extends BaseMigration {
 	 */
 	public function up()
 	{
-		Schema::create($this->tablename, function(Blueprint $table)
-		{
-			$this->up_table_generic($table);
+		Schema::rename('devicetype', $this->tablename);		
 
-			$table->string('name');
+		Schema::table($this->tablename, function(Blueprint $table)
+		{
 			$table->string('icon_name');
 		});
 
@@ -44,7 +43,12 @@ class CreateNetElementTypeTable extends BaseMigration {
 	 */
 	public function down()
 	{
-		Schema::drop($this->tablename);
+		Schema::table($this->tablename, function(Blueprint $table)
+		{
+			$table->dropColumn('icon_name');
+		});
+
+		Schema::rename($this->tablename, 'devicetype');
 	}
 
 }
