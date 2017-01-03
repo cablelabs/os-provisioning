@@ -62,7 +62,7 @@ class PhonenumberController extends \BaseController {
 			array('form_type' => 'select', 'name' => 'country_code', 'description' => 'Country Code', 'value' => Phonenumber::getPossibleEnumValues('country_code')),
 			array('form_type' => 'text', 'name' => 'prefix_number', 'description' => 'Prefix Number', 'help' => 'Has to be available on modem address.'),
 			array('form_type' => 'text', 'name' => 'number', 'description' => 'Number', 'help' => 'The phonenumber to port or a free number given by your provider.'),
-			array('form_type' => 'select', 'name' => 'mta_id', 'description' => 'MTA', 'value' => $model->mtas_list_with_dummies(), 'hidden' => '1'),
+			array('form_type' => 'select', 'name' => 'mta_id', 'description' => 'MTA', 'value' => $model->mtas_list_only_contract_assigned(), 'hidden' => 'C', 'help' => 'Can be used to assign the phonenumber (and related data) to another MTA. Useful on modem changes and for testing. You will probably have to change the port, too.'),
 			array('form_type' => 'text', 'name' => 'port', 'description' => 'Port'),
 			array('form_type' => 'text', 'name' => 'username', 'description' => 'Username', 'options' => array('placeholder' => $login_placeholder)),
 			array('form_type' => 'text', 'name' => 'password', 'description' => 'Password', 'options' => array('placeholder' => $login_placeholder)),
