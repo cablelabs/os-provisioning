@@ -297,7 +297,7 @@ class BaseController extends Controller {
 		if(!isset($a['networks']))
 		{
 			$a['networks'] = [];
-			if (\PPModule::is_active('HfcBase'))
+			if (\PPModule::is_active('HfcReq'))
 				$a['networks'] = \Modules\HfcReq\Entities\NetElement::get_all_net();
 		}
 
