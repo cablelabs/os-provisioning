@@ -245,14 +245,16 @@ class Phonenumber extends \BaseModel {
 			return null;
 		}
 
+		$whereStatement = "1";
 		if ($withTrashed) {
-			$enviaorders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->withTrashed()->whereRaw($whereStatement);
+			$orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->withTrashed()->whereRaw($whereStatement);
 		}
 		else {
-			$enviaorders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->whereRaw($whereStatement);
+			$orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->whereRaw($whereStatement);
+			/* $orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id'); */
 		}
 
-		return $enviaorders;
+		return $orders;
 	}
 
 
@@ -443,6 +445,7 @@ class PhonenumberObserver
 
 	public function updated($phonenumber)
 	{
+
 		$this->_create_login_data($phonenumber);
 
 		// check if we have a MTA change
@@ -499,16 +502,34 @@ class PhonenumberObserver
 			return;
 		}
 
+		// we need some helpers for easier access
+		$old_modem = $old_mta->modem;
+		$old_contract = $old_modem->contract;
+		$new_modem = $new_mta->modem;
+		$new_contract = $new_modem->contract;
+
 		// check if new mta is assigned to another contract than the old one
 		// if so: we assume that this is a temporary change only – we don't change any Envia data
-		if ($old_mta->modem->contract->id != $new_mta->modem->contract->id) {
+		if ($old_contract->id != $new_contract->id) {
+
+			$tmp_title = $old_contract->id.': '.$old_contract->firstname.' '.$old_contract->lastname.', '.$old_contract->city;
+			$old_contract_href = \HTML::linkRoute('Contract.edit', $tmp_title, [$old_contract->id], ['target' => '_blank']);
+			$tmp_title = $new_contract->id.': '.$new_contract->firstname.' '.$new_contract->lastname.', '.$new_contract->city;
+			$new_contract_href = \HTML::linkRoute('Contract.edit', $tmp_title, [$new_contract->id], ['target' => '_blank']);
+
+			\Session::push('tmp_info_above_form', 'New MTA belongs to another contract ('.$new_contract_href.') than the previous one ('.$old_contract_href.')<br>This seems to be a test only – so no Envia related data will be changed.<br>Do not forget to ');
+
 			return;
 		}
 
 		// the moment we get here we have to do a bunch of Envia data related work
-		$related_orders = $phonenumber->enviaorders();
-And here we go tomorrow!
-		d($related_orders);
+		$related_orders = $phonenumber->enviaorders(true)->get();
+
+		/* d($related_orders); */
+
+		// check if this number has been the last on old modem ⇒ if so remove envia related data from modem
+TODO: what to do??
+		/* $this->_check_if_last_number_on_modem($phonenumber, $old_modem); */
 
 	}
 
@@ -534,7 +555,8 @@ And here we go tomorrow!
 
 
 	/**
-	 * If module ProvVoipEnvia is enabled: perform actions for Envia related data
+	 * If SIP data has been changed and module ProvVoipEnvia is enabled:
+	 * Change this data at Envia, too
 	 *
 	 * @author Patrick Reichel
 	 */
@@ -546,8 +568,15 @@ And here we go tomorrow!
 		}
 
 		// TODO: check if this data can be changed automagically at Envia!
-		$envia_url = "/lara/admin/provvoipenvia/request/voip_account_update?origin=".urlencode(\Request::getUri())."&phonenumber_id=".$phonenumber->id;
-		\Session::push('tmp_info_above_form', 'Autochanging of SIP data at Envia is not implemented yet!<br>You have to do this manually <a href="'.$envia_url.'" target="_self">here</a>');
+		$parameters = [
+			'job' => 'voip_account_update',
+			'origin' => urlencode(\URL::previous()),
+			'phonenumber_id' => $phonenumber->id,
+			];
+		$title = 'DO THIS MANUALLY NOW!';
+		$envia_href = \HTML::linkRoute('ProvVoipEnvia.request', $title, $parameters);
+
+		\Session::push('tmp_info_above_form', 'Autochanging of SIP data at Envia is not implemented yet.<br>You have to '.$envia_href);
 
 	}
 
@@ -555,5 +584,8 @@ And here we go tomorrow!
 	{
 		$phonenumber->mta->make_configfile();
 		$phonenumber->mta->modem->restart_modem();
+
+		// check if this number has been the last on old modem ⇒ if so remove envia related data from modem
+		$this->_check_if_last_number_on_modem($phonenumber, $old_modem);
 	}
 }

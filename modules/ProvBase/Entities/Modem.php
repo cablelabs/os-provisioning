@@ -696,6 +696,12 @@ class ModemObserver
 
 		if (\PPModule::is_active ('ProvMon'))
 			\Artisan::call('nms:cacti');
+
+		// ATTENTION:
+		// If we ever think about moving modems to other contracts we have to delete Envia related stuff, too –
+		// check contract_ext* and installation_address_change_date
+		// moving then should only be allowed without attached phonenumbers and terminated Envia contract!
+		// cleaner in Patrick's opinion would be to delete and re-create the modem
 	}
 
 	public function deleted($modem)
