@@ -193,13 +193,7 @@ class Modem extends \BaseModel {
 	 */
 	private function generate_cm_dhcp_entry()
 	{
-		$ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
-
-		if(count($this->mtas))
-			$ret .= ' option ccc.dhcp-server-1 '.ProvBase::first()->provisioning_server.';';
-
-		$ret .= "}\n";
-		return $ret;
+			return 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'"; }'."\n";
 	}
 
 	private function generate_cm_dhcp_entry_pub()
@@ -670,8 +664,6 @@ class ModemObserver
 {
 	public function created($modem)
 	{
-		if (\PPModule::is_active ('ProvMon'))
-			\Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
 		$modem->hostname = 'cm-'.$modem->id;
 		$modem->save();	 // forces to call the updating() and updated() method of the observer !
 	}
@@ -701,6 +693,15 @@ class ModemObserver
 		$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
+
+		if (\PPModule::is_active ('ProvMon'))
+			\Artisan::call('nms:cacti');
+
+		// ATTENTION:
+		// If we ever think about moving modems to other contracts we have to delete Envia related stuff, too –
+		// check contract_ext* and installation_address_change_date
+		// moving then should only be allowed without attached phonenumbers and terminated Envia contract!
+		// cleaner in Patrick's opinion would be to delete and re-create the modem
 	}
 
 	public function deleted($modem)
