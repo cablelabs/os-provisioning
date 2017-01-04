@@ -27,10 +27,12 @@ class RenameDeviceTypetoNetElementTypeTable extends BaseMigration {
 		});
 
 		// Set Default Entries
-		$defaults = ['Net', 'Cluster', 'Cmts', 'Amplifier', 'Node', 'Data'];
+		$defaults = ['Net', ['Cluster', 1], 'Cmts', 'Amplifier', 'Node', 'Data'];
+		// $defaults = ['Net', 'Cluster', 'Cmts', 'Amplifier', 'Node', 'Data'];
 
 		foreach ($defaults as $d)
-			NetElementType::create(['name' => $d]);
+			is_array($d) ? NetElementType::create(['name' => $d[0], 'parent_id' => $d[1]]) : NetElementType::create(['name' => $d]);
+			// NetElementType::create(['name' => $d]);
 
 		return parent::up();
 	}

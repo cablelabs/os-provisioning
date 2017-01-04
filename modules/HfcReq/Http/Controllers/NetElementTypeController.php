@@ -13,10 +13,10 @@ class NetElementTypeController extends \BaseController {
 	public function view_form_fields($model = null)
 	{
 		$hidden  = in_array($model->name, ['Net', 'Cluster']);
-		$parents = $model->html_list(NetElementType::all(), 'name', true);
+		$parents = $model->html_list(NetElementType::whereNotIn('name', ['Net', 'Cluster'])->get(['id', 'name']), 'name', true);
 
 		// label has to be the same like column in sql table
-		return array(
+		$a = array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name', 'options' => $hidden ? ['readonly'] : []),
 			array('form_type' => 'text', 'name' => 'vendor', 'description' => 'Vendor', 'hidden' => $hidden ? '1' : '0'),
 			array('form_type' => 'text', 'name' => 'version', 'description' => 'Version', 'hidden' => $hidden ? '1' : '0'),
@@ -24,6 +24,11 @@ class NetElementTypeController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'icon_name', 'description' => 'Icon'),
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
 		);
+
+		if ($hidden)
+			$a[0]['help'] = trans('helper.undeleteables');
+
+		return $a;
 	}
 
 

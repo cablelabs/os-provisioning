@@ -13,27 +13,25 @@ class NetElementController extends HfcBaseController {
      */
 	public function view_form_fields($model = null)
 	{
-		if ($model) {
-			$parents = $model->parents_list();
-		}
-		else
-		{
-			$model = new NetElement;
-			$parents = $model->first()->parents_list_all();
-		}
+		$model = $model ? : new NetElement;
 
-		$kml_files = $model->kml_files();
+		$empty_field = isset($model->id);
+		$parents 	 = $model->html_list(NetElement::get(['id','name']), 'name', $empty_field);
+		$kml_files   = $model->kml_files();
+
 
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
 			// array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['NET' => 'NET', 'CMTS' => 'CMTS', 'DATA' => 'DATA', 'CLUSTER' => 'CLUSTER', 'NODE' => 'NODE', 'AMP' => 'AMP']),
-			array('form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $model->html_list(NetElementType::all(), 'name')),
+			array('form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $model->html_list(NetElementType::get(['id', 'name']), 'name'), 'hidden' => 0),
+			// net is automatically detected in Observer
+			// array('form_type' => 'select', 'name' => 'net', 'description' => 'Net', 'value' => $nets),
 			array('form_type' => 'text', 'name' => 'ip', 'description' => 'IP address'),
 			array('form_type' => 'text', 'name' => 'link', 'description' => 'HTML Link'),
 			array('form_type' => 'text', 'name' => 'pos', 'description' => 'Geoposition'),
-			array('form_type' => 'select', 'name' => 'parent', 'description' => 'Parent Object', 'value' => $parents),
-			array('form_type' => 'select', 'name' => 'state', 'description' => 'State', 'value' => ['OK' => 'OK', 'YELLOW' => 'YELLOW', 'RED' => 'RED'], 'options' => ['readonly']),
+			array('form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Object', 'value' => $parents),
+			// array('form_type' => 'select', 'name' => 'state', 'description' => 'State', 'value' => ['OK' => 'OK', 'YELLOW' => 'YELLOW', 'RED' => 'RED'], 'options' => ['readonly']),
 			array('form_type' => 'text', 'name' => 'options', 'description' => 'Options'),
 
 			array('form_type' => 'select', 'name' => 'kml_file', 'description' => 'Choose KML file', 'value' => $kml_files),
@@ -51,63 +49,31 @@ class NetElementController extends HfcBaseController {
 
 
 	/**
-	 * Overwrites the base method
+	 * Overwrites the base method to handle file uploads
 	 */
 	public function store($redirect = true)
 	{
 		// check and handle uploaded KML files
 		$this->handle_file_upload('kml_file', static::get_model_obj()->kml_path);
 
-		// call base method
-		$ret = parent::store();
+		return parent::store();
 
-		NetElement::relation_index_build_all();
-
-		return $ret;
+		// $ret = parent::store();
+		// NetElement::relation_index_build_all();
+		// return $ret;
 	}
 
 	/**
-	 * Overwrites the base method
+	 * Overwrites the base method to handle file uploads
 	 */
 	public function update($id)
 	{
 		// check and handle uploaded KML files
 		$this->handle_file_upload('kml_file', static::get_model_obj()->kml_path);
 
-		// call base method
-		$ret = parent::update($id);
-
-		NetElement::relation_index_build_all();
-
-		return $ret;
+		return parent::update($id);
 	}
 
-	/**
-	 * Overwrites the base method
-	 */
-	public function destroy ($id)
-	{
-		// call base method
-		$ret = parent::destroy($id);
-
-		NetElement::relation_index_build_all();
-
-		return $ret;
-	}
-
-	/**
-	 * Overwrites the base method
-	 * Usage: ERD - right click - delete
-	 * Note: needs special GET route in routes.php
-	 */
-    public function delete ($id)
-    {
-    	parent::destroy($id);
-
-    	NetElement::relation_index_build_all();
-
-    	return \Redirect::back();
-    }
 
 
 

@@ -86,19 +86,29 @@ class NetElementType extends \BaseModel {
 	 */
 	public function netelements()
 	{
-		return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'devicetype_id');
+		return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'netelementtype_id');
 	}
 
 	public function oids()
 	{
-		return $this->belongsToMany('Modules\HfcSnmp\Entities\OID', 'devicetype_oid', 'devicetype_id', 'oid_id')->orderBy('oid');
+		return $this->belongsToMany('Modules\HfcSnmp\Entities\OID', 'netelementtype_oid', 'netelementtype_id', 'oid_id')->orderBy('oid');
 	}
 
 
+
+
 	/**
-	 * Get all Database Entries with relevant data for index view ordered - note the undeletables array in other models!
+	 * These Types are relevant for whole Entity Relation Diagram and therefore must not be deleted
+	 * Furthermore they are ordered by there Database ID which is probably used as fix value in many places of the source code
+	 * So don't change this order unless you definitly know what you are doing !!!
+	 */
+	public static $undeletables = [1 => 'Net', 2 => 'Cluster'];
+
+
+	/**
+	 * Get all Database Entries with relevant data for index view ordered
 	 *
-	 * TODO: use in generic manner in BaseModel
+	 * TODO: use in generic manner in BaseModel - note the undeletables array in other models!
 	 *
 	 * @return 	Multidimensional Array
 	 */
@@ -106,14 +116,13 @@ class NetElementType extends \BaseModel {
 	{
 		$netelementtypes = NetElementType::orderBy('parent_id')->orderBy('id')->get(['id', 'parent_id', 'name']);
 		$types = [];
-		$undeletables = ['Net', 'Cluster'];
 
 		foreach ($netelementtypes as $key => $elem)
 		{
 			if ($elem->parent_id)
 				break;
 
-			if (in_array($elem->name, $undeletables))
+			if (in_array($elem->name, self::$undeletables))
 				$elem->index_delete_disabled = true;
 
 			$types[]  = $elem;
@@ -141,6 +150,9 @@ class NetElementType extends \BaseModel {
 
 		foreach ($children as $key => $elem)
 		{
+			if (in_array($elem->name, self::$undeletables))
+				$elem->index_delete_disabled = true;
+
 			$arr[] = $elem;
 			$tmp   = $elem->_get_children($objects);
 			if ($tmp)
