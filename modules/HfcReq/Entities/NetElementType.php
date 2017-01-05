@@ -62,7 +62,7 @@ class NetElementType extends \BaseModel {
 		$ret['Base']['NetElement']['class'] 	= 'NetElement';
 		$ret['Base']['NetElement']['relation']  = $this->netelements;
 
-		if (\PPModule::is_active('hfcsnmp') && $this->parent_id)
+		if (\PPModule::is_active('hfcsnmp') && !in_array($this->name, self::$undeletables))
 		{
 			// extra page or on Base ??
 			// $ret['Base']['- Assign OIDs from MIB']['view']['view'] = 'hfcreq::netelementtype.add_oid_from_mib';

@@ -64,10 +64,10 @@ class NetElement extends \BaseModel {
 			$bsclass = 'danger';
 
 		// TODO: complete list
-		return ['index' => [$this->id, $this->type, $this->name, $this->ip, $this->state, $this->pos],
-				'index_header' => ['ID', 'Type', 'Name', 'IP', 'State', 'Position'],
+		return ['index' => [$this->id, /*$this->type, */$this->name, $this->ip, $this->state, $this->pos],
+				'index_header' => ['ID', /*'Type', */'Name', 'IP', 'State', 'Position'],
 				'bsclass' => $bsclass,
-				'header' => $this->id.':'.$this->type.':'.$this->name];
+				'header' => $this->id./*':'.$this->type.*/':'.$this->name];
 	}
 
 	public function view_belongs_to ()
@@ -287,16 +287,24 @@ class NetElement extends \BaseModel {
 
 class NetElementObserver
 {
-	public function creating($netelement)
+	public function created($netelement)
 	{
+		if (!$netelement->observer_enabled)
+			return;
+
 		// if ($netelement->is_type_cluster())
+		// in created because otherwise netelement does not have an ID yet
 		$netelement->net 	 = $netelement->get_native_net();
 		$netelement->cluster = $netelement->get_native_cluster();
+		$netelement->observer_enabled = false; 		// don't execute functions in updating again
+		$netelement->save();
 	}
 
 	public function updating($netelement)
 	{
-		// if ($netelement->is_type_cluster())
+		if (!$netelement->observer_enabled)
+			return;
+
 		$netelement->net 	 = $netelement->get_native_net();
 		$netelement->cluster = $netelement->get_native_cluster();
 	}
