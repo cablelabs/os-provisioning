@@ -157,6 +157,16 @@ class Configfile extends \BaseModel {
 		return $this->hasMany('Modules\ProvVoip\Entities\Mta');
 	}
 
+	public function children ()
+	{
+		return $this->hasMany('Modules\ProvBase\Entities\Configfile', 'parent_id');
+	}
+
+	public function parent ()
+	{
+		return $this->belongsTo('Modules\ProvBase\Entities\Configfile');
+	}
+
 	public function get_parent ()
 	{
 		return Configfile::find($this->parent_id);
@@ -401,6 +411,54 @@ class Configfile extends \BaseModel {
 		$mtas = $this->mtas;		// This should be a one-to-one relation
 		foreach ($mtas as $mta)
 			$mta->make_configfile();
+	}
+
+	/**
+	 * Recursively add all parents of a used node to the list of used nodes,
+	 * we must not delete any of them
+	 *
+	 * @author Ole Ernst
+	 */
+	static protected function _add_parent(& $ids, $cf)
+	{
+		$parent = $cf->parent;
+		if($parent && !in_array($parent->id, $ids)) {
+			array_push($ids, $parent->id);
+			self::_add_parent($ids, $parent);
+		}
+	}
+
+	/**
+	 * Returns a list of configfiles, which are still associated with a modem or mta and
+	 * thus must not be deleted.
+	 *
+	 * @author Ole Ernst
+	 */
+	static public function all_in_use()
+	{
+		/*
+		 * get all leaf configfiles (i.e. with no children), using mysql query is more efficient
+		 * see: http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
+		 */
+		$leaf_ids = DB::table('configfile as t1')->leftJoin('configfile as t2', function ($join) {
+			$join->on('t1.id', '=', 't2.parent_id')->whereNull('t2.deleted_at');
+		})->whereNull('t2.id')->whereNull('t1.deleted_at')->select('t1.id')->get('t1.id');
+
+		// we are only interested in leafs, which are associated with a modem or mta
+		$leaf_ids = array_map(function($e) { return $e->id; }, $leaf_ids);
+		$leaf_ids = array_filter($leaf_ids, function($e) {
+			$cf = Configfile::where('id', $e)->first();
+			if(count($cf->modem) || count($cf->mtas))
+				return true;
+			return false;
+		});
+
+		// mark all parents of a used leaf configfile as used to, as we must not delete those too
+		$used_ids = $leaf_ids;
+		foreach ($leaf_ids as $leaf_id)
+			self::_add_parent($used_ids, Configfile::where('id', $leaf_id)->first());
+
+		return $used_ids;
 	}
 
 }
