@@ -3,7 +3,8 @@
 namespace Modules\HfcSnmp\Http\Controllers;
 
 use Modules\HfcSnmp\Entities\SnmpValue;
-use Modules\HfcSnmp\Entities\SnmpMib;
+use Modules\HfcSnmp\Entities\OID;
+
 
 use Log;
 
@@ -36,7 +37,7 @@ class SnmpController extends \BaseController{
 	 * Create or Update SnmpValue Object which corresponds
 	 * to $snmpmib and $this->device with $value
 	 *
-	 * @param snmpmib the SnmpMib Object
+	 * @param snmpmib the OID Object
 	 * @param value from snmpget command for this snmpmib object
 	 * @return the snmpmib->id
 	 *
@@ -87,30 +88,30 @@ class SnmpController extends \BaseController{
 	/**
 	 * The SNMP Walk Function
 	 *
-	 * make a snmpwalk over the entire $snmpmib->oid
+	 * make a snmpwalk over the entire $oid->oid
 	 * and create/update related SnmpValue Objects
 	 *
-	 * @param snmpmib the SnmpMib Object
+	 * @param oid the OID Object
 	 * @return array of snmpwalk over oid in format [SnmpValue object id, snmp value]
 	 *
 	 * @author Torsten Schmidt
 	 */
-	public function snmp_walk ($snmpmib)
+	public function snmp_walk ($oid)
 	{
 		// Walk
-		$walk = snmpwalkoid($this->device->ip, $this->device->community_ro, $snmpmib->oid, $this->timeout, $this->retry);
+		$walk = snmpwalkoid($this->device->ip, $this->device->community_ro, $oid->oid, $this->timeout, $this->retry);
 
 		// Log
-		Log::info('snmp: get '.$this->snmp_log().' '.$snmpmib->oid.' '.implode(' ',$walk));
+		Log::info('snmp: get '.$this->snmp_log().' '.$oid->oid.' '.implode(' ',$walk));
 
 		// Fetch Walk and write result to SnmpValue Objects (DB)
 		$ret = array();
-		foreach ($walk as $snmpmib->oid => $v)
+		foreach ($walk as $oid->oid => $v)
 		{
 			if (!$v)
 				return false;
 
-			$b = $this->snmp_value_set($snmpmib, $v);
+			$b = $this->snmp_value_set($oid, $v);
 
 			if (!$b)
 				return false;
@@ -146,44 +147,48 @@ class SnmpController extends \BaseController{
 		if ($x == $snmpvalue->value)
 			return TRUE;
 
-		$snmpmib = SnmpMib::findOrFail($snmpvalue->snmpmib_id);
+		$snmpmib = OID::findOrFail($snmpvalue->snmpmib_id);
 
 		Log::info('snmp: set diff '.$this->snmp_log().' '.$snmpvalue->oid_index.' '.$snmpmib->type.' '.$snmpvalue->value.' '.$x);
 		// return snmpset($this->device->ip, $this->device->community_rw, $oid, $type, $value, $this->timeout, $this->retry);
 	}
 
 
-	/**
-	 * Get all SNMP Values of this Controller
-	 * and save results in SnmpValue Object
-	 *
-	 * @return form_fields array for generic edit view function
-	 *
-	 * @author Torsten Schmidt
-	 */
-    public function snmp_get_all()
-    {
-    	$ret = array();
 
-    	foreach ($this->device->devicetype->snmpmibs as $mib)
+	/**
+	 * Prepare Formular Fields for Controlling View of NetElement
+	 * This includes getting all SNMP Values from Device
+	 * 
+	 * @return 	Array 	Data for Generic Form View
+	 *
+ 	 * @author Torsten Schmidt
+	 */
+	public function prep_form_fields()
+	{
+		$ret = [];
+
+		$oids = $this->device->netelementtype->oids;
+
+
+    	foreach ($oids as $oid)
     	{
-    		foreach ($this->snmp_walk($mib) as $a)
+    		foreach ($this->snmp_walk($oid) as $a)
     		{
     			$options = null;
     			$value = $a[1];
 
-    			if($mib->type_array)
+    			if($oid->type_array)
     			{
     				$options = $a[1];
-    				$value = $this->string_to_array($mib->type_array);
+    				$value = $this->string_to_array($oid->type_array);
     			}
 
-    			array_push($ret, ['form_type' => $mib->html_type, 'name' => 'field_'.$a[0], 'description' => $mib->field, 'value' => $value, 'options' => $options]);
+    			array_push($ret, ['form_type' => $oid->html_type, 'name' => 'field_'.$a[0], 'description' => $oid->field, 'value' => $value, 'options' => $options]);
     		}
     	}
 
     	return $ret;
-    }
+	}
 
 
 	/**
