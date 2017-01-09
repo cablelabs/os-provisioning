@@ -36,6 +36,15 @@ class NetElement extends \BaseModel {
 	/*
 	 * View Specific Stuff
 	 */
+
+	// Eager load Models so that only one Database Request is made when accessing type property (name of relational model netelementtype)
+	public function index_list()
+	{
+		$eager_loading_model = new NetElementType;
+
+		return $this->/*orderBy('parent_id')->*/orderBy('id')->with($eager_loading_model->table)->get();
+	}
+
 	// Name of View
 	public static function view_headline()
 	{
@@ -63,11 +72,13 @@ class NetElement extends \BaseModel {
 		if ($this->state == 'RED')
 			$bsclass = 'danger';
 
+		$type = $this->netelementtype ? $this->netelementtype->name : '';
+
 		// TODO: complete list
-		return ['index' => [$this->id, /*$this->type, */$this->name, $this->ip, $this->state, $this->pos],
-				'index_header' => ['ID', /*'Type', */'Name', 'IP', 'State', 'Position'],
+		return ['index' => [$this->id, $type, $this->name, $this->ip, $this->state, $this->pos],
+				'index_header' => ['ID', 'Type', 'Name', 'IP', 'State', 'Position'],
 				'bsclass' => $bsclass,
-				'header' => $this->id./*':'.$this->type.*/':'.$this->name];
+				'header' => $this->id.':'.$type.':'.$this->name];
 	}
 
 	public function view_belongs_to ()
@@ -82,7 +93,7 @@ class NetElement extends \BaseModel {
 	public function modems()
 	{
 		if (\PPModule::is_active('ProvBase'))
-			return $this->hasMany('Modules\ProvBase\Entities\Modem');
+			return $this->hasMany('Modules\ProvBase\Entities\Modem', 'netelement_id');
 
 		return null;
 	}
