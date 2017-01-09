@@ -359,7 +359,7 @@ class PhonenumberObserver
 	public function creating($phonenumber) {
 
 		// on creating there can not be a phonenumbermanagement – so we can set active state to false in each case
-		$phonenumber->active = 0;
+		// $phonenumber->active = 0;
 
 		$this->_create_login_data($phonenumber);
 	}
