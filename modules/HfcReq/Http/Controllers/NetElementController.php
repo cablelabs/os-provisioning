@@ -5,6 +5,7 @@ namespace Modules\HfcReq\Http\Controllers;
 use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcReq\Entities\NetElementType;
 use Modules\HfcBase\Http\Controllers\HfcBaseController;
+use Modules\HfcSnmp\Http\Controllers\SnmpController;
 
 class NetElementController extends HfcBaseController {
 
@@ -48,6 +49,15 @@ class NetElementController extends HfcBaseController {
 	}
 
 
+	protected function get_form_tabs($view_var)
+	{
+		return [
+			['name' => 'Edit', 'route' => 'NetElement.edit', 'link' => [$view_var->id]],
+			['name' => 'Controlling', 'route' => 'NetElement.controlling_edit', 'link' => [$view_var->id]]
+		];
+	}
+
+
 	/**
 	 * Overwrites the base method to handle file uploads
 	 */
@@ -74,79 +84,5 @@ class NetElementController extends HfcBaseController {
 		return parent::update($id);
 	}
 
-
-
-
-	/**
-	 * Controlling Read Function
-	 *
-	 * TODO: split SNMP Stuff from netelem specific stuff
-	 *       and do not return a View -> instead call BaseController@edit
-	 *
-	 * @param id the NetElement id
-	 * @author Torsten Schmidt
-	 */
-	public function controlling_edit($id)
-	{
-		// Init NetElement Model
-		$netelem = NetElement::findOrFail($id);
-
-		// Init SnmpController
-		$snmp = new SnmpController;
-		$snmp->init ($netelem);
-
-		// Get Html Form Fields for generic View
-		$form_fields = $snmp->snmp_get_all();
-
-		// Init View
-		$obj = static::get_model_obj();
-		$model_name  = \NamespaceController::get_model_name();
-		$view_header = 'Edit: '.$netelem->name;
-		$view_var 	 = $obj->findOrFail($id);
-		$route_name  = \NamespaceController::get_route_name();
-		$view_header_links = \BaseViewController::view_main_menus();
-
-		$view_path = 'hfcsnmp::NetElement.controlling';
-		$form_path = 'Generic.form';
-		$form_update = 'NetElement.controlling_update';
-
-		//dd(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'form_update'));
-
-
-		return View::make($view_path, compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'form_update', 'route_name', 'view_header_links'));
-	}
-
-
-	/**
-	 * Controlling Update Function
-	 *
-	 * @param id the NetElement id
-	 * @author Torsten Schmidt
-	 */
-	public function controlling_update($id)
-	{
-		$netelem = NetElement::findOrFail($id);
-
-		// TODO: validation
-		$validator = \Validator::make($data = $this->prepare_input(\Input::all()), $netelem::rules($id));
-
-/*
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-*/
-
-		// Init SnmpController
-		$snmp = new SnmpController;
-		$snmp->init ($netelem);
-
-		// Set Html Form Fields for generic View
-
-		$snmp->snmp_set_all($data);
-
-
-		return \Redirect::route('NetElement.controlling_update', $id)->with('message', 'Updated!');
-	}
 
 }

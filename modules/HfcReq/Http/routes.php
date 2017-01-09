@@ -15,7 +15,7 @@ BaseRoute::group([], function() {
 	\Route::delete('NetElementType/{netelementtype}/detach', array('as' => 'NetElementType.detach_oid', 'uses' => 'Modules\HfcReq\Http\Controllers\NetElementTypeController@detach', 'middleware' => 'auth:delete'));
 	\Route::delete('NetElementType/{netelementtype}/detach_all', array('as' => 'NetElementType.detach_all', 'uses' => 'Modules\HfcReq\Http\Controllers\NetElementTypeController@detach_all', 'middleware' => 'auth:delete'));
 
-	BaseRoute::get('NetElement/{modem}/controlling', array ('as' => 'NetElement.controlling_edit', 'uses' => 'Modules\HfcReq\Http\Controllers\NetElementController@controlling_edit'));
-	BaseRoute::put('NetElement/{modem}/controlling', array ('as' => 'NetElement.controlling_update', 'uses' => 'Modules\HfcReq\Http\Controllers\NetElementController@controlling_update'));
+	BaseRoute::get('NetElement/{id}/controlling', array ('as' => 'NetElement.controlling_edit', 'uses' => 'Modules\HfcSnmp\Http\Controllers\SnmpController@controlling_edit'));
+	BaseRoute::put('NetElement/{id}/controlling', array ('as' => 'NetElement.controlling_update', 'uses' => 'Modules\HfcSnmp\Http\Controllers\SnmpController@controlling_update'));
 
 });

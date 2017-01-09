@@ -54,12 +54,32 @@ class NetElement extends \BaseModel {
 	// Relations
 	public function view_has_many()
 	{
-		if (\PPModule::is_active('HfcCustomer'))
-			return array(
-					'Mpr' => $this->mprs
-				);
+		$ret = [];
 
-		return array();
+		// if (\PPModule::is_active('ProvBase'))
+		// {
+		// 	$ret['Edit']['Modem']['class'] 	  = 'Modem';
+		// 	$ret['Edit']['Modem']['relation'] = $this->modems;
+		// }
+
+		if (\PPModule::is_active('HfcCustomer'))
+		{
+			$ret['Edit']['Mpr']['class'] 	= 'Mpr';
+			$ret['Edit']['Mpr']['relation'] = $this->mprs;
+		}
+
+		if (\PPModule::is_active('hfcsnmp'))
+		{
+			// see NetElementController@controlling_edit !
+
+			// $ret['Controlling']['OIDs']['view']['view'] = 'hfcreq::NetElement.controlling';
+			// $snmpctrl = new \Modules\HfcSnmp\Http\Controllers\SnmpController;
+			// $snmpctrl->init($this);
+			// $ret['Controlling']['OIDs']['view']['vars']['form_fields'] = $snmpctrl->prep_form_fields();
+
+		}
+
+		return $ret;
 	}
 
 	// link title in index view

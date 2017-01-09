@@ -2,6 +2,7 @@
 
 namespace Modules\HfcSnmp\Http\Controllers;
 
+use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcSnmp\Entities\SnmpValue;
 use Modules\HfcSnmp\Entities\OID;
 
@@ -32,37 +33,104 @@ class SnmpController extends \BaseController{
 		$this->snmp_def_mode();
 	}
 
+	/**
+	 * Controlling Read Function
+	 *
+	 * TODO: split SNMP Stuff from netelem specific stuff
+	 *       and do not return a View -> instead call BaseController@edit
+	 *
+	 * @param id the NetElement id
+	 * @author Torsten Schmidt
+	 */
+	public function controlling_edit($id)
+	{
+		// Init NetElement Model
+		$netelem = NetElement::findOrFail($id);
+
+		// Init SnmpController
+		$snmp = new SnmpController;
+		$snmp->init ($netelem);
+
+		// Get Html Form Fields for generic View
+		$fields = $snmp->prep_form_fields();
+		$form_fields = $snmp->make_html($fields);
+		// $form_fields = \App\Http\Controllers\BaseViewController::compute_form_fields($fields, $netelem);
+
+// d($fields);
+
+		// Init View
+		// $obj = static::get_model_obj();
+		$model_name  = \NamespaceController::get_model_name();
+		$view_header = 'Edit: '.$netelem->name;
+		// $view_var 	 = $obj->findOrFail($id);
+		$view_var 	 = $netelem;
+		$route_name  = \NamespaceController::get_route_name();
+		$view_header_links = \App\Http\Controllers\BaseViewController::view_main_menus();
+
+		$view_path = 'hfcsnmp::NetElement.controlling';
+		$form_path = 'Generic.form';
+		$form_update = 'NetElement.controlling_update';
+
+		//dd(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'form_update'));
+
+
+		return \View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'form_update', 'route_name', 'view_header_links')));
+	}
+
+
+	/**
+	 * Controlling Update Function
+	 *
+	 * @param id the NetElement id
+	 * @author Torsten Schmidt
+	 */
+	public function controlling_update($id)
+	{
+		$netelem = NetElement::findOrFail($id);
+
+		// TODO: validation
+		$validator = \Validator::make($data = $this->prepare_input(\Input::all()), $netelem::rules($id));
+
+/*
+		if ($validator->fails())
+		{
+			return Redirect::back()->withErrors($validator)->withInput();
+		}
+*/
+
+		// Init SnmpController
+		$snmp = new SnmpController;
+		$snmp->init ($netelem);
+
+		// Set Html Form Fields for generic View
+
+		$snmp->snmp_set_all($data);
+
+
+		return \Redirect::route('NetElement.controlling_update', $id)->with('message', 'Updated!');
+	}
+
+
 
 	/**
 	 * Create or Update SnmpValue Object which corresponds
-	 * to $snmpmib and $this->device with $value
+	 * to $oid and $this->device with $value
 	 *
-	 * @param snmpmib the OID Object
-	 * @param value from snmpget command for this snmpmib object
-	 * @return the snmpmib->id
+	 * @param 	oid the OID Object
+	 * @param 	value from snmpget command for this oid object
+	 * @return 	the ID of the SnmpValue Model
 	 *
-	 * @author Torsten Schmidt
+	 * @author Torsten Schmidt, Nino Ryschawy
 	 */
-	private function snmp_value_set ($snmpmib, $value)
+	private function _snmp_value_set ($oid, $value)
 	{
-		$obj = SnmpValue::where('device_id', '=', $this->device->id)->
-						  where('snmpmib_id','=', $snmpmib->id)->
-						  where('oid_index', '=', $snmpmib->oid)->get();
+		$data = array(
+			'netelement_id' => $this->device->id,
+			'oid_id' 		=> $oid->id,
+			'value' 		=> $value,
+			);
 
-		if (isset($obj[0]))
-			$obj = $obj[0];
-		else
-		{
-			$obj = new SnmpValue;
-			$obj->device_id  = $this->device->id;
-			$obj->snmpmib_id = $snmpmib->id;
-			$obj->oid_index  = $snmpmib->oid;
-		}
-
-		$obj->value = $value;
-
-		if (!$obj->save())
-			return false;
+		$obj = SnmpValue::updateOrCreate($data);
 
 		return $obj->id;
 	}
@@ -70,7 +138,7 @@ class SnmpController extends \BaseController{
 
 	/**
 	 * Create or Update SnmpValue Object which corresponds
-	 * to $snmpmib and $this->device with $value
+	 * to $oid and $this->device with $value
 	 *
 	 * @param string encoded array like "3:qam64;4:qam256"
 	 * @return encoded array of string like [3]=>"qam64", [4]=>"qam256"
@@ -98,20 +166,23 @@ class SnmpController extends \BaseController{
 	 */
 	public function snmp_walk ($oid)
 	{
+		$community = $this->device->community_ro ? : \Modules\ProvBase\Entities\ProvBase::get(['ro_community'])->first()->ro_community;
+
 		// Walk
-		$walk = snmpwalkoid($this->device->ip, $this->device->community_ro, $oid->oid, $this->timeout, $this->retry);
+		$walk = snmpwalkoid($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
 
 		// Log
 		Log::info('snmp: get '.$this->snmp_log().' '.$oid->oid.' '.implode(' ',$walk));
 
 		// Fetch Walk and write result to SnmpValue Objects (DB)
 		$ret = array();
+
 		foreach ($walk as $oid->oid => $v)
 		{
-			if (!$v)
-				return false;
+			// if (!$v)
+			// 	return false;
 
-			$b = $this->snmp_value_set($oid, $v);
+			$b = $this->_snmp_value_set($oid, $v);
 
 			if (!$b)
 				return false;
@@ -161,19 +232,21 @@ class SnmpController extends \BaseController{
 	 * 
 	 * @return 	Array 	Data for Generic Form View
 	 *
- 	 * @author Torsten Schmidt
+ 	 * @author Torsten Schmidt, Nino Ryschawy
 	 */
 	public function prep_form_fields()
 	{
-		$ret = [];
-
+		$ret  = [];
 		$oids = $this->device->netelementtype->oids;
 
+		if (!$this->device->ip)
+			return $ret;
 
     	foreach ($oids as $oid)
     	{
     		foreach ($this->snmp_walk($oid) as $a)
     		{
+    			// d($a, $oid);
     			$options = null;
     			$value = $a[1];
 
@@ -183,11 +256,67 @@ class SnmpController extends \BaseController{
     				$value = $this->string_to_array($oid->type_array);
     			}
 
-    			array_push($ret, ['form_type' => $oid->html_type, 'name' => 'field_'.$a[0], 'description' => $oid->field, 'value' => $value, 'options' => $options]);
+    			array_push($ret, ['form_type' => $oid->html_type, 'name' => 'field_'.$a[0], 'description' => $oid->name, 'value' => $value, 'options' => $options]);
     		}
     	}
 
     	return $ret;
+	}
+
+
+	public function make_html($fields)
+	{
+		foreach ($fields as $key => $field)
+		{
+			$s = '';
+			$select = null;
+			$color = null;
+
+			// Open Form Group
+			$s .= \Form::openGroup($field["name"], $field["description"], $select, $color);
+
+			// Output the Form Elements
+			switch ($field["form_type"])
+			{
+				case 'checkbox' :
+					// Checkbox - where pre-checked is enabled
+					if ($value == [])
+						$value = 1;
+
+					if ($context == 'create')
+						// only take care of checked statement if we are called in context create
+						$checked = (isset($field['checked'])) ? $field['checked'] : $field['value'];
+					else
+						$checked = $field['value'];
+
+					$s .= \Form::checkbox($field['name'], $value, null, $checked);
+					break;
+
+				case 'select' :
+					$s .= \Form::select($field["name"], $value, $field['value'], $field['options']);
+					break;
+
+				case 'password' :
+					$s .= \Form::password($field['name']);
+					break;
+
+				default:
+					$s .= \Form::$field["form_type"]($field["name"], $field['value'], $field['options']);
+					break;
+			}
+
+			// Help: add help icon/image behind form field
+			if (isset($field['help']))
+				$s .= '<div title="'.$field['help'].'" name='.$field['name'].'-help class=col-md-1>'.
+				      \HTML::image(asset('images/help.png'), null, ['width' => 20]).'</div>';
+
+			// Close Form Group
+			$s .= \Form::closeGroup();
+
+			$fields[$key]['html'] = $s;
+		}
+
+		return $fields;
 	}
 
 
