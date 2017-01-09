@@ -37,55 +37,55 @@ use GlobalConfig;
 class BaseViewController extends Controller {
 
 	/**
-     * Searches for a string in the language files under resources/lang/ and returns it for the active application language
-     * Searches for a "*" (required field), deletes it for trans function and appends it at the end
-     * used in everything Form related (Labels, descriptions)
-     * @author Nino Ryschawy, Christian Schramm
-     */
-    public static function translate_label($string)
-    {
-        // cut the star at the end of value if there is one for the translate function and append it after translation
-        $star = '';
-        if (strpos($string, '*'))
-        {
-            $string = str_replace(' *', '', $string);
-            $star = ' *';
-        }
+	 * Searches for a string in the language files under resources/lang/ and returns it for the active application language
+	 * Searches for a "*" (required field), deletes it for trans function and appends it at the end
+	 * used in everything Form related (Labels, descriptions)
+	 * @author Nino Ryschawy, Christian Schramm
+	 */
+	public static function translate_label($string)
+	{
+		// cut the star at the end of value if there is one for the translate function and append it after translation
+		$star = '';
+		if (strpos($string, '*'))
+		{
+			$string = str_replace(' *', '', $string);
+			$star = ' *';
+		}
 
-        if (strpos($string, 'messages.'))
-        	return trans($string).$star;
+		if (strpos($string, 'messages.'))
+			return trans($string).$star;
 
-        $translation = trans("messages.$string");
+		$translation = trans("messages.$string");
 
-        // found in lang/{}/messages.php
-        if (strpos($translation, 'messages.') === false)
-            return $translation.$star;
+		// found in lang/{}/messages.php
+		if (strpos($translation, 'messages.') === false)
+			return $translation.$star;
 
-        return $string.$star;
-    }
+		return $string.$star;
+	}
 
 	/**
-     * Searches for a string in the language files under resources/lang/ and returns it for the active application language
-     * used in everything view related 
-     * @param string: 	string that is searched in resspurces/lang/{App-language}/view.php
-     * @param type: 	can be Header, Menu, Button, jQuery, Search
-     * @param count: 	standard at 1 , For plural translation - needs to be seperated with pipe "|""
-     *					example: Index Headers -> in view.php: 'Header_Mta'	=> 'MTA|MTAs',
-     * @author Christian Schramm
-     */
-    public static function translate_view($string, $type, $count = 1)
-    {
-        if (strpos($string, 'view.'.$type.'_'))
-        	return trans($string);
+	 * Searches for a string in the language files under resources/lang/ and returns it for the active application language
+	 * used in everything view related 
+	 * @param string: 	string that is searched in resspurces/lang/{App-language}/view.php
+	 * @param type: 	can be Header, Menu, Button, jQuery, Search
+	 * @param count: 	standard at 1 , For plural translation - needs to be seperated with pipe "|""
+	 *					example: Index Headers -> in view.php: 'Header_Mta'	=> 'MTA|MTAs',
+	 * @author Christian Schramm
+	 */
+	public static function translate_view($string, $type, $count = 1)
+	{
+		if (strpos($string, 'view.'.$type.'_'))
+			return trans($string);
 
-   		$translation = trans_choice('view.'.$type.'_'.$string, $count);
+		$translation = trans_choice('view.'.$type.'_'.$string, $count);
 
-        // found in lang/{}/messages.php
-        if (strpos($translation, 'view.'.$type.'_') === false)
-            return $translation;
+		// found in lang/{}/messages.php
+		if (strpos($translation, 'view.'.$type.'_') === false)
+			return $translation;
 
-        return $string;
-    }
+		return $string;
+	}
 
 
 	// TODO: take language from user setting or the language with highest priority from browser
@@ -128,7 +128,7 @@ class BaseViewController extends Controller {
 	 * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
 	 * @return: the modifeyed view_form_fields array()
 	 *
-	 * @autor: Torsten Schmidt
+	 * @author: Torsten Schmidt
 	 */
 	public static function prepare_form_fields($fields, $model)
 	{
@@ -198,7 +198,9 @@ class BaseViewController extends Controller {
 	 * @param context: edit|create - context from which this function is called
 	 * @return: array() of fields with added ['html'] element containing the preformed html content
 	 *
-	 * @autor: Torsten Schmidt
+	 * @author: Torsten Schmidt
+	 * 
+	 * TODO: split prepare form fields and this compute form fields function -> rename this to "make_html()" or sth more appropriate
 	 */
 	public static function compute_form_fields($_fields, $model, $context = 'edit')
 	{
@@ -295,7 +297,7 @@ class BaseViewController extends Controller {
 			// Help: add help icon/image behind form field
 			if (isset($field['help']))
 				$s .= '<div title="'.$field['help'].'" name='.$field['name'].'-help class=col-md-1>'.
-				      \HTML::image(asset('images/help.png'), null, ['width' => 20]).'</div>';
+					  \HTML::image(asset('images/help.png'), null, ['width' => 20]).'</div>';
 
 			// Close Form Group
 			$s .= \Form::closeGroup();
@@ -465,21 +467,22 @@ finish:
 	}
 
 
-	/*
+	/**
 	 * Prepare Right Panels to View
 	 *
 	 * @param $view_var: object/model to be displayed
 	 * @return: array() of fields with added ['html'] element containing the preformed html content
 	 *
-	 * @autor: Torsten Schmidt
+	 * @author: Torsten Schmidt
 	 */
 	public static function prep_right_panels ($view_var)
 	{
-		$api = static::get_view_has_many_api_version($view_var->view_has_many());
+		$arr = $view_var->view_has_many();
+		$api = static::get_view_has_many_api_version($arr);
 
 		if ($api == 1)
 		{
-			$relations = $view_var->view_has_many();
+			$relations = $arr;
 		}
 
 		if ($api == 2)
@@ -491,15 +494,15 @@ finish:
 				$blade = Input::get('blade');
 
 
-			// get actual blade to $b from array of all blades in $a
-			$a = $view_var->view_has_many();
+			// get actual blade to $b from array of all blades in $arr
+			// $arr = $view_var->view_has_many();
 
-			if (count($a) == 1)
-				return current($a);
+			if (count($arr) == 1)
+				return current($arr);
 
-			$b = current($a);
+			$b = current($arr);
 			for ($i = 0; $i < $blade; $i++)
-				$b = next($a); // move to next blade/tab
+				$b = next($arr); // move to next blade/tab
 
 			$relations = $b;
 		}
