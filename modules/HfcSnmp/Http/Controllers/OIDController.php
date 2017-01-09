@@ -24,7 +24,7 @@ class OIDController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'access', 'description' => 'Access', 'options' => ['readonly'], 'space' => 1),
 			array('form_type' => 'text', 'name' => 'field', 'description' => 'Field Name'),
 
-			array('form_type' => 'select', 'name' => 'html_type', 'description' => 'HTML Type', 'value' => OID::getPossibleEnumValues('html_type', true)),
+			array('form_type' => 'select', 'name' => 'html_type', 'description' => 'HTML Type', 'value' => OID::getPossibleEnumValues('html_type')),
 			array('form_type' => 'text', 'name' => 'html_frame', 'description' => 'HTML Frame'),
 			array('form_type' => 'text', 'name' => 'html_properties', 'description' => 'HTML Properties', 'space' => 1),
 

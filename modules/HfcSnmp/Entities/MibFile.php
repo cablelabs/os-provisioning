@@ -101,7 +101,7 @@ class MibFile extends \BaseModel {
 
 		// check necessary? - Note: exception is bad response for user of running/production system
 		if (!is_file($abs_filepath))
-			$this->error("Upload File not yet written");
+			$this->_error("Upload File not yet written");
 
 
 		// Get all OIDs of MIB - this includes many OIDs from the MIBs that are included in this MIB			
@@ -114,7 +114,7 @@ class MibFile extends \BaseModel {
 		{
 			preg_match('#\((.*?)\)#', substr($oids[1], 18), $mib);
 			$msg = "Please load dependent '".$mib[1].'\' before!! (OIDs cant be translated otherwise)';
-			$this->error($msg);
+			$this->_error($msg);
 
 			// $this->description = $msg;
 			// $this->save();
@@ -205,10 +205,11 @@ class MibFile extends \BaseModel {
 			// create OID
 			OID::create([
 				'mibfile_id' => $this->id,
-				'oid' => $oid,
-				'name' => $name,
-				'access' => $access,
-				'syntax' => $syntax,
+				'oid' 		=> $oid,
+				'name' 		=> $name,
+				'access' 	=> $access,
+				'syntax' 	=> $syntax,
+				'html_type' => 'text', 		// default - TODO: change dependent on syntax
 				'description' => $description
 			]);
 		}
@@ -219,7 +220,7 @@ class MibFile extends \BaseModel {
 	/**
 	 * For use in Observer only - TODO: move to Observer
 	 */
-	private function error($message)
+	private function _error($message)
 	{
 		$this->delete();
 		throw new \Exception($message);
