@@ -202,7 +202,7 @@ class BaseViewController extends Controller {
 	 * 
 	 * TODO: split prepare form fields and this compute form fields function -> rename this to "make_html()" or sth more appropriate
 	 */
-	public static function compute_form_fields($_fields, $model, $context = 'edit')
+	public static function add_html_string($fields, $context = 'edit')
 	{
 		// init
 		$ret = [];
@@ -210,9 +210,8 @@ class BaseViewController extends Controller {
 		// background color's to toggle through
 		$color_array = ['white', '#c8e6c9', '#fff3e0', '#fbe9e7', '#e0f2f1', '#f3e5f5'];
 		$color = $color_array[0];
-
 		// prepare form fields
-		$fields = static::prepare_form_fields($_fields, $model);
+		// $fields = static::prepare_form_fields($_fields, $model);
 
 		// foreach fields
 		foreach ($fields as $field)
@@ -225,7 +224,6 @@ class BaseViewController extends Controller {
 				array_push($ret, $field);
 				continue;
 			}
-
 			// hidden stuff
 			if (array_key_exists('hidden', $field))
 			{
@@ -250,7 +248,7 @@ class BaseViewController extends Controller {
 			// field color
 			if(!isset($options['style']))
 				$options['style'] = '';
-			$options['style'] .= " background-color:$color";
+			$options['style'] .= "background-color:$color";
 
 			// Help: add help msg to form fields - mouse on hover
 			if (isset($field['help']))

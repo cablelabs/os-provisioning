@@ -460,7 +460,9 @@ class BaseController extends Controller {
 		$model = static::get_model_obj();
 		$view_header = \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline() , 'Header');
 		$headline    = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header , NULL, $_GET);
-		$form_fields = BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($model), $model, 'create');
+		$fields 	 = BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($model), $model);
+		$form_fields = BaseViewController::add_html_string ($fields, 'create');
+		// $form_fields = BaseViewController::add_html_string (static::get_controller_obj()->view_form_fields($model), $model, 'create');
 
 		$view_path = 'Generic.create';
 		$form_path = 'Generic.form';
@@ -518,7 +520,11 @@ class BaseController extends Controller {
 		$view_var = $model->findOrFail($id);
 		$view_header 	= BaseViewController::translate_view('Edit'.$model->view_headline(),'Header');
 		$headline       = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var);
-		$form_fields	= BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
+
+		$fields 		= BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($view_var), $view_var);
+		$form_fields	= BaseViewController::add_html_string ($fields, 'edit');
+		// $form_fields	= BaseViewController::add_html_string (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
+
 		// prepare_tabs & prep_right_panels are redundant - TODO: improve
 		$panel_right    = $this->prepare_tabs($view_var);
 		$relations      = BaseViewController::prep_right_panels($view_var);

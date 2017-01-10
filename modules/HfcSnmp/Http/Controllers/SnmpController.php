@@ -5,6 +5,7 @@ namespace Modules\HfcSnmp\Http\Controllers;
 use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcSnmp\Entities\SnmpValue;
 use Modules\HfcSnmp\Entities\OID;
+use \App\Http\Controllers\BaseViewController;
 
 
 use Log;
@@ -53,10 +54,9 @@ class SnmpController extends \BaseController{
 
 		// Get Html Form Fields for generic View
 		$fields = $snmp->prep_form_fields();
-		$form_fields = $snmp->make_html($fields);
-		// $form_fields = \App\Http\Controllers\BaseViewController::compute_form_fields($fields, $netelem);
+		// $form_fields = $snmp->make_html($fields);
+		$form_fields = BaseViewController::add_html_string($fields, $netelem);
 
-// d($fields);
 
 		// Init View
 		// $obj = static::get_model_obj();
@@ -65,7 +65,7 @@ class SnmpController extends \BaseController{
 		// $view_var 	 = $obj->findOrFail($id);
 		$view_var 	 = $netelem;
 		$route_name  = \NamespaceController::get_route_name();
-		$view_header_links = \App\Http\Controllers\BaseViewController::view_main_menus();
+		$view_header_links = BaseViewController::view_main_menus();
 
 		$view_path = 'hfcsnmp::NetElement.controlling';
 		$form_path = 'Generic.form';
@@ -256,68 +256,22 @@ class SnmpController extends \BaseController{
     				$value = $this->string_to_array($oid->type_array);
     			}
 
-    			array_push($ret, ['form_type' => $oid->html_type, 'name' => 'field_'.$a[0], 'description' => $oid->name, 'value' => $value, 'options' => $options]);
+    			$field = array(
+    				'form_type' 	=> $oid->html_type,
+    				'name' 			=> 'field_'.$a[0],
+    				'description' 	=> $oid->name,
+    				// 'description' 	=> '<a href="'.route('OID.edit', ['id' => $oid->id]).'">'.$oid->name.'</a>',
+    				'field_value' 	=> $value,
+    				'options' 		=> $options
+    				);
+
+    			array_push($ret, $field);
     		}
     	}
 
     	return $ret;
 	}
 
-
-	public function make_html($fields)
-	{
-		foreach ($fields as $key => $field)
-		{
-			$s = '';
-			$select = null;
-			$color = null;
-
-			// Open Form Group
-			$s .= \Form::openGroup($field["name"], $field["description"], $select, $color);
-
-			// Output the Form Elements
-			switch ($field["form_type"])
-			{
-				case 'checkbox' :
-					// Checkbox - where pre-checked is enabled
-					if ($value == [])
-						$value = 1;
-
-					if ($context == 'create')
-						// only take care of checked statement if we are called in context create
-						$checked = (isset($field['checked'])) ? $field['checked'] : $field['value'];
-					else
-						$checked = $field['value'];
-
-					$s .= \Form::checkbox($field['name'], $value, null, $checked);
-					break;
-
-				case 'select' :
-					$s .= \Form::select($field["name"], $value, $field['value'], $field['options']);
-					break;
-
-				case 'password' :
-					$s .= \Form::password($field['name']);
-					break;
-
-				default:
-					$s .= \Form::$field["form_type"]($field["name"], $field['value'], $field['options']);
-					break;
-			}
-
-			// Help: add help icon/image behind form field
-			if (isset($field['help']))
-				$s .= '<div title="'.$field['help'].'" name='.$field['name'].'-help class=col-md-1>'.
-				      \HTML::image(asset('images/help.png'), null, ['width' => 20]).'</div>';
-
-			// Close Form Group
-			$s .= \Form::closeGroup();
-
-			$fields[$key]['html'] = $s;
-		}
-
-		return $fields;
-	}
 
 
 	/**
@@ -370,5 +324,6 @@ class SnmpController extends \BaseController{
         snmp_set_valueretrieval(SNMP_VALUE_PLAIN);
         snmp_set_oid_output_format (SNMP_OID_OUTPUT_NUMERIC);
 	}
+
 
 }
