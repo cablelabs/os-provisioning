@@ -245,7 +245,6 @@ class Phonenumber extends \BaseModel {
 			return null;
 		}
 
-		$whereStatement = "1";
 		if ($withTrashed) {
 			$orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->withTrashed()->whereRaw($whereStatement);
 		}
@@ -522,15 +521,53 @@ class PhonenumberObserver
 			return;
 		}
 
-		// the moment we get here we have to do a bunch of Envia data related work
-		$related_orders = $phonenumber->enviaorders(true)->get();
+		// the moment we get here we take for sure that we have a permanent switch (defective old modem)
+		// now we have to do a bunch of Envia data related work
 
-		/* d($related_orders); */
+		// first: get all the orders related to the number or the old modem
+		// and overwrite the modem_id with the new modem's id
+		$phonenumber_related_orders = $phonenumber->enviaorders(true)->get();
+		$contract_related_orders = \Modules\ProvVoipEnvia\Entities\EnviaOrder::withTrashed()->where('modem_id', $old_modem->id)->get();
+		$related_orders = $phonenumber_related_orders;
+		while ($tmp_order = $contract_related_orders->pop()) {
+			$related_orders->push($tmp_order);
+		}
+		$related_orders = $related_orders->unique();
+
+		foreach ($related_orders as $order) {
+			$order->modem_id = $new_modem->id;
+			$order->save();
+		}
+
+		// second: write all Envia related data from the old to the new modem
+		$new_modem->contract_external_id = $old_modem->contract_external_id;
+		$new_modem->contract_ext_creation_date = $old_modem->contract_ext_creation_date;
+		$new_modem->contract_ext_termination_date = $old_modem->contract_ext_termination_date;
+		$new_modem->installation_address_change_date = $old_modem->installation_address_change_date;
+		$new_modem->save();
+
+		// third: if there are no more numbers attached to the old modem: remove all Envia related data
+		if (!$old_modem->has_phonenumbers_attached()) {
+			$old_modem->contract_external_id = NULL;
+			$old_modem->contract_ext_creation_date = NULL;
+			$old_modem->contract_ext_termination_date = NULL;
+			$old_modem->installation_address_change_date = NULL;
+			$old_modem->save();
+		}
+		else {
+			$parameters = [
+				'modem' => $old_modem->id,
+			];
+			$title = 'modem '.$old_modem->id;
+			$href = \HTML::linkRoute('Modem.edit', $title, $parameters);
+			\Session::push('tmp_info_above_form', "There are still phonenumbers attached to ".$href."! Don't forget to move them, too!!");
+		}
 
 		// check if this number has been the last on old modem ⇒ if so remove envia related data from modem
-TODO: what to do??
+/* TODO: what to do?? */
 		/* $this->_check_if_last_number_on_modem($phonenumber, $old_modem); */
 
+		/* d($related_orders, $new_modem->has_phonenumbers_attached(), $old_modem->has_phonenumbers_attached()); */
 	}
 
 

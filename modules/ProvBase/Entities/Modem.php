@@ -628,6 +628,33 @@ class Modem extends \BaseModel {
 	}
 
 
+	/**
+	 * Check if modem has phonenumbers attached
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return True if phonenumbers attached to one of the modem's MTA, else False
+	 */
+	public function has_phonenumbers_attached() {
+
+		// if there is no voip module ⇒ there can be no numbers
+		if (!\PPModule::is_active('provvoip')) {
+			return False;
+		}
+
+		foreach ($this->mtas as $mta) {
+			foreach ($mta->phonenumbers->all() as $phonenumber) {
+				return True;
+			}
+		}
+
+		// no numbers found
+		return False;
+
+
+	}
+
+
 	/*
 	 * Return Last Geocoding State / ERROR
 	 */
@@ -662,6 +689,26 @@ class Modem extends \BaseModel {
  */
 class ModemObserver
 {
+
+	/**
+	 * @author Patrick Reichel
+	 *
+	 */
+	public function deleting($modem) {
+
+		// deletion of modems with attached phonenumbers is not allowed with enabled Envia module
+		if (\PPModule::is_active('ProvVoipEnvia')) {
+			if ($modem->has_phonenumbers_attached()) {
+				\Session::push('tmp_info_above_form', "You are not allowed to delete a modem with attached phonenumbers!");
+				/* return false; */
+				// return false is the official way to cancel deletion – but our BaseModel deletes some childs
+				// so we throw an exception until we have a solution
+				throw new Exception('You are not allowed to delete a modem with attached phonenumbers!');
+NEXT: Check how to cancel deletion (watch BaseModel line 622 for details)
+			}
+		}
+	}
+
 	public function created($modem)
 	{
 		$modem->hostname = 'cm-'.$modem->id;
