@@ -528,12 +528,19 @@ class PhonenumberObserver
 		// and overwrite the modem_id with the new modem's id
 		$phonenumber_related_orders = $phonenumber->enviaorders(true)->get();
 		$contract_related_orders = \Modules\ProvVoipEnvia\Entities\EnviaOrder::withTrashed()->where('modem_id', $old_modem->id)->get();
+
+		// build a collection of all orders that need to be changed
+		// this are all orders related to the current phonenumber or related to contract but not related to phonenumber (e.g. orders that created other phonenumbers)
 		$related_orders = $phonenumber_related_orders;
 		while ($tmp_order = $contract_related_orders->pop()) {
-			$related_orders->push($tmp_order);
+			$related_numbers = $tmp_order->phonenumbers;
+			if ($related_numbers->isEmpty() || $related_numbers->contains($phonenumber)) {
+				$related_orders->push($tmp_order);
+			}
 		}
 		$related_orders = $related_orders->unique();
 
+		// change the modem id to the value of the new modem
 		foreach ($related_orders as $order) {
 			$order->modem_id = $new_modem->id;
 			$order->save();
@@ -555,12 +562,30 @@ class PhonenumberObserver
 			$old_modem->save();
 		}
 		else {
+			$attributes = ['target'=>'_blank'];
+
+			// prepare the link (for view) for old modem (this may be useful as we get the breadcrumb for the new modem on our return to phonenumber.edit)
 			$parameters = [
 				'modem' => $old_modem->id,
 			];
-			$title = 'modem '.$old_modem->id;
-			$href = \HTML::linkRoute('Modem.edit', $title, $parameters);
-			\Session::push('tmp_info_above_form', "There are still phonenumbers attached to ".$href."! Don't forget to move them, too!!");
+			$title = 'modem '.$old_modem->id. ' ('.$old_modem->mac.')';
+			$modem_href = \HTML::linkRoute('Modem.edit', $title, $parameters, $attributes);
+
+			// prepare the links to the phonenumbers still related to old modem (they probably also have to be moved to another MTA)
+			$numbers = [];
+			foreach ($old_modem->mtas as $tmp_mta) {
+				foreach ($tmp_mta->phonenumbers->all() as $tmp_phonenumber) {
+					$tmp_parameters = [
+						'phonenumber' => $tmp_phonenumber->id,
+					];
+					$tmp_title = $tmp_phonenumber->prefix_number.'/'.$tmp_phonenumber->number;
+					$tmp_href = \HTML::linkRoute('Phonenumber.edit', $tmp_title, $tmp_parameters, $attributes);
+					array_push($numbers, $tmp_href);
+				}
+			}
+			$numbers = '<br>&nbsp;&nbsp;'.implode('<br>&nbsp;&nbsp;', $numbers);
+
+			\Session::push('tmp_info_above_form', "There are still phonenumbers attached to ".$modem_href."! Don't forget to move them, too:".$numbers);
 		}
 
 	}
