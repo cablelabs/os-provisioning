@@ -3,11 +3,16 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateNetElementTypeOIDTable extends BaseMigration {
 
+/**
+ * This is used as Pivot Table of the Many-to-Many Relationship between OIDs & NetElementTypes
+ *
+ * It adds extra information like it's done in Item (pivot of contract & product)
+ */
+class CreateParameterTable extends BaseMigration {
 
 	// name of the table to create
-	protected $tablename = "netelementtype_oid";
+	protected $tablename = "parameter";
 
 
 	/**
@@ -23,6 +28,10 @@ class CreateNetElementTypeOIDTable extends BaseMigration {
 
 			$table->integer('netelementtype_id')->unsigned();
 			$table->integer('oid_id')->unsigned();
+
+			$table->string('html_frame',16);
+			$table->text('html_properties');
+			$table->integer('html_id')->unsigned(); // for future use
 		});
 
 		return parent::up();
