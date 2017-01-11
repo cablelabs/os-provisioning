@@ -720,6 +720,25 @@ class ModemObserver
 
 	public function updating($modem)
 	{
+
+		// reminder: on active Envia module: moving modem with phonenumbers attached to other contract is not allowed!
+		// check if this is running if you decide to implement moving of modems to other contracts
+		// watch Ticket LAR-106
+		if (\PPModule::is_active('ProvVoipEnvia')) {
+			if ($modem['original']['contract_id'] != $modem->contract_id) {
+				if ($modem->has_phonenumbers_attached) {
+					// returning false should cancel the updating: verify this! There has been some problems with deleting modems – we had to put the logic in Modem::delete() probably caused by our Base* classes…
+					// see: http://laravel-tricks.com/tricks/cancelling-a-model-save-update-delete-through-events
+					return false;
+				}
+				elseif ($modem->contract_external_id) {
+					// if there are any Envia data: the number(s) are probably moved only temporary
+					// here we have to think about the references to this modem in all related EnviaOrders (maybe all the numbers have been terminated and then deleted from our database – but we still have the orders related to this numbers and also to this modem
+					return false;
+				}
+			}
+		}
+
 		if (!$modem->observer_enabled)
 			return;
 
