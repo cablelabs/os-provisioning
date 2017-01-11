@@ -604,6 +604,10 @@ class BaseController extends Controller {
 	 */
 	public function destroy($id)
 	{
+		// helper to inform the user about success on deletion
+		$to_delete = 0;
+		$deleted = 0;
+
 		// bulk delete
 		if ($id == 0)
 		{
@@ -611,14 +615,37 @@ class BaseController extends Controller {
 			if (!isset(Input::all()['ids']))
 				return Redirect::back()->with('delete_message', ['message' => 'No Entry For Deletion specified', 'class' => \NamespaceController::get_route_name(), 'color' => 'red']);
 
-			foreach (Input::all()['ids'] as $id => $val)
-				static::get_model_obj()->findOrFail($id)->delete();
+			foreach (Input::all()['ids'] as $id => $val) {
+				$to_delete++;
+				if (static::get_model_obj()->findOrFail($id)->delete()) {
+					$deleted++;
+				}
+			}
+
 		}
-		else
-			static::get_model_obj()->findOrFail($id)->delete();
+		else {
+			$to_delete++;
+			if (static::get_model_obj()->findOrFail($id)->delete()) {
+				$deleted++;
+			}
+		}
 
 		$class = \NamespaceController::get_route_name();
-		return Redirect::back()->with('delete_message', ['message' => 'Successful deleted '.$class, 'class' => $class, 'color' => 'blue']);
+
+		if ($deleted == 0) {
+			$message = 'Could not delete '.$class;
+			$color = 'red';
+		}
+		elseif ($deleted == $to_delete) {
+			$message = 'Successful deleted '.$class;
+			$color = 'blue';
+		}
+		else {
+			$message = 'Deleted '.$deleted.' out of '.$to_delete.' '.$class;
+			$color = 'orange';
+		}
+
+		return Redirect::back()->with('delete_message', ['message' => $message, 'class' => $class, 'color' => $color]);
 	}
 
 
