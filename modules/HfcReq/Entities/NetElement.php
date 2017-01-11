@@ -127,6 +127,10 @@ class NetElement extends \BaseModel {
 		return null;
 	}
 
+	public function snmpvalues()
+	{
+		return \PPModule::is_active('HfcSnmp') ? $this->hasMany('Modules\HfcSnmp\Entities\SnmpValue', 'netelement_id') : null;
+	}
 
 	public function netelementtype()
 	{
