@@ -35,46 +35,37 @@ class SnmpController extends \BaseController{
 	}
 
 	/**
-	 * Controlling Read Function
-	 *
-	 * TODO: split SNMP Stuff from netelem specific stuff
-	 *       and do not return a View -> instead call BaseController@edit
+	 * Returns the Controlling View for a NetElement (Device)
 	 *
 	 * @param id the NetElement id
-	 * @author Torsten Schmidt
+	 * @author Torsten Schmidt, Nino Ryschawy
 	 */
 	public function controlling_edit($id)
 	{
-		// Init NetElement Model
+		// Init NetElement Model & SnmpController
 		$netelem = NetElement::findOrFail($id);
-
-		// Init SnmpController
-		$snmp = new SnmpController;
+		$snmp 	 = new SnmpController;
 		$snmp->init ($netelem);
 
-		// Get Html Form Fields for generic View
-		$fields = $snmp->prep_form_fields();
-		// $form_fields = $snmp->make_html($fields);
+		// Get Html Form Fields for generic View - this includes the snmpwalk
+		$fields 	 = $snmp->prep_form_fields();
 		$form_fields = BaseViewController::add_html_string($fields, $netelem);
 
+// d($form_fields);
 
 		// Init View
-		// $obj = static::get_model_obj();
 		$model_name  = \NamespaceController::get_model_name();
 		$view_header = 'Edit: '.$netelem->name;
-		// $view_var 	 = $obj->findOrFail($id);
 		$view_var 	 = $netelem;
 		$route_name  = \NamespaceController::get_route_name();
 		$view_header_links = BaseViewController::view_main_menus();
+		// $panel_right = $this->prepare_tabs($view_var);
 
 		$view_path = 'hfcsnmp::NetElement.controlling';
 		$form_path = 'Generic.form';
 		$form_update = 'NetElement.controlling_update';
 
-		//dd(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'form_update'));
-
-
-		return \View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'form_update', 'route_name', 'view_header_links')));
+		return \View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'form_update', 'route_name', 'view_header_links', 'headline')));
 	}
 
 
@@ -86,28 +77,23 @@ class SnmpController extends \BaseController{
 	 */
 	public function controlling_update($id)
 	{
-		$netelem = NetElement::findOrFail($id);
-
-		// TODO: validation
-		$validator = \Validator::make($data = $this->prepare_input(\Input::all()), $netelem::rules($id));
-
-/*
-		if ($validator->fails())
-		{
-			return Redirect::back()->withErrors($validator)->withInput();
-		}
-*/
-
 		// Init SnmpController
+		$netelem = NetElement::findOrFail($id);
 		$snmp = new SnmpController;
 		$snmp->init ($netelem);
 
-		// Set Html Form Fields for generic View
+		$data = \Request::all();
 
+		// TODO: validation
+		// $validator = \Validator::make($data = $this->prepare_input(\Input::all()), $netelem::rules($id));
+		// if ($validator->fails())
+		// 	return Redirect::back()->withErrors($validator)->withInput();
+
+		// Transfer Settings via SNMP to Device
 		$snmp->snmp_set_all($data);
 
-
-		return \Redirect::route('NetElement.controlling_update', $id)->with('message', 'Updated!');
+		return \Redirect::route('NetElement.controlling_edit', $id)->with('message', 'Updated!');
+		// return \Redirect::route('NetElement.controlling_update', $id)->with('message', 'Updated!');
 	}
 
 
@@ -130,9 +116,19 @@ class SnmpController extends \BaseController{
 			'value' 		=> $value,
 			);
 
-		$obj = SnmpValue::updateOrCreate($data);
+		// $obj = SnmpValue::updateOrCreate($data); 		// doesnt work as is
+		$obj = SnmpValue::where('netelement_id', '=', $this->device->id)->where('oid_id', '=', $oid->id)->get()->first();
 
-		return $obj->id;
+		if ($obj)
+		{
+			// always update to get the latest timestamp ??
+			// $data['updated_at'] = \Carbon\Carbon::now(\Config::get('app.timezone'));
+			$obj->update($data);
+
+			return $obj->id;
+		}
+
+		return SnmpValue::create($data);
 	}
 
 
@@ -152,6 +148,16 @@ class SnmpController extends \BaseController{
 		return $ret;
 	}
 
+	/**
+	 * Return the Community String for Read-Only or Read-Write Access
+	 *
+	 * @param 	access 	String 	'ro' or 'rw'
+	 * @author 	Nino Ryschawy
+	 */
+	private function _get_community($access = 'ro')
+	{
+		return $this->device->{'community_'.$access} ? : \Modules\ProvBase\Entities\ProvBase::get([$access.'_community'])->first()->{$access.'_community'};
+	}
 
 	/**
 	 * The SNMP Walk Function
@@ -166,10 +172,11 @@ class SnmpController extends \BaseController{
 	 */
 	public function snmp_walk ($oid)
 	{
-		$community = $this->device->community_ro ? : \Modules\ProvBase\Entities\ProvBase::get(['ro_community'])->first()->ro_community;
+		$community = $this->_get_community();
 
 		// Walk
 		$walk = snmpwalkoid($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
+
 
 		// Log
 		Log::info('snmp: get '.$this->snmp_log().' '.$oid->oid.' '.implode(' ',$walk));
@@ -182,13 +189,15 @@ class SnmpController extends \BaseController{
 			// if (!$v)
 			// 	return false;
 
-			$b = $this->_snmp_value_set($oid, $v);
+			$id = $this->_snmp_value_set($oid, $v);
 
-			if (!$b)
+			if (!$id)
 				return false;
 
-			array_push($ret, [$b, $v]);
+			array_push($ret, [$id, $v]);
 		}
+// if ($oid->name == 'attenuation-out-1')
+// d($walk, $ret);
 
 		return $ret;
 	}
@@ -208,20 +217,25 @@ class SnmpController extends \BaseController{
 	 */
 	public function snmp_set ($snmpvalue)
 	{
-		$x = snmpget ($this->device->ip, $this->device->community_ro, $snmpvalue->oid_index, $this->timeout, $this->retry);
+		$community = $this->_get_community();
+		$oid = $snmpvalue->oid;
 
-		var_dump(' ', $x);
+		// TODO: get from oid model when implemented
+		$type = 'i';
 
-		if ($x === FALSE)
+		$ret = snmpget($this->device->ip, $community, $snmpvalue->oid->oid.'.0', $this->timeout, $this->retry);
+
+		if ($ret === FALSE)
 			return FALSE;
 
-		if ($x == $snmpvalue->value)
+		if ($ret == $snmpvalue->value)
 			return TRUE;
 
-		$snmpmib = OID::findOrFail($snmpvalue->snmpmib_id);
+		Log::info('snmp: set diff '.$this->snmp_log().' '.$snmpvalue->value.' '.$oid->type.' '.$snmpvalue->value.' '.$ret);
 
-		Log::info('snmp: set diff '.$this->snmp_log().' '.$snmpvalue->oid_index.' '.$snmpmib->type.' '.$snmpvalue->value.' '.$x);
-		// return snmpset($this->device->ip, $this->device->community_rw, $oid, $type, $value, $this->timeout, $this->retry);
+		// TODO: encapsulate in try-catch block and return appropriate error messages
+
+		return snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.'.0', $type, $snmpvalue->value, $this->timeout, $this->retry);
 	}
 
 
@@ -242,25 +256,29 @@ class SnmpController extends \BaseController{
 		if (!$this->device->ip)
 			return $ret;
 
+		// TODO: if device not reachable take already saved SnmpValues
+
     	foreach ($oids as $oid)
     	{
-    		foreach ($this->snmp_walk($oid) as $a)
+    		$results = $this->snmp_walk($oid);
+
+    		foreach ($results as $res)
     		{
-    			// d($a, $oid);
-    			$options = null;
-    			$value = $a[1];
+    			// create array with html options that is transformed to html string later
+    			$options = $oid->access == 'read-only' ? ['readonly'] : null;
+    			$value = $res[1];
 
     			if($oid->type_array)
     			{
-    				$options = $a[1];
+    				$options = $res[1];
     				$value = $this->string_to_array($oid->type_array);
     			}
 
     			$field = array(
     				'form_type' 	=> $oid->html_type,
-    				'name' 			=> 'field_'.$a[0],
+    				'name' 			=> 'field_'.$res[0], 		// = SnmpValue->id - TODO: Check if string 'field_' is necessary in front
     				'description' 	=> $oid->name,
-    				// 'description' 	=> '<a href="'.route('OID.edit', ['id' => $oid->id]).'">'.$oid->name.'</a>',
+    				// 'description' 	=> '<res href="'.route('OID.edit', ['id' => $oid->id]).'">'.$oid->name.'</res>',
     				'field_value' 	=> $value,
     				'options' 		=> $options
     				);
@@ -277,8 +295,8 @@ class SnmpController extends \BaseController{
 	/**
 	 * Perform a SNMP set of all SNMP Values for this Controller
 	 *
-	 * @param data the HTML data array in form array of ['field_<SnmpValue ID>' => <value>]
-	 * @return form_fields array for generic edit view function
+	 * @param 	data 	the HTML data array in form: ['field_<SnmpValue ID>' => <value>]
+	 * @return 	form_fields array for generic edit view function
 	 *
 	 * @author Torsten Schmidt
 	 */
@@ -286,17 +304,21 @@ class SnmpController extends \BaseController{
     {
     	foreach ($data as $field => $value)
     	{
-    		var_dump($value);
     		if (explode ('_', $field)[0] == 'field')
     		{
-    			// explode data
-    			$id = explode ('_', $field)[1];
-	    		$snmpmib = SnmpValue::findOrFail($id);
-	    		$snmpmib->value = $value;
-	    		$snmpmib->save();
+    			// explode data & write to Database
+    			$id  = explode ('_', $field)[1];
+	    		$oid = SnmpValue::findOrFail($id);
 
-	    		// The SET command
-	    		$this->snmp_set($snmpmib);
+	    		// Set Value of Parameter in Database & Device only if it was changed in GUI
+	    		if ($oid->value != $value)
+	    		{
+					$oid->value = $value;
+					$oid->save();
+
+		    		// Set Value in Device via SNMP
+					$this->snmp_set($oid);
+	    		}
     		}
     	}
 
