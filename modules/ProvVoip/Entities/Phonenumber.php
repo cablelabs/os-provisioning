@@ -516,7 +516,7 @@ class PhonenumberObserver
 			$tmp_title = $new_contract->id.': '.$new_contract->firstname.' '.$new_contract->lastname.', '.$new_contract->city;
 			$new_contract_href = \HTML::linkRoute('Contract.edit', $tmp_title, [$new_contract->id], ['target' => '_blank']);
 
-			\Session::push('tmp_info_above_form', 'New MTA belongs to another contract ('.$new_contract_href.') than the previous one ('.$old_contract_href.')<br>This seems to be a test only – so no Envia related data will be changed.<br>Do not forget to ');
+			\Session::push('tmp_info_above_form', 'New MTA belongs to another contract ('.$new_contract_href.') than the previous one ('.$old_contract_href.')<br>This seems to part of a a test only – so no Envia related data will be changed.<br>Make sure that the number finally is attached to the right MTA, especially BEFORE performing actions against Envia API!!');
 
 			return;
 		}
@@ -563,11 +563,6 @@ class PhonenumberObserver
 			\Session::push('tmp_info_above_form', "There are still phonenumbers attached to ".$href."! Don't forget to move them, too!!");
 		}
 
-		// check if this number has been the last on old modem ⇒ if so remove envia related data from modem
-/* TODO: what to do?? */
-		/* $this->_check_if_last_number_on_modem($phonenumber, $old_modem); */
-
-		/* d($related_orders, $new_modem->has_phonenumbers_attached(), $old_modem->has_phonenumbers_attached()); */
 	}
 
 

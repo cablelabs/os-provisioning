@@ -676,6 +676,28 @@ class Modem extends \BaseModel {
 	{
 		$this->observer_enabled = false;
 	}
+
+	/**
+	 * Before deleting a modem and all children we have to check some things
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function delete() {
+
+		// deletion of modems with attached phonenumbers is not allowed with enabled Envia module
+		// prevent user from (recursive and implicite) deletion of phonenumbers before termination at Envia!!
+		// we have to check this here as using ModemObserver::deleting() with return false does not prevent the monster from deleting child model instances!
+		if (\PPModule::is_active('ProvVoipEnvia')) {
+			if ($this->has_phonenumbers_attached()) {
+				\Session::push('tmp_info_above_form', "You are not allowed to delete a modem with attached phonenumbers!");
+				return false;
+			}
+		}
+
+		// when arriving here: start the standard deletion procedure
+		return parent::delete();
+	}
+
 }
 
 
@@ -689,25 +711,6 @@ class Modem extends \BaseModel {
  */
 class ModemObserver
 {
-
-	/**
-	 * @author Patrick Reichel
-	 *
-	 */
-	public function deleting($modem) {
-
-		// deletion of modems with attached phonenumbers is not allowed with enabled Envia module
-		if (\PPModule::is_active('ProvVoipEnvia')) {
-			if ($modem->has_phonenumbers_attached()) {
-				\Session::push('tmp_info_above_form', "You are not allowed to delete a modem with attached phonenumbers!");
-				/* return false; */
-				// return false is the official way to cancel deletion – but our BaseModel deletes some childs
-				// so we throw an exception until we have a solution
-				throw new Exception('You are not allowed to delete a modem with attached phonenumbers!');
-NEXT: Check how to cancel deletion (watch BaseModel line 622 for details)
-			}
-		}
-	}
 
 	public function created($modem)
 	{

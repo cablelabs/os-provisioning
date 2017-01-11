@@ -611,7 +611,7 @@ class BaseModel extends Eloquent
 	 *
 	 *	@author Torsten Schmidt
 	 *
-	 *	@return void
+	 *	@return bool
 	 *
 	 *  @todo return state on success, should also take care of deleted children
 	 */
@@ -621,7 +621,8 @@ class BaseModel extends Eloquent
 		foreach ($this->get_all_children() as $child)
 			$child->delete();
 
-		$this->_delete();
+		// always return this value (also in your derived classes!)
+		return $this->_delete();
 	}
 
 
