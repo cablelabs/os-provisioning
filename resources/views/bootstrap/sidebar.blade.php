@@ -22,7 +22,7 @@
 
           <li class="nav-header">Navigation</li>
           <li>
-            <a href="javascript:;"><i class="fa fa-laptop"></i> <span>Dashboard</span></a>
+            <a href="{{BaseRoute::get_base_url()}}/Dashboard"><i class="fa fa-laptop"></i> <span>Dashboard</span></a>
           </li>
 
           <li>
