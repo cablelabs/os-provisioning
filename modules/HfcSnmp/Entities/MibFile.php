@@ -87,6 +87,47 @@ class MibFile extends \BaseModel {
 
 
 	/**
+	 * Return SNMP OID Type Character from Syntax String (for OID Type field)
+	 */
+	public static function get_oid_type($string)
+	{
+		// u 	unsigned INTEGER
+		// i 	INTEGER
+		// d 	DECIMAL STRING
+		// x 	HEX STRING
+		// s 	STRING
+		// t 	TIMETICKS
+		// a 	IPADDRESS
+		// b 	BITS
+
+		// o 	OBJID
+		// n 	NULLOBJ
+		$type = '';
+
+		if (strpos($string, 'unsigned integer') !== false)
+			$type = 'u';
+		else if (strpos($string, 'integer') !== false)
+			$type = 'i';
+		else if (strpos($string, 'decimal string') !== false)
+			$type = 'd';
+		else if (strpos($string, 'hex string') !== false)
+			$type = 'x';
+		else if (strpos($string, 'string') !== false)
+			$type = 's';
+		else if (strpos($string, 'counter') !== false)
+			$type = 'i';
+		else if (strpos($string, 'timeticks') !== false)
+			$type = 't';
+		else if (strpos($string, 'ipaddress') !== false)
+			$type = 'a';
+		else if (strpos($string, 'bits') !== false)
+			$type = 'b';
+
+		return $type;
+	}
+
+
+	/**
 	 * Create OID Database Entries from parsing snmptranslate outputs of all OIDs of the MIB
 	 * Extract informations of OID: name, syntax, access, description
 	 *
@@ -130,7 +171,7 @@ class MibFile extends \BaseModel {
 		{
 			$out = [];
 			$error = false;
-			$name = $syntax = $access = $description = '';
+			$name = $syntax = $type = $access = $description = '';
 
 			// $out = shell_exec("snmptranslate -Td -m $abs_filepath $oid");
 			exec("snmptranslate -Td -m $abs_filepath $oid", $out);
@@ -154,13 +195,6 @@ class MibFile extends \BaseModel {
 						break;
 					}
 					$name = $tmp[0];
-
-					// skip OIDs from other (dependent) MIBs (name not existent in file) listet in $out - now done before foreach
-					// if (strpos($filetext, $name) === false)
-					// {
-					// 	$error = true;
-					// 	break;
-					// }
 				}
 
 				// syntax
@@ -209,6 +243,7 @@ class MibFile extends \BaseModel {
 				'name' 		=> $name,
 				'access' 	=> $access,
 				'syntax' 	=> $syntax,
+				'type' 		=> self::get_oid_type(strtolower($syntax)),
 				'html_type' => 'text', 		// default - TODO: change dependent on syntax
 				'description' => $description
 			]);
@@ -242,19 +277,10 @@ class MibFile extends \BaseModel {
 class MibFileObserver
 {
 
-	public function creating($mibfile)
-	{
-
-	}
-
 	public function created($mibfile)
 	{
 		if (\Request::hasFile('mibfile_upload'))
 			$mibfile->create_oids();
-	}
-
-	public function updating($mibfile)
-	{
 	}
 
 	public function deleting($mibfile)
@@ -262,7 +288,7 @@ class MibFileObserver
 		// hard delete OIDs as Database becomes huge otherwise
 		$mibfile->hard_delete_oids();
 		
-		// TODO: Unlink file ??
+		// TODO: Unlink file ?? - better not -> in case related mibs need this mib the user must not load it again
 	}
 
 }

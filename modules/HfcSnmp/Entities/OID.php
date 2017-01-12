@@ -2,6 +2,22 @@
 
 namespace Modules\HfcSnmp\Entities;
 
+
+/**
+ * The OID Model with it's OID and Properties from MibFile (access, type, description,...) and html properties for WebGUI View
+ *
+ * Type can have the following Values
+	i 	INTEGER
+	u 	unsigned INTEGER
+	t 	TIMETICKS
+	a 	IPADDRESS
+	o 	OBJID
+	s 	STRING
+	x 	HEX STRING
+	d 	DECIMAL STRING
+	n 	NULLOBJ
+	b 	BITS 
+ */
 class OID extends \BaseModel {
 
 	public $table = 'oid';
