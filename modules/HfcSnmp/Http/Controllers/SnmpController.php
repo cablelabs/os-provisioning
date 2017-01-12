@@ -60,7 +60,6 @@ class SnmpController extends \BaseController{
 		$route_name  = \NamespaceController::get_route_name();
 		$view_header_links = BaseViewController::view_main_menus();
 		// $panel_right = $this->prepare_tabs($view_var);
-
 		$view_path = 'hfcsnmp::NetElement.controlling';
 		$form_path = 'Generic.form';
 		$form_update = 'NetElement.controlling_update';
@@ -170,9 +169,10 @@ class SnmpController extends \BaseController{
 	 *
 	 * @author Torsten Schmidt
 	 */
-	public function snmp_walk ($oid)
+	public function snmp_walk ($param)
 	{
 		$community = $this->_get_community();
+		$oid = $param->oid;
 
 		// Walk
 		$walk = snmpwalkoid($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
@@ -221,7 +221,7 @@ class SnmpController extends \BaseController{
 		$oid = $snmpvalue->oid;
 
 		// TODO: get from oid model when implemented
-		$type = 'i';
+		$type = 's';
 
 		$ret = snmpget($this->device->ip, $community, $snmpvalue->oid->oid.'.0', $this->timeout, $this->retry);
 
@@ -251,34 +251,33 @@ class SnmpController extends \BaseController{
 	public function prep_form_fields()
 	{
 		$ret  = [];
-		$oids = $this->device->netelementtype->oids;
+		$params = $this->device->netelementtype->parameters;
 
 		if (!$this->device->ip)
 			return $ret;
 
 		// TODO: if device not reachable take already saved SnmpValues
-
-    	foreach ($oids as $oid)
+    	foreach ($params as $param)
     	{
-    		$results = $this->snmp_walk($oid);
+    		$results = $this->snmp_walk($param);
 
     		foreach ($results as $res)
     		{
     			// create array with html options that is transformed to html string later
-    			$options = $oid->access == 'read-only' ? ['readonly'] : null;
+    			$options = $param->oid->access == 'read-only' ? ['readonly'] : null;
     			$value = $res[1];
 
-    			if($oid->type_array)
+    			if($param->type_array)
     			{
     				$options = $res[1];
-    				$value = $this->string_to_array($oid->type_array);
+    				$value = $this->string_to_array($param->type_array);
     			}
 
     			$field = array(
-    				'form_type' 	=> $oid->html_type,
+    				'form_type' 	=> $param->oid->html_type,
     				'name' 			=> 'field_'.$res[0], 		// = SnmpValue->id - TODO: Check if string 'field_' is necessary in front
-    				'description' 	=> $oid->name,
-    				// 'description' 	=> '<res href="'.route('OID.edit', ['id' => $oid->id]).'">'.$oid->name.'</res>',
+    				'description' 	=> $param->oid->name,
+    				// 'description' 	=> '<res href="'.route('OID.edit', ['id' => $param->id]).'">'.$param->name.'</res>',
     				'field_value' 	=> $value,
     				'options' 		=> $options
     				);
@@ -308,16 +307,16 @@ class SnmpController extends \BaseController{
     		{
     			// explode data & write to Database
     			$id  = explode ('_', $field)[1];
-	    		$oid = SnmpValue::findOrFail($id);
+	    		$snmp_val = SnmpValue::findOrFail($id);
 
 	    		// Set Value of Parameter in Database & Device only if it was changed in GUI
-	    		if ($oid->value != $value)
+	    		if ($snmp_val->value != $value)
 	    		{
-					$oid->value = $value;
-					$oid->save();
+					$snmp_val->value = $value;
+					$snmp_val->save();
 
 		    		// Set Value in Device via SNMP
-					$this->snmp_set($oid);
+					$this->snmp_set($snmp_val);
 	    		}
     		}
     	}

@@ -98,7 +98,7 @@ class NetElement extends \BaseModel {
 		return ['index' => [$this->id, $type, $this->name, $this->ip, $this->state, $this->pos],
 				'index_header' => ['ID', 'Type', 'Name', 'IP', 'State', 'Position'],
 				'bsclass' => $bsclass,
-				'header' => $this->id.':'.$type.':'.$this->name];
+				'header' => $this->id.' : '.$type.' > '.$this->name];
 	}
 
 	public function view_belongs_to ()
