@@ -25,7 +25,7 @@
 
 	@section('content_right_1')
 
-	{{ Form::open(['route' => ['NetElementType.assign_oids', $view_var->id], 'method' => 'get']) }}
+	{{ Form::open(['route' => ['NetElementType.assign_oids', $view_var->id], 'method' => 'post']) }}
 
 		{{ Form::label('mibfile', 'Choose MIB-File') }}
 		{{ Form::select('mibfile_id', $mibs) }}

@@ -42,9 +42,14 @@ class OID extends \BaseModel {
 		return $this->belongsTo('Modules\HfcSnmp\Entities\MibFile');
 	}
 
-	public function devicetypes()
+	// public function netelementtypes()
+	// {
+	// 	return $this->belongsToMany('Modules\HfcReq\Entities\NetElementType', 'netelementtype_oid', 'oid_id', 'netelementtype_id');
+	// }
+
+	public function parameters()
 	{
-		return $this->belongsToMany('Modules\HfcReq\Entities\DeviceType', 'devicetype_oid', 'oid_id', 'devicetype_id');
+		return $this->HasMany('Modules\HfcSnmp\Entities\Parameter');
 	}
 
 	public function view_belongs_to ()

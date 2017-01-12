@@ -64,17 +64,12 @@ class NetElementType extends \BaseModel {
 
 		if (\PPModule::is_active('hfcsnmp') && !in_array($this->name, self::$undeletables))
 		{
-			// extra page or on Base ??
-			// $ret['Base']['- Assign OIDs from MIB']['view']['view'] = 'hfcreq::netelementtype.add_oid_from_mib';
-			// $mibs = \Modules\HfcSnmp\Entities\MibFile::select(['id', 'name', 'version'])->get();
-			// $ret['Base']['- Assign OIDs from MIB']['view']['vars']['list'] = isset($mibs[0]) ? $mibs[0]->html_list($mibs, 'name', true) : [];
+			// $ret['Base']['Parameter']['class'] 	= 'Parameter';
+			// $ret['Base']['Parameter']['relation']	= $this->parameters;
 
-			// $ret['Base']['OID']['class'] 	= 'OID';
-			// $ret['Base']['OID']['relation'] = $this->oids;
-			// $ret['Base']['OID']['options']['hide_delete_button'] = 0;
-			// $ret['Base']['OID']['options']['hide_create_button'] = 0;
-			$ret['Base']['OIDs']['view']['view'] = 'hfcreq::NetElementType.oids';
-			$ret['Base']['OIDs']['view']['vars']['list'] = $this->oids;
+			// Extra view for easier attachment (e.g. attach all oids from one mibfile)
+			$ret['Base']['Parameters']['view']['view'] = 'hfcreq::NetElementType.parameters';
+			$ret['Base']['Parameters']['view']['vars']['list'] = $this->parameters ? : [];
 
 		}
 
@@ -89,10 +84,15 @@ class NetElementType extends \BaseModel {
 		return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'netelementtype_id');
 	}
 
-	public function oids()
+	public function parameters()
 	{
-		return $this->belongsToMany('Modules\HfcSnmp\Entities\OID', 'netelementtype_oid', 'netelementtype_id', 'oid_id')->orderBy('oid');
+		return $this->HasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id');
 	}
+
+	// public function oids()
+	// {
+	// 	return $this->belongsToMany('Modules\HfcSnmp\Entities\OID', 'netelementtype_oid', 'netelementtype_id', 'oid_id')->orderBy('oid');
+	// }
 
 
 
