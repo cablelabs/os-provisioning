@@ -220,9 +220,6 @@ class SnmpController extends \BaseController{
 		$community = $this->_get_community();
 		$oid = $snmpvalue->oid;
 
-		// TODO: get from oid model when implemented
-		$type = 's';
-
 		$ret = snmpget($this->device->ip, $community, $snmpvalue->oid->oid.'.0', $this->timeout, $this->retry);
 
 		if ($ret === FALSE)
@@ -235,7 +232,7 @@ class SnmpController extends \BaseController{
 
 		// TODO: encapsulate in try-catch block and return appropriate error messages
 
-		return snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.'.0', $type, $snmpvalue->value, $this->timeout, $this->retry);
+		return snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.'.0', $oid->type, $snmpvalue->value, $this->timeout, $this->retry);
 	}
 
 
