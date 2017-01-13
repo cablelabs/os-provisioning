@@ -21,7 +21,7 @@ class CreateSnmpValueTable extends BaseMigration {
 
 			$table->integer('device_id')->unsigned();
 			$table->integer('snmpmib_id')->unsigned();
-			$table->string('oid_index');
+			$table->string('oid_index'); 			// for table elements
 			$table->string('value');
 		});
 

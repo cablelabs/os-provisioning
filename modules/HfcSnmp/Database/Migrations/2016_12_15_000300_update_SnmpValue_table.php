@@ -20,7 +20,6 @@ class UpdateSnmpValueTable extends BaseMigration {
 		{
 			$table->renameColumn('snmpmib_id', 'oid_id');
 			$table->renameColumn('device_id', 'netelement_id');
-			$table->dropColumn(['oid_index']);
 		});
 	}
 
@@ -34,7 +33,6 @@ class UpdateSnmpValueTable extends BaseMigration {
 	{
 		Schema::table($this->tablename, function(Blueprint $table)
 		{
-			$table->string('oid_index');
 			$table->renameColumn('oid_id', 'snmpmib_id');
 			$table->renameColumn('netelement_id', 'device_id');
 		});

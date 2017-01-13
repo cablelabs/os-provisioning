@@ -114,9 +114,18 @@ class SnmpController extends \BaseController{
 			'oid_id' 		=> $oid->id,
 			'value' 		=> $value,
 			);
-
+		
 		// $obj = SnmpValue::updateOrCreate($data); 		// doesnt work as is
-		$obj = SnmpValue::where('netelement_id', '=', $this->device->id)->where('oid_id', '=', $oid->id)->get()->first();
+
+		// compare resulting OID from snmpwalk with queried OID ... in case it's different we have a table with multiple elements & indexes
+		if ($oid->oid != $oid->res_oid)
+		{
+			$data['oid_index'] = str_replace($oid->oid, '', $oid->res_oid);
+
+			$obj = SnmpValue::where('netelement_id', '=', $this->device->id)->where('oid_id', '=', $oid->id)->where('oid_index', '=', $data['oid_index'])->get()->first();
+		}
+		else
+			$obj = SnmpValue::where('netelement_id', '=', $this->device->id)->where('oid_id', '=', $oid->id)->get()->first();
 
 		if ($obj)
 		{
@@ -184,7 +193,7 @@ class SnmpController extends \BaseController{
 		// Fetch Walk and write result to SnmpValue Objects (DB)
 		$ret = array();
 
-		foreach ($walk as $oid->oid => $v)
+		foreach ($walk as $oid->res_oid => $v)
 		{
 			// if (!$v)
 			// 	return false;
@@ -196,8 +205,8 @@ class SnmpController extends \BaseController{
 
 			array_push($ret, [$id, $v]);
 		}
-// if ($oid->name == 'attenuation-out-1')
-// d($walk, $ret);
+// if ($param->oid->name == 'sysORDescr')
+// 	d($walk, $oid, $oid->oid);
 
 		return $ret;
 	}
@@ -217,10 +226,11 @@ class SnmpController extends \BaseController{
 	 */
 	public function snmp_set ($snmpvalue)
 	{
-		$community = $this->_get_community();
-		$oid = $snmpvalue->oid;
+		$community  = $this->_get_community();
+		$oid 		= $snmpvalue->oid;
+		$index 		= $snmpvalue->oid_index ? : '.0';
 
-		$ret = snmpget($this->device->ip, $community, $snmpvalue->oid->oid.'.0', $this->timeout, $this->retry);
+		$ret = snmpget($this->device->ip, $community, $snmpvalue->oid->oid.$index, $this->timeout, $this->retry);
 
 		if ($ret === FALSE)
 			return FALSE;
@@ -232,7 +242,7 @@ class SnmpController extends \BaseController{
 
 		// TODO: encapsulate in try-catch block and return appropriate error messages
 
-		return snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.'.0', $oid->type, $snmpvalue->value, $this->timeout, $this->retry);
+		return snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.$index, $oid->type, $snmpvalue->value, $this->timeout, $this->retry);
 	}
 
 
