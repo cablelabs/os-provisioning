@@ -66,7 +66,7 @@ class OID extends \BaseModel {
 	public function parameters()
 	{
 		// NOTE: This should be done with eager loading if not already done by laravel automatically, because oid relation is needed close to all the time
-		return $this->HasMany('Modules\HfcSnmp\Entities\Parameter');
+		return $this->HasMany('Modules\HfcSnmp\Entities\Parameter', 'oid_id');
 		// ->with('Modules\HfcSnmp\Entities\OID')->get();
 	}
 

@@ -268,6 +268,9 @@ class MibFile extends \BaseModel {
 	 */
 	public function hard_delete_oids()
 	{
+		foreach($this->oids as $oid)
+			\DB::statement('DELETE from parameter WHERE oid_id='.$oid->id);
+		
 		\DB::statement('DELETE from oid WHERE mibfile_id='.$this->id);
 	}
 
@@ -286,7 +289,7 @@ class MibFileObserver
 	public function deleting($mibfile)
 	{
 		// hard delete OIDs as Database becomes huge otherwise
-		$mibfile->hard_delete_oids();
+		// $mibfile->hard_delete_oids();
 		
 		// TODO: Unlink file ?? - better not -> in case related mibs need this mib the user must not load it again
 	}

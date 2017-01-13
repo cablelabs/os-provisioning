@@ -41,7 +41,7 @@ class Parameter extends \BaseModel {
 	 */
 	public function oid()
 	{
-		return $this->belongsTo('Modules\HfcSnmp\Entities\OID');
+		return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'oid_id');
 	}
 
 	public function netelementtype()
