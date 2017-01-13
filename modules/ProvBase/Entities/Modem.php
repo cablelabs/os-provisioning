@@ -193,7 +193,13 @@ class Modem extends \BaseModel {
 	 */
 	private function generate_cm_dhcp_entry()
 	{
-			return 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'"; }'."\n";
+		$ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
+
+		if(count($this->mtas))
+			$ret .= ' option ccc.dhcp-server-1 '.ProvBase::first()->provisioning_server.';';
+
+		$ret .= "}\n";
+		return $ret;
 	}
 
 	private function generate_cm_dhcp_entry_pub()
@@ -659,6 +665,8 @@ class ModemObserver
 {
 	public function created($modem)
 	{
+		if (\PPModule::is_active ('ProvMon'))
+			\Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
 		$modem->hostname = 'cm-'.$modem->id;
 		$modem->save();	 // forces to call the updating() and updated() method of the observer !
 	}
@@ -688,9 +696,6 @@ class ModemObserver
 		$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
-
-		if (\PPModule::is_active ('ProvMon'))
-			\Artisan::call('nms:cacti');
 	}
 
 	public function deleted($modem)

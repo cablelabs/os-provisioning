@@ -363,7 +363,7 @@ class ExtendedValidator
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function valdidateBicAvailable($attribute, $value, $parameters)
+	public function validateBicAvailable($attribute, $value, $parameters)
 	{
 		$iban 	 = new IBAN(strtoupper($parameters[0]));
 		$country = strtolower($iban->Country());

@@ -217,6 +217,10 @@ class Cmts extends \BaseModel {
 
 			$data .= "\n\t".'}'."\n";
 
+			$data .= "\n\tsubnet $router netmask 255.255.255.255\n\t{";
+			$data .= "\n\t\tallow leasequery;";
+			$data .= "\n\t}\n";
+
 			File::append($file, $data);
 		}
 
@@ -345,6 +349,8 @@ class CmtsObserver
 		// dd(\Route::getCurrentRoute()->getActionName(), $this);
 		// only create new config file
 		// dd($cmts);
+		if (\PPModule::is_active ('ProvMon'))
+			\Artisan::call('nms:cacti', ['--modem-id' => 0, '--cmts-id' => $cmts->id]);
 		$cmts->make_dhcp_conf();
 	}
 
