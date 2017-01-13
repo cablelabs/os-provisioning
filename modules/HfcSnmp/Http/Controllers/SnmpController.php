@@ -92,9 +92,91 @@ class SnmpController extends \BaseController{
 		$snmp->snmp_set_all($data);
 
 		return \Redirect::route('NetElement.controlling_edit', $id)->with('message', 'Updated!');
-		// return \Redirect::route('NetElement.controlling_update', $id)->with('message', 'Updated!');
 	}
 
+
+	/**
+	 * Prepare Formular Fields for Controlling View of NetElement
+	 * This includes getting all SNMP Values from Device
+	 * 
+	 * @return 	Array 	Data for Generic Form View
+	 *
+	 * @author Torsten Schmidt, Nino Ryschawy
+	 */
+	public function prep_form_fields()
+	{
+		$array  = [];
+		$params = $this->device->netelementtype->parameters;
+
+		if (!$this->device->ip)
+			return $array;
+
+
+		foreach ($params as $param)
+		{
+			$oid  	 = $param->oid;
+			$results = $this->snmp_walk($oid);
+
+			// TODO: if device not reachable take already saved SnmpValues from Database
+			// if (!$results) ...
+
+			foreach ($results as $oid->res_oid => $value)
+			{
+				// Set SnmpValue
+				$ret 	= $this->_snmp_value_set($oid, $value);
+
+				$id 	= $ret[0];
+				$index  = $ret[1];
+
+				// Compose Array with html options that is transformed to html string later
+				$options = $param->oid->access == 'read-only' ? ['readonly'] : null;
+
+				if ($param->type_array)
+				{
+					$options = $value;
+					$value   = $this->string_to_array($param->type_array);
+				}
+
+				$field = array(
+					'form_type' 	=> $oid->html_type,
+					'name' 			=> 'field_'.$id,	 		// = SnmpValue->id - TODO: Check if string 'field_' is necessary in front
+					'description' 	=> $oid->name.$index,
+					// 'description' 	=> '<res href="'.route('OID.edit', ['id' => $param->id]).'">'.$param->name.'</res>',
+					'field_value' 	=> $value,
+					'options' 		=> $options
+					);
+
+				array_push($array, $field);
+			}
+		}
+
+		return $array;
+	}
+
+
+	/**
+	 * The SNMP Walk Function
+	 *
+	 * make a snmpwalk over the entire $oid->oid
+	 * and create/update related SnmpValue Objects
+	 *
+	 * @param oid the OID Object
+	 * @return array of snmpwalk over oid in format [SnmpValue object id, snmp value]
+	 *
+	 * @author Torsten Schmidt
+	 */
+	public function snmp_walk ($oid)
+	{
+		$community = $this->_get_community();
+
+		// Walk
+		$walk = snmpwalkoid($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
+
+		// Log
+		Log::info('snmp: get '.$this->snmp_log().' '.$oid->oid.' '.implode(' ',$walk));
+
+		return $walk;
+	}
 
 
 	/**
@@ -113,12 +195,13 @@ class SnmpController extends \BaseController{
 			'netelement_id' => $this->device->id,
 			'oid_id' 		=> $oid->id,
 			'value' 		=> $value,
+			'oid_index' 	=> ''
 			);
 		
 		// $obj = SnmpValue::updateOrCreate($data); 		// doesnt work as is
 
 		// compare resulting OID from snmpwalk with queried OID ... in case it's different we have a table with multiple elements & indexes
-		if ($oid->oid != $oid->res_oid)
+		if ($oid->oid.'.0' != $oid->res_oid)
 		{
 			$data['oid_index'] = str_replace($oid->oid, '', $oid->res_oid);
 
@@ -133,10 +216,10 @@ class SnmpController extends \BaseController{
 			// $data['updated_at'] = \Carbon\Carbon::now(\Config::get('app.timezone'));
 			$obj->update($data);
 
-			return $obj->id;
+			return [$obj->id, $data['oid_index']];
 		}
 
-		return SnmpValue::create($data);
+		return [SnmpValue::create($data), $data['oid_index']];
 	}
 
 
@@ -167,48 +250,38 @@ class SnmpController extends \BaseController{
 		return $this->device->{'community_'.$access} ? : \Modules\ProvBase\Entities\ProvBase::get([$access.'_community'])->first()->{$access.'_community'};
 	}
 
+
 	/**
-	 * The SNMP Walk Function
+	 * Perform a SNMP set of all SNMP Values for this Controller
 	 *
-	 * make a snmpwalk over the entire $oid->oid
-	 * and create/update related SnmpValue Objects
-	 *
-	 * @param oid the OID Object
-	 * @return array of snmpwalk over oid in format [SnmpValue object id, snmp value]
+	 * @param 	data 	the HTML data array in form: ['field_<SnmpValue ID>' => <value>]
+	 * @return 	form_fields array for generic edit view function
 	 *
 	 * @author Torsten Schmidt
 	 */
-	public function snmp_walk ($param)
+	public function snmp_set_all($data)
 	{
-		$community = $this->_get_community();
-		$oid = $param->oid;
-
-		// Walk
-		$walk = snmpwalkoid($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
-
-
-		// Log
-		Log::info('snmp: get '.$this->snmp_log().' '.$oid->oid.' '.implode(' ',$walk));
-
-		// Fetch Walk and write result to SnmpValue Objects (DB)
-		$ret = array();
-
-		foreach ($walk as $oid->res_oid => $v)
+		foreach ($data as $field => $value)
 		{
-			// if (!$v)
-			// 	return false;
+			if (explode ('_', $field)[0] == 'field')
+			{
+				// explode data & write to Database
+				$id  = explode ('_', $field)[1];
+				$snmp_val = SnmpValue::findOrFail($id);
 
-			$id = $this->_snmp_value_set($oid, $v);
+				// Set Value of Parameter in Database & Device only if it was changed in GUI
+				if ($snmp_val->value != $value)
+				{
+					$snmp_val->value = $value;
+					$snmp_val->save();
 
-			if (!$id)
-				return false;
-
-			array_push($ret, [$id, $v]);
+					// Set Value in Device via SNMP
+					$this->snmp_set($snmp_val);
+				}
+			}
 		}
-// if ($param->oid->name == 'sysORDescr')
-// 	d($walk, $oid, $oid->oid);
 
-		return $ret;
+		return true;
 	}
 
 
@@ -247,96 +320,10 @@ class SnmpController extends \BaseController{
 
 
 
-	/**
-	 * Prepare Formular Fields for Controlling View of NetElement
-	 * This includes getting all SNMP Values from Device
-	 * 
-	 * @return 	Array 	Data for Generic Form View
-	 *
- 	 * @author Torsten Schmidt, Nino Ryschawy
-	 */
-	public function prep_form_fields()
+	private function snmp_log()
 	{
-		$ret  = [];
-		$params = $this->device->netelementtype->parameters;
-
-		if (!$this->device->ip)
-			return $ret;
-
-		// TODO: if device not reachable take already saved SnmpValues
-    	foreach ($params as $param)
-    	{
-    		$results = $this->snmp_walk($param);
-
-    		foreach ($results as $res)
-    		{
-    			// create array with html options that is transformed to html string later
-    			$options = $param->oid->access == 'read-only' ? ['readonly'] : null;
-    			$value = $res[1];
-
-    			if($param->type_array)
-    			{
-    				$options = $res[1];
-    				$value = $this->string_to_array($param->type_array);
-    			}
-
-    			$field = array(
-    				'form_type' 	=> $param->oid->html_type,
-    				'name' 			=> 'field_'.$res[0], 		// = SnmpValue->id - TODO: Check if string 'field_' is necessary in front
-    				'description' 	=> $param->oid->name,
-    				// 'description' 	=> '<res href="'.route('OID.edit', ['id' => $param->id]).'">'.$param->name.'</res>',
-    				'field_value' 	=> $value,
-    				'options' 		=> $options
-    				);
-
-    			array_push($ret, $field);
-    		}
-    	}
-
-    	return $ret;
+		return $this->device->ip;
 	}
-
-
-
-	/**
-	 * Perform a SNMP set of all SNMP Values for this Controller
-	 *
-	 * @param 	data 	the HTML data array in form: ['field_<SnmpValue ID>' => <value>]
-	 * @return 	form_fields array for generic edit view function
-	 *
-	 * @author Torsten Schmidt
-	 */
-    public function snmp_set_all($data)
-    {
-    	foreach ($data as $field => $value)
-    	{
-    		if (explode ('_', $field)[0] == 'field')
-    		{
-    			// explode data & write to Database
-    			$id  = explode ('_', $field)[1];
-	    		$snmp_val = SnmpValue::findOrFail($id);
-
-	    		// Set Value of Parameter in Database & Device only if it was changed in GUI
-	    		if ($snmp_val->value != $value)
-	    		{
-					$snmp_val->value = $value;
-					$snmp_val->save();
-
-		    		// Set Value in Device via SNMP
-					$this->snmp_set($snmp_val);
-	    		}
-    		}
-    	}
-
-    	return true;
-    }
-
-
-
-    private function snmp_log()
-    {
-    	return $this->device->ip;
-    }
 
 
 	/**
@@ -347,10 +334,10 @@ class SnmpController extends \BaseController{
 	 */
 	private function snmp_def_mode()
 	{
-        snmp_set_quick_print(TRUE);
-        snmp_set_oid_numeric_print(TRUE);
-        snmp_set_valueretrieval(SNMP_VALUE_PLAIN);
-        snmp_set_oid_output_format (SNMP_OID_OUTPUT_NUMERIC);
+		snmp_set_quick_print(TRUE);
+		snmp_set_oid_numeric_print(TRUE);
+		snmp_set_valueretrieval(SNMP_VALUE_PLAIN);
+		snmp_set_oid_output_format (SNMP_OID_OUTPUT_NUMERIC);
 	}
 
 
