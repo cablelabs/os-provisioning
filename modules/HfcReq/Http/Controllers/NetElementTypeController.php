@@ -118,6 +118,8 @@ class NetElementTypeController extends \BaseController {
 		$oids = \Request::input('oid_id');
 		$this->_attach_oids($id, $oids);
 
+		// TODO: Implement Validation ?
+
 		return \Redirect::route('NetElementType.edit', $id);
 	}
 

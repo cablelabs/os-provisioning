@@ -26,6 +26,7 @@ class RenameSnmpMibtoOIDTable extends BaseMigration {
 			DB::statement('ALTER TABLE oid modify type enum(\'i\',\'u\',\'s\',\'x\',\'d\',\'n\',\'o\',\'t\',\'a\',\'b\') null');
 			DB::statement('ALTER TABLE oid CHANGE field name VARCHAR(255)');
 
+			$table->string('name_gui'); 			// Better understandable Name in Controlling View
 			$table->string('syntax');
 			$table->string('access');
 
@@ -47,7 +48,7 @@ class RenameSnmpMibtoOIDTable extends BaseMigration {
 		Schema::table($this->tablename, function(Blueprint $table)
 		{
 			DB::statement('ALTER TABLE '.$this->tablename.' CHANGE mibfile_id devicetype_id int');
-			$table->dropColumn(['name', 'syntax', 'access']);
+			$table->dropColumn(['name', 'syntax', 'access', 'name_gui']);
 			// NOTE: it's not desired to undo the not null modify statements
 
 			$table->string('html_frame',16);

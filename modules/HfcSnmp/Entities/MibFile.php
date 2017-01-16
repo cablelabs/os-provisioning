@@ -91,17 +91,6 @@ class MibFile extends \BaseModel {
 	 */
 	public static function get_oid_type($string)
 	{
-		// u 	unsigned INTEGER
-		// i 	INTEGER
-		// d 	DECIMAL STRING
-		// x 	HEX STRING
-		// s 	STRING
-		// t 	TIMETICKS
-		// a 	IPADDRESS
-		// b 	BITS
-
-		// o 	OBJID
-		// n 	NULLOBJ
 		$type = '';
 
 		if (strpos($string, 'unsigned integer') !== false)
