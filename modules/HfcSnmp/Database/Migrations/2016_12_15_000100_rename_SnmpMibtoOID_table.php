@@ -28,6 +28,8 @@ class RenameSnmpMibtoOIDTable extends BaseMigration {
 
 			$table->string('name_gui'); 			// Better understandable Name in Controlling View
 			$table->integer('unit_divisor');
+			$table->integer('startvalue');
+			$table->integer('endvalue');
 			$table->string('syntax');
 			$table->string('access');
 
@@ -49,7 +51,7 @@ class RenameSnmpMibtoOIDTable extends BaseMigration {
 		Schema::table($this->tablename, function(Blueprint $table)
 		{
 			DB::statement('ALTER TABLE '.$this->tablename.' CHANGE mibfile_id devicetype_id int');
-			$table->dropColumn(['name', 'syntax', 'access', 'name_gui, unit_divisor']);
+			$table->dropColumn(['name', 'syntax', 'access', 'name_gui, unit_divisor, startvalue, endvalue']);
 			// NOTE: it's not desired to undo the not null modify statements
 
 			$table->string('html_frame',16);

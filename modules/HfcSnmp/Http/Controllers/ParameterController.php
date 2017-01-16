@@ -46,7 +46,7 @@ class ParameterController extends \BaseController {
 	// Note: This is currently not used - see NetElementTypeController@attach
 	public function prepare_rules($rules, $data)
 	{
-		// don't allow double OID entries for a NetElementType
+		// don't allow double OID entries for a NetElementType - TODO: add MibFile_id as constraint
 		$data['oid_id'] = 'unique:parameter,oid_id,'.$id.',id,deleted_at,NULL,netelementtype_id,'.$data['netelementtype_id'];
 
 		return parent::prepare_rules($rules, $data);

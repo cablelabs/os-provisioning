@@ -196,6 +196,8 @@ class MibFile extends \BaseModel {
 						break;
 				}
 
+				// TODO: extract start & endvalue
+
 				// access
 				if (strpos($line, 'MAX-ACCESS') !== false)
 				{
@@ -219,6 +221,8 @@ class MibFile extends \BaseModel {
 					$description = str_replace("\t", '', $description);
 				}
 
+				// TODO: try to extract unit divisor from description ?
+
 				unset($out[$key]);
 			}
 
@@ -234,6 +238,8 @@ class MibFile extends \BaseModel {
 				'syntax' 	=> $syntax,
 				'type' 		=> self::get_oid_type(strtolower($syntax)),
 				'html_type' => 'text', 		// default - TODO: change dependent on syntax
+				// 'startvalue' => , 
+				// 'endvalue' 	=> ,
 				'description' => $description
 			]);
 		}
