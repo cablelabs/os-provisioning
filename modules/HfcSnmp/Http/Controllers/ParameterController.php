@@ -27,7 +27,7 @@ class ParameterController extends \BaseController {
 		return array(
 			// array('form_type' => 'text', 'name' => 'mibfile', 'description' => 'MIB-File', 'options' => ['readonly']),
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name', 'options' => ['readonly']),
-			array('form_type' => 'text', 'name' => 'oid', 'description' => 'OID', 'options' => ['readonly']),
+			array('form_type' => 'link', 'name' => $oid->oid, 'description' => 'OID', 'url' => route('OID.edit', ['id' => $oid->id]), 'help' => trans('helper.oid_link')),
 			// array('form_type' => 'text', 'name' => 'syntax', 'description' => 'Syntax', 'options' => ['readonly']),
 			// array('form_type' => 'text', 'name' => 'access', 'description' => 'Access', 'options' => ['readonly']),
 			// array('form_type' => 'text', 'name' => 'html_type', 'description' => 'HTML Type', 'options' => ['readonly']),

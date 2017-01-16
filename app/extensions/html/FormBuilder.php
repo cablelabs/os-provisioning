@@ -178,6 +178,26 @@ class FormBuilder extends CollectiveFormBuilder {
         // return $this->wrapCheckable($label, 'checkbox', $checkable);
     }
 
+    /**
+     * Creates Link looking like a button - See Parameter edit view
+     *
+     * more possible color names: primary, info, success, danger, warning, inverse, white, link
+     *
+     * @param   url     Array   [1 => url, 2 => button_name]
+     */
+    public function link($name, $url, $color = 'default')
+    {
+        return $this->appendDiv('<a class="btn btn-'.$color.' btn-block" href="'.$url.'">'.$name.'</a>');
+            
+        // 'html' => 
+        //     '<div class="col-md-12" style="background-color:white">
+        //         <div class="form-group"><label style="margin-top: 10px;" class="col-md-4 control-label">OID</label>
+        //             <div class="col-md-7">
+        //                 <a class="btn btn-default btn-block" href="'.route('OID.edit', ['id' => $oid->id]).'"> '.$oid->oid.'</a>
+        //             </div>
+        //         </div>
+        //     </div>'),
+    }
 
 
     /**

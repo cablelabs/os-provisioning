@@ -50,6 +50,7 @@ return [
   *	MODULE: HfcSnmp
   */
 	'mib_filename' 					=> 'Der Dateiname setzt sich aus MIB Name und Revision zusammen. Existiert bereits ein MIB-File mit selbem Dateiname und ist identisch, kann dieses nicht erneut angelegt werden.',
+	'oid_link' 						=> 'Gehe zu OID Einstellungen',
 
  /**
   *	MODULE: ProvBase	

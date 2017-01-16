@@ -287,11 +287,14 @@ class BaseViewController extends Controller {
 					$s .= \Form::password($field['name']);
 					break;
 
+				case 'link':
+					$s .= \Form::link($field['name'], $field['url'], isset($field['color']) ? : 'default');
+					break;
+
 				default:
 					$s .= \Form::$field["form_type"]($field["name"], $field['field_value'], $options);
 					break;
 			}
-
 			// Help: add help icon/image behind form field
 			if (isset($field['help']))
 				$s .= '<div title="'.$field['help'].'" name='.$field['name'].'-help class=col-md-1>'.
@@ -315,7 +318,6 @@ finish:
 			$add = $field;
 			$add['html'] = $s;
 			array_push($ret, $add);
-
 		}
 
 		return $ret;
