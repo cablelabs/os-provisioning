@@ -27,6 +27,7 @@ class OIDController extends \BaseController {
 
 			// array('form_type' => 'checkbox', 'name' => 'oid_table', 'description' => 'SNMP Table Element'),
 			array('form_type' => 'select', 'name' => 'type', 'description' => 'SNMP Type', 'value' => OID::getPossibleEnumValues('type', true)),
+			array('form_type' => 'text', 'name' => 'unit_divisor', 'description' => 'Unit Divisor'),
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'),
 		);
 	}

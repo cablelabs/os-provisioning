@@ -140,9 +140,8 @@ class SnmpController extends \BaseController{
 				$field = array(
 					'form_type' 	=> $oid->html_type,
 					'name' 			=> 'field_'.$id,	 		// = SnmpValue->id - TODO: Check if string 'field_' is necessary in front
-					'description' 	=> $oid->name.$index,
-					// 'description' 	=> '<res href="'.route('OID.edit', ['id' => $param->id]).'">'.$param->name.'</res>',
-					'field_value' 	=> $value,
+					'description' 	=> $oid->name_gui ? $oid->name_gui.$index : $oid->name.$index,
+					'field_value' 	=> $oid->unit_divisor && is_numeric($value) ? $value / $oid->unit_divisor : $value,
 					'options' 		=> $options
 					);
 
