@@ -35,29 +35,9 @@ class NetElementTypeController extends \BaseController {
 
 
 	/**
-	 * Assign OIDs to NetElementType - Store in pivot/intermediate-table
-	 *
-	 * @param 	$id 			integer 	netelementtype id
-	 * @input 	$mibfile_id 	integer 	ID of MIB-File we want to attach the OIDs to the device type
-	 */
-	public function add_oid_from_mib($id)
-	{
-		if (($mibfile_id = \Request::input('mibfile_id')) == 0)
-			return \Redirect::back();
-
-		// generate list of OIDs and attach to device type (fastest method)
-		$oids = OID::where('mibfile_id', '=', $mibfile_id)->get(['id'])->keyBy('id')->keys()->all();
-		$this->_attach_oids($id, $oids);
-
-		// $devtype = NetElementType::findOrFail($id);
-		// $devtype->oids()->attach($oids);
-
-		return \Redirect::route('NetElementType.edit', $id);
-	}
-
-
-	/**
 	 * Return the View for Assigning existing OIDs to the NetElementType
+	 *
+	 * @return  View
 	 */
 	public function assign($id)
 	{
@@ -85,13 +65,74 @@ class NetElementTypeController extends \BaseController {
 		return \View::make('hfcreq::NetElementType.assign', $this->compact_prep_view(compact('view_header', 'headline', 'view_var', 'oids', 'mibs')));
 	}
 
+
+	/**
+	 * Attach OIDs to a NetElementType - Store in pivot/intermediate-table (parameter) - Selection is done in assign.blade.php
+	 * 
+	 * Possible Methods:
+	 	* Single Chosen OIDs via Multiselect
+	 	* All OIDs from an already uploaded MibFile
+	 	* A Newline-separated List of OIDs that have to exist in Database (from already uploaded MibFile)
+	 *
+	 * @param 	$id 			integer 	netelementtype id
+	 * @input 	oid_id			array 		IDs of the OIDs we want to attach (transfered via HTTP POST)
+	 * @input 	mibfile_id 		integer 	ID of MIB-File
+	 * @input 	oid_list 		Text 		Newline-separated List of OIDs
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function attach_oids($id)
+	{
+		// Selected MibFile
+		if (\Request::has('mibfile_id'))
+		{
+			if (($mibfile_id = \Request::input('mibfile_id')) == 0)
+				return \Redirect::back();
+
+			// generate list of OIDs and attach to device type (fastest method)
+			$oids = OID::where('mibfile_id', '=', $mibfile_id)->get(['id'])->keyBy('id')->keys()->all();
+		}
+
+		// List from Textarea
+		if (\Request::has('oid_list'))
+		{
+			$delimiters = [',', ';', "\n"];
+			$oid_list = str_replace($delimiters, $delimiters[0], \Request::input('oid_list'));
+			$oid_list = explode($delimiters[0], $oid_list);
+
+			foreach ($oid_list as $oid)
+			{
+				$oid 	= trim($oid, "\r.0");
+				$oid_o  = OID::where('oid', 'like', '%'.$oid)->get(['id'])->first();
+				if ($oid_o)
+					$oids[] = $oid_o->id;
+			}
+		}
+
+		// Multiselect
+		if (\Request::has('oid_id'))
+		{
+			$oids = \Request::input('oid_id');
+		}
+
+		// $devtype = NetElementType::findOrFail($id);
+		// $devtype->oids()->attach($oids);
+
+		$this->_create_parameter($id, $oids);
+
+		// TODO: Implement Validation ?
+
+		return \Redirect::route('NetElementType.edit', $id);
+	}
+
+
 	/**
 	 * Creates a Parameter related to NetElementType for each OID in the List
 	 *
 	 * @param 	id 		Integer 	NetElementType ID
 	 * @param 	oids 	Array 		List of OID IDs [0 => id1, 1 => id2, ...]
 	 */
-	private function _attach_oids($id, $oids)
+	private function _create_parameter($id, $oids)
 	{
 		foreach ($oids as $oid_id)
 		{
@@ -102,25 +143,6 @@ class NetElementTypeController extends \BaseController {
 
 			Parameter::create($data);
 		}
-	}
-
-	/**
-	 * Attach single chosen OIDs (multiselect) to NetElementType - Store in pivot/intermediate-table (parameter)
-	 *
-	 * @param 	$id 			integer 	device type
-	 * @input 					array 		IDs of the OIDs we want to attach to the given device type transfered via HTTP POST/PUT
-	 */
-	public function attach($id)
-	{
-		// $devtype = NetElementType::findOrFail($id);
-		// $devtype->oids()->attach(\Request::input('oid_id'));
-
-		$oids = \Request::input('oid_id');
-		$this->_attach_oids($id, $oids);
-
-		// TODO: Implement Validation ?
-
-		return \Redirect::route('NetElementType.edit', $id);
 	}
 
 
