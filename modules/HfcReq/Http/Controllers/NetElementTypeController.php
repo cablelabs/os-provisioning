@@ -174,4 +174,40 @@ class NetElementTypeController extends \BaseController {
 	}
 
 
+	/**
+	 * This Function gives the Opportunity to quickly set html_frame or html_id of multiple Parameters 
+	 * to order the Netelement Controlling View
+	 * Note: Input comes from NetElementType.settings.blade.php
+	 *
+	 * @param 	id  	Integer 	NetElementType ID
+	 * @return 	Edit View of NetElementType
+	 */
+	public function settings($id)
+	{
+		if (!\Request::has('param_id'))
+			return \Redirect::back();
+
+		$html_frame = \Request::input('html_frame');
+		$html_id 	= \Request::input('html_id');
+
+		if (!$html_frame && !$html_id)
+			return \Redirect::back();
+
+		$params = Parameter::find(\Request::input('param_id'));
+
+		// TODO: If this gets slow we could easily optimize it by doing direct sql updates
+		foreach ($params as $param)
+		{
+			if ($html_frame)
+				$param->html_frame = $html_frame;
+
+			if ($html_id)
+				$param->html_id = $html_id;
+
+			$param->save();
+		}
+
+		return \Redirect::route('NetElementType.edit', $id);
+	}
+
 }

@@ -2,6 +2,9 @@
 
 namespace Modules\HfcReq\Entities;
 
+use Modules\HfcSnmp\Entities\OID;
+use Modules\HfcSnmp\Entities\Parameter;
+
 class NetElementType extends \BaseModel {
 
 	// The associated SQL table for this Model
@@ -70,7 +73,8 @@ class NetElementType extends \BaseModel {
 			// Extra view for easier attachment (e.g. attach all oids from one mibfile)
 			$ret['Base']['Parameters']['view']['view'] = 'hfcreq::NetElementType.parameters';
 			$ret['Base']['Parameters']['view']['vars']['list'] = $this->parameters ? : [];
-
+			// Extra view for easier controlling view structure setting (html_frame, html_id of parameter)
+			$ret['Parameter Settings']['Settings']['view']['view'] = 'hfcreq::NetElementType.settings';
 		}
 
 		return $ret;
@@ -90,6 +94,20 @@ class NetElementType extends \BaseModel {
 		// return $this->HasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id')->orderBy('oid_id')->orderBy('id');
 	}
 
+
+	public static function param_list($id)
+	{
+		$eager_loading_model = new OID;
+		$params = Parameter::where('netelementtype_id', '=', $id)->with($eager_loading_model->table)->get();
+
+		if (!$params)
+			return [];
+
+		foreach ($params as $param)
+			$list[$param->id] = $param->oid->oid.' - '.$param->oid->name;
+
+		return $list;
+	}
 
 
 	/**

@@ -7,7 +7,7 @@ BaseRoute::group([], function() {
 
 	// extra View
 	BaseRoute::get('NetElementType/{netelementtype}/assign', array ('as' => 'NetElementType.assign', 'uses' => 'Modules\HfcReq\Http\Controllers\NetElementTypeController@assign'));
-	// BaseRoute::post('NetElementType/{netelementtype}/assignoids', array ('as' => 'NetElementType.assign_oids', 'uses' => 'Modules\HfcReq\Http\Controllers\NetElementTypeController@add_oid_list'));
+	BaseRoute::post('NetElementType/{netelementtype}/settings', array ('as' => 'NetElementType.settings', 'uses' => 'Modules\HfcReq\Http\Controllers\NetElementTypeController@settings'));
 
 	// attach & detach routes for many-to-many relationship
 	BaseRoute::post('NetElementType/{netelementtype}/attach_oids', array ('as' => 'NetElementType.attach_oids', 'uses' => 'Modules\HfcReq\Http\Controllers\NetElementTypeController@attach_oids'));
