@@ -27,9 +27,9 @@ class RenameSnmpMibtoOIDTable extends BaseMigration {
 			DB::statement('ALTER TABLE oid CHANGE field name VARCHAR(255)');
 
 			$table->string('name_gui'); 			// Better understandable Name in Controlling View
-			$table->integer('unit_divisor');
-			$table->integer('startvalue');
-			$table->integer('endvalue');
+			$table->integer('unit_divisor')->nullable();
+			$table->integer('startvalue')->nullable();
+			$table->integer('endvalue')->nullable();
 			$table->string('syntax');
 			$table->string('access');
 
