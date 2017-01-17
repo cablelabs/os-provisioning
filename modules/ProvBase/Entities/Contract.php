@@ -108,6 +108,11 @@ class Contract extends \BaseModel {
 			$ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
 		}
 
+		if (\PPModule::is_active('mail'))
+		{
+			$ret['Email']['Email'] = $this->emails;
+		}
+
 		return $ret;
 	}
 
@@ -209,6 +214,13 @@ class Contract extends \BaseModel {
 	{
 		if (\PPModule::is_active('billingbase'))
 			return $this->hasMany('Modules\BillingBase\Entities\SepaMandate');
+		return null;
+	}
+
+	public function emails()
+	{
+		if (\PPModule::is_active('mail'))
+			return $this->hasMany('Modules\Mail\Entities\Email');
 		return null;
 	}
 
