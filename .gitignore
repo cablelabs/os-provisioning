@@ -32,4 +32,4 @@ cp-script.sh
 tags
 
 Documentation/doxyfile.bak
-Documentation/doxygen.log
+Documentation/doxywarn.log
