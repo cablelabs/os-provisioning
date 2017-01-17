@@ -180,6 +180,18 @@ class BaseController extends Controller {
 			if(!isset($data[$field['name']]) && ($field['form_type'] == 'checkbox'))
 				$data[$field['name']] = 0;
 
+			// JavaScript controlled checkboxes sometimes returns “on” if checked – which results in
+			// logical false (=0) in database so we have to overwrite this by 1
+			// this is e.g. the case for the active checkbox on ProvVoip\Phonenumber
+			// the value in _POST seems to be browser dependend – extend the array if needed
+			if (
+				($field['form_type'] == 'checkbox')
+				&&
+				(in_array(\Str::lower($data[$field['name']]), ["on", "checked"]))
+			) {
+				$data['active'] = "1";
+			}
+
 			// trim all inputs as default
 			$data[$field['name']] = trim($data[$field['name']]);
 
