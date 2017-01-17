@@ -163,7 +163,7 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 			$code = $entry[0];
 			$company = $entry[1];
 
-			# alter entry if exists, else create new one
+			// alter entry if exists, else create new one
 			$cc = EkpCode::firstOrNew(array('ekp_code' => $code));
 			if ($cc->company != $company) {
 
