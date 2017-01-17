@@ -48,10 +48,15 @@ class SnmpController extends \BaseController{
 		$snmp->init ($netelem);
 
 		// Get Html Form Fields for generic View - this includes the snmpwalk
-		$fields 	 = $snmp->prep_form_fields();
-		$form_fields = BaseViewController::add_html_string($fields, $netelem);
+		$form_fields = $snmp->prep_form_fields();
+		$form_fields = BaseViewController::add_html_string($form_fields, $netelem);
 
-// d($form_fields);
+		// order by panel (respective html_frame)
+		$panel_form_fields = [];
+		foreach ($form_fields as $form_field)
+			isset($panel_form_fields[$form_field['panel']]) ? array_push($panel_form_fields[$form_field['panel']], $form_field) : $panel_form_fields[$form_field['panel']][0] = $form_field;
+
+// d($panel_form_fields);
 
 		// Init View
 		$model_name  = \NamespaceController::get_model_name();
@@ -64,7 +69,7 @@ class SnmpController extends \BaseController{
 		$form_path = 'Generic.form';
 		$form_update = 'NetElement.controlling_update';
 
-		return \View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'form_update', 'route_name', 'view_header_links', 'headline')));
+		return \View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'panel_form_fields', 'form_update', 'route_name', 'view_header_links', 'headline')));
 	}
 
 
@@ -99,7 +104,7 @@ class SnmpController extends \BaseController{
 	 * Prepare Formular Fields for Controlling View of NetElement
 	 * This includes getting all SNMP Values from Device
 	 * 
-	 * @return 	Array 	Data for Generic Form View
+	 * @return 	Array (Multidimensional)	Data for Generic Form View in Form [frame1 => [field1, field2, ...], frame2 => [...], ...]
 	 *
 	 * @author Torsten Schmidt, Nino Ryschawy
 	 */
@@ -107,6 +112,8 @@ class SnmpController extends \BaseController{
 	{
 		$array  = [];
 		$params = $this->device->netelementtype->parameters;
+
+		// d($params);
 
 		if (!$this->device->ip)
 			return $array;
@@ -125,10 +132,9 @@ class SnmpController extends \BaseController{
 				// Set SnmpValue
 				$ret 	= $this->_snmp_value_set($oid, $value);
 
-				$id 	= $ret[0];
-				$index  = $ret[1];
-
 				// Compose Array with html options that is transformed to html string later
+				$id 	 = $ret[0];
+				$index   = $ret[1];
 				$options = $param->oid->access == 'read-only' ? ['readonly'] : null;
 
 				if ($param->type_array)
@@ -142,7 +148,8 @@ class SnmpController extends \BaseController{
 					'name' 			=> 'field_'.$id,	 		// = SnmpValue->id - TODO: Check if string 'field_' is necessary in front
 					'description' 	=> $oid->name_gui ? $oid->name_gui.$index : $oid->name.$index,
 					'field_value' 	=> $oid->unit_divisor && is_numeric($value) ? $value / $oid->unit_divisor : $value,
-					'options' 		=> $options
+					'options' 		=> $options,
+					'panel' 		=> $param->html_frame ? : 0,
 					);
 
 				array_push($array, $field);
