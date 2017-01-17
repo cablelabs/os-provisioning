@@ -31,7 +31,7 @@ class EkpCode extends \BaseModel {
 
 	/**
 	 * Return a list [db_id => ekp (ekpcode)] of all ekps.
-	 * This list is prepared for the use in a form's <select>
+	 * This list is prepared for the use in a form's select
 	 *	- first come the favorites
 	 *	- then the rest
 	 *

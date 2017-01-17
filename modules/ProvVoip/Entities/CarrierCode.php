@@ -30,7 +30,7 @@ class CarrierCode extends \BaseModel {
 
 	/**
 	 * Return a list [db_id => carrier (carriercode)] of all carriers.
-	 * This list is prepared for the use in a form's <select>
+	 * This list is prepared for the use in a form's select
 	 *	- first comes the default value (=no carrier)
 	 *	- second are the favorites
 	 *	- then the rest

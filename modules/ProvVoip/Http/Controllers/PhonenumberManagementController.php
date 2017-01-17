@@ -140,7 +140,7 @@ class PhonenumberManagementController extends \BaseController {
 	 * Get all management jobs for Envia
 	 *
 	 * @author Patrick Reichel
-	 * @param $model current phonenumber object
+	 * @param $phonenumbermanagement current phonenumbermanagement object
 	 * @return array containing linktexts and URLs to perform actions against REST API
 	 */
 	public static function _get_envia_management_jobs($phonenumbermanagement) {
