@@ -39,3 +39,6 @@ tags
 /.idea/workspace.xml
 /modules/HfcSnmp/Entities/._.DS_Store
 /modules/HfcSnmp/Http/Controllers/._.DS_Store
+
+Documentation/doxyfile.bak
+Documentation/doxygen.log
