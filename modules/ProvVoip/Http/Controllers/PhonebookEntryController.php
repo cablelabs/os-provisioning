@@ -195,7 +195,7 @@ class PhonebookEntryController extends \BaseController {
 	 * Get all management jobs for Envia
 	 *
 	 * @author Patrick Reichel
-	 * @param $model current phonenumber object
+	 * @param $phonebookentry current phonebookentry object
 	 * @return array containing linktexts and URLs to perform actions against REST API
 	 */
 	public static function _get_envia_management_jobs($phonebookentry) {

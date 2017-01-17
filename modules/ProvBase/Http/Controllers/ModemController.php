@@ -76,7 +76,7 @@ class ModemController extends \BaseController {
 	 * Get all management jobs for Envia
 	 *
 	 * @author Patrick Reichel
-	 * @param $model current modem object
+	 * @param $modem current modem object
 	 * @return array containing linktexts and URLs to perform actions against REST API
 	 */
 	public static function _get_envia_management_jobs($modem) {
