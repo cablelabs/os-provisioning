@@ -6,7 +6,17 @@ class Parameter extends \BaseModel {
 
 	public $table = 'parameter';
 
-	public $guarded = ['name', 'oid'];
+	public $guarded = ['name'];
+
+
+	// Add your validation rules here
+	public static function rules($id = null)
+	{
+		return array(
+			'html_frame' => 'numeric|min:1',
+			'html_id' => 'numeric|min:0',
+		);
+	}
 
 	// Name of View
 	public static function view_headline()
