@@ -14,6 +14,7 @@ class MailDatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 
+		$this->call('Modules\Mail\Database\Seeders\EmailTableSeeder');
 	}
 
 }
