@@ -16,6 +16,7 @@ BaseRoute::group([], function() {
 	BaseRoute::resource('Configfile', 'Modules\ProvBase\Http\Controllers\ConfigfileController');
 	BaseRoute::resource('Qos', 'Modules\ProvBase\Http\Controllers\QosController');
 	BaseRoute::resource('Contract', 'Modules\ProvBase\Http\Controllers\ContractController');
+	BaseRoute::resource('Domain', 'Modules\ProvBase\Http\Controllers\DomainController');
 	BaseRoute::resource('ProvBase', 'Modules\ProvBase\Http\Controllers\ProvBaseController');
 
 	// Configfile: Hierarchical Index Page
