@@ -42,18 +42,28 @@ class PhonenumberController extends \BaseController {
 			$active_checkbox = array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'help' => 'If there exists a phonenumber management this checkbox will be changed depending on its (de)activation date.');
 		}
 		else {
+			$checkbox_js = '<input align="left" class=" form-control" name="active" type="checkbox" id="active" onclick="return false"'.$active_state.'>';
+			$checkbox_no_js = '<input align="left" class=" form-control" name="active" type="checkbox" id="active" disabled="disabled"'.$active_state.'>';
 			$active_checkbox = array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'html' =>
 				'<div class="col-md-12" style="background-color:white">
 					<div class="form-group"><label for="active" style="margin-top: 10px;" class="col-md-4 control-label">Active</label>
-						<div class="col-md-7"><div class="col-md-7"><input align="left" class=" form-control" name="active" type="checkbox" id="active" onclick="return false"'.$active_state.'>
+						<div class="col-md-7">
+							<div class="col-md-7">
+								<script type="text/javascript">
+									document.write(\''.$checkbox_js.'\');
+								</script>
+								<noscript>
+									'.$checkbox_no_js.'
+								</noscript>
+							</div>
+						</div>
+						<div title="Automatically set by (de)activation date in phonenumber management" name=active-help class=col-md-1>'.\HTML::image(asset('images/help.png'), '?', ['width' => 20]).'</div>
+						<div class=col-md-4>
+						</div>
+						<div class=col-md-8>
 						</div>
 					</div>
-					<div title="Automatically set by (de)activation date in phonenumber management" name=active-help class=col-md-1>'.\HTML::image(asset('images/help.png'), '?', ['width' => 20]).'</div>
-					<div class=col-md-4>
-					</div>
-					<div class=col-md-8>
-					</div>
-					</div></div>',
+				</div>',
 				);
 		}
 
