@@ -22,13 +22,6 @@ class PhonenumberController extends \BaseController {
 		if (!$model)
 			$model = new Phonenumber;
 
-		if ($model->active) {
-			$active_state = ' checked="checked"';
-		}
-		else {
-			$active_state = '';
-		}
-
 		if (\PPModule::is_active('provvoipenvia')) {
 			$login_placeholder = 'Autofilled if empty.';
 		}
@@ -39,23 +32,31 @@ class PhonenumberController extends \BaseController {
 		// if there is no phonenumbermanagement: make checkbox changeable
 		// TODO: should this be the case or do we want to need a management in each case?
 		if (is_null($model->phonenumbermanagement)) {
-			$active_checkbox = array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'help' => 'If there exists a phonenumber management this checkbox will be changed depending on its (de)activation date.');
+			$active_checkbox = array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'help' => 'If you create a PhonenumberManagement this checkbox will be set depending on its (de)activation date.');
 		}
+		// otherwise: store value in hidden form field and show symbol to indicate the current state instead
 		else {
-			$checkbox_js = '<input align="left" class=" form-control" name="active" type="checkbox" id="active" onclick="return false"'.$active_state.'>';
-			$checkbox_no_js = '<input align="left" class=" form-control" name="active" type="checkbox" id="active" disabled="disabled"'.$active_state.'>';
+
+			// TODO: move style to css file or use existing styles
+			$active_symbol_style = "font-size: 1.4em; padding-top:0.4em; padding-left: 4.8em";
+
+			// prepare the data to be stored and the symbol to be shown
+			if ($model->active) {
+				$active_state = '1';
+				$active_symbol = '<div style="color: #080; '.$active_symbol_style.'">✔</div>';
+
+			}
+			else {
+				$active_state = '0';
+				$active_symbol = '<div style="color: #f00; '.$active_symbol_style.'">✘</div>';
+			}
+
 			$active_checkbox = array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'html' =>
 				'<div class="col-md-12" style="background-color:white">
 					<div class="form-group"><label for="active" style="margin-top: 10px;" class="col-md-4 control-label">Active</label>
 						<div class="col-md-7">
-							<div class="col-md-7">
-								<script type="text/javascript">
-									document.write(\''.$checkbox_js.'\');
-								</script>
-								<noscript>
-									'.$checkbox_no_js.'
-								</noscript>
-							</div>
+							<input name="active" type="hidden" id="active" value="'.$active_state.'">
+							'.$active_symbol.'
 						</div>
 						<div title="Automatically set by (de)activation date in phonenumber management" name=active-help class=col-md-1>'.\HTML::image(asset('images/help.png'), '?', ['width' => 20]).'</div>
 						<div class=col-md-4>
