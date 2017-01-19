@@ -2,7 +2,7 @@
 
 
 @section('content_top')
-
+	{{ $headline }}
 @stop
 
 

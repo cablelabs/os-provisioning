@@ -5,6 +5,7 @@ namespace Modules\HfcReq\Http\Controllers;
 use Modules\HfcReq\Entities\NetElementType;
 use Modules\HfcSnmp\Entities\OID;
 use Modules\HfcSnmp\Entities\Parameter;
+use \App\Http\Controllers\BaseViewController;
 
 
 class NetElementTypeController extends \BaseController {
@@ -43,7 +44,7 @@ class NetElementTypeController extends \BaseController {
 	{
 		$view_var 		= NetElementType::findOrFail($id);
 		$view_header 	= 'Attach single OIDs';
-		$headline       = 'Headline';
+		$headline 		= BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var).' assign';
 
 		// Get Mibs in case all OIDs from one Mib shall be attached
 		$mibs = \Modules\HfcSnmp\Entities\MibFile::select(['id', 'name', 'version'])->get();

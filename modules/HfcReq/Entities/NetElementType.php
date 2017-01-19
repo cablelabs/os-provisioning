@@ -105,7 +105,7 @@ class NetElementType extends \BaseModel {
 			return [];
 
 		foreach ($params as $param)
-			$list[$param->id] = $param->oid->oid.' - '.$param->oid->name;
+			$list[$param->id] = $param->oid->gui_name ? $param->oid->oid.' - '.$param->oid->gui_name : $param->oid->oid.' - '.$param->oid->name;
 
 		return $list;
 	}
