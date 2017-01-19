@@ -64,6 +64,8 @@ class SnmpController extends \BaseController{
 		$view_var 	 = $netelem;
 		$route_name  = \NamespaceController::get_route_name();
 		$view_header_links = BaseViewController::view_main_menus();
+		$headline 	 = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var);
+
 		// $panel_right = $this->prepare_tabs($view_var);
 		$view_path = 'hfcsnmp::NetElement.controlling';
 		$form_path = 'Generic.form';

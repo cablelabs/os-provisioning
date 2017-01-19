@@ -438,12 +438,11 @@ finish:
 			while ($parent);
 		}
 
-
 		// Base Link to Index Table in front of all relations
 		if (in_array($route_name, BaseController::get_config_modules()))	// parse: Global Config requires own link
 			$s = \HTML::linkRoute('Config.index', BaseViewController::translate_view('Global Configurations', 'Header')).': '.$s;
-		else
-			$s = \HTML::linkRoute($route_name.'.index', $view_header).': '.$s;
+		else if (Route::has($route_name.'.index'))
+			$s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
 
 		return $s;
 	}

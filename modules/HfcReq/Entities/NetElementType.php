@@ -34,7 +34,8 @@ class NetElementType extends \BaseModel {
 	public function view_index_label()
 	{
 		// in Tree View returning an array is currently not yet implemented
-		return $this->name;
+		$version = $this->version ? ' - '.$this->version : '';
+		return $this->name.$version;
 
 		// return ['index' => [$this->name],
 		//         'index_header' => ['Name'],
@@ -127,7 +128,7 @@ class NetElementType extends \BaseModel {
 	 */
 	public static function get_tree_list()
 	{
-		$netelementtypes = NetElementType::orderBy('parent_id')->orderBy('id')->get(['id', 'parent_id', 'name']);
+		$netelementtypes = NetElementType::orderBy('parent_id')->orderBy('id')->get();
 		$types = [];
 
 		foreach ($netelementtypes as $key => $elem)
