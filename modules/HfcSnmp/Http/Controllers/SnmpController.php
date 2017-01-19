@@ -19,6 +19,19 @@ class SnmpController extends \BaseController{
 
 
 	/**
+	 * @var 	Is Set to "tabular" if Controlling View is built from html_frame strings with more than 2 letters in 1st form or "linear" in 2nd form
+	 * 				"tabular" 					"linear"
+	 			|-------------------| 		|-----------|
+	 			| 11 | 12 | 13 		| 		| 1 | 2 | 3 |
+	 			| 21 | 22 			| 		| 4 | 5 | 6 |
+	 			| 31 | 32 | 33 | 34 | 		| 7 | 8 	|
+	 			|-------------------| 		|-----------|
+	 */
+	private $view_mode = 'tabular';
+
+
+
+	/**
 	 * Init SnmpController with a certain Device Model and
 	 * a MIB Array
 	 *
@@ -51,12 +64,27 @@ class SnmpController extends \BaseController{
 		$form_fields = $snmp->prep_form_fields();
 		$form_fields = BaseViewController::add_html_string($form_fields, $netelem);
 
-		// order by panel (respective html_frame)
+		// set view mode
+		$mode = $snmp->view_mode;
+
+		// order by panel (respective html_frame), evaluate count of columns
 		$panel_form_fields = [];
 		foreach ($form_fields as $form_field)
-			isset($panel_form_fields[$form_field['panel']]) ? array_push($panel_form_fields[$form_field['panel']], $form_field) : $panel_form_fields[$form_field['panel']][0] = $form_field;
+			isset($panel_form_fields[$form_field['panel']]) ? $panel_form_fields[$form_field['panel']][] = $form_field : $panel_form_fields[$form_field['panel']][0] = $form_field;
 
-// d($panel_form_fields);
+		// evaluate count of columns for each row if mode is tabular
+		if ($mode == 'tabular')
+		{
+			$frames = array_keys($panel_form_fields);
+			foreach ($frames as $key)
+			{
+				$key = (string) $key;
+				$columns[$key[0]] = $key[1];
+			}
+
+		}
+
+// d($panel_form_fields, $mode, $columns);
 
 		// Init View
 		$model_name  = \NamespaceController::get_model_name();
@@ -64,14 +92,14 @@ class SnmpController extends \BaseController{
 		$view_var 	 = $netelem;
 		$route_name  = \NamespaceController::get_route_name();
 		$view_header_links = BaseViewController::view_main_menus();
-		$headline 	 = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var);
+		$headline 	 = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var).' controlling';
 
 		// $panel_right = $this->prepare_tabs($view_var);
 		$view_path = 'hfcsnmp::NetElement.controlling';
 		$form_path = 'Generic.form';
 		$form_update = 'NetElement.controlling_update';
 
-		return \View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'panel_form_fields', 'form_update', 'route_name', 'view_header_links', 'headline')));
+		return \View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'panel_form_fields', 'form_update', 'route_name', 'view_header_links', 'headline', 'mode', 'columns')));
 	}
 
 
@@ -151,8 +179,13 @@ class SnmpController extends \BaseController{
 					'description' 	=> $oid->name_gui ? $oid->name_gui.$index : $oid->name.$index,
 					'field_value' 	=> $oid->unit_divisor && is_numeric($value) ? $value / $oid->unit_divisor : $value,
 					'options' 		=> $options,
-					'panel' 		=> $param->html_frame ? : 0,
+					'panel' 		=> $param->html_frame ? : '0',
+					// 'help' 			=> $oid->description,
 					);
+
+				// set default linear mode, when even 1 field has a html frame with string length of 1
+				if (strlen($field['panel'] < 2))
+					$this->view_mode = 'linear';
 
 				array_push($array, $field);
 			}
