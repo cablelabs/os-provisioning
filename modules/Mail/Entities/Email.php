@@ -17,7 +17,6 @@ class Email extends \BaseModel {
 		return array(
 			'localpart' => 'regex:/^[0-9A-Za-z\.\-\_]+$/|required|max:64|unique:email,localpart,'.$id.',id,deleted_at,NULL',
 			'domain_id' => 'required',
-			'password' => 'required',
 			'index' => "integer|required",
 			'forwardto' => 'email',
 		);
@@ -45,6 +44,21 @@ class Email extends \BaseModel {
 	public function domain()
 	{
 		return $this->belongsTo('Modules\ProvBase\Entities\Domain');
+	}
+
+	/**
+	 * Update the email password
+	 * A salted sha512 hash is used instead of bcrypt (not in mainline glibc)
+	 *
+	 * @param psw: password
+	 *
+	 * @author Ole Ernst
+	 */
+	public function psw_update($psw)
+	{
+		$salt = str_replace('+', '.', base64_encode(random_bytes(12)));
+		$this->password = crypt($psw, sprintf('$6$%s$', $salt));
+		$this->save();
 	}
 
 }

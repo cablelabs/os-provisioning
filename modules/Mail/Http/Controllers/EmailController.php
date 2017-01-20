@@ -29,7 +29,7 @@ class EmailController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 1),
 			array('form_type' => 'text', 'name' => 'localpart', 'description' => 'Local Part'),
 			array('form_type' => 'select', 'name' => 'domain_id', 'description' => 'Domain', 'value' => $model->html_list(Domain::where('type', '=', 'email')->get(), 'name')),
-			array('form_type' => 'text', 'name' => 'password', 'description' => 'Password'),
+			array('form_type' => 'text', 'name' => 'password', 'description' => 'Password', 'hidden' => 1),
 			array('form_type' => 'select', 'name' => 'index', 'description' => 'Index', 'value' => $avail, 'help' => "0: disabled\n1: primary email address"),
 			array('form_type' => 'checkbox', 'name' => 'greylisting', 'description' => 'Greylisting', 'value' => '1'),
 			array('form_type' => 'checkbox', 'name' => 'blacklisting', 'description' => 'Blacklisting', 'value' => '1'),
