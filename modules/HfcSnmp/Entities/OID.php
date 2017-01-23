@@ -39,8 +39,8 @@ class OID extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-		return ['index' => [$this->name, $this->oid, $this->access],
-		        'index_header' => ['Name', 'OID', 'Access'],
+		return ['index' => [$this->name, $this->name_gui, $this->oid, $this->access],
+		        'index_header' => ['Name', 'Descriptive Name', 'OID', 'Access'],
 		        'header' => $this->name.' - '.$this->oid];
 	}
 

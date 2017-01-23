@@ -240,7 +240,8 @@ class MibFile extends \BaseModel {
 	/**
 	 * Recursive Deletion of related OIDs - use this function as generic recursive deletion is super slow in this case!
 	 *
-	 * NOTE: generic recursive Deletion is disabled in BaseModel@get_all_children() by added exceptional column name: mibfile_id
+	 * NOTE: generic recursive Deletion was disabled in BaseModel@get_all_children() by added exceptional column name: mibfile_id
+	 	* recursive deletion is enabled again because it's needed also for Parameters
 	 */
 	public function hard_delete_oids()
 	{

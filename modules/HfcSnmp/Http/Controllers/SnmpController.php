@@ -72,6 +72,8 @@ class SnmpController extends \BaseController{
 		foreach ($form_fields as $form_field)
 			isset($panel_form_fields[$form_field['panel']]) ? $panel_form_fields[$form_field['panel']][] = $form_field : $panel_form_fields[$form_field['panel']][0] = $form_field;
 
+		ksort($panel_form_fields);
+
 		// evaluate count of columns for each row if mode is tabular
 		if ($mode == 'tabular')
 		{
