@@ -30,12 +30,18 @@ class RenameSnmpMibtoOIDTable extends BaseMigration {
 			$table->integer('unit_divisor')->nullable();
 			$table->integer('startvalue')->nullable();
 			$table->integer('endvalue')->nullable();
+			$table->integer('stepsize')->nullable();
 			$table->string('syntax');
 			$table->string('access');
 
+			$table->text('value_set'); 				// Possible Values for Select
+
 			// move to pivot table (of many to many relationship)
 			$table->dropColumn(['html_frame', 'html_properties', 'html_id']);
+
+			$this->set_fim_fields(['name', 'name_gui', 'syntax', 'value_set', 'description']);
 		});
+
 	}
 
 

@@ -86,39 +86,10 @@ class MibFile extends \BaseModel {
 	}
 
 
-	/**
-	 * Return SNMP OID Type Character from Syntax String (for OID Type field)
-	 */
-	public static function get_oid_type($string)
-	{
-		$type = '';
-
-		if (strpos($string, 'unsigned integer') !== false)
-			$type = 'u';
-		else if (strpos($string, 'integer') !== false)
-			$type = 'i';
-		else if (strpos($string, 'decimal string') !== false)
-			$type = 'd';
-		else if (strpos($string, 'hex string') !== false)
-			$type = 'x';
-		else if (strpos($string, 'string') !== false)
-			$type = 's';
-		else if (strpos($string, 'counter') !== false)
-			$type = 'i';
-		else if (strpos($string, 'timeticks') !== false)
-			$type = 't';
-		else if (strpos($string, 'ipaddress') !== false)
-			$type = 'a';
-		else if (strpos($string, 'bits') !== false)
-			$type = 'b';
-
-		return $type;
-	}
-
 
 	/**
 	 * Create OID Database Entries from parsing snmptranslate outputs of all OIDs of the MIB
-	 * Extract informations of OID: name, syntax, access, description
+	 * Extract informations of OID: name, syntax, access, type, values, description, ...
 	 *
 	 * @author Nino Ryschawy
 	 */
@@ -186,6 +157,7 @@ class MibFile extends \BaseModel {
 					$name = $tmp[0];
 				}
 
+
 				// syntax
 				if (strpos($line, 'SYNTAX') !== false)
 				{
@@ -196,7 +168,14 @@ class MibFile extends \BaseModel {
 						break;
 				}
 
-				// TODO: extract start & endvalue
+				// extract type & value_set (or start/endvalue) from syntax
+				$type = OID::get_oid_type(strtolower($syntax));
+				$value_set = OID::get_value_set($syntax);
+
+				$x = is_string($value_set) ? strpos($syntax, '{') : strpos($syntax, '(');
+				if ($x !== false)
+					$syntax = substr($syntax, 0, $x);
+
 
 				// access
 				if (strpos($line, 'MAX-ACCESS') !== false)
@@ -207,6 +186,7 @@ class MibFile extends \BaseModel {
 					else
 						break;
 				}
+
 
 				// description
 				if (strpos($line, 'DESCRIPTION') !== false)
@@ -221,7 +201,7 @@ class MibFile extends \BaseModel {
 					$description = str_replace("\t", '', $description);
 				}
 
-				// TODO: try to extract unit divisor from description ?
+				// TODO: try to extract unit divisor, value_set if not yet available from description ?
 
 				unset($out[$key]);
 			}
@@ -231,16 +211,17 @@ class MibFile extends \BaseModel {
 
 			// create OID
 			OID::create([
-				'mibfile_id' => $this->id,
-				'oid' 		=> $oid,
-				'name' 		=> $name,
-				'access' 	=> $access,
-				'syntax' 	=> $syntax,
-				'type' 		=> self::get_oid_type(strtolower($syntax)),
-				'html_type' => 'text', 		// default - TODO: change dependent on syntax
-				// 'startvalue' => , 
-				// 'endvalue' 	=> ,
-				'description' => $description
+				'mibfile_id' 	=> $this->id,
+				'oid' 			=> $oid,
+				'name'	 		=> $name,
+				'access'	 	=> $access,
+				'syntax' 		=> $syntax,
+				'type' 			=> $type,
+				'html_type' 	=> is_string($value_set) ? 'select' : 'text',
+				'value_set'		=> is_string($value_set) ? $value_set : null,
+				'startvalue' 	=> is_string($value_set) ? null : $value_set[0],
+				'endvalue' 		=> is_string($value_set) ? null : $value_set[1],
+				'description' 	=> $description,
 			]);
 		}
 

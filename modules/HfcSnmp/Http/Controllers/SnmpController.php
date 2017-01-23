@@ -172,16 +172,20 @@ class SnmpController extends \BaseController{
 					$options = $value;
 					$value   = $this->string_to_array($param->type_array);
 				}
-
+// if ($oid->name_gui == 'Forward Equalization')
+// 	d($value);
 				$field = array(
 					'form_type' 	=> $oid->html_type,
 					'name' 			=> 'field_'.$id,	 		// = SnmpValue->id - TODO: Check if string 'field_' is necessary in front
 					'description' 	=> $oid->name_gui ? $oid->name_gui.$index : $oid->name.$index,
 					'field_value' 	=> $oid->unit_divisor && is_numeric($value) ? $value / $oid->unit_divisor : $value,
 					'options' 		=> $options,
-					'panel' 		=> $param->html_frame ? : '0',
+					'panel' 		=> $param->html_frame ? : '91', 		// default last row - only 1 column (second char!)
 					// 'help' 			=> $oid->description,
 					);
+
+				if ($oid->html_type == 'select')
+					$field['value'] = $oid->get_select_values();
 
 				// set default linear mode, when even 1 field has a html frame with string length of 1
 				if (strlen($field['panel'] < 2))
