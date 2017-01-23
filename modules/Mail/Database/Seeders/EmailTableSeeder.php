@@ -17,16 +17,16 @@ class EmailTableSeeder extends \BaseSeeder {
 		{
 			$contract_id = Contract::all()->random(1)->id;
 
-			Email::create([
+			$email = Email::create([
 				'contract_id' => $contract_id,
 				'domain_id' => Domain::where('type', '=', 'email')->get()->random(1)->id,
 				'localpart' => $faker->userName(),
-				'password' => $faker->password(),
 				'index' => rand(1, Contract::find($contract_id)->emailcount),
 				'greylisting' => rand(0,1),
 				'blacklisting' => rand(0,1),
 				'forwardto' => $faker->email(),
 			]);
+			$email->psw_update($faker->password());
 		}
 	}
 
