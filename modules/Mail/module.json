@@ -3,7 +3,7 @@
     "alias": "mail",
     "description": "",
     "keywords": [],
-    "active": 1,
+    "active": 0,
     "order": 21,
     "providers": [
         "Modules\\Mail\\Providers\\MailServiceProvider"
