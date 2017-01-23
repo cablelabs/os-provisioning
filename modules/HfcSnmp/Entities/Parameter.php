@@ -27,9 +27,12 @@ class Parameter extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
+		$header = $this->oid->name_gui ? : $this->oid->name;
+		$header .= ' - '.$this->oid->oid;
+
 		return ['index' => [$this->oid->name, $this->oid->oid, $this->access],
 				'index_header' => ['Name', 'OID', 'Access'],
-				'header' => $this->oid->name.' - '.$this->oid->oid];
+				'header' => $header];
 	}
 
 	public function index_list()
