@@ -75,6 +75,33 @@ class Cmts extends \BaseModel {
 	}
 
 
+	/**
+	 * Get SNMP read-only community string
+	 *
+	 * @author Ole Ernst
+	 */
+	public function get_ro_community()
+	{
+		if ($this->community_ro)
+			return $this->community_ro;
+		else
+			return ProvBase::first()->ro_community;
+	}
+
+
+	/**
+	 * Get SNMP read-write community string
+	 *
+	 * @author Ole Ernst
+	 */
+	public function get_rw_community()
+	{
+		if ($this->community_rw)
+			return $this->community_rw;
+		else
+			return ProvBase::first()->rw_community;
+	}
+
 
 	/**
 	 * Get US SNR of a registered CM
@@ -87,10 +114,7 @@ class Cmts extends \BaseModel {
 	{
 		// find oid of corresponding modem on cmts and get the snr
 		$conf = snmp_get_valueretrieval();
-		if ($this->community_ro != '')
-			$com = $this->community_ro;
-		else
-			$com = ProvBase::first()->ro_community;
+		$com = $this->get_ro_community();
 
 		// we need to change the value retrievel for snmprealwalk()
 		snmp_set_valueretrieval(SNMP_VALUE_OBJECT);
