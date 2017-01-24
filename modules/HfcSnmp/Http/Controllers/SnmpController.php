@@ -19,6 +19,11 @@ class SnmpController extends \BaseController{
 
 	private $device;
 
+	/**
+	 * @var  Array  of OID-Objects that threw an exception during SNMP-Set
+	 */
+	private $set_errors = [];
+
 
 	/**
 	 * @var 	Is Set to "tabular" if Controlling View is built from html_frame strings with more than 2 letters in 1st form or "linear" in 2nd form
@@ -122,17 +127,38 @@ class SnmpController extends \BaseController{
 		$snmp = new SnmpController;
 		$snmp->init ($netelem);
 
-		$data = \Request::all();
-
 		// TODO: validation
 		// $validator = \Validator::make($data = $this->prepare_input(\Input::all()), $netelem::rules($id));
 		// if ($validator->fails())
 		// 	return Redirect::back()->withErrors($validator)->withInput();
 
+
 		// Transfer Settings via SNMP to Device
+		$data = \Request::all();
 		$snmp->snmp_set_all($data);
 
-		return \Redirect::route('NetElement.controlling_edit', $id)->with('message', 'Updated!');
+
+		// Build Error Message in case OIDs could not be set
+		if ($snmp->set_errors)
+		{
+			$msg = 'The following Parameters could not be Set: ';
+			$msg_color = 'red';
+
+			foreach ($snmp->set_errors as $k => $oid)
+			{
+				$msg .= $k ? ', ' : '';
+				$msg .= $oid->name_gui ? : $oid->name;
+			}
+
+			$msg .= '!';
+		}
+		else
+		{
+			$msg = 'Updated!';
+			$msg_color = 'blue';
+		}
+
+		return \Redirect::route('NetElement.controlling_edit', $id)->with('message', $msg)->with('message_color', $msg_color);
 	}
 
 
@@ -348,7 +374,8 @@ class SnmpController extends \BaseController{
 			}
 		}
 
-		$this->_configure($conf_val);
+		if (isset($conf_val))
+			$this->_configure($conf_val);
 
 		return true;
 	}
@@ -427,9 +454,15 @@ class SnmpController extends \BaseController{
 
 		Log::info('snmp: set diff '.$this->snmp_log().' '.$snmpvalue->value.' '.$oid->type.' '.$snmpvalue->value.' '.$ret);
 
-		// TODO: encapsulate in try-catch block and return appropriate error messages
+		// catch all OIDs that could not be set to print later in error message
+		try {
+			$val = snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.$index, $oid->type, $snmpvalue->value, $this->timeout, $this->retry);
+		} catch (\ErrorException $e) {
+			$this->set_errors[] = $oid;
+			return null;
+		}
 
-		return snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.$index, $oid->type, $snmpvalue->value, $this->timeout, $this->retry);
+		return $val;
 	}
 
 

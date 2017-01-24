@@ -18,8 +18,27 @@
 		$last = '1';
 	?>
 
+
 	@section ('Content')
 
+		<!-- Error | Success Message -->
+		@if (Session::has('message'))
+			@DivOpen(12)
+				@if (Session::get('message_color') == 'blue')
+					@DivOpen(5)
+					@DivClose()
+					@DivOpen(4)
+				@endif
+				<h4 style='color:{{ Session::get('message_color') }}' id='success_msg'>{{ Session::get('message') }}</h4>
+
+				@if (Session::get('message_color') == 'blue')
+					@DivClose()
+				@endif
+			@DivClose()
+		@endif
+
+
+		<!-- Frames -->
 		@foreach ($panel_form_fields as $form_fields)
 
 			<?php
@@ -36,9 +55,6 @@
 
 			</div>
 
-			<?php 
-			?>
-
 			@if ($mode == 'linear')
 				<!-- break after 3 columns (default) -->
 				@if (!($i % 3))
@@ -48,9 +64,6 @@
 
 			<!-- @if ($mode == 'tabular') -->
 				<!-- jump to next row when first letter of html_frame changes -->
-				<!-- @if ($i == $columns[$form_fields[0]['panel'][0]]) -->
-					<!-- <div class="col-md-12"><br></div> -->
-				<!-- @endif -->
 			<!-- @endif -->
 
 			<?php 
@@ -62,6 +75,7 @@
 		@endforeach
 
 	{{-- Form::submit( \App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button')) --}}
+
 
 	<!-- Save Button -->
 	<div class="col-md-12">
@@ -79,8 +93,8 @@
 	
 	{{ Form::close() }}
 
-
 	{{-- java script--}}
 	@include('Generic.form-js')
+
 
 @stop
