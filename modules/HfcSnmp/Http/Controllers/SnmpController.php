@@ -308,17 +308,32 @@ class SnmpController extends \BaseController{
 	 */
 	public function snmp_set_all($data)
 	{
+		$eager_loading_model = new OID;
+		$snmpvalues = SnmpValue::where('netelement_id', '=', $this->device->id)->with($eager_loading_model->table)->get();
+		$pre_conf = true; 			// true - has to be done
+
 		foreach ($data as $field => $value)
 		{
 			if (explode ('_', $field)[0] == 'field')
 			{
 				// explode data & write to Database
 				$id  = explode ('_', $field)[1];
-				$snmp_val = SnmpValue::findOrFail($id);
+				$snmp_val = $snmpvalues->find($id);
+
+				// In GUI the value was divided by divisor - multiplicate back now for value comparison
+				if ($snmp_val->oid->unit_divisor)
+					$value *= $snmp_val->oid->unit_divisor;
 
 				// Set Value of Parameter in Database & Device only if it was changed in GUI
 				if ($snmp_val->value != $value)
 				{
+					// Do preconfiguration if necessary
+					if ($pre_conf)
+					{
+						$conf_val = $this->_configure();
+						$pre_conf = false;
+					}
+
 					$snmp_val->value = $value;
 					$snmp_val->save();
 
@@ -328,8 +343,55 @@ class SnmpController extends \BaseController{
 			}
 		}
 
+		$this->_configure($conf_val);
+
 		return true;
 	}
+
+
+	/**
+	 * Set the corresponding Values to Configure the Device for a successful snmpset (e.g. needed by kathrein amplifiers)
+	 * NOTE: If Value is specified the post configuration is done
+	 *
+	 * @param 	value   the value of the Parameter before the Configuration to reset
+	 * @return 	value of Parameter before the configuration, null when resetting the Parameter to this value (specified in argument)
+	 */
+	private function _configure($value = null)
+	{
+		$type = $this->device->netelementtype;
+
+		if (!$type->pre_conf_oid_id || !$type->pre_conf_value)
+		{
+			\Log::debug('No SNMP Preconfiguration defined for this Device (NetElement)', [$this->device->name]);
+			return null;
+		}
+
+		$oid = $type->oid;
+
+		// PreConfiguration
+		if (!$value)
+		{
+			$conf_val = snmpget($this->device->ip, $this->_get_community(), $oid->oid.'.0', $this->timeout, $this->retry);
+
+			$ret = false;
+			if ($conf_val != $type->pre_conf_value)
+				$ret = snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.'.0', $oid->type, $type->pre_conf_value, $this->timeout, $this->retry);
+
+			$ret ? \Log::debug('Preconfigured Device for snmpset', [$this->device->name]) : \Log::debug('Failed to Preconfigure Device for snmpset', [$this->device->name]);
+
+			return $conf_val;
+		}
+
+		// PostConfiguration
+		snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.'.0', $oid->type, $value, $this->timeout, $this->retry);
+
+		// wait time in msec
+		$sleep_time = $type->pre_conf_time_offset ? : 0;
+		usleep($sleep_time);
+
+		return null;
+	}
+
 
 
 	/**
