@@ -24,6 +24,9 @@ class RenameDeviceTypetoNetElementTypeTable extends BaseMigration {
 		Schema::table($this->tablename, function(Blueprint $table)
 		{
 			$table->string('icon_name');
+			$table->integer('pre_conf_oid_id');
+			$table->string('pre_conf_value');
+			$table->integer('pre_conf_time_offset');
 		});
 
 		// Set Default Entries
@@ -36,6 +39,8 @@ class RenameDeviceTypetoNetElementTypeTable extends BaseMigration {
 		foreach ($defaults as $d)
 			is_array($d) ? NetElementType::create(['name' => $d[0], 'parent_id' => $d[1]]) : NetElementType::create(['name' => $d]);
 			// NetElementType::create(['name' => $d]);
+
+		$this->set_fim_fields(['name', 'vendor', 'description']);
 
 		return parent::up();
 	}

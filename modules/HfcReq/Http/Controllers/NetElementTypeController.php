@@ -18,12 +18,16 @@ class NetElementTypeController extends \BaseController {
 		$hidden  = in_array($model->name, ['Net', 'Cluster']);
 		$parents = $model->html_list(NetElementType::whereNotIn('name', ['Net', 'Cluster'])->get(['id', 'name']), 'name', true);
 
-		// label has to be the same like column in sql table
+		// label(name) has to be the same like column in sql table
 		$a = array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name', 'options' => $hidden ? ['readonly'] : []),
 			array('form_type' => 'text', 'name' => 'vendor', 'description' => 'Vendor', 'hidden' => $hidden ? '1' : '0'),
 			array('form_type' => 'text', 'name' => 'version', 'description' => 'Version', 'hidden' => $hidden ? '1' : '0'),
-			array('form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Device Type', 'value' => $parents, 'hidden' => $hidden ? '1' : '0'),
+			array('form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Device Type', 'value' => $parents, 'hidden' => $hidden ? '1' : '0', 'space' => 1),
+			// possibly load only OIDs from Mibs that are related to this Device/NetElement-Type
+			array('form_type' => 'select', 'name' => 'pre_conf_oid_id', 'description' => 'OID for PreConfiguration Setting', 'value' => OID::oid_list(true)),
+			array('form_type' => 'text', 'name' => 'pre_conf_value', 'description' => 'PreConfiguration Value'),
+			array('form_type' => 'text', 'name' => 'pre_conf_time_offset', 'description' => 'PreConfiguration Time Offset', 'space' => 1),
 			array('form_type' => 'text', 'name' => 'icon_name', 'description' => 'Icon'),
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
 		);

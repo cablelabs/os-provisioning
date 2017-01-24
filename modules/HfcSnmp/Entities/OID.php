@@ -77,6 +77,24 @@ class OID extends \BaseModel {
 
 
 	/**
+	 * Return OID List for Select Field
+	 */
+	public static function oid_list($empty_elem = false)
+	{
+		$list = $empty_elem ? [0 => null] : [];
+		$oids = OID::get(['id', 'name', 'name_gui', 'oid']);
+		
+		foreach ($oids as $oid)
+		{
+			$list[$oid->id] = $oid->name_gui ? : $oid->name;
+			$list[$oid->id] .= ' - '.$oid->oid;
+		}
+
+		return $list;
+	}
+
+
+	/**
 	 * Return The Select Values for the Parameter in the NetElement Controlling View
 	 *
 	 * @return Array
