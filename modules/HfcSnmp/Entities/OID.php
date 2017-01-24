@@ -130,8 +130,6 @@ class OID extends \BaseModel {
 				if ($key_value[0])
 					$list[$key_value[1]] = $key_value[0];
 			}
-// if ($this->name_gui == 'Forward Equalization')
-// 	d($list);
 			return $list;
 		}
 
@@ -140,8 +138,10 @@ class OID extends \BaseModel {
 			$this->stepsize = $this->stepsize ? : 1;
 
 			for ($i = $this->startvalue; $i <= $this->endvalue; $i += $this->stepsize)
-				$list[$i] = $i;
+				$list[(string) ($i/$this->unit_divisor)] = $i / $this->unit_divisor;
 
+// if ($this->name_gui == 'Configuration Offset (Winter/Summer)')
+// 	d($list, $this);
 			return $list;
 		}
 

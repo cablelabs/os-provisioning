@@ -3,9 +3,11 @@
 namespace Modules\HfcSnmp\Http\Controllers;
 
 use Modules\HfcReq\Entities\NetElement;
+use Modules\HfcReq\Entities\NetElementType;
 use Modules\HfcSnmp\Entities\SnmpValue;
 use Modules\HfcSnmp\Entities\OID;
 use \App\Http\Controllers\BaseViewController;
+use Modules\HfcReq\Http\Controllers\NetElementController;
 
 
 use Log;
@@ -60,7 +62,7 @@ class SnmpController extends \BaseController{
 		$snmp 	 = new SnmpController;
 		$snmp->init ($netelem);
 
-		// Get Html Form Fields for generic View - this includes the snmpwalk
+		// Get Html Form Fields for generic View - this includes the snmpwalk & updating snmpvalues
 		$form_fields = $snmp->prep_form_fields();
 		$form_fields = BaseViewController::add_html_string($form_fields, $netelem);
 
@@ -96,12 +98,14 @@ class SnmpController extends \BaseController{
 		$view_header_links = BaseViewController::view_main_menus();
 		$headline 	 = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var).' controlling';
 
-		// $panel_right = $this->prepare_tabs($view_var);
+		$panel_right = new NetElementController;
+		$panel_right = $panel_right->prepare_tabs($view_var);
+
 		$view_path = 'hfcsnmp::NetElement.controlling';
 		$form_path = 'Generic.form';
 		$form_update = 'NetElement.controlling_update';
 
-		return \View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'panel_form_fields', 'form_update', 'route_name', 'view_header_links', 'headline', 'mode', 'columns')));
+		return \View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'panel_right', 'panel_form_fields', 'form_update', 'route_name', 'view_header_links', 'headline', 'mode', 'columns')));
 	}
 
 
@@ -174,8 +178,6 @@ class SnmpController extends \BaseController{
 					$options = $value;
 					$value   = $this->string_to_array($param->type_array);
 				}
-// if ($oid->name_gui == 'Forward Equalization')
-// 	d($value);
 				$field = array(
 					'form_type' 	=> $oid->html_type,
 					'name' 			=> 'field_'.$id,	 		// = SnmpValue->id - TODO: Check if string 'field_' is necessary in front
@@ -189,6 +191,9 @@ class SnmpController extends \BaseController{
 				if ($oid->html_type == 'select')
 					$field['value'] = $oid->get_select_values();
 
+// if ($oid->name_gui == 'Configuration Offset')
+// if ($oid->name_gui == 'Lower Pilot Modulation')
+	// d($value, $field);
 				// set default linear mode, when even 1 field has a html frame with string length of 1
 				if (strlen($field['panel'] < 2))
 					$this->view_mode = 'linear';
