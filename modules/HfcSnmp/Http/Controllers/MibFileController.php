@@ -95,6 +95,7 @@ class MibFileController extends \BaseController {
 		// Set Filename and check if File already exists
 		$filename = $name.'_'.$version.'.mib';
 		$full_targetfilepath = storage_path(MibFile::REL_MIB_UPLOAD_PATH).$filename;
+		// $same = false;
 		$i = 1;
 
 		// check if MIB with same Name & Revision exists but with different content - then we add another number after version to filename
@@ -107,6 +108,10 @@ class MibFileController extends \BaseController {
 				break;
 			}
 
+			// Get version from existing file and compare?
+			// $existing = MibFile::where('filename', '=', $filename)->get(['version'])->first();
+			// $same = $same ? : $version == $existing->version;
+
 			$i++;
 			$filename = $name.'_'.$version.$i.'.mib';
 			$full_targetfilepath = storage_path(MibFile::REL_MIB_UPLOAD_PATH).$filename;
@@ -115,8 +120,9 @@ class MibFileController extends \BaseController {
 
 		// Multiple occurences of MIBs with same Name can cause errors on translation or using SNMPD - how does SNMPD handle this ???
 		if ($multiple)
-			$description .= "\nThis MIB already exists with same Name and Revision";
-
+			$description .= "\nThis MIB already exists with same Name";
+		// if ($same)
+		// 	$description .= " and Revision!";
 
 		// Set Input Default Values
 		\Request::merge([
@@ -131,7 +137,17 @@ class MibFileController extends \BaseController {
 		if (!$error)
 			$this->handle_file_upload(null, null);
 
-		return parent::store();
+		$id = parent::store(false);
+
+		// validation failed -> return redirect
+		if (is_object($id))
+			return $id;
+
+		// add OIDs to MibFile
+		$mib = MibFile::find($id);
+		$mib->create_oids();
+
+		return \Redirect::route('MibFile.edit', $id)->with('message', 'Created!')->with('message_color', 'blue');
 	}
 
 

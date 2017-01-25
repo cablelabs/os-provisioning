@@ -261,8 +261,7 @@ class MibFileObserver
 
 	public function created($mibfile)
 	{
-		if (\Request::hasFile('mibfile_upload'))
-			$mibfile->create_oids();
+		// create oids was moved to MibFileController@store for better responses on errors
 	}
 
 	public function deleting($mibfile)
