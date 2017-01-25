@@ -187,18 +187,18 @@ class OID extends \BaseModel {
 	 */
 	public static function get_value_set($string)
 	{
-		if ($x = strpos($string, '{') !== false)
+		if (($x = strpos($string, '{')) !== false)
 		{
 			// value_set
-			return substr($string, $x, strlen($string) - 1);
+			return substr($string, $x + 1, strlen($string) - $x - 2);
 		}
 
 
-		if ($x = strpos($string, '(') !== false)
+		if (($x = strpos($string, '(')) !== false)
 		{
 			// start & end value
 			$y 		  = strpos($string, '..');
-			$startval = substr($string, $x, $y - $x);
+			$startval = substr($string, $x + 1, $y - $x - 1);
 			$endval   = substr($string, $y + 2, strlen($string) - 1);
 			
 			return [$startval, $endval];

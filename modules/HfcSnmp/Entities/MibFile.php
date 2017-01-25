@@ -168,14 +168,8 @@ class MibFile extends \BaseModel {
 						break;
 				}
 
-				// extract type & value_set (or start/endvalue) from syntax
-				$type = OID::get_oid_type(strtolower($syntax));
-				$value_set = OID::get_value_set($syntax);
-
-				$x = is_string($value_set) ? strpos($syntax, '{') : strpos($syntax, '(');
-				if ($x !== false)
-					$syntax = substr($syntax, 0, $x);
-
+// if ($name == 'vgpConfigurationICS2Nominal' && $key == 4)
+// 	d($out, $value_set, $syntax, $type);
 
 				// access
 				if (strpos($line, 'MAX-ACCESS') !== false)
@@ -208,6 +202,14 @@ class MibFile extends \BaseModel {
 
 			if ($error || !$syntax || !$access)
 				continue;
+
+			// extract type & value_set (or start/endvalue) from syntax
+			$type = OID::get_oid_type(strtolower($syntax));
+			$value_set = OID::get_value_set($syntax);
+
+			$x = is_string($value_set) ? strpos($syntax, '{') : strpos($syntax, '(');
+			if ($x !== false)
+				$syntax = substr($syntax, 0, $x);
 
 			// create OID
 			OID::create([
@@ -243,13 +245,13 @@ class MibFile extends \BaseModel {
 	 * NOTE: generic recursive Deletion was disabled in BaseModel@get_all_children() by added exceptional column name: mibfile_id
 	 	* recursive deletion is enabled again because it's needed also for Parameters
 	 */
-	public function hard_delete_oids()
-	{
-		foreach($this->oids as $oid)
-			\DB::statement('DELETE from parameter WHERE oid_id='.$oid->id);
+	// public function hard_delete_oids()
+	// {
+	// 	foreach($this->oids as $oid)
+	// 		\DB::statement('DELETE from parameter WHERE oid_id='.$oid->id);
 		
-		\DB::statement('DELETE from oid WHERE mibfile_id='.$this->id);
-	}
+	// 	\DB::statement('DELETE from oid WHERE mibfile_id='.$this->id);
+	// }
 
 }
 
