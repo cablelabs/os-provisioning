@@ -91,6 +91,8 @@ class MibFile extends \BaseModel {
 	 * Create OID Database Entries from parsing snmptranslate outputs of all OIDs of the MIB
 	 * Extract informations of OID: name, syntax, access, type, values, description, ...
 	 *
+	 * @return  0  on success, Redirect::back Object on Error
+	 *
 	 * @author Nino Ryschawy
 	 */
 	public function create_oids()
@@ -102,7 +104,7 @@ class MibFile extends \BaseModel {
 
 		// check necessary? - Note: exception is bad response for user of running/production system
 		if (!is_file($abs_filepath))
-			$this->_error("Upload File not yet written");
+			return $this->_error("Upload File not yet written", 'Filesystem Error');
 
 
 		// Get all OIDs of MIB - this includes many OIDs from the MIBs that are included in this MIB			
@@ -110,19 +112,11 @@ class MibFile extends \BaseModel {
 
 
 		// check if Translation of MIB is dependent of another MIB
-		// TODO: We need a solution for a better response than an exception as the error msg is not readable on production systems (where APP_DEBUG=false)
 		if (isset($oids[1]) && strpos($oids[1], "Cannot find module") !== false)
 		{
 			preg_match('#\((.*?)\)#', substr($oids[1], 18), $mib);
 			$msg = "Please load dependent '".$mib[1].'\' before!! (OIDs cant be translated otherwise)';
-			$this->_error($msg);
-
-			// $this->description = $msg;
-			// $this->save();
-			// $c = new \Modules\HfcSnmp\Http\Controllers\MibFileController;
-			// return $c->create();
-			// return \Redirect::back()->with('message', $msg)->with('message_color', 'red');
-			// return \Redirect::route('MibFile.create')->with('message', $msg)->with('message_color', 'blue');
+			return $this->_error($msg);
 		}
 
 
@@ -193,6 +187,8 @@ class MibFile extends \BaseModel {
 					}
 					$description = substr($tmp, 14, $end ? $end - 14 : null);
 					$description = str_replace("\t", '', $description);
+
+					break;
 				}
 
 				// TODO: try to extract unit divisor, value_set if not yet available from description ?
@@ -227,16 +223,21 @@ class MibFile extends \BaseModel {
 			]);
 		}
 
+		return 0;
+
 	}
 
 
 	/**
-	 * For use in Observer only - TODO: move to Observer
+	 * Return Error Message without exception as their message is not seen on production Systems
 	 */
-	private function _error($message)
+	private function _error($message, $error = 'Missing Dependency')
 	{
 		$this->delete();
-		throw new \Exception($message);
+
+		return \Redirect::back()->with('message', $message)->with('message_color', 'red');
+		// throw new \Exception($message);
+		// return \View::make('errors.generic')->with('message', $message)->with('error', $error);
 	}
 
 	/**

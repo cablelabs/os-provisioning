@@ -145,7 +145,10 @@ class MibFileController extends \BaseController {
 
 		// add OIDs to MibFile
 		$mib = MibFile::find($id);
-		$mib->create_oids();
+		$ret = $mib->create_oids();
+
+		if ($ret)
+			return $ret;
 
 		return \Redirect::route('MibFile.edit', $id)->with('message', 'Created!')->with('message_color', 'blue');
 	}
