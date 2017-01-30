@@ -716,6 +716,8 @@ class ModemObserver
 	{
 		$modem->hostname = 'cm-'.$modem->id;
 		$modem->save();	 // forces to call the updating() and updated() method of the observer !
+		if (\PPModule::is_active ('ProvMon'))
+			\Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
 	}
 
 	public function updating($modem)
