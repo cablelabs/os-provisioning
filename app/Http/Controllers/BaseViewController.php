@@ -248,7 +248,7 @@ class BaseViewController extends Controller {
 			// field color
 			if(!isset($options['style']))
 				$options['style'] = '';
-			$options['style'] .= "background-color:$color";
+			$options['style'] .= $options['style'] == 'simple' ? '' : "background-color:$color";
 
 			// Help: add help msg to form fields - mouse on hover
 			if (isset($field['help']))
