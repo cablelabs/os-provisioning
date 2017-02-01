@@ -83,6 +83,12 @@ class FormBuilder extends CollectiveFormBuilder {
 
     /**
      * Create a form input field
+	 *
+	 * Attention: method call Collective\Html\FormBuilder::label() has been changed in version 5.2.5
+	 * Patrick changed our derived call from
+	 *		public function label($name, $value = null, $options = array())
+	 * to
+	 *		public function label($name, $value = null, $options = array(), $escape_html = true)
      */
     public function label($name, $value = null, $options = array(), $escape_html = true)
     {
