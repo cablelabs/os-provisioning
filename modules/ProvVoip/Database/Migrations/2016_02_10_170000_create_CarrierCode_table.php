@@ -27,12 +27,12 @@ class CreateCarrierCodeTable extends BaseMigration {
 
 		DB::update("INSERT INTO ".$this->tablename." (carrier_code, company) VALUES('0', '-');");
 
-		// empty csv hash (to be sure that newly created table will be filled)
+		// empty csv hash (if exists; to be sure that newly created table will be filled)
 		$updater = new CarrierCodeDatabaseUpdaterCommand();
 		$updater->clear_hash_file();
 
-		// fill table with carriercodes
-		$updater->fire();
+		// to fill this table call “php artisan provvoip:update_carrier_code_database“
+
 
 		return parent::up();
 	}
