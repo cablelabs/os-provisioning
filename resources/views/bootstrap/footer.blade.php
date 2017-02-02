@@ -14,6 +14,15 @@
 <!-- ================== END BASE JS ================== -->
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.js')}}"></script>
+<!--
+<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.time.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.resize.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.pie.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.stack.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.crosshair.js')}}"></script>
+-->
+<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.categories.js')}}"></script>
 <script src="{{asset('components/assets-admin/js/apps.min.js')}}"></script>
 <!-- ================== END PAGE LEVEL JS ================== -->
 
@@ -60,6 +69,10 @@
       "lengthMenu":  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
     });
 
+//      $.plot($("#interactive-chart"),
+//          [ [[0, 0], [1, 1]] ], {
+//              yaxis: {max: 1}
+//          });
   });
 
 
