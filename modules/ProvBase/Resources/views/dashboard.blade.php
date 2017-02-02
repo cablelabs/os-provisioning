@@ -9,7 +9,7 @@
             <div class="col-md-3 col-sm-6">
                 <div class="panel panel-inverse">
                     <div class="panel-heading">
-                        <h4 class="panel-title">Aktive Verträge</h4>
+                        <h4 class="panel-title">Aktive Verträge <?php echo date('m/Y'); ?></h4>
                     </div>
                     <div class="panel-body">
                         <div class="widget widget-stats bg-aqua-lighter">
@@ -59,44 +59,89 @@
 
         <br><br><br>
 
-        <div class="row">
-            <div class="col-md-3 col-sm-6">
-                <div class="panel panel-inverse">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">Umsatz <?php echo date('Y'); ?></h4>
-                    </div>
-                    <div class="panel-body">
-                        <div class="widget widget-stats bg-green-lighter">
-                            <div class="stats-icon">
-                                <i class="fa fa-euro fa-fw"></i>
-                            </div>
-                            <div class="stats-info">
-                                <h4>total:</h4>
-                                <?php $sales_total = $sales[date('Y')]['total']; ?>
-                                <p>{{ $sales_total }}</p>
-                                <div class="stats-desc">
-                                    <?php
-                                        $sales_diff = $sales[date('Y')]['total'] - $sales[date('Y') - 1]['total'];
-                                        $sales_diff = number_format($sales_diff, 2, ',', '');
-                                    ?>
-                                    Veränderung zum Vorjahr: {{ $sales_diff }}
+        @if (true === false)
+            <div class="row">
+                <div class="col-md-3 col-sm-6">
+                    <div class="panel panel-inverse">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Umsatz <?php echo date('Y'); ?></h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="widget widget-stats bg-green-lighter">
+                                <div class="stats-icon">
+                                    <i class="fa fa-euro fa-fw"></i>
                                 </div>
+                                <div class="stats-info">
+                                    <h4>total:</h4>
+                                    <?php $sales_total = $sales[date('Y')]['total']; ?>
+                                    <p>{{ $sales_total }}</p>
+                                    <div class="stats-desc">
+                                        <?php
+                                            $sales_diff = $sales[date('Y')]['total'] - $sales[date('Y') - 1]['total'];
+                                            $sales_diff = number_format($sales_diff, 2, ',', '');
+                                        ?>
+                                        Veränderung zum Vorjahr: {{ $sales_diff }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6">
+                    <div class="panel panel-inverse">
+                        <div class="panel-heading"><h4 class="panel-title">Umsatz nach Produkttypen</h4></div>
+                        <div class="panel-body">
+                            <div id="contracts-legend" style="float: right; padding: 25px;">
+                                <!-- Legende -->
+                            </div>
+                            <div id="sales-chart" style="width: 100%; height: 300px;">
+                                <!-- Chart -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6 col-sm-6">
+            <script type="text/javascript">
+                window.onload = function() {
+
+                    // float bar chart -> sales
+                    var data = <?php echo json_encode($chart_data_sales); ?>;
+                    var options = {
+                        xaxis: {
+                            mode: 'categories',
+                            tickLength: 0
+                        },
+                        yaxis: {
+                            tickDecimals: 2
+                        },
+                        grid: { borderWidth: 0 },
+                        bars: {
+                            show: true,
+                            align: "center",
+                            barWidth: 0.5
+                        }
+                    };
+
+                    $.plot($("#sales-chart"),
+                        [ {data: data } ],
+                        options
+                    );
+                }
+            </script>
+
+            <br><br><br>
+        @endif
+
+        <div class="row">
+            <div class="col-md-3 col-sm-6">
                 <div class="panel panel-inverse">
-                    <div class="panel-heading"><h4 class="panel-title">Umsatz nach Produkttypen</h4></div>
+                    <div class="panel-heading">
+                        <h4 class="panel-title">Test Ion.RangeSlider</h4>
+                    </div>
                     <div class="panel-body">
-                        <div id="contracts-legend" style="float: right; padding: 25px;">
-                            <!-- Legende -->
-                        </div>
-                        <div id="sales-chart" style="width: 100%; height: 300px;">
-                            <!-- Chart -->
-                        </div>
+                        <input type="text" id="example_id" name="example_name" value="" />
                     </div>
                 </div>
             </div>
@@ -127,28 +172,7 @@
             ],
             options);
 
-        // float bar chart -> sales
-        var data = <?php echo json_encode($chart_data_sales); ?>;
-        var options = {
-            xaxis: {
-                mode: 'categories',
-                tickLength: 0
-            },
-            yaxis: {
-                tickDecimals: 2
-            },
-            grid: { borderWidth: 0 },
-            bars: {
-                show: true,
-                align: "center",
-                barWidth: 0.5
-            }
-        };
-
-        $.plot($("#sales-chart"),
-            [
-                {data: data }
-            ],
-            options);
+        // range slider
+        $("#example_id").ionRangeSlider();
     };
 </script>
