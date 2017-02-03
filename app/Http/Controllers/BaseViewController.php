@@ -324,6 +324,50 @@ finish:
 	}
 
 
+	/**
+	 * Add simple html input String to the Fields-Array  -- without label - for use in HTML Tables
+	 */
+	public static function get_html_input($field)
+	{
+		$s = '';
+
+		$value   = isset($field["value"]) ? $field["value"] : [];
+		$options = isset($field["options"]) ? $field["options"] : [];
+
+		// \Form::set_layout(['label' => 5, 'form' => 6]);
+		// d(\Form::get_layout());
+
+		switch ($field["form_type"])
+		{
+			case 'checkbox' :
+				// Checkbox - where pre-checked is enabled
+				if ($value == [])
+					$value = 1;
+
+				$s .= \Form::checkbox($field['name'], $value, null, $field['field_value']);
+				break;
+
+			case 'select' :
+				$s .= \Form::select($field["name"], $value, $field['field_value'], $options);
+				break;
+
+			case 'password' :
+				$s .= \Form::password($field['name']);
+				break;
+
+			case 'link':
+				$s .= \Form::link($field['name'], $field['url'], isset($field['color']) ? : 'default');
+				break;
+
+			default:
+				$s .= \Form::$field["form_type"]($field["name"], $field['field_value'], $options);
+				break;
+		}
+			
+		return $s;
+	}
+
+
 	/*
 	 * Return the global prepared header links for Main Menu
 	 *

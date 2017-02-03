@@ -196,8 +196,10 @@ class MibFile extends \BaseModel {
 				unset($out[$key]);
 			}
 
-			if ($error || !$syntax || !$access)
+			if ($error || !$access)
 				continue;
+
+			// determine if OID is a table
 
 			// extract type & value_set (or start/endvalue) from syntax
 			$type = OID::get_oid_type(strtolower($syntax));
@@ -215,6 +217,7 @@ class MibFile extends \BaseModel {
 				'access'	 	=> $access,
 				'syntax' 		=> $syntax,
 				'type' 			=> $type,
+				'oid_table' 	=> ($tab = preg_match('/[a-z][a-zA-Z0-9]*Table$/', $name)) ? $tab : 0,
 				'html_type' 	=> is_string($value_set) ? 'select' : 'text',
 				'value_set'		=> is_string($value_set) ? $value_set : null,
 				'startvalue' 	=> is_string($value_set) ? null : $value_set[0],

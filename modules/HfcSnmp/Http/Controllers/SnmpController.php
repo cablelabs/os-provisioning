@@ -27,7 +27,7 @@ class SnmpController extends \BaseController{
 
 	/**
 	 * @var 	Is Set to "tabular" if Controlling View is built from html_frame strings with more than 2 letters in 1st form or "linear" in 2nd form
-	 * 				"tabular" 					"linear"
+	 * 				"tabular" 					"linear" 		"table"
 	 			|-------------------| 		|-----------|
 	 			| 11 | 12 | 13 		| 		| 1 | 2 | 3 |
 	 			| 21 | 22 			| 		| 4 | 5 | 6 |
@@ -69,17 +69,28 @@ class SnmpController extends \BaseController{
 
 		// Get Html Form Fields for generic View - this includes the snmpwalk & updating snmpvalues
 		$form_fields = $snmp->prep_form_fields();
-		$form_fields = BaseViewController::add_html_string($form_fields, $netelem);
 
-		// set view mode
+		$form_tables = $panel_form_fields = [];
+		// TODO: give the opportunity for a mixture
+		if (!isset($form_fields[0]['name']))
+		{
+			$form_tables = static::_make_html_snmp_table($form_fields);
+		}
+		else
+		{
+			$form_fields = BaseViewController::add_html_string($form_fields);
+
+			// order by panel (respective html_frame), evaluate count of columns
+			foreach ($form_fields as $form_field)
+				isset($panel_form_fields[$form_field['panel']]) ? $panel_form_fields[$form_field['panel']][] = $form_field : $panel_form_fields[$form_field['panel']][0] = $form_field;
+
+			ksort($panel_form_fields);
+		}
+
+// d($panel_form_fields);
+
+		// set view mode - global var is set in prep_form_fields & get_formfield_array
 		$mode = $snmp->view_mode;
-
-		// order by panel (respective html_frame), evaluate count of columns
-		$panel_form_fields = [];
-		foreach ($form_fields as $form_field)
-			isset($panel_form_fields[$form_field['panel']]) ? $panel_form_fields[$form_field['panel']][] = $form_field : $panel_form_fields[$form_field['panel']][0] = $form_field;
-
-		ksort($panel_form_fields);
 
 		// evaluate count of columns for each row if mode is tabular
 		if ($mode == 'tabular')
@@ -93,24 +104,21 @@ class SnmpController extends \BaseController{
 
 		}
 
-// d($panel_form_fields, $mode, $columns);
 
 		// Init View
-		$model_name  = \NamespaceController::get_model_name();
 		$view_header = 'Edit: '.$netelem->name;
 		$view_var 	 = $netelem;
 		$route_name  = \NamespaceController::get_route_name();
-		$view_header_links = BaseViewController::view_main_menus();
 		$headline 	 = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var).' controlling';
 
 		$panel_right = new NetElementController;
 		$panel_right = $panel_right->prepare_tabs($view_var);
 
-		$view_path = 'hfcsnmp::NetElement.controlling';
-		$form_path = 'Generic.form';
+		$view_path   = 'hfcsnmp::NetElement.controlling';
+		$form_path   = 'Generic.form';
 		$form_update = 'NetElement.controlling_update';
 
-		return \View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'panel_right', 'panel_form_fields', 'form_update', 'route_name', 'view_header_links', 'headline', 'mode', 'columns')));
+		return \View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'panel_right', 'panel_form_fields', 'form_tables', 'form_update', 'route_name', 'headline', 'mode', 'columns')));
 	}
 
 
@@ -174,63 +182,172 @@ class SnmpController extends \BaseController{
 	{
 		$array  = [];
 		$params = $this->device->netelementtype->parameters;
+		$table_index = 0;
 
 		// d($params);
 
 		if (!$this->device->ip)
 			return $array;
 
+$start = microtime(true);
 
 		foreach ($params as $param)
 		{
 			$oid  	 = $param->oid;
-			$results = $this->snmp_walk($oid);
+			$results = $oid->oid_table ? $this->snmp_table($oid) : $this->snmp_walk($oid);
 
-			// TODO: if device not reachable take already saved SnmpValues from Database
+			// TODO: if device not reachable take already saved SnmpValues from Database but show a hint
 			// if (!$results) ...
+
+
+			if ($oid->oid_table)
+			{
+				$table_index++;
+
+				foreach ($results as $res_oid => $values)
+				{
+					$suboid = OID::where('oid', '=', $res_oid)->get()->first();
+
+					if (!$suboid)
+					{
+						// this should never occur
+						Log::error('Missing OID Entry from '.$oid->name.' for: '.$res_oid, [$this->device->devicetype->name]);
+						continue;
+					}
+
+					foreach ($values as $index => $value)
+					{
+						// Save SnmpValues
+						// TODO: only add valueset to global variable to later multiupdate - but for that we have to change indexing 
+						// for field names for updates because we dont get them here as return value as is
+						$ret = $this->_snmp_value_set($suboid, $value, $index);
+
+						// reorder by index for easier graphical display
+						$array[$index][$res_oid] = $this->_get_formfield_array($suboid, $ret, $value, 'table_'.$table_index);
+// if ($suboid->oid == '.1.3.6.1.2.1.10.127.1.1.1.1.2')
+// 	d($suboid, $res_oid, $results, $array, $ret);
+					}
+				}
+
+				$this->view_mode = 'linear';
+
+				continue;
+			}
+
 
 			foreach ($results as $oid->res_oid => $value)
 			{
-				// Set SnmpValue
-				$ret 	= $this->_snmp_value_set($oid, $value);
+				// Save SnmpValue
+				$ret = $this->_snmp_value_set($oid, $value);
 
-				// Compose Array with html options that is transformed to html string later
-				$id 	 = $ret[0];
-				$index   = $ret[1];
-				$options = $param->oid->access == 'read-only' ? ['readonly'] : null;
-
-				if ($param->type_array)
-				{
-					$options = $value;
-					$value   = $this->string_to_array($param->type_array);
-				}
-				$field = array(
-					'form_type' 	=> $oid->html_type,
-					'name' 			=> 'field_'.$id,	 		// = SnmpValue->id - TODO: Check if string 'field_' is necessary in front
-					'description' 	=> $oid->name_gui ? $oid->name_gui.$index : $oid->name.$index,
-					'field_value' 	=> $oid->unit_divisor && is_numeric($value) ? $value / $oid->unit_divisor : $value,
-					'options' 		=> $options,
-					'panel' 		=> $param->html_frame ? : '91', 		// default last row - only 1 column (second char!)
-					// 'help' 			=> $oid->description,
-					);
-
-				if ($oid->html_type == 'select')
-					$field['value'] = $oid->get_select_values();
-
-// if ($oid->name_gui == 'Configuration Offset')
-// if ($oid->name_gui == 'Lower Pilot Modulation')
-	// d($value, $field);
-				// set default linear mode, when even 1 field has a html frame with string length of 1
-				if (strlen($field['panel'] < 2))
-					$this->view_mode = 'linear';
-
-				array_push($array, $field);
+				array_push($array, $this->_get_formfield_array($oid, $ret, $value, $param->html_frame ? : '91'));
 			}
 		}
+// d(round(microtime(true) - $start, 2). 'sec', $results, $array);
+// var_dump("\nTime prepare form fields: ".round(microtime(true) - $start, 3));
 
 		return $array;
 	}
 
+
+	/**
+	 * Generate Form Field array as preparation for creating the html form fields from it
+	 */
+	private function _get_formfield_array($oid, $ret, $value, $frame)
+	{
+		// Compose Array with html options that is transformed to html string later
+		$id 	 = $ret[0];
+		$index   = $ret[1] == '.0' ? '' : $ret[1];
+		$options = $oid->access == 'read-only' ? ['readonly'] : null;
+
+		// TODO: improve with assignment before
+		if (strpos($frame, 'table_') !== false)
+		{
+			$index = '';
+			// TODO: Move to get_html_input ??
+			$options['style'] = 'simple';
+		}
+
+// if ($oid->name_gui == 'Lower Pilot Modulation')
+// d($value, $field);
+
+		$field = array(
+			'form_type' 	=> $oid->html_type,
+			'name' 			=> 'field_'.$id,	 		// = SnmpValue->id - TODO: Check if string 'field_' is necessary in front
+			'description' 	=> $oid->name_gui ? $oid->name_gui.$index : $oid->name.$index,
+			'field_value' 	=> $oid->unit_divisor && is_numeric($value) ? $value / $oid->unit_divisor : $value,
+			'options' 		=> $options,
+			'panel' 		=> $frame, 		// default last row - only 1 column (second char!)
+			// 'help' 			=> $oid->description,
+			);
+
+		if ($oid->html_type == 'select')
+			$field['value'] = $oid->get_select_values();
+
+		// set default linear mode, when even 1 field has a html frame with string length of 1
+		if (strlen($field['panel'] < 2))
+			$this->view_mode = 'linear';
+
+		return $field;
+	}
+
+
+	/**
+	 * Create HTML Tables out of the list of prepared form fields
+	 *
+	 * @param 	Array 	List of all form fields
+	 * @return 	Array 	of HTML Tables
+	 *
+	 * TODO: standardise and move to BaseViewController!
+	 */
+	private static function _make_html_snmp_table($form_fields)
+	{
+		$s 		= '';
+		$new 	= true;
+		$last 	= 'table_1';
+
+		foreach ($form_fields as $index => $fields)
+		{
+			// end table if new one starts
+			if ($last != $fields[key($fields)]['panel'])
+			{
+				$s .= '</tbody></table>';
+				$new = true;
+				$tables[$last] = $s;
+				$s = '';
+			}
+
+			// start new table
+			if ($new)
+			{
+				$s .= '<table class="table table-condensed">';
+				$s .= '<thead><tr>';
+				$s .= '<th>Index</th>';
+				
+				foreach ($fields as $oid => $field)
+					$s .= '<th>'.$field['description'].'</th>';
+
+				$s .= '<tr></thead><tbody>';
+
+				$new = false;
+				reset($fields);
+			}
+
+			// add table body data
+			$s .= '<tr><td>'.$index.'</td>';
+
+			foreach ($fields as $oid => $field)
+				$s .= '<td>'.BaseViewController::get_html_input($field).'</td>';
+
+			$last = $field['panel'];
+			$s .= '</tr>';
+		}
+
+		// end last table
+		$tables[$last] = $s.'</tbody></table>';
+
+		return $tables;
+	}
 
 	/**
 	 * The SNMP Walk Function
@@ -248,12 +365,44 @@ class SnmpController extends \BaseController{
 		$community = $this->_get_community();
 
 		// Walk
-		$walk = snmpwalkoid($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
+		$walk = snmprealwalk($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
 
 		// Log
-		Log::info('snmp: get '.$this->snmp_log().' '.$oid->oid.' '.implode(' ',$walk));
+		Log::info('snmp: get '.$this->device->ip.' '.$oid->oid.' '.implode(' ',$walk));
 
 		return $walk;
+	}
+
+
+	/**
+	 * SNMP Walk over a Table Object
+	 *
+	 * @param 	OID Object
+	 * @return 	Array	[index => [oid => value]]
+	 */
+	public function snmp_table($oid)
+	{
+$start = microtime(true);
+
+		$results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->mibfile->name.'::'.$oid->name);
+		// $results = snmp2_real_walk($this->device->ip, $this->_get_community(), "DOCS-IF-MIB::docsIfUpstreamChannelTable");
+		// exec('snmptable -v2c -Ci -c'.$this->_get_community().' '.$this->device->ip.' '.escapeshellarg($oid->mibfile->name.'::'.$oid->name), $results);
+
+
+		// order - done with snmp real walk
+		foreach ($results as $oid_index => $value)
+		{
+			$index  = strrchr($oid_index, '.');
+			$oid_s 	= str_replace($index, '', $oid_index);
+			$index  = substr($index, 1);
+
+			$res[$oid_s][$index] = $value;
+		}
+
+// var_dump("Time single SnmpWalk ".$oid->oid.": ".round(microtime(true) - $start, 3));
+// d(round(microtime(true) - $start, 3), $oid, $res, $results);
+
+		return $res;
 	}
 
 
@@ -261,32 +410,26 @@ class SnmpController extends \BaseController{
 	 * Create or Update SnmpValue Object which corresponds
 	 * to $oid and $this->device with $value
 	 *
-	 * @param 	oid the OID Object
-	 * @param 	value from snmpget command for this oid object
+	 * @param 	oid 	the OID Object
+	 * @param 	value 	from snmpget command for this oid object
 	 * @return 	the ID of the SnmpValue Model
 	 *
 	 * @author Torsten Schmidt, Nino Ryschawy
 	 */
-	private function _snmp_value_set ($oid, $value)
+	private function _snmp_value_set ($oid, $value, $index = '')
 	{
+		// $obj = SnmpValue::updateOrCreate($data); 		// doesnt work as is
+
 		$data = array(
 			'netelement_id' => $this->device->id,
 			'oid_id' 		=> $oid->id,
 			'value' 		=> $value,
-			'oid_index' 	=> ''
+			'oid_index' 	=> $index ? : str_replace($oid->oid, '', $oid->res_oid),
 			);
-		
-		// $obj = SnmpValue::updateOrCreate($data); 		// doesnt work as is
 
-		// compare resulting OID from snmpwalk with queried OID ... in case it's different we have a table with multiple elements & indexes
-		if ($oid->oid.'.0' != $oid->res_oid)
-		{
-			$data['oid_index'] = str_replace($oid->oid, '', $oid->res_oid);
-
-			$obj = SnmpValue::where('netelement_id', '=', $this->device->id)->where('oid_id', '=', $oid->id)->where('oid_index', '=', $data['oid_index'])->get()->first();
-		}
-		else
-			$obj = SnmpValue::where('netelement_id', '=', $this->device->id)->where('oid_id', '=', $oid->id)->get()->first();
+		// // compare resulting OID from snmpwalk with queried OID ... in case it's different we have a table with multiple elements & indexes
+		$obj = SnmpValue::where('netelement_id', '=', $this->device->id)->where('oid_id', '=', $oid->id)->where('oid_index', '=', $data['oid_index'])->get()->first();
+		// $obj = $snmpvalues->where('oid_id', $oid->id)->where('oid_index', (string) $data['oid_index'])->first();
 
 		if ($obj)
 		{
@@ -345,10 +488,11 @@ class SnmpController extends \BaseController{
 
 		foreach ($data as $field => $value)
 		{
-			if (explode ('_', $field)[0] == 'field')
+			$arr = explode('_', $field);
+			if ($arr[0] == 'field')
 			{
 				// explode data & write to Database
-				$id  = explode ('_', $field)[1];
+				$id  = $arr[1];
 				$snmp_val = $snmpvalues->find($id);
 
 				// In GUI the value was divided by divisor - multiplicate back now for value comparison
@@ -452,7 +596,7 @@ class SnmpController extends \BaseController{
 		if ($ret == $snmpvalue->value)
 			return TRUE;
 
-		Log::info('snmp: set diff '.$this->snmp_log().' '.$snmpvalue->value.' '.$oid->type.' '.$snmpvalue->value.' '.$ret);
+		Log::info('snmp: set diff '.$this->device->ip.' '.$snmpvalue->value.' '.$oid->type.' '.$snmpvalue->value.' '.$ret);
 
 		// catch all OIDs that could not be set to print later in error message
 		try {
@@ -463,13 +607,6 @@ class SnmpController extends \BaseController{
 		}
 
 		return $val;
-	}
-
-
-
-	private function snmp_log()
-	{
-		return $this->device->ip;
 	}
 
 

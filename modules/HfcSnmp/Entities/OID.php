@@ -137,8 +137,10 @@ class OID extends \BaseModel {
 		{
 			$this->stepsize = $this->stepsize ? : 1;
 
-			for ($i = $this->startvalue; $i <= $this->endvalue; $i += $this->stepsize)
-				$list[(string) ($i/$this->unit_divisor)] = $i / $this->unit_divisor;
+			return range($this->startvalue, $this->endvalue, $this->stepsize);
+
+			// for ($i = $this->startvalue; $i <= $this->endvalue; $i += $this->stepsize)
+			// 	$list[(string) ($i/$this->unit_divisor)] = $i / $this->unit_divisor;
 
 // if ($this->name_gui == 'Configuration Offset (Winter/Summer)')
 // 	d($list, $this);

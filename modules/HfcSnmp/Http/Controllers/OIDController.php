@@ -35,7 +35,7 @@ class OIDController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'access', 'description' => 'Access', 'options' => ['readonly'], 'space' => 1),
 			array('form_type' => 'select', 'name' => 'html_type', 'description' => 'HTML Type', 'value' => $html_types, 'select' => $html_types),
 
-			// array('form_type' => 'checkbox', 'name' => 'oid_table', 'description' => 'SNMP Table Element'),
+			array('form_type' => 'checkbox', 'name' => 'oid_table', 'description' => 'Is SNMP Table'),
 			array('form_type' => 'select', 'name' => 'type', 'description' => 'SNMP Type', 'value' => $snmp_types, 'select' => $snmp_types_select),
 			array('form_type' => 'text', 'name' => 'unit_divisor', 'description' => 'Unit Divisor', 'select' => 'i u'),
 			array('form_type' => 'text', 'name' => 'startvalue', 'description' => 'Start Value', 'select' => 'select i u'),

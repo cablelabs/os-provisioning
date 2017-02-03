@@ -25,12 +25,10 @@
 		@if (Session::has('message'))
 			@DivOpen(12)
 				@if (Session::get('message_color') == 'blue')
-					@DivOpen(5)
-					@DivClose()
+					@DivOpen(5) @DivClose()
 					@DivOpen(4)
 				@endif
 				<h4 style='color:{{ Session::get('message_color') }}' id='success_msg'>{{ Session::get('message') }}</h4>
-
 				@if (Session::get('message_color') == 'blue')
 					@DivClose()
 				@endif
@@ -38,7 +36,12 @@
 		@endif
 
 
-		<!-- Frames -->
+		<!-- TABLE -->
+		@foreach($form_tables as $table)
+			{{ $table }}
+		@endforeach
+
+			<!-- FRAMES -->
 		@foreach ($panel_form_fields as $form_fields)
 
 			<?php
@@ -49,8 +52,8 @@
 
 			<!-- Headline ?? -->
 
-				@foreach($form_fields as $fields)
-					{{ $fields['html'] }}
+				@foreach($form_fields as $field)
+					{{ $field['html'] }}
 				@endforeach
 
 			</div>
@@ -61,10 +64,6 @@
 					<div class="col-md-12"><br></div>
 				@endif
 			@endif
-
-			<!-- @if ($mode == 'tabular') -->
-				<!-- jump to next row when first letter of html_frame changes -->
-			<!-- @endif -->
 
 			<?php 
 				$i++;
@@ -78,6 +77,7 @@
 
 
 	<!-- Save Button -->
+	<br>
 	<div class="col-md-12">
 		<div class="col-md-4"></div>
 		<div class="col-md-2">
@@ -96,5 +96,53 @@
 	{{-- java script--}}
 	@include('Generic.form-js')
 
+
+
+
+
+	@if(0)
+		<!-- temporary Notes -->
+		<?php $last = 'table_1' ?>
+
+		@foreach ($panel_form_fields as $index => $form_fields_row)
+
+			<?php
+				// new table
+			// d($form_fields_row[key($form_fields_row)]['panel'], key($form_fields_row), $last);
+				if ($last != $form_fields_row[key($form_fields_row)]['panel'])
+				// if ($form_fields_row[key($form_fields_row)]['panel'] == 'table_2')
+					$i = 1;
+				echo '</tbody></table><br>';
+			 ?>
+
+			<!-- table head -->
+			@if ($i == 1)
+			<table class="table table-condensed">
+			<thead>
+				<tr role="row">
+					<th> Index </th>
+				@foreach ($form_fields_row as $oid => $form_fields)
+					<th>{{ $form_fields['description'] }}</th>
+				@endforeach
+				</tr>
+				<?php $i++ ?>
+			</thead>
+			<tbody>
+			@endif
+
+			<!-- table body -->
+			<tr>
+				<td> {{ $index }} </td>
+			@foreach ($form_fields_row as $oid => $form_fields)
+				<td>{{ $form_fields['html'] }}</td>
+				<?php $last = $form_fields['panel'] ?>
+			@endforeach
+			</tr>
+
+
+		@endforeach
+			</tbody>
+		</table>
+	@endif
 
 @stop
