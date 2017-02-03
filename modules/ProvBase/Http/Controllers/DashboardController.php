@@ -38,6 +38,7 @@ class DashboardController extends BaseController
             $sales = $this->get_sales($itemised_contracts);
             $chart_data_sales = $this->get_chart_data_sales($sales);
         } catch (\Exception $e) {
+            Log::error('Dashboard-Exception: ' . $e->getMessage());
             throw new \Exception($e->getMessage(), $e->getCode(), $e);
         }
 
