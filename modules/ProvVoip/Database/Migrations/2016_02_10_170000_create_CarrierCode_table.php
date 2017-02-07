@@ -33,7 +33,6 @@ class CreateCarrierCodeTable extends BaseMigration {
 
 		// to fill this table call “php artisan provvoip:update_carrier_code_database“
 
-
 		return parent::up();
 	}
 
