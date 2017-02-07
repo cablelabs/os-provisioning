@@ -100,7 +100,6 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 		// fire!
 		$this->_perform_curl_request($url);
 
-
 	}
 
 
