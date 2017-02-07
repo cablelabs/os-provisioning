@@ -14,7 +14,7 @@ use \App\GuiLog;
  */
 class EkpCodeDatabaseUpdaterCommand extends Command {
 
-	// get functions for some address select options
+	// get some methods used by several updaters
 	use \App\Console\Commands\DatabaseUpdaterTrait;
 
 	/**
