@@ -29,8 +29,7 @@ class CreateEkpCodeTable extends BaseMigration {
 		$updater = new EkpCodeDatabaseUpdaterCommand();
 		$updater->clear_hash_file();
 
-		// fill table with ekpcodes
-		$updater->fire();
+		// to fill this table call “php artisan provvoip:update_ekp_code_database“
 
 		return parent::up();
 	}
