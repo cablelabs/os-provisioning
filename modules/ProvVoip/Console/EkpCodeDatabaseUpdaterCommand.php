@@ -26,7 +26,7 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $description = 'Update the database ekp code using the csv file $csv_file';
+	protected $description = 'Update the database table containing ekp codes';
 
 	/**
 	 * The path were the csv file is stored.
@@ -52,6 +52,9 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 	 */
 	public function __construct()
 	{
+		// this comes from config/app.php (key 'url')
+		$this->base_url = \Config::get('app.url');
+
 		parent::__construct();
 	}
 
@@ -63,6 +66,49 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 	 */
 	public function fire()
 	{
+
+		if (\PPModule::is_active('provvoipenvia')) {
+			// we get the data directly from Envia API
+			$this->_update_using_envia_api();
+		}
+		else {
+			// fallback: get data from file /lara/storage/app/config/provvoip/ekp_codes.csv
+			$this->_update_using_file();
+		}
+	}
+
+
+	/**
+	 * Updating ekp codes via Envia API means a simple call of the method in ProvVoipEnvia
+	 * The real work is done there
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _update_using_envia_api() {
+
+		Log::info($this->description.' from Envia API');
+
+		// getting data from Envia instead from file means: file is not current ⇒ delete the hash file
+		$this->clear_hash_file();
+
+		// prepare the URL to process via cURL
+		$url_suffix = \URL::route("ProvVoipEnvia.cron", array('job' => 'misc_get_keys', 'keyname' => 'ekp_code', 'really' => 'True'), false);
+		$url = $this->base_url.$url_suffix;
+
+		// fire!
+		$this->_perform_curl_request($url);
+
+	}
+
+
+	/**
+	 * Updating from a file (fallback if no other methods are available) is performed here.
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _update_using_file() {
+
+		Log::info($this->description.' from CSV file');
 
 		// nothing to do
 		if (!$this->_have_to_update()) {
@@ -87,6 +133,41 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 	 */
 	public function clear_hash_file() {
 		\Storage::put($this->hash_file, '');
+	}
+
+
+	/**
+	 * Update an order (using a curl request against the given URL.
+	 * Since updating uses the same functionality as updating via frontend we accessing the cron method in ProvVoipEnviaController using cURL.
+	 *
+	 * This may be not the best way – but the one without bigger refactoring of the sources…
+	 * TODO: Evaluate other solutions…
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @param $url URL to be accessed by cURL
+	 */
+	protected function _perform_curl_request($url) {
+
+		$ch = curl_init();
+
+		$opts = array(
+			CURLOPT_URL => $url,
+			CURLOPT_HEADER => false,
+			CURLOPT_SSL_VERIFYPEER => false,	// no valid cert for “localhost” – so we don't check
+			CURLOPT_RETURNTRANSFER => TRUE,		// return result instead of instantly printing to screen
+		);
+
+		curl_setopt_array($ch, $opts);
+
+		$res = curl_exec($ch);
+		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+		if ($http_code != 200) {
+			Log::error("HTTP error ".$http_code." occured in scheduled updating of envia orders calling ".$url);
+		}
+
+		curl_close($ch);
 	}
 
 
