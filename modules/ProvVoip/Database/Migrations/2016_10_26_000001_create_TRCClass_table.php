@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use \Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand;
 
 class CreateTRCClassTable extends BaseMigration {
 
@@ -18,10 +19,6 @@ class CreateTRCClassTable extends BaseMigration {
 	 */
 	public function up()
 	{
-		// this table needs to be initialized
-		// as trc classes are defined by every provider we don't “seed” them here any longer
-		// in case of Envia they are part of the inital_config.sql
-
 		// as there could exist a table created on the old ProvVoipEnvia migration we have to check for this special case
 		// do nothing in this case!
 		if (!Schema::hasTable($this->tablename)) {
@@ -33,6 +30,16 @@ class CreateTRCClassTable extends BaseMigration {
 				$table->string('trc_short');
 				$table->string('trc_description');
 			});
+
+			// insert a dummy entry to prevent exceptions in initial environments
+			// this will be overwritten/deleted in updating process
+			DB::update("INSERT INTO ".$this->tablename." (trc_id, trc_short, trc_description) VALUES(0, 'n/a', 'Dummy entry – no TRC classes known.');");
+
+			// empty csv hash (if exists; to be sure that newly created table will be filled)
+			$updater = new TRCClassDatabaseUpdaterCommand();
+			$updater->clear_hash_file();
+
+			// to fill this table call “php artisan provvoip:update_trc_class_database“
 
 			return parent::up();
 		}
