@@ -116,7 +116,7 @@ class TRCClassDatabaseUpdaterCommand extends Command {
 		Log::info($this->description.' from CSV file');
 
 		// this has to be done – but ATM there is no need for such behavior
-		// you can use EkpCodeDatabaseUpdaterCommand::_update_using_file as starting point
+		// you can use EkpCodeDatabaseUpdaterCommand::_update_using_file() as starting point
 		throw new NotImplementedException('Updating TRC classes database from CSV file is not yet implemented!');
 
 	}

@@ -10,7 +10,8 @@ use \Modules\ProvVoip\Entities\EkpCode;
 use \App\GuiLog;
 
 /**
- * Class for updating database with ekp codes from csv file
+ * Class for updating database with ekp codes
+ * This will be done using data from a web API or – as fallback – from CSV file
  */
 class EkpCodeDatabaseUpdaterCommand extends Command {
 
