@@ -63,7 +63,7 @@ return [
   */
 	//ModemController
 	'Modem_NetworkAccess'			=> 'Deaktivieren/Aktivieren des Netzwerkzugriffs - Achtung: Wenn das Abrechnungsmodul installiert ist, wird diese Checkbox täglich überschrieben, je nach Gültigkeit der Tarif-Option - vorausgesetzt sie wurde nicht manuell gesetzt.',
-	'Modem_InstallationAddressChangeDate'	=> 'Bei Änderung der Installationsadresse (Umzug) des Modems: Startdatum für die neue Adresse',
+	'Modem_InstallationAddressChangeDate'	=> 'Bei Änderung der Installationsadresse (Umzug) des Modems: Startdatum für die neue Adresse. Falls nur lesbar ist gerade eine Änderung der Adresse bei Envia anhängig.',
 									//'Disable/Enable Network Access - Take Care: If Billing-Module is installed this Checkbox will be overwritten daily during check of valid Tariff Item',
 
  /**

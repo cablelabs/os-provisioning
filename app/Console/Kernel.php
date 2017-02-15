@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel {
 		'\Modules\ProvVoip\Console\PhonenumberCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
+		'\Modules\ProvVoipEnvia\Console\EnviaOrderProcessorCommand',
 		'App\Console\Commands\authCommand',
 	];
 
@@ -86,6 +87,10 @@ class Kernel extends ConsoleKernel {
 			$schedule->command('provvoipenvia:update_voice_data')
 				->dailyAt('03:53');
 				/* ->everyMinute(); */
+
+			// Process Envia orders
+			$schedule->command('provvoipenvia:process_envia_orders')
+				->dailyAt('00:23');
 		}
 
 		// ProvBase Schedules

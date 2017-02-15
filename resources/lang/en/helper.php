@@ -46,7 +46,7 @@ return [
   */
  	//ModemController
 	'Modem_NetworkAccess'			=> 'Disable/Enable Network Access - Take Care: If Billing-Module is installed this Checkbox will be overwritten daily during check of valid Tariff Item when it was not enabled/checked manually',
-	'Modem_InstallationAddressChangeDate'	=> 'In case of (physical) relocation of the modem: Add startdate for the new address here',
+	'Modem_InstallationAddressChangeDate'	=> 'In case of (physical) relocation of the modem: Add startdate for the new address here. If readonly there is a pending address change order at Envia.',
 
  /**
   *	MODULE: ProvVoip
