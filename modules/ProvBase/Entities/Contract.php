@@ -400,6 +400,7 @@ class Contract extends \BaseModel {
 			// Task 1 & 2 included
 			$this->_update_network_access_from_items();
 
+			$this->_update_email_index();
 
 			// commented out by par for reference ⇒ if all is running this can savely be removed
 			/* $qos_id = ($tariff = $this->get_valid_tariff('Internet')) ? $tariff->product->qos_id : 0; */
@@ -609,6 +610,42 @@ class Contract extends \BaseModel {
 				$item->save();
 			}
 		}
+
+	}
+
+	/**
+	 * Update the email indices according to the number of allowed emails,
+	 * which is derived from the current internet item.
+	 * An email index of 0 means disabled, 1 is the primary email address.
+	 *
+	 * @return none
+	 * @author Ole Ernst
+	 */
+	protected function _update_email_index()
+	{
+		$cnt = $this->get_email_count();
+
+		// fast path: set all indices to 0, as no email is allowed
+		if(!$cnt) {
+			foreach($this->emails as $email) {
+				$email->index = 0;
+				$email->save();
+			}
+			return;
+		}
+
+		// remove all email indices, which are already in use
+		$used = [];
+		foreach($this->emails as $email)
+			$used[] = $email->index;
+		$avail = array_diff(range($cnt, 1), $used);
+
+		// try to fit all email indices into available slots
+		foreach($this->emails as $email)
+			if($email->index > $cnt) {
+				$email->index = $avail ? array_pop($avail) : 0;
+				$email->save();
+			}
 
 	}
 
