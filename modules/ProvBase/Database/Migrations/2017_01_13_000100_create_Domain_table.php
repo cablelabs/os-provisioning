@@ -20,7 +20,7 @@ class CreateDomainTable extends BaseMigration {
 
 			$table->string('name');
 			$table->string('alias');
-			$table->string('type');
+			$table->enum('type', ['SIP', 'Email', 'DHCP']);
 		});
 	}
 

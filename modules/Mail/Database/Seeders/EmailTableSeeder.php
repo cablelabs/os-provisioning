@@ -19,7 +19,7 @@ class EmailTableSeeder extends \BaseSeeder {
 
 			$email = Email::create([
 				'contract_id' => $contract->id,
-				'domain_id' => Domain::where('type', '=', 'email')->get()->random(1)->id,
+				'domain_id' => Domain::where('type', '=', 'Email')->get()->random(1)->id,
 				'localpart' => $faker->userName(),
 				'index' => rand(0, $contract->get_email_count()),
 				'greylisting' => rand(0,1),
