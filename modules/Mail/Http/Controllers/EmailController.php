@@ -23,12 +23,12 @@ class EmailController extends \BaseController {
 			// don't remove index, which is used by this model, as it would change the index if we hit the save button
 			if($email->index && $email->index != $model->index)
 				$used[] = $email->index;
-		$avail = array_diff(range(0, $contract->emailcount), $used);
+		$avail = array_diff(range(0, $contract->get_email_count()), $used);
 
 		return array(
-			array('form_type' => 'text', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 1),
+			array('form_type' => 'text', 'name' => 'contract_id', 'description' => 'Contract'),
 			array('form_type' => 'text', 'name' => 'localpart', 'description' => 'Local Part'),
-			array('form_type' => 'select', 'name' => 'domain_id', 'description' => 'Domain', 'value' => $model->html_list(Domain::where('type', '=', 'email')->get(), 'name')),
+			array('form_type' => 'select', 'name' => 'domain_id', 'description' => 'Domain', 'value' => $model->html_list(Domain::where('type', '=', 'Email')->get(), 'name')),
 			array('form_type' => 'text', 'name' => 'password', 'description' => 'Password', 'hidden' => 1),
 			array('form_type' => 'select', 'name' => 'index', 'description' => 'Index', 'value' => $avail, 'help' => "0: disabled\n1: primary email address"),
 			array('form_type' => 'checkbox', 'name' => 'greylisting', 'description' => 'Greylisting', 'value' => '1'),

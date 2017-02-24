@@ -40,7 +40,6 @@ class Contract extends \BaseModel {
 			'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
 			'sepa_iban' => 'iban',
 			'sepa_bic' => 'bic',
-			'emailcount' => 'integer|min:0',
 			);
 	}
 
@@ -222,6 +221,12 @@ class Contract extends \BaseModel {
 		if (\PPModule::is_active('mail'))
 			return $this->hasMany('Modules\Mail\Entities\Email');
 		return null;
+	}
+
+	public function get_email_count()
+	{
+		$tariff = $this->_get_valid_tariff_item_and_count('Internet');
+		return $tariff['count'] ? $tariff['item']->product->email_count : 0;
 	}
 
 	public function costcenter()

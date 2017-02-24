@@ -15,13 +15,13 @@ class EmailTableSeeder extends \BaseSeeder {
 
 		foreach(range(1, $this->max_seed) as $index)
 		{
-			$contract_id = Contract::all()->random(1)->id;
+			$contract = Contract::all()->random(1);
 
 			$email = Email::create([
-				'contract_id' => $contract_id,
+				'contract_id' => $contract->id,
 				'domain_id' => Domain::where('type', '=', 'email')->get()->random(1)->id,
 				'localpart' => $faker->userName(),
-				'index' => rand(1, Contract::find($contract_id)->emailcount),
+				'index' => rand(0, $contract->get_email_count()),
 				'greylisting' => rand(0,1),
 				'blacklisting' => rand(0,1),
 				'forwardto' => $faker->email(),
