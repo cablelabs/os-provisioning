@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Modules\BillingBase\Entities\Item;
 use View;
+use Illuminate\Support\Facades\App;
 
 use Modules\ProvBase\Entities\Contract;
 use Modules\BillingBase\Entities\Product;
@@ -19,8 +20,13 @@ class DashboardController extends BaseController
         $day_period = null;
         $monthly_sales = null;
         $checked = '';
+		$show_sales = false;
 
         try {
+			if (App::environment() !== 'production') {
+				$show_sales = true;
+			}
+
             // check if the dayfiltet form submitted
             $request = URL::getRequest();
             if ($request->isMethod('post')) {
@@ -54,7 +60,7 @@ class DashboardController extends BaseController
 
         return View::make(
             'provbase::dashboard', $this->compact_prep_view(
-                compact('title', 'contracts', 'chart_data_valid_contracts', 'chart_data_invalid_contracts', 'sales', 'chart_data_sales', 'checked')
+                compact('title', 'contracts', 'chart_data_valid_contracts', 'chart_data_invalid_contracts', 'show_sales', 'sales', 'chart_data_sales', 'checked')
             )
         );
     }

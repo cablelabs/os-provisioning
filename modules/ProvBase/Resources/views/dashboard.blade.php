@@ -59,7 +59,7 @@
 
         <br><br><br>
 
-        @if (true === true)
+        @if ($show_sales)
             <div class="row">
                 <div class="col-md-3 col-sm-6">
                     <div class="panel panel-inverse">
