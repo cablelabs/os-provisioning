@@ -59,7 +59,7 @@
 
         <br><br><br>
 
-        @if (true === false)
+        @if (true === true)
             <div class="row">
                 <div class="col-md-3 col-sm-6">
                     <div class="panel panel-inverse">
@@ -73,17 +73,39 @@
                                 </div>
                                 <div class="stats-info">
                                     <h4>total:</h4>
-                                    <?php $sales_total = $sales[date('Y')]['total']; ?>
+                                    <?php
+                                        $sales_total = 0;
+                                        if (isset($sales[date('Y')])) {
+											$sales_total = $sales[date('Y')]['total'];
+                                        } elseif (isset($sales['current_month'])) {
+											$sales_total = number_format($sales['current_month']['total'], 2, ',', '');
+                                        }
+                                    ?>
                                     <p>{{ $sales_total }}</p>
                                     <div class="stats-desc">
                                         <?php
-                                            $sales_diff = $sales[date('Y')]['total'] - $sales[date('Y') - 1]['total'];
-                                            $sales_diff = number_format($sales_diff, 2, ',', '');
+                                            $sales_diff = 0;
+
+										    if (isset($sales[date('Y')])) {
+                                                $sales_diff = $sales[date('Y')]['total'] - $sales[date('Y') - 1]['total'];
+                                                $sales_diff = number_format($sales_diff, 2, ',', '');
+                                                $periode = 'Vorjahr';
+                                            } elseif(isset($sales['current_month'])) {
+												$sales_diff = $sales['current_month']['total'] - $sales['last_month']['total'];
+												$sales_diff = number_format($sales_diff, 2, ',', '');
+												$periode = 'Vormonat';
+                                             }
                                         ?>
-                                        Veränderung zum Vorjahr: {{ $sales_diff }}
+                                        Veränderung zum {{ $periode }}: {{ $sales_diff }}
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="panel-footer">
+                            {{ Form::open(array('id' => 'switch-sales-count', 'route' => array('Dashboard.index', 0), 'method' => 'POST', 'files' => false)) }}
+                                <input type="checkbox" id="switch-sales" name="switch-sales" data-render="switchery" data-theme="default" {{ $checked }}/>
+                                <span>Umsatz monatlich</span>
+                            {{ Form::close() }}
                         </div>
                     </div>
                 </div>
@@ -102,7 +124,7 @@
                     </div>
                 </div>
             </div>
-
+<!--
             <script type="text/javascript">
                 window.onload = function() {
 
@@ -130,7 +152,7 @@
                     );
                 }
             </script>
-
+-->
             <br><br><br>
         @endif
 
@@ -172,7 +194,59 @@
             ],
             options);
 
+        // float bar chart -> sales
+        var data = <?php echo json_encode($chart_data_sales); ?>;
+        var options = {
+            xaxis: {
+                mode: 'categories',
+                tickLength: 0
+            },
+            yaxis: {
+                tickDecimals: 2
+            },
+            grid: { borderWidth: 0 },
+            bars: {
+                show: true,
+                align: "center",
+                barWidth: 0.5
+            }
+        };
+
+        $.plot($("#sales-chart"),
+            [ {data: data } ],
+            options
+        );
+
+        // float bar chart -> sales
+        var data = <?php echo json_encode($chart_data_sales); ?>;
+        var options = {
+            xaxis: {
+                mode: 'categories',
+                tickLength: 0
+            },
+            yaxis: {
+                tickDecimals: 2
+            },
+            grid: { borderWidth: 0 },
+            bars: {
+                show: true,
+                align: "center",
+                barWidth: 0.5
+            }
+        };
+
+        $.plot($("#sales-chart"),
+            [ {data: data } ],
+            options
+        );
+
         // range slider
         $("#example_id").ionRangeSlider();
+
+        FormSliderSwitcher.init();
+
+        $('#switch-sales').change(function() {
+            $('#switch-sales-count').submit();
+        })
     };
 </script>
