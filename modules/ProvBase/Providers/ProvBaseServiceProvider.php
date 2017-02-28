@@ -34,6 +34,8 @@ class ProvBaseServiceProvider extends ServiceProvider {
 		\View::addNamespace('provbase', __DIR__.'/../Resources/views');
 
 		$this->commands($this->commands);
+
+		$this->mergeConfigFrom(__DIR__ . '/../Config/dates.php', 'dates');
 	}
 
 	/**

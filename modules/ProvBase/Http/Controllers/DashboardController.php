@@ -5,6 +5,7 @@ namespace Modules\ProvBase\Http\Controllers;
 use App\Http\Controllers\BaseController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use Modules\BillingBase\Entities\Item;
 use View;
 
 use Modules\ProvBase\Entities\Contract;
@@ -15,13 +16,16 @@ class DashboardController extends BaseController
     public function index()
     {
         $title = 'Dashboard';
-
         $day_period = null;
+        $monthly_sales = null;
+        $checked = '';
+
         try {
             // check if the dayfiltet form submitted
             $request = URL::getRequest();
             if ($request->isMethod('post')) {
                 $day_period = $request->input('datefilter');
+                $monthly_sales = $request->input('switch-sales');
             }
 
             // get all valid contracts
@@ -35,16 +39,22 @@ class DashboardController extends BaseController
             $itemised_contracts = $this->get_itemised_contracts();
 
             // sales
-            $sales = $this->get_sales($itemised_contracts);
-            $chart_data_sales = $this->get_chart_data_sales($sales);
+            if (is_null($monthly_sales)) {
+                $sales = $this->get_sales($itemised_contracts);
+                $chart_data_sales = $this->get_chart_data_sales($sales);
+            } else {
+                $sales = $this->get_sales_monthly($itemised_contracts);
+                $chart_data_sales = $this->get_chart_data_sales($sales);
+				$checked = 'checked';
+            }
         } catch (\Exception $e) {
-            Log::error('Dashboard-Exception: ' . $e->getMessage());
+            \Log::error('Dashboard-Exception: ' . $e->getMessage());
             throw new \Exception($e->getMessage(), $e->getCode(), $e);
         }
 
         return View::make(
             'provbase::dashboard', $this->compact_prep_view(
-                compact('title', 'contracts', 'chart_data_valid_contracts', 'chart_data_invalid_contracts', 'sales', 'chart_data_sales')
+                compact('title', 'contracts', 'chart_data_valid_contracts', 'chart_data_invalid_contracts', 'sales', 'chart_data_sales', 'checked')
             )
         );
     }
@@ -101,15 +111,21 @@ class DashboardController extends BaseController
         $product_types = $this->get_product_types();
 
         try {
-            $sales = $sales[date('Y')]['by_types'];
+        	if (isset($sales[date('Y')])) {
+        		$sales = $sales = $sales[date('Y')]['by_types'];
+			} elseif (isset($sales['current_month'])) {
+				$sales = $sales = $sales['current_month']['by_types'];
+			}
 
-            foreach ($product_types as $type) {
-                $sale = 0;
-                if (isset($sales[$type])) {
-                    $sale = str_replace(',', '.', $sales[$type]);
-                }
-                $ret_val[] = array($type, $sale);
-            }
+			if (count($sales) > 0) {
+				foreach ($product_types as $type) {
+					$sale = 0;
+					if (isset($sales[$type])) {
+						$sale = str_replace(',', '.', $sales[$type]);
+					}
+					$ret_val[] = array($type, $sale);
+				}
+			}
         } catch (\Exception $e) {
             throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
         }
@@ -181,7 +197,7 @@ class DashboardController extends BaseController
      * @return mixed
      * @throws \Exception
      */
-    private function get_contracts($day_period)
+    private function get_contracts($day_period = null)
     {
         try {
             $contracts = Contract::all();
@@ -301,7 +317,7 @@ class DashboardController extends BaseController
     private function get_sales($contracts)
     {
         $ret_val = array();
-
+//d($contracts);
         try {
             foreach ($contracts as $year => $contracts) {
                 $sales = 0;
@@ -318,8 +334,52 @@ class DashboardController extends BaseController
         } catch (\Exception $e) {
             throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
         }
-
+//d($ret_val);
         return $ret_val;
+    }
+
+    private function get_sales_monthly($contracts)
+    {
+        $result = array(
+        	'current_month' => array('total' => 0),
+			'last_month' =>  array('total' => 0),
+		);
+		$dates = config('dates');
+//d($dates['current_month'], $dates['next_month']);
+        try {
+            $contracts = $contracts[date('Y')];
+
+            foreach ($contracts as $contract_id => $items) {
+                foreach ($items as $item) {
+                    $price_last_month = $item->calculate_price_and_span($dates['last_month'], true);
+					$price_current_month = $item->calculate_price_and_span($dates['next_month'], true);
+
+					$product = Product::find($item->product_id);
+
+                    if (!is_null($price_current_month)) {
+                        $result['current_month']['total'] += $price_current_month['charge'];
+						if (isset($result['current_month']['by_types'][$product->type])) {
+							$result['current_month']['by_types'][$product->type] += $price_current_month['charge'];
+						} else {
+							$result['current_month']['by_types'][$product->type] = $price_current_month['charge'];
+						}
+                    }
+
+					if (!is_null($price_last_month)) {
+						$result['last_month']['total'] += $price_last_month['charge'];
+						if (isset($result['last_month']['by_types'][$product->type])) {
+							$result['last_month']['by_types'][$product->type] += $price_current_month['charge'];
+						} else {
+							$result['last_month']['by_types'][$product->type] = $price_current_month['charge'];
+						}
+					}
+                }
+            }
+        } catch (\Exception $e) {
+            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+        }
+//d($result);
+		return $result;
     }
 
     /**

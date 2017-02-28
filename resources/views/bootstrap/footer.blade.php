@@ -18,6 +18,10 @@
 <script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.categories.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/ionRangeSlider/js/ion-rangeSlider/ion.rangeSlider.min.js')}}"></script>
+
+<script src="{{asset('components/assets-admin/plugins/switchery/switchery.js')}}"></script>
+<script src="{{asset('components/assets-admin/js/form-slider-switcher.demo.js')}}"></script>
+
 <script src="{{asset('components/assets-admin/js/apps.min.js')}}"></script>
 <!-- ================== END PAGE LEVEL JS ================== -->
 
@@ -29,7 +33,6 @@
    */
   $(document).ready(function() {
     App.init();
-    // Dashboard.init();
 
     // Select2 Init - intelligent HTML select
     $("select").select2();
