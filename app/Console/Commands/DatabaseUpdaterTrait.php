@@ -39,7 +39,7 @@ trait DatabaseUpdaterTrait {
 		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
 		if ($http_code != 200) {
-			Log::error("HTTP error ".$http_code." occured in scheduled updating of envia orders calling ".$url);
+			\Log::error("HTTP error ".$http_code." occured in scheduled updating of envia orders calling ".$url);
 		}
 
 		curl_close($ch);
