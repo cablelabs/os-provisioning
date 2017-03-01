@@ -41,7 +41,7 @@
 			{{ $table }}
 		@endforeach
 
-			<!-- FRAMES -->
+		<!-- FRAMES -->
 		@foreach ($panel_form_fields as $form_fields)
 
 			<?php

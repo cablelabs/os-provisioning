@@ -70,6 +70,10 @@ class SnmpController extends \BaseController{
 		// Get Html Form Fields for generic View - this includes the snmpwalk & updating snmpvalues
 		$form_fields = $snmp->prep_form_fields();
 
+// d($form_fields);
+		// TODO: use multi update function here
+		// $this->_multi_update_values();
+
 		$form_tables = $panel_form_fields = [];
 		// TODO: give the opportunity for a mixture
 		if (!isset($form_fields[0]['name']))
@@ -78,11 +82,16 @@ class SnmpController extends \BaseController{
 		}
 		else
 		{
-			$form_fields = BaseViewController::add_html_string($form_fields);
-
 			// order by panel (respective html_frame), evaluate count of columns
 			foreach ($form_fields as $form_field)
-				isset($panel_form_fields[$form_field['panel']]) ? $panel_form_fields[$form_field['panel']][] = $form_field : $panel_form_fields[$form_field['panel']][0] = $form_field;
+			{
+				$form_field = BaseViewController::add_html_string(array($form_field))[0];
+
+				if (isset($panel_form_fields[$form_field['panel']]))
+					$panel_form_fields[$form_field['panel']][] = $form_field;
+				else
+					$panel_form_fields[$form_field['panel']][0] = $form_field;
+			}
 
 			ksort($panel_form_fields);
 		}
@@ -187,7 +196,7 @@ class SnmpController extends \BaseController{
 		// d($params);
 
 		if (!$this->device->ip)
-			return $array;
+			return [];
 
 $start = microtime(true);
 
@@ -217,9 +226,10 @@ $start = microtime(true);
 
 					foreach ($values as $index => $value)
 					{
-						// Save SnmpValues
-						// TODO: only add valueset to global variable to later multiupdate - but for that we have to change indexing 
-						// for field names for updates because we dont get them here as return value as is
+						// Save SnmpValue
+						// NOTE: This takes way too much time
+						// TODO: only add valueset to global variable for later multiupdate - for that we have to change indexing 
+						// of field names because we wont get them as return value anymore
 						$ret = $this->_snmp_value_set($suboid, $value, $index);
 
 						// reorder by index for easier graphical display
@@ -252,6 +262,8 @@ $start = microtime(true);
 
 	/**
 	 * Generate Form Field array as preparation for creating the html form fields from it
+	 *
+	 * @param ret 	Array 	Return Value from _snmp_value_set [0 => oid_id, 1 => 'oid_index']
 	 */
 	private function _get_formfield_array($oid, $ret, $value, $frame)
 	{
@@ -290,6 +302,8 @@ $start = microtime(true);
 
 		return $field;
 	}
+
+
 
 
 	/**
@@ -368,7 +382,7 @@ $start = microtime(true);
 		$walk = snmprealwalk($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
 
 		// Log
-		Log::info('snmp: get '.$this->device->ip.' '.$oid->oid.' '.implode(' ',$walk));
+		Log::info('snmpwalk '.$this->device->ip.' '.$oid->oid);
 
 		return $walk;
 	}
@@ -384,12 +398,14 @@ $start = microtime(true);
 	{
 $start = microtime(true);
 
+		Log::info('snmp2_real_walk (table) '.$this->device->ip.' '.$oid->oid);
+
 		$results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->mibfile->name.'::'.$oid->name);
 		// $results = snmp2_real_walk($this->device->ip, $this->_get_community(), "DOCS-IF-MIB::docsIfUpstreamChannelTable");
 		// exec('snmptable -v2c -Ci -c'.$this->_get_community().' '.$this->device->ip.' '.escapeshellarg($oid->mibfile->name.'::'.$oid->name), $results);
 
 
-		// order - done with snmp real walk
+		// order by suboid for faster snmpvalue saving (still too slow)
 		foreach ($results as $oid_index => $value)
 		{
 			$index  = strrchr($oid_index, '.');
@@ -427,6 +443,7 @@ $start = microtime(true);
 			'oid_index' 	=> $index ? : str_replace($oid->oid, '', $oid->res_oid),
 			);
 
+
 		// // compare resulting OID from snmpwalk with queried OID ... in case it's different we have a table with multiple elements & indexes
 		$obj = SnmpValue::where('netelement_id', '=', $this->device->id)->where('oid_id', '=', $oid->id)->where('oid_index', '=', $data['oid_index'])->get()->first();
 		// $obj = $snmpvalues->where('oid_id', $oid->id)->where('oid_index', (string) $data['oid_index'])->first();
@@ -435,6 +452,7 @@ $start = microtime(true);
 		{
 			// always update to get the latest timestamp ??
 			// $data['updated_at'] = \Carbon\Carbon::now(\Config::get('app.timezone'));
+			// Note: update method needs id to update correct element
 			$obj->update($data);
 
 			return [$obj->id, $data['oid_index']];
@@ -624,5 +642,26 @@ $start = microtime(true);
 		snmp_set_oid_output_format (SNMP_OID_OUTPUT_NUMERIC);
 	}
 
+
+	// private function _multi_update_values()
+	// {
+
+	// 	/* NOTES: SQL Changes for multiple primary keys:
+	// 		ALTER TABLE snmpvalue DROP PRIMARY KEY, ADD PRIMARY KEY(netelement_id, oid_id, oid_index);
+	// 	 */
+
+	// 	$data = array(
+	// 		['netelement_id' => 28,
+	// 		'oid_id' 		=> 760,
+	// 		'value' 		=> 12,
+	// 		'oid_index' 	=> '.0'],
+	// 		['netelement_id' => 28,
+	// 		'oid_id' 		=> 757,
+	// 		'value' 		=> -100,
+	// 		'oid_index' 	=> '.0'],
+	// 		);
+	
+	// 	\DB::raw('insert into snmpvalue (netelement_id, oid_id, oid_index, value) VALUES (28, 760, 11, \'.0\'), (28, 757, -10, \'.0\') on duplicate key update value=VALUES(value)');
+	// }
 
 }
