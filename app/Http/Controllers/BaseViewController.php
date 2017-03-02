@@ -276,7 +276,7 @@ class BaseViewController extends Controller {
 					else
 						$checked = $field['field_value'];
 
-					$s .= \Form::checkbox($field['name'], $value, null, $checked);
+					$s .= \Form::checkbox($field['name'], $value, null, $checked, $options);
 					break;
 
 				case 'select' :
