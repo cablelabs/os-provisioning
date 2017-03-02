@@ -29,9 +29,15 @@ class CreateParameterTable extends BaseMigration {
 			$table->integer('netelementtype_id')->unsigned();
 			$table->integer('oid_id')->unsigned();
 
+			// special extensions for Table-OIDs
+			$table->integer('parent_id')->unsigned(); 	// If Set this is a SubOID, then only these SubOIDs will be considered for table view
+			$table->boolean('3rd_dimension'); 			// checkbox for being a parameter that's in the list behind a table row/element
+			$table->string('indices');
+
+			// arrangement stuff in view layout
 			$table->string('html_frame',16);
 			$table->text('html_properties');
-			$table->integer('html_id')->unsigned(); // for future use
+			$table->integer('html_id')->unsigned()->nullable(); // for future use
 		});
 
 		return parent::up();

@@ -25,21 +25,25 @@ class ParameterController extends \BaseController {
 			);
 
 		if ($oid)
-			$a[] = array('form_type' => 'link', 'name' => $oid->oid, 'description' => 'OID', 'url' => route('OID.edit', ['id' => $oid->id]), 'help' => trans('helper.oid_link'));
+			$a[] = array('form_type' => 'link', 'name' => $oid->oid, 'description' => 'OID', 'url' => route('OID.edit', ['id' => $oid->id]), 'help' => trans('helper.oid_link'), 'space' => 1);
+
+		if ($oid->oid_table)
+		{
+			$a[] = array('form_type' => 'checkbox', 'name' => 'table', 'description' => 'Table', 'options' => ['disabled' => 'disabled'], 'help' => trans('helper.oid_table'));
+			$a[] = array('form_type' => 'text', 'name' => 'indices', 'description' => 'Indices', 'help' => trans('helper.parameter_indices'), 'space' => 1);
+		}
+
+		if ($model->parent_id)
+			$a[] = array('form_type' => 'checkbox', 'name' => '3rd_dimension', 'description' => '3rd Dimension', 'help' => trans('helper.parameter_3rd_dimension'));
 
 		$b = array(
 				array('form_type' => 'text', 'name' => 'html_frame', 'description' => 'HTML Frame'),
 				array('form_type' => 'text', 'name' => 'html_id', 'description' => 'HTML ID'),
-				array('form_type' => 'text', 'name' => 'html_properties', 'description' => 'HTML Properties'),
+				// array('form_type' => 'text', 'name' => 'html_properties', 'description' => 'HTML Properties'),
 			);
 
 		return array_merge($a, $b);
 
-			// array('form_type' => 'checkbox', 'name' => 'oid_table', 'description' => 'SNMP Table Element'),
-			// array('form_type' => 'text', 'name' => 'type_array', 'description' => 'Type Array (?)', 'space' => 1),
-			//array('form_type' => 'textarea', 'name' => 'phpcode_pre', 'description' => 'PHP Code Pre-SNMP-Execution'),
-			//array('form_type' => 'textarea', 'name' => 'phpcode_post', 'description' => 'PHP Code Post-SNMP-Execution'),
-			// array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'),
 	}
 
 	// Note: This is currently not used - see NetElementTypeController@attach
