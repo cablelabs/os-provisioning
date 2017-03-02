@@ -2,7 +2,9 @@
 
 namespace Modules\HfcSnmp\Http\Controllers;
 
-class ParameterController extends \BaseController {
+use Modules\HfcReq\Http\Controllers\HfcReqController;
+
+class ParameterController extends HfcReqController {
 
 	/**
 	 * defines the formular fields for the edit and create view

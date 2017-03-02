@@ -1,14 +1,22 @@
+<?php
+	$description['NetElementType'] = 'Parameters';
+	$description['Parameter'] = 'SubOIDs';
+
+	$model = NamespaceController::get_route_name();
+?>
+
+
 <!-- attach button -->
 <div class='col-md-6'>
-	{{ Form::open(['route' => ['NetElementType.assign', $view_var->id], 'method' => 'get']) }}
-		{{ Form::submit('Assign Parameters', ['style' => 'simple']) }} <!-- .\App\Http\Controllers\BaseViewController::translate($view) -->
+	{{ Form::open(['route' => [$model.'.assign', $view_var->id], 'method' => 'get']) }}
+		{{ Form::submit('Assign '.$description[$model], ['style' => 'simple']) }} <!-- .\App\Http\Controllers\BaseViewController::translate($view) -->
 	{{ Form::close() }}
 </div>
 
 <!-- detach all button -->
 <div class='col-md-6'>
-	{{ Form::open(['route' => ['NetElementType.detach_all', $view_var->id], 'method' => 'delete']) }}
-		{{ Form::submit('Detach All Parameters', ['!class' => 'btn btn-danger', 'style' => 'simple']) }} <!-- .\App\Http\Controllers\BaseViewController::translate($view) -->
+	{{ Form::open(['route' => [$model.'.detach_all', $view_var->id], 'method' => 'delete']) }}
+		{{ Form::submit('Detach All '.$description[$model], ['!class' => 'btn btn-danger', 'style' => 'simple']) }}
 	{{ Form::close() }}
 </div>
 

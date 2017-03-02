@@ -8,7 +8,7 @@
 
 @section('content_left')
 
-	{{ Form::open(['route' => ['NetElementType.attach_oids', $view_var->id], 'method' => 'post']) }}
+	{{ Form::open(['route' => [$model_pure.'.attach_oids', $view_var->id], 'method' => 'post']) }}
 
 		{{ Form::label('oids', 'Choose OIDs') }}
 		{{ Form::select('oid_id[]', $oids, null, ['multiple' => 'multiple']) }}
@@ -25,7 +25,7 @@
 
 	@section('content_right_1')
 
-	{{ Form::open(['route' => ['NetElementType.attach_oids', $view_var->id], 'method' => 'post']) }}
+	{{ Form::open(['route' => [$model_pure.'.attach_oids', $view_var->id], 'method' => 'post']) }}
 
 		{{ Form::label('mibfile', 'Choose MIB-File') }}
 		{{ Form::select('mibfile_id', $mibs) }}
@@ -38,7 +38,7 @@
 
 	@section('content_right_2')
 
-	{{ Form::open(['route' => ['NetElementType.attach_oids', $view_var->id], 'method' => 'post']) }}
+	{{ Form::open(['route' => [$model_pure.'.attach_oids', $view_var->id], 'method' => 'post']) }}
 
 		{{ Form::label('oid_list', 'OID-List') }}
 		{{ Form::textarea('oid_list', null, ['placeholder' => '1.3.6.1.2.1.1.4

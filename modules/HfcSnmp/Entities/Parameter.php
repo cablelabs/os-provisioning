@@ -6,7 +6,7 @@ class Parameter extends \BaseModel {
 
 	public $table = 'parameter';
 
-	public $guarded = ['name'];
+	public $guarded = ['name', 'table'];
 
 
 	// Add your validation rules here
@@ -42,6 +42,24 @@ class Parameter extends \BaseModel {
 		return $this->orderBy('id')->with($eager_loading_model->table)->get();
 	}
 
+	public function view_has_many()
+	{
+		$ret = [];
+
+		if ($this->oid->oid_table)
+		{
+			$ret['Base']['SubOIDs']['view']['view'] = 'hfcreq::NetElementType.parameters';
+			$ret['Base']['SubOIDs']['view']['vars']['list'] = $this->children() ? : [];
+		}
+
+		return $ret;
+	}
+
+	public function view_belongs_to ()
+	{
+		return $this->netelementtype;
+	}
+
 
 	/**
 	 * Relations
@@ -56,6 +74,11 @@ class Parameter extends \BaseModel {
 		return $this->belongsTo('Modules\HfcReq\Entities\NetElementType', 'netelementtype_id');
 	}
 
+
+	public function children()
+	{
+		return Parameter::where('parent_id', '=', $this->id)->orderBy('3rd_dimension')->orderBy('id')->get();
+	}
 	// public function view_belongs_to ()
 	// {
 	// 	return $this->mibfile;
