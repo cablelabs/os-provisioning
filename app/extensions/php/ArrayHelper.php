@@ -120,4 +120,25 @@ class ArrayHelper {
 		return $arr_before + $arr_renamed + $arr_after;
 	}
 
+
+	/**
+	 * This function can be used as a kind of fast multiexplode
+	 *
+	 * @param 	delimiters 		Array - default is a comma
+	 * @param 	string 			String to convert
+	 *
+	 * @author 	Nino Ryschawy
+	 */
+	public static function str_to_array($string, $delimiters = [','])
+	{
+		if (isset($delimiters[1]))
+			$string = str_replace($delimiters, $delimiters[0], $string);
+
+		$array = explode($delimiters[0], $string);
+
+		// foreach ($array as $key => $str)
+		// 	$array[$key] = trim($str);
+
+		return $array;
+	}
 }

@@ -35,43 +35,42 @@
 			@DivClose()
 		@endif
 
+		<!-- LIST -->
+		@foreach ($form_fields['list'] as $field)
+			{{ $field }}
+		@endforeach
+
 
 		<!-- TABLE -->
-		@foreach($form_tables as $table)
+		@foreach ($form_fields['table'] as $table)
 			{{ $table }}
 		@endforeach
 
 		<!-- FRAMES -->
-		@foreach ($panel_form_fields as $form_fields)
+		@foreach ($form_fields['frame'] as $order)
+			@foreach ($order as $row)
 
-			<?php
-				$col_width = isset($columns) ? 12 / $columns[$form_fields[0]['panel'][0]] : 4;
-			?>
+				<div class="col-md-12" style="padding-right: 0px; padding-left: 0px;">
+				@foreach ($row as $col)
 
-			<div class="col-md-{{$col_width}} well" style="padding-right: 0px; padding-left: 0px;">
+					<?php
+						$col_width = (int) (12 / count($row));
+					?>
 
-			<!-- Headline ?? -->
+					<div class="col-md-{{$col_width}} well" style="padding-right: 0px; padding-left: 0px;">
 
-				@foreach($form_fields as $field)
-					{{ $field['html'] }}
+						@foreach ($col as $field)
+							{{ $field }}
+						@endforeach
+
+					</div>
+
 				@endforeach
+				</div>
 
-			</div>
-
-			@if ($mode == 'linear')
-				<!-- break after 3 columns (default) -->
-				@if (!($i % 3))
-					<div class="col-md-12"><br></div>
-				@endif
-			@endif
-
-			<?php 
-				$i++;
-				$last = $form_fields[0]['panel'][0];
-			?>
-
-
+			@endforeach
 		@endforeach
+
 
 	{{-- Form::submit( \App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button')) --}}
 
