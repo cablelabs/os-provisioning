@@ -27,11 +27,12 @@ class ParameterController extends HfcReqController {
 			);
 
 		if ($oid)
+		{
 			$a[] = array('form_type' => 'link', 'name' => $oid->oid, 'description' => 'OID', 'url' => route('OID.edit', ['id' => $oid->id]), 'help' => trans('helper.oid_link'), 'space' => 1);
 
-		if ($oid->oid_table)
-		{
-			$a[] = array('form_type' => 'checkbox', 'name' => 'table', 'description' => 'Table', 'options' => ['disabled' => 'disabled'], 'help' => trans('helper.oid_table'));
+			if ($oid->oid_table)
+				$a[] = array('form_type' => 'checkbox', 'name' => 'table', 'description' => 'Table', 'options' => ['disabled' => 'disabled'], 'help' => trans('helper.oid_table'));
+
 			$a[] = array('form_type' => 'text', 'name' => 'indices', 'description' => 'Indices', 'help' => trans('helper.parameter_indices'), 'space' => 1);
 		}
 
@@ -51,7 +52,6 @@ class ParameterController extends HfcReqController {
 	// Note: This is currently not used - see NetElementTypeController@attach
 	public function prepare_rules($rules, $data)
 	{
-		// d($data);
 		// don't allow double OID entries for a NetElementType - TODO: add MibFile_id as constraint
 		if (isset($data['id']))
 			$data['oid_id'] = 'unique:parameter,oid_id,'.$data['id'].',id,deleted_at,NULL,netelementtype_id,'.$data['netelementtype_id'];
