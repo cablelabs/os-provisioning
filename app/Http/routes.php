@@ -42,6 +42,9 @@ BaseRoute::group([], function() {
 	BaseRoute::get('base/fulltextSearch', array('as' => 'Base.fulltextSearch', 'uses' => 'BaseController@fulltextSearch'));
 
 	BaseRoute::resource('Authuser', 'AuthuserController');
+	BaseRoute::resource('Authrole', 'AuthroleController');
+	Route::post('Authuser/{id}/AssignRole', ['as' => 'AssignRole.add', 'uses' => 'AuthuserController@assign_roles']);
+	Route::post('Authuser/DeleteRole', ['as' => 'AssignRole.delete', 'uses' => 'AuthuserController@delete_assigned_roles']);
 
 	BaseRoute::get('Config', array('as' => 'Config.index', 'uses' => 'GlobalConfigController@index'));
 	BaseRoute::resource('GlobalConfig', 'GlobalConfigController');

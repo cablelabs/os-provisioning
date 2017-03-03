@@ -115,6 +115,7 @@
               <li class="arrow"></li>
               <li><a href="{{route('Authuser.edit', \Auth::user()->id)}}">{{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}</a></li>
               <li><a href="{{route('Authuser.index')}}">{{ \App\Http\Controllers\BaseViewController::translate_view('UserGlobSettings', 'Menu')}}</a></li>
+              <li><a href="{{route('Authrole.index')}}">{{ \App\Http\Controllers\BaseViewController::translate_view('UserRoleSettings', 'Menu')}}</a></li>
               <!-- <li><a href="javascript:;"><span class="badge badge-danger pull-right">2</span> Inbox</a></li> -->
               <li class="divider"></li>
               <li><a href="{{route('Auth.logout')}}">{{ \App\Http\Controllers\BaseViewController::translate_view('Logout', 'Menu')}}</a></li>

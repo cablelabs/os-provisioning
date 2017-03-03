@@ -199,7 +199,6 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 
 	}
 
-
 	/**
 	 * BOOT:
 	 * - init observer
@@ -209,6 +208,42 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 		parent::boot();
 
 		Authuser::observe(new AuthObserver);
+	}
+
+	public function view_has_many()
+	{
+		$ret['Base']['Roles']['view']['view'] = 'auth.roles';
+		$ret['Base']['Roles']['view']['vars']['roles'] = $this->roles();
+
+		return $ret;
+	}
+
+	public function delete_roles_by_userid($user_id, $role_id)
+	{
+		$ret = null;
+
+		try {
+			$ret = DB::table('authusermeta')
+				->where('user_id', '=', $user_id)
+				->where('meta_id', '=', $role_id)
+				->delete();
+		} catch (\Exception $e) {
+			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+		}
+		return $ret;
+	}
+
+	public function assign_roles_for_userid($user_id, $role_id)
+	{
+		$ret = null;
+
+		try {
+			$ret = DB::table('authusermeta')
+				->insert(array('user_id' => $user_id, 'meta_id' => $role_id));
+		} catch (\Exception $e) {
+			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+		}
+		return $ret;
 	}
 }
 

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Authuser;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+
 
 class AuthuserController extends BaseController {
 
@@ -37,4 +40,58 @@ class AuthuserController extends BaseController {
 		return parent::prepare_input($data);
 	}
 
+	/**
+	 * Assign roles to user
+	 *
+	 * @param Request $request
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 * @throws \Exception
+	 */
+	public function assign_roles(Request $request)
+	{
+		try {
+			$input_data = $request->all();
+			$url = route('Authuser.edit', $input_data['user_id']);
+
+			if ($request->isMethod('post')) {
+				if (isset($input_data['user_id']) && isset($input_data['role_ids'])) {
+					$user = new Authuser();
+					foreach ($input_data['role_ids'] as $role_id) {
+						$user->assign_roles_for_userid($input_data['user_id'], $role_id);
+					}
+				}
+			}
+		} catch (\Exception $e) {
+			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+		}
+		return redirect($url);
+	}
+
+	/**
+	 * Delete selected assigned roles for user
+	 *
+	 * @param Request $request
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 * @throws \Exception
+	 */
+	public function delete_assigned_roles(Request $request)
+	{
+		try {
+			$input_data = $request->all();
+			$url = route('Authuser.edit', $input_data['user_id']);
+
+			if ($request->isMethod('post')) {
+				if (isset($input_data['user_id']) && isset($input_data['role_ids'])) {
+					$user = new Authuser();
+					foreach ($input_data['role_ids'] as $role_id) {
+						$user->delete_roles_by_userid($input_data['user_id'], $role_id);
+					}
+				}
+			}
+		} catch (\Exception $e) {
+			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+		}
+
+		return redirect($url);
+	}
 }

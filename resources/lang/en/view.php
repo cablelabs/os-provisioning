@@ -55,6 +55,7 @@ return [
 		'Menu_UserSettings'			=> 'User Settings',
 		'Menu_UserGlobSettings' 	=> 'Global User Settings',
 		'Menu_Logout'				=> 'Logout',
+		'Menu_UserRoleSettings'		=> 'User Roles',
 
 //HEADER
 	//General
