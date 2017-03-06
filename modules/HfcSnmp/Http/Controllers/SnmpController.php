@@ -177,7 +177,7 @@ class SnmpController extends \BaseController{
 					if (!$suboid)
 					{
 						// this should never occur
-						Log::error('Missing OID Entry from '.$oid->name.' for: '.$res_oid, [$this->device->devicetype->name]);
+						Log::error('Missing OID Entry from '.$oid->name.' for: '.$res_oid, [$this->device->netelementtype->name]);
 						continue;
 					}
 
@@ -469,15 +469,15 @@ class SnmpController extends \BaseController{
 		// order by suboid for faster snmpvalue saving (still very slow)
 		foreach ($results as $oid_index => $value)
 		{
-			$index  = strrchr($oid_index, '.');
-			$oid_s 	= str_replace($index, '', $oid_index);
-			$index  = substr($index, 1);
+			$index = strrchr($oid_index, '.');
+			$oid_s = substr($oid_index, 0, strlen($oid_index) - strlen($index));
+			$index = substr($index, 1);
 
 			// Exclude unwished indices - this is a workaround for the unimproved snmpwalk over all indices 
 			// we filter them temporarily here - TODO: Improve performance via better snmpwalk
 			if (!$param_selection)
 			{
-				if (!in_array($index, $indices))
+				if ($indices && !in_array($index, $indices))
 					continue;
 			}
 

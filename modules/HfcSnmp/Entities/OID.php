@@ -160,6 +160,8 @@ class OID extends \BaseModel {
 	{
 		if (strpos($string, 'unsigned integer') !== false)
 			return 'u';
+		else if (strpos($string, 'unsigned32') !== false)
+			return 'u';
 		else if (strpos($string, 'integer') !== false)
 			return 'i';
 		else if (strpos($string, 'decimal string') !== false)
