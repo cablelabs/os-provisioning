@@ -70,7 +70,7 @@ class FormBuilder extends CollectiveFormBuilder {
 			return parent::input($type, $name, $value, $options);
 
 		// these 2 lines were moved before $options assignment -> in simple form there's no form-control class added - needed for Configfile index view
-		if (isset($options['style']) && $options['style'] == 'simple')
+		if (isset($options['style']) && strpos($options['style'], 'simple') !== false)
 			return parent::input($type, $name, $value, $options);
 
 		$options = $this->appendClassToOptions('form-control', $options);

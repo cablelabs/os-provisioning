@@ -360,6 +360,9 @@ finish:
 				break;
 
 			default:
+				if (in_array('readonly', $options))
+					return $field['field_value'];
+
 				$s .= \Form::$field["form_type"]($field["name"], $field['field_value'], $options);
 				break;
 		}

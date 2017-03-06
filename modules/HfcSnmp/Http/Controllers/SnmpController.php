@@ -62,11 +62,11 @@ class SnmpController extends \BaseController{
 		// Get Html Form Fields for generic View - this includes the snmpwalk & updating snmpvalues
 		$form_fields = $snmp->prep_form_fields();
 
+// d(round(microtime(true) - $start, 2), $form_fields);
 		// TODO: use multi update function
 		// $this->_multi_update_values();
 		$form_fields = static::_make_html_from_form_fields($form_fields);
 
-// d(round(microtime(true) - $start, 2), $form_fields);
 
 		// Init View
 		$view_header = 'SNMP Settings: '.$netelem->name;
@@ -247,18 +247,23 @@ class SnmpController extends \BaseController{
 	private function _get_formfield_array($oid, $ret, $value, $table = false)
 	{
 		$id = $ret[0];
+		$options = null;
 
 		if ($table)
 		{
 			$index = '';
 			// TODO: Move to get_html_input ??
 			$options['style'] = 'simple';
+			if (in_array($oid->type, ['i', 'u', 't']))
+				$options['style'] .= ";width: 85px";
 		}
 		else
 		{
 			$index   = $ret[1] == '.0' ? '' : $ret[1];
-			$options = $oid->access == 'read-only' ? ['readonly'] : null;
 		}
+
+		if ($oid->access == 'read-only')
+			$options[] =  'readonly';
 
 		$field = array(
 			'form_type' 	=> $oid->html_type,
@@ -365,7 +370,7 @@ class SnmpController extends \BaseController{
 				$s .= '<th>Index</th>';
 				
 				foreach ($oids as $oid => $field)
-					$s .= '<th>'.$field['description'].'</th>';
+					$s .= '<th style="padding: 2px">'.$field['description'].'</th>';
 
 				$s .= '<tr></thead><tbody>';
 
@@ -374,10 +379,11 @@ class SnmpController extends \BaseController{
 			}
 
 			// table body
+			// TODO: make index column a href link to controlling view for 3rd dimension
 			$s .= '<tr><td>'.$index.'</td>';
 
 			foreach ($oids as $oid => $field)
-				$s .= '<td>'.BaseViewController::get_html_input($field).'</td>';
+				$s .= '<td style="padding: 2px">'.BaseViewController::get_html_input($field).'</td>';
 
 			$s .= '</tr>';
 		}
@@ -485,7 +491,7 @@ class SnmpController extends \BaseController{
 		}
 
 // var_dump("Time single SnmpWalk ".$oid->oid.": ".round(microtime(true) - $start, 3));
-// d(round(microtime(true) - $start, 3), $res, $results);
+// d(round(microtime(true) - $start, 3), $oid, $res, $results);
 
 		return $res;
 	}
