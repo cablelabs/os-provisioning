@@ -61,4 +61,21 @@ class Email extends \BaseModel {
 		$this->save();
 	}
 
+	/**
+	 * Returns the type of an email address, which is derived from its index
+	 *
+	 * @author Ole Ernst
+	 */
+	public function get_type()
+	{
+		switch($this->index) {
+			case 0:
+				return trans('messages.disabled');
+			case 1:
+				return trans('messages.primary');
+			default:
+				return trans('messages.secondary');
+		}
+	}
+
 }
