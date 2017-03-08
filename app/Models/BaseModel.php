@@ -643,35 +643,38 @@ class BaseModel extends Eloquent
 	 *
 	 * Note: Model must have a get_start_time- & get_end_time-Function defined
 	 *
-	 * @param 	String 		$timespan		year / month / now
-	 * @param 	Integer 	$type 			1 - Tariff (Inet/Voip/TV) , 0 - No Tariff (Other/Device/Credit)
+	 * @param 	String 		$timespan		Yearly / Quarterly / Monthly / Now  => Enum of Product->billing_cycle
 	 * @return 	Bool  						true, if model had valid dates during last month / year or is actually valid (now)
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function check_validity($timespan = 'month', $type = 1)
+	public function check_validity($timespan = 'Monthly')
 	{
 		$start = $this->get_start_time();
 		$end   = $this->get_end_time();
 
-		$case  = $type ? $timespan : $timespan.$type;
-// if (get_class($this) == 'Modules\BillingBase\Entities\Item' && $this->contract->id == 500005 && $this->product->type == 'Internet')
-// 	dd($this->product->name, $start < strtotime(date('Y-m-01')), !$end, $end >= strtotime(date('Y-m-01', strtotime('first day of last month'))), date('Y-m-d', $start), date('Y-m-d', $end));
+		// if (get_class($this) == 'Modules\BillingBase\Entities\Item' && $this->contract->id == 500005 && $this->product->type == 'Internet')
+		// if ($this->id == 102)
+		// dd($this->id, date('m', $start), date('m', strtotime('first day of last month')), date('m', $end), date('m', $start) <= date('m', strtotime('first day of last month')) && date('m', $end) >= date('m') );
 
-
-		switch ($case)
+		switch ($timespan)
 		{
-			case 'month':
-				return $start < strtotime(date('Y-m-01')) && (!$end || $end >= strtotime(date('Y-m-01', strtotime('first day of last month'))));
+			case 'Once':
+				// E.g. one time or splitted payments of items - no open end! With end date: only on months from start to end
+				return $end ? $start < strtotime('midnight first day of this month') && $end >= strtotime('midnight first day of last month') : date('Y-m', $start) == date('Y-m', strtotime('first day of last month'));
 
-			case 'month0':
-				return	$end ? date('m', $start) <= date('m', strtotime('first day of last month')) && date('m', $end) >= date('m') : date('m', $start) == date('m', strtotime('first day of last month'));
+			case 'Monthly':
+				// has valid dates in last month - open end possible
+				return $start < strtotime('midnight first day of this month') && (!$end || $end >= strtotime('midnight first day of last month'));
 
-			case 'year':
-				return $start < strtotime(date('Y-01-01')) && (!$end || $end >= strtotime(date('Y-01-01'), strtotime('last year')));
+			case 'Quarterly':
+				// TODO: implement
+				break;
 
-			case 'now':
-				// $now = time();
+			case 'Yearly':
+				return $start < strtotime('midnight first day of January') && (!$end || $end >= strtotime('midnight first day of January last year'));
+
+			case 'Now':
 				$now = strtotime('today');
 				return $start <= $now && (!$end || $end >= $now);
 
@@ -679,8 +682,10 @@ class BaseModel extends Eloquent
 				\Log::error('Bad timespan param used in function '.__FUNCTION__);
 				break;
 		}
-	}
 
+		return true;
+
+	}
 
 }
 
@@ -811,7 +816,13 @@ class BaseObserver
 /**
  * Systemd Observer Class - Handles changes on Model Gateways - restarts system services
  *
- * TODO: place it somewhere else ..
+ * TODO: 
+ 	* place it somewhere else ...
+ 	* Calling this Observer is practically very bad in case there are more services inserted - then all services will restart even
+ *		if Config didn't change - therefore a distinction is necessary - or more Observers,
+ 	* another Suggestion:
+ 		* place the restart file creation in the appropriate observer itself
+ 		* only place a static function restart_dhcpd here that creates the file
  */
 class SystemdObserver
 {

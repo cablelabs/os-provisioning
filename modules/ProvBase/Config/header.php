@@ -1,6 +1,7 @@
 <?php
 
 return 	[['Contracts' => 'Contract.index'],
+		['Domains' => 'Domain.index'],
 		['Modems' => 'Modem.index'],
 		['Endpoints' => 'Endpoint.index'],
 		['Configfiles' => 'Configfile.index'],

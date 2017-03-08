@@ -182,7 +182,7 @@ class BaseController extends Controller {
 			// JavaScript controlled checkboxes sometimes returns “on” if checked – which results in
 			// logical false (=0) in database so we have to overwrite this by 1
 			// this is e.g. the case for the active checkbox on ProvVoip\Phonenumber
-			// the value in _POST seems to be browser dependend – extend the array if needed
+			// the value in $_POST seems to be browser dependend – extend the array if needed
 			if (
 				($field['form_type'] == 'checkbox')
 				&&

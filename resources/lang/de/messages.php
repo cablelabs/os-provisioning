@@ -246,6 +246,11 @@ return [
 	'Upload logo'			=> 'Logo hochladen',
 	'Web address'			=> 'Internet-Adresse',
 	'Zip'					=> 'PLZ',
+	// Global Config
+	'cdr_offset' 			=> 'Zeitdifferenz EVN zu Rechnung in Monaten',
+	'voip_extracharge_default' => 'Preisaufschlag Telefonie Standard in %',
+	'voip_extracharge_mobile_national' => 'Preisaufschlag Telefonie Mobilfunk national in %',
+
 	//Salesman
 	'Commission in %'		=> 'Komission in %',
 	'Product List'			=> 'Produktliste',
@@ -267,6 +272,7 @@ return [
 	'Commission in %'		=> 'Provision in %',
 	'Total Fee'				=> 'Gesamtgebühr',
 	'Commission Amount'		=> 'davon Provision',
+
 /**
  * Customer Control Center
  */

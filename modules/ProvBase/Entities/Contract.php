@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Entities;
 
 use Modules\ProvBase\Entities\Qos;
 use Modules\BillingBase\Entities\SettlementRun;
+use Modules\BillingBase\Entities\Invoice;
 
 class Contract extends \BaseModel {
 
@@ -39,6 +40,7 @@ class Contract extends \BaseModel {
 			'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
 			'sepa_iban' => 'iban',
 			'sepa_bic' => 'bic',
+			'emailcount' => 'integer|min:0',
 			);
 	}
 
@@ -104,6 +106,11 @@ class Contract extends \BaseModel {
 		if (\PPModule::is_active('ccc'))
 		{
 			$ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
+		}
+
+		if (\PPModule::is_active('mail'))
+		{
+			$ret['Email']['Email'] = $this->emails;
 		}
 
 		return $ret;
@@ -210,6 +217,13 @@ class Contract extends \BaseModel {
 		return null;
 	}
 
+	public function emails()
+	{
+		if (\PPModule::is_active('mail'))
+			return $this->hasMany('Modules\Mail\Entities\Email');
+		return null;
+	}
+
 	public function costcenter()
 	{
 		if (\PPModule::is_active('billingbase'))
@@ -228,8 +242,14 @@ class Contract extends \BaseModel {
 	{
 		if (\PPModule::is_active('billingbase'))
 		{
-			$hide = SettlementRun::unverified_files();
-			return $this->hasMany('Modules\BillingBase\Entities\Invoice')->orderBy('year', 'desc')->orderBy('month', 'desc')->whereNotIn('filename', $hide);
+			$srs  = SettlementRun::where('verified', '=', '0')->get(['id'])->pluck('id')->all();
+
+			$hide = $srs ? : 0;
+
+			return $this->hasMany('Modules\BillingBase\Entities\Invoice')->where('contract_id', '=', $this->id)->where('settlementrun_id', '!=', [$hide]);
+
+			// $hide = SettlementRun::unverified_files();
+			// return $this->hasMany('Modules\BillingBase\Entities\Invoice')->orderBy('year', 'desc')->orderBy('month', 'desc')->whereNotIn('filename', $hide);
 		}
 		return null;
 	}
@@ -462,7 +482,7 @@ class Contract extends \BaseModel {
 		$active_item_voip = $active_tariff_info_voip['item'];
 
 
-		if ($active_count_sum == 0 || !$this->check_validity('now')) {
+		if ($active_count_sum == 0 || !$this->check_validity('Now')) {
 			// if there is no active item of type internet or voip or contract is outdated: disable network_access (if not already done)
 			if (boolval($this->network_access)) {
 				$this->network_access = 0;
@@ -696,7 +716,7 @@ class Contract extends \BaseModel {
 // dd($prod_ids, $this->items);
 		foreach ($this->items as $item)
 		{
-			if (in_array($item->product->id, $prod_ids) && $item->check_validity('now'))
+			if (in_array($item->product->id, $prod_ids) && $item->check_validity('Now'))
 			{
 				$count++;
 
@@ -994,7 +1014,7 @@ class Contract extends \BaseModel {
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function get_valid_mandate($timespan = 'now')
+	public function get_valid_mandate($timespan = 'Now')
 	{
 		$mandate = null;
 		$last 	 = 0;
@@ -1040,38 +1060,79 @@ class ContractObserver
 	public function creating($contract)
 	{
 		// Note: this is only needed when Billing Module is not active - TODO: proof with future static function
-		$contract->sepa_iban = strtoupper($contract->sepa_iban);
-		$contract->sepa_bic  = strtoupper($contract->sepa_bic);
+		if (!\PPModule::is_active('billingbase'))
+		{
+			$contract->sepa_iban = strtoupper($contract->sepa_iban);
+			$contract->sepa_bic  = strtoupper($contract->sepa_bic);
+		}
 	}
 
 
 	public function created($contract)
 	{
 		// Note: this only works here because id is not yet assigned in creating function
-		$contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
+		// $contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
+		if (!$contract->number)
+		{
+			$contract->number = $contract->id - $this->num;
+			$contract->observer_enabled = false;
+			$contract->save();     			// forces to call the updating, saving, updated & saved method of the observer
+		}
 
-		$contract->save();     			// forces to call the updated method of the observer
 		$contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
 	}
 
 	public function updating($contract)
 	{
-		// autocalculate contract number if not given
-		$contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
+		$contract->number = $contract->number ? : $contract->id - $this->num;
 
-		$contract->sepa_iban = strtoupper($contract->sepa_iban);
-		$contract->sepa_bic  = strtoupper($contract->sepa_bic);
+		if (!\PPModule::is_active('billingbase'))
+		{
+			$contract->sepa_iban = strtoupper($contract->sepa_iban);
+			$contract->sepa_bic  = strtoupper($contract->sepa_bic);
+		}
 	}
 
 	public function updated ($contract)
 	{
+		if (!$contract->observer_enabled)
+			return;
+
 		$contract->push_to_modems();
+
+		if ($contract['orginal'])
+		{
+			// Note: implement this commented way if there are more checkings for better code structure - but this reduces performance on one of the most used functions of the user!
+			// $changed_fields = $contract->getDirty();
+
+			// Note: isset is way faster regarding the performance than array_key_exists, but returns false if value of key is null which is not important here - See upmost comment on: http://php.net/manual/de/function.array-key-exists.php 
+			// if (isset($changed_fields['number']))
+			if ($contract->number != $contract['original']['number'])
+			{
+				// change customer information - take care - this automatically changes login psw of customer
+				if ($customer = $contract->cccauthuser)
+					$customer->update(); 
+			}
+
+			// if (isset($changed_fields['contract_start']) || isset($changed_fields['contract_end']))
+			if ($contract->contract_start != $contract['original']['contract_start'] || $contract->contract_end != $contract['original']['contract_end'])
+			{
+				$contract->daily_conversion();
+			}
+
+		}
+
 	}
+
 
 	public function saved ($contract)
 	{
+		if (!$contract->observer_enabled)
+			return;
+
 		$contract->push_to_modems();
 	}
+
 }
 
 
