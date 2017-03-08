@@ -27,7 +27,7 @@ class Email extends \BaseModel {
 	{
 		return ['index' =>	[$this->localpart, $this->index, $this->greylisting, $this->blacklisting, $this->forwardto],
 			'index_header' =>	['Local Part', 'Index', 'Greylisting', 'Blacklisting', 'Forward To'],
-			'bsclass' => 'success',
+			'bsclass' => $this->index ? 'success' : 'danger',
 			'header' => $this->index.': '.$this->localpart.'@'.$this->domain->name];
 	}
 
