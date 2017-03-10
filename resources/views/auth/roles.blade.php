@@ -6,6 +6,13 @@
 ?>
 
 @DivOpen(12)
+    {{ Form::open(array('route' => ['AssignRole.add', $user_id], 'method' => 'POST')) }}
+    {{ Form::select('role_ids[]', $roles, null, array('multiple' => true, 'style' => 'width: 150px')) }}
+    {{ Form::hidden('user_id', $user_id) }}
+    {{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Assign roles', 'Button' ) , ['style' => 'simple', 'class' => 'btn btn-primary m-r-5']) }}
+    {{ Form::close() }}
+
+    <br><br><br>
 
     @if (isset($user_assigned_roles) && !is_null($user_assigned_roles))
         {{ Form::open(array('route' => array('AssignRole.delete', null), 'method' => 'POST')) }}
@@ -13,7 +20,7 @@
         <table class="table table-hover itable">
             @foreach ($user_assigned_roles as $role)
                 <tr>
-                    <td width=50> {{ Form::checkbox('role_ids[]', $role->id, null, null, ['style' => 'simple']) }} </td>
+                    <td width="50px"> {{ Form::checkbox('role_ids[]', $role->id, null, null, ['style' => 'simple']) }} </td>
                     <td>{{ $role->name }}</td>
                 </tr>
             @endforeach
@@ -23,16 +30,4 @@
         {{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Delete selected roles from user', 'Button' ) , ['style' => 'simple', 'class' => 'btn btn-danger m-r-5']) }}
         {{ Form::close() }}
     @endif
-
-    <br />
-@DivClose
-
-{{ Form::hr() }}
-
-@DivOpen(12)
-    {{ Form::open(array('route' => ['AssignRole.add', $user_id], 'method' => 'POST')) }}
-    {{ Form::select('role_ids[]', $roles, array(), array('multiple' => true)) }}
-    {{ Form::hidden('user_id', $user_id) }}
-    {{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Assign roles', 'Button' ) , ['style' => 'simple', 'class' => 'btn btn-primary m-r-5']) }}
-    {{ Form::close() }}
-@DivClose
+@DivClose()

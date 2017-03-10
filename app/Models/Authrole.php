@@ -2,8 +2,10 @@
 
 namespace App;
 
+use App\Http\Requests\Request;
 use Box\Spout\Common\Exception\EncodingConversionException;
 use DB;
+//use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 
 class Authrole extends BaseModel
@@ -31,6 +33,12 @@ class Authrole extends BaseModel
 			'index_header' => ['', 'Role name', 'Type'],
 			'header' => $this->name
 		];
+	}
+
+	public function view_has_many()
+	{
+		$ret['Base']['Rights']['view']['view'] = 'auth.rights';
+		return $ret;
 	}
 
 	/**
