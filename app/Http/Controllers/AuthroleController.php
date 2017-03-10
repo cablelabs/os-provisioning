@@ -26,12 +26,12 @@ class AuthroleController extends BaseController
 		);
 	}
 
-	public function update_right(Request $request)
+	public function update_permission(Request $request)
 	{
 		try {
 			$data = $request->all();
 			$rightModel = new Authmetacore();
-			$ret = $rightModel->update_right($data['authmethacore_id'], $data['authmethacore_right'], $data['authmethacore_right_value']);
+			$ret = $rightModel->update_permission($data['authmethacore_id'], $data['authmethacore_right'], $data['authmethacore_right_value']);
 		} catch (\Exception $e) {
 			// @ToDo: Logging the Exception
 			//throw new \Exception($e->getMessage(), $e->getCode(), $e);

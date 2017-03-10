@@ -37,7 +37,7 @@ class Authrole extends BaseModel
 
 	public function view_has_many()
 	{
-		$ret['Base']['Rights']['view']['view'] = 'auth.rights';
+		$ret['Base']['Permissions']['view']['view'] = 'auth.permissions';
 		return $ret;
 	}
 

@@ -12,6 +12,13 @@ class Authmetacore extends BaseModel {
 
 	protected $table = 'authmetacore';
 
+	/**
+	 * Get all assigned rights to a role
+	 *
+	 * @param $meta_id
+	 * @return array
+	 * @throws \Exception
+	 */
 	public function get_rights_by_metaid($meta_id)
 	{
 		$ret = array();
@@ -31,7 +38,16 @@ class Authmetacore extends BaseModel {
 		return $ret;
 	}
 
-	public function update_right($authmethacore_id, $authmethacore_right, $authmethacore_right_value)
+	/**
+	 * Update view\create\edit\delete permissions for Model
+	 *
+	 * @param $authmethacore_id
+	 * @param $authmethacore_right
+	 * @param $authmethacore_right_value
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function update_permission($authmethacore_id, $authmethacore_right, $authmethacore_right_value)
 	{
 
 		try {

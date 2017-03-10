@@ -1,14 +1,18 @@
 <?php
     $meta_id = Request::segment(3);
     $model = new App\Authmetacore();
-    $role_assigned_rights = $model->get_rights_by_metaid($meta_id);
+    $role_assigned_permissions = $model->get_rights_by_metaid($meta_id);
+
+    if (count($role_assigned_permissions) == 0) {
+    	$roles = '';
+    }
 ?>
 
 @DivOpen(12)
     <div id="failure" class="alert alert-danger" hidden></div>
 
-    @if (isset($role_assigned_rights) && !is_null($role_assigned_rights))
-        {{ Form::open(array('route' => array('Right.update', null), 'method' => 'POST')) }}
+    @if (isset($role_assigned_permissions) && count($role_assigned_permissions) > 0)
+        {{ Form::open(array('route' => array('Permission.update', null), 'method' => 'POST')) }}
         <table class="table table-hover itable">
             <thead>
                 <th>Name</th>
@@ -19,7 +23,7 @@
                 <th>Delete</th>
             </thead>
 
-            @foreach ($role_assigned_rights as $row)
+            @foreach ($role_assigned_permissions as $row)
                 <tr>
                     <td>{{ $row->name }}&nbsp;&nbsp;</td>
                     <td>{{ $row->type }}</td>
@@ -63,6 +67,9 @@
             @endforeach
         </table>
         {{ Form::close() }}
+    @else
+        <div>
+        </div>
     @endif
 @DivClose()
 
@@ -70,11 +77,12 @@
     function updateRolePermission(permission)
     {
         var msg = '';
+        var delay = 1000;
         var data = permission.val().split('_');
         var authmethacore_id =  data[0];
         var authmetacore_right = data[1];
         var authmetacore_right_value = data[2];
-        var url = window.location.protocol + '//' + window.location.host + '/lara/admin/Authrole/UpdateRight';
+        var url = window.location.protocol + '//' + window.location.host + '/lara/admin/Authrole/UpdatePermission';
         var token = $('input[name="_token"]').val();
 
         $.ajaxSetup({
@@ -84,18 +92,18 @@
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
             success: function (data) {
                 if (data == 1) {
-                    msg = 'Right "' + authmetacore_right + '" for ID ' + authmethacore_id + ' updated successfully.';
+                    msg = 'Permission "' + authmetacore_right + '" for ID ' + authmethacore_id + ' updated successfully.';
                 } else {
-                    msg = 'Error while updating user right (ID: ' + authmethacore_id + ', right: ' + authmetacore_right + '). ' + data;
+                    msg = 'Error while updating user permission (ID: ' + authmethacore_id + ', permission: ' + authmetacore_right + '). ' + data;
                     $("#failure").text(msg).attr('hidden', false);
-
-
+                    delay = 3000;
                 }
                 console.log(msg);
+
                 // reload the page
                 window.setTimeout(function() {
                     location.reload();
-                }, 3000);
+                }, delay);
             }
         });
 
