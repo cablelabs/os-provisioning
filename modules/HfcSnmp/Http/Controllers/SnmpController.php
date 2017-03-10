@@ -160,8 +160,8 @@ class SnmpController extends \BaseController{
 			$oid = $param->oid;
 			$indices = [];
 
-			if ($param->indices)
-				$indices = \Acme\php\ArrayHelper::str_to_array($param->indices);
+			if ($param->indices && $param->indices->indices)
+				$indices = \Acme\php\ArrayHelper::str_to_array($param->indices->indices);
 
 			// table param
 			if ($oid->oid_table)
@@ -490,8 +490,8 @@ class SnmpController extends \BaseController{
 			$res[$oid_s][$index] = $value;
 		}
 
-// var_dump("Time single SnmpWalk ".$oid->oid.": ".round(microtime(true) - $start, 3));
-// d(round(microtime(true) - $start, 3), $oid, $res, $results);
+// if ($param->parent_id == 238)
+// d(round(microtime(true) - $start, 3), $oid, $res, $results, $param);
 
 		return $res;
 	}

@@ -82,6 +82,11 @@ class Parameter extends \BaseModel {
 		return $this->belongsTo('Modules\HfcReq\Entities\NetElementType', 'netelementtype_id');
 	}
 
+	public function indices()
+	{
+		return $this->hasOne('Modules\HfcSnmp\Entities\Indices');
+	}
+
 
 	public function children()
 	{

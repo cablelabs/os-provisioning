@@ -4,6 +4,7 @@ BaseRoute::group([], function() {
 
 	BaseRoute::resource('NetElementType', 'Modules\HfcReq\Http\Controllers\NetElementTypeController');
 	BaseRoute::resource('NetElement', 'Modules\HfcReq\Http\Controllers\NetElementController');
+	BaseRoute::resource('Indices', 'Modules\HfcSnmp\Http\Controllers\IndicesController');
 
 	// extra View
 	BaseRoute::get('NetElementType/{netelementtype}/assign', array ('as' => 'NetElementType.assign', 'uses' => 'Modules\HfcReq\Http\Controllers\NetElementTypeController@assign'));

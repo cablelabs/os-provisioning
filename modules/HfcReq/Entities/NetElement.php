@@ -70,13 +70,13 @@ class NetElement extends \BaseModel {
 
 		if (\PPModule::is_active('hfcsnmp'))
 		{
-			// see NetElementController@controlling_edit !
+			if ($this->netelementtype->parameters->all())
+			{
+				$ret['Edit']['Indices']['class'] 	= 'Indices';
+				$ret['Edit']['Indices']['relation'] = $this->indices;
+			}
 
-			// $ret['Controlling']['OIDs']['view']['view'] = 'hfcreq::NetElement.controlling';
-			// $snmpctrl = new \Modules\HfcSnmp\Http\Controllers\SnmpController;
-			// $snmpctrl->init($this);
-			// $ret['Controlling']['OIDs']['view']['vars']['form_fields'] = $snmpctrl->prep_form_fields();
-
+			// see NetElementController@controlling_edit for Controlling Tab!
 		}
 
 		return $ret;
@@ -135,6 +135,12 @@ class NetElement extends \BaseModel {
 	public function netelementtype()
 	{
 		return $this->belongsTo('Modules\HfcReq\Entities\NetElementType');
+	}
+
+	public function indices()
+	{
+		if (\PPModule::is_active('HfcSnmp'))
+			return $this->hasMany('Modules\HfcSnmp\Entities\Indices', 'netelement_id');
 	}
 
 

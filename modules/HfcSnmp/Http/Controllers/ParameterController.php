@@ -32,8 +32,6 @@ class ParameterController extends HfcReqController {
 
 			if ($oid->oid_table)
 				$a[] = array('form_type' => 'checkbox', 'name' => 'table', 'description' => 'Table', 'options' => ['disabled' => 'disabled'], 'help' => trans('helper.oid_table'));
-
-			$a[] = array('form_type' => 'text', 'name' => 'indices', 'description' => 'Indices', 'help' => trans('helper.parameter_indices'), 'space' => 1);
 		}
 
 		if ($model->parent_id)
