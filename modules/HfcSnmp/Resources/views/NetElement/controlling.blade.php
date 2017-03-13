@@ -3,8 +3,11 @@
 
 @section('content_top')
 
-<!-- Seconds to refresh the page -->
-<!-- META HTTP-EQUIV="refresh" CONTENT="3" -->
+	@if ($reload)
+		<!-- Seconds to refresh the page -->
+		<META HTTP-EQUIV="refresh" CONTENT="{{$reload}}">
+	@endif
+
 	{{ $headline }}
 
 @stop
@@ -12,6 +15,8 @@
 
 
 @section ('content')
+
+
 
 	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id, 0, 0), 'method' => 'put', 'files' => true)) }}
 

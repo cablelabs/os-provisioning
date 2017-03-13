@@ -26,19 +26,19 @@ class RenameDeviceTypetoNetElementTypeTable extends BaseMigration {
 			$table->string('icon_name');
 			$table->integer('pre_conf_oid_id');
 			$table->string('pre_conf_value');
-			$table->integer('pre_conf_time_offset');
+			$table->integer('pre_conf_time_offset'); 		// in microsec
+			$table->float('page_reload_time'); 				// in sec
 		});
 
 		// Set Default Entries
 		$defaults = ['Net', ['Cluster', 1], 'Cmts', 'Amplifier', 'Node', 'Data'];
-		// $defaults = ['Net', 'Cluster', 'Cmts', 'Amplifier', 'Node', 'Data'];
 
 		// delete entries first
 		NetElementType::truncate();
 
 		foreach ($defaults as $d)
 			is_array($d) ? NetElementType::create(['name' => $d[0], 'parent_id' => $d[1]]) : NetElementType::create(['name' => $d]);
-			// NetElementType::create(['name' => $d]);
+
 
 		$this->set_fim_fields(['name', 'vendor', 'description']);
 

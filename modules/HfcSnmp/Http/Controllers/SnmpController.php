@@ -96,7 +96,9 @@ class SnmpController extends \BaseController{
 		$form_path   = 'Generic.form';
 		$form_update = 'NetElement.controlling_update';
 
-		return \View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'panel_right', 'form_fields', 'form_update', 'route_name', 'headline')));
+		$reload 	 = $snmp->device->netelementtype->page_reload_time ? : 0;
+
+		return \View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'panel_right', 'form_fields', 'form_update', 'route_name', 'headline', 'reload')));
 	}
 
 
