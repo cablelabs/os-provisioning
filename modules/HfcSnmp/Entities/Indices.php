@@ -71,6 +71,11 @@ class Indices extends \BaseModel {
 
 class IndicesObserver {
 
+	public function creating($indices)
+	{
+		$indices->indices = str_replace([' ', "\t"], '', $indices->indices);
+	}
+
 	public function updating($indices)
 	{
 		$indices->indices = str_replace([' ', "\t"], '', $indices->indices);

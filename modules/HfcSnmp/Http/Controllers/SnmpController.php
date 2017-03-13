@@ -75,7 +75,12 @@ class SnmpController extends \BaseController{
 		$start = microtime(true);
 		// Get Html Form Fields for generic View - this includes the snmpwalk & updating snmpvalues
 		$params 	 = $index ? Parameter::where('parent_id', '=', $param_id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all() : $snmp->device->netelementtype->parameters;
-		$form_fields = $snmp->prep_form_fields($params);
+
+		try {
+			$form_fields = $snmp->prep_form_fields($params);
+		} catch (\Exception $e) {
+			return self::handle_exception($e);
+		}
 
 		// TODO: use multi update function
 		// $this->_multi_update_values();
@@ -755,6 +760,32 @@ class SnmpController extends \BaseController{
 		snmp_set_oid_numeric_print(TRUE);
 		snmp_set_valueretrieval(SNMP_VALUE_PLAIN);
 		snmp_set_oid_output_format (SNMP_OID_OUTPUT_NUMERIC);
+	}
+
+
+	/**
+	 * Returns the appropriate View dependent on the thrown Exception
+	 */
+	private static function handle_exception(\Exception $e)
+	{
+		$msg = $e->getMessage();
+
+		if (strpos($msg, 'snmp2_get') !== false && strpos($msg, 'No Such Instance currently exists') !== false)
+		{
+			// wrong index specified
+			$oid = substr($msg, $start = (strpos($msg, '\'') + 1), strpos(substr($msg, $start + 1), '\'') + 1);
+
+			$index = strrchr($oid, '.');
+			$oid   = substr($oid, 0, strlen($oid) - strlen($index));
+			$index = substr($index, 1);
+
+			$error = 'snmp_get() failed';
+			$message = "There's no Index '$index' for this OID '$oid' on this NetElement! Change this Index please!";
+
+			return \View::make('errors.generic', compact('message', 'error'));
+		}
+
+		throw $e;
 	}
 
 
