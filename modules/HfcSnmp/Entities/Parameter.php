@@ -88,14 +88,17 @@ class Parameter extends \BaseModel {
 	}
 
 
+
+
 	public function children()
 	{
-		return Parameter::where('parent_id', '=', $this->id)->orderBy('3rd_dimension')->orderBy('id')->get()->all();
+		return Parameter::where('parent_id', '=', $this->id)->orderBy('third_dimension')->orderBy('id')->get()->all();
 	}
-	// public function view_belongs_to ()
-	// {
-	// 	return $this->mibfile;
-	// }
+
+	public function third_dimension_params()
+	{
+		return Parameter::where('parent_id', '=', $this->id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all();
+	}
 
 }
 

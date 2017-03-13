@@ -13,7 +13,7 @@
 
 @section ('content')
 
-	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true)) }}
+	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id, 0, 0), 'method' => 'put', 'files' => true)) }}
 
 	@section ('Content')
 

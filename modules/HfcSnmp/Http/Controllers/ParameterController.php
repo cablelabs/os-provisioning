@@ -35,7 +35,7 @@ class ParameterController extends HfcReqController {
 		}
 
 		if ($model->parent_id)
-			$a[] = array('form_type' => 'checkbox', 'name' => '3rd_dimension', 'description' => '3rd Dimension', 'help' => trans('helper.parameter_3rd_dimension'));
+			$a[] = array('form_type' => 'checkbox', 'name' => 'third_dimension', 'description' => '3rd Dimension', 'help' => trans('helper.parameter_3rd_dimension'));
 
 		$b = array(
 				array('form_type' => 'text', 'name' => 'html_frame', 'description' => 'HTML Frame'),

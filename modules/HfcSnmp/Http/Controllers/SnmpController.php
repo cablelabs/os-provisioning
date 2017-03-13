@@ -6,6 +6,7 @@ use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcReq\Entities\NetElementType;
 use Modules\HfcSnmp\Entities\SnmpValue;
 use Modules\HfcSnmp\Entities\OID;
+use Modules\HfcSnmp\Entities\Parameter;
 use \App\Http\Controllers\BaseViewController;
 use Modules\HfcReq\Http\Controllers\NetElementController;
 
@@ -29,6 +30,12 @@ class SnmpController extends \BaseController{
 
 
 	/**
+	 * @var  Bool 	If Set we only want to show the 3rd dimension parameters of this index for the controlling view
+	 */
+	private $index = 0;
+
+
+	/**
 	 * Init SnmpController with a certain Device Model and
 	 * a MIB Array
 	 *
@@ -47,26 +54,34 @@ class SnmpController extends \BaseController{
 	/**
 	 * Returns the Controlling View for a NetElement (Device)
 	 *
-	 * @param id the NetElement id
-	 * @author Torsten Schmidt, Nino Ryschawy
+	 * Note: This function is used again for the 3rd Dimension of a Snmp Table (of which the Index link references to)
+	 *
+	 * @param 	id  		The NetElement id
+	 * @param 	param_id 	ID of the Parameter for 3rd Dimension View
+	 * @param 	index 		The Index we want to see 3rd Dim for
+	 * @author 	Torsten Schmidt, Nino Ryschawy
 	 */
-	public function controlling_edit($id)
+	public function controlling_edit($id, $param_id = 0, $index = 0)
 	{
 		// Init NetElement Model & SnmpController
 		$netelem = NetElement::findOrFail($id);
 		$snmp 	 = new SnmpController;
 		$snmp->init ($netelem);
+		$snmp->index = $index ? [$index] : 0;
+
+// d(\HTML::linkRoute('NetElement.param_entry_edit', 'Controlling', [31, 0, 0]),
+// 	route('NetElement.param_entry_edit', [31, 238, 6851]));
 
 		$start = microtime(true);
-
 		// Get Html Form Fields for generic View - this includes the snmpwalk & updating snmpvalues
-		$form_fields = $snmp->prep_form_fields();
+		$params 	 = $index ? Parameter::where('parent_id', '=', $param_id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all() : $snmp->device->netelementtype->parameters;
+		$form_fields = $snmp->prep_form_fields($params);
 
-// d(round(microtime(true) - $start, 2), $form_fields);
 		// TODO: use multi update function
 		// $this->_multi_update_values();
 		$form_fields = static::_make_html_from_form_fields($form_fields);
 
+// d(round(microtime(true) - $start, 2), $form_fields);
 
 		// Init View
 		$view_header = 'SNMP Settings: '.$netelem->name;
@@ -141,10 +156,9 @@ class SnmpController extends \BaseController{
 	 *
 	 * @author Torsten Schmidt, Nino Ryschawy
 	 */
-	public function prep_form_fields()
+	public function prep_form_fields($params)
 	{
 		$form_fields = [];
-		$params 	 = $this->device->netelementtype->parameters;
 		$table_index = 0;
 
 		if (!$this->device->ip)
@@ -162,11 +176,21 @@ class SnmpController extends \BaseController{
 
 			if ($param->indices && $param->indices->indices)
 				$indices = \Acme\php\ArrayHelper::str_to_array($param->indices->indices);
+			if ($this->index)
+				$indices = $this->index;
 
-			// table param
+
+			// Table Param
 			if ($oid->oid_table)
 			{
 				$table_index++;
+
+				if ($param->third_dimension_params())
+				{
+					// Add Info for Generation of the 3rd Dimension Links of a Table (if param has 3rd dim params)
+					$form_fields['table'][$table_index]['options']['3rd_dim_link']['netelement_id'] = $this->device->id;
+					$form_fields['table'][$table_index]['options']['3rd_dim_link']['param_id'] = $param->id;
+				}
 
 				$results = $this->snmp_table($param, $indices);
 
@@ -198,8 +222,7 @@ class SnmpController extends \BaseController{
 				continue;
 			}
 
-
-			// non table param
+			// Non Table Param
 			$results = $this->snmp_walk($oid, $indices);
 
 			foreach ($results as $oid->res_oid => $value)
@@ -293,18 +316,21 @@ class SnmpController extends \BaseController{
 		$col = 1;
 		$form_fields_html = ['list' => [], 'table' => [], 'frame' => ['linear' => [], 'tabular' => []]];
 
+		// Table
 		if (isset($form_fields['table']))
 		{
 			foreach ($form_fields['table'] as $key => $table)
 				$form_fields_html['table'][$key] = static::_make_html_snmp_table($table);
 		}
 
+		// List
 		if (isset($form_fields['list']))
 		{
 			foreach ($form_fields['list'] as $key => $field)
 				$form_fields_html['list'][$key] = BaseViewController::add_html_string(array($field))[0]['html'];
 		}
 
+		// Frame
 		if (isset($form_fields['frame']['linear']))
 		{
 			foreach ($form_fields['frame']['linear'] as $list)
@@ -359,6 +385,13 @@ class SnmpController extends \BaseController{
 	{
 		$s = '';
 		$head = true;
+		$third_dim = false;
+		if (isset($form_fields['options']['3rd_dim_link']))
+		{
+			$third_dim = true;
+			$options = $form_fields['options']['3rd_dim_link'];
+			unset($form_fields['options']);
+		}
 
 		foreach ($form_fields as $index => $oids)
 		{
@@ -380,6 +413,8 @@ class SnmpController extends \BaseController{
 
 			// table body
 			// TODO: make index column a href link to controlling view for 3rd dimension
+			// $index = $third_dim ? '<a href="'.route('NetElement.param_entry_edit', [$options['netelement_id'], $options['param_id'], $index]).'">'.$index : $index;
+			$index = $third_dim ? '<a href="'.route('NetElement.controlling_edit', [$options['netelement_id'], $options['param_id'], $index]).'">'.$index : $index;
 			$s .= '<tr><td>'.$index.'</td>';
 
 			foreach ($oids as $oid => $field)
@@ -449,6 +484,9 @@ class SnmpController extends \BaseController{
 		{
 			foreach ($param_selection as $param)
 			{
+				if ($param->third_dimension && !$this->index)
+					continue;
+
 				/* TODO: check with first walk how many indices exist, if this is approximately 3 or 4 (check performance!) times larger than 
 					the indices list then only get oid.index for each index
 					Note: snmpwalk -CE ends on this OID - makes it much faster

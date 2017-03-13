@@ -31,7 +31,7 @@ class CreateParameterTable extends BaseMigration {
 
 			// special extensions for Table-OIDs
 			$table->integer('parent_id')->unsigned(); 	// If Set this is a SubOID, then only these SubOIDs will be considered for table view
-			$table->boolean('3rd_dimension'); 			// checkbox for being a parameter that's in the list behind a table row/element
+			$table->boolean('third_dimension');			// checkbox for being a parameter that's in the list behind a table row/element
 
 			// arrangement stuff in view layout
 			$table->string('html_frame',16);
