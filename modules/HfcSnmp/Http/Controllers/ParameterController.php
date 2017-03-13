@@ -24,6 +24,7 @@ class ParameterController extends HfcReqController {
 			array('form_type' => 'text', 'name' => 'netelementtype_id', 'description' => 'NetElementType', 'hidden' => 1),
 			array('form_type' => 'text', 'name' => 'oid_id', 'description' => 'OID', 'hidden' => 1),
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name', 'options' => ['readonly']),
+			// array('form_type' => 'text', 'name' => 'html_properties', 'description' => 'HTML Properties'),
 			);
 
 		if ($oid)
@@ -34,16 +35,17 @@ class ParameterController extends HfcReqController {
 				$a[] = array('form_type' => 'checkbox', 'name' => 'table', 'description' => 'Table', 'options' => ['disabled' => 'disabled'], 'help' => trans('helper.oid_table'));
 		}
 
+
+		$b[0] = array('form_type' => 'text', 'name' => 'html_frame', 'description' => 'HTML Frame');
+		$b[1] = array('form_type' => 'text', 'name' => 'html_id', 'description' => 'HTML ID');
+		$c[0] = array('form_type' => 'checkbox', 'name' => 'third_dimension', 'description' => '3rd Dimension', 'help' => trans('helper.parameter_3rd_dimension'));
+		
 		if ($model->parent_id)
-			$a[] = array('form_type' => 'checkbox', 'name' => 'third_dimension', 'description' => '3rd Dimension', 'help' => trans('helper.parameter_3rd_dimension'));
+			$b[0]['hidden'] = 1;
+		else
+			$c[0]['hidden'] = 1;
 
-		$b = array(
-				array('form_type' => 'text', 'name' => 'html_frame', 'description' => 'HTML Frame'),
-				array('form_type' => 'text', 'name' => 'html_id', 'description' => 'HTML ID'),
-				// array('form_type' => 'text', 'name' => 'html_properties', 'description' => 'HTML Properties'),
-			);
-
-		return array_merge($a, $b);
+		return array_merge($a, $b, $c);
 
 	}
 
