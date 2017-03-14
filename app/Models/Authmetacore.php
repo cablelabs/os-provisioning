@@ -136,6 +136,23 @@ class Authmetacore extends BaseModel {
 	}
 
 	/**
+	 * Delete a row by given id
+	 *
+	 * @param $row_id
+	 * @throws \Exception
+	 */
+	public function delete_permission($row_id)
+	{
+		try {
+			DB::table($this->table)
+				->where('id', '=', $row_id)
+				->delete();
+		} catch (\Exception $e) {
+			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+		}
+	}
+
+	/**
 	 * Check if a given permission already assigned to a role
 	 *
 	 * @param array $permission

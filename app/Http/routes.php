@@ -47,6 +47,7 @@ BaseRoute::group([], function() {
 	Route::post('Authuser/DeleteRole', ['as' => 'AssignRole.delete', 'uses' => 'AuthuserController@delete_assigned_roles']);
 	Route::post('Authrole/UpdatePermission', ['as' => 'Permission.update', 'uses' => 'AuthroleController@update_permission']);
 	Route::post('Authrole/AssignPermission', ['as' => 'Permission.assign', 'uses' => 'AuthroleController@assign_permission']);
+	Route::post('Authrole/DeletePermission', ['as' => 'Permission.delete', 'uses' => 'AuthroleController@delete_permission']);
 
 	BaseRoute::get('Config', array('as' => 'Config.index', 'uses' => 'GlobalConfigController@index'));
 	BaseRoute::resource('GlobalConfig', 'GlobalConfigController');

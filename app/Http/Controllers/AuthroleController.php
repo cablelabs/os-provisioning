@@ -13,6 +13,8 @@ class AuthroleController extends BaseController
 {
 	protected $index_create_allowed = true;
 
+	protected $index_delete_allowed = true;
+
 	protected $edit_left_md_size = 3;
 
 	protected $edit_right_md_size = 6;
@@ -26,6 +28,12 @@ class AuthroleController extends BaseController
 		);
 	}
 
+	/**
+	 * Update right/permission by given core_id
+	 *
+	 * @param Request $request
+	 * @return mixed|string
+	 */
 	public function update_permission(Request $request)
 	{
 		try {
@@ -40,6 +48,13 @@ class AuthroleController extends BaseController
 		return $ret;
 	}
 
+	/**
+	 * Assign permissions/rights to a role
+	 *
+	 * @param Request $request
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 * @throws \Exception
+	 */
 	public function assign_permission(Request $request)
 	{
 		try {
@@ -52,5 +67,30 @@ class AuthroleController extends BaseController
 		} catch (\Exception $e) {
 			throw new \Exception($e->getMessage(), $e->getCode(), $e);
 		}
+
+		return redirect('admin/Authrole/' . $data['role_id'] . '/edit');
+	}
+
+	/**
+	 * Delete permissions/rights from a role
+	 *
+	 * @param Request $request
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 * @throws \Exception
+	 */
+	public function delete_permission(Request $request)
+	{
+		try {
+			$data = $request->all();
+
+			foreach ($data['delete_ids'] as $row_id => $value) {
+				$model = new Authmetacore();
+				$ret = $model->delete_permission($row_id);
+			}
+		} catch (\Exception $e) {
+			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+		}
+
+		return redirect('admin/Authrole/' . $data['role_id'] . '/edit');
 	}
 }

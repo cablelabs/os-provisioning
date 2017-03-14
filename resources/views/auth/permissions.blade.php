@@ -16,13 +16,16 @@
 
 {{ Form::hr() }}
 
+{{ Form::open(array('route' => array('Permission.delete', null), 'method' => 'POST')) }}
 @DivOpen(12)
+
     <div id="failure" class="alert alert-danger" hidden></div>
 
     @if (isset($assigned_permissions) && count($assigned_permissions) > 0)
-        {{ Form::open(array('route' => array('Permission.update', null), 'method' => 'POST')) }}
+
         <table class="table table-hover itable">
             <thead>
+                <th></th>
                 <th>Name</th>
                 <th>Type</th>
                 <th>View</th>
@@ -33,6 +36,7 @@
 
             @foreach ($assigned_permissions as $row)
                 <tr>
+                    <td width=50> {{ Form::checkbox('delete_ids['.$row->id.']', 1, null, null, ['style' => 'simple']) }} </td>
                     <td>{{ $row->name }}&nbsp;&nbsp;</td>
                     <td>{{ $row->type }}</td>
                     <td align="center">
@@ -74,9 +78,14 @@
                 </tr>
             @endforeach
         </table>
-        {{ Form::close() }}
     @endif
 @DivClose()
+
+@DivOpen(12)
+    <input type="hidden" name="role_id" id="role_id" value="{{ $role_id }}">
+    {{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Delete selected permissions', 'Button' ) , ['style' => 'simple', 'class' => 'btn btn-danger m-r-5']) }}
+@DivClose()
+{{ Form::close() }}
 
 @if (count($assigned_permissions) == 0 || (isset($not_assigned_permissions) && count($not_assigned_permissions) > 0))
     @DivOpen(12)
@@ -151,7 +160,6 @@
         {{ Form::close() }}
     @DivClose()
 @endif
-
 
 <script type="text/javascript">
     function updateRolePermission(permission)
