@@ -19,7 +19,7 @@ class Authmetacore extends BaseModel {
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function get_rights_by_metaid($meta_id)
+	public function get_permissions_by_metaid($meta_id)
 	{
 		$ret = array();
 
@@ -36,6 +36,44 @@ class Authmetacore extends BaseModel {
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * Returns an array of all not assigned permissions to a role
+	 *
+	 * @param integer $meta_id
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function get_not_assigned_permissions($meta_id)
+	{
+		$ret = array();
+
+		try {
+			// get all assigned permissions
+			$assigned_permissions = $this->get_permissions_by_metaid($meta_id);
+
+			// get all available permissions
+			$available_permissions = Authcore::all()->toArray();
+
+			foreach ($available_permissions as $key => $permission) {
+				if (!$this->is_assigned($permission, $assigned_permissions)) {
+					$ret[] = $permission;
+				}
+			}
+		} catch (\Exception $e) {
+			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+		}
+		return $ret;
+	}
+
+	public function delete_permissions_by_metaid($permissions, $meta_id)
+	{
+		try {
+
+		} catch (\Exception $e) {
+			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+		}
 	}
 
 	/**
@@ -63,6 +101,61 @@ class Authmetacore extends BaseModel {
 		} catch (\Exception $e) {
 			throw new \Exception($e->getMessage(), $e->getCode(), $e);
 		}
+		return $ret;
+	}
+
+
+	/**
+	 * Assign permissions to role
+	 *
+	 * @param $role_id
+	 * @param $permission_id
+	 * @param $selected_rights
+	 * @throws \Exception
+	 */
+	public function assign_permission($role_id, $permission_id, $selected_rights)
+	{
+		$all_rights = array('view', 'create', 'edit', 'delete');
+
+		try {
+			$data = array(
+				'meta_id' => $role_id,
+				'core_id' => $permission_id,
+			);
+
+			foreach ($all_rights as $right) {
+				if (in_array($right, $selected_rights)) {
+					$data = array_add($data, $right, 1);
+				}
+			}
+
+			DB::table($this->table)->insert($data);
+		} catch (\Exception $e) {
+			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+		}
+	}
+
+	/**
+	 * Check if a given permission already assigned to a role
+	 *
+	 * @param array $permission
+	 * @param array $assigned_permissions
+	 * @return bool
+	 * @throws \Exception
+	 */
+	private function is_assigned ($permission, $assigned_permissions)
+	{
+		$ret = false;
+		try {
+			foreach ($assigned_permissions as $assigned_permission) {
+				if ($assigned_permission->name == $permission['name']) {
+					$ret = true;
+				}
+			}
+		} catch (\Exception $e) {
+			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+		}
+
 		return $ret;
 	}
 }

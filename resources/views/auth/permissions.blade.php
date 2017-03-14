@@ -1,17 +1,25 @@
 <?php
-    $meta_id = Request::segment(3);
+    // get all assigned permissions to role
+    $role_id = Request::segment(3);
     $model = new App\Authmetacore();
-    $role_assigned_permissions = $model->get_rights_by_metaid($meta_id);
+    $assigned_permissions = $model->get_permissions_by_metaid($role_id);
 
-    if (count($role_assigned_permissions) == 0) {
-    	$roles = '';
-    }
+    // find not assigned permissions to role
+    $not_assigned_permissions = $model->get_not_assigned_permissions($role_id);
 ?>
+
+@if (count($assigned_permissions) == 0 || (isset($not_assigned_permissions) && count($not_assigned_permissions) > 0))
+    @DivOpen(12)
+        <a href="#modal-dialog" class="btn btn-primary btn-sm" data-toggle="modal">Assign permissions</a>
+    @DivClose()
+@endif
+
+{{ Form::hr() }}
 
 @DivOpen(12)
     <div id="failure" class="alert alert-danger" hidden></div>
 
-    @if (isset($role_assigned_permissions) && count($role_assigned_permissions) > 0)
+    @if (isset($assigned_permissions) && count($assigned_permissions) > 0)
         {{ Form::open(array('route' => array('Permission.update', null), 'method' => 'POST')) }}
         <table class="table table-hover itable">
             <thead>
@@ -23,7 +31,7 @@
                 <th>Delete</th>
             </thead>
 
-            @foreach ($role_assigned_permissions as $row)
+            @foreach ($assigned_permissions as $row)
                 <tr>
                     <td>{{ $row->name }}&nbsp;&nbsp;</td>
                     <td>{{ $row->type }}</td>
@@ -67,11 +75,83 @@
             @endforeach
         </table>
         {{ Form::close() }}
-    @else
-        <div>
-        </div>
     @endif
 @DivClose()
+
+@if (count($assigned_permissions) == 0 || (isset($not_assigned_permissions) && count($not_assigned_permissions) > 0))
+    @DivOpen(12)
+        {{ Form::open(array('route' => array('Permission.assign', null), 'method' => 'POST')) }}
+        <div id="modal-dialog" class="modal modal-message fade" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4>Select permissions</h4>
+
+                        <br><br>
+
+                        <input type="button" class="btn btn-sm btn-white" value="Select all" id="btn-toggle" onclick="toggleAll()" style="width: 85px">
+                        <input type="submit" class="btn btn-sm btn-primary" value="Assign permissions">
+                        <input type="hidden" name="role_id" id="role_id" value="{{ $role_id }}">
+
+                        <br><br>
+                    </div>
+
+                    <div class="modal-body">
+                        <table class="table table-hover itable">
+                            <thead>
+                            <th>Name</th>
+                            <th>View</th>
+                            <th>Create</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                            </thead>
+
+                            @foreach ($not_assigned_permissions as $key => $permission)
+                                <tr>
+                                    <td>{{ $permission['name']; }}</td>
+                                    <td>{{ Form::checkbox(
+                                        'permission[' . $permission["id"] .'][]',
+                                        'view',
+                                        null,
+                                        null,
+                                        ['style' => 'simple']) }}
+                                    </td>
+                                    <td>{{ Form::checkbox(
+                                        'permission[' . $permission["id"] .'][]',
+                                        'create',
+                                        null,
+                                        null,
+                                        ['style' => 'simple']) }}
+                                    </td>
+                                    <td>{{ Form::checkbox(
+                                        'permission[' . $permission["id"] .'][]',
+                                        'edit',
+                                        null,
+                                        null,
+                                        ['style' => 'simple']) }}
+                                    </td>
+                                    <td>{{ Form::checkbox(
+                                        'permission[' . $permission["id"] .'][]',
+                                        'delete',
+                                        null,
+                                        null,
+                                        ['style' => 'simple']) }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ Form::close() }}
+    @DivClose()
+@endif
+
 
 <script type="text/javascript">
     function updateRolePermission(permission)
@@ -114,5 +194,28 @@
                 authmethacore_right_value: authmetacore_right_value
             }
         });
+    }
+
+    window.load(function() {
+        $('#modal-dialog').find(':checkbox').each(function() {
+            $(this).removeAttr('checked');
+        });
+    });
+
+    function toggleAll()
+    {
+        var btn_text = $('#btn-toggle').val();
+
+        if (btn_text == 'Select all') {
+            $('#modal-dialog').find(':checkbox').each(function() {
+                $(this).attr('checked', 'checked');
+            });
+            $('#btn-toggle').val('Unselect all')
+        } else if (btn_text == 'Unselect all') {
+            $('#modal-dialog').find(':checkbox').each(function() {
+                $(this).removeAttr('checked');
+            });
+            $('#btn-toggle').val('Select all')
+        }
     }
 </script>
