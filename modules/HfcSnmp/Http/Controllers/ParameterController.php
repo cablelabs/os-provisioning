@@ -29,23 +29,26 @@ class ParameterController extends HfcReqController {
 
 		if ($oid)
 		{
+			// only Info's - don't have to be returned on creation or validation
 			$a[] = array('form_type' => 'link', 'name' => $oid->oid, 'description' => 'OID', 'url' => route('OID.edit', ['id' => $oid->id]), 'help' => trans('helper.oid_link'), 'space' => 1);
 
 			if ($oid->oid_table)
 				$a[] = array('form_type' => 'checkbox', 'name' => 'table', 'description' => 'Table', 'options' => ['disabled' => 'disabled'], 'help' => trans('helper.oid_table'));
 		}
 
-
-		$b[0] = array('form_type' => 'text', 'name' => 'html_frame', 'description' => 'HTML Frame');
-		$b[1] = array('form_type' => 'text', 'name' => 'html_id', 'description' => 'HTML ID');
-		$c[0] = array('form_type' => 'checkbox', 'name' => 'third_dimension', 'description' => '3rd Dimension', 'help' => trans('helper.parameter_3rd_dimension'));
+		$b[] = array('form_type' => 'checkbox', 'name' => 'diff_param', 'description' => 'Difference Parameter ?', 'help' => trans('helper.parameter_diff'), 'hidden' => 1, 'space' => 1);
+		$b[] = array('form_type' => 'text', 'name' => 'html_frame', 'description' => 'HTML Frame');
+		$b[] = array('form_type' => 'text', 'name' => 'html_id', 'description' => 'HTML ID');
+		$b[] = array('form_type' => 'checkbox', 'name' => 'third_dimension', 'description' => '3rd Dimension', 'help' => trans('helper.parameter_3rd_dimension'));
 		
+		if ($oid && $oid->access == 'read-only')
+			$b[0]['hidden'] = 0;
 		if ($model->parent_id)
-			$b[0]['hidden'] = 1;
+			$b[1]['hidden'] = 1;
 		else
-			$c[0]['hidden'] = 1;
+			$b[3]['hidden'] = 1;
 
-		return array_merge($a, $b, $c);
+		return array_merge($a, $b);
 
 	}
 

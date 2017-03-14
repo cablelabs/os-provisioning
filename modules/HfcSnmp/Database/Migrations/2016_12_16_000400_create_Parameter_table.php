@@ -28,6 +28,7 @@ class CreateParameterTable extends BaseMigration {
 
 			$table->integer('netelementtype_id')->unsigned();
 			$table->integer('oid_id')->unsigned();
+			$table->boolean('diff_param');				// Difference-Parameter: if checked show value as difference with request before
 
 			// special extensions for Table-OIDs
 			$table->integer('parent_id')->unsigned(); 	// If Set this is a SubOID, then only these SubOIDs will be considered for table view

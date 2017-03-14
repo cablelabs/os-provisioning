@@ -199,7 +199,9 @@ class SnmpController extends \BaseController{
 					$form_fields['table'][$table_index]['options']['3rd_dim_link']['param_id'] = $param->id;
 				}
 
-				$results = $this->snmp_table($param, $indices);
+				$results 	= $this->snmp_table($param, $indices);
+				$diff_param = $results[1];
+				$results 	= $results[0];
 
 				foreach ($results as $res_oid => $values)
 				{
@@ -221,6 +223,10 @@ class SnmpController extends \BaseController{
 						*/
 						$ret = $this->_snmp_value_set($suboid, $value, $index);
 
+						// calculate diff after snmp_value_set!
+						if (isset($diff_param[$res_oid]))
+							$value = $value - $ret[2];
+
 						// reorder by index for easier graphical display
 						$form_fields['table'][$table_index][$index][$res_oid] = $this->_get_formfield_array($suboid, $ret, $value, true);
 					}
@@ -236,6 +242,9 @@ class SnmpController extends \BaseController{
 			{
 				// Save SnmpValue
 				$ret = $this->_snmp_value_set($oid, $value);
+
+				if ($param->diff_param)
+					$value = $value - $ret[2];
 
 				$field = $this->_get_formfield_array($oid, $ret, $value);
 
@@ -472,10 +481,10 @@ class SnmpController extends \BaseController{
 
 
 	/**
-	 * SNMP Walk over a Table OID Parameter
+	 * SNMP Walk over a Table OID Parameter - Can also be a walk over all it's SubOIDs
 	 *
 	 * @param 	param 	table Object ID
-	 * @return 	Array	[index => [oid => value]]
+	 * @return 	Array	[values => [index => [oid => value]], [diff-OIDs]]
 	 *
 	 * @author 	Nino Ryschawy
 	 */
@@ -483,7 +492,7 @@ class SnmpController extends \BaseController{
 	{
 		$oid = $param->oid;
 		$start = microtime(true);
-		$results = [];
+		$results = $diff_param = [];
 		$param_selection = $param->children();
 
 		// exact defined table via SubOIDs
@@ -501,6 +510,10 @@ class SnmpController extends \BaseController{
 				// exec('snmpwalk -v2c -CE 1.3.6.1.2.1.10.127.1.1.1.1.3.6725 -c'.$this->_get_community().' '.$this->device->ip.' '.$oid->oid, $results);
 				$oid = $param->oid;
 				$results += $this->snmp_walk($oid, $indices);
+
+				// add diff flag if it's a diff param
+				if ($param->diff_param)
+					$diff_param[$oid->oid] = true;
 			}
 
 		}
@@ -536,9 +549,9 @@ class SnmpController extends \BaseController{
 		}
 
 // if ($param->parent_id == 238)
-// d(round(microtime(true) - $start, 3), $oid, $res, $results, $param);
+// d(round(microtime(true) - $start, 3), $oid, $results, $param);
 
-		return $res;
+		return [$res, $diff_param];
 	}
 
 
@@ -546,9 +559,12 @@ class SnmpController extends \BaseController{
 	 * Create or Update SnmpValue Object which corresponds
 	 * to $oid and $this->device with $value
 	 *
-	 * @param 	oid 	the OID Object
-	 * @param 	value 	from snmpget command for this oid object
-	 * @return 	the ID of the SnmpValue Model
+	 * @param 	oid 	Object 		the OID Object
+	 * @param 	value 	String 		from snmpget command for this oid object
+	 * @param 	index 	String 		OID Index if already known (from table)
+	 * @return 	Array 	[SnmpValue_id, 		// as reference in view - for snmp set
+	 *					 OID-Index, 		// in case a walk over oid produces multiple results indexed by this
+	 *					 Value-before] 		// Last Value for Difference Calculation
 	 *
 	 * @author Torsten Schmidt, Nino Ryschawy
 	 */
@@ -568,15 +584,16 @@ class SnmpController extends \BaseController{
 
 		if ($obj)
 		{
+			$last_val = $obj->value;
 			// always update to get the latest timestamp ??
 			// $data['updated_at'] = \Carbon\Carbon::now(\Config::get('app.timezone'));
 			// Note: update method needs id to update correct element
 			$obj->update($data);
 
-			return [$obj->id, $data['oid_index']];
+			return [$obj->id, $data['oid_index'], $last_val];
 		}
 
-		return [SnmpValue::create($data)->id, $data['oid_index']];
+		return [SnmpValue::create($data)->id, $data['oid_index'], null];
 	}
 
 
