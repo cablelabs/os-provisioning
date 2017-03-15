@@ -228,7 +228,7 @@ class Cmts extends \BaseModel {
 					break;
 
 				default:
-					# code...
+					// code...
 					break;
 			}
 

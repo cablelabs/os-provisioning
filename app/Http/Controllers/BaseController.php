@@ -179,6 +179,18 @@ class BaseController extends Controller {
 			if(!isset($data[$field['name']]) && ($field['form_type'] == 'checkbox'))
 				$data[$field['name']] = 0;
 
+			// JavaScript controlled checkboxes sometimes returns “on” if checked – which results in
+			// logical false (=0) in database so we have to overwrite this by 1
+			// this is e.g. the case for the active checkbox on ProvVoip\Phonenumber
+			// the value in $_POST seems to be browser dependend – extend the array if needed
+			if (
+				($field['form_type'] == 'checkbox')
+				&&
+				(in_array(\Str::lower($data[$field['name']]), ["on", "checked"]))
+			) {
+				$data['active'] = "1";
+			}
+
 			// trim all inputs as default
 			$data[$field['name']] = trim($data[$field['name']]);
 
@@ -604,6 +616,10 @@ class BaseController extends Controller {
 	 */
 	public function destroy($id)
 	{
+		// helper to inform the user about success on deletion
+		$to_delete = 0;
+		$deleted = 0;
+
 		// bulk delete
 		if ($id == 0)
 		{
@@ -611,14 +627,37 @@ class BaseController extends Controller {
 			if (!isset(Input::all()['ids']))
 				return Redirect::back()->with('delete_message', ['message' => 'No Entry For Deletion specified', 'class' => \NamespaceController::get_route_name(), 'color' => 'red']);
 
-			foreach (Input::all()['ids'] as $id => $val)
-				static::get_model_obj()->findOrFail($id)->delete();
+			foreach (Input::all()['ids'] as $id => $val) {
+				$to_delete++;
+				if (static::get_model_obj()->findOrFail($id)->delete()) {
+					$deleted++;
+				}
+			}
+
 		}
-		else
-			static::get_model_obj()->findOrFail($id)->delete();
+		else {
+			$to_delete++;
+			if (static::get_model_obj()->findOrFail($id)->delete()) {
+				$deleted++;
+			}
+		}
 
 		$class = \NamespaceController::get_route_name();
-		return Redirect::back()->with('delete_message', ['message' => 'Successful deleted '.$class, 'class' => $class, 'color' => 'blue']);
+
+		if ($deleted == 0) {
+			$message = 'Could not delete '.$class;
+			$color = 'red';
+		}
+		elseif ($deleted == $to_delete) {
+			$message = 'Successful deleted '.$class;
+			$color = 'blue';
+		}
+		else {
+			$message = 'Deleted '.$deleted.' out of '.$to_delete.' '.$class;
+			$color = 'orange';
+		}
+
+		return Redirect::back()->with('delete_message', ['message' => $message, 'class' => $class, 'color' => $color]);
 	}
 
 

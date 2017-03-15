@@ -267,9 +267,9 @@ class BaseModel extends Eloquent
 			'BaseModel',
 			'Authmeta',
 			'Authcore',
-			'TRCClass',	# static data; not for standalone use
-			'CarrierCode', # cron updated data; not for standalone use
-			'EkpCode', # cron updated data; not for standalone use
+			'TRCClass',	// static data; not for standalone use
+			'CarrierCode', // cron updated data; not for standalone use
+			'EkpCode', // cron updated data; not for standalone use
 		);
 		$result = array();
 
@@ -492,7 +492,7 @@ class BaseModel extends Eloquent
 			else {
 				$indexed_cols = $this->_getFulltextIndexColumns($this->getTable());
 
-				# for a description of search modes check https://mariadb.com/kb/en/mariadb/fulltext-index-overview
+				// for a description of search modes check https://mariadb.com/kb/en/mariadb/fulltext-index-overview
 				if ("index_natural" == $mode) {
 					$mode = "IN NATURAL MODE";
 				}
@@ -503,7 +503,7 @@ class BaseModel extends Eloquent
 					$mode = "IN BOOLEAN MODE";
 				}
 
-				# search is against the fulltext index
+				// search is against the fulltext index
 				$result = [$this->whereRaw("MATCH(".$indexed_cols.") AGAINST(? ".$mode.")", array($query))];
 			}
 		}
@@ -611,7 +611,7 @@ class BaseModel extends Eloquent
 	 *
 	 *	@author Torsten Schmidt
 	 *
-	 *	@return void
+	 *	@return bool
 	 *
 	 *  @todo return state on success, should also take care of deleted children
 	 */
@@ -621,7 +621,8 @@ class BaseModel extends Eloquent
 		foreach ($this->get_all_children() as $child)
 			$child->delete();
 
-		$this->_delete();
+		// always return this value (also in your derived classes!)
+		return $this->_delete();
 	}
 
 

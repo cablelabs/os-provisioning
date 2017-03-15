@@ -30,3 +30,6 @@ cp-script.sh
 
 # ignore ctags file
 tags
+
+Documentation/doxyfile.bak
+Documentation/doxywarn.log
