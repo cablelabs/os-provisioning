@@ -11,4 +11,9 @@
 
       <link href="{{asset('components/assets-admin/plugins/select2-v4/vendor/select2/select2/dist/css/select2.css')}}" rel="stylesheet" />
       <link href="{{asset('components/assets-admin/plugins/DataTables/css/data-table.css')}}" rel="stylesheet" />
+
+      <link href="{{asset('components/assets-admin/plugins/ionRangeSlider/css/ion.rangeSlider.css')}}" rel="stylesheet" />
+      <link href="{{asset('components/assets-admin/plugins/ionRangeSlider/css/ion.rangeSlider.skinFlat.css')}}" rel="stylesheet" />
+
+      <link href="{{asset('components/assets-admin/plugins/switchery/switchery.css')}}" rel="stylesheet" />
       <!-- ================== END BASE CSS STYLE ================== -->
