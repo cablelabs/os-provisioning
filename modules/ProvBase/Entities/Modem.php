@@ -364,8 +364,10 @@ class Modem extends \BaseModel {
 				\Session::flash('error', 'Could not restart Modem! (offline?)');
 			}
 			else {
-				// re-throw all other exceptions
-				throw $e;
+				// Inform and log for all other exceptions
+				\Session::push('tmp_info_above_form', 'Unexpected exception: '.$e->getMessage());
+				\Log::error("Unexpected exception restarting modem ".$this->id." (".$this->mac."): ".$e->getMessage()." => ".$e->getTraceAsString());
+				\Session::flash('error', '');
 			}
 		}
 
