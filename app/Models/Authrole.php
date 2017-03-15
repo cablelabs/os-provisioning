@@ -7,6 +7,8 @@ use Box\Spout\Common\Exception\EncodingConversionException;
 use DB;
 //use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
+use Illuminate\Validation\ValidationServiceProvider;
 
 class Authrole extends BaseModel
 {
@@ -20,7 +22,7 @@ class Authrole extends BaseModel
 	public static function rules($id=null)
 	{
 		return array(
-			'name' => 'required',
+			'name' => 'required|unique:authmetas,name,'.$id.',id,type,role,deleted_at,NULL',
 			'type' => 'required|in:role,client'
 		);
 	}
@@ -60,6 +62,18 @@ class Authrole extends BaseModel
 			throw new \Exception($e->getMessage(), $e->getCode(), $e);
 		}
 		return $ret;
+	}
+
+	/**
+	 * Don't delete role 'super_admin'
+	 */
+	public function delete()
+	{
+		foreach ($_REQUEST['ids'] as $role_id => $checkbox_value) {
+			if ($role_id != 1) {
+				parent::delete();
+			}
+		}
 	}
 
 	/**

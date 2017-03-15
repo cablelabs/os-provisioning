@@ -20,14 +20,18 @@
         <table class="table table-hover itable">
             @foreach ($user_assigned_roles as $role)
                 <tr>
-                    <td width="50px"> {{ Form::checkbox('role_ids[]', $role->id, null, null, ['style' => 'simple']) }} </td>
+                    @if ($user_id == 1 && $role->name == 'super_admin')
+                        <td width="50px"> {{ Form::checkbox('role_ids[]', $role->id, null, null, ['style' => 'simple', 'disabled' => 'disabled']) }} </td>
+                    @else
+                        <td width="50px"> {{ Form::checkbox('role_ids[]', $role->id, null, null, ['style' => 'simple']) }} </td>
+                    @endif
                     <td>{{ $role->name }}</td>
                 </tr>
             @endforeach
         </table>
 
         {{ Form::hidden('user_id', $user_id) }}
-        {{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Delete selected roles from user', 'Button' ) , ['style' => 'simple', 'class' => 'btn btn-danger m-r-5']) }}
+        {{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Delete selected roles', 'Button' ) , ['style' => 'simple', 'class' => 'btn btn-danger m-r-5']) }}
         {{ Form::close() }}
     @endif
 @DivClose()

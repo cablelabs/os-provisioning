@@ -6,8 +6,7 @@ use App\Authmetacore;
 use App\Authrole;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
-use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Input;
 
 class AuthroleController extends BaseController
 {
@@ -26,6 +25,31 @@ class AuthroleController extends BaseController
 			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => Authrole::getPossibleEnumValues('type', false)),
 			array('form_type' => 'text', 'name' => 'description', 'description' => 'Description'),
 		);
+	}
+
+	/**
+	 * Create a new role or restore a soft deleted role if it exists
+	 *
+	 * @param bool $redirect
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 * @throws \Exception
+	 */
+	public function store($redirect = true)
+	{
+		try {
+			$data = Input::all();
+			$res = Authrole::withTrashed()
+				->where('name', $data['name'])
+				->restore();
+
+			if ($res == 0) {
+				parent::store($redirect);
+			}
+		} catch (\Exception $e) {
+			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+		}
+
+		return redirect('admin/Authrole');
 	}
 
 	/**
