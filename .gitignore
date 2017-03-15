@@ -30,6 +30,7 @@ cp-script.sh
 
 # ignore ctags file
 tags
+
 /.idea/blade.xml
 /.idea/deployment.xml
 /.idea/lara.iml
@@ -39,3 +40,6 @@ tags
 /.idea/workspace.xml
 /modules/HfcSnmp/Entities/._.DS_Store
 /modules/HfcSnmp/Http/Controllers/._.DS_Store
+
+Documentation/doxyfile.bak
+Documentation/doxywarn.log

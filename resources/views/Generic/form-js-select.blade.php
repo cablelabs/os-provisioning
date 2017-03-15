@@ -28,14 +28,3 @@ NOTE: will be used from form-js blade and must be called inside java context
 		}
 	@endforeach
 @endif
-
-// TODO: handle checkbox based selection
-@if ($field['form_type'] == 'checkbox')
-	@foreach($field['select'] as $val => $hide)
-		if( $('#{{$field['name']}}:checked').length == {{$val}} ) {
-			$(".{{$hide}}").show();
-		} else {
-			{{$hide_all}}
-		}
-	@endforeach
-@endif

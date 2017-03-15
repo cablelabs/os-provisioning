@@ -276,6 +276,7 @@ class MtaObserver
 		$mta->hostname = 'mta-'.$mta->id;
 		$mta->make_configfile();
 		$mta->make_dhcp_mta_all();
+		$mta->modem->make_dhcp_cm_all();
 		$mta->save();
 	}
 
@@ -288,6 +289,7 @@ class MtaObserver
 	{
 		$mta->make_dhcp_mta_all();
 		$mta->make_configfile();
+		$mta->modem->make_dhcp_cm_all();
 		$mta->modem->restart_modem();
 	}
 
@@ -295,6 +297,7 @@ class MtaObserver
 	{
 		$mta->make_dhcp_mta_all();
 		$mta->delete_configfile();
+		$mta->modem->make_dhcp_cm_all();
 		$mta->modem->restart_modem();
 	}
 }

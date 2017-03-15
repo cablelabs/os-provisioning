@@ -111,11 +111,17 @@ class ContractController extends \BaseController {
 			);
 		}
 
-		$d = array (
+		if(\PPModule::is_active('mail')) {
+			$d = array(
+				array('form_type' => 'text', 'name' => 'emailcount', 'description' => 'No. of email addresses')
+			);
+		}
+
+		$e = array (
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'),
 		);
 
-		return array_merge($a, $b, $c, $d);
+		return array_merge($a, $b, $c, $d, $e);
 	}
 
 
@@ -123,7 +129,7 @@ class ContractController extends \BaseController {
 	 * Get all management jobs for Envia
 	 *
 	 * @author Patrick Reichel
-	 * @param $model current phonenumber object
+	 * @param $contract current contract object
 	 * @return array containing linktexts and URLs to perform actions against REST API
 	 */
 	public static function _get_envia_management_jobs($contract) {

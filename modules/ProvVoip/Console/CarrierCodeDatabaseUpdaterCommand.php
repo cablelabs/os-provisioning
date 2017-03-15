@@ -1,15 +1,21 @@
-<?php namespace Modules\Provvoip\Console;
+<?php
+
+namespace Modules\ProvVoip\Console;
 
 use Log;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use \Modules\ProvVoip\Entities\CarrierCode;
+use \App\GuiLog;
 
 /**
  * Class for updating database with carrier codes from csv file
  */
 class CarrierCodeDatabaseUpdaterCommand extends Command {
+
+	// get some methods used by several updaters
+	use \App\Console\Commands\DatabaseUpdaterTrait;
 
 	/**
 	 * The console command name.
@@ -23,7 +29,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $description = 'Update the database carrier code using the csv file $csv_file';
+	protected $description = 'Update the database table containing carrier codes';
 
 	/**
 	 * The path were the csv file is stored.
@@ -49,6 +55,9 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	 */
 	public function __construct()
 	{
+		// this comes from config/app.php (key 'url')
+		$this->base_url = \Config::get('app.url');
+
 		parent::__construct();
 	}
 
@@ -56,17 +65,62 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	/**
 	 * Execute the console command.
 	 *
+	 * ATM we have to distinguish two cases: provvoipenvia enabled or not
+	 *
 	 * @return null
 	 */
 	public function fire()
 	{
+
+		if (\PPModule::is_active('provvoipenvia')) {
+			// we get the data directly from Envia API
+			$this->_update_using_envia_api();
+		}
+		else {
+			// fallback: get data from file /lara/storage/app/config/provvoip/carrier_codes.csv
+			$this->_update_using_file();
+		}
+	}
+
+
+	/**
+	 * Updating carrier codes via Envia API means a simple call of the method in ProvVoipEnvia
+	 * The real work is done there
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _update_using_envia_api() {
+
+		Log::info($this->description.' from Envia API');
+
+		// getting data from Envia instead from file means: file is not current ⇒ delete the hash file
+		$this->clear_hash_file();
+
+		// prepare the URL to process via cURL
+		$url_suffix = \URL::route("ProvVoipEnvia.cron", array('job' => 'misc_get_keys', 'keyname' => 'carriercode', 'really' => 'True'), false);
+		$url = $this->base_url.$url_suffix;
+
+		// fire!
+		$this->_perform_curl_request($url);
+
+	}
+
+
+	/**
+	 * Updating from a file (fallback if no other methods are available) is performed here.
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _update_using_file() {
+
+		Log::info($this->description.' from CSV file');
 
 		// nothing to do
 		if (!$this->_have_to_update()) {
 			return;
 		}
 
-		// if csv in unreadable => do nothing
+		// if csv file is unreadable => do nothing
 		if (!$this->_read_csv()) {
 			return;
 		}
@@ -74,7 +128,6 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 		// all OK? update now!
 		$this->_update_table();
 	}
-
 
 	/**
 	 * Clears the csv hash file (creates file with no content).
@@ -155,20 +208,46 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	 */
 	protected function _update_table() {
 
+		$changes = 0;
 		foreach ($this->csv as $key => $entry) {
 			$code = $entry[0];
 			$company = $entry[1];
 
-			# alter entry if exists, else create new one
+			// alter entry if exists, else create new one
 			$cc = CarrierCode::firstOrNew(array('carrier_code' => $code));
-			$cc->carrier_code = $code;
-			$cc->company = $company;
-			$cc->save();
+			if ($cc->company != $company) {
+
+				// disable observer to stop logging of each change
+				$cc->observer_enabled = false;
+
+				$cc->carrier_code = $code;
+				$cc->company = $company;
+				$cc->save();
+
+				$changes++;
+			}
 		}
 
+		// store the current hash file
 		$hash = sha1(\Storage::get($this->csv_file));
 		\Storage::put($this->hash_file, $hash);
-		Log::info($this->name.': Database carriercodes updated');
+
+		// log event summary to logfile
+		Log::info($this->name.': '.$changes.' entries in database carriercodes created/updated');
+
+		// log event summary to database (if there are changes)
+		if ($changes > 0) {
+			$user = \Auth::user();
+			$data = [
+				'authuser_id' => $user ? $user->id : 0,
+				'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
+				'method' 	=> 'created/updated',
+				'model' 	=> 'CarrierCode',
+				'model_id'  => -1,
+				'text' 		=> $changes.' entries created/updated',
+			];
+			GuiLog::log_changes($data);
+		}
 
 	}
 

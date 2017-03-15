@@ -32,7 +32,17 @@ class GuiLog extends \BaseModel {
         if ($this->method == 'deleted')
             $bsclass = 'danger';
 
-        return ['index' => [$this->created_at, $this->username, $this->method, $this->model, $this->model_id],
+		// if there is a route to a changed model: create hyperlink to the edit blade
+		// goal: easier to track changes
+		if (\Route::has($this->model.'.edit')) {
+			$model_link = '<a href="'.\URL::route($this->model.'.edit', array($this->model_id)).'" target="_blank">'.$this->model_id.'</a>';
+		}
+		// if there is no route (e.g. CCCAuthUser): show only ID
+		else {
+			$model_link = $this->model_id;
+		}
+
+        return ['index' => [$this->created_at, $this->username, $this->method, $this->model, $model_link],
                 'index_header' => ['Time', 'User', 'Action', 'Model', 'ID'],
                 'bsclass' => $bsclass,
                 'header' => $this->username.': '.$this->method.' '.$this->model];

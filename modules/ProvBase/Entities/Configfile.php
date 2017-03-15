@@ -23,6 +23,7 @@ class Configfile extends \BaseModel {
 		return array(
 			'name' => 'required|unique:configfile,name,'.$id.',id,deleted_at,NULL',
 			'text' => "docsis",
+			'cvc' => 'required_with:firmware',
 		);
 	}
 
@@ -110,26 +111,36 @@ class Configfile extends \BaseModel {
 
 
 	/**
-	 * Returns all available firmware files (via directory listing)
+	 * Returns all available files (via directory listing)
 	 * @author Patrick Reichel
 	 */
-	public function firmware_files()
+	public function get_files($folder)
 	{
 		// get all available files
-		$firmware_files_raw = glob("/tftpboot/fw/*");
-		$firmware_files = array(null => "None");
+		$files_raw = glob("/tftpboot/$folder/*");
+		$files = array(null => "None");
 		// extract filename
-		foreach ($firmware_files_raw as $file) {
+		foreach ($files_raw as $file) {
 			if (is_file($file)) {
 				$parts = explode("/", $file);
 				$filename = array_pop($parts);
-				$firmware_files[$filename] = $filename;
+				$files[$filename] = $filename;
 			}
 		}
-		return $firmware_files;
+		return $files;
 	}
 
-
+	/**
+	 * Returns text section of Code Validation Certificate in a human readable format
+	 * while skipping non-relevant sections (i.e. hashes)
+	 * @author Ole Ernst
+	 */
+	public function get_cvc_help() {
+		if (!$this->cvc)
+			return("The Code Validation Certificate 'cvc.der' can be extracted from a firmware image 'fw.img' by issuing:\n\nopenssl pkcs7 -print_certs -inform DER -in fw.img | openssl x509 -outform DER -out cvc.der");
+		exec('openssl x509 -text -inform DER -in /tftpboot/cvc/'.$this->cvc, $cvc_help);
+		return join("\n", array_slice($cvc_help, 0, 11));
+	}
 
 	/**
 	 * all Relationships
@@ -144,6 +155,16 @@ class Configfile extends \BaseModel {
 	public function mtas ()
 	{
 		return $this->hasMany('Modules\ProvVoip\Entities\Mta');
+	}
+
+	public function children ()
+	{
+		return $this->hasMany('Modules\ProvBase\Entities\Configfile', 'parent_id');
+	}
+
+	public function parent ()
+	{
+		return $this->belongsTo('Modules\ProvBase\Entities\Configfile');
 	}
 
 	public function get_parent ()
@@ -266,8 +287,12 @@ class Configfile extends \BaseModel {
 					// array_push($config_extensions, "SnmpMibObject docsDevSwServerAddress.0 IPAddress $server_ip ; /* tftp server */");
 					array_push($config_extensions, 'SnmpMibObject docsDevSwFilename.0 String "fw/'.$this->firmware.'"; /* firmware file to download */');
 					array_push($config_extensions, 'SnmpMibObject docsDevSwAdminStatus.0 Integer 2; /* allow provisioning upgrade */');
+					// array_push($config_extensions, 'SwUpgradeServer $server_ip;');
+					array_push($config_extensions, 'SwUpgradeFilename "fw/'.$this->firmware.'";');
 				}
 
+				if ($this->cvc)
+					exec("xxd -p -c 254 /tftpboot/cvc/".$this->cvc." | sed 's/^/MfgCVCData 0x/; s/$/;/'", $config_extensions);
 				break;
 
 			// this is for mtas
@@ -386,6 +411,54 @@ class Configfile extends \BaseModel {
 		$mtas = $this->mtas;		// This should be a one-to-one relation
 		foreach ($mtas as $mta)
 			$mta->make_configfile();
+	}
+
+	/**
+	 * Recursively add all parents of a used node to the list of used nodes,
+	 * we must not delete any of them
+	 *
+	 * @author Ole Ernst
+	 */
+	static protected function _add_parent(& $ids, $cf)
+	{
+		$parent = $cf->parent;
+		if($parent && !in_array($parent->id, $ids)) {
+			array_push($ids, $parent->id);
+			self::_add_parent($ids, $parent);
+		}
+	}
+
+	/**
+	 * Returns a list of configfiles, which are still associated with a modem or mta and
+	 * thus must not be deleted.
+	 *
+	 * @author Ole Ernst
+	 */
+	static public function all_in_use()
+	{
+		/*
+		 * get all leaf configfiles (i.e. with no children), using mysql query is more efficient
+		 * see: http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
+		 */
+		$leaf_ids = DB::table('configfile as t1')->leftJoin('configfile as t2', function ($join) {
+			$join->on('t1.id', '=', 't2.parent_id')->whereNull('t2.deleted_at');
+		})->whereNull('t2.id')->whereNull('t1.deleted_at')->select('t1.id')->get('t1.id');
+
+		// we are only interested in leafs, which are associated with a modem or mta
+		$leaf_ids = array_map(function($e) { return $e->id; }, $leaf_ids);
+		$leaf_ids = array_filter($leaf_ids, function($e) {
+			$cf = Configfile::where('id', $e)->first();
+			if(count($cf->modem) || count($cf->mtas))
+				return true;
+			return false;
+		});
+
+		// mark all parents of a used leaf configfile as used to, as we must not delete those too
+		$used_ids = $leaf_ids;
+		foreach ($leaf_ids as $leaf_id)
+			self::_add_parent($used_ids, Configfile::where('id', $leaf_id)->first());
+
+		return $used_ids;
 	}
 
 }
