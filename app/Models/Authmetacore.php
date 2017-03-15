@@ -32,7 +32,7 @@ class Authmetacore extends BaseModel {
 					->get();
 			}
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 
 		return $ret;
@@ -62,18 +62,9 @@ class Authmetacore extends BaseModel {
 				}
 			}
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 		return $ret;
-	}
-
-	public function delete_permissions_by_metaid($permissions, $meta_id)
-	{
-		try {
-
-		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
-		}
 	}
 
 	/**
@@ -99,7 +90,7 @@ class Authmetacore extends BaseModel {
 				->where('id', '=' , $authmethacore_id)
 				->update([$authmethacore_right => $value]);
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 		return $ret;
 	}
@@ -131,7 +122,7 @@ class Authmetacore extends BaseModel {
 
 			DB::table($this->table)->insert($data);
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 	}
 
@@ -148,7 +139,7 @@ class Authmetacore extends BaseModel {
 				->where('id', '=', $row_id)
 				->delete();
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 	}
 
@@ -170,7 +161,7 @@ class Authmetacore extends BaseModel {
 				}
 			}
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 
 		return $ret;

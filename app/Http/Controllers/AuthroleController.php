@@ -46,7 +46,7 @@ class AuthroleController extends BaseController
 				parent::store($redirect);
 			}
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 
 		return redirect('admin/Authrole');
@@ -66,7 +66,7 @@ class AuthroleController extends BaseController
 			$ret = $rightModel->update_permission($data['authmethacore_id'], $data['authmethacore_right'], $data['authmethacore_right_value']);
 		} catch (\Exception $e) {
 			// @ToDo: Logging the Exception
-			//throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			//throw $e;
 			$ret = $e->getMessage();
 		}
 		return $ret;
@@ -89,7 +89,7 @@ class AuthroleController extends BaseController
 				$ret = $model->assign_permission($data['role_id'], $permission_id, $rights);
 			}
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 
 		return redirect('admin/Authrole/' . $data['role_id'] . '/edit');
@@ -112,7 +112,7 @@ class AuthroleController extends BaseController
 				$ret = $model->delete_permission($row_id);
 			}
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 
 		return redirect('admin/Authrole/' . $data['role_id'] . '/edit');

@@ -62,7 +62,7 @@ class AuthuserController extends BaseController {
 				}
 			}
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 		return redirect($url);
 	}
@@ -89,7 +89,7 @@ class AuthuserController extends BaseController {
 				}
 			}
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 
 		return redirect($url);

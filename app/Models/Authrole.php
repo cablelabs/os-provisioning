@@ -59,7 +59,7 @@ class Authrole extends BaseModel
 				->where('type', 'LIKE', '%role%')
 				->get();
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 		return $ret;
 	}
@@ -95,7 +95,7 @@ class Authrole extends BaseModel
 				->where('authusermeta.user_id', '=', (int) $user_id)
 				->get();
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 		return $ret;
 	}
@@ -122,7 +122,7 @@ class Authrole extends BaseModel
 				}
 			}
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 
 		return $ret;
@@ -147,7 +147,7 @@ class Authrole extends BaseModel
 				}
 			}
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 
 		return $role_is_assigned;

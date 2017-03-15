@@ -228,7 +228,7 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 				->where('meta_id', '=', $role_id)
 				->delete();
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 		return $ret;
 	}
@@ -241,7 +241,7 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 			$ret = DB::table('authusermeta')
 				->insert(array('user_id' => $user_id, 'meta_id' => $role_id));
 		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), $e->getCode(), $e);
+			throw $e;
 		}
 		return $ret;
 	}
