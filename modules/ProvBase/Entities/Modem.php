@@ -735,7 +735,12 @@ class ModemObserver
 		// check if this is running if you decide to implement moving of modems to other contracts
 		// watch Ticket LAR-106
 		if (\PPModule::is_active('ProvVoipEnvia')) {
-			if ($modem['original']['contract_id'] != $modem->contract_id) {
+			if (
+				// updating is also called on create – so we have to check this
+				(!$modem->wasRecentlyCreated)
+				&&
+				($modem['original']['contract_id'] != $modem->contract_id)
+			) {
 				if ($modem->has_phonenumbers_attached) {
 					// returning false should cancel the updating: verify this! There has been some problems with deleting modems – we had to put the logic in Modem::delete() probably caused by our Base* classes…
 					// see: http://laravel-tricks.com/tricks/cancelling-a-model-save-update-delete-through-events
