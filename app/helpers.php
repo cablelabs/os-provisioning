@@ -34,3 +34,15 @@ function d() {
 	call_user_func_array('dd', func_get_args());
 }
 
+/**
+ * Translate all validated MAC formats into a common one
+ * (i.e. AA:BB:CC:DD:EE:FF)
+ *
+ * @author Ole Ernst
+ */
+function unify_mac($data)
+{
+	$data['mac'] = preg_replace('/[^a-f\d]/i', '', $data['mac']);
+	$data['mac'] = wordwrap($data['mac'], 2, ':', true);
+	return $data;
+}
