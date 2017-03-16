@@ -302,7 +302,7 @@ class Phonenumber extends \BaseModel {
 			/* 	$this->active = False; */
 			/* 	$changed = True; */
 			/* } */
-			return;
+			\Log::info('No PhonenumberManagement for phonenumber '.$this->prefix_number.'/'.$this->number.' (ID '.$this->id.') – will not change the active state.');
 		}
 		else {
 
@@ -422,7 +422,7 @@ class PhonenumberObserver
 
 		// TODO: ATM we don't force the creation of phonenumbermanagements – if we change our mind we can activate this line again
 		// on creating there can not be a phonenumbermanagement – so we can set active state to false in each case
-		/* $phonenumber->active = 0; */
+		// $phonenumber->active = 0;
 
 		$this->_create_login_data($phonenumber);
 	}

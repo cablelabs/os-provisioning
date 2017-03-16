@@ -228,10 +228,15 @@ class StorageCleaner extends Command
 				// compress
 				\Log::info('Compressing '.$dirpath);
 				$tar_cmd = "cd $path && tar -jcvf $archivepath $dir";
-				$tar_return = `$tar_cmd`;
-				$tar_return = explode("\n", $tar_return);
-				$tar_return_log = array_slice($tar_return, 0, 3);
-				\Log::debug('Calling "'.$tar_cmd.'" returned '.count($tar_return).' lines, beginning with '.implode('\n ', $tar_return_log));
+				try {
+					$tar_return = `$tar_cmd`;
+					$tar_return = explode("\n", $tar_return);
+					$tar_return_log = array_slice($tar_return, 0, 3);
+					\Log::debug('Calling "'.$tar_cmd.'" returned '.count($tar_return).' lines, beginning with '.implode('\n ', $tar_return_log));
+				}
+				catch (Exception $ex) {
+					\Log::error("Exception calling '$tar_cmd': ".$ex->getMessage());
+				}
 
 				if (\File::isFile($archivepath)) {
 					// remove original directory

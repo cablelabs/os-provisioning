@@ -157,11 +157,21 @@ class BaseViewController extends Controller {
 			// 3. Hide all parent view relation select fields (in edit context)
 			//    NOTE: this will not work in create context, because view_belongs_to() returns null !
 			//          Hiding in create context will only work with hard coded 'hidden' => 1 entry in view_form_fields()
-			if (is_object($view_belongs_to) && 					// does a view relation exists
-				(!($view_belongs_to instanceof \Illuminate\Support\Collection)) &&	// not a n:m relation (in which case we have an pivot table)
-				($view_belongs_to->table.'_id' == $field['name']) &&	// view table name (+_id) == field name ?
-				!isset($field['hidden']))									// hidden was not explicitly set
-					$field['hidden'] = '1';
+			if (
+				// does a view relation exists?
+				(is_object($view_belongs_to))
+				&&
+				// not a n:m relation (in which case we have an pivot table)
+				(!($view_belongs_to instanceof \Illuminate\Support\Collection))
+				&&
+				// view table name (*_id) == field name ?
+				($view_belongs_to->table.'_id' == $field['name'])
+				&&
+				// hidden was not explicitly set
+				(!isset($field['hidden']))
+			) {
+				$field['hidden'] = '1';
+			}
 
 			// 4. set all field_value's to SQL data
 			$field['field_value'] = $model[$field['name']];
@@ -465,9 +475,11 @@ finish:
 			while ($parent)	{
 
 				if (
-					(!($parent instanceof \Illuminate\Support\Collection))	// if $parent is not a Collection we have a 1:1 or 1:n relation
+					// if $parent is not a Collection we have a 1:1 or 1:n relation
+					(!($parent instanceof \Illuminate\Support\Collection))
 					||
-					($parent->count() == 1)	// there is a potential n:m relation, but only one model is really connected
+					// there is a potential n:m relation, but only one model is really connected
+					($parent->count() == 1)
 				) {
 					// this means we have an explicit next step in our breadcrumb path
 
@@ -485,6 +497,7 @@ finish:
 				else {
 					// $parent is a collection with more than one entry – this means we have a multiple parents
 					// we show breadcrumb paths for all of them, but then stopping further processing
+					// to avoid shredding the layout
 					foreach ($parent as $p) {
 						array_push($breadcrumb_paths, '… > '.$extend_breadcrumb_path($breadcrumb_path, $p));
 					}

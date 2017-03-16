@@ -193,7 +193,13 @@ class Modem extends \BaseModel {
 	 */
 	private function generate_cm_dhcp_entry()
 	{
-			return 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'"; }'."\n";
+		$ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
+
+		if(count($this->mtas))
+			$ret .= ' option ccc.dhcp-server-1 '.ProvBase::first()->provisioning_server.';';
+
+		$ret .= "}\n";
+		return $ret;
 	}
 
 	private function generate_cm_dhcp_entry_pub()
@@ -771,9 +777,6 @@ class ModemObserver
 		$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
-
-		if (\PPModule::is_active ('ProvMon'))
-			\Artisan::call('nms:cacti');
 
 		// ATTENTION:
 		// If we ever think about moving modems to other contracts we have to delete Envia related stuff, too –
