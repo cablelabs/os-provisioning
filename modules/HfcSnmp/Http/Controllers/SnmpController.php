@@ -104,7 +104,7 @@ class SnmpController extends \BaseController{
 
 		$reload 	 = $snmp->device->netelementtype->page_reload_time ? : 0;
 
-		return \View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'panel_right', 'form_fields', 'form_update', 'route_name', 'headline', 'reload')));
+		return \View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'panel_right', 'form_fields', 'form_update', 'route_name', 'headline', 'reload', 'param_id', 'index')));
 	}
 
 
@@ -114,7 +114,7 @@ class SnmpController extends \BaseController{
 	 * @param id the NetElement id
 	 * @author Torsten Schmidt
 	 */
-	public function controlling_update($id)
+	public function controlling_update($id, $param_id = 0, $index = 0)
 	{
 		// Init SnmpController
 		$netelem = NetElement::findOrFail($id);
@@ -122,15 +122,9 @@ class SnmpController extends \BaseController{
 		$snmp->init ($netelem);
 
 		// TODO: validation
-		// $validator = \Validator::make($data = $this->prepare_input(\Input::all()), $netelem::rules($id));
-		// if ($validator->fails())
-		// 	return Redirect::back()->withErrors($validator)->withInput();
-
-
 		// Transfer Settings via SNMP to Device
 		$data = \Request::all();
 		$snmp->snmp_set_all($data);
-
 
 		// Build Error Message in case OIDs could not be set
 		if ($snmp->set_errors)
@@ -152,7 +146,7 @@ class SnmpController extends \BaseController{
 			$msg_color = 'blue';
 		}
 
-		return \Redirect::route('NetElement.controlling_edit', $id)->with('message', $msg)->with('message_color', $msg_color);
+		return \Redirect::route('NetElement.controlling_edit', [$id, $param_id, $index])->with('message', $msg)->with('message_color', $msg_color);
 	}
 
 
