@@ -258,8 +258,11 @@ class AuthObserver
 		$id = $auth->id;
 
 		// Create required AuthUserMeta relation, otherwise user can not login
-		DB::update("INSERT INTO authusermeta (user_id, meta_id) VALUES($id, 1);");
-		DB::update("INSERT INTO authusermeta (user_id, meta_id) VALUES($id, 2);");
+		// 2017-03016 SAr: Assign relation only for the root user
+		if ($id == 1) {
+			DB::update("INSERT INTO authusermeta (user_id, meta_id) VALUES($id, 1);");
+			DB::update("INSERT INTO authusermeta (user_id, meta_id) VALUES($id, 2);");
+		}
     }
 
     public function deleted($auth)
