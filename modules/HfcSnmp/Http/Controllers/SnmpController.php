@@ -187,7 +187,6 @@ class SnmpController extends \BaseController{
 			if ($this->index)
 				$indices = $this->index;
 
-
 			// Table Param
 			if ($oid->oid_table)
 			{
@@ -328,6 +327,8 @@ class SnmpController extends \BaseController{
 
 	/**
 	 * This implements the whole form fields data structure - see Confluence MVC Documentation
+	 *
+	 * @return 	Array 	Form Fields - Html only
 	 */
 	private static function _make_html_from_form_fields($form_fields)
 	{
@@ -372,14 +373,13 @@ class SnmpController extends \BaseController{
 
 		if (isset($form_fields['frame']['tabular']))
 		{
-			foreach ($form_fields['frame']['tabular'] as $row)
+			foreach ($form_fields['frame']['tabular'] as $row => $rows)
 			{
-				foreach ($row as $list)
+				foreach ($rows as $col => $cols)
 				{
-					foreach ($list as $field)
+					foreach ($cols as $field)
 					{
-						$field = BaseViewController::add_html_string(array($field))['html'];
-
+						$field = BaseViewController::add_html_string(array($field))[0]['html'];
 						$form_fields_html['frame']['tabular'][$row][$col][] = $field;
 					}
 				}
@@ -387,7 +387,6 @@ class SnmpController extends \BaseController{
 		}
 
 		return $form_fields_html;
-
 	}
 
 
@@ -427,7 +426,7 @@ class SnmpController extends \BaseController{
 		{
 			if ($head)
 			{
-				// table head
+				// Table head
 				$s .= '<table class="table table-condensed">';
 				$s .= '<thead><tr>';
 				$s .= '<th>Index</th>';
@@ -441,10 +440,9 @@ class SnmpController extends \BaseController{
 				reset($oids);
 			}
 
-			// table body
-			// TODO: make index column a href link to controlling view for 3rd dimension
-			// $index = $third_dim ? '<a href="'.route('NetElement.param_entry_edit', [$options['netelement_id'], $options['param_id'], $index]).'">'.$index : $index;
-			$index_gui = $third_dim ? '<a href="'.route('NetElement.controlling_edit', [$options['netelement_id'], $options['param_id'], $index]).'">'.$index : $index;
+			// Table body
+			$route_index = str_replace('.', '', $index);
+			$index_gui = $third_dim ? '<a href="'.route('NetElement.controlling_edit', [$options['netelement_id'], $options['param_id'], $route_index]).'">'.$route_index : $route_index;
 			$s .= '<tr><td>'.$index_gui.'</td>';
 
 			foreach ($oids as $oid => $field)
@@ -565,7 +563,7 @@ class SnmpController extends \BaseController{
 		{
 			$index = strrchr($oid_index, '.');
 			$oid_s = substr($oid_index, 0, strlen($oid_index) - strlen($index));
-			$index = substr($index, 1);
+			// $index = substr($index, 1);
 
 			// Exclude unwished indices - this is a workaround for the unimproved snmpwalk over all indices 
 			// we filter them temporarily here - TODO: Improve performance via better snmpwalk
@@ -667,40 +665,41 @@ class SnmpController extends \BaseController{
 	{
 		$eager_loading_model = new OID;
 		$snmpvalues = SnmpValue::where('netelement_id', '=', $this->device->id)->with($eager_loading_model->table)->get();
-		$pre_conf = true; 			// true - has to be done
-
+		$pre_conf = $this->device->netelementtype->pre_conf_value ? true : false; 			// true - has to be done
 		foreach ($data as $field => $value)
 		{
 			$arr = explode('_', $field);
-			if ($arr[0] == 'field')
+
+			if ($arr[0] != 'field')
+				continue;
+
+			// explode data & write to Database
+			$id  = $arr[1];
+			$snmp_val = $snmpvalues->find($id);
+
+			// In GUI the value was divided by divisor - multiplicate back now for value comparison
+			if ($snmp_val->oid->unit_divisor)
+				$value *= $snmp_val->oid->unit_divisor;
+
+			// Set Value of Parameter in Database & Device only if it was changed in GUI
+			if ($snmp_val->value == $value)
+				continue;
+
+			// Do preconfiguration only once if necessary
+			if ($pre_conf)
 			{
-				// explode data & write to Database
-				$id  = $arr[1];
-				$snmp_val = $snmpvalues->find($id);
-
-				// In GUI the value was divided by divisor - multiplicate back now for value comparison
-				if ($snmp_val->oid->unit_divisor)
-					$value *= $snmp_val->oid->unit_divisor;
-
-				// Set Value of Parameter in Database & Device only if it was changed in GUI
-				if ($snmp_val->value != $value)
-				{
-					// Do preconfiguration if necessary
-					if ($pre_conf)
-					{
-						$conf_val = $this->_configure();
-						$pre_conf = false;
-					}
-
-					$snmp_val->value = $value;
-					$snmp_val->save();
-
-					// Set Value in Device via SNMP
-					$this->snmp_set($snmp_val);
-				}
+				$conf_val = $this->_configure();
+				$pre_conf = false;
 			}
+
+			$snmp_val->value = $value;
+			$snmp_val->save();
+
+			// Set Value in Device via SNMP
+			$this->snmp_set($snmp_val);
 		}
 
+		// Do postconfig if preconfig was done
 		if (isset($conf_val))
 			$this->_configure($conf_val);
 
@@ -723,7 +722,7 @@ class SnmpController extends \BaseController{
 
 		if (!$type->pre_conf_oid_id || !$type->pre_conf_value)
 		{
-			\Log::debug('No SNMP Preconfiguration defined for this Device (NetElement)', [$this->device->name]);
+			\Log::debug('Snmp Preconfiguration settings incomplete for this Device (NetElement)', [$this->device->name, $this->device->id]);
 			return null;
 		}
 
@@ -738,13 +737,15 @@ class SnmpController extends \BaseController{
 			if ($conf_val != $type->pre_conf_value)
 				$ret = snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.'.0', $oid->type, $type->pre_conf_value, $this->timeout, $this->retry);
 
-			$ret ? \Log::debug('Preconfigured Device for snmpset', [$this->device->name]) : \Log::debug('Failed to Preconfigure Device for snmpset', [$this->device->name]);
+			$ret ? \Log::debug('Preconfigured Device for snmpset', [$this->device->name, $this->device->id]) : \Log::debug('Failed to Preconfigure Device for snmpset', [$this->device->name, $this->device->id]);
 
 			return $conf_val;
 		}
 
 		// PostConfiguration
 		snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.'.0', $oid->type, $value, $this->timeout, $this->retry);
+
+		\Log::debug('Postconfigured Device for snmpset', [$this->device->name, $this->device->id]);
 
 		// wait time in msec
 		$sleep_time = $type->pre_conf_time_offset ? : 0;
@@ -773,23 +774,26 @@ class SnmpController extends \BaseController{
 		$oid 		= $snmpvalue->oid;
 		$index 		= $snmpvalue->oid_index ? : '.0';
 
-		$ret = snmpget($this->device->ip, $community, $snmpvalue->oid->oid.$index, $this->timeout, $this->retry);
+		// $ret = snmpget($this->device->ip, $community, $oid->oid.$index, $this->timeout, $this->retry);
 
-		if ($ret === FALSE)
-			return FALSE;
-
-		if ($ret == $snmpvalue->value)
-			return TRUE;
-
-		Log::info('snmp: set diff '.$this->device->ip.' '.$snmpvalue->value.' '.$oid->type.' '.$snmpvalue->value.' '.$ret);
 
 		// catch all OIDs that could not be set to print later in error message
 		try {
 			$val = snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.$index, $oid->type, $snmpvalue->value, $this->timeout, $this->retry);
 		} catch (\ErrorException $e) {
+// d($e, $this->device->ip, $this->_get_community('rw'), $oid->oid.$index, $oid->type, $snmpvalue->value);
 			$this->set_errors[] = $oid;
+			Log::error('snmpset failed with msg: '.$e->getMessage(), [$this->device->ip, $community, $oid->type, $snmpvalue->value]);
 			return null;
 		}
+
+		Log::info('snmp: set diff '.$this->device->ip.' '.$community.' '.$oid->oid.$index.' '.$snmpvalue->value.' '.$oid->type.' '.$val);
+
+		if ($val === FALSE)
+			return FALSE;
+
+		if ($val == $snmpvalue->value)
+			return TRUE;
 
 		return $val;
 	}
@@ -817,9 +821,9 @@ class SnmpController extends \BaseController{
 	{
 		$msg = $e->getMessage();
 
+		// Wrong index specified
 		if (strpos($msg, 'snmp2_get') !== false && strpos($msg, 'No Such Instance currently exists') !== false)
 		{
-			// wrong index specified
 			$oid = substr($msg, $start = (strpos($msg, '\'') + 1), strpos(substr($msg, $start + 1), '\'') + 1);
 
 			$index = strrchr($oid, '.');
@@ -828,6 +832,17 @@ class SnmpController extends \BaseController{
 
 			$error = 'snmp_get() failed';
 			$message = "There's no Index '$index' for this OID '$oid' on this NetElement! Change this Index please!";
+
+			return \View::make('errors.generic', compact('message', 'error'));
+		}
+
+		// Device not reachable/online
+		if (strpos($msg, 'snmp2_get') !== false && (($x = strpos($msg, 'No response from')) !== false))
+		{
+			$ip = substr($msg, $x + 16, 15);
+
+			$error = 'snmp_get() failed';
+			$message = "Device with IP $ip not reachable";
 
 			return \View::make('errors.generic', compact('message', 'error'));
 		}
