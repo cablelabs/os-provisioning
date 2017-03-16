@@ -58,6 +58,7 @@ return [
 	'parameter_diff' 				=> 'Bei Aktivierter Checkbox wird nur die Differenz des aktuell zum zuletzt abgefragten Wert angezeigt.',
 	'parameter_divide_by' 			=> 'Durch Angabe von OIDs wird dieser Wert prozentual zur Summe der zu diesen OIDs abgefragten Werte dargestellt. Dies funktioniert vorerst nur in SubOIDs exakt definierter Tabellen. Die hier angegebenen OIDs müssen als Parameter in der SubOID-List eingetragen sein.',
 	'parameter_indices' 			=> 'Durch Angabe einer durch Kommas getrennten Liste der Indizes der Tabellenreihen, werden die SnmpWerte nur für diese Einträge abgefragt.',
+	'parameter_html_frame' 			=> 'Hat keinen Einfluss auf SubOIDs innerhalb von Tabellen (aber auf 3. Dimension-Parameter!).',
 
  /**
   *	MODULE: ProvBase	

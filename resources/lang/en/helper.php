@@ -58,6 +58,7 @@ return [
 	'parameter_diff' 				=> 'Check this if only the Difference of actual to last queried values shall be shown.',
 	'parameter_divide_by' 			=> 'Make this ParameterValue percentual compared to the added values of the following OIDs that are queried by the actual snmpwalk, too. In a first step this only works on SubOIDs of exactly specified tables! The Calculation is also done after the Difference is calculated in case of Difference-Parameters.',
 	'parameter_indices' 			=> 'Specify a comma separated List of all Table Rows we want the Snmp Values for.',
+	'parameter_html_frame' 			=> 'Doesn\'t have influences on SubOIDs in Tables (but on 3rd Dimensional Params!).',
 
  /**
   *	MODULE: ProvBase	
