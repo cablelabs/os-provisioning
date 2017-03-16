@@ -29,6 +29,7 @@ class CreateParameterTable extends BaseMigration {
 			$table->integer('netelementtype_id')->unsigned();
 			$table->integer('oid_id')->unsigned();
 			$table->boolean('diff_param');				// Difference-Parameter: if checked show value as difference with request before
+			$table->string('divide_by'); 				// divide value by added values of this oids that have to be existent in that list/frame/table
 
 			// special extensions for Table-OIDs
 			$table->integer('parent_id')->unsigned(); 	// If Set this is a SubOID, then only these SubOIDs will be considered for table view

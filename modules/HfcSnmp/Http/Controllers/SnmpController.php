@@ -82,11 +82,12 @@ class SnmpController extends \BaseController{
 			return self::handle_exception($e);
 		}
 
+// d(round(microtime(true) - $start, 2), $form_fields);
+
 		// TODO: use multi update function
 		// $this->_multi_update_values();
 		$form_fields = static::_make_html_from_form_fields($form_fields);
 
-// d(round(microtime(true) - $start, 2), $form_fields);
 
 		// Init View
 		$view_header = 'SNMP Settings: '.$netelem->name;
@@ -201,6 +202,8 @@ class SnmpController extends \BaseController{
 
 				$results 	= $this->snmp_table($param, $indices);
 				$diff_param = $results[1];
+				if ($results[2])
+					$form_fields['table'][$table_index]['options']['division'] = $results[2];
 				$results 	= $results[0];
 
 				foreach ($results as $res_oid => $values)
@@ -402,12 +405,23 @@ class SnmpController extends \BaseController{
 		$s = '';
 		$head = true;
 		$third_dim = false;
-		if (isset($form_fields['options']['3rd_dim_link']))
+		$division = [];
+
+		// set 3rd Dimension link and prepare form field values dependent of other OIDs (percentParams)
+		if (isset($form_fields['options']))
 		{
-			$third_dim = true;
-			$options = $form_fields['options']['3rd_dim_link'];
+			if (isset($form_fields['options']['3rd_dim_link']))
+			{
+				$third_dim = true;
+				$options = $form_fields['options']['3rd_dim_link'];
+			}
+
+			if (isset($form_fields['options']['division']))
+				$division = $form_fields['options']['division'];
+
 			unset($form_fields['options']);
 		}
+
 
 		foreach ($form_fields as $index => $oids)
 		{
@@ -430,11 +444,23 @@ class SnmpController extends \BaseController{
 			// table body
 			// TODO: make index column a href link to controlling view for 3rd dimension
 			// $index = $third_dim ? '<a href="'.route('NetElement.param_entry_edit', [$options['netelement_id'], $options['param_id'], $index]).'">'.$index : $index;
-			$index = $third_dim ? '<a href="'.route('NetElement.controlling_edit', [$options['netelement_id'], $options['param_id'], $index]).'">'.$index : $index;
-			$s .= '<tr><td>'.$index.'</td>';
+			$index_gui = $third_dim ? '<a href="'.route('NetElement.controlling_edit', [$options['netelement_id'], $options['param_id'], $index]).'">'.$index : $index;
+			$s .= '<tr><td>'.$index_gui.'</td>';
 
 			foreach ($oids as $oid => $field)
+			{
+				// make field value percentual if wished
+				if (isset($division[$oid]))
+				{
+					$divisor = 0;
+					foreach ($division[$oid] as $divisor_oid)
+						$divisor += $form_fields[$index][$divisor_oid]['field_value'];
+
+					$field['field_value'] = $divisor ? round($field['field_value'] / $divisor * 100, 2) : 0;
+				}
+
 				$s .= '<td style="padding: 2px">'.BaseViewController::get_html_input($field).'</td>';
+			}
 
 			$s .= '</tr>';
 		}
@@ -492,7 +518,7 @@ class SnmpController extends \BaseController{
 	{
 		$oid = $param->oid;
 		$start = microtime(true);
-		$results = $diff_param = [];
+		$results = $res = $diff_param = $divisions = [];
 		$param_selection = $param->children();
 
 		// exact defined table via SubOIDs
@@ -514,6 +540,10 @@ class SnmpController extends \BaseController{
 				// add diff flag if it's a diff param
 				if ($param->diff_param)
 					$diff_param[$oid->oid] = true;
+
+				// add divide by option for table elements
+				if ($param->divide_by)
+					$divisions[$oid->oid] = \Acme\php\ArrayHelper::str_to_array($param->divide_by);
 			}
 
 		}
@@ -551,7 +581,7 @@ class SnmpController extends \BaseController{
 // if ($param->parent_id == 238)
 // d(round(microtime(true) - $start, 3), $oid, $results, $param);
 
-		return [$res, $diff_param];
+		return [$res, $diff_param, $divisions];
 	}
 
 

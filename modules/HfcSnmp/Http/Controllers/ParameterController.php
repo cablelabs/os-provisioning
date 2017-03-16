@@ -40,6 +40,7 @@ class ParameterController extends HfcReqController {
 		$b[] = array('form_type' => 'text', 'name' => 'html_frame', 'description' => 'HTML Frame');
 		$b[] = array('form_type' => 'text', 'name' => 'html_id', 'description' => 'HTML ID');
 		$b[] = array('form_type' => 'checkbox', 'name' => 'third_dimension', 'description' => '3rd Dimension', 'help' => trans('helper.parameter_3rd_dimension'));
+		$b[] = array('form_type' => 'text', 'name' => 'divide_by', 'description' => 'Divide by OID(s)', 'help' => trans('helper.parameter_divide_by'), 'options' => ['placeholder' => '.1.3.4.6.1.127.5, .1.3.4.6.1.118.9, ...']);
 		
 		if ($oid && $oid->access == 'read-only')
 			$b[0]['hidden'] = 0;
@@ -47,6 +48,8 @@ class ParameterController extends HfcReqController {
 			$b[1]['hidden'] = 1;
 		else
 			$b[3]['hidden'] = 1;
+		if ($oid && $oid->oid_table)
+			$b[4]['hidden'] = 1;
 
 		return array_merge($a, $b);
 

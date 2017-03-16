@@ -28,7 +28,7 @@ class NetElementTypeController extends HfcReqController {
 			array('form_type' => 'select', 'name' => 'pre_conf_oid_id', 'description' => 'OID for PreConfiguration Setting', 'value' => OID::oid_list(true)),
 			array('form_type' => 'text', 'name' => 'pre_conf_value', 'description' => 'PreConfiguration Value'),
 			array('form_type' => 'text', 'name' => 'pre_conf_time_offset', 'description' => 'PreConfiguration Time Offset', 'space' => 1, 'help' => 'In microsec: 200000 = 0.2s'),
-			array('form_type' => 'text', 'name' => 'page_reload_time', 'description' => 'Reload Time - Controlling View', 'help' => 'In sec'),
+			array('form_type' => 'text', 'name' => 'page_reload_time', 'description' => 'Reload Time - Controlling View', 'help' => trans('helper.netelementtype_reload')),
 			array('form_type' => 'text', 'name' => 'icon_name', 'description' => 'Icon'),
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
 		);

@@ -9,6 +9,14 @@ class Parameter extends \BaseModel {
 	public $guarded = ['name', 'table'];
 
 
+	public static function boot()
+	{
+		parent::boot();
+
+		Parameter::observe(new ParameterObserver);
+	}
+
+
 	// Add your validation rules here
 	public static function rules($id = null)
 	{
@@ -90,6 +98,21 @@ class Parameter extends \BaseModel {
 	public function third_dimension_params()
 	{
 		return Parameter::where('parent_id', '=', $this->id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all();
+	}
+
+}
+
+
+class ParameterObserver {
+
+	public function creating($parameter)
+	{
+		$parameter->divide_by = str_replace([' ', "\t"], '', $parameter->divide_by);
+	}
+
+	public function updating($parameter)
+	{
+		$parameter->divide_by = str_replace([' ', "\t"], '', $parameter->divide_by);
 	}
 
 }
