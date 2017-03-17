@@ -210,6 +210,7 @@ class SnmpController extends \BaseController{
 						continue;
 					}
 
+					$form_fields['table'][$table_index]['options']['oids'][$res_oid] = null;
 					foreach ($values as $index => $value)
 					{
 						/* Save SnmpValue
@@ -399,24 +400,49 @@ class SnmpController extends \BaseController{
 		$head = true;
 		$third_dim = false;
 		$division = [];
+		$oids = $form_fields['options']['oids'];
 
 		// set 3rd Dimension link and prepare form field values dependent of other OIDs (percentParams)
-		if (isset($form_fields['options']))
+		if (isset($form_fields['options']['3rd_dim_link']))
 		{
-			if (isset($form_fields['options']['3rd_dim_link']))
-			{
-				$third_dim = true;
-				$options = $form_fields['options']['3rd_dim_link'];
-			}
-
-			if (isset($form_fields['options']['division']))
-				$division = $form_fields['options']['division'];
-
-			unset($form_fields['options']);
+			$third_dim = true;
+			$options = $form_fields['options']['3rd_dim_link'];
 		}
 
+		if (isset($form_fields['options']['division']))
+			$division = $form_fields['options']['division'];
 
-		foreach ($form_fields as $index => $oids)
+		unset($form_fields['options']);
+
+
+		// Table head for tables without indices and with rows that dont have all oids - Attention - normal table head is built first in next foreach!
+		if (count($oids) != $form_fields[key($form_fields)])
+		{
+			$s .= '<table class="table table-condensed">';
+			$s .= '<thead><tr>';
+			$s .= '<th>Index</th>';
+
+			foreach ($oids as $oid => $headline)
+			{
+				foreach ($form_fields as $index => $oid_indices)
+				{
+					if (isset($oid_indices[$oid]))
+					{
+						// $oids[$oid] = $oid_indices[$oid]['description'];
+						$s .= '<th style="padding: 2px">'.$oid_indices[$oid]['description'].'</th>';
+						break;
+					}
+				}
+			}
+
+			$s .= '<tr></thead><tbody>';
+			$head = false;
+		}
+
+		reset($form_fields);
+
+
+		foreach ($form_fields as $index => $oid_indices)
 		{
 			if ($head)
 			{
@@ -425,13 +451,13 @@ class SnmpController extends \BaseController{
 				$s .= '<thead><tr>';
 				$s .= '<th>Index</th>';
 				
-				foreach ($oids as $oid => $field)
+				foreach ($oid_indices as $oid => $field)
 					$s .= '<th style="padding: 2px">'.$field['description'].'</th>';
 
 				$s .= '<tr></thead><tbody>';
 
 				$head = false;
-				reset($oids);
+				reset($oid_indices);
 			}
 
 			// Table body
@@ -439,19 +465,36 @@ class SnmpController extends \BaseController{
 			$index_gui = $third_dim ? '<a href="'.route('NetElement.controlling_edit', [$options['netelement_id'], $options['param_id'], $route_index]).'">'.$route_index : $route_index;
 			$s .= '<tr><td>'.$index_gui.'</td>';
 
-			foreach ($oids as $oid => $field)
+			// deprecated - this doesn't add empty table data fields - so row elements could be differently shifted through columns
+			// foreach ($oid_indices as $oid => $field)
+			// {
+			// 	// make field value percentual if wished
+			// 	if (isset($division[$oid]))
+			// 	{
+			// 		$divisor = 0;
+			// 		foreach ($division[$oid] as $divisor_oid)
+			// 			$divisor += $form_fields[$index][$divisor_oid]['field_value'];
+
+			// 		$field['field_value'] = $divisor ? round($field['field_value'] / $divisor * 100, 2) : 0;
+			// 	}
+
+			// 	$s .= '<td style="padding: 2px">'.BaseViewController::get_html_input($field).'</td>';
+			// }
+
+			// go from col to col and check if form_field exists -> if not: insert empty table data field
+			foreach ($oids as $oid => $heading)
 			{
 				// make field value percentual if wished
-				if (isset($division[$oid]))
+				if (isset($division[$oid]) && isset($oid_indices[$oid]))
 				{
 					$divisor = 0;
 					foreach ($division[$oid] as $divisor_oid)
 						$divisor += $form_fields[$index][$divisor_oid]['field_value'];
 
-					$field['field_value'] = $divisor ? round($field['field_value'] / $divisor * 100, 2) : 0;
+					$oid_indices[$oid]['field_value'] = $divisor ? round($oid_indices[$oid]['field_value'] / $divisor * 100, 2) : 0;
 				}
 
-				$s .= '<td style="padding: 2px">'.BaseViewController::get_html_input($field).'</td>';
+				$s.= isset($oid_indices[$oid]) ? '<td style="padding: 2px">'.BaseViewController::get_html_input($oid_indices[$oid]).'</td>' : '<td></td>';
 			}
 
 			$s .= '</tr>';
@@ -537,7 +580,6 @@ class SnmpController extends \BaseController{
 				if ($param->divide_by)
 					$divisions[$oid->oid] = \Acme\php\ArrayHelper::str_to_array($param->divide_by);
 			}
-
 		}
 		// standard table OID (all suboids(columns) and elements (rows))
 		else
