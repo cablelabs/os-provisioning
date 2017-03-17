@@ -1,5 +1,7 @@
 <?php namespace Modules\Mail\Entities;
 
+use App\Http\Controllers\BaseViewController;
+
 class Email extends \BaseModel {
 
 	// The associated SQL table for this Model
@@ -27,7 +29,7 @@ class Email extends \BaseModel {
 	{
 		return ['index' =>	[$this->localpart, $this->index, $this->greylisting, $this->blacklisting, $this->forwardto],
 			'index_header' =>	['Local Part', 'Index', 'Greylisting', 'Blacklisting', 'Forward To'],
-			'bsclass' => 'success',
+			'bsclass' => $this->index ? 'success' : 'danger',
 			'header' => $this->index.': '.$this->localpart.'@'.$this->domain->name];
 	}
 
@@ -59,6 +61,23 @@ class Email extends \BaseModel {
 		$salt = str_replace('+', '.', base64_encode(random_bytes(12)));
 		$this->password = crypt($psw, sprintf('$6$%s$', $salt));
 		$this->save();
+	}
+
+	/**
+	 * Returns the type of an email address, which is derived from its index
+	 *
+	 * @author Ole Ernst
+	 */
+	public function get_type()
+	{
+		switch($this->index) {
+			case 0:
+				return BaseViewController::translate_label('disabled');
+			case 1:
+				return BaseViewController::translate_label('primary');
+			default:
+				return BaseViewController::translate_label('secondary');
+		}
 	}
 
 }

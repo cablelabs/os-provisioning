@@ -53,7 +53,6 @@ class ContractTableSeeder extends \BaseSeeder {
 				'login' => $faker->userName,							// for feature use. Now it should same as id
 				'password' => \Acme\php\Password::generate_password(),
 				'description' => $faker->sentence,
-				'emailcount' => rand(1,10),
 			]);
 		}
 	}

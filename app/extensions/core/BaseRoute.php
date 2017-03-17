@@ -74,6 +74,10 @@ class BaseRoute {
 		// edit
 		\Route::get("$name/{{$name}}/edit", array('as' => $name.'.edit', 'uses' => $controller.'@edit', $options, 'middleware' => 'auth:edit'));
 
+		\Route::get("$name/{{$name}}/dump", array('as' => $name.'.dump', 'uses' => $controller.'@dump', $options, 'middleware' => 'auth:edit'));
+
+		\Route::get("$name/dump", array('as' => $name.'.dumpall', 'uses' => $controller.'@dumpall', $options, 'middleware' => 'auth:edit'));
+
 		// Fulltext Search
 		// TODO: adapt route name to not strtolower() like other functions
 		\Route::get(strtolower($name).'/fulltextSearch', array('as' => $name.'.fulltextSearch', 'uses' => $controller.'@fulltextSearch', $options, 'middleware' => 'auth:view'));

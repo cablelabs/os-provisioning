@@ -660,6 +660,13 @@ class BaseController extends Controller {
 		return Redirect::back()->with('delete_message', ['message' => $message, 'class' => $class, 'color' => $color]);
 	}
 
+	public function dump($id) {
+		return static::get_model_obj()->findOrFail($id);
+	}
+
+	public function dumpall() {
+		return static::get_model_obj()->all();
+	}
 
 
 // Deprecated:
