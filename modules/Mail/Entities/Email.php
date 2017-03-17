@@ -1,5 +1,7 @@
 <?php namespace Modules\Mail\Entities;
 
+use App\Http\Controllers\BaseViewController;
+
 class Email extends \BaseModel {
 
 	// The associated SQL table for this Model
@@ -70,11 +72,11 @@ class Email extends \BaseModel {
 	{
 		switch($this->index) {
 			case 0:
-				return trans('messages.disabled');
+				return BaseViewController::translate_label('disabled');
 			case 1:
-				return trans('messages.primary');
+				return BaseViewController::translate_label('primary');
 			default:
-				return trans('messages.secondary');
+				return BaseViewController::translate_label('secondary');
 		}
 	}
 
