@@ -6,7 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 class RenameSnmpMibtoOIDTable extends BaseMigration {
 
 	// name of the table to update
-	protected $tablename = "snmpmib";
+	protected $tablename = "oid";
 
 
 	/**
@@ -16,7 +16,7 @@ class RenameSnmpMibtoOIDTable extends BaseMigration {
 	 */
 	public function up()
 	{
-		Schema::rename($this->tablename, 'oid');
+		Schema::rename('snmpmib', $this->tablename);
 
 		Schema::table('oid', function(Blueprint $table)
 		{
@@ -39,8 +39,9 @@ class RenameSnmpMibtoOIDTable extends BaseMigration {
 			// move to pivot table (of many to many relationship)
 			$table->dropColumn(['html_frame', 'html_properties', 'html_id']);
 
-			$this->set_fim_fields(['name', 'name_gui', 'syntax', 'value_set', 'description']);
 		});
+		
+		$this->set_fim_fields(['name', 'name_gui', 'syntax', 'value_set', 'description']);
 
 	}
 
@@ -52,7 +53,7 @@ class RenameSnmpMibtoOIDTable extends BaseMigration {
 	 */
 	public function down()
 	{
-		Schema::rename('oid', $this->tablename);
+		Schema::rename($this->tablename, 'snmpmib');
 
 		Schema::table($this->tablename, function(Blueprint $table)
 		{
