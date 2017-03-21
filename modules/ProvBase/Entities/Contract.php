@@ -400,7 +400,8 @@ class Contract extends \BaseModel {
 			// Task 1 & 2 included
 			$this->_update_network_access_from_items();
 
-			$this->_update_email_index();
+			if(\PPModule::is_active('mail'))
+				$this->_update_email_index();
 
 			// commented out by par for reference ⇒ if all is running this can savely be removed
 			/* $qos_id = ($tariff = $this->get_valid_tariff('Internet')) ? $tariff->product->qos_id : 0; */
