@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use \Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand;
 
-class CreateTRCClassTable extends BaseMigration {
+class CreateTRCClassMovedToProvVoipTable extends BaseMigration {
 
 	// name of the table to create
 	protected $tablename = "trcclass";
