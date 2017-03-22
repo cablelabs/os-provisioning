@@ -107,6 +107,11 @@ class Contract extends \BaseModel {
 			$ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
 		}
 
+		if (\PPModule::is_active('mail'))
+		{
+			$ret['Email']['Email'] = $this->emails;
+		}
+
 		return $ret;
 	}
 
@@ -209,6 +214,19 @@ class Contract extends \BaseModel {
 		if (\PPModule::is_active('billingbase'))
 			return $this->hasMany('Modules\BillingBase\Entities\SepaMandate');
 		return null;
+	}
+
+	public function emails()
+	{
+		if (\PPModule::is_active('mail'))
+			return $this->hasMany('Modules\Mail\Entities\Email');
+		return null;
+	}
+
+	public function get_email_count()
+	{
+		$tariff = $this->_get_valid_tariff_item_and_count('Internet');
+		return $tariff['count'] ? $tariff['item']->product->email_count : 0;
 	}
 
 	public function costcenter()
@@ -382,6 +400,8 @@ class Contract extends \BaseModel {
 			// Task 1 & 2 included
 			$this->_update_network_access_from_items();
 
+			if(\PPModule::is_active('mail'))
+				$this->_update_email_index();
 
 			// commented out by par for reference ⇒ if all is running this can savely be removed
 			/* $qos_id = ($tariff = $this->get_valid_tariff('Internet')) ? $tariff->product->qos_id : 0; */
@@ -547,7 +567,7 @@ class Contract extends \BaseModel {
 		// attention: update youngest valid_from items first (to avoid problems in relation with
 		// ItemObserver::update() which else set valid_to smaller than valid_from in some cases)!
 		// and to avoid “Multipe valid tariffs active” warning
-		
+
 		foreach ($this->items_sorted_by_valid_from_desc as $item) {
 
 			$type = isset($item->product) ? $item->product->type : '';
@@ -567,7 +587,7 @@ class Contract extends \BaseModel {
 						$new_date = $tomorrow->toDateString();
 						$item->valid_from = $new_date;
 						$item_changed = True;
-						\Log::Info("contract: changing item ".$item->id." valid_from to ".$new_date." for Contract ".$this->number, [$this->id]);
+						\Log::Info("contract: changing item ".$item->id." (".$item->product->name.") valid_from to ".$new_date." for Contract ".$this->number, [$this->id]);
 					}
 				}
 			}
@@ -581,7 +601,7 @@ class Contract extends \BaseModel {
 						$new_date = $today->toDateString();
 						$item->valid_to = $new_date;
 						$item_changed = True;
-						\Log::Info("contract: changing item ".$item->id." valid_to to ".$new_date." for Contract ".$this->number, [$this->id]);
+						\Log::Info("contract: changing item ".$item->id." (".$item->product->name.") valid_to to ".$new_date." for Contract ".$this->number, [$this->id]);
 					}
 				}
 			}
@@ -591,6 +611,42 @@ class Contract extends \BaseModel {
 				$item->save();
 			}
 		}
+
+	}
+
+	/**
+	 * Update the email indices according to the number of allowed emails,
+	 * which is derived from the current internet item.
+	 * An email index of 0 means disabled, 1 is the primary email address.
+	 *
+	 * @return none
+	 * @author Ole Ernst
+	 */
+	protected function _update_email_index()
+	{
+		$cnt = $this->get_email_count();
+
+		// fast path: set all indices to 0, as no email is allowed
+		if(!$cnt) {
+			foreach($this->emails as $email) {
+				$email->index = 0;
+				$email->save();
+			}
+			return;
+		}
+
+		// remove all email indices, which are already in use
+		$used = [];
+		foreach($this->emails as $email)
+			$used[] = $email->index;
+		$avail = array_diff(range($cnt, 1), $used);
+
+		// try to fit all email indices into available slots
+		foreach($this->emails as $email)
+			if($email->index > $cnt) {
+				$email->index = $avail ? array_pop($avail) : 0;
+				$email->save();
+			}
 
 	}
 
@@ -759,7 +815,7 @@ class Contract extends \BaseModel {
 		foreach ($items as $item) {
 
 			// a given item can be null – check and ignore
-			if (!$item) 
+			if (!$item)
 				continue;
 
 			$type = isset($item->product) ? $item->product->type : '';

@@ -23,12 +23,33 @@ class ModemController extends \BaseController {
 		$pos = explode(',', \Input::get('pos'));
 		if(count($pos) == 2)
 			list($model['x'], $model['y']) = $pos;
+
+		$installation_address_change_date_options = ['placeholder' => 'YYYY-MM-DD'];
+		// check if installation_address_change_date is readonly (address change has been sent to Envia API)
+		if (
+			($model['installation_address_change_date'])
+			&&
+			(\PPModule::is_active('provvoipenvia'))
+		) {
+			$orders = \Modules\ProvVoipEnvia\Entities\EnviaOrder::
+				where('modem_id', '=', $model->id)->
+				where('method', '=', 'contract/relocate')->
+				where('orderdate', '>=', $model['installation_address_change_date'])->
+				where('contractreference', '<>', $model->contract_external_id)->
+				get();
+
+			if ($orders->count() > 0) {
+				array_push($installation_address_change_date_options, 'readonly');
+			}
+		}
+
 		// label has to be the same like column in sql table
 		$a = array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
 			array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly'], 'hidden' => 'C'),
+			// TODO: show this dropdown only if necessary (e.g. not if creating a modem from contract context)
 			array('form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 'E', 'value' => $model->html_list($model->contracts(), 'lastname')),
-			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF']),
+			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')),
 			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list($model->configfiles(), 'name')),
 			array('form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'),
 			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Network Access', 'value' => '1', 'help' => trans('helper.Modem_NetworkAccess'))
@@ -49,7 +70,7 @@ class ModemController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number'),
 			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode'),
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City'),
-			array('form_type' => 'text', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => ['placeholder' => 'YYYY-MM-DD']),  // Date of adress change for notification at telephone provider - important for localisation of emergency calls
+			array('form_type' => 'text', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => $installation_address_change_date_options, 'help' => trans('helper.Modem_InstallationAddressChangeDate')), // Date of adress change for notification at telephone provider - important for localisation of emergency calls
 			array('form_type' => 'text', 'name' => 'district', 'description' => 'District'),
 			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1', 'options' => ['placeholder' => 'YYYY-MM-DD']),
 
@@ -71,11 +92,17 @@ class ModemController extends \BaseController {
 	}
 
 
+	protected function prepare_input_post_validation($data)
+	{
+		return unify_mac($data);
+	}
+
+
 	/**
 	 * Get all management jobs for Envia
 	 *
 	 * @author Patrick Reichel
-	 * @param $model current modem object
+	 * @param $modem current modem object
 	 * @return array containing linktexts and URLs to perform actions against REST API
 	 */
 	public static function _get_envia_management_jobs($modem) {

@@ -34,7 +34,7 @@ class RenameSnmpMibtoOIDTable extends BaseMigration {
 			$table->string('syntax');
 			$table->string('access');
 
-			$table->text('value_set'); 				// Possible Values for Select
+			$table->text('value_set')->nullable(); 				// Possible Values for Select
 
 			// move to pivot table (of many to many relationship) - NOTE: Schema again is erroneous here
 			DB::statement('ALTER TABLE oid drop html_frame, drop html_properties, drop html_id');

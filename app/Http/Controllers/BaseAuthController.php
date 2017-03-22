@@ -77,6 +77,10 @@ class BaseAuthController extends Controller {
 			case 'Modules\ProvMon\Entities\ProvMon': 			// modem analyses page
 				$m = 'Modules\ProvBase\Entities\Modem';
 				break;
+
+            case 'Modules\ProvBase\Entities\Dashboard':
+                $m = 'Modules\ProvBase\Entities\ProvBase';
+                break;
 		}
 
 		return $m;

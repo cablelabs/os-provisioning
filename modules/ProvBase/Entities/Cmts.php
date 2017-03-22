@@ -75,6 +75,33 @@ class Cmts extends \BaseModel {
 	}
 
 
+	/**
+	 * Get SNMP read-only community string
+	 *
+	 * @author Ole Ernst
+	 */
+	public function get_ro_community()
+	{
+		if ($this->community_ro)
+			return $this->community_ro;
+		else
+			return ProvBase::first()->ro_community;
+	}
+
+
+	/**
+	 * Get SNMP read-write community string
+	 *
+	 * @author Ole Ernst
+	 */
+	public function get_rw_community()
+	{
+		if ($this->community_rw)
+			return $this->community_rw;
+		else
+			return ProvBase::first()->rw_community;
+	}
+
 
 	/**
 	 * Get US SNR of a registered CM
@@ -87,10 +114,7 @@ class Cmts extends \BaseModel {
 	{
 		// find oid of corresponding modem on cmts and get the snr
 		$conf = snmp_get_valueretrieval();
-		if ($this->community_ro != '')
-			$com = $this->community_ro;
-		else
-			$com = ProvBase::first()->ro_community;
+		$com = $this->get_ro_community();
 
 		// we need to change the value retrievel for snmprealwalk()
 		snmp_set_valueretrieval(SNMP_VALUE_OBJECT);
@@ -194,7 +218,7 @@ class Cmts extends \BaseModel {
 
 				case 'CPEPub':
 					$data .= "\n\t\t\t".'allow members of "Client-Public";';
-					$data .= "\n\t\t\t".'allow unknown-clients;';
+					// $data .= "\n\t\t\t".'allow unknown-clients;';
 					// $data .= "\n\t\t\t".'allow known-clients;';
 					break;
 
@@ -204,7 +228,7 @@ class Cmts extends \BaseModel {
 					break;
 
 				default:
-					# code...
+					// code...
 					break;
 			}
 
@@ -216,6 +240,10 @@ class Cmts extends \BaseModel {
 
 
 			$data .= "\n\t".'}'."\n";
+
+			$data .= "\n\tsubnet $router netmask 255.255.255.255\n\t{";
+			$data .= "\n\t\tallow leasequery;";
+			$data .= "\n\t}\n";
 
 			File::append($file, $data);
 		}
@@ -345,6 +373,8 @@ class CmtsObserver
 		// dd(\Route::getCurrentRoute()->getActionName(), $this);
 		// only create new config file
 		// dd($cmts);
+		if (\PPModule::is_active ('ProvMon'))
+			\Artisan::call('nms:cacti', ['--modem-id' => 0, '--cmts-id' => $cmts->id]);
 		$cmts->make_dhcp_conf();
 	}
 

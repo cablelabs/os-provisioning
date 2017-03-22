@@ -6,7 +6,7 @@ namespace Modules\ProvVoip\Database\Seeders;
 use Faker\Factory as Faker;
 use Modules\ProvVoip\Entities\PhonenumberManagement;
 
-# don't forget to add Seeder in DatabaseSeeder.php
+// don't forget to add Seeder in DatabaseSeeder.php
 class PhonenumberManagementTableSeeder extends \BaseSeeder {
 
 	public function run()

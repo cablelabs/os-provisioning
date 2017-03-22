@@ -61,6 +61,7 @@ class FormBuilder extends CollectiveFormBuilder {
 	}
 
 
+
 	/**
 	 * Create a form input field.
 	 */
@@ -83,8 +84,14 @@ class FormBuilder extends CollectiveFormBuilder {
 
 	/**
 	 * Create a form input field
+	 *
+	 * Attention: method call Collective\Html\FormBuilder::label() has been changed in version 5.2.5
+	 * Patrick changed our derived call from
+	 *		public function label($name, $value = null, $options = array())
+	 * to
+	 *		public function label($name, $value = null, $options = array(), $escape_html = true)
 	 */
-	public function label($name, $value = null, $options = array())
+	public function label($name, $value = null, $options = array(), $escape_html = true)
 	{
 		$col = 4;
 		if (isset(static::$layout_form_col_md['label']))
@@ -101,6 +108,7 @@ class FormBuilder extends CollectiveFormBuilder {
 		// the rest of the input set up.
 		return parent::label($name, $value, $options);
 	}
+
 
 
 	/**
@@ -128,6 +136,7 @@ class FormBuilder extends CollectiveFormBuilder {
 		// the rest of the input set up.
 		return $s;
 	}
+
 
 
 	/**
@@ -177,6 +186,7 @@ class FormBuilder extends CollectiveFormBuilder {
 		return $this->appendDiv($checkable);
 		// return $this->wrapCheckable($label, 'checkbox', $checkable);
 	}
+
 
 	/**
 	 * Creates Link looking like a button - See Parameter edit view
@@ -286,6 +296,7 @@ class FormBuilder extends CollectiveFormBuilder {
 	}
 
 
+
 	/**
 	 * Open a new form group.
 	 */
@@ -312,7 +323,6 @@ class FormBuilder extends CollectiveFormBuilder {
 
 		return $this->openDivClass(12, $color).'<div'.$this->html->attributes($options).'>'.$label;
 	}
-
 
 	/**
 	 * Close out the last opened form group.

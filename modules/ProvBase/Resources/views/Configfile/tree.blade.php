@@ -40,7 +40,7 @@
 
 			<!-- <table> -->
 
-			{{ $view_var }}
+			@include('provbase::Configfile.tree_item', array('items' => $roots))
 
 			<!-- </table> -->
 

@@ -7,6 +7,7 @@ use \Modules\HfcBase\Http\Controllers\TreeTopographyController;
 use \Modules\HfcCustomer\Http\Controllers\CustomerTopoController;
 use \Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand;
 use \Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand;
+use \Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand;
 use \Modules\ProvVoip\Console\PhonenumberCommand;
 use \Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand;
 
@@ -23,9 +24,11 @@ class Kernel extends ConsoleKernel {
 		'App\Console\Commands\StorageCleaner',
 		'\Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand',
 		'\Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand',
+		'\Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand',
 		'\Modules\ProvVoip\Console\PhonenumberCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
+		'\Modules\ProvVoipEnvia\Console\EnviaOrderProcessorCommand',
 		'App\Console\Commands\authCommand',
 	];
 
@@ -66,6 +69,10 @@ class Kernel extends ConsoleKernel {
 			// Update database table ekpcode with csv data if necessary
 			$schedule->command('provvoip:update_ekp_code_database')
 				->dailyAt('03:29');
+
+			// Update database table trcclass with csv data if necessary
+			$schedule->command('provvoip:update_trc_class_database')
+				->dailyAt('03:34');
 		}
 
 		if (\PPModule::is_active ('ProvVoipEnvia')) {
@@ -80,6 +87,10 @@ class Kernel extends ConsoleKernel {
 			$schedule->command('provvoipenvia:update_voice_data')
 				->dailyAt('03:53');
 				/* ->everyMinute(); */
+
+			// Process Envia orders
+			$schedule->command('provvoipenvia:process_envia_orders')
+				->dailyAt('00:23');
 		}
 
 		// ProvBase Schedules
@@ -122,7 +133,7 @@ class Kernel extends ConsoleKernel {
 			// Modem Positioning System
 			$schedule->command('nms:mps')->daily();
 
-			$schedule->command('nms:modem-refresh --schedule=1')->everyFiveMinutes()->withoutOverlapping();
+			$schedule->command('nms:modem-refresh')->everyFiveMinutes()->withoutOverlapping();
 		}
 
 
@@ -130,7 +141,7 @@ class Kernel extends ConsoleKernel {
 		if (\PPModule::is_active ('ProvMon'))
 		{
 			$schedule->command('nms:apc')->everyFiveMinutes()->withoutOverlapping();
-		// 	$schedule->command('nms:cacti')->everyFiveMinutes()->withoutOverlapping();
+			$schedule->command('nms:cacti')->daily();
 		}
 
 

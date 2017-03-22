@@ -194,7 +194,13 @@ class Modem extends \BaseModel {
 	 */
 	private function generate_cm_dhcp_entry()
 	{
-			return 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'"; }'."\n";
+		$ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
+
+		if(count($this->mtas))
+			$ret .= ' option ccc.dhcp-server-1 '.ProvBase::first()->provisioning_server.';';
+
+		$ret .= "}\n";
+		return $ret;
 	}
 
 	private function generate_cm_dhcp_entry_pub()
@@ -361,8 +367,15 @@ class Modem extends \BaseModel {
 		catch (Exception $e)
 		{
 			// only ignore error with this error message (catch exception with this string)
-			if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmpset(): No response from") !== false)))
+			if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmpset(): No response from") !== false))) {
 				\Session::flash('error', 'Could not restart Modem! (offline?)');
+			}
+			else {
+				// Inform and log for all other exceptions
+				\Session::push('tmp_info_above_form', 'Unexpected exception: '.$e->getMessage());
+				\Log::error("Unexpected exception restarting modem ".$this->id." (".$this->mac."): ".$e->getMessage()." => ".$e->getTraceAsString());
+				\Session::flash('error', '');
+			}
 		}
 
 	}
@@ -624,6 +637,33 @@ class Modem extends \BaseModel {
 	}
 
 
+	/**
+	 * Check if modem has phonenumbers attached
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return True if phonenumbers attached to one of the modem's MTA, else False
+	 */
+	public function has_phonenumbers_attached() {
+
+		// if there is no voip module ⇒ there can be no numbers
+		if (!\PPModule::is_active('provvoip')) {
+			return False;
+		}
+
+		foreach ($this->mtas as $mta) {
+			foreach ($mta->phonenumbers->all() as $phonenumber) {
+				return True;
+			}
+		}
+
+		// no numbers found
+		return False;
+
+
+	}
+
+
 	/*
 	 * Return Last Geocoding State / ERROR
 	 */
@@ -645,6 +685,28 @@ class Modem extends \BaseModel {
 	{
 		$this->observer_enabled = false;
 	}
+
+	/**
+	 * Before deleting a modem and all children we have to check some things
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function delete() {
+
+		// deletion of modems with attached phonenumbers is not allowed with enabled Envia module
+		// prevent user from (recursive and implicite) deletion of phonenumbers before termination at Envia!!
+		// we have to check this here as using ModemObserver::deleting() with return false does not prevent the monster from deleting child model instances!
+		if (\PPModule::is_active('ProvVoipEnvia')) {
+			if ($this->has_phonenumbers_attached()) {
+				\Session::push('tmp_info_above_form', "You are not allowed to delete a modem with attached phonenumbers!");
+				return false;
+			}
+		}
+
+		// when arriving here: start the standard deletion procedure
+		return parent::delete();
+	}
+
 }
 
 
@@ -658,14 +720,41 @@ class Modem extends \BaseModel {
  */
 class ModemObserver
 {
+
 	public function created($modem)
 	{
 		$modem->hostname = 'cm-'.$modem->id;
 		$modem->save();	 // forces to call the updating() and updated() method of the observer !
+		if (\PPModule::is_active ('ProvMon'))
+			\Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
 	}
 
 	public function updating($modem)
 	{
+
+		// reminder: on active Envia module: moving modem with phonenumbers attached to other contract is not allowed!
+		// check if this is running if you decide to implement moving of modems to other contracts
+		// watch Ticket LAR-106
+		if (\PPModule::is_active('ProvVoipEnvia')) {
+			if (
+				// updating is also called on create – so we have to check this
+				(!$modem->wasRecentlyCreated)
+				&&
+				($modem['original']['contract_id'] != $modem->contract_id)
+			) {
+				if ($modem->has_phonenumbers_attached) {
+					// returning false should cancel the updating: verify this! There has been some problems with deleting modems – we had to put the logic in Modem::delete() probably caused by our Base* classes…
+					// see: http://laravel-tricks.com/tricks/cancelling-a-model-save-update-delete-through-events
+					return false;
+				}
+				elseif ($modem->contract_external_id) {
+					// if there are any Envia data: the number(s) are probably moved only temporary
+					// here we have to think about the references to this modem in all related EnviaOrders (maybe all the numbers have been terminated and then deleted from our database – but we still have the orders related to this numbers and also to this modem
+					return false;
+				}
+			}
+		}
+
 		if (!$modem->observer_enabled)
 			return;
 
@@ -677,7 +766,7 @@ class ModemObserver
 		// Refresh MPS rules
 		// Note: does not perform a save() which could trigger observer.
 		if (\PPModule::is_active('HfcCustomer'))
-			$modem->netelement_id = \Modules\Hfccustomer\Entities\Mpr::refresh($modem->id);
+			$modem->netelement_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem->id);
 	}
 
 	public function updated($modem)
@@ -690,8 +779,11 @@ class ModemObserver
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
 
-		if (\PPModule::is_active ('ProvMon'))
-			\Artisan::call('nms:cacti');
+		// ATTENTION:
+		// If we ever think about moving modems to other contracts we have to delete Envia related stuff, too –
+		// check contract_ext* and installation_address_change_date
+		// moving then should only be allowed without attached phonenumbers and terminated Envia contract!
+		// cleaner in Patrick's opinion would be to delete and re-create the modem
 	}
 
 	public function deleted($modem)

@@ -1,15 +1,22 @@
-<?php namespace Modules\Provvoip\Console;
+<?php
+
+namespace Modules\ProvVoip\Console;
 
 use Log;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use \Modules\ProvVoip\Entities\EkpCode;
+use \App\GuiLog;
 
 /**
- * Class for updating database with ekp codes from csv file
+ * Class for updating database with ekp codes
+ * This will be done using data from a web API or – as fallback – from CSV file
  */
 class EkpCodeDatabaseUpdaterCommand extends Command {
+
+	// get some methods used by several updaters
+	use \App\Console\Commands\DatabaseUpdaterTrait;
 
 	/**
 	 * The console command name.
@@ -23,7 +30,7 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $description = 'Update the database ekp code using the csv file $csv_file';
+	protected $description = 'Update the database table containing ekp codes';
 
 	/**
 	 * The path were the csv file is stored.
@@ -49,6 +56,9 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 	 */
 	public function __construct()
 	{
+		// this comes from config/app.php (key 'url')
+		$this->base_url = \Config::get('app.url');
+
 		parent::__construct();
 	}
 
@@ -60,6 +70,49 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 	 */
 	public function fire()
 	{
+
+		if (\PPModule::is_active('provvoipenvia')) {
+			// we get the data directly from Envia API
+			$this->_update_using_envia_api();
+		}
+		else {
+			// fallback: get data from file /lara/storage/app/config/provvoip/ekp_codes.csv
+			$this->_update_using_file();
+		}
+	}
+
+
+	/**
+	 * Updating ekp codes via Envia API means a simple call of the method in ProvVoipEnvia
+	 * The real work is done there
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _update_using_envia_api() {
+
+		Log::info($this->description.' from Envia API');
+
+		// getting data from Envia instead from file means: file is not current ⇒ delete the hash file
+		$this->clear_hash_file();
+
+		// prepare the URL to process via cURL
+		$url_suffix = \URL::route("ProvVoipEnvia.cron", array('job' => 'misc_get_keys', 'keyname' => 'ekp_code', 'really' => 'True'), false);
+		$url = $this->base_url.$url_suffix;
+
+		// fire!
+		$this->_perform_curl_request($url);
+
+	}
+
+
+	/**
+	 * Updating from a file (fallback if no other methods are available) is performed here.
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _update_using_file() {
+
+		Log::info($this->description.' from CSV file');
 
 		// nothing to do
 		if (!$this->_have_to_update()) {
@@ -155,22 +208,46 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 	 */
 	protected function _update_table() {
 
+		$changes = 0;
 		foreach ($this->csv as $key => $entry) {
 			$code = $entry[0];
 			$company = $entry[1];
 
-			# alter entry if exists, else create new one
+			// alter entry if exists, else create new one
 			$cc = EkpCode::firstOrNew(array('ekp_code' => $code));
 			if ($cc->company != $company) {
+
+				// disable observer to stop logging of each change
+				$cc->observer_enabled = false;
+
 				$cc->ekp_code = $code;
 				$cc->company = $company;
 				$cc->save();
+
+				$changes++;
 			}
 		}
 
+		// store the current hash file
 		$hash = sha1(\Storage::get($this->csv_file));
 		\Storage::put($this->hash_file, $hash);
-		Log::info($this->name.': Database ekpcodes updated');
+
+		// log event summary to logfile
+		Log::info($this->name.': '.$changes.' entries in database ekpcodes created/updated');
+
+		// log event summary to database (if there are changes)
+		if ($changes > 0) {
+			$user = \Auth::user();
+			$data = [
+				'authuser_id' => $user ? $user->id : 0,
+				'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
+				'method' 	=> 'created/updated',
+				'model' 	=> 'EkpCode',
+				'model_id'  => -1,
+				'text' 		=> $changes.' entries created/updated',
+			];
+			GuiLog::log_changes($data);
+		}
 
 	}
 

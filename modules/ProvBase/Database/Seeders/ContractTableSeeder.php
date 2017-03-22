@@ -54,7 +54,7 @@ class ContractTableSeeder extends \BaseSeeder {
 				'create_invoice' => true,  //$faker->boolean(10),				// true means invoice will pe send via post office each month
 				'login' => $faker->userName,							// for feature use. Now it should same as id
 				'password' => \Acme\php\Password::generate_password(),
-				'description' => $faker->sentence
+				'description' => $faker->sentence,
 			]);
 		}
 	}

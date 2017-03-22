@@ -93,7 +93,7 @@ class SnmpController extends \BaseController{
 		$view_header = 'SNMP Settings: '.$netelem->name;
 		$view_var 	 = $netelem;
 		$route_name  = \NamespaceController::get_route_name();
-		$headline 	 = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var).' controlling';
+		$headline 	 = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var).' > controlling';
 
 		$panel_right = new NetElementController;
 		$panel_right = $panel_right->prepare_tabs($view_var);

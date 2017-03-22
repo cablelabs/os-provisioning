@@ -9,7 +9,7 @@ use Modules\ProvVoip\Entities\Mta;
 use Modules\ProvBase\Entities\Modem;
 
 
-# don't forget to add Seeder in DatabaseSeeder.php
+// don't forget to add Seeder in DatabaseSeeder.php
 class PhonenumberTableSeeder extends \BaseSeeder {
 
 	public function run()

@@ -280,6 +280,9 @@ return [
 	'password_change'		=> 'Passwort ändern',
 	'password_confirm'		=> 'Password bestätigen',
 	'home' 					=> 'Startseite',
+	'primary'				=> 'primär',
+	'secondary'				=> 'sekundär',
+	'disabled'				=> 'deaktiviert',
 
 
 //

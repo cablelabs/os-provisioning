@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
+use Modules\Ccc\Entities\CccAuthuser;
+
 /**
  * Basic AuthController
  *
@@ -160,6 +162,18 @@ class AuthController extends Controller {
 		if ($this->auth()->attempt($userdata))
 		{
 			$this->log(Input::get('login_name').' has logged in');
+
+			// update email password hash (salted sha512), if customer logs in successfully
+			// this way we don't need to ask customers to set a new password manually
+			if(\PPModule::is_active('mail') && $this->prefix == 'customer') {
+				foreach(CccAuthuser::where('login_name', '=', $request->login_name)->first()->contract->emails as $email) {
+					// password has already been hashed with sha512
+					if(substr($email->password,0,3) === '$6$')
+						continue;
+					$email->psw_update($request->password);
+				}
+			}
+
 			return $this->default_page(); // login successful
 		}
 
