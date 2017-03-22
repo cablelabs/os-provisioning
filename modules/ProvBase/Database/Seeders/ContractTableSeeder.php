@@ -14,12 +14,14 @@ class ContractTableSeeder extends \BaseSeeder {
 	{
 		$faker = Faker::create();
 
+		$count = Contract::get(['id'])->count();
+
 		foreach(range(1, $this->max_seed) as $index)
 		{
 			$start_contract = $faker->dateTimeBetween('-10 years', '+1 year');
 
 			Contract::create([
-				'number' => 'contr_'.$index,
+				'number' => 'contr_'.($index + $count),
 				'number2' => 'Cu/2015/Q4/'.($index-1),
 				'number3' => 'contr_'.$index,
 				'company' => (rand(0,10) > 7 ? $faker->company: ''),

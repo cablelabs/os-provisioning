@@ -122,10 +122,11 @@ class Modem extends \BaseModel {
 		return null;
 	}
 
+	// TODO: rename to device - search for all places where this function is used
 	public function tree()
 	{
-		if (\PPModule::is_active('HfcBase'))
-			return $this->belongsTo('Modules\HfcBase\Entities\Tree');
+		if (\PPModule::is_active('HfcReq'))
+			return $this->belongsTo('Modules\HfcReq\Entities\NetElement');
 
 		return null;
 	}
@@ -765,7 +766,7 @@ class ModemObserver
 		// Refresh MPS rules
 		// Note: does not perform a save() which could trigger observer.
 		if (\PPModule::is_active('HfcCustomer'))
-			$modem->tree_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem->id);
+			$modem->netelement_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem->id);
 	}
 
 	public function updated($modem)

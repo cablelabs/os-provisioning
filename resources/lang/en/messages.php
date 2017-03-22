@@ -29,6 +29,7 @@ return [
 	'modem_log_error' 		=> 'Modem was not registering on Server - No log entry found',
 	'modem_offline'			=> 'Modem is Offline',
 	'month' 				=> 'Month',
+	'oid_list' 				=> 'Warning: OIDs that not already exist in Database are discarded! Please upload MibFile before!',
 	'password_change'		=> 'Change Password',
 	'password_confirm'		=> 'Confirm Password',
 

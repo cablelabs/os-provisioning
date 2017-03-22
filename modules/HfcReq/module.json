@@ -1,0 +1,15 @@
+{
+    "name": "HfcReq",
+    "alias": "hfcreq",
+    "description": "HFC",
+    "keywords": [],
+    "active": 1,
+    "order": 8,
+    "providers": [
+        "Modules\\HfcReq\\Providers\\HfcReqServiceProvider"
+    ],
+    "aliases":{},
+    "files": [
+        "start.php"
+    ]
+}

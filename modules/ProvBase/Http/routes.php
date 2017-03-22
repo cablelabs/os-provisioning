@@ -20,7 +20,4 @@ BaseRoute::group([], function() {
 	BaseRoute::resource('ProvBase', 'Modules\ProvBase\Http\Controllers\ProvBaseController');
     BaseRoute::resource('Dashboard', 'Modules\ProvBase\Http\Controllers\DashboardController@index');
 
-	// Configfile: Hierarchical Index Page
-	BaseRoute::get('Configfile_t', ['as' => 'Configfile.tree', 'uses' => 'Modules\ProvBase\Http\Controllers\ConfigfileController@index_tree']);
-
 });

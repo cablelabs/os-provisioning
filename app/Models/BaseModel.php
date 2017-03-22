@@ -30,6 +30,12 @@ class BaseModel extends Eloquent
 	public $observer_enabled = true;
 
 	/**
+	 * View specific stuff
+	 */
+	// set this variable in model index_list() to true if it shall not be deletable on index page
+	public $index_delete_disabled = false;
+
+	/**
 	 * Constructor.
 	 * Used to set some helper variables.
 	 *
@@ -74,6 +80,13 @@ class BaseModel extends Eloquent
 
 	}
 
+	/**
+	 * Placeholder if specific Model does not have any rules
+	 */
+	public static function rules($id = null)
+	{
+		return [];
+	}
 
 
 	/**
@@ -345,7 +358,7 @@ class BaseModel extends Eloquent
 				if (($model[0] == 'Modules\ProvBase\Entities\Modem') && ($field == 'net' || $field == 'cluster'))
 				{
 					$ret = 'tree_id IN(-1';
-					foreach (Modules\HfcBase\Entities\Tree::where($field, '=', $value)->get() as $tree)
+					foreach (Modules\HfcReq\Entities\NetElement::where($field, '=', $value)->get() as $tree)
 						$ret .= ','.$tree->id;
 					$ret .= ')';
 				}
@@ -519,16 +532,30 @@ class BaseModel extends Eloquent
 
 	/**
 	 * Generic function to build a list with key of id
-	 * @param $array
-	 * @return $ret 	list
+	 * @param 	Array 			$array 	 		list of Models/Objects
+	 * @param 	String/Array 	$column 		sql column name(s) that contain(s) the description of the entry
+	 * @param 	Bool 			$empty_option 	true it first entry shall be empty
+	 * @return  Array 			$ret 			list
 	 */
-	public function html_list ($array, $column)
+	public function html_list ($array, $columns, $empty_option = false, $separator = '--')
 	{
-		$ret = array();
+		$ret = $empty_option ? [0 => null] : [];
 
+		if (is_string($columns))
+		{
+			foreach ($array as $a)
+				$ret[$a->id] = $a->{$columns};
+
+			return $ret;
+		}
+
+		// column is array
 		foreach ($array as $a)
 		{
-			$ret[$a->id] = $a->{$column};
+			foreach ($columns as $key => $c)
+				$desc[$key] = $a->{$c};
+
+			$ret[$a->id] = implode($separator, $desc);
 		}
 
 		return $ret;
@@ -564,7 +591,7 @@ class BaseModel extends Eloquent
 	{
 		$relations = [];
 		// exceptions
-		$exceptions = ['configfile_id', 'salesman_id', 'costcenter_id', 'company_id', 'sepaaccount_id', 'product_id'];
+		$exceptions = ['configfile_id', 'salesman_id', 'costcenter_id', 'company_id', 'sepaaccount_id', 'product_id'/*, 'mibfile_id', 'oid_id'*/];
 
 		// Lookup all SQL Tables
 		foreach (DB::select('SHOW TABLES') as $table)

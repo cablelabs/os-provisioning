@@ -22,6 +22,9 @@
 <script src="{{asset('components/assets-admin/js/form-slider-switcher.demo.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/js/apps.min.js')}}"></script>
+<!-- Javascript Tree View (for index page) -->
+<!-- <script src="{{asset('components/assets-admin/plugins/jstree/dist/jstree.min.js')}}"></script> -->
+<!-- <script src="{{asset('components/assets-admin/js/ui-tree.demo.min.js')}}"></script> -->
 <!-- ================== END PAGE LEVEL JS ================== -->
 
 
@@ -32,6 +35,7 @@
    */
   $(document).ready(function() {
     App.init();
+    // Dashboard.init();
 
     // Select2 Init - intelligent HTML select
     $("select").select2();
