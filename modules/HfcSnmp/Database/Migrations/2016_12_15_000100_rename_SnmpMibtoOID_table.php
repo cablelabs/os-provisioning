@@ -36,8 +36,9 @@ class RenameSnmpMibtoOIDTable extends BaseMigration {
 
 			$table->text('value_set'); 				// Possible Values for Select
 
-			// move to pivot table (of many to many relationship)
-			$table->dropColumn(['html_frame', 'html_properties', 'html_id']);
+			// move to pivot table (of many to many relationship) - NOTE: Schema again is erroneous here
+			DB::statement('ALTER TABLE oid drop html_frame, drop html_properties, drop html_id');
+			// $table->dropColumn(['html_frame', 'html_properties', 'html_id']);
 
 		});
 		
@@ -55,10 +56,14 @@ class RenameSnmpMibtoOIDTable extends BaseMigration {
 	{
 		Schema::rename($this->tablename, 'snmpmib');
 
-		Schema::table($this->tablename, function(Blueprint $table)
+		Schema::table('snmpmib', function(Blueprint $table)
 		{
-			DB::statement('ALTER TABLE '.$this->tablename.' CHANGE mibfile_id devicetype_id int');
-			$table->dropColumn(['name', 'syntax', 'access', 'name_gui, unit_divisor, startvalue, endvalue']);
+			DB::statement('ALTER TABLE snmpmib CHANGE mibfile_id devicetype_id int');
+
+			$dropColumns = ['name', 'syntax', 'access', 'name_gui', 'unit_divisor', 'startvalue', 'endvalue'];
+			foreach ($dropColumns as $col)
+				DB::statement("ALTER TABLE snmpmib drop $col");
+
 			// NOTE: it's not desired to undo the not null modify statements
 
 			$table->string('html_frame',16);
