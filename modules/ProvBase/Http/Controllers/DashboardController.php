@@ -326,7 +326,7 @@ class DashboardController extends BaseController
     private function get_sales($contracts)
     {
         $ret_val = array();
-//d($contracts);
+
         try {
             foreach ($contracts as $year => $contracts) {
                 $sales = 0;
@@ -343,15 +343,15 @@ class DashboardController extends BaseController
         } catch (\Exception $e) {
             throw $e;
         }
-//d($ret_val);
+
         return $ret_val;
     }
 
     private function get_sales_monthly($contracts)
     {
         $result = array(
-        	'current_month' => array('total' => 0),
-			'last_month' =>  array('total' => 0),
+        	'current_month' => array('total' => 0, 'by_types' => 0),
+			'last_month' =>  array('total' => 0, 'by_types' => 0),
 		);
 		$dates = config('dates');
 
@@ -387,7 +387,7 @@ class DashboardController extends BaseController
         } catch (\Exception $e) {
             throw $e;
         }
-//d($result);
+
 		return $result;
     }
 

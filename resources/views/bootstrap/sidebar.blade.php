@@ -21,10 +21,11 @@
         <ul class="nav">
 
           <li class="nav-header">Navigation</li>
+<!--
           <li>
             <a href="{{BaseRoute::get_base_url()}}/Dashboard"><i class="fa fa-laptop"></i> <span>Dashboard</span></a>
           </li>
-
+-->
           <li>
             <a href="javascript:;">
               <span class="badge pull-right">0</span>

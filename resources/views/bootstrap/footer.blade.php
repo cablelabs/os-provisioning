@@ -35,7 +35,6 @@
    */
   $(document).ready(function() {
     App.init();
-    // Dashboard.init();
 
     // Select2 Init - intelligent HTML select
     $("select").select2();
@@ -69,11 +68,6 @@
       // "sPaginationType": "four_button"
       "lengthMenu":  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
     });
-
-//      $.plot($("#interactive-chart"),
-//          [ [[0, 0], [1, 1]] ], {
-//              yaxis: {max: 1}
-//          });
   });
 
 
