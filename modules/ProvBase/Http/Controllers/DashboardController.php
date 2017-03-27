@@ -212,7 +212,7 @@ class DashboardController extends BaseController
 
             // get all contracts till now
             foreach ($contracts as $contract) {
-                if ($contract->contract_start <= date('Y-m-d') && ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d'))) {
+                if ($contract->contract_start <= date('Y-m-d') && ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
                     $valid_contracts['till_now'][] = $contract;
                 }
             }
@@ -268,7 +268,7 @@ class DashboardController extends BaseController
                 /**
                  * get all contracts current year till now
                  */
-                if ($contract->contract_start <= date('Y-m-d') && ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d'))) {
+                if ($contract->contract_start <= date('Y-m-d') && ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
                     $valid_contracts['2017'][] = $contract;
                 }
 
@@ -282,7 +282,7 @@ class DashboardController extends BaseController
                 $reference_date = $last_year . '-12-31';
 
                 if ($contract->contract_start <= $reference_date &&
-                    ($contract->contract_end == '0000-00-00' || $contract->contract_end <= $reference_date || $contract->contract_end > date('Y-m-d'))) {
+                    ($contract->contract_end == '0000-00-00' || $contract->contract_end <= $reference_date || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
                     $valid_contracts[$last_year][] = $contract;
                 }
             }
