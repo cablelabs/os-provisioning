@@ -55,7 +55,7 @@ class DashboardController extends BaseController
             }
         } catch (\Exception $e) {
             \Log::error('Dashboard-Exception: ' . $e->getMessage());
-            throw new \Exception($e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
 
         return View::make(
@@ -98,7 +98,7 @@ class DashboardController extends BaseController
                 }
             }
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
         return $ret_val;
     }
@@ -120,7 +120,7 @@ class DashboardController extends BaseController
         	if (isset($sales[date('Y')])) {
         		$sales = $sales = $sales[date('Y')]['by_types'];
 			} elseif (isset($sales['current_month'])) {
-				$sales = $sales = $sales['current_month']['by_types'];
+				$sales = $sales['current_month']['by_types'];
 			}
 
 			if (count($sales) > 0) {
@@ -133,7 +133,7 @@ class DashboardController extends BaseController
 				}
 			}
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
         return $ret_val;
     }
@@ -179,7 +179,7 @@ class DashboardController extends BaseController
 
             $ret_val = array($month . '/' . substr($year, -2), $contract_counter);
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
         return $ret_val;
     }
@@ -205,6 +205,8 @@ class DashboardController extends BaseController
      */
     private function get_contracts($day_period = null)
     {
+    	$valid_contracts = array();
+
         try {
             $contracts = Contract::all();
 
@@ -241,7 +243,7 @@ class DashboardController extends BaseController
                 }
             }
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
 
         return $valid_contracts;
@@ -256,6 +258,7 @@ class DashboardController extends BaseController
     private function get_itemised_contracts()
     {
         $ret_val = array();
+		$valid_contracts = array();
         $product_types = $this->get_product_types();
 
         try {
@@ -307,7 +310,7 @@ class DashboardController extends BaseController
                 }
             }
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
 
         return $ret_val;
@@ -338,7 +341,7 @@ class DashboardController extends BaseController
                 $ret_val[$year]['by_types'] = $this->get_sales_by_product_type($contracts, $year);
             }
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
 //d($ret_val);
         return $ret_val;
@@ -351,7 +354,7 @@ class DashboardController extends BaseController
 			'last_month' =>  array('total' => 0),
 		);
 		$dates = config('dates');
-//d($dates['current_month'], $dates['next_month']);
+
         try {
             $contracts = $contracts[date('Y')];
 
@@ -382,7 +385,7 @@ class DashboardController extends BaseController
                 }
             }
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
 //d($result);
 		return $result;
@@ -415,7 +418,7 @@ class DashboardController extends BaseController
                 $ret_val[$product->type] = $sales;
             }
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
 
         return $ret_val;
@@ -446,7 +449,7 @@ class DashboardController extends BaseController
                     break;
             }
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
 
         return number_format($sales, 2, ',', '');
@@ -465,7 +468,7 @@ class DashboardController extends BaseController
         try {
             $ret_val = Product::get_product_types();
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
 
         return $ret_val;
