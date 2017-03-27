@@ -350,8 +350,8 @@ class DashboardController extends BaseController
     private function get_sales_monthly($contracts)
     {
         $result = array(
-        	'current_month' => array('total' => 0, 'by_types' => 0),
-			'last_month' =>  array('total' => 0, 'by_types' => 0),
+        	'current_month' => array('total' => 0, 'by_types' => array()),
+			'last_month' =>  array('total' => 0, 'by_types' => array()),
 		);
 		$dates = config('dates');
 
