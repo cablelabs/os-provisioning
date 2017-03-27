@@ -30,6 +30,7 @@ class Kernel extends ConsoleKernel {
 		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderProcessorCommand',
 		'App\Console\Commands\authCommand',
+		'App\Console\Commands\install',
 	];
 
 
