@@ -38,8 +38,7 @@ class DashboardController extends BaseController
             $contracts = $this->get_contracts($day_period);
 
             // get chart data: contracts
-            $chart_data_valid_contracts = $this->get_chart_data();
-            $chart_data_invalid_contracts = $this->get_chart_data(true);
+            $chart_data_contracts = $this->get_chart_data();
 
             // get contracts with products/tariffs
             $itemised_contracts = $this->get_itemised_contracts();
@@ -55,26 +54,30 @@ class DashboardController extends BaseController
             }
         } catch (\Exception $e) {
             \Log::error('Dashboard-Exception: ' . $e->getMessage());
-            throw new \Exception($e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
 
         return View::make(
             'provbase::dashboard', $this->compact_prep_view(
-                compact('title', 'contracts', 'chart_data_valid_contracts', 'chart_data_invalid_contracts', 'show_sales', 'sales', 'chart_data_sales', 'checked')
+                compact('title', 'contracts', 'chart_data_contracts', 'show_sales', 'sales', 'chart_data_sales', 'checked')
             )
         );
     }
 
     /**
-     * Returns data for the flot chart
+     * Returns data for the line chart
      *
-     * @param bool $get_inactive
      * @return array
      * @throws \Exception
      */
-    private function get_chart_data($get_inactive = false)
+    private function get_chart_data()
     {
         $month = 1;
+        $ret_val = array(
+        	'labels' => array(),
+			'valid' => array(),
+        	'invalid' => array()
+		);
 
         try {
             while ($month <= 12) {
@@ -87,19 +90,35 @@ class DashboardController extends BaseController
                     $month = '0' . $month;
                 }
 
-                $contracts[$year][$month] = $this->count_contracts_by_month($month, $year, $get_inactive);
+                $valid_contracts[$year][$month] = $this->count_contracts_by_month($month, $year, false);
+				$invalid_contracts[$year][$month] = $this->count_contracts_by_month($month, $year, true);
                 $month++;
             }
-            rsort($contracts);
 
-            foreach ($contracts as $key => $contracts_per_year) {
-                foreach ($contracts_per_year as $month => $contracts) {
-                    $ret_val[] = $contracts;
-                }
-            }
+			ksort($valid_contracts);
+			ksort($invalid_contracts);
+
+            foreach ($valid_contracts as $year => $months) {
+            	foreach ($months as $month => $contracts) {
+            		if (!in_array($contracts[0], $ret_val['labels'])) {
+						$ret_val['labels'][] = $contracts[0];
+					}
+            		$ret_val['valid'][] = $contracts[1];
+				}
+			}
+
+			foreach ($invalid_contracts as $year => $months) {
+				foreach ($months as $month => $contracts) {
+					if (!in_array($contracts[0], $ret_val['labels'])) {
+						$ret_val['labels'][] = $contracts[0];
+					}
+					$ret_val['invalid'][] = $contracts[1];
+				}
+			}
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
+
         return $ret_val;
     }
 
@@ -120,7 +139,7 @@ class DashboardController extends BaseController
         	if (isset($sales[date('Y')])) {
         		$sales = $sales = $sales[date('Y')]['by_types'];
 			} elseif (isset($sales['current_month'])) {
-				$sales = $sales = $sales['current_month']['by_types'];
+				$sales = $sales['current_month']['by_types'];
 			}
 
 			if (count($sales) > 0) {
@@ -133,7 +152,7 @@ class DashboardController extends BaseController
 				}
 			}
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
         return $ret_val;
     }
@@ -166,11 +185,11 @@ class DashboardController extends BaseController
             if (count($contracts) > 0) {
                 foreach ($contracts as $contract) {
                     if ($get_inactive === false) {
-                        if ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d')) {
+                        if ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end)) {
                             $contract_counter++;
                         }
                     } else {
-                        if ($contract->contract_end != '0000-00-00' && $contract->contract_end < date('Y-m-d')) {
+                        if ($contract->contract_end != '0000-00-00' && $contract->contract_end < date('Y-m-d') || is_null($contract->contract_end)) {
                             $contract_counter++;
                         }
                     }
@@ -179,7 +198,7 @@ class DashboardController extends BaseController
 
             $ret_val = array($month . '/' . substr($year, -2), $contract_counter);
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
         return $ret_val;
     }
@@ -205,12 +224,14 @@ class DashboardController extends BaseController
      */
     private function get_contracts($day_period = null)
     {
+    	$valid_contracts = array();
+
         try {
             $contracts = Contract::all();
 
             // get all contracts till now
             foreach ($contracts as $contract) {
-                if ($contract->contract_start <= date('Y-m-d') && ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d'))) {
+                if ($contract->contract_start <= date('Y-m-d') && ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
                     $valid_contracts['till_now'][] = $contract;
                 }
             }
@@ -241,7 +262,7 @@ class DashboardController extends BaseController
                 }
             }
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
 
         return $valid_contracts;
@@ -256,6 +277,7 @@ class DashboardController extends BaseController
     private function get_itemised_contracts()
     {
         $ret_val = array();
+		$valid_contracts = array();
         $product_types = $this->get_product_types();
 
         try {
@@ -265,7 +287,7 @@ class DashboardController extends BaseController
                 /**
                  * get all contracts current year till now
                  */
-                if ($contract->contract_start <= date('Y-m-d') && ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d'))) {
+                if ($contract->contract_start <= date('Y-m-d') && ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
                     $valid_contracts['2017'][] = $contract;
                 }
 
@@ -279,7 +301,7 @@ class DashboardController extends BaseController
                 $reference_date = $last_year . '-12-31';
 
                 if ($contract->contract_start <= $reference_date &&
-                    ($contract->contract_end == '0000-00-00' || $contract->contract_end <= $reference_date || $contract->contract_end > date('Y-m-d'))) {
+                    ($contract->contract_end == '0000-00-00' || $contract->contract_end <= $reference_date || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
                     $valid_contracts[$last_year][] = $contract;
                 }
             }
@@ -307,7 +329,7 @@ class DashboardController extends BaseController
                 }
             }
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
 
         return $ret_val;
@@ -323,7 +345,7 @@ class DashboardController extends BaseController
     private function get_sales($contracts)
     {
         $ret_val = array();
-//d($contracts);
+
         try {
             foreach ($contracts as $year => $contracts) {
                 $sales = 0;
@@ -338,20 +360,20 @@ class DashboardController extends BaseController
                 $ret_val[$year]['by_types'] = $this->get_sales_by_product_type($contracts, $year);
             }
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
-//d($ret_val);
+
         return $ret_val;
     }
 
     private function get_sales_monthly($contracts)
     {
         $result = array(
-        	'current_month' => array('total' => 0),
-			'last_month' =>  array('total' => 0),
+        	'current_month' => array('total' => 0, 'by_types' => array()),
+			'last_month' =>  array('total' => 0, 'by_types' => array()),
 		);
 		$dates = config('dates');
-//d($dates['current_month'], $dates['next_month']);
+
         try {
             $contracts = $contracts[date('Y')];
 
@@ -382,9 +404,9 @@ class DashboardController extends BaseController
                 }
             }
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
-//d($result);
+
 		return $result;
     }
 
@@ -415,7 +437,7 @@ class DashboardController extends BaseController
                 $ret_val[$product->type] = $sales;
             }
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
 
         return $ret_val;
@@ -446,7 +468,7 @@ class DashboardController extends BaseController
                     break;
             }
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
 
         return number_format($sales, 2, ',', '');
@@ -465,7 +487,7 @@ class DashboardController extends BaseController
         try {
             $ret_val = Product::get_product_types();
         } catch (\Exception $e) {
-            throw new \Exception(__METHOD__ . ': ' . $e->getMessage(), $e->getCode(), $e);
+            throw $e;
         }
 
         return $ret_val;

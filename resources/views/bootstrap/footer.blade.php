@@ -16,6 +16,7 @@
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
 <script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.categories.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/chart/Chart.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/ionRangeSlider/js/ion-rangeSlider/ion.rangeSlider.min.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/plugins/switchery/switchery.js')}}"></script>
@@ -35,7 +36,6 @@
    */
   $(document).ready(function() {
     App.init();
-    // Dashboard.init();
 
     // Select2 Init - intelligent HTML select
     $("select").select2();
@@ -69,11 +69,6 @@
       // "sPaginationType": "four_button"
       "lengthMenu":  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
     });
-
-//      $.plot($("#interactive-chart"),
-//          [ [[0, 0], [1, 1]] ], {
-//              yaxis: {max: 1}
-//          });
   });
 
 
