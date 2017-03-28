@@ -24,7 +24,7 @@
 	@DivOpen(12)
 			@if ($create_allowed)
 				{{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
-				{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Create '.$b_text, 'Button' ) , ['style' => 'simple']) }} 
+				{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Create '.$b_text, 'Button' ) , ['!class' => 'btn btn-primary m-b-15','style' => 'simple']) }}
 				{{ Form::close() }}
 			@endif
 	@DivClose()
@@ -36,7 +36,6 @@
 			{{ Form::close() }}
 	@DivClose()
 	-->
-	{{ Form::hr() }}
 
 	<!-- database entries inside a form with checkboxes to be able to delete one or more entries -->
 	@DivOpen(12)
@@ -92,13 +91,12 @@
 		@else
 			<h4>{{ $view_no_entries }}</h4>
 		@endif
-
 	@DivClose()
 
 	@DivOpen(12)
 		<!-- delete/submit button of form -->
 		@if ($delete_allowed)
-			{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button' ), ['!class' => 'btn btn-danger btn-primary m-r-5', 'style' => 'simple']) }}
+			{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button' ), ['!class' => 'btn btn-danger btn-primary m-r-5 m-t-15', 'style' => 'simple']) }}
 			{{ Form::close() }}
 		@endif
 		<!-- only show page buttons if we actually use pagination -->
