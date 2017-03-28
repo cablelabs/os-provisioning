@@ -38,8 +38,7 @@ class DashboardController extends BaseController
             $contracts = $this->get_contracts($day_period);
 
             // get chart data: contracts
-            $chart_data_valid_contracts = $this->get_chart_data();
-            $chart_data_invalid_contracts = $this->get_chart_data(true);
+            $chart_data_contracts = $this->get_chart_data();
 
             // get contracts with products/tariffs
             $itemised_contracts = $this->get_itemised_contracts();
@@ -60,21 +59,25 @@ class DashboardController extends BaseController
 
         return View::make(
             'provbase::dashboard', $this->compact_prep_view(
-                compact('title', 'contracts', 'chart_data_valid_contracts', 'chart_data_invalid_contracts', 'show_sales', 'sales', 'chart_data_sales', 'checked')
+                compact('title', 'contracts', 'chart_data_contracts', 'show_sales', 'sales', 'chart_data_sales', 'checked')
             )
         );
     }
 
     /**
-     * Returns data for the flot chart
+     * Returns data for the line chart
      *
-     * @param bool $get_inactive
      * @return array
      * @throws \Exception
      */
-    private function get_chart_data($get_inactive = false)
+    private function get_chart_data()
     {
         $month = 1;
+        $ret_val = array(
+        	'labels' => array(),
+			'valid' => array(),
+        	'invalid' => array()
+		);
 
         try {
             while ($month <= 12) {
@@ -87,19 +90,35 @@ class DashboardController extends BaseController
                     $month = '0' . $month;
                 }
 
-                $contracts[$year][$month] = $this->count_contracts_by_month($month, $year, $get_inactive);
+                $valid_contracts[$year][$month] = $this->count_contracts_by_month($month, $year, false);
+				$invalid_contracts[$year][$month] = $this->count_contracts_by_month($month, $year, true);
                 $month++;
             }
-            rsort($contracts);
 
-            foreach ($contracts as $key => $contracts_per_year) {
-                foreach ($contracts_per_year as $month => $contracts) {
-                    $ret_val[] = $contracts;
-                }
-            }
+			ksort($valid_contracts);
+			ksort($invalid_contracts);
+
+            foreach ($valid_contracts as $year => $months) {
+            	foreach ($months as $month => $contracts) {
+            		if (!in_array($contracts[0], $ret_val['labels'])) {
+						$ret_val['labels'][] = $contracts[0];
+					}
+            		$ret_val['valid'][] = $contracts[1];
+				}
+			}
+
+			foreach ($invalid_contracts as $year => $months) {
+				foreach ($months as $month => $contracts) {
+					if (!in_array($contracts[0], $ret_val['labels'])) {
+						$ret_val['labels'][] = $contracts[0];
+					}
+					$ret_val['invalid'][] = $contracts[1];
+				}
+			}
         } catch (\Exception $e) {
             throw $e;
         }
+
         return $ret_val;
     }
 
@@ -166,11 +185,11 @@ class DashboardController extends BaseController
             if (count($contracts) > 0) {
                 foreach ($contracts as $contract) {
                     if ($get_inactive === false) {
-                        if ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d')) {
+                        if ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end)) {
                             $contract_counter++;
                         }
                     } else {
-                        if ($contract->contract_end != '0000-00-00' && $contract->contract_end < date('Y-m-d')) {
+                        if ($contract->contract_end != '0000-00-00' && $contract->contract_end < date('Y-m-d') || is_null($contract->contract_end)) {
                             $contract_counter++;
                         }
                     }

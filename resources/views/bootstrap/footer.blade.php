@@ -16,6 +16,7 @@
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
 <script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.categories.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/chart/Chart.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/ionRangeSlider/js/ion-rangeSlider/ion.rangeSlider.min.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/plugins/switchery/switchery.js')}}"></script>
