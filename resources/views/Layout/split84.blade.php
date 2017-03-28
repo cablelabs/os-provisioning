@@ -7,7 +7,9 @@
 	{{-- We need to include sections dynamically: always content left and if needed content right - more than 1 time possible --}}
 	@include ('bootstrap.panel', array ('content' => 'content_left', 'view_header' => $view_header, 'md' => 8))
 	@if (isset($view_header_right))
-		@include ('bootstrap.panel', array ('content' => 'content_right', 'view_header' => $view_header_right, 'md' => 4))
+		@include ('bootstrap.panel', array ('content' => 'content_right',
+											'view_header' => $view_header_right,
+											'md' => isset($index_left_md_size) ? $index_left_md_size : 9))
 	@endif
 
 
