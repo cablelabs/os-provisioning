@@ -49,7 +49,7 @@
 			@endif
 
 		@if (isset($view_var[0]))
-			<table class="table table-hover itable">
+			<table class="table table-hover datatable no-wrap table-striped table-bordered">
 
 				<!-- TODO: add concept to parse header fields for index table - like firstname, lastname, ..-->
 				<thead>

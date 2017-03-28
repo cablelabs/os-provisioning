@@ -41,9 +41,10 @@
     $("select").select2();
 
     // Intelligent Data Tables
-    $('.itable').dataTable( 
+    $('.datatable').dataTable(
     {
-      "language": {
+      // Translate Datatables
+      language: {
         "sEmptyTable":        "<?php echo trans('view.jQuery_sEmptyTable'); ?>",
         "sInfo":              "<?php echo trans('view.jQuery_sInfo'); ?>",
         "sInfoEmpty":         "<?php echo trans('view.jQuery_sInfoEmpty'); ?>",
@@ -66,8 +67,10 @@
             "sSortDescending":"<?php echo trans('view.jQuery_sLast'); ?>"
             } 
       },
+      //auto resize the Table to fit the viewing device
+      responsive: true,
       // "sPaginationType": "four_button"
-      "lengthMenu":  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
+      lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
     });
   });
 
