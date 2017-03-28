@@ -686,6 +686,7 @@ class Modem extends \BaseModel {
 		$this->observer_enabled = false;
 	}
 
+
 	/**
 	 * Before deleting a modem and all children we have to check some things
 	 *
@@ -705,6 +706,30 @@ class Modem extends \BaseModel {
 
 		// when arriving here: start the standard deletion procedure
 		return parent::delete();
+	}
+
+
+	/**
+	 * Clean modem from all Envia related data – call this e.g. if you delete the last number from this modem.
+	 * We have to do this to avoid problems in case we want to install this modem at another customer
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function remove_envia_related_data() {
+
+		// first: check if envia module is enabled
+		// if not: do nothing – this database fields could be in use by another voip provider module!
+		if (\PPModule::is_active('ProvVoipEnvia')) {
+			return;
+		}
+
+		$this->contract_external_id = NULL;
+		$this->contract_ext_creation_date = NULL;
+		$this->contract_ext_termination_date = NULL;
+		$this->installation_address_change_date = NULL;
+		$this->save();
+
+
 	}
 
 }

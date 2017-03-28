@@ -555,11 +555,7 @@ class PhonenumberObserver
 
 		// third: if there are no more numbers attached to the old modem: remove all Envia related data
 		if (!$old_modem->has_phonenumbers_attached()) {
-			$old_modem->contract_external_id = NULL;
-			$old_modem->contract_ext_creation_date = NULL;
-			$old_modem->contract_ext_termination_date = NULL;
-			$old_modem->installation_address_change_date = NULL;
-			$old_modem->save();
+			$old_modem->remove_envia_related_data();
 		}
 		else {
 			$attributes = ['target'=>'_blank'];
@@ -637,12 +633,15 @@ class PhonenumberObserver
 
 	}
 
+
 	public function deleted($phonenumber)
 	{
 		$phonenumber->mta->make_configfile();
 		$phonenumber->mta->modem->restart_modem();
 
 		// check if this number has been the last on old modem ⇒ if so remove envia related data from modem
-		$this->_check_if_last_number_on_modem($phonenumber, $old_modem);
+		if (!$phonenumber->mta->modem->has_phonenumbers_attached()) {
+			$phonenumber->mta->modem->remove_envia_related_data();
+		}
 	}
 }
