@@ -48,6 +48,7 @@
 				<tt>{{ \App\Http\Controllers\BaseViewController::translate_view($view_header, 'Header', 1) }}</tt></h4>
 			@endif
 
+		@if (isset($view_var[0]))
 			<table class="table table-hover itable">
 
 				<!-- TODO: add concept to parse header fields for index table - like firstname, lastname, ..-->
@@ -88,6 +89,10 @@
 				@endforeach
 
 			</table>
+		@else
+			<h4>{{ $view_no_entries }}</h4>
+		@endif
+
 	@DivClose()
 
 	@DivOpen(12)

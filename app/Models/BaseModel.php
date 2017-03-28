@@ -569,6 +569,12 @@ class BaseModel extends Eloquent
 	}
 
 	// Placeholder
+	public static function view_no_entries()
+	{
+		return "No entries found!";
+	}
+
+	// Placeholder
 	public function view_index_label()
 	{
 		return 'Need to be Set !';

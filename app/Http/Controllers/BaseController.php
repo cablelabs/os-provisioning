@@ -325,6 +325,9 @@ class BaseController extends Controller {
 		if(!isset($a['view_header']))
 			$a['view_header'] = $model->view_headline();
 
+		if(!isset($a['view_no_entries']))
+			$a['view_no_entries'] = $model->view_no_entries();
+
 		if(!isset($a['headline']))
 			$a['headline'] = '';
 
