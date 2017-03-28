@@ -174,7 +174,13 @@ class BaseViewController extends Controller {
 			}
 
 			// 4. set all field_value's to SQL data
-			$field['field_value'] = $model[$field['name']];
+			if (array_key_exists('eval', $field)) {
+				// dont't remove $name, as it is used in $field['eval'] (might be set in view_form_fields())
+				$name = $model[$field['name']];
+				$eval = $field['eval'];
+				$field['field_value'] = eval("return $eval;");
+			} else
+				$field['field_value'] = $model[$field['name']];
 
 			// 4.(sub-task) auto-fill all field_value's with HTML Input
 			if (\Input::get($field['name']))
@@ -187,7 +193,7 @@ class BaseViewController extends Controller {
 			// 4. (sub-task)
 			// write explicitly given init_value to field_value
 			// this is needed e.g. by Patrick to prefill new PhonenumberManagement and PhonebookEntry with data from Contract
-			if (array_key_exists('init_value', $field)) {
+		if (array_key_exists('init_value', $field) && $field['init_value']) {
 				$field['field_value'] = $field['init_value'];
 			}
 
