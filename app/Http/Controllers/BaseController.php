@@ -33,7 +33,7 @@ class BaseController extends Controller {
 	protected $relation_create_button = 'Create';
 	protected $index_create_allowed = true;
 	protected $index_delete_allowed = true;
-	protected $edit_left_md_size = 4;
+	protected $edit_left_md_size = 5;
 	protected $edit_view_save_button = true;
 
 
