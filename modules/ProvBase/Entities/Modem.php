@@ -707,7 +707,7 @@ class Modem extends \BaseModel {
 				if (\Str::endsWith($prev, 'edit')) {
 					\Session::push('tmp_info_above_relations', $msg);
 				}
-				elseif (\Str::endsWith($prev, 'phonenumber')) {
+				elseif (\Str::endsWith($prev, 'modem')) {
 					\Session::push('tmp_info_above_index_list', $msg);
 				}
 
