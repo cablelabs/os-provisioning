@@ -369,6 +369,43 @@ class Phonenumber extends \BaseModel {
 
 	}
 
+
+	/**
+	 * Before deleting a modem and all children we have to check some things
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function delete() {
+
+		// deletion of modems with attached phonenumbers is not allowed with enabled Envia module
+		// prevent user from (recursive and implicite) deletion of phonenumbers before termination at Envia!!
+		// we have to check this here as using ModemObserver::deleting() with return false does not prevent the monster from deleting child model instances!
+		/* d(\URL::previous()); */
+		if (
+			(\PPModule::is_active('ProvVoipEnvia'))
+			&&
+			(!is_null($this->phonenumbermanagement))
+		) {
+
+			// check from where the deletion request has been triggered and set the correct var to show information
+			$prev = explode('?', \URL::previous())[0];
+			$prev = \Str::lower($prev);
+			$msg = "You are not allowed to delete a phonenumber with attached phonenumbermanagement!";
+			if (\Str::endsWith($prev, 'edit')) {
+				\Session::push('tmp_info_above_relations', $msg);
+			}
+			elseif (\Str::endsWith($prev, 'phonenumber')) {
+				\Session::push('tmp_info_above_index_list', $msg);
+			}
+
+			return false;
+		}
+
+		// when arriving here: start the standard deletion procedure
+		return parent::delete();
+	}
+
+
 	/**
 	 * BOOT:
 	 * - init phone observer
