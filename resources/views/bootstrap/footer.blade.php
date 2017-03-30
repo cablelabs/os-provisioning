@@ -11,13 +11,14 @@
 <script src="{{asset('components/assets-admin/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/select2-v4/vendor/select2/select2/dist/js/select2.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/js/ui-modal-notification.demo.js')}}"></script>
 <!-- ================== END BASE JS ================== -->
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
 <script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.categories.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/chart/Chart.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/ionRangeSlider/js/ion-rangeSlider/ion.rangeSlider.min.js')}}"></script>
+<!-- script src="{{asset('components/assets-admin/plugins/ionRangeSlider/js/ion-rangeSlider/ion.rangeSlider.min.js')}}"></script -->
 
 <script src="{{asset('components/assets-admin/plugins/switchery/switchery.js')}}"></script>
 <script src="{{asset('components/assets-admin/js/form-slider-switcher.demo.js')}}"></script>

@@ -115,7 +115,8 @@ class AuthController extends Controller {
 
 		// Redirect to Default Page
 		// TODO: Redirect to a global overview page
-		return Redirect::to($this->prefix.'/Contract');
+//		return Redirect::to($this->prefix.'/Contract');
+		return Redirect::to($this->prefix . '/Dashboard');
 	}
 
 

@@ -278,6 +278,7 @@ class DashboardController extends BaseController
     {
         $ret_val = array();
 		$valid_contracts = array();
+
         $product_types = $this->get_product_types();
 
         try {

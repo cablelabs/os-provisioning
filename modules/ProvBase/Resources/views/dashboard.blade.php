@@ -127,6 +127,8 @@
             </div>
             <br><br><br>
         @endif
+            <br><br><br>
+        @endif
 --}}
 {{--
         <div class="row">
@@ -147,7 +149,6 @@
 
 <script type="text/javascript">
     window.onload = function() {
-
         // float bar chart -> sales
         if ($("#sales-chart").length) {
             var data = <?php echo json_encode($chart_data_sales); ?>;
@@ -174,7 +175,7 @@
         }
 
         // range slider
-        $("#example_id").ionRangeSlider();
+//        $("#example_id").ionRangeSlider();
 
         FormSliderSwitcher.init();
 

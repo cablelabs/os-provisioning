@@ -34,6 +34,7 @@ class BaseController extends Controller {
 	protected $index_create_allowed = true;
 	protected $index_delete_allowed = true;
 	protected $edit_left_md_size = 4;
+	protected $edit_right_md_size = null;
 	protected $edit_view_save_button = true;
 
 
@@ -333,6 +334,9 @@ class BaseController extends Controller {
 
 		if (!isset($a['edit_left_md_size']))
 			$a['edit_left_md_size'] = $this->edit_left_md_size;
+
+		if (!is_null($this->edit_right_md_size) && !isset($a['edit_right_md_size']))
+			$a['edit_right_md_size'] = $this->edit_right_md_size;
 
 		$a['save_button'] = $this->save_button;
 		$a['edit_view_save_button'] = $this->edit_view_save_button;
