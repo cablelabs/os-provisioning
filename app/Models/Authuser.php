@@ -302,6 +302,10 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 
 		try {
 			$namespace = 'Modules\\' . $module . '\\Entities\\' . $entity;
+			if ($module == 'App\\') {
+				$namespace = $module . $entity;
+			}
+
 			$model_permissions = $this->get_model_permissions();
 
 			if (array_key_exists($namespace, $model_permissions)) {

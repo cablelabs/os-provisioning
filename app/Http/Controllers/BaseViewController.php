@@ -367,13 +367,13 @@ finish:
 		$modules = Module::enabled();
 
 		// global page
-		if (\Auth::user()->is_admin() === true) {
-			$array = include(app_path().'/Config/header.php');
-			foreach ($array as $lines)
+		$array = include(app_path().'/Config/header.php');
+		foreach ($array as $lines)
+		{
+			// array_push($ret, $lines);
+			foreach ($lines as $k => $line)
 			{
-				// array_push($ret, $lines);
-				foreach ($lines as $k => $line)
-				{
+				if (\Auth::user()->has_permissions(app()->getNamespace(), substr($line, 0, -6))) {
 					$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
 					$ret['Global'][$key] = $line;
 				}
