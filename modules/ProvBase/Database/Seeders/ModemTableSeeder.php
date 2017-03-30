@@ -41,12 +41,12 @@ class ModemTableSeeder extends \BaseSeeder {
 				$country_id= 0;
 			}
 
-			$tree_id = 0;
-			if (\Module::find('HfcBase')->active())
+			$netelement_id = 0;
+			if (\Module::find('HfcReq')->active())
 			{
-				// Note: requires HfcBase to be seeded before this runs
-				if (\Modules\HfcBase\Entities\Tree::all()->count() > 2)
-					$tree_id = \Modules\HfcBase\Entities\Tree::where('id', '>', '2')->get()->random(1)->id;
+				// Note: requires HfcReq to be seeded before this runs
+				if (\Modules\HfcReq\Entities\NetElement::all()->count() > 2)
+					$netelement_id = \Modules\HfcReq\Entities\NetElement::where('id', '>', '2')->get()->random(1)->id;
 			}
 
 			Modem::create([
@@ -59,7 +59,7 @@ class ModemTableSeeder extends \BaseSeeder {
 				'contract_id' => $contract_id,
 				'configfile_id' => Configfile::where('device', '=', 'cm')->get()->random(1)->id,
 				'qos_id' => Qos::all()->random()->id,
-				'tree_id' => $tree_id,
+				'netelement_id' => $netelement_id,
 				'status' => (rand(0,10) > 2 ? rand(300,620) : 0),
 				'firstname' => $firstname,
 				'lastname' => $lastname,

@@ -183,7 +183,7 @@ class BaseController extends Controller {
 			// JavaScript controlled checkboxes sometimes returns “on” if checked – which results in
 			// logical false (=0) in database so we have to overwrite this by 1
 			// this is e.g. the case for the active checkbox on ProvVoip\Phonenumber
-			// the value in _POST seems to be browser dependend – extend the array if needed
+			// the value in $_POST seems to be browser dependend – extend the array if needed
 			if (
 				($field['form_type'] == 'checkbox')
 				&&
@@ -235,17 +235,17 @@ class BaseController extends Controller {
 	 */
 	protected function prepare_tabs($view_var)
 	{
-		// get_form_tabs()
+		// Version 1
 		$ret = $this->get_form_tabs($view_var);
 
 		if ($ret)
 			return $ret;
 
-		// view_has_many()
-		if (BaseViewController::get_view_has_many_api_version($view_var->view_has_many()) == 2)
+		// view_has_many() Version 2
+		if (BaseViewController::get_view_has_many_api_version($a = $view_var->view_has_many()) == 2)
 		{
 			// get actual blade to $b
-			$a = $view_var->view_has_many();
+			// $a = $view_var->view_has_many();
 			$b = current($a);
 			$c = [];
 
@@ -255,10 +255,9 @@ class BaseController extends Controller {
 				$b = next($a);
 			}
 
-			$ret = ($c);
+			return $c;
 		}
 
-		return $ret;
 	}
 
 
@@ -310,8 +309,8 @@ class BaseController extends Controller {
 		if(!isset($a['networks']))
 		{
 			$a['networks'] = [];
-			if (\PPModule::is_active('HfcBase'))
-				$a['networks'] = \Modules\HfcBase\Entities\Tree::get_all_net();
+			if (\PPModule::is_active('HfcReq'))
+				$a['networks'] = \Modules\HfcReq\Entities\NetElement::get_all_net();
 		}
 
 		if(!isset($a['view_header_links']))
@@ -477,7 +476,9 @@ class BaseController extends Controller {
 		$model = static::get_model_obj();
 		$view_header = \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline() , 'Header');
 		$headline    = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header , NULL, $_GET);
-		$form_fields = BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($model), $model, 'create');
+		$fields 	 = BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($model), $model);
+		$form_fields = BaseViewController::add_html_string ($fields, 'create');
+		// $form_fields = BaseViewController::add_html_string (static::get_controller_obj()->view_form_fields($model), $model, 'create');
 
 		$view_path = 'Generic.create';
 		$form_path = 'Generic.form';
@@ -533,10 +534,15 @@ class BaseController extends Controller {
 	{
 		$model    = static::get_model_obj();
 		$view_var = $model->findOrFail($id);
-		$view_header 	= BaseViewController::translate_view('Edit'.$model->view_headline(),'Header');
+		$view_header 	= BaseViewController::translate_view($model->view_headline(),'Header');
 		$headline       = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var);
+
+		$fields 		= BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($view_var), $view_var);
+		$form_fields	= BaseViewController::add_html_string ($fields, 'edit');
+		// $form_fields	= BaseViewController::add_html_string (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
+
+		// prepare_tabs & prep_right_panels are redundant - TODO: improve
 		$panel_right    = $this->prepare_tabs($view_var);
-		$form_fields	= BaseViewController::compute_form_fields (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
 		$relations      = BaseViewController::prep_right_panels($view_var);
 
 		// check if there is additional data to be passed to blade template
@@ -562,7 +568,7 @@ class BaseController extends Controller {
 			$view_path = \NamespaceController::get_view_name().'.edit';
 		if (View::exists(\NamespaceController::get_view_name().'.form'))
 			$form_path = \NamespaceController::get_view_name().'.form';
-	 	
+		
 		// $config_routes = BaseController::get_config_modules();
 		// return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations', 'extra_data')));
 		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations', 'method', 'additional_data')));
@@ -664,6 +670,13 @@ class BaseController extends Controller {
 		return Redirect::back()->with('delete_message', ['message' => $message, 'class' => $class, 'color' => $color]);
 	}
 
+	public function dump($id) {
+		return static::get_model_obj()->findOrFail($id);
+	}
+
+	public function dumpall() {
+		return static::get_model_obj()->all();
+	}
 
 
 // Deprecated:
@@ -698,5 +711,135 @@ class BaseController extends Controller {
 			return Redirect::route($view, $param);
 		else
 			return Redirect::route($view);
+	}
+
+
+	/**
+	 * Tree View Specific Stuff
+	 *
+	 * TODO: Implement the Tree View as Javascript Tree Table - preparations are already made in comments (use jstree.min.js)
+			 see Color Admin Bootstrap Theme: http://wrapbootstrap.com/preview/WB0N89JMK -> UI-Elements -> Tree View
+	 *
+	 * @author Nino Ryschawy
+	 *
+	 * global Variables
+		$INDEX  : used for shifting the children elements
+		$I 		: used to increment over specficied colours (defined in variable)
+	 */
+	public static $INDEX = 0;
+	public static $I = 0;
+	public static $colours = ['', 'text-danger', 'text-success', 'text-warning', 'text-info'];
+
+
+	/**
+	 * Returns the Tree View (Table) as HTML Text
+	 *
+	 * IMPORTANT NOTES
+		* If the Model uses the Generic BaseController@index function a separate index.blade.php has to be installed in 
+			modules/Resources/Modelname/ that includes the Generic.tree blade
+		* The Generic.tree blade calls this function
+		* The Model currently has to have a function called get_tree_list that shall return the ordered tree of objects
+			(with delete_disabled) - see NetElementType.php
+	 */
+	public static function make_tree_table()
+	{
+		$data = '';
+
+		// tree with select fields
+		// $data .= '<div id="jstree-checkable" class="jstree jstree-2 jstree-default jstree-checkbox-selection" role="tree" aria-multiselectable="true" tabindex="0" aria-activedescendant="j1" aria-busy="false" aria-selected="false">';
+		// $data .= '<ul class="jstree-container-ul jstree-children jstree-wholerow-ul jstree-no-dots" role="group">';
+
+		// default tree
+		// $data = '<div id="jstree-default" class="jstree jstree-1 jstree-default" role="tree" aria-multiselectable="true" tabindex="0" aria-activedescendant="j1" aria-busy="false">';
+		// $data .= '<ul class="jstree-children" role="group" style>';
+
+		$model = NamespaceController::get_model_name();
+		$data .= self::_create_index_view_data($model::get_tree_list());
+
+		// $data .= '</ul></div>';
+
+		return $data;
+	}
+
+
+	/**
+	 * writes whole index view table data as HTML in string
+	 *
+	 * @param array with all Model Objects in hierarchical tree structure
+	 *
+	 * @author Nino Ryschawy
+	 */
+	private static function _create_index_view_data($ordered_tree)
+	{
+		$data = '';
+
+		foreach ($ordered_tree as $object)
+		// foreach ($ordered_tree as $key => $object)
+		{
+			if (is_array($object))
+			{
+				self::$INDEX += 1;
+				if (self::$INDEX == 1)
+					self::$I--;
+
+				// $data .= '<ul role="group" class="jstree-children" style>';
+				$data .= self::_create_index_view_data($object);
+				// $data .= '</ul>';
+			}
+			else
+				// $data .= self::_print_label_elem($object, isset($ordered_tree[$key+1]));
+				$data .= self::_print_label_elem($object);
+
+			if (self::$INDEX == 0)
+				self::$I++;
+		}
+
+		self::$INDEX -= 1;
+		$data .= (self::$INDEX == 0) && (strpos(substr($data, strlen($data)-8), '<br><br>') === false) ? '<br>' : '';
+
+		return $data;
+	}
+
+	/**
+	 * Returns the HTML string for one label Element for Tree Index View
+	 *
+	 * @param $object 	Model Object
+	 *
+	 * @author Nino Ryschawy
+	 *
+	 * TODO: implement with jstree.min.js
+	 */
+	// public static function _print_label_elem($object, $list = false)
+	private static function _print_label_elem($object)
+	{
+		$cur_model_complete = get_class($object);
+		$cur_model_parts = explode('\\', $cur_model_complete);
+		$cur_model = array_pop($cur_model_parts);
+
+		$data = '';
+
+		// default tree
+		// $data .= '<li role="treeitem" data-jstree="{&quot;opened&quot;:true, &quot;selected&quot;:true" aria-selected="false" aria-level="'.self::$INDEX.'" aria-labelledby="'.self::$I.'_anchor" aria-expanded="true" id="j'.self::$I.'" class="jstree-node jstree-open">';
+		// 	$data .= $list ? '<i class="jstree-icon jstree-ocl" role="presentation"></i>' : '';
+
+		// tree with select fields
+		// $data .= '<li role="treeitem" aria-selected="false" aria-level="'.self::$INDEX.'" aria-labelledby="'.self::$I.'_anchor" id="j'.self::$I.'" class="jstree-node  jstree-leaf">';
+		// 	$data .= '<div unselectable="on" role="presentation" class="jstree-wholerow">&nbsp;</div><i class="jstree-icon jstree-ocl" role="presentation"></i>';
+
+		for ($cnt = 0; $cnt <=self::$INDEX; $cnt++)
+			$data .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+
+		$data .= \Form::checkbox('ids['.$object->id.']', 1, Null, null, ['style' => 'simple', 'disabled' => $object->index_delete_disabled ? 'disabled' : null]).'&nbsp;&nbsp;';
+		// $data .= \HTML::linkRoute($cur_model.'.edit', $object->view_index_label(), $object->id, ['class' => self::$colours[self::$I % count(self::$colours)]]);
+		$name = self::$INDEX == 0 ? '<strong>'.$object->view_index_label().'</strong>' : $object->view_index_label();
+		$data .= '<a class="'.self::$colours[self::$I % count(self::$colours)].'" href="'.route($cur_model.'.edit', $object->id).'">'.$name.'</a>';
+		$data .= '<br>';
+		// link for javascript tree
+		// $data .= '<a class="jstree-anchor" href="'.route($cur_model.'.edit', $object->view_index_label(), $object->id).'" tabindex="-1" id="'.self::$I.'_anchor">';
+		// $data .= '<i class="jstree-icon jstree-themeicon fa fa-folder text-warning fa-lg jstree-themeicon-custom" role="presentation"></i>';
+		// $data .= $object->view_index_label().'</a>';
+		// $data .= '</li>';
+
+		return $data;
 	}
 }

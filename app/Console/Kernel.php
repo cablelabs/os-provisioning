@@ -30,6 +30,7 @@ class Kernel extends ConsoleKernel {
 		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderProcessorCommand',
 		'App\Console\Commands\authCommand',
+		'App\Console\Commands\install',
 	];
 
 
@@ -158,9 +159,11 @@ class Kernel extends ConsoleKernel {
 			if (\Schema::hasTable('billingbase')) {
 				$schedule->call('\Modules\BillingBase\Entities\Item@yearly_conversion')->yearly();
 
-				$rcd = \Modules\BillingBase\Entities\BillingBase::select('rcd')->first()->rcd;
-				$execute = $rcd ? ($rcd - 5 > 0 ? $rcd - 5 : 1) : 15;
-				$schedule->command('nms:accounting')->monthlyOn($execute, '01:00');
+				// $rcd = \Modules\BillingBase\Entities\BillingBase::select('rcd')->first()->rcd;
+				// $execute = $rcd ? ($rcd - 5 > 0 ? $rcd - 5 : 1) : 15;
+				// This does not consider CDRs because .env file is not read properly in super global var by executing as cron job - adapt cdrCommand!
+				// $schedule->command('nms:accounting')->monthlyOn($execute, '01:00');
+				// TODO: create SettlementRun here!
 			}
 		}
 

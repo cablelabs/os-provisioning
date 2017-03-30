@@ -70,7 +70,7 @@ class ModemController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number'),
 			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode'),
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City'),
-			array('form_type' => 'text', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => $installation_address_change_date_options, 'help' => trans('helper.Modem_InstallationAddressChangeDate')),
+			array('form_type' => 'text', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => $installation_address_change_date_options, 'help' => trans('helper.Modem_InstallationAddressChangeDate')), // Date of adress change for notification at telephone provider - important for localisation of emergency calls
 			array('form_type' => 'text', 'name' => 'district', 'description' => 'District'),
 			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1', 'options' => ['placeholder' => 'YYYY-MM-DD']),
 
@@ -239,7 +239,7 @@ class ModemController extends \BaseController {
 		}
 
 		if ($pre_f && $pre_v)
-			$pre_t = ' Search in '.strtoupper($pre_f).' '.\Modules\HfcBase\Entities\Tree::find($pre_v)->name;
+			$pre_t = ' Search in '.strtoupper($pre_f).' '.\Modules\HfcReq\Entities\NetElement::find($pre_v)->name;
 
 		$panel_right = [['name' => 'List', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '0', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]],
 						['name' => 'Topography', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '1', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]]];

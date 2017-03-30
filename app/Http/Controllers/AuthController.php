@@ -166,7 +166,7 @@ class AuthController extends Controller {
 
 			// update email password hash (salted sha512), if customer logs in successfully
 			// this way we don't need to ask customers to set a new password manually
-			if($this->prefix == 'customer') {
+			if(\PPModule::is_active('mail') && $this->prefix == 'customer') {
 				foreach(CccAuthuser::where('login_name', '=', $request->login_name)->first()->contract->emails as $email) {
 					// password has already been hashed with sha512
 					if(substr($email->password,0,3) === '$6$')

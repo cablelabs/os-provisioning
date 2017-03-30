@@ -111,17 +111,11 @@ class ContractController extends \BaseController {
 			);
 		}
 
-		if(\PPModule::is_active('mail')) {
-			$d = array(
-				array('form_type' => 'text', 'name' => 'emailcount', 'description' => 'No. of email addresses')
-			);
-		}
-
-		$e = array (
+		$d = array (
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'),
 		);
 
-		return array_merge($a, $b, $c, $d, $e);
+		return array_merge($a, $b, $c, $d);
 	}
 
 

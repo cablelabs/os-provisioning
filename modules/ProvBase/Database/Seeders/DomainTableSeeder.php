@@ -17,7 +17,7 @@ class DomainTableSeeder extends \BaseSeeder {
 			foreach(range(1, rand(1,10)) as $idx)
 				$alias .= ':'.$faker->domainWord();
 
-			$type = ['sip', 'email', 'dhcp'];
+			$type = Domain::getPossibleEnumValues('type');
 
 			Domain::create([
 				'name' => $faker->domainName(),

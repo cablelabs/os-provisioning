@@ -26,28 +26,29 @@
 
         <ul class="nav navbar-nav navbar-right">
 
-        {{-- TODO: discuss the following draft (position, coding) --}}
-		<?php
-		if (\PPModule::is_active('provvoipenvia')) {
+			{{-- TODO: discuss the following draft (position, coding) --}}
+			<?php
+				if (\PPModule::is_active('provvoipenvia')) {
 
-			echo "<!-- count of user interaction needing EnviaOrders -->";
+					echo "<!-- count of user interaction needing EnviaOrders -->";
 
-			echo "<li style='font-size: 2em; font-weight: bold'>";
+					echo "<li style='font-size: 2em; font-weight: bold'>";
 
-			$user_interaction_needing_enviaorder_count = Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
-			echo '<a href="/lara/admin/EnviaOrder?show_filter=action_needed" target="_self">';
+					$user_interaction_needing_enviaorder_count = Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
+					echo '<a href="/lara/admin/EnviaOrder?show_filter=action_needed" target="_self">';
 
-			if ($user_interaction_needing_enviaorder_count > 0) {
-				echo "<span style='color: #f00; text-decoration:none' title='" . $user_interaction_needing_enviaorder_count . " user interaction needing EnviaOrders'>✘<sup>";
-				echo $user_interaction_needing_enviaorder_count . '</sup>';
-			} else {
-				echo "<span style='color: #080; text-decoration:none' title='No user interaction needing EnviaOrders'>✔";
-			}
-			echo "</a>";
+					if ($user_interaction_needing_enviaorder_count > 0) {
+						echo "<span style='color: #f00; text-decoration:none' title='".$user_interaction_needing_enviaorder_count." user interaction needing EnviaOrders'>✘<sup>";
+						echo $user_interaction_needing_enviaorder_count.'</sup>';
+					}
+					else {
+						echo "<span style='color: #080; text-decoration:none' title='No user interaction needing EnviaOrders'>✔";
+					}
+					echo "</a>";
 
-			echo "</li>";
-		}
-		?>
+					echo "</li>";
+				}
+			?>
 
         <!-- global search form -->
             <li>

@@ -280,6 +280,9 @@ return [
 	'password_change'		=> 'Passwort ändern',
 	'password_confirm'		=> 'Password bestätigen',
 	'home' 					=> 'Startseite',
+	'primary'				=> 'primär',
+	'secondary'				=> 'sekundär',
+	'disabled'				=> 'deaktiviert',
 
 
 //
@@ -288,6 +291,8 @@ return [
 	//MPR
 	'Value (deprecated)'          => 'Wert (veraltet)',
 	'Priority (lower runs first)' => 'Priorität (kleinere zuerst)',
+	'oid_list' 				=> 'Achtung: OIDs, die nicht bereits in der Datenbank existieren werden nicht beachtet! Bitte laden Sie das zuvor zugehörige MibFile hoch!',
+
 
 //
 // VOIP

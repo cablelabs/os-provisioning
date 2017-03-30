@@ -122,10 +122,11 @@ class Modem extends \BaseModel {
 		return null;
 	}
 
+	// TODO: rename to device - search for all places where this function is used
 	public function tree()
 	{
-		if (\PPModule::is_active('HfcBase'))
-			return $this->belongsTo('Modules\HfcBase\Entities\Tree');
+		if (\PPModule::is_active('HfcReq'))
+			return $this->belongsTo('Modules\HfcReq\Entities\NetElement');
 
 		return null;
 	}
@@ -685,6 +686,7 @@ class Modem extends \BaseModel {
 		$this->observer_enabled = false;
 	}
 
+
 	/**
 	 * Before deleting a modem and all children we have to check some things
 	 *
@@ -697,13 +699,48 @@ class Modem extends \BaseModel {
 		// we have to check this here as using ModemObserver::deleting() with return false does not prevent the monster from deleting child model instances!
 		if (\PPModule::is_active('ProvVoipEnvia')) {
 			if ($this->has_phonenumbers_attached()) {
-				\Session::push('tmp_info_above_form', "You are not allowed to delete a modem with attached phonenumbers!");
+
+				// check from where the deletion request has been triggered and set the correct var to show information
+				$prev = explode('?', \URL::previous())[0];
+				$prev = \Str::lower($prev);
+				$msg = "You are not allowed to delete a modem with attached phonenumbers!";
+				if (\Str::endsWith($prev, 'edit')) {
+					\Session::push('tmp_info_above_relations', $msg);
+				}
+				elseif (\Str::endsWith($prev, 'modem')) {
+					\Session::push('tmp_info_above_index_list', $msg);
+				}
+
 				return false;
 			}
 		}
 
 		// when arriving here: start the standard deletion procedure
 		return parent::delete();
+	}
+
+
+	/**
+	 * Clean modem from all Envia related data – call this e.g. if you delete the last number from this modem.
+	 * We have to do this to avoid problems in case we want to install this modem at another customer
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function remove_envia_related_data() {
+
+		// first: check if envia module is enabled
+		// if not: do nothing – this database fields could be in use by another voip provider module!
+		if (\PPModule::is_active('ProvVoipEnvia')) {
+			return;
+		}
+
+		$this->contract_external_id = NULL;
+		$this->contract_ext_creation_date = NULL;
+		$this->contract_ext_termination_date = NULL;
+		$this->installation_address_change_date = NULL;
+		$this->save();
+
+
 	}
 
 }
@@ -765,7 +802,7 @@ class ModemObserver
 		// Refresh MPS rules
 		// Note: does not perform a save() which could trigger observer.
 		if (\PPModule::is_active('HfcCustomer'))
-			$modem->tree_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem->id);
+			$modem->netelement_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem->id);
 	}
 
 	public function updated($modem)

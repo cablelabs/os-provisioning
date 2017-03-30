@@ -4,7 +4,7 @@
     "description": "",
     "keywords": [],
     "active": 0,
-    "order": 21,
+    "order": 24,
     "providers": [
         "Modules\\Mail\\Providers\\MailServiceProvider"
     ],

@@ -43,7 +43,25 @@ return [
 	'settlement_verification' 		=> 'Mit aktivierter Checkbox kann der Abrechnungslauf nicht wiederholt werden. Rechnungen der Kunden werden nur mit aktivierter Checkbox angezeigt.',
 
  /**
-  *	MODULE: ProvBase
+  *	MODULE: HfcReq
+  */
+ 	'netelementtype_reload' 		=> 'In Sekunden. 0s zum Deaktivieren des Autoreloads.',
+	'undeleteables' 				=> 'Net & Cluster können weder gelöscht werden, noch kann der Name geändert werden, da die Existenz dieser Typen Vorraussetzung für die Erzeugung des Entitity-Relationship-Diagramms ist.',
+
+ /**
+  *	MODULE: HfcSnmp
+  */
+	'mib_filename' 					=> 'Der Dateiname setzt sich aus MIB Name und Revision zusammen. Existiert bereits ein MIB-File mit selbem Dateiname und ist identisch, kann dieses nicht erneut angelegt werden.',
+	'oid_link' 						=> 'Gehe zu OID Einstellungen',
+	'oid_table' 					=> 'INFO: Dieser Parameter gehört zu einer Tabellen-OID. Durch Hinzufügen von SubOIDs or Indizes werden die SnmpWerte nur für diese abgefragt. Neben einem besseren Überblick auf der Einstellungen-Übersicht des Netzelements kann dies deren Aufrufgeschwindigkeit deutlich beschleunigen.',
+	'parameter_3rd_dimension' 		=> 'Durch Aktivieren der Checkbox wird dieser Parameter zur Einstellungsseite hinter einem Element in der Tabelle hinzugefügt.',
+	'parameter_diff' 				=> 'Bei Aktivierter Checkbox wird nur die Differenz des aktuell zum zuletzt abgefragten Wert angezeigt.',
+	'parameter_divide_by' 			=> 'Durch Angabe von OIDs wird dieser Wert prozentual zur Summe der zu diesen OIDs abgefragten Werte dargestellt. Dies funktioniert vorerst nur in SubOIDs exakt definierter Tabellen. Die hier angegebenen OIDs müssen als Parameter in der SubOID-List eingetragen sein.',
+	'parameter_indices' 			=> 'Durch Angabe einer durch Kommas getrennten Liste der Indizes der Tabellenreihen, werden die SnmpWerte nur für diese Einträge abgefragt.',
+	'parameter_html_frame' 			=> 'Hat keinen Einfluss auf SubOIDs innerhalb von Tabellen (aber auf 3. Dimension-Parameter!).',
+
+ /**
+  *	MODULE: ProvBase	
   */
 	//ModemController
 	'Modem_NetworkAccess'			=> 'Deaktivieren/Aktivieren des Netzwerkzugriffs - Achtung: Wenn das Abrechnungsmodul installiert ist, wird diese Checkbox täglich überschrieben, je nach Gültigkeit der Tarif-Option - vorausgesetzt sie wurde nicht manuell gesetzt.', 

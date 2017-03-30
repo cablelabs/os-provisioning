@@ -69,7 +69,8 @@ class BaseAuthController extends Controller {
 			case 'Modules\HfcBase\Entities\TreeErd': // entity relation diagram
 			case 'Modules\HfcBase\Entities\TreeTopo': // topography tree card
 			case 'Modules\HfcBase\Entities\TreeTopography':
-				$m = 'Modules\HfcBase\Entities\Tree';
+			case 'Modules\HfcSnmp\Entities\Snmp':
+				$m = 'Modules\HfcReq\Entities\NetElement';
 				break;
 
 			case 'Modules\HfcCustomer\Entities\CustomerTopo': // topography modems
@@ -108,7 +109,6 @@ class BaseAuthController extends Controller {
 		// if no model is given: use current model
 		if (is_null($model_to_check))
 			$model_to_check = static::__model_to_check();
-
 
 		// no user logged in
 		if (is_null($cur_user)) {

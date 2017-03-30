@@ -46,11 +46,12 @@
                 <div class="panel panel-inverse">
                     <div class="panel-heading"><h4 class="panel-title">Analyse letzte 12 Monate</h4></div>
                     <div class="panel-body">
-                        <div id="contracts-legend" style="float: right; padding: 25px;">
+                        <!-- div id="contracts-legend" style="float: right; padding: 25px;" -->
                             <!-- Legende -->
-                        </div>
+                        <!-- /div -->
                         <div id="contracts-chart" style="width: 100%; height: 300px;">
                             <!-- Chart -->
+                            <canvas id="chart" height="130%"></canvas>
                         </div>
                     </div>
                 </div>
@@ -59,12 +60,33 @@
 
         <br><br><br>
 
-        @if ($show_sales)
+        <?php
+            $sales_total = 0;
+    		$sales_diff = 0;
+
+            if (isset($sales[date('Y')])) {
+                $sales_total = $sales[date('Y')]['total'];
+            } elseif (isset($sales['current_month'])) {
+                $sales_total = number_format($sales['current_month']['total'], 2, ',', '');
+            }
+
+            if (isset($sales[date('Y')])) {
+                $sales_diff = $sales[date('Y')]['total'] - $sales[date('Y') - 1]['total'];
+                $sales_diff = number_format($sales_diff, 2, ',', '');
+                $periode = 'Vorjahr';
+            } elseif(isset($sales['current_month'])) {
+                $sales_diff = $sales['current_month']['total'] - $sales['last_month']['total'];
+                $sales_diff = number_format($sales_diff, 2, ',', '');
+                $periode = 'Vormonat';
+            }
+        ?>
+{{--
+        @if ($show_sales === true)
             <div class="row">
                 <div class="col-md-3 col-sm-6">
                     <div class="panel panel-inverse">
                         <div class="panel-heading">
-                            <h4 class="panel-title">Umsatz <?php echo date('Y'); ?></h4>
+                            <h4 class="panel-title">Umsatz {{ date('Y') }}</h4>
                         </div>
                         <div class="panel-body">
                             <div class="widget widget-stats bg-green-lighter">
@@ -73,29 +95,8 @@
                                 </div>
                                 <div class="stats-info">
                                     <h4>total:</h4>
-                                    <?php
-                                        $sales_total = 0;
-                                        if (isset($sales[date('Y')])) {
-											$sales_total = $sales[date('Y')]['total'];
-                                        } elseif (isset($sales['current_month'])) {
-											$sales_total = number_format($sales['current_month']['total'], 2, ',', '');
-                                        }
-                                    ?>
                                     <p>{{ $sales_total }}</p>
                                     <div class="stats-desc">
-                                        <?php
-                                            $sales_diff = 0;
-
-										    if (isset($sales[date('Y')])) {
-                                                $sales_diff = $sales[date('Y')]['total'] - $sales[date('Y') - 1]['total'];
-                                                $sales_diff = number_format($sales_diff, 2, ',', '');
-                                                $periode = 'Vorjahr';
-                                            } elseif(isset($sales['current_month'])) {
-												$sales_diff = $sales['current_month']['total'] - $sales['last_month']['total'];
-												$sales_diff = number_format($sales_diff, 2, ',', '');
-												$periode = 'Vormonat';
-                                             }
-                                        ?>
                                         Veränderung zum {{ $periode }}: {{ $sales_diff }}
                                     </div>
                                 </div>
@@ -124,38 +125,12 @@
                     </div>
                 </div>
             </div>
-<!--
-            <script type="text/javascript">
-                window.onload = function() {
-
-                    // float bar chart -> sales
-                    var data = <?php echo json_encode($chart_data_sales); ?>;
-                    var options = {
-                        xaxis: {
-                            mode: 'categories',
-                            tickLength: 0
-                        },
-                        yaxis: {
-                            tickDecimals: 2
-                        },
-                        grid: { borderWidth: 0 },
-                        bars: {
-                            show: true,
-                            align: "center",
-                            barWidth: 0.5
-                        }
-                    };
-
-                    $.plot($("#sales-chart"),
-                        [ {data: data } ],
-                        options
-                    );
-                }
-            </script>
--->
             <br><br><br>
         @endif
-
+            <br><br><br>
+        @endif
+--}}
+{{--
         <div class="row">
             <div class="col-md-3 col-sm-6">
                 <div class="panel panel-inverse">
@@ -168,85 +143,67 @@
                 </div>
             </div>
         </div>
+--}}
     </div>
 @stop
 
 <script type="text/javascript">
     window.onload = function() {
-        // flot interactive chart -> contracts
-        var valid_contracts = <?php echo json_encode($chart_data_valid_contracts); ?>;
-        var invalid_contracts = <?php echo json_encode($chart_data_invalid_contracts); ?>;
-        var options = {
-            colors: ['green', 'red'],
-            xaxis: { mode: 'categories' },
-            yaxis: { tickDecimals: 0 },
-            grid: { borderWidth: 0 },
-            legend: {
-                show: true,
-                container: $('#contracts-legend')
-            }
-        };
-
-        $.plot($("#contracts-chart"),
-            [
-                {label: "aktive Verträge", data: valid_contracts },
-                {label: "inaktive Verträge", data: invalid_contracts }
-            ],
-            options);
-
         // float bar chart -> sales
-        var data = <?php echo json_encode($chart_data_sales); ?>;
-        var options = {
-            xaxis: {
-                mode: 'categories',
-                tickLength: 0
-            },
-            yaxis: {
-                tickDecimals: 2
-            },
-            grid: { borderWidth: 0 },
-            bars: {
-                show: true,
-                align: "center",
-                barWidth: 0.5
-            }
-        };
+        if ($("#sales-chart").length) {
+            var data = <?php echo json_encode($chart_data_sales); ?>;
+            var options = {
+                xaxis: {
+                    mode: 'categories',
+                    tickLength: 0
+                },
+                yaxis: {
+                    tickDecimals: 2
+                },
+                grid: {borderWidth: 0},
+                bars: {
+                    show: true,
+                    align: "center",
+                    barWidth: 0.5
+                }
+            };
 
-        $.plot($("#sales-chart"),
-            [ {data: data } ],
-            options
-        );
-
-        // float bar chart -> sales
-        var data = <?php echo json_encode($chart_data_sales); ?>;
-        var options = {
-            xaxis: {
-                mode: 'categories',
-                tickLength: 0
-            },
-            yaxis: {
-                tickDecimals: 2
-            },
-            grid: { borderWidth: 0 },
-            bars: {
-                show: true,
-                align: "center",
-                barWidth: 0.5
-            }
-        };
-
-        $.plot($("#sales-chart"),
-            [ {data: data } ],
-            options
-        );
+            $.plot($("#sales-chart"),
+                [{data: data}],
+                options
+            );
+        }
 
         // range slider
-        $("#example_id").ionRangeSlider();
+//        $("#example_id").ionRangeSlider();
 
         FormSliderSwitcher.init();
 
-        $('#switch-sales').change(function() {
+        $('#switch-sales').change(function () {
             $('#switch-sales-count').submit();
         })
-    };
+
+        // line chart contracts
+        var labels = {{ json_encode($chart_data_contracts['labels']) }};
+        var active = {{ json_encode($chart_data_contracts['valid']) }};
+        var inactive = {{ json_encode($chart_data_contracts['invalid']) }};
+
+        var ctx = document.getElementById('chart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'active',
+                    data: active,
+                    backgroundColor: "rgba(0,128,0,0.6)"
+                }, {
+                    label: 'inactive Contracts',
+                    data: inactive,
+                    backgroundColor: "rgba(255,0,0,0.8)"
+                }]
+            }
+        });
+
+    }
 </script>

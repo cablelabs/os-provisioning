@@ -24,7 +24,6 @@
           <li>
             <a href="{{BaseRoute::get_base_url()}}/Dashboard"><i class="fa fa-laptop"></i> <span>Dashboard</span></a>
           </li>
-
           <li>
             <a href="javascript:;">
               <span class="badge pull-right">0</span>
@@ -42,7 +41,7 @@
                 <span>{{$network->name}}</span>
               </a>
               <ul class="sub-menu">
-                <li><a href="{{BaseRoute::get_base_url()}}/Tree/erd/net/{{$network->id}}">Network</a></li>
+                <li class="nav-header"><a href="{{BaseRoute::get_base_url()}}/Tree/erd/net/{{$network->id}}">Network ERD</a></li>
                 @foreach ($network->get_all_cluster_to_net() as $cluster)
                  <li><a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}">--{{$cluster->name}}</a></li>
                 @endforeach

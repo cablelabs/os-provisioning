@@ -89,6 +89,7 @@ class Configfile extends \BaseModel {
 	public function search_children($build = 0)
 	{
 		$id = $this->id;
+		// TODO: this should not be a database query
 		$children = Configfile::all()->where('parent_id', $id)->all();
 		$cf_tree = [];
 
@@ -429,34 +430,21 @@ class Configfile extends \BaseModel {
 	}
 
 	/**
-	 * Returns a list of configfiles, which are still associated with a modem or mta and
-	 * thus must not be deleted.
+	 * Returns a list of configfiles (incl. all of its parents), which are
+	 * still assigned to a modem or mta and thus must not be deleted.
 	 *
 	 * @author Ole Ernst
 	 */
 	static public function all_in_use()
 	{
-		/*
-		 * get all leaf configfiles (i.e. with no children), using mysql query is more efficient
-		 * see: http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
-		 */
-		$leaf_ids = DB::table('configfile as t1')->leftJoin('configfile as t2', function ($join) {
-			$join->on('t1.id', '=', 't2.parent_id')->whereNull('t2.deleted_at');
-		})->whereNull('t2.id')->whereNull('t1.deleted_at')->select('t1.id')->get('t1.id');
-
-		// we are only interested in leafs, which are associated with a modem or mta
-		$leaf_ids = array_map(function($e) { return $e->id; }, $leaf_ids);
-		$leaf_ids = array_filter($leaf_ids, function($e) {
-			$cf = Configfile::where('id', $e)->first();
-			if(count($cf->modem) || count($cf->mtas))
-				return true;
-			return false;
-		});
-
-		// mark all parents of a used leaf configfile as used to, as we must not delete those too
-		$used_ids = $leaf_ids;
-		foreach ($leaf_ids as $leaf_id)
-			self::_add_parent($used_ids, Configfile::where('id', $leaf_id)->first());
+		$used_ids = [];
+		// only public configfiles can be assigned to a modem or mta
+		foreach (Configfile::where('public', '=', 'yes')->get() as $cf) {
+			if(count($cf->modem) || count($cf->mtas)) {
+				array_push($used_ids, $cf->id);
+				self::_add_parent($used_ids, $cf);
+			}
+		}
 
 		return $used_ids;
 	}

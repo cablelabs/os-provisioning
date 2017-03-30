@@ -369,6 +369,43 @@ class Phonenumber extends \BaseModel {
 
 	}
 
+
+	/**
+	 * Before deleting a modem and all children we have to check some things
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function delete() {
+
+		// deletion of modems with attached phonenumbers is not allowed with enabled Envia module
+		// prevent user from (recursive and implicite) deletion of phonenumbers before termination at Envia!!
+		// we have to check this here as using ModemObserver::deleting() with return false does not prevent the monster from deleting child model instances!
+		/* d(\URL::previous()); */
+		if (
+			(\PPModule::is_active('ProvVoipEnvia'))
+			&&
+			(!is_null($this->phonenumbermanagement))
+		) {
+
+			// check from where the deletion request has been triggered and set the correct var to show information
+			$prev = explode('?', \URL::previous())[0];
+			$prev = \Str::lower($prev);
+			$msg = "You are not allowed to delete a phonenumber with attached phonenumbermanagement!";
+			if (\Str::endsWith($prev, 'edit')) {
+				\Session::push('tmp_info_above_relations', $msg);
+			}
+			elseif (\Str::endsWith($prev, 'phonenumber')) {
+				\Session::push('tmp_info_above_index_list', $msg);
+			}
+
+			return false;
+		}
+
+		// when arriving here: start the standard deletion procedure
+		return parent::delete();
+	}
+
+
 	/**
 	 * BOOT:
 	 * - init phone observer
@@ -555,11 +592,7 @@ class PhonenumberObserver
 
 		// third: if there are no more numbers attached to the old modem: remove all Envia related data
 		if (!$old_modem->has_phonenumbers_attached()) {
-			$old_modem->contract_external_id = NULL;
-			$old_modem->contract_ext_creation_date = NULL;
-			$old_modem->contract_ext_termination_date = NULL;
-			$old_modem->installation_address_change_date = NULL;
-			$old_modem->save();
+			$old_modem->remove_envia_related_data();
 		}
 		else {
 			$attributes = ['target'=>'_blank'];
@@ -637,12 +670,15 @@ class PhonenumberObserver
 
 	}
 
+
 	public function deleted($phonenumber)
 	{
 		$phonenumber->mta->make_configfile();
 		$phonenumber->mta->modem->restart_modem();
 
 		// check if this number has been the last on old modem ⇒ if so remove envia related data from modem
-		$this->_check_if_last_number_on_modem($phonenumber, $old_modem);
+		if (!$phonenumber->mta->modem->has_phonenumbers_attached()) {
+			$phonenumber->mta->modem->remove_envia_related_data();
+		}
 	}
 }

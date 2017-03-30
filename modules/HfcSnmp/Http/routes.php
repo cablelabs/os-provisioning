@@ -2,13 +2,13 @@
 
 BaseRoute::group([], function() {
 
-	BaseRoute::resource('SnmpMib', 'Modules\HfcSnmp\Http\Controllers\SnmpMibController');
+	BaseRoute::resource('MibFile', 'Modules\HfcSnmp\Http\Controllers\MibFileController');
+	BaseRoute::resource('OID', 'Modules\HfcSnmp\Http\Controllers\OIDController');
+	BaseRoute::resource('Parameter', 'Modules\HfcSnmp\Http\Controllers\ParameterController');
 	BaseRoute::resource('SnmpValue', 'Modules\HfcSnmp\Http\Controllers\SnmpValueController');
-	BaseRoute::resource('DeviceType', 'Modules\HfcSnmp\Http\Controllers\DeviceTypeController');
-	BaseRoute::resource('Device', 'Modules\HfcSnmp\Http\Controllers\DeviceController');
 
-
-	BaseRoute::get('Device/{modem}/controlling', array ('as' => 'Device.controlling_edit', 'uses' => 'Modules\HfcSnmp\Http\Controllers\DeviceController@controlling_edit'));
-	BaseRoute::put('Device/{modem}/controlling', array ('as' => 'Device.controlling_update', 'uses' => 'Modules\HfcSnmp\Http\Controllers\DeviceController@controlling_update'));
+	BaseRoute::get('Parameter/{param}/assign', array('as' => 'Parameter.assign', 'uses' => 'Modules\HfcSnmp\Http\Controllers\ParameterController@assign'));
+	BaseRoute::post('Parameter/{param}/attach_oids', array('as' => 'Parameter.attach_oids', 'uses' => 'Modules\HfcSnmp\Http\Controllers\ParameterController@attach_oids'));
+	\Route::delete('Parameter/{param}/detach_all', array('as' => 'Parameter.detach_all', 'uses' => 'Modules\HfcSnmp\Http\Controllers\ParameterController@detach_all', 'middleware' => 'auth:delete'));
 
 });
