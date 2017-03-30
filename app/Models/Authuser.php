@@ -218,6 +218,14 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 		return $ret;
 	}
 
+	/**
+	 * Remove role from user
+	 *
+	 * @param $user_id
+	 * @param $role_id
+	 * @return null
+	 * @throws \Exception
+	 */
 	public function delete_roles_by_userid($user_id, $role_id)
 	{
 		$ret = null;
@@ -233,6 +241,14 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 		return $ret;
 	}
 
+	/**
+	 * Assign role to user
+	 *
+	 * @param $user_id
+	 * @param $role_id
+	 * @return null
+	 * @throws \Exception
+	 */
 	public function assign_roles_for_userid($user_id, $role_id)
 	{
 		$ret = null;
@@ -244,6 +260,57 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 			throw $e;
 		}
 		return $ret;
+	}
+
+	/**
+	 * Check if user has super_admin rights
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function is_admin()
+	{
+		$ret_val = false;
+		$super_user_role_id = 1;
+
+		try {
+			$roles = $this->roles();
+
+			foreach ($roles as $role) {
+				if ($role->id == $super_user_role_id) {
+					$ret_val = true;
+					break;
+				}
+			}
+		} catch (\Exception $e) {
+			throw $e;
+		}
+		return $ret_val;
+	}
+
+	/**
+	 * Check if user has permissions for module and model
+	 *
+	 * @param $module
+	 * @param $entity
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function has_permissions($module, $entity)
+	{
+		$ret_val = false;
+
+		try {
+			$namespace = 'Modules\\' . $module . '\\Entities\\' . $entity;
+			$model_permissions = $this->get_model_permissions();
+
+			if (array_key_exists($namespace, $model_permissions)) {
+				$ret_val = true;
+			}
+		} catch (\Exception $e) {
+			throw $e;
+		}
+		return $ret_val;
 	}
 }
 

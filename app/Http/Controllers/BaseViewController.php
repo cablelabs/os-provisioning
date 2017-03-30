@@ -367,14 +367,16 @@ finish:
 		$modules = Module::enabled();
 
 		// global page
-		$array = include(app_path().'/Config/header.php');
-		foreach ($array as $lines)
-		{
-			// array_push($ret, $lines);
-			foreach ($lines as $k => $line)
+		if (\Auth::user()->is_admin() === true) {
+			$array = include(app_path().'/Config/header.php');
+			foreach ($array as $lines)
 			{
-				$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
-				$ret['Global'][$key] = $line;
+				// array_push($ret, $lines);
+				foreach ($lines as $k => $line)
+				{
+					$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
+					$ret['Global'][$key] = $line;
+				}
 			}
 		}
 
@@ -395,10 +397,19 @@ finish:
 				{
 					foreach ($lines as $k => $line)
 					{
-						$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
-						$ret[$name][$key] = $line;
+						if (\Auth::user()->has_permissions($module->name, substr($line, 0, -6))) {
+							$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
+							$ret[$name][$key] = $line;
+						}
 					}
 				}
+			}
+		}
+
+		// cleanup menu
+		foreach ($ret as $menu_name => $entries) {
+			if (count($entries) == 0) {
+				unset($ret[$menu_name]);
 			}
 		}
 

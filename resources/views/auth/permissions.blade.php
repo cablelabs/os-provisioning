@@ -37,7 +37,7 @@
             @foreach ($assigned_permissions as $row)
                 <tr>
                     <td width=50> {{ Form::checkbox('delete_ids['.$row->id.']', 1, null, null, ['style' => 'simple']) }} </td>
-                    <td>{{ $row->name }}&nbsp;&nbsp;</td>
+                    <td>{{ class_basename($row->name) }}&nbsp;&nbsp;</td>
                     <td>{{ $row->type }}</td>
                     <td align="center">
                         <?php $checked = ($row->view) ? 'checked' : ''; ?>
@@ -83,7 +83,7 @@
 
 @DivOpen(12)
     <input type="hidden" name="role_id" id="role_id" value="{{ $role_id }}">
-    {{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Delete selected permissions', 'Button' ) , ['style' => 'simple', 'class' => 'btn btn-danger m-r-5']) }}
+    {{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Delete selected model', 'Button' ) , ['style' => 'simple', 'class' => 'btn btn-danger m-r-5']) }}
 @DivClose()
 {{ Form::close() }}
 

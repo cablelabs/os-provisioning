@@ -27,12 +27,30 @@ class Authrole extends BaseModel
 		);
 	}
 
+	/**
+	 * Overwrite BaseModel method to get only roles
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function index_list()
+	{
+		$ret = array();
+
+		try {
+			$ret = $this->where('type', '=', 'role')->get();
+		} catch (\Exception $e) {
+			throw $e;
+		}
+		return $ret;
+	}
+
 	// link title in index view
 	public function view_index_label()
 	{
 		return [
-			'index' => [$this->id, $this->name, $this->type],
-			'index_header' => ['', 'Role name', 'Type'],
+			'index' => [$this->name],
+			'index_header' => ['Role name'],
 			'header' => $this->name
 		];
 	}
@@ -69,10 +87,16 @@ class Authrole extends BaseModel
 	 */
 	public function delete()
 	{
-		foreach ($_REQUEST['ids'] as $role_id => $checkbox_value) {
-			if ($role_id != 1) {
-				parent::delete();
+		try {
+			$data = \Input::all();
+
+			foreach ($data['ids'] as $role_id => $checkbox_value) {
+				if ($role_id != 1) {
+					parent::delete();
+				}
 			}
+		} catch (\Exception $e) {
+			throw $e;
 		}
 	}
 

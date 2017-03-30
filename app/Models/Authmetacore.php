@@ -29,6 +29,7 @@ class Authmetacore extends BaseModel {
 					->join('authcores', 'authcores.id', '=', $this->table . '.core_id')
 					->select($this->table . '.*', 'authcores.name', 'authcores.type')
 					->where($this->table . '.meta_id', '=', $meta_id)
+					->orderBy('name')
 					->get();
 			}
 		} catch (\Exception $e) {
@@ -89,6 +90,19 @@ class Authmetacore extends BaseModel {
 			$ret = DB::table($this->table)
 				->where('id', '=' , $authmethacore_id)
 				->update([$authmethacore_right => $value]);
+
+			// check rights - if no right set, delete entry
+			$entry = DB::table($this->table)
+				->select('view', 'create', 'edit', 'delete')
+				->where('id', '=', $authmethacore_id)
+				->get();
+
+			// delete entry if no right set
+			if ($entry[0]->view == 0 && $entry[0]->create == 0 && $entry[0]->edit == 0 && $entry[0]->delete == 0) {
+				$ret = DB::table($this->table)
+					->where('id', '=', $authmethacore_id)
+					->delete();
+			}
 		} catch (\Exception $e) {
 			throw $e;
 		}
