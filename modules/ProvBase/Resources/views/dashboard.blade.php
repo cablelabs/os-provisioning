@@ -1,5 +1,7 @@
 @extends ('Layout.default')
 
+<link href="{{asset('components/assets-admin/plugins/switchery/switchery.css')}}" rel="stylesheet" />
+
 @section('content')
     <div class="col-md-12">
 
@@ -17,15 +19,22 @@
                                 <i class="fa fa-globe fa-fw"></i>
                             </div>
                             <div class="stats-info">
-                                <h4>total:</h4>
-                                <p><h1 style="color: #ffffff">{{ count($contracts['till_now']) }}</h1></p>
-                                <div class="stats-desc">
-                                    @if (!isset($contracts['days']))
-                                        Veränderung zum Vormonat: {{ count($contracts['till_now']) - count($contracts['period']) }}
-                                    @else
-                                        Veränderung in den letzten {{ $contracts['days'] }} Tagen: {{ count($contracts['till_now']) - count($contracts['period']) }}
-                                    @endif
-                                </div>
+                                @if (count($contracts) == 0)
+                                    <p><h4>Keine Verträge vorhanden.</h4></p>
+                                @else
+                                    <h4>total:</h4>
+                                    <p><h1 style="color: #ffffff">{{ $contracts['count_all'] }}</h1></p>
+                                    <div class="stats-desc">
+                                        <?php
+                                            $diff = $contracts['count_all'] - $contracts['count_filtered'];
+                                        ?>
+                                        @if ($contracts['period'] == 'lastMonth')
+                                            Veränderung zum Vormonat: {{ $diff }}
+                                        @elseif ($contracts['period'] == 'dayPeriod')
+                                            Veränderung in den letzten {{ $contracts['days'] }} Tagen: {{ $diff }}
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -42,167 +51,66 @@
                 </div>
             </div>
 
-            <div class="col-md-6 col-sm-6">
-                <div class="panel panel-inverse">
-                    <div class="panel-heading"><h4 class="panel-title">Analyse letzte 12 Monate</h4></div>
-                    <div class="panel-body">
-                        <!-- div id="contracts-legend" style="float: right; padding: 25px;" -->
-                            <!-- Legende -->
-                        <!-- /div -->
-                        <div id="contracts-chart" style="width: 100%; height: 300px;">
-                            <!-- Chart -->
-                            <canvas id="chart" height="130%"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <br><br><br>
-
-        <?php
-            $sales_total = 0;
-    		$sales_diff = 0;
-
-            if (isset($sales[date('Y')])) {
-                $sales_total = $sales[date('Y')]['total'];
-            } elseif (isset($sales['current_month'])) {
-                $sales_total = number_format($sales['current_month']['total'], 2, ',', '');
-            }
-
-            if (isset($sales[date('Y')])) {
-                $sales_diff = $sales[date('Y')]['total'] - $sales[date('Y') - 1]['total'];
-                $sales_diff = number_format($sales_diff, 2, ',', '');
-                $periode = 'Vorjahr';
-            } elseif(isset($sales['current_month'])) {
-                $sales_diff = $sales['current_month']['total'] - $sales['last_month']['total'];
-                $sales_diff = number_format($sales_diff, 2, ',', '');
-                $periode = 'Vormonat';
-            }
-        ?>
-{{--
-        @if ($show_sales === true)
-            <div class="row">
-                <div class="col-md-3 col-sm-6">
-                    <div class="panel panel-inverse">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">Umsatz {{ date('Y') }}</h4>
-                        </div>
-                        <div class="panel-body">
-                            <div class="widget widget-stats bg-green-lighter">
-                                <div class="stats-icon">
-                                    <i class="fa fa-euro fa-fw"></i>
-                                </div>
-                                <div class="stats-info">
-                                    <h4>total:</h4>
-                                    <p>{{ $sales_total }}</p>
-                                    <div class="stats-desc">
-                                        Veränderung zum {{ $periode }}: {{ $sales_diff }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel-footer">
-                            {{ Form::open(array('id' => 'switch-sales-count', 'route' => array('Dashboard.index', 0), 'method' => 'POST', 'files' => false)) }}
-                                <input type="checkbox" id="switch-sales" name="switch-sales" data-render="switchery" data-theme="default" {{ $checked }}/>
-                                <span>Umsatz monatlich</span>
-                            {{ Form::close() }}
-                        </div>
-                    </div>
-                </div>
-
+            @if (count($contracts) > 0)
                 <div class="col-md-6 col-sm-6">
                     <div class="panel panel-inverse">
-                        <div class="panel-heading"><h4 class="panel-title">Umsatz nach Produkttypen</h4></div>
+                        <div class="panel-heading"><h4 class="panel-title">Analyse letzte 12 Monate</h4></div>
                         <div class="panel-body">
-                            <div id="contracts-legend" style="float: right; padding: 25px;">
+                            <!-- div id="contracts-legend" style="float: right; padding: 25px;" -->
                                 <!-- Legende -->
-                            </div>
-                            <div id="sales-chart" style="width: 100%; height: 300px;">
+                            <!-- /div -->
+                            <div id="contracts-chart" style="width: 100%; height: 300px;">
                                 <!-- Chart -->
+                                <canvas id="chart" height="100%"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <br><br><br>
-        @endif
---}}
-{{--
-        <div class="row">
-            <div class="col-md-3 col-sm-6">
-                <div class="panel panel-inverse">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">Test Ion.RangeSlider</h4>
-                    </div>
-                    <div class="panel-body">
-                        <input type="text" id="example_id" name="example_name" value="" />
-                    </div>
-                </div>
-            </div>
+            @endif
         </div>
---}}
     </div>
 @stop
 
 <script type="text/javascript">
+    if (typeof window.jQuery == 'undefined') {
+        document.write('<script src="{{asset('components/assets-admin/plugins/jquery/jquery-1.9.1.min.js')}}">\x3C/script>');
+    }
+</script>
+
+<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.categories.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/chart/Chart.min.js')}}"></script>
+
+<script src="{{asset('components/assets-admin/plugins/switchery/switchery.js')}}"></script>
+<script src="{{asset('components/assets-admin/js/form-slider-switcher.demo.js')}}"></script>
+
+<script type="text/javascript">
+
     window.onload = function() {
 
-        // float bar chart -> sales
-        if ($("#sales-chart").length) {
-            var data = <?php echo json_encode($chart_data_sales); ?>;
-            var options = {
-                xaxis: {
-                    mode: 'categories',
-                    tickLength: 0
-                },
-                yaxis: {
-                    tickDecimals: 2
-                },
-                grid: {borderWidth: 0},
-                bars: {
-                    show: true,
-                    align: "center",
-                    barWidth: 0.5
-                }
-            };
-
-            $.plot($("#sales-chart"),
-                [{data: data}],
-                options
-            );
-        }
-
-        // range slider
-        $("#example_id").ionRangeSlider();
-
-        FormSliderSwitcher.init();
-
-        $('#switch-sales').change(function () {
-            $('#switch-sales-count').submit();
-        })
-
         // line chart contracts
-        var labels = {{ json_encode($chart_data_contracts['labels']) }};
-        var active = {{ json_encode($chart_data_contracts['valid']) }};
-        var inactive = {{ json_encode($chart_data_contracts['invalid']) }};
+        var chart_data = {{ json_encode($chart_data_contracts) }};
 
-        var ctx = document.getElementById('chart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'active',
-                    data: active,
-                    backgroundColor: "rgba(0,128,0,0.6)"
-                }, {
-                    label: 'inactive Contracts',
-                    data: inactive,
-                    backgroundColor: "rgba(255,0,0,0.8)"
-                }]
-            }
-        });
+        if (chart_data.length != 0) {
 
+            var labels = chart_data['labels'];
+            var contracts = chart_data['contracts'];
+            var ctx = document.getElementById('chart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: contracts,
+                        backgroundColor: "rgba(0,128,0,0.6)",
+                    }],
+                },
+                options: {
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+        }
     }
 </script>
