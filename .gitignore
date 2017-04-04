@@ -12,6 +12,8 @@ Thumbs.db
 storage/systemd/
 storage/hfc/
 storage/framework/
+storage/debugbar/
+storage/xdebug/
 
 # vim (https://github.com/github/gitignore/blob/master/Global/Vim.gitignore)
 [._]*.s[a-w][a-z]
@@ -43,3 +45,4 @@ tags
 
 Documentation/doxyfile.bak
 Documentation/doxywarn.log
+
