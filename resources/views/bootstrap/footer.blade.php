@@ -16,6 +16,7 @@
 <script src="{{asset('components/assets-admin/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/select2-v4/vendor/select2/select2/dist/js/select2.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/js/ui-modal-notification.demo.js')}}"></script>
 <!-- ================== END BASE JS ================== -->
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->

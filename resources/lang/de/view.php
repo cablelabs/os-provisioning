@@ -66,6 +66,7 @@ return [
 		'Menu_UserSettings'			=> 'Nutzereinstellungen',
 		'Menu_UserGlobSettings'		=> 'Globale Nutzereinstellungen',
 		'Menu_Logout'				=> 'Ausloggen',
+		'Menu_UserRoleSettings'		=> 'Nutzerrollen',
 
 //
 //HEADER

@@ -199,7 +199,6 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 
 	}
 
-
 	/**
 	 * BOOT:
 	 * - init observer
@@ -209,6 +208,113 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 		parent::boot();
 
 		Authuser::observe(new AuthObserver);
+	}
+
+	public function view_has_many()
+	{
+		$ret['Base']['Roles']['view']['view'] = 'auth.roles';
+		$ret['Base']['Roles']['view']['vars']['roles'] = $this->roles();
+
+		return $ret;
+	}
+
+	/**
+	 * Remove role from user
+	 *
+	 * @param $user_id
+	 * @param $role_id
+	 * @return null
+	 * @throws \Exception
+	 */
+	public function delete_roles_by_userid($user_id, $role_id)
+	{
+		$ret = null;
+
+		try {
+			$ret = DB::table('authusermeta')
+				->where('user_id', '=', $user_id)
+				->where('meta_id', '=', $role_id)
+				->delete();
+		} catch (\Exception $e) {
+			throw $e;
+		}
+		return $ret;
+	}
+
+	/**
+	 * Assign role to user
+	 *
+	 * @param $user_id
+	 * @param $role_id
+	 * @return null
+	 * @throws \Exception
+	 */
+	public function assign_roles_for_userid($user_id, $role_id)
+	{
+		$ret = null;
+
+		try {
+			$ret = DB::table('authusermeta')
+				->insert(array('user_id' => $user_id, 'meta_id' => $role_id));
+		} catch (\Exception $e) {
+			throw $e;
+		}
+		return $ret;
+	}
+
+	/**
+	 * Check if user has super_admin rights
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function is_admin()
+	{
+		$ret_val = false;
+		$super_user_role_id = 1;
+
+		try {
+			$roles = $this->roles();
+
+			foreach ($roles as $role) {
+				if ($role->id == $super_user_role_id) {
+					$ret_val = true;
+					break;
+				}
+			}
+		} catch (\Exception $e) {
+			throw $e;
+		}
+		return $ret_val;
+	}
+
+	/**
+	 * Check if user has permissions for module and model
+	 *
+	 * @param $module
+	 * @param $entity
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function has_permissions($module, $entity)
+	{
+		$ret_val = false;
+
+		try {
+			$namespace = 'Modules\\' . $module . '\\Entities\\' . $entity;
+			if ($module == 'App\\') {
+				$namespace = $module . $entity;
+			}
+
+			$model_permissions = $this->get_model_permissions();
+
+			if (array_key_exists($namespace, $model_permissions)) {
+				$ret_val = true;
+			}
+		} catch (\Exception $e) {
+			throw $e;
+		}
+		return $ret_val;
 	}
 }
 
@@ -223,8 +329,11 @@ class AuthObserver
 		$id = $auth->id;
 
 		// Create required AuthUserMeta relation, otherwise user can not login
-		DB::update("INSERT INTO authusermeta (user_id, meta_id) VALUES($id, 1);");
-		DB::update("INSERT INTO authusermeta (user_id, meta_id) VALUES($id, 2);");
+		// 2017-03016 SAr: Assign relation only for the root user
+		if ($id == 1) {
+			DB::update("INSERT INTO authusermeta (user_id, meta_id) VALUES($id, 1);");
+			DB::update("INSERT INTO authusermeta (user_id, meta_id) VALUES($id, 2);");
+		}
     }
 
     public function deleted($auth)
