@@ -1,5 +1,10 @@
 <!-- ================== BEGIN BASE JS ================== -->
-<script src="{{asset('components/assets-admin/plugins/jquery/jquery-1.9.1.min.js')}}"></script>
+<script type="text/javascript">
+  if (typeof window.jQuery == 'undefined') {
+      document.write('<script src="{{asset('components/assets-admin/plugins/jquery/jquery-1.9.1.min.js')}}">\x3C/script>');
+  }
+</script>
+
 <script src="{{asset('components/assets-admin/plugins/jquery/jquery-migrate-1.1.0.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/jquery-ui/ui/minified/jquery-ui.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
@@ -15,14 +20,6 @@
 <!-- ================== END BASE JS ================== -->
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
-<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.categories.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/chart/Chart.min.js')}}"></script>
-<!-- script src="{{asset('components/assets-admin/plugins/ionRangeSlider/js/ion-rangeSlider/ion.rangeSlider.min.js')}}"></script -->
-
-<script src="{{asset('components/assets-admin/plugins/switchery/switchery.js')}}"></script>
-<script src="{{asset('components/assets-admin/js/form-slider-switcher.demo.js')}}"></script>
-
 <script src="{{asset('components/assets-admin/js/apps.min.js')}}"></script>
 <!-- Javascript Tree View (for index page) -->
 <!-- <script src="{{asset('components/assets-admin/plugins/jstree/dist/jstree.min.js')}}"></script> -->
