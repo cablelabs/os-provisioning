@@ -46,7 +46,22 @@
 @endforeach
 
 @if ($edit_view_save_button)
-	{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button')) }}
+	@if ($edit_view_force_restart_button)
+	<div class='col-md-5'>
+	@endif
+	{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button'), ['name' => '_save']) }}
+	@if ($edit_view_force_restart_button)
+	</div>
+	@endif
+@endif
+@if ($edit_view_force_restart_button)
+	@if ($edit_view_save_button)
+	<div class='col-md-6'>
+	@endif
+	{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view($force_restart_button , 'Button'), ['name' => '_force_restart']) }}
+	@if ($edit_view_save_button)
+	</div>
+	@endif
 @endif
 
 

@@ -202,6 +202,7 @@ return [
 		'Sign me in'				=> 'Einloggen',
 		'Button_Create'				=> 'Erstelle',
 		'Button_Delete'				=> 'Markierte Einträge löschen',
+		'Button_Force Restart'		=> 'Neustart erzwingen',
 		'Button_Save'				=> 'Speichern',
 		'Button_Save / Restart'		=> 'Speichern / Neustart',
 	//BillingBase

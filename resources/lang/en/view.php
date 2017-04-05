@@ -147,6 +147,7 @@ return [
 		'Sign me in'				=> 'Login',
 		'Button_Create'				=> 'Create',
 		'Button_Delete'				=> 'Delete marked Elements',
+		'Button_Force Restart'		=> 'Force Restart',
 		'Button_Save'				=> 'Save',
 		'Button_Save / Restart'		=> 'Save / Restart',
 	//BillingBase

@@ -30,12 +30,14 @@ class BaseController extends Controller {
 	 * NOTE: All these values could be used in the inheritances classes
 	 */
 	protected $save_button = 'Save';
+	protected $force_restart_button = 'Force Restart';
 	protected $relation_create_button = 'Create';
 	protected $index_create_allowed = true;
 	protected $index_delete_allowed = true;
 	protected $edit_left_md_size = 4;
 	protected $edit_right_md_size = null;
 	protected $edit_view_save_button = true;
+	protected $edit_view_force_restart_button = false;
 
 
 
@@ -350,7 +352,9 @@ class BaseController extends Controller {
 			$a['edit_right_md_size'] = $this->edit_right_md_size;
 
 		$a['save_button'] = $this->save_button;
+		$a['force_restart_button'] = $this->force_restart_button;
 		$a['edit_view_save_button'] = $this->edit_view_save_button;
+		$a['edit_view_force_restart_button'] = $this->edit_view_force_restart_button;
 
 		// Get Framework Informations
 		$gc = GlobalConfig::first();
