@@ -7,6 +7,7 @@ use Log;
 use Exception;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\ProvBase;
+use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class Modem extends \BaseModel {
 
@@ -351,24 +352,38 @@ class Modem extends \BaseModel {
 	 */
 	public function restart_modem()
 	{
-		$config = ProvBase::first();
-		$community_rw = $config->rw_community;
-		$domain = $config->domain_name;
-
 		// Log
 		Log::info('restart modem '.$this->hostname);
 
 		// if hostname cant be resolved we dont want to have an php error
 		try
 		{
-			// restart modem - NOTE: OID from MIB: DOCS-CABLE-DEV-MIB::docsDevResetNow
-			snmpset($this->hostname.'.'.$domain, $community_rw, "1.3.6.1.2.1.69.1.1.3.0", "i", "1", 300000, 1);
+			$config = ProvBase::first();
+			$fqdn = $this->hostname.'.'.$config->domain_name;
+			$cmts = ProvMonController::get_cmts(gethostbyname($fqdn));
+			$mac_oid = implode('.', array_map('hexdec', explode(':', $this->mac)));
+
+			if($cmts && $cmts->company == 'Cisco') {
+				// delete modem entry in cmts - CISCO-DOCS-EXT-MIB::cdxCmCpeDeleteNow
+				snmpset($cmts->ip, $cmts->get_rw_community(), '1.3.6.1.4.1.9.9.116.1.3.1.1.9.'.$mac_oid, 'i', '1', 300000, 1);
+			}
+			elseif($cmts && $cmts->company == 'Casa') {
+				// reset modem via cmts, deleting is not possible - CASA-CABLE-CMCPE-MIB::casaCmtsCmCpeResetNow
+				snmpset($cmts->ip, $cmts->get_rw_community(), '1.3.6.1.4.1.20858.10.12.1.3.1.7.'.$mac_oid, 'i', '1', 300000, 1);
+			}
+			else {
+				// restart modem - DOCS-CABLE-DEV-MIB::docsDevResetNow
+				snmpset($fqdn, $config->rw_community, '1.3.6.1.2.1.69.1.1.3.0', 'i', '1', 300000, 1);
+			}
 		}
 		catch (Exception $e)
 		{
 			// only ignore error with this error message (catch exception with this string)
 			if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmpset(): No response from") !== false))) {
 				\Session::flash('error', 'Could not restart Modem! (offline?)');
+			}
+			elseif(strpos($e->getMessage(), "noSuchName") !== false) {
+				// this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
 			}
 			else {
 				// Inform and log for all other exceptions
