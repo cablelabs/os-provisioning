@@ -558,6 +558,18 @@ class PhonenumberObserver
 			return;
 		}
 
+
+		// if the phonenumber does not exist at Envia (no management or no external creation date):
+		// nothing to cange in modems
+		if (
+			(!$phonenumber->phonenumbermanagement)
+			||
+			(!$phonenumber->phonenumbermanagement->voipaccount_ext_creation_date)
+		) {
+			\Session::push('tmp_info_above_form', 'Number has not been created at Envia – will not change any modem data.');
+			return;
+		};
+
 		// the moment we get here we take for sure that we have a permanent switch (defective old modem)
 		// now we have to do a bunch of Envia data related work
 
