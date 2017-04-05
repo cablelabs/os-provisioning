@@ -730,7 +730,7 @@ class Modem extends \BaseModel {
 
 		// first: check if envia module is enabled
 		// if not: do nothing – this database fields could be in use by another voip provider module!
-		if (\PPModule::is_active('ProvVoipEnvia')) {
+		if (!\PPModule::is_active('ProvVoipEnvia')) {
 			return;
 		}
 
