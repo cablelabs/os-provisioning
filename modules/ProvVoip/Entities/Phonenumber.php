@@ -472,8 +472,53 @@ class PhonenumberObserver
 
 	}
 
+	protected function _updating_allowed($phonenumber) {
+
+		// no Envia => no problems
+		if (!\PPModule::is_active('provvoipenvia')) {
+			return true;
+		}
+
+		$new_mta = $phonenumber->mta;
+		$old_mta = MTA::findOrFail(intval($phonenumber->getOriginal()['mta_id']));
+
+		// if MTA has not changed: no problems
+		if ($new_mta->id == $old_mta->id) {
+			return true;
+		}
+
+		// if contract has changed: problems are handled in $this->updated submethods
+		if ($new_mta->modem->contract->id != $old_mta->modem->contract->id) {
+			return true;
+		}
+
+		// if new contract is the same as the old one:
+		// updating only allowed if new modem has no envia data or old and new data are the same
+		$envia_fields = array(
+			'contract_external_id',
+			'contract_ext_creation_date',
+			'contract_ext_termination_date',
+			'installation_address_change_date',
+		);
+		foreach ($envia_fields as $field) {
+			if (
+				($new_mta->modem->{$field})
+				&&
+				($new_mta->modem->{$field} != $old_mta->modem->{$field})
+			) {
+				\Session::push('tmp_info_above_form', 'Updating not alloed: MTA change, but '.$field.' different in old and new modem');
+				return false;
+			}
+		}
+
+		return true;
+	}
 
 	public function updating($phonenumber) {
+
+		if (!$this->_updating_allowed($phonenumber)) {
+			return false;
+		}
 
 		$this->_create_login_data($phonenumber);
 	}
