@@ -776,6 +776,23 @@ class Modem extends \BaseModel {
 		return $ids;
 	}
 
+	/**
+	 * Check if modem actually needs to be restarted. This is only the case if a
+	 * relevant attribute was modified.
+	 *
+	 * @author Ole Ernst
+	 */
+	public function needs_restart() {
+		$diff = array_diff_assoc($this->getAttributes(), $this->getOriginal());
+
+		return array_key_exists('contract_id', $diff)
+			|| array_key_exists('mac', $diff)
+			|| array_key_exists('public', $diff)
+			|| array_key_exists('network_access', $diff)
+			|| array_key_exists('configfile_id', $diff)
+			|| array_key_exists('qos_id', $diff);
+	}
+
 }
 
 
@@ -843,8 +860,8 @@ class ModemObserver
 		if (!$modem->observer_enabled)
 			return;
 
-		// only restart on system relevant changes ? Then it's not that easy to restart modem anymore
-		$modem->restart_modem();
+		if($modem->needs_restart() || \Input::has('_force_restart'))
+			$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
 
