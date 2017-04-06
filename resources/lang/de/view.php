@@ -264,4 +264,15 @@ return [
 		'Button_Create Mpr'				=> 'Neue MPR',
 		'Button_Create Modem Positioning Rule Geoposition' => 'Neue Geoposition für Modem Positionierungsregel',
 		'Button_Create MprGeopos'		=> 'Neue MPR-Geoposition',
+
+//
+// DASHBOARD
+//
+	'Dashboard_Contracts'			=> 'AKTIVE VERTRÄGE',
+	'Dashboard_ContractAnalytics'	=> 'Analyse Verträge (letzte 12 Monate)',
+	'Dashboard_NoContracts'			=> 'Keine Verträge vorhanden.',
+	'Dashboard_Income'				=> 'ERLÖSE',
+	'Dashboard_IncomeAnalytics'		=> 'Erlöse Detailübersicht',
+	'Dashboard_Date'				=> 'DATUM',
+	'Dashboard_LinkDetails'			=> 'Zeige Details',
 ];

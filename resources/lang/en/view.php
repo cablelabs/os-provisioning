@@ -198,4 +198,15 @@ return [
 		// 'Button_Create Phonenumber'		=> 'Neue Telefonnummer',
 		// //Phone tariff
 		'Button_Create Phone tariffs'	=> 'Create Phonetariffs',
+
+//
+// DASHBOARD
+//
+	'Dashboard_Contracts'			=> 'ACTIVE CONTRACTS',
+	'Dashboard_ContractAnalytics'	=> 'Contract Analytics (Last 12 Months)',
+	'Dashboard_NoContracts'			=> 'No contracts available.',
+	'Dashboard_Income'				=> 'INCOME',
+	'Dashboard_IncomeAnalytics'		=> 'Income Details',
+	'Dashboard_Date'				=> 'DATE',
+	'Dashboard_LinkDetails'			=> 'View Details',
 ];
