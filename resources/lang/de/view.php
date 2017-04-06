@@ -275,4 +275,5 @@ return [
 	'Dashboard_IncomeAnalytics'		=> 'Erlöse Detailübersicht',
 	'Dashboard_Date'				=> 'DATUM',
 	'Dashboard_LinkDetails'			=> 'Zeige Details',
+	'Dashboard_Other'				=> 'Sonstiges',
 ];

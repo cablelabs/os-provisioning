@@ -209,4 +209,5 @@ return [
 	'Dashboard_IncomeAnalytics'		=> 'Income Details',
 	'Dashboard_Date'				=> 'DATE',
 	'Dashboard_LinkDetails'			=> 'View Details',
+	'Dashboard_Other'				=> 'Other',
 ];

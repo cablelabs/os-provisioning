@@ -330,6 +330,10 @@ class DashboardController extends BaseController
 					$val = number_format(0, 2, '.', '');
 				}
 
+				if ($product == 'Other') {
+					$product = \App\Http\Controllers\BaseViewController::translate_view($product, 'Dashboard');
+				}
+
 				$ret['data'][] = $val;
 				$ret['labels'][] = $product;
 			}
