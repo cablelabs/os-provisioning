@@ -17,10 +17,14 @@
       <link href="{{asset('components/assets-admin/css/theme/default.css')}}" rel="stylesheet" id="theme" />
 
       <!-- Plugins -->
-      <link href="{{asset('components/assets-admin/plugins/DataTables/css/data-table.css')}}" rel="stylesheet" />
+      <link href="{{asset('components/assets-admin/plugins/DataTables/media/css/dataTables.bootstrap.min.css')}}" rel="stylesheet" />
+      <link href="{{asset('components/assets-admin/plugins/DataTables/extensions/Responsive/css/responsive.bootstrap.min.css')}}" rel="stylesheet" />
+
       <link href="{{asset('components/assets-admin/plugins/select2-v4/vendor/select2/select2/dist/css/select2.css')}}" rel="stylesheet" />
+
       <link href="{{asset('components/assets-admin/plugins/ionRangeSlider/css/ion.rangeSlider.css')}}" rel="stylesheet" />
       <link href="{{asset('components/assets-admin/plugins/ionRangeSlider/css/ion.rangeSlider.skinFlat.css')}}" rel="stylesheet" />
+
       <link href="{{asset('components/assets-admin/plugins/switchery/switchery.css')}}" rel="stylesheet" />
       <!-- ================== END BASE CSS STYLE ================== -->
       <!-- ================== BEGIN BASE JS ================== -->

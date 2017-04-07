@@ -19,16 +19,21 @@
         <!-- end sidebar user -->
         <!-- begin sidebar nav -->
         <ul class="nav">
-
-          <li class="nav-header">Navigation</li>
           <li>
-            <a href="{{BaseRoute::get_base_url()}}/Dashboard"><i class="fa fa-laptop"></i> <span>Dashboard</span></a>
+            <a href="{{BaseRoute::get_base_url()}}/Dashboard"><i class="material-icons">home</i> <span cl>Dashboard</span></a>
           </li>
-          <li>
-            <a href="javascript:;">
-              <span class="badge pull-right">0</span>
-              <i class="fa fa-inbox"></i> <span>Inbox</span>
-            </a>
+          @foreach ($view_header_links as $module_name => $module)
+            <li class="has-sub"><a href="javascript:;"><i class="material-icons">world</i><b class="caret pull-right"></b><span cl>{{$module_name}}</span></a>
+              <ul class="sub-menu">
+              @foreach ($module as $name => $link)
+              <li>
+                <a href="{{route($link)}}"><span>{{ $name }}</span></a>
+              </li>
+              @endforeach
+             </ul>
+            </li>
+          @endforeach
+            </ul>
           </li>
 
           <li class="nav-header">Networks</li>

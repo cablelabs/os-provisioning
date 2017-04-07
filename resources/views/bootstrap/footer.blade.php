@@ -11,7 +11,9 @@
 <![endif]-->
 <script src="{{asset('components/assets-admin/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/select2-v4/vendor/select2/select2/dist/js/select2.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/DataTables/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/media/js/jquery.dataTables.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/media/js/dataTables.bootstrap.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js')}}"></script>
 <!-- ================== END BASE JS ================== -->
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
