@@ -4,16 +4,17 @@
       <div class="container-fluid">
         <!-- begin mobile sidebar expand / collapse button -->
         <div class="navbar-header">
-          <a href="javascript:;" class="navbar-brand"><span class="navbar-logo"></span> {{$header}}</a>
+          <button type="button" class="navbar-toggle collapsed navbar-toggle-left" data-click="sidebar-minify">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
           <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-
-
-
-
+          <a href="javascript:;" class="navbar-brand"><span class="navbar-logo"></span> {{$header}}</a>
         </div>
         <!-- end mobile sidebar expand / collapse button -->
 
@@ -53,21 +54,9 @@
 			?>
 
         <!-- global search form -->
-          <li>
-            <div class="navbar-form full-width">
-
-                {{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET'), 'simple') }}
-
-                  {{ Form::hidden('mode', 'simple') }}
-                  {{ Form::hidden('scope', 'all') }}
-
-                  <input type="text" name="query" placeholder="<?php echo \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search'); ?>" class="form-control">
-                  <button class="btn btn-search" type="submit"><i class="fa fa-search"></i></button>
-
-                {{ Form::close() }}
-
-            </div>
-          </li>
+            <li>
+                <a href="#" class="icon notification waves-effect waves-light" data-toggle="navbar-search"><i class="material-icons">search</i></a>
+            </li>
 
 <!--
           <li class="dropdown">
@@ -131,10 +120,11 @@
             </ul>
           </li>
 -->
+
           <li class="dropdown navbar-user">
             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="{{asset('components/assets-admin/img/user-11.jpg')}}" alt="" />
-              <span class="hidden-xs">{{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span> <b class="caret"></b>
+              <img src="{{asset('components/assets-admin/img/user-11.jpg')}}" alt ="" />
+              <span class="hidden-xs">{{\Auth::user()->first_name.' '.\Auth::user()->last_name}} <b class="caret"></b></span>
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>
@@ -150,7 +140,7 @@
             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
               <span class="hidden-xs">{{ \App\Http\Controllers\BaseViewController::translate_view('MainMenu', 'Menu') }}</span> <b class="caret"></b>
             </a>
-            <ul class="dropdown-menu animated fadeInLeft">
+            <ul class="dropdown-menu animated fadeInLeft scrollable-menu">
               <li class="arrow"></li>
 
                 @foreach ($view_header_links as $module_name => $module)
@@ -166,6 +156,15 @@
 
         </ul>
         <!-- end header navigation right -->
+        <div class="search-form">
+            {{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET'), 'simple') }}
+            {{ Form::hidden('mode', 'simple') }}
+            {{ Form::hidden('scope', 'all') }}
+            <button class="search-btn" type="submit"><i class="material-icons">search</i></button>
+            <input type="text" name="query" class="form-control" placeholder="<?php echo \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search'); ?>">
+            <a href="#" class="close" data-dismiss="navbar-search"><i class="material-icons">close</i></a>
+            {{ Form::close() }}
+        </div>
       </div>
       <!-- end container-fluid -->
     </div>

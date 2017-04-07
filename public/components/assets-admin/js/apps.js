@@ -1,8 +1,8 @@
 /*   
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.5
-Version: 1.8.0
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
+Version: 2.1.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v1.8/admin/
+Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
     ----------------------------
         APPS CONTENT TABLE
     ----------------------------
@@ -35,6 +35,13 @@ Website: http://www.seantheme.com/color-admin-v1.8/admin/
     
     <!-- ======== Added in V1.7 ======== -->
     18. Handle Mobile Sidebar Scrolling Feature - added in V1.7
+    
+    <!-- ======== Added in V1.9 ======== -->
+    19. Handle Top Menu - Unlimited Top Menu Render - added in V1.9
+    20. Handle Top Menu - Sub Menu Toggle - added in V1.9
+    21. Handle Top Menu - Mobile Sub Menu Toggle - added in V1.9
+    22. Handle Top Menu - Mobile Top Menu Toggle - added in V1.9
+    23. Handle Clear Sidebar Selection & Hide Mobile Menu - added in V1.9
 	
     <!-- ======== APPLICATION SETTING ======== -->
     Application Controller
@@ -51,6 +58,9 @@ var handleSlimScroll = function() {
     });
 };
 var generateSlimScroll = function(element) {
+    if ($(element).attr('data-init')) {
+        return;
+    }
     var dataHeight = $(element).attr('data-height');
         dataHeight = (!dataHeight) ? $(element).height() : dataHeight;
     
@@ -64,6 +74,7 @@ var generateSlimScroll = function(element) {
     } else {
         $(element).slimScroll(scrollBarOption);
     }
+    $(element).attr('data-init', true);
 };
 
 
@@ -76,12 +87,12 @@ var handleSidebarMenu = function() {
         var otherMenu = '.sidebar .nav > li.has-sub > .sub-menu';
     
         if ($('.page-sidebar-minified').length === 0) {
-            $(otherMenu).not(target).slideUp(250, function() {
+            $(otherMenu).not(target).slideUp(0, function() {
                 $(this).closest('li').removeClass('expand');
             });
-            $(target).slideToggle(250, function() {
+            $(target).slideToggle(0, function() {
                 var targetLi = $(this).closest('li');
-                if ($(targetLi).hasClass('expand')) {
+                if ($(targetLi).hasClass('expand') || !$(target).is(':visible')) {
                     $(targetLi).removeClass('expand');
                 } else {
                     $(targetLi).addClass('expand');
@@ -92,7 +103,14 @@ var handleSidebarMenu = function() {
     $('.sidebar .nav > .has-sub .sub-menu li.has-sub > a').click(function() {
         if ($('.page-sidebar-minified').length === 0) {
             var target = $(this).next('.sub-menu');
-            $(target).slideToggle(250);
+            $(target).slideToggle(0, function() {
+                var targetLi = $(this).closest('li');
+                if ($(targetLi).hasClass('expand')) {
+                    $(targetLi).removeClass('expand');
+                } else {
+                    $(targetLi).addClass('expand');
+                }
+            });
         }
     });
 };
@@ -102,7 +120,7 @@ var handleSidebarMenu = function() {
 ------------------------------------------------ */
 var handleMobileSidebarToggle = function() {
     var sidebarProgress = false;
-    $('.sidebar').on('click touchstart', function(e) {
+    $('.sidebar').bind('click touchstart', function(e) {
         if ($(e.target).closest('.sidebar').length !== 0) {
             sidebarProgress = true;
         } else {
@@ -111,7 +129,7 @@ var handleMobileSidebarToggle = function() {
         }
     });
     
-    $(document).on('click touchstart', function(e) {
+    $(document).bind('click touchstart', function(e) {
         if ($(e.target).closest('.sidebar').length === 0) {
             sidebarProgress = false;
         }
@@ -120,9 +138,11 @@ var handleMobileSidebarToggle = function() {
                 sidebarProgress = true;
                 $('#page-container').removeClass('page-sidebar-toggled');
             }
-            if ($('#page-container').hasClass('page-right-sidebar-toggled')) {
-                sidebarProgress = true;
-                $('#page-container').removeClass('page-right-sidebar-toggled');
+            if ($(window).width() <= 767) {
+                if ($('#page-container').hasClass('page-right-sidebar-toggled')) {
+                    sidebarProgress = true;
+                    $('#page-container').removeClass('page-right-sidebar-toggled');
+                }
             }
         }
     });
@@ -142,6 +162,7 @@ var handleMobileSidebarToggle = function() {
         if ($(window).width() < 480) {
             $('#page-container').removeClass('page-sidebar-toggled');
         }
+        $(window).trigger('resize');
     });
     
     $('[data-click=sidebar-toggled]').click(function(e) {
@@ -171,6 +192,7 @@ var handleSidebarMinify = function() {
         var sidebarClass = 'page-sidebar-minified';
         var targetContainer = '#page-container';
         $('#sidebar [data-scrollbar="true"]').css('margin-top','0');
+        $('#sidebar [data-scrollbar="true"]').removeAttr('data-init');
         $('#sidebar [data-scrollbar=true]').stop();
         if ($(targetContainer).hasClass(sidebarClass)) {
             $(targetContainer).removeClass(sidebarClass);
@@ -198,6 +220,7 @@ var handleSidebarMinify = function() {
                 }
                 $('#sidebar [data-scrollbar=true]').trigger('mouseover');
             } else {
+                $('#sidebar [data-scrollbar="true"]').css('margin-top','0');
                 $('#sidebar [data-scrollbar="true"]').css('overflow', 'visible');
             }
         }
@@ -218,51 +241,66 @@ var handlePageContentView = function() {
 
 /* 06. Handle Panel - Remove / Reload / Collapse / Expand
 ------------------------------------------------ */
+var panelActionRunning = false;
 var handlePanelAction = function() {
     "use strict";
     
+    if (panelActionRunning) {
+        return false;
+    }
+    panelActionRunning = true;
+    
     // remove
-    $('[data-click=panel-remove]').hover(function() {
-        $(this).tooltip({
-            title: 'Remove',
-            placement: 'bottom',
-            trigger: 'hover',
-            container: 'body'
-        });
-        $(this).tooltip('show');
+    $(document).on('hover', '[data-click=panel-remove]', function(e) {
+        if (!$(this).attr('data-init')) {
+            $(this).tooltip({
+                title: 'Remove',
+                placement: 'bottom',
+                trigger: 'hover',
+                container: 'body'
+            });
+            $(this).tooltip('show');
+            $(this).attr('data-init', true);
+        }
     });
-    $('[data-click=panel-remove]').click(function(e) {
+    $(document).on('click', '[data-click=panel-remove]', function(e) {
         e.preventDefault();
         $(this).tooltip('destroy');
         $(this).closest('.panel').remove();
     });
     
     // collapse
-    $('[data-click=panel-collapse]').hover(function() {
-        $(this).tooltip({
-            title: 'Collapse / Expand',
-            placement: 'bottom',
-            trigger: 'hover',
-            container: 'body'
-        });
-        $(this).tooltip('show');
+    $(document).on('hover', '[data-click=panel-collapse]', function(e) {
+        if (!$(this).attr('data-init')) {
+            $(this).tooltip({
+                title: 'Collapse / Expand',
+                placement: 'bottom',
+                trigger: 'hover',
+                container: 'body'
+            });
+            $(this).tooltip('show');
+            $(this).attr('data-init', true);
+        }
     });
-    $('[data-click=panel-collapse]').click(function(e) {
+    $(document).on('click', '[data-click=panel-collapse]', function(e) {
         e.preventDefault();
         $(this).closest('.panel').find('.panel-body').slideToggle();
     });
     
     // reload
-    $('[data-click=panel-reload]').hover(function() {
-        $(this).tooltip({
-            title: 'Reload',
-            placement: 'bottom',
-            trigger: 'hover',
-            container: 'body'
-        });
-        $(this).tooltip('show');
+    $(document).on('hover', '[data-click=panel-reload]', function(e) {
+        if (!$(this).attr('data-init')) {
+            $(this).tooltip({
+                title: 'Reload',
+                placement: 'bottom',
+                trigger: 'hover',
+                container: 'body'
+            });
+            $(this).tooltip('show');
+            $(this).attr('data-init', true);
+        }
     });
-    $('[data-click=panel-reload]').click(function(e) {
+    $(document).on('click', '[data-click=panel-reload]', function(e) {
         e.preventDefault();
         var target = $(this).closest('.panel');
         if (!$(target).hasClass('panel-loading')) {
@@ -278,16 +316,19 @@ var handlePanelAction = function() {
     });
     
     // expand
-    $('[data-click=panel-expand]').hover(function() {
-        $(this).tooltip({
-            title: 'Expand / Compress',
-            placement: 'bottom',
-            trigger: 'hover',
-            container: 'body'
-        });
-        $(this).tooltip('show');
+    $(document).on('hover', '[data-click=panel-expand]', function(e) {
+        if (!$(this).attr('data-init')) {
+            $(this).tooltip({
+                title: 'Expand / Compress',
+                placement: 'bottom',
+                trigger: 'hover',
+                container: 'body'
+            });
+            $(this).tooltip('show');
+            $(this).attr('data-init', true);
+        }
     });
-    $('[data-click=panel-expand]').click(function(e) {
+    $(document).on('click', '[data-click=panel-expand]', function(e) {
         e.preventDefault();
         var target = $(this).closest('.panel');
         var targetBody = $(target).find('.panel-body');
@@ -348,8 +389,12 @@ var handleDraggablePanel = function() {
 ------------------------------------------------ */
 var handelTooltipPopoverActivation = function() {
     "use strict";
-    $('[data-toggle=tooltip]').tooltip();
-    $('[data-toggle=popover]').popover();
+    if ($('[data-toggle="tooltip"]').length !== 0) {
+        $('[data-toggle=tooltip]').tooltip();
+    }
+    if ($('[data-toggle="popover"]').length !== 0) {
+        $('[data-toggle=popover]').popover();
+    }
 };
 
 
@@ -422,7 +467,7 @@ var handleThemePageStructureControl = function() {
     }
     
     // THEME - theme selection
-    $('.theme-list [data-theme]').live('click', function() {
+    $('.theme-list [data-theme]').click(function() {
         var cssFileSrc = 'assets/css/theme/' + $(this).attr('data-theme') + '.css';
         $('#theme').attr('href', cssFileSrc);
         $('.theme-list [data-theme]').not(this).closest('li').removeClass('active');
@@ -431,7 +476,7 @@ var handleThemePageStructureControl = function() {
     });
     
     // HEADER - inverse or default
-    $('.theme-panel [name=header-styling]').live('change', function() {
+    $('.theme-panel [name=header-styling]').on('change', function() {
         var targetClassAdd = ($(this).val() == 1) ? 'navbar-default' : 'navbar-inverse';
         var targetClassRemove = ($(this).val() == 1) ? 'navbar-inverse' : 'navbar-default';
         $('#header').removeClass(targetClassRemove).addClass(targetClassAdd);
@@ -439,7 +484,7 @@ var handleThemePageStructureControl = function() {
     });
     
     // SIDEBAR - grid or default
-    $('.theme-panel [name=sidebar-styling]').live('change', function() {
+    $('.theme-panel [name=sidebar-styling]').on('change', function() {
         if ($(this).val() == 2) {
             $('#sidebar').addClass('sidebar-grid');
             $.cookie('sidebar-styling', 'grid');
@@ -450,7 +495,7 @@ var handleThemePageStructureControl = function() {
     });
     
     // CONTENT - gradient enabled or disabled
-    $('.theme-panel [name=content-gradient]').live('change', function() {
+    $('.theme-panel [name=content-gradient]').on('change', function() {
         if ($(this).val() == 2) {
             $('#page-container').addClass('gradient-enabled');
             $.cookie('content-gradient', 'enabled');
@@ -461,7 +506,7 @@ var handleThemePageStructureControl = function() {
     });
     
     // CONTENT - default or black
-    $('.theme-panel [name=content-styling]').live('change', function() {
+    $(document).on('change', '.theme-panel [name=content-styling]', function() {
         if ($(this).val() == 2) {
             $('body').addClass('flat-black');
             $.cookie('content-styling', 'black');
@@ -472,7 +517,7 @@ var handleThemePageStructureControl = function() {
     });
     
     // SIDEBAR - fixed or default
-    $('.theme-panel [name=sidebar-fixed]').live('change', function() {
+    $(document).on('change', '.theme-panel [name=sidebar-fixed]', function() {
         if ($(this).val() == 1) {
             if ($('.theme-panel [name=header-fixed]').val() == 2) {
                 alert('Default Header with Fixed Sidebar option is not supported. Proceed with Fixed Header with Fixed Sidebar.');
@@ -510,7 +555,7 @@ var handleThemePageStructureControl = function() {
     });
     
     // HEADER - fixed or default
-    $('.theme-panel [name=header-fixed]').live('change', function() {
+    $(document).on('change', '.theme-panel [name=header-fixed]', function() {
         if ($(this).val() == 1) {
             $('#header').addClass('navbar-fixed-top');
             $('#page-container').addClass('page-header-fixed');
@@ -535,7 +580,7 @@ var handleThemePageStructureControl = function() {
 /* 11. Handle Theme Panel Expand - added in V1.2
 ------------------------------------------------ */
 var handleThemePanelExpand = function() {
-    $('[data-click="theme-panel-expand"]').live('click', function() {
+    $(document).on('click', '[data-click="theme-panel-expand"]', function() {
         var targetContainer = '.theme-panel';
         var targetClass = 'active';
         if ($(targetContainer).hasClass(targetClass)) {
@@ -598,7 +643,7 @@ var handleSavePanelPosition = function(element) {
 ------------------------------------------------ */
 var handleLocalStorage = function() {
     "use strict";
-    if (typeof(Storage) !== 'undefined') {
+    if (typeof(Storage) !== 'undefined' && typeof(localStorage) !== 'undefined') {
         var targetPage = window.location.href;
             targetPage = targetPage.split('?');
             targetPage = targetPage[0];
@@ -610,14 +655,14 @@ var handleLocalStorage = function() {
             $('.panel').parent('[class*="col-"]').each(function() {
                 var storageData = panelPositionData[i]; 
                 var targetColumn = $(this);
-                
                 if (storageData) {
                     $.each(storageData, function(index, data) {
-                        var targetId = '[data-sortable-id="'+ data.id +'"]';
+                        var targetId = $('[data-sortable-id="'+ data.id +'"]').not('[data-init="true"]');
                         if ($(targetId).length !== 0) {
                             var targetHtml = $(targetId).clone();
                             $(targetId).remove();
                             $(targetColumn).append(targetHtml);
+                            $('[data-sortable-id="'+ data.id +'"]').attr('data-init','true');
                         }
                     });
                 }
@@ -634,7 +679,7 @@ var handleLocalStorage = function() {
 ------------------------------------------------ */
 var handleResetLocalStorage = function() {
     "use strict";
-    $('[data-click=reset-local-storage]').live('click', function(e) {
+    $(document).on('click', '[data-click=reset-local-storage]', function(e) {
         e.preventDefault();
         
         var targetModalHtml = ''+
@@ -659,16 +704,17 @@ var handleResetLocalStorage = function() {
         $('body').append(targetModalHtml);
         $('[data-modal-id="reset-local-storage-confirmation"]').modal('show');
     });
-    $('[data-modal-id="reset-local-storage-confirmation"]').live('hidden.bs.modal', function() {
+    $(document).on('hidden.bs.modal', '[data-modal-id="reset-local-storage-confirmation"]', function(e) {
         $('[data-modal-id="reset-local-storage-confirmation"]').remove();
     });
-    $('[data-click=confirm-reset-local-storage]').live('click', function(e) {
+    $(document).on('click', '[data-click=confirm-reset-local-storage]', function(e) {
         e.preventDefault();
         var localStorageName = window.location.href;
             localStorageName = localStorageName.split('?');
             localStorageName = localStorageName[0];
         localStorage.removeItem(localStorageName);
-        window.location.href = document.URL;
+        
+        location.reload();
     });
 };
 
@@ -800,13 +846,13 @@ var handleUnlimitedTabsRender = function() {
     }
     
     // handle tab next button click action
-    $('[data-click="next-tab"]').live('click', function(e) {
+    $('[data-click="next-tab"]').click(function(e) {
         e.preventDefault();
         handleTabButtonAction(this,'next');
     });
     
     // handle tab prev button click action
-    $('[data-click="prev-tab"]').live('click', function(e) {
+    $('[data-click="prev-tab"]').click(function(e) {
         e.preventDefault();
         handleTabButtonAction(this,'prev');
 
@@ -836,13 +882,13 @@ var handleMobileSidebar = function() {
     }
 
     var oriTouch = 0;
-    $('.page-sidebar-minified .sidebar [data-scrollbar=true] a').live('touchstart', function(e) {
+    $('.page-sidebar-minified .sidebar [data-scrollbar=true] a').bind('touchstart', function(e) {
         var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
         var touchVertical = touch.pageY;
         oriTouch = touchVertical - parseInt($(this).closest('[data-scrollbar=true]').css('margin-top'));
     });
 
-    $('.page-sidebar-minified .sidebar [data-scrollbar=true] a').live('touchmove',function(e){
+    $('.page-sidebar-minified .sidebar [data-scrollbar=true] a').bind('touchmove',function(e){
         e.preventDefault();
         if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
             var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
@@ -853,7 +899,7 @@ var handleMobileSidebar = function() {
         }
     });
 
-    $('.page-sidebar-minified .sidebar [data-scrollbar=true] a').live('touchend', function(e) {
+    $('.page-sidebar-minified .sidebar [data-scrollbar=true] a').bind('touchend', function(e) {
         var targetScrollBar = $(this).closest('[data-scrollbar=true]');
         var windowHeight = $(window).height();
         var sidebarTopPosition = parseInt($('#sidebar').css('padding-top'));
@@ -878,6 +924,230 @@ var handleMobileSidebar = function() {
 };
 
 
+/* 19. Handle Top Menu - Unlimited Top Menu Render - added in V1.9
+------------------------------------------------ */
+var handleUnlimitedTopMenuRender = function() {
+    "use strict";
+    // function handle menu button action - next / prev
+    function handleMenuButtonAction(element, direction) {
+        var obj = $(element).closest('.nav');
+        var marginLeft = parseInt($(obj).css('margin-left'));  
+        var containerWidth = $('.top-menu').width() - 88;
+        var totalWidth = 0;
+        var finalScrollWidth = 0;
+
+        $(obj).find('li').each(function() {
+            if (!$(this).hasClass('menu-control')) {
+                totalWidth += $(this).width();
+            }
+        });
+        
+        switch (direction) {
+            case 'next':
+                var widthLeft = totalWidth + marginLeft - containerWidth;
+                if (widthLeft <= containerWidth) {
+                    finalScrollWidth = widthLeft - marginLeft + 128;
+                    setTimeout(function() {
+                        $(obj).find('.menu-control.menu-control-right').removeClass('show');
+                    }, 150);
+                } else {
+                    finalScrollWidth = containerWidth - marginLeft - 128;
+                }
+
+                if (finalScrollWidth != 0) {
+                    $(obj).animate({ marginLeft: '-' + finalScrollWidth + 'px'}, 150, function() {
+                        $(obj).find('.menu-control.menu-control-left').addClass('show');
+                    });
+                }
+                break;
+            case 'prev':
+                var widthLeft = -marginLeft;
+    
+                if (widthLeft <= containerWidth) {
+                    $(obj).find('.menu-control.menu-control-left').removeClass('show');
+                    finalScrollWidth = 0;
+                } else {
+                    finalScrollWidth = widthLeft - containerWidth + 88;
+                }
+                $(obj).animate({ marginLeft: '-' + finalScrollWidth + 'px'}, 150, function() {
+                    $(obj).find('.menu-control.menu-control-right').addClass('show');
+                });
+                break;
+        }
+    }
+
+    // handle page load active menu focus
+    function handlePageLoadMenuFocus() {
+        var targetMenu = $('.top-menu .nav');
+        var targetList = $('.top-menu .nav > li');
+        var targetActiveList = $('.top-menu .nav > li.active');
+        var targetContainer = $('.top-menu');
+        
+        var marginLeft = parseInt($(targetMenu).css('margin-left'));  
+        var viewWidth = $(targetContainer).width() - 128;
+        var prevWidth = $('.top-menu .nav > li.active').width();
+        var speed = 0;
+        var fullWidth = 0;
+        
+        $(targetActiveList).prevAll().each(function() {
+            prevWidth += $(this).width();
+        });
+
+        $(targetList).each(function() {
+            if (!$(this).hasClass('menu-control')) {
+                fullWidth += $(this).width();
+            }
+        });
+
+        if (prevWidth >= viewWidth) {
+            var finalScrollWidth = prevWidth - viewWidth + 128;
+            $(targetMenu).animate({ marginLeft: '-' + finalScrollWidth + 'px'}, speed);
+        }
+        
+        if (prevWidth != fullWidth && fullWidth >= viewWidth) {
+            $(targetMenu).find('.menu-control.menu-control-right').addClass('show');
+        } else {
+            $(targetMenu).find('.menu-control.menu-control-right').removeClass('show');
+        }
+
+        if (prevWidth >= viewWidth && fullWidth >= viewWidth) {
+            $(targetMenu).find('.menu-control.menu-control-left').addClass('show');
+        } else {
+            $(targetMenu).find('.menu-control.menu-control-left').removeClass('show');
+        }
+    }
+
+    // handle menu next button click action
+    $('[data-click="next-menu"]').click(function(e) {
+        e.preventDefault();
+        handleMenuButtonAction(this,'next');
+    });
+
+    // handle menu prev button click action
+    $('[data-click="prev-menu"]').click(function(e) {
+        e.preventDefault();
+        handleMenuButtonAction(this,'prev');
+
+    });
+
+    // handle unlimited menu responsive setting
+    $(window).resize(function() {
+        $('.top-menu .nav').removeAttr('style');
+        handlePageLoadMenuFocus();
+    });
+
+    handlePageLoadMenuFocus();
+};
+
+
+/* 20. Handle Top Menu - Sub Menu Toggle - added in V1.9
+------------------------------------------------ */
+var handleTopMenuSubMenu = function() {
+    "use strict";
+    $('.top-menu .sub-menu .has-sub > a').click(function() {
+        var target = $(this).closest('li').find('.sub-menu').first();
+        var otherMenu = $(this).closest('ul').find('.sub-menu').not(target);
+        $(otherMenu).not(target).slideUp(250, function() {
+            $(this).closest('li').removeClass('expand');
+        });
+        $(target).slideToggle(250, function() {
+            var targetLi = $(this).closest('li');
+            if ($(targetLi).hasClass('expand')) {
+                $(targetLi).removeClass('expand');
+            } else {
+                $(targetLi).addClass('expand');
+            }
+        });
+    });
+};
+
+
+/* 21. Handle Top Menu - Mobile Sub Menu Toggle - added in V1.9
+------------------------------------------------ */
+var handleMobileTopMenuSubMenu = function() {
+    "use strict";
+    $('.top-menu .nav > li.has-sub > a').click(function() {
+        if ($(window).width() <= 767) {
+            var target = $(this).closest('li').find('.sub-menu').first();
+            var otherMenu = $(this).closest('ul').find('.sub-menu').not(target);
+            $(otherMenu).not(target).slideUp(250, function() {
+                $(this).closest('li').removeClass('expand');
+            });
+            $(target).slideToggle(250, function() {
+                var targetLi = $(this).closest('li');
+                if ($(targetLi).hasClass('expand')) {
+                    $(targetLi).removeClass('expand');
+                } else {
+                    $(targetLi).addClass('expand');
+                }
+            });
+        }
+    });
+};
+
+
+/* 22. Handle Top Menu - Mobile Top Menu Toggle - added in V1.9
+------------------------------------------------ */
+var handleTopMenuMobileToggle = function() {
+    "use strict";
+    $('[data-click="top-menu-toggled"]').click(function() {
+        $('.top-menu').slideToggle(250);
+    });
+};
+
+
+/* 23. Handle Clear Sidebar Selection & Hide Mobile Menu - added in V1.9
+------------------------------------------------ */
+var handleClearSidebarSelection = function() {
+    $('.sidebar .nav > li, .sidebar .nav .sub-menu').removeClass('expand').removeAttr('style');
+};
+var handleClearSidebarMobileSelection = function() {
+    $('#page-container').removeClass('page-sidebar-toggled');
+};
+
+
+/* 24. Handle Toggle Navbar Search - added in V2.0
+------------------------------------------------ */
+
+var handleToggleNavbarSearch = function() {
+    $('[data-toggle="navbar-search"]').click(function(e) {
+        e.preventDefault();
+        $('.navbar').addClass('navbar-search-toggled');
+    });
+};
+
+
+/* 25. Handle Dismiss Navbar Search - added in V2.0
+------------------------------------------------ */
+var handleDismissNavbarSearch = function() {
+    $('[data-dismiss="navbar-search"]').click(function(e) {
+        e.preventDefault();
+        $('.navbar').removeClass('navbar-search-toggled');
+    });
+};
+
+
+/* 26. Handle Toggle Navbar Profile - added in V2.0
+------------------------------------------------ */
+var handleToggleNavProfile = function() {
+    $('[data-toggle="nav-profile"]').click(function(e) {
+        e.preventDefault();
+        
+        var targetLi = $(this).closest('li');
+        var targetProfile = $('.sidebar .nav-profile');
+        var targetClass = 'active';
+        
+        if ($(targetLi).hasClass(targetClass)) {
+            $(targetLi).removeClass(targetClass);
+            $(targetProfile).removeClass(targetClass);
+        } else {
+            $(targetLi).addClass(targetClass);
+            $(targetProfile).addClass(targetClass);
+        }
+    });
+};
+
+
 /* Application Controller
 ------------------------------------------------ */
 var App = function () {
@@ -886,37 +1156,59 @@ var App = function () {
 	return {
 		//main function
 		init: function () {
-		
-		    // draggable panel & local storage
-			handleDraggablePanel();
-		    handleLocalStorage();
-		    handleResetLocalStorage();
-		
-			// slimscroll
-			handleSlimScroll();
-			
-			// sidebar
+		    this.initLocalStorage();
+		    this.initSidebar();
+		    this.initTopMenu();
+		    this.initPageLoad();
+		    this.initComponent();
+		    this.initThemePanel();
+		},
+		initSidebar: function() {
 			handleSidebarMenu();
 			handleMobileSidebarToggle();
 			handleSidebarMinify();
 			handleMobileSidebar();
-			
-			// theme configuration
-			handleThemePageStructureControl();
-			handleThemePanelExpand();
-			
-			handleAfterPageLoadAddClass();
-			
+		},
+		initSidebarSelection: function() {
+		    handleClearSidebarSelection();
+		},
+		initSidebarMobileSelection: function() {
+		    handleClearSidebarMobileSelection();
+		},
+		initTopMenu: function() {
+			handleUnlimitedTopMenuRender();
+			handleTopMenuSubMenu();
+			handleMobileTopMenuSubMenu();
+			handleTopMenuMobileToggle();
+		},
+		initPageLoad: function() {
+			handlePageContentView();
+		},
+		initComponent: function() {
+			handleDraggablePanel();
+			handleIEFullHeightContent();
+			handleSlimScroll();
+			handleUnlimitedTabsRender();
 			handlePanelAction();
 			handelTooltipPopoverActivation();
 			handleScrollToTopButton();
-			handlePageContentView();
-			
-			// IE Compatibility
-			handleIEFullHeightContent();
-			
-			// unlimited nav tabs
-			handleUnlimitedTabsRender();
+			handleAfterPageLoadAddClass();
+			handleToggleNavProfile();
+			handleDismissNavbarSearch();
+			handleToggleNavbarSearch();
+		},
+		initLocalStorage: function() {
+		    handleLocalStorage();
+		},
+		initThemePanel: function() {
+			handleThemePageStructureControl();
+			handleThemePanelExpand();
+		    handleResetLocalStorage();
+		},
+		scrollTop: function() {
+            $('html, body').animate({
+                scrollTop: $('body').offset().top
+            }, 0);
 		}
   };
 }();

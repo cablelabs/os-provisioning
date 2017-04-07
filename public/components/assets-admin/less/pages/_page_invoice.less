@@ -1,6 +1,6 @@
 /* Invoice */
 .invoice {
-    background: #fff;
+    background: @white;
     padding: 20px;                
           
     & > div:not(.invoice-footer) {
@@ -11,7 +11,7 @@
     }
     & .invoice-header {
         margin: 0 -20px;
-        background: #f0f3f4;
+        background: @grey_200;
         padding: 20px;
     }
     & .invoice-from,
@@ -35,7 +35,7 @@
         padding-left: 20px;
     }
     & .invoice-price {
-        background: #f0f3f4;
+        background: @grey_200;
         display: table;
         width: 100%;
         
@@ -65,8 +65,8 @@
         }
         .invoice-price-right {
             width: 25%;
-            background: @black;
-            color: #fff;
+            background: @grey_900;
+            color: @white;
             font-size: 28px;
             text-align: right;
             vertical-align: bottom;

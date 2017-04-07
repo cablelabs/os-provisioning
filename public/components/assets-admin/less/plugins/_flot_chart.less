@@ -10,39 +10,39 @@
     padding-left: 5px !important;
 }
 .legend > table tr td {
-    padding: 4px 0 5px 0 !important;
+    padding: 5px 0 5px 0 !important;
 }
 .legend > div {
-    border-radius: 4px !important;
-    background: #000 !important;
+    .border-radius(2px) !important;
+    background: @black !important;
 }
 .legend > table tr td.legendLabel {
-    padding-right: 10px !important;
-    color: #fff;
+    padding-right: 5px !important;
+    color: @white;
 }
 .legend > table tr + tr td {
     padding-top: 0px !important;
 }
 .legendColorBox > div > div {
     border-width: 4px !important;
-    .border-radius(5px) !important;
+    .border-radius(2px) !important;
 }
 .tickLabel,.legendLabel {
-    font-size: 11px !important;
+    font-size: 12px !important;
 }
 .tickLabel {
-    color: #707478 !important;
+    color: @grey_900 !important;
 }
 .flot-tooltip {
     position: absolute;
     display: none;
     border: 0;
     padding: 6px 10px 7px;
-    color: #fff;
-    font-size: 11px;
+    color: @white;
+    font-size: 12px;
     background: url(../img/transparent/black-0.8.png);
     background-color: rgba(0,0,0,0.8);
-    .border-radius(5px);
+    .border-radius(2px);
     .opacity(1.0);
     z-index: 10000 !important;
 }

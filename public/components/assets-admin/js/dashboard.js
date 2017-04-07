@@ -1,28 +1,30 @@
 /*   
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.5
-Version: 1.8.0
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
+Version: 2.1.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v1.8/admin/
+Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
 */
 
-var blue		= '#348fe2',
-    blueLight	= '#5da5e8',
-    blueDark	= '#1993E4',
-    aqua		= '#49b6d6',
-    aquaLight	= '#6dc5de',
-    aquaDark	= '#3a92ab',
-    green		= '#00acac',
-    greenLight	= '#33bdbd',
-    greenDark	= '#008a8a',
-    orange		= '#f59c1a',
-    orangeLight	= '#f7b048',
-    orangeDark	= '#c47d15',
-    dark		= '#2d353c',
-    grey		= '#b6c2c9',
-    purple		= '#727cb6',
-    purpleLight	= '#8e96c5',
-    purpleDark	= '#5b6392',
-    red         = '#ff5b57';
+var blue		= '#2196F3',
+    blueLight	= '#64B5F6',
+    blueDark	= '#1976D2',
+    aqua		= '#03A9F4',
+    aquaLight	= '#4FC3F7',
+    aquaDark	= '#0288D1',
+    green		= '#009688',
+    greenLight	= '#4DB6AC',
+    greenDark	= '#00796B',
+    orange		= '#FF9800',
+    orangeLight	= '#FFB74D',
+    orangeDark	= '#F57C00',
+    dark		= '#212121',
+    grey		= '#9E9E9E',
+    purple		= '#673AB7',
+    purpleLight	= '#9575CD',
+    purpleDark	= '#512DA8',
+    orange      = '#FF9800',
+    pink        = '#E91E63',
+    red         = '#F44336';
 
 var handleVectorMap = function() {
 	"use strict";
@@ -35,14 +37,14 @@ var handleVectorMap = function() {
 		hoverColor: false,
 		markerStyle: {
 			initial: {
-				fill: '#4cabc7',
+				fill: '#E91E63',
 				stroke: 'transparent',
 				r: 3
 			}
 		},
 		regionStyle: {
 			initial: {
-				fill: 'rgb(97,109,125)',
+				fill: '#9E9E9E',
                 "fill-opacity": 1,
                 stroke: 'none',
                 "stroke-width": 0.4,
@@ -60,9 +62,9 @@ var handleVectorMap = function() {
 		focusOn: {
             x: 0.5,
             y: 0.5,
-            scale: 0
+            scale: 2
         },
-		backgroundColor: '#2d353c',
+		backgroundColor: '#212121',
 		markers: [
 			{latLng: [41.90, 12.45], name: 'Vatican City'},
 			{latLng: [43.73, 7.41], name: 'Monaco'},
@@ -121,14 +123,14 @@ var handleInteractiveChart = function () {
                 {
                     data: data1, 
                     label: "Page Views", 
-                    color: blue,
+                    color: pink,
                     lines: { show: true, fill:false, lineWidth: 2 },
                     points: { show: true, radius: 3, fillColor: '#fff' },
                     shadowSize: 0
                 }, {
                     data: data2,
                     label: 'Visitors',
-                    color: green,
+                    color: orange,
                     lines: { show: true, fill:false, lineWidth: 2 },
                     points: { show: true, radius: 3, fillColor: '#fff' },
                     shadowSize: 0

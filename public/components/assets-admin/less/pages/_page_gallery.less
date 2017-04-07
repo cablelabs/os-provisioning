@@ -15,10 +15,13 @@
             height: 200px;
             .border-radius(3px 3px 0 0);
         }
+        & .image-container {
+            .box-shadow(0 2px 3px rgba(0,0,0,0.15));
+        }
     }
     & .image-inner {
         position: relative;
-        background: #fff;
+        background: @white;
         .border-radius(3px 3px 0 0);
         & a {
             .transition(all .2s linear);
@@ -35,12 +38,12 @@
         left: 0;
         background: url(../img/transparent/black-0.6.png);
         background: rgba(0,0,0,0.6);
-        color: #fff;
+        color: @white;
         padding: 5px 15px;
         margin: 0;
     }
     & .image-info {
-        background: #fff;
+        background: @white;
         padding: 15px;
         .border-radius(0 0 3px 3px);
         

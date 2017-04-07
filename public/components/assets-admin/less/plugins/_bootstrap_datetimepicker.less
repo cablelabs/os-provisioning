@@ -7,12 +7,17 @@ body .bootstrap-datetimepicker-widget {
     & .timepicker-hour, 
     & .timepicker-minute, 
     & .timepicker-second {
-        border: 2px solid #e2e7eb;
-        border-radius: 3px;
+        border: 2px solid @grey_300;
+        .border-radius(3px);
     }
     &.dropdown-menu,
     & a[data-action] {
-        color: #242a30;
+        color: @grey_900;
+    }
+    a[data-action] {
+        padding: 0;
+        background: none;
+        .box-shadow(none);
     }
     & table td {
         height: 32px;

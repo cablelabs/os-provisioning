@@ -1,0 +1,103 @@
+/* Profile Page Setting */
+
+.profile-container {
+    background: @white;
+    padding: 20px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.profile-container:before,
+.profile-container:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+.profile-left {
+    width: 200px;
+    float: left;
+}
+.profile-right {
+    margin-left: 240px;
+    padding-right: 20px;
+}
+.profile-image {
+    height: 175px;
+    line-height: 175px;
+    text-align: center;
+    font-size: 72px;
+    margin-bottom: 10px;
+    border: 2px solid @grey_300;
+    overflow: hidden;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.profile-image img {
+    display: block;
+    max-width: 100%;
+}
+.profile-highlight {
+    padding: 12px 15px;
+    background: #FEFDE1;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.profile-highlight h4 {
+    margin: 0 0 7px;
+    font-size: 12px;
+    font-weight: bold;
+}
+.table.table-profile > thead > tr > th {
+    border-bottom: none !important;
+}
+.table.table-profile > thead > tr > th h4 {
+    font-size: 20px;
+    margin-top: 0;
+}
+.table.table-profile > thead > tr > th h4 small {
+    display: block;
+    font-size: 12px;
+    font-weight: normal;
+    margin-top: 5px;
+}
+.table.table-profile > thead > tr > th,
+.table.table-profile > tbody > tr > td {
+    border: none;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    color: @grey_900;
+}
+.table.table-profile > tbody > tr > td.field {
+    width: 120px;
+    text-align: right;
+    font-weight: 600;
+    color: #777;
+}
+.table.table-profile > tbody > tr.highlight > td {
+    border-top: 1px solid @grey_300;
+    border-bottom: 1px solid @grey_300;
+}
+.table.table-profile > tbody > tr.divider > td {
+    padding: 0 !important;
+    height: 10px;
+}
+.profile-section + .profile-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid @grey_300;
+}
+.profile-section:before,
+.profile-section:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+.profile-section .title {
+    font-size: 20px;
+    margin: 0 0 15px;
+}
+.profile-section .title small {
+    font-weight: normal;
+}

@@ -10,6 +10,12 @@ define([
       this.createTag = createTag;
     }
 
+    var insertTag = options.get('insertTag');
+
+    if (insertTag !== undefined) {
+        this.insertTag = insertTag;
+    }
+
     decorated.call(this, $element, options);
 
     if ($.isArray(tags)) {
@@ -71,7 +77,7 @@ define([
         var $option = self.option(tag);
         $option.attr('data-select2-tag', true);
 
-        self.addOptions($option);
+        self.addOptions([$option]);
 
         self.insertTag(data, tag);
       }

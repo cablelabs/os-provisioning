@@ -19,14 +19,15 @@
         .clearfix();
     }
     & .name {
-        color: #333;
+        color: @grey_900;
         display: block;
         margin-bottom: 5px;
-        font-weight: 600;
+        font-weight: 500;
         text-decoration: none;
+        font-size: 13px;
         
         & .label {
-            font-size: 8px;
+            font-size: 10px;
             padding: 1px 4px 2px;
             margin-left: 3px;
             position: relative;
@@ -34,7 +35,7 @@
         }
     }
     & .date-time {
-        font-size: 10px;
+        font-size: 12px;
         display: block;
         float: right;
         color: #999;
@@ -56,10 +57,10 @@
     }
     & .message {
         border: 1px solid #ccd0d4;
-        padding: 7px 12px;
-        font-size: 12px;
+        padding: 8px 12px;
+        font-size: 13px;
         position: relative;
-        background: #fff;
+        background: @white;
         .border-radius(4px);
         
         &:before,
@@ -73,7 +74,7 @@
         }
         &:after {
             left: -13px;
-            border-right-color: #fff;
+            border-right-color: @white;
         }
     }
     & .right {
@@ -99,7 +100,7 @@
             }
             & .message:after {
                 right: -13px;
-                border-left-color: #fff;
+                border-left-color: @white;
             }
         }
     }

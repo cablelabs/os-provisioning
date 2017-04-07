@@ -1,8 +1,8 @@
 /*   
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.5
-Version: 1.8.0
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
+Version: 2.1.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v1.8/admin/
+Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
 */
 
 var handleVectorMap = function() {
@@ -11,20 +11,19 @@ var handleVectorMap = function() {
         $('#world-map').css('height', wHeight);
 		$('#world-map').vectorMap({
 		map: 'world_mill_en',
-		scaleColors: ['#e74c3c', '#0071a4'],
 		normalizeFunction: 'polynomial',
 		hoverOpacity: 0.5,
 		hoverColor: false,
 		markerStyle: {
 			initial: {
-				fill: '#4cabc7',
+				fill: '#03A9F4',
 				stroke: 'transparent',
 				r: 3
 			}
 		},
 		regionStyle: {
 			initial: {
-				fill: 'rgb(97,109,125)',
+				fill: '#607D8B',
                 "fill-opacity": 1,
                 stroke: 'none',
                 "stroke-width": 0.4,
@@ -44,7 +43,7 @@ var handleVectorMap = function() {
             y: 0.5,
             scale: 2
         },
-		backgroundColor: '#242a30',
+		backgroundColor: '#263238',
 		markers: [
 			{latLng: [41.90, 12.45], name: 'Vatican City'},
 			{latLng: [43.73, 7.41], name: 'Monaco'},

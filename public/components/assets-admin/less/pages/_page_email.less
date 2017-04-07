@@ -3,8 +3,16 @@
 .nav-inbox > li > a {
     padding: 8px 15px;
     
+    .clearfix();
     & i {
         font-size: 14px;
+        line-height: 20px;
+        
+        &.material-icons {
+            float: left;
+            font-size: 18px;
+            margin: 0 10px 0 0;
+        }
     }
 }
 .table.table-email {
@@ -28,11 +36,14 @@
         margin-right: 15px;
         
         & + .email-btn {
-            margin-left: -12px;
+            margin-left: -10px;
         }
         &:hover,
         &focus {
             color: #999;
+        }
+        & i.material-icons {
+            font-size: 18px;
         }
     }
     & .email-sender {
@@ -40,7 +51,7 @@
     }
     & tr {
         &:hover td {
-            background: #fafafa;
+            background: @grey_50;
         }
         &.active td.email-select i:before,
         &.active th.email-select i:before {
@@ -64,6 +75,6 @@
     }
 }
 .email-content {
-    background: #fff;
+    background: @white;
     padding: 15px;
 }
