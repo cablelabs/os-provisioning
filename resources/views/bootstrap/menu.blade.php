@@ -71,13 +71,13 @@
           </li>
         </ul>
         <!-- end header navigation right -->
-        <div class="search-form">
-            {{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET'), 'simple') }}
-            {{ Form::hidden('mode', 'simple') }}
-            {{ Form::hidden('scope', 'all') }}
+        <div class="search-form bg-white">
+              {{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET'), 'simple') }}
+              {{ Form::hidden('mode', 'simple') }}
+              {{ Form::hidden('scope', 'all') }}
             <button class="search-btn" type="submit"><i class="fa fa-search fa-2x" aria-hidden="true"></i></button>
-            <input id="globalsearch" type="text" name="query" class="form-control" placeholder="<?php echo \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search'); ?>">
-            <a href="#" class="close" data-dismiss="navbar-search"><i class="material-icons">close</i></a>
+            <input id="globalsearch" type="text" name="query" class="form-control navbar" placeholder="<?php echo \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search'); ?>">
+            <a href="#" class="close" data-dismiss="navbar-search"><i class="fa fa-angle-up fa-2x" aria-hidden="true"></i></a>
             {{ Form::close() }}
         </div>
       </div>
