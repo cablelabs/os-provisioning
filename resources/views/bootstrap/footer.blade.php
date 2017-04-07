@@ -40,6 +40,14 @@
   $(document).ready(function() {
     App.init();
 
+  // Type anywhere to search in global search for keyword
+  $(document).on('keypress', function (event) {
+    if ($('*:focus').length == 0 && event.target.id != 'globalsearch'){
+        $("#togglesearch").click();
+        $("#globalsearch").focus().select();
+        }
+  });
+
     // Select2 Init - intelligent HTML select
     $("select").select2();
 

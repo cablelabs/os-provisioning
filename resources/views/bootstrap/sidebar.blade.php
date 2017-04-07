@@ -22,8 +22,9 @@
           <li>
             <a href="{{BaseRoute::get_base_url()}}/Dashboard"><i class="material-icons">home</i> <span cl>Dashboard</span></a>
           </li>
+          <li class="nav-header">Navigation</li>
           @foreach ($view_header_links as $module_name => $module)
-            <li class="has-sub"><a href="javascript:;"><i class="material-icons">world</i><b class="caret pull-right"></b><span cl>{{$module_name}}</span></a>
+            <li class="has-sub"><a href="javascript:;"><i class="material-icons">settings</i><b class="caret pull-right"></b><span cl>{{$module_name}}</span></a>
               <ul class="sub-menu">
               @foreach ($module as $name => $link)
               <li>
@@ -33,10 +34,10 @@
              </ul>
             </li>
           @endforeach
-            </ul>
-          </li>
+        </ul>
 
-          <li class="nav-header">Networks</li>
+        <ul class="nav">
+         <li class="nav-header">Networks</li>
 
           @foreach ($networks as $network)
             <li class="has-sub">

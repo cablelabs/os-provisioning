@@ -14,13 +14,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a href="javascript:;" class="navbar-brand"><span class="navbar-logo"></span> {{$header}}</a>
+          <a href="javascript:;" class="navbar-brand"><span class="navbar-logo hidden-xs"></span> <span class="hidden-xs">{{$header}}</span></a>
         </div>
         <!-- end mobile sidebar expand / collapse button -->
 
-        <div class="col-md-5">
-
-              <br>
+        <div class="col-md-3 p-t-15">
               <h5>
                 @yield('content_top')
               </h5>
@@ -55,20 +53,20 @@
 
         <!-- global search form -->
           <li>
-            <a href="#" class="icon notification waves-effect waves-light" data-toggle="navbar-search"><i class="material-icons">search</i></a>
+            <a id="togglesearch" href="javascript:;" class="icon notification waves-effect waves-light" data-toggle="navbar-search"><i class="fa fa-search fa-lg" aria-hidden="true"></i></a>
           </li>
           <li class="dropdown navbar-user">
             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="{{asset('components/assets-admin/img/user-11.jpg')}}" alt ="" />
-              <span class="hidden-xs"> {{\Auth::user()->first_name.' '.\Auth::user()->last_name}}<b class="caret"></b></span> 
-              
+              <i class="fa fa-user-circle-o fa-lg" aria-hidden="true"></i>
+              <span class="hidden-xs"><img src="{{asset('components/assets-admin/img/user-11.jpg')}}" alt ="" />  {{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span>
+              <b class="caret"></b>
             </a>
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>
-              <li><a href="{{route('Authuser.edit', \Auth::user()->id)}}">{{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}</a></li>
-              <li><a href="{{route('Authuser.index')}}">{{ \App\Http\Controllers\BaseViewController::translate_view('UserGlobSettings', 'Menu')}}</a></li>
+              <li><a href="{{route('Authuser.edit', \Auth::user()->id)}}"> <i class="fa fa-cog" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}</a></li>
+              <li><a href="{{route('Authuser.index')}}"><i class="fa fa-cogs" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserGlobSettings', 'Menu')}}</a></li>
               <li class="divider"></li>
-              <li><a href="{{route('Auth.logout')}}">{{ \App\Http\Controllers\BaseViewController::translate_view('Logout', 'Menu')}}</a></li>
+              <li><a href="{{route('Auth.logout')}}"><i class="fa fa-sign-out" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('Logout', 'Menu')}}</a></li>
             </ul>
           </li>
         </ul>
@@ -77,8 +75,8 @@
             {{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET'), 'simple') }}
             {{ Form::hidden('mode', 'simple') }}
             {{ Form::hidden('scope', 'all') }}
-            <button class="search-btn" type="submit"><i class="material-icons">search</i></button>
-            <input type="text" name="query" class="form-control" placeholder="<?php echo \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search'); ?>">
+            <button class="search-btn" type="submit"><i class="fa fa-search fa-2x" aria-hidden="true"></i></button>
+            <input id="globalsearch" type="text" name="query" class="form-control" placeholder="<?php echo \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search'); ?>">
             <a href="#" class="close" data-dismiss="navbar-search"><i class="material-icons">close</i></a>
             {{ Form::close() }}
         </div>
