@@ -2,8 +2,10 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use App\Http\Controllers\BaseController;
 use View;
+use Log;
+
+use App\Http\Controllers\BaseController;
 use Modules\ProvBase\Entities\Contract;
 
 class DashboardController extends BaseController
@@ -55,7 +57,6 @@ class DashboardController extends BaseController
 		$ret = array();
 
 		try {
-
 			if (\PPModule::is_active('billingbase')) {
 				// find contracts with related items and products
 				$contracts = Contract::orderBy('contract_start', 'asc')->with('items', 'items.product')->get();
@@ -245,7 +246,12 @@ class DashboardController extends BaseController
 						$product = $item->product;
 
 						if ($product->price != 0) {
-							$prepared_data[$product->type][$product->billing_cycle][$product->name][$contract->id] = $product->price;
+							$prepared_data[$product->type][$product->billing_cycle][$product->name][$contract->id]['price'] = $product->price;
+
+							if ($product->type == 'TV') {
+								$costcenter = $item->get_costcenter();
+								$prepared_data[$product->type][$product->billing_cycle][$product->name][$contract->id]['billing_month'] = $costcenter->get_billing_month();
+							}
 						}
 					}
 				}
@@ -254,7 +260,7 @@ class DashboardController extends BaseController
 			// calculate income based on type
 			foreach ($prepared_data as $product_type => $incomes) {
 				foreach ($incomes as $income_cycle => $products) {
-					if ($income_cycle == 'Monthly') {
+					if ($income_cycle == 'Monthly' or $income_cycle == 'Yearly') {
 						$ret[$product_type][$income_cycle] = $this->calculate_income($income_cycle, $products);
 					}
 				}
@@ -262,7 +268,11 @@ class DashboardController extends BaseController
 
 			// calculate incomes total
 			foreach ($ret as $product_type) {
-				$total += $product_type['Monthly'];
+				if (isset($product_type['Monthly'])) {
+					$total += $product_type['Monthly'];
+				} elseif (isset($product_type['Yearly'])) {
+					$total += $product_type['Yearly'];
+				}
 			}
 			$ret['total'] = $total;
 		} catch (\Exception $e) {
@@ -282,22 +292,36 @@ class DashboardController extends BaseController
 	private function calculate_income($income_cycle, array $products)
 	{
 		$monthly = 0.0;
+		$yearly = 0.0;
 		$once = 0.0;
 
 		try {
 			switch ($income_cycle) {
 				case 'Monthly':
 					foreach ($products as $product_name => $contracts) {
-						foreach ($contracts as $contract_id => $price)
-						$monthly += $price;
+						foreach ($contracts as $contract_id => $data) {
+							$monthly += $data['price'];
+						}
 					}
 					$ret = $monthly;
 					break;
 
+				case 'Yearly':
+					foreach ($products as $product_name => $contracts) {
+						foreach ($contracts as $contract_id => $data) {
+							if ($data['billing_month'] == date('m')) {
+								$yearly += $data['price'];
+							}
+						}
+					}
+					$ret = $yearly;
+					break;
+
 				case 'Once':
 					foreach ($products as $product_name => $contracts) {
-						foreach ($contracts as $contract_id => $price)
-							$once += $price;
+						foreach ($contracts as $contract_id => $data) {
+							$once += $data['price'];
+						}
 					}
 					$ret = $once;
 					break;
@@ -325,7 +349,12 @@ class DashboardController extends BaseController
 			foreach ($products as $product) {
 
 				if (array_key_exists($product, $income)) {
-					$val = number_format($income[$product]['Monthly'], 2, '.', '');
+					if (isset($income[$product]['Monthly'])) {
+						$data = $income[$product]['Monthly'];
+					} elseif (isset($income[$product]['Yearly'])) {
+						$data = $income[$product]['Yearly'];
+					}
+					$val = number_format($data, 2, '.', '');
 				} else {
 					$val = number_format(0, 2, '.', '');
 				}
