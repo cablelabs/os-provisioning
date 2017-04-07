@@ -138,7 +138,7 @@ $(function () {
           , $input = combobox.$element
           , $source = combobox.$source
           , $target = combobox.$target
-          
+
 
         $input.val('a')
         combobox.lookup()
@@ -293,6 +293,30 @@ $(function () {
           , combobox = $select.data('combobox')
 
         equal($input.attr('title'), 'A title', 'title was correctly set')
+
+        combobox.$menu.remove()
+      })
+
+      test("should use bootstrap 2 classes if bsVersion option is set to '2'", function() {
+        var $select = $('<select title="A title"><option></option><option>aa</option><option selected>ab</option><option>ac</option></select>')
+          , $input = $select.combobox({bsVersion: '2'}).data('combobox').$element
+          , combobox = $select.data('combobox')
+
+        ok($input.parent('.input-append').length > 0)
+        ok($input.siblings('span.add-on').length > 0)
+        ok($input.siblings('span.add-on').children('i.icon-remove').length > 0)
+
+        combobox.$menu.remove()
+      })
+
+      test("should respect disabled attribute", function() {
+        var $select = $('<select title="A title" disabled><option></option><option>aa</option><option selected>ab</option><option>ac</option></select>')
+          , $input = $select.combobox().data('combobox').$element
+          , combobox = $select.data('combobox')
+
+        equal($input.prop('disabled'), true)
+        equal(combobox.$button.attr('disabled'), "disabled")
+        equal(combobox.disabled, true)
 
         combobox.$menu.remove()
       })

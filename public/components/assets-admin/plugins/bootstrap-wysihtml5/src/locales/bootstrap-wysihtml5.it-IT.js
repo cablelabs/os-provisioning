@@ -1,7 +1,15 @@
 /**
  * Italian translation for bootstrap-wysihtml5
  */
-(function($){
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define('bootstrap.wysihtml5.it-IT', ['jquery', 'bootstrap.wysihtml5'], factory);
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function($){
     $.fn.wysihtml5.locale["it-IT"] = {
         font_styles: {
               normal: "Testo normale",
@@ -21,7 +29,8 @@
         },
         link: {
               insert: "Inserisci link",
-              cancel: "Annulla"
+              cancel: "Annulla",
+              target: "Apri il link in una nuova finestra"
         },
         image: {
               insert: "Inserisci immagine",
@@ -44,4 +53,4 @@
           orange: "Arancio"
         }
     };
-}(jQuery));
+}));
