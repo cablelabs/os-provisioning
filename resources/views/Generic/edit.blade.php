@@ -82,7 +82,7 @@
 		<!-- The Bootstap Panel to include -->
 		@include ('bootstrap.panel', array ('content' => "content_$i",
 											'view_header' => \App\Http\Controllers\BaseViewController::translate_view('Assigned', 'Header').' '.\App\Http\Controllers\BaseViewController::translate_view($view, 'Header' , 2),
-											'md' => 3))
+											'md' => 4))
 
 
 	@endforeach
