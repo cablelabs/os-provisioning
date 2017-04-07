@@ -24,7 +24,10 @@
 	@DivOpen(12)
 			@if ($create_allowed)
 				{{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
-				{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Create '.$b_text, 'Button' ) , ['!class' => 'btn btn-primary m-b-15','style' => 'simple']) }}
+				<button class="btn btn-primary m-b-15" style="simple">
+					<i class="fa fa-plus fa-lg m-r-10" aria-hidden="true"></i> 
+					{{ \App\Http\Controllers\BaseViewController::translate_view('Create '.$b_text, 'Button' )}}
+				</button>			
 				{{ Form::close() }}
 			@endif
 	@DivClose()
@@ -97,7 +100,10 @@
 	@DivOpen(12)
 		<!-- delete/submit button of form -->
 		@if ($delete_allowed)
-			{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button' ), ['!class' => 'btn btn-danger btn-primary m-r-5 m-t-15', 'style' => 'simple']) }}
+			<button class="btn btn-danger btn-primary m-r-5 m-t-15" style="simple">
+					<i class="fa fa-trash-o fa-lg m-r-10" aria-hidden="true"></i> 
+					{{ \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button' ) }}
+			</button>
 			{{ Form::close() }}
 		@endif
 		<!-- only show page buttons if we actually use pagination -->
