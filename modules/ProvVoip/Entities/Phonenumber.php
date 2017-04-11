@@ -246,10 +246,10 @@ class Phonenumber extends \BaseModel {
 		}
 
 		if ($withTrashed) {
-			$orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->withTrashed()->whereRaw($whereStatement);
+			$orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->withTrashed()->whereRaw($whereStatement)->withTimestamps();
 		}
 		else {
-			$orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->whereRaw($whereStatement);
+			$orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->whereRaw($whereStatement)->withTimestamps();
 			/* $orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id'); */
 		}
 
