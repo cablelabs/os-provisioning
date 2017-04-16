@@ -46,3 +46,14 @@ function unify_mac($data)
 	$data['mac'] = wordwrap($data['mac'], 2, ':', true);
 	return $data;
 }
+
+function is_delete_role_allowed($role_id)
+{
+	$ret_val = false;
+	$role_ids = array(1, 3, 4);
+
+	if (!in_array($role_id, $role_ids)) {
+		$ret_val = true;
+	}
+	return $ret_val;
+}

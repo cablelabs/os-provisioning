@@ -37,33 +37,35 @@
 
             {{-- Income --}}
             @if (\PPModule::is_active('billingbase'))
-            <div class="col-md-3 col-sm-6">
-                <div class="widget widget-stats bg-blue">
-                    {{-- icon --}}
-                    <div class="stats-icon">
-                        <i class="fa fa-euro"></i>
-                    </div>
+                @if ($allowed_to_see['accounting'] === true)
+                    <div class="col-md-3 col-sm-6">
+                        <div class="widget widget-stats bg-blue">
+                            {{-- icon --}}
+                            <div class="stats-icon">
+                                <i class="fa fa-euro"></i>
+                            </div>
 
-                    {{-- info/data --}}
-                    <div class="stats-info">
-                        <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Income', 'Dashboard') }} {{ date('m/Y') }}</h4>
-                        <p>
-                            @if (isset($income['total']))
-                                {{ number_format($income['total'], 2, ',', '.') }}
-                            @else
-                                {{ number_format(0, 2, ',', '.') }}
-                            @endif
-                        </p>
-                    </div>
+                            {{-- info/data --}}
+                            <div class="stats-info">
+                                <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Income', 'Dashboard') }} {{ date('m/Y') }}</h4>
+                                <p>
+                                    @if (isset($income['total']))
+                                        {{ number_format($income['total'], 2, ',', '.') }}
+                                    @else
+                                        {{ number_format(0, 2, ',', '.') }}
+                                    @endif
+                                </p>
+                            </div>
 
-                    {{-- refernce link --}}
-                    <div class="stats-link">
-                        <a href="javascript:;">
-                            {{ \App\Http\Controllers\BaseViewController::translate_view('LinkDetails', 'Dashboard') }} <i class="fa fa-arrow-circle-o-right"></i>
-                        </a>
+                            {{-- refernce link --}}
+                            <div class="stats-link">
+                                <a href="javascript:;">
+                                    {{ \App\Http\Controllers\BaseViewController::translate_view('LinkDetails', 'Dashboard') }} <i class="fa fa-arrow-circle-o-right"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                @endif
             @endif
 
             {{-- Placeholder --}}
@@ -132,19 +134,21 @@
             @endif
 
             @if (\PPModule::is_active('billingbase'))
-                @if (isset($income['total']))
-                    <div class="col-md-4">
-                        <div class="panel panel-inverse">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">{{ \App\Http\Controllers\BaseViewController::translate_view('IncomeAnalytics', 'Dashboard') }}</h4>
-                            </div>
-                            <div class="panel-body">
-                                <div class="height-sm" style="padding: 0px; position: relative;">
-                                    <canvas id="income-chart" height="160px"></canvas>
+                @if ($allowed_to_see['accounting'] === true)
+                    @if (isset($income['total']))
+                        <div class="col-md-4">
+                            <div class="panel panel-inverse">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">{{ \App\Http\Controllers\BaseViewController::translate_view('IncomeAnalytics', 'Dashboard') }}</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="height-sm" style="padding: 0px; position: relative;">
+                                        <canvas id="income-chart" height="160px"></canvas>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 @endif
             @endif
         </div>

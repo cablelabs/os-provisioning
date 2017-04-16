@@ -18,6 +18,14 @@ class DashboardController extends BaseController
 		$income = array();
 		$chart_data_contracts = array();
 		$chart_data_income = array();
+		$allowed_to_see = array(
+			'accounting' => false,
+			'technican' => false
+		);
+		$allowed_roles = array(
+			3 => 'techican',
+			4 => 'accounting'
+		);
 
         try {
             // get all valid contracts
@@ -34,6 +42,14 @@ class DashboardController extends BaseController
 					$chart_data_income = $this->get_chart_data_income($income);
 				}
 			}
+
+			// check user permissions
+			$roles = \Auth::user()->roles();
+			foreach ($roles as $role) {
+				if (array_key_exists($role->id, $allowed_roles)) {
+					$allowed_to_see[$allowed_roles[$role->id]] = true;
+				}
+			}
         } catch (\Exception $e) {
             \Log::error('Dashboard-Exception: ' . $e->getMessage());
             throw $e;
@@ -41,7 +57,7 @@ class DashboardController extends BaseController
 
         return View::make(
             'provbase::dashboard', $this->compact_prep_view(
-                compact('title', 'contracts', 'chart_data_contracts', 'income', 'chart_data_income')
+                compact('title', 'contracts', 'chart_data_contracts', 'income', 'chart_data_income', 'allowed_to_see')
             )
         );
     }
