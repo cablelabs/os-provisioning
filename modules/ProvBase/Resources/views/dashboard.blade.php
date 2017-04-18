@@ -1,71 +1,155 @@
 @extends ('Layout.default')
 
-<link href="{{asset('components/assets-admin/plugins/switchery/switchery.css')}}" rel="stylesheet" />
-
 @section('content')
     <div class="col-md-12">
 
         <h1 class="page-header">{{ $title }}</h1>
 
         <div class="row">
+            {{-- Contracts --}}
             <div class="col-md-3 col-sm-6">
-                <div class="panel panel-inverse">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">Aktive Verträge <?php echo date('m/Y'); ?></h4>
+                <div class="widget widget-stats bg-green">
+                    {{-- icon --}}
+                    <div class="stats-icon">
+                        <i class="fa fa-users"></i>
                     </div>
-                    <div class="panel-body">
-                        <div class="widget widget-stats bg-aqua-lighter">
-                            <div class="stats-icon">
-                                <i class="fa fa-globe fa-fw"></i>
-                            </div>
-                            <div class="stats-info">
-                                @if (count($contracts) == 0)
-                                    <p><h4>Keine Verträge vorhanden.</h4></p>
-                                @else
-                                    <h4>total:</h4>
-                                    <p><h1 style="color: #ffffff">{{ $contracts['count_all'] }}</h1></p>
-                                    <div class="stats-desc">
-                                        <?php
-                                            $diff = $contracts['count_all'] - $contracts['count_filtered'];
-                                        ?>
-                                        @if ($contracts['period'] == 'lastMonth')
-                                            Veränderung zum Vormonat: {{ $diff }}
-                                        @elseif ($contracts['period'] == 'dayPeriod')
-                                            Veränderung in den letzten {{ $contracts['days'] }} Tagen: {{ $diff }}
-                                        @endif
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
+
+                    {{-- info/data --}}
+                    <div class="stats-info">
+                        <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Contracts', 'Dashboard') }} {{ date('m/Y') }}</h4>
+                        <p>
+                            @if (count($contracts) == 0)
+                                {{ \App\Http\Controllers\BaseViewController::translate_view('NoContracts', 'Dashboard') }}
+                            @else
+                                {{ count($contracts) }}
+                            @endif
+                        </p>
                     </div>
-                    <div class="panel-footer">
-                        {{ Form::open(array('route' => array('Dashboard.index', 0), 'method' => 'POST', 'files' => false)) }}
-                            <div class="input-group">
-                                <input type="text" class="form-control input-sm" name="datefilter" placeholder="Zeitraum in Tagen">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary btn-sm" type="submit">Filter</button>
-                                </span>
-                            </div>
-                        {{ Form::close() }}
+
+                    {{-- refernce link --}}
+                    <div class="stats-link">
+                        <a href="javascript:;">
+                            {{ \App\Http\Controllers\BaseViewController::translate_view('LinkDetails', 'Dashboard') }} <i class="fa fa-arrow-circle-o-right"></i>
+                        </a>
                     </div>
                 </div>
             </div>
 
+            {{-- Income --}}
+            @if (\PPModule::is_active('billingbase'))
+                @if ($allowed_to_see['accounting'] === true)
+                    <div class="col-md-3 col-sm-6">
+                        <div class="widget widget-stats bg-blue">
+                            {{-- icon --}}
+                            <div class="stats-icon">
+                                <i class="fa fa-euro"></i>
+                            </div>
+
+                            {{-- info/data --}}
+                            <div class="stats-info">
+                                <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Income', 'Dashboard') }} {{ date('m/Y') }}</h4>
+                                <p>
+                                    @if (isset($income['total']))
+                                        {{ number_format($income['total'], 2, ',', '.') }}
+                                    @else
+                                        {{ number_format(0, 2, ',', '.') }}
+                                    @endif
+                                </p>
+                            </div>
+
+                            {{-- refernce link --}}
+                            <div class="stats-link">
+                                <a href="javascript:;">
+                                    {{ \App\Http\Controllers\BaseViewController::translate_view('LinkDetails', 'Dashboard') }} <i class="fa fa-arrow-circle-o-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            @endif
+
+            {{-- Placeholder --}}
+            @if (\PPModule::is_active('provvoipenvia'))
+            <div class="col-md-3 col-sm-6">
+                <div class="widget widget-stats bg-aqua">
+                    {{-- icon --}}
+                    <div class="stats-icon">
+                        <i class="fa fa-info"></i>
+                    </div>
+
+                    {{-- info/data --}}
+                    <div class="stats-info">
+                        <h4>PLACEHOLDER</h4>
+                        <p>ToDo's ProvVoipEnvia</p>
+                    </div>
+
+                    {{-- refernce link --}}
+                    <div class="stats-link">
+                        <a href="javascript:;">
+                            {{ \App\Http\Controllers\BaseViewController::translate_view('LinkDetails', 'Dashboard') }} <i class="fa fa-arrow-circle-o-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            {{-- Date --}}
+            <div class="col-md-3 col-sm-6">
+                <div class="widget widget-stats bg-purple">
+                    {{-- icon --}}
+                    <div class="stats-icon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+
+                    {{-- info/data --}}
+                    <div class="stats-info">
+                        <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Date', 'Dashboard') }}</h4>
+                        <p>{{ date('d.m.Y') }}</p>
+                    </div>
+
+                    {{-- refernce link --}}
+                    <div class="stats-link">
+                        <a href="javascript:;">&nbsp;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br><br>
+
+        <div class="row">
             @if (count($contracts) > 0)
-                <div class="col-md-6 col-sm-6">
+                <div class="col-md-8">
                     <div class="panel panel-inverse">
-                        <div class="panel-heading"><h4 class="panel-title">Analyse letzte 12 Monate</h4></div>
+                        <div class="panel-heading">
+                            <h4 class="panel-title">{{ \App\Http\Controllers\BaseViewController::translate_view('ContractAnalytics', 'Dashboard') }}</h4>
+                        </div>
                         <div class="panel-body">
-                            <!-- div id="contracts-legend" style="float: right; padding: 25px;" -->
-                                <!-- Legende -->
-                            <!-- /div -->
-                            <div id="contracts-chart" style="width: 100%; height: 300px;">
-                                <!-- Chart -->
-                                <canvas id="chart" height="100%"></canvas>
+                            <div class="height-sm" style="padding: 0px; position: relative;">
+                                <canvas id="contracts-chart" height="75px"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
+            @endif
+
+            @if (\PPModule::is_active('billingbase'))
+                @if ($allowed_to_see['accounting'] === true)
+                    @if (isset($income['total']))
+                        <div class="col-md-4">
+                            <div class="panel panel-inverse">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">{{ \App\Http\Controllers\BaseViewController::translate_view('IncomeAnalytics', 'Dashboard') }}</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="height-sm" style="padding: 0px; position: relative;">
+                                        <canvas id="income-chart" height="160px"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endif
             @endif
         </div>
     </div>
@@ -76,33 +160,57 @@
         document.write('<script src="{{asset('components/assets-admin/plugins/jquery/jquery-1.9.1.min.js')}}">\x3C/script>');
     }
 </script>
-
-<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.categories.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/chart/Chart.min.js')}}"></script>
-
-<script src="{{asset('components/assets-admin/plugins/switchery/switchery.js')}}"></script>
-<script src="{{asset('components/assets-admin/js/form-slider-switcher.demo.js')}}"></script>
 
 <script type="text/javascript">
 
     window.onload = function() {
 
         // line chart contracts
-        var chart_data = {{ json_encode($chart_data_contracts) }};
+        var chart_data_contracts = {{ json_encode($chart_data_contracts) }};
 
-        if (chart_data.length != 0) {
+        if (chart_data_contracts.length != 0) {
 
-            var labels = chart_data['labels'];
-            var contracts = chart_data['contracts'];
-            var ctx = document.getElementById('chart').getContext('2d');
-            var myChart = new Chart(ctx, {
+            var labels = chart_data_contracts['labels'];
+            var contracts = chart_data_contracts['contracts'];
+            var ctx = document.getElementById('contracts-chart').getContext('2d');
+            var contractChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
                         data: contracts,
-                        backgroundColor: "rgba(0,128,0,0.6)",
+                        backgroundColor: "rgba(0, 172, 172, 0.8)",
+                    }],
+                },
+                options: {
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+        }
+
+        // bar chart income
+        var chart_data_income = {{ json_encode($chart_data_income) }};
+
+        if (chart_data_income.length != 0) {
+
+            var labels = chart_data_income['labels'];
+            var incomes = chart_data_income['data'];
+            var ctx = document.getElementById('income-chart').getContext('2d');
+            var incomeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: incomes,
+                        backgroundColor: [
+                            "rgba(255, 206, 86, 0.8)",
+                            "rgba(75, 192, 192, 0.8)",
+                            "rgba(54, 162, 235, 0.8)",
+                            "rgba(153, 102, 255, 0.8)",
+                        ]
                     }],
                 },
                 options: {

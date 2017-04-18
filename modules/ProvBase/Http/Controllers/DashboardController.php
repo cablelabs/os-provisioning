@@ -2,66 +2,53 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use App\Http\Controllers\BaseController;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\URL;
-use Modules\BillingBase\Entities\Item;
 use View;
-use Illuminate\Support\Facades\App;
+use Log;
 
+use App\Http\Controllers\BaseController;
 use Modules\ProvBase\Entities\Contract;
-use Modules\BillingBase\Entities\Product;
 
 class DashboardController extends BaseController
 {
     public function index()
     {
         $title = 'Dashboard';
-		$period = 'lastMonth';
-
-        $days = null;
-		$monthly_sales = null;
-        $checked = '';
-		$show_sales = false;
 
 		$contracts = array();
+		$income = array();
 		$chart_data_contracts = array();
+		$chart_data_income = array();
+		$allowed_to_see = array(
+			'accounting' => false,
+			'technican' => false
+		);
+		$allowed_roles = array(
+			3 => 'technican',
+			4 => 'accounting'
+		);
 
         try {
-			if (App::environment() !== 'production') {
-				$show_sales = true;
-			}
-
-            // check if the dayfiltet form submitted
-            $request = URL::getRequest();
-            if ($request->isMethod('post')) {
-                $days = $request->input('datefilter');
-                $monthly_sales = $request->input('switch-sales');
-            }
-
             // get all valid contracts
-            $all_contracts = $this->get_contracts();
+			$contracts = $this->get_contracts();
 
-            // get last month contracts
-			$filtered_contracts = $this->get_contracts_by_filter($all_contracts, $period);
-
-			// get contracts by given last days
-			if (!is_null($days)) {
-				$period = 'dayPeriod';
-				$filtered_contracts = $this->get_contracts_by_filter($all_contracts, $period, $days);
-			}
-
-			if (count($all_contracts) > 0) {
-
-				$contracts = array(
-					'count_all' => count($all_contracts),
-					'count_filtered' => count($filtered_contracts),
-					'period' => $period,
-					'days' => $days
-				);
+			if (count($contracts) > 0) {
 
 				// get chart data: contracts
-				$chart_data_contracts = $this->get_chart_data_contracts($all_contracts);
+				$chart_data_contracts = $this->get_chart_data_contracts($contracts);
+
+				// income
+				if (\PPModule::is_active('billingbase')) {
+					$income = $this->get_income_total($contracts);
+					$chart_data_income = $this->get_chart_data_income($income);
+				}
+			}
+
+			// check user permissions
+			$roles = \Auth::user()->roles();
+			foreach ($roles as $role) {
+				if (array_key_exists($role->id, $allowed_roles)) {
+					$allowed_to_see[$allowed_roles[$role->id]] = true;
+				}
 			}
         } catch (\Exception $e) {
             \Log::error('Dashboard-Exception: ' . $e->getMessage());
@@ -70,7 +57,7 @@ class DashboardController extends BaseController
 
         return View::make(
             'provbase::dashboard', $this->compact_prep_view(
-                compact('title', 'contracts', 'chart_data_contracts', 'show_sales', 'sales', 'chart_data_sales', 'checked')
+                compact('title', 'contracts', 'chart_data_contracts', 'income', 'chart_data_income', 'allowed_to_see')
             )
         );
     }
@@ -86,14 +73,20 @@ class DashboardController extends BaseController
 		$ret = array();
 
 		try {
-			// find contracts with related items and products
-			$contracts = Contract::orderBy('contract_start', 'asc')->with('items', 'items.product')->get();
+			if (\PPModule::is_active('billingbase')) {
+				// find contracts with related items and products
+				$contracts = Contract::orderBy('contract_start', 'asc')->with('items', 'items.product')->get();
+			} else {
+				$contracts = Contract::orderBy('contract_start', 'asc')->get();
+			}
 
 			if (count($contracts) > 0) {
+				$date = $this->generate_reference_date();
+
 				foreach ($contracts as $contract) {
 
 					// check start- and enddate
-					if ($contract->contract_start <= $this->generate_reference_date() &&
+					if ($contract->contract_start <= $date &&
 						($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
 
 						$ret[] = $contract;
@@ -183,7 +176,7 @@ class DashboardController extends BaseController
 	}
 
     /**
-     * Returns data for the line chart
+     * Returns rehashed data for the line chart
      *
 	 * @param array $contracts
      * @return array
@@ -210,11 +203,11 @@ class DashboardController extends BaseController
 					$month = $date_parts[1] + $i;
 				}
 
-				$contract_start = $year . '-' . str_pad($month, 2 ,'0', STR_PAD_LEFT) . '-01';
-				$contract_end = $year . '-' . str_pad($month, 2 ,'0', STR_PAD_LEFT) . '-' . date("t", mktime(0, 0, 0, $month, 1, $year));
+				$date_interval_start = $year . '-' . str_pad($month, 2 ,'0', STR_PAD_LEFT) . '-01';
+				$date_interval_end = $year . '-' . str_pad($month, 2 ,'0', STR_PAD_LEFT) . '-' . date("t", mktime(0, 0, 0, $month, 1, $year));
 
 				$ret['labels'][] = str_pad($month, 2 ,'0', STR_PAD_LEFT) . '/' . $year;
-				$ret['contracts'][] = $this->count_contracts($contracts, $contract_start, $contract_end);
+				$ret['contracts'][] = $this->count_contracts($contracts, $date_interval_start);
 			}
 		} catch (\Exception $e) {
         	throw $e;
@@ -226,18 +219,17 @@ class DashboardController extends BaseController
 	 * Count contracts for given time interval
 	 *
 	 * @param array $contracts
-	 * @param string $contract_start
-	 * @param string $contract_end
+	 * @param string $date_interval_start
 	 * @return int
 	 * @throws \Exception
 	 */
-    private function count_contracts(array $contracts, $contract_start, $contract_end)
+    private function count_contracts(array $contracts, $date_interval_start)
 	{
 		$ret = 0;
 
 		try {
 			foreach ($contracts as $contract) {
-				if (($contract->contract_start >= $contract_start && $contract->contract_end <= $contract_end) &&
+				if (($contract->contract_start < $date_interval_start) &&
 					($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
 
 					$ret++;
@@ -246,7 +238,154 @@ class DashboardController extends BaseController
 		} catch (\Exception $e) {
 			throw $e;
 		}
+		return $ret;
+	}
 
-		return count($contracts) - $ret;
+	/**
+	 * Returns monthly incomes for each product type
+	 *
+	 * @param array $contracts
+	 * @return array
+	 * @throws \Exception
+	 */
+	private function get_income_total(array $contracts)
+	{
+		$total = 0.0;
+		$ret = array();
+
+		try {
+			foreach ($contracts as $contract) {
+				$items = $contract->items;
+
+				if (count($items) > 0) {
+					foreach ($items as $item) {
+						$product = $item->product;
+
+						if ($product->price != 0) {
+							$prepared_data[$product->type][$product->billing_cycle][$product->name][$contract->id]['price'] = $product->price;
+
+							if ($product->type == 'TV') {
+								$costcenter = $item->get_costcenter();
+								$prepared_data[$product->type][$product->billing_cycle][$product->name][$contract->id]['billing_month'] = $costcenter->get_billing_month();
+							}
+						}
+					}
+				}
+			}
+
+			// calculate income based on type
+			foreach ($prepared_data as $product_type => $incomes) {
+				foreach ($incomes as $income_cycle => $products) {
+					if ($income_cycle == 'Monthly' or $income_cycle == 'Yearly') {
+						$ret[$product_type][$income_cycle] = $this->calculate_income($income_cycle, $products);
+					}
+				}
+			}
+
+			// calculate incomes total
+			foreach ($ret as $product_type) {
+				if (isset($product_type['Monthly'])) {
+					$total += $product_type['Monthly'];
+				} elseif (isset($product_type['Yearly'])) {
+					$total += $product_type['Yearly'];
+				}
+			}
+			$ret['total'] = $total;
+		} catch (\Exception $e) {
+			throw $e;
+		}
+		return $ret;
+	}
+
+	/**
+	 * Calculate income
+	 *
+	 * @param string $income_cycle
+	 * @param array $products
+	 * @return float
+	 * @throws \Exception
+	 */
+	private function calculate_income($income_cycle, array $products)
+	{
+		$monthly = 0.0;
+		$yearly = 0.0;
+		$once = 0.0;
+
+		try {
+			switch ($income_cycle) {
+				case 'Monthly':
+					foreach ($products as $product_name => $contracts) {
+						foreach ($contracts as $contract_id => $data) {
+							$monthly += $data['price'];
+						}
+					}
+					$ret = $monthly;
+					break;
+
+				case 'Yearly':
+					foreach ($products as $product_name => $contracts) {
+						foreach ($contracts as $contract_id => $data) {
+							if ($data['billing_month'] == date('m')) {
+								$yearly += $data['price'];
+							}
+						}
+					}
+					$ret = $yearly;
+					break;
+
+				case 'Once':
+					foreach ($products as $product_name => $contracts) {
+						foreach ($contracts as $contract_id => $data) {
+							$once += $data['price'];
+						}
+					}
+					$ret = $once;
+					break;
+			}
+		} catch (Exception $e) {
+			throw $e;
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Returns rehashed data for the bar chart
+	 *
+	 * @param array $income
+	 * @return array
+	 * @throws \Exception
+	 */
+	private function get_chart_data_income(array $income)
+	{
+		$ret = array();
+		$products = array('Internet', 'Voip', 'TV', 'Other');
+
+		try {
+			foreach ($products as $product) {
+
+				if (array_key_exists($product, $income)) {
+					if (isset($income[$product]['Monthly'])) {
+						$data = $income[$product]['Monthly'];
+					} elseif (isset($income[$product]['Yearly'])) {
+						$data = $income[$product]['Yearly'];
+					}
+					$val = number_format($data, 2, '.', '');
+				} else {
+					$val = number_format(0, 2, '.', '');
+				}
+
+				if ($product == 'Other') {
+					$product = \App\Http\Controllers\BaseViewController::translate_view($product, 'Dashboard');
+				}
+
+				$ret['data'][] = $val;
+				$ret['labels'][] = $product;
+			}
+		} catch (\Exception $e) {
+			throw $e;
+		}
+
+		return $ret;
 	}
 }

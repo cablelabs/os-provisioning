@@ -36,9 +36,16 @@ class Authrole extends BaseModel
 	public function index_list()
 	{
 		$ret = array();
+		$delete_not_allowed = array(1 => 'super_admin', 3 => 'technician', 4 => 'accounting');
 
 		try {
-			$ret = $this->where('type', '=', 'role')->get();
+			$ret = $this->where('type', '=', 'role')->orderBy('id')->get();
+
+			foreach ($ret as $role) {
+				if (array_key_exists($role->id, $delete_not_allowed)) {
+					$role->index_delete_disabled = true;
+				}
+			}
 		} catch (\Exception $e) {
 			throw $e;
 		}
