@@ -92,20 +92,10 @@
 				@foreach ($view_var as $object)
 					<tr class="{{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}">
 
-						@if ($object instanceof \App\Authrole)
-							<td>
-								@if (is_delete_role_allowed($object->id))
-									{{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple', 'disabled' => null]) }}
-								@else
-									{{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple', 'disabled' => 'disabled']) }}
-								@endif
-							</td>
+						@if ($delete_allowed)
+							<td width=50>{{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple', 'disabled' => $object->index_delete_disabled ? 'disabled' : null]) }} </td>
 						@else
-							@if ($delete_allowed)
-								<td width=50>{{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple', 'disabled' => $object->index_delete_disabled ? 'disabled' : null]) }} </td>
-							@else
-								<td/>
-							@endif
+							<td/>
 						@endif
 
 						<!-- Parse view_index_label()  -->
