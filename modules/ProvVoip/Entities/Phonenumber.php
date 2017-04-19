@@ -506,7 +506,7 @@ class PhonenumberObserver
 				&&
 				($new_mta->modem->{$field} != $old_mta->modem->{$field})
 			) {
-				\Session::push('tmp_info_above_form', 'Updating not alloed: MTA change, but '.$field.' different in old and new modem');
+				\Session::push('tmp_info_above_form', 'Updating not allowed: MTA change, but '.$field.' different in old and new modem');
 				return false;
 			}
 		}

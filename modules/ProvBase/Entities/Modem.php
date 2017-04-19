@@ -171,6 +171,8 @@ class Modem extends \BaseModel {
 	 */
 	public static function boot()
 	{
+		Log::debug(__METHOD__." started");
+
 		parent::boot();
 
 		Modem::observe(new \App\SystemdObserver);
@@ -194,6 +196,8 @@ class Modem extends \BaseModel {
 	 */
 	private function generate_cm_dhcp_entry()
 	{
+		Log::debug(__METHOD__." started for ".$this->hostname);
+
 		$ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
 
 		if(count($this->mtas))
@@ -232,6 +236,8 @@ class Modem extends \BaseModel {
 	 */
 	public static function make_dhcp_cm_all ()
 	{
+		Log::debug(__METHOD__." started");
+
 		Modem::clear_dhcp_conf_files();
 
 		// Log
@@ -273,6 +279,8 @@ class Modem extends \BaseModel {
 	 */
 	public function make_configfile ()
 	{
+		Log::debug(__METHOD__." started for ".$this->hostname);
+
 		$modem	= $this;
 		$id		= $modem->id;
 		$mac	= $modem->mac;
@@ -567,6 +575,8 @@ class Modem extends \BaseModel {
 	 */
 	public function geocode ($save = true)
 	{
+		Log::debug(__METHOD__." started for ".$this->hostname);
+
 		$country = 'Deutschland';
 
 		// Load google key if .ENV is set
@@ -759,6 +769,8 @@ class ModemObserver
 
 	public function created($modem)
 	{
+		Log::debug(__METHOD__." started for ".$modem->hostname);
+
 		$modem->hostname = 'cm-'.$modem->id;
 		$modem->save();	 // forces to call the updating() and updated() method of the observer !
 		if (\PPModule::is_active ('ProvMon'))
@@ -767,6 +779,7 @@ class ModemObserver
 
 	public function updating($modem)
 	{
+		Log::debug(__METHOD__." started for ".$modem->hostname);
 
 		// reminder: on active Envia module: moving modem with phonenumbers attached to other contract is not allowed!
 		// check if this is running if you decide to implement moving of modems to other contracts
@@ -807,6 +820,8 @@ class ModemObserver
 
 	public function updated($modem)
 	{
+		Log::debug(__METHOD__." started for ".$modem->hostname);
+
 		if (!$modem->observer_enabled)
 			return;
 
@@ -824,6 +839,8 @@ class ModemObserver
 
 	public function deleted($modem)
 	{
+		Log::debug(__METHOD__." started for ".$modem->hostname);
+
 		$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->delete_configfile();
