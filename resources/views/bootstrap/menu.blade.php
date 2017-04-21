@@ -2,13 +2,9 @@
     <div id="header" class="header navbar navbar-default navbar-fixed-top">
       <!-- begin container-fluid -->
       <div class="container-fluid">
+          <div class="row">
         <!-- begin mobile sidebar expand / collapse button -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed navbar-toggle-left" data-click="sidebar-minify">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
+        <div class="nav navbar-nav col-md-3 col-sm-3 col-xs-2">
           <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -18,22 +14,25 @@
         </div>
         <!-- end mobile sidebar expand / collapse button -->
 
-        <div class="col-md-3 p-t-15">
+        <div class="nav navbar-nav col-md-5 col-sm-5 col-xs-5 p-t-5">
               <h5>
                 @yield('content_top')
               </h5>
         </div>
 
-
+        <div class="row">
         <ul class="nav navbar-nav navbar-right">
-
+            <!-- global search form -->
+              <li class="col-md-1 col-sm-2 col-xs-2 p-r-15">
+                <a id="togglesearch" href="javascript:;" class="icon notification waves-effect waves-light" data-toggle="navbar-search"><i class="fa fa-search fa-lg" aria-hidden="true"></i></a>
+              </li>
 			{{-- TODO: discuss the following draft (position, coding) --}}
 			<?php
 				if (\PPModule::is_active('provvoipenvia')) {
 
 					echo "<!-- count of user interaction needing EnviaOrders -->";
 
-					echo "<li style='font-size: 2em; font-weight: bold'>";
+					echo "<li style='font-size: 2em; font-weight: bold' class='col-md-1 col-sm-2 col-xs-2'>";
 
 					$user_interaction_needing_enviaorder_count = Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
 					echo '<a href="/lara/admin/EnviaOrder?show_filter=action_needed" target="_self">';
@@ -50,17 +49,12 @@
 					echo "</li>";
 				}
 			?>
-
-        <!-- global search form -->
-          <li>
-            <a id="togglesearch" href="javascript:;" class="icon notification waves-effect waves-light" data-toggle="navbar-search"><i class="fa fa-search fa-lg" aria-hidden="true"></i></a>
-          </li>
-          <li class="dropdown navbar-user">
-            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-user-circle-o fa-lg" aria-hidden="true"></i>
-              <span class="hidden-xs"><img src="{{asset('components/assets-admin/img/user-11.jpg')}}" alt ="" />  {{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span>
-              <b class="caret"></b>
-            </a>
+          <li class="dropdown navbar-user col-md-10 col-sm-8 col-xs-8 pull-right">
+              <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-user-circle-o fa-lg" aria-hidden="true"></i>
+                <span class="hidden-xs hidden-sm"><img src="{{asset('components/assets-admin/img/user-11.jpg')}}" alt ="" />  {{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span>
+                <b class="caret"></b>
+              </a>
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>
               <li><a href="{{route('Authuser.edit', \Auth::user()->id)}}"> <i class="fa fa-cog" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}</a></li>
@@ -69,7 +63,9 @@
               <li><a href="{{route('Auth.logout')}}"><i class="fa fa-sign-out" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('Logout', 'Menu')}}</a></li>
             </ul>
           </li>
-        </ul>
+                  </ul>
+      </div>
+
         <!-- end header navigation right -->
         <div class="search-form bg-white">
               {{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET'), 'simple') }}
@@ -79,6 +75,7 @@
             <input id="globalsearch" type="text" name="query" class="form-control navbar" placeholder="<?php echo \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search'); ?>">
             <a href="#" class="close" data-dismiss="navbar-search"><i class="fa fa-angle-up fa-2x" aria-hidden="true"></i></a>
             {{ Form::close() }}
+        </div>
         </div>
       </div>
       <!-- end container-fluid -->

@@ -28,5 +28,5 @@
       <link href="{{asset('components/assets-admin/plugins/switchery/switchery.css')}}" rel="stylesheet" />
       <!-- ================== END BASE CSS STYLE ================== -->
       <!-- ================== BEGIN BASE JS ================== -->
-      <script src="{{asset('components/assets-admin/plugins/pace/pace.min.js"></script>
+      <script src="{{asset('components/assets-admin/plugins/pace/pace.min.js')}}"></script>
       <!-- ================== END BASE JS ================== -->
