@@ -23,7 +23,7 @@ class DashboardController extends BaseController
 			'technican' => false
 		);
 		$allowed_roles = array(
-			3 => 'technican',
+			3 => 'techican',
 			4 => 'accounting'
 		);
 
