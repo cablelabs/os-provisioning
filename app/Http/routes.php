@@ -52,5 +52,6 @@ BaseRoute::group([], function() {
 	BaseRoute::get('Config', array('as' => 'Config.index', 'uses' => 'GlobalConfigController@index'));
 	BaseRoute::resource('GlobalConfig', 'GlobalConfigController');
 	BaseRoute::resource('GuiLog', 'GuiLogController');
+	Route::get('Guilog/FilterRecords', ['as' => 'GuiLog.filter', 'uses' => 'GuiLogController@filter']);
 
 });

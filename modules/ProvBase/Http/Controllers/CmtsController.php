@@ -32,7 +32,8 @@ class CmtsController extends \BaseController {
 
 		return [
 			['name' => 'Edit', 'route' => 'Cmts.edit', 'link' => [$view_var->id]],
-			['name' => 'Analysis', 'route' => 'Provmon.cmts', 'link' => [$view_var->id]]
+			['name' => 'Analysis', 'route' => 'Provmon.cmts', 'link' => [$view_var->id]],
+			parent::get_form_tabs($view_var)[0]
 		];
 	}
 
