@@ -306,7 +306,7 @@ class Contract extends \BaseModel {
 	 */
 	public function customer_number() {
 
-		if (boolval($this->number3)) {
+		if (boolval($this->number3) && (\Str::lower($this->number3 != 'n/a'))) {
 			$customer_number = $this->number3;
 		}
 		else {
@@ -314,6 +314,29 @@ class Contract extends \BaseModel {
 		}
 
 		return $customer_number;
+
+	}
+
+
+	/**
+	 * Helper to get the legacy customer number (may be identical wtih the legacy contract number).
+	 * As there is no hard coded customer number in database we have to use this mapper. The semantic meaning of number…number4 can be defined in global configuration.
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @todo: in this first step the relation is hardcoded within the function. Later on we have to check the mapping against the configuration.
+	 * @return current customer number
+	 */
+	public function customer_number_legacy() {
+
+		if (boolval($this->number4) && (\Str::lower($this->number4 != 'n/a'))) {
+			$customer_number_lecacy = $this->number4;
+		}
+		else {
+			$customer_number_lecacy = $this->number2;
+		}
+
+		return $customer_number_lecacy;
 
 	}
 
