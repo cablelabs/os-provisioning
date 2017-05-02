@@ -122,38 +122,44 @@ class importCommand extends Command {
 				// Thomson-TWG850-4 			46 | TWG 850-4
 				// Default CM Config 			3  | Base
 				// Thomson-THG540 				47 | THG 540
-				// Thomson-THG57X-SIP 			20 | ThomsonTechnicolorMta
+				// Thomson-THG57X-SIP 			6  | THG571
 				// TVM1000-2.31 				
 				// Thomson-THG541 				45 | THG 541
 				// SNMPSetup1 					3  | Base
 				// Arris-TM822-v9 				3  | Base
-				// Arris-TM822-SIP-V9 			34 | ArrisMta
+				// Arris-TM822-SIP-V9 			3  | Base
 				// Thomson-THG57X 				6  | THG571 
 				// Thomson-TWG850 				46 | TWG 850-4  	??
 				// Fritzbox AVM 6490 06.50 		25 | FritzBox 6490
 				// FritzBox 6320 				3  | Base
 				// Thomson-TWG870 				44 | TWG 870
-				// Thomson-THG540-SIP 			20 | ThomsonTechnicolorMta
+				// Thomson-THG540-SIP 			47 | THG 540
 				// Thomson-TCM47X 				3  | Base
-				// TC7200.20-SIP 				20 | ThomsonTechnicolorMta
-				// Thomson-THG541-SIP 			20 | ThomsonTechnicolorMta
+				// TC7200.20-SIP 				3  | 3
+				// Thomson-THG541-SIP 			45 | THG 541
 				// Fritzbox AVM 6490 			25 | FritzBox 6490
 				// Arris 820 					52 | Arris CM820
 				// FritzBox-6360-6360.85.06.31 	3  | Base
+
+				// FritzBox AVM MTA 			49 | Fritzbox MTA mit 10 Nrn
+				// Arris-MTA-MGCP
+				// Arris-MTA-SIP 				34 | ArrisMta
+				// Thomson-eMTA-SIP-EnviaTel 	20 | ThomsonTechnicolorMta
+				// Default MTA Config 			20 | ThomsonTechnicolorMta
 	 			'SNMPSetup1' 				=> 3,
-				'SNMPBlockMulticast' 		=> 'todo',
+				'SNMPBlockMulticast' 		=> 3,
 				'SNMPAllowMulticast' 		=> 3,
-				'SNMPSetup-TEST-FW-1' 		=> 'todo',
-				'SNMPSetup-TEST-FW-2' 		=> 'todo',
-				'SNMPTVM' 					=> 'todo',
-				'SNMPSIP' 					=> 'todo',
-				'SNMPSetupUpdate' 			=> 'todo',
+				'SNMPSetup-TEST-FW-1' 		=> 3,
+				'SNMPSetup-TEST-FW-2' 		=> 3,
+				'SNMPTVM' 					=> 3,
+				'SNMPSIP' 					=> 3,
+				'SNMPSetupUpdate' 			=> 3,
 				'Thomson-THG540' 			=> 47,
 				'Thomson-THG541' 			=> 45,
 				'Thomson-TWG850' 			=> 46,
 				'Thomson-TWG850-4' 			=> 46,
-				'Default MTA Config' 		=> 'todo',
-				'Thomson/Technicolor' 		=> 'todo',
+				'Default MTA Config' 		=> 20,
+				'Thomson/Technicolor' 		=> 3,
 				'Default CM Config' 		=> 3,
 				'TVM1000' 					=> 'todo',
 				'TVM1000-2.08' 				=> 'todo',
@@ -167,43 +173,43 @@ class importCommand extends Command {
 				'FritzBox AVM' 				=> 25,
 				'TVM1000-2.10' 				=> 'todo',
 				'FritzBox 6360' 			=> 3,
-				'FritzBox AVM MTA' 			=> 'todo',
-				'Thomson-THG540-SIP' 		=> 20,
+				'FritzBox AVM MTA' 			=> 49,
+				'Thomson-THG540-SIP' 		=> 47,
 				'Kathrein-DCM42' 			=> 'todo',
-				'Thomson-THG57X-SIP' 		=> 20,
-				'Thomson-TWG870-SIP' 		=> 'todo',
+				'Thomson-THG57X-SIP' 		=> 6,
+				'Thomson-TWG870-SIP' 		=> 'todo', 		//46
 				'TVM1000-2.20' 				=> 'todo',
 				'Thomson-TCM47X' 			=> 3,
-				'Thomson' 					=> 'todo',
-				'Technicolor' 				=> 'todo',
-				'TC7200.20' 				=> 'todo',
+				'Thomson' 					=> 3,
+				'Technicolor' 				=> 3,
+				'TC7200.20' 				=> 3,
 				'Delta' 					=> 'todo',
 				'Arris-TG862' 				=> 42,
-				'Arris' 					=> 'todo',
+				'Arris' 					=> 3,
 				'Hitron CVE 30360' 			=> 'todo',
 				'FritzBox 6320' 			=> 3,
 				'TVM1000-2.31' 				=> 'todo',
-				'TC7200.20 v01.03' 			=> 'todo',
-				'Thomson-THG541-SIP' 		=> 20,
-				'Thomson-TWG850-4-SIP' 		=> 'todo',
+				'TC7200.20 v01.03' 			=> 3,
+				'Thomson-THG541-SIP' 		=> 45,
+				'Thomson-TWG850-4-SIP' 		=> 46,
 				'Hitron BVG 3653 SIP' 		=> 'todo',
-				'6320v2' 					=> 'todo',
+				'6320v2' 					=> 3,
 				'Fritzbox AVM 6490' 		=> 25,
-				'6320v2int' 				=> 'todo',
+				'6320v2int' 				=> 3,
 				'AVM 6490 V.06.51' 			=> 25,
-				'AVM Basis Test 6340' 		=> 'todo',
-				'Arris-TG862 SIP' 			=> 'todo',
-				'Tarris' 					=> 'todo',
-				'Tarris-TG862 SIP' 			=> 'todo',
-				'Tarris_MTA' 				=> 'todo',
-				'Arris-TG862 test neueste Firmware' => 'todo',
+				'AVM Basis Test 6340' 		=> 3,
+				'Arris-TG862 SIP' 			=> 42,
+				'Tarris' 					=> 42,
+				'Tarris-TG862 SIP' 			=> 42,
+				'Tarris_MTA' 				=> 34,
+				'Arris-TG862 test neueste Firmware' => 53, // TG862 9.01103S5E1
 				'Hitron eMTA' 				=> 'todo',
 				'FritzBox-6360-6360.85.06.31' => 3,
-				'Arris-TG862-v9' 			=> 'todo',
-				'Arris-TG862-v9 sip' 		=> 'todo',
-				'Thomson-eMTA-SIP-EnviaTel' => 'todo',
-				'Fritzbox AVM 6490 06.50' 	=> 20,
-				'TC7200.20-SIP' 			=> 20,
+				'Arris-TG862-v9' 			=> 53,
+				'Arris-TG862-v9 sip' 		=> 53,
+				'Thomson-eMTA-SIP-EnviaTel' => 20,
+				'Fritzbox AVM 6490 06.50' 	=> 25,
+				'TC7200.20-SIP' 			=> 3,
 				'Fritz Box 6360.85.06.50' 	=> 3,
 				'Arris 820' 				=> 52,
 				'Arris-MTA-MGCP'			=> 'todo',
@@ -211,8 +217,8 @@ class importCommand extends Command {
 				'FritzBoxAVM-6360 (Ver. 06.51) (SNMP)' => 3,
 				'FritzBoxAVM-6490 (Ver. 06.51) (SNMP)' => 25,
 				'AVM 6.50 - Test' 			=> 25,
-				'Arris-TM822-SIP-V9' 		=> 34,
-				'Arris-MTA-SIP' 			=> 'todo',
+				'Arris-TM822-SIP-V9' 		=> 3,
+				'Arris-MTA-SIP' 			=> 34,
  			);
 
 
