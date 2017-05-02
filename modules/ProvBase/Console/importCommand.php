@@ -322,6 +322,7 @@ class importCommand extends Command {
 		foreach ($contracts as $contract)
 		{
 			$c = $contracts_new->whereLoose('number2', $contract->vertragsnummer)->first();
+
 			$info = 'UPDATE';
 			if (sizeof($c) == 0)
 			{
@@ -331,6 +332,7 @@ class importCommand extends Command {
 
 			// import fields
 			$c->number2   = $contract->vertragsnummer;
+			$c->number4   = $contract->kundennr;
 			$c->salutation= $contract->anrede;
 			$c->company   = $contract->firma;
 			$c->firstname = $contract->vorname;
@@ -338,7 +340,7 @@ class importCommand extends Command {
 			$c->street    = $contract->strasse;
 			$c->zip       = $contract->plz;
 			$c->city      = $contract->ort;
-			$c->phone     = $contract->tel;
+			$c->phone     = str_replace("/", "", $contract->tel);
 			$c->fax       = $contract->fax;
 			$c->email     = $contract->email;
 			$c->birthday  = $contract->geburtsdatum;
@@ -347,16 +349,20 @@ class importCommand extends Command {
 			$c->network_access = $contract->network_access;
 			$c->contract_start = $contract->angeschlossen;
 			$c->contract_end   = $contract->abgeklemmt;
-			$c->create_invoice = true;
+			$c->create_invoice = $contract->einzug;
 
 			// TODO: costcenter
-			$c->costcenter_id = 3; // Dittersdorf=1, new one would be 3
+			$c->costcenter_id = $costcenter_id; // Dittersdorf=1, new one would be 3
 
 
 			// set fields with null input to ''. 
 			// This fixes SQL import problem with null fields
+			$relations = $c->relationsToArray();
 			foreach( $c->toArray() as $key => $value )
 			{
+				if (array_key_exists($key, $relations))
+					continue;
+
 				$field = $c->{$key};
 
 				if ($field == null)
@@ -386,9 +392,6 @@ class importCommand extends Command {
 				'voip' 				=> $contract->telefontarif,
 				);
 
-// if ($i == 2)
-// d($i, $contract);
-
 			foreach ($tarifs as $key => $tarif)
 			{
 				if (!$tarif)
@@ -403,7 +406,7 @@ class importCommand extends Command {
 				Item::create([
 					'contract_id' 		=> $c->id,
 					'product_id' 		=> $prod_id,
-					'valid_from' 		=> $key == 'tarif_next_month' ? date('Y-m-01', strtotime('first day of next month')) : $c->angeschlossen,
+					'valid_from' 		=> $key == 'tarif_next_month' ? date('Y-m-01', strtotime('first day of next month')) : $contract->angeschlossen,
 					'valid_from_fixed' 	=> 1,
 					'valid_to' 			=> $key == 'tarif_next_month' ? NULL : $c->abgeklemmt,
 					'valid_to_fixed' 	=> 1,
@@ -424,12 +427,12 @@ class importCommand extends Command {
 				{
 					SepaMandate::create([
 						'contract_id' 		=> $c->id,
-						'reference' 		=> $c->number, 			// TODO: number circle ?
-						'signature_date' 	=> $mandate->datum,
-						'sepa_holder' 		=> $contract->kontoinhaber,
+						'reference' 		=> $c->number ? : '', 			// TODO: number circle ?
+						'signature_date' 	=> $mandate->datum ? : '',
+						'sepa_holder' 		=> $contract->kontoinhaber ? : '',
 						'sepa_iban'			=> $contract->iban ? : '',
-						'sepa_bic' 			=> $contract->bic,
-						'sepa_institute' 	=> $contract->institut,
+						'sepa_bic' 			=> $contract->bic ? : '',
+						'sepa_institute' 	=> $contract->institut ? : '',
 						'sepa_valid_from' 	=> $mandate->datum,
 						'recurring' 		=> true,
 						'state' 			=> 'RECUR',
@@ -496,7 +499,13 @@ class importCommand extends Command {
 					->whereRaw('m.configfile = c.id')
 					->where ('m.deleted', '=', 'false')->get();
 
-			$modems_n = $modems_new->where('contract_id', $c->id)->all();
+			$tmp = $modems_new->where('contract_id', $c->id)->all();
+
+			foreach ($tmp as $key => $value)
+				$modems_n[] = $value;
+
+			$tmp = [];
+
 
 			foreach ($modems as $k => $modem)
 			{
@@ -509,8 +518,6 @@ class importCommand extends Command {
 					$m = new Modem;
 				}
 				
-// d($i, $k, count($modems), $contract->id, $modem, $m);
-
 				// import fields
 				$m->mac     = $modem->mac_adresse;
 				$m->number  = $modem->id;
@@ -537,8 +544,12 @@ class importCommand extends Command {
 
 				// set fields with null input to ''. 
 				// This fixes SQL import problem with null fields
+				$relations = $m->relationsToArray();
 				foreach( $m->toArray() as $key => $value )
 				{
+					if (array_key_exists($key, $relations))
+						continue;
+
 					$field = $m->{$key};
 
 					if ($field == null)
@@ -547,7 +558,6 @@ class importCommand extends Command {
 					$m->{$key} = $field;
 				}
 				$m->deleted_at = NULL;
-
 
 				// SAVE
 				$m->save();
@@ -572,8 +582,12 @@ class importCommand extends Command {
 					->where('mta.deleted', '=', 'false')
 					->get();
 
-				$mtas_n = $mtas_new->where('modem_id', $m->id)->all();
+				$tmp = $mtas_new->where('modem_id', $m->id)->all();
 
+				foreach ($tmp as $key => $value)
+					$mtas_n[] = $value;
+
+				$tmp = [];
 				foreach ($mtas as $k => $mta)
 				{
 					$mta_n = isset($mtas_n[$k]) ? $mtas_n[$k] : NULL;
@@ -606,8 +620,13 @@ class importCommand extends Command {
 						->where ('e.deleted', '=', 'false')
 						->get();
 
-					$pns_n = $phonenumbers_new->where('mta_id', $mta_n->id)->all();
-// d($i, $phonenumbers);
+					$tmp = $phonenumbers_new->where('mta_id', $mta_n->id)->all();
+
+					foreach ($tmp as $key => $value)
+						$pns_n[] = $value;
+
+					$tmp = [];
+
 					foreach ($phonenumbers as $k => $phonenumber)
 					{
 						$p = isset($pns_n[$k]) ? $pns_n[$k] : NULL;
