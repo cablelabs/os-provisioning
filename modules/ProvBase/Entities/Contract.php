@@ -296,7 +296,7 @@ class Contract extends \BaseModel {
 
 
 	/**
-	 * Helper to get the customer number.
+	 * Helper to get the customer number (may be identical with the contract number).
 	 * As there is no hard coded customer number in database we have to use this mapper. The semantic meaning of number…number4 can be defined in global configuration.
 	 *
 	 * @author Patrick Reichel
@@ -337,6 +337,33 @@ class Contract extends \BaseModel {
 		}
 
 		return $customer_number_lecacy;
+
+	}
+
+	/**
+	 * Helper to get all phonenumbers related to contract.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function related_phonenumbers() {
+
+		// if voip module is not active: there can be no phonenumbers
+		if (!\PPModule::is_active('ProvVoip')) {
+			return [];
+		}
+
+		$phonenumbers_on_contract = [];
+
+		// else: search all mtas on all modems
+		foreach ($this->modems as $modem) {
+			foreach ($modem->mtas as $mta) {
+				foreach ($mta->phonenumbers as $phonenumber) {
+					array_push($phonenumbers_on_contract, $phonenumber);
+				}
+			}
+		}
+
+		return $phonenumbers_on_contract;
 
 	}
 

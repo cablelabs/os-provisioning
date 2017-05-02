@@ -11,6 +11,7 @@ use \Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand;
 use \Modules\ProvVoip\Console\PhonenumberCommand;
 use \Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand;
 use \Modules\ProvVoipEnvia\Console\EnviaContractReferenceGetterCommand;
+use \Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceGetterCommand;
 
 class Kernel extends ConsoleKernel {
 
@@ -28,6 +29,7 @@ class Kernel extends ConsoleKernel {
 		'\Modules\ProvVoip\Console\PhonenumberCommand',
 		'\Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaContractReferenceGetterCommand',
+		'\Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceGetterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderProcessorCommand',
 		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
@@ -93,8 +95,11 @@ class Kernel extends ConsoleKernel {
 
 			// Get Envia contract reference for phonenumbers without this information
 			$schedule->command('provvoipenvia:get_envia_contract_references')
+				->dailyAt('01:15');
+
+			// Get Envia customer reference for contracts without this information
+			$schedule->command('provvoipenvia:get_envia_customer_references')
 				->dailyAt('01:13');
-				/* ->everyMinute(); */
 
 			// Process Envia orders
 			$schedule->command('provvoipenvia:process_envia_orders')
