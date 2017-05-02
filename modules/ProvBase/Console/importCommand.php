@@ -276,6 +276,8 @@ class importCommand extends Command {
 		$mandates_new 	= SepaMandate::all();
 		$products_new 	= Product::all();
 
+		$costcenter_id  = $this->option('cc') ? : 3; 			// MAB is default
+
 
 		/*
 		 * CONTRACT Import
@@ -285,7 +287,6 @@ class importCommand extends Command {
 		$cluster_filter = $this->option('cluster')  ? 'tbl_modem.cluster_id = '.$this->option('cluster') : 'TRUE';
 		$plz_filter 	= $this->option('plz') 		? 'a.plz = \''.$this->option('plz')."'" 			 : 'TRUE';
 
-		// echo 'Cluster: '.$this->option('cluster').', PLZ: '.$this->option('plz');
 
 		// Get all Contracts with Tarifs from old systems DB
 		$contracts = $km3->table(\DB::raw('tbl_vertrag v, tbl_adressen a, tbl_kunde k, tbl_tarif t, tbl_posten p'))
@@ -709,6 +710,7 @@ class importCommand extends Command {
 			array('plz', null, InputOption::VALUE_OPTIONAL, 'Import only Contracts with special zip code (from tbl_adressen), e.g. 09518', 0),
 			array('cluster', null, InputOption::VALUE_OPTIONAL, 'Import only Contracts/Modems from cluster_id, e.g. 160', 0),
 			array('debug', null, InputOption::VALUE_OPTIONAL, '1 enables debug', 0),
+			array('cc', null, InputOption::VALUE_OPTIONAL, 'CostCenter ID for all the imported Contracts', 0),
 		);
 	}
 
