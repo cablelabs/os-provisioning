@@ -8,5 +8,9 @@ BASEDIR="/var/www/lara/Documentation"
 doxygen $BASEDIR/doxyfile
 
 echo
+echo "Changing group of doxygen dir to apache"
+sudo chgrp -R apache /var/www/html/lara/doxygen
+
+echo
 echo "Warnings from last run are stored in $BASEDIR/doxywarn.log"
 echo
