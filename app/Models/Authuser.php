@@ -231,6 +231,20 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 		$ret = null;
 
 		try {
+			// In the case the user would like to delete the super_admin role, it's
+			// necessary to check how many users have the role too. If the user the last one,
+			// the role can't be deleted
+			if ($role_id == 1) {
+				$count = DB::table('authusermeta')
+					->where('meta_id', '=', $role_id)
+					->count();
+
+				if ($count == 1) {
+					\Session::flash('role_error', 'Could not delete role "super_admin"!');
+					return $ret;
+				}
+			}
+
 			$ret = DB::table('authusermeta')
 				->where('user_id', '=', $user_id)
 				->where('meta_id', '=', $role_id)

@@ -5,6 +5,16 @@
     $roles = $role_model->html_list($role_model->get_not_assigned_roles_by_userid($user_id), 'name');
 ?>
 
+@if (Session::has('role_error'))
+    @DivOpen(12)
+        <div class="alert alert-danger fade in m-b-15">
+            <span class="close" data-dismiss="alert">×</span>
+            <strong>Error!</strong><br /><br />
+            {{ Session::get('role_error') }}
+        </div>
+    @DivClose()
+@endif
+
 @DivOpen(12)
     @if (\Auth::user()->is_admin() === true)
         {{ Form::open(array('route' => ['AssignRole.add', $user_id], 'method' => 'POST')) }}
