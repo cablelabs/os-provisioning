@@ -7,5 +7,4 @@ return 	[['Contracts' => 'Contract.index'],
 		['Configfiles' => 'Configfile.index'],
 		['QoS' => 'Qos.index'],
 		['CMTS' => 'Cmts.index'],
-		['Ip-Pools' => 'IpPool.index'],
-        ['Dashboard' => 'Dashboard.index']];
+		['Ip-Pools' => 'IpPool.index']];

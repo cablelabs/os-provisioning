@@ -74,7 +74,14 @@ class BaseController extends Controller {
 	 */
 	protected function get_form_tabs($view_var)
 	{
-		return null;
+		$class = \NamespaceController::get_model_name();
+		$class_name = substr(strrchr($class, "\\"), 1);
+
+		return [[
+			'name' => 'Logging',
+			'route' => 'GuiLog.filter',
+			'link' => ['model_id' => $view_var->id, 'model' => $class_name]
+		]];
 	}
 
 
@@ -238,7 +245,7 @@ class BaseController extends Controller {
 		// Version 1
 		$ret = $this->get_form_tabs($view_var);
 
-		if ($ret)
+		if ($ret && count($ret) > 1)
 			return $ret;
 
 		// view_has_many() Version 2
@@ -255,9 +262,13 @@ class BaseController extends Controller {
 				$b = next($a);
 			}
 
-			return $c;
-		}
+			// add tab for GuiLog
+			array_push($c, $ret[0]);
 
+			return $c;
+		} else {
+			return $ret;
+		}
 	}
 
 

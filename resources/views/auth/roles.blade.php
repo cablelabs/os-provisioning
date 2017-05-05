@@ -22,7 +22,7 @@
         <table class="table table-hover itable">
             @foreach ($user_assigned_roles as $role)
                 <tr>
-                    @if (\Auth::user()->is_admin() === true)
+                    @if (\Auth::user()->is_admin() === true && $role->id != 1)
                         <td width="50px"> {{ Form::checkbox('role_ids[]', $role->id, null, null, ['style' => 'simple']) }} </td>
                     @else
                         <td width="50px"> {{ Form::checkbox('role_ids[]', $role->id, null, null, ['style' => 'simple', 'disabled' => 'disabled']) }} </td>

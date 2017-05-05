@@ -133,7 +133,7 @@ class ModemController extends \BaseController {
 	protected function get_form_tabs($view_var)
 	{
 		$a = [
-			['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]]
+			['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]],
 		];
 
 		if(!\PPModule::is_active('ProvMon'))
@@ -145,6 +145,9 @@ class ModemController extends \BaseController {
 		// MTA: only show MTA analysis if Modem has MTAs
 		if (isset($view_var->mtas) && isset($view_var->mtas[0]))
 			array_push($a, ['name' => 'MTA-Analysis', 'route' => 'Provmon.mta', 'link' => [$view_var->id]]);
+
+		// add tab for GuiLog
+		array_push($a, parent::get_form_tabs($view_var)[0]);
 
 		return $a;
 	}

@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\GuiLog;
+use Illuminate\Http\Request;
+use View;
+
 class GuiLogController extends BaseController {
 
 	protected $index_create_allowed = false;
@@ -39,5 +43,29 @@ class GuiLogController extends BaseController {
 		return $a;
 	}
 
+	public function filter(Request $request)
+	{
+		try {
+			$params = $request->all();
+			$model = $params['model'];
+			$model_id = $params['model_id'];
 
+			$view_var = GuiLog::where('model', '=', $model)
+				->where('model_id', '=', $model_id)
+				->orderBy('id', 'desc')
+				->simplePaginate(1000);
+
+			$create_allowed = $this->index_create_allowed;
+			$delete_allowed = $this->index_delete_allowed;
+
+			$model = new GuiLog();
+			$view_header = \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
+			$headline = \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
+			$b_text	= $model->view_headline();
+
+			return View::make ('Generic.index', $this->compact_prep_view(compact('headline','view_header', 'view_var', 'create_allowed', 'delete_allowed', 'b_text')));
+		} catch (\Exception $e) {
+			throw $e;
+		}
+	}
 }
