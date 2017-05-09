@@ -73,6 +73,10 @@ class PhonenumberController extends \BaseController {
 				);
 		}
 
+		$reassign_help = "Can be used to assign the phonenumber (and related data) to another MTA.";
+		if (\PPModule::is_active('provvoipenvia')) {
+			$reassign_help .= "MTA has to belong to the same contract and modem installation addresses have to be equal.";
+		}
 		// label has to be the same like column in sql table
 		return array(
 			array(
@@ -97,9 +101,9 @@ class PhonenumberController extends \BaseController {
 				'form_type' => 'select',
 				'name' => 'mta_id',
 				'description' => 'MTA',
-				'value' => $model->mtas_list_only_contract_assigned(),
+				'value' => $model->mtas_list_phonenumber_can_be_reassigned_to(),
 				'hidden' => 'C',
-				'help' => 'Can be used to assign the phonenumber (and related data) to another MTA. Useful on modem changes and for testing. You will probably have to change the port, too.'
+				'help' => $reassign_help,
 			),
 			array(
 				'form_type' => 'text',

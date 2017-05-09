@@ -223,6 +223,83 @@ class Phonenumber extends \BaseModel {
 
 
 	/**
+	 * Checks if a number can be reassigned to a given new modem
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _phonenumber_reassignment_allowed($cur_modem, $new_modem) {
+
+		// check if modems belong to the same contract
+		if ($cur_modem->contract->id != $new_modem->contract->id) {
+			return False;
+		}
+
+		// check if installation addresses are equal
+		if (
+			($cur_modem->salutation != $new_modem->salutation)
+			||
+			($cur_modem->company != $new_modem->company)
+			||
+			($cur_modem->department != $new_modem->department)
+			||
+			($cur_modem->firstname != $new_modem->firstname)
+			||
+			($cur_modem->lastname != $new_modem->lastname)
+			||
+			($cur_modem->street != $new_modem->street)
+			||
+			($cur_modem->house_number != $new_modem->house_number)
+			||
+			($cur_modem->zip != $new_modem->zip)
+			||
+			($cur_modem->city != $new_modem->city)
+			||
+			($cur_modem->district != $new_modem->district)
+			||
+			($cur_modem->installation_address_change_date != $new_modem->installation_address_change_date)
+		) {
+			return False;
+		}
+
+		// all checks passed: reassignment is allowed
+		return True;
+	}
+
+
+	/**
+	 * Return a list of MTAs the current phonenumber can be assigned to.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function mtas_list_phonenumber_can_be_reassigned_to() {
+
+		// special case activated Envia module:
+		//   - MTA has to belong to the same contract
+		//   - Installation address of current modem match installation address of new modem
+		if (\PPModule::is_active('provvoipenvia')) {
+			$ret = array();
+
+			$cur_modem = $this->mta->modem;
+			$candidate_modems = $cur_modem->contract->modems;
+			foreach ($candidate_modems as $tmp_modem) {
+
+				if ($this->_phonenumber_reassignment_allowed($cur_modem, $tmp_modem)) {
+
+					foreach ($tmp_modem->mtas as $mta) {
+						$ret[$mta->id] = $mta->hostname.' ('.$mta->mac.")";
+					}
+				}
+			}
+
+			return $ret;
+		}
+
+		// default: can use every mta assigned to a contract
+		return $this->mtas_list_only_contract_assigned();
+	}
+
+
+	/**
 	 * link to management
 	 */
 	public function phonenumbermanagement() {
@@ -472,6 +549,13 @@ class PhonenumberObserver
 
 	}
 
+
+	/** 
+	 * Checks if updating the phonenumber is allowed.
+	 * Used to prevent problems related with Envia.
+	 *
+	 * @author Patrick Reichel
+	 */
 	protected function _updating_allowed($phonenumber) {
 
 		// no Envia => no problems
@@ -479,6 +563,7 @@ class PhonenumberObserver
 			return true;
 		}
 
+		// else we have to check if both MTAs belong to the same contract and if both modem's installation addresses are the same
 		$new_mta = $phonenumber->mta;
 		$old_mta = MTA::findOrFail(intval($phonenumber->getOriginal()['mta_id']));
 
@@ -487,28 +572,9 @@ class PhonenumberObserver
 			return true;
 		}
 
-		// if contract has changed: problems are handled in $this->updated submethods
-		if ($new_mta->modem->contract->id != $old_mta->modem->contract->id) {
-			return true;
-		}
-
-		// if new contract is the same as the old one:
-		// updating only allowed if new modem has no envia data or old and new data are the same
-		$envia_fields = array(
-			'contract_external_id',
-			'contract_ext_creation_date',
-			'contract_ext_termination_date',
-			'installation_address_change_date',
-		);
-		foreach ($envia_fields as $field) {
-			if (
-				($new_mta->modem->{$field})
-				&&
-				($new_mta->modem->{$field} != $old_mta->modem->{$field})
-			) {
-				\Session::push('tmp_info_above_form', 'Updating not allowed: MTA change, but '.$field.' different in old and new modem');
-				return false;
-			}
+		if (!$this->_phonenumber_reassignment_allowed($old_mta->modem, $new_mta->modem)) {
+			\Session::push('tmp_info_above_form', "Reassignement of phonenumber to MTA $new_mta->id not allowed");
+			return False;
 		}
 
 		return true;
@@ -589,27 +655,10 @@ class PhonenumberObserver
 		$new_modem = $new_mta->modem;
 		$new_contract = $new_modem->contract;
 
-		// check if new mta is assigned to another contract than the old one
-		// if so: we assume that this is a temporary change only – we don't change any Envia data
-		if ($old_contract->id != $new_contract->id) {
-
-			$tmp_title = $old_contract->id.': '.$old_contract->firstname.' '.$old_contract->lastname.', '.$old_contract->city;
-			$old_contract_href = \HTML::linkRoute('Contract.edit', $tmp_title, [$old_contract->id], ['target' => '_blank']);
-			$tmp_title = $new_contract->id.': '.$new_contract->firstname.' '.$new_contract->lastname.', '.$new_contract->city;
-			$new_contract_href = \HTML::linkRoute('Contract.edit', $tmp_title, [$new_contract->id], ['target' => '_blank']);
-
-			\Session::push('tmp_info_above_form', 'New MTA belongs to another contract ('.$new_contract_href.') than the previous one ('.$old_contract_href.')<br>This seems to part of a a test only – so no Envia related data will be changed.<br>Make sure that the number finally is attached to the right MTA, especially BEFORE performing actions against Envia API!!');
-
-			return;
-		}
-
-
 		// if the phonenumber does not exist at Envia (no management or no external creation date):
 		// nothing to cange in modems
 		if (
-			(!$phonenumber->phonenumbermanagement)
-			||
-			(!$phonenumber->phonenumbermanagement->voipaccount_ext_creation_date)
+			(!$phonenumber->contract_external_id)
 		) {
 			\Session::push('tmp_info_above_form', 'Number has not been created at Envia – will not change any modem data.');
 			return;
@@ -641,10 +690,18 @@ class PhonenumberObserver
 		}
 
 		// second: write all Envia related data from the old to the new modem
-		$new_modem->contract_external_id = $old_modem->contract_external_id;
-		$new_modem->contract_ext_creation_date = $old_modem->contract_ext_creation_date;
-		$new_modem->contract_ext_termination_date = $old_modem->contract_ext_termination_date;
-		$new_modem->installation_address_change_date = $old_modem->installation_address_change_date;
+		if (!$new_modem->contract_ext_creation_date) {
+			$new_modem->contract_ext_creation_date = $old_modem->contract_ext_creation_date;
+		}
+		else {
+			$new_modem->contract_ext_creation_date = min($new_modem->contract_ext_creation_date, $old_modem->contract_ext_creation_date);
+		}
+		if (!$new_modem->contract_ext_termination_date) {
+			$new_modem->contract_ext_termination_date = $old_modem->contract_ext_termination_date;
+		}
+		else {
+			$new_modem->contract_ext_termination_date = max($new_modem->contract_ext_termination_date, $old_modem->contract_ext_termination_date);
+		}
 		$new_modem->save();
 
 		// third: if there are no more numbers attached to the old modem: remove all Envia related data
