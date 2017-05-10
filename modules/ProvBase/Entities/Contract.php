@@ -124,6 +124,18 @@ class Contract extends \BaseModel {
 		return $this->hasMany('Modules\ProvBase\Entities\Modem');
 	}
 
+	/**
+	 * related enviacontracts
+	 */
+	public function enviacontracts() {
+		if (!\PPModule::is_active('provvoipenvia')) {
+			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
+		}
+		else {
+			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaContract');
+		}
+	}
+
 
 	/**
 	 * Get the purchase tariff

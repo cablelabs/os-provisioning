@@ -83,6 +83,18 @@ class PhonenumberManagement extends \BaseModel {
 		return $this->belongsTo('Modules\ProvVoip\Entities\Phonenumber');
 	}
 
+	/**
+	 * The Envia contract the related phonenumber currently belongs to
+	 */
+	public function enviacontract()	{
+		if (!\PPModule::is_active('provvoipenvia')) {
+			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
+		}
+		else {
+			return $this->belongsTo('Modules\ProvVoipEnvia\Entities\EnviaContract');
+		}
+	}
+
 	// belongs to an phonenumber
 	public function view_belongs_to ()
 	{
