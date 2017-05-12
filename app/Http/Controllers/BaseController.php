@@ -721,13 +721,13 @@ class BaseController extends Controller {
 	 * Tree View Specific Stuff
 	 *
 	 * TODO: Implement the Tree View as Javascript Tree Table - preparations are already made in comments (use jstree.min.js)
-			 see Color Admin Bootstrap Theme: http://wrapbootstrap.com/preview/WB0N89JMK -> UI-Elements -> Tree View
+	 * 		 see Color Admin Bootstrap Theme: http://wrapbootstrap.com/preview/WB0N89JMK -> UI-Elements -> Tree View
 	 *
 	 * @author Nino Ryschawy
 	 *
 	 * global Variables
-		$INDEX  : used for shifting the children elements
-		$I 		: used to increment over specficied colours (defined in variable)
+	 *	$INDEX  : used for shifting the children elements
+	 *	$I 		: used to increment over specficied colours (defined in variable)
 	 */
 	public static $INDEX = 0;
 	public static $I = 0;
@@ -738,11 +738,11 @@ class BaseController extends Controller {
 	 * Returns the Tree View (Table) as HTML Text
 	 *
 	 * IMPORTANT NOTES
-		* If the Model uses the Generic BaseController@index function a separate index.blade.php has to be installed in 
-			modules/Resources/Modelname/ that includes the Generic.tree blade
+		* If the Model uses the Generic BaseController@index function a separate index.blade.php has to be installed in
+		*	modules/Resources/Modelname/ that includes the Generic.tree blade
 		* The Generic.tree blade calls this function
 		* The Model currently has to have a function called get_tree_list that shall return the ordered tree of objects
-			(with delete_disabled) - see NetElementType.php
+		*	(with delete_disabled) - see NetElementType.php
 	 */
 	public static function make_tree_table()
 	{
