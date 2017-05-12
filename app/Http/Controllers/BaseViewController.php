@@ -402,19 +402,20 @@ finish:
 				$s .= \Form::$field["form_type"]($field["name"], $field['field_value'], $options);
 				break;
 		}
-			
+
 		return $s;
 	}
 
 
 	/*
-	 * Return the global prepared header links for Main Menu
+	 * Return the global prepared header links for Main Menu and provide Symbols for Modules
 	 *
 	 * NOTE: this function must take care of installed modules!
 	 *
-	 * @return: array() of header links, like ['module name' => ['page name' => route.entry, ..], ..]
+	 * @return: array() of header links, like
+	 * ['module name' => ['icon' => '...' ,'submodule' => [ 'name of submodule' => ['link' => 'route.entry', 'icon' => '...'], ... ] ...]
 	 *
-	 * @author: Torsten Schmidt
+	 * @author: Torsten Schmidt, Christian Schramm
 	 */
 	public static function view_main_menus ()
 	{
@@ -429,7 +430,8 @@ finish:
 			foreach ($lines as $k => $line)
 			{
 				$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
-				$ret['Global'][$key] = $line;
+				$ret['Global']['icon'] = 'fa-globe';
+				$ret['Global']['submenu'][$key] = $line;
 			}
 		}
 
@@ -443,7 +445,8 @@ finish:
 				 *       this needs to fix namespace problems first
 				 */
 				$name = ($module->get('description') == '' ? $module->name : $module->get('description')); // module name
-				$ret[$name] = [];
+				$icon = ($module->get('icon') == '' ? '' : $module->get('icon'));
+				$ret[$name]['icon'] = $icon;
 
 				$array = include ($module->getPath().'/Config/header.php');
 				foreach ($array as $lines)
@@ -451,12 +454,11 @@ finish:
 					foreach ($lines as $k => $line)
 					{
 						$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
-						$ret[$name][$key] = $line;
+						$ret[$name]['submenu'][$key] = $line;
 					}
 				}
 			}
 		}
-
 		return $ret;
 	}
 

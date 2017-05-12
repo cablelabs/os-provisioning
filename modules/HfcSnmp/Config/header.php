@@ -1,5 +1,12 @@
 <?php
 
-	return 		['HFC' => ['MibFile' => 'MibFile.index',
-				// 'SnmpValues' => 'SnmpValue.index'
-				]];
+return array(
+	'HFC' =>
+		['MibFile' =>
+			['link' => 'MibFile.index',
+			'icon'	=> 'fa-file-o']
+		// 	'SnmpValues' =>
+		// 	['link' => 'SnmpValue.index',
+		// 	'icon'	=> 'fa-']
+		]
+);

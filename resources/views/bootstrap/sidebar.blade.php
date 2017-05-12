@@ -1,15 +1,11 @@
 
-    <!-- begin #sidebar -->
+  <!-- begin #sidebar -->
     <div id="sidebar" class="sidebar">
       <!-- begin sidebar scrollbar -->
       <div data-scrollbar="true" data-height="100%">
         <!-- begin sidebar user -->
         <ul class="nav">
           <li class="nav-profile">
-<!--             <div class="image">
-              <a href="javascript:;"><img src="assets/img/user-11.jpg" alt="" /></a>
-            </div>
- -->
             <div class="info">
               {{ $framework['header2'] }}
               <small>Version {{ $framework['version'] }}</small>
@@ -17,18 +13,30 @@
           </li>
         </ul>
         <!-- end sidebar user -->
+
         <!-- begin sidebar nav -->
         <ul class="nav">
           <li>
-            <a href="{{BaseRoute::get_base_url()}}/Dashboard"><i class="material-icons">home</i> <span cl>Dashboard</span></a>
+            <a href="{{BaseRoute::get_base_url()}}/Dashboard">
+            <i class="fa fa-home"></i>
+            <span cl>Dashboard</span></a>
           </li>
+
           <li class="nav-header">Navigation</li>
-          @foreach ($view_header_links as $module_name => $module)
-            <li class="has-sub"><a href="javascript:;"><i class="material-icons">settings</i><b class="caret pull-right"></b><span cl>{{$module_name}}</span></a>
+          @foreach ($view_header_links as $module_name => $typearray)
+            <li class="has-sub">
+              <a href="javascript:;">
+                <i class="fa {{ $typearray['icon'] }}"></i>
+                <b class="caret pull-right"></b>
+                <span cl>{{$module_name}}</span>
+              </a>
               <ul class="sub-menu">
-              @foreach ($module as $name => $link)
+              @foreach ($typearray['submenu'] as $type => $valuearray)
               <li>
-                <a href="{{route($link)}}"><span>{{ $name }}</span></a>
+                <a href="{{route($valuearray['link'])}}">
+                  <i class="fa {{ $valuearray['icon'] }}"></i>
+                  <span>{{ $type }}</span>
+                </a>
               </li>
               @endforeach
              </ul>
@@ -42,29 +50,31 @@
           @foreach ($networks as $network)
             <li class="has-sub">
               <a href="javascript:;">
-                <i class="fa fa-suitcase"></i>
+                <i class="fa fa-sitemap"></i>
                 <b class="caret pull-right"></b>
                 <span>{{$network->name}}</span>
               </a>
               <ul class="sub-menu">
-                <li class="nav-header"><a href="{{BaseRoute::get_base_url()}}/Tree/erd/net/{{$network->id}}">Network ERD</a></li>
+                <li><a href="{{BaseRoute::get_base_url()}}/Tree/erd/net/{{$network->id}}">{{$network->name}} ERD</a></li>
                 @foreach ($network->get_all_cluster_to_net() as $cluster)
-                 <li><a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}">--{{$cluster->name}}</a></li>
+                 <li><i class="fa fa-circle-thin"></i><a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}">--{{$cluster->name}}</a></li>
                 @endforeach
               </ul>
             </li>
          @endforeach
 
-
-
           <!-- begin sidebar minify button -->
-          <li><a href="javascript:;" class="sidebar-minify-btn hidden-xs" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
+          <li>
+            <a href="javascript:;" class="sidebar-minify-btn hidden-xs" data-click="sidebar-minify">
+            <i class="fa fa-angle-double-left"></i>
+            </a>
+          </li>
           <!-- end sidebar minify button -->
         </ul>
         <!-- end sidebar nav -->
       </div>
       <!-- end sidebar scrollbar -->
-    </div>
+      </div>
     <div class="sidebar-bg"></div>
     <!-- end #sidebar -->
 
