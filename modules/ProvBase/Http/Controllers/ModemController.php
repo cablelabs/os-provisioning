@@ -35,11 +35,12 @@ class ModemController extends \BaseController {
 				where('modem_id', '=', $model->id)->
 				where('method', '=', 'contract/relocate')->
 				where('orderdate', '>=', $model['installation_address_change_date'])->
-				where('contractreference', '<>', $model->contract_external_id)->
 				get();
 
-			if ($orders->count() > 0) {
-				array_push($installation_address_change_date_options, 'readonly');
+			foreach ($orders as $order) {
+				if (!\Modules\ProvVoipEnvia\Entities\EnviaOrder::orderstate_is_final($order)) {
+					array_push($installation_address_change_date_options, 'readonly');
+				}
 			}
 		}
 
