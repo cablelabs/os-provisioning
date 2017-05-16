@@ -60,7 +60,11 @@ class ModemController extends \BaseController {
 			:
 			array(array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1'));
 
-		$geopos = link_to_route('CustomerModem.show', 'Geopos X/Y', ['true', $model->id]);
+		if (\PPModule::is_active('HfcCustomer'))
+			$geopos = link_to_route('CustomerModem.show', 'Geopos X/Y', ['true', $model->id]);
+		else
+			$geopos = 'Geopos X/Y';
+
 		$c = array(
 			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
 			array('form_type' => 'text', 'name' => 'department', 'description' => 'Department'),
