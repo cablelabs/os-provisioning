@@ -14,6 +14,7 @@ class ModemController extends \BaseController {
 
 	protected $index_create_allowed = false;
 	protected $save_button = 'Save / Restart';
+	protected $edit_view_force_restart_button = true;
 
     /**
      * defines the formular fields for the edit and create view
