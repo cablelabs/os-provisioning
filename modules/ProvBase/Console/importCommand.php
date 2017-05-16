@@ -41,8 +41,8 @@ class importCommand extends Command {
 	// TODO: Check every new import if new tarifs exist on old system
 	protected $old_sys_inet_tarifs = [
 	 	// in GroRü verwendet - oberste nicht gemapped:
-		// PrivatBasic
-		// Internet Volumen Basic 100000
+		// PrivatBasic 							4 - 25 MBit
+		// Internet Volumen Basic 100000 		
 		// Internet Speed 10G
 		// Internet Volumen 10G - 100000
 		// PrivatFlat, Internet Flat 100000, Internet Flat 6000 (inoffiziel), Internet Flat 2000, Internet Flat 16000, Internet Flat 25000, keineDaten
@@ -57,8 +57,8 @@ class importCommand extends Command {
 			'Pob_PrivatFlat' 				=> 'vol',
 			'Pob_PrivatFlat Spar' 			=> 'vol',
 			'keineDaten' 					=> 0,
-			'PrivatBasic' 					=> 'vol',
-			'PrivatBasic 10G' 				=> 'vol',
+			'PrivatBasic' 					=> 4,
+			'PrivatBasic 10G' 				=> 4,
 			'PrivatFlat Spar' 				=> 1,
 			'PrivatFlat' 					=> 1,
 			'Keine Daten' 					=> 0,
@@ -75,10 +75,10 @@ class importCommand extends Command {
 			'Internet Volumen 10G REI' 		=> 'vol',
 			'Internet Volumen 10G SAZ' 		=> 'vol',
 			'Internet Flat 16000' 			=> 4,
-			'Internet Speed 10G' 			=> 'vol',
+			'Internet Speed 10G' 			=> 4,
 			'Internet Volumen Basic POB' 	=> 'vol',
 			'Internet Volumen Basic REI' 	=> 'vol',
-			'Internet Volumen 10G - 100000' => 'vol',
+			'Internet Volumen 10G - 100000' => 4,
 			'Internet Flat 2000 REI' 		=> 1,
 			'Internet Flat 2000 SAZ' 		=> 1,
 			'Internet Flat Spar SAZ' 		=> 'inactive',
@@ -647,7 +647,7 @@ class importCommand extends Command {
 						$p->number 			= $phonenumber->rufnummer;
 						$p->username 		= $phonenumber->username;
 						$p->password 		= $phonenumber->password;
-						$p->active 			= $phonenumber->aktiv;
+						$p->active 			= true;  		// $phonenumber->aktiv; 		most phonenrs are marked as inactive because of automatic controlling
 
 						$p->save();
 
