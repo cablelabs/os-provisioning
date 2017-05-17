@@ -381,7 +381,7 @@ class importCommand extends Command {
 
 			// Log
 			if ($this->option('debug'))
-				$this->info ("$i/$num CONTRACT $info: ".$c->id.', '.$c->firstname.', '.$c->lastname.', '.$c->street.', '.$c->zip.', '.$c->city.', '.$c->sepa_iban);
+				$this->info ("\n$i/$num \nCONTRACT $info: ".$c->id.', '.$c->firstname.', '.$c->lastname.', '.$c->street.', '.$c->zip.', '.$c->city.', '.$c->sepa_iban);
 
 			/*
 			 * Add Billing related Data - Models: Items (Internet, Voip, Zusatzposten), SepaMandate
@@ -395,13 +395,28 @@ class importCommand extends Command {
 			foreach ($tarifs as $key => $tarif)
 			{
 				if (!$tarif)
+				{
+					if ($this->option('debug'))
+						$this->info("\tNo $key Item exists for Contract ".$c->id);
 					continue;
+				}
 
 				$prod_id = $this->_map_tarif_to_prod($tarif);
-				$item_n  = $items_new->where('product_id', $prod_id)->all();
+				$item_n  = $items_new->where('contract_id', $c->id)->where('product_id', $prod_id)->all();
 
-				if ($prod_id <= 0 || $item_n)
+				if ($item_n)
+				{
+					if ($this->option('debug'))
+						$this->info("\tItem $key for Contract ".$c->id." already exists");
 					continue;
+				}
+
+				if ($prod_id <= 0)
+				{
+					if ($this->option('debug'))
+						$this->info("\tProduct $prod_id does not exist yet");
+					continue;
+				}
 
 				Item::create([
 					'contract_id' 		=> $c->id,
@@ -413,7 +428,7 @@ class importCommand extends Command {
 					]);
 
 				if ($this->option('debug'))
-					$this->info ("Contract $i - ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
+					$this->info ("ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
 					// TODO: Set QoS-ID -- done by daily_conversion() ??
 					// $c->next_voip_id = 0;
 			}
@@ -440,9 +455,11 @@ class importCommand extends Command {
 						]);
 
 					if ($this->option('debug'))
-						$this->info ("Contract $i - SepaMandate ADD: ".$contract->kontoinhaber.', '.$contract->iban.', '.$contract->institut.', '.$mandate->datum);
+						$this->info ("SEPAMANDATE ADD: ".$contract->kontoinhaber.', '.$contract->iban.', '.$contract->institut.', '.$mandate->datum);
 				}
 			}
+			elseif ($this->option('debug'))
+				isset($mandates[$contract->kunde]) ? $this->info("\tCustomer $c->id already has SepaMandate assigned") : $this->info("\tCustomer $c->id has no SepaMandate in old DB");
 
 			// Additional Items
 			// $items = $km3->table(\DB::raw('tbl_zusatzposten z, tbl_posten p'))
@@ -484,7 +501,7 @@ class importCommand extends Command {
 
 				// Log
 				if ($this->option('debug'))
-					$this->info ("$i/$num CONTRACT ".$c->id.' Update: Added '.count($emails).' Emails');
+					$this->info ("MAIL: Added ".count($emails).' Addresses');
 			}
 
 
@@ -567,7 +584,7 @@ class importCommand extends Command {
 					Log::warning('No Configfile could be assignet to Modem '.$m->id);
 
 				if ($this->option('debug'))
-					$this->info ("\tMODEM $info: ".$m->id.', '.$m->mac.', QOS-'.$m->qos_id.', CF-'.$m->configfile_id.', '.$m->street.', '.$m->zip.', '.$m->city);
+					$this->info ("MODEM $info: ".$m->id.', '.$m->mac.', QOS-'.$m->qos_id.', CF-'.$m->configfile_id.', '.$m->street.', '.$m->zip.', '.$m->city);
 
 
 				/*
@@ -610,7 +627,7 @@ class importCommand extends Command {
 
 					// Log
 					if ($this->option('debug'))
-						$this->info ("\MTA $info: ".$mta_n->id.', '.$mta_n->mac.', CF-'.$mta_n->configfile_id);
+						$this->info ("MTA $info: ".$mta_n->id.', '.$mta_n->mac.', CF-'.$mta_n->configfile_id);
 
 					/*
 					 * Phonenumber Import
@@ -653,7 +670,7 @@ class importCommand extends Command {
 
 						// Log
 						if ($this->option('debug'))
-							$this->info ("\Phonenumber $info: ".$p->id.', '.$mta_n->id.', '.$p->country_code.$p->prefix_number.$p->number.', '.($phonenumber->aktiv ? 'active' : 'inactive'));
+							$this->info ("Phonenumber $info: ".$p->id.', '.$mta_n->id.', '.$p->country_code.$p->prefix_number.$p->number.', '.($phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
 
 					}
 				}
