@@ -18,13 +18,13 @@
 
 			<div id="content" class="content">
 
-				<ol class="breadcrumb pull-right">
+				<ul class="nav nav-pills pull-right p-b-10">
 					@if(isset($panel_right))
 						@foreach ($panel_right as $menu)
-				            <li> {{ HTML::linkRoute($menu['route'], $menu['name'], $menu['link']) }}</li>
+							<li role="presentation"> {{ HTML::linkRoute($menu['route'], $menu['name'], $menu['link']) }}</li>
 						@endforeach
 					@endif
-				</ol>
+				</ul>
 
 				@yield ('content')
 			</div>

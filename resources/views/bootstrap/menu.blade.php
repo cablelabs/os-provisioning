@@ -4,7 +4,7 @@
       <div class="container-fluid">
           <div class="row">
         <!-- begin mobile sidebar expand / collapse button -->
-        <div class="nav navbar-nav col-md-3 col-sm-3 col-xs-2">
+        <div class="nav navbar-header">
           <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -14,7 +14,7 @@
         </div>
         <!-- end mobile sidebar expand / collapse button -->
 
-        <div class="nav navbar-nav col-md-5 col-sm-5 col-xs-5 p-t-5">
+        <div class="nav nav-pills col-md-6 col-sm-6 col-xs-6 p-t-5">
               <h5>
                 @yield('content_top')
               </h5>

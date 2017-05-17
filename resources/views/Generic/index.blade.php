@@ -46,17 +46,16 @@
 		{{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete')) }}
 
 			@if (isset($query) && isset($scope))
-				<h4><?php echo trans('view.Search_MatchesFor'); ?><tt>'{{ $query }}'</tt> <?php echo trans('view.Search_In') ?> 
+				<h4><?php echo trans('view.Search_MatchesFor'); ?><tt>'{{ $query }}'</tt> <?php echo trans('view.Search_In') ?>
 				<tt>{{ \App\Http\Controllers\BaseViewController::translate_view($view_header, 'Header', 1) }}</tt></h4>
 			@endif
 
 		@if (isset($view_var[0]))
 			<table class="table table-hover table-striped datatable nowrap table-striped table-bordered collapsed">
-	
-
 				<!-- TODO: add concept to parse header fields for index table - like firstname, lastname, ..-->
 				<thead>
 					<tr role="row">
+						<th></th>
 						<th></th>
 						<!-- Parse view_index_label() header_index  -->
 						@if (isset($view_var[0]) && is_array($view_var[0]->view_index_label()) && isset($view_var[0]->view_index_label()['index_header']))
@@ -70,9 +69,9 @@
 				<!-- Index Table Entries -->
 				@foreach ($view_var as $object)
 					<tr class="{{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}">
-
+							<td width="30"></td>
 						@if ($delete_allowed)
-							<td width=50> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple', 'disabled' => $object->index_delete_disabled ? 'disabled' : null]) }} </td>
+							<td width="30" align="center"> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple', 'disabled' => $object->index_delete_disabled ? 'disabled' : null]) }} </td>
 						@else
 							<td/>
 						@endif

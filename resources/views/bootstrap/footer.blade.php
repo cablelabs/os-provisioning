@@ -49,13 +49,16 @@
   });
 
     // Select2 Init - intelligent HTML select
+    $(window).resize(function() {
+    $('.select2').css('width', "100%");
+    });
     $("select").select2();
 
     // Intelligent Data Tables
     $('.datatable').dataTable(
     {
-      // Translate Datatables
-      language: {
+    // Translate Datatables
+    language: {
         "sEmptyTable":        "<?php echo trans('view.jQuery_sEmptyTable'); ?>",
         "sInfo":              "<?php echo trans('view.jQuery_sInfo'); ?>",
         "sInfoEmpty":         "<?php echo trans('view.jQuery_sInfoEmpty'); ?>",
@@ -76,12 +79,21 @@
         "oAria": {
             "sSortAscending": "<?php echo trans('view.jQuery_sLast'); ?>",
             "sSortDescending":"<?php echo trans('view.jQuery_sLast'); ?>"
-            } 
-      },
-      //auto resize the Table to fit the viewing device
-      responsive: true,
-      // "sPaginationType": "four_button"
-      lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
+            }
+    },
+    //auto resize the Table to fit the viewing device
+    responsive: {
+        details: {
+            type: 'column'
+        }
+    },
+    aoColumnDefs: [ {
+        className: 'control',
+        orderable: false,
+        targets:   [0]
+    } ],
+    // "sPaginationType": "four_button"
+    lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
     });
   });
 
