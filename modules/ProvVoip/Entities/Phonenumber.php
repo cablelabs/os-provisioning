@@ -335,6 +335,63 @@ class Phonenumber extends \BaseModel {
 
 
 	/**
+	 * Helper to detect if an Envia contract has been created for this phonenumber
+	 * You can either make a bool test against this method or get the id of a contract has been created
+	 *
+	 * @return misc:
+	 *			null if module ProvVoipEnvia is disabled
+	 *			false if there is no Envia contract
+	 *			external_contract_id for the contract the number belongs to
+	 *
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function envia_contract_created() {
+
+		// no envia module ⇒ no envia contracts
+		if (!\PPModule::is_active('provvoipenvia')) {
+			return null;
+		}
+
+		// the check is simple: we there is an external contract ID we can be sure that a contract has been created
+		if (!is_null($this->contract_external_id)) {
+			return $this->contract_external_id;
+		}
+		else {
+			return false;
+		}
+	}
+
+
+	/**
+	 * Helper to detect if an Envia contract has been terminated for this phonenumber.
+	 * You can either make a bool test against this method or get the id of a contract if terminated
+	 *
+	 * @return misc:
+	 *			null if module ProvVoipEnvia is disabled
+	 *			false if there is no Envia contract or the contract is still active
+	 *			external_contract_id for the contract if terminated
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function envia_contract_terminated() {
+
+		// no envia module ⇒ no envia contracts
+		if (!\PPModule::is_active('provvoipenvia')) {
+			return null;
+		}
+
+		// as we are able to delete single phonenumbers from a contract (without deleting the contract if other numbers are attached)
+		// we here have to count the numbers containing the current external contract id
+		if (is_null($this->contract_external_id)) {
+			return false;
+		}
+
+		$envia_contract = \Modules\ProvVoipEnvia\Entities\EnviaContract::where('envia_contract_reference', '=', $this->contract_external_id)->first();
+	}
+
+
+	/**
 	 * link to monitoring
 	 *
 	 * @author Ole Ernst

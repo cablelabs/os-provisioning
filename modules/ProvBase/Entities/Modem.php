@@ -682,8 +682,33 @@ class Modem extends \BaseModel {
 		// no numbers found
 		return False;
 
-
 	}
+
+
+	/**
+	 * Helper to get all phonenumbers related to contract.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function related_phonenumbers() {
+
+		// if voip module is not active: there can be no phonenumbers
+		if (!\PPModule::is_active('ProvVoip')) {
+			return [];
+		}
+
+		$phonenumbers_on_modem = [];
+
+		// else: search all mtas on all modems
+		foreach ($this->mtas as $mta) {
+			foreach ($mta->phonenumbers as $phonenumber) {
+				array_push($phonenumbers_on_modem, $phonenumber);
+			}
+		}
+
+		return $phonenumbers_on_modem;
+	}
+
 
 
 	/*
