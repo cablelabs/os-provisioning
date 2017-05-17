@@ -51,10 +51,11 @@
 			@endif
 
 		@if (isset($view_var[0]))
-			<table class="table table-hover table-striped datatable nowrap table-striped table-bordered collapsed">
+		<div class="table-responsive">
+			<table class="table table-hover table-striped datatable table-striped table-bordered collapsed">
 				<!-- TODO: add concept to parse header fields for index table - like firstname, lastname, ..-->
 				<thead>
-					<tr role="row">
+					<tr>
 						<th></th>
 						<th></th>
 						<!-- Parse view_index_label() header_index  -->
@@ -65,8 +66,8 @@
 						@endif
 					</tr>
 				</thead>
-
 				<!-- Index Table Entries -->
+				<tbody>
 				@foreach ($view_var as $object)
 					<tr class="{{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}">
 							<td width="30"></td>
@@ -89,8 +90,9 @@
 						@endforeach
 					</tr>
 				@endforeach
-
+				</tbody>
 			</table>
+		</div>
 		@else
 			<h4>{{ $view_no_entries }}</h4>
 		@endif
