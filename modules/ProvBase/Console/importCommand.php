@@ -290,7 +290,7 @@ class importCommand extends Command {
 
 		// Get all Contracts with Tarifs from old systems DB
 		$contracts = $km3->table(\DB::raw('tbl_vertrag v, tbl_adressen a, tbl_kunde k, tbl_tarif t, tbl_posten p'))
-				->selectRaw ('distinct v.id, v.*, a.*, k.*, t.name as tarif, v.id as id')
+				->selectRaw ('distinct v.id, v.*, a.*, k.*, t.name as tarif, v.id as id, v.beschreibung as contr_descr')
 				->whereRaw('v.ansprechpartner = a.id')
 				->whereRaw('v.kunde = k.id')
 				->whereRaw('tbl_modem.vertrag = v.id')
@@ -345,7 +345,7 @@ class importCommand extends Command {
 			$c->email     = $contract->email;
 			$c->birthday  = $contract->geburtsdatum;
 
-			$c->description    = $contract->beschreibung;
+			$c->description    = $contract->beschreibung."\n".$contract->contr_descr;
 			$c->network_access = $contract->network_access;
 			$c->contract_start = $contract->angeschlossen;
 			$c->contract_end   = $contract->abgeklemmt;
