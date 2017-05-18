@@ -46,7 +46,12 @@
 @endforeach
 
 @if ($edit_view_save_button)
-	{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button')) }}
+	<div class="text-center">
+		<button class="btn btn-primary m-r-5 m-t-15" style="simple">
+			<i class="fa fa-save fa-lg m-r-10" aria-hidden="true"></i>
+			{{ \App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button') }}
+		</button>
+	</div>
 @endif
 
 
