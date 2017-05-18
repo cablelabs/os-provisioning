@@ -51,7 +51,6 @@
 			@endif
 
 		@if (isset($view_var[0]))
-		<div class="table-responsive">
 			<table class="table table-hover table-striped datatable table-striped table-bordered collapsed">
 				<!-- TODO: add concept to parse header fields for index table - like firstname, lastname, ..-->
 				<thead>
@@ -92,7 +91,6 @@
 				@endforeach
 				</tbody>
 			</table>
-		</div>
 		@else
 			<h4>{{ $view_no_entries }}</h4>
 		@endif
