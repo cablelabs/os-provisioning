@@ -29,7 +29,7 @@ class UpdateContractUniquenumberfield{
     {
         Schema::table('contract', function(Blueprint $table)
 		{
-			$table->dropUnique('number');
+			$table->drop('number');
         });
     }
 
