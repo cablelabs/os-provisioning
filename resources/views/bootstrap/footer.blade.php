@@ -54,7 +54,12 @@
     });
     $("select").select2();
 
-
+    /* This bit can be used on the entire app over all pages and will work for both tabs and pills.
+     * Also, make sure the tabs or pills are not active by default,
+     * otherwise you will see a flicker effect at page load.
+     * Important: Make sure the parent ul has an id. Thanks Alain
+     * http://stackoverflow.com/posts/16984739/revisions
+     */
     $(function() {
       var json, tabsState;
       $('a[data-toggle="pill"], a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
