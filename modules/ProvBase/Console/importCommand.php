@@ -421,7 +421,7 @@ class importCommand extends Command {
 				Item::create([
 					'contract_id' 		=> $c->id,
 					'product_id' 		=> $prod_id,
-					'valid_from' 		=> $key == 'tarif_next_month' ? date('Y-m-01', strtotime('first day of next month')) : $contract->angeschlossen,
+					'valid_from' 		=> $key == 'tarif_next_month' ? date('Y-m-01', strtotime('first day of next month')) : date('Y-m-d'), //$contract->angeschlossen,
 					'valid_from_fixed' 	=> 1,
 					'valid_to' 			=> $key == 'tarif_next_month' ? NULL : $c->abgeklemmt,
 					'valid_to_fixed' 	=> 1,
