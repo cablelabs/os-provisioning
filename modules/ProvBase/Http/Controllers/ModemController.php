@@ -14,6 +14,7 @@ class ModemController extends \BaseController {
 
 	protected $index_create_allowed = false;
 	protected $save_button = 'Save / Restart';
+	protected $edit_view_force_restart_button = true;
 
     /**
      * defines the formular fields for the edit and create view
@@ -60,6 +61,11 @@ class ModemController extends \BaseController {
 			:
 			array(array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1'));
 
+		if (\PPModule::is_active('HfcCustomer'))
+			$geopos = link_to_route('CustomerModem.show', 'Geopos X/Y', ['true', $model->id]);
+		else
+			$geopos = 'Geopos X/Y';
+
 		$c = array(
 			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
 			array('form_type' => 'text', 'name' => 'department', 'description' => 'Department'),
@@ -79,7 +85,7 @@ class ModemController extends \BaseController {
 
 			array('form_type' => 'text', 'name' => 'x', 'description' => 'Geopos X', 'html' =>
 				"<div class=col-md-12 style='background-color:#e0f2f1'>
-				<div class=form-group><label for=x class='col-md-4 control-label' style='margin-top: 10px;'>Geopos X/Y</label>
+				<div class=form-group><label for=x class='col-md-4 control-label' style='margin-top: 10px;'>$geopos</label>
 				<div class=col-md-3><input class=form-control name=x type=text value='".$model['x']."' id=x style='background-color:#e0f2f1'></div>"),
 			array('form_type' => 'text', 'name' => 'y', 'description' => 'Geopos Y', 'html' =>
 				"<div class=col-md-3><input class=form-control name=y type=text value='".$model['y']."' id=y style='background-color:#e0f2f1'></div>
@@ -133,7 +139,7 @@ class ModemController extends \BaseController {
 	protected function get_form_tabs($view_var)
 	{
 		$a = [
-			['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]]
+			['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]],
 		];
 
 		if(!\PPModule::is_active('ProvMon'))
@@ -145,6 +151,9 @@ class ModemController extends \BaseController {
 		// MTA: only show MTA analysis if Modem has MTAs
 		if (isset($view_var->mtas) && isset($view_var->mtas[0]))
 			array_push($a, ['name' => 'MTA-Analysis', 'route' => 'Provmon.mta', 'link' => [$view_var->id]]);
+
+		// add tab for GuiLog
+		array_push($a, parent::get_form_tabs($view_var)[0]);
 
 		return $a;
 	}

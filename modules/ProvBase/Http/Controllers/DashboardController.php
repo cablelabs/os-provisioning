@@ -2,56 +2,54 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use App\Http\Controllers\BaseController;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\URL;
-use Modules\BillingBase\Entities\Item;
 use View;
-use Illuminate\Support\Facades\App;
+use Log;
 
+use App\Http\Controllers\BaseController;
 use Modules\ProvBase\Entities\Contract;
-use Modules\BillingBase\Entities\Product;
 
 class DashboardController extends BaseController
 {
     public function index()
     {
         $title = 'Dashboard';
-        $day_period = null;
-        $monthly_sales = null;
-        $checked = '';
-		$show_sales = false;
+
+		$contracts = array();
+		$income = array();
+		$chart_data_contracts = array();
+		$chart_data_income = array();
+		$allowed_to_see = array(
+			'accounting' => false,
+			'technican' => false
+		);
+		$allowed_roles = array(
+			3 => 'technican',
+			4 => 'accounting'
+		);
 
         try {
-			if (App::environment() !== 'production') {
-				$show_sales = true;
+            // get all valid contracts
+			$contracts = $this->get_contracts();
+
+			if (count($contracts) > 0) {
+
+				// get chart data: contracts
+				$chart_data_contracts = $this->get_chart_data_contracts($contracts);
+
+				// income
+				if (\PPModule::is_active('billingbase')) {
+					$income = $this->get_income_total($contracts);
+					$chart_data_income = $this->get_chart_data_income($income);
+				}
 			}
 
-            // check if the dayfiltet form submitted
-            $request = URL::getRequest();
-            if ($request->isMethod('post')) {
-                $day_period = $request->input('datefilter');
-                $monthly_sales = $request->input('switch-sales');
-            }
-
-            // get all valid contracts
-            $contracts = $this->get_contracts($day_period);
-
-            // get chart data: contracts
-            $chart_data_contracts = $this->get_chart_data();
-
-            // get contracts with products/tariffs
-            $itemised_contracts = $this->get_itemised_contracts();
-
-            // sales
-            if (is_null($monthly_sales)) {
-                $sales = $this->get_sales($itemised_contracts);
-                $chart_data_sales = $this->get_chart_data_sales($sales);
-            } else {
-                $sales = $this->get_sales_monthly($itemised_contracts);
-                $chart_data_sales = $this->get_chart_data_sales($sales);
-				$checked = 'checked';
-            }
+			// check user permissions
+			$roles = \Auth::user()->roles();
+			foreach ($roles as $role) {
+				if (array_key_exists($role->id, $allowed_roles)) {
+					$allowed_to_see[$allowed_roles[$role->id]] = true;
+				}
+			}
         } catch (\Exception $e) {
             \Log::error('Dashboard-Exception: ' . $e->getMessage());
             throw $e;
@@ -59,437 +57,335 @@ class DashboardController extends BaseController
 
         return View::make(
             'provbase::dashboard', $this->compact_prep_view(
-                compact('title', 'contracts', 'chart_data_contracts', 'show_sales', 'sales', 'chart_data_sales', 'checked')
+                compact('title', 'contracts', 'chart_data_contracts', 'income', 'chart_data_income', 'allowed_to_see')
             )
         );
     }
 
-    /**
-     * Returns data for the line chart
-     *
-     * @return array
-     * @throws \Exception
-     */
-    private function get_chart_data()
-    {
-        $month = 1;
-        $ret_val = array(
-        	'labels' => array(),
-			'valid' => array(),
-        	'invalid' => array()
-		);
+	/**
+	 * Get all valid contracts
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	private function get_contracts()
+	{
+		$ret = array();
 
-        try {
-            while ($month <= 12) {
-                $year = date('Y');
-                if ((date('n') - $month) < 0) {
-                    $year = $year - 1;
-                }
+		try {
+			if (\PPModule::is_active('billingbase')) {
+				// find contracts with related items and products
+				$contracts = Contract::orderBy('contract_start', 'asc')->with('items', 'items.product')->get();
+			} else {
+				$contracts = Contract::orderBy('contract_start', 'asc')->get();
+			}
 
-                if ($month < 10) {
-                    $month = '0' . $month;
-                }
+			if (count($contracts) > 0) {
+				$date = $this->generate_reference_date();
 
-                $valid_contracts[$year][$month] = $this->count_contracts_by_month($month, $year, false);
-				$invalid_contracts[$year][$month] = $this->count_contracts_by_month($month, $year, true);
-                $month++;
-            }
+				foreach ($contracts as $contract) {
 
-			ksort($valid_contracts);
-			ksort($invalid_contracts);
+					// check start- and enddate
+					if ($contract->contract_start <= $date &&
+						($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
 
-            foreach ($valid_contracts as $year => $months) {
-            	foreach ($months as $month => $contracts) {
-            		if (!in_array($contracts[0], $ret_val['labels'])) {
-						$ret_val['labels'][] = $contracts[0];
+						$ret[] = $contract;
 					}
-            		$ret_val['valid'][] = $contracts[1];
 				}
 			}
+		} catch (\Exception $e) {
+			throw $e;
+		}
+		return $ret;
+	}
 
-			foreach ($invalid_contracts as $year => $months) {
-				foreach ($months as $month => $contracts) {
-					if (!in_array($contracts[0], $ret_val['labels'])) {
-						$ret_val['labels'][] = $contracts[0];
+	/**
+	 * Filter contracts by period
+	 *
+	 * @param array $contracts
+	 * @param string $period
+	 * @param integer $days
+	 * @return array
+	 * @throws \Exception
+	 */
+	private function get_contracts_by_filter(array $contracts, $period, $days = null)
+	{
+		$ret = array();
+
+		try {
+			$date = $this->generate_reference_date($period, $days);
+
+			if (count($contracts) > 0) {
+				foreach ($contracts as $key => $contract) {
+					if ($contract->contract_start <= $date &&
+						($contract->contract_end == '0000-00-00' || $contract->contract_end > $date || is_null($contract->contract_end))) {
+							$ret[] = $contract;
 					}
-					$ret_val['invalid'][] = $contracts[1];
 				}
 			}
-        } catch (\Exception $e) {
-            throw $e;
-        }
+		} catch (\Exception $e) {
+			throw $e;
+		}
 
-        return $ret_val;
-    }
+		return $ret;
+	}
 
-    /**
-     * Returns data for the flot bar chart
-     *
-     * @param $sales
-     * @return array
-     * @throws \Exception
-     */
-    private function get_chart_data_sales($sales)
-    {
-        $sale = 0;
-        $ret_val = array();
-        $product_types = $this->get_product_types();
+	/**
+	 * Generate date by given period
+	 *
+	 * @param string $period
+	 * @param integer $days
+	 * @return false|string
+	 * @throws \Exception
+	 */
+	private function generate_reference_date($period = null, $days = null)
+	{
+		$ret = date('Y-m-d');
 
-        try {
-        	if (isset($sales[date('Y')])) {
-        		$sales = $sales = $sales[date('Y')]['by_types'];
-			} elseif (isset($sales['current_month'])) {
-				$sales = $sales['current_month']['by_types'];
-			}
+		try {
+			$month = date('m');
+			$year = date('Y');
 
-			if (count($sales) > 0) {
-				foreach ($product_types as $type) {
-					$sale = 0;
-					if (isset($sales[$type])) {
-						$sale = str_replace(',', '.', $sales[$type]);
-					}
-					$ret_val[] = array($type, $sale);
-				}
-			}
-        } catch (\Exception $e) {
-            throw $e;
-        }
-        return $ret_val;
-    }
-
-    /**
-     * Returns quantity of contracts by month
-     *
-     * @param string $month
-     * @param string $year
-     * @param bool $get_inactive
-     * @return array
-     * @throws \Exception
-     */
-    private function count_contracts_by_month($month, $year, $get_inactive = false)
-    {
-        $ret_val = array();
-
-        try {
-            $days = $this->get_number_of_days($month, $year);
-            $contract_begin = $year . '-' . $month . '-01';
-            $contract_end = $year . '-' . $month . '-' . $days;
-
-            if ($get_inactive === false) {
-                $contracts = DB::table('contract')->whereBetween('contract_start', array($contract_begin, $contract_end))->get();
-            } else {
-                $contracts = DB::table('contract')->whereBetween('contract_end', array($contract_begin, $contract_end))->get();
-            }
-            $contract_counter = 0;
-
-            if (count($contracts) > 0) {
-                foreach ($contracts as $contract) {
-                    if ($get_inactive === false) {
-                        if ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end)) {
-                            $contract_counter++;
-                        }
-                    } else {
-                        if ($contract->contract_end != '0000-00-00' && $contract->contract_end < date('Y-m-d') || is_null($contract->contract_end)) {
-                            $contract_counter++;
-                        }
-                    }
-                }
-            }
-
-            $ret_val = array($month . '/' . substr($year, -2), $contract_counter);
-        } catch (\Exception $e) {
-            throw $e;
-        }
-        return $ret_val;
-    }
-
-    /**
-     * Returns the calculated number of month days
-     *
-     * @param string $month
-     * @param string $year
-     * @return false|string
-     */
-    private function get_number_of_days($month, $year)
-    {
-        return date("t", mktime(0, 0, 0, str_replace('0', '', $month), 1, $year));
-    }
-
-    /**
-     * Get all valid contracts
-     *
-     * @param $day_period Quantity last days
-     * @return mixed
-     * @throws \Exception
-     */
-    private function get_contracts($day_period = null)
-    {
-    	$valid_contracts = array();
-
-        try {
-            $contracts = Contract::all();
-
-            // get all contracts till now
-            foreach ($contracts as $contract) {
-                if ($contract->contract_start <= date('Y-m-d') && ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
-                    $valid_contracts['till_now'][] = $contract;
-                }
-            }
-
-            // get all contracts last month
-            $month = date('m');
-            $year = date('Y');
-
-            if (($month - 1) == 0) {
-                $month = 12;
-                $year = date('Y') - 1;
-            }
-            $reference_date = $year . '-' . $month . '-' . date('d');
-
-            if (!is_null($day_period)) {
-                // generate reference date for day period filter
-                $date = date_create(date('Y-m-d'));
-                date_sub($date, date_interval_create_from_date_string($day_period . ' days'));
-                $reference_date = date_format($date, 'Y-m-d');
-
-                // set period to array
-                $valid_contracts['days'] = $day_period;
-            }
-
-            foreach ($contracts as $contract) {
-                if ($contract->contract_start <= $reference_date && ($contract->contract_end == '0000-00-00' || $contract->contract_end > $reference_date)) {
-                    $valid_contracts['period'][] = $contract;
-                }
-            }
-        } catch (\Exception $e) {
-            throw $e;
-        }
-
-        return $valid_contracts;
-    }
-
-    /**
-     * Returns all valid contracts for the current year and the year before
-     *
-     * @return array
-     * @throws \Exception
-     */
-    private function get_itemised_contracts()
-    {
-        $ret_val = array();
-		$valid_contracts = array();
-        $product_types = $this->get_product_types();
-
-        try {
-            $contracts = Contract::all();
-
-            foreach ($contracts as $contract) {
-                /**
-                 * get all contracts current year till now
-                 */
-                if ($contract->contract_start <= date('Y-m-d') && ($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
-                    $valid_contracts['2017'][] = $contract;
-                }
-
-                /**
-                 * get all contracts last year
-                 *
-                 * contract_start:  between 01.01.2016 and 31.12.2016
-                 * contract_end:    0000-00-00, <=2016-12-31, > now
-                 */
-                $last_year = date('Y') - 1;
-                $reference_date = $last_year . '-12-31';
-
-                if ($contract->contract_start <= $reference_date &&
-                    ($contract->contract_end == '0000-00-00' || $contract->contract_end <= $reference_date || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
-                    $valid_contracts[$last_year][] = $contract;
-                }
-            }
-
-            if (count($valid_contracts) > 0) {
-                $contracts = null;
-
-                foreach ($valid_contracts as $year => $contracts) {
-                    foreach ($contracts as $key => $contract) {
-                        foreach ($product_types as $key => $product_type) {
-                            $tmp[$year][$contract->id][$product_type] = $contract->get_valid_tariff($product_type);
-                        }
-                    }
-                }
-
-                // Disable all null-Values
-                foreach ($tmp as $year => $contracts) {
-                    foreach ($contracts as $contract_id => $product_types) {
-                        foreach ($product_types as $type_name => $type_value) {
-                            if (!is_null($type_value)) {
-                                $ret_val[$year][$contract_id][] = $type_value;
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (\Exception $e) {
-            throw $e;
-        }
-
-        return $ret_val;
-    }
-
-    /**
-     * Returns the total count of sales per year and each product type
-     *
-     * @param $contracts
-     * @return array
-     * @throws \Exception
-     */
-    private function get_sales($contracts)
-    {
-        $ret_val = array();
-
-        try {
-            foreach ($contracts as $year => $contracts) {
-                $sales = 0;
-
-                foreach ($contracts as $contract_id => $contract_items) {
-                    foreach ($contract_items as $contract_item) {
-                        $product = Product::find($contract_item->product_id);
-                        $sales = $this->count_sales($product, $sales);
-                    }
-                }
-                $ret_val[$year]['total'] = $sales;
-                $ret_val[$year]['by_types'] = $this->get_sales_by_product_type($contracts, $year);
-            }
-        } catch (\Exception $e) {
-            throw $e;
-        }
-
-        return $ret_val;
-    }
-
-    private function get_sales_monthly($contracts)
-    {
-        $result = array(
-        	'current_month' => array('total' => 0, 'by_types' => array()),
-			'last_month' =>  array('total' => 0, 'by_types' => array()),
-		);
-		$dates = config('dates');
-
-        try {
-            $contracts = $contracts[date('Y')];
-
-            foreach ($contracts as $contract_id => $items) {
-                foreach ($items as $item) {
-                    $price_last_month = $item->calculate_price_and_span($dates['last_month'], true);
-					$price_current_month = $item->calculate_price_and_span($dates['next_month'], true);
-
-					$product = Product::find($item->product_id);
-
-                    if (!is_null($price_current_month)) {
-                        $result['current_month']['total'] += $price_current_month['charge'];
-						if (isset($result['current_month']['by_types'][$product->type])) {
-							$result['current_month']['by_types'][$product->type] += $price_current_month['charge'];
-						} else {
-							$result['current_month']['by_types'][$product->type] = $price_current_month['charge'];
+			if (!is_null($period)) {
+				switch ($period) {
+					case 'lastMonth':
+						$month = $month - 1;
+						if (($month) == 0) {
+							$month = 12;
+							$year = $year - 1;
 						}
-                    }
 
-					if (!is_null($price_last_month)) {
-						$result['last_month']['total'] += $price_last_month['charge'];
-						if (isset($result['last_month']['by_types'][$product->type])) {
-							$result['last_month']['by_types'][$product->type] += $price_current_month['charge'];
-						} else {
-							$result['last_month']['by_types'][$product->type] = $price_current_month['charge'];
+						if (strlen($month) == 1) {
+							$month = '0' . $month;
+						}
+						$ret = $year . '-' . $month . '-' . date('t', mktime(0, 0, 0, $month, 1, $year));
+						break;
+
+				case 'dayPeriod':
+					$date = date_create($ret);
+					date_sub($date, date_interval_create_from_date_string($days . ' days'));
+					$ret = date_format($date, 'Y-m-d');
+					break;
+				}
+			}
+		} catch (\Exception $e) {
+			throw $e;
+		}
+
+		return $ret;
+	}
+
+    /**
+     * Returns rehashed data for the line chart
+     *
+	 * @param array $contracts
+     * @return array
+     * @throws \Exception
+     */
+    private function get_chart_data_contracts(array $contracts)
+    {
+        $j = 2;
+        $ret = array();
+
+        try {
+			$date = date_create(date('Y-m-d'));
+			$date = date_format(date_sub($date, date_interval_create_from_date_string(12 . ' months')), 'Y-m-d');
+			$date_parts = explode('-', $date);
+
+			$year = $date_parts[0];
+			for ($i = 0; $i <= 12; $i++) {
+				if ($date_parts[1] + $i == 13) {
+					$year = $year + 1;
+					$month = 1;
+				} elseif ($date_parts[1] + $i > 13) {
+					$month = $j++;
+				} else {
+					$month = $date_parts[1] + $i;
+				}
+
+				$date_interval_start = $year . '-' . str_pad($month, 2 ,'0', STR_PAD_LEFT) . '-01';
+				$date_interval_end = $year . '-' . str_pad($month, 2 ,'0', STR_PAD_LEFT) . '-' . date("t", mktime(0, 0, 0, $month, 1, $year));
+
+				$ret['labels'][] = str_pad($month, 2 ,'0', STR_PAD_LEFT) . '/' . $year;
+				$ret['contracts'][] = $this->count_contracts($contracts, $date_interval_start);
+			}
+		} catch (\Exception $e) {
+        	throw $e;
+		}
+        return $ret;
+    }
+
+	/**
+	 * Count contracts for given time interval
+	 *
+	 * @param array $contracts
+	 * @param string $date_interval_start
+	 * @return int
+	 * @throws \Exception
+	 */
+    private function count_contracts(array $contracts, $date_interval_start)
+	{
+		$ret = 0;
+
+		try {
+			foreach ($contracts as $contract) {
+				if (($contract->contract_start < $date_interval_start) &&
+					($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
+
+					$ret++;
+				}
+			}
+		} catch (\Exception $e) {
+			throw $e;
+		}
+		return $ret;
+	}
+
+	/**
+	 * Returns monthly incomes for each product type
+	 *
+	 * @param array $contracts
+	 * @return array
+	 * @throws \Exception
+	 */
+	private function get_income_total(array $contracts)
+	{
+		$total = 0.0;
+		$ret = array();
+
+		try {
+			foreach ($contracts as $contract) {
+				$items = $contract->items;
+
+				if (count($items) > 0) {
+					foreach ($items as $item) {
+						$product = $item->product;
+
+						if ($product->price != 0) {
+							$prepared_data[$product->type][$product->billing_cycle][$product->name][$contract->id]['price'] = $product->price;
+
+							if ($product->type == 'TV') {
+								$costcenter = $item->get_costcenter();
+								$prepared_data[$product->type][$product->billing_cycle][$product->name][$contract->id]['billing_month'] = $costcenter->get_billing_month();
+							}
 						}
 					}
-                }
-            }
-        } catch (\Exception $e) {
-            throw $e;
-        }
+				}
+			}
 
-		return $result;
-    }
+			// calculate income based on type
+			foreach ($prepared_data as $product_type => $incomes) {
+				foreach ($incomes as $income_cycle => $products) {
+					if ($income_cycle == 'Monthly' or $income_cycle == 'Yearly') {
+						$ret[$product_type][$income_cycle] = $this->calculate_income($income_cycle, $products);
+					}
+				}
+			}
 
-    /**
-     * Returns the total count of sales for each/itemised by product type
-     *
-     * @param $contracts
-     * @return array
-     * @throws \Exception
-     */
-    private function get_sales_by_product_type($contracts)
-    {
-        $ret_val = array();
+			// calculate incomes total
+			foreach ($ret as $product_type) {
+				if (isset($product_type['Monthly'])) {
+					$total += $product_type['Monthly'];
+				} elseif (isset($product_type['Yearly'])) {
+					$total += $product_type['Yearly'];
+				}
+			}
+			$ret['total'] = $total;
+		} catch (\Exception $e) {
+			throw $e;
+		}
+		return $ret;
+	}
 
-        try {
-            foreach ($contracts as $contract_id => $contract_items) {
+	/**
+	 * Calculate income
+	 *
+	 * @param string $income_cycle
+	 * @param array $products
+	 * @return float
+	 * @throws \Exception
+	 */
+	private function calculate_income($income_cycle, array $products)
+	{
+		$monthly = 0.0;
+		$yearly = 0.0;
+		$once = 0.0;
 
-                foreach ($contract_items as $contract_item) {
+		try {
+			switch ($income_cycle) {
+				case 'Monthly':
+					foreach ($products as $product_name => $contracts) {
+						foreach ($contracts as $contract_id => $data) {
+							$monthly += $data['price'];
+						}
+					}
+					$ret = $monthly;
+					break;
 
-                    $product = Product::find($contract_item->product_id);
+				case 'Yearly':
+					foreach ($products as $product_name => $contracts) {
+						foreach ($contracts as $contract_id => $data) {
+							if ($data['billing_month'] == date('m')) {
+								$yearly += $data['price'];
+							}
+						}
+					}
+					$ret = $yearly;
+					break;
 
-                    $sales = 0;
-                    if (isset($ret_val[$product->type])) {
-                        $sales = $ret_val[$product->type];
-                    }
-                    $sales = $this->count_sales($product, $sales);
-                }
-                $ret_val[$product->type] = $sales;
-            }
-        } catch (\Exception $e) {
-            throw $e;
-        }
+				case 'Once':
+					foreach ($products as $product_name => $contracts) {
+						foreach ($contracts as $contract_id => $data) {
+							$once += $data['price'];
+						}
+					}
+					$ret = $once;
+					break;
+			}
+		} catch (Exception $e) {
+			throw $e;
+		}
 
-        return $ret_val;
-    }
+		return $ret;
+	}
 
-    /**
-     * Returns the total count of sales for product types
-     *
-     * @param $product
-     * @param $sales
-     * @return string
-     * @throws \Exception
-     */
-    private function count_sales($product, $sales)
-    {
-        try {
-            switch ($product->billing_cycle) {
-                case 'Once':
-                    $sales = $sales + $product->price;
-                    break;
+	/**
+	 * Returns rehashed data for the bar chart
+	 *
+	 * @param array $income
+	 * @return array
+	 * @throws \Exception
+	 */
+	private function get_chart_data_income(array $income)
+	{
+		$ret = array();
+		$products = array('Internet', 'Voip', 'TV', 'Other');
 
-                case 'Yearly':
-                    $sales = $sales + $product->price;
-                    break;
+		try {
+			foreach ($products as $product) {
 
-                case 'Monthly':
-                    $sales = $sales + ($product->price * 12);
-                    break;
-            }
-        } catch (\Exception $e) {
-            throw $e;
-        }
+				if (array_key_exists($product, $income)) {
+					if (isset($income[$product]['Monthly'])) {
+						$data = $income[$product]['Monthly'];
+					} elseif (isset($income[$product]['Yearly'])) {
+						$data = $income[$product]['Yearly'];
+					}
+					$val = number_format($data, 2, '.', '');
+				} else {
+					$val = number_format(0, 2, '.', '');
+				}
 
-        return number_format($sales, 2, ',', '');
-    }
+				if ($product == 'Other') {
+					$product = \App\Http\Controllers\BaseViewController::translate_view($product, 'Dashboard');
+				}
 
-    /**
-     * Returns an array of available product types
-     *
-     * @return array
-     * @throws \Exception
-     */
-    private function get_product_types()
-    {
-        $ret_val = array();
+				$ret['data'][] = $val;
+				$ret['labels'][] = $product;
+			}
+		} catch (\Exception $e) {
+			throw $e;
+		}
 
-        try {
-            $ret_val = Product::get_product_types();
-        } catch (\Exception $e) {
-            throw $e;
-        }
-
-        return $ret_val;
-    }
+		return $ret;
+	}
 }

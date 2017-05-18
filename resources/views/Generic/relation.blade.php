@@ -22,6 +22,32 @@ Relation Blade is used inside a Panel Element to display relational class object
 @endif
 
 
+{{-- man can use the session key “tmp_info_above_relations” to show additional data above the form for one screen --}}
+{{-- simply use Session::push('tmp_info_above_relations', 'your additional data') in your observers or where you want --}}
+@if (Session::has('tmp_info_above_relations'))
+	@DivOpen(12)
+	<?php
+		$tmp_info_above_relations = Session::get('tmp_info_above_relations');
+
+		// for better handling: transform strings to array (containing one element)
+		if (is_string($tmp_info_above_relations)) {
+			$tmp_info_above_relations = [$tmp_info_above_relations];
+		};
+	?>
+	@foreach($tmp_info_above_relations as $info)
+		<div style="font-weight: bold; padding-top: 0px; padding-left: 10px; margin-bottom: 5px; border-left: solid 2px #ffaaaa">
+			{{ $info }}
+		</div>
+	@endforeach
+	<br>
+	<?php
+		// as this shall not be shown on later screens: remove from session
+		// we could use Session::flash for this behavior – but this supports no arrays…
+		Session::forget('tmp_info_above_relations'); ?>
+	@DivClose()
+@endif
+
+
 <!-- Create Button: (With hidden add fields if required) -->
 @if (!isset($options['hide_create_button']))
 	@DivOpen(12)

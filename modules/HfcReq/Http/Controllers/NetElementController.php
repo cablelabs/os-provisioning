@@ -53,7 +53,8 @@ class NetElementController extends HfcBaseController {
 	{
 		return [
 			['name' => 'Edit', 'route' => 'NetElement.edit', 'link' => [$view_var->id]],
-			['name' => 'Controlling', 'route' => 'NetElement.controlling_edit', 'link' => [$view_var->id, 0, 0]]
+			['name' => 'Controlling', 'route' => 'NetElement.controlling_edit', 'link' => [$view_var->id, 0, 0]],
+			parent::get_form_tabs($view_var)[0]
 		];
 	}
 

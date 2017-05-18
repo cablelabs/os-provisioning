@@ -7,6 +7,7 @@ use Log;
 use Exception;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\ProvBase;
+use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class Modem extends \BaseModel {
 
@@ -351,24 +352,38 @@ class Modem extends \BaseModel {
 	 */
 	public function restart_modem()
 	{
-		$config = ProvBase::first();
-		$community_rw = $config->rw_community;
-		$domain = $config->domain_name;
-
 		// Log
 		Log::info('restart modem '.$this->hostname);
 
 		// if hostname cant be resolved we dont want to have an php error
 		try
 		{
-			// restart modem - NOTE: OID from MIB: DOCS-CABLE-DEV-MIB::docsDevResetNow
-			snmpset($this->hostname.'.'.$domain, $community_rw, "1.3.6.1.2.1.69.1.1.3.0", "i", "1", 300000, 1);
+			$config = ProvBase::first();
+			$fqdn = $this->hostname.'.'.$config->domain_name;
+			$cmts = ProvMonController::get_cmts(gethostbyname($fqdn));
+			$mac_oid = implode('.', array_map('hexdec', explode(':', $this->mac)));
+
+			if($cmts && $cmts->company == 'Cisco') {
+				// delete modem entry in cmts - CISCO-DOCS-EXT-MIB::cdxCmCpeDeleteNow
+				snmpset($cmts->ip, $cmts->get_rw_community(), '1.3.6.1.4.1.9.9.116.1.3.1.1.9.'.$mac_oid, 'i', '1', 300000, 1);
+			}
+			elseif($cmts && $cmts->company == 'Casa') {
+				// reset modem via cmts, deleting is not possible - CASA-CABLE-CMCPE-MIB::casaCmtsCmCpeResetNow
+				snmpset($cmts->ip, $cmts->get_rw_community(), '1.3.6.1.4.1.20858.10.12.1.3.1.7.'.$mac_oid, 'i', '1', 300000, 1);
+			}
+			else {
+				// restart modem - DOCS-CABLE-DEV-MIB::docsDevResetNow
+				snmpset($fqdn, $config->rw_community, '1.3.6.1.2.1.69.1.1.3.0', 'i', '1', 300000, 1);
+			}
 		}
 		catch (Exception $e)
 		{
 			// only ignore error with this error message (catch exception with this string)
 			if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmpset(): No response from") !== false))) {
 				\Session::flash('error', 'Could not restart Modem! (offline?)');
+			}
+			elseif(strpos($e->getMessage(), "noSuchName") !== false) {
+				// this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
 			}
 			else {
 				// Inform and log for all other exceptions
@@ -686,6 +701,7 @@ class Modem extends \BaseModel {
 		$this->observer_enabled = false;
 	}
 
+
 	/**
 	 * Before deleting a modem and all children we have to check some things
 	 *
@@ -698,13 +714,98 @@ class Modem extends \BaseModel {
 		// we have to check this here as using ModemObserver::deleting() with return false does not prevent the monster from deleting child model instances!
 		if (\PPModule::is_active('ProvVoipEnvia')) {
 			if ($this->has_phonenumbers_attached()) {
-				\Session::push('tmp_info_above_form', "You are not allowed to delete a modem with attached phonenumbers!");
+
+				// check from where the deletion request has been triggered and set the correct var to show information
+				$prev = explode('?', \URL::previous())[0];
+				$prev = \Str::lower($prev);
+				$msg = "You are not allowed to delete a modem with attached phonenumbers!";
+				if (\Str::endsWith($prev, 'edit')) {
+					\Session::push('tmp_info_above_relations', $msg);
+				}
+				elseif (\Str::endsWith($prev, 'modem')) {
+					\Session::push('tmp_info_above_index_list', $msg);
+				}
+
 				return false;
 			}
 		}
 
 		// when arriving here: start the standard deletion procedure
 		return parent::delete();
+	}
+
+	/**
+	 * Calculates the great-circle distance between this and $modem, with
+	 * the Haversine formula.
+	 *
+	 * see https://stackoverflow.com/questions/514673/how-do-i-open-a-file-from-line-x-to-line-y-in-php#tab-top
+	 *
+	 * @return float Distance between points in [m] (same as earthRadius)
+	 */
+
+	private function _haversine_great_circle_distance($modem)
+	{
+		// convert from degrees to radians
+		$latFrom = deg2rad($this->y);
+		$lonFrom = deg2rad($this->x);
+		$latTo = deg2rad($modem->y);
+		$lonTo = deg2rad($modem->x);
+
+		$latDelta = $latTo - $latFrom;
+		$lonDelta = $lonTo - $lonFrom;
+
+		$angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) + cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+
+		// earth radius
+		return $angle * 6371000;
+	}
+
+	/**
+	 * Clean modem from all Envia related data – call this e.g. if you delete the last number from this modem.
+	 * We have to do this to avoid problems in case we want to install this modem at another customer
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function remove_envia_related_data() {
+
+		// first: check if envia module is enabled
+		// if not: do nothing – this database fields could be in use by another voip provider module!
+		if (\PPModule::is_active('ProvVoipEnvia')) {
+			return;
+		}
+
+		$this->contract_external_id = NULL;
+		$this->contract_ext_creation_date = NULL;
+		$this->contract_ext_termination_date = NULL;
+		$this->installation_address_change_date = NULL;
+		$this->save();
+
+
+	}
+
+	public function proximity_search($radius) {
+		$ids = 'id = 0';
+		foreach (Modem::all() as $modem)
+			if ($this->_haversine_great_circle_distance($modem) < $radius)
+				$ids .= " OR id = $modem->id";
+		return $ids;
+	}
+
+	/**
+	 * Check if modem actually needs to be restarted. This is only the case if a
+	 * relevant attribute was modified.
+	 *
+	 * @author Ole Ernst
+	 */
+	public function needs_restart() {
+		$diff = array_diff_assoc($this->getAttributes(), $this->getOriginal());
+
+		return array_key_exists('contract_id', $diff)
+			|| array_key_exists('mac', $diff)
+			|| array_key_exists('public', $diff)
+			|| array_key_exists('network_access', $diff)
+			|| array_key_exists('configfile_id', $diff)
+			|| array_key_exists('qos_id', $diff);
 	}
 
 }
@@ -774,8 +875,8 @@ class ModemObserver
 		if (!$modem->observer_enabled)
 			return;
 
-		// only restart on system relevant changes ? Then it's not that easy to restart modem anymore
-		$modem->restart_modem();
+		if($modem->needs_restart() || \Input::has('_force_restart'))
+			$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
 

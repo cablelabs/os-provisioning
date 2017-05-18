@@ -1,24 +1,24 @@
-    <!-- begin #header -->
-    <div id="header" class="header navbar navbar-default navbar-fixed-top">
-      <!-- begin container-fluid -->
-      <div class="container-fluid">
-          <div class="row">
-        <!-- begin mobile sidebar expand / collapse button -->
-        <div class="nav navbar-header">
-          <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+<!-- begin #header -->
+<div id="header" class="header navbar navbar-default navbar-fixed-top">
+  <!-- begin container-fluid -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- begin mobile sidebar expand / collapse button -->
+      <div class="nav navbar-header">
+        <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </button>
-          <a href="javascript:;" class="navbar-brand"><span class="navbar-logo hidden-xs"></span> <span class="hidden-xs">{{$header}}</span></a>
-        </div>
-        <!-- end mobile sidebar expand / collapse button -->
+        </button>
+        <a href="javascript:;" class="navbar-brand"><span class="navbar-logo hidden-xs"></span> <span class="hidden-xs">{{$header}}</span></a>
+      </div>
+      <!-- end mobile sidebar expand / collapse button -->
 
-        <div class="nav nav-pills col-md-6 col-sm-6 col-xs-6 p-t-5">
-              <h5>
-                @yield('content_top')
-              </h5>
-        </div>
+      <div class="nav nav-pills col-md-6 col-sm-6 col-xs-6 p-t-5">
+        <h5>
+          @yield('content_top')
+        </h5>
+      </div>
 
         <div class="row">
         <ul class="nav navbar-nav navbar-right">
@@ -49,21 +49,26 @@
 					echo "</li>";
 				}
 			?>
+
           <li class="dropdown navbar-user col-md-10 col-sm-8 col-xs-8 pull-right">
               <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-user-circle-o fa-lg" aria-hidden="true"></i>
                 <span class="hidden-xs hidden-sm"><img src="{{asset('components/assets-admin/img/user-11.jpg')}}" alt ="" />  {{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span>
                 <b class="caret"></b>
               </a>
+
             <ul class="dropdown-menu animated fadeInLeft">
               <li class="arrow"></li>
               <li><a href="{{route('Authuser.edit', \Auth::user()->id)}}"> <i class="fa fa-cog" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}</a></li>
-              <li><a href="{{route('Authuser.index')}}"><i class="fa fa-cogs" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserGlobSettings', 'Menu')}}</a></li>
+              @if (\Auth::user()->is_admin() === true)
+                <li><a href="{{route('Authuser.index')}}"><i class="fa fa-cogs" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserGlobSettings', 'Menu')}}</a></li>
+                <li><a href="{{route('Authrole.index')}}">{{ \App\Http\Controllers\BaseViewController::translate_view('UserRoleSettings', 'Menu')}}</a></li>
+              @endif
               <li class="divider"></li>
               <li><a href="{{route('Auth.logout')}}"><i class="fa fa-sign-out" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('Logout', 'Menu')}}</a></li>
             </ul>
           </li>
-                  </ul>
+        </ul>
       </div>
 
         <!-- end header navigation right -->

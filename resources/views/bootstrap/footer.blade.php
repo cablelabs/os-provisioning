@@ -2,6 +2,12 @@
 <script src="{{asset('components/assets-admin/plugins/jquery/jquery-3.2.0.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/jquery/jquery-migrate-1.4.1.min.js')}}"></script>
 
+<script type="text/javascript">
+  if (typeof window.jQuery == 'undefined') {
+      document.write('<script src="{{asset('components/assets-admin/plugins/jquery/jquery-3.2.0.min.js')}}">\x3C/script>');
+  }
+</script>
+
 <script src="{{asset('components/assets-admin/plugins/jquery-ui/ui/minified/jquery-ui.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
 <!--[if lt IE 9]>
@@ -11,20 +17,16 @@
 <![endif]-->
 <script src="{{asset('components/assets-admin/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/select2-v4/vendor/select2/select2/dist/js/select2.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/DataTables/media/js/jquery.dataTables.js')}}"></script>
+
+<script src="{{asset('components/assets-admin/plugins/DataTables/media/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/media/js/dataTables.bootstrap.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js')}}"></script>
+
+
+<script src="{{asset('components/assets-admin/js/ui-modal-notification.demo.js')}}"></script>
 <!-- ================== END BASE JS ================== -->
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
-<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/flot/jquery.flot.categories.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/chart/Chart.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/ionRangeSlider/js/ion-rangeSlider/ion.rangeSlider.min.js')}}"></script>
-
-<script src="{{asset('components/assets-admin/plugins/switchery/switchery.js')}}"></script>
-<script src="{{asset('components/assets-admin/js/form-slider-switcher.demo.js')}}"></script>
-
 <script src="{{asset('components/assets-admin/js/apps.min.js')}}"></script>
 <!-- Javascript Tree View (for index page) -->
 <!-- <script src="{{asset('components/assets-admin/plugins/jstree/dist/jstree.min.js')}}"></script> -->

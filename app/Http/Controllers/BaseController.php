@@ -30,12 +30,17 @@ class BaseController extends Controller {
 	 * NOTE: All these values could be used in the inheritances classes
 	 */
 	protected $save_button = 'Save';
+	protected $force_restart_button = 'Force Restart';
 	protected $relation_create_button = 'Create';
 	protected $index_create_allowed = true;
 	protected $index_delete_allowed = true;
+
 	protected $edit_left_md_size = 8;
 	protected $index_left_md_size = 12;
+	protected $edit_right_md_size = null;
+
 	protected $edit_view_save_button = true;
+	protected $edit_view_force_restart_button = false;
 
 
 
@@ -74,7 +79,14 @@ class BaseController extends Controller {
 	 */
 	protected function get_form_tabs($view_var)
 	{
-		return null;
+		$class = \NamespaceController::get_model_name();
+		$class_name = substr(strrchr($class, "\\"), 1);
+
+		return [[
+			'name' => 'Logging',
+			'route' => 'GuiLog.filter',
+			'link' => ['model_id' => $view_var->id, 'model' => $class_name]
+		]];
 	}
 
 
@@ -238,7 +250,7 @@ class BaseController extends Controller {
 		// Version 1
 		$ret = $this->get_form_tabs($view_var);
 
-		if ($ret)
+		if ($ret && count($ret) > 1)
 			return $ret;
 
 		// view_has_many() Version 2
@@ -255,9 +267,13 @@ class BaseController extends Controller {
 				$b = next($a);
 			}
 
-			return $c;
-		}
+			// add tab for GuiLog
+			array_push($c, $ret[0]);
 
+			return $c;
+		} else {
+			return $ret;
+		}
 	}
 
 
@@ -341,8 +357,13 @@ class BaseController extends Controller {
 		if (!isset($a['index_left_md_size']))
 			$a['index_left_md_size'] = $this->index_left_md_size;
 
+		if (!is_null($this->edit_right_md_size) && !isset($a['edit_right_md_size']))
+			$a['edit_right_md_size'] = $this->edit_right_md_size;
+
 		$a['save_button'] = $this->save_button;
+		$a['force_restart_button'] = $this->force_restart_button;
 		$a['edit_view_save_button'] = $this->edit_view_save_button;
+		$a['edit_view_force_restart_button'] = $this->edit_view_force_restart_button;
 
 		// Get Framework Informations
 		$gc = GlobalConfig::first();
@@ -571,7 +592,7 @@ class BaseController extends Controller {
 			$view_path = \NamespaceController::get_view_name().'.edit';
 		if (View::exists(\NamespaceController::get_view_name().'.form'))
 			$form_path = \NamespaceController::get_view_name().'.form';
-		
+
 		// $config_routes = BaseController::get_config_modules();
 		// return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations', 'extra_data')));
 		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations', 'method', 'additional_data')));

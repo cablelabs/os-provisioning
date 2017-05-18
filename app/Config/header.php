@@ -1,5 +1,4 @@
 <?php
-
 return[
 	['Config Page' =>
 		['link' => 'Config.index',

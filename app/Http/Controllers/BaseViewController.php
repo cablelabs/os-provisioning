@@ -66,7 +66,7 @@ class BaseViewController extends Controller {
 
 	/**
 	 * Searches for a string in the language files under resources/lang/ and returns it for the active application language
-	 * used in everything view related 
+	 * used in everything view related
 	 * @param string: 	string that is searched in resspurces/lang/{App-language}/view.php
 	 * @param type: 	can be Header, Menu, Button, jQuery, Search
 	 * @param count: 	standard at 1 , For plural translation - needs to be seperated with pipe "|""
@@ -217,7 +217,7 @@ class BaseViewController extends Controller {
 	 * @return: array() of fields with added ['html'] element containing the preformed html content
 	 *
 	 * @author: Torsten Schmidt
-	 * 
+	 *
 	 * TODO: split prepare form fields and this compute form fields function -> rename this to "make_html()" or sth more appropriate
 	 */
 	public static function add_html_string($fields, $context = 'edit')
@@ -228,6 +228,7 @@ class BaseViewController extends Controller {
 		// background color's to toggle through
 		$color_array = ['white', '#c8e6c9', '#fff3e0', '#fbe9e7', '#e0f2f1', '#f3e5f5'];
 		$color = $color_array[0];
+
 		// prepare form fields
 		// $fields = static::prepare_form_fields($_fields, $model);
 
@@ -242,6 +243,7 @@ class BaseViewController extends Controller {
 				array_push($ret, $field);
 				continue;
 			}
+
 			// hidden stuff
 			if (array_key_exists('hidden', $field))
 			{
@@ -331,6 +333,7 @@ class BaseViewController extends Controller {
 					$s .= \Form::$field["form_type"]($field["name"], $field['field_value'], $options);
 					break;
 			}
+
 			// Help: add help icon/image behind form field
 			if (isset($field['help']))
 				$s .= '<div title="'.$field['help'].'" name='.$field['name'].'-help class=col-md-1>'.
@@ -429,9 +432,12 @@ finish:
 			// array_push($ret, $lines);
 			foreach ($lines as $k => $line)
 			{
-				$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
-				$ret['Global']['icon'] = 'fa-globe';
-				$ret['Global']['submenu'][$key] = $line;
+				$name = $line['link'];
+				if (\Auth::user()->has_permissions(app()->getNamespace(), substr($name, 0, -6))) {
+					$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
+					$ret['Global']['icon'] = 'fa-globe';
+					$ret['Global']['submenu'][$key] = $line;
+				}
 			}
 		}
 
@@ -453,12 +459,23 @@ finish:
 				{
 					foreach ($lines as $k => $line)
 					{
-						$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
-						$ret[$name]['submenu'][$key] = $line;
+
+						if (\Auth::user()->has_permissions($module->name, substr($line['link'], 0, -6))) {
+							$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
+							$ret[$name]['submenu'][$key] = $line;
+						}
 					}
 				}
 			}
 		}
+
+		// cleanup menu
+		foreach ($ret as $menu_name => $entries) {
+			if (count($entries) == 0) {
+				unset($ret[$menu_name]);
+			}
+		}
+
 		return $ret;
 	}
 
@@ -586,7 +603,6 @@ finish:
 		else {	// multiple breadcrumb paths: show overture on a single line
 			array_unshift($breadcrumb_paths, $breadcrumb_path_base);
 		}
-// >>>>>>> dev
 
 		// show each path on its own line
 		return implode('<br>', $breadcrumb_paths);
