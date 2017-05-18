@@ -82,7 +82,7 @@
 						@foreach (is_array($object->view_index_label()) ? $object->view_index_label()['index'] : [$object->view_index_label()] as $field)
 							<td class="ClickableTd">
 								@if ($i++ == 0)
-									{{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }}
+									<strong>{{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }}</strong>
 								@else
 									{{ $field }}
 								@endif
