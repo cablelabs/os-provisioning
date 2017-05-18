@@ -57,12 +57,12 @@
                 <b class="caret"></b>
               </a>
 
-            <ul class="dropdown-menu animated fadeInLeft">
+            <ul class="dropdown-menu animated fadeInLeft p-r-10">
               <li class="arrow"></li>
               <li><a href="{{route('Authuser.edit', \Auth::user()->id)}}"> <i class="fa fa-cog" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}</a></li>
               @if (\Auth::user()->is_admin() === true)
                 <li><a href="{{route('Authuser.index')}}"><i class="fa fa-cogs" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserGlobSettings', 'Menu')}}</a></li>
-                <li><a href="{{route('Authrole.index')}}">{{ \App\Http\Controllers\BaseViewController::translate_view('UserRoleSettings', 'Menu')}}</a></li>
+                <li><a href="{{route('Authrole.index')}}"><i class="fa fa-users" aria-hidden="true"></i>{{ \App\Http\Controllers\BaseViewController::translate_view('UserRoleSettings', 'Menu')}}</a></li>
               @endif
               <li class="divider"></li>
               <li><a href="{{route('Auth.logout')}}"><i class="fa fa-sign-out" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('Logout', 'Menu')}}</a></li>
