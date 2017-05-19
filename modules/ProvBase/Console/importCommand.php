@@ -278,6 +278,18 @@ class importCommand extends Command {
 
 		$costcenter_id  = $this->option('cc') ? : 3; 			// MAB is default
 
+		$termination_date = NULL;
+		if ($this->option('terminate'))
+		{
+			// check if date is valid
+			if (date('Y-m-d', strtotime($this->option('terminate'))) == $this->option('terminate'))
+				$termination_date = $this->option('terminate');
+			else
+			{
+				$this->option('debug') ? $this->error('Termination Date is not a valid string. Abort!') : Log::error('Import: Abort! Termination Date is not a valid string.');
+				return;
+			}
+		}
 
 		/*
 		 * CONTRACT Import
@@ -382,6 +394,15 @@ class importCommand extends Command {
 			// Log
 			if ($this->option('debug'))
 				$this->info ("\n$i/$num \nCONTRACT $info: ".$c->id.', '.$c->firstname.', '.$c->lastname.', '.$c->street.', '.$c->zip.', '.$c->city.', '.$c->sepa_iban);
+
+
+			// terminate km3 Contract
+			if ($termination_date)
+			{
+				$km3->table('tbl_vertrag')->where('id', '=', $contract->id)->update(['abgeklemmt' => $termination_date]);
+				if ($this->option('debug'))
+					$this->info("Terminated Contract $contract->id by $termination_date");
+			}
 
 			/*
 			 * Add Billing related Data - Models: Items (Internet, Voip, Zusatzposten), SepaMandate
@@ -747,6 +768,7 @@ class importCommand extends Command {
 			array('cluster', null, InputOption::VALUE_OPTIONAL, 'Import only Contracts/Modems from cluster_id, e.g. 160', 0),
 			array('debug', null, InputOption::VALUE_OPTIONAL, '1 enables debug', 0),
 			array('cc', null, InputOption::VALUE_OPTIONAL, 'CostCenter ID for all the imported Contracts', 0),
+			array('terminate', null, InputOption::VALUE_OPTIONAL, 'Date for all km3 Contracts to terminate', 0),
 		);
 	}
 
