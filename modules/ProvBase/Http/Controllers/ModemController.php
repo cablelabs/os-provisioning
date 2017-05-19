@@ -84,11 +84,11 @@ class ModemController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'),
 
 			array('form_type' => 'text', 'name' => 'x', 'description' => 'Geopos X', 'html' =>
-				"<div class=col-md-12 style='background-color:#e0f2f1'>
+				"<div class=col-md-12 style='background-color:whitesmoke'>
 				<div class=form-group><label for=x class='col-md-4 control-label' style='margin-top: 10px;'>$geopos</label>
-				<div class=col-md-3><input class=form-control name=x type=text value='".$model['x']."' id=x style='background-color:#e0f2f1'></div>"),
+				<div class=col-md-3><input class=form-control name=x type=text value='".$model['x']."' id=x style='background-color:whitesmoke'></div>"),
 			array('form_type' => 'text', 'name' => 'y', 'description' => 'Geopos Y', 'html' =>
-				"<div class=col-md-3><input class=form-control name=y type=text value='".$model['y']."' id=y style='background-color:#e0f2f1'></div>
+				"<div class=col-md-3><input class=form-control name=y type=text value='".$model['y']."' id=y style='background-color:whitesmoke'></div>
 				</div></div>"),
 
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')

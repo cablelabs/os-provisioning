@@ -226,7 +226,7 @@ class BaseViewController extends Controller {
 		$ret = [];
 
 		// background color's to toggle through
-		$color_array = ['white', '#c8e6c9', '#fff3e0', '#fbe9e7', '#e0f2f1', '#f3e5f5'];
+		$color_array = ['whitesmoke', 'gainsboro'];
 		$color = $color_array[0];
 
 		// prepare form fields
@@ -348,7 +348,7 @@ finish:
 			// Space Element between fields and color switching
 			if (array_key_exists('space', $field))
 			{
-				//$s .= "<div class=col-md-12><br></div>";
+				$s .= "<div class=col-md-12><br></div>";
 				$color_array = \Acme\php\ArrayHelper::array_rotate ($color_array);
 				$color = $color_array[0];
 			}
