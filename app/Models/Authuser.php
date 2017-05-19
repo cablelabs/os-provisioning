@@ -313,10 +313,12 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 	public function has_permissions($module, $entity)
 	{
 		$ret_val = false;
-
 		try {
 			$namespace = 'Modules\\' . $module . '\\Entities\\' . $entity;
 			if ($module == 'App\\') {
+				// separately added page
+				if ($entity == 'Config')
+					$entity = 'GlobalConfig';
 				$namespace = $module . $entity;
 			}
 
