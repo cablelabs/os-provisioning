@@ -70,7 +70,7 @@ class NetElement extends \BaseModel {
 
 		if (\PPModule::is_active('hfcsnmp'))
 		{
-			if ($this->netelementtype->parameters->all())
+			if ($this->netelementtype && $this->netelementtype->parameters && $this->netelementtype->parameters->all())
 			{
 				$ret['Edit']['Indices']['class'] 	= 'Indices';
 				$ret['Edit']['Indices']['relation'] = $this->indices;
