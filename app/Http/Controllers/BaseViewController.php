@@ -707,4 +707,68 @@ finish:
 
 		return $class;
 	}
+
+	/**
+	* Evaluate according to given limits
+	*
+	* @param val: the value to be evaluated
+	* @param limits: array of size 2 or 4, containing the limits
+	* @return: evaluation results - good(0), average(1) or bad(2)
+	*
+	* @author: Ole Ernst
+	*/
+	private static function _colorize($val, $limit)
+	{
+		if ($val < $limit[0] || (isset($limit[3]) && $val > $limit[3]))
+			return 2;
+		if ($val >= $limit[1] && (isset($limit[2]) && $val <= $limit[2]))
+			return 0;
+		return 1;
+	}
+
+	/**
+	* Evaluate if the value is good(0), average(1) or bad(2) in the given context
+	*
+	* @param dir: ds - downstream, us - upstream
+	* @param entity: the entity to check (power, modulation, ureflections)
+	* @param value: array containing all values (can be used for several us/ds channels)
+	* @return: array of same size as $value containing evaluation results
+	*
+	* @author: Ole Ernst
+	*/
+	public static function get_quality_color($dir, $entity, $values)
+	{
+		$ret = [];
+
+		foreach ($values as $val) {
+			switch ($entity) {
+			case 'pwr':
+				if($dir == 'ds')
+					$ret[] = self::_colorize($val, [-12, -5, 10, 17]);
+				if($dir == 'us')
+					$ret[] = self::_colorize($val, [22, 35, 45, 56]);
+				break;
+			case 'qpsk':
+				$ret[] = self::_colorize($val, [12, 15]);
+				break;
+			case '16qam':
+				$ret[] = self::_colorize($val, [18, 21]);
+				break;
+			case '32qam':
+				$ret[] = self::_colorize($val, [20, 23]);
+				break;
+			case '64qam':
+				$ret[] = self::_colorize($val, [24, 27]);
+				break;
+			case '256qam':
+				$ret[] = self::_colorize($val, [30, 33]);
+				break;
+			case 'urefl':
+				$ret[] = self::_colorize($val, [20, 30]);
+				break;
+			}
+		}
+
+		return $ret;
+	}
 }
