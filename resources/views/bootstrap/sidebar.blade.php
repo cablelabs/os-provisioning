@@ -55,9 +55,9 @@
                 <span>{{$network->name}}</span>
               </a>
               <ul class="sub-menu">
-                <li><a href="{{BaseRoute::get_base_url()}}/Tree/erd/net/{{$network->id}}">{{$network->name}} ERD</a></li>
+                <li><a href="{{BaseRoute::get_base_url()}}/Tree/erd/net/{{$network->id}}"><i class="fa fa-circle"></i> {{$network->name}}</a></li>
                 @foreach ($network->get_all_cluster_to_net() as $cluster)
-                 <li><i class="fa fa-circle-thin"></i><a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}">--{{$cluster->name}}</a></li>
+                 <li><a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}"><i class="fa fa-circle-thin"></i> {{$cluster->name}}</a></li>
                 @endforeach
               </ul>
             </li>
