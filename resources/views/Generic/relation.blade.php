@@ -72,7 +72,10 @@ Relation Blade is used inside a Panel Element to display relational class object
 				$create_button_text = trans($options['create_button_text']);
 			}
 		?>
-		{{ Form::submit($create_button_text, ['style' => 'simple']) }}
+    <button class="btn btn-primary m-b-15" style="simple">
+      <i class="fa fa-plus fa-lg m-r-10" aria-hidden="true"></i>
+      {{ $create_button_text }}
+    </button>
 		{{ Form::close() }}
 
 	@DivClose()
@@ -107,7 +110,10 @@ Relation Blade is used inside a Panel Element to display relational class object
 					$delete_button_text = trans($options['delete_button_text']);
 				}
 			?>
-				{{ Form::submit($delete_button_text, ['!class' => 'btn btn-danger', 'style' => 'simple']) }}
+      <button class="btn btn-danger btn-primary m-r-5 m-t-15" style="simple">
+          <i class="fa fa-trash-o fa-lg m-r-10" aria-hidden="true"></i>
+          {{ $delete_button_text }}
+      </button>
 		@endif
 
 	{{ Form::close() }}

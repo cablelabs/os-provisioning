@@ -66,7 +66,7 @@ class BaseViewController extends Controller {
 
 	/**
 	 * Searches for a string in the language files under resources/lang/ and returns it for the active application language
-	 * used in everything view related 
+	 * used in everything view related
 	 * @param string: 	string that is searched in resspurces/lang/{App-language}/view.php
 	 * @param type: 	can be Header, Menu, Button, jQuery, Search
 	 * @param count: 	standard at 1 , For plural translation - needs to be seperated with pipe "|""
@@ -174,7 +174,13 @@ class BaseViewController extends Controller {
 			}
 
 			// 4. set all field_value's to SQL data
-			$field['field_value'] = $model[$field['name']];
+			if (array_key_exists('eval', $field)) {
+				// dont't remove $name, as it is used in $field['eval'] (might be set in view_form_fields())
+				$name = $model[$field['name']];
+				$eval = $field['eval'];
+				$field['field_value'] = eval("return $eval;");
+			} else
+				$field['field_value'] = $model[$field['name']];
 
 			// 4.(sub-task) auto-fill all field_value's with HTML Input
 			if (\Input::get($field['name']))
@@ -187,7 +193,7 @@ class BaseViewController extends Controller {
 			// 4. (sub-task)
 			// write explicitly given init_value to field_value
 			// this is needed e.g. by Patrick to prefill new PhonenumberManagement and PhonebookEntry with data from Contract
-			if (array_key_exists('init_value', $field)) {
+		if (array_key_exists('init_value', $field) && $field['init_value']) {
 				$field['field_value'] = $field['init_value'];
 			}
 
@@ -211,7 +217,7 @@ class BaseViewController extends Controller {
 	 * @return: array() of fields with added ['html'] element containing the preformed html content
 	 *
 	 * @author: Torsten Schmidt
-	 * 
+	 *
 	 * TODO: split prepare form fields and this compute form fields function -> rename this to "make_html()" or sth more appropriate
 	 */
 	public static function add_html_string($fields, $context = 'edit')
@@ -399,19 +405,20 @@ finish:
 				$s .= \Form::$field["form_type"]($field["name"], $field['field_value'], $options);
 				break;
 		}
-			
+
 		return $s;
 	}
 
 
 	/*
-	 * Return the global prepared header links for Main Menu
+	 * Return the global prepared header links for Main Menu and provide Symbols for Modules
 	 *
 	 * NOTE: this function must take care of installed modules!
 	 *
-	 * @return: array() of header links, like ['module name' => ['page name' => route.entry, ..], ..]
+	 * @return: array() of header links, like
+	 * ['module name' => ['icon' => '...' ,'submodule' => [ 'name of submodule' => ['link' => 'route.entry', 'icon' => '...'], ... ] ...]
 	 *
-	 * @author: Torsten Schmidt
+	 * @author: Torsten Schmidt, Christian Schramm
 	 */
 	public static function view_main_menus ()
 	{
@@ -425,9 +432,10 @@ finish:
 			// array_push($ret, $lines);
 			foreach ($lines as $k => $line)
 			{
-				if (\Auth::user()->has_permissions(app()->getNamespace(), substr($line, 0, -6))) {
+				if (\Auth::user()->has_permissions(app()->getNamespace(), substr($line['link'], 0, -6))) {
 					$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
-					$ret['Global'][$key] = $line;
+					$ret['Global']['icon'] = 'fa-globe';
+					$ret['Global']['submenu'][$key] = $line;
 				}
 			}
 		}
@@ -442,16 +450,18 @@ finish:
 				 *       this needs to fix namespace problems first
 				 */
 				$name = ($module->get('description') == '' ? $module->name : $module->get('description')); // module name
-				$ret[$name] = [];
+				$icon = ($module->get('icon') == '' ? '' : $module->get('icon'));
+				$ret[$name]['icon'] = $icon;
 
 				$array = include ($module->getPath().'/Config/header.php');
 				foreach ($array as $lines)
 				{
 					foreach ($lines as $k => $line)
 					{
-						if (\Auth::user()->has_permissions($module->name, substr($line, 0, -6))) {
+
+						if (\Auth::user()->has_permissions($module->name, substr($line['link'], 0, -6))) {
 							$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
-							$ret[$name][$key] = $line;
+							$ret[$name]['submenu'][$key] = $line;
 						}
 					}
 				}
@@ -505,7 +515,7 @@ finish:
 
 		// lambda function to extend the current breadcrumb by its predecessor
 		// code within this function originally written by Torsten
-		$extend_breadcrumb_path = function($breadcrumb_path, $model) {
+		$extend_breadcrumb_path = function($breadcrumb_path, $model, $i) {
 
 			// following is the original source code written by Torsten
 			$tmp = explode('\\',get_class($model));
@@ -523,9 +533,12 @@ finish:
 				$glue = '';
 			}
 			else {
-				$glue = ' > ';
+				$glue = '';
 			}
-			$breadcrumb_path = \HTML::linkRoute($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).$glue.$breadcrumb_path;
+			if ($i == 0)
+			$breadcrumb_path = "<li class='nav-tabs'>".\HTML::linkRoute($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).$breadcrumb_path."</li>";
+			else
+			$breadcrumb_path = "<li>".\HTML::linkRoute($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id)."</li>".$breadcrumb_path;
 
 			return $breadcrumb_path;
 		};
@@ -535,6 +548,7 @@ finish:
 
 			// Recursively parse all relations from view_var
 			$parent = $view_var;
+			$i = 0;
 			while ($parent)	{
 
 				if (
@@ -552,17 +566,19 @@ finish:
 					}
 
 					// add the current model to breadcrumbs
-					$breadcrumb_path = $extend_breadcrumb_path($breadcrumb_path, $parent);
+					$breadcrumb_path = $extend_breadcrumb_path($breadcrumb_path, $parent, $i);
 
 					// get view parent
 					$parent = $parent->view_belongs_to();
+					$i++;
 				}
 				else {
 					// $parent is a collection with more than one entry – this means we have a multiple parents
 					// we show breadcrumb paths for all of them, but then stopping further processing
 					// to avoid shredding the layout
 					foreach ($parent as $p) {
-						array_push($breadcrumb_paths, '… > '.$extend_breadcrumb_path($breadcrumb_path, $p));
+						array_push($breadcrumb_paths, $extend_breadcrumb_path($breadcrumb_path, $p));
+						$i++;
 					}
 
 					// don't add more predecessors
@@ -579,10 +595,10 @@ finish:
 		// 	$s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
 // =======
 		if (in_array($route_name, BaseController::get_config_modules())) {	// parse: Global Config requires own link
-			$breadcrumb_path_base = \HTML::linkRoute('Config.index', BaseViewController::translate_view('Global Configurations', 'Header'));
+			$breadcrumb_path_base = "<li class='active'>".\HTML::linkRoute('Config.index', BaseViewController::translate_view('Global Configurations', 'Header'))."</li>";
 		}
 		else {
-			$breadcrumb_path_base = Route::has($route_name.'.index') ? \HTML::linkRoute($route_name.'.index', $view_header).": " : '';
+			$breadcrumb_path_base = Route::has($route_name.'.index') ? '<li class="active">'.\HTML::linkRoute($route_name.'.index', $view_header)."</li>" : '';
 		}
 // d($breadcrumb_paths, $breadcrumb_path, $breadcrumb_path_base);
 
@@ -690,5 +706,69 @@ finish:
 		}
 
 		return $class;
+	}
+
+	/**
+	* Evaluate according to given limits
+	*
+	* @param val: the value to be evaluated
+	* @param limits: array of size 2 or 4, containing the limits
+	* @return: evaluation results - good(0), average(1) or bad(2)
+	*
+	* @author: Ole Ernst
+	*/
+	private static function _colorize($val, $limit)
+	{
+		if ($val < $limit[0] || (isset($limit[3]) && $val > $limit[3]))
+			return 2;
+		if ($val >= $limit[1] && (isset($limit[2]) && $val <= $limit[2]))
+			return 0;
+		return 1;
+	}
+
+	/**
+	* Evaluate if the value is good(0), average(1) or bad(2) in the given context
+	*
+	* @param dir: ds - downstream, us - upstream
+	* @param entity: the entity to check (power, modulation, ureflections)
+	* @param value: array containing all values (can be used for several us/ds channels)
+	* @return: array of same size as $value containing evaluation results
+	*
+	* @author: Ole Ernst
+	*/
+	public static function get_quality_color($dir, $entity, $values)
+	{
+		$ret = [];
+
+		foreach ($values as $val) {
+			switch ($entity) {
+			case 'pwr':
+				if($dir == 'ds')
+					$ret[] = self::_colorize($val, [-12, -5, 10, 17]);
+				if($dir == 'us')
+					$ret[] = self::_colorize($val, [22, 35, 45, 56]);
+				break;
+			case 'qpsk':
+				$ret[] = self::_colorize($val, [12, 15]);
+				break;
+			case '16qam':
+				$ret[] = self::_colorize($val, [18, 21]);
+				break;
+			case '32qam':
+				$ret[] = self::_colorize($val, [20, 23]);
+				break;
+			case '64qam':
+				$ret[] = self::_colorize($val, [24, 27]);
+				break;
+			case '256qam':
+				$ret[] = self::_colorize($val, [30, 33]);
+				break;
+			case 'urefl':
+				$ret[] = self::_colorize($val, [20, 30]);
+				break;
+			}
+		}
+
+		return $ret;
 	}
 }

@@ -1,13 +1,24 @@
 /**
  * Arabic translation for bootstrap-wysihtml5
  */
-(function($){
-    $.fn.wysihtml5.locale["mo-MD"] = {
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define('bootstrap.wysihtml5.ar-AR', ['jquery', 'bootstrap.wysihtml5'], factory);
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function($){
+    $.fn.wysihtml5.locale["ar-AR"] = {
         font_styles: {
               normal: "نص عادي",
               h1: "عنوان رئيسي 1",
               h2: "عنوان رئيسي 2",
               h3: "عنوان رئيسي 3",
+              h4: "عنوان رئيسي 4",
+              h5: "عنوان رئيسي 5",
+              h6: "عنوان رئيسي 6"
         },
         emphasis: {
               bold: "عريض",
@@ -22,7 +33,8 @@
         },
         link: {
               insert: "إضافة رابط",
-              cancel: "إلغاء"
+              cancel: "إلغاء",
+              target: "فتح في نافذة جديدة"
         },
         image: {
               insert: "إضافة صورة",
@@ -46,4 +58,4 @@
             orange: "برتقالي"
         }
     };
-}(jQuery));
+}));

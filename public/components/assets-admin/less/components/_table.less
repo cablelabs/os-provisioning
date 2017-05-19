@@ -1,13 +1,14 @@
 /* Table */
 
 .table {
-    border-color: #e2e7eb;
+    border-color: @grey_300;
+    background: @white;
     .border-radius(3px);
 }
 .table > thead > tr > th {
-    color: @dark_black;
+    color: @grey_900;
     font-weight: 600;
-    border-bottom: 2px solid #e2e7eb !important;
+    border-bottom: 2px solid @grey_300 !important;
 }
 .table > thead > tr > th, 
 .table > tbody > tr > th, 
@@ -15,8 +16,9 @@
 .table > thead > tr > td, 
 .table > tbody > tr > td, 
 .table > tfoot > tr > td {
-    border-color: #e2e7eb;
+    border-color: @grey_300;
     padding: 10px 15px;
+    background: @white;
 }
 .table-condensed > thead > tr > th, 
 .table-condensed > tbody > tr > th, 
@@ -32,7 +34,10 @@
 }
 .table-striped > tbody > tr:nth-child(odd) > td, 
 .table-striped > tbody > tr:nth-child(odd) > th {
-    background: #f0f3f5;
+    background: @grey_100;
+}
+.table.table-inverse {
+    background: none;
 }
 .table.table-inverse > thead > tr > th, 
 .table.table-inverse > tbody > tr > th, 
@@ -42,6 +47,7 @@
 .table.table-inverse > tfoot > tr > td {
     border-color: #999 !important;
     border-color: rgba(0,0,0,0.2) !important;
+    background: none;
 }
 .table.table-inverse,
 .table.table-inverse > thead > tr > th, 
@@ -61,8 +67,8 @@
 .table > thead > tr.info > th, 
 .table > tbody > tr.info > th, 
 .table > tfoot > tr.info > th {
-    background: #dbf0f7;
-    border-color: #b6e2ef;
+    background: @light_blue_50;
+    border-color: @light_blue_200;
 }
 .table > thead > tr > td.success, 
 .table > tbody > tr > td.success, 
@@ -76,8 +82,8 @@
 .table > thead > tr.success > th, 
 .table > tbody > tr.success > th, 
 .table > tfoot > tr.success > th {
-    background: #cceeee;
-    border-color: #99dede;
+    background: @teal_50;
+    border-color: @teal_200;
 }
 .table > thead > tr > td.danger, 
 .table > tbody > tr > td.danger, 
@@ -91,8 +97,8 @@
 .table > thead > tr.danger > th, 
 .table > tbody > tr.danger > th, 
 .table > tfoot > tr.danger > th {
-    background: #ffdedd;
-    border-color: #ffbdbc;
+    background: @red_50;
+    border-color: @red_200;
 }
 .table > thead > tr > td.warning, 
 .table > tbody > tr > td.warning, 
@@ -106,8 +112,8 @@
 .table > thead > tr.warning > th, 
 .table > tbody > tr.warning > th, 
 .table > tfoot > tr.warning > th {
-    background: #fdebd1;
-    border-color: #fbd7a3;
+    background: @orange_50;
+    border-color: @orange_200;
 }
 .table > thead > tr > td.active, 
 .table > tbody > tr > td.active, 
@@ -121,6 +127,11 @@
 .table > thead > tr.active > th, 
 .table > tbody > tr.active > th, 
 .table > tfoot > tr.active > th {
-    background: #f0f3f5;
-    border-color: #e2e7e9;
+    background: @grey_100;
+    border-color: #e9e9e9;
+}
+.table.table-without-bg,
+.table.table-without-bg tr td,
+.table.table-without-bg tr th {
+    background: none;
 }

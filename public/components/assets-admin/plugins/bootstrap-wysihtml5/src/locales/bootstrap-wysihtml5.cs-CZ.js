@@ -1,13 +1,24 @@
 /**
  * Czech translation for bootstrap-wysihtml5
  */
-(function($){
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define('bootstrap.wysihtml5.cs-CZ', ['jquery', 'bootstrap.wysihtml5'], factory);
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function($){
     $.fn.wysihtml5.locale["cs-CZ"] = {
         font_styles: {
             normal: "Normální text",
             h1: "Nadpis úrovně 1",
             h2: "Nadpis úrovně 2",
-            h3: "Nadpis úrovně 3"
+            h3: "Nadpis úrovně 3",
+            h4: "Nadpis úrovně 4",
+            h5: "Nadpis úrovně 5",
+            h6: "Nadpis úrovně 6"
         },
         emphasis: {
             bold: "Tučné",
@@ -22,7 +33,8 @@
         },
         link: {
             insert: "Vložit odkaz",
-            cancel: "Zrušit"
+            cancel: "Zrušit",
+	    target: "Otevřít odkaz v novém okně"
         },
         image: {
             insert: "Vložit obrázek",
@@ -45,4 +57,4 @@
             orange: "Oranžová"
         }
     };
-}(jQuery));
+}));

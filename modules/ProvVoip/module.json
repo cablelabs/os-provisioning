@@ -2,6 +2,7 @@
     "name": "ProvVoip",
     "alias": "provvoip",
     "description": "VOIP",
+    "icon": "fa-phone",
     "keywords": [
 
     ],

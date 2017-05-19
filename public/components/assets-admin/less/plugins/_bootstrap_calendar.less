@@ -1,7 +1,7 @@
 /* Bootstrap Calendar Setting */
 
 .bootstrap-calendar .calendar {
-    background: #fff;
+    background: @white;
     border: none;
     border-radius: 0;
     padding: 10px 0;
@@ -10,7 +10,7 @@
         border: none !important;
     }
     & .table td {
-        padding: 3px 5px;
+        padding: 3px 10px;
     }
     & a {
         line-height: 24px;
@@ -20,7 +20,8 @@
         color: #a9acae;
     }
     & .visualmonthyear {
-        color: #707478;
+        color: @grey_900;
+        font-weight: normal;
     }
     & .table.header {
         margin-bottom: 5px;
@@ -54,7 +55,7 @@
     & .icon-arrow-left:hover,
     & .icon-arrow-right:focus,
     & .icon-arrow-left:focus {
-        color: #2d353c;
+        color: @grey_900;
     }
     & .icon-arrow-left:before {
         content: '\f060';
@@ -69,8 +70,8 @@
     & .event a {
         display: block;
         border-radius: 30px;
-        background: #fff;
-        color: #fff;
+        background: @white;
+        color: @white;
         margin: 0 auto;
     }
     & .event .popover a {
@@ -88,13 +89,13 @@
     & .event a:hover,
     & .event a:focus {
         text-shadow: none;
-        color: @black;
+        color: @grey_900;
         box-shadow: none;
         font-weight: normal;
     }
     & .event a:hover,
     & .event a:focus {
-        color: #fff;
+        color: @white;
         .opacity(0.8);
     }
     & .event,
@@ -109,4 +110,3 @@
         top: 0;
     }
 }
-

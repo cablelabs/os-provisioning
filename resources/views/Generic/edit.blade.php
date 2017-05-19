@@ -84,8 +84,7 @@
 		<!-- The Bootstap Panel to include -->
 		@include ('bootstrap.panel', array ('content' => "content_$i",
 											'view_header' => \App\Http\Controllers\BaseViewController::translate_view('Assigned', 'Header').' '.\App\Http\Controllers\BaseViewController::translate_view($view, 'Header' , 2),
-											'md' => isset($edit_right_md_size) ? $edit_right_md_size : 3))
-
+											'md' => isset($edit_right_md_size) ? $edit_right_md_size : 4))
 
 	@endforeach
 

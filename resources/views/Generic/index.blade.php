@@ -14,7 +14,7 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute($route_name.'.index', $headline) }}
+	<li class="active">{{ HTML::linkRoute($route_name.'.index', $headline) }}</li>
 
 @stop
 
@@ -24,7 +24,10 @@
 	@DivOpen(12)
 			@if ($create_allowed)
 				{{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
-				{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Create '.$b_text, 'Button' ) , ['style' => 'simple']) }} 
+				<button class="btn btn-primary m-b-15" style="simple">
+					<i class="fa fa-plus fa-lg m-r-10" aria-hidden="true"></i>
+					{{ \App\Http\Controllers\BaseViewController::translate_view('Create '.$b_text, 'Button' )}}
+				</button>
 				{{ Form::close() }}
 			@endif
 	@DivClose()
@@ -36,7 +39,6 @@
 			{{ Form::close() }}
 	@DivClose()
 	-->
-	{{ Form::hr() }}
 
 	{{-- man can use the session key “tmp_info_above_index_list” to show additional data above the form for one screen --}}
 	{{-- simply use Session::push('tmp_info_above_index_list', 'your additional data') in your observers or where you want --}}
@@ -69,15 +71,16 @@
 		{{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete')) }}
 
 			@if (isset($query) && isset($scope))
-				<h4><?php echo trans('view.Search_MatchesFor'); ?><tt>'{{ $query }}'</tt> <?php echo trans('view.Search_In') ?> 
+				<h4><?php echo trans('view.Search_MatchesFor'); ?><tt>'{{ $query }}'</tt> <?php echo trans('view.Search_In') ?>
 				<tt>{{ \App\Http\Controllers\BaseViewController::translate_view($view_header, 'Header', 1) }}</tt></h4>
 			@endif
 
-			<table class="table table-hover itable">
-
+		@if (isset($view_var[0]))
+			<table class="table table-hover table-striped datatable table-striped table-bordered collapsed">
 				<!-- TODO: add concept to parse header fields for index table - like firstname, lastname, ..-->
 				<thead>
-					<tr role="row">
+					<tr>
+						<th></th>
 						<th></th>
 						<!-- Parse view_index_label() header_index  -->
 						@if (isset($view_var[0]) && is_array($view_var[0]->view_index_label()) && isset($view_var[0]->view_index_label()['index_header']))
@@ -87,13 +90,13 @@
 						@endif
 					</tr>
 				</thead>
-
 				<!-- Index Table Entries -->
+				<tbody>
 				@foreach ($view_var as $object)
 					<tr class="{{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}">
-
+							<td width="30"></td>
 						@if ($delete_allowed)
-							<td width=50>{{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple', 'disabled' => $object->index_delete_disabled ? 'disabled' : null]) }} </td>
+							<td width="30" align="center"> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple', 'disabled' => $object->index_delete_disabled ? 'disabled' : null]) }} </td>
 						@else
 							<td/>
 						@endif
@@ -103,7 +106,7 @@
 						@foreach (is_array($object->view_index_label()) ? $object->view_index_label()['index'] : [$object->view_index_label()] as $field)
 							<td class="ClickableTd">
 								@if ($i++ == 0)
-									{{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }}
+									<strong>{{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }}</strong>
 								@else
 									{{ $field }}
 								@endif
@@ -111,14 +114,20 @@
 						@endforeach
 					</tr>
 				@endforeach
-
+				</tbody>
 			</table>
+		@else
+			<h4>{{ $view_no_entries }}</h4>
+		@endif
 	@DivClose()
 
 	@DivOpen(12)
 		<!-- delete/submit button of form -->
 		@if ($delete_allowed)
-			{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button' ), ['!class' => 'btn btn-danger btn-primary m-r-5', 'style' => 'simple']) }}
+			<button class="btn btn-danger btn-primary m-r-5 m-t-15" style="simple">
+					<i class="fa fa-trash-o fa-lg m-r-10" aria-hidden="true"></i>
+					{{ \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button' ) }}
+			</button>
 			{{ Form::close() }}
 		@endif
 		<!-- only show page buttons if we actually use pagination -->

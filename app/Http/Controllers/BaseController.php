@@ -34,8 +34,11 @@ class BaseController extends Controller {
 	protected $relation_create_button = 'Create';
 	protected $index_create_allowed = true;
 	protected $index_delete_allowed = true;
-	protected $edit_left_md_size = 4;
+
+	protected $edit_left_md_size = 8;
+	protected $index_left_md_size = 12;
 	protected $edit_right_md_size = null;
+
 	protected $edit_view_save_button = true;
 	protected $edit_view_force_restart_button = false;
 
@@ -339,6 +342,9 @@ class BaseController extends Controller {
 		if(!isset($a['view_header']))
 			$a['view_header'] = $model->view_headline();
 
+		if(!isset($a['view_no_entries']))
+			$a['view_no_entries'] = $model->view_no_entries();
+
 		if(!isset($a['headline']))
 			$a['headline'] = '';
 
@@ -347,6 +353,9 @@ class BaseController extends Controller {
 
 		if (!isset($a['edit_left_md_size']))
 			$a['edit_left_md_size'] = $this->edit_left_md_size;
+
+		if (!isset($a['index_left_md_size']))
+			$a['index_left_md_size'] = $this->index_left_md_size;
 
 		if (!is_null($this->edit_right_md_size) && !isset($a['edit_right_md_size']))
 			$a['edit_right_md_size'] = $this->edit_right_md_size;
@@ -583,7 +592,7 @@ class BaseController extends Controller {
 			$view_path = \NamespaceController::get_view_name().'.edit';
 		if (View::exists(\NamespaceController::get_view_name().'.form'))
 			$form_path = \NamespaceController::get_view_name().'.form';
-		
+
 		// $config_routes = BaseController::get_config_modules();
 		// return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations', 'extra_data')));
 		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations', 'method', 'additional_data')));
@@ -733,13 +742,13 @@ class BaseController extends Controller {
 	 * Tree View Specific Stuff
 	 *
 	 * TODO: Implement the Tree View as Javascript Tree Table - preparations are already made in comments (use jstree.min.js)
-			 see Color Admin Bootstrap Theme: http://wrapbootstrap.com/preview/WB0N89JMK -> UI-Elements -> Tree View
+	 * 		 see Color Admin Bootstrap Theme: http://wrapbootstrap.com/preview/WB0N89JMK -> UI-Elements -> Tree View
 	 *
 	 * @author Nino Ryschawy
 	 *
 	 * global Variables
-		$INDEX  : used for shifting the children elements
-		$I 		: used to increment over specficied colours (defined in variable)
+	 *	$INDEX  : used for shifting the children elements
+	 *	$I 		: used to increment over specficied colours (defined in variable)
 	 */
 	public static $INDEX = 0;
 	public static $I = 0;
@@ -750,11 +759,11 @@ class BaseController extends Controller {
 	 * Returns the Tree View (Table) as HTML Text
 	 *
 	 * IMPORTANT NOTES
-		* If the Model uses the Generic BaseController@index function a separate index.blade.php has to be installed in 
-			modules/Resources/Modelname/ that includes the Generic.tree blade
+		* If the Model uses the Generic BaseController@index function a separate index.blade.php has to be installed in
+		*	modules/Resources/Modelname/ that includes the Generic.tree blade
 		* The Generic.tree blade calls this function
 		* The Model currently has to have a function called get_tree_list that shall return the ordered tree of objects
-			(with delete_disabled) - see NetElementType.php
+		*	(with delete_disabled) - see NetElementType.php
 	 */
 	public static function make_tree_table()
 	{

@@ -5,7 +5,7 @@
     right: -175px;
     top: 150px;
     z-index: 1020;
-    background: #fff;
+    background: @white;
     padding: 15px;
     width: 175px;
     .box-shadow(0 0 2px rgba(0,0,0,0.4));
@@ -58,7 +58,7 @@
                     top: 0;
                     bottom: 0;
                     font-size: 14px;
-                    color: #fff;
+                    color: @white;
                     text-align: center;
                     .opacity(0.4);
                 }
@@ -68,10 +68,9 @@
             }
         }
         & a.bg-white {
-            border: 1px solid #e2e7eb;
+            border: 1px solid @grey_300;
         }       
-    }
-    
+    }    
     & .theme-collapse-btn {
         position: absolute;
         left: -30px;
@@ -82,7 +81,7 @@
         line-height: 30px;
         font-size: 18px;
         color: #333;
-        background: #fff;
+        background: @white;
         text-align: center;
         .border-radius(4px 0 0 4px);
         .box-shadow(-1px 0px 3px -1px rgba(0,0,0,0.4));
@@ -90,7 +89,7 @@
     & .theme-panel-content {
         margin: -15px;
         padding: 15px;
-        background: #fff;
+        background: @white;
         position: relative;
         z-index: 1020;
     }
@@ -107,3 +106,5 @@
         background: #f2f2f2;
     }
 } 
+
+

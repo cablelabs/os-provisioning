@@ -49,7 +49,12 @@
 	@if ($edit_view_force_restart_button)
 	<div class='col-md-5'>
 	@endif
-	{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button'), ['name' => '_save']) }}
+	<div class="text-center">
+		<button class="btn btn-primary m-r-5 m-t-15" style="simple">
+			<i class="fa fa-save fa-lg m-r-10" aria-hidden="true"></i>
+			{{ \App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button') }}
+		</button>
+	</div>
 	@if ($edit_view_force_restart_button)
 	</div>
 	@endif
@@ -58,7 +63,12 @@
 	@if ($edit_view_save_button)
 	<div class='col-md-6'>
 	@endif
-	{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view($force_restart_button , 'Button'), ['name' => '_force_restart']) }}
+	<div class="text-center">
+		<button class="btn btn-primary m-r-5 m-t-15" style="simple">
+			<i class="fa fa-refresh fa-lg m-r-10" aria-hidden="true"></i>
+			{{ \App\Http\Controllers\BaseViewController::translate_view($force_restart_button , 'Button') }}
+		</button>
+	</div>
 	@if ($edit_view_save_button)
 	</div>
 	@endif

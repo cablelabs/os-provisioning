@@ -1,4 +1,4 @@
-	<!-- begin col-8 -->
+	<!-- begin col-dyn -->
 	<div class="col-md-{{$md}} ui-sortable">
 		<div class="panel panel-inverse" data-sortable-id="table-basic-{{$md}}">
 			@include ('bootstrap.panel-header', ['view_header' => $view_header])

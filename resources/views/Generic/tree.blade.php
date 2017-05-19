@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute($route_name.'.index', \App\Http\Controllers\BaseViewController::translate_view('Overview', 'Header')) }} <!--$view_header -->
+	<li class="active"> {{ HTML::linkRoute($route_name.'.index', $view_header) }} </li>
 
 @stop
 
