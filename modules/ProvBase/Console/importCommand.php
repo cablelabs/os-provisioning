@@ -501,29 +501,29 @@ class importCommand extends Command {
 			/*
 			 * Email Import
 			 */
-			$emails = $km3->table(\DB::raw('tbl_email'))
-					->selectRaw ('*')
-					->where('vertrag', '=', $contract->id)
-					->get();
+			// $emails = $km3->table(\DB::raw('tbl_email'))
+			// 		->selectRaw ('*')
+			// 		->where('vertrag', '=', $contract->id)
+			// 		->get();
 
-			if (count($emails) != count($emails_new->where('contract_id', $contract->id)->all()))
-			{
-				foreach ($emails as $email)
-				{
-					Email::create([
-						'contract_id' 	=> $c->id,
-						'localpart' 	=> $email->alias,
-						'password' 		=> $email->passwort,
-						'blacklisting' 	=> $email->blacklisting,
-						'greylisting' 	=> $email->greylisting,
-						'forwardto' 	=> $email->forwardto ? : '',
-						]);
-				}
+			// if (count($emails) != count($emails_new->where('contract_id', $contract->id)->all()))
+			// {
+			// 	foreach ($emails as $email)
+			// 	{
+			// 		Email::create([
+			// 			'contract_id' 	=> $c->id,
+			// 			'localpart' 	=> $email->alias,
+			// 			'password' 		=> $email->passwort,
+			// 			'blacklisting' 	=> $email->blacklisting,
+			// 			'greylisting' 	=> $email->greylisting,
+			// 			'forwardto' 	=> $email->forwardto ? : '',
+			// 			]);
+			// 	}
 
-				// Log
-				if ($this->option('debug'))
-					$this->info ("MAIL: Added ".count($emails).' Addresses');
-			}
+			// 	// Log
+			// 	if ($this->option('debug'))
+			// 		$this->info ("MAIL: Added ".count($emails).' Addresses');
+			// }
 
 
 
