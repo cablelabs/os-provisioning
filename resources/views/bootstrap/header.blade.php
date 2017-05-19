@@ -11,7 +11,7 @@
 
       <!-- Theme -->
       <link href="{{asset('components/assets-admin/css/animate.min.css')}}" rel="stylesheet" />
-      <link href="{{asset('components/assets-admin/css/style.min.css')}}" rel="stylesheet" />
+      <link href="{{asset('components/assets-admin/css/style.css')}}" rel="stylesheet" />
       <link href="{{asset('components/assets-admin/css/style-responsive.min.css')}}" rel="stylesheet" />
       <link href="{{asset('components/assets-admin/css/theme/default.css')}}" rel="stylesheet" id="theme" />
 

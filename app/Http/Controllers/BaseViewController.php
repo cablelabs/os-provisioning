@@ -432,8 +432,7 @@ finish:
 			// array_push($ret, $lines);
 			foreach ($lines as $k => $line)
 			{
-				$name = $line['link'];
-				if (\Auth::user()->has_permissions(app()->getNamespace(), substr($name, 0, -6))) {
+				if (\Auth::user()->has_permissions(app()->getNamespace(), substr($line['link'], 0, -6))) {
 					$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
 					$ret['Global']['icon'] = 'fa-globe';
 					$ret['Global']['submenu'][$key] = $line;
@@ -516,7 +515,7 @@ finish:
 
 		// lambda function to extend the current breadcrumb by its predecessor
 		// code within this function originally written by Torsten
-		$extend_breadcrumb_path = function($breadcrumb_path, $model) {
+		$extend_breadcrumb_path = function($breadcrumb_path, $model, $i) {
 
 			// following is the original source code written by Torsten
 			$tmp = explode('\\',get_class($model));
@@ -534,9 +533,12 @@ finish:
 				$glue = '';
 			}
 			else {
-				$glue = ' > ';
+				$glue = '';
 			}
-			$breadcrumb_path = \HTML::linkRoute($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).$glue.$breadcrumb_path;
+			if ($i == 0)
+			$breadcrumb_path = "<li class='nav-tabs'>".\HTML::linkRoute($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).$breadcrumb_path."</li>";
+			else
+			$breadcrumb_path = "<li>".\HTML::linkRoute($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id)."</li>".$breadcrumb_path;
 
 			return $breadcrumb_path;
 		};
@@ -546,6 +548,7 @@ finish:
 
 			// Recursively parse all relations from view_var
 			$parent = $view_var;
+			$i = 0;
 			while ($parent)	{
 
 				if (
@@ -563,17 +566,19 @@ finish:
 					}
 
 					// add the current model to breadcrumbs
-					$breadcrumb_path = $extend_breadcrumb_path($breadcrumb_path, $parent);
+					$breadcrumb_path = $extend_breadcrumb_path($breadcrumb_path, $parent, $i);
 
 					// get view parent
 					$parent = $parent->view_belongs_to();
+					$i++;
 				}
 				else {
 					// $parent is a collection with more than one entry – this means we have a multiple parents
 					// we show breadcrumb paths for all of them, but then stopping further processing
 					// to avoid shredding the layout
 					foreach ($parent as $p) {
-						array_push($breadcrumb_paths, '… > '.$extend_breadcrumb_path($breadcrumb_path, $p));
+						array_push($breadcrumb_paths, $extend_breadcrumb_path($breadcrumb_path, $p));
+						$i++;
 					}
 
 					// don't add more predecessors
@@ -590,10 +595,10 @@ finish:
 		// 	$s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
 // =======
 		if (in_array($route_name, BaseController::get_config_modules())) {	// parse: Global Config requires own link
-			$breadcrumb_path_base = \HTML::linkRoute('Config.index', BaseViewController::translate_view('Global Configurations', 'Header'));
+			$breadcrumb_path_base = "<li class='active'>".\HTML::linkRoute('Config.index', BaseViewController::translate_view('Global Configurations', 'Header'))."</li>";
 		}
 		else {
-			$breadcrumb_path_base = Route::has($route_name.'.index') ? \HTML::linkRoute($route_name.'.index', $view_header).": " : '';
+			$breadcrumb_path_base = Route::has($route_name.'.index') ? '<li class="active">'.\HTML::linkRoute($route_name.'.index', $view_header)."</li>" : '';
 		}
 // d($breadcrumb_paths, $breadcrumb_path, $breadcrumb_path_base);
 

@@ -14,13 +14,15 @@
       </div>
       <!-- end mobile sidebar expand / collapse button -->
 
-      <div class="nav nav-pills col-md-6 col-sm-6 col-xs-6 p-t-5">
-        <h5>
-          @yield('content_top')
-        </h5>
-      </div>
+          <div class="col-md-6 col-sm-6 col-xs-8 p-t-5 tab-overflow">
+              <ul class="nav nav-pills m-t-5">
+                  <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="m-t-10"><i class="fa fa-arrow-left"></i></a></li>
+                  @yield('content_top')
+                  <li class="next-button"><a href="javascript:;" data-click="next-tab" class="m-t-10"><i class="fa fa-arrow-right"></i></a></li>
+              </ul>
+          </div>
 
-        <div class="row">
+        <div class="row col-md-3 navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <!-- global search form -->
               <li class="col-md-1 col-sm-2 col-xs-2 p-r-15">

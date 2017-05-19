@@ -14,7 +14,7 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute($route_name.'.index', $headline) }}
+	<li class="active">{{ HTML::linkRoute($route_name.'.index', $headline) }}</li>
 
 @stop
 
