@@ -46,7 +46,7 @@ class AuthController extends Controller {
 		$this->headline2 = $g->headline2;
 		$this->prefix = \BaseRoute::$admin_prefix; // url prefix
 		$this->login_page = null; // means jump to normal admin page
-		$this->image = 'main-pic-1.png';
+		$this->image = 'main-pic-1.jpg';
 
 		// @see: L5 documentation for authentication and "Accessing Specific Guard Instances"
 		// @see: config/auth.php
