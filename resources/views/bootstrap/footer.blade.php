@@ -45,9 +45,12 @@
   // Type anywhere to search in global search for keyword
   $(document).on('keypress', function (event) {
     if ($('*:focus').length == 0 && event.target.id != 'globalsearch'){
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if (code !=34 && code != 33) {
         $("#togglesearch").click();
         $("#globalsearch").focus().select();
         }
+    }
   });
 
     // Select2 Init - intelligent HTML select
