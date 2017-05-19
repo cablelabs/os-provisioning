@@ -47,9 +47,9 @@ class ContractController extends \BaseController {
 
 			// basic data
 			array('form_type' => 'text', 'name' => 'number', 'description' => $model->get_column_description('number'), 'help' => trans('helper.contract_number')),
-			array('form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2')),
-			array('form_type' => 'text', 'name' => 'number3', 'description' => $model->get_column_description('number3'), 'help' => 'If left empty contract number will be used as customer number, too.'),
-			array('form_type' => 'text', 'name' => 'number4', 'description' => $model->get_column_description('number4'), 'space' => 1),
+			array('form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2'), 'options' => ['class' => 'collapse']),
+			array('form_type' => 'text', 'name' => 'number3', 'description' => $model->get_column_description('number3'), 'help' => 'If left empty contract number will be used as customer number, too.', 'options' => ['class' => 'collapse']),
+			array('form_type' => 'text', 'name' => 'number4', 'description' => $model->get_column_description('number4'), 'space' => 1, 'options' => ['class' => 'collapse']),
 			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'department', 'description' => 'Department', 'create' => '1'),
 			array('form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options(), 'create' => '1'),

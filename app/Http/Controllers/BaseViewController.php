@@ -297,6 +297,15 @@ class BaseViewController extends Controller {
 				$additional_classes = $checkbox;
 			}
 
+			// handle collapsible classes
+			if (isset($options['class']) && $options['class'] == 'collapse')
+			{
+				$additional_classes['class'] = ' collapse';
+
+				// TODO: add the collapse button
+				// $s .= "<button type=\"button\" class=\"btn btn-info\" data-toggle=\"collapse\" data-target=\"#number2\">+</button>";
+			}
+
 			// Open Form Group
 			$s .= \Form::openGroup($field["name"], $field["description"], $additional_classes, $color);
 
