@@ -39,19 +39,19 @@ class Modem extends \BaseModel {
 	public function view_index_label()
 	{
 		$bsclass = 'success';
-		$status = $this->status.' dBmV';
+		$us_pwr = $this->us_pwr.' dBmV';
 
 		switch ($this->get_state('int'))
 		{
 			case 0:	$bsclass = 'success'; break; // online
 			case 1: $bsclass = 'warning'; break; // warning
 			case 2: $bsclass = 'warning'; break; // critical
-			case 3: $bsclass = 'danger'; $status = 'offline'; break; // offline
+			case 3: $bsclass = 'danger'; $us_pwr = 'offline'; break; // offline
 
 			default: $bsclass = 'danger'; break;
 		}
 
-		return ['index' => [$this->id, $this->mac, $this->name, $this->lastname, $this->city, $this->street, $status],
+		return ['index' => [$this->id, $this->mac, $this->name, $this->lastname, $this->city, $this->street, $us_pwr],
 		        'index_header' => ['Modem Number', 'MAC address', 'Name', 'Lastname', 'City', 'Street', 'US level'],
 		        'bsclass' => $bsclass,
 		        'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : '')];
@@ -399,7 +399,7 @@ class Modem extends \BaseModel {
 	/*
 	 * Refresh Modem State
 	 *
-	 * This function will update the modem->status field with the modem upstream power level
+	 * This function will update the modem upstream/downstream power level/SNR
 	 * if online, otherwise it will set the value to 0.
 	 *
 	 * NOTE: This function will be called via artisan command modem-refresh. This command
@@ -430,7 +430,11 @@ class Modem extends \BaseModel {
 
 		// OID Array to parse
 		// Style: ['modem table field 1' => 'oid1', 'modem table field 2' => 'oid2, ..']
-		$oids = ['status' => '.1.3.6.1.2.1.10.127.1.2.2.1.3.2'];
+		$oids = ['us_pwr' => '.1.3.6.1.2.1.10.127.1.2.2.1.3.2',
+				 /*'us_snr' => 'not possible using modem oids',*/
+				 'ds_pwr' => '.1.3.6.1.2.1.10.127.1.1.1.1.6',
+				 'ds_snr' => '.1.3.6.1.2.1.10.127.1.1.4.1.5',
+				 ];
 
 		$this->observer_disable();
 
@@ -467,7 +471,7 @@ class Modem extends \BaseModel {
 	/**
 	 * Refresh Modem State using cached value of Cacti
 	 *
-	 * This function will update the modem->status field with the modem upstream power level
+	 * This function will update the upstream/downstream power level/SNR
 	 * if online. Because the last value of Cacti is used, the update is much quicker and doesn't
 	 * generate a superfluous SNMP request.
 	 *
@@ -516,7 +520,13 @@ class Modem extends \BaseModel {
 
 		$keys = explode(' ', trim(array_shift($output)));
 		$vals = explode(' ', trim(explode(':', array_pop($output))[1]));
-		$res = array_combine($keys, $vals)['maxUsPow'];
+		$arr = array_combine($keys, $vals);
+
+		$res = ['us_pwr' => $arr['avgUsPow'],
+				'us_snr' => $arr['avgUsSNR'],
+				'ds_pwr' => $arr['avgDsPow'],
+				'ds_snr' => $arr['avgDsSNR'],
+				];
 
 		$status = \DB::connection('mysql-cacti')->table('host')
 			->where('description', '=', $this->hostname)
@@ -524,10 +534,11 @@ class Modem extends \BaseModel {
 		// modem is offline, if we use last value of cacti instead of setting it
 		// to zero, it would seem as if the modem is still online
 		if($status == 1)
-			$res = 0;
+			array_walk($res, function(&$val) {$val = 0;} );
 
 		$this->observer_disable();
-		$this->status = $res;
+		foreach($res as $key => $val)
+			$this->{$key} = round($val);
 		$this->save();
 
 		return $res;
@@ -542,13 +553,13 @@ class Modem extends \BaseModel {
 	 */
 	public function get_state($return_type = 'string')
 	{
-		if ($this->status == 0)
+		if ($this->us_pwr == 0)
 			if ($return_type == 'string') return 'offline'; else return 3;
 
-		if ($this->status > \Modules\HfcCustomer\Entities\ModemHelper::$single_critical_us)
+		if ($this->us_pwr > \Modules\HfcCustomer\Entities\ModemHelper::$single_critical_us)
 			if ($return_type == 'string') return 'critical'; else return 2;
 
-		if ($this->status > \Modules\HfcCustomer\Entities\ModemHelper::$single_warning_us)
+		if ($this->us_pwr > \Modules\HfcCustomer\Entities\ModemHelper::$single_warning_us)
 			if ($return_type == 'string') return 'warning'; else return 1;
 
 		if ($return_type == 'string') return 'ok'; else return 0;

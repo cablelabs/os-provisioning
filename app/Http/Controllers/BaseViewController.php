@@ -721,8 +721,14 @@ finish:
 	{
 		if ($val < $limit[0] || (isset($limit[3]) && $val > $limit[3]))
 			return 2;
-		if ($val >= $limit[1] && (isset($limit[2]) && $val <= $limit[2]))
-			return 0;
+
+		if ($val >= $limit[1]) {
+			if (!isset($limit[2]))
+				return 0;
+			if ($val <= $limit[2])
+				return 0;
+		}
+
 		return 1;
 	}
 
@@ -739,6 +745,10 @@ finish:
 	public static function get_quality_color($dir, $entity, $values)
 	{
 		$ret = [];
+		if($entity == 'snr' && $dir == 'ds')
+			$entity = '256qam';
+		if($entity == 'snr' && $dir == 'us')
+			$entity = '64qam';
 
 		foreach ($values as $val) {
 			switch ($entity) {
