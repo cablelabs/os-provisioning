@@ -25,27 +25,48 @@
        -moz-animation: @animation;
             animation: @animation;
 }
-.generate-button-styling(@buttonClassName; @defaultColor; @hoverColor;) {
+.generate-button-styling(@buttonClassName; @buttonTextColor; @defaultColor; @hoverColor; @btnGroupBorderColor) {
     .btn.@{buttonClassName} {
-        color: #fff;
+        color: @buttonTextColor;
         background: @defaultColor;
         border-color: @defaultColor;
         
-        &:hover,
-        &:focus,
-        &:active,
-        &.active {
+        &:hover, 
+        &:focus, 
+        &:active, 
+        &:active:focus,
+        &.focus,
+        &.active,
+        &.active.focus, 
+        &.active:focus, 
+        &.active:hover, 
+        &:active.focus, 
+        &:active:focus, 
+        &:active:hover {
             background: @hoverColor;
             border-color: @hoverColor;
         }
-        
     }
-    .open .dropdown-toggle.@{buttonClassName} {
+    .open > .dropdown-toggle.@{buttonClassName},
+    .open > .dropdown-toggle.@{buttonClassName}.focus, 
+    .open > .dropdown-toggle.@{buttonClassName}:focus, 
+    .open > .dropdown-toggle.@{buttonClassName}:hover  {
         background: @hoverColor;
         border-color: @hoverColor;
     }
+    .btn.@{buttonClassName}.disabled, 
+    .btn.@{buttonClassName}[disabled], 
+    fieldset[disabled] .btn@{buttonClassName},
+    .btn.@{buttonClassName}.active,
+    .btn.@{buttonClassName}.active.focus, 
+    .btn.@{buttonClassName}.active:hover,
+    .btn.@{buttonClassName}.active:focus,
+    .btn.@{buttonClassName}:active:focus, 
+    .btn.@{buttonClassName}:active:hover {
+        border-color: @btnGroupBorderColor;
+    }
     .btn-group .btn.@{buttonClassName}:not(.active) + .btn.@{buttonClassName},
     .input-group-btn .btn.@{buttonClassName}:not(.active) + .btn.@{buttonClassName} {
-        border-left-color: @hoverColor;
+        border-left-color: @btnGroupBorderColor;
     }
 }

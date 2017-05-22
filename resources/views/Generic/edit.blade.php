@@ -5,11 +5,11 @@
 @param $view_var: the object we are editing
 @param $form_update: the update route which should be called when clicking save
 @param $form_path: the form view to be displayed inside this blade (mostly Generic.edit)
-
+@param $panel_right: the page hyperlinks returned from prepare_tabs() or prep_right_panels()
 @param $relations: the relations array() returned by prep_right_panels() in BaseViewController
 
 --}}
-@extends ('Layout.split')
+@extends ('Layout.split-nopanel')
 
 @section('content_top')
 
@@ -31,6 +31,8 @@
 
 
 <?php $api = App\Http\Controllers\BaseViewController::get_view_has_many_api_version($relations) ?>
+
+<?php //d($edit_left_md_size, $edit_right_md_size); ?>
 
 @section('content_right')
 
@@ -82,8 +84,7 @@
 		<!-- The Bootstap Panel to include -->
 		@include ('bootstrap.panel', array ('content' => "content_$i",
 											'view_header' => \App\Http\Controllers\BaseViewController::translate_view('Assigned', 'Header').' '.\App\Http\Controllers\BaseViewController::translate_view($view, 'Header' , 2),
-											'md' => 3))
-
+											'md' => isset($edit_right_md_size) ? $edit_right_md_size : 4))
 
 	@endforeach
 

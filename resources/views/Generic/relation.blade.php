@@ -22,6 +22,32 @@ Relation Blade is used inside a Panel Element to display relational class object
 @endif
 
 
+{{-- man can use the session key “tmp_info_above_relations” to show additional data above the form for one screen --}}
+{{-- simply use Session::push('tmp_info_above_relations', 'your additional data') in your observers or where you want --}}
+@if (Session::has('tmp_info_above_relations'))
+	@DivOpen(12)
+	<?php
+		$tmp_info_above_relations = Session::get('tmp_info_above_relations');
+
+		// for better handling: transform strings to array (containing one element)
+		if (is_string($tmp_info_above_relations)) {
+			$tmp_info_above_relations = [$tmp_info_above_relations];
+		};
+	?>
+	@foreach($tmp_info_above_relations as $info)
+		<div style="font-weight: bold; padding-top: 0px; padding-left: 10px; margin-bottom: 5px; border-left: solid 2px #ffaaaa">
+			{{ $info }}
+		</div>
+	@endforeach
+	<br>
+	<?php
+		// as this shall not be shown on later screens: remove from session
+		// we could use Session::flash for this behavior – but this supports no arrays…
+		Session::forget('tmp_info_above_relations'); ?>
+	@DivClose()
+@endif
+
+
 <!-- Create Button: (With hidden add fields if required) -->
 @if (!isset($options['hide_create_button']))
 	@DivOpen(12)
@@ -37,7 +63,19 @@ Relation Blade is used inside a Panel Element to display relational class object
 				@endif
 			@endforeach
 
-		{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Create '.$view, 'Button'), ['style' => 'simple']) }} <!-- .\App\Http\Controllers\BaseViewController::translate($view) -->
+		<?php
+			// check if default create button text shall be overwritten
+			if (!isset($options['create_button_text'])) {
+				$create_button_text = \App\Http\Controllers\BaseViewController::translate_view('Create '.$view, 'Button');
+			}
+			else {
+				$create_button_text = trans($options['create_button_text']);
+			}
+		?>
+    <button class="btn btn-primary m-b-15" style="simple">
+      <i class="fa fa-plus fa-lg m-r-10" aria-hidden="true"></i>
+      {{ $create_button_text }}
+    </button>
 		{{ Form::close() }}
 
 	@DivClose()
@@ -54,7 +92,7 @@ Relation Blade is used inside a Panel Element to display relational class object
 			@foreach ($relation as $rel_elem)
 				<tr class="{{isset ($rel_elem->view_index_label()['bsclass']) ? $rel_elem->view_index_label()['bsclass'] : ''}}">
 					<td> {{ Form::checkbox('ids['.$rel_elem->id.']', 1, null, null, ['style' => 'simple']) }} </td>
-					<td> {{ HTML::linkRoute($route.'.'.$method, is_array($rel_elem->view_index_label()) ? $rel_elem->view_index_label()['header'] : $rel_elem->view_index_label(), $rel_elem->id) }} </td>
+					<td> {{$rel_elem->view_icon()}}	{{ HTML::linkRoute($route.'.'.$method, is_array($rel_elem->view_index_label()) ? $rel_elem->view_index_label()['header'] : $rel_elem->view_index_label(), $rel_elem->id) }} </td>
 				</tr>
 			@endforeach
 		</table>
@@ -62,7 +100,20 @@ Relation Blade is used inside a Panel Element to display relational class object
 
 		<!-- Delete Button -->
 		@if (!isset($options['hide_delete_button']) && isset($relation[0]))
-			{{ Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button'), ['!class' => 'btn btn-danger', 'style' => 'simple']) }}
+
+			<?php
+				// check if default delete button text shall be overwritten
+				if (!isset($options['delete_button_text'])) {
+					$delete_button_text = \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button');
+				}
+				else {
+					$delete_button_text = trans($options['delete_button_text']);
+				}
+			?>
+      <button class="btn btn-danger btn-primary m-r-5 m-t-15" style="simple">
+          <i class="fa fa-trash-o fa-lg m-r-10" aria-hidden="true"></i>
+          {{ $delete_button_text }}
+      </button>
 		@endif
 
 	{{ Form::close() }}

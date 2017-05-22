@@ -47,17 +47,22 @@ class ContractController extends \BaseController {
 
 			// basic data
 			array('form_type' => 'text', 'name' => 'number', 'description' => $model->get_column_description('number'), 'help' => trans('helper.contract_number')),
-			array('form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2')),
-			array('form_type' => 'text', 'name' => 'number3', 'description' => $model->get_column_description('number3'), 'help' => 'If left empty contract number will be used as customer number, too.'),
-			array('form_type' => 'text', 'name' => 'number4', 'description' => $model->get_column_description('number4'), 'space' => 1),
+			array('form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2')), // 'options' => ['class' => 'collapse']),
+			array('form_type' => 'text', 'name' => 'number3', 'description' => $model->get_column_description('number3'), 'help' => 'If left empty contract number will be used as customer number, too.'), // 'options' => ['class' => 'collapse']),
+			array('form_type' => 'text', 'name' => 'number4', 'description' => $model->get_column_description('number4'), 'space' => 1), // 'options' => ['class' => 'collapse']),
 			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'department', 'description' => 'Department', 'create' => '1'),
 			array('form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options(), 'create' => '1'),
 			array('form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic Degree', 'value' => $model->get_academic_degree_options()),
 			array('form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => '1', 'space' => '1'),
-			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1'),
-			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => '1'),
+			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1', 'html' =>
+				"<div class=col-md-12 style='background-color:whitesmoke'>
+				<div class=form-group><label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street and House Number</label>
+				<div class=col-md-5><input class=form-control name=street type=text value='".$model['street']."' id=street style='background-color:whitesmoke'></div>"),
+			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => '1', 'html' =>
+				"<div class=col-md-2><input class=form-control name=house_number type=text value='".$model['house_number']."' id=house_number style='background-color:whitesmoke'></div>
+				</div></div>"),
 			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => '1'),
@@ -123,7 +128,7 @@ class ContractController extends \BaseController {
 	 * Get all management jobs for Envia
 	 *
 	 * @author Patrick Reichel
-	 * @param $model current phonenumber object
+	 * @param $contract current contract object
 	 * @return array containing linktexts and URLs to perform actions against REST API
 	 */
 	public static function _get_envia_management_jobs($contract) {

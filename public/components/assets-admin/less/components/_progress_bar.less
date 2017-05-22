@@ -2,7 +2,7 @@
 
 .progress {
     .box-shadow(none);
-    background: #e2e7eb;
+    background: @grey_300;
 }
 .progress-xs {
     height: 5px;
@@ -23,21 +23,22 @@
     line-height: 30px;
 }
 .progress-bar {
-    .box-shadow(none);
-    background: @blue;
+    background: @blue_500;
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }
 .progress-bar.progress-bar-success {
-    background-color: @green;
+    background-color: @teal_500;
 }
 .progress-bar.progress-bar-info {
-    background-color: @aqua;
+    background-color: @light_blue_500;
 }
 .progress-bar.progress-bar-warning {
-    background-color: @orange;
+    background-color: @orange_500;
 }
 .progress-bar.progress-bar-danger {
-    background-color: @red;
+    background-color: @red_500;
 }
 .progress-bar.progress-bar-inverse {
-    background-color: @black;
+    background-color: @grey_900;
 }

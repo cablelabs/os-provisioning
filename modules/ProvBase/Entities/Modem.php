@@ -7,6 +7,7 @@ use Log;
 use Exception;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\ProvBase;
+use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class Modem extends \BaseModel {
 
@@ -34,23 +35,29 @@ class Modem extends \BaseModel {
 		return 'Modems';
 	}
 
+	// View Icon
+	public static function view_icon()
+	{
+		return '<i class="fa fa-hdd-o"></i>';
+	}
+
 	// link title in index view
 	public function view_index_label()
 	{
 		$bsclass = 'success';
-		$status = $this->status.' dBmV';
+		$us_pwr = $this->us_pwr.' dBmV';
 
 		switch ($this->get_state('int'))
 		{
 			case 0:	$bsclass = 'success'; break; // online
 			case 1: $bsclass = 'warning'; break; // warning
 			case 2: $bsclass = 'warning'; break; // critical
-			case 3: $bsclass = 'danger'; $status = 'offline'; break; // offline
+			case 3: $bsclass = 'danger'; $us_pwr = 'offline'; break; // offline
 
 			default: $bsclass = 'danger'; break;
 		}
 
-		return ['index' => [$this->id, $this->mac, $this->name, $this->lastname, $this->city, $this->street, $status],
+		return ['index' => [$this->id, $this->mac, $this->name, $this->lastname, $this->city, $this->street, $us_pwr],
 		        'index_header' => ['Modem Number', 'MAC address', 'Name', 'Lastname', 'City', 'Street', 'US level'],
 		        'bsclass' => $bsclass,
 		        'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : '')];
@@ -122,10 +129,11 @@ class Modem extends \BaseModel {
 		return null;
 	}
 
+	// TODO: rename to device - search for all places where this function is used
 	public function tree()
 	{
-		if (\PPModule::is_active('HfcBase'))
-			return $this->belongsTo('Modules\HfcBase\Entities\Tree');
+		if (\PPModule::is_active('HfcReq'))
+			return $this->belongsTo('Modules\HfcReq\Entities\NetElement');
 
 		return null;
 	}
@@ -193,7 +201,13 @@ class Modem extends \BaseModel {
 	 */
 	private function generate_cm_dhcp_entry()
 	{
-			return 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'"; }'."\n";
+		$ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
+
+		if(count($this->mtas))
+			$ret .= ' option ccc.dhcp-server-1 '.ProvBase::first()->provisioning_server.';';
+
+		$ret .= "}\n";
+		return $ret;
 	}
 
 	private function generate_cm_dhcp_entry_pub()
@@ -344,24 +358,45 @@ class Modem extends \BaseModel {
 	 */
 	public function restart_modem()
 	{
-		$config = ProvBase::first();
-		$community_rw = $config->rw_community;
-		$domain = $config->domain_name;
-
 		// Log
 		Log::info('restart modem '.$this->hostname);
 
 		// if hostname cant be resolved we dont want to have an php error
 		try
 		{
-			// restart modem - NOTE: OID from MIB: DOCS-CABLE-DEV-MIB::docsDevResetNow
-			snmpset($this->hostname.'.'.$domain, $community_rw, "1.3.6.1.2.1.69.1.1.3.0", "i", "1", 300000, 1);
+			$config = ProvBase::first();
+			$fqdn = $this->hostname.'.'.$config->domain_name;
+			$cmts = ProvMonController::get_cmts(gethostbyname($fqdn));
+			$mac_oid = implode('.', array_map('hexdec', explode(':', $this->mac)));
+
+			if($cmts && $cmts->company == 'Cisco') {
+				// delete modem entry in cmts - CISCO-DOCS-EXT-MIB::cdxCmCpeDeleteNow
+				snmpset($cmts->ip, $cmts->get_rw_community(), '1.3.6.1.4.1.9.9.116.1.3.1.1.9.'.$mac_oid, 'i', '1', 300000, 1);
+			}
+			elseif($cmts && $cmts->company == 'Casa') {
+				// reset modem via cmts, deleting is not possible - CASA-CABLE-CMCPE-MIB::casaCmtsCmCpeResetNow
+				snmpset($cmts->ip, $cmts->get_rw_community(), '1.3.6.1.4.1.20858.10.12.1.3.1.7.'.$mac_oid, 'i', '1', 300000, 1);
+			}
+			else {
+				// restart modem - DOCS-CABLE-DEV-MIB::docsDevResetNow
+				snmpset($fqdn, $config->rw_community, '1.3.6.1.2.1.69.1.1.3.0', 'i', '1', 300000, 1);
+			}
 		}
 		catch (Exception $e)
 		{
 			// only ignore error with this error message (catch exception with this string)
-			if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmpset(): No response from") !== false)))
+			if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmpset(): No response from") !== false))) {
 				\Session::flash('error', 'Could not restart Modem! (offline?)');
+			}
+			elseif(strpos($e->getMessage(), "noSuchName") !== false) {
+				// this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
+			}
+			else {
+				// Inform and log for all other exceptions
+				\Session::push('tmp_info_above_form', 'Unexpected exception: '.$e->getMessage());
+				\Log::error("Unexpected exception restarting modem ".$this->id." (".$this->mac."): ".$e->getMessage()." => ".$e->getTraceAsString());
+				\Session::flash('error', '');
+			}
 		}
 
 	}
@@ -370,7 +405,7 @@ class Modem extends \BaseModel {
 	/*
 	 * Refresh Modem State
 	 *
-	 * This function will update the modem->status field with the modem upstream power level
+	 * This function will update the modem upstream/downstream power level/SNR
 	 * if online, otherwise it will set the value to 0.
 	 *
 	 * NOTE: This function will be called via artisan command modem-refresh. This command
@@ -401,7 +436,11 @@ class Modem extends \BaseModel {
 
 		// OID Array to parse
 		// Style: ['modem table field 1' => 'oid1', 'modem table field 2' => 'oid2, ..']
-		$oids = ['status' => '.1.3.6.1.2.1.10.127.1.2.2.1.3.2'];
+		$oids = ['us_pwr' => '.1.3.6.1.2.1.10.127.1.2.2.1.3.2',
+				 /*'us_snr' => 'not possible using modem oids',*/
+				 'ds_pwr' => '.1.3.6.1.2.1.10.127.1.1.1.1.6',
+				 'ds_snr' => '.1.3.6.1.2.1.10.127.1.1.4.1.5',
+				 ];
 
 		$this->observer_disable();
 
@@ -438,7 +477,7 @@ class Modem extends \BaseModel {
 	/**
 	 * Refresh Modem State using cached value of Cacti
 	 *
-	 * This function will update the modem->status field with the modem upstream power level
+	 * This function will update the upstream/downstream power level/SNR
 	 * if online. Because the last value of Cacti is used, the update is much quicker and doesn't
 	 * generate a superfluous SNMP request.
 	 *
@@ -487,7 +526,13 @@ class Modem extends \BaseModel {
 
 		$keys = explode(' ', trim(array_shift($output)));
 		$vals = explode(' ', trim(explode(':', array_pop($output))[1]));
-		$res = array_combine($keys, $vals)['maxUsPow'];
+		$arr = array_combine($keys, $vals);
+
+		$res = ['us_pwr' => $arr['avgUsPow'],
+				'us_snr' => $arr['avgUsSNR'],
+				'ds_pwr' => $arr['avgDsPow'],
+				'ds_snr' => $arr['avgDsSNR'],
+				];
 
 		$status = \DB::connection('mysql-cacti')->table('host')
 			->where('description', '=', $this->hostname)
@@ -495,10 +540,11 @@ class Modem extends \BaseModel {
 		// modem is offline, if we use last value of cacti instead of setting it
 		// to zero, it would seem as if the modem is still online
 		if($status == 1)
-			$res = 0;
+			array_walk($res, function(&$val) {$val = 0;} );
 
 		$this->observer_disable();
-		$this->status = $res;
+		foreach($res as $key => $val)
+			$this->{$key} = round($val);
 		$this->save();
 
 		return $res;
@@ -513,13 +559,13 @@ class Modem extends \BaseModel {
 	 */
 	public function get_state($return_type = 'string')
 	{
-		if ($this->status == 0)
+		if ($this->us_pwr == 0)
 			if ($return_type == 'string') return 'offline'; else return 3;
 
-		if ($this->status > \Modules\HfcCustomer\Entities\ModemHelper::$single_critical_us)
+		if ($this->us_pwr > \Modules\HfcCustomer\Entities\ModemHelper::$single_critical_us)
 			if ($return_type == 'string') return 'critical'; else return 2;
 
-		if ($this->status > \Modules\HfcCustomer\Entities\ModemHelper::$single_warning_us)
+		if ($this->us_pwr > \Modules\HfcCustomer\Entities\ModemHelper::$single_warning_us)
 			if ($return_type == 'string') return 'warning'; else return 1;
 
 		if ($return_type == 'string') return 'ok'; else return 0;
@@ -623,6 +669,33 @@ class Modem extends \BaseModel {
 	}
 
 
+	/**
+	 * Check if modem has phonenumbers attached
+	 *
+	 * @author Patrick Reichel
+	 *
+	 * @return True if phonenumbers attached to one of the modem's MTA, else False
+	 */
+	public function has_phonenumbers_attached() {
+
+		// if there is no voip module ⇒ there can be no numbers
+		if (!\PPModule::is_active('provvoip')) {
+			return False;
+		}
+
+		foreach ($this->mtas as $mta) {
+			foreach ($mta->phonenumbers->all() as $phonenumber) {
+				return True;
+			}
+		}
+
+		// no numbers found
+		return False;
+
+
+	}
+
+
 	/*
 	 * Return Last Geocoding State / ERROR
 	 */
@@ -644,6 +717,114 @@ class Modem extends \BaseModel {
 	{
 		$this->observer_enabled = false;
 	}
+
+
+	/**
+	 * Before deleting a modem and all children we have to check some things
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function delete() {
+
+		// deletion of modems with attached phonenumbers is not allowed with enabled Envia module
+		// prevent user from (recursive and implicite) deletion of phonenumbers before termination at Envia!!
+		// we have to check this here as using ModemObserver::deleting() with return false does not prevent the monster from deleting child model instances!
+		if (\PPModule::is_active('ProvVoipEnvia')) {
+			if ($this->has_phonenumbers_attached()) {
+
+				// check from where the deletion request has been triggered and set the correct var to show information
+				$prev = explode('?', \URL::previous())[0];
+				$prev = \Str::lower($prev);
+				$msg = "You are not allowed to delete a modem with attached phonenumbers!";
+				if (\Str::endsWith($prev, 'edit')) {
+					\Session::push('tmp_info_above_relations', $msg);
+				}
+				elseif (\Str::endsWith($prev, 'modem')) {
+					\Session::push('tmp_info_above_index_list', $msg);
+				}
+
+				return false;
+			}
+		}
+
+		// when arriving here: start the standard deletion procedure
+		return parent::delete();
+	}
+
+	/**
+	 * Calculates the great-circle distance between this and $modem, with
+	 * the Haversine formula.
+	 *
+	 * see https://stackoverflow.com/questions/514673/how-do-i-open-a-file-from-line-x-to-line-y-in-php#tab-top
+	 *
+	 * @return float Distance between points in [m] (same as earthRadius)
+	 */
+
+	private function _haversine_great_circle_distance($modem)
+	{
+		// convert from degrees to radians
+		$latFrom = deg2rad($this->y);
+		$lonFrom = deg2rad($this->x);
+		$latTo = deg2rad($modem->y);
+		$lonTo = deg2rad($modem->x);
+
+		$latDelta = $latTo - $latFrom;
+		$lonDelta = $lonTo - $lonFrom;
+
+		$angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) + cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+
+		// earth radius
+		return $angle * 6371000;
+	}
+
+	/**
+	 * Clean modem from all Envia related data – call this e.g. if you delete the last number from this modem.
+	 * We have to do this to avoid problems in case we want to install this modem at another customer
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function remove_envia_related_data() {
+
+		// first: check if envia module is enabled
+		// if not: do nothing – this database fields could be in use by another voip provider module!
+		if (\PPModule::is_active('ProvVoipEnvia')) {
+			return;
+		}
+
+		$this->contract_external_id = NULL;
+		$this->contract_ext_creation_date = NULL;
+		$this->contract_ext_termination_date = NULL;
+		$this->installation_address_change_date = NULL;
+		$this->save();
+
+
+	}
+
+	public function proximity_search($radius) {
+		$ids = 'id = 0';
+		foreach (Modem::all() as $modem)
+			if ($this->_haversine_great_circle_distance($modem) < $radius)
+				$ids .= " OR id = $modem->id";
+		return $ids;
+	}
+
+	/**
+	 * Check if modem actually needs to be restarted. This is only the case if a
+	 * relevant attribute was modified.
+	 *
+	 * @author Ole Ernst
+	 */
+	public function needs_restart() {
+		$diff = array_diff_assoc($this->getAttributes(), $this->getOriginal());
+
+		return array_key_exists('contract_id', $diff)
+			|| array_key_exists('mac', $diff)
+			|| array_key_exists('public', $diff)
+			|| array_key_exists('network_access', $diff)
+			|| array_key_exists('configfile_id', $diff)
+			|| array_key_exists('qos_id', $diff);
+	}
+
 }
 
 
@@ -657,14 +838,41 @@ class Modem extends \BaseModel {
  */
 class ModemObserver
 {
+
 	public function created($modem)
 	{
 		$modem->hostname = 'cm-'.$modem->id;
 		$modem->save();	 // forces to call the updating() and updated() method of the observer !
+		if (\PPModule::is_active ('ProvMon'))
+			\Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
 	}
 
 	public function updating($modem)
 	{
+
+		// reminder: on active Envia module: moving modem with phonenumbers attached to other contract is not allowed!
+		// check if this is running if you decide to implement moving of modems to other contracts
+		// watch Ticket LAR-106
+		if (\PPModule::is_active('ProvVoipEnvia')) {
+			if (
+				// updating is also called on create – so we have to check this
+				(!$modem->wasRecentlyCreated)
+				&&
+				($modem['original']['contract_id'] != $modem->contract_id)
+			) {
+				if ($modem->has_phonenumbers_attached) {
+					// returning false should cancel the updating: verify this! There has been some problems with deleting modems – we had to put the logic in Modem::delete() probably caused by our Base* classes…
+					// see: http://laravel-tricks.com/tricks/cancelling-a-model-save-update-delete-through-events
+					return false;
+				}
+				elseif ($modem->contract_external_id) {
+					// if there are any Envia data: the number(s) are probably moved only temporary
+					// here we have to think about the references to this modem in all related EnviaOrders (maybe all the numbers have been terminated and then deleted from our database – but we still have the orders related to this numbers and also to this modem
+					return false;
+				}
+			}
+		}
+
 		if (!$modem->observer_enabled)
 			return;
 
@@ -676,7 +884,7 @@ class ModemObserver
 		// Refresh MPS rules
 		// Note: does not perform a save() which could trigger observer.
 		if (\PPModule::is_active('HfcCustomer'))
-			$modem->tree_id = \Modules\Hfccustomer\Entities\Mpr::refresh($modem->id);
+			$modem->netelement_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem->id);
 	}
 
 	public function updated($modem)
@@ -684,13 +892,16 @@ class ModemObserver
 		if (!$modem->observer_enabled)
 			return;
 
-		// only restart on system relevant changes ? Then it's not that easy to restart modem anymore
-		$modem->restart_modem();
+		if($modem->needs_restart() || \Input::has('_force_restart'))
+			$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
 
-		if (\PPModule::is_active ('ProvMon'))
-			\Artisan::call('nms:cacti');
+		// ATTENTION:
+		// If we ever think about moving modems to other contracts we have to delete Envia related stuff, too –
+		// check contract_ext* and installation_address_change_date
+		// moving then should only be allowed without attached phonenumbers and terminated Envia contract!
+		// cleaner in Patrick's opinion would be to delete and re-create the modem
 	}
 
 	public function deleted($modem)

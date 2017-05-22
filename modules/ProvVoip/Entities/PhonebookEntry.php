@@ -47,7 +47,6 @@ class PhonebookEntry extends \BaseModel {
 		if (is_null(static::$config)) {
 
 			// we have to use the raw scanner because of the special characters like “(”…
-			/* $config = parse_ini_file('/storage/app/config/provvoip/phonebook_entry__config.ini', true, INI_SCANNER_RAW); */
 			$config = parse_ini_string(\Storage::get('config/provvoip/phonebook_entry__config.ini'), true, INI_SCANNER_RAW);
 
 			// with using the raw scanner type we have to convert some values
@@ -167,7 +166,7 @@ class PhonebookEntry extends \BaseModel {
 	 *
 	 * @author Patrick Reichel
 	 */
-	public function get_options_from_list($section) {
+	public function get_options_from_list($section, $with_placeholder=False) {
 
 		$options = array();
 
@@ -175,6 +174,12 @@ class PhonebookEntry extends \BaseModel {
 			static::read_config();
 		};
 
+		// placeholder
+		if ($with_placeholder) {
+			$options[''] = 'n/a – to be set';
+		}
+
+		// the real options
 		foreach (static::$config[$section]['in_list'] as $option) {
 			$options[$option] = $option.' – '.static::$config[$section][$option];
 		}

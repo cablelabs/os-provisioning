@@ -1,6 +1,12 @@
 <?php
 
-	return 		[['Devices' => 'Device.index'],
-				['DeviceTypes' => 'DeviceType.index'],
-				['SnmpMibs' => 'SnmpMib.index'],
-				['SnmpValues' => 'SnmpValue.index']];
+return array(
+	'HFC' =>
+		['MibFile' =>
+			['link' => 'MibFile.index',
+			'icon'	=> 'fa-file-o']
+		// 	'SnmpValues' =>
+		// 	['link' => 'SnmpValue.index',
+		// 	'icon'	=> 'fa-']
+		]
+);

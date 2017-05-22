@@ -1,14 +1,11 @@
 /* Form Elements */
 
 .form-control {
-    border: 1px solid #ccd0d4;
-    font-size: 12px;
-    .border-radius(3px);
     .box-shadow(none);
 }
 .form-control.input-white {
-    background: #fff;
-    border-color: #fff;
+    background: @white;
+    border-color: @white;
 }
 .form-control.input-white:focus {
     .box-shadow(none);
@@ -16,21 +13,33 @@
 .form-control[disabled], 
 .form-control[readonly],
 fieldset[disabled] .form-control {
-    background: #e5e9ed;
+    background: @grey_300;
     .opacity(0.6);
 }
 .form-control[disabled]:focus, 
 .form-control[readonly]:focus,
 fieldset[disabled] .form-control:focus {
-    .box-shadow(none);
     border: 1px solid #ccd0d4;
+    .box-shadow(none);
 }
 .form-control:focus {
-    border-color: #9fa2a5;
+    border-color: @grey_700;
     .box-shadow(none);
 }
+.form-control.input-inline {
+    display: inline;
+    width: auto;
+    padding: 0 7px;
+}
+.form-control.input-xs {
+    height: 20px;
+}
+.form-control.input-lg {
+    font-size: 14px;
+    .border-radius(2px);
+}
 .form-horizontal.form-bordered .form-group {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid @grey_200;
     margin: 0;
 }
 .form-horizontal.form-bordered .form-group:last-child {
@@ -43,10 +52,10 @@ fieldset[disabled] .form-control:focus {
     padding: 15px;
 }
 .form-horizontal.form-bordered .form-group > div {
-    border-left: 1px solid #eee;
+    border-left: 1px solid @grey_200;
 }
 .form-horizontal.form-bordered .form-group > .control-label {
-    border-right: 1px solid #eee;
+    border-right: 1px solid @grey_200;
     margin-right: -1px;
 }
 .form-horizontal.form-bordered .has-feedback .form-control-feedback {
@@ -70,13 +79,13 @@ label {
 .has-success .radio-inline, 
 .has-success .checkbox-inline,
 .has-success .form-control-feedback {
-    color: @green;
+    color: @teal_500;
 }
 .has-success .form-control {
-    border-color: @green;
+    border-color: @teal_500;
 }
 .has-success .form-control:focus {
-    border-color: @dark_green;
+    border-color: #008a8a;
 }
 .has-warning .help-block, 
 .has-warning .control-label, 
@@ -85,13 +94,13 @@ label {
 .has-warning .radio-inline, 
 .has-warning .checkbox-inline,
 .has-warning .form-control-feedback {
-    color: @orange;
+    color: @orange_500;
 }
 .has-warning .form-control {
-    border-color: @orange;
+    border-color: @orange_500;
 }
 .has-warning .form-control:focus {
-    border-color: @dark_orange;
+    border-color: #c47d15;
 }
 .has-error .help-block, 
 .has-error .control-label, 
@@ -100,29 +109,34 @@ label {
 .has-error .radio-inline, 
 .has-error .checkbox-inline,
 .has-error .form-control-feedback {
-    color: @red;
+    color: @red_500;
 }
 .has-error .form-control {
-    border-color: @red;
+    border-color: @red_500;
 }
 .has-error .form-control:focus {
-    border-color: @dark_red;
+    border-color: #cc4946;
 }
 .form-control-feedback {
     line-height: 34px;
 }
-
-select.form-control {
-    border-color: #ccd0d4;
-}
-select[multiple].form-control {
-    border-color: #ccd0d4;
-}
 .input-group-addon {
-    background: #e2e7eb;
+    background: @grey_300;
     border: none;
 }
 legend {
     padding-bottom: 3px;
-    border-bottom: 1px solid #e2e7eb;
+    border-bottom: 1px solid @grey_300;
+    color: @grey_900;
+}
+.form-control.without-border {
+    border: none;
+}
+.form-control.inverse-mode {
+    background: url(../img/transparent/white-0.2.png);
+    background: rgba(255,255,255,0.2);
+    color: @white;
+}
+.input-group-addon:focus {
+    outline: none !important;
 }

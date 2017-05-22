@@ -1,7 +1,7 @@
 /* Page Options */
 
 .page-header-fixed {
-    padding-top: 54px;
+    padding-top: 60px;
 }
 .page-without-sidebar .content {
     margin-left: 0;
@@ -18,9 +18,12 @@
     margin-left: 0;
     margin-right: 220px;
 }
+.page-with-wide-sidebar .footer {
+    margin-left: 280px;
+}
 .page-with-right-sidebar .footer {
     margin-left: 25px;
-    margin-right: 245px;
+    margin-right: 280px;
 }
 .page-with-two-sidebar.page-sidebar-fixed .sidebar.sidebar-right {
     position: fixed;
@@ -41,7 +44,12 @@
 .page-with-two-sidebar.page-right-sidebar-collapsed .sidebar-bg.sidebar-right {
     right: -220px;
 }
-.page-with-two-sidebar.page-right-sidebar-collapsed .content {
+.page-with-two-sidebar.page-right-sidebar-collapsed.page-with-wide-sidebar .sidebar.sidebar-right,
+.page-with-two-sidebar.page-right-sidebar-collapsed.page-with-wide-sidebar .sidebar-bg.sidebar-right {
+    right: -250px;
+}
+.page-with-two-sidebar.page-right-sidebar-collapsed .content,
+.page-with-two-sidebar.page-right-sidebar-collapsed.page-with-wide-sidebar .content {
     margin-right: 0;
 }
 
@@ -54,7 +62,8 @@
     left: 0;
     bottom: 0;
     right: 0;
-    background: #E6E8EC;
+    background: @body_bg;
+    z-index: 9999;
 }
 #page-loader.fade {
     display: none;
@@ -86,24 +95,21 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    margin: -20px -20px 0 0;
-    border: 2px solid #fff;
+    margin: -20px 0 0 -20px;
+    border: 2px solid @white;
     border-top: 2px solid #24B498;
-    border-radius: 100%;
+    .border-radius(100%);
 }
 .fade.in .spinner, 
 .fade.in .spinner-small {
-    -webkit-animation: rotation .6s infinite linear;
-    -moz-animation: rotation .6s infinite linear;
-    -o-animation: rotation .6s infinite linear;
-    animation: rotation .6s infinite linear;
+    .animation(rotation .6s infinite linear);
 }
 .spinner-small {
     border: 2px solid rgba(0,0,0,0.05);
     border-top: 2px solid #24B498;
     height: 30px;
     width: 30px;
-    margin: -15px -15px 0 0;
+    margin: -15px 0 0 -15px;
 }
 
 
@@ -115,4 +121,110 @@
 
 .navbar-header.navbar-header-without-bg .navbar-brand {
     background: none !important;
+}
+
+
+/* -------------------------------
+   Update - V1.9
+------------------------------- */
+
+/* Boxed Layout Setting */
+
+.boxed-layout {
+    background-image: url(../img/pattern-cover.png);
+    
+    & .page-container {
+        width: 1080px;
+        margin: 0 auto;
+        min-height: 100%;
+        background: #f7f7f7;
+        overflow: hidden;
+        position: relative;
+        .box-shadow(0 0px 30px rgba(0,0,0,0.5));
+    }
+    & .page-container .header,
+    & .page-container .sidebar,
+    & .page-container .sidebar-bg {
+        left: auto;
+    }
+    & .page-container .header {
+        width: 1080px;
+        right: auto;
+    }
+    & .top-menu,
+    & .pace {
+        width: 1080px;
+        left: 50%;
+        margin-left: -540px;
+    }
+    & .pace .pace-progress,
+    & .pace .pace-activity,
+    & .page-with-top-menu .top-menu {
+        position: absolute;
+    }
+    & .page-sidebar-minified .sidebar,
+    & .page-with-top-menu.page-sidebar-minified .sidebar {
+        position: relative;
+        float: left;
+        padding-top: 0;
+    }
+}
+
+
+/* Material Loader */
+
+.material-loader {
+    position: fixed;
+    width: 200px;
+    height: 100px;
+    left: 50%;
+    top: 50%;
+    margin: -50px 0 0 -100px;
+}
+.material-loader .message {
+    line-height: 100px;
+    text-align: center;
+}
+.ie8 .material-loader .message {
+    padding-left: none;
+}
+.material-loader .circular {
+    animation: rotate 2s linear infinite;
+    height: 36px;
+    width: 36px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -24px;
+    margin-top: -55px;
+}
+.material-loader .path {
+    stroke-dasharray: 1,200;
+    stroke-dashoffset: 0;
+    animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+    stroke-linecap: round;
+}
+@keyframes rotate{
+    100%{
+        transform: rotate(360deg);
+    }
+}
+@keyframes dash{
+    0%{
+        stroke-dasharray: 1,200;
+        stroke-dashoffset: 0;
+    }
+    50%{
+        stroke-dasharray: 89,200;
+        stroke-dashoffset: -35;
+    }
+    100%{
+        stroke-dasharray: 89,200;
+        stroke-dashoffset: -124;
+    }
+}
+@keyframes color{
+    100%, 0%{
+        stroke: @grey_900;
+    }
 }

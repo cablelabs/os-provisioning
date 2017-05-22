@@ -21,7 +21,8 @@ class ConfigfileController extends \BaseController {
 			$model = new Configfile;
 			$parents = $model->first()->parents_list_all();
 		}
-		$firmware_files = $model->firmware_files();
+		$firmware_files = $model->get_files("fw");
+		$cvc_files = $model->get_files("cvc");
 
 		// label has to be the same like column in sql table
 		return array(
@@ -33,6 +34,7 @@ class ConfigfileController extends \BaseController {
 			array('form_type' => 'textarea', 'name' => 'text', 'description' => 'Config File Parameters'),
 			array('form_type' => 'select', 'name' => 'firmware', 'description' => 'Choose Firmware File', 'value' => $firmware_files),
 			array('form_type' => 'file', 'name' => 'firmware_upload', 'description' => 'or: Upload Firmware File'),
+			array('form_type' => 'select', 'name' => 'cvc', 'description' => 'Choose Certificate File', 'value' => $cvc_files, 'help' => $model->get_cvc_help()),
 		);
 	}
 
@@ -47,71 +49,6 @@ class ConfigfileController extends \BaseController {
 		return $rules;
 	}
 
-
-	public static $INDEX = 0;
-
-	/**
-	 * writes whole index view data in string
-	 *
-	 * @param array with all configfiles in hierarchical tree structure
-	 *
-	 * @author Nino Ryschawy
-	 */
-	public function create_index_view_data($cf_tree)
-	{
-		$data = '';
-		foreach ($cf_tree as $object)
-		{
-			if ($object == [])
-				continue;
-
-			if (is_array($object))
-			{
-				self::$INDEX += 1;
-				$data .= $this->create_index_view_data($object);
-			}
-			else
-				$data .= $this->print_cf_entry($object);
-		}
-		self::$INDEX -= 1;
-		return $data;
-	}
-
-	/**
-	 * writes whole index view data in string
-	 *
-	 * @param configfile or array with configfile(s) and arrays of configfiles
-	 *
-	 * @author Nino Ryschawy
-	 */
-	public function print_cf_entry($object)
-	{
-		$cur_model_complete = get_class($object);
-		$cur_model_parts = explode('\\', $cur_model_complete);
-		$cur_model = array_pop($cur_model_parts);
-
-		// $data = '<tr>';
-		$data = '';
-		$cnt = 0;
-		do
-		{
-			$cnt++;
-			// $data .= '<td>&nbsp;&nbsp;&nbsp;</td>';
-			$data .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-			var_dump(self::$INDEX);
-		} while ($cnt <= self::$INDEX);
-
-		// $data .= '<td>'.Form::checkbox('ids['.$object->id.']').'</td>';
-		// $data .= '<td>'.HTML::linkRoute($cur_model.'.edit', $object->view_index_label(), $object->id).'</td>';
-		// $data .= '</tr>';
-
-		$data .= Form::checkbox('ids['.$object->id.']', 1, Null, null, ['style' => 'simple']).'&nbsp;&nbsp;';
-		$data .= HTML::linkRoute($cur_model.'.edit', $object->view_index_label(), $object->id);
-		$data .= '<br>';
-
-		return $data;
-	}
-
 	/**
 	 * Display a listing of all Configfile objects in hierarchical tree structure
 	 *
@@ -120,19 +57,10 @@ class ConfigfileController extends \BaseController {
 	public function index()
 	{
 		$create_allowed = $this->index_create_allowed;
-
-		$children = Configfile::all()->where('parent_id', 0)->all();
-
-		$cf_tree = [];
-		foreach ($children as $cf)
-		{
-			array_push($cf_tree, $cf);
-			array_push($cf_tree, $cf->search_children());
-		}
-
-		$view_var = $this->create_index_view_data($cf_tree);
-
-		return \View::make('provbase::Configfile.tree', $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed')));
+		$roots = Configfile::where('parent_id', 0)->get();
+		$cf_used = Configfile::all_in_use();
+		// tree_item.blade.php: https://laracasts.com/discuss/channels/laravel/categories-tree-view/replies/114604
+		return \View::make('provbase::Configfile.tree', $this->compact_prep_view(compact('view_header', 'roots', 'cf_used', 'create_allowed')));
 	}
 
 

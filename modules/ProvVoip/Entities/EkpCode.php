@@ -20,7 +20,7 @@ class EkpCode extends \BaseModel {
 	protected $fillable = ['ekp_code', 'company'];
 
 
-	# TODO: who is a valid EKP code built?
+	// TODO: who is a valid EKP code built?
 	/* public static function is_valid($ekp_code) { */
 
 	/* 	$pattern = '#^D[0-9a-fA-F]{3}$#'; */
@@ -31,7 +31,7 @@ class EkpCode extends \BaseModel {
 
 	/**
 	 * Return a list [db_id => ekp (ekpcode)] of all ekps.
-	 * This list is prepared for the use in a form's <select>
+	 * This list is prepared for the use in a form's select
 	 *	- first come the favorites
 	 *	- then the rest
 	 *
@@ -42,22 +42,22 @@ class EkpCode extends \BaseModel {
 	public static function ekp_list_for_form_select()
 	{
 
-		# ekp codes of the ekps to be on top of the list
-		# the given sorting will be the sorting of the <select>
-		# TODO: maybe this list should not be hardcoded – can come from configuration dialog or out of .env?
+		// ekp codes of the ekps to be on top of the list
+		// the given sorting will be the sorting of the <select>
+		// TODO: maybe this list should not be hardcoded – can come from configuration dialog or out of .env?
 		if (\PPModule::is_active('ProvVoipEnvia')) {
 			$favorite_ekps = array(
-				'98/112', # EnviaTEL
-				'93/007', # Telekom
-				'12/017', # 1&1
-				'n.v.',	# no EKP known
+				'98/112', // EnviaTEL
+				'93/007', // Telekom
+				'12/017', // 1&1
+				'n.v.',	// no EKP known
 			);
 		}
 		else {
 			$favorite_ekps = array(
-				'93/007', # Telekom
-				'12/017', # 1&1
-				'n.v.',	# no EKP known
+				'93/007', // Telekom
+				'12/017', // 1&1
+				'n.v.',	// no EKP known
 			);
 		}
 

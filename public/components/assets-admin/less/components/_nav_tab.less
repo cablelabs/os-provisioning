@@ -1,12 +1,12 @@
 /* Nav Setting */
 
 .nav > li > a {
-    color: #6e7179;
+    color: @grey_700;
 }
 .nav > li > a:hover,
 .nav > li > a:focus {
-    color: #333;
-    background: #fafafa;
+    color: @grey_900;
+    background: @grey_300;
 }
 
 
@@ -29,21 +29,22 @@
 .nav-tabs.nav-justified > .active > a, 
 .nav-tabs.nav-justified > .active > a:hover, 
 .nav-tabs.nav-justified > .active > a:focus {
-    color: @dark_black;
+    color: @grey_900;
 }
 .nav-tabs {
-    background: #c1ccd1;
-    .border-radius(5px 5px 0 0);
+    background: @grey_300;
+    .border-radius(2px 2px 0 0);
 }
 .nav-tabs.nav-tabs-inverse {
-    background: @dark_black;
+    background: @grey_900;
 }
 .nav-tabs.nav-justified > li > a {
-    .border-radius(3px 3px 0 0);
+    .border-radius(2px 2px 0 0);
 }
 .nav-tabs.nav-tabs-inverse > li.active > a,
 .nav-tabs.nav-tabs-inverse > li.active > a:hover,
 .nav-tabs.nav-tabs-inverse > li.active > a:focus {
+    color: @grey_900;
     background: @white;
 }
 .nav-tabs.nav-tabs-inverse > li > a:hover,
@@ -58,6 +59,7 @@
 .nav-tabs > li > a {
     margin-right: 5px;
     line-height: 20px;
+    .border-radius(2px 2px 0 0);
 }
 
 
@@ -75,8 +77,9 @@
 .nav-pills > li.active > a, 
 .nav-pills > li.active > a:hover, 
 .nav-pills > li.active > a:focus {
-    background: @dark_black;
+    background: @grey_900;
 }
+
 .nav-stacked > li + li {
     margin-left: 0;
     margin-top: 5px;

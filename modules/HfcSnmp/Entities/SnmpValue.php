@@ -38,19 +38,16 @@ class SnmpValue extends \BaseModel {
     }
 
     /**
-     * link with devicetype
+     * Relations
      */
-    public function device()
+    public function netelement()
     {
-        return $this->belongsTo('Modules\HfcSnmp\Entities\Device');
+        return $this->belongsTo('Modules\HfcReq\Entities\NetElement');
     }
 
-    /**
-     * link with snmpmib
-     */
-    public function snmpmib()
+    public function oid()
     {
-        return $this->belongsTo('Modules\HfcSnmp\Entities\SnmpMib');
+        return $this->belongsTo('Modules\HfcSnmp\Entities\OID');
     }
 
 }

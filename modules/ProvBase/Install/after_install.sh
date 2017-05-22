@@ -1,5 +1,5 @@
 # create folders
-mkdir /etc/dhcp/nms
+mkdir -p /etc/dhcp/nms
 mkdir -p /tftpboot/cm
 
 # change owner

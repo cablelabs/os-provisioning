@@ -1,5 +1,6 @@
 <?php
-namespace Modules\Provvoip\Http\Controllers;
+
+namespace Modules\ProvVoip\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
 

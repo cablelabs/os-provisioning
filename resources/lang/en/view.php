@@ -55,6 +55,7 @@ return [
 		'Menu_UserSettings'			=> 'User Settings',
 		'Menu_UserGlobSettings' 	=> 'Global User Settings',
 		'Menu_Logout'				=> 'Logout',
+		'Menu_UserRoleSettings'		=> 'User Roles',
 
 //HEADER
 	//General
@@ -146,6 +147,7 @@ return [
 		'Sign me in'				=> 'Login',
 		'Button_Create'				=> 'Create',
 		'Button_Delete'				=> 'Delete marked Elements',
+		'Button_Force Restart'		=> 'Force Restart',
 		'Button_Save'				=> 'Save',
 		'Button_Save / Restart'		=> 'Save / Restart',
 	//BillingBase
@@ -197,4 +199,16 @@ return [
 		// 'Button_Create Phonenumber'		=> 'Neue Telefonnummer',
 		// //Phone tariff
 		'Button_Create Phone tariffs'	=> 'Create Phonetariffs',
+
+//
+// DASHBOARD
+//
+	'Dashboard_Contracts'			=> 'ACTIVE CONTRACTS',
+	'Dashboard_ContractAnalytics'	=> 'Contract Analytics (Last 12 Months)',
+	'Dashboard_NoContracts'			=> 'No contracts available.',
+	'Dashboard_Income'				=> 'INCOME',
+	'Dashboard_IncomeAnalytics'		=> 'Income Details',
+	'Dashboard_Date'				=> 'DATE',
+	'Dashboard_LinkDetails'			=> 'View Details',
+	'Dashboard_Other'				=> 'Other',
 ];

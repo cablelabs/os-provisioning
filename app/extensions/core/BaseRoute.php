@@ -72,7 +72,12 @@ class BaseRoute {
 		\Route::delete("$name/{{$name}}", array('as' => $name.'.destroy', 'uses' => $controller.'@destroy', $options, 'middleware' => 'auth:delete'));
 
 		// edit
-		\Route::get("$name/{{$name}}/edit", array('as' => $name.'.edit', 'uses' => $controller.'@edit', $options, 'middleware' => 'auth:edit'));
+//		\Route::get("$name/{{$name}}/edit", array('as' => $name.'.edit', 'uses' => $controller.'@edit', $options, 'middleware' => 'auth:edit'));
+		\Route::get("$name/{{$name}}/edit", array('as' => $name.'.edit', 'uses' => $controller.'@edit', $options, 'middleware' => 'auth:view'));
+
+		\Route::get("$name/{{$name}}/dump", array('as' => $name.'.dump', 'uses' => $controller.'@dump', $options, 'middleware' => 'auth:edit'));
+
+		\Route::get("$name/dump", array('as' => $name.'.dumpall', 'uses' => $controller.'@dumpall', $options, 'middleware' => 'auth:edit'));
 
 		// Fulltext Search
 		// TODO: adapt route name to not strtolower() like other functions

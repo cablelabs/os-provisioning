@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute($route_name.'.tree', \App\Http\Controllers\BaseViewController::translate_view('Overview', 'Header')) }} <!--$view_header -->
+	{{ HTML::linkRoute($route_name.'.index', \App\Http\Controllers\BaseViewController::translate_view('Overview', 'Header')) }} <!--$view_header -->
 
 @stop
 
@@ -40,7 +40,7 @@
 
 			<!-- <table> -->
 
-			{{ $view_var }}
+			@include('provbase::Configfile.tree_item', array('items' => $roots))
 
 			<!-- </table> -->
 

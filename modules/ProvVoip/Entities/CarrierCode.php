@@ -30,7 +30,7 @@ class CarrierCode extends \BaseModel {
 
 	/**
 	 * Return a list [db_id => carrier (carriercode)] of all carriers.
-	 * This list is prepared for the use in a form's <select>
+	 * This list is prepared for the use in a form's select
 	 *	- first comes the default value (=no carrier)
 	 *	- second are the favorites
 	 *	- then the rest
@@ -42,20 +42,20 @@ class CarrierCode extends \BaseModel {
 	public static function carrier_list_for_form_select($with_empty=True)
 	{
 
-		# carrier codes of the carriers to be on top of the list
-		# the given sorting will be the sorting of the <select>
-		# TODO: maybe this list should not be hardcoded – can come from configuration dialog or out of .env?
+		// carrier codes of the carriers to be on top of the list
+		// the given sorting will be the sorting of the <select>
+		// TODO: maybe this list should not be hardcoded – can come from configuration dialog or out of .env?
 		if (\PPModule::is_active('ProvVoipEnvia')) {
 			$favorite_carriers = array(
-				'D057', # EnviaTel; has to be used if no porting is wanted (new number from EnviaTel)
-				'D001', # Telekom
-				'D201', # 1&1
+				'D057', // EnviaTel; has to be used if no porting is wanted (new number from EnviaTel)
+				'D001', // Telekom
+				'D201', // 1&1
 			);
 		}
 		else {
 			$favorite_carriers = array(
-				'D001', # Telekom
-				'D201', # 1&1
+				'D001', // Telekom
+				'D201', // 1&1
 			);
 		}
 

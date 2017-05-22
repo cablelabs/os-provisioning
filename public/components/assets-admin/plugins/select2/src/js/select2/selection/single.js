@@ -54,6 +54,12 @@ define([
       // User exits the container
     });
 
+    container.on('focus', function (evt) {
+      if (!container.isOpen()) {
+        self.$selection.focus();
+      }
+    });
+
     container.on('selection:update', function (params) {
       self.update(params.data);
     });
@@ -63,11 +69,11 @@ define([
     this.$selection.find('.select2-selection__rendered').empty();
   };
 
-  SingleSelection.prototype.display = function (data) {
+  SingleSelection.prototype.display = function (data, container) {
     var template = this.options.get('templateSelection');
     var escapeMarkup = this.options.get('escapeMarkup');
 
-    return escapeMarkup(template(data));
+    return escapeMarkup(template(data, container));
   };
 
   SingleSelection.prototype.selectionContainer = function () {
@@ -82,9 +88,9 @@ define([
 
     var selection = data[0];
 
-    var formatted = this.display(selection);
-
     var $rendered = this.$selection.find('.select2-selection__rendered');
+    var formatted = this.display(selection, $rendered);
+
     $rendered.empty().append(formatted);
     $rendered.prop('title', selection.title || selection.text);
   };

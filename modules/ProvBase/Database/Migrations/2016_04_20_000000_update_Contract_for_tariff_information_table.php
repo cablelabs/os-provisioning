@@ -4,7 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 /**
- * Updater to add link to chosen purchase tariff (= variation @Envia)
+ * Updater to add link to chosen purchase tariff (= variation at Envia)
  *
  * @author Patrick Reichel
  */

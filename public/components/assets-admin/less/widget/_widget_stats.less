@@ -2,22 +2,24 @@
 
 .widget {
     margin-bottom: 20px;
-    color: #fff;
+    color: @white;
     padding: 15px;
     overflow: hidden;
     .border-radius(3px);
+    .box-shadow(0 2px 3px rgba(0,0,0,0.15));
     
     &.widget-stats {
         position: relative;
         
         & .stats-info {
             & h4 {
-                font-size: 12px;
+                font-size: 13px;
                 margin: 5px 0;
-                color: #fff;
+                color: @white;
+                color: rgba(255,255,255,0.75);
             }
             & p {
-                font-size: 24px;
+                font-size: 26px;
                 font-weight: 300;
                 margin-bottom: 0;
             }
@@ -29,16 +31,26 @@
             text-align: center;
             line-height: 56px;
             margin-left: 15px;
-            color: #fff;
+            color: @white;
             position: absolute;
             right: 15px;
             top: 15px;
             .opacity(0.2);
             
             &.stats-icon-lg {
-                font-size: 52px;
-                top: 12px;
-                right: 21px;
+                font-size: 60px;
+                line-height: 60px;
+                top: 15px;
+                right: 15px;
+                width: 60px;
+                height: 60px;
+                
+                & i {
+                    font-size: 60px;
+                }
+            }
+            & i.material-icons {
+                font-size: 56px;
             }
         }
         & .stats-link a {
@@ -49,32 +61,38 @@
             background: rgba(0,0,0,0.4);
             text-align: right;
             color: #ddd;
-            font-weight: 300;
+            font-weight: normal;
             text-decoration: none;
             
             &:hover,
             &:focus {
                 background: url(../img/transparent/black-0.6.png);
                 background: rgba(0,0,0,0.6);
-                color: #fff;
+                color: @white;
             }
         }
         & .stats-icon
         & .stats-title {
             position: relative;
             line-height: 1.1;
-            font-size: 12px;
+            font-size: 13px;
             margin: 2px 0 7px;
         }
+        & .stats-title,
         & .stats-desc {
-            color: #fff;
+            color: @white;
+            color: rgba(255,255,255,0.75);
+            font-size: 13px;
+        }
+        & .stats-desc {
+            color: @white;
             color: rgba(255,255,255,0.6);
-            font-weight: 300;
+            font-weight: normal;
             margin-bottom: 0;
         }
         & .stats-number {
-            font-size: 24px;
-            font-weight: 300;
+            font-size: 26px;
+            font-weight: normal;
             margin-bottom: 10px;
         }
         & .stats-progress {
@@ -84,7 +102,7 @@
             margin: 0 -15px 12px;
             
             & .progress-bar {
-                background: #fff;
+                background: @white;
             }
         }
     }

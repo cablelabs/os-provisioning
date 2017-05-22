@@ -23,8 +23,8 @@ class ProvbaseDatabaseSeeder extends Seeder {
 		$this->call('Modules\ProvBase\Database\Seeders\ContractTableSeeder');
 		$this->call('Modules\ProvBase\Database\Seeders\ModemTableSeeder');
 		$this->call('Modules\ProvBase\Database\Seeders\EndpointTableSeeder');
-		$this->call('Modules\ProvBase\Database\Seeders\EndpointTableSeeder');
 		$this->call('Modules\ProvBase\Database\Seeders\ProvBaseConfigTableSeeder');
+		$this->call('Modules\ProvBase\Database\Seeders\DomainTableSeeder');
 	}
 
 }

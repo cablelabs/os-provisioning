@@ -2,8 +2,8 @@
       
 .list-email {
     margin-bottom: 0;
-    border-top: 1px solid #e2e7eb;
-    border-bottom: 1px solid #e2e7eb;
+    border-top: 1px solid @grey_300;
+    border-bottom: 1px solid @grey_300;
     
     & > li.list-group-item {
         .border-radius(0);
@@ -16,7 +16,7 @@
         position: relative;
     }
     & > li.list-group-item + li.list-group-item {
-        border-top: 1px solid #e2e7eb;
+        border-top: 1px solid @grey_300;
     }
     
     & > li.list-group-item:before {
@@ -27,45 +27,43 @@
         left: 0;
         bottom: 0;
         width: 5px;
-        background: #fff;
+        background: @white;
     }
     & > li.list-group-item.success:before {
-        background: #00acac;
+        background: @teal_500;
     }
     & > li.list-group-item.info:before {
-        background-color: #49b6d6;
+        background-color: @light_blue_500;
     }
     & > li.list-group-item.danger:before {
-        background-color: #ff5b57;
+        background-color: @red_500;
     }
     & > li.list-group-item.primary:before {
-        background-color: #348fe2;
+        background-color: @blue_500;
     }
     & > li.list-group-item.inverse:before {
-        background-color: #242a30;
+        background-color: @grey_900;
     }
     & > li.list-group-item.warning:before {
-        background-color: #f59c1a;
+        background-color: @orange_500;
     }
     & > li.list-group-item.purple:before {
-        background-color: #727cb6;
+        background-color: @deep_purple_500;
     }
     & > li.list-group-item.default:before {
         background-color: #b6c2c9;
     }
-    
-    
     & .email-user {
         float: left;
         width: 50px;
         height: 50px;
-        border-radius: 50px;
         overflow: hidden;
         font-size: 24px;
         line-height: 50px;
         text-align: center;
         color: #6e7179;
         background: #f4f6f7;
+        .border-radius(50px);
     
         & img {
             max-width: 100%;
@@ -93,7 +91,7 @@
     }
     & .email-title,
     & .email-title a {
-        color: #242a30;
+        color: @grey_900;
     }
     & .email-time {
         float: right;
@@ -109,7 +107,7 @@
         line-height: 50px;
     
         & label {
-            color: #e2e7eb;
+            color: @grey_300;
             display: block;
             cursor: pointer;
             
@@ -130,6 +128,6 @@
         }
     }
     & > li.selected {
-        background: #F2FFFB;
+        background: #fffDE7;
     }
 }

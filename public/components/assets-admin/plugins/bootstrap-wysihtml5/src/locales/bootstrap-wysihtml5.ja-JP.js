@@ -1,7 +1,15 @@
 /**
  * Japanese translation for bootstrap-wysihtml5
  */
-(function($){
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define('bootstrap.wysihtml5.ja-JP', ['jquery', 'bootstrap.wysihtml5'], factory);
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function($){
     $.fn.wysihtml5.locale["ja-JP"] = {
         font_styles: {
             normal: "通常の文字",
@@ -22,7 +30,8 @@
         },
         link: {
             insert: "リンクの挿入",
-            cancel: "キャンセル"
+            cancel: "キャンセル",
+            target: "新しいウィンドウでリンクを開く"
         },
         image: {
             insert: "画像の挿入",
@@ -46,4 +55,4 @@
         }
 
     };
-}(jQuery));
+}));

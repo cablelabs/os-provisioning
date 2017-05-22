@@ -16,19 +16,22 @@
 
 			@include ('bootstrap.sidebar')
 
-			<div id="content" class="content">
+			<div id="content" class="content p-t-15">
 
-				<ol class="breadcrumb pull-right">
+				<ul class="nav nav-pills pull-right p-b-5">
 					@if(isset($panel_right))
 						@foreach ($panel_right as $menu)
-				            <li> {{ HTML::linkRoute($menu['route'], $menu['name'], $menu['link']) }}</li>
+							<li role="presentation"> {{ HTML::linkRoute($menu['route'], $menu['name'], $menu['link']) }}</li>
 						@endforeach
 					@endif
-				</ol>
+				</ul>
 
 				@yield ('content')
 			</div>
 
+			<!-- begin scroll to top btn -->
+			  <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+			 <!-- end scroll to top btn -->
 			@include ('bootstrap.footer')
 			@yield ('java')
 		</div>
