@@ -272,9 +272,11 @@ class importCommand extends Command {
 		$items_new 		= Item::all();
 		$mtas_new 		= MTA::all();
 		$phonenumbers_new = Phonenumber::all();
-		$emails_new 	= Email::all();
 		$mandates_new 	= SepaMandate::all();
 		$products_new 	= Product::all();
+
+		if (\PPModule::is_active('mail'))
+			$emails_new = Email::all();
 
 		$costcenter_id  = $this->option('cc') ? : 3; 			// MAB is default
 
@@ -501,29 +503,33 @@ class importCommand extends Command {
 			/*
 			 * Email Import
 			 */
-			// $emails = $km3->table(\DB::raw('tbl_email'))
-			// 		->selectRaw ('*')
-			// 		->where('vertrag', '=', $contract->id)
-			// 		->get();
 
-			// if (count($emails) != count($emails_new->where('contract_id', $contract->id)->all()))
-			// {
-			// 	foreach ($emails as $email)
-			// 	{
-			// 		Email::create([
-			// 			'contract_id' 	=> $c->id,
-			// 			'localpart' 	=> $email->alias,
-			// 			'password' 		=> $email->passwort,
-			// 			'blacklisting' 	=> $email->blacklisting,
-			// 			'greylisting' 	=> $email->greylisting,
-			// 			'forwardto' 	=> $email->forwardto ? : '',
-			// 			]);
-			// 	}
+			if (\PPModule::is_active('mail'))
+			{
+				$emails = $km3->table(\DB::raw('tbl_email'))
+						->selectRaw ('*')
+						->where('vertrag', '=', $contract->id)
+						->get();
 
-			// 	// Log
-			// 	if ($this->option('debug'))
-			// 		$this->info ("MAIL: Added ".count($emails).' Addresses');
-			// }
+				if (count($emails) != count($emails_new->where('contract_id', $contract->id)->all()))
+				{
+					foreach ($emails as $email)
+					{
+						Email::create([
+							'contract_id' 	=> $c->id,
+							'localpart' 	=> $email->alias,
+							'password' 		=> $email->passwort,
+							'blacklisting' 	=> $email->blacklisting,
+							'greylisting' 	=> $email->greylisting,
+							'forwardto' 	=> $email->forwardto ? : '',
+							]);
+					}
+
+					// Log
+					if ($this->option('debug'))
+						$this->info ("MAIL: Added ".count($emails).' Addresses');
+				}
+			}
 
 
 
