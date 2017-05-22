@@ -226,7 +226,7 @@ class BaseViewController extends Controller {
 		$ret = [];
 
 		// background color's to toggle through
-		$color_array = ['white', '#c8e6c9', '#fff3e0', '#fbe9e7', '#e0f2f1', '#f3e5f5'];
+		$color_array = ['whitesmoke', 'gainsboro'];
 		$color = $color_array[0];
 
 		// prepare form fields
@@ -297,6 +297,15 @@ class BaseViewController extends Controller {
 				$additional_classes = $checkbox;
 			}
 
+			// handle collapsible classes
+			if (isset($options['class']) && $options['class'] == 'collapse')
+			{
+				$additional_classes['class'] = ' collapse';
+
+				// TODO: add the collapse button
+				// $s .= "<button type=\"button\" class=\"btn btn-info\" data-toggle=\"collapse\" data-target=\"#number2\">+</button>";
+			}
+
 			// Open Form Group
 			$s .= \Form::openGroup($field["name"], $field["description"], $additional_classes, $color);
 
@@ -348,7 +357,7 @@ finish:
 			// Space Element between fields and color switching
 			if (array_key_exists('space', $field))
 			{
-				//$s .= "<div class=col-md-12><br></div>";
+				$s .= "<div class=col-md-12><br></div>";
 				$color_array = \Acme\php\ArrayHelper::array_rotate ($color_array);
 				$color = $color_array[0];
 			}
@@ -479,6 +488,38 @@ finish:
 	}
 
 
+	/**
+	 * This is a local helper to be able to show HTML code (like images) in breadcrumb
+	 * @author: Torsten Schmidt
+	 * @todo: move to a generic helper class
+	 */
+	private static function __link_route_html ($name, $title = null, $parameters = [], $attributes = [])
+	{
+		return \HTML::decode(\HTML::linkRoute($name, $title, $parameters, $attributes));
+	}
+
+
+	/**
+	 * Get the ICON of the class or object or from actual context
+	 * @param $class_or_obj: the class or object to look for the icon
+	 * @return the HTML icon (with HTML tags)
+	 * @author: Torsten Schmidt
+	 */
+	public static function __get_view_icon ($class_or_obj)
+	{
+		// NOTE: this does the trick: fetch the image when no object
+		//       is present, like on create page
+		$class = \NamespaceController::get_model_name();
+
+		if (is_object($class_or_obj))
+			$class = get_class ($class_or_obj);
+
+		if (class_exists($class_or_obj))
+			$class = $class_or_obj;
+
+		return $class::view_icon();
+	}
+
 
 	/**
 	 * Generate Top Header Link (like e.g. Contract > Modem > Mta > ..)
@@ -524,10 +565,12 @@ finish:
 			// get header field name
 			// NOTE: for historical reasons check if this is a array or a plain string
 			// See: Confluence API  - get_view_headline()
+			$name = static::__get_view_icon($model).' ';
 			if(is_array($model->view_index_label()))
-				$name = $model->view_index_label()['header'];
+				$name .= $model->view_index_label()['header'];
 			else
-				$name = $model->view_index_label();
+				$name .= $model->view_index_label();
+
 
 			if (!$breadcrumb_path) {
 				$glue = '';
@@ -536,9 +579,9 @@ finish:
 				$glue = '';
 			}
 			if ($i == 0)
-			$breadcrumb_path = "<li class='nav-tabs'>".\HTML::linkRoute($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).$breadcrumb_path."</li>";
+			$breadcrumb_path = "<li class='nav-tabs'>".static::__link_route_html($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).$breadcrumb_path."</li>";
 			else
-			$breadcrumb_path = "<li>".\HTML::linkRoute($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id)."</li>".$breadcrumb_path;
+			$breadcrumb_path = "<li>".static::__link_route_html($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id)."</li>".$breadcrumb_path;
 
 			return $breadcrumb_path;
 		};
@@ -595,10 +638,10 @@ finish:
 		// 	$s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
 // =======
 		if (in_array($route_name, BaseController::get_config_modules())) {	// parse: Global Config requires own link
-			$breadcrumb_path_base = "<li class='active'>".\HTML::linkRoute('Config.index', BaseViewController::translate_view('Global Configurations', 'Header'))."</li>";
+			$breadcrumb_path_base = "<li class='active'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).' '.BaseViewController::translate_view('Global Configurations', 'Header'))."</li>";
 		}
 		else {
-			$breadcrumb_path_base = Route::has($route_name.'.index') ? '<li class="active">'.\HTML::linkRoute($route_name.'.index', $view_header)."</li>" : '';
+			$breadcrumb_path_base = Route::has($route_name.'.index') ? '<li class="active">'.static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).' '.$view_header)."</li>" : '';
 		}
 // d($breadcrumb_paths, $breadcrumb_path, $breadcrumb_path_base);
 

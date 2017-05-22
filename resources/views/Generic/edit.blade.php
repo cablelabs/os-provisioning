@@ -9,7 +9,7 @@
 @param $relations: the relations array() returned by prep_right_panels() in BaseViewController
 
 --}}
-@extends ('Layout.split')
+@extends ('Layout.split-nopanel')
 
 @section('content_top')
 

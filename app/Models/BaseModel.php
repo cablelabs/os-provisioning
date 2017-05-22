@@ -569,6 +569,12 @@ class BaseModel extends Eloquent
 	}
 
 	// Placeholder
+	public static function view_icon()
+	{
+		return '<i class="fa fa-circle-thin"></i>';
+	}
+
+	// Placeholder
 	public static function view_no_entries()
 	{
 		return "No entries found!";

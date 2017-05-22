@@ -1,5 +1,21 @@
 @extends ('Layout.default')
 
+@section ('quickstart')
+    <!-- TODO: move to a seperate file -->
+    <ul class="registered-users-list clearfix">
+        <li>
+            {{ HTML::decode (HTML::linkRoute('Contract.create',
+                '<h1><div class="text-center"><i class="img-center fa fa-address-book-o"></i></div></h1>
+                 <h4 class="username text-ellipsis text-center">Add Contract<small>Easy</small></h4>')) }}
+        </li>
+        <li>
+            {{ HTML::decode (HTML::linkRoute('Contract.create',
+                '<h1><div class="text-center"><i class="img-center fa fa-ticket"></i></div></h1>
+                 <h4 class="username text-ellipsis text-center">Add Ticket<small>Easy</small></h4>')) }}
+        </li>
+    </ul>
+@stop
+
 @section('content')
     <div class="col-md-12">
 
@@ -131,6 +147,10 @@
                         </div>
                     </div>
                 </div>
+
+                @DivOpen(4)
+                    @include ('bootstrap.panel', array ('content' => "quickstart", 'view_header' => 'Quickstart', 'md' => 12))
+                @DivClose()
             @endif
 
             @if (\PPModule::is_active('billingbase'))
