@@ -745,6 +745,10 @@ finish:
 	public static function get_quality_color($dir, $entity, $values)
 	{
 		$ret = [];
+		if($entity == 'snr' && $dir == 'ds')
+			$entity = '256qam';
+		if($entity == 'snr' && $dir == 'us')
+			$entity = '64qam';
 
 		foreach ($values as $val) {
 			switch ($entity) {
