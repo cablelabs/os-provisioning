@@ -3,9 +3,6 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-/*
- * MPR: Modem Positioning Rule
- */
 class UpdateModemAddHfValues extends BaseMigration {
 
 	// name of the table to create
