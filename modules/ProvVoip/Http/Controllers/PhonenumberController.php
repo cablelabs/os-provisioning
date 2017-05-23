@@ -77,6 +77,15 @@ class PhonenumberController extends \BaseController {
 		if (\PPModule::is_active('provvoipenvia')) {
 			$reassign_help .= "MTA has to belong to the same contract and modem installation addresses have to be equal.";
 		}
+
+		// get a list of MTAs the modem can be moved to
+		if ($model->exists) {
+			$mta_list = $model->mtas_list_phonenumber_can_be_reassigned_to();
+		}
+		else {
+			$mta_list = array();
+		}
+
 		// label has to be the same like column in sql table
 		return array(
 			array(
@@ -101,7 +110,7 @@ class PhonenumberController extends \BaseController {
 				'form_type' => 'select',
 				'name' => 'mta_id',
 				'description' => 'MTA',
-				'value' => $model->mtas_list_phonenumber_can_be_reassigned_to(),
+				'value' => $mta_list,
 				'hidden' => 'C',
 				'help' => $reassign_help,
 			),
