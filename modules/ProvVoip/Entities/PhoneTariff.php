@@ -38,8 +38,8 @@ class PhoneTariff extends \BaseModel {
 		}
 
 
-        return ['index' => [$this->name, $this->type, $this->description, $this->usable],
-                'index_header' => ['Name', 'Type', 'Description', 'Usable'],
+        return ['index' => [$this->name, $this->type, $this->description, $this->voip_protocol, $this->usable],
+                'index_header' => ['Name', 'Type', 'Description', 'VoIP protocol', 'Usable'],
                 'bsclass' => $bsclass,
                 'header' => $this->name.' ('.$this->type.')'];
 	}
