@@ -2,7 +2,7 @@
 
 @section('content_top')
 
-	<li class="active">{{ HTML::linkRoute($route_name.'.index', \App\Http\Controllers\BaseViewController::translate_view($route_name.'s', 'Header')) }}</li> <!--$view_header -->
+	<li class="active"><a href={{$route_name.'.index'}}><i class="fa fa-file-code-o"></i>{{ \App\Http\Controllers\BaseViewController::translate_view($route_name.'s', 'Header', 2) }}</a></li> <!--$view_header -->
 
 @stop
 
@@ -16,6 +16,23 @@
 			{{ Form::close() }}
 		@DivClose()
 	@DivClose()  -->
+	<!-- Headline: means icon followed by headline -->
+	@DivOpen(12)
+		<h1 class="page-header">
+		{{\App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null).' '}}
+		<?php
+		if (isset($view_var[0]))
+			echo \App\Http\Controllers\BaseViewController::translate_view($view_var[0]->view_headline() , 'Header' , 2 );
+		else
+		{
+			// handle empty tables ..
+			// TODO: make me smarter :)
+			$class = \App\Http\Controllers\NamespaceController::get_model_name();
+			echo \App\Http\Controllers\BaseViewController::translate_view($class::view_headline() , 'Header' , 2 );
+		}
+		?>
+		</h1>
+	@DivClose()
 
 	@DivOpen(12)
 		@if ($create_allowed)

@@ -8,14 +8,14 @@
 
 @section('content_left')
 
-	<!-- Search Field -->
+	<!-- Search Field
 	@DivOpen(12)
 		@DivOpen(8)
 			{{ Form::model(null, array('route'=>$route_name.'.fulltextSearch', 'method'=>'GET')) }}
 				@include('Generic.searchform')
 			{{ Form::close() }}
 		@DivClose()
-	@DivClose()
+	@DivClose()-->
 
 
 	<!-- Create Form -->

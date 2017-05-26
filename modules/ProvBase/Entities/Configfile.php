@@ -34,6 +34,12 @@ class Configfile extends \BaseModel {
 		return 'Configfiles';
 	}
 
+	// View Icon
+	public static function view_icon()
+	{
+		return '<i class="fa fa-file-code-o"></i>'; 
+	}
+
 	// link title in index view
 	public function view_index_label()
 	{

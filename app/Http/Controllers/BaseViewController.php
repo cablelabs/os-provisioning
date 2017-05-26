@@ -566,7 +566,7 @@ finish:
 			// get header field name
 			// NOTE: for historical reasons check if this is a array or a plain string
 			// See: Confluence API  - get_view_headline()
-			$name = static::__get_view_icon($model).' ';
+			$name = static::__get_view_icon($model);
 			if(is_array($model->view_index_label()))
 				$name .= $model->view_index_label()['header'];
 			else

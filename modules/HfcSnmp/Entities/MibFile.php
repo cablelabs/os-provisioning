@@ -32,6 +32,12 @@ class MibFile extends \BaseModel {
 		return 'MIB-File';
 	}
 
+	// View Icon
+  public static function view_icon()
+  {
+    return '<i class="fa fa-file-o"></i>'; 
+  }
+
 	// link title in index view
 	public function view_index_label()
 	{
