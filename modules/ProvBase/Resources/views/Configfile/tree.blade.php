@@ -18,37 +18,35 @@
 	@DivClose()  -->
 
 	@DivOpen(12)
-		@DivOpen(3)
-			@if ($create_allowed)
-				{{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
-				{{Form::submit( \App\Http\Controllers\BaseViewController::translate_view('Create '.$view_header, 'Button' ) , ['style' => 'simple']) }}
-				{{ Form::close() }}
-			@endif
-		@DivClose()
+		@if ($create_allowed)
+			{{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
+				<button class="btn btn-primary m-b-15" style="simple">
+					<i class="fa fa-plus fa-lg m-r-10" aria-hidden="true"></i>
+					{{ \App\Http\Controllers\BaseViewController::translate_view('Create Configfiles', 'Button' )}}
+				</button>
+			{{ Form::close() }}
+		@endif
 	@DivClose()
 
 	<!-- database entries inside a form with checkboxes to be able to delete one or more entries -->
 	@DivOpen(12)
 
-		{{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete')) }}
+		{{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete', 'onsubmit' => 'return submitMe()')) }}
+			@include('provbase::Configfile.tree_hidden_helper', array('items' => $roots))
+				<div id="jstree-default">
+					<ul>
+						<li data-jstree='{"icon":"fa fa-folder text-info fa-lg", "opened":true}' class="f-s-16 f-w-400 m-5 nocheck">{{ \App\Http\Controllers\BaseViewController::translate_view('Configfiles', 'Header', 2)}}
+							@include('provbase::Configfile.tree_item', array('items' => $roots))
+						</li>
+					</ul>
+				</div>
 
-			@if (isset($query) && isset($scope))
-				<h4>Matches for <tt>{{ $query }}</tt> in <tt>{{ $scope }}</tt></h4>
-			@endif
-
-			<!-- <table> -->
-
-			@include('provbase::Configfile.tree_item', array('items' => $roots))
-
-			<!-- </table> -->
-
-			<br>
-
-		<!-- delete/submit button of form-->
-		@DivOpen(3)
-			{{ Form::submit('Delete', ['!class' => 'btn btn-danger btn-primary m-r-5', 'style' => 'simple']) }}
+		<!-- delete/submit button of form -->
+			<button class="btn btn-danger btn-primary m-r-5 m-t-15" style="simple">
+					<i class="fa fa-trash-o fa-lg m-r-10" aria-hidden="true"></i>
+					{{ \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button') }}
+			</button>
 			{{ Form::close() }}
-		@DivClose()
 
 	@DivClose()
 
