@@ -3,7 +3,7 @@
 
 @section('content_top')
 
-	<li class="nav-tabs">{{ HTML::linkRoute( $route_name , $view_header ) }}</li>
+	<li class="active">{{ HTML::linkRoute( $route_name , $view_header ) }}</li>
 
 @stop
 
