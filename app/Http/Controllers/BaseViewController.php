@@ -779,50 +779,43 @@ finish:
 	/**
 	* Evaluate if the value is good(0), average(1) or bad(2) in the given context
 	*
-	* @param dir: ds - downstream, us - upstream
+	* @param dir: downstream, upstream
 	* @param entity: the entity to check (power, modulation, ureflections)
 	* @param value: array containing all values (can be used for several us/ds channels)
 	* @return: array of same size as $value containing evaluation results
 	*
 	* @author: Ole Ernst
 	*/
-	public static function get_quality_color($dir, $entity, $values)
+	public static function get_quality_color($dir, $mod, $entity, $val)
 	{
-		$ret = [];
-		if($entity == 'snr' && $dir == 'ds')
-			$entity = '256qam';
-		if($entity == 'snr' && $dir == 'us')
-			$entity = '64qam';
+	$ret= "3";
 
-		foreach ($values as $val) {
-			switch ($entity) {
-			case 'pwr':
-				if($dir == 'ds')
-					$ret[] = self::_colorize($val, [-12, -5, 10, 17]);
-				if($dir == 'us')
-					$ret[] = self::_colorize($val, [22, 35, 45, 56]);
+	switch ($entity) {
+		case 'power dbmv':
+			if($dir == 'downstream')
+				$ret = self::_colorize($val, [-12, -5, 10, 17]);
+			if($dir == 'upstream')
+				$ret = self::_colorize($val, [22, 35, 45, 56]);
 				break;
-			case 'qpsk':
-				$ret[] = self::_colorize($val, [12, 15]);
-				break;
-			case '16qam':
-				$ret[] = self::_colorize($val, [18, 21]);
-				break;
-			case '32qam':
-				$ret[] = self::_colorize($val, [20, 23]);
-				break;
-			case '64qam':
-				$ret[] = self::_colorize($val, [24, 27]);
-				break;
-			case '256qam':
-				$ret[] = self::_colorize($val, [30, 33]);
-				break;
-			case 'urefl':
-				$ret[] = self::_colorize($val, [20, 30]);
+		case 'microreflection -dbc':
+			$ret = self::_colorize($val, [20, 30]);
+			break;
+		case 'snr db' :
+		case 'mer db':
+			if ($mod == 'qpsk')
+				$ret = self::_colorize($val, [12, 15]);
+			if ($mod == '16qam')
+				$ret = self::_colorize($val, [18, 21]);
+			if ($mod == '32qam')
+				$ret = self::_colorize($val, [20, 23]);
+			if ($mod == '64qam' || $mod == '0') // no docsIfCmtsModulationTable entry
+				$ret = self::_colorize($val, [24, 27]);
+			if ($mod == 'qam64')
+				$ret = self::_colorize($val, [24, 27]);
+			if ($mod == 'qam256')
+				$ret = self::_colorize($val, [30, 33]);
 				break;
 			}
-		}
-
-		return $ret;
+	return $ret;
 	}
 }
