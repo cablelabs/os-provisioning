@@ -21,7 +21,11 @@
 					@if(isset($panel_right))
 						<ul class="nav nav-pills pull-right p-b-5">
 							@foreach ($panel_right as $menu)
-								<li role="presentation"> {{ HTML::linkRoute($menu['route'], $menu['name'], $menu['link']) }}</li>
+								@if ($menu['route'] == Route::getCurrentRoute()->getName())
+									<li class="active" role="presentation"> {{ HTML::linkRoute($menu['route'], $menu['name'], $menu['link']) }}</li>
+								@else
+									<li role="presentation"> {{ HTML::linkRoute($menu['route'], $menu['name'], $menu['link']) }}</li>
+								@endif
 							@endforeach
 						</ul>
 					@endif
