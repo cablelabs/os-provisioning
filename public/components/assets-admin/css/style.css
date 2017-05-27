@@ -2206,7 +2206,7 @@ legend {
 .table > thead > tr.info > th, 
 .table > tbody > tr.info > th, 
 .table > tfoot > tr.info > th {
-    background: #dbf0f7;
+    background: lightgreen;
     border-color: #b6e2ef;
 }
 .table > thead > tr > td.success, 
@@ -2221,7 +2221,7 @@ legend {
 .table > thead > tr.success > th, 
 .table > tbody > tr.success > th, 
 .table > tfoot > tr.success > th {
-    background: #cceeee;
+    background: lightgreen;
     border-color: #99dede;
 }
 .table > thead > tr > td.danger, 
