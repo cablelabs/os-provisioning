@@ -35,6 +35,12 @@ class ProvBase extends \BaseModel {
 		return "Prov Base";
 	}
 
+	// View Icon
+	public static function view_icon()
+	{
+		return '<i class="fa fa-database"></i>';
+	}
+
 	/**
      * BOOT - init provbase observer
      */
