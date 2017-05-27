@@ -28,23 +28,41 @@
 <!-- ================== END BASE JS ================== -->
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
-<script src="{{asset('components/assets-admin/js/apps.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
 <script src="{{asset('components/nmsprime.js')}}"></script>
 <!-- Javascript Tree View (for index page) -->
 <!-- <script src="{{asset('components/assets-admin/plugins/jstree/dist/jstree.min.js')}}"></script> -->
 <!-- <script src="{{asset('components/assets-admin/js/ui-tree.demo.min.js')}}"></script> -->
 <!-- ================== END PAGE LEVEL JS ================== -->
 <script language="javascript">
+if (typeof(Storage) !== "undefined") {
+//save minified s_state
+var ministate = localStorage.getItem("minified-state");
+if (ministate == "true") {
+  $('#page-container').addClass('page-sidebar-minified');
+} else {
+  $('#page-container').removeClass('page-sidebar-minified');
+}
+var sitem = localStorage.getItem("sidebar-item");
+var chitem = localStorage.getItem("clicked-item");
+$('#' + sitem).addClass("expand");
+$('#' + sitem + ' .sub-menu ').css("display", "block");
+$('#sidebar .sub-menu li').click(function(event) {
+    localStorage.setItem("clicked-item", $(this).attr('id'));
+    if ($('.page-sidebar-minified') == true) {
+      $('#' + sitem).addClass("expand");
+    }
+});
+$('#' + chitem).addClass("active");
+}else {
+  console.log("sorry, no Web Storage Support - Cant save State of Sidebar")
+}
 /*
  * global document ready function
  */
 $(document).ready(function() {
   App.init();
 
-//Popover
-$('[data-toggle="popover"]').popover({
-    container: 'body'
-});
 // Type anywhere to search in global search for keyword
 $(document).on('keypress', function (event) {
   if ($('*:focus').length == 0 && event.target.id != 'globalsearch'){
