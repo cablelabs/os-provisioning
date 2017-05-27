@@ -639,10 +639,10 @@ finish:
 		// 	$s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
 // =======
 		if (in_array($route_name, BaseController::get_config_modules())) {	// parse: Global Config requires own link
-			$breadcrumb_path_base = "<li class='active'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).' '.BaseViewController::translate_view('Global Configurations', 'Header'))."</li>";
+			$breadcrumb_path_base = "<li class='active'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).BaseViewController::translate_view('Global Configurations', 'Header'))."</li>";
 		}
 		else {
-			$breadcrumb_path_base = Route::has($route_name.'.index') ? '<li class="active">'.static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).' '.$view_header)."</li>" : '';
+			$breadcrumb_path_base = Route::has($route_name.'.index') ? '<li class="active">'.static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).$view_header)."</li>" : '';
 		}
 // d($breadcrumb_paths, $breadcrumb_path, $breadcrumb_path_base);
 
