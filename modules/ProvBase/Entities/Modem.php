@@ -57,12 +57,18 @@ class Modem extends \BaseModel {
 			default: $bsclass = 'danger'; break;
 		}
 
-		return ['index' => [$this->id, $this->mac, $this->name, $this->lastname, $this->city, $this->street, $us_pwr],
-		        'index_header' => ['Modem Number', 'MAC address', 'Name', 'Lastname', 'City', 'Street', 'US level'],
+		$configfile = $this->configfile ? $this->configfile->name : '';
+
+		return ['index' => [$this->id, $this->mac, $configfile, $this->name, $this->lastname, $this->city, $this->street, $us_pwr],
+		        'index_header' => ['Modem Number', 'MAC address', 'Configfile', 'Name', 'Lastname', 'City', 'Street', 'US level'],
 		        'bsclass' => $bsclass,
 		        'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : '')];
 	}
 
+	public function index_list()
+	{
+		return $this->orderBy('id', 'desc')->with('configfile')->get();
+	}
 
 
 	/**

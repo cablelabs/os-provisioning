@@ -50,7 +50,7 @@
 	<div class='col-md-5'>
 	@endif
 	<div class="text-center">
-		<button class="btn btn-primary m-r-5 m-t-15" style="simple">
+		<button class="btn btn-primary m-r-5 m-t-15" style="simple" name="_save" value="1">
 			<i class="fa fa-save fa-lg m-r-10" aria-hidden="true"></i>
 			{{ \App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button') }}
 		</button>
@@ -64,7 +64,7 @@
 	<div class='col-md-6'>
 	@endif
 	<div class="text-center">
-		<button class="btn btn-primary m-r-5 m-t-15" style="simple">
+		<button class="btn btn-primary m-r-5 m-t-15" style="simple" name="_force_restart" value="1">
 			<i class="fa fa-refresh fa-lg m-r-10" aria-hidden="true"></i>
 			{{ \App\Http\Controllers\BaseViewController::translate_view($force_restart_button , 'Button') }}
 		</button>
