@@ -67,7 +67,8 @@ $(document).ready(function() {
 $(document).on('keypress', function (event) {
   if ($('*:focus').length == 0 && event.target.id != 'globalsearch'){
       var code = (event.keyCode ? event.keyCode : event.which);
-      if (code !=34 && code != 33) {
+      // if (code !=34 && code != 33) {
+      if ((code < 32 || code > 47) && (code < 112 || code > 145)) {
       $("#togglesearch").click();
       $("#globalsearch").focus().select();
       }
