@@ -818,4 +818,44 @@ finish:
 			}
 	return $ret;
 	}
+
+	public static function get_quality_color_orig($dir, $entity, $values)
+	{
+		$ret = [];
+		if($entity == 'snr' && $dir == 'ds')
+			$entity = '256qam';
+		if($entity == 'snr' && $dir == 'us')
+			$entity = '64qam';
+
+		foreach ($values as $val) {
+			switch ($entity) {
+			case 'pwr':
+				if($dir == 'ds')
+					$ret[] = self::_colorize($val, [-12, -5, 10, 17]);
+				if($dir == 'us')
+					$ret[] = self::_colorize($val, [22, 35, 45, 56]);
+				break;
+			case 'qpsk':
+				$ret[] = self::_colorize($val, [12, 15]);
+				break;
+			case '16qam':
+				$ret[] = self::_colorize($val, [18, 21]);
+				break;
+			case '32qam':
+				$ret[] = self::_colorize($val, [20, 23]);
+				break;
+			case '64qam':
+				$ret[] = self::_colorize($val, [24, 27]);
+				break;
+			case '256qam':
+				$ret[] = self::_colorize($val, [30, 33]);
+				break;
+			case 'urefl':
+				$ret[] = self::_colorize($val, [20, 30]);
+				break;
+			}
+		}
+
+		return $ret;
+	}
 }
