@@ -24,15 +24,15 @@
 
           <li class="nav-header">Navigation</li>
           @foreach ($view_header_links as $module_name => $typearray)
-            <li class="has-sub">
+            <li id="{{ Str::slug($module_name,'_')}}" class="has-sub">
               <a href="javascript:;">
                 <i class="fa {{ $typearray['icon'] }}"></i>
                 <b class="caret pull-right"></b>
-                <span cl>{{$module_name}}</span>
+                <span>{{$module_name}}</span>
               </a>
               <ul class="sub-menu">
               @foreach ($typearray['submenu'] as $type => $valuearray)
-              <li>
+              <li id="{{  Str::slug($type,'_') }}">
                 <a href="{{route($valuearray['link'])}}">
                   <i class="fa {{ $valuearray['icon'] }}"></i>
                   <span>{{ $type }}</span>

@@ -38,7 +38,7 @@ return [
 //
 	//Main Menu
 		'Menu_MainMenu' 			=> 'Hauptmenü',
-		'Menu_Config Page'			=> 'Systemkonfigurationen',
+		'Menu_Config Page'			=> 'Systemkonfiguration',
 		'Menu_Logging'				=> 'Logs',
 		'Menu_Product List'			=> 'Produktliste',
 		'Menu_SEPA Accounts'		=> 'SEPA-Konten',
@@ -83,12 +83,12 @@ return [
 	//
 	//Global'Config
 		//Global
-		'Header_Global Configurations' => 'Systemkonfigurationen',
+		'Header_Global Configurations' => 'Systemkonfiguration',
 		'Header_Global Config'		=> 'Globale Konfiguration|Globale Konfigurationen',
 		'Header_EditGlobal Config'	=> 'Globale Konfiguration bearbeiten',
-		'Header_Billing Config'		=> 'Moduleinstellungen für Billing Base', 
+		'Header_Billing Config'		=> 'Moduleinstellungen für Billing Base',
 		'Header_EditBilling Config' => 'Moduleinstellungen für Billing Base bearbeiten',
-		'Header_ProvVoip'			=> 'Moduleinstellungen VOIP',		
+		'Header_ProvVoip'			=> 'Moduleinstellungen VOIP',
 		'Header_EditProvVoip Config'=> 'Moduleinstellungen VOIP bearbeiten',
 		'Header_Ccc Config'			=> 'Moduleinstellungen Kundenkontrollzentrum',
 		'Header_EditCcc Config'		=> 'Moduleinstellungen Kundenkontrollzentrum bearbeiten',

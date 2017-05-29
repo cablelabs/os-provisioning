@@ -36,6 +36,11 @@ class Phonenumber extends \BaseModel {
 		return 'Phonenumbers';
 	}
 
+  // View Icon
+  public static function view_icon()
+  {
+    return '<i class="fa fa-list-ol"></i>'; 
+  }
 
 	// link title in index view
     public function view_index_label(){

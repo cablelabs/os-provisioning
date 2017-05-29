@@ -51,6 +51,12 @@ class NetElement extends \BaseModel {
 		return 'NetElement';
 	}
 
+	// View Icon
+  public static function view_icon()
+  {
+    return '<i class="fa fa-object-ungroup"></i>'; 
+  }
+
 	// Relations
 	public function view_has_many()
 	{

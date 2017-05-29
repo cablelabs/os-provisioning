@@ -22,10 +22,9 @@
               </ul>
           </div>
 
-        <div class="row col-md-3 navbar-right">
-        <ul class="nav navbar-nav navbar-right">
+          <ul class="nav navbar-nav navbar-right">
             <!-- global search form -->
-              <li class="col-md-1 col-sm-2 col-xs-2 p-r-15">
+              <li class="p-r-5">
                 <a id="togglesearch" href="javascript:;" class="icon notification waves-effect waves-light" data-toggle="navbar-search"><i class="fa fa-search fa-lg" aria-hidden="true"></i></a>
               </li>
 			{{-- TODO: discuss the following draft (position, coding) --}}
@@ -52,11 +51,11 @@
 				}
 			?>
 
-          <li class="dropdown navbar-user col-md-10 col-sm-8 col-xs-8 pull-right">
+          <li class="dropdown navbar-user m-r-15">
               <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="fa fa-user-circle-o fa-lg" aria-hidden="true"></i>
-                <span class="hidden-xs hidden-sm"><img src="{{asset('components/assets-admin/img/user-11.jpg')}}" alt ="" />  {{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span>
-                <b class="caret"></b>
+                <i class="fa fa-user-circle-o fa-lg visible-sm visible-xs col-sm-1 col-xs-1 p-t-5" aria-hidden="true"></i>
+                <span class="hidden-xs hidden-sm">{{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span><b class="caret"></b>
+                <span class="hidden-xs hidden-sm"><img src="{{asset('components/assets-admin/img/user-11.jpg')}}" alt =""></span>
               </a>
 
             <ul class="dropdown-menu animated fadeInLeft p-r-10">
@@ -64,21 +63,22 @@
               <li><a href="{{route('Authuser.edit', \Auth::user()->id)}}"> <i class="fa fa-cog" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}</a></li>
               @if (\Auth::user()->is_admin() === true)
                 <li><a href="{{route('Authuser.index')}}"><i class="fa fa-cogs" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserGlobSettings', 'Menu')}}</a></li>
-                <li><a href="{{route('Authrole.index')}}"><i class="fa fa-users" aria-hidden="true"></i>{{ \App\Http\Controllers\BaseViewController::translate_view('UserRoleSettings', 'Menu')}}</a></li>
+                <li><a href="{{route('Authrole.index')}}"><i class="fa fa-users" aria-hidden="true"></i> {{ \App\Http\Controllers\BaseViewController::translate_view('UserRoleSettings', 'Menu')}}</a></li>
               @endif
               <li class="divider"></li>
               <li><a href="{{route('Auth.logout')}}"><i class="fa fa-sign-out" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('Logout', 'Menu')}}</a></li>
             </ul>
           </li>
         </ul>
-      </div>
 
         <!-- end header navigation right -->
         <div class="search-form bg-white">
               {{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET'), 'simple') }}
               {{ Form::hidden('mode', 'simple') }}
               {{ Form::hidden('scope', 'all') }}
-            <button class="search-btn" type="submit"><i class="fa fa-search fa-2x" aria-hidden="true"></i></button>
+            <button class="search-btn" type="submit">
+                <i class="fa fa-search fa-2x" aria-hidden="true"></i>
+            </button>
             <input id="globalsearch" type="text" name="query" class="form-control navbar" placeholder="<?php echo \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search'); ?>">
             <a href="#" class="close" data-dismiss="navbar-search"><i class="fa fa-angle-up fa-2x" aria-hidden="true"></i></a>
             {{ Form::close() }}

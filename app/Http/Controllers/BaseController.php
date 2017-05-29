@@ -82,11 +82,17 @@ class BaseController extends Controller {
 		$class = \NamespaceController::get_model_name();
 		$class_name = substr(strrchr($class, "\\"), 1);
 
-		return [[
+		return ['0' => [
 			'name' => 'Logging',
 			'route' => 'GuiLog.filter',
 			'link' => ['model_id' => $view_var->id, 'model' => $class_name]
-		]];
+		],
+		'1' =>
+			['name' => "Edit",
+				'route' => $class_name.'.edit',
+				'link' => ['model_id' => $view_var->id, 'model' => $class_name]
+			],
+	];
 	}
 
 
@@ -268,7 +274,7 @@ class BaseController extends Controller {
 			}
 
 			// add tab for GuiLog
-			array_push($c, $ret[0]);
+			array_push($c, $ret[1]);
 
 			return $c;
 		} else {

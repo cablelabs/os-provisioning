@@ -345,8 +345,9 @@ class BaseViewController extends Controller {
 
 			// Help: add help icon/image behind form field
 			if (isset($field['help']))
-				$s .= '<div title="'.$field['help'].'" name='.$field['name'].'-help class=col-md-1>'.
-					  \HTML::image(asset('images/help.png'), null, ['width' => 20]).'</div>';
+				$s .= '<div name='.$field['name'].'-help class="col-md-1"><a data-toggle="popover" data-container="body"
+							data-trigger="hover" title="'.\App\Http\Controllers\BaseViewController::translate_label($field['description']).'" data-placement="right" data-content="'.$field['help'].'">'.
+							'<i class="fa fa-question-circle fa-2x text-info p-t-5"></i></a></div>';
 
 			// Close Form Group
 			$s .= \Form::closeGroup();
@@ -565,7 +566,7 @@ finish:
 			// get header field name
 			// NOTE: for historical reasons check if this is a array or a plain string
 			// See: Confluence API  - get_view_headline()
-			$name = static::__get_view_icon($model).' ';
+			$name = static::__get_view_icon($model);
 			if(is_array($model->view_index_label()))
 				$name .= $model->view_index_label()['header'];
 			else
@@ -638,10 +639,10 @@ finish:
 		// 	$s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
 // =======
 		if (in_array($route_name, BaseController::get_config_modules())) {	// parse: Global Config requires own link
-			$breadcrumb_path_base = "<li class='active'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).' '.BaseViewController::translate_view('Global Configurations', 'Header'))."</li>";
+			$breadcrumb_path_base = "<li class='active'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).BaseViewController::translate_view('Global Configurations', 'Header'))."</li>";
 		}
 		else {
-			$breadcrumb_path_base = Route::has($route_name.'.index') ? '<li class="active">'.static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).' '.$view_header)."</li>" : '';
+			$breadcrumb_path_base = Route::has($route_name.'.index') ? '<li class="active">'.static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).$view_header)."</li>" : '';
 		}
 // d($breadcrumb_paths, $breadcrumb_path, $breadcrumb_path_base);
 
@@ -778,14 +779,47 @@ finish:
 	/**
 	* Evaluate if the value is good(0), average(1) or bad(2) in the given context
 	*
-	* @param dir: ds - downstream, us - upstream
+	* @param dir: downstream, upstream
 	* @param entity: the entity to check (power, modulation, ureflections)
 	* @param value: array containing all values (can be used for several us/ds channels)
 	* @return: array of same size as $value containing evaluation results
 	*
 	* @author: Ole Ernst
 	*/
-	public static function get_quality_color($dir, $entity, $values)
+	public static function get_quality_color($dir, $mod, $entity, $val)
+	{
+	$ret= "3";
+
+	switch ($entity) {
+		case 'power dbmv':
+			if($dir == 'downstream')
+				$ret = self::_colorize($val, [-12, -5, 10, 17]);
+			if($dir == 'upstream')
+				$ret = self::_colorize($val, [22, 35, 45, 56]);
+				break;
+		case 'microreflection -dbc':
+			$ret = self::_colorize($val, [20, 30]);
+			break;
+		case 'snr db' :
+		case 'mer db':
+			if ($mod == 'qpsk')
+				$ret = self::_colorize($val, [12, 15]);
+			if ($mod == '16qam')
+				$ret = self::_colorize($val, [18, 21]);
+			if ($mod == '32qam')
+				$ret = self::_colorize($val, [20, 23]);
+			if ($mod == '64qam' || $mod == '0') // no docsIfCmtsModulationTable entry
+				$ret = self::_colorize($val, [24, 27]);
+			if ($mod == 'qam64')
+				$ret = self::_colorize($val, [24, 27]);
+			if ($mod == 'qam256')
+				$ret = self::_colorize($val, [30, 33]);
+				break;
+			}
+	return $ret;
+	}
+
+	public static function get_quality_color_orig($dir, $entity, $values)
 	{
 		$ret = [];
 		if($entity == 'snr' && $dir == 'ds')

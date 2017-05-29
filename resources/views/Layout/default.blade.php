@@ -18,13 +18,17 @@
 
 			<div id="content" class="content p-t-15">
 
-				<ul class="nav nav-pills pull-right p-b-5">
 					@if(isset($panel_right))
-						@foreach ($panel_right as $menu)
-							<li role="presentation"> {{ HTML::linkRoute($menu['route'], $menu['name'], $menu['link']) }}</li>
-						@endforeach
+						<ul class="nav nav-pills pull-right p-b-5">
+							@foreach ($panel_right as $menu)
+								@if ($menu['route'] == Route::getCurrentRoute()->getName())
+									<li class="active" role="presentation"> {{ HTML::linkRoute($menu['route'], $menu['name'], $menu['link']) }}</li>
+								@else
+									<li role="presentation"> {{ HTML::linkRoute($menu['route'], $menu['name'], $menu['link']) }}</li>
+								@endif
+							@endforeach
+						</ul>
 					@endif
-				</ul>
 
 				@yield ('content')
 			</div>
