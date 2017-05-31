@@ -237,7 +237,7 @@ class BaseController extends Controller {
 		// Version 1
 		$ret = $this->get_form_tabs($view_var);
 
-		if ($ret)
+		if ($ret) // dummy comment to provoke merge conflict
 			return $ret;
 
 		// view_has_many() Version 2
