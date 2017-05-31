@@ -31,6 +31,12 @@ class ProvVoip extends \BaseModel {
 		return "ProvVoip";
 	}
 
+	// View Icon
+	public static function view_icon()
+	{
+		return '<i class="fa fa-phone"></i>';
+	}
+
     public static function boot()
     {
         parent::boot();

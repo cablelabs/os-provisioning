@@ -1,13 +1,24 @@
 /**
 * Danish translations
 */
-(function($){
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define('bootstrap.wysihtml5.da-DK', ['jquery', 'bootstrap.wysihtml5'], factory);
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function($){
     $.fn.wysihtml5.locale["da-DK"] = {
         font_styles: {
             normal: "Normal tekst",
             h1: "Overskrift 1",
             h2: "Overskrift 2",
-            h3: "Overskrift 3"
+            h3: "Overskrift 3",
+            h4: "Overskrift 4",
+            h5: "Overskrift 5",
+            h6: "Overskrift 6"
         },
         emphasis: {
             bold: "Fed",
@@ -22,7 +33,8 @@
         },
         link: {
             insert: "Indsæt Link",
-            cancel: "Annuler"
+            cancel: "Annuler",
+            target: "Åbn link i nyt vindue"
         },
         image: {
             insert: "Indsæt billede",
@@ -45,4 +57,4 @@
             orange: "Orange"
         }
     };
-}(jQuery));
+}));

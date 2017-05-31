@@ -1,12 +1,24 @@
 /**
  * Catalan translation for bootstrap-wysihtml5
  */
-(function($){
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define('bootstrap.wysihtml5.ca-CT', ['jquery', 'bootstrap.wysihtml5'], factory);
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function($){
     $.fn.wysihtml5.locale["ca-CT"] = {
         font_styles: {
               normal: "Text normal",
               h1: "Títol 1",
-              h2: "Títol 2"
+              h2: "Títol 2",
+              h3: "Títol 3",
+              h4: "Títol 4",
+              h5: "Títol 5",
+              h6: "Títol 6"
         },
         emphasis: {
               bold: "Negreta",
@@ -21,7 +33,8 @@
         },
         link: {
               insert: "Afegir enllaç",
-              cancel: "Cancelar"
+              cancel: "Cancelar",
+              target: "Obrir enllaç en una finestra"
         },
         image: {
               insert: "Afegir imatge",
@@ -44,4 +57,4 @@
             orange: "Taronja"
         }
     };
-}(jQuery));
+}));

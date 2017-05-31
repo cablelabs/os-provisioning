@@ -2,20 +2,20 @@
 
 @section('content_top')
 
-	{{ HTML::linkRoute($route_name.'.index', \App\Http\Controllers\BaseViewController::translate_view('Overview', 'Header')) }} <!--$view_header -->
+	<li class="active"> {{ HTML::linkRoute($route_name.'.index', $view_header) }} </li>
 
 @stop
 
 @section('content_left')
 
-	<!-- Search Field -->
+	<!-- Search Field
 	@DivOpen(12)
 		@DivOpen(8)
 			{{ Form::model(null, array('route'=>$route_name.'.fulltextSearch', 'method'=>'GET')) }}
 				@include('Generic.searchform')
 			{{ Form::close() }}
 		@DivClose()
-	@DivClose()
+	@DivClose()-->
 
 
 	<!-- Create Form -->

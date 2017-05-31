@@ -1,16 +1,16 @@
 /*   
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.5
-Version: 1.8.0
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
+Version: 2.1.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v1.8/admin/
+Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
 */
 
-var green = '#00acac',
-    red = '#ff5b57',
-    blue = '#348fe2',
-    purple = '#727cb6',
-    orange = '#f59c1a',
-    black = '#2d353c';
+var green = '#009688',
+    red = '#F44336',
+    blue = '#2196F3',
+    purple = '#673AB7',
+    orange = '#FF9800',
+    black = '#212121';
 
 var renderSwitcher = function() {
     if ($('[data-render=switchery]').length !== 0) {
@@ -40,7 +40,7 @@ var renderSwitcher = function() {
                 option.secondaryColor = ($(this).attr('data-secondary-color')) ? $(this).attr('data-secondary-color') : '#dfdfdf';
                 option.className = ($(this).attr('data-classname')) ? $(this).attr('data-classname') : 'switchery';
                 option.disabled = ($(this).attr('data-disabled')) ? true : false;
-                option.disabledOpacity = ($(this).attr('data-disabled-opacity')) ? $(this).attr('data-disabled-opacity') : 0.5;
+                option.disabledOpacity = ($(this).attr('data-disabled-opacity')) ? parseFloat($(this).attr('data-disabled-opacity')) : 0.5;
                 option.speed = ($(this).attr('data-speed')) ? $(this).attr('data-speed') : '0.5s';
             var switchery = new Switchery(this, option);
         });
@@ -62,13 +62,13 @@ var renderPowerRangeSlider = function() {
             var option = {};
                 option.decimal = ($(this).attr('data-decimal')) ? $(this).attr('data-decimal') : false;
                 option.disable = ($(this).attr('data-disable')) ? $(this).attr('data-disable') : false;
-                option.disableOpacity = ($(this).attr('data-disable-opacity')) ? $(this).attr('data-disable-opacity') : 0.5;
+                option.disableOpacity = ($(this).attr('data-disable-opacity')) ? parseFloat($(this).attr('data-disable-opacity')) : 0.5;
                 option.hideRange = ($(this).attr('data-hide-range')) ? $(this).attr('data-hide-range') : false;
                 option.klass = ($(this).attr('data-class')) ? $(this).attr('data-class') : '';
-                option.min = ($(this).attr('data-min')) ? $(this).attr('data-min') : 0;
-                option.max = ($(this).attr('data-max')) ? $(this).attr('data-max') : 100;
-                option.start = ($(this).attr('data-start')) ? $(this).attr('data-start') : null;
-                option.step = ($(this).attr('data-step')) ? $(this).attr('data-step') : null;
+                option.min = ($(this).attr('data-min')) ? parseInt($(this).attr('data-min')) : 0;
+                option.max = ($(this).attr('data-max')) ? parseInt($(this).attr('data-max')) : 100;
+                option.start = ($(this).attr('data-start')) ? parseInt($(this).attr('data-start')) : null;
+                option.step = ($(this).attr('data-step')) ? parseInt($(this).attr('data-step')) : null;
                 option.vertical = ($(this).attr('data-vertical')) ? $(this).attr('data-vertical') : false;
             if ($(this).attr('data-height')) {
                 $(this).closest('.slider-wrapper').height($(this).attr('data-height'));

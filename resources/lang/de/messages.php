@@ -43,6 +43,7 @@ return [
 	'E-Mail Address'			=> 'Email-Adresse',
 	'First IP'					=> 'Erste IP',
 	'Firstname'					=> 'Vorname',
+	'Force Restart'				=> 'Neustart erzwingen',
 	'IBAN'						=> 'IBAN',
 	'Internet Access'			=> 'Internetzugriff',
 	'Inventar Number'			=> 'Inventarnummer',

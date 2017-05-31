@@ -1,28 +1,30 @@
 /*   
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.5
-Version: 1.8.0
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
+Version: 2.1.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v1.8/admin/
+Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
 */
 
-var blue		= '#348fe2',
-    blueLight	= '#5da5e8',
-    blueDark	= '#1993E4',
-    aqua		= '#49b6d6',
-    aquaLight	= '#6dc5de',
-    aquaDark	= '#3a92ab',
-	green		= '#00acac',
-	greenLight	= '#33bdbd',
-	greenDark	= '#008a8a',
-	orange		= '#f59c1a',
-	orangeLight	= '#f7b048',
-	orangeDark	= '#c47d15',
-    dark		= '#2d353c',
-    grey		= '#b6c2c9',
-    purple		= '#727cb6',
-    purpleLight	= '#8e96c5',
-    purpleDark	= '#5b6392',
-    red         = '#ff5b57';
+var blue		= '#2196F3',
+    blueLight	= '#64B5F6',
+    blueDark	= '#1976D2',
+    aqua		= '#03A9F4',
+    aquaLight	= '#4FC3F7',
+    aquaDark	= '#0288D1',
+    green		= '#009688',
+    greenLight	= '#4DB6AC',
+    greenDark	= '#00796B',
+    orange		= '#FF9800',
+    orangeLight	= '#FFB74D',
+    orangeDark	= '#F57C00',
+    dark		= '#212121',
+    grey		= '#9E9E9E',
+    purple		= '#673AB7',
+    purpleLight	= '#9575CD',
+    purpleDark	= '#512DA8',
+    orange      = '#FF9800',
+    pink        = '#E91E63',
+    red         = '#F44336';
     
 var handleBasicChart = function () {
 	"use strict";
@@ -49,16 +51,16 @@ var handleBasicChart = function () {
                 points: { show: false }
             },
             xaxis: {
-                tickColor: '#ddd'
+                tickColor: '#E0E0E0'
             },
             yaxis: {
-                min: -2,
-                max: 2,
-                tickColor: '#ddd'
+                min: -3,
+                max: 3,
+                tickColor: '#E0E0E0'
             },
             grid: {
-                borderColor: '#ddd',
-                borderWidth: 1
+                borderColor: '#E0E0E0',
+                borderWidth: 0
             }
         });
 	}
@@ -90,13 +92,13 @@ var handleStackedChart = function () {
         d6.push([f, parseInt(Math.random() * 5 + 5)]);
     }
     var ticksLabel = [
-        [0, "Monday"], [1, "Tuesday"], [2, "Wednesday"], [3, "Thursday"],
-        [4, "Friday"], [5, "Saturday"]
+        [0, "Mon"], [1, "Tue"], [2, "Wed"], [3, "Thur"],
+        [4, "Fri"], [5, "Sat"]
     ];
     
     var options = { 
         xaxis: {  tickColor: 'transparent',  ticks: ticksLabel},
-        yaxis: {  tickColor: '#ddd', ticksLength: 10},
+        yaxis: {  tickColor: '#E0E0E0', ticksLength: 10},
         grid: { 
             hoverable: true, 
             tickColor: "#ccc",
@@ -230,7 +232,7 @@ var handleTrackingChart = function () {
             } else if (p2 === null) {
                 y = p1[1];
             } else {
-                y = p1[1] + (p2[1] - p1[1]) * (pos.x - p1[0]) / (p2[0] - p1[0]);
+                y = p1[1];
             }
 
             legends.eq(i).text(series.label.replace(/=.*/, "= " + y.toFixed(2)));
@@ -239,8 +241,8 @@ var handleTrackingChart = function () {
 	if ($('#tracking-chart').length !== 0) {
         var plot = $.plot($("#tracking-chart"),
         [ 
-            { data: sin, label: "Series1", color: dark, shadowSize: 0},
-            { data: cos, label: "Series2", color: red, shadowSize: 0} 
+            { data: sin, label: "Series1", color: pink, shadowSize: 0},
+            { data: cos, label: "Series2", color: dark, shadowSize: 0} 
         ], 
         {
             series: {
@@ -249,10 +251,9 @@ var handleTrackingChart = function () {
             crosshair: { mode: "x", color: grey },
             grid: { hoverable: true, autoHighlight: false, borderColor: '#ccc', borderWidth: 0 },
             xaxis: {  tickLength: 0 },
-            yaxis: {  tickColor: '#ddd' },
+            yaxis: {  tickColor: '#E0E0E0' },
             legend: {
-                labelBoxBorderColor: '#ddd',
-                backgroundOpacity: 0.4,
+                labelBoxBorderColor: '#E0E0E0',
                 color:'#fff',
                 show: true
             }
@@ -290,7 +291,7 @@ var handleBarChart = function () {
             },
             xaxis: {
                 mode: "categories",
-                tickColor: '#ddd',
+                tickColor: '#E0E0E0',
 				tickLength: 0
             },
             grid: {
@@ -321,7 +322,7 @@ var handleInteractivePieChart = function () {
                 clickable: true
             },
             legend: {
-                labelBoxBorderColor: '#ddd',
+                labelBoxBorderColor: '#E0E0E0',
                 backgroundColor: 'none'
             }
         });
@@ -389,17 +390,17 @@ var handleInteractiveChart = function () {
                 }
             ], 
             {
-                xaxis: {  tickColor: '#ddd',tickSize: 2 },
-                yaxis: {  tickColor: '#ddd', tickSize: 20 },
+                xaxis: {  tickColor: '#E0E0E0',tickSize: 2 },
+                yaxis: {  tickColor: '#E0E0E0', tickSize: 20 },
                 grid: { 
                     hoverable: true, 
                     clickable: true,
                     tickColor: "#ccc",
-                    borderWidth: 1,
-                    borderColor: '#ddd'
+                    borderWidth: 0,
+                    borderColor: '#E0E0E0'
                 },
                 legend: {
-                    labelBoxBorderColor: '#ddd',
+                    labelBoxBorderColor: '#E0E0E0',
                     margin: 0,
                     noColumns: 1,
                     show: true
@@ -484,11 +485,11 @@ var handleLiveUpdatedChart = function () {
         // setup plot
         var options = {
             series: { shadowSize: 0, color: purple, lines: { show: true, fill:true } }, // drawing is faster without shadows
-            yaxis: { min: 0, max: 100, tickColor: '#ddd' },
-            xaxis: { show: true, tickColor: '#ddd' },
+            yaxis: { min: 0, max: 100, tickColor: '#E0E0E0' },
+            xaxis: { show: true, tickColor: '#E0E0E0' },
             grid: {
-                borderWidth: 1,
-                borderColor: '#ddd'
+                borderWidth: 0,
+                borderColor: '#E0E0E0'
             }
         };
         var plot = $.plot($("#live-updated-chart"), [ getRandomData() ], options);

@@ -1,0 +1,189 @@
+/* Top Menu Element */
+
+.page-with-top-menu {
+    padding-top: 106px;
+}
+.page-with-top-menu .sidebar {
+    padding-top: 106px;
+}
+.top-menu {
+    background: @blue_grey_800;
+    height: 46px;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    z-index: 1015;
+}
+.top-menu .nav {
+    white-space: nowrap;
+}
+.top-menu .nav > li {
+    display: inline-block;
+    position: relative;
+}
+.top-menu .nav > li + li {
+    margin-left: -3px;
+}
+.top-menu .nav > li > a {
+    padding: 10px 20px;
+    color: @blue_grey_100;
+    line-height: 26px;
+    font-weight: 500;
+}
+.top-menu .nav > li > a .badge,
+.top-menu .nav > li > a .label {
+    margin-left: 5px;
+}
+.top-menu .nav > li > a .badge {
+    background: #1b1f24;
+}
+.top-menu .nav > li > a .badge.pull-right,
+.top-menu .nav > li > a .label.pull-right {
+    margin-top: 4px;
+}
+.top-menu .nav > li.active > a .label.label-theme,
+.top-menu .nav > li.active > a .badge {
+    background: url(../img/transparent/black-0.4.png);
+    background: rgba(0,0,0,0.4);
+}
+.top-menu .nav > li > a i {
+    float: left;
+    font-size: 24px;
+    margin-right: 10px;
+    line-height: 26px;
+    width: 24px;
+    text-align: center;
+    color: @blue_grey_600;
+}
+.top-menu .nav > li.active > a i {
+    color: @white;
+}
+.top-menu .nav > li > a .caret {
+    border-width: 5px;
+}
+.top-menu .nav > li > a .caret.pull-right {
+    margin-top: 11px;
+    margin-left: 10px;
+}
+.top-menu .nav > li:hover > a,
+.top-menu .nav > li:focus > a,
+.top-menu .nav > li > a:hover,
+.top-menu .nav > li > a:focus {
+    background: none;
+}
+
+
+/* 15.2.1 Top Menu Sub Menu Setting */
+
+.top-menu .nav .sub-menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    min-width: 220px;
+    max-width: 320px;
+    top: 100%;
+    background: #2F3C43;
+    list-style-type: none;
+    margin: 0;
+    padding: 10px 0;
+}
+.top-menu .sub-menu > li > a {
+    padding: 5px 20px;
+    display: block;
+    color: #8a8f94;
+    text-decoration: none;
+    position: relative;
+}
+.top-menu .nav .sub-menu > li > a .caret {
+    margin-top: 7px;
+}
+.top-menu .sub-menu .sub-menu {
+    background: url(../img/transparent/black-0.2.png);
+    background: rgba(0,0,0,0.2);
+    position: relative;
+    left: 0;
+    top: 0;
+}
+.top-menu .sub-menu > li.active > a,
+.top-menu .sub-menu > li.active > a:hover,
+.top-menu .sub-menu > li.active > a:focus,
+.top-menu .sub-menu > li > a:hover,
+.top-menu .sub-menu > li > a:focus {
+    color: @white;
+}
+.top-menu .nav > li.has-sub:hover > .sub-menu {
+    display: block;
+}
+.top-menu .nav > li.active > a,
+.top-menu .nav > li.active > a:hover,
+.top-menu .nav > li.active > a:focus{
+    background: @teal_500;
+    color: @white;
+}
+
+
+/* 15.2.2 Top Menu Left & Right Control Setting */
+
+.top-menu .nav > li.menu-control {
+    position: absolute;
+    top: 0;
+    width: 46px;
+    background: @blue_grey_800;
+    height: 46px;
+    margin: 0;
+}
+.top-menu .nav > li.menu-control > a {
+    padding: 0;
+    text-align: center;
+    line-height: 46px;
+}
+.top-menu .nav > li.menu-control > a i {
+    float: none;
+    margin: 0;
+    font-size: 24px;
+    display: block;
+    line-height: 46px;
+    color: @white;
+    width: auto;
+}
+.top-menu .nav > li.menu-control.menu-control-left {
+    left: -56px;
+}
+.top-menu .nav > li.menu-control.menu-control-right {
+    right: -56px;
+}
+@keyframes slideInLeft {
+    from { left: -56px; }
+    to { left: 0; }
+}
+@-webkit-keyframes slideInLeft {
+    from { left: -56px; }
+    to { left: 0; }
+}
+.top-menu .nav > li.menu-control.menu-control-left.show {
+    -webkit-animation: slideInLeft .2s;
+    animation: slideInLeft .2s;
+    left: 0;
+}
+@keyframes slideInRight {
+    from { right: -56px; }
+    to { right: 0; }
+}
+@-webkit-keyframes slideInRight {
+    from { right: -56px; }
+    to { right: 0; }
+}
+.top-menu .nav > li.menu-control.menu-control-right.show {
+    -webkit-animation: slideInRight .2s;
+    animation: slideInRight .2s;
+    right: 0;
+}
+.top-menu .nav > li.menu-control.menu-control-left > a {
+    -webkit-box-shadow: 5px 0 8px -3px rgba(0,0,0,0.5);
+    box-shadow: 5px 0 8px -3px rgba(0,0,0,0.5);
+}
+.top-menu .nav > li.menu-control.menu-control-right > a {
+    -webkit-box-shadow: -5px 0 8px -3px rgba(0,0,0,0.5);
+    box-shadow: -5px 0 8px -3px rgba(0,0,0,0.5);
+}

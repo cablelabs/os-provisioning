@@ -1,5 +1,5 @@
 /* =============================================================
- * bootstrap-combobox.js v1.1.5
+ * bootstrap-combobox.js v1.1.7
  * =============================================================
  * Copyright 2012 Daniel Farrell
  *
@@ -25,6 +25,7 @@
 
   var Combobox = function ( element, options ) {
     this.options = $.extend({}, $.fn.combobox.defaults, options);
+    this.template = this.options.template || this.template
     this.$source = $(element);
     this.$container = this.setup();
     this.$element = this.$container.find('input[type=text]');
@@ -46,12 +47,25 @@
     constructor: Combobox
 
   , setup: function () {
-      var combobox = $(this.options.template);
+      var combobox = $(this.template());
       this.$source.before(combobox);
       this.$source.hide();
       return combobox;
     }
 
+  , disable: function() {
+      this.$element.prop('disabled', true);
+      this.$button.attr('disabled', true);
+      this.disabled = true;
+      this.$container.addClass('combobox-disabled');
+    }
+
+  , enable: function() {
+      this.$element.prop('disabled', false);
+      this.$button.attr('disabled', false);
+      this.disabled = false;
+      this.$container.removeClass('combobox-disabled');
+    }
   , parse: function () {
       var that = this
         , map = {}
@@ -82,17 +96,22 @@
     }
 
   , transferAttributes: function() {
-    this.options.placeholder = this.$source.attr('data-placeholder') || this.options.placeholder;
-    this.$element.attr('placeholder', this.options.placeholder);
-    this.$target.prop('name', this.$source.prop('name'));
-    this.$target.val(this.$source.val());
-    this.$source.removeAttr('name');  // Remove from source otherwise form will pass parameter twice.
-    this.$element.attr('required', this.$source.attr('required'));
-    this.$element.attr('rel', this.$source.attr('rel'));
-    this.$element.attr('title', this.$source.attr('title'));
-    this.$element.attr('class', this.$source.attr('class'));
-    this.$element.attr('tabindex', this.$source.attr('tabindex'));
-    this.$source.removeAttr('tabindex');
+    this.options.placeholder = this.$source.attr('data-placeholder') || this.options.placeholder
+    if(this.options.appendId !== "undefined") {
+    	this.$element.attr('id', this.$source.attr('id') + this.options.appendId);
+    }
+    this.$element.attr('placeholder', this.options.placeholder)
+    this.$target.prop('name', this.$source.prop('name'))
+    this.$target.val(this.$source.val())
+    this.$source.removeAttr('name')  // Remove from source otherwise form will pass parameter twice.
+    this.$element.attr('required', this.$source.attr('required'))
+    this.$element.attr('rel', this.$source.attr('rel'))
+    this.$element.attr('title', this.$source.attr('title'))
+    this.$element.attr('class', this.$source.attr('class'))
+    this.$element.attr('tabindex', this.$source.attr('tabindex'))
+    this.$source.removeAttr('tabindex')
+    if (this.$source.attr('disabled')!==undefined)
+      this.disable();
   }
 
   , select: function () {
@@ -122,12 +141,16 @@
         })
         .show();
 
+      $('.dropdown-menu').on('mousedown', $.proxy(this.scrollSafety, this));
+
       this.shown = true;
       return this;
     }
 
   , hide: function () {
       this.$menu.hide();
+      $('.dropdown-menu').off('mousedown', $.proxy(this.scrollSafety, this));
+      this.$element.on('blur', $.proxy(this.blur, this));
       this.shown = false;
       return this;
     }
@@ -151,6 +174,14 @@
       }
 
       return this.render(items.slice(0, this.options.items)).show();
+    }
+
+  , template: function() {
+      if (this.options.bsVersion == '2') {
+        return '<div class="combobox-container"><input type="hidden" /> <div class="input-append"> <input type="text" autocomplete="false" /> <span class="add-on dropdown-toggle" data-dropdown="dropdown"> <span class="caret"/> <i class="icon-remove"/> </span> </div> </div>'
+      } else {
+        return '<div class="combobox-container"> <input type="hidden" /> <div class="input-group"> <input type="text" autocomplete="false" /> <span class="input-group-addon dropdown-toggle" data-dropdown="dropdown"> <span class="caret" /> <span class="glyphicon glyphicon-remove" /> </span> </div> </div>'
+      }
     }
 
   , matcher: function (item) {
@@ -216,20 +247,27 @@
     }
 
   , toggle: function () {
-    if (this.$container.hasClass('combobox-selected')) {
-      this.clearTarget();
-      this.triggerChange();
-      this.clearElement();
-    } else {
-      if (this.shown) {
-        this.hide();
-      } else {
+    if (!this.disabled) {
+      if (this.$container.hasClass('combobox-selected')) {
+        this.clearTarget();
+        this.triggerChange();
         this.clearElement();
-        this.lookup();
+      } else {
+        if (this.shown) {
+          this.hide();
+        } else {
+          this.clearElement();
+          this.lookup();
+        }
       }
     }
   }
 
+  , scrollSafety: function(e) {
+      if (e.target.tagName == 'UL') {
+          this.$element.off('blur');
+      }
+  }
   , clearElement: function () {
     this.$element.val('').focus();
   }
@@ -292,16 +330,33 @@
         case 38: // up arrow
           e.preventDefault();
           this.prev();
+          this.fixMenuScroll();
           break;
 
         case 40: // down arrow
           e.preventDefault();
           this.next();
+          this.fixMenuScroll();
           break;
       }
 
       e.stopPropagation();
     }
+
+  , fixMenuScroll: function(){
+      var active = this.$menu.find('.active');
+      if(active.length){
+          var top = active.position().top;
+          var bottom = top + active.height();
+          var scrollTop = this.$menu.scrollTop();
+          var menuHeight = this.$menu.height();
+          if(bottom > menuHeight){
+              this.$menu.scrollTop(scrollTop + bottom - menuHeight);
+          } else if(top < 0){
+              this.$menu.scrollTop(scrollTop + top);
+          }
+      }
+  }
 
   , keydown: function (e) {
       this.suppressKeyPressRepeat = ~$.inArray(e.keyCode, [40,38,9,13,27]);
@@ -316,6 +371,10 @@
   , keyup: function (e) {
       switch(e.keyCode) {
         case 40: // down arrow
+         if (!this.shown){
+           this.toggle();
+         }
+         break;
         case 39: // right arrow
         case 38: // up arrow
         case 37: // left arrow
@@ -382,7 +441,6 @@
 
   /* COMBOBOX PLUGIN DEFINITION
    * =========================== */
-
   $.fn.combobox = function ( option ) {
     return this.each(function () {
       var $this = $(this)
@@ -394,7 +452,7 @@
   };
 
   $.fn.combobox.defaults = {
-  template: '<div class="combobox-container"><input type="hidden" /><input type="text" autocomplete="off" /><span class="add-on btn dropdown-toggle" data-dropdown="dropdown"><span class="caret"/><span class="combobox-clear"><i class="icon-remove"/></span></span></div>'
+    bsVersion: '3'
   , menu: '<ul class="typeahead typeahead-long dropdown-menu"></ul>'
   , item: '<li><a href="#"></a></li>'
   };

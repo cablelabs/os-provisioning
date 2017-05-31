@@ -2,16 +2,20 @@ module.exports = function (grunt) {
   // Full list of files that must be included by RequireJS
   includes = [
     'jquery.select2',
-    'almond'
+    'almond',
+
+    'jquery-mousewheel' // shimmed for non-full builds
   ];
 
   fullIncludes = [
     'jquery',
-    'jquery.mousewheel',
 
-    'select2/compat/matcher',
+    'select2/compat/containerCss',
+    'select2/compat/dropdownCss',
+
     'select2/compat/initSelection',
     'select2/compat/inputData',
+    'select2/compat/matcher',
     'select2/compat/query',
 
     'select2/dropdown/attachContainer',
@@ -146,7 +150,8 @@ module.exports = function (grunt) {
             },
 
             {
-              browserName: 'firefox'
+              browserName: 'firefox',
+              platform: 'linux'
             },
 
             {
@@ -155,7 +160,8 @@ module.exports = function (grunt) {
 
             {
               browserName: 'opera',
-              version: '12'
+              version: '12',
+              platform: 'linux'
             }
           ]
         }
@@ -250,8 +256,9 @@ module.exports = function (grunt) {
           include: includes,
           namespace: 'S2',
           paths: {
-            almond: '../../vendor/almond-0.2.9',
-            jquery: 'jquery.shim'
+            'almond': require.resolve('almond').slice(0, -3),
+            'jquery': 'jquery.shim',
+            'jquery-mousewheel': 'jquery.mousewheel.shim'
           },
           wrap: {
             startFile: 'src/js/banner.start.js',
@@ -268,9 +275,9 @@ module.exports = function (grunt) {
           include: fullIncludes,
           namespace: 'S2',
           paths: {
-            almond: '../../vendor/almond-0.2.9',
-            jquery: 'jquery.shim',
-            'jquery.mousewheel': '../../vendor/jquery.mousewheel'
+            'almond': require.resolve('almond').slice(0, -3),
+            'jquery': 'jquery.shim',
+            'jquery-mousewheel': require.resolve('jquery-mousewheel').slice(0, -3)
           },
           wrap: {
             startFile: 'src/js/banner.start.js',

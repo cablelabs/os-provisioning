@@ -2,7 +2,7 @@
 
 .content {
     margin-left: 220px;
-    padding: 20px 25px;
+    padding: 30px;
 }
 .content.content-full-width {
     padding: 0;
@@ -21,7 +21,12 @@
 .content.content-inverse-mode h4,
 .content.content-inverse-mode h5,
 .content.content-inverse-mode h6 {
-    color: #fff;
+    color: @white;
+}
+.content.content-inverse-mode .breadcrumb .active,
+.content.content-inverse-mode .page-header small {
+    color: @white;
+    color: rgba(255,255,255,0.75);
 }
 .content.content-full-width .page-header,
 .content.content-full-width .breadcrumb {
@@ -32,16 +37,21 @@
     z-index: 20;
 }
 .page-header {
-    font-size: 24px;
+    font-size: 28px;
     margin: 0 0 20px;
     padding: 0;
     border: none;
     line-height: 28px;
+    font-weight: 300;
+}
+.page-header small {
+    font-weight: 300;
 }
 .breadcrumb {
     padding: 0;
     margin: 0;
     background: none;
+    font-size: 14px;
 }
 .breadcrumb > li {
     line-height: 28px;
@@ -49,6 +59,11 @@
 .ie8 .breadcrumb > li {
     display: inline;
 }
-.breadcrumb > li a {
-    color: #333;
+.breadcrumb > li.active {
+    color: @grey_600;
+}
+.breadcrumb > li + li:before {
+    content: '›';
+    color: @black;
+    padding: 0 8px 0 5px;
 }

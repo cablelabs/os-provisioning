@@ -23,7 +23,7 @@
 	@DivClose()
 
 	@DivOpen(12)
-		<table class="table table-hover itable ClickableTd">
+		<table class="table table-hover datatable ClickableTd">
 			<thead>
 				<tr>
 					<th></th>

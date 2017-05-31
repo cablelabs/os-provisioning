@@ -12,7 +12,7 @@
         top: 5px;
         bottom: 5px;
         width: 5px;
-        background: @black;
+        background: @grey_900;
         left: 20%;
         margin-left: -2.5px;
     }
@@ -42,7 +42,7 @@
         & .time {
             line-height: 28px;
             font-size: 24px;
-            color: @dark_black;
+            color: @grey_900;
         }
     }
     & .timeline-icon {
@@ -57,24 +57,27 @@
             width: 50px;
             height: 50px;
             display: inline-block;
-            background: #575d63;
+            background: @grey_700;
             line-height: 40px;
-            color: #fff;
+            color: @white;
             font-size: 14px;
-            border: 5px solid #2d353c;
+            border: 5px solid @grey_900;
             .border-radius(50px);
             .transition(background .2s linear);
             
             &:hover,
             &:focus {
-                background: @green;
+                background: @blue_500;
             }
+        }
+        & i {
+            line-height: 40px;
         }
     }
     & .timeline-body {
         margin-left: 25%;
         margin-right: 15%;
-        background: #fff;
+        background: @white;
         position: relative;
         padding: 20px 30px;
         .border-radius(4px);
@@ -84,7 +87,7 @@
             display: block;
             position: absolute;
             border: 10px solid transparent;
-            border-right-color: #fff;
+            border-right-color: @white;
             left: -20px;
             top: 20px;
         }
@@ -96,7 +99,7 @@
 }
 .timeline-header {
     padding-bottom: 10px;
-    border-bottom: 1px solid #e2e7eb;
+    border-bottom: 1px solid @grey_300;
     line-height: 30px;
     
     & .userimage {
@@ -108,12 +111,11 @@
         .border-radius(40px);
     }
     & .username {
-        font-size: 16px;
-        font-weight: 600;
+        font-size: 18px;
     }
     & .username,
     & .username a {
-        color: @green;
+        color: @grey_900;
     }
 }
 .timeline-content {
@@ -132,15 +134,15 @@
 .timeline-footer {
     margin: -20px -30px;
     padding: 20px 30px;
-    background: #e8ecf1;
+    background: @grey_300;
     .border-radius(0 0 4px 4px);
     
     & a:not(.btn) {
-        color: @light_black;
+        color: @grey_700;
         
         &:hover,
         &:focus {
-            color: @black;;
+            color: @grey_900;
         }
     }
 }

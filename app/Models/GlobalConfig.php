@@ -30,6 +30,11 @@ class GlobalConfig extends BaseModel {
 		return "Global Config";
 	}
 
+	// View Icon
+	public static function view_icon()
+	{
+		return '<i class="fa fa-book"></i>';
+	}
 
 	/*
 	 * Get NMS Version

@@ -5,33 +5,34 @@
     margin-bottom: 0;
 }
 .navbar {
-    .border-radius(0);
-    .box-shadow(0 0 2px rgba(0,0,0,0.3));
     border: none;
+    min-height: 60px;
+    .border-radius(0);
+    .box-shadow(0 1px 1px rgba(0,0,0,.14));
 }
 .navbar.navbar-default {
     background: @white;
 }
 .navbar.navbar-inverse {
-    background: @black;
+    background: @grey_900;
 }
 .navbar.navbar-inverse .navbar-brand,
 .navbar.navbar-inverse .navbar-nav > li > a {
-    color: @header_inverse_text_color;
+    color: #a8acb1;
 }
 .navbar.navbar-inverse .navbar-form .form-control {
     background: url(../img/transparent/black-0.2.png);
     background: rgba(0,0,0,0.2);
     border-color: #1F2429;
     border-color: rgba(0,0,0,0.2);
-    color: @header_inverse_text_color;
+    color: #a8acb1;
 }
 .navbar-brand {
     margin-right: 10px;
-    padding: 12px 20px;
-    height: 54px;
+    padding: 15px;
+    height: 60px;
     width: 220px;
-    font-weight: 100;
+    font-weight: 300;
     font-size: 18px;
     line-height: 30px;
 }
@@ -47,10 +48,30 @@
     .opacity(0.9);
 }
 .navbar-toggle {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 10px;
+    margin: 0;
+    padding: 0;
     border: none;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    color: @white;
+    .border-radius(0);
+}
+.navbar-toggle.navbar-toggle-left {
+    float: left;
+    margin-left: -15px;
+    display: block;
+}
+.navbar-toggle .icon-bar {
+    margin: 0 auto;
+    height: 1px;
+    width: 20px;
+}
+.navbar-toggle.navbar-toggle-left .icon-bar {
+    background: rgba(0,0,0,0.5);
+}
+.navbar-inverse .navbar-toggle.navbar-toggle-left .icon-bar {
+    background: @white;
 }
 .navbar-toggle.pull-left {
     margin-left: 15px;
@@ -65,8 +86,8 @@
     .opacity(0.6);
 }
 .navbar-nav > li > a {
-    line-height: 20px;
-    padding: 17px 15px;
+    line-height: 30px;
+    padding: 15px;
 }
 .navbar-default .navbar-nav > li > a {
     color: @header_default_text_color;
@@ -82,22 +103,28 @@
     color: #333;
     .opacity(1.0);
 }
+.navbar .icon i {
+    display: block;
+    line-height: 30px;
+    font-size: 20px;
+}
 .navbar-form {
-    margin: 12px 0;
+    margin: 13px 0;
 }
 .fade .navbar-form .form-control {
-    -webkit-animation: none;
+    .animation(none);
 }
 .navbar-form .form-control {
     width: 200px;
-    padding: 5px 15px;
-    height: 30px;
-    .border-radius(30px);
+    padding: 5px 34px 5px 10px;
+    height: 34px;
+    border: none;
+    background: @grey_200;
+    .border-radius(3px);
 }
 .navbar-form .form-control:focus {
     width: 300px;
-    animation: expand .2s;
-    -webkit-animation: expand .2s;
+    .animation(expand .2s);
 }
 @keyframes expand {
     from { width: 200px; }
@@ -110,37 +137,54 @@
 .navbar-form .btn-search {
     position: absolute;
     right: 15px;
-    top: 12px;
-    height: 30px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    top: 13px;
+    line-height: 34px;
+    height: 34px;
+    width: 34px;
+    padding: 0;
     border: none;
     background: none;
-    .border-radius(0 30px 30px 0);
+    text-align: center;
+}
+.navbar-form .btn-search i {
+    line-height: 34px;
+    font-size: 20px;
 }
 .navbar-nav > li > .dropdown-menu {
-    border-top: 1px solid #eee;
+    margin-top: 0;
 }
 .navbar-nav > li > .dropdown-menu.media-list .media-heading {
-    font-weight: 600;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 3px;
 }
 .navbar-nav > li > a .label {
     position: absolute;
-    top: 7px;
-    right: 3px;
+    top: 8px;
+    right: 8px;
     display: block;
-    background: #ff5b57;
-    line-height: 12px;
-    font-weight: 300;
-    padding: .3em .6em .3em;
-    .border-radius(20px);
+    background: @red_500;
+    line-height: 22px;
+    font-weight: 500;
+    padding: 0;
+    color: @white;
+    text-align: center;
+    font-size: 12px;
+    min-width: 22px;
+    height: 22px;
+    .border-radius(22px);
 }
 .navbar-user img {
-    float: left;
-    width: 30px;
-    height: 30px;
-    margin: -5px 10px 0 0;
-    .border-radius(30px);
+    float: right;
+    width: 36px;
+    height: 36px;
+    margin: -3px 0px -3px 10px;
+    .border-radius(36px);
+}
+.navbar-user img + span {
+    display: block;
+    margin-right: 46px;
+    white-space: nowrap;
 }
 .navbar-default .navbar-nav .open .dropdown-menu > li > a {
     color: #333;
@@ -148,9 +192,109 @@
 .navbar .navbar-nav > li.divider {
     height: 34px;
     margin-top: 10px;
-    background: #e2e7eb;
+    background: @grey_300;
     width: 1px;
 }
 .navbar.navbar-inverse .navbar-nav > li.divider {
     background: #3F4B55;
+}
+.navbar .search-form {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    height: 60px;
+    .transition(all .3s ease);
+}
+.navbar.navbar-search-toggled .search-form {
+    bottom: 0;
+}
+.navbar .search-form .search-btn, 
+.navbar .search-form .close {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    color: @grey_700;
+    z-index: 1000;
+    text-align: center;
+    line-height: 60px;
+    background: none;
+    border: none;
+    padding: 0;
+    outline: none;
+}
+.navbar .search-form .search-btn i, .navbar .search-form .close i {
+    line-height: 60px;
+}
+.navbar .search-form .form-control {
+    border: none;
+    height: inherit;
+    color: @grey_900;
+    padding-left: 60px;
+    padding-right: 60px;
+    font-size: 16px;
+    .border-radius(0);
+    .box-shadow(none);
+}
+.navbar .search-form .form-control {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.navbar .search-form .close {
+    left: auto;
+    right: 0;
+    text-shadow: none;
+    .opacity(1.0);
+}
+.navbar-header.navbar-header-without-bg .navbar-brand {
+    background: none !important;
+}
+
+
+/* Header Mega Menu Setting */
+
+.dropdown.dropdown-lg {
+    position: static;
+}
+.dropdown-menu.dropdown-menu-lg {
+    left: 20px;
+    right: 20px;
+    padding: 20px;
+}
+.dropdown-header {
+    font-size: 14px;
+    font-weight: normal;
+    color: @black;
+    padding: 0;
+    margin: 0;
+}
+.dropdown-menu.dropdown-menu-lg .nav > li > a {
+    padding: 0;
+    background: none;
+    line-height: 24px;
+}
+.navbar-default .navbar-nav > .active > a, 
+.navbar-default .navbar-nav > .active.open > a,
+.navbar-default .navbar-nav > .active > a:focus, 
+.navbar-default .navbar-nav > .active > a:hover {
+    background: #f4f6f7 !important;
+    .opacity(1.0);
+}
+
+
+/* Top Navbar Language Bar Setting */
+
+.navbar-language .flag-icon {
+    font-size: 20px;
+    margin: 5px 10px 0;
+    float: left;
+}
+.navbar-language .dropdown-menu .flag-icon {
+    margin: 1px 7px 0;
+    font-size: 15px;
 }

@@ -38,7 +38,7 @@ return [
 //
 	//Main Menu
 		'Menu_MainMenu' 			=> 'Hauptmenü',
-		'Menu_Config Page'			=> 'Systemkonfigurationen',
+		'Menu_Config Page'			=> 'Systemkonfiguration',
 		'Menu_Logging'				=> 'Logs',
 		'Menu_Product List'			=> 'Produktliste',
 		'Menu_SEPA Accounts'		=> 'SEPA-Konten',
@@ -66,6 +66,7 @@ return [
 		'Menu_UserSettings'			=> 'Nutzereinstellungen',
 		'Menu_UserGlobSettings'		=> 'Globale Nutzereinstellungen',
 		'Menu_Logout'				=> 'Ausloggen',
+		'Menu_UserRoleSettings'		=> 'Nutzerrollen',
 
 //
 //HEADER
@@ -82,12 +83,12 @@ return [
 	//
 	//Global'Config
 		//Global
-		'Header_Global Configurations' => 'Systemkonfigurationen',
+		'Header_Global Configurations' => 'Systemkonfiguration',
 		'Header_Global Config'		=> 'Globale Konfiguration|Globale Konfigurationen',
 		'Header_EditGlobal Config'	=> 'Globale Konfiguration bearbeiten',
-		'Header_Billing Config'		=> 'Moduleinstellungen für Billing Base', 
+		'Header_Billing Config'		=> 'Moduleinstellungen für Billing Base',
 		'Header_EditBilling Config' => 'Moduleinstellungen für Billing Base bearbeiten',
-		'Header_ProvVoip'			=> 'Moduleinstellungen VOIP',		
+		'Header_ProvVoip'			=> 'Moduleinstellungen VOIP',
 		'Header_EditProvVoip Config'=> 'Moduleinstellungen VOIP bearbeiten',
 		'Header_Ccc Config'			=> 'Moduleinstellungen Kundenkontrollzentrum',
 		'Header_EditCcc Config'		=> 'Moduleinstellungen Kundenkontrollzentrum bearbeiten',
@@ -201,6 +202,7 @@ return [
 		'Sign me in'				=> 'Einloggen',
 		'Button_Create'				=> 'Erstelle',
 		'Button_Delete'				=> 'Markierte Einträge löschen',
+		'Button_Force Restart'		=> 'Neustart erzwingen',
 		'Button_Save'				=> 'Speichern',
 		'Button_Save / Restart'		=> 'Speichern / Neustart',
 	//BillingBase
@@ -263,4 +265,16 @@ return [
 		'Button_Create Mpr'				=> 'Neue MPR',
 		'Button_Create Modem Positioning Rule Geoposition' => 'Neue Geoposition für Modem Positionierungsregel',
 		'Button_Create MprGeopos'		=> 'Neue MPR-Geoposition',
+
+//
+// DASHBOARD
+//
+	'Dashboard_Contracts'			=> 'AKTIVE VERTRÄGE',
+	'Dashboard_ContractAnalytics'	=> 'Analyse Verträge (letzte 12 Monate)',
+	'Dashboard_NoContracts'			=> 'Keine Verträge vorhanden.',
+	'Dashboard_Income'				=> 'ERLÖSE',
+	'Dashboard_IncomeAnalytics'		=> 'Erlöse Detailübersicht',
+	'Dashboard_Date'				=> 'DATUM',
+	'Dashboard_LinkDetails'			=> 'Zeige Details',
+	'Dashboard_Other'				=> 'Sonstiges',
 ];

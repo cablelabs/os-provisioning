@@ -34,11 +34,17 @@ class Mta extends \BaseModel {
 		return 'MTAs';
 	}
 
+	// View Icon
+	public static function view_icon()
+	{
+		return '<i class="fa fa-fax"></i>'; 
+	}
+
 	// link title in index view
 	public function view_index_label()
 	{
 		$bsclass = 'info';
-		$cf_name = 'No Configfile assigned';			
+		$cf_name = 'No Configfile assigned';
 
 		if (isset($this->configfile))
 			$cf_name = $this->configfile->name;

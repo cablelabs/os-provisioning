@@ -4,7 +4,7 @@
 .datepicker table tr td.today:hover, 
 .datepicker table tr td.today.disabled, 
 .datepicker table tr td.today.disabled:hover {
-    background: #eee !important;
+    background: @grey_200 !important;
 }
 .datepicker table tr td.active:hover, 
 .datepicker table tr td.active:hover:hover, 
@@ -27,14 +27,12 @@
 .open .dropdown-toggle.datepicker table tr td.active:hover, 
 .open .dropdown-toggle.datepicker table tr td.active.disabled, 
 .open .dropdown-toggle.datepicker table tr td.active.disabled:hover {
-    background: #348fe2 !important;
-    color: #fff !important;
+    background: @blue_500 !important;
+    color: @white !important;
 }
 .datepicker {
     min-width: 250px !important;
-    -webkit-border-radius: 3px !important;
-    -moz-border-radius: 3px !important;
-    border-radius: 3px !important;
+    .border-radius(3px) !important;
 }
 .datepicker.dropdown-menu {
     min-width: 250px;
@@ -51,12 +49,12 @@
     width: 100%;
 }	        
 .input-daterange .input-group-addon {
-    background: #d6d8dd !important;
+    background: @grey_300 !important;
     border: none !important;
     text-shadow: none !important;
 }
 .irs-from, .irs-to, .irs-single {
-    background: @black !important;
+    background: @grey_900 !important;
 }
 .datepicker-full-width .datepicker-inline {
     width: 100%;

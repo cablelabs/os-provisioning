@@ -32,7 +32,6 @@ cp-script.sh
 
 # ignore ctags file
 tags
-
 /.idea/blade.xml
 /.idea/deployment.xml
 /.idea/lara.iml

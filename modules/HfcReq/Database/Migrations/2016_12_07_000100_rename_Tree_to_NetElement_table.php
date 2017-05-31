@@ -84,6 +84,7 @@ class RenameTreeToNetElementTable extends BaseMigration {
 			$table->string('state');
 			$table->integer('state_new');
 			$table->renameColumn('parent_id', 'parent');
+			$table->integer('parent_id')->unsigned();
 		});
 
 		// This is only safe when we directly rollback the migrations because of error!
