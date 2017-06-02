@@ -118,34 +118,39 @@ $(document).on('keypress', function (event) {
 
   //Tree
   $('#jstree-default').jstree({
-      'plugins': ["wholerow", "checkbox", "html_data", "types", "ui", "crrm", "search"],
+      'plugins': [ "html_data", "checkbox", "wholerow", "types", "ui", "search", "state"],
       "core": {
-          "check_callback" : true,
-          "dblclick_toggle": false,
+          "dblclick_toggle": true,
           "themes": {
-              "responsive": false
+              "responsive": true,
           }
       },
       "checkbox": {
           "cascade": "",
           "three_state": false,
+          "whole_node" : false,
+          "tie_selection" : false,
           "real_checkboxes": true
       },
+      "state" : { "filter" : function (k) { delete k.core.selected; return k; } },
       "types": {
+          "cm":{
+            "icon": "fa fa-hdd-o text-warning fa-lg"
+          },
+          "mta": {
+            "icon": "fa fa-fax text-info fa-lg"
+          },
           "default": {
               "icon": "fa fa-file-code-o text-success fa-lg"
           }
       }
   });
 
-  $('#jstree-default').on('dblclick.jstree', function(e,data) {
-      var node = $(e.target).closest("li");
-      var link = node.find('a');
-      if (link.attr("href") != "#" && link.attr("href") != "javascript:;" && link.attr("href") != "") {
-          if (link.attr("target") == "_blank") {
-              link.attr("href").target = "_blank";
-          }
-          document.location.href = link.attr("href");
+
+  $('#jstree-default').on('select_node.jstree', function(e,data) {
+      var link = data.node.a_attr.href;
+      if (link != "#" && link != "javascript:;" && link != "") {
+          document.location.href = link;
           return false;
       }
   });
@@ -154,20 +159,13 @@ $(document).on('keypress', function (event) {
   // trigger on Checkbox change and give
   // invisible form the name of selected id
   // @author: Christian
-  $('#jstree-default').on("changed.jstree", function (e, data) {
-      if (data.node.state.selected) {
+  $('#jstree-default').on("check_node.jstree uncheck_node.jstree", function (e, data) {
+      if (data.node.state.checked) {
         document.getElementById('myField'+ data.node.id).name = data.node.id;
       } else {
         document.getElementById('myField'+ data.node.id).name = '';
       }
   });
-
-    // 8 interact with the tree - either way is OK
-  function submitMe() {
-  document.new.systems.name = tst;
-        return true;
-  };
-
 
   // Intelligent Data Tables
   // TODO: Make them dynamically!
