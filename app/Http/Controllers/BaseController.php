@@ -873,4 +873,29 @@ class BaseController extends Controller {
 
 		return $data;
 	}
+
+
+
+	/**
+	 * Return a List of Filenames (e.g. PDF Logos, Tex Templates)
+	 *
+	 * @param 	dir 	Directory name relative to storage/app/config/
+	 * @return  Array 	of Filenames
+	 *
+	 * @author 	Nino Ryschawy
+	 */
+	public static function get_storage_file_list($dir)
+	{
+		$files_raw = \Storage::files("config/$dir");
+		$files[null] = 'None';
+
+		foreach ($files_raw as $file)
+		{
+			$name = explode('/', $file);
+			$name = array_pop($name);
+			$files[$name] = $name;
+		}
+
+		return $files;
+	}
 }

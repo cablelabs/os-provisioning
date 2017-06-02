@@ -846,6 +846,7 @@ class BaseObserver
 		// dd($model->getObservableEvents(), $model->getEventDispatcher(), $model->getEventDispatcher()->getListeners('eloquent.created: Modules\ProvBase\Entities\Cmts')[0]);
 	}
 
+
 }
 
 
