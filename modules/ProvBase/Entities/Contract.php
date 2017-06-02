@@ -75,9 +75,9 @@ class Contract extends \BaseModel {
 	{
 		if (\PPModule::is_active('billingbase'))
 		{
-			$ret['Base']['Modem'] 		= $this->modems;
-			$ret['Base']['Item']        = $this->items;
-			$ret['Base']['SepaMandate'] = $this->sepamandates;
+			$ret['Edit']['Modem'] 		= $this->modems;
+			$ret['Edit']['Item']        = $this->items;
+			$ret['Edit']['SepaMandate'] = $this->sepamandates;
 		}
 
 		$ret['Technical']['Modem'] = $this->modems;
