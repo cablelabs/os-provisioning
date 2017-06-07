@@ -756,7 +756,7 @@ class SnmpController extends \BaseController{
 	{
 		$type = $this->device->netelementtype;
 
-		if (!$type->pre_conf_oid_id || !$type->pre_conf_value)
+		if ($type->pre_conf_oid_id xor $type->pre_conf_value)
 		{
 			\Log::debug('Snmp Preconfiguration settings incomplete for this Device (NetElement)', [$this->device->name, $this->device->id]);
 			return null;
@@ -775,6 +775,10 @@ class SnmpController extends \BaseController{
 
 			$ret ? \Log::debug('Preconfigured Device for snmpset', [$this->device->name, $this->device->id]) : \Log::debug('Failed to Preconfigure Device for snmpset', [$this->device->name, $this->device->id]);
 
+			// wait time in msec
+			$sleep_time = $type->pre_conf_time_offset ? : 0;
+			usleep($sleep_time);
+
 			return $conf_val;
 		}
 
@@ -783,9 +787,6 @@ class SnmpController extends \BaseController{
 
 		\Log::debug('Postconfigured Device for snmpset', [$this->device->name, $this->device->id]);
 
-		// wait time in msec
-		$sleep_time = $type->pre_conf_time_offset ? : 0;
-		usleep($sleep_time);
 
 		return null;
 	}
