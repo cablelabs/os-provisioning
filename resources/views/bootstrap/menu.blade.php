@@ -33,7 +33,7 @@
 
 					echo "<!-- count of user interaction needing EnviaOrders -->";
 
-					echo "<li style='font-size: 2em; font-weight: bold' class='col-md-1 col-sm-2 col-xs-2'>";
+					echo "<li style='font-size: 2em; font-weight: bold' class='p-r-5'>";
 
 					$user_interaction_needing_enviaorder_count = Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
 					echo '<a href="/lara/admin/EnviaOrder?show_filter=action_needed" target="_self">';
