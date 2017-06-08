@@ -585,7 +585,8 @@ class SnmpController extends \BaseController{
 		else
 		{
 			Log::info('snmp2_real_walk (table) '.$this->device->ip.' '.$oid->oid);
-			$results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->mibfile->name.'::'.$oid->name);
+			$results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->oid);
+			// $results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->mibfile->name.'::'.$oid->name);
 			// $results = snmp2_real_walk($this->device->ip, $this->_get_community(), "DOCS-IF-MIB::docsIfUpstreamChannelTable");
 			// exec('snmptable -v2c -Ci -c'.$this->_get_community().' '.$this->device->ip.' '.escapeshellarg($oid->mibfile->name.'::'.$oid->name), $results);
 		}
