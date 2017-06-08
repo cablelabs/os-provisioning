@@ -294,6 +294,10 @@ return [
 	'Priority (lower runs first)' => 'Priorität (kleinere zuerst)',
 	'oid_list' 				=> 'Achtung: OIDs, die nicht bereits in der Datenbank existieren werden nicht beachtet! Bitte laden Sie das zuvor zugehörige MibFile hoch!',
 
+//
+// SNMP
+//
+	'upload_dependent_mib_err' => "Bitte Laden Sie zuvor die ':name' hoch! (Die zugehörigen OIDs können sonst nicht geparsed werden)",
 
 //
 // VOIP

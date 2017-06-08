@@ -32,7 +32,7 @@ return [
 	'oid_list' 				=> 'Warning: OIDs that not already exist in Database are discarded! Please upload MibFile before!',
 	'password_change'		=> 'Change Password',
 	'password_confirm'		=> 'Confirm Password',
-
+	'upload_dependent_mib_err' => "Please Upload dependent ':name' before!! (OIDs cant be translated otherwise)",
 	'user_settings'			=> 'User Settings',
 	'user_glob_settings'	=> 'Global User Settings',
 
