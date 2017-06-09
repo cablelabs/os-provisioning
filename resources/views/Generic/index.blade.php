@@ -27,18 +27,7 @@
 	@DivOpen(12)
 		<h1 class="page-header">
 		{{\App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null).' '}}
-		<?php
-		if (isset($view_var[0]))
-			echo \App\Http\Controllers\BaseViewController::translate_view($view_var[0]->view_headline() , 'Header' , 2 );
-		else
-		{
-			// handle empty tables ..
-			// TODO: make me smarter :)
-			$class = \App\Http\Controllers\NamespaceController::get_model_name();
-			echo \App\Http\Controllers\BaseViewController::translate_view($class::view_headline() , 'Header' , 2 );
-		}
-		?>
-		</h1>
+		{{$headline}}
 	@DivClose()
 
 	<!-- Create Form -->
