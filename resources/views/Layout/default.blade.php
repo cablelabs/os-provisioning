@@ -19,7 +19,7 @@
 			<div id="content" class="content p-t-15">
 
 					@if(isset($panel_right))
-						<ul class="nav nav-pills pull-right p-b-5">
+						<ul class="nav nav-pills hidden-xs hidden-sm pull-right p-b-5">
 							@foreach ($panel_right as $menu)
 								@if ($menu['route'] == Route::getCurrentRoute()->getName())
 									<li class="active" role="presentation"> {{ HTML::linkRoute($menu['route'], $menu['name'], $menu['link']) }}</li>
@@ -28,6 +28,19 @@
 								@endif
 							@endforeach
 						</ul>
+						<div class="panel panel-default hidden-md hidden-lg">
+							<div class="panel-body">
+								<ul class="nav nav-pills nav-justified pull-right p-b-5">
+									@foreach ($panel_right as $menu)
+										@if ($menu['route'] == Route::getCurrentRoute()->getName())
+											<li class="active" role="presentation"> {{ HTML::linkRoute($menu['route'], $menu['name'], $menu['link']) }}</li>
+										@else
+											<li role="presentation"> {{ HTML::linkRoute($menu['route'], $menu['name'], $menu['link']) }}</li>
+										@endif
+									@endforeach
+								</ul>
+							</div>
+						</div>
 					@endif
 
 				@yield ('content')
