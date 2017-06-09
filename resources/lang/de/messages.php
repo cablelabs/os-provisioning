@@ -140,14 +140,18 @@ return [
 	//Verträge
 	'Academic Degree'			=> 'Akademischer Titel',
 	'Contract number'			=> 'Vertragsnummer',
+	'Contract Nr'				=> 'Vertragsnr',
 	'Contract number legacy'	=> 'Historische Vertragsnummer',
 	'Cost Center'				=> 'Kostenstelle',
 	'Create Invoice'			=> 'Rechnung erstellen',
 	'Customer number'			=> 'Kundennummer',
 	'Customer number legacy'	=> 'Historische Kundennummer',
 	'Department'				=> 'Abteilung',
+	'End Date' 					=> 'Enddatum',
 	'House Number'				=> 'Hausnummer',
+	'House Nr'					=> 'Hausnr',
 	'Salesman'					=> 'Verkäufer',
+	'Start Date' 				=> 'Startdatum',
 
 	//Items
 	'Accounting Text (optional)'=> 'Verwendungszweck (optional)',
