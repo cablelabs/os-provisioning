@@ -4,17 +4,15 @@
   <div class="container-fluid">
     <div class="row">
       <!-- begin mobile sidebar expand / collapse button -->
-      <div class="nav navbar-header">
-        <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+        <button type="button" class="navbar-toggle m-0" data-click="sidebar-toggled">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a href="javascript:;" class="navbar-brand"><span class="navbar-logo hidden-xs"></span> <span class="hidden-xs">{{$header}}</span></a>
-      </div>
+        <a href="javascript:;" class="navbar-brand hidden-xs"><span class="navbar-logo"></span> <span>{{$header}}</span></a>
       <!-- end mobile sidebar expand / collapse button -->
 
-          <div class="col-md-6 col-sm-6 col-xs-8 p-t-5 tab-overflow">
+          <div class="col-md-6 col-sm-5 p-t-5 col-xs-6 tab-overflow">
               <ul class="nav nav-pills m-t-5">
                   <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="m-t-10"><i class="fa fa-arrow-left"></i></a></li>
                   @yield('content_top')
@@ -24,7 +22,7 @@
 
           <ul class="nav navbar-nav navbar-right">
             <!-- global search form -->
-              <li class="p-r-5">
+              <li>
                 <a id="togglesearch" href="javascript:;" class="icon notification waves-effect waves-light" data-toggle="navbar-search"><i class="fa fa-search fa-lg" aria-hidden="true"></i></a>
               </li>
 			{{-- TODO: discuss the following draft (position, coding) --}}
@@ -33,7 +31,7 @@
 
 					echo "<!-- count of user interaction needing EnviaOrders -->";
 
-					echo "<li style='font-size: 2em; font-weight: bold' class='col-md-1 col-sm-2 col-xs-2'>";
+					echo "<li style='font-size: 2em; font-weight: bold'>";
 
 					$user_interaction_needing_enviaorder_count = Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
 					echo '<a href="/lara/admin/EnviaOrder?show_filter=action_needed" target="_self">';
@@ -51,7 +49,7 @@
 				}
 			?>
 
-          <li class="dropdown navbar-user m-r-15">
+          <li class="dropdown navbar-user">
               <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-user-circle-o fa-lg visible-sm visible-xs col-sm-1 col-xs-1 p-t-5" aria-hidden="true"></i>
                 <span class="hidden-xs hidden-sm">{{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span><b class="caret"></b>
