@@ -5,10 +5,11 @@
     "keywords": [],
     "active": 0,
     "order": 24,
+    "icon": "fa-paper-plane-o",
     "providers": [
         "Modules\\Mail\\Providers\\MailServiceProvider"
     ],
-    "aliases":{},
+    "aliases": [],
     "files": [
         "start.php"
     ]
