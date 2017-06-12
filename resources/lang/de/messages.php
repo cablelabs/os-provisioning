@@ -156,6 +156,7 @@ return [
 	//Items
 	'Accounting Text (optional)'=> 'Verwendungszweck (optional)',
 	'Cost Center (optional)'	=> 'Kostenstelle (optional)',
+	'Credit Amount' 			=> 'Gutschrift - Betrag',
 	'Item'						=> 'Posten',
 	'Items'						=> 'Posten',
 	'Product'					=> 'Produkt',
