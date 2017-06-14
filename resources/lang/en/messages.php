@@ -16,6 +16,9 @@ return [
 	'cdr_offset' 			=> 'CDR to Invoice time difference in Months',
 
 	'cpe_log_error' 		=> 'was not registering on Server - No log entry found',
+	'conn_info_err_create' 	=> 'Error Creating PDF - See Logfiles or ask Admin!',
+	'conn_info_err_template' => 'Could not Read Template - See GlobalConfig or Company if it is set!',
+
 	'home' 					=> 'Startseite',
 	'invoice' 				=> 'Invoice',
 	'Invoices'				=> 'Invoices',

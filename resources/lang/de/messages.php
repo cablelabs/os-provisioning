@@ -283,6 +283,8 @@ return [
 /**
  * Customer Control Center
  */
+	'conn_info_err_create' 	=> 'Fehler beim Erstellen des PDF - Siehe LogFile!',
+	'conn_info_err_template' => 'Das Template konnte nicht gelesen werden - Bitte überprüfen Sie ob es unter Unternehmen gesetzt ist!', 
 	'log_out'				=> 'Ausloggen',
 	'password_change'		=> 'Passwort ändern',
 	'password_confirm'		=> 'Password bestätigen',
