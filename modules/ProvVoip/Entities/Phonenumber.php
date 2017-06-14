@@ -358,7 +358,7 @@ class Phonenumber extends \BaseModel {
 			return null;
 		}
 
-		// the check is simple: we there is an external contract ID we can be sure that a contract has been created
+		// the check is simple: if there is an external contract ID we can be sure that a contract has been created
 		if (!is_null($this->contract_external_id)) {
 			return $this->contract_external_id;
 		}
@@ -386,13 +386,27 @@ class Phonenumber extends \BaseModel {
 			return null;
 		}
 
-		// as we are able to delete single phonenumbers from a contract (without deleting the contract if other numbers are attached)
-		// we here have to count the numbers containing the current external contract id
+		// if there is no external id we assume that there is no envia contract
 		if (is_null($this->contract_external_id)) {
 			return false;
 		}
 
+		// as we are able to delete single phonenumbers from a contract (without deleting the contract if other numbers are attached)
+		// we here have to count the numbers containing the current external contract id
+
 		$envia_contract = \Modules\ProvVoipEnvia\Entities\EnviaContract::where('envia_contract_reference', '=', $this->contract_external_id)->first();
+
+		// no contract – seems to be deleted
+		if (is_null($envia_contract)) {
+			return $envia_contract;
+		}
+
+		// no end date set: contract seems to be active
+		if (is_null($envia_contract->external_termination_date) && is_null($envia_contract->end_date)) {
+			return false;
+		}
+
+		return $this->contract_external_id;
 	}
 
 
