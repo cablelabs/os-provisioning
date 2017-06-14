@@ -847,17 +847,30 @@ class PhonenumberObserver
 			return;
 		}
 
-		// TODO: check if this data can be changed automagically at Envia!
-		$parameters = [
-			'job' => 'voip_account_update',
-			'origin' => urlencode(\URL::previous()),
-			'phonenumber_id' => $phonenumber->id,
-			];
-		$title = 'DO THIS MANUALLY NOW!';
-		$envia_href = \HTML::linkRoute('ProvVoipEnvia.request', $title, $parameters);
+		// check what changed the SIP data
+		if (
+			(strpos(\URL::current(), "request/contract_get_voice_data") !== false)
+			||
+			(strpos(\URL::current(), "cron/contract_get_voice_data") !== false)
+		) {
+			// changed through API method get_voice_data: do nothing
+			return;
+		}
+		else {
+			// if we end up here: the current change has been done manually
+			// inform the user that he has to change the data at Envia, too
+			// TODO: check if this data can be changed automagically at Envia!
+			$parameters = [
+				'job' => 'voip_account_update',
+				'origin' => urlencode(\URL::previous()),
+				'phonenumber_id' => $phonenumber->id,
+				];
 
-		\Session::push('tmp_info_above_form', 'Autochanging of SIP data at Envia is not implemented yet.<br>You have to '.$envia_href);
+			$title = 'DO THIS MANUALLY NOW!';
+			$envia_href = \HTML::linkRoute('ProvVoipEnvia.request', $title, $parameters);
 
+			\Session::push('tmp_info_above_form', 'Autochanging of SIP data at Envia is not implemented yet.<br>You have to '.$envia_href);
+		}
 	}
 
 
