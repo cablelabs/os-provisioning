@@ -155,6 +155,9 @@ class Kernel extends ConsoleKernel {
 		// Create monthly Billing Files and reset flags
 		if (\PPModule::is_active ('BillingBase'))
 		{
+			// Remove all old CDRs & Invoices
+			$schedule->call('\Modules\BillingBase\Entities\Invoice@cleanup')->monthly();
+
 			// wrapping into a check if table billingbase exists (if not that crashes on every “php artisan” command – e.g. on migrations
 			if (\Schema::hasTable('billingbase')) {
 				$schedule->call('\Modules\BillingBase\Entities\Item@yearly_conversion')->yearly();
