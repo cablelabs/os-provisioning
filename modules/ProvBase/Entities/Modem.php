@@ -362,7 +362,7 @@ class Modem extends \BaseModel {
 	/**
 	 * Restarts modem through snmpset
 	 */
-	public function restart_modem()
+	public function restart_modem($mac_changed = false)
 	{
 		// Log
 		Log::info('restart modem '.$this->hostname);
@@ -371,9 +371,10 @@ class Modem extends \BaseModel {
 		try
 		{
 			$config = ProvBase::first();
-			$fqdn = $this->hostname.'.'.$config->domain_name;
-			$cmts = ProvMonController::get_cmts(gethostbyname($fqdn));
-			$mac_oid = implode('.', array_map('hexdec', explode(':', $this->mac)));
+			$fqdn 	= $this->hostname.'.'.$config->domain_name;
+			$cmts 	= ProvMonController::get_cmts(gethostbyname($fqdn));
+			$mac 	= $mac_changed ? $this->getOriginal('mac') : $this->mac;
+			$mac_oid = implode('.', array_map('hexdec', explode(':', $mac)));
 
 			if($cmts && $cmts->company == 'Cisco') {
 				// delete modem entry in cmts - CISCO-DOCS-EXT-MIB::cdxCmCpeDeleteNow
@@ -818,17 +819,27 @@ class Modem extends \BaseModel {
 	 * Check if modem actually needs to be restarted. This is only the case if a
 	 * relevant attribute was modified.
 	 *
-	 * @author Ole Ernst
+	 * @return 1 if reset via Modem or original mac is needed (mac was changed), -1 for reset via CMTS (faster), 0 if no restart is needed
+	 *
+	 * @author Ole Ernst, Nino Ryschawy
 	 */
 	public function needs_restart() {
 		$diff = array_diff_assoc($this->getAttributes(), $this->getOriginal());
 
-		return array_key_exists('contract_id', $diff)
-			|| array_key_exists('mac', $diff)
+		// in case mac was changed, reset via cmts - or take original mac
+		if (array_key_exists('mac', $diff))
+			return 1;
+
+		if (array_key_exists('contract_id', $diff)
 			|| array_key_exists('public', $diff)
 			|| array_key_exists('network_access', $diff)
 			|| array_key_exists('configfile_id', $diff)
-			|| array_key_exists('qos_id', $diff);
+			|| array_key_exists('qos_id', $diff))
+		{
+			return -1;
+		}
+
+		return 0;
 	}
 
 }
@@ -898,8 +909,9 @@ class ModemObserver
 		if (!$modem->observer_enabled)
 			return;
 
-		if($modem->needs_restart() || \Input::has('_force_restart'))
-			$modem->restart_modem();
+		if(($ret = $modem->needs_restart()) || \Input::has('_force_restart'))
+			$modem->restart_modem($ret > 0);
+
 		$modem->make_dhcp_cm_all();
 		$modem->make_configfile();
 
