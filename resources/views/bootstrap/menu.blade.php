@@ -49,7 +49,7 @@
 				}
 			?>
 
-          <li class="dropdown navbar-user">
+          <li class="dropdown navbar-user m-r-10">
               <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-user-circle-o fa-lg visible-sm visible-xs col-sm-1 col-xs-1 p-t-5" aria-hidden="true"></i>
                 <span class="hidden-xs hidden-sm">{{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span><b class="caret"></b>
