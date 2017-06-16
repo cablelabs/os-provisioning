@@ -42,6 +42,13 @@ $(document).ready(function() {
   App.init();
   NMS.init();
 
+  @if (isset($links))
+    @foreach($links as $name => $link)
+      $("#settings-{{Str::slug($name,'_')}}" ).load( "{{$link}}/1/edit #editform", function(){
+        $('[data-toggle="popover"]').popover();
+      });
+    @endforeach
+  @endif
   // Intelligent Data Tables
   // TODO: Make them dynamically!
   $('table.datatable').DataTable(
