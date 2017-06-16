@@ -38,8 +38,14 @@ class Parameter extends \BaseModel {
 		$header = $this->oid->name_gui ? : $this->oid->name;
 		$header .= ' - '.$this->oid->oid;
 
+		$bsclass = 'success';
+
+		if ($this->oid->access == 'read-only')
+			$bsclass = 'danger';
+
 		return ['index' => [$this->oid->name, $this->oid->oid, $this->access],
 				'index_header' => ['Name', 'OID', 'Access'],
+				'bsclass' => $bsclass,
 				'header' => $header];
 	}
 

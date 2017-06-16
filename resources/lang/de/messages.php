@@ -141,20 +141,26 @@ return [
 	//Verträge
 	'Academic Degree'			=> 'Akademischer Titel',
 	'Contract number'			=> 'Vertragsnummer',
+	'Contract Nr'				=> 'Vertragsnr',
 	'Contract number legacy'	=> 'Historische Vertragsnummer',
 	'Cost Center'				=> 'Kostenstelle',
 	'Create Invoice'			=> 'Rechnung erstellen',
 	'Customer number'			=> 'Kundennummer',
 	'Customer number legacy'	=> 'Historische Kundennummer',
 	'Department'				=> 'Abteilung',
+	'End Date' 					=> 'Enddatum',
 	'House Number'				=> 'Hausnummer',
+	'House Nr'					=> 'Hausnr',
 	'Salesman'					=> 'Verkäufer',
+	'Start Date' 				=> 'Startdatum',
 
 	//Items
 	'Accounting Text (optional)'=> 'Verwendungszweck (optional)',
 	'Cost Center (optional)'	=> 'Kostenstelle (optional)',
+	'Credit Amount' 			=> 'Gutschrift - Betrag',
 	'Item'						=> 'Posten',
 	'Items'						=> 'Posten',
+	'missing_product'			=> 'Fehlendes Produkt!',
 	'Product'					=> 'Produkt',
 	'Valid from'				=> 'Gültig ab',
 	'Valid to'					=> 'Gültig bis',
@@ -224,7 +230,7 @@ return [
 	'sepa'					=> 'mit_SEPA',
 	'no_sepa'				=> 'ohne_SEPA',
 	'Call Data Record'		=> 'Einzelverbindungsnachweis',
-	'accounting'			=> 'Rechungssatzdatei',
+	'accounting'			=> 'Rechnungssatzdatei',
 	'booking'				=> 'Buchungssatzdatei',
 	'DD'					=> 'SEPA Lastschriften',
 	'DC'					=> 'SEPA Gutschriften',
@@ -278,6 +284,8 @@ return [
 /**
  * Customer Control Center
  */
+	'conn_info_err_create' 	=> 'Fehler beim Erstellen des PDF - Siehe LogFile!',
+	'conn_info_err_template' => 'Das Template konnte nicht gelesen werden - Bitte überprüfen Sie ob es unter Unternehmen gesetzt ist!', 
 	'log_out'				=> 'Ausloggen',
 	'password_change'		=> 'Passwort ändern',
 	'password_confirm'		=> 'Password bestätigen',
@@ -295,6 +303,10 @@ return [
 	'Priority (lower runs first)' => 'Priorität (kleinere zuerst)',
 	'oid_list' 				=> 'Achtung: OIDs, die nicht bereits in der Datenbank existieren werden nicht beachtet! Bitte laden Sie das zuvor zugehörige MibFile hoch!',
 
+//
+// SNMP
+//
+	'upload_dependent_mib_err' => "Bitte Laden Sie zuvor die ':name' hoch! (Die zugehörigen OIDs können sonst nicht geparsed werden)",
 
 //
 // VOIP

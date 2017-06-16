@@ -585,7 +585,8 @@ class SnmpController extends \BaseController{
 		else
 		{
 			Log::info('snmp2_real_walk (table) '.$this->device->ip.' '.$oid->oid);
-			$results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->mibfile->name.'::'.$oid->name);
+			$results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->oid);
+			// $results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->mibfile->name.'::'.$oid->name);
 			// $results = snmp2_real_walk($this->device->ip, $this->_get_community(), "DOCS-IF-MIB::docsIfUpstreamChannelTable");
 			// exec('snmptable -v2c -Ci -c'.$this->_get_community().' '.$this->device->ip.' '.escapeshellarg($oid->mibfile->name.'::'.$oid->name), $results);
 		}
@@ -756,7 +757,7 @@ class SnmpController extends \BaseController{
 	{
 		$type = $this->device->netelementtype;
 
-		if (!$type->pre_conf_oid_id || !$type->pre_conf_value)
+		if ($type->pre_conf_oid_id xor $type->pre_conf_value)
 		{
 			\Log::debug('Snmp Preconfiguration settings incomplete for this Device (NetElement)', [$this->device->name, $this->device->id]);
 			return null;
@@ -775,6 +776,10 @@ class SnmpController extends \BaseController{
 
 			$ret ? \Log::debug('Preconfigured Device for snmpset', [$this->device->name, $this->device->id]) : \Log::debug('Failed to Preconfigure Device for snmpset', [$this->device->name, $this->device->id]);
 
+			// wait time in msec
+			$sleep_time = $type->pre_conf_time_offset ? : 0;
+			usleep($sleep_time);
+
 			return $conf_val;
 		}
 
@@ -783,9 +788,6 @@ class SnmpController extends \BaseController{
 
 		\Log::debug('Postconfigured Device for snmpset', [$this->device->name, $this->device->id]);
 
-		// wait time in msec
-		$sleep_time = $type->pre_conf_time_offset ? : 0;
-		usleep($sleep_time);
 
 		return null;
 	}

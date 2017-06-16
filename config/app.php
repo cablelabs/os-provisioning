@@ -112,8 +112,9 @@ return [
 	*/
 
 
-	'log' => 'daily',
-	'log_max_files' => 30,
+	'log' => 'single',
+	// 'log' => 'daily',
+	// 'log_max_files' => 30,
 
 
 	/*

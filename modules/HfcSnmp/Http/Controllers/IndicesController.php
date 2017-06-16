@@ -21,7 +21,7 @@ class IndicesController extends \BaseController {
 		$a = array(
 			array('form_type' => 'text', 'name' => 'netelement_id', 'description' => 'NetElement', 'hidden' => 1),
 			array('form_type' => 'select', 'name' => 'parameter_id', 'description' => 'Parameter', 'value' => $params),
-			array('form_type' => 'text', 'name' => 'indices', 'description' => 'Indices'),
+			array('form_type' => 'text', 'name' => 'indices', 'description' => 'Indices', 'options' => ['placeholder' => '2,3,8...']),
 			);
 
 		return $a;
