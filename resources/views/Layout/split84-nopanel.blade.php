@@ -2,7 +2,7 @@
 
 @section ('content')
 
-<div class="row col-md-12">
+<div class="row col-md-12 well">
 
 	{{-- We need to include sections dynamically: always content left and if needed content right - more than 1 time possible --}}
 	@yield ('content_left')

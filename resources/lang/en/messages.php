@@ -27,6 +27,7 @@ return [
 	'modem_lease_error'		=> 'No valid Lease found',
 	'modem_lease_valid' 	=> 'Modem has a valid lease',
 	'modem_log_error' 		=> 'Modem was not registering on Server - No log entry found',
+	'modem_configfile_error'=> 'Modem configfile not found',
 	'modem_offline'			=> 'Modem is Offline',
 	'month' 				=> 'Month',
 	'oid_list' 				=> 'Warning: OIDs that not already exist in Database are discarded! Please upload MibFile before!',

@@ -7,6 +7,8 @@ use Modules\ProvBase\Entities\IpPool;
 
 class IpPoolController extends \BaseController {
 
+	protected $index_create_allowed = false;
+
     /**
      * defines the formular fields for the edit and create view
      */

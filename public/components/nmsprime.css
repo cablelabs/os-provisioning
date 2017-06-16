@@ -175,3 +175,11 @@ body {
     line-height: 30px;
     font-size: 20px;
 }
+
+@media(max-width:767px){
+.sidebar, .sidebar-bg {
+    margin-top: 56px;
+}
+.
+}
+

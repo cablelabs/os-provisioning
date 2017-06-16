@@ -35,140 +35,20 @@
 <!-- <script src="{{asset('components/assets-admin/js/ui-tree.demo.min.js')}}"></script> -->
 <!-- ================== END PAGE LEVEL JS ================== -->
 <script language="javascript">
-if (typeof(Storage) !== "undefined") {
-//save minified s_state
-var ministate = localStorage.getItem("minified-state");
-if (ministate == "true") {
-  $('#page-container').addClass('page-sidebar-minified');
-} else {
-  $('#page-container').removeClass('page-sidebar-minified');
-}
-var sitem = localStorage.getItem("sidebar-item");
-var chitem = localStorage.getItem("clicked-item");
-$('#' + sitem).addClass("expand");
-$('#' + sitem + ' .sub-menu ').css("display", "block");
-$('#sidebar .sub-menu li').click(function(event) {
-    localStorage.setItem("clicked-item", $(this).attr('id'));
-    if ($('.page-sidebar-minified') == true) {
-      $('#' + sitem).addClass("expand");
-    }
-});
-$('#' + chitem).addClass("active");
-}else {
-  console.log("sorry, no Web Storage Support - Cant save State of Sidebar")
-}
 /*
  * global document ready function
  */
 $(document).ready(function() {
   App.init();
+  NMS.init();
 
-// Type anywhere to search in global search for keyword
-$(document).on('keypress', function (event) {
-  if ($('*:focus').length == 0 && event.target.id != 'globalsearch'){
-      var code = (event.keyCode ? event.keyCode : event.which);
-      // if (code !=34 && code != 33) {
-      if ((code < 32 || code > 47) && (code < 112 || code > 145)) {
-      $("#togglesearch").click();
-      $("#globalsearch").focus().select();
-      }
-  }
-});
-
-  // Select2 Init - intelligent HTML select
-  $(window).resize(function() {
-  $('.select2').css('width', "100%");
-  });
-  $("select").select2();
-
-  /* This bit can be used on the entire app over all pages and will work for both tabs and pills.
-   * Also, make sure the tabs or pills are not active by default,
-   * otherwise you will see a flicker effect at page load.
-   * Important: Make sure the parent ul has an id. Thanks Alain
-   * http://stackoverflow.com/posts/16984739/revisions
-   */
-  $(function() {
-    var json, tabsState;
-    $('a[data-toggle="pill"], a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-      var href, json, parentId, tabsState;
-
-      tabsState = localStorage.getItem("tabs-state");
-      json = JSON.parse(tabsState || "{}");
-      parentId = $(e.target).parents("ul.nav.nav-pills, ul.nav.nav-tabs").attr("id");
-      href = $(e.target).attr('href');
-      json[parentId] = href;
-
-      return localStorage.setItem("tabs-state", JSON.stringify(json));
-    });
-
-    tabsState = localStorage.getItem("tabs-state");
-    json = JSON.parse(tabsState || "{}");
-
-    $.each(json, function(containerId, href) {
-      return $("#" + containerId + " a[href=" + href + "]").tab('show');
-    });
-
-    $("ul.nav.nav-pills, ul.nav.nav-tabs").each(function() {
-      var $this = $(this);
-      if (!json[$this.attr("id")]) {
-        return $this.find("a[data-toggle=tab]:first, a[data-toggle=pill]:first").tab("show");
-      }
-    });
-  });
-
-  //Tree
-  $('#jstree-default').jstree({
-      'plugins': ["wholerow", "checkbox", "html_data", "types", "ui", "crrm", "search"],
-      "core": {
-          "check_callback" : true,
-          "dblclick_toggle": false,
-          "themes": {
-              "responsive": false
-          }
-      },
-      "checkbox": {
-          "cascade": "",
-          "three_state": false,
-          "real_checkboxes": true
-      },
-      "types": {
-          "default": {
-              "icon": "fa fa-file-code-o text-success fa-lg"
-          }
-      }
-  });
-
-  $('#jstree-default').on('dblclick.jstree', function(e,data) {
-      var node = $(e.target).closest("li");
-      var link = node.find('a');
-      if (link.attr("href") != "#" && link.attr("href") != "javascript:;" && link.attr("href") != "") {
-          if (link.attr("target") == "_blank") {
-              link.attr("href").target = "_blank";
-          }
-          document.location.href = link.attr("href");
-          return false;
-      }
-  });
-
-
-  // trigger on Checkbox change and give
-  // invisible form the name of selected id
-  // @author: Christian
-  $('#jstree-default').on("changed.jstree", function (e, data) {
-      if (data.node.state.selected) {
-        document.getElementById('myField'+ data.node.id).name = data.node.id;
-      } else {
-        document.getElementById('myField'+ data.node.id).name = '';
-      }
-  });
-
-    // 8 interact with the tree - either way is OK
-  function submitMe() {
-  document.new.systems.name = tst;
-        return true;
-  };
-
-
+  @if (isset($links))
+    @foreach($links as $name => $link)
+      $("#settings-{{Str::slug($name,'_')}}" ).load( "{{$link}}/1/edit #editform", function(){
+        $('[data-toggle="popover"]').popover();
+      });
+    @endforeach
+  @endif
   // Intelligent Data Tables
   // TODO: Make them dynamically!
   $('table.datatable').DataTable(
@@ -254,20 +134,5 @@ $(document).on('keypress', function (event) {
   } ]
   });
 
-});
-
-/*
- * Table on-hover click
- * NOTE: This automatically adds on-hover click to all table 'td' elements which are in class 'ClickableTd'.
- *       Please note that the table needs to be in class 'table-hover' for visual marking.
- *
- * HOWTO:
- *  - If clicked on td element which is assigned in class ClickableTd the function bellow is called.
- *  - fetch parent element of td element, which should/(must?) be a row.
- *  - search in tr HTML code for an HTML "a" element and fetch the href attribute
- * INFO: - working directly with row element also adds a click object to checkbox entry, which disabled checkbox functionality
- */
-$('.ClickableTd').click(function () {
-  window.location = $(this.parentNode).find('a').attr("href");
 });
 </script>
