@@ -33,6 +33,11 @@ class IpPool extends \BaseModel {
         return 'IP-Pools';
     }
 
+    // View Icon
+    public static function view_icon()
+    {
+      return '<i class="fa fa-tags"></i>';
+    }
 
     // link title in index view
     public function view_index_label()

@@ -13,8 +13,11 @@
 @extends ('Layout.split84-nopanel')
 
 @section('content_top')
-
-	<li class="active">{{ HTML::linkRoute($route_name.'.index', $headline) }}</li>
+	<li class="active">
+		<a href="{{$route_name.'.index'}}">
+		{{ \App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null).' '.$headline}}
+		</a>
+	</li>
 
 @stop
 
@@ -24,18 +27,7 @@
 	@DivOpen(12)
 		<h1 class="page-header">
 		{{\App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null).' '}}
-		<?php
-		if (isset($view_var[0]))
-			echo $view_var[0]->view_headline();
-		else
-		{
-			// handle empty tables ..
-			// TODO: make me smarter :)
-			$class = \App\Http\Controllers\NamespaceController::get_model_name();
-			echo $class::view_headline();
-		}
-		?>
-		</h1>
+		{{$headline}}
 	@DivClose()
 
 	<!-- Create Form -->

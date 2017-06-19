@@ -25,7 +25,7 @@ return [
 	'Item_ValidFrom'				=> 'Für einmalige (Zusatz-)Zahlungen kann das Feld genutzt werden, um die Zahlung zu teilen - nur  Jahr und Monat (jjjj.mm) werden berücksichtigt.',
 	'Item_ValidFromFixed'			=> 'Feste Termine werden für die Abrechnung verwendet und werden nicht durch externe Aufträge aktualisiert.',
 	'Item_ValidToFixed'				=> 'Feste Termine werden für die Abrechnung verwendet und werden nicht durch externe Aufträge aktualisiert.',
-	'Item_CreditAmount'				=> 'Gross price actualy - will be changed in future to Net price',
+	'Item_CreditAmount'				=> 'Nettobetrag, der dem Kunde gutgeschrieben werden soll',
 
 	//ProductController
 	'Product_Name' 					=> 'Für Kredite ist es möglich einen Typ zuzuweisen, indem der Typname dem Namen des Kredits angefügt wird - z.B.: \'Kredit Gerät\'', 

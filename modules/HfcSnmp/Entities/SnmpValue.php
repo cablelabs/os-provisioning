@@ -7,6 +7,7 @@ class SnmpValue extends \BaseModel {
 	// The associated SQL table for this Model
 	public $table = 'snmpvalue';
 
+    public $observer_enabled = false;
 
 	// Add your validation rules here
     public static function rules($id = null)

@@ -64,8 +64,8 @@ class Contract extends \BaseModel {
 		if ($this->network_access == 0)
 			$bsclass = 'danger';
 
-		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street.' '.$this->house_number, $this->contract_start],
-				'index_header' => ['Contract Number', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street', 'Contract Start'],
+		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street, $this->house_number, $this->district, $this->contract_start, $this->contract_end],
+				'index_header' => ['Contract Nr', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street', 'House Nr', 'District', 'Start Date', 'End Date'],
 				'bsclass' => $bsclass,
 				'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
 	}
@@ -75,9 +75,9 @@ class Contract extends \BaseModel {
 	{
 		if (\PPModule::is_active('billingbase'))
 		{
-			$ret['Base']['Modem'] 		= $this->modems;
-			$ret['Base']['Item']        = $this->items;
-			$ret['Base']['SepaMandate'] = $this->sepamandates;
+			$ret['Edit']['Modem'] 		= $this->modems;
+			$ret['Edit']['Item']        = $this->items;
+			$ret['Edit']['SepaMandate'] = $this->sepamandates;
 		}
 
 		$ret['Technical']['Modem'] = $this->modems;

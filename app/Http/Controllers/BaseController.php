@@ -82,11 +82,17 @@ class BaseController extends Controller {
 		$class = \NamespaceController::get_model_name();
 		$class_name = substr(strrchr($class, "\\"), 1);
 
-		return [[
+		return ['0' => [
 			'name' => 'Logging',
 			'route' => 'GuiLog.filter',
 			'link' => ['model_id' => $view_var->id, 'model' => $class_name]
-		]];
+		],
+		'1' =>
+			['name' => "Edit",
+				'route' => $class_name.'.edit',
+				'link' => ['model_id' => $view_var->id, 'model' => $class_name]
+			],
+	];
 	}
 
 
@@ -250,18 +256,18 @@ class BaseController extends Controller {
 		// Version 1
 		$ret = $this->get_form_tabs($view_var);
 
-		if ($ret && count($ret) > 1)
+		if (count($ret) > 2)
 			return $ret;
 
 		// view_has_many() Version 2
-		if (BaseViewController::get_view_has_many_api_version($a = $view_var->view_has_many()) == 2)
+		$a = $view_var->view_has_many();
+		if (BaseViewController::get_view_has_many_api_version($a) == 2)
 		{
 			// get actual blade to $b
-			// $a = $view_var->view_has_many();
 			$b = current($a);
 			$c = [];
 
-			for ($i = 0; $i < sizeof($view_var->view_has_many()); $i++)
+			for ($i = 0; $i < sizeof($a); $i++)
 			{
 				array_push($c, ['name' => key($a), 'route' => \NamespaceController::get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
 				$b = next($a);
@@ -271,7 +277,8 @@ class BaseController extends Controller {
 			array_push($c, $ret[0]);
 
 			return $c;
-		} else {
+		}
+		else {
 			return $ret;
 		}
 	}
@@ -636,7 +643,9 @@ class BaseController extends Controller {
 		// error msg created while observer execution
 		$msg = \Session::has('error') ? \Session::get('error') : 'Updated';
 		$color = \Session::has('error') ? 'orange' : 'blue';
-
+		
+		if ((\NamespaceController::get_route_name()) == "GlobalConfig" || "BillingBase" || "Ccc" || "HfcBase" || "ProvBase" || "ProvVoip")
+			return Redirect::route('Config.index');
 		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', $msg)->with('message_color', $color);
 	}
 
@@ -865,5 +874,30 @@ class BaseController extends Controller {
 		// $data .= '</li>';
 
 		return $data;
+	}
+
+
+
+	/**
+	 * Return a List of Filenames (e.g. PDF Logos, Tex Templates)
+	 *
+	 * @param 	dir 	Directory name relative to storage/app/config/
+	 * @return  Array 	of Filenames
+	 *
+	 * @author 	Nino Ryschawy
+	 */
+	public static function get_storage_file_list($dir)
+	{
+		$files_raw = \Storage::files("config/$dir");
+		$files[null] = 'None';
+
+		foreach ($files_raw as $file)
+		{
+			$name = explode('/', $file);
+			$name = array_pop($name);
+			$files[$name] = $name;
+		}
+
+		return $files;
 	}
 }

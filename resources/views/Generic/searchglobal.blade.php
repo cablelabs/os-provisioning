@@ -39,6 +39,9 @@
 					$cur_model_parts = explode('\\', get_class($object));
 					$cur_model = array_pop($cur_model_parts);
 
+					if (!\Route::has($cur_model.'.edit'))
+						continue;
+
 					if (is_array($object->view_index_label()))
 					{
 						$link = \HTML::linkRoute($cur_model.'.edit', $object->view_index_label()['header'], $object->id);

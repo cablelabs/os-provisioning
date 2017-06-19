@@ -13,19 +13,8 @@ NOTE: - java include section is in default blade at bottom of text
 	<script>setTimeout("document.getElementById('success_msg').style.display='none';", 6000);</script>
 	<script>setTimeout("document.getElementById('delete_msg').style.display='none';", 6000);</script>
 
-	<script type='text/javascript'>
-		/*
-		 * jQuery Plugin for "on Hover" Mouse Events:
-		 * use title option in html element,
-		 * see help msg on compute_form_fields() in BaseViewController
-		 */
-		$(function() {
-			$( document ).tooltip();
-		});
-	</script>
 
 	<script type="text/javascript">
-
 
 		{{-- jquery (java script) based realtime showing/hiding of fields --}}
 		{{-- foreach form field --}}
@@ -47,6 +36,7 @@ NOTE: - java include section is in default blade at bottom of text
 						$('#{{$field['name']}}').change(function() {
 							@include('Generic.form-js-select')
 						});
+          });
 
 				@endif
 

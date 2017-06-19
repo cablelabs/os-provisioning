@@ -36,6 +36,11 @@ class Phonenumber extends \BaseModel {
 		return 'Phonenumbers';
 	}
 
+  // View Icon
+  public static function view_icon()
+  {
+    return '<i class="fa fa-list-ol"></i>'; 
+  }
 
 	// link title in index view
     public function view_index_label(){
@@ -468,7 +473,7 @@ class PhonenumberObserver
 	public function created($phonenumber)
 	{
 		$phonenumber->mta->make_configfile();
-		$phonenumber->mta->modem->restart_modem();
+		$phonenumber->mta->restart();
 
 	}
 
@@ -492,7 +497,7 @@ class PhonenumberObserver
 
 		// rebuild the current mta's configfile and restart the modem – has to be done in each case
 		$phonenumber->mta->make_configfile();
-		$phonenumber->mta->modem->restart_modem();
+		$phonenumber->mta->restart();
 
 	}
 
@@ -518,7 +523,7 @@ class PhonenumberObserver
 
 		// rebuild old MTA's config and restart the modem (we have to remove all information about this phonenumber)
 		$old_mta->make_configfile();
-		$old_mta->modem->restart_modem();
+		$old_mta->restart();
 
 		// for all possible external providers we have to check if there is data to update, too
 		$this->_check_and_process_mta_change_for_envia($phonenumber, $old_mta, $new_mta);
@@ -674,7 +679,7 @@ class PhonenumberObserver
 	public function deleted($phonenumber)
 	{
 		$phonenumber->mta->make_configfile();
-		$phonenumber->mta->modem->restart_modem();
+		$phonenumber->mta->restart();
 
 		// check if this number has been the last on old modem ⇒ if so remove envia related data from modem
 		if (!$phonenumber->mta->modem->has_phonenumbers_attached()) {

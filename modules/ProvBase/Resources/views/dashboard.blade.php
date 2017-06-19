@@ -154,7 +154,7 @@
                 </div>
 
                 @DivOpen(4)
-                    @include ('bootstrap.panel', array ('content' => "quickstart", 'view_header' => 'Quickstart', 'md' => 12))
+                    @include ('bootstrap.panel', array ('content' => "quickstart", 'view_header' => 'Quickstart', 'md' => 12, 'height' => 'auto'))
                 @DivClose()
             @endif
 

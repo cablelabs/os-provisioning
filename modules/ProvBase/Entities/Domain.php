@@ -11,6 +11,12 @@ class Domain extends \BaseModel {
 		return 'Domains';
 	}
 
+	// View Icon
+	public static function view_icon()
+	{
+		return '<i class="fa fa-tag"></i>';
+	}
+
 	// There are no validation rules
 	public static function rules($id=null)
 	{
