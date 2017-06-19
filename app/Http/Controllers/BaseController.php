@@ -643,10 +643,13 @@ class BaseController extends Controller {
 		// error msg created while observer execution
 		$msg = \Session::has('error') ? \Session::get('error') : 'Updated';
 		$color = \Session::has('error') ? 'orange' : 'blue';
-		
-		if ((\NamespaceController::get_route_name()) == "GlobalConfig" || "BillingBase" || "Ccc" || "HfcBase" || "ProvBase" || "ProvVoip")
+
+		$route_model = \NamespaceController::get_route_name();
+
+		if (in_array($route_model, self::get_config_modules()))
 			return Redirect::route('Config.index');
-		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', $msg)->with('message_color', $color);
+
+		return Redirect::route($route_model.'.edit', $id)->with('message', $msg)->with('message_color', $color);
 	}
 
 
