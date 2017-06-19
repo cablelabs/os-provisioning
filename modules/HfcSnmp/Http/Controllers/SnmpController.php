@@ -88,7 +88,6 @@ class SnmpController extends \BaseController{
 		// $this->_multi_update_values();
 		$form_fields = static::_make_html_from_form_fields($form_fields);
 
-
 		// Init View
 		$view_header = 'SNMP Settings: '.$netelem->name;
 		$view_var 	 = $netelem;
@@ -533,7 +532,7 @@ class SnmpController extends \BaseController{
 		// exec('snmpwalk -v2c -On -CE '.escapeshellarg($oid->oid).'.'.$indices['max'].' -c'.escapeshellarg($this->_get_community()).' '.escapeshellarg($this->device->ip).' '.escapeshellarg($oid->oid), $results);
 
 		// Log
-		Log::info('snmpwalk '.$this->device->ip.' '.$oid->oid);
+		Log::debug('snmpwalk '.$this->device->ip.' '.$oid->oid);
 
 // d(round(microtime(true) - $start, 3), $results, $indices);
 
@@ -584,7 +583,7 @@ class SnmpController extends \BaseController{
 		// standard table OID (all suboids(columns) and elements (rows))
 		else
 		{
-			Log::info('snmp2_real_walk (table) '.$this->device->ip.' '.$oid->oid);
+			Log::debug('snmp2_real_walk (table) '.$this->device->ip.' '.$oid->oid);
 			$results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->oid);
 			// $results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->mibfile->name.'::'.$oid->name);
 			// $results = snmp2_real_walk($this->device->ip, $this->_get_community(), "DOCS-IF-MIB::docsIfUpstreamChannelTable");
@@ -825,7 +824,7 @@ class SnmpController extends \BaseController{
 			return null;
 		}
 
-		Log::info('snmp: set diff '.$this->device->ip.' '.$community.' '.$oid->oid.$index.' '.$snmpvalue->value.' '.$oid->type.' '.$val);
+		Log::debug('snmp: set diff '.$this->device->ip.' '.$community.' '.$oid->oid.$index.' '.$snmpvalue->value.' '.$oid->type.' '.$val);
 
 		if ($val === FALSE)
 			return FALSE;
