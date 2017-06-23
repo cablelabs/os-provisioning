@@ -14,11 +14,10 @@
 
 @section('content_top')
 	<li class="active">
-		<a href="{{$route_name.'.index'}}">
+		<a href="{{route($route_name.'.index')}}">
 		{{ \App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null).' '.$headline}}
 		</a>
 	</li>
-
 @stop
 
 @section('content_left')

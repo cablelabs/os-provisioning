@@ -4,7 +4,7 @@
 @section('content_top')
 
 <li class="active">
-	<a href="{{$route_name}}">
+	<a href="{{route($route_name)}}">
 	{{ \App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null).$view_header}}
 	</a>
 </li>
