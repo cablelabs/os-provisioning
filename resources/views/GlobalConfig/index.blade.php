@@ -26,6 +26,7 @@
 		@endforeach
 	</ul>
 @DivClose()
+
 @DivOpen(12)
 		<div class="tab-content">
 			@foreach($links as $name => $link)
