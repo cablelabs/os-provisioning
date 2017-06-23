@@ -349,7 +349,7 @@ class BaseViewController extends Controller {
 			// Help: add help icon/image behind form field
 			if (isset($field['help']))
 				$s .= '<div name='.$field['name'].'-help class="col-md-1"><a data-toggle="popover" data-container="body"
-							data-trigger="hover" title="'.\App\Http\Controllers\BaseViewController::translate_label($field['description']).'" data-placement="right" data-content="'.$field['help'].'">'.
+							data-trigger="hover" title="'.\App\Http\Controllers\BaseViewController::translate_label($field['description']).'" data-placement="auto right" data-content="'.$field['help'].'">'.
 							'<i class="fa fa-question-circle fa-2x text-info p-t-5"></i></a></div>';
 
 			// Close Form Group
