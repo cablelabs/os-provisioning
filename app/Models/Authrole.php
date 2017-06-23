@@ -52,6 +52,12 @@ class Authrole extends BaseModel
 		return $ret;
 	}
 
+	// View Icon
+	public static function view_icon()
+	{
+		return '<i class="fa fa-user-circle text-info"></i>';
+	}
+
 	// link title in index view
 	public function view_index_label()
 	{

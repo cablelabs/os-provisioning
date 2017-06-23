@@ -46,6 +46,13 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 		return 'Users';
 	}
 
+	// View Icon
+	public static function view_icon()
+	{
+		return '<i class="fa fa-user-o"></i>';
+	}
+
+
 	// link title in index view
 	public function view_index_label()
 	{
