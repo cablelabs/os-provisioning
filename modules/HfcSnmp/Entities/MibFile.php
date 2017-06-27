@@ -42,8 +42,11 @@ class MibFile extends \BaseModel {
 	public function view_index_label()
 	{
 		// TODO: possible Colorization: red - MIBs that occur multiple times - but checking can decrease performance dramatically
+		$bsclass = $this->oids->all() ? 'success' : 'info';
+
 		return ['index' => [$this->id, $this->name, $this->version],
 				'index_header' => ['ID', 'Name', 'Version'],
+				'bsclass' => $bsclass,
 				'header' => $this->name];
 	}
 

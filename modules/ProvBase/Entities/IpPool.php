@@ -44,8 +44,10 @@ class IpPool extends \BaseModel {
 	{
 		$bsclass = 'success';
 
-		if ($this->type == 'CPEPub' || $this->type == 'CPEPriv')
+		if ($this->type == 'CPEPub')
 			$bsclass = 'warning';
+		if ($this->type == 'CPEPriv')
+			$bsclass = 'info';
 		if ($this->type == 'MTA')
 			$bsclass = 'danger';
 
