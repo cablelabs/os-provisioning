@@ -889,7 +889,14 @@ class SystemdObserver
 		if (!$model->observer_enabled)
 			return;
 
-    	\Log::debug("systemd: observer called from update context", [get_class($model), $model->id]);
+		// Exception - Dont restart dhcp server for modems where no relevant changes where made
+		$model_name = new \ReflectionClass(get_class($model));
+		$model_name = $model_name->getShortName();
+
+		if ($model_name == 'Modem' && !$model->needs_restart())
+			return;
+
+		\Log::debug("systemd: observer called from update context", [$model_name, $model->id]);
 
 		if (!is_dir(storage_path('systemd')))
 			mkdir(storage_path('systemd'));

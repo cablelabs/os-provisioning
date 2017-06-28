@@ -822,6 +822,8 @@ class Modem extends \BaseModel {
 	 * @return 1 if reset via Modem or original mac is needed (mac was changed), -1 for reset via CMTS (faster), 0 if no restart is needed
 	 *
 	 * @author Ole Ernst, Nino Ryschawy
+	 *
+	 * NOTE: returns 1 when modem is created
 	 */
 	public function needs_restart() {
 		$diff = array_diff_assoc($this->getAttributes(), $this->getOriginal());
@@ -866,7 +868,6 @@ class ModemObserver
 
 	public function updating($modem)
 	{
-
 		// reminder: on active Envia module: moving modem with phonenumbers attached to other contract is not allowed!
 		// check if this is running if you decide to implement moving of modems to other contracts
 		// watch Ticket LAR-106
@@ -909,11 +910,17 @@ class ModemObserver
 		if (!$modem->observer_enabled)
 			return;
 
-		if(($ret = $modem->needs_restart()) || \Input::has('_force_restart'))
-			$modem->restart_modem($ret > 0);
+		// TODO: only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
+		$restart = $modem->needs_restart();
 
-		$modem->make_dhcp_cm_all();
-		$modem->make_configfile();
+		if(\Input::has('_force_restart'))
+			$modem->restart_modem($restart > 0);
+		else if ($restart)
+		{
+			$modem->restart_modem($restart > 0);
+			$modem->make_dhcp_cm_all();
+			$modem->make_configfile();
+		}
 
 		// ATTENTION:
 		// If we ever think about moving modems to other contracts we have to delete Envia related stuff, too –
