@@ -419,7 +419,7 @@ class SnmpController extends \BaseController{
 		{
 			$s .= '<table class="table table-condensed">';
 			$s .= '<thead><tr>';
-			$s .= '<th>Index</th>';
+			$s .= '<th style="padding: 4px>Index</th>';
 
 			foreach ($oids as $oid => $headline)
 			{
@@ -428,7 +428,7 @@ class SnmpController extends \BaseController{
 					if (isset($oid_indices[$oid]))
 					{
 						// $oids[$oid] = $oid_indices[$oid]['description'];
-						$s .= '<th style="padding: 2px">'.$oid_indices[$oid]['description'].'</th>';
+						$s .= '<th style="padding: 4px">'.$oid_indices[$oid]['description'].'</th>';
 						break;
 					}
 				}
@@ -451,7 +451,7 @@ class SnmpController extends \BaseController{
 				$s .= '<th>Index</th>';
 				
 				foreach ($oid_indices as $oid => $field)
-					$s .= '<th style="padding: 2px">'.$field['description'].'</th>';
+					$s .= '<th style="padding: 4px">'.$field['description'].'</th>';
 
 				$s .= '<tr></thead><tbody>';
 
@@ -493,7 +493,7 @@ class SnmpController extends \BaseController{
 					$oid_indices[$oid]['field_value'] = $divisor ? round($oid_indices[$oid]['field_value'] / $divisor * 100, 2) : 0;
 				}
 
-				$s.= isset($oid_indices[$oid]) ? '<td style="padding: 2px">'.BaseViewController::get_html_input($oid_indices[$oid]).'</td>' : '<td></td>';
+				$s.= isset($oid_indices[$oid]) ? '<td style="padding: 4px">'.BaseViewController::get_html_input($oid_indices[$oid]).'</td>' : '<td></td>';
 			}
 
 			$s .= '</tr>';
