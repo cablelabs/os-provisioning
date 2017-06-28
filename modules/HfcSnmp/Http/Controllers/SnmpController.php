@@ -729,6 +729,7 @@ class SnmpController extends \BaseController{
 				$pre_conf = false;
 			}
 
+			$snmp_val->observer_enabled = true;			// enable observer for GuiLogs when a value is manually set
 			$snmp_val->value = $value;
 			$snmp_val->save();
 
