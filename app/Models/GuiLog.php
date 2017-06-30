@@ -7,6 +7,8 @@ class GuiLog extends \BaseModel {
 	// The associated SQL table for this Model
 	protected $table = 'guilog';
 
+	public $index_delete_disabled = false;
+
 
 	// Add your validation rules here
 	public static function rules($id = null)

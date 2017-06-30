@@ -301,22 +301,22 @@ class MtaObserver
 	public function created($mta)
 	{
 		$mta->hostname = 'mta-'.$mta->id;
-		$mta->make_configfile();
-		$mta->make_dhcp_mta_all();
-		$mta->modem->make_dhcp_cm_all();
-		$mta->save();
-	}
-
-	public function updating($mta)
-	{
-		$mta->hostname = 'mta-'.$mta->id;
+		$mta->save(); 			// forces to call updated method
 	}
 
 	public function updated($mta)
 	{
-		$mta->make_dhcp_mta_all();
-		$mta->make_configfile();
-		$mta->modem->make_dhcp_cm_all();
+		$modifications = $mta->getDirty();
+		if (isset($modifications['updated_at']))
+			unset($modifications['updated_at']);
+
+		// only make configuration files when relevant data was changed
+		if ($modifications)
+		{
+			$mta->make_dhcp_mta_all();
+			$mta->make_configfile();
+		}
+
 		$mta->restart();
 	}
 
@@ -324,7 +324,6 @@ class MtaObserver
 	{
 		$mta->make_dhcp_mta_all();
 		$mta->delete_configfile();
-		$mta->modem->make_dhcp_cm_all();
 		$mta->restart();
 	}
 }

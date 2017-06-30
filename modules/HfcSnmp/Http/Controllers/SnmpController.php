@@ -419,7 +419,7 @@ class SnmpController extends \BaseController{
 		{
 			$s .= '<table class="table table-condensed">';
 			$s .= '<thead><tr>';
-			$s .= '<th>Index</th>';
+			$s .= '<th style="padding: 4px>Index</th>';
 
 			foreach ($oids as $oid => $headline)
 			{
@@ -428,7 +428,7 @@ class SnmpController extends \BaseController{
 					if (isset($oid_indices[$oid]))
 					{
 						// $oids[$oid] = $oid_indices[$oid]['description'];
-						$s .= '<th style="padding: 2px">'.$oid_indices[$oid]['description'].'</th>';
+						$s .= '<th style="padding: 4px">'.$oid_indices[$oid]['description'].'</th>';
 						break;
 					}
 				}
@@ -451,7 +451,7 @@ class SnmpController extends \BaseController{
 				$s .= '<th>Index</th>';
 				
 				foreach ($oid_indices as $oid => $field)
-					$s .= '<th style="padding: 2px">'.$field['description'].'</th>';
+					$s .= '<th style="padding: 4px">'.$field['description'].'</th>';
 
 				$s .= '<tr></thead><tbody>';
 
@@ -493,7 +493,7 @@ class SnmpController extends \BaseController{
 					$oid_indices[$oid]['field_value'] = $divisor ? round($oid_indices[$oid]['field_value'] / $divisor * 100, 2) : 0;
 				}
 
-				$s.= isset($oid_indices[$oid]) ? '<td style="padding: 2px">'.BaseViewController::get_html_input($oid_indices[$oid]).'</td>' : '<td></td>';
+				$s.= isset($oid_indices[$oid]) ? '<td style="padding: 4px">'.BaseViewController::get_html_input($oid_indices[$oid]).'</td>' : '<td></td>';
 			}
 
 			$s .= '</tr>';
@@ -519,7 +519,7 @@ class SnmpController extends \BaseController{
 	public function snmp_walk ($oid, $indices = [])
 	{
 		$community = $this->_get_community();
-		$start = microtime(true);
+// $start = microtime(true);
 
 		if ($indices)
 		{
@@ -527,14 +527,15 @@ class SnmpController extends \BaseController{
 				$results[$oid->oid.'.'.$index] = snmp2_get($this->device->ip, $community, $oid->oid.'.'.$index, $this->timeout, $this->retry);
 		}
 		else
-			$results = snmprealwalk($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
+			// NOTE: Always use snmp2 as this is minimum 20 times faster
+			$results = snmp2_real_walk($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
 
 		// exec('snmpwalk -v2c -On -CE '.escapeshellarg($oid->oid).'.'.$indices['max'].' -c'.escapeshellarg($this->_get_community()).' '.escapeshellarg($this->device->ip).' '.escapeshellarg($oid->oid), $results);
 
+// d(round(microtime(true) - $start, 3), $results, $indices);
+
 		// Log
 		Log::debug('snmpwalk '.$this->device->ip.' '.$oid->oid);
-
-// d(round(microtime(true) - $start, 3), $results, $indices);
 
 		return $results;
 	}
@@ -728,6 +729,7 @@ class SnmpController extends \BaseController{
 				$pre_conf = false;
 			}
 
+			$snmp_val->observer_enabled = true;			// enable observer for GuiLogs when a value is manually set
 			$snmp_val->value = $value;
 			$snmp_val->save();
 
