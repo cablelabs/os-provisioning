@@ -135,4 +135,8 @@ $(document).ready(function() {
   });
 
 });
+
+function resizeIframe(obj) {
+  setTimeout(function() {obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px'}, 3000);
+}
 </script>
