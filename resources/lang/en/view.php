@@ -155,7 +155,7 @@ return [
 		'Button_Create Product Entry'	=> 'Create Product Entry',
 		//SEPA-Konto
 		'Button_Create SEPA Account'	=> 'Create SEPA Account', //Workaround decide which one to use
-		'Button_Create SepaAccount'		=> 'Create SEPA Accounto',
+		'Button_Create SepaAccount'		=> 'Create SEPA Account',
 
 		//CostCenter
 		'Button_Create Cost Center' 	=> 'Create Cost Center', //Workaround decide which one to use

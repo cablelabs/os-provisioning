@@ -7,6 +7,8 @@ class SnmpValue extends \BaseModel {
 	// The associated SQL table for this Model
 	public $table = 'snmpvalue';
 
+    // Disable Observer by Default as this would leed to a mass number of log entries - NOTE: Observer is enabled in SnmpController for manual SnmpSets
+    public $observer_enabled = false;
 
 	// Add your validation rules here
     public static function rules($id = null)

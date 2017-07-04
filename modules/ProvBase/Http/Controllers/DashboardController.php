@@ -257,17 +257,15 @@ class DashboardController extends BaseController
 			foreach ($contracts as $contract) {
 				$items = $contract->items;
 
-				if (count($items) > 0) {
-					foreach ($items as $item) {
-						$product = $item->product;
+				foreach ($items as $item) {
+					$product = $item->product;
 
-						if ($product->price != 0) {
-							$prepared_data[$product->type][$product->billing_cycle][$product->name][$contract->id]['price'] = $product->price;
+					if ($product && $product->price != 0) {
+						$prepared_data[$product->type][$product->billing_cycle][$product->name][$contract->id]['price'] = $product->price;
 
-							if ($product->type == 'TV') {
-								$costcenter = $item->get_costcenter();
-								$prepared_data[$product->type][$product->billing_cycle][$product->name][$contract->id]['billing_month'] = $costcenter->get_billing_month();
-							}
+						if ($product->type == 'TV') {
+							$costcenter = $item->get_costcenter();
+							$prepared_data[$product->type][$product->billing_cycle][$product->name][$contract->id]['billing_month'] = $costcenter->get_billing_month();
 						}
 					}
 				}

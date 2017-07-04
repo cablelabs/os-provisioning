@@ -25,7 +25,7 @@ return [
 	'Item_ValidFrom'				=> 'For One Time Payments the fields can be used to split payment - Only YYYY-MM is considered then!',
 	'Item_ValidFromFixed'			=> 'Fixed dates are used for billing and not updated by external orders',
 	'Item_ValidToFixed'				=> 'Fixed dates are used for billing and not updated by external orders',
-	'Item_CreditAmount'				=> 'Gross price actually - will be changed in future to Net price',
+	'Item_CreditAmount'				=> 'Net Amount to be credited to Customer',
 
 	//ProductController
   	'Product_Name' 					=> 'For Credits it is possible to assign a Type by adding the type name to the Name of the Credit - e.g.: \'Credit Device\'',

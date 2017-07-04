@@ -7,6 +7,7 @@ use Log;
 
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Entities\ProvBase;
 
 // Model not found? execute composer dump-autoload in lara root dir
 class Mta extends \BaseModel {
@@ -27,6 +28,9 @@ class Mta extends \BaseModel {
 		);
 	}
 
+	/**
+	 * View Stuff
+	 */
 
 	// Name of View
 	public static function view_headline()
@@ -60,62 +64,42 @@ class Mta extends \BaseModel {
 				'header' => $this->hostname.' - '.$this->mac];
 	}
 
-
-	/**
-	 * return all modem objects
-	 */
-	public function modems()
+	public function view_belongs_to ()
 	{
-		return Modem::get();
+		return $this->modem;
 	}
 
-	/**
-	 * return all Configfile Objects for MTAs
-	 */
-	public function configfiles()
+	public function view_has_many()
 	{
-		return Configfile::where('device', '=', 'mta')->where('public', '=', 'yes')->get();
+		return array(
+			'Phonenumber' => $this->phonenumbers,
+		);
 	}
 
 
 	/**
 	 * All Relations
-	 *
-	 * link with configfiles
 	 */
 	public function configfile()
 	{
 		return $this->belongsTo('Modules\ProvBase\Entities\Configfile', 'configfile_id');
 	}
 
-	/**
-	 * link with modems
-	 */
 	public function modem()
 	{
 		return $this->belongsTo('Modules\ProvBase\Entities\Modem', 'modem_id');
 	}
 
-	/**
-	 * link with phonenumbers
-	 */
 	public function phonenumbers()
 	{
 		return $this->hasMany('Modules\ProvVoip\Entities\Phonenumber');
 	}
 
-	// belongs to a modem - see BaseModel for explanation
-	public function view_belongs_to ()
-	{
-		return $this->modem;
-	}
 
-	// returns all objects that are related to a mta
-	public function view_has_many()
+	// return all Configfile Objects for MTAs
+	public function configfiles()
 	{
-		return array(
-			'Phonenumber' => $this->phonenumbers,
-		);
+		return Configfile::where('device', '=', 'mta')->where('public', '=', 'yes')->get();
 	}
 
 
@@ -262,6 +246,43 @@ _failed:
 			if (file_exists($f)) unlink($f);
 		}
 	}
+
+
+	/**
+	 * Restarts MTA through snmpset
+	 */
+	public function restart()
+	{
+		// Log
+		Log::info('restart MTA '.$this->hostname);
+
+		// if hostname cant be resolved we dont want to have an php error
+		try
+		{
+			$config = ProvBase::first();
+			$fqdn 	= $this->hostname.'.'.$config->domain_name;
+
+			// restart - PKTC-EXCENTIS-MTA-MIB::pktcMtaDevResetNow - NOTE: Version 2 is important for some Modems!
+			snmp2_set($fqdn, $config->rw_community, '1.3.6.1.4.1.7432.1.1.1.1.0', 'i', '1', 300000, 1);
+		}
+		catch (\Exception $e)
+		{
+			// only ignore error with this error message (catch exception with this string)
+			if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmp2_set(): No response from") !== false))) {
+				\Session::flash('error', 'Could not restart MTA! (offline?)');
+			}
+			elseif(strpos($e->getMessage(), "noSuchName") !== false) {
+				// this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
+			}
+			else {
+				// Inform and log for all other exceptions
+				\Session::push('tmp_info_above_form', 'Unexpected exception: '.$e->getMessage());
+				\Log::error("Unexpected exception restarting MTA ".$this->id." (".$this->mac."): ".$e->getMessage()." => ".$e->getTraceAsString());
+				\Session::flash('error', '');
+			}
+		}
+
+	}
 }
 
 
@@ -280,30 +301,29 @@ class MtaObserver
 	public function created($mta)
 	{
 		$mta->hostname = 'mta-'.$mta->id;
-		$mta->make_configfile();
-		$mta->make_dhcp_mta_all();
-		$mta->modem->make_dhcp_cm_all();
-		$mta->save();
-	}
-
-	public function updating($mta)
-	{
-		$mta->hostname = 'mta-'.$mta->id;
+		$mta->save(); 			// forces to call updated method
 	}
 
 	public function updated($mta)
 	{
-		$mta->make_dhcp_mta_all();
-		$mta->make_configfile();
-		$mta->modem->make_dhcp_cm_all();
-		$mta->modem->restart_modem();
+		$modifications = $mta->getDirty();
+		if (isset($modifications['updated_at']))
+			unset($modifications['updated_at']);
+
+		// only make configuration files when relevant data was changed
+		if ($modifications)
+		{
+			$mta->make_dhcp_mta_all();
+			$mta->make_configfile();
+		}
+
+		$mta->restart();
 	}
 
 	public function deleted($mta)
 	{
 		$mta->make_dhcp_mta_all();
 		$mta->delete_configfile();
-		$mta->modem->make_dhcp_cm_all();
-		$mta->modem->restart_modem();
+		$mta->restart();
 	}
 }

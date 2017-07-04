@@ -2206,7 +2206,8 @@ legend {
 .table > thead > tr.info > th, 
 .table > tbody > tr.info > th, 
 .table > tfoot > tr.info > th {
-    background: lightgreen;
+    /*background: deecff;*/
+    background: #e0edff;
     border-color: #b6e2ef;
 }
 .table > thead > tr > td.success, 
@@ -2221,7 +2222,9 @@ legend {
 .table > thead > tr.success > th, 
 .table > tbody > tr.success > th, 
 .table > tfoot > tr.success > th {
-    background: lightgreen;
+    /*background: lightgreen;*/
+    /*background: #96ef94;*/
+    background: #aff7aa;
     border-color: #99dede;
 }
 .table > thead > tr > td.danger, 
@@ -2236,8 +2239,9 @@ legend {
 .table > thead > tr.danger > th, 
 .table > tbody > tr.danger > th, 
 .table > tfoot > tr.danger > th {
-    background: #ffdedd;
-    border-color: #ffbdbc;
+    /*background: #ffc4c4;*/
+    background: #ffc2c2;
+    border-color: #ffb3b3;
 }
 .table > thead > tr > td.warning, 
 .table > tbody > tr > td.warning, 
@@ -2251,7 +2255,8 @@ legend {
 .table > thead > tr.warning > th, 
 .table > tbody > tr.warning > th, 
 .table > tfoot > tr.warning > th {
-    background: #fdebd1;
+    /*background: #fdebd1;*/
+    background: #fafac1;
     border-color: #fbd7a3;
 }
 .table > thead > tr > td.active, 

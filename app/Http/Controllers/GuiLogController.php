@@ -9,7 +9,7 @@ use View;
 class GuiLogController extends BaseController {
 
 	protected $index_create_allowed = false;
-	protected $index_delete_allowed = true;
+	protected $index_delete_allowed = false;
 	protected $edit_view_save_button = false;
 
 

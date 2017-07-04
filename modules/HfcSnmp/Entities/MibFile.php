@@ -42,8 +42,11 @@ class MibFile extends \BaseModel {
 	public function view_index_label()
 	{
 		// TODO: possible Colorization: red - MIBs that occur multiple times - but checking can decrease performance dramatically
+		$bsclass = $this->oids->all() ? 'success' : 'info';
+
 		return ['index' => [$this->id, $this->name, $this->version],
 				'index_header' => ['ID', 'Name', 'Version'],
+				'bsclass' => $bsclass,
 				'header' => $this->name];
 	}
 
@@ -121,7 +124,7 @@ class MibFile extends \BaseModel {
 		if (isset($oids[1]) && strpos($oids[1], "Cannot find module") !== false)
 		{
 			preg_match('#\((.*?)\)#', substr($oids[1], 18), $mib);
-			$msg = "Please load dependent '".$mib[1].'\' before!! (OIDs cant be translated otherwise)';
+			$msg = trans('messages.upload_dependent_mib_err', ['name' => $mib[1]]);
 			return $this->_error($msg);
 		}
 

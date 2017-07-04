@@ -166,8 +166,12 @@ class FormBuilder extends CollectiveFormBuilder {
 		foreach ($list as $key => $value) {
 			$list[$key] = \App\Http\Controllers\BaseViewController::translate_label($value) ;
 		}
+
 		// Call the parent select method so that Laravel can handle
 		// the rest of the select set up.
+		if (isset($options['style']) && (strpos($options['style'], 'simple') !== false))
+			return parent::select($name, $list, $selected, $options);
+
 		return $this->appendDiv(parent::select($name, $list, $selected, $options));
 	}
 
@@ -179,9 +183,6 @@ class FormBuilder extends CollectiveFormBuilder {
 		$options['align'] = 'left';
 		$options['class'] = '';
 		$checkable = parent::checkbox($name, $value, $checked, $options);
-
-		if (isset($options['style']) && $options['style'] == 'simple')
-			return $checkable;
 
 		return $this->appendDiv($checkable);
 		// return $this->wrapCheckable($label, 'checkbox', $checkable);

@@ -39,8 +39,15 @@ class OID extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
+		$bsclass = 'success';
+
+		if ($this->access == 'read-only')
+			$bsclass = 'danger';
+
+
 		return ['index' => [$this->name, $this->name_gui, $this->oid, $this->access],
 		        'index_header' => ['Name', 'Descriptive Name', 'OID', 'Access'],
+				'bsclass' => $bsclass,
 		        'header' => $this->name.' - '.$this->oid];
 	}
 
@@ -136,14 +143,10 @@ class OID extends \BaseModel {
 		if ($this->endvalue)
 		{
 			$this->stepsize = $this->stepsize ? : 1;
+			$arr = range($this->startvalue, $this->endvalue, $this->stepsize);
 
-			return range($this->startvalue, $this->endvalue, $this->stepsize);
+			return array_combine($arr, $arr);
 
-			// for ($i = $this->startvalue; $i <= $this->endvalue; $i += $this->stepsize)
-			// 	$list[(string) ($i/$this->unit_divisor)] = $i / $this->unit_divisor;
-
-// if ($this->name_gui == 'Configuration Offset (Winter/Summer)')
-// 	d($list, $this);
 			return $list;
 		}
 

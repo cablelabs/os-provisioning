@@ -88,7 +88,6 @@ class SnmpController extends \BaseController{
 		// $this->_multi_update_values();
 		$form_fields = static::_make_html_from_form_fields($form_fields);
 
-
 		// Init View
 		$view_header = 'SNMP Settings: '.$netelem->name;
 		$view_var 	 = $netelem;
@@ -420,7 +419,7 @@ class SnmpController extends \BaseController{
 		{
 			$s .= '<table class="table table-condensed">';
 			$s .= '<thead><tr>';
-			$s .= '<th>Index</th>';
+			$s .= '<th style="padding: 4px>Index</th>';
 
 			foreach ($oids as $oid => $headline)
 			{
@@ -429,7 +428,7 @@ class SnmpController extends \BaseController{
 					if (isset($oid_indices[$oid]))
 					{
 						// $oids[$oid] = $oid_indices[$oid]['description'];
-						$s .= '<th style="padding: 2px">'.$oid_indices[$oid]['description'].'</th>';
+						$s .= '<th style="padding: 4px">'.$oid_indices[$oid]['description'].'</th>';
 						break;
 					}
 				}
@@ -452,7 +451,7 @@ class SnmpController extends \BaseController{
 				$s .= '<th>Index</th>';
 				
 				foreach ($oid_indices as $oid => $field)
-					$s .= '<th style="padding: 2px">'.$field['description'].'</th>';
+					$s .= '<th style="padding: 4px">'.$field['description'].'</th>';
 
 				$s .= '<tr></thead><tbody>';
 
@@ -494,7 +493,7 @@ class SnmpController extends \BaseController{
 					$oid_indices[$oid]['field_value'] = $divisor ? round($oid_indices[$oid]['field_value'] / $divisor * 100, 2) : 0;
 				}
 
-				$s.= isset($oid_indices[$oid]) ? '<td style="padding: 2px">'.BaseViewController::get_html_input($oid_indices[$oid]).'</td>' : '<td></td>';
+				$s.= isset($oid_indices[$oid]) ? '<td style="padding: 4px">'.BaseViewController::get_html_input($oid_indices[$oid]).'</td>' : '<td></td>';
 			}
 
 			$s .= '</tr>';
@@ -520,7 +519,7 @@ class SnmpController extends \BaseController{
 	public function snmp_walk ($oid, $indices = [])
 	{
 		$community = $this->_get_community();
-		$start = microtime(true);
+// $start = microtime(true);
 
 		if ($indices)
 		{
@@ -528,14 +527,15 @@ class SnmpController extends \BaseController{
 				$results[$oid->oid.'.'.$index] = snmp2_get($this->device->ip, $community, $oid->oid.'.'.$index, $this->timeout, $this->retry);
 		}
 		else
-			$results = snmprealwalk($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
+			// NOTE: Always use snmp2 as this is minimum 20 times faster
+			$results = snmp2_real_walk($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
 
 		// exec('snmpwalk -v2c -On -CE '.escapeshellarg($oid->oid).'.'.$indices['max'].' -c'.escapeshellarg($this->_get_community()).' '.escapeshellarg($this->device->ip).' '.escapeshellarg($oid->oid), $results);
 
-		// Log
-		Log::info('snmpwalk '.$this->device->ip.' '.$oid->oid);
-
 // d(round(microtime(true) - $start, 3), $results, $indices);
+
+		// Log
+		Log::debug('snmpwalk '.$this->device->ip.' '.$oid->oid);
 
 		return $results;
 	}
@@ -584,8 +584,9 @@ class SnmpController extends \BaseController{
 		// standard table OID (all suboids(columns) and elements (rows))
 		else
 		{
-			Log::info('snmp2_real_walk (table) '.$this->device->ip.' '.$oid->oid);
-			$results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->mibfile->name.'::'.$oid->name);
+			Log::debug('snmp2_real_walk (table) '.$this->device->ip.' '.$oid->oid);
+			$results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->oid);
+			// $results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->mibfile->name.'::'.$oid->name);
 			// $results = snmp2_real_walk($this->device->ip, $this->_get_community(), "DOCS-IF-MIB::docsIfUpstreamChannelTable");
 			// exec('snmptable -v2c -Ci -c'.$this->_get_community().' '.$this->device->ip.' '.escapeshellarg($oid->mibfile->name.'::'.$oid->name), $results);
 		}
@@ -728,6 +729,7 @@ class SnmpController extends \BaseController{
 				$pre_conf = false;
 			}
 
+			$snmp_val->observer_enabled = true;			// enable observer for GuiLogs when a value is manually set
 			$snmp_val->value = $value;
 			$snmp_val->save();
 
@@ -756,7 +758,7 @@ class SnmpController extends \BaseController{
 	{
 		$type = $this->device->netelementtype;
 
-		if (!$type->pre_conf_oid_id || !$type->pre_conf_value)
+		if ($type->pre_conf_oid_id xor $type->pre_conf_value)
 		{
 			\Log::debug('Snmp Preconfiguration settings incomplete for this Device (NetElement)', [$this->device->name, $this->device->id]);
 			return null;
@@ -775,6 +777,10 @@ class SnmpController extends \BaseController{
 
 			$ret ? \Log::debug('Preconfigured Device for snmpset', [$this->device->name, $this->device->id]) : \Log::debug('Failed to Preconfigure Device for snmpset', [$this->device->name, $this->device->id]);
 
+			// wait time in msec
+			$sleep_time = $type->pre_conf_time_offset ? : 0;
+			usleep($sleep_time);
+
 			return $conf_val;
 		}
 
@@ -783,9 +789,6 @@ class SnmpController extends \BaseController{
 
 		\Log::debug('Postconfigured Device for snmpset', [$this->device->name, $this->device->id]);
 
-		// wait time in msec
-		$sleep_time = $type->pre_conf_time_offset ? : 0;
-		usleep($sleep_time);
 
 		return null;
 	}
@@ -823,7 +826,7 @@ class SnmpController extends \BaseController{
 			return null;
 		}
 
-		Log::info('snmp: set diff '.$this->device->ip.' '.$community.' '.$oid->oid.$index.' '.$snmpvalue->value.' '.$oid->type.' '.$val);
+		Log::debug('snmp: set diff '.$this->device->ip.' '.$community.' '.$oid->oid.$index.' '.$snmpvalue->value.' '.$oid->type.' '.$val);
 
 		if ($val === FALSE)
 			return FALSE;

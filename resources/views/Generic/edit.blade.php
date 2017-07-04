@@ -21,8 +21,8 @@
 
 @section('content_left')
 
-	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true)) }}
-
+	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'editform')) }}
+	
 		@include($form_path, $view_var)
 
 	{{ Form::close() }}
