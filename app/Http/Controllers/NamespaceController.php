@@ -72,9 +72,9 @@ class NamespaceController  {
 			return null;
 		}
 
-		$_ = explode('.', $route->getName());
-		array_pop($_);
-		$model = implode('.', $_);
+		$_ = explode('Controller@', $route->getActionName());
+		$_ = explode('\\', $_[0]);
+		$model = array_pop($_);
 		return $model;
 	}
 
@@ -82,15 +82,25 @@ class NamespaceController  {
 	/**
 	 * Return Model Name
 	 *
+	 * @author Torsten Schmidt, Patrick Reichel
 	 * @return model name
 	 */
 	public static function get_model_name()
 	{
-		if (static::is_module_context())
-			return static::__module_get_mvc_namespace().'\\Entities\\'.static::module_get_pure_model_name();
+		$pure_model = static::module_get_pure_model_name();
 
-		$route = Route::getCurrentRoute();
-		return  $route ? 'App\\'.explode ('Controller', explode ('\\', explode ('@', $route->getActionName())[0])[3])[0] : null;
+		if (static::is_module_context()) {
+			return static::__module_get_mvc_namespace().'\\Entities\\'.$pure_model;
+		}
+		else {
+
+			if (is_null($pure_model)) {
+				return null;
+			}
+			else {
+				return  'App\\'.$pure_model;
+			}
+		}
 	}
 
 
