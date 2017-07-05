@@ -184,6 +184,9 @@ class FormBuilder extends CollectiveFormBuilder {
 		$options['class'] = '';
 		$checkable = parent::checkbox($name, $value, $checked, $options);
 
+                if (isset($options['style']) && $options['style'] == 'simple')
+                        return $checkable;
+
 		return $this->appendDiv($checkable);
 		// return $this->wrapCheckable($label, 'checkbox', $checkable);
 	}
