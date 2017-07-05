@@ -228,6 +228,83 @@ class Phonenumber extends \BaseModel {
 
 
 	/**
+	 * Checks if a number can be reassigned to a given new modem
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _phonenumber_reassignment_allowed($cur_modem, $new_modem) {
+
+		// check if modems belong to the same contract
+		if ($cur_modem->contract->id != $new_modem->contract->id) {
+			return False;
+		}
+
+		// check if installation addresses are equal
+		if (
+			($cur_modem->salutation != $new_modem->salutation)
+			||
+			($cur_modem->company != $new_modem->company)
+			||
+			($cur_modem->department != $new_modem->department)
+			||
+			($cur_modem->firstname != $new_modem->firstname)
+			||
+			($cur_modem->lastname != $new_modem->lastname)
+			||
+			($cur_modem->street != $new_modem->street)
+			||
+			($cur_modem->house_number != $new_modem->house_number)
+			||
+			($cur_modem->zip != $new_modem->zip)
+			||
+			($cur_modem->city != $new_modem->city)
+			||
+			($cur_modem->district != $new_modem->district)
+			||
+			($cur_modem->installation_address_change_date != $new_modem->installation_address_change_date)
+		) {
+			return False;
+		}
+
+		// all checks passed: reassignment is allowed
+		return True;
+	}
+
+
+	/**
+	 * Return a list of MTAs the current phonenumber can be assigned to.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function mtas_list_phonenumber_can_be_reassigned_to() {
+
+		// special case activated Envia module:
+		//   - MTA has to belong to the same contract
+		//   - Installation address of current modem match installation address of new modem
+		if (\PPModule::is_active('provvoipenvia')) {
+			$ret = array();
+
+			$cur_modem = $this->mta->modem;
+			$candidate_modems = $cur_modem->contract->modems;
+			foreach ($candidate_modems as $tmp_modem) {
+
+				if ($this->_phonenumber_reassignment_allowed($cur_modem, $tmp_modem)) {
+
+					foreach ($tmp_modem->mtas as $mta) {
+						$ret[$mta->id] = $mta->hostname.' ('.$mta->mac.")";
+					}
+				}
+			}
+
+			return $ret;
+		}
+
+		// default: can use every mta assigned to a contract
+		return $this->mtas_list_only_contract_assigned();
+	}
+
+
+	/**
 	 * link to management
 	 */
 	public function phonenumbermanagement() {
@@ -251,14 +328,85 @@ class Phonenumber extends \BaseModel {
 		}
 
 		if ($withTrashed) {
-			$orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->withTrashed()->whereRaw($whereStatement);
+			$orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->withTrashed()->whereRaw($whereStatement)->withTimestamps();
 		}
 		else {
-			$orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->whereRaw($whereStatement);
+			$orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->whereRaw($whereStatement)->withTimestamps();
 			/* $orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id'); */
 		}
 
 		return $orders;
+	}
+
+
+	/**
+	 * Helper to detect if an Envia contract has been created for this phonenumber
+	 * You can either make a bool test against this method or get the id of a contract has been created
+	 *
+	 * @return misc:
+	 *			null if module ProvVoipEnvia is disabled
+	 *			false if there is no Envia contract
+	 *			external_contract_id for the contract the number belongs to
+	 *
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function envia_contract_created() {
+
+		// no envia module ⇒ no envia contracts
+		if (!\PPModule::is_active('provvoipenvia')) {
+			return null;
+		}
+
+		// the check is simple: if there is an external contract ID we can be sure that a contract has been created
+		if (!is_null($this->contract_external_id)) {
+			return $this->contract_external_id;
+		}
+		else {
+			return false;
+		}
+	}
+
+
+	/**
+	 * Helper to detect if an Envia contract has been terminated for this phonenumber.
+	 * You can either make a bool test against this method or get the id of a contract if terminated
+	 *
+	 * @return misc:
+	 *			null if module ProvVoipEnvia is disabled
+	 *			false if there is no Envia contract or the contract is still active
+	 *			external_contract_id for the contract if terminated
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function envia_contract_terminated() {
+
+		// no envia module ⇒ no envia contracts
+		if (!\PPModule::is_active('provvoipenvia')) {
+			return null;
+		}
+
+		// if there is no external id we assume that there is no envia contract
+		if (is_null($this->contract_external_id)) {
+			return false;
+		}
+
+		// as we are able to delete single phonenumbers from a contract (without deleting the contract if other numbers are attached)
+		// we here have to count the numbers containing the current external contract id
+
+		$envia_contract = \Modules\ProvVoipEnvia\Entities\EnviaContract::where('envia_contract_reference', '=', $this->contract_external_id)->first();
+
+		// no contract – seems to be deleted
+		if (is_null($envia_contract)) {
+			return $envia_contract;
+		}
+
+		// no end date set: contract seems to be active
+		if (is_null($envia_contract->external_termination_date) && is_null($envia_contract->end_date)) {
+			return false;
+		}
+
+		return $this->contract_external_id;
 	}
 
 
@@ -478,7 +626,41 @@ class PhonenumberObserver
 	}
 
 
+	/** 
+	 * Checks if updating the phonenumber is allowed.
+	 * Used to prevent problems related with Envia.
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _updating_allowed($phonenumber) {
+
+		// no Envia => no problems
+		if (!\PPModule::is_active('provvoipenvia')) {
+			return true;
+		}
+
+		// else we have to check if both MTAs belong to the same contract and if both modem's installation addresses are the same
+		$new_mta = $phonenumber->mta;
+		$old_mta = MTA::findOrFail(intval($phonenumber->getOriginal()['mta_id']));
+
+		// if MTA has not changed: no problems
+		if ($new_mta->id == $old_mta->id) {
+			return true;
+		}
+
+		if (!$this->_phonenumber_reassignment_allowed($old_mta->modem, $new_mta->modem)) {
+			\Session::push('tmp_info_above_form', "Reassignement of phonenumber to MTA $new_mta->id not allowed");
+			return False;
+		}
+
+		return true;
+	}
+
 	public function updating($phonenumber) {
+
+		if (!$this->_updating_allowed($phonenumber)) {
+			return false;
+		}
 
 		$this->_create_login_data($phonenumber);
 	}
@@ -549,19 +731,14 @@ class PhonenumberObserver
 		$new_modem = $new_mta->modem;
 		$new_contract = $new_modem->contract;
 
-		// check if new mta is assigned to another contract than the old one
-		// if so: we assume that this is a temporary change only – we don't change any Envia data
-		if ($old_contract->id != $new_contract->id) {
-
-			$tmp_title = $old_contract->id.': '.$old_contract->firstname.' '.$old_contract->lastname.', '.$old_contract->city;
-			$old_contract_href = \HTML::linkRoute('Contract.edit', $tmp_title, [$old_contract->id], ['target' => '_blank']);
-			$tmp_title = $new_contract->id.': '.$new_contract->firstname.' '.$new_contract->lastname.', '.$new_contract->city;
-			$new_contract_href = \HTML::linkRoute('Contract.edit', $tmp_title, [$new_contract->id], ['target' => '_blank']);
-
-			\Session::push('tmp_info_above_form', 'New MTA belongs to another contract ('.$new_contract_href.') than the previous one ('.$old_contract_href.')<br>This seems to part of a a test only – so no Envia related data will be changed.<br>Make sure that the number finally is attached to the right MTA, especially BEFORE performing actions against Envia API!!');
-
+		// if the phonenumber does not exist at Envia (no management or no external creation date):
+		// nothing to cange in modems
+		if (
+			(!$phonenumber->contract_external_id)
+		) {
+			\Session::push('tmp_info_above_form', 'Number has not been created at Envia – will not change any modem data.');
 			return;
-		}
+		};
 
 		// the moment we get here we take for sure that we have a permanent switch (defective old modem)
 		// now we have to do a bunch of Envia data related work
@@ -589,10 +766,18 @@ class PhonenumberObserver
 		}
 
 		// second: write all Envia related data from the old to the new modem
-		$new_modem->contract_external_id = $old_modem->contract_external_id;
-		$new_modem->contract_ext_creation_date = $old_modem->contract_ext_creation_date;
-		$new_modem->contract_ext_termination_date = $old_modem->contract_ext_termination_date;
-		$new_modem->installation_address_change_date = $old_modem->installation_address_change_date;
+		if (!$new_modem->contract_ext_creation_date) {
+			$new_modem->contract_ext_creation_date = $old_modem->contract_ext_creation_date;
+		}
+		else {
+			$new_modem->contract_ext_creation_date = min($new_modem->contract_ext_creation_date, $old_modem->contract_ext_creation_date);
+		}
+		if (!$new_modem->contract_ext_termination_date) {
+			$new_modem->contract_ext_termination_date = $old_modem->contract_ext_termination_date;
+		}
+		else {
+			$new_modem->contract_ext_termination_date = max($new_modem->contract_ext_termination_date, $old_modem->contract_ext_termination_date);
+		}
 		$new_modem->save();
 
 		// third: if there are no more numbers attached to the old modem: remove all Envia related data
@@ -662,17 +847,30 @@ class PhonenumberObserver
 			return;
 		}
 
-		// TODO: check if this data can be changed automagically at Envia!
-		$parameters = [
-			'job' => 'voip_account_update',
-			'origin' => urlencode(\URL::previous()),
-			'phonenumber_id' => $phonenumber->id,
-			];
-		$title = 'DO THIS MANUALLY NOW!';
-		$envia_href = \HTML::linkRoute('ProvVoipEnvia.request', $title, $parameters);
+		// check what changed the SIP data
+		if (
+			(strpos(\URL::current(), "request/contract_get_voice_data") !== false)
+			||
+			(strpos(\URL::current(), "cron/contract_get_voice_data") !== false)
+		) {
+			// changed through API method get_voice_data: do nothing
+			return;
+		}
+		else {
+			// if we end up here: the current change has been done manually
+			// inform the user that he has to change the data at Envia, too
+			// TODO: check if this data can be changed automagically at Envia!
+			$parameters = [
+				'job' => 'voip_account_update',
+				'origin' => urlencode(\URL::previous()),
+				'phonenumber_id' => $phonenumber->id,
+				];
 
-		\Session::push('tmp_info_above_form', 'Autochanging of SIP data at Envia is not implemented yet.<br>You have to '.$envia_href);
+			$title = 'DO THIS MANUALLY NOW!';
+			$envia_href = \HTML::linkRoute('ProvVoipEnvia.request', $title, $parameters);
 
+			\Session::push('tmp_info_above_form', 'Autochanging of SIP data at Envia is not implemented yet.<br>You have to '.$envia_href);
+		}
 	}
 
 

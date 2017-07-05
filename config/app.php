@@ -112,7 +112,8 @@ return [
 	*/
 
 
-	'log' => 'single',
+	'log' => env('APP_LOG', 'daily'),
+	'log_max_files' => env('APP_LOG_MAX_FILES', 30),
 	// 'log' => 'daily',
 	// 'log_max_files' => 30,
 

@@ -367,6 +367,9 @@ class BaseController extends Controller {
 		if (!is_null($this->edit_right_md_size) && !isset($a['edit_right_md_size']))
 			$a['edit_right_md_size'] = $this->edit_right_md_size;
 
+		if (!isset($a['html_title']))
+			$a['html_title'] = "NMS – ".\NamespaceController::module_get_pure_model_name();
+
 		$a['save_button'] = $this->save_button;
 		$a['force_restart_button'] = $this->force_restart_button;
 		$a['edit_view_save_button'] = $this->edit_view_save_button;

@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>NMS</title>
+		<title>{{$html_title}}</title>
 		@include ('bootstrap.header')
 
 	</head>

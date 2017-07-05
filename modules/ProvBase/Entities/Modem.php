@@ -107,6 +107,18 @@ class Modem extends \BaseModel {
 
 	}
 
+	/**
+	 * related enviacontracts
+	 */
+	public function enviacontracts() {
+		if (!\PPModule::is_active('provvoipenvia')) {
+			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
+		}
+		else {
+			return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaContract');
+		}
+	}
+
 	public function configfile ()
 	{
 		return $this->belongsTo('Modules\ProvBase\Entities\Configfile');
@@ -184,6 +196,8 @@ class Modem extends \BaseModel {
 	 */
 	public static function boot()
 	{
+		Log::debug(__METHOD__." started");
+
 		parent::boot();
 
 		Modem::observe(new \App\SystemdObserver);
@@ -207,6 +221,8 @@ class Modem extends \BaseModel {
 	 */
 	private function generate_cm_dhcp_entry()
 	{
+		Log::debug(__METHOD__." started for ".$this->hostname);
+
 		$ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
 
 		if(count($this->mtas))
@@ -245,6 +261,8 @@ class Modem extends \BaseModel {
 	 */
 	public static function make_dhcp_cm_all ()
 	{
+		Log::debug(__METHOD__." started");
+
 		Modem::clear_dhcp_conf_files();
 
 		// Log
@@ -286,6 +304,8 @@ class Modem extends \BaseModel {
 	 */
 	public function make_configfile ()
 	{
+		Log::debug(__METHOD__." started for ".$this->hostname);
+
 		$modem	= $this;
 		$id		= $modem->id;
 		$mac	= $modem->mac;
@@ -606,6 +626,8 @@ class Modem extends \BaseModel {
 	 */
 	public function geocode ($save = true)
 	{
+		Log::debug(__METHOD__." started for ".$this->hostname);
+
 		$country = 'Deutschland';
 
 		// Load google key if .ENV is set
@@ -699,8 +721,33 @@ class Modem extends \BaseModel {
 		// no numbers found
 		return False;
 
-
 	}
+
+
+	/**
+	 * Helper to get all phonenumbers related to contract.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function related_phonenumbers() {
+
+		// if voip module is not active: there can be no phonenumbers
+		if (!\PPModule::is_active('ProvVoip')) {
+			return [];
+		}
+
+		$phonenumbers_on_modem = [];
+
+		// else: search all mtas on all modems
+		foreach ($this->mtas as $mta) {
+			foreach ($mta->phonenumbers as $phonenumber) {
+				array_push($phonenumbers_on_modem, $phonenumber);
+			}
+		}
+
+		return $phonenumbers_on_modem;
+	}
+
 
 
 	/*
@@ -794,7 +841,7 @@ class Modem extends \BaseModel {
 
 		// first: check if envia module is enabled
 		// if not: do nothing – this database fields could be in use by another voip provider module!
-		if (\PPModule::is_active('ProvVoipEnvia')) {
+		if (!\PPModule::is_active('ProvVoipEnvia')) {
 			return;
 		}
 
@@ -860,6 +907,8 @@ class ModemObserver
 
 	public function created($modem)
 	{
+		Log::debug(__METHOD__." started for ".$modem->hostname);
+
 		$modem->hostname = 'cm-'.$modem->id;
 		$modem->save();	 // forces to call the updating() and updated() method of the observer !
 		if (\PPModule::is_active ('ProvMon'))
@@ -868,7 +917,9 @@ class ModemObserver
 
 	public function updating($modem)
 	{
-		// reminder: on active Envia module: moving modem with phonenumbers attached to other contract is not allowed!
+		Log::debug(__METHOD__." started for ".$modem->hostname);
+
+		// reminder: on active Envia module: moving modem to other contract is not allowed!
 		// check if this is running if you decide to implement moving of modems to other contracts
 		// watch Ticket LAR-106
 		if (\PPModule::is_active('ProvVoipEnvia')) {
@@ -878,16 +929,9 @@ class ModemObserver
 				&&
 				($modem['original']['contract_id'] != $modem->contract_id)
 			) {
-				if ($modem->has_phonenumbers_attached) {
-					// returning false should cancel the updating: verify this! There has been some problems with deleting modems – we had to put the logic in Modem::delete() probably caused by our Base* classes…
-					// see: http://laravel-tricks.com/tricks/cancelling-a-model-save-update-delete-through-events
-					return false;
-				}
-				elseif ($modem->contract_external_id) {
-					// if there are any Envia data: the number(s) are probably moved only temporary
-					// here we have to think about the references to this modem in all related EnviaOrders (maybe all the numbers have been terminated and then deleted from our database – but we still have the orders related to this numbers and also to this modem
-					return false;
-				}
+				// returning false should cancel the updating: verify this! There has been some problems with deleting modems – we had to put the logic in Modem::delete() probably caused by our Base* classes…
+				// see: http://laravel-tricks.com/tricks/cancelling-a-model-save-update-delete-through-events
+				return false;
 			}
 		}
 
@@ -907,6 +951,8 @@ class ModemObserver
 
 	public function updated($modem)
 	{
+		Log::debug(__METHOD__." started for ".$modem->hostname);
+
 		if (!$modem->observer_enabled)
 			return;
 
@@ -931,6 +977,8 @@ class ModemObserver
 
 	public function deleted($modem)
 	{
+		Log::debug(__METHOD__." started for ".$modem->hostname);
+
 		$modem->restart_modem();
 		$modem->make_dhcp_cm_all();
 		$modem->delete_configfile();

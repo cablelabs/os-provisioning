@@ -572,17 +572,10 @@ finish:
 			else
 				$name .= $model->view_index_label();
 
-
-			if (!$breadcrumb_path) {
-				$glue = '';
-			}
-			else {
-				$glue = '';
-			}
 			if ($i == 0)
-			$breadcrumb_path = "<li class='nav-tabs'>".static::__link_route_html($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).$breadcrumb_path."</li>";
+				$breadcrumb_path = "<li class='nav-tabs'>".static::__link_route_html($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).$breadcrumb_path."</li>";
 			else
-			$breadcrumb_path = "<li>".static::__link_route_html($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id)."</li>".$breadcrumb_path;
+				$breadcrumb_path = "<li>".static::__link_route_html($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id)."</li>".$breadcrumb_path;
 
 			return $breadcrumb_path;
 		};
@@ -618,14 +611,56 @@ finish:
 				}
 				else {
 					// $parent is a collection with more than one entry – this means we have a multiple parents
+					// for example Phonenumber:EnviaOrder is such a n:m relatio
 					// we show breadcrumb paths for all of them, but then stopping further processing
 					// to avoid shredding the layout
+					$breadcrumb_path_before_split = $breadcrumb_path;
+					$multicrumbs = '';
+
 					foreach ($parent as $p) {
-						array_push($breadcrumb_paths, $extend_breadcrumb_path($breadcrumb_path, $p));
-						$i++;
+
+						// get the breadcrumb for the current parent
+						$extended_path  = $extend_breadcrumb_path($breadcrumb_path, $p, $i);
+						$breadcrumb = str_replace($breadcrumb_path_before_split, '', $extended_path);
+
+						// overwrite style (default needs to much space on page)
+						$new_style = [
+							'font-size: 80%',
+							'display: block !important',
+							'padding-top: 0px !important',
+							'padding-bottom: 1px !important',
+						];
+						$new_style = implode('; ', $new_style);
+						$breadcrumb = str_replace('<a ', '<a style="'.$new_style.'" ', $breadcrumb);
+
+						// collect all parent breadcrumbs
+						if (!$multicrumbs) {
+
+							// the first one is simple :-)
+							$multicrumbs = $breadcrumb;
+						}
+						else {
+
+							// insert the current breadcrumb into the existing <li> element
+
+							// therefore we extract all text from the first opening to the last closing <a> tag
+							// from the current breadcrumb
+							$pattern_a_tag = '#\<a .*\</a\>#';
+							preg_match($pattern_a_tag, $breadcrumb, $matches);
+							$stripped_breadcrumb = $matches[0];
+
+							// then we extract the same pattern from the collected breadcrumbs
+							// and replace it by itself (backreference) extended by our cleaned current breadcrumb
+							$replacement = '$0'.$stripped_breadcrumb;
+							$multicrumbs = preg_replace($pattern_a_tag, $replacement, $multicrumbs);
+						}
 					}
 
-					// don't add more predecessors
+					// add all the parent breadcrumbs as a single breadcrumb path element
+					array_push($breadcrumb_paths, $multicrumbs.$breadcrumb_path_before_split);
+
+					// don't add more predecessors as this can really shred the layout
+					// (think about cascading n:m relations…)
 					break;
 				}
 			}
@@ -653,8 +688,7 @@ finish:
 			array_unshift($breadcrumb_paths, $breadcrumb_path_base);
 		}
 
-		// show each path on its own line
-		return implode('<br>', $breadcrumb_paths);
+		return implode('', $breadcrumb_paths);
 	}
 
 

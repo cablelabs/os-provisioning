@@ -10,6 +10,8 @@ use \Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand;
 use \Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand;
 use \Modules\ProvVoip\Console\PhonenumberCommand;
 use \Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand;
+use \Modules\ProvVoipEnvia\Console\EnviaContractReferenceGetterCommand;
+use \Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceGetterCommand;
 
 class Kernel extends ConsoleKernel {
 
@@ -24,11 +26,13 @@ class Kernel extends ConsoleKernel {
 		'App\Console\Commands\StorageCleaner',
 		'\Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand',
 		'\Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand',
-		'\Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand',
 		'\Modules\ProvVoip\Console\PhonenumberCommand',
+		'\Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand',
+		'\Modules\ProvVoipEnvia\Console\EnviaContractReferenceGetterCommand',
+		'\Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceGetterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
-		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderProcessorCommand',
+		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
 		'App\Console\Commands\authCommand',
 		'App\Console\Commands\install',
 	];
@@ -88,6 +92,14 @@ class Kernel extends ConsoleKernel {
 			$schedule->command('provvoipenvia:update_voice_data')
 				->dailyAt('03:53');
 				/* ->everyMinute(); */
+
+			// Get Envia contract reference for phonenumbers without this information
+			$schedule->command('provvoipenvia:get_envia_contract_references')
+				->dailyAt('01:15');
+
+			// Get Envia customer reference for contracts without this information
+			$schedule->command('provvoipenvia:get_envia_customer_references')
+				->dailyAt('01:13');
 
 			// Process Envia orders
 			$schedule->command('provvoipenvia:process_envia_orders')

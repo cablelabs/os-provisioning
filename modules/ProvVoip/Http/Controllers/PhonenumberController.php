@@ -32,7 +32,12 @@ class PhonenumberController extends \BaseController {
 		// if there is no phonenumbermanagement: make checkbox changeable
 		// TODO: should this be the case or do we want to need a management in each case?
 		if (is_null($model->phonenumbermanagement)) {
-			$active_checkbox = array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'help' => 'If you create a PhonenumberManagement this checkbox will be set depending on its (de)activation date.');
+			$active_checkbox = array(
+				'form_type' => 'checkbox',
+				'name' => 'active',
+				'description' => 'Active',
+				'help' => 'If you create a PhonenumberManagement this checkbox will be set depending on its (de)activation date.'
+			);
 		}
 		// otherwise: store value in hidden form field and show symbol to indicate the current state instead
 		else {
@@ -68,16 +73,69 @@ class PhonenumberController extends \BaseController {
 				);
 		}
 
+		$reassign_help = "Can be used to assign the phonenumber (and related data) to another MTA.";
+		if (\PPModule::is_active('provvoipenvia')) {
+			$reassign_help .= "MTA has to belong to the same contract and modem installation addresses have to be equal.";
+		}
+
+		// get a list of MTAs the modem can be moved to
+		if ($model->exists) {
+			$mta_list = $model->mtas_list_phonenumber_can_be_reassigned_to();
+		}
+		else {
+			$mta_list = array();
+		}
+
 		// label has to be the same like column in sql table
 		return array(
-			array('form_type' => 'select', 'name' => 'country_code', 'description' => 'Country Code', 'value' => Phonenumber::getPossibleEnumValues('country_code')),
-			array('form_type' => 'text', 'name' => 'prefix_number', 'description' => 'Prefix Number', 'help' => 'Has to be available on modem address.'),
-			array('form_type' => 'text', 'name' => 'number', 'description' => 'Number', 'help' => 'The phonenumber to port or a free number given by your provider.'),
-			array('form_type' => 'select', 'name' => 'mta_id', 'description' => 'MTA', 'value' => $model->mtas_list_only_contract_assigned(), 'hidden' => 'C', 'help' => 'Can be used to assign the phonenumber (and related data) to another MTA. Useful on modem changes and for testing. You will probably have to change the port, too.'),
-			array('form_type' => 'text', 'name' => 'port', 'description' => 'Port'),
-			array('form_type' => 'text', 'name' => 'username', 'description' => 'Username', 'options' => array('placeholder' => $login_placeholder)),
-			array('form_type' => 'text', 'name' => 'password', 'description' => 'Password', 'options' => array('placeholder' => $login_placeholder)),
-			array('form_type' => 'text', 'name' => 'sipdomain', 'description' => 'SIP domain'),
+			array(
+				'form_type' => 'select',
+				'name' => 'country_code',
+				'description' => 'Country Code',
+				'value' => Phonenumber::getPossibleEnumValues('country_code')
+			),
+			array(
+				'form_type' => 'text',
+				'name' => 'prefix_number',
+				'description' => 'Prefix Number',
+				'help' => 'Has to be available on modem address.'
+			),
+			array(
+				'form_type' => 'text',
+				'name' => 'number',
+				'description' => 'Number',
+				'help' => 'The phonenumber to port or a free number given by your provider.'
+			),
+			array(
+				'form_type' => 'select',
+				'name' => 'mta_id',
+				'description' => 'MTA',
+				'value' => $mta_list,
+				'hidden' => 'C',
+				'help' => $reassign_help,
+			),
+			array(
+				'form_type' => 'text',
+				'name' => 'port',
+				'description' => 'Port'
+			),
+			array(
+				'form_type' => 'text',
+				'name' => 'username',
+				'description' => 'Username',
+				'options' => array('placeholder' => $login_placeholder)
+			),
+			array(
+				'form_type' => 'text',
+				'name' => 'password',
+				'description' => 'Password',
+				'options' => array('placeholder' => $login_placeholder)
+			),
+			array(
+				'form_type' => 'text',
+				'name' => 'sipdomain',
+				'description' => 'SIP domain'
+			),
 			$active_checkbox,
 		);
 	}
