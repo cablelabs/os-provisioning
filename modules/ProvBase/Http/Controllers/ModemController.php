@@ -146,12 +146,12 @@ class ModemController extends \BaseController {
 		if(!\PPModule::is_active('ProvMon'))
 			return $a;
 
-		array_push($a, ['name' => 'Analyses', 'route' => 'Provmon.index', 'link' => [$view_var->id]]);
-		array_push($a, ['name' => 'CPE-Analysis', 'route' => 'Provmon.cpe', 'link' => [$view_var->id]]);
+		array_push($a, ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => [$view_var->id]]);
+		array_push($a, ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => [$view_var->id]]);
 
 		// MTA: only show MTA analysis if Modem has MTAs
 		if (isset($view_var->mtas) && isset($view_var->mtas[0]))
-			array_push($a, ['name' => 'MTA-Analysis', 'route' => 'Provmon.mta', 'link' => [$view_var->id]]);
+			array_push($a, ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => [$view_var->id]]);
 
 		// add tab for GuiLog
 		array_push($a, parent::get_form_tabs($view_var)[0]);
