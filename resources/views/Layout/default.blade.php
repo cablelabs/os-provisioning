@@ -3,17 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<?php
-
-			// get the base part of current route and add to title
-			// helpful with many open tabs
-			$_ = explode('.', Route::getCurrentRoute()->getName());
-			array_pop($_);
-			$_ = implode('.', $_);
-
-			echo "<title>NMS – $_</title>";
-
-		?>
+		<title>{{$html_title}}</title>
 		@include ('bootstrap.header')
 
 	</head>
