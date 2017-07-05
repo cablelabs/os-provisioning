@@ -61,13 +61,21 @@ class NamespaceController  {
 	 * Return the Model name for current context, like "Contract"
 	 * NOTE: will only perform in Ping Pong Context
 	 *
+	 * @author Torsten Schmidt, Patrick Reichel
 	 * @return model name
 	 */
 	public static function module_get_pure_model_name()
 	{
 		$route = Route::getCurrentRoute();
 
-		return $route? explode ('Controller', explode ('\\', explode ('@', $route->getActionName())[0])[4])[0] : null;
+		if (!$route) {
+			return null;
+		}
+
+		$_ = explode('.', $route->getName());
+		array_pop($_);
+		$model = implode('.', $_);
+		return $model;
 	}
 
 
