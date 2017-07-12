@@ -17,14 +17,23 @@ class ExampleTest extends TestCase
 	{
 		// TODO: do not hard code any user class, instead fetch a user dynamically
 		//       ore add it only for testing (see Laravel factory stuff)
-		$user = App\Authuser::find(8);
+		$user = App\Authuser::findOrFail(1);
 
 		// TODO: there must be a namespace problem in Testing Context!
 		//       All/Many normal non pingpong classes are not found, like routing, Controllers, ...
 		//       To fix this issue for routing, i have added the basic route file to TestCase.php
 		//       This should be solved better ..
 		//       When solving this problem, the following ignore test case array can shrink
-		$ignore = ['Authuser.index', 'Authrole.index', 'GlobalConfig.index', 'Config.index', 'GuiLog.index', 'Provmon.index'];
+		$ignore = [
+			'Authuser.index',
+			'Authrole.index',
+			'Config.index',
+			'GlobalConfig.index',
+			'GuiLog.index',
+			'PhonenumberManagement.index',	// not a real MVC
+			'ProvMon.index',
+			'ProvVoipEnvia.index',	// not a real MVC
+		];
 
 		// Fetch all routes
 		foreach (Route::getRoutes() as $route)
@@ -34,7 +43,9 @@ class ExampleTest extends TestCase
 				!(in_array($route->getName(), $ignore)))
 			{
 				// Info Message
-				echo "\nTesting of ".$route->getName().' '.$route->getPath();
+				$msg = "Testing of ".$route->getName().' '.$route->getPath();
+				echo "\n$msg";
+				\Log::debug($msg);
 
 				// Index Page
 				$this->actingAs($user)->visit($route->getPath());
