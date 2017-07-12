@@ -24,7 +24,7 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
 
         // NOTE: This is tricky shit! AND should be solved different!
         //       See NOTE on ExampleTest.php
-        require_once __DIR__.'/../app/Http/routes.php';
+        /* require_once __DIR__.'/../app/Http/routes.php'; */
 
         return $app;
     }
