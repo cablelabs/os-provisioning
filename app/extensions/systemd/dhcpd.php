@@ -17,12 +17,16 @@ if ($ret == 0)
 	$fp_cm  = fopen($fn_cm, "r");
 	$fp_mta = fopen($fn_mta, "r");
 
+	$logfile = '/var/www/lara/storage/logs/laravel.log';
+
 	if (!flock($fp_cm, LOCK_EX) || !flock($fp_mta, LOCK_EX))
+	{
 		// Note: This should never occure as flock waits until file is unlocked from other process
-		Log::debug('Files are locked');
+		if (file_exists($logfile))
+			file_put_contents($logfile, "[".date('Y-m-d H:i:s')."] local.ERROR: DHCP Configfiles are locked\n", FILE_APPEND);
+	}
 
 	// Log
-	$logfile = '/var/www/lara/storage/logs/laravel.log';
 	if (file_exists($logfile))
 		file_put_contents($logfile, "[".date('Y-m-d H:i:s')."] local.INFO: Restart DHCPD\n", FILE_APPEND);
 	else

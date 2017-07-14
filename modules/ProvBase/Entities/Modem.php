@@ -234,7 +234,9 @@ class Modem extends \BaseModel {
 
 	private function generate_cm_dhcp_entry_pub()
 	{
-			return 'subclass "Client-Public" '.$this->mac.'; # CM id:'.$this->id."\n";
+		Log::debug(__METHOD__." started for ".$this->hostname);
+
+		return 'subclass "Client-Public" '.$this->mac.'; # CM id:'.$this->id."\n";
 	}
 
 
@@ -305,17 +307,16 @@ class Modem extends \BaseModel {
 	 	* It's also more secure as it uses flock() to avoid dhcpd restart errors due to race conditions
 	 	* MaybeTODO: embed part between lock & unlock into try catch block to avoid forever locked files in case of exception
 	 *
+	 * @param 	delete  	set to true if you want to remove the entry from the configfile
+	 *
 	 * @author Nino Ryschawy
 	 */
 	public function make_dhcp_cm($delete = false)
 	{
 		Log::debug(__METHOD__." started");
 
-		if ($this->id == 0)
-			return;
-
 		// Note: hostname is changed when modem was created
-		if (!$this->isDirty(['hostname', 'mac']) && !$delete)
+		if (!$this->isDirty(['hostname', 'mac', 'public']) && !$delete)
 			return;
 
 		// Log
@@ -329,7 +330,8 @@ class Modem extends \BaseModel {
 		{
 			$original = clone $this;
 			$original->hostname = $modem_orig['hostname'];
-			$original->mac = $modem_orig['mac'];
+			$original->mac 		= $modem_orig['mac'];
+			$original->public 	= $modem_orig['public'];
 
 			$replace = $original->generate_cm_dhcp_entry();
 		}
@@ -354,10 +356,10 @@ class Modem extends \BaseModel {
 		if (!$delete)
 			$conf .= $data;
 
-		$this->_write_file(self::CONF_FILE_PATH, $conf);
+		self::_write_dhcp_file(self::CONF_FILE_PATH, $conf);
 
 		// public ip
-		if ($this->public)
+		if ($this->public || ((isset($original) && $original->public)))
 		{
 			$data_pub 	  = $this->generate_cm_dhcp_entry_pub();
 			$replace_pub  = isset($original) ? $original->generate_cm_dhcp_entry_pub() : '';
@@ -368,10 +370,10 @@ class Modem extends \BaseModel {
 				Log::critical('Missing DHCPD Configfile '.self::CONF_FILE_PATH_PUB);
 
 			$conf_pub = str_replace($replace_pub, '', $conf_pub);
-			if (!$delete)
+			if (!$delete && $this->public)
 				$conf_pub .= $data_pub;
 
-			$this->_write_file(self::CONF_FILE_PATH_PUB, $conf_pub);
+			self::_write_dhcp_file(self::CONF_FILE_PATH_PUB, $conf_pub);
 		}
 
 		// unlock
@@ -380,7 +382,7 @@ class Modem extends \BaseModel {
 	}
 
 
-	private function _write_file($filename, $data)
+	public static function _write_dhcp_file($filename, $data)
 	{
 		if (File::put($filename, $data) === false)
 			Log::critcal('Failed to modify DHCPD Configfile '.$filename);
