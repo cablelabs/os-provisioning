@@ -162,14 +162,17 @@ var makeInputFitOnResize = function() {
   $("select").select2();
 };
 
-var positionErdPopover= function {
-  $('.erd-popover').hover(
+var positionErdPopover= function() {
+$('.erd-popover').mousemove(
   function(event){
-    console.log(event.pageY);
-     $(".popover").css({
-      top: event.pageY + 5,
-      left: event.pageX + 5
-  }).show();
+    var mouseX = event.pageX + 20;
+    var mouseY = event.pageY;
+    if ($(this).attr('shape') == "circle") {
+      var mouseY = event.pageY -50;
+    }
+    $('.popover').css({'top':mouseY,'left':mouseX}).fadeIn('slow');
+    $('.popover .arrow').css({'top': ($('.popover').height()/2) ,'left':-10});
+    $(".popover").show();
 });
 };
 
