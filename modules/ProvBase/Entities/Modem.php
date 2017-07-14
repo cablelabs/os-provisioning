@@ -417,8 +417,8 @@ class Modem extends \BaseModel {
 		if ($ret === false)
 				die("Error writing to file");
 
-		Log::info('configfile: update modem '.$this->hostname);
-		Log::info("configfile: /usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file");
+		Log::info('Configfile Update for Modem: '.$this->hostname);
+		Log::debug("configfile: /usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file");
 		// if (file_exists($cfg_file))
 		//	 unlink($cfg_file);
 
