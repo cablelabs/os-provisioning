@@ -298,11 +298,12 @@ class Modem extends \BaseModel {
 
 	/**
 	 * Add DHCP config for a single CM including EPs to the appropriate DHCPD Config File
-	 * Used in ModemObserver@updated or deleted for created/updated/deleted events
+	 * Used in ModemObserver@updated/deleted for created/updated/deleted events
 	 *
 	 * NOTES:
-	 	* This is way faster (0,02s vs 2,8s for 348 Modems via make_dhcp_cm_all) than everytime creating files for all modems
-	 	* It's also secure as it uses flock() to avoid dhcpd restart errors due to race conditions
+	 	* This is way faster (0,01s vs 2,8s for 348 Modems via make_dhcp_cm_all) than everytime creating files for all modems
+	 	* It's also more secure as it uses flock() to avoid dhcpd restart errors due to race conditions
+	 	* MaybeTODO: embed part between lock & unlock into try catch block to avoid forever locked files in case of exception
 	 *
 	 * @author Nino Ryschawy
 	 */
@@ -333,15 +334,19 @@ class Modem extends \BaseModel {
 			$replace = $original->generate_cm_dhcp_entry();
 		}
 
-// lock
-
-		if (file_exists(self::CONF_FILE_PATH))
-			$conf = File::get(self::CONF_FILE_PATH);
-		else
+		if (!file_exists(self::CONF_FILE_PATH))
 		{
 			Log::critical('Missing DHCPD Configfile '.self::CONF_FILE_PATH);
 			return;
 		}
+
+		// lock
+		$fp = fopen(self::CONF_FILE_PATH, "r+");
+
+		if (!flock($fp, LOCK_EX))
+			Log::error('Could not get exclusive lock for '.self::CONF_FILE_PATH);
+
+		$conf = File::get(self::CONF_FILE_PATH);
 
 		// dont replace directly as this wouldnt add the entry for a new created modem
 		$conf = str_replace($replace, '', $conf);
@@ -369,7 +374,9 @@ class Modem extends \BaseModel {
 			$this->_write_file(self::CONF_FILE_PATH_PUB, $conf_pub);
 		}
 
-// unlock
+		// unlock
+		flock($fp, LOCK_UN);
+		fclose($fp);
 	}
 
 
