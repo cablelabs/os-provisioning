@@ -40,11 +40,11 @@ class ExampleTest extends TestCase
 	protected function _get_routes_blacklist() {
 
 		$this->routes_to_ignore = [
-			'Authuser.index',
-			'Authrole.index',
-			'Config.index',
-			'GlobalConfig.index',
-			'GuiLog.index',
+			'Authuser.*',
+			'Authrole.*',
+			'Config.*',
+			'GlobalConfig.*',
+			'GuiLog.*',
 			'PhonenumberManagement.index',	// not a real MVC
 			'ProvMon.index',
 			'ProvVoipEnvia.index',	// not a real MVC
@@ -96,17 +96,18 @@ class ExampleTest extends TestCase
 			array_pop($_);
 			$_ = implode("Controller", $_);
 			if (\Str::startswith($controller, "App\Http\Controllers")) {
-				$model = str_replace("\\Http\\Controllers\\", "\\Models\\", $_);
+				$model = str_replace("\\Http\\Controllers\\", "\\", $_);
 			}
 			else {
 				$model = str_replace("\\Http\\Controllers\\", "\\Entities\\", $_);
 			}
 
-			if (!in_array($model, $this->models)) {
-				$model = "\\$model";
-				/* $this->models[$model] = new $model(); */
-				$this->models[$model] = null;
-			}
+			$this->models[$route->getName()] = $model;
+			/* if (!in_array($model, $this->models)) { */
+			/* 	$model = "\\$model"; */
+			/* 	/1* $this->models[$model] = new $model(); *1/ */
+			/* 	$this->models[$model] = null; */
+			/* } */
 		}
 	}
 
@@ -160,7 +161,7 @@ class ExampleTest extends TestCase
     public function testGenericMvc()
 	{
 
-		dd("TODO: Implement single index/edit tester instead of this method as next step!");
+		/* dd("TODO: Implement single index/edit tester instead of this method as next step!"); */
 
 		// TODO: there must be a namespace problem in Testing Context!
 		//       All/Many normal non pingpong classes are not found, like routing, Controllers, ...
@@ -172,24 +173,104 @@ class ExampleTest extends TestCase
 		foreach ($this->routes_to_test as $route)
 		{
 			$msg = "Testing of ".$route->getName().' ('.$route->getAction()['controller'].')';
-			echo "\n$msg";
+			echo "\n\n$msg";
 			\Log::debug($msg);
 
 			// Filter only '*.index' routes and ignore $ignores array
-			if ((strpos($route->getName(), '.index') !== false)) {
-				// Info Message
+			if ((\Str::endswith($route->getName(), '.index'))) {
 
-				$controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]);
+				$this->_testGenericMVCIndex($route);
 
-				// Index Page
-				$this->actingAs($this->user)->visit($route->getPath());
-
-				// TODO: edit, delete, create page
-				// NOTE: it seems to be quit tricky to fetch the object / model from
-				//       this context. This is required to make next tests, like jumping
-				//       to admin/Contract/{id}/edit. We need to find the first valid id..
 			}
-		}
+			elseif ((\Str::endswith($route->getName(), '.create'))) {
 
+				$this->_testGenericMVCCreate($route);
+
+			}
+			elseif ((\Str::endswith($route->getName(), '.edit'))) {
+
+				$this->_testGenericMVCEdit($route);
+
+			}
+			/* elseif ((\Str::endswith($route->getName(), '.destroy'))) { */
+
+			/* 	$this->_testGenericMVCDestroy($route); */
+
+			/* } */
+			else {
+				$msg = 'No tests for '.$route->getName().' implemented';
+				\Log::warning($msg);
+				echo "\n  WARNING: $msg";
+			}
+
+		}
     }
+
+	/**
+	 * Tests index view
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _testGenericMVCIndex($route) {
+
+		$controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]);
+
+		// Index Page
+		$this->actingAs($this->user)->visit($route->getPath());
+	}
+
+	/**
+	 * Tests create view
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _testGenericMVCCreate($route) {
+
+		$controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]);
+
+		// Index Page
+		$this->actingAs($this->user)->visit($route->getPath());
+	}
+
+	/**
+	 * Tests edit view
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _testGenericMVCEdit($route) {
+
+		$model_name = "\\".$this->models[$route->getName()];
+		/* $model = $model::all()->take(1); */
+		$model = $model_name::all()->first();
+		$model_id = $model->id;
+		/* $model = call_user_func($model_name.'::find'); */
+		/* dd($route->getAction()); */
+		/* $controller = $this->app->make(explode('@', $route->getAction()['controller'])[0], array($model_id)); */
+		echo "\n--------\n";
+		echo($model_id);
+
+		$route->setParameter('id', $model_id);
+		$uri = $route->getPath();
+		/* $route_params = $route->signatureParameters(); */
+		/* if ($route_params) { */
+		/* 	$first_param = $route_params[0]->name; */
+		/* 	echo "\n$first_param"; */
+		/* 	$uri = str_replace("{".$first_param."}", $model_id, $uri); */
+		/* } */
+		echo "\n$uri";
+		$this->actingAs($this->user)->visit($uri);
+	}
+
+	/**
+	 * Tests destroy view
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _testGenericMVCDestroy($route) {
+
+		$controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]);
+
+		// Index Page
+		$this->actingAs($this->user)->visit($route->getPath());
+	}
 }
