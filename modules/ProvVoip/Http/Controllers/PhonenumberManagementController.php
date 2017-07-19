@@ -10,11 +10,24 @@ use Modules\ProvVoip\Entities\TRCClass;
 
 class PhonenumberManagementController extends \BaseController {
 
-
 	/**
 	 * if set to true a create button on index view is available - set to true in BaseController as standard
 	 */
     protected $index_create_allowed = false;
+
+	public function create() {
+
+		if (
+			(!\Input::has('phonenumber_id'))
+			||
+			!(Phonenumber::find(\Input::get('phonenumber_id')))
+		) {
+			$this->edit_view_save_button = false;
+			\Session::push('tmp_info_above_form', 'Cannot create phonenumbermanagement – phonenumber ID missing or phonenumber not found');
+		}
+
+		return parent::create();
+	}
 
 
     /**
@@ -29,7 +42,14 @@ class PhonenumberManagementController extends \BaseController {
 
 		// in most cases the subscriber is identical to contract partner ⇒ on create we prefill these values with data from contract
 		if (!$model->exists) {
-			$phonenumber = Phonenumber::findOrFail(\Input::get('phonenumber_id'));
+
+			if (
+				(!\Input::has('phonenumber_id'))
+				||
+				!($phonenumber = Phonenumber::find(\Input::get('phonenumber_id')))
+			) {
+				return [];
+			}
 			$contract = $phonenumber->mta->modem->contract;
 
 			$init_values = array(
