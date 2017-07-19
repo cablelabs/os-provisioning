@@ -4,6 +4,15 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
+/**
+ * Tester for visibility of views.
+ *
+ * For all routes to be found (and not on a blacklist) we check if (ATM create, edit and index) views are visible and
+ * if the two headlines can be found on the returned sites.
+ * This will fail if there are uncaught Exceptions in views.
+ *
+ * @author Patrick Reichel
+ */
 class ViewsVisibleGenericTest extends TestCase
 {
     use WithoutMiddleware;
@@ -78,6 +87,10 @@ class ViewsVisibleGenericTest extends TestCase
 			'ProvVoipEnvia.index',	// not a real MVC
 			'Welcome.*',
 			'*.destroy',
+			'*.dump',
+			'*.dumpall',
+			'*.fulltextSearch',
+			'*.store',
 		];
 	}
 
