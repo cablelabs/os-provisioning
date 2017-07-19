@@ -4,15 +4,19 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ExampleTest extends TestCase
+class ViewsVisibleTest extends TestCase
 {
     use WithoutMiddleware;
 
+	// flag to enable/disable debug output
+	protected $debug = false;
 
+	// some instance variables to be filled later
 	protected $user = null;
 	protected $routes_to_ignore = null;
 	protected $routes_to_test = null;
 	protected $models = null;
+	protected $global_config = null;
 
 
 	/**
@@ -23,14 +27,27 @@ class ExampleTest extends TestCase
 	public function createApplication() {
 		$app = parent::createApplication();
 
+		echo "\n\nFiring up ".__CLASS__;
+
 		$this->_get_routes_blacklist();
 		$this->_get_routes_to_test();
 		$this->_get_models();
 		$this->_get_user();
+		$this->_get_global_config();
 
 		return $app;
 	}
 
+
+	/**
+	 * Gets global config.
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _get_global_config() {
+
+		$this->global_config = \App\GlobalConfig::first();
+	}
 
 	/**
 	 * Used to define a blacklist of routes to be excluded from tests.
@@ -39,16 +56,28 @@ class ExampleTest extends TestCase
 	 */
 	protected function _get_routes_blacklist() {
 
+		// add all routes that cannot be visited (e.g. missing index views, …)
+		// you can specify:
+		//		single routes (like Item.index)
+		//		wildcard routes (like Authuser.*) to ignore complete MVCs
+		//		wildcard actions (like *.destroy) to ignore all actions of a kind
 		$this->routes_to_ignore = [
 			'Authuser.*',
 			'Authrole.*',
+			/* 'Ccc.edit', */
 			'Config.*',
+			'Dashboard.edit',
+			'Domain.create',
 			'GlobalConfig.*',
 			'GuiLog.*',
-			'PhonenumberManagement.index',	// not a real MVC
+			'Indices.create',
+			'Invoice.index',
+			'Item.index',
+			'PhonenumberManagement.index',
 			'ProvMon.index',
 			'ProvVoipEnvia.index',	// not a real MVC
 			'Welcome.*',
+			'*.destroy',
 		];
 	}
 
@@ -64,16 +93,33 @@ class ExampleTest extends TestCase
 		$routes_to_test = [];
 		foreach (Route::getRoutes() as $route) {
 
+			// handle explicite excluded routes
 			if (in_array($route->getName(), $this->routes_to_ignore)) {
-				continue;
-			}
-			$_ = explode(".", $route->getName());
-			array_pop($_);
-			$wildcard = implode(".", $_).".*";
-			if (in_array($wildcard, $this->routes_to_ignore)) {
+				$msg = "Route ".$route->getName() ." is not tested within ".__CLASS__;
+				echo "\nINFO: $msg";
+				\Log::info($msg);
 				continue;
 			}
 
+			$route_parts = explode(".", $route->getName());
+			$action = array_pop($route_parts);
+			$route_parts = [implode('.', $route_parts), $action];
+
+			// handle leading and trailing wildcards
+			$wildcard_routes = [];
+			array_push($wildcard_routes, "*.".$route_parts[1]);
+			array_push($wildcard_routes, $route_parts[0].".*");
+
+			foreach ($wildcard_routes as $wildcard_route) {
+				if (in_array($wildcard_route, $this->routes_to_ignore)) {
+					$msg = "Route ".$route->getName() ." is not tested within ".__CLASS__;
+					echo "\nINFO: $msg";
+					\Log::info($msg);
+					continue;
+				}
+			}
+
+			// route has to be tested
 			array_push($routes_to_test, $route);
 		}
 
@@ -173,23 +219,25 @@ class ExampleTest extends TestCase
 		foreach ($this->routes_to_test as $route)
 		{
 			$msg = "Testing of ".$route->getName().' ('.$route->getAction()['controller'].')';
-			echo "\n\n$msg";
+			if ($this->debug) {
+				echo "\n\n$msg";
+			}
 			\Log::debug($msg);
 
 			// Filter only '*.index' routes and ignore $ignores array
 			if ((\Str::endswith($route->getName(), '.index'))) {
 
-				$this->_testGenericMVCIndex($route);
+				$this->_testGenericMVCIndexView($route);
 
 			}
 			elseif ((\Str::endswith($route->getName(), '.create'))) {
 
-				$this->_testGenericMVCCreate($route);
+				$this->_testGenericMVCCreateView($route);
 
 			}
 			elseif ((\Str::endswith($route->getName(), '.edit'))) {
 
-				$this->_testGenericMVCEdit($route);
+				$this->_testGenericMVCEditView($route);
 
 			}
 			/* elseif ((\Str::endswith($route->getName(), '.destroy'))) { */
@@ -200,7 +248,7 @@ class ExampleTest extends TestCase
 			else {
 				$msg = 'No tests for '.$route->getName().' implemented';
 				\Log::warning($msg);
-				echo "\n  WARNING: $msg";
+				echo "\nWARNING: $msg";
 			}
 
 		}
@@ -211,12 +259,15 @@ class ExampleTest extends TestCase
 	 *
 	 * @author Patrick Reichel
 	 */
-	protected function _testGenericMVCIndex($route) {
+	protected function _testGenericMVCIndexView($route) {
 
 		$controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]);
 
 		// Index Page
-		$this->actingAs($this->user)->visit($route->getPath());
+		$this->actingAs($this->user)
+			->visit($route->getPath())
+			->see($this->global_config->headline1)
+			->see($this->global_config->headline2);
 	}
 
 	/**
@@ -224,12 +275,15 @@ class ExampleTest extends TestCase
 	 *
 	 * @author Patrick Reichel
 	 */
-	protected function _testGenericMVCCreate($route) {
+	protected function _testGenericMVCCreateView($route) {
 
 		$controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]);
 
 		// Index Page
-		$this->actingAs($this->user)->visit($route->getPath());
+		$this->actingAs($this->user)
+			->visit($route->getPath())
+			->see($this->global_config->headline1)
+			->see($this->global_config->headline2);
 	}
 
 	/**
@@ -237,28 +291,43 @@ class ExampleTest extends TestCase
 	 *
 	 * @author Patrick Reichel
 	 */
-	protected function _testGenericMVCEdit($route) {
+	protected function _testGenericMVCEditView($route) {
 
-		$model_name = "\\".$this->models[$route->getName()];
-		/* $model = $model::all()->take(1); */
-		$model = $model_name::all()->first();
-		$model_id = $model->id;
-		/* $model = call_user_func($model_name.'::find'); */
-		/* dd($route->getAction()); */
-		/* $controller = $this->app->make(explode('@', $route->getAction()['controller'])[0], array($model_id)); */
-		echo "\n--------\n";
-		echo($model_id);
+		$uri = $route->uri();
+		$curly_bracket_count = substr_count($uri, "{");
 
-		$route->setParameter('id', $model_id);
-		$uri = $route->getPath();
-		/* $route_params = $route->signatureParameters(); */
-		/* if ($route_params) { */
-		/* 	$first_param = $route_params[0]->name; */
-		/* 	echo "\n$first_param"; */
-		/* 	$uri = str_replace("{".$first_param."}", $model_id, $uri); */
-		/* } */
-		echo "\n$uri";
-		$this->actingAs($this->user)->visit($uri);
+		if ($curly_bracket_count > 1) {
+			// if there is more than one route parameter – we cannot test (currently not implemented)
+			$msg = "Route ".$route->getName()." expects more than one parameter. Cannot be tested";
+			echo "\nWARNING: $msg";
+			\Log::warning($msg);
+			return;
+		}
+
+		if ($curly_bracket_count == 1) {
+			// replace the placeholder by model ID
+
+			// therefore first get a model instance to get a valid ID
+			$model_name = "\\".$this->models[$route->getName()];
+			$model = $model_name::all()->first();
+
+			// check if we have a model instance – if not we cannot call the edit view
+			if (!$model) {
+				$msg = "No instance of $model_name found – cannot test ".$route->getName();
+				echo "\nWARNING: $msg";
+				\Log::warning($msg);
+				return;
+			}
+			$model_id = $model->id;
+
+			// then replace the placeholder in the URI by model ID
+			$uri = preg_replace('#\{[a-zA-Z]*\}#', $model->id, $uri);
+		}
+
+		$this->actingAs($this->user)
+			->visit($uri)
+			->see($this->global_config->headline1)
+			->see($this->global_config->headline2);
 	}
 
 	/**
@@ -266,7 +335,7 @@ class ExampleTest extends TestCase
 	 *
 	 * @author Patrick Reichel
 	 */
-	protected function _testGenericMVCDestroy($route) {
+	protected function _testGenericMVCDestroyView($route) {
 
 		$controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]);
 
