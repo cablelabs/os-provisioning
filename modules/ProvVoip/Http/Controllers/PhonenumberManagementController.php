@@ -15,6 +15,12 @@ class PhonenumberManagementController extends \BaseController {
 	 */
     protected $index_create_allowed = false;
 
+
+	/**
+	 * Extend create: check if a phonenumber exists to attach this management to
+	 *
+	 * @author Patrick Reichel
+	 */
 	public function create() {
 
 		if (
