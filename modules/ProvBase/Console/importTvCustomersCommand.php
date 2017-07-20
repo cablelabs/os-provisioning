@@ -135,18 +135,18 @@ class importTvCustomersCommand extends Command {
 			if (in_array($c->number, [10002]))
 				continue;
 
+			$c->contract_start 	= $line[self::C_START] ? date('Y-m-d', strtotime($line[self::C_START])) : '2000-01-01';
+			$c->contract_end   	= $line[self::C_END] ? date('Y-m-d', strtotime($line[self::C_END])) : null;
+
 			$contract = Contract::where('number', '=', $c->number)->get()->all();
 			if ($contract)
 			{
 				$contract = $contract[0];
 				\Log::notice("Contract ".$contract->number." already existing - only add TV Tarif");
-				$this->_add_tarif($contract, $line[self::TARIFF]);
+				$this->_add_tarif($contract, $line[self::TARIFF], $c->contract_start);
 				$this->_add_Credit($contract, $line[self::CREDIT]);
 				continue;
 			}
-
-			$c->contract_start 	= $line[self::C_START] ? date('Y-m-d', strtotime($line[self::C_START])) : '2000-01-01';
-			$c->contract_end   	= $line[self::C_END] ? date('Y-m-d', strtotime($line[self::C_END])) : null;
 
 			// Discard contracts that ended last month
 			if ($c->contract_end && ($c->contract_end < $t_month))
@@ -260,7 +260,7 @@ class importTvCustomersCommand extends Command {
 	}
 
 
-	private function _add_tarif($contract, $tariff)
+	private function _add_tarif($contract, $tariff, $start = null)
 	{
 		if (!$tariff)
 		{
@@ -299,7 +299,7 @@ class importTvCustomersCommand extends Command {
 		Item::create([
 			'contract_id' 		=> $contract->id,
 			'product_id' 		=> $product_id,
-			'valid_from' 		=> $contract->contract_start,
+			'valid_from' 		=> $start ? : $contract->contract_start,
 			'valid_from_fixed' 	=> 1,
 			'valid_to' 			=> $contract->contract_end,
 			'valid_to_fixed' 	=> 1,
