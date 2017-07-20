@@ -711,7 +711,7 @@ class BaseModel extends Eloquent
 				break;
 
 			case 'Yearly':
-				return $start < strtotime('midnight first day of January') && (!$end || $end >= strtotime('midnight first day of January last year'));
+				return $start < strtotime('midnight first day of this month') && (!$end || $end >= strtotime('midnight first day of January this year'));
 
 			case 'Now':
 				$now = strtotime('today');

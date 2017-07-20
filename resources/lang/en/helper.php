@@ -18,7 +18,7 @@ return [
 	'Company_TransferReason'		=> 'Template from all Invoice class data field keys - Contract Number and Invoice Nr is default',
 
 	//CostCenterController
-	'CostCenter_BillingMonth'		=> 'Default: 6 (June) - if not set. Has to be minimum current month on change to avoid missing payments',
+	'CostCenter_BillingMonth'		=> 'Accounting for yearly charged items - corresponds to the month the invoices are created for. Default: 6 (June) - if not set. Please be careful to not miss any payments when changing this!',
 
 	//ItemController
 	'Item_ProductId'				=> 'All fields besides Billing Cycle have to be cleared before a type change! Otherwise items can not be saved in most cases',
