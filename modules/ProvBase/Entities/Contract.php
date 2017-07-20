@@ -40,6 +40,7 @@ class Contract extends \BaseModel {
 			'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
 			'sepa_iban' => 'iban',
 			'sepa_bic' => 'bic',
+			'costcenter_id' => 'required|numeric|min:1',
 			);
 	}
 
