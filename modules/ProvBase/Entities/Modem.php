@@ -234,7 +234,9 @@ class Modem extends \BaseModel {
 
 	private function generate_cm_dhcp_entry_pub()
 	{
-			return 'subclass "Client-Public" '.$this->mac.'; # CM id:'.$this->id."\n";
+		Log::debug(__METHOD__." started for ".$this->hostname);
+
+		return 'subclass "Client-Public" '.$this->mac.'; # CM id:'.$this->id."\n";
 	}
 
 
@@ -254,8 +256,6 @@ class Modem extends \BaseModel {
 	/**
 	 * Make DHCP config files for all CMs including EPs - used in dhcpCommand after deleting
 	 * the config files with all entries
-	 *
-	 * TODO: make static function (class context not object)
 	 *
 	 * @author Torsten Schmidt
 	 */
@@ -293,10 +293,101 @@ class Modem extends \BaseModel {
 		if ($ret === false)
 			die("Error writing to file");
 
-
 		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
 		system('/bin/chown -R apache /etc/dhcp/');
 	}
+
+
+	/**
+	 * Add DHCP config for a single CM including EPs to the appropriate DHCPD Config File
+	 * Used in ModemObserver@updated/deleted for created/updated/deleted events
+	 *
+	 * NOTES:
+	 	* This is way faster (0,01s vs 2,8s for 348 Modems via make_dhcp_cm_all) than everytime creating files for all modems
+	 	* It's also more secure as it uses flock() to avoid dhcpd restart errors due to race conditions
+	 	* MaybeTODO: embed part between lock & unlock into try catch block to avoid forever locked files in case of exception
+	 *
+	 * @param 	delete  	set to true if you want to remove the entry from the configfile
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function make_dhcp_cm($delete = false)
+	{
+		Log::debug(__METHOD__." started");
+
+		// Note: hostname is changed when modem was created
+		if (!$this->isDirty(['hostname', 'mac', 'public']) && !$delete)
+			return;
+
+		// Log
+		Log::info('DHCPD Configfile Update for Modem: '.$this->id);
+
+		$data 	 	= $this->generate_cm_dhcp_entry();
+		$replace 	= '';
+		$modem_orig = $this->getOriginal();
+
+		if ($modem_orig)
+		{
+			$original = clone $this;
+			$original->hostname = $modem_orig['hostname'];
+			$original->mac 		= $modem_orig['mac'];
+			$original->public 	= $modem_orig['public'];
+
+			$replace = $original->generate_cm_dhcp_entry();
+		}
+
+		if (!file_exists(self::CONF_FILE_PATH))
+		{
+			Log::critical('Missing DHCPD Configfile '.self::CONF_FILE_PATH);
+			return;
+		}
+
+		// lock
+		$fp = fopen(self::CONF_FILE_PATH, "r+");
+
+		if (!flock($fp, LOCK_EX))
+			Log::error('Could not get exclusive lock for '.self::CONF_FILE_PATH);
+
+		$conf = File::get(self::CONF_FILE_PATH);
+
+		// dont replace directly as this wouldnt add the entry for a new created modem
+		$conf = str_replace($replace, '', $conf);
+
+		if (!$delete)
+			$conf .= $data;
+
+		self::_write_dhcp_file(self::CONF_FILE_PATH, $conf);
+
+		// public ip
+		if ($this->public || ((isset($original) && $original->public)))
+		{
+			$data_pub 	  = $this->generate_cm_dhcp_entry_pub();
+			$replace_pub  = isset($original) ? $original->generate_cm_dhcp_entry_pub() : '';
+
+			if (file_exists(self::CONF_FILE_PATH_PUB))
+				$conf_pub = File::get(self::CONF_FILE_PATH_PUB);
+			else
+				Log::critical('Missing DHCPD Configfile '.self::CONF_FILE_PATH_PUB);
+
+			$conf_pub = str_replace($replace_pub, '', $conf_pub);
+			if (!$delete && $this->public)
+				$conf_pub .= $data_pub;
+
+			self::_write_dhcp_file(self::CONF_FILE_PATH_PUB, $conf_pub);
+		}
+
+		// unlock
+		flock($fp, LOCK_UN);
+		fclose($fp);
+	}
+
+
+	public static function _write_dhcp_file($filename, $data)
+	{
+		if (File::put($filename, $data) === false)
+			Log::critcal('Failed to modify DHCPD Configfile '.$filename);
+	}
+
 
 
 	/**
@@ -328,8 +419,8 @@ class Modem extends \BaseModel {
 		if ($ret === false)
 				die("Error writing to file");
 
-		Log::info('configfile: update modem '.$this->hostname);
-		Log::info("configfile: /usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file");
+		Log::info('Configfile Update for Modem: '.$this->hostname);
+		Log::debug("configfile: /usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file");
 		// if (file_exists($cfg_file))
 		//	 unlink($cfg_file);
 
@@ -963,8 +1054,8 @@ class ModemObserver
 			$modem->restart_modem($restart > 0);
 		else if ($restart)
 		{
+			$modem->make_dhcp_cm();
 			$modem->restart_modem($restart > 0);
-			$modem->make_dhcp_cm_all();
 			$modem->make_configfile();
 		}
 
@@ -979,8 +1070,9 @@ class ModemObserver
 	{
 		Log::debug(__METHOD__." started for ".$modem->hostname);
 
+		// $modem->make_dhcp_cm_all();
+		$modem->make_dhcp_cm(true);
 		$modem->restart_modem();
-		$modem->make_dhcp_cm_all();
 		$modem->delete_configfile();
 	}
 }

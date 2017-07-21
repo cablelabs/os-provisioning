@@ -113,7 +113,6 @@ class Mta extends \BaseModel {
 		$mta = $this;
 		$id = $mta->id;
 		$mac = $mta->mac;
-		$hostname = $mta->hostname;
 
 		// dir; filenames
 		$dir = '/tftpboot/mta/';
@@ -223,6 +222,48 @@ _failed:
 		return true;
 	}
 
+
+	/**
+	 * Create/Update/Delete single Entry in mta dhcpd configfile
+	 * See Modem@make_dhcp_cm for more explanations
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function make_dhcp_mta($delete = false)
+	{
+		Log::debug(__METHOD__." started");
+
+		$orig = $this->getOriginal();
+
+		if (!file_exists(self::CONF_FILE_PATH))
+		{
+			Log::critical('Missing DHCPD Configfile '.self::CONF_FILE_PATH);
+			return;
+		}
+
+		// lock
+		$fp = fopen(self::CONF_FILE_PATH, "r+");
+
+		$data 	 = 'host mta-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "mta/mta-'.$this->id.'.cfg"; ddns-hostname "mta-'.$this->id.'"; option host-name "'.$this->id.'"; }'."\n";
+		$replace = $orig ? 'host mta-'.$this->id.' { hardware ethernet '.$orig['mac'].'; filename "mta/mta-'.$this->id.'.cfg"; ddns-hostname "mta-'.$this->id.'"; option host-name "'.$this->id.'"; }'."\n" : '';
+
+		if (!flock($fp, LOCK_EX))
+			Log::error('Could not get exclusive lock for '.self::CONF_FILE_PATH);
+
+		$conf = File::get(self::CONF_FILE_PATH);
+
+		// dont replace directly as this wouldnt add the entry for a new created mta
+		$conf = str_replace($replace, '', $conf);
+		if (!$delete)
+			$conf .= $data;
+
+		Modem::_write_dhcp_file(self::CONF_FILE_PATH, $conf);
+
+		// unlock
+		flock($fp, LOCK_UN); fclose($fp);
+	}
+
+
 	/**
 	 * Deletes the configfiles with all mta dhcp entries - used to refresh the config through artisan nms:dhcp command
 	 */
@@ -313,7 +354,9 @@ class MtaObserver
 		// only make configuration files when relevant data was changed
 		if ($modifications)
 		{
-			$mta->make_dhcp_mta_all();
+			if (array_key_exists('mac', $modifications))
+				$mta->make_dhcp_mta();
+			
 			$mta->make_configfile();
 		}
 
@@ -322,7 +365,7 @@ class MtaObserver
 
 	public function deleted($mta)
 	{
-		$mta->make_dhcp_mta_all();
+		$mta->make_dhcp_mta(true);
 		$mta->delete_configfile();
 		$mta->restart();
 	}
