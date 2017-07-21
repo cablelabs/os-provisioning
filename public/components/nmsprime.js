@@ -162,6 +162,20 @@ var makeInputFitOnResize = function() {
   $("select").select2();
 };
 
+var positionErdPopover= function() {
+$('.erd-popover').mousemove(
+  function(event){
+    var mouseX = event.pageX + 20;
+    var mouseY = event.pageY;
+    if ($(this).attr('shape') == "circle") {
+      var mouseY = event.pageY -50;
+    }
+    $('.popover').css({'top':mouseY,'left':mouseX}).fadeIn('slow');
+    $('.popover .arrow').css({'top': ($('.popover').height()/2) ,'left':-10});
+    $(".popover").show();
+});
+};
+
 /*
  * Table on-hover click
  * NOTE: This automatically adds on-hover click to all table 'td' elements which are in class 'ClickableTd'.
@@ -188,6 +202,7 @@ var NMS = function () {
 			makeInputFitOnResize();
 			saveTabPillState();
 			makeJsTreeView();
+      positionErdPopover();
 		},
   };
 }();
