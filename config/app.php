@@ -153,7 +153,6 @@ return [
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
-
 		/*
 		 * Application Service Providers...
 		 */
@@ -166,6 +165,7 @@ return [
 		'Collective\Html\HtmlServiceProvider',
 		'Acme\html\HtmlServiceProvider',
 		'Intervention\Validation\ValidationServiceProvider',
+		'Collective\Bus\BusServiceProvider',
 	],
 
 	/*
