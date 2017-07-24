@@ -110,11 +110,12 @@ return [
 	'Headline 1'				=> 'Überschrift Kopfzeile',
 	'Headline 2'				=> 'Überschrift Navigationsleiste',
 	//Billing
+	'accCmd_processing' 		=> 'Der Abrechnungslauf wird erstellt. Bitte warten Sie bis der Prozess abgeschlossen ist.',
 	'Day of Requested Collection Date'	=> 'Monatlicher Abrechungstag',
 	'Tax in %'					=> 'Mehrwertsteuer in %',
 	'Invoice Number Start'		=> 'Start Nummerierung Rechnungen',
 	'Split Sepa Transfer-Types'	=> 'SEPA-Transfertypen aufteilen?',
-	'Mandate Reference'			=> 'Mandatrefferenz', 
+	'Mandate Reference'			=> 'Mandatrefferenz',
 	'e.g.: String - {number}'	=> 'z.Bsp.: Sring - {Nummer}',
 	'Item Termination only end of month'=> 'Posten nur am ende des Monats kündigen?',
 	'Language for Accounting command'	=> 'Sprache für Abrechnungslauf-Befehl',
