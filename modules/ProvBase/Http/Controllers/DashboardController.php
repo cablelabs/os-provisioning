@@ -252,6 +252,7 @@ class DashboardController extends BaseController
 	{
 		$total = 0.0;
 		$ret = array();
+		$prepared_data = array();
 
 		try {
 			foreach ($contracts as $contract) {
