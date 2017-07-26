@@ -274,7 +274,7 @@ class ViewsVisibleGenericTest extends TestCase
 	 */
 	protected function _testGenericMVCIndexView($route) {
 
-		$controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]);
+		/* $controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]); */
 
 		// Index Page
 		$this->actingAs($this->user)
@@ -290,7 +290,7 @@ class ViewsVisibleGenericTest extends TestCase
 	 */
 	protected function _testGenericMVCCreateView($route) {
 
-		$controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]);
+		/* $controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]); */
 
 		// Index Page
 		$this->actingAs($this->user)
@@ -350,7 +350,7 @@ class ViewsVisibleGenericTest extends TestCase
 	 */
 	protected function _testGenericMVCDestroyView($route) {
 
-		$controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]);
+		/* $controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]); */
 
 		// Index Page
 		$this->actingAs($this->user)->visit($route->getPath());
