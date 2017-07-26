@@ -35,6 +35,7 @@ class Kernel extends ConsoleKernel {
 		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
 		'App\Console\Commands\authCommand',
 		'App\Console\Commands\install',
+		'App\Console\Commands\EnsureQueueListenerIsRunning',
 	];
 
 
@@ -57,6 +58,8 @@ class Kernel extends ConsoleKernel {
 		// watch App\Console\Commands\TimeDeltaChecker for more informations
 		/* $schedule->command('main:time_delta') */
 			/* ->everyMinute(); */
+
+		$schedule->command('queue:checkup')->everyTenMinutes(); //cron("1,16,31,46 * * * * *");
 
 
 		// Remove all Log Entries older than 90 days
