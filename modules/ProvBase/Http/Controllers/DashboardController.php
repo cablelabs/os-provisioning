@@ -14,10 +14,7 @@ class DashboardController extends BaseController
 	{
 		$title = 'Dashboard';
 
-		$contracts = array();
-		$income = array();
-		$chart_data_contracts = array();
-		$chart_data_income = array();
+		$contracts = $income = $chart_data_contracts = $chart_data_income = array();
 
 		$allowed_to_see = array(
 			'accounting' => false,
@@ -43,19 +40,16 @@ class DashboardController extends BaseController
 				$allowed_to_see[$allowed_roles[$role->id]] = true;
 		}
 
-		// get all valid contracts
-		$contracts = $this->get_contracts();
+		// get chart data: contracts
+		$chart_data_contracts = self::get_chart_data_contracts();
+		$contracts = end($chart_data_contracts['contracts']);
 
-		if (count($contracts) > 0) {
-
-			// get chart data: contracts
-			$chart_data_contracts = $this->get_chart_data_contracts($contracts);
-
-			// income - TODO: only calculate when user has permissions - or better calculate only during night and save to DB
-			if (\PPModule::is_active('billingbase') && $allowed_to_see['accounting']) {
-				$income = $this->get_income_total($contracts);
-				$chart_data_income = $this->get_chart_data_income($income);
-			}
+		// income - TODO: calculate only during night and save to DB
+		if (\PPModule::is_active('billingbase') && $allowed_to_see['accounting'])
+		{
+			$contracts = self::get_contracts();
+			$income = $this->get_income_total($contracts);
+			$chart_data_income = $this->get_chart_data_income($income);
 		}
 
 
@@ -66,37 +60,21 @@ class DashboardController extends BaseController
 	}
 
 	/**
-	 * Get all valid contracts
+	 * Get all today valid contracts
 	 *
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	private function get_contracts()
+	public static function get_contracts()
 	{
-		$ret = array();
+		$query = Contract::where('contract_start', '<', date('Y-m-d'))
+				->where(function ($query) { $query
+				->where('contract_end', '>', date('Y-m-d'))
+				->orWhere('contract_end', '=', '0000-00-00')
+				->orWhereNull('contract_end');})
+				->orderBy('contract_start');
 
-		if (\PPModule::is_active('billingbase')) {
-			// find contracts with related items and products
-			$contracts = Contract::orderBy('contract_start', 'asc')->with('items', 'items.product')->get();
-		} else {
-			$contracts = Contract::orderBy('contract_start', 'asc')->get();
-		}
-
-		if (count($contracts) > 0) {
-			$date = $this->generate_reference_date();
-
-			foreach ($contracts as $contract) {
-
-				// check start- and enddate
-				if ($contract->contract_start <= $date &&
-					($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
-
-					$ret[] = $contract;
-				}
-			}
-		}
-
-		return $ret;
+		return \PPModule::is_active('billingbase') ? $query->with('items', 'items.product')->get()->all() : $query->get()->all();
 	}
 
 	/**
@@ -136,32 +114,22 @@ class DashboardController extends BaseController
 	 */
 	private function generate_reference_date($period = null, $days = null)
 	{
-		$ret = date('Y-m-d');
+		if (is_null($period))
+			return date('Y-m-d');
 
 		$month = date('m');
 		$year = date('Y');
 
-		if (!is_null($period)) {
-			switch ($period) {
-				case 'lastMonth':
-					$month = $month - 1;
-					if (($month) == 0) {
-						$month = 12;
-						$year = $year - 1;
-					}
-
-					if (strlen($month) == 1) {
-						$month = '0' . $month;
-					}
-					$ret = $year . '-' . $month . '-' . date('t', mktime(0, 0, 0, $month, 1, $year));
-					break;
+		switch ($period)
+		{
+			case 'lastMonth':
+				$time = strtotime('last month');
+				$ret  = date('Y-m-'.date('t', $time), $time);
+				break;
 
 			case 'dayPeriod':
-				$date = date_create($ret);
-				date_sub($date, date_interval_create_from_date_string($days . ' days'));
-				$ret = date_format($date, 'Y-m-d');
+				$ret = date('Y-m-d', strtotime("-$days days"));
 				break;
-			}
 		}
 
 		return $ret;
@@ -174,7 +142,7 @@ class DashboardController extends BaseController
 	 * @return array
 	 * @throws \Exception
 	 */
-	private function get_chart_data_contracts(array $contracts)
+	private static function get_chart_data_contracts()
 	{
 		$ret = array();
 		$i 	 = 13;
@@ -185,7 +153,7 @@ class DashboardController extends BaseController
 			$time = strtotime("-$i month");
 
 			$ret['labels'][] = date('m/Y', $time);
-			$ret['contracts'][] = $this->count_contracts([], date('Y-m-01', $time));
+			$ret['contracts'][] = self::count_contracts(date('Y-m-01', $time));
 		}
 
 		return $ret;
@@ -199,7 +167,7 @@ class DashboardController extends BaseController
 	 * @return int
 	 * @throws \Exception
 	 */
-	private function count_contracts(array $contracts, $date_interval_start)
+	private static function count_contracts($date_interval_start)
 	{
 		$ret = 0;
 
