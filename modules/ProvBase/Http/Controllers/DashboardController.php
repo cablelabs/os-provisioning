@@ -176,29 +176,16 @@ class DashboardController extends BaseController
 	 */
 	private function get_chart_data_contracts(array $contracts)
 	{
-		$j = 2;
 		$ret = array();
+		$i 	 = 13;
 
-		$date = date_create(date('Y-m-d'));
-		$date = date_format(date_sub($date, date_interval_create_from_date_string(12 . ' months')), 'Y-m-d');
-		$date_parts = explode('-', $date);
+		while($i > 0)
+		{
+			$i--;
+			$time = strtotime("-$i month");
 
-		$year = $date_parts[0];
-		for ($i = 0; $i <= 12; $i++) {
-			if ($date_parts[1] + $i == 13) {
-				$year = $year + 1;
-				$month = 1;
-			} elseif ($date_parts[1] + $i > 13) {
-				$month = $j++;
-			} else {
-				$month = $date_parts[1] + $i;
-			}
-
-			$date_interval_start = $year . '-' . str_pad($month, 2 ,'0', STR_PAD_LEFT) . '-01';
-			$date_interval_end = $year . '-' . str_pad($month, 2 ,'0', STR_PAD_LEFT) . '-' . date("t", mktime(0, 0, 0, $month, 1, $year));
-
-			$ret['labels'][] = str_pad($month, 2 ,'0', STR_PAD_LEFT) . '/' . $year;
-			$ret['contracts'][] = $this->count_contracts($contracts, $date_interval_start);
+			$ret['labels'][] = date('m/Y', $time);
+			$ret['contracts'][] = $this->count_contracts([], date('Y-m-01', $time));
 		}
 
 		return $ret;
@@ -216,13 +203,20 @@ class DashboardController extends BaseController
 	{
 		$ret = 0;
 
-		foreach ($contracts as $contract) {
-			if (($contract->contract_start < $date_interval_start) &&
-				($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
+		// for 800 contracts this is approximately 4x faster
+		$ret = Contract::where('contract_start', '<', $date_interval_start)
+				->where(function ($query) { $query
+				->where('contract_end', '>', date('Y-m-d'))
+				->orWhere('contract_end', '=', '0000-00-00')
+				->orWhereNull('contract_end');})
+				->count();
 
-				$ret++;
-			}
-		}
+		// foreach ($contracts as $contract) {
+		// 	if (($contract->contract_start < $date_interval_start) &&
+		// 		($contract->contract_end == '0000-00-00' || $contract->contract_end > date('Y-m-d') || is_null($contract->contract_end))) {
+		// 		$ret++;
+		// 	}
+		// }
 
 		return $ret;
 	}
