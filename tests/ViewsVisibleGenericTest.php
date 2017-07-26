@@ -292,7 +292,7 @@ class ViewsVisibleGenericTest extends TestCase
 
 		/* $controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]); */
 
-		// Index Page
+		// Create Page
 		$this->actingAs($this->user)
 			->visit($route->getPath())
 			->see($this->global_config->headline1)

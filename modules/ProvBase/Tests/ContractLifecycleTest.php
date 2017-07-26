@@ -1,11 +1,14 @@
 <?php
 
-class ContractLifecycleTest extends BaseLifecycleTest {
+namespace Modules\ProvBase\Tests;
 
-	/* public function setU */
+use \Modules\ProvBase\Entities\Contract;
+use \Modules\ProvBase\Http\Controllers\ContractController;
 
-	public function test_foo() {
+class ContractLifecycleTest extends \BaseLifecycleTest {
 
-		var_dump($this->_get_fake_data());
-	}
+	protected $seeder = '\Modules\ProvBase\Database\Seeders\ContractTableSeeder';
+
+	protected $controller = '\Modules\ProvBase\Http\Controllers\ContractController';
+
 }

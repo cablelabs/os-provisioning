@@ -29,6 +29,7 @@ class ContractTableSeeder extends \BaseSeeder {
 		$faker = Faker::create();
 		$count = Contract::get(['id'])->count();
 		$start_contract = $faker->dateTimeBetween('-10 years', '+1 year');
+		$salutations = ['Herr', 'Frau', 'Firma', 'Behörde'];
 
 		$ret = [
 			'number' => 'contr_'.($count + 1),
@@ -36,7 +37,7 @@ class ContractTableSeeder extends \BaseSeeder {
 			'number3' => 'Cu/2015/Q4/'.($count),
 			'number4' => 'legacy_cust_'.($count + 180558),
 			'company' => (rand(0,10) > 7 ? $faker->company: ''),
-			'salutation' => 'Frau',
+			'salutation' => $salutations[array_rand($salutations, 1)],
 			'academic_degree' => '',
 			'firstname' => $faker->firstName,
 			'lastname' => $faker->lastName,
