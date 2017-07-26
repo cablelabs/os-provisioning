@@ -419,7 +419,7 @@ class SnmpController extends \BaseController{
 		{
 			$s .= '<table class="table table-condensed">';
 			$s .= '<thead><tr>';
-			$s .= '<th style="padding: 4px>Index</th>';
+			$s .= '<th style="padding: 4px">Index</th>';
 
 			foreach ($oids as $oid => $headline)
 			{
