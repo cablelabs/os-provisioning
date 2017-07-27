@@ -678,40 +678,41 @@ class BaseModel extends Eloquent
 
 
 	/**
-	 * Checks if model is valid in specific time (used for Billing)
+	 * Checks if model is valid in specific time interval (used for Billing or to calculate income for dashboard)
 	 *
 	 * Note: Model must have a get_start_time- & get_end_time-Function defined
 	 *
-	 * @param 	String 		$timespan		Yearly / Quarterly / Monthly / Now  => Enum of Product->billing_cycle
-	 * @return 	Bool  						true, if model had valid dates during last month / year or is actually valid (now)
+	 * @param 	timespan 	String			Yearly / Quarterly / Monthly / Now  => Enum of Product->billing_cycle
+	 * @param 	time 		Integer 		Seconds since 1970 - check if model has/had/will have valid dates during specific time
+	 * @return 				Bool  			true, if model had valid dates during last month / year or is actually valid (now)
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function check_validity($timespan = 'Monthly')
+	public function check_validity($timespan = 'Monthly', $time = null)
 	{
 		$start = $this->get_start_time();
 		$end   = $this->get_end_time();
 
-		// if (get_class($this) == 'Modules\BillingBase\Entities\Item' && $this->contract->id == 500005 && $this->product->type == 'Internet')
-		// if ($this->id == 102)
-		// dd($this->id, date('m', $start), date('m', strtotime('first day of last month')), date('m', $end), date('m', $start) <= date('m', strtotime('first day of last month')) && date('m', $end) >= date('m') );
+		// default - for billing settlementruns/charges are calculated for last month
+		if (!$time)
+			$time = strtotime('midnight first day of last month');
 
 		switch ($timespan)
 		{
 			case 'Once':
 				// E.g. one time or splitted payments of items - no open end! With end date: only on months from start to end
-				return $end ? $start < strtotime('midnight first day of this month') && $end >= strtotime('midnight first day of last month') : date('Y-m', $start) == date('Y-m', strtotime('first day of last month'));
+				return $end ? $start < strtotime('midnight first day of next month', $time) && $end >= $time : date('Y-m', $start) == date('Y-m', $time);
 
 			case 'Monthly':
 				// has valid dates in last month - open end possible
-				return $start < strtotime('midnight first day of this month') && (!$end || $end >= strtotime('midnight first day of last month'));
+				return $start < strtotime('midnight first day of next month', $time) && (!$end || $end >= $time);
 
 			case 'Quarterly':
 				// TODO: implement
 				break;
 
 			case 'Yearly':
-				return $start < strtotime('midnight first day of this month') && (!$end || $end >= strtotime('midnight first day of January this year'));
+				return $start < strtotime('midnight first day of next month', $time) && (!$end || $end >= strtotime('midnight first day of January this year', $time));
 
 			case 'Now':
 				$now = strtotime('today');
