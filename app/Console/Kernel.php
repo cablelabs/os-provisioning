@@ -61,6 +61,8 @@ class Kernel extends ConsoleKernel {
 
 		$schedule->command('queue:checkup')->everyTenMinutes(); //cron("1,16,31,46 * * * * *");
 
+		$schedule->call('\Modules\ProvBase\Http\Controllers\DashboardController@save_income_to_json')->dailyAt('00:07');
+
 
 		// Remove all Log Entries older than 90 days
 		$schedule->call('\App\GuiLog@cleanup')->weekly();

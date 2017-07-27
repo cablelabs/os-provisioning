@@ -44,18 +44,18 @@ class DashboardController extends BaseController
 		$chart_data_contracts = self::get_chart_data_contracts();
 		$contracts = end($chart_data_contracts['contracts']);
 
-		// income - TODO: calculate only during night and save to DB
+		// income
 		if (\PPModule::is_active('billingbase') && $allowed_to_see['accounting'])
 		{
-			$valid_contracts = self::get_valid_contracts();
-			// $start = microtime(true);
-			// TODO: execute during night as cronjob and save data to json file - get data live from there
-			$income = self::get_income_total($valid_contracts);
-			// $end = microtime(true);
-			// d($income, $end - $start);
-			$chart_data_income = self::get_chart_data_income($income);
-		}
+			$chart_data_income = self::get_chart_data_income();
 
+			// TODO: move income total calculation to get_chart_data_income() and return well structured array 
+			// to use in blade -> content of this if-clause will only be the one line ahead
+			$income['total'] = 0;
+			foreach ($chart_data_income['data'] as $value)
+				$income['total'] += $value;
+			$income['total'] = (int) $income['total'];
+		}
 
 		return View::make('provbase::dashboard', $this->compact_prep_view(
 				compact('title', 'contracts', 'chart_data_contracts', 'income', 'chart_data_income', 'allowed_to_see')
@@ -170,8 +170,10 @@ class DashboardController extends BaseController
 	 * @param array $contracts
 	 * @return array
 	 */
-	private static function get_income_total(array $contracts)
+	public static function get_income_total()
 	{
+		$contracts = self::get_valid_contracts();
+
 		// manipulate dates array for charge calculation for coming month (not last one)
 		$conf  = \Modules\BillingBase\Entities\BillingBase::first();
 		$dates = \Modules\BillingBase\Console\accountingCommand::create_dates_array();
@@ -202,10 +204,9 @@ class DashboardController extends BaseController
 					continue;
 
 				$item->calculate_price_and_span($dates, false, false);
-				// \Log::debug("Contract: $c->id - charge: $item->charge", [$item->product->type, $c->zip, $cycle]);
 
 				// $prepared_data[$product->type][$cycle][$product->name][$c->id]['price'] = $item->charge;
-				// prepared data not really needed - why cycle ??
+				// prepared data not really needed - why cycle ?? - TODO: simplify
 				if (!isset($ret[$item->product->type][$cycle])) {
 					$ret[$item->product->type][$cycle] = $item->charge;
 					continue;
@@ -230,6 +231,41 @@ class DashboardController extends BaseController
 	}
 
 
+	/**
+	 * Calculate Income for current month, format and save to json
+	 * Used by Cronjob
+	 */
+	public static function save_income_to_json()
+	{
+		$dir_path = storage_path("app/data/dashboard/");
+		$fn = 'income.json';
+
+		$income = self::get_income_total();
+		$income = self::format_chart_data_income($income);
+
+		if (!is_dir($dir_path))
+			mkdir($dir_path, 0740, true);
+
+		\File::put($dir_path.$fn, json_encode($income));
+
+		system("chown apache $dir_path");
+	}
+
+
+	/**
+	 * Get chart data from json file - created by cron job
+	 *
+	 * @return array
+	 */
+	public static function get_chart_data_income()
+	{
+		$dir_path = storage_path("app/data/dashboard/");
+		$fn = 'income.json';
+
+		return json_decode(\File::get($dir_path.$fn), true);
+	}
+
+
 
 	/**
 	 * Returns rehashed data for the bar chart
@@ -237,7 +273,7 @@ class DashboardController extends BaseController
 	 * @param array $income
 	 * @return array
 	 */
-	private static function get_chart_data_income(array $income)
+	private static function format_chart_data_income(array $income)
 	{
 		$ret = array();
 		$products = array('Internet', 'Voip', 'TV', 'Other');
