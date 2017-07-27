@@ -68,7 +68,7 @@
 
                             {{-- info/data --}}
                             <div class="stats-info">
-                                <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Income', 'Dashboard') }} {{ date('m/Y') }}</h4>
+                                <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Net Income', 'Dashboard') }} {{ date('m/Y') }}</h4>
                                 <p>
                                     @if (isset($income['total']))
                                         {{ number_format($income['total'], 2, ',', '.') }}
