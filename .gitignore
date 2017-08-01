@@ -45,3 +45,5 @@ tags
 Documentation/doxyfile.bak
 Documentation/doxywarn.log
 
+# ignore queue process pid's
+*queue.pid

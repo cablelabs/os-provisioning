@@ -39,10 +39,10 @@
                     <div class="stats-info">
                         <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Contracts', 'Dashboard') }} {{ date('m/Y') }}</h4>
                         <p>
-                            @if (count($contracts) == 0)
+                            @if ($contracts == 0)
                                 {{ \App\Http\Controllers\BaseViewController::translate_view('NoContracts', 'Dashboard') }}
                             @else
-                                {{ count($contracts) }}
+                                {{ $contracts }}
                             @endif
                         </p>
                     </div>
@@ -68,12 +68,12 @@
 
                             {{-- info/data --}}
                             <div class="stats-info">
-                                <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Income', 'Dashboard') }} {{ date('m/Y') }}</h4>
+                                <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Net Income', 'Dashboard') }} {{ date('m/Y') }}</h4>
                                 <p>
                                     @if (isset($income['total']))
-                                        {{ number_format($income['total'], 2, ',', '.') }}
+                                        {{ number_format($income['total'], 0, ',', '.') }}
                                     @else
-                                        {{ number_format(0, 2, ',', '.') }}
+                                        {{ number_format(0, 0, ',', '.') }}
                                     @endif
                                 </p>
                             </div>
@@ -139,7 +139,7 @@
         <br><br>
 
         <div class="row">
-            @if (count($contracts) > 0)
+            @if ($contracts > 0)
                 <div class="col-md-8">
                     <div class="panel panel-inverse">
                         <div class="panel-heading">

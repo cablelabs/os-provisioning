@@ -273,6 +273,7 @@ return [
 	'Dashboard_ContractAnalytics'	=> 'Analyse Verträge (letzte 12 Monate)',
 	'Dashboard_NoContracts'			=> 'Keine Verträge vorhanden.',
 	'Dashboard_Income'				=> 'ERLÖSE',
+	'Dashboard_Net Income'			=> 'NETTOERLÖSE',
 	'Dashboard_IncomeAnalytics'		=> 'Erlöse Detailübersicht',
 	'Dashboard_Date'				=> 'DATUM',
 	'Dashboard_LinkDetails'			=> 'Zeige Details',

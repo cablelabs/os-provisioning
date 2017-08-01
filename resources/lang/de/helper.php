@@ -18,7 +18,7 @@ return [
 	'Company_TransferReason'		=> 'Vorlage aller Rechnungsklassen als Datenfeld-Schlüssel - Vertrags- und Rechnungsnummer sind standardmäßig ausgewählt.', 
 
 	//CostCenterController
-	'CostCenter_BillingMonth'		=> 'Standard: 6 (Juni) - wenn nicht festgelegt. Bei Veränderung muss der eingetragene Monat mindestens dem aktueller Monat entsprechen, um fehlende Zahlungen zu vermeiden.',
+	'CostCenter_BillingMonth'		=> 'Abrechnungsmonat für jährliche Posten. Gilt für den Monat für den die Rechnungen erstellt werden. Standard: 6 (Juni) - wenn nicht festgelegt. Bitte seien Sie vorsichtig beim Ändern innerhalb des Jahres: das Resultat könnten fehlende Zahlungen sein!',
 
 	//ItemController
 	'Item_ProductId'				=> 'Alle Felder außer dem Abrechnungszyklus müssen vor eine Änderung des Produkts gelöscht werde! Andernfalls können die Produkte in den meisten Fällen nicht gespeichert werden.', 

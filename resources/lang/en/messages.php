@@ -9,6 +9,7 @@ return [
 	*/
 
 	// Descriptions of Form Fields in Edit/Create
+	'accCmd_processing' 	=> 'The SettlementRun is executed. Please wait until this process has finished.',
 
 	'Call Data Record'		=> 'Call Data Record',
 	'ccc'					=> 'Customer Control Center',

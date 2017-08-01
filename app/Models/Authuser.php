@@ -75,7 +75,7 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 	 * @author Patrick Reichel
 	 */
 	public function roles() {
-		return $this->_meta()->where('type', 'LIKE', 'role')->get();
+		return $this->_meta()->where('type', 'LIKE', 'role')->orderBy('id')->get();
 	}
 
 	/**
