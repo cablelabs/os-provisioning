@@ -283,8 +283,6 @@ class NetElement extends \BaseModel {
 	 */
 	public static function relation_index_build_all ($call_from_cmd = 0)
 	{
-		return;
-
 		$netelements = NetElement::all();
 
 		\Log::info('nms: build net and cluster index of all tree objects');
