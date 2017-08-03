@@ -92,13 +92,15 @@ class NetElement extends \BaseModel {
 	public function view_index_label()
 	{
 		$bsclass = 'success';
+		$type = $this->netelementtype ? $this->netelementtype->name : '';
 
-		if ($this->state == 'YELLOW')
+		if (in_array($type, NetElementType::$undeletables))
+			$bsclass = 'info';
+		else if ($this->state == 'YELLOW')
 			$bsclass = 'warning';
-		if ($this->state == 'RED')
+		else if ($this->state == 'RED')
 			$bsclass = 'danger';
 
-		$type = $this->netelementtype ? $this->netelementtype->name : '';
 
 		// TODO: complete list
 		return ['index' => [$this->id, $type, $this->name, $this->ip, $this->state, $this->pos],
