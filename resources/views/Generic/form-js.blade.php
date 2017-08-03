@@ -8,7 +8,7 @@ NOTE: - java include section is in default blade at bottom of text
 
 --}}
 
-@section ('java')
+@section ('javascript')
 
 	<script>setTimeout("document.getElementById('success_msg').style.display='none';", 6000);</script>
 	<script>setTimeout("document.getElementById('delete_msg').style.display='none';", 6000);</script>
@@ -22,21 +22,15 @@ NOTE: - java include section is in default blade at bottom of text
 			@foreach($form_fields as $field)
 
 				{{-- that has a select field with an array() inside --}}
-				@if ((isset($field['select']) && is_array($field['select'])))
+				@if (isset($field['select']) && is_array($field['select']))
 
 					{{-- load on document initialization --}}
 					@include('Generic.form-js-select')
 
 					{{-- the element change function --}}
 					$('#{{$field['name']}}').change(function() {
-
 						@include('Generic.form-js-select')
-
-						// the element change function
-						$('#{{$field['name']}}').change(function() {
-							@include('Generic.form-js-select')
-						});
-          });
+					});
 
 				@endif
 
