@@ -271,21 +271,21 @@ class DashboardController extends BaseController
 		$dir_path = storage_path("app/data/dashboard/");
 		$fn = 'income.json';
 
-		if (!\File::isDirectory($dir_path)) { 
-			\File::makeDirectory($dir_path, 0740, true); 
+		if (!\File::isDirectory($dir_path)) {
+			\File::makeDirectory($dir_path, 0740, true);
 		}
 
-		  if (!\File::exists($dir_path.$fn)) {
-			$income = self::format_chart_data_income( 
-				array( 
-					'Internet' => array('Monthly' => 0), 
-					'Voip' => array('Monthly' => 0), 
-					'TV' => array('Monthly' => 0),
-					'Other' => array('Monthly' => 0),
-				) 
-			);  
+		if (!\File::exists($dir_path.$fn)) {
+			$initial_income = array(
+				'Internet' => array('Monthly' => 0),
+				'Voip' => array('Monthly' => 0),
+				'TV' => array('Monthly' => 0),
+				'Other' => array('Monthly' => 0),
+			);
 
-			\File::put($dir_path.$fn, json_encode($income)); }
+			\File::put($dir_path.$fn, json_encode($initial_income));
+		}
+
 		return json_decode(\File::get($dir_path.$fn), true);
 	}
 
