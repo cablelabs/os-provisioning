@@ -58,9 +58,10 @@ class Modem extends \BaseModel {
 		}
 
 		$configfile = $this->configfile ? $this->configfile->name : '';
+		$valid 		= $this->contract->check_validity('Now') ? 'yes' : 'no';
 
-		return ['index' => [$this->id, $this->mac, $configfile, $this->name, $this->lastname, $this->city, $this->street, $us_pwr],
-		        'index_header' => ['Modem Number', 'MAC address', 'Configfile', 'Name', 'Lastname', 'City', 'Street', 'US level'],
+		return ['index' => [$this->id, $this->mac, $configfile, $this->name, $this->lastname, $this->city, $this->street, $this->contract->district, $us_pwr, \App\Http\Controllers\BaseViewController::translate_label($valid)],
+		        'index_header' => ['Modem Number', 'MAC address', 'Configfile', 'Name', 'Lastname', 'City', 'Street', 'District', 'US level', 'Contract valid'],
 		        'bsclass' => $bsclass,
 		        'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : '')];
 	}

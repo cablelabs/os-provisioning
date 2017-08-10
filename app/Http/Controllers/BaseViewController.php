@@ -44,6 +44,9 @@ class BaseViewController extends Controller {
 	 */
 	public static function translate_label($string)
 	{
+		if (App::getLocale() == 'en')
+			return $string;
+
 		// cut the star at the end of value if there is one for the translate function and append it after translation
 		$star = '';
 		if (strpos($string, '*'))

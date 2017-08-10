@@ -20,6 +20,7 @@ return [
 	'Contract Number'			=> 'Vertragsnummer',
 	'Contract Start'			=> 'Vertragsbeginn',
 	'Contract End'				=> 'Vertragsende',
+	'Contract valid' 			=> 'Vertrag gültig',
 	'Contract'					=> 'Vertrag',
 	'Contract List'				=> 'Vertragsliste',
 	'Contracts'					=> 'Verträge',
@@ -68,6 +69,7 @@ return [
 	'Net'						=> 'Netz',
 	'Netmask'					=> 'Netzmaske',
 	'Network Access'			=> 'Netzwerkzugriff',
+	'no' 						=> 'nein',
 	'Number'					=> 'Nummer',
 	'Options'					=> 'Optionen',
 	'or: Upload KML file'		=> 'oder lade KML hoch',
@@ -92,10 +94,12 @@ return [
 	'State'						=> 'Status',
 	'Street'					=> 'Straße',
 	'Type'						=> 'Typ',
+	'US level' 					=> 'US Pegel',
 	'Username'					=> 'Nutzername',
 	'Users'						=> 'Nutzer',
 	'Vendor'					=> 'Hersteller',
 	'Year'						=> 'Jahr',
+	'yes' 						=> 'ja',
 //
 //Global
 //

@@ -692,31 +692,29 @@ class BaseModel extends Eloquent
 	{
 		$start = $this->get_start_time();
 		$end   = $this->get_end_time();
-
 		// default - for billing settlementruns/charges are calculated for last month
-		if (!$time)
-			$time = strtotime('midnight first day of last month');
+		$time = $time ? : strtotime('midnight first day of last month');
 
-		switch ($timespan)
+		switch (strtolower($timespan))
 		{
-			case 'Once':
+			case 'once':
 				// E.g. one time or splitted payments of items - no open end! With end date: only on months from start to end
 				return $end ? $start < strtotime('midnight first day of next month', $time) && $end >= $time : date('Y-m', $start) == date('Y-m', $time);
 
-			case 'Monthly':
+			case 'monthly':
 				// has valid dates in last month - open end possible
 				return $start < strtotime('midnight first day of next month', $time) && (!$end || $end >= $time);
 
-			case 'Quarterly':
+			case 'quarterly':
 				// TODO: implement
 				break;
 
-			case 'Yearly':
+			case 'yearly':
 				return $start < strtotime('midnight first day of next month', $time) && (!$end || $end >= strtotime('midnight first day of January this year', $time));
 
-			case 'Now':
-				$now = strtotime('today');
-				return $start <= $now && (!$end || $end >= $now);
+			case 'now':
+				$time = strtotime('today');
+				return $start <= $time && (!$end || $end >= $time);
 
 			default:
 				\Log::error('Bad timespan param used in function '.__FUNCTION__);
