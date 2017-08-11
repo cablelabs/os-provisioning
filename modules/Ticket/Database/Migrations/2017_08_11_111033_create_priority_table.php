@@ -15,7 +15,7 @@ class CreatePriorityTable extends Migration {
         Schema::create('priority', function(Blueprint $table)
         {
             $table->increments('id');
-            $tabl->string('name');
+            $table->string('name');
 
             $table->timestamps();
         });
