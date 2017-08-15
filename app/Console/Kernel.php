@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel {
 		'\Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand',
 		'\Modules\ProvVoip\Console\PhonenumberCommand',
 		'\Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand',
+		'\Modules\ProvVoipEnvia\Console\EnviaContractGetterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaContractReferenceGetterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceGetterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
