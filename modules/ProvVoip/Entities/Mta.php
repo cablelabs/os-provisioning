@@ -244,20 +244,31 @@ _failed:
 		// lock
 		$fp = fopen(self::CONF_FILE_PATH, "r+");
 
-		$data 	 = 'host mta-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "mta/mta-'.$this->id.'.cfg"; ddns-hostname "mta-'.$this->id.'"; option host-name "'.$this->id.'"; }'."\n";
-		$replace = $orig ? 'host mta-'.$this->id.' { hardware ethernet '.$orig['mac'].'; filename "mta/mta-'.$this->id.'.cfg"; ddns-hostname "mta-'.$this->id.'"; option host-name "'.$this->id.'"; }'."\n" : '';
-
 		if (!flock($fp, LOCK_EX))
 			Log::error('Could not get exclusive lock for '.self::CONF_FILE_PATH);
 
-		$conf = File::get(self::CONF_FILE_PATH);
 
+		$replace = $orig ? $orig['mac'] : $this->mac;
+		// $conf = File::get(self::CONF_FILE_PATH);
+		$conf = file(self::CONF_FILE_PATH);
+
+		foreach ($conf as $key => $line)
+		{
+			if (strpos($line, $replace))
+			{
+				unset($conf[$key]);
+				break;
+			}
+		}
 		// dont replace directly as this wouldnt add the entry for a new created mta
-		$conf = str_replace($replace, '', $conf);
+		// $conf = str_replace($replace, '', $conf);
 		if (!$delete)
-			$conf .= $data;
+		{
+			$data 	= 'host mta-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "mta/mta-'.$this->id.'.cfg"; ddns-hostname "mta-'.$this->id.'"; option host-name "'.$this->id.'"; }'."\n";
+			$conf[] = $data;
+		}
 
-		Modem::_write_dhcp_file(self::CONF_FILE_PATH, $conf);
+		Modem::_write_dhcp_file(self::CONF_FILE_PATH, implode($conf));
 
 		// unlock
 		flock($fp, LOCK_UN); fclose($fp);
@@ -343,6 +354,7 @@ class MtaObserver
 	{
 		$mta->hostname = 'mta-'.$mta->id;
 		$mta->save(); 			// forces to call updated method
+		$mta->modem->make_dhcp_cm();
 	}
 
 	public function updated($mta)
@@ -366,6 +378,7 @@ class MtaObserver
 	public function deleted($mta)
 	{
 		$mta->make_dhcp_mta(true);
+		$mta->modem->make_dhcp_cm();
 		$mta->delete_configfile();
 		$mta->restart();
 	}

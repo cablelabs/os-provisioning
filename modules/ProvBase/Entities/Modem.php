@@ -304,7 +304,7 @@ class Modem extends \BaseModel {
 	 * Used in ModemObserver@updated/deleted for created/updated/deleted events
 	 *
 	 * NOTES:
-	 	* This is way faster (0,01s vs 2,8s for 348 Modems via make_dhcp_cm_all) than everytime creating files for all modems
+	 	* This is way faster (0,01s (also on 2k modems) vs 2,8s for 348 Modems via make_dhcp_cm_all) than everytime creating files for all modems
 	 	* It's also more secure as it uses flock() to avoid dhcpd restart errors due to race conditions
 	 	* MaybeTODO: embed part between lock & unlock into try catch block to avoid forever locked files in case of exception
 	 *
@@ -317,30 +317,25 @@ class Modem extends \BaseModel {
 		Log::debug(__METHOD__." started");
 
 		// Note: hostname is changed when modem was created
-		if (!$this->isDirty(['hostname', 'mac', 'public']) && !$delete)
-			return;
+		// if (!$this->isDirty(['hostname', 'mac', 'public']) && !$delete)
+		// 	return;
 
 		// Log
 		Log::info('DHCPD Configfile Update for Modem: '.$this->id);
 
-		$data 	 	= $this->generate_cm_dhcp_entry();
-		$replace 	= '';
-		$modem_orig = $this->getOriginal();
-
-		if ($modem_orig)
-		{
-			$original = clone $this;
-			$original->hostname = $modem_orig['hostname'];
-			$original->mac 		= $modem_orig['mac'];
-			$original->public 	= $modem_orig['public'];
-
-			$replace = $original->generate_cm_dhcp_entry();
-		}
+		$data 		= $this->generate_cm_dhcp_entry();
+		$original 	= $this->getOriginal();
+		$replace 	= $original ? $original['mac'] : $this->mac;
 
 		if (!file_exists(self::CONF_FILE_PATH))
 		{
-			Log::critical('Missing DHCPD Configfile '.self::CONF_FILE_PATH);
-			return;
+			// try to add file if it doesnt exist
+			Log::info('Missing DHCPD Configfile '.self::CONF_FILE_PATH);
+			if (File::put('', self::CONF_FILE_PATH) === false)
+			{
+				Log::alert('Error writing to DHCPD Configfile: '.self::CONF_FILE_PATH);
+				return;
+			}
 		}
 
 		// lock
@@ -349,32 +344,54 @@ class Modem extends \BaseModel {
 		if (!flock($fp, LOCK_EX))
 			Log::error('Could not get exclusive lock for '.self::CONF_FILE_PATH);
 
-		$conf = File::get(self::CONF_FILE_PATH);
+		// $conf = File::get(self::CONF_FILE_PATH);
+		$conf = file(self::CONF_FILE_PATH);
+
+		foreach ($conf as $key => $line)
+		{
+			if (strpos($line, $replace) !== false)
+			{
+				unset($conf[$key]);
+				break;
+			}
+		}
 
 		// dont replace directly as this wouldnt add the entry for a new created modem
-		$conf = str_replace($replace, '', $conf);
+		// $conf = str_replace($replace, '', $conf);
 
 		if (!$delete)
-			$conf .= $data;
+			$conf[] = $data;
 
-		self::_write_dhcp_file(self::CONF_FILE_PATH, $conf);
+		self::_write_dhcp_file(self::CONF_FILE_PATH, implode($conf)); //	PHP_EOL
 
 		// public ip
-		if ($this->public || ((isset($original) && $original->public)))
+		if ($this->public || ($original && $original['public']))
 		{
 			$data_pub 	  = $this->generate_cm_dhcp_entry_pub();
-			$replace_pub  = isset($original) ? $original->generate_cm_dhcp_entry_pub() : '';
 
 			if (file_exists(self::CONF_FILE_PATH_PUB))
-				$conf_pub = File::get(self::CONF_FILE_PATH_PUB);
+				$conf_pub = file(self::CONF_FILE_PATH_PUB);
 			else
-				Log::critical('Missing DHCPD Configfile '.self::CONF_FILE_PATH_PUB);
+			{
+				Log::info('Missing DHCPD Configfile '.self::CONF_FILE_PATH_PUB);
+				if (File::put('', self::CONF_FILE_PATH_PUB) === false)
+					Log::alert('Error writing to DHCPD Configfile: '.self::CONF_FILE_PATH_PUB);
+			}
 
-			$conf_pub = str_replace($replace_pub, '', $conf_pub);
+			foreach ($conf_pub as $key => $line)
+			{
+				if (strpos($line, $replace) !== false)
+				{
+					unset($conf_pub[$key]);
+					break;
+				}
+			}
+
+			// $conf_pub = str_replace($replace_pub, '', $conf_pub);
 			if (!$delete && $this->public)
-				$conf_pub .= $data_pub;
+				$conf_pub[] = $data_pub;
 
-			self::_write_dhcp_file(self::CONF_FILE_PATH_PUB, $conf_pub);
+			self::_write_dhcp_file(self::CONF_FILE_PATH_PUB, implode($conf_pub));
 		}
 
 		// unlock
