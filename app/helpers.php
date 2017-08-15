@@ -46,3 +46,22 @@ function unify_mac($data)
 	$data['mac'] = wordwrap($data['mac'], 2, ':', true);
 	return $data;
 }
+
+
+
+/**
+ * Check if at least one of the needle array keys exists in the haystack array
+ * 
+ * @return true if one array key of needle array exists in haystack array, false otherwise
+ * @author Nino Ryschawy
+ */
+function multi_array_key_exists($needles, $haystack)
+{
+	foreach ($needles as $needle)
+	{
+		if (array_key_exists($needle, $haystack))
+			return true;
+	}
+
+	return false;
+}

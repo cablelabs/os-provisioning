@@ -958,27 +958,24 @@ class Modem extends \BaseModel {
 	 * Check if modem actually needs to be restarted. This is only the case if a
 	 * relevant attribute was modified.
 	 *
-	 * @return 1 if reset via Modem or original mac is needed (mac was changed), -1 for reset via CMTS (faster), 0 if no restart is needed
+	 * @return 1 if reset via Modem or original mac is needed (mac was changed)
+	 *		  -1 for reset via CMTS (faster), 
+	 *		   0 if no restart is needed
 	 *
 	 * @author Ole Ernst, Nino Ryschawy
 	 *
 	 * NOTE: returns 1 when modem is created
 	 */
-	public function needs_restart() {
-		$diff = array_diff_assoc($this->getAttributes(), $this->getOriginal());
+	public function needs_restart()
+	{
+		$diff = $this->getDirty();
 
 		// in case mac was changed, reset via cmts - or take original mac
 		if (array_key_exists('mac', $diff))
 			return 1;
 
-		if (array_key_exists('contract_id', $diff)
-			|| array_key_exists('public', $diff)
-			|| array_key_exists('network_access', $diff)
-			|| array_key_exists('configfile_id', $diff)
-			|| array_key_exists('qos_id', $diff))
-		{
+		if (multi_array_key_exists(['contract_id', 'public', 'network_access', 'configfile_id', 'qos_id'], $diff))
 			return -1;
-		}
 
 		return 0;
 	}
@@ -1030,15 +1027,24 @@ class ModemObserver
 		if (!$modem->observer_enabled)
 			return;
 
+		$diff = $modem->getDirty();
+
 		// Use Updating to set the geopos before a save() is called.
 		// Notice: that we can not call save() in update(). This will re-tricker
 		//         the Observer and re-call update() -> endless loop is the result.
-		$modem->geocode(false);
+		if (multi_array_key_exists(['street', 'house_number', 'zip', 'city'], $diff))
+		{
+			$modem->geocode(false);
+			$diff['x'] = true; 			// refresh Mpr by setting changed attribute to true
+		}
 
 		// Refresh MPS rules
 		// Note: does not perform a save() which could trigger observer.
 		if (\PPModule::is_active('HfcCustomer'))
-			$modem->netelement_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem->id);
+		{
+			if (multi_array_key_exists(['x', 'y'], $diff))
+				$modem->netelement_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem->id);
+		}
 	}
 
 	public function updated($modem)
