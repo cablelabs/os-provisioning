@@ -876,11 +876,12 @@ class SnmpController extends \BaseController{
 		}
 
 		// Device not reachable/online
-		if (strpos($msg, 'snmp2_get') !== false && (($x = strpos($msg, 'No response from')) !== false))
+		if (strpos($msg, 'snmp2_') !== false && (($x = strpos($msg, 'No response from')) !== false))
 		{
 			$ip = substr($msg, $x + 16, 15);
+			$method = explode(':', $msg)[0];
 
-			$error = 'snmp_get() failed';
+			$error = "$method failed";
 			$message = "Device with IP $ip not reachable";
 
 			return \View::make('errors.generic', compact('message', 'error'));
