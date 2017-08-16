@@ -94,21 +94,21 @@ class Kernel extends ConsoleKernel {
 				->dailyAt('00:01');
 				/* ->everyMinute(); */
 
-			// Process Envia orders
-			$schedule->command('provvoipenvia:process_envia_orders')
-				->dailyAt('00:23');
-
 			// Get Envia customer reference for contracts without this information
 			$schedule->command('provvoipenvia:get_envia_customer_references')
 				->dailyAt('01:13');
 
-			// Get Envia contract reference for phonenumbers without this information
+			// Get/update Envia orders
+			$schedule->command('provvoipenvia:get_envia_contracts_by_customer')
+				->dailyAt('01:18');
+
+			// Get Envia contract reference for phonenumbers without this information or inactive linked envia contract
 			$schedule->command('provvoipenvia:get_envia_contract_references')
 				->dailyAt('01:23');
 
-			// Get/update Envia orders
-			$schedule->command('provvoipenvia:get_envia_contracts_by_customer')
-				->dailyAt('03:43');
+			// Process Envia orders (do so after getting envia contracts)
+			$schedule->command('provvoipenvia:process_envia_orders')
+				->dailyAt('03:48');
 
 			// Update voice data
 			$schedule->command('provvoipenvia:update_voice_data')
