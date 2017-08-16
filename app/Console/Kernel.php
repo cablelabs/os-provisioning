@@ -75,15 +75,15 @@ class Kernel extends ConsoleKernel {
 
 			// Update database table carriercode with csv data if necessary
 			$schedule->command('provvoip:update_carrier_code_database')
-				->dailyAt('03:24');
+				->dailyAt('04:23');
 
 			// Update database table ekpcode with csv data if necessary
 			$schedule->command('provvoip:update_ekp_code_database')
-				->dailyAt('03:29');
+				->dailyAt('04:28');
 
 			// Update database table trcclass with csv data if necessary
 			$schedule->command('provvoip:update_trc_class_database')
-				->dailyAt('03:34');
+				->dailyAt('04:33');
 		}
 
 		if (\PPModule::is_active ('ProvVoipEnvia')) {
@@ -94,22 +94,25 @@ class Kernel extends ConsoleKernel {
 				->dailyAt('00:01');
 				/* ->everyMinute(); */
 
-			// Update voice data
-			$schedule->command('provvoipenvia:update_voice_data')
-				->dailyAt('03:53');
-				/* ->everyMinute(); */
-
-			// Get Envia contract reference for phonenumbers without this information
-			$schedule->command('provvoipenvia:get_envia_contract_references')
-				->dailyAt('01:15');
+			// Process Envia orders
+			$schedule->command('provvoipenvia:process_envia_orders')
+				->dailyAt('00:23');
 
 			// Get Envia customer reference for contracts without this information
 			$schedule->command('provvoipenvia:get_envia_customer_references')
 				->dailyAt('01:13');
 
-			// Process Envia orders
-			$schedule->command('provvoipenvia:process_envia_orders')
-				->dailyAt('00:23');
+			// Get Envia contract reference for phonenumbers without this information
+			$schedule->command('provvoipenvia:get_envia_contract_references')
+				->dailyAt('01:23');
+
+			// Get/update Envia orders
+			$schedule->command('provvoipenvia:get_envia_contracts_by_customer')
+				->dailyAt('03:43');
+
+			// Update voice data
+			$schedule->command('provvoipenvia:update_voice_data')
+				->dailyAt('03:53');
 		}
 
 		// ProvBase Schedules
