@@ -266,13 +266,15 @@ class importCommand extends Command {
 		 * CONTRACT Import
 		 */
 		$cluster_filter = $this->option('cluster')  ? 'm.cluster_id = '.$this->option('cluster') : 'TRUE';
-		$plz_filter 	= $this->option('plz') 		? 'a.plz = \''.$this->option('plz')."'" 	 : 'TRUE';
+		$plz_filter 	= $this->option('plz') 		? 'modem_adr.plz = \''.$this->option('plz')."'" : 'TRUE';
 
-		// Get all Contracts with customer data & Tarifname from old systems DB
-		$contracts = $km3->table(\DB::raw('tbl_vertrag v, tbl_modem m, tbl_adressen a, tbl_kunde k, tbl_tarif t, tbl_posten p'))
+		// Get all Contracts with where modem adress is inside the specified area 
+		// Get customer data & Tarifname from old systems DB
+		$contracts = $km3->table(\DB::raw('tbl_vertrag v, tbl_modem m, tbl_adressen a, tbl_adressen modem_adr, tbl_kunde k, tbl_tarif t, tbl_posten p'))
 				->selectRaw ('distinct on (v.vertragsnummer) v.vertragsnummer, v.*, a.*, k.*, t.name as tarif,
 					v.id as id, v.beschreibung as contr_descr, m.cluster_id')
-				->whereRaw('m.adresse = a.id')
+				->whereRaw('m.adresse = modem_adr.id')
+				->whereRaw('v.ansprechpartner = a.id')
 				->whereRaw('v.kunde = k.id')
 				->whereRaw('m.vertrag = v.id')
 				->whereRaw('v.tarif = t.id')
@@ -285,14 +287,14 @@ class importCommand extends Command {
 				->whereRaw ($cluster_filter)
 				->where(function ($query) use ($plz_filter) { $query
 					->whereRaw ($plz_filter)
-					->where ('a.ort', '!=', 'Mooshaide')
-					->where ('a.ort', '!=', 'Lauterbach')
-					->whereRaw ('a.strasse not like \'Bussardw%\'')
-					->whereRaw ('a.strasse not like \'Alte Annab%\'')
-					->whereRaw ('a.strasse not like \'Wolkensteiner%\'')
-					->whereRaw ('a.strasse not like \'Mooshaid%\'')
-					->whereRaw ('a.strasse not like \'Falkenw%\'')
-					->whereRaw ('a.strasse not like \'Habichtw%\'')
+					->where ('modem_adr.ort', '!=', 'Mooshaide')
+					->where ('modem_adr.ort', '!=', 'Lauterbach')
+					->whereRaw ('modem_adr.strasse not like \'Bussardw%\'')
+					->whereRaw ('modem_adr.strasse not like \'Alte Annab%\'')
+					->whereRaw ('modem_adr.strasse not like \'Wolkensteiner%\'')
+					->whereRaw ('modem_adr.strasse not like \'Mooshaid%\'')
+					->whereRaw ('modem_adr.strasse not like \'Falkenw%\'')
+					->whereRaw ('modem_adr.strasse not like \'Habichtw%\'')
 					->orWhere ('v.vertragsnummer', '=', 43851);
 					})
 				->orderBy('v.vertragsnummer')
@@ -302,7 +304,6 @@ class importCommand extends Command {
 		$i   = 1;
 		$num = sizeof($contracts);
 		$bar = $this->output->createProgressBar($num);
-
 
 		foreach ($contracts as $contract)
 		{
@@ -410,9 +411,16 @@ class importCommand extends Command {
 			// 	$bar->advance();
 			
 			$i++;
+			$new_contracts[] = $c;
 		}	
 
 		echo "\n";
+
+		// Update QoS-ID of Modems - we could alternatively add Items here and this should solve the problem,
+		// but with the current daily-conversion it's very unsecure
+		foreach ($new_contracts as $cont) {
+			$cont->push_to_modems();
+		}
 	}
 
 
