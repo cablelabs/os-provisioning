@@ -40,10 +40,9 @@ class importCommand extends Command {
 
 	// TODO: Check every new import if new tarifs exist on old system
 	protected $old_sys_inet_tarifs = [
-	 	// in Edeka verwendet - alle gemapped
 			'BusinessBasic' 				=> 'business',
 			'BusinessFlat' 					=> 'business',
-			'Industrie/Gewerbe 150' 		=> 'business',
+			'Industrie/Gewerbe 150' 		=> 22,
 			'Industrie/Gewerbe 145' 		=> 'business',
 			'Internet Flat 6000 REI' 		=> 2,
 			'Pob_PrivatBasic' 				=> 'vol',
@@ -64,15 +63,15 @@ class importCommand extends Command {
 			'Internet Flat 6000 POB' 		=> 2,
 			'Internet Flat 16000 POB' 		=> 4,
 			'Internet Flat 2000 POB' 		=> 1,
-			'Internet Volumen Basic SAZ' 	=> 'vol',
+			'Internet Volumen Basic SAZ' 	=> 4,
 			'Internet Flat 6000 (inoffiziel)' => 2,
 			'Internet Volumen 10G POB' 		=> 'vol',
 			'Internet Volumen 10G REI' 		=> 'vol',
 			'Internet Volumen 10G SAZ' 		=> 'vol',
 			'Internet Flat 16000' 			=> 4,
 			'Internet Speed 10G' 			=> 4,
-			'Internet Volumen Basic POB' 	=> 'vol',
-			'Internet Volumen Basic REI' 	=> 'vol',
+			'Internet Volumen Basic POB' 	=> 4,
+			'Internet Volumen Basic REI' 	=> 4,
 			'Internet Volumen 10G - 100000' => 4,
 			'Internet Flat 2000 REI' 		=> 1,
 			'Internet Flat 2000 SAZ' 		=> 1,
@@ -80,7 +79,7 @@ class importCommand extends Command {
 			'Internet Flat Spar MAB,POB' 	=> 'inactive',
 			'Internet Flat Spar POB' 		=> 'inactive',
 			'Internet Flat Spar REI' 		=> 'inactive',
-			'Internet Volumen Basic 100000' => 5,
+			'Internet Volumen Basic 100000' => 4,
 			'PrivatBasic20G' 				=> 'vol',
 			'Flat 25Mbits.' 				=> 4,
 			'PrivatBasic30G' 				=> 'vol',
@@ -88,7 +87,7 @@ class importCommand extends Command {
 			'Internet Flat 100000' 			=> 5,
 			'Internet Flat 2000' 			=> 1,
 			'Internet Flat 25000' 			=> 4,
-			'Internet Speed Basic MAB,POB'  => 'vol',
+			'Internet Speed Basic MAB,POB'  => 4,
  		];
 
 		protected $old_sys_voip_tarifs = array(
@@ -111,9 +110,6 @@ class importCommand extends Command {
 			);
 
 	protected $configfiles = array(
-// Kathrein-DCV8400
-// Thomson-TWG870-SIP
-// Thomson-TWG850-SIP
 			'SNMPSetup1' 				=> 3,
 			'SNMPBlockMulticast' 		=> 3,
 			'SNMPAllowMulticast' 		=> 3,
@@ -130,12 +126,12 @@ class importCommand extends Command {
 			'Thomson/Technicolor' 		=> 3,
 			'Default CM Config' 		=> 3,
 			'TVM1000' 					=> 'todo',
-			'TVM1000-2.08' 				=> 'todo',
+			'TVM1000-2.08' 				=> 63,
 			'TVM1000-2.04'				=> 'todo',
 			'Thomson-THG57X' 			=> 6,
 			'Thomson-TWG870' 			=> 44,
 			'Kathrein' 					=> 'todo',
-			'Kathrein-DCV8400' 			=> 'todo',
+			'Kathrein-DCV8400' 			=> 61,
 			'TVM1000-2.09' 				=> 'todo',
 			'X_DQOS'					=> 'todo',
 			'FritzBox AVM' 				=> 25,
@@ -143,15 +139,15 @@ class importCommand extends Command {
 			'FritzBox 6360' 			=> 3,
 			'FritzBox AVM MTA' 			=> 49,
 			'Thomson-THG540-SIP' 		=> 47,
-			'Kathrein-DCM42' 			=> 'todo',
+			'Kathrein-DCM42' 			=> 3,
 			'Thomson-THG57X-SIP' 		=> 6,
-			'Thomson-TWG870-SIP' 		=> 'todo', 		//46
+			'Thomson-TWG870-SIP' 		=> 44,
 			'TVM1000-2.20' 				=> 'todo',
 			'Thomson-TCM47X' 			=> 3,
 			'Thomson' 					=> 3,
 			'Technicolor' 				=> 3,
 			'TC7200.20' 				=> 3,
-			'Delta' 					=> 'todo',
+			'Delta' 					=> 3,
 			'Arris-TG862' 				=> 42,
 			'Arris' 					=> 3,
 			'Hitron CVE 30360' 			=> 'todo',
@@ -159,7 +155,9 @@ class importCommand extends Command {
 			'TVM1000-2.31' 				=> 'todo',
 			'TC7200.20 v01.03' 			=> 3,
 			'Thomson-THG541-SIP' 		=> 45,
+			'Thomson-TWG850-SIP' 		=> 46,
 			'Thomson-TWG850-4-SIP' 		=> 46,
+			'Thomson-TWG870-SIP' 		=> 44,
 			'Hitron BVG 3653 SIP' 		=> 'todo',
 			'6320v2' 					=> 3,
 			'Fritzbox AVM 6490' 		=> 25,
@@ -583,7 +581,7 @@ class importCommand extends Command {
 
 			if ($prod_id <= 0)
 			{
-				$this->error("\tProduct $prod_id does not exist yet");
+				$this->error("\tProduct $prod_id does not exist yet [$tarif]");
 				continue;
 			}
 
