@@ -325,9 +325,10 @@ class importCommand extends Command {
 
 
 			// Add Billing related Data
-			self::add_tarifs($c, $items_new, $products_new, $contract);
-			self::add_sepamandate($c, $mandates_new, $contract, $km3);
-			self::add_additional_items();
+			$this->add_tarifs($c, $items_new, $products_new, $contract);
+			$this->add_tarif_credit($c, $contract);
+			$this->add_sepamandate($c, $mandates_new, $contract, $km3);
+			// $this->add_additional_items();
 
 			// Email Import
 			if (\PPModule::is_active('mail'))
@@ -445,6 +446,7 @@ class importCommand extends Command {
 		$c = new Contract;
 
 		// import fields
+		$c->number 			= $old_contract->vertragsnummer;
 		$c->number2 		= $old_contract->vertragsnummer;
 		$c->number4 		= $old_contract->kundennr;
 		$c->salutation 		= $old_contract->anrede;
@@ -606,6 +608,28 @@ class importCommand extends Command {
 			// TODO: Set QoS-ID -- done by daily_conversion() ??
 			// $c->next_voip_id = 0;
 		}
+	}
+
+
+	/**
+	 * Add extra credit item (5 Euro gross - 1 Year) if customer had an old volume tariff
+	 */
+	private function add_tarif_credit($new_contract, $old_contract)
+	{
+		if ((strpos($old_contract->tarif, 'Volumen') === false) && (strpos($old_contract->tarif, 'Speed') === false))
+			return;
+
+		$this->info("Add extra Credit as Customer had volume tariff. [$new_contract->number]");
+
+		Item::create([
+			'contract_id' 		=> $new_contract->id,
+			'product_id' 		=> 10,
+			'valid_from' 		=> date('Y-m-01', strtotime('first day of next month')),
+			'valid_from_fixed' 	=> 1,
+			'valid_to' 			=> date('Y-m-d', strtotime('last day of next year')),
+			'valid_to_fixed' 	=> 1,
+			'credit_amount' 	=> 4.2017,
+			]);
 	}
 
 
