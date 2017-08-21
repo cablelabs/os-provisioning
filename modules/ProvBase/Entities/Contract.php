@@ -65,8 +65,10 @@ class Contract extends \BaseModel {
 		if ($this->network_access == 0)
 			$bsclass = 'danger';
 
-		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street, $this->house_number, $this->district, $this->contract_start, $this->contract_end],
-				'index_header' => ['Contract Nr', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street', 'House Nr', 'District', 'Start Date', 'End Date'],
+		$costcenter = $this->costcenter ? $this->costcenter->name : '';
+
+		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street, $this->house_number, $this->district, $this->contract_start, $this->contract_end, $costcenter],
+				'index_header' => ['Contract Nr', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street', 'House Nr', 'District', 'Start Date', 'End Date', 'CostCenter'],
 				'bsclass' => $bsclass,
 				'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
 	}
