@@ -19,7 +19,7 @@ var makeNavbarSearch = function() {
 	      }
 	    }
 	});
-	console.log("nmsprime.js is working")
+
 	$('#globalsearch').on('keydown', function (event) {
 	    var code = (event.keyCode ? event.keyCode : event.which);
 	    if (code == 27) {
@@ -34,25 +34,29 @@ var makeNavbarSearch = function() {
 // Keep Sidebar open and Save State and Minify Status of Sidebar
 // @author: Christian Schramm
 if (typeof(Storage) !== "undefined") {
-//save minified s_state
-var ministate = localStorage.getItem("minified-state");
-if (ministate == "true") {
-  $('#page-container').addClass('page-sidebar-minified');
-} else {
-  $('#page-container').removeClass('page-sidebar-minified');
-}
-var sitem = localStorage.getItem("sidebar-item");
-var chitem = localStorage.getItem("clicked-item");
-$('#' + sitem).addClass("expand");
-$('#' + sitem + ' .sub-menu ').css("display", "block");
-$('#sidebar .sub-menu li').click(function(event) {
-    localStorage.setItem("clicked-item", $(this).attr('id'));
-    if ($('.page-sidebar-minified') == true) {
-      $('#' + sitem).addClass("expand");
+    //save minified s_state
+    var ministate = localStorage.getItem("minified-state");
+    var sitem = localStorage.getItem("sidebar-item");
+    var chitem = localStorage.getItem("clicked-item");
+
+    if (ministate == "true") {
+    $('#page-container').addClass('page-sidebar-minified');
+    } else {
+    $('#page-container').removeClass('page-sidebar-minified');
     }
-});
-$('#' + chitem).addClass("active");
-}else {
+
+    if (!$('#dashboardsidebar').hasClass('active')) {
+        $('#' + sitem).addClass("expand");
+        $('#' + sitem).addClass("active");
+        $('#' + sitem + ' .sub-menu ').css("display", "block");
+        $('#' + chitem).addClass("active");
+        
+        $('#sidebar .sub-menu li').click(function(event) {
+            localStorage.setItem("clicked-item", $(this).attr('id'));
+            localStorage.setItem("sidebar-item", $(this).parent().parent().attr('id'))
+        });
+    }
+} else {
   console.log("sorry, no Web Storage Support - Cant save State of Sidebar")
 }
 
