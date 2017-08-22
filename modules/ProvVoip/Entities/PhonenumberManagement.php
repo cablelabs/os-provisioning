@@ -185,6 +185,9 @@ class PhonenumberManagement extends \BaseModel {
 	public function view_has_many() {
 
 		if (\PPModule::is_active('provvoipenvia')) {
+			/* $ret['Envia']['EnviaContract']['class'] = 'EnviaContract'; */
+			/* $ret['Envia']['EnviaContract']['relation'] = $this->enviacontract; */
+
 			$ret['Envia']['EnviaOrder']['class'] = 'EnviaOrder';
 			$ret['Envia']['EnviaOrder']['relation'] = $this->_envia_orders;
 			$ret['Envia']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at Envia';

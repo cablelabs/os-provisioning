@@ -99,6 +99,9 @@ class Contract extends \BaseModel {
 
 		if (\PPModule::is_active('provvoipenvia'))
 		{
+			$ret['Envia']['EnviaContract']['class'] = 'EnviaContract';
+			$ret['Envia']['EnviaContract']['relation'] = $this->enviacontracts;
+
 			$ret['Envia']['EnviaOrder']['class'] = 'EnviaOrder';
 			$ret['Envia']['EnviaOrder']['relation'] = $this->_envia_orders;
 

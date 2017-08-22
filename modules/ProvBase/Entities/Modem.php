@@ -179,6 +179,9 @@ class Modem extends \BaseModel {
 
 		if (\PPModule::is_active('provvoipenvia'))
 		{
+			$ret['dummy']['EnviaContract']['class'] = 'EnviaContract';
+			$ret['dummy']['EnviaContract']['relation'] = $this->enviacontracts;
+
 			$ret['dummy']['EnviaOrder']['class'] = 'EnviaOrder';
 			$ret['dummy']['EnviaOrder']['relation'] = $this->_envia_orders;
 
