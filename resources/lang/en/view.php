@@ -127,6 +127,9 @@ return [
 		'Header_EditIpPool'			=> 'Edit IP-Pool',
 		'Header_IP-Pools'			=> 'IP-Pool|IP-Pools',
 		'Header_EditIP-Pools'		=> 'Edit IP-Pool',
+		// Tickets
+		'Header_Ticket'				=> 'Ticket|Tickets',
+		'Header_EditTicket'			=> 'Edit Ticket',
 
 	//VOIP
 		//MTA
@@ -222,4 +225,7 @@ return [
 	'Dashboard_Date'				=> 'DATE',
 	'Dashboard_LinkDetails'			=> 'View Details',
 	'Dashboard_Other'				=> 'Other',
+	'Dashboard_Tickets' 			=> 'NEW TICKETS',
+	'Dashboard_NoTickets' 			=> 'No new Tickets available.',
+	'Dashboard_Quickstart' 			=> 'QUICKSTART',
 ];

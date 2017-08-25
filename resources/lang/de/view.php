@@ -67,6 +67,8 @@ return [
 		'Menu_Envia orders'			=> 'envia TEL Aufträge',
 		'Menu_Envia contracts'		=> 'envia TEL Verträge',
 		'Menu_CDRs'					=> 'EVNs',
+		'Menu_Tickets'				=> 'Tickets',
+		'Menu_Comment'				=> 'Kommentare',
 
 	//User Settings
 		'Menu_UserSettings'			=> 'Nutzereinstellungen',
@@ -167,6 +169,13 @@ return [
 		'Header_EditIpPool'			=> 'IP-Bereich bearbeiten',
 		'Header_IP-Pools'			=> 'IP-Bereich|IP-Bereiche',
 		'Header_EditIP-Pools'		=> 'IP-Bereich bearbeiten',
+	//Tickets
+		//Ticket
+		'Header_Tickets'			=> 'Ticket|Tickets',
+		'Header_EditTickets'		=> 'Ticket bearbeiten',
+		//Comment
+		'Header_Comment'			=> 'Kommentar|Kommentare',
+		'Header_EditComment'		=> 'Kommentar bearbeiten',
 
 	//VOIP
 		//MTA
@@ -276,6 +285,12 @@ return [
 		'Button_Create Modem Positioning Rule Geoposition' => 'Neue Geoposition für Modem Positionierungsregel',
 		'Button_Create MprGeopos'		=> 'Neue MPR-Geoposition',
 
+	//Ticket
+		//Ticket
+		'Button_Create Tickets'		=> 'Neues Ticket',
+		//Comment
+		'Button_Create Comment'		=> 'Neuer Kommentar',
+
 //
 // DASHBOARD
 //
@@ -288,4 +303,26 @@ return [
 	'Dashboard_Date'				=> 'DATUM',
 	'Dashboard_LinkDetails'			=> 'Zeige Details',
 	'Dashboard_Other'				=> 'Sonstiges',
+	'Dashboard_Tickets' 			=> 'NEUE TICKETS',
+	'Dashboard_NoTickets' 			=> 'Keine neuen Tickets vorhanden.',
+	'Dashboard_Quickstart' 			=> 'SCHNELLSTART',
+
+//
+//	TICKET
+//
+	//State
+	'Ticket_State_New' => 'Neu',
+	'Ticket_State_In Process' => 'In Bearbeitung',
+	'Ticket_State_Closed' => 'Geschlossen',
+
+	//Type
+	'Ticket_Type_General' => 'Allgemein',
+	'Ticket_Type_Technical' => 'Technik',
+	'Ticket_Type_Accounting' => 'Buchhaltung',
+
+	//Priority
+	'Ticket_Priority_Trivial' => 'Niedrig',
+	'Ticket_Priority_Minor' => 'Medium',
+	'Ticket_Priority_Major' => 'Hoch',
+	'Ticket_Priority_Critical' => 'Kritisch',
 ];

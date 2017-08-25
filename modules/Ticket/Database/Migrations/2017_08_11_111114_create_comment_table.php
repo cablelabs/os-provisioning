@@ -3,7 +3,9 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCommentTable extends Migration {
+class CreateCommentTable extends BaseMigration {
+
+    protected $tablename = "comment";
 
     /**
      * Run the migrations.
@@ -12,14 +14,15 @@ class CreateCommentTable extends Migration {
      */
     public function up()
     {
-        Schema::create('comment', function(Blueprint $table)
+        Schema::create($this->tablename, function(Blueprint $table)
         {
-            $table->increments('id');
+            $this->up_table_generic($table);
+            
             $table->integer('user_id');
             $table->integer('ticket_id');
             $table->text('comment');
 
-            $table->timestamps();
+            return parent::up();
         });
     }
 
@@ -30,7 +33,7 @@ class CreateCommentTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('comment');
+        Schema::drop($this->tablename);
     }
 
 }

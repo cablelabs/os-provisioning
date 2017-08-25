@@ -26,7 +26,7 @@
             @yield($content)
         </div>
 
-        {{-- refernce link --}}
+        {{-- reference link --}}
         <div class="stats-link">
             <a href="{{ $link }}">
                 @if($link != 'javascript:;')
