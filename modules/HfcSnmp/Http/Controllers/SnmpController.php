@@ -511,6 +511,8 @@ class SnmpController extends \BaseController{
 	 * make a snmpwalk over the entire $oid->oid
 	 * and create/update related SnmpValue Objects
 	 *
+	 * NOTE: snmp2 is minimum 20 times faster for several snmpwalks
+	 *
 	 * @param 	oid the OID Object
 	 * @return 	array of snmpwalk over oid in format [SnmpValue object id, snmp value]
 	 *
@@ -519,24 +521,35 @@ class SnmpController extends \BaseController{
 	public function snmp_walk ($oid, $indices = [])
 	{
 		$community = $this->_get_community();
-// $start = microtime(true);
-
-		if ($indices)
-		{
-			foreach ($indices as $index)
-				$results[$oid->oid.'.'.$index] = snmp2_get($this->device->ip, $community, $oid->oid.'.'.$index, $this->timeout, $this->retry);
-		}
-		else
-			// NOTE: Always use snmp2 as this is minimum 20 times faster
-			$results = snmp2_real_walk($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
-
-		// exec('snmpwalk -v2c -On -CE '.escapeshellarg($oid->oid).'.'.$indices['max'].' -c'.escapeshellarg($this->_get_community()).' '.escapeshellarg($this->device->ip).' '.escapeshellarg($oid->oid), $results);
-
-// d(round(microtime(true) - $start, 3), $results, $indices);
+		// $start = microtime(true);
 
 		// Log
 		Log::debug('snmpwalk '.$this->device->ip.' '.$oid->oid);
 
+		if ($indices)
+		{
+			try {
+				// check if snmp version 2 is supported - use it - otherwise use version 1
+				snmp2_get($this->device->ip, $community, '1.3.6.1.2.1.1.1', $this->timeout, $this->retry);
+				
+				foreach ($indices as $index)
+					$results[$oid->oid.'.'.$index] = snmp2_get($this->device->ip, $community, $oid->oid.'.'.$index, $this->timeout, $this->retry);
+			} 
+			catch (\Exception $e) {
+				foreach ($indices as $index)
+					$results[$oid->oid.'.'.$index] = snmpget($this->device->ip, $community, $oid->oid.'.'.$index, $this->timeout, $this->retry);
+			}
+		}
+		else
+		{
+			try {
+				$results = snmp2_real_walk($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
+			} catch (\Exception $e) {
+				$results = snmpwalk($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
+			}
+		}
+
+		// d(round(microtime(true) - $start, 3), $results, $indices);
 		return $results;
 	}
 
@@ -876,7 +889,7 @@ class SnmpController extends \BaseController{
 		}
 
 		// Device not reachable/online
-		if (strpos($msg, 'snmp2_') !== false && (($x = strpos($msg, 'No response from')) !== false))
+		if (strpos($msg, 'snmp') !== false && (($x = strpos($msg, 'No response from')) !== false))
 		{
 			$ip = substr($msg, $x + 16, 15);
 			$method = explode(':', $msg)[0];
