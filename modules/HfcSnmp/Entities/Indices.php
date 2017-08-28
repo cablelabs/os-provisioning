@@ -45,6 +45,17 @@ class Indices extends \BaseModel {
 				'header' => $this->parameter->id.': '.$this->parameter->oid->name];
 	}
 
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$header = isset($this->parameter) ? $this->parameter->id.': '.$this->parameter->oid->name : '';
+
+		return ['table' => $this->table,
+				'index_header' => ['parameter.oid.name'],
+				'header' => $header,
+				'eager_loading' => ['parameter']];
+	}
 
 	public function view_belongs_to ()
 	{

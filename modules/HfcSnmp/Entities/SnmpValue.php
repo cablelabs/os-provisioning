@@ -39,6 +39,26 @@ class SnmpValue extends \BaseModel {
                 'header' => $this->id.': '.$device.' - '.$snmpmib.' - '.$this->oid_index];
     }
 
+    // AJAX Index list function
+    // generates datatable content and classes for model
+    // TODO: device or DeviceType? and SNMP mibfile? implementation
+	public function view_index_label_ajax()
+	{
+        //copy functionality
+        $device = '';
+        if ($this->device)
+            $device = $this->device->name;
+
+        $snmpmib = '';
+        if ($this->snmpmib)
+            $snmpmib = $this->snmpmib->field;
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.oid_index', $this->table.'.value'],
+				'header' =>  $this->id.': '.$device.' - '.$snmpmib.' - '.$this->oid_index,
+				'orderBy' => ['0' => 'asc']];
+	}
+
     /**
      * Relations
      */
