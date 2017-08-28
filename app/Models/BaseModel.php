@@ -89,6 +89,13 @@ class BaseModel extends Eloquent
 	}
 
 
+	function set_index_delete_disabled()
+	{
+		$this->index_delete_disabled = true;
+		return;
+	}
+
+
 	/**
 	 * This function is a placeholder to write Model specific adaptions to
 	 * order and/or restructure the Model objects for Index View
