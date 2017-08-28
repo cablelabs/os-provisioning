@@ -82,6 +82,9 @@ class BaseRoute {
 		// Fulltext Search
 		// TODO: adapt route name to not strtolower() like other functions
 		\Route::get(strtolower($name).'/fulltextSearch', array('as' => $name.'.fulltextSearch', 'uses' => $controller.'@fulltextSearch', $options, 'middleware' => 'auth:view'));
+
+		// AJAX Index DataTable
+		\Route::get("$name/datatables", array('as' => $name.'.data', 'uses' => $controller.'@ajaxDatatables'));
 	}
 
 
