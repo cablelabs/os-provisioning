@@ -49,48 +49,93 @@ $(document).ready(function() {
       });
     @endforeach
   @endif
+  
   // Intelligent Data Tables
-  // TODO: Make them dynamically!
-  $('table.datatable').DataTable(
-  {
-  // Translate Datatables
-  language: {
-      "sEmptyTable":        "<?php echo trans('view.jQuery_sEmptyTable'); ?>",
-      "sInfo":              "<?php echo trans('view.jQuery_sInfo'); ?>",
-      "sInfoEmpty":         "<?php echo trans('view.jQuery_sInfoEmpty'); ?>",
-      "sInfoFiltered":      "<?php echo trans('view.jQuery_sInfoFiltered'); ?>",
-      "sInfoPostFix":       "<?php echo trans('view.jQuery_sInfoPostFix'); ?>",
-      "sInfoThousands":     "<?php echo trans('view.jQuery_sInfoThousands'); ?>",
-      "sLengthMenu":        "<?php echo trans('view.jQuery_sLengthMenu'); ?>",
-      "sLoadingRecords":    "<?php echo trans('view.jQuery_sLoadingRecords'); ?>",
-      "sProcessing":        "<?php echo trans('view.jQuery_sProcessing'); ?>",
-      "sSearch":            "<?php echo trans('view.jQuery_sSearch'); ?>",
-      "sZeroRecords":       "<?php echo trans('view.jQuery_sZeroRecords'); ?>",
-      "oPaginate": {
-          "sFirst":         "<?php echo trans('view.jQuery_PaginatesFirst'); ?>",
-          "sPrevious":      "<?php echo trans('view.jQuery_PaginatesPrevious'); ?>",
-          "sNext":          "<?php echo trans('view.jQuery_PaginatesNext'); ?>",
-          "sLast":          "<?php echo trans('view.jQuery_PaginatesLast'); ?>"
-          },
-      "oAria": {
-          "sSortAscending": "<?php echo trans('view.jQuery_sLast'); ?>",
-          "sSortDescending":"<?php echo trans('view.jQuery_sLast'); ?>"
-          }
-  },
-  //auto resize the Table to fit the viewing device
-  responsive: {
-      details: {
-          type: 'column'
-      }
-  },
-  aoColumnDefs: [ {
-      className: 'control',
-      orderable: false,
-      targets:   [0]
-  } ],
-  // "sPaginationType": "four_button"
-  lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
-  });
+  @if (isset($model) && isset($view_var))
+    $('table.datatable').DataTable(
+    {
+        // Translate Datatables
+        language: {
+            "sEmptyTable":        "<?php echo trans('view.jQuery_sEmptyTable'); ?>",
+            "sInfo":              "<?php echo trans('view.jQuery_sInfo'); ?>",
+            "sInfoEmpty":         "<?php echo trans('view.jQuery_sInfoEmpty'); ?>",
+            "sInfoFiltered":      "<?php echo trans('view.jQuery_sInfoFiltered'); ?>",
+            "sInfoPostFix":       "<?php echo trans('view.jQuery_sInfoPostFix'); ?>",
+            "sInfoThousands":     "<?php echo trans('view.jQuery_sInfoThousands'); ?>",
+            "sLengthMenu":        "<?php echo trans('view.jQuery_sLengthMenu'); ?>",
+            "sLoadingRecords":    "<?php echo trans('view.jQuery_sLoadingRecords'); ?>",
+            "sProcessing":        "<?php echo trans('view.jQuery_sProcessing'); ?>",
+            "sSearch":            "<?php echo trans('view.jQuery_sSearch'); ?>",
+            "sZeroRecords":       "<?php echo trans('view.jQuery_sZeroRecords'); ?>",
+            "oPaginate": {
+                "sFirst":         "<?php echo trans('view.jQuery_PaginatesFirst'); ?>",
+                "sPrevious":      "<?php echo trans('view.jQuery_PaginatesPrevious'); ?>",
+                "sNext":          "<?php echo trans('view.jQuery_PaginatesNext'); ?>",
+                "sLast":          "<?php echo trans('view.jQuery_PaginatesLast'); ?>"
+                },
+            "oAria": {
+                "sSortAscending": "<?php echo trans('view.jQuery_sLast'); ?>",
+                "sSortDescending":"<?php echo trans('view.jQuery_sLast'); ?>"
+                }
+        },
+        //auto resize the Table to fit the viewing device
+        responsive: {
+            details: {
+                type: 'column',
+            }
+        },
+        autoWidth: false,
+        processing: true,
+        serverSide: true,
+        ajax: '{{ isset($route_name) && $route_name!= "Config.index"  ? route($route_name.'.data') : "" }}',
+        columns:[
+                    {data: 'responsive', orderable: false, searchable: false},
+            @if (isset($delete_allowed) && $delete_allowed == true)
+                    {data: 'checkbox', orderable: false, searchable: false},
+            @endif
+            @if (isset($view_var->view_index_label_ajax()['index_header']))
+                @foreach ($view_var->view_index_label_ajax()['index_header'] as $field)
+                    @if ( starts_with($field, $view_var->view_index_label_ajax()["table"].'.'))
+                        {data: '{{ substr($field, strlen($view_var->view_index_label_ajax()["table"]) + 1) }}', name: '{{ $field }}'},
+                    @else
+                        {data: '{{ $field }}', name: '{{$field}}', 
+                        searchable: {{ isset($view_var->view_index_label_ajax()["sortsearch"][$field]) ? "false" : "true" }}, 
+                        orderable:  {{ isset($view_var->view_index_label_ajax()["sortsearch"][$field]) ? "false" : "true" }} 
+                        },
+                    @endif
+                @endforeach
+            @endif
+        ],
+        @if (isset($view_var->view_index_label_ajax()['orderBy']))
+            order:
+            @foreach ($view_var->view_index_label_ajax()['orderBy'] as $columnindex => $direction)
+                @if (isset($delete_allowed) && $delete_allowed == true)
+                    [{{$columnindex + 2}}, '{{$direction}}'],
+                @else
+                    [{{$columnindex + 1}}, '{{$direction}}'], 
+                @endif
+            @endforeach
+        @endif   
+        aoColumnDefs: [ {
+            className: 'control',
+            orderable: false,
+            targets:   [0]
+        },
+        @if (isset($delete_allowed) && $delete_allowed == true)
+        {
+            className: 'index_check',
+            orderable: false,
+            targets:   [1]
+        },      
+        @endif
+        {
+            targets :  "_all",
+            className : 'ClickableTd',
+        } ],
+        // "sPaginationType": "four_button"
+        lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
+    });
+  @endif
 
   $('table.streamtable').DataTable(
   {
