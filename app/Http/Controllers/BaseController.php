@@ -482,8 +482,7 @@ class BaseController extends Controller {
 	public function index()
 	{
 		$model = static::get_model_obj();
-
-		$view_var   = $model->index_list();
+		$view_var   = $model->first();
 		$view_header = \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
 		$headline  	= \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
 		$b_text		= $model->view_headline();
@@ -497,10 +496,8 @@ class BaseController extends Controller {
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
 
-		return View::make ($view_path, $this->compact_prep_view(compact('headline','view_header', 'view_var', 'create_allowed', 'delete_allowed', 'b_text')));
+		return View::make ($view_path, $this->compact_prep_view(compact('headline','view_header', 'model','view_var', 'create_allowed', 'delete_allowed', 'b_text')));
 	}
-
-
 
 	/**
 	 * Show the form for creating a new model item
