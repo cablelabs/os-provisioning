@@ -48,6 +48,11 @@ class NetElementType extends \BaseModel {
 		//         'header' => $this->name];
 	}
 
+	public function view_index_label_ajax()
+	{ 
+		return $this;
+	}
+
 	public function index_list ()
 	{
 		// implement Index View as Tree - make sure that a separate index.blade.php is installed that includes the Generic.tree blade
