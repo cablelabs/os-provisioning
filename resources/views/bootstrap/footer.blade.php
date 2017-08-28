@@ -1,13 +1,6 @@
 <!-- ================== BEGIN BASE JS ================== -->
 <script src="{{asset('components/assets-admin/plugins/jquery/jquery-3.2.0.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/jquery/jquery-migrate-1.4.1.min.js')}}"></script>
-
-<script type="text/javascript">
-  if (typeof window.jQuery == 'undefined') {
-      document.write('<script src="{{asset('components/assets-admin/plugins/jquery/jquery-3.2.0.min.js')}}">\x3C/script>');
-  }
-</script>
-
 <script src="{{asset('components/assets-admin/plugins/jquery-ui/ui/minified/jquery-ui.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
 <!--[if lt IE 9]>
