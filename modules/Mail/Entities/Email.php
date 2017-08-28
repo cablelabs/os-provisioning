@@ -13,6 +13,12 @@ class Email extends \BaseModel {
 		return 'Email';
 	}
 
+    // View Icon
+	public static function view_icon()
+	{
+	  return '<i class="fa fa-envelope-o"></i>'; 
+	}
+
 	// There are no validation rules
 	public static function rules($id=null)
 	{

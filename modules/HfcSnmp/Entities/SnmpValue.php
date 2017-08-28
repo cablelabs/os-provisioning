@@ -23,6 +23,12 @@ class SnmpValue extends \BaseModel {
         return 'Temporary Testing SNMP Values';
     }
 
+    // View Icon
+	public static function view_icon()
+	{
+	  return '<i class="fa fa-th-list"></i>'; 
+	}
+
     // link title in index view
     public function view_index_label()
     {

@@ -32,6 +32,12 @@ class Parameter extends \BaseModel {
 		return 'Parameter';
 	}
 
+	// View Icon
+	public static function view_icon()
+	{
+	  return '<i class="fa fa-dot-circle-o"></i>'; 
+	}
+	
 	// link title in index view
 	public function view_index_label()
 	{
