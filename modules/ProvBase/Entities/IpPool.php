@@ -42,14 +42,7 @@ class IpPool extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-		$bsclass = 'success';
-
-		if ($this->type == 'CPEPub')
-			$bsclass = 'warning';
-		if ($this->type == 'CPEPriv')
-			$bsclass = 'info';
-		if ($this->type == 'MTA')
-			$bsclass = 'danger';
+		$bsclass = $this->get_bsclass();
 
 		return ['index' => [$this->id, $this->cmts->hostname, $this->type, $this->net, $this->netmask, $this->router_ip, $this->description],
 				'index_header' => ['ID', 'CMTS', 'Type of Pool', 'IP network', 'IP netmask', 'IP router', 'Description'],
@@ -57,6 +50,32 @@ class IpPool extends \BaseModel {
 				'header' => $this->type.': '.$this->net.' / '.$this->netmask];
 	}
 
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.id','cmts.hostname', $this->table.'.type', $this->table.'.net', $this->table.'.netmask', $this->table.'.router_ip', $this->table.'.description'],
+				'header' =>  $this->type.': '.$this->net.' / '.$this->netmask,
+				'bsclass' => $bsclass,
+				'eager_loading' => ['cmts']];
+	}
+
+	public function get_bsclass()
+	{
+		$bsclass = 'success';
+			
+		if ($this->type == 'CPEPub')
+			$bsclass = 'warning';
+		if ($this->type == 'CPEPriv')
+			$bsclass = 'info';
+		if ($this->type == 'MTA')
+			$bsclass = 'danger';
+
+		return $bsclass;
+	}
 
 
 	/**

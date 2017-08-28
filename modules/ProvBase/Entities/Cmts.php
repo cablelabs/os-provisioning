@@ -36,13 +36,7 @@ class Cmts extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-		$bsclass = 'success';
-
-		// TODO: use cmts state value
-		if ($this->state == 1)
-			$bsclass = 'warning';
-		if ($this->state == 2)
-			$bsclass = 'danger';
+		$bsclass = $this->get_bsclass();
 
 		return ['index' => [$this->id, $this->hostname, $this->ip, $this->company, $this->type],
 				'index_header' => ['ID', 'Hostname', 'IP address', 'Company', 'Type'],
@@ -50,6 +44,30 @@ class Cmts extends \BaseModel {
 				'header' => $this->hostname];
 	}
 
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.id', $this->table.'.hostname', $this->table.'.ip', $this->table.'.company', $this->table.'.type'],
+				'header' =>  $this->hostname,
+				'bsclass' => $bsclass,
+				'orderBy' => ['0' => 'asc']];
+	}
+
+	public function get_bsclass()
+	{
+		$bsclass = 'success';
+	
+		// TODO: use cmts state value
+		if ($this->state == 1)
+			$bsclass = 'warning';
+		if ($this->state == 2)
+			$bsclass = 'danger';
+		return $bsclass;
+	}
 
 	/**
 	 * BOOT - init cmts observer

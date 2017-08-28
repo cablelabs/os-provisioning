@@ -43,7 +43,24 @@ class Endpoint extends \BaseModel {
                 'header' => $this->hostname];
     }
 
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
 
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.description'],
+				'header' =>  'Domain: '.$this->name.' (Type: '.$this->type.')',
+				'bsclass' => $bsclass];
+	}
+
+	public function get_bsclass()
+	{
+        $bsclass = 'success';
+
+        return $bsclass;
+	}
 
     /**
      * all Relationships:
