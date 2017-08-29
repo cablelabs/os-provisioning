@@ -10,12 +10,12 @@ return [
 
 	// Descriptions of Form Fields in Edit/Create
 	'accCmd_processing' 	=> 'The SettlementRun is executed. Please wait until this process has finished.',
-
+	'alert' 				=> 'Attention!',
 	'Call Data Record'		=> 'Call Data Record',
 	'ccc'					=> 'Customer Control Center',
 
 	'cdr_offset' 			=> 'CDR to Invoice time difference in Months',
-
+	'close' 				=> 'Close',
 	'cpe_log_error' 		=> 'was not registering on Server - No log entry found',
 	'conn_info_err_create' 	=> 'Error Creating PDF - See Logfiles or ask Admin!',
 	'conn_info_err_template' => 'Could not Read Template - See GlobalConfig or Company if it is set!',

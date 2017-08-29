@@ -89,4 +89,11 @@
 	@endforeach
 
 
+	<!-- Alert -->
+	@if (Session::has('alert'))
+		@include('bootstrap.alert', array('message' => Session::get('alert')))
+		<?php Session::forget('alert'); ?>
+	@endif
+
+
 @stop

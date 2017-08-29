@@ -5,6 +5,7 @@ return [
 
 	'Active'					=> 'Aktiv',
 	'Active?'					=> 'Aktiv?',
+	'alert' 					=> 'Achtung!',
 	'Additional Options'		=> 'Zusätzliche Optionen',
 	'Address Line 1'			=> 'Adresszeile 1',
 	'Address Line 2'			=> 'Adresszeile 2',
@@ -16,6 +17,7 @@ return [
 	'ccc'						=> 'Kundenkontrollzentrum',
 	'City'						=> 'Stadt',
 	'Choose KML file'			=> 'Wähle KML file',
+	'close' 					=> 'Schliessen',
 	'Company'					=> 'Firma',
 	'Contract Number'			=> 'Vertragsnummer',
 	'Contract Start'			=> 'Vertragsbeginn',
