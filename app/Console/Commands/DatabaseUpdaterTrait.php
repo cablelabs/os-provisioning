@@ -43,6 +43,8 @@ trait DatabaseUpdaterTrait {
 		}
 
 		curl_close($ch);
+
+		return $res;
 	}
 
 }
