@@ -21,6 +21,7 @@ return [
 	'conn_info_err_template' => 'Could not Read Template - See GlobalConfig or Company if it is set!',
 
 	'home' 					=> 'Startseite',
+	'item_credit_amount_negative' => 'A negative credit amount becomes a debit! Are you sure that the customer shall be charged?',
 	'invoice' 				=> 'Invoice',
 	'Invoices'				=> 'Invoices',
 	'log_out'				=> 'Log Out',
