@@ -86,12 +86,12 @@ class PhonenumberManagement extends \BaseModel {
 	/**
 	 * The Envia contract the related phonenumber currently belongs to
 	 */
-	public function enviacontract()	{
+	public function envia_contract()	{
 		if (!\PPModule::is_active('provvoipenvia')) {
 			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
 		}
 		else {
-			return $this->belongsTo('Modules\ProvVoipEnvia\Entities\EnviaContract');
+			return $this->belongsTo('Modules\ProvVoipEnvia\Entities\EnviaContract', 'enviacontract_id');
 		}
 	}
 
@@ -192,6 +192,13 @@ class PhonenumberManagement extends \BaseModel {
 			$ret['Envia']['EnviaOrder']['relation'] = $this->_envia_orders;
 			$ret['Envia']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at Envia';
 
+			$ret['Envia']['EnviaContract']['class'] = 'EnviaContract';
+			$ret['Envia']['EnviaContract']['relation'] = [$this->envia_contract];
+			/* $ret['Envia']['EnviaContract']['options']['delete_button_text'] = 'Cancel contract at Envia'; */
+			$ret['Envia']['EnviaContract']['options']['hide_create_button'] = 1;
+			$ret['Envia']['EnviaContract']['options']['hide_delete_button'] = 1;
+
+			/* d($this->envia_contract, $this->phonebookentry); */
 			$ret['Envia']['PhonebookEntry']['class'] = 'PhonebookEntry';
 
 			$relation = $this->phonebookentry;
