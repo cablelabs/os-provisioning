@@ -324,11 +324,6 @@ class importCommand extends Command {
 			// }
 
 
-			// Add Billing related Data
-			$this->add_tarifs($c, $items_new, $products_new, $contract);
-			$this->add_tarif_credit($c, $contract);
-			$this->add_sepamandate($c, $mandates_new, $contract, $km3);
-			// $this->add_additional_items();
 
 			// Email Import
 			if (\PPModule::is_active('mail'))
@@ -407,21 +402,28 @@ class importCommand extends Command {
 				}
 			}
 
+			// $new_contracts[] = $c;
+
+			// Add Billing related Data
+			$this->add_tarifs($c, $items_new, $products_new, $contract);
+			$this->add_tarif_credit($c, $contract);
+			$this->add_sepamandate($c, $mandates_new, $contract, $km3);
+			$this->add_additional_items($c, $km3, $contract);
+
 			// progress bar
 			// if (!$this->option('debug'))
 			// 	$bar->advance();
-			
 			$i++;
-			$new_contracts[] = $c;
 		}	
 
 		echo "\n";
 
+
 		// Update QoS-ID of Modems - we could alternatively add Items here and this should solve the problem,
 		// but with the current daily-conversion it's very unsecure
-		foreach ($new_contracts as $cont) {
-			$cont->push_to_modems();
-		}
+		// foreach ($new_contracts as $cont) {
+		// 	$cont->push_to_modems();
+		// }
 	}
 
 
@@ -680,22 +682,55 @@ class importCommand extends Command {
 	}
 
 	/**
-	 * TODO
+	 * Add all relevant additional Items - see mapping table below which are relavant
 	 */
-	private function add_additional_items()
+	private function add_additional_items($new_contract, $db_con, $old_contract)
 	{
-		// Additional Items
-		// $items = $km3->table(\DB::raw('tbl_zusatzposten z, tbl_posten p'))
-		// 		->selectRaw ('*, z.id as id')
-		// 		->whereRaw('z.vertrag = '.$contract->id)
-		// 		->whereRaw('z.posten = p.id')
-		// 		->where('z.closed', '=', 'false')
-		// 		->whereRaw('z.bis > \''.date('Y-m-d').'\'::date or z.bis is null')
-		// 		->get();
+		$map = [
+				1  => 10,			// Gutschrift monatlich
+				3  => 23, 			// postalische Rechnung
+				11 => 24, 			// Nebenanschluss
+				37 => 17, 			// feste öffentliche IP
+				42 => 25, 			// Freischalten des Kabel-TV-Internetanschlusses
+				65 => 26, 			// Rufnummernfreischaltung
+			];
 
-		// TODO: not important for GroRü
-		// foreach ($items as $item) {
-		// }
+		// Additional Items
+		$items = $db_con->table(\DB::raw('tbl_zusatzposten z, tbl_posten p'))
+				->selectRaw ('p.id, p.artikel, z.von, z.bis, z.menge, z.buchungstext, z.preis')
+				->where('z.vertrag', '=', $old_contract->id)
+				->whereRaw('z.posten = p.id')
+				->where('z.closed', '=', 'false')
+				// ->whereRaw('z.bis > \''.date('Y-m-d').'\'::date or z.bis is null')
+				->where(function ($query) { $query
+					->where('z.bis', '>', date('Y-m-d'))
+					->orWhere ('z.bis', '=', null);})
+				->get();
+
+		foreach ($items as $item)
+		{
+			if (!isset($map[$item->id])) {
+				$this->error("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
+				continue;
+			}
+
+			if ($item->id == 1 && !$item->preis)
+				continue;
+
+			$this->info("\tAdd Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
+
+			Item::create([
+				'contract_id' 		=> $new_contract->id,
+				'product_id' 		=> $map[$item->id],
+				'count' 			=> $item->menge,
+				'valid_from' 		=> $item->von ? : date('Y-m-d'),
+				'valid_from_fixed' 	=> 1,
+				'valid_to' 			=> $item->bis,
+				'valid_to_fixed' 	=> 1,
+				'credit_amount' 	=> (-1) * $item->preis,
+				'accounting_text' 	=> $item->buchungstext,
+			]);
+		}
 	}
 
 
