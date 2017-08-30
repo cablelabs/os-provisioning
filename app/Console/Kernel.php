@@ -12,6 +12,7 @@ use \Modules\ProvVoip\Console\PhonenumberCommand;
 use \Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand;
 use \Modules\ProvVoipEnvia\Console\EnviaContractReferenceGetterCommand;
 use \Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceGetterCommand;
+use \Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceFromCSVUpdaterCommand;
 
 class Kernel extends ConsoleKernel {
 
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel {
 		'\Modules\ProvVoipEnvia\Console\EnviaContractGetterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaContractReferenceGetterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceGetterCommand',
+		'\Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceFromCSVUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderProcessorCommand',
 		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
