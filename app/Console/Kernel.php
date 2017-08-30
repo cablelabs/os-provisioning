@@ -107,8 +107,13 @@ class Kernel extends ConsoleKernel {
 			$schedule->command('provvoipenvia:get_envia_contracts_by_customer')
 				->dailyAt('01:18');
 
+			// Process Envia orders (do so after getting envia contracts)
+			$schedule->command('provvoipenvia:process_envia_orders')
+				->dailyAt('03:18');
+
 			// Get Envia contract reference for phonenumbers without this information or inactive linked envia contract
 			// on first of a month: run in complete mode
+			// do so after provvoipenvia:process_envia_orders as we need the old references there
 			if ($is_first_day_of_month) {
 				$tmp_cmd = 'provvoipenvia:get_envia_contract_references complete';
 			}
@@ -116,11 +121,7 @@ class Kernel extends ConsoleKernel {
 				$tmp_cmd = 'provvoipenvia:get_envia_contract_references';
 			}
 			$schedule->command($tmp_cmd)
-				->dailyAt('01:23');
-
-			// Process Envia orders (do so after getting envia contracts)
-			$schedule->command('provvoipenvia:process_envia_orders')
-				->dailyAt('03:48');
+				->dailyAt('03:23');
 
 			// Update voice data
 			// on first of a month: run in complete mode
