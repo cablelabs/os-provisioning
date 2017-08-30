@@ -103,7 +103,7 @@ class Kernel extends ConsoleKernel {
 			$schedule->command('provvoipenvia:get_envia_customer_references')
 				->dailyAt('01:13');
 
-			// Get/update Envia orders
+			// Get/update Envia contracts
 			$schedule->command('provvoipenvia:get_envia_contracts_by_customer')
 				->dailyAt('01:18');
 
