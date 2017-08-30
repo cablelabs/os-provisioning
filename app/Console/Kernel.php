@@ -60,6 +60,9 @@ class Kernel extends ConsoleKernel {
 		/* $schedule->command('main:time_delta') */
 			/* ->everyMinute(); */
 
+		// define some helpers
+		$is_first_day_of_month = (date('d') == '01') ? True : False;
+
 		$schedule->command('queue:checkup')->everyTenMinutes(); //cron("1,16,31,46 * * * * *");
 
 		$schedule->call('\Modules\ProvBase\Http\Controllers\DashboardController@save_income_to_json')->dailyAt('00:07');
@@ -103,7 +106,14 @@ class Kernel extends ConsoleKernel {
 				->dailyAt('01:18');
 
 			// Get Envia contract reference for phonenumbers without this information or inactive linked envia contract
-			$schedule->command('provvoipenvia:get_envia_contract_references')
+			// on first of a month: run in complete mode
+			if ($is_first_day_of_month) {
+				$tmp_cmd = 'provvoipenvia:get_envia_contract_references complete';
+			}
+			else {
+				$tmp_cmd = 'provvoipenvia:get_envia_contract_references';
+			}
+			$schedule->command($tmp_cmd)
 				->dailyAt('01:23');
 
 			// Process Envia orders (do so after getting envia contracts)
@@ -111,7 +121,14 @@ class Kernel extends ConsoleKernel {
 				->dailyAt('03:48');
 
 			// Update voice data
-			$schedule->command('provvoipenvia:update_voice_data')
+			// on first of a month: run in complete mode
+			if ($is_first_day_of_month) {
+				$tmp_cmd = 'provvoipenvia:update_voice_data complete';
+			}
+			else {
+				$tmp_cmd = 'provvoipenvia:update_voice_data';
+			}
+			$schedule->command($tmp_cmd)
 				->dailyAt('03:53');
 		}
 

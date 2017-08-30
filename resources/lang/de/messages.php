@@ -36,6 +36,7 @@ return [
 	'Device Type List'			=> 'Gerätetypenliste',
 	'Devices'					=> 'Geräte',
 	'DeviceTypes'				=> 'Gerätetypen',
+	'District'					=> 'Ortsteil',
 	'Edit'						=> 'Ändern -',
 	'Edit '						=> 'Ändere ',
 	'Endpoints'					=> 'Endpunkte',
