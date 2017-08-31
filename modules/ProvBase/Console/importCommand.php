@@ -241,6 +241,7 @@ class importCommand extends Command {
 		$mandates_new 	= SepaMandate::all();
 		$products_new 	= Product::all();
 
+
 		if (\PPModule::is_active('mail'))
 			$emails_new = Email::all();
 
@@ -930,6 +931,48 @@ class importCommand extends Command {
 			array('cc', null, InputOption::VALUE_OPTIONAL, 'CostCenter ID for all the imported Contracts', 0),
 			// array('terminate', null, InputOption::VALUE_OPTIONAL, 'Date for all km3 Contracts to terminate', 0),
 		);
+	}
+
+
+
+
+	/**
+	 * Temporary functions to fix database bugs
+	 */
+	public static function update_mandates_correct_encoding($db_con)
+	{
+		foreach (SepaMandate::all() as $m)
+		{
+			if ($m->contract->firstname.' '.$m->contract->lastname == $m->sepa_holder)
+				continue;
+
+			$mandate_old = $db_con->table(\DB::raw('tbl_sepamandate s, tbl_lastschriftkonten l'))
+				 	->selectRaw ('s.*, l.*, l.id as id')
+				 	->whereRaw('s.id = l.sepamandat')
+				 	->where('l.iban', '=', $m->sepa_iban)
+				 	->where('s.deleted', '=', 'false')
+				 	->where('l.deleted', '=', 'false')
+				 	->orderBy('l.id')
+				 	->get();
+
+			if (!$mandate_old) {
+				// echo "\tERROR: No corresponding SepaMandate in old sys [$m->id]";
+				continue;
+			}
+
+			$mandate_old = $mandate_old[0];
+
+			if ($m->sepa_holder == $mandate_old->kontoinhaber)
+				continue;
+
+			echo "\nSEPAMANDATE UPDATE [$m->id]: $m->sepa_holder to $mandate_old->kontoinhaber";
+
+			$m->sepa_holder = $mandate_old->kontoinhaber ? utf8_encode($mandate_old->kontoinhaber) : '';
+			$m->save();
+
+		}
+
+		exit(0);
 	}
 
 }
