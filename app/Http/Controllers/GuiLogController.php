@@ -52,7 +52,8 @@ class GuiLogController extends BaseController {
 
 			$view_var = GuiLog::where('model', '=', $model)
 				->where('model_id', '=', $model_id)
-				->orderBy('id', 'desc');
+				->orderBy('id', 'desc')
+				->get();
 
 			$create_allowed = $this->index_create_allowed;
 			$delete_allowed = $this->index_delete_allowed;
