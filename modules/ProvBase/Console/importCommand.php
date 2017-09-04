@@ -125,24 +125,24 @@ class importCommand extends Command {
 			'Default MTA Config' 		=> 20,
 			'Thomson/Technicolor' 		=> 3,
 			'Default CM Config' 		=> 3,
-			'TVM1000' 					=> 'todo',
+			'TVM1000' 					=> 3,
 			'TVM1000-2.08' 				=> 63,
-			'TVM1000-2.04'				=> 'todo',
+			'TVM1000-2.04'				=> 68,
 			'Thomson-THG57X' 			=> 6,
 			'Thomson-TWG870' 			=> 44,
 			'Kathrein' 					=> 'todo',
 			'Kathrein-DCV8400' 			=> 61,
-			'TVM1000-2.09' 				=> 'todo',
+			'TVM1000-2.09' 				=> 69,
 			'X_DQOS'					=> 'todo',
 			'FritzBox AVM' 				=> 25,
-			'TVM1000-2.10' 				=> 'todo',
+			'TVM1000-2.10' 				=> 70,
 			'FritzBox 6360' 			=> 3,
 			'FritzBox AVM MTA' 			=> 49,
 			'Thomson-THG540-SIP' 		=> 47,
 			'Kathrein-DCM42' 			=> 3,
 			'Thomson-THG57X-SIP' 		=> 6,
 			'Thomson-TWG870-SIP' 		=> 44,
-			'TVM1000-2.20' 				=> 'todo',
+			'TVM1000-2.20' 				=> 71,
 			'Thomson-TCM47X' 			=> 3,
 			'Thomson' 					=> 3,
 			'Technicolor' 				=> 3,
@@ -152,7 +152,7 @@ class importCommand extends Command {
 			'Arris' 					=> 3,
 			'Hitron CVE 30360' 			=> 'todo',
 			'FritzBox 6320' 			=> 3,
-			'TVM1000-2.31' 				=> 'todo',
+			'TVM1000-2.31' 				=> 70,
 			'TC7200.20 v01.03' 			=> 3,
 			'Thomson-THG541-SIP' 		=> 45,
 			'Thomson-TWG850-SIP' 		=> 46,
@@ -388,7 +388,7 @@ class importCommand extends Command {
 
 
 	/**
-	 * Extract last number from street
+	 * Extract last number from street (and encode dependent of andre schuberts encoding mechanism)
 	 */
 	public static function split_street_housenr($string, $utf8_encode = false)
 	{
@@ -396,15 +396,25 @@ class importCommand extends Command {
 		$matches = $matches ? $matches[0] : '';
 
 		if (!$matches)
-			return $utf8_encode ? [utf8_encode($string), null] : [$string, null];
+		{
+			$street = $utf8_encode ? utf8_encode($string) : $string;
+			return [$street, null];
+		}
 
-		$x 		= strpos($string, $matches);
-		$street = trim(substr($string, 0, $x));
-		$street = $utf8_encode ? utf8_encode($street) : $street;
+		$x 		 = strpos($string, $matches);
 		$housenr = substr($string, $x);
 
+		if (strlen($housenr) > 6) {
+			$street  = str_replace($matches, '', $string);
+			$housenr = $matches;
+		}
+		else
+			$street = trim(substr($string, 0, $x));
+
+		$street = $utf8_encode ? utf8_encode($street) : $street;
 		// $street = mb_convert_encoding(trim(substr($string, 0, $x)), 'iso-8859-1', 'ascii');
 		// var_dump(mb_detect_encoding ($street), $street);
+
 		return [$street, $housenr];
 	}
 
@@ -687,6 +697,8 @@ class importCommand extends Command {
 					->orWhere ('z.bis', '=', null);})
 				->get();
 
+		// TODO: Check if items already exist !?
+
 		foreach ($items as $item)
 		{
 			if (!isset($map[$item->id])) {
@@ -833,7 +845,7 @@ class importCommand extends Command {
 		if ($modem->configfile_id == 0)
 			$this->error('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
 
-		$this->info ("ADD MODEM: ".$modem->id.', '.$modem->mac.', QOS-'.$modem->qos_id.', CF-'.$modem->configfile_id.', '.$modem->street.', '.$modem->zip.', '.$modem->city.", Public: $modem->public");
+		$this->info ("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: $modem->public");
 
 		$modem->save();
 
