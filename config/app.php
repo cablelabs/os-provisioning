@@ -166,6 +166,7 @@ return [
 		'Acme\html\HtmlServiceProvider',
 		'Intervention\Validation\ValidationServiceProvider',
 		'Collective\Bus\BusServiceProvider',
+		Yajra\Datatables\DatatablesServiceProvider::class,
 	],
 
 	/*
@@ -225,7 +226,8 @@ return [
 		'BaseRoute'     => 'Acme\core\BaseRoute',
 		'NamespaceController' => 'App\Http\Controllers\NamespaceController',
 		'BaseModel' => 'App\BaseModel',
-		'GlobalConfig' => 'App\GlobalConfig'
+		'GlobalConfig' => 'App\GlobalConfig',
+		'Datatables' => 'Yajra\Datatables\Facades\Datatables'
 	],
 
 ];

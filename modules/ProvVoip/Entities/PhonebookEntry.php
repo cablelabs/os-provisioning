@@ -131,13 +131,33 @@ class PhonebookEntry extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-        $bsclass = 'success';
+		$bsclass = $this->get_bsclass();
 
         return ['index' => [$this->id],
                 'index_header' => ['ID'],
                 'bsclass' => $bsclass,
                 'header' => 'PhonebookEntry (id'.$this->id.')'];
 	}
+
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.id'],
+				'header' => 'PhonebookEntry (id'.$this->id.')',
+				'bsclass' => $bsclass];
+	}
+
+	public function get_bsclass() 
+	{
+		$bsclass = 'success';
+
+		return $bsclass;
+	}
+
 	// link title in index view
 	public function get_view_link_title()
 	{

@@ -13,6 +13,12 @@ class Email extends \BaseModel {
 		return 'Email';
 	}
 
+    // View Icon
+	public static function view_icon()
+	{
+	  return '<i class="fa fa-envelope-o"></i>'; 
+	}
+
 	// There are no validation rules
 	public static function rules($id=null)
 	{
@@ -31,6 +37,26 @@ class Email extends \BaseModel {
 			'index_header' =>	['Local Part', 'Index', 'Greylisting', 'Blacklisting', 'Forward To'],
 			'bsclass' => $this->index ? 'success' : 'danger',
 			'header' => $this->index.': '.$this->localpart.'@'.$this->domain->name];
+	}
+
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.localpart', $this->table.'.index',  $this->table.'.greylisting',  $this->table.'.blacklisting',  $this->table.'.forwardto'],
+				//'header' =>  $this->index.': '.$this->localpart.'@'.isset($this->domain) ? $this->domain->name : 'no-domain.com' ,
+				'bsclass' => $bsclass,
+				'orderBy' => ['1' => 'asc'],
+				'eager_loading' => ['domain']];
+	}
+
+	public function get_bsclass() {
+		$bsclass = $this->index ? 'success' : 'danger';
+
+		return $bsclass;
 	}
 
 	public function view_belongs_to()

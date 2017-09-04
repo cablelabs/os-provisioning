@@ -60,10 +60,7 @@ class Contract extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-		$bsclass = 'success';
-
-		if ($this->network_access == 0)
-			$bsclass = 'danger';
+		$bsclass = $this->get_bsclass();
 
 		$costcenter = $this->costcenter ? $this->costcenter->name : '';
 
@@ -71,6 +68,30 @@ class Contract extends \BaseModel {
 				'index_header' => ['Contract Nr', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street', 'House Nr', 'District', 'Start Date', 'End Date', 'CostCenter'],
 				'bsclass' => $bsclass,
 				'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
+	}
+
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.zip', $this->table.'.city', $this->table.'.street', $this->table.'.house_number', $this->table.'.district', $this->table.'.contract_start', $this->table.'.contract_end'],
+				'header' =>  $this->number.' '.$this->firstname.' '.$this->lastname,
+				'bsclass' => $bsclass,
+				'orderBy' => ['0' => 'asc']];
+	}
+
+
+	public function get_bsclass() 
+	{
+		$bsclass = 'success';
+		
+		if ($this->network_access == 0)
+			$bsclass = 'danger';
+
+		return $bsclass;
 	}
 
 	// View Relation.

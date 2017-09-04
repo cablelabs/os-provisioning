@@ -44,8 +44,38 @@ class Modem extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
+		$us_pwr = $this->get_us_pwr();
+		$bsclass = $this->get_bsclass();
+		
+		$configfile = $this->configfile ? $this->configfile->name : '';
+		//d($this->contract->district );
+		//$valid 		= $this->contract->check_validity('Now') ? 'yes' : 'no';
+		$valid = 'yes';
+
+		return ['index' => [$this->id, $this->mac, $configfile, $this->name, $this->lastname, $this->city, $this->street, '', $us_pwr, \App\Http\Controllers\BaseViewController::translate_label($valid)],
+		        'index_header' => ['Modem Number', 'MAC address', 'Configfile', 'Name', 'Lastname', 'City', 'Street', 'District', 'US level', 'Contract valid'],
+		        'bsclass' => $bsclass,
+				'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : '')];
+	}
+
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.name', $this->table.'.lastname', $this->table.'.city', $this->table.'.street', $this->table.'.district', $this->table.'.us_pwr', 'contract_valid'],
+		        'bsclass' => $bsclass,
+				'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
+				'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
+				'eager_loading' => ['configfile','contract'],
+				'sortsearch' => ['contract_valid' => 'false'] ]; // TO DO -> find reason for error
+	}
+
+	public function get_bsclass()
+	{
 		$bsclass = 'success';
-		$us_pwr = $this->us_pwr.' dBmV';
 
 		switch ($this->get_state('int'))
 		{
@@ -57,13 +87,17 @@ class Modem extends \BaseModel {
 			default: $bsclass = 'danger'; break;
 		}
 
-		$configfile = $this->configfile ? $this->configfile->name : '';
-		$valid 		= $this->contract->check_validity('Now') ? 'yes' : 'no';
+		return $bsclass;
+	}
 
-		return ['index' => [$this->id, $this->mac, $configfile, $this->name, $this->lastname, $this->city, $this->street, $this->contract->district, $us_pwr, \App\Http\Controllers\BaseViewController::translate_label($valid)],
-		        'index_header' => ['Modem Number', 'MAC address', 'Configfile', 'Name', 'Lastname', 'City', 'Street', 'District', 'US level', 'Contract valid'],
-		        'bsclass' => $bsclass,
-		        'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : '')];
+	public function get_contract_valid()
+	{
+		return $this->contract->check_validity('Now') ? 'yes' : 'no';
+	}
+
+	public function get_us_pwr()
+	{
+		return $this->us_pwr.' dBmV';
 	}
 
 	public function index_list()

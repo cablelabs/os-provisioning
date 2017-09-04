@@ -36,14 +36,16 @@ class OID extends \BaseModel {
 		return 'OID';
 	}
 
+	// View Icon
+	public static function view_icon()
+	{
+	  return '<i class="fa fa-check-circle-o"></i>'; 
+	}
+
 	// link title in index view
 	public function view_index_label()
 	{
-		$bsclass = 'success';
-
-		if ($this->access == 'read-only')
-			$bsclass = 'danger';
-
+		$bsclass = $this->get_bsclass();
 
 		return ['index' => [$this->name, $this->name_gui, $this->oid, $this->access],
 		        'index_header' => ['Name', 'Descriptive Name', 'OID', 'Access'],
@@ -51,11 +53,27 @@ class OID extends \BaseModel {
 		        'header' => $this->name.' - '.$this->oid];
 	}
 
-	public function index_list()
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
 	{
-		return $this->orderBy('oid')->simplePaginate(1000);
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.name', $this->table.'.name_gui',  $this->table.'.oid', $this->table.'.access'],
+				'header' =>  $this->name.' - '.$this->oid,
+				'orderBy' => ['2' => 'asc']];
 	}
 
+	 public function get_bsclass()
+	 {
+		$bsclass = 'success';
+		
+		if ($this->access == 'read-only')
+			$bsclass = 'danger';
+				
+		 return $bsclass;
+	 }
 
 	/**
 	 * Relations
