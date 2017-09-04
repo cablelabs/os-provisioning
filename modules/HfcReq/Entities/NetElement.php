@@ -120,6 +120,7 @@ class NetElement extends \BaseModel {
 	public function get_bsclass()
 	{
 		$bsclass = 'success';
+		$type = $this->get_elementtype_name();
 
 		if (in_array($type, NetElementType::$undeletables))
 			$bsclass = 'info';

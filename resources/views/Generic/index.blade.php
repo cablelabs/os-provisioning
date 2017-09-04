@@ -3,6 +3,7 @@
 @param $route_name: the base route name of this object class
 @param $headline: 	the link header description in HTML
 @param $create_allowd: create button allowed?
+@param $model: 	model object to call functions
 @param $view_var: 	array() of objects to be displayed
 
 @param $query:

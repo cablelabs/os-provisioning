@@ -62,7 +62,7 @@ class GuiLogController extends BaseController {
 			$headline = \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
 			$b_text	= $model->view_headline();
 
-			return View::make ('Generic.index', $this->compact_prep_view(compact('headline','view_header', 'view_var', 'create_allowed', 'delete_allowed', 'b_text')));
+			return View::make ('Generic.index', $this->compact_prep_view(compact('headline','view_header', 'model', 'view_var', 'create_allowed', 'delete_allowed', 'b_text')));
 		} catch (\Exception $e) {
 			throw $e;
 		}
