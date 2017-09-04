@@ -256,7 +256,7 @@ class importCommand extends Command {
 		/**
 		 * Add Modems currently needed for HFC Devices (Amplifier & Nodes (VGPs & TVMs))
 		 */
-		// $devices = $km3->table('tbl_modem')->whereRaw($cluster_filter);
+		self::add_netelements($km3, $cluster_filter, $modems_new);
 
 
 		/*
@@ -913,6 +913,30 @@ class importCommand extends Command {
 		return $phonenumber;
 	}
 
+
+	/**
+	 * Add Modems of Netelements to Erznet Contract as this is still necessary to get them online in new system
+	 */
+	private function add_netelements($db_con, $cluster_filter, $new_modems)
+	{
+		$devices = $db_con->table(\DB::raw('tbl_modem m, tbl_adressen a, tbl_configfiles c'))
+					->selectRaw ('m.*, a.*, m.id as id, c.name as cf_name')
+					->whereRaw('m.adresse = a.id')
+					->whereRaw('m.configfile = c.id')
+					->where ('m.deleted', '=', 'false')
+					->where('m.device', '=', 9)
+					// ->where('m.mac_adresse', '=', '00:d0:55:07:1d:86')
+					->whereRaw($cluster_filter)
+					->get();
+
+		$contract = Contract::find(500000);
+		$modems_n = [];
+		foreach ($new_modems->where('contract_id', 500000)->all() as $cm)
+			$modems_n[$cm->mac] = $cm;
+
+		foreach ($devices as $device)
+			self::add_modem($contract, $modems_n, $device, $db_con);
+	}
 
 
 	/**
