@@ -50,6 +50,18 @@ class MibFile extends \BaseModel {
 				'header' => $this->name];
 	}
 
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		//$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.id', $this->table.'.name',  $this->table.'.version'],
+				'header' =>  $this->name,
+				'orderBy' => ['1' => 'asc']];
+	}
+
 	public function view_has_many ()
 	{
 		return array(

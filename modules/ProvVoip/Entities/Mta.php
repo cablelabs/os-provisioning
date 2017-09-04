@@ -47,13 +47,11 @@ class Mta extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-		$bsclass = 'info';
+		$bsclass = $this->get_bsclass();
 		$cf_name = 'No Configfile assigned';
 
 		if (isset($this->configfile))
 			$cf_name = $this->configfile->name;
-		else
-			$bsclass = 'danger';
 
 		// TODO: use mta states.
 		//       Maybe use fast ping to test if online in this function?
@@ -63,6 +61,42 @@ class Mta extends \BaseModel {
 				'bsclass' => $bsclass,
 				'header' => $this->hostname.' - '.$this->mac];
 	}
+
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.type', 'configfile.name'],
+				'header' => $this->hostname.' - '.$this->mac,
+				'bsclass' => $bsclass,
+				'orderBy' => ['3' => 'asc'],
+                'edit' => ['configfile.name' => 'has_configfile_assigned'],
+				'eager_loading' => ['configfile']];
+	}
+
+	public function get_bsclass() 
+	{
+		$bsclass = 'info';
+		if (!isset($this->configfile))
+			$bsclass = 'danger';
+		
+		return $bsclass;
+	}
+	
+	public function has_configfile_assigned() 
+	{
+		$cf_name = 'No Configfile assigned';
+		
+		if (isset($this->configfile))
+			$cf_name = $this->configfile->name;
+
+		return $cf_name;
+	}
+	
+
 
 	public function view_belongs_to ()
 	{

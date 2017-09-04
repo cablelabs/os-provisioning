@@ -62,16 +62,38 @@ class PhonenumberManagement extends \BaseModel {
 		return 'Phonenumber Management';
 	}
 
+	public static function view_icon()
+	{
+		return '<i class="fa fa-phone text-info"></i>';
+	}
+
 	// link title in index view
 	public function view_index_label()
 	{
-		$bsclass = 'success';
-		$phonenumber = $this->phonenumber;
+		$bsclass = $this->get_bsclass();
+		$header = isset($this->phonenumber) ? 'PhonenumberManagement ('.$this->phonenumber->prefix_number.'/'.$this->phonenumber->number.')' : '';
 
         return ['index' => [$this->id],
                 'index_header' => ['ID'],
                 'bsclass' => $bsclass,
-                'header' => 'PhonenumberManagement ('.$phonenumber->prefix_number.'/'.$phonenumber->number.')'];
+                'header' => $header];
+	}
+
+	// link title in index view
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+		$header = isset($this->phonenumber) ? 'PhonenumberManagement ('.$this->phonenumber->prefix_number.'/'.$this->phonenumber->number.')' : '';
+
+        return ['table' => $this->table,
+                'index_header' => [$this->table.'.id'],
+                'bsclass' => $bsclass,
+                'header' => $header];
+	}
+
+	public function get_bsclass()
+	{
+		return 'success';
 	}
 
 	/**

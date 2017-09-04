@@ -91,15 +91,8 @@ class NetElement extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-		$bsclass = 'success';
-		$type = $this->netelementtype ? $this->netelementtype->name : '';
-
-		if (in_array($type, NetElementType::$undeletables))
-			$bsclass = 'info';
-		else if ($this->state == 'YELLOW')
-			$bsclass = 'warning';
-		else if ($this->state == 'RED')
-			$bsclass = 'danger';
+		$bsclass = $this->get_bsclass();
+		$type = $this->get_elementtype_name();
 
 
 		// TODO: complete list
@@ -107,6 +100,42 @@ class NetElement extends \BaseModel {
 				'index_header' => ['ID', 'Type', 'Name', 'IP', 'State', 'Position'],
 				'bsclass' => $bsclass,
 				'header' => $this->id.' - '.$this->name];
+	}
+
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name',  $this->table.'.ip', $this->table.'.pos'],
+				'header' =>  $this->id.' - '.$this->name,
+				'bsclass' => $bsclass,
+				'orderBy' => ['0' => 'asc'],
+				'eager_loading' => ['netelementtype'],
+				'edit' => ['netelementtype.name' => 'get_elementtype_name']];
+	}
+
+	public function get_bsclass()
+	{
+		$bsclass = 'success';
+		$type = $this->get_elementtype_name();
+
+		if (in_array($type, NetElementType::$undeletables))
+			$bsclass = 'info';
+		else if ($this->state == 'YELLOW')
+			$bsclass = 'warning';
+		else if ($this->state == 'RED')
+			$bsclass = 'danger';
+		return $bsclass;
+	}
+
+	public function get_elementtype_name()
+	{
+	$type = $this->netelementtype ? $this->netelementtype->name : '';
+	
+	return $type;
 	}
 
 	public function view_belongs_to ()

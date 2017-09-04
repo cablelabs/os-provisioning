@@ -52,8 +52,7 @@ class GuiLogController extends BaseController {
 
 			$view_var = GuiLog::where('model', '=', $model)
 				->where('model_id', '=', $model_id)
-				->orderBy('id', 'desc')
-				->simplePaginate(1000);
+				->orderBy('id', 'desc');
 
 			$create_allowed = $this->index_create_allowed;
 			$delete_allowed = $this->index_delete_allowed;
@@ -63,7 +62,7 @@ class GuiLogController extends BaseController {
 			$headline = \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
 			$b_text	= $model->view_headline();
 
-			return View::make ('Generic.index', $this->compact_prep_view(compact('headline','view_header', 'view_var', 'create_allowed', 'delete_allowed', 'b_text')));
+			return View::make ('Generic.index', $this->compact_prep_view(compact('headline','view_header', 'model', 'view_var', 'create_allowed', 'delete_allowed', 'b_text')));
 		} catch (\Exception $e) {
 			throw $e;
 		}

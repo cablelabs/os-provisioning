@@ -44,16 +44,40 @@ class Parameter extends \BaseModel {
 		$header = $this->oid->name_gui ? : $this->oid->name;
 		$header .= ' - '.$this->oid->oid;
 
-		$bsclass = 'success';
+		$bsclass = $this->get_bsclass();
 
-		if ($this->oid->access == 'read-only')
-			$bsclass = 'danger';
-
-		return ['index' => [$this->oid->name, $this->oid->oid, $this->access],
+		return ['index' => [$this->oid->name, $this->oid->oid, $this->oid->access],
 				'index_header' => ['Name', 'OID', 'Access'],
 				'bsclass' => $bsclass,
 				'header' => $header];
 	}
+	
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$header = isset($this->oid) ? $this->oid->name : '' ;
+		$header .= isset($this->oid) ? ' - '.$this->oid->oid : '';
+
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => ['oid.name', 'oid.oid',  'oid.access'],
+				'header' =>  $header,
+				'orderBy' => ['1' => 'asc'],
+				'eager_loading' => ['oid']];
+	}
+
+	public function get_bsclass() 
+	{
+		$bsclass = 'success';
+
+		if (isset($this->oid) && $this->oid->access == 'read-only')
+			$bsclass = 'danger';
+
+		return $bsclass;
+	}
+
 
 	public function index_list()
 	{

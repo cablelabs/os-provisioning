@@ -16,6 +16,8 @@ use Auth;
 use NoAuthenticateduserError;
 use Log;
 use GlobalConfig;
+use Illuminate\Support\Facades\Request;
+use Yajra\Datatables\Datatables;
 
 use App\Exceptions\AuthExceptions;
 
@@ -96,7 +98,7 @@ class BaseController extends Controller {
 	}
 
 
-	protected static function get_model_obj ()
+	public static function get_model_obj ()
 	{
 		$classname = \NamespaceController::get_model_name();
 
@@ -112,7 +114,7 @@ class BaseController extends Controller {
 		return $obj;
 	}
 
-	protected static function get_controller_obj()
+	public static function get_controller_obj()
 	{
 		$classname = \NamespaceController::get_controller_name();
 
@@ -481,7 +483,11 @@ class BaseController extends Controller {
 	{
 		$model = static::get_model_obj();
 
-		$view_var   = $model->index_list();
+		if ($model->index_datatables_ajax_enabled)
+			$view_var   = $model->first();
+		else
+			$view_var   = $model->index_list();
+
 		$view_header = \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
 		$headline  	= \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
 		$b_text		= $model->view_headline();
@@ -495,10 +501,8 @@ class BaseController extends Controller {
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
 
-		return View::make ($view_path, $this->compact_prep_view(compact('headline','view_header', 'view_var', 'create_allowed', 'delete_allowed', 'b_text')));
+		return View::make ($view_path, $this->compact_prep_view(compact('headline','view_header', 'model','view_var', 'create_allowed', 'delete_allowed', 'b_text')));
 	}
-
-
 
 	/**
 	 * Show the form for creating a new model item
@@ -905,5 +909,63 @@ class BaseController extends Controller {
 		}
 
 		return $files;
+	}
+
+	/**
+     * Process datatables ajax request.
+	 *
+     * For Performance tests and fast Copy and Paste: $start = microtime(true) and $end = microtime(true);
+     *
+	 * @return \Illuminate\Http\JsonResponse
+	 *
+	 * @author Christian Schramm
+     */
+    public function index_datatables_ajax()
+    {
+		$model = static::get_model_obj();
+		$index_label_array =  $model->view_index_label_ajax();
+
+		$header_fields = $index_label_array['index_header'];
+		$edit_column_data = isset($index_label_array['edit']) ? $index_label_array['edit'] : [];
+		$eager_loading_tables = isset($index_label_array['eager_loading']) ? $index_label_array['eager_loading'] : [];
+
+		!array_has($header_fields, $index_label_array['table'].'.id') ? array_push($header_fields, 'id') : null; // if no id Column is drawn, draw it to generate links with id
+
+		if (empty($eager_loading_tables) ){ //use eager loading only when its needed
+			$eloquent_query = $model::select($index_label_array['table'].'.*');
+			$first_column = substr(head($header_fields), strlen($index_label_array["table"]) + 1);
+		} else {
+			$eloquent_query = $model::with($eager_loading_tables)->select($index_label_array['table'].'.*'); //eager loading | select($select_column_data);
+			if (starts_with(head($header_fields), $index_label_array["table"]))
+				$first_column = substr(head($header_fields), strlen($index_label_array["table"]) + 1);
+			else
+				$first_column = head($header_fields);
+		}
+
+		$DT = Datatables::of($eloquent_query);
+		$DT ->addColumn('responsive', "")
+			->addColumn('checkbox', "");
+
+		foreach ($edit_column_data as $column => $functionname) {
+			$DT->editColumn($column, function($object) use ($functionname) {
+				return $object->$functionname();
+			});
+		};
+			
+		$DT	->editColumn('checkbox', function ($object) {
+				return "<input style='simple' align='center' class='' name='ids[".$object->id."]' type='checkbox' value='1' ".
+				($object->index_delete_disabled ? "disabled" : '').">";
+			})
+            ->editColumn($first_column, function ($object) use ($first_column) {
+				return '<a href="'.route(\NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
+				$object->view_icon().array_get($object, $first_column).'</strong></a>';
+			});
+
+		$DT	->setRowClass(function ($object) {
+			$bsclass = isset($object->view_index_label()['bsclass']) ? $object->view_index_label()['bsclass'] : 'info';
+			return $bsclass;
+		});
+
+		return $DT->make(true);
 	}
 }
