@@ -5,6 +5,7 @@ return [
 
 	'Active'					=> 'Aktiv',
 	'Active?'					=> 'Aktiv?',
+	'alert' 					=> 'Achtung!',
 	'Additional Options'		=> 'Zusätzliche Optionen',
 	'Address Line 1'			=> 'Adresszeile 1',
 	'Address Line 2'			=> 'Adresszeile 2',
@@ -16,6 +17,7 @@ return [
 	'ccc'						=> 'Kundenkontrollzentrum',
 	'City'						=> 'Stadt',
 	'Choose KML file'			=> 'Wähle KML file',
+	'close' 					=> 'Schliessen',
 	'Company'					=> 'Firma',
 	'Contract Number'			=> 'Vertragsnummer',
 	'Contract Start'			=> 'Vertragsbeginn',
@@ -164,6 +166,7 @@ return [
 	'Accounting Text (optional)'=> 'Verwendungszweck (optional)',
 	'Cost Center (optional)'	=> 'Kostenstelle (optional)',
 	'Credit Amount' 			=> 'Gutschrift - Betrag',
+	'item_credit_amount_negative' => 'Ein negativer Betrag bei Gutschriften wird zur Lastschrift für den Kunden! Sind Sie sicher, dass der Betrag dem Kunde abgezogen werden soll?',
 	'Item'						=> 'Posten',
 	'Items'						=> 'Posten',
 	'missing_product'			=> 'Fehlendes Produkt!',
