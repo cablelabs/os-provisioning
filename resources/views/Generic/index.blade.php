@@ -16,7 +16,12 @@
 @section('content_top')
 	<li class="active">
 		<a href="{{route($route_name.'.index')}}">
-		{{ \App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var) ? $view_var : null).' '.$headline}}
+		@if (isset($view_var) && is_array($view_var))
+		{{ \App\Http\Controllers\BaseViewController::__get_view_icon($view_var[0]).' '}}
+		@else
+		{{ $model->view_icon().' '}}
+		@endif
+		{{$headline}}
 		</a>
 	</li>
 @stop
@@ -26,7 +31,11 @@
 	<!-- Headline: means icon followed by headline -->
 	@DivOpen(12)
 		<h1 class="page-header">
-		{{\App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var) ? $view_var : null).' '}}
+		@if (isset($view_var) && is_array($view_var) )
+		{{ \App\Http\Controllers\BaseViewController::__get_view_icon($view_var[0]).' '}}
+		@else
+		{{ $model->view_icon().' '}}
+		@endif
 		{{$headline}}
 	@DivClose()
 
@@ -70,22 +79,21 @@
 
 	<!-- database entries inside a form with checkboxes to be able to delete one or more entries -->
 	@DivOpen(12)
-
 		{{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete')) }}
-
-		@if (isset($model) && isset($view_var) )
-			<table class="table table-hover table-striped datatable table-striped table-bordered collapsed" id="datatable">				<thead>
+		@if (isset($model) && isset($view_var) && isset($view_var->index_datatables_ajax_enabled) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
+			<table class="table table-hover datatable table-bordered" id="datatable">
+				<thead>
 					<tr>
 						<th width="30px"></th>
 						@if (isset($delete_allowed) && $delete_allowed == true)
-							<th id="selectall" style="vertical-align:middle;">
-								<input id ="allCheck" data-trigger="hover" style='simple' align='center' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top" 
+							<th id="selectall" style="text-align:center; vertical-align:middle;">
+								<input id ="allCheck" data-trigger="hover" style='simple' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top" 
 								data-delay='{"show":"350"}' data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('Select All')}}">
 							</th>
 						@endif
 						@if (isset($model) && is_array($model->view_index_label_ajax()) && isset($model->view_index_label_ajax()['index_header']))
 							@foreach ($model->view_index_label_ajax()['index_header'] as $field)
-								<th>{{ trans('messages.'.$field).' ' }}
+								<th style="text-align:center; vertical-align:middle;">{{ trans('messages.'.$field).' ' }}
 								@if ((!empty($model->view_index_label_ajax()['sortsearch'])) && ($model->view_index_label_ajax()['sortsearch'] == [$field => 'false']))
 									<i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top" data-delay='{"show":"250"}'
 									data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('You cant sort or search this Column')}}"></i>
@@ -95,10 +103,69 @@
 						@endif
 					</tr>
 				</thead>
+				<tfoot>
+					<tr>
+						<th></th>
+						@if (isset($delete_allowed) && $delete_allowed == true)
+							<th></th>
+						@endif
+						@foreach ($model->view_index_label_ajax()['index_header'] as $field)
+							@if ((!empty($model->view_index_label_ajax()['sortsearch'])) && ( array_has( $model->view_index_label_ajax()['sortsearch'] , $field) ) )
+								<th></th>
+							@else
+								<th class="searchable"></th>
+							@endif
+						@endforeach
+					</tr>
+				</tfoot>
+			</table>
+		@elseif (method_exists( BaseController::get_model_obj() , 'view_index_label' ) && isset($view_var[0]) )
+			<table class="table table-hover table-striped datatable table-striped table-bordered collapsed">
+				<!-- TODO: add concept to parse header fields for index table - like firstname, lastname, ..-->
+				<thead>
+					<tr>
+						<th width="30px"></th>
+						@if (isset($delete_allowed) && $delete_allowed == true)
+							<th id="selectall" style="text-align:center; vertical-align:middle;">
+								<input id ="allCheck" data-trigger="hover" style='simple' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top" 
+								data-delay='{"show":"350"}' data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('Select All')}}">
+							</th>
+						@endif
+						<!-- Parse view_index_label() header_index  -->
+						@if (isset($view_var[0]) && is_array($view_var[0]->view_index_label()) && isset($view_var[0]->view_index_label()['index_header']))
+							@foreach ($view_var[0]->view_index_label()['index_header'] as $field)
+								<th> {{ \App\Http\Controllers\BaseViewController::translate_label($field) }} </th>
+							@endforeach
+						@endif
+					</tr>
+				</thead>
+				<!-- Index Table Entries -->
+				<tbody>
+				@foreach ($view_var as $object)
+					<tr class="{{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}">
+							<td width="30"></td>
+						@if (isset($delete_allowed) && $delete_allowed == true)
+							<td width="30" align="center"> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple', 'disabled' => $object->index_delete_disabled ? 'disabled' : null]) }} </td>
+						@endif
+						<!-- Parse view_index_label()  -->
+						<?php $i = 0; // display link only on first element ?>
+						@foreach (is_array($object->view_index_label()) ? $object->view_index_label()['index'] : [$object->view_index_label()] as $field)
+							<td class="ClickableTd">
+								@if ($i++ == 0)
+									{{$object->view_icon()}}
+									<strong>{{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }}</strong>
+								@else
+									{{ $field }}
+								@endif
+							</td>
+						@endforeach
+					</tr>
+				@endforeach
+				</tbody>
 			</table>
 		@else
-			<h4>{{ $view_no_entries }}</h4>
-		@endif
+			<h4>{{ \App\Http\Controllers\BaseViewController::translate_label($view_no_entries) }}</h4>
+		@endif	
 	@DivClose()
 
 	@DivOpen(12)

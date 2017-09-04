@@ -51,7 +51,7 @@ $(document).ready(function() {
   @endif
   
   // Intelligent Data Tables
-  @if (isset($model) && isset($view_var))
+  @if (isset($model) && isset($view_var) && isset($view_var->index_datatables_ajax_enabled) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
     $('table.datatable').DataTable(
     {
         // Translate Datatables
@@ -106,6 +106,23 @@ $(document).ready(function() {
                 @endforeach
             @endif
         ],
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                var input = document.createElement('input');
+                input.classList.add('select2');
+                if ($(this.footer()).hasClass('searchable')){
+                    $(input).appendTo($(column.footer()).empty())
+                    .on('keydown', function () {
+                        var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                        column.search(val ? val : '', true, false).draw();
+                    });
+                }
+                $('.select2').css('width', "100%");
+            });
+            $(this).DataTable().columns.adjust().responsive.recalc();
+        },
         @if (isset($view_var->view_index_label_ajax()['orderBy']))
             order:
             @foreach ($view_var->view_index_label_ajax()['orderBy'] as $columnindex => $direction)
@@ -135,6 +152,54 @@ $(document).ready(function() {
         // "sPaginationType": "four_button"
         lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
     });
+  @elseif (method_exists( BaseController::get_model_obj() , 'view_index_label' ))
+	$('table.datatable').DataTable(
+	{
+	// Translate Datatables
+	language: {
+		"sEmptyTable":        "<?php echo trans('view.jQuery_sEmptyTable'); ?>",
+		"sInfo":              "<?php echo trans('view.jQuery_sInfo'); ?>",
+		"sInfoEmpty":         "<?php echo trans('view.jQuery_sInfoEmpty'); ?>",
+		"sInfoFiltered":      "<?php echo trans('view.jQuery_sInfoFiltered'); ?>",
+		"sInfoPostFix":       "<?php echo trans('view.jQuery_sInfoPostFix'); ?>",
+		"sInfoThousands":     "<?php echo trans('view.jQuery_sInfoThousands'); ?>",
+		"sLengthMenu":        "<?php echo trans('view.jQuery_sLengthMenu'); ?>",
+		"sLoadingRecords":    "<?php echo trans('view.jQuery_sLoadingRecords'); ?>",
+		"sProcessing":        "<?php echo trans('view.jQuery_sProcessing'); ?>",
+		"sSearch":            "<?php echo trans('view.jQuery_sSearch'); ?>",
+		"sZeroRecords":       "<?php echo trans('view.jQuery_sZeroRecords'); ?>",
+		"oPaginate": {
+			"sFirst":         "<?php echo trans('view.jQuery_PaginatesFirst'); ?>",
+			"sPrevious":      "<?php echo trans('view.jQuery_PaginatesPrevious'); ?>",
+			"sNext":          "<?php echo trans('view.jQuery_PaginatesNext'); ?>",
+			"sLast":          "<?php echo trans('view.jQuery_PaginatesLast'); ?>"
+			},
+		"oAria": {
+			"sSortAscending": "<?php echo trans('view.jQuery_sLast'); ?>",
+			"sSortDescending":"<?php echo trans('view.jQuery_sLast'); ?>"
+			}
+	},
+	//auto resize the Table to fit the viewing device
+	responsive: {
+		details: {
+			type: 'column'
+		}
+	},
+	aoColumnDefs: [ {
+		className: 'control',
+		orderable: false,
+		targets:   [0]
+    },
+    @if (isset($delete_allowed) && $delete_allowed == true)
+    {
+        className: 'index_check',
+        orderable: false,
+        targets:   [1]
+    },      
+    @endif ],
+	// "sPaginationType": "four_button"
+	lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
+	});
   @endif
 
   $('table.streamtable').DataTable(

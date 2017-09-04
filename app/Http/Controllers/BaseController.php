@@ -482,7 +482,12 @@ class BaseController extends Controller {
 	public function index()
 	{
 		$model = static::get_model_obj();
-		$view_var   = $model->first();
+
+		if ($model->index_datatables_ajax_enabled)
+			$view_var   = $model->first();
+		else
+			$view_var   = $model->index_list();
+
 		$view_header = \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
 		$headline  	= \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
 		$b_text		= $model->view_headline();
@@ -915,20 +920,7 @@ class BaseController extends Controller {
 	 *
 	 * @author Christian Schramm
      */
-	// To do:
-	// export to new function view_index_label_ajax()
-	// make global variable to open model on click
-	/* codesnippets that might be needed later on
-	$select_column_data = array_where($header_fields, function ($key, $value) use ($index_label_array) {
-		return starts_with($value, $index_label_array['table']);
-	});
-
-	foreach ($modify_model_data as $functionname) {
-		$DT->addColumn($functionname,function ($object) use ($functionname){
-			$object->$functionname();
-		});
-	};*/
-    public function ajaxDatatables()
+    public function index_datatables_ajax()
     {
 		$model = static::get_model_obj();
 		$index_label_array =  $model->view_index_label_ajax();
