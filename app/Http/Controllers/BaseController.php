@@ -98,7 +98,7 @@ class BaseController extends Controller {
 	}
 
 
-	protected static function get_model_obj ()
+	public static function get_model_obj ()
 	{
 		$classname = \NamespaceController::get_model_name();
 
@@ -114,7 +114,7 @@ class BaseController extends Controller {
 		return $obj;
 	}
 
-	protected static function get_controller_obj()
+	public static function get_controller_obj()
 	{
 		$classname = \NamespaceController::get_controller_name();
 
@@ -932,7 +932,7 @@ class BaseController extends Controller {
 		!array_has($header_fields, $index_label_array['table'].'.id') ? array_push($header_fields, 'id') : null; // if no id Column is drawn, draw it to generate links with id
 
 		if (empty($eager_loading_tables) ){ //use eager loading only when its needed
-			$eloquent_query = $model::select($header_fields);
+			$eloquent_query = $model::select($index_label_array['table'].'.*');
 			$first_column = substr(head($header_fields), strlen($index_label_array["table"]) + 1);
 		} else {
 			$eloquent_query = $model::with($eager_loading_tables)->select($index_label_array['table'].'.*'); //eager loading | select($select_column_data);
