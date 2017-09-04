@@ -185,3 +185,7 @@ body {
 .table>tbody>tr>td {
     vertical-align: middle;
 }
+
+table .index_check {
+    text-align: center;
+}
