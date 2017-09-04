@@ -549,7 +549,7 @@ return [
 	'phonetariff.name' => 'Name',
 	'phonetariff.type' => 'Typ',
 	'phonetariff.description' => 'Beschreibung',
-	'phonetariff.voip_protocol' => 'VOIP Protokill',
+	'phonetariff.voip_protocol' => 'VOIP Protokoll',
 	'phonetariff.usable' => 'Verfügbar',
 	// ENVIA enviaorder
 	'enviaorder_ordertype'  => 'Bestelltyp',
