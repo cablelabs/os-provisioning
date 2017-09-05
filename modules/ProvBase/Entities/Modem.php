@@ -348,7 +348,8 @@ class Modem extends \BaseModel {
 	 * NOTES:
 	 	* This is way faster (0,01s (also on 2k modems) vs 2,8s for 348 Modems via make_dhcp_cm_all) than everytime creating files for all modems
 	 	* It's also more secure as it uses flock() to avoid dhcpd restart errors due to race conditions
-	 	* MaybeTODO: embed part between lock & unlock into try catch block to avoid forever locked files in case of exception
+	 	* MaybeTODO: embed part between lock & unlock into try catch block to avoid forever locked files in case of exception !?
+	 	* Attention!: MAC Address must be unique in database to work correctly !!!
 	 *
 	 * @param 	delete  	set to true if you want to remove the entry from the configfile
 	 *
@@ -359,8 +360,8 @@ class Modem extends \BaseModel {
 		Log::debug(__METHOD__." started");
 
 		// Note: hostname is changed when modem was created
-		// if (!$this->isDirty(['hostname', 'mac', 'public']) && !$delete)
-		// 	return;
+		if (!$this->isDirty(['hostname', 'mac', 'public']) && !$delete)
+			return;
 
 		// Log
 		Log::info('DHCPD Configfile Update for Modem: '.$this->id);
@@ -386,20 +387,17 @@ class Modem extends \BaseModel {
 		if (!flock($fp, LOCK_EX))
 			Log::error('Could not get exclusive lock for '.self::CONF_FILE_PATH);
 
-		// $conf = File::get(self::CONF_FILE_PATH);
 		$conf = file(self::CONF_FILE_PATH);
 
+		// TODO: check for hostname to avoid deleting the wrong entry when mac exists multiple times in DB !?
 		foreach ($conf as $key => $line)
 		{
-			if (strpos($line, $replace) !== false)
+			if (strpos($line, $replace) !== false && strpos($line, $this->hostname) !== false)
 			{
 				unset($conf[$key]);
 				break;
 			}
 		}
-
-		// dont replace directly as this wouldnt add the entry for a new created modem
-		// $conf = str_replace($replace, '', $conf);
 
 		if (!$delete)
 			$conf[] = $data;
