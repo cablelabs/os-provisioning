@@ -12,6 +12,7 @@ use \Modules\ProvVoip\Console\PhonenumberCommand;
 use \Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand;
 use \Modules\ProvVoipEnvia\Console\EnviaContractReferenceGetterCommand;
 use \Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceGetterCommand;
+use \Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceFromCSVUpdaterCommand;
 
 class Kernel extends ConsoleKernel {
 
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel {
 		'\Modules\ProvVoipEnvia\Console\EnviaContractGetterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaContractReferenceGetterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceGetterCommand',
+		'\Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceFromCSVUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
 		'\Modules\ProvVoipEnvia\Console\EnviaOrderProcessorCommand',
 		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
@@ -101,12 +103,17 @@ class Kernel extends ConsoleKernel {
 			$schedule->command('provvoipenvia:get_envia_customer_references')
 				->dailyAt('01:13');
 
-			// Get/update Envia orders
+			// Get/update Envia contracts
 			$schedule->command('provvoipenvia:get_envia_contracts_by_customer')
 				->dailyAt('01:18');
 
+			// Process Envia orders (do so after getting envia contracts)
+			$schedule->command('provvoipenvia:process_envia_orders')
+				->dailyAt('03:18');
+
 			// Get Envia contract reference for phonenumbers without this information or inactive linked envia contract
 			// on first of a month: run in complete mode
+			// do so after provvoipenvia:process_envia_orders as we need the old references there
 			if ($is_first_day_of_month) {
 				$tmp_cmd = 'provvoipenvia:get_envia_contract_references complete';
 			}
@@ -114,11 +121,7 @@ class Kernel extends ConsoleKernel {
 				$tmp_cmd = 'provvoipenvia:get_envia_contract_references';
 			}
 			$schedule->command($tmp_cmd)
-				->dailyAt('01:23');
-
-			// Process Envia orders (do so after getting envia contracts)
-			$schedule->command('provvoipenvia:process_envia_orders')
-				->dailyAt('03:48');
+				->dailyAt('03:23');
 
 			// Update voice data
 			// on first of a month: run in complete mode
