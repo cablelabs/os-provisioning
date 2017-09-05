@@ -287,4 +287,25 @@ class ModemController extends \BaseController {
 		return $data;
 	}
 
+
+	/**
+	 * Inheritet update function to handle force restart button as
+	 * we dont want to update the modem when this button is clicked
+	 */
+	public function update($id)
+	{
+		if(!\Input::has('_force_restart'))
+			return parent::update($id);
+
+		$modem = Modem::find($id);
+
+		$modem->restart_modem();
+
+		// error msg created while observer execution
+		$msg = \Session::has('error') ? \Session::get('error') : 'Restarted Modem!';
+		$color = \Session::has('error') ? 'orange' : 'blue';
+
+		return \Redirect::route('Modem.edit', $id)->with('message', $msg)->with('message_color', $color);
+	}
+
 }

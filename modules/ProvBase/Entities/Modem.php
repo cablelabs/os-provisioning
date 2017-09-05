@@ -1111,14 +1111,13 @@ class ModemObserver
 		// TODO: only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
 		$restart = $modem->needs_restart();
 
-		if(\Input::has('_force_restart'))
-			$modem->restart_modem($restart > 0);
-		else if ($restart)
+		if ($restart)
 		{
 			$modem->make_dhcp_cm();
 			$modem->restart_modem($restart > 0);
 			$modem->make_configfile();
 		}
+
 
 		// ATTENTION:
 		// If we ever think about moving modems to other contracts we have to delete Envia related stuff, too –
