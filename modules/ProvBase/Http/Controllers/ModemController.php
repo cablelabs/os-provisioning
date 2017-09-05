@@ -58,7 +58,7 @@ class ModemController extends \BaseController {
 			);
 
 		$b = \PPModule::is_active('billingbase') ? 
-			array(array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'hidden' => 1, 'space' => '1'))
+			array(array('form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'hidden' => 1, 'space' => '1'))
 			:
 			array(array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1'));
 

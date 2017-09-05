@@ -111,7 +111,7 @@ class Modem extends \BaseModel {
 	 */
 	public function configfiles ()
 	{
-		return Configfile::where('device', '=', 'CM')->where('public', '=', 'yes')->get();
+		return Configfile::select(['id', 'name'])->where('device', '=', 'CM')->where('public', '=', 'yes')->get();
 	}
 
 	/**
@@ -169,9 +169,14 @@ class Modem extends \BaseModel {
 		return $this->belongsTo('Modules\ProvBase\Entities\Contract', 'contract_id');
 	}
 
+	/**
+	 * Return all Contracts
+	 * NOTE: Dont use Eloquent here as it's super slow for many models and we dont need the Eloquent instance here
+	 */
 	public function contracts()
 	{
-		return Contract::get();
+		// Contract::select(['id', 'lastname'])->get();
+		return \DB::table('contract')->get();
 	}
 
 	public function mtas()
