@@ -355,12 +355,12 @@ class Modem extends \BaseModel {
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function make_dhcp_cm($delete = false)
+	public function make_dhcp_cm($delete = false, $mta_added = false)
 	{
 		Log::debug(__METHOD__." started");
 
 		// Note: hostname is changed when modem was created
-		if (!$this->isDirty(['hostname', 'mac', 'public']) && !$delete)
+		if (!$this->isDirty(['hostname', 'mac', 'public']) && !$delete && !$mta_added)
 			return;
 
 		// Log
