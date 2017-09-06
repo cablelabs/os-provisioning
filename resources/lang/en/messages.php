@@ -19,7 +19,8 @@ return [
 	'cpe_log_error' 		=> 'was not registering on Server - No log entry found',
 	'conn_info_err_create' 	=> 'Error Creating PDF - See Logfiles or ask Admin!',
 	'conn_info_err_template' => 'Could not Read Template - See GlobalConfig or Company if it is set!',
-
+	'cpe_not_reachable' 	=> 'but not reachable from WAN-side due to manufacturing reasons (it can be possible to enable ICMP response via modem configfile)',
+	'device_probably_online' =>	':type is probably online',
 	'home' 					=> 'Startseite',
 	'item_credit_amount_negative' => 'A negative credit amount becomes a debit! Are you sure that the customer shall be charged?',
 	'invoice' 				=> 'Invoice',
