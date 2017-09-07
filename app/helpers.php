@@ -88,6 +88,7 @@ function escape_latex_special_chars($string)
 {
 	// NOTE: Uncommenting every char produces errors - TODO: enable single chars and test
 	// 		"\\" have to be ignored because strings (adress) often are concatenated by "\\" (latex newline)
+	// TODO: Add discards parameter to discard specific chars for specific strings 
 	$map = array( 
 			// "#"  => "\\#",
 			// "$"  => "\\$",
