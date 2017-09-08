@@ -44,7 +44,6 @@ $(document).ready(function() {
   @endif
 
   // Intelligent Data Tables
-  @if (isset($model) && isset($view_var) && isset($view_var->index_datatables_ajax_enabled) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
     $('table.datatable').DataTable(
     {
         // Translate Datatables
@@ -77,6 +76,9 @@ $(document).ready(function() {
                 type: 'column',
             }
         },
+        // "sPaginationType": "four_button"
+	    lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
+  @if (isset($model) && isset($view_var) && isset($view_var->index_datatables_ajax_enabled) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
         autoWidth: false,
         processing: true,
         serverSide: true,
@@ -142,43 +144,8 @@ $(document).ready(function() {
             targets :  "_all",
             className : 'ClickableTd',
         } ],
-        // "sPaginationType": "four_button"
-        lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
     });
   @elseif (method_exists( BaseController::get_model_obj() , 'view_index_label' ))
-	$('table.datatable').DataTable(
-	{
-	// Translate Datatables
-	language: {
-		"sEmptyTable":        "<?php echo trans('view.jQuery_sEmptyTable'); ?>",
-		"sInfo":              "<?php echo trans('view.jQuery_sInfo'); ?>",
-		"sInfoEmpty":         "<?php echo trans('view.jQuery_sInfoEmpty'); ?>",
-		"sInfoFiltered":      "<?php echo trans('view.jQuery_sInfoFiltered'); ?>",
-		"sInfoPostFix":       "<?php echo trans('view.jQuery_sInfoPostFix'); ?>",
-		"sInfoThousands":     "<?php echo trans('view.jQuery_sInfoThousands'); ?>",
-		"sLengthMenu":        "<?php echo trans('view.jQuery_sLengthMenu'); ?>",
-		"sLoadingRecords":    "<?php echo trans('view.jQuery_sLoadingRecords'); ?>",
-		"sProcessing":        "<?php echo trans('view.jQuery_sProcessing'); ?>",
-		"sSearch":            "<?php echo trans('view.jQuery_sSearch'); ?>",
-		"sZeroRecords":       "<?php echo trans('view.jQuery_sZeroRecords'); ?>",
-		"oPaginate": {
-			"sFirst":         "<?php echo trans('view.jQuery_PaginatesFirst'); ?>",
-			"sPrevious":      "<?php echo trans('view.jQuery_PaginatesPrevious'); ?>",
-			"sNext":          "<?php echo trans('view.jQuery_PaginatesNext'); ?>",
-			"sLast":          "<?php echo trans('view.jQuery_PaginatesLast'); ?>"
-			},
-		"oAria": {
-			"sSortAscending": "<?php echo trans('view.jQuery_sLast'); ?>",
-			"sSortDescending":"<?php echo trans('view.jQuery_sLast'); ?>"
-			}
-	},
-	//auto resize the Table to fit the viewing device
-	responsive: {
-		details: {
-			type: 'column'
-		}
-	},
-    autoWidth: false,
 	aoColumnDefs: [ {
 		className: 'control',
 		orderable: false,
@@ -191,8 +158,6 @@ $(document).ready(function() {
         targets:   [1]
     },
     @endif ],
-	// "sPaginationType": "four_button"
-	lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
 	});
   @endif
 
