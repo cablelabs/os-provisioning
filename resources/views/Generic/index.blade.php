@@ -80,20 +80,22 @@
 	<!-- database entries inside a form with checkboxes to be able to delete one or more entries -->
 	@DivOpen(12)
 		{{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete')) }}
-		@if (isset($model) && isset($view_var) && isset($view_var->index_datatables_ajax_enabled) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
+		<?php // init DataTable ?>
 			<table class="table table-hover datatable table-bordered" id="datatable">
+		<?php // Get Headerdata and translate with translation files ?>
+		@if (isset($model) && isset($view_var) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
 				<thead>
 					<tr>
 						<th width="30px"></th>
 						@if (isset($delete_allowed) && $delete_allowed == true)
-							<th id="selectall" style="text-align:center; vertical-align:middle;">
+							<th witdth="30px" id="selectall" style="text-align:center; vertical-align:middle;">
 								<input id ="allCheck" data-trigger="hover" style='simple' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top" 
 								data-delay='{"show":"350"}' data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('Select All')}}">
 							</th>
 						@endif
 						@if (isset($model) && is_array($model->view_index_label_ajax()) && isset($model->view_index_label_ajax()['index_header']))
 							@foreach ($model->view_index_label_ajax()['index_header'] as $field)
-								<th style="text-align:center; vertical-align:middle;">{{ trans('messages.'.$field).' ' }}
+								<th style="text-align:center; vertical-align:middle;">{{ trans('dt_header.'.$field).' ' }}
 								@if ((!empty($model->view_index_label_ajax()['sortsearch'])) && ($model->view_index_label_ajax()['sortsearch'] == [$field => 'false']))
 									<i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top" data-delay='{"show":"250"}'
 									data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('You cant sort or search this Column')}}"></i>
@@ -103,6 +105,9 @@
 						@endif
 					</tr>
 				</thead>
+		@endif
+		<?php // Generate AJAX Datatable Footer ?>
+		@if (isset($model) && isset($view_var) && isset($view_var->index_datatables_ajax_enabled) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
 				<tfoot>
 					<tr>
 						<th></th>
@@ -119,9 +124,9 @@
 					</tr>
 				</tfoot>
 			</table>
+		<?php // For Backwards compatibility: Generate the Datatable the old way ?>
 		@elseif (method_exists( BaseController::get_model_obj() , 'view_index_label' ) && isset($view_var[0]) )
-			<table class="table table-hover table-striped datatable table-striped table-bordered collapsed">
-				<!-- TODO: add concept to parse header fields for index table - like firstname, lastname, ..-->
+			@if (!method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
 				<thead>
 					<tr>
 						<th width="30px"></th>
@@ -138,7 +143,8 @@
 							@endforeach
 						@endif
 					</tr>
-				</thead>
+				</thead>				
+			@endif
 				<!-- Index Table Entries -->
 				<tbody>
 				@foreach ($view_var as $object)
@@ -164,7 +170,7 @@
 				</tbody>
 			</table>
 		@else
-			<h4>{{ \App\Http\Controllers\BaseViewController::translate_label($view_no_entries) }}</h4>
+			</table>
 		@endif	
 	@DivClose()
 
