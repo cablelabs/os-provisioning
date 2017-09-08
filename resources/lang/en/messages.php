@@ -133,7 +133,7 @@ return [
 	'contract.zip' => 'ZIP',
 	'contract.city' => 'City',
 	'contract.street' => 'Street',
-	'contract.house_number' => 'Hausenumber',
+	'contract.house_number' => 'Housenumber',
 	'contract.district' => 'District',
 	'contract.contract_start' => 'Contract Startdate',
 	'contract.contract_end' => 'Contract Enddate',
