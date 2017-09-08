@@ -227,7 +227,8 @@ return [
 		'NamespaceController' => 'App\Http\Controllers\NamespaceController',
 		'BaseModel' => 'App\BaseModel',
 		'GlobalConfig' => 'App\GlobalConfig',
-		'Datatables' => 'Yajra\Datatables\Facades\Datatables'
+		'Datatables' => 'Yajra\Datatables\Facades\Datatables',
+		'ChannelLog' => 'Acme\log\ChannelLog',
 	],
 
 ];
