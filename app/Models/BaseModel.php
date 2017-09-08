@@ -215,15 +215,13 @@ class BaseModel extends Eloquent
 	 * @return true if index model contains more than 100 entries
 	 */
 	 public function index_datatables_ajax_enabled() {
-		$enabled =false;
-		if (method_exists( $this, 'view_index_label_ajax')){
+		$enabled = false;
+		if (method_exists( $this, 'view_index_label_ajax')) {
 			$model_name = static::class;
 			if ($model_name::count() > 100)
 				$enabled = true;
-			else
-				$enabled = false;
 		}
-		$end = microtime();
+
 		return $enabled;
 	}	
 
