@@ -112,6 +112,7 @@ return [
 	'modem.lastname' => 'Lastname',
 	'modem.city' => 'City',
 	'modem.street' => 'Street',
+	'modem.district' => 'District',
 	'modem.us_pwr' => 'US level',
 	'contract_valid' => 'Contract valid?',
 	// QoS
@@ -152,6 +153,11 @@ return [
 	'enviaorder.orderdate'  => 'Order date',
 	'enviaorder_current'  => 'Action needed?',
 	'enviaorder_solve_link' => 'Mark as solved?',
+	//ENVIA Contract
+	'enviacontract.envia_contract_reference' => 'EnVia Contract reference',
+	'enviacontract.state' => 'Status',
+	'enviacontract.start_date' => 'Start Date',
+	'enviacontract.end_date' => 'End Date',
 	// CDR
 	'cdr.calldate' => 'Call Date',
 	'cdr.caller' => 'Caller',

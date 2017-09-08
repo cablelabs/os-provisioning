@@ -113,6 +113,7 @@ return [
 	'modem.city' => 'Stadt',
 	'modem.street' => 'Straße',
 	'modem.us_pwr' => 'US level',
+	'modem.district' => 'Bezirk',
 	'contract_valid' => 'Vertrag gültig?',
 	// QoS
 	'qos.name' => 'QoS Name',
@@ -152,6 +153,11 @@ return [
 	'enviaorder.orderdate'  => 'Bestelldatum',
 	'enviaorder_current'  => 'Bearbeitung notwendig?',
 	'enviaorder_solve_link' => 'Als gelöst markeren?',
+	//ENVIA Contract
+	'enviacontract.envia_contract_reference' => 'EnVia Vertragsreferenz',
+	'enviacontract.state' => 'Status',
+	'enviacontract.start_date' => 'Anfangsdatum',
+	'enviacontract.end_date' => 'Enddatum',
 	// CDR
 	'cdr.calldate' => 'Anrufzeitpunkt',
 	'cdr.caller' => 'Anrufer',
