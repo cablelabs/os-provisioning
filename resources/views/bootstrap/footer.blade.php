@@ -116,9 +116,9 @@ $(document).ready(function() {
             });
             $(this).DataTable().columns.adjust().responsive.recalc();
         },
-        @if (isset($view_var->view_index_label_ajax()['orderBy']))
+        @if (isset($view_var->view_index_label_ajax()['order_by']))
             order:
-            @foreach ($view_var->view_index_label_ajax()['orderBy'] as $columnindex => $direction)
+            @foreach ($view_var->view_index_label_ajax()['order_by'] as $columnindex => $direction)
                 @if (isset($delete_allowed) && $delete_allowed == true)
                     [{{$columnindex + 2}}, '{{$direction}}'],
                 @else

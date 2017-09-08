@@ -54,7 +54,7 @@ class Cmts extends \BaseModel {
 				'index_header' => [$this->table.'.id', $this->table.'.hostname', $this->table.'.ip', $this->table.'.company', $this->table.'.type'],
 				'header' =>  $this->hostname,
 				'bsclass' => $bsclass,
-				'orderBy' => ['0' => 'asc']];
+				'order_by' => ['0' => 'asc']];
 	}
 
 	public function get_bsclass()

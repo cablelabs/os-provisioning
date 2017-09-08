@@ -109,10 +109,10 @@ class NetElement extends \BaseModel {
 		$bsclass = $this->get_bsclass();
 
 		return ['table' => $this->table,
-				'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name',  $this->table.'.ip', $this->table.'.pos'],
+				'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name',  $this->table.'.ip', $this->table.'.state', $this->table.'.pos'],
 				'header' =>  $this->id.' - '.$this->name,
 				'bsclass' => $bsclass,
-				'orderBy' => ['0' => 'asc'],
+				'order_by' => ['0' => 'asc'],
 				'eager_loading' => ['netelementtype'],
 				'edit' => ['netelementtype.name' => 'get_elementtype_name']];
 	}
