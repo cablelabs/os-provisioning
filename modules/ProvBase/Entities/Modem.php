@@ -176,7 +176,7 @@ class Modem extends \BaseModel {
 	public function contracts()
 	{
 		// Contract::select(['id', 'lastname'])->get();
-		return \DB::table('contract')->get();
+		return \DB::table('contract')->where('deleted_at', '=', null)->get();
 	}
 
 	public function mtas()
