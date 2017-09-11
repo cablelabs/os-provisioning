@@ -3,6 +3,7 @@
 namespace Acme\log;
 
 use Monolog\Handler\StreamHandler;
+use Monolog\Formatter\LineFormatter;
 
 /**
  * Use channels to log into separate files
@@ -25,6 +26,10 @@ class ChannelStreamHandler extends StreamHandler
 	public function __construct($channel, $stream, $level = Logger::DEBUG, $bubble = true, $filePermission = null, $useLocking = false)
 	{
 		$this->channel = $channel;
+
+		// dont add empty context array fields
+		$formatter = new LineFormatter(null, null, false, true);
+		$this->setFormatter($formatter);
 
 		parent::__construct($stream, $level, $bubble);
 	}

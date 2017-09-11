@@ -3,7 +3,6 @@
 namespace Acme\log;
 
 use Monolog\Logger;
-
 use Acme\log\ChannelStreamHandler;
 
 class ChannelWriter
@@ -86,7 +85,7 @@ class ChannelWriter
 	//alert('event','Message');
 	function __call($func, $params){
 		if(in_array($func, array_keys($this->levels))){
-			return $this->writeLog($params[0], $func, $params[1]);
+			return $this->writeLog($params[0], $func, $params[1], isset($params[2]) ? $params[2] : []);
 		}
 	}
 
