@@ -291,16 +291,11 @@ class Contract extends \BaseModel {
 	public function invoices()
 	{
 		if (\PPModule::is_active('billingbase'))
-		{
-			$srs  = SettlementRun::where('verified', '=', '0')->get(['id'])->pluck('id')->all();
+			return $this->hasMany('Modules\BillingBase\Entities\Invoice');
+			// $srs  = SettlementRun::where('verified', '=', '0')->get(['id'])->pluck('id')->all();
+			// $hide = $srs ? : 0;
+			// return $this->hasMany('Modules\BillingBase\Entities\Invoice')->where('contract_id', '=', $this->id)->where('settlementrun_id', '!=', [$hide]);
 
-			$hide = $srs ? : 0;
-
-			return $this->hasMany('Modules\BillingBase\Entities\Invoice')->where('contract_id', '=', $this->id)->where('settlementrun_id', '!=', [$hide]);
-
-			// $hide = SettlementRun::unverified_files();
-			// return $this->hasMany('Modules\BillingBase\Entities\Invoice')->orderBy('year', 'desc')->orderBy('month', 'desc')->whereNotIn('filename', $hide);
-		}
 		return null;
 	}
 
