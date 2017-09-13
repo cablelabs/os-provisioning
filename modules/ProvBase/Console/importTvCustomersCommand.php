@@ -109,7 +109,7 @@ class importTvCustomersCommand extends Command {
 			throw new \Exception("Customer Control Center has to be specified by Option --cc !", 1);
 
 		$file_arr 	= file($fn);
-		$t_month 	= date('Y-m-01');
+		$t_year 	= date('Y-01-01');
 		$num 		= count($file_arr) - 1;
 		$bar 		= $this->output->createProgressBar($num);
 		$i 			= 0;
@@ -147,8 +147,8 @@ class importTvCustomersCommand extends Command {
 				continue;
 			}
 
-			// Discard contracts that ended last month
-			if ($c->contract_end && ($c->contract_end < $t_month)) {
+			// Discard contracts that ended last year
+			if ($c->contract_end && ($c->contract_end < $t_year)) {
 				\Log::info("Contract $c->number is out of date");
 				continue;
 			}
@@ -317,8 +317,7 @@ class importTvCustomersCommand extends Command {
 		if ($contract->items)
 			$existing = $contract->items->contains('product_id', self::CREDIT_ID);
 
-		if ($existing)
-		{
+		if ($existing) {
 			\Log::debug("Contract $contract->number already has Credit ". self::CREDIT_ID." assigned");
 			return;
 		}

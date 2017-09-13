@@ -718,7 +718,7 @@ class BaseModel extends Eloquent
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function check_validity($timespan = 'Monthly', $time = null)
+	public function check_validity($timespan = 'monthly', $time = null)
 	{
 		$start = $this->get_start_time();
 		$end   = $this->get_end_time();
