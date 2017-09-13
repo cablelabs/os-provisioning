@@ -96,7 +96,7 @@ class EnsureQueueListenerIsRunning extends Command
      */
     private function startQueueListener()
     {
-        $command = 'php ' . base_path() . '/artisan queue:work --daemon > /dev/null & echo $!';
+        $command = 'php ' . base_path() . '/artisan queue:work --daemon --tries=2 > /dev/null & echo $!';
         $pid = exec($command);
         return $pid;
     }
