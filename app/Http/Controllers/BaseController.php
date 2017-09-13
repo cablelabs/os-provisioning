@@ -18,6 +18,7 @@ use Log;
 use GlobalConfig;
 use Illuminate\Support\Facades\Request;
 use Yajra\Datatables\Datatables;
+use Monolog\Logger;
 
 use App\Exceptions\AuthExceptions;
 
@@ -910,6 +911,35 @@ class BaseController extends Controller {
 
 		return $files;
 	}
+
+
+	/**
+	 * Grep Log entries of all severity Levels above the specified one of a specific Logfile
+	 *
+	 * @author Nino Ryschawy
+	 *
+	 * @return Array 		Last Log entry first
+	 */
+	public static function get_logs($filename, $severity_level = Logger::DEBUG)
+	{
+		$levels = Logger::getLevels();
+
+		foreach ($levels as $key => $value)
+		{
+			if ($severity_level <= $value)
+				break;
+
+			unset($levels[$key]);
+		}
+
+		$levels 	= implode('\|', array_keys($levels));
+		$filename 	= $filename[0] == '/' ? $filename : storage_path("logs/$filename");
+
+		exec ("grep \"$levels\" $filename", $logs);
+
+		return array_reverse($logs);
+	}
+
 
 	/**
      * Process datatables ajax request.
