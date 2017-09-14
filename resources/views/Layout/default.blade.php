@@ -77,6 +77,7 @@
 
 			@include ('bootstrap.footer')
 			@yield ('javascript')
+			@yield ('javascript_extra')
 
 		</div>
 
