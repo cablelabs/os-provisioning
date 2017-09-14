@@ -114,7 +114,7 @@ class importTvCustomersCommand extends Command {
 		$bar 		= $this->output->createProgressBar($num);
 		$i 			= 0;
 		// skip headline
-		unset($file_arr[0]);
+		// unset($file_arr[0]);
 		\Log::info("Import $num Contracts for TV");
 
 		foreach ($file_arr as $line)
@@ -325,6 +325,9 @@ class importTvCustomersCommand extends Command {
 		$credit_amount = str_replace('EUR', '', $credit);
 		$credit_amount = str_replace(',', '.', $credit);
 		$credit_amount = trim($credit_amount);
+
+		if (date('Y') == date('Y', strtotime($contract->contract_start)) || date('Y') == date('Y', strtotime($contract->contract_end)))
+			$this->important_todos .= "\nPlease check Amplifier debit for Contract $contract->number as it's calculated partly for the year";
 
 		Item::create([
 			'contract_id' 		=> $contract->id,
