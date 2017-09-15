@@ -1,4 +1,4 @@
-<?php 
+<?php
 return [
 // Index DataTable Header
 	// GuiLog
@@ -7,8 +7,8 @@ return [
 	'guilog.method' => 'Aktion',
 	'guilog.model' => 'Model',
 	'guilog.model_id' => 'Model ID',
-	// Company	
-	'company.name' => 'Unternehmen', 
+	// Company
+	'company.name' => 'Unternehmen',
 	'company.city' => 'Stadt',
 	'company.phone' => 'Telefonnummer',
 	'company.mail' => 'E-Mail',
@@ -17,7 +17,7 @@ return [
 	'costcenter.number' => 'Nummer',
 	//Invoices
 	'invoice.type' => 'Typ',
-	'invoice.year' => 'Jahr', 
+	'invoice.year' => 'Jahr',
 	'invoice.month' => 'Monat',
 	//Item //**
 
@@ -46,7 +46,7 @@ return [
 	// MPR
 	'mpr.name' => 'Name',
 	// NetElement
-	'netelement.id' => 'ID',	
+	'netelement.id' => 'ID',
 	'netelement.name' => 'Netzelement',
 	'netelement.ip' => 'IP Adresse',
 	'netelement.state' => 'Status',
@@ -60,7 +60,7 @@ return [
 	'mibfile.name' => 'Mibfilename',
 	'mibfile.version' => 'Version',
 	// OID
-	'oid.name_gui' => 'GUI Beschriftung', 
+	'oid.name_gui' => 'GUI Beschriftung',
 	'oid.name' => 'OID Name',
 	'oid.oid' => 'OID',
 	'oid.access' => 'Schreibschutz',
@@ -124,7 +124,7 @@ return [
 	'mta.mac' => 'MAC-Adresse',
 	'mta.type' => 'Provisionierungstyp',
 	// Configfile
-	'configfile.name' => 'Konfiguartionsdatei',	
+	'configfile.name' => 'Konfiguartionsdatei',
 	// PhonebookEntry
 	'phonebookentry.id' => 'ID',
 	// Phonenumber
@@ -142,17 +142,13 @@ return [
 	'phonetariff.voip_protocol' => 'VOIP Protokoll',
 	'phonetariff.usable' => 'Verfügbar',
 	// ENVIA enviaorder
-	'enviaorder_ordertype'  => 'Bestelltyp',
-	'enviaorder_orderstatus'  => 'Bestellstatus',
-	'enviaorder_escalation_level' => 'Statuslevel',
-	'enviaorder_contract_nr'  => 'Vertrag',
-	'enviaorder_modem_nr'  => 'Modem',
-	'enviaorder_phonenumber_nrs'  => 'Telefonnummern',
+	'enviaorder.ordertype'  => 'Bestelltyp',
+	'enviaorder.orderstatus'  => 'Bestellstatus',
+	'escalation_level' => 'Statuslevel',
 	'enviaorder.created_at'  => 'Erstellt am',
 	'enviaorder.updated_at'  => 'Bearbeitet am',
 	'enviaorder.orderdate'  => 'Bestelldatum',
 	'enviaorder_current'  => 'Bearbeitung notwendig?',
-	'enviaorder_solve_link' => 'Als gelöst markeren?',
 	//ENVIA Contract
 	'enviacontract.envia_contract_reference' => 'EnVia Vertragsreferenz',
 	'enviacontract.state' => 'Status',

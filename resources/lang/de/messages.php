@@ -421,4 +421,5 @@ return [
 	'user'                      => 'Nutzer',
 	'Yes'                       => 'Ja',
 	'No'                        => 'Nein',
+	'Mark solved'				=> 'Als gelöst markeren?',
 ];
