@@ -41,8 +41,8 @@ class MibFile extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-		// TODO: possible Colorization: red - MIBs that occur multiple times - but checking can decrease performance dramatically
-		$bsclass = $this->oids->all() ? 'success' : 'info';
+		// TODO: possible Colorization: red - MIBs that occur multiple times ((but checking can decrease performance dramatically))
+		$bsclass = \DB::table('oid')->where('mibfile_id', '=', $this->id)->whereNull('deleted_at')->first() ? 'success' : 'info';
 
 		return ['index' => [$this->id, $this->name, $this->version],
 				'index_header' => ['ID', 'Name', 'Version'],

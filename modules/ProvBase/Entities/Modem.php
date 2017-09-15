@@ -46,7 +46,7 @@ class Modem extends \BaseModel {
 	{
 		$us_pwr = $this->get_us_pwr();
 		$bsclass = $this->get_bsclass();
-		
+
 		$configfile = $this->configfile ? $this->configfile->name : '';
 		//d($this->contract->district );
 		//$valid 		= $this->contract->check_validity('Now') ? 'yes' : 'no';
@@ -111,7 +111,8 @@ class Modem extends \BaseModel {
 	 */
 	public function configfiles ()
 	{
-		return Configfile::select(['id', 'name'])->where('device', '=', 'CM')->where('public', '=', 'yes')->get();
+		return \DB::table('configfile')->select(['id', 'name'])->whereNull('deleted_at')->where('device', '=', 'CM')->where('public', '=', 'yes')->get();
+		// return Configfile::select(['id', 'name'])->where('device', '=', 'CM')->where('public', '=', 'yes')->get();
 	}
 
 	/**
@@ -119,7 +120,7 @@ class Modem extends \BaseModel {
 	 */
 	public function qualities ()
 	{
-		return QoS::all();
+		return DB::table('qos')->whereNull('deleted_at')->get();
 	}
 
 
@@ -176,7 +177,7 @@ class Modem extends \BaseModel {
 	public function contracts()
 	{
 		// Contract::select(['id', 'lastname'])->get();
-		return \DB::table('contract')->where('deleted_at', '=', null)->get();
+		return \DB::table('contract')->whereNull('deleted_at')->get();
 	}
 
 	public function mtas()
@@ -1016,7 +1017,7 @@ class Modem extends \BaseModel {
 	 * relevant attribute was modified.
 	 *
 	 * @return 1 if reset via Modem or original mac is needed (mac was changed)
-	 *		  -1 for reset via CMTS (faster), 
+	 *		  -1 for reset via CMTS (faster),
 	 *		   0 if no restart is needed
 	 *
 	 * @author Ole Ernst, Nino Ryschawy

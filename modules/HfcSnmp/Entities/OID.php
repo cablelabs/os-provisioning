@@ -109,7 +109,7 @@ class OID extends \BaseModel {
 		$list = $empty_elem ? [0 => null] : [];
 
 		// Note: DB::table is way faster than instantiating the Eloquent Objects which are not needed in this case
-		$oids = \DB::table('oid')->where('deleted_at', '=', null)->get(['id', 'name', 'name_gui', 'oid']);
+		$oids = \DB::table('oid')->whereNull('deleted_at')->get(['id', 'name', 'name_gui', 'oid']);
 		
 		foreach ($oids as $oid)
 		{
