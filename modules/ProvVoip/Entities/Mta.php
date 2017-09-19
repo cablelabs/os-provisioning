@@ -41,7 +41,7 @@ class Mta extends \BaseModel {
 	// View Icon
 	public static function view_icon()
 	{
-		return '<i class="fa fa-fax"></i>'; 
+		return '<i class="fa fa-fax"></i>';
 	}
 
 	// link title in index view
@@ -77,25 +77,25 @@ class Mta extends \BaseModel {
 				'eager_loading' => ['configfile']];
 	}
 
-	public function get_bsclass() 
+	public function get_bsclass()
 	{
 		$bsclass = 'info';
 		if (!isset($this->configfile))
 			$bsclass = 'danger';
-		
+
 		return $bsclass;
 	}
-	
-	public function has_configfile_assigned() 
+
+	public function has_configfile_assigned()
 	{
 		$cf_name = 'No Configfile assigned';
-		
+
 		if (isset($this->configfile))
 			$cf_name = $this->configfile->name;
 
 		return $cf_name;
 	}
-	
+
 
 
 	public function view_belongs_to ()
@@ -345,11 +345,17 @@ _failed:
 		// if hostname cant be resolved we dont want to have an php error
 		try
 		{
-			$config = ProvBase::first();
-			$fqdn 	= $this->hostname.'.'.$config->domain_name;
+			$domain = ProvVoip::first()->mta_domain;
 
-			// restart - PKTC-EXCENTIS-MTA-MIB::pktcMtaDevResetNow - NOTE: Version 2 is important for some Modems!
-			snmp2_set($fqdn, $config->rw_community, '1.3.6.1.4.1.7432.1.1.1.1.0', 'i', '1', 300000, 1);
+			if (!$domain)
+				$domain = ProvBase::first()->domain_name;
+
+			$fqdn = $this->hostname.'.'.$domain;
+
+			// restart - PKTC-EXCENTIS-MTA-MIB::pktcMtaDevResetNow
+			// NOTES: Version 2 is important!
+			// 'private' is the always working default community
+			snmp2_set($fqdn, 'private', '1.3.6.1.4.1.7432.1.1.1.1.0', 'i', '1', 300000, 1);
 		}
 		catch (\Exception $e)
 		{
@@ -403,7 +409,7 @@ class MtaObserver
 		{
 			if (array_key_exists('mac', $modifications))
 				$mta->make_dhcp_mta();
-			
+
 			$mta->make_configfile();
 		}
 
