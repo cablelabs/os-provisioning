@@ -42,7 +42,7 @@ $(document).ready(function() {
       });
     @endforeach
   @endif
-  
+
   // Intelligent Data Tables
   @if (isset($model) && isset($view_var) && isset($view_var->index_datatables_ajax_enabled) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
     $('table.datatable').DataTable(
@@ -91,9 +91,9 @@ $(document).ready(function() {
                     @if ( starts_with($field, $view_var->view_index_label_ajax()["table"].'.'))
                         {data: '{{ substr($field, strlen($view_var->view_index_label_ajax()["table"]) + 1) }}', name: '{{ $field }}'},
                     @else
-                        {data: '{{ $field }}', name: '{{$field}}', 
-                        searchable: {{ isset($view_var->view_index_label_ajax()["sortsearch"][$field]) ? "false" : "true" }}, 
-                        orderable:  {{ isset($view_var->view_index_label_ajax()["sortsearch"][$field]) ? "false" : "true" }} 
+                        {data: '{{ $field }}', name: '{{$field}}',
+                        searchable: {{ isset($view_var->view_index_label_ajax()["sortsearch"][$field]) ? "false" : "true" }},
+                        orderable:  {{ isset($view_var->view_index_label_ajax()["sortsearch"][$field]) ? "false" : "true" }}
                         },
                     @endif
                 @endforeach
@@ -122,10 +122,10 @@ $(document).ready(function() {
                 @if (isset($delete_allowed) && $delete_allowed == true)
                     [{{$columnindex + 2}}, '{{$direction}}'],
                 @else
-                    [{{$columnindex + 1}}, '{{$direction}}'], 
+                    [{{$columnindex + 1}}, '{{$direction}}'],
                 @endif
             @endforeach
-        @endif   
+        @endif
         aoColumnDefs: [ {
             className: 'control',
             orderable: false,
@@ -136,7 +136,7 @@ $(document).ready(function() {
             className: 'index_check',
             orderable: false,
             targets:   [1]
-        },      
+        },
         @endif
         {
             targets :  "_all",
@@ -189,7 +189,7 @@ $(document).ready(function() {
         className: 'index_check',
         orderable: false,
         targets:   [1]
-    },      
+    },
     @endif ],
 	// "sPaginationType": "four_button"
 	lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],

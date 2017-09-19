@@ -50,7 +50,7 @@ if (typeof(Storage) !== "undefined") {
         $('#' + sitem).addClass("active");
         $('#' + sitem + ' .sub-menu ').css("display", "block");
         $('#' + chitem).addClass("active");
-        
+
         $('#sidebar .sub-menu li').click(function(event) {
             localStorage.setItem("clicked-item", $(this).attr('id'));
             localStorage.setItem("sidebar-item", $(this).parent().parent().attr('id'))

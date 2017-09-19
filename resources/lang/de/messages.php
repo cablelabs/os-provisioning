@@ -148,7 +148,7 @@ return [
 	'Start ID Endpoints'		=> 'Start Nummerierung Endpunkte',
 	//VOIP
 	'Start ID MTA´s'			=> 'Start Nummerierung MTA\'s',
-//    
+//
 //Provisioning
 //
 	//Verträge
@@ -221,7 +221,7 @@ return [
 	//SEPA Accounts
 	'Account Holder'			=> 'Kontoinhaber',
 	'Account Name'				=> 'Kontoname',
-	'Choose Call Data Record template file'	=> 'Vorlage für Einzel- verbindungsnachweis', 
+	'Choose Call Data Record template file'	=> 'Vorlage für Einzel- verbindungsnachweis',
 	'Choose invoice template file'			=> 'Rechnungsvorlage',
 	'CostCenter'				=> 'Kostenstelle',
 	'Creditor ID'				=> 'Gläubiger ID',
@@ -235,7 +235,7 @@ return [
 	'SepaAccount'				=> 'SEPA-Konto', // siehe Companies
 	'Upload CDR template'		=> 'CDR-Vorlage hochladen',
 	'Upload invoice template'	=> 'Rechnungsvorlage hochladen',
-	
+
 	//Settlement Run Abrechnnungslauf
 	'General'				=> 'Allgemein',
 	'Verified'				=> 'Überprüft?',
@@ -259,7 +259,7 @@ return [
 	'Directorate'			=> 'Geschäftsleitung',
 	'Mail address'			=> 'Email-Adresse',
 	'Management'			=> 'Unternehmensführung',
-	'Registration Court 1'	=> 'Registergericht 1', 
+	'Registration Court 1'	=> 'Registergericht 1',
 	'Registration Court 2'	=> 'Registergericht 2',
 	'Registration Court 3'	=> 'Registergericht 3',
 	'Sales Tax Id Nr'		=> 'Umsatzsteuer ID-Nummer',
@@ -281,8 +281,8 @@ return [
 	'Invoicenr'				=> 'Rechnungsnummer',
 	'Calling Number'		=> 'Rufnummer',
 	'Called Number'			=> 'Angerufene Nummer',
-	'Target Month'			=> 'Abrechnungsmonat', 
-	'Date'					=> 'Datum', 
+	'Target Month'			=> 'Abrechnungsmonat',
+	'Date'					=> 'Datum',
 	'Count'					=> 'Anzahl',
 	'Tax'					=> 'Mehrwertsteuer',
 	'RCD'					=> 'Fälligkeitsdatum',
@@ -299,7 +299,7 @@ return [
  * Customer Control Center
  */
 	'conn_info_err_create' 	=> 'Fehler beim Erstellen des PDF - Siehe LogFile!',
-	'conn_info_err_template' => 'Das Template konnte nicht gelesen werden - Bitte überprüfen Sie ob es unter Unternehmen gesetzt ist!', 
+	'conn_info_err_template' => 'Das Template konnte nicht gelesen werden - Bitte überprüfen Sie ob es unter Unternehmen gesetzt ist!',
 	'log_out'				=> 'Ausloggen',
 	'password_change'		=> 'Passwort ändern',
 	'password_confirm'		=> 'Password bestätigen',
@@ -396,7 +396,7 @@ return [
 	'PDV >300 ms'			=> 'PDV von über 300ms',
 	'Callee (-> Caller)'	=> 'Angerufener -> Anrufer',
 //
-// Select Box 
+// Select Box
 //
 	//Product Entry
 	'Credit'                    => 'Gutschrift',
@@ -418,7 +418,7 @@ return [
 	'generic'                   => 'Allgemein',
 	'network'                   => 'Netzwerk',
 	'vendor'                    => 'Hersteller',
-	'user'                      => 'Nutzer',    
+	'user'                      => 'Nutzer',
 	'Yes'                       => 'Ja',
 	'No'                        => 'Nein',
 // Index DataTable Header
@@ -428,8 +428,8 @@ return [
 	'guilog.method' => 'Aktion',
 	'guilog.model' => 'Model',
 	'guilog.model_id' => 'Model ID',
-	// Company	
-	'company.name' => 'Name', 
+	// Company
+	'company.name' => 'Name',
 	'company.city' => 'Stadt',
 	'company.phone' => 'Telefonnummer',
 	'company.mail' => 'E-Mail',
@@ -438,7 +438,7 @@ return [
 	'costcenter.number' => 'Nummer',
 	//Invoices
 	'invoice.type' => 'Typ',
-	'invoice.year' => 'Jahr', 
+	'invoice.year' => 'Jahr',
 	'invoice.month' => 'Monat',
 	//Item //**
 
@@ -467,7 +467,7 @@ return [
 	// MPR
 	'mpr.name' => 'Name',
 	// NetElement
-	'netelement.id' => 'ID',	
+	'netelement.id' => 'ID',
 	'netelement.name' => 'Netzelement',
 	'netelement.ip' => 'IP Adresse',
 	'netelement.pos' => 'Position',
@@ -480,7 +480,7 @@ return [
 	'mibfile.name' => 'Name',
 	'mibfile.version' => 'Version',
 	// OID
-	'oid.name_gui' => 'GUI Beschriftung', 
+	'oid.name_gui' => 'GUI Beschriftung',
 	'oid.name' => 'OID Name',
 	'oid.oid' => 'OID',
 	'oid.access' => 'Schreibschutz',
@@ -543,7 +543,7 @@ return [
 	'mta.mac' => 'MAC-Adresse',
 	'mta.type' => 'Provisionierungstyp',
 	// Configfile
-	'configfile.name' => 'Konfiguartionsdatei',	
+	'configfile.name' => 'Konfiguartionsdatei',
 	// PhonebookEntry
 	'phonebookentry.id' => 'ID',
 	// Phonenumber

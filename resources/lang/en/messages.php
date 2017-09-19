@@ -56,7 +56,7 @@ return [
 	'guilog.model' => 'Model',
 	'guilog.model_id' => 'Model ID',
 	// Company
-	'company.name' => 'Name', 
+	'company.name' => 'Name',
 	'company.city' => 'City',
 	'company.phone' => 'Mobile Number',
 	'company.mail' => 'E-Mail',
@@ -65,7 +65,7 @@ return [
 	'costcenter.number' => 'Number',
 	//Invoices
 	'invoice.type' => 'Type',
-	'invoice.year' => 'Year', 
+	'invoice.year' => 'Year',
 	'invoice.month' => 'Month',
 	//Item //**
 
@@ -94,7 +94,7 @@ return [
 	// MPR
 	'mpr.name' => 'Name',
 	// NetElement
-	'netelement.id' => 'ID',	
+	'netelement.id' => 'ID',
 	'netelement.name' => 'Netelement',
 	'netelement.ip' => 'IP Adress',
 	'netelement.pos' => 'Position',
@@ -107,7 +107,7 @@ return [
 	'mibfile.name' => 'Name',
 	'mibfile.version' => 'Version',
 	// OID
-	'oid.name_gui' => 'GUI Label', 
+	'oid.name_gui' => 'GUI Label',
 	'oid.name' => 'OID Name',
 	'oid.oid' => 'OID',
 	'oid.access' => 'Access Type',
