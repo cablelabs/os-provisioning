@@ -38,6 +38,7 @@ return [
 	'modem_configfile_error'=> 'Modem configfile not found',
 	'modem_offline'			=> 'Modem is Offline',
 	'month' 				=> 'Month',
+	'mta_configfile_error'	=> 'MTA configfile not found',
 	'oid_list' 				=> 'Warning: OIDs that not already exist in Database are discarded! Please upload MibFile before!',
 	'password_change'		=> 'Change Password',
 	'password_confirm'		=> 'Confirm Password',

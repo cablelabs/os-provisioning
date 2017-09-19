@@ -73,6 +73,7 @@ return [
 	'modem_offline'				=> 'Modem ist Offline',
 	'month'						=> 'Monat',
 	'Month'						=> 'Monat',
+	'mta_configfile_error'		=> 'MTA Konfigurationsdatei nicht gefunden',
 	'Net'						=> 'Netz',
 	'Netmask'					=> 'Netzmaske',
 	'Network Access'			=> 'Netzwerkzugriff',
