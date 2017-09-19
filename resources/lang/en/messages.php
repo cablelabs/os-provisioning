@@ -27,6 +27,7 @@ return [
 	'Invoices'				=> 'Invoices',
 	'log_out'				=> 'Log Out',
 	'missing_product' 		=> 'Missing Product!',
+	'modem_eventlog_error'	=> 'Modem eventlog not found',
 	'modem_monitoring_error'=> 'This could be because the Modem was not online until now. Please note that Diagrams are only available
 		from the point that a modem was online. If all diagrams did not show properly then it should be a
 		bigger problem and there should be a cacti misconfiguration. Please consider the administrator on bigger problems.',

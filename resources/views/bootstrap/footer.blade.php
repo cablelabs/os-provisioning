@@ -178,6 +178,7 @@ $(document).ready(function() {
 			type: 'column'
 		}
 	},
+    autoWidth: false,
 	aoColumnDefs: [ {
 		className: 'control',
 		orderable: false,
@@ -227,6 +228,7 @@ $(document).ready(function() {
           type: 'column'
       }
   },
+  autoWidth: false,
   paging: false,
   info: false,
   searching: false,

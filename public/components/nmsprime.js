@@ -206,6 +206,11 @@ $('.datatable').click(function (e) {
 });
 
 
+$('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+  $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+});
+
+
 var NMS = function () {
 	"use strict";
 

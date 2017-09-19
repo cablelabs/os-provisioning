@@ -61,6 +61,7 @@ return [
 	'Last IP'					=> 'Letzte IP',
 	'MAC Address'				=> 'MAC Adresse',
 	'Main Menu'					=> 'Hauptmenü',
+	'modem_eventlog_error'		=> 'Modem Eventlog nicht gefunden',
 	'modem_monitoring_error'	=> 'Möglicherweise war das Modem bis jetzt nicht online. Beachten Sie, dass Diagramme erst ab
 		dem Zeitpunkt verfügbar sind, von dem an das Modem online ist. Wurden alle Diagramme unsauber angezeigt, könnte es
 		sich um ein größeres Problem, wie eine Fehlkonfiguration von Cacti, handeln. Wenden Sie sich dazu an ihren Administrator.',

@@ -5,6 +5,7 @@ namespace Modules\ProvBase\Entities;
 use File;
 use Log;
 use Exception;
+use Acme\php\ArrayHelper;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\ProvBase;
 use Modules\ProvMon\Http\Controllers\ProvMonController;
@@ -576,6 +577,62 @@ class Modem extends \BaseModel {
 			}
 		}
 
+	}
+
+
+	/**
+	 * Get eventlog of a modem via snmp
+	 *
+	 * @return: Array of rows of the eventlog table
+	 * @author: Ole Ernst
+	 */
+	public function get_eventlog()
+	{
+		$conf = ProvBase::first();
+		$fqdn = $this->hostname.'.'.$conf->domain_name;
+		$com = $conf->ro_community;
+
+		snmp_set_quick_print(TRUE);
+		snmp_set_oid_output_format(SNMP_OID_OUTPUT_NUMERIC);
+		snmp_set_valueretrieval(SNMP_VALUE_LIBRARY);
+
+		$log = snmprealwalk($fqdn, $com, '.1.3.6.1.2.1.69.1.5.8.1');
+		$log = ArrayHelper::snmpwalk_fold($log);
+
+		// filter unnecessary entries
+		$log = array_filter($log, function($k) {
+			$tmp = explode('.', $k);
+			$tmp = array_pop($tmp);
+			if($tmp > 2 && $tmp < 8 && $tmp != 6)
+				return true;
+		}, ARRAY_FILTER_USE_KEY);
+
+		// show time column in a human-readable format
+		$time_key = array_keys($log)[0];
+		foreach($log[$time_key] as $k => $time) {
+			$time = explode(' ', trim($time, "\" "));
+			$time[0] .= $time[1]; unset($time[1]);
+			$time = array_map('hexdec', $time);
+			$time = sprintf("%02d.%02d.%04d %02d:%02d:%02d.%d", $time[3], $time[2], $time[0], $time[4], $time[5], $time[6], $time[7]);
+			$log[$time_key][$k] = $time;
+		}
+
+		// translate severity level of log entry to datatable colors
+		$color_key = array_keys($log)[2];
+		foreach($log[$color_key] as $k => $color_idx) {
+			$trans = ['', 'danger', 'danger', 'danger', 'danger', 'warning', 'success', '', 'info'];
+			$log[$color_key][$k] = $trans[$color_idx];
+		}
+
+		// add table headers
+		$ret[] = ['Time', '#', 'Text'];
+
+		// reshape array into the right format
+		foreach (array_reverse(array_keys(reset($log))) as $idx)
+			foreach ($log as $k => $v)
+				$ret[$idx][] = $v[$idx];
+
+		return $ret;
 	}
 
 
