@@ -50,7 +50,7 @@ if (typeof(Storage) !== "undefined") {
         $('#' + sitem).addClass("active");
         $('#' + sitem + ' .sub-menu ').css("display", "block");
         $('#' + chitem).addClass("active");
-        
+
         $('#sidebar .sub-menu li').click(function(event) {
             localStorage.setItem("clicked-item", $(this).attr('id'));
             localStorage.setItem("sidebar-item", $(this).parent().parent().attr('id'))
@@ -203,6 +203,11 @@ $('.datatable').click(function (e) {
     var allCheck = ($(this).closest('table').find('td input:checkbox:enabled'));
     allCheck.prop('checked', !allCheck.prop("checked"));
   }
+});
+
+
+$('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+  $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
 });
 
 

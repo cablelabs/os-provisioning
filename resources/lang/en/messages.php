@@ -27,6 +27,7 @@ return [
 	'Invoices'				=> 'Invoices',
 	'log_out'				=> 'Log Out',
 	'missing_product' 		=> 'Missing Product!',
+	'modem_eventlog_error'	=> 'Modem eventlog not found',
 	'modem_monitoring_error'=> 'This could be because the Modem was not online until now. Please note that Diagrams are only available
 		from the point that a modem was online. If all diagrams did not show properly then it should be a
 		bigger problem and there should be a cacti misconfiguration. Please consider the administrator on bigger problems.',
@@ -37,6 +38,7 @@ return [
 	'modem_configfile_error'=> 'Modem configfile not found',
 	'modem_offline'			=> 'Modem is Offline',
 	'month' 				=> 'Month',
+	'mta_configfile_error'	=> 'MTA configfile not found',
 	'oid_list' 				=> 'Warning: OIDs that not already exist in Database are discarded! Please upload MibFile before!',
 	'password_change'		=> 'Change Password',
 	'password_confirm'		=> 'Confirm Password',
@@ -54,7 +56,7 @@ return [
 	'guilog.model' => 'Model',
 	'guilog.model_id' => 'Model ID',
 	// Company
-	'company.name' => 'Name', 
+	'company.name' => 'Name',
 	'company.city' => 'City',
 	'company.phone' => 'Mobile Number',
 	'company.mail' => 'E-Mail',
@@ -63,7 +65,7 @@ return [
 	'costcenter.number' => 'Number',
 	//Invoices
 	'invoice.type' => 'Type',
-	'invoice.year' => 'Year', 
+	'invoice.year' => 'Year',
 	'invoice.month' => 'Month',
 	//Item //**
 
@@ -92,7 +94,7 @@ return [
 	// MPR
 	'mpr.name' => 'Name',
 	// NetElement
-	'netelement.id' => 'ID',	
+	'netelement.id' => 'ID',
 	'netelement.name' => 'Netelement',
 	'netelement.ip' => 'IP Adress',
 	'netelement.pos' => 'Position',
@@ -105,7 +107,7 @@ return [
 	'mibfile.name' => 'Name',
 	'mibfile.version' => 'Version',
 	// OID
-	'oid.name_gui' => 'GUI Label', 
+	'oid.name_gui' => 'GUI Label',
 	'oid.name' => 'OID Name',
 	'oid.oid' => 'OID',
 	'oid.access' => 'Access Type',

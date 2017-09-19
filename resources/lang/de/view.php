@@ -53,8 +53,8 @@ return [
 		'Menu_Modems'				=> 'Modems',
 		'Menu_Endpoints'			=> 'Endpunkte',
 		'Menu_Configfiles' 			=> 'Konfigurationsdateien',
-		'Menu_QoS' 					=> 'QoS-Einstellungen',
-		'Menu_CMTS' 				=> 'CMTS-Einstellungen',
+		'Menu_QoS' 					=> 'QoS',
+		'Menu_CMTS' 				=> 'CMTS',
 		'Menu_Ip-Pools' 			=> 'IP-Bereiche',
 		'Menu_MTAs' 				=> 'MTAs',
 		'Menu_Phonenumbers'			=> 'Telefonnummern',
@@ -136,7 +136,7 @@ return [
 		//Contract
 		'Header_Contract'			=> 'Vertrag|Verträge',
 		'Header_EditContract'		=> 'Vertrag bearbeiten',
-		'Header_SepaMandate'		=> 'SEPA-Mandat|SEPA-Mandate',	
+		'Header_SepaMandate'		=> 'SEPA-Mandat|SEPA-Mandate',
 		//Modems
 		'Header_Modems'				=> 'Modem|Modems', //workaround
 		'Header_EditModems'			=> 'Modem bearbeiten',
@@ -159,7 +159,7 @@ return [
 		'Header_EditIpPool'			=> 'IP-Bereich bearbeiten',
 		'Header_IP-Pools'			=> 'IP-Bereich|IP-Bereiche',
 		'Header_EditIP-Pools'		=> 'IP-Bereich bearbeiten',
-			
+
 	//VOIP
 		//MTA
 		'Header_Mta'				=> 'MTA|MTAs',
@@ -178,7 +178,7 @@ return [
 		'Header_EnviaOrders'		=> 'Envia Bestellung|Envia Bestellungen',
 
 	//HFC
-		//Tree 
+		//Tree
 		'Header_Tree Table' 		=> 'Baumelement|Baumtabelle', //??
 		'Header_EditTree Table'		=> 'Baumelement bearbeiten', //??
 		//MPR
