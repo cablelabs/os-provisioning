@@ -49,6 +49,7 @@ return [
 		'Menu_SEPA Accounts'		=> 'SEPA-Konten',
 		'Menu_Settlement Run'		=> 'Abrechnungslauf',
 		'Menu_Cost Center'			=> 'Kostenstelle',
+		'Menu_Number Range'			=> 'Nummernkreis',
 		'Menu_Companies'			=> 'Unternehmen',
 		'Menu_Salesmen'				=> 'Verkäufer',
 		'Menu_Tree Table'			=> 'Baumdiagramm',
@@ -304,7 +305,7 @@ return [
 	'Dashboard_LinkDetails'			=> 'Zeige Details',
 	'Dashboard_Other'				=> 'Sonstiges',
 	'Dashboard_Tickets' 			=> 'NEUE TICKETS',
-	'Dashboard_NoTickets' 			=> 'Keine neuen Tickets vorhanden.',
+	'Dashboard_NoTickets' 			=> 'Keine neuen Tickets.',
 	'Dashboard_Quickstart' 			=> 'SCHNELLSTART',
 
 //

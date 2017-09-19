@@ -609,6 +609,8 @@ class BaseModel extends Eloquent
 		$relations = [];
 		// exceptions
 		$exceptions = ['configfile_id', 'salesman_id', 'costcenter_id', 'company_id', 'sepaaccount_id', 'product_id'/*, 'mibfile_id', 'oid_id'*/];
+		// current DB
+		$db = 'Tables_in_' . \Config::get('database.connections.' . \Config::get('database.default') . '.database');
 
 		// this is the variable that holds table names in $table returned by DB::select('SHOW TABLES')
 		// named dynamically containing the database name

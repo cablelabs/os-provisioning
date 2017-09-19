@@ -18,6 +18,11 @@
 	                @if (session('status'))
 					    {{ session('status') }}
 					@endif
+
+                    @if ( !empty($message))
+                        {{ $message }} <a href="{{ route('Auth.logout') }}" class="btn btn-success">Logout</a>
+                    @endif
+                    <br><br>
                 </div>
                 <div>
                     <a href="{{\BaseRoute::get_base_url()}}" class="btn btn-success">Go Back to Home Page</a>

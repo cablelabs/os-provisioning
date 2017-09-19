@@ -103,6 +103,13 @@ class BaseController extends Controller {
 	{
 		$classname = \NamespaceController::get_model_name();
 
+		// Rewrite model to check with new assigned Model
+		switch ($classname) {
+			case 'Modules\Ticketsystem\Entities\Ticketsystem':
+				$classname = 'Modules\Ticketsystem\Entities\Ticket';
+				break;
+		}
+
 		if (!$classname)
 			return null;
 
@@ -211,6 +218,11 @@ class BaseController extends Controller {
 				(in_array(\Str::lower($data[$field['name']]), ["on", "checked"]))
 			) {
 				$data['active'] = "1";
+			}
+
+			// multiple select?
+			if ($field['form_type'] == 'select' && isset($field['options']['multiple'])) {
+				$field['name'] = str_replace('[]', '', $field['name']);
 			}
 
 			// trim all inputs as default

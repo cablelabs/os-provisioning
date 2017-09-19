@@ -5,6 +5,7 @@ namespace Modules\ProvBase\Entities;
 use Modules\ProvBase\Entities\Qos;
 use Modules\BillingBase\Entities\SettlementRun;
 use Modules\BillingBase\Entities\Invoice;
+use Modules\BillingBase\Entities\NumberRange;
 
 class Contract extends \BaseModel {
 
@@ -1220,6 +1221,14 @@ class ContractObserver
 			$contract->sepa_iban = strtoupper($contract->sepa_iban);
 			$contract->sepa_bic  = strtoupper($contract->sepa_bic);
 		}
+
+		// generate contract number 
+		if (is_null($contract->id)) {
+			$new_number = NumberRange::get_new_number('contract');
+		} else {
+			$new_number = $contract->id - $this->num;
+		}
+		$contract->number = $new_number;
 	}
 
 
@@ -1229,7 +1238,7 @@ class ContractObserver
 		// $contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
 		if (!$contract->number)
 		{
-			$contract->number = $contract->id - $this->num;
+			// $contract->number = $contract->id - $this->num;
 			$contract->observer_enabled = false;
 			$contract->save();     			// forces to call the updating, saving, updated & saved method of the observer
 		}
