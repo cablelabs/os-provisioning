@@ -104,8 +104,12 @@ We use .. for versioning. For the versions available, see the ..
 ## Authors
 
 * **Torsten Schmidt** - *Initial work* - [schmto](https://github.com/schmto)
+* **Nino Ryschawy** - *Maintainer/Developer* - [nino](https://github.com/todo)
+* **Ole Ernst** - *Maintainer/Developer* - [ole](https://github.com/todo)
+* **Patrick Reichel** - *Sub-Maintainer/Developer for ..* - [patrick](https://github.com/todo)
+* **Christian Schramm** - *Developer for ..* - [christian](https://github.com/todo)
 
-TODO: add other main contributors..
+TODO: add other main developers..
 
 See also the list of [contributors] (https://github.com/schmto/nms-prime/contributors) who participated in this project.
 
@@ -114,4 +118,4 @@ See also the list of [contributors] (https://github.com/schmto/nms-prime/contrib
 This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.md) file for details.
 
 The code under public/components/assets-admin has a special license – see:
-* [Color Admin](https://wrapbootstrap.com/theme/color-admin-admin-template-front-end-WB0N89JMK)(public/components/assets-admin/LICENSE.md) for license informations
+* [Color Admin](https://wrapbootstrap.com/theme/color-admin-admin-template-front-end-WB0N89JMK) [LICENSE.md](/public/components/assets-admin/LICENSE.md) for license informations
