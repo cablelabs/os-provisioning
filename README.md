@@ -81,7 +81,7 @@ TODO - PR: reference to our RPM build stuff
 
 * [Laravel](http://..) - ..
 * [Bootstrap](http://..) - ..
-* [Color Admin](http://..) - ..
+* [Color Admin](https://wrapbootstrap.com/theme/color-admin-admin-template-front-end-WB0N89JMK) - Bootstrap - Color Admin - Admin Template - Front End
 
 TODO - PR: add more main projects
 
@@ -113,3 +113,5 @@ See also the list of [contributors] (https://github.com/schmto/nms-prime/contrib
 
 This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.md) file for details.
 
+The code under public/components/assets-admin has a special license – see:
+* [Color Admin](https://wrapbootstrap.com/theme/color-admin-admin-template-front-end-WB0N89JMK)(public/components/assets-admin/LICENSE.md) for license informations
