@@ -226,6 +226,6 @@ return [
 	'Dashboard_LinkDetails'			=> 'View Details',
 	'Dashboard_Other'				=> 'Other',
 	'Dashboard_Tickets' 			=> 'NEW TICKETS',
-	'Dashboard_NoTickets' 			=> 'No new Tickets available.',
+	'Dashboard_NoTickets' 			=> 'No new Tickets.',
 	'Dashboard_Quickstart' 			=> 'QUICKSTART',
 ];
