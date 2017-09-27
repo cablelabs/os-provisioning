@@ -1224,7 +1224,7 @@ class ContractObserver
 
 		// generate contract number 
 		if (is_null($contract->id)) {
-			$new_number = NumberRange::get_new_number('contract');
+			$new_number = NumberRange::get_new_number('contract', \Input::get('costcenter_id'));
 		} else {
 			$new_number = $contract->id - $this->num;
 		}
