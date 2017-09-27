@@ -395,7 +395,7 @@ class MtaObserver
 		$mta->hostname = 'mta-'.$mta->id;
 		$mta->save(); 			// forces to call updated method
 		$mta->modem->make_dhcp_cm(false, true);
-		$mta->modem->restart();
+		$mta->modem->restart_modem();
 	}
 
 	public function updated($mta)
@@ -421,6 +421,6 @@ class MtaObserver
 		$mta->make_dhcp_mta(true);
 		$mta->modem->make_dhcp_cm(false, true);
 		$mta->delete_configfile();
-		$mta->restart();
+		$mta->modem->restart_modem();
 	}
 }
