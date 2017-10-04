@@ -110,6 +110,12 @@ TODO - PR: reference to our RPM build stuff
 
 ---
 
+## Documentation
+
+You can generate Doxygen documentation using Documentation/doxygen.sh
+
+---
+
 ## Built With
 
 * [Laravel](http://..) - ..
