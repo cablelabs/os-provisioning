@@ -46,24 +46,31 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 |
 */
 
+$kernel = $app->make('Illuminate\Contracts\Http\Kernel');
+
+
+/*
+ * Check permissions: disable all admin pages and/or redirect
+ * to customer control center (ccc)
+ *
+ * @author: Torsten Schmidt
+ */
 $request = Illuminate\Http\Request::capture();
 
-if ($request->is('customer/*'))
+if ($request->is('admin/*'))
 {
 	/*
 	 * TODO: throw "nice looking" access error due to permisson restriction!
 	 *       Wrong http port to access admin section!
 	 */
-	echo "Wrong http port to access customer section!";
+	echo "Wrong http port to access admin section!";
 
 	return;
 }
 
 
-$kernel = $app->make('Illuminate\Contracts\Http\Kernel');
-
 $response = $kernel->handle(
-	$request = Illuminate\Http\Request::capture()
+	$request
 );
 
 $response->send();
