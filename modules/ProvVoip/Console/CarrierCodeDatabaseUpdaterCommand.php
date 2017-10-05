@@ -41,7 +41,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 	/**
 	 * Path to hash file for csv comparation.
 	 * this path is later used by \Storage::…
-	 * if relative: this is stored in …/lara/storage/app
+	 * if relative: this is stored in …/nmsprime/storage/app
 	 *
 	 * @var string
 	 */
@@ -77,7 +77,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command {
 			$this->_update_using_envia_api();
 		}
 		else {
-			// fallback: get data from file /lara/storage/app/config/provvoip/carrier_codes.csv
+			// fallback: get data from file /nmsprime/storage/app/config/provvoip/carrier_codes.csv
 			$this->_update_using_file();
 		}
 	}

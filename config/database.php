@@ -52,7 +52,7 @@ return [
 			'prefix'   => '',
 		],
 
-		// TODO: don't use root sql user to access lara DB
+		// TODO: don't use root sql user to access nmsprime DB
 		//       we should use a separate user for this.
 		'mysql' => [
 			'driver'    => 'mysql',

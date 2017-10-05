@@ -9,7 +9,7 @@ use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Configfile;
 use Modules\ProvBase\Entities\ProvBase;
 
-// Model not found? execute composer dump-autoload in lara root dir
+// Model not found? execute composer dump-autoload in nmsprime root dir
 class Mta extends \BaseModel {
 
 	// The associated SQL table for this Model

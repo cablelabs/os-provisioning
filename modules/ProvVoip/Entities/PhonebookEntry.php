@@ -2,7 +2,7 @@
 
 namespace Modules\ProvVoip\Entities;
 
-// Model not found? execute composer dump-autoload in lara root dir
+// Model not found? execute composer dump-autoload in nmsprime root dir
 class PhonebookEntry extends \BaseModel {
 
     // The associated SQL table for this Model
@@ -151,7 +151,7 @@ class PhonebookEntry extends \BaseModel {
 				'bsclass' => $bsclass];
 	}
 
-	public function get_bsclass() 
+	public function get_bsclass()
 	{
 		$bsclass = 'success';
 

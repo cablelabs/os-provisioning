@@ -47,7 +47,7 @@ class GlobalConfig extends BaseModel {
 	 */
 	public function version ()
 	{
-		$version = exec("rpm -q lara-base --queryformat '%{version}'");
+		$version = exec("rpm -q nmsprime-base --queryformat '%{version}'");
 		if (preg_match('/not installed/', $version))
 			$version = 'GIT: '.exec('cd '.app_path().' && git rev-parse --abbrev-ref HEAD').' - '.exec('cd '.app_path().' && git rev-parse --short HEAD');
 

@@ -2,7 +2,7 @@
 
 namespace Modules\ProvVoip\Entities;
 
-// Model not found? execute composer dump-autoload in lara root dir
+// Model not found? execute composer dump-autoload in nmsprime root dir
 class PhoneTariff extends \BaseModel {
 
     // The associated SQL table for this Model
@@ -30,7 +30,7 @@ class PhoneTariff extends \BaseModel {
 	// View Icon
 	public static function view_icon()
 	{
-		return '<i class="fa fa-phone-square"></i>'; 
+		return '<i class="fa fa-phone-square"></i>';
 	}
 
 

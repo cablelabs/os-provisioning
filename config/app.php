@@ -41,7 +41,7 @@ return [
 	/* 'url' => 'http://localhost', */
 
 	// changed by Patrick Reichel => use this in /modules/ProvVoipEnvia/Console/EnviaOrderUpdaterCommand.php
-	'url' => 'https://localhost/lara',
+	'url' => 'https://localhost/nmsprime',
 
 	/*
 	|--------------------------------------------------------------------------

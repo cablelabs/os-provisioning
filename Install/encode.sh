@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# call like ./encode.sh /var/www/nmsprime /tmp/lara "1 2 3 4 5 6 7 8 9 10"
+# call like ./encode.sh /var/www/nmsprime /tmp/nmsprime "1 2 3 4 5 6 7 8 9 10"
 
 sour=$1
 dest=$2

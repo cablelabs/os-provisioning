@@ -36,7 +36,7 @@
 					//echo "<li style='font-size: 2em; font-weight: bold' class='p-r-5'>";
 
 					$user_interaction_needing_enviaorder_count = Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
-					echo '<a href="/lara/admin/EnviaOrder?show_filter=action_needed" target="_self">';
+					echo '<a href="/nmsprime/admin/EnviaOrder?show_filter=action_needed" target="_self">';
 
 					if ($user_interaction_needing_enviaorder_count > 0) {
 						echo "<span style='color: #f00; text-decoration:none' title='".$user_interaction_needing_enviaorder_count." user interaction needing EnviaOrders'>✘<sup>";

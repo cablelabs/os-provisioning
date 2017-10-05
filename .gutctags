@@ -4,14 +4,14 @@
 --regex-C=/$x/x/x/e/ http://stackoverflow.com/questions/10973224/how-to-add-comments-to-an-exuberant-ctags-config-file
 --regex-C=/$x/x/x/e/
 --regex-C=/$x/x/x/e/ This file is used by the gutentags vim plugin for live creation of tags file
---regex-C=/$x/x/x/e/ if you are using a root path other than “lara” AND you are using gutentags: extend this file for your path
+--regex-C=/$x/x/x/e/ if you are using a root path other than “nmsprime” AND you are using gutentags: extend this file for your path
 --regex-C=/$x/x/x/e/ comment by par: local excludes (e.g. --exclude=vendor/*) are sometimes ignored and let the tags file explode
 --regex-C=/$x/x/x/e/ so we use this unusual patterns
 
---exclude=*/lara/.git
---exclude=*/lara/vendor/*
---exclude=*/lara/storage/*
---exclude=*/lara/Documentation/*
---exclude=*/lara/public/components/*
---exclude=*/lara/modules/*/Assets/*
---exclude=*/lara/.deprecated/*
+--exclude=*/nmsprime/.git
+--exclude=*/nmsprime/vendor/*
+--exclude=*/nmsprime/storage/*
+--exclude=*/nmsprime/Documentation/*
+--exclude=*/nmsprime/public/components/*
+--exclude=*/nmsprime/modules/*/Assets/*
+--exclude=*/nmsprime/.deprecated/*
