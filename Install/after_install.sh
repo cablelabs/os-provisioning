@@ -1,4 +1,4 @@
-dir="/var/www/lara"
+dir="/var/www/nmsprime"
 cd $dir
 
 # access rights

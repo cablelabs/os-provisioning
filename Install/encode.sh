@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# call like ./encode.sh /var/www/lara /tmp/lara "1 2 3 4 5 6 7 8 9 10"
+# call like ./encode.sh /var/www/nmsprime /tmp/lara "1 2 3 4 5 6 7 8 9 10"
 
 sour=$1
 dest=$2
@@ -11,7 +11,7 @@ opt="--replace-target --license-check auto --ignore-interface-aliases"
 cmd="ioncube_encoder.sh"
 
 
-# Base Package Encode Directories 
+# Base Package Encode Directories
 # NOTE: encoding  views does not work, this leads to no interpretation of blade syntax
 #       blade is not properly decoded in to HTML, it simply prints {{ .. }} to HTML
 directorys=( app database )
