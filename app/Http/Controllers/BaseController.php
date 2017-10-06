@@ -981,28 +981,29 @@ class BaseController extends Controller {
 
 		$header_fields = $index_label_array['index_header'];
 		$edit_column_data = isset($index_label_array['edit']) ? $index_label_array['edit'] : [];
+		$filter_column_data = isset($index_label_array['filter']) ? $index_label_array['filter'] : [];
 		$eager_loading_tables = isset($index_label_array['eager_loading']) ? $index_label_array['eager_loading'] : [];
 
 		!array_has($header_fields, $index_label_array['table'].'.id') ? array_push($header_fields, 'id') : null; // if no id Column is drawn, draw it to generate links with id
 
 		if (empty($eager_loading_tables) ){ //use eager loading only when its needed
-			$eloquent_query = $model::select($index_label_array['table'].'.*');
+			$request_query = $model::select($index_label_array['table'].'.*');
 			$first_column = substr(head($header_fields), strlen($index_label_array["table"]) + 1);
 		} else {
-			$eloquent_query = $model::with($eager_loading_tables)->select($index_label_array['table'].'.*'); //eager loading | select($select_column_data);
+			$request_query = $model::with($eager_loading_tables)->select($index_label_array['table'].'.*'); //eager loading | select($select_column_data);
 			if (starts_with(head($header_fields), $index_label_array["table"]))
 				$first_column = substr(head($header_fields), strlen($index_label_array["table"]) + 1);
 			else
 				$first_column = head($header_fields);
 		}
 
-		$DT = Datatables::of($eloquent_query);
-		$DT ->addColumn('responsive', "")
-			->addColumn('checkbox', "");
+		$DT = Datatables::of($request_query);
+		$DT ->addColumn('responsive', '')
+			->addColumn('checkbox', '');
 
-		foreach ($edit_column_data as $column => $functionname) {
-			$DT->editColumn($column, function($object) use ($functionname) {
-				return $object->$functionname();
+		foreach ($filter_column_data as $column => $custom_query) {
+			$DT->filterColumn($column, function($query, $keyword) use ($custom_query) {
+				$query->whereRaw( $custom_query, ["%{$keyword}%"]);
 			});
 		};
 
@@ -1014,6 +1015,20 @@ class BaseController extends Controller {
 				return '<a href="'.route(\NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
 				$object->view_icon().array_get($object, $first_column).'</strong></a>';
 			});
+
+		foreach ($edit_column_data as $column => $functionname) {
+			if($column == $first_column)
+			{
+			$DT->editColumn($column, function($object) use ($functionname) {
+				return '<a href="'.route(\NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
+				$object->view_icon().$object->$functionname().'</strong></a>';
+			});
+			} else {
+			$DT->editColumn($column, function($object) use ($functionname) {
+				return $object->$functionname();
+			});
+		}
+		};
 
 		$DT	->setRowClass(function ($object) {
 			$bsclass = isset($object->view_index_label()['bsclass']) ? $object->view_index_label()['bsclass'] : 'info';
