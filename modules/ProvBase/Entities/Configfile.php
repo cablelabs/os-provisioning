@@ -282,6 +282,17 @@ class Configfile extends \BaseModel {
 				$modem  = array ($device);
 				$qos 	= array ($device->qos);
 
+				// Set test data rate if no qos is assigned - 1 Mbit
+				if (!$device->qos)
+				{
+					$qos[0] = new Qos;
+					$qos[0]->id = 0;
+					$qos[0]->ds_rate_max_help = 1024000;
+					$qos[0]->us_rate_max_help = 512000;
+
+					Log::warning ("Modem $device->id has no qos assigned - use test data rate for Configfile.");
+				}
+
 				/*
 				 * generate Table array with SQL columns
 				 */
