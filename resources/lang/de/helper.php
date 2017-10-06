@@ -7,33 +7,33 @@ return [
 	//BillingBaseController
  	'BillingBase_extra_charge' 		=> 'Aufschlag auf Einkaufspreis in %. Nur wenn nicht schon vom Provider berechnet!',
 	'BillingBase_cdr_offset' 		=> "ACHTUNG: Eine Erhöhung der Differenz führt bei bereits vorhandenen Daten im nächsten Abrechnungslauf zu überschriebenen EVNs - Stellen Sie sicher, dass diese gesichert/umbenannt wurden!\n\n1 - wenn die Einzelverbindungsnachweise vom Juni zu den Rechnungen vom Juli gehören; 0 - wenn beide für den selben Monat abgerechnet werden; 2 - wenn die Einzelverbindungsnachweise vom Januar zu den Rechnungen vom März gehören.",
-	'BillingBase_InvoiceNrStart' 	=> 'Rechnungsnummer startet jedes neue Jahr mit dieser Nummer.', 
-	'BillingBase_ItemTermination'	=> 'Erlaubt es Kunden gebuchte Produkte nur bis zum letzten Tag des Monats zu kündigen.', 
-	'BillingBase_MandateRef'		=> "Eine Vorlage kann mit SQL-Spalten des Auftrags oder mit der Mandat-Tabelle erstellt werden - mögliche Felder: \n", 
-	'BillingBase_SplitSEPA'			=> 'SEPA-Überweisungen sind in unterschiedliche XML-Dateien aufgeteilt, abhängig von ihrem Übertragungstyp.', 
+	'BillingBase_InvoiceNrStart' 	=> 'Rechnungsnummer startet jedes neue Jahr mit dieser Nummer.',
+	'BillingBase_ItemTermination'	=> 'Erlaubt es Kunden gebuchte Produkte nur bis zum letzten Tag des Monats zu kündigen.',
+	'BillingBase_MandateRef'		=> "Eine Vorlage kann mit SQL-Spalten des Auftrags oder mit der Mandat-Tabelle erstellt werden - mögliche Felder: \n",
+	'BillingBase_SplitSEPA'			=> 'SEPA-Überweisungen sind in unterschiedliche XML-Dateien aufgeteilt, abhängig von ihrem Übertragungstyp.',
 
 	//CompanyController
-	'Company_Management'			=> 'Trennung der Namen durch Komma.', 
-	'Company_Directorate'			=> 'Trennung der Namen durch Komma.',	
-	'Company_TransferReason'		=> 'Vorlage aller Rechnungsklassen als Datenfeld-Schlüssel - Vertrags- und Rechnungsnummer sind standardmäßig ausgewählt.', 
+	'Company_Management'			=> 'Trennung der Namen durch Komma.',
+	'Company_Directorate'			=> 'Trennung der Namen durch Komma.',
+	'Company_TransferReason'		=> 'Vorlage aller Rechnungsklassen als Datenfeld-Schlüssel - Vertrags- und Rechnungsnummer sind standardmäßig ausgewählt.',
 
 	//CostCenterController
 	'CostCenter_BillingMonth'		=> 'Abrechnungsmonat für jährliche Posten. Gilt für den Monat für den die Rechnungen erstellt werden. Standard: 6 (Juni) - wenn nicht festgelegt. Bitte seien Sie vorsichtig beim Ändern innerhalb des Jahres: das Resultat könnten fehlende Zahlungen sein!',
 
 	//ItemController
-	'Item_ProductId'				=> 'Alle Felder außer dem Abrechnungszyklus müssen vor eine Änderung des Produkts gelöscht werde! Andernfalls können die Produkte in den meisten Fällen nicht gespeichert werden.', 
+	'Item_ProductId'				=> 'Alle Felder außer dem Abrechnungszyklus müssen vor eine Änderung des Produkts gelöscht werde! Andernfalls können die Produkte in den meisten Fällen nicht gespeichert werden.',
 	'Item_ValidFrom'				=> 'Für einmalige (Zusatz-)Zahlungen kann das Feld genutzt werden, um die Zahlung zu teilen - nur  Jahr und Monat (jjjj.mm) werden berücksichtigt.',
 	'Item_ValidFromFixed'			=> 'Feste Termine werden für die Abrechnung verwendet und werden nicht durch externe Aufträge aktualisiert.',
 	'Item_ValidToFixed'				=> 'Feste Termine werden für die Abrechnung verwendet und werden nicht durch externe Aufträge aktualisiert.',
 	'Item_CreditAmount'				=> 'Nettobetrag, der dem Kunde gutgeschrieben werden soll. Achtung: Ein negativer Betrag wird dem Kunde abgezogen!',
 
 	//ProductController
-	'Product_Name' 					=> 'Für Kredite ist es möglich einen Typ zuzuweisen, indem der Typname dem Namen des Kredits angefügt wird - z.B.: \'Kredit Gerät\'', 
+	'Product_Name' 					=> 'Für Kredite ist es möglich einen Typ zuzuweisen, indem der Typname dem Namen des Kredits angefügt wird - z.B.: \'Kredit Gerät\'',
 	'Product_Type'					=> 'Alle Felder außer dem Abrechnungszyklus müssen vor eine Änderung des Produkts gelöscht werde! Andernfalls können die Produkte in den meisten Fällen nicht gespeichert werden.',
-	'Product_Number_of_Cycles' 		=> 'Achtung! Für alle Produkte, die in einem wiederkehrenden Zyklus bezahlt werden steht der Preis für jede einzelne Zahlung. Für Produkte, die einmalig bezahlt werden wird der Preis durch die Anzahl der Zyklen geteilt.', 
+	'Product_Number_of_Cycles' 		=> 'Achtung! Für alle Produkte, die in einem wiederkehrenden Zyklus bezahlt werden steht der Preis für jede einzelne Zahlung. Für Produkte, die einmalig bezahlt werden wird der Preis durch die Anzahl der Zyklen geteilt.',
 
 	//SalesmanController
-	'Salesman_ProductList'			=> 'Füge alle Produkttypen an, für die eine Provision erzielt werden kann - möglich:', 
+	'Salesman_ProductList'			=> 'Füge alle Produkttypen an, für die eine Provision erzielt werden kann - möglich:',
 
 	//SepaAccountController
 	'SepaAccount_InvoiceHeadline'	=> 'Ersetzt die Überschrift der Rechnung, die für diese Kostenstelle erstellt wird.',
@@ -61,10 +61,10 @@ return [
 	'parameter_html_frame' 			=> 'Hat keinen Einfluss auf SubOIDs innerhalb von Tabellen (aber auf 3. Dimension-Parameter!).',
 
  /**
-  *	MODULE: ProvBase	
+  *	MODULE: ProvBase
   */
 	//ModemController
-	'Modem_NetworkAccess'			=> 'Deaktivieren/Aktivieren des Netzwerkzugriffs - Achtung: Wenn das Abrechnungsmodul installiert ist, wird diese Checkbox täglich überschrieben, je nach Gültigkeit der Tarif-Option - vorausgesetzt sie wurde nicht manuell gesetzt.', 
+	'Modem_NetworkAccess'			=> 'Netzwerkzugriff für CPEs. (MTAs werden nicht beachtet und gehen immer online, wenn alle restlich notwendigen Konfigurationen korrekt vorgenommen wurden) - Achtung: Mit Billingmodul wird diese Checkbox täglich je nach Gültigkeit des Tarifes überschrieben, vorausgesetzt sie wurde nicht manuell gesetzt.',
 	'contract_number' 				=> 'Achtung - Kundenkennwort wird bei Änderung automatisch geändert!',
 	'mac_formats'					=> "Erlaubte Formate (Groß-/Kleinschreibung nicht unterschieden):\n\n1) AA:BB:CC:DD:EE:FF\n2) AABB.CCDD.EEFF\n3) AABBCCDDEEFF",
 

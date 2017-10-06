@@ -84,10 +84,10 @@ class Contract extends \BaseModel {
 	}
 
 
-	public function get_bsclass() 
+	public function get_bsclass()
 	{
 		$bsclass = 'success';
-		
+
 		if ($this->network_access == 0)
 			$bsclass = 'danger';
 
@@ -573,49 +573,36 @@ class Contract extends \BaseModel {
 
 		$active_count_internet = $active_tariff_info_internet['count'];
 		$active_count_voip = $active_tariff_info_voip['count'];
-		$active_count_sum = $active_count_internet + $active_count_voip;
 
-		$active_item_internet = $active_tariff_info_internet['item'];
-		$active_item_voip = $active_tariff_info_voip['item'];
-
-
-		if ($active_count_sum == 0 || !$this->check_validity('Now')) {
+		if (!$active_count_internet || !$this->check_validity('Now'))
+		{
 			// if there is no active item of type internet or voip or contract is outdated: disable network_access (if not already done)
 			if (boolval($this->network_access)) {
 				$this->network_access = 0;
 				$contract_changed = True;
 				\Log::Info('daily: contract: disabling network_access based on active internet/voip items for contract '.$this->id);
 			}
+
+			if (!$active_count_internet && $active_count_voip && !$this->telephony_only) {
+					$this->telephony_only = 1;
+					$contract_changed = True;
+					\Log::Info('daily: contract: switch to telephony_only', [$this->id]);
+			}
 		}
-		else {
+		else
+		{
 			// changes are only required if not active
 			if (!boolval($this->network_access)) {
-
-				// then we compare the startdate of the most current active internet/voip type item with today
-				// if the difference between the two dates is to big we assume that access has been disabled manually – we don't change the state in this case
-				// this follows the philosophy introduced by Torsten within method _update_network_access_from_contract (e.g. lack of payment)
-				// $now = \Carbon\Carbon::now();
-				// $starts = array();
-				// if ($active_item_internet) {
-				// 	array_push($starts, $this->_date_to_carbon($active_item_internet->valid_from));
-				// }
-				// if ($active_item_voip) {
-				// 	array_push($starts, $this->_date_to_carbon($active_item_voip->valid_from));
-				// }
-				// $start = max($starts);
-
-				// if (($start->diff($now)->days) <= 1) {
 					$this->network_access = 1;
 					$contract_changed = True;
 					\Log::Info('daily: contract: enabling network_access based on active internet/voip items for contract '.$this->id);
-				// }
 			}
 
-		}
-
-		if(!$active_count_internet && $active_count_voip) {
-			$this->telephony_only = 1;
-			$contract_changed = True;
+			if ($this->telephony_only) {
+				$this->telephony_only = 0;
+				$contract_changed = True;
+				\Log::Info('daily: contract: switch from telephony_only to internet + telephony tariff', [$this->id]);
+			}
 		}
 
 		if ($contract_changed) {
@@ -1083,7 +1070,6 @@ class Contract extends \BaseModel {
 		foreach ($this->modems as $modem)
 		{
 			$modem->network_access = $this->network_access;
-			$modem->telephony_only = $this->telephony_only;
 			$modem->qos_id = $this->qos_id;
 			$modem->save();
 		}
@@ -1244,13 +1230,13 @@ class ContractObserver
 			// Note: implement this commented way if there are more checkings for better code structure - but this reduces performance on one of the most used functions of the user!
 			// $changed_fields = $contract->getDirty();
 
-			// Note: isset is way faster regarding the performance than array_key_exists, but returns false if value of key is null which is not important here - See upmost comment on: http://php.net/manual/de/function.array-key-exists.php 
+			// Note: isset is way faster regarding the performance than array_key_exists, but returns false if value of key is null which is not important here - See upmost comment on: http://php.net/manual/de/function.array-key-exists.php
 			// if (isset($changed_fields['number']))
 			if ($contract->number != $contract['original']['number'])
 			{
 				// change customer information - take care - this automatically changes login psw of customer
 				if ($customer = $contract->cccauthuser)
-					$customer->update(); 
+					$customer->update();
 			}
 
 			// if (isset($changed_fields['contract_start']) || isset($changed_fields['contract_end']))
