@@ -63,7 +63,7 @@ class MibFile extends \BaseModel {
 
 	public function get_bsclass()
 	{
-		$bsclass = $this->oids->all() ? 'success' : 'info';
+		$bsclass = $this->oids->first() ? 'success' : 'info';
 
 		return $bsclass;
 	}

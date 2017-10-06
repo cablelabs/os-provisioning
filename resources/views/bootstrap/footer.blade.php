@@ -93,10 +93,10 @@ $(document).ready(function() {
             });
             $(this).DataTable().columns.adjust().responsive.recalc();
         },
+        autoWidth: false,
         // "sPaginationType": "four_button"
 	    lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
         @if (isset($model) && isset($view_var) && isset($index_datatables_ajax_enabled) && ($index_datatables_ajax_enabled === true) && method_exists( $view_var, 'view_index_label_ajax') )
-        autoWidth: false,
         processing: true,
         serverSide: true,
         ajax: '{{ isset($route_name) && $route_name!= "Config.index"  ? route($route_name.'.data') : "" }}',
@@ -144,7 +144,6 @@ $(document).ready(function() {
             targets :  "_all",
             className : 'ClickableTd',
         } ],
-    });
   @elseif (method_exists( BaseController::get_model_obj() , 'view_index_label' ))
 	aoColumnDefs: [ {
 		className: 'control',
@@ -157,9 +156,10 @@ $(document).ready(function() {
         orderable: false,
         targets:   [1]
     },
-    @endif ],
-	});
+    @endif
+    ],
   @endif
+});
 
   $('table.streamtable').DataTable(
   {

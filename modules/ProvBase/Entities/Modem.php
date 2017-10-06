@@ -93,7 +93,7 @@ class Modem extends \BaseModel {
 
 	public function get_contract_valid()
 	{
-		return $this->contract->check_validity('Now') ? 'yes' : 'no';
+		return $this->contract->check_validity('Now') ? \App\Http\Controllers\BaseViewController::translate_label('yes') : \App\Http\Controllers\BaseViewController::translate_label('no');
 	}
 
 	public function get_us_pwr()

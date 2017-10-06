@@ -250,6 +250,11 @@ class Phonenumber extends \BaseModel {
 		return $deact;
 	}
 
+	public function build_number()
+	{
+		return $this->prefix_number.'/'.$this->number;
+	}
+
 	/**
 	 * ALL RELATIONS
 	 * link with mtas

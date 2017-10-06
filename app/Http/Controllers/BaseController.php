@@ -487,7 +487,7 @@ class BaseController extends Controller {
 	{
 		$model = static::get_model_obj();
 
-		$index_datatables_ajax_enabled = isset($this->index_datatables_ajax_enabled) ? false : $this->index_datatables_ajax_enabled();
+		$index_datatables_ajax_enabled = isset($this->index_datatables_ajax_enabled) ? $this->index_datatables_ajax_enabled : $this->index_datatables_ajax_enabled();
 
 		if ($index_datatables_ajax_enabled)
 			$view_var   = $model->first();

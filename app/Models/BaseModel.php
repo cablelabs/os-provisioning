@@ -23,9 +23,6 @@ class BaseModel extends Eloquent
 
 	public $voip_enabled;
 	public $billing_enabled;
-
-	public $index_datatables_ajax_enabled;
-
 	protected $fillable = array();
 
 
@@ -863,7 +860,7 @@ class BaseObserver
 /**
  * Systemd Observer Class - Handles changes on Model Gateways - restarts system services
  *
- * TODO: 
+ * TODO:
  	* place it somewhere else ...
  	* Calling this Observer is practically very bad in case there are more services inserted - then all services will restart even
  *		if Config didn't change - therefore a distinction is necessary - or more Observers,
