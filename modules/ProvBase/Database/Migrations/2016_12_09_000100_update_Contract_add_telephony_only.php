@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateModemAddTelephonyOnly{
+class UpdateContractAddTelephonyOnly{
 
 	/**
 	 * Run the migrations.
@@ -13,7 +13,7 @@ class UpdateModemAddTelephonyOnly{
 	 */
 	public function up()
 	{
-		Schema::table('modem', function(Blueprint $table)
+		Schema::table('contract', function(Blueprint $table)
 		{
 			$table->boolean('telephony_only');
 		});
@@ -27,7 +27,7 @@ class UpdateModemAddTelephonyOnly{
 	 */
 	public function down()
 	{
-		Schema::table('modem', function(Blueprint $table)
+		Schema::table('contract', function(Blueprint $table)
 		{
 			$table->dropColumn(['telephony_only']);
 		});
