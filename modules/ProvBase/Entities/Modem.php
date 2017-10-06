@@ -472,17 +472,37 @@ class Modem extends \BaseModel {
 		if (!$cf)
 			return false;
 
-		$text = "Main\n{\n\t".$cf->text_make($modem, "modem")."\n}";
-		$ret  = File::put($cf_file, $text);
+		// Evaluate network access (NA) and MaxCPE count
+		// Note: NA becomes only zero when there are no mta's and modems NA is false (e.g. no internet tariff)
+		$cpe_cnt = \Modules\ProvBase\Entities\ProvBase::first()->max_cpe;
+		$max_cpe = $cpe_cnt ? : 1; 		// default 1
+		$network_access = 1;
+
+		if (count($this->mtas))
+			$max_cpe = count($this->mtas) + (($this->contract->telephony_only || !$this->network_access) ? 0 : $max_cpe);
+		else if (!$this->network_access)
+			$network_access = 0;
+
+		// MaxCPE MUST be between 1 and 254 according to the standard
+		if ($max_cpe < 1)
+			$max_cpe = 1;
+		if ($max_cpe > 254)
+			$max_cpe = 254;
 
 
-		if ($ret === false)
-				die("Error writing to file");
+		// make text and write to file
+		$conf = "\tNetworkAccess $network_access;\n";
+		$conf .= "\tMaxCPE $max_cpe;\n";
+		foreach ($this->mtas as $mta)
+			$conf .= "\tCpeMacAddress $mta->mac;\n";
+
+		$text = "Main\n{\n".$conf.$cf->text_make($modem, "modem")."\n}";
+
+		if (File::put($cf_file, $text) === false)
+			die("Error writing to file");
 
 		Log::info('Configfile Update for Modem: '.$this->hostname);
 		Log::debug("configfile: /usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file");
-		// if (file_exists($cfg_file))
-		//	 unlink($cfg_file);
 
 		// "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
 		exec("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file >/dev/null 2>&1 &", $out);

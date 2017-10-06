@@ -38,7 +38,6 @@ class ConfigfileTableSeeder extends \BaseSeeder {
 			'type' => 'generic',
 			'public' => 'yes',
 			'text' => <<<'EOT'
-NetworkAccess {modem.network_access.0};
 ModemCapabilities
 {
     ConcatenationSupport 1;
