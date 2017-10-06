@@ -76,9 +76,26 @@ $(document).ready(function() {
                 type: 'column',
             }
         },
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                var input = document.createElement('input');
+                input.classList.add('select2');
+                if ($(this.footer()).hasClass('searchable')){
+                    $(input).appendTo($(column.footer()).empty())
+                    .on('keyup', function () {
+                        var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                        column.search(val ? val : '', true, false).draw();
+                    });
+                }
+                $('.select2').css('width', "100%");
+            });
+            $(this).DataTable().columns.adjust().responsive.recalc();
+        },
         // "sPaginationType": "four_button"
 	    lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
-  @if (isset($model) && isset($view_var) && isset($index_datatables_ajax_enabled) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
+        @if (isset($model) && isset($view_var) && isset($index_datatables_ajax_enabled) && ($index_datatables_ajax_enabled === true) && method_exists( $view_var, 'view_index_label_ajax') )
         autoWidth: false,
         processing: true,
         serverSide: true,
@@ -101,23 +118,6 @@ $(document).ready(function() {
                 @endforeach
             @endif
         ],
-        initComplete: function () {
-            this.api().columns().every(function () {
-                var column = this;
-                var input = document.createElement('input');
-                input.classList.add('select2');
-                if ($(this.footer()).hasClass('searchable')){
-                    $(input).appendTo($(column.footer()).empty())
-                    .on('keyup', function () {
-                        var val = $.fn.dataTable.util.escapeRegex($(this).val());
-
-                        column.search(val ? val : '', true, false).draw();
-                    });
-                }
-                $('.select2').css('width', "100%");
-            });
-            $(this).DataTable().columns.adjust().responsive.recalc();
-        },
         @if (isset($view_var->view_index_label_ajax()['order_by']))
             order:
             @foreach ($view_var->view_index_label_ajax()['order_by'] as $columnindex => $direction)
@@ -205,7 +205,6 @@ $(document).ready(function() {
   });
 
 });
-
 // show alert
 $(".modal").modal();
 

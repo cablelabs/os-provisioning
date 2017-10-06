@@ -943,7 +943,8 @@ class BaseController extends Controller {
 		exec ("grep \"$levels\" $filename", $logs);
 
 		return array_reverse($logs);
-	 
+	}
+
 	/* Check if AJAX Datatables should be used
 	 *
 	 *
@@ -1004,7 +1005,7 @@ class BaseController extends Controller {
 				return $object->$functionname();
 			});
 		};
-			
+
 		$DT	->editColumn('checkbox', function ($object) {
 				return "<input style='simple' align='center' class='' name='ids[".$object->id."]' type='checkbox' value='1' ".
 				($object->index_delete_disabled ? "disabled" : '').">";
