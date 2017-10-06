@@ -9,23 +9,6 @@ class MibFile extends \BaseModel {
 	public $guarded = ['mibfile_upload'];
 
 	/**
-	 * Constructor.
-	 * Used to set some helper variables.
-	 *
-	 * @author Patrick Reichel
-	 *
-	 * @param $attributes pass through to Eloquent contstructor.
-	 */
-	 public function __construct($attributes = array()) {
-
-		// call Eloquent constructor
-		// $attributes are needed! (or e.g. seeding and creating will not work)
-		parent::__construct($attributes);
-
-		$this->index_datatables_ajax_enabled = true;
-	}
-
-	/**
 	 * @Const MibFile Upload Path relativ to storage directory
 	 */
 	const REL_MIB_UPLOAD_PATH = 'app/data/hfcsnmp/mibs/';

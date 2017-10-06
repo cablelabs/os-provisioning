@@ -54,7 +54,6 @@ class BaseModel extends Eloquent
 		// set helper variables
 		$this->voip_enabled = $this->voip_enabled();
 		$this->billing_enabled = $this->billing_enabled();
-		$this->index_datatables_ajax_enabled = $this->index_datatables_ajax_enabled();
 	}
 
 
@@ -205,25 +204,6 @@ class BaseModel extends Eloquent
 
 		return False;
 	}
-
-	/**
-	 * Check if AJAX Datatables should be used
-	 *
-	 *
-	 * @author Christian Schramm
-	 *
-	 * @return true if index model contains more than 100 entries
-	 */
-	 public function index_datatables_ajax_enabled() {
-		$enabled = false;
-		if (method_exists( $this, 'view_index_label_ajax')) {
-			$model_name = static::class;
-			if ($model_name::count() > 100)
-				$enabled = true;
-		}
-
-		return $enabled;
-	}	
 
 
 	/**

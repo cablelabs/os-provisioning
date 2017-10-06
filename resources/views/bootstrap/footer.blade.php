@@ -78,7 +78,7 @@ $(document).ready(function() {
         },
         // "sPaginationType": "four_button"
 	    lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "<?php echo trans('view.jQuery_All'); ?>" ] ],
-  @if (isset($model) && isset($view_var) && isset($view_var->index_datatables_ajax_enabled) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
+  @if (isset($model) && isset($view_var) && isset($index_datatables_ajax_enabled) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
         autoWidth: false,
         processing: true,
         serverSide: true,
@@ -108,7 +108,7 @@ $(document).ready(function() {
                 input.classList.add('select2');
                 if ($(this.footer()).hasClass('searchable')){
                     $(input).appendTo($(column.footer()).empty())
-                    .on('keydown', function () {
+                    .on('keyup', function () {
                         var val = $.fn.dataTable.util.escapeRegex($(this).val());
 
                         column.search(val ? val : '', true, false).draw();

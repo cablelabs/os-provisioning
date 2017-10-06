@@ -370,6 +370,9 @@ class BaseController extends Controller {
 		if (!is_null($this->edit_right_md_size) && !isset($a['edit_right_md_size']))
 			$a['edit_right_md_size'] = $this->edit_right_md_size;
 
+		if (!isset($a['index_datatables_ajax_enabled']))
+			$a['index_datatables_ajax_enabled'] = isset($this->index_datatables_ajax_enabled) ? false : $this->index_datatables_ajax_enabled();
+
 		if (!isset($a['html_title']))
 			$a['html_title'] = "NMS – ".\NamespaceController::module_get_pure_model_name();
 
@@ -484,7 +487,9 @@ class BaseController extends Controller {
 	{
 		$model = static::get_model_obj();
 
-		if ($model->index_datatables_ajax_enabled)
+		$index_datatables_ajax_enabled = isset($this->index_datatables_ajax_enabled) ? false : $this->index_datatables_ajax_enabled();
+
+		if ($index_datatables_ajax_enabled)
 			$view_var   = $model->first();
 		else
 			$view_var   = $model->index_list();
@@ -502,7 +507,7 @@ class BaseController extends Controller {
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
 
-		return View::make ($view_path, $this->compact_prep_view(compact('headline','view_header', 'model','view_var', 'create_allowed', 'delete_allowed', 'b_text')));
+		return View::make ($view_path, $this->compact_prep_view(compact('headline','view_header', 'model','view_var', 'create_allowed', 'delete_allowed', 'b_text', 'index_datatables_ajax_enabled')));
 	}
 
 	/**
@@ -938,6 +943,24 @@ class BaseController extends Controller {
 		exec ("grep \"$levels\" $filename", $logs);
 
 		return array_reverse($logs);
+	 
+	/* Check if AJAX Datatables should be used
+	 *
+	 *
+	 * @author Christian Schramm
+	 *
+	 * @return true if index model contains more than 100 entries
+	 */
+	 public function index_datatables_ajax_enabled() {
+		$enabled = false;
+		$model = static::get_model_obj();
+		if (method_exists( $model, 'view_index_label_ajax')) {
+			$model_name = \NamespaceController::get_model_name();
+			if ($model_name::count() >= 100)
+				$enabled = true;
+		}
+
+		return $enabled;
 	}
 
 

@@ -89,7 +89,7 @@
 						<th width="30px"></th>
 						@if (isset($delete_allowed) && $delete_allowed == true)
 							<th witdth="30px" id="selectall" style="text-align:center; vertical-align:middle;">
-								<input id ="allCheck" data-trigger="hover" style='simple' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top" 
+								<input id ="allCheck" data-trigger="hover" style='simple' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top"
 								data-delay='{"show":"350"}' data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('Select All')}}">
 							</th>
 						@endif
@@ -101,13 +101,13 @@
 									data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('You cant sort or search this Column')}}"></i>
 								@endif
 								</th>
-							@endforeach 
+							@endforeach
 						@endif
 					</tr>
 				</thead>
 		@endif
 		<?php // Generate AJAX Datatable Footer ?>
-		@if (isset($model) && isset($view_var) && isset($view_var->index_datatables_ajax_enabled) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
+		@if (isset($model) && isset($view_var) && isset($index_datatables_ajax_enabled) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
 				<tfoot>
 					<tr>
 						<th></th>
@@ -132,7 +132,7 @@
 						<th width="30px"></th>
 						@if (isset($delete_allowed) && $delete_allowed == true)
 							<th id="selectall" style="text-align:center; vertical-align:middle;">
-								<input id ="allCheck" data-trigger="hover" style='simple' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top" 
+								<input id ="allCheck" data-trigger="hover" style='simple' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top"
 								data-delay='{"show":"350"}' data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('Select All')}}">
 							</th>
 						@endif
@@ -143,7 +143,7 @@
 							@endforeach
 						@endif
 					</tr>
-				</thead>				
+				</thead>
 			@endif
 				<!-- Index Table Entries -->
 				<tbody>
@@ -171,7 +171,7 @@
 			</table>
 		@else
 			</table>
-		@endif	
+		@endif
 	@DivClose()
 
 	@DivOpen(12)
