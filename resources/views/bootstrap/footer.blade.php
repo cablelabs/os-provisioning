@@ -80,6 +80,8 @@ $(document).ready(function() {
             this.api().columns().every(function () {
                 var column = this;
                 var input = document.createElement('input');
+                input.classList.add('form-control');
+                input.classList.add('input-sm');
                 input.classList.add('select2');
                 if ($(this.footer()).hasClass('searchable')){
                     $(input).appendTo($(column.footer()).empty())
