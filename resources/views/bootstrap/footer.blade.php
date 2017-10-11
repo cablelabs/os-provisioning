@@ -2,12 +2,9 @@
 <script src="{{asset('components/assets-admin/plugins/jquery/jquery-3.2.0.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/jquery/jquery-migrate-1.4.1.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/jquery-ui/ui/minified/jquery-ui.min.js')}}"></script>
+
 <script src="{{asset('components/assets-admin/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
-<!--[if lt IE 9]>
-  <script src="{{asset('components/assets-admin/crossbrowserjs/html5shiv.js')}}"></script>
-  <script src="{{asset('components/assets-admin/crossbrowserjs/respond.min.js')}}"></script>
-  <script src="{{asset('components/assets-admin/crossbrowserjs/excanvas.min.js')}}"></script>
-<![endif]-->
+
 <script src="{{asset('components/assets-admin/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/select2-v4/vendor/select2/select2/dist/js/select2.js')}}"></script>
 
@@ -18,14 +15,26 @@
 <script src="{{asset('components/assets-admin/plugins/jstree/dist/jstree.min.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/js/ui-modal-notification.demo.js')}}"></script>
+
+<!--[if lt IE 9]>
+  <script src="{{asset('components/assets-admin/crossbrowserjs/html5shiv.js')}}"></script>
+  <script src="{{asset('components/assets-admin/crossbrowserjs/respond.min.js')}}"></script>
+  <script src="{{asset('components/assets-admin/crossbrowserjs/excanvas.min.js')}}"></script>
+<![endif]-->
 <!-- ================== END BASE JS ================== -->
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/buttons.bootstrap.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/jszip.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/pdfmake.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/vfs_fonts.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/buttons.colVis.min.js')}}"></script>
+
 <script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
 <script src="{{asset('components/nmsprime.js')}}"></script>
-<!-- Javascript Tree View (for index page) -->
-<!-- <script src="{{asset('components/assets-admin/plugins/jstree/dist/jstree.min.js')}}"></script> -->
-<!-- <script src="{{asset('components/assets-admin/js/ui-tree.demo.min.js')}}"></script> -->
 <!-- ================== END PAGE LEVEL JS ================== -->
 <script language="javascript">
 /*
