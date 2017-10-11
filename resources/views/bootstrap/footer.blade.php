@@ -53,31 +53,36 @@ $(document).ready(function() {
   @endif
 
   // Intelligent Data Tables
-    $('table.datatable').DataTable(
+ var table = $('table.datatable').DataTable(
     {
         // Translate Datatables
         language: {
-            "sEmptyTable":        "<?php echo trans('view.jQuery_sEmptyTable'); ?>",
-            "sInfo":              "<?php echo trans('view.jQuery_sInfo'); ?>",
-            "sInfoEmpty":         "<?php echo trans('view.jQuery_sInfoEmpty'); ?>",
-            "sInfoFiltered":      "<?php echo trans('view.jQuery_sInfoFiltered'); ?>",
-            "sInfoPostFix":       "<?php echo trans('view.jQuery_sInfoPostFix'); ?>",
-            "sInfoThousands":     "<?php echo trans('view.jQuery_sInfoThousands'); ?>",
-            "sLengthMenu":        "<?php echo trans('view.jQuery_sLengthMenu'); ?>",
-            "sLoadingRecords":    "<?php echo trans('view.jQuery_sLoadingRecords'); ?>",
-            "sProcessing":        "<?php echo trans('view.jQuery_sProcessing'); ?>",
-            "sSearch":            "<?php echo trans('view.jQuery_sSearch'); ?>",
-            "sZeroRecords":       "<?php echo trans('view.jQuery_sZeroRecords'); ?>",
+            "sEmptyTable":          "<?php echo trans('view.jQuery_sEmptyTable'); ?>",
+            "sInfo":                "<?php echo trans('view.jQuery_sInfo'); ?>",
+            "sInfoEmpty":           "<?php echo trans('view.jQuery_sInfoEmpty'); ?>",
+            "sInfoFiltered":        "<?php echo trans('view.jQuery_sInfoFiltered'); ?>",
+            "sInfoPostFix":         "<?php echo trans('view.jQuery_sInfoPostFix'); ?>",
+            "sInfoThousands":       "<?php echo trans('view.jQuery_sInfoThousands'); ?>",
+            "sLengthMenu":          "<?php echo trans('view.jQuery_sLengthMenu'); ?>",
+            "sLoadingRecords":      "<?php echo trans('view.jQuery_sLoadingRecords'); ?>",
+            "sProcessing":          "<?php echo trans('view.jQuery_sProcessing'); ?>",
+            "sSearch":              "<?php echo trans('view.jQuery_sSearch'); ?>",
+            "sZeroRecords":         "<?php echo trans('view.jQuery_sZeroRecords'); ?>",
             "oPaginate": {
-                "sFirst":         "<?php echo trans('view.jQuery_PaginatesFirst'); ?>",
-                "sPrevious":      "<?php echo trans('view.jQuery_PaginatesPrevious'); ?>",
-                "sNext":          "<?php echo trans('view.jQuery_PaginatesNext'); ?>",
-                "sLast":          "<?php echo trans('view.jQuery_PaginatesLast'); ?>"
+                "sFirst":           "<?php echo trans('view.jQuery_PaginatesFirst'); ?>",
+                "sPrevious":        "<?php echo trans('view.jQuery_PaginatesPrevious'); ?>",
+                "sNext":            "<?php echo trans('view.jQuery_PaginatesNext'); ?>",
+                "sLast":            "<?php echo trans('view.jQuery_PaginatesLast'); ?>"
                 },
             "oAria": {
-                "sSortAscending": "<?php echo trans('view.jQuery_sLast'); ?>",
-                "sSortDescending":"<?php echo trans('view.jQuery_sLast'); ?>"
-                }
+                "sSortAscending":   "<?php echo trans('view.jQuery_sLast'); ?>",
+                "sSortDescending":  "<?php echo trans('view.jQuery_sLast'); ?>"
+                },
+            "buttons": {
+                "print":            "<?php echo trans('view.jQuery_Print'); ?>",
+                "colvis":           "<?php echo trans('view.jQuery_colvis'); ?>",
+                "colvisRestore":    "<?php echo trans('view.jQuery_colvisRestore'); ?>",
+            }
         },
         //auto resize the Table to fit the viewing device
         responsive: {
@@ -85,6 +90,74 @@ $(document).ready(function() {
                 type: 'column',
             }
         },
+        dom: 'lBfrtip',
+        stateSave: true,
+        buttons: [
+            {
+                extend: 'print',
+                className: 'btn-sm btn-primary',
+                titleAttr: "<?php echo trans('helper.PrintVisibleTable'); ?>",
+                exportOptions: {columns: ':visible.content'},
+            },
+            {
+                extend: 'collection',
+                text: "<?php echo trans('view.jQuery_ExportTo'); ?>",
+                titleAttr: "<?php echo trans('helper.ExportVisibleTable'); ?>",
+                className: 'btn-sm btn-primary',
+                autoClose: true,
+                buttons: [
+                    {
+                        extend: 'csvHtml5',
+                        text: "<i class='fa fa-file-code-o'></i> .CSV",
+                        exportOptions: {columns: ':visible.content'},
+                        fieldSeparator: ';'
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: "<i class='fa fa-file-excel-o'></i> .XLSX",
+                        exportOptions: {columns: ':visible.content'}
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: "<i class='fa fa-file-pdf-o'></i> .PDF",
+                        exportOptions: {
+                            columns: ':visible.content'
+                            },
+                        customize: function(doc, config) {
+                            var tableNode;
+                            for (i = 0; i < doc.content.length; ++i) {
+                                if(doc.content[i].table !== undefined){
+                                tableNode = doc.content[i];
+                                break;
+                                }
+                            }
+
+                            var rowIndex = 0;
+                            var tableColumnCount = tableNode.table.body[rowIndex].length;
+
+                            if(tableColumnCount > 6){
+                                doc.pageOrientation = 'landscape';
+                            }
+                        },
+
+                    },
+                ]
+            },
+            {
+                extend: 'colvis',
+                className: 'btn-sm btn-primary',
+                titleAttr: "<?php echo trans('helper.ChangeVisibilityTable'); ?>",
+                columns: ':not(.nocolvis)',
+                postfixButtons: [
+                    {
+                        extend:'colvisGroup',
+                        className: 'dt-button btn-warning',
+                        text:"<?php echo trans('view.jQuery_colvisReset'); ?>",
+                        show:':hidden'
+                    },
+                 ],
+            },
+        ],
         initComplete: function () {
             this.api().columns().every(function () {
                 var column = this;
@@ -110,6 +183,7 @@ $(document).ready(function() {
         @if (isset($model) && isset($view_var) && isset($index_datatables_ajax_enabled) && ($index_datatables_ajax_enabled === true) && method_exists( $view_var, 'view_index_label_ajax') )
         processing: true,
         serverSide: true,
+        deferRender: true,
         ajax: '{{ isset($route_name) && $route_name!= "Config.index"  ? route($route_name.'.data') : "" }}',
         columns:[
                     {data: 'responsive', orderable: false, searchable: false},

@@ -85,9 +85,9 @@
 			<?php // Get Headerdata and translate with translation files ?>
 			<thead>
 				<tr>
-					<th width="30px"></th> <?php // Responsive Column ?>
+					<th class="nocolvis" width="30px"></th> <?php // Responsive Column ?>
 					@if (isset($delete_allowed) && $delete_allowed == true) <?php // Checkbox Column if delete is allowed ?>
-						<th witdth="30px" id="selectall" style="text-align:center; vertical-align:middle;">
+						<th class="nocolvis" witdth="30px" id="selectall" style="text-align:center; vertical-align:middle;">
 							<input id ="allCheck" data-trigger="hover" style='simple' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top"
 							data-delay='{"show":"350"}' data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('Select All')}}">
 						</th>
@@ -95,17 +95,17 @@
 					<?php // Get Header if possible with new Format - for Backwards compatibility old one stays?>
 					@if (isset($model) && is_array($model->view_index_label_ajax()) && isset($model->view_index_label_ajax()['index_header']))
 						@foreach ($model->view_index_label_ajax()['index_header'] as $field)
-							<th style="text-align:center; vertical-align:middle;">{{ trans('dt_header.'.$field).' ' }}
+							<th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.'.$field).' ' }}
 							@if ((!empty($model->view_index_label_ajax()['sortsearch'])) && ($model->view_index_label_ajax()['sortsearch'] == [$field => 'false']))
 								<i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top" data-delay='{"show":"250"}'
-								data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('You cant sort or search this Column')}}"></i>
+								data-original-title="{{trans('helper.SortSearchColumn')}}"></i>
 							@endif
 							</th>
 						@endforeach
 					@elseif (!method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ) && isset($view_var[0]) )
 						@if (isset($view_var[0]) && is_array($view_var[0]->view_index_label()) && isset($view_var[0]->view_index_label()['index_header']))
 							@foreach ($view_var[0]->view_index_label()['index_header'] as $field)
-								<th> {{ \App\Http\Controllers\BaseViewController::translate_label($field) }} </th>
+								<th class="content"> {{ \App\Http\Controllers\BaseViewController::translate_label($field) }} </th>
 							@endforeach
 						@endif
 					@endif
