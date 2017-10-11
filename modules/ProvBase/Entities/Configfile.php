@@ -480,20 +480,19 @@ class ConfigfileObserver
 {
 	public function created($configfile)
 	{
-		$configfile->build_corresponding_configfiles();
-		// with parameter one the children are built
-		$configfile->search_children(1);
+		// When a Configfile was created we can not already have a relation - so dont call command
 	}
 
 	public function updated($configfile)
 	{
-		$configfile->build_corresponding_configfiles();
-		$configfile->search_children(1);
+		\Queue::push(new \Modules\ProvBase\Console\configfileCommand($configfile->id));
+		// $configfile->build_corresponding_configfiles();
+		// with parameter one the children are built
+		// $configfile->search_children(1);
 	}
 
 	public function deleted($configfile)
 	{
-		$configfile->build_corresponding_configfiles();
-		$configfile->search_children(1);
+		// Actually it's only possible to delete configfiles that are not related to any cm/mta - so no CFs need to be built
 	}
 }

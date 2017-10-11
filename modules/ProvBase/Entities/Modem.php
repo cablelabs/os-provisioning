@@ -505,7 +505,7 @@ class Modem extends \BaseModel {
 		Log::debug("configfile: /usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file");
 
 		// "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
-		exec("/usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file >/dev/null 2>&1 &", $out);
+		exec("/usr/local/bin/docsis -e $cf_file $dir../keyfile $cfg_file >/dev/null 2>&1 &", $out);
 
 		// change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
 		system('/bin/chown -R apache /tftpboot/cm');
