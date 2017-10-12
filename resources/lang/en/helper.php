@@ -64,7 +64,7 @@ return [
   *	MODULE: ProvBase
   */
  	//ModemController
-	'Modem_NetworkAccess'			=> 'Network Access for CPEs. (MTAs are not considered and will always go online when all other configurations are correct). Take Care: With Billing-Module this Checkbox will be overwritten daily during check if Tariff is valid and when checkbox was not set manually.',
+	'Modem_NetworkAccess'			=> 'Network Access for CPEs. (MTAs are not considered and will always go online when all other configurations are correct). Take care: With Billing-Module this checkbox will be overwritten by daily check if tariff changes.',
 	'Modem_InstallationAddressChangeDate'	=> 'In case of (physical) relocation of the modem: Add startdate for the new address here. If readonly there is a pending address change order at Envia.',
 	'contract_number' 				=> 'Attention - Customer login password is changed automatically on changing this field!',
 	'mac_formats'					=> "Allowed formats (case-insensitive):\n\n1) AA:BB:CC:DD:EE:FF\n2) AABB.CCDD.EEFF\n3) AABBCCDDEEFF",

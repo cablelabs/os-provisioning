@@ -477,9 +477,13 @@ class Modem extends \BaseModel {
 		$cpe_cnt = \Modules\ProvBase\Entities\ProvBase::first()->max_cpe;
 		$max_cpe = $cpe_cnt ? : 1; 		// default 1
 		$network_access = 1;
-
 		if (count($this->mtas))
-			$max_cpe = count($this->mtas) + (($this->contract->telephony_only || !$this->network_access) ? 0 : $max_cpe);
+		{
+			if (!$this->contract->telephony_only && !$this->network_access)
+				$network_access = 0;
+			else
+				$max_cpe = count($this->mtas) + (($this->contract->telephony_only || !$this->network_access) ? 0 : $max_cpe);
+		}
 		else if (!$this->network_access)
 			$network_access = 0;
 

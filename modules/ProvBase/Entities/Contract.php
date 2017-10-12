@@ -584,9 +584,15 @@ class Contract extends \BaseModel {
 			}
 
 			if (!$active_count_internet && $active_count_voip && !$this->telephony_only) {
-					$this->telephony_only = 1;
-					$contract_changed = True;
-					\Log::Info('daily: contract: switch to telephony_only', [$this->id]);
+				$this->telephony_only = 1;
+				$contract_changed = True;
+				\Log::Info('daily: contract: switch to telephony_only', [$this->id]);
+			}
+
+			if (!$active_count_voip && $this->telephony_only) {
+				$this->telephony_only = 0;
+				$contract_changed = True;
+				\Log::Info('daily: contract: switch from telephony_only to internet + telephony tariff', [$this->id]);
 			}
 		}
 		else
@@ -596,12 +602,6 @@ class Contract extends \BaseModel {
 					$this->network_access = 1;
 					$contract_changed = True;
 					\Log::Info('daily: contract: enabling network_access based on active internet/voip items for contract '.$this->id);
-			}
-
-			if ($this->telephony_only) {
-				$this->telephony_only = 0;
-				$contract_changed = True;
-				\Log::Info('daily: contract: switch from telephony_only to internet + telephony tariff', [$this->id]);
 			}
 		}
 
@@ -1064,6 +1064,8 @@ class Contract extends \BaseModel {
 	 */
 	public function push_to_modems()
 	{
+		$changes = $this->getDirty();
+
 		// TODO: Speed-up: Could this be done with a single eloquent update statement ?
 		//       Note: This requires to use the Eloquent Context to run all Observers
 		//       an to rebuild and restart the involved modems
@@ -1072,6 +1074,11 @@ class Contract extends \BaseModel {
 			$modem->network_access = $this->network_access;
 			$modem->qos_id = $this->qos_id;
 			$modem->save();
+
+			if (isset($changes['telephony_only']) && !$modem->needs_restart()) {
+				$modem->restart_modem();
+				$modem->make_configfile();
+			}
 		}
 	}
 
