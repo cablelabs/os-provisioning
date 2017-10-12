@@ -2,6 +2,8 @@
 
 namespace Modules\HfcReq\Entities;
 
+use Modules\HfcBase\Entities\IcingaObjects;
+
 class NetElement extends \BaseModel {
 
 	// The associated SQL table for this Model
@@ -54,7 +56,7 @@ class NetElement extends \BaseModel {
 	// View Icon
   public static function view_icon()
   {
-    return '<i class="fa fa-object-ungroup"></i>'; 
+    return '<i class="fa fa-object-ungroup"></i>';
   }
 
 	// Relations
@@ -119,22 +121,26 @@ class NetElement extends \BaseModel {
 
 	public function get_bsclass()
 	{
-		$bsclass = 'success';
-		$type = $this->get_elementtype_name();
+		if (in_array($this->get_elementtype_name(), NetElementType::$undeletables))
+			return 'info';
 
-		if (in_array($type, NetElementType::$undeletables))
-			$bsclass = 'info';
-		else if ($this->state == 'YELLOW')
-			$bsclass = 'warning';
-		else if ($this->state == 'RED')
-			$bsclass = 'danger';
-		return $bsclass;
+		if(!IcingaObjects::db_exists())
+			return 'warning';
+
+		$tmp = $this->icingaobjects;
+		if($tmp && $tmp->is_active) {
+			$tmp = $tmp->icingahoststatus;
+			if($tmp)
+				return $tmp->last_hard_state ? 'danger' : 'success';
+		}
+
+		return 'warning';
 	}
 
 	public function get_elementtype_name()
 	{
 	$type = $this->netelementtype ? $this->netelementtype->name : '';
-	
+
 	return $type;
 	}
 
@@ -180,8 +186,13 @@ class NetElement extends \BaseModel {
 			return $this->hasMany('Modules\HfcSnmp\Entities\Indices', 'netelement_id');
 	}
 
+	public function icingaobjects()
+	{
+		if(IcingaObjects::db_exists())
+			return $this->hasOne('Modules\HfcBase\Entities\IcingaObjects', 'name1');
 
-
+		return null;
+	}
 
 	public function get_parent ()
 	{
@@ -220,7 +231,7 @@ class NetElement extends \BaseModel {
 		$net_id = array_search('Net', NetElementType::$undeletables);
 
 		return NetElement::where('netelementtype_id', '=', $net_id)->get();
-   
+
 		// return NetElement::where('type', '=', 'NET')->get();
 	}
 
