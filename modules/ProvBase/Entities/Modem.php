@@ -475,7 +475,7 @@ class Modem extends \BaseModel {
 		// Evaluate network access (NA) and MaxCPE count
 		// Note: NA becomes only zero when there are no mta's and modems NA is false (e.g. no internet tariff)
 		$cpe_cnt = \Modules\ProvBase\Entities\ProvBase::first()->max_cpe;
-		$max_cpe = $cpe_cnt ? : 1; 		// default 1
+		$max_cpe = $cpe_cnt ? : 2; 		// default 1
 		$network_access = 1;
 		if (count($this->mtas))
 		{
@@ -488,8 +488,8 @@ class Modem extends \BaseModel {
 			$network_access = 0;
 
 		// MaxCPE MUST be between 1 and 254 according to the standard
-		if ($max_cpe < 1)
-			$max_cpe = 1;
+		if ($max_cpe < 2)
+			$max_cpe = 2;
 		if ($max_cpe > 254)
 			$max_cpe = 254;
 
