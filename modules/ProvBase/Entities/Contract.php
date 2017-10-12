@@ -1222,11 +1222,15 @@ class ContractObserver
 			$contract->sepa_bic  = strtoupper($contract->sepa_bic);
 		}
 
-		// generate contract number 
-		if (is_null($contract->id)) {
+		// generate contract number
+		$input_data = \Input::all();
+		$contract_number = $input_data['number'];
+
+		if (is_null($contract->id) && strlen($contract_number) == 0) {
 			$new_number = NumberRange::get_new_number('contract', \Input::get('costcenter_id'));
 		} else {
-			$new_number = $contract->id - $this->num;
+			//$new_number = $contract->id - $this->num;
+			$new_number = $contract_number;
 		}
 		$contract->number = $new_number;
 	}
@@ -1248,7 +1252,7 @@ class ContractObserver
 
 	public function updating($contract)
 	{
-		$contract->number = $contract->number ? : $contract->id - $this->num;
+//		$contract->number = $contract->number ? : $contract->id - $this->num;
 
 		if (!\PPModule::is_active('billingbase'))
 		{

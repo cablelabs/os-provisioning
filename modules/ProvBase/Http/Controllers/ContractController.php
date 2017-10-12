@@ -145,7 +145,6 @@ class ContractController extends \BaseController {
 		catch (PermissionDeniedError $ex) {
 			return null;
 		}
-
 		return $provvoipenvia->get_jobs_for_view($contract, 'contract');
 	}
 
@@ -201,6 +200,5 @@ class ContractController extends \BaseController {
 
 		return $data;
 	}
-
-
 }
+

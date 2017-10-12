@@ -95,7 +95,7 @@ class BaseController extends Controller {
 				'route' => $class_name.'.edit',
 				'link' => ['model_id' => $view_var->id, 'model' => $class_name]
 			],
-	];
+		];
 	}
 
 
