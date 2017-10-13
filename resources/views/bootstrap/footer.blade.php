@@ -295,6 +295,9 @@ $(".modal").modal();
 
 // TODO: move to analyses.blade to javascript part
 function resizeIframe(obj) {
-  setTimeout(function() {obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px'}, 3000);
+  setTimeout(function() {
+    //obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    obj.style.height = '110vmax';
+  }, 3000);
 };
 </script>
