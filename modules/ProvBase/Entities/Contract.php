@@ -86,21 +86,19 @@ class Contract extends \BaseModel {
 	}
 
 
-	public function get_bsclass() 
+	public function get_bsclass()
 	{
 		$bsclass = 'success';
-		
+
 		if ($this->network_access == 0)
 			$bsclass = 'danger';
 
 		return $bsclass;
 	}
 
-	public function get_costcenter_name() 
+	public function get_costcenter_name()
 	{
-		$costcenter = $this->costcenter ? $this->costcenter->name : '';
-
-		return $costcenter;
+		return $costcenter = $this->costcenter ? $this->costcenter->name : trans('messages.noCC');
 	}
 
 	// View Relation.
@@ -1247,13 +1245,13 @@ class ContractObserver
 			// Note: implement this commented way if there are more checkings for better code structure - but this reduces performance on one of the most used functions of the user!
 			// $changed_fields = $contract->getDirty();
 
-			// Note: isset is way faster regarding the performance than array_key_exists, but returns false if value of key is null which is not important here - See upmost comment on: http://php.net/manual/de/function.array-key-exists.php 
+			// Note: isset is way faster regarding the performance than array_key_exists, but returns false if value of key is null which is not important here - See upmost comment on: http://php.net/manual/de/function.array-key-exists.php
 			// if (isset($changed_fields['number']))
 			if ($contract->number != $contract['original']['number'])
 			{
 				// change customer information - take care - this automatically changes login psw of customer
 				if ($customer = $contract->cccauthuser)
-					$customer->update(); 
+					$customer->update();
 			}
 
 			// if (isset($changed_fields['contract_start']) || isset($changed_fields['contract_end']))

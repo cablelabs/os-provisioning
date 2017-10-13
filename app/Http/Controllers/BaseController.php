@@ -370,9 +370,6 @@ class BaseController extends Controller {
 		if (!is_null($this->edit_right_md_size) && !isset($a['edit_right_md_size']))
 			$a['edit_right_md_size'] = $this->edit_right_md_size;
 
-		if (!isset($a['index_datatables_ajax_enabled']))
-			$a['index_datatables_ajax_enabled'] = isset($this->index_datatables_ajax_enabled) ? false : $this->index_datatables_ajax_enabled();
-
 		if (!isset($a['html_title']))
 			$a['html_title'] = "NMS – ".\NamespaceController::module_get_pure_model_name();
 

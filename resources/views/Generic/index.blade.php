@@ -80,19 +80,19 @@
 	<!-- database entries inside a form with checkboxes to be able to delete one or more entries -->
 	@DivOpen(12)
 		{{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete')) }}
-		<?php // init DataTable ?>
+		{{-- init DataTable --}}
 		<table class="table table-hover datatable table-bordered" id="datatable">
-			<?php // Get Headerdata and translate with translation files ?>
+			{{-- Get Headerdata and translate with translation files --}}
 			<thead>
 				<tr>
-					<th class="nocolvis" width="30px"></th> <?php // Responsive Column ?>
-					@if (isset($delete_allowed) && $delete_allowed == true) <?php // Checkbox Column if delete is allowed ?>
+					<th class="nocolvis" width="30px"></th> {{-- Responsive Column --}}
+					@if (isset($delete_allowed) && $delete_allowed == true) {{-- Checkbox Column if delete is allowed --}}
 						<th class="nocolvis" witdth="30px" id="selectall" style="text-align:center; vertical-align:middle;">
 							<input id ="allCheck" data-trigger="hover" style='simple' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top"
 							data-delay='{"show":"350"}' data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('Select All')}}">
 						</th>
 					@endif
-					<?php // Get Header if possible with new Format - for Backwards compatibility old one stays?>
+					{{-- Get Header if possible with new Format - for Backwards compatibility old one stays --}}
 					@if (isset($model) && is_array($model->view_index_label_ajax()) && isset($model->view_index_label_ajax()['index_header']))
 						@foreach ($model->view_index_label_ajax()['index_header'] as $field)
 							<th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.'.$field).' ' }}
@@ -112,7 +112,7 @@
 				</tr>
 			</thead>
 			<tbody>
-			<?php // For Backwards compatibility: Generate the Datatable the old way ?>
+			{{-- For Backwards compatibility: Generate the Datatable the old way --}}
 			@if (method_exists( BaseController::get_model_obj() , 'view_index_label' ) && isset($view_var[0]))
 				@foreach ($view_var as $object)
 					<tr class="{{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}">
@@ -138,9 +138,9 @@
 			<tfoot>
 			@if (isset($model) && isset($view_var) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
 				<tr>
-					<th></th>  <?php // Responsive Column ?>
+					<th></th>  {{-- Responsive Column --}}
 					@if (isset($delete_allowed) && $delete_allowed == true)
-						<th></th> <?php // Checkbox Column if delete is allowed ?>
+						<th></th> {{-- Checkbox Column if delete is allowed --}}
 					@endif
 					@foreach ($model->view_index_label_ajax()['index_header'] as $field)
 						@if ((!empty($model->view_index_label_ajax()['sortsearch'])) && ( array_has( $model->view_index_label_ajax()['sortsearch'] , $field) ) )

@@ -166,7 +166,7 @@ return [
 	'House Nr'					=> 'Hausnr',
 	'Salesman'					=> 'Verkäufer',
 	'Start Date' 				=> 'Startdatum',
-
+	'noCC'	=> 'Keine Kostenstelle zugewiesen',
 	//Items
 	'Accounting Text (optional)'=> 'Verwendungszweck (optional)',
 	'Cost Center (optional)'	=> 'Kostenstelle (optional)',
