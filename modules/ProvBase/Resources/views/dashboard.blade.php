@@ -26,6 +26,52 @@
     </ul>
 @stop
 
+@section ('impaired_netelements')
+    @if($netelements)
+        <table class="table">
+            <thead>
+                <tr>
+                    @foreach ($netelements['hdr'] as $hdr)
+                        <th>{{$hdr}}</th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($netelements['row'] as $row)
+                    <tr class = "{{array_shift($netelements['clr'])}}">
+                        @foreach ($row as $data)
+                            <td>{{$data}}</td>
+                        @endforeach
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+@stop
+
+@section ('impaired_services')
+    @if($services)
+        <table class="table">
+            <thead>
+                <tr>
+                    @foreach ($services['hdr'] as $hdr)
+                        <th>{{$hdr}}</th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($services['row'] as $row)
+                    <tr class = "{{array_shift($services['clr'])}}">
+                        @foreach ($row as $data)
+                            <td class='f-s-13'>{{$data}}</td>
+                        @endforeach
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+@stop
+
 @section('content')
     <div class="col-md-12">
 
@@ -144,6 +190,12 @@
         <br><br>
 
         <div class="row">
+            @if($netelements)
+                @include ('bootstrap.panel', array ('content' => "impaired_netelements", 'view_header' => 'Impaired Netelements', 'md' => 6, 'height' => 'auto'))
+            @endif
+            @if($services)
+                @include ('bootstrap.panel', array ('content' => "impaired_services", 'view_header' => 'Impaired Services', 'md' => 6, 'height' => 'auto'))
+            @endif
             @if ($contracts > 0)
                 <div class="col-md-8">
                     <div class="panel panel-inverse">

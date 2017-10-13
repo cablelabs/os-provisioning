@@ -7,6 +7,8 @@ use Log;
 
 use App\Http\Controllers\BaseController;
 use Modules\ProvBase\Entities\Contract;
+use Modules\HfcReq\Entities\NetElement;
+use Modules\HfcBase\Entities\IcingaObjects;
 
 class DashboardController extends BaseController
 {
@@ -14,7 +16,7 @@ class DashboardController extends BaseController
 	{
 		$title = 'Dashboard';
 
-		$contracts = $income = $chart_data_contracts = $chart_data_income = array();
+		$contracts = $income = $chart_data_contracts = $chart_data_income = $netelements = $services = array();
 
 		$allowed_to_see = array(
 			'accounting' => false,
@@ -57,8 +59,11 @@ class DashboardController extends BaseController
 			$income['total'] = (int) $income['total'];
 		}
 
+		$netelements = $this->_get_impaired_netelements();
+		$services = $this->_get_impaired_services();
+
 		return View::make('provbase::dashboard', $this->compact_prep_view(
-				compact('title', 'contracts', 'chart_data_contracts', 'income', 'chart_data_income', 'allowed_to_see')
+				compact('title', 'contracts', 'chart_data_contracts', 'income', 'chart_data_income', 'allowed_to_see', 'netelements', 'services')
 			)
 		);
 	}
@@ -303,4 +308,61 @@ class DashboardController extends BaseController
 
 		return $ret;
 	}
+
+	/**
+	 * Return all impaired netelements in a table array
+	 *
+	 * @author Ole Ernst
+	 * @return array
+	 */
+	private static function _get_impaired_netelements()
+	{
+		$ret = [];
+		foreach(NetElement::where('id', '>', '2')->get() as $element) {
+			$status = $element->get_bsclass();
+			if (/*$element->id != 5 &&*/ ($status == 'success' || $status == 'info'))
+				continue;
+			if(!isset($element->icingaobjects->icingahoststatus) || !$element->icingaobjects->is_active)
+				continue;
+
+			$status = $element->icingaobjects->icingahoststatus;
+			$ret['clr'][] = $element->get_bsclass();
+			$ret['row'][] = [$element->name, $status->output, $status->last_time_up];
+		}
+
+		if($ret)
+			$ret['hdr'] = ['Name', 'Status', 'since'];
+
+		return $ret;
+	}
+
+
+	/**
+	 * Return all impaired services in a table array
+	 *
+	 * @author Ole Ernst
+	 * @return array
+	 */
+	private static function _get_impaired_services()
+	{
+		$ret = [];
+		$clr = ['success', 'warning', 'danger'];
+		$objs = IcingaObjects::join('icinga_servicestatus', 'object_id', '=', 'service_object_id')
+			->where('is_active', '=', '1')
+			->where('name2', '<>', 'ping4')
+			->where('last_hard_state', '<>', '0')
+			->where('problem_has_been_acknowledged', '<>', '1');
+
+		foreach($objs->get() as $service) {
+			$tmp = NetElement::find($service->name1);
+			$ret['clr'][] = $clr[$service->last_hard_state];
+			$ret['row'][] = [$tmp ? $tmp->name : $service->name1, $service->name2, $service->output, /*$service->perfdata,*/ $service->last_time_ok];
+		}
+
+		if($ret)
+			$ret['hdr'] = ['Host', 'Service', 'Status', /*'PerfData',*/ 'since'];
+
+		return $ret;
+	}
+
 }
