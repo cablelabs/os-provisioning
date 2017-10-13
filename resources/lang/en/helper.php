@@ -1,6 +1,14 @@
 <?php
 
 return [
+/**
+ * Index Page - Datatables
+ */
+	'SortSearchColumn'				=> 'This Column cannot be searched or ordered.',
+	'PrintVisibleTable'				=> 'Prints the shown table. If the table is filtered make sure to select the \"All\" option to display everything. Loading can take a few seconds.',
+	'ExportVisibleTable'			=> 'Exports the shown table. If the table is filtered make sure to select the \"All\" option to display everything. Loading can take a few seconds.',
+	'ChangeVisibilityTable'			=> 'Select the columns that should be visible.',
+
  /**
   *	MODULE: BillingBase
   */

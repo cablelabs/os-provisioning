@@ -49,7 +49,7 @@ class Email extends \BaseModel {
 				'index_header' => [$this->table.'.localpart', $this->table.'.index',  $this->table.'.greylisting',  $this->table.'.blacklisting',  $this->table.'.forwardto'],
 				//'header' =>  $this->index.': '.$this->localpart.'@'.isset($this->domain) ? $this->domain->name : 'no-domain.com' ,
 				'bsclass' => $bsclass,
-				'orderBy' => ['1' => 'asc'],
+				'order_by' => ['1' => 'asc'],
 				'eager_loading' => ['domain']];
 	}
 

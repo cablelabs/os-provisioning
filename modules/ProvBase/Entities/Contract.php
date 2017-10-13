@@ -77,10 +77,12 @@ class Contract extends \BaseModel {
 		$bsclass = $this->get_bsclass();
 
 		return ['table' => $this->table,
-				'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.zip', $this->table.'.city', $this->table.'.street', $this->table.'.house_number', $this->table.'.district', $this->table.'.contract_start', $this->table.'.contract_end'],
+				'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.zip', $this->table.'.city', $this->table.'.street', $this->table.'.house_number', $this->table.'.district', $this->table.'.contract_start', $this->table.'.contract_end', 'costcenter.name'],
 				'header' =>  $this->number.' '.$this->firstname.' '.$this->lastname,
 				'bsclass' => $bsclass,
-				'orderBy' => ['0' => 'asc']];
+				'eager_loading' => ['costcenter'],
+				'edit' => ['costcenter.name' => 'get_costcenter_name'],
+				'order_by' => ['0' => 'asc']];
 	}
 
 
@@ -92,6 +94,11 @@ class Contract extends \BaseModel {
 			$bsclass = 'danger';
 
 		return $bsclass;
+	}
+
+	public function get_costcenter_name()
+	{
+		return $costcenter = $this->costcenter ? $this->costcenter->name : trans('messages.noCC');
 	}
 
 	// View Relation.

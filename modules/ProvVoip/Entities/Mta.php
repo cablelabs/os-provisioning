@@ -72,7 +72,7 @@ class Mta extends \BaseModel {
 				'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.type', 'configfile.name'],
 				'header' => $this->hostname.' - '.$this->mac,
 				'bsclass' => $bsclass,
-				'orderBy' => ['3' => 'asc'],
+				'order_by' => ['3' => 'asc'],
                 'edit' => ['configfile.name' => 'has_configfile_assigned'],
 				'eager_loading' => ['configfile']];
 	}

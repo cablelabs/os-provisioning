@@ -121,16 +121,22 @@ class Phonenumber extends \BaseModel {
 		$bsclass = $this->get_bsclass();
 
 		return ['table' => $this->table,
-				'index_header' => [$this->table.'.prefix_number', $this->table.'.number', 'phonenr_act', 'phonenr_deact', 'phonenr_state'],
+				'index_header' => [$this->table.'.number', 'phonenr_act', 'phonenr_deact', 'phonenr_state'],
 				'header' => 'PhonebookEntry (id'.$this->id.')',
 				'bsclass' => $bsclass,
-				'edit' => ['phonenr_act' => 'get_act', 'phonenr_deact' => 'get_deact', 'phonenr_state' => 'get_state'],
-				'sortsearch' => ['phonenr_act' => 'false', 'phonenr_deact' => 'false', 'phonenr_state' => 'false'] ];
+				'edit' => ['phonenr_act' => 'get_act', 'phonenr_deact' => 'get_deact', 'phonenr_state' => 'get_state', 'number' => 'build_number'],
+				'sortsearch' => [],
+				'filter' => ['phonenumber.number' => $this->number_query(), ] ];
 	}
 
-	public function get_bsclass() 
-	{	
-		$management = $this->phonenumbermanagement;	
+	public function number_query()
+	{
+		return "CONCAT(phonenumber.prefix_number,'/',phonenumber.number) like ?";
+	}
+
+	public function get_bsclass()
+	{
+		$management = $this->phonenumbermanagement;
 		if (is_null($management)) {
 			$bsclass = 'warning';
 			}
@@ -248,6 +254,11 @@ class Phonenumber extends \BaseModel {
 		if (is_null($deact)) $deact = '-';
 
 		return $deact;
+	}
+
+	public function build_number()
+	{
+		return $this->prefix_number.'/'.$this->number;
 	}
 
 	/**

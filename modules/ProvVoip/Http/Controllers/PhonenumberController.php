@@ -13,6 +13,7 @@ class PhonenumberController extends \BaseController {
 	 */
     protected $index_create_allowed = false;
 	protected $save_button = 'Save / Restart';
+	protected $index_datatables_ajax_enabled = false;
 
     /**
      * defines the formular fields for the edit and create view
