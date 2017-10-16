@@ -320,7 +320,7 @@ class DashboardController extends BaseController
 		$ret = [];
 		foreach(NetElement::where('id', '>', '2')->get() as $element) {
 			$status = $element->get_bsclass();
-			if (/*$element->id != 5 &&*/ ($status == 'success' || $status == 'info'))
+			if ($status == 'success' || $status == 'info')
 				continue;
 			if(!isset($element->icingaobjects->icingahoststatus) || !$element->icingaobjects->is_active)
 				continue;
@@ -356,13 +356,90 @@ class DashboardController extends BaseController
 		foreach($objs->get() as $service) {
 			$tmp = NetElement::find($service->name1);
 			$ret['clr'][] = $clr[$service->last_hard_state];
-			$ret['row'][] = [$tmp ? $tmp->name : $service->name1, $service->name2, $service->output, /*$service->perfdata,*/ $service->last_time_ok];
+			$ret['row'][] = [$tmp ? $tmp->name : $service->name1, $service->name2, $service->output, $service->last_time_ok];
+			$ret['perf'][] = $this->_get_impaired_services_perfdata($service->perfdata);
 		}
 
 		if($ret)
-			$ret['hdr'] = ['Host', 'Service', 'Status', /*'PerfData',*/ 'since'];
+			$ret['hdr'] = ['Host', 'Service', 'Status', 'since'];
 
 		return $ret;
 	}
+
+
+	/**
+	 * Return formatted impaired performance data for a given perfdata string
+	 *
+	 * @author Ole Ernst
+	 * @return array
+	 */
+	private function _get_impaired_services_perfdata($perf)
+	{
+		$ret = [];
+		preg_match_all("/('.+?'|[^ ]+)=([^ ]+)/", $perf, $matches, PREG_SET_ORDER);
+		foreach ($matches as $idx => $val) {
+			$ret[$idx]['text'] = $val[1];
+			$p = explode(';', $val[2]);
+			// we are dealing with percentages
+			if(substr($p[0], -1) == '%') {
+				$p[3] = 0;
+				$p[4] = 100;
+			}
+			$ret[$idx]['val'] = $p[0];
+			// remove unit of measurement, such as percent
+			$p[0] = preg_replace("/[^0-9.]/", "",$p[0]);
+
+			// set the colour according to the current $p[0], warning $p[1] and critical $p[2] value
+			$cls = null;
+			if(isset($p[1]) && isset($p[2])) {
+				$cls = $this->_get_perfdata_class($p[0], $p[1], $p[2]);
+				// don't show non-impaired perf data
+				if($cls == 'success') {
+					unset($ret[$idx]);
+					continue;
+				}
+				$cls = 'progress-bar progress-bar-' . $cls;
+			}
+			$ret[$idx]['cls'] = $cls;
+
+			// set the percentage according to the current $p[0], minimum $p[3] and maximum $p[4] value
+			$per = null;
+			if(isset($p[3]) && isset($p[4])) {
+				$per = ($p[0] - $p[3]) / ($p[4] - $p[3]) * 100;
+				$ret[$idx]['text'] .= " ($per%)";
+			}
+			$ret[$idx]['per'] = $per;
+
+		}
+
+		return $ret;
+	}
+
+
+	/**
+	 * Return performance data colour class according to given limits
+	 *
+	 * @author Ole Ernst
+	 * @return string
+	 */
+	private function _get_perfdata_class($cur, $warn, $crit)
+	{
+		if($crit > $warn) {
+			if($cur < $warn)
+				return 'success';
+			if($cur < $crit)
+				return 'warning';
+			if($cur > $crit)
+				return 'danger';
+		} else {
+			if($cur > $warn)
+				return 'success';
+			if($cur > $crit)
+				return 'warning';
+			if($cur < $crit)
+				return 'danger';
+		}
+	}
+
 
 }
