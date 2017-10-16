@@ -93,7 +93,7 @@
 						</th>
 					@endif
 					{{-- Get Header if possible with new Format - for Backwards compatibility old one stays --}}
-					@if (isset($model) && is_array($model->view_index_label_ajax()) && isset($model->view_index_label_ajax()['index_header']))
+					@if (isset($model) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ) && is_array($model->view_index_label_ajax()) && isset($model->view_index_label_ajax()['index_header']))
 						@foreach ($model->view_index_label_ajax()['index_header'] as $field)
 							<th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.'.$field).' ' }}
 							@if ((!empty($model->view_index_label_ajax()['sortsearch'])) && ($model->view_index_label_ajax()['sortsearch'] == [$field => 'false']))
@@ -102,12 +102,10 @@
 							@endif
 							</th>
 						@endforeach
-					@elseif (!method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ) && isset($view_var[0]) )
-						@if (isset($view_var[0]) && is_array($view_var[0]->view_index_label()) && isset($view_var[0]->view_index_label()['index_header']))
+					@elseif (isset($view_var[0]) && is_array($view_var[0]->view_index_label()) && isset($view_var[0]->view_index_label()['index_header']) )
 							@foreach ($view_var[0]->view_index_label()['index_header'] as $field)
 								<th class="content"> {{ \App\Http\Controllers\BaseViewController::translate_label($field) }} </th>
 							@endforeach
-						@endif
 					@endif
 				</tr>
 			</thead>
