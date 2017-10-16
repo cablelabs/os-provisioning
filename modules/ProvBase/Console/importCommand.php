@@ -90,7 +90,7 @@ class importCommand extends Command {
 			'Internet Speed Basic MAB,POB'  => 4,
  		];
 
-		protected $old_sys_voip_tarifs = array(
+	protected $old_sys_voip_tarifs = array(
 		12464 => 6,		// TelefonieBasic
 		12465 => 6,		// TelefonieBasicData
 		12466 => 7,		// TelefonieFlatData
@@ -295,7 +295,7 @@ class importCommand extends Command {
 
 		foreach ($contracts as $contract)
 		{
-			$this->info("$i/$num \n");
+			$this->info("\n$i/$num");
 			$c = $this->add_contract($contract, $contracts_new);
 
 			// discard already existing contracts
@@ -310,7 +310,7 @@ class importCommand extends Command {
 				self::add_email($c, $emails_new, $contract);
 
 
-			/* 
+			/*
 			 * MODEM Import
 			 */
 			$modems = $km3->table(\DB::raw('tbl_modem m, tbl_adressen a, tbl_configfiles c'))
@@ -349,7 +349,7 @@ class importCommand extends Command {
 					$mta_n = $this->add_mta($m, $mtas_n, $mta);
 
 
-					/*	
+					/*
 				 	 * Phonenumber Import
 					 */
 					$phonenumbers = $km3->table('tbl_mtaendpoints')
@@ -375,7 +375,7 @@ class importCommand extends Command {
 			$this->add_additional_items($c, $km3, $contract);
 
 			$i++;
-		}	
+		}
 
 		echo "\n";
 
@@ -435,7 +435,7 @@ class importCommand extends Command {
 			$this->error("Contract $c->vertragsnummer already exists [$c->id]");
 			return $c;
 		}
-		
+
 		$c = new Contract;
 
 		// import fields
@@ -469,7 +469,7 @@ class importCommand extends Command {
 		$c->net 			= self::map_cluster_id($old_contract->cluster_id, 1);
 
 
-		// set fields with null input to ''. 
+		// set fields with null input to ''.
 		// This fixes SQL import problem with null fields
 		$relations = $c->relationsToArray();
 		foreach( $c->toArray() as $key => $value )
@@ -507,21 +507,14 @@ class importCommand extends Command {
 		if (is_int($tarif))
 		{
 	 		if (!array_key_exists($tarif, $this->old_sys_voip_tarifs))
-	 		{
-	 			Log::error('importCommand: contract has unknown voip tarif');
 	 			return -1;
-	 		}
 
 	 		return $this->old_sys_voip_tarifs[$tarif];
-
 		}
 
 		// Inet
 		if (!array_key_exists($tarif, $this->old_sys_inet_tarifs))
-		{
-			Log::error('importCommand: contract has unknown tarif');
 			return -1;
-		}
 
  		return is_int($this->old_sys_inet_tarifs[$tarif]) ? $this->old_sys_inet_tarifs[$tarif] : -1;
 	}
@@ -556,6 +549,8 @@ class importCommand extends Command {
 
 	/**
 	 * Add Tarifs to corresponding Contract of new System
+	 *
+	 * TODO: Tarif next month can not be set as is - has still ID - Separate inet & voip tarif mappings and map all by id
 	 */
 	private function add_tarifs($new_contract, $items_new, $products_new, $old_contract)
 	{
@@ -567,8 +562,7 @@ class importCommand extends Command {
 
 		foreach ($tarifs as $key => $tarif)
 		{
-			if (!$tarif)
-			{
+			if (!$tarif) {
 				$this->info("\tNo $key Item exists in old System");
 				continue;
 			}
@@ -576,14 +570,12 @@ class importCommand extends Command {
 			$prod_id = $this->_map_tarif_to_prod($tarif);
 			$item_n  = $items_new->where('contract_id', $new_contract->id)->where('product_id', $prod_id)->all();
 
-			if ($item_n)
-			{
+			if ($item_n) {
 				$this->error("\tItem $key for Contract ".$new_contract->id." already exists");
 				continue;
 			}
 
-			if ($prod_id <= 0)
-			{
+			if ($prod_id <= 0) {
 				$this->error("\tProduct $prod_id does not exist yet [$tarif]");
 				continue;
 			}
@@ -591,9 +583,9 @@ class importCommand extends Command {
 			Item::create([
 				'contract_id' 		=> $new_contract->id,
 				'product_id' 		=> $prod_id,
-				'valid_from' 		=> $key == 'tarif_next_month' ? date('Y-m-01', strtotime('first day of next month')) : date('Y-m-d'), //$contract->angeschlossen,
+				'valid_from' 		=> $key == 'tarif_next_month' ? date('Y-m-01', strtotime('first day of next month')) : $old_contract->angeschlossen,
 				'valid_from_fixed' 	=> 1,
-				'valid_to' 			=> $key == 'tarif_next_month' ? NULL : $new_contract->abgeklemmt,
+				'valid_to' 			=> $key == 'tarif_next_month' ? NULL : $old_contract->abgeklemmt,
 				'valid_to_fixed' 	=> 1,
 				]);
 
@@ -803,7 +795,7 @@ class importCommand extends Command {
 		else
 		{
 			$modem->street 		 = $new_contract->street;
-			$modem->house_number = $new_contract->house_number;			
+			$modem->house_number = $new_contract->house_number;
 		}
 
 		$modem->zip       = $new_contract->zip;
@@ -829,7 +821,7 @@ class importCommand extends Command {
 			}
 		}
 
-		// set fields with null input to ''. 
+		// set fields with null input to ''.
 		// This fixes SQL import problem with null fields
 		$relations = $modem->relationsToArray();
 		foreach( $modem->toArray() as $key => $value )
@@ -845,7 +837,7 @@ class importCommand extends Command {
 		if ($modem->configfile_id == 0)
 			$this->error('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
 
-		$this->info ("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: $modem->public");
+		$this->info ("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
 
 		$modem->save();
 
@@ -933,6 +925,8 @@ class importCommand extends Command {
 		$modems_n = [];
 		foreach ($new_modems->where('contract_id', 500000)->all() as $cm)
 			$modems_n[$cm->mac] = $cm;
+
+		$this->info ("ADD NETELEMENT Modems");
 
 		foreach ($devices as $device)
 			self::add_modem($contract, $modems_n, $device, $db_con);
