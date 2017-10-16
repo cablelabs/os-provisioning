@@ -7,6 +7,8 @@ use Log;
 
 use App\Http\Controllers\BaseController;
 use Modules\ProvBase\Entities\Contract;
+use Modules\HfcReq\Entities\NetElement;
+use Modules\HfcBase\Entities\IcingaObjects;
 
 class DashboardController extends BaseController
 {
@@ -14,7 +16,7 @@ class DashboardController extends BaseController
 	{
 		$title = 'Dashboard';
 
-		$contracts = $income = $chart_data_contracts = $chart_data_income = array();
+		$contracts = $income = $chart_data_contracts = $chart_data_income = $netelements = $services = array();
 
 		$allowed_to_see = array(
 			'accounting' => false,
@@ -57,8 +59,11 @@ class DashboardController extends BaseController
 			$income['total'] = (int) $income['total'];
 		}
 
+		$netelements = $this->_get_impaired_netelements();
+		$services = $this->_get_impaired_services();
+
 		return View::make('provbase::dashboard', $this->compact_prep_view(
-				compact('title', 'contracts', 'chart_data_contracts', 'income', 'chart_data_income', 'allowed_to_see')
+				compact('title', 'contracts', 'chart_data_contracts', 'income', 'chart_data_income', 'allowed_to_see', 'netelements', 'services')
 			)
 		);
 	}
@@ -303,4 +308,138 @@ class DashboardController extends BaseController
 
 		return $ret;
 	}
+
+	/**
+	 * Return all impaired netelements in a table array
+	 *
+	 * @author Ole Ernst
+	 * @return array
+	 */
+	private static function _get_impaired_netelements()
+	{
+		$ret = [];
+		foreach(NetElement::where('id', '>', '2')->get() as $element) {
+			$status = $element->get_bsclass();
+			if ($status == 'success' || $status == 'info')
+				continue;
+			if(!isset($element->icingaobjects->icingahoststatus) || !$element->icingaobjects->is_active)
+				continue;
+
+			$status = $element->icingaobjects->icingahoststatus;
+			$ret['clr'][] = $element->get_bsclass();
+			$ret['row'][] = [$element->name, $status->output, $status->last_time_up];
+		}
+
+		if($ret)
+			$ret['hdr'] = ['Name', 'Status', 'since'];
+
+		return $ret;
+	}
+
+
+	/**
+	 * Return all impaired services in a table array
+	 *
+	 * @author Ole Ernst
+	 * @return array
+	 */
+	private static function _get_impaired_services()
+	{
+		$ret = [];
+		$clr = ['success', 'warning', 'danger'];
+		$objs = IcingaObjects::join('icinga_servicestatus', 'object_id', '=', 'service_object_id')
+			->where('is_active', '=', '1')
+			->where('name2', '<>', 'ping4')
+			->where('last_hard_state', '<>', '0')
+			->where('problem_has_been_acknowledged', '<>', '1');
+
+		foreach($objs->get() as $service) {
+			$tmp = NetElement::find($service->name1);
+			$ret['clr'][] = $clr[$service->last_hard_state];
+			$ret['row'][] = [$tmp ? $tmp->name : $service->name1, $service->name2, $service->output, $service->last_time_ok];
+			$ret['perf'][] = $this->_get_impaired_services_perfdata($service->perfdata);
+		}
+
+		if($ret)
+			$ret['hdr'] = ['Host', 'Service', 'Status', 'since'];
+
+		return $ret;
+	}
+
+
+	/**
+	 * Return formatted impaired performance data for a given perfdata string
+	 *
+	 * @author Ole Ernst
+	 * @return array
+	 */
+	private function _get_impaired_services_perfdata($perf)
+	{
+		$ret = [];
+		preg_match_all("/('.+?'|[^ ]+)=([^ ]+)/", $perf, $matches, PREG_SET_ORDER);
+		foreach ($matches as $idx => $val) {
+			$ret[$idx]['text'] = $val[1];
+			$p = explode(';', $val[2]);
+			// we are dealing with percentages
+			if(substr($p[0], -1) == '%') {
+				$p[3] = 0;
+				$p[4] = 100;
+			}
+			$ret[$idx]['val'] = $p[0];
+			// remove unit of measurement, such as percent
+			$p[0] = preg_replace("/[^0-9.]/", "",$p[0]);
+
+			// set the colour according to the current $p[0], warning $p[1] and critical $p[2] value
+			$cls = null;
+			if(isset($p[1]) && isset($p[2])) {
+				$cls = $this->_get_perfdata_class($p[0], $p[1], $p[2]);
+				// don't show non-impaired perf data
+				if($cls == 'success') {
+					unset($ret[$idx]);
+					continue;
+				}
+				$cls = 'progress-bar progress-bar-' . $cls;
+			}
+			$ret[$idx]['cls'] = $cls;
+
+			// set the percentage according to the current $p[0], minimum $p[3] and maximum $p[4] value
+			$per = null;
+			if(isset($p[3]) && isset($p[4])) {
+				$per = ($p[0] - $p[3]) / ($p[4] - $p[3]) * 100;
+				$ret[$idx]['text'] .= " ($per%)";
+			}
+			$ret[$idx]['per'] = $per;
+
+		}
+
+		return $ret;
+	}
+
+
+	/**
+	 * Return performance data colour class according to given limits
+	 *
+	 * @author Ole Ernst
+	 * @return string
+	 */
+	private function _get_perfdata_class($cur, $warn, $crit)
+	{
+		if($crit > $warn) {
+			if($cur < $warn)
+				return 'success';
+			if($cur < $crit)
+				return 'warning';
+			if($cur > $crit)
+				return 'danger';
+		} else {
+			if($cur > $warn)
+				return 'success';
+			if($cur > $crit)
+				return 'warning';
+			if($cur < $crit)
+				return 'danger';
+		}
+	}
+
+
 }
