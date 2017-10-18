@@ -1252,7 +1252,23 @@ class ContractObserver
 
 	public function updating($contract)
 	{
-//		$contract->number = $contract->number ? : $contract->id - $this->num;
+		$original_number = $contract->getOriginal('number');
+		$original_costcenter_id = $contract->getOriginal('costcenter_id');
+
+		/*
+		 * if
+		 *  - empty contract number
+		 *  - costcenter changed then generate a new contract number
+		 * then generate a new contract number
+		 */
+		if ((trim(\Input::get('number')) == '')) {
+			$new_number = NumberRange::get_new_number('contract', $original_costcenter_id);
+		} elseif ($original_costcenter_id != \Input::get('costcenter_id')) {
+			$new_number = NumberRange::get_new_number('contract', \Input::get('costcenter_id'));
+		} else {
+			$new_number = $original_number;
+		}
+		$contract->number = $new_number;
 
 		if (!\PPModule::is_active('billingbase'))
 		{
