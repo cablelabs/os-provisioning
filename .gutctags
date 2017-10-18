@@ -13,5 +13,7 @@
 --exclude=*/nmsprime/storage/*
 --exclude=*/nmsprime/Documentation/*
 --exclude=*/nmsprime/public/components/*
+--exclude=*/nmsprime/public-ccc/components/*
 --exclude=*/nmsprime/modules/*/Assets/*
 --exclude=*/nmsprime/.deprecated/*
+
