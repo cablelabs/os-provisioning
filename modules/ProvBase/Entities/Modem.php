@@ -506,7 +506,7 @@ class Modem extends \BaseModel {
 			die("Error writing to file");
 
 		Log::info('Configfile Update for Modem: '.$this->hostname);
-		Log::debug("configfile: /usr/local/bin/docsis -e $cf_file $dir/../keyfile $cfg_file");
+		Log::debug("configfile: /usr/local/bin/docsis -e $cf_file $dir../keyfile $cfg_file");
 
 		// "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
 		exec("/usr/local/bin/docsis -e $cf_file $dir../keyfile $cfg_file >/dev/null 2>&1 &", $out);

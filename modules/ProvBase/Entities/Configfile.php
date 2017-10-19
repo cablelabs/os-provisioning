@@ -283,7 +283,7 @@ class Configfile extends \BaseModel {
 				$qos 	= array ($device->qos);
 
 				// Set test data rate if no qos is assigned - 1 Mbit
-				if (!$device->qos)
+				if (!$this->parent_id && !$device->qos)
 				{
 					$qos[0] = new Qos;
 					$qos[0]->id = 0;
