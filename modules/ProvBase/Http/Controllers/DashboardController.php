@@ -357,7 +357,7 @@ class DashboardController extends BaseController
 			$tmp = NetElement::find($service->name1);
 			$ret['clr'][] = $clr[$service->last_hard_state];
 			$ret['row'][] = [$tmp ? $tmp->name : $service->name1, $service->name2, $service->output, $service->last_time_ok];
-			$ret['perf'][] = $this->_get_impaired_services_perfdata($service->perfdata);
+			$ret['perf'][] = self::_get_impaired_services_perfdata($service->perfdata);
 		}
 
 		if($ret)
@@ -373,7 +373,7 @@ class DashboardController extends BaseController
 	 * @author Ole Ernst
 	 * @return array
 	 */
-	private function _get_impaired_services_perfdata($perf)
+	private static function _get_impaired_services_perfdata($perf)
 	{
 		$ret = [];
 		preg_match_all("/('.+?'|[^ ]+)=([^ ]+)/", $perf, $matches, PREG_SET_ORDER);
@@ -392,7 +392,7 @@ class DashboardController extends BaseController
 			// set the colour according to the current $p[0], warning $p[1] and critical $p[2] value
 			$cls = null;
 			if(isset($p[1]) && isset($p[2])) {
-				$cls = $this->_get_perfdata_class($p[0], $p[1], $p[2]);
+				$cls = self::_get_perfdata_class($p[0], $p[1], $p[2]);
 				// don't show non-impaired perf data
 				if($cls == 'success') {
 					unset($ret[$idx]);
@@ -422,7 +422,7 @@ class DashboardController extends BaseController
 	 * @author Ole Ernst
 	 * @return string
 	 */
-	private function _get_perfdata_class($cur, $warn, $crit)
+	private static function _get_perfdata_class($cur, $warn, $crit)
 	{
 		if($crit > $warn) {
 			if($cur < $warn)
