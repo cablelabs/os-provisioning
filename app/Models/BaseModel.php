@@ -635,11 +635,15 @@ class BaseModel extends Eloquent
 		// exceptions
 		$exceptions = ['configfile_id', 'salesman_id', 'costcenter_id', 'company_id', 'sepaaccount_id', 'product_id'/*, 'mibfile_id', 'oid_id'*/];
 
+		// this is the variable that holds table names in $table returned by DB::select('SHOW TABLES')
+		// named dynamically containing the database name
+		$tables_var_name = "Tables_in_".ENV('DB_DATABASE');
+
 		// Lookup all SQL Tables
 		foreach (DB::select('SHOW TABLES') as $table)
 		{
 			// Lookup SQL Fields for current $table
-			foreach (Schema::getColumnListing($table->Tables_in_db_lara) as $column)
+			foreach (Schema::getColumnListing($table->$tables_var_name) as $column)
 			{
 				// check if $column is actual table name object added by '_id'
 				if ($column == $this->table.'_id')
@@ -647,9 +651,9 @@ class BaseModel extends Eloquent
 					if (in_array($column, $exceptions))
 						continue;
 					// get all objects with $column
-					foreach (DB::select('SELECT id FROM '.$table->Tables_in_db_lara.' WHERE '.$column.'='.$this->id) as $child)
+					foreach (DB::select('SELECT id FROM '.$table->$tables_var_name.' WHERE '.$column.'='.$this->id) as $child)
 					{
-						$class_child_name = $this->_guess_model_name ($table->Tables_in_db_lara);
+						$class_child_name = $this->_guess_model_name ($table->$tables_var_name);
 						$class = new $class_child_name;
 
 						array_push($relations, $class->find($child->id));
