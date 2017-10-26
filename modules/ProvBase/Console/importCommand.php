@@ -38,25 +38,35 @@ class importCommand extends Command {
 	 */
 	protected $description = 'import km3';
 
+	/**
+	 * TODOs on new System:
+	 	* adapt contract filter
+	 	* map new tarifs (inet & voip) via configfile and id <-> id
+	 	* check restrictions of volume tarifs in add_tarif_credit and adapt amount if operator wishes it
+	 */
+
+
+
 	// TODO: Check every new import if new tarifs exist on old system
+	// TODO: mapping should be done by configfile and id <-> id
 	protected $old_sys_inet_tarifs = [
 			'BusinessBasic' 				=> 'business',
 			'BusinessFlat' 					=> 'business',
 			'Industrie/Gewerbe 150' 		=> 22,
 			'Industrie/Gewerbe 145' 		=> 'business',
 			'Internet Flat 6000 REI' 		=> 2,
-			'Pob_PrivatBasic' 				=> 'vol',
-			'Pob_PrivatBasic10G' 			=> 'vol',
-			'Pob_PrivatBasic5G' 			=> 'vol',
+			'Pob_PrivatBasic' 				=> 4, 			// Volumentarif
+			'Pob_PrivatBasic10G' 			=> 4, 			// Volumentarif
+			'Pob_PrivatBasic5G' 			=> 4, 			// Volumentarif
 			'Pob_PrivatFlat' 				=> 'vol',
 			'Pob_PrivatFlat Spar' 			=> 'vol',
 			'keineDaten' 					=> 0,
 			'PrivatBasic' 					=> 4,
-			'PrivatBasic 10G' 				=> 4,
+			'PrivatBasic 10G' 				=> 4, 			// Volumentarif
 			'PrivatFlat Spar' 				=> 1,
 			'PrivatFlat' 					=> 1,
 			'Keine Daten' 					=> 0,
-			'PrivatBasic 5G' 				=> 'vol',
+			'PrivatBasic 5G' 				=> 4, 			// Volumentarif
 			'Internet Flat 16000 REI' 		=> 4,
 			'Internet Flat 6000 SAZ' 		=> 2,
 			'Internet Flat 16000 SAZ' 		=> 4,
@@ -69,21 +79,21 @@ class importCommand extends Command {
 			'Internet Volumen 10G REI' 		=> 4,
 			'Internet Volumen 10G SAZ' 		=> 4,
 			'Internet Flat 16000' 			=> 4,
-			'Internet Speed 10G' 			=> 4,
+			'Internet Speed 10G' 			=> 4, 			// Volumentarif
 			'Internet Volumen Basic POB' 	=> 4,
 			'Internet Volumen Basic REI' 	=> 4,
 			'Internet Volumen 10G - 100000' => 4,
 			'Internet Flat 2000 REI' 		=> 1,
 			'Internet Flat 2000 SAZ' 		=> 1,
-			'Internet Flat Spar SAZ' 		=> 'inactive',
-			'Internet Flat Spar MAB,POB' 	=> 'inactive',
-			'Internet Flat Spar POB' 		=> 'inactive',
-			'Internet Flat Spar REI' 		=> 'inactive',
+			'Internet Flat Spar SAZ' 		=> 2, 			// inactive
+			'Internet Flat Spar MAB,POB' 	=> 2, 			// inactive
+			'Internet Flat Spar POB' 		=> 2, 			// inactive
+			'Internet Flat Spar REI' 		=> 2, 			// inactive
 			'Internet Volumen Basic 100000' => 4,
-			'PrivatBasic20G' 				=> 'vol',
+			'PrivatBasic20G' 				=> 4, 			// Volumentarif
 			'Flat 25Mbits.' 				=> 4,
-			'PrivatBasic30G' 				=> 'vol',
-			'PrivatBasic30G REI' 			=> 'vol',
+			'PrivatBasic30G' 				=> 4, 			// Volumentarif
+			'PrivatBasic30G REI' 			=> 4, 			// Volumentarif
 			'Internet Flat 100000' 			=> 5,
 			'Internet Flat 2000' 			=> 1,
 			'Internet Flat 25000' 			=> 4,
@@ -266,7 +276,7 @@ class importCommand extends Command {
 		 * with: Get customer data & Tarifname from old systems DB
 		 */
 		$contracts = $km3->table(\DB::raw('tbl_vertrag v, tbl_modem m, tbl_adressen a, tbl_adressen modem_adr, tbl_kunde k, tbl_tarif t, tbl_posten p'))
-				->selectRaw ('distinct on (v.vertragsnummer) v.vertragsnummer, v.*, a.*, k.*, t.name as tarif,
+				->selectRaw ('distinct on (v.vertragsnummer) v.vertragsnummer, v.*, a.*, k.*, t.name as tariffname,
 					v.id as id, v.beschreibung as contr_descr, m.cluster_id')
 				->whereRaw('m.adresse = modem_adr.id')
 				->whereRaw('v.ansprechpartner = a.id')
@@ -429,9 +439,7 @@ class importCommand extends Command {
 	{
 		$c = $contracts_new->whereLoose('number2', $old_contract->vertragsnummer)->first();
 
-		if ($c)
-		{
-			// $info = 'UPDATE';
+		if ($c) {
 			$this->error("Contract $c->vertragsnummer already exists [$c->id]");
 			return $c;
 		}
@@ -456,12 +464,12 @@ class importCommand extends Command {
 		$c->phone 			= str_replace("/", "", $old_contract->tel);
 		$c->fax 			= $old_contract->fax;
 		$c->email 			= $old_contract->email;
-		$c->birthday 		= $old_contract->geburtsdatum;
+		$c->birthday 		= $old_contract->geburtsdatum ? : null;
 
 		$c->description 	= $old_contract->beschreibung."\n".$old_contract->contr_descr;
 		$c->network_access 	= $old_contract->network_access;
 		$c->contract_start 	= $old_contract->angeschlossen;
-		$c->contract_end   	= $old_contract->abgeklemmt;
+		$c->contract_end   	= $old_contract->abgeklemmt ? : null;
 		$c->create_invoice 	= $old_contract->rechnung;
 
 		$c->costcenter_id 	= $this->option('cc') ? : 3; // Dittersdorf=1, new one would be 3
@@ -555,7 +563,7 @@ class importCommand extends Command {
 	private function add_tarifs($new_contract, $items_new, $products_new, $old_contract)
 	{
 		$tarifs = array(
-			'tarif' 			=> $old_contract->tarif,
+			'tarif' 			=> $old_contract->tariffname,
 			'tarif_next_month'  => $old_contract->tarif_next_month,
 			'voip' 				=> $old_contract->telefontarif,
 			);
@@ -601,7 +609,7 @@ class importCommand extends Command {
 	 */
 	private function add_tarif_credit($new_contract, $old_contract)
 	{
-		if ((strpos($old_contract->tarif, 'Volumen') === false) && (strpos($old_contract->tarif, 'Speed') === false))
+		if ((strpos($old_contract->tariffname, 'Volumen') === false) && (strpos($old_contract->tariffname, 'Speed') === false) && (strpos($old_contract->tariffname, 'Basic') === false))
 			return;
 
 		$this->info("Add extra Credit as Customer had volume tariff. [$new_contract->number]");
