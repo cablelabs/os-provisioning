@@ -683,21 +683,25 @@ class BaseModel extends Eloquent
 
 
 	/**
-	 * Checks if model is valid in specific time interval (used for Billing or to calculate income for dashboard)
+	 * Checks if model is valid in specific timespan
+	 * (used for Billing or to calculate income for dashboard)
 	 *
-	 * Note: Model must have a get_start_time- & get_end_time-Function defined
+	 * Note: if param start_end_ts is not set the model must have a get_start_time- & get_end_time-Function defined
 	 *
-	 * @param 	timespan 	String			Yearly / Quarterly / Monthly / Now  => Enum of Product->billing_cycle
-	 * @param 	time 		Integer 		Seconds since 1970 - check if model has/had/will have valid dates during specific time
-	 * @return 				Bool  			true, if model had valid dates during last month / year or is actually valid (now)
+	 * @param 	timespan 		String		Yearly|Quarterly|Monthly|Now => Enum of Product->billing_cycle
+	 * @param 	time 			Integer 	Seconds since 1970 - check for timespan of specific point of time
+	 * @param 	start_end_ts 	Array 		UTC Timestamps [start, end] (in sec)
+	 *
+	 * @return 	Bool  			true, if model had valid dates during last month / year or is actually valid (now)
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function check_validity($timespan = 'monthly', $time = null)
+	public function check_validity($timespan = 'monthly', $time = null, $start_end_ts = [])
 	{
-		$start = $this->get_start_time();
-		$end   = $this->get_end_time();
-		// default - for billing settlementruns/charges are calculated for last month
+		$start = $start_end_ts ? $start_end_ts[0] : $this->get_start_time();
+		$end   = $start_end_ts ? $start_end_ts[1] : $this->get_end_time();
+
+		// default - billing settlementruns/charges are calculated for last month
 		$time = $time ? : strtotime('midnight first day of last month');
 
 		switch (strtolower($timespan))
