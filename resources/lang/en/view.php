@@ -183,7 +183,7 @@ return [
 		'Button_Create Item'			=> 'Create Item',
 		'sr_dl_logs' 					=> 'Download whole logfile',
 		//Numberrange
-		'Button_Create Numberrange'		=> 'Create Numberrange',
+		'Button_Create NumberRange'		=> 'Create Numberrange',
 
 	//SNMP Modul
 		//Device
