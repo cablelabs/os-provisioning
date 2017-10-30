@@ -237,6 +237,11 @@ return [
 // Numberrange
 //
 	//Type
-		'Numberrange_Type_contract' => 'Contract',
-		'Numberrange_Type_invoice' => 'Invoice',
+	'Numberrange_Type_contract' => 'Contract',
+	'Numberrange_Type_invoice' => 'Invoice',
+
+//
+// Contract
+//
+	'Contract_Numberrange_Failure' => 'No free contract number for selected costcenter available!'
 ];

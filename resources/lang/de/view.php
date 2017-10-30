@@ -343,4 +343,9 @@ return [
 	//Type
 	'Numberrange_Type_contract' => 'Vertrag',
 	'Numberrange_Type_invoice' => 'Rechnung',
+
+//
+// Contract
+//
+	'Contract_Numberrange_Failure' => 'Keine freie Vertragsnummer für die gewählte Kostenstelle gefunden.'
 ];

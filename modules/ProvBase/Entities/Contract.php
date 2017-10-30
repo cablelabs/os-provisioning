@@ -1246,11 +1246,18 @@ class ContractObserver
 	{
 		// Note: this only works here because id is not yet assigned in creating function
 //		$contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
-
 		if ($contract->number == 0) {
-			$contract->number = $contract->id - $this->num;
+			session([
+				'alert' => \App\Http\Controllers\BaseViewController::translate_view(
+					'Failure',
+					'Contract_Numberrange'
+				)
+			]);
+		}
+
+		if (!$contract->number) {
 			$contract->observer_enabled = false;
-			$contract->save();
+			$contract->save();  // forces to call the updating, saving, updated & saved method of the observer
 		}
 
 		$contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
