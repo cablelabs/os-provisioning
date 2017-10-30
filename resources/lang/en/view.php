@@ -90,10 +90,12 @@ return [
 		//Company
 		'Header_EditCompany'		=> 'Edit Company',
 		//Salesman
-		'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
+		'Header_EditSalesman'		=> 'Edit Salesman',
 		//Items
 		'Header_Item'				=> 'Item|Items',
 		'Header_EditItem'			=> 'Edit Item', //??
+		//Numberrange
+		'Header_NumberRange'		=> 'Numberrange|Numberranges',
 	//SNMP Modul
 		//Device
 		'Header_Device'				=> 'Device|Devices',
@@ -180,6 +182,8 @@ return [
 		//Item
 		'Button_Create Item'			=> 'Create Item',
 		'sr_dl_logs' 					=> 'Download whole logfile',
+		//Numberrange
+		'Button_Create Numberrange'		=> 'Create Numberrange',
 
 	//SNMP Modul
 		//Device
@@ -228,4 +232,11 @@ return [
 	'Dashboard_Tickets' 			=> 'NEW TICKETS',
 	'Dashboard_NoTickets' 			=> 'No new Tickets.',
 	'Dashboard_Quickstart' 			=> 'QUICKSTART',
+
+//
+// Numberrange
+//
+	//Type
+		'Numberrange_Type_contract' => 'Contract',
+		'Numberrange_Type_invoice' => 'Invoice',
 ];

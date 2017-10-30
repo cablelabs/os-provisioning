@@ -1227,24 +1227,30 @@ class ContractObserver
 		$contract_number = $input_data['number'];
 
 		if (is_null($contract->id) && strlen($contract_number) == 0) {
-			$new_number = NumberRange::get_new_number('contract', \Input::get('costcenter_id'));
+			$new_number = NumberRange::get_new_number('contract', $input_data['costcenter_id']);
+
+			/*
+			 * If new number is null (all ranges are exhausted) generate a new number with the old
+			 * algorithm (see ContractObserver::created()
+			 */
+			if (is_null($new_number)) {
+				$new_number = 0;
+			}
 		} else {
-			//$new_number = $contract->id - $this->num;
 			$new_number = $contract_number;
 		}
 		$contract->number = $new_number;
 	}
 
-
 	public function created($contract)
 	{
 		// Note: this only works here because id is not yet assigned in creating function
-		// $contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
-		if (!$contract->number)
-		{
-			// $contract->number = $contract->id - $this->num;
+//		$contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
+
+		if ($contract->number == 0) {
+			$contract->number = $contract->id - $this->num;
 			$contract->observer_enabled = false;
-			$contract->save();     			// forces to call the updating, saving, updated & saved method of the observer
+			$contract->save();
 		}
 
 		$contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
@@ -1258,7 +1264,7 @@ class ContractObserver
 		/*
 		 * if
 		 *  - empty contract number
-		 *  - costcenter changed then generate a new contract number
+		 *  - costcenter changed
 		 * then generate a new contract number
 		 */
 		if ((trim(\Input::get('number')) == '')) {

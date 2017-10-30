@@ -136,6 +136,9 @@ return [
 		//Settlement Run
 		'Header_Settlement Run'		=> 'Abrechnungslauf|Abrechnungsläufe',
 		'Header_EditSettlement Run' => 'Abrechnungslauf bearbeiten',
+		//Numberrange
+		'Header_NumberRange'		=> 'Nummernkreis|Nummernkreise',
+
 	//SNMP Modul
 		//Device
 		'Header_Device'				=> 'Gerät|Geräte',
@@ -245,6 +248,8 @@ return [
 		'Button_Rerun Accounting Command for current Month'	=> 'Vorgang für den aktuellen Monat erneut ausführen',
 		'sr_dl_logs' 					=> 'Gesamtes Logfile herunterladen',
 
+		//Numberrange
+		'Button_Create NumberRange'		=> 'Neuer Nummernkreis',
 	//SNMP Modul
 		//Device
 		'Button_Create Device'			=> 'Neues Gerät',
@@ -326,4 +331,16 @@ return [
 	'Ticket_Priority_Minor' => 'Medium',
 	'Ticket_Priority_Major' => 'Hoch',
 	'Ticket_Priority_Critical' => 'Kritisch',
+
+//
+// Numberrange
+//
+	'Numberrange_Start' => 'Beginn',
+	'Numberrange_End' => 'Ende',
+	'Numberrange_Suffix' => 'Suffix',
+	'Numberrange_Prefix' => 'Präfix',
+	'Numberrange_Type' => 'Typ',
+	//Type
+	'Numberrange_Type_contract' => 'Vertrag',
+	'Numberrange_Type_invoice' => 'Rechnung',
 ];
