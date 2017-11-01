@@ -13,7 +13,7 @@ return [
 	'alert' 				=> 'Attention!',
 	'Call Data Record'		=> 'Call Data Record',
 	'ccc'					=> 'Customer Control Center',
-
+	'cdr' 					=> 'cdr',
 	'cdr_offset' 			=> 'CDR to Invoice time difference in Months',
 	'close' 				=> 'Close',
 	'cpe_log_error' 		=> 'was not registering on Server - No log entry found',

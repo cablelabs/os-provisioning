@@ -15,6 +15,7 @@ return [
 	'Bank Account Holder'		=> 'Kontoinhaber',
 	'Birthday'					=> 'Geburtstag',
 	'ccc'						=> 'Kundenkontrollzentrum',
+	'cdr' 						=> 'Evn',
 	'City'						=> 'Stadt',
 	'Choose KML file'			=> 'Wähle KML file',
 	'close' 					=> 'Schliessen',
