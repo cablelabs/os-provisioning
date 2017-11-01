@@ -70,7 +70,7 @@ return [
 			'driver'    => 'mysql',
 			'host'      => env('CACTI_DB_HOST', 'localhost'),
 			'database'  => env('CACTI_DB_DATABASE', 'cacti'),
-			'username'  => env('CACTI_DB_USERNAME', 'forge'),
+			'username'  => env('CACTI_DB_USERNAME', 'cactiuser'),
 			'password'  => env('CACTI_DB_PASSWORD', ''),
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
