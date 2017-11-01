@@ -66,14 +66,12 @@ return [
 			'strict'    => false,
 		],
 
-		// TODO: adapt ENV settings to access cacti DB with
-		//       the installed Cacti user and not with root
 		'mysql-cacti' => [
 			'driver'    => 'mysql',
-			'host'      => env('DB_HOST', 'localhost'),
-			'database'  => 'cacti',
-			'username'  => env('DB_USERNAME', 'forge'),
-			'password'  => env('DB_PASSWORD', ''),
+			'host'      => env('CACTI_DB_HOST', 'localhost'),
+			'database'  => env('CACTI_DB_DATABASE', 'cacti'),
+			'username'  => env('CACTI_DB_USERNAME', 'forge'),
+			'password'  => env('CACTI_DB_PASSWORD', ''),
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
