@@ -39,7 +39,7 @@ return [
 	*/
 
 	// used e.g. in all envia related console commands by cURL
-	'url' => env('APP_CONSOLE_BASEURL', 'https://localhost'),
+	'url' => env('APP_CONSOLE_BASEURL', 'https://localhost/nmsprime'),
 
 	/*
 	|--------------------------------------------------------------------------
