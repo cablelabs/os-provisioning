@@ -32,6 +32,11 @@ return [
 		'jQuery_sLast'				=> ':sSortAscending aktivieren, um Spalte aufsteigend zu sortieren',
 		'jQuery_sLast'				=> ':sSortDescending aktivieren, um Spalte absteigend zu sortieren',
 		'jQuery_All'				=> 'Alle',
+		'jQuery_Print'				=> 'Drucken',
+		'jQuery_colvis'				=> 'Spaltensichtbarkeit',
+		'jQuery_colvisRestore'		=> 'Wiederherstellen',
+		'jQuery_colvisReset'		=> 'Zurücksetzen',
+		'jQuery_ExportTo'			=> 'Exportieren als',
 
 //
 //MENU

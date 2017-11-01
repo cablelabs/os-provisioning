@@ -64,7 +64,7 @@ class Parameter extends \BaseModel {
 		return ['table' => $this->table,
 				'index_header' => ['oid.name', 'oid.oid',  'oid.access'],
 				'header' =>  $header,
-				'orderBy' => ['1' => 'asc'],
+				'order_by' => ['1' => 'asc'],
 				'eager_loading' => ['oid']];
 	}
 

@@ -52,6 +52,23 @@ class PhoneTariff extends \BaseModel {
 	}
 
 
+	// link title in index view
+	public function view_index_label_ajax()
+	{
+		if (boolval($this->usable)) {
+	        $bsclass = 'success';
+		}
+		else {
+			$bsclass = 'danger';
+		}
+
+
+        return ['table' => $this->table,
+				'index_header' => [$this->table.'.name', $this->table.'.type', $this->table.'.description', $this->table.'.voip_protocol', $this->table.'.usable'],
+                'bsclass' => $bsclass,
+                'header' => $this->name.' ('.$this->type.')'];
+	}
+
 	// Name of View
 	public static function get_view_header()
 	{

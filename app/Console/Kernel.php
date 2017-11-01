@@ -65,8 +65,7 @@ class Kernel extends ConsoleKernel {
 		// define some helpers
 		$is_first_day_of_month = (date('d') == '01') ? True : False;
 
-		$schedule->command('queue:checkup')->everyTenMinutes(); //cron("1,16,31,46 * * * * *");
-
+		$schedule->command('queue:checkup')->everyMinute();
 		$schedule->call('\Modules\ProvBase\Http\Controllers\DashboardController@save_income_to_json')->dailyAt('00:07');
 
 

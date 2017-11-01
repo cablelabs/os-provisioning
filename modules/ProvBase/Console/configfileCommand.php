@@ -6,9 +6,17 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-use Modules\ProvBase\Entities\Modem;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Bus\SelfHandling;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class configfileCommand extends Command {
+use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\Configfile;
+
+class configfileCommand extends Command implements SelfHandling, ShouldQueue {
+
+	use InteractsWithQueue, SerializesModels;
 
 	/**
 	 * The console command name.
@@ -22,15 +30,28 @@ class configfileCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $description = 'make alle configfiles';
+	protected $description = 'make all configfiles';
+
+
+	/**
+	 * Configfile ID
+	 	* 0:  all Modem & MTA Configfiles (CFs) are built
+	 	* >0: all related (with children CFs) cfg's are built
+	 *
+	 * @var integer
+	 */
+	protected $cf_id = 0;
+
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct()
+	public function __construct($cf_id = 0)
 	{
+		$this->cf_id = $cf_id;
+
 		parent::__construct();
 	}
 
@@ -39,12 +60,27 @@ class configfileCommand extends Command {
 	 *
 	 * @return mixed
 	 */
-	public function fire()
+	public function handle()
 	{
+		\Log::debug(__CLASS__." called with configfile id: $this->cf_id");
+
+		// handle configfile observer functionality via job in background
+		if ($this->cf_id)
+		{
+			// $cf = Configfile::withTrashed()->find($this->cf_id); 	// only if we want to build for deleted CFs - doesnt make sense right now
+			$cf = Configfile::find($this->cf_id);
+
+			$cf->build_corresponding_configfiles();
+			$cf->search_children(1);
+
+			return;
+		}
+
+
 		// Modem
 		$cms = Modem::all();
 
-		$i = 1; 
+		$i = 1;
 		$num = count ($cms);
 
 		foreach ($cms as $cm)
@@ -58,7 +94,7 @@ class configfileCommand extends Command {
 		// MTA
 		$mtas = \Modules\ProvVoip\Entities\Mta::all();
 
-		$i = 1; 
+		$i = 1;
 		$num = count ($mtas);
 
 		foreach ($mtas as $mta)
@@ -77,7 +113,7 @@ class configfileCommand extends Command {
 	protected function getArguments()
 	{
 		return array(
-			// array('example', InputArgument::REQUIRED, 'An example argument.'),
+			// array('configfile_id', InputArgument::OPTIONAL, 'ID of Configfile - build all related CMs and MTAs for that and all children CFs'),
 		);
 	}
 
@@ -89,7 +125,7 @@ class configfileCommand extends Command {
 	protected function getOptions()
 	{
 		return array(
-			// array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
+			// array('configfile_id', null, InputOption::VALUE_OPTIONAL, 'ID of Configfile - build all related CMs and MTAs for that and all children CFs, e.g. 1', 0),
 		);
 	}
 

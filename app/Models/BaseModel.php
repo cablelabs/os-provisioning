@@ -23,9 +23,6 @@ class BaseModel extends Eloquent
 
 	public $voip_enabled;
 	public $billing_enabled;
-
-	public $index_datatables_ajax_enabled;
-
 	protected $fillable = array();
 
 
@@ -54,7 +51,6 @@ class BaseModel extends Eloquent
 		// set helper variables
 		$this->voip_enabled = $this->voip_enabled();
 		$this->billing_enabled = $this->billing_enabled();
-		$this->index_datatables_ajax_enabled = $this->index_datatables_ajax_enabled();
 	}
 
 
@@ -205,27 +201,6 @@ class BaseModel extends Eloquent
 
 		return False;
 	}
-
-	/**
-	 * Check if AJAX Datatables should be used
-	 *
-	 *
-	 * @author Christian Schramm
-	 *
-	 * @return true if index model contains more than 100 entries
-	 */
-	 public function index_datatables_ajax_enabled() {
-		$enabled =false;
-		if (method_exists( $this, 'view_index_label_ajax')){
-			$model_name = static::class;
-			if ($model_name::count() > 100)
-				$enabled = true;
-			else
-				$enabled = false;
-		}
-		$end = microtime();
-		return $enabled;
-	}	
 
 
 	/**
@@ -712,21 +687,25 @@ class BaseModel extends Eloquent
 
 
 	/**
-	 * Checks if model is valid in specific time interval (used for Billing or to calculate income for dashboard)
+	 * Checks if model is valid in specific timespan
+	 * (used for Billing or to calculate income for dashboard)
 	 *
-	 * Note: Model must have a get_start_time- & get_end_time-Function defined
+	 * Note: if param start_end_ts is not set the model must have a get_start_time- & get_end_time-Function defined
 	 *
-	 * @param 	timespan 	String			Yearly / Quarterly / Monthly / Now  => Enum of Product->billing_cycle
-	 * @param 	time 		Integer 		Seconds since 1970 - check if model has/had/will have valid dates during specific time
-	 * @return 				Bool  			true, if model had valid dates during last month / year or is actually valid (now)
+	 * @param 	timespan 		String		Yearly|Quarterly|Monthly|Now => Enum of Product->billing_cycle
+	 * @param 	time 			Integer 	Seconds since 1970 - check for timespan of specific point of time
+	 * @param 	start_end_ts 	Array 		UTC Timestamps [start, end] (in sec)
+	 *
+	 * @return 	Bool  			true, if model had valid dates during last month / year or is actually valid (now)
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function check_validity($timespan = 'monthly', $time = null)
+	public function check_validity($timespan = 'monthly', $time = null, $start_end_ts = [])
 	{
-		$start = $this->get_start_time();
-		$end   = $this->get_end_time();
-		// default - for billing settlementruns/charges are calculated for last month
+		$start = $start_end_ts ? $start_end_ts[0] : $this->get_start_time();
+		$end   = $start_end_ts ? $start_end_ts[1] : $this->get_end_time();
+
+		// default - billing settlementruns/charges are calculated for last month
 		$time = $time ? : strtotime('midnight first day of last month');
 
 		switch (strtolower($timespan))
@@ -889,7 +868,7 @@ class BaseObserver
 /**
  * Systemd Observer Class - Handles changes on Model Gateways - restarts system services
  *
- * TODO: 
+ * TODO:
  	* place it somewhere else ...
  	* Calling this Observer is practically very bad in case there are more services inserted - then all services will restart even
  *		if Config didn't change - therefore a distinction is necessary - or more Observers,

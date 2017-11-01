@@ -72,7 +72,7 @@ class Mta extends \BaseModel {
 				'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.type', 'configfile.name'],
 				'header' => $this->hostname.' - '.$this->mac,
 				'bsclass' => $bsclass,
-				'orderBy' => ['3' => 'asc'],
+				'order_by' => ['3' => 'asc'],
                 'edit' => ['configfile.name' => 'has_configfile_assigned'],
 				'eager_loading' => ['configfile']];
 	}
@@ -407,8 +407,10 @@ class MtaObserver
 		// only make configuration files when relevant data was changed
 		if ($modifications)
 		{
-			if (array_key_exists('mac', $modifications))
+			if (array_key_exists('mac', $modifications)){
 				$mta->make_dhcp_mta();
+				$mta->modem->make_configfile();
+			}
 
 			$mta->make_configfile();
 		}
@@ -421,6 +423,7 @@ class MtaObserver
 		$mta->make_dhcp_mta(true);
 		$mta->modem->make_dhcp_cm(false, true);
 		$mta->delete_configfile();
+		$mta->modem->make_configfile();
 		$mta->modem->restart_modem();
 	}
 }

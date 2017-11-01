@@ -125,6 +125,18 @@ return [
 			'strict'    => false,
 		],
 
+		'mysql-icinga2' => [
+			'driver'    => 'mysql',
+			'host'      => env('ICINGA2_DB_HOST', env('DB_HOST', 'localhost')),
+			'database'  => env('ICINGA2_DB_DATABASE', 'icinga2'),
+			'username'  => env('ICINGA2_DB_USERNAME', env('DB_USERNAME', 'icinga2user')),
+			'password'  => env('ICINGA2_DB_PASSWORD', env('DB_PASSWORD', '')),
+			'charset'   => 'utf8',
+			'collation' => 'utf8_unicode_ci',
+			'prefix'    => '',
+			'strict'    => false,
+		],
+
 	],
 
 	/*
