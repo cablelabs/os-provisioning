@@ -8,7 +8,7 @@ return [
 	'PrintVisibleTable'				=> 'Druckt den aktuell sichtbaren Bereich der Tabelle. Um alles zu drucken bitte im Filter \"Alle\" auswählen. Das Laden kann einige Sekunden dauern.',
 	'ExportVisibleTable'			=> 'Exportiert den aktuell sichtbaren Bereich der Tabelle. Um alles zu exportieren bitte im Filter \"Alle\" auswählen. Das Laden kann einige Sekunden dauern.',
 	'ChangeVisibilityTable'			=> 'Mit dieser Option können Spaten ein-/ausgeblendet werden.',
-	
+
  /**
   *	MODULE: BillingBase
   */
@@ -42,6 +42,9 @@ return [
 
 	//SalesmanController
 	'Salesman_ProductList'			=> 'Füge alle Produkttypen an, für die eine Provision erzielt werden kann - möglich:',
+
+	// SepaMandate
+	'sm_cc' 						=> 'Tragen Sie hier eine Kostenstelle ein, um über dieses Konto nur Posten/Produkte abzurechnen, die derselben Kostenstelle zugewiesen sind. Dem Konto eines SEPA-Mandats ohne zugewiesene Kostenstelle werden alle entstandenen Kosten abgebucht, die keinem anderen Mandat zugordnet werden können. Anmerkung: Entstehen Kosten, die keinem SEPA-Mandat zugeordnet werden können, wird angenommen, dass diese in bar beglichen werden.',
 
 	//SepaAccountController
 	'SepaAccount_InvoiceHeadline'	=> 'Ersetzt die Überschrift der Rechnung, die für diese Kostenstelle erstellt wird.',
