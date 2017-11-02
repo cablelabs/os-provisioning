@@ -127,6 +127,8 @@ return [
 		// Invoice
 		'Header_Invoice' 			=> 'Rechnung|Rechnungen',
 
+		// SepaMandate
+		'Header_SEPA Mandate' 		=> 'SEPA-Mandat',
 		//Settlement Run
 		'Header_Settlement Run'		=> 'Abrechnungslauf|Abrechnungsläufe',
 		'Header_EditSettlement Run' => 'Abrechnungslauf bearbeiten',

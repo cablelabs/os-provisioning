@@ -663,9 +663,8 @@ class importCommand extends Command {
 				'sepa_institute' 	=> $mandate->institut ? : '',
 				'sepa_valid_from' 	=> $mandate->gueltig_ab,
 				'sepa_valid_to' 	=> $mandate->gueltig_bis,
-				'recurring' 		=> true,
-				'state' 			=> 'RECUR',
-				// 'sepa_valid_to' 	=> NULL,
+				'disable' 			=> $old_contract->einzug ? false : true,
+				'state' 			=> 'RCUR',
 				]);
 
 			$this->info ("SEPAMANDATE ADD: ".$mandate->kontoinhaber.', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);

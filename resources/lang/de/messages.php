@@ -277,6 +277,14 @@ return [
 	//Salesman
 	'Commission in %'		=> 'Komission in %',
 	'Product List'			=> 'Produktliste',
+
+	// SepaMandate
+	'Already recurring ?' 	=> 'Bereits wiederkehrend ?',
+	'Date of Signature' 	=> 'Signaturdatum',
+	'Disable temporary' 	=> 'Temporär aussetzen',
+	'Reference Number' 		=> 'Referenznummer',
+	'Bank Institute' 		=> 'Institut',
+
 	//Settlement Run File generation
 	'Contractnr'			=> 'Vertragsnummer',
 	'Invoicenr'				=> 'Rechnungsnummer',

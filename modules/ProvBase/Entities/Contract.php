@@ -845,7 +845,7 @@ class Contract extends \BaseModel {
 		$last 	= 0;
 		$tariff = null;			// item
 		$count = 0;
-// dd($prod_ids, $this->items);
+
 		foreach ($this->items as $item)
 		{
 			if (in_array($item->product->id, $prod_ids) && $item->check_validity('Now'))
@@ -1161,7 +1161,10 @@ class Contract extends \BaseModel {
 
 		foreach ($this->sepamandates as $m)
 		{
-			if (!is_object($m) || !$m->check_validity($timespan))
+			if (!is_object($m))
+				continue;
+
+			if ($m->disable || !$m->check_validity($timespan))
 				continue;
 
 			if ($m->costcenter xor $sepaaccount_id)

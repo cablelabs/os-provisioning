@@ -45,6 +45,7 @@ return [
 
 	// SepaMandate
 	'sm_cc' 						=> 'Tragen Sie hier eine Kostenstelle ein, um über dieses Konto nur Posten/Produkte abzurechnen, die derselben Kostenstelle zugewiesen sind. Dem Konto eines SEPA-Mandats ohne zugewiesene Kostenstelle werden alle entstandenen Kosten abgebucht, die keinem anderen Mandat zugordnet werden können. Anmerkung: Entstehen Kosten, die keinem SEPA-Mandat zugeordnet werden können, wird angenommen, dass diese in bar beglichen werden.',
+	'sm_recur' 						=> 'Aktivieren, wenn vor dem Anlegen bereits Transaktionen von diesem Konto vorgenommen worden. Setzt den Status auf Folgelastschrift. Anmerkung: Wird nur bei der ersten Lastschrift beachtet!',
 
 	//SepaAccountController
 	'SepaAccount_InvoiceHeadline'	=> 'Ersetzt die Überschrift der Rechnung, die für diese Kostenstelle erstellt wird.',
