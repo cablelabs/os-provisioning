@@ -171,6 +171,7 @@ return [
 		'Button_Create Salesman'		=> 'Create Salesman',
 		//Item
 		'Button_Create Item'			=> 'Create Item',
+		'sr_dl_logs' 					=> 'Download whole logfile',
 
 	//SNMP Modul
 		//Device
