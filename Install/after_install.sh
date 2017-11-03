@@ -3,7 +3,7 @@
 #
 dir="/var/www/nmsprime"
 env="/etc/nmsprime/env/global.env"
-pw=$(openssl rand -base64 12) # SQL password for user nmsprime
+pw=$(tr -dc '[:alnum:]' < /dev/urandom | head -c 12) # SQL password for user nmsprime
 
 
 #
@@ -47,6 +47,7 @@ chown -R apache $dir/storage/ $dir/bootstrap/cache/
 ln -sr "$env" "$dir/.env" # TODO: force L5 to use global env file - remove this line
 
 # L5 setup
-composer install
+php artisan clear-compiled
+php artisan optimize
 php artisan key:generate
 php artisan migrate
