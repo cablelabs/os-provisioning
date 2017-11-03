@@ -7,6 +7,13 @@ pw=$(tr -dc '[:alnum:]' < /dev/urandom | head -c 12) # SQL password for user nms
 
 
 #
+# disable SE linux
+#
+sed -i "s/^SELINUX=enforcing$/SELINUX=disabled/" /etc/sysconfig/selinux
+setenforce  0
+
+
+#
 # HTTP
 #
 # SSL demo certificate
@@ -42,8 +49,7 @@ sed -i "s/^DB_PASSWORD=$/DB_PASSWORD=$pw/" "$env"
 #
 # Laravel
 #
-cd $dir
-chown -R apache $dir/storage/ $dir/bootstrap/cache/
+cd "$dir"
 ln -sr "$env" "$dir/.env" # TODO: force L5 to use global env file - remove this line
 
 # L5 setup
@@ -51,3 +57,7 @@ php artisan clear-compiled
 php artisan optimize
 php artisan key:generate
 php artisan migrate
+
+# Note: needs to run last. storage/logs is only available after artisan optimize
+mkdir $dir/storage/logs
+chown -R apache $dir/storage/ $dir/bootstrap/cache/
