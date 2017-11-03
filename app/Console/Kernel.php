@@ -2,17 +2,6 @@
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use \Modules\HfcBase\Http\Controllers\TreeErdController;
-use \Modules\HfcBase\Http\Controllers\TreeTopographyController;
-use \Modules\HfcCustomer\Http\Controllers\CustomerTopoController;
-use \Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand;
-use \Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand;
-use \Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand;
-use \Modules\ProvVoip\Console\PhonenumberCommand;
-use \Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand;
-use \Modules\ProvVoipEnvia\Console\EnviaContractReferenceGetterCommand;
-use \Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceGetterCommand;
-use \Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceFromCSVUpdaterCommand;
 
 class Kernel extends ConsoleKernel {
 
@@ -25,17 +14,6 @@ class Kernel extends ConsoleKernel {
 		'App\Console\Commands\Inspire',
 		'App\Console\Commands\TimeDeltaChecker',
 		'App\Console\Commands\StorageCleaner',
-		'\Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand',
-		'\Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand',
-		'\Modules\ProvVoip\Console\PhonenumberCommand',
-		'\Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand',
-		'\Modules\ProvVoipEnvia\Console\EnviaContractGetterCommand',
-		'\Modules\ProvVoipEnvia\Console\EnviaContractReferenceGetterCommand',
-		'\Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceGetterCommand',
-		'\Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceFromCSVUpdaterCommand',
-		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
-		'\Modules\ProvVoipEnvia\Console\EnviaOrderProcessorCommand',
-		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
 		'App\Console\Commands\authCommand',
 		'App\Console\Commands\install',
 		'App\Console\Commands\EnsureQueueListenerIsRunning',
@@ -158,8 +136,8 @@ class Kernel extends ConsoleKernel {
 		{
 			// Rebuid all Configfiles
 			$schedule->call(function () {
-				\Storage::deleteDirectory(TreeTopographyController::$path_rel);
-				\Storage::deleteDirectory(TreeErdController::$path_rel);
+				\Storage::deleteDirectory(\Modules\HfcBase\Http\Controllers\TreeTopographyController::$path_rel);
+				\Storage::deleteDirectory(\Modules\HfcBase\Http\Controllers\TreeErdController::$path_rel);
 			})->hourly();
 		}
 
@@ -168,7 +146,7 @@ class Kernel extends ConsoleKernel {
 		{
 			// Rebuid all Configfiles
 			$schedule->call(function () {
-				\Storage::deleteDirectory(CustomerTopoController::$path_rel);
+				\Storage::deleteDirectory(\Modules\HfcCustomer\Http\Controllers\CustomerTopoController::$path_rel);
 			})->hourly();
 
 			// Modem Positioning System
