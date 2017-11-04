@@ -11,8 +11,8 @@
          syntaxCheck="false">
     <testsuites>
         <testsuite name="Application Test Suite">
-            <directory>./tests/</directory>
 			<directory>./modules/*/Tests/</directory>
+			<directory>./tests/*</directory>
         </testsuite>
     </testsuites>
     <php>
@@ -20,5 +20,6 @@
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>
+		<env name="APP_URL" value="https://localhost/lara"/>
     </php>
 </phpunit>

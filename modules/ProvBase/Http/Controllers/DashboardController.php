@@ -265,6 +265,9 @@ class DashboardController extends BaseController
 	 */
 	public static function get_chart_data_income()
 	{
+		$total = 0.0;
+		$ret = array();
+		$prepared_data = array();
 		$dir_path = storage_path("app/data/dashboard/");
 		$fn = 'income.json';
 
