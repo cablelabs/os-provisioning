@@ -50,16 +50,21 @@ sed -i "s/^DB_PASSWORD=$/DB_PASSWORD=$pw/" "$env"
 # Laravel
 #
 cd "$dir"
-echo "# Use /etc/nmsprime/env/*.env files for configuration" > "$dir/.env"
 
 # L5 setup
 php artisan clear-compiled
 php artisan optimize
+
+# key:generate needs .env in root dir – create symlink to our env file
+ln -s /etc/nmsprime/env/global.env "$dir/.env"
 php artisan key:generate
+# remove the symlink and create empty .env with comment
+rm -f "$dir/.env"
+echo "# Use /etc/nmsprime/env/*.env files for configuration" > "$dir/.env"
+
 php artisan migrate
 
 # Note: needs to run last. storage/logs is only available after artisan optimize
-mkdir $dir/storage/logs
 chown -R apache $dir/storage/ $dir/bootstrap/cache/
 
 # make .env files readable for apache

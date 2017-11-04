@@ -150,7 +150,7 @@ return [
 	'enviaorder.orderdate'  => 'Bestelldatum',
 	'enviaorder_current'  => 'Bearbeitung notwendig?',
 	//ENVIA Contract
-	'enviacontract.envia_contract_reference' => 'EnVia Vertragsreferenz',
+	'enviacontract.envia_contract_reference' => 'envia TEL Vertragsreferenz',
 	'enviacontract.state' => 'Status',
 	'enviacontract.start_date' => 'Anfangsdatum',
 	'enviacontract.end_date' => 'Enddatum',

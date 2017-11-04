@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 /**
  * Holds some helper methods used by several updater console commands
- * currently those related to Envia API.
+ * currently those related to envia TEL API.
  *
  * @author Patrick Reichel
  */

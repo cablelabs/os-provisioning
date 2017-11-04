@@ -55,6 +55,8 @@ return [
 		'Menu_MTAs' 				=> 'MTAs',
 		'Menu_Phonenumbers'			=> 'Phonenumbers',
 		'Menu_PhoneTariffs'			=> 'PhoneTariffs',
+		'Menu_Envia orders'			=> 'envia TEL orders',
+		'Menu_Envia contracts'		=> 'envia TEL contracts',
 
 	//User Settings
 		'Menu_UserSettings'			=> 'User Settings',
@@ -140,6 +142,9 @@ return [
 		//Phone tariff
 		'Header_Phone tariffs'		=> 'Phonetariff|Phonetariffs',
 		'Header_EditPhone tariffs'	=> 'Edit Phonetariffs',
+	//ProvVoipEnvia
+		'Header_EnviaOrders'		=> 'envia TEL order|envia TEL orders',
+		'Header_EnviaContracts'		=> 'envia TEL contract|envia TEL contracts',
 
 	//Header Relation
 		// 'Assigned'  				=> 'Zugewiesene',

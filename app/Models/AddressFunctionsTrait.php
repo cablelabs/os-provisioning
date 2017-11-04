@@ -7,7 +7,7 @@ trait AddressFunctionsTrait {
 
 	/**
 	 * Helper to define possible salutation values.
-	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
+	 * E.g. envia TEL API has a well defined set of valid values – using this method we can handle this.
 	 *
 	 * @author Patrick Reichel
 	 */
@@ -23,7 +23,7 @@ trait AddressFunctionsTrait {
 
 		if (\PPModule::is_active('provvoipenvia')) {
 
-			// Envia expects Herrn instead of Herr ⇒ to be as compatible as possible to other use cases
+			// envia TEL expects Herrn instead of Herr ⇒ to be as compatible as possible to other use cases
 			// we nevertheless store Herr in database and fix this in XML generation within
 			// ProvVoipEnvia->_add_fields
 			$options = [
@@ -49,7 +49,7 @@ trait AddressFunctionsTrait {
 
 	/**
 	 * Helper to define possible academic degree values.
-	 * E.g. Envia-API has a well defined set of valid values – using this method we can handle this.
+	 * E.g. envia TEL API has a well defined set of valid values – using this method we can handle this.
 	 *
 	 * @author Patrick Reichel
 	 */
