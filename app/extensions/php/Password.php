@@ -21,7 +21,7 @@ class Password {
 
 		// define the characters to be used in passwords
 		if ($target == 'envia') {
-			// Envia accepts alphanumericals and ._-
+			// envia TEL accepts alphanumericals and ._-
 			// we use letter as first character to avoid possible problems with some exotic clients…
 			$specials = "._-";
 
