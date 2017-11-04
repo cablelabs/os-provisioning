@@ -65,7 +65,6 @@ echo "# Use /etc/nmsprime/env/*.env files for configuration" > "$dir/.env"
 php artisan migrate
 
 # Note: needs to run last. storage/logs is only available after artisan optimize
-mkdir $dir/storage/logs
 chown -R apache $dir/storage/ $dir/bootstrap/cache/
 
 # make .env files readable for apache
