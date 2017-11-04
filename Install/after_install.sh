@@ -50,7 +50,7 @@ sed -i "s/^DB_PASSWORD=$/DB_PASSWORD=$pw/" "$env"
 # Laravel
 #
 cd "$dir"
-ln -sr "$env" "$dir/.env" # TODO: force L5 to use global env file - remove this line
+echo "# Use /etc/nmsprime/env/*.env files for configuration" > "$dir/.env"
 
 # L5 setup
 php artisan clear-compiled
@@ -61,3 +61,8 @@ php artisan migrate
 # Note: needs to run last. storage/logs is only available after artisan optimize
 mkdir $dir/storage/logs
 chown -R apache $dir/storage/ $dir/bootstrap/cache/
+
+# make .env files readable for apache
+chgrp -R apache /etc/nmsprime/env
+chmod -R o-rwx /etc/nmsprime/env
+chmod -R g-w /etc/nmsprime/env
