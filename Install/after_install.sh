@@ -18,7 +18,7 @@ setenforce  0
 #
 # SSL demo certificate
 mkdir /etc/httpd/ssl
-openssl req -new -x509 -days 365 -nodes -batch -out /etc/httpd/ssl/httpd.pem -keyout /etc/httpd/ssl/httpd.key 
+openssl req -new -x509 -days 365 -nodes -batch -out /etc/httpd/ssl/httpd.pem -keyout /etc/httpd/ssl/httpd.key
 
 # reload apache config
 systemctl start httpd
