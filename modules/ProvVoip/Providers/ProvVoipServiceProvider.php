@@ -14,6 +14,16 @@ class ProvVoipServiceProvider extends ServiceProvider {
 	protected $defer = false;
 
 	/**
+	 * The artisan commands provided by this module
+	 */
+	protected $commands = [
+		'\Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand',
+		'\Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand',
+		'\Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand',
+		'\Modules\ProvVoip\Console\PhonenumberCommand',
+		];
+
+	/**
 	 * Register the service provider.
 	 *
 	 * @return void
@@ -21,6 +31,7 @@ class ProvVoipServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		\View::addNamespace('provvoip', __DIR__.'/../Resources/views');
+		$this->commands($this->commands);
 	}
 
 	/**
