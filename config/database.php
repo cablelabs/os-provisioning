@@ -52,7 +52,7 @@ return [
 			'prefix'   => '',
 		],
 
-		// TODO: don't use root sql user to access lara DB
+		// TODO: don't use root sql user to access nmsprime DB
 		//       we should use a separate user for this.
 		'mysql' => [
 			'driver'    => 'mysql',
@@ -66,14 +66,12 @@ return [
 			'strict'    => false,
 		],
 
-		// TODO: adapt ENV settings to access cacti DB with
-		//       the installed Cacti user and not with root
 		'mysql-cacti' => [
 			'driver'    => 'mysql',
-			'host'      => env('DB_HOST', 'localhost'),
-			'database'  => 'cacti',
-			'username'  => env('DB_USERNAME', 'forge'),
-			'password'  => env('DB_PASSWORD', ''),
+			'host'      => env('CACTI_DB_HOST', 'localhost'),
+			'database'  => env('CACTI_DB_DATABASE', 'cacti'),
+			'username'  => env('CACTI_DB_USERNAME', 'cactiuser'),
+			'password'  => env('CACTI_DB_PASSWORD', ''),
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
@@ -121,6 +119,18 @@ return [
 
 			'username'  => env('VOIPMONITOR_DB_USERNAME', env('DB_USERNAME', 'root')),
 			'password'  => env('VOIPMONITOR_DB_PASSWORD', env('DB_PASSWORD', '')),
+			'charset'   => 'utf8',
+			'collation' => 'utf8_unicode_ci',
+			'prefix'    => '',
+			'strict'    => false,
+		],
+
+		'mysql-icinga2' => [
+			'driver'    => 'mysql',
+			'host'      => env('ICINGA2_DB_HOST', env('DB_HOST', 'localhost')),
+			'database'  => env('ICINGA2_DB_DATABASE', 'icinga2'),
+			'username'  => env('ICINGA2_DB_USERNAME', env('DB_USERNAME', 'icinga2user')),
+			'password'  => env('ICINGA2_DB_PASSWORD', env('DB_PASSWORD', '')),
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

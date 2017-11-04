@@ -11,7 +11,7 @@ namespace Acme\core;
  */
 class BaseRoute {
 
-	// HTML Admin Prefix for https://xyz/lara/admin
+	// HTML Admin Prefix for https://xyz/nmsprime/admin
 	public static $admin_prefix = 'admin';
 
 

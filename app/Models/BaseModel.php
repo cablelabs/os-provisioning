@@ -23,9 +23,6 @@ class BaseModel extends Eloquent
 
 	public $voip_enabled;
 	public $billing_enabled;
-
-	public $index_datatables_ajax_enabled;
-
 	protected $fillable = array();
 
 
@@ -54,7 +51,6 @@ class BaseModel extends Eloquent
 		// set helper variables
 		$this->voip_enabled = $this->voip_enabled();
 		$this->billing_enabled = $this->billing_enabled();
-		$this->index_datatables_ajax_enabled = $this->index_datatables_ajax_enabled();
 	}
 
 
@@ -205,27 +201,6 @@ class BaseModel extends Eloquent
 
 		return False;
 	}
-
-	/**
-	 * Check if AJAX Datatables should be used
-	 *
-	 *
-	 * @author Christian Schramm
-	 *
-	 * @return true if index model contains more than 100 entries
-	 */
-	 public function index_datatables_ajax_enabled() {
-		$enabled =false;
-		if (method_exists( $this, 'view_index_label_ajax')){
-			$model_name = static::class;
-			if ($model_name::count() > 100)
-				$enabled = true;
-			else
-				$enabled = false;
-		}
-		$end = microtime();
-		return $enabled;
-	}	
 
 
 	/**
@@ -635,11 +610,15 @@ class BaseModel extends Eloquent
 		// exceptions
 		$exceptions = ['configfile_id', 'salesman_id', 'costcenter_id', 'company_id', 'sepaaccount_id', 'product_id'/*, 'mibfile_id', 'oid_id'*/];
 
+		// this is the variable that holds table names in $table returned by DB::select('SHOW TABLES')
+		// named dynamically containing the database name
+		$tables_var_name = "Tables_in_".ENV('DB_DATABASE');
+
 		// Lookup all SQL Tables
 		foreach (DB::select('SHOW TABLES') as $table)
 		{
 			// Lookup SQL Fields for current $table
-			foreach (Schema::getColumnListing($table->Tables_in_db_lara) as $column)
+			foreach (Schema::getColumnListing($table->$tables_var_name) as $column)
 			{
 				// check if $column is actual table name object added by '_id'
 				if ($column == $this->table.'_id')
@@ -647,9 +626,9 @@ class BaseModel extends Eloquent
 					if (in_array($column, $exceptions))
 						continue;
 					// get all objects with $column
-					foreach (DB::select('SELECT id FROM '.$table->Tables_in_db_lara.' WHERE '.$column.'='.$this->id) as $child)
+					foreach (DB::select('SELECT id FROM '.$table->$tables_var_name.' WHERE '.$column.'='.$this->id) as $child)
 					{
-						$class_child_name = $this->_guess_model_name ($table->Tables_in_db_lara);
+						$class_child_name = $this->_guess_model_name ($table->$tables_var_name);
 						$class = new $class_child_name;
 
 						array_push($relations, $class->find($child->id));
@@ -708,21 +687,25 @@ class BaseModel extends Eloquent
 
 
 	/**
-	 * Checks if model is valid in specific time interval (used for Billing or to calculate income for dashboard)
+	 * Checks if model is valid in specific timespan
+	 * (used for Billing or to calculate income for dashboard)
 	 *
-	 * Note: Model must have a get_start_time- & get_end_time-Function defined
+	 * Note: if param start_end_ts is not set the model must have a get_start_time- & get_end_time-Function defined
 	 *
-	 * @param 	timespan 	String			Yearly / Quarterly / Monthly / Now  => Enum of Product->billing_cycle
-	 * @param 	time 		Integer 		Seconds since 1970 - check if model has/had/will have valid dates during specific time
-	 * @return 				Bool  			true, if model had valid dates during last month / year or is actually valid (now)
+	 * @param 	timespan 		String		Yearly|Quarterly|Monthly|Now => Enum of Product->billing_cycle
+	 * @param 	time 			Integer 	Seconds since 1970 - check for timespan of specific point of time
+	 * @param 	start_end_ts 	Array 		UTC Timestamps [start, end] (in sec)
+	 *
+	 * @return 	Bool  			true, if model had valid dates during last month / year or is actually valid (now)
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function check_validity($timespan = 'monthly', $time = null)
+	public function check_validity($timespan = 'monthly', $time = null, $start_end_ts = [])
 	{
-		$start = $this->get_start_time();
-		$end   = $this->get_end_time();
-		// default - for billing settlementruns/charges are calculated for last month
+		$start = $start_end_ts ? $start_end_ts[0] : $this->get_start_time();
+		$end   = $start_end_ts ? $start_end_ts[1] : $this->get_end_time();
+
+		// default - billing settlementruns/charges are calculated for last month
 		$time = $time ? : strtotime('midnight first day of last month');
 
 		switch (strtolower($timespan))
@@ -885,7 +868,7 @@ class BaseObserver
 /**
  * Systemd Observer Class - Handles changes on Model Gateways - restarts system services
  *
- * TODO: 
+ * TODO:
  	* place it somewhere else ...
  	* Calling this Observer is practically very bad in case there are more services inserted - then all services will restart even
  *		if Config didn't change - therefore a distinction is necessary - or more Observers,

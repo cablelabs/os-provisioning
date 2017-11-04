@@ -2,7 +2,7 @@
 
 namespace Modules\ProvVoip\Entities;
 
-// Model not found? execute composer dump-autoload in lara root dir
+// Model not found? execute composer dump-autoload in nmsprime root dir
 class CarrierCode extends \BaseModel {
 
     // The associated SQL table for this Model

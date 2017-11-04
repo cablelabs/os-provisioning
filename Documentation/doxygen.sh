@@ -11,11 +11,12 @@ cd $SCRIPT_DIR
 # see https://christianhujer.github.io/Git-Version-in-Doxygen
 export PROJECT_NUMBER="$(git rev-parse HEAD ; git diff-index --quiet HEAD || echo '(with uncommitted changes)')"
 
-doxygen $SCRIPT_DIR/doxyfile
+BASEDIR="/var/www/nmsprime/Documentation"
+doxygen $BASEDIR/doxyfile
 
 echo
 echo "Changing group of doxygen dir to apache"
-sudo chgrp -R apache $DST_DIR
+sudo chgrp -R apache /var/www/html/nmsprime/doxygen
 
 echo
 echo "Warnings from last run are stored in $SCRIPT_DIR/doxywarn.log"

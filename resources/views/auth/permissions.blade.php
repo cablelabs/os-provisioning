@@ -170,7 +170,7 @@
         var authmethacore_id =  data[0];
         var authmetacore_right = data[1];
         var authmetacore_right_value = data[2];
-        var url = window.location.protocol + '//' + window.location.host + '/lara/admin/Authrole/UpdatePermission';
+        var url = window.location.protocol + '//' + window.location.host + '/nmsprime/admin/Authrole/UpdatePermission';
         var token = $('input[name="_token"]').val();
 
         $.ajaxSetup({

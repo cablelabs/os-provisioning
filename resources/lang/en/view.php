@@ -25,6 +25,11 @@ return [
 		'jQuery_sLast'				=> ': activate to sort column ascending',
 		'jQuery_sLast'				=> ': activate to sort column descending',
 		'jQuery_All'				=> 'All',
+		'jQuery_Print'				=> 'Print',
+		'jQuery_colvis'				=> 'Column Visibility',
+		'jQuery_colvisRestore'		=> 'Restore',
+		'jQuery_colvisReset'		=> 'Reset',
+		'jQuery_ExportTo'			=> 'Export to',
 
 //MENU
 	//Main Menu
@@ -97,7 +102,7 @@ return [
 		//Contract
 		'Header_Contract'			=> 'Contract|Contracts',
 		'Header_EditContract'		=> 'Edit Contract',
-		'Header_SepaMandate'		=> 'SEPA-Mandate|SEPA-Mandates',	
+		'Header_SepaMandate'		=> 'SEPA-Mandate|SEPA-Mandates',
 		//Modems
 		'Header_Modems'				=> 'Modem|Modems', //workaround
 		'Header_EditModems'			=> 'Edit Modem',
@@ -120,7 +125,7 @@ return [
 		'Header_EditIpPool'			=> 'Edit IP-Pool',
 		'Header_IP-Pools'			=> 'IP-Pool|IP-Pools',
 		'Header_EditIP-Pools'		=> 'Edit IP-Pool',
-			
+
 	//VOIP
 		//MTA
 		'Header_Mta'				=> 'MTA|MTAs',
