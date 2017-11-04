@@ -45,9 +45,13 @@ function config ($dir_root)
 	if (isset($cfg['destination']))
 		$dest = $cfg['destination'];
 
+	// set config files
+	$cf = '';
 	$f = '';
-	foreach ($files as $f_from => $f_to)
+	foreach ($files as $f_from => $f_to) {
+		$cf .= ' --config-files '.$f_to;
 		$f .= ' '.$dir.'/files/'.$f_from.'='.$f_to;
+	}
 
 	// load install scripts
 	$scripts = '';
@@ -57,7 +61,7 @@ function config ($dir_root)
 		$scripts .= ' --before-install '.$dir.'/before_install.sh';
 
 	// config fil
-	return $depends.' '.$name.' '.$description.' '.$exclude.' '.$scripts.' '.$dir_root.'/'.'='.$dest.' '.$f;
+	return $depends.' '.$name.' '.$description.' '.$exclude.' '.$scripts.' '.$cf.' '.$dir_root.'/'.'='.$dest.' '.$f;
 }
 
 

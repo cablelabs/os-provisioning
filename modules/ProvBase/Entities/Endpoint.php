@@ -84,7 +84,7 @@ class Endpoint extends \BaseModel {
      */
     public static function make_dhcp ()
     {
-        $dir = '/etc/dhcp/nms/';
+        $dir = '/etc/dhcp/nmsprime/';
         $file_ep = $dir.'endpoints-host.conf';
 
         $data = '';

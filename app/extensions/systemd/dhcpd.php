@@ -11,8 +11,8 @@ exec("/usr/sbin/dhcpd -t &>/dev/null", $out, $ret);
 if ($ret == 0)
 {
 	// only restart when dhcpd configfiles are not locked
-	$fn_cm  = '/etc/dhcp/nms/modems-host.conf';
-	$fn_mta = '/etc/dhcp/nms/mta.conf';
+	$fn_cm  = '/etc/dhcp/nmsprime/modems-host.conf';
+	$fn_mta = '/etc/dhcp/nmsprime/mta.conf';
 
 	$fp_cm  = fopen($fn_cm, "r");
 	$fp_mta = fopen($fn_mta, "r");
