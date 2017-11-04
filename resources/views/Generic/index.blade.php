@@ -80,74 +80,44 @@
 	<!-- database entries inside a form with checkboxes to be able to delete one or more entries -->
 	@DivOpen(12)
 		{{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete')) }}
-		@if (isset($model) && isset($view_var) && isset($view_var->index_datatables_ajax_enabled) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
-			<table class="table table-hover datatable table-bordered" id="datatable">
-				<thead>
-					<tr>
-						<th width="30px"></th>
-						@if (isset($delete_allowed) && $delete_allowed == true)
-							<th id="selectall" style="text-align:center; vertical-align:middle;">
-								<input id ="allCheck" data-trigger="hover" style='simple' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top" 
-								data-delay='{"show":"350"}' data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('Select All')}}">
-							</th>
-						@endif
-						@if (isset($model) && is_array($model->view_index_label_ajax()) && isset($model->view_index_label_ajax()['index_header']))
-							@foreach ($model->view_index_label_ajax()['index_header'] as $field)
-								<th style="text-align:center; vertical-align:middle;">{{ trans('messages.'.$field).' ' }}
-								@if ((!empty($model->view_index_label_ajax()['sortsearch'])) && ($model->view_index_label_ajax()['sortsearch'] == [$field => 'false']))
-									<i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top" data-delay='{"show":"250"}'
-									data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('You cant sort or search this Column')}}"></i>
-								@endif
-								</th>
-							@endforeach 
-						@endif
-					</tr>
-				</thead>
-				<tfoot>
-					<tr>
-						<th></th>
-						@if (isset($delete_allowed) && $delete_allowed == true)
-							<th></th>
-						@endif
+		{{-- init DataTable --}}
+		<table class="table table-hover datatable table-bordered" id="datatable">
+			{{-- Get Headerdata and translate with translation files --}}
+			<thead>
+				<tr>
+					<th class="nocolvis" width="30px"></th> {{-- Responsive Column --}}
+					@if (isset($delete_allowed) && $delete_allowed == true) {{-- Checkbox Column if delete is allowed --}}
+						<th class="nocolvis" witdth="30px" id="selectall" style="text-align:center; vertical-align:middle;">
+							<input id ="allCheck" data-trigger="hover" style='simple' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top"
+							data-delay='{"show":"350"}' data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('Select All')}}">
+						</th>
+					@endif
+					{{-- Get Header if possible with new Format - for Backwards compatibility old one stays --}}
+					@if (isset($model) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ) && is_array($model->view_index_label_ajax()) && isset($model->view_index_label_ajax()['index_header']))
 						@foreach ($model->view_index_label_ajax()['index_header'] as $field)
-							@if ((!empty($model->view_index_label_ajax()['sortsearch'])) && ( array_has( $model->view_index_label_ajax()['sortsearch'] , $field) ) )
-								<th></th>
-							@else
-								<th class="searchable"></th>
+							<th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.'.$field).' ' }}
+							@if ((!empty($model->view_index_label_ajax()['sortsearch'])) && ($model->view_index_label_ajax()['sortsearch'] == [$field => 'false']))
+								<i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top" data-delay='{"show":"250"}'
+								data-original-title="{{trans('helper.SortSearchColumn')}}"></i>
 							@endif
-						@endforeach
-					</tr>
-				</tfoot>
-			</table>
-		@elseif (method_exists( BaseController::get_model_obj() , 'view_index_label' ) && isset($view_var[0]) )
-			<table class="table table-hover table-striped datatable table-striped table-bordered collapsed">
-				<!-- TODO: add concept to parse header fields for index table - like firstname, lastname, ..-->
-				<thead>
-					<tr>
-						<th width="30px"></th>
-						@if (isset($delete_allowed) && $delete_allowed == true)
-							<th id="selectall" style="text-align:center; vertical-align:middle;">
-								<input id ="allCheck" data-trigger="hover" style='simple' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top" 
-								data-delay='{"show":"350"}' data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('Select All')}}">
 							</th>
-						@endif
-						<!-- Parse view_index_label() header_index  -->
-						@if (isset($view_var[0]) && is_array($view_var[0]->view_index_label()) && isset($view_var[0]->view_index_label()['index_header']))
+						@endforeach
+					@elseif (isset($view_var[0]) && is_array($view_var[0]->view_index_label()) && isset($view_var[0]->view_index_label()['index_header']) )
 							@foreach ($view_var[0]->view_index_label()['index_header'] as $field)
-								<th> {{ \App\Http\Controllers\BaseViewController::translate_label($field) }} </th>
+								<th class="content"> {{ \App\Http\Controllers\BaseViewController::translate_label($field) }} </th>
 							@endforeach
-						@endif
-					</tr>
-				</thead>
-				<!-- Index Table Entries -->
-				<tbody>
+					@endif
+				</tr>
+			</thead>
+			<tbody>
+			{{-- For Backwards compatibility: Generate the Datatable the old way --}}
+			@if (method_exists( BaseController::get_model_obj() , 'view_index_label' ) && isset($view_var[0]))
 				@foreach ($view_var as $object)
 					<tr class="{{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}">
 							<td width="30"></td>
 						@if (isset($delete_allowed) && $delete_allowed == true)
 							<td width="30" align="center"> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple', 'disabled' => $object->index_delete_disabled ? 'disabled' : null]) }} </td>
 						@endif
-						<!-- Parse view_index_label()  -->
 						<?php $i = 0; // display link only on first element ?>
 						@foreach (is_array($object->view_index_label()) ? $object->view_index_label()['index'] : [$object->view_index_label()] as $field)
 							<td class="ClickableTd">
@@ -161,11 +131,26 @@
 						@endforeach
 					</tr>
 				@endforeach
-				</tbody>
-			</table>
-		@else
-			<h4>{{ \App\Http\Controllers\BaseViewController::translate_label($view_no_entries) }}</h4>
-		@endif	
+			@endif
+			</tbody>
+			<tfoot>
+			@if (isset($model) && isset($view_var) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
+				<tr>
+					<th></th>  {{-- Responsive Column --}}
+					@if (isset($delete_allowed) && $delete_allowed == true)
+						<th></th> {{-- Checkbox Column if delete is allowed --}}
+					@endif
+					@foreach ($model->view_index_label_ajax()['index_header'] as $field)
+						@if ((!empty($model->view_index_label_ajax()['sortsearch'])) && ( array_has( $model->view_index_label_ajax()['sortsearch'] , $field) ) )
+							<th></th>
+						@else
+							<th class="searchable"></th>
+						@endif
+					@endforeach
+				</tr>
+			@endif
+			</tfoot>
+		</table>
 	@DivClose()
 
 	@DivOpen(12)

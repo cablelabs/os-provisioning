@@ -32,6 +32,9 @@ class Kernel extends HttpKernel {
 		// TODO: check if absence of CCC module will break ?
 		'ccc.base' => \Modules\Ccc\Http\Middleware\CccBaseMiddleware::class,
 
+		// Redirect Start Page
+		'home' => \App\Http\Middleware\RedirectStartPage::class,
+
 		// L5 defaults:
 		//'auth' => 'App\Http\Middleware\Authenticate',
 		//'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',

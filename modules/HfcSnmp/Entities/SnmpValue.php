@@ -62,7 +62,7 @@ class SnmpValue extends \BaseModel {
 		return ['table' => $this->table,
 				'index_header' => [$this->table.'.oid_index', $this->table.'.value'],
 				'header' =>  $this->id.': '.$device.' - '.$snmpmib.' - '.$this->oid_index,
-				'orderBy' => ['0' => 'asc']];
+				'order_by' => ['0' => 'asc']];
 	}
 
     /**

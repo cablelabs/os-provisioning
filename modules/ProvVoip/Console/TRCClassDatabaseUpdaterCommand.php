@@ -43,7 +43,7 @@ class TRCClassDatabaseUpdaterCommand extends Command {
 	/**
 	 * Path to hash file for csv comparation.
 	 * this path is later used by \Storage::…
-	 * if relative: this is stored in …/lara/storage/app
+	 * if relative: this is stored in …/nmsprime/storage/app
 	 *
 	 * @var string
 	 */

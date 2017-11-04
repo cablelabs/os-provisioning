@@ -60,7 +60,6 @@ class ModemTableSeeder extends \BaseSeeder {
 				'configfile_id' => Configfile::where('device', '=', 'cm')->get()->random(1)->id,
 				'qos_id' => Qos::all()->random()->id,
 				'netelement_id' => $netelement_id,
-				'status' => (rand(0,10) > 2 ? rand(300,620) : 0),
 				'firstname' => $firstname,
 				'lastname' => $lastname,
 				'zip' => $zip,

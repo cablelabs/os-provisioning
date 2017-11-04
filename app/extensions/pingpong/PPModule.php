@@ -20,7 +20,8 @@ class PPModule
 	 */
 	public static function is_active($modulename)
 	{
-		return \Module::find($modulename)->active();
+		if (\Module::find($modulename))
+			return \Module::find($modulename)->active();
 	}
 
 	/**
@@ -32,7 +33,8 @@ class PPModule
 	 */
 	public static function disable($modulename)
 	{
-		\Module::find($modulename)->disable();
+		if (\Module::find($modulename))
+			\Module::find($modulename)->disable();
 	}
 
 }

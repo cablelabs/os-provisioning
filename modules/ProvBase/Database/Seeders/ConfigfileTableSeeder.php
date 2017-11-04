@@ -38,7 +38,6 @@ class ConfigfileTableSeeder extends \BaseSeeder {
 			'type' => 'generic',
 			'public' => 'yes',
 			'text' => <<<'EOT'
-NetworkAccess {modem.network_access.0};
 ModemCapabilities
 {
     ConcatenationSupport 1;
@@ -115,7 +114,6 @@ BaselinePrivacy
     TEKGraceTime 1800;
     AuthRejectTimeout 60;
 }
-MaxCPE 2;
 UsServiceFlow
 {
     UsServiceFlowRef 101;

@@ -13,13 +13,15 @@ class ProvBase extends \BaseModel {
 	public $name = 'Provisioning Basic Config';
 
 	// Don't forget to fill this array
-	protected $fillable = ['provisioning_server', 'ro_community', 'rw_community', 'domain_name', 'notif_mail', 'dhcp_def_lease_time', 'dhcp_max_lease_time', 'startid_contract', 'startid_modem', 'startid_endpoint'];
+	// protected $fillable = ['provisioning_server', 'ro_community', 'rw_community', 'domain_name', 'notif_mail', 'dhcp_def_lease_time', 'dhcp_max_lease_time', 'startid_contract', 'startid_modem', 'startid_endpoint'];
 
 	// Add your validation rules here
 	public static function rules($id = null)
 	{
 		return array(
 			'provisioning_server' => 'ip',
+			// TODO: Add max_cpe rule when validation errors are displayed again
+			// 'max_cpe' => 'numeric|min:1|max:254',
 		);
 	}
 
@@ -105,7 +107,7 @@ class ProvBase extends \BaseModel {
 				$hostname = $hostname[0];
 
 			$fqdn = $hostname.'.'.$this->domain_name;
-	
+
 			system('sudo hostnamectl set-hostname '.escapeshellarg($fqdn), $ret);
 
 			if ($ret != 0)
@@ -148,6 +150,8 @@ class ProvBaseObserver
     public function updated($model)
     {
         $model->make_dhcp_glob_conf();
+
+        // TODO: if max_cpe was changed -> make all Modem Configfiles via Queue Job as this will take a long time (Nino)
     }
 
 }

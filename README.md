@@ -65,13 +65,14 @@ TODO - PR: some general notes ..
 
 TODO - PR: topics to addressed:
 
-- Linux Versions Tested: CentOS 7
-- PHP >= 5.5.9 (which is not part of the standard repo but can be installed via IUS repo)
+- Linux Versions Tested: CentOS 7 (but should run on other distributions as well)
+- PHP >= 5.5.9 (which is not part of the standard repo but can be installed via IUS repo; see installation notes below)
 - other needed software (mostly installed as dependency if installing via the RPM):
   * Apache webserver
   * MariaDB
   * ISC DHCP server
   * TFTP server
+  * Nameserver (BIND)
   * Nagios
   * Cacti
   * RRD tool
@@ -82,7 +83,7 @@ TODO - PR: topics to addressed:
 #### Install PHP
 
 ```bash
-# add IUS repo
+# add the IUS repo containing a more recent version of PHP
 wget https://centos7.iuscommunity.org/ius-release.rpm
 rpm -Uvh ius-release.rpm
 
@@ -140,6 +141,12 @@ Link to confluence space ..
 Add additional notes about how to deploy
 
 TODO - PR: reference to our RPM build stuff
+
+---
+
+## Documentation
+
+You can generate Doxygen documentation using Documentation/doxygen.sh
 
 ---
 
