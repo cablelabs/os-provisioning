@@ -7,8 +7,6 @@ use Log;
 
 use App\Http\Controllers\BaseController;
 use Modules\ProvBase\Entities\Contract;
-use Modules\HfcReq\Entities\NetElement;
-use Modules\HfcBase\Entities\IcingaObjects;
 
 class DashboardController extends BaseController
 {
@@ -59,8 +57,10 @@ class DashboardController extends BaseController
 			$income['total'] = (int) $income['total'];
 		}
 
-		$netelements = $this->_get_impaired_netelements();
-		$services = $this->_get_impaired_services();
+		if (\PPModule::is_active('hfcbase')) {
+			$netelements = $this->_get_impaired_netelements();
+			$services = $this->_get_impaired_services();
+		}
 
 		return View::make('provbase::dashboard', $this->compact_prep_view(
 				compact('title', 'contracts', 'chart_data_contracts', 'income', 'chart_data_income', 'allowed_to_see', 'netelements', 'services')
@@ -321,7 +321,7 @@ class DashboardController extends BaseController
 	private static function _get_impaired_netelements()
 	{
 		$ret = [];
-		foreach(NetElement::where('id', '>', '2')->get() as $element) {
+		foreach(\Modules\HfcReq\Entities\NetElement::where('id', '>', '2')->get() as $element) {
 			$status = $element->get_bsclass();
 			if ($status == 'success' || $status == 'info')
 				continue;
@@ -351,10 +351,10 @@ class DashboardController extends BaseController
 		$ret = [];
 		$clr = ['success', 'warning', 'danger', 'info'];
 
-		if(!IcingaObjects::db_exists())
+		if(!\Modules\HfcBase\Entities\IcingaObjects::db_exists())
 			return $ret;
 
-		$objs = IcingaObjects::join('icinga_servicestatus', 'object_id', '=', 'service_object_id')
+		$objs = \Modules\HfcBase\Entities\IcingaObjects::join('icinga_servicestatus', 'object_id', '=', 'service_object_id')
 			->where('is_active', '=', '1')
 			->where('name2', '<>', 'ping4')
 			->where('last_hard_state', '<>', '0')
@@ -362,7 +362,7 @@ class DashboardController extends BaseController
 			->orderBy('last_time_ok', 'desc');
 
 		foreach($objs->get() as $service) {
-			$tmp = NetElement::find($service->name1);
+			$tmp = \Modules\HfcReq\Entities\NetElement::find($service->name1);
 			$ret['clr'][] = $clr[$service->last_hard_state];
 			$ret['row'][] = [$tmp ? $tmp->name : $service->name1, $service->name2, $service->output, $service->last_time_ok];
 			$ret['perf'][] = self::_get_impaired_services_perfdata($service->perfdata);
