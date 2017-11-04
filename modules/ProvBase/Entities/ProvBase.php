@@ -63,7 +63,7 @@ class ProvBase extends \BaseModel {
      */
     public function make_dhcp_glob_conf()
     {
-		$file_dhcp_conf = '/etc/dhcp/nms/global.conf';
+		$file_dhcp_conf = '/etc/dhcp/nmsprime/global.conf';
 
 		$data = 'ddns-domainname "'.$this->domain_name.'.";'."\n";
 		$data .= 'option domain-name "'.$this->domain_name.'";'."\n";

@@ -60,7 +60,7 @@ class Cmts extends \BaseModel {
 	public function get_bsclass()
 	{
 		$bsclass = 'success';
-	
+
 		// TODO: use cmts state value
 		if ($this->state == 1)
 			$bsclass = 'warning';
@@ -202,8 +202,8 @@ class Cmts extends \BaseModel {
 	 */
 	public function make_dhcp_conf ()
 	{
-		$file_dhcp_conf = '/etc/dhcp/dhcpd.conf';
-		$file = '/etc/dhcp/nms/cmts_gws/'.$this->hostname.'.conf';
+		$file_dhcp_conf = '/etc/dhcp/nmsprime/cmts_gws.conf';
+		$file = '/etc/dhcp/nmsprime/cmts_gws/'.$this->hostname.'.conf';
 
 		if ($this->id == 0)
 			return -1;
@@ -339,7 +339,7 @@ _exit:
 	public function delete_cmts()
 	{
 
-		$file = '/etc/dhcp/nms/cmts_gws/'.$this->hostname.'.conf';
+		$file = '/etc/dhcp/nmsprime/cmts_gws/'.$this->hostname.'.conf';
 		if (file_exists($file)) unlink($file);
 
 		$lines = file('/etc/dhcp/dhcpd.conf');
@@ -371,7 +371,7 @@ _exit:
 	public static function del_cmts_includes()
 	{
 		$file_path   = '/etc/dhcp/dhcpd.conf';
-		$include_str = '/etc/dhcp/nms/cmts_gws/';
+		$include_str = '/etc/dhcp/nmsprime/cmts_gws/';
 
 		// copy file as backup
 		copy($file_path, $file_path.'_backup');
