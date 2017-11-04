@@ -5,6 +5,7 @@ return [
 
 	'Active'					=> 'Aktiv',
 	'Active?'					=> 'Aktiv?',
+	'alert' 					=> 'Achtung!',
 	'Additional Options'		=> 'Zusätzliche Optionen',
 	'Address Line 1'			=> 'Adresszeile 1',
 	'Address Line 2'			=> 'Adresszeile 2',
@@ -14,27 +15,34 @@ return [
 	'Bank Account Holder'		=> 'Kontoinhaber',
 	'Birthday'					=> 'Geburtstag',
 	'ccc'						=> 'Kundenkontrollzentrum',
+	'cdr' 						=> 'Evn',
 	'City'						=> 'Stadt',
 	'Choose KML file'			=> 'Wähle KML file',
+	'close' 					=> 'Schliessen',
 	'Company'					=> 'Firma',
 	'Contract Number'			=> 'Vertragsnummer',
 	'Contract Start'			=> 'Vertragsbeginn',
 	'Contract End'				=> 'Vertragsende',
+	'Contract valid' 			=> 'Vertrag gültig',
 	'Contract'					=> 'Vertrag',
 	'Contract List'				=> 'Vertragsliste',
 	'Contracts'					=> 'Verträge',
 	'Country Code'				=> 'Ländervorwahl',
+	'cpe_not_reachable' 		=> 'aber via PING nicht erreichbar (ICMP kann herstellerabhängig vom Router geblockt werden)',
 	'cpe_log_error'				=> 'ist nicht beim Server registriert - Kein Logeintrag gefunden',
+
 	'Create'					=> 'Erstellen',
 	'Delete'					=> 'Löschen',
 	'Day'						=> 'Tag',
 	'Description'				=> 'Beschreibung',
 	'Device'					=> 'Gerät',
+	'device_probably_online' 	=>	':type ist wahrscheinlich online',
 	'Device List'				=> 'Geräteliste',
 	'Device Type'				=> 'Gerätetyp',
 	'Device Type List'			=> 'Gerätetypenliste',
 	'Devices'					=> 'Geräte',
 	'DeviceTypes'				=> 'Gerätetypen',
+	'District'					=> 'Ortsteil',
 	'Edit'						=> 'Ändern -',
 	'Edit '						=> 'Ändere ',
 	'Endpoints'					=> 'Endpunkte',
@@ -54,6 +62,7 @@ return [
 	'Last IP'					=> 'Letzte IP',
 	'MAC Address'				=> 'MAC Adresse',
 	'Main Menu'					=> 'Hauptmenü',
+	'modem_eventlog_error'		=> 'Modem Eventlog nicht gefunden',
 	'modem_monitoring_error'	=> 'Möglicherweise war das Modem bis jetzt nicht online. Beachten Sie, dass Diagramme erst ab
 		dem Zeitpunkt verfügbar sind, von dem an das Modem online ist. Wurden alle Diagramme unsauber angezeigt, könnte es
 		sich um ein größeres Problem, wie eine Fehlkonfiguration von Cacti, handeln. Wenden Sie sich dazu an ihren Administrator.',
@@ -65,9 +74,11 @@ return [
 	'modem_offline'				=> 'Modem ist Offline',
 	'month'						=> 'Monat',
 	'Month'						=> 'Monat',
+	'mta_configfile_error'		=> 'MTA Konfigurationsdatei nicht gefunden',
 	'Net'						=> 'Netz',
 	'Netmask'					=> 'Netzmaske',
 	'Network Access'			=> 'Netzwerkzugriff',
+	'no' 						=> 'nein',
 	'Number'					=> 'Nummer',
 	'Options'					=> 'Optionen',
 	'or: Upload KML file'		=> 'oder lade KML hoch',
@@ -92,10 +103,12 @@ return [
 	'State'						=> 'Status',
 	'Street'					=> 'Straße',
 	'Type'						=> 'Typ',
+	'US level' 					=> 'US Pegel',
 	'Username'					=> 'Nutzername',
 	'Users'						=> 'Nutzer',
 	'Vendor'					=> 'Hersteller',
 	'Year'						=> 'Jahr',
+	'yes' 						=> 'ja',
 //
 //Global
 //
@@ -110,11 +123,12 @@ return [
 	'Headline 1'				=> 'Überschrift Kopfzeile',
 	'Headline 2'				=> 'Überschrift Navigationsleiste',
 	//Billing
+	'accCmd_processing' 		=> 'Der Abrechnungslauf wird erstellt. Bitte warten Sie bis der Prozess abgeschlossen ist.',
 	'Day of Requested Collection Date'	=> 'Monatlicher Abrechungstag',
 	'Tax in %'					=> 'Mehrwertsteuer in %',
 	'Invoice Number Start'		=> 'Start Nummerierung Rechnungen',
 	'Split Sepa Transfer-Types'	=> 'SEPA-Transfertypen aufteilen?',
-	'Mandate Reference'			=> 'Mandatrefferenz', 
+	'Mandate Reference'			=> 'Mandatrefferenz',
 	'e.g.: String - {number}'	=> 'z.Bsp.: Sring - {Nummer}',
 	'Item Termination only end of month'=> 'Posten nur am ende des Monats kündigen?',
 	'Language for Accounting command'	=> 'Sprache für Abrechnungslauf-Befehl',
@@ -135,7 +149,7 @@ return [
 	'Start ID Endpoints'		=> 'Start Nummerierung Endpunkte',
 	//VOIP
 	'Start ID MTA´s'			=> 'Start Nummerierung MTA\'s',
-//    
+//
 //Provisioning
 //
 	//Verträge
@@ -153,11 +167,12 @@ return [
 	'House Nr'					=> 'Hausnr',
 	'Salesman'					=> 'Verkäufer',
 	'Start Date' 				=> 'Startdatum',
-
+	'noCC'	=> 'Keine Kostenstelle zugewiesen',
 	//Items
 	'Accounting Text (optional)'=> 'Verwendungszweck (optional)',
 	'Cost Center (optional)'	=> 'Kostenstelle (optional)',
 	'Credit Amount' 			=> 'Gutschrift - Betrag',
+	'item_credit_amount_negative' => 'Ein negativer Betrag bei Gutschriften wird zur Lastschrift für den Kunden! Sind Sie sicher, dass der Betrag dem Kunde abgezogen werden soll?',
 	'Item'						=> 'Posten',
 	'Items'						=> 'Posten',
 	'missing_product'			=> 'Fehlendes Produkt!',
@@ -207,7 +222,7 @@ return [
 	//SEPA Accounts
 	'Account Holder'			=> 'Kontoinhaber',
 	'Account Name'				=> 'Kontoname',
-	'Choose Call Data Record template file'	=> 'Vorlage für Einzel- verbindungsnachweis', 
+	'Choose Call Data Record template file'	=> 'Vorlage für Einzel- verbindungsnachweis',
 	'Choose invoice template file'			=> 'Rechnungsvorlage',
 	'CostCenter'				=> 'Kostenstelle',
 	'Creditor ID'				=> 'Gläubiger ID',
@@ -221,7 +236,7 @@ return [
 	'SepaAccount'				=> 'SEPA-Konto', // siehe Companies
 	'Upload CDR template'		=> 'CDR-Vorlage hochladen',
 	'Upload invoice template'	=> 'Rechnungsvorlage hochladen',
-	
+
 	//Settlement Run Abrechnnungslauf
 	'General'				=> 'Allgemein',
 	'Verified'				=> 'Überprüft?',
@@ -245,7 +260,7 @@ return [
 	'Directorate'			=> 'Geschäftsleitung',
 	'Mail address'			=> 'Email-Adresse',
 	'Management'			=> 'Unternehmensführung',
-	'Registration Court 1'	=> 'Registergericht 1', 
+	'Registration Court 1'	=> 'Registergericht 1',
 	'Registration Court 2'	=> 'Registergericht 2',
 	'Registration Court 3'	=> 'Registergericht 3',
 	'Sales Tax Id Nr'		=> 'Umsatzsteuer ID-Nummer',
@@ -262,13 +277,21 @@ return [
 	//Salesman
 	'Commission in %'		=> 'Komission in %',
 	'Product List'			=> 'Produktliste',
+
+	// SepaMandate
+	'Already recurring ?' 	=> 'Bereits wiederkehrend ?',
+	'Date of Signature' 	=> 'Signaturdatum',
+	'Disable temporary' 	=> 'Temporär aussetzen',
+	'Reference Number' 		=> 'Referenznummer',
+	'Bank Institute' 		=> 'Institut',
+
 	//Settlement Run File generation
 	'Contractnr'			=> 'Vertragsnummer',
 	'Invoicenr'				=> 'Rechnungsnummer',
 	'Calling Number'		=> 'Rufnummer',
 	'Called Number'			=> 'Angerufene Nummer',
-	'Target Month'			=> 'Abrechnungsmonat', 
-	'Date'					=> 'Datum', 
+	'Target Month'			=> 'Abrechnungsmonat',
+	'Date'					=> 'Datum',
 	'Count'					=> 'Anzahl',
 	'Tax'					=> 'Mehrwertsteuer',
 	'RCD'					=> 'Fälligkeitsdatum',
@@ -285,7 +308,7 @@ return [
  * Customer Control Center
  */
 	'conn_info_err_create' 	=> 'Fehler beim Erstellen des PDF - Siehe LogFile!',
-	'conn_info_err_template' => 'Das Template konnte nicht gelesen werden - Bitte überprüfen Sie ob es unter Unternehmen gesetzt ist!', 
+	'conn_info_err_template' => 'Das Template konnte nicht gelesen werden - Bitte überprüfen Sie ob es unter Unternehmen gesetzt ist!',
 	'log_out'				=> 'Ausloggen',
 	'password_change'		=> 'Passwort ändern',
 	'password_confirm'		=> 'Password bestätigen',
@@ -382,7 +405,7 @@ return [
 	'PDV >300 ms'			=> 'PDV von über 300ms',
 	'Callee (-> Caller)'	=> 'Angerufener -> Anrufer',
 //
-// Select Box 
+// Select Box
 //
 	//Product Entry
 	'Credit'                    => 'Gutschrift',
@@ -404,8 +427,8 @@ return [
 	'generic'                   => 'Allgemein',
 	'network'                   => 'Netzwerk',
 	'vendor'                    => 'Hersteller',
-	'user'                      => 'Nutzer',    
+	'user'                      => 'Nutzer',
 	'Yes'                       => 'Ja',
 	'No'                        => 'Nein',
+	'Mark solved'				=> 'Als gelöst markeren?',
 ];
-

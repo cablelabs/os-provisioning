@@ -19,7 +19,7 @@ var makeNavbarSearch = function() {
 	      }
 	    }
 	});
-	console.log("nmsprime.js is working")
+
 	$('#globalsearch').on('keydown', function (event) {
 	    var code = (event.keyCode ? event.keyCode : event.which);
 	    if (code == 27) {
@@ -34,25 +34,29 @@ var makeNavbarSearch = function() {
 // Keep Sidebar open and Save State and Minify Status of Sidebar
 // @author: Christian Schramm
 if (typeof(Storage) !== "undefined") {
-//save minified s_state
-var ministate = localStorage.getItem("minified-state");
-if (ministate == "true") {
-  $('#page-container').addClass('page-sidebar-minified');
-} else {
-  $('#page-container').removeClass('page-sidebar-minified');
-}
-var sitem = localStorage.getItem("sidebar-item");
-var chitem = localStorage.getItem("clicked-item");
-$('#' + sitem).addClass("expand");
-$('#' + sitem + ' .sub-menu ').css("display", "block");
-$('#sidebar .sub-menu li').click(function(event) {
-    localStorage.setItem("clicked-item", $(this).attr('id'));
-    if ($('.page-sidebar-minified') == true) {
-      $('#' + sitem).addClass("expand");
+    //save minified s_state
+    var ministate = localStorage.getItem("minified-state");
+    var sitem = localStorage.getItem("sidebar-item");
+    var chitem = localStorage.getItem("clicked-item");
+
+    if (ministate == "true") {
+    $('#page-container').addClass('page-sidebar-minified');
+    } else {
+    $('#page-container').removeClass('page-sidebar-minified');
     }
-});
-$('#' + chitem).addClass("active");
-}else {
+
+    if (!$('#dashboardsidebar').hasClass('active')) {
+        $('#' + sitem).addClass("expand");
+        $('#' + sitem).addClass("active");
+        $('#' + sitem + ' .sub-menu ').css("display", "block");
+        $('#' + chitem).addClass("active");
+
+        $('#sidebar .sub-menu li').click(function(event) {
+            localStorage.setItem("clicked-item", $(this).attr('id'));
+            localStorage.setItem("sidebar-item", $(this).parent().parent().attr('id'))
+        });
+    }
+} else {
   console.log("sorry, no Web Storage Support - Cant save State of Sidebar")
 }
 
@@ -162,6 +166,20 @@ var makeInputFitOnResize = function() {
   $("select").select2();
 };
 
+var positionErdPopover= function() {
+$('.erd-popover').mousemove(
+  function(event){
+    var mouseX = event.pageX + 20;
+    var mouseY = event.pageY;
+    if ($(this).attr('shape') == "circle") {
+      var mouseY = event.pageY -50;
+    }
+    $('.popover').css({'top':mouseY,'left':mouseX}).fadeIn('slow');
+    $('.popover .arrow').css({'top': ($('.popover').height()/2) ,'left':-10});
+    $(".popover").show();
+});
+};
+
 /*
  * Table on-hover click
  * NOTE: This automatically adds on-hover click to all table 'td' elements which are in class 'ClickableTd'.
@@ -173,8 +191,23 @@ var makeInputFitOnResize = function() {
  *  - search in tr HTML code for an HTML "a" element and fetch the href attribute
  * INFO: - working directly with row element also adds a click object to checkbox entry, which disabled checkbox functionality
  */
-$('.ClickableTd').click(function () {
-  window.location = $(this.parentNode).find('a').attr("href");
+$('.datatable').click(function (e) {
+  if ($(e.target).hasClass('ClickableTd') && $(e.target).is('td')) {
+    window.location = $(e.target.parentNode).find('a').attr("href");
+  }
+  if ($(e.target).hasClass('index_check') && !($(e.target).find('input:checkbox').is(':disabled')) ) {
+    var checkbox = $(e.target).find('input:checkbox');
+    checkbox.prop('checked',!checkbox.prop("checked") );
+  }
+  if (e.target.id == 'selectall' || e.target.id =="allCheck") {
+    var allCheck = ($(this).closest('table').find('td input:checkbox:enabled'));
+    allCheck.prop('checked', !allCheck.prop("checked"));
+  }
+});
+
+
+$('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+  $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
 });
 
 
@@ -188,6 +221,7 @@ var NMS = function () {
 			makeInputFitOnResize();
 			saveTabPillState();
 			makeJsTreeView();
+      positionErdPopover();
 		},
   };
 }();

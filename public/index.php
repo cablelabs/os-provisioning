@@ -46,6 +46,20 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 |
 */
 
+$request = Illuminate\Http\Request::capture();
+
+if ($request->is('customer/*'))
+{
+	/*
+	 * TODO: throw "nice looking" access error due to permisson restriction!
+	 *       Wrong http port to access admin section!
+	 */
+	echo "Wrong http port to access customer section!";
+
+	return;
+}
+
+
 $kernel = $app->make('Illuminate\Contracts\Http\Kernel');
 
 $response = $kernel->handle(

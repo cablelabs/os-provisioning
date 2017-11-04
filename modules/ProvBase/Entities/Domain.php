@@ -35,4 +35,23 @@ class Domain extends \BaseModel {
 			'header' => 'Domain: '.$this->name.' (Type: '.$this->type.')'];
 	}
 
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.name', $this->table.'.type', $this->table.'.alias'],
+				'header' =>  'Domain: '.$this->name.' (Type: '.$this->type.')',
+				'bsclass' => $bsclass,
+				'order_by' => ['0' => 'asc']];
+	}
+
+	public function get_bsclass()
+	{
+		$bsclass = 'success';
+
+		return $bsclass;
+	}
 }

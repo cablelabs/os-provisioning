@@ -37,7 +37,7 @@ class Configfile extends \BaseModel {
 	// View Icon
 	public static function view_icon()
 	{
-		return '<i class="fa fa-file-code-o"></i>'; 
+		return '<i class="fa fa-file-code-o"></i>';
 	}
 
 	// link title in index view
@@ -282,6 +282,17 @@ class Configfile extends \BaseModel {
 				$modem  = array ($device);
 				$qos 	= array ($device->qos);
 
+				// Set test data rate if no qos is assigned - 1 Mbit
+				if (!$this->parent_id && !$device->qos)
+				{
+					$qos[0] = new Qos;
+					$qos[0]->id = 0;
+					$qos[0]->ds_rate_max_help = 1024000;
+					$qos[0]->us_rate_max_help = 512000;
+
+					Log::warning ("Modem $device->id has no qos assigned - use test data rate for Configfile.");
+				}
+
 				/*
 				 * generate Table array with SQL columns
 				 */
@@ -469,20 +480,19 @@ class ConfigfileObserver
 {
 	public function created($configfile)
 	{
-		$configfile->build_corresponding_configfiles();
-		// with parameter one the children are built
-		$configfile->search_children(1);
+		// When a Configfile was created we can not already have a relation - so dont call command
 	}
 
 	public function updated($configfile)
 	{
-		$configfile->build_corresponding_configfiles();
-		$configfile->search_children(1);
+		\Queue::push(new \Modules\ProvBase\Console\configfileCommand($configfile->id));
+		// $configfile->build_corresponding_configfiles();
+		// with parameter one the children are built
+		// $configfile->search_children(1);
 	}
 
 	public function deleted($configfile)
 	{
-		$configfile->build_corresponding_configfiles();
-		$configfile->search_children(1);
+		// Actually it's only possible to delete configfiles that are not related to any cm/mta - so no CFs need to be built
 	}
 }

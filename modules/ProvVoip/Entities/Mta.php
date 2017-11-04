@@ -9,7 +9,7 @@ use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Configfile;
 use Modules\ProvBase\Entities\ProvBase;
 
-// Model not found? execute composer dump-autoload in lara root dir
+// Model not found? execute composer dump-autoload in nmsprime root dir
 class Mta extends \BaseModel {
 
 	// The associated SQL table for this Model
@@ -41,19 +41,17 @@ class Mta extends \BaseModel {
 	// View Icon
 	public static function view_icon()
 	{
-		return '<i class="fa fa-fax"></i>'; 
+		return '<i class="fa fa-fax"></i>';
 	}
 
 	// link title in index view
 	public function view_index_label()
 	{
-		$bsclass = 'info';
+		$bsclass = $this->get_bsclass();
 		$cf_name = 'No Configfile assigned';
 
 		if (isset($this->configfile))
 			$cf_name = $this->configfile->name;
-		else
-			$bsclass = 'danger';
 
 		// TODO: use mta states.
 		//       Maybe use fast ping to test if online in this function?
@@ -63,6 +61,42 @@ class Mta extends \BaseModel {
 				'bsclass' => $bsclass,
 				'header' => $this->hostname.' - '.$this->mac];
 	}
+
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.type', 'configfile.name'],
+				'header' => $this->hostname.' - '.$this->mac,
+				'bsclass' => $bsclass,
+				'order_by' => ['3' => 'asc'],
+                'edit' => ['configfile.name' => 'has_configfile_assigned'],
+				'eager_loading' => ['configfile']];
+	}
+
+	public function get_bsclass()
+	{
+		$bsclass = 'info';
+		if (!isset($this->configfile))
+			$bsclass = 'danger';
+
+		return $bsclass;
+	}
+
+	public function has_configfile_assigned()
+	{
+		$cf_name = 'No Configfile assigned';
+
+		if (isset($this->configfile))
+			$cf_name = $this->configfile->name;
+
+		return $cf_name;
+	}
+
+
 
 	public function view_belongs_to ()
 	{
@@ -113,7 +147,6 @@ class Mta extends \BaseModel {
 		$mta = $this;
 		$id = $mta->id;
 		$mac = $mta->mac;
-		$hostname = $mta->hostname;
 
 		// dir; filenames
 		$dir = '/tftpboot/mta/';
@@ -223,6 +256,59 @@ _failed:
 		return true;
 	}
 
+
+	/**
+	 * Create/Update/Delete single Entry in mta dhcpd configfile
+	 * See Modem@make_dhcp_cm for more explanations
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function make_dhcp_mta($delete = false)
+	{
+		Log::debug(__METHOD__." started");
+
+		$orig = $this->getOriginal();
+
+		if (!file_exists(self::CONF_FILE_PATH))
+		{
+			Log::critical('Missing DHCPD Configfile '.self::CONF_FILE_PATH);
+			return;
+		}
+
+		// lock
+		$fp = fopen(self::CONF_FILE_PATH, "r+");
+
+		if (!flock($fp, LOCK_EX))
+			Log::error('Could not get exclusive lock for '.self::CONF_FILE_PATH);
+
+
+		$replace = $orig ? $orig['mac'] : $this->mac;
+		// $conf = File::get(self::CONF_FILE_PATH);
+		$conf = file(self::CONF_FILE_PATH);
+
+		foreach ($conf as $key => $line)
+		{
+			if (strpos($line, $replace))
+			{
+				unset($conf[$key]);
+				break;
+			}
+		}
+		// dont replace directly as this wouldnt add the entry for a new created mta
+		// $conf = str_replace($replace, '', $conf);
+		if (!$delete)
+		{
+			$data 	= 'host mta-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "mta/mta-'.$this->id.'.cfg"; ddns-hostname "mta-'.$this->id.'"; option host-name "'.$this->id.'"; }'."\n";
+			$conf[] = $data;
+		}
+
+		Modem::_write_dhcp_file(self::CONF_FILE_PATH, implode($conf));
+
+		// unlock
+		flock($fp, LOCK_UN); fclose($fp);
+	}
+
+
 	/**
 	 * Deletes the configfiles with all mta dhcp entries - used to refresh the config through artisan nms:dhcp command
 	 */
@@ -259,11 +345,17 @@ _failed:
 		// if hostname cant be resolved we dont want to have an php error
 		try
 		{
-			$config = ProvBase::first();
-			$fqdn 	= $this->hostname.'.'.$config->domain_name;
+			$domain = ProvVoip::first()->mta_domain;
 
-			// restart - PKTC-EXCENTIS-MTA-MIB::pktcMtaDevResetNow - NOTE: Version 2 is important for some Modems!
-			snmp2_set($fqdn, $config->rw_community, '1.3.6.1.4.1.7432.1.1.1.1.0', 'i', '1', 300000, 1);
+			if (!$domain)
+				$domain = ProvBase::first()->domain_name;
+
+			$fqdn = $this->hostname.'.'.$domain;
+
+			// restart - PKTC-EXCENTIS-MTA-MIB::pktcMtaDevResetNow
+			// NOTES: Version 2 is important!
+			// 'private' is the always working default community
+			snmp2_set($fqdn, 'private', '1.3.6.1.4.1.7432.1.1.1.1.0', 'i', '1', 300000, 1);
 		}
 		catch (\Exception $e)
 		{
@@ -302,6 +394,8 @@ class MtaObserver
 	{
 		$mta->hostname = 'mta-'.$mta->id;
 		$mta->save(); 			// forces to call updated method
+		$mta->modem->make_dhcp_cm(false, true);
+		$mta->modem->restart_modem();
 	}
 
 	public function updated($mta)
@@ -313,7 +407,11 @@ class MtaObserver
 		// only make configuration files when relevant data was changed
 		if ($modifications)
 		{
-			$mta->make_dhcp_mta_all();
+			if (array_key_exists('mac', $modifications)){
+				$mta->make_dhcp_mta();
+				$mta->modem->make_configfile();
+			}
+
 			$mta->make_configfile();
 		}
 
@@ -322,8 +420,10 @@ class MtaObserver
 
 	public function deleted($mta)
 	{
-		$mta->make_dhcp_mta_all();
+		$mta->make_dhcp_mta(true);
+		$mta->modem->make_dhcp_cm(false, true);
 		$mta->delete_configfile();
-		$mta->restart();
+		$mta->modem->make_configfile();
+		$mta->modem->restart_modem();
 	}
 }

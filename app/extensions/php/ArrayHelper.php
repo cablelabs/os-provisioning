@@ -141,4 +141,26 @@ class ArrayHelper {
 
 		return $array;
 	}
+
+
+	/**
+	 * This function groups matching OIDs (except for their last index) into groups of arrays.
+	 * The key of the outer array is the OID, without the last index.
+	 * The key of the inner array is the last index.
+	 *
+	 * @param walk: the output of an snmpwalk
+	 * @return: the folded output
+	 * @author: Ole Ernst
+	 */
+	public static function snmpwalk_fold($walk)
+	{
+		$ret = [];
+		foreach($walk as $key => $val) {
+			$key = explode('.', $key);
+			$idx = array_pop($key);
+			$ret[implode('.', $key)][$idx] = $val;
+		}
+
+		return $ret;
+	}
 }

@@ -46,3 +46,68 @@ function unify_mac($data)
 	$data['mac'] = wordwrap($data['mac'], 2, ':', true);
 	return $data;
 }
+
+
+/**
+ * Simplify string for Filenames
+ *
+ * @author Nino Ryschawy
+ */
+function str_sanitize($string)
+{
+	$string = str_replace(' ', '_', $string);
+	return preg_replace("/[^a-zA-Z0-9.\/_-]/", "", $string);
+}
+
+
+/**
+ * Check if at least one of the needle array keys exists in the haystack array
+ * 
+ * @return true if one array key of needle array exists in haystack array, false otherwise
+ * @author Nino Ryschawy
+ */
+function multi_array_key_exists($needles, $haystack)
+{
+	foreach ($needles as $needle)
+	{
+		if (array_key_exists($needle, $haystack))
+			return true;
+	}
+
+	return false;
+}
+
+
+/**
+ * Escape Special Characters in Latex documents (before PDF conversion)
+ * Used in Invoice.php & CccAuthuserController.php
+ *
+ * @author Nino Ryschawy
+ */
+function escape_latex_special_chars($string)
+{
+	// NOTE: Uncommenting every char produces errors - TODO: enable single chars and test
+	// 		"\\" have to be ignored because strings (adress) often are concatenated by "\\" (latex newline)
+	// TODO: Add discards parameter to discard specific chars for specific strings 
+	$map = array( 
+			// "#"  => "\\#",
+			// "$"  => "\\$",
+			// "%"  => "\\%",
+			"&"  => "\\&",
+			// "~"  => "\\~{}",
+			// "_"  => "\\_",
+			// "^"  => "\\^{}",
+			// "{"  => "\\{",
+			// "}"  => "\\}",
+			// "\\" => "\\textbackslash",
+	);
+
+	foreach ($map as $search => $replace) {
+		$string = str_replace($search, $replace, $string);
+	}
+
+	return $string;
+
+	// not working: https://stackoverflow.com/questions/2541616/how-to-escape-strip-special-characters-in-the-latex-document
+	return preg_replace( "/([\^\%~\\\\#\$%&_\{\}])/e", "\$map['$1']", $string );
+}

@@ -23,7 +23,6 @@ class BaseModel extends Eloquent
 
 	public $voip_enabled;
 	public $billing_enabled;
-
 	protected $fillable = array();
 
 
@@ -52,7 +51,6 @@ class BaseModel extends Eloquent
 		// set helper variables
 		$this->voip_enabled = $this->voip_enabled();
 		$this->billing_enabled = $this->billing_enabled();
-
 	}
 
 
@@ -86,6 +84,13 @@ class BaseModel extends Eloquent
 	public static function rules($id = null)
 	{
 		return [];
+	}
+
+
+	function set_index_delete_disabled()
+	{
+		$this->index_delete_disabled = true;
+		return;
 	}
 
 
@@ -605,11 +610,15 @@ class BaseModel extends Eloquent
 		// exceptions
 		$exceptions = ['configfile_id', 'salesman_id', 'costcenter_id', 'company_id', 'sepaaccount_id', 'product_id'/*, 'mibfile_id', 'oid_id'*/];
 
+		// this is the variable that holds table names in $table returned by DB::select('SHOW TABLES')
+		// named dynamically containing the database name
+		$tables_var_name = "Tables_in_".ENV('DB_DATABASE');
+
 		// Lookup all SQL Tables
 		foreach (DB::select('SHOW TABLES') as $table)
 		{
 			// Lookup SQL Fields for current $table
-			foreach (Schema::getColumnListing($table->Tables_in_db_lara) as $column)
+			foreach (Schema::getColumnListing($table->$tables_var_name) as $column)
 			{
 				// check if $column is actual table name object added by '_id'
 				if ($column == $this->table.'_id')
@@ -617,9 +626,9 @@ class BaseModel extends Eloquent
 					if (in_array($column, $exceptions))
 						continue;
 					// get all objects with $column
-					foreach (DB::select('SELECT id FROM '.$table->Tables_in_db_lara.' WHERE '.$column.'='.$this->id) as $child)
+					foreach (DB::select('SELECT id FROM '.$table->$tables_var_name.' WHERE '.$column.'='.$this->id) as $child)
 					{
-						$class_child_name = $this->_guess_model_name ($table->Tables_in_db_lara);
+						$class_child_name = $this->_guess_model_name ($table->$tables_var_name);
 						$class = new $class_child_name;
 
 						array_push($relations, $class->find($child->id));
@@ -678,44 +687,47 @@ class BaseModel extends Eloquent
 
 
 	/**
-	 * Checks if model is valid in specific time (used for Billing)
+	 * Checks if model is valid in specific timespan
+	 * (used for Billing or to calculate income for dashboard)
 	 *
-	 * Note: Model must have a get_start_time- & get_end_time-Function defined
+	 * Note: if param start_end_ts is not set the model must have a get_start_time- & get_end_time-Function defined
 	 *
-	 * @param 	String 		$timespan		Yearly / Quarterly / Monthly / Now  => Enum of Product->billing_cycle
-	 * @return 	Bool  						true, if model had valid dates during last month / year or is actually valid (now)
+	 * @param 	timespan 		String		Yearly|Quarterly|Monthly|Now => Enum of Product->billing_cycle
+	 * @param 	time 			Integer 	Seconds since 1970 - check for timespan of specific point of time
+	 * @param 	start_end_ts 	Array 		UTC Timestamps [start, end] (in sec)
+	 *
+	 * @return 	Bool  			true, if model had valid dates during last month / year or is actually valid (now)
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function check_validity($timespan = 'Monthly')
+	public function check_validity($timespan = 'monthly', $time = null, $start_end_ts = [])
 	{
-		$start = $this->get_start_time();
-		$end   = $this->get_end_time();
+		$start = $start_end_ts ? $start_end_ts[0] : $this->get_start_time();
+		$end   = $start_end_ts ? $start_end_ts[1] : $this->get_end_time();
 
-		// if (get_class($this) == 'Modules\BillingBase\Entities\Item' && $this->contract->id == 500005 && $this->product->type == 'Internet')
-		// if ($this->id == 102)
-		// dd($this->id, date('m', $start), date('m', strtotime('first day of last month')), date('m', $end), date('m', $start) <= date('m', strtotime('first day of last month')) && date('m', $end) >= date('m') );
+		// default - billing settlementruns/charges are calculated for last month
+		$time = $time ? : strtotime('midnight first day of last month');
 
-		switch ($timespan)
+		switch (strtolower($timespan))
 		{
-			case 'Once':
+			case 'once':
 				// E.g. one time or splitted payments of items - no open end! With end date: only on months from start to end
-				return $end ? $start < strtotime('midnight first day of this month') && $end >= strtotime('midnight first day of last month') : date('Y-m', $start) == date('Y-m', strtotime('first day of last month'));
+				return $end ? $start < strtotime('midnight first day of next month', $time) && $end >= $time : date('Y-m', $start) == date('Y-m', $time);
 
-			case 'Monthly':
+			case 'monthly':
 				// has valid dates in last month - open end possible
-				return $start < strtotime('midnight first day of this month') && (!$end || $end >= strtotime('midnight first day of last month'));
+				return $start < strtotime('midnight first day of next month', $time) && (!$end || $end >= $time);
 
-			case 'Quarterly':
+			case 'quarterly':
 				// TODO: implement
 				break;
 
-			case 'Yearly':
-				return $start < strtotime('midnight first day of January') && (!$end || $end >= strtotime('midnight first day of January last year'));
+			case 'yearly':
+				return $start < strtotime('midnight first day of next year', $time) && (!$end || $end >= strtotime('midnight first day of January this year', $time));
 
-			case 'Now':
-				$now = strtotime('today');
-				return $start <= $now && (!$end || $end >= $now);
+			case 'now':
+				$time = strtotime('today');
+				return $start <= $time && (!$end || $end >= $time);
 
 			default:
 				\Log::error('Bad timespan param used in function '.__FUNCTION__);
@@ -856,7 +868,7 @@ class BaseObserver
 /**
  * Systemd Observer Class - Handles changes on Model Gateways - restarts system services
  *
- * TODO: 
+ * TODO:
  	* place it somewhere else ...
  	* Calling this Observer is practically very bad in case there are more services inserted - then all services will restart even
  *		if Config didn't change - therefore a distinction is necessary - or more Observers,

@@ -4,7 +4,7 @@ namespace Modules\ProvVoip\Entities;
 
 use Illuminate\Support\Collection;
 
-// Model not found? execute composer dump-autoload in lara root dir
+// Model not found? execute composer dump-autoload in nmsprime root dir
 class PhonenumberManagement extends \BaseModel {
 
 	// get functions for some address select options
@@ -62,16 +62,38 @@ class PhonenumberManagement extends \BaseModel {
 		return 'Phonenumber Management';
 	}
 
+	public static function view_icon()
+	{
+		return '<i class="fa fa-phone text-info"></i>';
+	}
+
 	// link title in index view
 	public function view_index_label()
 	{
-		$bsclass = 'success';
-		$phonenumber = $this->phonenumber;
+		$bsclass = $this->get_bsclass();
+		$header = isset($this->phonenumber) ? 'PhonenumberManagement ('.$this->phonenumber->prefix_number.'/'.$this->phonenumber->number.')' : '';
 
         return ['index' => [$this->id],
                 'index_header' => ['ID'],
                 'bsclass' => $bsclass,
-                'header' => 'PhonenumberManagement ('.$phonenumber->prefix_number.'/'.$phonenumber->number.')'];
+                'header' => $header];
+	}
+
+	// link title in index view
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+		$header = isset($this->phonenumber) ? 'PhonenumberManagement ('.$this->phonenumber->prefix_number.'/'.$this->phonenumber->number.')' : '';
+
+        return ['table' => $this->table,
+                'index_header' => [$this->table.'.id'],
+                'bsclass' => $bsclass,
+                'header' => $header];
+	}
+
+	public function get_bsclass()
+	{
+		return 'success';
 	}
 
 	/**
@@ -86,12 +108,12 @@ class PhonenumberManagement extends \BaseModel {
 	/**
 	 * The Envia contract the related phonenumber currently belongs to
 	 */
-	public function enviacontract()	{
+	public function envia_contract()	{
 		if (!\PPModule::is_active('provvoipenvia')) {
 			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
 		}
 		else {
-			return $this->belongsTo('Modules\ProvVoipEnvia\Entities\EnviaContract');
+			return $this->belongsTo('Modules\ProvVoipEnvia\Entities\EnviaContract', 'enviacontract_id');
 		}
 	}
 
@@ -185,9 +207,16 @@ class PhonenumberManagement extends \BaseModel {
 	public function view_has_many() {
 
 		if (\PPModule::is_active('provvoipenvia')) {
+
 			$ret['Envia']['EnviaOrder']['class'] = 'EnviaOrder';
 			$ret['Envia']['EnviaOrder']['relation'] = $this->_envia_orders;
 			$ret['Envia']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at Envia';
+
+			$ret['Envia']['EnviaContract']['class'] = 'EnviaContract';
+			$enviacontracts = is_null($this->envia_contract) ? [] : [$this->envia_contract];
+			$ret['Envia']['EnviaContract']['relation'] = $enviacontracts;
+			$ret['Envia']['EnviaContract']['options']['hide_create_button'] = 1;
+			$ret['Envia']['EnviaContract']['options']['hide_delete_button'] = 1;
 
 			$ret['Envia']['PhonebookEntry']['class'] = 'PhonebookEntry';
 

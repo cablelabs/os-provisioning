@@ -36,13 +36,7 @@ class Cmts extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-		$bsclass = 'success';
-
-		// TODO: use cmts state value
-		if ($this->state == 1)
-			$bsclass = 'warning';
-		if ($this->state == 2)
-			$bsclass = 'danger';
+		$bsclass = $this->get_bsclass();
 
 		return ['index' => [$this->id, $this->hostname, $this->ip, $this->company, $this->type],
 				'index_header' => ['ID', 'Hostname', 'IP address', 'Company', 'Type'],
@@ -50,6 +44,30 @@ class Cmts extends \BaseModel {
 				'header' => $this->hostname];
 	}
 
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.id', $this->table.'.hostname', $this->table.'.ip', $this->table.'.company', $this->table.'.type'],
+				'header' =>  $this->hostname,
+				'bsclass' => $bsclass,
+				'order_by' => ['0' => 'asc']];
+	}
+
+	public function get_bsclass()
+	{
+		$bsclass = 'success';
+	
+		// TODO: use cmts state value
+		if ($this->state == 1)
+			$bsclass = 'warning';
+		if ($this->state == 2)
+			$bsclass = 'danger';
+		return $bsclass;
+	}
 
 	/**
 	 * BOOT - init cmts observer
@@ -143,6 +161,34 @@ class Cmts extends \BaseModel {
 		return ['Could not find CMTS'];
 	}
 
+
+	/**
+	 * Get US modulations of the respective channel ID
+	 *
+	 * @param ch_ids: Array of channel IDs
+	 * @return Array of corresponding modulations used (docsIfCmtsModType)
+	 *
+	 * @author Ole Ernst
+	 */
+	public function get_us_mods($ch_ids)
+	{
+		$mods = [];
+		// get all channel IDs of the CMTS
+		$idxs = snmprealwalk($this->ip, $this->get_ro_community(), '.1.3.6.1.2.1.10.127.1.1.2.1.1');
+
+		// intersect all channel IDs with the ones used by the modem (supplied as method argument)
+		foreach(array_intersect($idxs, $ch_ids) as $key => $val) {
+			$key = explode('.', $key);
+			// get the modulation profile ID used for this channel
+			$mod_prof = snmpwalk($this->ip, $this->get_ro_community(), '.1.3.6.1.2.1.10.127.1.1.2.1.4.'.end($key));
+			// get all modulations of this profile
+			$mod = snmpwalk($this->ip, $this->get_ro_community(), '.1.3.6.1.2.1.10.127.1.3.5.1.4.'.array_pop($mod_prof));
+			// only add the last one, as this is used for user data
+			$mods[] = array_pop($mod);
+		}
+
+		return $mods;
+	}
 
 	/**
 	 * auto generates the dhcp conf file for a specified cmts and

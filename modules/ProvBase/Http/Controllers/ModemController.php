@@ -54,11 +54,11 @@ class ModemController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')),
 			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list($model->configfiles(), 'name')),
 			array('form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'),
-			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Network Access', 'value' => '1', 'help' => trans('helper.Modem_NetworkAccess'))
+			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Network Access', 'value' => '1', 'help' => trans('helper.Modem_NetworkAccess')),
 			);
 
-		$b = \PPModule::is_active('billingbase') ? 
-			array(array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'hidden' => 1, 'space' => '1'))
+		$b = \PPModule::is_active('billingbase') ?
+			array(array('form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'hidden' => 1, 'space' => '1'))
 			:
 			array(array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1'));
 
@@ -285,6 +285,27 @@ class ModemController extends \BaseController {
 		$data = $this->_nullify_fields($data, $nullable_fields);
 
 		return $data;
+	}
+
+
+	/**
+	 * Inheritet update function to handle force restart button as
+	 * we dont want to update the modem when this button is clicked
+	 */
+	public function update($id)
+	{
+		if(!\Input::has('_force_restart'))
+			return parent::update($id);
+
+		$modem = Modem::find($id);
+
+		$modem->restart_modem();
+
+		// error msg created while observer execution
+		$msg = \Session::has('error') ? \Session::get('error') : 'Restarted Modem!';
+		$color = \Session::has('error') ? 'orange' : 'blue';
+
+		return \Redirect::route('Modem.edit', $id)->with('message', $msg)->with('message_color', $color);
 	}
 
 }

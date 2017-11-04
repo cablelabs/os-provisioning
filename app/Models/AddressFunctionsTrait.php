@@ -14,6 +14,7 @@ trait AddressFunctionsTrait {
 	public function get_salutation_options() {
 
 		$defaults = [
+			'',
 			'Herr',
 			'Frau',
 			'Firma',
@@ -26,6 +27,7 @@ trait AddressFunctionsTrait {
 			// we nevertheless store Herr in database and fix this in XML generation within
 			// ProvVoipEnvia->_add_fields
 			$options = [
+				'',
 				'Herr',
 				'Frau',
 				'Firma',

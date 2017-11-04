@@ -19,7 +19,7 @@ class ContractController extends \BaseController {
 
 	/**
 	 * Returns the List of Salesmen for the contract to choose from
-	 * 
+	 *
 	 * @return 	array 	$salesman
 	 */
 	private function _salesmen()
@@ -58,7 +58,7 @@ class ContractController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => '1', 'space' => '1'),
 			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1', 'html' =>
 				"<div class=col-md-12 style='background-color:whitesmoke'>
-				<div class=form-group><label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street and House Number</label>
+				<div class=form-group><label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number</label>
 				<div class=col-md-5><input class=form-control name=street type=text value='".$model['street']."' id=street style='background-color:whitesmoke'></div>"),
 			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => '1', 'html' =>
 				"<div class=col-md-2><input class=form-control name=house_number type=text value='".$model['house_number']."' id=house_number style='background-color:whitesmoke'></div>
@@ -68,7 +68,7 @@ class ContractController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'),
 			array('form_type' => 'text', 'name' => 'fax', 'description' => 'Fax'),
-			array('form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'), 
+			array('form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'),
 			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'create' => '1', 'space' => '1'),
 
 		);
@@ -88,6 +88,7 @@ class ContractController extends \BaseController {
 
 				array('form_type' => 'select', 'name' => 'voip_id', 'description' => 'Sale tariff', 'value' => PhoneTariff::get_sale_tariffs()),
 				/* array('form_type' => 'text', 'name' => 'next_voip_id', 'description' => 'Phone ID next month', 'space' => '1'), */
+				array('form_type' => 'checkbox', 'name' => 'telephony_only', 'description' => 'Telephony only', 'value' => '1', 'help' => 'Customer has only subscribed telephony, i.e. no internet access')
 			);
 		}
 
@@ -103,6 +104,7 @@ class ContractController extends \BaseController {
 				// NOTE: qos is required as hidden field to automatically create modem with correct contract qos class
 				// TODO: @Nino Ryschawy: please review and test while merging ..
 				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list(Qos::all(), 'name'), 'hidden' => 1),
+				array('form_type' => 'checkbox', 'name' => 'telephony_only', 'description' => 'Telephony only', 'value' => '1', 'help' => 'Customer has only subscribed telephony, i.e. no internet access', 'hidden' => 1)
 			);
 		}
 		else

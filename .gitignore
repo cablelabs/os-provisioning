@@ -7,6 +7,7 @@ composer.lock
 .env
 .DS_Store
 *.sublime*
+*.vscode*
 *.fuse_hidden*
 Thumbs.db
 storage/systemd/
@@ -34,7 +35,7 @@ cp-script.sh
 tags
 /.idea/blade.xml
 /.idea/deployment.xml
-/.idea/lara.iml
+/.idea/nmsprime.iml
 /.idea/modules.xml
 /.idea/vcs.xml
 /.idea/webServers.xml
@@ -45,3 +46,5 @@ tags
 Documentation/doxyfile.bak
 Documentation/doxywarn.log
 
+# ignore queue process pid's
+*queue.pid

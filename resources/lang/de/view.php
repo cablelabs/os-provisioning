@@ -32,6 +32,11 @@ return [
 		'jQuery_sLast'				=> ':sSortAscending aktivieren, um Spalte aufsteigend zu sortieren',
 		'jQuery_sLast'				=> ':sSortDescending aktivieren, um Spalte absteigend zu sortieren',
 		'jQuery_All'				=> 'Alle',
+		'jQuery_Print'				=> 'Drucken',
+		'jQuery_colvis'				=> 'Spaltensichtbarkeit',
+		'jQuery_colvisRestore'		=> 'Wiederherstellen',
+		'jQuery_colvisReset'		=> 'Zurücksetzen',
+		'jQuery_ExportTo'			=> 'Exportieren als',
 
 //
 //MENU
@@ -53,8 +58,8 @@ return [
 		'Menu_Modems'				=> 'Modems',
 		'Menu_Endpoints'			=> 'Endpunkte',
 		'Menu_Configfiles' 			=> 'Konfigurationsdateien',
-		'Menu_QoS' 					=> 'QoS-Einstellungen',
-		'Menu_CMTS' 				=> 'CMTS-Einstellungen',
+		'Menu_QoS' 					=> 'QoS',
+		'Menu_CMTS' 				=> 'CMTS',
 		'Menu_Ip-Pools' 			=> 'IP-Bereiche',
 		'Menu_MTAs' 				=> 'MTAs',
 		'Menu_Phonenumbers'			=> 'Telefonnummern',
@@ -122,6 +127,8 @@ return [
 		// Invoice
 		'Header_Invoice' 			=> 'Rechnung|Rechnungen',
 
+		// SepaMandate
+		'Header_SEPA Mandate' 		=> 'SEPA-Mandat',
 		//Settlement Run
 		'Header_Settlement Run'		=> 'Abrechnungslauf|Abrechnungsläufe',
 		'Header_EditSettlement Run' => 'Abrechnungslauf bearbeiten',
@@ -136,7 +143,7 @@ return [
 		//Contract
 		'Header_Contract'			=> 'Vertrag|Verträge',
 		'Header_EditContract'		=> 'Vertrag bearbeiten',
-		'Header_SepaMandate'		=> 'SEPA-Mandat|SEPA-Mandate',	
+		'Header_SepaMandate'		=> 'SEPA-Mandat|SEPA-Mandate',
 		//Modems
 		'Header_Modems'				=> 'Modem|Modems', //workaround
 		'Header_EditModems'			=> 'Modem bearbeiten',
@@ -159,7 +166,7 @@ return [
 		'Header_EditIpPool'			=> 'IP-Bereich bearbeiten',
 		'Header_IP-Pools'			=> 'IP-Bereich|IP-Bereiche',
 		'Header_EditIP-Pools'		=> 'IP-Bereich bearbeiten',
-			
+
 	//VOIP
 		//MTA
 		'Header_Mta'				=> 'MTA|MTAs',
@@ -178,7 +185,7 @@ return [
 		'Header_EnviaOrders'		=> 'Envia Bestellung|Envia Bestellungen',
 
 	//HFC
-		//Tree 
+		//Tree
 		'Header_Tree Table' 		=> 'Baumelement|Baumtabelle', //??
 		'Header_EditTree Table'		=> 'Baumelement bearbeiten', //??
 		//MPR
@@ -224,6 +231,7 @@ return [
 		//Settlement Run
 		'Button_Create Settlement Run'	=> 'Neuer Abrechnungslauf',
 		'Button_Rerun Accounting Command for current Month'	=> 'Vorgang für den aktuellen Monat erneut ausführen',
+		'sr_dl_logs' 					=> 'Gesamtes Logfile herunterladen',
 
 	//SNMP Modul
 		//Device
@@ -273,6 +281,7 @@ return [
 	'Dashboard_ContractAnalytics'	=> 'Analyse Verträge (letzte 12 Monate)',
 	'Dashboard_NoContracts'			=> 'Keine Verträge vorhanden.',
 	'Dashboard_Income'				=> 'ERLÖSE',
+	'Dashboard_Net Income'			=> 'NETTOERLÖSE',
 	'Dashboard_IncomeAnalytics'		=> 'Erlöse Detailübersicht',
 	'Dashboard_Date'				=> 'DATUM',
 	'Dashboard_LinkDetails'			=> 'Zeige Details',

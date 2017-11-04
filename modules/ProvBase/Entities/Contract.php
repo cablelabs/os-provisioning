@@ -40,6 +40,7 @@ class Contract extends \BaseModel {
 			'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
 			'sepa_iban' => 'iban',
 			'sepa_bic' => 'bic',
+			'costcenter_id' => 'required|numeric|min:1',
 			);
 	}
 
@@ -59,15 +60,45 @@ class Contract extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
+		$bsclass = $this->get_bsclass();
+
+		$costcenter = $this->costcenter ? $this->costcenter->name : '';
+
+		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street, $this->house_number, $this->district, $this->contract_start, $this->contract_end, $costcenter],
+				'index_header' => ['Contract Nr', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street', 'House Nr', 'District', 'Start Date', 'End Date', 'CostCenter'],
+				'bsclass' => $bsclass,
+				'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
+	}
+
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.zip', $this->table.'.city', $this->table.'.street', $this->table.'.house_number', $this->table.'.district', $this->table.'.contract_start', $this->table.'.contract_end', 'costcenter.name'],
+				'header' =>  $this->number.' '.$this->firstname.' '.$this->lastname,
+				'bsclass' => $bsclass,
+				'eager_loading' => ['costcenter'],
+				'edit' => ['costcenter.name' => 'get_costcenter_name'],
+				'order_by' => ['0' => 'asc']];
+	}
+
+
+	public function get_bsclass()
+	{
 		$bsclass = 'success';
 
 		if ($this->network_access == 0)
 			$bsclass = 'danger';
 
-		return ['index' => [$this->number, $this->firstname, $this->lastname, $this->zip, $this->city, $this->street, $this->house_number, $this->district, $this->contract_start, $this->contract_end],
-				'index_header' => ['Contract Nr', 'Firstname', 'Lastname', 'Postcode', 'City', 'Street', 'House Nr', 'District', 'Start Date', 'End Date'],
-				'bsclass' => $bsclass,
-				'header' => $this->number.' '.$this->firstname.' '.$this->lastname];
+		return $bsclass;
+	}
+
+	public function get_costcenter_name()
+	{
+		return $costcenter = $this->costcenter ? $this->costcenter->name : trans('messages.noCC');
 	}
 
 	// View Relation.
@@ -96,6 +127,9 @@ class Contract extends \BaseModel {
 
 		if (\PPModule::is_active('provvoipenvia'))
 		{
+			$ret['Envia']['EnviaContract']['class'] = 'EnviaContract';
+			$ret['Envia']['EnviaContract']['relation'] = $this->enviacontracts;
+
 			$ret['Envia']['EnviaOrder']['class'] = 'EnviaOrder';
 			$ret['Envia']['EnviaOrder']['relation'] = $this->_envia_orders;
 
@@ -264,16 +298,11 @@ class Contract extends \BaseModel {
 	public function invoices()
 	{
 		if (\PPModule::is_active('billingbase'))
-		{
-			$srs  = SettlementRun::where('verified', '=', '0')->get(['id'])->pluck('id')->all();
+			return $this->hasMany('Modules\BillingBase\Entities\Invoice');
+			// $srs  = SettlementRun::where('verified', '=', '0')->get(['id'])->pluck('id')->all();
+			// $hide = $srs ? : 0;
+			// return $this->hasMany('Modules\BillingBase\Entities\Invoice')->where('contract_id', '=', $this->id)->where('settlementrun_id', '!=', [$hide]);
 
-			$hide = $srs ? : 0;
-
-			return $this->hasMany('Modules\BillingBase\Entities\Invoice')->where('contract_id', '=', $this->id)->where('settlementrun_id', '!=', [$hide]);
-
-			// $hide = SettlementRun::unverified_files();
-			// return $this->hasMany('Modules\BillingBase\Entities\Invoice')->orderBy('year', 'desc')->orderBy('month', 'desc')->whereNotIn('filename', $hide);
-		}
 		return null;
 	}
 
@@ -551,44 +580,36 @@ class Contract extends \BaseModel {
 
 		$active_count_internet = $active_tariff_info_internet['count'];
 		$active_count_voip = $active_tariff_info_voip['count'];
-		$active_count_sum = $active_count_internet + $active_count_voip;
 
-		$active_item_internet = $active_tariff_info_internet['item'];
-		$active_item_voip = $active_tariff_info_voip['item'];
-
-
-		if ($active_count_sum == 0 || !$this->check_validity('Now')) {
+		if (!$active_count_internet || !$this->check_validity('Now'))
+		{
 			// if there is no active item of type internet or voip or contract is outdated: disable network_access (if not already done)
 			if (boolval($this->network_access)) {
 				$this->network_access = 0;
 				$contract_changed = True;
 				\Log::Info('daily: contract: disabling network_access based on active internet/voip items for contract '.$this->id);
 			}
+
+			if (!$active_count_internet && $active_count_voip && !$this->telephony_only) {
+				$this->telephony_only = 1;
+				$contract_changed = True;
+				\Log::Info('daily: contract: switch to telephony_only', [$this->id]);
+			}
+
+			if (!$active_count_voip && $this->telephony_only) {
+				$this->telephony_only = 0;
+				$contract_changed = True;
+				\Log::Info('daily: contract: switch from telephony_only to internet + telephony tariff', [$this->id]);
+			}
 		}
-		else {
+		else
+		{
 			// changes are only required if not active
 			if (!boolval($this->network_access)) {
-
-				// then we compare the startdate of the most current active internet/voip type item with today
-				// if the difference between the two dates is to big we assume that access has been disabled manually – we don't change the state in this case
-				// this follows the philosophy introduced by Torsten within method _update_network_access_from_contract (e.g. lack of payment)
-				// $now = \Carbon\Carbon::now();
-				// $starts = array();
-				// if ($active_item_internet) {
-				// 	array_push($starts, $this->_date_to_carbon($active_item_internet->valid_from));
-				// }
-				// if ($active_item_voip) {
-				// 	array_push($starts, $this->_date_to_carbon($active_item_voip->valid_from));
-				// }
-				// $start = max($starts);
-
-				// if (($start->diff($now)->days) <= 1) {
 					$this->network_access = 1;
 					$contract_changed = True;
 					\Log::Info('daily: contract: enabling network_access based on active internet/voip items for contract '.$this->id);
-				// }
 			}
-
 		}
 
 		if ($contract_changed) {
@@ -824,7 +845,7 @@ class Contract extends \BaseModel {
 		$last 	= 0;
 		$tariff = null;			// item
 		$count = 0;
-// dd($prod_ids, $this->items);
+
 		foreach ($this->items as $item)
 		{
 			if (in_array($item->product->id, $prod_ids) && $item->check_validity('Now'))
@@ -1050,6 +1071,8 @@ class Contract extends \BaseModel {
 	 */
 	public function push_to_modems()
 	{
+		$changes = $this->getDirty();
+
 		// TODO: Speed-up: Could this be done with a single eloquent update statement ?
 		//       Note: This requires to use the Eloquent Context to run all Observers
 		//       an to rebuild and restart the involved modems
@@ -1058,6 +1081,11 @@ class Contract extends \BaseModel {
 			$modem->network_access = $this->network_access;
 			$modem->qos_id = $this->qos_id;
 			$modem->save();
+
+			if (isset($changes['telephony_only']) && !$modem->needs_restart()) {
+				$modem->restart_modem();
+				$modem->make_configfile();
+			}
 		}
 	}
 
@@ -1120,23 +1148,33 @@ class Contract extends \BaseModel {
 	/**
 	 * Returns valid sepa mandate for specific timespan
 	 *
-	 * @param String 	Timespan - LAST (!!) 'year'/'month' or 'now
-	 * @return Object 	Sepa Mandate
+	 * @param 	String 		Timespan - LAST (!!) 'year'/'month' or 'now
+	 * @param 	Integer 	If Set only Mandates related to specific SepaAccount are considered (related via CostCenter)
+	 * @return 	Object 		Valid Sepa Mandate with latest start date
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function get_valid_mandate($timespan = 'Now')
+	public function get_valid_mandate($timespan = 'now', $sepaaccount_id = 0)
 	{
 		$mandate = null;
 		$last 	 = 0;
 
 		foreach ($this->sepamandates as $m)
 		{
-			if (!is_object($m) || !$m->check_validity($timespan))
+			if (!is_object($m))
+				continue;
+
+			if ($m->disable || !$m->check_validity($timespan))
+				continue;
+
+			if ($m->costcenter xor $sepaaccount_id)
+				continue;
+
+			if ($sepaaccount_id && ($m->costcenter->sepaaccount->id != $sepaaccount_id))
 				continue;
 
 			if ($mandate)
-				\Log::warning("Multiple valid Sepa Mandates active for Contract ".$this->number, [$this->id]);
+				\Log::warning("SepaMandate: Multiple valid mandates active for Contract $this->number", [$this->id]);
 
 			$start = $m->get_start_time();
 
@@ -1216,13 +1254,13 @@ class ContractObserver
 			// Note: implement this commented way if there are more checkings for better code structure - but this reduces performance on one of the most used functions of the user!
 			// $changed_fields = $contract->getDirty();
 
-			// Note: isset is way faster regarding the performance than array_key_exists, but returns false if value of key is null which is not important here - See upmost comment on: http://php.net/manual/de/function.array-key-exists.php 
+			// Note: isset is way faster regarding the performance than array_key_exists, but returns false if value of key is null which is not important here - See upmost comment on: http://php.net/manual/de/function.array-key-exists.php
 			// if (isset($changed_fields['number']))
 			if ($contract->number != $contract['original']['number'])
 			{
 				// change customer information - take care - this automatically changes login psw of customer
 				if ($customer = $contract->cccauthuser)
-					$customer->update(); 
+					$customer->update();
 			}
 
 			// if (isset($changed_fields['contract_start']) || isset($changed_fields['contract_end']))

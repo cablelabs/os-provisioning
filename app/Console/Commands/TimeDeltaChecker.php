@@ -7,11 +7,11 @@ use Illuminate\Console\Command;
 /**
  * This class can be used to analyze the timeshift between the scheduler time and the system time.
  * You can check this behavior by using the following bash command:
- *     date --iso-8601=seconds; php /var/www/lara/artisan schedule:run; cat /tmp/par__laravel__time_delta_checker_output; date --iso-8601=seconds
+ *     date --iso-8601=seconds; php /var/www/nmsprime/artisan schedule:run; cat /tmp/par__laravel__time_delta_checker_output; date --iso-8601=seconds
  * Then the times in the file are some (typically 2–10) seconds behind the both direct times
  *
  * If you call this command directly (without scheduler) all works fine – try:
- *     date --iso-8601=seconds; /usr/bin/php /var/www/lara/artisan main:time_delta; cat /tmp/par__laravel__time_delta_checker_output; date --iso-8601=seconds
+ *     date --iso-8601=seconds; /usr/bin/php /var/www/nmsprime/artisan main:time_delta; cat /tmp/par__laravel__time_delta_checker_output; date --iso-8601=seconds
  *
  * We should keep this behavior in mind – e.g. if we need to perform time critical tasks or have out-of-order log entries.
  * Maybe we could create a bug report to laravel – therefore we need to understand the topic more…

@@ -152,7 +152,7 @@ class SnmpController extends \BaseController{
 	/**
 	 * Prepare Formular Fields for Controlling View of NetElement
 	 * This includes getting all SNMP Values from Device
-	 * 
+	 *
 	 * @return 	Array (Multidimensional)	Data for Generic Form View in Form [frame1 => [field1, field2, ...], frame2 => [...], ...]
 	 *
 	 * @author Torsten Schmidt, Nino Ryschawy
@@ -214,7 +214,7 @@ class SnmpController extends \BaseController{
 					{
 						/* Save SnmpValue
 						 	NOTE: This takes way too much time
-							TODO: only add valueset to global variable for later multiupdate - for that we have to change indexing 
+							TODO: only add valueset to global variable for later multiupdate - for that we have to change indexing
 								  of field names because we wont get them as return value anymore
 						*/
 						$ret = $this->_snmp_value_set($suboid, $value, $index);
@@ -419,7 +419,7 @@ class SnmpController extends \BaseController{
 		{
 			$s .= '<table class="table table-condensed">';
 			$s .= '<thead><tr>';
-			$s .= '<th style="padding: 4px>Index</th>';
+			$s .= '<th style="padding: 4px">Index</th>';
 
 			foreach ($oids as $oid => $headline)
 			{
@@ -449,7 +449,7 @@ class SnmpController extends \BaseController{
 				$s .= '<table class="table table-condensed">';
 				$s .= '<thead><tr>';
 				$s .= '<th>Index</th>';
-				
+
 				foreach ($oid_indices as $oid => $field)
 					$s .= '<th style="padding: 4px">'.$field['description'].'</th>';
 
@@ -511,6 +511,8 @@ class SnmpController extends \BaseController{
 	 * make a snmpwalk over the entire $oid->oid
 	 * and create/update related SnmpValue Objects
 	 *
+	 * NOTE: snmp2 is minimum 20 times faster for several snmpwalks
+	 *
 	 * @param 	oid the OID Object
 	 * @return 	array of snmpwalk over oid in format [SnmpValue object id, snmp value]
 	 *
@@ -519,24 +521,35 @@ class SnmpController extends \BaseController{
 	public function snmp_walk ($oid, $indices = [])
 	{
 		$community = $this->_get_community();
-// $start = microtime(true);
-
-		if ($indices)
-		{
-			foreach ($indices as $index)
-				$results[$oid->oid.'.'.$index] = snmp2_get($this->device->ip, $community, $oid->oid.'.'.$index, $this->timeout, $this->retry);
-		}
-		else
-			// NOTE: Always use snmp2 as this is minimum 20 times faster
-			$results = snmp2_real_walk($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
-
-		// exec('snmpwalk -v2c -On -CE '.escapeshellarg($oid->oid).'.'.$indices['max'].' -c'.escapeshellarg($this->_get_community()).' '.escapeshellarg($this->device->ip).' '.escapeshellarg($oid->oid), $results);
-
-// d(round(microtime(true) - $start, 3), $results, $indices);
+		// $start = microtime(true);
 
 		// Log
 		Log::debug('snmpwalk '.$this->device->ip.' '.$oid->oid);
 
+		if ($indices)
+		{
+			try {
+				// check if snmp version 2 is supported - use it - otherwise use version 1
+				snmp2_get($this->device->ip, $community, '1.3.6.1.2.1.1.1', $this->timeout, $this->retry);
+
+				foreach ($indices as $index)
+					$results[$oid->oid.'.'.$index] = snmp2_get($this->device->ip, $community, $oid->oid.'.'.$index, $this->timeout, $this->retry);
+			}
+			catch (\Exception $e) {
+				foreach ($indices as $index)
+					$results[$oid->oid.'.'.$index] = snmpget($this->device->ip, $community, $oid->oid.'.'.$index, $this->timeout, $this->retry);
+			}
+		}
+		else
+		{
+			try {
+				$results = snmp2_real_walk($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
+			} catch (\Exception $e) {
+				$results = snmpwalk($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
+			}
+		}
+
+		// d(round(microtime(true) - $start, 3), $results, $indices);
 		return $results;
 	}
 
@@ -564,7 +577,7 @@ class SnmpController extends \BaseController{
 				if ($param->third_dimension && !$this->index)
 					continue;
 
-				/* TODO: check with first walk how many indices exist, if this is approximately 3 or 4 (check performance!) times larger than 
+				/* TODO: check with first walk how many indices exist, if this is approximately 3 or 4 (check performance!) times larger than
 					the indices list then only get oid.index for each index
 					Note: snmpwalk -CE ends on this OID - makes it much faster
 					*/
@@ -602,7 +615,7 @@ class SnmpController extends \BaseController{
 			$oid_s = substr($oid_index, 0, strlen($oid_index) - strlen($index));
 			// $index = substr($index, 1);
 
-			// Exclude unwished indices - this is a workaround for the unimproved snmpwalk over all indices 
+			// Exclude unwished indices - this is a workaround for the unimproved snmpwalk over all indices
 			// we filter them temporarily here - TODO: Improve performance via better snmpwalk
 			if (!$param_selection)
 			{
@@ -876,11 +889,12 @@ class SnmpController extends \BaseController{
 		}
 
 		// Device not reachable/online
-		if (strpos($msg, 'snmp2_get') !== false && (($x = strpos($msg, 'No response from')) !== false))
+		if (strpos($msg, 'snmp') !== false && (($x = strpos($msg, 'No response from')) !== false))
 		{
 			$ip = substr($msg, $x + 16, 15);
+			$method = explode(':', $msg)[0];
 
-			$error = 'snmp_get() failed';
+			$error = "$method failed";
 			$message = "Device with IP $ip not reachable";
 
 			return \View::make('errors.generic', compact('message', 'error'));
@@ -907,7 +921,7 @@ class SnmpController extends \BaseController{
 	// 		'value' 		=> -100,
 	// 		'oid_index' 	=> '.0'],
 	// 		);
-	
+
 	// 	\DB::raw('insert into snmpvalue (netelement_id, oid_id, oid_index, value) VALUES (28, 760, 11, \'.0\'), (28, 757, -10, \'.0\') on duplicate key update value=VALUES(value)');
 	// }
 

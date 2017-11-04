@@ -1,6 +1,14 @@
 <?php
 
 return [
+/**
+ * Index Page - Datatables
+ */
+	'SortSearchColumn'				=> 'This Column cannot be searched or ordered.',
+	'PrintVisibleTable'				=> 'Prints the shown table. If the table is filtered make sure to select the \"All\" option to display everything. Loading can take a few seconds.',
+	'ExportVisibleTable'			=> 'Exports the shown table. If the table is filtered make sure to select the \"All\" option to display everything. Loading can take a few seconds.',
+	'ChangeVisibilityTable'			=> 'Select the columns that should be visible.',
+
  /**
   *	MODULE: BillingBase
   */
@@ -18,14 +26,14 @@ return [
 	'Company_TransferReason'		=> 'Template from all Invoice class data field keys - Contract Number and Invoice Nr is default',
 
 	//CostCenterController
-	'CostCenter_BillingMonth'		=> 'Default: 6 (June) - if not set. Has to be minimum current month on change to avoid missing payments',
+	'CostCenter_BillingMonth'		=> 'Accounting for yearly charged items - corresponds to the month the invoices are created for. Default: 6 (June) - if not set. Please be careful to not miss any payments when changing this!',
 
 	//ItemController
 	'Item_ProductId'				=> 'All fields besides Billing Cycle have to be cleared before a type change! Otherwise items can not be saved in most cases',
 	'Item_ValidFrom'				=> 'For One Time Payments the fields can be used to split payment - Only YYYY-MM is considered then!',
 	'Item_ValidFromFixed'			=> 'Fixed dates are used for billing and not updated by external orders',
 	'Item_ValidToFixed'				=> 'Fixed dates are used for billing and not updated by external orders',
-	'Item_CreditAmount'				=> 'Net Amount to be credited to Customer',
+	'Item_CreditAmount'				=> 'Net Amount to be credited to Customer. Take Care: a negative amount becomes a debit!',
 
 	//ProductController
   	'Product_Name' 					=> 'For Credits it is possible to assign a Type by adding the type name to the Name of the Credit - e.g.: \'Credit Device\'',
@@ -34,6 +42,10 @@ return [
 
 	//SalesmanController
 	'Salesman_ProductList'			=> 'Add all Product types he gets commission for - possible: ',
+
+	// SepaMandate
+	'sm_cc' 						=> 'If a cost center is assigned only products related to the same cost center will be charged of this account. Leave this field empty if all charges that can not be assigned to another SEPA-Mandate with specific cost center shall be debited of this account. Note: It is assumed that all emerging costs that can not be assigned to any SEPA-Mandate will be payed in cash!',
+	'sm_recur' 						=> 'Activate if there already have been transactions of this account before the creation of this mandate. Sets the status to recurring. Note: This flag is only considered on first transaction!',
 
 	//SepaAccountController
 	'SepaAccount_InvoiceHeadline'	=> 'Replaces Headline in Invoices created for this Costcenter',
@@ -61,10 +73,10 @@ return [
 	'parameter_html_frame' 			=> 'Doesn\'t have influences on SubOIDs in Tables (but on 3rd Dimensional Params!).',
 
  /**
-  *	MODULE: ProvBase	
+  *	MODULE: ProvBase
   */
  	//ModemController
-	'Modem_NetworkAccess'			=> 'Disable/Enable Network Access - Take Care: If Billing-Module is installed this Checkbox will be overwritten daily during check of valid Tariff Item when it was not enabled/checked manually',
+	'Modem_NetworkAccess'			=> 'Network Access for CPEs. (MTAs are not considered and will always go online when all other configurations are correct). Take care: With Billing-Module this checkbox will be overwritten by daily check if tariff changes.',
 	'Modem_InstallationAddressChangeDate'	=> 'In case of (physical) relocation of the modem: Add startdate for the new address here. If readonly there is a pending address change order at Envia.',
 	'contract_number' 				=> 'Attention - Customer login password is changed automatically on changing this field!',
 	'mac_formats'					=> "Allowed formats (case-insensitive):\n\n1) AA:BB:CC:DD:EE:FF\n2) AABB.CCDD.EEFF\n3) AABBCCDDEEFF",

@@ -18,7 +18,83 @@
                 <h1><div class="text-center"><i class="img-center fa fa-ticket"></i></div></h1>
                  <h4 class="username text-ellipsis text-center">Add Ticket<small>Easy</small></h4>
         </li>
+        <li>
+            {{ HTML::decode (HTML::linkRoute('CustomerTopo.show_bad',
+                '<h1><div class="text-center"><i class="img-center fa fa-hdd-o text-danger"></i></div></h1>
+                 <h4 class="username text-ellipsis text-center">Bad Modems<small>Easy</small></h4>')) }}
+        </li>
     </ul>
+@stop
+
+@section ('impaired_netelements')
+    @if($netelements)
+        <table class="table">
+            <thead>
+                <tr>
+                    @foreach ($netelements['hdr'] as $hdr)
+                        <th>{{$hdr}}</th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($netelements['row'] as $row)
+                    <tr class = "{{array_shift($netelements['clr'])}}">
+                        @foreach ($row as $data)
+                            <td>{{$data}}</td>
+                        @endforeach
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+@stop
+
+@section ('impaired_services')
+    @if($services)
+        <table class="table">
+            <thead>
+                <tr>
+                    @foreach ($services['hdr'] as $hdr)
+                        <th>{{$hdr}}</th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($services['row'] as $i => $row)
+                    <tr class = "clickable {{$services['clr'][$i]}}" data-toggle="collapse" data-target=".{{$i}}collapsedservice">
+                        @foreach ($row as $j => $data)
+                            @if($j)
+                                <td class='f-s-13'>{{$data}}</td>
+                            @elseif(count($services['perf'][$i]))
+                                <td class='f-s-13'><i class="fa fa-plus"></i>{{$data}}</td>
+                            @else
+                                <td class='f-s-13'><i class="fa fa-info"></i>{{$data}}</td>
+                            @endif
+                        @endforeach
+                    </tr>
+                    @foreach ($services['perf'][$i] as $perf)
+                        <tr class="collapse {{$i}}collapsedservice">
+                            <td colspan="4">
+                                @if($perf['per'] !== null)
+                                    @if($perf['cls'] !== null)
+                                        <div class="progress progress-striped">
+                                            <div class="{{$perf['cls']}}" style="width: {{$perf['per']}}%"><span class='text-inverse'>{{$perf['text']}}</span></div>
+                                        </div>
+                                    @else
+                                        <div class="progress progress-striped">
+                                            <div class="progress-bar progress-bar-{{$services['clr'][$i]}}" style="width: {{$perf['per']}}%"><span class='text-inverse'>{{$perf['text']}}</span></div>
+                                        </div>
+                                    @endif
+                                @else
+                                    {{$perf['text']}}: {{$perf['val']}}
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                @endforeach
+            </tbody>
+        </table>
+    @endif
 @stop
 
 @section('content')
@@ -39,10 +115,10 @@
                     <div class="stats-info">
                         <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Contracts', 'Dashboard') }} {{ date('m/Y') }}</h4>
                         <p>
-                            @if (count($contracts) == 0)
+                            @if ($contracts == 0)
                                 {{ \App\Http\Controllers\BaseViewController::translate_view('NoContracts', 'Dashboard') }}
                             @else
-                                {{ count($contracts) }}
+                                {{ $contracts }}
                             @endif
                         </p>
                     </div>
@@ -68,12 +144,12 @@
 
                             {{-- info/data --}}
                             <div class="stats-info">
-                                <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Income', 'Dashboard') }} {{ date('m/Y') }}</h4>
+                                <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Net Income', 'Dashboard') }} {{ date('m/Y') }}</h4>
                                 <p>
                                     @if (isset($income['total']))
-                                        {{ number_format($income['total'], 2, ',', '.') }}
+                                        {{ number_format($income['total'], 0, ',', '.') }}
                                     @else
-                                        {{ number_format(0, 2, ',', '.') }}
+                                        {{ number_format(0, 0, ',', '.') }}
                                     @endif
                                 </p>
                             </div>
@@ -139,7 +215,13 @@
         <br><br>
 
         <div class="row">
-            @if (count($contracts) > 0)
+            @if($netelements)
+                @include ('bootstrap.panel', array ('content' => "impaired_netelements", 'view_header' => 'Impaired Netelements', 'md' => 6, 'height' => 'auto'))
+            @endif
+            @if($services)
+                @include ('bootstrap.panel', array ('content' => "impaired_services", 'view_header' => 'Impaired Services', 'md' => 6, 'height' => 'auto'))
+            @endif
+            @if ($contracts > 0)
                 <div class="col-md-8">
                     <div class="panel panel-inverse">
                         <div class="panel-heading">

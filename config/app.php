@@ -38,10 +38,8 @@ return [
 	|
 	*/
 
-	/* 'url' => 'http://localhost', */
-
-	// changed by Patrick Reichel => use this in /modules/ProvVoipEnvia/Console/EnviaOrderUpdaterCommand.php
-	'url' => 'https://localhost/lara',
+	// used e.g. in all envia related console commands by cURL
+	'url' => env('APP_CONSOLE_BASEURL', 'https://localhost/nmsprime'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -113,6 +111,7 @@ return [
 
 
 	'log' => env('APP_LOG', 'daily'),
+	'log_level' => env('APP_LOG_LEVEL', 'error'),
 	'log_max_files' => env('APP_LOG_MAX_FILES', 30),
 	// 'log' => 'daily',
 	// 'log_max_files' => 30,
@@ -153,7 +152,6 @@ return [
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
-
 		/*
 		 * Application Service Providers...
 		 */
@@ -166,6 +164,8 @@ return [
 		'Collective\Html\HtmlServiceProvider',
 		'Acme\html\HtmlServiceProvider',
 		'Intervention\Validation\ValidationServiceProvider',
+		'Collective\Bus\BusServiceProvider',
+		Yajra\Datatables\DatatablesServiceProvider::class,
 	],
 
 	/*
@@ -225,7 +225,9 @@ return [
 		'BaseRoute'     => 'Acme\core\BaseRoute',
 		'NamespaceController' => 'App\Http\Controllers\NamespaceController',
 		'BaseModel' => 'App\BaseModel',
-		'GlobalConfig' => 'App\GlobalConfig'
+		'GlobalConfig' => 'App\GlobalConfig',
+		'Datatables' => 'Yajra\Datatables\Facades\Datatables',
+		'ChannelLog' => 'Acme\log\ChannelLog',
 	],
 
 ];

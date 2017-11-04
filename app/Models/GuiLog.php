@@ -33,13 +33,42 @@ class GuiLog extends \BaseModel {
 	// link title in index view
 	public function view_index_label()
 	{
-        $bsclass = 'info';
+        $bsclass = $this->get_bsclass();
+
+        return ['index' => [$this->created_at, $this->username, $this->method, $this->model, ""],
+                'index_header' => ['created_at', 'username', 'method', 'model', 'model_id'],
+                'bsclass' => $bsclass,
+				'header' => $this->username.': '.$this->method.' '.$this->model ];
+	}
+
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+		//dd($this->method);
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.created_at', $this->table.'.username', $this->table.'.method', $this->table.'.model', $this->table.'.model_id'],
+		        'bsclass' => $bsclass,
+				'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
+				'edit'	=> ['model_id' => 'generate_model_link'],
+				'order_by' => ['0' => 'desc'] ];
+	}
+
+	public function get_bsclass()
+	{
+		$bsclass = 'info';
 
         if ($this->method == 'created')
-            $bsclass = 'success';
+			$bsclass = 'success';
         if ($this->method == 'deleted')
             $bsclass = 'danger';
 
+		return $bsclass;
+	}
+
+	public function generate_model_link()
+	{
 		// if there is a route to a changed model: create hyperlink to the edit blade
 		// goal: easier to track changes
 		if (\Route::has($this->model.'.edit')) {
@@ -50,28 +79,18 @@ class GuiLog extends \BaseModel {
 			$model_link = $this->model_id;
 		}
 
-        return ['index' => [$this->created_at, $this->username, $this->method, $this->model, $model_link],
-                'index_header' => ['Time', 'User', 'Action', 'Model', 'ID'],
-                'bsclass' => $bsclass,
-                'header' => $this->username.': '.$this->method.' '.$this->model];
+		return $model_link;
 	}
-
-
-	public function index_list()
-	{
-		return $this->orderBy('id', 'desc')->simplePaginate(1000);
-	}
-
 
 	/**
-	 * Delete all LogEntries older than a specific timespan - default 3 months
-	 * Hard Delete all Entries older than 6 months
+	 * Delete all LogEntries older than a specific timespan - default 2 years
+	 * Hard Delete all Entries older than 3 years
 	 */
-	public static function cleanup($days = 360)
+	public static function cleanup($months = 24)
 	{
-		\Log::notice('GuiLog: Execute cleanup() - Delete Log entries older than '.$days.' days - (hard delete older than 180 days)');
+		\Log::notice('GuiLog: Execute cleanup() - Delete Log entries older than '.$months.' months - (hard delete older than 3 years)');
 
-		GuiLog::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL '.$days.' DAY)'))->delete();
+		GuiLog::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL '.$months.' MONTH)'))->delete();
 		GuiLog::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL 36 MONTH)'))->forceDelete();
 		// GuiLog::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL 3 MINUTE)'))->delete();
 	}

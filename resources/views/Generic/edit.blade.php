@@ -32,7 +32,7 @@
 
 <?php $api = App\Http\Controllers\BaseViewController::get_view_has_many_api_version($relations) ?>
 
-<?php //d($edit_left_md_size, $edit_right_md_size); ?>
+<?php //d($relations, $edit_left_md_size); ?>
 
 @section('content_right')
 
@@ -64,6 +64,7 @@
 						@endif
 						@if (is_array($relation['view']))
 							@include ($relation['view']['view'], isset($relation['view']['vars']) ? $relation['view']['vars'] : [])
+							<?php $md_size = isset($relation['view']['vars']['md_size']) ? $relation['view']['vars']['md_size'] : null; ?>
 						@endif
 					@endif
 
@@ -80,13 +81,19 @@
 
 		@stop
 
-
 		<!-- The Bootstap Panel to include -->
 		@include ('bootstrap.panel', array ('content' => "content_$i",
 											'view_header' => \App\Http\Controllers\BaseViewController::translate_view('Assigned', 'Header').' '.\App\Http\Controllers\BaseViewController::translate_view($view, 'Header' , 2),
-											'md' => isset($edit_right_md_size) ? $edit_right_md_size : 4))
+											'md' => isset($md_size) ? $md_size : (isset($edit_right_md_size) ? $edit_right_md_size : 4)))
 
 	@endforeach
+
+
+	<!-- Alert -->
+	@if (Session::has('alert'))
+		@include('bootstrap.alert', array('message' => Session::get('alert')))
+		<?php Session::forget('alert'); ?>
+	@endif
 
 
 @stop

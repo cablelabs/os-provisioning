@@ -11,7 +11,7 @@ namespace Acme\core;
  */
 class BaseRoute {
 
-	// HTML Admin Prefix for https://xyz/lara/admin
+	// HTML Admin Prefix for https://xyz/nmsprime/admin
 	public static $admin_prefix = 'admin';
 
 
@@ -82,6 +82,9 @@ class BaseRoute {
 		// Fulltext Search
 		// TODO: adapt route name to not strtolower() like other functions
 		\Route::get(strtolower($name).'/fulltextSearch', array('as' => $name.'.fulltextSearch', 'uses' => $controller.'@fulltextSearch', $options, 'middleware' => 'auth:view'));
+
+		// AJAX Index DataTable
+		\Route::get("$name/datatables", array('as' => $name.'.data', 'uses' => $controller.'@index_datatables_ajax', 'middleware' => 'auth:view'));
 	}
 
 

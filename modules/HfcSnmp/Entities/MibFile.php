@@ -8,7 +8,6 @@ class MibFile extends \BaseModel {
 
 	public $guarded = ['mibfile_upload'];
 
-
 	/**
 	 * @Const MibFile Upload Path relativ to storage directory
 	 */
@@ -35,19 +34,38 @@ class MibFile extends \BaseModel {
 	// View Icon
   public static function view_icon()
   {
-    return '<i class="fa fa-file-o"></i>'; 
+    return '<i class="fa fa-file-o"></i>';
   }
 
 	// link title in index view
 	public function view_index_label()
 	{
-		// TODO: possible Colorization: red - MIBs that occur multiple times - but checking can decrease performance dramatically
-		$bsclass = $this->oids->all() ? 'success' : 'info';
+		// TODO: possible Colorization: red - MIBs that occur multiple times ((but checking can decrease performance dramatically))
+		$bsclass = \DB::table('oid')->where('mibfile_id', '=', $this->id)->whereNull('deleted_at')->first() ? 'success' : 'info';
 
 		return ['index' => [$this->id, $this->name, $this->version],
 				'index_header' => ['ID', 'Name', 'Version'],
 				'bsclass' => $bsclass,
 				'header' => $this->name];
+	}
+
+	// AJAX Index list function
+	// generates datatable content and classes for model
+	public function view_index_label_ajax()
+	{
+		$bsclass = $this->get_bsclass();
+
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.id', $this->table.'.name',  $this->table.'.version'],
+				'header' =>  $this->name,
+				'order_by' => ['1' => 'asc']];
+	}
+
+	public function get_bsclass()
+	{
+		$bsclass = $this->oids->first() ? 'success' : 'info';
+
+		return $bsclass;
 	}
 
 	public function view_has_many ()
@@ -116,7 +134,7 @@ class MibFile extends \BaseModel {
 			return $this->_error("Upload File not yet written", 'Filesystem Error');
 
 
-		// Get all OIDs of MIB - this includes many OIDs from the MIBs that are included in this MIB			
+		// Get all OIDs of MIB - this includes many OIDs from the MIBs that are included in this MIB
 		exec("snmptranslate -To -m $abs_filepath 2>&1", $oids); 			// 2>&1 ... stderr to stdout
 
 
@@ -262,7 +280,7 @@ class MibFile extends \BaseModel {
 	// {
 	// 	foreach($this->oids as $oid)
 	// 		\DB::statement('DELETE from parameter WHERE oid_id='.$oid->id);
-		
+
 	// 	\DB::statement('DELETE from oid WHERE mibfile_id='.$this->id);
 	// }
 
@@ -281,7 +299,7 @@ class MibFileObserver
 	{
 		// hard delete OIDs as Database becomes huge otherwise
 		// $mibfile->hard_delete_oids();
-		
+
 		// TODO: Unlink file ?? - better not -> in case related mibs need this mib the user must not load it again
 	}
 

@@ -12,16 +12,16 @@ $services = array('dhcpd');
 
 // contains the restart-indicating files
 // TODO: use laravel path config
-$dir = '/var/www/lara/storage/systemd/';
+$dir = '/var/www/nmsprime/storage/systemd/';
 
 // contains restart scripts
-$dir_scripts = '/var/www/lara/app/extensions/systemd/';
+$dir_scripts = '/var/www/nmsprime/app/extensions/systemd/';
 
 $i = 0;
 
 while (1)
 {
-	foreach ($services as $service) 
+	foreach ($services as $service)
 	{
 		// proof if indication file exists, if so execute the restart script
 		if (file_exists($dir.$service))

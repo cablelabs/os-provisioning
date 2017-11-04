@@ -2,16 +2,6 @@
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use \Modules\HfcBase\Http\Controllers\TreeErdController;
-use \Modules\HfcBase\Http\Controllers\TreeTopographyController;
-use \Modules\HfcCustomer\Http\Controllers\CustomerTopoController;
-use \Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand;
-use \Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand;
-use \Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand;
-use \Modules\ProvVoip\Console\PhonenumberCommand;
-use \Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand;
-use \Modules\ProvVoipEnvia\Console\EnviaContractReferenceGetterCommand;
-use \Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceGetterCommand;
 
 class Kernel extends ConsoleKernel {
 
@@ -24,17 +14,9 @@ class Kernel extends ConsoleKernel {
 		'App\Console\Commands\Inspire',
 		'App\Console\Commands\TimeDeltaChecker',
 		'App\Console\Commands\StorageCleaner',
-		'\Modules\ProvVoip\Console\CarrierCodeDatabaseUpdaterCommand',
-		'\Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand',
-		'\Modules\ProvVoip\Console\PhonenumberCommand',
-		'\Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand',
-		'\Modules\ProvVoipEnvia\Console\EnviaContractReferenceGetterCommand',
-		'\Modules\ProvVoipEnvia\Console\EnviaCustomerReferenceGetterCommand',
-		'\Modules\ProvVoipEnvia\Console\EnviaOrderUpdaterCommand',
-		'\Modules\ProvVoipEnvia\Console\EnviaOrderProcessorCommand',
-		'\Modules\ProvVoipEnvia\Console\VoiceDataUpdaterCommand',
 		'App\Console\Commands\authCommand',
 		'App\Console\Commands\install',
+		'App\Console\Commands\EnsureQueueListenerIsRunning',
 	];
 
 
@@ -58,6 +40,12 @@ class Kernel extends ConsoleKernel {
 		/* $schedule->command('main:time_delta') */
 			/* ->everyMinute(); */
 
+		// define some helpers
+		$is_first_day_of_month = (date('d') == '01') ? True : False;
+
+		$schedule->command('queue:checkup')->everyMinute();
+		$schedule->call('\Modules\ProvBase\Http\Controllers\DashboardController@save_income_to_json')->dailyAt('00:07');
+
 
 		// Remove all Log Entries older than 90 days
 		$schedule->call('\App\GuiLog@cleanup')->weekly();
@@ -69,15 +57,15 @@ class Kernel extends ConsoleKernel {
 
 			// Update database table carriercode with csv data if necessary
 			$schedule->command('provvoip:update_carrier_code_database')
-				->dailyAt('03:24');
+				->dailyAt('04:23');
 
 			// Update database table ekpcode with csv data if necessary
 			$schedule->command('provvoip:update_ekp_code_database')
-				->dailyAt('03:29');
+				->dailyAt('04:28');
 
 			// Update database table trcclass with csv data if necessary
 			$schedule->command('provvoip:update_trc_class_database')
-				->dailyAt('03:34');
+				->dailyAt('04:33');
 		}
 
 		if (\PPModule::is_active ('ProvVoipEnvia')) {
@@ -88,22 +76,40 @@ class Kernel extends ConsoleKernel {
 				->dailyAt('00:01');
 				/* ->everyMinute(); */
 
-			// Update voice data
-			$schedule->command('provvoipenvia:update_voice_data')
-				->dailyAt('03:53');
-				/* ->everyMinute(); */
-
-			// Get Envia contract reference for phonenumbers without this information
-			$schedule->command('provvoipenvia:get_envia_contract_references')
-				->dailyAt('01:15');
-
 			// Get Envia customer reference for contracts without this information
 			$schedule->command('provvoipenvia:get_envia_customer_references')
 				->dailyAt('01:13');
 
-			// Process Envia orders
+			// Get/update Envia contracts
+			$schedule->command('provvoipenvia:get_envia_contracts_by_customer')
+				->dailyAt('01:18');
+
+			// Process Envia orders (do so after getting envia contracts)
 			$schedule->command('provvoipenvia:process_envia_orders')
-				->dailyAt('00:23');
+				->dailyAt('03:18');
+
+			// Get Envia contract reference for phonenumbers without this information or inactive linked envia contract
+			// on first of a month: run in complete mode
+			// do so after provvoipenvia:process_envia_orders as we need the old references there
+			if ($is_first_day_of_month) {
+				$tmp_cmd = 'provvoipenvia:get_envia_contract_references complete';
+			}
+			else {
+				$tmp_cmd = 'provvoipenvia:get_envia_contract_references';
+			}
+			$schedule->command($tmp_cmd)
+				->dailyAt('03:23');
+
+			// Update voice data
+			// on first of a month: run in complete mode
+			if ($is_first_day_of_month) {
+				$tmp_cmd = 'provvoipenvia:update_voice_data complete';
+			}
+			else {
+				$tmp_cmd = 'provvoipenvia:update_voice_data';
+			}
+			$schedule->command($tmp_cmd)
+				->dailyAt('03:53');
 		}
 
 		// ProvBase Schedules
@@ -130,8 +136,8 @@ class Kernel extends ConsoleKernel {
 		{
 			// Rebuid all Configfiles
 			$schedule->call(function () {
-				\Storage::deleteDirectory(TreeTopographyController::$path_rel);
-				\Storage::deleteDirectory(TreeErdController::$path_rel);
+				\Storage::deleteDirectory(\Modules\HfcBase\Http\Controllers\TreeTopographyController::$path_rel);
+				\Storage::deleteDirectory(\Modules\HfcBase\Http\Controllers\TreeErdController::$path_rel);
 			})->hourly();
 		}
 
@@ -140,7 +146,7 @@ class Kernel extends ConsoleKernel {
 		{
 			// Rebuid all Configfiles
 			$schedule->call(function () {
-				\Storage::deleteDirectory(CustomerTopoController::$path_rel);
+				\Storage::deleteDirectory(\Modules\HfcCustomer\Http\Controllers\CustomerTopoController::$path_rel);
 			})->hourly();
 
 			// Modem Positioning System

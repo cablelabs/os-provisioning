@@ -16,7 +16,11 @@
 
         <!-- begin sidebar nav -->
         <ul class="nav">
-          <li>
+          <li id ="dashboardsidebar"
+            @if ($route_name == "Dashboard")
+              class="active"
+            @endif
+            >
             <a href="{{BaseRoute::get_base_url()}}/Dashboard">
             <i class="fa fa-home"></i>
             <span cl>Dashboard</span></a>

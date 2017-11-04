@@ -2,7 +2,7 @@
 
 namespace Modules\ProvVoip\Entities;
 
-// Model not found? execute composer dump-autoload in lara root dir
+// Model not found? execute composer dump-autoload in nmsprime root dir
 class PhoneTariff extends \BaseModel {
 
     // The associated SQL table for this Model
@@ -30,7 +30,7 @@ class PhoneTariff extends \BaseModel {
 	// View Icon
 	public static function view_icon()
 	{
-		return '<i class="fa fa-phone-square"></i>'; 
+		return '<i class="fa fa-phone-square"></i>';
 	}
 
 
@@ -51,6 +51,23 @@ class PhoneTariff extends \BaseModel {
                 'header' => $this->name.' ('.$this->type.')'];
 	}
 
+
+	// link title in index view
+	public function view_index_label_ajax()
+	{
+		if (boolval($this->usable)) {
+	        $bsclass = 'success';
+		}
+		else {
+			$bsclass = 'danger';
+		}
+
+
+        return ['table' => $this->table,
+				'index_header' => [$this->table.'.name', $this->table.'.type', $this->table.'.description', $this->table.'.voip_protocol', $this->table.'.usable'],
+                'bsclass' => $bsclass,
+                'header' => $this->name.' ('.$this->type.')'];
+	}
 
 	// Name of View
 	public static function get_view_header()

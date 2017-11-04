@@ -180,6 +180,12 @@ body {
 .sidebar, .sidebar-bg {
     margin-top: 56px;
 }
-.
 }
 
+.table>tbody>tr>td {
+    vertical-align: middle;
+}
+
+table .index_check {
+    text-align: center;
+}
