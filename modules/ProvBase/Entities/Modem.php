@@ -186,7 +186,7 @@ class Modem extends \BaseModel {
 		if (\PPModule::is_active('ProvVoip'))
 			return $this->hasMany('Modules\ProvVoip\Entities\Mta');
 
-		return $this->hasMany('Modules\ProvVoip\Entities\Mta')->where('modem_id', '<', 0);
+		return $this->contract->hasMany('Modules\ProvBase\Entities\Modem')->where('id', '<', 0);
 	}
 
 	// TODO: rename to device - search for all places where this function is used
@@ -270,7 +270,7 @@ class Modem extends \BaseModel {
 
 		$ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
 
-		if(count($this->mtas))
+		if (\PPModule::is_active('provvoip') && count($this->mtas))
 			$ret .= ' option ccc.dhcp-server-1 '.ProvBase::first()->provisioning_server.';';
 
 		$ret .= "}\n";
