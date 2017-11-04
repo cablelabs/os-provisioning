@@ -189,9 +189,10 @@ class NetElement extends \BaseModel {
 	public function icingaobjects()
 	{
 		if(IcingaObjects::db_exists())
-			return $this->hasOne('Modules\HfcBase\Entities\IcingaObjects', 'name1');
-
-		return null;
+			return $this->hasOne('Modules\HfcBase\Entities\IcingaObjects', 'name1')->where('objecttype_id', '=', '1');
+		else
+			// return an impossible condition, rather than null
+			return $this->hasOne('Modules\HfcReq\Entities\NetElement', 'id')->where('id', '<', '0');
 	}
 
 	public function get_parent ()
