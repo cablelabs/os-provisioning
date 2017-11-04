@@ -554,6 +554,36 @@ class Modem extends \BaseModel {
 		}
 	}
 
+
+	/**
+	 * Get CMTS a CM is registered on
+	 *
+	 * @param  String 	ip 		address of cm
+	 * @return Object 	CMTS
+	 *
+	 * @author Nino Ryschawy
+	 */
+	static public function get_cmts($ip)
+	{
+		$validator = new \Acme\Validators\ExtendedValidator;
+
+		$ippools = IpPool::where('type', '=', 'CM')->all();
+
+		foreach ($ippools as $pool)
+		{
+			if ($validator->validateIpInRange(0, $ip, [$pool->net, $pool->netmask])) {
+				$cmts_id = $pool->cmts_id;
+				break;
+			}
+		}
+
+		if (isset($cmts_id))
+			return Cmts::find($cmts_id);
+
+		return null;
+	}
+
+
 	/**
 	 * Restarts modem through snmpset
 	 */
@@ -567,7 +597,7 @@ class Modem extends \BaseModel {
 		{
 			$config = ProvBase::first();
 			$fqdn 	= $this->hostname.'.'.$config->domain_name;
-			$cmts 	= ProvMonController::get_cmts(gethostbyname($fqdn));
+			$cmts 	= Modem::get_cmts(gethostbyname($fqdn));
 			$mac 	= $mac_changed ? $this->getOriginal('mac') : $this->mac;
 			$mac_oid = implode('.', array_map('hexdec', explode(':', $mac)));
 
