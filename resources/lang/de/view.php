@@ -127,6 +127,8 @@ return [
 		// Invoice
 		'Header_Invoice' 			=> 'Rechnung|Rechnungen',
 
+		// SepaMandate
+		'Header_SEPA Mandate' 		=> 'SEPA-Mandat',
 		//Settlement Run
 		'Header_Settlement Run'		=> 'Abrechnungslauf|Abrechnungsläufe',
 		'Header_EditSettlement Run' => 'Abrechnungslauf bearbeiten',
@@ -229,6 +231,7 @@ return [
 		//Settlement Run
 		'Button_Create Settlement Run'	=> 'Neuer Abrechnungslauf',
 		'Button_Rerun Accounting Command for current Month'	=> 'Vorgang für den aktuellen Monat erneut ausführen',
+		'sr_dl_logs' 					=> 'Gesamtes Logfile herunterladen',
 
 	//SNMP Modul
 		//Device

@@ -845,7 +845,7 @@ class Contract extends \BaseModel {
 		$last 	= 0;
 		$tariff = null;			// item
 		$count = 0;
-// dd($prod_ids, $this->items);
+
 		foreach ($this->items as $item)
 		{
 			if (in_array($item->product->id, $prod_ids) && $item->check_validity('Now'))
@@ -1148,23 +1148,33 @@ class Contract extends \BaseModel {
 	/**
 	 * Returns valid sepa mandate for specific timespan
 	 *
-	 * @param String 	Timespan - LAST (!!) 'year'/'month' or 'now
-	 * @return Object 	Sepa Mandate
+	 * @param 	String 		Timespan - LAST (!!) 'year'/'month' or 'now
+	 * @param 	Integer 	If Set only Mandates related to specific SepaAccount are considered (related via CostCenter)
+	 * @return 	Object 		Valid Sepa Mandate with latest start date
 	 *
 	 * @author Nino Ryschawy
 	 */
-	public function get_valid_mandate($timespan = 'Now')
+	public function get_valid_mandate($timespan = 'now', $sepaaccount_id = 0)
 	{
 		$mandate = null;
 		$last 	 = 0;
 
 		foreach ($this->sepamandates as $m)
 		{
-			if (!is_object($m) || !$m->check_validity($timespan))
+			if (!is_object($m))
+				continue;
+
+			if ($m->disable || !$m->check_validity($timespan))
+				continue;
+
+			if ($m->costcenter xor $sepaaccount_id)
+				continue;
+
+			if ($sepaaccount_id && ($m->costcenter->sepaaccount->id != $sepaaccount_id))
 				continue;
 
 			if ($mandate)
-				\Log::warning("Multiple valid Sepa Mandates active for Contract ".$this->number, [$this->id]);
+				\Log::warning("SepaMandate: Multiple valid mandates active for Contract $this->number", [$this->id]);
 
 			$start = $m->get_start_time();
 
