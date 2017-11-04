@@ -121,7 +121,7 @@ class Modem extends \BaseModel {
 	 */
 	public function qualities ()
 	{
-		return DB::table('qos')->whereNull('deleted_at')->get();
+		return \DB::table('qos')->whereNull('deleted_at')->get();
 	}
 
 
@@ -186,7 +186,7 @@ class Modem extends \BaseModel {
 		if (\PPModule::is_active('ProvVoip'))
 			return $this->hasMany('Modules\ProvVoip\Entities\Mta');
 
-		return $this->hasMany('Modules\ProvVoip\Entities\Mta')->where('modem_id', '<', 0);
+		return $this->contract->hasMany('Modules\ProvBase\Entities\Modem')->where('id', '<', 0);
 	}
 
 	// TODO: rename to device - search for all places where this function is used
@@ -270,7 +270,7 @@ class Modem extends \BaseModel {
 
 		$ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
 
-		if(count($this->mtas))
+		if (\PPModule::is_active('provvoip') && count($this->mtas))
 			$ret .= ' option ccc.dhcp-server-1 '.ProvBase::first()->provisioning_server.';';
 
 		$ret .= "}\n";
@@ -554,6 +554,36 @@ class Modem extends \BaseModel {
 		}
 	}
 
+
+	/**
+	 * Get CMTS a CM is registered on
+	 *
+	 * @param  String 	ip 		address of cm
+	 * @return Object 	CMTS
+	 *
+	 * @author Nino Ryschawy
+	 */
+	static public function get_cmts($ip)
+	{
+		$validator = new \Acme\Validators\ExtendedValidator;
+
+		$ippools = IpPool::where('type', '=', 'CM')->all();
+
+		foreach ($ippools as $pool)
+		{
+			if ($validator->validateIpInRange(0, $ip, [$pool->net, $pool->netmask])) {
+				$cmts_id = $pool->cmts_id;
+				break;
+			}
+		}
+
+		if (isset($cmts_id))
+			return Cmts::find($cmts_id);
+
+		return null;
+	}
+
+
 	/**
 	 * Restarts modem through snmpset
 	 */
@@ -567,7 +597,7 @@ class Modem extends \BaseModel {
 		{
 			$config = ProvBase::first();
 			$fqdn 	= $this->hostname.'.'.$config->domain_name;
-			$cmts 	= ProvMonController::get_cmts(gethostbyname($fqdn));
+			$cmts 	= Modem::get_cmts(gethostbyname($fqdn));
 			$mac 	= $mac_changed ? $this->getOriginal('mac') : $this->mac;
 			$mac_oid = implode('.', array_map('hexdec', explode(':', $mac)));
 

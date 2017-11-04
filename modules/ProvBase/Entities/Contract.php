@@ -23,7 +23,7 @@ class Contract extends \BaseModel {
 	// TODO: dependencies of active modules (billing)
 	public static function rules($id = null)
 	{
-		return array(
+		$rules = array(
 			'number' => 'string|unique:contract,number,'.$id.',id,deleted_at,NULL',
 			'number2' => 'string|unique:contract,number2,'.$id.',id,deleted_at,NULL',
 			'number3' => 'string|unique:contract,number3,'.$id.',id,deleted_at,NULL',
@@ -38,10 +38,13 @@ class Contract extends \BaseModel {
 			'birthday' => 'required|date',
 			'contract_start' => 'date',
 			'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
-			'sepa_iban' => 'iban',
-			'sepa_bic' => 'bic',
-			'costcenter_id' => 'required|numeric|min:1',
-			);
+		);
+
+		if (\PPModule::is_active('billingbase')) {
+			$rules['costcenter_id'] = 'required|numeric|min:1';
+		}
+
+		return $rules;
 	}
 
 
@@ -285,7 +288,10 @@ class Contract extends \BaseModel {
 	{
 		if (\PPModule::is_active('billingbase'))
 			return $this->belongsTo('Modules\BillingBase\Entities\CostCenter', 'costcenter_id');
-		return null;
+		else {
+			// force empty relation
+			return $this->belongsTo('Modules\ProvBase\Entities\Modem', 'costcenter_id')->where('id', '<', 0);
+		}
 	}
 
 	public function salesman()
