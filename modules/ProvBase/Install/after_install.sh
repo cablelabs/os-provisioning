@@ -1,8 +1,12 @@
+pw=$(openssl rand -base64 16)
 # create folders
-mkdir -p /etc/dhcp/nms
-mkdir -p /tftpboot/cm
+install -dm750 /etc/dhcp/nmsprime/cmts_gws
+install -dm700 /tftpboot/{,cm}
+install -dm750 -g named /var/named-nmsprime
 
 # change owner
-chown -R apache /etc/dhcp/nms /tftpboot
-chmod o+rx /etc/dhcp/
-chown -R apache /etc/dhcp/
+chown -R apache:dhcpd /etc/dhcp/nmsprime
+chown -R apache /tftpboot
+
+sed "s|<DNS-PASSWORD>|$pw|" /etc/dhcp/nmsprime/dhcpd.conf
+sed "s|<DNS-PASSWORD>|$pw|" /etc/named-nmsprime.conf
