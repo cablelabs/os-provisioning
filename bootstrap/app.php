@@ -15,6 +15,32 @@ $app = new Illuminate\Foundation\Application(
 	realpath(__DIR__.'/../')
 );
 
+
+/*
+|--------------------------------------------------------------------------
+| Read the config files
+|--------------------------------------------------------------------------
+|
+| We use different .env files (e.g. for modules).
+| This method reads them all.
+| @author Patrick Reichel
+*/
+
+// directory holding our .env files
+$env_dir = '/etc/nmsprime/env/';
+
+// get all .env files from /etc
+$files = scandir($env_dir);
+
+// read environmental data from files ending with .env
+foreach ($files as $f) {
+	if (substr($f, -4) == '.env') {
+		$dotenv = new \Dotenv\Dotenv($env_dir, $f);
+		$dotenv->overload();
+	}
+}
+
+
 /*
 |--------------------------------------------------------------------------
 | Bind Important Interfaces
