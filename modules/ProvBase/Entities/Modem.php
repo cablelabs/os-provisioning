@@ -121,7 +121,7 @@ class Modem extends \BaseModel {
 	 */
 	public function qualities ()
 	{
-		return DB::table('qos')->whereNull('deleted_at')->get();
+		return \DB::table('qos')->whereNull('deleted_at')->get();
 	}
 
 
