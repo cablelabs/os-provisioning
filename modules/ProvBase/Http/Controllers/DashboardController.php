@@ -346,12 +346,17 @@ class DashboardController extends BaseController
 	private static function _get_impaired_services()
 	{
 		$ret = [];
-		$clr = ['success', 'warning', 'danger'];
+		$clr = ['success', 'warning', 'danger', 'info'];
+
+		if(!IcingaObjects::db_exists())
+			return $ret;
+
 		$objs = IcingaObjects::join('icinga_servicestatus', 'object_id', '=', 'service_object_id')
 			->where('is_active', '=', '1')
 			->where('name2', '<>', 'ping4')
 			->where('last_hard_state', '<>', '0')
-			->where('problem_has_been_acknowledged', '<>', '1');
+			->where('problem_has_been_acknowledged', '<>', '1')
+			->orderBy('last_time_ok', 'desc');
 
 		foreach($objs->get() as $service) {
 			$tmp = NetElement::find($service->name1);
@@ -398,15 +403,14 @@ class DashboardController extends BaseController
 					unset($ret[$idx]);
 					continue;
 				}
-				$cls = 'progress-bar progress-bar-' . $cls;
 			}
 			$ret[$idx]['cls'] = $cls;
 
 			// set the percentage according to the current $p[0], minimum $p[3] and maximum $p[4] value
 			$per = null;
-			if(isset($p[3]) && isset($p[4])) {
+			if(isset($p[3]) && isset($p[4]) && ($p[4] - $p[3])) {
 				$per = ($p[0] - $p[3]) / ($p[4] - $p[3]) * 100;
-				$ret[$idx]['text'] .= " ($per%)";
+				$ret[$idx]['text'] .= sprintf(' (%.1f%%)', $per);
 			}
 			$ret[$idx]['per'] = $per;
 
@@ -431,13 +435,15 @@ class DashboardController extends BaseController
 				return 'warning';
 			if($cur > $crit)
 				return 'danger';
-		} else {
+		} elseif($crit < $warn) {
 			if($cur > $warn)
 				return 'success';
 			if($cur > $crit)
 				return 'warning';
 			if($cur < $crit)
 				return 'danger';
+		} else {
+			return 'warning';
 		}
 	}
 
