@@ -161,7 +161,11 @@ class Configfile extends \BaseModel {
 
 	public function mtas ()
 	{
-		return $this->hasMany('Modules\ProvVoip\Entities\Mta');
+		if (\PPModule::is_active('provvoip'))
+			return $this->hasMany('Modules\ProvVoip\Entities\Mta');
+
+		// return an impossible condition, rather than null -> fixme
+		return $this->hasOne('Modules\ProvBase\Entities\Configfile', 'id')->where('id', '<', '0');
 	}
 
 	public function children ()
