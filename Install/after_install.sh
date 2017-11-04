@@ -52,6 +52,8 @@ sed -i "s/^DB_PASSWORD=$/DB_PASSWORD=$pw/" "$env"
 cd "$dir"
 
 # L5 setup
+install -Dm640 -u apache -g root /var/www/nmsprime/storage/logs/laravel.log
+chown apache /var/www/nmsprime/storage/logs/laravel.log
 php artisan clear-compiled
 php artisan optimize
 

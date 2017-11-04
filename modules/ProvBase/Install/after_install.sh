@@ -23,3 +23,4 @@ systemctl enable named
 
 php artisan nms:dhcp
 php artisan nms:configfile
+chown -R apache /var/www/nmsprime/storage
