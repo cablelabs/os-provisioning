@@ -64,7 +64,8 @@ return [
 		'Menu_MTAs' 				=> 'MTAs',
 		'Menu_Phonenumbers'			=> 'Telefonnummern',
 		'Menu_PhoneTariffs'			=> 'Telefontarife',
-		'Menu_Envia orders'			=> 'Envia Bestellungen',
+		'Menu_Envia orders'			=> 'envia TEL Aufträge',
+		'Menu_Envia contracts'		=> 'envia TEL Verträge',
 		'Menu_CDRs'					=> 'EVNs',
 
 	//User Settings
@@ -182,7 +183,8 @@ return [
 		'Header_Phone tariffs'		=> 'Telefontarif|Telefontarife',
 		'Header_EditPhone tariffs'	=> 'Telefontarif bearbeiten',
 	//ProvVoipEnvia
-		'Header_EnviaOrders'		=> 'Envia Bestellung|Envia Bestellungen',
+		'Header_EnviaOrders'		=> 'envia TEL Auftrag|envia TEL Aufträge',
+		'Header_EnviaContracts'		=> 'envia TEL Vertrag|envia TEL Verträge',
 
 	//HFC
 		//Tree
