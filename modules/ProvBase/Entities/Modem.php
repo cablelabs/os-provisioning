@@ -186,7 +186,7 @@ class Modem extends \BaseModel {
 		if (\PPModule::is_active('ProvVoip'))
 			return $this->hasMany('Modules\ProvVoip\Entities\Mta');
 
-		return null;
+		return $this->hasMany('Modules\ProvVoip\Entities\Mta')->where('modem_id', '<', 0);
 	}
 
 	// TODO: rename to device - search for all places where this function is used

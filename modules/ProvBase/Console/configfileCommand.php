@@ -90,19 +90,22 @@ class configfileCommand extends Command implements SelfHandling, ShouldQueue {
 		}
 		echo "\n";
 
-
 		// MTA
-		$mtas = \Modules\ProvVoip\Entities\Mta::all();
-
-		$i = 1;
-		$num = count ($mtas);
-
-		foreach ($mtas as $mta)
+		if (\PPModule::is_active('provvoip'))
 		{
-			echo "MTA: create config files: $i/$num \r"; $i++;
-			$mta->make_configfile();
+			$mtas = \Modules\ProvVoip\Entities\Mta::all();
+
+			$i = 1;
+			$num = count ($mtas);
+
+			foreach ($mtas as $mta)
+			{
+				echo "MTA: create config files: $i/$num \r"; $i++;
+				$mta->make_configfile();
+			}
+			echo "\n";
 		}
-		echo "\n";
+
 	}
 
 	/**
