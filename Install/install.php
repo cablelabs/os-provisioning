@@ -46,10 +46,10 @@ function config ($dir_root)
 		$dest = $cfg['destination'];
 
 	$f = '';
-	foreach ($files as $f_from => $f_to)	
+	foreach ($files as $f_from => $f_to)
 		$f .= ' '.$dir.'/files/'.$f_from.'='.$f_to;
 
-	// laod install scripts
+	// load install scripts
 	$scripts = '';
 	if (file_exists($dir.'/after_install.sh'))
 		$scripts .= ' --after-install '.$dir.'/after_install.sh';
@@ -91,7 +91,7 @@ foreach (array_slice(scandir($dir.'/modules'), 2) as $mod)
 {
 	$cmd = fpm($dir.'/modules/'.$mod, $version, $rpm_dir);
 
-	echo "\n".$cmd;
+	echo "\nCommand to run: ".$cmd;
 	system ($cmd);
 }
 

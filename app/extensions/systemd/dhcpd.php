@@ -17,7 +17,7 @@ if ($ret == 0)
 	$fp_cm  = fopen($fn_cm, "r");
 	$fp_mta = fopen($fn_mta, "r");
 
-	$logfile = '/var/www/lara/storage/logs/laravel.log';
+	$logfile = '/var/www/nmsprime/storage/logs/laravel.log';
 
 	if (!flock($fp_cm, LOCK_EX) || !flock($fp_mta, LOCK_EX))
 	{

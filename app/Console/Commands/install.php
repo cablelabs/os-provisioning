@@ -38,7 +38,7 @@ class install extends Command
 	 */
 	public function handle()
 	{
-		// firstly, handle install directive in laravel base folder
+		// firstly, handle install directive in nms base folder
 		$this->_handle_module(base_path('Install'));
 
 		// secondly, handle all enabled modules

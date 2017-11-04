@@ -4,7 +4,7 @@ namespace Modules\ProvVoip\Entities;
 
 use Illuminate\Support\Collection;
 
-// Model not found? execute composer dump-autoload in lara root dir
+// Model not found? execute composer dump-autoload in nmsprime root dir
 class Phonenumber extends \BaseModel {
 
     // The associated SQL table for this Model
@@ -36,11 +36,11 @@ class Phonenumber extends \BaseModel {
 		return 'Phonenumbers';
 	}
 
-  // View Icon
-  public static function view_icon()
-  {
-    return '<i class="fa fa-list-ol"></i>'; 
-  }
+	// View Icon
+	public static function view_icon()
+	{
+		return '<i class="fa fa-list-ol"></i>';
+	}
 
 	// link title in index view
     public function view_index_label(){
@@ -773,7 +773,7 @@ class PhonenumberObserver
 	}
 
 
-	/** 
+	/**
 	 * Checks if updating the phonenumber is allowed.
 	 * Used to prevent problems related with Envia.
 	 *

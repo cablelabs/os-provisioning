@@ -4,7 +4,7 @@ namespace Modules\ProvVoip\Entities;
 
 use Illuminate\Support\Collection;
 
-// Model not found? execute composer dump-autoload in lara root dir
+// Model not found? execute composer dump-autoload in nmsprime root dir
 class PhonenumberManagement extends \BaseModel {
 
 	// get functions for some address select options

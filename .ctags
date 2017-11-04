@@ -4,3 +4,5 @@
 --exclude=storage/*
 --exclude=Documenation/*
 --exclude=public/components/*
+--exclude=public-ccc/components/*
+--exclude=modules/*/Assets/*

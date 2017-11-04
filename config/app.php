@@ -38,10 +38,8 @@ return [
 	|
 	*/
 
-	/* 'url' => 'http://localhost', */
-
-	// changed by Patrick Reichel => use this in /modules/ProvVoipEnvia/Console/EnviaOrderUpdaterCommand.php
-	'url' => 'https://localhost/lara',
+	// used e.g. in all envia related console commands by cURL
+	'url' => env('APP_CONSOLE_BASEURL', 'https://localhost/nmsprime'),
 
 	/*
 	|--------------------------------------------------------------------------
