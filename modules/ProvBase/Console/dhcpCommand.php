@@ -52,7 +52,11 @@ class dhcpCommand extends Command {
 
 		Modem::make_dhcp_cm_all();
 		Endpoint::make_dhcp();
-		Mta::make_dhcp_mta_all();
+
+		if (\PPModule::is_active('provvoip')) {
+			Mta::make_dhcp_mta_all();
+		}
+
 
 		// CMTS's
 		Cmts::del_cmts_includes();
