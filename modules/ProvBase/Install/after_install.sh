@@ -20,6 +20,7 @@ php artisan nms:auth
 
 systemctl enable dhcpd
 systemctl enable named
+systemctl enable xinetd
 
 php artisan nms:dhcp
 php artisan nms:configfile
