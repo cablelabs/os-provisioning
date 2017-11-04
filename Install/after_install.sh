@@ -50,7 +50,7 @@ sed -i "s/^DB_PASSWORD=$/DB_PASSWORD=$pw/" "$env"
 # Laravel
 #
 cd "$dir"
-ln -sr "$env" "$dir/.env" # TODO: force L5 to use global env file - remove this line
+echo "# Use /etc/nmsprime/env/*.env files for configuration" > "$dir/.env"
 
 # L5 setup
 php artisan clear-compiled
