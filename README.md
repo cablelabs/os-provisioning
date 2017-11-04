@@ -6,17 +6,51 @@ DOCSIS/Cable Open Source Provisioning and Management Software
 
 ## Getting Started
 
-TODO - TS:
+NMS Prime is a open source provisioning and management web application for network operators. At the time we are highly focused on DOCSIS. The system is designed technology neutral – so other technologies (like FTTH or TR-69) will be implemented in the feature. NMS Prime provides a user friendly GUI for:
 
-- main goals and purpose of the project
-- short summary of the included projects like L5, bootstrap, ..
+- ISC DHCP Server,
+- TFTP – to serve config files,
+- NTP – to provide time,
+- config of Nagios and Cacti,
+
+NMS Prime is written with PHP 5.6, Laravel 5 framework and a modern, cool and responsive bootstrap topic.
+
+Our goal is: "changing the way software for ISPs works nowadays!"
+
+### Addressed Topics
+
+#### Provisioning
+- [DOCSIS provisioning and customer management](https://www.youtube.com/watch?v=t-PFsy42cI0)
+- [VoIP provisioning (SIP)](http://todo)
+- [Quality Analysis](https://www.youtube.com/watch?v=6UoxwtlcAkA)
+- [administration of DHCP, Config Files, IP-Pool, CMTS, ..](http://todo)
+- [Billing](http://todo)
+
+#### Network Management
+- [Topographic Map and Entitiy Relation Diagram](https://www.youtube.com/watch?v=_urtVRYNuys)
+- [Generic GUI for cacti and nagios](http://todo)
+- [SNMP GUI for device controlling](http://todo)
+
+
+For more details checkout: [Overview Page](https://devel.roetzer-engineering.com:3128/confluence/display/NMS/Overview)
 
 ---
 
-## Documentation
 
-TODO - TS:
-- link to confluence
+### NMS Prime Supporters
+
+We thanks to the following supporters for helping and funding NMS Prime development. If you are interested in becoming a supporter, please visit the NMS Prime [NMS Prime page](https://nmsprime.com):
+
+- **[Rötzer Engineering](https://roetzer-engineering.com)**
+- **[ERZNET](http://erznet.tv)**
+- **[MEK Cable](http://mek-cable.de)**
+- **[KM3](https://km3.de)**
+
+
+
+### Further Documentation
+
+Checkout our Wiki under [NMS Prime](https://devel.roetzer-engineering.com:3128/confluence/display/NMS)
 
 ---
 
@@ -148,13 +182,12 @@ We use .. for versioning. For the versions available, see the ..
 
 ## Authors
 
-* **Torsten Schmidt** - *Initial work* - [schmto](https://github.com/schmto)
+* **Torsten Schmidt** - *Initial work* - [torsten](https://github.com/schmto)
 * **Nino Ryschawy** - *Maintainer/Developer* - [nino](https://github.com/todo)
 * **Ole Ernst** - *Maintainer/Developer* - [ole](https://github.com/todo)
 * **Patrick Reichel** - *Sub-Maintainer/Developer for ..* - [patrick](https://github.com/todo)
 * **Christian Schramm** - *Developer for ..* - [christian](https://github.com/todo)
-
-TODO: add other main developers..
+* **Sven Arndt** - *Developer for ..* - [sven](https://github.com/todo)
 
 See also the list of [contributors] (https://github.com/schmto/nms-prime/contributors) who participated in this project.
 
