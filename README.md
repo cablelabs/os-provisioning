@@ -1,11 +1,11 @@
 # NMS Prime
 
-Open Source Provisioning and Management Software for ISPs. NMS Prime is a open source (GPLv3) provisioning and management web application for network operators, with the focus:
+Open Source Provisioning and Management Software for network operators:
 
-1. Provisioning: DOCSIS
+Provisioning: DOCSIS
 - At the time we are highly focused on DOCSIS provisioning – including VoIP
 
-2. IT Maintenance
+IT Maintenance
 - Show your IT infrastructure in real-time in topography MAP and ERD – Entity Relation Diagram
 - Auto configuration of Nagios and Cacti from one database
 - Generic SNMP GUI creator 
