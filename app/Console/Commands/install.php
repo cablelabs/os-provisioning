@@ -65,11 +65,15 @@ class install extends Command
 			if(readline("$module: $path/before_install.sh? [Y/n] ") != 'n')
 				system("/usr/bin/bash $path/before_install.sh");
 
-		$cfg = '';
-		if (file_exists("$path/config.cfg"))
-			$cfg = parse_ini_file("$path/config.cfg", TRUE)['config']['depends'];
-		if ($cfg && readline("$module: yum install $cfg? [Y/n] ") != 'n')
-			system("/usr/bin/yum install -y $cfg");
+		$depends = '';
+		if (file_exists("$path/config.cfg")) {
+			$depends = parse_ini_file("$path/config.cfg", TRUE)['config']['depends'];
+			foreach (parse_ini_file("$path/config.cfg", TRUE)['files'] as $f_from => $f_to)
+				if(readline("$module: copy $path/files/$f_from $f_to ? [Y/n] ") != 'n')
+					system("mkdir -p $(dirname \"$f_to\"); cp $path/files/$f_from $f_to");
+		}
+		if ($depends && readline("$module: yum install $depends? [Y/n] ") != 'n')
+			system("/usr/bin/yum install -y $depends");
 
 		if (file_exists("$path/after_install.sh"))
 			if(readline("$module: $path/after_install.sh? [Y/n] ") != 'n')
