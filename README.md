@@ -3,10 +3,10 @@
 Open Source Provisioning and Management Software for network operators:
 
 Provisioning: DOCSIS
-- At the time we are highly focused on DOCSIS provisioning – including VoIP
+- At the time we are highly focused on DOCSIS provisioning - including VoIP
 
 IT Maintenance
-- Show your IT infrastructure in real-time in topography MAP and ERD – Entity Relation Diagram
+- Show your IT infrastructure in real-time in topography MAP and ERD - Entity Relation Diagram
 - Auto configuration of Nagios and Cacti from one database
 - Generic SNMP GUI creator 
 
