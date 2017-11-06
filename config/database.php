@@ -66,6 +66,18 @@ return [
 			'strict'    => false,
 		],
 
+		'mysql-root' => [
+			'driver'    => 'mysql',
+			'host'      => env('ROOT_DB_HOST', 'localhost'),
+			'database'  => env('ROOT_DB_DATABASE', ''),
+			'username'  => env('ROOT_DB_USERNAME', 'root'),
+			'password'  => env('ROOT_DB_PASSWORD', ''),
+			'charset'   => 'utf8',
+			'collation' => 'utf8_unicode_ci',
+			'prefix'    => '',
+			'strict'    => false,
+		],
+
 		'mysql-cacti' => [
 			'driver'    => 'mysql',
 			'host'      => env('CACTI_DB_HOST', 'localhost'),
