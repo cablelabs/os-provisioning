@@ -53,7 +53,7 @@ For more Informations [Installation](https://devel.roetzer-engineering.com:3128/
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 * [Report a bug](https://devel.roetzer-engineering.com:3128/confluence/display/NMS/Report+a+Bug)
 * [Ticket-System](https://devel.roetzer-engineering.com:3128/confluence/display/NMS/Open+Tickets+Overview)
@@ -86,4 +86,4 @@ See also the list of [contributors](https://github.com/schmto/nms-prime/contribu
 
 ## License
 
-This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.md) file for details. For more informations: [License Article](https://devel.roetzer-engineering.com:3128/confluence/display/NMS/License)
+This project is licensed under the GPLv3 License - see the [LICENSE](LICENSE.md) file for details. For more informations: [License Article](https://devel.roetzer-engineering.com:3128/confluence/display/NMS/License)
