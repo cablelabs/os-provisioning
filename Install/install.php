@@ -15,7 +15,7 @@ $rpm_dir = $argv[3];
  * Parse Config for FPM
  * Requires Install/config.cfg
  */
-function config ($dir_root)
+function config ($dir_root, $module='base', $options='')
 {
 	$dir  = $dir_root.'/Install';
 	$file = $dir.'/config.cfg';
@@ -53,24 +53,39 @@ function config ($dir_root)
 		$f .= ' '.$dir.'/files/'.$f_from.'='.$f_to;
 	}
 
-	// load install scripts
-	$scripts = '';
-	if (file_exists($dir.'/after_install.sh'))
-		$scripts .= ' --after-install '.$dir.'/after_install.sh';
-	if (file_exists($dir.'/before_install.sh'))
-		$scripts .= ' --before-install '.$dir.'/before_install.sh';
+	// create install/upgrade scripts
+	system("cat $dir/before_install.sh > /tmp/fpm-$module-bi.txt");
+	system("cat $dir/after_install.sh > /tmp/fpm-$module-ai.txt");
+	system("cat $dir/before_upgrade.sh > /tmp/fpm-$module-bu.txt");
+	system("cat $dir/after_upgrade.sh > /tmp/fpm-$module-au.txt");
+
+	// for all modules: append module_<install files>
+	if ($module != 'base')
+	{
+		system("cat $dir/../../../Install/module_before_upgrade.sh >> /tmp/fpm-$module-bi.txt");
+		system("cat $dir/../../../Install/module_after_install.sh >> /tmp/fpm-$module-ai.txt");
+		system("cat $dir/../../../Install/module_before_upgrade.sh >> /tmp/fpm-$module-au.txt");
+		system("cat $dir/../../../Install/module_after_upgrade.sh >> /tmp/fpm-$module-au.txt");
+	}
+
+	// use file parameters
+	$scripts  = " --before-install /tmp/fpm-$module-bi.txt";
+	$scripts .= " --after-install /tmp/fpm-$module-ai.txt";
+	$scripts .= " --before-upgrade /tmp/fpm-$module-bu.txt";
+	$scripts .= " --after-upgrade /tmp/fpm-$module-au.txt";
+
 
 	// config fil
-	return $depends.' '.$name.' '.$description.' '.$exclude.' '.$scripts.' '.$cf.' '.$dir_root.'/'.'='.$dest.' '.$f;
+	return $depends.' '.$name.' '.$description.' '.$exclude.' '.$scripts.' '.$options.' '.$cf.' '.$dir_root.'/'.'='.$dest.' '.$f;
 }
 
 
 /*
  * Make fpm Command Line for Execution
  */
-function fpm ($dir, $version, $rpm_dir)
+function fpm ($dir, $version, $rpm_dir, $module='base', $options='')
 {
-	$config = config($dir);
+	$config = config($dir, $module, $options);
 
 	if (!$config)
 		return false;
@@ -80,12 +95,21 @@ function fpm ($dir, $version, $rpm_dir)
 
 
 /*
+ * Call & Print
+ */
+function call  ($cmd, $module = 'Base')
+{
+	echo "\n\n================================== $module ================================================\n\n";
+	echo str_replace('--', "\ \n--", $cmd)."\n\n";
+	echo "\nFPM Returns: -----\n";
+	system ($cmd);
+}
+
+
+/*
  * Build Main package
  */
-$cmd = fpm($dir, $version, $rpm_dir);
-
-echo $cmd;
-system ($cmd);
+call(fpm($dir, $version, $rpm_dir));
 
 
 /*
@@ -93,10 +117,7 @@ system ($cmd);
  */
 foreach (array_slice(scandir($dir.'/modules'), 2) as $mod)
 {
-	$cmd = fpm($dir.'/modules/'.$mod, $version, $rpm_dir);
-
-	echo "\nCommand to run: ".$cmd;
-	system ($cmd);
+	call(fpm($dir.'/modules/'.$mod, $version, $rpm_dir, $mod), $mod);
 }
 
 echo "\n";

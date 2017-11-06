@@ -13,15 +13,9 @@ chown -R apache /tftpboot
 sed -i "s|<DNS-PASSWORD>|$pw|" /etc/dhcp/nmsprime/dhcpd.conf
 sed -i "s|<DNS-PASSWORD>|$pw|" /etc/named-nmsprime.conf
 
-cd "$dir"
-php artisan module:publish
-php artisan module:migrate
-php artisan nms:auth
-
 systemctl enable dhcpd
 systemctl enable named
 systemctl enable xinetd
 
 php artisan nms:dhcp
 php artisan nms:configfile
-chown -R apache /var/www/nmsprime/storage
