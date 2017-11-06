@@ -53,20 +53,25 @@ function config ($dir_root, $module='base', $options='')
 		$f .= ' '.$dir.'/files/'.$f_from.'='.$f_to;
 	}
 
-	// create install/upgrade scripts
-	system("cat $dir/before_install.sh > /tmp/fpm-$module-bi.txt");
-	system("cat $dir/after_install.sh > /tmp/fpm-$module-ai.txt");
-	system("cat $dir/before_upgrade.sh > /tmp/fpm-$module-bu.txt");
-	system("cat $dir/after_upgrade.sh > /tmp/fpm-$module-au.txt");
 
-	// for all modules: append module_<install files>
-	if ($module != 'base')
+	// prepare install config scripts
+	if ($module == 'base')
 	{
-		system("cat $dir/../../../Install/module_before_upgrade.sh >> /tmp/fpm-$module-bi.txt");
-		system("cat $dir/../../../Install/module_after_install.sh >> /tmp/fpm-$module-ai.txt");
-		system("cat $dir/../../../Install/module_before_upgrade.sh >> /tmp/fpm-$module-au.txt");
-		system("cat $dir/../../../Install/module_after_upgrade.sh >> /tmp/fpm-$module-au.txt");
+		// nmsprime-base
+		system("cp $dir/before_install.sh /tmp/fpm-base-bi.txt");
+		system("cp $dir/after_install.sh /tmp/fpm-base-ai.txt");
+		system("cp $dir/before_upgrade.sh /tmp/fpm-base-bu.txt");
+		system("cp $dir/after_upgrade.sh /tmp/fpm-base-au.txt");
 	}
+	else
+	{
+		// nmsprime-<modules>
+		system("cat $dir/../../../Install/module_before_upgrade.sh $dir/before_install.sh > /tmp/fpm-$module-bi.txt");
+		system("cat $dir/../../../Install/module_after_install.sh $dir/after_install.sh > /tmp/fpm-$module-ai.txt");
+		system("cat $dir/../../../Install/module_before_upgrade.sh $dir/before_upgrade.sh > /tmp/fpm-$module-au.txt");
+		system("cat $dir/../../../Install/module_after_upgrade.sh $dir/after_upgrade.sh > /tmp/fpm-$module-au.txt");
+	}
+
 
 	// use file parameters
 	$scripts  = " --before-install /tmp/fpm-$module-bi.txt";
