@@ -3,7 +3,7 @@
 #
 dir="/var/www/nmsprime"
 env="/etc/nmsprime/env/global.env"
-pw=$(tr -dc '[:alnum:]' < /dev/urandom | head -c 12) # SQL password for user nmsprime
+pw=$(pwgen 12 1) # SQL password for user nmsprime
 
 
 #
