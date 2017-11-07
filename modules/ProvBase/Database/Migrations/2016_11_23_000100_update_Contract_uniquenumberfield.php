@@ -7,7 +7,7 @@ class UpdateContractUniquenumberfield{
 
     /**
 	 * Run the migrations.
-	 * For using the Envia API we need some changes in storing the contracts data.
+	 * For using the envia TEL API we need some changes in storing the contracts data.
      *
      * @return void
      */
