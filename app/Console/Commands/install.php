@@ -39,7 +39,7 @@ class install extends Command
 	public function handle()
 	{
 		// firstly, handle install directive in nms base folder
-		$this->_handle_module(base_path('Install'));
+		$this->_handle_module('base');
 
 		// secondly, handle all enabled modules
 		foreach (Module::enabled() as $module)
@@ -56,27 +56,29 @@ class install extends Command
 	 */
 	protected function _handle_module($module)
 	{
-		if (is_string($module))
-			$path = $module;
+		if ($module == 'base')
+			$path = base_path('Install');
 		else
 			$path = $module->getPath().'/Install';
 
-		if (file_exists("$path/before_install.sh"))
-			if(readline("$module: $path/before_install.sh? [Y/n] ") != 'n')
-				system("/usr/bin/bash $path/before_install.sh");
+		if($module != 'base' && readline("$module: run module_before_install.sh? [Y/n] ") != 'n')
+			system("/usr/bin/bash Install/module_before_install.sh");
+		if (file_exists("$path/before_install.sh") && readline("$module: run $path/before_install.sh? [Y/n] ") != 'n')
+			system("/usr/bin/bash $path/before_install.sh");
 
 		$depends = '';
 		if (file_exists("$path/config.cfg")) {
 			$depends = parse_ini_file("$path/config.cfg", TRUE)['config']['depends'];
 			foreach (parse_ini_file("$path/config.cfg", TRUE)['files'] as $f_from => $f_to)
-				if(readline("$module: copy $path/files/$f_from $f_to ? [Y/n] ") != 'n')
+				if(readline("$module: copy $path/files/$f_from to $f_to ? [Y/n] ") != 'n')
 					system("mkdir -p $(dirname \"$f_to\"); cp $path/files/$f_from $f_to");
 		}
 		if ($depends && readline("$module: yum install $depends? [Y/n] ") != 'n')
 			system("/usr/bin/yum install -y $depends");
 
-		if (file_exists("$path/after_install.sh"))
-			if(readline("$module: $path/after_install.sh? [Y/n] ") != 'n')
-				system("/usr/bin/bash $path/after_install.sh");
+		if($module != 'base' && readline("$module: run module_after_install.sh? [Y/n] ") != 'n')
+			system("/usr/bin/bash Install/module_after_install.sh");
+		if (file_exists("$path/after_install.sh") && readline("$module: run $path/after_install.sh? [Y/n] ") != 'n')
+			system("/usr/bin/bash $path/after_install.sh");
 	}
 }
