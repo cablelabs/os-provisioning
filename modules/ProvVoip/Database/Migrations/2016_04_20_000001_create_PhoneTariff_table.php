@@ -22,11 +22,11 @@ class CreatePhoneTariffTable extends BaseMigration {
 		{
 			$this->up_table_generic($table);
 
-			$table->string('external_identifier');		// at Envia this is a integer or a string…
+			$table->string('external_identifier');		// at envia TEL this is a integer or a string…
 			$table->string('name');						// name to show in forms
 			$table->enum('type', ['purchase', 'sale']);
 			$table->string('description');
-			$table->boolean('usable')->default(1);		// there are more Envia variations as we really use (e.g. MGCP stuff) – can be used for temporary deactivation of tariffs or to prevent a tariff from being assingned again
+			$table->boolean('usable')->default(1);		// there are more envia TEL variations as we really use (e.g. MGCP stuff) – can be used for temporary deactivation of tariffs or to prevent a tariff from being assingned again
 
 		});
 
