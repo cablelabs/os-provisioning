@@ -133,6 +133,9 @@ class BaseModel extends Eloquent
 	 */
 	protected function _needEmptyRelation($related) {
 
+		// remove all leading backslashes
+		$related = ltrim($related, '\\');
+
 		$parts = explode('\\', $related);
 		$context = $parts[0];
 
@@ -201,6 +204,7 @@ class BaseModel extends Eloquent
      * @param  string  $related
      * @param  string  $foreignKey
      * @param  string  $localKey
+     * @param  string  $relation
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo or \App\Extensions\Database\EmptyRelation
 	 * @author Patrick Reichel
 	 */
@@ -212,6 +216,29 @@ class BaseModel extends Eloquent
 		else {
 			// in all other cases: call parent method to return a standard laravel relation
 			return parent::belongsTo($related, $foreignKey, $otherKey, $relation);
+		}
+	}
+
+
+	/**
+	 * Extension to original belongsToMany – returns an empty relation if the related module is not available.
+	 *
+     * @param  string  $related
+     * @param  string  $table
+     * @param  string  $foreignKey
+     * @param  string  $otherKey
+     * @param  string  $relation
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany or \App\Extensions\Database\EmptyRelation
+	 * @author Patrick Reichel
+	 */
+    public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null) {
+
+		if ($this->_needEmptyRelation($related)) {
+			return new EmptyRelation();
+		}
+		else {
+			// in all other cases: call parent method to return a standard laravel relation
+			return parent::belongsToMany($related, $table, $foreignKey, $otherKey, $relation);
 		}
 	}
 
