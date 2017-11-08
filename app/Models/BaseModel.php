@@ -9,6 +9,7 @@ use Module;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use App\Http\Controllers\NamespaceController;
+use App\Extensions\Database\EmptyRelation as EmptyRelation;
 
 
 /**
@@ -119,6 +120,99 @@ class BaseModel extends Eloquent
 	public function view_belongs_to ()
 	{
 		return null;
+	}
+
+
+	/**
+	 * Checks if the requested relation is installed and enabled.
+	 * If so all is fine – otherwise we return flag to create special empty eloquent relation.
+	 *
+	 * @return bool
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _needEmptyRelation($related) {
+
+		$parts = explode('\\', $related);
+		$context = $parts[0];
+
+		// check if requested relation is in module context
+		if (\Str::lower($context) == 'modules') {
+
+			// check if requested module is active
+			// if not: an empty relation is needed
+			$module = $parts[1];
+			if (!\PPModule::is_active($module)) {
+
+				return true;
+			}
+		}
+
+		// in all other cases: no special handling needed – we can return the standard eloquent relation
+		return false;
+	}
+
+
+	/**
+	 * Extension to original hasMany – returns an empty relation if the related module is not available.
+	 *
+     * @param  string  $related
+     * @param  string  $foreignKey
+     * @param  string  $localKey
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany or \App\Extensions\Database\EmptyRelation
+	 * @author Patrick Reichel
+	 */
+	public function hasMany($related, $foreignKey = null, $localKey = null) {
+
+		if ($this->_needEmptyRelation($related)) {
+			return new EmptyRelation();
+		}
+		else {
+			// in all other cases: call parent method to return a standard laravel relation
+			return parent::hasMany($related, $foreignKey, $localKey);
+		}
+	}
+
+
+	/**
+	 * Extension to original hasOne – returns an empty relation if the related module is not available.
+	 *
+     * @param  string  $related
+     * @param  string  $foreignKey
+     * @param  string  $localKey
+	 * @return \Illuminate\Database\Eloquent\Relations\HasOne or \App\Extensions\Database\EmptyRelation
+	 * @author Patrick Reichel
+	 */
+	public function hasOne($related, $foreignKey = null, $localKey = null) {
+
+		if ($this->_needEmptyRelation($related)) {
+			return new EmptyRelation();
+		}
+		else {
+			// in all other cases: call parent method to return a standard laravel relation
+			return parent::hasOne($related, $foreignKey, $localKey);
+		}
+	}
+
+
+	/**
+	 * Extension to original belongsTo – returns an empty relation if the related module is not available.
+	 *
+     * @param  string  $related
+     * @param  string  $foreignKey
+     * @param  string  $localKey
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo or \App\Extensions\Database\EmptyRelation
+	 * @author Patrick Reichel
+	 */
+    public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null) {
+
+		if ($this->_needEmptyRelation($related)) {
+			return new EmptyRelation();
+		}
+		else {
+			// in all other cases: call parent method to return a standard laravel relation
+			return parent::belongsTo($related, $foreignKey, $otherKey, $relation);
+		}
 	}
 
 
