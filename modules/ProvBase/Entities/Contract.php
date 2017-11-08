@@ -185,12 +185,7 @@ class Contract extends \BaseModel {
 	 */
 	public function phonetariff_purchase() {
 
-		if ($this->voip_enabled) {
-			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'purchase_tariff');
-		}
-		else {
-			return null;
-		}
+		return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'purchase_tariff');
 	}
 
 
@@ -199,12 +194,7 @@ class Contract extends \BaseModel {
 	 */
 	public function phonetariff_purchase_next() {
 
-		if ($this->voip_enabled) {
-			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_purchase_tariff');
-		}
-		else {
-			return null;
-		}
+		return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_purchase_tariff');
 	}
 
 
@@ -213,12 +203,7 @@ class Contract extends \BaseModel {
 	 */
 	public function phonetariff_sale() {
 
-		if ($this->voip_enabled) {
-			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'voip_id');
-		}
-		else {
-			return null;
-		}
+		return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'voip_id');
 	}
 
 
@@ -227,12 +212,7 @@ class Contract extends \BaseModel {
 	 */
 	public function phonetariff_sale_next() {
 
-		if ($this->voip_enabled) {
-			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_voip_id');
-		}
-		else {
-			return null;
-		}
+		return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_voip_id');
 	}
 
 	/**
@@ -278,19 +258,12 @@ class Contract extends \BaseModel {
 
 	public function costcenter()
 	{
-		if (\PPModule::is_active('billingbase'))
-			return $this->belongsTo('Modules\BillingBase\Entities\CostCenter', 'costcenter_id');
-		else {
-			// force empty relation
-			return $this->belongsTo('Modules\ProvBase\Entities\Modem', 'costcenter_id')->where('id', '<', 0);
-		}
+		return $this->belongsTo('Modules\BillingBase\Entities\CostCenter', 'costcenter_id');
 	}
 
 	public function salesman()
 	{
-		if (\PPModule::is_active('billingbase'))
-			return $this->belongsTo('Modules\BillingBase\Entities\Salesman');
-		return null;
+		return $this->belongsTo('Modules\BillingBase\Entities\Salesman');
 	}
 
 	public function invoices()

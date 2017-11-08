@@ -109,8 +109,7 @@ class NetElementType extends \BaseModel {
 	// only for preconfiguration of special device types (e.g. kathreins vgp)
 	public function oid()
 	{
-		if (\PPModule::is_active('hfcsnmp'))
-			return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'pre_conf_oid_id');
+		return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'pre_conf_oid_id');
 	}
 
 
