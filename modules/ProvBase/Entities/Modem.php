@@ -561,7 +561,7 @@ class Modem extends \BaseModel {
 	{
 		$validator = new \Acme\Validators\ExtendedValidator;
 
-		$ippools = IpPool::where('type', '=', 'CM')->all();
+		$ippools = IpPool::where('type', '=', 'CM')->get();
 
 		foreach ($ippools as $pool)
 		{
