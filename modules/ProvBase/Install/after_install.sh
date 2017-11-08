@@ -13,13 +13,18 @@ chown -R apache /tftpboot
 sed -i "s|<DNS-PASSWORD>|$pw|" /etc/dhcp/nmsprime/dhcpd.conf
 sed -i "s|<DNS-PASSWORD>|$pw|" /etc/named-nmsprime.conf
 
+systemctl daemon-reload
+
+systemctl enable nmsprimed.service
 systemctl enable dhcpd
 systemctl enable named
 systemctl enable xinetd
+systemctl enable chronyd
 
-systemctl daemon-reload
-systemctl enable nmsprimed.service
+systemctl start chronyd
 systemctl start nmsprimed.service
+systemctl start xinetd
+
 
 cd "$dir"
 php artisan nms:dhcp
