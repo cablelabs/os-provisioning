@@ -17,6 +17,10 @@ systemctl enable dhcpd
 systemctl enable named
 systemctl enable xinetd
 
+systemctl daemon-reload
+systemctl enable nmsprimed.service
+systemctl start nmsprimed.service
+
 cd "$dir"
 php artisan nms:dhcp
 php artisan nms:configfile
