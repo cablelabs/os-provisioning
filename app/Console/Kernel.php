@@ -15,7 +15,6 @@ class Kernel extends ConsoleKernel {
 		'App\Console\Commands\TimeDeltaChecker',
 		'App\Console\Commands\StorageCleaner',
 		'App\Console\Commands\authCommand',
-		'App\Console\Commands\install',
 		'App\Console\Commands\EnsureQueueListenerIsRunning',
 	];
 
