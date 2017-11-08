@@ -183,10 +183,7 @@ class Modem extends \BaseModel {
 
 	public function mtas()
 	{
-		if (\PPModule::is_active('ProvVoip'))
-			return $this->hasMany('Modules\ProvVoip\Entities\Mta');
-
-		return $this->contract->hasMany('Modules\ProvBase\Entities\Modem')->where('id', '<', 0);
+		return $this->hasMany('Modules\ProvVoip\Entities\Mta');
 	}
 
 	// TODO: rename to device - search for all places where this function is used

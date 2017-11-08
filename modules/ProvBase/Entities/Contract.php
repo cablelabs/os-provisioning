@@ -252,30 +252,22 @@ class Contract extends \BaseModel {
 
 	public function items()
 	{
-		if (\PPModule::is_active('billingbase'))
-			return $this->hasMany('Modules\BillingBase\Entities\Item');
-		return null;
+		return $this->hasMany('Modules\BillingBase\Entities\Item');
 	}
 
 	public function items_sorted_by_valid_from_desc()
 	{
-		if (\PPModule::is_active('billingbase'))
-			return $this->hasMany('Modules\BillingBase\Entities\Item')->orderBy('valid_from', 'desc');
-		return null;
+		return $this->hasMany('Modules\BillingBase\Entities\Item')->orderBy('valid_from', 'desc');
 	}
 
 	public function sepamandates()
 	{
-		if (\PPModule::is_active('billingbase'))
-			return $this->hasMany('Modules\BillingBase\Entities\SepaMandate');
-		return null;
+		return $this->hasMany('Modules\BillingBase\Entities\SepaMandate');
 	}
 
 	public function emails()
 	{
-		if (\PPModule::is_active('mail'))
-			return $this->hasMany('Modules\Mail\Entities\Email');
-		return null;
+		return $this->hasMany('Modules\Mail\Entities\Email');
 	}
 
 	public function get_email_count()

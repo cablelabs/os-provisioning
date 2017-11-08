@@ -564,11 +564,7 @@ class Phonenumber extends \BaseModel {
 	 */
 	public function cdrs()
 	{
-		if (\PPModule::is_active('voipmon')) {
-			return $this->hasMany('Modules\VoipMon\Entities\Cdr');
-		}
-
-		return null;
+		return $this->hasMany('Modules\VoipMon\Entities\Cdr');
 	}
 
 	/**
