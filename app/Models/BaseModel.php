@@ -205,15 +205,15 @@ class BaseModel extends Eloquent
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo or \App\Extensions\Database\EmptyRelation
 	 * @author Patrick Reichel
 	 */
-    public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null) {
+    /* public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null) { */
 
-		if ($this->_relationAvailable($related)) {
-			return parent::belongsTo($related, $foreignKey, $otherKey, $relation);
-		}
-		else {
-			return new EmptyRelation();
-		}
-	}
+		/* if ($this->_relationAvailable($related)) { */
+			/* return parent::belongsTo($related, $foreignKey, $otherKey, $relation); */
+		/* } */
+		/* else { */
+			/* return new EmptyRelation(); */
+		/* } */
+	/* } */
 
 
 	/**
@@ -227,15 +227,15 @@ class BaseModel extends Eloquent
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany or \App\Extensions\Database\EmptyRelation
 	 * @author Patrick Reichel
 	 */
-    public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null) {
+    /* public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null) { */
 
-		if ($this->_relationAvailable($related)) {
-			return parent::belongsToMany($related, $table, $foreignKey, $otherKey, $relation);
-		}
-		else {
-			return new EmptyRelation();
-		}
-	}
+		/* if ($this->_relationAvailable($related)) { */
+			/* return parent::belongsToMany($related, $table, $foreignKey, $otherKey, $relation); */
+		/* } */
+		/* else { */
+			/* return new EmptyRelation(); */
+		/* } */
+	/* } */
 
 
 	/**
