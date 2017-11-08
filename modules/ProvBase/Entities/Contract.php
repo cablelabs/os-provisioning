@@ -295,20 +295,15 @@ class Contract extends \BaseModel {
 
 	public function invoices()
 	{
-		if (\PPModule::is_active('billingbase'))
-			return $this->hasMany('Modules\BillingBase\Entities\Invoice');
-			// $srs  = SettlementRun::where('verified', '=', '0')->get(['id'])->pluck('id')->all();
-			// $hide = $srs ? : 0;
-			// return $this->hasMany('Modules\BillingBase\Entities\Invoice')->where('contract_id', '=', $this->id)->where('settlementrun_id', '!=', [$hide]);
-
-		return null;
+		return $this->hasMany('Modules\BillingBase\Entities\Invoice');
+		// $srs  = SettlementRun::where('verified', '=', '0')->get(['id'])->pluck('id')->all();
+		// $hide = $srs ? : 0;
+		// return $this->hasMany('Modules\BillingBase\Entities\Invoice')->where('contract_id', '=', $this->id)->where('settlementrun_id', '!=', [$hide]);
 	}
 
 	public function cccauthuser()
 	{
-		if (\PPModule::is_active('ccc'))
-			return $this->hasOne('Modules\Ccc\Entities\CccAuthuser');
-		return null;
+		return $this->hasOne('Modules\Ccc\Entities\CccAuthuser');
 	}
 
 
