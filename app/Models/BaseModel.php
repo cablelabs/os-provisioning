@@ -131,7 +131,7 @@ class BaseModel extends Eloquent
 	 *
 	 * @author Patrick Reichel
 	 */
-	protected function _needEmptyRelation($related) {
+	protected function _relationAvailable($related) {
 
 		// remove all leading backslashes
 		$related = ltrim($related, '\\');
@@ -143,16 +143,15 @@ class BaseModel extends Eloquent
 		if (\Str::lower($context) == 'modules') {
 
 			// check if requested module is active
-			// if not: an empty relation is needed
 			$module = $parts[1];
 			if (!\PPModule::is_active($module)) {
 
-				return true;
+				return false;
 			}
 		}
 
 		// in all other cases: no special handling needed – we can return the standard eloquent relation
-		return false;
+		return true;
 	}
 
 
@@ -167,12 +166,11 @@ class BaseModel extends Eloquent
 	 */
 	public function hasMany($related, $foreignKey = null, $localKey = null) {
 
-		if ($this->_needEmptyRelation($related)) {
-			return new EmptyRelation();
+		if ($this->_relationAvailable($related)) {
+			return parent::hasMany($related, $foreignKey, $localKey);
 		}
 		else {
-			// in all other cases: call parent method to return a standard laravel relation
-			return parent::hasMany($related, $foreignKey, $localKey);
+			return new EmptyRelation();
 		}
 	}
 
@@ -188,12 +186,11 @@ class BaseModel extends Eloquent
 	 */
 	public function hasOne($related, $foreignKey = null, $localKey = null) {
 
-		if ($this->_needEmptyRelation($related)) {
-			return new EmptyRelation();
+		if ($this->_relationAvailable($related)) {
+			return parent::hasOne($related, $foreignKey, $localKey);
 		}
 		else {
-			// in all other cases: call parent method to return a standard laravel relation
-			return parent::hasOne($related, $foreignKey, $localKey);
+			return new EmptyRelation();
 		}
 	}
 
@@ -210,12 +207,11 @@ class BaseModel extends Eloquent
 	 */
     public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null) {
 
-		if ($this->_needEmptyRelation($related)) {
-			return new EmptyRelation();
+		if ($this->_relationAvailable($related)) {
+			return parent::belongsTo($related, $foreignKey, $otherKey, $relation);
 		}
 		else {
-			// in all other cases: call parent method to return a standard laravel relation
-			return parent::belongsTo($related, $foreignKey, $otherKey, $relation);
+			return new EmptyRelation();
 		}
 	}
 
@@ -233,12 +229,11 @@ class BaseModel extends Eloquent
 	 */
     public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null) {
 
-		if ($this->_needEmptyRelation($related)) {
-			return new EmptyRelation();
+		if ($this->_relationAvailable($related)) {
+			return parent::belongsToMany($related, $table, $foreignKey, $otherKey, $relation);
 		}
 		else {
-			// in all other cases: call parent method to return a standard laravel relation
-			return parent::belongsToMany($related, $table, $foreignKey, $otherKey, $relation);
+			return new EmptyRelation();
 		}
 	}
 
