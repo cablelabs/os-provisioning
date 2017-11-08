@@ -155,24 +155,18 @@ class NetElement extends \BaseModel {
 	 */
 	public function modems()
 	{
-		if (\PPModule::is_active('ProvBase'))
-			return $this->hasMany('Modules\ProvBase\Entities\Modem', 'netelement_id');
-
-		return null;
+		return $this->hasMany('Modules\ProvBase\Entities\Modem', 'netelement_id');
 	}
 
 	// Relation to MPRs Modem Positioning Rules
 	public function mprs()
 	{
-		if (\PPModule::is_active('HfcCustomer'))
-			return $this->hasMany('Modules\HfcCustomer\Entities\Mpr', 'netelement_id');
-
-		return null;
+		return $this->hasMany('Modules\HfcCustomer\Entities\Mpr', 'netelement_id');
 	}
 
 	public function snmpvalues()
 	{
-		return \PPModule::is_active('HfcSnmp') ? $this->hasMany('Modules\HfcSnmp\Entities\SnmpValue', 'netelement_id') : null;
+		return $this->hasMany('Modules\HfcSnmp\Entities\SnmpValue', 'netelement_id');
 	}
 
 	public function netelementtype()
@@ -182,17 +176,12 @@ class NetElement extends \BaseModel {
 
 	public function indices()
 	{
-		if (\PPModule::is_active('HfcSnmp'))
-			return $this->hasMany('Modules\HfcSnmp\Entities\Indices', 'netelement_id');
+		return $this->hasMany('Modules\HfcSnmp\Entities\Indices', 'netelement_id');
 	}
 
 	public function icingaobjects()
 	{
-		if(IcingaObjects::db_exists())
-			return $this->hasOne('Modules\HfcBase\Entities\IcingaObjects', 'name1')->where('objecttype_id', '=', '1');
-		else
-			// return an impossible condition, rather than null
-			return $this->hasOne('Modules\HfcReq\Entities\NetElement', 'id')->where('id', '<', '0');
+		return $this->hasOne('Modules\HfcBase\Entities\IcingaObjects', 'name1')->where('objecttype_id', '=', '1');
 	}
 
 	public function get_parent ()

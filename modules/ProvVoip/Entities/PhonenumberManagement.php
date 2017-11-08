@@ -161,11 +161,7 @@ class PhonenumberManagement extends \BaseModel {
 	 */
 	public function trc_class() {
 
-		if (\PPModule::is_active('provvoipenvia')) {
-			return $this->hasOne('Modules\ProvVoip\Entities\TRCClass', 'trcclass');
-		}
-
-		return null;
+		return $this->hasOne('Modules\ProvVoip\Entities\TRCClass', 'trcclass');
 	}
 
 	/**
