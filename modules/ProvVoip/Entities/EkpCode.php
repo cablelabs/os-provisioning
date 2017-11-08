@@ -47,7 +47,7 @@ class EkpCode extends \BaseModel {
 		// TODO: maybe this list should not be hardcoded – can come from configuration dialog or out of .env?
 		if (\PPModule::is_active('ProvVoipEnvia')) {
 			$favorite_ekps = array(
-				'98/112', // EnviaTEL
+				'98/112', // envia TEL
 				'93/007', // Telekom
 				'12/017', // 1&1
 				'n.v.',	// no EKP known

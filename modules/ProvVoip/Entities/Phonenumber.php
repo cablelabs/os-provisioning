@@ -20,7 +20,7 @@ class Phonenumber extends \BaseModel {
 			'mta_id' => 'required|exists:mta,id|min:1',
 			'port' => 'required|numeric|min:1',
 			/* 'active' => 'required|boolean', */
-			// TODO: check if password is secure and matches needs of external APIs (e.g. Envia)
+			// TODO: check if password is secure and matches needs of external APIs (e.g. envia TEL)
 		);
 
 		// inject id to rules (so it is passed to prepare_rules)
@@ -299,9 +299,9 @@ class Phonenumber extends \BaseModel {
 
 		if (\PPModule::is_active('provvoipenvia')) {
 			// TODO: auth - loading controller from model could be a security issue ?
-			$ret['Main']['Envia API']['html'] = '<h4>Available Envia API jobs</h4>';
-			$ret['Main']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-			$ret['Main']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
+			$ret['Main']['envia TEL API']['html'] = '<h4>Available envia TEL API jobs</h4>';
+			$ret['Main']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+			$ret['Main']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
 		}
 
 		if (\PPModule::is_active('voipmon')) {
@@ -425,7 +425,7 @@ class Phonenumber extends \BaseModel {
 	 */
 	public function mtas_list_phonenumber_can_be_reassigned_to() {
 
-		// special case activated Envia module:
+		// special case activated envia TEL module:
 		//   - MTA has to belong to the same contract
 		//   - Installation address of current modem match installation address of new modem
 		if (\PPModule::is_active('provvoipenvia')) {
@@ -487,12 +487,12 @@ class Phonenumber extends \BaseModel {
 
 
 	/**
-	 * Helper to detect if an Envia contract has been created for this phonenumber
+	 * Helper to detect if an envia TEL contract has been created for this phonenumber
 	 * You can either make a bool test against this method or get the id of a contract has been created
 	 *
 	 * @return misc:
 	 *			null if module ProvVoipEnvia is disabled
-	 *			false if there is no Envia contract
+	 *			false if there is no envia TEL contract
 	 *			external_contract_id for the contract the number belongs to
 	 *
 	 *
@@ -516,12 +516,12 @@ class Phonenumber extends \BaseModel {
 
 
 	/**
-	 * Helper to detect if an Envia contract has been terminated for this phonenumber.
+	 * Helper to detect if an envia TEL contract has been terminated for this phonenumber.
 	 * You can either make a bool test against this method or get the id of a contract if terminated
 	 *
 	 * @return misc:
 	 *			null if module ProvVoipEnvia is disabled
-	 *			false if there is no Envia contract or the contract is still active
+	 *			false if there is no envia TEL contract or the contract is still active
 	 *			external_contract_id for the contract if terminated
 	 *
 	 * @author Patrick Reichel
@@ -677,8 +677,8 @@ class Phonenumber extends \BaseModel {
 	 */
 	public function delete() {
 
-		// deletion of modems with attached phonenumbers is not allowed with enabled Envia module
-		// prevent user from (recursive and implicite) deletion of phonenumbers before termination at Envia!!
+		// deletion of modems with attached phonenumbers is not allowed with enabled envia TEL module
+		// prevent user from (recursive and implicite) deletion of phonenumbers before termination at envia TEL!!
 		// we have to check this here as using ModemObserver::deleting() with return false does not prevent the monster from deleting child model instances!
 		/* d(\URL::previous()); */
 		if (
@@ -733,8 +733,8 @@ class PhonenumberObserver
 {
 
 	/**
-	 * For Envia API we create username and login if not given.
-	 * Otherwise Envia will do this – so we would have to ask for this data…
+	 * For envia TEL API we create username and login if not given.
+	 * Otherwise envia TEL will do this – so we would have to ask for this data…
 	 *
 	 * @author Patrick Reichel
 	 */
@@ -746,7 +746,7 @@ class PhonenumberObserver
 				$phonenumber->password = \Acme\php\Password::generate_password(15, 'envia');
 			}
 
-			// username at Envia defaults to prefixnumber + number – we also do so
+			// username at envia TEL defaults to prefixnumber + number – we also do so
 			if (!boolval($phonenumber->username)) {
 				$phonenumber->username = $phonenumber->prefix_number.$phonenumber->number;
 			}
@@ -775,13 +775,13 @@ class PhonenumberObserver
 
 	/**
 	 * Checks if updating the phonenumber is allowed.
-	 * Used to prevent problems related with Envia.
+	 * Used to prevent problems related with envia TEL.
 	 *
 	 * @author Patrick Reichel
 	 */
 	protected function _updating_allowed($phonenumber) {
 
-		// no Envia => no problems
+		// no envia TEL => no problems
 		if (!\PPModule::is_active('provvoipenvia')) {
 			return true;
 		}
@@ -860,7 +860,7 @@ class PhonenumberObserver
 	}
 
 	/**
-	 * Change Envia related data on assigning a phonenumber to a new MTA.
+	 * Change envia TEL related data on assigning a phonenumber to a new MTA.
 	 * Here we have to decide if the change is permanent (customer got new modem) or temporary (e.g. for testing reasons).
 	 *
 	 * @author Patrick Reichel
@@ -878,17 +878,17 @@ class PhonenumberObserver
 		$new_modem = $new_mta->modem;
 		$new_contract = $new_modem->contract;
 
-		// if the phonenumber does not exist at Envia (no management or no external creation date):
+		// if the phonenumber does not exist at envia TEL (no management or no external creation date):
 		// nothing to cange in modems
 		if (
 			(!$phonenumber->contract_external_id)
 		) {
-			\Session::push('tmp_info_above_form', 'Number has not been created at Envia – will not change any modem data.');
+			\Session::push('tmp_info_above_form', 'Number has not been created at envia TEL – will not change any modem data.');
 			return;
 		};
 
 		// the moment we get here we take for sure that we have a permanent switch (defective old modem)
-		// now we have to do a bunch of Envia data related work
+		// now we have to do a bunch of envia TEL data related work
 
 		// first: get all the orders related to the number or the old modem
 		// and overwrite the modem_id with the new modem's id
@@ -912,7 +912,7 @@ class PhonenumberObserver
 			$order->save();
 		}
 
-		// second: write all Envia related data from the old to the new modem
+		// second: write all envia TEL related data from the old to the new modem
 		if (!$new_modem->contract_ext_creation_date) {
 			$new_modem->contract_ext_creation_date = $old_modem->contract_ext_creation_date;
 		}
@@ -927,7 +927,7 @@ class PhonenumberObserver
 		}
 		$new_modem->save();
 
-		// third: if there are no more numbers attached to the old modem: remove all Envia related data
+		// third: if there are no more numbers attached to the old modem: remove all envia TEL related data
 		if (!$old_modem->has_phonenumbers_attached()) {
 			$old_modem->remove_envia_related_data();
 		}
@@ -983,7 +983,7 @@ class PhonenumberObserver
 
 	/**
 	 * If SIP data has been changed and module ProvVoipEnvia is enabled:
-	 * Change this data at Envia, too
+	 * Change this data at envia TEL, too
 	 *
 	 * @author Patrick Reichel
 	 */
@@ -1005,8 +1005,8 @@ class PhonenumberObserver
 		}
 		else {
 			// if we end up here: the current change has been done manually
-			// inform the user that he has to change the data at Envia, too
-			// TODO: check if this data can be changed automagically at Envia!
+			// inform the user that he has to change the data at envia TEL, too
+			// TODO: check if this data can be changed automagically at envia TEL!
 			$parameters = [
 				'job' => 'voip_account_update',
 				'origin' => urlencode(\URL::previous()),
@@ -1016,7 +1016,7 @@ class PhonenumberObserver
 			$title = 'DO THIS MANUALLY NOW!';
 			$envia_href = \HTML::linkRoute('ProvVoipEnvia.request', $title, $parameters);
 
-			\Session::push('tmp_info_above_form', 'Autochanging of SIP data at Envia is not implemented yet.<br>You have to '.$envia_href);
+			\Session::push('tmp_info_above_form', 'Autochanging of SIP data at envia TEL is not implemented yet.<br>You have to '.$envia_href);
 		}
 	}
 

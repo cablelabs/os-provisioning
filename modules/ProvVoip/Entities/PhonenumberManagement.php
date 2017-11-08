@@ -106,7 +106,7 @@ class PhonenumberManagement extends \BaseModel {
 	}
 
 	/**
-	 * The Envia contract the related phonenumber currently belongs to
+	 * The envia TEL contract the related phonenumber currently belongs to
 	 */
 	public function envia_contract()	{
 		if (!\PPModule::is_active('provvoipenvia')) {
@@ -208,33 +208,33 @@ class PhonenumberManagement extends \BaseModel {
 
 		if (\PPModule::is_active('provvoipenvia')) {
 
-			$ret['Envia']['EnviaOrder']['class'] = 'EnviaOrder';
-			$ret['Envia']['EnviaOrder']['relation'] = $this->_envia_orders;
-			$ret['Envia']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at Envia';
+			$ret['envia TEL']['EnviaOrder']['class'] = 'EnviaOrder';
+			$ret['envia TEL']['EnviaOrder']['relation'] = $this->_envia_orders;
+			$ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at envia TEL';
 
-			$ret['Envia']['EnviaContract']['class'] = 'EnviaContract';
+			$ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
 			$enviacontracts = is_null($this->envia_contract) ? [] : [$this->envia_contract];
-			$ret['Envia']['EnviaContract']['relation'] = $enviacontracts;
-			$ret['Envia']['EnviaContract']['options']['hide_create_button'] = 1;
-			$ret['Envia']['EnviaContract']['options']['hide_delete_button'] = 1;
+			$ret['envia TEL']['EnviaContract']['relation'] = $enviacontracts;
+			$ret['envia TEL']['EnviaContract']['options']['hide_create_button'] = 1;
+			$ret['envia TEL']['EnviaContract']['options']['hide_delete_button'] = 1;
 
-			$ret['Envia']['PhonebookEntry']['class'] = 'PhonebookEntry';
+			$ret['envia TEL']['PhonebookEntry']['class'] = 'PhonebookEntry';
 
 			$relation = $this->phonebookentry;
 
 			// can be created if no one exists, can be deleted if one exists
 			if (is_null($relation)) {
-				$ret['Envia']['PhonebookEntry']['relation'] = new Collection();
-				$ret['Envia']['PhonebookEntry']['options']['hide_delete_button'] = 1;
+				$ret['envia TEL']['PhonebookEntry']['relation'] = new Collection();
+				$ret['envia TEL']['PhonebookEntry']['options']['hide_delete_button'] = 1;
 			}
 			else {
-				$ret['Envia']['PhonebookEntry']['relation'] = [$relation];
-				$ret['Envia']['PhonebookEntry']['options']['hide_create_button'] = 1;
+				$ret['envia TEL']['PhonebookEntry']['relation'] = [$relation];
+				$ret['envia TEL']['PhonebookEntry']['options']['hide_create_button'] = 1;
 			}
 
 			// TODO: auth - loading controller from model could be a security issue ?
-			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberManagementController::_get_envia_management_jobs($this);
+			$ret['envia TEL']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+			$ret['envia TEL']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberManagementController::_get_envia_management_jobs($this);
 		}
 		else {
 			$ret = array();

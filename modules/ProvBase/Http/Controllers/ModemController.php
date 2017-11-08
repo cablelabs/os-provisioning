@@ -26,7 +26,7 @@ class ModemController extends \BaseController {
 			list($model['x'], $model['y']) = $pos;
 
 		$installation_address_change_date_options = ['placeholder' => 'YYYY-MM-DD'];
-		// check if installation_address_change_date is readonly (address change has been sent to Envia API)
+		// check if installation_address_change_date is readonly (address change has been sent to envia TEL API)
 		if (
 			($model['installation_address_change_date'])
 			&&
@@ -106,7 +106,7 @@ class ModemController extends \BaseController {
 
 
 	/**
-	 * Get all management jobs for Envia
+	 * Get all management jobs for envia TEL
 	 *
 	 * @author Patrick Reichel
 	 * @param $modem current modem object
@@ -116,7 +116,7 @@ class ModemController extends \BaseController {
 
 		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
 
-		// check if user has the right to perform actions against Envia API
+		// check if user has the right to perform actions against envia TEL API
 		// if not: don't show any actions
 		try {
 			\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');

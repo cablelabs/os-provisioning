@@ -57,7 +57,7 @@ class ContractTableSeeder extends \BaseSeeder {
 			'contract_end' => (rand(0,10) > 8 ? $faker->dateTimeBetween($start_contract, '+1 year') : 0),
 			'qos_id' => Qos::all()->random(1)->id,
 			'next_qos_id' => (rand(0,10) > 8 ? Qos::all()->random(1)->id : 0),
-			'voip_id' => rand(0, 2),								// TODO: use Envia interface
+			'voip_id' => rand(0, 2),								// TODO: use envia TEL interface
 			'next_voip_id' => (rand(0,10) > 8 ? rand(0, 2) : 0),
 			'sepa_iban' => Payment::bankAccountNumber(),			// L5: replace with iban ***
 			'sepa_bic' => $faker->swiftBicNumber,

@@ -13,7 +13,7 @@
 		(!App::environment('testing'))	// not running in (unit) testing environment
 	) {
 		$currently_free_numbers = \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia::get_free_numbers_for_view();
-		$free_numbers_panel_headline = 'Asking Envia for free numbers';
+		$free_numbers_panel_headline = 'Asking envia TEL for free numbers';
 	}
 
 ?>

@@ -227,8 +227,8 @@ class Modem extends \BaseModel {
 			$ret['dummy']['EnviaOrder']['relation'] = $this->_envia_orders;
 
 			// TODO: auth - loading controller from model could be a security issue ?
-			$ret['dummy']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-			$ret['dummy']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ModemController::_get_envia_management_jobs($this);
+			$ret['dummy']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+			$ret['dummy']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ModemController::_get_envia_management_jobs($this);
 		}
 
 		return $ret;
@@ -1041,8 +1041,8 @@ class Modem extends \BaseModel {
 	 */
 	public function delete() {
 
-		// deletion of modems with attached phonenumbers is not allowed with enabled Envia module
-		// prevent user from (recursive and implicite) deletion of phonenumbers before termination at Envia!!
+		// deletion of modems with attached phonenumbers is not allowed with enabled envia TEL module
+		// prevent user from (recursive and implicite) deletion of phonenumbers before termination at envia TEL!!
 		// we have to check this here as using ModemObserver::deleting() with return false does not prevent the monster from deleting child model instances!
 		if (\PPModule::is_active('ProvVoipEnvia')) {
 			if ($this->has_phonenumbers_attached()) {
@@ -1093,7 +1093,7 @@ class Modem extends \BaseModel {
 	}
 
 	/**
-	 * Clean modem from all Envia related data – call this e.g. if you delete the last number from this modem.
+	 * Clean modem from all envia TEL related data – call this e.g. if you delete the last number from this modem.
 	 * We have to do this to avoid problems in case we want to install this modem at another customer
 	 *
 	 * @author Patrick Reichel
@@ -1177,7 +1177,7 @@ class ModemObserver
 	{
 		Log::debug(__METHOD__." started for ".$modem->hostname);
 
-		// reminder: on active Envia module: moving modem to other contract is not allowed!
+		// reminder: on active envia TEL module: moving modem to other contract is not allowed!
 		// check if this is running if you decide to implement moving of modems to other contracts
 		// watch Ticket LAR-106
 		if (\PPModule::is_active('ProvVoipEnvia')) {
@@ -1235,9 +1235,9 @@ class ModemObserver
 
 
 		// ATTENTION:
-		// If we ever think about moving modems to other contracts we have to delete Envia related stuff, too –
+		// If we ever think about moving modems to other contracts we have to delete envia TEL related stuff, too –
 		// check contract_ext* and installation_address_change_date
-		// moving then should only be allowed without attached phonenumbers and terminated Envia contract!
+		// moving then should only be allowed without attached phonenumbers and terminated envia TEL contract!
 		// cleaner in Patrick's opinion would be to delete and re-create the modem
 	}
 

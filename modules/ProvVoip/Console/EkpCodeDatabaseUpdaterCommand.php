@@ -72,7 +72,7 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 	{
 
 		if (\PPModule::is_active('provvoipenvia')) {
-			// we get the data directly from Envia API
+			// we get the data directly from envia TEL API
 			$this->_update_using_envia_api();
 		}
 		else {
@@ -83,16 +83,16 @@ class EkpCodeDatabaseUpdaterCommand extends Command {
 
 
 	/**
-	 * Updating ekp codes via Envia API means a simple call of the method in ProvVoipEnvia
+	 * Updating ekp codes via envia TEL API means a simple call of the method in ProvVoipEnvia
 	 * The real work is done there
 	 *
 	 * @author Patrick Reichel
 	 */
 	protected function _update_using_envia_api() {
 
-		Log::info($this->description.' from Envia API');
+		Log::info($this->description.' from envia TEL API');
 
-		// getting data from Envia instead from file means: file is not current ⇒ delete the hash file
+		// getting data from envia TEL instead from file means: file is not current ⇒ delete the hash file
 		$this->clear_hash_file();
 
 		// prepare the URL to process via cURL

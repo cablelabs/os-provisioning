@@ -130,19 +130,19 @@ class Contract extends \BaseModel {
 
 		if (\PPModule::is_active('provvoipenvia'))
 		{
-			$ret['Envia']['EnviaContract']['class'] = 'EnviaContract';
-			$ret['Envia']['EnviaContract']['relation'] = $this->enviacontracts;
+			$ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
+			$ret['envia TEL']['EnviaContract']['relation'] = $this->enviacontracts;
 
-			$ret['Envia']['EnviaOrder']['class'] = 'EnviaOrder';
-			$ret['Envia']['EnviaOrder']['relation'] = $this->_envia_orders;
+			$ret['envia TEL']['EnviaOrder']['class'] = 'EnviaOrder';
+			$ret['envia TEL']['EnviaOrder']['relation'] = $this->_envia_orders;
 
 			// TODO: auth - loading controller from model could be a security issue ?
-			$ret['Envia']['Envia API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-			$ret['Envia']['Envia API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
+			$ret['envia TEL']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+			$ret['envia TEL']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
 
-			// for better navigation: show modems also in Envia blade
-			$ret['Envia']['Modem']['class'] = 'Modem';
-			$ret['Envia']['Modem']['relation'] = $this->modems;
+			// for better navigation: show modems also in envia TEL blade
+			$ret['envia TEL']['Modem']['class'] = 'Modem';
+			$ret['envia TEL']['Modem']['relation'] = $this->modems;
 		}
 
 		if (\PPModule::is_active('ccc'))
