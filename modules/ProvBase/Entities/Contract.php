@@ -1210,56 +1210,17 @@ class Contract extends \BaseModel {
 class ContractObserver
 {
 
-	// Start contract numbers from 10000 - TODO: move to global config or remove this after creating number cycle MVC
-	protected $num = 490000;
-
 	public function creating($contract)
 	{
-		// Note: this is only needed when Billing Module is not active - TODO: proof with future static function
 		if (!\PPModule::is_active('billingbase'))
 		{
 			$contract->sepa_iban = strtoupper($contract->sepa_iban);
 			$contract->sepa_bic  = strtoupper($contract->sepa_bic);
 		}
-
-		// generate contract number
-		$input_data = \Input::all();
-		$contract_number = $input_data['number'];
-
-		if (is_null($contract->id) && strlen($contract_number) == 0) {
-			$new_number = NumberRange::get_new_number('contract', $input_data['costcenter_id']);
-
-			/*
-			 * If new number is null (all ranges are exhausted) generate a new number with the old
-			 * algorithm (see ContractObserver::created()
-			 */
-			if (is_null($new_number)) {
-				$new_number = 0;
-			}
-		} else {
-			$new_number = $contract_number;
-		}
-		$contract->number = $new_number;
 	}
 
 	public function created($contract)
 	{
-		// Note: this only works here because id is not yet assigned in creating function
-//		$contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
-		if ($contract->number == 0) {
-			session([
-				'alert' => \App\Http\Controllers\BaseViewController::translate_view(
-					'Failure',
-					'Contract_Numberrange'
-				)
-			]);
-		}
-
-		if (!$contract->number) {
-			$contract->observer_enabled = false;
-			$contract->save();  // forces to call the updating, saving, updated & saved method of the observer
-		}
-
 		$contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
 	}
 
@@ -1267,21 +1228,6 @@ class ContractObserver
 	{
 		$original_number = $contract->getOriginal('number');
 		$original_costcenter_id = $contract->getOriginal('costcenter_id');
-
-		/*
-		 * if
-		 *  - empty contract number
-		 *  - costcenter changed
-		 * then generate a new contract number
-		 */
-		if ((trim(\Input::get('number')) == '')) {
-			$new_number = NumberRange::get_new_number('contract', $original_costcenter_id);
-		} elseif ($original_costcenter_id != \Input::get('costcenter_id')) {
-			$new_number = NumberRange::get_new_number('contract', \Input::get('costcenter_id'));
-		} else {
-			$new_number = $original_number;
-		}
-		$contract->number = $new_number;
 
 		if (!\PPModule::is_active('billingbase'))
 		{
