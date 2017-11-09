@@ -105,6 +105,9 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 		return $this->_meta()->where('type', 'LIKE', 'client');
 	}
 
+	public function tickets() {
+		return $this->belongsToMany('\Modules\Ticketsystem\Entities\Ticket', 'ticket_user', 'user_id', 'ticket_id');
+	}
 
 	/**
 	 * Get a matrix containing user rights for models.
@@ -123,7 +126,6 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 
 			// get all models for the current role
 			$models = $this->_role_models($role['id']);
-
 			// get permissions per model
 			foreach ($models as $model) {
 

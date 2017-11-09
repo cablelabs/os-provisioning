@@ -104,12 +104,6 @@ class BaseController extends Controller {
 		$classname = \NamespaceController::get_model_name();
 
 		// Rewrite model to check with new assigned Model
-		switch ($classname) {
-			case 'Modules\Ticketsystem\Entities\Ticketsystem':
-				$classname = 'Modules\Ticketsystem\Entities\Ticket';
-				break;
-		}
-
 		if (!$classname)
 			return null;
 
@@ -729,6 +723,28 @@ class BaseController extends Controller {
 
 		return Redirect::back()->with('delete_message', ['message' => $message, 'class' => $class, 'color' => $color]);
 	}
+
+
+	/**
+	 * Detach a pivot entry of an n-m relationship
+	 *
+	 * @param 	id 			Integer 	Model ID the relational model is attached to
+	 * @param 	function 	String 		Function Name of the N-M Relation
+	 * @return 	Response 	Object 		Redirect back
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function detach($id, $function)
+	{
+		$model = \NamespaceController::get_model_name();
+		$model = $model::find($id);
+
+		if (\Input::has('ids'))
+			$model->{$function}()->detach(array_keys(\Input::get('ids')));
+
+		return \Redirect::back();
+	}
+
 
 	public function dump($id) {
 		return static::get_model_obj()->findOrFail($id);
