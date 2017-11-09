@@ -692,31 +692,33 @@ class BaseController extends Controller {
 		if ($id == 0)
 		{
 			// Error Message when no Model is specified - NOTE: delete_message must be an array of the structure below !
-			if (!isset(Input::all()['ids']))
+			if (!Input::get('ids'))
 				return Redirect::back()->with('delete_message', ['message' => 'No Entry For Deletion specified', 'class' => \NamespaceController::get_route_name(), 'color' => 'red']);
 
-			foreach (Input::all()['ids'] as $id => $val) {
+			$obj = static::get_model_obj();
+
+			foreach (Input::get('ids') as $id => $val) {
 				$to_delete++;
-				if (static::get_model_obj()->findOrFail($id)->delete()) {
+				if ($obj->findOrFail($id)->delete()) {
 					$deleted++;
 				}
 			}
-
 		}
 		else {
 			$to_delete++;
-			if (static::get_model_obj()->findOrFail($id)->delete()) {
+			$obj = static::get_model_obj();
+			if ($obj->findOrFail($id)->delete()) {
 				$deleted++;
 			}
 		}
-
+		$obj = isset($obj) ? $obj : static::get_model_obj();
 		$class = \NamespaceController::get_route_name();
 
-		if ($deleted == 0) {
+		if (!$deleted && !$obj->force_delete) {
 			$message = 'Could not delete '.$class;
 			$color = 'red';
 		}
-		elseif ($deleted == $to_delete) {
+		elseif (($deleted == $to_delete) || $obj->force_delete) {
 			$message = 'Successful deleted '.$class;
 			$color = 'blue';
 		}
