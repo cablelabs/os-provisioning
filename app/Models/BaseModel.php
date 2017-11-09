@@ -43,7 +43,20 @@ class BaseModel extends Eloquent
 	 *
 	 * @param $attributes pass through to Eloquent contstructor.
 	 */
-	public function __construct($attributes = array()) {
+	public function __construct($attributes = array())
+	{
+		// Config Host Setup
+		// @note: This could be used to fetch configuration tables
+		//        (like configfiles) from a global NMS Prime system
+		// @author: Torsten Schmidt
+		$env = env('DB_CONFIG_TABLES', false);
+
+		if ($env && strpos($env, $this->table) !== false)
+		{
+			$this->connection = 'mysql-config';
+			\Log::debug ('Use mysql-config connection to access '.$this->table.' table');
+		}
+
 
 		// call Eloquent constructor
 		// $attributes are needed! (or e.g. seeding and creating will not work)
