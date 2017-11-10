@@ -321,6 +321,10 @@ class DashboardController extends BaseController
 	private static function _get_impaired_netelements()
 	{
 		$ret = [];
+
+		if(!\Modules\HfcBase\Entities\IcingaObjects::db_exists())
+			return $ret;
+
 		foreach(\Modules\HfcReq\Entities\NetElement::where('id', '>', '2')->get() as $element) {
 			$status = $element->get_bsclass();
 			if ($status == 'success' || $status == 'info')
