@@ -30,7 +30,7 @@ class IpPoolController extends \BaseController {
 			$type = (isset($_GET['type']) ? $_GET['type'] : 'CM');
 
 			// get last ip pools ordered desc by net, which means get last added ip pool
-			$ippools=IpPool::where('type','=',$type)->orderBy('net', 'DESC')->get();
+			$ippools=IpPool::where('type','=',$type)->orderBy(\DB::raw('INET_ATON(net)'), 'DESC')->get();
 
 			// check if we still have pools in DB
 			if ($ippools->count()>0)
