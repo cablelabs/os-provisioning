@@ -78,7 +78,7 @@ class IpPoolController extends \BaseController {
 		// label has to be the same like column in sql table
 		$ret_tmp = array(
 			array('form_type' => 'select', 'name' => 'cmts_id', 'description' => 'CMTS Hostname', 'value' => $model->html_list($model->cmts_hostnames(), 'hostname'), 'hidden' => 1),
-			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => array( 'CM' => 'Cable Modem', 'CPEPriv' => 'CPE Private', 'CPEPub' => 'CPE Public', 'MTA' => 'MTA'), 'hidden'=>'C'),
+			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => array( 'CM' => 'Cable Modem', 'CPEPriv' => 'CPE Private', 'CPEPub' => 'CPE Public', 'MTA' => 'MTA')),
 			array('form_type' => 'text', 'name' => 'net', 'description' => 'Net'),
 			array('form_type' => 'text', 'name' => 'netmask', 'description' => 'Netmask'),
 			array('form_type' => 'text', 'name' => 'ip_pool_start', 'description' => 'First IP'),
