@@ -136,29 +136,38 @@ class Cmts extends \BaseModel {
 	 */
 	public function get_us_snr($ip)
 	{
-		// find oid of corresponding modem on cmts and get the snr
-		$conf = snmp_get_valueretrieval();
+		$snrs = json_decode(\Storage::get("data/provbase/us_snr/$this->hostname.json"), true);
+		if(array_key_exists($ip, $snrs))
+			return $snrs[$ip];
+
+		return ['SNR not found'];
+	}
+
+
+	/**
+	 * Store US SNR values for all modems once every 5 minutes
+	 * this greatly reduces the cpu load on the cmts
+	 *
+	 * @author Ole Ernst
+	 */
+	public function store_us_snrs()
+	{
+		$ret = [];
 		$com = $this->get_ro_community();
 
-		// we need to change the value retrievel for snmprealwalk()
-		snmp_set_valueretrieval(SNMP_VALUE_OBJECT);
-		try
-		{
-			$modem_ips = snmprealwalk($this->ip, $com, '1.3.6.1.4.1.4491.2.1.20.1.3.1.5');
+		snmp_set_valueretrieval(SNMP_VALUE_LIBRARY);
+		snmp_set_quick_print(true);
+		$ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.3.1.5');
+		$snrs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.4.1.4');
+
+		foreach ($ips as $i_key => $i_val) {
+			$i_key = last(explode('.', $i_key));
+			$tmp = array_filter($snrs, function($s_key) use($i_key) {
+				return strpos($s_key, $i_key) !== false;
+			}, ARRAY_FILTER_USE_KEY);
+			$ret[long2ip(hexdec($i_val))] = ArrayHelper::ArrayDiv(array_values($tmp));
 		}
-		catch(\Exception $e)
-		{
-			snmp_set_valueretrieval($conf);
-			return ['No response of CMTS'];
-		}
-		snmp_set_valueretrieval($conf);
-		foreach ($modem_ips as $oid => $value)
-		{
-			$cmts_cm_ip = long2ip('0x'.str_replace(["\"", " "], '', $value->value));
-			if ($cmts_cm_ip == $ip)
-				return ArrayHelper::ArrayDiv(snmpwalk($this->ip, $com, str_replace('.1.3.6.1.4.1.4491.2.1.20.1.3.1.5', '1.3.6.1.4.1.4491.2.1.20.1.4.1.4', $oid)));
-		}
-		return ['Could not find CMTS'];
+		\Storage::put("data/provbase/us_snr/$this->hostname.json", json_encode($ret));
 	}
 
 
