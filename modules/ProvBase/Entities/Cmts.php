@@ -93,9 +93,12 @@ class Cmts extends \BaseModel {
 	// returns all objects that are related to a cmts
 	public function view_has_many()
 	{
-		return array(
-			'IpPool' => $this->ippools
-		);
+		$ret['Base']['IpPool']['class'] = 'IpPool';
+		$ret['Base']['IpPool']['relation'] = $this->ippools;
+
+		$ret['Base']['Routing']['view']['view'] = 'provbase::Cmts.routing';
+
+		return $ret;
 	}
 
 
