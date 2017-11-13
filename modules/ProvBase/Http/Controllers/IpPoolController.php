@@ -49,7 +49,7 @@ class IpPoolController extends \BaseController {
 				case 'CM':      $next_net = env('IP_CM_DEFAULT_NET', '10.0.0.0');	break;
 				case 'CPEPriv': $next_net = env('IP_CPE_PRIV_DEFAULT_NET', '100.64.0.0');  $init_values['dns1_ip'] = '8.8.8.8'; break;
 				case 'CPEPub':  $next_net = env('IP_CPE_PUB_DEFAULT_NET', '192.168.100.0'); $init_values['dns1_ip'] = '8.8.8.8'; break;
-				case 'MTA':     $next_net = env('IP_MTA_DEFAULT_NET', '172.17.0.0'); $init_values['dns1_ip'] = \ProvBase::first()->provisioning_server;	break;
+				case 'MTA':     $next_net = env('IP_MTA_DEFAULT_NET', '172.17.0.0'); $init_values['dns1_ip'] = \Modules\ProvBase\Entities\ProvBase::first()->provisioning_server;	break;
 				default: $next_net = '192.168.200.0'; break;
 			}
 
