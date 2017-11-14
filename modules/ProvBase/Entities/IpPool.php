@@ -66,7 +66,7 @@ class IpPool extends \BaseModel {
 	public function get_bsclass()
 	{
 		$bsclass = 'success';
-			
+
 		if ($this->type == 'CPEPub')
 			$bsclass = 'warning';
 		if ($this->type == 'CPEPriv')
@@ -106,6 +106,18 @@ class IpPool extends \BaseModel {
 	public function ip_route_prov_exists()
 	{
 		return (strlen(exec ('ip route show '.$this->net.'/'.$this->size().' via '.$this->router_ip)) == 0 ? false : true);
+	}
+
+
+	/*
+	 * Return true if $this->router_ip is online, otherwise false
+	 * This implies that the CMTS Pool should be set correctly in the CMTS
+	 */
+	public function ip_route_online ()
+	{
+		// Ping: Only check if device is online
+		exec ('sudo ping -c1 -i0 -w1 '.$this->router_ip, $ping, $ret);
+		return $ret ? false : true;
 	}
 
 
