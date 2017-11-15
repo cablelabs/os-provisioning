@@ -27,7 +27,7 @@ class PhonebookEntryController extends \BaseController {
 			!(PhonenumberManagement::find(\Input::get('phonenumbermanagement_id')))
 		) {
 			$this->edit_view_save_button = false;
-			\Session::push('tmp_info_above_form', 'Cannot create phonebookentry – phonenumbermanagement ID missing or phonenumbermanagement not found');
+			\Session::push('tmp_error_above_form', 'Cannot create phonebookentry – phonenumbermanagement ID missing or phonenumbermanagement not found');
 		}
 
 		return parent::create();

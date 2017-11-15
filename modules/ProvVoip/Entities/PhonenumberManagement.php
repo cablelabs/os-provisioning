@@ -13,6 +13,9 @@ class PhonenumberManagement extends \BaseModel {
     // The associated SQL table for this Model
     public $table = 'phonenumbermanagement';
 
+	// do not auto delete anything related to managements (ATM this can only be PhonebookEntries which will be deleted explicitely)
+	protected $delete_children = False;
+
 
 	// Add your validation rules here
 	public static function rules($id=null)
@@ -238,6 +241,62 @@ class PhonenumberManagement extends \BaseModel {
 
 		return $ret;
 	}
+
+
+	/**
+	 * Before deleting a phonenumbermanagement we have to check some things
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function delete() {
+
+		// with activated envia TEL module we have to perform some extra checks
+		// we have to check this here as using ModemObserver::deleting() with return false does not prevent the monster from deleting child model instances!
+		if (\PPModule::is_active('ProvVoipEnvia')) {
+
+			// check from where the deletion request has been triggered and set the correct var to show information
+			$prev = explode('?', \URL::previous())[0];
+			$prev = \Str::lower($prev);
+
+			// check if there is a not completely terminated envia TEL contract related to this management
+			if ($this->envia_contract) {
+				if (in_array($this->envia_contract->state, ['Aktiv', 'In Realisierung'])) {
+					$msg = "Cannot delete PhonenumberManagement $this->id: There is an active or pending envia TEL contract";
+					if (\Str::endsWith($prev, 'edit')) {
+						\Session::push('tmp_error_above_relations', $msg);
+					}
+					else {
+						\Session::push('tmp_error_above_index_list', $msg);
+					}
+					return false;
+				}
+				if (in_array($this->envia_contract->state, ['Gekündigt', ])) {
+					if ($this->envia_contract->end_date <= \Carbon\Carbon::now()->toDateTimeString()) {
+						$msg = "Cannot delete PhonenumberManagement $this->id: There is an envia TEL contract with enddate greater or equal than today";
+						if (\Str::endsWith($prev, 'edit')) {
+							\Session::push('tmp_error_above_relations', $msg);
+						}
+						else {
+							\Session::push('tmp_error_above_index_list', $msg);
+						}
+						return false;
+					}
+				}
+			}
+
+			// check start and end dates
+
+			// remove PhonebookEntry if one
+			if ($this->phonebookentry) {
+				$this->phonebookentry->delete();
+			}
+		}
+
+
+		// when arriving here: start the standard deletion procedure
+		return parent::delete();
+	}
+
 
 	/**
 	 * BOOT:
