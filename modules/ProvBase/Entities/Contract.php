@@ -124,17 +124,20 @@ class Contract extends \BaseModel {
 			$ret['Billing']['SepaMandate']['relation']  = $this->sepamandates;
 			$ret['Billing']['Invoice']['class'] 	= 'Invoice';
 			$ret['Billing']['Invoice']['relation']  = $this->invoices;
-			$ret['Billing']['Invoice']['options']['hide_delete_button'] = 0;
-			$ret['Billing']['Invoice']['options']['hide_create_button'] = 0;
+			$ret['Billing']['Invoice']['options']['hide_delete_button'] = 1;
+			$ret['Billing']['Invoice']['options']['hide_create_button'] = 1;
 		}
 
 		if (\PPModule::is_active('provvoipenvia'))
 		{
 			$ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
 			$ret['envia TEL']['EnviaContract']['relation'] = $this->enviacontracts;
+			$ret['envia TEL']['EnviaContract']['options']['hide_create_button'] = 1;
+			$ret['envia TEL']['EnviaContract']['options']['hide_delete_button'] = 1;
 
 			$ret['envia TEL']['EnviaOrder']['class'] = 'EnviaOrder';
 			$ret['envia TEL']['EnviaOrder']['relation'] = $this->_envia_orders;
+			$ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at envia TEL';
 
 			// TODO: auth - loading controller from model could be a security issue ?
 			$ret['envia TEL']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';

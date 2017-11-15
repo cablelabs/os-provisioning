@@ -216,9 +216,12 @@ class Modem extends \BaseModel {
 		{
 			$ret['dummy']['EnviaContract']['class'] = 'EnviaContract';
 			$ret['dummy']['EnviaContract']['relation'] = $this->enviacontracts;
+			$ret['dummy']['EnviaContract']['options']['hide_create_button'] = 1;
+			$ret['dummy']['EnviaContract']['options']['hide_delete_button'] = 1;
 
 			$ret['dummy']['EnviaOrder']['class'] = 'EnviaOrder';
 			$ret['dummy']['EnviaOrder']['relation'] = $this->_envia_orders;
+			$ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at envia TEL';
 
 			// TODO: auth - loading controller from model could be a security issue ?
 			$ret['dummy']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
