@@ -35,6 +35,10 @@ class BaseModel extends Eloquent
 	// set this variable in model index_list() to true if it shall not be deletable on index page
 	public $index_delete_disabled = false;
 
+	// Add Comment here. ..
+	protected $guarded = ['id'];
+
+
 	/**
 	 * Constructor.
 	 * Used to set some helper variables.
@@ -55,8 +59,17 @@ class BaseModel extends Eloquent
 	}
 
 
-	// Add Comment here. ..
-	protected $guarded = ['id'];
+	/**
+	 * Helper to get the model name.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function get_model_name() {
+
+		$model_name = get_class($this);
+		$model_name = explode('\\',$model_name);
+		return array_pop($model_name);
+	}
 
 
 	/**
@@ -916,9 +929,7 @@ class BaseObserver
 	{
 		$user = \Auth::user();
 
-		$model_name = get_class($model);
-		$model_name = explode('\\',$model_name);
-		$model_name = array_pop($model_name);
+		$model_name = $model->get_model_name();
 
 		$text = '';
 
