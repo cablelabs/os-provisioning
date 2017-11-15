@@ -731,8 +731,9 @@ class BaseModel extends Eloquent
 	 *          forgein key, like modem and modem_id.
 	 *
 	 *  NOTE: we define exceptions in an array where recursive deletion is disabled
+	 *  NOTE: we have to distinct between 1:n and n:m relations
 	 *
-	 *	@author Torsten Schmidt
+	 *	@author Torsten Schmidt, Patrick Reichel
 	 *
 	 *	@return array of all children objects
 	 */
@@ -773,9 +774,9 @@ class BaseModel extends Eloquent
 				{
 					if (in_array($column, $exceptions))
 						continue;
+
 					// get all objects with $column
 					$query = 'SELECT * FROM '.$table->$tables_var_name.' WHERE '.$column.'='.$this->id;
-					echo $query.'<br>';
 					foreach (DB::select($query) as $child)
 					{
 						$class_child_name = $this->_guess_model_name ($table->$tables_var_name);
@@ -793,16 +794,18 @@ class BaseModel extends Eloquent
 							$parts = explode('_', $table->$tables_var_name);
 							foreach ($parts as $part) {
 								$class_child_name = $this->_guess_model_name($part);
+
+								// one of the models in pivot tables is the current model – skip
 								if ($class_child_name == get_class($this)) {
 									continue;
 								}
-								else {
-									$class = new $class_child_name;
-									$id_col = $part.'_id';
-									$rel = $class->find($child->{$id_col});
-									if (!is_null($rel)) {
-										array_push($relations['n:m'], $rel);
-									}
+
+								// add other model instances to relation array if existing
+								$class = new $class_child_name;
+								$id_col = $part.'_id';
+								$rel = $class->find($child->{$id_col});
+								if (!is_null($rel)) {
+									array_push($relations['n:m'], $rel);
 								}
 							}
 						}
@@ -831,7 +834,7 @@ class BaseModel extends Eloquent
 	/**
 	 * Recursive delete of all children objects
 	 *
-	 * @author Torsten Schmidt
+	 * @author Torsten Schmidt, Patrick Reichel
 	 *
 	 * @return bool
 	 *
@@ -853,7 +856,7 @@ class BaseModel extends Eloquent
 				// if one direct or indirect child cannot be deleted:
 				// do not delete anything
 				if (!$child->delete()) {
-					$msg = "Cannot delete ".$this->get_model_name()." $this->id because ".$child->get_model_name()." $child->id cannot be deleted";
+					$msg = "Cannot delete ".$this->get_model_name()." $this->id: ".$child->get_model_name()." $child->id cannot be deleted";
 					if (\Str::endsWith($prev, 'edit')) {
 						\Session::push('tmp_error_above_relations', $msg);
 					}
@@ -870,7 +873,7 @@ class BaseModel extends Eloquent
 			foreach ($children['n:m'] as $child) {
 				$delete_method = 'deleteNtoM'.$child->get_model_name();
 				if (!$this->{$delete_method}($child)) {
-					$msg = "Cannot delete ".$this->get_model_name()." $this->id because of existing n:m relation with ".$child->get_model_name()." $child->id.";
+					$msg = "Cannot delete ".$this->get_model_name()." $this->id: n:m relation with ".$child->get_model_name()." $child->id. cannot be deleted";
 					if (\Str::endsWith($prev, 'edit')) {
 						\Session::push('tmp_error_above_relations', $msg);
 					}

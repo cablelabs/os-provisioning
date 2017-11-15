@@ -10,6 +10,8 @@
 	'tmp_error_above_relations',
 	];
 
+$tmp_msg_above_shown = False;
+
 $tmp_msg_above = [];
 foreach ($tmp_msg_above_keys as $tmp_msg_above_key) {
 	if ((Session::has($tmp_msg_above_key)) && (Str::endswith($tmp_msg_above_key, $blade_type))) {
@@ -43,6 +45,7 @@ foreach ($tmp_msg_above_keys as $tmp_msg_above_key) {
 			$tmp_color = '#aaaaaa';
 		}
 		$tmp_style = "font-weight: bold; padding-top: 0px; padding-left: 10px; margin-bottom: 5px; border-left: solid 2px $tmp_color";
+		$tmp_msg_above_shown = True;
 	?>
 	@foreach ($tmp_msg_above_msg as $tmp_msg)
 		<div style="{{ $tmp_style }}">
@@ -56,3 +59,9 @@ foreach ($tmp_msg_above_keys as $tmp_msg_above_key) {
 	?>
 	@DivClose()
 @endforeach
+
+@if ($tmp_msg_above)
+	@DivOpen(12)
+		&nbsp;
+	@DivClose()
+@endif
