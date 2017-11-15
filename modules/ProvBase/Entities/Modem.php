@@ -619,7 +619,7 @@ class Modem extends \BaseModel {
 			}
 			else {
 				// Inform and log for all other exceptions
-				\Session::push('tmp_info_above_form', 'Unexpected exception: '.$e->getMessage());
+				\Session::push('tmp_error_above_form', 'Unexpected exception: '.$e->getMessage());
 				\Log::error("Unexpected exception restarting modem ".$this->id." (".$this->mac."): ".$e->getMessage()." => ".$e->getTraceAsString());
 				\Session::flash('error', '');
 			}
@@ -1027,38 +1027,6 @@ class Modem extends \BaseModel {
 		$this->observer_enabled = false;
 	}
 
-
-	/**
-	 * Before deleting a modem and all children we have to check some things
-	 *
-	 * @author Patrick Reichel
-	 */
-	public function delete() {
-
-		// deletion of modems with attached phonenumbers is not allowed with enabled envia TEL module
-		// prevent user from (recursive and implicite) deletion of phonenumbers before termination at envia TEL!!
-		// we have to check this here as using ModemObserver::deleting() with return false does not prevent the monster from deleting child model instances!
-		if (\PPModule::is_active('ProvVoipEnvia')) {
-			if ($this->has_phonenumbers_attached()) {
-
-				// check from where the deletion request has been triggered and set the correct var to show information
-				$prev = explode('?', \URL::previous())[0];
-				$prev = \Str::lower($prev);
-				$msg = "You are not allowed to delete a modem with attached phonenumbers!";
-				if (\Str::endsWith($prev, 'edit')) {
-					\Session::push('tmp_info_above_relations', $msg);
-				}
-				elseif (\Str::endsWith($prev, 'modem')) {
-					\Session::push('tmp_info_above_index_list', $msg);
-				}
-
-				return false;
-			}
-		}
-
-		// when arriving here: start the standard deletion procedure
-		return parent::delete();
-	}
 
 	/**
 	 * Calculates the great-circle distance between this and $modem, with
