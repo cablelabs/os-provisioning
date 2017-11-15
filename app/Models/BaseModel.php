@@ -205,15 +205,26 @@ class BaseModel extends Eloquent
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo or \App\Extensions\Database\EmptyRelation
 	 * @author Patrick Reichel
 	 */
-    /* public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null) { */
+    public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null) {
 
-		/* if ($this->_relationAvailable($related)) { */
-			/* return parent::belongsTo($related, $foreignKey, $otherKey, $relation); */
-		/* } */
-		/* else { */
-			/* return new EmptyRelation(); */
-		/* } */
-	/* } */
+		if ($this->_relationAvailable($related)) {
+
+			// Patrick Reichel: get $relation if not given (copied from Eloquent/Model.php to get proper backtrace)
+			// If no relation name was given, we will use this debug backtrace to extract
+			// the calling method's name and use that as the relationship name as most
+			// of the time this will be what we desire to use for the relationships.
+			if (is_null($relation)) {
+				list($current, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+
+				$relation = $caller['function'];
+			}
+
+			return parent::belongsTo($related, $foreignKey, $otherKey, $relation);
+		}
+		else {
+			return new EmptyRelation();
+		}
+	}
 
 
 	/**
@@ -227,15 +238,15 @@ class BaseModel extends Eloquent
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany or \App\Extensions\Database\EmptyRelation
 	 * @author Patrick Reichel
 	 */
-    /* public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null) { */
+    public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null) {
 
-		/* if ($this->_relationAvailable($related)) { */
-			/* return parent::belongsToMany($related, $table, $foreignKey, $otherKey, $relation); */
-		/* } */
-		/* else { */
-			/* return new EmptyRelation(); */
-		/* } */
-	/* } */
+		if ($this->_relationAvailable($related)) {
+			return parent::belongsToMany($related, $table, $foreignKey, $otherKey, $relation);
+		}
+		else {
+			return new EmptyRelation();
+		}
+	}
 
 
 	/**
