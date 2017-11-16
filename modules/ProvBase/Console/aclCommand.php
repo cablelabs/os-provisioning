@@ -37,6 +37,8 @@ class aclCommand extends Command {
 	/**
 	 * Execute the console command.
 	 *
+	 * NOTE: deprecated: Use GUI / Cmtsblade's instead
+	 *
 	 * @return mixed
 	 */
 	public function fire()

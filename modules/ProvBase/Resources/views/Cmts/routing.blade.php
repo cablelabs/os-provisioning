@@ -2,23 +2,21 @@
 File: <i>/etc/sysconfig/network-scripts/route-...</i><br><br>
 
 <div style="padding-left: 20px;">
-<div class="note note-info">
-# {{$view_var->hostname}}<br>
-
+<pre>{{--do not indent, it will show up in HTML--}}
+# {{$view_var->hostname}}
 <?php $missing=false; ?>
 @foreach ($view_var->ippools as $pool)
-	@if($pool->ip_route_prov_exists())
-		{{$pool->net}}/{{$pool->size()}} via {{$view_var->ip}} <br>
-	@else
-		<div class="label label-danger">
-			{{$pool->net}}/{{$pool->size()}} via {{$view_var->ip}}
-		</div><br>
-		<?php $missing=true; ?>
-	@endif
+@if($pool->ip_route_prov_exists())
+ {{$pool->net}}/{{$pool->size()}} via {{$view_var->ip}}
+@else
+<div class="label label-danger">
+ {{$pool->net}}/{{$pool->size()}} via {{$view_var->ip}}
+</div>
+<?php $missing=true; ?>
+@endif
 @endforeach
+</pre>
 </div>
-</div>
-
 @if ($missing)
 	<div class="label label-danger">!!! ROUTES NOT FOUND !!!</div>
 @endif
@@ -29,20 +27,9 @@ File: <i>/etc/sysconfig/network-scripts/route-...</i><br><br>
 <i>interface bundle 1</i><br><br>
 
 <div style="padding-left: 20px;">
-<div class="note note-info">
-
-<?php $missing=false; ?>
-@foreach ($view_var->ippools as $pool)
-	@if($pool->ip_route_online())
-		ip address {{$pool->router_ip}} {{$pool->netmask}} secondary <br>
-	@else
-		<div class="label label-danger">
-			ip address {{$pool->router_ip}} {{$pool->netmask}} secondary
-		</div><br>
-		<?php $missing=true; ?>
-	@endif
-@endforeach
-</div>
+<pre>
+@include ('provbase::Cmtsblade.bundle_ips')
+</pre>
 </div>
 
 @if ($missing)

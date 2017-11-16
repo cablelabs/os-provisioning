@@ -93,12 +93,79 @@ class Cmts extends \BaseModel {
 	// returns all objects that are related to a cmts
 	public function view_has_many()
 	{
+		// related IP Pools
 		$ret['Base']['IpPool']['class'] = 'IpPool';
 		$ret['Base']['IpPool']['relation'] = $this->ippools;
 
+		// Routing page
 		$ret['Base']['Routing']['view']['view'] = 'provbase::Cmts.routing';
 
+		// CMTS config page
+		$this->prep_cmts_config_page();
+		$ret['Base']['Config']['view']['view'] = 'provbase::Cmtsblade.load';
+		$ret['Base']['Config']['view']['vars'] = ['cb' => $this]; // cb .. CMTS blade
+
 		return $ret;
+	}
+
+	/*
+	 * create a cisco encrypted password, like $1$fUW9$EAwpFkkbCTUUK8MpRS1sI0
+	 *
+	 * See: https://serverfault.com/questions/26188/code-to-generate-cisco-secret-password-hashes/46399
+	 *
+	 * NOTE: dont encrypt if CMTS_SAVE_ENCRYPTED_PASSWORDS is set in env file
+	 */
+	public function create_cisco_encrypt ($psw)
+	{
+		// Dont encrypt password, it is still encrypted
+		if (env('CMTS_SAVE_ENCRYPTED_PASSWORDS', false))
+			return $psw;
+
+		exec ('openssl passwd -salt `openssl rand -base64 3` -1 "'.$psw.'"', $output);
+		return $output[0];
+	}
+
+	/*
+	 * CMTS Config Page:
+	 * Prepare Cmts Config Variables
+	 *
+	 * They are required in Cmtsblade's
+	 *
+	 * NOTE: this will fit 90% of generic installations
+	 */
+	public function prep_cmts_config_page()
+	{
+		// password section
+		$this->enable_secret = $this->create_cisco_encrypt(env('CMTS_ENABLE_SECRET', 'admin'));
+		$this->admin_psw = $this->create_cisco_encrypt(env('CMTS_ADMIN_PASSWORD', 'admin'));
+		// NOTE: this is quit insecure and should be a different psw that the encrypted ones above!
+		$this->vty_psw = env('CMTS_VTY_PASSWORD', 'adminvty');
+
+		// type specific settings
+		switch ($this->type) {
+			case 'ubr7225':
+				$this->interface = 'GigabitEthernet0/1';
+				break;
+
+			case 'ubr10k':
+				$this->interface = 'GigabitEthernet1/0/0';
+				break;
+
+			default:
+				$this->interface = 'GigabitEthernet0/1';
+				break;
+		}
+
+		$this->domain = ProvBase::first()->domain_name;
+
+		$this->prov_ip = ProvBase::first()->provisioning_server;
+		$this->router_ip = env('CMTS_DEFAULT_GW', '10.255.255.254');
+		$this->netmask = env('CMTS_IP_NETMASK', '255.255.255.0');
+		$this->tf_net_1 = env('CMTS_TRANSFER_NET', '10.255.0.1'); // servers with /24
+		$this->nat_ip = env('CMTS_NAT_IP', '10.255.0.2'); // second server ip is mostlikely NAT
+
+		$this->snmp_ro = $this->get_ro_community();
+		$this->snmp_rw = $this->get_rw_community();
 	}
 
 
