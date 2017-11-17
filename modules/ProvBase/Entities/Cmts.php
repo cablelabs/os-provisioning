@@ -135,6 +135,7 @@ class Cmts extends \BaseModel {
 		return $output[0];
 	}
 
+
 	/*
 	 * CMTS Config Page:
 	 * Prepare Cmts Config Variables

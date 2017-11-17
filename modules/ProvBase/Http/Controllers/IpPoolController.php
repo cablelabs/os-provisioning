@@ -83,7 +83,7 @@ class IpPoolController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'netmask', 'description' => 'Netmask'),
 			array('form_type' => 'text', 'name' => 'ip_pool_start', 'description' => 'First IP'),
 			array('form_type' => 'text', 'name' => 'ip_pool_end', 'description' => 'Last IP'),
-			array('form_type' => 'text', 'name' => 'router_ip', 'description' => 'Router IP'),
+			array('form_type' => 'ip', 'name' => 'router_ip', 'description' => 'Router IP'),
 			array('form_type' => 'text', 'name' => 'broadcast_ip', 'description' => 'Broadcast IP'),
 			array('form_type' => 'text', 'name' => 'dns1_ip', 'description' => 'DNS1 IP'),
 			array('form_type' => 'text', 'name' => 'dns2_ip', 'description' => 'DNS2 IP'),

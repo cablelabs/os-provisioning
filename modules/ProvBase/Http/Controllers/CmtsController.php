@@ -42,7 +42,7 @@ class CmtsController extends \BaseController {
 			array('form_type' => 'select', 'name' => 'company', 'description' => 'Company', 'value' => ['Cisco' => 'Cisco', 'Casa' => 'Casa']),
 			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['ubr7225' => 'ubr7225', 'ubr10k' => 'ubr10k']),
 			// TODO: type should be jquery based select depending on the company
-			array('form_type' => 'text', 'name' => 'ip', 'description' => 'IP'),
+			array('form_type' => 'ip', 'name' => 'ip', 'description' => 'IP', 'help' => 'Online'),
 			array('form_type' => 'text', 'name' => 'community_rw', 'description' => 'SNMP Private Community String'),
 			array('form_type' => 'text', 'name' => 'community_ro', 'description' => 'SNMP Public Community String'),
 			array('form_type' => 'text', 'name' => 'state', 'description' => 'State'),
