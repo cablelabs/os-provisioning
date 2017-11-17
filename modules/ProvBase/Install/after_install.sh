@@ -3,7 +3,6 @@ pw=$(openssl rand -base64 16)
 
 # create folders
 install -dm750 /etc/dhcp/nmsprime/cmts_gws
-install -dm700 /tftpboot/{,cm}
 install -dm750 -g named /var/named-nmsprime
 
 # change owner
