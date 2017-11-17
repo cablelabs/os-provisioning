@@ -98,15 +98,25 @@ class Cmts extends \BaseModel {
 		$ret['Base']['IpPool']['relation'] = $this->ippools;
 
 		// Routing page
-		$ret['Base']['Routing']['view']['view'] = 'provbase::Cmts.routing';
-
-		// CMTS config page
 		$this->prep_cmts_config_page();
-		$ret['Base']['Config']['view']['view'] = 'provbase::Cmtsblade.load';
 		$ret['Base']['Config']['view']['vars'] = ['cb' => $this]; // cb .. CMTS blade
+		$ret['Base']['Config']['view']['view'] = 'provbase::Cmts.overview';
 
 		return $ret;
 	}
+
+
+	/*
+	 * Return the CMTS config as clear text
+	 */
+	public function get_raw_cmts_config()
+	{
+		$view_var = $this;
+		$cb = $this;
+
+		return strip_tags(view('provbase::Cmtsblade.'.strtolower($this->company), compact('cb', 'view_var'))->render());
+	}
+
 
 	/*
 	 * create a cisco encrypted password, like $1$fUW9$EAwpFkkbCTUUK8MpRS1sI0
@@ -156,9 +166,12 @@ class Cmts extends \BaseModel {
 				break;
 		}
 
-		$this->domain = ProvBase::first()->domain_name;
-
+		// get provisioning IP and interface
 		$this->prov_ip = ProvBase::first()->provisioning_server;
+		exec ('ip a | grep '.$this->prov_ip.' | tr " " "\n" | tail -n1', $prov_if);
+		$this->prov_if = (isset($prov_if[0]) ? $prov_if[0] : 'eth');
+
+		$this->domain = ProvBase::first()->domain_name;
 		$this->router_ip = env('CMTS_DEFAULT_GW', '10.255.255.254');
 		$this->netmask = env('CMTS_IP_NETMASK', '255.255.255.0');
 		$this->tf_net_1 = env('CMTS_TRANSFER_NET', '10.255.0.1'); // servers with /24
@@ -507,6 +520,9 @@ class CmtsObserver
 		if (\PPModule::is_active ('ProvMon'))
 			\Artisan::call('nms:cacti', ['--modem-id' => 0, '--cmts-id' => $cmts->id]);
 		$cmts->make_dhcp_conf();
+
+		// write CMTS config to /tftpboot/cmts
+		File::put('/tftpboot/cmts/'.$cmts->hostname.'.cfg', $cmts->get_raw_cmts_config());
 	}
 
 	public function updating($cmts)
@@ -518,6 +534,9 @@ class CmtsObserver
 	public function updated($cmts)
 	{
 		$cmts->make_dhcp_conf();
+
+		// write CMTS config to /tftpboot/cmts
+		File::put('/tftpboot/cmts/'.$cmts->hostname.'.cfg', $cmts->get_raw_cmts_config());
 	}
 
 	public function deleted($cmts)

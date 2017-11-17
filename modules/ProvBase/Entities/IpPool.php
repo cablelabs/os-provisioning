@@ -105,7 +105,7 @@ class IpPool extends \BaseModel {
 	 */
 	public function ip_route_prov_exists()
 	{
-		return (strlen(exec ('ip route show '.$this->net.'/'.$this->size().' via '.$this->router_ip)) == 0 ? false : true);
+		return (strlen(exec ('ip route show '.$this->net.'/'.$this->size().' via '.$this->cmts->ip)) == 0 ? false : true);
 	}
 
 
