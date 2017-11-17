@@ -23,12 +23,12 @@ File: <i>/etc/sysconfig/network-scripts/route-...</i><br><br>
 
 <hr>
 
-<b>CMTS Routing</b><br>
+<b>CMTS Bundle Interface</b><br><br>
 
 <div style="padding-left: 20px;">
 <pre>
 interface bundle 1
-@include ('provbase::Cmtsblade.bundle_ips')
+ @include ('provbase::Cmtsblade.bundle_ips')
 </pre>
 </div>
 
