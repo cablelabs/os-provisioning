@@ -180,6 +180,20 @@ class Cmts extends \BaseModel {
 
 		$this->snmp_ro = $this->get_ro_community();
 		$this->snmp_rw = $this->get_rw_community();
+
+		// Help section: onhover
+		$this->enable_secret = '<span title="CMTS_ENABLE_SECRET and CMTS_SAVE_ENCRYPTED_PASSWORDS"><b>'.$this->enable_secret.'</b></span>';
+		$this->admin_psw = '<span title="CMTS_ADMIN_PASSWORD and CMTS_SAVE_ENCRYPTED_PASSWORDS"><b>'.$this->admin_psw.'</b></span>';
+		$this->vty_psw = '<span title="CMTS_VTY_PASSWORD"><b>'.$this->vty_psw.'</b></span>';
+		$this->prov_ip = '<span title="Set in Global Config Page / Provisioning / Provisioning Server IP"><b>'.$this->prov_ip.'</b></span>';
+		$this->interface = '<span title="Depending on CMTS Device Company and Type"><b>'.$this->interface.'</b></span>';
+		$this->domain = '<span title="Set in Global Config Page / Provisioning / Domain Name"><b>'.$this->domain.'</b></span>';
+		$this->router_ip = '<span title="CMTS_DEFAULT_GW"><b>'.$this->router_ip.'</b></span>';
+		$this->netmask = '<span title="CMTS_IP_NETMASK"><b>'.$this->netmask.'</b></span>';
+		$this->tf_net_1 = '<span title="CMTS_TRANSFER_NET"><b>'.$this->tf_net_1.'</b></span>';
+		$this->nat_ip = '<span title="CMTS_NAT_IP"><b>'.$this->nat_ip.'</b></span>';
+		$this->snmp_ro = '<span title="Set in CMTS page or Global Config Page / Provisioning if empty in CMTS page"><b>'.$this->snmp_ro.'</b></span>';
+		$this->snmp_rw = '<span title="Set in CMTS page or Global Config Page / Provisioning if empty in CMTS page"><b>'.$this->snmp_rw.'</b></span>';
 	}
 
 
