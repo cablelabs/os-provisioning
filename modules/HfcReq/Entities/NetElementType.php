@@ -10,6 +10,8 @@ class NetElementType extends \BaseModel {
 	// The associated SQL table for this Model
 	public $table = 'netelementtype';
 
+	private $max_parents = 15;
+
 
 	// Add your validation rules here
 	public static function rules($id = null)
@@ -112,6 +114,13 @@ class NetElementType extends \BaseModel {
 		return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'pre_conf_oid_id');
 	}
 
+	public function get_parent ()
+	{
+		if (!$this->parent_id || $this->parent_id < 1)
+			return 0;
+
+		return NetElementType::find($this->parent_id);
+	}
 
 	public static function param_list($id)
 	{
@@ -191,6 +200,32 @@ class NetElementType extends \BaseModel {
 		}
 
 		return $arr;
+	}
+
+
+	/**
+	 * Return the base type id of the current NetElementType
+	 *
+	 * @param
+	 * @return integer [1: Net, 2: Cluster, 3: Cmts, 4: Amp, 5: Node, 6: Data]
+	 */
+	public function get_base_type()
+	{
+		$p = $this;
+		$i = 0;
+
+		do
+		{
+			if (!is_object($p))
+				return false;
+
+			if ($p->id >=1 && $p->id <= 6)
+				return $p->id;
+
+			$p = $p->get_parent();
+		} while ($i++ < $this->max_parents);
+
+		return false;
 	}
 
 }
