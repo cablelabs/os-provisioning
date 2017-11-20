@@ -20,18 +20,24 @@ class NetElementController extends HfcBaseController {
 		$parents 	 = $model->html_list(NetElement::get(['id','name']), 'name', $empty_field);
 		$kml_files   = $model->kml_files();
 
+		// parse which netelementtype we want to edit/create
+		// NOTE: this is for auto reload via HTML GET
+		$type = 0;
+		if (isset($_GET['netelementtype_id']))
+			$type = $_GET['netelementtype_id'];
+		elseif ($model->netelementtype)
+			$type = $model->netelementtype->get_base_type();
+
 		/*
 		 * provisioning device
 		 */
 		$prov_device = [];
 		$prov_device_hidden = 1;
 
-		if ($model->netelementtype && $model->netelementtype->get_base_type() == 3) // cluster
+		if ($type == 3) // cluster
 			$prov_device = $model->html_list(\Modules\ProvBase\Entities\Cmts::get(['id', 'hostname']), 'hostname', $empty_field);
 
-		if ($model->netelementtype &&
-		   ($model->netelementtype->get_base_type() == 4 || // amp
-			$model->netelementtype->get_base_type() == 5)) // node
+		if ($type == 4 || $type == 5) // amp || node
 			$prov_device = $model->html_list(\Modules\ProvBase\Entities\Modem::get(['id', 'id']), 'id', $empty_field);
 
 		if ($prov_device)
@@ -50,14 +56,14 @@ class NetElementController extends HfcBaseController {
 		 * return
 		 */
 		return array(
+			array('form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $model->html_list(NetElementType::get(['id', 'name']), 'name'), 'hidden' => 0),
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
 			// array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['NET' => 'NET', 'CMTS' => 'CMTS', 'DATA' => 'DATA', 'CLUSTER' => 'CLUSTER', 'NODE' => 'NODE', 'AMP' => 'AMP']),
-			array('form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $model->html_list(NetElementType::get(['id', 'name']), 'name'), 'hidden' => 0),
 			// net is automatically detected in Observer
 			// array('form_type' => 'select', 'name' => 'net', 'description' => 'Net', 'value' => $nets),
 			array('form_type' => 'text', 'name' => 'ip', 'description' => 'IP address'),
 			array('form_type' => 'text', 'name' => 'link', 'description' => 'HTML Link'),
-			array('form_type' => 'select', 'name' => 'prov_device_id', 'description' => 'Link Provisioning Device', 'value' => $prov_device, 'hidden' => $prov_device_hidden),
+			array('form_type' => 'select', 'name' => 'prov_device_id', 'description' => 'Provisioning Device', 'value' => $prov_device, 'hidden' => $prov_device_hidden),
 			array('form_type' => 'text', 'name' => 'pos', 'description' => 'Geoposition'),
 			array('form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Object', 'value' => $parents),
 

@@ -42,7 +42,7 @@ class NetElementTypeController extends HfcReqController {
 
 
 	/**
-	 * This Function gives the Opportunity to quickly set html_frame or html_id of multiple Parameters 
+	 * This Function gives the Opportunity to quickly set html_frame or html_id of multiple Parameters
 	 * to order the Netelement Controlling View
 	 * Note: Input comes from NetElementType.settings.blade.php
 	 *
