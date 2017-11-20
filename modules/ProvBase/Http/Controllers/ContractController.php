@@ -155,7 +155,7 @@ class ContractController extends \BaseController {
 	 */
 	public function prepare_input($data)
 	{
-		$data['contract_start'] = isset($data['contract_start']) ? : date('Y-m-d');
+		$data['contract_start'] = $data['contract_start'] ? : date('Y-m-d');
 
 		$data = parent::prepare_input($data);
 
