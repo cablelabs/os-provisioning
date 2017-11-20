@@ -66,10 +66,10 @@ function config ($dir_root, $module='base', $options='')
 	else
 	{
 		// nmsprime-<modules>
-		system("cat $dir/../../../Install/module_before_install.sh $dir/before_install.sh > /tmp/fpm-$module-bi.txt");
-		system("cat $dir/../../../Install/module_after_install.sh $dir/after_install.sh > /tmp/fpm-$module-ai.txt");
-		system("cat $dir/../../../Install/module_before_upgrade.sh $dir/before_upgrade.sh > /tmp/fpm-$module-bu.txt");
-		system("cat $dir/../../../Install/module_after_upgrade.sh $dir/after_upgrade.sh > /tmp/fpm-$module-au.txt");
+		system("cat $dir/before_install.sh $dir/../../../Install/module_before_install.sh > /tmp/fpm-$module-bi.txt");
+		system("cat $dir/after_install.sh $dir/../../../Install/module_after_install.sh > /tmp/fpm-$module-ai.txt");
+		system("cat $dir/before_upgrade.sh $dir/../../../Install/module_before_upgrade.sh > /tmp/fpm-$module-bu.txt");
+		system("cat $dir/after_upgrade.sh $dir/../../../Install/module_after_upgrade.sh > /tmp/fpm-$module-au.txt");
 	}
 
 
