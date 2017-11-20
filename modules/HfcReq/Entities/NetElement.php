@@ -371,6 +371,44 @@ class NetElement extends \BaseModel {
 
 		return ($this->netelementtype->get_core_type() == 3); // 3 .. is core element for cmts
 	}
+
+
+	/**
+	 * Return the base NetElementType id
+	 *
+	 * @param
+	 * @return integer [1: Net, 2: Cluster, 3: Cmts, 4: Amp, 5: Node, 6: Data]
+	 */
+	public function get_base_netelementtype()
+	{
+		return $this->netelementtype->get_base_type();
+	}
+
+	/**
+	 * Return hard coded $this->options array
+	 * NOTE: this is of course type dependent
+	 *
+	 * @param
+	 * @return array()
+	 */
+	public function get_options_array()
+	{
+		if ($this->get_base_netelementtype() == 2) // cluster
+			return array(
+				'0' => '8x4', // default
+				'81' => '8x1',
+				'82' => '8x2',
+				'84' => '8x4',
+				'88' => '8x8',
+				'124' => '12x4',
+				'128' => '12x8',
+				'164' => '16x4',
+				'168' => '16x8'
+			);
+
+		return [];
+	}
+
 }
 
 
