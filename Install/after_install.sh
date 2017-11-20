@@ -76,3 +76,6 @@ chown -R apache $dir/storage $dir/bootstrap/cache
 chgrp -R apache /etc/nmsprime/env
 chmod -R o-rwx /etc/nmsprime/env
 chmod -R g-w /etc/nmsprime/env
+
+# log
+chmod 644 /var/log/messages

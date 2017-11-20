@@ -1,0 +1,17 @@
+/var/www/nmsprime/storage/logs/laravel.log {
+    weekly
+    missingok
+    rotate 6
+#   compress
+#   delaycompress
+    notifempty
+    create 755 apache apache
+}
+
+/var/www/nmsprime/storage/logs/billing.log {
+    monthly
+    missingok
+    rotate 6
+    notifempty
+    create 755 apache apache
+}
