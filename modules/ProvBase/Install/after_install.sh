@@ -3,7 +3,6 @@ pw=$(openssl rand -base64 16)
 
 # create folders
 install -dm750 /etc/dhcp/nmsprime/cmts_gws
-install -dm700 /tftpboot/{,cm,cmts}
 install -dm750 -g named /var/named-nmsprime
 
 # change owner
@@ -15,17 +14,12 @@ sed -i "s|<DNS-PASSWORD>|$pw|" /etc/named-nmsprime.conf
 
 systemctl daemon-reload
 
-systemctl enable nmsprimed.service
+systemctl enable chronyd
 systemctl enable dhcpd
 systemctl enable named
+systemctl enable nmsprimed
 systemctl enable xinetd
-systemctl enable chronyd
 
 systemctl start chronyd
-systemctl start nmsprimed.service
+systemctl start nmsprimed
 systemctl start xinetd
-
-
-cd "$dir"
-php artisan nms:dhcp
-php artisan nms:configfile
