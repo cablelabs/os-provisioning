@@ -93,9 +93,107 @@ class Cmts extends \BaseModel {
 	// returns all objects that are related to a cmts
 	public function view_has_many()
 	{
-		return array(
-			'IpPool' => $this->ippools
-		);
+		// related IP Pools
+		$ret['Base']['IpPool']['class'] = 'IpPool';
+		$ret['Base']['IpPool']['relation'] = $this->ippools;
+
+		// Routing page
+		$this->prep_cmts_config_page();
+		$ret['Base']['Config']['view']['vars'] = ['cb' => $this]; // cb .. CMTS blade
+		$ret['Base']['Config']['view']['view'] = 'provbase::Cmts.overview';
+
+		return $ret;
+	}
+
+
+	/*
+	 * Return the CMTS config as clear text
+	 */
+	public function get_raw_cmts_config()
+	{
+		$view_var = $this;
+		$cb = $this;
+
+		return strip_tags(view('provbase::Cmtsblade.'.strtolower($this->company), compact('cb', 'view_var'))->render());
+	}
+
+
+	/*
+	 * create a cisco encrypted password, like $1$fUW9$EAwpFkkbCTUUK8MpRS1sI0
+	 *
+	 * See: https://serverfault.com/questions/26188/code-to-generate-cisco-secret-password-hashes/46399
+	 *
+	 * NOTE: dont encrypt if CMTS_SAVE_ENCRYPTED_PASSWORDS is set in env file
+	 */
+	public function create_cisco_encrypt ($psw)
+	{
+		// Dont encrypt password, it is still encrypted
+		if (env('CMTS_SAVE_ENCRYPTED_PASSWORDS', false))
+			return $psw;
+
+		exec ('openssl passwd -salt `openssl rand -base64 3` -1 "'.$psw.'"', $output);
+		return $output[0];
+	}
+
+
+	/*
+	 * CMTS Config Page:
+	 * Prepare Cmts Config Variables
+	 *
+	 * They are required in Cmtsblade's
+	 *
+	 * NOTE: this will fit 90% of generic installations
+	 */
+	public function prep_cmts_config_page()
+	{
+		// password section
+		$this->enable_secret = $this->create_cisco_encrypt(env('CMTS_ENABLE_SECRET', 'admin'));
+		$this->admin_psw = $this->create_cisco_encrypt(env('CMTS_ADMIN_PASSWORD', 'admin'));
+		// NOTE: this is quit insecure and should be a different psw that the encrypted ones above!
+		$this->vty_psw = env('CMTS_VTY_PASSWORD', 'adminvty');
+
+		// type specific settings
+		switch ($this->type) {
+			case 'ubr7225':
+				$this->interface = 'GigabitEthernet0/1';
+				break;
+
+			case 'ubr10k':
+				$this->interface = 'GigabitEthernet1/0/0';
+				break;
+
+			default:
+				$this->interface = 'GigabitEthernet0/1';
+				break;
+		}
+
+		// get provisioning IP and interface
+		$this->prov_ip = ProvBase::first()->provisioning_server;
+		exec ('ip a | grep '.$this->prov_ip.' | tr " " "\n" | tail -n1', $prov_if);
+		$this->prov_if = (isset($prov_if[0]) ? $prov_if[0] : 'eth');
+
+		$this->domain = ProvBase::first()->domain_name;
+		$this->router_ip = env('CMTS_DEFAULT_GW', '10.255.255.254');
+		$this->netmask = env('CMTS_IP_NETMASK', '255.255.255.0');
+		$this->tf_net_1 = env('CMTS_TRANSFER_NET', '10.255.0.1'); // servers with /24
+		$this->nat_ip = env('CMTS_NAT_IP', '10.255.0.2'); // second server ip is mostlikely NAT
+
+		$this->snmp_ro = $this->get_ro_community();
+		$this->snmp_rw = $this->get_rw_community();
+
+		// Help section: onhover
+		$this->enable_secret = '<span title="CMTS_ENABLE_SECRET and CMTS_SAVE_ENCRYPTED_PASSWORDS"><b>'.$this->enable_secret.'</b></span>';
+		$this->admin_psw = '<span title="CMTS_ADMIN_PASSWORD and CMTS_SAVE_ENCRYPTED_PASSWORDS"><b>'.$this->admin_psw.'</b></span>';
+		$this->vty_psw = '<span title="CMTS_VTY_PASSWORD"><b>'.$this->vty_psw.'</b></span>';
+		$this->prov_ip = '<span title="Set in Global Config Page / Provisioning / Provisioning Server IP"><b>'.$this->prov_ip.'</b></span>';
+		$this->interface = '<span title="Depending on CMTS Device Company and Type"><b>'.$this->interface.'</b></span>';
+		$this->domain = '<span title="Set in Global Config Page / Provisioning / Domain Name"><b>'.$this->domain.'</b></span>';
+		$this->router_ip = '<span title="CMTS_DEFAULT_GW"><b>'.$this->router_ip.'</b></span>';
+		$this->netmask = '<span title="CMTS_IP_NETMASK"><b>'.$this->netmask.'</b></span>';
+		$this->tf_net_1 = '<span title="CMTS_TRANSFER_NET"><b>'.$this->tf_net_1.'</b></span>';
+		$this->nat_ip = '<span title="CMTS_NAT_IP"><b>'.$this->nat_ip.'</b></span>';
+		$this->snmp_ro = '<span title="Set in CMTS page or Global Config Page / Provisioning if empty in CMTS page"><b>'.$this->snmp_ro.'</b></span>';
+		$this->snmp_rw = '<span title="Set in CMTS page or Global Config Page / Provisioning if empty in CMTS page"><b>'.$this->snmp_rw.'</b></span>';
 	}
 
 
@@ -437,6 +535,9 @@ class CmtsObserver
 		if (\PPModule::is_active ('ProvMon'))
 			\Artisan::call('nms:cacti', ['--modem-id' => 0, '--cmts-id' => $cmts->id]);
 		$cmts->make_dhcp_conf();
+
+		// write CMTS config to /tftpboot/cmts
+		File::put('/tftpboot/cmts/'.$cmts->hostname.'.cfg', $cmts->get_raw_cmts_config());
 	}
 
 	public function updating($cmts)
@@ -448,6 +549,9 @@ class CmtsObserver
 	public function updated($cmts)
 	{
 		$cmts->make_dhcp_conf();
+
+		// write CMTS config to /tftpboot/cmts
+		File::put('/tftpboot/cmts/'.$cmts->hostname.'.cfg', $cmts->get_raw_cmts_config());
 	}
 
 	public function deleted($cmts)

@@ -54,6 +54,17 @@ class ProvBase extends \BaseModel {
         ProvBase::observe(new \App\SystemdObserver);
     }
 
+	/*
+	 * Return true if $this->prov_ip is online, otherwise false
+	 * This implies that the Mgmt Interface is setup correctly
+	 */
+	public static function prov_ip_online ()
+	{
+		// Ping: Only check if device is online
+		exec ('sudo ping -c1 -i0 -w1 '.ProvBase::first()->provisioning_server, $ping, $ret);
+		return $ret ? false : true;
+	}
+
 
     /**
 	 * Create the global configuration file for DHCP Server from Global Config Parameters
