@@ -29,7 +29,7 @@ class PhonenumberManagementController extends \BaseController {
 			!(Phonenumber::find(\Input::get('phonenumber_id')))
 		) {
 			$this->edit_view_save_button = false;
-			\Session::push('tmp_info_above_form', 'Cannot create phonenumbermanagement – phonenumber ID missing or phonenumber not found');
+			\Session::push('tmp_error_above_form', 'Cannot create phonenumbermanagement – phonenumber ID missing or phonenumber not found');
 		}
 
 		return parent::create();

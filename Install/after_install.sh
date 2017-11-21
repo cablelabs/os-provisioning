@@ -12,6 +12,8 @@ pw=$(pwgen 12 1) # SQL password for user nmsprime
 sed -i "s/^SELINUX=enforcing$/SELINUX=disabled/" /etc/sysconfig/selinux
 setenforce  0
 
+# set default hostname
+hostnamectl set-hostname nmsprime
 
 #
 # HTTP
@@ -38,6 +40,10 @@ firewall-cmd --reload
 #
 systemctl start mariadb
 systemctl enable mariadb
+
+# populate timezone info and set php timezone based on the local one
+mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
+sed -i "s|^;date.timezone =$|date.timezone = $(timedatectl | grep 'Time zone' | cut -d':' -f2 | xargs | cut -d' ' -f1)|" /etc/php.ini
 
 # create mysql db
 mysql -u root -e "CREATE DATABASE nmsprime;"
@@ -74,3 +80,6 @@ chown -R apache $dir/storage $dir/bootstrap/cache
 chgrp -R apache /etc/nmsprime/env
 chmod -R o-rwx /etc/nmsprime/env
 chmod -R g-w /etc/nmsprime/env
+
+# log
+chmod 644 /var/log/messages

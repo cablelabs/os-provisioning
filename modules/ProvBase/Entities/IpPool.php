@@ -66,7 +66,7 @@ class IpPool extends \BaseModel {
 	public function get_bsclass()
 	{
 		$bsclass = 'success';
-			
+
 		if ($this->type == 'CPEPub')
 			$bsclass = 'warning';
 		if ($this->type == 'CPEPriv')
@@ -84,6 +84,40 @@ class IpPool extends \BaseModel {
 	public function cmts_hostnames ()
 	{
 		return DB::table('cmts')->select('id', 'hostname')->get();
+	}
+
+
+	/*
+	 * Return the corresponding network size to the netmask,
+	 * e.g. 255.255.255.240 will return 28 as integer – means /28 netmask
+	 */
+	public function size ()
+	{
+		// this is crazy shit from http://php.net/manual/de/function.ip2long.php
+		$long = ip2long($this->netmask);
+		$base = ip2long('255.255.255.255');
+
+		return 32-log(($long ^ $base)+1,2);
+	}
+
+	/*
+	 * Returns true if provisioning route to $this pool exists, otherwise false
+	 */
+	public function ip_route_prov_exists()
+	{
+		return (strlen(exec ('ip route show '.$this->net.'/'.$this->size().' via '.$this->cmts->ip)) == 0 ? false : true);
+	}
+
+
+	/*
+	 * Return true if $this->router_ip is online, otherwise false
+	 * This implies that the CMTS Pool should be set correctly in the CMTS
+	 */
+	public function ip_route_online ()
+	{
+		// Ping: Only check if device is online
+		exec ('sudo ping -c1 -i0 -w1 '.$this->router_ip, $ping, $ret);
+		return $ret ? false : true;
 	}
 
 

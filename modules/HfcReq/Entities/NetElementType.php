@@ -102,15 +102,14 @@ class NetElementType extends \BaseModel {
 
 	public function parameters()
 	{
-		return $this->HasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id')->orderBy('html_frame')->orderBy('html_id')->orderBy('oid_id')->orderBy('id');
-		// return $this->HasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id')->orderBy('oid_id')->orderBy('id');
+		return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id')->orderBy('html_frame')->orderBy('html_id')->orderBy('oid_id')->orderBy('id');
+		// return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id')->orderBy('oid_id')->orderBy('id');
 	}
 
 	// only for preconfiguration of special device types (e.g. kathreins vgp)
 	public function oid()
 	{
-		if (\PPModule::is_active('hfcsnmp'))
-			return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'pre_conf_oid_id');
+		return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'pre_conf_oid_id');
 	}
 
 

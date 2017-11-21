@@ -130,6 +130,10 @@ class Kernel extends ConsoleKernel {
 			// TODO: ckeck if this is really needed
 			$schedule->command('nms:contract daily')->daily()->at('00:03');
 			$schedule->command('nms:contract monthly')->monthly()->at('00:13');
+			$schedule->call(function () {
+				foreach (\Modules\ProvBase\Entities\Cmts::all() as $cmts)
+					$cmts->store_us_snrs();
+			})->everyFiveMinutes();
 		}
 
 		// Clean Up of HFC Base

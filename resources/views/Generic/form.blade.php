@@ -5,6 +5,10 @@
 
 --}}
 
+<?php
+	$blade_type = 'form';
+?>
+
 {{-- Error Message --}}
 <?php $col = \Acme\Html\FormBuilder::get_layout_form_col_md()['label'] ?>
 @DivOpen(12)
@@ -15,31 +19,7 @@
 @DivClose()
 
 
-{{-- man can use the session key “tmp_info_above_form” to show additional data above the form for one screen --}}
-{{-- simply use Session::push('tmp_info_above_form', 'your additional data') in your observers or where you want --}}
-@if (Session::has('tmp_info_above_form'))
-	@DivOpen(12)
-	<?php
-		$tmp_info_above_form = Session::get('tmp_info_above_form');
-
-		// for better handling: transform strings to array (containing one element)
-		if (is_string($tmp_info_above_form)) {
-			$tmp_info_above_form = [$tmp_info_above_form];
-		};
-	?>
-	@foreach($tmp_info_above_form as $info)
-		<div style="font-weight: bold; padding-top: 0px; padding-left: 10px; margin-bottom: 5px; border-left: solid 2px #ffaaaa">
-			{{ $info }}
-		</div>
-	@endforeach
-	<br>
-	<?php
-		// as this shall not be shown on later screens: remove from session
-		// we could use Session::flash for this behavior – but this supports no arrays…
-		Session::forget('tmp_info_above_form'); ?>
-	@DivClose()
-@endif
-
+@include('Generic.above_infos')
 
 @foreach($form_fields as $fields)
 	{{ $fields['html'] }}

@@ -81,6 +81,10 @@ while getopts ":y" opt; do
 	esac
 done
 
+# composer, we can't run scripts yet, as artisan can't be executed as of now
+composer install --no-scripts
+
+# nmsprime
 handle_module base
 for file in $(cat <(find modules/ -name module.json | grep Ccc) <(find modules/ -name module.json | grep -v Ccc)); do
 	if [ $(grep active "$file" | cut -d':' -f2 | tr -cd "[:digit:]\n") -ne 1 ]; then

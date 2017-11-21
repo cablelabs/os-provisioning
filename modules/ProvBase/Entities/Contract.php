@@ -125,17 +125,20 @@ class Contract extends \BaseModel {
 			$ret['Billing']['SepaMandate']['relation']  = $this->sepamandates;
 			$ret['Billing']['Invoice']['class'] 	= 'Invoice';
 			$ret['Billing']['Invoice']['relation']  = $this->invoices;
-			$ret['Billing']['Invoice']['options']['hide_delete_button'] = 0;
-			$ret['Billing']['Invoice']['options']['hide_create_button'] = 0;
+			$ret['Billing']['Invoice']['options']['hide_delete_button'] = 1;
+			$ret['Billing']['Invoice']['options']['hide_create_button'] = 1;
 		}
 
 		if (\PPModule::is_active('provvoipenvia'))
 		{
 			$ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
 			$ret['envia TEL']['EnviaContract']['relation'] = $this->enviacontracts;
+			$ret['envia TEL']['EnviaContract']['options']['hide_create_button'] = 1;
+			$ret['envia TEL']['EnviaContract']['options']['hide_delete_button'] = 1;
 
 			$ret['envia TEL']['EnviaOrder']['class'] = 'EnviaOrder';
 			$ret['envia TEL']['EnviaOrder']['relation'] = $this->_envia_orders;
+			$ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at envia TEL';
 
 			// TODO: auth - loading controller from model could be a security issue ?
 			$ret['envia TEL']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
@@ -186,12 +189,7 @@ class Contract extends \BaseModel {
 	 */
 	public function phonetariff_purchase() {
 
-		if ($this->voip_enabled) {
-			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'purchase_tariff');
-		}
-		else {
-			return null;
-		}
+		return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'purchase_tariff');
 	}
 
 
@@ -200,12 +198,7 @@ class Contract extends \BaseModel {
 	 */
 	public function phonetariff_purchase_next() {
 
-		if ($this->voip_enabled) {
-			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_purchase_tariff');
-		}
-		else {
-			return null;
-		}
+		return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_purchase_tariff');
 	}
 
 
@@ -214,12 +207,7 @@ class Contract extends \BaseModel {
 	 */
 	public function phonetariff_sale() {
 
-		if ($this->voip_enabled) {
-			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'voip_id');
-		}
-		else {
-			return null;
-		}
+		return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'voip_id');
 	}
 
 
@@ -228,12 +216,7 @@ class Contract extends \BaseModel {
 	 */
 	public function phonetariff_sale_next() {
 
-		if ($this->voip_enabled) {
-			return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_voip_id');
-		}
-		else {
-			return null;
-		}
+		return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_voip_id');
 	}
 
 	/**
@@ -253,30 +236,22 @@ class Contract extends \BaseModel {
 
 	public function items()
 	{
-		if (\PPModule::is_active('billingbase'))
-			return $this->hasMany('Modules\BillingBase\Entities\Item');
-		return null;
+		return $this->hasMany('Modules\BillingBase\Entities\Item');
 	}
 
 	public function items_sorted_by_valid_from_desc()
 	{
-		if (\PPModule::is_active('billingbase'))
-			return $this->hasMany('Modules\BillingBase\Entities\Item')->orderBy('valid_from', 'desc');
-		return null;
+		return $this->hasMany('Modules\BillingBase\Entities\Item')->orderBy('valid_from', 'desc');
 	}
 
 	public function sepamandates()
 	{
-		if (\PPModule::is_active('billingbase'))
-			return $this->hasMany('Modules\BillingBase\Entities\SepaMandate');
-		return null;
+		return $this->hasMany('Modules\BillingBase\Entities\SepaMandate');
 	}
 
 	public function emails()
 	{
-		if (\PPModule::is_active('mail'))
-			return $this->hasMany('Modules\Mail\Entities\Email');
-		return null;
+		return $this->hasMany('Modules\Mail\Entities\Email');
 	}
 
 	public function get_email_count()
@@ -287,37 +262,25 @@ class Contract extends \BaseModel {
 
 	public function costcenter()
 	{
-		if (\PPModule::is_active('billingbase'))
-			return $this->belongsTo('Modules\BillingBase\Entities\CostCenter', 'costcenter_id');
-		else {
-			// force empty relation
-			return $this->belongsTo('Modules\ProvBase\Entities\Modem', 'costcenter_id')->where('id', '<', 0);
-		}
+		return $this->belongsTo('Modules\BillingBase\Entities\CostCenter', 'costcenter_id');
 	}
 
 	public function salesman()
 	{
-		if (\PPModule::is_active('billingbase'))
-			return $this->belongsTo('Modules\BillingBase\Entities\Salesman');
-		return null;
+		return $this->belongsTo('Modules\BillingBase\Entities\Salesman');
 	}
 
 	public function invoices()
 	{
-		if (\PPModule::is_active('billingbase'))
-			return $this->hasMany('Modules\BillingBase\Entities\Invoice');
-			// $srs  = SettlementRun::where('verified', '=', '0')->get(['id'])->pluck('id')->all();
-			// $hide = $srs ? : 0;
-			// return $this->hasMany('Modules\BillingBase\Entities\Invoice')->where('contract_id', '=', $this->id)->where('settlementrun_id', '!=', [$hide]);
-
-		return null;
+		return $this->hasMany('Modules\BillingBase\Entities\Invoice');
+		// $srs  = SettlementRun::where('verified', '=', '0')->get(['id'])->pluck('id')->all();
+		// $hide = $srs ? : 0;
+		// return $this->hasMany('Modules\BillingBase\Entities\Invoice')->where('contract_id', '=', $this->id)->where('settlementrun_id', '!=', [$hide]);
 	}
 
 	public function cccauthuser()
 	{
-		if (\PPModule::is_active('ccc'))
-			return $this->hasOne('Modules\Ccc\Entities\CccAuthuser');
-		return null;
+		return $this->hasOne('Modules\Ccc\Entities\CccAuthuser');
 	}
 
 

@@ -126,6 +126,7 @@ class BaseViewController extends Controller {
 	 *  2. Add Placeholder YYYY-MM-DD for all date fields
 	 *  3. Hide all parent view relation select fields (works only in edit context)
 	 *  4. auto-fill field_value with correlating model data (from sql)
+	 *  5. IP online check for form_type = 'ip' || 'ping'
 	 *
 	 * @param fields: the view_form_fields array()
 	 * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
@@ -196,8 +197,28 @@ class BaseViewController extends Controller {
 			// 4. (sub-task)
 			// write explicitly given init_value to field_value
 			// this is needed e.g. by Patrick to prefill new PhonenumberManagement and PhonebookEntry with data from Contract
-		if (array_key_exists('init_value', $field) && $field['init_value']) {
+			if (array_key_exists('init_value', $field) && $field['init_value']) {
 				$field['field_value'] = $field['init_value'];
+			}
+
+			// 5. ip online check
+			if ($field['form_type'] == 'ip' || $field['form_type'] == 'ping')
+			{
+				// Ping: Only check if ip is online
+				exec ('sudo ping -c1 -i0 -w1 '.$model[$field['name']], $ping, $offline);
+
+				if($offline)
+				{
+					$field['help'] = 'Device is Offline!';
+					$field['help_icon'] = 'fa-exclamation-triangle text-warning';
+				}
+				else
+				{
+					$field['help'] = 'Device is Online';
+					$field['help_icon'] = 'fa-check-circle-o text-success';
+				}
+
+				$field['form_type'] = 'text';
 			}
 
 			array_push ($ret, $field);
@@ -350,7 +371,7 @@ class BaseViewController extends Controller {
 			if (isset($field['help']))
 				$s .= '<div name='.$field['name'].'-help class="col-md-1"><a data-toggle="popover" data-container="body"
 							data-trigger="hover" title="'.\App\Http\Controllers\BaseViewController::translate_label($field['description']).'" data-placement="auto right" data-content="'.$field['help'].'">'.
-							'<i class="fa fa-question-circle fa-2x text-info p-t-5"></i></a></div>';
+							'<i class="fa fa-2x text-info p-t-5 '.(isset($field['help_icon']) ? $field['help_icon'] : 'fa-question-circle').'"></i></a></div>';
 
 			// Close Form Group
 			$s .= \Form::closeGroup();

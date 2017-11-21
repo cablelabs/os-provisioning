@@ -368,7 +368,7 @@ _failed:
 			}
 			else {
 				// Inform and log for all other exceptions
-				\Session::push('tmp_info_above_form', 'Unexpected exception: '.$e->getMessage());
+				\Session::push('tmp_error_above_form', 'Unexpected exception: '.$e->getMessage());
 				\Log::error("Unexpected exception restarting MTA ".$this->id." (".$this->mac."): ".$e->getMessage()." => ".$e->getTraceAsString());
 				\Session::flash('error', '');
 			}

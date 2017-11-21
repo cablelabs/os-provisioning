@@ -9,6 +9,7 @@ use Module;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use App\Http\Controllers\NamespaceController;
+use App\Extensions\Database\EmptyRelation as EmptyRelation;
 
 
 /**
@@ -20,6 +21,9 @@ class BaseModel extends Eloquent
 
 	// use to enable force delete for inherit models
 	protected $force_delete = 0;
+
+	// flag showing if children also shall be deleted on Model::delete()
+	protected $delete_children = True;
 
 	public $voip_enabled;
 	public $billing_enabled;
@@ -34,6 +38,10 @@ class BaseModel extends Eloquent
 	// set this variable in model index_list() to true if it shall not be deletable on index page
 	public $index_delete_disabled = false;
 
+	// Add Comment here. ..
+	protected $guarded = ['id'];
+
+
 	/**
 	 * Constructor.
 	 * Used to set some helper variables.
@@ -42,7 +50,20 @@ class BaseModel extends Eloquent
 	 *
 	 * @param $attributes pass through to Eloquent contstructor.
 	 */
-	public function __construct($attributes = array()) {
+	public function __construct($attributes = array())
+	{
+		// Config Host Setup
+		// @note: This could be used to fetch configuration tables
+		//        (like configfiles) from a global NMS Prime system
+		// @author: Torsten Schmidt
+		$env = env('DB_CONFIG_TABLES', false);
+
+		if ($env && strpos($env, $this->table) !== false)
+		{
+			$this->connection = 'mysql-config';
+			\Log::debug ('Use mysql-config connection to access '.$this->table.' table');
+		}
+
 
 		// call Eloquent constructor
 		// $attributes are needed! (or e.g. seeding and creating will not work)
@@ -54,8 +75,17 @@ class BaseModel extends Eloquent
 	}
 
 
-	// Add Comment here. ..
-	protected $guarded = ['id'];
+	/**
+	 * Helper to get the model name.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function get_model_name() {
+
+		$model_name = get_class($this);
+		$model_name = explode('\\',$model_name);
+		return array_pop($model_name);
+	}
 
 
 	/**
@@ -119,6 +149,132 @@ class BaseModel extends Eloquent
 	public function view_belongs_to ()
 	{
 		return null;
+	}
+
+
+	/**
+	 * Checks if the requested relation is installed and enabled.
+	 * If so all is fine – otherwise we return flag to create special empty eloquent relation.
+	 *
+	 * @return bool
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _relationAvailable($related) {
+
+		// remove all leading backslashes
+		$related = ltrim($related, '\\');
+
+		$parts = explode('\\', $related);
+		$context = $parts[0];
+
+		// check if requested relation is in module context
+		if (\Str::lower($context) == 'modules') {
+
+			// check if requested module is active
+			$module = $parts[1];
+			if (!\PPModule::is_active($module)) {
+
+				return false;
+			}
+		}
+
+		// in all other cases: no special handling needed – we can return the standard eloquent relation
+		return true;
+	}
+
+
+	/**
+	 * Extension to original hasMany – returns an empty relation if the related module is not available.
+	 *
+     * @param  string  $related
+     * @param  string  $foreignKey
+     * @param  string  $localKey
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany or \App\Extensions\Database\EmptyRelation
+	 * @author Patrick Reichel
+	 */
+	public function hasMany($related, $foreignKey = null, $localKey = null) {
+
+		if ($this->_relationAvailable($related)) {
+			return parent::hasMany($related, $foreignKey, $localKey);
+		}
+		else {
+			return new EmptyRelation();
+		}
+	}
+
+
+	/**
+	 * Extension to original hasOne – returns an empty relation if the related module is not available.
+	 *
+     * @param  string  $related
+     * @param  string  $foreignKey
+     * @param  string  $localKey
+	 * @return \Illuminate\Database\Eloquent\Relations\HasOne or \App\Extensions\Database\EmptyRelation
+	 * @author Patrick Reichel
+	 */
+	public function hasOne($related, $foreignKey = null, $localKey = null) {
+
+		if ($this->_relationAvailable($related)) {
+			return parent::hasOne($related, $foreignKey, $localKey);
+		}
+		else {
+			return new EmptyRelation();
+		}
+	}
+
+
+	/**
+	 * Extension to original belongsTo – returns an empty relation if the related module is not available.
+	 *
+     * @param  string  $related
+     * @param  string  $foreignKey
+     * @param  string  $localKey
+     * @param  string  $relation
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo or \App\Extensions\Database\EmptyRelation
+	 * @author Patrick Reichel
+	 */
+    public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null) {
+
+		if ($this->_relationAvailable($related)) {
+
+			// Patrick Reichel: get $relation if not given (copied from Eloquent/Model.php to get proper backtrace)
+			// If no relation name was given, we will use this debug backtrace to extract
+			// the calling method's name and use that as the relationship name as most
+			// of the time this will be what we desire to use for the relationships.
+			if (is_null($relation)) {
+				list($current, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+
+				$relation = $caller['function'];
+			}
+
+			return parent::belongsTo($related, $foreignKey, $otherKey, $relation);
+		}
+		else {
+			return new EmptyRelation();
+		}
+	}
+
+
+	/**
+	 * Extension to original belongsToMany – returns an empty relation if the related module is not available.
+	 *
+     * @param  string  $related
+     * @param  string  $table
+     * @param  string  $foreignKey
+     * @param  string  $otherKey
+     * @param  string  $relation
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany or \App\Extensions\Database\EmptyRelation
+	 * @author Patrick Reichel
+	 */
+    public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null) {
+
+		if ($this->_relationAvailable($related)) {
+			return parent::belongsToMany($related, $table, $foreignKey, $otherKey, $relation);
+		}
+		else {
+			return new EmptyRelation();
+		}
 	}
 
 
@@ -599,18 +755,32 @@ class BaseModel extends Eloquent
 	 *          forgein key, like modem and modem_id.
 	 *
 	 *  NOTE: we define exceptions in an array where recursive deletion is disabled
+	 *  NOTE: we have to distinct between 1:n and n:m relations
 	 *
-	 *	@author Torsten Schmidt
+	 *	@author Torsten Schmidt, Patrick Reichel
 	 *
 	 *	@return array of all children objects
 	 */
 	public function get_all_children()
 	{
-		$relations = [];
-		// exceptions
-		$exceptions = ['configfile_id', 'salesman_id', 'costcenter_id', 'company_id', 'sepaaccount_id', 'product_id'/*, 'mibfile_id', 'oid_id'*/];
-		// current DB
-		$db = 'Tables_in_' . \Config::get('database.connections.' . \Config::get('database.default') . '.database');
+		$relations = [
+			'1:n' => [],
+			'n:m' => []
+		];
+		// exceptions – the children (=their database ID fields) that never should be deleted
+		$exceptions = [
+			'company_id',
+			'configfile_id',
+			'costcenter_id',
+			'country_id',	// not used yet
+			//'mibfile_id',
+			//'oid_id',
+			'product_id',
+			'qos_id',
+			'salesman_id',
+			'sepaaccount_id',
+			'voip_id',
+		];
 
 		// this is the variable that holds table names in $table returned by DB::select('SHOW TABLES')
 		// named dynamically containing the database name
@@ -627,19 +797,47 @@ class BaseModel extends Eloquent
 				{
 					if (in_array($column, $exceptions))
 						continue;
+
 					// get all objects with $column
-					foreach (DB::select('SELECT id FROM '.$table->$tables_var_name.' WHERE '.$column.'='.$this->id) as $child)
+					$query = 'SELECT * FROM '.$table->$tables_var_name.' WHERE '.$column.'='.$this->id;
+					foreach (DB::select($query) as $child)
 					{
 						$class_child_name = $this->_guess_model_name ($table->$tables_var_name);
-						$class = new $class_child_name;
+						// check if we got a model name
+						if ($class_child_name) {
+							// yes! 1:n relation
+							$class = new $class_child_name;
+							$rel = $class->find($child->id);
+							if (!is_null($rel)) {
+								array_push($relations['1:n'], $rel);
+							}
+						}
+						else {
+							// seems to be a n:m relation
+							$parts = explode('_', $table->$tables_var_name);
+							foreach ($parts as $part) {
+								$class_child_name = $this->_guess_model_name($part);
 
-						array_push($relations, $class->find($child->id));
+								// one of the models in pivot tables is the current model – skip
+								if ($class_child_name == get_class($this)) {
+									continue;
+								}
+
+								// add other model instances to relation array if existing
+								$class = new $class_child_name;
+								$id_col = $part.'_id';
+								$rel = $class->find($child->{$id_col});
+								if (!is_null($rel)) {
+									array_push($relations['n:m'], $rel);
+								}
+							}
+						}
 					}
 				}
 			}
 		}
 
-		return array_filter ($relations);
+		return $relations;
 	}
 
 
@@ -657,22 +855,82 @@ class BaseModel extends Eloquent
 
 
 	/**
-	 *	Recursive delete of all children objects
+	 * Recursive delete of all children objects
 	 *
-	 *	@author Torsten Schmidt
+	 * @author Torsten Schmidt, Patrick Reichel
 	 *
-	 *	@return bool
+	 * @return bool
 	 *
-	 *  @todo return state on success, should also take care of deleted children
+	 * @todo return state on success, should also take care of deleted children
 	 */
 	public function delete()
 	{
-		// dd( $this->get_all_children() );
-		foreach ($this->get_all_children() as $child)
-			$child->delete();
+		// check from where the deletion request has been triggered and set the correct var to show information
+		$prev = explode('?', \URL::previous())[0];
+		$prev = \Str::lower($prev);
+
+		if ($this->delete_children) {
+			$children = $this->get_all_children();
+			// find and delete all children
+
+			// deletion of 1:n related children is straight forward
+			foreach ($children['1:n'] as $child) {
+
+				// if one direct or indirect child cannot be deleted:
+				// do not delete anything
+				if (!$child->delete()) {
+					$msg = "Cannot delete ".$this->get_model_name()." $this->id: ".$child->get_model_name()." $child->id cannot be deleted";
+					if (\Str::endsWith($prev, 'edit')) {
+						\Session::push('tmp_error_above_relations', $msg);
+					}
+					else {
+						\Session::push('tmp_error_above_index_list', $msg);
+					}
+					return false;
+				}
+			}
+
+			// in n:m relations we have to detach instead of deleting if
+			// child is related to others, too
+			// this should be handled in class methods because BaseModel cannot know the possible problems
+			foreach ($children['n:m'] as $child) {
+				$delete_method = 'deleteNtoM'.$child->get_model_name();
+				if (!$this->{$delete_method}($child)) {
+					$msg = "Cannot delete ".$this->get_model_name()." $this->id: n:m relation with ".$child->get_model_name()." $child->id. cannot be deleted";
+					if (\Str::endsWith($prev, 'edit')) {
+						\Session::push('tmp_error_above_relations', $msg);
+					}
+					else {
+						\Session::push('tmp_error_above_index_list', $msg);
+					}
+					return false;
+				}
+			}
+
+		}
 
 		// always return this value (also in your derived classes!)
-		return $this->_delete();
+		$deleted = $this->_delete();
+		if (!$deleted) {
+			$msg = "Could not delete ".$this->get_model_name()." $this->id";
+			if (\Str::endsWith($prev, 'edit')) {
+				\Session::push('tmp_error_above_relations', $msg);
+			}
+			else {
+				\Session::push('tmp_error_above_index_list', $msg);
+			}
+		}
+		else {
+			$msg = "Deleted ".$this->get_model_name()." $this->id";
+			if (\Str::endsWith($prev, 'edit')) {
+				\Session::push('tmp_success_above_relations', $msg);
+			}
+			else {
+				\Session::push('tmp_success_above_index_list', $msg);
+			}
+		}
+
+		return $deleted;
 	}
 
 
@@ -802,9 +1060,7 @@ class BaseObserver
 	{
 		$user = \Auth::user();
 
-		$model_name = get_class($model);
-		$model_name = explode('\\',$model_name);
-		$model_name = array_pop($model_name);
+		$model_name = $model->get_model_name();
 
 		$text = '';
 
