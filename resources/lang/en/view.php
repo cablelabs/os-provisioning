@@ -90,10 +90,12 @@ return [
 		//Company
 		'Header_EditCompany'		=> 'Edit Company',
 		//Salesman
-		'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
+		'Header_EditSalesman'		=> 'Edit Salesman',
 		//Items
 		'Header_Item'				=> 'Item|Items',
 		'Header_EditItem'			=> 'Edit Item', //??
+		//Numberrange
+		'Header_NumberRange'		=> 'Numberrange|Numberranges',
 	//SNMP Modul
 		//Device
 		'Header_Device'				=> 'Device|Devices',
@@ -127,6 +129,9 @@ return [
 		'Header_EditIpPool'			=> 'Edit IP-Pool',
 		'Header_IP-Pools'			=> 'IP-Pool|IP-Pools',
 		'Header_EditIP-Pools'		=> 'Edit IP-Pool',
+		// Tickets
+		'Header_Ticket'				=> 'Ticket|Tickets',
+		'Header_EditTicket'			=> 'Edit Ticket',
 
 	//VOIP
 		//MTA
@@ -177,6 +182,8 @@ return [
 		//Item
 		'Button_Create Item'			=> 'Create Item',
 		'sr_dl_logs' 					=> 'Download whole logfile',
+		//Numberrange
+		'Button_Create NumberRange'		=> 'Create Numberrange',
 
 	//SNMP Modul
 		//Device
@@ -222,4 +229,19 @@ return [
 	'Dashboard_Date'				=> 'DATE',
 	'Dashboard_LinkDetails'			=> 'View Details',
 	'Dashboard_Other'				=> 'Other',
+	'Dashboard_Tickets' 			=> 'NEW TICKETS',
+	'Dashboard_NoTickets' 			=> 'No new Tickets.',
+	'Dashboard_Quickstart' 			=> 'QUICKSTART',
+
+//
+// Numberrange
+//
+	//Type
+	'Numberrange_Type_contract' => 'Contract',
+	'Numberrange_Type_invoice' => 'Invoice',
+
+//
+// Contract
+//
+	'Contract_Numberrange_Failure' => 'No free contract number for selected costcenter available!'
 ];

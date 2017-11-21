@@ -5,6 +5,7 @@ namespace Modules\ProvBase\Entities;
 use Modules\ProvBase\Entities\Qos;
 use Modules\BillingBase\Entities\SettlementRun;
 use Modules\BillingBase\Entities\Invoice;
+use Modules\BillingBase\Entities\NumberRange;
 
 class Contract extends \BaseModel {
 
@@ -1172,12 +1173,8 @@ class Contract extends \BaseModel {
 class ContractObserver
 {
 
-	// Start contract numbers from 10000 - TODO: move to global config or remove this after creating number cycle MVC
-	protected $num = 490000;
-
 	public function creating($contract)
 	{
-		// Note: this is only needed when Billing Module is not active - TODO: proof with future static function
 		if (!\PPModule::is_active('billingbase'))
 		{
 			$contract->sepa_iban = strtoupper($contract->sepa_iban);
@@ -1185,24 +1182,15 @@ class ContractObserver
 		}
 	}
 
-
 	public function created($contract)
 	{
-		// Note: this only works here because id is not yet assigned in creating function
-		// $contract->number = $contract->number ? $contract->number : $contract->id - $this->num;
-		if (!$contract->number)
-		{
-			$contract->number = $contract->id - $this->num;
-			$contract->observer_enabled = false;
-			$contract->save();     			// forces to call the updating, saving, updated & saved method of the observer
-		}
-
 		$contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
 	}
 
 	public function updating($contract)
 	{
-		$contract->number = $contract->number ? : $contract->id - $this->num;
+		$original_number = $contract->getOriginal('number');
+		$original_costcenter_id = $contract->getOriginal('costcenter_id');
 
 		if (!\PPModule::is_active('billingbase'))
 		{

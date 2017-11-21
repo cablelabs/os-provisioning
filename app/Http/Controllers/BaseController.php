@@ -95,7 +95,7 @@ class BaseController extends Controller {
 				'route' => $class_name.'.edit',
 				'link' => ['model_id' => $view_var->id, 'model' => $class_name]
 			],
-	];
+		];
 	}
 
 
@@ -103,6 +103,7 @@ class BaseController extends Controller {
 	{
 		$classname = \NamespaceController::get_model_name();
 
+		// Rewrite model to check with new assigned Model
 		if (!$classname)
 			return null;
 
@@ -211,6 +212,11 @@ class BaseController extends Controller {
 				(in_array(\Str::lower($data[$field['name']]), ["on", "checked"]))
 			) {
 				$data['active'] = "1";
+			}
+
+			// multiple select?
+			if ($field['form_type'] == 'select' && isset($field['options']['multiple'])) {
+				$field['name'] = str_replace('[]', '', $field['name']);
 			}
 
 			// trim all inputs as default
@@ -680,31 +686,33 @@ class BaseController extends Controller {
 		if ($id == 0)
 		{
 			// Error Message when no Model is specified - NOTE: delete_message must be an array of the structure below !
-			if (!isset(Input::all()['ids']))
+			if (!Input::get('ids'))
 				return Redirect::back()->with('delete_message', ['message' => 'No Entry For Deletion specified', 'class' => \NamespaceController::get_route_name(), 'color' => 'red']);
 
-			foreach (Input::all()['ids'] as $id => $val) {
+			$obj = static::get_model_obj();
+
+			foreach (Input::get('ids') as $id => $val) {
 				$to_delete++;
-				if (static::get_model_obj()->findOrFail($id)->delete()) {
+				if ($obj->findOrFail($id)->delete()) {
 					$deleted++;
 				}
 			}
-
 		}
 		else {
 			$to_delete++;
-			if (static::get_model_obj()->findOrFail($id)->delete()) {
+			$obj = static::get_model_obj();
+			if ($obj->findOrFail($id)->delete()) {
 				$deleted++;
 			}
 		}
-
+		$obj = isset($obj) ? $obj : static::get_model_obj();
 		$class = \NamespaceController::get_route_name();
 
-		if ($deleted == 0) {
+		if (!$deleted && !$obj->force_delete) {
 			$message = 'Could not delete '.$class;
 			$color = 'red';
 		}
-		elseif ($deleted == $to_delete) {
+		elseif (($deleted == $to_delete) || $obj->force_delete) {
 			$message = 'Successful deleted '.$class;
 			$color = 'blue';
 		}
@@ -715,6 +723,28 @@ class BaseController extends Controller {
 
 		return Redirect::back()->with('delete_message', ['message' => $message, 'class' => $class, 'color' => $color]);
 	}
+
+
+	/**
+	 * Detach a pivot entry of an n-m relationship
+	 *
+	 * @param 	id 			Integer 	Model ID the relational model is attached to
+	 * @param 	function 	String 		Function Name of the N-M Relation
+	 * @return 	Response 	Object 		Redirect back
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function detach($id, $function)
+	{
+		$model = \NamespaceController::get_model_name();
+		$model = $model::find($id);
+
+		if (\Input::has('ids'))
+			$model->{$function}()->detach(array_keys(\Input::get('ids')));
+
+		return \Redirect::back();
+	}
+
 
 	public function dump($id) {
 		return static::get_model_obj()->findOrFail($id);

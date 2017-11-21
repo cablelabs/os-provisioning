@@ -43,7 +43,9 @@ class Kernel extends ConsoleKernel {
 		$is_first_day_of_month = (date('d') == '01') ? True : False;
 
 		$schedule->command('queue:checkup')->everyMinute();
+
 		$schedule->call('\Modules\ProvBase\Http\Controllers\DashboardController@save_income_to_json')->dailyAt('00:07');
+		$schedule->call('\Modules\Dashboard\Http\Controllers\DashboardController@save_contracts_to_json')->hourly();
 
 
 		// Remove all Log Entries older than 90 days

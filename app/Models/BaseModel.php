@@ -782,7 +782,6 @@ class BaseModel extends Eloquent
 			'voip_id',
 		];
 
-
 		// this is the variable that holds table names in $table returned by DB::select('SHOW TABLES')
 		// named dynamically containing the database name
 		$tables_var_name = "Tables_in_".ENV('DB_DATABASE');

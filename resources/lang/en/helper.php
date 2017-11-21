@@ -108,4 +108,8 @@ return [
 	'a_d50' => 'Number of packets experiencing a packet delay variation (i.e. jitter) between 50ms and 70ms',
 	'a_d300' => 'Number of packets experiencing a packet delay variation (i.e. jitter) greater than 300ms',
 	'called' => 'Call direction from Callee to Caller',
+/**
+ * Module Ticketsystem
+ */
+	'assign_user' => 'Allowed to assign an user to a ticket.',
  ];

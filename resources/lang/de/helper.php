@@ -108,4 +108,8 @@ return [
 	'a_d50' 						=> 'Anzahl der Pakete, welche eine Paketverzögerung (Packet Delay Variation - z.B. Jitter) zwischen 50ms and 70ms aufweisen',
 	'a_d300' 						=> 'Anzahl der Pakete, welche eine Paketverzögerung (Packet Delay Variation - z.B. Jitter) von über 300ms aufweisen',
 	'called' 						=> 'Betrachtrung der Anrufrichtung von Angerufenem zum Anrufer',
+/**
+ * Module Ticketsystem
+ */
+    'assign_user' => 'Zuweisen eines Users zu einem Ticket.',
 ];

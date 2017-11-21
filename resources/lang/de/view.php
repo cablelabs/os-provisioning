@@ -49,6 +49,7 @@ return [
 		'Menu_SEPA Accounts'		=> 'SEPA-Konten',
 		'Menu_Settlement Run'		=> 'Abrechnungslauf',
 		'Menu_Cost Center'			=> 'Kostenstelle',
+		'Menu_Number Range'			=> 'Nummernkreis',
 		'Menu_Companies'			=> 'Unternehmen',
 		'Menu_Salesmen'				=> 'Verkäufer',
 		'Menu_Tree Table'			=> 'Baumdiagramm',
@@ -67,6 +68,8 @@ return [
 		'Menu_Envia orders'			=> 'envia TEL Aufträge',
 		'Menu_Envia contracts'		=> 'envia TEL Verträge',
 		'Menu_CDRs'					=> 'EVNs',
+		'Menu_Tickets'				=> 'Tickets',
+		'Menu_Comment'				=> 'Kommentare',
 
 	//User Settings
 		'Menu_UserSettings'			=> 'Nutzereinstellungen',
@@ -133,6 +136,9 @@ return [
 		//Settlement Run
 		'Header_Settlement Run'		=> 'Abrechnungslauf|Abrechnungsläufe',
 		'Header_EditSettlement Run' => 'Abrechnungslauf bearbeiten',
+		//Numberrange
+		'Header_NumberRange'		=> 'Nummernkreis|Nummernkreise',
+
 	//SNMP Modul
 		//Device
 		'Header_Device'				=> 'Gerät|Geräte',
@@ -167,6 +173,13 @@ return [
 		'Header_EditIpPool'			=> 'IP-Bereich bearbeiten',
 		'Header_IP-Pools'			=> 'IP-Bereich|IP-Bereiche',
 		'Header_EditIP-Pools'		=> 'IP-Bereich bearbeiten',
+	//Tickets
+		//Ticket
+		'Header_Tickets'			=> 'Ticket|Tickets',
+		'Header_EditTickets'		=> 'Ticket bearbeiten',
+		//Comment
+		'Header_Comment'			=> 'Kommentar|Kommentare',
+		'Header_EditComment'		=> 'Kommentar bearbeiten',
 
 	//VOIP
 		//MTA
@@ -235,6 +248,8 @@ return [
 		'Button_Rerun Accounting Command for current Month'	=> 'Vorgang für den aktuellen Monat erneut ausführen',
 		'sr_dl_logs' 					=> 'Gesamtes Logfile herunterladen',
 
+		//Numberrange
+		'Button_Create NumberRange'		=> 'Neuer Nummernkreis',
 	//SNMP Modul
 		//Device
 		'Button_Create Device'			=> 'Neues Gerät',
@@ -276,6 +291,12 @@ return [
 		'Button_Create Modem Positioning Rule Geoposition' => 'Neue Geoposition für Modem Positionierungsregel',
 		'Button_Create MprGeopos'		=> 'Neue MPR-Geoposition',
 
+	//Ticket
+		//Ticket
+		'Button_Create Tickets'		=> 'Neues Ticket',
+		//Comment
+		'Button_Create Comment'		=> 'Neuer Kommentar',
+
 //
 // DASHBOARD
 //
@@ -288,4 +309,43 @@ return [
 	'Dashboard_Date'				=> 'DATUM',
 	'Dashboard_LinkDetails'			=> 'Zeige Details',
 	'Dashboard_Other'				=> 'Sonstiges',
+	'Dashboard_Tickets' 			=> 'NEUE TICKETS',
+	'Dashboard_NoTickets' 			=> 'Keine neuen Tickets.',
+	'Dashboard_Quickstart' 			=> 'SCHNELLSTART',
+
+//
+//	TICKET
+//
+	//State
+	'Ticket_State_New' => 'Neu',
+	'Ticket_State_In Process' => 'In Bearbeitung',
+	'Ticket_State_Closed' => 'Geschlossen',
+
+	//Type
+	'Ticket_Type_General' => 'Allgemein',
+	'Ticket_Type_Technical' => 'Technik',
+	'Ticket_Type_Accounting' => 'Buchhaltung',
+
+	//Priority
+	'Ticket_Priority_Trivial' => 'Niedrig',
+	'Ticket_Priority_Minor' => 'Medium',
+	'Ticket_Priority_Major' => 'Hoch',
+	'Ticket_Priority_Critical' => 'Kritisch',
+
+//
+// Numberrange
+//
+	'Numberrange_Start' => 'Beginn',
+	'Numberrange_End' => 'Ende',
+	'Numberrange_Suffix' => 'Suffix',
+	'Numberrange_Prefix' => 'Präfix',
+	'Numberrange_Type' => 'Typ',
+	//Type
+	'Numberrange_Type_contract' => 'Vertrag',
+	'Numberrange_Type_invoice' => 'Rechnung',
+
+//
+// Contract
+//
+	'Contract_Numberrange_Failure' => 'Keine freie Vertragsnummer für die gewählte Kostenstelle gefunden.'
 ];

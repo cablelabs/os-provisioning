@@ -5,7 +5,7 @@ Relation Blade is used inside a Panel Element to display relational class object
 @param $relation: the relation array to be displayed, contains one element of $relations element from edit.blade
 @param $key: SQL table key, required for adding new elements with reference to $key table
 @param $class: the class of the object to be used. this will be translated to route name
-               so take care that class = route and vice versa
+			   so take care that class = route and vice versa
 
 --}}
 
@@ -49,10 +49,10 @@ Relation Blade is used inside a Panel Element to display relational class object
 				$create_button_text = trans($options['create_button_text']);
 			}
 		?>
-    <button class="btn btn-primary m-b-15" style="simple">
-      <i class="fa fa-plus fa-lg m-r-10" aria-hidden="true"></i>
-      {{ $create_button_text }}
-    </button>
+	<button class="btn btn-primary m-b-15" style="simple">
+	  <i class="fa fa-plus fa-lg m-r-10" aria-hidden="true"></i>
+	  {{ $create_button_text }}
+	</button>
 		{{ Form::close() }}
 
 	@DivClose()
@@ -62,7 +62,11 @@ Relation Blade is used inside a Panel Element to display relational class object
 <!-- The Relation Table and Delete Button -->
 @DivOpen(12)
 
-	{{ Form::open(array('route' => array($route.'.destroy', 0), 'method' => 'delete')) }}
+	@if (isset($options['many_to_many']))
+		{{ Form::open(array('route' => array($route_name.'.detach', $view_var->id, $options['many_to_many']), 'method' => 'post')) }}
+	@else
+		{{ Form::open(array('route' => array($route.'.destroy', 0), 'method' => 'delete')) }}
+	@endif
 
 		<br>
 		<table class="table">
@@ -87,10 +91,10 @@ Relation Blade is used inside a Panel Element to display relational class object
 					$delete_button_text = trans($options['delete_button_text']);
 				}
 			?>
-      <button class="btn btn-danger btn-primary m-r-5 m-t-15" style="simple">
-          <i class="fa fa-trash-o fa-lg m-r-10" aria-hidden="true"></i>
-          {{ $delete_button_text }}
-      </button>
+		<button class="btn btn-danger btn-primary m-r-5 m-t-15" style="simple">
+			<i class="fa fa-trash-o fa-lg m-r-10" aria-hidden="true"></i>
+			{{ $delete_button_text }}
+		</button>
 		@endif
 
 	{{ Form::close() }}

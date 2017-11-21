@@ -703,7 +703,6 @@ finish:
 		else {
 			$breadcrumb_path_base = Route::has($route_name.'.index') ? '<li class="active">'.static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).$view_header)."</li>" : '';
 		}
-// d($breadcrumb_paths, $breadcrumb_path, $breadcrumb_path_base);
 
 		if (!$breadcrumb_paths) {	// if this array is still empty: put the one and only breadcrumb path in this array
 			array_push($breadcrumb_paths, $breadcrumb_path_base.$breadcrumb_path);

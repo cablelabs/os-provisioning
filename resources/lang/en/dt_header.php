@@ -159,4 +159,21 @@ return [
 	'cdr.caller' => 'Caller',
 	'cdr.called' => 'Called',
 	'cdr.mos_min_mult10' => 'Minimum MOS',
+	// Numberrange
+	'numberrange.id' => 'ID',
+	'numberrange.name' => 'Name',
+	'numberrange.start' => 'Start',
+	'numberrange.end' => 'End',
+	'numberrange.prefix' => 'Prefix',
+	'numberrange.suffix' => 'Suffix',
+	'numberrange.type' => 'Type',
+	'numberrange.costcenter.name' => 'Cost center',
+	// Ticket
+	'ticket.id' => 'ID',
+	'ticket.name' => 'Title',
+	'ticket.type' => 'Type',
+	'ticket.priority' => 'Priority',
+	'ticket.state' => 'State',
+	'ticket.user_id' => 'Created by',
+	'ticket.created_at' => 'Created at',
 ];

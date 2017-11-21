@@ -61,7 +61,7 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 
 		return ['index' => [$this->login_name, $this->first_name, $this->last_name],
 		        'index_header' => ['Login', 'Firstname', 'Lastname'],
-		        'header' => $this->login_name];
+		        'header' => "$this->first_name $this->last_name"];
 	}
 
 
@@ -74,6 +74,7 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 	protected function _meta() {
 		return $this->belongsToMany('App\Authmeta', 'authusermeta', 'user_id', 'meta_id');
 	}
+
 
 	/**
 	 * Get all the users roles.
@@ -104,6 +105,9 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 		return $this->_meta()->where('type', 'LIKE', 'client');
 	}
 
+	public function tickets() {
+		return $this->belongsToMany('\Modules\Ticketsystem\Entities\Ticket', 'ticket_user', 'user_id', 'ticket_id');
+	}
 
 	/**
 	 * Get a matrix containing user rights for models.
@@ -122,7 +126,6 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 
 			// get all models for the current role
 			$models = $this->_role_models($role['id']);
-
 			// get permissions per model
 			foreach ($models as $model) {
 
@@ -363,12 +366,5 @@ class AuthObserver
     {
 		// Drop AuthUserMeta Relation
 		DB::table('authusermeta')->where('user_id', '=', $auth->id)->delete();
-
-		// Hard Delete this entry. Because in SQL the login_name is unique
-		// a soft deleted login_name entry will cause problems while adding
-		// a new entry
-		//
-		// TODO: use a global define to disable Soft Deletes
-		Authuser::onlyTrashed()->forceDelete();
     }
 }
