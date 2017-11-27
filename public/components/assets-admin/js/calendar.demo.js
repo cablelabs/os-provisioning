@@ -1,8 +1,8 @@
-/*   
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
-Version: 2.1.0
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7 & Bootstrap 4.0.0-Alpha 6
+Version: 3.0.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
+Website: http://www.seantheme.com/color-admin-v3.0/admin/html/
 */
 
 var handleCalendarDemo = function() {
@@ -56,7 +56,7 @@ var handleCalendarDemo = function() {
         events: [{
             title: 'All Day Event',
             start: currentYear + '-'+ currentMonth +'-01',
-            color: '#009688'
+            color: '#00acac'
         }, {
             title: 'Long Event',
             start: currentYear + '-'+ currentMonth +'-07',
@@ -65,7 +65,7 @@ var handleCalendarDemo = function() {
             id: 999,
             title: 'Repeating Event',
             start: currentYear + '-'+ currentMonth +'-09T16:00:00',
-            color: '#009688'
+            color: '#00acac'
         }, {
             id: 999,
             title: 'Repeating Event',
@@ -78,11 +78,11 @@ var handleCalendarDemo = function() {
             title: 'Meeting',
             start: currentYear + '-'+ currentMonth +'-12T10:30:00',
             end: currentYear + '-'+ currentMonth +'-12T12:30:00',
-            color: '#009688'
+            color: '#00acac'
         }, {
             title: 'Lunch',
             start: currentYear + '-'+ currentMonth +'-12T12:00:00',
-            color: '#2196F3'
+            color: '#348fe2'
         }, {
             title: 'Meeting',
             start: currentYear + '-'+ currentMonth +'-12T14:30:00'
@@ -99,7 +99,7 @@ var handleCalendarDemo = function() {
             title: 'Click for Google',
             url: 'http://google.com/',
             start: currentYear + '-'+ currentMonth +'-28',
-            color: '#E91E63'
+            color: '#ff5b57'
         }]
 
     });

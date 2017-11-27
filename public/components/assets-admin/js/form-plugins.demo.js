@@ -1,9 +1,32 @@
-/*   
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
-Version: 2.1.0
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7 & Bootstrap 4.0.0-Alpha 6
+Version: 3.0.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
+Website: http://www.seantheme.com/color-admin-v3.0/admin/html/
 */
+
+// IE8 browser support
+if (!Array.prototype.indexOf) {
+	Array.prototype.indexOf = function(elt /*, from*/) {
+    	var len = this.length >>> 0;
+    	var from = Number(arguments[1]) || 0;
+    	from = (from < 0) ? Math.ceil(from) : Math.floor(from);
+    	if (from < 0)
+      		from += len;
+
+    	for (; from < len; from++) {
+      		if (from in this && this[from] === elt)
+        		return from;
+    	}
+    	return -1;
+	};
+}
+if(typeof String.prototype.trim !== 'function') {
+	String.prototype.trim = function() {
+		return this.replace(/^\s+|\s+$/g, ''); 
+	}
+}
+
 
 var handleDatepicker = function() {
     $('#datepicker-default').datepicker({
@@ -172,7 +195,6 @@ var handleDateRangePicker = function() {
         $('#default-daterange input').val(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
     });
     
-    
     $('#advance-daterange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
 
     $('#advance-daterange').daterangepicker({
@@ -236,6 +258,40 @@ var handleDateTimePicker = function() {
     });
 };
 
+var handleBootstrapColorPalette = function() {
+    $('#color-palette-1').colorPalette().on('selectColor', function(e) {
+        $('[data-id="color-palette-1"]').val(e.color);
+    });
+    var options = {
+      colors:[['#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#EFF7F7', '#FFFFFF']]
+    }
+    $('#color-palette-custom').colorPalette(options).on('selectColor', function(e) {
+        $('[data-id="color-palette-custom"]').val(e.color);
+    });
+};
+
+var handleSimpleColorpicker = function() {
+    $('select[name="jquery-simplecolorpicker"]').simplecolorpicker('selectColor', '#7bd148');
+    $('select[name="jquery-simplecolorpicker-fa"]').simplecolorpicker({theme: 'fontawesome'});
+    $('select[name="colorpicker-picker-longlist"]').simplecolorpicker({picker: true, theme: 'glyphicons'});
+};
+
+var handleClipboard = function() {
+	var clipboard = new Clipboard('.btn');
+	
+	clipboard.on('success', function(e) {
+		$(e.trigger).tooltip({
+			title: 'Copied',
+			placement: 'top'
+		});
+		$(e.trigger).tooltip('show');
+		setTimeout(function() {
+			$(e.trigger).tooltip('destroy');
+		}, 500);
+	});
+};
+
+
 var FormPlugins = function () {
 	"use strict";
     return {
@@ -255,6 +311,9 @@ var FormPlugins = function () {
 			handleDateRangePicker();
 			handleSelect2();
 			handleDateTimePicker();
+			handleBootstrapColorPalette();
+			handleSimpleColorpicker();
+			handleClipboard();
         }
     };
 }();

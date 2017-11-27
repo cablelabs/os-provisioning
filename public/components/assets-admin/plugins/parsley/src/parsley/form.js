@@ -1,105 +1,195 @@
-define('parsley/form', [
-  'parsley/abstract',
-  'parsley/utils'
-], function (ParsleyAbstract, ParsleyUtils) {
-  var ParsleyForm = function (element, OptionsFactory) {
-    this.__class__ = 'ParsleyForm';
-    this.__id__ = ParsleyUtils.hash(4);
+import $ from 'jquery';
+import ParsleyAbstract from './abstract';
+import ParsleyUtils from './utils';
 
-    if ('OptionsFactory' !== ParsleyUtils.get(OptionsFactory, '__class__'))
-      throw new Error('You must give an OptionsFactory instance');
+var ParsleyForm = function (element, domOptions, options) {
+  this.__class__ = 'ParsleyForm';
 
-    this.OptionsFactory = OptionsFactory;
-    this.$element = $(element);
+  this.$element = $(element);
+  this.domOptions = domOptions;
+  this.options = options;
+  this.parent = window.Parsley;
 
-    this.validationResult = null;
-    this.options = this.OptionsFactory.get(this);
-  };
+  this.fields = [];
+  this.validationResult = null;
+};
 
-  ParsleyForm.prototype = {
-    onSubmitValidate: function (event) {
-      this.validate(undefined, undefined, event);
+var statusMapping = {pending: null, resolved: true, rejected: false};
 
-      // prevent form submission if validation fails
-      if (false === this.validationResult && event instanceof $.Event) {
-        event.stopImmediatePropagation();
-        event.preventDefault();
-      }
+ParsleyForm.prototype = {
+  onSubmitValidate: function (event) {
+    // This is a Parsley generated submit event, do not validate, do not prevent, simply exit and keep normal behavior
+    if (true === event.parsley)
+      return;
 
-      return this;
-    },
+    // If we didn't come here through a submit button, use the first one in the form
+    var $submitSource = this._$submitSource || this.$element.find(ParsleyUtils._SubmitSelector).first();
+    this._$submitSource = null;
+    this.$element.find('.parsley-synthetic-submit-button').prop('disabled', true);
+    if ($submitSource.is('[formnovalidate]'))
+      return;
 
-    // @returns boolean
-    validate: function (group, force, event) {
-      this.submitEvent = event;
-      this.validationResult = true;
+    var promise = this.whenValidate({event});
 
-      var fieldValidationResult = [];
+    if ('resolved' === promise.state() && false !== this._trigger('submit')) {
+      // All good, let event go through. We make this distinction because browsers
+      // differ in their handling of `submit` being called from inside a submit event [#1047]
+    } else {
+      // Rejected or pending: cancel this submit
+      event.stopImmediatePropagation();
+      event.preventDefault();
+      if ('pending' === promise.state())
+        promise.done(() => { this._submit($submitSource); });
+    }
+  },
 
-      // Refresh form DOM options and form's fields that could have changed
-      this._refreshFields();
+  onSubmitButton: function(event) {
+    this._$submitSource = $(event.currentTarget);
+  },
+  // internal
+  // _submit submits the form, this time without going through the validations.
+  // Care must be taken to "fake" the actual submit button being clicked.
+  _submit: function ($submitSource) {
+    if (false === this._trigger('submit'))
+      return;
+    // Add submit button's data
+    if ($submitSource) {
+      var $synthetic = this.$element.find('.parsley-synthetic-submit-button').prop('disabled', false);
+      if (0 === $synthetic.length)
+        $synthetic = $('<input class="parsley-synthetic-submit-button" type="hidden">').appendTo(this.$element);
+      $synthetic.attr({
+        name: $submitSource.attr('name'),
+        value: $submitSource.attr('value')
+      });
+    }
 
-      $.emit('parsley:form:validate', this);
+    this.$element.trigger($.extend($.Event('submit'), {parsley: true}));
+  },
 
-      // loop through fields to validate them one by one
-      for (var i = 0; i < this.fields.length; i++) {
+  // Performs validation on fields while triggering events.
+  // @returns `true` if all validations succeeds, `false`
+  // if a failure is immediately detected, or `null`
+  // if dependant on a promise.
+  // Consider using `whenValidate` instead.
+  validate: function (options) {
+    if (arguments.length >= 1 && !$.isPlainObject(options)) {
+      ParsleyUtils.warnOnce('Calling validate on a parsley form without passing arguments as an object is deprecated.');
+      var [group, force, event] = arguments;
+      options = {group, force, event};
+    }
+    return statusMapping[ this.whenValidate(options).state() ];
+  },
 
-        // do not validate a field if not the same as given validation group
-        if (group && group !== this.fields[i].options.group)
-          continue;
+  whenValidate: function ({group, force, event} = {}) {
+    this.submitEvent = event;
+    if (event) {
+      this.submitEvent = $.extend({}, event, {preventDefault: () => {
+        ParsleyUtils.warnOnce("Using `this.submitEvent.preventDefault()` is deprecated; instead, call `this.validationResult = false`");
+        this.validationResult = false;
+      }});
+    }
+    this.validationResult = true;
 
-        fieldValidationResult = this.fields[i].validate(force);
+    // fire validate event to eventually modify things before every validation
+    this._trigger('validate');
 
-        if (true !== fieldValidationResult && fieldValidationResult.length > 0 && this.validationResult)
-          this.validationResult = false;
-      }
+    // Refresh form DOM options and form's fields that could have changed
+    this._refreshFields();
 
-      $.emit('parsley:form:validated', this);
+    var promises = this._withoutReactualizingFormOptions(() => {
+      return $.map(this.fields, field => field.whenValidate({force, group}));
+    });
 
-      return this.validationResult;
-    },
+    return ParsleyUtils.all(promises)
+      .done(  () => { this._trigger('success'); })
+      .fail(  () => {
+        this.validationResult = false;
+        this.focus();
+        this._trigger('error');
+      })
+      .always(() => { this._trigger('validated'); })
+      .pipe(...this._pipeAccordingToValidationResult());
+  },
 
-    // Iterate over refreshed fields, and stop on first failure
-    isValid: function (group, force) {
-      this._refreshFields();
+  // Iterate over refreshed fields, and stop on first failure.
+  // Returns `true` if all fields are valid, `false` if a failure is detected
+  // or `null` if the result depends on an unresolved promise.
+  // Prefer using `whenValid` instead.
+  isValid: function (options) {
+    if (arguments.length >= 1 && !$.isPlainObject(options)) {
+      ParsleyUtils.warnOnce('Calling isValid on a parsley form without passing arguments as an object is deprecated.');
+      var [group, force] = arguments;
+      options = {group, force};
+    }
+    return statusMapping[ this.whenValid(options).state() ];
+  },
 
-      for (var i = 0; i < this.fields.length; i++) {
+  // Iterate over refreshed fields and validate them.
+  // Returns a promise.
+  // A validation that immediately fails will interrupt the validations.
+  whenValid: function ({group, force} = {}) {
+    this._refreshFields();
 
-        // do not validate a field if not the same as given validation group
-        if (group && group !== this.fields[i].options.group)
-          continue;
+    var promises = this._withoutReactualizingFormOptions(() => {
+      return $.map(this.fields, field => field.whenValid({group, force}));
+    });
+    return ParsleyUtils.all(promises);
+  },
 
-        if (false === this.fields[i].isValid(force))
-          return false;
-      }
+  _refreshFields: function () {
+    return this.actualizeOptions()._bindFields();
+  },
 
-      return true;
-    },
+  _bindFields: function () {
+    var oldFields = this.fields;
 
-    _refreshFields: function () {
-      return this.actualizeOptions()._bindFields();
-    },
+    this.fields = [];
+    this.fieldsMappedById = {};
 
-    _bindFields: function () {
-      var self = this;
-
-      this.fields = [];
-      this.fieldsMappedById = {};
-
-      this.$element.find(this.options.inputs).each(function () {
-        var fieldInstance = new window.Parsley(this, {}, self);
+    this._withoutReactualizingFormOptions(() => {
+      this.$element
+      .find(this.options.inputs)
+      .not(this.options.excluded)
+      .each((_, element) => {
+        var fieldInstance = new window.Parsley.Factory(element, {}, this);
 
         // Only add valid and not excluded `ParsleyField` and `ParsleyFieldMultiple` children
-        if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && !fieldInstance.$element.is(fieldInstance.options.excluded))
-          if ('undefined' === typeof self.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__]) {
-            self.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__] = fieldInstance;
-            self.fields.push(fieldInstance);
+        if (('ParsleyField' === fieldInstance.__class__ || 'ParsleyFieldMultiple' === fieldInstance.__class__) && (true !== fieldInstance.options.excluded))
+          if ('undefined' === typeof this.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__]) {
+            this.fieldsMappedById[fieldInstance.__class__ + '-' + fieldInstance.__id__] = fieldInstance;
+            this.fields.push(fieldInstance);
           }
       });
 
-      return this;
-    }
-  };
+      $.each(ParsleyUtils.difference(oldFields, this.fields), (_, field) => {
+        field._trigger('reset');
+      });
+    });
+    return this;
+  },
 
-  return ParsleyForm;
-});
+  // Internal only.
+  // Looping on a form's fields to do validation or similar
+  // will trigger reactualizing options on all of them, which
+  // in turn will reactualize the form's options.
+  // To avoid calling actualizeOptions so many times on the form
+  // for nothing, _withoutReactualizingFormOptions temporarily disables
+  // the method actualizeOptions on this form while `fn` is called.
+  _withoutReactualizingFormOptions: function (fn) {
+    var oldActualizeOptions = this.actualizeOptions;
+    this.actualizeOptions = function () { return this; };
+    var result = fn();
+    this.actualizeOptions = oldActualizeOptions;
+    return result;
+  },
+
+  // Internal only.
+  // Shortcut to trigger an event
+  // Returns true iff event is not interrupted and default not prevented.
+  _trigger: function (eventName) {
+    return this.trigger('form:' + eventName);
+  }
+
+};
+
+export default ParsleyForm;

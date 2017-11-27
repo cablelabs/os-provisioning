@@ -1,8 +1,8 @@
 /*
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
-Version: 2.1.0
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7 & Bootstrap 4.0.0-Alpha 6
+Version: 3.0.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
+Website: http://www.seantheme.com/color-admin-v3.0/admin/html/
     ----------------------------
         APPS CONTENT TABLE
     ----------------------------
@@ -87,13 +87,12 @@ var handleSidebarMenu = function() {
         var otherMenu = '.sidebar .nav > li.has-sub > .sub-menu';
 
         if ($('.page-sidebar-minified').length === 0) {
-            $(otherMenu).not(target).slideUp(0, function() {
+            $(otherMenu).not(target).slideUp(250, function() {
                 $(this).closest('li').removeClass('expand');
             });
-            $(target).slideToggle(0, function() {
+            $(target).slideToggle(250, function() {
                 var targetLi = $(this).closest('li');
-                localStorage.setItem("sidebar-item", $(this).closest('li').attr("id"));
-                if ($(targetLi).hasClass('expand') || !$(target).is(':visible')) {
+                if ($(targetLi).hasClass('expand')) {
                     $(targetLi).removeClass('expand');
                 } else {
                     $(targetLi).addClass('expand');
@@ -104,14 +103,7 @@ var handleSidebarMenu = function() {
     $('.sidebar .nav > .has-sub .sub-menu li.has-sub > a').click(function() {
         if ($('.page-sidebar-minified').length === 0) {
             var target = $(this).next('.sub-menu');
-            $(target).slideToggle(0, function() {
-                var targetLi = $(this).closest('li');
-                if ($(targetLi).hasClass('expand')) {
-                    $(targetLi).removeClass('expand');
-                } else {
-                    $(targetLi).addClass('expand');
-                }
-            });
+            $(target).slideToggle(250);
         }
     });
 };
@@ -655,7 +647,7 @@ var handleLocalStorage = function() {
         if (panelPositionData) {
             panelPositionData = JSON.parse(panelPositionData);
             var i = 0;
-            $('.panel').parent('[class*="col-"]').each(function() {
+            $.when($('.panel').parent('[class*="col-"]').each(function() {
                 var storageData = panelPositionData[i];
                 var targetColumn = $(this);
                 if (storageData) {
@@ -670,6 +662,8 @@ var handleLocalStorage = function() {
                     });
                 }
                 i++;
+            })).done(function() {
+            	window.dispatchEvent(new CustomEvent('localstorage-position-loaded'));
             });
         }
     } else {
@@ -1108,7 +1102,6 @@ var handleClearSidebarMobileSelection = function() {
     $('#page-container').removeClass('page-sidebar-toggled');
 };
 
-
 /* 24. Handle Toggle Navbar Search - added in V2.0
 ------------------------------------------------ */
 
@@ -1195,8 +1188,8 @@ var App = function () {
 			handlePanelAction();
 			handelTooltipPopoverActivation();
 			handleScrollToTopButton();
-			handleAfterPageLoadAddClass();
-			handleToggleNavProfile();
+            handleAfterPageLoadAddClass();
+            handleToggleNavProfile();
 			handleDismissNavbarSearch();
 			handleToggleNavbarSearch();
 		},

@@ -6,29 +6,28 @@
 .fc-event,
 .fc .fc-event {
     border: none;
-    background: @grey_800;
-    .border-radius(0);
+    background: #575d63;
+    border-radius: 0;
 }
 .fc-event-list .fc-event {
     background: none;
     border: none;
-    color: @grey_700;
+    color: #242a30;
     padding: 10px 15px;
-    font-size: 13px;
+    font-size: 12px;
     margin-left: -15px;
     margin-right: -15px;
-    border-top: 1px solid @grey_300;
-    border-bottom: 1px solid @grey_300;
-    .border-radius(0);
+    border-top: 1px solid #D2D6DA;
+    border-bottom: 1px solid #D2D6DA;
 }
 .fc-event-list .fc-event:hover,
 .fc-event-list .fc-event:focus {
-    color: @grey_900;
+    color: #242a30;
     cursor: pointer;
-    background: @grey_100;
+    background: #f0f3f5;
 }
 .fc-event-list .fc-event.ui-draggable-dragging {
-    border: 1px dashed @grey_300;
+    border: 1px dashed #D2D6DA;
 }
 .fc-event-list .fc-event + .fc-event {
     margin-top: -1px;
@@ -40,9 +39,9 @@
 }
 body .fc button {
     font-weight: 400;
-    color: @grey_900;
-    background: @white;
-    border-color: #c8c8c8;
+    color: #242a30;
+    background: #fff;
+    border-color: #e2e7eb;
     box-shadow: none;
     padding: 5px 10px;
     height: inherit;
@@ -52,20 +51,21 @@ body .fc button {
 body .fc button:active, 
 body .fc button:focus,
 body .fc button:hover {
-    background: @grey_300;
-    border-color: #c8c8c8;
+    background: #e2e7eb;
+    border-color: #d8dde1;
     outline: none;
 }
 body .fc button.fc-state-disabled:active, 
 body .fc button.fc-state-disabled:focus,
 body .fc button.fc-state-disabled:hover {
-    background: @white;
+    background: #fff;
 }
 body .fc button.fc-state-active, 
 body .fc button:active {
-    background: @grey_300;
-    border-color: #c8c8c8;
-    .box-shadow(inset 0 3px 5px rgba(0,0,0,.1));
+    background: #e2e7eb;
+    border-color: #d8dde1;
+    -webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,.1);
+    box-shadow: inset 0 3px 5px rgba(0,0,0,.1);
 }
 .fc .fc-unthemed .fc-divider, 
 .fc .fc-unthemed .fc-popover, 
@@ -74,14 +74,13 @@ body .fc button:active {
 .fc .fc-unthemed td, 
 .fc .fc-unthemed th, 
 .fc .fc-unthemed thead {
-    border-color: @grey_300;
+    border-color: #e2e7eb;
 }
 .fc th {
     padding: 3px 15px;
-    color: @grey_900;
-    font-weight: 500;
-    font-size: 13px;
-    background: @grey_100;
+    color: #242a30;
+    font-weight: 600;
+    background: #f0f3f5;
 }
 .fc button .fc-icon {
     font-family: FontAwesome;
@@ -102,7 +101,7 @@ body .fc button:active {
     content: "\f054";
 }
 .fc .fc-unthemed .fc-today {
-    background: #fff8F0;
+    background: #FFF8F0;
 }
 .fc .fc-scroller {
     overflow: initial;

@@ -23,7 +23,7 @@ _Aside from this readme you can find a lot more info on [jstree.com](http://www.
 - [Getting Started](#getting-started)
   - [Include all neccessary files](#include-all-neccessary-files)
   - [Populating a tree using HTML](#populating-a-tree-using-html)
-  - [Populating a tree using an array (or JSON)](#populating-a-tree-using-an-array-or-json)
+  - [Populating a tree using an array \(or JSON\)](#populating-a-tree-using-an-array-or-json)
     - [The required JSON format](#the-required-json-format)
   - [Populating the tree using AJAX](#populating-the-tree-using-ajax)
   - [Populating the tree using AJAX and lazy loading nodes](#populating-the-tree-using-ajax-and-lazy-loading-nodes)
@@ -123,7 +123,7 @@ $(function() {
 </script>
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/1/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4478/)
 
 Unlike the previous simple HTML example, this time the `.jstree()` function accepts a config object.
 
@@ -143,12 +143,12 @@ There are other available options for each node, only set them if you need them 
 
  * `id` - makes if possible to identify a node later (will also be used as a DOM ID of the `LI` node). _Make sure you do not repeat the same ID in a tree instance (that would defeat its purpose of being a unique identifier and may cause problems for jstree)_.
  * `icon` - a string which will be used for the node's icon - this can either be a path to a file, or a className (or list of classNames), which you can style in your CSS (font icons also work).
- * `data` - this can be anything you want - it is metadata you want attached to the node - you willbe able to access and modify it any time later - it has no effect on the visuals of the node.
- * `state` - and object specifyng a few options about the node:
+ * `data` - this can be anything you want - it is metadata you want attached to the node - you will be able to access and modify it any time later - it has no effect on the visuals of the node.
+ * `state` - an object specifyng a few options about the node:
    - `selected` - if the node should be initially selected
    - `opened` - if the node should be initially opened
    - `disabled` - if the node should be disabled
-   - `checked` - __checkbox plugin specific__ - if the node should be checked (only used when `tie_to_selection` is `false`, which you should only do if you really know what you are doing)
+   - `checked` - __checkbox plugin specific__ - if the node should be checked (only used when `tie_selection` is `false`, which you should only do if you really know what you are doing)
    - `undetermined` - __checkbox plugin specific__ - if the node should be rendered in undetermined state (only used with lazy loading and when the node is not yet loaded, otherwise this state is automatically calculated).
  * `type` - __types plugin specific__ - the type of the nodes (should be defined in the types config), if not set `"default"` is assumed.
  * `li_attr` - object of values which will be used to add HTML attributes on the resulting `LI` DOM node.
@@ -182,7 +182,7 @@ $(function() {
 </script>
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/11/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4479/)
 
 ---
 
@@ -216,9 +216,9 @@ The server response is:
 }]
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/4/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4480/)
 
-Instead of a JS array, you can set `core.data` to a [jQuery AJAX config](http://api.jquery.com/jQuery.ajax/)
+Instead of a JS array, you can set `core.data` to a [jQuery AJAX config](http://api.jquery.com/jQuery.ajax/). 
 jsTree will hit that URL, and provided you return properly formatted JSON it will be displayed.
 
 _If you cannot provide proper JSON headers, set `core.data.dataType` to `"json"`._
@@ -231,7 +231,7 @@ __WHEN USING IDS MAKE SURE THEY ARE UNIQUE INSIDE A PARTICULAR TREE__
 
 ### Populating the tree using AJAX and lazy loading nodes
 
-Lazy loading means nodes will be loaded then they are needed. Imagine you have a huge amount of nodes you want to show, but loading them with a single request is way too much traffic. Lazy loading makes it possible to load nodes on the fly - jstree will perform AJAX requests as the user browses the tree.
+Lazy loading means nodes will be loaded when they are needed. Imagine you have a huge amount of nodes you want to show, but loading them with a single request is way too much traffic. Lazy loading makes it possible to load nodes on the fly - jstree will perform AJAX requests as the user browses the tree.
 
 Here we take our previous example, and lazy load the "Child node 1" node.
 
@@ -263,7 +263,7 @@ The initial server response is:
 }]
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/5/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4481/)
 
 Now to focus on what is different. First off the `"data"` config option of the data object. If you check with jQuery, it is supposed to be a string or an object. But jstree makes it possible to set a function.
 
@@ -312,7 +312,7 @@ $(function() {
 </script>
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/13/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4482/)
 
 As you can see your function will receive two arguments - the node whose children need to be loaded and a callback function to call with the data once you have it. The data follows the same familiar JSON format and lazy loading works just as with AJAX (as you can see in the above example).
 
@@ -343,7 +343,7 @@ $(function() {
 </script>
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/6/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4483/)
 
 All jstree events fire in a special `".jstree"` namespace - this is why we listen for `"changed.jstree"`. The handler itself receives one additional parameter - it will be populated with all you need to know about the event that happened. In this case `data.selected` is an array of selected node IDs (please note, that if you have not specified IDs they will be autogenerated).
 
@@ -366,7 +366,7 @@ __All available functions and events are documented in the API docs__
 
 ## Interacting with the tree using the API
 
-We scratcched the surface on interacting with the tree in the previous example. Let's move on to obtaining an instance and calling a method on this instance:
+We scratched the surface on interacting with the tree in the previous example. Let's move on to obtaining an instance and calling a method on this instance:
 
 ```html
 <button>Select node 1</button>
@@ -390,7 +390,7 @@ $(function() {
 </script>
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/7/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4484/)
 
 The above example shows how to obtain a reference to a jstree instance (again with a selector, but this time instead of a config, we pass a boolean `true`), and call a couple of methods - the latter one is selecting a node by its ID.
 
@@ -430,7 +430,7 @@ $("#tree").jstree({
 });
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/8/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4485/)
 
 We will cover all plugins further down.
 
@@ -445,9 +445,9 @@ $("#tree").jstree({
 });
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/9/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4486/)
 
-`"core.check_callback"` can also be set to a function, that will be invoked every time a modification is about to happen (or when jstree needs to check if a modification is possible). If you return `true` the operation will be allowed, a value of `false` means it will not be allowed.
+`"core.check_callback"` can also be set to a function, that will be invoked every time a modification is about to happen (or when jstree needs to check if a modification is possible). If you return `true` the operation will be allowed, a value of `false` means it will not be allowed. The possible operation you can expect are `create_node`, `rename_node`, `delete_node`, `move_node` and `copy_node`. The `more` parameter will contain various information provided by the plugin that is invoking the check. For example the DND plugin will provide an object containing information about the move or copy operation that is being checked - is it a multi tree operation, which node is currently hovered, where the insert arrow is pointing - before, after or inside, etc.
 
 ```js
 $("#tree").jstree({
@@ -465,7 +465,7 @@ $("#tree").jstree({
 });
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/10/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4487/)
 
 The `more` parameter you receive contains other information related to the check being performed.
 
@@ -488,7 +488,7 @@ $("#tree").jstree({
 });
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/14/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4488/)
 
 ### contextmenu
 Makes it possible to right click nodes and shows a list of configurable actions in a menu.
@@ -500,7 +500,7 @@ $("#tree").jstree({
 });
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/16/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4489/)
 
 ### dnd
 Makes it possible to drag and drop tree nodes and rearrange the tree.
@@ -512,7 +512,7 @@ $("#tree").jstree({
 });
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/17/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4490/)
 
 ### massload
 Makes it possible to load multiple nodes in a single go (for a lazy loaded tree).
@@ -527,7 +527,7 @@ $("#tree").jstree({
     "data" : function (nodes) {
       return { "ids" : nodes.join(",") };
     }
-  }
+  },
   "plugins" : [ "massload", "state" ]
 });
 ```
@@ -546,12 +546,12 @@ $("#container").jstree({
 });
 $("#s").submit(function(e) {
   e.preventDefault();
-  $("container").jstree(true).search($("#q").val());
+  $("#container").jstree(true).search($("#q").val());
 });
 </script>
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/18/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4491/)
 
 ### sort
 Automatically arranges all sibling nodes according to a comparison config option function, which defaults to alphabetical order.
@@ -562,7 +562,7 @@ $("#tree").jstree({
 });
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/19/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4492/)
 
 ### state
 Saves all opened and selected nodes in the user's browser, so when returning to the same tree the previous state will be restored.
@@ -575,7 +575,7 @@ $("#tree").jstree({
 });
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/20/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4493/)
 
 ### types
 Makes it possible to add a "type" for a node, which means to easily control nesting rules and icon for groups of nodes instead of individually. To set a node type add a type property to the node structure.
@@ -594,7 +594,7 @@ $("#tree").jstree({
 });
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/21/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4494/)
 
 ### unique
 Enforces that no nodes with the same name can coexist as siblings - prevents renaming and moving nodes to a parent, which already contains a node with the same name.
@@ -605,7 +605,7 @@ $("#tree").jstree({
 });
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/22/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4495/)
 
 ### wholerow
 Makes each node appear block level which makes selection easier. May cause slow down for large trees in old browsers.
@@ -616,7 +616,7 @@ $("#tree").jstree({
 });
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/23/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4496/)
 
 ### More plugins
 If you create your own plugin (or download a 3rd party one) you must include its source on the page and list its name in the `"plugins"` config array.
@@ -642,7 +642,7 @@ $("#tree").jstree({
 });
 ```
 
-[view result](http://jsfiddle.net/vakata/2kwkh2uL/24/)
+[view result](http://jsfiddle.net/vakata/2kwkh2uL/4497/)
 
 As seen here when creating a plugin you can define a default config, add your own functions to jstree, or override existing ones while maintaining the ability to call the overridden function.
 

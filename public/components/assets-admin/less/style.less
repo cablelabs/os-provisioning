@@ -7,15 +7,15 @@
 @import '_sidebar';
 @import '_content';
 @import '_footer';
-@import '_component_list';
 @import '_helper';
+@import '_component_list';
 @import '_widget_list';
 @import '_plugin_list';
 @import '_page_list';
 @import '_responsive';
+@import '_content_flat_black';
 @import '_pace_loader';
 @import 'theme/_default';
-
 
 /* Reset and overrides */
 
@@ -24,11 +24,10 @@ html {
     height: 100%;
 }
 body {
-    background: @body_bg;
-    font-family: @body_font_family;
+    background: @bg_body;
     font-size: @body_font_size;
+    font-family: @body_font_family;
     color: @body_text_color;
-    -webkit-font-smoothing: antialiased;
 }
 .ie8 body {
     font-family: @ie8_body_font_family;
@@ -39,28 +38,18 @@ h1, h2, h3, h4, h5, h6{
 }
 h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
     font-size: 60%;
-    font-weight: normal;
+    font-weight: 300;
     color: @heading_small_text_color;
 }
 a {
     .transition(color 100ms ease-in-out);
-    color: @default_link_color;
 }
 a:focus {
     outline: none;
 }
-a:hover, 
-a:focus,
- a:active {
-    color: @default_link_hover_color;
-}
 label {
-    color: @form_label_color;
+    color: #242a30;
 }
-
-
-/* Material Icon Mobile Setting */
-
 .material-icons {
     text-rendering: optimizeLegibility;
 }
