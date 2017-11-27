@@ -373,7 +373,7 @@ class Modem extends \BaseModel {
 		{
 			// try to add file if it doesnt exist
 			Log::info('Missing DHCPD Configfile '.self::CONF_FILE_PATH);
-			if (File::put('', self::CONF_FILE_PATH) === false)
+			if (File::put(self::CONF_FILE_PATH, '') === false)
 			{
 				Log::alert('Error writing to DHCPD Configfile: '.self::CONF_FILE_PATH);
 				return;
@@ -413,7 +413,7 @@ class Modem extends \BaseModel {
 			else
 			{
 				Log::info('Missing DHCPD Configfile '.self::CONF_FILE_PATH_PUB);
-				if (File::put('', self::CONF_FILE_PATH_PUB) === false)
+				if (File::put(self::CONF_FILE_PATH_PUB, '') === false)
 					Log::alert('Error writing to DHCPD Configfile: '.self::CONF_FILE_PATH_PUB);
 			}
 
