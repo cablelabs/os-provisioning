@@ -215,13 +215,13 @@ class ExtendedValidator
 
         if ($device == 'cm')
         {
-	        Log::info("Validation: /usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg");
-	        exec("rm -f $dir/dummy-validator.cfg && /usr/local/bin/docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg 2>&1", $outs);
+	        Log::info("Validation: docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg");
+	        exec("rm -f $dir/dummy-validator.cfg && docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg 2>&1", $outs);
         }
         elseif ($device == 'mta')
         {
-	        Log::info("Validation: /usr/local/bin/docsis -p $cf_file $dir/dummy-validator.cfg");
-	        exec("rm -f $dir/dummy-validator.cfg && /usr/local/bin/docsis -p $cf_file $dir/dummy-validator.cfg 2>&1", $outs, $ret);	//return value is always 0
+	        Log::info("Validation: docsis -p $cf_file $dir/dummy-validator.cfg");
+	        exec("rm -f $dir/dummy-validator.cfg && docsis -p $cf_file $dir/dummy-validator.cfg 2>&1", $outs, $ret);	//return value is always 0
 		}
 
         /*

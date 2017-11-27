@@ -175,9 +175,9 @@ class Mta extends \BaseModel {
 			goto _failed;
 		}
 
-		Log::info("/usr/local/bin/docsis -eu -p $conf_file $cfg_file");
+		Log::info("docsis -eu -p $conf_file $cfg_file");
 		// "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
-		exec     ("/usr/local/bin/docsis -eu -p $conf_file $cfg_file >/dev/null 2>&1 &", $out);
+		exec     ("docsis -eu -p $conf_file $cfg_file >/dev/null 2>&1 &", $out);
 
 		// this only is valid when we dont execute docsis in background
 		// if (!file_exists($cfg_file))
