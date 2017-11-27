@@ -24,3 +24,5 @@ systemctl enable xinetd
 systemctl start chronyd
 systemctl start nmsprimed
 systemctl start xinetd
+
+firewall-cmd --reload
