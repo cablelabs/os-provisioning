@@ -1,0 +1,10 @@
+$ORIGIN .
+$TTL 86400	; 1 day
+in-addr.arpa		IN SOA	<hostname>.nmsprime.test. hostmaster.nmsprime.test. (
+				2017112701 ; serial
+				21600      ; refresh (6 hours)
+				3600       ; retry (1 hour)
+				604800     ; expire (1 week)
+				86400      ; minimum (1 day)
+				)
+			NS	<hostname>.nmsprime.test.
