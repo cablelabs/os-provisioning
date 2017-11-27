@@ -13,7 +13,7 @@ sed -i "s/^SELINUX=enforcing$/SELINUX=disabled/" /etc/sysconfig/selinux
 setenforce  0
 
 # set default hostname
-hostnamectl set-hostname nmsprime
+hostnamectl set-hostname nmslx01.nmsprime.test
 
 #
 # HTTP
