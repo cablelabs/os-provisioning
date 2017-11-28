@@ -29,7 +29,7 @@ class CmtsController extends \BaseController {
 			if ($ips->count()>0)
 				$next_ip = long2ip(ip2long($ips[0]->ip)-1); // calc: next_ip = last_ip-1
 			else
-				$next_ip = env('CMTS_SETUP_FIRST_IP', '10.255.255.254'); // default first ip
+				$next_ip = env('CMTS_SETUP_FIRST_IP', '10.255.0.254'); // default first ip
 
 			$init_values += array(
 				'ip' => $next_ip,

@@ -173,7 +173,7 @@ class Cmts extends \BaseModel {
 		$this->prov_if = (isset($prov_if[0]) ? $prov_if[0] : 'eth');
 
 		$this->domain = ProvBase::first()->domain_name;
-		$this->router_ip = env('CMTS_DEFAULT_GW', '10.255.255.254');
+		$this->router_ip = env('CMTS_DEFAULT_GW', '10.255.0.254');
 		$this->netmask = env('CMTS_IP_NETMASK', '255.255.255.0');
 		$this->tf_net_1 = env('CMTS_TRANSFER_NET', '10.255.0.1'); // servers with /24
 		$this->nat_ip = env('CMTS_NAT_IP', '10.255.0.2'); // second server ip is mostlikely NAT
