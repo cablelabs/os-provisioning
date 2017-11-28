@@ -120,6 +120,28 @@ class IpPool extends \BaseModel {
 		return $ret ? false : true;
 	}
 
+	/**
+	 * Return 'secondary' if this pool is not the first CM pool of the CMTS,
+	 * otherwise an empty string
+	 *
+	 * @return String
+	 *
+	 * @author Ole Ernst
+	 */
+	public function is_secondary ()
+	{
+		$cm_pools = $this->cmts->ippools->filter(function ($item) {
+			return $item->type == 'CM';
+		});
+
+		if($cm_pools->isEmpty() || $this->id != $cm_pools->first()->id)
+			return 'secondary';
+
+		return '';
+	}
+
+
+
 
 	/**
 	 * Relationships:
