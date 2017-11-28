@@ -29,7 +29,7 @@ class Qos extends \BaseModel {
 
     public function prices()
     {
-        return $this->hasMany('Modules\Billingbase\Entities\Price');
+        return $this->hasMany('Modules\BillingBase\Entities\Price');
     }
 
 
