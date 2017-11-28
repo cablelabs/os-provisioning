@@ -234,7 +234,15 @@ class Cmts extends \BaseModel {
 	 */
 	public function get_us_snr($ip)
 	{
-		$snrs = json_decode(\Storage::get("data/provbase/us_snr/$this->hostname.json"), true);
+		$fn = "data/provbase/us_snr/$this->hostname.json";
+
+		if (!\Storage::exists($fn)) {
+			\Log::error("Missing Modem US SNR json file of CMTS $this->hostname [$this->id]");
+			return ['SNR not found'];
+		}
+
+		$snrs = json_decode(\Storage::get($fn), true);
+
 		if(array_key_exists($ip, $snrs))
 			return $snrs[$ip];
 
@@ -247,6 +255,7 @@ class Cmts extends \BaseModel {
 	 * this greatly reduces the cpu load on the cmts
 	 *
 	 * @author Ole Ernst
+	 * @author Nino Ryschawy  - D2.0 Extension
 	 */
 	public function store_us_snrs()
 	{
@@ -255,16 +264,39 @@ class Cmts extends \BaseModel {
 
 		snmp_set_valueretrieval(SNMP_VALUE_LIBRARY);
 		snmp_set_quick_print(true);
-		$ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.3.1.5');
-		$snrs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.4.1.4');
 
-		foreach ($ips as $i_key => $i_val) {
-			$i_key = last(explode('.', $i_key));
-			$tmp = array_filter($snrs, function($s_key) use($i_key) {
-				return strpos($s_key, $i_key) !== false;
-			}, ARRAY_FILTER_USE_KEY);
-			$ret[long2ip(hexdec($i_val))] = ArrayHelper::ArrayDiv(array_values($tmp));
+		\Log::info("CMTS $this->hostname: Store CM US SNRs");
+
+		try {
+			// DOCS-IF3-MIB::docsIf3CmtsCmRegStatusIPv4Addr, ...
+			$ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.3.1.5');
+			$snrs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.4.1.4');
+
+			foreach ($ips as $i_key => $i_val) {
+				$i_key = last(explode('.', $i_key));
+				$tmp = array_filter($snrs, function($s_key) use($i_key) {
+						return strpos($s_key, $i_key) !== false;
+				}, ARRAY_FILTER_USE_KEY);
+				$ret[long2ip(hexdec($i_val))] = ArrayHelper::ArrayDiv(array_values($tmp));
+			}
+
+		} catch (\Exception $e) {
+			if (strpos($e->getMessage(), 'No Such Object available on this agent at this OID') === false)
+					throw $e;
+
+			// try DOCSIS2.0 - DOCS-IF-MIB::docsIfCmtsCmStatusIpAddress, ...
+			$ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.3.3.1.3');
+			$snrs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.3.3.1.13');
+
+			foreach ($ips as $i_key => $i_val) {
+				$i_key = last(explode('.', $i_key));
+				$tmp = array_filter($snrs, function($s_key) use($i_key) {
+						return strpos($s_key, $i_key) !== false;
+				}, ARRAY_FILTER_USE_KEY);
+				$ret[$i_val] = ArrayHelper::ArrayDiv(array_values($tmp));
+			}
 		}
+
 		\Storage::put("data/provbase/us_snr/$this->hostname.json", json_encode($ret));
 	}
 
