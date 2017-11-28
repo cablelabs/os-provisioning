@@ -12,8 +12,10 @@ pw=$(pwgen 12 1) # SQL password for user nmsprime
 sed -i "s/^SELINUX=enforcing$/SELINUX=disabled/" /etc/sysconfig/selinux
 setenforce  0
 
-# set default hostname
-hostnamectl set-hostname nmslx01.nmsprime.test
+# set default hostname, if none was explicitly set
+if [[ "$(hostname)" == 'localhost.localdomain' ]]; then
+	hostnamectl set-hostname nmslx01.nmsprime.test
+fi
 
 #
 # HTTP
