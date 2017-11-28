@@ -250,8 +250,10 @@ class Configfile extends \BaseModel {
 	* Internal Helper:
 	*   Make Configfile Content for $this Object /
 	*   without recursive objects
+	*
+	* @param sw_up 	Bool 	true if Software upgrade statement is already set -> then the next one is discarded (child CF has priority)
 	*/
-	private function __text_make ($device, $type)
+	private function __text_make ($device, $type, $sw_up = false)
 	{
 		// array to extend the configfile; e.g. for firmware
 		$config_extensions = array();
@@ -300,7 +302,7 @@ class Configfile extends \BaseModel {
 				$db_schemata ['qos'][0] 	= Schema::getColumnListing('qos');
 
 				// if there is a specific firmware: add entries for upgrade
-				if ($this->firmware) {
+				if ($this->firmware && !$sw_up) {
 					// $server_ip = ProvBase::first()['provisioning_server'];
 					// array_push($config_extensions, "SnmpMibObject docsDevSwServerAddress.0 IPAddress $server_ip ; /* tftp server */");
 					array_push($config_extensions, 'SnmpMibObject docsDevSwFilename.0 String "fw/'.$this->firmware.'"; /* firmware file to download */');
@@ -309,7 +311,7 @@ class Configfile extends \BaseModel {
 					array_push($config_extensions, 'SwUpgradeFilename "fw/'.$this->firmware.'";');
 				}
 
-				if ($this->cvc)
+				if ($this->cvc && !$sw_up)
 					exec("xxd -p -c 254 /tftpboot/cvc/".$this->cvc." | sed 's/^/MfgCVCData 0x/; s/$/;/'", $config_extensions);
 				break;
 
@@ -390,7 +392,6 @@ class Configfile extends \BaseModel {
 			if (!preg_match("/\\{[^\\{]*\\}/im", $row))
 				$result .= "\n\t".$row;
 
-
 		/*
 		 * return
 		 */
@@ -405,9 +406,15 @@ class Configfile extends \BaseModel {
 	{
 		$p = $this;
 		$t = '';
+		$sw_up = false;
 
 		do {
-			$t .= $p->__text_make($device, $type);
+			$t .= $p->__text_make($device, $type, $sw_up);
+
+			// only allow one sw upgrade statement
+			if (strpos($t, 'SwUpgradeFilename "fw/') !== false && !$sw_up)
+				$sw_up = true;
+
 			$p  = $p->get_parent();
 		} while ($p);
 
