@@ -15,11 +15,11 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class BaseLifecycleTest extends TestCase {
 
 	// flag to show debug output from test runs
-	/* protected $debug = True; */
-	protected $debug = False;
+	protected $debug = True;
+	/* protected $debug = False; */
 
 	// define how often the create, update and delete tests should be run
-	protected $testrun_count = 10;
+	protected $testrun_count = 2;
 
 	// flag to indicate if creating without data should fail
 	protected $creating_empty_should_fail = True;
@@ -32,6 +32,9 @@ class BaseLifecycleTest extends TestCase {
 
 	// array holding the edit form structure
 	protected $edit_field_structure = [];
+
+	// container to collect all created entities
+	protected static $created_entity_ids = [];
 
 
 	/**
@@ -196,7 +199,7 @@ class BaseLifecycleTest extends TestCase {
 
 			case 'select':
 			case 'radio':
-				// us faker data only if available as option; choose random value out of available randomly
+				// use faker data only if available as option; choose random value out of available randomly
 				if (!in_array($faked_data, $structure['values'])) {
 					$faked_data = $structure['values'][array_rand($structure['values'])];
 				}
@@ -274,6 +277,15 @@ class BaseLifecycleTest extends TestCase {
 			$this->press("_save")
 				->see("Created!")
 			;
+
+			// if we end up in edit view: generated successfully (otherwise we keep staying in create view)
+			$_ = explode('/', $this->currentUri);
+			if ((array_pop($_) == 'edit')) {
+				$id = array_pop($_);
+				if (is_numeric($id) && ($id != '0')) {
+					array_push(self::$created_entity_ids, $id);
+				}
+			}
 		}
 	}
 

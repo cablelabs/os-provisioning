@@ -15,7 +15,7 @@ class ContractTableSeeder extends \BaseSeeder {
 
 		foreach(range(1, self::$max_seed) as $index)
 		{
-			Contract::create(static::get_fake_data());
+			Contract::create(static::get_fake_data('seed'));
 		}
 	}
 
@@ -24,7 +24,7 @@ class ContractTableSeeder extends \BaseSeeder {
 	 *
 	 * @author Patrick Reichel
 	 */
-	public static function get_fake_data() {
+	public static function get_fake_data($topic) {
 
 		$faker = Faker::create();
 		$count = Contract::get(['id'])->count();
@@ -32,10 +32,6 @@ class ContractTableSeeder extends \BaseSeeder {
 		$salutations = ['Herr', 'Frau', 'Firma', 'Behörde'];
 
 		$ret = [
-			'number' => 'contr_'.($count + 1),
-			'number2' => 'legacy_contr_'.($count + 13157),
-			'number3' => 'Cu/2015/Q4/'.($count),
-			'number4' => 'legacy_cust_'.($count + 180558),
 			'company' => (rand(0,10) > 7 ? $faker->company: ''),
 			'salutation' => $salutations[array_rand($salutations, 1)],
 			'academic_degree' => '',
@@ -68,6 +64,14 @@ class ContractTableSeeder extends \BaseSeeder {
 			'password' => \Acme\php\Password::generate_password(),
 			'description' => $faker->sentence,
 		];
+
+		// add numbers only in seeding mode or on disabled billing module
+		if (($topic == 'seed') || (!\Module::find('BillingBase')->active())) {
+			$ret['number'] = 'contr_'.($count + 1);
+			$ret['number2'] = 'legacy_contr_'.($count + 13157);
+			$ret['number3'] = 'Cu/2015/Q4/'.($count);
+			$ret['number4'] = 'legacy_cust_'.($count + 180558);
+		}
 
 		if (\Module::find('BillingBase')->active()) {
 			$ret['costcenter_id'] = $faker->numberBetween(1, 2);
