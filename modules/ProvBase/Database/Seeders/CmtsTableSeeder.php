@@ -13,7 +13,7 @@ class CmtsTableSeeder extends \BaseSeeder {
 		$faker = Faker::create();
 		$company = ['Cisco', 'Casa'];
 
-		foreach(range(1, $this->max_seed_l2) as $index)
+		foreach(range(1, self::$max_seed_l2) as $index)
 		{
 			Cmts::create([
 				'hostname' => $faker->unique->name,

@@ -14,7 +14,7 @@ class MtaTableSeeder extends \BaseSeeder {
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, $this->max_seed) as $index)
+		foreach(range(1, self::$max_seed) as $index)
 		{
 			Mta::create([
 				'mac' => $faker->macAddress(),

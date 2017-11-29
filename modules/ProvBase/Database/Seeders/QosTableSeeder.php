@@ -10,7 +10,7 @@ class QosTableSeeder extends \BaseSeeder {
 
 	public function run()
 	{
-		foreach(range(1, $this->max_seed_l2) as $index)
+		foreach(range(1, self::$max_seed_l2) as $index)
 		{
 			Qos::create([
 				'name' => 'QOS-'.$index,

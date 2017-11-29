@@ -14,7 +14,7 @@ class PhonenumberTableSeeder extends \BaseSeeder {
 
 	public function run()
 	{
-		foreach(range(0, $this->max_seed) as $index)
+		foreach(range(0, self::$max_seed) as $index)
 		{
 			Phonenumber::create([
 				'prefix_number' => "03725",

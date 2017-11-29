@@ -12,7 +12,7 @@ class EndpointTableSeeder extends \BaseSeeder {
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, $this->max_seed_l2) as $index)
+		foreach(range(1, self::$max_seed_l2) as $index)
 		{
 			Endpoint::create([
 				'mac' => (rand(0,1) == 1 ? $faker->macAddress() : ''),

@@ -13,7 +13,7 @@ class ContractTableSeeder extends \BaseSeeder {
 	public function run()
 	{
 
-		foreach(range(1, $this->max_seed) as $index)
+		foreach(range(1, self::$max_seed) as $index)
 		{
 			Contract::create(static::get_fake_data());
 		}
@@ -68,6 +68,10 @@ class ContractTableSeeder extends \BaseSeeder {
 			'password' => \Acme\php\Password::generate_password(),
 			'description' => $faker->sentence,
 		];
+
+		if (\Module::find('BillingBase')->active()) {
+			$ret['costcenter_id'] = $faker->numberBetween(1, 2);
+		}
 
 		return $ret;
 	}

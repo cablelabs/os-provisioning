@@ -11,7 +11,7 @@ class DomainTableSeeder extends \BaseSeeder {
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, $this->max_seed) as $index)
+		foreach(range(1, self::$max_seed) as $index)
 		{
 			$alias = $faker->domainWord();
 			foreach(range(1, rand(1,10)) as $idx)

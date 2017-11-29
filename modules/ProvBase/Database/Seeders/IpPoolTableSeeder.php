@@ -14,7 +14,7 @@ class IpPoolTableSeeder extends \BaseSeeder {
 		$m = 0;
 		$n = 0;
 
-		foreach(range(1, $this->max_seed) as $index)
+		foreach(range(1, self::$max_seed) as $index)
 		{
 			IpPool::create([
 				'cmts_id' => CMTS::all()->random(1)->id,

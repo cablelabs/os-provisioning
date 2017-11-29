@@ -64,7 +64,7 @@ class NetElementTableSeeder extends \BaseSeeder {
 		$faker = Faker::create();
 		$i = 2;
 
-		foreach(range(1, $this->max_seed) as $index)
+		foreach(range(1, self::$max_seed) as $index)
 		{
 			$x = 13 + $faker->longitude() / 10;
 			$y = 50 + $faker->latitude() / 10;
