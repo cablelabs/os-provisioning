@@ -163,13 +163,17 @@ class ContractController extends \BaseController {
 
 		if (!$data['number'] && \PPModule::is_active('billingbase'))
 		{
-			// generate contract number
-			$num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
+			// check if a costcenter id is given
+			// if not: skip generation of a new number (this crashes) – instead let prepare_input handle the missing data
+			if ($data['costcenter_id']) {
+				// generate contract number
+				$num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
 
-			if ($num)
-				$data['number'] = $num;
-			else
-				session(['alert' => \App\Http\Controllers\BaseViewController::translate_view('Failure','Contract_Numberrange')]);
+				if ($num)
+					$data['number'] = $num;
+				else
+					session(['alert' => \App\Http\Controllers\BaseViewController::translate_view('Failure','Contract_Numberrange')]);
+			}
 		}
 
 		$data = parent::prepare_input($data);
