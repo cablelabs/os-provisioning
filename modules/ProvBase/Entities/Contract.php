@@ -154,6 +154,13 @@ class Contract extends \BaseModel {
 			$ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
 		}
 
+		if (\PPModule::is_active('Ticketsystem'))
+		{
+			$tickets = $this->tickets;
+			if ($tickets->all())
+				$ret['Ticket']['Ticket'] = $tickets;
+		}
+
 		if (\PPModule::is_active('mail'))
 		{
 			$ret['Email']['Email'] = $this->emails;
@@ -281,6 +288,11 @@ class Contract extends \BaseModel {
 	public function cccauthuser()
 	{
 		return $this->hasOne('Modules\Ccc\Entities\CccAuthuser');
+	}
+
+	public function tickets()
+	{
+		return $this->hasMany('Modules\Ticketsystem\Entities\Ticket');
 	}
 
 
