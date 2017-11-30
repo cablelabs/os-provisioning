@@ -1299,6 +1299,172 @@ class Modem extends \BaseModel
         return $ret;
     }
 
+	/**
+	 * Get Pre-equalization data of a modem via cacti
+	 *
+	 * @return: Array
+	 * @author: John Adebayo
+	 */
+	private function _threenibble($hexcall)
+	{
+		$ret = [];
+		$counter = 0;
+
+		foreach($hexcall as $hex) {
+			$counter++;
+			if($counter < 49) {
+				$hex = str_split($hex, 1);
+				if (ctype_alpha($hex[1]) || $hex[1] > 7) {
+					$hex[0] = "F";
+					$hex = implode("",$hex);
+					$hex = preg_replace('/[^0-9A-Fa-f]/', '', $hex);
+					$hex = strrev("$hex");
+					$dec = last(unpack("s", pack("h*", "$hex")));
+					array_push($ret,$dec);
+				} else {
+					$hex[0] = 0;
+					$hex = implode("",$hex);
+					$hex = preg_replace('/[^0-9A-Fa-f]/', '', $hex);
+					$hex = strrev("$hex");
+					$dec = last(unpack("s", pack("h*", "$hex")));
+					array_push($ret,$dec);
+				}
+			} else {
+				break;
+			}
+		}
+
+		return $ret;
+	}
+
+	private function _fournibble($hexcall)
+	{
+		$ret = [];
+		$counter = 0;
+		foreach($hexcall as $hex) {
+			$counter++;
+			if ($counter < 49) {
+				$hex = preg_replace('/[^0-9A-Fa-f]/', '', $hex);
+				$hex = strrev("$hex");
+				$dec = last(unpack("s", pack("h*", "$hex")));
+				array_push($ret, $dec);
+			} else {
+				break;
+			}
+		}
+		return $ret;
+	}
+
+	private function _nePwr($decimal,$maintap)
+	{
+		$pwr = [];
+		$a2 = $decimal[$maintap];
+		$b2 = $decimal[$maintap + 1];
+		foreach (array_chunk($decimal, 2) as $val) {
+			$a1 = $val[0];
+			$b1 = $val[1];
+			$real = ($a1 * $a2 + $b1 * $b2) / ($a2**2 + $b2**2);
+			$imag = ($a2 * $b1 - $a1 * $b2) / ($a2**2 + $b2**2);
+			array_push($pwr, $real);
+			array_push($pwr, $imag);
+		}
+
+		return $pwr;
+	}
+
+	private function _energy($pwr,$maintap,$energymain)
+	{
+		$ene = [];
+
+		// normalizing the main tap
+		// sum of all real values
+		$even = 0;
+		$pwr[$maintap] = 0;
+		foreach ($pwr as $line => $value)
+			if (!($line == 1 || ($line % 2) == 1))
+				$even += abs($value);
+		$even = sqrt(1 - $even);
+
+		// sum of all imaginary values
+		$odd = 0;
+		$pwr[$maintap + 1] = 0;
+		foreach($pwr as $line => $value)
+			if (!($line == 0 || ($line % 2) ==0))
+				$odd += abs($value);#
+		$odd = sqrt($odd);
+
+		// calculating energy values
+		$pwr = array_chunk($pwr, 2);
+		foreach ($pwr as $val)
+			array_push($ene, 10 * log10($val[0]**2 + $val[1]**2));
+
+		$ene[$energymain]= 10 * log10($even**2 + $odd**2);
+
+		return $ene;
+	}
+
+
+	private function _tdr($ene, $energymain, $freq)
+	{
+		// propgagtion speed in cable networks (87% speed of light)
+		$v = 0.87 * 299792458;
+		unset($ene[$energymain]);
+		$highest = array_keys($ene, max($ene));
+		$highest = implode("", $highest);
+		$tap_diff = abs($energymain - $highest);
+		// 0.8 - Roll-off of filter; /2 -> round-trip (back and forth)
+		$tdr = $v * $tap_diff / (0.8 * $freq) / 2;
+		return $tdr;
+	}
+
+	public function get_preq_data()
+	{
+		$ret = [];
+		$domain = ProvBase::first()->domain_name;
+		$file = "/usr/share/cacti/rra/$this->hostname.$domain.json";
+
+		if(!file_exists($file))
+			return ['No pre-equalization data found'];
+
+		$preq = json_decode(file_get_contents($file), true);
+		$freq = $preq['width'];
+		$hexs = str_split($preq['data'], 8);
+		$or_hexs = array_shift($hexs);
+
+		$maintap = 2 * $or_hexs[1] - 2;
+		$energymain = $maintap / 2;
+		array_splice($hexs, 0, 0);
+		$hexs = implode("", $hexs);
+		$hexs = str_split($hexs, 4);
+		$hexcall = $hexs;
+		$counter = 0;
+		foreach($hexs as $hex) {
+			$hsplit = str_split($hex, 1);
+			$counter++;
+			if (is_numeric($hsplit[0]) && $hsplit[0] == 0 && $counter >= 46) {
+				$decimal = $this->_threenibble($hexcall);
+				$ret['decimal'] = $decimal;
+				break;
+			}
+			elseif(ctype_alpha($hsplit[0]) || $hsplit[0] != 0 && $counter >= 46) {
+				$decimal = $this->_fournibble($hexcall);
+				$ret['decimal'] = $decimal;
+				break;
+			}
+		}
+		$pwr = $this->_nePwr($decimal, $maintap);
+		$ret['power'] = $pwr;
+		$ene = $this->_energy($pwr, $maintap, $energymain);
+		$ret['energy'] = $ene;
+		$tdr = $this->_tdr($ene, $energymain, $freq);
+		$ret['tdr'] = $tdr;
+
+		return $ret;
+	}
+
+
+
+
     /*
      * Return actual modem state as string or int
      *
