@@ -107,15 +107,10 @@ class AuthController extends Controller {
 		if(!is_null($this->login_page))
 			return Redirect::to($this->prefix.'/'.$this->login_page);
 
-		$roles = \Auth::user()->roles()->toArray();
-		if (count($roles) == 0) {
-			return \View::make('auth.denied')
-			            ->with(
-			            	'message',
-				            'No roles assigned. Please contact your administrator.'
-//				            \App\Http\Controllers\BaseViewController::translate_view('NoRoles' , 'Auth')
-			            );
-		}
+		$roles = \Auth::user()->roles;
+
+		if (!count($roles))
+			return \View::make('auth.denied')->with('message', 'No roles assigned. Please contact your administrator.');
 
 		// TODO: return to dashboard, but via $login_page variable !
 		// If ProvBase is not installed redirect to Config Page

@@ -35,6 +35,8 @@ class BaseController extends Controller {
 	protected $save_button = 'Save';
 	protected $force_restart_button = 'Force Restart';
 	protected $relation_create_button = 'Create';
+
+	// if set to true a create button on index view is available
 	protected $index_create_allowed = true;
 	protected $index_delete_allowed = true;
 

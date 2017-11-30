@@ -65,7 +65,7 @@ class authCommand extends Command {
 		foreach ($models as $model) {
 			\App\Authmetacore::updateOrCreate(
 				['core_id' => $model->id,
-				 'meta_id' => 1,
+				 'role_id' => 1,
 				 'view' => 1,
 				 'create' => 1,
 				 'edit' => 1,
@@ -78,7 +78,7 @@ class authCommand extends Command {
 		foreach ($nets as $net) {
 			\App\Authmetacore::updateOrCreate(
 				['core_id' => $net->id,
-				 'meta_id' => 2,
+				 'role_id' => 2,
 				 'view' => 1,
 				 'create' => 1,
 				 'edit' => 1,
