@@ -377,7 +377,7 @@ class BaseController extends Controller {
 			$a['edit_right_md_size'] = $this->edit_right_md_size;
 
 		if (!isset($a['html_title']))
-			$a['html_title'] = "NMS – ".\NamespaceController::module_get_pure_model_name();
+			$a['html_title'] = 'NMS Prime - '.\App\Http\Controllers\BaseViewController::translate_view(\NamespaceController::module_get_pure_model_name(),'Header');
 
 		$a['save_button'] = $this->save_button;
 		$a['force_restart_button'] = $this->force_restart_button;
@@ -832,7 +832,7 @@ class BaseController extends Controller {
 		$model = NamespaceController::get_model_name();
 		$data .= self::_create_index_view_data($model::get_tree_list());
 
-		// $data .= '</ul></div>';
+		// $data .= '</ul></div></div>';
 
 		return $data;
 	}
