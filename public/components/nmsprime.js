@@ -31,8 +31,9 @@ var makeNavbarSearch = function() {
 	});
 };
 
-// Keep Sidebar open and Save State and Minify Status of Sidebar
-// @author: Christian Schramm
+/* Keep Sidebar open and Save State and Minify Status of Sidebar
+*  @author: Christian Schramm
+*/
 if (typeof(Storage) !== "undefined") {
     //save minified s_state
     var ministate = localStorage.getItem("minified-state");

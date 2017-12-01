@@ -1,9 +1,8 @@
-
-  <!-- begin #sidebar -->
+ {{-- begin #sidebar --}}
     <div id="sidebar" class="sidebar">
-      <!-- begin sidebar scrollbar -->
+     {{-- begin sidebar scrollbar --}}
       <div data-scrollbar="true" data-height="100%">
-        <!-- begin sidebar user -->
+       {{-- begin sidebar user --}}
         <ul class="nav">
           <li class="nav-profile">
             <div class="info">
@@ -12,9 +11,9 @@
             </div>
           </li>
         </ul>
-        <!-- end sidebar user -->
+       {{-- end sidebar user --}}
 
-        <!-- begin sidebar nav -->
+       {{-- begin sidebar nav --}}
         <ul class="nav">
           @if (\PPModule::is_active ('Dashboard'))
             <li id ="dashboardsidebar"
@@ -71,25 +70,25 @@
             </li>
          @endforeach
 
-          <!-- begin sidebar minify button -->
+         {{-- begin sidebar minify button --}}
           <li>
             <a href="javascript:;" class="sidebar-minify-btn hidden-xs" data-click="sidebar-minify">
             <i class="fa fa-angle-double-left"></i>
             </a>
           </li>
-          <!-- end sidebar minify button -->
+         {{-- end sidebar minify button --}}
         </ul>
-        <!-- end sidebar nav -->
+       {{-- end sidebar nav --}}
       </div>
-      <!-- end sidebar scrollbar -->
+     {{-- end sidebar scrollbar --}}
       </div>
     <div class="sidebar-bg"></div>
-    <!-- end #sidebar -->
+   {{-- end #sidebar --}}
 
 
-<!-- java script dynamic panel on right top side under tabs -->
+{{-- java script dynamic panel on right top side under tabs --}}
 @if(isset($panel_right_extra))
-    <!-- begin theme-panel -->
+   {{-- begin theme-panel --}}
     <div class="theme-panel">
       <a href="javascript:;" data-click="theme-panel-expand" class="theme-collapse-btn">
         <i class="fa fa-cog"></i>
@@ -110,5 +109,5 @@
 
       </div>
     </div>
-    <!-- end theme-panel -->
+   {{-- end theme-panel --}}
 @endif

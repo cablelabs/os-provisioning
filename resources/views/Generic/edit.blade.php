@@ -15,49 +15,47 @@
 
 	{{ $headline }}
 
-
 @stop
 
 
 @section('content_left')
 
-	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'editform')) }}
-	
-		@include($form_path, $view_var)
-
-	{{ Form::close() }}
-
+	<div class="tab-content" style="display:none;">
+		<div class="tab-pane fade in" id="logging" role="tabpanel"></div>
+	</div>
+			{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'EditForm')) }}
+				@include($form_path, $view_var)
+			{{ Form::close() }}
 @stop
 
 
 <?php $api = App\Http\Controllers\BaseViewController::get_view_has_many_api_version($relations) ?>
 
-<?php //d($relations, $edit_left_md_size); ?>
+{{-- d($relations, $edit_left_md_size) --}}
 
 @section('content_right')
-
 	@foreach($relations as $view => $relation)
 
 		<?php if (!isset($i)) $i = 0; else $i++; ?>
 
-		<!-- The section content for the new Panel -->
+		{{-- The section content for the new Panel --}}
 		@section("content_$i")
 
-			<!-- old API: directly load relation view. NOTE: old API new class var is $view -->
+			{{-- old API: directly load relation view. NOTE: old API new class var is $view --}}
 			@if ($api == 1)
 				@include('Generic.relation', [$relation, 'class' => $view, 'key' => strtolower($view_var->table).'_id'])
 			@endif
 
-			<!-- new API: parse data -->
+			{{-- new API: parse data --}}
 			@if ($api == 2)
 				@if (is_array($relation))
 
-					<!-- include pure HTML -->
+					{{-- include pure HTML --}}
 					@if (isset($relation['html']))
 						{{$relation['html']}}
 					@endif
 
-					<!-- include a view -->
+					{{-- include a view --}}
 					@if (isset($relation['view']))
 						@if (is_string($relation['view']))
 							@include ($relation['view'])
@@ -68,7 +66,7 @@
 						@endif
 					@endif
 
-					<!-- include a relational class/object/table, like Contract->Modem -->
+					{{-- include a relational class/object/table, like Contract->Modem --}}
 					@if (isset($relation['class']) && isset($relation['relation']))
 						@include('Generic.relation', ['relation' => $relation['relation'],
 													  'class' => $relation['class'],
@@ -81,7 +79,7 @@
 
 		@stop
 
-		<!-- The Bootstap Panel to include -->
+		{{-- The Bootstap Panel to include --}}
 		@include ('bootstrap.panel', array ('content' => "content_$i",
 											'view_header' => \App\Http\Controllers\BaseViewController::translate_view('Assigned', 'Header').' '.\App\Http\Controllers\BaseViewController::translate_view($view, 'Header' , 2),
 											'md' => isset($md_size) ? $md_size : (isset($edit_right_md_size) ? $edit_right_md_size : 4)))
@@ -89,7 +87,7 @@
 	@endforeach
 
 
-	<!-- Alert -->
+	{{-- Alert --}}
 	@if (Session::has('alert'))
 		@include('bootstrap.alert', array('message' => Session::get('alert')))
 		<?php Session::forget('alert'); ?>

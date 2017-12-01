@@ -14,7 +14,7 @@
 
 @section('content_left')
 
-<!-- Headline: means icon followed by headline -->
+{{-- Headline: means icon followed by headline --}}
 @DivOpen(12)
 	<h1 class="page-header">
 	{{\App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null).$view_header}}

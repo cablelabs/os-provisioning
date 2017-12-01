@@ -13,16 +13,16 @@
 
 	<body class="pace-top">
 
-	<!-- Background Image -->
+	{{-- Background Image --}}
 	<div class="login-cover">
 		<div class="login-cover-image"><img alt="" data-id="login-cover-image" src="{{asset('images/main-pic-1.png')}}"></div>
 		<div class="login-cover-bg"></div>
 	</div>
 
-		<!-- begin login -->
+		{{-- begin login --}}
 		<div class="login login-v2 animated fadeInDown">
 
-			<!-- begin brand -->
+			{{-- begin brand --}}
 			<div class="login-header">
 				<div class="brand">
 					<span class="logo"></span> {{ $head1 }}
@@ -33,7 +33,7 @@
 				</div>
 			</div>
 
-			<!-- end brand -->
+			{{-- end brand --}}
 			<div class="login-content">
 				<div align="center">
 
@@ -50,7 +50,7 @@
 			</div>
 
 		</div>
-		<!-- end login -->
+		{{-- end login --}}
 
 	</body>
 

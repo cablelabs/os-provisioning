@@ -290,10 +290,10 @@ $(document).ready(function() {
   });
 
 });
-// show alert
+{{-- show alert --}}
 $(".modal").modal();
 
-// TODO: move to analyses.blade to javascript part
+{{-- TODO: move to analyses.blade to javascript part --}}
 function resizeIframe(obj) {
   setTimeout(function() {
     //obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';

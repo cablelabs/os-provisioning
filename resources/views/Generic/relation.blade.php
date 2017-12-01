@@ -1,4 +1,4 @@
-{{---
+{{--
 
 Relation Blade is used inside a Panel Element to display relational class objects on the right window side
 
@@ -25,11 +25,11 @@ Relation Blade is used inside a Panel Element to display relational class object
 
 @include('Generic.above_infos')
 
-<!-- Create Button: (With hidden add fields if required) -->
+{{-- Create Button: (With hidden add fields if required) --}}
 @if (!isset($options['hide_create_button']))
 	@DivOpen(12)
-
-		<!-- Form Open: must send it's correlating parent via GET, see note in BaseViewController::compute_headline() -->
+		<div class="row">
+		{{-- Form Open: must send it's correlating parent via GET, see note in BaseViewController::compute_headline() --}}
 		{{ Form::open(array('url' => BaseRoute::$admin_prefix.'/'.$route.'/create?'.$key.'='.$view_var->id, 'method' => 'POST')) }}
 		{{ Form::hidden($key, $view_var->id) }}
 
@@ -59,7 +59,7 @@ Relation Blade is used inside a Panel Element to display relational class object
 @endif
 
 
-<!-- The Relation Table and Delete Button -->
+{{-- The Relation Table and Delete Button --}}
 @DivOpen(12)
 
 	@if (isset($options['many_to_many']))
@@ -79,7 +79,7 @@ Relation Blade is used inside a Panel Element to display relational class object
 		</table>
 
 
-		<!-- Delete Button -->
+		{{-- Delete Button --}}
 		@if (!isset($options['hide_delete_button']) && isset($relation[0]))
 
 			<?php
