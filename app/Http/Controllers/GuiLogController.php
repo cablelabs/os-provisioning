@@ -26,12 +26,12 @@ class GuiLogController extends BaseController {
 			array('form_type' => 'textarea', 'name' => 'text', 'description' => 'Changed Attributes'),
 			);
 
-		// add link of changed Model in edit view - Note: check if route exists is necessary because CccAuthuser.edit is not available for instance 
+		// add link of changed Model in edit view - Note: check if route exists is necessary because CccAuthuser.edit is not available for instance
 		if ($model && \Route::getRoutes()->hasNamedRoute($model->model.'.edit'))
 		{
-			array_push($a, array('form_type' => 'text', 'name' => 'link', 'description' => 'Link', 'html' => 
+			array_push($a, array('form_type' => 'text', 'name' => 'link', 'description' => 'Link', 'html' =>
 				'<div class="col-md-12" style="background-color:white">
-					<div class="form-group"><label style="margin-top: 10px;" class="col-md-4 control-label">Link</label>
+					<div class="form-group row"><label style="margin-top: 10px;" class="col-md-4 control-label">Link</label>
 						<div class="col-md-7">
 							<a class="btn btn-default btn-block" href="'.route($model->model.'.edit', ['id' => $model->model_id]).'"> '.$model->model.' '.$model->model_id.'</a>
 						</div>

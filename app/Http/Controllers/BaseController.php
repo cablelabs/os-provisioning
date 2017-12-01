@@ -559,7 +559,7 @@ class BaseController extends Controller {
 
 		if ($validator->fails())
 		{
-			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'red');
+			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'danger');
 		}
 
 		$id = $obj::create($data)->id;
@@ -567,7 +567,7 @@ class BaseController extends Controller {
 		if (!$redirect)
 			return $id;
 
-		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', 'Created!')->with('message_color', 'blue');
+		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', 'Created!')->with('message_color', 'success');
 	}
 
 
@@ -642,7 +642,7 @@ class BaseController extends Controller {
 		if ($validator->fails())
 		{
 			Log::info ('Validation Rule Error: '.$validator->errors());
-			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'red');
+			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'danger');
 		}
 
 		// update timestamp, this forces to run all observer's
@@ -658,7 +658,7 @@ class BaseController extends Controller {
 
 		// error msg created while observer execution
 		$msg = \Session::has('error') ? \Session::get('error') : 'Updated';
-		$color = \Session::has('error') ? 'orange' : 'blue';
+		$color = \Session::has('error') ? 'warning' : 'info';
 
 		$route_model = \NamespaceController::get_route_name();
 

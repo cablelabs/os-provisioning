@@ -11,12 +11,10 @@
 
 {{-- Error Message --}}
 <?php $col = \Acme\Html\FormBuilder::get_layout_form_col_md()['label'] ?>
-@DivOpen(12)
-	@DivOpen($col)	@DivClose()
-	@DivOpen(12-$col)
-		<h5 style='color:{{ Session::get('message_color') }}' id='success_msg'>{{ Session::get('message') }}</h5>
-	@DivClose()
-@DivClose()
+
+<div id='top_message' class="note note-{{ Session::get('message_color')}} fade in m-b-15" style="display:none;">
+	<strong><h5>{{ Session::get('message') }}</h5></strong>
+</div>
 
 
 @include('Generic.above_infos')
@@ -25,9 +23,10 @@
 	{{ $fields['html'] }}
 @endforeach
 
+<div class="row d-flex justify-content-center">
 @if ($edit_view_save_button)
 	@if ($edit_view_force_restart_button)
-	<div class='col-md-5'>
+	<div class='col-6'>
 	@endif
 	<div class="text-center">
 		<button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_save" value="1">
@@ -41,7 +40,7 @@
 @endif
 @if ($edit_view_force_restart_button)
 	@if ($edit_view_save_button)
-	<div class='col-md-6'>
+	<div class='col-6'>
 	@endif
 	<div class="text-center">
 		<button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_force_restart" value="1">
@@ -53,7 +52,7 @@
 	</div>
 	@endif
 @endif
-
+</div>
 
 {{-- java script--}}
 @include('Generic.form-js')

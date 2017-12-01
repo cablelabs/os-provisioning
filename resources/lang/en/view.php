@@ -132,7 +132,13 @@ return [
 		// Tickets
 		'Header_Ticket'				=> 'Ticket|Tickets',
 		'Header_EditTicket'			=> 'Edit Ticket',
-
+	//HFC
+		//Topography
+		'Header_Topography - Modems'=> 'Topography - Modems',
+		'navigate'					=> 'Navigate',
+		'draw box'					=> 'Draw Box',
+		'draw polygon'				=> 'Draw Polygon',
+		'modify'					=> 'Modify Elements',
 	//VOIP
 		//MTA
 		'Header_Mta'				=> 'MTA|MTAs',

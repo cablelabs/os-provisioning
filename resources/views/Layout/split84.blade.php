@@ -11,8 +11,7 @@
 											'view_header' => $view_header_right,
 											'md' => isset($index_left_md_size) ? $index_left_md_size : 12))
 	@endif
-
-
+	</div>
 </div>
 
 @stop

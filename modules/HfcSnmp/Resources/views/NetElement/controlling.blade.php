@@ -88,7 +88,7 @@
 
 
 	@include('bootstrap.panel', ['content' => 'Content', 'md' => 12])
-	
+
 	{{ Form::close() }}
 
 	{{-- java script--}}

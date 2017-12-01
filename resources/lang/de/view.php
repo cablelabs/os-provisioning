@@ -45,7 +45,7 @@ return [
 		'Menu_MainMenu' 			=> 'Hauptmenü',
 		'Menu_Config Page'			=> 'Systemkonfiguration',
 		'Menu_Logging'				=> 'Logs',
-		'Menu_Product List'			=> 'Produktliste',
+		'Menu_Product List'			=> 'Produktangebot',
 		'Menu_SEPA Accounts'		=> 'SEPA-Konten',
 		'Menu_Settlement Run'		=> 'Abrechnungslauf',
 		'Menu_Cost Center'			=> 'Kostenstelle',
@@ -201,8 +201,14 @@ return [
 
 	//HFC
 		//Tree
-		'Header_Tree Table' 		=> 'Baumelement|Baumtabelle', //??
-		'Header_EditTree Table'		=> 'Baumelement bearbeiten', //??
+		'Header_Tree Table' 		=> 'Baumelement|Baumtabelle',
+		'Header_EditTree Table'		=> 'Baumelement bearbeiten',
+		'Header_Topography - Modems'=> 'Topografie - Modems',
+		//Topography
+		'navigate'					=> 'Navigieren',
+		'draw box'					=> 'Box einzeichnen',
+		'draw polygon'				=> 'Polygon einzeichnen',
+		'modify'					=> 'Elemente ändern',
 		//MPR
 		'Header_Mpr'				=> 'Modem Positionierungsregel|Modem Positionierungsregeln',
 		'Header_Modem Positioning Rule' => 'Modem Positionierungsregel|Modem Positionierungsregeln',

@@ -306,7 +306,7 @@ class FormBuilder extends CollectiveFormBuilder {
 	 */
 	public function openGroup($name, $label = null, $options = array(), $color = false)
 	{
-		$options = $this->appendClassToOptions('form-group', $options);
+		$options = $this->appendClassToOptions('form-group row', $options);
 
 		// dd($name, $label);
 		// Append the name of the group to the groupStack.
