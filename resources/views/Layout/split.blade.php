@@ -2,7 +2,7 @@
 
 @section ('content')
 
-<div class="row col-md-12">
+<div class="row col-12">
 
 	@include ('bootstrap.panel', array ('content' => 'content_left', 'view_header' => $view_header,
 										'md' => isset($edit_left_md_size) ? $edit_left_md_size : 5))
