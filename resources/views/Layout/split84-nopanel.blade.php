@@ -4,7 +4,7 @@
 
 <div class="col-md-12">
 	<div class="card bg-white">
-		<div class="card-block"
+		<div class="card-block">
 		{{-- We need to include sections dynamically: always content left and if needed content right - more than 1 time possible --}}
 		@yield ('content_left')
 		</div>
