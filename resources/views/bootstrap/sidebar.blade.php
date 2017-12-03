@@ -16,15 +16,17 @@
 
         <!-- begin sidebar nav -->
         <ul class="nav">
-          <li id ="dashboardsidebar"
-            @if ($route_name == "Dashboard")
-              class="active"
-            @endif
-            >
-            <a href="{{BaseRoute::get_base_url()}}/Dashboard">
-            <i class="fa fa-home"></i>
-            <span cl>Dashboard</span></a>
-          </li>
+          @if (\PPModule::is_active ('Dashboard'))
+            <li id ="dashboardsidebar"
+              @if ($route_name == "Dashboard")
+                class="active"
+              @endif
+              >
+              <a href="{{BaseRoute::get_base_url()}}/Dashboard">
+              <i class="fa fa-home"></i>
+              <span cl>Dashboard</span></a>
+            </li>
+          @endif
 
           <li class="nav-header">Navigation</li>
           @foreach ($view_header_links as $module_name => $typearray)
