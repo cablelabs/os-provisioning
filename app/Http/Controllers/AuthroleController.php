@@ -14,7 +14,7 @@ class AuthroleController extends BaseController
 
 	protected $index_delete_allowed = true;
 
-	protected $edit_left_md_size = 3;
+	protected $edit_left_md_size = 6;
 
 	protected $edit_right_md_size = 6;
 

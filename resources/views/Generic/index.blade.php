@@ -44,7 +44,7 @@
                 {{$headline}}
             </div>
         {{-- Create Form --}}
-            <div class="col-1 align-self-end">
+            <div class="align-self-end m-r-20">
                 @if ($create_allowed)
                     {{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
                     <button class="btn btn-outline-primary float-right m-b-10" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
@@ -54,7 +54,7 @@
                     {{ Form::close() }}
                 @endif
             </div>
-            <div class="col-1 align-self-end">
+            <div class="align-self-end">
                 @if ($delete_allowed)
                     <button class="btn btn-outline-danger m-b-10 float-right" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
                     title="{{ \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button' ) }}" form="IndexForm">
