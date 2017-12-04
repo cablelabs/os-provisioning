@@ -1,14 +1,14 @@
 <?php
 return [
     // Index DataTable Header
-	// GiuLog
+	// GuiLog
 	'guilog.created_at' => 'Time',
 	'guilog.username' => 'User',
 	'guilog.method' => 'Action',
 	'guilog.model' => 'Model',
 	'guilog.model_id' => 'Model ID',
 	// Company
-	'company.name' => 'Company Name', 
+	'company.name' => 'Company Name',
 	'company.city' => 'City',
 	'company.phone' => 'Mobile Number',
 	'company.mail' => 'E-Mail',
@@ -17,7 +17,7 @@ return [
 	'costcenter.number' => 'Number',
 	//Invoices
 	'invoice.type' => 'Type',
-	'invoice.year' => 'Year', 
+	'invoice.year' => 'Year',
 	'invoice.month' => 'Month',
 	//Item //**
 
@@ -46,7 +46,7 @@ return [
 	// MPR
 	'mpr.name' => 'Name',
 	// NetElement
-	'netelement.id' => 'ID',	
+	'netelement.id' => 'ID',
 	'netelement.name' => 'Netelement',
 	'netelement.ip' => 'IP Adress',
 	'netelement.state' => 'State',
@@ -60,7 +60,7 @@ return [
 	'mibfile.name' => 'Mibfile',
 	'mibfile.version' => 'Version',
 	// OID
-	'oid.name_gui' => 'GUI Label', 
+	'oid.name_gui' => 'GUI Label',
 	'oid.name' => 'OID Name',
 	'oid.oid' => 'OID',
 	'oid.access' => 'Access Type',
@@ -176,4 +176,5 @@ return [
 	'ticket.state' => 'State',
 	'ticket.user_id' => 'Created by',
 	'ticket.created_at' => 'Created at',
+	'ticket.assigned_users' => 'Assigned Users',
 ];
