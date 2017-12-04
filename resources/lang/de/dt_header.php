@@ -1,6 +1,11 @@
 <?php
 return [
 // Index DataTable Header
+	// Auth
+	'authusers.login_name' => 'Loginname',
+	'authusers.first_name' => 'Vorname',
+	'authusers.last_name' => 'Nachname',
+	'authmetas.name' => 'Name',
 	// GuiLog
 	'guilog.created_at' => 'Zeitpunkt',
 	'guilog.username' => 'Nutzer',

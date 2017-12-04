@@ -16,7 +16,7 @@ class Email extends \BaseModel {
     // View Icon
 	public static function view_icon()
 	{
-	  return '<i class="fa fa-envelope-o"></i>'; 
+	  return '<i class="fa fa-envelope-o"></i>';
 	}
 
 	// There are no validation rules
@@ -30,18 +30,9 @@ class Email extends \BaseModel {
 		);
 	}
 
-	// Link title in index view
-	public function view_index_label()
-	{
-		return ['index' =>	[$this->localpart, $this->index, $this->greylisting, $this->blacklisting, $this->forwardto],
-			'index_header' =>	['Local Part', 'Index', 'Greylisting', 'Blacklisting', 'Forward To'],
-			'bsclass' => $this->index ? 'success' : 'danger',
-			'header' => $this->index.': '.$this->localpart.'@'.$this->domain->name];
-	}
-
 	// AJAX Index list function
 	// generates datatable content and classes for model
-	public function view_index_label_ajax()
+	public function view_index_label()
 	{
 		$bsclass = $this->get_bsclass();
 

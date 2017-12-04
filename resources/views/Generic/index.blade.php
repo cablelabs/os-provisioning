@@ -74,63 +74,37 @@
         {{-- Get Headerdata and translate with translation files --}}
         <thead> {{-- TABLE HEADER --}}
             <tr>
-                <th class="nocolvis" style="min-width:20px;"></th> {{-- Responsive Column --}}
+                <th class="nocolvis" style="min-width:20px;width:20px;"></th> {{-- Responsive Column --}}
                 @if (isset($delete_allowed) && $delete_allowed == true) {{-- Checkbox Column if delete is allowed --}}
-                    <th class="nocolvis" id="selectall" style="text-align:center; vertical-align:middle;min-width:20px;">
+                    <th class="nocolvis" id="selectall" style="text-align:center; vertical-align:middle;min-width:20px;;width:20px;">
                         <input id ="allCheck" data-trigger="hover" style='simple' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top"
                         data-delay='{"show":"250"}' data-original-title="{{\App\Http\Controllers\BaseViewController::translate_label('Select All')}}">
                     </th>
                 @endif
                 {{-- Get Header if possible with new Format - for Backwards compatibility old one stays --}}
-                @if (isset($model) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ) && is_array($model->view_index_label_ajax()) && isset($model->view_index_label_ajax()['index_header']))
-                    @foreach ($model->view_index_label_ajax()['index_header'] as $field)
+                @if (isset($model) && method_exists( BaseController::get_model_obj() , 'view_index_label' ) && is_array($model->view_index_label()) && isset($model->view_index_label()['index_header']))
+                    @foreach ($model->view_index_label()['index_header'] as $field)
                         <th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.'.$field).' ' }}
-                        @if ((!empty($model->view_index_label_ajax()['sortsearch'])) && ($model->view_index_label_ajax()['sortsearch'] == [$field => 'false']))
+                        @if ((!empty($model->view_index_label()['sortsearch'])) && ($model->view_index_label()['sortsearch'] == [$field => 'false']))
                             <i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top" data-delay='{"show":"250"}'
                             data-original-title="{{trans('helper.SortSearchColumn')}}"></i>
                         @endif
                         </th>
                     @endforeach
-                @elseif (isset($view_var[0]) && is_array($view_var[0]->view_index_label()) && isset($view_var[0]->view_index_label()['index_header']) )
-                        @foreach ($view_var[0]->view_index_label()['index_header'] as $field)
-                            <th class="content"> {{ \App\Http\Controllers\BaseViewController::translate_label($field) }} </th>
-                        @endforeach
                 @endif
             </tr>
         </thead>
         <tbody> {{-- Table DATA --}}
-        {{-- For Backwards compatibility: Generate the Datatable the old way --}}
-        @if (method_exists( BaseController::get_model_obj() , 'view_index_label' ) && isset($view_var[0]))
-            @foreach ($view_var as $object)
-                <tr class="{{\App\Http\Controllers\BaseViewController::prep_index_entries_color($object)}}">
-                        <td width="30"></td>
-                    @if (isset($delete_allowed) && $delete_allowed == true)
-                        <td width="30" align="center"> {{ Form::checkbox('ids['.$object->id.']', 1, null, null, ['style' => 'simple', 'disabled' => $object->index_delete_disabled ? 'disabled' : null]) }} </td>
-                    @endif
-                    <?php $i = 0; // display link only on first element ?>
-                    @foreach (is_array($object->view_index_label()) ? $object->view_index_label()['index'] : [$object->view_index_label()] as $field)
-                        <td class="ClickableTd">
-                            @if ($i++ == 0)
-                                {{$object->view_icon()}}
-                                <strong>{{ HTML::linkRoute($route_name.'.edit', $field, $object->id) }}</strong>
-                            @else
-                                {{ $field }}
-                            @endif
-                        </td>
-                    @endforeach
-                </tr>
-            @endforeach
-        @endif
         </tbody>
         <tfoot> {{-- TABLE FOOTER--}}
-        @if (isset($model) && isset($view_var) && method_exists( BaseController::get_model_obj() , 'view_index_label_ajax' ))
+        @if (isset($model) && isset($view_var) && method_exists( BaseController::get_model_obj() , 'view_index_label' ))
             <tr>
                 <th></th>  {{-- Responsive Column --}}
                 @if (isset($delete_allowed) && $delete_allowed == true)
                     <th></th> {{-- Checkbox Column if delete is allowed --}}
                 @endif
-                @foreach ($model->view_index_label_ajax()['index_header'] as $field)
-                    @if ((!empty($model->view_index_label_ajax()['sortsearch'])) && ( array_has( $model->view_index_label_ajax()['sortsearch'] , $field) ) )
+                @foreach ($model->view_index_label()['index_header'] as $field)
+                    @if ((!empty($model->view_index_label()['sortsearch'])) && ( array_has( $model->view_index_label()['sortsearch'] , $field) ) )
                         <th></th>
                     @else
                         <th class="searchable"></th>
@@ -301,7 +275,7 @@
                 lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "{{ trans('view.jQuery_All') }}" ] ],
                 {{-- Add Columns - First 2 Columns are for Responsive Button and Input Checkbox --}}
     {{-- DT AJAX CONFIGURATION --}}
-                @if (isset($model) && isset($view_var) && isset($index_datatables_ajax_enabled) && ($index_datatables_ajax_enabled === true) && method_exists( $view_var, 'view_index_label_ajax') )
+                @if (isset($model) && isset($view_var) && method_exists( $view_var, 'view_index_label') )
                 {{-- enable Serverside Handling--}}
                 processing: true,
                 serverSide: true,
@@ -312,23 +286,23 @@
                     @if (isset($delete_allowed) && $delete_allowed == true)
                             {data: 'checkbox', orderable: false, searchable: false},
                     @endif
-                    @if (isset($view_var->view_index_label_ajax()['index_header']))
-                        @foreach ($view_var->view_index_label_ajax()['index_header'] as $field)
-                            @if ( starts_with($field, $view_var->view_index_label_ajax()["table"].'.'))
-                                {data: '{{ substr($field, strlen($view_var->view_index_label_ajax()["table"]) + 1) }}', name: '{{ $field }}'},
+                    @if (isset($view_var->view_index_label()['index_header']))
+                        @foreach ($view_var->view_index_label()['index_header'] as $field)
+                            @if ( starts_with($field, $view_var->view_index_label()["table"].'.'))
+                                {data: '{{ substr($field, strlen($view_var->view_index_label()["table"]) + 1) }}', name: '{{ $field }}'},
                             @else
                                 {data: '{{ $field }}', name: '{{$field}}',
-                                searchable: {{ isset($view_var->view_index_label_ajax()["sortsearch"][$field]) ? "false" : "true" }},
-                                orderable:  {{ isset($view_var->view_index_label_ajax()["sortsearch"][$field]) ? "false" : "true" }}
+                                searchable: {{ isset($view_var->view_index_label()["sortsearch"][$field]) ? "false" : "true" }},
+                                orderable:  {{ isset($view_var->view_index_label()["sortsearch"][$field]) ? "false" : "true" }}
                                 },
                             @endif
                         @endforeach
                     @endif
                 ],
                 {{-- Set Sorting if order_by is set -> Standard is ASC of first Column --}}
-                @if (isset($view_var->view_index_label_ajax()['order_by']))
+                @if (isset($view_var->view_index_label()['order_by']))
                     order:
-                    @foreach ($view_var->view_index_label_ajax()['order_by'] as $columnindex => $direction)
+                    @foreach ($view_var->view_index_label()['order_by'] as $columnindex => $direction)
                         @if (isset($delete_allowed) && $delete_allowed == true)
                             [{{$columnindex + 2}}, '{{$direction}}'],
                         @else

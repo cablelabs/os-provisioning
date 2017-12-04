@@ -37,21 +37,9 @@ class MibFile extends \BaseModel {
     return '<i class="fa fa-file-o"></i>';
   }
 
-	// link title in index view
-	public function view_index_label()
-	{
-		// TODO: possible Colorization: red - MIBs that occur multiple times ((but checking can decrease performance dramatically))
-		$bsclass = \DB::table('oid')->where('mibfile_id', '=', $this->id)->whereNull('deleted_at')->first() ? 'success' : 'info';
-
-		return ['index' => [$this->id, $this->name, $this->version],
-				'index_header' => ['ID', 'Name', 'Version'],
-				'bsclass' => $bsclass,
-				'header' => $this->name];
-	}
-
 	// AJAX Index list function
 	// generates datatable content and classes for model
-	public function view_index_label_ajax()
+	public function view_index_label()
 	{
 		$bsclass = $this->get_bsclass();
 

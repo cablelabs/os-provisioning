@@ -61,11 +61,11 @@ class Authrole extends BaseModel
 	// link title in index view
 	public function view_index_label()
 	{
-		return [
-			'index' => [$this->name],
-			'index_header' => ['Role name'],
-			'header' => $this->name
-		];
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.name'],
+				'header' => $this->name,
+				'order_by' => ['0' => 'desc'],
+			];
 	}
 
 	public function view_has_many()

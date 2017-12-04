@@ -52,18 +52,18 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 		return '<i class="fa fa-user-o"></i>';
 	}
 
-
-	// link title in index view
+	// AJAX Index list function
+	// generates datatable content and classes for model
 	public function view_index_label()
 	{
 		// TODO: set color dependent of user permissions
-		// 'bsclass' => $bsclass,
+		//$bsclass = $this->get_bsclass();
 
-		return ['index' => [$this->login_name, $this->first_name, $this->last_name],
-		        'index_header' => ['Login', 'Firstname', 'Lastname'],
-		        'header' => "$this->first_name $this->last_name"];
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.login_name', $this->table.'.first_name', $this->table.'.last_name'],
+				'header' => $this->first_name.' '.$this->last_name,
+			];
 	}
-
 
 
 	/**

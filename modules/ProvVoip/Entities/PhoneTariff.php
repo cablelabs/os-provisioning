@@ -33,27 +33,8 @@ class PhoneTariff extends \BaseModel {
 		return '<i class="fa fa-phone-square"></i>';
 	}
 
-
 	// link title in index view
 	public function view_index_label()
-	{
-		if (boolval($this->usable)) {
-	        $bsclass = 'success';
-		}
-		else {
-			$bsclass = 'danger';
-		}
-
-
-        return ['index' => [$this->name, $this->type, $this->description, $this->voip_protocol, $this->usable],
-                'index_header' => ['Name', 'Type', 'Description', 'VoIP protocol', 'Usable'],
-                'bsclass' => $bsclass,
-                'header' => $this->name.' ('.$this->type.')'];
-	}
-
-
-	// link title in index view
-	public function view_index_label_ajax()
 	{
 		if (boolval($this->usable)) {
 	        $bsclass = 'success';

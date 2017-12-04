@@ -45,17 +45,9 @@ class Qos extends \BaseModel {
       return '<i class="fa fa-ticket"></i>';
     }
 
-    // link title in index view
-    public function view_index_label()
-    {
-        return ['index' => [$this->name, $this->ds_rate_max.' MBit/s', $this->us_rate_max.' MBit/s'],
-                'index_header' => ['Name', 'DS Rate', 'US Rate'],
-                'header' => $this->name];
-    }
-
 	// AJAX Index list function
 	// generates datatable content and classes for model
-	public function view_index_label_ajax()
+	public function view_index_label()
 	{
 		$bsclass = $this->get_bsclass();
 
@@ -67,12 +59,12 @@ class Qos extends \BaseModel {
 				'order_by' => ['0' => 'asc']];
 	}
 
-	public function get_bsclass() 
+	public function get_bsclass()
 	{
         $bsclass = 'success';
         return $bsclass;
     }
-    
+
     public function unit_ds_rate_max()
     {
         return $this->ds_rate_max.' MBit/s';
@@ -81,7 +73,7 @@ class Qos extends \BaseModel {
     public function unit_us_rate_max()
     {
         return $this->us_rate_max.' MBit/s';
-    }   
+    }
 
     /**
      * BOOT: init quality observer

@@ -83,7 +83,7 @@ class PhonenumberManagement extends \BaseModel {
 	}
 
 	// link title in index view
-	public function view_index_label_ajax()
+	public function view_index_label()
 	{
 		$bsclass = $this->get_bsclass();
 		$header = isset($this->phonenumber) ? 'PhonenumberManagement ('.$this->phonenumber->prefix_number.'/'.$this->phonenumber->number.')' : '';

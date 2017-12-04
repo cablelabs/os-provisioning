@@ -30,22 +30,9 @@ class Endpoint extends \BaseModel {
         return '<i class="fa fa-map-marker"></i>';
     }
 
-
-    // link title in index view
-    public function view_index_label()
-    {
-        $bsclass = 'success';
-
-
-        return ['index' => [$this->hostname, $this->mac, $this->description],
-                'index_header' => ['Hostname', 'MAC Address', 'Description'],
-                'bsclass' => $bsclass,
-                'header' => $this->hostname];
-    }
-
 	// AJAX Index list function
 	// generates datatable content and classes for model
-	public function view_index_label_ajax()
+	public function view_index_label()
 	{
 		$bsclass = $this->get_bsclass();
 

@@ -490,12 +490,7 @@ class BaseController extends Controller {
 	{
 		$model = static::get_model_obj();
 
-		$index_datatables_ajax_enabled = isset($this->index_datatables_ajax_enabled) ? $this->index_datatables_ajax_enabled : $this->index_datatables_ajax_enabled();
-
-		if ($index_datatables_ajax_enabled)
-			$view_var   = $model->first();
-		else
-			$view_var   = $model->index_list();
+		$view_var   = $model->first();
 
 		$view_header = \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
 		$headline  	= \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
@@ -510,7 +505,7 @@ class BaseController extends Controller {
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
 
-		return View::make ($view_path, $this->compact_prep_view(compact('headline','view_header', 'model','view_var', 'create_allowed', 'delete_allowed', 'b_text', 'index_datatables_ajax_enabled')));
+		return View::make ($view_path, $this->compact_prep_view(compact('headline','view_header', 'model','view_var', 'create_allowed', 'delete_allowed', 'b_text')));
 	}
 
 	/**
@@ -972,26 +967,6 @@ class BaseController extends Controller {
 		return array_reverse($logs);
 	}
 
-	/* Check if AJAX Datatables should be used
-	 *
-	 *
-	 * @author Christian Schramm
-	 *
-	 * @return true if index model contains more than 100 entries
-	 */
-	 public function index_datatables_ajax_enabled() {
-		$enabled = false;
-		$model = static::get_model_obj();
-		if (method_exists( $model, 'view_index_label_ajax')) {
-			$model_name = \NamespaceController::get_model_name();
-			if ($model_name::count() >= 100)
-				$enabled = true;
-		}
-
-		return $enabled;
-	}
-
-
 	/**
      * Process datatables ajax request.
 	 *
@@ -1004,7 +979,7 @@ class BaseController extends Controller {
     public function index_datatables_ajax()
     {
 		$model = static::get_model_obj();
-		$index_label_array =  $model->view_index_label_ajax();
+		$index_label_array =  $model->view_index_label();
 
 		$header_fields = $index_label_array['index_header'];
 		$edit_column_data = isset($index_label_array['edit']) ? $index_label_array['edit'] : [];

@@ -35,7 +35,7 @@ class NetElementType extends \BaseModel {
 	// View Icon
   public static function view_icon()
   {
-    return '<i class="fa fa-object-group"></i>'; 
+    return '<i class="fa fa-object-group"></i>';
   }
 
 	// link title in index view
@@ -48,11 +48,6 @@ class NetElementType extends \BaseModel {
 		// return ['index' => [$this->name],
 		//         'index_header' => ['Name'],
 		//         'header' => $this->name];
-	}
-
-	public function view_index_label_ajax()
-	{ 
-		return $this;
 	}
 
 	public function index_list ()
@@ -191,7 +186,7 @@ class NetElementType extends \BaseModel {
 	 * Search Children from Collection List of NetElementTypes recursivly
 	 *
 	 * @param 	Collection $objects
-	 * @return 	Array 
+	 * @return 	Array
 	 */
 	private function _get_children($objects = null)
 	{

@@ -233,6 +233,8 @@ return [
 		'Button_Force Restart'		=> 'Neustart erzwingen',
 		'Button_Save'				=> 'Speichern',
 		'Button_Save / Restart'		=> 'Speichern / Neustart',
+		'Button_Assign roles'		=> 'Rolle zuweisen',
+		'Button_Delete selected roles'=> 'Ausgewählte Rollen entfernen',
 	//BillingBase
 		//Product List
 		'Button_Create Product Entry'	=> 'Neues Produkt',
