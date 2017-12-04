@@ -90,12 +90,21 @@ class Contract extends \BaseModel {
 	}
 
 
+	/**
+	 * @return String  Bootstrap Color Class
+	 */
 	public function get_bsclass()
 	{
 		$bsclass = 'success';
 
-		if ($this->network_access == 0)
-			$bsclass = 'danger';
+		if (!$this->network_access)
+		{
+			$bsclass = 'active';
+
+			// '$this->id' to dont check when index table header is determined!
+			if ($this->id && $this->check_validity('now'))
+				$bsclass = 'warning';
+		}
 
 		return $bsclass;
 	}
