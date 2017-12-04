@@ -55,7 +55,7 @@ class BaseViewController extends Controller {
 			$star = ' *';
 		}
 
-		if (strpos($string, 'messages.'))
+		if (strpos($string, 'messages.') !== false)
 			return trans($string).$star;
 
 		$translation = trans("messages.$string");
