@@ -5,7 +5,7 @@ namespace Acme\Validators;
 use Models\Configfiles;
 use File;
 use Log;
-use Modules\Billingbase\Entities\Product;
+use Modules\BillingBase\Entities\Product;
 use IBAN;
 
 use Modules\ProvVoip\Entities\PhonebookEntry;
