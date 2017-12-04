@@ -464,7 +464,7 @@ class Configfile extends \BaseModel {
 		$used_ids = [];
 		// only public configfiles can be assigned to a modem or mta
 		foreach (Configfile::where('public', '=', 'yes')->get() as $cf) {
-			if(count($cf->modem) || count($cf->mtas)) {
+			if ($cf->modem()->count() || $cf->mtas()->count()) {
 				array_push($used_ids, $cf->id);
 				self::_add_parent($used_ids, $cf);
 			}
