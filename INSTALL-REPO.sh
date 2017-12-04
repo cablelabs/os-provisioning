@@ -19,5 +19,8 @@ curl http://bit.ly/2zGarzc -Lo /etc/yum.repos.d/nmsprime.repo
 yum install -y php yum-plugin-replace
 yum replace -y php --replace-with php56u
 
+# enable software collections, since icingaweb2 depends on php7.1 from there
+yum install -y centos-release-scl
+
 # clean & update
 yum clean all && yum update -y
