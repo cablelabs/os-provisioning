@@ -191,7 +191,7 @@ $('.erd-popover').mousemove(
  *  - search in tr HTML code for an HTML "a" element and fetch the href attribute
  * INFO: - working directly with row element also adds a click object to checkbox entry, which disabled checkbox functionality
  */
-$('.datatable').click(function (e) {
+$('.datatable, .clickableRow').click(function (e) {
   if ($(e.target).hasClass('ClickableTd') && $(e.target).is('td')) {
     window.location = $(e.target.parentNode).find('a').attr("href");
   }
