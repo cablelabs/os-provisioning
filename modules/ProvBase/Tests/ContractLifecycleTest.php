@@ -11,4 +11,8 @@ class ContractLifecycleTest extends \BaseLifecycleTest {
 
 	protected $controller = '\Modules\ProvBase\Http\Controllers\ContractController';
 
+	protected $model_name = 'Contract';
+
+	protected $database_table = 'contract';
+
 }
