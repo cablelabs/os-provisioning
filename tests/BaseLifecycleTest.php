@@ -37,6 +37,16 @@ class BaseLifecycleTest extends TestCase {
 	protected static $created_entity_ids = [];
 
 
+	// the following helpers define the stuff to use
+	// we try to guess this from child class name (you can set it there explicitely if needed)
+	// the derived classes are expected to be in following format: Modules\_modulename_\Tests\_modelname_LifeceycleTest
+	// e.g.Modules\ProvBase\Tests\ContractLifecycleTest
+	protected $model_name = null;
+	protected $controller = null;
+	protected $database_table = null;
+	protected $seeder = null;
+
+
 	/**
 	 * Constructor
 	 *
@@ -45,13 +55,52 @@ class BaseLifecycleTest extends TestCase {
 	public function __construct() {
 
 		$this->class_name = get_called_class();
+
 		if ($this->class_name == 'BaseLifecycleTest') {
 			// this is a base class doing nothing – derive your own lifecycle tests classes
 			exit(0);
 		}
 
+		$this->_set_helper_vars();
+
 		return parent::__construct();
 
+	}
+
+
+	/**
+	 * Try to guess (from child class name) all helper vars that are set to null.
+	 * That means you can simply set these vars to correct values if this method makes problems.
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _set_helper_vars() {
+
+		$parts = explode("\\Tests\\", $this->class_name);
+		$path = $parts[0];
+		$class = $parts[1];
+
+		// guess the model name
+		if (is_null($this->model_name)) {
+			$this->model_name = str_replace('LifecycleTest', '', $class);
+		}
+
+		// guess the controller name
+		if (is_null($this->controller)) {
+			$this->controller = "\\".$path."\\Http\\Controllers\\".$this->model_name."Controller";
+		}
+
+		// guess the database table
+		if (is_null($this->database_table)) {
+			$this->database_table = strtolower($this->model_name);
+		}
+
+		// guess the model name
+		if (is_null($this->seeder)) {
+			$this->seeder = "\\".$path."\\Database\\Seeders\\".$this->model_name."TableSeeder";
+		}
+
+		/* dd($this->class_name, $parts, $this->seeder, $this->controller, $this->model_name, $this->database_table); */
 	}
 
 	public function createApplication() {

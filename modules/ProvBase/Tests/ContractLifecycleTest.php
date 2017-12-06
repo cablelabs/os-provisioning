@@ -5,14 +5,10 @@ namespace Modules\ProvBase\Tests;
 use \Modules\ProvBase\Entities\Contract;
 use \Modules\ProvBase\Http\Controllers\ContractController;
 
+/**
+ * Run the lifecycle test for Contract.
+ */
 class ContractLifecycleTest extends \BaseLifecycleTest {
 
-	protected $seeder = '\Modules\ProvBase\Database\Seeders\ContractTableSeeder';
-
-	protected $controller = '\Modules\ProvBase\Http\Controllers\ContractController';
-
-	protected $model_name = 'Contract';
-
-	protected $database_table = 'contract';
-
+	// nothing to do here – but class is needed to run test by phpunit :-)
 }
