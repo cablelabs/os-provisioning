@@ -22,7 +22,7 @@
 @section('content_left')
 
 	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'editform')) }}
-	
+
 		@include($form_path, $view_var)
 
 	{{ Form::close() }}
@@ -95,5 +95,8 @@
 		<?php Session::forget('alert'); ?>
 	@endif
 
+@stop
 
+@section('javascript')
+	{{-- move Javascript Edit Stuff here: select2.js,  --}}
 @stop

@@ -47,6 +47,10 @@ class BaseController extends Controller {
 	protected $edit_view_save_button = true;
 	protected $edit_view_force_restart_button = false;
 
+	protected $index_datatables_ajax_enabled = false;
+	// for index tree view a parent_id column must exist in table !
+	protected $index_tree_view = false;
+
 
 
 	// Auth Vars
@@ -492,22 +496,26 @@ class BaseController extends Controller {
 	{
 		$model = static::get_model_obj();
 
-		$index_datatables_ajax_enabled = isset($this->index_datatables_ajax_enabled) ? $this->index_datatables_ajax_enabled : $this->index_datatables_ajax_enabled();
-
-		if ($index_datatables_ajax_enabled)
-			$view_var   = $model->first();
-		else
-			$view_var   = $model->index_list();
-
 		$view_header = \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
 		$headline  	= \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
 		$b_text		= $model->view_headline();
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
 		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
+		if ($this->index_tree_view)
+		{
+			$view_var = $model::where('parent_id', 0)->get();
+			$undeletables = $model::undeletables();
+
+			return View::make ('Generic.tree', $this->compact_prep_view(compact('headline', 'view_header', 'view_var', 'create_allowed', 'undeletables')));
+		}
+
 		$view_path = 'Generic.index';
 		if (View::exists(\NamespaceController::get_view_name().'.index'))
 			$view_path = \NamespaceController::get_view_name().'.index';
+
+		$index_datatables_ajax_enabled = $this->index_datatables_ajax_enabled ? : $this->index_datatables_ajax_enabled();
+		$view_var = $index_datatables_ajax_enabled ? $model->first() : $model->index_list();
 
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');

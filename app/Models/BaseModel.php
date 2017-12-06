@@ -950,6 +950,16 @@ class BaseModel extends Eloquent
 
 
 	/**
+	 * Placeholder for undeletable Elements of index tree view
+	 */
+	public static function undeletables()
+	{
+		return [0 => 0];
+	}
+
+
+
+	/**
 	 * Checks if model is valid in specific timespan
 	 * (used for Billing or to calculate income for dashboard)
 	 *

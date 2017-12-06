@@ -127,6 +127,24 @@ var makeJsTreeView = function() {
           "mta": {
             "icon": "fa fa-fax text-info fa-lg"
           },
+          "Net": {
+            "icon": "fa fa-cloud text-info fa-lg"
+          },
+          "Cluster": {
+            "icon": "fa fa-soundcloud text-warning fa-lg"
+          },
+          "Cmts": {
+            "icon": "fa fa-building text-success fa-lg"
+          },
+          "Amplifier": {
+            "icon": "fa fa-toggle-right text-danger fa-lg"
+          },
+          "Node": {
+            "icon": "fa fa-arrow-circle-o-right text-warning fa-lg"
+          },
+          "Data": {
+            "icon": "fa fa-server text-active fa-lg"
+          },
           "default": {
               "icon": "fa fa-file-code-o text-success fa-lg"
           }
