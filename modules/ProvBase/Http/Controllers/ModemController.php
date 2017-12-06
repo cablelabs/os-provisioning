@@ -21,6 +21,10 @@ class ModemController extends \BaseController {
      */
 	public function view_form_fields($model = null)
 	{
+		if (!$model) {
+			$model = new Modem;
+		}
+
 		$pos = explode(',', \Input::get('pos'));
 		if(count($pos) == 2)
 			list($model['x'], $model['y']) = $pos;

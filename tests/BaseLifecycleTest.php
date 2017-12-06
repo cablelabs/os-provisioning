@@ -15,11 +15,14 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class BaseLifecycleTest extends TestCase {
 
 	// flag to show debug output from test runs
-	protected $debug = True;
-	/* protected $debug = False; */
+	/* protected $debug = True; */
+	protected $debug = False;
 
 	// define how often the create, update and delete tests should be run
 	protected $testrun_count = 2;
+
+	// most models are created from another models context – if so set this in your derived class
+	protected $create_from_model_context = null;
 
 	// flag to indicate if creating without data should fail
 	protected $creating_empty_should_fail = True;
@@ -103,6 +106,7 @@ class BaseLifecycleTest extends TestCase {
 		/* dd($this->class_name, $parts, $this->seeder, $this->controller, $this->model_name, $this->database_table); */
 	}
 
+
 	public function createApplication() {
 
 		$app = parent::createApplication();
@@ -110,6 +114,7 @@ class BaseLifecycleTest extends TestCase {
 
 		return $app;
 	}
+
 
 	/**
 	 * Gets a user having the permissions needed for tests.
@@ -187,9 +192,9 @@ class BaseLifecycleTest extends TestCase {
 	 *
 	 * @author Patrick Reichel
 	 */
-	protected function _get_fake_data() {
+	protected function _get_fake_data($related_to) {
 
-		return call_user_func($this->seeder."::get_fake_data", 'test');
+		return call_user_func($this->seeder."::get_fake_data", 'test', $related_to);
 	}
 
 
@@ -304,6 +309,25 @@ class BaseLifecycleTest extends TestCase {
 	}
 
 
+	protected function _get_create_context() {
+
+		$ret = [];
+
+		if (is_null($this->create_from_model_context)) {
+			$ret['instance'] = null;
+			$ret['params'] = [];
+		}
+		else {
+			$model = $this->create_from_model_context;
+			$instance = $model::all()->random(1);
+			$ret['instance'] = $instance;
+			$ret['params'] = [$instance->table."_id" => $instance->id];
+		}
+
+		return $ret;
+	}
+
+
 	/**
 	 * Try to create.
 	 *
@@ -316,10 +340,11 @@ class BaseLifecycleTest extends TestCase {
 
 		for ($i = 0; $i < $this->testrun_count; $i++) {
 
-			$data = $this->_get_fake_data();
+			$context = $this->_get_create_context();
+			$data = $this->_get_fake_data($context['instance']);
 
 			$this->actingAs($this->user)
-				->visit(route("$this->model_name.create"));
+				->visit(route("$this->model_name.create", $context['params']));
 
 			$this->_fill_create_form($data);
 
@@ -347,14 +372,15 @@ class BaseLifecycleTest extends TestCase {
 	public function testCreateTwiceUsingTheSameData() {
 
 		echo "\nStarting ".$this->class_name."->".__FUNCTION__."()";
-		return;
+
 		$this->_get_form_structure();
 
-		$data = $this->_get_fake_data();
+		$context = $this->_get_create_context();
+		$data = $this->_get_fake_data($context['instance']);
 
 		// this is the first create which should run
 		$this->actingAs($this->user)
-			->visit(route("$this->model_name.create"));
+			->visit(route("$this->model_name.create", $context['params']));
 		$this->_fill_create_form($data);
 		$this->press("_save")
 			->see("Created!")
@@ -408,6 +434,9 @@ class BaseLifecycleTest extends TestCase {
 
 			$this->notSeeInDatabase($this->database_table, ['deleted_at' => null, 'id' => $id]);
 		}
+
+		// clear array (else this data will be used by other models, too)
+		self::$created_entity_ids = [];
 	}
 
 
