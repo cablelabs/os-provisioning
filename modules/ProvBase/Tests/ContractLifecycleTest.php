@@ -10,5 +10,8 @@ use \Modules\ProvBase\Http\Controllers\ContractController;
  */
 class ContractLifecycleTest extends \BaseLifecycleTest {
 
-	// nothing to do here – but class is needed to run test by phpunit :-)
+	// creating a contract twice using the same data is OK;
+	// the only unique field is the contract number which is calculated on the fly
+	protected $creating_twice_should_fail = False;
+
 }
