@@ -329,6 +329,23 @@ class BaseLifecycleTest extends TestCase {
 
 
 	/**
+	 * Check if index view is visible.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function testIndexViewVisible() {
+
+		echo "\nStarting ".$this->class_name."->".__FUNCTION__."()";
+
+		$this->actingAs($this->user)
+			->visit(route("$this->model_name.index"))
+			->see("NMS Prime")
+			->see($this->model_name);
+
+	}
+
+
+	/**
 	 * Try to create.
 	 *
 	 * @author Patrick Reichel
