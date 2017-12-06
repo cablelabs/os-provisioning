@@ -147,6 +147,15 @@ var makeJsTreeView = function() {
           },
           "default": {
               "icon": "fa fa-file-code-o text-success fa-lg"
+          },
+          "default-2": {
+              "icon": "fa fa-file-excel-o text-warning fa-lg"
+          },
+          "default-3": {
+              "icon": "fa fa-file-pdf-o text-danger fa-lg"
+          },
+          "default-4": {
+              "icon": "fa fa-file-image-o text-info fa-lg"
           }
       }
   });
