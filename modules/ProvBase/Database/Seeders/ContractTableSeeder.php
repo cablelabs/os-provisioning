@@ -2,8 +2,6 @@
 
 namespace Modules\ProvBase\Database\Seeders;
 
-// Composer: "fzaninotto/faker": "v1.3.0"
-use Faker\Factory as Faker;
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\Qos;
 use Faker\Provider\de_DE\Payment;			// SEPA: should not be required in Laravel 5 (L5), see ***
@@ -12,23 +10,24 @@ class ContractTableSeeder extends \BaseSeeder {
 
 	public function run()
 	{
-
 		foreach(range(1, self::$max_seed) as $index)
 		{
 			Contract::create(static::get_fake_data('seed'));
 		}
 	}
 
+
 	/**
 	 * Returns an array with faked contract data; used e.g. in seeding and testing
 	 *
-	 * @param $topic Context the method is used in (seed|testing)
+	 * @param $topic Context the method is used in (seed|test)
 	 *
 	 * @author Patrick Reichel
 	 */
 	public static function get_fake_data($topic) {
 
-		$faker = Faker::create();
+		$faker =& \NmsFaker::getInstance();
+
 		$count = Contract::get(['id'])->count();
 		$start_contract = $faker->dateTimeBetween('-10 years', '+1 year');
 		$salutations = ['Herr', 'Frau', 'Firma', 'Behörde'];

@@ -2,8 +2,6 @@
 
 namespace Modules\ProvBase\Database\Seeders;
 
-// Composer: "fzaninotto/faker": "v1.3.0"
-use Faker\Factory as Faker;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\Configfile;
