@@ -18,6 +18,16 @@ class BaseLifecycleTest extends TestCase {
 	/* protected $debug = True; */
 	protected $debug = False;
 
+	// list of test method names to be run – can be used in development to work on single tests only
+	protected $tests_to_be_run = [
+		'testCreateTwiceUsingTheSameData',
+		'testCreateWithFakeData',
+		'testDelete',
+		'testEmptyCreate',
+		'testIndexViewVisible',
+		'testUpdate',
+	];
+
 	// define how often the create, update and delete tests should be run
 	protected $testrun_count = 2;
 
@@ -34,7 +44,7 @@ class BaseLifecycleTest extends TestCase {
 	protected $update_fields = [];
 
 	// array holding the edit form structure
-	protected $edit_field_structure = [];
+	protected static $edit_field_structure = [];
 
 	// container to collect all created entities
 	protected static $created_entity_ids = [];
@@ -103,7 +113,6 @@ class BaseLifecycleTest extends TestCase {
 			$this->seeder = "\\".$path."\\Database\\Seeders\\".$this->model_name."TableSeeder";
 		}
 
-		/* dd($this->class_name, $parts, $this->seeder, $this->controller, $this->model_name, $this->database_table); */
 	}
 
 
@@ -111,6 +120,10 @@ class BaseLifecycleTest extends TestCase {
 
 		$app = parent::createApplication();
 		$this->_get_user();
+
+		// get edit form structure for current model
+		// has to be done here (and not in constructor as we need some laravel stuff)
+		$this->_get_form_structure();
 
 		return $app;
 	}
@@ -142,6 +155,11 @@ class BaseLifecycleTest extends TestCase {
 	 * @return array containing form field names as keys and testing methods as values
 	 */
 	protected function _get_form_structure($model = null) {
+
+		// check if data exists – nothing to do
+		if (array_key_exists($this->class_name, self::$edit_field_structure)) {
+			return;
+		}
 
 		/* require_once */
 		$controller = new $this->controller();
@@ -180,8 +198,8 @@ class BaseLifecycleTest extends TestCase {
 				}
 			}
 
-			$this->edit_field_structure[$name]['type'] = $type;
-			$this->edit_field_structure[$name]['values'] = $value;
+			self::$edit_field_structure[$this->class_name][$name]['type'] = $type;
+			self::$edit_field_structure[$this->class_name][$name]['values'] = $value;
 
 		}
 	}
@@ -229,7 +247,7 @@ class BaseLifecycleTest extends TestCase {
 
 		if ($this->debug) echo "\nFilling form";
 
-		foreach ($this->edit_field_structure as $field_name => $structure) {
+		foreach (self::$edit_field_structure[$this->class_name] as $field_name => $structure) {
 
 			// on update: only update defined fields
 			if ($method == 'update') {
@@ -292,6 +310,11 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	public function testEmptyCreate() {
 
+		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
+			echo "\n	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)";
+			return;
+		}
+
 		echo "\nStarting ".$this->class_name."->".__FUNCTION__."()";
 
 		if ($this->creating_empty_should_fail) {
@@ -335,11 +358,17 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	public function testIndexViewVisible() {
 
+		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
+			echo "\n	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)";
+			return;
+		}
+
 		echo "\nStarting ".$this->class_name."->".__FUNCTION__."()";
 
 		$this->actingAs($this->user)
 			->visit(route("$this->model_name.index"))
 			->see("NMS Prime")
+			->see("The next Generation NMS")
 			->see($this->model_name);
 
 	}
@@ -352,8 +381,12 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	public function testCreateWithFakeData() {
 
+		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
+			echo "\n	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)";
+			return;
+		}
+
 		echo "\nStarting ".$this->class_name."->".__FUNCTION__."()";
-		$this->_get_form_structure();
 
 		for ($i = 0; $i < $this->testrun_count; $i++) {
 
@@ -388,9 +421,12 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	public function testCreateTwiceUsingTheSameData() {
 
-		echo "\nStarting ".$this->class_name."->".__FUNCTION__."()";
+		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
+			echo "\n	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)";
+			return;
+		}
 
-		$this->_get_form_structure();
+		echo "\nStarting ".$this->class_name."->".__FUNCTION__."()";
 
 		$context = $this->_get_create_context();
 		$data = $this->_get_fake_data($context['instance']);
@@ -426,9 +462,34 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	public function testUpdate() {
 
+		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
+			echo "\n	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)";
+			return;
+		}
+
 		echo "\nStarting ".$this->class_name."->".__FUNCTION__."()";
-		echo "\n	WARNING: Not yet implemented!";
-		/* $this->_get_form_structure($model_instance); */
+
+		if (!$this->update_fields) {
+			echo "\n	WARNING: No update fields – cannot test!";
+			return;
+		}
+
+		foreach (self::$created_entity_ids as $id) {
+
+			if ($this->debug) echo "\nUpdating $this->model_name $id";
+
+			$context = $this->_get_create_context();
+			$data = $this->_get_fake_data($context['instance']);
+
+			$this->actingAs($this->user)
+				->visit(route("$this->model_name.edit", $id));
+
+			$this->_fill_edit_form($data);
+			$this->press("_save")
+				->see("Updated")
+			;
+		}
+
 	}
 
 
@@ -438,6 +499,11 @@ class BaseLifecycleTest extends TestCase {
 	 * @author Patrick Reichel
 	 */
 	public function testDelete() {
+
+		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
+			echo "\n	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)";
+			return;
+		}
 
 		foreach (self::$created_entity_ids as $id) {
 
