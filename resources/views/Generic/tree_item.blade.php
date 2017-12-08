@@ -10,7 +10,7 @@
 	?>
 	<li id="ids[{{$item->id}}]"
 		class="f-s-14 p-t-5 {{in_array($item->id, $undeletables) ? 'nocheck' : ''}}
-			{{ in_array($item->id, $undeletables) && !$item->parent_id ? 'p-l-25' : ''}}"
+			{{ in_array($item->id, $undeletables) && $item->parent_id ? 'p-l-25' : ''}}"
 		data-jstree='{"type":"{{ $type }}" }'>
 
 		{{ HTML::linkRoute("$route_name.edit", $item->view_index_label(), $item->id) }}
