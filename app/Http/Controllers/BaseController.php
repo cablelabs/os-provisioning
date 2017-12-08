@@ -223,6 +223,7 @@ class BaseController extends Controller {
 			// multiple select?
 			if ($field['form_type'] == 'select' && isset($field['options']['multiple'])) {
 				$field['name'] = str_replace('[]', '', $field['name']);
+				continue; 			// multiselects will have array in data so don't trim
 			}
 
 			// trim all inputs as default
@@ -568,12 +569,14 @@ class BaseController extends Controller {
 		$data 		= $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails())
-		{
 			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'red');
-		}
 
-		$id = $obj::create($data)->id;
+		$obj = $obj::create($data);
 
+		// Add N:M Relations
+		self::_set_many_to_many_relations($obj, $data);
+
+		$id  = $obj->id;
 		if (!$redirect)
 			return $id;
 
@@ -649,8 +652,7 @@ class BaseController extends Controller {
 		$validator = Validator::make($data, $rules);
 		$data      = $controller->prepare_input_post_validation ($data);
 
-		if ($validator->fails())
-		{
+		if ($validator->fails()) {
 			Log::info ('Validation Rule Error: '.$validator->errors());
 			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'red');
 		}
@@ -666,6 +668,9 @@ class BaseController extends Controller {
 		//       without updated_at field. So we globally use a guarded field from now, to use the update timestamp
 		$obj->update($data);
 
+		// Add N:M Relations
+		self::_set_many_to_many_relations($obj, $data);
+
 		// error msg created while observer execution
 		$msg = \Session::has('error') ? \Session::get('error') : 'Updated';
 		$color = \Session::has('error') ? 'orange' : 'blue';
@@ -678,6 +683,51 @@ class BaseController extends Controller {
 		return Redirect::route($route_model.'.edit', $id)->with('message', $msg)->with('message_color', $color);
 	}
 
+
+	/**
+	 * Store Many to Many Relations in Pivot table
+	 *
+	 * IMPORTANT NOTES:
+	 *	 To assign a model to the pivot table we need an extra multiselect field in the controllers
+	 *	 	view_form_fields() that must be mentioned inside the guarded array of the model!
+	 *	 The multiselect's field name must be in form of the models relation function and a concatenated '_ids'
+	 *		like: '<relation-function>_ids' , e.g. 'users_ids' for the multiselect in Tickets view to assign users
+	 *
+	 * @param Object 	The Object to store/update
+	 * @param Array 	Input Data
+	 *
+	 * @author Nino Ryschawy
+	 */
+	private static function _set_many_to_many_relations($obj, $data)
+	{
+		if (!$obj->guarded)
+			return;
+
+		foreach ($obj->guarded as $field)
+		{
+			if (!isset($data[$field]) || !is_array($data[$field]))
+				continue;
+
+			// relation-function_id
+			$func = explode('_', $field)[0];
+
+			$attached = $obj->$func->pluck('id')->all();
+
+			// attach new assignments
+			foreach ($data[$field] as $rel_id)
+			{
+				if (!in_array($rel_id, $attached))
+					$obj->$func()->attach($rel_id, ['created_at' => date('Y-m-d H:i:s')]);
+			}
+
+			// detach removed assignments (from selected multiselect options)
+			foreach ($attached as $rel_id)
+			{
+				if (!in_array($rel_id, $data[$field]))
+					$obj->$func()->detach($rel_id);
+			}
+		}
+	}
 
 
 	/**

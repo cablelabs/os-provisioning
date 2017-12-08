@@ -177,7 +177,7 @@ class BaseViewController extends Controller {
 				$field['hidden'] = '1';
 			}
 
-			// 4. set all field_value's to SQL data
+			// 4. set all field_value's to actual SQL data
 			if (array_key_exists('eval', $field)) {
 				// dont't remove $name, as it is used in $field['eval'] (might be set in view_form_fields())
 				$name = $model[$field['name']];
@@ -351,6 +351,9 @@ class BaseViewController extends Controller {
 					break;
 
 				case 'select' :
+					if (isset($options['multiple']) && isset($field['selected']))
+						$field['field_value'] = array_keys($field['selected']);
+
 					$s .= \Form::select($field["name"], $value, $field['field_value'], $options);
 					break;
 
