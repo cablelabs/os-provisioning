@@ -23,7 +23,9 @@ systemctl enable named
 systemctl enable nmsprimed
 systemctl enable xinetd
 
+# starting dhcpd won't work now, because not all files have been populated
 systemctl start chronyd
+systemctl start named
 systemctl start nmsprimed
 systemctl start xinetd
 
