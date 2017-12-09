@@ -66,7 +66,7 @@ php artisan clear-compiled
 php artisan optimize
 
 # key:generate needs .env in root dir – create symlink to our env file
-ln -s /etc/nmsprime/env/global.env "$dir/.env"
+ln -srf /etc/nmsprime/env/global.env "$dir/.env"
 php artisan key:generate
 # remove the symlink and create empty .env with comment
 rm -f "$dir/.env"
