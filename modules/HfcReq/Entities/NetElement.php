@@ -11,7 +11,7 @@ class NetElement extends \BaseModel {
 
 	public $guarded = ['kml_file_upload'];
 
-	public $kml_path = 'app/data/hfcbase/kml/static';
+	public $kml_path = 'app/data/hfcbase/kml_static';
 	private $max_parents = 25;
 
 	// Add your validation rules here
