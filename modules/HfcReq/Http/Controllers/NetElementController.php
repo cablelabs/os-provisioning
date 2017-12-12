@@ -61,7 +61,7 @@ class NetElementController extends HfcBaseController {
 			// array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['NET' => 'NET', 'CMTS' => 'CMTS', 'DATA' => 'DATA', 'CLUSTER' => 'CLUSTER', 'NODE' => 'NODE', 'AMP' => 'AMP']),
 			// net is automatically detected in Observer
 			// array('form_type' => 'select', 'name' => 'net', 'description' => 'Net', 'value' => $nets),
-			array('form_type' => 'text', 'name' => 'ip', 'description' => 'IP address'),
+			array('form_type' => 'ip', 'name' => 'ip', 'description' => 'IP address'),
 			array('form_type' => 'text', 'name' => 'link', 'description' => 'HTML Link'),
 			array('form_type' => 'select', 'name' => 'prov_device_id', 'description' => 'Provisioning Device', 'value' => $prov_device, 'hidden' => $prov_device_hidden),
 			array('form_type' => 'text', 'name' => 'pos', 'description' => 'Geoposition'),
