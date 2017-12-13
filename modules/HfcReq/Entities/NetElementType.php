@@ -114,6 +114,16 @@ class NetElementType extends \BaseModel {
 		return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'pre_conf_oid_id');
 	}
 
+	public function parent()
+	{
+		return $this->belongsTo('Modules\HfcReq\Entities\NetElementType');
+	}
+
+	public function children ()
+	{
+		return $this->hasMany('Modules\HfcReq\Entities\NetElementType', 'parent_id');
+	}
+
 	public function get_parent ()
 	{
 		if (!$this->parent_id || $this->parent_id < 1)
@@ -206,8 +216,10 @@ class NetElementType extends \BaseModel {
 	/**
 	 * Return the base type id of the current NetElementType
 	 *
+	 * @note: base device means: parent_id = 0, 2 (cluster)
+	 *
 	 * @param
-	 * @return integer [1: Net, 2: Cluster, 3: Cmts, 4: Amp, 5: Node, 6: Data]
+	 * @return integer id of base device netelementtype
 	 */
 	public function get_base_type()
 	{
@@ -219,10 +231,10 @@ class NetElementType extends \BaseModel {
 			if (!is_object($p))
 				return false;
 
-			if ($p->id >=1 && $p->id <= 6)
+			if ($p->parent_id == 0 || $p->id == 2) // exit: on base type, or cluster (which is child of net)
 				return $p->id;
 
-			$p = $p->get_parent();
+			$p = $p->parent;
 		} while ($i++ < $this->max_parents);
 
 		return false;
