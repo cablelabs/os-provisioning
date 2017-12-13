@@ -29,7 +29,7 @@ class MtaTableSeeder extends \BaseSeeder {
 
 		$faker =& \NmsFaker::getInstance();
 
-		// in seeding mode: choose random contract to create modem at
+		// in seeding mode: choose random modem to create mta at
 		if ($topic == 'seed') {
 			$modem = Modem::all()->random(1);
 			$modem_id = $modem->id;

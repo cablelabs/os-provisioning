@@ -49,7 +49,6 @@ class BaseLifecycleTest extends TestCase {
 	// container to collect all created entities
 	protected static $created_entity_ids = [];
 
-
 	// the following helpers define the stuff to use
 	// we try to guess this from child class name (you can set it there explicitely if needed)
 	// the derived classes are expected to be in following format: Modules\_modulename_\Tests\_modelname_LifeceycleTest
