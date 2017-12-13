@@ -1,9 +1,5 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-
 /**
  * Base class to derive lifecycle tests for a model from
  *
@@ -12,7 +8,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
  *
  * @author Patrick Reichel
  */
-class BaseLifecycleTest extends TestCase {
+class BaseLifecycleTest extends BaseTest {
 
 	// flag to show debug output from test runs
 	/* protected $debug = True; */
