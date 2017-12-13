@@ -244,7 +244,7 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	protected function _fill_form($data, $method) {
 
-		if ($this->debug) echo "\nFilling form";
+		if ($this->debug) echo "Filling form\n";
 
 		foreach (self::$edit_field_structure[$this->class_name] as $field_name => $structure) {
 
@@ -275,24 +275,24 @@ class BaseLifecycleTest extends TestCase {
 					$faked_data = $structure['values'][array_rand($structure['values'])];
 				}
 
-				if ($this->debug) echo "\nSelecting “".$faked_data."” in $field_name";
+				if ($this->debug) echo "Selecting “".$faked_data."” in $field_name\n";
 				$this->select($faked_data, $field_name);
 				break;
 
 			case 'checkbox':
 				if (boolval($faked_data)) {
-					if ($this->debug) echo "\nChecking $field_name";
+					if ($this->debug) echo "Checking $field_name\n";
 					$this->check($field_name);
 				}
 				else {
-					if ($this->debug) echo "\nUnchecking $field_name";
+					if ($this->debug) echo "Unchecking $field_name\n";
 					$this->uncheck($field_name);
 				}
 				break;
 
 			default:
 				// simply put faked data into the field (should be text or textarea)
-				if ($this->debug) echo "\nTyping “".$faked_data."” in $field_name";
+				if ($this->debug) echo "Typing “".$faked_data."” in $field_name\n";
 				$this->type($faked_data, $field_name);
 				break;
 
@@ -310,11 +310,9 @@ class BaseLifecycleTest extends TestCase {
 	public function testEmptyCreate() {
 
 		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
-			echo "\n	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)";
+			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)\n";
 			return;
 		}
-
-		echo "\nStarting ".$this->class_name."->".__FUNCTION__."()";
 
 		if ($this->creating_empty_should_fail) {
 			$msg_expected = "please correct the following errors";
@@ -358,11 +356,9 @@ class BaseLifecycleTest extends TestCase {
 	public function testIndexViewVisible() {
 
 		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
-			echo "\n	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)";
+			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)\n";
 			return;
 		}
-
-		echo "\nStarting ".$this->class_name."->".__FUNCTION__."()";
 
 		$this->actingAs($this->user)
 			->visit(route("$this->model_name.index"))
@@ -381,11 +377,9 @@ class BaseLifecycleTest extends TestCase {
 	public function testCreateWithFakeData() {
 
 		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
-			echo "\n	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)";
+			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)\n";
 			return;
 		}
-
-		echo "\nStarting ".$this->class_name."->".__FUNCTION__."()";
 
 		for ($i = 0; $i < $this->testrun_count; $i++) {
 
@@ -421,11 +415,9 @@ class BaseLifecycleTest extends TestCase {
 	public function testCreateTwiceUsingTheSameData() {
 
 		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
-			echo "\n	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)";
+			echo "WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)";
 			return;
 		}
-
-		echo "\nStarting ".$this->class_name."->".__FUNCTION__."()";
 
 		$context = $this->_get_create_context();
 		$data = $this->_get_fake_data($context['instance']);
@@ -462,14 +454,12 @@ class BaseLifecycleTest extends TestCase {
 	public function testUpdate() {
 
 		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
-			echo "\n	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)";
+			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)\n";
 			return;
 		}
 
-		echo "\nStarting ".$this->class_name."->".__FUNCTION__."()";
-
 		if (!$this->update_fields) {
-			echo "\n	WARNING: No update fields – cannot test!";
+			echo "	WARNING: No update fields – cannot test!\n";
 			return;
 		}
 
@@ -500,7 +490,7 @@ class BaseLifecycleTest extends TestCase {
 	public function testDelete() {
 
 		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
-			echo "\n	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)";
+			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)\n";
 			return;
 		}
 
