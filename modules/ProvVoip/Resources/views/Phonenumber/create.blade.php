@@ -7,19 +7,19 @@
 	// try to get free numbers; these can be given as string (HTML) or as array
 
 	// get numbers for the active provider
-	d(App::environment());
 	if (
 		(\PPModule::is_active('provvoipenvia'))
 		&&
 		(!\App::runningUnitTests())	// not running in (unit) testing environment
 	) {
-			$currently_free_numbers = \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia::get_free_numbers_for_view();
 		try {
-			$free_numbers_panel_headline = 'Asking envia TEL for free numbers';
+			$currently_free_numbers = \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia::get_free_numbers_for_view();
 		}
 		catch (Exception $ex) {
 			echo "Exception getting free numbers from envia TEL: ".$ex->getMessage();
 		}
+
+		$free_numbers_panel_headline = 'Asking envia TEL for free numbers';
 	}
 
 ?>
