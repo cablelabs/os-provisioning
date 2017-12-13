@@ -486,7 +486,7 @@ class BaseLifecycleTest extends TestCase {
 
 			$this->_fill_edit_form($data);
 			$this->press("_save")
-				->see("Updated")
+				->see("Updated!")
 			;
 		}
 
