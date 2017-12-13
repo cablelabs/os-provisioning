@@ -65,7 +65,7 @@ class NetElementController extends HfcBaseController {
 	public function store($redirect = true)
 	{
 		// check and handle uploaded KML files
-		$this->handle_file_upload('kml_file', static::get_model_obj()->kml_path);
+		$this->handle_file_upload('kml_file', storage_path(static::get_model_obj()->kml_path));
 
 		return parent::store();
 
@@ -80,7 +80,7 @@ class NetElementController extends HfcBaseController {
 	public function update($id)
 	{
 		// check and handle uploaded KML files
-		$this->handle_file_upload('kml_file', static::get_model_obj()->kml_path);
+		$this->handle_file_upload('kml_file', storage_path(static::get_model_obj()->kml_path));
 
 		return parent::update($id);
 	}

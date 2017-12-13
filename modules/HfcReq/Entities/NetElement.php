@@ -9,8 +9,9 @@ class NetElement extends \BaseModel {
 	// The associated SQL table for this Model
 	public $table = 'netelement';
 
+	public $guarded = ['kml_file_upload'];
 
-	public $kml_path = 'app/data/hfcbase/kml/static';
+	public $kml_path = 'app/data/hfcbase/kml_static';
 	private $max_parents = 25;
 
 	// Add your validation rules here
