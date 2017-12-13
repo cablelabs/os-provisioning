@@ -292,6 +292,11 @@ class NetElement extends \BaseModel {
 		return $this->_get_native_helper('Net');
 	}
 
+	public function get_native_cmts ()
+	{
+		return $this->_get_native_helper('Cmts');
+	}
+
 	// TODO: depracted, remove
 	public function get_layer_level($layer='')
 	{
@@ -328,13 +333,15 @@ class NetElement extends \BaseModel {
 			$debug = "nms: netelement - rebuild net and cluster index $i of $num - id ".$netelement->id;
 			\Log::debug($debug);
 
-			$netelement->update(['net' => $netelement->get_native_net(), 'cluster' => $netelement->get_native_cluster()]);
+			$netelement->update(['net' => $netelement->get_native_net(),
+								 'cluster' => $netelement->get_native_cluster(),
+								 'cmts' => $netelement->get_native_cmts()]);
 
 			if ($call_from_cmd == 1)
 				echo "$debug\r"; $i++;
 
 			if ($call_from_cmd == 2)
-				echo "\n$debug - net:".$netelement->net.', clu:'.$netelement->cluster;
+				echo "\n$debug - net:".$netelement->net.', clu:'.$netelement->cluster.', cmts:'.$netelement->cmts;
 
 		}
 
@@ -356,6 +363,51 @@ class NetElement extends \BaseModel {
 	public function is_type_cluster()
 	{
 		return $this->netelementtype_id == array_search('Cluster', NetElementType::$undeletables);
+	}
+
+	public function is_type_cmts()
+	{
+		if (!$this->netelementtype)
+			return false;
+
+		return ($this->netelementtype->get_core_type() == 3); // 3 .. is core element for cmts
+	}
+
+
+	/**
+	 * Return the base NetElementType id
+	 *
+	 * @param
+	 * @return integer [1: Net, 2: Cluster, 3: Cmts, 4: Amp, 5: Node, 6: Data]
+	 */
+	public function get_base_netelementtype()
+	{
+		return $this->netelementtype->get_base_type();
+	}
+
+	/**
+	 * Return hard coded $this->options array
+	 * NOTE: this is of course type dependent
+	 *
+	 * @param
+	 * @return array()
+	 */
+	public function get_options_array()
+	{
+		if ($this->get_base_netelementtype() == 2) // cluster
+			return array(
+				'0' => '8x4', // default
+				'81' => '8x1',
+				'82' => '8x2',
+				'84' => '8x4',
+				'88' => '8x8',
+				'124' => '12x4',
+				'128' => '12x8',
+				'164' => '16x4',
+				'168' => '16x8'
+			);
+
+		return [];
 	}
 
 }

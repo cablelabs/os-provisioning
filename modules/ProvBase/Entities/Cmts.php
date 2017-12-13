@@ -90,6 +90,11 @@ class Cmts extends \BaseModel {
 		return $this->hasMany('Modules\ProvBase\Entities\IpPool');
 	}
 
+	public function netelement ()
+	{
+		return $this->hasOne('Modules\HfcReq\Entities\NetElement', 'prov_device_id');
+	}
+
 	// returns all objects that are related to a cmts
 	public function view_has_many()
 	{
@@ -101,6 +106,14 @@ class Cmts extends \BaseModel {
 		$this->prep_cmts_config_page();
 		$ret['Base']['Config']['view']['vars'] = ['cb' => $this]; // cb .. CMTS blade
 		$ret['Base']['Config']['view']['view'] = 'provbase::Cmts.overview';
+
+		// rf card page
+		$this->prep_rfcard_page();
+		$ret['Base']['Cluster']['view']['vars'] = ['rf' => $this]; // rf .. RF card blade
+		$ret['Base']['Cluster']['view']['view'] = 'provbase::Rfcardblade.overview';
+		// uncomment: to use default blade instead
+		//$ret['Base']['NetElement']['class'] = 'NetElement';
+		//$ret['Base']['NetElement']['relation'] = $this->clusters;
 
 		return $ret;
 	}
@@ -196,6 +209,31 @@ class Cmts extends \BaseModel {
 		$this->snmp_rw = '<span title="Set in CMTS page or Global Config Page / Provisioning if empty in CMTS page"><b>'.$this->snmp_rw.'</b></span>';
 	}
 
+
+	/*
+	 * CMTS Config Page:
+	 * Prepare Cmts Config Variables
+	 *
+	 * They are required in Cmtsblade's
+	 *
+	 * NOTE: this will fit 90% of generic installations
+	 */
+	public function prep_rfcard_page()
+	{
+		$netelement = $this->netelement;
+
+		$clusters = [];
+		if($netelement)
+		{
+			foreach (\Modules\HfcReq\Entities\NetElement::where('cmts', '=', $netelement->id)->get() as $ne)
+			{
+				if ($ne->get_base_netelementtype() == 2)
+					$clusters[$ne->id] = $ne;
+			}
+		}
+
+		$this->clusters = $clusters;
+	}
 
 	/**
 	 * Get SNMP read-only community string
