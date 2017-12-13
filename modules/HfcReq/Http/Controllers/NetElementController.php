@@ -38,7 +38,7 @@ class NetElementController extends HfcBaseController {
 			$prov_device = $model->html_list(\Modules\ProvBase\Entities\Cmts::get(['id', 'hostname']), 'hostname', $empty_field);
 
 		if ($type == 4 || $type == 5) // amp || node
-			$prov_device = $model->html_list(\Modules\ProvBase\Entities\Modem::get(['id', 'id']), 'id', $empty_field);
+			$prov_device = $model->html_list(\DB::table('modem')->where('deleted_at', '=', NULL)->get(['id', 'name']), ['id', 'name'], $empty_field, ': ');
 
 		if ($prov_device)
 			$prov_device_hidden = 0;
