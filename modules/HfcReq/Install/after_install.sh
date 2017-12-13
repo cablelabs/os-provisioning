@@ -1,2 +1,0 @@
-# TODO: @olebowle install icinga
-

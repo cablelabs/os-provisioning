@@ -373,7 +373,7 @@ class Modem extends \BaseModel {
 		{
 			// try to add file if it doesnt exist
 			Log::info('Missing DHCPD Configfile '.self::CONF_FILE_PATH);
-			if (File::put('', self::CONF_FILE_PATH) === false)
+			if (File::put(self::CONF_FILE_PATH, '') === false)
 			{
 				Log::alert('Error writing to DHCPD Configfile: '.self::CONF_FILE_PATH);
 				return;
@@ -413,7 +413,7 @@ class Modem extends \BaseModel {
 			else
 			{
 				Log::info('Missing DHCPD Configfile '.self::CONF_FILE_PATH_PUB);
-				if (File::put('', self::CONF_FILE_PATH_PUB) === false)
+				if (File::put(self::CONF_FILE_PATH_PUB, '') === false)
 					Log::alert('Error writing to DHCPD Configfile: '.self::CONF_FILE_PATH_PUB);
 			}
 
@@ -503,10 +503,10 @@ class Modem extends \BaseModel {
 			die("Error writing to file");
 
 		Log::info('Configfile Update for Modem: '.$this->hostname);
-		Log::debug("configfile: /usr/local/bin/docsis -e $cf_file $dir../keyfile $cfg_file");
+		Log::debug("configfile: docsis -e $cf_file $dir../keyfile $cfg_file");
 
 		// "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
-		exec("/usr/local/bin/docsis -e $cf_file $dir../keyfile $cfg_file >/dev/null 2>&1 &", $out);
+		exec("docsis -e $cf_file $dir../keyfile $cfg_file >/dev/null 2>&1 &", $out);
 
 		// change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
 		system('/bin/chown -R apache /tftpboot/cm');

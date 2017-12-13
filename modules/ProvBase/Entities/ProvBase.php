@@ -86,7 +86,8 @@ class ProvBase extends \BaseModel {
 		$data .= 'option time-servers '.$this->provisioning_server.";\n";
 		$data .= 'option time-offset '.date('Z').";\n";
 
-		$data .= "\n# zone\nzone ".$this->domain_name." {\n\tprimary ".$this->provisioning_server.";\n\tkey dhcpupdate;\n}\n";
+		$data .= "\n# zone\nzone ".$this->domain_name." {\n\tprimary 127.0.0.1;\n\tkey dhcpupdate;\n}\n";
+		$data .= "\n# reverse zone\nzone in-addr.arpa {\n\tprimary 127.0.0.1;\n\tkey dhcpupdate;\n}\n";
 
 		if (\PPModule::is_active('provvoip'))
 		{
