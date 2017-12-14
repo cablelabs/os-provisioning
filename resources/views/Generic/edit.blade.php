@@ -20,12 +20,12 @@
 
 @section('content_left')
 
-	<div class="tab-content" style="display:none;">
-		<div class="tab-pane fade in" id="logging" role="tabpanel"></div>
+	<div class="card card-inverse col-md-{{$edit_left_md_size}} border border-info border-top-0 border-left-0 border-bottom-0">
+
+				{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'EditForm')) }}
+					@include($form_path, $view_var)
+				{{ Form::close() }}
 	</div>
-			{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'EditForm')) }}
-				@include($form_path, $view_var)
-			{{ Form::close() }}
 @stop
 
 

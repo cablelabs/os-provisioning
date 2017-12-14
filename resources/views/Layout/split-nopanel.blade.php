@@ -2,9 +2,9 @@
 
 @section ('content')
 
-	<div class="card card-inverse col-md-{{$edit_left_md_size}}">
-		@if(isset($panel_right))
-		<div class="card-header">
+	@if(isset($panel_right))
+	<div class="card card-inverse col-12 p-b-5">
+		<div class="card-header m-b-15">
 			<ul class="nav nav-tabs card-header-tabs d-flex">
 				@foreach ($panel_right as $tabs)
 					@if ($tabs['route'] == Route::getCurrentRoute()->getName())
@@ -29,12 +29,12 @@
 				@endforeach
 			</ul>
 		</div>
-		@endif
-		<div class="col-12 card-block">
-				@yield('content_left')
-		</div>
-	</div>
-	@yield('content_right')
-	@yield('content_right_extra')
+	@endif
+	<div class="row">
+		@yield('content_left')
 
+		@yield('content_right')
+		@yield('content_right_extra')
+	</div>
+</div>
 @stop
