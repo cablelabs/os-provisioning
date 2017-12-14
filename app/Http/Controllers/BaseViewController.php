@@ -848,6 +848,7 @@ finish:
 	$ret= "3";
 
 	switch ($entity) {
+		case 'rx power dbmv':
 		case 'power dbmv':
 			if($dir == 'downstream')
 				$ret = self::_colorize($val, [-20, -10, 15, 20]);
@@ -856,6 +857,9 @@ finish:
 				break;
 		case 'microreflection -dbc':
 			$ret = self::_colorize($val, [20, 30]);
+			break;
+		case "avg utilization %":
+			$ret = self::_colorize($val, [0,0,70,90]);
 			break;
 		case 'snr db' :
 		case 'mer db':
