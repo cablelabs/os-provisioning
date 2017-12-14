@@ -19,6 +19,22 @@
 
 
 @section('content_left')
+	<div class="col-12 card-block">
+		<div class="col-md-12 card tab-content" style="display:none;">
+			<div class="tab-pane" id="logging" role="tabpanel">
+				<table id="datatable" class="table table-hover datatable table-bordered d-table">
+					<thead>
+						<tr>
+							<th class="nocolvis" style="min-width:20px;width:20px;"></th> {{-- Responsive Column --}}
+							<th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.guilog.created_at')}}</th>
+							<th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.guilog.username')}}</th>
+							<th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.guilog.method')}}</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
 
 	<div class="card card-inverse col-md-{{$edit_left_md_size}} border border-info border-top-0 border-left-0 border-bottom-0">
 
@@ -101,8 +117,18 @@
 	<script language="javascript">
 	$('#loggingtab').click(function() {
 		$('.tab-content').toggle();
+		$('.tab-content').toggleClass('d-block');
+		console.log($('#loggingtab').hasClass('active'));
+		if ( $('#loggingtab').hasClass('active') ) {
+			console.log('i am here');
+			$('#loggingtab').removeClass('active');
+			console.log($('#loggingtab').hasClass('active'));
+		}
 	});
-	$("#logging" ).load( "{{Route('GuiLog.filter')}}?model_id={{$view_var->id}}&model={{$view_var->table}} #IndexForm", function(){
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		console.log(e);
+	});
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		var table = $('table.datatable').DataTable(
 		{
 			language: {
@@ -133,6 +159,7 @@
 					"colvisRestore":    "{{ trans('view.jQuery_colvisRestore') }}",
 				}
 			},
+			retrieve: true,
 			responsive: {
 				details: {
 				type: 'column',
@@ -232,10 +259,20 @@
                 "visible": false
             }
 			],
+			processing: true,
+			serverSide: true,
+			deferRender: true,
+			ajax: '{{Route("GuiLog.filter")}}?model_id={{$view_var->id}}&model={{$view_var->table}}',
+			columns:[
+						{data: 'responsive', orderable: false, searchable: false},
+						{data: 'created_at', name: 'created_at'},
+						{data: 'username', name: 'username'},
+						{data: 'method', name: 'method'},
+						{data: 'model', name: 'model'},
+						{data: 'model_id', name: 'model_id'},
+			],
 		});
-	});
-	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-	 		$( $.fn.dataTable.tables(true) ).DataTable().responsive.recalc();
+	$( $.fn.dataTable.tables(true) ).DataTable().responsive.recalc();
 	});
 	</script>
 @endif
