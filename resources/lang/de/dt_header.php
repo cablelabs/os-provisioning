@@ -140,6 +140,8 @@ return [
 	'phonenr_state' => 'Status',
 	// Phonenumbermanagement
 	'phonenumbermanagement.id' => 'ID',
+	'phonenumbermanagement.activation_date' => 'Aktivierungsdatum',
+	'phonenumbermanagement.deactivation_date' => 'Deaktivierungsdatum',
 	// PhoneTariff
 	'phonetariff.name' => 'Telefontarif',
 	'phonetariff.type' => 'Typ',
