@@ -75,13 +75,8 @@
 
 
 	{{-- Save Button --}}
-	<br>
-	<div class="col-md-12">
-		<div class="col-md-4"></div>
-		<div class="col-md-2">
-			<input class="btn btn-primary btn-block" style="simple" value="Save" type="submit">
-		</div>
-		<div class="col-md-5"></div>
+	<div class="d-flex justify-content-center">
+			<input class="btn btn-primary" style="simple" value="{{\App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button') }}" type="submit">
 	</div>
 
 	@stop
