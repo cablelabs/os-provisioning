@@ -18,6 +18,7 @@ class UpdateNetElementTable extends Migration {
         Schema::table($this->tablename, function(Blueprint $table)
         {
             $table->integer('prov_device_id')->nullable();
+            $table->integer('cmts')->nullable();
         });
     }
 
@@ -31,6 +32,7 @@ class UpdateNetElementTable extends Migration {
         Schema::table($this->tablename, function(Blueprint $table)
         {
             $table->dropColumn(['prov_device_id']);
+            $table->dropColumn(['cmts']);
         });
     }
 
