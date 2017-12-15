@@ -131,120 +131,22 @@
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		var table = $('table.datatable').DataTable(
 		{
-			language: {
-				"sEmptyTable":          "{{ trans('view.jQuery_sEmptyTable') }}",
-				"sInfo":                "{{ trans('view.jQuery_sInfo') }}",
-				"sInfoEmpty":           "{{ trans('view.jQuery_sInfoEmpty') }}",
-				"sInfoFiltered":        "{{ trans('view.jQuery_sInfoFiltered') }}",
-				"sInfoPostFix":         "{{ trans('view.jQuery_sInfoPostFix') }}",
-				"sInfoThousands":       "{{ trans('view.jQuery_sInfoThousands') }}",
-				"sLengthMenu":          "{{ trans('view.jQuery_sLengthMenu') }}",
-				"sLoadingRecords":      "{{ trans('view.jQuery_sLoadingRecords') }}",
-				"sProcessing":          "{{ trans('view.jQuery_sProcessing') }}",
-				"sSearch":              "{{ trans('view.jQuery_sSearch') }}",
-				"sZeroRecords":         "{{ trans('view.jQuery_sZeroRecords') }}",
-				"oPaginate": {
-					"sFirst":           "{{ trans('view.jQuery_PaginatesFirst') }}",
-					"sPrevious":        "{{ trans('view.jQuery_PaginatesPrevious') }}",
-					"sNext":            "{{ trans('view.jQuery_PaginatesNext') }}",
-					"sLast":            "{{ trans('view.jQuery_PaginatesLast') }}"
-					},
-				"oAria": {
-					"sSortAscending":   "{{ trans('view.jQuery_sLast') }}",
-					"sSortDescending":  "{{ trans('view.jQuery_sLast') }}"
-					},
-				"buttons": {
-					"print":            "{{ trans('view.jQuery_Print') }}",
-					"colvis":           "{{ trans('view.jQuery_colvis') }}",
-					"colvisRestore":    "{{ trans('view.jQuery_colvisRestore') }}",
-				}
-			},
+		{{-- STANDARD CONFIGURATION --}}
+			{{-- Translate Datatables Base --}}
+				@include('datatables.lang')
+			{{-- Buttons above Datatable for export, print and change Column Visibility --}}
+            	@include('datatables.buttons')
+        	{{-- Show Pagination only when the results do not fit on one page --}}
+            	@include('datatables.paginate')
 			retrieve: true,
 			responsive: {
 				details: {
-				type: 'column',
+				type: 'column', {{-- auto resize the Table to fit the viewing device --}}
 				}
 			},
 			dom: "Btip",
-			buttons: [
-				{
-					extend: 'print',
-					className: 'btn-sm btn-primary',
-					titleAttr: "{{ trans('helper.PrintVisibleTable') }}",
-					exportOptions: {columns: ':visible.content'},
-				},
-				{
-					extend: 'collection',
-					text: "{{ trans('view.jQuery_ExportTo') }}",
-					titleAttr: "{{ trans('helper.ExportVisibleTable') }}",
-					className: 'btn-sm btn-primary',
-					autoClose: true,
-					buttons: [
-						{
-							extend: 'csvHtml5',
-							text: "<i class='fa fa-file-code-o'></i> .CSV",
-							exportOptions: {columns: ':visible.content'},
-							fieldSeparator: ';'
-						},
-						{
-							extend: 'excelHtml5',
-							text: "<i class='fa fa-file-excel-o'></i> .XLSX",
-							exportOptions: {columns: ':visible.content'}
-						},
-						{
-							extend: 'pdfHtml5',
-							text: "<i class='fa fa-file-pdf-o'></i> .PDF",
-							exportOptions: {
-								columns: ':visible.content'
-								},
-							customize: function(doc, config) {
-								var tableNode;
-								for (i = 0; i < doc.content.length; ++i) {
-									if(doc.content[i].table !== undefined){
-									tableNode = doc.content[i];
-									break;
-									}
-								}
-
-								var rowIndex = 0;
-								var tableColumnCount = tableNode.table.body[rowIndex].length;
-
-								if(tableColumnCount > 6){
-									doc.pageOrientation = 'landscape';
-								}
-							},
-
-						},
-					]
-				},
-				{
-					extend: 'colvis',
-					className: 'btn-sm btn-primary',
-					titleAttr: "{{ trans('helper.ChangeVisibilityTable') }}",
-					columns: ':not(.nocolvis)',
-					postfixButtons: [
-						{
-							extend:'colvisGroup',
-							className: 'dt-button btn-warning',
-							text:"{{ trans('view.jQuery_colvisReset') }}",
-							show:':hidden'
-						},
-					],
-				},
-			],
-			fnDrawCallback: function(oSettings) {
-				if ( ($('#datatable tr').length <= this.api().page.info().length) && (this.api().page.info().page == 0) ){
-					$('.dataTables_paginate').hide();
-					$('.dataTables_info').hide();
-				}
-				if ($('#datatable tr').length >= this.api().page.info().length) {
-					$('.dataTables_paginate').show();
-					$('.dataTables_info').show();
-				}
-			},
 			fnAdjustColumnSizing: true,
 			autoWidth: false,
-			lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "{{ trans('view.jQuery_All') }}" ] ],
 			aoColumnDefs: [ {
 				className: 'control',
 				orderable: false,
@@ -259,6 +161,7 @@
                 "visible": false
             }
 			],
+		{{-- AJAX CONFIGURATION --}}
 			processing: true,
 			serverSide: true,
 			deferRender: true,

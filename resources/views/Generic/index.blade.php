@@ -120,231 +120,57 @@
 @section('javascript')
 {{-- JS DATATABLE CONFIG --}}
 <script language="javascript">
-    $(document).ready(function() {
-        var table = $('table.datatable').DataTable(
-            {
-    {{-- STANDARD DT CONFIGURATION --}}
-                {{-- Translate Datatables --}}
-                language: {
-                    "sEmptyTable":          "{{ trans('view.jQuery_sEmptyTable') }}",
-                    "sInfo":                "{{ trans('view.jQuery_sInfo') }}",
-                    "sInfoEmpty":           "{{ trans('view.jQuery_sInfoEmpty') }}",
-                    "sInfoFiltered":        "{{ trans('view.jQuery_sInfoFiltered') }}",
-                    "sInfoPostFix":         "{{ trans('view.jQuery_sInfoPostFix') }}",
-                    "sInfoThousands":       "{{ trans('view.jQuery_sInfoThousands') }}",
-                    "sLengthMenu":          "{{ trans('view.jQuery_sLengthMenu') }}",
-                    "sLoadingRecords":      "{{ trans('view.jQuery_sLoadingRecords') }}",
-                    "sProcessing":          "{{ trans('view.jQuery_sProcessing') }}",
-                    "sSearch":              "{{ trans('view.jQuery_sSearch') }}",
-                    "sZeroRecords":         "{{ trans('view.jQuery_sZeroRecords') }}",
-                    "oPaginate": {
-                        "sFirst":           "{{ trans('view.jQuery_PaginatesFirst') }}",
-                        "sPrevious":        "{{ trans('view.jQuery_PaginatesPrevious') }}",
-                        "sNext":            "{{ trans('view.jQuery_PaginatesNext') }}",
-                        "sLast":            "{{ trans('view.jQuery_PaginatesLast') }}"
-                        },
-                    "oAria": {
-                        "sSortAscending":   "{{ trans('view.jQuery_sLast') }}",
-                        "sSortDescending":  "{{ trans('view.jQuery_sLast') }}"
-                        },
-                    "buttons": {
-                        "print":            "{{ trans('view.jQuery_Print') }}",
-                        "colvis":           "{{ trans('view.jQuery_colvis') }}",
-                        "colvisRestore":    "{{ trans('view.jQuery_colvisRestore') }}",
-                    }
-                },
-                {{-- auto resize the Table to fit the viewing device --}}
-                responsive: {
-                    details: {
-                        type: 'column',
-                    }
-                },
-                {{-- Option to ajust Table to Width of container --}}
-                autoWidth: false,
-                {{-- sets order and what to show  --}}
-                dom: 'lBfrtip',
-                {{-- Save Search Filters and visible Columns --}}
-                stateSave: true,
-                {{-- Buttons above Datatable for export, print and change Column Visibility --}}
-                buttons: [
-                    {
-                        extend: 'print',
-                        className: 'btn-sm btn-primary',
-                        titleAttr: "{{ trans('helper.PrintVisibleTable') }}",
-                        exportOptions: {columns: ':visible.content'},
-                    },
-                    {
-                        extend: 'collection',
-                        text: "{{ trans('view.jQuery_ExportTo') }}",
-                        titleAttr: "{{ trans('helper.ExportVisibleTable') }}",
-                        className: 'btn-sm btn-primary',
-                        autoClose: true,
-                        buttons: [
-                            {
-                                extend: 'csvHtml5',
-                                text: "<i class='fa fa-file-code-o'></i> .CSV",
-                                exportOptions: {columns: ':visible.content'},
-                                fieldSeparator: ';'
-                            },
-                            {
-                                extend: 'excelHtml5',
-                                text: "<i class='fa fa-file-excel-o'></i> .XLSX",
-                                exportOptions: {columns: ':visible.content'}
-                            },
-                            {
-                                extend: 'pdfHtml5',
-                                text: "<i class='fa fa-file-pdf-o'></i> .PDF",
-                                exportOptions: {
-                                    columns: ':visible.content'
-                                    },
-                                customize: function(doc, config) {
-                                    var tableNode;
-                                    for (i = 0; i < doc.content.length; ++i) {
-                                        if(doc.content[i].table !== undefined){
-                                        tableNode = doc.content[i];
-                                        break;
-                                        }
-                                    }
+$(document).ready(function() {
+    var table = $('table.datatable').DataTable(
+        {
+    {{-- STANDARD CONFIGURATION --}}
+        {{-- Translate Datatables Base --}}
+            @include('datatables.lang')
+        {{-- Buttons above Datatable for export, print and change Column Visibility --}}
+            @include('datatables.buttons')
+        {{-- Table Footer Search fields to filter Columnwise and SAVE Filter --}}
+            @include('datatables.colsearch')
+        {{-- Show Pagination only when the results do not fit on one page --}}
+            @include('datatables.paginate')
+        responsive: {
+            details: {
+                type: 'column', {{-- auto resize the Table to fit the viewing device --}}
+            }
+        },
+        autoWidth: false, {{-- Option to ajust Table to Width of container --}}
+        dom: 'lBfrtip', {{-- sets order and what to show  --}}
+        stateSave: true, {{-- Save Search Filters and visible Columns --}}
+        lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "{{ trans('view.jQuery_All') }}" ] ], {{-- Filter to List # Datasets --}}
+        {{-- Responsive Column --}}
+        aoColumnDefs: [ {
+            className: 'control',
+            orderable: false,
+            searchable: false,
+            targets:   [0]
+        },
 
-                                    var rowIndex = 0;
-                                    var tableColumnCount = tableNode.table.body[rowIndex].length;
-
-                                    if(tableColumnCount > 6){
-                                        doc.pageOrientation = 'landscape';
-                                    }
-                                },
-
-                            },
-                        ]
-                    },
-                    {
-                        extend: 'colvis',
-                        className: 'btn-sm btn-primary',
-                        titleAttr: "{{ trans('helper.ChangeVisibilityTable') }}",
-                        columns: ':not(.nocolvis)',
-                        postfixButtons: [
-                            {
-                                extend:'colvisGroup',
-                                className: 'dt-button btn-warning',
-                                text:"{{ trans('view.jQuery_colvisReset') }}",
-                                show:':hidden'
-                            },
-                        ],
-                    },
-                ],
-                {{-- Add Table Footer Search fields to filter Columnwise and SAVE Filter --}}
-                initComplete: function () {
-                    this.api().columns().every(function () {
-                        var column = this;
-                        var input = document.createElement('input');
-                        input.classList.add('form-control');
-                        input.classList.add('input-sm');
-                        input.classList.add('select2');
-                        if ($(this.footer()).hasClass('searchable')){
-                            $(input).appendTo($(column.footer()).empty())
-                            .on('keyup', function () {
-                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
-
-                                column.search(val ? val : '', true, false).draw();
-                            });
-                        }
-                        $('.select2').css('width', "100%");
-                    });
-                    var state = this.api().state.loaded();
-                    if (state) {
-                        this.api().columns().eq(0).each(function (colIdx) {
-                            var colSearch = state.columns[colIdx].search;
-                            if (colSearch.search) {
-                                $('input', this.column(colIdx).footer()).val(colSearch.search);
-                            }
-                        });
-                    }
-                    $(this).DataTable().columns.adjust().responsive.recalc();
-                },
-    			fnDrawCallback: function(oSettings) {
-                    if ( ($('#datatable tr').length <= this.api().page.info().length) && (this.api().page.info().page == 0) ){
-                        $('.dataTables_paginate').hide();
-                        $('.dataTables_info').hide();
-                    }
-                    if ($('#datatable tr').length >= this.api().page.info().length) {
-                        $('.dataTables_paginate').show();
-                        $('.dataTables_info').show();
-                    }
-    		    },
-                {{-- Filter to List # Datasets --}}
-                lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "{{ trans('view.jQuery_All') }}" ] ],
-                {{-- Add Columns - First 2 Columns are for Responsive Button and Input Checkbox --}}
-    {{-- DT AJAX CONFIGURATION --}}
-                @if (isset($model) && isset($view_var) && method_exists( $view_var, 'view_index_label') )
-                {{-- enable Serverside Handling--}}
-                processing: true,
-                serverSide: true,
-                deferRender: true,
-                ajax: '{{ isset($route_name) && $route_name!= "Config.index"  ? route($route_name.'.data') : "" }}',
-                columns:[
-                            {data: 'responsive', orderable: false, searchable: false},
-                    @if (isset($delete_allowed) && $delete_allowed == true)
-                            {data: 'checkbox', orderable: false, searchable: false},
-                    @endif
-                    @if (isset($view_var->view_index_label()['index_header']))
-                        @foreach ($view_var->view_index_label()['index_header'] as $field)
-                            @if ( starts_with($field, $view_var->view_index_label()["table"].'.'))
-                                {data: '{{ substr($field, strlen($view_var->view_index_label()["table"]) + 1) }}', name: '{{ $field }}'},
-                            @else
-                                {data: '{{ $field }}', name: '{{$field}}',
-                                searchable: {{ isset($view_var->view_index_label()["sortsearch"][$field]) ? "false" : "true" }},
-                                orderable:  {{ isset($view_var->view_index_label()["sortsearch"][$field]) ? "false" : "true" }}
-                                },
-                            @endif
-                        @endforeach
-                    @endif
-                ],
-                {{-- Set Sorting if order_by is set -> Standard is ASC of first Column --}}
-                @if (isset($view_var->view_index_label()['order_by']))
-                    order:
-                    @foreach ($view_var->view_index_label()['order_by'] as $columnindex => $direction)
-                        @if (isset($delete_allowed) && $delete_allowed == true)
-                            [{{$columnindex + 2}}, '{{$direction}}'],
-                        @else
-                            [{{$columnindex + 1}}, '{{$direction}}'],
-                        @endif
-                    @endforeach
-                @endif
-                {{-- Responsive Column --}}
-                aoColumnDefs: [ {
-                    className: 'control',
-                    orderable: false,
-                    searchable: false,
-                    targets:   [0]
-                },
-                @if (isset($delete_allowed) && $delete_allowed == true)
-                {
-                    className: 'index_check',
-                    orderable: false,
-                    searchable: false,
-                    targets:   [1]
-                },
-                @endif
-                {
-                    targets :  "_all",
-                    className : 'ClickableTd',
-                } ],
-        @elseif (method_exists( BaseController::get_model_obj() , 'view_index_label' ))
-            aoColumnDefs: [ {
-                className: 'control',
-                orderable: false,
-                targets:   [0]
-            },
-            @if (isset($delete_allowed) && $delete_allowed == true)
+        @if (isset($delete_allowed) && $delete_allowed == true) {{-- show checkboxes only when needed --}}
             {
                 className: 'index_check',
                 orderable: false,
+                searchable: false,
                 targets:   [1]
             },
-            @endif
-            ],
         @endif
-        });
+        {
+            targets :  "_all",
+            className : 'ClickableTd',
+        } ],
+    {{-- AJAX CONFIGURATION --}}
+        @if (isset($model) && isset($view_var) && method_exists( $view_var, 'view_index_label') )
+            processing: true, {{-- show loader--}}
+            serverSide: true, {{-- enable Serverside Handling--}}
+            deferRender: true,
+            ajax: '{{ isset($route_name) && $route_name!= "Config.index"  ? route($route_name.'.data') : "" }}',
+            {{-- generic Col Header generation --}}
+                @include('datatables.genericColHeader')
+        @endif
     });
+});
 </script>
 @stop
