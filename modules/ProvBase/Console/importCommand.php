@@ -195,6 +195,8 @@ class importCommand extends Command {
 			'AVM 6.50 - Test' 			=> 25,
 			'Arris-TM822-SIP-V9' 		=> 3,
 			'Arris-MTA-SIP' 			=> 34,
+			'Thomson-THG520-SIP' 		=> 3,
+			'AVM 6490 6.84 test' 		=> 25,
 		);
 
 
@@ -448,8 +450,8 @@ class importCommand extends Command {
 
 		// import fields
 		$c->number 			= $old_contract->vertragsnummer;
-		$c->number2 		= $old_contract->vertragsnummer;
-		$c->number4 		= $old_contract->kundennr;
+		$c->number2 		= '002-'.$old_contract->vertragsnummer;
+		$c->number4 		= '002-'.$old_contract->kundennr;
 		$c->salutation 		= $old_contract->anrede;
 		$c->company 		= $old_contract->firma;
 		$c->firstname 		= $old_contract->vorname;

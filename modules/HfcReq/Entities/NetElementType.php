@@ -33,10 +33,24 @@ class NetElementType extends \BaseModel {
 	}
 
 	// View Icon
-  public static function view_icon()
-  {
-    return '<i class="fa fa-object-group"></i>';
-  }
+	public static function view_icon()
+	{
+		return '<i class="fa fa-object-group"></i>';
+	}
+
+	// icon type for tree view
+	public function get_icon_type()
+	{
+		$type = $this->name ? : 'default';
+		if ($parent = $this->parent)
+		{
+			$type = $parent->name;
+			while ($parent = $parent->parent)
+				$type = $parent->name;
+		}
+
+		return $type;
+	}
 
 	// link title in index view
 	public function view_index_label()
@@ -44,28 +58,6 @@ class NetElementType extends \BaseModel {
 		// in Tree View returning an array is currently not yet implemented
 		$version = $this->version ? ' - '.$this->version : '';
 		return $this->name.$version;
-
-		// return ['index' => [$this->name],
-		//         'index_header' => ['Name'],
-		//         'header' => $this->name];
-	}
-
-	public function index_list ()
-	{
-		// implement Index View as Tree - make sure that a separate index.blade.php is installed that includes the Generic.tree blade
-		// so we can use the Generic BaseController@index function
-		return NetElementType::get_tree_list();
-
-		// $types = $this->orderBy('id')->get();
-		// $undeletables = ['Net', 'Cluster'];
-
-		// foreach ($types as $type)
-		// {
-		// 	if (in_array($type->name, $undeletables))
-		// 		$type->index_delete_disabled = true;
-		// }
-
-		// return $types;
 	}
 
 	// returns all objects that are related to a DeviceType
@@ -109,6 +101,7 @@ class NetElementType extends \BaseModel {
 		return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'pre_conf_oid_id');
 	}
 
+
 	public function parent()
 	{
 		return $this->belongsTo('Modules\HfcReq\Entities\NetElementType');
@@ -151,60 +144,11 @@ class NetElementType extends \BaseModel {
 
 
 	/**
-	 * Get all Database Entries with relevant data for index view ordered
-	 *
-	 * TODO: use in generic manner in BaseModel - note the undeletables array in other models!
-	 *
-	 * @return 	Multidimensional Array
+	 * Must be defined to disable delete Checkbox on index tree view
 	 */
-	public static function get_tree_list()
+	public static function undeletables()
 	{
-		$netelementtypes = NetElementType::orderBy('parent_id')->orderBy('id')->get();
-		$types = [];
-
-		foreach ($netelementtypes as $key => $elem)
-		{
-			if ($elem->parent_id)
-				break;
-
-			if (in_array($elem->name, self::$undeletables))
-				$elem->index_delete_disabled = true;
-
-			$types[]  = $elem;
-			unset($netelementtypes[$key]); 		// increases performance a bit
-
-			$children = $elem->_get_children($netelementtypes);
-			if ($children)
-				$types[] = $children;
-		}
-
-		return $types;
-	}
-
-
-	/**
-	 * Search Children from Collection List of NetElementTypes recursivly
-	 *
-	 * @param 	Collection $objects
-	 * @return 	Array
-	 */
-	private function _get_children($objects = null)
-	{
-		$children = $objects ? $objects->where('parent_id', $this->id) : [];
-		$arr = [];
-
-		foreach ($children as $key => $elem)
-		{
-			if (in_array($elem->name, self::$undeletables))
-				$elem->index_delete_disabled = true;
-
-			$arr[] = $elem;
-			$tmp   = $elem->_get_children($objects);
-			if ($tmp)
-				$arr[] = $tmp;
-		}
-
-		return $arr;
+		return array_keys(NetElementType::$undeletables);
 	}
 
 

@@ -439,11 +439,14 @@ class BaseModel extends Eloquent
 		// models to be excluded from search
 		$exclude = array(
 			'BaseModel',
-			'Authmeta',
+			'Authmetacore',
 			'Authcore',
 			'TRCClass',	// static data; not for standalone use
 			'CarrierCode', // cron updated data; not for standalone use
 			'EkpCode', // cron updated data; not for standalone use
+			// 'AddressFunctionsTrait',
+			// 'AccountingRecord',
+			// 'BillingLogger',
 		);
 		$result = array();
 
@@ -944,6 +947,16 @@ class BaseModel extends Eloquent
 		foreach ($ids as $id => $help)
 			$instance->findOrFail($id)->delete();
 	}
+
+
+	/**
+	 * Placeholder for undeletable Elements of index tree view
+	 */
+	public static function undeletables()
+	{
+		return [0 => 0];
+	}
+
 
 
 	/**

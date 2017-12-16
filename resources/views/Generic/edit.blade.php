@@ -38,9 +38,11 @@
 
 	<div class="card card-inverse col-md-{{$edit_left_md_size}} border border-info border-top-0 border-left-0 border-bottom-0">
 
-				{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'EditForm')) }}
-					@include($form_path, $view_var)
-				{{ Form::close() }}
+	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'EditForm')) }}
+        
+		@include($form_path, $view_var)
+          
+	{{ Form::close() }}
 	</div>
 @stop
 
@@ -109,7 +111,10 @@
 		<?php Session::forget('alert'); ?>
 	@endif
 
+@stop
 
+@section('javascript')
+	{{-- move Javascript Edit Stuff here: select2.js,  --}}
 @stop
 
 @section('javascript_extra')

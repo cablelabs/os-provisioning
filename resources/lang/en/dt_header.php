@@ -6,7 +6,7 @@ return [
 	'authusers.first_name' => 'Given Name',
 	'authusers.last_name' => 'Family Name',
 	'authmetas.name' => 'Name',
-	// GiuLog
+	// GuiLog
 	'guilog.created_at' => 'Time',
 	'guilog.username' => 'User',
 	'guilog.method' => 'Action',
@@ -183,4 +183,5 @@ return [
 	'ticket.state' => 'State',
 	'ticket.user_id' => 'Created by',
 	'ticket.created_at' => 'Created at',
+	'ticket.assigned_users' => 'Assigned Users',
 ];

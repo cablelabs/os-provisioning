@@ -35,6 +35,8 @@ class BaseController extends Controller {
 	protected $save_button = 'Save';
 	protected $force_restart_button = 'Force Restart';
 	protected $relation_create_button = 'Create';
+
+	// if set to true a create button on index view is available
 	protected $index_create_allowed = true;
 	protected $index_delete_allowed = true;
 
@@ -44,6 +46,10 @@ class BaseController extends Controller {
 
 	protected $edit_view_save_button = true;
 	protected $edit_view_force_restart_button = false;
+
+	protected $index_datatables_ajax_enabled = false;
+	// for index tree view a parent_id column must exist in table !
+	protected $index_tree_view = false;
 
 
 
@@ -217,6 +223,7 @@ class BaseController extends Controller {
 			// multiple select?
 			if ($field['form_type'] == 'select' && isset($field['options']['multiple'])) {
 				$field['name'] = str_replace('[]', '', $field['name']);
+				continue; 			// multiselects will have array in data so don't trim
 			}
 
 			// trim all inputs as default
@@ -489,18 +496,26 @@ class BaseController extends Controller {
 	public function index()
 	{
 		$model = static::get_model_obj();
-
-		$view_var   = $model->first();
-
 		$view_header = \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
 		$headline  	= \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
 		$b_text		= $model->view_headline();
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
 		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
+		if ($this->index_tree_view)
+		{
+			$view_var = $model::where('parent_id', 0)->get();
+			$undeletables = $model::undeletables();
+
+			return View::make ('Generic.tree', $this->compact_prep_view(compact('headline', 'view_header', 'view_var', 'create_allowed', 'undeletables')));
+		}
+
 		$view_path = 'Generic.index';
 		if (View::exists(\NamespaceController::get_view_name().'.index'))
 			$view_path = \NamespaceController::get_view_name().'.index';
+
+		$index_datatables_ajax_enabled = $this->index_datatables_ajax_enabled ? : $this->index_datatables_ajax_enabled();
+		$view_var = $index_datatables_ajax_enabled ? $model->first() : $model->index_list();
 
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
@@ -552,13 +567,16 @@ class BaseController extends Controller {
 		$validator  = Validator::make($data, $rules);
 		$data 		= $controller->prepare_input_post_validation ($data);
 
-		if ($validator->fails())
-		{
+		if ($validator->fails()) {
 			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'danger');
 		}
 
-		$id = $obj::create($data)->id;
+		$obj = $obj::create($data);
 
+		// Add N:M Relations
+		self::_set_many_to_many_relations($obj, $data);
+
+		$id  = $obj->id;
 		if (!$redirect)
 			return $id;
 
@@ -634,8 +652,7 @@ class BaseController extends Controller {
 		$validator = Validator::make($data, $rules);
 		$data      = $controller->prepare_input_post_validation ($data);
 
-		if ($validator->fails())
-		{
+		if ($validator->fails()) {
 			Log::info ('Validation Rule Error: '.$validator->errors());
 			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'danger');
 		}
@@ -651,6 +668,9 @@ class BaseController extends Controller {
 		//       without updated_at field. So we globally use a guarded field from now, to use the update timestamp
 		$obj->update($data);
 
+		// Add N:M Relations
+		self::_set_many_to_many_relations($obj, $data);
+
 		// error msg created while observer execution
 		$msg = \Session::has('error') ? \Session::get('error') : 'Updated';
 		$color = \Session::has('error') ? 'warning' : 'info';
@@ -663,6 +683,51 @@ class BaseController extends Controller {
 		return Redirect::route($route_model.'.edit', $id)->with('message', $msg)->with('message_color', $color);
 	}
 
+
+	/**
+	 * Store Many to Many Relations in Pivot table
+	 *
+	 * IMPORTANT NOTES:
+	 *	 To assign a model to the pivot table we need an extra multiselect field in the controllers
+	 *	 	view_form_fields() that must be mentioned inside the guarded array of the model!
+	 *	 The multiselect's field name must be in form of the models relation function and a concatenated '_ids'
+	 *		like: '<relation-function>_ids' , e.g. 'users_ids' for the multiselect in Tickets view to assign users
+	 *
+	 * @param Object 	The Object to store/update
+	 * @param Array 	Input Data
+	 *
+	 * @author Nino Ryschawy
+	 */
+	private static function _set_many_to_many_relations($obj, $data)
+	{
+		if (!$obj->guarded)
+			return;
+
+		foreach ($obj->guarded as $field)
+		{
+			if (!isset($data[$field]) || !is_array($data[$field]))
+				continue;
+
+			// relation-function_id
+			$func = explode('_', $field)[0];
+
+			$attached = $obj->$func->pluck('id')->all();
+
+			// attach new assignments
+			foreach ($data[$field] as $rel_id)
+			{
+				if (!in_array($rel_id, $attached))
+					$obj->$func()->attach($rel_id, ['created_at' => date('Y-m-d H:i:s')]);
+			}
+
+			// detach removed assignments (from selected multiselect options)
+			foreach ($attached as $rel_id)
+			{
+				if (!in_array($rel_id, $data[$field]))
+					$obj->$func()->detach($rel_id);
+			}
+		}
+	}
 
 
 	/**

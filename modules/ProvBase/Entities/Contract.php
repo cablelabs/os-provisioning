@@ -77,12 +77,21 @@ class Contract extends \BaseModel {
 	}
 
 
+	/**
+	 * @return String  Bootstrap Color Class
+	 */
 	public function get_bsclass()
 	{
 		$bsclass = 'success';
 
-		if ($this->network_access == 0)
-			$bsclass = 'danger';
+		if (!$this->network_access)
+		{
+			$bsclass = 'active';
+
+			// '$this->id' to dont check when index table header is determined!
+			if ($this->id && $this->check_validity('now'))
+				$bsclass = 'warning';
+		}
 
 		return $bsclass;
 	}
@@ -139,6 +148,13 @@ class Contract extends \BaseModel {
 		if (\PPModule::is_active('ccc'))
 		{
 			$ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
+		}
+
+		if (\PPModule::is_active('Ticketsystem'))
+		{
+			$tickets = $this->tickets;
+			if ($tickets->all())
+				$ret['Ticket']['Ticket'] = $tickets;
 		}
 
 		if (\PPModule::is_active('mail'))
@@ -268,6 +284,11 @@ class Contract extends \BaseModel {
 	public function cccauthuser()
 	{
 		return $this->hasOne('Modules\Ccc\Entities\CccAuthuser');
+	}
+
+	public function tickets()
+	{
+		return $this->hasMany('Modules\Ticketsystem\Entities\Ticket');
 	}
 
 
@@ -522,14 +543,15 @@ class Contract extends \BaseModel {
 
 
 	/**
-	 * This enables/disables network_access based on existence of currently active items of types Internet and Voip
+	 * This enables/disables network/telephony access based on
+	 	* validity of contract
+	 	* existence of currently active items of types Internet and Voip
 	 *
-	 * Check also if contract is outdated
-	 *
-	 * @author Patrick Reichel
+	 * @author Patrick Reichel, Nino Ryschawy
 	 */
 	protected function _update_network_access_from_items() {
 
+		// check if DB update is required
 		$contract_changed = False;
 
 		$active_tariff_info_internet = $this->_get_valid_tariff_item_and_count('Internet');
@@ -538,22 +560,37 @@ class Contract extends \BaseModel {
 		$active_count_internet = $active_tariff_info_internet['count'];
 		$active_count_voip = $active_tariff_info_voip['count'];
 
-		if (!$active_count_internet || !$this->check_validity('Now'))
+		if (!$this->check_validity('Now'))
 		{
-			// if there is no active item of type internet or voip or contract is outdated: disable network_access (if not already done)
-			if (boolval($this->network_access)) {
+			// invalid contract - disable every access
+			if ($this->network_access) {
 				$this->network_access = 0;
 				$contract_changed = True;
 				\Log::Info('daily: contract: disabling network_access based on active internet/voip items for contract '.$this->id);
 			}
 
-			if (!$active_count_internet && $active_count_voip && !$this->telephony_only) {
+			if ($this->telephony_only) {
+				$this->telephony_only = 0;
+				$contract_changed = True;
+				\Log::info('daily: contract: Unset telephony_only as contract is invalid!', [$this->id]);
+			}
+		}
+		else if (!$active_count_internet)
+		{
+			// valid contract, but no valid internet tariff
+			if ($this->network_access) {
+				$this->network_access = 0;
+				$contract_changed = True;
+				\Log::Info('daily: contract: disabling network_access based on active internet/voip items for contract '.$this->id);
+			}
+
+			if ($active_count_voip && !$this->telephony_only) {
 				$this->telephony_only = 1;
 				$contract_changed = True;
 				\Log::Info('daily: contract: switch to telephony_only', [$this->id]);
 			}
 
-			if (!$active_count_voip && $this->telephony_only) {
+			else if (!$active_count_voip && $this->telephony_only) {
 				$this->telephony_only = 0;
 				$contract_changed = True;
 				\Log::Info('daily: contract: switch from telephony_only to internet + telephony tariff', [$this->id]);
@@ -561,17 +598,22 @@ class Contract extends \BaseModel {
 		}
 		else
 		{
-			// changes are only required if not active
-			if (!boolval($this->network_access)) {
-					$this->network_access = 1;
-					$contract_changed = True;
-					\Log::Info('daily: contract: enabling network_access based on active internet/voip items for contract '.$this->id);
+			// valid contract and valid internet tariff
+			if ($this->telephony_only) {
+				$this->telephony_only = 0;
+				$contract_changed = True;
+				\Log::info('daily: contract: unset telephony_only as customer has internet tariff now', [$this->id]);
+			}
+
+			if (!$this->network_access) {
+				$this->network_access = 1;
+				$contract_changed = True;
+				\Log::Info('daily: contract: enabling network_access based on active internet/voip items for contract '.$this->id);
 			}
 		}
 
-		if ($contract_changed) {
+		if ($contract_changed)
 			$this->save();
-		}
 
 	}
 

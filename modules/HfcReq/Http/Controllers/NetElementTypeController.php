@@ -10,6 +10,8 @@ use \App\Http\Controllers\BaseViewController;
 
 class NetElementTypeController extends HfcReqController {
 
+	protected $index_tree_view = true;
+
     /**
      * defines the formular fields for the edit and create view
      */

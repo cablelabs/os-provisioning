@@ -62,7 +62,7 @@ function str_sanitize($string)
 
 /**
  * Check if at least one of the needle array keys exists in the haystack array
- * 
+ *
  * @return true if one array key of needle array exists in haystack array, false otherwise
  * @author Nino Ryschawy
  */
@@ -86,28 +86,28 @@ function multi_array_key_exists($needles, $haystack)
  */
 function escape_latex_special_chars($string)
 {
-	// NOTE: Uncommenting every char produces errors - TODO: enable single chars and test
-	// 		"\\" have to be ignored because strings (adress) often are concatenated by "\\" (latex newline)
-	// TODO: Add discards parameter to discard specific chars for specific strings 
-	$map = array( 
-			// "#"  => "\\#",
-			// "$"  => "\\$",
-			// "%"  => "\\%",
+	if (!$string)
+		return '';
+
+	// NOTE: "\\" has to be on top as it otherwise would replace all replacements in following loop
+	$map = array(
+			"\\" => "\\textbackslash",
+			"#"  => "\\#",
+			"$"  => "\\$",
+			"%"  => "\\%",
 			"&"  => "\\&",
-			// "~"  => "\\~{}",
-			// "_"  => "\\_",
-			// "^"  => "\\^{}",
-			// "{"  => "\\{",
-			// "}"  => "\\}",
-			// "\\" => "\\textbackslash",
+			"~"  => "\\~{}",
+			"_"  => "\\_",
+			"^"  => "\\^{}",
+			"{"  => "\\{",
+			"}"  => "\\}",
 	);
 
-	foreach ($map as $search => $replace) {
+	foreach ($map as $search => $replace)
 		$string = str_replace($search, $replace, $string);
-	}
 
 	return $string;
 
 	// not working: https://stackoverflow.com/questions/2541616/how-to-escape-strip-special-characters-in-the-latex-document
-	return preg_replace( "/([\^\%~\\\\#\$%&_\{\}])/e", "\$map['$1']", $string );
+	// return preg_replace( "/([\^\%~\\\\#\$%&_\{\}])/e", "\$map['$1']", $string );
 }

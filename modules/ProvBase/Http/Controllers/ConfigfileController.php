@@ -8,21 +8,19 @@ use HTML;
 
 class ConfigfileController extends \BaseController {
 
+	protected $index_tree_view = true;
+
     /**
      * defines the formular fields for the edit and create view
      */
 	public function view_form_fields($model = null)
 	{
-		if ($model) {
-			$parents = $model->parents_list();
-		}
-		else
-		{
+		if (!$model)
 			$model = new Configfile;
-			$parents = $model->first()->parents_list_all();
-		}
-		$firmware_files = $model->get_files("fw");
-		$cvc_files = $model->get_files("cvc");
+
+		$parents = $model->html_list(Configfile::where('id', '!=', $model->id)->get()->all(), 'name', true);
+		$firmware_files = Configfile::get_files("fw");
+		$cvc_files = Configfile::get_files("cvc");
 
 		// label has to be the same like column in sql table
 		return array(
@@ -47,20 +45,6 @@ class ConfigfileController extends \BaseController {
 	{
 		$rules['text'] .= ':'.$data['device'];
 		return $rules;
-	}
-
-	/**
-	 * Display a listing of all Configfile objects in hierarchical tree structure
-	 *
-	 * @author Nino Ryschawy
-	 */
-	public function index()
-	{
-		$create_allowed = $this->index_create_allowed;
-		$roots = Configfile::where('parent_id', 0)->get();
-		$cf_used = Configfile::all_in_use();
-		// tree_item.blade.php: https://laracasts.com/discuss/channels/laravel/categories-tree-view/replies/114604
-		return \View::make('provbase::Configfile.tree', $this->compact_prep_view(compact('view_header', 'roots', 'cf_used', 'create_allowed')));
 	}
 
 

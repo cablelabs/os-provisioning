@@ -13,7 +13,6 @@
 <script src="{{asset('components/assets-admin/plugins/DataTables/media/js/dataTables.bootstrap4.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js')}}"></script>
 
-<script src="{{asset('components/assets-admin/plugins/jstree/dist/jstree.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/js/ui-modal-notification.demo.js')}}"></script>
 
 <!--[if lt IE 9]>

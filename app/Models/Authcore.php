@@ -6,7 +6,7 @@ class Authcore extends BaseModel {
 
 
 	public function metas() {
-		return $this->belongsToMany('App\Authmeta', 'authmetacore');
+		return $this->belongsToMany('App\Authrole', 'authrole_core');
 	}
 
 
