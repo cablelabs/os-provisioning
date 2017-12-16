@@ -17,6 +17,8 @@ class UpdateProvBaseAddMaxCpe{
 			$table->smallInteger('max_cpe')->nullable();
 		});
 
+		// no where filter is set, as there should be only one row with id 1
+		DB::update("UPDATE provbase SET max_cpe = '2';");
 	}
 
 	/**

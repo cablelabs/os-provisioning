@@ -12,8 +12,10 @@ pw=$(pwgen 12 1) # SQL password for user nmsprime
 sed -i "s/^SELINUX=enforcing$/SELINUX=disabled/" /etc/sysconfig/selinux
 setenforce  0
 
-# set default hostname
-hostnamectl set-hostname nmsprime
+# set default hostname, if none was explicitly set
+if [[ "$(hostname)" == 'localhost.localdomain' ]]; then
+	hostnamectl set-hostname nmslx01.nmsprime.test
+fi
 
 #
 # HTTP
@@ -64,7 +66,7 @@ php artisan clear-compiled
 php artisan optimize
 
 # key:generate needs .env in root dir – create symlink to our env file
-ln -s /etc/nmsprime/env/global.env "$dir/.env"
+ln -srf /etc/nmsprime/env/global.env "$dir/.env"
 php artisan key:generate
 # remove the symlink and create empty .env with comment
 rm -f "$dir/.env"
@@ -83,3 +85,4 @@ chmod -R g-w /etc/nmsprime/env
 
 # log
 chmod 644 /var/log/messages
+systemctl restart rsyslog

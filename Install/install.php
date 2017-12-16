@@ -42,8 +42,12 @@ function config ($dir_root, $module='base', $options='')
 		$exclude = '-x '.str_replace (' ', ' -x ', $cfg['exclude']);
 
 	// files
-	if (isset($cfg['destination']))
+	$configfiles = '';
+	if (isset($cfg['destination'])) {
 		$dest = $cfg['destination'];
+		if (isset($cfg['configfiles']))
+			$configfiles = "--config-files $dest/".str_replace (' ', " --config-files $dest/", $cfg['configfiles']);
+	}
 
 	// set config files
 	$cf = '';
@@ -81,7 +85,7 @@ function config ($dir_root, $module='base', $options='')
 
 
 	// config fil
-	return $depends.' '.$name.' '.$description.' '.$exclude.' '.$scripts.' '.$options.' '.$cf.' '.$dir_root.'/'.'='.$dest.' '.$f;
+	return $depends.' '.$name.' '.$description.' '.$exclude.' '.$configfiles.' '.$scripts.' '.$options.' '.$cf.' '.$dir_root.'/'.'='.$dest.' '.$f;
 }
 
 

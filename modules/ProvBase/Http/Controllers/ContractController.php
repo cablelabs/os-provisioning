@@ -161,7 +161,7 @@ class ContractController extends \BaseController {
 		if (!$data['number'] && \PPModule::is_active('billingbase'))
 		{
 			// generate contract number
-			$num = \Modules\Billingbase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
+			$num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
 
 			if ($num)
 				$data['number'] = $num;

@@ -853,9 +853,9 @@ finish:
 	switch ($entity) {
 		case 'power dbmv':
 			if($dir == 'downstream')
-				$ret = self::_colorize($val, [-12, -5, 10, 17]);
+				$ret = self::_colorize($val, [-20, -10, 15, 20]);
 			if($dir == 'upstream')
-				$ret = self::_colorize($val, [22, 35, 45, 56]);
+				$ret = self::_colorize($val, [22, 27, 50, 56]);
 				break;
 		case 'microreflection -dbc':
 			$ret = self::_colorize($val, [20, 30]);
@@ -863,17 +863,17 @@ finish:
 		case 'snr db' :
 		case 'mer db':
 			if ($mod == 'qpsk')
-				$ret = self::_colorize($val, [12, 15]);
+				$ret = self::_colorize($val, [14, 17]);
 			if ($mod == '16qam')
-				$ret = self::_colorize($val, [18, 21]);
-			if ($mod == '32qam')
 				$ret = self::_colorize($val, [20, 23]);
+			if ($mod == '32qam')
+				$ret = self::_colorize($val, [22, 25]);
 			if ($mod == '64qam' || $mod == '0') // no docsIfCmtsModulationTable entry
-				$ret = self::_colorize($val, [24, 27]);
+				$ret = self::_colorize($val, [26, 29]);
 			if ($mod == 'qam64')
-				$ret = self::_colorize($val, [24, 27]);
+				$ret = self::_colorize($val, [26, 29]);
 			if ($mod == 'qam256')
-				$ret = self::_colorize($val, [30, 33]);
+				$ret = self::_colorize($val, [32, 35]);
 				break;
 			}
 	return $ret;
@@ -891,24 +891,24 @@ finish:
 			switch ($entity) {
 			case 'pwr':
 				if($dir == 'ds')
-					$ret[] = self::_colorize($val, [-12, -5, 10, 17]);
+					$ret[] = self::_colorize($val, [-20, -10, 15, 20]);
 				if($dir == 'us')
-					$ret[] = self::_colorize($val, [22, 35, 45, 56]);
+					$ret[] = self::_colorize($val, [22, 27, 50, 56]);
 				break;
 			case 'qpsk':
-				$ret[] = self::_colorize($val, [12, 15]);
+				$ret[] = self::_colorize($val, [14, 17]);
 				break;
 			case '16qam':
-				$ret[] = self::_colorize($val, [18, 21]);
-				break;
-			case '32qam':
 				$ret[] = self::_colorize($val, [20, 23]);
 				break;
+			case '32qam':
+				$ret[] = self::_colorize($val, [22, 25]);
+				break;
 			case '64qam':
-				$ret[] = self::_colorize($val, [24, 27]);
+				$ret[] = self::_colorize($val, [26, 29]);
 				break;
 			case '256qam':
-				$ret[] = self::_colorize($val, [30, 33]);
+				$ret[] = self::_colorize($val, [32, 35]);
 				break;
 			case 'urefl':
 				$ret[] = self::_colorize($val, [20, 30]);

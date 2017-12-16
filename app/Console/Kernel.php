@@ -158,7 +158,7 @@ class Kernel extends ConsoleKernel {
 			// Modem Positioning System
 			$schedule->command('nms:mps')->daily();
 
-			$schedule->command('nms:modem-refresh')->everyFiveMinutes()->withoutOverlapping();
+			$schedule->command('nms:modem-refresh')->everyFiveMinutes();
 		}
 
 
