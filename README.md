@@ -10,7 +10,7 @@ IT Maintenance
 - Auto configuration of Nagios and Cacti from one database
 - Generic SNMP GUI creator 
 
-For more informations: [Official Documentation](https://devel.roetzer-engineering.com:3128/confluence/display/NMS/NMS+PRIME)
+For more informations: [Official Documentation](https://devel.roetzer-engineering.com/confluence/display/NMS/NMS+PRIME)
 
 
 ## Architectual Concepts
@@ -23,7 +23,7 @@ NMS Prime is build by standard Linux tools, like
 - [Nagios](https://www.nagios.org/)
 - [Cacti](https://www.cacti.net/index.php)
 
-These tools are worldwide developed, approved and used. See [Design Architecture](https://devel.roetzer-engineering.com:3128/confluence/display/NMS/Architecture+Guidelines) for more information
+These tools are worldwide developed, approved and used. See [Design Architecture](https://devel.roetzer-engineering.com/confluence/display/NMS/Architecture+Guidelines) for more information
 
 
 ## Installation
@@ -40,13 +40,16 @@ yum install nmsprime-*
 ### From source code:
 
 ```
+curl -vsL https://raw.githubusercontent.com/schmto/nmsprime/dev/INSTALL-REPO.sh | bash
+sed -i 's/\[nmsprime\]/\[nmsprime\]\nexclude=nmsprime*/' /etc/yum.repos.d/nmsprime.repo
+yum clean all && yum update -y
+yum install git composer
 git clone https://github.com/schmto/nmsprime.git /var/www/nmsprime
-
 cd /var/www/nmsprime
-php artisan install
+./install-from-git.sh -y
 ```
 
-For more Informations [Installation](https://devel.roetzer-engineering.com:3128/confluence/display/NMS/Installation)
+For more Informations [Installation](https://devel.roetzer-engineering.com/confluence/display/NMS/Installation)
 
 
 ---
@@ -55,16 +58,16 @@ For more Informations [Installation](https://devel.roetzer-engineering.com:3128/
 
 Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
-* [Report a bug](https://devel.roetzer-engineering.com:3128/confluence/display/NMS/Report+a+Bug)
-* [Ticket-System](https://devel.roetzer-engineering.com:3128/confluence/display/NMS/Open+Tickets+Overview)
-* [Versioning](https://devel.roetzer-engineering.com:3128/confluence/display/NMS/Versioning+Schema)
+* [Report a bug](https://devel.roetzer-engineering.com/confluence/display/NMS/Report+a+Bug)
+* [Ticket-System](https://devel.roetzer-engineering.com/confluence/display/NMS/Open+Tickets+Overview)
+* [Versioning](https://devel.roetzer-engineering.com/confluence/display/NMS/Versioning+Schema)
 
 
 ---
 
 ## Supporters
 
-We thanks to the following supporters for helping and funding NMS Prime development. If you are interested in becoming a supporter, please read [here](https://devel.roetzer-engineering.com:3128/confluence/pages/viewpage.action?pageId=6554183):
+We thanks to the following supporters for helping and funding NMS Prime development. If you are interested in becoming a supporter, please read [here](https://devel.roetzer-engineering.com/confluence/pages/viewpage.action?pageId=6554183):
 
 - **[Rötzer Engineering](https://roetzer-engineering.com)**
 - **[ERZNET](http://erznet.tv)**
@@ -86,4 +89,4 @@ See also the list of [contributors](https://github.com/schmto/nms-prime/contribu
 
 ## License
 
-This project is licensed under the GPLv3 License - see the [LICENSE](LICENSE.md) file for details. For more informations: [License Article](https://devel.roetzer-engineering.com:3128/confluence/display/NMS/License)
+This project is licensed under the GPLv3 License - see the [LICENSE](LICENSE.md) file for details. For more informations: [License Article](https://devel.roetzer-engineering.com/confluence/display/NMS/License)
