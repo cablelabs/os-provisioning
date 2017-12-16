@@ -101,61 +101,6 @@ var saveTabPillState = function() {
 };
 
 
-// Generate jsTree
-// @author: Christian Schramm
-var makeJsTreeView = function() {
-  $('#jstree-default').jstree({
-      'plugins': [ "html_data", "checkbox", "wholerow", "types", "ui", "search", "state"],
-      "core": {
-          "dblclick_toggle": true,
-          "themes": {
-              "responsive": true,
-          }
-      },
-      "checkbox": {
-          "cascade": "",
-          "three_state": false,
-          "whole_node" : false,
-          "tie_selection" : false,
-          "real_checkboxes": true
-      },
-      "state" : { "filter" : function (k) { delete k.core.selected; return k; } },
-      "types": {
-          "cm":{
-            "icon": "fa fa-hdd-o text-warning fa-lg"
-          },
-          "mta": {
-            "icon": "fa fa-fax text-info fa-lg"
-          },
-          "default": {
-              "icon": "fa fa-file-code-o text-success fa-lg"
-          }
-      }
-  });
-
-
-  $('#jstree-default').on('select_node.jstree', function(e,data) {
-      var link = data.node.a_attr.href;
-      if (link != "#" && link != "javascript:;" && link != "") {
-          document.location.href = link;
-          return false;
-      }
-  });
-
-
-// trigger on Checkbox change and give
-// invisible form the name of selected id
-// @author: Christian Schramm
-
-  $('#jstree-default').on("check_node.jstree uncheck_node.jstree", function (e, data) {
-      if (data.node.state.checked) {
-        document.getElementById('myField'+ data.node.id).name = data.node.id;
-      } else {
-        document.getElementById('myField'+ data.node.id).name = '';
-      }
-  });
-};
-
 // Select2 Init - intelligent HTML select
 // Resize on Zoom to look always pretty
 // @author: Christian Schramm
@@ -191,7 +136,7 @@ $('.erd-popover').mousemove(
  *  - search in tr HTML code for an HTML "a" element and fetch the href attribute
  * INFO: - working directly with row element also adds a click object to checkbox entry, which disabled checkbox functionality
  */
-$('.datatable').click(function (e) {
+$('.datatable, .clickableRow').click(function (e) {
   if ($(e.target).hasClass('ClickableTd') && $(e.target).is('td')) {
     window.location = $(e.target.parentNode).find('a').attr("href");
   }
@@ -220,7 +165,6 @@ var NMS = function () {
 			makeNavbarSearch();
 			makeInputFitOnResize();
 			saveTabPillState();
-			makeJsTreeView();
       positionErdPopover();
 		},
   };

@@ -317,6 +317,10 @@ return [
 	'secondary'				=> 'sekundär',
 	'disabled'				=> 'deaktiviert',
 
+//
+// DASHBOARD
+//
+	'dashbrd_ticket' 		=> 'Neue mir zugewiesene Tickets',
 
 //
 // HFC
@@ -331,6 +335,11 @@ return [
 //
 	'upload_dependent_mib_err' => "Bitte Laden Sie zuvor die ':name' hoch! (Die zugehörigen OIDs können sonst nicht geparsed werden)",
 
+//
+// TICKETSYSTEM
+//
+	'Priority' 				=> 'Priorität',
+	'Title' 				=> 'Titel',
 //
 // VOIP
 //

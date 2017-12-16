@@ -3,16 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Authuser;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-
 
 class AuthuserController extends BaseController {
-
-	/**
-	 * if set to true a create button on index view is available - set to true in BaseController as standard
-	 */
-    protected $index_create_allowed = true;
 
     /**
      * defines the formular fields for the edit and create view
@@ -29,7 +21,17 @@ class AuthuserController extends BaseController {
 			array('form_type' => 'text', 'name' => 'email', 'description' => 'Email'),
 			array('form_type' => 'select', 'name' => 'language', 'description' => 'Language', 'value' => Authuser::getPossibleEnumValues('language', false)),
 			array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'value' => '1', 'checked' => true),
+			array('form_type' => 'select', 'name' => 'assigned_role_id[]', 'description' => 'Assign Role',
+					'value' => $model->html_list(Authuser::get_not_assigned_roles_by_userid($model->id), 'name'),
+					'options' => ['multiple' => 'multiple'], 'help' => trans('helper.assign_role')),
 		);
+	}
+
+	protected function prepare_input($data)
+	{
+		$data['assigned_role_id'] = isset($data['assigned_role_id']) ? implode(';', $data['assigned_role_id']) : null;
+
+		return parent::prepare_input($data);
 	}
 
 
@@ -40,58 +42,4 @@ class AuthuserController extends BaseController {
 		return parent::prepare_input($data);
 	}
 
-	/**
-	 * Assign roles to user
-	 *
-	 * @param Request $request
-	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-	 * @throws \Exception
-	 */
-	public function assign_roles(Request $request)
-	{
-		try {
-			$input_data = $request->all();
-			$url = route('Authuser.edit', $input_data['user_id']);
-
-			if ($request->isMethod('post')) {
-				if (isset($input_data['user_id']) && isset($input_data['role_ids'])) {
-					$user = new Authuser();
-					foreach ($input_data['role_ids'] as $role_id) {
-						$user->assign_roles_for_userid($input_data['user_id'], $role_id);
-					}
-				}
-			}
-		} catch (\Exception $e) {
-			throw $e;
-		}
-		return redirect($url);
-	}
-
-	/**
-	 * Delete selected assigned roles for user
-	 *
-	 * @param Request $request
-	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-	 * @throws \Exception
-	 */
-	public function delete_assigned_roles(Request $request)
-	{
-		try {
-			$input_data = $request->all();
-			$url = route('Authuser.edit', $input_data['user_id']);
-
-			if ($request->isMethod('post')) {
-				if (isset($input_data['user_id']) && isset($input_data['role_ids'])) {
-					$user = new Authuser();
-					foreach ($input_data['role_ids'] as $role_id) {
-						$user->delete_roles_by_userid($input_data['user_id'], $role_id);
-					}
-				}
-			}
-		} catch (\Exception $e) {
-			throw $e;
-		}
-
-		return redirect($url);
-	}
 }

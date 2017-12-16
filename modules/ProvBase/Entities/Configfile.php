@@ -34,7 +34,7 @@ class Configfile extends \BaseModel {
 		return 'Configfiles';
 	}
 
-	// View Icon
+	// Global View Icon
 	public static function view_icon()
 	{
 		return '<i class="fa fa-file-code-o"></i>';
@@ -44,6 +44,12 @@ class Configfile extends \BaseModel {
 	public function view_index_label()
 	{
 		return $this->device.': '.$this->name;
+	}
+
+	// icon type for tree view
+	public function get_icon_type()
+	{
+		return $this->device ? : 'default';
 	}
 
 	/**
@@ -58,32 +64,6 @@ class Configfile extends \BaseModel {
 	}
 
 
-
-	/**
-	 * TODO: make one function
-	 * returns a list of possible parent configfiles
-	 * Nearly the same like html_list method of BaseModel but needs zero element in front
-	 */
-	public function parents_list ()
-	{
-		$parents = array('0' => 'Null');
-		foreach (Configfile::all() as $cf)
-		{
-			if ($cf->id != $this->id)
-				$parents[$cf->id] = $cf->name;
-		}
-		return $parents;
-	}
-
-	public function parents_list_all ()
-	{
-		$parents = array('0' => 'Null');
-		foreach (Configfile::all() as $cf)
-		{
-			$parents[$cf->id] = $cf->name;
-		}
-		return $parents;
-	}
 
 
 	/**
@@ -121,7 +101,7 @@ class Configfile extends \BaseModel {
 	 * Returns all available files (via directory listing)
 	 * @author Patrick Reichel
 	 */
-	public function get_files($folder)
+	public static function get_files($folder)
 	{
 		// get all available files
 		$files_raw = glob("/tftpboot/$folder/*");
@@ -136,6 +116,7 @@ class Configfile extends \BaseModel {
 		}
 		return $files;
 	}
+
 
 	/**
 	 * Returns text section of Code Validation Certificate in a human readable format
@@ -183,66 +164,13 @@ class Configfile extends \BaseModel {
 	/**
 	 * Return all children Configfiles for $this Configfile
 	 *
-	 * Note: we return a normal array(). Eloquent->where(..)->get() does
-	 *       return a special formated array, which does not work in
-	 *       make_ordered_tree()
-	 *
 	 * @author Torsten Schmidt
 	 *
-	 * @return all children for $this configfile, null if no children
+	 * @return Array 	all children for $this configfile, null if no children
 	 */
 	public function get_children ()
 	{
-		$ret = [];
-
-		foreach (Configfile::whereRaw('parent_id = '.$this->id)->get() as $a)
-			array_push ($ret, $a);
-
-		return $ret;
-	}
-
-
-	/**
-	 * Return a recursive structured 1d-array for $cfgs Configfiles
-	 * with adapt the Configfile names for Index view
-	 *
-	 * Note: This function is recursive style
-	 *
-	 * @author Torsten Schmidt
-	 *
-	 * @param the configfile's to structrue
-	 * @return the structrued configfile for $cfgs with all children
-	 */
-	public function make_ordered_tree ($cfgs)
-	{
-		$ret = [];
-
-		foreach($cfgs as $cfg)
-		{
-			if ($cfg->get_children())
-			{
-				// push all children and adapt name for index view
-				array_push ($ret, $cfg);
-				foreach ($this->make_ordered_tree($cfg->get_children()) as $a)
-				{
-					$a->name = '- - - - '.$a->name; // adapt name
-					array_push ($ret, $a);
-				}
-			}
-			else
-				array_push ($ret, $cfg);
-		}
-
-		return $ret;
-	}
-
-
-	/*
-	 * Return a pre-formated index list
-	 */
-	public function index_list ()
-	{
-		return $this->make_ordered_tree ($this->where('parent_id', '=', '0')->orderBy('device')->get());
+		return Configfile::where('parent_id', '=', $this->id)->get()->all();
 	}
 
 
@@ -250,8 +178,10 @@ class Configfile extends \BaseModel {
 	* Internal Helper:
 	*   Make Configfile Content for $this Object /
 	*   without recursive objects
+	*
+	* @param sw_up 	Bool 	true if Software upgrade statement is already set -> then the next one is discarded (child CF has priority)
 	*/
-	private function __text_make ($device, $type)
+	private function __text_make ($device, $type, $sw_up = false)
 	{
 		// array to extend the configfile; e.g. for firmware
 		$config_extensions = array();
@@ -300,7 +230,7 @@ class Configfile extends \BaseModel {
 				$db_schemata ['qos'][0] 	= Schema::getColumnListing('qos');
 
 				// if there is a specific firmware: add entries for upgrade
-				if ($this->firmware) {
+				if ($this->firmware && !$sw_up) {
 					// $server_ip = ProvBase::first()['provisioning_server'];
 					// array_push($config_extensions, "SnmpMibObject docsDevSwServerAddress.0 IPAddress $server_ip ; /* tftp server */");
 					array_push($config_extensions, 'SnmpMibObject docsDevSwFilename.0 String "fw/'.$this->firmware.'"; /* firmware file to download */');
@@ -309,7 +239,7 @@ class Configfile extends \BaseModel {
 					array_push($config_extensions, 'SwUpgradeFilename "fw/'.$this->firmware.'";');
 				}
 
-				if ($this->cvc)
+				if ($this->cvc && !$sw_up)
 					exec("xxd -p -c 254 /tftpboot/cvc/".$this->cvc." | sed 's/^/MfgCVCData 0x/; s/$/;/'", $config_extensions);
 				break;
 
@@ -390,7 +320,6 @@ class Configfile extends \BaseModel {
 			if (!preg_match("/\\{[^\\{]*\\}/im", $row))
 				$result .= "\n\t".$row;
 
-
 		/*
 		 * return
 		 */
@@ -405,9 +334,15 @@ class Configfile extends \BaseModel {
 	{
 		$p = $this;
 		$t = '';
+		$sw_up = false;
 
 		do {
-			$t .= $p->__text_make($device, $type);
+			$t .= $p->__text_make($device, $type, $sw_up);
+
+			// only allow one sw upgrade statement
+			if (strpos($t, 'SwUpgradeFilename "fw/') !== false && !$sw_up)
+				$sw_up = true;
+
 			$p  = $p->get_parent();
 		} while ($p);
 
@@ -446,18 +381,24 @@ class Configfile extends \BaseModel {
 		}
 	}
 
+
 	/**
 	 * Returns a list of configfiles (incl. all of its parents), which are
 	 * still assigned to a modem or mta and thus must not be deleted.
 	 *
 	 * @author Ole Ernst
+	 *
+	 * NOTE: DB::table would reduce time again by 30%, setting index_delete_disabled of CFs
+	 *	instead of creating used_ids array slows function down
 	 */
-	static public function all_in_use()
+	static public function undeletables()
 	{
 		$used_ids = [];
 		// only public configfiles can be assigned to a modem or mta
-		foreach (Configfile::where('public', '=', 'yes')->get() as $cf) {
-			if(count($cf->modem) || count($cf->mtas)) {
+		foreach (Configfile::where('public', '=', 'yes')->get() as $cf)
+		{
+			if ((($cf->device == 'cm') && $cf->modem()->count()) ||
+				(($cf->device == 'mta') && $cf->mtas()->count())) {
 				array_push($used_ids, $cf->id);
 				self::_add_parent($used_ids, $cf);
 			}

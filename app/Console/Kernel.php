@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel {
 		'App\Console\Commands\StorageCleaner',
 		'App\Console\Commands\authCommand',
 		'App\Console\Commands\EnsureQueueListenerIsRunning',
+		'App\Console\Commands\addDefaultRolesCommand',
 	];
 
 

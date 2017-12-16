@@ -6,65 +6,54 @@ namespace App;
  * This is a simple placeholder, so that we can use Authmetacore from Eloquent context
  * NOTE: This shit :) is actually used by Command: php artisan nms:auth
  */
-use Illuminate\Support\Facades\DB;
 
 class Authmetacore extends BaseModel {
 
-	protected $table = 'authmetacore';
+	protected $table = 'authrole_core';
 
 	/**
 	 * Get all assigned rights to a role
 	 *
-	 * @param $meta_id
+	 * @param $role_id
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function get_permissions_by_metaid($meta_id)
+	public function get_permissions_by_roleid($role_id)
 	{
-		$ret = array();
+		if (is_null($role_id))
+			return [];
 
-		try {
-			if (!is_null($meta_id)) {
-				$ret = DB::table($this->table)
-					->join('authcores', 'authcores.id', '=', $this->table . '.core_id')
-					->select($this->table . '.*', 'authcores.name', 'authcores.type')
-					->where($this->table . '.meta_id', '=', $meta_id)
-					->orderBy('name')
-					->get();
-			}
-		} catch (\Exception $e) {
-			throw $e;
-		}
-
-		return $ret;
+		return \DB::table($this->table)
+				->join('authcores', 'authcores.id', '=', $this->table . '.core_id')
+				->select($this->table . '.*', 'authcores.name', 'authcores.type')
+				->where($this->table . '.role_id', '=', $role_id)
+				->orderBy('name')
+				->get();
 	}
 
 	/**
 	 * Returns an array of all not assigned permissions to a role
 	 *
-	 * @param integer $meta_id
+	 * @param integer $role_id
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function get_not_assigned_permissions($meta_id)
+	public function get_not_assigned_permissions($role_id)
 	{
 		$ret = array();
 
-		try {
-			// get all assigned permissions
-			$assigned_permissions = $this->get_permissions_by_metaid($meta_id);
+		// get all assigned permissions
+		$assigned_permissions = $this->get_permissions_by_roleid($role_id);
 
-			// get all available permissions
-			$available_permissions = Authcore::all()->toArray();
+		// get all available permissions
+		$available_permissions = Authcore::all()->toArray();
 
-			foreach ($available_permissions as $key => $permission) {
-				if (!$this->is_assigned($permission, $assigned_permissions)) {
-					$ret[] = $permission;
-				}
+		foreach ($available_permissions as $key => $permission) {
+			if (!$this->is_assigned($permission, $assigned_permissions)) {
+				$ret[] = $permission;
 			}
-		} catch (\Exception $e) {
-			throw $e;
 		}
+
 		return $ret;
 	}
 
@@ -80,32 +69,29 @@ class Authmetacore extends BaseModel {
 	public function update_permission($authmethacore_id, $authmethacore_right, $authmethacore_right_value)
 	{
 
-		try {
-			if ($authmethacore_right_value == 1) {
-				$value = 0;
-			} elseif ($authmethacore_right_value == 0) {
-				$value = 1;
-			}
-
-			$ret = DB::table($this->table)
-				->where('id', '=' , $authmethacore_id)
-				->update([$authmethacore_right => $value]);
-
-			// check rights - if no right set, delete entry
-			$entry = DB::table($this->table)
-				->select('view', 'create', 'edit', 'delete')
-				->where('id', '=', $authmethacore_id)
-				->get();
-
-			// delete entry if no right set
-			if ($entry[0]->view == 0 && $entry[0]->create == 0 && $entry[0]->edit == 0 && $entry[0]->delete == 0) {
-				$ret = DB::table($this->table)
-					->where('id', '=', $authmethacore_id)
-					->delete();
-			}
-		} catch (\Exception $e) {
-			throw $e;
+		if ($authmethacore_right_value == 1) {
+			$value = 0;
+		} elseif ($authmethacore_right_value == 0) {
+			$value = 1;
 		}
+
+		$ret = \DB::table($this->table)
+			->where('id', '=' , $authmethacore_id)
+			->update([$authmethacore_right => $value]);
+
+		// check rights - if no right set, delete entry
+		$entry = \DB::table($this->table)
+			->select('view', 'create', 'edit', 'delete')
+			->where('id', '=', $authmethacore_id)
+			->get();
+
+		// delete entry if no right set
+		if ($entry[0]->view == 0 && $entry[0]->create == 0 && $entry[0]->edit == 0 && $entry[0]->delete == 0) {
+			$ret = \DB::table($this->table)
+				->where('id', '=', $authmethacore_id)
+				->delete();
+		}
+
 		return $ret;
 	}
 
@@ -122,22 +108,18 @@ class Authmetacore extends BaseModel {
 	{
 		$all_rights = array('view', 'create', 'edit', 'delete');
 
-		try {
-			$data = array(
-				'meta_id' => $role_id,
-				'core_id' => $permission_id,
-			);
+		$data = array(
+			'role_id' => $role_id,
+			'core_id' => $permission_id,
+		);
 
-			foreach ($all_rights as $right) {
-				if (in_array($right, $selected_rights)) {
-					$data = array_add($data, $right, 1);
-				}
+		foreach ($all_rights as $right) {
+			if (in_array($right, $selected_rights)) {
+				$data = array_add($data, $right, 1);
 			}
-
-			DB::table($this->table)->insert($data);
-		} catch (\Exception $e) {
-			throw $e;
 		}
+
+		\DB::table($this->table)->insert($data);
 	}
 
 	/**
@@ -148,13 +130,7 @@ class Authmetacore extends BaseModel {
 	 */
 	public function delete_permission($row_id)
 	{
-		try {
-			DB::table($this->table)
-				->where('id', '=', $row_id)
-				->delete();
-		} catch (\Exception $e) {
-			throw $e;
-		}
+		\DB::table($this->table)->where('id', '=', $row_id)->delete();
 	}
 
 	/**
@@ -167,17 +143,11 @@ class Authmetacore extends BaseModel {
 	 */
 	private function is_assigned ($permission, $assigned_permissions)
 	{
-		$ret = false;
-		try {
-			foreach ($assigned_permissions as $assigned_permission) {
-				if ($assigned_permission->name == $permission['name']) {
-					$ret = true;
-				}
-			}
-		} catch (\Exception $e) {
-			throw $e;
+		foreach ($assigned_permissions as $assigned_permission) {
+			if ($assigned_permission->name == $permission['name'])
+				return true;
 		}
 
-		return $ret;
+		return false;
 	}
 }

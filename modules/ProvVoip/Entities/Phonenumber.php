@@ -359,19 +359,19 @@ class Phonenumber extends \BaseModel {
 	public function mtas_list_only_contract_assigned()
 	{
 		$ret = array();
-		foreach ($this->mtas()['mtas'] as $mta)
-		{
-			$contract = $mta->modem->contract;
-			if (is_null($contract)) {
-				continue;
-			}
-			else {
-				$ret[$mta->id] = $mta->hostname.' ('.$mta->mac.") ⇒ ".$contract->number.": ".$contract->lastname.", ".$contract->firstname;
-			}
-		}
+
+		$mtas = \DB::table('mta')
+			->join('modem as m', 'm.id', '=', 'mta.modem_id')->join('contract as c', 'c.id', '=', 'm.contract_id')
+			->where('m.deleted_at', '=', null)->where('c.deleted_at', '=', null)->where('mta.deleted_at', '=', null)
+			->select('mta.*', 'c.number', 'c.firstname', 'c.lastname')
+			->get();
+
+		foreach ($mtas as $mta)
+			$ret[$mta->id] = $mta->hostname.' ('.$mta->mac.") ⇒ ".$mta->number.": ".$mta->lastname.", ".$mta->firstname;
 
 		return $ret;
 	}
+
 
 
 	/**
@@ -788,8 +788,8 @@ class PhonenumberObserver
 
 	public function updated($phonenumber)
 	{
-
-		$this->_create_login_data($phonenumber);
+		// uncommented by nino: redundant and senseless here
+		// $this->_create_login_data($phonenumber);
 
 		// check if we have a MTA change
 		$this->_check_and_process_mta_change($phonenumber);
@@ -800,7 +800,6 @@ class PhonenumberObserver
 		// rebuild the current mta's configfile and restart the modem – has to be done in each case
 		$phonenumber->mta->make_configfile();
 		$phonenumber->mta->restart();
-
 	}
 
 
