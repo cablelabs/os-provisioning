@@ -42,26 +42,9 @@ class Modem extends \BaseModel {
 		return '<i class="fa fa-hdd-o"></i>';
 	}
 
-	// link title in index view
-	public function view_index_label()
-	{
-		$us_pwr = $this->get_us_pwr();
-		$bsclass = $this->get_bsclass();
-
-		$configfile = $this->configfile ? $this->configfile->name : '';
-		//d($this->contract->district );
-		//$valid 		= $this->contract->check_validity('Now') ? 'yes' : 'no';
-		$valid = 'yes';
-
-		return ['index' => [$this->id, $this->mac, $configfile, $this->name, $this->lastname, $this->city, $this->street, '', $us_pwr, \App\Http\Controllers\BaseViewController::translate_label($valid)],
-		        'index_header' => ['Modem Number', 'MAC address', 'Configfile', 'Name', 'Lastname', 'City', 'Street', 'District', 'US level', 'Contract valid'],
-		        'bsclass' => $bsclass,
-				'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : '')];
-	}
-
 	// AJAX Index list function
 	// generates datatable content and classes for model
-	public function view_index_label_ajax()
+	public function view_index_label()
 	{
 		$bsclass = $this->get_bsclass();
 

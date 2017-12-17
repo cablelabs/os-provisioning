@@ -16,7 +16,7 @@ namespace Modules\HfcSnmp\Entities;
 	x 	HEX STRING
 	d 	DECIMAL STRING
 	n 	NULLOBJ
-	b 	BITS 
+	b 	BITS
  */
 class OID extends \BaseModel {
 
@@ -39,23 +39,12 @@ class OID extends \BaseModel {
 	// View Icon
 	public static function view_icon()
 	{
-	  return '<i class="fa fa-check-circle-o"></i>'; 
-	}
-
-	// link title in index view
-	public function view_index_label()
-	{
-		$bsclass = $this->get_bsclass();
-
-		return ['index' => [$this->name, $this->name_gui, $this->oid, $this->access],
-		        'index_header' => ['Name', 'Descriptive Name', 'OID', 'Access'],
-				'bsclass' => $bsclass,
-		        'header' => $this->name.' - '.$this->oid];
+	  return '<i class="fa fa-check-circle-o"></i>';
 	}
 
 	// AJAX Index list function
 	// generates datatable content and classes for model
-	public function view_index_label_ajax()
+	public function view_index_label()
 	{
 		$bsclass = $this->get_bsclass();
 
@@ -68,10 +57,10 @@ class OID extends \BaseModel {
 	 public function get_bsclass()
 	 {
 		$bsclass = 'success';
-		
+
 		if ($this->access == 'read-only')
 			$bsclass = 'danger';
-				
+
 		 return $bsclass;
 	 }
 
@@ -110,7 +99,7 @@ class OID extends \BaseModel {
 
 		// Note: DB::table is way faster than instantiating the Eloquent Objects which are not needed in this case
 		$oids = \DB::table('oid')->whereNull('deleted_at')->get(['id', 'name', 'name_gui', 'oid']);
-		
+
 		foreach ($oids as $oid)
 		{
 			$list[$oid->id] = $oid->name_gui ? : $oid->name;
@@ -210,7 +199,7 @@ class OID extends \BaseModel {
 	 * Return value set from Syntax field of OID or Start & Endvalue
 	 *
 	 * @param 	String 			Syntax field
-	 * @return 	String|Array 	
+	 * @return 	String|Array
 	 */
 	public static function get_value_set($string)
 	{
@@ -227,7 +216,7 @@ class OID extends \BaseModel {
 			$y 		  = strpos($string, '..');
 			$startval = substr($string, $x + 1, $y - $x - 1);
 			$endval   = substr($string, $y + 2, strlen($string) - 1);
-			
+
 			return [$startval, $endval];
 		}
 

@@ -1,45 +1,46 @@
-/*   
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
-Version: 2.1.0
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7 & Bootstrap 4.0.0-Alpha 6
+Version: 3.0.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
+Website: http://www.seantheme.com/color-admin-v3.0/admin/html/
 */
 
 // white
 var white = 'rgba(255,255,255,1.0)';
-var fillBlack = 'rgba(33, 33, 33, 0.6)';
-var fillBlackLight = 'rgba(33, 33, 33, 0.2)';
-var strokeBlack = 'rgba(33, 33, 33, 0.8)';
-var highlightFillBlack = 'rgba(33, 33, 33, 0.8)';
-var highlightStrokeBlack = '#212121';
+var fillBlack = 'rgba(45, 53, 60, 0.6)';
+var fillBlackLight = 'rgba(45, 53, 60, 0.2)';
+var strokeBlack = 'rgba(45, 53, 60, 0.8)';
+var highlightFillBlack = 'rgba(45, 53, 60, 0.8)';
+var highlightStrokeBlack = 'rgba(45, 53, 60, 1)';
 
 // blue
-var fillBlue = 'rgba(33, 150, 243, 0.6)';
-var fillBlueLight = 'rgba(33, 150, 243, 0.2)';
-var strokeBlue = 'rgba(33, 150, 243, 0.8)';
-var highlightFillBlue = 'rgba(33, 150, 243, 0.8)';
-var highlightStrokeBlue = '#2196F3';
+var fillBlue = 'rgba(52, 143, 226, 0.6)';
+var fillBlueLight = 'rgba(52, 143, 226, 0.2)';
+var strokeBlue = 'rgba(52, 143, 226, 0.8)';
+var highlightFillBlue = 'rgba(52, 143, 226, 0.8)';
+var highlightStrokeBlue = 'rgba(52, 143, 226, 1)';
 
 // grey
-var fillGrey = 'rgba(158, 158, 158, 0.6)';
-var fillGreyLight = 'rgba(158, 158, 158, 0.2)';
-var strokeGrey = 'rgba(158, 158, 158, 0.8)';
-var highlightFillGrey = 'rgba(158, 158, 158, 0.8)';
-var highlightStrokeGrey = '#9e9e9e';
+var fillGrey = 'rgba(182, 194, 201, 0.6)';
+var fillGreyLight = 'rgba(182, 194, 201, 0.2)';
+var strokeGrey = 'rgba(182, 194, 201, 0.8)';
+var highlightFillGrey = 'rgba(182, 194, 201, 0.8)';
+var highlightStrokeGrey = 'rgba(182, 194, 201, 1)';
 
 // green
-var fillGreen = 'rgba(0, 150, 136, 0.6)';
-var fillGreenLight = 'rgba(0, 150, 136, 0.2)';
-var strokeGreen = 'rgba(0, 150, 136, 0.8)';
-var highlightFillGreen = 'rgba(0, 150, 136, 0.8)';
-var highlightStrokeGreen = '#009688';
+var fillGreen = 'rgba(0, 172, 172, 0.6)';
+var fillGreenLight = 'rgba(0, 172, 172, 0.2)';
+var strokeGreen = 'rgba(0, 172, 172, 0.8)';
+var highlightFillGreen = 'rgba(0, 172, 172, 0.8)';
+var highlightStrokeGreen = 'rgba(0, 172, 172, 1)';
 
 // purple
-var fillPurple = 'rgba(103, 58, 183, 0.6)';
-var fillPurpleLight = 'rgba(103, 58, 183, 0.2)';
-var strokePurple = 'rgba(103, 58, 183, 0.8)';
-var highlightFillPurple = 'rgba(103, 58, 183, 0.8)';
-var highlightStrokePurple = '#673AB7';
+var fillPurple = 'rgba(114, 124, 182, 0.6)';
+var fillPurpleLight = 'rgba(114, 124, 182, 0.2)';
+var strokePurple = 'rgba(114, 124, 182, 0.8)';
+var highlightFillPurple = 'rgba(114, 124, 182, 0.8)';
+var highlightStrokePurple = 'rgba(114, 124, 182, 1)';
+
 
 var randomScalingFactor = function() { 
     return Math.round(Math.random()*100)

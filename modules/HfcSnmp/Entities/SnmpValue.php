@@ -26,29 +26,13 @@ class SnmpValue extends \BaseModel {
     // View Icon
 	public static function view_icon()
 	{
-	  return '<i class="fa fa-th-list"></i>'; 
+	  return '<i class="fa fa-th-list"></i>';
 	}
-
-    // link title in index view
-    public function view_index_label()
-    {
-        $device = '';
-        if ($this->device)
-            $device = $this->device->name;
-
-        $snmpmib = '';
-        if ($this->snmpmib)
-            $snmpmib = $this->snmpmib->field;
-
-        return ['index' => [$device, $snmpmib, $this->oid_index, $this->value],
-                'index_header' => ['Device Type', 'SNMP MIB Reference', 'SNMP OID Index', 'Value'],
-                'header' => $this->id.': '.$device.' - '.$snmpmib.' - '.$this->oid_index];
-    }
 
     // AJAX Index list function
     // generates datatable content and classes for model
     // TODO: device or DeviceType? and SNMP mibfile? implementation
-	public function view_index_label_ajax()
+	public function view_index_label()
 	{
         //copy functionality
         $device = '';

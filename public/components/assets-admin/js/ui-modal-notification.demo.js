@@ -1,8 +1,8 @@
-/*   
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
-Version: 2.1.0
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7 & Bootstrap 4.0.0-Alpha 6
+Version: 3.0.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
+Website: http://www.seantheme.com/color-admin-v3.0/admin/html/
 */
 
 var handleGritterNotification = function() {
@@ -114,6 +114,63 @@ var handleGritterNotification = function() {
 	});
 };
 
+var handleSweetNotification = function() {
+	$('[data-click="swal-primary"]').live('click', function() {
+		swal({
+			title: "Are you sure?",
+			text: "You will not be able to recover this imaginary file!",
+			type: "info",
+			showCancelButton: true,
+			confirmButtonClass: 'btn-primary',
+			confirmButtonText: 'Primary!'
+		});
+	});
+
+	$('[data-click="swal-info"]').live('click', function() {
+		swal({
+			title: "Are you sure?",
+			text: "You will not be able to recover this imaginary file!",
+			type: "info",
+			showCancelButton: true,
+			confirmButtonClass: 'btn-info',
+			confirmButtonText: 'Info!'
+		});
+	});
+
+	$('[data-click="swal-success"]').live('click', function() {
+		swal({
+			title: "Are you sure?",
+			text: "You will not be able to recover this imaginary file!",
+			type: "success",
+			showCancelButton: true,
+			confirmButtonClass: 'btn-success',
+			confirmButtonText: 'Success!'
+		});
+	});
+
+	$('[data-click="swal-warning"]').live('click', function() {
+		swal({
+			title: "Are you sure?",
+			text: "You will not be able to recover this imaginary file!",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonClass: 'btn-warning',
+			confirmButtonText: 'Warning!'
+		});
+	});
+
+	$('[data-click="swal-danger"]').live('click', function() {
+		swal({
+			title: "Are you sure?",
+			text: "You will not be able to recover this imaginary file!",
+			type: "error",
+			showCancelButton: true,
+			confirmButtonClass: 'btn-danger',
+			confirmButtonText: 'Danger!'
+		});
+	});
+};
+
 
 var Notification = function () {
 	"use strict";
@@ -121,6 +178,7 @@ var Notification = function () {
         //main function
         init: function () {
             handleGritterNotification();
+            handleSweetNotification();
         }
     };
 }();

@@ -2,21 +2,17 @@
 
 .dataTables_wrapper table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, 
 .dataTables_wrapper table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
-    background: @grey_900;
+    background: #242a30;
     border: none;
     top: 10px;
     left: 8px;
     line-height: 16px;
-    text-align: center;
-    text-indent: initial;
     .box-shadow(none);
-    .border-radius(2px);
-    font-family: @body_font_family;
+    .border-radius(3px);
 }
 .dataTables_wrapper table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child:before, 
 .dataTables_wrapper table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child:before {
-    background: @grey_800;
-    font-size: 18px;
+    background: #00acac;
 }
 body div.dataTables_wrapper div.dataTables_paginate ul.pagination {
     margin: 5px 0;
@@ -71,26 +67,12 @@ div.dataTables_scrollHead .table,
 table.dataTable tbody > tr.selected, 
 table.dataTable tbody > tr.selected td,
 table.dataTable tbody > tr > .selected {
-    background: #fffDE7 !important;
-    color: @grey_900;
+    background: #ffc !important;
+    color: #707478;
 }
 table.dataTable th.focus, 
 table.dataTable td.focus {
     position: relative;
     z-index: 1000;
-    outline: 2px solid @grey_900 !important;
-}
-div.dt-autofill-select,
-div.DTCR_pointer {
-    background-color: @blue_500 !important;
-}
-div.dt-autofill-handle {
-    border-color: @blue_500 !important;
-    background-color: @blue_500 !important;
-}
-table.dt-rowReorder-float {
-    outline: 2px solid @red_500 !important;
-}
-tr.dt-rowReorder-moving {
-    outline: 2px solid @grey_900 !important;
+    outline: 2px solid #242a30 !important;
 }

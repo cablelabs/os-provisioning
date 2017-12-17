@@ -91,28 +91,14 @@ class NetElement extends \BaseModel {
 		return $ret;
 	}
 
-	// link title in index view
-	public function view_index_label()
-	{
-		$bsclass = $this->get_bsclass();
-		$type = $this->get_elementtype_name();
-
-
-		// TODO: complete list
-		return ['index' => [$this->id, $type, $this->name, $this->ip, $this->state, $this->pos],
-				'index_header' => ['ID', 'Type', 'Name', 'IP', 'State', 'Position'],
-				'bsclass' => $bsclass,
-				'header' => $this->id.' - '.$this->name];
-	}
-
 	// AJAX Index list function
 	// generates datatable content and classes for model
-	public function view_index_label_ajax()
+	public function view_index_label()
 	{
 		$bsclass = $this->get_bsclass();
 
 		return ['table' => $this->table,
-				'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name',  $this->table.'.ip', $this->table.'.state', $this->table.'.pos'],
+				'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name',  $this->table.'.ip', $this->table.'.pos'],
 				'header' =>  $this->id.' - '.$this->name,
 				'bsclass' => $bsclass,
 				'order_by' => ['0' => 'asc'],

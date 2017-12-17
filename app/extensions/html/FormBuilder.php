@@ -26,7 +26,7 @@ class FormBuilder extends CollectiveFormBuilder {
 
 
 	/**
-	 * Append <div> block with col-md-7
+	 * Append <div> block with col-md-7 </div>
 	 * NOTE: 4: col for label, 7: col for form field, 1: col for help image - if set
 	 */
 	public function appendDiv($s, $col = 7)
@@ -95,7 +95,7 @@ class FormBuilder extends CollectiveFormBuilder {
 	{
 		$col = 4;
 		if (isset(static::$layout_form_col_md['label']))
-			$col = static::$layout_form_col_md['label']; 
+			$col = static::$layout_form_col_md['label'];
 
 		$options = $this->appendClassToOptions('col-md-'.$col.' control-label', $options);
 
@@ -202,8 +202,8 @@ class FormBuilder extends CollectiveFormBuilder {
 	public function link($name, $url, $color = 'default')
 	{
 		return $this->appendDiv('<a class="btn btn-'.$color.' btn-block" href="'.$url.'">'.$name.'</a>');
-			
-		// 'html' => 
+
+		// 'html' =>
 		//     '<div class="col-md-12" style="background-color:white">
 		//         <div class="form-group"><label style="margin-top: 10px;" class="col-md-4 control-label">OID</label>
 		//             <div class="col-md-7">
@@ -306,7 +306,7 @@ class FormBuilder extends CollectiveFormBuilder {
 	 */
 	public function openGroup($name, $label = null, $options = array(), $color = false)
 	{
-		$options = $this->appendClassToOptions('form-group', $options);
+		$options = $this->appendClassToOptions('form-group row', $options);
 
 		// dd($name, $label);
 		// Append the name of the group to the groupStack.

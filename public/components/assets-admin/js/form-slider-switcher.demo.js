@@ -1,16 +1,16 @@
-/*   
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
-Version: 2.1.0
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7 & Bootstrap 4.0.0-Alpha 6
+Version: 3.0.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
+Website: http://www.seantheme.com/color-admin-v3.0/admin/html/
 */
 
-var green = '#009688',
-    red = '#F44336',
-    blue = '#2196F3',
-    purple = '#673AB7',
-    orange = '#FF9800',
-    black = '#212121';
+var green = '#00acac',
+    red = '#ff5b57',
+    blue = '#348fe2',
+    purple = '#727cb6',
+    orange = '#f59c1a',
+    black = '#2d353c';
 
 var renderSwitcher = function() {
     if ($('[data-render=switchery]').length !== 0) {

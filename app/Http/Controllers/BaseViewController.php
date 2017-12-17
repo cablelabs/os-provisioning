@@ -372,8 +372,8 @@ class BaseViewController extends Controller {
 
 			// Help: add help icon/image behind form field
 			if (isset($field['help']))
-				$s .= '<div name='.$field['name'].'-help class="col-md-1"><a data-toggle="popover" data-container="body"
-							data-trigger="hover" title="'.\App\Http\Controllers\BaseViewController::translate_label($field['description']).'" data-placement="auto right" data-content="'.$field['help'].'">'.
+				$s .= '<div name='.$field['name'].'-help class="col-1"><a data-toggle="popover" data-container="body"
+							data-trigger="hover" title="'. BaseViewController::translate_label($field['description']) .'" data-placement="right" data-content="'.$field['help'].'">'.
 							'<i class="fa fa-2x text-info p-t-5 '.(isset($field['help_icon']) ? $field['help_icon'] : 'fa-question-circle').'"></i></a></div>';
 
 			// Close Form Group
@@ -851,6 +851,7 @@ finish:
 	$ret= "3";
 
 	switch ($entity) {
+		case 'rx power dbmv':
 		case 'power dbmv':
 			if($dir == 'downstream')
 				$ret = self::_colorize($val, [-20, -10, 15, 20]);
@@ -859,6 +860,9 @@ finish:
 				break;
 		case 'microreflection -dbc':
 			$ret = self::_colorize($val, [20, 30]);
+			break;
+		case "avg utilization %":
+			$ret = self::_colorize($val, [0,0,70,90]);
 			break;
 		case 'snr db' :
 		case 'mer db':

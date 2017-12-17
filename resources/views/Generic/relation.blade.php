@@ -1,4 +1,4 @@
-{{---
+{{--
 
 Relation Blade is used inside a Panel Element to display relational class objects on the right window side
 
@@ -25,11 +25,11 @@ Relation Blade is used inside a Panel Element to display relational class object
 
 @include('Generic.above_infos')
 
-<!-- Create Button: (With hidden add fields if required) -->
-@if (!isset($options['hide_create_button']))
-	@DivOpen(12)
-
-		<!-- Form Open: must send it's correlating parent via GET, see note in BaseViewController::compute_headline() -->
+{{-- Create Button: (With hidden add fields if required) --}}
+@DivOpen(12)
+	@if (!isset($options['hide_create_button']))
+		<div class="row">
+		{{-- Form Open: must send it's correlating parent via GET, see note in BaseViewController::compute_headline() --}}
 		{{ Form::open(array('url' => BaseRoute::$admin_prefix.'/'.$route.'/create?'.$key.'='.$view_var->id, 'method' => 'POST')) }}
 		{{ Form::hidden($key, $view_var->id) }}
 
@@ -49,23 +49,47 @@ Relation Blade is used inside a Panel Element to display relational class object
 				$create_button_text = trans($options['create_button_text']);
 			}
 		?>
-	<button class="btn btn-primary m-b-15" style="simple">
-	  <i class="fa fa-plus fa-lg m-r-10" aria-hidden="true"></i>
-	  {{ $create_button_text }}
-	</button>
+		<div class="col align-self-start">
+				<button class="btn btn-outline-primary float-right m-b-10" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
+				title="{{ $create_button_text }}">
+					<i class="fa fa-plus fa-2x" aria-hidden="true"></i>
+				</button>
+		</div>
 		{{ Form::close() }}
+	@endif
+	{{-- Delete Button --}}
+	@if (!isset($options['hide_delete_button']) && isset($relation[0]))
 
-	@DivClose()
-@endif
+		<?php
+			// check if default delete button text shall be overwritten
+			if (!isset($options['delete_button_text'])) {
+				$delete_button_text = \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button');
+			}
+			else {
+				$delete_button_text = trans($options['delete_button_text']);
+			}
+		?>
+		    <div class="col align-self-end">
+				<button class="btn btn-outline-danger m-b-10 float-right" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
+				title="{{ $delete_button_text }}" form="RelationForm">
+						<i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
+				</button>
+			</div>
+	@endif
+	</div>
+@DivClose()
 
 
-<!-- The Relation Table and Delete Button -->
+
+
+
+{{-- The Relation Table and Delete Button --}}
 @DivOpen(12)
 
 	@if (isset($options['many_to_many']))
-		{{ Form::open(array('route' => array($route_name.'.detach', $view_var->id, $options['many_to_many']), 'method' => 'post')) }}
+		{{ Form::open(array('route' => array($route_name.'.detach', $view_var->id, $options['many_to_many']), 'method' => 'post', 'id' => 'RelationForm')) }}
 	@else
-		{{ Form::open(array('route' => array($route.'.destroy', 0), 'method' => 'delete')) }}
+		{{ Form::open(array('route' => array($route.'.destroy', 0), 'method' => 'delete', 'id' => 'RelationForm')) }}
 	@endif
 
 		<br>
@@ -77,25 +101,6 @@ Relation Blade is used inside a Panel Element to display relational class object
 				</tr>
 			@endforeach
 		</table>
-
-
-		<!-- Delete Button -->
-		@if (!isset($options['hide_delete_button']) && isset($relation[0]))
-
-			<?php
-				// check if default delete button text shall be overwritten
-				if (!isset($options['delete_button_text'])) {
-					$delete_button_text = \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button');
-				}
-				else {
-					$delete_button_text = trans($options['delete_button_text']);
-				}
-			?>
-		<button class="btn btn-danger btn-primary m-r-5 m-t-15" style="simple">
-			<i class="fa fa-trash-o fa-lg m-r-10" aria-hidden="true"></i>
-			{{ $delete_button_text }}
-		</button>
-		@endif
 
 	{{ Form::close() }}
 

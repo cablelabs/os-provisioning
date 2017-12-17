@@ -10,8 +10,15 @@ NOTE: - java include section is in default blade at bottom of text
 
 @section ('javascript')
 
-	<script>setTimeout("document.getElementById('success_msg').style.display='none';", 6000);</script>
-	<script>setTimeout("document.getElementById('delete_msg').style.display='none';", 6000);</script>
+	<script type="text/javascript">
+		if ($('#top_message').is(".note-primary, .note-success, .note-warning, .note-danger, .note-info")){
+			$('#top_message').show();
+			setTimeout(function() { $('#top_message').fadeOut(); }, 6000);
+		}
+	</script>
+	<script type="text/javascript">
+		setTimeout(function() { $('#delete_msg').fadeOut();}, 6000);
+	</script>
 
 
 	<script type="text/javascript">

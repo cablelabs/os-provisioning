@@ -44,27 +44,9 @@ class Mta extends \BaseModel {
 		return '<i class="fa fa-fax"></i>';
 	}
 
-	// link title in index view
-	public function view_index_label()
-	{
-		$bsclass = $this->get_bsclass();
-		$cf_name = 'No Configfile assigned';
-
-		if (isset($this->configfile))
-			$cf_name = $this->configfile->name;
-
-		// TODO: use mta states.
-		//       Maybe use fast ping to test if online in this function?
-
-		return ['index' => [$this->hostname, $this->mac, $this->type, $cf_name],
-				'index_header' => ['Name', 'MAC', 'Type', 'Configfile'],
-				'bsclass' => $bsclass,
-				'header' => $this->hostname.' - '.$this->mac];
-	}
-
 	// AJAX Index list function
 	// generates datatable content and classes for model
-	public function view_index_label_ajax()
+	public function view_index_label()
 	{
 		$bsclass = $this->get_bsclass();
 

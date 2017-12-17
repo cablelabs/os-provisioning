@@ -5,21 +5,21 @@
 	<li class="active"><a href={{route($route_name.'.index')}}>
 	{{\App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null)}}
 	{{ \App\Http\Controllers\BaseViewController::translate_view($route_name.'s', 'Header', 2) }}</a>
-	</li> <!--$view_header -->
+	</li> {{--$view_header --}}
 
 @stop
 
 @section('content_left')
 
-	<!-- Search Field
+	{{-- Search Field
 	@DivOpen(12)
 		@DivOpen(8)
 			{{ Form::model(null, array('route'=>$route_name.'.fulltextSearch', 'method'=>'GET')) }}
 				@include('Generic.searchform')
 			{{ Form::close() }}
 		@DivClose()
-	@DivClose()  -->
-	<!-- Headline: means icon followed by headline -->
+	@DivClose()  --}}
+	{{-- Headline: means icon followed by headline --}}
 	@DivOpen(12)
 		<h1 class="page-header">
 		{{\App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null)}}
@@ -36,7 +36,7 @@
 		@endif
 	@DivClose()
 
-	<!-- database entries inside a form with checkboxes to be able to delete one or more entries -->
+	{{-- database entries inside a form with checkboxes to be able to delete one or more entries --}}
 	@DivOpen(12)
 
 		{{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete', 'onsubmit' => 'return submitMe()')) }}
@@ -49,7 +49,7 @@
 					</ul>
 				</div>
 
-		<!-- delete/submit button of form -->
+		{{-- delete/submit button of form --}}
 			<button class="btn btn-danger btn-primary m-r-5 m-t-15" style="simple">
 					<i class="fa fa-trash-o fa-lg m-r-10" aria-hidden="true"></i>
 					{{ \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button') }}

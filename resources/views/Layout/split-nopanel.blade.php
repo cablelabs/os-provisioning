@@ -2,15 +2,39 @@
 
 @section ('content')
 
-<div class="row col-md-12">
-	<div class="col-md-{{isset($edit_left_md_size) ? $edit_left_md_size : 5}}">
-		<div class="col-md-12 well"><h1 class="page-header">{{$view_var->view_icon().' '.$view_header}}</h1>
-			@yield('content_left')
+	@if(isset($panel_right))
+	<div class="card card-inverse col-12 p-b-5">
+		<div class="card-header m-b-15">
+			<ul class="nav nav-tabs card-header-tabs d-flex">
+				@foreach ($panel_right as $tabs)
+					@if ($tabs['route'] == Route::getCurrentRoute()->getName())
+						<?php
+							$class = 'active';
+							$blade = \Input::get('blade');
+							if (is_null($blade))
+							{
+								$class = !isset($tabs['link'][1]) || $tabs['link'][1] == 'blade=0' ? 'active' : '';
+							}
+							else if (isset($tabs['link'][1]))
+							{
+								$class = 'blade='.$blade == $tabs['link'][1] ? 'active' : '';
+							}
+						?>
+						<li class="nav-item {{$class}}" role="tab"> {{ HTML::linkRoute($tabs['route'], $tabs['name'], $tabs['link']) }}</li>
+					@elseif ($tabs['name'] == "Logging")
+						<li class="nav-item order-12 ml-auto" role="tab"><a id="loggingtab" class="" href="#logging" data-toggle="tab"> Logging</a></li>
+					@else
+						<li role="tab"> {{ HTML::linkRoute($tabs['route'], $tabs['name'], $tabs['link']) }}</li>
+					@endif
+				@endforeach
+			</ul>
 		</div>
+	@endif
+	<div class="row">
+		@yield('content_left')
+
+		@yield('content_right')
+		@yield('content_right_extra')
 	</div>
-	@yield('content_right')
-	@yield('content_right_extra')
-
 </div>
-
 @stop

@@ -1,27 +1,18 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Sodipodi ("http://www.sodipodi.com/") -->
-<svg id="svg378" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="480" width="640" version="1" y="0" x="0" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
- <metadata id="metadata3649">
-  <rdf:RDF>
-   <cc:Work rdf:about="">
-    <dc:format>image/svg+xml</dc:format>
-    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-   </cc:Work>
-  </rdf:RDF>
- </metadata>
- <defs id="defs380">
-  <clipPath id="clipPath4393" clipPathUnits="userSpaceOnUse">
-   <rect id="rect4395" fill-opacity="0.67" height="512" width="682.67" y="0" x="-85.333"/>
-  </clipPath>
- </defs>
- <g id="flag" clip-path="url(#clipPath4393)" fill-rule="evenodd" stroke-width="1pt">
-  <rect id="rect649" height="216.28" width="993.54" y="139.08" x="-226.62" fill="#fff"/>
-  <rect id="rect148" transform="scale(-1)" height="172.87" width="989.67" y="-512" x="-765.11" fill="#087bce"/>
-  <rect id="rect585" transform="scale(-1)" height="168.1" width="994.15" y="-168.1" x="-767.53" fill="#087bce"/>
-  <polygon id="polygon671" transform="matrix(.34510 -.0016795 -.0037575 .32718 88.666 141.87)" points="498.45 365.81 441.12 324.21 511.95 324.28 533.78 256.9 555.61 324.28 626.44 324.23 569.1 365.81 591.04 433.16 591.04 433.16 533.77 391.48 476.5 433.15" fill="#087bce"/>
-  <polygon id="polygon637" transform="matrix(.34510 -.0016795 -.0037575 .32718 231.61 178.67)" points="498.45 365.81 441.12 324.21 511.95 324.28 533.78 256.9 555.61 324.28 626.44 324.23 569.1 365.81 591.04 433.16 591.04 433.16 533.77 391.48 476.5 433.15" fill="#087bce"/>
-  <polygon id="polygon638" transform="matrix(.34510 -.0016795 -.0037575 .32718 231.61 102.24)" points="498.45 365.81 441.12 324.21 511.95 324.28 533.78 256.9 555.61 324.28 626.44 324.23 569.1 365.81 591.04 433.16 591.04 433.16 533.77 391.48 476.5 433.15" fill="#087bce"/>
-  <polygon id="polygon639" transform="matrix(.34510 -.0016795 -.0037575 .32718 -84.003 178.67)" points="498.45 365.81 441.12 324.21 511.95 324.28 533.78 256.9 555.61 324.28 626.44 324.23 569.1 365.81 591.04 433.16 591.04 433.16 533.77 391.48 476.5 433.15" fill="#087bce"/>
-  <polygon id="polygon640" transform="matrix(.34510 -.0016795 -.0037575 .32718 -84.003 102.24)" points="498.45 365.81 441.12 324.21 511.95 324.28 533.78 256.9 555.61 324.28 626.44 324.23 569.1 365.81 591.04 433.16 591.04 433.16 533.77 391.48 476.5 433.15" fill="#087bce"/>
- </g>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" height="480" width="640" version="1">
+  <path fill="#0073cf" d="M-85.333 0h682.667v512H-85.333z"/>
+  <path fill="#fff" d="M-85.333 170.667h682.667v170.667H-85.333z"/>
+  <g id="c" transform="translate(256 256) scale(28.44444)" fill="#0073cf">
+    <g id="b">
+      <path id="a" d="M-.31-.05l.477.156L0-1z"/>
+      <use height="100%" width="100%" xlink:href="#a" transform="scale(-1 1)"/>
+    </g>
+    <use height="100%" width="100%" xlink:href="#b" transform="rotate(72)"/>
+    <use height="100%" width="100%" xlink:href="#b" transform="rotate(-72)"/>
+    <use height="100%" width="100%" xlink:href="#b" transform="rotate(144)"/>
+    <use height="100%" width="100%" xlink:href="#b" transform="rotate(-144)"/>
+  </g>
+  <use height="100%" width="100%" xlink:href="#c" transform="translate(142.222 -45.51)"/>
+  <use height="100%" width="100%" xlink:href="#c" transform="translate(142.222 39.822)"/>
+  <use height="100%" width="100%" xlink:href="#c" transform="translate(-142.222 -45.51)"/>
+  <use height="100%" width="100%" xlink:href="#c" transform="translate(-142.222 39.822)"/>
 </svg>

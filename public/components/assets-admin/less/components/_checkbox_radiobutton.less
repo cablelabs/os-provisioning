@@ -1,0 +1,114 @@
+/* CSS Checkbox Setting */
+
+.checkbox.checkbox-css {
+	position: relative;
+}
+.checkbox.checkbox-css.checkbox-inline {
+	padding-left: 0;
+}
+.checkbox.checkbox-css label:before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 8px;
+	width: 14px;
+	height: 14px;
+	border-radius: 4px;
+	border: 1px solid #ccd0d4;
+}
+.checkbox.checkbox-css input {
+	display: none;
+}
+.checkbox.checkbox-css input:checked + label:after {
+	content: '\f00c';
+	position: absolute;
+	top: 8px;
+	left: 0;
+	font-size: 10px;
+	font-family: FontAwesome;
+	color: #fff;
+	line-height: 14px;
+	width: 14px;
+	text-align: center;
+}
+.checkbox.checkbox-css input:checked + label:before {
+	background: #348fe2;
+	border-color: #348fe2;
+}
+.checkbox.checkbox-css.checkbox-success input:checked + label:before {
+	background: #00acac;
+	border-color: #00acac;
+}
+.checkbox.checkbox-css.checkbox-info input:checked + label:before {
+	background: #49b6d6;
+	border-color: #49b6d6;
+}
+.checkbox.checkbox-css.checkbox-danger input:checked + label:before {
+	background: #ff5b57;
+	border-color: #ff5b57;
+}
+.checkbox.checkbox-css.checkbox-warning input:checked + label:before {
+	background: #f59c1a;
+	border-color: #f59c1a;
+}
+.checkbox.checkbox-css.checkbox-inverse input:checked + label:before {
+	background: #2d353c;
+	border-color: #2d353c;
+}
+
+
+/* CSS Radio Button Setting */
+
+.radio.radio-css {
+	position: relative;
+}
+.radio.radio-css.radio-inline {
+	padding-left: 0;
+}
+.radio.radio-css label:before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 8px;
+	width: 14px;
+	height: 14px;
+	border-radius: 14px;
+	border: 1px solid #ccd0d4;
+}
+.radio.radio-css input {
+	display: none;
+}
+.radio.radio-css input:checked + label:after {
+	content: '';
+	position: absolute;
+	top: 12px;
+	left: 4px;
+	width: 6px;
+	height: 6px;
+	border-radius: 6px;
+	background: #fff;
+}
+.radio.radio-css input:checked + label:before {
+	background: #348fe2;
+	border-color: #348fe2;
+}
+.radio.radio-css.radio-success input:checked + label:before {
+	background: #00acac;
+	border-color: #00acac;
+}
+.radio.radio-css.radio-info input:checked + label:before {
+	background: #49b6d6;
+	border-color: #49b6d6;
+}
+.radio.radio-css.radio-danger input:checked + label:before {
+	background: #ff5b57;
+	border-color: #ff5b57;
+}
+.radio.radio-css.radio-warning input:checked + label:before {
+	background: #f59c1a;
+	border-color: #f59c1a;
+}
+.radio.radio-css.radio-inverse input:checked + label:before {
+	background: #2d353c;
+	border-color: #2d353c;
+}

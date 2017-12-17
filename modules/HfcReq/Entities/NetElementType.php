@@ -60,7 +60,6 @@ class NetElementType extends \BaseModel {
 		return $this->name.$version;
 	}
 
-
 	// returns all objects that are related to a DeviceType
 	public function view_has_many()
 	{

@@ -1,9 +1,8 @@
-
-  <!-- begin #sidebar -->
+ {{-- begin #sidebar --}}
     <div id="sidebar" class="sidebar">
-      <!-- begin sidebar scrollbar -->
+     {{-- begin sidebar scrollbar --}}
       <div data-scrollbar="true" data-height="100%">
-        <!-- begin sidebar user -->
+       {{-- begin sidebar user --}}
         <ul class="nav">
           <li class="nav-profile">
             <div class="info">
@@ -12,9 +11,9 @@
             </div>
           </li>
         </ul>
-        <!-- end sidebar user -->
+       {{-- end sidebar user --}}
 
-        <!-- begin sidebar nav -->
+       {{-- begin sidebar nav --}}
         <ul class="nav">
           @if (\PPModule::is_active ('Dashboard'))
             <li id ="dashboardsidebar"
@@ -31,12 +30,8 @@
           <li class="nav-header">Navigation</li>
           @foreach ($view_header_links as $module_name => $typearray)
             @if (isset($typearray['submenu']))
-            <li id="{{ Str::slug($module_name,'_')}}" class="has-sub">
-              <a href="javascript:;">
-                <i class="fa fa-fw {{ $typearray['icon'] }}"></i>
-                <b class="caret pull-right"></b>
-                <span>{{$module_name}}</span>
-              </a>
+            <li id="{{ Str::slug($module_name,'_')}}" data-sidebar="level1" class="has-sub">
+              <a href="javascript:;"><i class="fa fa-fw {{ $typearray['icon'] }}"></i><b class="caret pull-right"></b><span>{{$module_name}}</span></a>
               <ul class="sub-menu">
               @foreach ($typearray['submenu'] as $type => $valuearray)
               <li id="{{  Str::slug($type,'_') }}">
@@ -56,40 +51,38 @@
          <li class="nav-header">Networks</li>
 
           @foreach ($networks as $network)
-            <li class="has-sub">
-              <a href="javascript:;">
-                <i class="fa fa-sitemap"></i>
-                <b class="caret pull-right"></b>
-                <span>{{$network->name}}</span>
-              </a>
+            <li id="network_{{$network->id}}" data-sidebar="level1" class="has-sub">
+              <a href="javascript:;"><i class="fa fa-sitemap"></i><b class="caret pull-right"></b><span>{{$network->name}}</span></a>
               <ul class="sub-menu">
-                <li><a href="{{BaseRoute::get_base_url()}}/Tree/erd/net/{{$network->id}}"><i class="fa fa-circle"></i> {{$network->name}}</a></li>
-                @foreach ($network->get_all_cluster_to_net() as $cluster)
-                 <li><a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}"><i class="fa fa-circle-thin"></i> {{$cluster->name}}</a></li>
-                @endforeach
+                <li id="{{$network->name}}"><a href="{{BaseRoute::get_base_url()}}/Tree/erd/net/{{$network->id}}" style="display:block;"><i class="fa fa-circle text-success"></i> {{$network->name}}</a></li>
+                <ul class="sub-menu" style="display:block;">
+                  @foreach ($network->get_all_cluster_to_net() as $cluster)
+                    <li id="{{$cluster->name}}" class="has-sub" style="display:block;"><a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}" style="display:block;"><i class="fa fa-circle-thin text-danger"></i> {{$cluster->name}}</a></li>
+                  @endforeach
+                </ul>
               </ul>
             </li>
          @endforeach
 
-          <!-- begin sidebar minify button -->
+         {{-- begin sidebar minify button --}}
           <li>
             <a href="javascript:;" class="sidebar-minify-btn hidden-xs" data-click="sidebar-minify">
             <i class="fa fa-angle-double-left"></i>
             </a>
           </li>
-          <!-- end sidebar minify button -->
+         {{-- end sidebar minify button --}}
         </ul>
-        <!-- end sidebar nav -->
+       {{-- end sidebar nav --}}
       </div>
-      <!-- end sidebar scrollbar -->
+     {{-- end sidebar scrollbar --}}
       </div>
     <div class="sidebar-bg"></div>
-    <!-- end #sidebar -->
+   {{-- end #sidebar --}}
 
 
-<!-- java script dynamic panel on right top side under tabs -->
+{{-- java script dynamic panel on right top side under tabs --}}
 @if(isset($panel_right_extra))
-    <!-- begin theme-panel -->
+   {{-- begin theme-panel --}}
     <div class="theme-panel">
       <a href="javascript:;" data-click="theme-panel-expand" class="theme-collapse-btn">
         <i class="fa fa-cog"></i>
@@ -110,5 +103,5 @@
 
       </div>
     </div>
-    <!-- end theme-panel -->
+   {{-- end theme-panel --}}
 @endif

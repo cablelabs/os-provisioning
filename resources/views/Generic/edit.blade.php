@@ -15,49 +15,65 @@
 
 	{{ $headline }}
 
-
 @stop
 
 
 @section('content_left')
+	<div class="col-12 card-block">
+		<div class="col-md-12 card tab-content" style="display:none;">
+			<div class="tab-pane" id="logging" role="tabpanel">
+				<table id="datatable" class="table table-hover datatable table-bordered d-table">
+					<thead>
+						<tr>
+							<th class="nocolvis" style="min-width:20px;width:20px;"></th> {{-- Responsive Column --}}
+							<th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.guilog.created_at')}}</th>
+							<th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.guilog.username')}}</th>
+							<th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.guilog.method')}}</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
 
-	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'editform')) }}
+	<div class="card card-inverse col-md-{{$edit_left_md_size}} border border-info border-top-0 border-left-0 border-bottom-0">
 
+	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'EditForm')) }}
+        
 		@include($form_path, $view_var)
-
+          
 	{{ Form::close() }}
-
+	</div>
 @stop
 
 
 <?php $api = App\Http\Controllers\BaseViewController::get_view_has_many_api_version($relations) ?>
 
-<?php //d($relations, $edit_left_md_size); ?>
+{{-- d($relations, $edit_left_md_size) --}}
 
 @section('content_right')
-
 	@foreach($relations as $view => $relation)
 
 		<?php if (!isset($i)) $i = 0; else $i++; ?>
 
-		<!-- The section content for the new Panel -->
+		{{-- The section content for the new Panel --}}
 		@section("content_$i")
 
-			<!-- old API: directly load relation view. NOTE: old API new class var is $view -->
+			{{-- old API: directly load relation view. NOTE: old API new class var is $view --}}
 			@if ($api == 1)
 				@include('Generic.relation', [$relation, 'class' => $view, 'key' => strtolower($view_var->table).'_id'])
 			@endif
 
-			<!-- new API: parse data -->
+			{{-- new API: parse data --}}
 			@if ($api == 2)
 				@if (is_array($relation))
 
-					<!-- include pure HTML -->
+					{{-- include pure HTML --}}
 					@if (isset($relation['html']))
 						{{$relation['html']}}
 					@endif
 
-					<!-- include a view -->
+					{{-- include a view --}}
 					@if (isset($relation['view']))
 						@if (is_string($relation['view']))
 							@include ($relation['view'])
@@ -68,7 +84,7 @@
 						@endif
 					@endif
 
-					<!-- include a relational class/object/table, like Contract->Modem -->
+					{{-- include a relational class/object/table, like Contract->Modem --}}
 					@if (isset($relation['class']) && isset($relation['relation']))
 						@include('Generic.relation', ['relation' => $relation['relation'],
 													  'class' => $relation['class'],
@@ -81,7 +97,7 @@
 
 		@stop
 
-		<!-- The Bootstap Panel to include -->
+		{{-- The Bootstap Panel to include --}}
 		@include ('bootstrap.panel', array ('content' => "content_$i",
 											'view_header' => \App\Http\Controllers\BaseViewController::translate_view('Assigned', 'Header').' '.\App\Http\Controllers\BaseViewController::translate_view($view, 'Header' , 2),
 											'md' => isset($md_size) ? $md_size : (isset($edit_right_md_size) ? $edit_right_md_size : 4)))
@@ -89,7 +105,7 @@
 	@endforeach
 
 
-	<!-- Alert -->
+	{{-- Alert --}}
 	@if (Session::has('alert'))
 		@include('bootstrap.alert', array('message' => Session::get('alert')))
 		<?php Session::forget('alert'); ?>
@@ -99,4 +115,73 @@
 
 @section('javascript')
 	{{-- move Javascript Edit Stuff here: select2.js,  --}}
+@stop
+
+@section('javascript_extra')
+@if(isset($panel_right))
+	<script language="javascript">
+	$('#loggingtab').click(function() {
+		$('.tab-content').toggle();
+		$('.tab-content').toggleClass('d-block');
+		console.log($('#loggingtab').hasClass('active'));
+		if ( $('#loggingtab').hasClass('active') ) {
+			console.log('i am here');
+			$('#loggingtab').removeClass('active');
+			console.log($('#loggingtab').hasClass('active'));
+		}
+	});
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		console.log(e);
+	});
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		var table = $('table.datatable').DataTable(
+		{
+		{{-- STANDARD CONFIGURATION --}}
+			{{-- Translate Datatables Base --}}
+				@include('datatables.lang')
+			{{-- Buttons above Datatable for export, print and change Column Visibility --}}
+            	@include('datatables.buttons')
+        	{{-- Show Pagination only when the results do not fit on one page --}}
+            	@include('datatables.paginate')
+			retrieve: true,
+			responsive: {
+				details: {
+				type: 'column', {{-- auto resize the Table to fit the viewing device --}}
+				}
+			},
+			dom: "Btip",
+			fnAdjustColumnSizing: true,
+			autoWidth: false,
+			aoColumnDefs: [ {
+				className: 'control',
+				orderable: false,
+				targets:   [0]
+			},
+			{
+                "targets": [ 4 ],
+                "visible": false,
+            },
+            {
+                "targets": [ 5 ],
+                "visible": false
+            }
+			],
+		{{-- AJAX CONFIGURATION --}}
+			processing: true,
+			serverSide: true,
+			deferRender: true,
+			ajax: '{{Route("GuiLog.filter")}}?model_id={{$view_var->id}}&model={{$view_var->table}}',
+			columns:[
+						{data: 'responsive', orderable: false, searchable: false},
+						{data: 'created_at', name: 'created_at'},
+						{data: 'username', name: 'username'},
+						{data: 'method', name: 'method'},
+						{data: 'model', name: 'model'},
+						{data: 'model_id', name: 'model_id'},
+			],
+		});
+	$( $.fn.dataTable.tables(true) ).DataTable().responsive.recalc();
+	});
+	</script>
+@endif
 @stop

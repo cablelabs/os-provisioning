@@ -33,20 +33,9 @@ class Cmts extends \BaseModel {
 		return '<i class="fa fa-server"></i>';
 	}
 
-	// link title in index view
-	public function view_index_label()
-	{
-		$bsclass = $this->get_bsclass();
-
-		return ['index' => [$this->id, $this->hostname, $this->ip, $this->company, $this->type],
-				'index_header' => ['ID', 'Hostname', 'IP address', 'Company', 'Type'],
-				'bsclass' => $bsclass,
-				'header' => $this->hostname];
-	}
-
 	// AJAX Index list function
 	// generates datatable content and classes for model
-	public function view_index_label_ajax()
+	public function view_index_label()
 	{
 		$bsclass = $this->get_bsclass();
 

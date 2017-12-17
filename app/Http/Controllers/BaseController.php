@@ -384,7 +384,7 @@ class BaseController extends Controller {
 			$a['edit_right_md_size'] = $this->edit_right_md_size;
 
 		if (!isset($a['html_title']))
-			$a['html_title'] = "NMS – ".\NamespaceController::module_get_pure_model_name();
+			$a['html_title'] = 'NMS Prime - '.\App\Http\Controllers\BaseViewController::translate_view(\NamespaceController::module_get_pure_model_name(),'Header');
 
 		$a['save_button'] = $this->save_button;
 		$a['force_restart_button'] = $this->force_restart_button;
@@ -496,7 +496,6 @@ class BaseController extends Controller {
 	public function index()
 	{
 		$model = static::get_model_obj();
-
 		$view_header = \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
 		$headline  	= \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
 		$b_text		= $model->view_headline();
@@ -521,7 +520,7 @@ class BaseController extends Controller {
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
 
-		return View::make ($view_path, $this->compact_prep_view(compact('headline','view_header', 'model','view_var', 'create_allowed', 'delete_allowed', 'b_text', 'index_datatables_ajax_enabled')));
+		return View::make ($view_path, $this->compact_prep_view(compact('headline','view_header', 'model','view_var', 'create_allowed', 'delete_allowed', 'b_text')));
 	}
 
 	/**
@@ -568,8 +567,9 @@ class BaseController extends Controller {
 		$validator  = Validator::make($data, $rules);
 		$data 		= $controller->prepare_input_post_validation ($data);
 
-		if ($validator->fails())
-			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'red');
+		if ($validator->fails()) {
+			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'danger');
+		}
 
 		$obj = $obj::create($data);
 
@@ -580,7 +580,7 @@ class BaseController extends Controller {
 		if (!$redirect)
 			return $id;
 
-		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', 'Created!')->with('message_color', 'blue');
+		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', 'Created!')->with('message_color', 'success');
 	}
 
 
@@ -654,7 +654,7 @@ class BaseController extends Controller {
 
 		if ($validator->fails()) {
 			Log::info ('Validation Rule Error: '.$validator->errors());
-			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'red');
+			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'danger');
 		}
 
 		// update timestamp, this forces to run all observer's
@@ -673,7 +673,7 @@ class BaseController extends Controller {
 
 		// error msg created while observer execution
 		$msg = \Session::has('error') ? \Session::get('error') : 'Updated';
-		$color = \Session::has('error') ? 'orange' : 'blue';
+		$color = \Session::has('error') ? 'warning' : 'info';
 
 		$route_model = \NamespaceController::get_route_name();
 
@@ -892,7 +892,7 @@ class BaseController extends Controller {
 		$model = NamespaceController::get_model_name();
 		$data .= self::_create_index_view_data($model::get_tree_list());
 
-		// $data .= '</ul></div>';
+		// $data .= '</ul></div></div>';
 
 		return $data;
 	}
@@ -1032,26 +1032,6 @@ class BaseController extends Controller {
 		return array_reverse($logs);
 	}
 
-	/* Check if AJAX Datatables should be used
-	 *
-	 *
-	 * @author Christian Schramm
-	 *
-	 * @return true if index model contains more than 100 entries
-	 */
-	 public function index_datatables_ajax_enabled() {
-		$enabled = false;
-		$model = static::get_model_obj();
-		if (method_exists( $model, 'view_index_label_ajax')) {
-			$model_name = \NamespaceController::get_model_name();
-			if ($model_name::count() >= 100)
-				$enabled = true;
-		}
-
-		return $enabled;
-	}
-
-
 	/**
      * Process datatables ajax request.
 	 *
@@ -1064,7 +1044,7 @@ class BaseController extends Controller {
     public function index_datatables_ajax()
     {
 		$model = static::get_model_obj();
-		$index_label_array =  $model->view_index_label_ajax();
+		$index_label_array =  $model->view_index_label();
 
 		$header_fields = $index_label_array['index_header'];
 		$edit_column_data = isset($index_label_array['edit']) ? $index_label_array['edit'] : [];

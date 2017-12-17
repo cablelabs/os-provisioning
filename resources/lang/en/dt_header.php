@@ -1,6 +1,11 @@
 <?php
 return [
-    // Index DataTable Header
+	// Index DataTable Header
+	// Auth
+	'authusers.login_name' => 'Login Name',
+	'authusers.first_name' => 'Given Name',
+	'authusers.last_name' => 'Family Name',
+	'authmetas.name' => 'Name',
 	// GuiLog
 	'guilog.created_at' => 'Time',
 	'guilog.username' => 'User',
@@ -135,6 +140,8 @@ return [
 	'phonenr_state' => 'Status',
 	// Phonenumbermanagement
 	'phonenumbermanagement.id' => 'ID',
+	'phonenumbermanagement.activation_date' => 'Activation date',
+	'phonenumbermanagement.deactivation_date' => 'Deactivation date',
 	// PhoneTariff
 	'phonetariff.name' => 'Phone Tariff',
 	'phonetariff.type' => 'Type',

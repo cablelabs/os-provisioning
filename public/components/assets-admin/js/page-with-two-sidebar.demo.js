@@ -1,8 +1,8 @@
-/*   
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
-Version: 2.1.0
+/*
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7 & Bootstrap 4.0.0-Alpha 6
+Version: 3.0.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
+Website: http://www.seantheme.com/color-admin-v3.0/admin/html/
 */
 
 var getRandomValue = function() {
@@ -18,33 +18,33 @@ var handleRenderKnobDonutChart = function() {
 };
 
 var handleRenderSparkline = function() {
-    var red		    = '#F44336',
-        pink		= '#E91E63',
-        orange	    = '#FF9800',
-        yellow       = '#FFEB3B';
+    var blue		= '#348fe2',
+        green		= '#00acac',
+        purple		= '#727cb6',
+        red         = '#ff5b57';
         
     var options = {
         height: '50px',
         width: '100%',
         fillColor: 'transparent',
         type: 'bar',
-        barWidth: 9.9,
-        barColor: red
+        barWidth: 8,
+        barColor: green
     };
     
     var value = getRandomValue();
     $('#sidebar-sparkline-1').sparkline(value, options);
     
     value = getRandomValue();
-    options.barColor = pink;
+    options.barColor = blue;
     $('#sidebar-sparkline-2').sparkline(value, options);
     
     value = getRandomValue();
-    options.barColor = orange;
+    options.barColor = purple;
     $('#sidebar-sparkline-3').sparkline(value, options);
     
     value = getRandomValue();
-    options.barColor = yellow;
+    options.barColor = red;
     $('#sidebar-sparkline-4').sparkline(value, options);
 };
 

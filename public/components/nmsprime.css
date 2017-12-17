@@ -1,9 +1,7 @@
 /*General */
 body {
-    background: #f7f7f7;
     font-family: 'Roboto', "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 13px;
-    color: #616161;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -176,10 +174,17 @@ body {
     font-size: 20px;
 }
 
-@media(max-width:767px){
-.sidebar, .sidebar-bg {
-    margin-top: 56px;
-}
+
+@media (max-width: 767px) {
+    .page-header {
+        font-size: 24px;
+    }
+    .page-header-fixed {
+        padding-top: 101px;
+    }
+    .sidebar, .sidebar-bg {
+        margin-top: 56px;
+    }
 }
 
 .table>tbody>tr>td {
@@ -188,4 +193,135 @@ body {
 
 table .index_check {
     text-align: center;
+}
+
+/* Table Colors*/
+.table > thead > tr > td.info,
+.table > tbody > tr > td.info,
+.table > tfoot > tr > td.info,
+.table > thead > tr > th.info,
+.table > tbody > tr > th.info,
+.table > tfoot > tr > th.info,
+.table > thead > tr.info > td,
+.table > tbody > tr.info > td,
+.table > tfoot > tr.info > td,
+.table > thead > tr.info > th,
+.table > tbody > tr.info > th,
+.table > tfoot > tr.info > th {
+    background: #e0edff;
+    border-color: #b6e2ef;
+}
+.table > thead > tr > td.success,
+.table > tbody > tr > td.success,
+.table > tfoot > tr > td.success,
+.table > thead > tr > th.success,
+.table > tbody > tr > th.success,
+.table > tfoot > tr > th.success,
+.table > thead > tr.success > td,
+.table > tbody > tr.success > td,
+.table > tfoot > tr.success > td,
+.table > thead > tr.success > th,
+.table > tbody > tr.success > th,
+.table > tfoot > tr.success > th {
+    background: #aff7aa;
+    border-color: #99dede;
+}
+.table > thead > tr > td.danger,
+.table > tbody > tr > td.danger,
+.table > tfoot > tr > td.danger,
+.table > thead > tr > th.danger,
+.table > tbody > tr > th.danger,
+.table > tfoot > tr > th.danger,
+.table > thead > tr.danger > td,
+.table > tbody > tr.danger > td,
+.table > tfoot > tr.danger > td,
+.table > thead > tr.danger > th,
+.table > tbody > tr.danger > th,
+.table > tfoot > tr.danger > th {
+    background: #ffc2c2;
+    border-color: #ffb3b3;
+}
+.table > thead > tr > td.warning,
+.table > tbody > tr > td.warning,
+.table > tfoot > tr > td.warning,
+.table > thead > tr > th.warning,
+.table > tbody > tr > th.warning,
+.table > tfoot > tr > th.warning,
+.table > thead > tr.warning > td,
+.table > tbody > tr.warning > td,
+.table > tfoot > tr.warning > td,
+.table > thead > tr.warning > th,
+.table > tbody > tr.warning > th,
+.table > tfoot > tr.warning > th {
+    background: #fafac1;
+    border-color: #fbd7a3;
+}
+.table > thead > tr > td.active,
+.table > tbody > tr > td.active,
+.table > tfoot > tr > td.active,
+.table > thead > tr > th.active,
+.table > tbody > tr > th.active,
+.table > tfoot > tr > th.active,
+.table > thead > tr.active > td,
+.table > tbody > tr.active > td,
+.table > tfoot > tr.active > td,
+.table > thead > tr.active > th,
+.table > tbody > tr.active > th,
+.table > tfoot > tr.active > th {
+    background: #f0f3f5;
+    border-color: #e2e7e9;
+}
+
+.popover-header{
+    margin-top: 0;
+}
+
+
+.card-inverse {
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.card-inverse .card-header,
+.card-inverse .card-footer {
+    background-color: transparent;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+.card-inverse .card-header,
+.card-inverse .card-footer,
+.card-inverse .card-title,
+.card-inverse .card-blockquote {
+    color: rgb(0, 0, 0);
+}
+
+.card-inverse .card-link,
+.card-inverse .card-text,
+.card-inverse .card-subtitle,
+.card-inverse .card-blockquote .blockquote-footer {
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.card-inverse .card-link:focus,
+.card-inverse .card-link:hover {
+    color: rgb(0, 0, 0);
+}
+
+@media (max-width: 767px)
+/* @grid-float-breakpoint -1 */
+
+{
+    .navbar-fixed-top {
+        position: relative;
+        top: auto;
+    }
+
+    .navbar-fixed-bottom .navbar-collapse,
+    .navbar-fixed-top .navbar-collapse {
+        max-height: inherit;
+        /* Clear max-height */
+    }
+
+    #page-container {
+        padding:0px;
+    }
 }

@@ -1,6 +1,17 @@
 body {
   color: #111111;
-  padding-top: 20px;
+}
+.branding {
+  width: 100%;
+  color: #676E72;;
+  font-size: 1.1em;
+  text-align: center;
+  background-color: #F1BC32;
+  background-color: rgba(241,188,50,.15);
+  padding: 24px;
+}
+.branding a {
+  font-weight: 700;
 }
 @media (min-width: 768px) {
   .nav-justified {
@@ -157,6 +168,19 @@ body {
 .sidebar .nav .nav > .active > a {
   font-weight: 500;
   padding-left: 28px;
+}
+/*
+* Examples
+*
+*/
+.code-block {
+  margin-top: 20px;
+}
+body.examples .row h2 {
+  color: #FF851B;
+}
+body.examples .row p {
+  text-align: justify;
 }
 /*
 * Callouts

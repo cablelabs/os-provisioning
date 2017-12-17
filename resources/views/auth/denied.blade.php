@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-        <!-- end error -->
+        {{-- end error --}}
 
     </body>
 

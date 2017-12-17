@@ -4,7 +4,7 @@
 @section('content_top')
 
 	@if ($reload)
-		<!-- Seconds to refresh the page -->
+		{{-- Seconds to refresh the page --}}
 		<META HTTP-EQUIV="refresh" CONTENT="{{$reload}}">
 	@endif
 
@@ -21,7 +21,7 @@
 
 	@section ('Content')
 
-		<!-- Error | Success Message -->
+		{{-- Error | Success Message --}}
 		@if (Session::has('message'))
 			@DivOpen(12)
 				@if (Session::get('message_color') == 'blue')
@@ -35,12 +35,12 @@
 			@DivClose()
 		@endif
 
-		<!-- LIST -->
+		{{-- LIST --}}
 		@foreach ($form_fields['list'] as $field)
 			{{ $field }}
 		@endforeach
 
-		<!-- FRAMES -->
+		{{-- FRAMES --}}
 		@foreach ($form_fields['frame'] as $order)
 			@foreach ($order as $row)
 
@@ -65,7 +65,7 @@
 			@endforeach
 		@endforeach
 
-		<!-- TABLE -->
+		{{-- TABLE --}}
 		@foreach ($form_fields['table'] as $table)
 			{{ $table }}
 		@endforeach
@@ -74,21 +74,16 @@
 	{{-- Form::submit( \App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button')) --}}
 
 
-	<!-- Save Button -->
-	<br>
-	<div class="col-md-12">
-		<div class="col-md-4"></div>
-		<div class="col-md-2">
-			<input class="btn btn-primary btn-block" style="simple" value="Save" type="submit">
-		</div>
-		<div class="col-md-5"></div>
+	{{-- Save Button --}}
+	<div class="d-flex justify-content-center">
+			<input class="btn btn-primary" style="simple" value="{{\App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button') }}" type="submit">
 	</div>
 
 	@stop
 
 
 	@include('bootstrap.panel', ['content' => 'Content', 'md' => 12])
-	
+
 	{{ Form::close() }}
 
 	{{-- java script--}}

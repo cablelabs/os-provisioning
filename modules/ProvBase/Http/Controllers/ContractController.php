@@ -58,10 +58,13 @@ class ContractController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => '1', 'space' => '1'),
 			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1', 'html' =>
 				"<div class=col-md-12 style='background-color:whitesmoke'>
-				<div class=form-group><label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number</label>
-				<div class=col-md-5><input class=form-control name=street type=text value='".$model['street']."' id=street style='background-color:whitesmoke'></div>"),
+				<div class='form-group row'>
+					<label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number</label>
+						<div class=col-md-5>
+							<input class='form-control' name='street' type=text value='".$model['street']."' id='street' style='background-color:whitesmoke'>
+						</div>"),
 			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => '1', 'html' =>
-				"<div class=col-md-2><input class=form-control name=house_number type=text value='".$model['house_number']."' id=house_number style='background-color:whitesmoke'></div>
+				"<div class=col-md-2><input class='form-control' name='house_number' type=text value='".$model['house_number']."' id='house_number' style='background-color:whitesmoke'></div>
 				</div></div>"),
 			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => '1'),

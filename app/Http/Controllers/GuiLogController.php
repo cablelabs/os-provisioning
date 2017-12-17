@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\GuiLog;
 use Illuminate\Http\Request;
-use View;
+use Yajra\Datatables\Datatables;
 
 class GuiLogController extends BaseController {
 
@@ -26,12 +26,12 @@ class GuiLogController extends BaseController {
 			array('form_type' => 'textarea', 'name' => 'text', 'description' => 'Changed Attributes'),
 			);
 
-		// add link of changed Model in edit view - Note: check if route exists is necessary because CccAuthuser.edit is not available for instance 
+		// add link of changed Model in edit view - Note: check if route exists is necessary because CccAuthuser.edit is not available for instance
 		if ($model && \Route::getRoutes()->hasNamedRoute($model->model.'.edit'))
 		{
-			array_push($a, array('form_type' => 'text', 'name' => 'link', 'description' => 'Link', 'html' => 
+			array_push($a, array('form_type' => 'text', 'name' => 'link', 'description' => 'Link', 'html' =>
 				'<div class="col-md-12" style="background-color:white">
-					<div class="form-group"><label style="margin-top: 10px;" class="col-md-4 control-label">Link</label>
+					<div class="form-group row"><label style="margin-top: 10px;" class="col-md-4 control-label">Link</label>
 						<div class="col-md-7">
 							<a class="btn btn-default btn-block" href="'.route($model->model.'.edit', ['id' => $model->model_id]).'"> '.$model->model.' '.$model->model_id.'</a>
 						</div>
@@ -47,23 +47,26 @@ class GuiLogController extends BaseController {
 	{
 		try {
 			$params = $request->all();
-			$model = $params['model'];
-			$model_id = $params['model_id'];
-
-			$view_var = GuiLog::where('model', '=', $model)
-				->where('model_id', '=', $model_id)
-				->orderBy('id', 'desc')
-				->get();
-
 			$create_allowed = $this->index_create_allowed;
 			$delete_allowed = $this->index_delete_allowed;
 
-			$model = new GuiLog();
-			$view_header = \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
-			$headline = \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
-			$b_text	= $model->view_headline();
+			$model = $params['model'];
+			$model_id = $params['model_id'];
 
-			return View::make ('Generic.index', $this->compact_prep_view(compact('headline','view_header', 'model', 'view_var', 'create_allowed', 'delete_allowed', 'b_text')));
+			$request_query = GuiLog::where('model', '=', $model)
+			->where('model_id', '=', $model_id)
+			->orderBy('id', 'desc')
+			->get();
+
+			$DT = Datatables::of($request_query);
+			$DT ->addColumn('responsive', '')
+				->setRowClass('info')
+				->editColumn('created_at', function($object) {
+				return '<a href="'.route(\NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
+				$object->view_icon().$object->created_at.'</strong></a>';
+			});
+
+			return $DT->make(true);
 		} catch (\Exception $e) {
 			throw $e;
 		}

@@ -21,12 +21,12 @@
         
         &:hover,
         &:focus {
-            background: @grey_50;
+            background: #fafafa;
             text-decoration: none;
             
             .todolist-input i:before {
                 content: '\f14a';
-                color: @grey_900;
+                color: @black;
                 .opacity(0.4);
             }
         }
@@ -37,7 +37,7 @@
         &:hover .todolist-input i:before,
         &:focus .todolist-input i:before {
             content: '\f14a';
-            color: @teal_500;
+            color: #00acac;
             .opacity(1.0);
         }
         & .todolist-title {
@@ -60,11 +60,5 @@
         font-size: 14px;
         border-right: 1px solid #ddd;
         padding-left: 15px;
-        
-        & i {
-            display: block;
-            width: 14px;
-            text-align: center;
-        }
     }
 }

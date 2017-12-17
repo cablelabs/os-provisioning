@@ -1,12 +1,15 @@
 /* Coming Soon */
 
 .coming-soon {
+    & a {
+        color: @green
+    }
     & .brand {
         line-height: 40px;
         font-size: 28px;
         font-weight: 300;
         margin-bottom: 50px;
-        color: @white;
+        color: #fff;
         text-align: center;
         
         & .logo {
@@ -27,7 +30,7 @@
         position: relative;
         
         &:before {
-            background: @black;
+            background: #000;
         }
         & .desc,
         & .timer,
@@ -39,7 +42,7 @@
             text-align: center;
             font-size: 14px;
             font-weight: 300;
-            color: @white;
+            color: #fff;
         }
         & .timer {
             margin-bottom: 50px;
@@ -57,14 +60,14 @@
                     padding: 0 10px;
                     
                     & + .countdown-section {
-                        border-left: 1px solid @white;
+                        border-left: 1px solid #fff;
                         border-left: 1px solid rgba(255,255,255,0.3);
                     }
                 }
             }
             & .countdown-amount {
                 font-size: 36px;
-                color: @white;
+                color: #fff;
             }
             & .countdown-period {
                 font-size: 14px;
@@ -72,7 +75,7 @@
             }
         }
         & .bg-cover {
-            background: @black;
+            background: #000;
             position: absolute;
             right: 0;
             top: 0;

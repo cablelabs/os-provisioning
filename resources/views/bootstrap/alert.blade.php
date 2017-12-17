@@ -1,7 +1,7 @@
-<!-- Modal -->
+{{-- Modal --}}
 <div class="modal fade" id="myModal" role="dialog">
 	<div class="modal-dialog">
-		<!-- Modal content-->
+		{{-- Modal content--}}
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -21,7 +21,7 @@
 </div>
 
 {{-- not working gritter kept here as comment
-<!--div id="gritter-notice-wrapper">
+{{--<div id="gritter-notice-wrapper">
 	<div id="gritter-item-1" class="gritter-item-wrapper my-sticky-class" style="" role="alert">
 		<div class="gritter-top"></div>
 		<div class="gritter-item">
@@ -35,5 +35,5 @@
 		</div>
 		<div class="gritter-bottom"></div>
 	</div>
-</div-->
+</div--}}
 --}}

@@ -26,18 +26,9 @@ class Domain extends \BaseModel {
 		);
 	}
 
-	// Link title in index view
-	public function view_index_label()
-	{
-		return ['index' =>	[$this->name, $this->type, $this->alias],
-			'index_header' =>	['Name', 'Type', 'Alias'],
-			'bsclass' => 'success',
-			'header' => 'Domain: '.$this->name.' (Type: '.$this->type.')'];
-	}
-
 	// AJAX Index list function
 	// generates datatable content and classes for model
-	public function view_index_label_ajax()
+	public function view_index_label()
 	{
 		$bsclass = $this->get_bsclass();
 

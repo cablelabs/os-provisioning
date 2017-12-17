@@ -3,53 +3,64 @@
 // eg: `inputs` can be set in DOM using `data-parsley-inputs="input, textarea"`
 // eg: `data-parsley-stop-on-first-failing-constraint="false"`
 
-define('parsley/defaults', function () {
-  return {
-    // ### General
+var ParsleyDefaults = {
+  // ### General
 
-    // Default data-namespace for DOM API
-    namespace: 'data-parsley-',
+  // Default data-namespace for DOM API
+  namespace: 'data-parsley-',
 
-    // Supported inputs by default
-    inputs: 'input, textarea, select',
+  // Supported inputs by default
+  inputs: 'input, textarea, select',
 
-    // Excluded inputs by default
-    excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden]',
+  // Excluded inputs by default
+  excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden]',
 
-    // Stop validating field on highest priority failing constraint
-    priorityEnabled: true,
+  // Stop validating field on highest priority failing constraint
+  priorityEnabled: true,
 
-    // ### UI
-    // Enable\Disable error messages
-    uiEnabled: true,
+  // ### Field only
 
-    // Key events threshold before validation
-    validationThreshold: 3,
+  // identifier used to group together inputs (e.g. radio buttons...)
+  multiple: null,
 
-    // Focused field on form validation error. 'fist'|'last'|'none'
-    focus: 'first',
+  // identifier (or array of identifiers) used to validate only a select group of inputs
+  group: null,
 
-    // `$.Event()` that will trigger validation. eg: `keyup`, `change`..
-    trigger: false,
+  // ### UI
+  // Enable\Disable error messages
+  uiEnabled: true,
 
-    // Class that would be added on every failing validation Parsley field
-    errorClass: 'parsley-error',
+  // Key events threshold before validation
+  validationThreshold: 3,
 
-    // Same for success validation
-    successClass: 'parsley-success',
+  // Focused field on form validation error. 'first'|'last'|'none'
+  focus: 'first',
 
-    // Return the `$element` that will receive these above success or error classes
-    // Could also be (and given directly from DOM) a valid selector like `'#div'`
-    classHandler: function (ParsleyField) {},
+  // event(s) that will trigger validation before first failure. eg: `input`...
+  trigger: false,
 
-    // Return the `$element` where errors will be appended
-    // Could also be (and given directly from DOM) a valid selector like `'#div'`
-    errorsContainer: function (ParsleyField) {},
+  // event(s) that will trigger validation after first failure.
+  triggerAfterFailure: 'input',
 
-    // ul elem that would receive errors' list
-    errorsWrapper: '<ul class="parsley-errors-list"></ul>',
+  // Class that would be added on every failing validation Parsley field
+  errorClass: 'parsley-error',
 
-    // li elem that would receive error message
-    errorTemplate: '<li></li>'
-  };
-});
+  // Same for success validation
+  successClass: 'parsley-success',
+
+  // Return the `$element` that will receive these above success or error classes
+  // Could also be (and given directly from DOM) a valid selector like `'#div'`
+  classHandler: function (ParsleyField) {},
+
+  // Return the `$element` where errors will be appended
+  // Could also be (and given directly from DOM) a valid selector like `'#div'`
+  errorsContainer: function (ParsleyField) {},
+
+  // ul elem that would receive errors' list
+  errorsWrapper: '<ul class="parsley-errors-list"></ul>',
+
+  // li elem that would receive error message
+  errorTemplate: '<li></li>'
+};
+
+export default ParsleyDefaults;

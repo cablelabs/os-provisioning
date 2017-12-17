@@ -40,20 +40,12 @@ class Indices extends \BaseModel {
 	// View Icon
 	public static function view_icon()
 	{
-	  return '<i class="fa fa-header"></i>'; 
-	}
-
-	// link title in index view
-	public function view_index_label()
-	{
-		return ['index' => [$this->parameter->oid->name],
-				'index_header' => ['OID Name'],
-				'header' => $this->parameter->id.': '.$this->parameter->oid->name];
+	  return '<i class="fa fa-header"></i>';
 	}
 
 	// AJAX Index list function
 	// generates datatable content and classes for model
-	public function view_index_label_ajax()
+	public function view_index_label()
 	{
 		$header = isset($this->parameter) ? $this->parameter->id.': '.$this->parameter->oid->name : '';
 

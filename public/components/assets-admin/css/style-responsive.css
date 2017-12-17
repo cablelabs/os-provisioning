@@ -1,11 +1,15 @@
 /*
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7
-Version: 2.1.0
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7 & Bootstrap 4.0.0-Alpha 6
+Version: 3.0.0
 Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
+Website: http://www.seantheme.com/color-admin-v3.0/admin/html/
 */
 
 @media(max-width: 979px) {
+	.form-horizontal .control-label[class*="col-md-"]:not([class*="col-sm-"]):not([class*="col-xs-"]),
+	.form-horizontal .control-label[class*="col-lg-"]:not([class*="col-sm-"]):not([class*="col-xs-"]) {
+		padding-bottom: 5px;
+	}
     .form-horizontal.form-bordered .form-group {
         border-bottom: 1px solid #eee;
     }
@@ -15,6 +19,15 @@ Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
     }
     .form-horizontal.form-bordered .form-group > div {
         padding: 15px;
+    }
+    .form-horizontal.form-bordered .form-group > .control-label[class*="col-md-"]:not([class*="col-sm-"]):not([class*="col-xs-"]),
+    .form-horizontal.form-bordered .form-group > .control-label[class*="col-lg-"]:not([class*="col-sm-"]):not([class*="col-xs-"]) {
+        padding: 15px 15px 0;
+        line-height: 14px;
+    }
+    .form-horizontal.form-bordered .form-group > div[class*="col-md-"]:not([class*="col-sm-"]):not([class*="col-xs-"]),
+    .form-horizontal.form-bordered .form-group > div[class*="col-lg-"]:not([class*="col-sm-"]):not([class*="col-xs-"]) {
+        padding: 5px 15px 15px;
     }
     .form-horizontal.form-bordered .form-group > div,
     .form-horizontal.form-bordered .form-group > .control-label {
@@ -62,11 +75,8 @@ Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
 }
 
 @media (max-width: 767px) {
-    .page-header {
-        font-size: 24px;
-    }
     .page-header-fixed {
-        padding-top: 101px;
+        padding-top: 109px;
     }
     .page-with-right-sidebar .sidebar,
     .page-with-right-sidebar .sidebar-bg {
@@ -86,47 +96,8 @@ Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
     .content.content-full-width .breadcrumb {
         margin: 20px;
     }
-    .navbar-toggle.navbar-toggle-left {
-        display: none;
-    }
-    .navbar .search-form {
-        transition: none;
-        height: 50px;
-    }
-    .navbar .search-form .search-btn i, 
-    .navbar .search-form .close i {
-        line-height: 50px;
-    }
-    .navbar-toggle {
-        float: left;
-        margin-left: 0;
-        height: 50px;
-    }
     .navbar-brand {
         width: auto;
-        line-height: 20px;
-        height: 50px;
-        display: block;
-        float: none;
-        margin: 0;
-        padding: 15px;
-        text-align: center;
-    }
-    .navbar-nav > li > a,
-    .navbar .icon i {
-        line-height: 20px;
-    }
-    .navbar-user img {
-        display: block;
-        float: none;
-        margin: -8px 0 -8px 10px;
-    }
-    .navbar-nav > li > a .label {
-        min-width: 20px;
-        height: 20px;
-        line-height: 20px;
-        top: 6px;
-        right: 9px;
     }
     .navbar-header {
         border-bottom: 1px solid #eee;
@@ -199,7 +170,7 @@ Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
     }
     .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, 
     .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
-        background: #f5f5f5;
+        background: #edf0f5;
     }
     @keyframes sidebarSlideInLeft {
         from { left: -220px; }
@@ -292,11 +263,35 @@ Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
         width: 100% !important;
     }
     .login {
-        margin: 108px 0;
+        margin: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
     }
     .login .login-header {
         left: 0;
         margin: 0;
+        position: relative;
+        top: 0;
+        padding-top: 60px;
+    }
+    .login .login-header .icon {
+        display: none;
+    }
+    .login .login-header .brand {
+        text-align: center;
+        color: #fff;
+    }
+    .login .login-header .brand small {
+        opacity: 0.5;
+        color: #fff;
+    }
+    .login .login-header .brand .logo {
+        border-width: 25px;
+        display: block;
+        margin: 0 auto;
     }
     .invoice-company .pull-right {
         float: none !important;
@@ -457,6 +452,13 @@ Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
         margin: 0;
         overflow: scroll;
     }
+    .page-sidebar-toggled.page-sidebar-minified .sidebar.sidebar-transparent + .sidebar-bg, 
+    .sidebar.sidebar-transparent + .sidebar-bg {
+    	background-size: 100% 100%;
+    }
+     .boxed-layout .top-menu {
+		top: 109px;
+	}
 }
 
 @media(max-width: 480px) {
@@ -494,6 +496,14 @@ Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
     .gallery .image {
         width: 100%;
     }
+    .email-content {
+    	margin: 0 -20px;
+    	padding: 0;
+    	overflow: scroll;
+    }
+    .datepicker table tr td, .datepicker table tr th {
+    	padding: 7px !important;
+    }
 }
 
 @media (max-width: 380px) {
@@ -510,11 +520,6 @@ Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
     }
 }
 
-@media (max-width: 320px) {
-    #gritter-notice-wrapper {
-        right: 10px !important;
-    }
-}
 
 
 
@@ -625,18 +630,22 @@ Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
 
 @media (max-width: 767px) {
     .login.login-v2 {
-        margin: 108px 0;
+        left: 0;
+        top: 0;
+        margin: 0;
+        position: relative;
         width: 100%;
+        background: none;
     }
     .login-cover-image img {
         max-width: initial;
         max-height: 100%;
     }
     .login-bg-list {
+        position: relative;
         padding: 20px;
         right: 0;
         bottom: 0;
-        margin-top: -108px;
     }
 }
 
@@ -726,10 +735,10 @@ Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
 
 @media (max-width: 767px) {
     .pace-progress {
-        top: 101px;
+        top: 109px;
     }
     .pace .pace-activity {
-        top: 112px
+        top: 120px
     }
 }
 
@@ -1063,14 +1072,8 @@ Website: http://www.seantheme.com/color-admin-v2.1/admin/material/
     .boxed-layout .page-container .sidebar-bg {
         left: -220px;
     }
-    .boxed-layout .page-container.page-with-wide-sidebar .sidebar,
-    .boxed-layout .page-container.page-with-wide-sidebar .sidebar-bg {
-        left: -250px;
-    }
     .boxed-layout .page-sidebar-toggled .sidebar,
-    .boxed-layout .page-sidebar-toggled .sidebar-bg,
-    .boxed-layout .page-sidebar-toggled.page-with-wide-sidebar .sidebar,
-    .boxed-layout .page-sidebar-toggled.page-with-wide-sidebar .sidebar-bg {
+    .boxed-layout .page-sidebar-toggled .sidebar-bg {
         left: 0;
     }
 }
