@@ -52,7 +52,7 @@
 
           @foreach ($networks as $network)
             <li id="network_{{$network->id}}" class="has-sub" data-sidebar="level1">
-              <a href="javascript:;"><i class="fa fa-sitemap"></i><b class="caret pull-right"></b><span>{{$network->name}}</span></a>
+              <a href="{{BaseRoute::get_base_url()}}/Tree/erd/net/{{$network->id}}"><i class="fa fa-sitemap"></i><b class="caret pull-right"></b><span>{{$network->name}}</span></a>
               <ul class="sub-menu">
                 <li id="{{$network->name}}" class="has-sub" data-sidebar="level2"><a href="javascript:;"><i class="fa fa-circle text-success"></i><b class="caret ml-auto"></b> {{$network->name}}</a></li>
                 <ul class="sub-menu d-block">

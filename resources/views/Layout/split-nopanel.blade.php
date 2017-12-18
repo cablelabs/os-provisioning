@@ -31,12 +31,10 @@
 		</div>
 	@endif
 	<div class="row">
-		<div class="col-md-12">
-		@yield('content_left')
-
-		@yield('content_right')
-		@yield('content_right_extra')
+		<div class="card card-inverse col-md-{{$edit_left_md_size}}">
+			@yield('content_left')
 		</div>
+		@yield('content_right')
 	</div>
-</div>
+
 @stop
