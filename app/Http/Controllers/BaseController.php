@@ -489,14 +489,13 @@ class BaseController extends Controller {
 	/**
 	 * Display a listing of all objects of the calling model
 	 *
-	 * @return Response
+	 * @return View
 	 */
 	public function index()
 	{
-		$model = static::get_model_obj();
-		$view_header = \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
-		$headline  	= \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
-		$b_text		= $model->view_headline();
+		$model 			= static::get_model_obj();
+		$headline  		= \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
+		$view_header 	= \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
 		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
@@ -512,13 +511,10 @@ class BaseController extends Controller {
 		if (View::exists(\NamespaceController::get_view_name().'.index'))
 			$view_path = \NamespaceController::get_view_name().'.index';
 
-		// TODO: adapt naming conventions
-		$view_var = $model;
-
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
 
-		return View::make ($view_path, $this->compact_prep_view(compact('headline','view_header', 'model','view_var', 'create_allowed', 'delete_allowed', 'b_text')));
+		return View::make ($view_path, $this->compact_prep_view(compact('headline','view_header', 'model', 'create_allowed', 'delete_allowed')));
 	}
 
 	/**

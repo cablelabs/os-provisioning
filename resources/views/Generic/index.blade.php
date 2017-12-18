@@ -1,13 +1,11 @@
 {{--
 
-@param $route_name: the base route name of this object class
-@param $headline: 	the link header description in HTML
-@param $create_allowd: create button allowed?
-@param $model: 	model object to call functions
-@param $view_var: 	array() of objects to be displayed
-
-@param $query:
-@param $scope:
+@param $route_name:     the base route name of this object class
+@param $headline:       the link header description in HTML
+@param $view_header:    the base route name of this object class
+@param $create_allowd:  create button visibility
+@param $delete_allowd:  delete button visibility
+@param $model:          model object of current model
 
 --}}
 
@@ -20,12 +18,7 @@
 @section('content_top')
 	<li class="active">
 		<a href="{{route($route_name.'.index')}}">
-		@if (isset($view_var) && is_array($view_var))
-		{{ \App\Http\Controllers\BaseViewController::__get_view_icon($view_var[0]).' '}}
-		@else
-		{{ $model->view_icon().' '}}
-		@endif
-		{{$headline}}
+		    {{ $model->view_icon().' '.$headline}}
 		</a>
 	</li>
 @stop
@@ -36,19 +29,15 @@
         <div class="row m-b-25">
             <div class="col">
                 <h3 class="card-title">
-                @if (isset($view_var) && is_array($view_var) )
-                {{ \App\Http\Controllers\BaseViewController::__get_view_icon($view_var[0]).' '}}
-                @else
-                {{ $model->view_icon().' '}}
-                @endif
-                {{$headline}}
+                    {{ $model->view_icon().' '.$headline}}
+                </h3>
             </div>
         {{-- Create Form --}}
             <div class="align-self-end m-r-20">
                 @if ($create_allowed)
                     {{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
                     <button class="btn btn-outline-primary float-right m-b-10" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
-                    title="{{ \App\Http\Controllers\BaseViewController::translate_view('Create '.$b_text, 'Button' )}}">
+                    title="{{ \App\Http\Controllers\BaseViewController::translate_view('Create '.$model->view_headline(), 'Button' )}}">
                         <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
                     </button>
                     {{ Form::close() }}
@@ -97,7 +86,7 @@
         <tbody> {{-- Table DATA --}}
         </tbody>
         <tfoot> {{-- TABLE FOOTER--}}
-        @if (isset($model) && isset($view_var) && method_exists( BaseController::get_model_obj() , 'view_index_label' ))
+        @if (isset($model) && method_exists( BaseController::get_model_obj() , 'view_index_label' ))
             <tr>
                 <th></th>  {{-- Responsive Column --}}
                 @if (isset($delete_allowed) && $delete_allowed == true)
@@ -162,7 +151,7 @@ $(document).ready(function() {
             className : 'ClickableTd',
         } ],
     {{-- AJAX CONFIGURATION --}}
-        @if (isset($model) && isset($view_var) && method_exists( $view_var, 'view_index_label') )
+        @if (isset($model) && method_exists( $model, 'view_index_label') )
             processing: true, {{-- show loader--}}
             serverSide: true, {{-- enable Serverside Handling--}}
             deferRender: true,
