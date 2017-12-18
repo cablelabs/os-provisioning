@@ -36,20 +36,16 @@
 		</div>
 	</div>
 
-	<div class="card card-inverse col-md-{{$edit_left_md_size}} border border-info border-top-0 border-left-0 border-bottom-0">
-
 	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'EditForm')) }}
-        
+
 		@include($form_path, $view_var)
-          
+
 	{{ Form::close() }}
-	</div>
+
 @stop
 
 
 <?php $api = App\Http\Controllers\BaseViewController::get_view_has_many_api_version($relations) ?>
-
-{{-- d($relations, $edit_left_md_size) --}}
 
 @section('content_right')
 	@foreach($relations as $view => $relation)
