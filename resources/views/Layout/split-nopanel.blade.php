@@ -31,10 +31,12 @@
 		</div>
 	@endif
 	<div class="row">
+		<div class="col-md-12">
 		@yield('content_left')
 
 		@yield('content_right')
 		@yield('content_right_extra')
+		</div>
 	</div>
 </div>
 @stop
