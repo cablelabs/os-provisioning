@@ -47,8 +47,6 @@ class BaseController extends Controller {
 	protected $edit_view_save_button = true;
 	protected $edit_view_force_restart_button = false;
 
-	protected $index_datatables_ajax_enabled = false;
-	// for index tree view a parent_id column must exist in table !
 	protected $index_tree_view = false;
 
 
@@ -514,8 +512,8 @@ class BaseController extends Controller {
 		if (View::exists(\NamespaceController::get_view_name().'.index'))
 			$view_path = \NamespaceController::get_view_name().'.index';
 
-		$index_datatables_ajax_enabled = $this->index_datatables_ajax_enabled ? : $this->index_datatables_ajax_enabled();
-		$view_var = $index_datatables_ajax_enabled ? $model->first() : $model->index_list();
+		// TODO: adapt naming conventions
+		$view_var = $model;
 
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
