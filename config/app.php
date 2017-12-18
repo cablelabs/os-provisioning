@@ -166,6 +166,7 @@ return [
 		'Intervention\Validation\ValidationServiceProvider',
 		'Collective\Bus\BusServiceProvider',
 		Yajra\Datatables\DatatablesServiceProvider::class,
+		Barryvdh\Debugbar\ServiceProvider::class,
 	],
 
 	/*
