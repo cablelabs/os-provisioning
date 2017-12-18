@@ -36,18 +36,6 @@ class NetElement extends \BaseModel {
 	}
 
 
-	/*
-	 * View Specific Stuff
-	 */
-
-	// Eager load Models so that only one Database Request is made when accessing type property (name of relational model netelementtype)
-	public function index_list()
-	{
-		$eager_loading_model = new NetElementType;
-
-		return $this->/*orderBy('parent_id')->*/orderBy('id')->with($eager_loading_model->table)->get();
-	}
-
 	// Name of View
 	public static function view_headline()
 	{

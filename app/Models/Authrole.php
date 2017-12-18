@@ -51,25 +51,6 @@ class Authrole extends BaseModel
 	}
 
 
-	/**
-	 * Overwrite BaseModel method to get only roles
-	 *
-	 * @return array
-	 * @throws \Exception
-	 */
-	public function index_list()
-	{
-		$roles = $this->where('type', '=', 'role')->orderBy('id')->get();
-
-		foreach ($roles as $role) {
-			if (array_key_exists($role->id, self::$undeletables)) {
-				$role->index_delete_disabled = true;
-			}
-		}
-
-		return $roles;
-	}
-
 	// View Icon
 	public static function view_icon()
 	{
@@ -83,7 +64,16 @@ class Authrole extends BaseModel
 				'index_header' => [$this->table.'.name'],
 				'header' => $this->name,
 				'order_by' => ['0' => 'desc'],
+				'edit' =>['checkbox' => 'set_index_delete'],
 			];
+	}
+
+
+	public function set_index_delete()
+	{
+		if (array_key_exists($this->id, self::$undeletables)) {
+				$this->index_delete_disabled = true;
+			}
 	}
 
 	public function view_has_many()

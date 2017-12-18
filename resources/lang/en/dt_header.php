@@ -5,7 +5,7 @@ return [
 	'authusers.login_name' => 'Login Name',
 	'authusers.first_name' => 'Given Name',
 	'authusers.last_name' => 'Family Name',
-	'authmetas.name' => 'Name',
+	'authrole.name' => 'Name',
 	// GuiLog
 	'guilog.created_at' => 'Time',
 	'guilog.username' => 'User',

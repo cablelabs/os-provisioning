@@ -30,7 +30,7 @@
           <li class="nav-header">Navigation</li>
           @foreach ($view_header_links as $module_name => $typearray)
             @if (isset($typearray['submenu']))
-            <li id="{{ Str::slug($module_name,'_')}}" data-sidebar="level1" class="has-sub">
+            <li id="{{ Str::slug($module_name,'_')}}" class="has-sub" data-sidebar="level1">
               <a href="javascript:;"><i class="fa fa-fw {{ $typearray['icon'] }}"></i><b class="caret pull-right"></b><span>{{$module_name}}</span></a>
               <ul class="sub-menu">
               @foreach ($typearray['submenu'] as $type => $valuearray)
@@ -51,13 +51,13 @@
          <li class="nav-header">Networks</li>
 
           @foreach ($networks as $network)
-            <li id="network_{{$network->id}}" data-sidebar="level1" class="has-sub">
+            <li id="network_{{$network->id}}" class="has-sub" data-sidebar="level1">
               <a href="javascript:;"><i class="fa fa-sitemap"></i><b class="caret pull-right"></b><span>{{$network->name}}</span></a>
               <ul class="sub-menu">
-                <li id="{{$network->name}}"><a href="{{BaseRoute::get_base_url()}}/Tree/erd/net/{{$network->id}}" style="display:block;"><i class="fa fa-circle text-success"></i> {{$network->name}}</a></li>
-                <ul class="sub-menu" style="display:block;">
+                <li id="{{$network->name}}" class="has-sub" data-sidebar="level2"><a href="javascript:;"><i class="fa fa-circle text-success"></i><b class="caret ml-auto"></b> {{$network->name}}</a></li>
+                <ul class="sub-menu d-block">
                   @foreach ($network->get_all_cluster_to_net() as $cluster)
-                    <li id="{{$cluster->name}}" class="has-sub" style="display:block;"><a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}" style="display:block;"><i class="fa fa-circle-thin text-danger"></i> {{$cluster->name}}</a></li>
+                    <li id="{{$cluster->name}}" class="has-sub"><a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}"><i class="fa fa-circle-thin text-danger"></i> {{$cluster->name}}</a></li>
                   @endforeach
                 </ul>
               </ul>

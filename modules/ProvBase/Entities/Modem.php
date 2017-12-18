@@ -54,7 +54,8 @@ class Modem extends \BaseModel {
 				'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
 				'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
 				'eager_loading' => ['configfile','contract'],
-				'sortsearch' => ['contract_valid' => 'false'] ]; // TO DO -> find reason for error
+				'sortsearch' => ['contract_valid' => 'false'],
+				'order_by' => ['0' => 'desc'], ];
 	}
 
 	public function get_bsclass()
@@ -83,12 +84,6 @@ class Modem extends \BaseModel {
 	{
 		return $this->us_pwr.' dBmV';
 	}
-
-	public function index_list()
-	{
-		return $this->orderBy('id', 'desc')->with('configfile')->get();
-	}
-
 
 	/**
 	 * return all Configfile Objects for CMs
