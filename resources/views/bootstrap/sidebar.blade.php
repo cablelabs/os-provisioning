@@ -55,7 +55,7 @@
               <a href="javascript:;"><i class="fa fa-sitemap"></i><b class="caret pull-right"></b><span>{{$network->name}}</span></a>
               <ul class="sub-menu">
                 <li id="{{$network->name}}" class="has-sub" data-sidebar="level2"><a href="javascript:;"><i class="fa fa-circle text-success"></i><b class="caret ml-auto"></b> {{$network->name}}</a></li>
-                <ul class="sub-menu">
+                <ul class="sub-menu d-block">
                   @foreach ($network->get_all_cluster_to_net() as $cluster)
                     <li id="{{$cluster->name}}" class="has-sub"><a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}"><i class="fa fa-circle-thin text-danger"></i> {{$cluster->name}}</a></li>
                   @endforeach
