@@ -35,7 +35,7 @@ class BaseModel extends Eloquent
 	/**
 	 * View specific stuff
 	 */
-	// set this variable in model index_list() to true if it shall not be deletable on index page
+	// set this variable in a function model to true and implement into view_index_label() if it shall not be deletable on index page
 	public $index_delete_disabled = false;
 
 	// Add Comment here. ..
@@ -121,22 +121,6 @@ class BaseModel extends Eloquent
 	{
 		$this->index_delete_disabled = true;
 		return;
-	}
-
-
-	/**
-	 * This function is a placeholder to write Model specific adaptions to
-	 * order and/or restructure the Model objects for Index View
-	 *
-	 * Note: for a example see Configfile Model
-	 *
-	 * @author Torsten Schmidt
-	 *
-	 * @return all objects of this model
-	 */
-	public function index_list ()
-	{
-		return $this->orderBy('id')->get();
 	}
 
 

@@ -64,14 +64,6 @@ class Parameter extends \BaseModel {
 		return $bsclass;
 	}
 
-
-	public function index_list()
-	{
-		$eager_loading_model = new OID;
-
-		return $this->orderBy('id')->with($eager_loading_model->table)->get();
-	}
-
 	public function view_has_many()
 	{
 		$ret = [];

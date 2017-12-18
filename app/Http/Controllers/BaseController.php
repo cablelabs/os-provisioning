@@ -1030,7 +1030,21 @@ class BaseController extends Controller {
      * Process datatables ajax request.
 	 *
      * For Performance tests and fast Copy and Paste: $start = microtime(true) and $end = microtime(true);
-     *
+	 * calls view_index_label() which determines how datatables are configured
+	 * you can find examples in every model with index page
+	 * Documentation is written here, because this seems like the first place to look for it
+	 * @param table - tablename of model
+	 * @param index_header - array like [$table.'.column1' , $table.'.column2', ..., 'foreigntable1.column1', 'foreigntable2.column1', ..., 'customcolumn']
+	 * order in index_header is important and datatables will have the column order given here
+	 * @param bsclass - defines a Bootstrap class for colering the Rows
+	 * @param header - defines whats written in Breadcrumbs Header at Edit and Create Pages
+	 * @param edit - array like [$table.'.column1' => 'customfunction', 'foreigntable.column' => 'customfunction', 'customcolumn' => 'customfunction']
+	 * customfunction will be called for every element in table.column, foreigntable.column or customcolumn
+	 * CAREFUL customcolumn will not be sortable or searchable - to use them anyways use the sortsearch key
+	 * @param eager_loading array like [foreigntable1, foreigntable2, ...] - eager load foreign tables
+	 * @param order_by array like ['0' => 'asc'] - order table by id in ascending order, ['1' => 'desc'] - order table after first column in descending order
+	 * @param sortsearch array like ['customcolumn' => 'false'] prevents that user is able to sort what is impossible => prevent errors
+	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 *
 	 * @author Christian Schramm
@@ -1038,22 +1052,22 @@ class BaseController extends Controller {
     public function index_datatables_ajax()
     {
 		$model = static::get_model_obj();
-		$index_label_array =  $model->view_index_label();
+		$dt_config =  $model->view_index_label();
 
-		$header_fields = $index_label_array['index_header'];
-		$edit_column_data = isset($index_label_array['edit']) ? $index_label_array['edit'] : [];
-		$filter_column_data = isset($index_label_array['filter']) ? $index_label_array['filter'] : [];
-		$eager_loading_tables = isset($index_label_array['eager_loading']) ? $index_label_array['eager_loading'] : [];
+		$header_fields = $dt_config['index_header'];
+		$edit_column_data = isset($dt_config['edit']) ? $dt_config['edit'] : [];
+		$filter_column_data = isset($dt_config['filter']) ? $dt_config['filter'] : [];
+		$eager_loading_tables = isset($dt_config['eager_loading']) ? $dt_config['eager_loading'] : [];
 
-		!array_has($header_fields, $index_label_array['table'].'.id') ? array_push($header_fields, 'id') : null; // if no id Column is drawn, draw it to generate links with id
+		!array_has($header_fields, $dt_config['table'].'.id') ? array_push($header_fields, 'id') : null; // if no id Column is drawn, draw it to generate links with id
 
 		if (empty($eager_loading_tables) ){ //use eager loading only when its needed
-			$request_query = $model::select($index_label_array['table'].'.*');
-			$first_column = substr(head($header_fields), strlen($index_label_array["table"]) + 1);
+			$request_query = $model::select($dt_config['table'].'.*');
+			$first_column = substr(head($header_fields), strlen($dt_config["table"]) + 1);
 		} else {
-			$request_query = $model::with($eager_loading_tables)->select($index_label_array['table'].'.*'); //eager loading | select($select_column_data);
-			if (starts_with(head($header_fields), $index_label_array["table"]))
-				$first_column = substr(head($header_fields), strlen($index_label_array["table"]) + 1);
+			$request_query = $model::with($eager_loading_tables)->select($dt_config['table'].'.*'); //eager loading | select($select_column_data);
+			if (starts_with(head($header_fields), $dt_config["table"]))
+				$first_column = substr(head($header_fields), strlen($dt_config["table"]) + 1);
 			else
 				$first_column = head($header_fields);
 		}
