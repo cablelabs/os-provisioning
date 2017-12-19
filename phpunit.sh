@@ -1,7 +1,7 @@
-#!/bin/bash 
+#!/bin/bash
 
-LOGFILE="tmp_phpunit_log.htm"
-OUTFILE="tmp_phpunit_out.htm"
+LOGFILE="phpunit_log.htm"
+OUTFILE="phpunit_output.htm"
 
 # debug e.g. shows the tests to be run
 DEBUG=""
@@ -14,9 +14,9 @@ OPTS=" --testdox-html $LOGFILE --colors"
 
 # if empty: run all tests
 # can be used on developing tests (you don't want to run the complete test suite in this case)
-TESTS=" modules/ProvBase/Tests/ModemLifecycleTest.php"
 TESTS=""
 TESTS=" modules/ProvVoip/Tests/PhonenumberLifecycleTest.php"
+TESTS=" --filter testDeleteFromIndexView modules/ProvBase/Tests/ModemLifecycleTest.php"
 
 
 touch $LOGFILE $OUTFILE

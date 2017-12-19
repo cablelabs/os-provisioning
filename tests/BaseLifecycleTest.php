@@ -23,7 +23,7 @@ class BaseLifecycleTest extends TestCase {
 	protected $tests_to_be_run = [
 		'testCreateTwiceUsingTheSameData',
 		'testCreateWithFakeData',
-		'testDelete',
+		'testDeleteFromIndexView',
 		'testEmptyCreate',
 		'testIndexViewVisible',
 		'testUpdate',
@@ -50,10 +50,17 @@ class BaseLifecycleTest extends TestCase {
 	// container to collect all created entities
 	protected static $created_entity_ids = [];
 
+	// because of the datatables there are not all entries visible in index view
+	// so to test deletion we have to choose an ID from the first list
+	// this variable defines which field is used for inital sort
+	protected $index_view_order_field = 'id';
+	protected $index_view_order_order = 'asc';
+
 	// the following helpers define the stuff to use
 	// we try to guess this from child class name (you can set it there explicitely if needed)
 	// the derived classes are expected to be in following format: Modules\_modulename_\Tests\_modelname_LifeceycleTest
 	// e.g.Modules\ProvBase\Tests\ContractLifecycleTest
+	protected $module_path = null;
 	protected $model_name = null;
 	protected $controller = null;
 	protected $database_table = null;
@@ -90,7 +97,9 @@ class BaseLifecycleTest extends TestCase {
 	protected function _set_helper_vars() {
 
 		$parts = explode("\\Tests\\", $this->class_name);
-		$path = $parts[0];
+		if (is_null($this->module_path)) {
+			$this->module_path = $parts[0];
+		}
 		$class = $parts[1];
 
 		// guess the model name
@@ -100,7 +109,7 @@ class BaseLifecycleTest extends TestCase {
 
 		// guess the controller name
 		if (is_null($this->controller)) {
-			$this->controller = "\\".$path."\\Http\\Controllers\\".$this->model_name."Controller";
+			$this->controller = "\\".$this->module_path."\\Http\\Controllers\\".$this->model_name."Controller";
 		}
 
 		// guess the database table
@@ -110,7 +119,7 @@ class BaseLifecycleTest extends TestCase {
 
 		// guess the model name
 		if (is_null($this->seeder)) {
-			$this->seeder = "\\".$path."\\Database\\Seeders\\".$this->model_name."TableSeeder";
+			$this->seeder = "\\".$this->module_path."\\Database\\Seeders\\".$this->model_name."TableSeeder";
 		}
 
 	}
@@ -207,12 +216,47 @@ class BaseLifecycleTest extends TestCase {
 
 	/**
 	 * Get fake data for one instance from seeder.
+	 * This method guaranties that no unique fields are filled with data existing in our database.
+	 * If a model_id is given data can be the same for this ID (e.g. on updating a model)
 	 *
 	 * @author Patrick Reichel
 	 */
-	protected function _get_fake_data($related_to) {
+	protected function _get_fake_data($related_to, $model_id=-1) {
 
-		return call_user_func($this->seeder."::get_fake_data", 'test', $related_to);
+		// get the rules defined in model and extract unique fields
+		$rules = call_user_func([$this->module_path."\\Entities\\".$this->model_name, 'rules']);
+		$unique_fields = array();
+
+		// check for unique fields
+		foreach ($rules as $field => $rule) {
+			if (strpos($rule, 'unique') !== false) {
+				array_push($unique_fields, $field);
+			}
+		}
+
+		// get data until all critical fields are unique
+		$data_is_unique = False;
+		while (!$data_is_unique) {
+			$data_is_unique = True;
+			$data = call_user_func($this->seeder."::get_fake_data", 'test', $related_to);
+
+			// check if data that has to be unique already exists in our database
+			foreach ($unique_fields as $unique_field) {
+				$ids = DB::table($this->database_table)
+					->select('id')
+					->where($unique_field, '=', $data[$unique_field])
+					->where('id', '!=', $model_id)
+					->get();
+
+				// if there is duplicate data for an unique field: get new seeder data
+				if ($ids) {
+					$data_is_unique = False;
+					break;
+				}
+			}
+		}
+
+		return $data;
 	}
 
 
@@ -469,7 +513,7 @@ class BaseLifecycleTest extends TestCase {
 			if ($this->debug) echo "\nUpdating $this->model_name $id";
 
 			$context = $this->_get_create_context();
-			$data = $this->_get_fake_data($context['instance']);
+			$data = $this->_get_fake_data($context['instance'], $id);
 
 			$this->actingAs($this->user)
 				->visit(route("$this->model_name.edit", $id));
@@ -480,6 +524,9 @@ class BaseLifecycleTest extends TestCase {
 			;
 		}
 
+		// clear array (else this data will be used by other models, too)
+		self::$created_entity_ids = [];
+
 	}
 
 
@@ -488,28 +535,35 @@ class BaseLifecycleTest extends TestCase {
 	 *
 	 * @author Patrick Reichel
 	 */
-	public function testDelete() {
+	public function testDeleteFromIndexView() {
 
 		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
 			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)\n";
 			return;
 		}
 
-		foreach (self::$created_entity_ids as $id) {
+		// get IDs visible on index view
+		$ids = DB::table($this->database_table)
+			->select($this->index_view_order_field)
+			->whereNull('deleted_at')
+			->orderBy($this->index_view_order_field, $this->index_view_order_order)
+			->limit($this->testrun_count)
+			->get();
+
+		foreach ($ids as $id) {
+			$id = $id->id;
 
 			if ($this->debug) echo "\nDeleting $this->model_name $id";
 
 			$this->actingAs($this->user)
-				->visit(route("$this->model_name.index"));
-
-			$this->check("ids[$id]");
-			$this->press("_delete");
-
+				->visit(route("$this->model_name.index"))
+				->post("_delete", [
+					"ids[$id]" => '1',
+					"_token" => Session::token(),
+				]);
+			$this->see("Deleted $this->model_name $id");
 			$this->notSeeInDatabase($this->database_table, ['deleted_at' => null, 'id' => $id]);
 		}
-
-		// clear array (else this data will be used by other models, too)
-		self::$created_entity_ids = [];
 	}
 
 
