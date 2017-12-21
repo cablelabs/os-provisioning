@@ -194,11 +194,6 @@ class AuthController extends Controller {
 					$email->psw_update($request->password);
 				}
 			}
-			if (Auth::user()->roles()) {
-				$msg = 'hat rolle';
-			} else {
-				$msg = 'hat keine rolle';
-			}
 
 			return $this->default_page(); // login successful
 		}
