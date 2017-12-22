@@ -993,6 +993,13 @@ class importCommand extends Command {
 			return $new_pn;
 		}
 
+		switch ($old_phonenumber->carrier)
+		{
+			case 'PURTel': $registrar = 'deu3.purtel.com'; break;
+			case 'EnviaTel': $registrar = 'sip.enviatel.net'; break;
+			default: $registrar = ''; \Log::warning("Missing Registrar for Phonenumber $old_phonenumber->vorwahl/$old_phonenumber->rufnummer"); break;
+		}
+
 		$phonenumber = new Phonenumber;
 
 		$phonenumber->mta_id 		= $new_mta->id;
@@ -1002,6 +1009,8 @@ class importCommand extends Command {
 		$phonenumber->number 		= $old_phonenumber->rufnummer;
 		$phonenumber->username 		= $old_phonenumber->username;
 		$phonenumber->password 		= $old_phonenumber->password;
+		// TODO
+		$phonenumber->sipdomain 	= $registrar;
 		$phonenumber->active 		= true;  		// $old_phonenumber->aktiv; 		most phonenrs are marked as inactive because of automatic controlling
 
 		// Log
