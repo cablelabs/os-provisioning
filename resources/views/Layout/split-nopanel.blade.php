@@ -31,7 +31,7 @@
 		</div>
 	@endif
 	<div class="row">
-		<div class="card card-inverse col-md-{{$edit_left_md_size}}">
+		<div class="card card-inverse col-md-{{(isset($relations) && empty($relations)) ? '12' :$edit_left_md_size}}">
 			@yield('content_left')
 		</div>
 		@yield('content_right')
