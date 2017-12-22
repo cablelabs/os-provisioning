@@ -543,7 +543,7 @@ class importCommand extends Command {
 	 */
 	private function add_contract($old_contract, $contracts_new)
 	{
-		$c = $contracts_new->whereLoose('number2', $old_contract->vertragsnummer)->first();
+		$c = $contracts_new->whereLoose('number', $old_contract->vertragsnummer)->first();
 
 		if ($c) {
 			$this->error("Contract $c->vertragsnummer already exists [$c->id]");
