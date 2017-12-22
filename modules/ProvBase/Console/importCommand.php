@@ -547,6 +547,7 @@ class importCommand extends Command {
 
 		if ($c) {
 			$this->error("Contract $c->vertragsnummer already exists [$c->id]");
+			\Log::error("Contract $c->vertragsnummer already exists [$c->id]");
 			return $c;
 		}
 
@@ -603,6 +604,7 @@ class importCommand extends Command {
 		// Update or Create Entry
 		$c->save();
 
+		\Log::info ("ADD CONTRACT: $c->id, $c->firstname $c->lastname, $c->street, $c->zip $c->city [$old_contract->vertragsnummer]");
 		$this->info ("\nADD CONTRACT: $c->id, $c->firstname $c->lastname, $c->street, $c->zip $c->city [$old_contract->vertragsnummer]");
 
 		return $c;
@@ -668,7 +670,7 @@ class importCommand extends Command {
 		foreach ($tarifs as $key => $tarif)
 		{
 			if (!$tarif) {
-				$this->info("\tNo $key Item exists in old System");
+				\Log::info("\tNo $key Item exists in old System");
 				continue;
 			}
 
@@ -677,11 +679,12 @@ class importCommand extends Command {
 
 			if ($item_n) {
 				$this->error("\tItem $key for Contract ".$new_contract->id." already exists");
+				\Log::error("\tItem $key for Contract ".$new_contract->id." already exists");
 				continue;
 			}
 
 			if ($prod_id <= 0) {
-				$this->error("\tProduct $prod_id does not exist yet [$tarif]");
+				\Log::error("\tProduct $prod_id does not exist yet [$tarif]");
 				continue;
 			}
 
@@ -694,9 +697,8 @@ class importCommand extends Command {
 				'valid_to_fixed' 	=> 1,
 				]);
 
+			\Log::info ("ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
 			$this->info ("ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
-			// TODO: Set QoS-ID -- done by daily_conversion() ??
-			// $c->next_voip_id = 0;
 		}
 	}
 
@@ -710,7 +712,7 @@ class importCommand extends Command {
 		if ((strpos($old_contract->tariffname, 'Volumen') === false) && (strpos($old_contract->tariffname, 'Speed') === false) && (strpos($old_contract->tariffname, 'Basic') === false))
 			return;
 
-		$this->info("Add extra Credit as Customer had volume tariff. [$new_contract->number]");
+		\Log::info("Add extra Credit as Customer had volume tariff. [$new_contract->number]");
 
 		Item::create([
 			'contract_id' 		=> $new_contract->id,
@@ -731,10 +733,9 @@ class importCommand extends Command {
 	{
 		$mandates_n = $mandates_new->where('contract_id', $new_contract->id)->all();
 
-		if ($mandates_n)
-		{
-			$this->error("\tCustomer $new_contract->id already has SepaMandate assigned");
-			return;
+		if ($mandates_n) {
+			\Log::error("\tCustomer $new_contract->id already has SepaMandate assigned");
+			return $this->error("\tCustomer $new_contract->id already has SepaMandate assigned");
 		}
 
 		$mandates_old = $db_con->table('tbl_sepamandate as s')
@@ -765,6 +766,7 @@ class importCommand extends Command {
 				'state' 			=> 'RCUR',
 				]);
 
+			\Log::info ("SEPAMANDATE ADD: ".$mandate->kontoinhaber.', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
 			$this->info ("SEPAMANDATE ADD: ".$mandate->kontoinhaber.', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
 		}
 	}
@@ -791,12 +793,14 @@ class importCommand extends Command {
 		{
 			if (!isset(self::$add_items[$item->id])) {
 				$this->error("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
+				\Log::error("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
 				continue;
 			}
 
 			if ($item->id == 1 && !$item->preis)
 				continue;
 
+			\Log::info("Add Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
 			$this->info("\tAdd Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
 
 			Item::create([
@@ -859,6 +863,7 @@ class importCommand extends Command {
 		if (array_key_exists($old_modem->mac_adresse, $new_modems))
 		{
 			$new_cm = $new_modems[$old_modem->mac_adresse];
+			\Log::info("Modem already exists in new System with ID $new_cm->id!");
 			$this->info("Modem already exists in new System with ID $new_cm->id!");
 			return $new_cm;
 		}
@@ -930,9 +935,12 @@ class importCommand extends Command {
 		$modem->deleted_at = NULL;
 
 		// Output
-		if ($modem->configfile_id == 0)
+		if ($modem->configfile_id == 0) {
 			$this->error('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
+			\Log::error('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
+		}
 
+		\Log::info ("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
 		$this->info ("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
 
 		$modem->save();
@@ -950,6 +958,7 @@ class importCommand extends Command {
 		if (array_key_exists($old_mta->mac_adresse, $new_mtas))
 		{
 			$new_mta = $new_mtas[$old_mta->mac_adresse];
+			\Log::info("MTA already exists in new System with ID $new_mta->id!");
 			$this->info("MTA already exists in new System with ID $new_mta->id!");
 			return $new_mta;
 		}
@@ -962,6 +971,7 @@ class importCommand extends Command {
 		$mta->type = 'sip';
 
 		// Log
+		\Log::info ("ADD MTA: ".$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
 		$this->info ("ADD MTA: ".$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
 
 		$mta->save();
@@ -978,6 +988,7 @@ class importCommand extends Command {
 		if (array_key_exists($old_phonenumber->username, $new_phonenumbers))
 		{
 			$new_pn = $new_phonenumbers[$old_phonenumber->username];
+			\Log::info("Phonenumber already exists in new System with ID $new_pn->id!");
 			$this->info("Phonenumber already exists in new System with ID $new_pn->id!");
 			return $new_pn;
 		}
@@ -994,6 +1005,7 @@ class importCommand extends Command {
 		$phonenumber->active 		= true;  		// $old_phonenumber->aktiv; 		most phonenrs are marked as inactive because of automatic controlling
 
 		// Log
+		\Log::info ("ADD Phonenumber: ".$phonenumber->id.', '.$new_mta->id.', '.$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
 		$this->info ("ADD Phonenumber: ".$phonenumber->id.', '.$new_mta->id.', '.$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
 
 		$phonenumber->save();
