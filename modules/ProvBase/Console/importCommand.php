@@ -328,17 +328,13 @@ class importCommand extends Command {
 	}
 
 
-
 	/**
 	 * Execute the console command.
 	 *
-	 * TODO / Note
-	 *  - no qos import -> uses default qos, see options
-	 *  - no voip contract id import
-	 *  - no MTA / Phone import
-	 *
-	 * @return mixed
-	 *
+	 * NOTE:
+	 	* All Logging with level higher than 'info' are written to laravel log too
+	 	* Check TODO(<nrs>) before Import!
+	 		(* set cluster mapping table)
 	 */
 	public function fire()
 	{
@@ -388,17 +384,7 @@ class importCommand extends Command {
 		$phonenumbers_new = Phonenumber::all();
 		$mandates_new 	= SepaMandate::all();
 		$products_new 	= Product::all();
-
-
-		if (\PPModule::is_active('mail'))
-			$emails_new = Email::all();
-
-
-		// Connect to old Database
-		$km3 = \DB::connection('pgsql-km3');
-
-		$cluster_filter = $this->option('cluster')  ? 'm.cluster_id = '.$this->option('cluster') : 'TRUE';
-		$plz_filter 	= $this->option('plz') 		? 'modem_adr.plz = \''.$this->option('plz')."'" : 'TRUE';
+		$emails_new 	= \PPModule::is_active('mail') ? Email::all() : [];
 
 
 		/**
@@ -434,24 +420,15 @@ class importCommand extends Command {
 		// progress bar
 		$i   = 1;
 		$num = count($contracts);
-		// $bar = $this->output->createProgressBar($num);
 
 		foreach ($contracts as $contract)
 		{
 			$this->info("\n$i/$num");
 			$c = $this->add_contract($contract, $contracts_new);
 
-			// discard already existing contracts
-			// if (!$c) {
-			// 	$i++;
-			// 	continue;
-			// }
-
-
 			// Email Import
 			if (\PPModule::is_active('mail'))
 				self::add_email($c, $emails_new, $contract);
-
 
 			/*
 			 * MODEM Import
@@ -487,6 +464,7 @@ class importCommand extends Command {
 				$mtas_n = [];
 				foreach ($mtas_new->where('modem_id', $m->id)->all() as $value)
 					$mtas_n[$value->mac] = $value;
+
 				foreach ($mtas as $mta)
 				{
 					$mta_n = $this->add_mta($m, $mtas_n, $mta);
@@ -495,9 +473,11 @@ class importCommand extends Command {
 					/*
 				 	 * Phonenumber Import
 					 */
-					$phonenumbers = $km3->table('tbl_mtaendpoints')
-						->where('mta', '=', $mta->id)
-						->where ('deleted', '=', 'false')
+					$phonenumbers = $km3->table('tbl_mtaendpoints as e')
+						->join('tbl_clis as c', 'c.endpoint', '=', 'e.id')
+						->where('e.mta', '=', $mta->id)
+						->where ('e.deleted', '=', 'false')
+						->select('e.*', 'c.carrier')
 						->get();
 
 					$pns_n = [];
@@ -509,8 +489,6 @@ class importCommand extends Command {
 				}
 			}
 
-			// $new_contracts[] = $c;
-
 			// Add Billing related Data
 			$this->add_tarifs($c, $items_new, $products_new, $contract);
 			$this->add_tarif_credit($c, $contract);
@@ -521,13 +499,8 @@ class importCommand extends Command {
 		}
 
 		echo "\n";
-
-
-		// Update QoS-ID of Modems - TODO: Check if qos_id is properly set on import - activate this otherwise
-		// foreach ($new_contracts as $cont) {
-		// 	$cont->push_to_modems();
-		// }
 	}
+
 
 
 	/**
@@ -597,6 +570,8 @@ class importCommand extends Command {
 		$c->phone 			= str_replace("/", "", $old_contract->tel);
 		$c->fax 			= $old_contract->fax;
 		$c->email 			= $old_contract->email;
+
+		// TODO: Fix that birthday and contract_end are '0000-00-00' in DB when not set
 		$c->birthday 		= $old_contract->geburtsdatum ? : null;
 
 		$c->description 	= $old_contract->beschreibung."\n".$old_contract->contr_descr;
@@ -731,6 +706,7 @@ class importCommand extends Command {
 	 */
 	private function add_tarif_credit($new_contract, $old_contract)
 	{
+		// TODO(5) check restrictions of volume tarifs!
 		if ((strpos($old_contract->tariffname, 'Volumen') === false) && (strpos($old_contract->tariffname, 'Speed') === false) && (strpos($old_contract->tariffname, 'Basic') === false))
 			return;
 
@@ -761,9 +737,9 @@ class importCommand extends Command {
 			return;
 		}
 
-		$mandates_old = $db_con->table(\DB::raw('tbl_sepamandate s, tbl_lastschriftkonten l'))
-			 	->selectRaw ('s.*, l.*, l.id as id')
-			 	->whereRaw('s.id = l.sepamandat')
+		$mandates_old = $db_con->table('tbl_sepamandate as s')
+				->join('tbl_lastschriftkonten as l', 's.id', '=', 'l.sepamandat')
+			 	->select ('s.*', 'l.*', 'l.id as id')
 			 	->where('s.kunde', '=', $old_contract->kunde)
 			 	->where('s.deleted', '=', 'false')
 			 	->where('l.deleted', '=', 'false')
@@ -1076,7 +1052,7 @@ class importCommand extends Command {
 	protected function getOptions()
 	{
 		return array(
-			array('qos', null, InputOption::VALUE_OPTIONAL, 'QOS id for default QOS, e.g. 1', 0),
+			// array('qos', null, InputOption::VALUE_OPTIONAL, 'QOS id for default QOS, e.g. 1', 0),
 			array('configfile', null, InputOption::VALUE_OPTIONAL, 'Configfile id for default Configfile, e.g. 5', 0),
 			array('plz', null, InputOption::VALUE_OPTIONAL, 'Import only Contracts with special zip code (from tbl_adressen), e.g. 09518', 0),
 			array('cluster', null, InputOption::VALUE_OPTIONAL, 'Import only Contracts/Modems from cluster_id, e.g. 160', 0),
@@ -1129,36 +1105,3 @@ class importCommand extends Command {
 	}
 
 }
-
-
-
-		// $termination_date = NULL;
-		// if ($this->option('terminate'))
-		// {
-		// 	// check if date is valid
-		// 	if (date('Y-m-d', strtotime($this->option('terminate'))) == $this->option('terminate'))
-		// 		$termination_date = $this->option('terminate');
-		// 	else {
-		// 		$this->error('Termination Date is not a valid string. Abort!');
-		// 		return;
-		// 	}
-		// }
-
-			// terminate km3 Contract
-			// if ($termination_date) {
-			// 	$km3->table('tbl_vertrag')->where('id', '=', $contract->id)->update(['abgeklemmt' => $termination_date]);
-			// 	$this->info("Terminated Contract $contract->id by $termination_date");
-			// }
-
-
-// $bar = $this->output->createProgressBar(count($contracts_new));
-// foreach ($contracts_new as $v)
-// {
-// 	$ret = self::split_street_housenr($v->street);
-// 	$v->street = $ret[0];
-// 	$v->house_number = $v->house_number ? : $ret[1];
-
-// 	$v->save();
-// 	$bar->advance();
-// }
-// exit(0);
