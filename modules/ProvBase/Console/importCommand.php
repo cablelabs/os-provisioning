@@ -355,11 +355,30 @@ class importCommand extends Command {
 		if (!Qos::count())
 			return $this->error('no QOS entry exists to use');
 
-		if (env('APP_KEY') != 'NTh0ocCOtO0x8NU7svT7lSrD9YGlLJAJ')
-		{
-			$this->error('Import is not made for this Server!');
-			return;
-		}
+		if (!Configfile::count())
+			return $this->error('no configfile entry exists to use');
+
+		if (!Product::count())
+			return $this->error('no product entry exists to use');
+
+
+		$cluster_filter = $this->option('cluster')  ? 'm.cluster_id = '.$this->option('cluster') : 'TRUE';
+		$plz_filter 	= $this->option('plz') 		? 'cm_adr.plz = \''.$this->option('plz')."'" : 'TRUE';
+
+		// TODO(4): Adapt this Contract Filter for every Import
+		$area_filter = function ($query) use ($cluster_filter) {$query
+				->whereRaw ($cluster_filter)
+				// ->whereRaw("cm_adr.strasse not like '%Stra%'")
+				// ->where(function ($query) { $query
+				// 	->whereRaw ("cm_adr.strasse like '%Flo%m%hle%'")
+				// 	->orWhereRaw ("cm_adr.strasse like 'Fl%talstr%'")
+				// 	->orWhereRaw ("cm_adr.ort like '%/OT Flo%'");}
+				// )
+				;};
+
+
+		// Connect to old Database
+		$km3 = \DB::connection('pgsql-km3');
 
 		// Get all important Data from new DB
 		$contracts_new 	= Contract::all();
@@ -385,7 +404,7 @@ class importCommand extends Command {
 		/**
 		 * Add Modems currently needed for HFC Devices (Amplifier & Nodes (VGPs & TVMs))
 		 */
-		self::add_netelements($km3, $cluster_filter, $modems_new);
+		self::add_netelements($km3, $area_filter, $modems_new);
 
 
 		/*
@@ -394,25 +413,20 @@ class importCommand extends Command {
 		 * Get all Contracts that have at least one modem with an adress inside the specified area
 		 * with: Get customer data & Tarifname from old systems DB
 		 */
-		$contracts = $km3->table(\DB::raw('tbl_vertrag v, tbl_modem m, tbl_adressen a, tbl_adressen modem_adr, tbl_kunde k, tbl_tarif t, tbl_posten p'))
+		$contracts = $km3->table('tbl_vertrag as v')
 				->selectRaw ('distinct on (v.vertragsnummer) v.vertragsnummer, v.*, a.*, k.*, t.name as tariffname,
 					v.id as id, v.beschreibung as contr_descr, m.cluster_id')
-				->whereRaw('m.adresse = modem_adr.id')
-				->whereRaw('v.ansprechpartner = a.id')
-				->whereRaw('v.kunde = k.id')
-				->whereRaw('m.vertrag = v.id')
-				->whereRaw('v.tarif = t.id')
-				->whereRaw('t.posten_volumen_extern = p.id')
-
+				->join('tbl_modem as m', 'm.vertrag', '=', 'v.id')
+				->join('tbl_adressen as a', 'v.ansprechpartner', '=', 'a.id')
+				->join('tbl_adressen as cm_adr', 'm.adresse', '=', 'cm_adr.id')
+				->join('tbl_kunde as k', 'v.kunde', '=', 'k.id')
+				->join('tbl_tarif as t', 'v.tarif', '=', 't.id')
+				->join('tbl_posten as p', 't.posten_volumen_extern', '=', 'p.id')
 				->where ('v.deleted', '=', 'false')
 				->where ('m.deleted', '=', 'false')
-				->whereRaw('(v.abgeklemmt is null or v.abgeklemmt >= \''.date('Y-m-d').'\'::date)') 		// dont import out-of-date contracts
+				->whereRaw('(v.abgeklemmt is null or v.abgeklemmt >= CURRENT_DATE)') 		// dont import out-of-date contracts
+				->where($area_filter)
 
-				->whereRaw ($cluster_filter)
-				// ->where(function ($query) use ($plz_filter) { $query
-				// 	->whereRaw ('modem_adr.strasse not like \'Bussardw%\'')
-				// 	->orWhere ('v.vertragsnummer', '=', 43319);})
-			 	// ->where ('v.vertragsnummer', '=', 41536)
 				->orderBy('v.vertragsnummer')
 				->get();
 
@@ -1015,7 +1029,7 @@ class importCommand extends Command {
 	/**
 	 * Add Modems of Netelements to Erznet Contract as this is still necessary to get them online in new system
 	 */
-	private function add_netelements($db_con, $cluster_filter, $new_modems)
+	private function add_netelements($db_con, $area_filter, $new_modems)
 	{
 		$devices = $db_con->table(\DB::raw('tbl_modem m, tbl_adressen a, tbl_configfiles c'))
 					->selectRaw ('m.*, a.*, m.id as id, c.name as cf_name')
@@ -1024,8 +1038,11 @@ class importCommand extends Command {
 					->where ('m.deleted', '=', 'false')
 					->where('m.device', '=', 9)
 					// ->where('m.mac_adresse', '=', '00:d0:55:07:1d:86')
-					->whereRaw($cluster_filter)
+					->where($area_filter)
 					->get();
+
+		if (!$devices)
+			return;
 
 		$contract = Contract::find(500000);
 		$modems_n = [];
