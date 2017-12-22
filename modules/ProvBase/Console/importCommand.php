@@ -342,18 +342,18 @@ class importCommand extends Command {
 	 */
 	public function fire()
 	{
-		// Pre - Testing
-		if (!Qos::first())
-		{
-			$this->error('no QOS entry exists to use');
+		// NOTE: Search by TODO(1) for Configfile Map and so on!
+		if (!$this->confirm("IMPORTANT!!!\n\nHave following things been done (in source code) for this import?:
+			(1) Configfile-Mapping
+			(2) Tariff-Mapping
+			(3) Item-Mapping (Zusatzposten)
+			(4) Has Contract filter been correctly set up?
+			(5) Shall volume tarifs get Credits?\n"))
 			return;
-		}
 
-		if (!Configfile::first())
-		{
-			$this->error('no configfile entry exists to use');
-			return;
-		}
+		// Pre - Testing
+		if (!Qos::count())
+			return $this->error('no QOS entry exists to use');
 
 		if (env('APP_KEY') != 'NTh0ocCOtO0x8NU7svT7lSrD9YGlLJAJ')
 		{
