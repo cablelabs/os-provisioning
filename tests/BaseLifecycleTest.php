@@ -26,6 +26,7 @@ class BaseLifecycleTest extends TestCase {
 		'testDeleteFromIndexView',
 		'testEmptyCreate',
 		'testIndexViewVisible',
+		'testIndexViewDatatablesDataAvailable',
 		'testUpdate',
 	];
 
@@ -394,6 +395,24 @@ class BaseLifecycleTest extends TestCase {
 
 
 	/**
+	 * Get model IDs that should be visible on index view.
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _get_ids_visible_on_index_view() {
+
+		$ids = DB::table($this->database_table)
+			->select($this->index_view_order_field)
+			->whereNull('deleted_at')
+			->orderBy($this->index_view_order_field, $this->index_view_order_order)
+			->limit($this->testrun_count)
+			->get();
+
+		return $ids;
+	}
+
+
+	/**
 	 * Check if index view is visible.
 	 *
 	 * @author Patrick Reichel
@@ -410,7 +429,43 @@ class BaseLifecycleTest extends TestCase {
 			->see("NMS Prime")
 			->see("The next Generation NMS")
 			->see($this->model_name);
+	}
 
+
+	/**
+	 * Check if datatables return data in index view.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function testIndexViewDatatablesDataAvailable() {
+
+		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
+			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)\n";
+			return;
+		}
+
+		$route = $this->model_name.".data";
+		if (!Route::has($route)) {
+			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (no datatables route ($route) found)\n";
+			return;
+		}
+
+		$ids = $this->_get_ids_visible_on_index_view();
+
+		foreach ($ids as $id) {
+			$id = $id->id;
+
+			$this->actingAs($this->user);
+			$this->visit(route("$this->model_name.index"));
+			$this->json('GET', route($route), [],  ['HTTP_X-Requested-With' => 'XMLHttpRequest']);
+			$this->seeJson([
+				/* "ids\[".$id."\]", */
+				/* "id" => "100000", */
+				/* 'id' =>$id, */
+				/* '100000', */
+				"checkbox" => "<input style='simple' align='center' class='' name='ids[$id]' type='checkbox' value='1' >",
+			]);
+		}
 	}
 
 

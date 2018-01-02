@@ -17,6 +17,7 @@ OPTS=" --testdox-html $LOGFILE --colors"
 TESTS=""
 TESTS=" modules/ProvVoip/Tests/PhonenumberLifecycleTest.php"
 TESTS=" --filter testDeleteFromIndexView modules/ProvBase/Tests/ModemLifecycleTest.php"
+TESTS=" --filter testIndexViewDatatablesDataAvailable modules/ProvBase/Tests/ModemLifecycleTest.php"
 
 
 touch $LOGFILE $OUTFILE
