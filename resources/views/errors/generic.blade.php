@@ -25,7 +25,11 @@
             <div class="error-code m-b-10">{{$error}}<i class="fa fa-warning"></i></div>
             <div class="error-content">
                 <div class="error-message">{{$message}}</div>
-                @if ($error == 404)
+                @if ($error == 403)
+                	<div class="error-desc m-b-20">
+						<b>Permission denied!</b> <br />
+    	            </div>
+				@elseif ($error == 404)
                 	<div class="error-desc m-b-20">
                     	The page you're looking for doesn't exist. <br />
 	                    <!-- Perhaps, there pages will help find what you're looking for. -->

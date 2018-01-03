@@ -125,7 +125,7 @@ class ModemController extends \BaseController {
 		try {
 			\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
 		}
-		catch (PermissionDeniedError $ex) {
+		catch (AuthExceptions $ex) {
 			return null;
 		}
 

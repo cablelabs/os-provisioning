@@ -112,7 +112,7 @@ class BaseAuthController extends Controller {
 
 		// no user logged in
 		if (is_null($cur_user)) {
-			throw new AuthExceptions('Login Required');
+			throw new AuthExceptions('Login required.');
 		}
 
 		// build permissions array for easy access to user rights
@@ -151,8 +151,8 @@ class BaseAuthController extends Controller {
 		try {
 			static::_check_permissions($access, $model_to_check);
 		}
-		catch (PermissionDeniedError $ex) {
-			return View::make('auth.denied', array('error_msg' => $ex->getMessage()));
+		catch (AuthExceptions $ex) {
+			abort(403, $ex->getMessage());
 		}
 	}
 }
