@@ -16,8 +16,9 @@ OPTS=" --testdox-html $LOGFILE --colors"
 # can be used on developing tests (you don't want to run the complete test suite in this case)
 TESTS=""
 TESTS=" modules/ProvVoip/Tests/PhonenumberLifecycleTest.php"
-TESTS=" --filter testDeleteFromIndexView modules/ProvBase/Tests/ModemLifecycleTest.php"
 TESTS=" --filter testIndexViewDatatablesDataAvailable modules/ProvBase/Tests/ModemLifecycleTest.php"
+TESTS=" --filter testDeleteFromIndexView modules/ProvBase/Tests/ModemLifecycleTest.php"
+TESTS=" --filter testRoutesAuthMiddleware tests/RoutesAuthTest"
 
 
 touch $LOGFILE $OUTFILE
