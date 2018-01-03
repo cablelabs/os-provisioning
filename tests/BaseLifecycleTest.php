@@ -30,6 +30,11 @@ class BaseLifecycleTest extends TestCase {
 		'testUpdate',
 	];
 
+	// this blacklist defines tests that should not be run (overwrites $tests_to_be_run)
+	// use this in your derived test classes to cut out single tests without the need
+	// to keep the whitelist up-to-date
+	protected $tests_to_be_excluded = [];
+
 	// define how often the create, update and delete tests should be run
 	protected $testrun_count = 2;
 
@@ -53,7 +58,7 @@ class BaseLifecycleTest extends TestCase {
 
 	// because of the datatables there are not all entries visible in index view
 	// so to test deletion we have to choose an ID from the first list
-	// this variable defines which field is used for inital sort
+	// this variables defines how initial sorting is done
 	protected $index_view_order_field = 'id';
 	protected $index_view_order_order = 'asc';
 
@@ -349,14 +354,37 @@ class BaseLifecycleTest extends TestCase {
 
 
 	/**
+	 * Checks if a test method shall be executed
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _test_shall_be_run($test_method) {
+
+		// check against the whitelist
+		if (!in_array($test_method, $this->tests_to_be_run)) {
+			echo "	WARNING: Skipping ".$this->class_name."->".$test_method."() (not found in tests_to_be_run)\n";
+			return false;
+		}
+
+		// check against the blacklist
+		if (in_array($test_method, $this->tests_to_be_excluded)) {
+			echo "	WARNING: Skipping ".$this->class_name."->".$test_method."() (found in tests_to_be_excluded)\n";
+			return false;
+		}
+
+		// all checks passed: run the test
+		return true;
+	}
+
+
+	/**
 	 * Try to create without data – we expect this to fail.
 	 *
 	 * @author Patrick Reichel
 	 */
 	public function testEmptyCreate() {
 
-		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
-			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)\n";
+		if (!$this->_test_shall_be_run(__FUNCTION__)) {
 			return;
 		}
 
@@ -419,8 +447,7 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	public function testIndexViewVisible() {
 
-		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
-			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)\n";
+		if (!$this->_test_shall_be_run(__FUNCTION__)) {
 			return;
 		}
 
@@ -439,8 +466,7 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	public function testIndexViewDatatablesDataAvailable() {
 
-		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
-			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)\n";
+		if (!$this->_test_shall_be_run(__FUNCTION__)) {
 			return;
 		}
 
@@ -476,8 +502,7 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	public function testCreateWithFakeData() {
 
-		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
-			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)\n";
+		if (!$this->_test_shall_be_run(__FUNCTION__)) {
 			return;
 		}
 
@@ -514,8 +539,7 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	public function testCreateTwiceUsingTheSameData() {
 
-		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
-			echo "WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)";
+		if (!$this->_test_shall_be_run(__FUNCTION__)) {
 			return;
 		}
 
@@ -553,13 +577,12 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	public function testUpdate() {
 
-		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
-			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)\n";
+		if (!$this->_test_shall_be_run(__FUNCTION__)) {
 			return;
 		}
 
 		if (!$this->update_fields) {
-			echo "	WARNING: No update fields – cannot test!\n";
+			echo "	WARNING: No entries in update_fields – cannot test!\n";
 			return;
 		}
 
@@ -592,8 +615,7 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	public function testDeleteFromIndexView() {
 
-		if (!in_array(__FUNCTION__, $this->tests_to_be_run)) {
-			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (not in in tests_to_be_run)\n";
+		if (!$this->_test_shall_be_run(__FUNCTION__)) {
 			return;
 		}
 
