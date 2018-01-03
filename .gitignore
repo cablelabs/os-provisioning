@@ -48,3 +48,7 @@ Documentation/doxywarn.log
 
 # ignore queue process pid's
 *queue.pid
+
+# ignore debug output from testing
+phpunit_log.htm
+phpunit_output.htm

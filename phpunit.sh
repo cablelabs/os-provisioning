@@ -10,7 +10,7 @@ DEBUG=" --debug"
 PHPUNIT="/usr/bin/phpunit"
 
 OPTS=""
-OPTS=" --testdox-html $LOGFILE --colors"
+OPTS=" --testdox-html $LOGFILE --colors --stop-on-failure"
 
 # if empty: run all tests
 # can be used on developing tests (you don't want to run the complete test suite in this case)
