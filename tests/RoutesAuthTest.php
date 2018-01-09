@@ -94,17 +94,22 @@ class RoutesAuthTest extends TestCase {
 			else {
 				switch ($method) {
 					case "GET":
+						// this should return a 403 error code
 						echo "\nTesting $name ($method: $url)";
 						$this->get($url);
+						$this->assertResponseStatus(403);
 						break;
-					/* case "POST": */
-					/* 	echo "\nTesting $name ($method: $url)"; */
-					/* 	$this->post($url); */
-					/* 	break; */
+					case "POST":
+						// this should crash because no CSRF token is given
+						echo "\nTesting $name ($method: $url)";
+						$this->call('POST', $url."/1", []);
+						$this->followRedirects();
+						$this->see('TokenMismatchException');
+						/* $this->json('POST', $url."/1", []); */
+						break;
 					default:
 						array_push($not_testable_routes, "$name ($method: $url)");
 				}
-				$this->assertResponseStatus(403);
 			}
 		}
 
