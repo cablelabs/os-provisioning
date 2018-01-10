@@ -66,13 +66,10 @@ class ContractTableSeeder extends \BaseSeeder {
 			'description' => $faker->sentence,
 		];
 
-		// add numbers only in seeding mode or on disabled billing module
-		if (($topic == 'seed') || (!\Module::find('BillingBase')->active())) {
-			$ret['number'] = 'contr_'.($count + 1);
-			$ret['number2'] = 'legacy_contr_'.($count + 13157);
-			$ret['number3'] = 'Cu/2015/Q4/'.($count);
-			$ret['number4'] = 'legacy_cust_'.($count + 180558);
-		}
+		$ret['number'] = 'contr_'.($count + 1);
+		$ret['number2'] = 'legacy_contr_'.($count + 13157);
+		$ret['number3'] = 'Cu/2015/Q4/'.($count);
+		$ret['number4'] = 'legacy_cust_'.($count + 180558);
 
 		if (\Module::find('BillingBase')->active()) {
 			$ret['costcenter_id'] = $faker->numberBetween(1, 2);
