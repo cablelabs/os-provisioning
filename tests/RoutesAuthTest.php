@@ -14,12 +14,22 @@ class RoutesAuthTest extends TestCase {
 		'ProvVoipEnvia.cron',
 	];
 
+	// some routes make problems (e.g. returning status 500 in testing
+	// Solve this problems and remove routes from array
 	protected $problematic_routes_to_check = [
 		'Tree.delete',
 		'Modem.ping',
 		'Modem.monitoring',
 		'Modem.log',
 		'Modem.lease',
+	];
+
+	// some routes do redirect to login page instead of giving status 403
+	// as these routs needs other tests you can define them here
+	protected $routes_redirecting_to_login_page = [
+		'admin',
+		'Auth.login',
+		'CustomerAuth.login',
 	];
 
 
@@ -55,8 +65,6 @@ class RoutesAuthTest extends TestCase {
 	 */
 	public function testRoutesAuthMiddleware() {
 
-		$not_testable_routes = [];
-
 		$routeCollection = Route::getRoutes();
 		foreach ($routeCollection as $value) {
 			$name = $value->getName();
@@ -77,14 +85,8 @@ class RoutesAuthTest extends TestCase {
 			$url = explode('?', $_)[0];
 			$method = $value->getMethods()[0];
 
-			// admin redirects to login page
-			if (
-				($name == 'admin')
-				||
-				($name == 'Auth.login')
-				||
-				($name == 'CustomerAuth.login')
-			) {
+			if (in_array($name, $this->routes_redirecting_to_login_page)) {
+				// special test for redirects to login page
 				echo "\nTesting $name ($method: $url)";
 				$this->visit($url)
 					->see('Username')
@@ -92,33 +94,12 @@ class RoutesAuthTest extends TestCase {
 					->see('Sign me in');
 			}
 			else {
-				switch ($method) {
-					case "GET":
-						// this should return a 403 error code
-						echo "\nTesting $name ($method: $url)";
-						$this->get($url);
-						$this->assertResponseStatus(403);
-						break;
-					case "POST":
-						// this should crash because no CSRF token is given
-						echo "\nTesting $name ($method: $url)";
-						$this->call('POST', $url."/1", []);
-						$this->followRedirects();
-						$this->see('TokenMismatchException');
-						/* $this->json('POST', $url."/1", []); */
-						break;
-					default:
-						array_push($not_testable_routes, "$name ($method: $url)");
-				}
+				// all other routes should return 403 if not logged in
+				echo "\nTesting $name ($method: $url)";
+				$this->call($method, $url, []);
+				$this->assertResponseStatus(403);
+				$this->see('denied');
 			}
-		}
-
-		// print routes with known problems
-		if ($not_testable_routes) {
-			echo "\n\nThere are routes that are not testable (e.g. not implemented method):";
-		}
-		foreach ($not_testable_routes as $r) {
-			echo "\n	$r";
 		}
 
 		// print routes with known problems
