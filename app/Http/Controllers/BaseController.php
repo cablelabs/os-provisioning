@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Request;
 use Yajra\Datatables\Datatables;
 use Monolog\Logger;
 
-use App\Exceptions\AuthExceptions;
+use App\Exceptions\AuthException;
 
 
 /*

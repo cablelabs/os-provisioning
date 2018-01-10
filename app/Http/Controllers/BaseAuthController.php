@@ -7,7 +7,7 @@ use Auth;
 use NoAuthenticateduserError;
 use Log;
 
-use App\Exceptions\AuthExceptions;
+use App\Exceptions\AuthException;
 
 /*
  * Authentication Base Class for Checking active
@@ -96,10 +96,7 @@ class BaseAuthController extends Controller {
 	 * @param $access [view|create|edit|delete]
 	 * @param $model_to_check model path and name (in format as is stored in database); use current model if not given
 	 *
-	 * @throws NoAuthenticatedUserError if no user is logged in
-	 * @throws NoModelPermissionError if user is not allowed to acces the model
-	 * @throws InvalidPermissionsRequest if permission request is invalid
-	 * @throws InsufficientRightsError if user has not the specific right needed to perform an action
+	 * @throws AuthException if permission is denied (not logged in, insufficient rights, etc.)
 	 */
 	protected static function _check_permissions($access, $model_to_check=null) {
 
@@ -112,7 +109,7 @@ class BaseAuthController extends Controller {
 
 		// no user logged in
 		if (is_null($cur_user)) {
-			throw new AuthExceptions('Login required.');
+			throw new AuthException('Login required.');
 		}
 
 		// build permissions array for easy access to user rights
@@ -120,13 +117,13 @@ class BaseAuthController extends Controller {
 
 		// check model rights
 		if (!array_key_exists($model_to_check, $permissions['model'])) {
-			throw new AuthExceptions('Access to model '.$model_to_check.' not allowed for user '.$cur_user->login_name.'.');
+			throw new AuthException('Access to model '.$model_to_check.' not allowed for user '.$cur_user->login_name.'.');
 		}
 		if (!array_key_exists($access, $permissions['model'][$model_to_check])) {
-			throw new AuthExceptions('Something went wrong asking for '.$access.' right in '.$model_to_check.' for user '.$cur_user->login_name.'.');
+			throw new AuthException('Something went wrong asking for '.$access.' right in '.$model_to_check.' for user '.$cur_user->login_name.'.');
 		}
 		if ($permissions['model'][$model_to_check][$access] == 0) {
-			throw new AuthExceptions('User '.$cur_user->login_name.' is not allowed to '.$access.' in '.$model_to_check.'.');
+			throw new AuthException('User '.$cur_user->login_name.' is not allowed to '.$access.' in '.$model_to_check.'.');
 		}
 
 		// TODO: check net rights
@@ -148,7 +145,7 @@ class BaseAuthController extends Controller {
 	 */
 	public static function auth_check ($access, $model_to_check=null)
 	{
-		// Handling of thrown AuthExceptions is done in app/Exceptions/Handler.php
+		// Handling of thrown AuthException is done in app/Exceptions/Handler.php
 		static::_check_permissions($access, $model_to_check);
 	}
 }

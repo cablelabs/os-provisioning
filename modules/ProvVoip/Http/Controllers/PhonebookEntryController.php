@@ -234,7 +234,7 @@ class PhonebookEntryController extends \BaseController {
 		try {
 			\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
 		}
-		catch (AuthExceptions $ex) {
+		catch (AuthException $ex) {
 			return null;
 		}
 

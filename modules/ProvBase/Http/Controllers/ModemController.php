@@ -7,7 +7,7 @@ use Modules\ProvBase\Entities\Endpoint;
 use Modules\ProvBase\Entities\Configfile;
 use Modules\ProvBase\Entities\Qos;
 
-use App\Exceptions\AuthExceptions;
+use App\Exceptions\AuthException;
 
 
 class ModemController extends \BaseController {
@@ -125,7 +125,7 @@ class ModemController extends \BaseController {
 		try {
 			\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
 		}
-		catch (AuthExceptions $ex) {
+		catch (AuthException $ex) {
 			return null;
 		}
 

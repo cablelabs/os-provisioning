@@ -4,7 +4,7 @@ use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
 
-use App\Exceptions\AuthExceptions;
+use App\Exceptions\AuthException;
 
 class Handler extends ExceptionHandler {
 
@@ -40,7 +40,7 @@ class Handler extends ExceptionHandler {
 	public function render($request, Exception $e)
 	{
 		// Auth Error Messages
-		if ($e instanceof AuthExceptions)
+		if ($e instanceof AuthException)
 		{
 			$msg = "AUTH failed: ";
 			$msg .= \Request::getClientIP()." tried to access ".\Request::getRequestUri();
