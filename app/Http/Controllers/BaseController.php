@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Request;
 use Yajra\Datatables\Datatables;
 use Monolog\Logger;
 
-use App\Exceptions\AuthException;
+use App\Exceptions\AuthExceptions;
 
 
 /*
@@ -561,11 +561,8 @@ class BaseController extends Controller {
 		$validator  = Validator::make($data, $rules);
 		$data 		= $controller->prepare_input_post_validation ($data);
 
-		if ($validator->fails())
-		{
-			$msg = 'Input invalid – please correct the following errors';
-			\Session::push('tmp_error_above_form', $msg);
-			return Redirect::back()->withErrors($validator)->withInput()->with('message', $msg)->with('message_color', 'danger');
+		if ($validator->fails()) {
+			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'danger');
 		}
 
 		$obj = $obj::create($data);
@@ -577,9 +574,7 @@ class BaseController extends Controller {
 		if (!$redirect)
 			return $id;
 
-		$msg = 'Created!';
-		\Session::push('tmp_success_above_form', $msg);
-		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', $msg)->with('message_color', 'success');
+		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', 'Created!')->with('message_color', 'success');
 	}
 
 
@@ -670,18 +665,9 @@ class BaseController extends Controller {
 		// Add N:M Relations
 		self::_set_many_to_many_relations($obj, $data);
 
-		// create messages depending on error state created while observer execution
-		// TODO: check if giving msg/color to route is still wanted or obsolete by the new tmp_*_above_* messages format
-		if (!\Session::has('error')) {
-			$msg = 'Updated!';
-			$color = 'info';
-			\Session::push('tmp_success_above_form', $msg);
-		}
-		else {
-			$msg = \Session::get('error');
-			$color = 'warning';
-			\Session::push('tmp_error_above_form', $msg);
-		}
+		// error msg created while observer execution
+		$msg = \Session::has('error') ? \Session::get('error') : 'Updated';
+		$color = \Session::has('error') ? 'warning' : 'info';
 
 		$route_model = \NamespaceController::get_route_name();
 
