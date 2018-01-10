@@ -15,6 +15,10 @@
             <div class="error-code m-b-10">Access Denied <i class="fa fa-warning"></i></div>
             <div class="error-content">
                 <div class="error-message">
+					@if ($status)
+						{{ $status }}
+					@endif
+
 	                @if (session('status'))
 					    {{ session('status') }}
 					@endif
