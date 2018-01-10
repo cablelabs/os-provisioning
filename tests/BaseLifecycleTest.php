@@ -26,7 +26,6 @@ class BaseLifecycleTest extends TestCase {
 		'testDeleteFromIndexView',
 		'testEmptyCreate',
 		'testIndexViewVisible',
-		'testIndexViewDatatablesDataAvailable',
 		'testUpdate',
 	];
 
@@ -55,12 +54,6 @@ class BaseLifecycleTest extends TestCase {
 
 	// container to collect all created entities
 	protected static $created_entity_ids = [];
-
-	// because of the datatables there are not all entries visible in index view
-	// so to test deletion we have to choose an ID from the first list
-	// this variables defines how initial sorting is done
-	protected $index_view_order_field = 'id';
-	protected $index_view_order_order = 'asc';
 
 	// the following helpers define the stuff to use
 	// we try to guess this from child class name (you can set it there explicitely if needed)
@@ -131,6 +124,11 @@ class BaseLifecycleTest extends TestCase {
 	}
 
 
+	/**
+	 * Creates a Laravel application used for testing
+	 *
+	 * @author Patrick Reichel
+	 */
 	public function createApplication() {
 
 		$app = parent::createApplication();
@@ -423,24 +421,6 @@ class BaseLifecycleTest extends TestCase {
 
 
 	/**
-	 * Get model IDs that should be visible on index view.
-	 *
-	 * @author Patrick Reichel
-	 */
-	protected function _get_ids_visible_on_index_view() {
-
-		$ids = DB::table($this->database_table)
-			->select($this->index_view_order_field)
-			->whereNull('deleted_at')
-			->orderBy($this->index_view_order_field, $this->index_view_order_order)
-			->limit($this->testrun_count)
-			->get();
-
-		return $ids;
-	}
-
-
-	/**
 	 * Check if index view is visible.
 	 *
 	 * @author Patrick Reichel
@@ -455,43 +435,8 @@ class BaseLifecycleTest extends TestCase {
 			->visit(route("$this->model_name.index"))
 			->see("NMS Prime")
 			->see("The next Generation NMS")
-			->see($this->model_name);
-	}
-
-
-	/**
-	 * Check if datatables return data in index view.
-	 *
-	 * @author Patrick Reichel
-	 */
-	public function testIndexViewDatatablesDataAvailable() {
-
-		if (!$this->_test_shall_be_run(__FUNCTION__)) {
-			return;
-		}
-
-		$route = $this->model_name.".data";
-		if (!Route::has($route)) {
-			echo "	WARNING: Skipping ".$this->class_name."->".__FUNCTION__."() (no datatables route ($route) found)\n";
-			return;
-		}
-
-		$ids = $this->_get_ids_visible_on_index_view();
-
-		foreach ($ids as $id) {
-			$id = $id->id;
-
-			$this->actingAs($this->user);
-			$this->visit(route("$this->model_name.index"));
-			$this->json('GET', route($route), [],  ['HTTP_X-Requested-With' => 'XMLHttpRequest']);
-			$this->seeJson([
-				/* "ids\[".$id."\]", */
-				/* "id" => "100000", */
-				/* 'id' =>$id, */
-				/* '100000', */
-				"checkbox" => "<input style='simple' align='center' class='' name='ids[$id]' type='checkbox' value='1' >",
-			]);
-		}
+			->see($this->model_name)
+			->see('/admin/'.$this->model_name.'/0');	// part of the delete form
 	}
 
 
@@ -602,9 +547,6 @@ class BaseLifecycleTest extends TestCase {
 			;
 		}
 
-		// clear array (else this data will be used by other models, too)
-		self::$created_entity_ids = [];
-
 	}
 
 
@@ -619,29 +561,26 @@ class BaseLifecycleTest extends TestCase {
 			return;
 		}
 
-		// get IDs visible on index view
-		$ids = DB::table($this->database_table)
-			->select($this->index_view_order_field)
-			->whereNull('deleted_at')
-			->orderBy($this->index_view_order_field, $this->index_view_order_order)
-			->limit($this->testrun_count)
-			->get();
-
+		// delete only freshly created model entities
+		// others could have children that disallows deletion!
+		$ids = self::$created_entity_ids;
 		foreach ($ids as $id) {
-			$id = $id->id;
 
 			if ($this->debug) echo "\nDeleting $this->model_name $id";
 
-			$this->actingAs($this->user)
-				->visit(route("$this->model_name.index"))
-				->post("_delete", [
-					"ids[$id]" => '1',
-					"_token" => Session::token(),
-				]);
+			$this->actingAs($this->user);
+			$this->visit(route("$this->model_name.index"));
+
+			// attention: this is only running if datatables are disabled in testing environment
+			// phpunit does not execute JavaScript!
+			$this->check("ids[$id]");
+			$this->press("_delete");
 			$this->see("Deleted $this->model_name $id");
 			$this->notSeeInDatabase($this->database_table, ['deleted_at' => null, 'id' => $id]);
 		}
-	}
 
+		// clear array (else this data will be used by other models, too)
+		self::$created_entity_ids = [];
+	}
 
 }
