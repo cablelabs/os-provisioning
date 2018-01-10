@@ -18,7 +18,7 @@ class CmtsTableSeeder extends \BaseSeeder {
 			Cmts::create([
 				'hostname' => $faker->unique->name,
 				'type' => "cmts",
-				'ip' => $faker->ipv4(),
+				'ip' => $faker->localIpv4(),	// using local IPs prevent NMS from snmpget against outside IPs
 				'community_rw' => "private",
 				'community_ro' => "public",
 				'company' => $company[array_rand($company)],
