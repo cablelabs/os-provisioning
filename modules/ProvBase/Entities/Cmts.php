@@ -295,33 +295,41 @@ class Cmts extends \BaseModel {
 		\Log::info("CMTS $this->hostname: Store CM US SNRs");
 
 		try {
-			// DOCS-IF3-MIB::docsIf3CmtsCmRegStatusIPv4Addr, ...
-			$ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.3.1.5');
-			$snrs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.4.1.4');
+			try {
+				// DOCS-IF3-MIB::docsIf3CmtsCmRegStatusIPv4Addr, ...
+				$ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.3.1.5');
+				$snrs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.4.1.4');
 
-			foreach ($ips as $i_key => $i_val) {
-				$i_key = last(explode('.', $i_key));
-				$tmp = array_filter($snrs, function($s_key) use($i_key) {
-						return strpos($s_key, $i_key) !== false;
-				}, ARRAY_FILTER_USE_KEY);
-				$ret[long2ip(hexdec($i_val))] = ArrayHelper::ArrayDiv(array_values($tmp));
+				foreach ($ips as $i_key => $i_val) {
+					$i_key = last(explode('.', $i_key));
+					$tmp = array_filter($snrs, function($s_key) use($i_key) {
+							return strpos($s_key, $i_key) !== false;
+					}, ARRAY_FILTER_USE_KEY);
+					$ret[long2ip(hexdec($i_val))] = ArrayHelper::ArrayDiv(array_values($tmp));
+				}
+
+			} catch (\Exception $e) {
+				if (strpos($e->getMessage(), 'No Such Object available on this agent at this OID') === false)
+						throw $e;
+
+				// try DOCSIS2.0 - DOCS-IF-MIB::docsIfCmtsCmStatusIpAddress, ...
+				$ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.3.3.1.3');
+				$snrs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.3.3.1.13');
+
+				foreach ($ips as $i_key => $i_val) {
+					$i_key = last(explode('.', $i_key));
+					$tmp = array_filter($snrs, function($s_key) use($i_key) {
+							return strpos($s_key, $i_key) !== false;
+					}, ARRAY_FILTER_USE_KEY);
+					$ret[$i_val] = ArrayHelper::ArrayDiv(array_values($tmp));
+				}
 			}
-
-		} catch (\Exception $e) {
-			if (strpos($e->getMessage(), 'No Such Object available on this agent at this OID') === false)
-					throw $e;
-
-			// try DOCSIS2.0 - DOCS-IF-MIB::docsIfCmtsCmStatusIpAddress, ...
-			$ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.3.3.1.3');
-			$snrs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.3.3.1.13');
-
-			foreach ($ips as $i_key => $i_val) {
-				$i_key = last(explode('.', $i_key));
-				$tmp = array_filter($snrs, function($s_key) use($i_key) {
-						return strpos($s_key, $i_key) !== false;
-				}, ARRAY_FILTER_USE_KEY);
-				$ret[$i_val] = ArrayHelper::ArrayDiv(array_values($tmp));
-			}
+		}
+		catch (\Exception $e) {
+			// have to catch errors here – throwing an exception results in stopping the console command
+			// no other CMTSs will be asked for US values after the first crash
+			\Log::error("Cannot get modem US SNR values for CMTS $this->hostname: ".get_class($e)." (".$e->getMessage().") in ".$e->getFile().":".$e->getLine());
+			return;
 		}
 
 		\Storage::put("data/provbase/us_snr/$this->hostname.json", json_encode($ret));
@@ -340,17 +348,25 @@ class Cmts extends \BaseModel {
 	{
 		$mods = [];
 		// get all channel IDs of the CMTS
-		$idxs = snmprealwalk($this->ip, $this->get_ro_community(), '.1.3.6.1.2.1.10.127.1.1.2.1.1');
+		try {
+			$idxs = snmprealwalk($this->ip, $this->get_ro_community(), '.1.3.6.1.2.1.10.127.1.1.2.1.1');
 
-		// intersect all channel IDs with the ones used by the modem (supplied as method argument)
-		foreach(array_intersect($idxs, $ch_ids) as $key => $val) {
-			$key = explode('.', $key);
-			// get the modulation profile ID used for this channel
-			$mod_prof = snmpwalk($this->ip, $this->get_ro_community(), '.1.3.6.1.2.1.10.127.1.1.2.1.4.'.end($key));
-			// get all modulations of this profile
-			$mod = snmpwalk($this->ip, $this->get_ro_community(), '.1.3.6.1.2.1.10.127.1.3.5.1.4.'.array_pop($mod_prof));
-			// only add the last one, as this is used for user data
-			$mods[] = array_pop($mod);
+			// intersect all channel IDs with the ones used by the modem (supplied as method argument)
+			foreach(array_intersect($idxs, $ch_ids) as $key => $val) {
+				$key = explode('.', $key);
+				// get the modulation profile ID used for this channel
+				$mod_prof = snmpwalk($this->ip, $this->get_ro_community(), '.1.3.6.1.2.1.10.127.1.1.2.1.4.'.end($key));
+				// get all modulations of this profile
+				$mod = snmpwalk($this->ip, $this->get_ro_community(), '.1.3.6.1.2.1.10.127.1.3.5.1.4.'.array_pop($mod_prof));
+				// only add the last one, as this is used for user data
+				$mods[] = array_pop($mod);
+			}
+		}
+		catch (\ErrorException $ex) {
+			\Log::error("ErrorException in ".__METHOD__."(): ".$ex->getMessage());
+		}
+		catch (\Exception $ex) {
+			throw $ex;
 		}
 
 		return $mods;
