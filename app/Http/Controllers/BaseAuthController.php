@@ -148,16 +148,7 @@ class BaseAuthController extends Controller {
 	 */
 	public static function auth_check ($access, $model_to_check=null)
 	{
-		try {
-			static::_check_permissions($access, $model_to_check);
-		}
-		catch (AuthExceptions $ex) {
-			$msg = "AUTH failed: ";
-			$msg .= \Request::getClientIP()." tried to access ".\Request::getRequestUri();
-			$msg .= " (".$ex->getMessage().")";
-			\Log::error($msg);
-
-			abort(403, $ex->getMessage());
-		}
+		// Handling of thrown AuthExceptions is done in app/Exceptions/Handler.php
+		static::_check_permissions($access, $model_to_check);
 	}
 }

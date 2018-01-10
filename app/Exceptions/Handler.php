@@ -2,6 +2,7 @@
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 
 use App\Exceptions\AuthExceptions;
 
@@ -41,7 +42,19 @@ class Handler extends ExceptionHandler {
 		// Auth Error Messages
 		if ($e instanceof AuthExceptions)
 		{
+			$msg = "AUTH failed: ";
+			$msg .= \Request::getClientIP()." tried to access ".\Request::getRequestUri();
+			$msg .= " (".$e->getMessage().")";
+			\Log::error($msg);
+
+			/* abort(403, $e->getMessage()); */
 			return response()->view('auth.denied', ['status' => $e->getMessage()], 403);
+		}
+
+		// catch CSRF token timeouts
+		if ($e instanceof TokenMismatchException) {
+			return response()->view('auth.denied', ['status' => 'Session expired – please log in again'], 403);
+			/* return redirect(route('Auth.login'))->with('message', 'You page session expired. Please try again'); */
 		}
 
 		return parent::render($request, $e);
