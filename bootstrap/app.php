@@ -36,7 +36,9 @@ $files = scandir($env_dir);
 foreach ($files as $f) {
 	if (substr($f, -4) == '.env') {
 		$dotenv = new \Dotenv\Dotenv($env_dir, $f);
-		$dotenv->overload();
+		// do not use $dotenv->overload() as this overwrites data from .env.testing
+		// this results e.g. in app.env==local instead of testing
+		$dotenv->load();
 	}
 }
 
