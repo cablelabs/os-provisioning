@@ -15,4 +15,3 @@ class DomainLifecycleTest extends \BaseLifecycleTest {
 		'alias',
 	];
 }
-
