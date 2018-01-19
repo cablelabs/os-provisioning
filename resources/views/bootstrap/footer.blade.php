@@ -3,8 +3,8 @@
 <script src="{{asset('components/assets-admin/plugins/jquery/jquery-migrate-1.4.1.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/jquery-ui/ui/minified/jquery-ui.min.js')}}"></script>
 
-<script src="{{asset('components/assets-admin/plugins/bootstrap4/js/bootstrap.bundle.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/bootstrap4/js/bootstrap.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/bootstrap4/js/bootstrap.bundle.min.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/select2-v4/vendor/select2/select2/dist/js/select2.min.js')}}"></script>
@@ -42,15 +42,9 @@
 $(document).ready(function() {
   App.init();
   NMS.init();
+  {{-- init modals --}}
+  $(".modal").modal();
+  {{-- init popovers --}}
+  $('[data-toggle="popover"]').popover();
 });
-{{-- show alert --}}
-$(".modal").modal();
-
-{{-- TODO: move to analyses.blade to javascript part --}}
-function resizeIframe(obj) {
-  setTimeout(function() {
-    //obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-    obj.style.height = '70vmax';
-  }, 3000);
-};
 </script>
