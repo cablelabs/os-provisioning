@@ -2,8 +2,8 @@
 
 @section ('content')
 
-	@if(isset($panel_right))
-	<div class="card card-inverse col-12 p-b-5">
+	<div class="card card-inverse col-12 p-b-5 p-t-10">
+		@if(isset($panel_right))
 		<div class="card-header m-b-15">
 			<ul class="nav nav-tabs card-header-tabs d-flex">
 				@foreach ($panel_right as $tabs)
@@ -29,12 +29,11 @@
 				@endforeach
 			</ul>
 		</div>
-	@endif
-	<div class="row">
-		<div class="card card-inverse col-md-{{(isset($relations) && empty($relations)) ? '12' :$edit_left_md_size}}">
-			@yield('content_left')
+		@endif
+		<div class="row">
+			<div class="card card-inverse col-md-{{(!isset($relations) || empty($relations)) ? '12' : $edit_left_md_size}}">
+				@yield('content_left')
+			</div>
+			@yield('content_right')
 		</div>
-		@yield('content_right')
-	</div>
-
 @stop
