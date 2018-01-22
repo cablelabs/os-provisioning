@@ -12,6 +12,7 @@
 <script src="{{asset('components/assets-admin/plugins/DataTables/media/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/media/js/dataTables.bootstrap4.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/FixedHeader/js/dataTables.fixedHeader.min.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/plugins/jstree/dist/jstree.min.js')}}"></script>
 
