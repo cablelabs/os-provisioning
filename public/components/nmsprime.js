@@ -155,6 +155,19 @@ $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
   $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
 });
 
+function rezizeTextareas() {
+  $('textarea').each(function () {
+    this.setAttribute('style', 'height:' + (this.scrollHeight + 5) + 'px;max-height: 1080px;');
+  }).on('input', function () {
+    var scrollLeft = window.pageXOffset ||
+      (document.documentElement || document.body.parentNode || document.body).scrollLeft;
+    var scrollTop = window.pageYOffset ||
+      (document.documentElement || document.body.parentNode || document.body).scrollTop;
+    this.style.height = "auto";
+    this.style.height = (this.scrollHeight + 10) + 'px';
+    window.scrollTo(scrollLeft, scrollTop);
+  });
+}
 
 var NMS = function () {
 	"use strict";
@@ -166,6 +179,7 @@ var NMS = function () {
 			makeInputFitOnResize();
 			saveTabPillState();
       positionErdPopover();
+      rezizeTextareas();
 		},
   };
 }();
