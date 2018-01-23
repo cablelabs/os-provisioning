@@ -568,7 +568,7 @@ class BaseLifecycleTest extends TestCase {
 
 			$this->_fill_edit_form($data);
 			$this->press("_save")
-				->see("Updated")
+				->see("Updated!")
 			;
 		}
 
@@ -590,7 +590,7 @@ class BaseLifecycleTest extends TestCase {
 			->get(route("$this->model_name.index").'/datatables');
 
 		// count all not deleted database entries and check if this is returned by JSON
-		$model_count = \DB::table($this->database_table)->count();
+		$model_count = \DB::table($this->database_table)->whereNull('deleted_at')->count();
 		$this->seeJson(["recordsTotal" => $model_count]);
 
 		// check if there are links to the recently created model instances
