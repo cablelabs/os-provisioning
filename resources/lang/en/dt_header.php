@@ -112,7 +112,7 @@ return [
 	'ippool.description' => 'Description',
 	// Modem
 	'modem.id' => 'Modem Number',
-	'modem.mac' => 'MAC Addresse',
+	'modem.mac' => 'MAC Address',
 	'modem.name' => 'Modem Name',
 	'modem.lastname' => 'Lastname',
 	'modem.city' => 'City',
