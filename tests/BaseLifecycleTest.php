@@ -61,7 +61,8 @@ class BaseLifecycleTest extends TestCase {
 	// e.g.Modules\ProvBase\Tests\ContractLifecycleTest
 	protected $module_path = null;
 	protected $model_name = null;
-	protected $controller = null;
+	protected $model_path = null;
+	protected $controller_path = null;
 	protected $database_table = null;
 	protected $seeder = null;
 
@@ -106,9 +107,9 @@ class BaseLifecycleTest extends TestCase {
 			$this->model_name = str_replace('LifecycleTest', '', $class);
 		}
 
-		// guess the controller name
-		if (is_null($this->controller)) {
-			$this->controller = "\\".$this->module_path."\\Http\\Controllers\\".$this->model_name."Controller";
+		// guess the controller path
+		if (is_null($this->controller_path)) {
+			$this->controller_path = "\\".$this->module_path."\\Http\\Controllers\\".$this->model_name."Controller";
 		}
 
 		// guess the database table
@@ -119,6 +120,11 @@ class BaseLifecycleTest extends TestCase {
 		// guess the model name
 		if (is_null($this->seeder)) {
 			$this->seeder = "\\".$this->module_path."\\Database\\Seeders\\".$this->model_name."TableSeeder";
+		}
+
+		// guess the model path
+		if (is_null($this->model_path)) {
+			$this->model_path = "\\".$this->module_path."\\Entities\\".$this->model_name;
 		}
 
 	}
@@ -175,7 +181,7 @@ class BaseLifecycleTest extends TestCase {
 		}
 
 		/* require_once */
-		$controller = new $this->controller();
+		$controller = new $this->controller_path();
 
 		$form_raw = $controller->view_form_fields($model);
 
@@ -431,12 +437,31 @@ class BaseLifecycleTest extends TestCase {
 			return;
 		}
 
+		// get the raw headlines for datatables table from model
+		$model = new $this->model_path();
+		$index_header_raw = $model->view_index_label()['index_header'];
+
+		// get the (english) translation array
+		$index_header_translations_en = include('resources/lang/en/dt_header.php');
+
+		// create the header as should be shown on index view
+		$index_header = [];
+		foreach($index_header_raw as $raw) {
+			array_push($index_header, $index_header_translations_en[$raw]);
+		}
+
+		// visit index page and check for some basic output
 		$this->actingAs($this->user)
 			->visit(route("$this->model_name.index"))
 			->see("NMS Prime")
-			->see("The next Generation NMS")
+			->see("Next Generation NMS")
 			->see($this->model_name)
 			->see('/admin/'.$this->model_name.'/0');	// part of the delete form
+
+		// check if all index table headers are visible
+		foreach ($index_header as $header) {
+			$this->see($header);
+		}
 	}
 
 
