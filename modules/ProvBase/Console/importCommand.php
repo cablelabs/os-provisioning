@@ -39,282 +39,41 @@ class importCommand extends Command {
 	protected $description = 'import km3';
 
 
-	// TODO(2): mapping should be done by configfile and id <-> id
-	// Marienberg
-	// protected $old_sys_inet_tarifs = [
-	// 	'BusinessBasic' 				=> 'business',
-	// 	'BusinessFlat' 					=> 'business',
-	// 	'Industrie/Gewerbe 150' 		=> 22,
-	// 	'Industrie/Gewerbe 145' 		=> 'business',
-	// 	'Internet Flat 6000 REI' 		=> 2,
-	// 	'Pob_PrivatBasic' 				=> 4, 			// Volumentarif
-	// 	'Pob_PrivatBasic10G' 			=> 4, 			// Volumentarif
-	// 	'Pob_PrivatBasic5G' 			=> 4, 			// Volumentarif
-	// 	'Pob_PrivatFlat' 				=> 'vol',
-	// 	'Pob_PrivatFlat Spar' 			=> 'vol',
-	// 	'keineDaten' 					=> 0,
-	// 	'PrivatBasic' 					=> 4,
-	// 	'PrivatBasic 10G' 				=> 4, 			// Volumentarif
-	// 	'PrivatFlat Spar' 				=> 1,
-	// 	'PrivatFlat' 					=> 1,
-	// 	'Keine Daten' 					=> 0,
-	// 	'PrivatBasic 5G' 				=> 4, 			// Volumentarif
-	// 	'Internet Flat 16000 REI' 		=> 4,
-	// 	'Internet Flat 6000 SAZ' 		=> 2,
-	// 	'Internet Flat 16000 SAZ' 		=> 4,
-	// 	'Internet Flat 6000 POB' 		=> 2,
-	// 	'Internet Flat 16000 POB' 		=> 4,
-	// 	'Internet Flat 2000 POB' 		=> 1,
-	// 	'Internet Volumen Basic SAZ' 	=> 4,
-	// 	'Internet Flat 6000 (inoffiziel)' => 2,
-	// 	'Internet Volumen 10G POB' 		=> 4,
-	// 	'Internet Volumen 10G REI' 		=> 4,
-	// 	'Internet Volumen 10G SAZ' 		=> 4,
-	// 	'Internet Flat 16000' 			=> 4,
-	// 	'Internet Speed 10G' 			=> 4, 			// Volumentarif
-	// 	'Internet Volumen Basic POB' 	=> 4,
-	// 	'Internet Volumen Basic REI' 	=> 4,
-	// 	'Internet Volumen 10G - 100000' => 4,
-	// 	'Internet Flat 2000 REI' 		=> 1,
-	// 	'Internet Flat 2000 SAZ' 		=> 1,
-	// 	'Internet Flat Spar SAZ' 		=> 2, 			// inactive
-	// 	'Internet Flat Spar MAB,POB' 	=> 2, 			// inactive
-	// 	'Internet Flat Spar POB' 		=> 2, 			// inactive
-	// 	'Internet Flat Spar REI' 		=> 2, 			// inactive
-	// 	'Internet Volumen Basic 100000' => 4,
-	// 	'PrivatBasic20G' 				=> 4, 			// Volumentarif
-	// 	'Flat 25Mbits.' 				=> 4,
-	// 	'PrivatBasic30G' 				=> 4, 			// Volumentari4f
-	// 	'PrivatBasic30G REI' 			=> 4, 			// Volumentarif
-	// 	'Internet Flat 100000' 			=> 5,
-	// 	'Internet Flat 2000' 			=> 1,
-	// 	'Internet Flat 25000' 			=> 4,
-	// 	'Internet Speed Basic MAB,POB'  => 4,
- // 		];
+	/**
+	 * Mapping of old Internet Tarif Names to new Tarif IDs
+	 *
+	 * @var array
+	 */
+	protected $old_sys_inet_tarifs;
 
-	 // Wildenstein
-	protected $old_sys_inet_tarifs = [
-		'PrivatBasic' 				=> 4,
-		'PrivatBasic 10G' 			=> 4,
-		'PrivatFlat Spar' 			=> 1,
-		'PrivatBasic 5G' 			=> 4,
-		'Internet Speed 10G' 		=> 4,
-		'Internet Speed Basic'  	=> 4,
-		'Internet Volumen 10G'  	=> 4,
-		'Internet Volumen Basic' 	=> 4,
-		'keine Daten' 				=> 0,
-		'PrivatBasic30G' 			=> 4,
-		'Internet Flat 6000' 		=> 2,
-		// 'Internet Flat 50000 LBD' 	=> ,
-		'Internet Flat 6000+' 		=> 2,
-		'Internet Flat 16000' 		=> 4,
-		'Internet Flat Spar' 		=> 2,
-		'Internet Flat 25000' 		=> 4,
-		'Internet Flat 100000'  	=> 5,
-		];
+	/**
+	 * Mapping of old Voip Tarif IDs to new Voip Tarif IDs
+	 *
+	 * @var array
+	 */
+	protected $old_sys_voip_tarifs;
 
-	// TODO(2)
-	// Marienberg
-	// protected $old_sys_voip_tarifs = array(
-	// 	12464 => 6,		// TelefonieBasic
-	// 	12465 => 6,		// TelefonieBasicData
-	// 	12466 => 7,		// TelefonieFlatData
-	// 	12965 => 7,		// TelefonieFlat
-	// 	22668 => 6,		// Rei_TelefonieBasic
-	// 	22669 => 6,		// Rei_TelefonieBasicData
-	// 	22671 => 7,		// Rei_TelefonieFlatData
-	// 	24057 => 6,		// Saz_TelefonieBasic
-	// 	24058 => 6,		// Saz_TelefonieBasicData
-	// 	24059 => 7,		// Saz_TelefonieFlat
-	// 	24060 => 7,		// Saz_TelefonieFlatData
-	// 	17663 => 6,		// Pob_TelefonieBasic
-	// 	17664 => 6,		// Pob_TelefonieBasicData
-	// 	17665 => 7,		// Pob_TelefonieFlat
-	// 	17666 => 7,		// Pob_TelefonieFlatData
-	// 	22670 => 7,		// Rei_TelefonieFlat
-	// 		);
+	/**
+	 * Mapping of old ConfigFile Names to new ConfigFile IDs
+	 *
+	 * @var array
+	 */
+ 	protected $configfiles;
 
-	// Wildenstein
-	protected $old_sys_voip_tarifs = array(
-		4162 => 38, 	// TelefonieBasic PURTel
-		9620 => 39, 	// TelefonieFlatData PURTel
-		9649 => 40, 	// TelefonieBasic PURTel (Evt)
-		9502 => 6, 		// TelefonieBasic
-		9503 => 6, 		// TelefonieBasicData
-		9504 => 7, 		// TelefonieFlat
-		9505 => 7, 		// TelefonieFlatData
-		);
+	/**
+	 * Mapping of old Cluster ID to new Cluster ID
+	 *
+	 * @var array
+	 */
+	protected $cluster = [];
 
+	/**
+	 * Mapping of old additional Item IDs to new additional Item IDs
+	 *
+	 * @var array
+	 */
+	protected $add_items;
 
-	// TODO(1)
-	// Wildenstein
- 	protected $configfiles = array(
-		'Arris' 					=> 3,
-		'Arris 820' 				=> 52,
-		'Arris-SIP-MTA SIP v9' 		=> 34,
-		'Arris-TG862' 				=> 42,
-		'Arris-TG862-v9' 			=> 42,
-		'Arris-TG862-v9 sip' 		=> 42,
-		'Arris-TM822-SIP-V9' 		=> 55,
-		'AVM 6360-85.06.31' 		=> 78,
-		'AVM 6490' 					=> 25,
-		'Default Configfile' 		=> 3,
-		// 'Default-MTA-Config' 		=> ,
-		'Fritzbox 6320' 			=> 3,
-		'Fritzbox 6320v2' 			=> 3,
-		'Fritzbox 6320v2 int' 		=> 3,
-		'Fritzbox 6360.06.50' 		=> 66,
-		'FritzBox AVM' 				=> 3,
-		'FritzBoxAVM-6360 (Ver. 06.51) (SNMP)' => 78,
-		'Fritzbox AVM 6490' 		=> 25,
-		'Fritzbox AVM 6490 06.84' 	=> 25,
-		'Fritzbox AVM 6490 6.50' 	=> 80,
-		'FritzBoxAVM-6490 (Ver. 06.51) (SNMP)' => 64,
-		'FritzBox AVM MTA' 			=> 81,
-		'FritzBox AVM MTA EnviaTel' => 81,
-		'FritzBox AVM MTA PURTel' 	=> 81,
-		'MTA-SIP-Test' 				=> 18,
-		'SNMPSetup-TVM' 			=> 3,
-		'Tarris_MTA' 				=> 34,
-		'TC7200.20-SIP' 			=> 72,
-		'Technicolor' 				=> 50,
-		'Technicolor/Thomson' 		=> 50,
-		'THG540-T38-Test' 			=> 47,
-		'Thomson' 					=> 50,
-		'Thomson-eMTA-SIP-EnviaTel' => 20,
-		'Thomson-THG540-SIP' 		=> 47,
-		'Thomson-THG540-SIP-T.38' 	=> 47,
-		'Thomson-THG541-SIP' 		=> 45,
-		'Thomson-THG541-SIP-T.38' 	=> 45,
-		'Thomson-THG57X-SIP' 		=> 6,
-		'Thomson-TWG850-4-SIP' 		=> 46,
-		'Thomson-TWG850-SIP' 		=> 46,
-		'Thomson-TWG870-SIP' 		=> 44,
-		'TVM 2.20' 					=> 71,
- 		);
-
- 	// Marienberg
-	// protected $configfiles = array(
-	// 		'SNMPSetup1' 				=> 3,
-	// 		'SNMPBlockMulticast' 		=> 3,
-	// 		'SNMPAllowMulticast' 		=> 3,
-	// 		'SNMPSetup-TEST-FW-1' 		=> 3,
-	// 		'SNMPSetup-TEST-FW-2' 		=> 3,
-	// 		'SNMPTVM' 					=> 3,
-	// 		'SNMPSIP' 					=> 3,
-	// 		'SNMPSetupUpdate' 			=> 3,
-	// 		'Thomson-THG540' 			=> 47,
-	// 		'Thomson-THG541' 			=> 45,
-	// 		'Thomson-TWG850' 			=> 46,
-	// 		'Thomson-TWG850-4' 			=> 46,
-	// 		'Default MTA Config' 		=> 20,
-	// 		'Thomson/Technicolor' 		=> 3,
-	// 		'Default CM Config' 		=> 3,
-	// 		'TVM1000' 					=> 3,
-	// 		'TVM1000-2.08' 				=> 63,
-	// 		'TVM1000-2.04'				=> 68,
-	// 		'Thomson-THG57X' 			=> 6,
-	// 		'Thomson-TWG870' 			=> 44,
-	// 		'Kathrein' 					=> 'todo',
-	// 		'Kathrein-DCV8400' 			=> 61,
-	// 		'TVM1000-2.09' 				=> 69,
-	// 		'X_DQOS'					=> 'todo',
-	// 		'FritzBox AVM' 				=> 25,
-	// 		'TVM1000-2.10' 				=> 70,
-	// 		'FritzBox 6360' 			=> 3,
-	// 		'FritzBox AVM MTA' 			=> 49,
-	// 		'Thomson-THG540-SIP' 		=> 47,
-	// 		'Kathrein-DCM42' 			=> 3,
-	// 		'Thomson-THG57X-SIP' 		=> 6,
-	// 		'Thomson-TWG870-SIP' 		=> 44,
-	// 		'TVM1000-2.20' 				=> 71,
-	// 		'Thomson-TCM47X' 			=> 3,
-	// 		'Thomson' 					=> 3,
-	// 		'Technicolor' 				=> 3,
-	// 		'TC7200.20' 				=> 3,
-	// 		'Delta' 					=> 3,
-	// 		'Arris-TG862' 				=> 42,
-	// 		'Arris' 					=> 3,
-	// 		'Hitron CVE 30360' 			=> 'todo',
-	// 		'FritzBox 6320' 			=> 3,
-	// 		'TVM1000-2.31' 				=> 70,
-	// 		'TC7200.20 v01.03' 			=> 3,
-	// 		'Thomson-THG541-SIP' 		=> 45,
-	// 		'Thomson-TWG850-SIP' 		=> 46,
-	// 		'Thomson-TWG850-4-SIP' 		=> 46,
-	// 		'Thomson-TWG870-SIP' 		=> 44,
-	// 		'Hitron BVG 3653 SIP' 		=> 'todo',
-	// 		'6320v2' 					=> 3,
-	// 		'Fritzbox AVM 6490' 		=> 25,
-	// 		'6320v2int' 				=> 3,
-	// 		'AVM 6490 V.06.51' 			=> 25,
-	// 		'AVM Basis Test 6340' 		=> 3,
-	// 		'Arris-TG862 SIP' 			=> 42,
-	// 		'Tarris' 					=> 42,
-	// 		'Tarris-TG862 SIP' 			=> 42,
-	// 		'Tarris_MTA' 				=> 34,
-	// 		'Arris-TG862 test neueste Firmware' => 53, // TG862 9.01103S5E1
-	// 		'Hitron eMTA' 				=> 'todo',
-	// 		'FritzBox-6360-6360.85.06.31' => 3,
-	// 		'Arris-TG862-v9' 			=> 53,
-	// 		'Arris-TG862-v9 sip' 		=> 53,
-	// 		'Thomson-eMTA-SIP-EnviaTel' => 20,
-	// 		'Fritzbox AVM 6490 06.50' 	=> 25,
-	// 		'TC7200.20-SIP' 			=> 3,
-	// 		'Fritz Box 6360.85.06.50' 	=> 3,
-	// 		'Arris 820' 				=> 52,
-	// 		'Arris-MTA-MGCP'			=> 'todo',
-	// 		'Arris-TM822-v9' 			=> 3,
-	// 		'FritzBoxAVM-6360 (Ver. 06.51) (SNMP)' => 3,
-	// 		'FritzBoxAVM-6490 (Ver. 06.51) (SNMP)' => 25,
-	// 		'AVM 6.50 - Test' 			=> 25,
-	// 		'Arris-TM822-SIP-V9' 		=> 3,
-	// 		'Arris-MTA-SIP' 			=> 34,
-	// 		'Thomson-THG520-SIP' 		=> 3,
-	// 		'AVM 6490 6.84 test' 		=> 25,
-	// 	);
-
- 	// Marienberg [cluster id, network id]
-	// protected $cluster = array(
-	// 		33382 => [null, 3],			// Mbg-Stadt-Gebirge-Dampf
-	// 		33383 => [32, 3],			// Mbg-Edeka
-	// 		33384 => [null, 3],			// Mbg-NL-LB-HG-LF
-	// 		36385 => [null, 3],			// Pobershau
-	// 		36464 => [null, 3],			// Olb-Reitz-Rueb
-	// 		36546 => [null, 3],			// Satzung
-	// 		36821 => [null, 3],			// Khnhaide
-	// 		41298 => [null, 3],			// Wolk-Gehr-Strw
-	// 	);
-
-	// Wildenstein
-	protected static $cluster = array(
-			4 => [null, 643],			// Admin_Cluster
-			9159 => [644, 643],			// Cluster-D3.0
-			9974 => [null, 643],		// Gruenh-Borst
-			10025 => [null, 643],		// Boern-Waldk-Krumh
-			12905 => [null, 643],		// Cluster LBD
-		);
-
-	// TODO(3)
-	// Additional Items Marienberg
-	// protected static $add_items = [
-	// 		1  => 10,			// Gutschrift monatlich
-	// 		3  => 23, 			// postalische Rechnung
-	// 		11 => 24, 			// Nebenanschluss
-	// 		37 => 17, 			// feste öffentliche IP
-	// 		42 => 25, 			// Freischalten des Kabel-TV-Internetanschlusses
-	// 		65 => 26, 			// Rufnummernfreischaltung
-	// 	];
-
-	// Additional Items Wildenstein
-	protected static $add_items = [
-			9  => 10,			// Gutschrift monatlich
-			23 => 23, 			// postalische Rechnung
-			11 => 24, 			// Nebenanschluss
-			50 => 17, 			// feste öffentliche IP
-			6  => 25, 			// Freischalten des Kabel-TV-Internetanschlusses
-			29 => 26, 			// Rufnummernfreischaltung
-		];
 
 
 	/**
@@ -338,13 +97,11 @@ class importCommand extends Command {
 	 */
 	public function fire()
 	{
-		// NOTE: Search by TODO(1) for Configfile Map and so on!
-		if (!$this->confirm("IMPORTANT!!!\n\nHave following things been done (in source code) for this import?:
-			(1) Configfile-Mapping
-			(2) Tariff-Mapping
-			(3) Item-Mapping (Zusatzposten)
-			(4) Has Contract filter been correctly set up?
-			(5) Shall volume tarifs get Credits?\n"))
+		// NOTE: Search by TODO(2) for Contract Filter and TODO(3) to change restrictions for adding credits!
+		if (!$this->confirm("IMPORTANT!!!\n\nHave following things been prepared for this import?:
+			(1) Created Mapping Configfile?
+			(2) Has Contract filter been correctly set up (in source code)?
+			(3) Shall volume tarifs get Credits (in source code)?\n"))
 			return;
 
 		// Pre - Testing
@@ -361,7 +118,7 @@ class importCommand extends Command {
 		$cluster_filter = $this->option('cluster')  ? 'm.cluster_id = '.$this->option('cluster') : 'TRUE';
 		$plz_filter 	= $this->option('plz') 		? 'cm_adr.plz = \''.$this->option('plz')."'" : 'TRUE';
 
-		// TODO(4): Adapt this Contract Filter for every Import
+		// TODO(2): Adapt this Contract Filter for every Import
 		$area_filter = function ($query) use ($cluster_filter) {$query
 				->whereRaw ($cluster_filter)
 				// ->whereRaw("cm_adr.strasse not like '%Stra%'")
@@ -372,6 +129,7 @@ class importCommand extends Command {
 				// )
 				;};
 
+		$this->_load_mappings();
 
 		// Connect to old Database
 		$km3 = \DB::connection('pgsql-km3');
@@ -502,6 +260,25 @@ class importCommand extends Command {
 	}
 
 
+	/**
+	 * Load all necessary mappings from config file
+		(1) Tariff (Inet + Voip)
+	 	(2) Configfile
+		(3) Item-Mapping (Zusatzposten)
+	 */
+	private function _load_mappings()
+	{
+		$arr = require $this->argument('filename');
+
+		$this->old_sys_inet_tarifs = $arr['old_sys_inet_tarifs'];
+		$this->old_sys_voip_tarifs = $arr['old_sys_voip_tarifs'];
+		$this->configfiles 		   = $arr['configfiles'];
+		$this->add_items 		   = $arr['add_items'];
+
+		if (isset($arr['cluster']))
+			$this->cluster = $arr['cluster'];
+	}
+
 
 	/**
 	 * Extract last number from street (and encode dependent of andre schuberts encoding mechanism)
@@ -582,8 +359,8 @@ class importCommand extends Command {
 		$c->create_invoice 	= $old_contract->rechnung;
 
 		$c->costcenter_id 	= $this->option('cc') ? : 3; // Dittersdorf=1, new one would be 3
-		$c->cluster 		= self::map_cluster_id($old_contract->cluster_id);
-		$c->net 			= self::map_cluster_id($old_contract->cluster_id, 1);
+		$c->cluster 		= $this->map_cluster_id($old_contract->cluster_id);
+		$c->net 			= $this->map_cluster_id($old_contract->cluster_id, 1);
 
 
 		// set fields with null input to ''.
@@ -646,11 +423,11 @@ class importCommand extends Command {
 	 *
 	 * @return 	Integer
 	 */
-	private static function map_cluster_id($cluster_id, $net = 0)
+	private function map_cluster_id($cluster_id, $net = 0)
 	{
 		// old cluster ID => cluster ID in new System
 		// TODO: Add new Cluster IDs when they exist in new system
-		return self::$cluster[$cluster_id][$net];
+		return $this->cluster[$cluster_id][$net];
 	}
 
 
@@ -791,7 +568,9 @@ class importCommand extends Command {
 
 		foreach ($items as $item)
 		{
-			if (!isset(self::$add_items[$item->id])) {
+			$prod_id = isset($this->add_items[$item->id]) ? $this->add_items[$item->id] : null;
+
+			if (!$prod_id) {
 				$this->error("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
 				\Log::error("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
 				continue;
@@ -805,7 +584,7 @@ class importCommand extends Command {
 
 			Item::create([
 				'contract_id' 		=> $new_contract->id,
-				'product_id' 		=> self::$add_items[$item->id],
+				'product_id' 		=> $this->add_items[$item->id],
 				'count' 			=> $item->menge,
 				'valid_from' 		=> $item->von ? : date('Y-m-d'),
 				'valid_from_fixed' 	=> 1,
@@ -1061,9 +840,10 @@ class importCommand extends Command {
 	protected function getArguments()
 	{
 		return array(
-			// array('example', InputArgument::REQUIRED, 'An example argument.'),
+			array('filename', InputArgument::REQUIRED, 'Name of Mapping Configfile in Storage directory'),
 		);
 	}
+
 
 	/**
 	 * Get the console command options.
@@ -1073,12 +853,10 @@ class importCommand extends Command {
 	protected function getOptions()
 	{
 		return array(
-			// array('qos', null, InputOption::VALUE_OPTIONAL, 'QOS id for default QOS, e.g. 1', 0),
-			array('configfile', null, InputOption::VALUE_OPTIONAL, 'Configfile id for default Configfile, e.g. 5', 0),
 			array('plz', null, InputOption::VALUE_OPTIONAL, 'Import only Contracts with special zip code (from tbl_adressen), e.g. 09518', 0),
 			array('cluster', null, InputOption::VALUE_OPTIONAL, 'Import only Contracts/Modems from cluster_id, e.g. 160', 0),
-			// array('debug', null, InputOption::VALUE_OPTIONAL, '1 enables debug', 0),
 			array('cc', null, InputOption::VALUE_OPTIONAL, 'CostCenter ID for all the imported Contracts', 0),
+			// array('debug', null, InputOption::VALUE_OPTIONAL, '1 enables debug', 0),
 			// array('terminate', null, InputOption::VALUE_OPTIONAL, 'Date for all km3 Contracts to terminate', 0),
 		);
 	}
