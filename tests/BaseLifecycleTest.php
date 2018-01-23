@@ -568,10 +568,43 @@ class BaseLifecycleTest extends TestCase {
 
 			$this->_fill_edit_form($data);
 			$this->press("_save")
-				->see("Updated!")
+				->see("Updated")
 			;
 		}
 
+	}
+
+
+	/**
+	 * Check if associated datatable returns data.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function testDatatableDataReturned() {
+
+		if (!$this->_test_shall_be_run(__FUNCTION__)) {
+			return;
+		}
+
+		$this->actingAs($this->user)
+			->get(route("$this->model_name.index").'/datatables');
+
+		// count all not deleted database entries and check if this is returned by JSON
+		$model_count = \DB::table($this->database_table)->count();
+		$this->seeJson(["recordsTotal" => $model_count]);
+
+		// check if there are links to the recently created model instances
+		$ids = self::$created_entity_ids;
+		foreach ($ids as $id) {
+			$route = route($this->model_name.'.edit', $id);
+			// the href are specially prepared in JSON return – some characters are escaped
+			$_ = str_replace('/', '\/', $route);
+			// the route command returns localhost while JSON has links to 127.0.0.1
+			// as I don't know if this everytime is the case I only check beginning with port number
+			$_ = explode(':', $_);
+			$search = array_pop($_);
+			$this->see($search);
+		};
 	}
 
 
