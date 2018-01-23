@@ -151,12 +151,15 @@ class importCommand extends Command {
 		 * with: Get customer data & Tarifname from old systems DB
 		 */
 		$contracts = $km3->table('tbl_vertrag as v')
-				->selectRaw ('distinct on (v.vertragsnummer) v.vertragsnummer, v.*, a.*, k.*, t.name as tariffname,
-					v.id as id, v.beschreibung as contr_descr, m.cluster_id')
+				->selectRaw ('distinct on (v.vertragsnummer) v.vertragsnummer, v.*, k.*, kadr.*, t.name as tariffname,
+					v.id as id, v.beschreibung as contr_descr, m.cluster_id,
+					a.vorname as v_vorname, a.nachname as v_nachname, a.strasse as v_strasse, a.plz as v_plz,
+					a.ort as v_ort, a.firma as v_firma, a.tel as v_tel, a.anrede as v_anrede, a.email as v_email')
 				->join('tbl_modem as m', 'm.vertrag', '=', 'v.id')
-				->join('tbl_adressen as a', 'v.ansprechpartner', '=', 'a.id')
-				->join('tbl_adressen as cm_adr', 'm.adresse', '=', 'cm_adr.id')
 				->join('tbl_kunde as k', 'v.kunde', '=', 'k.id')
+				->join('tbl_adressen as a', 'v.ansprechpartner', '=', 'a.id')
+				->join('tbl_adressen as kadr', 'k.rechnungsanschrift', '=', 'kadr.id')
+				->join('tbl_adressen as cm_adr', 'm.adresse', '=', 'cm_adr.id')
 				->join('tbl_tarif as t', 'v.tarif', '=', 't.id')
 				->join('tbl_posten as p', 't.posten_volumen_extern', '=', 'p.id')
 				->where ('v.deleted', '=', 'false')
@@ -311,7 +314,26 @@ class importCommand extends Command {
 
 		$c = new Contract;
 
-		// import fields
+		// Compare Customer and Contract Name, Surname, Address and print warning if they differ
+		$desc = '';
+		$c_datafields = ['vorname', 'nachname', 'strasse', 'plz', 'ort', 'firma', 'anrede', 'email'];
+
+		foreach ($c_datafields as $field)
+		{
+			if ($old_contract->{$field} != $old_contract->{'v_'.$field})
+				$desc .= ucwords($field).': '.$old_contract->{'v_'.$field}.PHP_EOL;
+		}
+
+		$c->description = $old_contract->beschreibung.PHP_EOL.$old_contract->contr_descr.PHP_EOL;
+
+		if ($desc)
+		{
+			$c->description .= 'Alte Vertragsdaten:'.PHP_EOL.$desc;
+
+			Log::warning("Contract address differs from customer address for contract $old_contract->vertragsnummer");
+		}
+
+		// import all other fields
 		$c->number 			= $old_contract->vertragsnummer;
 		$c->number2 		= '002-'.$old_contract->vertragsnummer;
 		$c->number4 		= '002-'.$old_contract->kundennr;
@@ -333,7 +355,6 @@ class importCommand extends Command {
 		// TODO: Fix that birthday and contract_end are '0000-00-00' in DB when not set
 		$c->birthday 		= $old_contract->geburtsdatum ? : null;
 
-		$c->description 	= $old_contract->beschreibung."\n".$old_contract->contr_descr;
 		$c->network_access 	= $old_contract->network_access;
 		$c->contract_start 	= $old_contract->angeschlossen;
 		$c->contract_end   	= $old_contract->abgeklemmt ? : null;
