@@ -135,20 +135,13 @@ class importCommand extends Command {
 		$km3 = \DB::connection('pgsql-km3');
 
 		// Get all important Data from new DB
-		$contracts_new 	= Contract::all();
-		$modems_new 	= Modem::all();
-		$items_new 		= Item::all();
-		$mtas_new 		= MTA::all();
-		$phonenumbers_new = Phonenumber::all();
-		$mandates_new 	= SepaMandate::all();
-		$products_new 	= Product::all();
-		$emails_new 	= \PPModule::is_active('mail') ? Email::all() : [];
+		$products_new = Product::all();
 
 
 		/**
 		 * Add Modems currently needed for HFC Devices (Amplifier & Nodes (VGPs & TVMs))
 		 */
-		self::add_netelements($km3, $area_filter, $modems_new);
+		self::add_netelements($km3, $area_filter);
 
 
 		/*
@@ -182,11 +175,7 @@ class importCommand extends Command {
 		foreach ($contracts as $contract)
 		{
 			$this->info("\n$i/$num");
-			$c = $this->add_contract($contract, $contracts_new);
-
-			// Email Import
-			if (\PPModule::is_active('mail'))
-				self::add_email($c, $emails_new, $contract);
+			$c = $this->add_contract($contract);
 
 			/*
 			 * MODEM Import
@@ -198,13 +187,9 @@ class importCommand extends Command {
 					->whereRaw('m.configfile = c.id')
 					->where ('m.deleted', '=', 'false')->get();
 
-			$modems_n = [];
-			foreach ($modems_new->where('contract_id', $c->id)->all() as $cm)
-				$modems_n[$cm->mac] = $cm;
-
 			foreach ($modems as $modem)
 			{
-				$m = $this->add_modem($c, $modems_n, $modem, $km3);
+				$m = $this->add_modem($c, $modem, $km3);
 
 
 				/*
@@ -219,13 +204,9 @@ class importCommand extends Command {
 					->where('mta.deleted', '=', 'false')
 					->get();
 
-				$mtas_n = [];
-				foreach ($mtas_new->where('modem_id', $m->id)->all() as $value)
-					$mtas_n[$value->mac] = $value;
-
 				foreach ($mtas as $mta)
 				{
-					$mta_n = $this->add_mta($m, $mtas_n, $mta);
+					$mta_n = $this->add_mta($m, $mta);
 
 
 					/*
@@ -238,19 +219,19 @@ class importCommand extends Command {
 						->select('e.*', 'c.carrier')
 						->get();
 
-					$pns_n = [];
-					foreach ($phonenumbers_new->where('mta_id', $mta_n->id)->all() as $pn)
-						$pns_n[$pn->username] = $pn;
-
 					foreach ($phonenumbers as $phonenumber)
-						$p = $this->add_phonenumber($mta_n, $pns_n, $phonenumber);
+						$p = $this->add_phonenumber($mta_n, $phonenumber);
 				}
 			}
 
+			// Email Import
+			if (\PPModule::is_active('mail'))
+				self::add_email($c, $contract);
+
 			// Add Billing related Data
-			$this->add_tarifs($c, $items_new, $products_new, $contract);
+			$this->add_tarifs($c, $products_new, $contract);
 			$this->add_tarif_credit($c, $contract);
-			$this->add_sepamandate($c, $mandates_new, $contract, $km3);
+			$this->add_sepamandate($c, $contract, $km3);
 			$this->add_additional_items($c, $km3, $contract);
 
 			$i++;
@@ -318,9 +299,9 @@ class importCommand extends Command {
 	 * @param 	old_contract 		Object 		Contract from old DB
 	 * @param 	new_contracts 		Array 		All existing Contracts of new DB
 	 */
-	private function add_contract($old_contract, $contracts_new)
+	private function add_contract($old_contract)
 	{
-		$c = $contracts_new->whereLoose('number', $old_contract->vertragsnummer)->first();
+		$c = Contract::where('number', $old_contract->vertragsnummer)->first();
 
 		if ($c) {
 			$this->error("Contract $c->vertragsnummer already exists [$c->id]");
@@ -436,13 +417,15 @@ class importCommand extends Command {
 	 *
 	 * TODO: Tarif next month can not be set as is - has still ID - Separate inet & voip tarif mappings and map all by id
 	 */
-	private function add_tarifs($new_contract, $items_new, $products_new, $old_contract)
+	private function add_tarifs($new_contract, $products_new, $old_contract)
 	{
 		$tarifs = array(
 			'tarif' 			=> $old_contract->tariffname,
 			'tarif_next_month'  => $old_contract->tarif_next_month,
 			'voip' 				=> $old_contract->telefontarif,
 			);
+
+		$items_new = $new_contract->items;
 
 		foreach ($tarifs as $key => $tarif)
 		{
@@ -452,7 +435,7 @@ class importCommand extends Command {
 			}
 
 			$prod_id = $this->_map_tarif_to_prod($tarif);
-			$item_n  = $items_new->where('contract_id', $new_contract->id)->where('product_id', $prod_id)->all();
+			$item_n  = $items_new->where('product_id', $prod_id)->all();
 
 			if ($item_n) {
 				$this->error("\tItem $key for Contract ".$new_contract->id." already exists");
@@ -506,13 +489,13 @@ class importCommand extends Command {
 	/**
 	 * Add SepaMandate to corresponding Contract
 	 */
-	private function add_sepamandate($new_contract, $mandates_new, $old_contract, $db_con)
+	private function add_sepamandate($new_contract, $old_contract, $db_con)
 	{
-		$mandates_n = $mandates_new->where('contract_id', $new_contract->id)->all();
+		$mandates_n = $new_contract->sepamandates;
 
-		if ($mandates_n) {
-			\Log::error("\tCustomer $new_contract->id already has SepaMandate assigned");
-			return $this->error("\tCustomer $new_contract->id already has SepaMandate assigned");
+		if (!$mandates_n->isEmpty()) {
+			\Log::notice("\tCustomer $new_contract->id already has SepaMandate assigned");
+			return $this->error("\tCustomer $new_contract->number [$new_contract->id] already has SepaMandate assigned");
 		}
 
 		$mandates_old = $db_con->table('tbl_sepamandate as s')
@@ -564,7 +547,7 @@ class importCommand extends Command {
 					->orWhere ('z.bis', '=', null);})
 				->get();
 
-		// TODO: Check if items already exist !?
+		$items_new = $new_contract->items;
 
 		foreach ($items as $item)
 		{
@@ -579,7 +562,11 @@ class importCommand extends Command {
 			if ($item->id == 1 && !$item->preis)
 				continue;
 
-			\Log::info("Add Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
+			// Check if item already exists
+			if ($items_new->contains('product_id', $prod_id))
+				\Log::warning("Additional item with product id $prod_id already exists for Contract ".$new_contract->number.'! (Added again)');
+
+			// \Log::info("Add Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
 			$this->info("\tAdd Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
 
 			Item::create([
@@ -600,18 +587,13 @@ class importCommand extends Command {
 	/**
 	 * Add Emails to corresponding Contract
 	 */
-	private function add_email($new_contract, $emails_new, $old_contract)
+	private function add_email($new_contract, $old_contract)
 	{
-		$emails = $km3->table(\DB::raw('tbl_email'))
-				->selectRaw ('*')
-				->where('vertrag', '=', $old_contract->id)
-				->get();
+		$emails = $km3->table('tbl_email')->selectRaw ('*')->where('vertrag', '=', $old_contract->id)->get();
+		$emails_new_cnt = \PPModule::is_active('mail') ? $new_contract->emails()->count() : [];
 
-		if (count($emails) == count($emails_new->where('contract_id', $old_contract->id)->all()))
-		{
-			$this->error('Email Aliases already added!');
-			return;
-		}
+		if (count($emails) == $emails_new_cnt)
+			return $this->error('Email Aliases already added!');
 
 		foreach ($emails as $email)
 		{
@@ -635,14 +617,15 @@ class importCommand extends Command {
 	 *
 	 * @param 	new_modems 		All modems already existing in new system for this contract
 	 */
-	private function add_modem($new_contract, $new_modems, $old_modem, $db_con)
+	private function add_modem($new_contract, $old_modem, $db_con)
 	{
-		// $m = isset($modems_n[$k]) ? $modems_n[$k] : NULL;
 		// dont update new modems with old data - return modem that new mtas & phonenumbers can be assigned
-		if (array_key_exists($old_modem->mac_adresse, $new_modems))
+		$modems_n = $new_contract->modems;
+
+		if (!$modems_n->isEmpty() && $modems_n->contains('mac', $old_modem->mac_adresse))
 		{
-			$new_cm = $new_modems[$old_modem->mac_adresse];
-			\Log::info("Modem already exists in new System with ID $new_cm->id!");
+			$new_cm = $modems_n->where('mac', $old_modem->mac_adresse)->first();
+
 			$this->info("Modem already exists in new System with ID $new_cm->id!");
 			return $new_cm;
 		}
@@ -731,13 +714,15 @@ class importCommand extends Command {
 	/**
 	 * Add MTA to corresponding Modem of new System
 	 */
-	private function add_mta($new_modem, $new_mtas, $old_mta)
+	private function add_mta($new_modem, $old_mta)
 	{
 		// dont update new mtas with old data - return mta that new phonenumbers can be assigned
-		if (array_key_exists($old_mta->mac_adresse, $new_mtas))
+		$mtas_n = $new_modem->mtas;
+
+		if (!$mtas_n->isEmpty() && $mtas_n->contains('mac', $old_mta->mac_adresse))
 		{
-			$new_mta = $new_mtas[$old_mta->mac_adresse];
-			\Log::info("MTA already exists in new System with ID $new_mta->id!");
+			$new_mta = $mtas_n->where('mac', $old_mta->mac_adresse)->first();
+
 			$this->info("MTA already exists in new System with ID $new_mta->id!");
 			return $new_mta;
 		}
@@ -762,12 +747,14 @@ class importCommand extends Command {
 	/**
 	 * Add Phonenumber to corresponding MTA
 	 */
-	private function add_phonenumber($new_mta, $new_phonenumbers, $old_phonenumber)
+	private function add_phonenumber($new_mta, $old_phonenumber)
 	{
-		if (array_key_exists($old_phonenumber->username, $new_phonenumbers))
+		$pns_n = $new_mta->phonenumbers;
+
+		if (!$pns_n->isEmpty() && $pns_n->contains('username', $old_phonenumber->username))
 		{
-			$new_pn = $new_phonenumbers[$old_phonenumber->username];
-			\Log::info("Phonenumber already exists in new System with ID $new_pn->id!");
+			$new_pn = $pns_n->where('username', $old_phonenumber->username)->first();
+
 			$this->info("Phonenumber already exists in new System with ID $new_pn->id!");
 			return $new_pn;
 		}
@@ -805,12 +792,12 @@ class importCommand extends Command {
 	/**
 	 * Add Modems of Netelements to Erznet Contract as this is still necessary to get them online in new system
 	 */
-	private function add_netelements($db_con, $area_filter, $new_modems)
+	private function add_netelements($db_con, $area_filter)
 	{
-		$devices = $db_con->table(\DB::raw('tbl_modem m, tbl_adressen a, tbl_configfiles c'))
-					->selectRaw ('m.*, a.*, m.id as id, c.name as cf_name')
-					->whereRaw('m.adresse = a.id')
-					->whereRaw('m.configfile = c.id')
+		$devices = $db_con->table('tbl_modem as m')
+					->selectRaw ('m.*, cm_adr.*, m.id as id, c.name as cf_name')
+					->join('tbl_adressen as cm_adr', 'm.adresse', '=', 'cm_adr.id')
+					->join('tbl_configfiles as c', 'm.configfile', '=', 'c.id')
 					->where ('m.deleted', '=', 'false')
 					->where('m.device', '=', 9)
 					// ->where('m.mac_adresse', '=', '00:d0:55:07:1d:86')
@@ -820,15 +807,12 @@ class importCommand extends Command {
 		if (!$devices)
 			return;
 
-		$contract = Contract::find(500000);
-		$modems_n = [];
-		foreach ($new_modems->where('contract_id', 500000)->all() as $cm)
-			$modems_n[$cm->mac] = $cm;
-
 		$this->info ("ADD NETELEMENT Modems");
 
+		$contract = Contract::find(500000);
+
 		foreach ($devices as $device)
-			self::add_modem($contract, $modems_n, $device, $db_con);
+			self::add_modem($contract, $device, $db_con);
 	}
 
 
