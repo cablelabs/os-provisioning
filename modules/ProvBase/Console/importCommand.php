@@ -126,7 +126,7 @@ class importCommand extends Command {
 				// 	->whereRaw ("cm_adr.strasse like '%Flo%m%hle%'")
 				// 	->orWhereRaw ("cm_adr.strasse like 'Fl%talstr%'")
 				// 	->orWhereRaw ("cm_adr.ort like '%/OT Flo%'");}
-				// )
+				// 	)
 				;};
 
 		$this->_load_mappings();
@@ -170,14 +170,13 @@ class importCommand extends Command {
 				->orderBy('v.vertragsnummer')
 				->get();
 
-
 		// progress bar
 		$i   = 1;
 		$num = count($contracts);
 
 		foreach ($contracts as $contract)
 		{
-			$this->info("\n$i/$num");
+			$this->line("\n$i/$num");
 			$c = $this->add_contract($contract);
 
 			/*
@@ -307,8 +306,8 @@ class importCommand extends Command {
 		$c = Contract::where('number', $old_contract->vertragsnummer)->first();
 
 		if ($c) {
-			$this->error("Contract $c->vertragsnummer already exists [$c->id]");
-			\Log::error("Contract $c->vertragsnummer already exists [$c->id]");
+			$this->info("Contract $c->vertragsnummer already exists [$c->id]");
+			\Log::notice("Contract $c->vertragsnummer already exists [$c->id]");
 			return $c;
 		}
 
@@ -383,8 +382,7 @@ class importCommand extends Command {
 		// Update or Create Entry
 		$c->save();
 
-		\Log::info ("ADD CONTRACT: $c->id, $c->firstname $c->lastname, $c->street, $c->zip $c->city [$old_contract->vertragsnummer]");
-		$this->info ("\nADD CONTRACT: $c->id, $c->firstname $c->lastname, $c->street, $c->zip $c->city [$old_contract->vertragsnummer]");
+		$this->line ("\nADD CONTRACT: $c->id, $c->firstname $c->lastname, $c->street, $c->zip $c->city [$old_contract->vertragsnummer]");
 
 		return $c;
 	}
@@ -451,7 +449,7 @@ class importCommand extends Command {
 		foreach ($tarifs as $key => $tarif)
 		{
 			if (!$tarif) {
-				\Log::info("\tNo $key Item exists in old System");
+				$this->line("\tNo $key Item exists in old System");
 				continue;
 			}
 
@@ -459,7 +457,7 @@ class importCommand extends Command {
 			$item_n  = $items_new->where('product_id', $prod_id)->all();
 
 			if ($item_n) {
-				$this->error("\tItem $key for Contract ".$new_contract->id." already exists");
+				$this->info("\tItem $key for Contract ".$new_contract->id." already exists");
 				\Log::error("\tItem $key for Contract ".$new_contract->id." already exists");
 				continue;
 			}
@@ -478,8 +476,7 @@ class importCommand extends Command {
 				'valid_to_fixed' 	=> 1,
 				]);
 
-			\Log::info ("ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
-			$this->info ("ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
+			$this->line ("ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
 		}
 	}
 
@@ -489,11 +486,11 @@ class importCommand extends Command {
 	 */
 	private function add_tarif_credit($new_contract, $old_contract)
 	{
-		// TODO(5) check restrictions of volume tarifs!
+		// TODO(3) check restrictions of volume tarifs!
 		if ((strpos($old_contract->tariffname, 'Volumen') === false) && (strpos($old_contract->tariffname, 'Speed') === false) && (strpos($old_contract->tariffname, 'Basic') === false))
 			return;
 
-		\Log::info("Add extra Credit as Customer had volume tariff. [$new_contract->number]");
+		$this->line("Add extra Credit as Customer had volume tariff. [$new_contract->number]");
 
 		Item::create([
 			'contract_id' 		=> $new_contract->id,
@@ -516,7 +513,7 @@ class importCommand extends Command {
 
 		if (!$mandates_n->isEmpty()) {
 			\Log::notice("\tCustomer $new_contract->id already has SepaMandate assigned");
-			return $this->error("\tCustomer $new_contract->number [$new_contract->id] already has SepaMandate assigned");
+			return $this->info("\tCustomer $new_contract->number [$new_contract->id] already has SepaMandate assigned");
 		}
 
 		$mandates_old = $db_con->table('tbl_sepamandate as s')
@@ -547,8 +544,7 @@ class importCommand extends Command {
 				'state' 			=> 'RCUR',
 				]);
 
-			\Log::info ("SEPAMANDATE ADD: ".$mandate->kontoinhaber.', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
-			$this->info ("SEPAMANDATE ADD: ".$mandate->kontoinhaber.', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
+			$this->line ("SEPAMANDATE ADD: ".$mandate->kontoinhaber.', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
 		}
 	}
 
@@ -575,7 +571,7 @@ class importCommand extends Command {
 			$prod_id = isset($this->add_items[$item->id]) ? $this->add_items[$item->id] : null;
 
 			if (!$prod_id) {
-				$this->error("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
+				$this->info("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
 				\Log::error("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
 				continue;
 			}
@@ -588,7 +584,7 @@ class importCommand extends Command {
 				\Log::warning("Additional item with product id $prod_id already exists for Contract ".$new_contract->number.'! (Added again)');
 
 			// \Log::info("Add Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
-			$this->info("\tAdd Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
+			$this->line("\tAdd Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
 
 			Item::create([
 				'contract_id' 		=> $new_contract->id,
@@ -614,7 +610,7 @@ class importCommand extends Command {
 		$emails_new_cnt = \PPModule::is_active('mail') ? $new_contract->emails()->count() : [];
 
 		if (count($emails) == $emails_new_cnt)
-			return $this->error('Email Aliases already added!');
+			return $this->info('Email Aliases already added!');
 
 		foreach ($emails as $email)
 		{
@@ -690,11 +686,8 @@ class importCommand extends Command {
 		$modem->configfile_id = isset($this->configfiles[$old_modem->cf_name]) && is_int($this->configfiles[$old_modem->cf_name]) ? $this->configfiles[$old_modem->cf_name] : 0;
 
 		// check if assigned cpe has public ip (starts with 7 or 8)
-		// NOTE: if even 1 of the cpe's has a public IP we assign a public IP for all CPE's here - Note: in future we maybe have maxCPE 1
-		$comps = $db_con->table('tbl_computer')
-			->select('ip')
-			->where('modem', '=', $old_modem->id)
-			->get();
+		// NOTE: if even 1 of the cpe's has a public IP we assign a public IP for all CPE's here
+		$comps = $db_con->table('tbl_computer')->select('ip')->where('modem', '=', $old_modem->id)->get();
 
 		$modem->public = 0;
 		foreach ($comps as $comp)
@@ -719,12 +712,11 @@ class importCommand extends Command {
 
 		// Output
 		if ($modem->configfile_id == 0) {
-			$this->error('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
+			$this->info('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
 			\Log::error('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
 		}
 
-		\Log::info ("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
-		$this->info ("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
+		$this->line ("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
 
 		$modem->save();
 
@@ -755,9 +747,7 @@ class importCommand extends Command {
 		$mta->configfile_id = isset($this->configfiles[$old_mta->configfile]) && is_int($this->configfiles[$old_mta->configfile]) ? $this->configfiles[$old_mta->configfile] : 0;
 		$mta->type = 'sip';
 
-		// Log
-		\Log::info ("ADD MTA: ".$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
-		$this->info ("ADD MTA: ".$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
+		$this->line ("ADD MTA: ".$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
 
 		$mta->save();
 
@@ -784,7 +774,9 @@ class importCommand extends Command {
 		{
 			case 'PURTel': $registrar = 'deu3.purtel.com'; break;
 			case 'EnviaTel': $registrar = 'sip.enviatel.net'; break;
-			default: $registrar = ''; \Log::warning("Missing Registrar for Phonenumber $old_phonenumber->vorwahl/$old_phonenumber->rufnummer"); break;
+			default: $registrar = '';
+				\Log::warning("Missing Registrar for Phonenumber $old_phonenumber->vorwahl/$old_phonenumber->rufnummer");
+				break;
 		}
 
 		$phonenumber = new Phonenumber;
@@ -800,9 +792,7 @@ class importCommand extends Command {
 		$phonenumber->sipdomain 	= $registrar;
 		$phonenumber->active 		= true;  		// $old_phonenumber->aktiv; 		most phonenrs are marked as inactive because of automatic controlling
 
-		// Log
-		\Log::info ("ADD Phonenumber: ".$phonenumber->id.', '.$new_mta->id.', '.$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
-		$this->info ("ADD Phonenumber: ".$phonenumber->id.', '.$new_mta->id.', '.$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
+		$this->line ("ADD Phonenumber: ".$phonenumber->id.', '.$new_mta->id.', '.$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
 
 		$phonenumber->save();
 
@@ -828,7 +818,7 @@ class importCommand extends Command {
 		if (!$devices)
 			return;
 
-		$this->info ("ADD NETELEMENT Modems");
+		$this->line ("ADD NETELEMENT Modems");
 
 		$contract = Contract::find(500000);
 
