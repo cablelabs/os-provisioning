@@ -40,15 +40,32 @@ class PhonenumberTableSeeder extends \BaseSeeder {
 				$mta_id = $mta->id;
 			}
 			else {
-				$mta_id = null;
+				$mta = Mta::all()->random(1)->get();
+				$mta_id = $mta->id;
 			}
+		}
+
+		// check for ports already taken on this mta
+		// this field is unique but not checked in Phonenumber::$rules which can crash the unit tests
+		$ports_taken = [];
+		foreach (\DB::table('phonenumber')->where('mta_id', '=', 300046)->whereNull('deleted_at')->get() as $nr_data) {
+			array_push($ports_taken, $nr_data->port);
+		}
+
+		$port = null;
+		$candidate = 1;
+		while (is_null($port)) {
+			if (!in_array($candidate, $ports_taken)) {
+				$port = $candidate;
+			}
+			$candidate++;
 		}
 
 		$ret = [
 			'prefix_number' => "0".rand(2, 9).rand(0, 9999),
 			'number' => rand(100,999999),
-			'mta_id' => Mta::all()->random(1)->id,
-			'port' => 1,
+			'mta_id' => $mta_id,
+			'port' => $port,
 			'active' => rand(0, 1),
 		];
 
