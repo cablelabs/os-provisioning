@@ -73,7 +73,6 @@ class NetElementTableSeeder extends \BaseSeeder {
 				'name' => $faker->domainWord(),
 				'ip' => $faker->localIpv4(),
 				'netelementtype_id' => rand(1,10) > 3 ? 1 : (rand(1,10) > 3 ? 2 : rand(3,6)),
-				'state' => $this->state(rand(0,10)),
 				'parent_id' => $index == 1 ? 0 : NetElement::where('id', '>', '1')->get()->random(1)->id,
 				'descr' => $faker->sentence(),
 				'pos' => $x.','.$y,
@@ -98,7 +97,9 @@ class NetElementTableSeeder extends \BaseSeeder {
 
 		$this->pos_dumping (NetElement::where('netelementtype_id', '=', 1)->get());
 
-		NetElement::relation_index_build_all(1);
+		echo "\nATTENTION: disabled call of NetElement::relation_index_build_all(1) in ".__METHOD__;
+		echo "\nSee https://devel.roetzer-engineering.com/jira/browse/LAR-179 for details";
+		/* NetElement::relation_index_build_all(1); */
 	}
 
 }
