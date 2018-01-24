@@ -37,6 +37,7 @@ class BaseLifecycleTest extends TestCase {
 	protected $tests_to_be_excluded = [];
 
 	// define how often the create, update and delete tests should be run
+	// should be at least two to be able to test bulk delete, too
 	protected $testrun_count = 2;
 
 	// most models are created from another models context – if so set this in your derived class
@@ -384,6 +385,26 @@ class BaseLifecycleTest extends TestCase {
 
 
 	/**
+	 * Helper to add ID of a currently created entity to the static array
+	 *
+	 * @param $uri The URI to be used; in most cases you will us $this->currentUri
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _addToCreatedEntityIdsArray($uri) {
+
+		$_ = explode('/', $uri);
+		// if we end up in edit view: generated successfully (otherwise we keep staying in create view)
+		if ((array_pop($_) == 'edit')) {
+			$id = array_pop($_);
+			if (is_numeric($id) && ($id != '0')) {
+				array_push(self::$created_entity_ids, $id);
+			}
+		}
+	}
+
+
+	/**
 	 * Try to create without data – we expect this to fail.
 	 *
 	 * @author Patrick Reichel
@@ -492,14 +513,8 @@ class BaseLifecycleTest extends TestCase {
 				->see("Created!")
 			;
 
-			// if we end up in edit view: generated successfully (otherwise we keep staying in create view)
-			$_ = explode('/', $this->currentUri);
-			if ((array_pop($_) == 'edit')) {
-				$id = array_pop($_);
-				if (is_numeric($id) && ($id != '0')) {
-					array_push(self::$created_entity_ids, $id);
-				}
-			}
+			// add to created ids array (check if there is a created entity is performed in helper method)
+			$this->_addToCreatedEntityIdsArray($this->currentUri);
 		}
 	}
 
@@ -526,6 +541,9 @@ class BaseLifecycleTest extends TestCase {
 			->see("Created!")
 		;
 
+		// add to created ids array (check if there is a created entity is performed in helper method)
+		$this->_addToCreatedEntityIdsArray($this->currentUri);
+
 		// this is the second create (using the same data) which usually should fail
 		if ($this->creating_twice_should_fail) {
 			$msg_expected = "please correct the following errors";
@@ -539,6 +557,9 @@ class BaseLifecycleTest extends TestCase {
 		$this->press("_save")
 			->see($msg_expected)
 		;
+
+		// add to created ids array (check if there is a created entity is performed in helper method)
+		$this->_addToCreatedEntityIdsArray($this->currentUri);
 	}
 
 
@@ -626,25 +647,33 @@ class BaseLifecycleTest extends TestCase {
 
 		// delete only freshly created model entities
 		// others could have children that disallow deletion!
-		$ids = self::$created_entity_ids;
+		// therefore: prepare an array holding a single ID to be deleted and an array holding all other
+		// IDs to be bulk deleted
+		$ids_to_delete = [];
+		array_push($ids_to_delete, array(array_pop(self::$created_entity_ids)));
+		array_push($ids_to_delete, self::$created_entity_ids);
 
-		foreach ($ids as $id) {
+		// clear array (else this data will be used by other models, too)
+		self::$created_entity_ids = [];
 
-			if ($this->debug) echo "\nDeleting $this->model_name $id";
+		foreach ($ids_to_delete as $ids) {
 
 			// first: visit index view to get CSRF token
 			$this->actingAs($this->user);
 			$this->visit(route("$this->model_name.index"));
 
+			$post_ids = [];
+			foreach ($ids as $id) {
+				$post_ids[$id] = '1';
+				if ($this->debug) echo "\nDeleting $this->model_name $id";
+			}
 			// then prepare the data to be send via POST
 			// this is necessary because of the datables there is no HTML content to be clicked
 			$form_data = [
 				'_delete' => "",
 				'_token' => Session::token(),
 				'_method' => 'DELETE',
-				'ids' => [
-					$id => '1',
-					],
+				'ids' => $post_ids,
 				];
 
 			// the url to send the POST request to
@@ -655,14 +684,13 @@ class BaseLifecycleTest extends TestCase {
 
 			$this->followRedirects();
 
-			// we should end up in index view telling us about successful delete
-			$this->see("Deleted $this->model_name $id");
-			// and of course: deleted at should not longer be NULL in database
-			$this->notSeeInDatabase($this->database_table, ['deleted_at' => null, 'id' => $id]);
+			foreach ($ids as $id) {
+				// we should end up in index view telling us about successful delete
+				$this->see("Deleted $this->model_name $id");
+				// and of course: deleted at should not longer be NULL in database
+				$this->notSeeInDatabase($this->database_table, ['deleted_at' => null, 'id' => $id]);
+			}
 		}
-
-		// clear array (else this data will be used by other models, too)
-		self::$created_entity_ids = [];
 	}
 
 }
