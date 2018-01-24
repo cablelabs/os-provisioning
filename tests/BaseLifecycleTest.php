@@ -20,12 +20,14 @@ class BaseLifecycleTest extends TestCase {
 	protected $debug = False;
 
 	// list of test method names to be run – can be used in development to work on single tests only
+	// attention: the tests are executed in order of definition – not in order of this array
 	protected $tests_to_be_run = [
 		'testCreateTwiceUsingTheSameData',
 		'testCreateWithFakeData',
 		'testDeleteFromIndexView',
 		'testEmptyCreate',
 		'testIndexViewVisible',
+		'testDatatableDataReturned',
 		'testUpdate',
 	];
 
@@ -610,6 +612,9 @@ class BaseLifecycleTest extends TestCase {
 
 	/**
 	 * Try to delete a database entry.
+	 * This cannot be executed directly by checking in and submitting the form.
+	 * The use of datatables causes empty form table in returned HTML – so we have to simulate the process
+	 * in sending a POST request directly.
 	 *
 	 * @author Patrick Reichel
 	 */
@@ -620,20 +625,39 @@ class BaseLifecycleTest extends TestCase {
 		}
 
 		// delete only freshly created model entities
-		// others could have children that disallows deletion!
+		// others could have children that disallow deletion!
 		$ids = self::$created_entity_ids;
+
 		foreach ($ids as $id) {
 
 			if ($this->debug) echo "\nDeleting $this->model_name $id";
 
+			// first: visit index view to get CSRF token
 			$this->actingAs($this->user);
 			$this->visit(route("$this->model_name.index"));
 
-			// attention: this is only running if datatables are disabled in testing environment
-			// phpunit does not execute JavaScript!
-			$this->check("ids[$id]");
-			$this->press("_delete");
+			// then prepare the data to be send via POST
+			// this is necessary because of the datables there is no HTML content to be clicked
+			$form_data = [
+				'_delete' => "",
+				'_token' => Session::token(),
+				'_method' => 'DELETE',
+				'ids' => [
+					$id => '1',
+					],
+				];
+
+			// the url to send the POST request to
+			$url = "/admin/".$this->model_name."/0";
+
+			// and here we go!
+			$this->call('POST', $url, $form_data);
+
+			$this->followRedirects();
+
+			// we should end up in index view telling us about successful delete
 			$this->see("Deleted $this->model_name $id");
+			// and of course: deleted at should not longer be NULL in database
 			$this->notSeeInDatabase($this->database_table, ['deleted_at' => null, 'id' => $id]);
 		}
 
