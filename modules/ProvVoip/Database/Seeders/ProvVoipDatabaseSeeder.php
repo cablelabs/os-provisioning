@@ -1,11 +1,11 @@
 <?php 
 
-namespace Modules\ProvVoip\Database\Seeders;
+namespace Modules\Provvoip\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class ProvVoipDatabaseSeeder extends Seeder {
+class ProvvoipDatabaseSeeder extends Seeder {
 
 	/**
 	 * Run the database seeds.
