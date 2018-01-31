@@ -13,7 +13,8 @@ return [
   *	MODULE: BillingBase
   */
 	//BillingBaseController
- 	'BillingBase_extra_charge' 		=> 'Aufschlag auf Einkaufspreis in %. Nur wenn nicht schon vom Provider berechnet!',
+	'BillingBase_extra_charge' 		=> 'Aufschlag auf Einkaufspreis in %. Nur wenn nicht schon vom Provider berechnet!',
+	'BillingBase_cdr_retention' 	=> 'Anzahl der Monate, die Einzelverbindungsnachweise gespeichert werden dürfen/müssen.',
 	'BillingBase_cdr_offset' 		=> "ACHTUNG: Eine Erhöhung der Differenz führt bei bereits vorhandenen Daten im nächsten Abrechnungslauf zu überschriebenen EVNs - Stellen Sie sicher, dass diese gesichert/umbenannt wurden!\n\n1 - wenn die Einzelverbindungsnachweise vom Juni zu den Rechnungen vom Juli gehören; 0 - wenn beide für den selben Monat abgerechnet werden; 2 - wenn die Einzelverbindungsnachweise vom Januar zu den Rechnungen vom März gehören.",
 	'BillingBase_InvoiceNrStart' 	=> 'Rechnungsnummer startet jedes neue Jahr mit dieser Nummer.',
 	'BillingBase_ItemTermination'	=> 'Erlaubt es Kunden gebuchte Produkte nur bis zum letzten Tag des Monats zu kündigen.',
@@ -57,7 +58,7 @@ return [
  /**
   *	MODULE: HfcReq
   */
- 	'netelementtype_reload' 		=> 'In Sekunden. 0s zum Deaktivieren des Autoreloads.',
+	'netelementtype_reload' 		=> 'In Sekunden. 0s zum Deaktivieren des Autoreloads.',
 	'undeleteables' 				=> 'Net & Cluster können weder gelöscht werden, noch kann der Name geändert werden, da die Existenz dieser Typen Vorraussetzung für die Erzeugung des Entitity-Relationship-Diagramms ist.',
 
  /**
@@ -111,5 +112,5 @@ return [
 /**
  * Module Ticketsystem
  */
-    'assign_user' => 'Zuweisen eines Users zu einem Ticket.',
+	'assign_user' => 'Zuweisen eines Users zu einem Ticket.',
 ];

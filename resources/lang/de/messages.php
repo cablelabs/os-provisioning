@@ -124,6 +124,7 @@ return [
 	'Headline 2'				=> 'Überschrift Navigationsleiste',
 	//Billing
 	'accCmd_processing' 		=> 'Der Abrechnungslauf wird erstellt. Bitte warten Sie bis der Prozess abgeschlossen ist.',
+	'CDR retention period' 		=> 'Aufbewahrungsfrist für Einzelverbindungsnachweise',
 	'Day of Requested Collection Date'	=> 'Monatlicher Abrechungstag',
 	'Tax in %'					=> 'Mehrwertsteuer in %',
 	'Invoice Number Start'		=> 'Start Nummerierung Rechnungen',

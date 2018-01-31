@@ -14,7 +14,8 @@ return [
   */
 	//BillingBaseController
 	'BillingBase_cdr_offset' 		=> "TAKE CARE: incrementing this when having data from settlement runs leads to overwritten CDRs during next run - make sure to save/rename the history!\n\nExample: Set to 1 if Call Data Records from June belong to Invoices of July, Zero if it's the same month, 2 if CDRs of January belong to Invoices of March.",
- 	'BillingBase_extra_charge' 		=> 'Additional mark-on to purchase price. Only when not calculated through provider!',
+	'BillingBase_cdr_retention' 	=> 'Months that Call Data Records may/have to be kept save',
+	'BillingBase_extra_charge' 		=> 'Additional mark-on to purchase price. Only when not calculated through provider!',
 	'BillingBase_InvoiceNrStart' 	=> 'Invoice Number Counter starts every new year with this number',
 	'BillingBase_ItemTermination'	=> 'Allow Customers only to terminate booked products on last day of month',
 	'BillingBase_MandateRef'		=> "A Template can be built with sql columns of contract or mandate table - possible fields: \n",
@@ -36,8 +37,8 @@ return [
 	'Item_CreditAmount'				=> 'Net Amount to be credited to Customer. Take Care: a negative amount becomes a debit!',
 
 	//ProductController
-  	'Product_Name' 					=> 'For Credits it is possible to assign a Type by adding the type name to the Name of the Credit - e.g.: \'Credit Device\'',
-  	'Product_Type'					=> 'All fields besides Billing Cycle have to be cleared before a type change! Otherwise products can not be saved in most cases',
+	'Product_Name' 					=> 'For Credits it is possible to assign a Type by adding the type name to the Name of the Credit - e.g.: \'Credit Device\'',
+	'Product_Type'					=> 'All fields besides Billing Cycle have to be cleared before a type change! Otherwise products can not be saved in most cases',
 	'Product_Number_of_Cycles' 		=> 'Take Care!: for all repeatedly payed products the price stands for every charge, for Once payed products the Price is divided by the number of cycles',
 
 	//SalesmanController
@@ -57,7 +58,7 @@ return [
  /**
   *	MODULE: HfcReq
   */
- 	'netelementtype_reload' 		=> 'In Seconds. Zero to deactivate autoreload.',
+	'netelementtype_reload' 		=> 'In Seconds. Zero to deactivate autoreload.',
 	'undeleteables' 				=> 'Net & Cluster can not be changed due to there relevance for all the Entity Relation Diagrams',
 
  /**
@@ -75,7 +76,7 @@ return [
  /**
   *	MODULE: ProvBase
   */
- 	//ModemController
+	//ModemController
 	'Modem_NetworkAccess'			=> 'Network Access for CPEs. (MTAs are not considered and will always go online when all other configurations are correct). Take care: With Billing-Module this checkbox will be overwritten by daily check if tariff changes.',
 	'Modem_InstallationAddressChangeDate'	=> 'In case of (physical) relocation of the modem: Add startdate for the new address here. If readonly there is a pending address change order at Envia.',
 	'contract_number' 				=> 'Attention - Customer login password is changed automatically on changing this field!',
@@ -84,7 +85,7 @@ return [
  /**
   *	MODULE: ProvVoip
   */
- 	//PhonenumberManagementController
+	//PhonenumberManagementController
 	'PhonenumberManagement_CarrierIn' => 'On incoming porting: set to previous Telco.',
 	'PhonenumberManagement_CarrierInWithEnvia' => 'On incoming porting: set to previous Telco. In case of a new number set this to EnviaTEL',
 	'PhonenumberManagement_EkpIn' => 'On incoming porting: set to previous Telco.',
