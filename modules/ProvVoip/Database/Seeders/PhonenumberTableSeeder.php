@@ -48,7 +48,7 @@ class PhonenumberTableSeeder extends \BaseSeeder {
 		// check for ports already taken on this mta
 		// this field is unique but not checked in Phonenumber::$rules which can crash the unit tests
 		$ports_taken = [];
-		foreach (\DB::table('phonenumber')->where('mta_id', '=', 300046)->whereNull('deleted_at')->get() as $nr_data) {
+		foreach (\DB::table('phonenumber')->where('mta_id', '=', $mta_id)->whereNull('deleted_at')->get() as $nr_data) {
 			array_push($ports_taken, $nr_data->port);
 		}
 
