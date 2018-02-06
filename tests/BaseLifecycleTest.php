@@ -52,6 +52,7 @@ class BaseLifecycleTest extends TestCase {
 	// fields to be updated with random data
 	protected $update_fields = [];
 
+
 	// array holding the edit form structure
 	protected static $edit_field_structure = [];
 
@@ -140,7 +141,14 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	public function createApplication() {
 
-		$app = parent::createApplication();
+		// making $app global (and reusing it in every lifecycle test) prevents memory exhaustion
+		// (laravel seems not to clean up $app properly – read https://stackoverflow.com/questions/39096658/laravel-testing-increasing-memory-use for details)
+		// attention: can have ugly side effects if you change $app in your tests (no code isolation)
+		// if needed: clean up in $this->tearDown()
+		global $app;
+		if (is_null($app)) {
+			$app = parent::createApplication();
+		}
 		$this->_get_user();
 
 		// get edit form structure for current model
@@ -161,7 +169,7 @@ class BaseLifecycleTest extends TestCase {
 	protected function _get_user() {
 
 		// TODO: do not hard code any user class, instead fetch a user dynamically
-		//       ore add it only for testing (see Laravel factory stuff)
+		//       or add it only for testing (see Laravel factory stuff)
 		$this->user = App\Authuser::findOrFail(1);
 	}
 
@@ -389,6 +397,8 @@ class BaseLifecycleTest extends TestCase {
 	 *
 	 * @param $uri The URI to be used; in most cases you will us $this->currentUri
 	 *
+	 * @return $id if one has been created else null
+	 *
 	 * @author Patrick Reichel
 	 */
 	protected function _addToCreatedEntityIdsArray($uri) {
@@ -399,8 +409,10 @@ class BaseLifecycleTest extends TestCase {
 			$id = array_pop($_);
 			if (is_numeric($id) && ($id != '0')) {
 				array_push(self::$created_entity_ids, $id);
+				return $id;
 			}
 		}
+		return null;
 	}
 
 
@@ -514,7 +526,12 @@ class BaseLifecycleTest extends TestCase {
 			;
 
 			// add to created ids array (check if there is a created entity is performed in helper method)
-			$this->_addToCreatedEntityIdsArray($this->currentUri);
+			$id = $this->_addToCreatedEntityIdsArray($this->currentUri);
+
+			if (!is_null($id)) {
+				// check for correct entry in guilog
+				$this->seeInDatabase('guilog', ['method' => 'created', 'model' => $this->model_name, 'model_id' => $id,]);
+			}
 		}
 	}
 
@@ -593,6 +610,9 @@ class BaseLifecycleTest extends TestCase {
 			$this->press("_save")
 				->see("Updated!")
 			;
+
+			// check for correct entry in guilog
+			$this->seeInDatabase('guilog', ['method' => 'updated', 'model' => $this->model_name, 'model_id' => $id,]);
 		}
 
 	}
@@ -689,8 +709,29 @@ class BaseLifecycleTest extends TestCase {
 				$this->see("Deleted $this->model_name $id");
 				// and of course: deleted at should not longer be NULL in database
 				$this->notSeeInDatabase($this->database_table, ['deleted_at' => null, 'id' => $id]);
+				// check for correct entry in guilog
+				$this->seeInDatabase('guilog', ['method' => 'deleted', 'model' => $this->model_name, 'model_id' => $id,]);
 			}
 		}
+	}
+
+	/**
+	 * Clean up to free RAM and speedup PHPUnit
+	 * see http://kriswallsmith.net/post/18029585104/faster-phpunit
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function tearDown()
+	{
+		$refl = new ReflectionObject($this);
+		foreach ($refl->getProperties() as $prop) {
+			if (!$prop->isStatic() && 0 !== strpos($prop->getDeclaringClass()->getName(), 'PHPUnit_')) {
+				$prop->setAccessible(true);
+				$prop->setValue($this, null);
+			}
+		}
+
+		parent::tearDown();
 	}
 
 }
