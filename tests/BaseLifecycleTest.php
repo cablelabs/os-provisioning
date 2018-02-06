@@ -417,6 +417,31 @@ class BaseLifecycleTest extends TestCase {
 
 
 	/**
+	 * There are models that can only be created from another model.
+	 * This method gets a parent model to create on.
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _get_create_context() {
+
+		$ret = [];
+
+		if (is_null($this->create_from_model_context)) {
+			$ret['instance'] = null;
+			$ret['params'] = [];
+		}
+		else {
+			$model = $this->create_from_model_context;
+			$instance = $model::all()->random(1);
+			$ret['instance'] = $instance;
+			$ret['params'] = [$instance->table."_id" => $instance->id];
+		}
+
+		return $ret;
+	}
+
+
+	/**
 	 * Try to create without data – we expect this to fail.
 	 *
 	 * @author Patrick Reichel
@@ -434,30 +459,24 @@ class BaseLifecycleTest extends TestCase {
 			$msg_expected = "Created!";
 		};
 
+		$context = $this->_get_create_context();
 		$this->actingAs($this->user)
-			->visit(route("$this->model_name.create"))
+			->visit(route("$this->model_name.create", $context['params']))
 			->press("Save")
 			->see($msg_expected)
 		;
-	}
 
+		if (!$this->creating_empty_should_fail) {
 
-	protected function _get_create_context() {
+			// add to created ids array (check if there is a created entity is performed in helper method)
+			$id = $this->_addToCreatedEntityIdsArray($this->currentUri);
 
-		$ret = [];
+			if (!is_null($id)) {
+				// check for correct entry in guilog
+				$this->seeInDatabase('guilog', ['method' => 'created', 'model' => $this->model_name, 'model_id' => $id,]);
+			}
+		};
 
-		if (is_null($this->create_from_model_context)) {
-			$ret['instance'] = null;
-			$ret['params'] = [];
-		}
-		else {
-			$model = $this->create_from_model_context;
-			$instance = $model::all()->random(1);
-			$ret['instance'] = $instance;
-			$ret['params'] = [$instance->table."_id" => $instance->id];
-		}
-
-		return $ret;
 	}
 
 
