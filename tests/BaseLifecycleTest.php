@@ -19,6 +19,9 @@ class BaseLifecycleTest extends TestCase {
 	/* protected $debug = True; */
 	protected $debug = False;
 
+	// flag to print currently executed test method to stdout
+	protected $echo_running_test = True;
+
 	// list of test method names to be run – can be used in development to work on single tests only
 	// attention: the tests are executed in order of definition – not in order of this array
 	protected $tests_to_be_run = [
@@ -375,15 +378,19 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	protected function _test_shall_be_run($test_method) {
 
+		if ($this->echo_running_test) {
+			echo "\n".$this->class_name."->".$test_method."()";
+		}
+
 		// check against the whitelist
 		if (!in_array($test_method, $this->tests_to_be_run)) {
-			echo "	WARNING: Skipping ".$this->class_name."->".$test_method."() (not found in tests_to_be_run)\n";
+			echo "\n	WARNING: Skipping ".$this->class_name."->".$test_method."() (not found in tests_to_be_run)";
 			return false;
 		}
 
 		// check against the blacklist
 		if (in_array($test_method, $this->tests_to_be_excluded)) {
-			echo "	WARNING: Skipping ".$this->class_name."->".$test_method."() (found in tests_to_be_excluded)\n";
+			echo "\n	WARNING: Skipping ".$this->class_name."->".$test_method."() (found in tests_to_be_excluded)";
 			return false;
 		}
 
