@@ -203,6 +203,7 @@ class BaseLifecycleTest extends TestCase {
 
 		foreach ($form_raw as $form_raw_field) {
 
+			// hint: the operator “@” forces PHP to ignore error messages
 			// check if field is hidden – in which case we don't want to fill it
 			if (@$form_raw_field['hidden']) {
 				continue;

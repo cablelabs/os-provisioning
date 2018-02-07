@@ -45,7 +45,8 @@ class MtaTableSeeder extends \BaseSeeder {
 
 		$ret = [
 			'mac' => $faker->macAddress(),
-			'type' => (rand(0, 1) == 1 ? 1 : 2),
+			/* 'type' => (rand(0, 1) == 1 ? 1 : 2), */
+			'type' => 'sip',	// only seed sip mta (packetcable is not implemented and therefore may raise problems in testing)
 			'modem_id' => $modem_id,
 			'configfile_id' => Configfile::where('device', '=', 'mta')->get()->random(1)->id,
 		];
