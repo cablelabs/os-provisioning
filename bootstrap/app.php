@@ -26,6 +26,12 @@ $app = new Illuminate\Foundation\Application(
 | @author Patrick Reichel
 */
 
+// force reading of .evn.testing – this seems not be done automatically every time
+if (env('APP_ENV') == 'testing') {
+	$dotenv = new \Dotenv\Dotenv(__DIR__.'/../', '.env.testing');
+	$dotenv->overload();
+}
+
 // directory holding our .env files
 $env_dir = '/etc/nmsprime/env/';
 

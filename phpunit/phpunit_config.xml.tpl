@@ -14,16 +14,9 @@
 	verbose="true"
 >
 	<logging>
-		<log type="testdox-html" target="{{phpunit_html_out_file}}"/>
+		<log type="testdox-html" target="{{phpunit_html_log_file}}"/>
 	</logging>
     <testsuites>
 		{{testsuite_directories}}
     </testsuites>
-    <php>
-        <env name="APP_ENV" value="testing"/>
-        <env name="CACHE_DRIVER" value="array"/>
-        <env name="SESSION_DRIVER" value="array"/>
-        <env name="QUEUE_DRIVER" value="sync"/>
-		<env name="APP_URL" value="https:/127.0.0.1:8080/nmsprime"/>
-    </php>
 </phpunit>
