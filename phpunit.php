@@ -23,7 +23,7 @@ class UnitTestStarter {
 	// the test circuits
 	// each circuits holds an array with modules to disable
 	protected $circuits = [
-		'all_module_enabled' => [],
+		'all_modules_enabled' => [],
 		/* 'no_voip' => ['Provvoip', 'Provvoipenvia', 'Voipmon'], */
 		/* 'no_envia' => ['Provvoipenvia'], */
 	];
@@ -149,33 +149,31 @@ class UnitTestStarter {
 		}
 
 		$substitutions = [
-			'{{phpunit_html_out_file}}' => $outfile,
+			'{{phpunit_html_log_file}}' => $logfile,
 		];
 		$test_dirs = [];
+
+		// add additional tests
+		array_push($test_dirs, "<testsuite name=\"Route auth tests\"><file>".$this->basepath."/tests/RoutesAuthTest.php</file></testsuite>");
+
+		// add module level test dirs (for all enabled modules)
 		foreach ($modules_to_test as $m) {
 			array_push($test_dirs, "<testsuite name=\"$m\"><directory>".$m."/Tests</directory></testsuite>");
 		}
+
 		$substitutions['{{testsuite_directories}}'] = join("\n", $test_dirs);
 
 		$this->_write_config_file($configfile, $substitutions);
 
-		/* exec("sudo -u apache phpunit --configuration $configfile | tee $logfile", $output, $return_var); */
-		passthru("sudo -u apache phpunit --configuration $configfile | tee $logfile", $exit_code);
+		/* exec("sudo -u apache phpunit --configuration $configfile | tee $outfile", $output, $return_var); */
+		passthru("sudo -u apache phpunit --configuration $configfile | tee $outfile", $exit_code);
 
-		var_dump($exit_code);
-		/* foreach ($output as $line) { */
-		/* 	echo "\n# $line"; */
-		/* } */
-
-		/* $last_line = array_pop($output); */
-		/* echo "\n\n$last_line"; */
-		/* if ( */
-		/* 	(strpos($last_line, 'Failure') === True) */
-		/* 	|| */
-		/* 	(strpos($last_line, 'Error') === True) */
-		/* ) { */
-		/* 	return false; */
-		/* } */
+		// check for errors in outfile (unfortunately phpunit exits with “0” even on failures and errors)
+		// this is used to skip testing of other circuits if current on failed
+		$problems = system("tail -n 1 $outfile | egrep -c '(Failure|Error)'");
+		if ($problems != "0") {
+			return false;
+		}
 
 		return true;
 	}
@@ -260,8 +258,7 @@ class UnitTestStarter {
 	 */
 	protected function _restore_initial_module_state() {
 
-		echo "\n\nRestoring original module states";
-		echo "\n";
+		echo "\n\nRestoring original module states\n";
 		$this->_current_module_information = $this->_get_module_information();
 		foreach ($this->initial_module_information as $module => $data) {
 			if ($data[1] == 'Enabled') {
@@ -271,9 +268,10 @@ class UnitTestStarter {
 				$this->_disable_modules([$module]);
 			}
 			else {
-				echo "\nUnknown state $data[1] for module $module.";
+				echo "Unknown state $data[1] for module $module.\n";
 			}
 		}
+		echo "\n";
 	}
 
 }
