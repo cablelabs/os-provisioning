@@ -12,7 +12,7 @@
 */
 
 // Home Route
-Route::get('', array('as' => 'Home', 'uses' => 'WelcomeController@index', 'middleware' => 'home'));
+/* Route::get('', array('as' => 'Home', 'uses' => 'WelcomeController@index', 'middleware' => 'home')); */
 
 
 /*
