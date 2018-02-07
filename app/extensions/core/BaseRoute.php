@@ -84,7 +84,7 @@ class BaseRoute {
 		\Route::get(strtolower($name).'/fulltextSearch', array('as' => $name.'.fulltextSearch', 'uses' => $controller.'@fulltextSearch', $options, 'middleware' => 'auth:view'));
 
 		// AJAX Index DataTable
-		\Route::get("$name/datatables", array('as' => $name.'.data', 'uses' => $controller.'@index_datatables_ajax', $options,  $options, 'middleware' => 'auth:view'));
+		\Route::get("$name/datatables", array('as' => $name.'.data', 'uses' => $controller.'@index_datatables_ajax', $options, 'middleware' => 'auth:view'));
 	}
 
 
