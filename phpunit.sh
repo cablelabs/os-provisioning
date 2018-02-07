@@ -1,16 +1,22 @@
 #!/bin/bash
 
-LOGFILE="phpunit_log.htm"
-OUTFILE="phpunit_output.htm"
+# this is a simple starte script for test development
+# it allows to run single classes or even tests so you don't need to run the complete testing suite
+# for real testing use phpunit.php
+
+LOGFILE="phpunit/phpunit_log.htm"
+OUTFILE="phpunit/phpunit_output.htm"
+
+rm -f phpunit/*.htm
 
 # debug e.g. shows the tests to be run
-DEBUG=""
 DEBUG=" --debug"
+DEBUG=""
 
 PHPUNIT="/usr/bin/phpunit"
 
 OPTS=""
-OPTS=" --testdox-html $LOGFILE --colors --stop-on-failure"
+OPTS=" --testdox-html $LOGFILE --colors --stop-on-failure --bootstrap /var/www/nmsprime/bootstrap/autoload.php"
 
 # if empty: run all tests
 # can be used on developing tests (you don't want to run the complete test suite in this case)
