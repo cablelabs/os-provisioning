@@ -32,6 +32,7 @@ class ExtendedValidatorServiceProvider extends ServiceProvider {
 		$this->app['validator']->extend('phonebook_string', 'Acme\Validators\ExtendedValidator@validatePhonebookString');
 		$this->app['validator']->extend('phonebook_predefined_string', 'Acme\Validators\ExtendedValidator@validatePhonebookPredefinedString');
 		$this->app['validator']->extend('phonebook_one_character_option', 'Acme\Validators\ExtendedValidator@validatePhonebookOneCharacterOption');
+		$this->app['validator']->extend('period', 'Acme\Validators\ExtendedValidator@validatePeriod');
 	}
 
 	/**

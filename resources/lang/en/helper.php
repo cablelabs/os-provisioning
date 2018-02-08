@@ -37,9 +37,10 @@ return [
 	'Item_CreditAmount'				=> 'Net Amount to be credited to Customer. Take Care: a negative amount becomes a debit!',
 
 	//ProductController
+	'Product_maturity' 				=> 'Tariff period/runtime/term. E.g. 14D (14 days), 3M (three months), 1Y (one year)',
 	'Product_Name' 					=> 'For Credits it is possible to assign a Type by adding the type name to the Name of the Credit - e.g.: \'Credit Device\'',
-	'Product_Type'					=> 'All fields besides Billing Cycle have to be cleared before a type change! Otherwise products can not be saved in most cases',
 	'Product_Number_of_Cycles' 		=> 'Take Care!: for all repeatedly payed products the price stands for every charge, for Once payed products the Price is divided by the number of cycles',
+	'Product_Type'					=> 'All fields besides Billing Cycle have to be cleared before a type change! Otherwise products can not be saved in most cases',
 
 	//SalesmanController
 	'Salesman_ProductList'			=> 'Add all Product types he gets commission for - possible: ',

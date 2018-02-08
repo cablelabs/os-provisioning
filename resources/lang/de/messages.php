@@ -32,6 +32,7 @@ return [
 	'cpe_log_error'				=> 'ist nicht beim Server registriert - Kein Logeintrag gefunden',
 
 	'Create'					=> 'Erstellen',
+	'D' 						=> 'Tag|Tage',
 	'Delete'					=> 'Löschen',
 	'Day'						=> 'Tag',
 	'Description'				=> 'Beschreibung',
@@ -60,8 +61,10 @@ return [
 	'Language'					=> 'Sprache',
 	'Lastname'					=> 'Nachname',
 	'Last IP'					=> 'Letzte IP',
+	'M' 						=> 'Monat|Monate',
 	'MAC Address'				=> 'MAC Adresse',
 	'Main Menu'					=> 'Hauptmenü',
+	'Maturity' 					=> 'Laufzeit',
 	'modem_eventlog_error'		=> 'Modem Eventlog nicht gefunden',
 	'modem_monitoring_error'	=> 'Möglicherweise war das Modem bis jetzt nicht online. Beachten Sie, dass Diagramme erst ab
 		dem Zeitpunkt verfügbar sind, von dem an das Modem online ist. Wurden alle Diagramme unsauber angezeigt, könnte es
@@ -84,6 +87,7 @@ return [
 	'or: Upload KML file'		=> 'oder lade KML hoch',
 	'Parent Device Type'		=> 'Eltern Gerätetyp',
 	'Parent Object'				=> 'Eltern Objekt',
+	'Period of Notice' 			=> 'Kündigungsfrist',
 	'Password'					=> 'Passwort',
 	'Phone'						=> 'Telefon',
 	'Phone ID next month'		=> 'Telefon ID nächsten Monat',
@@ -109,6 +113,7 @@ return [
 	'Vendor'					=> 'Hersteller',
 	'Year'						=> 'Jahr',
 	'yes' 						=> 'ja',
+	'Y' 						=> 'Jahr|Jahre',
 //
 //Global
 //
@@ -211,7 +216,7 @@ return [
 //Billing Base
 //
 	//Product Entry
-	'Billing Cycle'				=> 'Rechnungskreislauf',
+	'Billing Cycle'				=> 'Abrechungszyklus',
 	'Bundled with VoIP product?'=> 'Mit VoIP-Produkt verknüpft?',
 	'Price (Net)'				=> 'Preis (netto)',
 	'Number of Cycles'			=> 'Anzahl der Zyklen',
@@ -304,6 +309,7 @@ return [
 	'Commission in %'		=> 'Provision in %',
 	'Total Fee'				=> 'Gesamtgebühr',
 	'Commission Amount'		=> 'davon Provision',
+	'eom' 					=> 'zum Monatsende',
 
 /**
  * Customer Control Center
@@ -421,9 +427,9 @@ return [
 	'Credit'                    => 'Gutschrift',
 	'Other'                     => 'Sonstige',
 	'Once'                      => 'einmalig',
-	'Monthly'                   => 'pro Monat',
-	'Quarterly'                 => 'pro Quartal',
-	'Yearly'                    => 'pro Jahr',
+	'Monthly'                   => 'monatlich',
+	'Quarterly'                 => 'vierteljährlich',
+	'Yearly'                    => 'jährlich',
 	//Tree Table
 	'NET'                       => 'Netz',
 	'CMTS'                      => 'CMTS',
