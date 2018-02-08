@@ -20,7 +20,10 @@
 
 @section('content_left')
 	@include ('Generic.logging')
-
+	<?php
+		$blade_type = 'relations';
+	?>
+	@include('Generic.above_infos')
 	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'EditForm')) }}
 
 		@include($form_path, $view_var)

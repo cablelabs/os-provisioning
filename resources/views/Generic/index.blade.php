@@ -35,11 +35,12 @@
         {{-- Create Form --}}
             <div class="align-self-end m-r-20">
                 @if ($create_allowed)
-                    {{ Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) }}
-                    <button class="btn btn-outline-primary float-right m-b-10" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
-                    title="{{ \App\Http\Controllers\BaseViewController::translate_view('Create '.$model->view_headline(), 'Button' )}}">
+                    {{ Form::open(array('method' => 'GET', 'id' => 'createModel')) }}
+                    <a href={{route($route_name.'.create')}} onclick="form.submit();" class="btn btn-outline-primary float-right m-b-10" 
+                        style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top" 
+                        title="{{ \App\Http\Controllers\BaseViewController::translate_view('Create '.$model->view_headline(), 'Button' )}}">
                         <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
-                    </button>
+                    </a>
                     {{ Form::close() }}
                 @endif
             </div>
