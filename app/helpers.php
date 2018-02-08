@@ -127,8 +127,9 @@ function concat_pdfs($sourcefiles, $target_fn)
 		$cnt = count($sourcefiles);
 		$sourcefiles = implode(' ', $sourcefiles);
 	}
+	// only for debugging - remove when sufficient tested
 	else
-		$cnt = count(explode(' ', $sourcefiles)) - 1;
+		$cnt = count(explode(' ', trim($sourcefiles)));
 
 	\ChannelLog::debug('billing', 'Concat '.$cnt. ' PDFs to '.$target_fn);
 
