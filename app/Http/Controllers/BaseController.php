@@ -1059,7 +1059,8 @@ class BaseController extends Controller {
 		$filter_column_data = isset($dt_config['filter']) ? $dt_config['filter'] : [];
 		$eager_loading_tables = isset($dt_config['eager_loading']) ? $dt_config['eager_loading'] : [];
 
-		!array_has($header_fields, $dt_config['table'].'.id') ? array_push($header_fields, 'id') : null; // if no id Column is drawn, draw it to generate links with id
+		// if no id Column is drawn, draw it to generate links with id
+		!array_has($header_fields, $dt_config['table'].'.id') ? array_push($header_fields, 'id') : null;
 
 		if (empty($eager_loading_tables) ){ //use eager loading only when its needed
 			$request_query = $model::select($dt_config['table'].'.*');

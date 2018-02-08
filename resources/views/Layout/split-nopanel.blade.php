@@ -36,4 +36,5 @@
 			</div>
 			@yield('content_right')
 		</div>
+	</div>
 @stop
