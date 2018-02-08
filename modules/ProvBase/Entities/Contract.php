@@ -837,26 +837,29 @@ class Contract extends \BaseModel {
 		if (!\PPModule::is_active('Billingbase'))
 			return ['item' => null, 'count' => 0];
 
-		$prod_ids = \Modules\BillingBase\Entities\Product::get_product_ids($type);
-		if (!$prod_ids)
+		$last = $count = 0;
+		$tariff = null;			// item
+
+		$tariffs = $this->items()
+			->join('product as p', 'item.product_id', '=', 'p.id')
+			->where('type', '=', $type)->where('valid_from', '<=', date('Y-m-d'))
+			->get();
+
+		if ($tariffs->isEmpty())
 			return ['item' => null, 'count' => 0];
 
-		$last 	= 0;
-		$tariff = null;			// item
-		$count = 0;
-
-		foreach ($this->items as $item)
+		foreach ($tariffs as $item)
 		{
-			if (in_array($item->product->id, $prod_ids) && $item->check_validity('Now'))
-			{
-				$count++;
+			if (!$item->check_validity('Now'))
+				continue;
 
-				$start = $item->get_start_time();
-				if ($start > $last)
-				{
-					$tariff = $item;
-					$last   = $start;
-				}
+			$count++;
+
+			$start = $item->get_start_time();
+			if ($start > $last)
+			{
+				$tariff = $item;
+				$last   = $start;
 			}
 		}
 
