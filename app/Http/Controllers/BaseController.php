@@ -1083,6 +1083,9 @@ class BaseController extends Controller {
 		};
 
 		$DT	->editColumn('checkbox', function ($object) {
+				if(method_exists($object , 'set_index_delete'))
+					$object->set_index_delete();
+
 				return "<input style='simple' align='center' class='' name='ids[".$object->id."]' type='checkbox' value='1' ".
 				($object->index_delete_disabled ? "disabled" : '').">";
 			})
