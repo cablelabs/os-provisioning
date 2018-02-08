@@ -111,3 +111,29 @@ function escape_latex_special_chars($string)
 	// not working: https://stackoverflow.com/questions/2541616/how-to-escape-strip-special-characters-in-the-latex-document
 	// return preg_replace( "/([\^\%~\\\\#\$%&_\{\}])/e", "\$map['$1']", $string );
 }
+
+
+/**
+ * Concatenate a list of existing PDF Files
+ *
+ * @author Nino Ryschawy
+ *
+ * @param mixed  source files
+ * @param string target filename
+ */
+function concat_pdfs($sourcefiles, $target_fn)
+{
+	if (is_array($sourcefiles))	{
+		$cnt = count($sourcefiles);
+		$sourcefiles = implode(' ', $sourcefiles);
+	}
+	else
+		$cnt = count(explode(' ', $sourcefiles)) - 1;
+
+	\ChannelLog::debug('billing', 'Concat '.$cnt. ' PDFs to '.$target_fn);
+
+	exec("gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=$target_fn $sourcefiles", $output, $ret);
+
+	if ($ret)
+		\ChannelLog::error('billing', "Error concatenating target file $target_fn", [$ret]);
+}
