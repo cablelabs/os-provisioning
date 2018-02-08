@@ -160,6 +160,7 @@ return [
 //
 	//Verträge
 	'Academic Degree'			=> 'Akademischer Titel',
+	'contract_early_cancel' 	=> 'Möchten Sie den Vertrag wirklich vor Tariflaufzeitende :date kündigen?',
 	'Contract number'			=> 'Vertragsnummer',
 	'Contract Nr'				=> 'Vertragsnr',
 	'Contract number legacy'	=> 'Historische Vertragsnummer',
