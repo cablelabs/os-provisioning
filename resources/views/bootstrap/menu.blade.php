@@ -25,7 +25,7 @@
 				@if (\PPModule::is_active('provvoipenvia'))
 					{{-- count of user interaction needing EnviaOrders --}}
 					<li  class='m-t-10' style='font-size: 2em; font-weight: bold'>
-						<a href="/lara/admin/EnviaOrder?show_filter=action_needed" target="_self">
+						<a href="EnviaOrder?show_filter=action_needed" target="_self">
 							@if (Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count() > 0)
 								<span style='color: #f00; text-decoration:none' title='{{ Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count() }} user interaction needing EnviaOrders'>✘
 								<sup>{{ Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count() }}</sup>
@@ -40,7 +40,7 @@
 						<i class="fa fa-user-circle-o fa-lg d-inline" aria-hidden="true"></i>
 						<span class="d-none d-sm-none d-md-inline">{{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span> <b class="caret"></b>
 					</a>
-					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0;left:auto;">
 						<a class="dropdown-item" href="{{route('Authuser.edit', \Auth::user()->id)}}"> <i class="fa fa-cog" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}</a>
 						@if (\Auth::user()->is_admin() === true)
 							<a class="dropdown-item" href="{{route('Authuser.index')}}"><i class="fa fa-cogs" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserGlobSettings', 'Menu')}}</a>
@@ -59,7 +59,7 @@
 			<button class="search-btn" type="submit">
 				<i class="fa fa-search fa-2x" aria-hidden="true"></i>
 			</button>
-			<input id="globalsearch" type="text" name="query" class="form-control navbar" placeholder="<?php echo \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search'); ?>">
+			<input id="globalsearch" type="text" name="query" class="form-control navbar" placeholder="{{\App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search')}}">
 			<a href="#" class="close" data-dismiss="navbar-search"><i class="fa fa-angle-up fa-2x" aria-hidden="true"></i></a>
 			{{ Form::close() }}
 		</div>
