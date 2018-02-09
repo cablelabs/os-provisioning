@@ -39,282 +39,41 @@ class importCommand extends Command {
 	protected $description = 'import km3';
 
 
-	// TODO(2): mapping should be done by configfile and id <-> id
-	// Marienberg
-	// protected $old_sys_inet_tarifs = [
-	// 	'BusinessBasic' 				=> 'business',
-	// 	'BusinessFlat' 					=> 'business',
-	// 	'Industrie/Gewerbe 150' 		=> 22,
-	// 	'Industrie/Gewerbe 145' 		=> 'business',
-	// 	'Internet Flat 6000 REI' 		=> 2,
-	// 	'Pob_PrivatBasic' 				=> 4, 			// Volumentarif
-	// 	'Pob_PrivatBasic10G' 			=> 4, 			// Volumentarif
-	// 	'Pob_PrivatBasic5G' 			=> 4, 			// Volumentarif
-	// 	'Pob_PrivatFlat' 				=> 'vol',
-	// 	'Pob_PrivatFlat Spar' 			=> 'vol',
-	// 	'keineDaten' 					=> 0,
-	// 	'PrivatBasic' 					=> 4,
-	// 	'PrivatBasic 10G' 				=> 4, 			// Volumentarif
-	// 	'PrivatFlat Spar' 				=> 1,
-	// 	'PrivatFlat' 					=> 1,
-	// 	'Keine Daten' 					=> 0,
-	// 	'PrivatBasic 5G' 				=> 4, 			// Volumentarif
-	// 	'Internet Flat 16000 REI' 		=> 4,
-	// 	'Internet Flat 6000 SAZ' 		=> 2,
-	// 	'Internet Flat 16000 SAZ' 		=> 4,
-	// 	'Internet Flat 6000 POB' 		=> 2,
-	// 	'Internet Flat 16000 POB' 		=> 4,
-	// 	'Internet Flat 2000 POB' 		=> 1,
-	// 	'Internet Volumen Basic SAZ' 	=> 4,
-	// 	'Internet Flat 6000 (inoffiziel)' => 2,
-	// 	'Internet Volumen 10G POB' 		=> 4,
-	// 	'Internet Volumen 10G REI' 		=> 4,
-	// 	'Internet Volumen 10G SAZ' 		=> 4,
-	// 	'Internet Flat 16000' 			=> 4,
-	// 	'Internet Speed 10G' 			=> 4, 			// Volumentarif
-	// 	'Internet Volumen Basic POB' 	=> 4,
-	// 	'Internet Volumen Basic REI' 	=> 4,
-	// 	'Internet Volumen 10G - 100000' => 4,
-	// 	'Internet Flat 2000 REI' 		=> 1,
-	// 	'Internet Flat 2000 SAZ' 		=> 1,
-	// 	'Internet Flat Spar SAZ' 		=> 2, 			// inactive
-	// 	'Internet Flat Spar MAB,POB' 	=> 2, 			// inactive
-	// 	'Internet Flat Spar POB' 		=> 2, 			// inactive
-	// 	'Internet Flat Spar REI' 		=> 2, 			// inactive
-	// 	'Internet Volumen Basic 100000' => 4,
-	// 	'PrivatBasic20G' 				=> 4, 			// Volumentarif
-	// 	'Flat 25Mbits.' 				=> 4,
-	// 	'PrivatBasic30G' 				=> 4, 			// Volumentari4f
-	// 	'PrivatBasic30G REI' 			=> 4, 			// Volumentarif
-	// 	'Internet Flat 100000' 			=> 5,
-	// 	'Internet Flat 2000' 			=> 1,
-	// 	'Internet Flat 25000' 			=> 4,
-	// 	'Internet Speed Basic MAB,POB'  => 4,
- // 		];
+	/**
+	 * Mapping of old Internet Tarif Names to new Tarif IDs
+	 *
+	 * @var array
+	 */
+	protected $old_sys_inet_tarifs;
 
-	 // Wildenstein
-	protected $old_sys_inet_tarifs = [
-		'PrivatBasic' 				=> 4,
-		'PrivatBasic 10G' 			=> 4,
-		'PrivatFlat Spar' 			=> 1,
-		'PrivatBasic 5G' 			=> 4,
-		'Internet Speed 10G' 		=> 4,
-		'Internet Speed Basic'  	=> 4,
-		'Internet Volumen 10G'  	=> 4,
-		'Internet Volumen Basic' 	=> 4,
-		'keine Daten' 				=> 0,
-		'PrivatBasic30G' 			=> 4,
-		'Internet Flat 6000' 		=> 2,
-		// 'Internet Flat 50000 LBD' 	=> ,
-		'Internet Flat 6000+' 		=> 2,
-		'Internet Flat 16000' 		=> 4,
-		'Internet Flat Spar' 		=> 2,
-		'Internet Flat 25000' 		=> 4,
-		'Internet Flat 100000'  	=> 5,
-		];
+	/**
+	 * Mapping of old Voip Tarif IDs to new Voip Tarif IDs
+	 *
+	 * @var array
+	 */
+	protected $old_sys_voip_tarifs;
 
-	// TODO(2)
-	// Marienberg
-	// protected $old_sys_voip_tarifs = array(
-	// 	12464 => 6,		// TelefonieBasic
-	// 	12465 => 6,		// TelefonieBasicData
-	// 	12466 => 7,		// TelefonieFlatData
-	// 	12965 => 7,		// TelefonieFlat
-	// 	22668 => 6,		// Rei_TelefonieBasic
-	// 	22669 => 6,		// Rei_TelefonieBasicData
-	// 	22671 => 7,		// Rei_TelefonieFlatData
-	// 	24057 => 6,		// Saz_TelefonieBasic
-	// 	24058 => 6,		// Saz_TelefonieBasicData
-	// 	24059 => 7,		// Saz_TelefonieFlat
-	// 	24060 => 7,		// Saz_TelefonieFlatData
-	// 	17663 => 6,		// Pob_TelefonieBasic
-	// 	17664 => 6,		// Pob_TelefonieBasicData
-	// 	17665 => 7,		// Pob_TelefonieFlat
-	// 	17666 => 7,		// Pob_TelefonieFlatData
-	// 	22670 => 7,		// Rei_TelefonieFlat
-	// 		);
+	/**
+	 * Mapping of old ConfigFile Names to new ConfigFile IDs
+	 *
+	 * @var array
+	 */
+ 	protected $configfiles;
 
-	// Wildenstein
-	protected $old_sys_voip_tarifs = array(
-		4162 => 38, 	// TelefonieBasic PURTel
-		9620 => 39, 	// TelefonieFlatData PURTel
-		9649 => 40, 	// TelefonieBasic PURTel (Evt)
-		9502 => 6, 		// TelefonieBasic
-		9503 => 6, 		// TelefonieBasicData
-		9504 => 7, 		// TelefonieFlat
-		9505 => 7, 		// TelefonieFlatData
-		);
+	/**
+	 * Mapping of old Cluster ID to new Cluster ID
+	 *
+	 * @var array
+	 */
+	protected $cluster = [];
 
+	/**
+	 * Mapping of old additional Item IDs to new additional Item IDs
+	 *
+	 * @var array
+	 */
+	protected $add_items;
 
-	// TODO(1)
-	// Wildenstein
- 	protected $configfiles = array(
-		'Arris' 					=> 3,
-		'Arris 820' 				=> 52,
-		'Arris-SIP-MTA SIP v9' 		=> 34,
-		'Arris-TG862' 				=> 42,
-		'Arris-TG862-v9' 			=> 42,
-		'Arris-TG862-v9 sip' 		=> 42,
-		'Arris-TM822-SIP-V9' 		=> 55,
-		'AVM 6360-85.06.31' 		=> 78,
-		'AVM 6490' 					=> 25,
-		'Default Configfile' 		=> 3,
-		// 'Default-MTA-Config' 		=> ,
-		'Fritzbox 6320' 			=> 3,
-		'Fritzbox 6320v2' 			=> 3,
-		'Fritzbox 6320v2 int' 		=> 3,
-		'Fritzbox 6360.06.50' 		=> 66,
-		'FritzBox AVM' 				=> 3,
-		'FritzBoxAVM-6360 (Ver. 06.51) (SNMP)' => 78,
-		'Fritzbox AVM 6490' 		=> 25,
-		'Fritzbox AVM 6490 06.84' 	=> 25,
-		'Fritzbox AVM 6490 6.50' 	=> 80,
-		'FritzBoxAVM-6490 (Ver. 06.51) (SNMP)' => 64,
-		'FritzBox AVM MTA' 			=> 81,
-		'FritzBox AVM MTA EnviaTel' => 81,
-		'FritzBox AVM MTA PURTel' 	=> 81,
-		'MTA-SIP-Test' 				=> 18,
-		'SNMPSetup-TVM' 			=> 3,
-		'Tarris_MTA' 				=> 34,
-		'TC7200.20-SIP' 			=> 72,
-		'Technicolor' 				=> 50,
-		'Technicolor/Thomson' 		=> 50,
-		'THG540-T38-Test' 			=> 47,
-		'Thomson' 					=> 50,
-		'Thomson-eMTA-SIP-EnviaTel' => 20,
-		'Thomson-THG540-SIP' 		=> 47,
-		'Thomson-THG540-SIP-T.38' 	=> 47,
-		'Thomson-THG541-SIP' 		=> 45,
-		'Thomson-THG541-SIP-T.38' 	=> 45,
-		'Thomson-THG57X-SIP' 		=> 6,
-		'Thomson-TWG850-4-SIP' 		=> 46,
-		'Thomson-TWG850-SIP' 		=> 46,
-		'Thomson-TWG870-SIP' 		=> 44,
-		'TVM 2.20' 					=> 71,
- 		);
-
- 	// Marienberg
-	// protected $configfiles = array(
-	// 		'SNMPSetup1' 				=> 3,
-	// 		'SNMPBlockMulticast' 		=> 3,
-	// 		'SNMPAllowMulticast' 		=> 3,
-	// 		'SNMPSetup-TEST-FW-1' 		=> 3,
-	// 		'SNMPSetup-TEST-FW-2' 		=> 3,
-	// 		'SNMPTVM' 					=> 3,
-	// 		'SNMPSIP' 					=> 3,
-	// 		'SNMPSetupUpdate' 			=> 3,
-	// 		'Thomson-THG540' 			=> 47,
-	// 		'Thomson-THG541' 			=> 45,
-	// 		'Thomson-TWG850' 			=> 46,
-	// 		'Thomson-TWG850-4' 			=> 46,
-	// 		'Default MTA Config' 		=> 20,
-	// 		'Thomson/Technicolor' 		=> 3,
-	// 		'Default CM Config' 		=> 3,
-	// 		'TVM1000' 					=> 3,
-	// 		'TVM1000-2.08' 				=> 63,
-	// 		'TVM1000-2.04'				=> 68,
-	// 		'Thomson-THG57X' 			=> 6,
-	// 		'Thomson-TWG870' 			=> 44,
-	// 		'Kathrein' 					=> 'todo',
-	// 		'Kathrein-DCV8400' 			=> 61,
-	// 		'TVM1000-2.09' 				=> 69,
-	// 		'X_DQOS'					=> 'todo',
-	// 		'FritzBox AVM' 				=> 25,
-	// 		'TVM1000-2.10' 				=> 70,
-	// 		'FritzBox 6360' 			=> 3,
-	// 		'FritzBox AVM MTA' 			=> 49,
-	// 		'Thomson-THG540-SIP' 		=> 47,
-	// 		'Kathrein-DCM42' 			=> 3,
-	// 		'Thomson-THG57X-SIP' 		=> 6,
-	// 		'Thomson-TWG870-SIP' 		=> 44,
-	// 		'TVM1000-2.20' 				=> 71,
-	// 		'Thomson-TCM47X' 			=> 3,
-	// 		'Thomson' 					=> 3,
-	// 		'Technicolor' 				=> 3,
-	// 		'TC7200.20' 				=> 3,
-	// 		'Delta' 					=> 3,
-	// 		'Arris-TG862' 				=> 42,
-	// 		'Arris' 					=> 3,
-	// 		'Hitron CVE 30360' 			=> 'todo',
-	// 		'FritzBox 6320' 			=> 3,
-	// 		'TVM1000-2.31' 				=> 70,
-	// 		'TC7200.20 v01.03' 			=> 3,
-	// 		'Thomson-THG541-SIP' 		=> 45,
-	// 		'Thomson-TWG850-SIP' 		=> 46,
-	// 		'Thomson-TWG850-4-SIP' 		=> 46,
-	// 		'Thomson-TWG870-SIP' 		=> 44,
-	// 		'Hitron BVG 3653 SIP' 		=> 'todo',
-	// 		'6320v2' 					=> 3,
-	// 		'Fritzbox AVM 6490' 		=> 25,
-	// 		'6320v2int' 				=> 3,
-	// 		'AVM 6490 V.06.51' 			=> 25,
-	// 		'AVM Basis Test 6340' 		=> 3,
-	// 		'Arris-TG862 SIP' 			=> 42,
-	// 		'Tarris' 					=> 42,
-	// 		'Tarris-TG862 SIP' 			=> 42,
-	// 		'Tarris_MTA' 				=> 34,
-	// 		'Arris-TG862 test neueste Firmware' => 53, // TG862 9.01103S5E1
-	// 		'Hitron eMTA' 				=> 'todo',
-	// 		'FritzBox-6360-6360.85.06.31' => 3,
-	// 		'Arris-TG862-v9' 			=> 53,
-	// 		'Arris-TG862-v9 sip' 		=> 53,
-	// 		'Thomson-eMTA-SIP-EnviaTel' => 20,
-	// 		'Fritzbox AVM 6490 06.50' 	=> 25,
-	// 		'TC7200.20-SIP' 			=> 3,
-	// 		'Fritz Box 6360.85.06.50' 	=> 3,
-	// 		'Arris 820' 				=> 52,
-	// 		'Arris-MTA-MGCP'			=> 'todo',
-	// 		'Arris-TM822-v9' 			=> 3,
-	// 		'FritzBoxAVM-6360 (Ver. 06.51) (SNMP)' => 3,
-	// 		'FritzBoxAVM-6490 (Ver. 06.51) (SNMP)' => 25,
-	// 		'AVM 6.50 - Test' 			=> 25,
-	// 		'Arris-TM822-SIP-V9' 		=> 3,
-	// 		'Arris-MTA-SIP' 			=> 34,
-	// 		'Thomson-THG520-SIP' 		=> 3,
-	// 		'AVM 6490 6.84 test' 		=> 25,
-	// 	);
-
- 	// Marienberg [cluster id, network id]
-	// protected $cluster = array(
-	// 		33382 => [null, 3],			// Mbg-Stadt-Gebirge-Dampf
-	// 		33383 => [32, 3],			// Mbg-Edeka
-	// 		33384 => [null, 3],			// Mbg-NL-LB-HG-LF
-	// 		36385 => [null, 3],			// Pobershau
-	// 		36464 => [null, 3],			// Olb-Reitz-Rueb
-	// 		36546 => [null, 3],			// Satzung
-	// 		36821 => [null, 3],			// Khnhaide
-	// 		41298 => [null, 3],			// Wolk-Gehr-Strw
-	// 	);
-
-	// Wildenstein
-	protected static $cluster = array(
-			4 => [null, 643],			// Admin_Cluster
-			9159 => [644, 643],			// Cluster-D3.0
-			9974 => [null, 643],		// Gruenh-Borst
-			10025 => [null, 643],		// Boern-Waldk-Krumh
-			12905 => [null, 643],		// Cluster LBD
-		);
-
-	// TODO(3)
-	// Additional Items Marienberg
-	// protected static $add_items = [
-	// 		1  => 10,			// Gutschrift monatlich
-	// 		3  => 23, 			// postalische Rechnung
-	// 		11 => 24, 			// Nebenanschluss
-	// 		37 => 17, 			// feste öffentliche IP
-	// 		42 => 25, 			// Freischalten des Kabel-TV-Internetanschlusses
-	// 		65 => 26, 			// Rufnummernfreischaltung
-	// 	];
-
-	// Additional Items Wildenstein
-	protected static $add_items = [
-			9  => 10,			// Gutschrift monatlich
-			23 => 23, 			// postalische Rechnung
-			11 => 24, 			// Nebenanschluss
-			50 => 17, 			// feste öffentliche IP
-			6  => 25, 			// Freischalten des Kabel-TV-Internetanschlusses
-			29 => 26, 			// Rufnummernfreischaltung
-		];
 
 
 	/**
@@ -338,13 +97,11 @@ class importCommand extends Command {
 	 */
 	public function fire()
 	{
-		// NOTE: Search by TODO(1) for Configfile Map and so on!
-		if (!$this->confirm("IMPORTANT!!!\n\nHave following things been done (in source code) for this import?:
-			(1) Configfile-Mapping
-			(2) Tariff-Mapping
-			(3) Item-Mapping (Zusatzposten)
-			(4) Has Contract filter been correctly set up?
-			(5) Shall volume tarifs get Credits?\n"))
+		// NOTE: Search by TODO(2) for Contract Filter and TODO(3) to change restrictions for adding credits!
+		if (!$this->confirm("IMPORTANT!!!\n\nHave following things been prepared for this import?:
+			(1) Created Mapping Configfile?
+			(2) Has Contract filter been correctly set up (in source code)?
+			(3) Shall volume tarifs get Credits (in source code)?\n"))
 			return;
 
 		// Pre - Testing
@@ -361,7 +118,7 @@ class importCommand extends Command {
 		$cluster_filter = $this->option('cluster')  ? 'm.cluster_id = '.$this->option('cluster') : 'TRUE';
 		$plz_filter 	= $this->option('plz') 		? 'cm_adr.plz = \''.$this->option('plz')."'" : 'TRUE';
 
-		// TODO(4): Adapt this Contract Filter for every Import
+		// TODO(2): Adapt this Contract Filter for every Import
 		$area_filter = function ($query) use ($cluster_filter) {$query
 				->whereRaw ($cluster_filter)
 				// ->whereRaw("cm_adr.strasse not like '%Stra%'")
@@ -369,28 +126,22 @@ class importCommand extends Command {
 				// 	->whereRaw ("cm_adr.strasse like '%Flo%m%hle%'")
 				// 	->orWhereRaw ("cm_adr.strasse like 'Fl%talstr%'")
 				// 	->orWhereRaw ("cm_adr.ort like '%/OT Flo%'");}
-				// )
+				// 	)
 				;};
 
+		$this->_load_mappings();
 
 		// Connect to old Database
 		$km3 = \DB::connection('pgsql-km3');
 
 		// Get all important Data from new DB
-		$contracts_new 	= Contract::all();
-		$modems_new 	= Modem::all();
-		$items_new 		= Item::all();
-		$mtas_new 		= MTA::all();
-		$phonenumbers_new = Phonenumber::all();
-		$mandates_new 	= SepaMandate::all();
-		$products_new 	= Product::all();
-		$emails_new 	= \PPModule::is_active('mail') ? Email::all() : [];
+		$products_new = Product::all();
 
 
 		/**
 		 * Add Modems currently needed for HFC Devices (Amplifier & Nodes (VGPs & TVMs))
 		 */
-		self::add_netelements($km3, $area_filter, $modems_new);
+		self::add_netelements($km3, $area_filter);
 
 
 		/*
@@ -400,12 +151,15 @@ class importCommand extends Command {
 		 * with: Get customer data & Tarifname from old systems DB
 		 */
 		$contracts = $km3->table('tbl_vertrag as v')
-				->selectRaw ('distinct on (v.vertragsnummer) v.vertragsnummer, v.*, a.*, k.*, t.name as tariffname,
-					v.id as id, v.beschreibung as contr_descr, m.cluster_id')
+				->selectRaw ('distinct on (v.vertragsnummer) v.vertragsnummer, v.*, k.*, kadr.*, t.name as tariffname,
+					v.id as id, v.beschreibung as contr_descr, m.cluster_id,
+					a.vorname as v_vorname, a.nachname as v_nachname, a.strasse as v_strasse, a.plz as v_plz,
+					a.ort as v_ort, a.firma as v_firma, a.tel as v_tel, a.anrede as v_anrede, a.email as v_email')
 				->join('tbl_modem as m', 'm.vertrag', '=', 'v.id')
-				->join('tbl_adressen as a', 'v.ansprechpartner', '=', 'a.id')
-				->join('tbl_adressen as cm_adr', 'm.adresse', '=', 'cm_adr.id')
 				->join('tbl_kunde as k', 'v.kunde', '=', 'k.id')
+				->join('tbl_adressen as a', 'v.ansprechpartner', '=', 'a.id')
+				->join('tbl_adressen as kadr', 'k.rechnungsanschrift', '=', 'kadr.id')
+				->join('tbl_adressen as cm_adr', 'm.adresse', '=', 'cm_adr.id')
 				->join('tbl_tarif as t', 'v.tarif', '=', 't.id')
 				->join('tbl_posten as p', 't.posten_volumen_extern', '=', 'p.id')
 				->where ('v.deleted', '=', 'false')
@@ -416,19 +170,14 @@ class importCommand extends Command {
 				->orderBy('v.vertragsnummer')
 				->get();
 
-
 		// progress bar
 		$i   = 1;
 		$num = count($contracts);
 
 		foreach ($contracts as $contract)
 		{
-			$this->info("\n$i/$num");
-			$c = $this->add_contract($contract, $contracts_new);
-
-			// Email Import
-			if (\PPModule::is_active('mail'))
-				self::add_email($c, $emails_new, $contract);
+			$this->line("\n$i/$num");
+			$c = $this->add_contract($contract);
 
 			/*
 			 * MODEM Import
@@ -440,13 +189,9 @@ class importCommand extends Command {
 					->whereRaw('m.configfile = c.id')
 					->where ('m.deleted', '=', 'false')->get();
 
-			$modems_n = [];
-			foreach ($modems_new->where('contract_id', $c->id)->all() as $cm)
-				$modems_n[$cm->mac] = $cm;
-
 			foreach ($modems as $modem)
 			{
-				$m = $this->add_modem($c, $modems_n, $modem, $km3);
+				$m = $this->add_modem($c, $modem, $km3);
 
 
 				/*
@@ -461,13 +206,9 @@ class importCommand extends Command {
 					->where('mta.deleted', '=', 'false')
 					->get();
 
-				$mtas_n = [];
-				foreach ($mtas_new->where('modem_id', $m->id)->all() as $value)
-					$mtas_n[$value->mac] = $value;
-
 				foreach ($mtas as $mta)
 				{
-					$mta_n = $this->add_mta($m, $mtas_n, $mta);
+					$mta_n = $this->add_mta($m, $mta);
 
 
 					/*
@@ -480,19 +221,19 @@ class importCommand extends Command {
 						->select('e.*', 'c.carrier')
 						->get();
 
-					$pns_n = [];
-					foreach ($phonenumbers_new->where('mta_id', $mta_n->id)->all() as $pn)
-						$pns_n[$pn->username] = $pn;
-
 					foreach ($phonenumbers as $phonenumber)
-						$p = $this->add_phonenumber($mta_n, $pns_n, $phonenumber);
+						$p = $this->add_phonenumber($mta_n, $phonenumber);
 				}
 			}
 
+			// Email Import
+			if (\PPModule::is_active('mail'))
+				self::add_email($c, $contract);
+
 			// Add Billing related Data
-			$this->add_tarifs($c, $items_new, $products_new, $contract);
+			$this->add_tarifs($c, $products_new, $contract);
 			$this->add_tarif_credit($c, $contract);
-			$this->add_sepamandate($c, $mandates_new, $contract, $km3);
+			$this->add_sepamandate($c, $contract, $km3);
 			$this->add_additional_items($c, $km3, $contract);
 
 			$i++;
@@ -501,6 +242,25 @@ class importCommand extends Command {
 		echo "\n";
 	}
 
+
+	/**
+	 * Load all necessary mappings from config file
+		(1) Tariff (Inet + Voip)
+	 	(2) Configfile
+		(3) Item-Mapping (Zusatzposten)
+	 */
+	private function _load_mappings()
+	{
+		$arr = require $this->argument('filename');
+
+		$this->old_sys_inet_tarifs = $arr['old_sys_inet_tarifs'];
+		$this->old_sys_voip_tarifs = $arr['old_sys_voip_tarifs'];
+		$this->configfiles 		   = $arr['configfiles'];
+		$this->add_items 		   = $arr['add_items'];
+
+		if (isset($arr['cluster']))
+			$this->cluster = $arr['cluster'];
+	}
 
 
 	/**
@@ -541,19 +301,38 @@ class importCommand extends Command {
 	 * @param 	old_contract 		Object 		Contract from old DB
 	 * @param 	new_contracts 		Array 		All existing Contracts of new DB
 	 */
-	private function add_contract($old_contract, $contracts_new)
+	private function add_contract($old_contract)
 	{
-		$c = $contracts_new->whereLoose('number', $old_contract->vertragsnummer)->first();
+		$c = Contract::where('number', $old_contract->vertragsnummer)->first();
 
 		if ($c) {
-			$this->error("Contract $c->vertragsnummer already exists [$c->id]");
-			\Log::error("Contract $c->vertragsnummer already exists [$c->id]");
+			$this->info("Contract $c->vertragsnummer already exists [$c->id]");
+			\Log::notice("Contract $c->vertragsnummer already exists [$c->id]");
 			return $c;
 		}
 
 		$c = new Contract;
 
-		// import fields
+		// Compare Customer and Contract Name, Surname, Address and print warning if they differ
+		$desc = '';
+		$c_datafields = ['vorname', 'nachname', 'strasse', 'plz', 'ort', 'firma', 'anrede', 'email'];
+
+		foreach ($c_datafields as $field)
+		{
+			if ($old_contract->{$field} != $old_contract->{'v_'.$field})
+				$desc .= ucwords($field).': '.$old_contract->{'v_'.$field}.PHP_EOL;
+		}
+
+		$c->description = $old_contract->beschreibung.PHP_EOL.$old_contract->contr_descr.PHP_EOL;
+
+		if ($desc)
+		{
+			$c->description .= 'Alte Vertragsdaten:'.PHP_EOL.$desc;
+
+			Log::warning("Contract address differs from customer address for contract $old_contract->vertragsnummer");
+		}
+
+		// import all other fields
 		$c->number 			= $old_contract->vertragsnummer;
 		$c->number2 		= '002-'.$old_contract->vertragsnummer;
 		$c->number4 		= '002-'.$old_contract->kundennr;
@@ -575,15 +354,14 @@ class importCommand extends Command {
 		// TODO: Fix that birthday and contract_end are '0000-00-00' in DB when not set
 		$c->birthday 		= $old_contract->geburtsdatum ? : null;
 
-		$c->description 	= $old_contract->beschreibung."\n".$old_contract->contr_descr;
 		$c->network_access 	= $old_contract->network_access;
 		$c->contract_start 	= $old_contract->angeschlossen;
 		$c->contract_end   	= $old_contract->abgeklemmt ? : null;
 		$c->create_invoice 	= $old_contract->rechnung;
 
 		$c->costcenter_id 	= $this->option('cc') ? : 3; // Dittersdorf=1, new one would be 3
-		$c->cluster 		= self::map_cluster_id($old_contract->cluster_id);
-		$c->net 			= self::map_cluster_id($old_contract->cluster_id, 1);
+		$c->cluster 		= $this->map_cluster_id($old_contract->cluster_id);
+		$c->net 			= $this->map_cluster_id($old_contract->cluster_id, 1);
 
 
 		// set fields with null input to ''.
@@ -604,8 +382,7 @@ class importCommand extends Command {
 		// Update or Create Entry
 		$c->save();
 
-		\Log::info ("ADD CONTRACT: $c->id, $c->firstname $c->lastname, $c->street, $c->zip $c->city [$old_contract->vertragsnummer]");
-		$this->info ("\nADD CONTRACT: $c->id, $c->firstname $c->lastname, $c->street, $c->zip $c->city [$old_contract->vertragsnummer]");
+		$this->line ("\nADD CONTRACT: $c->id, $c->firstname $c->lastname, $c->street, $c->zip $c->city [$old_contract->vertragsnummer]");
 
 		return $c;
 	}
@@ -646,11 +423,11 @@ class importCommand extends Command {
 	 *
 	 * @return 	Integer
 	 */
-	private static function map_cluster_id($cluster_id, $net = 0)
+	private function map_cluster_id($cluster_id, $net = 0)
 	{
 		// old cluster ID => cluster ID in new System
 		// TODO: Add new Cluster IDs when they exist in new system
-		return self::$cluster[$cluster_id][$net];
+		return $this->cluster[$cluster_id][$net];
 	}
 
 
@@ -659,7 +436,7 @@ class importCommand extends Command {
 	 *
 	 * TODO: Tarif next month can not be set as is - has still ID - Separate inet & voip tarif mappings and map all by id
 	 */
-	private function add_tarifs($new_contract, $items_new, $products_new, $old_contract)
+	private function add_tarifs($new_contract, $products_new, $old_contract)
 	{
 		$tarifs = array(
 			'tarif' 			=> $old_contract->tariffname,
@@ -667,18 +444,20 @@ class importCommand extends Command {
 			'voip' 				=> $old_contract->telefontarif,
 			);
 
+		$items_new = $new_contract->items;
+
 		foreach ($tarifs as $key => $tarif)
 		{
 			if (!$tarif) {
-				\Log::info("\tNo $key Item exists in old System");
+				$this->line("\tNo $key Item exists in old System");
 				continue;
 			}
 
 			$prod_id = $this->_map_tarif_to_prod($tarif);
-			$item_n  = $items_new->where('contract_id', $new_contract->id)->where('product_id', $prod_id)->all();
+			$item_n  = $items_new->where('product_id', $prod_id)->all();
 
 			if ($item_n) {
-				$this->error("\tItem $key for Contract ".$new_contract->id." already exists");
+				$this->info("\tItem $key for Contract ".$new_contract->id." already exists");
 				\Log::error("\tItem $key for Contract ".$new_contract->id." already exists");
 				continue;
 			}
@@ -697,8 +476,7 @@ class importCommand extends Command {
 				'valid_to_fixed' 	=> 1,
 				]);
 
-			\Log::info ("ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
-			$this->info ("ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
+			$this->line ("ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
 		}
 	}
 
@@ -708,11 +486,11 @@ class importCommand extends Command {
 	 */
 	private function add_tarif_credit($new_contract, $old_contract)
 	{
-		// TODO(5) check restrictions of volume tarifs!
+		// TODO(3) check restrictions of volume tarifs!
 		if ((strpos($old_contract->tariffname, 'Volumen') === false) && (strpos($old_contract->tariffname, 'Speed') === false) && (strpos($old_contract->tariffname, 'Basic') === false))
 			return;
 
-		\Log::info("Add extra Credit as Customer had volume tariff. [$new_contract->number]");
+		$this->line("Add extra Credit as Customer had volume tariff. [$new_contract->number]");
 
 		Item::create([
 			'contract_id' 		=> $new_contract->id,
@@ -729,13 +507,13 @@ class importCommand extends Command {
 	/**
 	 * Add SepaMandate to corresponding Contract
 	 */
-	private function add_sepamandate($new_contract, $mandates_new, $old_contract, $db_con)
+	private function add_sepamandate($new_contract, $old_contract, $db_con)
 	{
-		$mandates_n = $mandates_new->where('contract_id', $new_contract->id)->all();
+		$mandates_n = $new_contract->sepamandates;
 
-		if ($mandates_n) {
-			\Log::error("\tCustomer $new_contract->id already has SepaMandate assigned");
-			return $this->error("\tCustomer $new_contract->id already has SepaMandate assigned");
+		if (!$mandates_n->isEmpty()) {
+			\Log::notice("\tCustomer $new_contract->id already has SepaMandate assigned");
+			return $this->info("\tCustomer $new_contract->number [$new_contract->id] already has SepaMandate assigned");
 		}
 
 		$mandates_old = $db_con->table('tbl_sepamandate as s')
@@ -766,8 +544,7 @@ class importCommand extends Command {
 				'state' 			=> 'RCUR',
 				]);
 
-			\Log::info ("SEPAMANDATE ADD: ".$mandate->kontoinhaber.', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
-			$this->info ("SEPAMANDATE ADD: ".$mandate->kontoinhaber.', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
+			$this->line ("SEPAMANDATE ADD: ".$mandate->kontoinhaber.', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
 		}
 	}
 
@@ -787,12 +564,14 @@ class importCommand extends Command {
 					->orWhere ('z.bis', '=', null);})
 				->get();
 
-		// TODO: Check if items already exist !?
+		$items_new = $new_contract->items;
 
 		foreach ($items as $item)
 		{
-			if (!isset(self::$add_items[$item->id])) {
-				$this->error("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
+			$prod_id = isset($this->add_items[$item->id]) ? $this->add_items[$item->id] : null;
+
+			if (!$prod_id) {
+				$this->info("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
 				\Log::error("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
 				continue;
 			}
@@ -800,12 +579,16 @@ class importCommand extends Command {
 			if ($item->id == 1 && !$item->preis)
 				continue;
 
-			\Log::info("Add Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
-			$this->info("\tAdd Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
+			// Check if item already exists
+			if ($items_new->contains('product_id', $prod_id))
+				\Log::warning("Additional item with product id $prod_id already exists for Contract ".$new_contract->number.'! (Added again)');
+
+			// \Log::info("Add Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
+			$this->line("\tAdd Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
 
 			Item::create([
 				'contract_id' 		=> $new_contract->id,
-				'product_id' 		=> self::$add_items[$item->id],
+				'product_id' 		=> $this->add_items[$item->id],
 				'count' 			=> $item->menge,
 				'valid_from' 		=> $item->von ? : date('Y-m-d'),
 				'valid_from_fixed' 	=> 1,
@@ -821,18 +604,13 @@ class importCommand extends Command {
 	/**
 	 * Add Emails to corresponding Contract
 	 */
-	private function add_email($new_contract, $emails_new, $old_contract)
+	private function add_email($new_contract, $old_contract)
 	{
-		$emails = $km3->table(\DB::raw('tbl_email'))
-				->selectRaw ('*')
-				->where('vertrag', '=', $old_contract->id)
-				->get();
+		$emails = $km3->table('tbl_email')->selectRaw ('*')->where('vertrag', '=', $old_contract->id)->get();
+		$emails_new_cnt = \PPModule::is_active('mail') ? $new_contract->emails()->count() : [];
 
-		if (count($emails) == count($emails_new->where('contract_id', $old_contract->id)->all()))
-		{
-			$this->error('Email Aliases already added!');
-			return;
-		}
+		if (count($emails) == $emails_new_cnt)
+			return $this->info('Email Aliases already added!');
 
 		foreach ($emails as $email)
 		{
@@ -856,14 +634,15 @@ class importCommand extends Command {
 	 *
 	 * @param 	new_modems 		All modems already existing in new system for this contract
 	 */
-	private function add_modem($new_contract, $new_modems, $old_modem, $db_con)
+	private function add_modem($new_contract, $old_modem, $db_con)
 	{
-		// $m = isset($modems_n[$k]) ? $modems_n[$k] : NULL;
 		// dont update new modems with old data - return modem that new mtas & phonenumbers can be assigned
-		if (array_key_exists($old_modem->mac_adresse, $new_modems))
+		$modems_n = $new_contract->modems;
+
+		if (!$modems_n->isEmpty() && $modems_n->contains('mac', $old_modem->mac_adresse))
 		{
-			$new_cm = $new_modems[$old_modem->mac_adresse];
-			\Log::info("Modem already exists in new System with ID $new_cm->id!");
+			$new_cm = $modems_n->where('mac', $old_modem->mac_adresse)->first();
+
 			$this->info("Modem already exists in new System with ID $new_cm->id!");
 			return $new_cm;
 		}
@@ -907,11 +686,8 @@ class importCommand extends Command {
 		$modem->configfile_id = isset($this->configfiles[$old_modem->cf_name]) && is_int($this->configfiles[$old_modem->cf_name]) ? $this->configfiles[$old_modem->cf_name] : 0;
 
 		// check if assigned cpe has public ip (starts with 7 or 8)
-		// NOTE: if even 1 of the cpe's has a public IP we assign a public IP for all CPE's here - Note: in future we maybe have maxCPE 1
-		$comps = $db_con->table('tbl_computer')
-			->select('ip')
-			->where('modem', '=', $old_modem->id)
-			->get();
+		// NOTE: if even 1 of the cpe's has a public IP we assign a public IP for all CPE's here
+		$comps = $db_con->table('tbl_computer')->select('ip')->where('modem', '=', $old_modem->id)->get();
 
 		$modem->public = 0;
 		foreach ($comps as $comp)
@@ -936,12 +712,11 @@ class importCommand extends Command {
 
 		// Output
 		if ($modem->configfile_id == 0) {
-			$this->error('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
+			$this->info('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
 			\Log::error('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
 		}
 
-		\Log::info ("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
-		$this->info ("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
+		$this->line ("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
 
 		$modem->save();
 
@@ -952,13 +727,15 @@ class importCommand extends Command {
 	/**
 	 * Add MTA to corresponding Modem of new System
 	 */
-	private function add_mta($new_modem, $new_mtas, $old_mta)
+	private function add_mta($new_modem, $old_mta)
 	{
 		// dont update new mtas with old data - return mta that new phonenumbers can be assigned
-		if (array_key_exists($old_mta->mac_adresse, $new_mtas))
+		$mtas_n = $new_modem->mtas;
+
+		if (!$mtas_n->isEmpty() && $mtas_n->contains('mac', $old_mta->mac_adresse))
 		{
-			$new_mta = $new_mtas[$old_mta->mac_adresse];
-			\Log::info("MTA already exists in new System with ID $new_mta->id!");
+			$new_mta = $mtas_n->where('mac', $old_mta->mac_adresse)->first();
+
 			$this->info("MTA already exists in new System with ID $new_mta->id!");
 			return $new_mta;
 		}
@@ -970,9 +747,7 @@ class importCommand extends Command {
 		$mta->configfile_id = isset($this->configfiles[$old_mta->configfile]) && is_int($this->configfiles[$old_mta->configfile]) ? $this->configfiles[$old_mta->configfile] : 0;
 		$mta->type = 'sip';
 
-		// Log
-		\Log::info ("ADD MTA: ".$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
-		$this->info ("ADD MTA: ".$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
+		$this->line ("ADD MTA: ".$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
 
 		$mta->save();
 
@@ -983,12 +758,14 @@ class importCommand extends Command {
 	/**
 	 * Add Phonenumber to corresponding MTA
 	 */
-	private function add_phonenumber($new_mta, $new_phonenumbers, $old_phonenumber)
+	private function add_phonenumber($new_mta, $old_phonenumber)
 	{
-		if (array_key_exists($old_phonenumber->username, $new_phonenumbers))
+		$pns_n = $new_mta->phonenumbers;
+
+		if (!$pns_n->isEmpty() && $pns_n->contains('username', $old_phonenumber->username))
 		{
-			$new_pn = $new_phonenumbers[$old_phonenumber->username];
-			\Log::info("Phonenumber already exists in new System with ID $new_pn->id!");
+			$new_pn = $pns_n->where('username', $old_phonenumber->username)->first();
+
 			$this->info("Phonenumber already exists in new System with ID $new_pn->id!");
 			return $new_pn;
 		}
@@ -997,7 +774,9 @@ class importCommand extends Command {
 		{
 			case 'PURTel': $registrar = 'deu3.purtel.com'; break;
 			case 'EnviaTel': $registrar = 'sip.enviatel.net'; break;
-			default: $registrar = ''; \Log::warning("Missing Registrar for Phonenumber $old_phonenumber->vorwahl/$old_phonenumber->rufnummer"); break;
+			default: $registrar = '';
+				\Log::warning("Missing Registrar for Phonenumber $old_phonenumber->vorwahl/$old_phonenumber->rufnummer");
+				break;
 		}
 
 		$phonenumber = new Phonenumber;
@@ -1013,9 +792,7 @@ class importCommand extends Command {
 		$phonenumber->sipdomain 	= $registrar;
 		$phonenumber->active 		= true;  		// $old_phonenumber->aktiv; 		most phonenrs are marked as inactive because of automatic controlling
 
-		// Log
-		\Log::info ("ADD Phonenumber: ".$phonenumber->id.', '.$new_mta->id.', '.$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
-		$this->info ("ADD Phonenumber: ".$phonenumber->id.', '.$new_mta->id.', '.$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
+		$this->line ("ADD Phonenumber: ".$phonenumber->id.', '.$new_mta->id.', '.$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
 
 		$phonenumber->save();
 
@@ -1026,12 +803,12 @@ class importCommand extends Command {
 	/**
 	 * Add Modems of Netelements to Erznet Contract as this is still necessary to get them online in new system
 	 */
-	private function add_netelements($db_con, $area_filter, $new_modems)
+	private function add_netelements($db_con, $area_filter)
 	{
-		$devices = $db_con->table(\DB::raw('tbl_modem m, tbl_adressen a, tbl_configfiles c'))
-					->selectRaw ('m.*, a.*, m.id as id, c.name as cf_name')
-					->whereRaw('m.adresse = a.id')
-					->whereRaw('m.configfile = c.id')
+		$devices = $db_con->table('tbl_modem as m')
+					->selectRaw ('m.*, cm_adr.*, m.id as id, c.name as cf_name')
+					->join('tbl_adressen as cm_adr', 'm.adresse', '=', 'cm_adr.id')
+					->join('tbl_configfiles as c', 'm.configfile', '=', 'c.id')
 					->where ('m.deleted', '=', 'false')
 					->where('m.device', '=', 9)
 					// ->where('m.mac_adresse', '=', '00:d0:55:07:1d:86')
@@ -1041,15 +818,12 @@ class importCommand extends Command {
 		if (!$devices)
 			return;
 
-		$contract = Contract::find(500000);
-		$modems_n = [];
-		foreach ($new_modems->where('contract_id', 500000)->all() as $cm)
-			$modems_n[$cm->mac] = $cm;
+		$this->line ("ADD NETELEMENT Modems");
 
-		$this->info ("ADD NETELEMENT Modems");
+		$contract = Contract::find(500000);
 
 		foreach ($devices as $device)
-			self::add_modem($contract, $modems_n, $device, $db_con);
+			self::add_modem($contract, $device, $db_con);
 	}
 
 
@@ -1061,9 +835,10 @@ class importCommand extends Command {
 	protected function getArguments()
 	{
 		return array(
-			// array('example', InputArgument::REQUIRED, 'An example argument.'),
+			array('filename', InputArgument::REQUIRED, 'Name of Mapping Configfile in Storage directory'),
 		);
 	}
+
 
 	/**
 	 * Get the console command options.
@@ -1073,12 +848,10 @@ class importCommand extends Command {
 	protected function getOptions()
 	{
 		return array(
-			// array('qos', null, InputOption::VALUE_OPTIONAL, 'QOS id for default QOS, e.g. 1', 0),
-			array('configfile', null, InputOption::VALUE_OPTIONAL, 'Configfile id for default Configfile, e.g. 5', 0),
 			array('plz', null, InputOption::VALUE_OPTIONAL, 'Import only Contracts with special zip code (from tbl_adressen), e.g. 09518', 0),
 			array('cluster', null, InputOption::VALUE_OPTIONAL, 'Import only Contracts/Modems from cluster_id, e.g. 160', 0),
-			// array('debug', null, InputOption::VALUE_OPTIONAL, '1 enables debug', 0),
 			array('cc', null, InputOption::VALUE_OPTIONAL, 'CostCenter ID for all the imported Contracts', 0),
+			// array('debug', null, InputOption::VALUE_OPTIONAL, '1 enables debug', 0),
 			// array('terminate', null, InputOption::VALUE_OPTIONAL, 'Date for all km3 Contracts to terminate', 0),
 		);
 	}
