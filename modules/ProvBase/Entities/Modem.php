@@ -3,12 +3,17 @@
 namespace Modules\ProvBase\Entities;
 
 use DB;
+use FFT;
 use Log;
 use File;
 use Module;
 use App\Sla;
 use Request;
 use Acme\php\ArrayHelper;
+use Modules\ProvBase\Entities\Qos;
+use Modules\ProvBase\Entities\ProvBase;
+use Modules\ProvMon\Http\Controllers\ProvMonController;
+
 
 class Modem extends \BaseModel
 {
@@ -1329,8 +1334,6 @@ class Modem extends \BaseModel
 					$dec = last(unpack("s", pack("h*", "$hex")));
 					array_push($ret,$dec);
 				}
-			} else {
-				break;
 			}
 		}
 
@@ -1348,8 +1351,6 @@ class Modem extends \BaseModel
 				$hex = strrev("$hex");
 				$dec = last(unpack("s", pack("h*", "$hex")));
 				array_push($ret, $dec);
-			} else {
-				break;
 			}
 		}
 		return $ret;
@@ -1363,12 +1364,9 @@ class Modem extends \BaseModel
 		foreach (array_chunk($decimal, 2) as $val) {
 			$a1 = $val[0];
 			$b1 = $val[1];
-			$real = ($a1 * $a2 + $b1 * $b2) / ($a2**2 + $b2**2);
-			$imag = ($a2 * $b1 - $a1 * $b2) / ($a2**2 + $b2**2);
-			array_push($pwr, $real);
-			array_push($pwr, $imag);
+			$pwr[] = ($a1 * $a2 - $b1 * $b2) / ($a2**2 + $b2**2);
+			$pwr[] = ($a2 * $b1 + $a1 * $b2) / ($a2**2 + $b2**2);
 		}
-
 		return $pwr;
 	}
 
@@ -1377,12 +1375,13 @@ class Modem extends \BaseModel
 		$ene = [];
 
 		// normalizing the main tap
-		// sum of all real values
+		// conservation of energy approach page 84 for the maintap
 		$even = 0;
 		$pwr[$maintap] = 0;
 		foreach ($pwr as $line => $value)
 			if (!($line == 1 || ($line % 2) == 1))
 				$even += abs($value);
+
 		$even = sqrt(1 - $even);
 
 		// sum of all imaginary values
@@ -1390,17 +1389,31 @@ class Modem extends \BaseModel
 		$pwr[$maintap + 1] = 0;
 		foreach($pwr as $line => $value)
 			if (!($line == 0 || ($line % 2) ==0))
-				$odd += abs($value);#
+				$odd += abs($value);
+
 		$odd = sqrt($odd);
 
 		// calculating energy values
 		$pwr = array_chunk($pwr, 2);
 		foreach ($pwr as $val)
-			array_push($ene, 10 * log10($val[0]**2 + $val[1]**2));
+			$ene[] = $val[0]**2 + $val[1]**2;
 
-		$ene[$energymain]= 10 * log10($even**2 + $odd**2);
+		$ene[$energymain]= $even**2 + $odd**2;
 
 		return $ene;
+	}
+
+	private function _energyDb($ene)
+	{
+		$ene_db = [];
+		foreach ($ene as $val) {
+			$temp = 10 * log10($val);
+			if (!(is_finite($temp)))
+				$temp = -100;
+
+			$ene_db[] = round($temp,2);
+		}
+		return $ene_db;
 	}
 
 
@@ -1414,7 +1427,62 @@ class Modem extends \BaseModel
 		$tap_diff = abs($energymain - $highest);
 		// 0.8 - Roll-off of filter; /2 -> round-trip (back and forth)
 		$tdr = $v * $tap_diff / (0.8 * $freq) / 2;
+		$tdr = round($tdr,1);
 		return $tdr;
+	}
+
+	private function _chart($ene)
+	{
+		$chart = [];
+		$min = min($ene);
+		foreach ($ene as $value)
+			$chart[] = round($min);
+
+		return $chart;
+	}
+
+	private function _normalization($ene)
+	{
+		$norm = [];
+		$variance = [];
+		$mean = array_sum($ene)/24;
+
+		foreach ($ene as $value)
+			$variance[] = ($value - $mean)**2;
+
+		$standard_dev = sqrt(array_sum($variance) / 24);
+
+		foreach ($ene as $value)
+			$norm[] = ($value - $mean) / $standard_dev;
+
+		return $norm;
+	}
+
+	private function _fft($ene)
+	{
+		$answer = [];
+		for ($i=0 ; $i < 8 ; $i++ )
+			array_push($ene, 0);
+
+		$fft = new FFT(32);
+		// Calculate the FFT of the function $f
+		$w = $fft->fft($ene);
+		for ($i = 0; $i < $fft->getDim(); $i++)
+			$answer[] = 10 * log(sqrt($w[$i]->getReal()**2 + $w[$i]->getImag()**2),2);
+			//$answer[] = $w[$i]->getReal();
+			//$answer[] = $w[$i]->getImag();
+		$answer = array_slice($answer,8);
+		return $answer;
+	}
+
+	private function _xaxis()
+	{
+		$axis = [];
+		$fs = 5.12;
+		for ($i= -0.5; $i <= 0.5; $i+=0.04345)
+			$axis[] = $fs * $i;
+
+		return $axis;
 	}
 
 	public function get_preq_data()
@@ -1428,6 +1496,7 @@ class Modem extends \BaseModel
 
 		$preq = json_decode(file_get_contents($file), true);
 		$freq = $preq['width'];
+		//$hexs = str_split("08011800FFFF000000000001FFFEFFFD00030004FFFAFFFB00080009FFF0FFEA01EE0000FFEFFFEC0038FFD80055FFD7FFE20003001FFFE5FFFCFFFA0001FFFE0001FFF7FFFE0002FFFFFFFDFFFF000000000000FFFF0000000000000000000000000000", 8);
 		$hexs = str_split($preq['data'], 8);
 		$or_hexs = array_shift($hexs);
 
@@ -1453,11 +1522,22 @@ class Modem extends \BaseModel
 			}
 		}
 		$pwr = $this->_nePwr($decimal, $maintap);
-		$ret['power'] = $pwr;
 		$ene = $this->_energy($pwr, $maintap, $energymain);
-		$ret['energy'] = $ene;
+		$ene_db = $this->_energyDb($ene);
+		$chart = $this->_chart($ene_db);
+		$norm = $this->_normalization($ene);//not used, test case
+		$fft = $this->_fft($ene);
 		$tdr = $this->_tdr($ene, $energymain, $freq);
+		$index = $this->_xaxis();
+
+		$ret['power'] = $pwr;
+		$ret['nodb'] = $ene;
+		$ret['energy'] = $ene_db;
+		$ret['chart'] = $chart;
 		$ret['tdr'] = $tdr;
+		$ret['norm'] = $norm;
+		$ret['fft'] = $fft;
+		$ret['axis'] = $index;
 
 		return $ret;
 	}
