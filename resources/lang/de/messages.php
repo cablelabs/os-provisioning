@@ -294,6 +294,7 @@ return [
 
 	//Settlement Run File generation
 	'Contractnr'			=> 'Vertragsnummer',
+	'Create Invoices' 		=> 'Erstelle Rechnungen',
 	'Invoicenr'				=> 'Rechnungsnummer',
 	'Calling Number'		=> 'Rufnummer',
 	'Called Number'			=> 'Angerufene Nummer',
@@ -311,6 +312,7 @@ return [
 	'Total Fee'				=> 'Gesamtgebühr',
 	'Commission Amount'		=> 'davon Provision',
 	'eom' 					=> 'zum Monatsende',
+	'Zip Files' 			=> 'Erstelle ZIP-Datei',
 
 /**
  * Customer Control Center
