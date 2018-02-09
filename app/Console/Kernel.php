@@ -168,7 +168,7 @@ class Kernel extends ConsoleKernel {
 		// Automatic Power Control based on measured SNR
 		if (\PPModule::is_active ('ProvMon'))
 		{
-			$schedule->command('nms:apc')->everyFiveMinutes()->withoutOverlapping();
+			$schedule->command('nms:apc')->everyMinute();
 			$schedule->command('nms:cacti')->daily();
 		}
 

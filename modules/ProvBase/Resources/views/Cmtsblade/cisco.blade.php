@@ -132,4 +132,7 @@ line vty 5 15
  transport input ssh
 !
 exception crashinfo buffersize 64
+exception crashinfo maximum files 10
+exception pxf style minimal
+exception pxf flash flash:
 !
