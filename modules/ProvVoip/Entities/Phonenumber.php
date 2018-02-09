@@ -234,7 +234,7 @@ class Phonenumber extends \BaseModel {
 		}
 
 		if (\PPModule::is_active('voipmon')) {
-			$ret['Monitoring']['Cdr'] = $this->cdrs;
+			$ret['Monitoring']['Cdr'] = $this->cdrs()->orderBy('id', 'DESC')->get();
 		}
 
 		return $ret;
