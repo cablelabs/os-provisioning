@@ -376,15 +376,4 @@ class ExtendedValidator
 		return false;
 	}
 
-
-	/**
-	 * Checks if a String only contains digits and letters d/m/y (Day, Month, Year)
-	 */
-	public function validatePeriod($attribute, $value, $parameters)
-	{
-		return preg_match('/^\d+[dDmMyY]$/', $value);
-	}
-
-
 }
-
