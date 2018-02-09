@@ -113,6 +113,7 @@ class Cmts extends \BaseModel {
 	 */
 	public function get_raw_cmts_config()
 	{
+		$this->prep_cmts_config_page();
 		$view_var = $this;
 		$cb = $this;
 
