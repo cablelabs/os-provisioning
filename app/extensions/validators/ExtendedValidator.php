@@ -354,7 +354,6 @@ class ExtendedValidator
 		}
 
 		return true;
-
 	}
 
 
@@ -378,4 +377,3 @@ class ExtendedValidator
 	}
 
 }
-

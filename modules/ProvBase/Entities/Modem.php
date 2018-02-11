@@ -239,17 +239,16 @@ class Modem extends \BaseModel {
 	 *
 	 * @author Nino Ryschawy
 	 */
-	private function generate_cm_dhcp_entry()
+	private function generate_cm_dhcp_entry($server = '')
 	{
 		Log::debug(__METHOD__." started for ".$this->hostname);
 
 		$ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
 
-		if (\PPModule::is_active('provvoip') && count($this->mtas))
-			$ret .= ' option ccc.dhcp-server-1 '.ProvBase::first()->provisioning_server.';';
+		if (\PPModule::is_active('provvoip') && $this->mtas()->count())
+			$ret .= ' option ccc.dhcp-server-1 '.($server ? : ProvBase::first()->provisioning_server).';';
 
-		$ret .= "}\n";
-		return $ret;
+		return $ret."}\n";
 	}
 
 	private function generate_cm_dhcp_entry_pub()
@@ -281,15 +280,13 @@ class Modem extends \BaseModel {
 	 */
 	public static function make_dhcp_cm_all ()
 	{
-		Log::debug(__METHOD__." started");
-
-		Modem::clear_dhcp_conf_files();
-
-		// Log
 		Log::info('dhcp: update '.self::CONF_FILE_PATH.', '.self::CONF_FILE_PATH_PUB);
 
 		$data     = '';
 		$data_pub = '';
+		$server   = ProvBase::first()->provisioning_server;
+
+		Modem::clear_dhcp_conf_files();
 
 		foreach (Modem::all() as $modem)
 		{
@@ -297,12 +294,11 @@ class Modem extends \BaseModel {
 				continue;
 
 			// all
-			$data .= $modem->generate_cm_dhcp_entry();
+			$data .= $modem->generate_cm_dhcp_entry($server);
 
 			// public ip
 			if ($modem->public)
 				$data_pub .= $modem->generate_cm_dhcp_entry_pub();
-
 		}
 
 		$ret = File::put(self::CONF_FILE_PATH, $data);

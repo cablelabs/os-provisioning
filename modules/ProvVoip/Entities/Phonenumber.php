@@ -234,7 +234,7 @@ class Phonenumber extends \BaseModel {
 		}
 
 		if (\PPModule::is_active('voipmon')) {
-			$ret['Monitoring']['Cdr'] = $this->cdrs;
+			$ret['Monitoring']['Cdr'] = $this->cdrs()->orderBy('id', 'DESC')->get();
 		}
 
 		return $ret;
@@ -439,7 +439,15 @@ class Phonenumber extends \BaseModel {
 			return $this->contract_external_id;
 		}
 		else {
-			return false;
+			// take the most recent contract from modem
+			// TODO: on handling of multiple contracts per modem: return all IDs
+			$envia_contract = $this->mta->modem->enviacontracts->last();
+			if ($envia_contract) {
+				return $envia_contract->envia_contract_reference;
+			}
+			else {
+				return false;
+			}
 		}
 	}
 

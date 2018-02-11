@@ -74,6 +74,7 @@ class SnmpController extends \BaseController{
 
 		$start = microtime(true);
 		// Get Html Form Fields for generic View - this includes the snmpwalk & updating snmpvalues
+		// TODO: check if netelement has a netelementtype -> exception for root elem
 		$params 	 = $index ? Parameter::where('parent_id', '=', $param_id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all() : $snmp->device->netelementtype->parameters;
 
 		try {

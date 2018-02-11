@@ -837,26 +837,29 @@ class Contract extends \BaseModel {
 		if (!\PPModule::is_active('Billingbase'))
 			return ['item' => null, 'count' => 0];
 
-		$prod_ids = \Modules\BillingBase\Entities\Product::get_product_ids($type);
-		if (!$prod_ids)
+		$last = $count = 0;
+		$tariff = null;			// item
+
+		$tariffs = $this->items()
+			->join('product as p', 'item.product_id', '=', 'p.id')
+			->where('type', '=', $type)->where('valid_from', '<=', date('Y-m-d'))
+			->get();
+
+		if ($tariffs->isEmpty())
 			return ['item' => null, 'count' => 0];
 
-		$last 	= 0;
-		$tariff = null;			// item
-		$count = 0;
-
-		foreach ($this->items as $item)
+		foreach ($tariffs as $item)
 		{
-			if (in_array($item->product->id, $prod_ids) && $item->check_validity('Now'))
-			{
-				$count++;
+			if (!$item->check_validity('Now'))
+				continue;
 
-				$start = $item->get_start_time();
-				if ($start > $last)
-				{
-					$tariff = $item;
-					$last   = $start;
-				}
+			$count++;
+
+			$start = $item->get_start_time();
+			if ($start > $last)
+			{
+				$tariff = $item;
+				$last   = $start;
 			}
 		}
 
@@ -1189,6 +1192,62 @@ class Contract extends \BaseModel {
 	}
 
 
+	/**
+	 * Get Contracts next possible cancelation dates - dependent of tariff type (default: Internet)
+	 *
+	 * @author Nino Ryschawy
+	 *
+	 * @param String 	Internet|Voip|TV  - Type of which the contracts next possible cancelation date is dependent
+	 * @return Array 	[end of term, next possible cancelation date, tariff]
+	 *
+	 * NOTE: if cancelation date is empty -> customer has no tariff or has already canceled
+	 */
+	public function get_next_cancel_date($type = 'Internet')
+	{
+		if (!in_array($type, ['Internet', 'Voip', 'TV']))
+			throw new Exception("No Tariff Type");
+
+		// get last tariff
+		$tariff = $this->items()
+			->join('product as p', 'item.product_id', '=', 'p.id')
+			->where('type', '=', $type)
+			->where('valid_from_fixed', '=', 1)
+			->orderBy('valid_from', 'desc')
+			->first();
+
+		// check voip and tv tariffs also
+		if (!$tariff)
+		{
+			switch ($type) {
+				case 'Internet':
+					$type = 'Voip'; break;
+
+				case 'Voip':
+					$type = 'TV'; break;
+
+				case 'TV':
+					// customer has no tariff
+					return array(
+						'end_of_term' => '',
+						'cancelation_day' => '',
+						);
+			}
+
+			return $this->get_next_cancel_date($type);
+		}
+
+		// last tariff already canceled -> contract canceled
+		if ($tariff->get_end_time()) {
+			return array(
+				'end_of_term' => $tariff->valid_to,
+				'cancelation_day' => '',
+				'tariff' => $tariff,
+				);
+		}
+
+		return array_merge($tariff->get_next_cancel_date(), ['tariff' => $tariff]);
+	}
+
 }
 
 
@@ -1235,7 +1294,7 @@ class ContractObserver
 
 		$contract->push_to_modems();
 
-		if ($contract['orginal'])
+		if ($contract['original'])
 		{
 			// Note: implement this commented way if there are more checkings for better code structure - but this reduces performance on one of the most used functions of the user!
 			// $changed_fields = $contract->getDirty();
@@ -1253,6 +1312,15 @@ class ContractObserver
 			if ($contract->contract_start != $contract['original']['contract_start'] || $contract->contract_end != $contract['original']['contract_end'])
 			{
 				$contract->daily_conversion();
+
+				if (\PPModule::is_active('billingbase') && $contract->contract_end && $contract->contract_end != $contract['original']['contract_end'])
+				{
+					// Alert if end is lower than tariffs end of term
+					$ret = $contract->get_next_cancel_date();
+
+					if ($ret['cancelation_day'] && $contract->contract_end < $ret['end_of_term'])
+						\Session::put('alert', trans('messages.contract_early_cancel', ['date' => $ret['end_of_term']]));
+				}
 			}
 
 		}

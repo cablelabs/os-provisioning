@@ -32,6 +32,7 @@ return [
 	'cpe_log_error'				=> 'ist nicht beim Server registriert - Kein Logeintrag gefunden',
 
 	'Create'					=> 'Erstellen',
+	'D' 						=> 'Tag|Tage',
 	'Delete'					=> 'Löschen',
 	'Day'						=> 'Tag',
 	'Description'				=> 'Beschreibung',
@@ -60,8 +61,10 @@ return [
 	'Language'					=> 'Sprache',
 	'Lastname'					=> 'Nachname',
 	'Last IP'					=> 'Letzte IP',
+	'M' 						=> 'Monat|Monate',
 	'MAC Address'				=> 'MAC Adresse',
 	'Main Menu'					=> 'Hauptmenü',
+	'Maturity' 					=> 'Laufzeit',
 	'modem_eventlog_error'		=> 'Modem Eventlog nicht gefunden',
 	'modem_monitoring_error'	=> 'Möglicherweise war das Modem bis jetzt nicht online. Beachten Sie, dass Diagramme erst ab
 		dem Zeitpunkt verfügbar sind, von dem an das Modem online ist. Wurden alle Diagramme unsauber angezeigt, könnte es
@@ -84,6 +87,7 @@ return [
 	'or: Upload KML file'		=> 'oder lade KML hoch',
 	'Parent Device Type'		=> 'Eltern Gerätetyp',
 	'Parent Object'				=> 'Eltern Objekt',
+	'Period of Notice' 			=> 'Kündigungsfrist',
 	'Password'					=> 'Passwort',
 	'Phone'						=> 'Telefon',
 	'Phone ID next month'		=> 'Telefon ID nächsten Monat',
@@ -109,6 +113,7 @@ return [
 	'Vendor'					=> 'Hersteller',
 	'Year'						=> 'Jahr',
 	'yes' 						=> 'ja',
+	'Y' 						=> 'Jahr|Jahre',
 //
 //Global
 //
@@ -124,6 +129,7 @@ return [
 	'Headline 2'				=> 'Überschrift Navigationsleiste',
 	//Billing
 	'accCmd_processing' 		=> 'Der Abrechnungslauf wird erstellt. Bitte warten Sie bis der Prozess abgeschlossen ist.',
+	'CDR retention period' 		=> 'Aufbewahrungsfrist für Einzelverbindungsnachweise',
 	'Day of Requested Collection Date'	=> 'Monatlicher Abrechungstag',
 	'Tax in %'					=> 'Mehrwertsteuer in %',
 	'Invoice Number Start'		=> 'Start Nummerierung Rechnungen',
@@ -154,6 +160,7 @@ return [
 //
 	//Verträge
 	'Academic Degree'			=> 'Akademischer Titel',
+	'contract_early_cancel' 	=> 'Möchten Sie den Vertrag wirklich vor Tariflaufzeitende :date kündigen?',
 	'Contract number'			=> 'Vertragsnummer',
 	'Contract Nr'				=> 'Vertragsnr',
 	'Contract number legacy'	=> 'Historische Vertragsnummer',
@@ -210,7 +217,7 @@ return [
 //Billing Base
 //
 	//Product Entry
-	'Billing Cycle'				=> 'Rechnungskreislauf',
+	'Billing Cycle'				=> 'Abrechungszyklus',
 	'Bundled with VoIP product?'=> 'Mit VoIP-Produkt verknüpft?',
 	'Price (Net)'				=> 'Preis (netto)',
 	'Number of Cycles'			=> 'Anzahl der Zyklen',
@@ -287,6 +294,7 @@ return [
 
 	//Settlement Run File generation
 	'Contractnr'			=> 'Vertragsnummer',
+	'Create Invoices' 		=> 'Erstelle Rechnungen',
 	'Invoicenr'				=> 'Rechnungsnummer',
 	'Calling Number'		=> 'Rufnummer',
 	'Called Number'			=> 'Angerufene Nummer',
@@ -303,6 +311,8 @@ return [
 	'Commission in %'		=> 'Provision in %',
 	'Total Fee'				=> 'Gesamtgebühr',
 	'Commission Amount'		=> 'davon Provision',
+	'eom' 					=> 'zum Monatsende',
+	'Zip Files' 			=> 'Erstelle ZIP-Datei',
 
 /**
  * Customer Control Center
@@ -420,9 +430,9 @@ return [
 	'Credit'                    => 'Gutschrift',
 	'Other'                     => 'Sonstige',
 	'Once'                      => 'einmalig',
-	'Monthly'                   => 'pro Monat',
-	'Quarterly'                 => 'pro Quartal',
-	'Yearly'                    => 'pro Jahr',
+	'Monthly'                   => 'monatlich',
+	'Quarterly'                 => 'vierteljährlich',
+	'Yearly'                    => 'jährlich',
 	//Tree Table
 	'NET'                       => 'Netz',
 	'CMTS'                      => 'CMTS',

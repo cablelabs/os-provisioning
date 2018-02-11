@@ -17,6 +17,7 @@ HOWTO: setup a new CMTS
 <pre>
 interface {{$cb->interface}}
  ip address {{$cb->ip}} {{$cb->netmask}}
+ no shutdown
 
 copy tftp://{{$cb->prov_ip}}/cmts/{{$cb->hostname}}.cfg startup-config
 
