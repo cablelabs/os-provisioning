@@ -44,7 +44,5 @@ $(document).ready(function() {
   NMS.init();
   {{-- init modals --}}
   $(".modal").modal();
-  {{-- init popovers --}}
-  $('[data-toggle="popover"]').popover();
 });
 </script>
