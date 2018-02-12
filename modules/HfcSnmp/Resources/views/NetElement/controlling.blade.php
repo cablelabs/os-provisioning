@@ -1,4 +1,4 @@
-@extends ('Layout.default')
+@extends ('Layout.split-nopanel')
 
 
 @section('content_top')
@@ -14,22 +14,22 @@
 
 
 
-@section ('content')
+@section ('content_left')
+
+	@include ('Generic.logging')
 
 
 	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id, $param_id, $index), 'method' => 'put', 'files' => true)) }}
 
-	@section ('Content')
-
 		{{-- Error | Success Message --}}
 		@if (Session::has('message'))
 			@DivOpen(12)
-				@if (Session::get('message_color') == 'blue')
+				@if (Session::get('message_color') == 'primary')
 					@DivOpen(5) @DivClose()
 					@DivOpen(4)
 				@endif
 				<h4 style='color:{{ Session::get('message_color') }}' id='success_msg'>{{ Session::get('message') }}</h4>
-				@if (Session::get('message_color') == 'blue')
+				@if (Session::get('message_color') == 'primary')
 					@DivClose()
 				@endif
 			@DivClose()
@@ -70,24 +70,43 @@
 			{{ $table }}
 		@endforeach
 
-
-	{{-- Form::submit( \App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button')) --}}
-
-
 	{{-- Save Button --}}
 	<div class="d-flex justify-content-center">
 			<input class="btn btn-primary" style="simple" value="{{\App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button') }}" type="submit">
 	</div>
-
-	@stop
-
-
-	@include('bootstrap.panel', ['content' => 'Content', 'md' => 12])
 
 	{{ Form::close() }}
 
 	{{-- java script--}}
 	@include('Generic.form-js')
 
+
+@stop
+
+@section('javascript_extra')
+{{-- JS DATATABLE CONFIG --}}
+<!-- Hallo Tada - das ist der Test ob das ganze überhaupt ankommt-->
+<script language="javascript">
+	var table = $('table.controllingtable').DataTable(
+		{
+		{{-- Translate Datatables Base --}}
+			@include('datatables.lang')
+		{{-- Buttons above Datatable for export, print and change Column Visibility --}}
+			@include('datatables.buttons')
+		iDisplayLength: -1,
+		responsive: true,
+		autoWidth: false, {{-- Option to ajust Table to Width of container --}}
+		dom:	"<'row'<'col-sm-12'B>>" +
+				"<'row'<'col-sm-12'tr>>" +
+				"<'row'<'col-sm-5'i>>", {{-- sets order and what to show  --}}
+		stateSave: true, {{-- Save Search Filters and visible Columns --}}
+		fixedHeader: {
+			headerOffset: $('#header').outerHeight(),
+		},
+	});
+	window.onresize = function(event) {
+		table.responsive.recalc();
+	}
+</script>
 
 @stop

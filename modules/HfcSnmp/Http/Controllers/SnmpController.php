@@ -418,7 +418,7 @@ class SnmpController extends \BaseController{
 		// Table head for tables without indices and with rows that dont have all oids - Attention - normal table head is built first in next foreach!
 		if (count($oids) != $form_fields[key($form_fields)])
 		{
-			$s .= '<table class="table table-condensed">';
+			$s .= '<table class="table controllingtable table-condensed table-bordered d-table" id="datatable">';
 			$s .= '<thead><tr>';
 			$s .= '<th style="padding: 4px">Index</th>';
 
@@ -435,7 +435,7 @@ class SnmpController extends \BaseController{
 				}
 			}
 
-			$s .= '<tr></thead><tbody>';
+			$s .= '</tr></thead><tbody>';
 			$head = false;
 		}
 

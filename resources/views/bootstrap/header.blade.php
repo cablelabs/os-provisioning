@@ -22,6 +22,7 @@
       <link href="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/css/buttons.dataTables.min.css')}}" rel="stylesheet" />
       <link href="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/css/buttons.bootstrap.min.css')}}" rel="stylesheet" />
       <link href="{{asset('components/assets-admin/plugins/DataTables/media/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet" />
+      <link href="{{asset('components/assets-admin/plugins/DataTables/extensions/FixedHeader/css/fixedHeader.bootstrap.min.css')}}" rel="stylesheet" />
 
       <link href="{{asset('components/assets-admin/plugins/select2-v4/vendor/select2/select2/dist/css/select2.css')}}" rel="stylesheet" />
       <link href="{{asset('components/assets-admin/plugins/jstree/dist/themes/default/style.min.css')}}" rel="stylesheet" />

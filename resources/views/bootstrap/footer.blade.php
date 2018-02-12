@@ -4,7 +4,6 @@
 <script src="{{asset('components/assets-admin/plugins/jquery-ui/ui/minified/jquery-ui.min.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/plugins/bootstrap4/js/bootstrap.bundle.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/bootstrap4/js/bootstrap.min.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/select2-v4/vendor/select2/select2/dist/js/select2.min.js')}}"></script>
@@ -12,6 +11,7 @@
 <script src="{{asset('components/assets-admin/plugins/DataTables/media/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/media/js/dataTables.bootstrap4.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/FixedHeader/js/dataTables.fixedHeader.min.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/plugins/jstree/dist/jstree.min.js')}}"></script>
 
@@ -42,15 +42,9 @@
 $(document).ready(function() {
   App.init();
   NMS.init();
+  {{-- init modals --}}
+  $(".modal").modal();
+  {{-- init popovers --}}
+  $('[data-toggle="popover"]').popover();
 });
-{{-- show alert --}}
-$(".modal").modal();
-
-{{-- TODO: move to analyses.blade to javascript part --}}
-function resizeIframe(obj) {
-  setTimeout(function() {
-    //obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-    obj.style.height = '70vmax';
-  }, 3000);
-};
 </script>
