@@ -350,6 +350,10 @@ class BaseViewController extends Controller {
 					$s .= \Form::checkbox($field['name'], $value, null, $checked, $options);
 					break;
 
+				case 'file':
+					$s .= \Form::file($field['name'], $options);
+					break;
+
 				case 'select' :
 					if (isset($options['multiple']) && isset($field['selected']))
 						$field['field_value'] = array_keys($field['selected']);
