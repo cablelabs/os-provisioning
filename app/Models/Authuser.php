@@ -223,10 +223,10 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 
 	public function view_has_many()
 	{
-		$ret['Edit']['Roles']['class'] = 'Authrole';
-		$ret['Edit']['Roles']['relation'] = $this->roles;
-		$ret['Edit']['Roles']['options']['many_to_many'] = 'roles';
-		$ret['Edit']['Roles']['options']['hide_create_button'] = true;
+		$ret['Edit']['Authrole']['class'] = 'Authrole';
+		$ret['Edit']['Authrole']['relation'] = $this->roles;
+		$ret['Edit']['Authrole']['options']['many_to_many'] = 'Authrole';
+		$ret['Edit']['Authrole']['options']['hide_create_button'] = true;
 
 		return $ret;
 	}
