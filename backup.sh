@@ -57,7 +57,7 @@ cp -a /var/named/dynamic/*.zone "$out/var/named/dynamic/"
 
 # backup firewalld zones
 mkdir -p "$out/etc/firewalld/zones"
-rsync -a /etc/firewalld/zones "$out/etc/firewalld/zones"
+rsync -a /etc/firewalld/zones "$out/etc/firewalld"
 
 # backup tftpboot folder
 mkdir -p "$out/tftpboot"

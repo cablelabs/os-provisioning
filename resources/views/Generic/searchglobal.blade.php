@@ -45,7 +45,7 @@
 					if (is_array($object->view_index_label()))
 					{
 						$link = \HTML::linkRoute($cur_model.'.edit', $object->view_index_label()['header'], $object->id);
-						$descr = implode (', ', $object->view_index_label()['index']);
+						$descr = $object->view_index_label()['header'];
 					}
 					else
 					{
