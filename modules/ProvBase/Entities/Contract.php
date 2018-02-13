@@ -842,6 +842,7 @@ class Contract extends \BaseModel {
 
 		$tariffs = $this->items()
 			->join('product as p', 'item.product_id', '=', 'p.id')
+			->select('item.*', 'p.*', 'item.id as id')
 			->where('type', '=', $type)->where('valid_from', '<=', date('Y-m-d'))
 			->get();
 
