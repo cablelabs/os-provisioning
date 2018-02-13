@@ -856,10 +856,12 @@ finish:
 
 	switch ($entity) {
 		case 'rx power dbmv':
+			$ret = self::_colorize($val, [-3, -1, 15, 20]);
+			break;
 		case 'power dbmv':
-			if($dir == 'downstream')
+			if ($dir == 'downstream')
 				$ret = self::_colorize($val, [-20, -10, 15, 20]);
-			if($dir == 'upstream')
+			if ($dir == 'upstream')
 				$ret = self::_colorize($val, [22, 27, 50, 56]);
 				break;
 		case 'microreflection -dbc':
@@ -883,8 +885,9 @@ finish:
 			if ($mod == 'qam256')
 				$ret = self::_colorize($val, [32, 35]);
 				break;
-			}
-	return $ret;
+		}
+
+		return $ret;
 	}
 
 	public static function get_quality_color_orig($dir, $entity, $values)
