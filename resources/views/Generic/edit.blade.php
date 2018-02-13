@@ -4,7 +4,7 @@
 
 @param $view_var: the object we are editing
 @param $form_update: the update route which should be called when clicking save
-@param $form_path: the form view to be displayed inside this blade (mostly Generic.edit)
+@param $form_path: the form view to be displayed inside this blade (mostly Generic.form)
 @param $panel_right: the page hyperlinks returned from prepare_tabs() or prep_right_panels()
 @param $relations: the relations array() returned by prep_right_panels() in BaseViewController
 

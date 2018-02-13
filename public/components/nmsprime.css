@@ -5,6 +5,18 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+a {
+    color: #348FE2;
+    text-decoration:none;
+    background-color:transparent;
+    -webkit-text-decoration-skip:objects
+}
+
+a:hover {
+    color:#337AB7;
+    text-decoration:underline
+}
+
 /* Selectv2 responsive */
 .select2-container {
     width: 100% !important;
