@@ -3,11 +3,7 @@
   <short>CM</short>
   <description>Only allow cablemodems essential services.</description>
   <source address="10.0.0.0/19"/>
+  <service name="dhcp"/>
   <service name="tftp"/>
   <port protocol="udp" port="37"/>
-  <rule family="ipv4">
-    <source address="10.0.31.254"/>
-    <service name="dhcp"/>
-    <accept/>
-  </rule>
 </zone>
