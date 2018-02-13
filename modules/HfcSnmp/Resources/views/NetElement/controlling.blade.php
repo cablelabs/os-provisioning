@@ -44,14 +44,14 @@
 		@foreach ($form_fields['frame'] as $order)
 			@foreach ($order as $row)
 
-				<div class="col-md-12" style="padding-right: 0px; padding-left: 0px;">
+				<div class="col-md-12 row" style="padding-right: 0px;">
 				@foreach ($row as $col)
 
 					<?php
 						$col_width = (int) (12 / count($row));
 					?>
 
-					<div class="col-md-{{$col_width}} well" style="padding-right: 0px; padding-left: 0px;">
+					<div class="col-md-{{$col_width}} well">
 
 						@foreach ($col as $field)
 							{{ $field }}
