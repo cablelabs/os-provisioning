@@ -93,7 +93,7 @@ return [
 	'contract.street' => 'Straße',
 	'contract.house_number' => 'Hausnummer',
 	'contract.district' => 'Bezirk',
-	'contract.contract_start' => 'Vertragsanfang',
+	'contract.contract_start' => 'Vertragsbeginn',
 	'contract.contract_end' => 'Vertragsende',
 	// Domain
 	'domain.name' => 'Domain',
