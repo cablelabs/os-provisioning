@@ -25,7 +25,7 @@
 				@if (\PPModule::is_active('provvoipenvia'))
 					{{-- count of user interaction needing EnviaOrders --}}
 					<li  class='m-t-10' style='font-size: 2em; font-weight: bold'>
-						<a href="{{route('EnviaOrder.index', ['show_filter' => 'action_needed'])}}" target="_self">
+						<a href="{{route('EnviaOrder.index', ['show_filter' => 'action_needed'])}}" target="_self" style="text-decoration: none">
 							@if (Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count() > 0)
 								<span style='color: #f00; text-decoration:none' title='{{ Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count() }} user interaction needing EnviaOrders'>✘
 								<sup>{{ Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count() }}</sup>
