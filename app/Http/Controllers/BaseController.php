@@ -288,7 +288,9 @@ class BaseController extends Controller {
 			}
 
 			// add tab for GuiLog
-			array_push($c, $ret[0]);
+			if ($ret) {
+				array_push($c, $ret[0]);
+			}
 
 			return $c;
 		}
