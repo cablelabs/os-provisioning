@@ -92,5 +92,3 @@ for file in $(cat <(find modules/ -name module.json | grep Ccc) <(find modules/ 
 	fi
 	handle_module "$(echo "$file" | cut -d'/' -f2)"
 done
-
-yum install icingaweb2-module-director
