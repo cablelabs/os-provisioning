@@ -104,6 +104,7 @@ return [
 	'Save'						=> 'Speichern',
 	'Save / Restart'			=> 'Speichern / Neustart',
 	'Serial Number'				=> 'Seriennummer',
+	'Sign me in' 				=> 'Anmelden',
 	'State'						=> 'Status',
 	'Street'					=> 'Straße',
 	'Type'						=> 'Typ',

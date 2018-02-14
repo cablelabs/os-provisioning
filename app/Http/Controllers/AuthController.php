@@ -84,11 +84,12 @@ class AuthController extends Controller {
 	 */
 	public function showLoginForm()
 	{
-		$g = GlobalConfig::first();
 		$head1 = $this->headline1;
 		$head2 = $this->headline2;
 		$prefix = $this->prefix;
 		$image = $this->image;
+
+		\App::setLocale(\App\Http\Controllers\BaseViewController::get_user_lang());
 
 		// show the form
 		return \View::make('auth.login', compact('head1', 'head2', 'prefix', 'image'));
