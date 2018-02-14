@@ -21,10 +21,18 @@ OPTS=" --testdox-html $LOGFILE --colors --stop-on-failure --bootstrap /var/www/n
 # if empty: run all tests
 # can be used on developing tests (you don't want to run the complete test suite in this case)
 TESTS=""
-TESTS=" modules/ProvVoip/Tests/PhonenumberLifecycleTest.php"
-TESTS=" --filter testIndexViewDatatablesDataAvailable modules/ProvBase/Tests/ModemLifecycleTest.php"
 TESTS=" --filter testDeleteFromIndexView modules/ProvBase/Tests/ModemLifecycleTest.php"
+TESTS=" --filter testDatatableDataReturned modules/ProvBase/Tests/ModemLifecycleTest.php"
+TESTS=" modules/ProvBase/Tests/DomainLifecycleTest.php"
+TESTS=" modules/ProvBase/Tests/CmtsLifecycleTest.php"
+TESTS=" modules/ProvBase/Tests/IpPoolLifecycleTest.php"
+TESTS=" modules/ProvBase/Tests/ContractLifecycleTest.php"
+TESTS=" modules/ProvBase/Tests/EndpointLifecycleTest.php"
+TESTS=" modules/ProvBase/Tests/IpPoolLifecycleTest.php"
+TESTS=" modules/ProvBase/Tests/ModemLifecycleTest.php"
 TESTS=" --filter testRoutesAuthMiddleware tests/RoutesAuthTest"
+TESTS=" modules/ProvVoip/Tests/MtaLifecycleTest.php"
+TESTS=" modules/ProvVoip/Tests/PhonenumberLifecycleTest.php"
 
 
 touch $LOGFILE $OUTFILE
