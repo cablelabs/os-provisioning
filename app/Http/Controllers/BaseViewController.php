@@ -96,9 +96,8 @@ class BaseViewController extends Controller {
 	public static function get_user_lang()
 	{
 		$user = Auth::user();
-		if (!isset($user))
-			return 'en';
-		$language = Auth::user()->language;
+
+		$language = $user ? $user->language : 'browser';
 
 		if ($language == 'browser')
 		{
@@ -112,7 +111,6 @@ class BaseViewController extends Controller {
 			else
 				return 'en';
 		}
-
 		return $language;
 	}
 
