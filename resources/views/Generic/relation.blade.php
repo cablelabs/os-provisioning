@@ -17,11 +17,11 @@ Relation Blade is used inside a Panel Element to display relational class object
 	<div class="row">
 		{{-- Create Button: (With hidden add fields if required) --}}
 		@if (!isset($options['hide_create_button']))
-			{{-- must send it's correlating parent via GET, see note in BaseViewController::compute_headline() --}}
-			{{ Form::open(array('method' => 'POST')) }}
+
+			{{ Form::open(['url' => route($view.'.create', [$key => $view_var->id]), 'method' => 'POST', 'name' => 'createForm']) }}
 			{{ Form::hidden($key, $view_var->id) }}
 
-			{{-- Add a hidden form field if create tag is set in $form_fields --}}
+			{{-- Add hidden input fields if create tag is set in $form_fields - This sets global POST Variable --}}
 			@foreach($form_fields as $field)
 				@if (array_key_exists('create', $field))
 					{{ Form::hidden($field["name"], $view_var->{$field["name"]}) }}
@@ -29,15 +29,11 @@ Relation Blade is used inside a Panel Element to display relational class object
 			@endforeach
 
 			<div class="col align-self-start">
-				<a 	class="btn btn-outline-primary m-b-10"
-					data-toggle="tooltip"
-					data-delay='{"show":"250"}'
-					data-placement="top"
-					href="{{'/'.BaseRoute::$admin_prefix.'/'.$view.'/create?'.$key.'='.$view_var->id}}"
-					onclick="form.submit();"
-					style="simple"
-					title="{{ !isset($options['create_button_text']) ? \App\Http\Controllers\BaseViewController::translate_view('Create '.$view, 'Button') : trans($options['create_button_text']) }}">
+				<a href="{{ route($view.'.create', [$key => $view_var->id]) }}">
+					<button class="btn btn-outline-primary float-right m-b-10" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
+						title="{{ isset($options['create_button_text']) ? trans($options['create_button_text']) : \App\Http\Controllers\BaseViewController::translate_view('Create '.$view, 'Button') }}">
 						<i class="fa fa-plus fa-2x" aria-hidden="true"></i>
+					</button>
 				</a>
 			</div>
 

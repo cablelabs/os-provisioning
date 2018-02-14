@@ -20,8 +20,9 @@
 	</div>
 </div>
 
-{{-- not working gritter kept here as comment
-{{--<div id="gritter-notice-wrapper">
+{{-- not working gritter kept here as comment --}}
+{{--
+<div id="gritter-notice-wrapper">
 	<div id="gritter-item-1" class="gritter-item-wrapper my-sticky-class" style="" role="alert">
 		<div class="gritter-top"></div>
 		<div class="gritter-item">
@@ -35,5 +36,5 @@
 		</div>
 		<div class="gritter-bottom"></div>
 	</div>
-</div--}}
+</div>
 --}}

@@ -161,15 +161,17 @@ class ContractController extends \BaseController {
 	{
 		$data['contract_start'] = $data['contract_start'] ? : date('Y-m-d');
 
+		// generate contract number
 		if (!$data['number'] && \PPModule::is_active('billingbase'))
 		{
-			// generate contract number
 			$num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
 
 			if ($num)
 				$data['number'] = $num;
-			else
+			else if (\Modules\BillingBase\Entities\NumberRange::where('type', '=', 'contract')->where('costcenter_id', $data['costcenter_id'])->count()) {
+				// show alert when there is a numberrange for costcenter but there are no more free numbers
 				session(['alert' => \App\Http\Controllers\BaseViewController::translate_view('Failure','Contract_Numberrange')]);
+			}
 		}
 
 		$data = parent::prepare_input($data);
