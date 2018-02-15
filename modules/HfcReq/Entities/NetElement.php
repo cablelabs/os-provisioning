@@ -344,7 +344,7 @@ class NetElement extends \BaseModel {
 		if (!$this->netelementtype)
 			return false;
 
-		return ($this->netelementtype->get_core_type() == 3); // 3 .. is core element for cmts
+		return ($this->netelementtype->get_base_type() == 3); // 3 .. is base element for cmts
 	}
 
 
