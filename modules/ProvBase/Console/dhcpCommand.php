@@ -58,8 +58,8 @@ class dhcpCommand extends Command {
 		}
 
 
-		// CMTS's
-		Cmts::del_cmts_includes();
+		// regenerate CMTS includes by emptying the file and adding all entries
+		file_put_contents(Cmts::$cmts_include_path.'.conf', '');
 		foreach (Cmts::all() as $cmts)
 			$cmts->make_dhcp_conf();
 

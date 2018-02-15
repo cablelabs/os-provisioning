@@ -8,6 +8,9 @@ use Acme\php\ArrayHelper;
 
 class Cmts extends \BaseModel {
 
+	# don't put a trailing slash here!
+	public static $cmts_include_path = '/etc/dhcp/nmsprime/cmts_gws';
+
 	// The associated SQL table for this Model
 	public $table = 'cmts';
 
@@ -369,8 +372,8 @@ class Cmts extends \BaseModel {
 	 */
 	public function make_dhcp_conf ()
 	{
-		$file_dhcp_conf = '/etc/dhcp/nmsprime/cmts_gws.conf';
-		$file = '/etc/dhcp/nmsprime/cmts_gws/'.$this->hostname.'.conf';
+		$file_dhcp_conf = self::$cmts_include_path.'.conf';
+		$file = self::$cmts_include_path."/$this->hostname.conf";
 
 		if ($this->id == 0)
 			return -1;
@@ -506,7 +509,7 @@ _exit:
 	public function delete_cmts()
 	{
 
-		$file = '/etc/dhcp/nmsprime/cmts_gws/'.$this->hostname.'.conf';
+		$file = self::$cmts_include_path."/$this->hostname.conf";
 		if (file_exists($file)) unlink($file);
 
 		$lines = file('/etc/dhcp/dhcpd.conf');
@@ -527,51 +530,6 @@ _exit:
 		$file_dhcp_conf = fopen('/etc/dhcp/dhcpd.conf', 'w');
 		fwrite($file_dhcp_conf, $data);
 		fclose($file_dhcp_conf);
-	}
-
-	/**
-	 * Deletes all cmts include statements in global dhcpd.conf
-	 *
-	 * @return
-	 * @author Nino Ryschawy
-	 */
-	public static function del_cmts_includes()
-	{
-		$file_path   = '/etc/dhcp/dhcpd.conf';
-		$include_str = '/etc/dhcp/nmsprime/cmts_gws/';
-
-		// copy file as backup
-		copy($file_path, $file_path.'_backup');
-
-		$lines = file($file_path);
-		$data = '';
-		$bool = false;
-		$i = 0;
-
-		foreach($lines as $key => $line)
-		{
-			// if it's an cmts include line
-			if(strpos($line, $include_str) !== false)
-			{
-				// remove all empty lines only the first time an cmts include statement was found
-				do
-				{
-					if ($bool)
-						break;
-					$lines[$key - $i] = str_replace(PHP_EOL, "", $lines[$key - $i]);
-					$i++;
-				} while (($lines[$key - $i] == "\n") || ($lines[$key - $i] == ""));
-
-				unset($lines[$key]);
-				$bool = true;
-
-			}
-		}
-
-		$data = implode(array_values($lines));
-
-		\File::put($file_path, $data);
-
 	}
 
 }
