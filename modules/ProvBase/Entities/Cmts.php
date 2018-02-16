@@ -265,7 +265,7 @@ class Cmts extends \BaseModel {
 	 */
 	public function get_us_snr($ip)
 	{
-		$fn = "data/provbase/us_snr/$this->hostname.json";
+		$fn = "data/provbase/us_snr/$this->id.json";
 
 		if (!\Storage::exists($fn)) {
 			\Log::error("Missing Modem US SNR json file of CMTS $this->hostname [$this->id]");
@@ -328,7 +328,7 @@ class Cmts extends \BaseModel {
 			}
 		}
 
-		\Storage::put("data/provbase/us_snr/$this->hostname.json", json_encode($ret));
+		\Storage::put("data/provbase/us_snr/$this->id.json", json_encode($ret));
 	}
 
 
@@ -372,8 +372,7 @@ class Cmts extends \BaseModel {
 	 */
 	public function make_dhcp_conf ()
 	{
-		$file_dhcp_conf = self::$cmts_include_path.'.conf';
-		$file = self::$cmts_include_path."/$this->hostname.conf";
+		$file = self::$cmts_include_path."/$this->id.conf";
 
 		if ($this->id == 0)
 			return -1;
@@ -387,7 +386,7 @@ class Cmts extends \BaseModel {
 			goto _exit;
 		}
 
-		File::put($file, 'shared-network "'.$this->hostname.'"'."\n".'{'."\n");
+		File::put($file, 'shared-network "'.$this->id.'"'."\n".'{'."\n");
 
 		foreach ($ippools as $pool) {
 
@@ -472,64 +471,26 @@ class Cmts extends \BaseModel {
 
 		File::append($file, '}'."\n");
 
-
-		// append include statement in dhcpd.conf if not yet done
-		$handle = fopen($file_dhcp_conf, 'r');
-		$existent = false;
-
-		// search for file-string
-		while (($buffer = fgets($handle)) !== false)
-		{
-			if (strpos($buffer, $file) !== false)
-			{
-				$existent = true;
-				break;
-			}
-		}
-
-		if (!$existent)
-		{
-			File::append($file_dhcp_conf, "\n".'include "'.$file.'";');
-		}
-
-
 _exit:
+		self::make_includes();
+
 		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
 		system('/bin/chown -R apache /etc/dhcp/');
 	}
 
 	/**
-	 * Deletes the calling object/cmts in DB and removes the include statement from the global dhcpd.conf
-	 * Also sets the related IP-Pools to cmts_id=0
+	 * Generate cmts_gws.conf containing includes for the
+	 * shared-networks of all cmts
 	 *
-	 * @author Nino Ryschawy
-	 * @param
-	 * @return void
+	 * @author Ole Ernst
 	 */
-	public function delete_cmts()
+	public static function make_includes()
 	{
-
-		$file = self::$cmts_include_path."/$this->hostname.conf";
-		if (file_exists($file)) unlink($file);
-
-		$lines = file('/etc/dhcp/dhcpd.conf');
-
-		foreach($lines as $key => $line)
-		{
-			// line found
-			if(strpos($line, $file) !== false)
-			{
-				if ($lines[$key-1] == "")
-					$lines[$key-1] = str_replace(PHP_EOL, "", $lines[$key-1]);
-				unset($lines[$key]);
-			}
-		}
-
-		$data = implode(array_values($lines));
-
-		$file_dhcp_conf = fopen('/etc/dhcp/dhcpd.conf', 'w');
-		fwrite($file_dhcp_conf, $data);
-		fclose($file_dhcp_conf);
+		$path = self::$cmts_include_path;
+		$incs = '';
+		foreach (Cmts::all() as $cmts)
+			$incs .= "include \"$path/$cmts->id.conf\";\n";
+		file_put_contents($path.'.conf', $incs);
 	}
 
 }
@@ -558,12 +519,6 @@ class CmtsObserver
 		File::put('/tftpboot/cmts/'.$cmts->hostname.'.cfg', $cmts->get_raw_cmts_config());
 	}
 
-	public function updating($cmts)
-	{
-		$tmp = Cmts::find($cmts->id);
-		$tmp->delete_cmts();
-	}
-
 	public function updated($cmts)
 	{
 		$cmts->make_dhcp_conf();
@@ -574,7 +529,10 @@ class CmtsObserver
 
 	public function deleted($cmts)
 	{
-		// delete the conf file and the include statement in /etc/dhcp/dhcpd.conf
-		$cmts->delete_cmts();
+		$file = Cmts::$cmts_include_path."/$this->id.conf";
+		if (file_exists($file))
+			unlink($file);
+
+		Cmts::make_includes();
 	}
 }
