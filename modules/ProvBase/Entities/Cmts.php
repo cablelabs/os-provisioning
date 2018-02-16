@@ -8,7 +8,7 @@ use Acme\php\ArrayHelper;
 
 class Cmts extends \BaseModel {
 
-	# don't put a trailing slash here!
+	// don't put a trailing slash here!
 	public static $cmts_include_path = '/etc/dhcp/nmsprime/cmts_gws';
 
 	// The associated SQL table for this Model
