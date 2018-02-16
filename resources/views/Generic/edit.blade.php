@@ -106,17 +106,8 @@
 	<script language="javascript">
 	$('#loggingtab').click(function() {
 		$('.tab-content').toggle();
-		$('.tab-content').toggleClass('d-block');
-		console.log($('#loggingtab').hasClass('active'));
-		if ( $('#loggingtab').hasClass('active') ) {
-			console.log('i am here');
-			$('#loggingtab').removeClass('active');
-			console.log($('#loggingtab').hasClass('active'));
-		}
 	});
-	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-		console.log(e);
-	});
+
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		var table = $('table.datatable').DataTable(
 		{
@@ -142,13 +133,9 @@
 				targets:   [0]
 			},
 			{
-                "targets": [ 4 ],
+                "targets": [ 4 , 5 ],
                 "visible": false,
             },
-            {
-                "targets": [ 5 ],
-                "visible": false
-            }
 			],
 		{{-- AJAX CONFIGURATION --}}
 			processing: true,
