@@ -25,12 +25,16 @@
 				@if (\PPModule::is_active('provvoipenvia'))
 					{{-- count of user interaction needing EnviaOrders --}}
 					<li  class='m-t-10' style='font-size: 2em; font-weight: bold'>
-						<a href="{{route('EnviaOrder.index', ['show_filter' => 'action_needed'])}}" target="_self">
-							@if (Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count() > 0)
-								<span style='color: #f00; text-decoration:none' title='{{ Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count() }} user interaction needing EnviaOrders'>✘
-								<sup>{{ Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count() }}</sup>
+						<a href="{{route('EnviaOrder.index', ['show_filter' => 'action_needed'])}}" target="_self" style="text-decoration: none;">
+							@if ($envia_interactioncount > 0)
+								<span data-toggle="tooltip" data-placement="auto" title="{{ $envia_interactioncount }} {{ trans_choice('messages.envia_interaction', $envia_interactioncount )}}">
+									<i class="fa fa-times fa-lg text-danger"></i>
+									<span class="badge badge-danger">{{ $envia_interactioncount }}</span>
+								</span>
 							@else
-								<span style='color: #080; text-decoration:none' title='No user interaction needing EnviaOrders'>✔
+								<span data-toggle="tooltip" data-placement="auto" title="{{ trans('messages.envia_no_interaction')}}">
+									<i class="fa fa-check fa-lg text-success"></i>
+								</span>
 							@endif
 						</a>
 					</li>

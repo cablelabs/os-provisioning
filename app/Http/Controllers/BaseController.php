@@ -343,8 +343,7 @@ class BaseController extends Controller {
 		if (!$model)
 			$model = new BaseModel;
 
-		if(!isset($a['networks']))
-		{
+		if(!isset($a['networks'])){
 			$a['networks'] = [];
 			if (\PPModule::is_active('HfcReq'))
 				$a['networks'] = \Modules\HfcReq\Entities\NetElement::get_all_net();
@@ -383,6 +382,9 @@ class BaseController extends Controller {
 
 		if (!isset($a['html_title']))
 			$a['html_title'] = 'NMS Prime - '.\App\Http\Controllers\BaseViewController::translate_view(\NamespaceController::module_get_pure_model_name(),'Header');
+
+		if (( \PPModule::is_active('Provvoipenvia')) && (!isset($a['envia_interactioncount'])) )
+			$a['envia_interactioncount'] = \Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
 
 		$a['save_button'] = $this->save_button;
 		$a['force_restart_button'] = $this->force_restart_button;
@@ -1058,6 +1060,7 @@ class BaseController extends Controller {
 		$edit_column_data = isset($dt_config['edit']) ? $dt_config['edit'] : [];
 		$filter_column_data = isset($dt_config['filter']) ? $dt_config['filter'] : [];
 		$eager_loading_tables = isset($dt_config['eager_loading']) ? $dt_config['eager_loading'] : [];
+		$additional_raw_where_clauses = isset($dt_config['where_clauses']) ? $dt_config['where_clauses'] : [];
 
 		// if no id Column is drawn, draw it to generate links with id
 		!array_has($header_fields, $dt_config['table'].'.id') ? array_push($header_fields, 'id') : null;
@@ -1071,6 +1074,11 @@ class BaseController extends Controller {
 				$first_column = substr(head($header_fields), strlen($dt_config["table"]) + 1);
 			else
 				$first_column = head($header_fields);
+		}
+
+		// apply additional where clauses
+		foreach ($additional_raw_where_clauses as $where_clause) {
+			$request_query = $request_query->whereRaw($where_clause);
 		}
 
 		$DT = Datatables::of($request_query);

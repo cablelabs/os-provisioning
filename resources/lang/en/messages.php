@@ -25,6 +25,8 @@ return [
 	'dashbrd_ticket' 		=> 'My New Tickets',
 	'device_probably_online' =>	':type is probably online',
 	'eom' 					=> 'to end of month',
+	'envia_no_interaction' 	=> 'No Envia Orders require Interaction',
+	'envia_interaction'	 	=> 'Envia Order requires Interaction|Envia Orders require Interaction',
 	'home' 					=> 'Startseite',
 	'item_credit_amount_negative' => 'A negative credit amount becomes a debit! Are you sure that the customer shall be charged?',
 	'invoice' 				=> 'Invoice',
