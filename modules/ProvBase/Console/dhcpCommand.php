@@ -53,10 +53,8 @@ class dhcpCommand extends Command {
 		Modem::make_dhcp_cm_all();
 		Endpoint::make_dhcp();
 
-		if (\PPModule::is_active('provvoip')) {
+		if (\PPModule::is_active('provvoip'))
 			Mta::make_dhcp_mta_all();
-		}
-
 
 		// regenerate CMTS includes by emptying the file and adding all entries
 		file_put_contents(Cmts::$cmts_include_path.'.conf', '');
@@ -65,13 +63,11 @@ class dhcpCommand extends Command {
 
 		// Restart dhcp server
 		$dir = storage_path('systemd/');
-		if (!is_dir($dir))
-		{
+		if (!is_dir($dir)) {
 			mkdir($dir, 0700, true);
 			chown($dir, 'apache');
 		}
 		touch($dir.'dhcpd');
-
 	}
 
 
