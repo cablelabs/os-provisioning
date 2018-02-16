@@ -49,6 +49,8 @@ return [
 	'Endpoints'					=> 'Endpunkte',
 	'Endpoints List'			=> 'Endpunktliste',
 	'Entry'						=> 'Eintrag',
+	'envia_no_interaction' 		=> 'Keine Envia Vorgänge, die eine Bearbeitung benötigen',
+	'envia_interaction'			=> 'Envia Vorgang benötigt eine Bearbeitung|Envia Vorgänge benötigen Bearbeitung',
 	'E-Mail Address'			=> 'Email-Adresse',
 	'First IP'					=> 'Erste IP',
 	'Firstname'					=> 'Vorname',
