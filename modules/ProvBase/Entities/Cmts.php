@@ -506,32 +506,28 @@ _exit:
  */
 class CmtsObserver
 {
+	public static $cmts_tftp_path = '/tftpboot/cmts';
+
 	public function created($cmts)
 	{
-		// dd(\Route::getCurrentRoute()->getActionName(), $this);
-		// only create new config file
-		// dd($cmts);
 		if (\PPModule::is_active ('ProvMon'))
 			\Artisan::call('nms:cacti', ['--modem-id' => 0, '--cmts-id' => $cmts->id]);
 		$cmts->make_dhcp_conf();
 
-		// write CMTS config to /tftpboot/cmts
-		File::put('/tftpboot/cmts/'.$cmts->hostname.'.cfg', $cmts->get_raw_cmts_config());
+		File::put(self::$cmts_tftp_path."/$cmts->id.cfg", $cmts->get_raw_cmts_config());
 	}
 
 	public function updated($cmts)
 	{
 		$cmts->make_dhcp_conf();
 
-		// write CMTS config to /tftpboot/cmts
-		File::put('/tftpboot/cmts/'.$cmts->hostname.'.cfg', $cmts->get_raw_cmts_config());
+		File::put(self::$cmts_tftp_path."/$cmts->id.cfg", $cmts->get_raw_cmts_config());
 	}
 
 	public function deleted($cmts)
 	{
-		$file = Cmts::$cmts_include_path."/$this->id.conf";
-		if (file_exists($file))
-			unlink($file);
+		File::delete(Cmts::$cmts_include_path."/$cmts->id.conf");
+		File::delete(self::$cmts_tftp_path."/$cmts->id.cfg");
 
 		Cmts::make_includes();
 	}
