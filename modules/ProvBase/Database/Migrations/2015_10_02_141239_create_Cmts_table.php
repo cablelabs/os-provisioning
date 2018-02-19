@@ -51,19 +51,15 @@ class CreateCmtsTable extends BaseMigration {
 	 */
 	public function down()
 	{
-		$c = Cmts::first();
-		if ($c)
-			$c->del_cmts_includes();
+		// empty CMTS includes
+		file_put_contents(Cmts::$cmts_include_path.'.conf', '');
 
 		Schema::drop($this->tablename);
 
 		// remove all through dhcpCommand created cmts config files
-		$files = glob('/etc/dhcp/nmsprime/cmts_gws/*');		// get all files in dir
-		foreach ($files as $file)
-		{
+		foreach (glob(Cmts::$cmts_include_path.'/*') as $file)
 			if(is_file($file))
 				unlink($file);
-		}
 	}
 
 }

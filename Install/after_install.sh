@@ -47,7 +47,10 @@ systemctl enable mariadb
 # populate timezone info and set php timezone based on the local one
 mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
 sed -i "s|^;date.timezone =$|date.timezone = $(timedatectl | grep 'Time zone' | cut -d':' -f2 | xargs | cut -d' ' -f1)|" /etc/php.ini
-sed -i 's/^memory_limit =.*/memory_limit = 1024M/;s/^upload_max_filesize =.*/upload_max_filesize = 50M/' /etc/php.ini
+sed -e 's/^memory_limit =.*/memory_limit = 1024M/' \
+    -e 's/^upload_max_filesize =.*/upload_max_filesize = 50M/' \
+    -e 's/^post_max_size =.*/post_max_size = 50M/' \
+    -i /etc/php.ini
 
 # create mysql db
 mysql -u root -e "CREATE DATABASE nmsprime;"
