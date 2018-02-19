@@ -44,9 +44,10 @@ class SnmpController extends \BaseController{
 	 *
 	 * @author Torsten Schmidt
 	 */
-	public function init ($device = null)
+	public function init ($device = null, $index = 0)
 	{
 		$this->device = $device;
+		$this->index = $index ? [$index] : 0;
 
 		$this->snmp_def_mode();
 	}
@@ -65,20 +66,19 @@ class SnmpController extends \BaseController{
 	{
 		// Init NetElement Model & SnmpController
 		$netelem = NetElement::findOrFail($id);
-		$snmp 	 = new SnmpController;
-		$snmp->init ($netelem);
-		$snmp->index = $index ? [$index] : 0;
-
-// d(\HTML::linkRoute('NetElement.param_entry_edit', 'Controlling', [31, 0, 0]),
-// 	route('NetElement.param_entry_edit', [31, 238, 6851]));
+		$this->init ($netelem, $index);
 
 		$start = microtime(true);
-		// Get Html Form Fields for generic View - this includes the snmpwalk & updating snmpvalues
+
+		// GET SNMP values of NetElement
 		// TODO: check if netelement has a netelementtype -> exception for root elem
-		$params 	 = $index ? Parameter::where('parent_id', '=', $param_id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all() : $snmp->device->netelementtype->parameters;
+		$params = $index ?
+			Parameter::where('parent_id', '=', $param_id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all()
+			:
+			$this->device->netelementtype->parameters()->orderBy('html_frame')->orderBy('html_id')->orderBy('oid_id')->orderBy('id')->get()->all();
 
 		try {
-			$form_fields = $snmp->prep_form_fields($params);
+			$form_fields = $this->prep_form_fields($params);
 		} catch (\Exception $e) {
 			return self::handle_exception($e);
 		}
@@ -102,7 +102,7 @@ class SnmpController extends \BaseController{
 		$form_path   = 'Generic.form';
 		$form_update = 'NetElement.controlling_update';
 
-		$reload 	 = $snmp->device->netelementtype->page_reload_time ? : 0;
+		$reload 	 = $this->device->netelementtype->page_reload_time ? : 0;
 
 		return \View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'panel_right', 'form_fields', 'form_update', 'route_name', 'headline', 'reload', 'param_id', 'index')));
 	}
@@ -167,19 +167,18 @@ class SnmpController extends \BaseController{
 			return [];
 
 		// TODO: if device not reachable take already saved SnmpValues from Database but show a hint
-		// if (!$results) ...
-
-		$start = microtime(true);
+		if (!$this->device->ip)
+			return [];
 
 		foreach ($params as $param)
 		{
 			$oid = $param->oid;
-			$indices = [];
+			$indices = $this->index ? : [];
 
-			if ($param->indices && $param->indices->indices)
-				$indices = \Acme\php\ArrayHelper::str_to_array($param->indices->indices);
-			if ($this->index)
-				$indices = $this->index;
+			if (!$indices) {
+				$indices_o = $param->indices()->where('netelement_id', '=', $this->device->id)->first();
+				$indices = $indices_o ? explode(',', $indices_o->indices) : [];
+			}
 
 			// Table Param
 			if ($oid->oid_table)
