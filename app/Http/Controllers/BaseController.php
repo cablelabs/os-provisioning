@@ -673,7 +673,7 @@ class BaseController extends Controller {
 
 		// error msg created while observer execution
 		$msg = \Session::has('error') ? \Session::get('error') : 'Updated';
-		$color = \Session::has('error') ? 'warning' : 'info';
+		$color = \Session::has('error') ? 'warning' : 'success';
 
 		$route_model = \NamespaceController::get_route_name();
 
