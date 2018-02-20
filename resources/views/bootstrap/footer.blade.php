@@ -43,6 +43,6 @@ $(document).ready(function() {
   App.init();
   NMS.init();
   {{-- init modals --}}
-  $(".modal").modal();
+  $("#alertModal").modal();
 });
 </script>
