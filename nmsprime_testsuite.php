@@ -153,13 +153,13 @@ class UnitTestStarter {
 		];
 		$test_dirs = [];
 
-		// add additional tests
-		array_push($test_dirs, "<testsuite name=\"Route auth tests\"><file>".$this->basepath."/tests/RoutesAuthTest.php</file></testsuite>");
-
 		// add module level test dirs (for all enabled modules)
 		foreach ($modules_to_test as $m) {
 			array_push($test_dirs, "<testsuite name=\"$m\"><directory>".$m."/Tests</directory></testsuite>");
 		}
+
+		// add additional tests
+		array_push($test_dirs, "<testsuite name=\"Route auth tests\"><file>".$this->basepath."/tests/RoutesAuthTest.php</file></testsuite>");
 
 		$substitutions['{{testsuite_directories}}'] = join("\n", $test_dirs);
 

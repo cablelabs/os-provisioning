@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# this is a simple starte script for test development
-# it allows to run single classes or even tests so you don't need to run the complete testing suite
-# for real testing use phpunit.php
+# this is a simple starter script for test development
+# it allows to run single classes or even single tests so you don't need to run the complete testing suite
+# for real testing use nmsprime_testsuite.php
 
 LOGFILE="phpunit/phpunit_log.htm"
 OUTFILE="phpunit/phpunit_output.htm"
