@@ -29,7 +29,7 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 	// The associated SQL table for this Model
 	public $table = 'authusers';
 
-	public $guarded = ['assigned_role_id'];
+	public $guarded = ['roles_ids'];
 
 	// Add your validation rules here
 	public static function rules($id=null)
@@ -221,42 +221,6 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 		Authuser::observe(new AuthuserObserver);
 	}
 
-	public function view_has_many()
-	{
-		$ret['Edit']['Authrole']['class'] = 'Authrole';
-		$ret['Edit']['Authrole']['relation'] = $this->roles;
-		$ret['Edit']['Authrole']['options']['many_to_many'] = 'Authrole';
-		$ret['Edit']['Authrole']['options']['hide_create_button'] = true;
-
-		return $ret;
-	}
-
-
-	/**
-	 * Returns roles which aren't assigned to a specific user
-	 *
-	 * @param integer $user_id
-	 * @return array
-	 * @throws \Exception
-	 */
-	public static function get_not_assigned_roles_by_userid($user_id)
-	{
-		if (!$user_id)
-			return [];
-
-		$all_roles = Authrole::select('id', 'name')->where('type', '=', 'role')->get();
-		$user = Authuser::find($user_id);
-		$assigned_roles = $user->roles;
-
-		$ret = array();
-		foreach ($all_roles as $key => $role)
-		{
-			if (!$assigned_roles->contains('id', $role->id))
-				$ret[] = $role;
-		}
-
-		return $ret;
-	}
 
 
 	/**
@@ -322,13 +286,6 @@ class AuthuserObserver
 			DB::update("INSERT INTO authuser_role (user_id, role_id) VALUES($id, 1);");
 			DB::update("INSERT INTO authuser_role (user_id, role_id) VALUES($id, 2);");
 		}
-
-		self::_assign_role($user);
-    }
-
-    public function updated($user)
-    {
-		self::_assign_role($user);
     }
 
     public function deleted($user)
@@ -337,12 +294,4 @@ class AuthuserObserver
 		DB::table('authuser_role')->where('user_id', '=', $auth->id)->delete();
     }
 
-    private static function _assign_role($user)
-    {
-		if (!\Input::has('assigned_role_id'))
-			return;
-
-		foreach (\Input::get('assigned_role_id') as $role_id)
-			$user->roles()->attach($role_id, ['created_at' => date('Y-m-d H:i:s')]);
-    }
 }

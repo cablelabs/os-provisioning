@@ -49,6 +49,10 @@ class BaseController extends Controller {
 
 	protected $index_tree_view = false;
 
+	/**
+	 * Placeholder for Many-to-Many-Relation multiselect fields that should be handled generically
+	 */
+	protected $many_to_many = [];
 
 
 	// Auth Vars
@@ -570,7 +574,7 @@ class BaseController extends Controller {
 		$obj = $obj::create($data);
 
 		// Add N:M Relations
-		self::_set_many_to_many_relations($obj, $data);
+		$this->_set_many_to_many_relations($obj, $data);
 
 		$id  = $obj->id;
 		if (!$redirect)
@@ -665,7 +669,7 @@ class BaseController extends Controller {
 		$obj->update($data);
 
 		// Add N:M Relations
-		self::_set_many_to_many_relations($obj, $data);
+		$this->_set_many_to_many_relations($obj, $data);
 
 		// error msg created while observer execution
 		$msg = \Session::has('error') ? \Session::get('error') : 'Updated';
@@ -685,7 +689,7 @@ class BaseController extends Controller {
 	 *
 	 * IMPORTANT NOTES:
 	 *	 To assign a model to the pivot table we need an extra multiselect field in the controllers
-	 *	 	view_form_fields() that must be mentioned inside the guarded array of the model!
+	 *	 	view_form_fields() that must be mentioned inside the guarded array of the model and the many_to_many array of the Controller!!
 	 *	 The multiselect's field name must be in form of the models relation function and a concatenated '_ids'
 	 *		like: '<relation-function>_ids' , e.g. 'users_ids' for the multiselect in Tickets view to assign users
 	 *
@@ -694,25 +698,24 @@ class BaseController extends Controller {
 	 *
 	 * @author Nino Ryschawy
 	 */
-	private static function _set_many_to_many_relations($obj, $data)
+	private function _set_many_to_many_relations($obj, $data)
 	{
-		if (!$obj->guarded)
+		if (!$this->many_to_many)
 			return;
 
-		foreach ($obj->guarded as $field)
+		foreach ($this->many_to_many as $field)
 		{
-			if (!isset($data[$field]) || !is_array($data[$field]))
-				continue;
+			if (!isset($data[$field]))
+				$data[$field] = [];
 
 			// relation-function_id
 			$func = explode('_', $field)[0];
-
 			$attached = $obj->$func->pluck('id')->all();
 
 			// attach new assignments
 			foreach ($data[$field] as $rel_id)
 			{
-				if (!in_array($rel_id, $attached))
+				if ($rel_id && !in_array($rel_id, $attached))
 					$obj->$func()->attach($rel_id, ['created_at' => date('Y-m-d H:i:s')]);
 			}
 
