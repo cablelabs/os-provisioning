@@ -68,26 +68,18 @@ class SnmpController extends \BaseController{
 		$netelem = NetElement::findOrFail($id);
 		$this->init ($netelem, $index);
 
-		$start = microtime(true);
-
 		// GET SNMP values of NetElement
 		// TODO: check if netelement has a netelementtype -> exception for root elem
 		$params = $index ?
-			Parameter::where('parent_id', '=', $param_id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all()
+			Parameter::where('parent_id', '=', $param_id)->where('third_dimension', '=', 1)->with('oid')->orderBy('id')->get()
 			:
-			$this->device->netelementtype->parameters()->orderBy('html_frame')->orderBy('html_id')->orderBy('oid_id')->orderBy('id')->get()->all();
+			$this->device->netelementtype->parameters()->with('oid')->orderBy('html_frame')->orderBy('html_id')->orderBy('oid_id')->orderBy('id')->get();
 
 		try {
-			$form_fields = $this->prep_form_fields($params);
+			$form_fields = $this->get_snmp_values($params, true);
 		} catch (\Exception $e) {
 			return self::handle_exception($e);
 		}
-
-// d(round(microtime(true) - $start, 2), $form_fields);
-
-		// TODO: use multi update function
-		// $this->_multi_update_values();
-		$form_fields = static::_make_html_from_form_fields($form_fields);
 
 		// Init View
 		$view_header = 'SNMP Settings: '.$netelem->name;
@@ -151,28 +143,29 @@ class SnmpController extends \BaseController{
 
 
 	/**
-	 * Prepare Formular Fields for Controlling View of NetElement
-	 * This includes getting all SNMP Values from Device
+	 * GET all SNMP values from device
 	 *
-	 * @return 	Array (Multidimensional)	Data for Generic Form View in Form [frame1 => [field1, field2, ...], frame2 => [...], ...]
-	 *
-	 * @author Torsten Schmidt, Nino Ryschawy
+	 * @param Array 	params 		Array of Parameter Objects
+	 * @param Bool 		ordered 	true:  @return SNMP values as structured array to build initial view
+	 * 								false: @return raw json data to update values via Ajax
+	 * @author Nino Ryschawy
 	 */
-	public function prep_form_fields($params)
+	public function get_snmp_values($params, $ordered = false)
 	{
-		$form_fields = [];
-		$table_index = 0;
+		$results_tot = $ordered ? ['list' => [], 'frame' => ['linear' => [], 'tabular' => []], 'table' => []] : [];
+		$values_to_store = [];
+		$table_id = 0;
 
-		if (!$this->device->ip)
-			return [];
+		// Get stored Snmpvalues
+		$dir_path_rel = "data/hfc/snmpvalues/".$this->device->id;
+		$old_vals = \Storage::exists($dir_path_rel) ? json_decode(\Storage::get($dir_path_rel)) : [];
 
-		// TODO: if device not reachable take already saved SnmpValues from Database but show a hint
+		// TODO: if device not reachable take already saved SnmpValues from Database but show a hint - check via snmpget !?
 		if (!$this->device->ip)
 			return [];
 
 		foreach ($params as $param)
 		{
-			$oid = $param->oid;
 			$indices = $this->index ? : [];
 
 			if (!$indices) {
@@ -181,130 +174,157 @@ class SnmpController extends \BaseController{
 			}
 
 			// Table Param
-			if ($oid->oid_table)
+			if ($param->oid->oid_table)
 			{
-				$table_index++;
+				$table_id++;
 
-				if ($param->third_dimension_params())
+				$results = $this->snmp_table($param, $indices);
+				$values_to_store = array_merge($values_to_store, $results);
+
+				$subparam = null;
+				foreach ($results as $oid => $value)
 				{
-					// Add Info for Generation of the 3rd Dimension Links of a Table (if param has 3rd dim params)
-					$form_fields['table'][$table_index]['options']['3rd_dim_link']['netelement_id'] = $this->device->id;
-					$form_fields['table'][$table_index]['options']['3rd_dim_link']['param_id'] = $param->id;
-				}
+					$index  = strrchr($oid, '.'); 								// row in table
+					$suboid = substr($oid, 0, strlen($oid) - strlen($index)); 	// column in table
 
-				$results 	= $this->snmp_table($param, $indices);
-				$diff_param = $results[1];
-				if ($results[2])
-					$form_fields['table'][$table_index]['options']['division'] = $results[2];
-				$results 	= $results[0];
-
-				foreach ($results as $res_oid => $values)
-				{
-					$suboid = OID::where('oid', '=', $res_oid)->get()->first();
-
-					if (!$suboid)
-					{
-						// this should never occur
-						Log::error('Missing OID Entry from '.$oid->name.' for: '.$res_oid, [$this->device->netelementtype->name]);
+					// Note: Subparams are already fetched from DB in snmp_table() with joined OID
+					if (!$subparam || $subparam->oid != $suboid)
+						$subparam = $param->children ? $param->children->where('oidoid', $suboid)->first() : OID::where('oid', '=', $suboid)->first();
+					if (!$subparam) {
+						\Log::error('SNMP Query returned OID that is missing in database!');
 						continue;
 					}
 
-					$form_fields['table'][$table_index]['options']['oids'][$res_oid] = null;
-					foreach ($values as $index => $value)
+					$value = self::_build_diff_and_divide($subparam, $index, $results, $value, isset($old_vals->{$oid}) ? $old_vals->{$oid} : 0);
+
+					// order results for initial view
+					if ($ordered)
 					{
-						/* Save SnmpValue
-						 	NOTE: This takes way too much time
-							TODO: only add valueset to global variable for later multiupdate - for that we have to change indexing
-								  of field names because we wont get them as return value anymore
-						*/
-						$ret = $this->_snmp_value_set($suboid, $value, $index);
+						// set table head only once
+						if (!isset($results_tot['table'][$table_id]['head'][$suboid]))
+							$results_tot['table'][$table_id]['head'][$suboid] = $subparam->oid->name_gui ? $subparam->oid->name_gui : $subparam->oid->name;
 
-						// calculate diff after snmp_value_set!
-						if (isset($diff_param[$res_oid]))
-							$value = $value - $ret[2];
+						$arr = self::_get_formfield_array($subparam->oid, $index, $value, true);
+						$field = BaseViewController::get_html_input($arr);
 
-						// reorder by index for easier graphical display
-						$form_fields['table'][$table_index][$index][$res_oid] = $this->_get_formfield_array($suboid, $ret, $value, true);
+						$results_tot['table'][$table_id]['body'][$index][$suboid] = $field;
 					}
+					else
+						$results_tot[$oid] = $value;
 				}
 
-				continue;
+				if ($ordered && $param->third_dimension_params()->count())
+					$results_tot['table'][$table_id]['3rd_dim'] = ['netelement_id' => $this->device->id, 'param_id' => $param->id];
 			}
-
-			// Non Table Param
-			$results = $this->snmp_walk($oid, $indices);
-
-			foreach ($results as $oid->res_oid => $value)
+			// Non Table Param - can not have subparams
+			else
 			{
-				// Save SnmpValue
-				$ret = $this->_snmp_value_set($oid, $value);
+				$results = $this->snmp_walk($param->oid->oid, $indices);
+				$values_to_store = array_merge($values_to_store, $results);
 
-				if ($param->diff_param)
-					$value = $value - $ret[2];
-
-				$field = $this->_get_formfield_array($oid, $ret, $value);
-
-				// arrange in order inside form fields array structure - see Module Documentation
-				if (!$param->html_frame)
+				// Calculate differential param
+				foreach ($results as $oid => $value)
 				{
-					$form_fields['list'][] = $field;
+					$index  = strrchr($oid, '.'); 								// row in table
+					$suboid = substr($oid, 0, strlen($oid) - strlen($index)); 	// column in table
+					// join relevant information before calling diff function
+					$value = self::_build_diff_and_divide($param, $index, $results, $value, isset($old_vals->{$oid}) ? $old_vals->{$oid} : 0);
+
+					// order results for initial view
+					if ($ordered)
+					{
+						$arr = self::_get_formfield_array($param->oid, $index, $value);
+						$field = BaseViewController::add_html_string([$arr])[0]['html'];
+
+						if (!$param->html_frame)
+							$results_tot['list'][] = $field;
+						else if (strlen((string) $param->html_frame) == 1)
+							$results_tot['frame']['linear'][$param->html_frame][] = $field;
+						else {
+							// e.g.: '12' -> row 1, column 2
+							$frame = (string) $param->html_frame;
+							$results_tot['frame']['tabular'][$frame[0]][$frame[1]][] = $field;
+						}
+					}
+					else
+						$results_tot[$oid] = $value;
 				}
-
-				else if (strlen((string) $param->html_frame) == 1)
-				{
-					$form_fields['frame']['linear'][$param->html_frame][] = $field;
-				}
-
-				else
-				{
-					$frame = (string) $param->html_frame;
-					$row = $frame[0];
-					$col = $frame[1];
-
-					$form_fields['frame']['tabular'][$row][$col][] = $field;
-				}
-
 			}
+		} // end foreach
+
+		// store snmp values
+		\Storage::put($dir_path_rel, json_encode($values_to_store));
+
+		return $ordered ? $results_tot : json_encode($results_tot);
+	}
+
+
+	/**
+	 * Determine resulting value dependent of unit divisor or other OID values (see source code descriptions)
+	 *
+	 * @param Object 	param 	Parameter
+	 * @param String 	index 	last number of OID
+	 * @param Array 	results
+	 * @param String|Integer 	value 		current value from snmpwalk
+	 * @param String|Integer 	old_value 	value from last snmpwalk (to possibly calculate the difference)
+	 *
+	 * @author Nino Ryschawy
+	 */
+	private static function _build_diff_and_divide($param, &$index, &$results, $value, $old_value)
+	{
+		// Subtract old value from new value
+		if ($param->diff_param)
+			$value -= $old_value;
+
+		// divide value by value of other oid or sum of values of multiple OIDs and make it percentual
+		if ($param->divide_by)
+		{
+			if (!is_array($param->divide_by))
+				$param->divide_by = \Acme\php\ArrayHelper::str_to_array($param->divide_by);
+
+			$divisor = 0;
+			foreach ($param->divide_by as $divisor_oid)
+				$divisor += $results[$divisor_oid.$index];
+
+			$value = $divisor ? round($value / $divisor * 100, 2) : $value;
 		}
+		// divide value by fix number (e.g. to change the power(Potenz) of the value)
+		else if ($param->oid->unit_divisor && is_numeric($value))
+			$value /= $param->oid->unit_divisor;
 
-// if ($suboid->oid == '.1.3.6.1.2.1.10.127.1.1.1.1.2')
-// d(round(microtime(true) - $start, 2). 'sec', $form_fields);
-
-		return $form_fields;
+		return $value;
 	}
 
 
 	/**
 	 * Generate Form Field array as preparation for creating the html form fields from it
 	 *
-	 * @param ret 	Array 	Return Value from _snmp_value_set [0 => oid_id, 1 => 'oid_index']
+	 * @param Object 	OID
+	 * @param String 	index 	Last number of OID (with starting dot)
+	 * @param String|Int value
+	 * @param Bool 		table
 	 */
-	private function _get_formfield_array($oid, $ret, $value, $table = false)
+	private static function _get_formfield_array($oid, $index, $value, $table = false)
 	{
-		$id = $ret[0];
 		$options = null;
 
-		if ($table)
-		{
-			$index = '';
-			// TODO: Move to get_html_input ??
+		if ($table) {
 			$options['style'] = 'simple';
-			if (in_array($oid->type, ['i', 'u', 't']))
-				$options['style'] .= ";width: 85px";
-		}
-		else
-		{
-			$index   = $ret[1] == '.0' ? '' : $ret[1];
+			$options['style'] .= in_array($oid->type, ['i', 'u', 't']) ? ";width: 85px;" : '';
 		}
 
 		if ($oid->access == 'read-only')
-			$options[] =  'readonly';
+			$options[] = 'readonly';
+
+		// description of table is set only once for table head
+		$ext = $index == '.0' ? '' : $index;
+		$description = $table ? '' : ($oid->name_gui ? $oid->name_gui.$ext : $oid->name.$ext);
 
 		$field = array(
 			'form_type' 	=> $oid->html_type,
-			'name' 			=> 'field_'.$id,	 		// = SnmpValue->id - TODO: Check if string 'field_' is necessary in front
-			'description' 	=> $oid->name_gui ? $oid->name_gui.$index : $oid->name.$index,
-			'field_value' 	=> $oid->unit_divisor && is_numeric($value) ? $value / $oid->unit_divisor : $value,
+			'name' 			=> $oid->oid.$index,
+			'description' 	=> $description,
+			'field_value' 	=> $value,
 			'options' 		=> $options,
 			// 'help' 			=> $oid->description,
 			);
@@ -312,198 +332,9 @@ class SnmpController extends \BaseController{
 		if ($oid->html_type == 'select')
 			$field['value'] = $oid->get_select_values();
 
-// if ($oid->name_gui == 'Lower Pilot Modulation')
-// d($value, $field);
-
 		return $field;
 	}
 
-
-	/**
-	 * This implements the whole form fields data structure - see Confluence MVC Documentation
-	 *
-	 * @return 	Array 	Form Fields - Html only
-	 */
-	private static function _make_html_from_form_fields($form_fields)
-	{
-		$row = 1;
-		$col = 1;
-		$form_fields_html = ['list' => [], 'table' => [], 'frame' => ['linear' => [], 'tabular' => []]];
-
-		// Table
-		if (isset($form_fields['table']))
-		{
-			foreach ($form_fields['table'] as $key => $table)
-				$form_fields_html['table'][$key] = static::_make_html_snmp_table($table);
-		}
-
-		// List
-		if (isset($form_fields['list']))
-		{
-			foreach ($form_fields['list'] as $key => $field)
-				$form_fields_html['list'][$key] = BaseViewController::add_html_string(array($field))[0]['html'];
-		}
-
-		// Frame
-		if (isset($form_fields['frame']['linear']))
-		{
-			foreach ($form_fields['frame']['linear'] as $list)
-			{
-				foreach ($list as $key => $field)
-				{
-					$field = BaseViewController::add_html_string(array($field))[0]['html'];
-
-					$form_fields_html['frame']['linear'][$row][$col][] = $field;
-				}
-
-				$col++;
-				if ($col % 4 == 0)
-				{
-					$row++;
-					$col = 1;
-				}
-			}
-		}
-
-		if (isset($form_fields['frame']['tabular']))
-		{
-			foreach ($form_fields['frame']['tabular'] as $row => $rows)
-			{
-				foreach ($rows as $col => $cols)
-				{
-					foreach ($cols as $field)
-					{
-						$field = BaseViewController::add_html_string(array($field))[0]['html'];
-						$form_fields_html['frame']['tabular'][$row][$col][] = $field;
-					}
-				}
-			}
-		}
-
-		return $form_fields_html;
-	}
-
-
-	/**
-	 * Create HTML Table out of the list of prepared form fields for a Table
-	 *
-	 * @param 	Array 	List of form fields of a Table
-	 * @return 	String 	HTML Code of the Table
-	 *
-	 * TODO: standardise and move to BaseViewController!
-	 * @author 	Nino Ryschawy
-	 */
-	private static function _make_html_snmp_table($form_fields)
-	{
-		$s = '';
-		$head = true;
-		$third_dim = false;
-		$division = [];
-		$oids = $form_fields['options']['oids'];
-
-		// set 3rd Dimension link and prepare form field values dependent of other OIDs (percentParams)
-		if (isset($form_fields['options']['3rd_dim_link']))
-		{
-			$third_dim = true;
-			$options = $form_fields['options']['3rd_dim_link'];
-		}
-
-		if (isset($form_fields['options']['division']))
-			$division = $form_fields['options']['division'];
-
-		unset($form_fields['options']);
-
-
-		// Table head for tables without indices and with rows that dont have all oids - Attention - normal table head is built first in next foreach!
-		if (count($oids) != $form_fields[key($form_fields)])
-		{
-			$s .= '<table class="table controllingtable table-condensed table-bordered d-table" id="datatable">';
-			$s .= '<thead><tr>';
-			$s .= '<th style="padding: 4px">Index</th>';
-
-			foreach ($oids as $oid => $headline)
-			{
-				foreach ($form_fields as $index => $oid_indices)
-				{
-					if (isset($oid_indices[$oid]))
-					{
-						// $oids[$oid] = $oid_indices[$oid]['description'];
-						$s .= '<th style="padding: 4px">'.$oid_indices[$oid]['description'].'</th>';
-						break;
-					}
-				}
-			}
-
-			$s .= '</tr></thead><tbody>';
-			$head = false;
-		}
-
-		reset($form_fields);
-
-
-		foreach ($form_fields as $index => $oid_indices)
-		{
-			if ($head)
-			{
-				// Table head
-				$s .= '<table class="table table-condensed">';
-				$s .= '<thead><tr>';
-				$s .= '<th>Index</th>';
-
-				foreach ($oid_indices as $oid => $field)
-					$s .= '<th style="padding: 4px">'.$field['description'].'</th>';
-
-				$s .= '<tr></thead><tbody>';
-
-				$head = false;
-				reset($oid_indices);
-			}
-
-			// Table body
-			$route_index = str_replace('.', '', $index);
-			$index_gui = $third_dim ? '<a href="'.route('NetElement.controlling_edit', [$options['netelement_id'], $options['param_id'], $route_index]).'">'.$route_index : $route_index;
-			$s .= '<tr><td>'.$index_gui.'</td>';
-
-			// deprecated - this doesn't add empty table data fields - so row elements could be differently shifted through columns
-			// foreach ($oid_indices as $oid => $field)
-			// {
-			// 	// make field value percentual if wished
-			// 	if (isset($division[$oid]))
-			// 	{
-			// 		$divisor = 0;
-			// 		foreach ($division[$oid] as $divisor_oid)
-			// 			$divisor += $form_fields[$index][$divisor_oid]['field_value'];
-
-			// 		$field['field_value'] = $divisor ? round($field['field_value'] / $divisor * 100, 2) : 0;
-			// 	}
-
-			// 	$s .= '<td style="padding: 2px">'.BaseViewController::get_html_input($field).'</td>';
-			// }
-
-			// go from col to col and check if form_field exists -> if not: insert empty table data field
-			foreach ($oids as $oid => $heading)
-			{
-				// make field value percentual if wished
-				if (isset($division[$oid]) && isset($oid_indices[$oid]))
-				{
-					$divisor = 0;
-					foreach ($division[$oid] as $divisor_oid)
-						$divisor += $form_fields[$index][$divisor_oid]['field_value'];
-
-					$oid_indices[$oid]['field_value'] = $divisor ? round($oid_indices[$oid]['field_value'] / $divisor * 100, 2) : 0;
-				}
-
-				$s.= isset($oid_indices[$oid]) ? '<td style="padding: 4px">'.BaseViewController::get_html_input($oid_indices[$oid]).'</td>' : '<td></td>';
-			}
-
-			$s .= '</tr>';
-		}
-
-		// end table
-		$s .= '</tbody></table>';
-
-		return $s;
-	}
 
 	/**
 	 * The SNMP Walk Function
@@ -513,18 +344,17 @@ class SnmpController extends \BaseController{
 	 *
 	 * NOTE: snmp2 is minimum 20 times faster for several snmpwalks
 	 *
-	 * @param 	oid the OID Object
-	 * @return 	array of snmpwalk over oid in format [SnmpValue object id, snmp value]
+	 * @param 	String 	SNMP Object Identifier
+	 * @return 	Array 	of snmpwalk over oid in format [SnmpValue object id, snmp value]
 	 *
 	 * @author Torsten Schmidt, Nino Ryschawy
 	 */
 	public function snmp_walk ($oid, $indices = [])
 	{
 		$community = $this->_get_community();
-		// $start = microtime(true);
 
 		// Log
-		Log::debug('snmpwalk '.$this->device->ip.' '.$oid->oid);
+		Log::debug('snmpwalk '.$this->device->ip.' '.$oid);
 
 		if ($indices)
 		{
@@ -533,23 +363,22 @@ class SnmpController extends \BaseController{
 				snmp2_get($this->device->ip, $community, '1.3.6.1.2.1.1.1', $this->timeout, $this->retry);
 
 				foreach ($indices as $index)
-					$results[$oid->oid.'.'.$index] = snmp2_get($this->device->ip, $community, $oid->oid.'.'.$index, $this->timeout, $this->retry);
+					$results[$oid.'.'.$index] = snmp2_get($this->device->ip, $community, $oid.'.'.$index, $this->timeout, $this->retry);
 			}
 			catch (\Exception $e) {
 				foreach ($indices as $index)
-					$results[$oid->oid.'.'.$index] = snmpget($this->device->ip, $community, $oid->oid.'.'.$index, $this->timeout, $this->retry);
+					$results[$oid.'.'.$index] = snmpget($this->device->ip, $community, $oid.'.'.$index, $this->timeout, $this->retry);
 			}
 		}
 		else
 		{
 			try {
-				$results = snmp2_real_walk($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
+				$results = snmp2_real_walk($this->device->ip, $community, $oid, $this->timeout, $this->retry);
 			} catch (\Exception $e) {
-				$results = snmpwalk($this->device->ip, $community, $oid->oid, $this->timeout, $this->retry);
+				$results = snmpwalk($this->device->ip, $community, $oid, $this->timeout, $this->retry);
 			}
 		}
 
-		// d(round(microtime(true) - $start, 3), $results, $indices);
 		return $results;
 	}
 
@@ -557,7 +386,7 @@ class SnmpController extends \BaseController{
 	/**
 	 * SNMP Walk over a Table OID Parameter - Can also be a walk over all it's SubOIDs
 	 *
-	 * @param 	param 	table Object ID
+	 * @param 	param 	Table Object ID
 	 * @return 	Array	[values => [index => [oid => value]], [diff-OIDs]]
 	 *
 	 * @author 	Nino Ryschawy
@@ -565,71 +394,35 @@ class SnmpController extends \BaseController{
 	public function snmp_table($param, $indices)
 	{
 		$oid = $param->oid;
-		$start = microtime(true);
 		$results = $res = $diff_param = $divisions = [];
-		$param_selection = $param->children();
+		$relation = $param->children()
+			->where('third_dimension', '=', $this->index ? 1 : 0)
+			->with('oid')
+			->join('oid as o', 'o.id', '=', 'parameter.oid_id')
+			->select('parameter.*', 'o.oid as oidoid')
+			->orderBy('third_dimension')->orderBy('html_id')->orderBy('parameter.id')->get();
+
+		$param->setRelation('children', $relation);
 
 		// exact defined table via SubOIDs
-		if ($param_selection)
+		if ($param->children)
 		{
-			foreach ($param_selection as $param)
-			{
-				if ($param->third_dimension && !$this->index)
-					continue;
-
-				/* TODO: check with first walk how many indices exist, if this is approximately 3 or 4 (check performance!) times larger than
-					the indices list then only get oid.index for each index
-					Note: snmpwalk -CE ends on this OID - makes it much faster
-					*/
+			foreach ($param->children as $param) {
+				// Note: snmpwalk -CE ends on this OID - makes it much faster
 				// exec('snmpwalk -v2c -CE 1.3.6.1.2.1.10.127.1.1.1.1.3.6725 -c'.$this->_get_community().' '.$this->device->ip.' '.$oid->oid, $results);
-				$oid = $param->oid;
-				$results += $this->snmp_walk($oid, $indices);
-
-				// add diff flag if it's a diff param
-				if ($param->diff_param)
-					$diff_param[$oid->oid] = true;
-
-				// add divide by option for table elements
-				if ($param->divide_by)
-					$divisions[$oid->oid] = \Acme\php\ArrayHelper::str_to_array($param->divide_by);
+				$results += $this->snmp_walk($param->oid->oid, $indices);
 			}
 		}
 		// standard table OID (all suboids(columns) and elements (rows))
-		else
-		{
+		else {
 			Log::debug('snmp2_real_walk (table) '.$this->device->ip.' '.$oid->oid);
 			$results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->oid);
-			// $results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->mibfile->name.'::'.$oid->name);
-			// $results = snmp2_real_walk($this->device->ip, $this->_get_community(), "DOCS-IF-MIB::docsIfUpstreamChannelTable");
-			// exec('snmptable -v2c -Ci -c'.$this->_get_community().' '.$this->device->ip.' '.escapeshellarg($oid->mibfile->name.'::'.$oid->name), $results);
 		}
 
 		if (!$results)
 			Log::error('No Results for SnmpWalk over OID: '.$oid->oid); // Possible Reasons: wrong defined indices, device does not support oid
 
-
-		// order by suboid for faster snmpvalue saving (still very slow)
-		foreach ($results as $oid_index => $value)
-		{
-			$index = strrchr($oid_index, '.');
-			$oid_s = substr($oid_index, 0, strlen($oid_index) - strlen($index));
-			// $index = substr($index, 1);
-
-			// Exclude unwished indices - this is a workaround for the unimproved snmpwalk over all indices
-			// we filter them temporarily here - TODO: Improve performance via better snmpwalk
-			if (!$param_selection)
-			{
-				if ($indices && !in_array($index, $indices))
-					continue;
-			}
-
-			$res[$oid_s][$index] = $value;
-		}
-
-// if ($param->parent_id == 238)
-// d(round(microtime(true) - $start, 3), $oid, $results, $param);
-
-		return [$res, $diff_param, $divisions];
+		return $results;
 	}
 
 
@@ -902,27 +695,5 @@ class SnmpController extends \BaseController{
 
 		throw $e;
 	}
-
-
-	// private function _multi_update_values()
-	// {
-
-	// 	/* NOTES: SQL Changes for multiple primary keys:
-	// 		ALTER TABLE snmpvalue DROP PRIMARY KEY, ADD PRIMARY KEY(netelement_id, oid_id, oid_index);
-	// 	 */
-
-	// 	$data = array(
-	// 		['netelement_id' => 28,
-	// 		'oid_id' 		=> 760,
-	// 		'value' 		=> 12,
-	// 		'oid_index' 	=> '.0'],
-	// 		['netelement_id' => 28,
-	// 		'oid_id' 		=> 757,
-	// 		'value' 		=> -100,
-	// 		'oid_index' 	=> '.0'],
-	// 		);
-
-	// 	\DB::raw('insert into snmpvalue (netelement_id, oid_id, oid_index, value) VALUES (28, 760, 11, \'.0\'), (28, 757, -10, \'.0\') on duplicate key update value=VALUES(value)');
-	// }
 
 }

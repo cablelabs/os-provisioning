@@ -14,6 +14,8 @@ class NetElement extends \BaseModel {
 	public $kml_path = 'app/data/hfcbase/kml_static';
 	private $max_parents = 25;
 
+	public $snmpvalues = ['attributes' => [], 'original' => []];
+
 	// Add your validation rules here
 	public static function rules($id = null)
 	{

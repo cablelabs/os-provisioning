@@ -35,40 +35,80 @@
 			@DivClose()
 		@endif
 
+
 		{{-- LIST --}}
+		@if ($form_fields['list'])
+		<div class="col-md-12 row" style="padding-right: 0px;"><div class="col-md-12 well row">
 		@foreach ($form_fields['list'] as $field)
+			<div class="col-md-6">
 			{{ $field }}
+			</div>
 		@endforeach
+		</div></div>
+		@endif
+
 
 		{{-- FRAMES --}}
-		@foreach ($form_fields['frame'] as $order)
-			@foreach ($order as $row)
+		@if ($form_fields['frame']['linear'])
+			<?php
+				switch (count($form_fields['frame']['linear'])) {
+					case 1:
+						$col_width = 12; break;
+					case 2:
+					case 4:
+						$col_width = 6; break;
+					default:
+						$col_width = 4; break;
+				}
+			?>
+			<div class="col-md-12 row" style="padding-right: 0px;">
+			@foreach ($form_fields['frame']['linear'] as $frame)
+				<div class="col-md-{{$col_width}} well">
+					@foreach ($frame as $field)
+						{{ $field }}
+					@endforeach
+				</div>
+			@endforeach
+			</div>
+		@endif
 
-				<div class="col-md-12 row" style="padding-right: 0px;">
+		@foreach ($form_fields['frame']['tabular'] as $row)
+			<div class="col-md-12 row" style="padding-right: 0px;">
+				<?php $col_width = (int) (12 / count($row)) ?>
 				@foreach ($row as $col)
-
-					<?php
-						$col_width = (int) (12 / count($row));
-					?>
-
 					<div class="col-md-{{$col_width}} well">
-
 						@foreach ($col as $field)
 							{{ $field }}
 						@endforeach
-
 					</div>
-
 				@endforeach
-				</div>
-
-			@endforeach
+			</div>
 		@endforeach
 
-		{{-- TABLE --}}
+
+		{{-- TABLES --}}
 		@foreach ($form_fields['table'] as $table)
-			{{ $table }}
+			<table class="table controllingtable table-condensed table-bordered d-table" id="datatable">
+				<thead>
+						<th style="padding: 4px"> Index </th>
+					@foreach ($table['head'] as $oid => $head)
+						<th align="center" style="padding: 4px">{{$head}}</th>
+					@endforeach
+				</thead>
+				<tbody>
+					@foreach ($table['body'] as $index => $row)
+						<tr>
+							<?php $index = str_replace('.', '', $index) ?>
+							<td> {{ isset($table['3rd_dim']) ? HTML::linkRoute('NetElement.controlling_edit', $index, [$table['3rd_dim']['netelement_id'], $table['3rd_dim']['param_id'], $index]) : $index }} </td>
+							@foreach ($row as $col)
+								<td align="center" style="padding: 4px"> {{ $col }} </td>
+							@endforeach
+						</tr>
+					@endforeach
+				</tbody>
+			</table>
 		@endforeach
+
 
 	{{-- Save Button --}}
 	<div class="d-flex justify-content-center">
@@ -77,7 +117,7 @@
 
 	{{ Form::close() }}
 
-	{{-- java script--}}
+	{{-- java script --}}
 	@include('Generic.form-js')
 
 
@@ -85,7 +125,6 @@
 
 @section('javascript_extra')
 {{-- JS DATATABLE CONFIG --}}
-<!-- Hallo Tada - das ist der Test ob das ganze überhaupt ankommt-->
 <script language="javascript">
 	var table = $('table.controllingtable').DataTable(
 		{
