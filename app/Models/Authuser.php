@@ -88,6 +88,7 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 		// return $this->_meta()->where('type', 'LIKE', 'role')->orderBy('id')->get();
 	}
 
+
 	/**
 	 * Get all model information related to a given roll
 	 *
@@ -184,31 +185,6 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 	}
 
 
-	/**
-	 * Create a user and add meta entities
-	 *
-	 * @author Patrick Reichel
-	 *
-	 * @param $metagroups array with meta entities a user should get
-	 */
-	public function makeUser($metagroups) {
-
-		// TODO: Check if create right for users is set!
-
-		$groups = array_fetch(Authrole::all()->toArray(), 'name');
-		$usergroups = array();
-
-		// check if given metagroups exist in database
-		// apply group to user
-		foreach ($metagroups as $metagroup) {
-			if (array_search($metagroup, $groups) !== False) {
-				array_push($usergroups, $this->getIdInArray($groups, $metagroup));
-			}
-		}
-
-		$this->_meta()->attach($usergroups);
-
-	}
 
 	/**
 	 * BOOT:
@@ -233,12 +209,7 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
 	{
 		$super_user_role_id = 1;
 
-		foreach ($this->roles as $role) {
-			if ($role->id == $super_user_role_id)
-				return true;
-		}
-
-		return false;
+		return $this->roles->contains('id', $super_user_role_id);
 	}
 
 	/**
