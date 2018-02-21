@@ -386,7 +386,7 @@ class Cmts extends \BaseModel {
 			goto _exit;
 		}
 
-		File::put($file, 'shared-network "'.$this->id.'"'."\n".'{'."\n");
+		File::put($file, 'shared-network "'.$this->hostname.'"'."\n".'{'."\n");
 
 		foreach ($ippools as $pool) {
 
