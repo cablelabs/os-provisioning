@@ -16,6 +16,7 @@ return [
 	'BillingBase_cdr_offset' 		=> "TAKE CARE: incrementing this when having data from settlement runs leads to overwritten CDRs during next run - make sure to save/rename the history!\n\nExample: Set to 1 if Call Data Records from June belong to Invoices of July, Zero if it's the same month, 2 if CDRs of January belong to Invoices of March.",
 	'BillingBase_cdr_retention' 	=> 'Months that Call Data Records may/have to be kept save',
 	'BillingBase_extra_charge' 		=> 'Additional mark-on to purchase price. Only when not calculated through provider!',
+	'BillingBase_fluid_dates' 		=> 'Check this box if you want to add tariffs with uncertain start and/or end date. If checked two new checkboxes (Valid from fixed, Valid to fixed) will appear on Item\'s edit/create page. Check out their help messages for further explanation!',
 	'BillingBase_InvoiceNrStart' 	=> 'Invoice Number Counter starts every new year with this number',
 	'BillingBase_ItemTermination'	=> 'Allow Customers only to terminate booked products on last day of month',
 	'BillingBase_MandateRef'		=> "A Template can be built with sql columns of contract or mandate table - possible fields: \n",
@@ -32,8 +33,8 @@ return [
 	//ItemController
 	'Item_ProductId'				=> 'All fields besides Billing Cycle have to be cleared before a type change! Otherwise items can not be saved in most cases',
 	'Item_ValidFrom'				=> 'For One Time Payments the fields can be used to split payment - Only YYYY-MM is considered then!',
-	'Item_ValidFromFixed'			=> 'Fixed dates are used for billing and not updated by external orders',
-	'Item_ValidToFixed'				=> 'Fixed dates are used for billing and not updated by external orders',
+	'Item_ValidFromFixed'			=> 'Checked by default! Uncheck if the valid from date is uncertain. If unchecked and the valid from date is reached the date will be incremented every day by one day - the tariff will not start and not be charged until the checkbox is checked again. The date is not updated by external orders (e.g. from telephony provider).',
+	'Item_ValidToFixed'				=> 'Checked by default! Uncheck if the valid to date is uncertain. If unchecked and the valid to date is reached the date will be incremented every day by one day - the tariff will not end and will be charged until the date is fixed by the checked box. The date is not updated by external orders (e.g. from telephony provider).',
 	'Item_CreditAmount'				=> 'Net Amount to be credited to Customer. Take Care: a negative amount becomes a debit!',
 
 	//ProductController

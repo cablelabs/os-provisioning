@@ -16,6 +16,7 @@ return [
 	'BillingBase_extra_charge' 		=> 'Aufschlag auf Einkaufspreis in %. Nur wenn nicht schon vom Provider berechnet!',
 	'BillingBase_cdr_retention' 	=> 'Anzahl der Monate, die Einzelverbindungsnachweise gespeichert werden dürfen/müssen.',
 	'BillingBase_cdr_offset' 		=> "ACHTUNG: Eine Erhöhung der Differenz führt bei bereits vorhandenen Daten im nächsten Abrechnungslauf zu überschriebenen EVNs - Stellen Sie sicher, dass diese gesichert/umbenannt wurden!\n\n1 - wenn die Einzelverbindungsnachweise vom Juni zu den Rechnungen vom Juli gehören; 0 - wenn beide für den selben Monat abgerechnet werden; 2 - wenn die Einzelverbindungsnachweise vom Januar zu den Rechnungen vom März gehören.",
+	'BillingBase_fluid_dates' 		=> 'Aktivieren Sie diese Checkbox wenn Sie Tarife mit ungewissem Start- und/oder Enddatum eintragen möchten. In dem Fall werden 2 weitere Checkboxen (Gültig ab fest, Gültig bis fest) auf der Posten-Seite angezeigt. Weitere Erklärungen finden Sie neben diesen Feldern!',
 	'BillingBase_InvoiceNrStart' 	=> 'Rechnungsnummer startet jedes neue Jahr mit dieser Nummer.',
 	'BillingBase_ItemTermination'	=> 'Erlaubt es Kunden gebuchte Produkte nur bis zum letzten Tag des Monats zu kündigen.',
 	'BillingBase_MandateRef'		=> "Eine Vorlage kann mit SQL-Spalten des Auftrags oder mit der Mandat-Tabelle erstellt werden - mögliche Felder: \n",
@@ -32,8 +33,8 @@ return [
 	//ItemController
 	'Item_ProductId'				=> 'Alle Felder außer dem Abrechnungszyklus müssen vor eine Änderung des Produkts gelöscht werde! Andernfalls können die Produkte in den meisten Fällen nicht gespeichert werden.',
 	'Item_ValidFrom'				=> 'Für einmalige (Zusatz-)Zahlungen kann das Feld genutzt werden, um die Zahlung zu teilen - nur  Jahr und Monat (jjjj.mm) werden berücksichtigt.',
-	'Item_ValidFromFixed'			=> 'Feste Termine werden für die Abrechnung verwendet und werden nicht durch externe Aufträge aktualisiert.',
-	'Item_ValidToFixed'				=> 'Feste Termine werden für die Abrechnung verwendet und werden nicht durch externe Aufträge aktualisiert.',
+	'Item_ValidFromFixed'			=> 'Dieses Feld ist standardmäßig gesetzt! Deaktivieren Sie diese Checkbox, wenn das Gültig ab - Datum ungewiss ist. In dem Fall wird bei Erreichen des Datums dieses jeden Tag erneut auf den darauffolgenden Tag gesetzt. Der Tarif startet damit nicht und wird auch nicht abgerechnet bis die Checkbox wieder aktiviert wird. Feste Termine werden nicht durch externe Aufträge (z.B. vom Telefonie-Provider) aktualisiert.',
+	'Item_ValidToFixed'				=> 'Dieses Feld ist standardmäßig gesetzt! Deaktivieren Sie diese Checkbox, wenn das Gültig bis - Datum ungewiss ist. In dem Fall wird bei Erreichen des Datums dieses jeden Tag erneut auf den darauffolgenden Tag gesetzt. Der Tarif endet damit nicht und wird weiterhin abgerechnet bis die Checkbox wieder aktiviert wird. Feste Termine werden nicht durch externe Aufträge (z.B. vom Telefonie-Provider) aktualisiert.',
 	'Item_CreditAmount'				=> 'Nettobetrag, der dem Kunde gutgeschrieben werden soll. Achtung: Ein negativer Betrag wird dem Kunde abgezogen!',
 
 	//ProductController

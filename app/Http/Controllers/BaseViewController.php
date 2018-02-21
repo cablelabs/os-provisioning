@@ -277,7 +277,8 @@ class BaseViewController extends Controller {
 					$hidden == 1) // hide globally?
 				)
 					{
-						$s .= \Form::hidden ($field["name"], $field['field_value']);
+						$value = ($field['field_value'] === null) && isset($field['value']) ? $field['value'] : $field['field_value'];
+						$s .= \Form::hidden ($field["name"], $value);
 						goto finish;
 					}
 			}
