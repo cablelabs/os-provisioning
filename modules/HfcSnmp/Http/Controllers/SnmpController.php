@@ -103,39 +103,28 @@ class SnmpController extends \BaseController{
 	/**
 	 * Controlling Update Function
 	 *
-	 * @param id the NetElement id
-	 * @author Torsten Schmidt
+	 * @param Integer id the NetElement id
+	 * @param Integer param_id, index 	just for Redirect
+	 *
+	 * @author Torsten Schmidt, Nino Ryschawy
 	 */
 	public function controlling_update($id, $param_id = 0, $index = 0)
 	{
 		// Init SnmpController
 		$netelem = NetElement::findOrFail($id);
-		$snmp = new SnmpController;
-		$snmp->init ($netelem);
+		$this->init ($netelem, $index);
 
 		// TODO: validation
 		// Transfer Settings via SNMP to Device
-		$data = \Request::all();
-		$snmp->snmp_set_all($data);
+		$this->snmp_set_all(\Request::all());
 
-		// Build Error Message in case OIDs could not be set
-		if ($snmp->set_errors)
-		{
-			$msg = 'The following Parameters could not be Set: ';
+		$msg = 'Updated!';
+		$msg_color = 'blue';
+
+		// Set Error Message in case some OIDs could not be set
+		if ($this->set_errors) {
+			$msg = 'The following Parameters could not be Set: '.implode(', ', $this->set_errors).'!';
 			$msg_color = 'red';
-
-			foreach ($snmp->set_errors as $k => $oid)
-			{
-				$msg .= $k ? ', ' : '';
-				$msg .= $oid->name_gui ? : $oid->name;
-			}
-
-			$msg .= '!';
-		}
-		else
-		{
-			$msg = 'Updated!';
-			$msg_color = 'blue';
 		}
 
 		return \Redirect::route('NetElement.controlling_edit', [$id, $param_id, $index])->with('message', $msg)->with('message_color', $msg_color);
@@ -157,8 +146,7 @@ class SnmpController extends \BaseController{
 		$table_id = 0;
 
 		// Get stored Snmpvalues
-		$dir_path_rel = "data/hfc/snmpvalues/".$this->device->id;
-		$old_vals = \Storage::exists($dir_path_rel) ? json_decode(\Storage::get($dir_path_rel)) : [];
+		$old_vals = $this->_values();
 
 		// TODO: if device not reachable take already saved SnmpValues from Database but show a hint - check via snmpget !?
 		if (!$this->device->ip)
@@ -253,9 +241,25 @@ class SnmpController extends \BaseController{
 		} // end foreach
 
 		// store snmp values
-		\Storage::put($dir_path_rel, json_encode($values_to_store));
+		$this->_values($values_to_store);
 
 		return $ordered ? $results_tot : json_encode($results_tot);
+	}
+
+
+	/**
+	 * Store values or get stored values
+	 *
+	 * @param Array  if oid-to-value array is set these values are stored
+	 */
+	private function _values($array = null)
+	{
+		$dir_path_rel = "data/hfc/snmpvalues/".$this->device->id;
+
+		if ($array)
+			\Storage::put($dir_path_rel, json_encode($array));
+		else
+			return \Storage::exists($dir_path_rel) ? json_decode(\Storage::get($dir_path_rel)) : [];
 	}
 
 
@@ -339,13 +343,10 @@ class SnmpController extends \BaseController{
 	/**
 	 * The SNMP Walk Function
 	 *
-	 * make a snmpwalk over the entire $oid->oid
-	 * and create/update related SnmpValue Objects
-	 *
 	 * NOTE: snmp2 is minimum 20 times faster for several snmpwalks
 	 *
 	 * @param 	String 	SNMP Object Identifier
-	 * @return 	Array 	of snmpwalk over oid in format [SnmpValue object id, snmp value]
+	 * @return 	Array 	SNMP values in form: [OID => value]
 	 *
 	 * @author Torsten Schmidt, Nino Ryschawy
 	 */
@@ -427,121 +428,80 @@ class SnmpController extends \BaseController{
 
 
 	/**
-	 * Create or Update SnmpValue Object which corresponds
-	 * to $oid and $this->device with $value
+	 * Update all changed SNMP Values
 	 *
-	 * @param 	oid 	Object 		the OID Object
-	 * @param 	value 	String 		from snmpget command for this oid object
-	 * @param 	index 	String 		OID Index if already known (from table)
-	 * @return 	Array 	[SnmpValue_id, 		// as reference in view - for snmp set
-	 *					 OID-Index, 		// in case a walk over oid produces multiple results indexed by this
-	 *					 Value-before] 		// Last Value for Difference Calculation
+	 * @param Array data 	the HTML POST data array in form: [<oid> => <value>]
 	 *
-	 * @author Torsten Schmidt, Nino Ryschawy
-	 */
-	private function _snmp_value_set ($oid, $value, $index = '')
-	{
-		// $obj = SnmpValue::updateOrCreate($data); 		// doesnt work as is
-
-		$data = array(
-			'netelement_id' => $this->device->id,
-			'oid_id' 		=> $oid->id,
-			'value' 		=> $value,
-			'oid_index' 	=> $index ? : str_replace($oid->oid, '', $oid->res_oid),
-			);
-
-		$obj = SnmpValue::where('netelement_id', '=', $this->device->id)->where('oid_id', '=', $oid->id)->where('oid_index', '=', $data['oid_index'])->get()->first();
-		// $obj = $snmpvalues->where('oid_id', $oid->id)->where('oid_index', (string) $data['oid_index'])->first();
-
-		if ($obj)
-		{
-			$last_val = $obj->value;
-			// always update to get the latest timestamp ??
-			// $data['updated_at'] = \Carbon\Carbon::now(\Config::get('app.timezone'));
-			// Note: update method needs id to update correct element
-			$obj->update($data);
-
-			return [$obj->id, $data['oid_index'], $last_val];
-		}
-
-		return [SnmpValue::create($data)->id, $data['oid_index'], null];
-	}
-
-
-	/**
-	 * Create or Update SnmpValue Object which corresponds
-	 * to $oid and $this->device with $value
-	 *
-	 * @param string encoded array like "3:qam64;4:qam256"
-	 * @return encoded array of string like [3]=>"qam64", [4]=>"qam256"
-	 * @author Torsten Schmidt
-	 */
-	private function string_to_array ($s)
-	{
-		$ret = array();
-		foreach (explode (';', $s) as $line)
-			$ret[explode(':', $line)[0]] = explode(':', $line)[1];
-		return $ret;
-	}
-
-	/**
-	 * Return the Community String for Read-Only or Read-Write Access
-	 *
-	 * @param 	access 	String 	'ro' or 'rw'
-	 * @author 	Nino Ryschawy
-	 */
-	private function _get_community($access = 'ro')
-	{
-		return $this->device->{'community_'.$access} ? : \Modules\ProvBase\Entities\ProvBase::get([$access.'_community'])->first()->{$access.'_community'};
-	}
-
-
-	/**
-	 * Perform a SNMP set of all SNMP Values for this Controller
-	 *
-	 * @param 	data 	the HTML data array in form: ['field_<SnmpValue ID>' => <value>]
-	 * @return 	form_fields array for generic edit view function
-	 *
-	 * @author Torsten Schmidt
+	 * @author Nino Ryschawy
 	 */
 	public function snmp_set_all($data)
 	{
-		$eager_loading_model = new OID;
-		$snmpvalues = SnmpValue::where('netelement_id', '=', $this->device->id)->with($eager_loading_model->table)->get();
+		// Get stored Snmpvalues
+		$old_vals = $this->_values();
+
+		if (!$old_vals)
+			throw new Exception("Error: Stored SNMP Values were deleted!");
+
+		$oids = new \Illuminate\Database\Eloquent\Collection();
+		$oid_o = null;
 		$pre_conf = $this->device->netelementtype->pre_conf_value ? true : false; 			// true - has to be done
-		foreach ($data as $field => $value)
+
+		foreach ($data as $full_oid => $value)
 		{
-			$arr = explode('_', $field);
-
-			if ($arr[0] != 'field')
+			// Discard everything that is not an snmp value field (method, token, ...)
+			if ($full_oid[1] != '1')
 				continue;
 
-			// explode data & write to Database
-			$id  = $arr[1];
-			$snmp_val = $snmpvalues->find($id);
+			// All dots of input variables are automatically replaced by PHP - See: https://stackoverflow.com/questions/68651/get-php-to-stop-replacing-characters-in-get-or-post-arrays
+			// There is a workaround for $_POST (file_get_contents("php://input")) and $_GET ($_SERVER['QUERY_STRING']), but not very nice
+			// So we have to replace all underscores by dots again
+			$full_oid = str_replace('_', '.', $full_oid);
 
-			// In GUI the value was divided by divisor - multiplicate back now for value comparison
-			if ($snmp_val->oid->unit_divisor)
-				$value *= $snmp_val->oid->unit_divisor;
+			// Null value can actually only happen, when someone deleted storage json file manually between last get and the save
+			$old_val = isset($old_vals->{$full_oid}) ? $old_vals->{$full_oid} : null;
 
-			// Set Value of Parameter in Database & Device only if it was changed in GUI
-			if ($snmp_val->value == $value)
+			if ($value == $old_val)
 				continue;
+
+			// GET OID to check if shown value was divided by unit_divisor (for the view)
+			$index = strrchr($full_oid, '.'); 									// row in table
+			$oid   = substr($full_oid, 0, strlen($full_oid) - strlen($index)); 	// column in table
+
+			if (!$oid_o || $oid_o->oid != $oid)
+			{
+				// GET OID from database only once
+				if ($oids->contains('oid', $oid))
+					$oid_o = $oids->where('oid', $oid)->first();
+				else {
+					$oid_o = OID::where('oid', '=', $oid)->first();
+					$oids->add($oid_o);
+				}
+			}
+
+			if ($oid_o->access == 'read-only')
+				continue;
+
+			if ($oid_o->unit_divisor)
+				$value *= $oid_o->unit_divisor;
 
 			// Do preconfiguration only once if necessary
-			if ($pre_conf)
-			{
+			if ($pre_conf) {
 				$conf_val = $this->_configure();
 				$pre_conf = false;
 			}
 
-			$snmp_val->observer_enabled = true;			// enable observer for GuiLogs when a value is manually set
-			$snmp_val->value = $value;
-			$snmp_val->save();
+			// Set Value
+			$ret = $this->snmp_set($full_oid, $oid_o->type, $value);
 
-			// Set Value in Device via SNMP
-			$this->snmp_set($snmp_val);
+			// only update on success
+			if ($ret)
+				$old_vals->{$oid} = $value;
+			else
+				$this->set_errors[] = $oid_o->name_gui ? : $oid_o->name;
 		}
+
+		// Store values
+		$this->_values($old_vals);
 
 		// Do postconfig if preconfig was done
 		if (isset($conf_val))
@@ -595,52 +555,47 @@ class SnmpController extends \BaseController{
 
 		\Log::debug('Postconfigured Device for snmpset', [$this->device->name, $this->device->id]);
 
-
 		return null;
 	}
 
 
-
 	/**
-	 * The SNMP Set Function
+	 * Push a SNMP value to the device
 	 *
-	 * snmpset the $snmpvalue object with $snmpvalue->value
+	 * @param Object oid
+	 * @param String|Integer value
+	 * @return true on success, otherwise false
 	 *
-	 * Note: performs snmpsetdiff
-	 *
-	 * @param snmpvalue the SnmpValue Object
-	 * @return true if success, otherwise false
-	 *
-	 * @author Torsten Schmidt
+	 * @author Torsten Schmidt, Nino Ryschawy
 	 */
-	public function snmp_set ($snmpvalue)
+	public function snmp_set ($oid, $type, $value)
 	{
-		$community  = $this->_get_community();
-		$oid 		= $snmpvalue->oid;
-		$index 		= $snmpvalue->oid_index ? : '.0';
-
-		// $ret = snmpget($this->device->ip, $community, $oid->oid.$index, $this->timeout, $this->retry);
-
+		$community  = $this->_get_community('rw');
 
 		// catch all OIDs that could not be set to print later in error message
 		try {
-			$val = snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.$index, $oid->type, $snmpvalue->value, $this->timeout, $this->retry);
+			// NOTE: snmp2_set is also available
+			$ret = snmpset($this->device->ip, $community, $oid, $type, $value, $this->timeout, $this->retry);
 		} catch (\ErrorException $e) {
-// d($e, $this->device->ip, $this->_get_community('rw'), $oid->oid.$index, $oid->type, $snmpvalue->value);
-			$this->set_errors[] = $oid;
-			Log::error('snmpset failed with msg: '.$e->getMessage(), [$this->device->ip, $community, $oid->type, $snmpvalue->value]);
-			return null;
+			Log::error('snmpset failed with msg: '.$e->getMessage(), [$this->device->ip, $community, $type, $value]);
+			return false;
 		}
 
-		Log::debug('snmp: set diff '.$this->device->ip.' '.$community.' '.$oid->oid.$index.' '.$snmpvalue->value.' '.$oid->type.' '.$val);
+		Log::debug('snmpset '.$this->device->ip.' '.$community.' '.$oid.' '.$value.' '.$type, [$ret]);
 
-		if ($val === FALSE)
-			return FALSE;
+		return $ret;
+	}
 
-		if ($val == $snmpvalue->value)
-			return TRUE;
 
-		return $val;
+	/**
+	 * Return the Community String for Read-Only or Read-Write Access
+	 *
+	 * @param 	access 	String 	'ro' or 'rw'
+	 * @author 	Nino Ryschawy
+	 */
+	private function _get_community($access = 'ro')
+	{
+		return $this->device->{'community_'.$access} ? : \Modules\ProvBase\Entities\ProvBase::get([$access.'_community'])->first()->{$access.'_community'};
 	}
 
 
