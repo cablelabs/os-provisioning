@@ -28,6 +28,7 @@ return [
 	'envia_no_interaction' 	=> 'No Envia Orders require Interaction',
 	'envia_interaction'	 	=> 'Envia Order requires Interaction|Envia Orders require Interaction',
 	'home' 					=> 'Startseite',
+	'indices_unassigned' 	=> 'Some of the assigned Indices could not be assigned to a corresponding parameter! They are actually just not used. You can delete them or keep them for later. Just compare the list of parameters of the netelementtype with the list of indices here.',
 	'item_credit_amount_negative' => 'A negative credit amount becomes a debit! Are you sure that the customer shall be charged?',
 	'invoice' 				=> 'Invoice',
 	'Invoices'				=> 'Invoices',

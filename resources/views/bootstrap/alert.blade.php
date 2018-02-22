@@ -8,7 +8,7 @@
 				<h4 class="modal-title">{{ trans('messages.alert') }}</h4>
 			</div>
 			<div class="modal-body">
-				<div class="alert alert-danger m-b-0">
+				<div class="alert alert-{{$color}} m-b-0">
 					<h4><i class="fa fa-info-circle"></i>{{ $message }}</h4>
 					<p></p>
 				</div>

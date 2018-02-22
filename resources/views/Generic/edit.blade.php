@@ -23,6 +23,7 @@
 	<?php
 		$blade_type = 'relations';
 	?>
+
 	@include('Generic.above_infos')
 	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'EditForm')) }}
 
@@ -93,11 +94,14 @@
 	@endforeach
 	</div>
 
-	{{-- Alert --}}
-	@if (Session::has('alert'))
-		@include('bootstrap.alert', array('message' => Session::get('alert')))
-		<?php Session::forget('alert'); ?>
-	@endif
+	{{-- Alert / Info --}}
+	@foreach (['alert', 'info'] as $notif)
+		@if (Session::has($notif))
+			@include('bootstrap.alert', array('message' => Session::get($notif), 'color' => $notif == 'alert' ? 'danger' : $notif))
+			<?php Session::forget($notif); ?>
+		@endif
+	@endforeach
+
 @endif
 @stop
 

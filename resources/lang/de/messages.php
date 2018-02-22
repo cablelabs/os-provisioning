@@ -344,6 +344,8 @@ return [
 //
 // HFC
 //
+	'indices_unassigned' 	=> 'Einer/Einige der zugewiesenen Indizes konnten keinem Parameter zugeordnet werden! Sie werden somit aktuell nur nicht genutzt. Sie können gelöscht oder für später behalten werden. Vergleichen Sie dazu die Parameterliste im Netzelement mit der Liste der Indizes!',
+
 	//MPR
 	'Value (deprecated)'          => 'Wert (veraltet)',
 	'Priority (lower runs first)' => 'Priorität (kleinere zuerst)',
