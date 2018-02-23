@@ -36,7 +36,7 @@
 <?php $api = App\Http\Controllers\BaseViewController::get_view_has_many_api_version($relations) ?>
 
 @section('content_right')
-<div class="col-md-{{isset($edit_right_md_size) ? $edit_right_md_size : 4}} ui-sortable">
+	<div class="col-md-{{isset($edit_right_md_size) ? $edit_right_md_size : 4}} ui-sortable">
 	@foreach($relations as $view => $relation)
 
 		<?php if (!isset($i)) $i = 0; else $i++; ?>
@@ -85,11 +85,12 @@
 		{{-- The Bootstap Panel to include --}}
 		@include ('bootstrap.panel', array ('content' => "content_$i",
 											'view_header' => \App\Http\Controllers\BaseViewController::translate_view('Assigned', 'Header').' '.\App\Http\Controllers\BaseViewController::translate_view($view, 'Header' , 2),
-											'md' => isset($md_size) ? $md_size : (isset($edit_right_md_size) ? $edit_right_md_size : 4)))
+											'md' => 12))
+											{{-- 'md' => isset($md_size) ? $md_size : (isset($edit_right_md_size) ? $edit_right_md_size : 4))) --}}
 
 
 	@endforeach
-</div>
+	</div>
 
 	{{-- Alert --}}
 	@if (Session::has('alert'))
