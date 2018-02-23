@@ -277,8 +277,10 @@ class BaseViewController extends Controller {
 					$hidden == 1) // hide globally?
 				)
 					{
+						// For hidden fields it's also important that default values are set
 						$value = ($field['field_value'] === null) && isset($field['value']) ? $field['value'] : $field['field_value'];
-						$s .= \Form::hidden ($field["name"], $value);
+						// Note: setting a selection by giving an array doesnt make sense as you can not choose anyway - it also would throw an exception as it's not allowed for hidden fields
+						$s .= \Form::hidden ($field["name"], is_array($value) ? '' : $value);
 						goto finish;
 					}
 			}
