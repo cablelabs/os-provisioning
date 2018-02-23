@@ -77,11 +77,8 @@ class ContractController extends \BaseController {
 		);
 
 		if (!\PPModule::is_active('ccc'))
-		{
 			unset($a[0]['help']);
-		}
 
-		// TODO: replace with static command
 		if ($model->voip_enabled && !\PPModule::is_active('billingbase')) {
 
 			$b = array(
