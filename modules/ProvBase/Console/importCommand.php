@@ -209,6 +209,7 @@ class importCommand extends Command {
 				foreach ($mtas as $mta)
 				{
 					$mta_n = $this->add_mta($m, $mta);
+					$c->has_mta = true;
 
 
 					/*
@@ -451,6 +452,15 @@ class importCommand extends Command {
 			if (!$tarif) {
 				$this->line("\tNo $key Item exists in old System");
 				continue;
+			}
+
+			// Discard voip tariff if new contract doesnt have MTA
+			if ($key == 'voip')
+			{
+				if (!isset($new_contract->has_mta)) {
+					Log::notice('Discard voip tariff as contract has no MTA assigned', [$new_contract->number]);
+					continue;
+				}
 			}
 
 			$prod_id = $this->_map_tarif_to_prod($tarif);
