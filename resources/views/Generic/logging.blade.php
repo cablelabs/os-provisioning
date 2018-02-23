@@ -1,6 +1,6 @@
 <div class="col-12 card-block">
     <div class="col-md-12 card tab-content" style="display:none;">
-        <div class="tab-pane" id="logging" role="tabpanel">
+        <div id="logging" role="tabpanel">
             <table id="datatable" class="table table-hover datatable table-bordered d-table">
                 <thead>
                     <tr>
