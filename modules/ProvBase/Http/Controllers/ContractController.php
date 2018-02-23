@@ -108,7 +108,7 @@ class ContractController extends \BaseController {
 
 				// NOTE: qos is required as hidden field to automatically create modem with correct contract qos class
 				// TODO: @Nino Ryschawy: please review and test while merging ..
-				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list(Qos::all(), 'name'), 'hidden' => 1),
+				array('form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'hidden' => 1),
 				array('form_type' => 'checkbox', 'name' => 'telephony_only', 'description' => 'Telephony only', 'value' => '1', 'help' => 'Customer has only subscribed telephony, i.e. no internet access', 'hidden' => 1)
 			);
 		}
