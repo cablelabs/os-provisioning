@@ -208,7 +208,7 @@ class NetElement extends \BaseModel {
 		// return NetElement::where('net','=',$this->id)->get();
 
 		$cluster_id = array_search('Cluster', NetElementType::$undeletables);
-		return NetElement::where('netelementtype_id', '=', $cluster_id)->where('net','=',$this->id)->get();
+		return NetElement::where('netelementtype_id', '=', $cluster_id)->where('net','=',$this->id)->orderBy('name')->get();
 
 		// return NetElement::where('type', '=', 'CLUSTER')->where('net','=',$this->id)->get();
 	}
