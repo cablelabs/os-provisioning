@@ -152,9 +152,8 @@ class Contract extends \BaseModel {
 
 		if (\PPModule::is_active('Ticketsystem'))
 		{
-			$tickets = $this->tickets;
-			if ($tickets->all())
-				$ret['Ticket']['Ticket'] = $tickets;
+			$ret['Edit']['Ticket'] = $this->tickets;
+			$ret['Ticket']['Ticket'] = $this->tickets;
 		}
 
 		if (\PPModule::is_active('mail'))
