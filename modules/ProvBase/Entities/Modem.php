@@ -347,8 +347,7 @@ class Modem extends \BaseModel {
 		{
 			// try to add file if it doesnt exist
 			Log::info('Missing DHCPD Configfile '.self::CONF_FILE_PATH);
-			if (File::put(self::CONF_FILE_PATH, '') === false)
-			{
+			if (File::put(self::CONF_FILE_PATH, '') === false) {
 				Log::alert('Error writing to DHCPD Configfile: '.self::CONF_FILE_PATH);
 				return;
 			}
@@ -365,8 +364,7 @@ class Modem extends \BaseModel {
 		// TODO: check for hostname to avoid deleting the wrong entry when mac exists multiple times in DB !?
 		foreach ($conf as $key => $line)
 		{
-			if (strpos($line, $replace) !== false && strpos($line, $this->hostname) !== false)
-			{
+			if (strpos($line, $this->hostname) !== false) {
 				unset($conf[$key]);
 				break;
 			}
@@ -380,7 +378,7 @@ class Modem extends \BaseModel {
 		// public ip
 		if ($this->public || ($original && $original['public']))
 		{
-			$data_pub 	  = $this->generate_cm_dhcp_entry_pub();
+			$data_pub = $this->generate_cm_dhcp_entry_pub();
 
 			if (file_exists(self::CONF_FILE_PATH_PUB))
 				$conf_pub = file(self::CONF_FILE_PATH_PUB);
@@ -393,8 +391,7 @@ class Modem extends \BaseModel {
 
 			foreach ($conf_pub as $key => $line)
 			{
-				if (strpos($line, $replace) !== false)
-				{
+				if (strpos($line, $replace) !== false) {
 					unset($conf_pub[$key]);
 					break;
 				}
