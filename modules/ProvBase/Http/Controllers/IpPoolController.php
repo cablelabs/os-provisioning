@@ -58,7 +58,7 @@ class IpPoolController extends \BaseController {
 				case 'CM':      $size = env('IP_CM_DEFAULT_SIZE', 19);	break; // /19
 				case 'CPEPriv': $size = env('IP_CPE_PRIV_DEFAULT_SIZE', 22);	break; // /22
 				case 'CPEPub':  $size = env('IP_CPE_PUB_DEFAULT_SIZE', 27);	break; // /27
-				case 'MTA':     $size = env('IP_MTA_DEFAULT_SIZE', 19);	break; // /19
+				case 'MTA':     $size = env('IP_MTA_DEFAULT_SIZE', 24);	break; // /19
 				default: $size = 24; break;
 			}
 
