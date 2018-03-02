@@ -756,7 +756,7 @@ class PhonenumberObserver
 		}
 
 		// get an instance of both MTAs for easier access
-		$old_mta = MTA::findOrFail($old_mta_id);
+		$old_mta = Mta::findOrFail($old_mta_id);
 		$new_mta = $phonenumber->mta;
 
 		// rebuild old MTA's config and restart the modem (we have to remove all information about this phonenumber)
