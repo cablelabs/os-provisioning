@@ -47,6 +47,10 @@ a:hover {
     box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
 }
 
+.progress span {
+    position: absolute;
+    width: 100%;
+}
 
 /* Breadcrumb pills custom style */
 .tab-overflow .nav.nav-pills {
