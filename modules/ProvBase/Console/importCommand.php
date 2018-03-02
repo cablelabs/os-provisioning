@@ -898,11 +898,40 @@ class importCommand extends Command {
 			echo "\nSEPAMANDATE UPDATE [$m->id]: $m->sepa_holder to $mandate_old->kontoinhaber";
 
 			$m->sepa_holder = $mandate_old->kontoinhaber ? utf8_encode($mandate_old->kontoinhaber) : '';
-			$m->save();
 
+			$m->save();
 		}
 
 		exit(0);
+	}
+
+
+	/**
+	 * Import SIP Passwords from Envia CSV - needed after changing tel protocol from MGCP to SIP
+	 */
+	public static function set_phonenr_passwords()
+	{
+		$fn = storage_path('app/tmp/wildenstein-mgcp-to-sip-passwords.csv');
+		$csv = file($fn);
+		$num = count($csv);
+
+		foreach ($csv as $i => $line)
+		{
+			$line = str_getcsv($line, ';');
+
+			echo "$i/$num\r";
+			$username = $line[6];
+			$psw = $line[7];
+
+			$pn = Phonenumber::where('username', '=', $username)->first();
+
+			if ($pn) {
+				$pn->password = $psw;
+				$pn->save();
+			}
+			else
+				echo "Error: Could not find phonenumber with username $username!\n";
+		}
 	}
 
 }
