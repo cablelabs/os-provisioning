@@ -3,7 +3,6 @@
 namespace Modules\ProvBase\Entities;
 
 use DB;
-use FFT;
 use Log;
 use File;
 use Module;
@@ -13,7 +12,13 @@ use Acme\php\ArrayHelper;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\ProvBase;
 use Modules\ProvMon\Http\Controllers\ProvMonController;
-
+//use Webit\Math\Fft\FftCalculatorRadix2;
+//use Webit\Math\Fft\Dimension;
+//use Webit\Math\ComplexNumber\Complex;
+//use Webit\Math\ComplexNumber\ComplexArray;
+//use Complex;
+//use FFT;
+//use Brokencube\fft\FFT;
 
 class Modem extends \BaseModel
 {
@@ -1372,50 +1377,17 @@ class Modem extends \BaseModel
 
 	private function _energy($pwr,$maintap,$energymain)
 	{
-		$ene = [];
-
-		// normalizing the main tap
-		// conservation of energy approach page 84 for the maintap
-		$even = 0;
-		$pwr[$maintap] = 0;
-		foreach ($pwr as $line => $value)
-			if (!($line == 1 || ($line % 2) == 1))
-				$even += abs($value);
-
-		$even = sqrt(1 - $even);
-
-		// sum of all imaginary values
-		$odd = 0;
-		$pwr[$maintap + 1] = 0;
-		foreach($pwr as $line => $value)
-			if (!($line == 0 || ($line % 2) ==0))
-				$odd += abs($value);
-
-		$odd = sqrt($odd);
-
-		// calculating energy values
-		$pwr = array_chunk($pwr, 2);
-		foreach ($pwr as $val)
-			$ene[] = $val[0]**2 + $val[1]**2;
-
-		$ene[$energymain]= $even**2 + $odd**2;
-
-		return $ene;
-	}
-
-	private function _energyDb($ene)
-	{
 		$ene_db = [];
-		foreach ($ene as $val) {
-			$temp = 10 * log10($val);
+		//calculating the magnitude
+		$pwr = array_chunk($pwr, 2);
+		foreach ($pwr as $val) {
+			$temp = 10 * log10($val[0]**2 + $val[1]**2);
 			if (!(is_finite($temp)))
 				$temp = -100;
-
 			$ene_db[] = round($temp,2);
 		}
 		return $ene_db;
 	}
-
 
 	private function _tdr($ene, $energymain, $freq)
 	{
@@ -1441,46 +1413,41 @@ class Modem extends \BaseModel
 		return $chart;
 	}
 
-	private function _normalization($ene)
+	private function _fft($pwr)
 	{
-		$norm = [];
-		$variance = [];
-		$mean = array_sum($ene)/24;
+		$rea = [];
+		$imag = [];
+		$pwr = array_chunk($pwr, 2);
+		foreach ($pwr as $val) {
+			$rea[] = $val[0];
+			$imag[] = $val[1];
+		}
 
-		foreach ($ene as $value)
-			$variance[] = ($value - $mean)**2;
 
-		$standard_dev = sqrt(array_sum($variance) / 24);
-
-		foreach ($ene as $value)
-			$norm[] = ($value - $mean) / $standard_dev;
-
-		return $norm;
+		for ($i=0 ; $i < 8; $i++) {
+			array_push($rea, 0);
+			array_push($imag, 0);
 	}
 
-	private function _fft($ene)
-	{
-		$answer = [];
-		for ($i=0 ; $i < 8 ; $i++ )
-			array_push($ene, 0);
+		$ans = \Brokencube\FFT\FFT::run($rea, $imag);
+		ksort($ans[0]);
+		ksort($ans[1]);
+		$answer = array_map(function ($v1, $v2) {
+			return 20 * log10(sqrt($v1**2 + $v2**2));
+		}, $ans[0], $ans[1]);
 
-		$fft = new FFT(32);
-		// Calculate the FFT of the function $f
-		$w = $fft->fft($ene);
-		for ($i = 0; $i < $fft->getDim(); $i++)
-			$answer[] = 10 * log(sqrt($w[$i]->getReal()**2 + $w[$i]->getImag()**2),2);
-			//$answer[] = $w[$i]->getReal();
-			//$answer[] = $w[$i]->getImag();
 		$answer = array_slice($answer,8);
 		return $answer;
 	}
 
+
 	private function _xaxis()
 	{
 		$axis = [];
-		$fs = 5.12;
 		for ($i= -0.5; $i <= 0.5; $i+=0.04345)
-			$axis[] = $fs * $i;
+			$axis[] = $i;
+		//for ($i= -0.5; $i <= 0.5; $i+=0.00782)
+		//dd($axis);
 
 		return $axis;
 	}
@@ -1523,19 +1490,20 @@ class Modem extends \BaseModel
 		}
 		$pwr = $this->_nePwr($decimal, $maintap);
 		$ene = $this->_energy($pwr, $maintap, $energymain);
-		$ene_db = $this->_energyDb($ene);
-		$chart = $this->_chart($ene_db);
-		$norm = $this->_normalization($ene);//not used, test case
-		$fft = $this->_fft($ene);
+		//$comp = $this->_complex($pwr);
+		//$ene_db = $this->_energyDb($ene);
+		$chart = $this->_chart($ene);
+		//$norm = $this->_normalization($ene);//not used, test case
+		$fft = $this->_fft($pwr);
 		$tdr = $this->_tdr($ene, $energymain, $freq);
 		$index = $this->_xaxis();
 
 		$ret['power'] = $pwr;
-		$ret['nodb'] = $ene;
-		$ret['energy'] = $ene_db;
+		//$ret['nodb'] = $ene;
+		$ret['energy'] = $ene;
 		$ret['chart'] = $chart;
 		$ret['tdr'] = $tdr;
-		$ret['norm'] = $norm;
+		//$ret['norm'] = $norm;
 		$ret['fft'] = $fft;
 		$ret['axis'] = $index;
 

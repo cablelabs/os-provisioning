@@ -20,16 +20,8 @@
     "silber/bouncer": "v1.0.0-rc.5",
     "kingsquare/php-mt940": "^1.5",
     "fideloper/proxy": "~4.0",
-    "phpclasses/fft": ">=0.1"
+    "brokencube/fft": "~1.0.1"
   },
-  "repositories": [{
-      "type": "composer",
-      "url": "https:\/\/www.phpclasses.org\/"
-    },
-    {
-      "packagist": false
-    }
-  ],
   "require-dev": {
     "phpunit/phpunit": "~6.0",
     "phpspec/phpspec": "~2.1",
