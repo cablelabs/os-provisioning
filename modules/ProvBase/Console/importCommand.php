@@ -58,7 +58,7 @@ class importCommand extends Command {
 	 *
 	 * @var array
 	 */
- 	protected $configfiles;
+	protected $configfiles;
 
 	/**
 	 * Mapping of old Cluster ID to new Cluster ID
@@ -91,9 +91,9 @@ class importCommand extends Command {
 	 * Execute the console command.
 	 *
 	 * NOTE:
-	 	* All Logging with level higher than 'info' are written to laravel log too
-	 	* Check TODO(<nrs>) before Import!
-	 		(* set cluster mapping table)
+		* All Logging with level higher than 'info' are written to laravel log too
+		* Check TODO(<nrs>) before Import!
+			(* set cluster mapping table)
 	 */
 	public function fire()
 	{
@@ -173,10 +173,12 @@ class importCommand extends Command {
 		// progress bar
 		$i   = 1;
 		$num = count($contracts);
+		$bar = $this->output->createProgressBar($num);
+		$bar->start();
 
 		foreach ($contracts as $contract)
 		{
-			$this->line("\n$i/$num");
+			$bar->advance();
 			$c = $this->add_contract($contract);
 
 			/*
@@ -209,10 +211,11 @@ class importCommand extends Command {
 				foreach ($mtas as $mta)
 				{
 					$mta_n = $this->add_mta($m, $mta);
+					$c->has_mta = true;
 
 
 					/*
-				 	 * Phonenumber Import
+					 * Phonenumber Import
 					 */
 					$phonenumbers = $km3->table('tbl_mtaendpoints as e')
 						->join('tbl_clis as c', 'c.endpoint', '=', 'e.id')
@@ -246,7 +249,7 @@ class importCommand extends Command {
 	/**
 	 * Load all necessary mappings from config file
 		(1) Tariff (Inet + Voip)
-	 	(2) Configfile
+		(2) Configfile
 		(3) Item-Mapping (Zusatzposten)
 	 */
 	private function _load_mappings()
@@ -306,8 +309,7 @@ class importCommand extends Command {
 		$c = Contract::where('number', $old_contract->vertragsnummer)->first();
 
 		if ($c) {
-			$this->info("Contract $c->vertragsnummer already exists [$c->id]");
-			\Log::notice("Contract $c->vertragsnummer already exists [$c->id]");
+			\Log::info("Contract $c->vertragsnummer already exists [$c->id]");
 			return $c;
 		}
 
@@ -325,10 +327,8 @@ class importCommand extends Command {
 
 		$c->description = $old_contract->beschreibung.PHP_EOL.$old_contract->contr_descr.PHP_EOL;
 
-		if ($desc)
-		{
+		if ($desc) {
 			$c->description .= 'Alte Vertragsdaten:'.PHP_EOL.$desc;
-
 			Log::warning("Contract address differs from customer address for contract $old_contract->vertragsnummer");
 		}
 
@@ -382,7 +382,7 @@ class importCommand extends Command {
 		// Update or Create Entry
 		$c->save();
 
-		$this->line ("\nADD CONTRACT: $c->id, $c->firstname $c->lastname, $c->street, $c->zip $c->city [$old_contract->vertragsnummer]");
+		\Log::info("\nADD CONTRACT: $c->id, $c->firstname $c->lastname, $c->street, $c->zip $c->city [$old_contract->vertragsnummer]");
 
 		return $c;
 	}
@@ -401,17 +401,17 @@ class importCommand extends Command {
 		// Voip
 		if (is_int($tarif))
 		{
-	 		if (!array_key_exists($tarif, $this->old_sys_voip_tarifs))
-	 			return -1;
+			if (!array_key_exists($tarif, $this->old_sys_voip_tarifs))
+				return -1;
 
-	 		return $this->old_sys_voip_tarifs[$tarif];
+			return $this->old_sys_voip_tarifs[$tarif];
 		}
 
 		// Inet
 		if (!array_key_exists($tarif, $this->old_sys_inet_tarifs))
 			return -1;
 
- 		return is_int($this->old_sys_inet_tarifs[$tarif]) ? $this->old_sys_inet_tarifs[$tarif] : -1;
+		return is_int($this->old_sys_inet_tarifs[$tarif]) ? $this->old_sys_inet_tarifs[$tarif] : -1;
 	}
 
 
@@ -449,21 +449,29 @@ class importCommand extends Command {
 		foreach ($tarifs as $key => $tarif)
 		{
 			if (!$tarif) {
-				$this->line("\tNo $key Item exists in old System");
+				\Log::info("\tNo $key Item exists in old System");
 				continue;
+			}
+
+			// Discard voip tariff if new contract doesnt have MTA
+			if ($key == 'voip')
+			{
+				if (!isset($new_contract->has_mta)) {
+					Log::notice('Discard voip tariff as contract has no MTA assigned', [$new_contract->number]);
+					continue;
+				}
 			}
 
 			$prod_id = $this->_map_tarif_to_prod($tarif);
 			$item_n  = $items_new->where('product_id', $prod_id)->all();
 
 			if ($item_n) {
-				$this->info("\tItem $key for Contract ".$new_contract->id." already exists");
-				\Log::error("\tItem $key for Contract ".$new_contract->id." already exists");
+				\Log::info("\tItem $key for Contract ".$new_contract->id." already exists");
 				continue;
 			}
 
 			if ($prod_id <= 0) {
-				\Log::error("\tProduct $prod_id does not exist yet [$tarif]");
+				\Log::error("\tProduct $prod_id does not exist for $key: $tarif");
 				continue;
 			}
 
@@ -476,7 +484,7 @@ class importCommand extends Command {
 				'valid_to_fixed' 	=> 1,
 				]);
 
-			$this->line ("ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
+			\Log::info("ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
 		}
 	}
 
@@ -490,7 +498,7 @@ class importCommand extends Command {
 		if ((strpos($old_contract->tariffname, 'Volumen') === false) && (strpos($old_contract->tariffname, 'Speed') === false) && (strpos($old_contract->tariffname, 'Basic') === false))
 			return;
 
-		$this->line("Add extra Credit as Customer had volume tariff. [$new_contract->number]");
+		\Log::info("Add extra Credit as Customer had volume tariff. [$new_contract->number]");
 
 		Item::create([
 			'contract_id' 		=> $new_contract->id,
@@ -512,21 +520,21 @@ class importCommand extends Command {
 		$mandates_n = $new_contract->sepamandates;
 
 		if (!$mandates_n->isEmpty()) {
-			\Log::notice("\tCustomer $new_contract->id already has SepaMandate assigned");
-			return $this->info("\tCustomer $new_contract->number [$new_contract->id] already has SepaMandate assigned");
+			\Log::info("\tCustomer $new_contract->id already has SepaMandate assigned");
+			return;
 		}
 
 		$mandates_old = $db_con->table('tbl_sepamandate as s')
 				->join('tbl_lastschriftkonten as l', 's.id', '=', 'l.sepamandat')
-			 	->select ('s.*', 'l.*', 'l.id as id')
-			 	->where('s.kunde', '=', $old_contract->kunde)
-			 	->where('s.deleted', '=', 'false')
-			 	->where('l.deleted', '=', 'false')
-			 	->orderBy('l.id')
-			 	->get();
+				->select ('s.*', 'l.*', 'l.id as id')
+				->where('s.kunde', '=', $old_contract->kunde)
+				->where('s.deleted', '=', 'false')
+				->where('l.deleted', '=', 'false')
+				->orderBy('l.id')
+				->get();
 
 		if (!$mandates_old)
-			$this->line("\tCustomer $new_contract->id has no SepaMandate in old DB");
+			\Log::info("\tCustomer $new_contract->id has no SepaMandate in old DB");
 
 		foreach ($mandates_old as $mandate)
 		{
@@ -544,7 +552,7 @@ class importCommand extends Command {
 				'state' 			=> 'RCUR',
 				]);
 
-			$this->line ("SEPAMANDATE ADD: ".$mandate->kontoinhaber.', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
+			\Log::info("SEPAMANDATE ADD: ".$mandate->kontoinhaber.', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
 		}
 	}
 
@@ -571,7 +579,6 @@ class importCommand extends Command {
 			$prod_id = isset($this->add_items[$item->id]) ? $this->add_items[$item->id] : null;
 
 			if (!$prod_id) {
-				$this->info("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
 				\Log::error("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
 				continue;
 			}
@@ -583,8 +590,7 @@ class importCommand extends Command {
 			if ($items_new->contains('product_id', $prod_id))
 				\Log::warning("Additional item with product id $prod_id already exists for Contract ".$new_contract->number.'! (Added again)');
 
-			// \Log::info("Add Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
-			$this->line("\tAdd Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
+			\Log::info("\tAdd Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
 
 			Item::create([
 				'contract_id' 		=> $new_contract->id,
@@ -610,7 +616,7 @@ class importCommand extends Command {
 		$emails_new_cnt = \PPModule::is_active('mail') ? $new_contract->emails()->count() : [];
 
 		if (count($emails) == $emails_new_cnt)
-			return $this->info('Email Aliases already added!');
+			return Log::info('Email Aliases already added!', [$new_contract->number]);
 
 		foreach ($emails as $email)
 		{
@@ -625,7 +631,7 @@ class importCommand extends Command {
 		}
 
 		// Log
-		$this->line ("MAIL: ADDED ".count($emails).' Addresses');
+		\Log::info("MAIL: ADDED ".count($emails).' Addresses');
 	}
 
 
@@ -643,7 +649,7 @@ class importCommand extends Command {
 		{
 			$new_cm = $modems_n->where('mac', $old_modem->mac_adresse)->first();
 
-			$this->info("Modem already exists in new System with ID $new_cm->id!");
+			Log::info("Modem already exists in new System with ID $new_cm->id!", [$new_contract->id]);
 			return $new_cm;
 		}
 
@@ -710,15 +716,16 @@ class importCommand extends Command {
 		}
 		$modem->deleted_at = NULL;
 
-		// Output
-		if ($modem->configfile_id == 0) {
-			$this->info('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
-			\Log::error('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
-		}
-
-		$this->line ("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
-
+		// suppress output of MPR refresh and cacti diagram creation on saving
+		ob_start();
 		$modem->save();
+		ob_end_clean();
+
+		// Output
+		if ($modem->configfile_id == 0)
+			\Log::error('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
+
+		\Log::info("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
 
 		return $modem;
 	}
@@ -736,7 +743,7 @@ class importCommand extends Command {
 		{
 			$new_mta = $mtas_n->where('mac', $old_mta->mac_adresse)->first();
 
-			$this->info("MTA already exists in new System with ID $new_mta->id!");
+			Log::info("MTA already exists in new System with ID $new_mta->id!", [$new_modem->id]);
 			return $new_mta;
 		}
 
@@ -747,9 +754,9 @@ class importCommand extends Command {
 		$mta->configfile_id = isset($this->configfiles[$old_mta->configfile]) && is_int($this->configfiles[$old_mta->configfile]) ? $this->configfiles[$old_mta->configfile] : 0;
 		$mta->type = 'sip';
 
-		$this->line ("ADD MTA: ".$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
-
 		$mta->save();
+
+		\Log::info ("ADD MTA: ".$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
 
 		return $mta;
 	}
@@ -766,7 +773,7 @@ class importCommand extends Command {
 		{
 			$new_pn = $pns_n->where('username', $old_phonenumber->username)->first();
 
-			$this->info("Phonenumber already exists in new System with ID $new_pn->id!");
+			Log::info("Phonenumber already exists in new System with ID $new_pn->id!", [$new_mta->id]);
 			return $new_pn;
 		}
 
@@ -792,9 +799,9 @@ class importCommand extends Command {
 		$phonenumber->sipdomain 	= $registrar;
 		$phonenumber->active 		= true;  		// $old_phonenumber->aktiv; 		most phonenrs are marked as inactive because of automatic controlling
 
-		$this->line ("ADD Phonenumber: ".$phonenumber->id.', '.$new_mta->id.', '.$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
-
 		$phonenumber->save();
+
+		Log::info("ADD Phonenumber: ".$phonenumber->id.', '.$new_mta->id.', '.$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
 
 		return $phonenumber;
 	}
@@ -818,7 +825,7 @@ class importCommand extends Command {
 		if (!$devices)
 			return;
 
-		$this->line ("ADD NETELEMENT Modems");
+		Log::info("ADD NETELEMENT Modems");
 
 		$contract = Contract::find(500000);
 
@@ -870,13 +877,13 @@ class importCommand extends Command {
 				continue;
 
 			$mandate_old = $db_con->table(\DB::raw('tbl_sepamandate s, tbl_lastschriftkonten l'))
-				 	->selectRaw ('s.*, l.*, l.id as id')
-				 	->whereRaw('s.id = l.sepamandat')
-				 	->where('l.iban', '=', $m->sepa_iban)
-				 	->where('s.deleted', '=', 'false')
-				 	->where('l.deleted', '=', 'false')
-				 	->orderBy('l.id')
-				 	->get();
+					->selectRaw ('s.*, l.*, l.id as id')
+					->whereRaw('s.id = l.sepamandat')
+					->where('l.iban', '=', $m->sepa_iban)
+					->where('s.deleted', '=', 'false')
+					->where('l.deleted', '=', 'false')
+					->orderBy('l.id')
+					->get();
 
 			if (!$mandate_old) {
 				// echo "\tERROR: No corresponding SepaMandate in old sys [$m->id]";
@@ -891,11 +898,40 @@ class importCommand extends Command {
 			echo "\nSEPAMANDATE UPDATE [$m->id]: $m->sepa_holder to $mandate_old->kontoinhaber";
 
 			$m->sepa_holder = $mandate_old->kontoinhaber ? utf8_encode($mandate_old->kontoinhaber) : '';
-			$m->save();
 
+			$m->save();
 		}
 
 		exit(0);
+	}
+
+
+	/**
+	 * Import SIP Passwords from Envia CSV - needed after changing tel protocol from MGCP to SIP
+	 */
+	public static function set_phonenr_passwords()
+	{
+		$fn = storage_path('app/tmp/wildenstein-mgcp-to-sip-passwords.csv');
+		$csv = file($fn);
+		$num = count($csv);
+
+		foreach ($csv as $i => $line)
+		{
+			$line = str_getcsv($line, ';');
+
+			echo "$i/$num\r";
+			$username = $line[6];
+			$psw = $line[7];
+
+			$pn = Phonenumber::where('username', '=', $username)->first();
+
+			if ($pn) {
+				$pn->password = $psw;
+				$pn->save();
+			}
+			else
+				echo "Error: Could not find phonenumber with username $username!\n";
+		}
 	}
 
 }

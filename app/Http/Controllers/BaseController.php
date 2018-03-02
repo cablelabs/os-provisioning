@@ -322,8 +322,11 @@ class BaseController extends Controller {
 			// get filename
 			$filename = Input::file($upload_field)->getClientOriginalName();
 
+			$ext = strrchr($filename, '.');
+			$fn  = substr($filename, 0, strlen($filename) - strlen($ext));
+			$filename = str_replace([' ', '&', '|', ',', ';', '+', '.' ], '', $fn).$ext;
+
 			// move file
-			$filename = str_replace([' ', '&', '|', ',', ';', '+' ], '', $filename);
 			Input::file($upload_field)->move($dst_path, $filename);
 
 			// place filename as chosen value in Input field
