@@ -173,10 +173,12 @@ class importCommand extends Command {
 		// progress bar
 		$i   = 1;
 		$num = count($contracts);
+		$bar = $this->output->createProgressBar($num);
+		$bar->start();
 
 		foreach ($contracts as $contract)
 		{
-			$this->line("\n$i/$num");
+			$bar->advance();
 			$c = $this->add_contract($contract);
 
 			/*
@@ -307,8 +309,7 @@ class importCommand extends Command {
 		$c = Contract::where('number', $old_contract->vertragsnummer)->first();
 
 		if ($c) {
-			$this->info("Contract $c->vertragsnummer already exists [$c->id]");
-			\Log::notice("Contract $c->vertragsnummer already exists [$c->id]");
+			\Log::info("Contract $c->vertragsnummer already exists [$c->id]");
 			return $c;
 		}
 
@@ -381,7 +382,7 @@ class importCommand extends Command {
 		// Update or Create Entry
 		$c->save();
 
-		$this->line ("\nADD CONTRACT: $c->id, $c->firstname $c->lastname, $c->street, $c->zip $c->city [$old_contract->vertragsnummer]");
+		\Log::info("\nADD CONTRACT: $c->id, $c->firstname $c->lastname, $c->street, $c->zip $c->city [$old_contract->vertragsnummer]");
 
 		return $c;
 	}
@@ -448,7 +449,7 @@ class importCommand extends Command {
 		foreach ($tarifs as $key => $tarif)
 		{
 			if (!$tarif) {
-				$this->line("\tNo $key Item exists in old System");
+				\Log::info("\tNo $key Item exists in old System");
 				continue;
 			}
 
@@ -465,13 +466,12 @@ class importCommand extends Command {
 			$item_n  = $items_new->where('product_id', $prod_id)->all();
 
 			if ($item_n) {
-				$this->info("\tItem $key for Contract ".$new_contract->id." already exists");
-				\Log::error("\tItem $key for Contract ".$new_contract->id." already exists");
+				\Log::info("\tItem $key for Contract ".$new_contract->id." already exists");
 				continue;
 			}
 
 			if ($prod_id <= 0) {
-				\Log::error("\tProduct $prod_id does not exist yet [$tarif]");
+				\Log::error("\tProduct $prod_id does not exist for $key: $tarif");
 				continue;
 			}
 
@@ -484,7 +484,7 @@ class importCommand extends Command {
 				'valid_to_fixed' 	=> 1,
 				]);
 
-			$this->line ("ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
+			\Log::info("ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
 		}
 	}
 
@@ -498,7 +498,7 @@ class importCommand extends Command {
 		if ((strpos($old_contract->tariffname, 'Volumen') === false) && (strpos($old_contract->tariffname, 'Speed') === false) && (strpos($old_contract->tariffname, 'Basic') === false))
 			return;
 
-		$this->line("Add extra Credit as Customer had volume tariff. [$new_contract->number]");
+		\Log::info("Add extra Credit as Customer had volume tariff. [$new_contract->number]");
 
 		Item::create([
 			'contract_id' 		=> $new_contract->id,
@@ -520,8 +520,8 @@ class importCommand extends Command {
 		$mandates_n = $new_contract->sepamandates;
 
 		if (!$mandates_n->isEmpty()) {
-			\Log::notice("\tCustomer $new_contract->id already has SepaMandate assigned");
-			return $this->info("\tCustomer $new_contract->number [$new_contract->id] already has SepaMandate assigned");
+			\Log::info("\tCustomer $new_contract->id already has SepaMandate assigned");
+			return;
 		}
 
 		$mandates_old = $db_con->table('tbl_sepamandate as s')
@@ -534,7 +534,7 @@ class importCommand extends Command {
 				->get();
 
 		if (!$mandates_old)
-			$this->line("\tCustomer $new_contract->id has no SepaMandate in old DB");
+			\Log::info("\tCustomer $new_contract->id has no SepaMandate in old DB");
 
 		foreach ($mandates_old as $mandate)
 		{
@@ -552,7 +552,7 @@ class importCommand extends Command {
 				'state' 			=> 'RCUR',
 				]);
 
-			$this->line ("SEPAMANDATE ADD: ".$mandate->kontoinhaber.', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
+			\Log::info("SEPAMANDATE ADD: ".$mandate->kontoinhaber.', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
 		}
 	}
 
@@ -579,7 +579,6 @@ class importCommand extends Command {
 			$prod_id = isset($this->add_items[$item->id]) ? $this->add_items[$item->id] : null;
 
 			if (!$prod_id) {
-				$this->info("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
 				\Log::error("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
 				continue;
 			}
@@ -591,8 +590,7 @@ class importCommand extends Command {
 			if ($items_new->contains('product_id', $prod_id))
 				\Log::warning("Additional item with product id $prod_id already exists for Contract ".$new_contract->number.'! (Added again)');
 
-			// \Log::info("Add Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
-			$this->line("\tAdd Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
+			\Log::info("\tAdd Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
 
 			Item::create([
 				'contract_id' 		=> $new_contract->id,
@@ -618,7 +616,7 @@ class importCommand extends Command {
 		$emails_new_cnt = \PPModule::is_active('mail') ? $new_contract->emails()->count() : [];
 
 		if (count($emails) == $emails_new_cnt)
-			return $this->info('Email Aliases already added!');
+			return Log::info('Email Aliases already added!', [$new_contract->number]);
 
 		foreach ($emails as $email)
 		{
@@ -633,7 +631,7 @@ class importCommand extends Command {
 		}
 
 		// Log
-		$this->line ("MAIL: ADDED ".count($emails).' Addresses');
+		\Log::info("MAIL: ADDED ".count($emails).' Addresses');
 	}
 
 
@@ -651,7 +649,7 @@ class importCommand extends Command {
 		{
 			$new_cm = $modems_n->where('mac', $old_modem->mac_adresse)->first();
 
-			$this->info("Modem already exists in new System with ID $new_cm->id!");
+			Log::info("Modem already exists in new System with ID $new_cm->id!", [$new_contract->id]);
 			return $new_cm;
 		}
 
@@ -718,15 +716,16 @@ class importCommand extends Command {
 		}
 		$modem->deleted_at = NULL;
 
-		// Output
-		if ($modem->configfile_id == 0) {
-			$this->info('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
-			\Log::error('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
-		}
-
-		$this->line ("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
-
+		// suppress output of MPR refresh and cacti diagram creation on saving
+		ob_start();
 		$modem->save();
+		ob_end_clean();
+
+		// Output
+		if ($modem->configfile_id == 0)
+			\Log::error('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
+
+		\Log::info("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
 
 		return $modem;
 	}
@@ -744,7 +743,7 @@ class importCommand extends Command {
 		{
 			$new_mta = $mtas_n->where('mac', $old_mta->mac_adresse)->first();
 
-			$this->info("MTA already exists in new System with ID $new_mta->id!");
+			Log::info("MTA already exists in new System with ID $new_mta->id!", [$new_modem->id]);
 			return $new_mta;
 		}
 
@@ -755,9 +754,9 @@ class importCommand extends Command {
 		$mta->configfile_id = isset($this->configfiles[$old_mta->configfile]) && is_int($this->configfiles[$old_mta->configfile]) ? $this->configfiles[$old_mta->configfile] : 0;
 		$mta->type = 'sip';
 
-		$this->line ("ADD MTA: ".$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
-
 		$mta->save();
+
+		\Log::info ("ADD MTA: ".$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
 
 		return $mta;
 	}
@@ -774,7 +773,7 @@ class importCommand extends Command {
 		{
 			$new_pn = $pns_n->where('username', $old_phonenumber->username)->first();
 
-			$this->info("Phonenumber already exists in new System with ID $new_pn->id!");
+			Log::info("Phonenumber already exists in new System with ID $new_pn->id!", [$new_mta->id]);
 			return $new_pn;
 		}
 
@@ -800,9 +799,9 @@ class importCommand extends Command {
 		$phonenumber->sipdomain 	= $registrar;
 		$phonenumber->active 		= true;  		// $old_phonenumber->aktiv; 		most phonenrs are marked as inactive because of automatic controlling
 
-		$this->line ("ADD Phonenumber: ".$phonenumber->id.', '.$new_mta->id.', '.$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
-
 		$phonenumber->save();
+
+		Log::info("ADD Phonenumber: ".$phonenumber->id.', '.$new_mta->id.', '.$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
 
 		return $phonenumber;
 	}
@@ -826,7 +825,7 @@ class importCommand extends Command {
 		if (!$devices)
 			return;
 
-		$this->line ("ADD NETELEMENT Modems");
+		Log::info("ADD NETELEMENT Modems");
 
 		$contract = Contract::find(500000);
 
