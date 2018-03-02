@@ -58,7 +58,7 @@ class importCommand extends Command {
 	 *
 	 * @var array
 	 */
- 	protected $configfiles;
+	protected $configfiles;
 
 	/**
 	 * Mapping of old Cluster ID to new Cluster ID
@@ -91,9 +91,9 @@ class importCommand extends Command {
 	 * Execute the console command.
 	 *
 	 * NOTE:
-	 	* All Logging with level higher than 'info' are written to laravel log too
-	 	* Check TODO(<nrs>) before Import!
-	 		(* set cluster mapping table)
+		* All Logging with level higher than 'info' are written to laravel log too
+		* Check TODO(<nrs>) before Import!
+			(* set cluster mapping table)
 	 */
 	public function fire()
 	{
@@ -213,7 +213,7 @@ class importCommand extends Command {
 
 
 					/*
-				 	 * Phonenumber Import
+					 * Phonenumber Import
 					 */
 					$phonenumbers = $km3->table('tbl_mtaendpoints as e')
 						->join('tbl_clis as c', 'c.endpoint', '=', 'e.id')
@@ -247,7 +247,7 @@ class importCommand extends Command {
 	/**
 	 * Load all necessary mappings from config file
 		(1) Tariff (Inet + Voip)
-	 	(2) Configfile
+		(2) Configfile
 		(3) Item-Mapping (Zusatzposten)
 	 */
 	private function _load_mappings()
@@ -326,10 +326,8 @@ class importCommand extends Command {
 
 		$c->description = $old_contract->beschreibung.PHP_EOL.$old_contract->contr_descr.PHP_EOL;
 
-		if ($desc)
-		{
+		if ($desc) {
 			$c->description .= 'Alte Vertragsdaten:'.PHP_EOL.$desc;
-
 			Log::warning("Contract address differs from customer address for contract $old_contract->vertragsnummer");
 		}
 
@@ -402,17 +400,17 @@ class importCommand extends Command {
 		// Voip
 		if (is_int($tarif))
 		{
-	 		if (!array_key_exists($tarif, $this->old_sys_voip_tarifs))
-	 			return -1;
+			if (!array_key_exists($tarif, $this->old_sys_voip_tarifs))
+				return -1;
 
-	 		return $this->old_sys_voip_tarifs[$tarif];
+			return $this->old_sys_voip_tarifs[$tarif];
 		}
 
 		// Inet
 		if (!array_key_exists($tarif, $this->old_sys_inet_tarifs))
 			return -1;
 
- 		return is_int($this->old_sys_inet_tarifs[$tarif]) ? $this->old_sys_inet_tarifs[$tarif] : -1;
+		return is_int($this->old_sys_inet_tarifs[$tarif]) ? $this->old_sys_inet_tarifs[$tarif] : -1;
 	}
 
 
@@ -528,12 +526,12 @@ class importCommand extends Command {
 
 		$mandates_old = $db_con->table('tbl_sepamandate as s')
 				->join('tbl_lastschriftkonten as l', 's.id', '=', 'l.sepamandat')
-			 	->select ('s.*', 'l.*', 'l.id as id')
-			 	->where('s.kunde', '=', $old_contract->kunde)
-			 	->where('s.deleted', '=', 'false')
-			 	->where('l.deleted', '=', 'false')
-			 	->orderBy('l.id')
-			 	->get();
+				->select ('s.*', 'l.*', 'l.id as id')
+				->where('s.kunde', '=', $old_contract->kunde)
+				->where('s.deleted', '=', 'false')
+				->where('l.deleted', '=', 'false')
+				->orderBy('l.id')
+				->get();
 
 		if (!$mandates_old)
 			$this->line("\tCustomer $new_contract->id has no SepaMandate in old DB");
@@ -880,13 +878,13 @@ class importCommand extends Command {
 				continue;
 
 			$mandate_old = $db_con->table(\DB::raw('tbl_sepamandate s, tbl_lastschriftkonten l'))
-				 	->selectRaw ('s.*, l.*, l.id as id')
-				 	->whereRaw('s.id = l.sepamandat')
-				 	->where('l.iban', '=', $m->sepa_iban)
-				 	->where('s.deleted', '=', 'false')
-				 	->where('l.deleted', '=', 'false')
-				 	->orderBy('l.id')
-				 	->get();
+					->selectRaw ('s.*, l.*, l.id as id')
+					->whereRaw('s.id = l.sepamandat')
+					->where('l.iban', '=', $m->sepa_iban)
+					->where('s.deleted', '=', 'false')
+					->where('l.deleted', '=', 'false')
+					->orderBy('l.id')
+					->get();
 
 			if (!$mandate_old) {
 				// echo "\tERROR: No corresponding SepaMandate in old sys [$m->id]";
