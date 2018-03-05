@@ -24,6 +24,7 @@
 	</div>
 
 @include ('bootstrap.footer')
+@yield ('form-javascript')
 @yield ('javascript')
 @yield ('javascript_extra')
 

@@ -36,13 +36,14 @@
 <?php $api = App\Http\Controllers\BaseViewController::get_view_has_many_api_version($relations) ?>
 
 @section('content_right')
-	<div class="col-md-{{isset($edit_right_md_size) ? $edit_right_md_size : 4}} ui-sortable">
+@if(isset($relations) && !empty($relations))
+<div class="col-md-{{isset($edit_right_md_size) ? $edit_right_md_size : 4}} ui-sortable">
 	@foreach($relations as $view => $relation)
 
-		<?php if (!isset($i)) $i = 0; else $i++; ?>
+	<?php if (!isset($i)) $i = 0; else $i++; ?>
 
-		{{-- The section content for the new Panel --}}
-		@section("content_$i")
+	{{-- The section content for the new Panel --}}
+	@section("content_$i")
 
 			{{-- old API: directly load relation view. NOTE: old API new class var is $view --}}
 			@if ($api == 1)
@@ -97,16 +98,12 @@
 		@include('bootstrap.alert', array('message' => Session::get('alert')))
 		<?php Session::forget('alert'); ?>
 	@endif
-
+@endif
 @stop
 
 @section('javascript')
-	{{-- move Javascript Edit Stuff here: select2.js,  --}}
-@stop
-
-@section('javascript_extra')
 @if(isset($panel_right))
-	<script language="javascript">
+<script language="javascript">
 	$('#loggingtab').click(function() {
 		$('.tab-content').toggle();
 	});
@@ -156,92 +153,7 @@
 		});
 	$( $.fn.dataTable.tables(true) ).DataTable().responsive.recalc();
 	});
-
-$(document).ready(function() {
-	var handlePanel = function () {
-	var target = $('.panel').parent('[class*=col]');
-	var targetHandle = '.panel-heading';
-	var connectedTarget = '.row > [class*=col]';
-
-	$(target).sortable({
-		handle: targetHandle,
-		connectWith: connectedTarget,
-		stop: function (event, ui) {
-			ui.item.find('.panel-title').append('<i class="fa fa-refresh fa-spin m-l-5" data-id="title-spinner"></i>');
-			handlePanelPosition(ui.item);
-		}
-	});
-	};
-
-	var handlePanelPosition = function(element) {
-		if ($('.ui-sortable').length !== 0) {
-		var newValue = [];
-		var index = 0;
-		$.when($('.ui-sortable').each(function() {
-			var panelSortableElement = $(this).find('[data-sortable-id]');
-			if (panelSortableElement.length !== 0) {
-				var columnValue = [];
-				$(panelSortableElement).each(function() {
-					var targetSortId = $(this).attr('data-sortable-id');
-					columnValue.push({id: targetSortId});
-				});
-				newValue.push(columnValue);
-			} else {
-				newValue.push([]);
-			}
-			index++;
-		})).done(function() {
-			var targetPage = window.location.href;
-				targetPage = targetPage.split('?');
-				targetPage = targetPage[0].split('/');
-				targetPage = targetPage[targetPage.length - 3];
-			localStorage.setItem(targetPage, JSON.stringify(newValue));
-			$(element).find('[data-id="title-spinner"]').delay(500).fadeOut(500, function() {
-				$(this).remove();
-			});
-		});
-	}
-	};
-
-	var handlePanelStorage = function() {
-		if (typeof(Storage) !== 'undefined' && typeof(localStorage) !== 'undefined') {
-			var targetPage = window.location.href;
-				targetPage = targetPage.split('?');
-				targetPage = targetPage[0].split('/');
-				targetPage = targetPage[targetPage.length - 3];
-		var panelPositionData = localStorage.getItem(targetPage);
-
-		if (panelPositionData) {
-			panelPositionData = JSON.parse(panelPositionData);
-			var i = 0;
-			$.when($('.panel').parent('[class*="col-"]').each(function() {
-				var storageData = panelPositionData[i];
-				var targetColumn = $(this);
-				if (storageData) {
-					$.each(storageData, function(index, data) {
-						var targetId = $('[data-sortable-id="'+ data.id +'"]').not('[data-init="true"]');
-						if ($(targetId).length !== 0) {
-							var targetHtml = $(targetId).clone();
-							$(targetId).remove();
-							$(targetColumn).append(targetHtml);
-							$('[data-sortable-id="'+ data.id +'"]').attr('data-init','true');
-						}
-					});
-				}
-				i++;
-			})).done(function() {
-				window.dispatchEvent(new CustomEvent('localstorage-position-loaded'));
-			});
-		}
-	} else {
-		alert('Your browser is not supported with the local storage');
-	}
-	};
-
-	handlePanel();
-	handlePanelPosition();
-	handlePanelStorage();
-});
 </script>
+@include('Generic.handlePanel')
 @endif
 @stop
