@@ -76,7 +76,7 @@
 		  },
 		  "state" : {
 				"filter" : function (k) { delete k.core.selected; return k; },
-				"key"   : "{{ $route_name }}",
+				"key"   : "tree-{{ $route_name }}",
 				'ttl' : false,
 			},
 		  "types": {
