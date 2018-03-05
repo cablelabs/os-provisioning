@@ -101,12 +101,8 @@
 @stop
 
 @section('javascript')
-	{{-- move Javascript Edit Stuff here: select2.js,  --}}
-@stop
-
-@section('javascript_extra')
 @if(isset($panel_right))
-	<script language="javascript">
+<script language="javascript">
 	$('#loggingtab').click(function() {
 		$('.tab-content').toggle();
 	});
