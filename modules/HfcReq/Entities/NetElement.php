@@ -45,10 +45,10 @@ class NetElement extends \BaseModel {
 	}
 
 	// View Icon
-  public static function view_icon()
-  {
-    return '<i class="fa fa-object-ungroup"></i>';
-  }
+	public static function view_icon()
+	{
+		return '<i class="fa fa-object-ungroup"></i>';
+	}
 
 	// Relations
 	public function view_has_many()
@@ -161,12 +161,14 @@ class NetElement extends \BaseModel {
 		return $this->hasOne('Modules\HfcBase\Entities\IcingaObjects', 'name1')->where('objecttype_id', '=', '1');
 	}
 
-	public function get_parent ()
+	public function parent()
 	{
-		if (!$this->parent_id || $this->parent_id < 1)
-			return 0;
+		return $this->belongsTo('Modules\HfcReq\Entities\NetElement', 'parent_id');
+	}
 
-		return NetElement::find($this->parent_id);
+	public function children()
+	{
+		return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'parent_id');
 	}
 
 	public function get_children ()
@@ -178,10 +180,10 @@ class NetElement extends \BaseModel {
 	// TODO: rename, avoid recursion
 	public function get_non_location_parent($layer='')
 	{
-		return $this->get_parent();
+		return $this->parent;
 
 
-		$p = $this->get_parent();
+		$p = $this->parent;
 
 		if ($p->type == 'LOCATION')
 			return get_non_location_parent($p);
@@ -253,7 +255,7 @@ class NetElement extends \BaseModel {
 			if ($p->{'is_type_'.strtolower($type)}())
 				return $p->id;
 
-			$p = $p->get_parent();
+			$p = $p->parent;
 		} while ($i++ < $this->max_parents);
 
 	}
