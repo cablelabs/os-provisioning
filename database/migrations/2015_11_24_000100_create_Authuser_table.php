@@ -25,7 +25,7 @@ class CreateAuthuserTable extends BaseMigration {
 			$table->string('first_name');
 			$table->string('last_name');
 			$table->string('email');
-			$table->string('login_name');
+			$table->string('login_name', 191);
 			$table->string('password', 60);
 			$table->string('description');
 			$table->boolean('active')->default(1);

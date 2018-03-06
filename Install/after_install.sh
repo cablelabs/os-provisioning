@@ -53,7 +53,7 @@ sed -e 's/^memory_limit =.*/memory_limit = 1024M/' \
     -i /etc/php.ini
 
 # create mysql db
-mysql -u root -e "CREATE DATABASE nmsprime;"
+mysql -u root -e "CREATE DATABASE nmsprime CHARACTER SET 'utf8mb4';"
 
 mysql -u root -e "GRANT ALL ON nmsprime.* TO 'nmsprime'@'localhost' IDENTIFIED BY '$pw'";
 sed -i "s/^DB_PASSWORD=$/DB_PASSWORD=$pw/" "$env"
