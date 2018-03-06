@@ -69,11 +69,7 @@ class SnmpController extends \BaseController{
 		$this->init ($netelem, $index);
 
 		// GET SNMP values of NetElement
-		// TODO: check if netelement has a netelementtype -> exception for root elem
-		$params = $index ?
-			Parameter::where('parent_id', '=', $param_id)->where('third_dimension', '=', 1)->with('oid')->orderBy('id')->get()
-			:
-			$this->device->netelementtype->parameters()->with('oid')->orderBy('html_frame')->orderBy('html_id')->orderBy('oid_id')->orderBy('id')->get();
+		$params = $this->_get_parameter($param_id);
 
 		try {
 			$form_fields = $this->get_snmp_values($params, true);
@@ -86,7 +82,6 @@ class SnmpController extends \BaseController{
 		$view_var 	 = $netelem;
 		$route_name  = \NamespaceController::get_route_name();
 		$headline 	 = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var).' > controlling';
-
 		$panel_right = new NetElementController;
 		$panel_right = $panel_right->prepare_tabs($view_var);
 
@@ -128,6 +123,55 @@ class SnmpController extends \BaseController{
 		}
 
 		return \Redirect::route('NetElement.controlling_edit', [$id, $param_id, $index])->with('message', $msg)->with('message_color', $msg_color);
+	}
+
+
+	/**
+	 * Returns updated SnmpValues via client opened TCP connection (SSE)
+	 */
+	public function sse_get_snmpvalues($netelem_id, $param_id = 0, $index = 0, $reload = 1)
+	{
+		$this->init(NetElement::find($netelem_id), $index);
+		$params = $this->_get_parameter($param_id);
+
+		\Log::debug(__FUNCTION__.": $netelem_id, $param_id, $index, $reload, ". count($params));
+
+		$response = new \Symfony\Component\HttpFoundation\StreamedResponse(function() use ($params, $reload) {
+
+			// Get data and push to client
+			$start = microtime(true);
+			echo "data: ".$this->get_snmp_values($params)."\n\n";
+			$end = microtime(true);
+
+			// Dont stress device too much - sleep at least as long as the device needs to return the values
+			$diff = $end - $start;
+			$sleep_time = $diff > $reload / 2 ? $diff : $reload - $diff;
+			sleep($sleep_time);
+
+			\Log::debug('Updating NetElements SnmpValues for SSE took '. round($diff, 2) .' seconds');
+		});
+
+		$response->headers->set('Content-Type', 'text/event-stream');
+
+		return $response;
+	}
+
+
+	/**
+	 * Get the necessary parameters (OIDs) of the netelementtype
+	 *
+	 * @return \Illuminate\Database\Eloquent\Collection 	of Parameter objects with related OID object
+	 */
+	private function _get_parameter($param_id)
+	{
+		if ($param_id)
+			return Parameter::where('parent_id', '=', $param_id)->where('third_dimension', '=', 1)->with('oid')->orderBy('id')->get();
+
+		// TODO: check if netelement has a netelementtype -> exception for root elem
+		return $this->device->netelementtype->parameters()
+			->with('oid')
+			->orderBy('html_frame')->orderBy('html_id')->orderBy('oid_id')->orderBy('id')
+			->get();
 	}
 
 

@@ -5,7 +5,7 @@
 
 	@if ($reload)
 		{{-- Seconds to refresh the page --}}
-		<META HTTP-EQUIV="refresh" CONTENT="{{$reload}}">
+		<!-- <META HTTP-EQUIV="refresh" CONTENT="{{$reload}}"> -->
 	@endif
 
 	{{ $headline }}
@@ -18,6 +18,16 @@
 
 	@include ('Generic.logging')
 
+	{{-- Stop SSE Button --}}
+	@if ($reload)
+	<div class="row">
+		@DivOpen(10)
+		@DivClose()
+		@DivOpen(2)
+			<input id="stop-button" class="btn btn-primary" style="simple" onclick="close_source()" value="Stop updating">
+		@DivClose()
+	</div>
+	@endif
 
 	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id, $param_id, $index), 'method' => 'put', 'files' => true)) }}
 
@@ -96,10 +106,10 @@
 					@endforeach
 				</thead>
 				<tbody>
-					@foreach ($table['body'] as $index => $row)
+					@foreach ($table['body'] as $i => $row)
 						<tr>
-							<?php $index = str_replace('.', '', $index) ?>
-							<td> {{ isset($table['3rd_dim']) ? HTML::linkRoute('NetElement.controlling_edit', $index, [$table['3rd_dim']['netelement_id'], $table['3rd_dim']['param_id'], $index]) : $index }} </td>
+							<?php $i = str_replace('.', '', $i) ?>
+							<td> {{ isset($table['3rd_dim']) ? HTML::linkRoute('NetElement.controlling_edit', $i, [$table['3rd_dim']['netelement_id'], $table['3rd_dim']['param_id'], $i]) : $i }} </td>
 							@foreach ($row as $col)
 								<td align="center" style="padding: 4px"> {{ $col }} </td>
 							@endforeach
@@ -112,7 +122,7 @@
 
 	{{-- Save Button --}}
 	<div class="d-flex justify-content-center">
-			<input class="btn btn-primary" style="simple" value="{{\App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button') }}" type="submit">
+		<input class="btn btn-primary" style="simple" value="{{\App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button') }}" type="submit">
 	</div>
 
 	{{ Form::close() }}
@@ -146,6 +156,47 @@
 	window.onresize = function(event) {
 		table.responsive.recalc();
 	}
+
+	// use SSE for constant updating values as ajax uses more http overhead
+	function update_snmp_values()
+	{
+		$('#stop-button').val('Stop updating');
+		$('#stop-button').attr("onclick", "close_source()");
+
+		console.log("Establish SSE connection");
+		this.source = new EventSource("{{ route('NetElement.sse_get_snmpvalues', [$view_var->id, $param_id, $index, $reload]); }}");
+
+		this.source.onmessage = function(e)
+		{
+			var data = JSON.parse(e.data);
+
+			console.log("Received data");
+
+			for (var key in data)
+			{
+				if (document.getElementsByName(key)[0] instanceof HTMLInputElement)
+					document.getElementsByName(key)[0].value = data[key];
+				else
+					document.getElementsByName(key)[0].innerHTML = data[key];
+			}
+		}
+	}
+
+	function close_source()
+	{
+		console.log('Close SSE connection');
+		this.source.close();
+		// $('#stop-button').remove();
+		$('#stop-button').val('Start update again');
+		$('#stop-button').attr("onclick", "update_snmp_values()");
+	}
+
+	$(document).ready(function()
+	{
+		if (Number("{{$reload}}"))
+			setTimeout(update_snmp_values(), "{{$reload}}" * 1000);
+	});
+
 </script>
 
 @stop

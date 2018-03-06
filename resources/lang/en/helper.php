@@ -60,7 +60,7 @@ return [
  /**
   *	MODULE: HfcReq
   */
-	'netelementtype_reload' 		=> 'In Seconds. Zero to deactivate autoreload.',
+	'netelementtype_reload' 		=> 'In Seconds. Zero to deactivate autoreload. Decimals possible.',
 	'undeleteables' 				=> 'Net & Cluster can not be changed due to there relevance for all the Entity Relation Diagrams',
 
  /**

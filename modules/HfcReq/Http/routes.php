@@ -17,5 +17,5 @@ BaseRoute::group([], function() {
 
 	BaseRoute::get('NetElement/{id}/controlling/{parameter}/{index}', array ('as' => 'NetElement.controlling_edit', 'uses' => 'Modules\HfcSnmp\Http\Controllers\SnmpController@controlling_edit'));
 	BaseRoute::put('NetElement/{id}/controlling/{parameter}/{index}', array ('as' => 'NetElement.controlling_update', 'uses' => 'Modules\HfcSnmp\Http\Controllers\SnmpController@controlling_update'));
-
+	BaseRoute::get('NetElement/{id}/sse_get_snmpvalues/{parameter}/{index}/{reload}', array ('as' => 'NetElement.sse_get_snmpvalues', 'uses' => 'Modules\HfcSnmp\Http\Controllers\SnmpController@sse_get_snmpvalues'));
 });

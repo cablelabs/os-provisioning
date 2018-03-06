@@ -440,7 +440,7 @@ finish:
 
 			default:
 				if (in_array('readonly', $options))
-					return $field['field_value'];
+					return '<p name="'.$field['name'].'">'. $field['field_value'] .'</p>';
 
 				$s .= \Form::$field["form_type"]($field["name"], $field['field_value'], $options);
 				break;

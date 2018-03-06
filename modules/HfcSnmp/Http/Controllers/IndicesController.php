@@ -15,7 +15,12 @@ class IndicesController extends \BaseController {
 		$netelement_id = $model->netelement_id ? : \Request::input('netelement_id');
 
 		$netelem = NetElement::find($netelement_id);
-		$params  = NetElementType::param_list($netelem->netelementtype_id);
+
+		// get params from parent cmts for cluster
+		if ($netelem->netelementtype_id == 2)
+			$netelem = $netelem->get_parent_cmts();
+
+		$params = $netelem ? NetElementType::param_list($netelem->netelementtype_id) : [];
 
 		// label has to be the same like column in sql table
 		$a = array(
