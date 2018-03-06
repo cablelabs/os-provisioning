@@ -294,7 +294,7 @@ class SnmpController extends \BaseController{
 	/**
 	 * Store values or get stored values
 	 *
-	 * @param Array  if oid-to-value array is set these values are stored
+	 * @param Array  if array ([oid => value]) is set these values are stored
 	 */
 	private function _values($array = null)
 	{
@@ -489,6 +489,7 @@ class SnmpController extends \BaseController{
 		$oids = new \Illuminate\Database\Eloquent\Collection();
 		$oid_o = null;
 		$pre_conf = $this->device->netelementtype->pre_conf_value ? true : false; 			// true - has to be done
+		$user = \Auth::user();
 
 		foreach ($data as $full_oid => $value)
 		{
@@ -538,8 +539,19 @@ class SnmpController extends \BaseController{
 			$ret = $this->snmp_set($full_oid, $oid_o->type, $value);
 
 			// only update on success
-			if ($ret)
-				$old_vals->{$oid} = $value;
+			if ($ret) {
+				// Create GuiLog Entry
+				\App\GuiLog::log_changes([
+					'authuser_id' => $user ? $user->id : 0,
+					'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
+					'method' 	=> 'updated',
+					'model' 	=> 'NetElement',
+					'model_id'  => $this->device->id,
+					'text' 		=> ($oid_o->name_gui ? : $oid_o->name)." ($full_oid):  '".$old_vals->{$full_oid}."' => '$value'",
+					]);
+
+				$old_vals->{$full_oid} = $value;
+			}
 			else
 				$this->set_errors[] = $oid_o->name_gui ? : $oid_o->name;
 		}
