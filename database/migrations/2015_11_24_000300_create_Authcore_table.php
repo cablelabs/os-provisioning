@@ -20,7 +20,7 @@ class CreateAuthcoreTable extends BaseMigration {
 
 			$this->up_table_generic($table);
 
-			$table->string('name');
+			$table->string('name', 191);
 			$table->enum('type', array('model', 'net'));
 			$table->string('description');
 
