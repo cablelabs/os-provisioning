@@ -13,7 +13,7 @@ sed -i 's/\[ius\]/\[ius\]\nincludepkgs=php56u* yum-plugin-replace/' /etc/yum.rep
 rpm -ivh https://packages.icinga.com/epel/icinga-rpm-release-7-latest.noarch.rpm
 
 # add nmsprime repo
-curl http://bit.ly/2zGarzc -Lo /etc/yum.repos.d/nmsprime.repo
+curl https://raw.githubusercontent.com/schmto/nmsprime/dev/nmsprime.repo -Lo /etc/yum.repos.d/nmsprime.repo
 
 # install and replace php56u
 yum install -y php yum-plugin-replace

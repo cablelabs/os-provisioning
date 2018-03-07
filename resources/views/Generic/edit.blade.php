@@ -4,7 +4,7 @@
 
 @param $view_var: the object we are editing
 @param $form_update: the update route which should be called when clicking save
-@param $form_path: the form view to be displayed inside this blade (mostly Generic.edit)
+@param $form_path: the form view to be displayed inside this blade (mostly Generic.form)
 @param $panel_right: the page hyperlinks returned from prepare_tabs() or prep_right_panels()
 @param $relations: the relations array() returned by prep_right_panels() in BaseViewController
 
@@ -19,23 +19,11 @@
 
 
 @section('content_left')
-	<div class="col-12 card-block">
-		<div class="col-md-12 card tab-content" style="display:none;">
-			<div class="tab-pane" id="logging" role="tabpanel">
-				<table id="datatable" class="table table-hover datatable table-bordered d-table">
-					<thead>
-						<tr>
-							<th class="nocolvis" style="min-width:20px;width:20px;"></th> {{-- Responsive Column --}}
-							<th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.guilog.created_at')}}</th>
-							<th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.guilog.username')}}</th>
-							<th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.guilog.method')}}</th>
-						</tr>
-					</thead>
-				</table>
-			</div>
-		</div>
-	</div>
-
+	@include ('Generic.logging')
+	<?php
+		$blade_type = 'relations';
+	?>
+	@include('Generic.above_infos')
 	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'EditForm')) }}
 
 		@include($form_path, $view_var)
@@ -48,12 +36,14 @@
 <?php $api = App\Http\Controllers\BaseViewController::get_view_has_many_api_version($relations) ?>
 
 @section('content_right')
+@if(isset($relations) && !empty($relations))
+<div class="col-md-{{isset($edit_right_md_size) ? $edit_right_md_size : 4}} ui-sortable">
 	@foreach($relations as $view => $relation)
 
-		<?php if (!isset($i)) $i = 0; else $i++; ?>
+	<?php if (!isset($i)) $i = 0; else $i++; ?>
 
-		{{-- The section content for the new Panel --}}
-		@section("content_$i")
+	{{-- The section content for the new Panel --}}
+	@section("content_$i")
 
 			{{-- old API: directly load relation view. NOTE: old API new class var is $view --}}
 			@if ($api == 1)
@@ -96,39 +86,28 @@
 		{{-- The Bootstap Panel to include --}}
 		@include ('bootstrap.panel', array ('content' => "content_$i",
 											'view_header' => \App\Http\Controllers\BaseViewController::translate_view('Assigned', 'Header').' '.\App\Http\Controllers\BaseViewController::translate_view($view, 'Header' , 2),
-											'md' => isset($md_size) ? $md_size : (isset($edit_right_md_size) ? $edit_right_md_size : 4)))
+											'md' => 12))
+											{{-- 'md' => isset($md_size) ? $md_size : (isset($edit_right_md_size) ? $edit_right_md_size : 4))) --}}
+
 
 	@endforeach
-
+	</div>
 
 	{{-- Alert --}}
 	@if (Session::has('alert'))
 		@include('bootstrap.alert', array('message' => Session::get('alert')))
 		<?php Session::forget('alert'); ?>
 	@endif
-
+@endif
 @stop
 
 @section('javascript')
-	{{-- move Javascript Edit Stuff here: select2.js,  --}}
-@stop
-
-@section('javascript_extra')
 @if(isset($panel_right))
-	<script language="javascript">
+<script language="javascript">
 	$('#loggingtab').click(function() {
 		$('.tab-content').toggle();
-		$('.tab-content').toggleClass('d-block');
-		console.log($('#loggingtab').hasClass('active'));
-		if ( $('#loggingtab').hasClass('active') ) {
-			console.log('i am here');
-			$('#loggingtab').removeClass('active');
-			console.log($('#loggingtab').hasClass('active'));
-		}
 	});
-	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-		console.log(e);
-	});
+
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		var table = $('table.datatable').DataTable(
 		{
@@ -154,13 +133,9 @@
 				targets:   [0]
 			},
 			{
-                "targets": [ 4 ],
+                "targets": [ 4 , 5 ],
                 "visible": false,
             },
-            {
-                "targets": [ 5 ],
-                "visible": false
-            }
 			],
 		{{-- AJAX CONFIGURATION --}}
 			processing: true,
@@ -178,6 +153,7 @@
 		});
 	$( $.fn.dataTable.tables(true) ).DataTable().responsive.recalc();
 	});
-	</script>
+</script>
+@include('Generic.handlePanel')
 @endif
 @stop

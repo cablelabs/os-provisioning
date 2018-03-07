@@ -8,7 +8,7 @@ NOTE: - java include section is in default blade at bottom of text
 
 --}}
 
-@section ('javascript')
+@section ('form-javascript')
 
 	<script type="text/javascript">
 		if ($('#top_message').is(".note-primary, .note-success, .note-warning, .note-danger, .note-info")){

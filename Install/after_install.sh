@@ -10,6 +10,7 @@ pw=$(pwgen 12 1) # SQL password for user nmsprime
 # disable SE linux
 #
 sed -i "s/^SELINUX=enforcing$/SELINUX=disabled/" /etc/sysconfig/selinux
+sed -i "s/^SELINUX=enforcing$/SELINUX=disabled/" /etc/selinux/config
 setenforce  0
 
 # set default hostname, if none was explicitly set
@@ -46,9 +47,13 @@ systemctl enable mariadb
 # populate timezone info and set php timezone based on the local one
 mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
 sed -i "s|^;date.timezone =$|date.timezone = $(timedatectl | grep 'Time zone' | cut -d':' -f2 | xargs | cut -d' ' -f1)|" /etc/php.ini
+sed -e 's/^memory_limit =.*/memory_limit = 1024M/' \
+    -e 's/^upload_max_filesize =.*/upload_max_filesize = 50M/' \
+    -e 's/^post_max_size =.*/post_max_size = 50M/' \
+    -i /etc/php.ini
 
 # create mysql db
-mysql -u root -e "CREATE DATABASE nmsprime;"
+mysql -u root -e "CREATE DATABASE nmsprime CHARACTER SET 'utf8mb4';"
 
 mysql -u root -e "GRANT ALL ON nmsprime.* TO 'nmsprime'@'localhost' IDENTIFIED BY '$pw'";
 sed -i "s/^DB_PASSWORD=$/DB_PASSWORD=$pw/" "$env"
@@ -73,6 +78,8 @@ rm -f "$dir/.env"
 echo "# Use /etc/nmsprime/env/*.env files for configuration" > "$dir/.env"
 
 php artisan migrate
+# create default user roles to be later assigned to users
+php artisan nms:addDefaultRoles
 
 # Note: needs to run last. storage/logs is only available after artisan optimize
 chown -R apache $dir/storage $dir/bootstrap/cache

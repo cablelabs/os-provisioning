@@ -91,7 +91,7 @@ class NetElementType extends \BaseModel {
 
 	public function parameters()
 	{
-		return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id')->orderBy('html_frame')->orderBy('html_id')->orderBy('oid_id')->orderBy('id');
+		return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id');
 		// return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id')->orderBy('oid_id')->orderBy('id');
 	}
 

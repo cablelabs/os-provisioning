@@ -307,7 +307,7 @@ class ModemController extends \BaseController {
 
 		// error msg created while observer execution
 		$msg = \Session::has('error') ? \Session::get('error') : 'Restarted Modem!';
-		$color = \Session::has('error') ? 'orange' : 'blue';
+		$color = \Session::has('error') ? 'warning' : 'info';
 
 		return \Redirect::route('Modem.edit', $id)->with('message', $msg)->with('message_color', $color);
 	}

@@ -49,6 +49,10 @@ class BaseController extends Controller {
 
 	protected $index_tree_view = false;
 
+	/**
+	 * Placeholder for Many-to-Many-Relation multiselect fields that should be handled generically
+	 */
+	protected $many_to_many = [];
 
 
 	// Auth Vars
@@ -320,6 +324,10 @@ class BaseController extends Controller {
 			// get filename
 			$filename = Input::file($upload_field)->getClientOriginalName();
 
+			$ext = strrchr($filename, '.');
+			$fn  = substr($filename, 0, strlen($filename) - strlen($ext));
+			$filename = str_replace([' ', '&', '|', ',', ';', '+', '.' ], '', $fn).$ext;
+
 			// move file
 			Input::file($upload_field)->move($dst_path, $filename);
 
@@ -345,8 +353,7 @@ class BaseController extends Controller {
 		if (!$model)
 			$model = new BaseModel;
 
-		if(!isset($a['networks']))
-		{
+		if(!isset($a['networks'])){
 			$a['networks'] = [];
 			if (\PPModule::is_active('HfcReq'))
 				$a['networks'] = \Modules\HfcReq\Entities\NetElement::get_all_net();
@@ -385,6 +392,9 @@ class BaseController extends Controller {
 
 		if (!isset($a['html_title']))
 			$a['html_title'] = 'NMS Prime - '.\App\Http\Controllers\BaseViewController::translate_view(\NamespaceController::module_get_pure_model_name(),'Header');
+
+		if (( \PPModule::is_active('Provvoipenvia')) && (!isset($a['envia_interactioncount'])) )
+			$a['envia_interactioncount'] = \Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
 
 		$a['save_button'] = $this->save_button;
 		$a['force_restart_button'] = $this->force_restart_button;
@@ -572,7 +582,7 @@ class BaseController extends Controller {
 		$obj = $obj::create($data);
 
 		// Add N:M Relations
-		self::_set_many_to_many_relations($obj, $data);
+		$this->_set_many_to_many_relations($obj, $data);
 
 		$id  = $obj->id;
 		if (!$redirect)
@@ -673,13 +683,13 @@ class BaseController extends Controller {
 		$obj->update($data);
 
 		// Add N:M Relations
-		self::_set_many_to_many_relations($obj, $data);
+		$this->_set_many_to_many_relations($obj, $data);
 
 		// create messages depending on error state created while observer execution
 		// TODO: check if giving msg/color to route is still wanted or obsolete by the new tmp_*_above_* messages format
 		if (!\Session::has('error')) {
 			$msg = "Updated!";
-			$color = 'info';
+			$color = 'success';
 			\Session::push('tmp_success_above_form', $msg);
 		}
 		else {
@@ -702,7 +712,7 @@ class BaseController extends Controller {
 	 *
 	 * IMPORTANT NOTES:
 	 *	 To assign a model to the pivot table we need an extra multiselect field in the controllers
-	 *	 	view_form_fields() that must be mentioned inside the guarded array of the model!
+	 *	 	view_form_fields() that must be mentioned inside the guarded array of the model and the many_to_many array of the Controller!!
 	 *	 The multiselect's field name must be in form of the models relation function and a concatenated '_ids'
 	 *		like: '<relation-function>_ids' , e.g. 'users_ids' for the multiselect in Tickets view to assign users
 	 *
@@ -711,25 +721,24 @@ class BaseController extends Controller {
 	 *
 	 * @author Nino Ryschawy
 	 */
-	private static function _set_many_to_many_relations($obj, $data)
+	private function _set_many_to_many_relations($obj, $data)
 	{
-		if (!$obj->guarded)
+		if (!$this->many_to_many)
 			return;
 
-		foreach ($obj->guarded as $field)
+		foreach ($this->many_to_many as $field)
 		{
-			if (!isset($data[$field]) || !is_array($data[$field]))
-				continue;
+			if (!isset($data[$field]))
+				$data[$field] = [];
 
 			// relation-function_id
 			$func = explode('_', $field)[0];
-
 			$attached = $obj->$func->pluck('id')->all();
 
 			// attach new assignments
 			foreach ($data[$field] as $rel_id)
 			{
-				if (!in_array($rel_id, $attached))
+				if ($rel_id && !in_array($rel_id, $attached))
 					$obj->$func()->attach($rel_id, ['created_at' => date('Y-m-d H:i:s')]);
 			}
 
@@ -762,7 +771,7 @@ class BaseController extends Controller {
 			if (!Input::get('ids')) {
 				$message = 'No Entry For Deletion specified';
 				\Session::push('tmp_error_above_form', $message);
-				return Redirect::back()->with('delete_message', ['message' => $message, 'class' => \NamespaceController::get_route_name(), 'color' => 'red']);
+				return Redirect::back()->with('delete_message', ['message' => $message, 'class' => \NamespaceController::get_route_name(), 'color' => 'danger']);
 			};
 
 			$obj = static::get_model_obj();
@@ -786,17 +795,17 @@ class BaseController extends Controller {
 
 		if (!$deleted && !$obj->force_delete) {
 			$message = 'Could not delete '.$class;
-			$color = 'red';
+			$color = 'danger';
 			\Session::push('tmp_error_above_form', $message);
 		}
 		elseif (($deleted == $to_delete) || $obj->force_delete) {
 			$message = 'Successful deleted '.$class;
-			$color = 'blue';
+			$color = 'success';
 			\Session::push('tmp_success_above_form', $message);
 		}
 		else {
 			$message = 'Deleted '.$deleted.' out of '.$to_delete.' '.$class;
-			$color = 'orange';
+			$color = 'warning';
 			\Session::push('tmp_warning_above_form', $message);
 		}
 
@@ -1083,8 +1092,10 @@ class BaseController extends Controller {
 		$edit_column_data = isset($dt_config['edit']) ? $dt_config['edit'] : [];
 		$filter_column_data = isset($dt_config['filter']) ? $dt_config['filter'] : [];
 		$eager_loading_tables = isset($dt_config['eager_loading']) ? $dt_config['eager_loading'] : [];
+		$additional_raw_where_clauses = isset($dt_config['where_clauses']) ? $dt_config['where_clauses'] : [];
 
-		!array_has($header_fields, $dt_config['table'].'.id') ? array_push($header_fields, 'id') : null; // if no id Column is drawn, draw it to generate links with id
+		// if no id Column is drawn, draw it to generate links with id
+		!array_has($header_fields, $dt_config['table'].'.id') ? array_push($header_fields, 'id') : null;
 
 		if (empty($eager_loading_tables) ){ //use eager loading only when its needed
 			$request_query = $model::select($dt_config['table'].'.*');
@@ -1095,6 +1106,11 @@ class BaseController extends Controller {
 				$first_column = substr(head($header_fields), strlen($dt_config["table"]) + 1);
 			else
 				$first_column = head($header_fields);
+		}
+
+		// apply additional where clauses
+		foreach ($additional_raw_where_clauses as $where_clause) {
+			$request_query = $request_query->whereRaw($where_clause);
 		}
 
 		$DT = Datatables::of($request_query);
@@ -1108,6 +1124,9 @@ class BaseController extends Controller {
 		};
 
 		$DT	->editColumn('checkbox', function ($object) {
+				if(method_exists($object , 'set_index_delete'))
+					$object->set_index_delete();
+
 				return "<input style='simple' align='center' class='' name='ids[".$object->id."]' type='checkbox' value='1' ".
 				($object->index_delete_disabled ? "disabled" : '').">";
 			})

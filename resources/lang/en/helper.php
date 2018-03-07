@@ -14,7 +14,9 @@ return [
   */
 	//BillingBaseController
 	'BillingBase_cdr_offset' 		=> "TAKE CARE: incrementing this when having data from settlement runs leads to overwritten CDRs during next run - make sure to save/rename the history!\n\nExample: Set to 1 if Call Data Records from June belong to Invoices of July, Zero if it's the same month, 2 if CDRs of January belong to Invoices of March.",
- 	'BillingBase_extra_charge' 		=> 'Additional mark-on to purchase price. Only when not calculated through provider!',
+	'BillingBase_cdr_retention' 	=> 'Months that Call Data Records may/have to be kept save',
+	'BillingBase_extra_charge' 		=> 'Additional mark-on to purchase price. Only when not calculated through provider!',
+	'BillingBase_fluid_dates' 		=> 'Check this box if you want to add tariffs with uncertain start and/or end date. If checked two new checkboxes (Valid from fixed, Valid to fixed) will appear on Item\'s edit/create page. Check out their help messages for further explanation!',
 	'BillingBase_InvoiceNrStart' 	=> 'Invoice Number Counter starts every new year with this number',
 	'BillingBase_ItemTermination'	=> 'Allow Customers only to terminate booked products on last day of month',
 	'BillingBase_MandateRef'		=> "A Template can be built with sql columns of contract or mandate table - possible fields: \n",
@@ -31,14 +33,15 @@ return [
 	//ItemController
 	'Item_ProductId'				=> 'All fields besides Billing Cycle have to be cleared before a type change! Otherwise items can not be saved in most cases',
 	'Item_ValidFrom'				=> 'For One Time Payments the fields can be used to split payment - Only YYYY-MM is considered then!',
-	'Item_ValidFromFixed'			=> 'Fixed dates are used for billing and not updated by external orders',
-	'Item_ValidToFixed'				=> 'Fixed dates are used for billing and not updated by external orders',
+	'Item_ValidFromFixed'			=> 'Checked by default! Uncheck if the tariff shall stay inactive when start date is reached (e.g. if customer is waiting for a phone number porting). The tariff will not start and not be charged until you activate the checkbox. Further the start date will be incremented every day by one day after reaching the start date. Info: The date is not updated by external orders (e.g. from telephony provider).',
+	'Item_ValidToFixed'				=> 'Checked by default! Uncheck if the end date is uncertain. If unchecked the tariff will not end and will be charged until you activate the checkbox. Further when the end date is reached it will be incremented every day by one day. Info: The date is not updated by external orders (e.g. from telephony provider).',
 	'Item_CreditAmount'				=> 'Net Amount to be credited to Customer. Take Care: a negative amount becomes a debit!',
 
 	//ProductController
-  	'Product_Name' 					=> 'For Credits it is possible to assign a Type by adding the type name to the Name of the Credit - e.g.: \'Credit Device\'',
-  	'Product_Type'					=> 'All fields besides Billing Cycle have to be cleared before a type change! Otherwise products can not be saved in most cases',
+	'Product_maturity' 				=> 'Tariff period/runtime/term. E.g. 14D (14 days), 3M (three months), 1Y (one year)',
+	'Product_Name' 					=> 'For Credits it is possible to assign a Type by adding the type name to the Name of the Credit - e.g.: \'Credit Device\'',
 	'Product_Number_of_Cycles' 		=> 'Take Care!: for all repeatedly payed products the price stands for every charge, for Once payed products the Price is divided by the number of cycles',
+	'Product_Type'					=> 'All fields besides Billing Cycle have to be cleared before a type change! Otherwise products can not be saved in most cases',
 
 	//SalesmanController
 	'Salesman_ProductList'			=> 'Add all Product types he gets commission for - possible: ',
@@ -57,7 +60,7 @@ return [
  /**
   *	MODULE: HfcReq
   */
- 	'netelementtype_reload' 		=> 'In Seconds. Zero to deactivate autoreload.',
+	'netelementtype_reload' 		=> 'In Seconds. Zero to deactivate autoreload.',
 	'undeleteables' 				=> 'Net & Cluster can not be changed due to there relevance for all the Entity Relation Diagrams',
 
  /**
@@ -75,7 +78,7 @@ return [
  /**
   *	MODULE: ProvBase
   */
- 	//ModemController
+	//ModemController
 	'Modem_NetworkAccess'			=> 'Network Access for CPEs. (MTAs are not considered and will always go online when all other configurations are correct). Take care: With Billing-Module this checkbox will be overwritten by daily check if tariff changes.',
 	'Modem_InstallationAddressChangeDate'	=> 'In case of (physical) relocation of the modem: Add startdate for the new address here. If readonly there is a pending address change order at Envia.',
 	'contract_number' 				=> 'Attention - Customer login password is changed automatically on changing this field!',
@@ -84,7 +87,7 @@ return [
  /**
   *	MODULE: ProvVoip
   */
- 	//PhonenumberManagementController
+	//PhonenumberManagementController
 	'PhonenumberManagement_CarrierIn' => 'On incoming porting: set to previous Telco.',
 	'PhonenumberManagement_CarrierInWithEnvia' => 'On incoming porting: set to previous Telco. In case of a new number set this to EnviaTEL',
 	'PhonenumberManagement_EkpIn' => 'On incoming porting: set to previous Telco.',

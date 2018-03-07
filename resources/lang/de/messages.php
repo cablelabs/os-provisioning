@@ -32,6 +32,7 @@ return [
 	'cpe_log_error'				=> 'ist nicht beim Server registriert - Kein Logeintrag gefunden',
 
 	'Create'					=> 'Erstellen',
+	'D' 						=> 'Tag|Tage',
 	'Delete'					=> 'Löschen',
 	'Day'						=> 'Tag',
 	'Description'				=> 'Beschreibung',
@@ -48,6 +49,8 @@ return [
 	'Endpoints'					=> 'Endpunkte',
 	'Endpoints List'			=> 'Endpunktliste',
 	'Entry'						=> 'Eintrag',
+	'envia_no_interaction' 		=> 'Keine Envia Vorgänge, die eine Bearbeitung benötigen',
+	'envia_interaction'			=> 'Envia Vorgang benötigt eine Bearbeitung|Envia Vorgänge benötigen Bearbeitung',
 	'E-Mail Address'			=> 'Email-Adresse',
 	'First IP'					=> 'Erste IP',
 	'Firstname'					=> 'Vorname',
@@ -60,8 +63,10 @@ return [
 	'Language'					=> 'Sprache',
 	'Lastname'					=> 'Nachname',
 	'Last IP'					=> 'Letzte IP',
+	'M' 						=> 'Monat|Monate',
 	'MAC Address'				=> 'MAC Adresse',
 	'Main Menu'					=> 'Hauptmenü',
+	'Maturity' 					=> 'Laufzeit',
 	'modem_eventlog_error'		=> 'Modem Eventlog nicht gefunden',
 	'modem_monitoring_error'	=> 'Möglicherweise war das Modem bis jetzt nicht online. Beachten Sie, dass Diagramme erst ab
 		dem Zeitpunkt verfügbar sind, von dem an das Modem online ist. Wurden alle Diagramme unsauber angezeigt, könnte es
@@ -84,6 +89,7 @@ return [
 	'or: Upload KML file'		=> 'oder lade KML hoch',
 	'Parent Device Type'		=> 'Eltern Gerätetyp',
 	'Parent Object'				=> 'Eltern Objekt',
+	'Period of Notice' 			=> 'Kündigungsfrist',
 	'Password'					=> 'Passwort',
 	'Phone'						=> 'Telefon',
 	'Phone ID next month'		=> 'Telefon ID nächsten Monat',
@@ -100,6 +106,7 @@ return [
 	'Save'						=> 'Speichern',
 	'Save / Restart'			=> 'Speichern / Neustart',
 	'Serial Number'				=> 'Seriennummer',
+	'Sign me in' 				=> 'Anmelden',
 	'State'						=> 'Status',
 	'Street'					=> 'Straße',
 	'Type'						=> 'Typ',
@@ -109,6 +116,7 @@ return [
 	'Vendor'					=> 'Hersteller',
 	'Year'						=> 'Jahr',
 	'yes' 						=> 'ja',
+	'Y' 						=> 'Jahr|Jahre',
 //
 //Global
 //
@@ -124,14 +132,16 @@ return [
 	'Headline 2'				=> 'Überschrift Navigationsleiste',
 	//Billing
 	'accCmd_processing' 		=> 'Der Abrechnungslauf wird erstellt. Bitte warten Sie bis der Prozess abgeschlossen ist.',
-	'Day of Requested Collection Date'	=> 'Monatlicher Abrechungstag',
+	'CDR retention period' 		=> 'Aufbewahrungsfrist für Einzelverbindungsnachweise',
+	'Day of Requested Collection Date'	=> 'Monatlicher Abrechnungstag',
 	'Tax in %'					=> 'Mehrwertsteuer in %',
 	'Invoice Number Start'		=> 'Start Nummerierung Rechnungen',
 	'Split Sepa Transfer-Types'	=> 'SEPA-Transfertypen aufteilen?',
-	'Mandate Reference'			=> 'Mandatrefferenz',
+	'Mandate Reference'			=> 'Mandatsrefferenz',
 	'e.g.: String - {number}'	=> 'z.Bsp.: Sring - {Nummer}',
 	'Item Termination only end of month'=> 'Posten nur am ende des Monats kündigen?',
-	'Language for Accounting command'	=> 'Sprache für Abrechnungslauf-Befehl',
+	'Language for settlement run' => 'Sprache für Abrechnungslauf',
+	'Uncertain start/end dates for tariffs' => 'Ungewisse Tarif-Start-/Enddaten',
 	//CCC
 	'Connection Info Template'	=> 'Vorlage für Verbingungsinformationen',
 	'Upload Template'			=> 'Vorlage hochladen',
@@ -154,6 +164,7 @@ return [
 //
 	//Verträge
 	'Academic Degree'			=> 'Akademischer Titel',
+	'contract_early_cancel' 	=> 'Möchten Sie den Vertrag wirklich vor Tariflaufzeitende :date kündigen?',
 	'Contract number'			=> 'Vertragsnummer',
 	'Contract Nr'				=> 'Vertragsnr',
 	'Contract number legacy'	=> 'Historische Vertragsnummer',
@@ -177,10 +188,12 @@ return [
 	'Items'						=> 'Posten',
 	'missing_product'			=> 'Fehlendes Produkt!',
 	'Product'					=> 'Produkt',
-	'Valid from'				=> 'Gültig ab',
-	'Valid to'					=> 'Gültig bis',
-	'Valid from fixed'			=> 'Gültig ab fest',
-	'Valid to fixed'			=> 'Gültig bis fest',
+	'Start date' 				=> 'Startdatum',
+	'Active from start date' 	=> 'Ab Startdatum aktiv',
+	'Valid from'				=> 'Startdatum',
+	'Valid to'					=> 'Enddatum',
+	'Valid from fixed'			=> 'Ab Startdatum aktiv',
+	'Valid to fixed'			=> 'Festes Enddatum',
 	//Modems
 	'Configfile'				=> 'Konfigurationsdatei',
 	'Mta'						=> 'MTA',
@@ -209,8 +222,9 @@ return [
 //
 //Billing Base
 //
+
 	//Product Entry
-	'Billing Cycle'				=> 'Rechnungskreislauf',
+	'Billing Cycle'				=> 'Abrechungszyklus',
 	'Bundled with VoIP product?'=> 'Mit VoIP-Produkt verknüpft?',
 	'Price (Net)'				=> 'Preis (netto)',
 	'Number of Cycles'			=> 'Anzahl der Zyklen',
@@ -287,6 +301,7 @@ return [
 
 	//Settlement Run File generation
 	'Contractnr'			=> 'Vertragsnummer',
+	'Create Invoices' 		=> 'Erstelle Rechnungen',
 	'Invoicenr'				=> 'Rechnungsnummer',
 	'Calling Number'		=> 'Rufnummer',
 	'Called Number'			=> 'Angerufene Nummer',
@@ -303,6 +318,8 @@ return [
 	'Commission in %'		=> 'Provision in %',
 	'Total Fee'				=> 'Gesamtgebühr',
 	'Commission Amount'		=> 'davon Provision',
+	'eom' 					=> 'zum Monatsende',
+	'Zip Files' 			=> 'Erstelle ZIP-Datei',
 
 /**
  * Customer Control Center
@@ -420,9 +437,9 @@ return [
 	'Credit'                    => 'Gutschrift',
 	'Other'                     => 'Sonstige',
 	'Once'                      => 'einmalig',
-	'Monthly'                   => 'pro Monat',
-	'Quarterly'                 => 'pro Quartal',
-	'Yearly'                    => 'pro Jahr',
+	'Monthly'                   => 'monatlich',
+	'Quarterly'                 => 'vierteljährlich',
+	'Yearly'                    => 'jährlich',
 	//Tree Table
 	'NET'                       => 'Netz',
 	'CMTS'                      => 'CMTS',

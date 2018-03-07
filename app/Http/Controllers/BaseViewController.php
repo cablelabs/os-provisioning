@@ -96,9 +96,8 @@ class BaseViewController extends Controller {
 	public static function get_user_lang()
 	{
 		$user = Auth::user();
-		if (!isset($user))
-			return 'en';
-		$language = Auth::user()->language;
+
+		$language = $user ? $user->language : 'browser';
 
 		if ($language == 'browser')
 		{
@@ -112,7 +111,6 @@ class BaseViewController extends Controller {
 			else
 				return 'en';
 		}
-
 		return $language;
 	}
 
@@ -186,6 +184,7 @@ class BaseViewController extends Controller {
 			} else
 				$field['field_value'] = $model[$field['name']];
 
+			// NOTE: Input::get should actually include $_POST global var and $_GET!!
 			// 4.(sub-task) auto-fill all field_value's with HTML Input
 			if (\Input::get($field['name']))
 				$field['field_value'] = \Input::get($field['name']);
@@ -261,9 +260,6 @@ class BaseViewController extends Controller {
 		$color_array = ['whitesmoke', 'gainsboro'];
 		$color = $color_array[0];
 
-		// prepare form fields
-		// $fields = static::prepare_form_fields($_fields, $model);
-
 		// foreach fields
 		foreach ($fields as $field)
 		{
@@ -287,7 +283,10 @@ class BaseViewController extends Controller {
 					$hidden == 1) // hide globally?
 				)
 					{
-						$s .= \Form::hidden ($field["name"], $field['field_value']);
+						// For hidden fields it's also important that default values are set
+						$value = ($field['field_value'] === null) && isset($field['value']) ? $field['value'] : $field['field_value'];
+						// Note: setting a selection by giving an array doesnt make sense as you can not choose anyway - it also would throw an exception as it's not allowed for hidden fields
+						$s .= \Form::hidden ($field["name"], is_array($value) ? '' : $value);
 						goto finish;
 					}
 			}
@@ -356,6 +355,10 @@ class BaseViewController extends Controller {
 						$checked = $field['field_value'];
 
 					$s .= \Form::checkbox($field['name'], $value, null, $checked, $options);
+					break;
+
+				case 'file':
+					$s .= \Form::file($field['name'], $options);
 					break;
 
 				case 'select' :
@@ -702,12 +705,10 @@ finish:
 		}
 
 		// Base Link to Index Table in front of all relations
-// <<<<<<< HEAD
 		// if (in_array($route_name, BaseController::get_config_modules()))	// parse: Global Config requires own link
 		// 	$s = \HTML::linkRoute('Config.index', BaseViewController::translate_view('Global Configurations', 'Header')).': '.$s;
 		// else if (Route::has($route_name.'.index'))
 		// 	$s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
-// =======
 		if (in_array($route_name, BaseController::get_config_modules())) {	// parse: Global Config requires own link
 			$breadcrumb_path_base = "<li class='active'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).BaseViewController::translate_view('Global Configurations', 'Header'))."</li>";
 		}
@@ -860,10 +861,12 @@ finish:
 
 	switch ($entity) {
 		case 'rx power dbmv':
+			$ret = self::_colorize($val, [-3, -1, 15, 20]);
+			break;
 		case 'power dbmv':
-			if($dir == 'downstream')
+			if ($dir == 'downstream')
 				$ret = self::_colorize($val, [-20, -10, 15, 20]);
-			if($dir == 'upstream')
+			if ($dir == 'upstream')
 				$ret = self::_colorize($val, [22, 27, 50, 56]);
 				break;
 		case 'microreflection -dbc':
@@ -887,8 +890,9 @@ finish:
 			if ($mod == 'qam256')
 				$ret = self::_colorize($val, [32, 35]);
 				break;
-			}
-	return $ret;
+		}
+
+		return $ret;
 	}
 
 	public static function get_quality_color_orig($dir, $entity, $values)

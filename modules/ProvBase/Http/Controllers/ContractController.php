@@ -77,11 +77,8 @@ class ContractController extends \BaseController {
 		);
 
 		if (!\PPModule::is_active('ccc'))
-		{
 			unset($a[0]['help']);
-		}
 
-		// TODO: replace with static command
 		if ($model->voip_enabled && !\PPModule::is_active('billingbase')) {
 
 			$b = array(
@@ -108,7 +105,7 @@ class ContractController extends \BaseController {
 
 				// NOTE: qos is required as hidden field to automatically create modem with correct contract qos class
 				// TODO: @Nino Ryschawy: please review and test while merging ..
-				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list(Qos::all(), 'name'), 'hidden' => 1),
+				array('form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'hidden' => 1),
 				array('form_type' => 'checkbox', 'name' => 'telephony_only', 'description' => 'Telephony only', 'value' => '1', 'help' => 'Customer has only subscribed telephony, i.e. no internet access', 'hidden' => 1)
 			);
 		}
@@ -161,6 +158,7 @@ class ContractController extends \BaseController {
 	{
 		$data['contract_start'] = $data['contract_start'] ? : date('Y-m-d');
 
+		// generate contract number
 		if (!$data['number'] && \PPModule::is_active('billingbase'))
 		{
 			// check if a costcenter id is given
@@ -168,11 +166,13 @@ class ContractController extends \BaseController {
 			if ($data['costcenter_id']) {
 				// generate contract number
 				$num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
-
-				if ($num)
+				if ($num) {
 					$data['number'] = $num;
-				else
+				}
+				else if (\Modules\BillingBase\Entities\NumberRange::where('type', '=', 'contract')->where('costcenter_id', $data['costcenter_id'])->count()) {
+					// show alert when there is a numberrange for costcenter but there are no more free numbers
 					session(['alert' => \App\Http\Controllers\BaseViewController::translate_view('Failure','Contract_Numberrange')]);
+				}
 			}
 		}
 

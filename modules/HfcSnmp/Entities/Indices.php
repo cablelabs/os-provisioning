@@ -66,7 +66,7 @@ class Indices extends \BaseModel {
 	 */
 	public function parameter()
 	{
-		return $this->belongsTo('Modules\HfcSnmp\Entities\Parameter')->with('oid');
+		return $this->belongsTo('Modules\HfcSnmp\Entities\Parameter');
 	}
 
 	public function netelement()

@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<title>{{$html_title}}</title>
 	@include ('bootstrap.header')
-
+	@yield('head')
 </head>
 
 <body <?php if(isset($body_onload)) echo "onload=$body_onload()";?> >
@@ -24,6 +24,7 @@
 	</div>
 
 @include ('bootstrap.footer')
+@yield ('form-javascript')
 @yield ('javascript')
 @yield ('javascript_extra')
 

@@ -21,7 +21,7 @@ class CreateEkpCodeTable extends BaseMigration {
 		{
 			$this->up_table_generic($table);
 
-			$table->string('ekp_code')->unique();
+			$table->string('ekp_code', 191)->unique();
 			$table->string('company');
 		});
 

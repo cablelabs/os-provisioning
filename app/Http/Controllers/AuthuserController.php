@@ -6,6 +6,8 @@ use App\Authuser;
 
 class AuthuserController extends BaseController {
 
+	protected $many_to_many = ['roles_ids'];
+
     /**
      * defines the formular fields for the edit and create view
      */
@@ -21,17 +23,11 @@ class AuthuserController extends BaseController {
 			array('form_type' => 'text', 'name' => 'email', 'description' => 'Email'),
 			array('form_type' => 'select', 'name' => 'language', 'description' => 'Language', 'value' => Authuser::getPossibleEnumValues('language', false)),
 			array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'value' => '1', 'checked' => true),
-			array('form_type' => 'select', 'name' => 'assigned_role_id[]', 'description' => 'Assign Role',
-					'value' => $model->html_list(Authuser::get_not_assigned_roles_by_userid($model->id), 'name'),
-					'options' => ['multiple' => 'multiple'], 'help' => trans('helper.assign_role')),
+			array('form_type' => 'select', 'name' => 'roles_ids[]', 'description' => 'Assign Role',
+				'value' => $model->html_list(\App\Authrole::where('type', 'like', 'role')->get(), 'name'),
+				'options' => array('multiple' => 'multiple'), 'help' => trans('helper.assign_role'),
+				'selected' => $model->html_list($model->roles, 'name')),
 		);
-	}
-
-	protected function prepare_input($data)
-	{
-		$data['assigned_role_id'] = isset($data['assigned_role_id']) ? implode(';', $data['assigned_role_id']) : null;
-
-		return parent::prepare_input($data);
 	}
 
 

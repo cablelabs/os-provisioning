@@ -5,6 +5,18 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+a {
+    color: #348FE2;
+    text-decoration:none;
+    background-color:transparent;
+    -webkit-text-decoration-skip:objects
+}
+
+a:hover {
+    color:#337AB7;
+    text-decoration:underline
+}
+
 /* Selectv2 responsive */
 .select2-container {
     width: 100% !important;
@@ -35,6 +47,10 @@ body {
     box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
 }
 
+.progress span {
+    position: absolute;
+    width: 100%;
+}
 
 /* Breadcrumb pills custom style */
 .tab-overflow .nav.nav-pills {

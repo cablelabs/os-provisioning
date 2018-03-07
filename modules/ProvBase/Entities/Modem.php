@@ -49,7 +49,7 @@ class Modem extends \BaseModel {
 		$bsclass = $this->get_bsclass();
 
 		return ['table' => $this->table,
-				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.name', $this->table.'.lastname', $this->table.'.city', $this->table.'.street', $this->table.'.district', $this->table.'.us_pwr', 'contract_valid'],
+				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.street', $this->table.'.house_number', $this->table.'.district', $this->table.'.us_pwr', 'contract_valid'],
 		        'bsclass' => $bsclass,
 				'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
 				'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
@@ -239,17 +239,16 @@ class Modem extends \BaseModel {
 	 *
 	 * @author Nino Ryschawy
 	 */
-	private function generate_cm_dhcp_entry()
+	private function generate_cm_dhcp_entry($server = '')
 	{
 		Log::debug(__METHOD__." started for ".$this->hostname);
 
 		$ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
 
-		if (\PPModule::is_active('provvoip') && count($this->mtas))
-			$ret .= ' option ccc.dhcp-server-1 '.ProvBase::first()->provisioning_server.';';
+		if (\PPModule::is_active('provvoip') && $this->mtas()->count())
+			$ret .= ' option ccc.dhcp-server-1 '.($server ? : ProvBase::first()->provisioning_server).';';
 
-		$ret .= "}\n";
-		return $ret;
+		return $ret."}\n";
 	}
 
 	private function generate_cm_dhcp_entry_pub()
@@ -281,15 +280,13 @@ class Modem extends \BaseModel {
 	 */
 	public static function make_dhcp_cm_all ()
 	{
-		Log::debug(__METHOD__." started");
-
-		Modem::clear_dhcp_conf_files();
-
-		// Log
 		Log::info('dhcp: update '.self::CONF_FILE_PATH.', '.self::CONF_FILE_PATH_PUB);
 
 		$data     = '';
 		$data_pub = '';
+		$server   = ProvBase::first()->provisioning_server;
+
+		Modem::clear_dhcp_conf_files();
 
 		foreach (Modem::all() as $modem)
 		{
@@ -297,12 +294,11 @@ class Modem extends \BaseModel {
 				continue;
 
 			// all
-			$data .= $modem->generate_cm_dhcp_entry();
+			$data .= $modem->generate_cm_dhcp_entry($server);
 
 			// public ip
 			if ($modem->public)
 				$data_pub .= $modem->generate_cm_dhcp_entry_pub();
-
 		}
 
 		$ret = File::put(self::CONF_FILE_PATH, $data);
@@ -351,8 +347,7 @@ class Modem extends \BaseModel {
 		{
 			// try to add file if it doesnt exist
 			Log::info('Missing DHCPD Configfile '.self::CONF_FILE_PATH);
-			if (File::put(self::CONF_FILE_PATH, '') === false)
-			{
+			if (File::put(self::CONF_FILE_PATH, '') === false) {
 				Log::alert('Error writing to DHCPD Configfile: '.self::CONF_FILE_PATH);
 				return;
 			}
@@ -369,8 +364,7 @@ class Modem extends \BaseModel {
 		// TODO: check for hostname to avoid deleting the wrong entry when mac exists multiple times in DB !?
 		foreach ($conf as $key => $line)
 		{
-			if (strpos($line, $replace) !== false && strpos($line, $this->hostname) !== false)
-			{
+			if (strpos($line, $this->hostname) !== false) {
 				unset($conf[$key]);
 				break;
 			}
@@ -384,7 +378,7 @@ class Modem extends \BaseModel {
 		// public ip
 		if ($this->public || ($original && $original['public']))
 		{
-			$data_pub 	  = $this->generate_cm_dhcp_entry_pub();
+			$data_pub = $this->generate_cm_dhcp_entry_pub();
 
 			if (file_exists(self::CONF_FILE_PATH_PUB))
 				$conf_pub = file(self::CONF_FILE_PATH_PUB);
@@ -397,8 +391,7 @@ class Modem extends \BaseModel {
 
 			foreach ($conf_pub as $key => $line)
 			{
-				if (strpos($line, $replace) !== false)
-				{
+				if (strpos($line, $replace) !== false) {
 					unset($conf_pub[$key]);
 					break;
 				}
@@ -1105,8 +1098,10 @@ class ModemObserver
 
 		$modem->hostname = 'cm-'.$modem->id;
 		$modem->save();	 // forces to call the updating() and updated() method of the observer !
-		if (\PPModule::is_active ('ProvMon'))
+		if (\PPModule::is_active ('ProvMon')) {
+			Log::info("Create cacti diagrams for modem: $modem->hostname");
 			\Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
+		}
 	}
 
 	public function updating($modem)

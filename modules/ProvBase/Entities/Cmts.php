@@ -8,6 +8,9 @@ use Acme\php\ArrayHelper;
 
 class Cmts extends \BaseModel {
 
+	// don't put a trailing slash here!
+	public static $cmts_include_path = '/etc/dhcp/nmsprime/cmts_gws';
+
 	// The associated SQL table for this Model
 	public $table = 'cmts';
 
@@ -113,6 +116,7 @@ class Cmts extends \BaseModel {
 	 */
 	public function get_raw_cmts_config()
 	{
+		$this->prep_cmts_config_page();
 		$view_var = $this;
 		$cb = $this;
 
@@ -261,7 +265,7 @@ class Cmts extends \BaseModel {
 	 */
 	public function get_us_snr($ip)
 	{
-		$fn = "data/provbase/us_snr/$this->hostname.json";
+		$fn = "data/provbase/us_snr/$this->id.json";
 
 		if (!\Storage::exists($fn)) {
 			\Log::error("Missing Modem US SNR json file of CMTS $this->hostname [$this->id]");
@@ -332,7 +336,7 @@ class Cmts extends \BaseModel {
 			return;
 		}
 
-		\Storage::put("data/provbase/us_snr/$this->hostname.json", json_encode($ret));
+		\Storage::put("data/provbase/us_snr/$this->id.json", json_encode($ret));
 	}
 
 
@@ -384,8 +388,7 @@ class Cmts extends \BaseModel {
 	 */
 	public function make_dhcp_conf ()
 	{
-		$file_dhcp_conf = '/etc/dhcp/nmsprime/cmts_gws.conf';
-		$file = '/etc/dhcp/nmsprime/cmts_gws/'.$this->hostname.'.conf';
+		$file = self::$cmts_include_path."/$this->id.conf";
 
 		if ($this->id == 0)
 			return -1;
@@ -484,109 +487,26 @@ class Cmts extends \BaseModel {
 
 		File::append($file, '}'."\n");
 
-
-		// append include statement in dhcpd.conf if not yet done
-		$handle = fopen($file_dhcp_conf, 'r');
-		$existent = false;
-
-		// search for file-string
-		while (($buffer = fgets($handle)) !== false)
-		{
-			if (strpos($buffer, $file) !== false)
-			{
-				$existent = true;
-				break;
-			}
-		}
-
-		if (!$existent)
-		{
-			File::append($file_dhcp_conf, "\n".'include "'.$file.'";');
-		}
-
-
 _exit:
+		self::make_includes();
+
 		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
 		system('/bin/chown -R apache /etc/dhcp/');
 	}
 
 	/**
-	 * Deletes the calling object/cmts in DB and removes the include statement from the global dhcpd.conf
-	 * Also sets the related IP-Pools to cmts_id=0
+	 * Generate cmts_gws.conf containing includes for the
+	 * shared-networks of all cmts
 	 *
-	 * @author Nino Ryschawy
-	 * @param
-	 * @return void
+	 * @author Ole Ernst
 	 */
-	public function delete_cmts()
+	public static function make_includes()
 	{
-
-		$file = '/etc/dhcp/nmsprime/cmts_gws/'.$this->hostname.'.conf';
-		if (file_exists($file)) unlink($file);
-
-		$lines = file('/etc/dhcp/dhcpd.conf');
-
-		foreach($lines as $key => $line)
-		{
-			// line found
-			if(strpos($line, $file) !== false)
-			{
-				if ($lines[$key-1] == "")
-					$lines[$key-1] = str_replace(PHP_EOL, "", $lines[$key-1]);
-				unset($lines[$key]);
-			}
-		}
-
-		$data = implode(array_values($lines));
-
-		$file_dhcp_conf = fopen('/etc/dhcp/dhcpd.conf', 'w');
-		fwrite($file_dhcp_conf, $data);
-		fclose($file_dhcp_conf);
-	}
-
-	/**
-	 * Deletes all cmts include statements in global dhcpd.conf
-	 *
-	 * @return
-	 * @author Nino Ryschawy
-	 */
-	public static function del_cmts_includes()
-	{
-		$file_path   = '/etc/dhcp/dhcpd.conf';
-		$include_str = '/etc/dhcp/nmsprime/cmts_gws/';
-
-		// copy file as backup
-		copy($file_path, $file_path.'_backup');
-
-		$lines = file($file_path);
-		$data = '';
-		$bool = false;
-		$i = 0;
-
-		foreach($lines as $key => $line)
-		{
-			// if it's an cmts include line
-			if(strpos($line, $include_str) !== false)
-			{
-				// remove all empty lines only the first time an cmts include statement was found
-				do
-				{
-					if ($bool)
-						break;
-					$lines[$key - $i] = str_replace(PHP_EOL, "", $lines[$key - $i]);
-					$i++;
-				} while (($lines[$key - $i] == "\n") || ($lines[$key - $i] == ""));
-
-				unset($lines[$key]);
-				$bool = true;
-
-			}
-		}
-
-		$data = implode(array_values($lines));
-
-		\File::put($file_path, $data);
-
+		$path = self::$cmts_include_path;
+		$incs = '';
+		foreach (Cmts::all() as $cmts)
+			$incs .= "include \"$path/$cmts->id.conf\";\n";
+		file_put_contents($path.'.conf', $incs);
 	}
 
 }
@@ -602,36 +522,29 @@ _exit:
  */
 class CmtsObserver
 {
+	public static $cmts_tftp_path = '/tftpboot/cmts';
+
 	public function created($cmts)
 	{
-		// dd(\Route::getCurrentRoute()->getActionName(), $this);
-		// only create new config file
-		// dd($cmts);
 		if (\PPModule::is_active ('ProvMon'))
 			\Artisan::call('nms:cacti', ['--modem-id' => 0, '--cmts-id' => $cmts->id]);
 		$cmts->make_dhcp_conf();
 
-		// write CMTS config to /tftpboot/cmts
-		File::put('/tftpboot/cmts/'.$cmts->hostname.'.cfg', $cmts->get_raw_cmts_config());
-	}
-
-	public function updating($cmts)
-	{
-		$tmp = Cmts::find($cmts->id);
-		$tmp->delete_cmts();
+		File::put(self::$cmts_tftp_path."/$cmts->id.cfg", $cmts->get_raw_cmts_config());
 	}
 
 	public function updated($cmts)
 	{
 		$cmts->make_dhcp_conf();
 
-		// write CMTS config to /tftpboot/cmts
-		File::put('/tftpboot/cmts/'.$cmts->hostname.'.cfg', $cmts->get_raw_cmts_config());
+		File::put(self::$cmts_tftp_path."/$cmts->id.cfg", $cmts->get_raw_cmts_config());
 	}
 
 	public function deleted($cmts)
 	{
-		// delete the conf file and the include statement in /etc/dhcp/dhcpd.conf
-		$cmts->delete_cmts();
+		File::delete(Cmts::$cmts_include_path."/$cmts->id.conf");
+		File::delete(self::$cmts_tftp_path."/$cmts->id.cfg");
+
+		Cmts::make_includes();
 	}
 }

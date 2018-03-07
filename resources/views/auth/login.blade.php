@@ -39,12 +39,12 @@
 
 					{{-- Username --}}
 					<div class="form-group m-b-20">
-					{{ Form::text('login_name', Input::old('login_name'), array('autofocus'=>'autofocus', 'class' => "form-control input-lg", 'placeholder' => 'Username', 'style' => 'simple')) }}
+					{{ Form::text('login_name', Input::old('login_name'), array('autofocus'=>'autofocus', 'class' => "form-control input-lg", 'placeholder' => \App\Http\Controllers\BaseViewController::translate_label('Username'), 'style' => 'simple')) }}
 					</div>
 
 					{{-- Password --}}
 					<div class="form-group m-b-20">
-					{{ Form::password('password', array('autofocus'=>'autofocus', 'class' => "form-control input-lg", 'placeholder' => 'Password', 'style' => 'simple')) }}
+					{{ Form::password('password', array('autofocus'=>'autofocus', 'class' => "form-control input-lg", 'placeholder' => \App\Http\Controllers\BaseViewController::translate_label('Password'), 'style' => 'simple')) }}
 					</div>
 
 					{{-- Error Message --}}
@@ -67,7 +67,7 @@
 
 					{{-- Login Button --}}
 					<div class="login-buttons">
-						<button type="submit" class="btn btn-success btn-block btn-lg">Sign me in</button>
+						<button type="submit" class="btn btn-success btn-block btn-lg">{{ \App\Http\Controllers\BaseViewController::translate_label('Sign me in') }}</button>
 					</div>
 
 				{{ Form::close() }}

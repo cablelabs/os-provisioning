@@ -36,6 +36,27 @@ class PhonenumberManagementController extends \BaseController {
 	}
 
 
+	/**
+	 * Add functionality to clear envia TEL reference for this phonenumber(management)
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function edit($id) {
+
+		if (\Input::has('clear_envia_reference')) {
+			if (\PPModule::is_active('ProvVoipEnvia')) {
+				$mgmt = PhonenumberManagement::find($id);
+				$mgmt->phonenumber->contract_external_id = null;
+				$mgmt->phonenumber->save();
+				\Session::push('tmp_info_above_form', 'Removed envia TEL contract reference. This can be restored via „Get envia TEL contract reference“.');
+				return \Redirect::back();
+			}
+		}
+
+		return parent::edit($id);
+	}
+
+
     /**
      * defines the formular fields for the edit and create view
      */

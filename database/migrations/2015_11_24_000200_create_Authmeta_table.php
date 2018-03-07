@@ -19,7 +19,7 @@ class CreateAuthmetaTable extends BaseMigration {
 
 			$this->up_table_generic($table);
 
-			$table->string('name');
+			$table->string('name', 191);
 			$table->enum('type', array('role', 'client'));
 			$table->string('description');
 

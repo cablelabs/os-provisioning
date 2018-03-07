@@ -60,7 +60,14 @@ class GuiLogController extends BaseController {
 
 			$DT = Datatables::of($request_query);
 			$DT ->addColumn('responsive', '')
-				->setRowClass('info')
+				->setRowClass(function ($object) {
+					$bsclass = 'info';
+					if ($object->method == 'created')
+						$bsclass = 'success';
+					if ($object->method == 'deleted')
+						$bsclass = 'danger';
+					return $bsclass;
+				})
 				->editColumn('created_at', function($object) {
 				return '<a href="'.route(\NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
 				$object->view_icon().$object->created_at.'</strong></a>';

@@ -20,7 +20,7 @@ class Mta extends \BaseModel {
 	public static function rules($id=null)
 	{
 		return array(
-			'mac' => 'required|mac', //|unique:mta,mac',
+			'mac' => 'required|mac|unique:mta,mac,'.$id.',id,deleted_at,NULL', //|unique:mta,mac',
 			'modem_id' => 'required|exists:modem,id|min:1',
 			'configfile_id' => 'required|exists:configfile,id|min:1',
 			// 'hostname' => 'required|unique:mta,hostname,'.$id,
@@ -249,10 +249,7 @@ _failed:
 	{
 		Log::debug(__METHOD__." started");
 
-		$orig = $this->getOriginal();
-
-		if (!file_exists(self::CONF_FILE_PATH))
-		{
+		if (!file_exists(self::CONF_FILE_PATH))	{
 			Log::critical('Missing DHCPD Configfile '.self::CONF_FILE_PATH);
 			return;
 		}
@@ -263,26 +260,20 @@ _failed:
 		if (!flock($fp, LOCK_EX))
 			Log::error('Could not get exclusive lock for '.self::CONF_FILE_PATH);
 
-
-		$replace = $orig ? $orig['mac'] : $this->mac;
-		// $conf = File::get(self::CONF_FILE_PATH);
+		$replace = "host $this->hostname";
 		$conf = file(self::CONF_FILE_PATH);
 
 		foreach ($conf as $key => $line)
 		{
-			if (strpos($line, $replace))
-			{
+			if (strpos($line, $replace) !== false) {
 				unset($conf[$key]);
 				break;
 			}
 		}
-		// dont replace directly as this wouldnt add the entry for a new created mta
-		// $conf = str_replace($replace, '', $conf);
+
+		// Note: dont replace directly as this wouldnt add the entry for a new created mta
 		if (!$delete)
-		{
-			$data 	= 'host mta-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "mta/mta-'.$this->id.'.cfg"; ddns-hostname "mta-'.$this->id.'"; option host-name "'.$this->id.'"; }'."\n";
-			$conf[] = $data;
-		}
+			$conf[] = 'host mta-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "mta/mta-'.$this->id.'.cfg"; ddns-hostname "mta-'.$this->id.'"; option host-name "'.$this->id.'"; }'."\n";
 
 		Modem::_write_dhcp_file(self::CONF_FILE_PATH, implode($conf));
 

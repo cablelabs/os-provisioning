@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zone>
+  <short>CMTS</short>
+  <description>CMTS tftp copy config</description>
+  <source address="10.255.0.0/24"/>
+  <service name="tftp"/>
+</zone>

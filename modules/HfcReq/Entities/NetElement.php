@@ -208,7 +208,7 @@ class NetElement extends \BaseModel {
 		// return NetElement::where('net','=',$this->id)->get();
 
 		$cluster_id = array_search('Cluster', NetElementType::$undeletables);
-		return NetElement::where('netelementtype_id', '=', $cluster_id)->where('net','=',$this->id)->get();
+		return NetElement::where('netelementtype_id', '=', $cluster_id)->where('net','=',$this->id)->orderBy('name')->get();
 
 		// return NetElement::where('type', '=', 'CLUSTER')->where('net','=',$this->id)->get();
 	}
@@ -344,7 +344,7 @@ class NetElement extends \BaseModel {
 		if (!$this->netelementtype)
 			return false;
 
-		return ($this->netelementtype->get_core_type() == 3); // 3 .. is core element for cmts
+		return ($this->netelementtype->get_base_type() == 3); // 3 .. is base element for cmts
 	}
 
 
@@ -411,5 +411,26 @@ class NetElementObserver
 
 		$netelement->net 	 = $netelement->get_native_net();
 		$netelement->cluster = $netelement->get_native_cluster();
+
+		// if netelementtype_id changes -> indices have to change there parameter id - otherwise they are not used anymore
+		if ($netelement['original']['netelementtype_id'] != $netelement['attributes']['netelementtype_id'])
+		{
+			$new_params = $netelement->netelementtype->parameters;
+
+			foreach ($netelement->indices as $indices)
+			{
+				// assign each indices of parameter to new parameter with same oid
+				if ($new_params->contains('oid_id', $indices->parameter->oid->id)) {
+					$indices->parameter_id = $new_params->where('oid_id', $indices->parameter->oid->id)->first()->id;
+					$indices->save();
+				}
+				else {
+					// Show Alert that not all indices could be assigned to the new parameter -> user has to create new indices and delete the old ones
+					// We also could delete them directly, so that user has to add them again
+					\Session::put('alert', trans('messages.indices_unassigned'));
+				}
+			}
+		}
 	}
+
 }

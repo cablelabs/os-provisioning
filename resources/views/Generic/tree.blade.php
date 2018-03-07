@@ -74,9 +74,11 @@
 			  "tie_selection" : false,
 			  "real_checkboxes": true
 		  },
-		  "state" : { "filter" : function (k) { delete k.core.selected; return k; },
-		  "key"   : "{{ $route_name }}",
-		},
+		  "state" : {
+				"filter" : function (k) { delete k.core.selected; return k; },
+				"key"   : "tree-{{ $route_name }}",
+				'ttl' : false,
+			},
 		  "types": {
 			  "cm":{
 				"icon": "fa fa-hdd-o text-warning fa-lg"
