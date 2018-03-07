@@ -20,7 +20,7 @@ class UpdateNetElementTypeAutoincOffset extends Migration {
         // which won't collide with user defined ones
         DB::statement("ALTER TABLE $this->tablename AUTO_INCREMENT = 1000;");
         DB::statement("UPDATE $this->tablename SET id = id + 1000 where id > 6;");
-        DB::statement("UPDATE $this->tablename SET parent_id = parent_id + 1000 where id > 6 and parent_id <> 0;");
+        DB::statement("UPDATE $this->tablename SET parent_id = parent_id + 1000 where id > 6 and parent_id > 6;");
         DB::statement('UPDATE netelement SET netelementtype_id = netelementtype_id + 1000 where netelementtype_id > 6;');
     }
 
