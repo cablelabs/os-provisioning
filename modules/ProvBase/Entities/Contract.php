@@ -68,7 +68,7 @@ class Contract extends \BaseModel {
 		$bsclass = $this->get_bsclass();
 
 		return ['table' => $this->table,
-				'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.company', $this->table.'.zip', $this->table.'.city', $this->table.'.street', $this->table.'.house_number', $this->table.'.district', $this->table.'.contract_start', $this->table.'.contract_end', 'costcenter.name'],
+				'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.company', $this->table.'.zip', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.contract_start', $this->table.'.contract_end', 'costcenter.name'],
 				'header' =>  $this->number.' '.$this->firstname.' '.$this->lastname,
 				'bsclass' => $bsclass,
 				'eager_loading' => ['costcenter'],
