@@ -18,6 +18,7 @@ class UpdateModemAddTdr extends BaseMigration {
 		Schema::table($this->tablename, function(Blueprint $table)
 		{
 			$table->float('tdr');
+			$table->float('fft_max');
 		});
 
 		return parent::up();
@@ -34,6 +35,7 @@ class UpdateModemAddTdr extends BaseMigration {
 		Schema::table($this->tablename, function(Blueprint $table)
 		{
 			$table->dropColumn('tdr');
+			$table->dropColumn('fft_max');
 		});
 	}
 

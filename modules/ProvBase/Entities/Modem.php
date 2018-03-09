@@ -1423,31 +1423,41 @@ class Modem extends \BaseModel
 			$imag[] = $val[1];
 		}
 
-
-		for ($i=0 ; $i < 8; $i++) {
+		for ($i=0 ; $i < 104; $i++) {
 			array_push($rea, 0);
 			array_push($imag, 0);
 	}
+		for ($i=0; $i < 248; $i++) {
+			array_push($rea, array_shift($rea));
+			array_push($imag, array_shift($imag));
+		}
+
 
 		$ans = \Brokencube\FFT\FFT::run($rea, $imag);
 		ksort($ans[0]);
 		ksort($ans[1]);
+		for ($i=0; $i < 64; $i++) {
+			array_push($ans[0], array_shift($ans[0]));
+			array_push($ans[1], array_shift($ans[1]));
+		}
+
 		$answer = array_map(function ($v1, $v2) {
 			return 20 * log10(sqrt($v1**2 + $v2**2));
 		}, $ans[0], $ans[1]);
 
-		$answer = array_slice($answer,8);
-		return $answer;
+		// stores the maximum amplitude value of the fft waveform
+		$maxamp = max($answer);
+
+		//return ($fftmax['fft'] = $answer, $fftmax['max'] = $maxamp);
+		return [$answer, $maxamp];
 	}
 
 
 	private function _xaxis()
 	{
 		$axis = [];
-		for ($i= -0.5; $i <= 0.5; $i+=0.04345)
+		for ($i= -0.5; $i <= 0.5; $i+=0.0078125)
 			$axis[] = $i;
-		//for ($i= -0.5; $i <= 0.5; $i+=0.00782)
-		//dd($axis);
 
 		return $axis;
 	}
@@ -1462,10 +1472,15 @@ class Modem extends \BaseModel
 			return ['No pre-equalization data found'];
 
 		$preq = json_decode(file_get_contents($file), true);
+		if (empty($preq['data']) || empty($preq['width']))
+			return ['No pre-equalization data found'];
+
 		$freq = $preq['width'];
-		//$hexs = str_split("08011800FFFF000000000001FFFEFFFD00030004FFFAFFFB00080009FFF0FFEA01EE0000FFEFFFEC0038FFD80055FFD7FFE20003001FFFE5FFFCFFFA0001FFFE0001FFF7FFFE0002FFFFFFFDFFFF000000000000FFFF0000000000000000000000000000", 8);
-		$hexs = str_split($preq['data'], 8);
+		$hexs = str_split("08011800FFFF000000000001FFFEFFFD00030004FFFAFFFB00080009FFF0FFEA01EE0000FFEFFFEC0038FFD80055FFD7FFE20003001FFFE5FFFCFFFA0001FFFE0001FFF7FFFE0002FFFFFFFDFFFF000000000000FFFF0000000000000000000000000000", 8);
+		//$hexs = str_split($preq['data'], 8);
 		$or_hexs = array_shift($hexs);
+		if (count($hexs) != 24)
+			return ['Not supported modem for Pre-equalization at the moment'];
 
 		$maintap = 2 * $or_hexs[1] - 2;
 		$energymain = $maintap / 2;
@@ -1479,32 +1494,26 @@ class Modem extends \BaseModel
 			$counter++;
 			if (is_numeric($hsplit[0]) && $hsplit[0] == 0 && $counter >= 46) {
 				$decimal = $this->_threenibble($hexcall);
-				$ret['decimal'] = $decimal;
 				break;
 			}
 			elseif(ctype_alpha($hsplit[0]) || $hsplit[0] != 0 && $counter >= 46) {
 				$decimal = $this->_fournibble($hexcall);
-				$ret['decimal'] = $decimal;
 				break;
 			}
 		}
 		$pwr = $this->_nePwr($decimal, $maintap);
 		$ene = $this->_energy($pwr, $maintap, $energymain);
-		//$comp = $this->_complex($pwr);
-		//$ene_db = $this->_energyDb($ene);
 		$chart = $this->_chart($ene);
-		//$norm = $this->_normalization($ene);//not used, test case
 		$fft = $this->_fft($pwr);
 		$tdr = $this->_tdr($ene, $energymain, $freq);
 		$index = $this->_xaxis();
 
 		$ret['power'] = $pwr;
-		//$ret['nodb'] = $ene;
 		$ret['energy'] = $ene;
 		$ret['chart'] = $chart;
 		$ret['tdr'] = $tdr;
-		//$ret['norm'] = $norm;
-		$ret['fft'] = $fft;
+		$ret['max'] = $fft[1];
+		$ret['fft'] = $fft[0];
 		$ret['axis'] = $index;
 
 		return $ret;
