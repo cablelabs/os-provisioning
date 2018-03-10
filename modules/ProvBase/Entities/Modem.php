@@ -12,13 +12,6 @@ use Acme\php\ArrayHelper;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\ProvBase;
 use Modules\ProvMon\Http\Controllers\ProvMonController;
-//use Webit\Math\Fft\FftCalculatorRadix2;
-//use Webit\Math\Fft\Dimension;
-//use Webit\Math\ComplexNumber\Complex;
-//use Webit\Math\ComplexNumber\ComplexArray;
-//use Complex;
-//use FFT;
-//use Brokencube\fft\FFT;
 
 class Modem extends \BaseModel
 {
@@ -1432,7 +1425,6 @@ class Modem extends \BaseModel
 			array_push($imag, array_shift($imag));
 		}
 
-
 		$ans = \Brokencube\FFT\FFT::run($rea, $imag);
 		ksort($ans[0]);
 		ksort($ans[1]);
@@ -1446,9 +1438,10 @@ class Modem extends \BaseModel
 		}, $ans[0], $ans[1]);
 
 		// stores the maximum amplitude value of the fft waveform
-		$maxamp = max($answer);
+		$x = max($answer);
+		$y = abs(min($answer));
+		$maxamp = $x >= $y ? $x : $y;
 
-		//return ($fftmax['fft'] = $answer, $fftmax['max'] = $maxamp);
 		return [$answer, $maxamp];
 	}
 
@@ -1476,8 +1469,7 @@ class Modem extends \BaseModel
 			return ['No pre-equalization data found'];
 
 		$freq = $preq['width'];
-		$hexs = str_split("08011800FFFF000000000001FFFEFFFD00030004FFFAFFFB00080009FFF0FFEA01EE0000FFEFFFEC0038FFD80055FFD7FFE20003001FFFE5FFFCFFFA0001FFFE0001FFF7FFFE0002FFFFFFFDFFFF000000000000FFFF0000000000000000000000000000", 8);
-		//$hexs = str_split($preq['data'], 8);
+		$hexs = str_split($preq['data'], 8);
 		$or_hexs = array_shift($hexs);
 		if (count($hexs) != 24)
 			return ['Not supported modem for Pre-equalization at the moment'];
@@ -1487,6 +1479,8 @@ class Modem extends \BaseModel
 		array_splice($hexs, 0, 0);
 		$hexs = implode("", $hexs);
 		$hexs = str_split($hexs, 4);
+		//check if the modem contains false Hexvalues i.e if the main tap is zero return 0 values for
+		//the max amplitude and the tdr
 		$hexcall = $hexs;
 		$counter = 0;
 		foreach($hexs as $hex) {
