@@ -339,6 +339,10 @@ table .index_check {
     color: rgb(0, 0, 0);
 }
 
+.layersDiv {
+    background-color: lightgrey !important;
+}
+
 @media (max-width: 767px)
 /* @grid-float-breakpoint -1 */
 
