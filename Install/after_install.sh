@@ -1,3 +1,6 @@
+# source environment variables to use php 7.1
+source scl_source enable rh-php71
+
 #
 # variables
 #
@@ -29,6 +32,9 @@ openssl req -new -x509 -days 365 -nodes -batch -out /etc/httpd/ssl/httpd.pem -ke
 systemctl start httpd
 systemctl enable httpd
 
+# start fpm
+systemctl start rh-php71-php-fpm
+systemctl enable rh-php71-php-fpm
 
 #
 # firewalld
@@ -46,7 +52,7 @@ systemctl enable mariadb
 
 # populate timezone info and set php timezone based on the local one
 mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
-sed -i "s|^;date.timezone =$|date.timezone = $(timedatectl | grep 'Time zone' | cut -d':' -f2 | xargs | cut -d' ' -f1)|" /etc/php.ini
+sed -i "s|^;date.timezone =$|date.timezone = $(timedatectl | grep 'Time zone' | cut -d':' -f2 | xargs | cut -d' ' -f1)|" /etc/opt/rh/rh-php71/php.ini
 sed -e 's/^memory_limit =.*/memory_limit = 1024M/' \
     -e 's/^upload_max_filesize =.*/upload_max_filesize = 50M/' \
     -e 's/^post_max_size =.*/post_max_size = 50M/' \

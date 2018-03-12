@@ -1,3 +1,6 @@
+# source environment variables to use php 7.1
+source scl_source enable rh-php71
+
 dir="/var/www/nmsprime"
 
 cd "$dir"
