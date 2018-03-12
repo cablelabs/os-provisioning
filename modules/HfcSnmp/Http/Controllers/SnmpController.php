@@ -49,6 +49,13 @@ class SnmpController extends \BaseController{
 		$this->device = $device;
 		$this->index = $index ? [$index] : 0;
 
+		// Search parent CMTS for type cluster
+		if ($device->netelementtype_id == 2) {
+			$cmts = $device->get_parent_cmts();
+			$this->parent_device = $cmts ? : null;
+			$this->device->ip = $this->device->ip ? : $cmts->ip;
+		}
+
 		$this->snmp_def_mode();
 	}
 
@@ -127,6 +134,35 @@ class SnmpController extends \BaseController{
 
 
 	/**
+	 * Get the necessary parameters (OIDs) of the netelementtype
+	 *
+	 * @return \Illuminate\Database\Eloquent\Collection 	of Parameter objects with related OID object
+	 */
+	private function _get_parameter($param_id)
+	{
+		if ($param_id)
+			return Parameter::where('parent_id', '=', $param_id)->where('third_dimension', '=', 1)->with('oid')->orderBy('id')->get();
+
+		$device = $this->device;
+
+		// use parent cmts for cluster
+		if ($this->device->netelementtype_id == 2)
+		{
+			 if (!$this->parent_device)
+				return [];
+
+			$device = $this->parent_device;
+		}
+
+		// TODO: check if netelement has a netelementtype -> exception for root elem
+		return $device->netelementtype->parameters()
+			->with('oid')
+			->orderBy('html_frame')->orderBy('html_id')->orderBy('oid_id')->orderBy('id')
+			->get();
+	}
+
+
+	/**
 	 * Returns updated SnmpValues via client opened TCP connection (SSE)
 	 */
 	public function sse_get_snmpvalues($netelem_id, $param_id = 0, $index = 0, $reload = 1)
@@ -158,24 +194,6 @@ class SnmpController extends \BaseController{
 
 
 	/**
-	 * Get the necessary parameters (OIDs) of the netelementtype
-	 *
-	 * @return \Illuminate\Database\Eloquent\Collection 	of Parameter objects with related OID object
-	 */
-	private function _get_parameter($param_id)
-	{
-		if ($param_id)
-			return Parameter::where('parent_id', '=', $param_id)->where('third_dimension', '=', 1)->with('oid')->orderBy('id')->get();
-
-		// TODO: check if netelement has a netelementtype -> exception for root elem
-		return $this->device->netelementtype->parameters()
-			->with('oid')
-			->orderBy('html_frame')->orderBy('html_id')->orderBy('oid_id')->orderBy('id')
-			->get();
-	}
-
-
-	/**
 	 * GET all SNMP values from device
 	 *
 	 * @param Array 	params 		Array of Parameter Objects
@@ -202,7 +220,12 @@ class SnmpController extends \BaseController{
 
 			if (!$indices) {
 				$indices_o = $param->indices()->where('netelement_id', '=', $this->device->id)->first();
-				$indices = $indices_o ? explode(',', $indices_o->indices) : [];
+				$indices = $indices_o && $indices_o->indices ? explode(',', $indices_o->indices) : [];
+
+				if ($this->device->netelementtype_id == 2 && !$indices_o) {
+					\Log::error('HFC-Cluster is missing table indices for controlling view!', [$this->device->id]);
+					continue;
+				}
 			}
 
 			// Table Param
@@ -488,6 +511,13 @@ class SnmpController extends \BaseController{
 
 		$oids = new \Illuminate\Database\Eloquent\Collection();
 		$oid_o = null;
+
+		// switch device and parent device if type is cluster so that all functions work properly - switch again to store values
+		if ($this->device->netelementtype_id == 2) {
+			$device = $this->device;
+			$this->device = $this->parent_device;
+		}
+
 		$pre_conf = $this->device->netelementtype->pre_conf_value ? true : false; 			// true - has to be done
 		$user = \Auth::user();
 
@@ -546,7 +576,7 @@ class SnmpController extends \BaseController{
 					'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
 					'method' 	=> 'updated',
 					'model' 	=> 'NetElement',
-					'model_id'  => $this->device->id,
+					'model_id'  => $this->device->netelementtype_id == 2 ? $device->id : $this->device->id,
 					'text' 		=> ($oid_o->name_gui ? : $oid_o->name)." ($full_oid):  '".$old_vals->{$full_oid}."' => '$value'",
 					]);
 
@@ -556,14 +586,13 @@ class SnmpController extends \BaseController{
 				$this->set_errors[] = $oid_o->name_gui ? : $oid_o->name;
 		}
 
-		// Store values
-		$this->_values($old_vals);
-
 		// Do postconfig if preconfig was done
 		if (isset($conf_val))
 			$this->_configure($conf_val);
 
-		return true;
+		// Store values
+		$this->device = $this->device->netelementtype_id == 2 ? $device : $this->device;
+		$this->_values($old_vals);
 	}
 
 

@@ -69,7 +69,7 @@ class NetElement extends \BaseModel {
 
 		if (\PPModule::is_active('hfcsnmp'))
 		{
-			if ($this->netelementtype && $this->netelementtype->parameters && $this->netelementtype->parameters->all())
+			if ($this->netelementtype && ($this->netelementtype->id == 2 || $this->netelementtype->parameters()->count()))
 			{
 				$ret['Edit']['Indices']['class'] 	= 'Indices';
 				$ret['Edit']['Indices']['relation'] = $this->indices;
@@ -171,9 +171,23 @@ class NetElement extends \BaseModel {
 		return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'parent_id');
 	}
 
-	public function get_children ()
+	/**
+	 * Get first parent being a CMTS
+	 *
+	 * @return Object NetElement 	(or NULL if there is no parent CMTS)
+	 */
+	public function get_parent_cmts()
 	{
-		return NetElement::whereRaw('parent_id = '.$this->id)->get();
+		$parent = $this;
+
+		do {
+			$parent = $parent->parent()->with('netelementtype')->first();
+
+			if (!$parent)
+				break;
+		} while (!$parent->netelementtype || $parent->netelementtype->get_base_type() != 3);
+
+		return $parent;
 	}
 
 

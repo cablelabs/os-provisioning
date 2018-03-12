@@ -34,7 +34,7 @@ class NetElementController extends HfcBaseController {
 		$prov_device = [];
 		$prov_device_hidden = 1;
 
-		if ($type == 3) // cluster
+		if ($type == 3) // cmts
 			$prov_device = $model->html_list(\Modules\ProvBase\Entities\Cmts::get(['id', 'hostname']), 'hostname', $empty_field);
 
 		if ($type == 4 || $type == 5) // amp || node
