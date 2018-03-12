@@ -377,7 +377,8 @@ class BaseViewController extends Controller {
 					break;
 
 				default:
-					$s .= \Form::$field["form_type"]($field["name"], $field['field_value'], $options);
+					$form = $field["form_type"];
+					$s .= \Form::$form($field["name"], $field['field_value'], $options);
 					break;
 			}
 
@@ -450,7 +451,8 @@ finish:
 				if (in_array('readonly', $options))
 					return '<p name="'.$field['name'].'">'. $field['field_value'] .'</p>';
 
-				$s .= \Form::$field["form_type"]($field["name"], $field['field_value'], $options);
+				$form = $field["form_type"];
+				$s .= \Form::$form($field["name"], $field['field_value'], $options);
 				break;
 		}
 
