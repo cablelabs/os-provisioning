@@ -563,36 +563,40 @@ class Modem extends \BaseModel {
 			$mac 	= $mac_changed ? $this->getOriginal('mac') : $this->mac;
 			$mac_oid = implode('.', array_map('hexdec', explode(':', $mac)));
 
-			if($cmts && $cmts->company == 'Cisco') {
+			if ($cmts && $cmts->company == 'Cisco') {
 				// delete modem entry in cmts - CISCO-DOCS-EXT-MIB::cdxCmCpeDeleteNow
 				snmpset($cmts->ip, $cmts->get_rw_community(), '1.3.6.1.4.1.9.9.116.1.3.1.1.9.'.$mac_oid, 'i', '1', 300000, 1);
 			}
-			elseif($cmts && $cmts->company == 'Casa') {
+			else if ($cmts && $cmts->company == 'Casa') {
 				// reset modem via cmts, deleting is not possible - CASA-CABLE-CMCPE-MIB::casaCmtsCmCpeResetNow
 				snmpset($cmts->ip, $cmts->get_rw_community(), '1.3.6.1.4.1.20858.10.12.1.3.1.7.'.$mac_oid, 'i', '1', 300000, 1);
 			}
-			else {
-				// restart modem - DOCS-CABLE-DEV-MIB::docsDevResetNow
-				snmpset($fqdn, $config->rw_community, '1.3.6.1.2.1.69.1.1.3.0', 'i', '1', 300000, 1);
-			}
+			else throw new Exception("CMTS company not set");
 		}
 		catch (Exception $e)
 		{
-			// only ignore error with this error message (catch exception with this string)
-			if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) || (strpos($e->getMessage(), "snmpset(): No response from") !== false))) {
-				\Session::flash('error', 'Could not restart Modem! (offline?)');
-			}
-			elseif(strpos($e->getMessage(), "noSuchName") !== false) {
-				// this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
-			}
-			else {
-				// Inform and log for all other exceptions
-				\Session::push('tmp_error_above_form', 'Unexpected exception: '.$e->getMessage());
-				\Log::error("Unexpected exception restarting modem ".$this->id." (".$this->mac."): ".$e->getMessage()." => ".$e->getTraceAsString());
-				\Session::flash('error', '');
+			\Log::error("Could not delete $this->hostname from CMTS ('".$e->getMessage()."'). Let's try to restart it directly.");
+
+			try {
+				// restart modem - DOCS-CABLE-DEV-MIB::docsDevResetNow
+				snmpset($fqdn, $config->rw_community, '1.3.6.1.2.1.69.1.1.3.0', 'i', '1', 300000, 1);
+			} catch (Exception $e) {
+				\Log::error("Could not restart $this->hostname directly ('".$e->getMessage()."')");
+
+				if (((strpos($e->getMessage(), "php_network_getaddresses: getaddrinfo failed: Name or service not known") !== false) ||
+					(strpos($e->getMessage(), "snmpset(): No response from") !== false)) ||
+					// this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
+					(strpos($e->getMessage(), "noSuchName") !== false))
+				{
+					\Session::flash('error', trans('messages.modem_restart_error'));
+				}
+				else {
+					// Inform and log for all other exceptions
+					\Session::push('tmp_error_above_form', 'Unexpected exception: '.$e->getMessage());
+					\Session::flash('error', '');
+				}
 			}
 		}
-
 	}
 
 

@@ -45,6 +45,7 @@ return [
 	'modem_log_error' 		=> 'Modem was not registering on Server - No log entry found',
 	'modem_configfile_error'=> 'Modem configfile not found',
 	'modem_offline'			=> 'Modem is Offline',
+	'modem_restart_error' 		=> 'Could not restart Modem! (offline?)',
 	'month' 				=> 'Month',
 	'mta_configfile_error'	=> 'MTA configfile not found',
 	'noCC'					=> 'no Costcenter assigned',
