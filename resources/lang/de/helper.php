@@ -61,6 +61,7 @@ return [
   *	MODULE: HfcReq
   */
 	'netelementtype_reload' 		=> 'In Sekunden. 0s zum Deaktivieren des Autoreloads. Nachkommastellen möglich.',
+	'netelementtype_time_offset' 	=> 'In Sekunden. Nachkommastellen möglich.',
 	'undeleteables' 				=> 'Net & Cluster können weder gelöscht werden, noch kann der Name geändert werden, da die Existenz dieser Typen Vorraussetzung für die Erzeugung des Entitity-Relationship-Diagramms ist.',
 
  /**

@@ -628,8 +628,8 @@ class SnmpController extends \BaseController{
 
 			$ret ? \Log::debug('Preconfigured Device for snmpset', [$this->device->name, $this->device->id]) : \Log::debug('Failed to Preconfigure Device for snmpset', [$this->device->name, $this->device->id]);
 
-			// wait time in msec
-			$sleep_time = $type->pre_conf_time_offset ? : 0;
+			// wait time in usec
+			$sleep_time = $type->pre_conf_time_offset * 1000000 ? : 0;
 			usleep($sleep_time);
 
 			return $conf_val;
