@@ -159,7 +159,7 @@ class ContractController extends \BaseController {
 		$data['contract_start'] = $data['contract_start'] ? : date('Y-m-d');
 
 		// generate contract number
-		if (!$data['number'] && \PPModule::is_active('billingbase'))
+		if (!$data['number'] && \PPModule::is_active('billingbase') && $data['costcenter_id'])
 		{
 			$num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
 
