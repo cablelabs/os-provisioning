@@ -2,8 +2,7 @@
 
 namespace Modules\HfcReq\Entities;
 
-use Modules\HfcSnmp\Entities\OID;
-use Modules\HfcSnmp\Entities\Parameter;
+use Modules\HfcSnmp\Entities\{ OID, Parameter};
 
 class NetElementType extends \BaseModel {
 

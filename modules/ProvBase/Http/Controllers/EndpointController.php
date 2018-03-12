@@ -2,8 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Modules\ProvBase\Entities\Endpoint;
-use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\{Endpoint, Modem};
 
 class EndpointController extends \BaseController {
 

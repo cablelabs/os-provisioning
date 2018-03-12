@@ -3,9 +3,7 @@
 namespace Modules\ProvBase\Entities;
 
 use Modules\ProvBase\Entities\Qos;
-use Modules\BillingBase\Entities\SettlementRun;
-use Modules\BillingBase\Entities\Invoice;
-use Modules\BillingBase\Entities\NumberRange;
+use Modules\BillingBase\Entities\{ Invoice, NumberRange, SettlementRun};
 
 class Contract extends \BaseModel {
 

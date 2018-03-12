@@ -1,8 +1,8 @@
 <?php
 
 namespace Modules\HfcSnmp\Http\Controllers;
-use Modules\HfcReq\Entities\NetElement;
-use Modules\HfcReq\Entities\NetElementType;
+
+use Modules\HfcReq\Entities\{ NetElement, NetElementType};
 use Modules\HfcSnmp\Entities\Parameter;
 
 class IndicesController extends \BaseController {

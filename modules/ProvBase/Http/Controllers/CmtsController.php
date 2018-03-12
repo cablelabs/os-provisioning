@@ -2,8 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Modules\ProvBase\Entities\Cmts;
-use Modules\ProvBase\Entities\IpPool;
+use Modules\ProvBase\Entities\{Cmts, IpPool};
 
 class CmtsController extends \BaseController {
 

@@ -2,11 +2,7 @@
 
 namespace Modules\ProvVoip\Http\Controllers;
 
-use Modules\ProvVoip\Entities\PhonenumberManagement;
-use Modules\ProvVoip\Entities\Phonenumber;
-use Modules\ProvVoip\Entities\CarrierCode;
-use Modules\ProvVoip\Entities\EkpCode;
-use Modules\ProvVoip\Entities\TRCClass;
+use Modules\ProvVoip\Entities\{CarrierCode,EkpCode, Phonenumber, PhonenumberManagement, TRCClass};
 
 class PhonenumberManagementController extends \BaseController {
 

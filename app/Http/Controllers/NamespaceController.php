@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use Route;
-use Module;
 
+use Module, Route;
 
 /**
  * NamespaceController

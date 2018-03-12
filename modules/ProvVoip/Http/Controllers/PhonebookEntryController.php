@@ -2,8 +2,7 @@
 
 namespace Modules\ProvVoip\Http\Controllers;
 
-use Modules\ProvVoip\Entities\PhonebookEntry;
-use Modules\ProvVoip\Entities\PhonenumberManagement;
+use Modules\ProvVoip\Entities\{PhonebookEntry, PhonenumberManagement};
 
 class PhonebookEntryController extends \BaseController {
 

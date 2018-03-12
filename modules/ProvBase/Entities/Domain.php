@@ -1,4 +1,6 @@
-<?php namespace Modules\ProvBase\Entities;
+<?php
+
+namespace Modules\ProvBase\Entities;
 
 class Domain extends \BaseModel {
 

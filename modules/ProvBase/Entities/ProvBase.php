@@ -2,8 +2,7 @@
 
 namespace Modules\ProvBase\Entities;
 
-use GlobalConfig;
-use File;
+use File, GlobalConfig;
 
 class ProvBase extends \BaseModel {
 

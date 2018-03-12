@@ -2,20 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App;
-use Module;
-use Config;
-use File;
-use View;
-use Validator;
-use Input;
-use Redirect;
-use Route;
-use BaseModel;
-use Auth;
-use Log;
-use GlobalConfig;
-
+use App, Auth, BaseModel, Config, File, GlobalConfig, Input, Log, Module, Redirect, Route, Validator, View ;
 
 /*
  * BaseViewController: Is a special Controller which will be a kind of middleware/sub-layer/helper

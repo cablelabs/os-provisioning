@@ -2,8 +2,7 @@
 
 namespace Modules\HfcReq\Http\Controllers;
 
-use Modules\HfcReq\Entities\NetElement;
-use Modules\HfcReq\Entities\NetElementType;
+use Modules\HfcReq\Entities\{ NetElement, NetElementType};
 use Modules\HfcBase\Http\Controllers\HfcBaseController;
 use Modules\HfcSnmp\Http\Controllers\SnmpController;
 

@@ -2,8 +2,7 @@
 
 namespace Modules\ProvBase\Entities;
 
-use File;
-use DB;
+use DB, File;
 use Acme\php\ArrayHelper;
 
 class Cmts extends \BaseModel {

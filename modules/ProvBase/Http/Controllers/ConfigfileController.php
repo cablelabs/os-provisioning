@@ -2,9 +2,8 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use Form, HTML;
 use Modules\ProvBase\Entities\Configfile;
-use Form;
-use HTML;
 
 class ConfigfileController extends \BaseController {
 

@@ -2,15 +2,10 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Modules\ProvBase\Entities\Contract;
-use Modules\ProvBase\Entities\Qos;
+use Modules\ProvBase\Entities\{Contract, Qos};
 use Modules\ProvVoip\Entities\PhoneTariff;
-
 // TODO: @Nino Ryschawy: directly includes does not work if billing module is disables
-use Modules\BillingBase\Entities\Product;
-use Modules\BillingBase\Entities\Item;
-use Modules\BillingBase\Entities\CostCenter;
-use Modules\BillingBase\Entities\Salesman;
+use Modules\BillingBase\Entities\{CostCenter, Item, Product, Salesman};
 
 class ContractController extends \BaseController {
 

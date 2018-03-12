@@ -2,13 +2,8 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Modules\ProvBase\Entities\Modem;
-use Modules\ProvBase\Entities\Endpoint;
-use Modules\ProvBase\Entities\Configfile;
-use Modules\ProvBase\Entities\Qos;
-
 use App\Exceptions\AuthException;
-
+use Modules\ProvBase\Entities\{Configfile, Endpoint, Modem, Qos};
 
 class ModemController extends \BaseController {
 

@@ -2,15 +2,10 @@
 
 namespace App;
 
-use DB;
-use Str;
-use Schema;
-use Module;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model as Eloquent;
+use DB, Module, Schema, Str;
 use App\Http\Controllers\NamespaceController;
 use App\Extensions\Database\EmptyRelation as EmptyRelation;
-
+use Illuminate\Database\Eloquent\{ SoftDeletes, Model as Eloquent};
 
 /**
  *	Class to add functionality – use instead of Eloquent for your models

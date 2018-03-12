@@ -4,7 +4,6 @@ namespace Modules\ProvVoip\Entities;
 
 use Illuminate\Support\Collection;
 
-// Model not found? execute composer dump-autoload in nmsprime root dir
 class Phonenumber extends \BaseModel {
 
     // The associated SQL table for this Model

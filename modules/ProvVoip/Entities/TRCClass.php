@@ -2,7 +2,6 @@
 
 namespace Modules\ProvVoip\Entities;
 
-// Model not found? execute composer dump-autoload in nmsprime root dir
 class TRCClass extends \BaseModel {
 
 	// The associated SQL table for this Model

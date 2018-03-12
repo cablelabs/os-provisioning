@@ -2,12 +2,9 @@
 
 namespace Modules\ProvBase\Entities;
 
-use File;
-use Log;
-use Exception;
+use Exception, File, Log;
 use Acme\php\ArrayHelper;
-use Modules\ProvBase\Entities\Qos;
-use Modules\ProvBase\Entities\ProvBase;
+use Modules\ProvBase\Entities\{ ProvBase, Qos};
 use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class Modem extends \BaseModel {

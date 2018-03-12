@@ -1,14 +1,11 @@
-<?php 
+<?php
 
 namespace Modules\Hfcreq\Http\Controllers;
 
-use Pingpong\Modules\Routing\Controller;
+use App\Http\Controllers\{ BaseViewController, NamespaceController};
 use Modules\HfcReq\Entities\NetElementType;
-use Modules\HfcSnmp\Entities\OID;
-use Modules\HfcSnmp\Entities\Parameter;
-use App\Http\Controllers\BaseViewController;
-use App\Http\Controllers\NamespaceController;
-
+use Modules\HfcSnmp\Entities\{ OID, Parameter};
+use Pingpong\Modules\Routing\Controller;
 
 class HfcReqController extends \BaseController {
 
@@ -41,7 +38,7 @@ class HfcReqController extends \BaseController {
 		$oids 	  = [];
 		$oids_raw = OID::get(['id', 'name', 'oid']);
 		foreach ($oids_raw as $key => $oid)
-			$oids[$oid->id] = $oid->name.' - '.$oid->oid; 
+			$oids[$oid->id] = $oid->name.' - '.$oid->oid;
 
 		return \View::make('hfcreq::NetElementType.assign', $this->compact_prep_view(compact('view_header', 'headline', 'view_var', 'oids', 'mibs', 'model_pure')));
 	}
@@ -50,7 +47,7 @@ class HfcReqController extends \BaseController {
 	/**
 	 * Attach OIDs to a NetElementType - Store in pivot/intermediate-table (parameter) - Selection is done in assign.blade.php
 	 * Attach SubOIDs to a Parameter - for exact table definitions
-	 * 
+	 *
 	 * Possible Methods:
 	 	* Single Chosen OIDs via Multiselect
 	 	* All OIDs from an already uploaded MibFile
