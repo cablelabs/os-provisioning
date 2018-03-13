@@ -161,18 +161,14 @@ class ContractController extends \BaseController {
 		// generate contract number
 		if (!$data['number'] && \PPModule::is_active('billingbase') && $data['costcenter_id'])
 		{
-			// check if a costcenter id is given
-			// if not: skip generation of a new number (this crashes) – instead let prepare_input handle the missing data
-			if ($data['costcenter_id']) {
-				// generate contract number
-				$num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
-				if ($num) {
-					$data['number'] = $num;
-				}
-				else if (\Modules\BillingBase\Entities\NumberRange::where('type', '=', 'contract')->where('costcenter_id', $data['costcenter_id'])->count()) {
-					// show alert when there is a numberrange for costcenter but there are no more free numbers
-					session(['alert' => \App\Http\Controllers\BaseViewController::translate_view('Failure','Contract_Numberrange')]);
-				}
+			// generate contract number
+			$num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
+
+			if ($num)
+				$data['number'] = $num;
+			else if (\Modules\BillingBase\Entities\NumberRange::where('type', '=', 'contract')->where('costcenter_id', $data['costcenter_id'])->count()) {
+				// show alert when there is a numberrange for costcenter but there are no more free numbers
+				session(['alert' => \App\Http\Controllers\BaseViewController::translate_view('Failure','Contract_Numberrange')]);
 			}
 		}
 
