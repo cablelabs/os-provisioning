@@ -37,7 +37,7 @@ class NmsFaker extends Faker {
     }
 
 	/**
-	 * Getter for the GuiLogWriter “object“
+	 * Getter for the Faker “object“
 	 */
 	public static function &getInstance() {
 
