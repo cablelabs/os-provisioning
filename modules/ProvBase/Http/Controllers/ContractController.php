@@ -159,7 +159,7 @@ class ContractController extends \BaseController {
 		$data['contract_start'] = $data['contract_start'] ? : date('Y-m-d');
 
 		// generate contract number
-		if (!$data['number'] && \PPModule::is_active('billingbase'))
+		if (!$data['number'] && \PPModule::is_active('billingbase') && $data['costcenter_id'])
 		{
 			// check if a costcenter id is given
 			// if not: skip generation of a new number (this crashes) – instead let prepare_input handle the missing data

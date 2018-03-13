@@ -77,6 +77,7 @@ return [
 	'modem_log_error'			=> 'Modem ist nicht beim Server registriert - Kein Logeintrag gefunden',
 	'modem_configfile_error'	=> 'Modem Konfigurationsdatei nicht gefunden',
 	'modem_offline'				=> 'Modem ist Offline',
+	'modem_restart_error' 		=> 'Das Modem konnte nicht neugestartet werden! (offline?)',
 	'month'						=> 'Monat',
 	'Month'						=> 'Monat',
 	'mta_configfile_error'		=> 'MTA Konfigurationsdatei nicht gefunden',
@@ -265,6 +266,7 @@ return [
 	'DC'					=> 'SEPA Gutschriften',
 	'salesmen_commission'	=> 'Provision_Verkaeufer',
 	'Invoices'				=> 'Rechnungen',
+	'Load Data' 			=> 'Lade Daten',
 
 	//CostCenter
 	'Associated SEPA Account'	=> 'Verknüpftes SEPA-Konto',
