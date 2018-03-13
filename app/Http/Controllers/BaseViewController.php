@@ -204,17 +204,25 @@ class BaseViewController extends Controller {
 			if ($field['form_type'] == 'ip' || $field['form_type'] == 'ping')
 			{
 				// Ping: Only check if ip is online
-				exec ('sudo ping -c1 -i0 -w1 '.$model[$field['name']], $ping, $offline);
+				if ($model[$field['name']]) {
+					// $model[$field['name']] is null e.g. on Cmts/create
+					exec ('sudo ping -c1 -i0 -w1 '.$model[$field['name']], $ping, $offline);
 
-				if($offline)
-				{
-					$field['help'] = 'Device is Offline!';
-					$field['help_icon'] = 'fa-exclamation-triangle text-warning';
+					if($offline)
+					{
+						$field['help'] = 'Device seems to be Offline!';
+						$field['help_icon'] = 'fa-exclamation-triangle text-warning';
+					}
+					else
+					{
+						$field['help'] = 'Device is Online';
+						$field['help_icon'] = 'fa-check-circle-o text-success';
+					}
 				}
-				else
-				{
-					$field['help'] = 'Device is Online';
-					$field['help_icon'] = 'fa-check-circle-o text-success';
+				else {
+					// there is no device to ping – so we do not provide info about online status
+					$field['help'] = '';
+					$field['help_icon'] = '';
 				}
 
 				$field['form_type'] = 'text';

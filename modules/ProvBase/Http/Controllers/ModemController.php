@@ -7,7 +7,7 @@ use Modules\ProvBase\Entities\Endpoint;
 use Modules\ProvBase\Entities\Configfile;
 use Modules\ProvBase\Entities\Qos;
 
-use App\Exceptions\AuthExceptions;
+use App\Exceptions\AuthException;
 
 
 class ModemController extends \BaseController {
@@ -21,6 +21,10 @@ class ModemController extends \BaseController {
      */
 	public function view_form_fields($model = null)
 	{
+		if (!$model) {
+			$model = new Modem;
+		}
+
 		$pos = explode(',', \Input::get('pos'));
 		if(count($pos) == 2)
 			list($model['x'], $model['y']) = $pos;
@@ -121,7 +125,7 @@ class ModemController extends \BaseController {
 		try {
 			\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
 		}
-		catch (PermissionDeniedError $ex) {
+		catch (AuthException $ex) {
 			return null;
 		}
 

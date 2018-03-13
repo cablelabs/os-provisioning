@@ -117,7 +117,12 @@ return [
 	"ip"                   		=> "Dies ist keine gültige IP-Adresse im Format: 192.168.0.255",
 	"ip_in_range"		   		=> "Die angege IP-Adresse ist nicht innerhalb des spezifizierten Bereichs",
 	"ip_larger"			   		=> "Die angege IP-Adresse muss aufgrund der Angaben aus anderen Feldern eine höhere Nummer besitzen",
-	"mac"				   		=> ":attribute muss eine gültige MAC-Addresse in der Form \'aa:bb:cc:dd:ee:ff\' sein",
+	"mac"				   		=> ":attribute muss eine gültige MAC-Adresse in der Form \'aa:bb:cc:dd:ee:ff\' sein",
+	"netmask"               	=> "Die angegebene Netzmaske ist nicht korrekt",
+	'not_null'              	=> 'Dieses Feld muss ausgefüllt sein (nicht 0)',
+	'null_if'					=> 'Wert muss 0 sein',
+
+		//
 	"netmask"               	=> "Die angegebene Netzmaske ist nicht korrekt",
 	'not_null'              	=> 'Dieses Feld muss ausgefüllt sein (nicht 0)',
 	'null_if'					=> 'Wert muss 0 sein',

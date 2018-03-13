@@ -13,7 +13,7 @@ class PhonenumberManagementTableSeeder extends \BaseSeeder {
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, $this->max_seed) as $index)
+		foreach(range(1, self::$max_seed) as $index)
 		{
 			PhonenumberManagement::create([
 				'phonenumber_id' => 300000 + $index,

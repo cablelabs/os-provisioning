@@ -18,6 +18,10 @@ class MtaController extends \BaseController {
      */
 	public function view_form_fields($model = null)
 	{
+		if (!$model) {
+			$model = new Mta;
+		}
+
 		// label has to be the same like column in sql table
 		return array(
 			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')),

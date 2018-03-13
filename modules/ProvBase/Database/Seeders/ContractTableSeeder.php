@@ -2,8 +2,6 @@
 
 namespace Modules\ProvBase\Database\Seeders;
 
-// Composer: "fzaninotto/faker": "v1.3.0"
-use Faker\Factory as Faker;
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\Qos;
 use Faker\Provider\de_DE\Payment;			// SEPA: should not be required in Laravel 5 (L5), see ***
@@ -12,30 +10,30 @@ class ContractTableSeeder extends \BaseSeeder {
 
 	public function run()
 	{
-
-		foreach(range(1, $this->max_seed) as $index)
+		foreach(range(1, self::$max_seed) as $index)
 		{
-			Contract::create(static::get_fake_data());
+			Contract::create(static::get_fake_data('seed'));
 		}
 	}
+
 
 	/**
 	 * Returns an array with faked contract data; used e.g. in seeding and testing
 	 *
+	 * @param $topic Context the method is used in (seed|test)
+	 *
 	 * @author Patrick Reichel
 	 */
-	public static function get_fake_data() {
+	public static function get_fake_data($topic) {
 
-		$faker = Faker::create();
-		$count = Contract::get(['id'])->count();
+		$faker =& \NmsFaker::getInstance();
+
+		// we need to count deleted contracts, too – else validation rules in contract test create will end in endless loop
+		$count = Contract::withTrashed()->get(['id'])->count();
 		$start_contract = $faker->dateTimeBetween('-10 years', '+1 year');
 		$salutations = ['Herr', 'Frau', 'Firma', 'Behörde'];
 
 		$ret = [
-			'number' => 'contr_'.($count + 1),
-			'number2' => 'legacy_contr_'.($count + 13157),
-			'number3' => 'Cu/2015/Q4/'.($count),
-			'number4' => 'legacy_cust_'.($count + 180558),
 			'company' => (rand(0,10) > 7 ? $faker->company: ''),
 			'salutation' => $salutations[array_rand($salutations, 1)],
 			'academic_degree' => '',
@@ -57,7 +55,7 @@ class ContractTableSeeder extends \BaseSeeder {
 			'contract_end' => (rand(0,10) > 8 ? $faker->dateTimeBetween($start_contract, '+1 year') : 0),
 			'qos_id' => Qos::all()->random(1)->id,
 			'next_qos_id' => (rand(0,10) > 8 ? Qos::all()->random(1)->id : 0),
-			'voip_id' => rand(0, 2),								// TODO: use envia TEL interface
+			'voip_id' => rand(0, 2),
 			'next_voip_id' => (rand(0,10) > 8 ? rand(0, 2) : 0),
 			'sepa_iban' => Payment::bankAccountNumber(),			// L5: replace with iban ***
 			'sepa_bic' => $faker->swiftBicNumber,
@@ -68,6 +66,15 @@ class ContractTableSeeder extends \BaseSeeder {
 			'password' => \Acme\php\Password::generate_password(),
 			'description' => $faker->sentence,
 		];
+
+		$ret['number'] = 'contr_'.($count + 1);
+		$ret['number2'] = 'legacy_contr_'.($count + 13157);
+		$ret['number3'] = 'Cu/2015/Q4/'.($count);
+		$ret['number4'] = 'legacy_cust_'.($count + 180558);
+
+		if (\Module::find('BillingBase')->active()) {
+			$ret['costcenter_id'] = $faker->numberBetween(1, 2);
+		}
 
 		return $ret;
 	}

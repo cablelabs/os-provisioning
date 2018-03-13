@@ -1,9 +1,11 @@
-<?php namespace Modules\Hfcreq\Database\Seeders;
+<?php
+
+namespace Modules\Hfcreq\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class HfcReqDatabaseSeeder extends Seeder {
+class HfcreqDatabaseSeeder extends Seeder {
 
 	/**
 	 * Run the database seeds.
@@ -14,7 +16,7 @@ class HfcReqDatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 		
-		$this->call("NetElementTableSeeder");
+		$this->call("Modules\HfcReq\Database\Seeders\NetElementTableSeeder");
 	}
 
 }
