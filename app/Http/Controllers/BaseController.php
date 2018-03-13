@@ -50,7 +50,9 @@ class BaseController extends Controller {
 	protected $index_tree_view = false;
 
 	/**
-	 * Placeholder for Many-to-Many-Relation multiselect fields that should be handled generically
+	 * Placeholder for Many-to-Many-Relation multiselect fields that should be handled generically (e.g. users of Ticket)
+	 *
+	 * NOTE: When model is deleted all pivot entries will be detached and special handling in BaseModel@delete is omitted
 	 */
 	protected $many_to_many = [];
 
@@ -763,7 +765,6 @@ class BaseController extends Controller {
 		// helper to inform the user about success on deletion
 		$to_delete = 0;
 		$deleted = 0;
-
 		// bulk delete
 		if ($id == 0)
 		{
@@ -776,11 +777,19 @@ class BaseController extends Controller {
 
 			$obj = static::get_model_obj();
 
-			foreach (Input::get('ids') as $id => $val) {
+			foreach (Input::get('ids') as $id => $val)
+			{
+				$obj = $obj->findOrFail($id);
 				$to_delete++;
-				if ($obj->findOrFail($id)->delete()) {
-					$deleted++;
+
+				// detach all pivot entries if many-to-many relations exist
+				foreach ($this->many_to_many as $rel) {
+					$func = explode('_', $rel)[0];
+					$obj->$func()->detach();
 				}
+
+				if ($obj->delete())
+					$deleted++;
 			}
 		}
 		else {
