@@ -155,24 +155,6 @@ class Configfile extends \BaseModel {
 		return $this->belongsTo('Modules\ProvBase\Entities\Configfile');
 	}
 
-	public function get_parent ()
-	{
-		return Configfile::find($this->parent_id);
-	}
-
-
-	/**
-	 * Return all children Configfiles for $this Configfile
-	 *
-	 * @author Torsten Schmidt
-	 *
-	 * @return Array 	all children for $this configfile, null if no children
-	 */
-	public function get_children ()
-	{
-		return Configfile::where('parent_id', '=', $this->id)->get()->all();
-	}
-
 
 	/**
 	* Internal Helper:
@@ -343,7 +325,7 @@ class Configfile extends \BaseModel {
 			if (strpos($t, 'SwUpgradeFilename "fw/') !== false && !$sw_up)
 				$sw_up = true;
 
-			$p  = $p->get_parent();
+			$p  = $p->parent;
 		} while ($p);
 
 		return $t;

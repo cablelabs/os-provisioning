@@ -45,21 +45,20 @@ class Parameter extends \BaseModel {
 		$header = isset($this->oid) ? $this->oid->name : '' ;
 		$header .= isset($this->oid) ? ' - '.$this->oid->oid : '';
 
-		$bsclass = $this->get_bsclass();
-
 		return ['table' => $this->table,
 				'index_header' => ['oid.name', 'oid.oid',  'oid.access'],
 				'header' =>  $header,
 				'order_by' => ['1' => 'asc'],
+				'bsclass' => $this->get_bsclass(),
 				'eager_loading' => ['oid']];
 	}
 
 	public function get_bsclass()
 	{
-		$bsclass = 'success';
+		$bsclass = 'warning';
 
 		if (isset($this->oid) && $this->oid->access == 'read-only')
-			$bsclass = 'danger';
+			$bsclass = 'info';
 
 		return $bsclass;
 	}
@@ -71,7 +70,7 @@ class Parameter extends \BaseModel {
 		if ($this->oid->oid_table)
 		{
 			$ret['Base']['SubOIDs']['view']['view'] = 'hfcreq::NetElementType.parameters';
-			$ret['Base']['SubOIDs']['view']['vars']['list'] = $this->children() ? : [];
+			$ret['Base']['SubOIDs']['view']['vars']['list'] = $this->children()->orderBy('third_dimension')->orderBy('html_id')->orderBy('id')->get() ? : [];
 		}
 
 		return $ret;
@@ -106,11 +105,15 @@ class Parameter extends \BaseModel {
 
 	public function children()
 	{
+		return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'parent_id');
+
 		return Parameter::where('parent_id', '=', $this->id)->orderBy('third_dimension')->orderBy('html_id')->orderBy('id')->get()->all();
 	}
 
 	public function third_dimension_params()
 	{
+		return $this->children()->where('third_dimension', '=', 1);
+
 		return Parameter::where('parent_id', '=', $this->id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all();
 	}
 

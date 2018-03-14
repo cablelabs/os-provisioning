@@ -112,13 +112,6 @@ class NetElementType extends \BaseModel {
 		return $this->hasMany('Modules\HfcReq\Entities\NetElementType', 'parent_id');
 	}
 
-	public function get_parent ()
-	{
-		if (!$this->parent_id || $this->parent_id < 1)
-			return 0;
-
-		return NetElementType::find($this->parent_id);
-	}
 
 	public static function param_list($id)
 	{

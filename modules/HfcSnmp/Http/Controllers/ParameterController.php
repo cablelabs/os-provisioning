@@ -38,10 +38,10 @@ class ParameterController extends HfcReqController {
 
 		$b[] = array('form_type' => 'checkbox', 'name' => 'diff_param', 'description' => 'Difference Parameter ?', 'help' => trans('helper.parameter_diff'), 'hidden' => 1, 'space' => 1);
 		$b[] = array('form_type' => 'text', 'name' => 'html_frame', 'description' => 'HTML Frame', 'helper' => trans('helper.parameter_html_frame'));
-		$b[] = array('form_type' => 'text', 'name' => 'html_id', 'description' => 'HTML ID');
+		$b[] = array('form_type' => 'text', 'name' => 'html_id', 'description' => 'HTML ID', 'helper' => trans('helper.parameter_html_id'));
 		$b[] = array('form_type' => 'checkbox', 'name' => 'third_dimension', 'description' => '3rd Dimension', 'help' => trans('helper.parameter_3rd_dimension'));
 		$b[] = array('form_type' => 'text', 'name' => 'divide_by', 'description' => 'Divide by OID(s)', 'help' => trans('helper.parameter_divide_by'), 'options' => ['placeholder' => '.1.3.4.6.1.127.5, .1.3.4.6.1.118.9, ...']);
-		
+
 		if ($oid && $oid->access == 'read-only')
 			$b[0]['hidden'] = 0;
 		if (!$model->parent_id)

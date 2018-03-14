@@ -14,6 +14,8 @@ class NetElement extends \BaseModel {
 	public $kml_path = 'app/data/hfcbase/kml_static';
 	private $max_parents = 25;
 
+	public $snmpvalues = ['attributes' => [], 'original' => []];
+
 	// Add your validation rules here
 	public static function rules($id = null)
 	{
@@ -43,10 +45,10 @@ class NetElement extends \BaseModel {
 	}
 
 	// View Icon
-  public static function view_icon()
-  {
-    return '<i class="fa fa-object-ungroup"></i>';
-  }
+	public static function view_icon()
+	{
+		return '<i class="fa fa-object-ungroup"></i>';
+	}
 
 	// Relations
 	public function view_has_many()
@@ -67,7 +69,7 @@ class NetElement extends \BaseModel {
 
 		if (\PPModule::is_active('hfcsnmp'))
 		{
-			if ($this->netelementtype && $this->netelementtype->parameters && $this->netelementtype->parameters->all())
+			if ($this->netelementtype && ($this->netelementtype->id == 2 || $this->netelementtype->parameters()->count()))
 			{
 				$ret['Edit']['Indices']['class'] 	= 'Indices';
 				$ret['Edit']['Indices']['relation'] = $this->indices;
@@ -159,27 +161,43 @@ class NetElement extends \BaseModel {
 		return $this->hasOne('Modules\HfcBase\Entities\IcingaObjects', 'name1')->where('objecttype_id', '=', '1');
 	}
 
-	public function get_parent ()
+	public function parent()
 	{
-		if (!$this->parent_id || $this->parent_id < 1)
-			return 0;
-
-		return NetElement::find($this->parent_id);
+		return $this->belongsTo('Modules\HfcReq\Entities\NetElement', 'parent_id');
 	}
 
-	public function get_children ()
+	public function children()
 	{
-		return NetElement::whereRaw('parent_id = '.$this->id)->get();
+		return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'parent_id');
+	}
+
+	/**
+	 * Get first parent being a CMTS
+	 *
+	 * @return Object NetElement 	(or NULL if there is no parent CMTS)
+	 */
+	public function get_parent_cmts()
+	{
+		$parent = $this;
+
+		do {
+			$parent = $parent->parent()->with('netelementtype')->first();
+
+			if (!$parent)
+				break;
+		} while (!$parent->netelementtype || $parent->netelementtype->get_base_type() != 3);
+
+		return $parent;
 	}
 
 
 	// TODO: rename, avoid recursion
 	public function get_non_location_parent($layer='')
 	{
-		return $this->get_parent();
+		return $this->parent;
 
 
-		$p = $this->get_parent();
+		$p = $this->parent;
 
 		if ($p->type == 'LOCATION')
 			return get_non_location_parent($p);
@@ -251,7 +269,7 @@ class NetElement extends \BaseModel {
 			if ($p->{'is_type_'.strtolower($type)}())
 				return $p->id;
 
-			$p = $p->get_parent();
+			$p = $p->parent;
 		} while ($i++ < $this->max_parents);
 
 	}
@@ -427,7 +445,7 @@ class NetElementObserver
 				else {
 					// Show Alert that not all indices could be assigned to the new parameter -> user has to create new indices and delete the old ones
 					// We also could delete them directly, so that user has to add them again
-					\Session::put('alert', trans('messages.indices_unassigned'));
+					\Session::put('info', trans('messages.indices_unassigned'));
 				}
 			}
 		}

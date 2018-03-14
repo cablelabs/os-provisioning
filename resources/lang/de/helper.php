@@ -60,7 +60,8 @@ return [
  /**
   *	MODULE: HfcReq
   */
-	'netelementtype_reload' 		=> 'In Sekunden. 0s zum Deaktivieren des Autoreloads.',
+	'netelementtype_reload' 		=> 'In Sekunden. 0s zum Deaktivieren des Autoreloads. Nachkommastellen möglich.',
+	'netelementtype_time_offset' 	=> 'In Sekunden. Nachkommastellen möglich.',
 	'undeleteables' 				=> 'Net & Cluster können weder gelöscht werden, noch kann der Name geändert werden, da die Existenz dieser Typen Vorraussetzung für die Erzeugung des Entitity-Relationship-Diagramms ist.',
 
  /**
@@ -73,7 +74,8 @@ return [
 	'parameter_diff' 				=> 'Bei Aktivierter Checkbox wird nur die Differenz des aktuell zum zuletzt abgefragten Wert angezeigt.',
 	'parameter_divide_by' 			=> 'Durch Angabe von OIDs wird dieser Wert prozentual zur Summe der zu diesen OIDs abgefragten Werte dargestellt. Dies funktioniert vorerst nur in SubOIDs exakt definierter Tabellen. Die hier angegebenen OIDs müssen als Parameter in der SubOID-List eingetragen sein.',
 	'parameter_indices' 			=> 'Durch Angabe einer durch Kommas getrennten Liste der Indizes der Tabellenreihen, werden die SnmpWerte nur für diese Einträge abgefragt.',
-	'parameter_html_frame' 			=> 'Hat keinen Einfluss auf SubOIDs innerhalb von Tabellen (aber auf 3. Dimension-Parameter!).',
+	'parameter_html_frame' 			=> 'Durch Eintragen einer zweistelligen Framenummer wird der Parameter dem Frame auf der Seite zugewiesen. Durch das Eintragen unterschiedlicher Framenummern bei den Parmetern wird die Seite gemäß der Nummer aufgeteilt. Dabei entspricht die erste Zahl der Zeile und die zweite Zahl der Spalte. Auf SubOIDs von Tabellen hat die Framenummer keinen Einfluss (aber auf 3. Dimension-Parameter!).',
+	'parameter_html_id' 			=> 'Durch Eintragen einer ID wird der Parameter in Reihe zu den anderen Parametern gemäß der ID (aufsteigend) angeordnet. In Tabellen kann durch setzen der ID im Sub-Parameter die Spaltenanordnung verändert werden.',
 
  /**
   *	MODULE: ProvBase

@@ -43,7 +43,7 @@ class NetElementTableSeeder extends \BaseSeeder {
 	{
 		foreach ($netelements as $elem)
 		{
-			$children = $elem->get_children();
+			$children = $elem->children;
 			$this->pos_dumping($children);
 
 			if (isset($pos) && rand(0,10) > 7)
@@ -83,12 +83,12 @@ class NetElementTableSeeder extends \BaseSeeder {
 		$root = NetElement::find(2);
 
 		// Make top level elements of type NET, second level of type CLUSTER
-		foreach ($root->get_children() as $net)
+		foreach ($root->children as $net)
 		{
 			$net->netelementtype_id = 1;
 			$net->save();
 
-			foreach ($net->get_children() as $cluster)
+			foreach ($net->children as $cluster)
 			{
 				$cluster->netelementtype_id = 2;
 				$cluster->save();
