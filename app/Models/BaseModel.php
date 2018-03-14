@@ -880,16 +880,18 @@ class BaseModel extends Eloquent
 			// in n:m relations we have to detach instead of deleting if
 			// child is related to others, too
 			// this should be handled in class methods because BaseModel cannot know the possible problems
-			foreach ($children['n:m'] as $child) {
+			foreach ($children['n:m'] as $child)
+			{
 				$delete_method = 'deleteNtoM'.$child->get_model_name();
-				if (!$this->{$delete_method}($child)) {
+				$msg_target = \Str::endsWith($prev, 'edit') ? 'tmp_error_above_relations' : 'tmp_error_above_index_list';
+
+				if (!method_exists($this, $delete_method)) {
+					// Keep Pivot Entries and children if method is not specified and just log a warning message
+					\Log::warning($this->get_model_name().' - N:M pivot entry deletion handling not implemented for '.$child->get_model_name());
+				}
+				else if (!$this->{$delete_method}($child)) {
 					$msg = "Cannot delete ".$this->get_model_name()." $this->id: n:m relation with ".$child->get_model_name()." $child->id. cannot be deleted";
-					if (\Str::endsWith($prev, 'edit')) {
-						\Session::push('tmp_error_above_relations', $msg);
-					}
-					else {
-						\Session::push('tmp_error_above_index_list', $msg);
-					}
+					\Session::push($msg_target, $msg);
 					return false;
 				}
 			}
