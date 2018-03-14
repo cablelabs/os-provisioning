@@ -83,7 +83,6 @@ class NetElementTableSeeder extends \BaseSeeder {
 		$root = NetElement::find(2);
 
 		// Make top level elements of type NET, second level of type CLUSTER
-
 		foreach ($root->children as $net)
 		{
 			$net->netelementtype_id = 1;
