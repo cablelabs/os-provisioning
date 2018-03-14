@@ -782,11 +782,15 @@ class BaseController extends Controller {
 				$obj = $obj->findOrFail($id);
 				$to_delete++;
 
-				// detach all pivot entries if many-to-many relations exist
-				foreach ($this->many_to_many as $rel) {
-					$func = explode('_', $rel)[0];
-					$obj->$func()->detach();
-				}
+				/* detach all pivot entries if many-to-many relations exist
+				 * Note: This should be implemented as soft detach, but this functionality is actually not implemented by laravel
+				 * So we could do it by ourself (DB::update(...)) but as many pivot tables do actually not have deleted_at timestamp
+				 * we can preliminary just keep them in DB
+				 */
+				// foreach ($this->many_to_many as $rel) {
+				// 	$func = explode('_', $rel)[0];
+				// 	$obj->$func()->detach();
+				// }
 
 				if ($obj->delete())
 					$deleted++;
