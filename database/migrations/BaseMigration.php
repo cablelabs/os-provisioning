@@ -7,6 +7,7 @@ class BaseMigration extends Migration
 {
     function __construct() {
 
+		echo "Migrating ".get_class($this)."\n";
         // get and instanciate of index maker
         require_once(getcwd()."/app/extensions/database/FulltextIndexMaker.php");
         $this->fim = new FulltextIndexMaker($this->tablename);

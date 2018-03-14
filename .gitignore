@@ -48,3 +48,9 @@ Documentation/doxywarn.log
 
 # ignore queue process pid's
 *queue.pid
+
+# ignore debug output from testing 
+phpunit/*.htm
+
+# ignore xml files created from template
+phpunit/*.xml

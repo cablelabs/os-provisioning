@@ -588,12 +588,11 @@ class Modem extends \BaseModel {
 					// this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
 					(strpos($e->getMessage(), "noSuchName") !== false))
 				{
-					\Session::flash('error', trans('messages.modem_restart_error'));
+					\Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
 				}
 				else {
 					// Inform and log for all other exceptions
 					\Session::push('tmp_error_above_form', 'Unexpected exception: '.$e->getMessage());
-					\Session::flash('error', '');
 				}
 			}
 		}

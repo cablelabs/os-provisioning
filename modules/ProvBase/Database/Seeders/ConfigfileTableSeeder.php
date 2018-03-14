@@ -12,7 +12,7 @@ class ConfigfileTableSeeder extends \BaseSeeder {
 	{
 		$faker = Faker::create();
 
-		foreach(range(1, $this->max_seed_l2) as $index)
+		foreach(range(1, self::$max_seed_l2) as $index)
 		{
 			Configfile::create([
 				'name' => $faker->colorName(),

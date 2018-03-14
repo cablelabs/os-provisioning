@@ -18,7 +18,7 @@ class OIDTableSeeder extends \BaseSeeder {
 				'mibfile_id' => rand(1,5),
 				'html_type' => $this->_get_enum('html_type'),
 				'type' 		=> $this->_get_enum('type'),
-				'oid' 		=> '.1.3.6.1.4.1.'.$faker->ipv4,
+				'oid' 		=> '.1.3.6.1.4.1.'.$faker->localIpv4,
 				'oid_table' => rand(1,20) > 17,
 				'syntax' 	=> $this->_get_enum('syntax'),
 				'access' 	=> $this->_get_enum('acccess'),

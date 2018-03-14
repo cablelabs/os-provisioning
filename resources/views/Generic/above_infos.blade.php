@@ -1,12 +1,17 @@
 <?php $tmp_msg_above_keys = [
 	'tmp_success_above_form',
 	'tmp_info_above_form',
+	'tmp_warning_above_form',
 	'tmp_error_above_form',
+
 	'tmp_success_above_index_list',
 	'tmp_info_above_index_list',
+	'tmp_warning_above_index_list',
 	'tmp_error_above_index_list',
+
 	'tmp_success_above_relations',
 	'tmp_info_above_relations',
+	'tmp_warning_above_relations',
 	'tmp_error_above_relations',
 	];
 
@@ -37,6 +42,9 @@ foreach ($tmp_msg_above_keys as $tmp_msg_above_key) {
 		}
 		elseif ($tmp_type == 'success') {
 			$tmp_color = '#aaffaa';
+		}
+		elseif ($tmp_type == 'warning') {
+			$tmp_color = '#ffcc44';
 		}
 		elseif ($tmp_type == 'error') {
 			$tmp_color = '#ffaaaa';

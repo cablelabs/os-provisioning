@@ -144,7 +144,7 @@ class ContractController extends \BaseController {
 		try {
 			\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
 		}
-		catch (PermissionDeniedError $ex) {
+		catch (AuthException $ex) {
 			return null;
 		}
 		return $provvoipenvia->get_jobs_for_view($contract, 'contract');
@@ -161,6 +161,7 @@ class ContractController extends \BaseController {
 		// generate contract number
 		if (!$data['number'] && \PPModule::is_active('billingbase') && $data['costcenter_id'])
 		{
+			// generate contract number
 			$num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
 
 			if ($num)

@@ -46,8 +46,8 @@
             </div>
             <div class="align-self-end">
                 @if ($delete_allowed)
-                    <button class="btn btn-outline-danger m-b-10 float-right" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
-                    title="{{ \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button' ) }}" form="IndexForm">
+                    <button type="submit" class="btn btn-outline-danger m-b-10 float-right" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
+                    title="{{ \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button' ) }}" form="IndexForm" name="_delete">
                             <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
                     </button>
                 @endif

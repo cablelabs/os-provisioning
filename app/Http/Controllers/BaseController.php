@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Request;
 use Yajra\Datatables\Datatables;
 use Monolog\Logger;
 
-use App\Exceptions\AuthExceptions;
+use App\Exceptions\AuthException;
 
 
 /*
@@ -50,7 +50,9 @@ class BaseController extends Controller {
 	protected $index_tree_view = false;
 
 	/**
-	 * Placeholder for Many-to-Many-Relation multiselect fields that should be handled generically
+	 * Placeholder for Many-to-Many-Relation multiselect fields that should be handled generically (e.g. users of Ticket)
+	 *
+	 * NOTE: When model is deleted all pivot entries will be detached and special handling in BaseModel@delete is omitted
 	 */
 	protected $many_to_many = [];
 
@@ -292,7 +294,9 @@ class BaseController extends Controller {
 			}
 
 			// add tab for GuiLog
-			array_push($c, $ret[0]);
+			if ($ret) {
+				array_push($c, $ret[0]);
+			}
 
 			return $c;
 		}
@@ -572,7 +576,9 @@ class BaseController extends Controller {
 		$data 		= $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails()) {
-			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'danger');
+			$msg = 'Input invalid – please correct the following errors';
+			\Session::push('tmp_error_above_form', $msg);
+			return Redirect::back()->withErrors($validator)->withInput()->with('message', $msg)->with('message_color', 'danger');
 		}
 
 		$obj = $obj::create($data);
@@ -584,7 +590,10 @@ class BaseController extends Controller {
 		if (!$redirect)
 			return $id;
 
-		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', 'Created!')->with('message_color', 'success');
+		$msg = 'Created!';
+		\Session::push('tmp_success_above_form', $msg);
+
+		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', $msg)->with('message_color', 'success');
 	}
 
 
@@ -658,7 +667,10 @@ class BaseController extends Controller {
 
 		if ($validator->fails()) {
 			Log::info ('Validation Rule Error: '.$validator->errors());
-			return Redirect::back()->withErrors($validator)->withInput()->with('message', 'please correct the following errors')->with('message_color', 'danger');
+
+			$msg = 'Input invalid – please correct the following errors';
+			\Session::push('tmp_error_above_form', $msg);
+			return Redirect::back()->withErrors($validator)->withInput()->with('message', $msg)->with('message_color', 'danger');
 		}
 
 		// update timestamp, this forces to run all observer's
@@ -675,9 +687,18 @@ class BaseController extends Controller {
 		// Add N:M Relations
 		$this->_set_many_to_many_relations($obj, $data);
 
-		// error msg created while observer execution
-		$msg = \Session::has('error') ? \Session::get('error') : 'Updated';
-		$color = \Session::has('error') ? 'warning' : 'success';
+		// create messages depending on error state created while observer execution
+		// TODO: check if giving msg/color to route is still wanted or obsolete by the new tmp_*_above_* messages format
+		if (!\Session::has('error')) {
+			$msg = "Updated!";
+			$color = 'success';
+			\Session::push('tmp_success_above_form', $msg);
+		}
+		else {
+			$msg = \Session::get('error');
+			$color = 'warning';
+			\Session::push('tmp_error_above_form', $msg);
+		}
 
 		$route_model = \NamespaceController::get_route_name();
 
@@ -744,21 +765,31 @@ class BaseController extends Controller {
 		// helper to inform the user about success on deletion
 		$to_delete = 0;
 		$deleted = 0;
-
 		// bulk delete
 		if ($id == 0)
 		{
 			// Error Message when no Model is specified - NOTE: delete_message must be an array of the structure below !
-			if (!Input::get('ids'))
-				return Redirect::back()->with('delete_message', ['message' => 'No Entry For Deletion specified', 'class' => \NamespaceController::get_route_name(), 'color' => 'danger']);
+			if (!Input::get('ids')) {
+				$message = 'No Entry For Deletion specified';
+				\Session::push('tmp_error_above_form', $message);
+				return Redirect::back()->with('delete_message', ['message' => $message, 'class' => \NamespaceController::get_route_name(), 'color' => 'danger']);
+			};
 
 			$obj = static::get_model_obj();
 
-			foreach (Input::get('ids') as $id => $val) {
+			foreach (Input::get('ids') as $id => $val)
+			{
+				$obj = $obj->findOrFail($id);
 				$to_delete++;
-				if ($obj->findOrFail($id)->delete()) {
-					$deleted++;
+
+				// detach all pivot entries if many-to-many relations exist
+				foreach ($this->many_to_many as $rel) {
+					$func = explode('_', $rel)[0];
+					$obj->$func()->detach();
 				}
+
+				if ($obj->delete())
+					$deleted++;
 			}
 		}
 		else {
@@ -774,14 +805,17 @@ class BaseController extends Controller {
 		if (!$deleted && !$obj->force_delete) {
 			$message = 'Could not delete '.$class;
 			$color = 'danger';
+			\Session::push('tmp_error_above_form', $message);
 		}
 		elseif (($deleted == $to_delete) || $obj->force_delete) {
 			$message = 'Successful deleted '.$class;
 			$color = 'success';
+			\Session::push('tmp_success_above_form', $message);
 		}
 		else {
 			$message = 'Deleted '.$deleted.' out of '.$to_delete.' '.$class;
 			$color = 'warning';
+			\Session::push('tmp_warning_above_form', $message);
 		}
 
 		return Redirect::back()->with('delete_message', ['message' => $message, 'class' => $class, 'color' => $color]);
