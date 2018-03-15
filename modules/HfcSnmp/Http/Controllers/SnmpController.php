@@ -91,6 +91,7 @@ class SnmpController extends \BaseController{
 		$headline 	 = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var).' > controlling';
 		$panel_right = new NetElementController;
 		$panel_right = $panel_right->prepare_tabs($view_var);
+		// TODO: add topography, erd tabs – see: TreeErdController, line 114
 
 		$view_path   = 'hfcsnmp::NetElement.controlling';
 		$form_path   = 'Generic.form';
