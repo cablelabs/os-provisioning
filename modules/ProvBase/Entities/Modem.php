@@ -1351,12 +1351,15 @@ class Modem extends \BaseModel
 				array_push($ret, $dec);
 			}
 		}
+
 		return $ret;
 	}
 
 	private function _nePwr($decimal,$maintap)
 	{
 		$pwr = [];
+		$ans = implode("", array_keys($decimal, max($decimal)));
+		if ($maintap == $ans) {
 		$a2 = $decimal[$maintap];
 		$b2 = $decimal[$maintap + 1];
 		foreach (array_chunk($decimal, 2) as $val) {
@@ -1365,6 +1368,12 @@ class Modem extends \BaseModel
 			$pwr[] = ($a1 * $a2 - $b1 * $b2) / ($a2**2 + $b2**2);
 			$pwr[] = ($a2 * $b1 + $a1 * $b2) / ($a2**2 + $b2**2);
 		}
+		}
+		else {
+			for ($i=0; $i < 48; $i++)
+			$pwr[] = 0;
+		}
+
 		return $pwr;
 	}
 
@@ -1379,11 +1388,15 @@ class Modem extends \BaseModel
 				$temp = -100;
 			$ene_db[] = round($temp,2);
 		}
+
 		return $ene_db;
 	}
 
 	private function _tdr($ene, $energymain, $freq)
 	{
+		if ($ene[$energymain] == -100)
+			$tdr = 0;
+		else {
 		// propgagtion speed in cable networks (87% speed of light)
 		$v = 0.87 * 299792458;
 		unset($ene[$energymain]);
@@ -1393,6 +1406,8 @@ class Modem extends \BaseModel
 		// 0.8 - Roll-off of filter; /2 -> round-trip (back and forth)
 		$tdr = $v * $tap_diff / (0.8 * $freq) / 2;
 		$tdr = round($tdr,1);
+		}
+
 		return $tdr;
 	}
 
@@ -1420,6 +1435,7 @@ class Modem extends \BaseModel
 			array_push($rea, 0);
 			array_push($imag, 0);
 	}
+
 		for ($i=0; $i < 248; $i++) {
 			array_push($rea, array_shift($rea));
 			array_push($imag, array_shift($imag));
@@ -1442,6 +1458,9 @@ class Modem extends \BaseModel
 		$y = abs(min($answer));
 		$maxamp = $x >= $y ? $x : $y;
 
+		if (!(is_finite($maxamp)))
+				$maxamp = 0;
+
 		return [$answer, $maxamp];
 	}
 
@@ -1457,7 +1476,6 @@ class Modem extends \BaseModel
 
 	public function get_preq_data()
 	{
-		$ret = [];
 		$domain = ProvBase::first()->domain_name;
 		$file = "/usr/share/cacti/rra/$this->hostname.$domain.json";
 
@@ -1465,22 +1483,19 @@ class Modem extends \BaseModel
 			return ['No pre-equalization data found'];
 
 		$preq = json_decode(file_get_contents($file), true);
-		if (empty($preq['data']) || empty($preq['width']))
+		if (empty($preq['data']) || empty($preq['width']) || (!isset($preq['data'][199])))
 			return ['No pre-equalization data found'];
 
+		$ret = [];
+		dd($preq['data']);
 		$freq = $preq['width'];
 		$hexs = str_split($preq['data'], 8);
 		$or_hexs = array_shift($hexs);
-		if (count($hexs) != 24)
-			return ['Not supported modem for Pre-equalization at the moment'];
-
 		$maintap = 2 * $or_hexs[1] - 2;
 		$energymain = $maintap / 2;
 		array_splice($hexs, 0, 0);
 		$hexs = implode("", $hexs);
 		$hexs = str_split($hexs, 4);
-		//check if the modem contains false Hexvalues i.e if the main tap is zero return 0 values for
-		//the max amplitude and the tdr
 		$hexcall = $hexs;
 		$counter = 0;
 		foreach($hexs as $hex) {
@@ -1490,11 +1505,13 @@ class Modem extends \BaseModel
 				$decimal = $this->_threenibble($hexcall);
 				break;
 			}
+
 			elseif(ctype_alpha($hsplit[0]) || $hsplit[0] != 0 && $counter >= 46) {
 				$decimal = $this->_fournibble($hexcall);
 				break;
 			}
 		}
+
 		$pwr = $this->_nePwr($decimal, $maintap);
 		$ene = $this->_energy($pwr, $maintap, $energymain);
 		$chart = $this->_chart($ene);
@@ -1512,10 +1529,6 @@ class Modem extends \BaseModel
 
 		return $ret;
 	}
-
-
-
-
     /*
      * Return actual modem state as string or int
      *
