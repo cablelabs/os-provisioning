@@ -7,6 +7,7 @@ pw=$(ddns-confgen -a hmac-md5 -r /dev/urandom | grep secret)
 install -dm750 /etc/dhcp/nmsprime/cmts_gws
 
 # change owner
+chown apache /etc/dhcp
 chown -R apache:dhcpd /etc/dhcp/nmsprime
 chown -R apache /tftpboot
 chown -R named:named /var/named/dynamic
