@@ -2,10 +2,10 @@
 
 return array(
 	'HFC' =>
-		['NetElementTypes' =>
+		['Net Element Types' =>
 			['link'	=> 'NetElementType.index',
 			'icon'	=> 'fa-object-group'],
-		'NetElements' =>
+		'Net Elements' =>
 			['link'	=> 'NetElement.index',
 			'icon'	=> 'fa-object-ungroup']
 		]

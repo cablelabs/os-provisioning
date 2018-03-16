@@ -29,6 +29,8 @@
 	</div>
 	@endif
 
+@if (isset ($form_fields['list']))
+
 	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id, $param_id, $index), 'method' => 'put', 'files' => true)) }}
 
 		{{-- Error | Success Message --}}
@@ -47,6 +49,7 @@
 
 
 		{{-- LIST --}}
+
 		@if ($form_fields['list'])
 		<div class="col-md-12 row" style="padding-right: 0px;"><div class="col-md-12 well row">
 		@foreach ($form_fields['list'] as $field)
@@ -126,6 +129,10 @@
 	</div>
 
 	{{ Form::close() }}
+
+@else
+	<h2>No controlling defined</h2>
+@endif
 
 	{{-- java script --}}
 	@include('Generic.form-js')

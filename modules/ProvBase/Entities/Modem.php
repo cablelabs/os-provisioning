@@ -164,10 +164,15 @@ class Modem extends \BaseModel {
 		return $this->hasMany('Modules\ProvVoip\Entities\Mta');
 	}
 
-	// TODO: rename to device - search for all places where this function is used
+	// TODO: deprecated! use netelement function instead - search for all places where this function is used
 	public function tree()
 	{
 		return $this->belongsTo('Modules\HfcReq\Entities\NetElement');
+	}
+
+	public function nelelement()
+	{
+		return $this->belongsTo('Modules\HfcReq\Entities\NetElement', 'netelement_id');
 	}
 
 
