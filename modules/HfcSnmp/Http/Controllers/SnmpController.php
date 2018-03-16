@@ -200,6 +200,7 @@ class SnmpController extends \BaseController{
 	 * @param Array 	params 		Array of Parameter Objects
 	 * @param Bool 		ordered 	true:  @return SNMP values as structured array to build initial view
 	 * 								false: @return raw json data to update values via Ajax
+	 * @return Array 				TODO: explain output array
 	 * @author Nino Ryschawy
 	 */
 	public function get_snmp_values($params, $ordered = false)
