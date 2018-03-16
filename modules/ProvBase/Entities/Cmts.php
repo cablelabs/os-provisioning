@@ -412,7 +412,7 @@ class Cmts extends \BaseModel {
 			$subnet = $pool->net;
 			$netmask = $pool->netmask;
 			$broadcast_addr = $pool->broadcast_ip;
-			$range = $pool->ip_pool_start.' '.$pool->ip_pool_end;
+			$range = $pool->get_range();
 			$router = $pool->router_ip;
 			$type = $pool->type;
 			$options = $pool->optional;
@@ -437,8 +437,8 @@ class Cmts extends \BaseModel {
 				$pos = strrpos($data_tmp, ',');
 				$data .= substr_replace($data_tmp, '', $pos, 1).";";
 			}
-			$data .= "\n\n\t\t".'pool'."\n\t\t".'{';
-			$data .= "\n\t\t\t".'range '.$range.';'."\n";
+			$data .= "\n\n\t\t".'pool'."\n\t\t{\n";
+			$data .= $range;
 
 			switch ($type)
 			{
