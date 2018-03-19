@@ -147,13 +147,13 @@ class IpPool extends \BaseModel {
 		if ($this->type != 'CPEPub' || !file_exists(self::$static_ip_file) || !filesize(self::$static_ip_file))
 			return $ret;
 
-		preg_match_all('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', file_get_contents(self::$static_ip_file), $static);
+		preg_match_all('/fixed-address\s+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s*;/', file_get_contents(self::$static_ip_file), $static);
 		// there are no static ip addresses defined, return normal range string
-		if (empty($static[0]))
+		if (empty($static[1]))
 			return $ret;
 
 		$ret = '';
-		$static = array_map(function($ip) { return ip2long($ip); }, $static[0]);
+		$static = array_map(function($ip) { return ip2long($ip); }, $static[1]);
 		$all = range(ip2long($this->ip_pool_start), ip2long($this->ip_pool_end));
 		foreach (array_diff($all, $static) as $ip)
 			$ret .= "\t\t\trange ".long2ip($ip).";\n";
