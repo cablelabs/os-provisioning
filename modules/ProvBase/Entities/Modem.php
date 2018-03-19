@@ -1404,6 +1404,7 @@ class ModemObserver
 		}
 
 		// Refresh MPS rules
+		// Note: does not perform a save() which could trigger observer.
 		if (\Module::collections()->has('HfcCustomer'))
 		{
 			if (multi_array_key_exists(['x', 'y'], $diff)) {

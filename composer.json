@@ -10,7 +10,7 @@
 		"soapbox/laravel-formatter": "^2.0",
 		"laravelcollective/html": "5.2.*",
 		"intervention/validation": "~1.1.3",
-		"digitick/sepa-xml" : "1.1.*",
+		"digitick/sepa-xml": "1.1.*",
 		"globalcitizen/php-iban": "2.5.6",
 		"box/spout": "^2.4",
 		"chumper/zipper": "0.6.x",
