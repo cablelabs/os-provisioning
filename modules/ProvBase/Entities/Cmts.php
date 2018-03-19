@@ -8,6 +8,7 @@ use Acme\php\ArrayHelper;
 
 class Cmts extends \BaseModel {
 
+	private static $_us_snr_path = 'data/provmon/us_snr';
 	// don't put a trailing slash here!
 	public static $cmts_include_path = '/etc/dhcp/nmsprime/cmts_gws';
 
@@ -265,7 +266,7 @@ class Cmts extends \BaseModel {
 	 */
 	public function get_us_snr($ip)
 	{
-		$fn = "data/provbase/us_snr/$this->id.json";
+		$fn = self::$_us_snr_path."/$this->id.json";
 
 		if (!\Storage::exists($fn)) {
 			\Log::error("Missing Modem US SNR json file of CMTS $this->hostname [$this->id]");
@@ -336,7 +337,7 @@ class Cmts extends \BaseModel {
 			return;
 		}
 
-		\Storage::put("data/provbase/us_snr/$this->id.json", json_encode($ret));
+		\Storage::put(self::$_us_snr_path."/$this->id.json", json_encode($ret));
 	}
 
 
