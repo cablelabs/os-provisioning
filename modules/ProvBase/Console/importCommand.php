@@ -230,7 +230,7 @@ class importCommand extends Command {
 			}
 
 			// Email Import
-			if (\PPModule::is_active('mail'))
+			if (\Module::collections()->has('Mail'))
 				self::add_email($c, $contract);
 
 			// Add Billing related Data
@@ -613,7 +613,7 @@ class importCommand extends Command {
 	private function add_email($new_contract, $old_contract)
 	{
 		$emails = $km3->table('tbl_email')->selectRaw ('*')->where('vertrag', '=', $old_contract->id)->get();
-		$emails_new_cnt = \PPModule::is_active('mail') ? $new_contract->emails()->count() : [];
+		$emails_new_cnt = \Module::collections()->has('Mail') ? $new_contract->emails()->count() : [];
 
 		if (count($emails) == $emails_new_cnt)
 			return Log::info('Email Aliases already added!', [$new_contract->number]);

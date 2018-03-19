@@ -460,7 +460,7 @@ finish:
 	public static function view_main_menus ()
 	{
 		$ret = array();
-		$modules = Module::enabled();
+		$modules = \Module::enabled();
 
 		// global page
 		$array = include(app_path().'/Config/header.php');

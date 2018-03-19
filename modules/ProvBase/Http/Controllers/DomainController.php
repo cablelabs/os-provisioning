@@ -1,10 +1,10 @@
 <?php namespace Modules\ProvBase\Http\Controllers;
 
-use Pingpong\Modules\Routing\Controller;
+use Nwidart\Modules\Routing\Controller;
 use Modules\ProvBase\Entities\Domain;
 
 class DomainController extends \BaseController {
-	
+
 	public function view_form_fields($model = null)
 	{
 		return array(
@@ -13,5 +13,5 @@ class DomainController extends \BaseController {
 			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => Domain::getPossibleEnumValues('type')),
 		);
 	}
-	
+
 }

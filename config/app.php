@@ -160,12 +160,12 @@ return [
 		'App\Providers\RouteServiceProvider',
 		'App\Providers\ExtendedValidatorServiceProvider',
 
-		'Pingpong\Modules\ModulesServiceProvider',
 		'Collective\Html\HtmlServiceProvider',
 		'Acme\html\HtmlServiceProvider',
 		'Intervention\Validation\ValidationServiceProvider',
 		'Collective\Bus\BusServiceProvider',
 		Yajra\Datatables\DatatablesServiceProvider::class,
+		Nwidart\Modules\LaravelModulesServiceProvider::class,
 	],
 
 	/*
@@ -221,13 +221,13 @@ return [
 
 		'BaseController' => 'App\Http\Controllers\BaseController',
 		'HtmlServiceProvider'  => 'Acme\html\HtmlServiceProvider',
-		'PPModule' => 'Acme\pingpong\PPModule',
 		'BaseRoute'     => 'Acme\core\BaseRoute',
 		'NamespaceController' => 'App\Http\Controllers\NamespaceController',
 		'BaseModel' => 'App\BaseModel',
 		'GlobalConfig' => 'App\GlobalConfig',
 		'Datatables' => 'Yajra\Datatables\Facades\Datatables',
 		'ChannelLog' => 'Acme\log\ChannelLog',
+		'Module' => Nwidart\Modules\Facades\Module::class,
 	],
 
 ];

@@ -55,7 +55,7 @@ class Kernel extends ConsoleKernel {
 		// Command to remove obsolete data in storage
 		$schedule->command('main:storage_cleaner')->dailyAt('04:18');
 
-		if (\PPModule::is_active ('ProvVoip')) {
+		if (\Module::collections()->has('ProvVoip')) {
 
 			// Update database table carriercode with csv data if necessary
 			$schedule->command('provvoip:update_carrier_code_database')
@@ -70,7 +70,7 @@ class Kernel extends ConsoleKernel {
 				->dailyAt('04:33');
 		}
 
-		if (\PPModule::is_active ('ProvVoipEnvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 
 			// Update status of envia orders
 			// Do this at the very beginning of a day
@@ -115,7 +115,7 @@ class Kernel extends ConsoleKernel {
 		}
 
 		// ProvBase Schedules
-		if (\PPModule::is_active ('ProvBase'))
+		if (\Module::collections()->has('ProvBase'))
 		{
 			// Rebuid all Configfiles
 			// $schedule->command('nms:configfile')->dailyAt('00:50')->withoutOverlapping();
@@ -141,7 +141,7 @@ class Kernel extends ConsoleKernel {
 		}
 
 		// Clean Up of HFC Base
-		if (\PPModule::is_active ('HfcBase'))
+		if (\Module::collections()->has('HfcBase'))
 		{
 			// Rebuid all Configfiles
 			$schedule->call(function () {
@@ -151,7 +151,7 @@ class Kernel extends ConsoleKernel {
 		}
 
 		// Clean Up of HFC Customer
-		if (\PPModule::is_active ('HfcCustomer'))
+		if (\Module::collections()->has('HfcCustomer'))
 		{
 			// Rebuid all Configfiles
 			$schedule->call(function () {
@@ -166,7 +166,7 @@ class Kernel extends ConsoleKernel {
 
 
 		// Automatic Power Control based on measured SNR
-		if (\PPModule::is_active ('ProvMon'))
+		if (\Module::collections()->has('ProvMon'))
 		{
 			$schedule->command('nms:apc')->everyMinute();
 			$schedule->command('nms:cacti')->daily();
@@ -180,7 +180,7 @@ class Kernel extends ConsoleKernel {
 
 
 		// Create monthly Billing Files and reset flags
-		if (\PPModule::is_active ('BillingBase'))
+		if (\Module::collections()->has('BillingBase'))
 		{
 			// Remove all old CDRs & Invoices
 			$schedule->call('\Modules\BillingBase\Entities\Invoice@cleanup')->monthly();
@@ -197,11 +197,11 @@ class Kernel extends ConsoleKernel {
 			}
 		}
 
-		if (\PPModule::is_active('ProvVoip')) {
+		if (\Module::collections()->has('ProvVoip')) {
 			$schedule->command('provvoip:phonenumber')->daily()->at('00:13');
 		}
 
-		if (\PPModule::is_active ('VoipMon'))
+		if (\Module::collections()->has('VoipMon'))
 		{
 			$schedule->command('voipmon:match_records')->everyFiveMinutes();
 			$schedule->command('voipmon:delete_old_records')->daily();

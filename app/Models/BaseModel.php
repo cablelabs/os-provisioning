@@ -152,7 +152,7 @@ class BaseModel extends Eloquent
 
 			// check if requested module is active
 			$module = $parts[1];
-			if (!\PPModule::is_active($module)) {
+			if (!\Module::collections()->has($module)) {
 
 				return false;
 			}
@@ -302,7 +302,7 @@ class BaseModel extends Eloquent
 		);
 
 		foreach ($voip_modules as $module) {
-			if (\PPModule::is_active($module)) {
+			if (\Module::collections()->has($module)) {
 				return True;
 			}
 		}
@@ -329,7 +329,7 @@ class BaseModel extends Eloquent
 		);
 
 		foreach ($billing_modules as $module) {
-			if (\PPModule::is_active($module)) {
+			if (\Module::collections()->has($module)) {
 				return True;
 			}
 		}
@@ -448,7 +448,7 @@ class BaseModel extends Eloquent
 		 */
 		$path = base_path('modules');
 		$dirs = array();
-		$modules = Module::enabled();
+		$modules = \Module::enabled();
 		foreach ($modules as $module)
 			array_push($dirs, $module->getPath().'/Entities');
 
@@ -496,7 +496,7 @@ class BaseModel extends Eloquent
 		{
 			$ret = $field.'='.$value;
 
-			if(\PPModule::is_active('Hfcbase'))
+			if(\Module::collections()->has('HfcBase'))
 			{
 				if (($model[0] == 'Modules\ProvBase\Entities\Modem') && ($field == 'net' || $field == 'cluster'))
 				{

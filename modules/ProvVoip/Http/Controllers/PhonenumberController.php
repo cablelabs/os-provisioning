@@ -21,7 +21,7 @@ class PhonenumberController extends \BaseController {
 		if (!$model)
 			$model = new Phonenumber;
 
-		if (\PPModule::is_active('provvoipenvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 			$login_placeholder = 'Autofilled if empty.';
 		}
 		else {
@@ -73,7 +73,7 @@ class PhonenumberController extends \BaseController {
 		}
 
 		$reassign_help = "Can be used to assign the phonenumber (and related data) to another MTA.";
-		if (\PPModule::is_active('provvoipenvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 			$reassign_help .= "MTA has to belong to the same contract and modem installation addresses have to be equal.";
 		}
 

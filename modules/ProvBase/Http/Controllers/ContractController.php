@@ -71,10 +71,10 @@ class ContractController extends \BaseController {
 
 		);
 
-		if (!\PPModule::is_active('ccc'))
+		if (!\Module::collections()->has('Ccc'))
 			unset($a[0]['help']);
 
-		if ($model->voip_enabled && !\PPModule::is_active('billingbase')) {
+		if ($model->voip_enabled && !\Module::collections()->has('BillingBase')) {
 
 			$b = array(
 				/* array('form_type' => 'text', 'name' => 'voip_contract_start', 'description' => 'VoIP Contract Start'), */
@@ -91,7 +91,7 @@ class ContractController extends \BaseController {
 				array('form_type' => 'text', 'name' => 'contract_end', 'description' => 'Contract End'),
 			);
 
-		if (\PPModule::is_active('billingbase')) {
+		if (\Module::collections()->has('BillingBase')) {
 
 			$c2 = array(
 				array('form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'value' => '1'),
@@ -154,7 +154,7 @@ class ContractController extends \BaseController {
 		$data['contract_start'] = $data['contract_start'] ? : date('Y-m-d');
 
 		// generate contract number
-		if (!$data['number'] && \PPModule::is_active('billingbase') && $data['costcenter_id'])
+		if (!$data['number'] && \Module::collections()->has('BillingBase') && $data['costcenter_id'])
 		{
 			// generate contract number
 			$num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);

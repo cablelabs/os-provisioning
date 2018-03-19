@@ -53,7 +53,7 @@ class dhcpCommand extends Command {
 		Modem::make_dhcp_cm_all();
 		Endpoint::make_dhcp();
 
-		if (\PPModule::is_active('provvoip'))
+		if (\Module::collections()->has('ProvVoip'))
 			Mta::make_dhcp_mta_all();
 
 		// regenerate CMTS includes by emptying the file and adding all entries

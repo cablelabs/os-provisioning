@@ -99,7 +99,7 @@ class PhonenumberManagement extends \BaseModel {
 	 * The envia TEL contract the related phonenumber currently belongs to
 	 */
 	public function envia_contract()	{
-		if (!\PPModule::is_active('provvoipenvia')) {
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
 			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
 		}
 		else {
@@ -161,7 +161,7 @@ class PhonenumberManagement extends \BaseModel {
 	 */
 	protected function _envia_orders() {
 
-		if (!\PPModule::is_active('provvoipenvia')) {
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
 			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
 		}
 
@@ -192,7 +192,7 @@ class PhonenumberManagement extends \BaseModel {
 	// View Relation.
 	public function view_has_many() {
 
-		if (\PPModule::is_active('provvoipenvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 
 			$ret['envia TEL']['EnviaOrder']['class'] = 'EnviaOrder';
 			$ret['envia TEL']['EnviaOrder']['relation'] = $this->_envia_orders;
@@ -239,7 +239,7 @@ class PhonenumberManagement extends \BaseModel {
 
 		// with activated envia TEL module we have to perform some extra checks
 		// we have to check this here as using ModemObserver::deleting() with return false does not prevent the monster from deleting child model instances!
-		if (\PPModule::is_active('ProvVoipEnvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 
 			// check from where the deletion request has been triggered and set the correct var to show information
 			$prev = explode('?', \URL::previous())[0];

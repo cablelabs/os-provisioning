@@ -22,7 +22,7 @@
 				<li class="navbar-nav nav p-t-15">
 					<a id="togglesearch" href="javascript:;" class="icon notification waves-effect waves-light m-t-5" data-toggle="navbar-search"><i class="fa fa-search fa-lg" aria-hidden="true"></i></a>
 				</li>
-				@if (\PPModule::is_active('provvoipenvia'))
+				@if (\Module::collections()->has('ProvVoipEnvia'))
 					{{-- count of user interaction needing EnviaOrders --}}
 					<li  class='m-t-10' style='font-size: 2em; font-weight: bold'>
 						<a href="{{route('EnviaOrder.index', ['show_filter' => 'action_needed'])}}" target="_self" style="text-decoration: none;">

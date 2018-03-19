@@ -39,7 +39,7 @@ class Contract extends \BaseModel {
 			'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
 		);
 
-		if (\PPModule::is_active('billingbase')) {
+		if (\Module::collections()->has('BillingBase')) {
 			$rules['costcenter_id'] = 'required|numeric|min:1';
 		}
 
@@ -102,7 +102,7 @@ class Contract extends \BaseModel {
 	// View Relation.
 	public function view_has_many()
 	{
-		if (\PPModule::is_active('billingbase'))
+		if (\Module::collections()->has('BillingBase'))
 		{
 			$ret['Edit']['Modem'] 		= $this->modems;
 			$ret['Edit']['Item']        = $this->items;
@@ -111,7 +111,7 @@ class Contract extends \BaseModel {
 
 		$ret['Technical']['Modem'] = $this->modems;
 
-		if (\PPModule::is_active('billingbase'))
+		if (\Module::collections()->has('BillingBase'))
 		{
 			$ret['Billing']['Item']['class'] 	= 'Item';
 			$ret['Billing']['Item']['relation']	= $this->items;
@@ -123,7 +123,7 @@ class Contract extends \BaseModel {
 			$ret['Billing']['Invoice']['options']['hide_create_button'] = 1;
 		}
 
-		if (\PPModule::is_active('provvoipenvia'))
+		if (\Module::collections()->has('ProvVoipEnvia'))
 		{
 			$ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
 			$ret['envia TEL']['EnviaContract']['relation'] = $this->enviacontracts;
@@ -143,18 +143,18 @@ class Contract extends \BaseModel {
 			$ret['envia TEL']['Modem']['relation'] = $this->modems;
 		}
 
-		if (\PPModule::is_active('ccc'))
+		if (\Module::collections()->has('Ccc'))
 		{
 			$ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
 		}
 
-		if (\PPModule::is_active('Ticketsystem'))
+		if (\Module::collections()->has('Ticketsystem'))
 		{
 			$ret['Edit']['Ticket'] = $this->tickets;
 			$ret['Ticket']['Ticket'] = $this->tickets;
 		}
 
-		if (\PPModule::is_active('mail'))
+		if (\Module::collections()->has('Mail'))
 		{
 			$ret['Email']['Email'] = $this->emails;
 		}
@@ -175,7 +175,7 @@ class Contract extends \BaseModel {
 	 * related enviacontracts
 	 */
 	public function enviacontracts() {
-		if (!\PPModule::is_active('provvoipenvia')) {
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
 			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
 		}
 		else {
@@ -226,7 +226,7 @@ class Contract extends \BaseModel {
 	 */
 	protected function _envia_orders() {
 
-		if (!\PPModule::is_active('provvoipenvia')) {
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
 			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
 		}
 
@@ -370,7 +370,7 @@ class Contract extends \BaseModel {
 	public function related_phonenumbers() {
 
 		// if voip module is not active: there can be no phonenumbers
-		if (!\PPModule::is_active('ProvVoip')) {
+		if (!\Module::collections()->has('ProvVoip')) {
 			return [];
 		}
 
@@ -452,7 +452,7 @@ class Contract extends \BaseModel {
 	{
 		\Log::Debug('Starting daily conversion for contract '.$this->number, [$this->id]);
 
-		if (!\PPModule::is_active('Billingbase')) {
+		if (!\Module::collections()->has('BillingBase')) {
 
 			$this->_update_network_access_from_contract();
 		}
@@ -472,7 +472,7 @@ class Contract extends \BaseModel {
 			// Task 1 & 2 included
 			$this->_update_network_access_from_items();
 
-			if(\PPModule::is_active('mail'))
+			if(\Module::collections()->has('Mail'))
 				$this->_update_email_index();
 
 			// commented out by par for reference ⇒ if all is running this can savely be removed
@@ -640,7 +640,7 @@ class Contract extends \BaseModel {
 	protected function _update_inet_voip_dates() {
 
 		// items only exist if Billingbase is enabled
-		if (!\PPModule::is_active('Billingbase')) {
+		if (!\Module::collections()->has('BillingBase')) {
 			return;
 		}
 
@@ -755,7 +755,7 @@ class Contract extends \BaseModel {
 	public function monthly_conversion()
 	{
 		// with billing module -> done by daily conversion
-		if (\PPModule::is_active('Billingbase'))
+		if (\Module::collections()->has('BillingBase'))
 			return;
 
 		$contract_changed = False;
@@ -831,7 +831,7 @@ class Contract extends \BaseModel {
 	 */
 	protected function _get_valid_tariff_item_and_count($type)
 	{
-		if (!\PPModule::is_active('Billingbase'))
+		if (!\Module::collections()->has('BillingBase'))
 			return ['item' => null, 'count' => 0];
 
 		$last = $count = 0;
@@ -1261,7 +1261,7 @@ class ContractObserver
 
 	public function creating($contract)
 	{
-		if (!\PPModule::is_active('billingbase'))
+		if (!\Module::collections()->has('BillingBase'))
 		{
 			$contract->sepa_iban = strtoupper($contract->sepa_iban);
 			$contract->sepa_bic  = strtoupper($contract->sepa_bic);
@@ -1278,7 +1278,7 @@ class ContractObserver
 		$original_number = $contract->getOriginal('number');
 		$original_costcenter_id = $contract->getOriginal('costcenter_id');
 
-		if (!\PPModule::is_active('billingbase'))
+		if (!\Module::collections()->has('BillingBase'))
 		{
 			$contract->sepa_iban = strtoupper($contract->sepa_iban);
 			$contract->sepa_bic  = strtoupper($contract->sepa_bic);
@@ -1311,7 +1311,7 @@ class ContractObserver
 			{
 				$contract->daily_conversion();
 
-				if (\PPModule::is_active('billingbase') && $contract->contract_end && $contract->contract_end != $contract['original']['contract_end'])
+				if (\Module::collections()->has('BillingBase') && $contract->contract_end && $contract->contract_end != $contract['original']['contract_end'])
 				{
 					// Alert if end is lower than tariffs end of term
 					$ret = $contract->get_next_cancel_date();
@@ -1375,7 +1375,7 @@ abstract class VoipRelatedDataUpdater {
 	protected function _check_modules() {
 
 		foreach ($this->modules_to_be_active as $module) {
-			if (!\PPModule::is_active($module)) {
+			if (!\Module::collections()->has($module)) {
 				return false;
 			}
 		}

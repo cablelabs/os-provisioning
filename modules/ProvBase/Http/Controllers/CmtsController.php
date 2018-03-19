@@ -63,7 +63,7 @@ class CmtsController extends \BaseController {
 
 	protected function get_form_tabs($view_var)
 	{
-		if(!\PPModule::is_active('ProvMon'))
+		if(!\Module::collections()->has('ProvMon'))
 			return [];
 
 		return [

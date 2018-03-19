@@ -5,7 +5,7 @@ namespace Modules\Hfcreq\Http\Controllers;
 use App\Http\Controllers\{ BaseViewController, NamespaceController};
 use Modules\HfcReq\Entities\NetElementType;
 use Modules\HfcSnmp\Entities\{ OID, Parameter};
-use Pingpong\Modules\Routing\Controller;
+use Nwidart\Modules\Routing\Controller;
 
 class HfcReqController extends \BaseController {
 

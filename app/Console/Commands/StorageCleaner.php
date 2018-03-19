@@ -65,7 +65,7 @@ class StorageCleaner extends Command
 	 */
 	protected function _prepare_metadata() {
 
-		if (\PPModule::is_active('provvoipenvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 
 			// defaults
 			$envia_api_xml_thresholds = array(

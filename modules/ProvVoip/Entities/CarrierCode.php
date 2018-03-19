@@ -45,7 +45,7 @@ class CarrierCode extends \BaseModel {
 		// carrier codes of the carriers to be on top of the list
 		// the given sorting will be the sorting of the <select>
 		// TODO: maybe this list should not be hardcoded – can come from configuration dialog or out of .env?
-		if (\PPModule::is_active('ProvVoipEnvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 			$favorite_carriers = array(
 				'D057', // envia TEL; has to be used if no porting is wanted (new number from envia TEL)
 				'D001', // Telekom

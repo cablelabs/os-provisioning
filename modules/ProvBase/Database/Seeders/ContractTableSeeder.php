@@ -72,7 +72,7 @@ class ContractTableSeeder extends \BaseSeeder {
 		$ret['number3'] = 'Cu/2015/Q4/'.($count);
 		$ret['number4'] = 'legacy_cust_'.($count + 180558);
 
-		if (\Module::find('BillingBase')->active()) {
+		if (\Module::collections()->has('BillingBase')) {
 			$ret['costcenter_id'] = $faker->numberBetween(1, 2);
 		}
 

@@ -72,7 +72,7 @@ class TRCClassDatabaseUpdaterCommand extends Command {
 	public function fire()
 	{
 
-		if (\PPModule::is_active('provvoipenvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 			// we get the data directly from envia TEL API
 			$this->_update_using_envia_api();
 		}

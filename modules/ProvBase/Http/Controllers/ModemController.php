@@ -29,7 +29,7 @@ class ModemController extends \BaseController {
 		if (
 			($model['installation_address_change_date'])
 			&&
-			(\PPModule::is_active('provvoipenvia'))
+			(\Module::collections()->has('ProvVoipEnvia'))
 		) {
 			$orders = \Modules\ProvVoipEnvia\Entities\EnviaOrder::
 				where('modem_id', '=', $model->id)->
@@ -56,12 +56,12 @@ class ModemController extends \BaseController {
 			array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Network Access', 'value' => '1', 'help' => trans('helper.Modem_NetworkAccess')),
 			);
 
-		$b = \PPModule::is_active('billingbase') ?
+		$b = \Module::collections()->has('BillingBase') ?
 			array(array('form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'hidden' => 1, 'space' => '1'))
 			:
 			array(array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1'));
 
-		if (\PPModule::is_active('HfcCustomer'))
+		if (\Module::collections()->has('HfcCustomer'))
 			$geopos = link_to_route('CustomerModem.show', 'Geopos X/Y', ['true', $model->id]);
 		else
 			$geopos = 'Geopos X/Y';
@@ -142,7 +142,7 @@ class ModemController extends \BaseController {
 			['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]],
 		];
 
-		if(!\PPModule::is_active('ProvMon'))
+		if(!\Module::collections()->has('ProvMon'))
 			return $a;
 
 		array_push($a, ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => [$view_var->id]]);
@@ -173,7 +173,7 @@ class ModemController extends \BaseController {
 	{
 		\App\Http\Controllers\BaseAuthController::auth_check('view', $this->get_model_name());
 
-		if(!\PPModule::is_active('HfcCustomer'))
+		if(!\Module::collections()->has('HfcCustomer'))
 			return parent::index();
 
 		$modems = Modem::where('id', '>', '0');
@@ -218,7 +218,7 @@ class ModemController extends \BaseController {
 	{
 		$obj    = static::get_model_obj();
 
-		if(!\PPModule::is_active ('HfcCustomer'))
+		if(!\Module::collections()->has('HfcCustomer'))
 			return parent::fulltextSearch();
 
 		// get the search scope
