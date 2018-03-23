@@ -7,12 +7,18 @@ pw=$(ddns-confgen -a hmac-md5 -r /dev/urandom | grep secret)
 install -dm750 /etc/dhcp/nmsprime/cmts_gws
 
 # change owner
+chown apache /etc/dhcp
 chown -R apache:dhcpd /etc/dhcp/nmsprime
 chown -R apache /tftpboot
 chown -R named:named /var/named/dynamic
+chown dhcpd /etc/named-ddns.sh
+
+# create secret to salt hostname generation of public CPEs
+install -Dm700 -o dhcpd <(openssl rand -hex 32) /etc/named-ddns-cpe.key
 
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/dhcp/nmsprime/dhcpd.conf
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/named-nmsprime.conf
+sed -i "s|<DNS-PASSWORD>|$pw|" /etc/named-ddns.sh
 sed -i "s/<hostname>/$(hostname | cut -d '.' -f1)/" /var/named/dynamic/{nmsprime.test,in-addr.arpa}.zone
 
 systemctl daemon-reload

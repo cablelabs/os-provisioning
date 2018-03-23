@@ -8,6 +8,7 @@ use Acme\php\ArrayHelper;
 
 class Cmts extends \BaseModel {
 
+	private static $_us_snr_path = 'data/provmon/us_snr';
 	// don't put a trailing slash here!
 	public static $cmts_include_path = '/etc/dhcp/nmsprime/cmts_gws';
 
@@ -265,7 +266,7 @@ class Cmts extends \BaseModel {
 	 */
 	public function get_us_snr($ip)
 	{
-		$fn = "data/provbase/us_snr/$this->id.json";
+		$fn = self::$_us_snr_path."/$this->id.json";
 
 		if (!\Storage::exists($fn)) {
 			\Log::error("Missing Modem US SNR json file of CMTS $this->hostname [$this->id]");
@@ -336,7 +337,7 @@ class Cmts extends \BaseModel {
 			return;
 		}
 
-		\Storage::put("data/provbase/us_snr/$this->id.json", json_encode($ret));
+		\Storage::put(self::$_us_snr_path."/$this->id.json", json_encode($ret));
 	}
 
 
@@ -412,7 +413,7 @@ class Cmts extends \BaseModel {
 			$subnet = $pool->net;
 			$netmask = $pool->netmask;
 			$broadcast_addr = $pool->broadcast_ip;
-			$range = $pool->ip_pool_start.' '.$pool->ip_pool_end;
+			$range = $pool->get_range();
 			$router = $pool->router_ip;
 			$type = $pool->type;
 			$options = $pool->optional;
@@ -437,8 +438,8 @@ class Cmts extends \BaseModel {
 				$pos = strrpos($data_tmp, ',');
 				$data .= substr_replace($data_tmp, '', $pos, 1).";";
 			}
-			$data .= "\n\n\t\t".'pool'."\n\t\t".'{';
-			$data .= "\n\t\t\t".'range '.$range.';'."\n";
+			$data .= "\n\n\t\t".'pool'."\n\t\t{\n";
+			$data .= $range;
 
 			switch ($type)
 			{
