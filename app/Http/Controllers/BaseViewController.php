@@ -589,8 +589,12 @@ finish:
 		{
 			$key        = array_keys($html)[0];
 			$class_name = BaseModel::_guess_model_name(ucwords(explode ('_id', $key)[0]));
-			$class      = new $class_name;
-			$view_var   = $class->find($html[$key]);
+
+			if (class_exists($class_name))
+			{
+				$class      = new $class_name;
+				$view_var   = $class->find($html[$key]);
+			}
 		}
 
 		// lambda function to extend the current breadcrumb by its predecessor
