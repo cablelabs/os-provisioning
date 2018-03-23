@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     /*
 	|--------------------------------------------------------------------------
@@ -21,9 +21,9 @@ return array(
     /*
      * get local settings partly from /.env.local.php
      */
-    'connections' => array(
+    'connections' => [
 
-        'mysql' => array(
+        'mysql' => [
             'driver'    => 'mysql',
             'host'      => $_ENV['dbHostFromDotenv'],
             'database'  => $_ENV['dbDatabaseFromDotenv'],
@@ -32,8 +32,8 @@ return array(
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
-        ),
+        ],
 
-    ),
+    ],
 
-);
+];

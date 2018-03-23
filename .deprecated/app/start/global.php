@@ -11,7 +11,7 @@
 |
 */
 
-ClassLoader::addDirectories(array(
+ClassLoader::addDirectories([
 
     app_path().'/commands',
     app_path().'/controllers',
@@ -19,7 +19,7 @@ ClassLoader::addDirectories(array(
     app_path().'/database/seeds',
     app_path().'/extensions/validators',
 
-));
+]);
 
 /*
 |--------------------------------------------------------------------------

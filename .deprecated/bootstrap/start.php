@@ -24,11 +24,11 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$env = $app->detectEnvironment(array(
+$env = $app->detectEnvironment([
 
-    'local' => array('homestead', 'ns1.test.erznet.tv', 'parbook', 'localhost.localdomain'),
+    'local' => ['homestead', 'ns1.test.erznet.tv', 'parbook', 'localhost.localdomain'],
 
-));
+]);
 
 /*
 |--------------------------------------------------------------------------

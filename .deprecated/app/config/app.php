@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     /*
 	|--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return array(
 	|
 	*/
 
-    'providers' => array(
+    'providers' => [
 
         'Illuminate\Foundation\Providers\ArtisanServiceProvider',
         'Illuminate\Auth\AuthServiceProvider',
@@ -126,7 +126,7 @@ return array(
         'Pingpong\Modules\ModulesServiceProvider',
         'Intervention\Validation\ValidationServiceProvider',
 
-    ),
+    ],
 
     /*
 	|--------------------------------------------------------------------------
@@ -152,7 +152,7 @@ return array(
 	|
 	*/
 
-    'aliases' => array(
+    'aliases' => [
 
         'App'             => 'Illuminate\Support\Facades\App',
         'Artisan'         => 'Illuminate\Support\Facades\Artisan',
@@ -194,6 +194,6 @@ return array(
         'View'            => 'Illuminate\Support\Facades\View',
         'Module'          => 'Pingpong\Modules\Facades\Module',
 
-    ),
+    ],
 
-);
+];
