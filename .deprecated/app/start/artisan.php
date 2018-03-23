@@ -21,13 +21,11 @@ Artisan::add(new cactiCommand);
 
 $m = new \BaseModel;
 
-if (\PPModule::is_active('ProvBase'))
-{
-	Artisan::add(new Modules\ProvBase\Console\dhcpCommand);
-	Artisan::add(new Modules\ProvBase\Console\configfileCommand);
+if (\PPModule::is_active('ProvBase')) {
+    Artisan::add(new Modules\ProvBase\Console\dhcpCommand);
+    Artisan::add(new Modules\ProvBase\Console\configfileCommand);
 }
 
-if (\PPModule::is_active('HfcBase'))
-{
-	Artisan::add(new Modules\HfcBase\Console\TreeBuildCommand);
+if (\PPModule::is_active('HfcBase')) {
+    Artisan::add(new Modules\HfcBase\Console\TreeBuildCommand);
 }

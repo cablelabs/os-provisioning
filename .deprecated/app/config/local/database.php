@@ -2,7 +2,7 @@
 
 return array(
 
-	/*
+    /*
 	|--------------------------------------------------------------------------
 	| Database Connections
 	|--------------------------------------------------------------------------
@@ -21,19 +21,19 @@ return array(
     /*
      * get local settings partly from /.env.local.php
      */
-	'connections' => array(
+    'connections' => array(
 
-		'mysql' => array(
-			'driver'    => 'mysql',
-			'host'      => $_ENV['dbHostFromDotenv'],
-			'database'  => $_ENV['dbDatabaseFromDotenv'],
-			'username'  => $_ENV['dbUsernameFromDotenv'],
-			'password'  => $_ENV['dbPasswordFromDotenv'],
-			'charset'   => 'utf8',
-			'collation' => 'utf8_unicode_ci',
-			'prefix'    => '',
-		),
+        'mysql' => array(
+            'driver'    => 'mysql',
+            'host'      => $_ENV['dbHostFromDotenv'],
+            'database'  => $_ENV['dbDatabaseFromDotenv'],
+            'username'  => $_ENV['dbUsernameFromDotenv'],
+            'password'  => $_ENV['dbPasswordFromDotenv'],
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+        ),
 
-	),
+    ),
 
 );

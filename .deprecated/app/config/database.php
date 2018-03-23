@@ -2,7 +2,7 @@
 
 return array(
 
-	/*
+    /*
 	|--------------------------------------------------------------------------
 	| PDO Fetch Style
 	|--------------------------------------------------------------------------
@@ -13,9 +13,9 @@ return array(
 	|
 	*/
 
-	'fetch' => PDO::FETCH_CLASS,
+    'fetch' => PDO::FETCH_CLASS,
 
-	/*
+    /*
 	|--------------------------------------------------------------------------
 	| Default Database Connection Name
 	|--------------------------------------------------------------------------
@@ -26,9 +26,9 @@ return array(
 	|
 	*/
 
-	'default' => 'mysql',
+    'default' => 'mysql',
 
-	/*
+    /*
 	|--------------------------------------------------------------------------
 	| Database Connections
 	|--------------------------------------------------------------------------
@@ -44,51 +44,51 @@ return array(
 	|
 	*/
 
-	'connections' => array(
+    'connections' => array(
 
-		'sqlite' => array(
-			'driver'   => 'sqlite',
-			'database' => __DIR__.'/../database/production.sqlite',
-			'prefix'   => '',
-		),
+        'sqlite' => array(
+            'driver'   => 'sqlite',
+            'database' => __DIR__.'/../database/production.sqlite',
+            'prefix'   => '',
+        ),
 
-		/*
+        /*
 		 * get global settings partly from /.env.php
 		 */
-		'mysql' => array(
-			'driver'    => 'mysql',
-			'host'      => $_ENV['dbHostFromDotenv'],
-			'database'  => $_ENV['dbDatabaseFromDotenv'],
-			'username'  => $_ENV['dbUsernameFromDotenv'],
-			'password'  => $_ENV['dbPasswordFromDotenv'],
-			'charset'   => 'utf8',
-			'collation' => 'utf8_unicode_ci',
-			'prefix'    => '',
-		),
+        'mysql' => array(
+            'driver'    => 'mysql',
+            'host'      => $_ENV['dbHostFromDotenv'],
+            'database'  => $_ENV['dbDatabaseFromDotenv'],
+            'username'  => $_ENV['dbUsernameFromDotenv'],
+            'password'  => $_ENV['dbPasswordFromDotenv'],
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+        ),
 
-		'pgsql' => array(
-			'driver'   => 'pgsql',
-			'host'     => 'localhost',
-			'database' => 'forge',
-			'username' => 'forge',
-			'password' => '',
-			'charset'  => 'utf8',
-			'prefix'   => '',
-			'schema'   => 'public',
-		),
+        'pgsql' => array(
+            'driver'   => 'pgsql',
+            'host'     => 'localhost',
+            'database' => 'forge',
+            'username' => 'forge',
+            'password' => '',
+            'charset'  => 'utf8',
+            'prefix'   => '',
+            'schema'   => 'public',
+        ),
 
-		'sqlsrv' => array(
-			'driver'   => 'sqlsrv',
-			'host'     => 'localhost',
-			'database' => 'database',
-			'username' => 'root',
-			'password' => '',
-			'prefix'   => '',
-		),
+        'sqlsrv' => array(
+            'driver'   => 'sqlsrv',
+            'host'     => 'localhost',
+            'database' => 'database',
+            'username' => 'root',
+            'password' => '',
+            'prefix'   => '',
+        ),
 
-	),
+    ),
 
-	/*
+    /*
 	|--------------------------------------------------------------------------
 	| Migration Repository Table
 	|--------------------------------------------------------------------------
@@ -99,9 +99,9 @@ return array(
 	|
 	*/
 
-	'migrations' => 'migrations',
+    'migrations' => 'migrations',
 
-	/*
+    /*
 	|--------------------------------------------------------------------------
 	| Redis Databases
 	|--------------------------------------------------------------------------
@@ -112,16 +112,16 @@ return array(
 	|
 	*/
 
-	'redis' => array(
+    'redis' => array(
 
-		'cluster' => false,
+        'cluster' => false,
 
-		'default' => array(
-			'host'     => '127.0.0.1',
-			'port'     => 6379,
-			'database' => 0,
-		),
+        'default' => array(
+            'host'     => '127.0.0.1',
+            'port'     => 6379,
+            'database' => 0,
+        ),
 
-	),
+    ),
 
 );

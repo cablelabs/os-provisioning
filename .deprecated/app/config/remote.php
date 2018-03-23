@@ -2,7 +2,7 @@
 
 return array(
 
-	/*
+    /*
 	|--------------------------------------------------------------------------
 	| Default Remote Connection Name
 	|--------------------------------------------------------------------------
@@ -13,9 +13,9 @@ return array(
 	|
 	*/
 
-	'default' => 'production',
+    'default' => 'production',
 
-	/*
+    /*
 	|--------------------------------------------------------------------------
 	| Remote Server Connections
 	|--------------------------------------------------------------------------
@@ -26,20 +26,20 @@ return array(
 	|
 	*/
 
-	'connections' => array(
+    'connections' => array(
 
-		'production' => array(
-			'host'      => '',
-			'username'  => '',
-			'password'  => '',
-			'key'       => '',
-			'keyphrase' => '',
-			'root'      => '/var/www',
-		),
+        'production' => array(
+            'host'      => '',
+            'username'  => '',
+            'password'  => '',
+            'key'       => '',
+            'keyphrase' => '',
+            'root'      => '/var/www',
+        ),
 
-	),
+    ),
 
-	/*
+    /*
 	|--------------------------------------------------------------------------
 	| Remote Server Groups
 	|--------------------------------------------------------------------------
@@ -50,10 +50,10 @@ return array(
 	|
 	*/
 
-	'groups' => array(
+    'groups' => array(
 
-		'web' => array('production')
+        'web' => array('production')
 
-	),
+    ),
 
 );

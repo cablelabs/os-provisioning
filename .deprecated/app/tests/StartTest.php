@@ -1,11 +1,11 @@
 <?php
 
 
-class StartTest extends TestCase {
+class StartTest extends TestCase
+{
 
-	public function testIndex()
-	{
-		$this->routeContains ();
-	}
-
+    public function testIndex()
+    {
+        $this->routeContains();
+    }
 }
