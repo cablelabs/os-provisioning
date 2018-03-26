@@ -101,6 +101,7 @@ return [
 	'domain.type' => 'Type',
 	'domain.alias' => 'Alias',
 	// Endpoint
+	'endpoint.ip' => 'IP',
 	'endpoint.hostname' => 'Hostname',
 	'endpoint.mac' => 'MAC',
 	'endpoint.description' => 'Description',

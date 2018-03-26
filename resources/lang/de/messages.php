@@ -54,6 +54,7 @@ return [
 	'E-Mail Address'			=> 'Email-Adresse',
 	'First IP'					=> 'Erste IP',
 	'Firstname'					=> 'Vorname',
+	'Fixed IP'					=> 'Statische IP',
 	'Force Restart'				=> 'Neustart erzwingen',
 	'IBAN'						=> 'IBAN',
 	'Internet Access'			=> 'Internetzugriff',

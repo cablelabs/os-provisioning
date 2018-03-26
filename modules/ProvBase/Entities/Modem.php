@@ -164,6 +164,11 @@ class Modem extends \BaseModel {
 		return $this->hasMany('Modules\ProvVoip\Entities\Mta');
 	}
 
+	public function endpoints()
+	{
+		return $this->hasMany('Modules\ProvBase\Entities\Endpoint');
+	}
+
 	// TODO: deprecated! use netelement function instead - search for all places where this function is used
 	public function tree()
 	{
@@ -210,6 +215,12 @@ class Modem extends \BaseModel {
 			$ret['dummy']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
 			$ret['dummy']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ModemController::_get_envia_management_jobs($this);
 		}
+
+		$ret['dummy']['Endpoint']['class'] = 'Endpoint';
+		$ret['dummy']['Endpoint']['relation'] = $this->endpoints;
+		// only allow modems with a public CPE to have an endpoint
+		if (!$this->public)
+			$ret['dummy']['Endpoint']['options']['hide_create_button'] = 1;
 
 		return $ret;
 	}

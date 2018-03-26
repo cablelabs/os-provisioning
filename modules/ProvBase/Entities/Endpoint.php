@@ -3,6 +3,7 @@
 namespace Modules\ProvBase\Entities;
 
 use File;
+use Modules\ProvBase\Entities\Cmts;
 
 class Endpoint extends \BaseModel {
 
@@ -13,7 +14,8 @@ class Endpoint extends \BaseModel {
 	{
 		return array(
 			'mac' => 'required|mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL',
-			'hostname' => 'unique:endpoint,hostname,'.$id.',id,deleted_at,NULL'
+			'hostname' => 'required|unique:endpoint,hostname,'.$id.',id,deleted_at,NULL',
+			'ip' => 'ip|unique:endpoint,ip,'.$id.',id,deleted_at,NULL',
 		);
 	}
 
@@ -35,10 +37,14 @@ class Endpoint extends \BaseModel {
 	public function view_index_label()
 	{
 		$bsclass = $this->get_bsclass();
+		if ($this->fixed_ip && $this->ip)
+			$header = "$this->hostname ($this->mac / $this->ip)";
+		else
+			$header = "$this->hostname ($this->mac)";
 
 		return ['table' => $this->table,
-				'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.description'],
-				'header' =>  'Domain: '.$this->name.' (Type: '.$this->type.')',
+				'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.ip', $this->table.'.description'],
+				'header' =>  $header,
 				'bsclass' => $bsclass];
 	}
 
@@ -49,9 +55,19 @@ class Endpoint extends \BaseModel {
 		return $bsclass;
 	}
 
+	public function view_belongs_to ()
+	{
+		return $this->modem;
+	}
+
 	/**
-	 * all Relationships:
+	 * all Relations:
 	 */
+	public function modem()
+	{
+		return $this->belongsTo('Modules\ProvBase\Entities\Modem');
+	}
+
 
 
 	/**
@@ -76,13 +92,11 @@ class Endpoint extends \BaseModel {
 
 		$data = '';
 
-		foreach (Endpoint::all() as $ep)
-		{
-			$id =	$ep->id;
-			$mac =	$ep->mac;
-			$host =	$ep->hostname;
-
-			$data .= 'host ep-'.$id.' { hardware ethernet '.$mac.'; ddns-hostname "'.$host.'"; }'."\n";
+		foreach (Endpoint::all() as $ep) {
+			$data .= "host $ep->hostname { hardware ethernet $ep->mac; ";
+			if ($ep->fixed_ip && $ep->ip)
+				$data .= "fixed-address $ep->ip; ";
+			$data .= "}\n";
 		}
 
 		$ret = File::put($file_ep, $data);
@@ -92,8 +106,9 @@ class Endpoint extends \BaseModel {
 		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
 		system('/bin/chown -R apache /etc/dhcp/');
 
-		return ($ret > 0 ? true : false);
+		return $ret > 0;
 	}
+
 }
 
 
@@ -102,29 +117,18 @@ class EndpointObserver {
 	public function created($endpoint)
 	{
 		$endpoint->make_dhcp();
-
-		if ($endpoint->hostname == '')
-		{
-			$endpoint->hostname = 'ep-'.$endpoint->id;
-			$endpoint->save();
-		}
-	}
-
-	public function updating($endpoint)
-	{
-		if ($endpoint->hostname == '')
-		{
-			$endpoint->hostname = 'ep-'.$endpoint->id;
-		}
+		Cmts::make_dhcp_conf_all();
 	}
 
 	public function updated($endpoint)
 	{
 		$endpoint->make_dhcp();
+		Cmts::make_dhcp_conf_all();
 	}
 
 	public function deleted($endpoint)
 	{
 		$endpoint->make_dhcp();
+		Cmts::make_dhcp_conf_all();
 	}
 }

@@ -102,6 +102,7 @@ return [
 	'domain.alias' => 'Alias',
 	// Endpoint
 	'endpoint.hostname' => 'Hostname',
+	'endpoint.ip' => 'IP',
 	'endpoint.mac' => 'MAC',
 	'endpoint.description' => 'Beschreibung',
 	// IpPool

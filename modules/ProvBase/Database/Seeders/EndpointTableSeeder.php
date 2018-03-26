@@ -22,14 +22,25 @@ class EndpointTableSeeder extends \BaseSeeder {
 	 *
 	 * @author Patrick Reichel
 	 */
-	public static function get_fake_data($topic, $contract=null) {
+	public static function get_fake_data($topic, $modem=null) {
 
 		$faker =& \NmsFaker::getInstance();
+
+		if ($topic == 'seed') {
+			$modem = Modem::all()->random(1);
+			$modem_id = $modem->id;
+		} else {
+			if (!is_null($modem))
+				$modem_id = $modem->id;
+			else
+				$modem_id = null;
+		}
 
 		$ret = [
 			'mac' => $faker->macAddress(),
 			'description' => $faker->realText(200),
 			'hostname' => "$faker->domainWord.$faker->domainName",
+			'modem_id' => $modem_id,
 		];
 
 		return $ret;
