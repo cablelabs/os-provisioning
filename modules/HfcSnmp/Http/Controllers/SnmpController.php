@@ -453,7 +453,7 @@ class SnmpController extends \BaseController{
 			try {
 				$results = snmp2_real_walk($this->device->ip, $community, $oid, $this->timeout, $this->retry);
 			} catch (\Exception $e) {
-				$results = snmpwalk($this->device->ip, $community, $oid, $this->timeout, $this->retry);
+				$results = snmprealwalk($this->device->ip, $community, $oid, $this->timeout, $this->retry);
 			}
 		}
 
