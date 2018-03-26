@@ -37,6 +37,12 @@ class Cmts extends \BaseModel {
 		return '<i class="fa fa-server"></i>';
 	}
 
+	public static function make_dhcp_conf_all()
+	{
+		foreach (Cmts::all() as $cmts)
+			$cmts->make_dhcp_conf();
+	}
+
 	// AJAX Index list function
 	// generates datatable content and classes for model
 	public function view_index_label()

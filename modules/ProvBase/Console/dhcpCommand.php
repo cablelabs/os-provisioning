@@ -56,10 +56,7 @@ class dhcpCommand extends Command {
 		if (\PPModule::is_active('provvoip'))
 			Mta::make_dhcp_mta_all();
 
-		// regenerate CMTS includes by emptying the file and adding all entries
-		file_put_contents(Cmts::$cmts_include_path.'.conf', '');
-		foreach (Cmts::all() as $cmts)
-			$cmts->make_dhcp_conf();
+		Cmts::make_dhcp_conf_all();
 
 		// Restart dhcp server
 		$dir = storage_path('systemd/');
