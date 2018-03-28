@@ -200,6 +200,12 @@ class Modem extends \BaseModel {
 			$ret['dummy']['Mta']['relation'] = $this->mtas;
 		}
 
+                // only show endpoints (and thus the ability to create a new one) for public CPEs
+                if($this->public) {
+                        $ret['dummy']['Endpoint']['class'] = 'Endpoint';
+                        $ret['dummy']['Endpoint']['relation'] = $this->endpoints;
+                }
+
 		if (\PPModule::is_active('provvoipenvia'))
 		{
 			$ret['dummy']['EnviaContract']['class'] = 'EnviaContract';
@@ -215,12 +221,6 @@ class Modem extends \BaseModel {
 			$ret['dummy']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
 			$ret['dummy']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ModemController::_get_envia_management_jobs($this);
 		}
-
-		$ret['dummy']['Endpoint']['class'] = 'Endpoint';
-		$ret['dummy']['Endpoint']['relation'] = $this->endpoints;
-		// only allow modems with a public CPE to have an endpoint
-		if (!$this->public)
-			$ret['dummy']['Endpoint']['options']['hide_create_button'] = 1;
 
 		return $ret;
 	}
