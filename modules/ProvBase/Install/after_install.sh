@@ -12,10 +12,12 @@ chown -R apache:dhcpd /etc/dhcp/nmsprime
 chown -R apache /tftpboot
 chown -R named:named /var/named/dynamic
 chown dhcpd /etc/named-ddns.sh
+chmod 750 /etc/named-ddns.sh
 
 # create secret to salt hostname generation of public CPEs
-install -Dm700 -o dhcpd <(openssl rand -hex 32) /etc/named-ddns-cpe.key
+install -Dm640 -o apache -g dhcpd <(openssl rand -hex 32) /etc/named-ddns-cpe.key
 
+sed -i "s|^DNS_PASSWORD=<DNS-PASSWORD>$|DNS_PASSWORD=$pw|" /etc/nmsprime/env/global.env
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/dhcp/nmsprime/dhcpd.conf
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/named-nmsprime.conf
 sed -i "s|<DNS-PASSWORD>|$pw|" /etc/named-ddns.sh

@@ -5,7 +5,7 @@
 
 
 // check config
-exec("/usr/sbin/dhcpd -t &>/dev/null", $out, $ret);
+exec("dhcpd -t -cf /etc/dhcp/nmsprime/dhcpd.conf &>/dev/null", $out, $ret);
 
 // restart server
 if ($ret == 0)
