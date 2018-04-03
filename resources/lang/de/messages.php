@@ -30,7 +30,7 @@ return [
 	'Country Code'				=> 'Ländervorwahl',
 	'cpe_not_reachable' 		=> 'aber via PING nicht erreichbar (ICMP kann herstellerabhängig vom Router geblockt werden)',
 	'cpe_log_error'				=> 'ist nicht beim Server registriert - Kein Logeintrag gefunden',
-
+	'cpe_fake_lease'			=> 'Der DHCP Server hat kein Lease für den Endpunkt angelegt, weil dessen IP Adresse statisch vergeben ist und der Server diesen somit nicht verfolgen muss. Das folgende Lease wurde lediglich als Referenz manuell generiert:',
 	'Create'					=> 'Erstellen',
 	'D' 						=> 'Tag|Tage',
 	'Delete'					=> 'Löschen',
