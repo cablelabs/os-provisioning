@@ -33,8 +33,9 @@ class EndpointController extends \BaseController {
 
 	function prepare_rules($rules, $data)
 	{
-		if ($data['fixed_ip'] == '1')
-			$rules['ip'] .= '|required';
+		// as we are setting IP to “null” if no fixed IP is used: remove rule in this case
+		if ($data['fixed_ip'] == '0')
+			$rules['ip'] = '';
 
 		return $rules;
 	}

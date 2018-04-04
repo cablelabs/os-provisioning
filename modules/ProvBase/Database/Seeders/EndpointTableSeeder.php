@@ -3,6 +3,7 @@
 namespace Modules\ProvBase\Database\Seeders;
 
 use Modules\ProvBase\Entities\Endpoint;
+use Modules\ProvBase\Entities\Modem;
 
 class EndpointTableSeeder extends \BaseSeeder {
 
@@ -36,11 +37,22 @@ class EndpointTableSeeder extends \BaseSeeder {
 				$modem_id = null;
 		}
 
+		if (rand(0, 1) == 1) {
+			$fixed_ip = 1;
+			$ip = $faker->localIpv4();
+		}
+		else {
+			$fixed_ip = 0;
+			$ip = null;
+		}
+
 		$ret = [
 			'mac' => $faker->macAddress(),
 			'description' => $faker->realText(200),
-			'hostname' => "$faker->domainWord.$faker->domainName",
+			'hostname' => $faker->domainWord.$faker->domainWord.$faker->domainWord,
 			'modem_id' => $modem_id,
+			'fixed_ip' => $fixed_ip,
+			'ip' => $ip,
 		];
 
 		return $ret;

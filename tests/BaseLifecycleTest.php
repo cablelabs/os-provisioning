@@ -242,7 +242,10 @@ class BaseLifecycleTest extends TestCase {
 	/**
 	 * Get fake data for one instance from seeder.
 	 * This method guaranties that no unique fields are filled with data existing in our database.
+	 * The only exception is NULL – we assume that this is allowed to be used multiple times.
+	 *
 	 * If a model_id is given data can be the same for this ID (e.g. on updating a model)
+	 * 
 	 *
 	 * @author Patrick Reichel
 	 */
@@ -261,12 +264,26 @@ class BaseLifecycleTest extends TestCase {
 
 		// get data until all critical fields are unique
 		$data_is_unique = False;
+		$tries = 0;
 		while (!$data_is_unique) {
+
+			$tries++;
+			// throw exception to avoid endless loop
+			if ($tries > 100) {
+				throw new Exception('Unable to create unique data.');
+			};
+
 			$data_is_unique = True;
 			$data = call_user_func($this->seeder."::get_fake_data", 'test', $related_to);
 
 			// check if data that has to be unique already exists in our database
 			foreach ($unique_fields as $unique_field) {
+
+				// if seeder returns null: skip unique test – we assume that NULL can be used multiple times
+				if (is_null($data[$unique_field])) {
+					continue;
+				}
+
 				$ids = DB::table($this->database_table)
 					->select('id')
 					->where($unique_field, '=', $data[$unique_field])
@@ -279,6 +296,7 @@ class BaseLifecycleTest extends TestCase {
 					break;
 				}
 			}
+
 		}
 
 		return $data;
