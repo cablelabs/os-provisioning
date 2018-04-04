@@ -27,17 +27,25 @@ class RedirectStartPage
         // default settings
         // NOTE: required for backward compatibility
         //       admin and ccc run's on same port
-        $admin = env('HTTPS_ADMIN_PORT', '443');
-        $ccc   = env('HTTPS_CCC_PORT', '443');
+        $admin_port = env('HTTPS_ADMIN_PORT', '443');
+        $ccc_port   = env('HTTPS_CCC_PORT', '443');
 
         // if same port, show start page
-        if ($admin == $ccc)
+        if ($admin_port == $ccc_port)
             return $next($request);
 
-        if ($_SERVER['SERVER_PORT'] == $admin)
+		if (env('APP_ENV') == 'testing') {
+			// $_SERVER['SERVER_PORT'] does not exist if running phpunit
+			$server_port = \Request::getPort();
+		}
+		else {
+			$server_port = $_SERVER['SERVER_PORT'];
+		}
+
+        if ($server_port == $admin_port)
             return redirect('admin');
 
-        if ($_SERVER['SERVER_PORT'] == $ccc)
+        if ($server_port == $ccc_port)
             return redirect('customer');
 
         // start page
