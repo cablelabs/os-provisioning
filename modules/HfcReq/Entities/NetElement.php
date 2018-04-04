@@ -6,6 +6,9 @@ use Modules\HfcBase\Entities\IcingaObjects;
 
 class NetElement extends \BaseModel {
 
+	// Do not delete children (modem, mta, phonenmumber, etc.)!
+	protected $delete_children = False;
+
 	// The associated SQL table for this Model
 	public $table = 'netelement';
 
