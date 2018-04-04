@@ -7,6 +7,9 @@
  *
  * Within there are circuits defined – e.g. to enable/disable modules.
  *
+ * Tests should be run with a freshly migrated and seeded database to prevent
+ * side effects.
+ *
  * @author Patrick Reichel
  */
 class UnitTestStarter {
@@ -24,8 +27,8 @@ class UnitTestStarter {
 	// each circuits holds an array with modules to disable
 	protected $circuits = [
 		'all_modules_enabled' => [],
-		/* 'no_voip' => ['Provvoip', 'Provvoipenvia', 'Voipmon'], */
-		/* 'no_envia' => ['Provvoipenvia'], */
+		'no_envia' => ['Provvoipenvia'],
+		'no_voip' => ['Provvoip', 'Provvoipenvia', 'Voipmon'],
 	];
 
 
