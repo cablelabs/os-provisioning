@@ -9,7 +9,7 @@ fi
 mangle=$(echo "$1$2" | tr -cd "[:xdigit:]" | xxd -r -p | openssl dgst -sha256 -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())')
 rev=$(awk -F. '{OFS="."; print $4,$3,$2,$1}' <<< "$3")
 
-if [ "$4" -eq 1 ]
+if [ "$4" -ne 0 ]
 then
 	cmd="
 	update delete ${mangle}.cpe.nmsprime.test.

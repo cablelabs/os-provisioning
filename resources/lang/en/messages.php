@@ -21,6 +21,7 @@ return [
 	'conn_info_err_template' => 'Could not Read Template - See GlobalConfig or Company if it is set!',
 	'cpe_log_error' 		=> 'was not registering on Server - No log entry found',
 	'cpe_not_reachable' 	=> 'but not reachable from WAN-side due to manufacturing reasons (it can be possible to enable ICMP response via modem configfile)',
+	'cpe_fake_lease'		=> 'The DHCP server has not generated a lease for this endpoint, because the IP address is statically assigned and the server does not need to keep track of it. The following lease has been manually generated for reference only:',
 	'D' 					=> 'day|days',
 	'dashbrd_ticket' 		=> 'My New Tickets',
 	'device_probably_online' =>	':type is probably online',

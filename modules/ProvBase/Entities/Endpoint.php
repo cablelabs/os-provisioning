@@ -135,7 +135,7 @@ class Endpoint extends \BaseModel {
 			$data .= "}\n";
 		}
 
-		$ret = File::put($file_ep, $data);
+		$ret = file_put_contents($file_ep, $data, LOCK_EX);
 		if ($ret === false)
 			die("Error writing to file");
 
