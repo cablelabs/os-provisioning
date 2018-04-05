@@ -219,6 +219,7 @@ class importCommand extends Command {
 						->where('e.mta', '=', $mta->id)
 						->where ('e.deleted', '=', 'false')
 						->select('e.*', 'c.carrier')
+						->distinct()
 						->get();
 
 					foreach ($phonenumbers as $phonenumber)
