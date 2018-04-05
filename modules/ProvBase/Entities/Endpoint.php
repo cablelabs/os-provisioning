@@ -16,7 +16,7 @@ class Endpoint extends \BaseModel {
 		return array(
 			'mac' => 'required|mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL',
 			'hostname' => 'regex:/^[0-9A-Za-z\-]+$/|required|unique:endpoint,hostname,'.$id.',id,deleted_at,NULL',
-			'ip' => 'ip|unique:endpoint,ip,'.$id.',id,deleted_at,NULL',
+			'ip' => 'required|ip|unique:endpoint,ip,'.$id.',id,deleted_at,NULL',
 		);
 	}
 
@@ -150,6 +150,14 @@ class Endpoint extends \BaseModel {
 
 class EndpointObserver {
 
+
+	public function creating($endpoint)
+	{
+		if (!$endpoint->fixed_ip) {
+			$endpoint->ip = null;
+		}
+	}
+
 	public function created($endpoint)
 	{
 		$endpoint->make_dhcp();
@@ -159,6 +167,9 @@ class EndpointObserver {
 
 	public function updating($endpoint)
 	{
+		if (!$endpoint->fixed_ip) {
+			$endpoint->ip = null;
+		}
 		$endpoint->nsupdate(true);
 	}
 
