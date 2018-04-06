@@ -47,7 +47,7 @@ class contractCommand extends Command {
 
 		$cs = Contract::all();
 
-		$i = 1; 
+		$i = 1;
 		$num = count ($cs);
 
 		foreach ($cs as $c)
