@@ -26,13 +26,13 @@ $app = new Illuminate\Foundation\Application(
 | @author Patrick Reichel
 */
 
-// force reading of .evn.testing – this seems not be done automatically every time
+// force reading of .env.testing – this seems not be done automatically every time
 if (env('APP_ENV') == 'testing') {
 	$dotenv = new \Dotenv\Dotenv(__DIR__.'/../', '.env.testing');
 	$dotenv->overload();
 }
 
-// directory holding our .env files
+// directory holding the NMS Prime .env files
 $env_dir = '/etc/nmsprime/env/';
 
 // get all .env files from /etc
@@ -61,18 +61,18 @@ foreach ($files as $f) {
 */
 
 $app->singleton(
-	'Illuminate\Contracts\Http\Kernel',
-	'App\Http\Kernel'
+	Illuminate\Contracts\Http\Kernel::class,
+	App\Http\Kernel::class
 );
 
 $app->singleton(
-	'Illuminate\Contracts\Console\Kernel',
-	'App\Console\Kernel'
+	Illuminate\Contracts\Console\Kernel::class,
+	App\Console\Kernel::class
 );
 
 $app->singleton(
-	'Illuminate\Contracts\Debug\ExceptionHandler',
-	'App\Exceptions\Handler'
+	Illuminate\Contracts\Debug\ExceptionHandler::class,
+	App\Exceptions\Handler::class
 );
 
 /*

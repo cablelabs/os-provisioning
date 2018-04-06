@@ -245,7 +245,7 @@ class BaseLifecycleTest extends TestCase {
 	 * The only exception is NULL – we assume that this is allowed to be used multiple times.
 	 *
 	 * If a model_id is given data can be the same for this ID (e.g. on updating a model)
-	 * 
+	 *
 	 *
 	 * @author Patrick Reichel
 	 */

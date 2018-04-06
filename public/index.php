@@ -19,7 +19,6 @@
 */
 
 require __DIR__.'/../bootstrap/autoload.php';
-
 /*
 |--------------------------------------------------------------------------
 | Turn On The Lights
@@ -51,9 +50,9 @@ $request = Illuminate\Http\Request::capture();
 if ($request->is('customer/*'))
 {
 	/*
-	 * TODO: throw "nice looking" access error due to permisson restriction!
-	 *       Wrong http port to access admin section!
-	 */
+	* TODO: throw "nice looking" access error due to permisson restriction!
+	*       Wrong http port to access admin section!
+	*/
 	echo "Wrong http port to access customer section!";
 
 	return;
@@ -65,6 +64,7 @@ $kernel = $app->make('Illuminate\Contracts\Http\Kernel');
 $response = $kernel->handle(
 	$request = Illuminate\Http\Request::capture()
 );
+
 
 $response->send();
 
