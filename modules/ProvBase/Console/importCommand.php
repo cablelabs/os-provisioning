@@ -114,7 +114,6 @@ class importCommand extends Command {
 		if (!Product::count())
 			return $this->error('no product entry exists to use');
 
-
 		$cluster_filter = $this->option('cluster')  ? 'm.cluster_id = '.$this->option('cluster') : 'TRUE';
 		$plz_filter 	= $this->option('plz') 		? 'cm_adr.plz = \''.$this->option('plz')."'" : 'TRUE';
 
@@ -166,14 +165,12 @@ class importCommand extends Command {
 				->where ('m.deleted', '=', 'false')
 				->whereRaw('(v.abgeklemmt is null or v.abgeklemmt >= CURRENT_DATE)') 		// dont import out-of-date contracts
 				->where($area_filter)
-
 				->orderBy('v.vertragsnummer')
 				->get();
 
 		// progress bar
-		$i   = 1;
-		$num = count($contracts);
-		$bar = $this->output->createProgressBar($num);
+		echo "\nADD Contracts\n";
+		$bar = $this->output->createProgressBar(count($contracts));
 		$bar->start();
 
 		foreach ($contracts as $contract)
@@ -222,6 +219,7 @@ class importCommand extends Command {
 						->where('e.mta', '=', $mta->id)
 						->where ('e.deleted', '=', 'false')
 						->select('e.*', 'c.carrier')
+						->distinct()
 						->get();
 
 					foreach ($phonenumbers as $phonenumber)
@@ -238,8 +236,6 @@ class importCommand extends Command {
 			$this->add_tarif_credit($c, $contract);
 			$this->add_sepamandate($c, $contract, $km3);
 			$this->add_additional_items($c, $km3, $contract);
-
-			$i++;
 		}
 
 		echo "\n";
@@ -382,7 +378,7 @@ class importCommand extends Command {
 		// Update or Create Entry
 		$c->save();
 
-		\Log::info("\nADD CONTRACT: $c->id, $c->firstname $c->lastname, $c->street, $c->zip $c->city [$old_contract->vertragsnummer]");
+		\Log::info("ADD CONTRACT: $c->id, $c->firstname $c->lastname, $c->street, $c->zip $c->city [$old_contract->vertragsnummer]");
 
 		return $c;
 	}
@@ -829,8 +825,17 @@ class importCommand extends Command {
 
 		$contract = Contract::find(500000);
 
+		echo "ADD NETELEMENT Modems\n";
+		$bar = $this->output->createProgressBar(count($devices));
+		$bar->start();
+
 		foreach ($devices as $device)
+		{
+			$bar->advance();
 			self::add_modem($contract, $device, $db_con);
+		}
+
+		$bar->finish();
 	}
 
 

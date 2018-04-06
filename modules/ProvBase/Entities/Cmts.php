@@ -303,7 +303,7 @@ class Cmts extends \BaseModel {
 		snmp_set_valueretrieval(SNMP_VALUE_LIBRARY);
 		snmp_set_quick_print(true);
 
-		\Log::info("CMTS $this->hostname: Store CM US SNRs");
+		\Log::debug("CMTS $this->hostname: Store CM US SNRs");
 
 		try {
 			try {
