@@ -24,7 +24,7 @@ class NetElement extends \BaseModel {
 	{
 		return array(
 			'name' 			=> 'required|string',
-			'ip' 			=> 'ip',
+			// 'ip' 			=> 'ip', 		// also hostname is permitted and soon also mac
 			'pos' 			=> 'geopos',
 			'community_ro' 	=> 'regex:/(^[A-Za-z0-9]+$)+/',
 			'community_rw' 	=> 'regex:/(^[A-Za-z0-9]+$)+/',
