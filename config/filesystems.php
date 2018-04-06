@@ -45,7 +45,13 @@ return [
 
 		'local' => [
 			'driver' => 'local',
-			'root'   => storage_path().'/app',
+			'root' => storage_path('app'),
+		],
+
+		'public' => [
+			'driver' => 'local',
+			'root' => storage_path('app/public'),
+			'visibility' => 'public',
 		],
 
 		's3' => [
@@ -68,7 +74,7 @@ return [
 
 		'chart-data' => [
 			'driver' => 'local',
-			'root' => storage_path() . '/app/data/dashboard'
+			'root' => storage_path('/app/data/dashboard'),
 		]
 	],
 
