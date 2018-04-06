@@ -244,10 +244,18 @@ class SnmpController extends \BaseController{
 					$index  = strrchr($oid, '.'); 								// row in table
 					$suboid = substr($oid, 0, strlen($oid) - strlen($index)); 	// column in table
 
-					// Note: Subparams are already fetched from DB in snmp_table() with joined OID
 					if (!$subparam || $subparam->oid != $suboid)
-						$subparam = $param->children ? $param->children->where('oidoid', $suboid)->first() : OID::where('oid', '=', $suboid)->first();
-					if (!$subparam) {
+					{
+						if ($param->children->isEmpty()) {
+							$subparam = new Parameter;
+							$subparam->setRelation('oid', OID::where('oid', '=', $suboid)->first());
+						}
+						else
+							// Note: If existent Subparams are already fetched from DB in snmp_table() with joined OID
+							$subparam = $param->children->where('oidoid', $suboid)->first();
+					}
+
+					if (!$subparam || !$subparam->oid) {
 						\Log::error('SNMP Query returned OID that is missing in database!');
 						continue;
 					}
@@ -445,7 +453,7 @@ class SnmpController extends \BaseController{
 			try {
 				$results = snmp2_real_walk($this->device->ip, $community, $oid, $this->timeout, $this->retry);
 			} catch (\Exception $e) {
-				$results = snmpwalk($this->device->ip, $community, $oid, $this->timeout, $this->retry);
+				$results = snmprealwalk($this->device->ip, $community, $oid, $this->timeout, $this->retry);
 			}
 		}
 
@@ -475,7 +483,7 @@ class SnmpController extends \BaseController{
 		$param->setRelation('children', $relation);
 
 		// exact defined table via SubOIDs
-		if ($param->children)
+		if (!$param->children->isEmpty())
 		{
 			foreach ($param->children as $param) {
 				// Note: snmpwalk -CE ends on this OID - makes it much faster
