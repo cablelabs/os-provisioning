@@ -253,9 +253,9 @@ class MibFile extends \BaseModel {
 	{
 		$this->delete();
 
-		return \Redirect::back()->with('message', $message)->with('message_color', 'red');
+		//return \Redirect::back()->with('message', $message)->with('message_color', 'red');
 		// throw new \Exception($message);
-		// return \View::make('errors.generic')->with('message', $message)->with('error', $error);
+		return \View::make('errors.generic')->with('message', $message)->with('error', $error);
 	}
 
 	/**
