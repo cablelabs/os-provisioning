@@ -117,9 +117,10 @@ class NetElementType extends \BaseModel {
 	{
 		$eager_loading_model = new OID;
 		$params = Parameter::where('netelementtype_id', '=', $id)->with($eager_loading_model->table)->get();
+		$list = [];
 
 		if (!$params)
-			return [];
+			return $list;
 
 		foreach ($params as $param)
 			$list[$param->id] = $param->oid->gui_name ? $param->oid->oid.' - '.$param->oid->gui_name : $param->oid->oid.' - '.$param->oid->name;
