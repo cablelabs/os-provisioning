@@ -260,6 +260,7 @@ return [
 	'item'					=> 'Posten',
 	'sepa'					=> 'mit_SEPA',
 	'no_sepa'				=> 'ohne_SEPA',
+	'Call_Data_Records'		=> 'Einzelverbindungsnachweise',
 	'Call Data Record'		=> 'Einzelverbindungsnachweis',
 	'accounting'			=> 'Rechnungssatzdatei',
 	'booking'				=> 'Buchungssatzdatei',
