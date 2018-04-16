@@ -192,38 +192,31 @@ class importCommand extends Command {
 			{
 				$m = $this->add_modem($c, $modem, $km3);
 
-
 				/*
 				 * MTA Import
 				 */
-				$mtas = $km3->table(\DB::raw('tbl_computer c, tbl_packetcablemtas mta, tbl_configfiles cf'))
-					->selectRaw ('c.*, mta.*, cf.name as configfile, mta.id as id')
+				$mtas = $km3->table('tbl_computer as c')
+					->join('tbl_packetcablemtas as mta', 'mta.computer', '=', 'c.id')
+					->selectRaw ('c.*, mta.*, mta.id as id')
 					->where('c.modem', '=', $modem->id)
-					->whereRaw('mta.computer = c.id')
-					->whereRaw('mta.configfile = cf.id')
 					->where('c.deleted', '=', 'false')
 					->where('mta.deleted', '=', 'false')
 					->get();
 
 				foreach ($mtas as $mta)
 				{
-					$mta_n = $this->add_mta($m, $mta);
+					$mta_n = $this->add_mta($m, $mta, $km3);
 					$c->has_mta = true;
-
 
 					/*
 					 * Phonenumber Import
 					 */
 					$phonenumbers = $km3->table('tbl_mtaendpoints as e')
-						->join('tbl_clis as c', 'c.endpoint', '=', 'e.id')
-						->where('e.mta', '=', $mta->id)
-						->where ('e.deleted', '=', 'false')
-						->select('e.*', 'c.carrier')
-						->distinct()
-						->get();
+						->where('e.mta', '=', $mta->id)->where('e.deleted', '=', 'false')
+						->distinct()->get();
 
 					foreach ($phonenumbers as $phonenumber)
-						$p = $this->add_phonenumber($mta_n, $phonenumber);
+						$p = $this->add_phonenumber($mta_n, $phonenumber, $km3);
 				}
 			}
 
@@ -236,6 +229,10 @@ class importCommand extends Command {
 			$this->add_tarif_credit($c, $contract);
 			$this->add_sepamandate($c, $contract, $km3);
 			$this->add_additional_items($c, $km3, $contract);
+
+			// disable network access where blockcpe is set
+			if ($contract->blockcpe)
+				self::_blockcpe($c);
 		}
 
 		echo "\n";
@@ -723,6 +720,8 @@ class importCommand extends Command {
 
 		\Log::info("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
 
+		$new_contract->modems->add($modem);
+
 		return $modem;
 	}
 
@@ -730,7 +729,7 @@ class importCommand extends Command {
 	/**
 	 * Add MTA to corresponding Modem of new System
 	 */
-	private function add_mta($new_modem, $old_mta)
+	private function add_mta($new_modem, $old_mta, $db_con)
 	{
 		// dont update new mtas with old data - return mta that new phonenumbers can be assigned
 		$mtas_n = $new_modem->mtas;
@@ -743,16 +742,26 @@ class importCommand extends Command {
 			return $new_mta;
 		}
 
+		$cf = $db_con->table('tbl_configfiles')->where('id', '=', $old_mta->configfile)->first();
+
+		if ($cf)
+			$cf = $cf->name;
+
 		$mta = new MTA;
 
 		$mta->modem_id 	= $new_modem->id;
 		$mta->mac 		= $old_mta->mac_adresse;
-		$mta->configfile_id = isset($this->configfiles[$old_mta->configfile]) && is_int($this->configfiles[$old_mta->configfile]) ? $this->configfiles[$old_mta->configfile] : 0;
+		$mta->configfile_id = isset($this->configfiles[$cf]) && is_int($this->configfiles[$cf]) ? $this->configfiles[$cf] : 0;
 		$mta->type = 'sip';
 
 		$mta->save();
 
+		$new_modem->mtas->add($mta);
+
 		\Log::info ("ADD MTA: ".$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
+
+		if (!$cf)
+			Log::warning("No Configfile set on MTA $mta->id (ID)");
 
 		return $mta;
 	}
@@ -761,10 +770,11 @@ class importCommand extends Command {
 	/**
 	 * Add Phonenumber to corresponding MTA
 	 */
-	private function add_phonenumber($new_mta, $old_phonenumber)
+	private function add_phonenumber($new_mta, $old_phonenumber, $db_con)
 	{
 		$pns_n = $new_mta->phonenumbers;
 
+		// check if phonenumber was already added
 		if (!$pns_n->isEmpty() && $pns_n->contains('username', $old_phonenumber->username))
 		{
 			$new_pn = $pns_n->where('username', $old_phonenumber->username)->first();
@@ -773,11 +783,21 @@ class importCommand extends Command {
 			return $new_pn;
 		}
 
-		switch ($old_phonenumber->carrier)
+		$carrier = $db_con->table('tbl_clis')
+			->where('endpoint', '=', $old_phonenumber->id)
+			->where('carrier', '!=', null)->where('carrier', '!=', '')
+			->select('id', 'carrier')
+			->distinct()
+			->orderBy('id', 'desc')
+			->first();
+
+		$carrier = $carrier ? $carrier->carrier : null;
+
+		switch ($carrier)
 		{
 			case 'PURTel': $registrar = 'deu3.purtel.com'; break;
 			case 'EnviaTel': $registrar = 'sip.enviatel.net'; break;
-			default: $registrar = '';
+			default: $registrar = null;
 				\Log::warning("Missing Registrar for Phonenumber $old_phonenumber->vorwahl/$old_phonenumber->rufnummer");
 				break;
 		}
@@ -791,13 +811,15 @@ class importCommand extends Command {
 		$phonenumber->number 		= $old_phonenumber->rufnummer;
 		$phonenumber->username 		= $old_phonenumber->username;
 		$phonenumber->password 		= $old_phonenumber->password;
-		// TODO
 		$phonenumber->sipdomain 	= $registrar;
 		$phonenumber->active 		= true;  		// $old_phonenumber->aktiv; 		most phonenrs are marked as inactive because of automatic controlling
 
 		$phonenumber->save();
 
-		Log::info("ADD Phonenumber: ".$phonenumber->id.', '.$new_mta->id.', '.$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
+		Log::info("ADD Phonenumber: $phonenumber->id (ID), ".$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
+
+		// add new PN to relation collection to check on next add if it was already added
+		$new_mta->phonenumbers->add($phonenumber);
 
 		return $phonenumber;
 	}
@@ -836,6 +858,17 @@ class importCommand extends Command {
 		}
 
 		$bar->finish();
+	}
+
+
+	private static function _blockcpe($contract)
+	{
+		\Log::info("Disable network_access of all modems of contract number $contract->number");
+
+		foreach ($contract->modems as $cm) {
+			$cm->network_access = 0;
+			$cm->save();
+		}
 	}
 
 
