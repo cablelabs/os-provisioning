@@ -212,15 +212,11 @@ class importCommand extends Command {
 					 * Phonenumber Import
 					 */
 					$phonenumbers = $km3->table('tbl_mtaendpoints as e')
-						->join('tbl_clis as c', 'c.endpoint', '=', 'e.id')
-						->where('e.mta', '=', $mta->id)
-						->where ('e.deleted', '=', 'false')
-						->select('e.*', 'c.carrier')
-						->distinct()
-						->get();
+						->where('e.mta', '=', $mta->id)->where('e.deleted', '=', 'false')
+						->distinct()->get();
 
 					foreach ($phonenumbers as $phonenumber)
-						$p = $this->add_phonenumber($mta_n, $phonenumber);
+						$p = $this->add_phonenumber($mta_n, $phonenumber, $km3);
 				}
 			}
 
@@ -720,6 +716,8 @@ class importCommand extends Command {
 
 		\Log::info("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
 
+		$new_contract->modems->add($modem);
+
 		return $modem;
 	}
 
@@ -768,10 +766,11 @@ class importCommand extends Command {
 	/**
 	 * Add Phonenumber to corresponding MTA
 	 */
-	private function add_phonenumber($new_mta, $old_phonenumber)
+	private function add_phonenumber($new_mta, $old_phonenumber, $db_con)
 	{
 		$pns_n = $new_mta->phonenumbers;
 
+		// check if phonenumber was already added
 		if (!$pns_n->isEmpty() && $pns_n->contains('username', $old_phonenumber->username))
 		{
 			$new_pn = $pns_n->where('username', $old_phonenumber->username)->first();
@@ -780,11 +779,21 @@ class importCommand extends Command {
 			return $new_pn;
 		}
 
-		switch ($old_phonenumber->carrier)
+		$carrier = $db_con->table('tbl_clis')
+			->where('endpoint', '=', $old_phonenumber->id)
+			->where('carrier', '!=', null)->where('carrier', '!=', '')
+			->select('id', 'carrier')
+			->distinct()
+			->orderBy('id', 'desc')
+			->first();
+
+		$carrier = $carrier ? $carrier->carrier : null;
+
+		switch ($carrier)
 		{
 			case 'PURTel': $registrar = 'deu3.purtel.com'; break;
 			case 'EnviaTel': $registrar = 'sip.enviatel.net'; break;
-			default: $registrar = '';
+			default: $registrar = null;
 				\Log::warning("Missing Registrar for Phonenumber $old_phonenumber->vorwahl/$old_phonenumber->rufnummer");
 				break;
 		}
@@ -798,13 +807,15 @@ class importCommand extends Command {
 		$phonenumber->number 		= $old_phonenumber->rufnummer;
 		$phonenumber->username 		= $old_phonenumber->username;
 		$phonenumber->password 		= $old_phonenumber->password;
-		// TODO
 		$phonenumber->sipdomain 	= $registrar;
 		$phonenumber->active 		= true;  		// $old_phonenumber->aktiv; 		most phonenrs are marked as inactive because of automatic controlling
 
 		$phonenumber->save();
 
-		Log::info("ADD Phonenumber: ".$phonenumber->id.', '.$new_mta->id.', '.$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
+		Log::info("ADD Phonenumber: $phonenumber->id (ID), ".$phonenumber->country_code.$phonenumber->prefix_number.$phonenumber->number.', '.($old_phonenumber->aktiv ? 'active' : 'inactive (but currently set fix to active)'));
+
+		// add new PN to relation collection to check on next add if it was already added
+		$new_mta->phonenumbers->add($phonenumber);
 
 		return $phonenumber;
 	}
