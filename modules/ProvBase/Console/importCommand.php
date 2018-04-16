@@ -229,6 +229,10 @@ class importCommand extends Command {
 			$this->add_tarif_credit($c, $contract);
 			$this->add_sepamandate($c, $contract, $km3);
 			$this->add_additional_items($c, $km3, $contract);
+
+			// disable network access where blockcpe is set
+			if ($contract->blockcpe)
+				self::_blockcpe($c);
 		}
 
 		echo "\n";
@@ -854,6 +858,17 @@ class importCommand extends Command {
 		}
 
 		$bar->finish();
+	}
+
+
+	private static function _blockcpe($contract)
+	{
+		\Log::info("Disable network_access of all modems of contract number $contract->number");
+
+		foreach ($contract->modems as $cm) {
+			$cm->network_access = 0;
+			$cm->save();
+		}
 	}
 
 
