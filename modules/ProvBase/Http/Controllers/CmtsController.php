@@ -36,17 +36,20 @@ class CmtsController extends \BaseController {
 			);
 		}
 
-		// label has to be the same like column in sql table
+		/**
+		 * label has to be the same like column in sql table
+		 */
+		// TODO: type should be jquery based select depending on the company
+		// TODO: State and Monitoring without functionality -> hidden
 		$ret_tmp = array(
 			array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname'),
 			array('form_type' => 'select', 'name' => 'company', 'description' => 'Company', 'value' => ['Cisco' => 'Cisco', 'Casa' => 'Casa']),
 			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['ubr7225' => 'ubr7225', 'ubr10k' => 'ubr10k']),
-			// TODO: type should be jquery based select depending on the company
 			array('form_type' => 'ip', 'name' => 'ip', 'description' => 'IP', 'help' => 'Online'),
 			array('form_type' => 'text', 'name' => 'community_rw', 'description' => 'SNMP Private Community String'),
 			array('form_type' => 'text', 'name' => 'community_ro', 'description' => 'SNMP Public Community String'),
-			array('form_type' => 'text', 'name' => 'state', 'description' => 'State'),
-			array('form_type' => 'text', 'name' => 'monitoring', 'description' => 'Monitoring')
+			array('form_type' => 'text', 'name' => 'state', 'description' => 'State', 'hidden' => 1),
+			array('form_type' => 'text', 'name' => 'monitoring', 'description' => 'Monitoring', 'hidden' => 1)
 		);
 
 		// add init values if set
