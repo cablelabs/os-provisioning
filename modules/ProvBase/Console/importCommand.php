@@ -192,24 +192,21 @@ class importCommand extends Command {
 			{
 				$m = $this->add_modem($c, $modem, $km3);
 
-
 				/*
 				 * MTA Import
 				 */
-				$mtas = $km3->table(\DB::raw('tbl_computer c, tbl_packetcablemtas mta, tbl_configfiles cf'))
-					->selectRaw ('c.*, mta.*, cf.name as configfile, mta.id as id')
+				$mtas = $km3->table('tbl_computer as c')
+					->join('tbl_packetcablemtas as mta', 'mta.computer', '=', 'c.id')
+					->selectRaw ('c.*, mta.*, mta.id as id')
 					->where('c.modem', '=', $modem->id)
-					->whereRaw('mta.computer = c.id')
-					->whereRaw('mta.configfile = cf.id')
 					->where('c.deleted', '=', 'false')
 					->where('mta.deleted', '=', 'false')
 					->get();
 
 				foreach ($mtas as $mta)
 				{
-					$mta_n = $this->add_mta($m, $mta);
+					$mta_n = $this->add_mta($m, $mta, $km3);
 					$c->has_mta = true;
-
 
 					/*
 					 * Phonenumber Import
@@ -730,7 +727,7 @@ class importCommand extends Command {
 	/**
 	 * Add MTA to corresponding Modem of new System
 	 */
-	private function add_mta($new_modem, $old_mta)
+	private function add_mta($new_modem, $old_mta, $db_con)
 	{
 		// dont update new mtas with old data - return mta that new phonenumbers can be assigned
 		$mtas_n = $new_modem->mtas;
@@ -743,16 +740,26 @@ class importCommand extends Command {
 			return $new_mta;
 		}
 
+		$cf = $db_con->table('tbl_configfiles')->where('id', '=', $old_mta->configfile)->first();
+
+		if ($cf)
+			$cf = $cf->name;
+
 		$mta = new MTA;
 
 		$mta->modem_id 	= $new_modem->id;
 		$mta->mac 		= $old_mta->mac_adresse;
-		$mta->configfile_id = isset($this->configfiles[$old_mta->configfile]) && is_int($this->configfiles[$old_mta->configfile]) ? $this->configfiles[$old_mta->configfile] : 0;
+		$mta->configfile_id = isset($this->configfiles[$cf]) && is_int($this->configfiles[$cf]) ? $this->configfiles[$cf] : 0;
 		$mta->type = 'sip';
 
 		$mta->save();
 
+		$new_modem->mtas->add($mta);
+
 		\Log::info ("ADD MTA: ".$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
+
+		if (!$cf)
+			Log::warning("No Configfile set on MTA $mta->id (ID)");
 
 		return $mta;
 	}
