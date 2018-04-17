@@ -94,7 +94,10 @@ function config ($dir_root, $module='base', $options='')
  */
 function fpm ($dir, $version, $rpm_dir, $module='base', $options='')
 {
-	$config = config($dir, $module, $options);
+	if ($module === 'Debug')
+		$config = '-n debug-nmsprime --description "NMS Prime Debug Package" .git/=/var/www/nmsprime/.git';
+	else
+		$config = config($dir, $module, $options);
 
 	if (!$config)
 		return false;
@@ -120,6 +123,10 @@ function call  ($cmd, $module = 'Base')
  */
 call(fpm($dir, $version, $rpm_dir));
 
+/*
+ * Build Debug package, containing the .git folder
+ */
+call(fpm($dir, $version, $rpm_dir, 'Debug'), 'Debug');
 
 /*
  * Foreach Module
