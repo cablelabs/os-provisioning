@@ -1165,7 +1165,7 @@ class ModemObserver
 		if (\PPModule::is_active('HfcCustomer'))
 		{
 			if (multi_array_key_exists(['x', 'y'], $diff))
-				$modem->netelement_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem->id);
+				$modem->netelement_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem);
 		}
 	}
 
