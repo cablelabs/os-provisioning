@@ -118,7 +118,7 @@ class Contract extends \BaseModel {
 			$ret['Edit']['SepaMandate'] = $this->sepamandates;
 		}
 
-		$ret['Technical']['Modem'] = $this->modems;
+		$ret['Edit']['Modem'] = $this->modems;
 
 		if (\PPModule::is_active('billingbase'))
 		{
@@ -159,8 +159,8 @@ class Contract extends \BaseModel {
 
 		if (\PPModule::is_active('Ticketsystem'))
 		{
-			$ret['Edit']['Ticket'] = $this->tickets;
-			$ret['Ticket']['Ticket'] = $this->tickets;
+			$tab = \PPModule::is_active('billingbase') ? 'Ticket' : 'Edit';
+			$ret[$tab]['Ticket'] = $this->tickets;
 		}
 
 		if (\PPModule::is_active('mail'))
