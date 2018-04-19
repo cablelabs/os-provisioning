@@ -54,8 +54,8 @@ class Qos extends \BaseModel {
 		return ['table' => $this->table,
 				'index_header' => [$this->table.'.name', $this->table.'.ds_rate_max', $this->table.'.us_rate_max'],
 				'header' =>  $this->name,
-                'bsclass' => $bsclass,
-                'edit' => ['ds_rate_max' => 'unit_ds_rate_max', 'us_rate_max' => 'unit_ds_rate_max'],
+				'bsclass' => $bsclass,
+				'edit' => ['ds_rate_max' => 'unit_ds_rate_max', 'us_rate_max' => 'unit_us_rate_max'],
 				'order_by' => ['0' => 'asc']];
 	}
 
