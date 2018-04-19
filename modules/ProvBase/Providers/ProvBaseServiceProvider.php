@@ -22,6 +22,7 @@ class ProvBaseServiceProvider extends ServiceProvider {
 		'Modules\ProvBase\Console\dhcpCommand',
 		'Modules\ProvBase\Console\importCommand',
 		'Modules\ProvBase\Console\importTvCustomersCommand',
+		'Modules\ProvBase\Console\importNetUserCommand',
 		'Modules\ProvBase\Console\geocodeCommand',
 	];
 
