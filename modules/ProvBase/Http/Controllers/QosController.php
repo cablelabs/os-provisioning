@@ -6,9 +6,9 @@ use Modules\ProvBase\Entities\Qos;
 
 class QosController extends \BaseController {
 
-    /**
-     * defines the formular fields for the edit and create view
-     */
+	/**
+	 * defines the formular fields for the edit and create view
+	 */
 	public function view_form_fields($model = null)
 	{
 		// label has to be the same like column in sql table
@@ -19,4 +19,11 @@ class QosController extends \BaseController {
 		);
 	}
 
+	public function prepare_input($data)
+	{
+		$data['ds_rate_max_help'] = $data['ds_rate_max_help'] ? : $data['ds_rate_max'] * 1024 * 1024;
+		$data['us_rate_max_help'] = $data['ds_rate_max_help'] ? : $data['us_rate_max'] * 1024 * 1024;
+
+		return parent::prepare_input($data);
+	}
 }

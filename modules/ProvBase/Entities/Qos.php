@@ -95,13 +95,9 @@ class QosObserver
 {
     public function creating($q)
     {
-    	$q->ds_rate_max_help = $q->ds_rate_max * 1024 * 1024;
-    	$q->us_rate_max_help = $q->us_rate_max * 1024 * 1024;
     }
 
     public function updating($q)
     {
-    	$q->ds_rate_max_help = $q->ds_rate_max * 1024 * 1024;
-    	$q->us_rate_max_help = $q->us_rate_max * 1024 * 1024;
     }
 }
