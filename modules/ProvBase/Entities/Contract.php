@@ -1211,6 +1211,11 @@ class Contract extends \BaseModel {
 		$tariff = $this->items()
 			->join('product as p', 'item.product_id', '=', 'p.id')
 			->where('type', '=', $type)
+			->where(function ($query) { $query
+				->where('item.valid_to', '>=', date('Y-m-d'))
+				->orWhereNull("item.valid_to")
+				->orWhere("item.valid_to", '=', '');}
+			)
 			->where('valid_from_fixed', '=', 1)
 			->orderBy('valid_from', 'desc')
 			->first();
