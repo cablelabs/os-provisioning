@@ -30,12 +30,29 @@ class WelcomeController extends Controller {
 	 */
 	public function index()
 	{
-		$g = \GlobalConfig::first();
-		$head1 = $g->headline1;
-		$head2 = $g->headline2;
+        $admin_port = env('HTTPS_ADMIN_PORT', '443');
+        $ccc_port   = env('HTTPS_CCC_PORT', '443');
 
+        // if same port, show start page
+        if ($admin_port == $ccc_port)
+            return $next($request);
+
+		if (env('APP_ENV') == 'testing') {
+			// $_SERVER['SERVER_PORT'] does not exist if running phpunit
+			$server_port = \Request::getPort();
+		}
+		else {
+			$server_port = $_SERVER['SERVER_PORT'];
+		}
+
+        if ($server_port == $admin_port)
+            return redirect('admin/login');
+
+        if ($server_port == $ccc_port)
+            return redirect('customer');
 		if (\App::isLocal())
-			return view('welcome')->with(compact('head1', 'head2'));
+			return view('welcome')
+				->with(compact('head1', 'head2'));
 
 		abort(404);
 	}
