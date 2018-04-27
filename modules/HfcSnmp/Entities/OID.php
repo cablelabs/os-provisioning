@@ -39,7 +39,7 @@ class OID extends \BaseModel {
 	// View Icon
 	public static function view_icon()
 	{
-	  return '<i class="fa fa-check-circle-o"></i>';
+	  return '<i class="fa fa-opera"></i>';
 	}
 
 	// AJAX Index list function

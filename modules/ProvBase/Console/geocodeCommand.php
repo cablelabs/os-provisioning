@@ -55,7 +55,17 @@ class geocodeCommand extends Command {
 		{
 // Retry on over query limit
 retry:
+			ob_start();
 			$ret = $modem->geocode();
+			ob_end_clean();
+
+			// Take care of google over query limit
+			if ($modem->geocode_last_status() == 'OVER_QUERY_LIMIT')
+			{
+				usleep(400*1000); // 400 ms
+				$wait++;
+				goto retry;
+			}
 
 			if ($this->option('debug'))
 			{
@@ -68,14 +78,6 @@ retry:
 			}
 			else
 				$bar->advance();
-
-			// Take care of google over query limit
-			if ($modem->geocode_last_status() == 'OVER_QUERY_LIMIT')
-			{
-				usleep(400*1000); // 400 ms
-				$wait++;
-				goto retry;
-			}
 
 			// Google Standard: 2500 requests per day, 10 per second
 			// see: https://developers.google.com/maps/documentation/geocoding/usage-limits

@@ -774,12 +774,15 @@ class importCommand extends Command {
 	{
 		$pns_n = $new_mta->phonenumbers;
 
-		// check if phonenumber was already added
-		if (!$pns_n->isEmpty() && $pns_n->contains('username', $old_phonenumber->username))
-		{
-			$new_pn = $pns_n->where('username', $old_phonenumber->username)->first();
+		if (!$old_phonenumber->rufnummer)
+			\Log::error("Missing number of phonenumber with username $old_phonenumber->username and old ID $old_phonenumber->id", ["new MTA-ID: $new_mta->id"]);
 
-			Log::info("Phonenumber already exists in new System with ID $new_pn->id!", [$new_mta->id]);
+		// check if phonenumber was already added
+		if (!$pns_n->isEmpty() && $pns_n->contains('number', $old_phonenumber->rufnummer))
+		{
+			$new_pn = $pns_n->where('number', $old_phonenumber->rufnummer)->first();
+
+			Log::info("Phonenumber ($old_phonenumber->vorwahl/$old_phonenumber->rufnummer) already exists in new System with ID $new_pn->id!", ["MTA-ID: $new_mta->id"]);
 			return $new_pn;
 		}
 
