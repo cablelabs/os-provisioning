@@ -16,12 +16,13 @@ class PhoneTariffController extends \BaseController {
 			$model = new PhoneTariff;
 
 		// label has to be the same like column in sql table
+		// TODO: Voip Protocol: only SIP is implemented and chhosing has no effect -> hidden
 		return array(
 			array('form_type' => 'text', 'name' => 'external_identifier', 'description' => 'External Identifier'),
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
 			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => PhoneTariff::getPossibleEnumValues('type')),
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'),
-			array('form_type' => 'select', 'name' => 'voip_protocol', 'description' => 'VoIP protocol', 'value' => PhoneTariff::getPossibleEnumValues('voip_protocol', true)),
+			array('form_type' => 'select', 'name' => 'voip_protocol', 'description' => 'VoIP protocol', 'value' => PhoneTariff::getPossibleEnumValues('voip_protocol', true), 'hidden' => 1),
 			array('form_type' => 'checkbox', 'name' => 'usable', 'description' => 'Usable', 'create' => '1'),
 		);
 

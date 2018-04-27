@@ -21,7 +21,7 @@ class GlobalConfigController extends BaseController {
 			array('form_type' => 'text', 'name' => 'phone', 'description' => 'Phonenumber'),
 			array('form_type' => 'text', 'name' => 'mail', 'description' => 'E-Mail Address'),
 
-			array('form_type' => 'select', 'name' => 'log_level', 'description' => 'System Log Level', 'value' => $this->log_level),
+			array('form_type' => 'select', 'name' => 'log_level', 'description' => 'System Log Level', 'value' => $this->log_level, 'hidden' => 1),
 			array('form_type' => 'text', 'name' => 'headline1', 'description' => 'Headline 1'),
 			array('form_type' => 'text', 'name' => 'headline2', 'description' => 'Headline 2'),
 			);

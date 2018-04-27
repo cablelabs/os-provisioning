@@ -23,12 +23,13 @@ class MtaController extends \BaseController {
 		}
 
 		// label has to be the same like column in sql table
+		// TODO: Type is without functionality -> hidden
 		return array(
 			array('form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')),
 			array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly']),
 			array('form_type' => 'text', 'name' => 'modem_id', 'description' => 'Modem', 'hidden' => 1),
 			array('form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $this->_add_empty_first_element_to_options($model->html_list($model->configfiles(), 'name'))),
-			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => Mta::getPossibleEnumValues('type', false)),
+			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => Mta::getPossibleEnumValues('type', false), 'hidden' => 1),
 		);
 	}
 
