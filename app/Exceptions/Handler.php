@@ -1,10 +1,9 @@
 <?php namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
-
-use App\Exceptions\AuthException;
 
 class Handler extends ExceptionHandler {
 
@@ -72,7 +71,7 @@ class Handler extends ExceptionHandler {
         if ($request->expectsJson()) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
-        return redirect()->guest('login');
+        return redirect()->guest(route('login'));
     }
 
 }
