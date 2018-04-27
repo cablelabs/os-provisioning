@@ -268,7 +268,7 @@ return [
 	'DC'					=> 'SEPA Gutschriften',
 	'salesmen_commission'	=> 'Provision_Verkaeufer',
 	'Invoices'				=> 'Rechnungen',
-	'Load Data' 			=> 'Lade Daten',
+	'Load Data...' 			=> 'Lade Daten...',
 
 	//CostCenter
 	'Associated SEPA Account'	=> 'Verknüpftes SEPA-Konto',
