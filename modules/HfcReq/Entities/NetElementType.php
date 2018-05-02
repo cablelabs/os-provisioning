@@ -2,8 +2,7 @@
 
 namespace Modules\HfcReq\Entities;
 
-use Modules\HfcSnmp\Entities\OID;
-use Modules\HfcSnmp\Entities\Parameter;
+use Modules\HfcSnmp\Entities\{ OID, Parameter};
 
 class NetElementType extends \BaseModel {
 
@@ -66,7 +65,7 @@ class NetElementType extends \BaseModel {
 		$ret['Base']['NetElement']['class'] 	= 'NetElement';
 		$ret['Base']['NetElement']['relation']  = $this->netelements;
 
-		if (\PPModule::is_active('hfcsnmp') && !in_array($this->name, self::$undeletables))
+		if (\Module::collections()->has('HfcSnmp') && !in_array($this->name, self::$undeletables))
 		{
 			// $ret['Base']['Parameter']['class'] 	= 'Parameter';
 			// $ret['Base']['Parameter']['relation']	= $this->parameters;

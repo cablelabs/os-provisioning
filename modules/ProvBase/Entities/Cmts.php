@@ -2,8 +2,7 @@
 
 namespace Modules\ProvBase\Entities;
 
-use File;
-use DB;
+use DB, File;
 use Acme\php\ArrayHelper;
 
 class Cmts extends \BaseModel {
@@ -533,7 +532,7 @@ class CmtsObserver
 
 	public function created($cmts)
 	{
-		if (\PPModule::is_active ('ProvMon'))
+		if (\Module::collections()->has('ProvMon'))
 			\Artisan::call('nms:cacti', ['--modem-id' => 0, '--cmts-id' => $cmts->id]);
 		$cmts->make_dhcp_conf();
 

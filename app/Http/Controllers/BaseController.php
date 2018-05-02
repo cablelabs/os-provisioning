@@ -2,26 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App;
-use Module;
-use Config;
-use File;
-use View;
-use Validator;
-use Input;
-use Redirect;
-use Route;
-use BaseModel;
-use Auth;
-use NoAuthenticateduserError;
-use Log;
-use GlobalConfig;
-use Illuminate\Support\Facades\Request;
-use Yajra\Datatables\Datatables;
-use Monolog\Logger;
-
+use App, Auth, BaseModel, Config, File, GlobalConfig, Input, Log, Module, NoAuthenticateduserError, Redirect, Route, Validator, View;
 use App\Exceptions\AuthException;
-
+use Illuminate\Support\Facades\Request;
+use Monolog\Logger;
+use Yajra\Datatables\Datatables;
 
 /*
  * BaseController: The Basic Controller in our MVC design.
@@ -144,7 +129,7 @@ class BaseController extends Controller {
 
 	public static function get_config_modules()
 	{
-		$modules = Module::enabled();
+		$modules = \Module::enabled();
 		$links = ['Global Config' => 'GlobalConfig'];
 
 		foreach($modules as $module)
@@ -357,7 +342,7 @@ class BaseController extends Controller {
 
 		if(!isset($a['networks'])){
 			$a['networks'] = [];
-			if (\PPModule::is_active('HfcReq'))
+			if (\Module::collections()->has('HfcReq'))
 				$a['networks'] = \Modules\HfcReq\Entities\NetElement::get_all_net();
 		}
 
@@ -395,7 +380,7 @@ class BaseController extends Controller {
 		if (!isset($a['html_title']))
 			$a['html_title'] = 'NMS Prime - '.\App\Http\Controllers\BaseViewController::translate_view(\NamespaceController::module_get_pure_model_name(),'Header');
 
-		if (( \PPModule::is_active('Provvoipenvia')) && (!isset($a['envia_interactioncount'])) )
+		if (( \Module::collections()->has('ProvVoipEnvia')) && (!isset($a['envia_interactioncount'])) )
 			$a['envia_interactioncount'] = \Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
 
 		$a['save_button'] = $this->save_button;

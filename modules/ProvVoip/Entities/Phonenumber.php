@@ -4,7 +4,6 @@ namespace Modules\ProvVoip\Entities;
 
 use Illuminate\Support\Collection;
 
-// Model not found? execute composer dump-autoload in nmsprime root dir
 class Phonenumber extends \BaseModel {
 
     // The associated SQL table for this Model
@@ -209,7 +208,7 @@ class Phonenumber extends \BaseModel {
 	public function view_has_many()
 	{
 		$ret = array();
-		if (\PPModule::is_active('provvoip')) {
+		if (\Module::collections()->has('ProvVoip')) {
 
 			$relation = $this->phonenumbermanagement;
 
@@ -226,14 +225,14 @@ class Phonenumber extends \BaseModel {
 			$ret['Main']['PhonenumberManagement']['class'] = 'PhonenumberManagement';
 		}
 
-		if (\PPModule::is_active('provvoipenvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 			// TODO: auth - loading controller from model could be a security issue ?
 			$ret['Main']['envia TEL API']['html'] = '<h4>Available envia TEL API jobs</h4>';
 			$ret['Main']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
 			$ret['Main']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
 		}
 
-		if (\PPModule::is_active('voipmon')) {
+		if (\Module::collections()->has('VoipMon')) {
 			$ret['Monitoring']['Cdr'] = $this->cdrs()->orderBy('id', 'DESC')->get();
 		}
 
@@ -357,7 +356,7 @@ class Phonenumber extends \BaseModel {
 		// special case activated envia TEL module:
 		//   - MTA has to belong to the same contract
 		//   - Installation address of current modem match installation address of new modem
-		if (\PPModule::is_active('provvoipenvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 			$ret = array();
 
 			$cur_modem = $this->mta->modem;
@@ -399,7 +398,7 @@ class Phonenumber extends \BaseModel {
 	 */
 	public function enviaorders($withTrashed=False, $whereStatement="1") {
 
-		if (!\PPModule::is_active('provvoipenvia')) {
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
 			return null;
 		}
 
@@ -430,7 +429,7 @@ class Phonenumber extends \BaseModel {
 	public function envia_contract_created() {
 
 		// no envia module ⇒ no envia contracts
-		if (!\PPModule::is_active('provvoipenvia')) {
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
 			return null;
 		}
 
@@ -466,7 +465,7 @@ class Phonenumber extends \BaseModel {
 	public function envia_contract_terminated() {
 
 		// no envia module ⇒ no envia contracts
-		if (!\PPModule::is_active('provvoipenvia')) {
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
 			return null;
 		}
 
@@ -650,7 +649,7 @@ class PhonenumberObserver
 	 */
 	protected function _create_login_data($phonenumber) {
 
-		if (\PPModule::is_active('provvoipenvia') && ($phonenumber->mta->type == 'sip')) {
+		if (\Module::collections()->has('ProvVoipEnvia') && ($phonenumber->mta->type == 'sip')) {
 
 			if (!boolval($phonenumber->password)) {
 				$phonenumber->password = \Acme\php\Password::generate_password(15, 'envia');
@@ -686,7 +685,7 @@ class PhonenumberObserver
 	protected function _updating_allowed($phonenumber) {
 
 		// no envia TEL => no problems
-		if (!\PPModule::is_active('provvoipenvia')) {
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
 			return true;
 		}
 
@@ -771,7 +770,7 @@ class PhonenumberObserver
 	protected function _check_and_process_mta_change_for_envia($phonenumber, $old_mta, $new_mta) {
 
 		// check if module is enabled
-		if (!\PPModule::is_active('provvoipenvia')) {
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
 			return;
 		}
 
@@ -893,7 +892,7 @@ class PhonenumberObserver
 	protected function _check_and_process_sip_data_change_for_envia($phonenumber) {
 
 		// check if module is enabled
-		if (!\PPModule::is_active('provvoipenvia')) {
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
 			return;
 		}
 

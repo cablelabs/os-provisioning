@@ -91,7 +91,7 @@ class configfileCommand extends Command implements SelfHandling, ShouldQueue {
 		echo "\n";
 
 		// MTA
-		if (\PPModule::is_active('provvoip'))
+		if (\Module::collections()->has('ProvVoip'))
 		{
 			$mtas = \Modules\ProvVoip\Entities\Mta::all();
 

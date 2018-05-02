@@ -2,9 +2,7 @@
 
 namespace Modules\ProvBase\Entities;
 
-use Log;
-use DB;
-use Schema;
+use DB, Log, Schema;
 
 use Modules\ProvVoip\Entities\Phonenumber;
 

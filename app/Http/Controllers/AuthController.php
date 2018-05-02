@@ -119,14 +119,14 @@ class AuthController extends Controller {
 
 		// Redirect to Default Page
 		// TODO: Redirect to a global overview page
-		if (!\PPModule::is_active('Dashboard')) {
+		if (!\Module::collections()->has('Dashboard')) {
 			if (
-				(\PPModule::is_active('Provbase') && !\Auth::user()->has_permissions('ProvBase', 'Contract')) ||
-				(!\PPModule::is_active('ProvBase'))
+				(\Module::collections()->has('ProvBase') && !\Auth::user()->has_permissions('ProvBase', 'Contract')) ||
+				(!\Module::collections()->has('ProvBase'))
 			) {
 				if (
-					(\PPModule::is_active('HfcReq') && !\Auth::user()->has_permissions('HfcReq', 'NetElement')) ||
-					(!\PPModule::is_active('HfcReq'))
+					(\Module::collections()->has('HfcReq') && !\Auth::user()->has_permissions('HfcReq', 'NetElement')) ||
+					(!\Module::collections()->has('HfcReq'))
 				) {
 					return Redirect::to($this->prefix.'/Config');
 				} else {
@@ -187,7 +187,7 @@ class AuthController extends Controller {
 
 			// update email password hash (salted sha512), if customer logs in successfully
 			// this way we don't need to ask customers to set a new password manually
-			if(\PPModule::is_active('mail') && $this->prefix == 'customer') {
+			if(\Module::collections()->has('Mail') && $this->prefix == 'customer') {
 				foreach(CccAuthuser::where('login_name', '=', $request->login_name)->first()->contract->emails as $email) {
 					// password has already been hashed with sha512
 					if(substr($email->password,0,3) === '$6$')

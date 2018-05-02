@@ -3,10 +3,8 @@
 namespace Modules\HfcReq\Http\Controllers;
 
 use Modules\HfcReq\Entities\NetElementType;
-use Modules\HfcSnmp\Entities\OID;
-use Modules\HfcSnmp\Entities\Parameter;
+use Modules\HfcSnmp\Entities\{ OID, Parameter};
 use \App\Http\Controllers\BaseViewController;
-
 
 class NetElementTypeController extends HfcReqController {
 

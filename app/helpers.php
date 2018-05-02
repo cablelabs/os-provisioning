@@ -13,6 +13,7 @@
  * @author Patrick Reichel
  */
 function d() {
+	$args =  func_get_args();
 
 	// write meta information about the caller
 	$td = '<td style="font-size: 11px; font-family:monospace; color:#444">';
@@ -31,7 +32,7 @@ function d() {
 	echo '<hr size="1" noshade>';
 
 	// call laravel's dd function and pass all given params
-	call_user_func_array('dd', func_get_args());
+	call_user_func_array('dd', $args);
 }
 
 /**

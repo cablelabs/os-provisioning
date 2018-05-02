@@ -3,10 +3,10 @@
 namespace Acme\Validators;
 
 use Models\Configfiles;
-use File;
-use Log;
 use Modules\BillingBase\Entities\Product;
-use IBAN;
+
+use File , Log, IBAN;
+
 
 use Modules\ProvVoip\Entities\PhonebookEntry;
 
@@ -180,7 +180,7 @@ class ExtendedValidator
 	 */
 	public function validateDocsis ($attribute, $value, $parameters)
 	{
-		// dd($attribute, $value, $parameters);
+		$arguments = func_get_args();
 
 		/* Configfile */
         $device	 = $parameters[0];
@@ -236,11 +236,11 @@ class ExtendedValidator
         // 	$report .= "\n$out";
         // }
 
-        if (!file_exists("$dir/dummy-validator.cfg"))
-        {
-        	// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
+		if (!file_exists("$dir/dummy-validator.cfg") && (isset($arguments[3])))
+		{
+			// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
         	// when laravel calls the actual validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
-        	$validator = \func_get_arg(3);
+			$validator = $arguments[3];
         	$validator->setCustomMessages(array('docsis' => $report));
         	return false;
         }

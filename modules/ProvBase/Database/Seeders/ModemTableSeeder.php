@@ -69,7 +69,7 @@ class ModemTableSeeder extends \BaseSeeder {
 		}
 
 		$netelement_id = 0;
-		if (\Module::find('HfcReq')->active())
+		if (\Module::collections()->has('HfcReq'))
 		{
 			// Note: requires HfcReq to be seeded before this runs
 			if (\Modules\HfcReq\Entities\NetElement::all()->count() > 2)

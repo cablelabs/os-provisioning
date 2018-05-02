@@ -15,7 +15,7 @@
 
     {{-- begin sidebar nav --}}
     <ul class="nav">
-      @if (\PPModule::is_active ('Dashboard'))
+      @if (\Module::collections()->has('Dashboard'))
         <li id ="dashboardsidebar" class="{{ ($route_name == 'Dashboard') ? 'active' : ''}}">
           <a href="{{BaseRoute::get_base_url()}}/Dashboard">
           <i class="fa fa-home"></i>

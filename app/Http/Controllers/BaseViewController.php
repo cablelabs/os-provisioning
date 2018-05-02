@@ -2,20 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App;
-use Module;
-use Config;
-use File;
-use View;
-use Validator;
-use Input;
-use Redirect;
-use Route;
-use BaseModel;
-use Auth;
-use Log;
-use GlobalConfig;
-
+use App, Auth, BaseModel, Config, File, GlobalConfig, Input, Log, Module, Redirect, Route, Validator, View ;
 
 /*
  * BaseViewController: Is a special Controller which will be a kind of middleware/sub-layer/helper
@@ -377,7 +364,8 @@ class BaseViewController extends Controller {
 					break;
 
 				default:
-					$s .= \Form::$field["form_type"]($field["name"], $field['field_value'], $options);
+					$form = $field["form_type"];
+					$s .= \Form::$form($field["name"], $field['field_value'], $options);
 					break;
 			}
 
@@ -450,7 +438,8 @@ finish:
 				if (in_array('readonly', $options))
 					return '<p name="'.$field['name'].'">'. $field['field_value'] .'</p>';
 
-				$s .= \Form::$field["form_type"]($field["name"], $field['field_value'], $options);
+				$form = $field["form_type"];
+				$s .= \Form::$form($field["name"], $field['field_value'], $options);
 				break;
 		}
 
@@ -471,7 +460,7 @@ finish:
 	public static function view_main_menus ()
 	{
 		$ret = array();
-		$modules = Module::enabled();
+		$modules = \Module::enabled();
 
 		// global page
 		$array = include(app_path().'/Config/header.php');

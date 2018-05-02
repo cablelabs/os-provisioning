@@ -58,19 +58,19 @@ class NetElement extends \BaseModel {
 	{
 		$ret = [];
 
-		// if (\PPModule::is_active('ProvBase'))
+		// if (\Module::collections()->has('ProvBase'))
 		// {
 		// 	$ret['Edit']['Modem']['class'] 	  = 'Modem';
 		// 	$ret['Edit']['Modem']['relation'] = $this->modems;
 		// }
 
-		if (\PPModule::is_active('HfcCustomer'))
+		if (\Module::collections()->has('HfcCustomer'))
 		{
 			$ret['Edit']['Mpr']['class'] 	= 'Mpr';
 			$ret['Edit']['Mpr']['relation'] = $this->mprs;
 		}
 
-		if (\PPModule::is_active('hfcsnmp'))
+		if (\Module::collections()->has('HfcSnmp'))
 		{
 			if ($this->netelementtype && ($this->netelementtype->id == 2 || $this->netelementtype->parameters()->count()))
 			{

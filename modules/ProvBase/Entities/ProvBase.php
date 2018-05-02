@@ -2,8 +2,7 @@
 
 namespace Modules\ProvBase\Entities;
 
-use GlobalConfig;
-use File;
+use File, GlobalConfig;
 
 class ProvBase extends \BaseModel {
 
@@ -89,7 +88,7 @@ class ProvBase extends \BaseModel {
 		$data .= "\n# zone\nzone ".$this->domain_name." {\n\tprimary 127.0.0.1;\n\tkey dhcpupdate;\n}\n";
 		$data .= "\n# reverse zone\nzone in-addr.arpa {\n\tprimary 127.0.0.1;\n\tkey dhcpupdate;\n}\n";
 
-		if (\PPModule::is_active('provvoip'))
+		if (\Module::collections()->has('ProvVoip'))
 		{
 			// second domain for mta's if existent
 			$mta_domain = \Modules\ProvVoip\Entities\ProvVoip::first()->mta_domain;

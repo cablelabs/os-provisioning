@@ -2,12 +2,9 @@
 
 namespace Modules\ProvBase\Entities;
 
-use File;
-use Log;
-use Exception;
+use Exception, File, Log;
 use Acme\php\ArrayHelper;
-use Modules\ProvBase\Entities\Qos;
-use Modules\ProvBase\Entities\ProvBase;
+use Modules\ProvBase\Entities\{ ProvBase, Qos};
 use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class Modem extends \BaseModel {
@@ -50,7 +47,7 @@ class Modem extends \BaseModel {
 
 		return ['table' => $this->table,
 				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', 'contract_valid'],
-		        'bsclass' => $bsclass,
+				'bsclass' => $bsclass,
 				'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
 				'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
 				'eager_loading' => ['configfile','contract'],
@@ -114,7 +111,7 @@ class Modem extends \BaseModel {
 	 */
 	protected function _envia_orders() {
 
-		if (!\PPModule::is_active('provvoipenvia')) {
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
 			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
 		}
 
@@ -126,7 +123,7 @@ class Modem extends \BaseModel {
 	 * related enviacontracts
 	 */
 	public function enviacontracts() {
-		if (!\PPModule::is_active('provvoipenvia')) {
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
 			throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
 		}
 		else {
@@ -195,19 +192,19 @@ class Modem extends \BaseModel {
 		$ret = array();
 
 		// we use a dummy here as this will be overwritten by ModemController::get_form_tabs()
-		if (\PPModule::is_active('ProvVoip')) {
+		if (\Module::collections()->has('ProvVoip')) {
 			$ret['dummy']['Mta']['class'] = 'Mta';
 			$ret['dummy']['Mta']['relation'] = $this->mtas;
 		}
 
-                // only show endpoints (and thus the ability to create a new one) for public CPEs
-                if($this->public) {
-                        $ret['dummy']['Endpoint']['class'] = 'Endpoint';
-                        $ret['dummy']['Endpoint']['relation'] = $this->endpoints;
-                }
-
-		if (\PPModule::is_active('provvoipenvia'))
+		if (\Module::collections()->has('ProvVoipEnvia'))
 		{
+			// only show endpoints (and thus the ability to create a new one) for public CPEs
+			if ($this->public) {
+				$ret['dummy']['Endpoint']['class'] = 'Endpoint';
+				$ret['dummy']['Endpoint']['relation'] = $this->endpoints;
+			}
+
 			$ret['dummy']['EnviaContract']['class'] = 'EnviaContract';
 			$ret['dummy']['EnviaContract']['relation'] = $this->enviacontracts;
 			$ret['dummy']['EnviaContract']['options']['hide_create_button'] = 1;
@@ -261,7 +258,7 @@ class Modem extends \BaseModel {
 
 		$ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
 
-		if (\PPModule::is_active('provvoip') && $this->mtas()->count())
+		if (\Module::collections()->has('ProvVoip') && $this->mtas()->count())
 			$ret .= ' option ccc.dhcp-server-1 '.($server ? : ProvBase::first()->provisioning_server).';';
 
 		return $ret."}\n";
@@ -335,10 +332,10 @@ class Modem extends \BaseModel {
 	 * Used in ModemObserver@updated/deleted for created/updated/deleted events
 	 *
 	 * NOTES:
-	 	* This is way faster (0,01s (also on 2k modems) vs 2,8s for 348 Modems via make_dhcp_cm_all) than everytime creating files for all modems
-	 	* It's also more secure as it uses flock() to avoid dhcpd restart errors due to race conditions
-	 	* MaybeTODO: embed part between lock & unlock into try catch block to avoid forever locked files in case of exception !?
-	 	* Attention!: MAC Address must be unique in database to work correctly !!!
+		* This is way faster (0,01s (also on 2k modems) vs 2,8s for 348 Modems via make_dhcp_cm_all) than everytime creating files for all modems
+		* It's also more secure as it uses flock() to avoid dhcpd restart errors due to race conditions
+		* MaybeTODO: embed part between lock & unlock into try catch block to avoid forever locked files in case of exception !?
+		* Attention!: MAC Address must be unique in database to work correctly !!!
 	 *
 	 * @param 	delete  	set to true if you want to remove the entry from the configfile
 	 *
@@ -761,7 +758,7 @@ class Modem extends \BaseModel {
 	public function refresh_state_cacti()
 	{
 		// cacti is not installed
-		if(!\PPModule::is_active('provmon'))
+		if(!\Module::collections()->has('ProvMon'))
 			return -1;
 
 		try {
@@ -952,7 +949,7 @@ class Modem extends \BaseModel {
 	public function has_phonenumbers_attached() {
 
 		// if there is no voip module ⇒ there can be no numbers
-		if (!\PPModule::is_active('provvoip')) {
+		if (!\Module::collections()->has('ProvVoip')) {
 			return False;
 		}
 
@@ -976,7 +973,7 @@ class Modem extends \BaseModel {
 	public function related_phonenumbers() {
 
 		// if voip module is not active: there can be no phonenumbers
-		if (!\PPModule::is_active('ProvVoip')) {
+		if (!\Module::collections()->has('ProvVoip')) {
 			return [];
 		}
 
@@ -1053,7 +1050,7 @@ class Modem extends \BaseModel {
 
 		// first: check if envia module is enabled
 		// if not: do nothing – this database fields could be in use by another voip provider module!
-		if (!\PPModule::is_active('ProvVoipEnvia')) {
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
 			return;
 		}
 
@@ -1120,7 +1117,7 @@ class ModemObserver
 
 		$modem->hostname = 'cm-'.$modem->id;
 		$modem->save();	 // forces to call the updating() and updated() method of the observer !
-		if (\PPModule::is_active ('ProvMon')) {
+		if (\Module::collections()->has('ProvMon')) {
 			Log::info("Create cacti diagrams for modem: $modem->hostname");
 			\Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
 		}
@@ -1133,7 +1130,7 @@ class ModemObserver
 		// reminder: on active envia TEL module: moving modem to other contract is not allowed!
 		// check if this is running if you decide to implement moving of modems to other contracts
 		// watch Ticket LAR-106
-		if (\PPModule::is_active('ProvVoipEnvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 			if (
 				// updating is also called on create – so we have to check this
 				(!$modem->wasRecentlyCreated)
@@ -1162,7 +1159,7 @@ class ModemObserver
 
 		// Refresh MPS rules
 		// Note: does not perform a save() which could trigger observer.
-		if (\PPModule::is_active('HfcCustomer'))
+		if (\Module::collections()->has('HfcCustomer'))
 		{
 			if (multi_array_key_exists(['x', 'y'], $diff))
 				$modem->netelement_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem);

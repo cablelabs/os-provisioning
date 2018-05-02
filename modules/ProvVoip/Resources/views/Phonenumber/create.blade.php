@@ -7,7 +7,7 @@
 	// try to get free numbers; these can be given as string (HTML) or as array
 
 	// get numbers for the active provider
-	if (\PPModule::is_active('provvoipenvia')) {
+	if (\Module::collections()->has('ProvVoipEnvia')) {
 
 		$free_numbers_panel_headline = 'Asking envia TEL for free numbers';
 

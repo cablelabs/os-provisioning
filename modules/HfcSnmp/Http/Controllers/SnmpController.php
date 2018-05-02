@@ -2,16 +2,11 @@
 
 namespace Modules\HfcSnmp\Http\Controllers;
 
-use Modules\HfcReq\Entities\NetElement;
-use Modules\HfcReq\Entities\NetElementType;
-use Modules\HfcSnmp\Entities\SnmpValue;
-use Modules\HfcSnmp\Entities\OID;
-use Modules\HfcSnmp\Entities\Parameter;
-use \App\Http\Controllers\BaseViewController;
-use Modules\HfcReq\Http\Controllers\NetElementController;
-
-
 use Log;
+use \App\Http\Controllers\BaseViewController;
+use Modules\HfcReq\Entities\{ NetElement,NetElementType};
+use Modules\HfcReq\Http\Controllers\NetElementController;
+use Modules\HfcSnmp\Entities\{ OID, Parameter, SnmpValue};
 
 class SnmpController extends \BaseController{
 

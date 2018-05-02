@@ -2,8 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Modules\ProvBase\Entities\Cmts;
-use Modules\ProvBase\Entities\IpPool;
+use Modules\ProvBase\Entities\{Cmts, IpPool};
 
 class CmtsController extends \BaseController {
 
@@ -67,7 +66,7 @@ class CmtsController extends \BaseController {
 
 	protected function get_form_tabs($view_var)
 	{
-		if(!\PPModule::is_active('ProvMon'))
+		if(!\Module::collections()->has('ProvMon'))
 			return [];
 
 		return [

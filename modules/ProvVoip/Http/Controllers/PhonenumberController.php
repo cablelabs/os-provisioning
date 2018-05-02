@@ -2,8 +2,7 @@
 
 namespace Modules\ProvVoip\Http\Controllers;
 
-use Modules\ProvVoip\Entities\Phonenumber;
-use Modules\ProvVoip\Entities\Mta;
+use Modules\ProvVoip\Entities\{Mta, Phonenumber};
 
 class PhonenumberController extends \BaseController {
 
@@ -21,6 +20,13 @@ class PhonenumberController extends \BaseController {
 	{
 		if (!$model)
 			$model = new Phonenumber;
+
+		if (\Module::collections()->has('ProvVoipEnvia')) {
+			$login_placeholder = 'Autofilled if empty.';
+		}
+		else {
+			$login_placeholder = '';
+		}
 
 		// if there is no phonenumbermanagement: make checkbox changeable
 		// TODO: should this be the case or do we want to need a management in each case?
@@ -67,7 +73,7 @@ class PhonenumberController extends \BaseController {
 		}
 
 		$reassign_help = "Can be used to assign the phonenumber (and related data) to another MTA.";
-		if (\PPModule::is_active('provvoipenvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 			$reassign_help .= "MTA has to belong to the same contract and modem installation addresses have to be equal.";
 		}
 

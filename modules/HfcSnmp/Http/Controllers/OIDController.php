@@ -2,8 +2,7 @@
 
 namespace Modules\HfcSnmp\Http\Controllers;
 
-use Modules\HfcSnmp\Entities\MibFile;
-use Modules\HfcSnmp\Entities\OID;
+use Modules\HfcSnmp\Entities\{ MibFile, OID};
 
 class OIDController extends \BaseController {
 

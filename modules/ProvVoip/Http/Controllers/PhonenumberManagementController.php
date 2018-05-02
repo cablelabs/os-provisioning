@@ -2,11 +2,7 @@
 
 namespace Modules\ProvVoip\Http\Controllers;
 
-use Modules\ProvVoip\Entities\PhonenumberManagement;
-use Modules\ProvVoip\Entities\Phonenumber;
-use Modules\ProvVoip\Entities\CarrierCode;
-use Modules\ProvVoip\Entities\EkpCode;
-use Modules\ProvVoip\Entities\TRCClass;
+use Modules\ProvVoip\Entities\{CarrierCode,EkpCode, Phonenumber, PhonenumberManagement, TRCClass};
 
 class PhonenumberManagementController extends \BaseController {
 
@@ -44,7 +40,7 @@ class PhonenumberManagementController extends \BaseController {
 	public function edit($id) {
 
 		if (\Input::has('clear_envia_reference')) {
-			if (\PPModule::is_active('ProvVoipEnvia')) {
+			if (\Module::collections()->has('ProvVoipEnvia')) {
 				$mgmt = PhonenumberManagement::find($id);
 				$mgmt->phonenumber->contract_external_id = null;
 				$mgmt->phonenumber->save();
@@ -127,7 +123,7 @@ class PhonenumberManagementController extends \BaseController {
 		}
 
 		// help text for carrier/ekp settings
-		if (\PPModule::is_active('ProvVoipEnvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 			$trc_help = trans('helper.PhonenumberManagement_TRCWithEnvia');
 			$carrier_in_help = trans('helper.PhonenumberManagement_CarrierInWithEnvia');
 			$ekp_in_help = trans('helper.PhonenumberManagement_EkpInWithEnvia');

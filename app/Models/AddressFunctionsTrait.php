@@ -21,7 +21,7 @@ trait AddressFunctionsTrait {
 			'Behörde',
 		];
 
-		if (\PPModule::is_active('provvoipenvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 
 			// envia TEL expects Herrn instead of Herr ⇒ to be as compatible as possible to other use cases
 			// we nevertheless store Herr in database and fix this in XML generation within
@@ -61,7 +61,7 @@ trait AddressFunctionsTrait {
 			'Prof. Dr.',
 		];
 
-		if (\PPModule::is_active('provvoipenvia')) {
+		if (\Module::collections()->has('ProvVoipEnvia')) {
 
 			$options = [
 				'',
