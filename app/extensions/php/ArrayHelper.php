@@ -7,7 +7,7 @@ namespace Acme\php;
  */
 class ArrayHelper {
 
-	/*
+	/**
 	 * Search if $value is in $array field $index
 	 *
 	 * @param: array: array to search
@@ -28,8 +28,8 @@ class ArrayHelper {
 	}
 
 
-	/*
-	 * Device all entrys of an Array by $div
+	/**
+	 * Devide all entrys of an Array by $div
 	 *
 	 * @param $array: The Array to split
 	 * @param $div: device by $div
@@ -37,7 +37,7 @@ class ArrayHelper {
 	 *
 	 * @author: Torsten Schmidt
 	 */
-	public static function ArrayDiv($array, $div=10)
+	public static function ArrayDiv($array, int $div=10)
 	{
 		$ret = [];
 
@@ -50,7 +50,7 @@ class ArrayHelper {
 	}
 
 
-	/*
+	/**
 	 * return the rotated array ($a)
 	 * Example: [1,2,3,4] -> [4,1,2,3]
 	 *
@@ -65,7 +65,7 @@ class ArrayHelper {
 	}
 
 
-	/*
+	/**
 	 * return nested array depth
 	 *
 	 * @param $a: The Array to check
@@ -91,7 +91,7 @@ class ArrayHelper {
 	}
 
 
-	/*
+	/**
 	 * return the changed array key from $old_key to $new_key in $array
 	 *
 	 * NOTE: This function holds the same order than in $array

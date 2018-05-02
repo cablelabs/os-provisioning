@@ -469,7 +469,8 @@ finish:
 			// array_push($ret, $lines);
 			foreach ($lines as $k => $line)
 			{
-				if (\Auth::user()->has_permissions(app()->getNamespace(), substr($line['link'], 0, -6))) {
+				//dd(Auth::user(), Auth::user()->can('read-Contract'), Auth::user()->isSuperAdmin() );
+				if (Auth::user()->can('create-App\AddressFunctionsTrait')) {
 					$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
 					$ret['Global']['icon'] = 'fa-globe';
 					$ret['Global']['submenu'][$key] = $line;
@@ -496,7 +497,7 @@ finish:
 					foreach ($lines as $k => $line)
 					{
 
-						if (\Auth::user()->has_permissions($module->name, substr($line['link'], 0, -6))) {
+						if (Auth::user()->can('create-App\AddressFunctionsTrait')) {
 							$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
 							$ret[$name]['submenu'][$key] = $line;
 						}
