@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Permission;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -13,11 +14,11 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
+        //'App\Model' => 'App\Policies\ModelPolicy',
     ];
 
     /**
-     * Register any authentication / authorization services.
+     * Dynamically register permissions with Laravel's Gate.
      *
      * @return void
      */
@@ -25,6 +26,28 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        foreach ($this->getPermissions() as $permission) {
+            Gate::define($permission->action .'-'. $permission->name, function ($user) use ($permission) {
+
+                if ($user->isSuperAdmin()) {
+                        return true;
+                }
+
+                return $user->hasPermission($permission);
+            });
+        }
+
+
+
+    }
+
+    /**
+     * Fetch the collection of site permissions.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    protected function getPermissions()
+    {
+        return Permission::with('roles')->get();
     }
 }
