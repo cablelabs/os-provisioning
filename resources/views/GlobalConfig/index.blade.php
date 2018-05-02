@@ -4,7 +4,7 @@
 
 <li class="active">
 	<a href="{{route($route_name)}}">
-	{{ \App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null).$view_header}}
+	{!! \App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null).$view_header !!}
 	</a>
 </li>
 
@@ -16,7 +16,7 @@
 {{-- Headline: means icon followed by headline --}}
 @DivOpen(12)
 	<h1 class="page-header">
-		{{\App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null).$view_header}}
+		{!! \App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null).$view_header !!}
 	</h1>
 
 	<ul class="nav nav-pills d-flex nav-fill" id="SettingsTab">
@@ -31,7 +31,7 @@
 		<div class="tab-content">
 			@foreach($module_model as $count => $model)
 				<div class="tab-pane fade in" id="settings-{{Str::slug($links[$count]['name'],'_')}}" role="tabpanel">
-					{{ Form::model($model, array('route' => array($links[$count]['link'].'.update', '1'), 'method' => 'put', 'files' => true) ) }}
+					{!! Form::model($model, array('route' => array($links[$count]['link'].'.update', '1'), 'method' => 'put', 'files' => true) ) !!}
 
 						@include('Generic.form',['view_var' => $model,
 												 'form_fields' => $form_fields[$count],])

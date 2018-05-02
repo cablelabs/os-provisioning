@@ -13,7 +13,7 @@
 
 @section('content_top')
 
-	{{ $headline }}
+	{!! $headline !!}
 
 @stop
 
@@ -25,7 +25,7 @@
 	?>
 
 	@include('Generic.above_infos')
-	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'EditForm')) }}
+	{!! Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'EditForm')) !!}
 
 		@include($form_path, $view_var)
 

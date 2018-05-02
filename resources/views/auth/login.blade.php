@@ -35,7 +35,7 @@
 
 			{{-- end brand --}}
 			<div class="login-content">
-				{{ Form::open(array('url' => $prefix.'/auth/login')) }}
+				{{ Form::open(array('url' => $prefix.'/login')) }}
 
 					{{-- Username --}}
 					<div class="form-group m-b-20">
@@ -45,6 +45,12 @@
 					{{-- Password --}}
 					<div class="form-group m-b-20">
 					{{ Form::password('password', array('autofocus'=>'autofocus', 'class' => "form-control input-lg", 'placeholder' => \App\Http\Controllers\BaseViewController::translate_label('Password'), 'style' => 'simple')) }}
+					</div>
+
+					{{-- Remember Checkbox --}}
+					<div class="form-group m-b-20">
+						<input align="left" class="" name="remember" type="checkbox" value="1">
+						{{ Form::label('remember', \App\Http\Controllers\BaseViewController::translate_label('Remember Me!')) }}
 					</div>
 
 					{{-- Error Message --}}

@@ -6,8 +6,8 @@
     <ul class="nav">
       <li class="nav-profile">
         <div class="info">
-          {{ $framework['header2'] }}
-          <small>Version {{ $framework['version'] }}</small>
+          {!! $framework['header2'] !!}
+          <small>Version {!! $framework['version'] !!}</small>
         </div>
       </li>
     </ul>
@@ -17,7 +17,7 @@
     <ul class="nav">
       @if (\Module::collections()->has('Dashboard'))
         <li id ="dashboardsidebar" class="{{ ($route_name == 'Dashboard') ? 'active' : ''}}">
-          <a href="{{BaseRoute::get_base_url()}}/Dashboard">
+          <a href="{{route('Dashboard.index')}}">
           <i class="fa fa-home"></i>
           <span cl>Dashboard</span></a>
         </li>

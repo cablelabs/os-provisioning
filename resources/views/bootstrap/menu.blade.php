@@ -58,13 +58,17 @@
 						<span class="d-none d-sm-none d-md-inline">{{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span> <b class="caret"></b>
 					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0;left:auto;">
-						<a class="dropdown-item" href="{{route('Authuser.edit', \Auth::user()->id)}}"> <i class="fa fa-cog" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}</a>
-						@if (\Auth::user()->is_admin() === true)
-							<a class="dropdown-item" href="{{route('Authuser.index')}}"><i class="fa fa-cogs" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserGlobSettings', 'Menu')}}</a>
-							<a class="dropdown-item" href="{{route('Authrole.index')}}"><i class="fa fa-users" aria-hidden="true"></i> {{ \App\Http\Controllers\BaseViewController::translate_view('UserRoleSettings', 'Menu')}}</a>
+						<a class="dropdown-item" href="{{route('User.edit', \Auth::user()->id)}}"> <i class="fa fa-cog" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}</a>
+						@if (Auth::user()->isSuperAdmin())
+							<a class="dropdown-item" href="{{route('User.index')}}"><i class="fa fa-cogs" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserGlobSettings', 'Menu')}}</a>
+							<a class="dropdown-item" href="{{route('Role.index')}}"><i class="fa fa-users" aria-hidden="true"></i> {{ \App\Http\Controllers\BaseViewController::translate_view('UserRoleSettings', 'Menu')}}</a>
 						@endif
 						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="{{route('Auth.logout')}}"><i class="fa fa-sign-out" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('Logout', 'Menu')}}</a>
+						{{ Form::open(['url' => route('logout.post')])}}
+						<button class="dropdown-item" href="#"><i class="fa fa-sign-out" aria-hidden="true"></i>
+							{{ \App\Http\Controllers\BaseViewController::translate_view('Logout', 'Menu')}}
+						</button>
+						{{ Form::close() }}
 					</div>
 				</li>
 			</ul>

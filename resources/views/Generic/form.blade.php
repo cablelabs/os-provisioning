@@ -22,7 +22,7 @@
 @include('Generic.above_infos')
 
 @foreach($form_fields as $fields)
-	{{ $fields['html'] }}
+	{!! $fields['html'] !!}
 @endforeach
 
 <div class="row d-flex justify-content-center">
