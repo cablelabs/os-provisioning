@@ -1114,9 +1114,6 @@ class BaseObserver
 }
 
 
-
-
-
 /**
  * Systemd Observer Class - Handles changes on Model Gateways - restarts system services
  *
