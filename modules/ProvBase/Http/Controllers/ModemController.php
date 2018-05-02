@@ -131,7 +131,7 @@ class ModemController extends \BaseController {
 		// check if user has the right to perform actions against envia TEL API
 		// if not: don't show any actions
 		try {
-			\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
+			\App\Http\Controllers\Auth\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
 		}
 		catch (AuthException $ex) {
 			return null;
@@ -184,7 +184,7 @@ class ModemController extends \BaseController {
 	 */
 	public function _index_todo()
 	{
-		\App\Http\Controllers\BaseAuthController::auth_check('view', $this->get_model_name());
+		\App\Http\Controllers\Auth\BaseAuthController::auth_check('view', $this->get_model_name());
 
 		if(!\Module::collections()->has('HfcCustomer'))
 			return parent::index();

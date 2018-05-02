@@ -8,7 +8,7 @@ use Modules\BillingBase\Entities\{ Invoice, NumberRange, SettlementRun};
 class Contract extends \BaseModel {
 
 	// get functions for some address select options
-	use \App\Models\AddressFunctionsTrait;
+	use \App\AddressFunctionsTrait;
 
 	// The associated SQL table for this Model
 	public $table = 'contract';

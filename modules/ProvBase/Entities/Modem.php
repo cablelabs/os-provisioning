@@ -10,7 +10,7 @@ use Modules\ProvMon\Http\Controllers\ProvMonController;
 class Modem extends \BaseModel {
 
 	// get functions for some address select options
-	use \App\Models\AddressFunctionsTrait;
+	use \App\AddressFunctionsTrait;
 
 	// The associated SQL table for this Model
 	public $table = 'modem';
