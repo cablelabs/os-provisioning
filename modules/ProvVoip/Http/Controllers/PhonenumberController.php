@@ -122,7 +122,7 @@ class PhonenumberController extends \BaseController {
 
 		// create the form field for SIP username – envia TEL causes special handling
 		$options = array();
-		if (\PPModule::is_active('provvoipenvia')) {
+		if (\Module::collections()->has('provvoipenvia')) {
 			if ($model->contract_external_id) {
 				$options = ['readonly'];
 			}
@@ -141,7 +141,7 @@ class PhonenumberController extends \BaseController {
 
 		// create the form field for SIP password – envia TEL causes special handling
 		$options = array();
-		if (\PPModule::is_active('provvoipenvia')) {
+		if (\Module::collections()->has('provvoipenvia')) {
 			$options = ['placeholder' => 'Autofilled if empty.'];
 		}
 		$password = array(
@@ -155,7 +155,7 @@ class PhonenumberController extends \BaseController {
 
 		// create the form field for SIP domain – envia TEL causes special handling
 		$options = array();
-		if (\PPModule::is_active('provvoipenvia')) {
+		if (\Module::collections()->has('provvoipenvia')) {
 			if ($model->contract_external_id) {
 				$options = ['readonly'];
 			}
