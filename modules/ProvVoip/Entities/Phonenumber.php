@@ -654,12 +654,6 @@ class PhonenumberObserver
 			if (!boolval($phonenumber->password)) {
 				$phonenumber->password = \Acme\php\Password::generate_password(15, 'envia');
 			}
-
-			// username at envia TEL defaults to prefixnumber + number – we also do so
-			if (!boolval($phonenumber->username)) {
-				$phonenumber->username = $phonenumber->prefix_number.$phonenumber->number;
-			}
-
 		}
 	}
 

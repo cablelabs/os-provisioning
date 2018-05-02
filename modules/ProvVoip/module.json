@@ -3,15 +3,11 @@
     "alias": "provvoip",
     "description": "VOIP",
     "icon": "fa-phone",
-    "keywords": [
-
-    ],
+    "keywords": [],
     "active": 1,
     "order": 21,
     "priority": 0,
-    "providers": [
-
-    ],
+    "providers": [],
     "files": [
         "start.php"
     ]

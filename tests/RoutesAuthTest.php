@@ -31,6 +31,7 @@ class RoutesAuthTest extends TestCase {
 		'Auth.login',
 		'CustomerAuth.login',
 		'CHome',
+		'Home',
 	];
 
 

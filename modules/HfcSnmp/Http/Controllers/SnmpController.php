@@ -109,7 +109,7 @@ class SnmpController extends \BaseController{
 	public function controlling_update($id, $param_id = 0, $index = 0)
 	{
 		// Init SnmpController
-		$netelem = NetElement::findOrFail($id);
+		$netelem = NetElement::where('id', '=', $id)->with('netelementtype')->first();
 		$this->init ($netelem, $index);
 
 		// TODO: validation
@@ -239,10 +239,18 @@ class SnmpController extends \BaseController{
 					$index  = strrchr($oid, '.'); 								// row in table
 					$suboid = substr($oid, 0, strlen($oid) - strlen($index)); 	// column in table
 
-					// Note: Subparams are already fetched from DB in snmp_table() with joined OID
 					if (!$subparam || $subparam->oid != $suboid)
-						$subparam = $param->children ? $param->children->where('oidoid', $suboid)->first() : OID::where('oid', '=', $suboid)->first();
-					if (!$subparam) {
+					{
+						if ($param->children->isEmpty()) {
+							$subparam = new Parameter;
+							$subparam->setRelation('oid', OID::where('oid', '=', $suboid)->first());
+						}
+						else
+							// Note: If existent Subparams are already fetched from DB in snmp_table() with joined OID
+							$subparam = $param->children->where('oidoid', $suboid)->first();
+					}
+
+					if (!$subparam || !$subparam->oid) {
 						\Log::error('SNMP Query returned OID that is missing in database!');
 						continue;
 					}
@@ -440,7 +448,7 @@ class SnmpController extends \BaseController{
 			try {
 				$results = snmp2_real_walk($this->device->ip, $community, $oid, $this->timeout, $this->retry);
 			} catch (\Exception $e) {
-				$results = snmpwalk($this->device->ip, $community, $oid, $this->timeout, $this->retry);
+				$results = snmprealwalk($this->device->ip, $community, $oid, $this->timeout, $this->retry);
 			}
 		}
 
@@ -470,7 +478,7 @@ class SnmpController extends \BaseController{
 		$param->setRelation('children', $relation);
 
 		// exact defined table via SubOIDs
-		if ($param->children)
+		if (!$param->children->isEmpty())
 		{
 			foreach ($param->children as $param) {
 				// Note: snmpwalk -CE ends on this OID - makes it much faster
@@ -506,6 +514,8 @@ class SnmpController extends \BaseController{
 		if (!$old_vals)
 			throw new Exception("Error: Stored SNMP Values were deleted!");
 
+		// TODO: get empty collection or already filled with OIDs to increase performance if probable
+		// $oids = $this->_get_oid_collection();
 		$oids = new \Illuminate\Database\Eloquent\Collection();
 		$oid_o = null;
 
@@ -532,6 +542,10 @@ class SnmpController extends \BaseController{
 			// Null value can actually only happen, when someone deleted storage json file manually between last get and the save
 			$old_val = isset($old_vals->{$full_oid}) ? $old_vals->{$full_oid} : null;
 
+			// ATTENTION: This check improves performance, but assumes that it's not possible to change value previously
+			// divided by unit_divisor to a value multiplied exactly by unit_divisor as in following example:
+			// e.g.: unit_divisor=10 and old_val=100 (in GUI 10) and (new) value=100 (in GUI 100) would result in not saving the value as 100=100
+			// but value was actually changed to 10x the previous value
 			if ($value == $old_val)
 				continue;
 
@@ -556,6 +570,9 @@ class SnmpController extends \BaseController{
 			if ($oid_o->unit_divisor)
 				$value *= $oid_o->unit_divisor;
 
+			if ($value == $old_val)
+				continue;
+
 			// Do preconfiguration only once if necessary
 			if ($pre_conf) {
 				$conf_val = $this->_configure();
@@ -574,7 +591,7 @@ class SnmpController extends \BaseController{
 					'method' 	=> 'updated',
 					'model' 	=> 'NetElement',
 					'model_id'  => $this->device->netelementtype_id == 2 ? $device->id : $this->device->id,
-					'text' 		=> ($oid_o->name_gui ? : $oid_o->name)." ($full_oid):  '".$old_vals->{$full_oid}."' => '$value'",
+					'text' 		=> ($oid_o->name_gui ? : $oid_o->name)." ($full_oid):  '".$old_val."' => '$value'",
 					]);
 
 				$old_vals->{$full_oid} = $value;
@@ -590,6 +607,29 @@ class SnmpController extends \BaseController{
 		// Store values
 		$this->device = $this->device->netelementtype_id == 2 ? $device : $this->device;
 		$this->_values($old_vals);
+	}
+
+
+	/**
+	 * Gets all necessary OIDs if it's probable that they will be necessary for update so that
+	 *	we have only one DB-Query and not multiple queries inside the for loop
+	 *
+	 * @return \Illuminate\Database\Eloquent\Collection  - empty by default - filled with OIDs if it's possible to increase performance
+	 */
+	private function _get_oid_collection()
+	{
+		// Performance improvement (needs only 33% of the time for 35 OIDs)
+		// Get OID Collection (all read-write OIDs) for NetElements that dont have a table parameter only once before the foreach loop
+		$query = $this->device->netelementtype->parameters()->join('oid', 'oid.id', '=', 'parameter.oid_id');
+		$has_table = $query->where('oid.oid_table', '=', 1)->count();
+		$cnt = $query->where('oid.access', '=', 'read-write')->whereNotIn('oid.unit_divisor', [NULL, 0])->count();
+
+		if ($has_table || $cnt < 10)
+			return new \Illuminate\Database\Eloquent\Collection();
+
+		$oid_ids = $this->device->netelementtype->parameters()->get(['oid_id'])->pluck('oid_id')->all();
+
+		return $oids = OID::whereIn('id', $oid_ids)->where('access', '=', 'read-write')->get();
 	}
 
 

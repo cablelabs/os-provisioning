@@ -6,6 +6,9 @@ use Modules\HfcBase\Entities\IcingaObjects;
 
 class NetElement extends \BaseModel {
 
+	// Do not delete children (modem, mta, phonenmumber, etc.)!
+	protected $delete_children = False;
+
 	// The associated SQL table for this Model
 	public $table = 'netelement';
 
@@ -21,7 +24,7 @@ class NetElement extends \BaseModel {
 	{
 		return array(
 			'name' 			=> 'required|string',
-			'ip' 			=> 'ip',
+			// 'ip' 			=> 'ip', 		// also hostname is permitted and soon also mac
 			'pos' 			=> 'geopos',
 			'community_ro' 	=> 'regex:/(^[A-Za-z0-9]+$)+/',
 			'community_rw' 	=> 'regex:/(^[A-Za-z0-9]+$)+/',

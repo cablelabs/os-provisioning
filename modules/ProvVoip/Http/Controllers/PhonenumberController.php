@@ -86,7 +86,7 @@ class PhonenumberController extends \BaseController {
 		}
 
 		// label has to be the same like column in sql table
-		return array(
+		$ret = array(
 			array(
 				'form_type' => 'select',
 				'name' => 'country_code',
@@ -118,25 +118,69 @@ class PhonenumberController extends \BaseController {
 				'name' => 'port',
 				'description' => 'Port'
 			),
-			array(
-				'form_type' => 'text',
-				'name' => 'username',
-				'description' => 'Username',
-				'options' => array('placeholder' => $login_placeholder)
-			),
-			array(
-				'form_type' => 'text',
-				'name' => 'password',
-				'description' => 'Password',
-				'options' => array('placeholder' => $login_placeholder)
-			),
-			array(
-				'form_type' => 'text',
-				'name' => 'sipdomain',
-				'description' => 'SIP domain'
-			),
-			$active_checkbox,
 		);
+
+		// create the form field for SIP username – envia TEL causes special handling
+		$options = array();
+		if (\PPModule::is_active('provvoipenvia')) {
+			if ($model->contract_external_id) {
+				$options = ['readonly'];
+			}
+			else {
+				$options = ['placeholder' => 'Leave empty on phonenumbers to be created.'];
+			}
+		}
+		$username =	array(
+			'form_type' => 'text',
+			'name' => 'username',
+			'description' => 'Username',
+		);
+		if ($options) {
+			$username['options'] = $options;
+		}
+
+		// create the form field for SIP password – envia TEL causes special handling
+		$options = array();
+		if (\PPModule::is_active('provvoipenvia')) {
+			$options = ['placeholder' => 'Autofilled if empty.'];
+		}
+		$password = array(
+			'form_type' => 'text',
+			'name' => 'password',
+			'description' => 'Password',
+		);
+		if ($options) {
+			$password['options'] = $options;
+		}
+
+		// create the form field for SIP domain – envia TEL causes special handling
+		$options = array();
+		if (\PPModule::is_active('provvoipenvia')) {
+			if ($model->contract_external_id) {
+				$options = ['readonly'];
+			}
+			else {
+				$options = ['placeholder' => 'Leave empty on phonenumbers to be created.'];
+			}
+		}
+		$sipdomain = array(
+			'form_type' => 'text',
+			'name' => 'sipdomain',
+			'description' => 'SIP domain'
+		);
+		if ($options) {
+			$sipdomain['options'] = $options;
+		}
+
+		array_push(
+			$ret,
+			$username,
+			$password,
+			$sipdomain,
+			$active_checkbox
+		);
+
+		return $ret;
 	}
 
 

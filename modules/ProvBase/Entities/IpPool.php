@@ -129,7 +129,33 @@ class IpPool extends \BaseModel {
 		return '';
 	}
 
+	/**
+	 * Return the range string according to the IpPool. We need to cut out public
+	 * CPE IP addresses, which have been statically assigned - so that they won't
+	 * be given out to multiple CPEs
+	 *
+	 * @return String
+	 *
+	 * @author Ole Ernst
+	 */
+	public function get_range()
+	{
+		$ret = "\t\t\trange ".$this->ip_pool_start.' '.$this->ip_pool_end.";\n";
+		$ep_static = Endpoint::where('fixed_ip', '=', '1');
 
+		if ($this->type != 'CPEPub' || $ep_static->count() == 0)
+			return $ret;
+
+		$ret = '';
+		foreach($ep_static->get() as $ep)
+			$static[] = ip2long($ep->ip);
+
+		$all = range(ip2long($this->ip_pool_start), ip2long($this->ip_pool_end));
+		foreach (array_diff($all, $static) as $ip)
+			$ret .= "\t\t\trange ".long2ip($ip).";\n";
+
+		return $ret;
+	}
 
 
 	/**

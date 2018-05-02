@@ -47,7 +47,7 @@ class Modem extends \BaseModel {
 
 		return ['table' => $this->table,
 				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', 'contract_valid'],
-		        'bsclass' => $bsclass,
+				'bsclass' => $bsclass,
 				'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
 				'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
 				'eager_loading' => ['configfile','contract'],
@@ -161,6 +161,11 @@ class Modem extends \BaseModel {
 		return $this->hasMany('Modules\ProvVoip\Entities\Mta');
 	}
 
+	public function endpoints()
+	{
+		return $this->hasMany('Modules\ProvBase\Entities\Endpoint');
+	}
+
 	// TODO: deprecated! use netelement function instead - search for all places where this function is used
 	public function tree()
 	{
@@ -194,6 +199,12 @@ class Modem extends \BaseModel {
 
 		if (\Module::collections()->has('ProvVoipEnvia'))
 		{
+			// only show endpoints (and thus the ability to create a new one) for public CPEs
+			if ($this->public) {
+				$ret['dummy']['Endpoint']['class'] = 'Endpoint';
+				$ret['dummy']['Endpoint']['relation'] = $this->endpoints;
+			}
+
 			$ret['dummy']['EnviaContract']['class'] = 'EnviaContract';
 			$ret['dummy']['EnviaContract']['relation'] = $this->enviacontracts;
 			$ret['dummy']['EnviaContract']['options']['hide_create_button'] = 1;
@@ -321,10 +332,10 @@ class Modem extends \BaseModel {
 	 * Used in ModemObserver@updated/deleted for created/updated/deleted events
 	 *
 	 * NOTES:
-	 	* This is way faster (0,01s (also on 2k modems) vs 2,8s for 348 Modems via make_dhcp_cm_all) than everytime creating files for all modems
-	 	* It's also more secure as it uses flock() to avoid dhcpd restart errors due to race conditions
-	 	* MaybeTODO: embed part between lock & unlock into try catch block to avoid forever locked files in case of exception !?
-	 	* Attention!: MAC Address must be unique in database to work correctly !!!
+		* This is way faster (0,01s (also on 2k modems) vs 2,8s for 348 Modems via make_dhcp_cm_all) than everytime creating files for all modems
+		* It's also more secure as it uses flock() to avoid dhcpd restart errors due to race conditions
+		* MaybeTODO: embed part between lock & unlock into try catch block to avoid forever locked files in case of exception !?
+		* Attention!: MAC Address must be unique in database to work correctly !!!
 	 *
 	 * @param 	delete  	set to true if you want to remove the entry from the configfile
 	 *
@@ -448,7 +459,7 @@ class Modem extends \BaseModel {
 		$max_cpe = $cpe_cnt ? : 2; 		// default 2
 		$network_access = 1;
 
-		if (count($this->mtas))
+		if (\PPModule::is_active('provvoip') && (count($this->mtas)))
 			$max_cpe = count($this->mtas) + (($this->contract->telephony_only || !$this->network_access) ? 0 : $max_cpe);
 		else if (!$this->network_access)
 			$network_access = 0;
@@ -461,8 +472,10 @@ class Modem extends \BaseModel {
 		// make text and write to file
 		$conf = "\tNetworkAccess $network_access;\n";
 		$conf .= "\tMaxCPE $max_cpe;\n";
-		foreach ($this->mtas as $mta)
-			$conf .= "\tCpeMacAddress $mta->mac;\n";
+		if (\PPModule::is_active('ProvVoip')) {
+			foreach ($this->mtas as $mta)
+				$conf .= "\tCpeMacAddress $mta->mac;\n";
+		}
 
 		$text = "Main\n{\n".$conf.$cf->text_make($modem, "modem")."\n}";
 
@@ -1149,7 +1162,7 @@ class ModemObserver
 		if (\Module::collections()->has('HfcCustomer'))
 		{
 			if (multi_array_key_exists(['x', 'y'], $diff))
-				$modem->netelement_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem->id);
+				$modem->netelement_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem);
 		}
 	}
 

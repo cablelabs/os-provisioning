@@ -22,9 +22,10 @@ class ConfigfileController extends \BaseController {
 		$cvc_files = Configfile::get_files("cvc");
 
 		// label has to be the same like column in sql table
+		// TODO: type is without functionality -> hidden
 		return array(
 			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
-			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => array('generic' => 'generic', 'network' => 'network', 'vendor' => 'vendor', 'user' => 'user')),
+			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => array('generic' => 'generic', 'network' => 'network', 'vendor' => 'vendor', 'user' => 'user'), 'hidden' => 1),
 			array('form_type' => 'select', 'name' => 'device', 'description' => 'Device', 'value' => array('cm' => 'CM', 'mta' => 'MTA')),
 			array('form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Configfile', 'value' => $parents),
 			array('form_type' => 'select', 'name' => 'public', 'description' => 'Public Use', 'value' => array('yes' => 'Yes', 'no' => 'No')),

@@ -30,7 +30,7 @@ return [
 	'Country Code'				=> 'Ländervorwahl',
 	'cpe_not_reachable' 		=> 'aber via PING nicht erreichbar (ICMP kann herstellerabhängig vom Router geblockt werden)',
 	'cpe_log_error'				=> 'ist nicht beim Server registriert - Kein Logeintrag gefunden',
-
+	'cpe_fake_lease'			=> 'Der DHCP Server hat kein Lease für den Endpunkt angelegt, weil dessen IP Adresse statisch vergeben ist und der Server diesen somit nicht verfolgen muss. Das folgende Lease wurde lediglich als Referenz manuell generiert:',
 	'Create'					=> 'Erstellen',
 	'D' 						=> 'Tag|Tage',
 	'Delete'					=> 'Löschen',
@@ -54,6 +54,7 @@ return [
 	'E-Mail Address'			=> 'Email-Adresse',
 	'First IP'					=> 'Erste IP',
 	'Firstname'					=> 'Vorname',
+	'Fixed IP'					=> 'Statische IP',
 	'Force Restart'				=> 'Neustart erzwingen',
 	'IBAN'						=> 'IBAN',
 	'Internet Access'			=> 'Internetzugriff',
@@ -259,6 +260,7 @@ return [
 	'item'					=> 'Posten',
 	'sepa'					=> 'mit_SEPA',
 	'no_sepa'				=> 'ohne_SEPA',
+	'Call_Data_Records'		=> 'Einzelverbindungsnachweise',
 	'Call Data Record'		=> 'Einzelverbindungsnachweis',
 	'accounting'			=> 'Rechnungssatzdatei',
 	'booking'				=> 'Buchungssatzdatei',
@@ -266,7 +268,7 @@ return [
 	'DC'					=> 'SEPA Gutschriften',
 	'salesmen_commission'	=> 'Provision_Verkaeufer',
 	'Invoices'				=> 'Rechnungen',
-	'Load Data' 			=> 'Lade Daten',
+	'Load Data...' 			=> 'Lade Daten...',
 
 	//CostCenter
 	'Associated SEPA Account'	=> 'Verknüpftes SEPA-Konto',
