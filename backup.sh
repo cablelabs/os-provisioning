@@ -20,8 +20,16 @@ handle_module() {
 	fi
 }
 
-while getopts ":o:p:" opt; do
+display_help() {
+	echo "Usage: $0 [-o outdir] [-p mysql_root_password]" >&2
+	exit 1
+}
+
+while getopts ":o:p:h" opt; do
 	case $opt in
+		h)
+			display_help
+			;;
 		o)
 			out="$OPTARG"
 			;;
@@ -30,7 +38,7 @@ while getopts ":o:p:" opt; do
 			;;
 		\?)
 			echo "Invalid option: -$OPTARG" >&2
-			exit 1
+			display_help
 			;;
 	esac
 done
