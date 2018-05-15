@@ -4,26 +4,12 @@ namespace Modules\ProvBase\Http\Controllers;
 
 use Modules\ProvBase\Entities\{Contract, Qos};
 use Modules\ProvVoip\Entities\PhoneTariff;
-// TODO: @Nino Ryschawy: directly includes does not work if billing module is disables
-use Modules\BillingBase\Entities\{CostCenter, Item, Product, Salesman};
 
 class ContractController extends \BaseController {
 
 
 	protected $relation_create_button = "Add";
 
-	/**
-	 * Returns the List of Salesmen for the contract to choose from
-	 *
-	 * @return 	array 	$salesman
-	 */
-	private function _salesmen()
-	{
-		$salesmen[0] = null;
-		foreach (Salesman::select('id', 'firstname', 'lastname')->get()->all() as $sm)
-			$salesmen[$sm->id] = $sm->firstname.' '. $sm->lastname;
-		return $salesmen;
-	}
 
     /**
      * defines the formular fields for the edit and create view
@@ -95,8 +81,8 @@ class ContractController extends \BaseController {
 
 			$c2 = array(
 				array('form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'value' => '1'),
-				array('form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $this->_add_empty_first_element_to_options($model->html_list(CostCenter::all(), 'name'))),
-				array('form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => $this->_salesmen(), 'space' => '1'),
+				array('form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $model->html_list(\Modules\BillingBase\Entities\CostCenter::all(), 'name', true)),
+				array('form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => $model->html_list(\Modules\BillingBase\Entities\Salesman::all(), ['firstname', 'lastname'], true, ' - '), 'space' => '1'),
 
 				// NOTE: qos is required as hidden field to automatically create modem with correct contract qos class
 				// TODO: @Nino Ryschawy: please review and test while merging ..
@@ -106,10 +92,12 @@ class ContractController extends \BaseController {
 		}
 		else
 		{
+			$qoss = Qos::all();
+
 			$c2 = array(
 				array('form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1', 'checked' => 1),
-				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list(Qos::all(), 'name')),
-				array('form_type' => 'select', 'name' => 'next_qos_id', 'description' => 'QoS next month', 'value' => $this->_add_empty_first_element_to_options($model->html_list(Qos::all(), 'name'))),
+				array('form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list($qoss, 'name')),
+				array('form_type' => 'select', 'name' => 'next_qos_id', 'description' => 'QoS next month', 'value' => $model->html_list($qoss, 'name', true)),
 				array('form_type' => 'text', 'name' => 'voip_id', 'description' => 'Phone ID'),
 				array('form_type' => 'text', 'name' => 'next_voip_id', 'description' => 'Phone ID next month', 'space' => '1'),
 			);
