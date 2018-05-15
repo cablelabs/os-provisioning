@@ -302,7 +302,7 @@ class importCommand extends Command {
 		$c = Contract::where('number', $old_contract->vertragsnummer)->first();
 
 		if ($c) {
-			\Log::info("Contract $c->vertragsnummer already exists [$c->id]");
+			\Log::info("Contract $c->number already exists [$c->id]");
 			return $c;
 		}
 
