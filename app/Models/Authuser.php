@@ -260,7 +260,7 @@ class AuthuserObserver
 	public function deleted($user)
 	{
 		// Drop AuthUser_role Relation
-		DB::table('authuser_role')->where('user_id', '=', $auth->id)->delete();
+		DB::table('authuser_role')->where('user_id', '=', $user->id)->delete();
 	}
 
 }
