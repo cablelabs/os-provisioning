@@ -561,6 +561,8 @@ class BaseController extends Controller {
 		$data 		= $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails()) {
+			Log::info ('Validation Rule Error: '.$validator->errors());
+
 			$msg = 'Input invalid – please correct the following errors';
 			\Session::push('tmp_error_above_form', $msg);
 			return Redirect::back()->withErrors($validator)->withInput()->with('message', $msg)->with('message_color', 'danger');

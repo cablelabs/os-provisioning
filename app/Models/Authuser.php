@@ -245,8 +245,8 @@ class Authuser extends BaseModel implements AuthenticatableContract, CanResetPas
  */
 class AuthuserObserver
 {
-    public function created($user)
-    {
+	public function created($user)
+	{
 		$id = $user->id;
 
 		// Create required AuthUser_role relation, otherwise user can not login
@@ -255,12 +255,12 @@ class AuthuserObserver
 			DB::update("INSERT INTO authuser_role (user_id, role_id) VALUES($id, 1);");
 			DB::update("INSERT INTO authuser_role (user_id, role_id) VALUES($id, 2);");
 		}
-    }
+	}
 
-    public function deleted($user)
-    {
+	public function deleted($user)
+	{
 		// Drop AuthUser_role Relation
-		DB::table('authuser_role')->where('user_id', '=', $auth->id)->delete();
-    }
+		DB::table('authuser_role')->where('user_id', '=', $user->id)->delete();
+	}
 
 }
