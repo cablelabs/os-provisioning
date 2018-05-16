@@ -46,7 +46,7 @@ class NetElementController extends HfcBaseController {
 		 * cluster: rf card settings
 		 * Options array is hidden when not used
 		 */
-		$options_array = array('form_type' => 'text', 'name' => 'options', 'description' => 'Options', 'hidden' => 1);
+		$options_array = array('form_type' => 'text', 'name' => 'options', 'description' => 'Options');
 		if ($model->netelementtype && $model->netelementtype->get_base_type() == 2)
 		{
 			$options_array = array('form_type' => 'select', 'name' => 'options', 'description' => 'RF Card Setting (DSxUS)', 'value' => $model->get_options_array());
