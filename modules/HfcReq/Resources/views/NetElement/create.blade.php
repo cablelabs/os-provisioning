@@ -14,7 +14,8 @@
 <script language="javascript">
 
 $('#netelementtype_id').change(function() {
-	location.href = location.href + "?&netelementtype_id=" + document.getElementById("netelementtype_id").options[document.getElementById("netelementtype_id").selectedIndex].value;
+
+	location.href = location.href + "<?php echo (isset($_GET) ? '&' : '?&');?>netelementtype_id=" + document.getElementById("netelementtype_id").options[document.getElementById("netelementtype_id").selectedIndex].value;
 });
 
 </script>
