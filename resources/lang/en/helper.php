@@ -20,6 +20,7 @@ return [
 	'BillingBase_InvoiceNrStart' 	=> 'Invoice Number Counter starts every new year with this number',
 	'BillingBase_ItemTermination'	=> 'Allow Customers only to terminate booked products on last day of month',
 	'BillingBase_MandateRef'		=> "A Template can be built with sql columns of contract or mandate table - possible fields: \n",
+	'BillingBase_showAGs' 			=> 'Adds a select list with contact persons to the contract page. The list has to be stored in appropriate Storage directory - check source code!',
 	'BillingBase_SplitSEPA'			=> 'Sepa Transfers are split to different XML-Files dependent of their transfer type',
 
 	//CompanyController
