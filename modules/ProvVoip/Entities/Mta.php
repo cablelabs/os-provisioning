@@ -19,7 +19,6 @@ class Mta extends \BaseModel {
 			'modem_id' => 'required|exists:modem,id|min:1',
 			'configfile_id' => 'required|exists:configfile,id|min:1',
 			// 'hostname' => 'required|unique:mta,hostname,'.$id,
-			'type' => 'required|exists:mta,type'
 		);
 	}
 
