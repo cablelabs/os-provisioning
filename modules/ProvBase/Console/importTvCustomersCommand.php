@@ -34,43 +34,42 @@ class importTvCustomersCommand extends Command {
 	 * Column Number and Description for easy Adaption
 	 */
 	const C_NR 			= 0;
-	const C_NAME 		= 2;
-	const C_STRASSE		= 4;
-	const C_ZIP 		= 5;
-	const C_CITY 		= 6;
-	// const C_ACAD_DGR 	= 27; 		// Anrede
-	const C_SALUT		= 27;		// Bemerkung
-	// const C_NR_LEGACY 	= 7; 		// Alte MG-Nr
-	const C_MAIL		= 26;
-	const C_TEL			= 24;
-	const C_DESC1		= 40;		// Watt
-	const C_DESC2		= 41; 		// Zusatz
-	const C_DESC3		= 3;		// Sonstiges
-	const C_START		= 45; 		// Eintritt
-	const C_END			= 46;		// Austritt
+	const C_NAME 		= 1;
+	const C_STRASSE		= 2;
+	const C_ZIP 		= 3;
+	const C_CITY 		= 4;
+	const C_TEL			= 5;
+	const C_FAX			= 6;
+	const C_MAIL		= 7;
+	const C_SALUT		= 13;		// Anrede (Bemerkung)
+	const C_DESC2		= 14; 		// Zusatz
+	const C_DESC1		= 15;		// Watt
+	const C_DESC3		= 16;		// Sonstiges
+	const C_START		= 20; 		// Eintritt
+	const C_END			= 21;		// Austritt
 
 	// Sepa Data
-	const S_REF 		= 62;
-	const S_HOLDER 		= 54;
-	const S_BIC 		= 35;
-	const S_IBAN  		= 36;
-	const S_INST 		= 10;
-	const S_SIGNATURE 	= 63;
-	const S_VALID 		= 29; 		// Zahlungsziel (invalid when = "14 Tage")
+	const S_REF 		= 0;
+	const S_HOLDER 		= 8;
+	const S_INST 		= 9;
+	const S_BIC 		= 10;
+	const S_IBAN  		= 11;
+	const S_VALID 		= 12; 		// Zahlungsziel (invalid when = "14 Tage")
+	const S_SIGNATURE 	= 24;
 
 	// Item Data
-	const TARIFF 		= 42; 		// Umlage
-	const CREDIT 		= 44;		// Verstärkergeld
+	const TARIFF 		= 17; 		// Umlage
+	const CREDIT 		= 19;		// Verstärkergeld
 
 
 	/*
 	 * Global Variables - need adaption for every import
 	 * TODO: Change product IDs according to Database and yearly Charges according to CostCenter
 	 */
-	const TV_CHARGE1 	= 15; 		// Umlage 36 Euro
-	const TV_CHARGE2 	= 40; 		// Umlage 66 Euro
-	const PRODUCT_ID1 	= 29; 		// TV Billig
-	const PRODUCT_ID2 	= 27;		// TV Teuer
+	const TV_CHARGE1 	= 60; 		// Umlage in Euro
+	const TV_CHARGE2 	= 99999; 	// Umlage in Euro - Set to 99999 to disable second charge/tv-tariff
+	const PRODUCT_ID1 	= 46; 		// TV Billig
+	const PRODUCT_ID2 	= 0;		// TV Teuer
 	const CREDIT_ID 	= 28; 		// Credit for Amplifier
 
 
