@@ -206,7 +206,8 @@ class importTvCustomersCommand extends Command {
 		$contract->phone     		= str_replace(["/", '-', ' '], "", $line[self::C_TEL]);
 		$contract->description    	= $line[self::C_DESC1]."\n".$line[self::C_DESC2]."\n".$line[self::C_DESC3];
 		$contract->costcenter_id 	= $this->option('cc'); 		// Dittersdorf=1
-		$contract->contact 			= $this->option('ag');
+		if ($this->option('ag'))
+			$contract->contact 		= $this->option('ag');
 		$contract->create_invoice 	= true;
 
 		$contract->fax      		= $line[self::C_FAX];
@@ -223,9 +224,6 @@ class importTvCustomersCommand extends Command {
 
 			if ($contract->{$key} == null)
 				$contract->{$key} = '';
-
-			if (is_string($contract->{$key}))
-				$contract->{$key} = utf8_encode ($contract->{$key});
 		}
 
 		$contract->deleted_at = NULL;
@@ -365,7 +363,7 @@ class importTvCustomersCommand extends Command {
 
 		SepaMandate::create([
 			'contract_id' 		=> $contract->id,
-			'reference' 		=> $contract->number,
+			'reference' 		=> $line[self::C_NR],
 			'signature_date' 	=> $signature_date,
 			'sepa_holder' 		=> $line[self::S_HOLDER],
 			'sepa_iban'			=> $line[self::S_IBAN],
