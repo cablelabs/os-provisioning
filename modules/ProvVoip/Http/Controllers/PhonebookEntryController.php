@@ -113,7 +113,7 @@ class PhonebookEntryController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City'),
 			array('form_type' => 'text', 'name' => 'urban_district', 'description' => 'Urban district'),
 			array('form_type' => 'select', 'name' => 'business', 'description' => 'Business', 'value' => $model->get_options_from_file('business')),
-			array('form_type' => 'select', 'name' => 'number_usage', 'description' => 'Number usage', 'value' => $model->get_options_from_list('number_usage', True)),
+			array('form_type' => 'select', 'name' => 'usage', 'description' => 'Number usage', 'value' => $model->get_options_from_list('usage', True)),
 			array('form_type' => 'select', 'name' => 'tag', 'description' => 'Tag', 'value' => $model->get_options_from_file('tag')),
 
 		);
