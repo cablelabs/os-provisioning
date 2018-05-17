@@ -2,7 +2,7 @@
 
 namespace Modules\ProvBase\Entities;
 
-use Exception, File, Log;
+use Exception, File, Log, GlobalConfig;
 use Acme\php\ArrayHelper;
 use Modules\ProvBase\Entities\{ ProvBase, Qos};
 use Modules\ProvMon\Http\Controllers\ProvMonController;
@@ -23,6 +23,7 @@ class Modem extends \BaseModel {
 		return array(
 			'mac' => 'required|mac|unique:modem,mac,'.$id.',id,deleted_at,NULL',
 			'birthday' => 'date',
+			'country_code' => 'regex:/^[A-Z]{2}$/',
 		);
 	}
 

@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use GlobalConfig;
 use App\Exceptions\AuthException;
 use Modules\ProvBase\Entities\{Configfile, Endpoint, Modem, Qos};
 
@@ -18,6 +19,11 @@ class ModemController extends \BaseController {
 	{
 		if (!$model) {
 			$model = new Modem;
+		}
+
+		if (!$model->exists) {
+			$config = GlobalConfig::find(1);
+			$model->country_code = $config->default_country_code;
 		}
 
 		$pos = explode(',', \Input::get('pos'));
@@ -76,8 +82,9 @@ class ModemController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number'),
 			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode'),
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City'),
-			array('form_type' => 'text', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => $installation_address_change_date_options, 'help' => trans('helper.Modem_InstallationAddressChangeDate')), // Date of adress change for notification at telephone provider - important for localisation of emergency calls
 			array('form_type' => 'text', 'name' => 'district', 'description' => 'District'),
+			array('form_type' => 'text', 'name' => 'country_code', 'description' => 'Country code', 'value' => $model->country_code, 'help' => 'ISO 3166 ALPHA-2 (two characters)'),
+			array('form_type' => 'text', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => $installation_address_change_date_options, 'help' => trans('helper.Modem_InstallationAddressChangeDate')), // Date of adress change for notification at telephone provider - important for localisation of emergency calls
 			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1', 'options' => ['placeholder' => 'YYYY-MM-DD']),
 
 			array('form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number'),
@@ -282,6 +289,9 @@ class ModemController extends \BaseController {
 			'installation_address_change_date',
 		);
 		$data = $this->_nullify_fields($data, $nullable_fields);
+
+		// ISO 3166 country codes are uppercase
+		$data['country_code'] = \Str::upper($data['country_code']);
 
 		return $data;
 	}
