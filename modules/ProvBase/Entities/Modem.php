@@ -868,6 +868,118 @@ class Modem extends \BaseModel {
 	 */
 	public function geocode ($save = true)
 	{
+
+		// first try to get geocoding from OSM
+		try {
+			$geodata = $this->_geocode_osm_nominatim();
+		}
+		catch (Exception $ex) {
+			$msg = "Error in geocoding against OSM Nominatim: ".$ex->getMessage();
+			\Session::push('tmp_error_above_form', $msg);
+			Log::error("$msg (".get_class($ex)." in ".$ex->getFile()." line ".$ex->getLine().")");
+		}
+
+return false;
+
+		// fallback: ask google maps
+		if (!$geodata) {
+			$geodata = $this->_geocode_google_maps($save);
+		}
+
+		// if both methods failed: inform user
+		if (!$geodata) {
+			$message = "Geolocation failed – please add manually";
+			\Session::push('tmp_error_above_form', $message);
+			return false;
+		}
+
+		$this->y = $geodata['latitude'];
+		$this->x = $geodata['longitude'];
+		$this->geocode_state = 'OK';
+
+		if ($save) {
+			$this->save();
+		}
+
+	}
+
+
+	/**
+	 * Get geodata from OpenStreetMap
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _geocode_osm_nominatim() {
+
+		if (!filter_var(env('OSM_NOMINATIM_EMAIL'), FILTER_VALIDATE_EMAIL)) {
+			$message = "Unable to ask OSM API for geocoding – OSM_NOMINATIM_EMAIL not set";
+			\Session::push('tmp_warning_above_form', $message);
+			return false;
+		}
+
+		// first: split the house number – OSM expects a space e.g. between “104” and “a” in “104a”
+		// regex from https://stackoverflow.com/questions/10180730/splitting-string-containing-letters-and-numbers-not-separated-by-any-particular
+		$parts = preg_split("/(,?\s+)|((?<=[-\/a-z])(?=\d))|((?<=\d)(?=[-\/a-z]))/i", strtolower($this->house_number));
+		$housenumber_prepared = implode(' ', $parts);
+
+		if ($this->country_code) {
+			$country_code = $this->country_code;
+		}
+		else {
+			$config = GlobalConfig::find(1);
+			$country_code = $config->default_country_code;
+		}
+
+		$url = "https://nominatim.openstreetmap.org/search";
+		// see https://wiki.openstreetmap.org/wiki/DE:Nominatim#Parameter for details
+		$params = [
+			'street' => "$housenumber_prepared $this->street",
+			'postalcode' => $this->zip,
+			'country' => $country_code,
+			'email' => env('OSM_NOMINATIM_EMAIL'),	// has to be set (https://operations.osmfoundation.org/policies/nominatim); else 403 Forbidden
+			'format' => 'json',			// return format
+			'dedupe' => '1',			// only one geolocation (even if address is split to multiple places)?
+			'polygon' => '0',			// include surrounding polygons?
+			'addressdetails' => '0',	// not available using API
+
+		];
+
+		$url .= "?";
+		if ($params) {
+			$tmp_params = [];
+			foreach ($params as $key => $value) {
+				array_push($tmp_params, (urlencode($key)."=".urlencode($value)));
+			}
+			$url .= implode("&", $tmp_params);
+		}
+
+		$geojson = file_get_contents($url);
+		$geodata_raw = json_decode($geojson, true);
+
+		$geodata = null;
+		foreach ($geodata_raw as $entry) {
+			// check if returned entry is of certain type (e.g. “highway” indicates fuzzy match)
+			if (in_array($entry['class'], ['building', ])) {
+				if (\Str::startswith($entry['display_name'], $housenumber_prepared)) {
+					$geodata = [
+						'latitude' => $entry['lat'],
+						'longitude' => $entry['lon'],
+						'source' => 'OSM Nominatim',
+					];
+				}
+			}
+		}
+		d($url, $geojson, $geodata_raw, $geodata);
+	}
+
+
+	/**
+	 * Get geodata from google maps
+	 *
+	 * @author Torsten Schmidt, Patrick Reichel
+	 */
+	protected function _geocode_google_maps() {
+
 		Log::debug(__METHOD__." started for ".$this->hostname);
 
 		$country = 'Deutschland';
@@ -904,21 +1016,10 @@ class Modem extends \BaseModel {
 			if($lati && $longi && $formatted_address)
 			{
 				// put the data in the array
-				$data_arr = array();
-
-				array_push(
-					$data_arr,
-					$lati,
-					$longi
-					// $formatted_address
-					);
-
-				$this->y = $lati;
-				$this->x = $longi;
-				$this->geocode_state = 'OK';
-
-				if ($save)
-					$this->save();
+				$data_arr = [
+					'latitude' => $lati,
+					'longitude' => $longi,
+				];
 
 				Log::info('geocode: result '.$lati.','.$longi);
 
