@@ -879,16 +879,22 @@ class Modem extends \BaseModel {
 			Log::error("$msg (".get_class($ex)." in ".$ex->getFile()." line ".$ex->getLine().")");
 		}
 
-return false;
-
 		// fallback: ask google maps
 		if (!$geodata) {
-			$geodata = $this->_geocode_google_maps($save);
+			try {
+				$geodata = $this->_geocode_google_maps($save);
+			}
+			catch (Exception $ex) {
+				$msg = "Error in geocoding against google maps: ".$ex->getMessage();
+				\Session::push('tmp_error_above_form', $msg);
+				Log::error("$msg (".get_class($ex)." in ".$ex->getFile()." line ".$ex->getLine().")");
+			}
 		}
 
 		// if both methods failed: inform user
 		if (!$geodata) {
-			$message = "Geolocation failed – please add manually";
+			$message = "Could not determine geo coordinates – please add manually";
+			Log::info("geocoding failed");
 			\Session::push('tmp_error_above_form', $message);
 			return false;
 		}
@@ -896,6 +902,9 @@ return false;
 		$this->y = $geodata['latitude'];
 		$this->x = $geodata['longitude'];
 		$this->geocode_state = 'OK';
+
+		Log::info("geocoding successful, result: ".$this->y.",".$this->x);
+
 
 		if ($save) {
 			$this->save();
@@ -910,6 +919,8 @@ return false;
 	 * @author Patrick Reichel
 	 */
 	protected function _geocode_osm_nominatim() {
+
+		Log::debug(__METHOD__." started for ".$this->hostname);
 
 		if (!filter_var(env('OSM_NOMINATIM_EMAIL'), FILTER_VALIDATE_EMAIL)) {
 			$message = "Unable to ask OSM API for geocoding – OSM_NOMINATIM_EMAIL not set";
@@ -932,6 +943,7 @@ return false;
 
 		$url = "https://nominatim.openstreetmap.org/search";
 		// see https://wiki.openstreetmap.org/wiki/DE:Nominatim#Parameter for details
+		// we are using the structured format (faster, saves server ressources – but marked experimental)
 		$params = [
 			'street' => "$housenumber_prepared $this->street",
 			'postalcode' => $this->zip,
@@ -953,6 +965,8 @@ return false;
 			$url .= implode("&", $tmp_params);
 		}
 
+		Log::info("Trying to geocode modem ".$this->id." against $url");
+
 		$geojson = file_get_contents($url);
 		$geodata_raw = json_decode($geojson, true);
 
@@ -969,7 +983,8 @@ return false;
 				}
 			}
 		}
-		d($url, $geojson, $geodata_raw, $geodata);
+		/* d($url, $geojson, $geodata_raw, $geodata); */
+		return $geodata;
 	}
 
 
@@ -982,7 +997,14 @@ return false;
 
 		Log::debug(__METHOD__." started for ".$this->hostname);
 
-		$country = 'Deutschland';
+
+		if ($this->country_code) {
+			$country_code = $this->country_code;
+		}
+		else {
+			$config = GlobalConfig::find(1);
+			$country_code = $config->default_country_code;
+		}
 
 		// Load google key if .ENV is set
 		$key = '';
@@ -995,45 +1017,44 @@ return false;
 		// google map geocode api url
 		$url = "https://maps.google.com/maps/api/geocode/json?sensor=false&address={$address}$key";
 
+		Log::info ("Trying to geocode modem ".$this->id." against $url");
+
 		// get the json response
 		$resp_json = file_get_contents($url);
-
-		// Log
-		Log::info ('geocode: request '.$url);
-
-		// decode the json
 		$resp = json_decode($resp_json, true);
 
+		$geodata = null;
+
 		// response status will be 'OK', if able to geocode given address
-		if($resp['status']=='OK')
-		{
+		if ($resp['status']=='OK') {
+
 			// get the important data
 			$lati = $resp['results'][0]['geometry']['location']['lat'];
 			$longi = $resp['results'][0]['geometry']['location']['lng'];
 			$formatted_address = $resp['results'][0]['formatted_address'];
 
 			// verify if data is complete
-			if($lati && $longi && $formatted_address)
-			{
+			if ($lati && $longi && $formatted_address) {
+
 				// put the data in the array
-				$data_arr = [
+				$geodata = [
 					'latitude' => $lati,
 					'longitude' => $longi,
+					'source' => 'Google Maps',
 				];
 
-				Log::info('geocode: result '.$lati.','.$longi);
 
-				return $data_arr;
+				return $geodata;
 			}
-			else
-			{
+			else {
+
 				$this->geocode_state = 'DATA_VERIFICATION_FAILED';
 				Log::info('geocode: '.$this->geocode_state);
 				return false;
 			}
 		}
-		else
-		{
+		else {
+
 			$this->geocode_state = $resp['status'];
 			Log::info('geocode: '.$this->geocode_state);
 			return false;
