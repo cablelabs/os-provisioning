@@ -1,7 +1,6 @@
 {{--
 
 The generic ip access-list bundle blade
-This is a cut & paste adaption of Ole's AclCommand
 
 --}}
 
