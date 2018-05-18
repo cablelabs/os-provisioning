@@ -7,3 +7,5 @@ cd "$dir"
 php artisan clear-compiled
 php artisan optimize
 php artisan migrate
+
+systemctl reload httpd

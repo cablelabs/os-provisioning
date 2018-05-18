@@ -8,6 +8,8 @@ php artisan module:publish
 php artisan module:migrate
 php artisan nms:auth
 
+systemctl reload httpd
+
 chown -R apache $dir/storage $dir/bootstrap/cache
 chown apache /etc/dhcp
 chown -R apache:dhcpd /etc/dhcp/nmsprime
