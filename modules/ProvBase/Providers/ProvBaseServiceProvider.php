@@ -16,7 +16,6 @@ class ProvBaseServiceProvider extends ServiceProvider {
 	 * The artisan commands provided by this module
 	 */
 	protected $commands = [
-		'Modules\ProvBase\Console\aclCommand',
 		'Modules\ProvBase\Console\configfileCommand',
 		'Modules\ProvBase\Console\contractCommand',
 		'Modules\ProvBase\Console\dhcpCommand',

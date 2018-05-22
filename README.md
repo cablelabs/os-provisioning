@@ -77,10 +77,10 @@ We thanks to the following supporters for helping and funding NMS Prime developm
 ## Authors
 
 * **Torsten Schmidt** - *Initial work* - [torsten](https://github.com/schmto)
-* **Nino Ryschawy** - *Maintainer/Developer* - [nino](https://github.com/todo)
-* **Ole Ernst** - *Maintainer/Developer* - [ole](https://github.com/todo)
+* **Nino Ryschawy** - *Maintainer/Developer* - [nino](https://github.com/NinoRy)
+* **Ole Ernst** - *Maintainer/Developer* - [ole](https://github.com/olebowle)
 * **Patrick Reichel** - *Sub-Maintainer/Developer for ..* - [xee8ai](https://github.com/xee8ai)
-* **Christian Schramm** - *Developer for ..* - [christian](https://github.com/todo)
+* **Christian Schramm** - *Developer for ..* - [christian](https://github.com/cschra)
 * **Sven Arndt** - *Developer for ..* - [sven](https://github.com/todo)
 
 See also the list of [contributors](https://github.com/schmto/nms-prime/contributors) who participated in this project.
