@@ -15,8 +15,11 @@ class NetElementController extends HfcBaseController {
 	{
 		$model = $model ? : new NetElement;
 
-		$empty_field = isset($model->id);
-		$parents 	 = $model->html_list(NetElement::get(['id','name']), 'name', $empty_field);
+		$empty_field = $model->exists;
+		$netelems = NetElement::join('netelementtype as nt', 'nt.id', '=', 'netelementtype_id')
+			->select(['netelement.id as id','netelement.name as name', 'nt.name as ntname'])
+			->get();
+		$parents 	 = $model->html_list($netelems, ['ntname', 'name'], $empty_field, ': ');
 		$kml_files   = $model->kml_files();
 
 		// parse which netelementtype we want to edit/create
