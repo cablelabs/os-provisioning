@@ -13,7 +13,6 @@ class AddCountryCodeFields {
 
 	/**
 	 * Run the migrations.
-	 * For using the envia TEL API we need some changes in storing the contracts data.
 	 *
 	 * @return void
 	 */

@@ -869,6 +869,8 @@ class Modem extends \BaseModel {
 	public function geocode ($save = true)
 	{
 
+		$geodata = null;
+
 		// first try to get geocoding from OSM
 		try {
 			$geodata = $this->_geocode_osm_nominatim();
@@ -893,6 +895,9 @@ class Modem extends \BaseModel {
 
 		// if both methods failed: inform user
 		if (!$geodata) {
+			$this->y = '';
+			$this->x = '';
+			$this->geocode_source = null;
 			$message = "Could not determine geo coordinates – please add manually";
 			Log::info("geocoding failed");
 			\Session::push('tmp_error_above_form', $message);
@@ -901,9 +906,10 @@ class Modem extends \BaseModel {
 
 		$this->y = $geodata['latitude'];
 		$this->x = $geodata['longitude'];
+		$this->geocode_source = $geodata['source'];
 		$this->geocode_state = 'OK';
 
-		Log::info("geocoding successful, result: ".$this->y.",".$this->x);
+		Log::info("Geocoding successful, result: ".$this->y.",".$this->x.' (source: '.$geodata['source'].')');
 
 
 		if ($save) {
@@ -922,8 +928,10 @@ class Modem extends \BaseModel {
 
 		Log::debug(__METHOD__." started for ".$this->hostname);
 
+		$geodata = null;
+
 		if (!filter_var(env('OSM_NOMINATIM_EMAIL'), FILTER_VALIDATE_EMAIL)) {
-			$message = "Unable to ask OSM API for geocoding – OSM_NOMINATIM_EMAIL not set";
+			$message = "Unable to ask OpenStreetMap Nominatim API for geocoding – OSM_NOMINATIM_EMAIL not set";
 			\Session::push('tmp_warning_above_form', $message);
 			return false;
 		}
@@ -970,18 +978,22 @@ class Modem extends \BaseModel {
 		$geojson = file_get_contents($url);
 		$geodata_raw = json_decode($geojson, true);
 
-		$geodata = null;
+		$matches = ['building', ];
 		foreach ($geodata_raw as $entry) {
 			// check if returned entry is of certain type (e.g. “highway” indicates fuzzy match)
-			if (in_array($entry['class'], ['building', ])) {
+			if (in_array($entry['class'], $matches)) {
 				if (\Str::startswith($entry['display_name'], $housenumber_prepared)) {
 					$geodata = [
 						'latitude' => $entry['lat'],
 						'longitude' => $entry['lon'],
-						'source' => 'OSM Nominatim',
+						'source' => 'OpenStreetMap Nominatim',
 					];
 				}
 			}
+		}
+		if (!$geodata) {
+			Log::warning('Geocoding for modem '.$this->id.' failed');
+			return false;
 		}
 		/* d($url, $geojson, $geodata_raw, $geodata); */
 		return $geodata;
@@ -997,6 +1009,7 @@ class Modem extends \BaseModel {
 
 		Log::debug(__METHOD__." started for ".$this->hostname);
 
+		$geodata = null;
 
 		if ($this->country_code) {
 			$country_code = $this->country_code;
@@ -1012,7 +1025,8 @@ class Modem extends \BaseModel {
 			$key = '&key='.$_ENV['GOOGLE_API_KEY'];
 
 		// url encode the address
-		$address = urlencode($country.', '.$this->street.' '.$this->house_number.', '.$this->zip.', '.$this->city);
+		/* $address = urlencode($country_code.', '.$this->street.' '.$this->house_number.', '.$this->zip.', '.$this->city); */
+		$address = urlencode($this->street.' '.$this->house_number.', '.$this->zip.', '.$country_code);
 
 		// google map geocode api url
 		$url = "https://maps.google.com/maps/api/geocode/json?sensor=false&address={$address}$key";
@@ -1023,8 +1037,6 @@ class Modem extends \BaseModel {
 		$resp_json = file_get_contents($url);
 		$resp = json_decode($resp_json, true);
 
-		$geodata = null;
-
 		// response status will be 'OK', if able to geocode given address
 		if ($resp['status']=='OK') {
 
@@ -1032,9 +1044,11 @@ class Modem extends \BaseModel {
 			$lati = $resp['results'][0]['geometry']['location']['lat'];
 			$longi = $resp['results'][0]['geometry']['location']['lng'];
 			$formatted_address = $resp['results'][0]['formatted_address'];
+			$location_type = $resp['results'][0]['geometry']['location_type'];
 
 			// verify if data is complete
-			if ($lati && $longi && $formatted_address) {
+			$matches = ['ROOFTOP', ];
+			if ($lati && $longi && $formatted_address && in_array($location_type, $matches)) {
 
 				// put the data in the array
 				$geodata = [
@@ -1049,14 +1063,14 @@ class Modem extends \BaseModel {
 			else {
 
 				$this->geocode_state = 'DATA_VERIFICATION_FAILED';
-				Log::info('geocode: '.$this->geocode_state);
+				Log::warning('Geocoding for modem '.$this->id.' failed: '.$this->geocode_state);
 				return false;
 			}
 		}
 		else {
 
 			$this->geocode_state = $resp['status'];
-			Log::info('geocode: '.$this->geocode_state);
+			Log::warning('Geocoding for modem '.$this->id.' failed: '.$this->geocode_state);
 			return false;
 		}
 	}

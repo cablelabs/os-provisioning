@@ -98,7 +98,8 @@ class ModemController extends \BaseController {
 				"<div class=col-md-3><input class=form-control name=y type=text value='".$model['y']."' id=y style='background-color:whitesmoke'></div>
 				</div></div>"),
 
-			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description')
+			array('form_type' => 'text', 'name' => 'geocode_source', 'description' => 'Geocoding from'),
+			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'),
 		);
 
 		return array_merge($a, $b, $c);
