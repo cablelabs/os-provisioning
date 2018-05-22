@@ -31,6 +31,7 @@ trait DatabaseUpdaterTrait {
 			CURLOPT_HEADER => false,
 			CURLOPT_SSL_VERIFYPEER => false,	// no valid cert for “localhost” – so we don't check
 			CURLOPT_RETURNTRANSFER => TRUE,		// return result instead of instantly printing to screen
+			CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,	// resolve to IPv4 address
 		);
 
 		curl_setopt_array($ch, $opts);
