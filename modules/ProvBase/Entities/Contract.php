@@ -71,7 +71,7 @@ class Contract extends \BaseModel {
 				'bsclass' => $bsclass,
 				'order_by' => ['0' => 'asc']];
 
-		if (\PPModule::is_active('billingbase'))
+		if (\Module::collections()->has('billingbase'))
 		{
 			$ret['index_header'][] = 'costcenter.name';
 			$ret['eager_loading'] = ['costcenter'];
@@ -157,7 +157,7 @@ class Contract extends \BaseModel {
 
 		if (\Module::collections()->has('Ticketsystem'))
 		{
-			$tab = \PPModule::is_active('billingbase') ? 'Ticket' : 'Edit';
+			$tab = \Module::collections()->has('billingbase') ? 'Ticket' : 'Edit';
 			$ret[$tab]['Ticket'] = $this->tickets;
 		}
 
