@@ -34,43 +34,42 @@ class importTvCustomersCommand extends Command {
 	 * Column Number and Description for easy Adaption
 	 */
 	const C_NR 			= 0;
-	const C_NAME 		= 2;
-	const C_STRASSE		= 4;
-	const C_ZIP 		= 5;
-	const C_CITY 		= 6;
-	// const C_ACAD_DGR 	= 27; 		// Anrede
-	const C_SALUT		= 27;		// Bemerkung
-	// const C_NR_LEGACY 	= 7; 		// Alte MG-Nr
-	const C_MAIL		= 26;
-	const C_TEL			= 24;
-	const C_DESC1		= 40;		// Watt
-	const C_DESC2		= 41; 		// Zusatz
-	const C_DESC3		= 3;		// Sonstiges
-	const C_START		= 45; 		// Eintritt
-	const C_END			= 46;		// Austritt
+	const C_NAME 		= 1;
+	const C_STRASSE		= 2;
+	const C_ZIP 		= 3;
+	const C_CITY 		= 4;
+	const C_TEL			= 5;
+	const C_FAX			= 6;
+	const C_MAIL		= 7;
+	const C_SALUT		= 13;		// Anrede (Bemerkung)
+	const C_DESC2		= 14; 		// Zusatz
+	const C_DESC1		= 15;		// Watt
+	const C_DESC3		= 16;		// Sonstiges
+	const C_START		= 20; 		// Eintritt
+	const C_END			= 21;		// Austritt
 
 	// Sepa Data
-	const S_REF 		= 62;
-	const S_HOLDER 		= 54;
-	const S_BIC 		= 35;
-	const S_IBAN  		= 36;
-	const S_INST 		= 10;
-	const S_SIGNATURE 	= 63;
-	const S_VALID 		= 29; 		// Zahlungsziel (invalid when = "14 Tage")
+	const S_REF 		= 0;
+	const S_HOLDER 		= 8;
+	const S_INST 		= 9;
+	const S_BIC 		= 10;
+	const S_IBAN  		= 11;
+	const S_VALID 		= 12; 		// Zahlungsziel (invalid when = "14 Tage")
+	const S_SIGNATURE 	= 24;
 
 	// Item Data
-	const TARIFF 		= 42; 		// Umlage
-	const CREDIT 		= 44;		// Verstärkergeld
+	const TARIFF 		= 17; 		// Umlage
+	const CREDIT 		= 19;		// Verstärkergeld
 
 
 	/*
 	 * Global Variables - need adaption for every import
 	 * TODO: Change product IDs according to Database and yearly Charges according to CostCenter
 	 */
-	const TV_CHARGE1 	= 15; 		// Umlage 36 Euro
-	const TV_CHARGE2 	= 40; 		// Umlage 66 Euro
-	const PRODUCT_ID1 	= 29; 		// TV Billig
-	const PRODUCT_ID2 	= 27;		// TV Teuer
+	const TV_CHARGE1 	= 60; 		// Umlage in Euro
+	const TV_CHARGE2 	= 99999; 	// Umlage in Euro - Set to 99999 to disable second charge/tv-tariff
+	const PRODUCT_ID1 	= 46; 		// TV Billig
+	const PRODUCT_ID2 	= 0;		// TV Teuer
 	const CREDIT_ID 	= 28; 		// Credit for Amplifier
 
 
@@ -91,145 +90,42 @@ class importTvCustomersCommand extends Command {
 	/**
 	 * Execute the console command - Import new Contracts with TV Tariff from a CSV-File (Separator: ";")
 	 *
-	 * See order and description of Columns ahead defined by constants 
+	 * See order and description of Columns ahead defined by constants
 	 *
 	 * @return mixed
 	 */
 	public function fire()
 	{
+		if (!$this->confirm("IMPORTANT!!!\n\nHave global variables been adapted for this import?:
+			(1) TV Charge in Euro?
+			(2) TV product ID?"))
+			return;
 
-		if ($_ENV['APP_KEY'] != 'NTh0ocCOtO0x8NU7svT7lSrD9YGlLJAJ')
-			throw new \Exception('Import is not made for this Server!', 1);
-
-		$fn = $this->argument('file');
-		if (!is_file($fn))
-			throw new \Exception("Can not read file [$fn]", 1);
-
-		if (!$this->option('cc'))
-			throw new \Exception("Customer Control Center has to be specified by Option --cc !", 1);
-
-		$file_arr 	= file($fn);
-		$t_year 	= date('Y-01-01');
-		$num 		= count($file_arr) - 1;
+		$file_arr 	= file($this->argument('file'));
+		$num 		= count($file_arr);
 		$bar 		= $this->output->createProgressBar($num);
-		$i 			= 0;
+
 		// skip headline
 		// unset($file_arr[0]);
-		\Log::info("Import $num Contracts for TV");
+
+		echo "Import TV customers\n";
+		\Log::info("Import potentially $num TV customers");
+		$bar->start();
 
 		foreach ($file_arr as $line)
 		{
-			$i++;
-			// progress bar
-			if (!$this->option('debug'))
-				$bar->advance();
+			$bar->advance();
 
-			$line 	= str_getcsv($line, "\t");
-			$c 		= new Contract;
+			$line = str_getcsv($line, ";");
+			// $line = str_getcsv($line, "\t");
+			$c = $this->_add_contract($line);
 
-			// import fields
-			$c->number 			= $line[self::C_NR];
-
-			// Discard known Test Contracts
-			if (in_array($c->number, [10002]))
+			if (!$c)
 				continue;
 
-			$c->contract_start 	= $line[self::C_START] ? date('Y-m-d', strtotime($line[self::C_START])) : '2000-01-01';
-			$c->contract_end   	= $line[self::C_END] ? date('Y-m-d', strtotime($line[self::C_END])) : null;
-
-			$contract = Contract::where('number', '=', $c->number)->get()->all();
-			if ($contract)
-			{
-				$contract = $contract[0];
-				\Log::notice("Contract $contract->number already existing - only add TV Tarif");
-				$this->_add_tarif($contract, $line[self::TARIFF], $c->contract_start);
-				$this->_add_Credit($contract, $line[self::CREDIT]);
-				continue;
-			}
-
-			// Discard contracts that ended last year
-			if ($c->contract_end && ($c->contract_end < $t_year)) {
-				\Log::info("Contract $c->number is out of date");
-				continue;
-			}
-
-			$name 				= explode(',', $line[self::C_NAME]);
-			$c->firstname 		= isset($name[1]) ? trim($name[1]) : trim($name[0]);
-			$c->lastname 		= isset($name[1]) ? trim($name[0]) : '';
-			$ret = importCommand::split_street_housenr($line[self::C_STRASSE]);
-			$house_nr_strpos 	= strrpos($line[self::C_STRASSE], ' ');
-			// $c->street    		= substr($line[self::C_STRASSE], 0, $house_nr_strpos);
-			// $c->house_number	= substr($line[self::C_STRASSE], $house_nr_strpos);
-			$c->street    		= $ret[0];
-			$c->house_number	= $ret[1];
-			$c->zip 			= str_pad($line[self::C_ZIP], 5, "0", STR_PAD_LEFT);
-			$c->city 			= $line[self::C_CITY];
-			// $c->academic_degree = $this->map_academic_degree($line[self::C_ACAD_DGR]);
-			$c->salutation 		= $this->map_salutation($line[self::C_SALUT]);
-			// $c->phone     		= str_replace(["/", '-', ' '], "", $line[self::C_TEL]);
-			$c->phone     		= $line[self::C_TEL];
-			$c->description    	= $line[self::C_DESC1]."\n".$line[self::C_DESC2]."\n".$line[self::C_DESC3];
-			$c->costcenter_id 	= $this->option('cc'); 		// Dittersdorf=1
-			$c->create_invoice 	= true;
-
-			// $c->company  	= $contract->firma;
-			// $c->fax      	= $contract->fax;
-			$c->email    		= $line[self::C_MAIL];
-			// $c->birthday 	= $contract->geburtsdatum;
-
-
-			// Set null-fields to '' to fix SQL import problem with null fields
-			$relations = $c->relationsToArray();
-			foreach($c->toArray() as $key => $value)
-			{
-				if (array_key_exists($key, $relations))
-					continue;
-
-				if ($c->{$key} == null)
-					$c->{$key} = '';
-				
-				if (is_string($c->{$key}))
-					$c->{$key} = utf8_encode ($c->{$key});
-			}
-
-			$c->deleted_at = NULL;
-			// Update or Create Entry
-			$c->save();
-
-			// Log
-			\Log::debug("Add Contract $c->number: $c->firstname, $c->lastname");
-			if ($this->option('debug'))
-				$this->info ("\n$i/$num \nCONTRACT ADD: $c->id, $c->firstname, $c->lastname");
-
-
-			// Add TV Tarif
 			$this->_add_tarif($c, $line[self::TARIFF]);
 			$this->_add_Credit($c, $line[self::CREDIT]);
-
-
-			// Add Sepa Mandate
-			$valid = trim($line[self::S_VALID]) == 'einzug';
-
-			if (!$valid) {
-				\Log::debug("Contract $c->number has no valid SepaMandate");
-				continue;
-			}
-
-			SepaMandate::create([
-				'contract_id' 		=> $c->id,
-				'reference' 		=> $c->number, 
-				'signature_date' 	=> date('Y-m-d', strtotime($line[self::S_SIGNATURE])),
-				'sepa_holder' 		=> $line[self::S_HOLDER],
-				'sepa_iban'			=> $line[self::S_IBAN],
-				'sepa_bic' 			=> $line[self::S_BIC],
-				'sepa_institute' 	=> $line[self::S_INST],
-				'sepa_valid_from' 	=> date('Y-m-d', strtotime($line[self::S_SIGNATURE])),
-				'recurring' 		=> true,
-				'state' 			=> 'RECUR',
-				// 'sepa_valid_to' 	=> NULL,
-				]);
-
-			\Log::debug("Add SepaMandate");
+			self::_add_sepa_mandate($c, $line);
 		}
 
 		if ($this->important_todos)
@@ -237,7 +133,111 @@ class importTvCustomersCommand extends Command {
 	}
 
 
-	public function map_academic_degree($string)
+	/**
+	 * Create new Contract or return existing one
+	 *
+	 * @return Object  New created contract or if found the already existing one
+	 */
+	private function _add_contract($line)
+	{
+		$number = $line[self::C_NR];
+		$name = explode(',', $line[self::C_NAME]);
+		$firstname = isset($name[1]) ? trim($name[1]) : trim($name[0]);
+		$lastname  = isset($name[1]) ? trim($name[0]) : '';
+		$ret = importCommand::split_street_housenr($line[self::C_STRASSE]);
+		$street  = $ret[0];
+		$housenr = $ret[1];
+		$arr = explode(' OT ', $line[self::C_CITY]);
+		$city = $arr[0];
+		$district = isset($arr[1]) ? $arr[1] : '';
+
+		$contract = Contract::where('number', '=', $number)->first();
+
+		if ($contract)
+		{
+			// Check if name and address differs - could be a different customer
+			if ($contract->firstname != $firstname || $contract->lastname != $lastname || $contract->street != $street) {
+				$msg = "Contract [$number] already exists with different name or street - Pls check & add manually!";
+				\Log::warning($msg);
+				$this->important_todos .= "\n$msg";
+				return null;
+			}
+
+			\Log::notice("Contract $number already exists - only add TV Tarif");
+			return $contract;
+		}
+		else {
+			// TODO: Check if customer/name & address already exists with another contract number
+			$existing = Contract::where('firstname', '=', $firstname)->where('lastname', '=', $lastname)
+				// make Straße or Str. respective ..straße or ..str. indifferent on searching in DB
+				->whereIn('street', [$street, str_replace(['traße', 'traße'], 'tr.', $street)])
+				->where('city', '=', $city)->first();
+
+			if ($existing) {
+				// $msg = "Customer $number is probably already added with different contract number [$existing->number] (found same name [$firstname $lastname], city & street [$street]). Check this manually!";
+				$msg = "Kunde $number existiert bereits mit einer anderen Vertragsnummer [$existing->number] (selber Name [$firstname $lastname], Stadt & Straße [$street] gefunden). Füge nur Tarif hinzu.";
+				\Log::warning($msg);
+				return $existing;
+			}
+		}
+
+		$contract = new Contract;
+
+		$contract->contract_start 	= $line[self::C_START] ? date('Y-m-d', strtotime($line[self::C_START])) : '2000-01-01';
+		$contract->contract_end   	= $line[self::C_END] ? date('Y-m-d', strtotime($line[self::C_END])) : null;
+
+		// Discard contracts that ended last year
+		if ($contract->contract_end && ($contract->contract_end < date('Y-01-01'))) {
+			\Log::info("Contract $number is out of date");
+			return null;
+		}
+
+		$contract->number 			= $number;
+		$contract->firstname 		= $firstname;
+		$contract->lastname 		= $lastname;
+		$contract->street    		= $street;
+		$contract->house_number		= $housenr;
+		$contract->zip 				= str_pad($line[self::C_ZIP], 5, "0", STR_PAD_LEFT);
+		$contract->city 			= $city;
+		$contract->district 		= $district;
+
+		// $contract->academic_degree = self::map_academic_degree($line[self::C_ACAD_DGR]);
+		$contract->salutation 		= self::map_salutation($line[self::C_SALUT]);
+		$contract->phone     		= str_replace(["/", '-', ' '], "", $line[self::C_TEL]);
+		$contract->description    	= $line[self::C_DESC1]."\n".$line[self::C_DESC2]."\n".$line[self::C_DESC3];
+		$contract->costcenter_id 	= $this->option('cc'); 		// Dittersdorf=1
+		if ($this->option('ag'))
+			$contract->contact 		= $this->option('ag');
+		$contract->create_invoice 	= true;
+
+		$contract->fax      		= $line[self::C_FAX];
+		$contract->email    		= $line[self::C_MAIL];
+		// $contract->birthday 	= $contract->geburtsdatum;
+
+
+		// Set null-fields to '' to fix SQL import problem with null fields
+		$relations = $contract->relationsToArray();
+		foreach($contract->toArray() as $key => $value)
+		{
+			if (array_key_exists($key, $relations))
+				continue;
+
+			if ($contract->{$key} == null)
+				$contract->{$key} = '';
+		}
+
+		$contract->deleted_at = NULL;
+		// Update or Create Entry
+		$contract->save();
+
+		// Log
+		\Log::info("Add Contract $contract->number: $contract->firstname, $contract->lastname");
+
+		return $contract;
+	}
+
+
+	public static function map_academic_degree($string)
 	{
 		if (strpos($string, 'Prof') !== false)
 			return 'Prof. Dr.';
@@ -249,7 +249,7 @@ class importTvCustomersCommand extends Command {
 	}
 
 
-	public function map_salutation($string)
+	public static function map_salutation($string)
 	{
 		if (strpos($string, 'Damen und Herren') !== false)
 			return 'Firma';
@@ -261,7 +261,7 @@ class importTvCustomersCommand extends Command {
 	}
 
 
-	private function _add_tarif($contract, $tariff, $start = null)
+	private function _add_tarif($contract, $tariff)
 	{
 		if (!$tariff) {
 			\Log::debug("'Umlage' is zero or empty - don't add tariff");
@@ -269,10 +269,11 @@ class importTvCustomersCommand extends Command {
 		}
 
 		$existing = false;
-		if ($contract->items)
-			$existing = $contract->items->contains(function($value, $item){
+		if ($contract->items()->count()) {
+			$existing = $contract->items->contains(function($value, $item) {
 				return in_array($item->product_id, [self::PRODUCT_ID1, self::PRODUCT_ID2]);
 			});
+		}
 
 		if ($existing) {
 			\Log::debug("Contract $contract->number already has TV Tariff assigned");
@@ -298,13 +299,13 @@ class importTvCustomersCommand extends Command {
 		Item::create([
 			'contract_id' 		=> $contract->id,
 			'product_id' 		=> $product_id,
-			'valid_from' 		=> $start ? : $contract->contract_start,
+			'valid_from' 		=> $contract->contract_start,
 			'valid_from_fixed' 	=> 1,
 			'valid_to' 			=> $contract->contract_end,
 			'valid_to_fixed' 	=> 1,
 			]);
 
-		\Log::debug("Add TV Tariff $product_id for Contract $contract->number");
+		\Log::info("Add TV Tariff $product_id for Contract $contract->number");
 	}
 
 
@@ -340,7 +341,40 @@ class importTvCustomersCommand extends Command {
 			'costcenter_id' 	=> $this->option('cc'),
 			]);
 
-		\Log::debug("Add Credit $credit_amount Euro for Amplifier for Contract $contract->number");		
+		\Log::info("Add Credit $credit_amount Euro for Amplifier to Contract $contract->number");
+	}
+
+
+	private static function _add_sepa_mandate($contract, $line)
+	{
+		$valid = trim($line[self::S_VALID]) == 'einzug';
+
+		if (!$valid) {
+			\Log::debug("Contract $contract->number has no valid SepaMandate");
+			return;
+		}
+
+		$signature_date = date('Y-m-d', strtotime($line[self::S_SIGNATURE]));
+
+		if ($contract->sepamandates && $contract->sepamandates->contains('signature_date', $signature_date)) {
+			\Log::notice("Contract $contract->number already has SEPA-mandate with signature date $signature_date");
+			return;
+		}
+
+		SepaMandate::create([
+			'contract_id' 		=> $contract->id,
+			'reference' 		=> $line[self::C_NR],
+			'signature_date' 	=> $signature_date,
+			'sepa_holder' 		=> $line[self::S_HOLDER],
+			'sepa_iban'			=> $line[self::S_IBAN],
+			'sepa_bic' 			=> $line[self::S_BIC],
+			'sepa_institute' 	=> $line[self::S_INST],
+			'sepa_valid_from' 	=> date('Y-m-d', strtotime($line[self::S_SIGNATURE])),
+			'state' 			=> 'RCUR',
+			// 'sepa_valid_to' 	=> NULL,
+			]);
+
+		\Log::info("Add SepaMandate [IBAN: ".$line[self::S_IBAN]."] for contract $contract->number");
 	}
 
 
@@ -365,8 +399,7 @@ class importTvCustomersCommand extends Command {
 	{
 		return array(
 			array('cc', null, InputOption::VALUE_REQUIRED, 'CostCenter ID for all the imported Contracts', 0),
-			array('debug', null, InputOption::VALUE_OPTIONAL, 'Print Debug Output to Commandline (1 - Yes, 0 - No (Default))', 0),
-			// array('prod_id', null, InputOption::VALUE_REQUIRED, 'Product ID in Database of TV Tarif that will be assigned to all Contracts', 0),
+			array('ag', null, InputOption::VALUE_OPTIONAL, 'Antenna Community ID for all the imported Contracts', 0),
 		);
 	}
 

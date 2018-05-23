@@ -54,6 +54,8 @@ return [
 	'oid_list' 				=> 'Warning: OIDs that not already exist in Database are discarded! Please upload MibFile before!',
 	'password_change'		=> 'Change Password',
 	'password_confirm'		=> 'Confirm Password',
+	'show_ags' 				=> 'Show AG Select Field on Contract Page',
+	'snmp_query_failed' 	=> 'SNMP Query failed for following OIDs: ',
 	'upload_dependent_mib_err' => "Please Upload dependent ':name' before!! (OIDs cant be translated otherwise)",
 	'user_settings'			=> 'User Settings',
 	'user_glob_settings'	=> 'Global User Settings',

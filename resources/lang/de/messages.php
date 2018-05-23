@@ -180,7 +180,8 @@ return [
 	'House Nr'					=> 'Hausnr',
 	'Salesman'					=> 'Verkäufer',
 	'Start Date' 				=> 'Startdatum',
-	'noCC'	=> 'Keine Kostenstelle zugewiesen',
+	'noCC'						=> 'Keine Kostenstelle zugewiesen',
+	'Contact Persons' 			=> 'Antennengemeinschaft/Kontakt',
 	//Items
 	'Accounting Text (optional)'=> 'Verwendungszweck (optional)',
 	'Cost Center (optional)'	=> 'Kostenstelle (optional)',
@@ -253,7 +254,7 @@ return [
 	'Upload CDR template'		=> 'CDR-Vorlage hochladen',
 	'Upload invoice template'	=> 'Rechnungsvorlage hochladen',
 
-	//Settlement Run Abrechnnungslauf
+	//Settlement Run Abrechnungslauf
 	'General'				=> 'Allgemein',
 	'Verified'				=> 'Überprüft?',
 	'tariff'				=> 'Tarif',
@@ -289,6 +290,7 @@ return [
 	'Zip'					=> 'PLZ',
 	// Global Config
 	'cdr_offset' 			=> 'Zeitdifferenz EVN zu Rechnung in Monaten',
+	'show_ags' 				=> 'Zeige AG Auswahlfeld auf Vertragsseite',
 	'voip_extracharge_default' => 'Preisaufschlag Telefonie Standard in %',
 	'voip_extracharge_mobile_national' => 'Preisaufschlag Telefonie Mobilfunk national in %',
 
