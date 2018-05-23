@@ -1,7 +1,16 @@
 #!/bin/bash
 # do not run ddns for CPEs with a private IP address, those aren't publicly reachable anyway
-if grep -q -E '^(10\.|172\.1[6789]\.|172\.2[0-9]\.|172\.3[01]\.|100\.64|192\.168)' <<< "$3"; then
+if grep -q -E '^(10\.|192\.168)' <<< "$3"; then
 	exit 0
+fi
+if grep -q -E '^(172\.|100\.)' <<< "$3"; then
+	IFS='.' read -r -a ip <<< "$3"
+	if [ "${ip[0]}" -eq 172 -a "${ip[1]}" -ge 16 -a "${ip[1]}" -le 31 ]; then
+		exit 0
+	fi
+	if [ "${ip[0]}" -eq 100 -a "${ip[1]}" -ge 64 -a "${ip[1]}" -le 127 ]; then
+		exit 0
+	fi
 fi
 
 # we use a secret to salt the generation of hostnames (base32 encoded and truncated to 6 characters)

@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class InstallPhpConfig extends BaseMigration {
+class InstallPhpConfigBase extends BaseMigration {
 
 	protected $tablename = '';
 
@@ -35,12 +35,6 @@ class InstallPhpConfig extends BaseMigration {
 			$str = preg_replace('/^post_max_size =.*/m', 'post_max_size = 50M', $str);
 			file_put_contents($file, $str);
 		}
-		system('systemctl reload httpd');
-
-		$file = '/etc/httpd/conf.d/cacti.conf';
-		$str = file_get_contents($file);
-		$str = preg_replace('/Require all granted$/m', "Require all granted\n\t\tDirectoryIndex index.php", $str);
-		file_put_contents($file, $str);
 	}
 
 
