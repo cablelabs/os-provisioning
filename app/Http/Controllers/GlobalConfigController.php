@@ -24,7 +24,7 @@ class GlobalConfigController extends BaseController {
 			array('form_type' => 'select', 'name' => 'log_level', 'description' => 'System Log Level', 'value' => $this->log_level, 'hidden' => 1),
 			array('form_type' => 'text', 'name' => 'headline1', 'description' => 'Headline 1'),
 			array('form_type' => 'text', 'name' => 'headline2', 'description' => 'Headline 2'),
-			array('form_type' => 'text', 'name' => 'default_country_code', 'description' => 'Default country code', 'help' => 'ISO 3166 ALPHA-2 (two characters)'),
+			array('form_type' => 'text', 'name' => 'default_country_code', 'description' => 'Default country code', 'help' => trans('helper.ISO_3166_ALPHA-2')),
 			);
 	}
 
