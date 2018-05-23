@@ -123,6 +123,7 @@ return [
 	'modem.street' => 'Street',
 	'modem.district' => 'District',
 	'modem.us_pwr' => 'US level',
+	'modem.geocode_source' => 'Geocode origin',
 	'contract_valid' => 'Contract valid?',
 	// QoS
 	'qos.name' => 'QoS Name',

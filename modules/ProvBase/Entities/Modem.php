@@ -47,7 +47,7 @@ class Modem extends \BaseModel {
 		$bsclass = $this->get_bsclass();
 
 		return ['table' => $this->table,
-				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', 'contract_valid'],
+				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', 'contract_valid'],
 				'bsclass' => $bsclass,
 				'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
 				'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
@@ -866,8 +866,7 @@ class Modem extends \BaseModel {
 	 *
 	 * TODO: split in a general geocoding function and a modem specific one
 	 */
-	public function geocode ($save = true)
-	{
+	public function geocode($save=true) {
 
 		$geodata = null;
 
@@ -893,28 +892,29 @@ class Modem extends \BaseModel {
 			}
 		}
 
-		// if both methods failed: inform user
-		if (!$geodata) {
+		if ($geodata) {
+			$this->y = $geodata['latitude'];
+			$this->x = $geodata['longitude'];
+			$this->geocode_source = $geodata['source'];
+			$this->geocode_state = 'OK';
+
+			Log::info("Geocoding successful, result: ".$this->y.",".$this->x.' (source: '.$geodata['source'].')');
+		}
+		else {
+			// if both methods failed: delete probably outdated geodata and inform user
 			$this->y = '';
 			$this->x = '';
-			$this->geocode_source = null;
+			$this->geocode_source = 'n/a';
 			$message = "Could not determine geo coordinates – please add manually";
 			Log::info("geocoding failed");
 			\Session::push('tmp_error_above_form', $message);
-			return false;
 		}
-
-		$this->y = $geodata['latitude'];
-		$this->x = $geodata['longitude'];
-		$this->geocode_source = $geodata['source'];
-		$this->geocode_state = 'OK';
-
-		Log::info("Geocoding successful, result: ".$this->y.",".$this->x.' (source: '.$geodata['source'].')');
-
 
 		if ($save) {
 			$this->save();
 		}
+
+		return $geodata;
 
 	}
 
@@ -933,6 +933,7 @@ class Modem extends \BaseModel {
 		if (!filter_var(env('OSM_NOMINATIM_EMAIL'), FILTER_VALIDATE_EMAIL)) {
 			$message = "Unable to ask OpenStreetMap Nominatim API for geocoding – OSM_NOMINATIM_EMAIL not set";
 			\Session::push('tmp_warning_above_form', $message);
+			Log::warning($message);
 			return false;
 		}
 
@@ -980,22 +981,31 @@ class Modem extends \BaseModel {
 
 		$matches = ['building', ];
 		foreach ($geodata_raw as $entry) {
+			$class = array_get($entry, 'class', '');
+			$display_name = array_get($entry, 'display_name', '');
+			$lat = array_get($entry, 'lat', null);
+			$lon = array_get($entry, 'lon', null);
+
 			// check if returned entry is of certain type (e.g. “highway” indicates fuzzy match)
-			if (in_array($entry['class'], $matches)) {
-				if (\Str::startswith($entry['display_name'], $housenumber_prepared)) {
-					$geodata = [
-						'latitude' => $entry['lat'],
-						'longitude' => $entry['lon'],
-						'source' => 'OpenStreetMap Nominatim',
-					];
-				}
+			if (
+				in_array($class, $matches) &&
+				$lat &&
+				$lon &&
+				\Str::contains($display_name, $housenumber_prepared)	// don't check for startswith; sometimes a company name is added before the house number
+			) {
+				$geodata = [
+					'latitude' => $lat,
+					'longitude' => $lon,
+					'source' => 'OSM Nominatim',
+				];
 			}
 		}
+
 		if (!$geodata) {
-			Log::warning('Geocoding for modem '.$this->id.' failed');
+			Log::warning('OSM Nominatim geocoding for modem '.$this->id.' failed');
 			return false;
 		}
-		/* d($url, $geojson, $geodata_raw, $geodata); */
+
 		return $geodata;
 	}
 
@@ -1019,13 +1029,25 @@ class Modem extends \BaseModel {
 			$country_code = $config->default_country_code;
 		}
 
-		// Load google key if .ENV is set
-		$key = '';
-		if (isset ($_ENV['GOOGLE_API_KEY']))
+		// beginning on 2018-06-11 geocode api can only be used with an api key (otherwise returning error)
+		// ⇒ https://cloud.google.com/maps-platform/user-guide
+		if (date('c') > '2018-06-10') {
+			if (!env('GOOGLE_API_KEY')) {
+				$message = "Unable to ask Google Geocoding API – GOOGLE_API_KEY not set";
+				\Session::push('tmp_warning_above_form', $message);
+				Log::warning($message);
+				return false;
+			}
 			$key = '&key='.$_ENV['GOOGLE_API_KEY'];
+		}
+		else {
+			// Load google key if .ENV is set
+			$key = '';
+			if (env('GOOGLE_API_KEY'))
+				$key = '&key='.$_ENV['GOOGLE_API_KEY'];
+		}
 
 		// url encode the address
-		/* $address = urlencode($country_code.', '.$this->street.' '.$this->house_number.', '.$this->zip.', '.$this->city); */
 		$address = urlencode($this->street.' '.$this->house_number.', '.$this->zip.', '.$country_code);
 
 		// google map geocode api url
@@ -1037,41 +1059,47 @@ class Modem extends \BaseModel {
 		$resp_json = file_get_contents($url);
 		$resp = json_decode($resp_json, true);
 
+		$status = array_get($resp, 'status', 'n/a');
+
 		// response status will be 'OK', if able to geocode given address
-		if ($resp['status']=='OK') {
+		if ($status == 'OK') {
 
 			// get the important data
-			$lati = $resp['results'][0]['geometry']['location']['lat'];
-			$longi = $resp['results'][0]['geometry']['location']['lng'];
-			$formatted_address = $resp['results'][0]['formatted_address'];
-			$location_type = $resp['results'][0]['geometry']['location_type'];
+			$lati = array_get($resp, 'results.0.geometry.location.lat', null);
+			$longi = array_get($resp, 'results.0.geometry.location.lng', null);
+			$formatted_address = array_get($resp, 'results.0.formatted_address', null);
+			$location_type = array_get($resp, 'results.0.geometry.location_type', null);
+			$partial_match = array_get($resp, 'results.0.partial_match', null);
 
-			// verify if data is complete
+			// verify if data is complete and a real match
 			$matches = ['ROOFTOP', ];
-			if ($lati && $longi && $formatted_address && in_array($location_type, $matches)) {
-
-				// put the data in the array
+			if (
+				$lati &&
+				$longi &&
+				$formatted_address &&
+				!$partial_match	&&
+				in_array($location_type, $matches)
+			) {
 				$geodata = [
 					'latitude' => $lati,
 					'longitude' => $longi,
-					'source' => 'Google Maps',
+					'source' => 'Google Geocoding API',
 				];
-
 
 				return $geodata;
 			}
 			else {
 
 				$this->geocode_state = 'DATA_VERIFICATION_FAILED';
-				Log::warning('Geocoding for modem '.$this->id.' failed: '.$this->geocode_state);
-				return false;
+				Log::warning('Google geocoding for modem '.$this->id.' failed: '.$this->geocode_state);
+				return null;
 			}
 		}
 		else {
 
-			$this->geocode_state = $resp['status'];
-			Log::warning('Geocoding for modem '.$this->id.' failed: '.$this->geocode_state);
-			return false;
+			$this->geocode_state = $status;
+			Log::warning('Google geocoding for modem '.$this->id.' failed: '.$this->geocode_state);
+			return null;
 		}
 	}
 
@@ -1288,10 +1316,18 @@ class ModemObserver
 		// Use Updating to set the geopos before a save() is called.
 		// Notice: that we can not call save() in update(). This will re-tricker
 		//         the Observer and re-call update() -> endless loop is the result.
-		if (multi_array_key_exists(['street', 'house_number', 'zip', 'city'], $diff))
-		{
+		if (multi_array_key_exists(['street', 'house_number', 'zip', 'city'], $diff)) {
+			// address changed ⇒ try to geocode new address
 			$modem->geocode(false);
 			$diff['x'] = true; 			// refresh Mpr by setting changed attribute to true
+		}
+		elseif (multi_array_key_exists(['x', 'y'], $diff)) {
+			// geodata changed but address not ⇒ manually entered geodata
+			// set origin to username (except if running from console command)
+			if (!\App::runningInConsole()) {
+				$user = \Auth::user();
+				$modem->geocode_source = $user->first_name." ".$user->last_name;
+			};
 		}
 
 		// Refresh MPS rules
