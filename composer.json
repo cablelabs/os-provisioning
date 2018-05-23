@@ -17,7 +17,8 @@
 		"laravelcollective/bus": "^5.2.0",
 		"yajra/laravel-datatables-oracle": "6.*",
 		"markrogoyski/ipv4-subnet-calculator": "2.0.*",
-		"nwidart/laravel-modules": "^1.0"
+		"nwidart/laravel-modules": "^1.0",
+		"maatwebsite/excel": "^2.1"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",

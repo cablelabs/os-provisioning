@@ -1156,4 +1156,108 @@ class BaseController extends Controller {
 
 		return $DT->make(true);
 	}
+
+
+// NOTE: Import is a fast-forward-copy from https://github.com/LaravelDaily/Laravel-Import-CSV-Demo
+
+	/**
+	 * Import: show the import view
+	 *
+	 * @author Torsten Schmidt
+	 *
+	 * @return view
+	 */
+	public function import ()
+	{
+
+		return View::make('Generic.import', $this->compact_prep_view(null));
+	}
+
+
+	/**
+	 * Import Parse: upload the file in CsvData model and allow the user to
+	 *               parse the *.csv file fields
+	 *
+	 * @author Torsten Schmidt
+	 *
+	 * @return view
+	 */
+	public function import_parse(\App\Http\Requests\CsvImportRequest $request)
+	{
+
+		$path = $request->file('csv_file')->getRealPath();
+
+		if ($request->has('header')) {
+			$data = \Maatwebsite\Excel\Facades\Excel::load($path, function($reader) {})->get()->toArray();
+		} else {
+			$data = array_map('str_getcsv', file($path));
+		}
+
+		if (count($data) > 0) {
+			if ($request->has('header')) {
+				$csv_header_fields = [];
+				foreach ($data[0] as $key => $value) {
+					$csv_header_fields[] = $key;
+				}
+			}
+			$csv_data = array_slice($data, 0, 2);
+
+			$csv_data_file = \App\CsvData::create([
+				'csv_filename' => $request->file('csv_file')->getClientOriginalName(),
+				'csv_header' => $request->has('header'),
+				'csv_data' => json_encode($data)
+				]);
+		} else {
+			return redirect()->back();
+		}
+
+		$db_fields = \Schema::getColumnListing(static::get_model_obj()->getTable());
+
+		// d($csv_header_fields, $csv_data, $csv_data_file, $db_fields);
+
+		return View::make('Generic.import_fields', $this->compact_prep_view(compact('csv_header_fields', 'csv_data', 'csv_data_file', 'db_fields')));
+
+	}
+
+
+	/**
+	 * Import Process: Do the import
+	 *
+	 * @author Torsten Schmidt
+	 *
+	 * @return view
+	 */
+	public function import_process()
+	{
+		$data = \App\CsvData::find($_POST['csv_data_file_id']);
+		$csv_data = json_decode($data->csv_data, true);
+
+		foreach ($csv_data as $row) {
+			$obj = static::get_model_obj();
+			foreach (\Schema::getColumnListing(static::get_model_obj()->getTable()) as $index => $field) {
+				if ($data->csv_header) {
+					$obj->$field = $row[$_POST['fields'][$field]];
+				} else {
+					$obj->$field = $row[$_POST['fields'][$index]];
+				}
+			}
+
+			if ($obj->deleted_at == 0)
+				$obj->deleted_at = NULL;
+
+			// Disable & Detach all observers for speed up
+			if (!$data->observer)
+			{
+				$obj->observer_enabled = false;
+				$obj->getEventDispatcher()->forget('eloquent.created: '.\NamespaceController::get_model_name());
+				$obj->getEventDispatcher()->forget('eloquent.creating: '.\NamespaceController::get_model_name());
+				//d( $obj->getEventDispatcher() );
+			}
+
+			$obj->save();
+		}
+
+		return View::make('Generic.import_success', $this->compact_prep_view(null));
+	}
+
 }
