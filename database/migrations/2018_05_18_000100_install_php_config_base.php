@@ -35,7 +35,6 @@ class InstallPhpConfigBase extends BaseMigration {
 			$str = preg_replace('/^post_max_size =.*/m', 'post_max_size = 50M', $str);
 			file_put_contents($file, $str);
 		}
-		system('systemctl reload httpd');
 	}
 
 
