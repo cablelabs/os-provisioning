@@ -123,6 +123,7 @@ return [
 	'modem.street' => 'Straße',
 	'modem.us_pwr' => 'US Pegel',
 	'modem.district' => 'Bezirk',
+	'modem.geocode_source' => 'Geocode-Quelle',
 	'contract_valid' => 'Vertrag gültig?',
 	// QoS
 	'qos.name' => 'QoS Name',

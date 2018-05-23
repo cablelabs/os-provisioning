@@ -24,7 +24,21 @@ class GlobalConfigController extends BaseController {
 			array('form_type' => 'select', 'name' => 'log_level', 'description' => 'System Log Level', 'value' => $this->log_level, 'hidden' => 1),
 			array('form_type' => 'text', 'name' => 'headline1', 'description' => 'Headline 1'),
 			array('form_type' => 'text', 'name' => 'headline2', 'description' => 'Headline 2'),
+			array('form_type' => 'text', 'name' => 'default_country_code', 'description' => 'Default country code', 'help' => trans('helper.ISO_3166_ALPHA-2')),
 			);
+	}
+
+
+	/**
+	 * @author Patrick Reichel
+	 */
+	public function prepare_input($data) {
+
+		// ISO 3166 country codes are uppercase
+		$data['default_country_code'] = \Str::upper($data['default_country_code']);
+
+		$data = parent::prepare_input($data);
+		return $data;
 	}
 
 
