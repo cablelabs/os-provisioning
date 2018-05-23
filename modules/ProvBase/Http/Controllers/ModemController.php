@@ -83,7 +83,7 @@ class ModemController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode'),
 			array('form_type' => 'text', 'name' => 'city', 'description' => 'City'),
 			array('form_type' => 'text', 'name' => 'district', 'description' => 'District'),
-			array('form_type' => 'text', 'name' => 'country_code', 'description' => 'Country code', 'value' => $model->country_code, 'help' => 'ISO 3166 ALPHA-2 (two characters)'),
+			array('form_type' => 'text', 'name' => 'country_code', 'description' => trans('address_country_code'), 'value' => $model->country_code, 'help' => 'ISO 3166 ALPHA-2 (two characters)'),
 			array('form_type' => 'text', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => $installation_address_change_date_options, 'help' => trans('helper.Modem_InstallationAddressChangeDate')), // Date of adress change for notification at telephone provider - important for localisation of emergency calls
 			array('form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1', 'options' => ['placeholder' => 'YYYY-MM-DD']),
 
@@ -98,7 +98,7 @@ class ModemController extends \BaseController {
 				"<div class=col-md-3><input class=form-control name=y type=text value='".$model['y']."' id=y style='background-color:whitesmoke'></div>
 				</div></div>"),
 
-			array('form_type' => 'text', 'name' => 'geocode_source', 'description' => 'Geocode origin', 'help' => 'Where does geocode data come from? If set to “n/a” address could not be geocoded against any API. Will be set to your name on manually changed geodata.'),
+			array('form_type' => 'text', 'name' => 'geocode_source', 'description' => 'address_geocode_origin', 'help' => trans('helper.Modem_GeocodeOrigin')),
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'),
 		);
 
