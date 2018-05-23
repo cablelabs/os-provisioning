@@ -6,44 +6,44 @@ use Log;
 
 class Qos extends \BaseModel {
 
-    // The associated SQL table for this Model
-    public $table = 'qos';
+	// The associated SQL table for this Model
+	public $table = 'qos';
 
 	// Add your validation rules here
 	public static function rules($id = null)
-    {
-        return array(
-            'name' => 'required'
-        );
-    }
+	{
+		return array(
+			'name' => 'required'
+		);
+	}
 
 
-    /**
-     * Relations
-     */
+	/**
+	 * Relations
+	 */
 	public function modem()
 	{
 		return $this->hasMany("Modules\ProvBase\Entities\Modem");
 	}
 
 
-    public function prices()
-    {
-        return $this->hasMany('Modules\BillingBase\Entities\Price');
-    }
+	public function prices()
+	{
+		return $this->hasMany('Modules\BillingBase\Entities\Price');
+	}
 
 
-    // Name of View
-    public static function view_headline()
-    {
-        return 'QoS';
-    }
+	// Name of View
+	public static function view_headline()
+	{
+		return 'QoS';
+	}
 
-    // View Icon
-    public static function view_icon()
-    {
-      return '<i class="fa fa-ticket"></i>';
-    }
+	// View Icon
+	public static function view_icon()
+	{
+	  return '<i class="fa fa-ticket"></i>';
+	}
 
 	// AJAX Index list function
 	// generates datatable content and classes for model
@@ -61,29 +61,29 @@ class Qos extends \BaseModel {
 
 	public function get_bsclass()
 	{
-        $bsclass = 'success';
-        return $bsclass;
-    }
+		$bsclass = 'success';
+		return $bsclass;
+	}
 
-    public function unit_ds_rate_max()
-    {
-        return $this->ds_rate_max.' MBit/s';
-    }
+	public function unit_ds_rate_max()
+	{
+		return $this->ds_rate_max.' MBit/s';
+	}
 
-    public function unit_us_rate_max()
-    {
-        return $this->us_rate_max.' MBit/s';
-    }
+	public function unit_us_rate_max()
+	{
+		return $this->us_rate_max.' MBit/s';
+	}
 
-    /**
-     * BOOT: init quality observer
-     */
-    public static function boot()
-    {
-        parent::boot();
+	/**
+	 * BOOT: init quality observer
+	 */
+	public static function boot()
+	{
+		parent::boot();
 
-        Qos::observe(new QosObserver);
-    }
+		Qos::observe(new QosObserver);
+	}
 }
 
 /**
@@ -93,15 +93,11 @@ class Qos extends \BaseModel {
  */
 class QosObserver
 {
-    public function creating($q)
-    {
-    	$q->ds_rate_max_help = $q->ds_rate_max * 1024 * 1024;
-    	$q->us_rate_max_help = $q->us_rate_max * 1024 * 1024;
-    }
+	public function creating($q)
+	{
+	}
 
-    public function updating($q)
-    {
-    	$q->ds_rate_max_help = $q->ds_rate_max * 1024 * 1024;
-    	$q->us_rate_max_help = $q->us_rate_max * 1024 * 1024;
-    }
+	public function updating($q)
+	{
+	}
 }

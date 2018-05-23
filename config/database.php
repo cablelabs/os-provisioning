@@ -172,6 +172,18 @@ return [
 			'strict'    => false,
 		],
 
+		'mysql-netuser' => [
+			'driver'    => 'mysql',
+			'host'      => env('DB_IMPORT_HOST', 'localhost'),
+			'database'  => env('DB_IMPORT_DATABASE', 'webuser'),
+			'username'  => env('DB_IMPORT_USERNAME', 'root'),
+			'password'  => env('DB_IMPORT_PASSWORD', ''),
+			'charset'   => 'latin1',
+			'collation' => 'latin1_swedish_ci',
+			'prefix'    => '',
+			'strict'    => false,
+		],
+
 	],
 
 	/*

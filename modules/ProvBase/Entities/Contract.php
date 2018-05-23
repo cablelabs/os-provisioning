@@ -65,13 +65,20 @@ class Contract extends \BaseModel {
 	{
 		$bsclass = $this->get_bsclass();
 
-		return ['table' => $this->table,
-				'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.company', $this->table.'.zip', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.contract_start', $this->table.'.contract_end', 'costcenter.name'],
+		$ret = ['table' => $this->table,
+				'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.company', $this->table.'.zip', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.contract_start', $this->table.'.contract_end'],
 				'header' =>  $this->number.' '.$this->firstname.' '.$this->lastname,
 				'bsclass' => $bsclass,
-				'eager_loading' => ['costcenter'],
-				'edit' => ['costcenter.name' => 'get_costcenter_name'],
 				'order_by' => ['0' => 'asc']];
+
+		if (\PPModule::is_active('billingbase'))
+		{
+			$ret['index_header'][] = 'costcenter.name';
+			$ret['eager_loading'] = ['costcenter'];
+			$ret['edit'] = ['costcenter.name' => 'get_costcenter_name'];
+		}
+
+		return $ret;
 	}
 
 
@@ -109,7 +116,7 @@ class Contract extends \BaseModel {
 			$ret['Edit']['SepaMandate'] = $this->sepamandates;
 		}
 
-		$ret['Technical']['Modem'] = $this->modems;
+		$ret['Edit']['Modem'] = $this->modems;
 
 		if (\Module::collections()->has('BillingBase'))
 		{
@@ -150,8 +157,8 @@ class Contract extends \BaseModel {
 
 		if (\Module::collections()->has('Ticketsystem'))
 		{
-			$ret['Edit']['Ticket'] = $this->tickets;
-			$ret['Ticket']['Ticket'] = $this->tickets;
+			$tab = \PPModule::is_active('billingbase') ? 'Ticket' : 'Edit';
+			$ret[$tab]['Ticket'] = $this->tickets;
 		}
 
 		if (\Module::collections()->has('Mail'))
