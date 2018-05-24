@@ -87,6 +87,7 @@ return [
 	//ModemController
 	'Modem_NetworkAccess'			=> 'Network Access for CPEs. (MTAs are not considered and will always go online when all other configurations are correct). Take care: With Billing-Module this checkbox will be overwritten by daily check if tariff changes.',
 	'Modem_InstallationAddressChangeDate'	=> 'In case of (physical) relocation of the modem: Add startdate for the new address here. If readonly there is a pending address change order at Envia.',
+	'Modem_GeocodeOrigin'			=> 'Where does geocode data come from? If set to “n/a” address could not be geocoded against any API. Will be set to your name on manually changed geodata.',
 	'contract_number' 				=> 'Attention - Customer login password is changed automatically on changing this field!',
 	'mac_formats'					=> "Allowed formats (case-insensitive):\n\n1) AA:BB:CC:DD:EE:FF\n2) AABB.CCDD.EEFF\n3) AABBCCDDEEFF",
 	'fixed_ip_warning'				=> 'Using fixed IP address is highly discouraged, as this breaks the ability to move modems and their CPEs freely among CMTSes. Instead of telling the customer a fixed IP address they should be supplied with the hostname, which will not change.',
