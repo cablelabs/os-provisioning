@@ -57,13 +57,9 @@ $kernel = $app->make('Illuminate\Contracts\Http\Kernel');
  */
 $request = Illuminate\Http\Request::capture();
 
-if ($request->is('admin/*'))
+if ($request->is('admin*'))
 {
-	/*
-	 * TODO: throw "nice looking" access error due to permisson restriction!
-	 *       Wrong http port to access admin section!
-	 */
-	echo "Wrong http port to access admin section!";
+	header('Location: /customer/login');
 
 	return;
 }
