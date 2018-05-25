@@ -17,6 +17,8 @@ aaa new-model
 !
 !
 aaa session-id common
+clock timezone CET 1
+clock summer-time CEST recurring last Sun Mar 2:00 last Sun Oct 3:00
 cable admission-control preempt priority-voice
 !
 !
@@ -135,4 +137,7 @@ exception crashinfo buffersize 64
 exception crashinfo maximum files 10
 exception pxf style minimal
 exception pxf flash flash:
+!
+ntp update-calendar
+ntp server {{$cb->prov_ip}}
 !
