@@ -942,13 +942,8 @@ class Modem extends \BaseModel {
 		$parts = preg_split("/(,?\s+)|((?<=[-\/a-z])(?=\d))|((?<=\d)(?=[-\/a-z]))/i", strtolower($this->house_number));
 		$housenumber_prepared = implode(' ', $parts);
 
-		if ($this->country_code) {
-			$country_code = $this->country_code;
-		}
-		else {
-			$config = GlobalConfig::find(1);
-			$country_code = $config->default_country_code;
-		}
+
+		$country_code = $this->country_code ? : GlobalConfig::first()->default_country_code;
 
 		$url = "https://nominatim.openstreetmap.org/search";
 		// see https://wiki.openstreetmap.org/wiki/DE:Nominatim#Parameter for details
@@ -1021,13 +1016,7 @@ class Modem extends \BaseModel {
 
 		$geodata = null;
 
-		if ($this->country_code) {
-			$country_code = $this->country_code;
-		}
-		else {
-			$config = GlobalConfig::find(1);
-			$country_code = $config->default_country_code;
-		}
+		$country_code = $this->country_code ? : GlobalConfig::first()->default_country_code;
 
 		// beginning on 2018-06-11 geocode api can only be used with an api key (otherwise returning error)
 		// ⇒ https://cloud.google.com/maps-platform/user-guide
@@ -1350,16 +1339,15 @@ class ModemObserver
 		if (!$modem->observer_enabled)
 			return;
 
-		// TODO: only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
-		$restart = $modem->needs_restart();
+		// only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
+		$diff = $modem->getDirty();
 
-		if ($restart)
+		if (multi_array_key_exists(['contract_id', 'public', 'network_access', 'configfile_id', 'qos_id', 'mac'], $diff))
 		{
 			$modem->make_dhcp_cm();
-			$modem->restart_modem($restart > 0);
+			$modem->restart_modem(array_key_exists('mac', $diff));
 			$modem->make_configfile();
 		}
-
 
 		// ATTENTION:
 		// If we ever think about moving modems to other contracts we have to delete envia TEL related stuff, too –
