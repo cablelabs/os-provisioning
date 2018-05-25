@@ -1331,12 +1331,16 @@ class ModemObserver
 		}
 
 		// Refresh MPS rules
-		// Note: does not perform a save() which could trigger observer.
 		if (\Module::collections()->has('HfcCustomer'))
 		{
-			if (multi_array_key_exists(['x', 'y'], $diff))
-				$modem->netelement_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem);
+			if (multi_array_key_exists(['x', 'y'], $diff)) {
+				// suppress output in this case
+				ob_start();
+				\Modules\HfcCustomer\Entities\Mpr::refresh($modem);
+				ob_end_clean();
+			}
 		}
+
 	}
 
 	public function updated($modem)
