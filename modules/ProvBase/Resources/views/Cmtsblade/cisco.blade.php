@@ -73,16 +73,17 @@ no ip http secure-server
 !
 !
 !
-ip access-list standard snmp
+ip access-list standard mgmt
  permit {{$cb->tf_net_1}} 0.0.0.255
 !
 ip access-list extended cpe-private
- permit ip 100.64.0.0 0.0.3.255 any
+@foreach($cb->ippools()->where('type', '=', 'CPEPriv')->get() as $cpe_pool)
+ permit ip {{$cpe_pool->net}} {{$cpe_pool->wildcard_mask()}} any
+@endforeach
 !
 @include('provbase::Cmtsblade.acl_bundle')
 !
 logging cmts ipc-cable log-level errors
- access-list 13 permit {{$cb->tf_net_1}} 0.0.0.255
 cpd cr-id 1
 nls resp-timeout 1
 !
@@ -90,8 +91,8 @@ route-map NAT permit 10
  match ip address cpe-private
  set ip next-hop {{$cb->nat_ip}}
 !
-snmp-server community {{$cb->snmp_ro}} RO snmp
-snmp-server community {{$cb->snmp_rw}} RW snmp
+snmp-server community {{$cb->snmp_ro}} RO mgmt
+snmp-server community {{$cb->snmp_rw}} RW mgmt
 !
 !
 control-plane
@@ -107,28 +108,14 @@ gatekeeper
 !
 !
 line con 0
- exec-timeout 0 0
- logging synchronous
  exec prompt timestamp
  stopbits 1
 line aux 0
- access-class 13 in
+ access-class mgmt in
  transport input ssh
  stopbits 1
-line vty 0 1
- access-class 13 in
- password {{$cb->vty_psw}}
- logging synchronous
- exec prompt timestamp
- transport input telnet
-line vty 2 4
- access-class 13 in
- exec-timeout 120 0
- password {{$cb->vty_psw}}
- exec prompt timestamp
- transport input ssh
-line vty 5 15
- access-class 13 in
+line vty 0 15
+ access-class mgmt in
  exec-timeout 120 0
  exec prompt timestamp
  transport input ssh
