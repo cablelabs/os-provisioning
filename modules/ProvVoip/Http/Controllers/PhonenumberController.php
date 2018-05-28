@@ -90,7 +90,7 @@ class PhonenumberController extends \BaseController {
 			array(
 				'form_type' => 'select',
 				'name' => 'country_code',
-				'description' => 'Country Code',
+				'description' => 'International prefix',
 				'value' => Phonenumber::getPossibleEnumValues('country_code')
 			),
 			array(
