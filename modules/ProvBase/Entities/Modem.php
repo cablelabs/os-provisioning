@@ -1092,8 +1092,9 @@ class Modem extends \BaseModel {
 			$location_type = array_get($resp, 'results.0.geometry.location_type', null);
 			$partial_match = array_get($resp, 'results.0.partial_match', null);
 
-			// verify if data is complete and a real match
 			$matches = ['ROOFTOP', ];
+			$interpolated_matches = ['RANGE_INTERPOLATED'];
+			// verify if data is complete and a real match
 			if (
 				$lati &&
 				$longi &&
@@ -1105,6 +1106,23 @@ class Modem extends \BaseModel {
 					'latitude' => $lati,
 					'longitude' => $longi,
 					'source' => 'Google Geocoding API',
+				];
+
+				return $geodata;
+			}
+			// check if partial match (interpolated geocoords seem to be pretty good!)
+			// mark source as tainted to give the user a hint
+			elseif (
+				$lati &&
+				$longi &&
+				$formatted_address &&
+				$partial_match	&&
+				in_array($location_type, $interpolated_matches)
+			) {
+				$geodata = [
+					'latitude' => $lati,
+					'longitude' => $longi,
+					'source' => 'Google Geocoding API (interpolated)',
 				];
 
 				return $geodata;
