@@ -285,9 +285,9 @@ class Contract extends \BaseModel {
 		// return $this->hasMany('Modules\BillingBase\Entities\Invoice')->where('contract_id', '=', $this->id)->where('settlementrun_id', '!=', [$hide]);
 	}
 
-	public function cccauthuser()
+	public function CccUser()
 	{
-		return $this->hasOne('Modules\Ccc\Entities\CccAuthuser');
+		return $this->hasOne('Modules\Ccc\Entities\CccUser');
 	}
 
 	public function tickets()
@@ -1314,7 +1314,7 @@ class ContractObserver
 			if ($contract->number != $contract['original']['number'])
 			{
 				// change customer information - take care - this automatically changes login psw of customer
-				if ($customer = $contract->cccauthuser)
+				if ($customer = $contract->CccUser)
 					$customer->update();
 			}
 

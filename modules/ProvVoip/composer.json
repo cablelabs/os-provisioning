@@ -1,12 +1,10 @@
 {
-	"name": "pingpong-modules/provvoip",
-	"description": "",
-	"authors": [
-		{
-			"name": "Pingpong Labs",
-			"email": "pingpong.labs@gmail.com"
-		}
-	],
+	"name": "nmsprime-modules/provvoip",
+	"description": "NMS Prime VOIP Privisioning Module",
+	"authors": [{
+		"name": "Roetzer engineering",
+		"email": "info@roetzer-engineering.com"
+	}],
 	"autoload": {
 		"psr-4": {
 			"Modules\\ProvVoip\\": ""

@@ -1,12 +1,10 @@
 {
-	"name": "pingpong-modules/hfcsnmp",
-	"description": "",
-	"authors": [
-		{
-			"name": "Pingpong Labs",
-			"email": "pingpong.labs@gmail.com"
-		}
-	],
+	"name": "nmsprime-modules/hfcsnmp",
+	"description": "HFC SNMP Module for NMS Prime",
+	"authors": [{
+		"name": "Roetzer engineering",
+		"email": "info@roetzer-engineering.com"
+	}],
 	"autoload": {
 		"psr-4": {
 			"Modules\\HfcSnmp\\": ""

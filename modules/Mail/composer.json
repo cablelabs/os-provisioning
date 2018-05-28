@@ -1,12 +1,10 @@
 {
-	"name": "pingpong-modules/mail",
-	"description": "",
-	"authors": [
-		{
-			"name": "Pingpong Labs",
-			"email": "pingpong.labs@gmail.com"
-		}
-	],
+	"name": "nmsprime-modules/mail",
+	"description": "NMS Prime MailModule",
+	"authors": [{
+		"name": "Roetzer engineering",
+		"email": "info@roetzer-engineering.com"
+	}],
 	"autoload": {
 		"psr-4": {
 			"Modules\\Mail\\": ""

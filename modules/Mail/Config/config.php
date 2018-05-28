@@ -1,5 +1,11 @@
 <?php
 
 return [
-	'name' => 'Mail'
+	'name' => 'Mail',
+	'MenuItems' => [
+		'E-Mail' => [
+			'link'	=> 'Email.index',
+			'icon'	=> 'fa-envelope-o'
+		]
+	]
 ];

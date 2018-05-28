@@ -18,6 +18,4 @@ BaseRoute::group([], function() {
 	BaseRoute::resource('Contract', 'Modules\ProvBase\Http\Controllers\ContractController');
 	BaseRoute::resource('Domain', 'Modules\ProvBase\Http\Controllers\DomainController');
 	BaseRoute::resource('ProvBase', 'Modules\ProvBase\Http\Controllers\ProvBaseController');
-//    BaseRoute::resource('Dashboard', 'Modules\ProvBase\Http\Controllers\DashboardController@index');
-
 });
