@@ -901,13 +901,20 @@ class Modem extends \BaseModel {
 			Log::info("Geocoding successful, result: ".$this->y.",".$this->x.' (source: '.$geodata['source'].')');
 		}
 		else {
-			// if both methods failed: delete probably outdated geodata and inform user
-			$this->y = '';
-			$this->x = '';
-			$this->geocode_source = 'n/a';
-			$message = "Could not determine geo coordinates – please add manually";
-			Log::info("geocoding failed");
-			\Session::push('tmp_error_above_form', $message);
+			// no geodata determined
+			if (!\App::runningInConsole()) {
+				// if running interactively: delete probably outdated geodata and inform user
+				$this->y = '';
+				$this->x = '';
+				$this->geocode_source = 'n/a';
+				$message = "Could not determine geo coordinates – please add manually";
+				\Session::push('tmp_error_above_form', $message);
+			}
+			else {
+				// if running from console: preserve existing geodata (could have been be imported or manually set in older times)
+				$this->geocode_source = 'n/a (unchanged existing data)';
+			}
+			Log::warning("geocoding failed");
 		}
 
 		if ($save) {

@@ -60,7 +60,7 @@ class geocodeCommand extends Command {
 		// get all modems with missing or uncertain geodata
 		// ordering puts modems with uncertain data first (correct wrong entries)
 		// second are all modems where geocode failed before
-		$modems = Modem::whereRaw("geocode_source IS NULL OR geocode_source LIKE '' OR geocode_source LIKE 'n/a'")
+		$modems = Modem::whereRaw("geocode_source IS NULL OR geocode_source LIKE '' OR geocode_source LIKE 'n/a%'")
 			->orderBy('geocode_source')
 			->take($this->modem_count)
 			->get();
