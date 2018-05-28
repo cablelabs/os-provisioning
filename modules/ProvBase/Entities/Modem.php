@@ -920,6 +920,17 @@ class Modem extends \BaseModel {
 
 
 	/**
+	 * Some housenumbers need special handling. This method splits them to the needed parts.
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _split_housenumber_for_geocoding($house_number) {
+		// regex from https://stackoverflow.com/questions/10180730/splitting-string-containing-letters-and-numbers-not-separated-by-any-particular
+		return preg_split("/(,?\s+)|((?<=[-\/a-z])(?=\d))|((?<=\d)(?=[-\/a-z]))/i", strtolower($this->house_number));
+	}
+
+
+	/**
 	 * Get geodata from OpenStreetMap
 	 *
 	 * @author Patrick Reichel
@@ -929,6 +940,7 @@ class Modem extends \BaseModel {
 		Log::debug(__METHOD__." started for ".$this->hostname);
 
 		$geodata = null;
+		$base_url = "https://nominatim.openstreetmap.org/search";
 
 		if (!filter_var(env('OSM_NOMINATIM_EMAIL'), FILTER_VALIDATE_EMAIL)) {
 			$message = "Unable to ask OpenStreetMap Nominatim API for geocoding – OSM_NOMINATIM_EMAIL not set";
@@ -937,63 +949,83 @@ class Modem extends \BaseModel {
 			return false;
 		}
 
-		// first: split the house number – OSM expects a space e.g. between “104” and “a” in “104a”
-		// regex from https://stackoverflow.com/questions/10180730/splitting-string-containing-letters-and-numbers-not-separated-by-any-particular
-		$parts = preg_split("/(,?\s+)|((?<=[-\/a-z])(?=\d))|((?<=\d)(?=[-\/a-z]))/i", strtolower($this->house_number));
-		$housenumber_prepared = implode(' ', $parts);
-
-
 		$country_code = $this->country_code ? : GlobalConfig::first()->default_country_code;
 
-		$url = "https://nominatim.openstreetmap.org/search";
-		// see https://wiki.openstreetmap.org/wiki/DE:Nominatim#Parameter for details
-		// we are using the structured format (faster, saves server ressources – but marked experimental)
-		$params = [
-			'street' => "$housenumber_prepared $this->street",
-			'postalcode' => $this->zip,
-			'country' => $country_code,
-			'email' => env('OSM_NOMINATIM_EMAIL'),	// has to be set (https://operations.osmfoundation.org/policies/nominatim); else 403 Forbidden
-			'format' => 'json',			// return format
-			'dedupe' => '1',			// only one geolocation (even if address is split to multiple places)?
-			'polygon' => '0',			// include surrounding polygons?
-			'addressdetails' => '0',	// not available using API
+		// problem: data is inconsistent in OSM – housenumbers with additional character can have two formats:
+		// “104 a” or “104a”; there is an 3-years-open bug report: https://trac.openstreetmap.org/ticket/5256
+		// so we have to try both variants if the first one does not return a result
+		$parts = $this->_split_housenumber_for_geocoding($this->house_number);
 
-		];
-
-		$url .= "?";
-		if ($params) {
-			$tmp_params = [];
-			foreach ($params as $key => $value) {
-				array_push($tmp_params, (urlencode($key)."=".urlencode($value)));
-			}
-			$url .= implode("&", $tmp_params);
+		if (count($parts) < 2) {
+			$housenumber_variants = [$parts[0]];
 		}
+		else {
+			$housenumber_variants = [
+				implode('', $parts),	// more often used according to bug report
+				implode(' ', $parts),
+			];
+		};
 
-		Log::info("Trying to geocode modem ".$this->id." against $url");
+		foreach ($housenumber_variants as $housenumber_prepared) {
+			// see https://wiki.openstreetmap.org/wiki/DE:Nominatim#Parameter for details
+			// we are using the structured format (faster, saves server ressources – but marked experimental)
+			$params = [
+				'street' => "$housenumber_prepared $this->street",
+				'postalcode' => $this->zip,
+				'country' => $country_code,
+				'email' => env('OSM_NOMINATIM_EMAIL'),	// has to be set (https://operations.osmfoundation.org/policies/nominatim); else 403 Forbidden
+				'format' => 'json',			// return format
+				'dedupe' => '1',			// only one geolocation (even if address is split to multiple places)?
+				'polygon' => '0',			// include surrounding polygons?
+				'addressdetails' => '0',	// not available using API
 
-		$geojson = file_get_contents($url);
-		$geodata_raw = json_decode($geojson, true);
+			];
 
-		$matches = ['building', ];
-		foreach ($geodata_raw as $entry) {
-			$class = array_get($entry, 'class', '');
-			$display_name = array_get($entry, 'display_name', '');
-			$lat = array_get($entry, 'lat', null);
-			$lon = array_get($entry, 'lon', null);
-
-			// check if returned entry is of certain type (e.g. “highway” indicates fuzzy match)
-			if (
-				in_array($class, $matches) &&
-				$lat &&
-				$lon &&
-				\Str::contains($display_name, $housenumber_prepared)	// don't check for startswith; sometimes a company name is added before the house number
-			) {
-				$geodata = [
-					'latitude' => $lat,
-					'longitude' => $lon,
-					'source' => 'OSM Nominatim',
-				];
+			$url = $base_url."?";
+			if ($params) {
+				$tmp_params = [];
+				foreach ($params as $key => $value) {
+					array_push($tmp_params, (urlencode($key)."=".urlencode($value)));
+				}
+				$url .= implode("&", $tmp_params);
 			}
+
+			Log::info("Trying to geocode modem ".$this->id." against $url");
+
+			$geojson = file_get_contents($url);
+			$geodata_raw = json_decode($geojson, true);
+
+			$matches = ['building', ];
+			foreach ($geodata_raw as $entry) {
+				$class = array_get($entry, 'class', '');
+				$display_name = array_get($entry, 'display_name', '');
+				$lat = array_get($entry, 'lat', null);
+				$lon = array_get($entry, 'lon', null);
+
+				// check if returned entry is of certain type (e.g. “highway” indicates fuzzy match)
+				if (in_array($class, $matches) && $lat && $lon) {
+
+					// as both variants can appear in resulting address: check for all of them
+					foreach ($housenumber_variants as $variant) {
+						if (\Str::contains(strtolower($display_name), $variant)) {	// don't check for startswith; sometimes a company name is added before the house number
+							$geodata = [
+								'latitude' => $lat,
+								'longitude' => $lon,
+								'source' => 'OSM Nominatim',
+							];
+							break;
+						}
+					}
+				}
+			}
+
+			// if this try results in a match: exit the loop
+			if ($geodata) {
+				break;
+			}
+
+			// sleep to respect usage policy
+			sleep(1);
 		}
 
 		if (!$geodata) {
