@@ -83,6 +83,7 @@ return [
 	'modem_configfile_error'	=> 'Modem Konfigurationsdatei nicht gefunden',
 	'modem_offline'				=> 'Modem ist Offline',
 	'modem_restart_error' 		=> 'Das Modem konnte nicht neugestartet werden! (offline?)',
+	'modem_statistics'			=> 'Anzahl Online / Offline Modems',
 	'month'						=> 'Monat',
 	'Month'						=> 'Monat',
 	'mta_configfile_error'		=> 'MTA Konfigurationsdatei nicht gefunden',
