@@ -10,8 +10,6 @@ return [
 
 	// Descriptions of Form Fields in Edit/Create
 	'accCmd_processing' 	=> 'The SettlementRun is executed. Please wait until this process has finished.',
-	'address_country_code'	=> 'Country code',
-	'address_geocode_origin'=> 'Geocode origin',
 	'alert' 				=> 'Attention!',
 	'Call Data Record'		=> 'Call Data Record',
 	'ccc'					=> 'Customer Control Center',

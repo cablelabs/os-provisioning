@@ -27,7 +27,7 @@ return [
 	'Contract'					=> 'Vertrag',
 	'Contract List'				=> 'Vertragsliste',
 	'Contracts'					=> 'Verträge',
-	'Country Code'				=> 'Ländervorwahl',
+	'International prefix'		=> 'Ländervorwahl',
 	'Country code'				=> 'Ländercode',
 	'cpe_not_reachable' 		=> 'aber via PING nicht erreichbar (ICMP kann herstellerabhängig vom Router geblockt werden)',
 	'cpe_log_error'				=> 'ist nicht beim Server registriert - Kein Logeintrag gefunden',
