@@ -104,11 +104,7 @@ function escape_latex_special_chars($string)
 			"^"  => "\\^{}",
 	);
 
-	foreach ($map as $search => $replace)
-		$string = str_replace($search, $replace, $string);
-
-	return $string;
-
+	return strtr($string, $map);
 	// not working: https://stackoverflow.com/questions/2541616/how-to-escape-strip-special-characters-in-the-latex-document
 	// return preg_replace( "/([\^\%~\\\\#\$%&_\{\}])/e", "\$map['$1']", $string );
 }
