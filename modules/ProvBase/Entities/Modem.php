@@ -946,6 +946,12 @@ class Modem extends \BaseModel {
 
 		Log::debug(__METHOD__." started for ".$this->hostname);
 
+		// don't ask API in testing mode (=faked data)
+		if (env('APP_ENV') == 'testing') {
+			Log::debug('Testing mode – will not ask OSM Nominatim with faked data');
+			return null;
+		}
+
 		$geodata = null;
 		$base_url = "https://nominatim.openstreetmap.org/search";
 
@@ -1032,7 +1038,9 @@ class Modem extends \BaseModel {
 			}
 
 			// sleep to respect usage policy
-			sleep(1);
+			if (count($housenumber_variants > 1)) {
+				sleep(1);
+			}
 		}
 
 		if (!$geodata) {
@@ -1052,6 +1060,12 @@ class Modem extends \BaseModel {
 	protected function _geocode_google_maps() {
 
 		Log::debug(__METHOD__." started for ".$this->hostname);
+
+		// don't ask API in testing mode (=faked data)
+		if (env('APP_ENV') == 'testing') {
+			Log::debug('Testing mode – will not ask Google Geocoding API with faked data');
+			return null;
+		}
 
 		$geodata = null;
 
