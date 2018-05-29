@@ -901,13 +901,20 @@ class Modem extends \BaseModel {
 			Log::info("Geocoding successful, result: ".$this->y.",".$this->x.' (source: '.$geodata['source'].')');
 		}
 		else {
-			// if both methods failed: delete probably outdated geodata and inform user
-			$this->y = '';
-			$this->x = '';
-			$this->geocode_source = 'n/a';
-			$message = "Could not determine geo coordinates – please add manually";
-			Log::info("geocoding failed");
-			\Session::push('tmp_error_above_form', $message);
+			// no geodata determined
+			if (!\App::runningInConsole()) {
+				// if running interactively: delete probably outdated geodata and inform user
+				$this->y = '';
+				$this->x = '';
+				$this->geocode_source = 'n/a';
+				$message = "Could not determine geo coordinates – please add manually";
+				\Session::push('tmp_error_above_form', $message);
+			}
+			else {
+				// if running from console: preserve existing geodata (could have been be imported or manually set in older times)
+				$this->geocode_source = 'n/a (unchanged existing data)';
+			}
+			Log::warning("geocoding failed");
 		}
 
 		if ($save) {
@@ -916,6 +923,17 @@ class Modem extends \BaseModel {
 
 		return $geodata;
 
+	}
+
+
+	/**
+	 * Some housenumbers need special handling. This method splits them to the needed parts.
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _split_housenumber_for_geocoding($house_number) {
+		// regex from https://stackoverflow.com/questions/10180730/splitting-string-containing-letters-and-numbers-not-separated-by-any-particular
+		return preg_split("/(,?\s+)|((?<=[-\/a-z])(?=\d))|((?<=\d)(?=[-\/a-z]))/i", strtolower($this->house_number));
 	}
 
 
@@ -929,6 +947,7 @@ class Modem extends \BaseModel {
 		Log::debug(__METHOD__." started for ".$this->hostname);
 
 		$geodata = null;
+		$base_url = "https://nominatim.openstreetmap.org/search";
 
 		if (!filter_var(env('OSM_NOMINATIM_EMAIL'), FILTER_VALIDATE_EMAIL)) {
 			$message = "Unable to ask OpenStreetMap Nominatim API for geocoding – OSM_NOMINATIM_EMAIL not set";
@@ -937,63 +956,83 @@ class Modem extends \BaseModel {
 			return false;
 		}
 
-		// first: split the house number – OSM expects a space e.g. between “104” and “a” in “104a”
-		// regex from https://stackoverflow.com/questions/10180730/splitting-string-containing-letters-and-numbers-not-separated-by-any-particular
-		$parts = preg_split("/(,?\s+)|((?<=[-\/a-z])(?=\d))|((?<=\d)(?=[-\/a-z]))/i", strtolower($this->house_number));
-		$housenumber_prepared = implode(' ', $parts);
-
-
 		$country_code = $this->country_code ? : GlobalConfig::first()->default_country_code;
 
-		$url = "https://nominatim.openstreetmap.org/search";
-		// see https://wiki.openstreetmap.org/wiki/DE:Nominatim#Parameter for details
-		// we are using the structured format (faster, saves server ressources – but marked experimental)
-		$params = [
-			'street' => "$housenumber_prepared $this->street",
-			'postalcode' => $this->zip,
-			'country' => $country_code,
-			'email' => env('OSM_NOMINATIM_EMAIL'),	// has to be set (https://operations.osmfoundation.org/policies/nominatim); else 403 Forbidden
-			'format' => 'json',			// return format
-			'dedupe' => '1',			// only one geolocation (even if address is split to multiple places)?
-			'polygon' => '0',			// include surrounding polygons?
-			'addressdetails' => '0',	// not available using API
+		// problem: data is inconsistent in OSM – housenumbers with additional character can have two formats:
+		// “104 a” or “104a”; there is an 3-years-open bug report: https://trac.openstreetmap.org/ticket/5256
+		// so we have to try both variants if the first one does not return a result
+		$parts = $this->_split_housenumber_for_geocoding($this->house_number);
 
-		];
-
-		$url .= "?";
-		if ($params) {
-			$tmp_params = [];
-			foreach ($params as $key => $value) {
-				array_push($tmp_params, (urlencode($key)."=".urlencode($value)));
-			}
-			$url .= implode("&", $tmp_params);
+		if (count($parts) < 2) {
+			$housenumber_variants = [$parts[0]];
 		}
+		else {
+			$housenumber_variants = [
+				implode('', $parts),	// more often used according to bug report
+				implode(' ', $parts),
+			];
+		};
 
-		Log::info("Trying to geocode modem ".$this->id." against $url");
+		foreach ($housenumber_variants as $housenumber_prepared) {
+			// see https://wiki.openstreetmap.org/wiki/DE:Nominatim#Parameter for details
+			// we are using the structured format (faster, saves server ressources – but marked experimental)
+			$params = [
+				'street' => "$housenumber_prepared $this->street",
+				'postalcode' => $this->zip,
+				'country' => $country_code,
+				'email' => env('OSM_NOMINATIM_EMAIL'),	// has to be set (https://operations.osmfoundation.org/policies/nominatim); else 403 Forbidden
+				'format' => 'json',			// return format
+				'dedupe' => '1',			// only one geolocation (even if address is split to multiple places)?
+				'polygon' => '0',			// include surrounding polygons?
+				'addressdetails' => '0',	// not available using API
 
-		$geojson = file_get_contents($url);
-		$geodata_raw = json_decode($geojson, true);
+			];
 
-		$matches = ['building', ];
-		foreach ($geodata_raw as $entry) {
-			$class = array_get($entry, 'class', '');
-			$display_name = array_get($entry, 'display_name', '');
-			$lat = array_get($entry, 'lat', null);
-			$lon = array_get($entry, 'lon', null);
-
-			// check if returned entry is of certain type (e.g. “highway” indicates fuzzy match)
-			if (
-				in_array($class, $matches) &&
-				$lat &&
-				$lon &&
-				\Str::contains($display_name, $housenumber_prepared)	// don't check for startswith; sometimes a company name is added before the house number
-			) {
-				$geodata = [
-					'latitude' => $lat,
-					'longitude' => $lon,
-					'source' => 'OSM Nominatim',
-				];
+			$url = $base_url."?";
+			if ($params) {
+				$tmp_params = [];
+				foreach ($params as $key => $value) {
+					array_push($tmp_params, (urlencode($key)."=".urlencode($value)));
+				}
+				$url .= implode("&", $tmp_params);
 			}
+
+			Log::info("Trying to geocode modem ".$this->id." against $url");
+
+			$geojson = file_get_contents($url);
+			$geodata_raw = json_decode($geojson, true);
+
+			$matches = ['building', ];
+			foreach ($geodata_raw as $entry) {
+				$class = array_get($entry, 'class', '');
+				$display_name = array_get($entry, 'display_name', '');
+				$lat = array_get($entry, 'lat', null);
+				$lon = array_get($entry, 'lon', null);
+
+				// check if returned entry is of certain type (e.g. “highway” indicates fuzzy match)
+				if (in_array($class, $matches) && $lat && $lon) {
+
+					// as both variants can appear in resulting address: check for all of them
+					foreach ($housenumber_variants as $variant) {
+						if (\Str::contains(strtolower($display_name), $variant)) {	// don't check for startswith; sometimes a company name is added before the house number
+							$geodata = [
+								'latitude' => $lat,
+								'longitude' => $lon,
+								'source' => 'OSM Nominatim',
+							];
+							break;
+						}
+					}
+				}
+			}
+
+			// if this try results in a match: exit the loop
+			if ($geodata) {
+				break;
+			}
+
+			// sleep to respect usage policy
+			sleep(1);
 		}
 
 		if (!$geodata) {
@@ -1060,8 +1099,9 @@ class Modem extends \BaseModel {
 			$location_type = array_get($resp, 'results.0.geometry.location_type', null);
 			$partial_match = array_get($resp, 'results.0.partial_match', null);
 
-			// verify if data is complete and a real match
 			$matches = ['ROOFTOP', ];
+			$interpolated_matches = ['RANGE_INTERPOLATED'];
+			// verify if data is complete and a real match
 			if (
 				$lati &&
 				$longi &&
@@ -1073,6 +1113,23 @@ class Modem extends \BaseModel {
 					'latitude' => $lati,
 					'longitude' => $longi,
 					'source' => 'Google Geocoding API',
+				];
+
+				return $geodata;
+			}
+			// check if partial match (interpolated geocoords seem to be pretty good!)
+			// mark source as tainted to give the user a hint
+			elseif (
+				$lati &&
+				$longi &&
+				$formatted_address &&
+				$partial_match	&&
+				in_array($location_type, $interpolated_matches)
+			) {
+				$geodata = [
+					'latitude' => $lati,
+					'longitude' => $longi,
+					'source' => 'Google Geocoding API (interpolated)',
 				];
 
 				return $geodata;
