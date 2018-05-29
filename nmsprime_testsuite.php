@@ -1,4 +1,4 @@
-#!/usr/bin/env php
+#!/opt/rh/rh-php71/root/usr/bin/php
 
 <?php
 
@@ -14,21 +14,21 @@
  */
 class UnitTestStarter {
 
-
 	protected $basepath = "/var/www/nmsprime";
+	protected $phpunit = "source scl_source enable rh-php71; vendor/bin/phpunit";
 
 	protected $modules_disabled_for_all_circuits = [
 		'Mail',
-		'Provmon',
-		'Voipmon',
+		'ProvMon',
+		'VoipMon',
 	];
 
 	// the test circuits
 	// each circuits holds an array with modules to disable
 	protected $circuits = [
 		'all_modules_enabled' => [],
-		'no_envia' => ['Provvoipenvia'],
-		'no_voip' => ['Provvoip', 'Provvoipenvia', 'Voipmon'],
+		'no_envia' => ['ProvVoipEnvia'],
+		'no_voip' => ['ProvVoip', 'ProvVoipEnvia', 'VoipMon'],
 	];
 
 
@@ -52,6 +52,9 @@ class UnitTestStarter {
 		$this->_run_tests();
 
 		$this->_restore_initial_module_state();
+
+		echo "\n\n";
+		echo "Finished! Check *.htm files in ".$this->basepath."/phpunit for data collected during the tests.\n\n";
 
 	}
 
@@ -169,7 +172,9 @@ class UnitTestStarter {
 		$this->_write_config_file($configfile, $substitutions);
 
 		/* exec("sudo -u apache phpunit --configuration $configfile | tee $outfile", $output, $return_var); */
-		passthru("sudo -u apache phpunit --configuration $configfile | tee $outfile", $exit_code);
+		/* passthru("sudo -u apache ".$this->phpunit." --configuration $configfile | tee $outfile", $exit_code); */
+		file_put_contents($outfile, "<pre>\n\n");
+		passthru($this->phpunit." --configuration $configfile | tee -a $outfile", $exit_code);
 
 		// check for errors in outfile (unfortunately phpunit exits with “0” even on failures and errors)
 		// this is used to skip testing of other circuits if current on failed

@@ -946,6 +946,12 @@ class Modem extends \BaseModel {
 
 		Log::debug(__METHOD__." started for ".$this->hostname);
 
+		// don't ask API in testing mode (=faked data)
+		if (env('APP_ENV') == 'testing') {
+			Log::debug('Testing mode – will not ask OSM Nominatim with faked data');
+			return null;
+		}
+
 		$geodata = null;
 		$base_url = "https://nominatim.openstreetmap.org/search";
 
@@ -1032,7 +1038,9 @@ class Modem extends \BaseModel {
 			}
 
 			// sleep to respect usage policy
-			sleep(1);
+			if (count($housenumber_variants > 1)) {
+				sleep(1);
+			}
 		}
 
 		if (!$geodata) {
@@ -1052,6 +1060,12 @@ class Modem extends \BaseModel {
 	protected function _geocode_google_maps() {
 
 		Log::debug(__METHOD__." started for ".$this->hostname);
+
+		// don't ask API in testing mode (=faked data)
+		if (env('APP_ENV') == 'testing') {
+			Log::debug('Testing mode – will not ask Google Geocoding API with faked data');
+			return null;
+		}
 
 		$geodata = null;
 
@@ -1360,20 +1374,21 @@ class ModemObserver
 		$diff = $modem->getDirty();
 
 		// Use Updating to set the geopos before a save() is called.
-		// Notice: that we can not call save() in update(). This will re-tricker
+		// Notice: that we can not call save() in update(). This will re-trigger
 		//         the Observer and re-call update() -> endless loop is the result.
-		if (multi_array_key_exists(['street', 'house_number', 'zip', 'city'], $diff)) {
-			// address changed ⇒ try to geocode new address
-			$modem->geocode(false);
-			$diff['x'] = true; 			// refresh Mpr by setting changed attribute to true
-		}
-		elseif (multi_array_key_exists(['x', 'y'], $diff)) {
-			// geodata changed but address not ⇒ manually entered geodata
+		if (multi_array_key_exists(['x', 'y'], $diff)) {
+			// geodata changed ⇒ manually entered geodata
 			// set origin to username (except if running from console command)
+			// this also prevents asking the geocoding APIs on seeded modems
 			if (!\App::runningInConsole()) {
 				$user = \Auth::user();
 				$modem->geocode_source = $user->first_name." ".$user->last_name;
 			};
+		}
+		elseif (multi_array_key_exists(['street', 'house_number', 'zip', 'city'], $diff)) {
+			// address changed ⇒ try to geocode new address
+			$modem->geocode(false);
+			$diff['x'] = true; 			// refresh Mpr by setting changed attribute to true
 		}
 
 		// Refresh MPS rules
