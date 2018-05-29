@@ -47,6 +47,7 @@ class Kernel extends ConsoleKernel {
 
 		$schedule->call('\Modules\ProvBase\Http\Controllers\DashboardController@save_income_to_json')->dailyAt('00:07');
 		$schedule->call('\Modules\Dashboard\Http\Controllers\DashboardController@save_contracts_to_json')->hourly();
+		$schedule->call('\Modules\Dashboard\Http\Controllers\DashboardController@save_modem_statistics')->everyMinute();
 
 
 		// Remove all Log Entries older than 90 days

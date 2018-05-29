@@ -383,6 +383,9 @@ class BaseController extends Controller {
 		if (( \Module::collections()->has('ProvVoipEnvia')) && (!isset($a['envia_interactioncount'])) )
 			$a['envia_interactioncount'] = \Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
 
+		if ( \Module::collections()->has('Dashboard'))
+			$a['modem_statistics'] = \Modules\Dashboard\Http\Controllers\DashboardController::get_modem_statistics();
+
 		$a['save_button'] = $this->save_button;
 		$a['force_restart_button'] = $this->force_restart_button;
 		$a['edit_view_save_button'] = $this->edit_view_save_button;
