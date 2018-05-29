@@ -1164,7 +1164,7 @@ class Contract extends \BaseModel {
 	public function get_valid_mandate($timespan = 'now', $sepaaccount_id = 0)
 	{
 		$mandate = null;
-		$last 	 = 0;
+		$last 	 = null;
 
 		foreach ($this->sepamandates as $m)
 		{
@@ -1185,7 +1185,7 @@ class Contract extends \BaseModel {
 
 			$start = $m->get_start_time();
 
-			if ($start > $last)
+			if ($last === null || $start > $last)
 			{
 				$mandate = $m;
 				$last   = $start;
