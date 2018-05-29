@@ -70,7 +70,14 @@ class importTvCustomersCommand extends Command {
 	const TV_CHARGE2 	= 99999; 	// Umlage in Euro - Set to 99999 to disable second charge/tv-tariff
 	const PRODUCT_ID1 	= 46; 		// TV Billig
 	const PRODUCT_ID2 	= 0;		// TV Teuer
-	const CREDIT_ID 	= 28; 		// Credit for Amplifier
+	// const CREDIT1 		= 10,91; 	// Credit amount 1 for amplifier
+	// const CREDIT2 		= 43,63; 	// Credit amount 2 for amplifier
+	const CREDIT_WATT_1 = '4,5'; 		// Credit amount 1 for amplifier
+	const CREDIT_WATT_2 = 18; 		// Credit amount 2 for amplifier
+	const CREDIT_WATT_3 = 27; 		// Credit amount 3 for amplifier
+	const PRODUCT_C1 	= 51; 		// Product ID for credit 1
+	const PRODUCT_C2 	= 52;		// Product ID for credit 2
+	const PRODUCT_C3 	= 53;		// Product ID for credit 3
 
 
 	public $important_todos = "";
@@ -98,7 +105,9 @@ class importTvCustomersCommand extends Command {
 	{
 		if (!$this->confirm("IMPORTANT!!!\n\nHave global variables been adapted for this import?:
 			(1) TV Charge in Euro?
-			(2) TV product ID?"))
+			(2) TV product ID?
+			(3) Verstärkergeld-in-Euro/product_id
+			"))
 			return;
 
 		$file_arr 	= file($this->argument('file'));
@@ -124,7 +133,7 @@ class importTvCustomersCommand extends Command {
 				continue;
 
 			$this->_add_tarif($c, $line[self::TARIFF]);
-			$this->_add_Credit($c, $line[self::CREDIT]);
+			$this->_add_Credit($c, $line);
 			self::_add_sepa_mandate($c, $line);
 		}
 
@@ -309,39 +318,57 @@ class importTvCustomersCommand extends Command {
 	}
 
 
-	private function _add_Credit($contract, $credit)
+	private function _add_Credit($contract, $line)
 	{
+		$credit = $line[self::CREDIT];
+
 		if (!$credit)
 			return;
 
+		switch ($line[self::C_DESC1])
+		{
+			case self::CREDIT_WATT_1: $product_id = self::PRODUCT_C1;
+				break;
+
+			case self::CREDIT_WATT_2: $product_id = self::PRODUCT_C2;
+				break;
+
+			case self::CREDIT_WATT_3: $product_id = self::PRODUCT_C3;
+				break;
+
+			default:
+				$this->important_todos .= "\nContract $contract->number [Old Contract Nr ".$line[self::C_NR]."] has credit of $credit €. Please add credit manually!";
+				return;
+		}
+
 		$existing = false;
 		if ($contract->items)
-			$existing = $contract->items->contains('product_id', self::CREDIT_ID);
+			$existing = $contract->items->contains('product_id', $product_id);
 
 		if ($existing) {
-			\Log::debug("Contract $contract->number already has Credit ". self::CREDIT_ID." assigned");
+			\Log::debug("Contract $contract->number already has Credit ". $product_id." assigned");
 			return;
 		}
 
-		$credit_amount = str_replace('EUR', '', $credit);
-		$credit_amount = str_replace(',', '.', $credit);
-		$credit_amount = trim($credit_amount);
+		// $credit_amount = str_replace('EUR', '', $credit);
+		// $credit_amount = str_replace(',', '.', $credit);
+		// $credit_amount = trim($credit_amount);
 
 		if (date('Y') == date('Y', strtotime($contract->contract_start)) || date('Y') == date('Y', strtotime($contract->contract_end)))
-			$this->important_todos .= "\nPlease check Amplifier debit for Contract $contract->number as it's calculated partly for the year";
+			$this->important_todos .= "\nPlease check Amplifier credit for Contract $contract->number as it's calculated partly for the year";
 
 		Item::create([
 			'contract_id' 		=> $contract->id,
-			'product_id' 		=> self::CREDIT_ID,
+			'product_id' 		=> $product_id,
 			'valid_from' 		=> $contract->contract_start,
 			'valid_from_fixed' 	=> 1,
 			'valid_to' 			=> $contract->contract_end,
 			'valid_to_fixed' 	=> 1,
-			'credit_amount' 	=> $credit_amount,
+			// 'credit_amount' 	=> $credit_amount,
 			'costcenter_id' 	=> $this->option('cc'),
 			]);
 
-		\Log::info("Add Credit $credit_amount Euro for Amplifier to Contract $contract->number");
+		\Log::info("Add Credit [Product ID $product_id] for Amplifier to Contract $contract->number");
 	}
 
 
