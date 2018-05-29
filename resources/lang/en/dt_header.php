@@ -143,6 +143,7 @@ return [
 	'phonenr_act' => 'Activation date',
 	'phonenr_deact' => 'Deactivation date',
 	'phonenr_state' => 'Status',
+	'modem_city' => 'Modem city',
 	// Phonenumbermanagement
 	'phonenumbermanagement.id' => 'ID',
 	'phonenumbermanagement.activation_date' => 'Activation date',
