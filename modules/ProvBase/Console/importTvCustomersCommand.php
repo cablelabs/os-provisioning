@@ -376,8 +376,15 @@ class importTvCustomersCommand extends Command {
 	{
 		$valid = trim($line[self::S_VALID]) == 'einzug';
 
-		if (!$valid) {
+		if (!$valid)
+		{
 			\Log::debug("Contract $contract->number has no valid SepaMandate");
+
+			// Set CostCenter for current SepaMandate if customer pays TV charge in cash
+			SepaMandate::where('contract_id', '=', $contract->id)
+				->where(function ($query) { $query->whereNull('costcenter_id')->orWhere('costcenter_id', '=', 0);})
+				->update(['costcenter_id' => $contract->costcenter_id]);
+
 			return;
 		}
 
@@ -398,6 +405,7 @@ class importTvCustomersCommand extends Command {
 			'sepa_institute' 	=> $line[self::S_INST],
 			'sepa_valid_from' 	=> date('Y-m-d', strtotime($line[self::S_SIGNATURE])),
 			'state' 			=> 'RCUR',
+			'costcenter_id' 	=> $this->option('cc'),
 			// 'sepa_valid_to' 	=> NULL,
 			]);
 
