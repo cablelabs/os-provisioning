@@ -134,7 +134,7 @@ class importTvCustomersCommand extends Command {
 
 			$this->_add_tarif($c, $line[self::TARIFF]);
 			$this->_add_Credit($c, $line);
-			self::_add_sepa_mandate($c, $line);
+			$this->_add_sepa_mandate($c, $line);
 		}
 
 		if ($this->important_todos)
@@ -372,7 +372,7 @@ class importTvCustomersCommand extends Command {
 	}
 
 
-	private static function _add_sepa_mandate($contract, $line)
+	private function _add_sepa_mandate($contract, $line)
 	{
 		$valid = trim($line[self::S_VALID]) == 'einzug';
 
