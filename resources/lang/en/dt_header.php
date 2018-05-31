@@ -124,6 +124,7 @@ return [
 	'modem.district' => 'District',
 	'modem.us_pwr' => 'US level',
 	'modem.geocode_source' => 'Geocode origin',
+	'modem.inventar_num' => 'Serial Nr',
 	'contract_valid' => 'Contract valid?',
 	// QoS
 	'qos.name' => 'QoS Name',

@@ -124,6 +124,7 @@ return [
 	'modem.us_pwr' => 'US Pegel',
 	'modem.district' => 'Bezirk',
 	'modem.geocode_source' => 'Geocode-Quelle',
+	'modem.inventar_num' => 'Inventar-Nr',
 	'contract_valid' => 'Vertrag gültig?',
 	// QoS
 	'qos.name' => 'QoS Name',
