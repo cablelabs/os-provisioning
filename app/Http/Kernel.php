@@ -35,9 +35,12 @@ class Kernel extends HttpKernel {
 		// Redirect Start Page
 		'home' => \App\Http\Middleware\RedirectStartPage::class,
 
+		// only authenticate user with email adress 'api@localhost'
+		'apiuser' => \App\Http\Middleware\CheckApiUser::class,
+
 		// L5 defaults:
 		//'auth' => 'App\Http\Middleware\Authenticate',
-		//'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
+		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
 		//'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
 	];
 
