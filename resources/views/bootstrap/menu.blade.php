@@ -25,7 +25,7 @@
 				@if (\Module::collections()->has('Dashboard'))
 					{{-- Modem Statistics (Online/Offline) --}}
 					<li  class='m-t-10' style='font-size: 2em; font-weight: bold'>
-						<a style="text-decoration: none;">
+						<a href="{{ route('CustomerTopo.show_bad') }}" style="text-decoration: none;">
 							@if (is_object($modem_statistics))
 								<span data-toggle="tooltip" data-placement="auto" title="{{trans_choice('messages.modem_statistics',1)}}">
 									<i class="{{ $modem_statistics->fa }} fa-lg text-{{ $modem_statistics->style }}"></i>
