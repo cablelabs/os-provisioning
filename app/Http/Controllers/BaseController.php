@@ -1141,15 +1141,15 @@ class BaseController extends Controller {
 		foreach ($edit_column_data as $column => $functionname) {
 			if($column == $first_column)
 			{
-			$DT->editColumn($column, function($object) use ($functionname) {
-				return '<a href="'.route(\NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
-				$object->view_icon().$object->$functionname().'</strong></a>';
-			});
+				$DT->editColumn($column, function($object) use ($functionname) {
+					return '<a href="'.route(\NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
+					$object->view_icon().$object->$functionname().'</strong></a>';
+				});
 			} else {
-			$DT->editColumn($column, function($object) use ($functionname) {
-				return $object->$functionname();
-			});
-		}
+				$DT->editColumn($column, function($object) use ($functionname) {
+					return $object->$functionname();
+				});
+			}
 		};
 
 		$DT	->setRowClass(function ($object) {
