@@ -191,4 +191,6 @@ return [
 	'ticket.user_id' => 'Created by',
 	'ticket.created_at' => 'Created at',
 	'ticket.assigned_users' => 'Assigned Users',
+	'assigned_users' => 'Assigned Users',
+	'tickettypes.name' => 'Type',
 ];
