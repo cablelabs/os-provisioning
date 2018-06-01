@@ -16,7 +16,7 @@ class Phonenumber extends \BaseModel {
 			'country_code' => 'required|numeric',
 			'prefix_number' => 'required|numeric',
 			'number' => 'required|numeric',
-			'mta_id' => 'required|exists:mta,id|min:1',
+			'mta_id' => 'required|exists:mta,id,deleted_at,NULL|min:1',
 			'port' => 'required|numeric|min:1',
 			/* 'active' => 'required|boolean', */
 			// TODO: check if password is secure and matches needs of external APIs (e.g. envia TEL)

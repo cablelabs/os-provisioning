@@ -28,7 +28,7 @@ class NetElement extends \BaseModel {
 			'pos' 			=> 'geopos',
 			'community_ro' 	=> 'regex:/(^[A-Za-z0-9]+$)+/',
 			'community_rw' 	=> 'regex:/(^[A-Za-z0-9]+$)+/',
-			'netelementtype_id'	=> 'required|exists:netelementtype,id|min:1'
+			'netelementtype_id'	=> 'required|exists:netelementtype,id,deleted_at,NULL|min:1'
 		);
 	}
 

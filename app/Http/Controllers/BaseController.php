@@ -561,7 +561,6 @@ class BaseController extends Controller {
 		$data 		= $controller->prepare_input(Input::all());
 		$rules 		= $controller->prepare_rules($obj::rules(), $data);
 		$validator  = Validator::make($data, $rules);
-		$data 		= $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails()) {
 			Log::info ('Validation Rule Error: '.$validator->errors());
@@ -570,6 +569,7 @@ class BaseController extends Controller {
 			\Session::push('tmp_error_above_form', $msg);
 			return Redirect::back()->withErrors($validator)->withInput()->with('message', $msg)->with('message_color', 'danger');
 		}
+		$data = $controller->prepare_input_post_validation ($data);
 
 		$obj = $obj::create($data);
 

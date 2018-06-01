@@ -19,11 +19,11 @@ class QosController extends \BaseController {
 		);
 	}
 
-	public function prepare_input($data)
+	public function prepare_input_post_validation($data)
 	{
-		$data['ds_rate_max_help'] = $data['ds_rate_max_help'] ? : $data['ds_rate_max'] * 1024 * 1024;
-		$data['us_rate_max_help'] = $data['ds_rate_max_help'] ? : $data['us_rate_max'] * 1024 * 1024;
+		$data['ds_rate_max_help'] = $data['ds_rate_max'] * 1024 * 1024;
+		$data['us_rate_max_help'] = $data['us_rate_max'] * 1024 * 1024;
 
-		return parent::prepare_input($data);
+		return parent::prepare_input_post_validation($data);
 	}
 }

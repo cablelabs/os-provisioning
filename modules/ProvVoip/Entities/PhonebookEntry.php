@@ -15,7 +15,7 @@ class PhonebookEntry extends \BaseModel {
 	public static function rules($id=null)
 	{
 		return array(
-			'phonenumbermanagement_id' => 'required|exists:phonenumbermanagement,id|min:1',
+			'phonenumbermanagement_id' => 'required|exists:phonenumbermanagement,id,deleted_at,NULL|min:1',
 			'reverse_search' => 'required|phonebook_one_character_option',
 			'publish_in_print_media' => 'required|phonebook_one_character_option',
 			'publish_in_electronic_media' => 'required|phonebook_one_character_option',

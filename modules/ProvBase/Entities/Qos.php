@@ -13,7 +13,9 @@ class Qos extends \BaseModel {
 	public static function rules($id = null)
 	{
 		return array(
-			'name' => 'required'
+			'name' => 'required',
+			'ds_rate_max' => 'required|numeric|min:0',
+			'us_rate_max' => 'required|numeric|min:0',
 		);
 	}
 
