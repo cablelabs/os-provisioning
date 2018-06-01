@@ -49,7 +49,7 @@ class Modem extends \BaseModel {
 		$bsclass = $this->get_bsclass();
 
 		return ['table' => $this->table,
-				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', 'contract_valid'],
+				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
 				'bsclass' => $bsclass,
 				'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
 				'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
@@ -909,7 +909,7 @@ class Modem extends \BaseModel {
 				$this->y = '';
 				$this->x = '';
 				$this->geocode_source = 'n/a';
-				$message = "Could not determine geo coordinates – please add manually";
+				$message = "Could not determine geo coordinates ($this->geocode_state) – please add manually";
 				\Session::push('tmp_error_above_form', $message);
 			}
 			else {
@@ -1058,6 +1058,7 @@ class Modem extends \BaseModel {
 	 * Get geodata from google maps
 	 *
 	 * @author Torsten Schmidt, Patrick Reichel
+	 * @return Array 	Geodata [lat, lon, source]
 	 */
 	protected function _geocode_google_maps() {
 
