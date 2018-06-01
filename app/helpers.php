@@ -56,8 +56,8 @@ function unify_mac($data)
  */
 function str_sanitize($string)
 {
-	$string = str_replace(' ', '_', $string);
-	return preg_replace("/[^a-zA-Z0-9.\/_-]/", "", $string);
+	$string = str_replace([' ', 'ß'], '_', $string);
+	return preg_replace("/[^a-zA-Z0-9-_]/", "", $string);
 }
 
 
