@@ -30,6 +30,7 @@ class Contract extends \BaseModel {
 			'firstname' => 'required',
 			'lastname' => 'required',
 			'street' => 'required',
+			'house_number' => 'required',
 			'zip' => 'required',
 			'city' => 'required',
 			'phone' => 'required',

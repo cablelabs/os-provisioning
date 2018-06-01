@@ -40,7 +40,7 @@ class ContractController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1', 'html' =>
 				"<div class=col-md-12 style='background-color:whitesmoke'>
 				<div class='form-group row'>
-					<label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number</label>
+					<label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number *</label>
 						<div class=col-md-5>
 							<input class='form-control' name='street' type=text value='".$model['street']."' id='street' style='background-color:whitesmoke'>
 						</div>"),

@@ -24,6 +24,8 @@ class Modem extends \BaseModel {
 			'mac' => 'required|mac|unique:modem,mac,'.$id.',id,deleted_at,NULL',
 			'birthday' => 'date',
 			'country_code' => 'regex:/^[A-Z]{2}$/',
+			'contract_id' => 'required|exists:contract,id,deleted_at,NULL',
+			'configfile_id' => 'required|exists:configfile,id,deleted_at,NULL,device,cm,public,yes',
 		);
 	}
 

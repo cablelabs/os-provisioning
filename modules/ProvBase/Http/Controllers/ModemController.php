@@ -297,6 +297,13 @@ class ModemController extends \BaseController {
 		return $data;
 	}
 
+	public function prepare_rules($rules, $data)
+	{
+		if (!\Module::collections()->has('BillingBase'))
+			$rules['qos_id'] = 'required|exists:qos,id,deleted_at,NULL';
+
+		return parent::prepare_rules($rules, $data);
+	}
 
 	/**
 	 * Inheritet update function to handle force restart button as
