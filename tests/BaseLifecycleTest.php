@@ -173,7 +173,7 @@ class BaseLifecycleTest extends TestCase {
 
 		// TODO: do not hard code any user class, instead fetch a user dynamically
 		//       or add it only for testing (see Laravel factory stuff)
-		$this->user = App\Authuser::findOrFail(1);
+		$this->user = App\User::findOrFail(1);
 	}
 
 

@@ -9,7 +9,7 @@ class RoutesAuthTest extends TestCase {
 
 	// there can be routes not using auth middleware – define them here to exclude from testing
 	protected $routes_not_using_auth_middleware = [
-		'Auth.logout',
+		'logout',
 		'CustomerAuth.logout',
 		'ProvVoipEnvia.cron',
 	];
@@ -28,7 +28,7 @@ class RoutesAuthTest extends TestCase {
 	// as these routs needs other tests you can define them here
 	protected $routes_redirecting_to_login_page = [
 		'admin',
-		'Auth.login',
+		'login',
 		'CustomerAuth.login',
 		'CHome',
 		'Home',

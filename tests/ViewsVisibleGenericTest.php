@@ -68,12 +68,12 @@ class ViewsVisibleGenericTest extends TestCase
 		// add all routes that cannot be visited (e.g. missing index views, …)
 		// you can specify:
 		//		single routes (like Item.index)
-		//		wildcard routes (like Authuser.*) to ignore complete MVCs
+		//		wildcard routes (like User.*) to ignore complete MVCs
 		//		wildcard actions (like *.destroy) to ignore all actions of a kind
 		$this->routes_to_ignore = [
-			'Authuser.*',
-			'Authrole.*',
-			/* 'Ccc.edit', */
+			/* 'User.*',
+			'Role.*',
+			'Ccc.edit', */
 			'Config.*',
 			'Dashboard.edit',
 			'Domain.create',
@@ -181,8 +181,8 @@ class ViewsVisibleGenericTest extends TestCase
 	protected function _get_user() {
 
 		// TODO: do not hard code any user class, instead fetch a user dynamically
-		//       ore add it only for testing (see Laravel factory stuff)
-		$this->user = App\Authuser::findOrFail(1);
+		//       or add it only for testing (see Laravel factory stuff)
+		$this->user = App\User::findOrFail(1);
 	}
 
 
