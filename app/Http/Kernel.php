@@ -2,8 +2,8 @@
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
-class Kernel extends HttpKernel {
-
+class Kernel extends HttpKernel
+{
 	/**
 	 * The application's global HTTP middleware stack.
 	 *
@@ -13,26 +13,25 @@ class Kernel extends HttpKernel {
 		\Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
 	];
 
-
 	/**
 	 * The application's route middleware groups.
 	 *
 	 * @var array
 	 */
 	protected $middlewareGroups = [
-			'web' => [
-					\App\Http\Middleware\EncryptCookies::class,
-					\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-					\Illuminate\Session\Middleware\StartSession::class,
-					\Illuminate\View\Middleware\ShareErrorsFromSession::class,
-					\App\Http\Middleware\VerifyCsrfToken::class,
-					\Illuminate\Routing\Middleware\SubstituteBindings::class,
-
-			],
-			'api' => [
-					'throttle:60,1',
-					'bindings',
-			],
+		'web' => [
+			\App\Http\Middleware\EncryptCookies::class,
+			\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+			\Illuminate\Session\Middleware\StartSession::class,
+			\Illuminate\View\Middleware\ShareErrorsFromSession::class,
+			\App\Http\Middleware\VerifyCsrfToken::class,
+			\Illuminate\Routing\Middleware\SubstituteBindings::class,
+			\App\Http\Middleware\ScopeBouncer::class,
+		],
+		'api' => [
+			'throttle:60,1',
+			'bindings',
+		],
 	];
 
 
@@ -46,15 +45,12 @@ class Kernel extends HttpKernel {
 	 */
 	protected $routeMiddleware = [
 		'auth'        => \Illuminate\Auth\Middleware\Authenticate::class,
-		'can'         => \Illuminate\Auth\Middleware\Authorize::class,
 		'auth.basic'  => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-		'guest'       => \App\Http\Middleware\RedirectIfAuthenticated::class,
+		'can'         => \Illuminate\Auth\Middleware\Authorize::class,
+		'adminRedirect' => \App\Http\Middleware\RedirectIfAuthenticated::class,
 		'throttle'	  => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 		'bindings'    => \Illuminate\Routing\Middleware\SubstituteBindings::class,
-		// TODO: check if absence of CCC module will break ?
-		// TODO: Revamp CCC authentication
-		//'ccc'      => \Modules\Ccc\Http\Middleware\CccBaseMiddleware::class,
-		// only authenticate user with email adress 'api@localhost'
 		'apiuser' => \App\Http\Middleware\CheckApiUser::class,
+		'ccc'         => \Modules\Ccc\Http\Middleware\CccMiddleware::class,
 	];
 }

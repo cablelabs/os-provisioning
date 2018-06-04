@@ -71,7 +71,16 @@ class Handler extends ExceptionHandler {
         if ($request->expectsJson()) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
-        return redirect()->guest(route('login'));
+
+        $server_port = $request->getPort();
+		$admin_port = env('HTTPS_ADMIN_PORT', '8080');
+		$ccc_port   = env('HTTPS_CCC_PORT', '443');
+
+		if ($server_port == $admin_port)
+				return redirect()->guest(route('adminLogin'));
+
+		if ($server_port == $ccc_port)
+				return redirect()->guest(route('customerLogin'));
     }
 
 }

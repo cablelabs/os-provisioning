@@ -1,4 +1,5 @@
-<?php namespace App\Http\Controllers;
+<?php
+namespace App\Http\Controllers;
 
 class WelcomeController extends Controller {
 
@@ -14,43 +15,23 @@ class WelcomeController extends Controller {
 	*/
 
 	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		// $this->middleware('guest');
-	}
-
-	/**
 	 * Show the application welcome screen to the user.
 	 *
 	 * @return Response
 	 */
 	public function index()
 	{
-        $admin_port = env('HTTPS_ADMIN_PORT', '443');
-        $ccc_port   = env('HTTPS_CCC_PORT', '443');
+		$server_port = \Request::getPort();
+		$admin_port = env('HTTPS_ADMIN_PORT', '8080');
+		$ccc_port   = env('HTTPS_CCC_PORT', '443');
 
-        // if same port, show start page
-        if ($admin_port == $ccc_port)
-            return $next($request);
+		if ($server_port == $admin_port)
+				return redirect(route('adminLogin'));
 
-		if (env('APP_ENV') == 'testing') {
-			// $_SERVER['SERVER_PORT'] does not exist if running phpunit
-			$server_port = \Request::getPort();
-		}
-		else {
-			$server_port = $_SERVER['SERVER_PORT'];
-		}
+		if ($server_port == $ccc_port)
+				return redirect(route('customerLogin'));
 
-        if ($server_port == $admin_port)
-            return redirect('admin/login');
-
-        if ($server_port == $ccc_port)
-            return redirect('customer');
-		if (\App::isLocal())
+		if (\App::isLocal() || $admin_port == $ccc_port)
 			return view('welcome')
 				->with(compact('head1', 'head2'));
 
