@@ -258,7 +258,7 @@ class Contract extends \BaseModel {
 
 	public function emails()
 	{
-		return $this->hasMany('Modules\Mail\Entities\Email');
+		return $this->hasMany('Modules\NmsMail\Entities\Email');
 	}
 
 	public function get_email_count()

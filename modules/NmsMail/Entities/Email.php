@@ -1,4 +1,6 @@
-<?php namespace Modules\Mail\Entities;
+<?php
+
+namespace Modules\NmsMail\Entities;
 
 use App\Http\Controllers\BaseViewController;
 

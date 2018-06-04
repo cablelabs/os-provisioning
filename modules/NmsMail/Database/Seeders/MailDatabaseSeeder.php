@@ -1,4 +1,4 @@
-<?php namespace Modules\Mail\Database\Seeders;
+<?php namespace Modules\NmsMail\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +14,7 @@ class MailDatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 
-		$this->call('Modules\Mail\Database\Seeders\EmailTableSeeder');
+		$this->call('Modules\NmsMail\Database\Seeders\EmailTableSeeder');
 	}
 
 }

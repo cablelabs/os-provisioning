@@ -1,4 +1,6 @@
-<?php namespace Modules\Mail\Http\Controllers;
+<?php
+
+namespace Modules\NmsMail\Http\Controllers;
 
 use Nwidart\Modules\Routing\Controller;
 use Modules\ProvBase\Entities\{ Contract, Domain};

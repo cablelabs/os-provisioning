@@ -1,13 +1,13 @@
 {
-    "name": "Mail",
-    "alias": "mail",
+    "name": "NmsMail",
+    "alias": "nmsmail",
     "description": "",
     "keywords": [],
-    "active": 0,
+    "active": 1,
     "order": 24,
     "icon": "fa-paper-plane-o",
     "providers": [
-        "Modules\\Mail\\Providers\\MailServiceProvider"
+        "Modules\\NmsMail\\Providers\\MailServiceProvider"
     ],
     "aliases": [],
     "files": [

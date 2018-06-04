@@ -1,8 +1,10 @@
-<?php namespace Modules\Mail\Http\Controllers;
+<?php
+
+namespace Modules\NmsMail\Http\Controllers;
 
 use Nwidart\Modules\Routing\Controller;
 
-class MailController extends Controller {
+class NmsMailController extends Controller {
 
 	public function index()
 	{

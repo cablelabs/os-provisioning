@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Mail\Database\Seeders;
+namespace Modules\NmsMail\Database\Seeders;
 
 use Faker\Factory as Faker;
-use Modules\Mail\Entities\Email;
+use Modules\NmsMail\Entities\Email;
 use Modules\ProvBase\Entities\Domain;
 use Modules\ProvBase\Entities\Contract;
 
