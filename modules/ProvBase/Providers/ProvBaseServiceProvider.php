@@ -9,7 +9,7 @@ class ProvBaseServiceProvider extends ServiceProvider {
 	 *
 	 * @var bool
 	 */
-	protected $defer = false;
+	protected $defer = true;
 
 
 	/**
@@ -27,17 +27,76 @@ class ProvBaseServiceProvider extends ServiceProvider {
 
 
 	/**
+	 * Boot the application events.
+	 *
+	 * @return void
+	 */
+	public function boot()
+	{
+		$this->registerTranslations();
+		$this->registerConfig();
+		$this->registerViews();
+	}
+
+	/**
 	 * Register the service provider.
 	 *
 	 * @return void
 	 */
 	public function register()
 	{
-		\View::addNamespace('provbase', __DIR__.'/../Resources/views');
+		//
+	}
 
-		$this->commands($this->commands);
+	/**
+	 * Register config.
+	 *
+	 * @return void
+	 */
+	protected function registerConfig()
+	{
+		$this->publishes([
+		    __DIR__.'/../Config/config.php' => config_path('provbase.php'),
+		]);
+		$this->mergeConfigFrom(
+		    __DIR__.'/../Config/config.php', 'provbase'
+		);
+	}
 
-		$this->mergeConfigFrom(__DIR__ . '/../Config/dates.php', 'dates');
+	/**
+	 * Register views.
+	 *
+	 * @return void
+	 */
+	public function registerViews()
+	{
+		$viewPath = base_path('resources/views/modules/provbase');
+
+		$sourcePath = __DIR__.'/../Resources/views';
+
+		$this->publishes([
+			$sourcePath => $viewPath
+		]);
+
+		$this->loadViewsFrom(array_merge(array_map(function ($path) {
+			return $path . '/modules/provbase';
+		}, \Config::get('view.paths')), [$sourcePath]), 'provbase');
+	}
+
+	/**
+	 * Register translations.
+	 *
+	 * @return void
+	 */
+	public function registerTranslations()
+	{
+		$langPath = base_path('resources/lang/modules/provbase');
+
+		if (is_dir($langPath)) {
+			$this->loadTranslationsFrom($langPath, 'provbase');
+		} else {
+			$this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'provbase');
+		}
 	}
 
 	/**
