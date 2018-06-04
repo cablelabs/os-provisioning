@@ -88,6 +88,11 @@ class BaseRoute {
 
 		// AJAX Index DataTable
 		\Route::get("$name/datatables", array('as' => $name.'.data', 'uses' => $controller.'@index_datatables_ajax', $options, 'middleware' => 'auth:view'));
+
+		// import
+		\Route::get("$name/import", array('as' => $name.'.import', 'uses' => $controller.'@import', $options, 'middleware' => 'auth:create'));
+		\Route::post("$name/import_parse", array('as' => $name.'.import_parse', 'uses' => $controller.'@import_parse', $options, 'middleware' => 'auth:create'));
+		\Route::post("$name/import_process", array('as' => $name.'.import_process', 'uses' => $controller.'@import_process', $options, 'middleware' => 'auth:create'));
 	}
 
 
