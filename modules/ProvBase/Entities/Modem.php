@@ -1117,8 +1117,8 @@ class Modem extends \BaseModel {
 			$location_type = array_get($resp, 'results.0.geometry.location_type', null);
 			$partial_match = array_get($resp, 'results.0.partial_match', null);
 
-			$matches = ['ROOFTOP', ];
-			$interpolated_matches = ['RANGE_INTERPOLATED'];
+			$matches = ['ROOFTOP'];
+			$interpolated_matches = ['ROOFTOP', 'RANGE_INTERPOLATED'];
 			// verify if data is complete and a real match
 			if (
 				$lati &&
