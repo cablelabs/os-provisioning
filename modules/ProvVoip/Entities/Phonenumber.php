@@ -16,7 +16,7 @@ class Phonenumber extends \BaseModel {
 			'country_code' => 'required|numeric',
 			'prefix_number' => 'required|numeric',
 			'number' => 'required|numeric',
-			'mta_id' => 'required|exists:mta,id|min:1',
+			'mta_id' => 'required|exists:mta,id,deleted_at,NULL|min:1',
 			'port' => 'required|numeric|min:1',
 			/* 'active' => 'required|boolean', */
 			// TODO: check if password is secure and matches needs of external APIs (e.g. envia TEL)
@@ -48,12 +48,12 @@ class Phonenumber extends \BaseModel {
 		$bsclass = $this->get_bsclass();
 
 		return ['table' => $this->table,
-				'index_header' => [$this->table.'.number', 'phonenumbermanagement.activation_date', 'phonenumbermanagement.deactivation_date', 'phonenr_state'],
+				'index_header' => [$this->table.'.number', 'phonenumbermanagement.activation_date', 'phonenumbermanagement.deactivation_date', 'phonenr_state', 'modem_city'],
 				'header' => 'Port '.$this->port.': '.$this->prefix_number."/".$this->number,
 				'bsclass' => $bsclass,
-				'edit' => ['phonenumbermanagement.activation_date' => 'get_act', 'phonenumbermanagement.deactivation_date' => 'get_deact', 'phonenr_state' => 'get_state', 'number' => 'build_number'],
-				'eager_loading' => ['phonenumbermanagement'],
-				'sortsearch' => ['phonenr_state' => 'false'],
+				'edit' => ['phonenumbermanagement.activation_date' => 'get_act', 'phonenumbermanagement.deactivation_date' => 'get_deact', 'phonenr_state' => 'get_state', 'number' => 'build_number', 'modem_city' => 'modem_city'],
+				'eager_loading' => ['phonenumbermanagement', 'mta.modem'],
+				'sortsearch' => ['phonenr_state' => 'false', 'modem_city' => 'false'],
 				'filter' => ['phonenumber.number' => $this->number_query(), ] ];
 	}
 
@@ -187,6 +187,11 @@ class Phonenumber extends \BaseModel {
 	public function build_number()
 	{
 		return $this->prefix_number.'/'.$this->number;
+	}
+
+	public function modem_city()
+	{
+		return $this->mta->modem->zip.' '.$this->mta->modem->city;
 	}
 
 	/**

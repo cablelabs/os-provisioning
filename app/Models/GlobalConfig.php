@@ -8,13 +8,14 @@ class GlobalConfig extends BaseModel {
 	protected $table = 'global_config';
 
 	// Don't forget to fill this array
-	protected $fillable = ['name', 'street', 'city', 'phone', 'mail', 'log_level', 'headline1', 'headline2'];
+	protected $fillable = ['name', 'street', 'city', 'phone', 'mail', 'log_level', 'headline1', 'headline2', 'default_country_code'];
 
 	// Add your validation rules here
 	public static function rules($id = null)
 	{
 		return array(
 			'mail' => 'email',
+			'default_country_code' => 'regex:/^[A-Z]{2}$/',
 		);
 	}
 

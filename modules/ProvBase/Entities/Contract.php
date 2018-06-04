@@ -30,6 +30,7 @@ class Contract extends \BaseModel {
 			'firstname' => 'required',
 			'lastname' => 'required',
 			'street' => 'required',
+			'house_number' => 'required',
 			'zip' => 'required',
 			'city' => 'required',
 			'phone' => 'required',
@@ -65,13 +66,20 @@ class Contract extends \BaseModel {
 	{
 		$bsclass = $this->get_bsclass();
 
-		return ['table' => $this->table,
-				'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.company', $this->table.'.zip', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.contract_start', $this->table.'.contract_end', 'costcenter.name'],
+		$ret = ['table' => $this->table,
+				'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.company', $this->table.'.zip', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.contract_start', $this->table.'.contract_end'],
 				'header' =>  $this->number.' '.$this->firstname.' '.$this->lastname,
 				'bsclass' => $bsclass,
-				'eager_loading' => ['costcenter'],
-				'edit' => ['costcenter.name' => 'get_costcenter_name'],
 				'order_by' => ['0' => 'asc']];
+
+		if (\Module::collections()->has('billingbase'))
+		{
+			$ret['index_header'][] = 'costcenter.name';
+			$ret['eager_loading'] = ['costcenter'];
+			$ret['edit'] = ['costcenter.name' => 'get_costcenter_name'];
+		}
+
+		return $ret;
 	}
 
 
@@ -109,7 +117,7 @@ class Contract extends \BaseModel {
 			$ret['Edit']['SepaMandate'] = $this->sepamandates;
 		}
 
-		$ret['Technical']['Modem'] = $this->modems;
+		$ret['Edit']['Modem'] = $this->modems;
 
 		if (\Module::collections()->has('BillingBase'))
 		{
@@ -150,8 +158,8 @@ class Contract extends \BaseModel {
 
 		if (\Module::collections()->has('Ticketsystem'))
 		{
-			$ret['Edit']['Ticket'] = $this->tickets;
-			$ret['Ticket']['Ticket'] = $this->tickets;
+			$tab = \Module::collections()->has('billingbase') ? 'Ticket' : 'Edit';
+			$ret[$tab]['Ticket'] = $this->tickets;
 		}
 
 		if (\Module::collections()->has('Mail'))
@@ -1157,7 +1165,7 @@ class Contract extends \BaseModel {
 	public function get_valid_mandate($timespan = 'now', $sepaaccount_id = 0)
 	{
 		$mandate = null;
-		$last 	 = 0;
+		$last 	 = null;
 
 		foreach ($this->sepamandates as $m)
 		{
@@ -1178,7 +1186,7 @@ class Contract extends \BaseModel {
 
 			$start = $m->get_start_time();
 
-			if ($start > $last)
+			if ($last === null || $start > $last)
 			{
 				$mandate = $m;
 				$last   = $start;

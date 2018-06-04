@@ -123,6 +123,8 @@ return [
 	'modem.street' => 'Straße',
 	'modem.us_pwr' => 'US Pegel',
 	'modem.district' => 'Bezirk',
+	'modem.geocode_source' => 'Geocode-Quelle',
+	'modem.inventar_num' => 'Inventar-Nr',
 	'contract_valid' => 'Vertrag gültig?',
 	// QoS
 	'qos.name' => 'QoS Name',
@@ -142,6 +144,7 @@ return [
 	'phonenr_act' => 'Aktivierungsdatum',
 	'phonenr_deact' => 'Deaktivierungsdatum',
 	'phonenr_state' => 'Status',
+	'modem_city' => 'Modem-Ort',
 	// Phonenumbermanagement
 	'phonenumbermanagement.id' => 'ID',
 	'phonenumbermanagement.activation_date' => 'Aktivierungsdatum',
@@ -188,4 +191,7 @@ return [
 	'ticket.user_id' => 'Erstellt von',
 	'ticket.created_at' => 'Erstellt am',
 	'ticket.assigned_users' => 'Bearbeiter',
+	'assigned_users' => 'Bearbeiter',
+	'tickettypes.name' => 'Typ',
+
 ];

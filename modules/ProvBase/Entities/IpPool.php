@@ -110,6 +110,21 @@ class IpPool extends \BaseModel {
 	}
 
 	/**
+	 * Return the cisco wildcard mask, which is the inverted subnet mask
+	 *
+	 * @return String
+	 *
+	 * @author Ole Ernst
+	 */
+	public function wildcard_mask ()
+	{
+		foreach (explode('.', $this->netmask) as $val)
+			$mask[] = ~intval($val) & 255;
+
+		return implode('.', $mask);
+	}
+
+	/**
 	 * Return 'secondary' if this pool is not the first CM pool of the CMTS,
 	 * otherwise an empty string
 	 *

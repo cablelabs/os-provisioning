@@ -14,7 +14,11 @@
 <script language="javascript">
 
 $('#netelementtype_id').change(function() {
-	location.href = location.href + "?&netelementtype_id=" + document.getElementById("netelementtype_id").options[document.getElementById("netelementtype_id").selectedIndex].value;
+	if (location.search.search("netelementtype_id=") > 0) {
+		location.search = location.search.replace(/netelementtype_id=\d+/g, "netelementtype_id=" + $("#netelementtype_id").val());
+	} else {
+		location.search += "{{ empty($_GET) ? '?' : '&' }}netelementtype_id=" + $("#netelementtype_id").val();
+	}
 });
 
 </script>

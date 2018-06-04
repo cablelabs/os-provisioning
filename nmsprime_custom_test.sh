@@ -13,7 +13,7 @@ rm -f phpunit/*.htm
 DEBUG=" --debug"
 DEBUG=""
 
-PHPUNIT="/usr/bin/phpunit"
+PHPUNIT="source scl_source enable rh-php71; vendor/bin/phpunit"
 
 OPTS=""
 OPTS=" --testdox-html $LOGFILE --colors --stop-on-failure --bootstrap /var/www/nmsprime/bootstrap/autoload.php"
@@ -26,19 +26,21 @@ TESTS=" --filter testDatatableDataReturned modules/ProvBase/Tests/ModemLifecycle
 TESTS=" modules/ProvBase/Tests/DomainLifecycleTest.php"
 TESTS=" modules/ProvBase/Tests/CmtsLifecycleTest.php"
 TESTS=" modules/ProvBase/Tests/IpPoolLifecycleTest.php"
-TESTS=" modules/ProvBase/Tests/ContractLifecycleTest.php"
 TESTS=" modules/ProvBase/Tests/EndpointLifecycleTest.php"
 TESTS=" modules/ProvBase/Tests/IpPoolLifecycleTest.php"
-TESTS=" modules/ProvBase/Tests/ModemLifecycleTest.php"
 TESTS=" --filter testRoutesAuthMiddleware tests/RoutesAuthTest"
 TESTS=" modules/ProvVoip/Tests/MtaLifecycleTest.php"
 TESTS=" modules/ProvVoip/Tests/PhonenumberLifecycleTest.php"
+TESTS=" modules/ProvBase/Tests/ContractLifecycleTest.php"
+TESTS=" modules/ProvBase/Tests/ModemLifecycleTest.php"
 
 
 touch $LOGFILE $OUTFILE
 chmod 666 $LOGFILE $OUTFILE
 
-CMD="sudo -u apache $PHPUNIT$OPTS$DEBUG$TESTS | tee $OUTFILE"
+# CMD="sudo -u apache $PHPUNIT$OPTS$DEBUG$TESTS | tee $OUTFILE"
+# CMD="$PHPUNIT --version"
+CMD="$PHPUNIT$OPTS$DEBUG$TESTS | tee $OUTFILE"
 
 clear
 echo

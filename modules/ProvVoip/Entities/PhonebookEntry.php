@@ -15,7 +15,7 @@ class PhonebookEntry extends \BaseModel {
 	public static function rules($id=null)
 	{
 		return array(
-			'phonenumbermanagement_id' => 'required|exists:phonenumbermanagement,id|min:1',
+			'phonenumbermanagement_id' => 'required|exists:phonenumbermanagement,id,deleted_at,NULL|min:1',
 			'reverse_search' => 'required|phonebook_one_character_option',
 			'publish_in_print_media' => 'required|phonebook_one_character_option',
 			'publish_in_electronic_media' => 'required|phonebook_one_character_option',
@@ -35,7 +35,7 @@ class PhonebookEntry extends \BaseModel {
 			'city' => 'required|phonebook_string',
 			'urban_district' => 'phonebook_string',
 			'business' => 'phonebook_predefined_string',
-			'number_usage' => 'required|phonebook_one_character_option',
+			'usage' => 'required|phonebook_one_character_option',
 			'tag' => 'phonebook_predefined_string',
 		);
 	}

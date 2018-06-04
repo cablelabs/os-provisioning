@@ -40,7 +40,7 @@ class ContractController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1', 'html' =>
 				"<div class=col-md-12 style='background-color:whitesmoke'>
 				<div class='form-group row'>
-					<label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number</label>
+					<label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number *</label>
 						<div class=col-md-5>
 							<input class='form-control' name='street' type=text value='".$model['street']."' id='street' style='background-color:whitesmoke'>
 						</div>"),
@@ -83,12 +83,13 @@ class ContractController extends \BaseController {
 				array('form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'value' => '1'),
 				array('form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $model->html_list(\Modules\BillingBase\Entities\CostCenter::all(), 'name', true)),
 				array('form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => $model->html_list(\Modules\BillingBase\Entities\Salesman::all(), ['firstname', 'lastname'], true, ' - '), 'space' => '1'),
-
 				// NOTE: qos is required as hidden field to automatically create modem with correct contract qos class
-				// TODO: @Nino Ryschawy: please review and test while merging ..
 				array('form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'hidden' => 1),
 				array('form_type' => 'checkbox', 'name' => 'telephony_only', 'description' => 'Telephony only', 'value' => '1', 'help' => 'Customer has only subscribed telephony, i.e. no internet access', 'hidden' => 1)
 			);
+
+			if (\Modules\BillingBase\Entities\BillingBase::first()->show_ags)
+				$c2[] = array('form_type' => 'select', 'name' => 'contact', 'description' => 'Contact Persons', 'value' => \Modules\BillingBase\Entities\BillingBase::contactPersons());
 		}
 		else
 		{
@@ -103,7 +104,7 @@ class ContractController extends \BaseController {
 			);
 		}
 
-		$d = array (
+		$d = array(
 			array('form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'),
 		);
 

@@ -18,10 +18,11 @@
 		"yajra/laravel-datatables-oracle": "6.*",
 		"markrogoyski/ipv4-subnet-calculator": "2.0.*",
 		"nwidart/laravel-modules": "^1.0",
-		"maatwebsite/excel": "^2.1"
+		"maatwebsite/excel": "^2.1",
+		"doctrine/dbal": "^2.7"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "~4.0",
+		"phpunit/phpunit": "~5.7",
 		"phpspec/phpspec": "~2.1",
 		"laracasts/generators": "^1.1",
 		"symfony/dom-crawler": "~3.0",

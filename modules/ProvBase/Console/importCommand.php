@@ -120,7 +120,9 @@ class importCommand extends Command {
 		// TODO(2): Adapt this Contract Filter for every Import
 		$area_filter = function ($query) use ($cluster_filter) {$query
 				->whereRaw ($cluster_filter)
-				// ->whereRaw("cm_adr.strasse not like '%Stra%'")
+				->whereNotBetween('v.vertragsnummer', [30000, 31000])
+				->whereNotIn('v.vertragsnummer', [43206,43214,43215,43217,43218,43219,43220,43223,43233,43346,43419,43441,44029])
+				->orWhereIn('m.cluster_id', [36546, 36821])
 				// ->where(function ($query) { $query
 				// 	->whereRaw ("cm_adr.strasse like '%Flo%m%hle%'")
 				// 	->orWhereRaw ("cm_adr.strasse like 'Fl%talstr%'")
@@ -142,7 +144,6 @@ class importCommand extends Command {
 		 */
 		self::add_netelements($km3, $area_filter);
 
-
 		/*
 		 * CONTRACT Import
 		 *
@@ -161,11 +162,12 @@ class importCommand extends Command {
 				->join('tbl_adressen as cm_adr', 'm.adresse', '=', 'cm_adr.id')
 				->join('tbl_tarif as t', 'v.tarif', '=', 't.id')
 				->join('tbl_posten as p', 't.posten_volumen_extern', '=', 'p.id')
-				->where ('v.deleted', '=', 'false')
-				->where ('m.deleted', '=', 'false')
+				->where ('v.deleted', '=', false)
+				->where ('m.deleted', '=', false)
 				->whereRaw('(v.abgeklemmt is null or v.abgeklemmt >= CURRENT_DATE)') 		// dont import out-of-date contracts
 				->where($area_filter)
 				->orderBy('v.vertragsnummer')
+				// ->toSql();
 				->get();
 
 		// progress bar
@@ -545,7 +547,7 @@ class importCommand extends Command {
 				'state' 			=> 'RCUR',
 				]);
 
-			\Log::info("SEPAMANDATE ADD: ".$mandate->kontoinhaber.', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
+			\Log::info("SEPAMANDATE ADD: ".utf8_encode($mandate->kontoinhaber).', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
 		}
 	}
 

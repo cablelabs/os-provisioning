@@ -27,12 +27,14 @@ return [
 	'Contract'					=> 'Vertrag',
 	'Contract List'				=> 'Vertragsliste',
 	'Contracts'					=> 'Verträge',
-	'Country Code'				=> 'Ländervorwahl',
+	'International prefix'		=> 'Ländervorwahl',
+	'Country code'				=> 'Ländercode',
 	'cpe_not_reachable' 		=> 'aber via PING nicht erreichbar (ICMP kann herstellerabhängig vom Router geblockt werden)',
 	'cpe_log_error'				=> 'ist nicht beim Server registriert - Kein Logeintrag gefunden',
 	'cpe_fake_lease'			=> 'Der DHCP Server hat kein Lease für den Endpunkt angelegt, weil dessen IP Adresse statisch vergeben ist und der Server diesen somit nicht verfolgen muss. Das folgende Lease wurde lediglich als Referenz manuell generiert:',
 	'Create'					=> 'Erstellen',
 	'D' 						=> 'Tag|Tage',
+	'Date of installation address change'	=> 'Datum der Änderung der Installationsaddresse',
 	'Delete'					=> 'Löschen',
 	'Day'						=> 'Tag',
 	'Description'				=> 'Beschreibung',
@@ -56,6 +58,7 @@ return [
 	'Firstname'					=> 'Vorname',
 	'Fixed IP'					=> 'Statische IP',
 	'Force Restart'				=> 'Neustart erzwingen',
+	'Geocode origin'			=> 'Herkunft der Geodaten',
 	'IBAN'						=> 'IBAN',
 	'Internet Access'			=> 'Internetzugriff',
 	'Inventar Number'			=> 'Inventarnummer',
@@ -79,6 +82,7 @@ return [
 	'modem_configfile_error'	=> 'Modem Konfigurationsdatei nicht gefunden',
 	'modem_offline'				=> 'Modem ist Offline',
 	'modem_restart_error' 		=> 'Das Modem konnte nicht neugestartet werden! (offline?)',
+	'modem_statistics'			=> 'Anzahl Online / Offline Modems',
 	'month'						=> 'Monat',
 	'Month'						=> 'Monat',
 	'mta_configfile_error'		=> 'MTA Konfigurationsdatei nicht gefunden',
@@ -180,7 +184,8 @@ return [
 	'House Nr'					=> 'Hausnr',
 	'Salesman'					=> 'Verkäufer',
 	'Start Date' 				=> 'Startdatum',
-	'noCC'	=> 'Keine Kostenstelle zugewiesen',
+	'noCC'						=> 'Keine Kostenstelle zugewiesen',
+	'Contact Persons' 			=> 'Antennengemeinschaft/Kontakt',
 	//Items
 	'Accounting Text (optional)'=> 'Verwendungszweck (optional)',
 	'Cost Center (optional)'	=> 'Kostenstelle (optional)',
@@ -253,7 +258,7 @@ return [
 	'Upload CDR template'		=> 'CDR-Vorlage hochladen',
 	'Upload invoice template'	=> 'Rechnungsvorlage hochladen',
 
-	//Settlement Run Abrechnnungslauf
+	//Settlement Run Abrechnungslauf
 	'General'				=> 'Allgemein',
 	'Verified'				=> 'Überprüft?',
 	'tariff'				=> 'Tarif',
@@ -289,6 +294,7 @@ return [
 	'Zip'					=> 'PLZ',
 	// Global Config
 	'cdr_offset' 			=> 'Zeitdifferenz EVN zu Rechnung in Monaten',
+	'show_ags' 				=> 'Zeige AG Auswahlfeld auf Vertragsseite',
 	'voip_extracharge_default' => 'Preisaufschlag Telefonie Standard in %',
 	'voip_extracharge_mobile_national' => 'Preisaufschlag Telefonie Mobilfunk national in %',
 

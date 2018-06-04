@@ -22,6 +22,19 @@
 				<li class="navbar-nav nav p-t-15">
 					<a id="togglesearch" href="javascript:;" class="icon notification waves-effect waves-light m-t-5" data-toggle="navbar-search"><i class="fa fa-search fa-lg" aria-hidden="true"></i></a>
 				</li>
+				@if (\Module::collections()->has('Dashboard'))
+					{{-- Modem Statistics (Online/Offline) --}}
+					<li  class='m-t-10' style='font-size: 2em; font-weight: bold'>
+						<a href="{{ route('CustomerTopo.show_bad') }}" style="text-decoration: none;">
+							@if (is_object($modem_statistics))
+								<span data-toggle="tooltip" data-placement="auto" title="{{trans_choice('messages.modem_statistics',1)}}">
+									<i class="{{ $modem_statistics->fa }} fa-lg text-{{ $modem_statistics->style }}"></i>
+									<span class="badge badge-{{ $modem_statistics->style }}">{{ $modem_statistics->text }}</span>
+								</span>
+							@endif
+						</a>
+					</li>
+				@endif
 				@if (\Module::collections()->has('ProvVoipEnvia'))
 					{{-- count of user interaction needing EnviaOrders --}}
 					<li  class='m-t-10' style='font-size: 2em; font-weight: bold'>
@@ -29,7 +42,7 @@
 							@if ($envia_interactioncount > 0)
 								<span data-toggle="tooltip" data-placement="auto" title="{{ $envia_interactioncount }} {{ trans_choice('messages.envia_interaction', $envia_interactioncount )}}">
 									<i class="fa fa-times fa-lg text-danger"></i>
-									<span class="badge badge-danger">{{ $envia_interactioncount }}</span>
+									<span class="badge badge-danger">Envia<br>{{ $envia_interactioncount }}</span>
 								</span>
 							@else
 								<span data-toggle="tooltip" data-placement="auto" title="{{ trans('messages.envia_no_interaction')}}">

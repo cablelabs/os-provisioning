@@ -56,8 +56,8 @@ function unify_mac($data)
  */
 function str_sanitize($string)
 {
-	$string = str_replace(' ', '_', $string);
-	return preg_replace("/[^a-zA-Z0-9.\/_-]/", "", $string);
+	$string = str_replace([' ', 'ß'], '_', $string);
+	return preg_replace("/[^a-zA-Z0-9-_]/", "", $string);
 }
 
 
@@ -104,11 +104,7 @@ function escape_latex_special_chars($string)
 			"^"  => "\\^{}",
 	);
 
-	foreach ($map as $search => $replace)
-		$string = str_replace($search, $replace, $string);
-
-	return $string;
-
+	return strtr($string, $map);
 	// not working: https://stackoverflow.com/questions/2541616/how-to-escape-strip-special-characters-in-the-latex-document
 	// return preg_replace( "/([\^\%~\\\\#\$%&_\{\}])/e", "\$map['$1']", $string );
 }
@@ -138,4 +134,43 @@ function concat_pdfs($sourcefiles, $target_fn)
 
 	if ($ret)
 		\ChannelLog::error('billing', "Error concatenating target file $target_fn", [$ret]);
+}
+
+
+
+/**
+ * Create PDF from tex template
+ *
+ * @param String 	directory & filename
+ * @param Bool 	 	start latex process in background (for faster SettlementRun)
+ */
+function pdflatex($dir, $filename, $background = false)
+{
+	chdir($dir);
+
+	/* NOTE: returns
+		* 0 on success
+		* 127 if pdflatex is not installed,
+		* 134 when pdflatex is called without path /usr/bin/ and path variable is not set when running from cmd line
+	*/
+
+	// take care - when we start process in background we don't get the return value anymore
+	$cmd = "/usr/bin/pdflatex \"$filename\" -interaction=nonstopmode &>/dev/null";
+	$cmd .= $background ? ' &' : '';
+
+	system($cmd, $ret);
+
+	switch ($ret)
+	{
+		case 0: break;
+		case 1:
+			Log::error("PdfLatex - Syntax error in tex template (misspelled placeholder?)", [$dir.$filename]);
+			return null;
+		case 127:
+			Log::error("Illegal Command - PdfLatex not installed!");
+			return null;
+		default:
+			Log::error("Error executing PdfLatex - Return Code: $ret");
+			return null;
+	}
 }

@@ -313,7 +313,7 @@ class BaseController extends Controller {
 
 			$ext = strrchr($filename, '.');
 			$fn  = substr($filename, 0, strlen($filename) - strlen($ext));
-			$filename = str_replace([' ', '&', '|', ',', ';', '+', '.' ], '', $fn).$ext;
+			$filename = str_sanitize($fn).$ext;
 
 			// move file
 			Input::file($upload_field)->move($dst_path, $filename);
@@ -382,6 +382,9 @@ class BaseController extends Controller {
 
 		if (( \Module::collections()->has('ProvVoipEnvia')) && (!isset($a['envia_interactioncount'])) )
 			$a['envia_interactioncount'] = \Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
+
+		if ( \Module::collections()->has('Dashboard'))
+			$a['modem_statistics'] = \Modules\Dashboard\Http\Controllers\DashboardController::get_modem_statistics();
 
 		$a['save_button'] = $this->save_button;
 		$a['force_restart_button'] = $this->force_restart_button;
@@ -545,6 +548,25 @@ class BaseController extends Controller {
 
 
 	/**
+	 * API equivalent of create()
+	 *
+	 * @author Ole Ernst
+	 *
+	 * @return JsonResponse
+	 */
+	public function api_create($ver)
+	{
+		if ($ver !== '0')
+			return response()->json(['ret' => "Version $ver not supported"]);
+
+		$model = static::get_model_obj();
+		$fields = BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($model), $model);
+
+		return response()->json($fields);
+	}
+
+
+	/**
 	 * Generic store function - stores an object of the calling model
 	 * @param redirect: if set to false returns id of the new created object (default: true)
 	 * @return: html redirection to edit page (or if param $redirect is false the new added object id)
@@ -558,7 +580,6 @@ class BaseController extends Controller {
 		$data 		= $controller->prepare_input(Input::all());
 		$rules 		= $controller->prepare_rules($obj::rules(), $data);
 		$validator  = Validator::make($data, $rules);
-		$data 		= $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails()) {
 			Log::info ('Validation Rule Error: '.$validator->errors());
@@ -567,6 +588,7 @@ class BaseController extends Controller {
 			\Session::push('tmp_error_above_form', $msg);
 			return Redirect::back()->withErrors($validator)->withInput()->with('message', $msg)->with('message_color', 'danger');
 		}
+		$data = $controller->prepare_input_post_validation ($data);
 
 		$obj = $obj::create($data);
 
@@ -581,6 +603,43 @@ class BaseController extends Controller {
 		\Session::push('tmp_success_above_form', $msg);
 
 		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', $msg)->with('message_color', 'success');
+	}
+
+	/**
+	 * API equivalent of store()
+	 *
+	 * @author Ole Ernst
+	 *
+	 * @return JsonResponse
+	 */
+	public function api_store($ver)
+	{
+		if ($ver !== '0')
+			return response()->json(['ret' => "Version $ver not supported"]);
+
+		$obj = static::get_model_obj();
+		$controller = static::get_controller_obj();
+
+		// Prepare and Validate Input
+		$data       = $this->_api_prepopulate_fields($obj, $controller);
+		$data 		= $controller->prepare_input($data);
+		$rules 		= $controller->prepare_rules($obj::rules(), $data);
+		$validator  = Validator::make($data, $rules);
+
+		if ($validator->fails()) {
+			$ret = [];
+			foreach($validator->errors()->getMessages() as $field => $error)
+				$ret[$field] = $error;
+			return response()->json(['ret' => $ret]);
+		}
+		$data = $controller->prepare_input_post_validation ($data);
+
+		$obj = $obj::create($data);
+
+		// Add N:M Relations
+		self::_set_many_to_many_relations($obj, $data);
+
+		return response()->json(['ret' => 'success', 'id' => $obj->id]);
 	}
 
 
@@ -694,6 +753,68 @@ class BaseController extends Controller {
 
 		return Redirect::route($route_model.'.edit', $id)->with('message', $msg)->with('message_color', $color);
 	}
+
+	/**
+	 * API equivalent of update()
+	 *
+	 * @author Ole Ernst
+	 *
+	 * @return JsonResponse
+	 */
+	public function api_update($ver, $id)
+	{
+		if ($ver !== '0')
+			return response()->json(['ret' => "Version $ver not supported"]);
+
+		$obj = static::get_model_obj()->findOrFail($id);
+		$controller = static::get_controller_obj();
+
+		// Prepare and Validate Input
+		$data      = $this->_api_prepopulate_fields($obj, $controller);
+		$data      = $controller->prepare_input($data);
+		$rules     = $controller->prepare_rules($obj::rules($id), $data);
+		$validator = Validator::make($data, $rules);
+		$data      = $controller->prepare_input_post_validation ($data);
+
+		if ($validator->fails()) {
+			$ret = [];
+			foreach($validator->errors()->getMessages() as $field => $error)
+				$ret[$field] = $error;
+			return response()->json(['ret' => $ret]);
+		}
+
+		$data['updated_at'] = \Carbon\Carbon::now(Config::get('app.timezone'));
+
+		$obj->update($data);
+
+		// Add N:M Relations
+		self::_set_many_to_many_relations($obj, $data);
+
+		return response()->json(['ret' => 'success']);
+	}
+
+	/**
+	 * Prepopluate all data fields of the corresponding object, so that an API
+	 * request only needs to send the fields which should be updated and not all
+	 *
+	 * @author Ole Ernst
+	 *
+	 * @return Array
+	 */
+	private static function _api_prepopulate_fields($obj, $ctrl) {
+		$fields = BaseViewController::prepare_form_fields($ctrl->view_form_fields($obj), $obj);
+		$inputs = Input::all();
+		$data = [];
+
+		foreach ($fields as $field) {
+			$name = $field['name'];
+			// we can't use Input::has($name), as it claims $name does not exists, if it is an empty string
+			$data[$name] = array_key_exists($name, $inputs) ? $inputs[$name] : $field['field_value'];
+		}
+
+		return $data;
+	}
+
 
 
 	/**
@@ -812,6 +933,28 @@ class BaseController extends Controller {
 		return Redirect::back()->with('delete_message', ['message' => $message, 'class' => $class, 'color' => $color]);
 	}
 
+	/**
+	 * API equivalent of destroy()
+	 * Recursive deletion is not implemented, as this should be handled by the client
+	 *
+	 * @author Ole Ernst
+	 *
+	 * @return JsonResponse
+	 */
+	public function api_destroy($ver, $id)
+	{
+		if ($ver !== '0')
+			return response()->json(['ret' => "Version $ver not supported"]);
+
+		$obj = static::get_model_obj();
+		if ($obj->findOrFail($id)->delete())
+			$ret = 'success';
+		else
+			$ret = 'failure';
+
+		return response()->json(['ret' => $ret]);
+	}
+
 
 	/**
 	 * Detach a pivot entry of an n-m relationship
@@ -833,13 +976,32 @@ class BaseController extends Controller {
 		return \Redirect::back();
 	}
 
-
-	public function dump($id) {
-		return static::get_model_obj()->findOrFail($id);
+	/**
+	 * API equivalent of the edit view
+	 *
+	 * @author Ole Ernst
+	 *
+	 * @return JsonResponse
+	 */
+	public function api_get($ver, $id) {
+		if ($ver === '0')
+			return static::get_model_obj()->findOrFail($id);
+		else
+			return response()->json(['ret' => "Version $ver not supported"]);
 	}
 
-	public function dumpall() {
-		return static::get_model_obj()->all();
+	/**
+	 * API equivalent of index()
+	 *
+	 * @author Ole Ernst
+	 *
+	 * @return JsonResponse
+	 */
+	public function api_index($ver) {
+		if ($ver === '0')
+			return static::get_model_obj()->all();
+		else
+			return response()->json(['ret' => "Version $ver not supported"]);
 	}
 
 
@@ -1138,15 +1300,15 @@ class BaseController extends Controller {
 		foreach ($edit_column_data as $column => $functionname) {
 			if($column == $first_column)
 			{
-			$DT->editColumn($column, function($object) use ($functionname) {
-				return '<a href="'.route(\NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
-				$object->view_icon().$object->$functionname().'</strong></a>';
-			});
+				$DT->editColumn($column, function($object) use ($functionname) {
+					return '<a href="'.route(\NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
+					$object->view_icon().$object->$functionname().'</strong></a>';
+				});
 			} else {
-			$DT->editColumn($column, function($object) use ($functionname) {
-				return $object->$functionname();
-			});
-		}
+				$DT->editColumn($column, function($object) use ($functionname) {
+					return $object->$functionname();
+				});
+			}
 		};
 
 		$DT	->setRowClass(function ($object) {

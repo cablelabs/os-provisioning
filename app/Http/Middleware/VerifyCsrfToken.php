@@ -14,6 +14,10 @@ class VerifyCsrfToken extends BaseVerifier {
 	 */
 	public function handle($request, Closure $next)
 	{
+		// api@localhost doesn't need to pass this check
+		if ($request->getUser() === 'api@localhost')
+			return $next($request);
+
 		return parent::handle($request, $next);
 	}
 

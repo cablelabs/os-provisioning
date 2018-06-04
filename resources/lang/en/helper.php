@@ -9,6 +9,9 @@ return [
 	'ExportVisibleTable'			=> 'Exports the shown table. If the table is filtered make sure to select the \"All\" option to display everything. Loading can take a few seconds.',
 	'ChangeVisibilityTable'			=> 'Select the columns that should be visible.',
 
+	// GlobalConfig
+	'ISO_3166_ALPHA-2'				=> 'ISO 3166 ALPHA-2 (two characters, e.g. “US”). Used in address forms to specify the country.',
+
  /**
   *	MODULE: BillingBase
   */
@@ -20,6 +23,7 @@ return [
 	'BillingBase_InvoiceNrStart' 	=> 'Invoice Number Counter starts every new year with this number',
 	'BillingBase_ItemTermination'	=> 'Allow Customers only to terminate booked products on last day of month',
 	'BillingBase_MandateRef'		=> "A Template can be built with sql columns of contract or mandate table - possible fields: \n",
+	'BillingBase_showAGs' 			=> 'Adds a select list with contact persons to the contract page. The list has to be stored in appropriate Storage directory - check source code!',
 	'BillingBase_SplitSEPA'			=> 'Sepa Transfers are split to different XML-Files dependent of their transfer type',
 
 	//CompanyController
@@ -83,6 +87,7 @@ return [
 	//ModemController
 	'Modem_NetworkAccess'			=> 'Network Access for CPEs. (MTAs are not considered and will always go online when all other configurations are correct). Take care: With Billing-Module this checkbox will be overwritten by daily check if tariff changes.',
 	'Modem_InstallationAddressChangeDate'	=> 'In case of (physical) relocation of the modem: Add startdate for the new address here. If readonly there is a pending address change order at Envia.',
+	'Modem_GeocodeOrigin'			=> 'Where does geocode data come from? If set to “n/a” address could not be geocoded against any API. Will be set to your name on manually changed geodata.',
 	'contract_number' 				=> 'Attention - Customer login password is changed automatically on changing this field!',
 	'mac_formats'					=> "Allowed formats (case-insensitive):\n\n1) AA:BB:CC:DD:EE:FF\n2) AABB.CCDD.EEFF\n3) AABBCCDDEEFF",
 	'fixed_ip_warning'				=> 'Using fixed IP address is highly discouraged, as this breaks the ability to move modems and their CPEs freely among CMTSes. Instead of telling the customer a fixed IP address they should be supplied with the hostname, which will not change.',

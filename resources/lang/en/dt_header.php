@@ -123,6 +123,8 @@ return [
 	'modem.street' => 'Street',
 	'modem.district' => 'District',
 	'modem.us_pwr' => 'US level',
+	'modem.geocode_source' => 'Geocode origin',
+	'modem.inventar_num' => 'Serial Nr',
 	'contract_valid' => 'Contract valid?',
 	// QoS
 	'qos.name' => 'QoS Name',
@@ -142,6 +144,7 @@ return [
 	'phonenr_act' => 'Activation date',
 	'phonenr_deact' => 'Deactivation date',
 	'phonenr_state' => 'Status',
+	'modem_city' => 'Modem city',
 	// Phonenumbermanagement
 	'phonenumbermanagement.id' => 'ID',
 	'phonenumbermanagement.activation_date' => 'Activation date',
@@ -188,4 +191,6 @@ return [
 	'ticket.user_id' => 'Created by',
 	'ticket.created_at' => 'Created at',
 	'ticket.assigned_users' => 'Assigned Users',
+	'assigned_users' => 'Assigned Users',
+	'tickettypes.name' => 'Type',
 ];

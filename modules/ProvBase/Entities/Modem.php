@@ -2,7 +2,7 @@
 
 namespace Modules\ProvBase\Entities;
 
-use Exception, File, Log;
+use Exception, File, Log, GlobalConfig;
 use Acme\php\ArrayHelper;
 use Modules\ProvBase\Entities\{ ProvBase, Qos};
 use Modules\ProvMon\Http\Controllers\ProvMonController;
@@ -23,6 +23,9 @@ class Modem extends \BaseModel {
 		return array(
 			'mac' => 'required|mac|unique:modem,mac,'.$id.',id,deleted_at,NULL',
 			'birthday' => 'date',
+			'country_code' => 'regex:/^[A-Z]{2}$/',
+			'contract_id' => 'required|exists:contract,id,deleted_at,NULL',
+			'configfile_id' => 'required|exists:configfile,id,deleted_at,NULL,device,cm,public,yes',
 		);
 	}
 
@@ -46,7 +49,7 @@ class Modem extends \BaseModel {
 		$bsclass = $this->get_bsclass();
 
 		return ['table' => $this->table,
-				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', 'contract_valid'],
+				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
 				'bsclass' => $bsclass,
 				'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
 				'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
@@ -865,76 +868,301 @@ class Modem extends \BaseModel {
 	 *
 	 * TODO: split in a general geocoding function and a modem specific one
 	 */
-	public function geocode ($save = true)
-	{
+	public function geocode($save=true) {
+
+		$geodata = null;
+
+		// first try to get geocoding from OSM
+		try {
+			$geodata = $this->_geocode_osm_nominatim();
+		}
+		catch (Exception $ex) {
+			$msg = "Error in geocoding against OSM Nominatim: ".$ex->getMessage();
+			\Session::push('tmp_error_above_form', $msg);
+			Log::error("$msg (".get_class($ex)." in ".$ex->getFile()." line ".$ex->getLine().")");
+		}
+
+		// fallback: ask google maps
+		if (!$geodata) {
+			try {
+				$geodata = $this->_geocode_google_maps($save);
+			}
+			catch (Exception $ex) {
+				$msg = "Error in geocoding against google maps: ".$ex->getMessage();
+				\Session::push('tmp_error_above_form', $msg);
+				Log::error("$msg (".get_class($ex)." in ".$ex->getFile()." line ".$ex->getLine().")");
+			}
+		}
+
+		if ($geodata) {
+			$this->y = $geodata['latitude'];
+			$this->x = $geodata['longitude'];
+			$this->geocode_source = $geodata['source'];
+			$this->geocode_state = 'OK';
+
+			Log::info("Geocoding successful, result: ".$this->y.",".$this->x.' (source: '.$geodata['source'].')');
+		}
+		else {
+			// no geodata determined
+			if (!\App::runningInConsole()) {
+				// if running interactively: delete probably outdated geodata and inform user
+				$this->y = '';
+				$this->x = '';
+				$this->geocode_source = 'n/a';
+				$message = "Could not determine geo coordinates ($this->geocode_state) – please add manually";
+				\Session::push('tmp_error_above_form', $message);
+			}
+			else {
+				// if running from console: preserve existing geodata (could have been be imported or manually set in older times)
+				$this->geocode_source = 'n/a (unchanged existing data)';
+			}
+			Log::warning("geocoding failed");
+		}
+
+		if ($save) {
+			$this->save();
+		}
+
+		return $geodata;
+
+	}
+
+
+	/**
+	 * Some housenumbers need special handling. This method splits them to the needed parts.
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _split_housenumber_for_geocoding($house_number) {
+		// regex from https://stackoverflow.com/questions/10180730/splitting-string-containing-letters-and-numbers-not-separated-by-any-particular
+		return preg_split("/(,?\s+)|((?<=[-\/a-z])(?=\d))|((?<=\d)(?=[-\/a-z]))/i", strtolower($this->house_number));
+	}
+
+
+	/**
+	 * Get geodata from OpenStreetMap
+	 *
+	 * @author Patrick Reichel
+	 */
+	protected function _geocode_osm_nominatim() {
+
 		Log::debug(__METHOD__." started for ".$this->hostname);
 
-		$country = 'Deutschland';
+		// don't ask API in testing mode (=faked data)
+		if (env('APP_ENV') == 'testing') {
+			Log::debug('Testing mode – will not ask OSM Nominatim with faked data');
+			return null;
+		}
 
-		// Load google key if .ENV is set
-		$key = '';
-		if (isset ($_ENV['GOOGLE_API_KEY']))
+		$geodata = null;
+		$base_url = "https://nominatim.openstreetmap.org/search";
+
+		if (!filter_var(env('OSM_NOMINATIM_EMAIL'), FILTER_VALIDATE_EMAIL)) {
+			$message = "Unable to ask OpenStreetMap Nominatim API for geocoding – OSM_NOMINATIM_EMAIL not set";
+			\Session::push('tmp_warning_above_form', $message);
+			Log::warning($message);
+			return false;
+		}
+
+		$country_code = $this->country_code ? : GlobalConfig::first()->default_country_code;
+
+		// problem: data is inconsistent in OSM – housenumbers with additional character can have two formats:
+		// “104 a” or “104a”; there is an 3-years-open bug report: https://trac.openstreetmap.org/ticket/5256
+		// so we have to try both variants if the first one does not return a result
+		$parts = $this->_split_housenumber_for_geocoding($this->house_number);
+
+		if (count($parts) < 2) {
+			$housenumber_variants = [$parts[0]];
+		}
+		else {
+			$housenumber_variants = [
+				implode('', $parts),	// more often used according to bug report
+				implode(' ', $parts),
+			];
+		};
+
+		foreach ($housenumber_variants as $housenumber_prepared) {
+			// see https://wiki.openstreetmap.org/wiki/DE:Nominatim#Parameter for details
+			// we are using the structured format (faster, saves server ressources – but marked experimental)
+			$params = [
+				'street' => "$housenumber_prepared $this->street",
+				'postalcode' => $this->zip,
+				'country' => $country_code,
+				'email' => env('OSM_NOMINATIM_EMAIL'),	// has to be set (https://operations.osmfoundation.org/policies/nominatim); else 403 Forbidden
+				'format' => 'json',			// return format
+				'dedupe' => '1',			// only one geolocation (even if address is split to multiple places)?
+				'polygon' => '0',			// include surrounding polygons?
+				'addressdetails' => '0',	// not available using API
+
+			];
+
+			$url = $base_url."?";
+			if ($params) {
+				$tmp_params = [];
+				foreach ($params as $key => $value) {
+					array_push($tmp_params, (urlencode($key)."=".urlencode($value)));
+				}
+				$url .= implode("&", $tmp_params);
+			}
+
+			Log::info("Trying to geocode modem ".$this->id." against $url");
+
+			$geojson = file_get_contents($url);
+			$geodata_raw = json_decode($geojson, true);
+
+			$matches = ['building', ];
+			foreach ($geodata_raw as $entry) {
+				$class = array_get($entry, 'class', '');
+				$display_name = array_get($entry, 'display_name', '');
+				$lat = array_get($entry, 'lat', null);
+				$lon = array_get($entry, 'lon', null);
+
+				// check if returned entry is of certain type (e.g. “highway” indicates fuzzy match)
+				if (in_array($class, $matches) && $lat && $lon) {
+
+					// as both variants can appear in resulting address: check for all of them
+					foreach ($housenumber_variants as $variant) {
+						if (\Str::contains(strtolower($display_name), $variant)) {	// don't check for startswith; sometimes a company name is added before the house number
+							$geodata = [
+								'latitude' => $lat,
+								'longitude' => $lon,
+								'source' => 'OSM Nominatim',
+							];
+							break;
+						}
+					}
+				}
+			}
+
+			// if this try results in a match: exit the loop
+			if ($geodata) {
+				break;
+			}
+
+			// sleep to respect usage policy
+			if (count($housenumber_variants > 1)) {
+				sleep(1);
+			}
+		}
+
+		if (!$geodata) {
+			Log::warning('OSM Nominatim geocoding for modem '.$this->id.' failed');
+			return false;
+		}
+
+		return $geodata;
+	}
+
+
+	/**
+	 * Get geodata from google maps
+	 *
+	 * @author Torsten Schmidt, Patrick Reichel
+	 * @return Array 	Geodata [lat, lon, source]
+	 */
+	protected function _geocode_google_maps() {
+
+		Log::debug(__METHOD__." started for ".$this->hostname);
+
+		// don't ask API in testing mode (=faked data)
+		if (env('APP_ENV') == 'testing') {
+			Log::debug('Testing mode – will not ask Google Geocoding API with faked data');
+			return null;
+		}
+
+		$geodata = null;
+
+		$country_code = $this->country_code ? : GlobalConfig::first()->default_country_code;
+
+		// beginning on 2018-06-11 geocode api can only be used with an api key (otherwise returning error)
+		// ⇒ https://cloud.google.com/maps-platform/user-guide
+		if (date('c') > '2018-06-10') {
+			if (!env('GOOGLE_API_KEY')) {
+				$message = "Unable to ask Google Geocoding API – GOOGLE_API_KEY not set";
+				\Session::push('tmp_warning_above_form', $message);
+				Log::warning($message);
+				return false;
+			}
 			$key = '&key='.$_ENV['GOOGLE_API_KEY'];
+		}
+		else {
+			// Load google key if .ENV is set
+			$key = '';
+			if (env('GOOGLE_API_KEY'))
+				$key = '&key='.$_ENV['GOOGLE_API_KEY'];
+		}
 
 		// url encode the address
-		$address = urlencode($country.', '.$this->street.' '.$this->house_number.', '.$this->zip.', '.$this->city);
+		$address = urlencode($this->street.' '.$this->house_number.', '.$this->zip.', '.$country_code);
 
 		// google map geocode api url
 		$url = "https://maps.google.com/maps/api/geocode/json?sensor=false&address={$address}$key";
 
+		Log::info ("Trying to geocode modem ".$this->id." against $url");
+
 		// get the json response
 		$resp_json = file_get_contents($url);
-
-		// Log
-		Log::info ('geocode: request '.$url);
-
-		// decode the json
 		$resp = json_decode($resp_json, true);
 
+		$status = array_get($resp, 'status', 'n/a');
+
 		// response status will be 'OK', if able to geocode given address
-		if($resp['status']=='OK')
-		{
+		if ($status == 'OK') {
+
 			// get the important data
-			$lati = $resp['results'][0]['geometry']['location']['lat'];
-			$longi = $resp['results'][0]['geometry']['location']['lng'];
-			$formatted_address = $resp['results'][0]['formatted_address'];
+			$lati = array_get($resp, 'results.0.geometry.location.lat', null);
+			$longi = array_get($resp, 'results.0.geometry.location.lng', null);
+			$formatted_address = array_get($resp, 'results.0.formatted_address', null);
+			$location_type = array_get($resp, 'results.0.geometry.location_type', null);
+			$partial_match = array_get($resp, 'results.0.partial_match', null);
 
-			// verify if data is complete
-			if($lati && $longi && $formatted_address)
-			{
-				// put the data in the array
-				$data_arr = array();
+			$matches = ['ROOFTOP', ];
+			$interpolated_matches = ['RANGE_INTERPOLATED'];
+			// verify if data is complete and a real match
+			if (
+				$lati &&
+				$longi &&
+				$formatted_address &&
+				!$partial_match	&&
+				in_array($location_type, $matches)
+			) {
+				$geodata = [
+					'latitude' => $lati,
+					'longitude' => $longi,
+					'source' => 'Google Geocoding API',
+				];
 
-				array_push(
-					$data_arr,
-					$lati,
-					$longi
-					// $formatted_address
-					);
-
-				$this->y = $lati;
-				$this->x = $longi;
-				$this->geocode_state = 'OK';
-
-				if ($save)
-					$this->save();
-
-				Log::info('geocode: result '.$lati.','.$longi);
-
-				return $data_arr;
+				return $geodata;
 			}
-			else
-			{
+			// check if partial match (interpolated geocoords seem to be pretty good!)
+			// mark source as tainted to give the user a hint
+			elseif (
+				$lati &&
+				$longi &&
+				$formatted_address &&
+				$partial_match	&&
+				in_array($location_type, $interpolated_matches)
+			) {
+				$geodata = [
+					'latitude' => $lati,
+					'longitude' => $longi,
+					'source' => 'Google Geocoding API (interpolated)',
+				];
+
+				return $geodata;
+			}
+			else {
+
 				$this->geocode_state = 'DATA_VERIFICATION_FAILED';
-				Log::info('geocode: '.$this->geocode_state);
-				return false;
+				Log::warning('Google geocoding for modem '.$this->id.' failed: '.$this->geocode_state);
+				return null;
 			}
 		}
-		else
-		{
-			$this->geocode_state = $resp['status'];
-			Log::info('geocode: '.$this->geocode_state);
-			return false;
+		else {
+
+			$this->geocode_state = $status;
+			Log::warning('Google geocoding for modem '.$this->id.' failed: '.$this->geocode_state);
+			return null;
 		}
 	}
 
@@ -1149,21 +1377,34 @@ class ModemObserver
 		$diff = $modem->getDirty();
 
 		// Use Updating to set the geopos before a save() is called.
-		// Notice: that we can not call save() in update(). This will re-tricker
+		// Notice: that we can not call save() in update(). This will re-trigger
 		//         the Observer and re-call update() -> endless loop is the result.
-		if (multi_array_key_exists(['street', 'house_number', 'zip', 'city'], $diff))
-		{
+		if (multi_array_key_exists(['x', 'y'], $diff)) {
+			// geodata changed ⇒ manually entered geodata
+			// set origin to username (except if running from console command)
+			// this also prevents asking the geocoding APIs on seeded modems
+			if (!\App::runningInConsole()) {
+				$user = \Auth::user();
+				$modem->geocode_source = $user->first_name." ".$user->last_name;
+			};
+		}
+		elseif (multi_array_key_exists(['street', 'house_number', 'zip', 'city'], $diff)) {
+			// address changed ⇒ try to geocode new address
 			$modem->geocode(false);
 			$diff['x'] = true; 			// refresh Mpr by setting changed attribute to true
 		}
 
 		// Refresh MPS rules
-		// Note: does not perform a save() which could trigger observer.
 		if (\Module::collections()->has('HfcCustomer'))
 		{
-			if (multi_array_key_exists(['x', 'y'], $diff))
-				$modem->netelement_id = \Modules\HfcCustomer\Entities\Mpr::refresh($modem);
+			if (multi_array_key_exists(['x', 'y'], $diff)) {
+				// suppress output in this case
+				ob_start();
+				\Modules\HfcCustomer\Entities\Mpr::refresh($modem);
+				ob_end_clean();
+			}
 		}
+
 	}
 
 	public function updated($modem)
@@ -1173,16 +1414,15 @@ class ModemObserver
 		if (!$modem->observer_enabled)
 			return;
 
-		// TODO: only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
-		$restart = $modem->needs_restart();
+		// only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
+		$diff = $modem->getDirty();
 
-		if ($restart)
+		if (multi_array_key_exists(['contract_id', 'public', 'network_access', 'configfile_id', 'qos_id', 'mac'], $diff))
 		{
 			$modem->make_dhcp_cm();
-			$modem->restart_modem($restart > 0);
+			$modem->restart_modem(array_key_exists('mac', $diff));
 			$modem->make_configfile();
 		}
-
 
 		// ATTENTION:
 		// If we ever think about moving modems to other contracts we have to delete envia TEL related stuff, too –

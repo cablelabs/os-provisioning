@@ -20,11 +20,11 @@ class PhonenumberManagement extends \BaseModel {
 	public static function rules($id=null)
 	{
 		return array(
-			'phonenumber_id' => 'required|exists:phonenumber,id|min:1',
-			'trcclass' => 'required|exists:trcclass,id',
-			'carrier_in' => 'required|exists:carriercode,id',
-			'carrier_out' => 'required|exists:carriercode,id',
-			'ekp_in' => 'required|exists:ekpcode,id',
+			'phonenumber_id' => 'required|exists:phonenumber,id,deleted_at,NULL|min:1',
+			'trcclass' => 'required|exists:trcclass,id,deleted_at,NULL',
+			'carrier_in' => 'required|exists:carriercode,id,deleted_at,NULL',
+			'carrier_out' => 'required|exists:carriercode,id,deleted_at,NULL',
+			'ekp_in' => 'required|exists:ekpcode,id,deleted_at,NULL',
 			'activation_date' => 'date',
 			'deactivation_date' => 'date',
 		);

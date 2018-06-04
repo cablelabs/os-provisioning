@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DST_DIR="/var/www/html/lara/doxygen"
+DST_DIR="/var/www/html/nmsprime/doxygen"
 
 
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
@@ -11,12 +11,13 @@ cd $SCRIPT_DIR
 # see https://christianhujer.github.io/Git-Version-in-Doxygen
 export PROJECT_NUMBER="$(git rev-parse HEAD ; git diff-index --quiet HEAD || echo '(with uncommitted changes)')"
 
-BASEDIR="/var/www/nmsprime/Documentation"
-doxygen $BASEDIR/doxyfile
+doxygen doxyfile
+
+mkdir -p $DST_DIR
 
 echo
 echo "Changing group of doxygen dir to apache"
-sudo chgrp -R apache /var/www/html/nmsprime/doxygen
+sudo chgrp -R apache $DST_DIR
 
 echo
 echo "Warnings from last run are stored in $SCRIPT_DIR/doxywarn.log"
