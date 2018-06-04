@@ -313,7 +313,7 @@ class BaseController extends Controller {
 
 			$ext = strrchr($filename, '.');
 			$fn  = substr($filename, 0, strlen($filename) - strlen($ext));
-			$filename = str_sanitize($fn).$ext;
+			$filename = sanitize_filename($fn).$ext;
 
 			// move file
 			Input::file($upload_field)->move($dst_path, $filename);

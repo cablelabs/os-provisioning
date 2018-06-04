@@ -51,10 +51,11 @@ function unify_mac($data)
 
 /**
  * Simplify string for Filenames
+ * Attention: Do not use full path (with directory) as slash is replaced
  *
  * @author Nino Ryschawy
  */
-function str_sanitize($string)
+function sanitize_filename($string)
 {
 	$string = str_replace([' ', 'ß'], '_', $string);
 	return preg_replace("/[^a-zA-Z0-9-_]/", "", $string);
