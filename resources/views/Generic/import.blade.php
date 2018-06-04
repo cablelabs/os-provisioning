@@ -51,10 +51,10 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12 col-md-offset-4">
-                                    <b>NOTE's on runnning without observers:</b>
-                                    <li>imports without observers (create/creating) are more fast, BUT</li>
-                                    <li>mostly require manual work afterwards, like running some <code>php artisan</code> commands from CLI</li>
-                                    <li>skip GUI logging entries</li>
+                                    <b>NOTES on runnning without observers:</b>
+                                    <li>imports without observers (create/creating) are faster, BUT</li>
+                                    <li>often requires require manual work afterwards, like running some <code>php artisan</code> commands from CLI</li>
+                                    <li>skips GUI logging entries</li>
                                 </div>
                             </div>
                         </form>
