@@ -63,7 +63,7 @@ class GuiLog extends \BaseModel {
 		if (\Route::has($this->model.'.edit')) {
 			$model_link = '<a href="'.\URL::route($this->model.'.edit', array($this->model_id)).'" target="_blank">'.$this->model_id.'</a>';
 		}
-		// if there is no route (e.g. CCCAuthUser): show only ID
+		// if there is no route (e.g. CccUser): show only ID
 		else {
 			$model_link = $this->model_id;
 		}
