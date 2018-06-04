@@ -2,7 +2,7 @@
 
 namespace App;
 
-use DB, Module, Schema, Str;
+use Auth, DB, Module, Schema, Str;
 use App\Http\Controllers\NamespaceController;
 use App\Extensions\Database\EmptyRelation as EmptyRelation;
 use Illuminate\Database\Eloquent\{ SoftDeletes, Model as Eloquent};
@@ -418,26 +418,21 @@ class BaseModel extends Eloquent
 		// models to be excluded from search
 		$exclude = array(
 			'BaseModel',
-			'Authmetacore',
-			'Authcore',
+			'helpers',
 			'TRCClass',	// static data; not for standalone use
 			'CarrierCode', // cron updated data; not for standalone use
 			'EkpCode', // cron updated data; not for standalone use
-			// 'AddressFunctionsTrait',
-			// 'AccountingRecord',
-			// 'BillingLogger',
 		);
 		$result = array();
 
 		/*
 		 * Search all Models in /models Models Path
 		 */
-		$dir = app_path('Models');
-		$models = glob($dir."/*.php");
+		$models = glob(app_path()."/*.php");
 
 		foreach ($models as $model) {
 			$model = str_replace(app_path('Models')."/", "", $model);
-			$model = str_replace(".php", "", $model);
+			$model = str_replace(".php", "::class", $model);
 			if (array_search($model, $exclude) === FALSE) {
 				array_push($result, 'App\\'.$model);
 			}
@@ -1052,7 +1047,7 @@ class BaseObserver
 	 */
 	private function add_log_entry($model, $action)
 	{
-		$user = \Auth::user();
+		$user = Auth::user();
 
 		$model_name = $model->get_model_name();
 
@@ -1097,7 +1092,7 @@ class BaseObserver
 		}
 
 		$data = [
-			'authuser_id' => $user ? $user->id : 0,
+			'user_id' 	=> $user ? $user->id : 0,
 			'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
 			'method' 	=> $action,
 			'model' 	=> $model_name,

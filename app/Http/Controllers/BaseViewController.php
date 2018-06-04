@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth, BaseModel, Config, File, GlobalConfig, Input, Log, Module, Redirect, Route, Validator, View ;
+use App, Auth, BaseModel, Bouncer, Cache, Config, File, GlobalConfig, Input;
+use Log, Module, Redirect, Route, Str, Validator, View ;
 
 /*
  * BaseViewController: Is a special Controller which will be a kind of middleware/sub-layer/helper
@@ -448,72 +449,52 @@ finish:
 
 
 	/*
-	 * Return the global prepared header links for Main Menu and provide Symbols for Modules
+	 * This Method returns The Menuobjects for the Main Menu
+	 * which constist of icon, link and class of the page
 	 *
-	 * NOTE: this function must take care of installed modules!
+	 * NOTE: this function takes care of installed modules and Permissions!
 	 *
-	 * @return: array() of header links, like
-	 * ['module name' => ['icon' => '...' ,'submodule' => [ 'name of submodule' => ['link' => 'route.entry', 'icon' => '...'], ... ] ...]
-	 *
-	 * @author: Torsten Schmidt, Christian Schramm
+	 * @return: array()
+	 * @author: Christian Schramm
 	 */
 	public static function view_main_menus ()
 	{
-		$ret = array();
-		$modules = \Module::enabled();
+		if (Cache::has('menu'))
+			return Cache::get('menu');
 
-		// global page
-		$array = include(app_path().'/Config/header.php');
-		foreach ($array as $lines)
-		{
-			// array_push($ret, $lines);
-			foreach ($lines as $k => $line)
-			{
-				//dd(Auth::user(), Auth::user()->can('read-Contract'), Auth::user()->isSuperAdmin() );
-				if (Auth::user()->can('create-App\AddressFunctionsTrait')) {
-					$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
-					$ret['Global']['icon'] = 'fa-globe';
-					$ret['Global']['submenu'][$key] = $line;
-				}
+		$menu = [];
+		$modules = Module::enabled();
+		$configMenuItemKey = 'MenuItems';
+
+		$globalPages = Config::get('base.' . $configMenuItemKey);
+
+		foreach ($globalPages as $page => $settings) {
+			if (Bouncer::can('view', $settings['class'] )) {
+				$menuItem = static::translate_view($page, 'Menu');
+				$menu['Global']['icon'] = 'fa-globe';
+				$menu['Global']['submenu'][$menuItem] = $settings;
 			}
 		}
 
-		// foreach module
-		foreach ($modules as $module)
-		{
-			if (File::exists($module->getPath().'/Config/header.php'))
-			{
-				/*
-				 * TODO: use Config::get()
-				 *       this needs to fix namespace problems first
-				 */
-				$name = ($module->get('description') == '' ? $module->name : $module->get('description')); // module name
+		foreach ($modules as $module) {
+			$moduleMenuConfig= Config::get(Str::lower($module->name) . '.' . $configMenuItemKey);
+
+			if (!empty($moduleMenuConfig)) {
+				$name = Config::get(Str::lower($module->name) . '.' .'name') ?? $module->get('description');
 				$icon = ($module->get('icon') == '' ? '' : $module->get('icon'));
-				$ret[$name]['icon'] = $icon;
-
-				$array = include ($module->getPath().'/Config/header.php');
-				foreach ($array as $lines)
+				$menu[$name]['icon'] = $icon;
+				foreach ($moduleMenuConfig as $page => $settings)
 				{
-					foreach ($lines as $k => $line)
-					{
-
-						if (Auth::user()->can('create-App\AddressFunctionsTrait')) {
-							$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
-							$ret[$name]['submenu'][$key] = $line;
-						}
+					if (Bouncer::can('view', $settings['class'])) {
+						$menuItem = static::translate_view($page, 'Menu');
+						$menu[$name]['submenu'][$menuItem] = $settings;
 					}
 				}
 			}
 		}
 
-		// cleanup menu
-		foreach ($ret as $menu_name => $entries) {
-			if (count($entries) == 0) {
-				unset($ret[$menu_name]);
-			}
-		}
-
-		return $ret;
+		Cache::forever('menu', $menu);
+		return $menu;
 	}
 
 

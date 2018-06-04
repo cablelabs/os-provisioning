@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Bouncer;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -53,38 +54,7 @@ class authCommand extends Command {
 	 */
 	public function fire()
 	{
-		// the following “seeding” is needed in every case – even if the seeders will not be run!
-		// add each existing model
-		foreach (\App\BaseModel::get_models() as $model)
-		{
-			\App\Authcore::updateOrCreate(['name'=>$model], ['type'=>'model']);
-		}
-
-		// add relations meta<->core for role super_admin
-		$models = \DB::table('authcores')->select('id')->where('type', 'LIKE', 'model')->get();
-		foreach ($models as $model) {
-			\App\Authmetacore::updateOrCreate(
-				['core_id' => $model->id,
-				 'role_id' => 1,
-				 'view' => 1,
-				 'create' => 1,
-				 'edit' => 1,
-				 'delete' => 1]
-			);
-		}
-
-		// add relations meta<->core for client every_net
-		$nets = \DB::table('authcores')->select('id')->where('type', 'LIKE', 'net')->get();
-		foreach ($nets as $net) {
-			\App\Authmetacore::updateOrCreate(
-				['core_id' => $net->id,
-				 'role_id' => 2,
-				 'view' => 1,
-				 'create' => 1,
-				 'edit' => 1,
-				 'delete' => 1]
-			);
-		}
+			Bouncer::allow('super_admin')->everything();
 	}
 
 	/**

@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Log;
-use Module;
-use GlobalConfig;
+use GlobalConfig, Log, Module;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -25,7 +23,7 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    protected $prefix = "admin";
+    private $prefix = "admin";
 
     /**
      * Create a new controller instance.
@@ -34,7 +32,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'logout']);
+        $this->middleware('adminRedirect', ['except' => 'logout']);
     }
 
     /**
@@ -61,10 +59,10 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
+        $prefix = $this->prefix;
         $globalConfig = GlobalConfig::first();
         $head1 = $globalConfig->headline1;
         $head2 = $globalConfig->headline2;
-        $prefix = $this->prefix;
         $image = 'main-pic-1.jpg';
 
         \App::setLocale(\App\Http\Controllers\BaseViewController::get_user_lang());

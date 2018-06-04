@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Permission;
+use Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -26,28 +26,13 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        foreach ($this->getPermissions() as $permission) {
-            Gate::define($permission->action .'-'. $permission->name, function ($user) use ($permission) {
+        Auth::extend('admin', function ($app, $name, array $config) {
+            return new adminGuard(Auth::createUserProvider($config['admin']));
+        });
 
-                if ($user->isSuperAdmin()) {
-                        return true;
-                }
+        Auth::extend('ccc', function ($app, $name, array $config) {
+            return new cccGuard(Auth::createUserProvider($config['ccc']));
+        });
 
-                return $user->hasPermission($permission);
-            });
-        }
-
-
-
-    }
-
-    /**
-     * Fetch the collection of site permissions.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    protected function getPermissions()
-    {
-        return Permission::with('roles')->get();
     }
 }

@@ -167,7 +167,7 @@ return [
 		Nwidart\Modules\LaravelModulesServiceProvider::class,
 		Intervention\Validation\ValidationServiceProvider::class,
 		Acme\html\HtmlServiceProvider::class,
-		// Silber\Bouncer\BouncerServiceProvider::class,
+		Silber\Bouncer\BouncerServiceProvider::class,
 	],
 
 	/*
@@ -182,7 +182,6 @@ return [
 	*/
 
 	'aliases' => [
-
 
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
@@ -233,7 +232,7 @@ return [
 		'Datatables' => Yajra\Datatables\Facades\Datatables::class,
 		'ChannelLog' => Acme\log\ChannelLog::class,
 		'Module' => Nwidart\Modules\Facades\Module::class,
-		// 'Bouncer' => Silber\Bouncer\BouncerFacade::class,
+		'Bouncer' => Silber\Bouncer\BouncerFacade::class,
 	],
 
 ];

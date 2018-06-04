@@ -10,11 +10,11 @@ use Module, Route;
  * This Controller could be used in any MVC context to retrieve actual MVC names
  *
  * NOTE: You MUST follow the following naming examples:
- *       Model: Contract, IpPool, Authuser
- *       Controller: ContractController, IpPoolController, AuthuserController
- *       View: Contract, IpPool, Authuser
- *       Route: provbase::Contract, provbase::IpPool, Authuser
- *       SQL: contract, ippool, authusers
+ *       Model: Contract, IpPool, User
+ *       Controller: ContractController, IpPoolController, UserController
+ *       View: Contract, IpPool, User
+ *       Route: provbase::Contract, provbase::IpPool, User
+ *       SQL: contract, ippool, Users
  *
  * @author Torsten Schmidt
  */

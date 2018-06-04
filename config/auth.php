@@ -67,8 +67,7 @@ return [
         ],
         'ccc' => [
             'driver' => 'eloquent',
-            // TODO: check if absence of CCC module will break ?
-            'model' => \Modules\Ccc\Entities\CccAuthuser::class,
+            'model' => \Modules\Ccc\Entities\CccUser::class,
         ]
     ],
     /*

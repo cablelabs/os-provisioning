@@ -17,7 +17,7 @@ Route::get('', array('as' => 'Home', 'uses' => 'WelcomeController@index'));
  * Admin Login Routes
  */
 Route::group(['prefix' => 'admin', 'middleware' => ['web']], function() {
-	Route::get('login', array('as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm'));
+	Route::get('login', array('as' => 'adminLogin', 'uses' => 'Auth\LoginController@showLoginForm'));
 	Route::post('login', array('as' => 'login.post', 'uses' => 'Auth\LoginController@login'));
 	Route::post('logout', array('as' => 'logout.post', 'uses' => 'Auth\LoginController@logout'));
 });

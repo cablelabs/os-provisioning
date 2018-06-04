@@ -15,19 +15,19 @@ class UserController extends BaseController {
      */
 	public function view_form_fields($model = null)
 	{
-		return array(
-			array('form_type' => 'text', 'name' => 'login_name', 'description' => 'Login'),
-			array('form_type' => 'password', 'name' => 'password', 'description' => 'Password'),
-			array('form_type' => 'text', 'name' => 'first_name', 'description' => 'Firstname'),
-			array('form_type' => 'text', 'name' => 'last_name', 'description' => 'Lastname'),
-			array('form_type' => 'text', 'name' => 'email', 'description' => 'Email'),
-			array('form_type' => 'select', 'name' => 'language', 'description' => 'Language', 'value' => User::getPossibleEnumValues('language', false)),
-			array('form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'value' => '1', 'checked' => true),
-			array('form_type' => 'select', 'name' => 'roles_ids[]', 'description' => 'Assign Role',
-				'value' => $model->html_list(\App\Role::where('type', 'like', 'role')->get(), 'name'),
-				'options' => array('multiple' => 'multiple'), 'help' => trans('helper.assign_role'),
-				'selected' => $model->html_list($model->roles, 'name')),
-		);
+		return [
+			['form_type' => 'text', 'name' => 'login_name', 'description' => 'Login'],
+			['form_type' => 'password', 'name' => 'password', 'description' => 'Password'],
+			['form_type' => 'text', 'name' => 'first_name', 'description' => 'Firstname'],
+			['form_type' => 'text', 'name' => 'last_name', 'description' => 'Lastname'],
+			['form_type' => 'text', 'name' => 'email', 'description' => 'Email'],
+			['form_type' => 'select', 'name' => 'language', 'description' => 'Language', 'value' => User::getPossibleEnumValues('language', false)],
+			['form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'value' => '1', 'checked' => true],
+			['form_type' => 'select', 'name' => 'roles_ids[]', 'description' => 'Assign Role',
+				'value' => $model->html_list(\App\Role::all(), 'name'),
+				'options' => ['multiple' => 'multiple'], 'help' => trans('helper.assign_role'),
+				'selected' => $model->html_list($model->roles, 'name')]
+		];
 	}
 
 

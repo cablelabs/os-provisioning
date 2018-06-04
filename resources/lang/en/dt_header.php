@@ -2,10 +2,10 @@
 return [
 	// Index DataTable Header
 	// Auth
-	'authusers.login_name' => 'Login Name',
-	'authusers.first_name' => 'Given Name',
-	'authusers.last_name' => 'Family Name',
-	'authrole.name' => 'Name',
+	'users.login_name' => 'Login Name',
+	'users.first_name' => 'Given Name',
+	'users.last_name' => 'Family Name',
+	'role.name' => 'Name',
 	// GuiLog
 	'guilog.created_at' => 'Time',
 	'guilog.username' => 'User',
