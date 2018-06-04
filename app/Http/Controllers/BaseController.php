@@ -1236,14 +1236,18 @@ class BaseController extends Controller {
 	 * @param header - defines whats written in Breadcrumbs Header at Edit and Create Pages
 	 * @param edit - array like [$table.'.column1' => 'customfunction', 'foreigntable.column' => 'customfunction', 'customcolumn' => 'customfunction']
 	 * customfunction will be called for every element in table.column, foreigntable.column or customcolumn
-	 * CAREFUL customcolumn will not be sortable or searchable - to use them anyways use the sortsearch key
+	 * CAREFUL customcolumn will not be sortable or searchable - to use them anyways use the disable_sortsearch key
 	 * @param eager_loading array like [foreigntable1, foreigntable2, ...] - eager load foreign tables
 	 * @param order_by array like ['0' => 'asc'] - order table by id in ascending order, ['1' => 'desc'] - order table after first column in descending order
-	 * @param sortsearch array like ['customcolumn' => 'false'] prevents that user is able to sort what is impossible => prevent errors
+	 * @param disable_sortsearch array like ['customcolumn' => 'false'] disables sorting & searching for the chosen column (e.g. when it is impossible) => prevent errors
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 *
 	 * @author Christian Schramm
+	 *
+	 * NOTE: Further Datatables Documentation
+	 * 			https://datatables.yajrabox.com
+	 * 			https://yajrabox.com/docs/laravel-datatables/
      */
     public function index_datatables_ajax()
     {

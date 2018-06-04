@@ -54,7 +54,7 @@ class Modem extends \BaseModel {
 				'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
 				'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
 				'eager_loading' => ['configfile','contract'],
-				'sortsearch' => ['contract_valid' => 'false'],
+				'disable_sortsearch' => ['contract_valid' => 'false'],
 				'order_by' => ['0' => 'desc'], ];
 	}
 
