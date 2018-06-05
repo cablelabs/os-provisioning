@@ -158,8 +158,7 @@ class Contract extends \BaseModel {
 
 		if (\Module::collections()->has('Ticketsystem'))
 		{
-			$tab = \Module::collections()->has('BillingBase') ? 'Ticket' : 'Edit';
-			$ret[$tab]['Ticket'] = $this->tickets;
+			$ret['Edit']['Ticket'] = $this->tickets;
 		}
 
 		if (\Module::collections()->has('Mail'))
