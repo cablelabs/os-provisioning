@@ -110,7 +110,7 @@ var makeInputFitOnResize = function() {
   });
   $("select").select2();
 
-  selects = ['street', 'city'];
+  selects = ['street', 'city', 'zip', 'district'];
   for (var i=0, len=selects.length; i<len; i++) {
     $('.select2-' + selects[i]).select2({
       tags: true,
