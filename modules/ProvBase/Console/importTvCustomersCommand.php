@@ -138,7 +138,7 @@ class importTvCustomersCommand extends Command {
 			if (!$c)
 				continue;
 
-			$this->_add_tarif($c, $line[self::TARIFF]);
+			$this->_add_tarif($c, $line);
 			$this->_add_Credit($c, $line);
 			$this->_add_sepa_mandate($c, $line);
 		}
@@ -276,8 +276,10 @@ class importTvCustomersCommand extends Command {
 	}
 
 
-	private function _add_tarif($contract, $tariff)
+	private function _add_tarif($contract, $line)
 	{
+		$tariff = $line[self::TARIFF];
+
 		if (!$tariff) {
 			\Log::debug("'Umlage' is zero or empty - don't add tariff");
 			return;
@@ -314,7 +316,7 @@ class importTvCustomersCommand extends Command {
 		Item::create([
 			'contract_id' 		=> $contract->id,
 			'product_id' 		=> $product_id,
-			'valid_from' 		=> $contract->contract_start,
+			'valid_from' 		=> $line[self::C_START] ? : '2000-01-01',
 			'valid_from_fixed' 	=> 1,
 			'valid_to' 			=> $contract->contract_end,
 			'valid_to_fixed' 	=> 1,
