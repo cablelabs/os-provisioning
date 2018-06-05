@@ -10,7 +10,12 @@ class ModemController extends \BaseController {
 
 	protected $index_create_allowed = false;
 	protected $save_button = 'Save / Restart';
-	protected $edit_view_force_restart_button = true;
+	protected $save_button_title_key = 'modem_save_button_title';
+
+	// save button title ? for a help message
+	protected $edit_view_second_button = true;
+	protected $second_button_name = 'Force Restart';
+	protected $second_button_title_key = 'modem_force_restart_button_title';
 
     /**
      * defines the formular fields for the edit and create view
@@ -311,7 +316,7 @@ class ModemController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		if (!\Input::has('_force_restart'))
+		if (!\Input::has('_2nd_action'))
 			return parent::update($id);
 
 		$modem = Modem::find($id);

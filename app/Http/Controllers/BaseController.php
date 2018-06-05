@@ -17,8 +17,15 @@ class BaseController extends Controller {
 	 * Default VIEW styling options
 	 * NOTE: All these values could be used in the inheritances classes
 	 */
-	protected $save_button = 'Save';
-	protected $force_restart_button = 'Force Restart';
+	protected $edit_view_save_button = true;
+	protected $save_button_name = 'Save';
+	// key in messages language file
+	protected $save_button_title_key = null;
+
+	protected $edit_view_second_button = false;
+	protected $second_button_name = 'Missing action name';
+	protected $second_button_title_key = null;
+
 	protected $relation_create_button = 'Create';
 
 	// if set to true a create button on index view is available
@@ -28,9 +35,6 @@ class BaseController extends Controller {
 	protected $edit_left_md_size = 8;
 	protected $index_left_md_size = 12;
 	protected $edit_right_md_size = null;
-
-	protected $edit_view_save_button = true;
-	protected $edit_view_force_restart_button = false;
 
 	protected $index_tree_view = false;
 
@@ -386,10 +390,12 @@ class BaseController extends Controller {
 		if ( \Module::collections()->has('Dashboard'))
 			$a['modem_statistics'] = \Modules\Dashboard\Http\Controllers\DashboardController::get_modem_statistics();
 
-		$a['save_button'] = $this->save_button;
-		$a['force_restart_button'] = $this->force_restart_button;
 		$a['edit_view_save_button'] = $this->edit_view_save_button;
-		$a['edit_view_force_restart_button'] = $this->edit_view_force_restart_button;
+		$a['save_button_name'] = $this->save_button_name;
+		$a['second_button_name'] = $this->second_button_name;
+		$a['edit_view_second_button'] = $this->edit_view_second_button;
+		$a['second_button_title_key'] = $this->second_button_title_key;
+		$a['save_button_title_key'] = $this->save_button_title_key;
 
 		// Get Framework Informations
 		$gc = GlobalConfig::first();
