@@ -311,18 +311,13 @@ class ModemController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		if(!\Input::has('_force_restart'))
+		if (!\Input::has('_force_restart'))
 			return parent::update($id);
 
 		$modem = Modem::find($id);
-
 		$modem->restart_modem();
 
-		// error msg created while observer execution
-		$msg = \Session::has('error') ? \Session::get('error') : 'Restarted Modem!';
-		$color = \Session::has('error') ? 'warning' : 'info';
-
-		return \Redirect::route('Modem.edit', $id)->with('message', $msg)->with('message_color', $color);
+		return \Redirect::back();
 	}
 
 }

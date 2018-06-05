@@ -591,6 +591,9 @@ class Modem extends \BaseModel {
 				snmpset($cmts->ip, $cmts->get_rw_community(), '1.3.6.1.4.1.20858.10.12.1.3.1.7.'.$mac_oid, 'i', '1', 300000, 1);
 			}
 			else throw new Exception("CMTS company not set");
+
+			// success message
+			\Session::push('tmp_info_above_form', trans('messages.modem_restart_cmts'));
 		}
 		catch (Exception $e)
 		{
@@ -599,6 +602,9 @@ class Modem extends \BaseModel {
 			try {
 				// restart modem - DOCS-CABLE-DEV-MIB::docsDevResetNow
 				snmpset($fqdn, $config->rw_community, '1.3.6.1.2.1.69.1.1.3.0', 'i', '1', 300000, 1);
+
+				// success message - make it a warning as sth is wrong when it's not already restarted by CMTS??
+				\Session::push('tmp_info_above_form', trans('messages.modem_restart_direct'));
 			} catch (Exception $e) {
 				\Log::error("Could not restart $this->hostname directly ('".$e->getMessage()."')");
 
@@ -611,7 +617,7 @@ class Modem extends \BaseModel {
 				}
 				else {
 					// Inform and log for all other exceptions
-					\Session::push('tmp_error_above_form', 'Unexpected exception: '.$e->getMessage());
+					\Session::push('tmp_error_above_form', \App\Http\Controllers\BaseViewController::translate_label('Unexpected exception').': '.$e->getMessage());
 				}
 			}
 		}

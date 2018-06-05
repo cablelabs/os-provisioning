@@ -48,6 +48,8 @@ return [
 	'modem_configfile_error'=> 'Modem configfile not found',
 	'modem_offline'			=> 'Modem is Offline',
 	'modem_restart_error' 		=> 'Could not restart Modem! (offline?)',
+	'modem_restart_success_cmts' => "Restarted modem via CMTS",
+	'modem_restart_success_direct' => "Restarted Modem directly via SNMP",
 	'modem_statistics'		=> 'Number Online / Offline Modems',
 	'month' 				=> 'Month',
 	'mta_configfile_error'	=> 'MTA configfile not found',
