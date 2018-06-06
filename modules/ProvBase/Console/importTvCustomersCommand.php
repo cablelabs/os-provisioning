@@ -30,6 +30,8 @@ class importTvCustomersCommand extends Command {
 	protected $description = 'import Customers from CSV and add TV Tarif';
 
 
+	public $important_todos = "";
+
 	/**
 	 * Column Number and Description for easy Adaption
 	 */
@@ -68,19 +70,23 @@ class importTvCustomersCommand extends Command {
 	 */
 	const TV_CHARGE1 	= 60; 		// Umlage in Euro
 	const TV_CHARGE2 	= 99999; 	// Umlage in Euro - Set to 99999 to disable second charge/tv-tariff
-	const PRODUCT_ID1 	= 46; 		// TV Billig
+	const PRODUCT_ID1 	= 66; 		// TV Billig
 	const PRODUCT_ID2 	= 0;		// TV Teuer
-	// const CREDIT1 		= 10,91; 	// Credit amount 1 for amplifier
-	// const CREDIT2 		= 43,63; 	// Credit amount 2 for amplifier
-	const CREDIT_WATT_1 = '4,5'; 		// Credit amount 1 for amplifier
-	const CREDIT_WATT_2 = 18; 		// Credit amount 2 for amplifier
-	const CREDIT_WATT_3 = 27; 		// Credit amount 3 for amplifier
-	const PRODUCT_C1 	= 51; 		// Product ID for credit 1
-	const PRODUCT_C2 	= 52;		// Product ID for credit 2
-	const PRODUCT_C3 	= 53;		// Product ID for credit 3
 
-
-	public $important_todos = "";
+	// mapping of Watt amount to credit
+	// Watt amount => product_id
+	const CREDITS_WATT = array (
+		'4,5' 	=> 51,
+		5 		=> 64,
+		7 		=> 62, 	// & 63
+		8 		=> 53,
+		'8,5' 	=> 55,
+		11 		=> 65,
+		14 		=> 54,
+		15 		=> 61,
+		16 		=> 58,
+		'16,5'  => 52, // & 57
+		);
 
 
 	/**
@@ -132,7 +138,7 @@ class importTvCustomersCommand extends Command {
 			if (!$c)
 				continue;
 
-			$this->_add_tarif($c, $line[self::TARIFF]);
+			$this->_add_tarif($c, $line);
 			$this->_add_Credit($c, $line);
 			$this->_add_sepa_mandate($c, $line);
 		}
@@ -270,8 +276,10 @@ class importTvCustomersCommand extends Command {
 	}
 
 
-	private function _add_tarif($contract, $tariff)
+	private function _add_tarif($contract, $line)
 	{
+		$tariff = $line[self::TARIFF];
+
 		if (!$tariff) {
 			\Log::debug("'Umlage' is zero or empty - don't add tariff");
 			return;
@@ -308,7 +316,7 @@ class importTvCustomersCommand extends Command {
 		Item::create([
 			'contract_id' 		=> $contract->id,
 			'product_id' 		=> $product_id,
-			'valid_from' 		=> $contract->contract_start,
+			'valid_from' 		=> $line[self::C_START] ? : '2000-01-01',
 			'valid_from_fixed' 	=> 1,
 			'valid_to' 			=> $contract->contract_end,
 			'valid_to_fixed' 	=> 1,
@@ -321,24 +329,24 @@ class importTvCustomersCommand extends Command {
 	private function _add_Credit($contract, $line)
 	{
 		$credit = $line[self::CREDIT];
+		$watt_amount = $line[self::C_DESC1];
 
 		if (!$credit)
 			return;
 
-		switch ($line[self::C_DESC1])
-		{
-			case self::CREDIT_WATT_1: $product_id = self::PRODUCT_C1;
+		$product_id = 0;
+		foreach (self::CREDITS_WATT as $watt => $prod_id) {
+			if ($watt_amount == $watt) {
+				if (in_array($watt, [7, '16,5']))
+					$this->important_todos .="\nPlease check if contract $contract->number has correct credit assigned! (multiple possible)";
+				$product_id = $prod_id;
 				break;
+			}
+		}
 
-			case self::CREDIT_WATT_2: $product_id = self::PRODUCT_C2;
-				break;
-
-			case self::CREDIT_WATT_3: $product_id = self::PRODUCT_C3;
-				break;
-
-			default:
-				$this->important_todos .= "\nContract $contract->number [Old Contract Nr ".$line[self::C_NR]."] has credit of $credit €. Please add credit manually!";
-				return;
+		if (!$product_id) {
+			$this->important_todos .= "\nContract $contract->number [Old Contract Nr ".$line[self::C_NR]."] has credit of $credit € [Watt: $watt_amount]. Please add credit manually!";
+			return;
 		}
 
 		$existing = false;

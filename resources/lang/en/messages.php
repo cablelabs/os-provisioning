@@ -38,6 +38,7 @@ return [
 	'Mark solved'			=> 'Mark as solved?',
 	'missing_product' 		=> 'Missing Product!',
 	'modem_eventlog_error'	=> 'Modem eventlog not found',
+	'modem_force_restart_button_title' => 'Only restarts the modem. Doesn\'t save any changed data!',
 	'modem_monitoring_error'=> 'This could be because the Modem was not online until now. Please note that Diagrams are only available
 		from the point that a modem was online. If all diagrams did not show properly then it should be a
 		bigger problem and there should be a cacti misconfiguration. Please consider the administrator on bigger problems.',
@@ -48,6 +49,9 @@ return [
 	'modem_configfile_error'=> 'Modem configfile not found',
 	'modem_offline'			=> 'Modem is Offline',
 	'modem_restart_error' 		=> 'Could not restart Modem! (offline?)',
+	'modem_restart_success_cmts' => "Restarted modem via CMTS",
+	'modem_restart_success_direct' => "Restarted Modem directly via SNMP",
+	'modem_save_button_title' 	=> 'Saves changed data. Determines new geoposition when address data was changed (and assigns it to a new MPR if necessary). Rebuilds the configfile and restarts the modem if at least one of the following has changed: Public IP, network access, configfile, QoS, MAC-address',
 	'modem_statistics'		=> 'Number Online / Offline Modems',
 	'month' 				=> 'Month',
 	'mta_configfile_error'	=> 'MTA configfile not found',

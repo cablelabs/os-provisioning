@@ -75,7 +75,7 @@
                 @if (isset($model) && method_exists( BaseController::get_model_obj() , 'view_index_label' ) && is_array($model->view_index_label()) && isset($model->view_index_label()['index_header']))
                     @foreach ($model->view_index_label()['index_header'] as $field)
                         <th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.'.$field).' ' }}
-                        @if ((!empty($model->view_index_label()['sortsearch'])) && ($model->view_index_label()['sortsearch'] == [$field => 'false']))
+                        @if ((!empty($model->view_index_label()['disable_sortsearch'])) && ($model->view_index_label()['disable_sortsearch'] == [$field => 'false']))
                             <i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top" data-delay='{"show":"250"}'
                             data-original-title="{{trans('helper.SortSearchColumn')}}"></i>
                         @endif
@@ -94,7 +94,7 @@
                     <th></th> {{-- Checkbox Column if delete is allowed --}}
                 @endif
                 @foreach ($model->view_index_label()['index_header'] as $field)
-                    @if ((!empty($model->view_index_label()['sortsearch'])) && ( array_has( $model->view_index_label()['sortsearch'] , $field) ) )
+                    @if ((!empty($model->view_index_label()['disable_sortsearch'])) && ( array_has( $model->view_index_label()['disable_sortsearch'] , $field) ) )
                         <th></th>
                     @else
                         <th class="searchable"></th>

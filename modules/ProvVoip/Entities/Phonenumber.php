@@ -53,7 +53,7 @@ class Phonenumber extends \BaseModel {
 				'bsclass' => $bsclass,
 				'edit' => ['phonenumbermanagement.activation_date' => 'get_act', 'phonenumbermanagement.deactivation_date' => 'get_deact', 'phonenr_state' => 'get_state', 'number' => 'build_number', 'modem_city' => 'modem_city'],
 				'eager_loading' => ['phonenumbermanagement', 'mta.modem'],
-				'sortsearch' => ['phonenr_state' => 'false', 'modem_city' => 'false'],
+				'disable_sortsearch' => ['phonenr_state' => 'false', 'modem_city' => 'false'],
 				'filter' => ['phonenumber.number' => $this->number_query(), ] ];
 	}
 

@@ -10,19 +10,16 @@ columns:[
     @endif
     @if (isset($index_label_arr['index_header']))
         @foreach ($index_label_arr['index_header'] as $field)
+        {
             @if ( starts_with($field, $index_label_arr["table"].'.'))
-                {
-                  data: '{{ substr($field, strlen($index_label_arr["table"]) + 1) }}',
-                  name: '{{ $field }}'
-                },
+                data: '{{ substr($field, strlen($index_label_arr["table"]) + 1) }}',
             @else
-                {
-                  data: '{{ $field }}',
-                  name: '{{$field}}',
-                  searchable: {{ isset($index_label_arr["sortsearch"][$field]) ? "false" : "true" }},
-                  orderable:  {{ isset($index_label_arr["sortsearch"][$field]) ? "false" : "true" }}
-                },
+                data: '{{ $field }}',
             @endif
+            name: '{{ $field }}',
+            searchable: {{ isset($index_label_arr["disable_sortsearch"][$field]) ? $index_label_arr["disable_sortsearch"][$field] : "true" }},
+            orderable:  {{ isset($index_label_arr["disable_sortsearch"][$field]) ? $index_label_arr["disable_sortsearch"][$field] : "true" }}
+        },
         @endforeach
     @endif
 ],
