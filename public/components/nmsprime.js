@@ -109,6 +109,17 @@ var makeInputFitOnResize = function() {
   $('.select2').css('width', "100%");
   });
   $("select").select2();
+
+  selects = ['street', 'city', 'zip', 'district'];
+  for (var i=0, len=selects.length; i<len; i++) {
+    $('.select2-' + selects[i]).select2({
+      tags: true,
+      ajax: {
+        url: '/admin/Contract/select2/' + selects[i],
+        dataType: 'json'
+      }
+    });
+  }
 };
 
 var positionErdPopover= function() {

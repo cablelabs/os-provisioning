@@ -42,14 +42,16 @@ class ContractController extends \BaseController {
 				<div class='form-group row'>
 					<label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number *</label>
 						<div class=col-md-5>
-							<input class='form-control' name='street' type=text value='".$model['street']."' id='street' style='background-color:whitesmoke'>
+							<select class='select2-street form-control' name='street' type=text id='street' style='background-color:whitesmoke'>
+								<option value='${model['street']}'>${model['street']}</option>
+							</select>
 						</div>"),
 			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => '1', 'html' =>
 				"<div class=col-md-2><input class='form-control' name='house_number' type=text value='".$model['house_number']."' id='house_number' style='background-color:whitesmoke'></div>
 				</div></div>"),
-			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1'),
-			array('form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => '1'),
-			array('form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => '1'),
+			array('form_type' => 'select', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1', 'options' => ['class' => 'select2-zip']),
+			array('form_type' => 'select', 'name' => 'city', 'description' => 'City', 'create' => '1', 'options' => ['class' => 'select2-city']),
+			array('form_type' => 'select', 'name' => 'district', 'description' => 'District', 'create' => '1', 'options' => ['class' => 'select2-district']),
 			array('form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'),
 			array('form_type' => 'text', 'name' => 'fax', 'description' => 'Fax'),
 			array('form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'),

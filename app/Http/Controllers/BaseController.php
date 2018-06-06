@@ -1422,4 +1422,26 @@ class BaseController extends Controller {
 		return View::make('Generic.import_success', $this->compact_prep_view(null));
 	}
 
+	/**
+	 * Process select2 ajax request
+	 *
+	 * @return Array
+	 *
+	 * @author Ole Ernst
+	 */
+	public function select2_ajax($column)
+	{
+		$model = static::get_model_obj();
+		$res = $model->select($column)
+			->where($column, 'like', '%'.\Input::get('q').'%')
+			->distinct()
+			->limit(10)
+			->pluck($column)
+			->toArray();
+
+		// reshape array in the form select2 expects
+		array_walk($res, function(&$val, $key) { $val = ['id' => $val, 'text' => $val]; });
+
+		return ['results' => $res, 'more' => false];
+	}
 }
