@@ -125,7 +125,7 @@
 
 	{{-- Save Button --}}
 	<div class="d-flex justify-content-center">
-		<input class="btn btn-primary" style="simple" value="{{\App\Http\Controllers\BaseViewController::translate_view($save_button , 'Button') }}" type="submit">
+		<input class="btn btn-primary" style="simple" value="{{\App\Http\Controllers\BaseViewController::translate_view($save_button_name , 'Button') }}" type="submit">
 	</div>
 
 	{{ Form::close() }}
