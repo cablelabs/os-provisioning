@@ -9,7 +9,7 @@ class MtaController extends \BaseController {
 
 
 	protected $index_create_allowed = false;
-	protected $save_button = 'Save / Restart';
+	protected $save_button_name = 'Save / Restart';
 
     /**
      * defines the formular fields for the edit and create view

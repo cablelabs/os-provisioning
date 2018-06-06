@@ -9,7 +9,7 @@ use Modules\ProvBase\Entities\{Configfile, Endpoint, Modem, Qos};
 class ModemController extends \BaseController {
 
 	protected $index_create_allowed = false;
-	protected $save_button = 'Save / Restart';
+	protected $save_button_name = 'Save / Restart';
 	protected $save_button_title_key = 'modem_save_button_title';
 
 	// save button title ? for a help message
