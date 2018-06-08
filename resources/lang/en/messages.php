@@ -14,6 +14,8 @@ return [
 	'Call Data Record'		=> 'Call Data Record',
 	'ccc'					=> 'Customer Control Center',
 	'cdr' 					=> 'cdr',
+	'cdr_discarded_calls' 	=> "CDR: Contract Nr or ID ':contractnr' not found in database - :count calls of phonenumber :phonenr with price of :price :currency are discarded",
+	'cdr_missing_reseller_data' => 'Missing Reseller Data in Environment File!',
 	'cdr_offset' 			=> 'CDR to Invoice time difference in Months',
 	'close' 				=> 'Close',
 	'contract_early_cancel' => 'Do you really want to cancel this contract before tariffs end of term :date is reached?',

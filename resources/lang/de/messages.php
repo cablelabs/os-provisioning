@@ -264,6 +264,8 @@ return [
 	'Upload invoice template'	=> 'Rechnungsvorlage hochladen',
 
 	//Settlement Run Abrechnungslauf
+	'cdr_discarded_calls' 	=> "EVN: Vertragsnr oder -ID ':contractnr' in Datenbank nicht gefunden - :count Telefongespräche der Telefonnr :phonenr mit einem Preis von :price :currency können nicht zugeordnet werden",
+	'cdr_missing_reseller_data' => 'EVN konnte nicht geladen werden. Reseller Daten in Environment Datei fehlen!',
 	'General'				=> 'Allgemein',
 	'Verified'				=> 'Überprüft?',
 	'tariff'				=> 'Tarif',
