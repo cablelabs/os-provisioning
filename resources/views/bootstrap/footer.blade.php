@@ -1,7 +1,8 @@
 <!-- ================== BEGIN BASE JS ================== -->
 <script src="{{asset('components/assets-admin/plugins/jquery/jquery-3.2.0.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/jquery/jquery-migrate-1.4.1.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/jquery-ui/ui/minified/jquery-ui.min.js')}}"></script>
+{{-- more recent version of jquery-ui needed --}}
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
 <script src="{{asset('components/assets-admin/plugins/bootstrap4/js/bootstrap.bundle.min.js')}}"></script>
 
@@ -35,6 +36,23 @@
 <script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
 <script src="{{asset('components/nmsprime.js')}}"></script>
 <!-- ================== END PAGE LEVEL JS ================== -->
+
+<script>
+	$(document).ready(function() {
+		$( "#city" ).autocomplete({
+			source:function (data, response) {
+				$.ajax({
+					url:'/admin/Contract/select2/city?q=' + $('#city').val(),
+					success:function(data){
+						response(data);
+					}
+				})
+
+			}
+		});
+	} );
+</script>
+
 <script language="javascript">
 /*
  * global document ready function

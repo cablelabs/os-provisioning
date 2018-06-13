@@ -50,7 +50,7 @@ class ContractController extends \BaseController {
 				"<div class=col-md-2><input class='form-control' name='house_number' type=text value='".$model['house_number']."' id='house_number' style='background-color:whitesmoke'></div>
 				</div></div>"),
 			array('form_type' => 'select', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1', 'options' => ['class' => 'select2-zip']),
-			array('form_type' => 'select', 'name' => 'city', 'description' => 'City', 'create' => '1', 'options' => ['class' => 'select2-city']),
+			array('form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => '1'),
 			array('form_type' => 'select', 'name' => 'district', 'description' => 'District', 'create' => '1', 'options' => ['class' => 'select2-district']),
 			array('form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'),
 			array('form_type' => 'text', 'name' => 'fax', 'description' => 'Fax'),

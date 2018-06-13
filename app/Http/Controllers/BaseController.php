@@ -1448,9 +1448,6 @@ class BaseController extends Controller {
 			->pluck($column)
 			->toArray();
 
-		// reshape array in the form select2 expects
-		array_walk($res, function(&$val, $key) { $val = ['id' => $val, 'text' => $val]; });
-
-		return ['results' => $res, 'more' => false];
+		return $res;
 	}
 }

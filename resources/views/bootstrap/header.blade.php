@@ -38,3 +38,7 @@
       <!-- ================== BEGIN BASE JS ================== -->
       <script src="{{asset('components/assets-admin/plugins/pace/pace.min.js')}}"></script>
       <!-- ================== END BASE JS ================== -->
+
+	  <style>
+		  .ui-autocomplete {z-index: 10000 !important;}
+	</style>
