@@ -72,7 +72,7 @@ class Contract extends \BaseModel {
 				'bsclass' => $bsclass,
 				'order_by' => ['0' => 'asc']];
 
-		if (\Module::collections()->has('billingbase'))
+		if (\Module::collections()->has('BillingBase'))
 		{
 			$ret['index_header'][] = 'costcenter.name';
 			$ret['eager_loading'] = ['costcenter'];
