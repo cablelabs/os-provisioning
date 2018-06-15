@@ -44,15 +44,15 @@ class ProvBase extends \BaseModel {
 	}
 
 	/**
-     * BOOT - init provbase observer
-     */
-    public static function boot()
-    {
-        parent::boot();
+	 * BOOT - init provbase observer
+	 */
+	public static function boot()
+	{
+		parent::boot();
 
-        ProvBase::observe(new ProvBaseObserver);
-        ProvBase::observe(new \App\SystemdObserver);
-    }
+		ProvBase::observe(new ProvBaseObserver);
+		ProvBase::observe(new \App\SystemdObserver);
+	}
 
 	/*
 	 * Return true if $this->prov_ip is online, otherwise false
@@ -66,14 +66,14 @@ class ProvBase extends \BaseModel {
 	}
 
 
-    /**
+	/**
 	 * Create the global configuration file for DHCP Server from Global Config Parameters
 	 * Set correct Domain Name on Server from GUI (Permissions via sudoers-file needed!!)
-     *
-     * @author Nino Ryschawy
-     */
-    public function make_dhcp_glob_conf()
-    {
+	 *
+	 * @author Nino Ryschawy
+	 */
+	public function make_dhcp_glob_conf()
+	{
 		$file_dhcp_conf = '/etc/dhcp/nmsprime/global.conf';
 
 		$data = 'ddns-domainname "'.$this->domain_name.'.";'."\n";
@@ -144,7 +144,7 @@ class ProvBase extends \BaseModel {
 		$data .= 'class "Client-Public" {'."\n\t".'match if ((substring(option vendor-class-identifier,0,6) != "docsis") and (substring(option vendor-class-identifier,0,4) != "pktc"));'."\n\t".'match pick-first-value (option agent.remote-id);'."\n\t".'lease limit 4; # max 4 public cpe per cm'."\n}\n\n";
 
 		File::put($file_dhcp_conf, $data);
-    }
+	}
 }
 
 
@@ -159,21 +159,21 @@ class ProvBase extends \BaseModel {
 class ProvBaseObserver
 {
 
-    public function updated($model)
-    {
-        $model->make_dhcp_glob_conf();
+	public function updated($model)
+	{
+		$model->make_dhcp_glob_conf();
 
-        // re-evaluate all qos rate_max_help fields if one or both coefficients were changed
-        if (multi_array_key_exists(['ds_rate_coefficient', 'us_rate_coefficient'], $model->getDirty())) {
-            $pb = ProvBase::first();
-            foreach(Qos::all() as $qos) {
-                $qos->ds_rate_max_help = $qos->ds_rate_max * 1024 * 1024 * $pb->ds_rate_coefficient;
-                $qos->us_rate_max_help = $qos->us_rate_max * 1024 * 1024 * $pb->us_rate_coefficient;
-                $qos->save();
-            }
-        }
+		// re-evaluate all qos rate_max_help fields if one or both coefficients were changed
+		if (multi_array_key_exists(['ds_rate_coefficient', 'us_rate_coefficient'], $model->getDirty())) {
+			$pb = ProvBase::first();
+			foreach(Qos::all() as $qos) {
+				$qos->ds_rate_max_help = $qos->ds_rate_max * 1024 * 1024 * $pb->ds_rate_coefficient;
+				$qos->us_rate_max_help = $qos->us_rate_max * 1024 * 1024 * $pb->us_rate_coefficient;
+				$qos->save();
+			}
+		}
 
-        // TODO: if max_cpe was changed -> make all Modem Configfiles via Queue Job as this will take a long time (Nino)
-    }
+		// TODO: if max_cpe was changed -> make all Modem Configfiles via Queue Job as this will take a long time (Nino)
+	}
 
 }
