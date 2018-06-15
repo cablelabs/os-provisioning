@@ -5,7 +5,7 @@ return [
 	'users.login_name' => 'Loginname',
 	'users.first_name' => 'Vorname',
 	'users.last_name' => 'Nachname',
-	'role.name' => 'Name',
+	'roles.name' => 'Name',
 	// GuiLog
 	'guilog.created_at' => 'Zeitpunkt',
 	'guilog.username' => 'Nutzer',

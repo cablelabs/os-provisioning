@@ -86,7 +86,11 @@ class BaseController extends Controller {
 	 */
 	protected function get_form_tabs($view_var)
 	{
-		$class = \NamespaceController::get_model_name();
+		$class = NamespaceController::get_model_name();
+
+		if (Str::contains($class, 'GuiLog'))
+			return;
+
 		$class_name = substr(strrchr($class, "\\"), 1);
 
 		return ['0' => [
@@ -363,6 +367,8 @@ class BaseController extends Controller {
 	public function compact_prep_view ()
 	{
 		$a     = func_get_args()[0];
+
+		$a['user'] = Auth::user();
 
 		$model = static::get_model_obj();
 		if (!$model)
@@ -768,7 +774,7 @@ class BaseController extends Controller {
 
 		// Add N:M Relations
 		if ($this->many_to_many)
-		$this->_set_many_to_many_relations($obj, $data);
+			$this->_set_many_to_many_relations($obj, $data);
 
 		// create messages depending on error state created while observer execution
 		// TODO: check if giving msg/color to route is still wanted or obsolete by the new tmp_*_above_* messages format
@@ -908,7 +914,7 @@ class BaseController extends Controller {
 					$changed_attributes->push($attribute);
 				}
 			}
-			}
+		}
 
 		if ($changed_attributes->isNotEmpty()) {
 			$user = Auth::user();

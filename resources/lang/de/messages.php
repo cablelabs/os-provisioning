@@ -101,6 +101,7 @@ return [
 	'Parent Object'				=> 'Eltern Objekt',
 	'Period of Notice' 			=> 'Kündigungsfrist',
 	'Password'					=> 'Passwort',
+	'Confirm Password'					=> 'Passwort bestätigen',
 	'Phone'						=> 'Telefon',
 	'Phone ID next month'		=> 'Telefon ID nächsten Monat',
 	'Phonenumber'				=> 'Telefonnummer',
