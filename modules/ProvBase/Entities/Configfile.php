@@ -292,20 +292,43 @@ class Configfile extends \BaseModel {
 		// finally: append extensions; they have to be an array with one entry per line
 		$rows = array_merge($rows, $config_extensions);
 
-		/*
-		 * Delete all with {xyz} content which can not be replaced
-		 */
-		$result = '';
-		foreach ($rows as $row)
-			if (!preg_match("/\\{[^\\{]*\\}/im", $row))
-				$result .= "\n\t".$row;
 
-		/*
-		 * return
-		 */
+		$result = '';
+		$match = [];
+		foreach ($rows as $row) {
+			// Ignore all rows with {xyz} content which can not be replaced
+			if (preg_match("/\\{[^\\{]*\\}/im", $row, $match) && ($row = self::_calc_eval($row, $match)) === null)
+				continue;
+
+			$result .= "\n\t".$row;
+		}
+
 		return $result;
 	}
 
+	/**
+	 * Check if mathematical expression in configfile is valid and can be evaluated.
+	 * If so, return string containing the row replaced by the result, otherwise null.
+	 *
+	 * @author Ole Ernst
+	 */
+	static protected function _calc_eval($row, $match)
+	{
+		$match = trim($match[0], '{}');
+		$ops = explode(',', $match);
+
+		if (count($ops) != 3 || !is_numeric($ops[0]) || !is_numeric($ops[2]) || !in_array($ops[1], ['+', '-', '*', '/']))
+			return null;
+
+		try {
+			$res = eval("return $ops[0] $ops[1] $ops[2];");
+		} catch (\Exception $e) {
+			// e.g. divide by zero
+			return null;
+		}
+
+		return preg_replace("/\\{[^\\{]*\\}/im", $res, $row);
+	}
 
 	/**
 	* Make Configfile Content
