@@ -54,7 +54,7 @@ class authCommand extends Command {
 	 */
 	public function fire()
 	{
-			Bouncer::allow('super_admin')->everything();
+		Bouncer::allow('admin')->everything();
 	}
 
 	/**

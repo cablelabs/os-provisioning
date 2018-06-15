@@ -2,6 +2,7 @@
 
 use Silber\Bouncer\Database\Models;
 
+use App\{Role, User};
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -40,6 +41,7 @@ class CreateBouncerTables extends Migration
                 $table->increments('id');
                 $table->string('name', 150);
                 $table->string('title')->nullable();
+                $table->string('description')->nullable();
                 $table->integer('level')->unsigned()->nullable();
                 $table->integer('scope')->nullable()->index();
                 $table->timestamps();
@@ -86,19 +88,33 @@ class CreateBouncerTables extends Migration
                       ->onUpdate('cascade')->onDelete('cascade');
             });
 
-            $users = \App\User::all();
+            $users = User::all();
             foreach ($users as $user) {
                 $roles = \DB::table('authuser_role')
                         ->join('authrole', 'authrole.id', '=', 'authuser_role.role_id')
                         ->join('users', 'users.id', '=', 'authuser_role.user_id')
-                        ->select('authrole.name')
+                        ->select('authrole.*')
                         ->where('users.id', '=', $user->id)->get();
                 foreach ($roles as $role) {
+                    if ($user->id == 1)
+                        $role->name = ($role->name == 'super_admin') ? 'admin' : $role->name;
+                    else
+                        $role->name = ($role->name == 'super_admin') ? 'support' : $role->name;
+
+                    if(!Role::find($role->id))
+                        Role::create([
+                            'id' => $role->id,
+                            'name' => $role->name,
+                            'title' => Str::studly($role->name),
+                            'description' => $role->description,
+                        ]);
                     Bouncer::assign($role->name)->to($user);
                 }
             }
-            Bouncer::allow('super-admin')->everything();
-
+            Bouncer::allow('admin')->everything();
+            Bouncer::allow('support')->everything();
+            Bouncer::forbid('support')->toManage(Role::class);
+            Bouncer::forbid('support')->to('see income chart');
         });
 
         Schema::dropIfExists('authrole');
@@ -114,11 +130,11 @@ class CreateBouncerTables extends Migration
      */
     public function down()
     {
-        Schema::rename('users', 'authusers');
         Schema::table('guilog', function (Blueprint $table) {
             $table->renameColumn('user_id', 'authuser_id');
         });
-        //Schema::drop('roles');
+
+        Schema::rename('users', 'authusers');
 
         Schema::create('authrole', function(Blueprint $table) {
 
@@ -133,12 +149,6 @@ class CreateBouncerTables extends Migration
             $table->unique(array('name', 'type'));
         });
 
-        // the following “seeding” is needed in every case – even if the seeders will not be run!
-        DB::table('authrole')->insert([
-            ['id' => 1, 'name'=>'super_admin', 'type'=>'role', 'description'=>'Is allowed to do everything. Used for the initial user which can add other users.'],
-            ['id' => 2, 'name'=>'every_net', 'type'=>'client', 'description'=>'Is allowed to access every net. Used for the initial user which can add other users.'],
-        ]);
-
         Schema::create('authcores', function(Blueprint $table) {
 
             $table->increments('id');
@@ -147,16 +157,9 @@ class CreateBouncerTables extends Migration
             $table->string('name', 191);
             $table->enum('type', array('model', 'net'));
             $table->string('description');
-
             $table->unique(array('name', 'type'));
-        });
 
-        // the following “seeding” is needed in every case – even if the seeders will not be run!
-        // add each existing model
-        require_once(getcwd()."/app/BaseModel.php");
-        foreach(BaseModel::get_models() as $model) {
-            DB::table('authcores')->insert(['name'=>$model, 'type'=>'model']);
-        }
+        });
 
         Schema::create('authuser_role', function(Blueprint $table) {
 
@@ -164,18 +167,18 @@ class CreateBouncerTables extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->integer('user_id')->unsigned();
-            $table->integer('role_id')->unsigned();
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->integer('role_id')->unsigned()->nullable();
 
-            $table->foreign('user_id')->references('id')->on('authuser');
-            $table->foreign('role_id')->references('id')->on('authrole');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('authusers');
+            $table->foreign('role_id')
+                ->references('id')
+                ->on('authrole');
 
             $table->unique(array('user_id', 'role_id'));
         });
-
-        // the following “seeding” is needed in every case – even if the seeders will not be run!
-        DB::update("INSERT INTO ".'authuser_role'." (user_id, role_id) VALUES(1, 1);");
-        DB::update("INSERT INTO ".'authuser_role'." (user_id, role_id) VALUES(1, 2);");
 
         Schema::create('authrole_core', function(Blueprint $table) {
 
@@ -183,21 +186,51 @@ class CreateBouncerTables extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->integer('role_id')->unsigned();
-            $table->integer('core_id')->unsigned();
+            $table->integer('role_id')->unsigned()->nullable();
+            $table->integer('core_id')->unsigned()->nullable();
             $table->boolean('view')->default(0);
             $table->boolean('create')->default(0);
             $table->boolean('edit')->default(0);
             $table->boolean('delete')->default(0);
 
-            $table->foreign('role_id')->references('id')->on('authrole');
-            $table->foreign('core_id')->references('id')->on('authcore');
+            $table->foreign('role_id')
+                ->references('id')
+                ->on('authrole');
+            $table->foreign('core_id')
+                ->references('id')
+                ->on('authcores');
 
             $table->unique(array('role_id', 'core_id'));
         });
 
-
         // the following “seeding” is needed in every case – even if the seeders will not be run!
+        // add superuser
+        if (empty(DB::select('SELECT * FROM authusers where id = 1'))) {
+            DB::table('authusers')->insert([
+                'id' => 1,
+                'first_name' => 'superuser',
+                'last_name' => 'initial',
+                'email' => 'root@localhost',
+                'login_name' => 'root',
+                'password' => \Hash::make('toor'),
+                'description' => 'Superuser to do base config. Initial password is “toor” – change this ASAP or delete this user!!',
+            ]);
+        }
+
+        DB::table('authrole')->insert([
+            ['id' => 1, 'name'=>'super_admin', 'type'=>'role', 'description'=>'Is allowed to do everything. Used for the initial user which can add other users.'],
+            ['id' => 2, 'name'=>'every_net', 'type'=>'client', 'description'=>'Is allowed to access every net. Used for the initial user which can add other users.'],
+        ]);
+
+        DB::update("INSERT INTO authuser_role (user_id, role_id) VALUES(1, 1);");
+        DB::update("INSERT INTO authuser_role (user_id, role_id) VALUES(1, 2);");
+
+        // add each existing model
+        require_once(getcwd()."/app/BaseModel.php");
+        foreach(BaseModel::get_models() as $model) {
+            DB::table('authcores')->insert(['name'=>$model, 'type'=>'model']);
+        }
+
 
         // add relations meta<->core for role super_admin
         $models = DB::table('authcores')->select('id')->where('type', 'LIKE', 'model')->get();
@@ -225,9 +258,9 @@ class CreateBouncerTables extends Migration
             ]);
         }
 
-        Schema::drop(Models::table('permissions'));
-        Schema::drop(Models::table('assigned_roles'));
-        Schema::drop(Models::table('roles'));
-        Schema::drop(Models::table('abilities'));
+        Schema::dropIfExists(Models::table('permissions'));
+        Schema::dropIfExists(Models::table('assigned_roles'));
+        Schema::dropIfExists(Models::table('roles'));
+        Schema::dropIfExists(Models::table('abilities'));
     }
 }

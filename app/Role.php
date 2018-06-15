@@ -1,22 +1,38 @@
 <?php
 
 namespace App;
-use Silber\Bouncer\Database\Role as BouncerRole;
+use Silber\Bouncer\Database\Concerns\IsRole;
 
-class Role extends BouncerRole
+class Role extends BaseModel
 {
+	use IsRole;
+
+	public $table = 'roles';
+	protected static $undeletables = ['admin', 'support'];
+
 	public static function rules($id=null)
 	{
 		return array(
-			'name' => 'required|unique:role,name,'.$id.',id,role,deleted_at,NULL',
+			'name' => 'required|unique:roles,name,'.$id.',id,deleted_at,NULL',
 		);
 	}
 
 
 	public static function view_headline()
 	{
-		return 'User roles';
+		return 'Roles';
 	}
+
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = [
+		'name',
+		'title',
+		'description',
+	];
 
 	// View Icon
 	public static function view_icon()
@@ -27,18 +43,18 @@ class Role extends BouncerRole
 	// link title in index view
 	public function view_index_label()
 	{
-		return ['table' => $this->table,
-		'index_header' => [$this->table.'.name'],
-		'header' => $this->name,
-		'order_by' => ['0' => 'desc'],
-		'edit' =>['checkbox' => 'set_index_delete'],
-	];
+		return [
+			'table'			=> $this->table,
+			'index_header'	=> [$this->table . '.name'],
+			'header'		=> $this->name,
+			'order_by'		=> ['0' => 'desc'],
+		];
 	}
 
 
 	public function set_index_delete()
 	{
-		if (array_key_exists($this->id, self::$undeletables)) {
+		if ( in_array($this->name, self::$undeletables)) {
 				$this->index_delete_disabled = true;
 			}
 	}
