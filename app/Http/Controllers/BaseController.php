@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth, BaseModel, Config, File, GlobalConfig, Input, Log, Module, NoAuthenticateduserError, Redirect, Route, Validator, View;
+use App, Auth, BaseModel, Config, File, GlobalConfig, Input, Log, Module;
+use NoAuthenticateduserError, Redirect, Route, Str, Validator, View;
 use App\Exceptions\AuthException;
 use Illuminate\Support\Facades\Request;
 use Monolog\Logger;
@@ -110,7 +111,7 @@ class BaseController extends Controller {
 
 	public static function get_model_obj ()
 	{
-		$classname = \NamespaceController::get_model_name();
+		$classname = NamespaceController::get_model_name();
 
 		// Rewrite model to check with new assigned Model
 		if (!$classname)
@@ -127,7 +128,7 @@ class BaseController extends Controller {
 
 	public static function get_controller_obj()
 	{
-		$classname = \NamespaceController::get_controller_name();
+		$classname = NamespaceController::get_controller_name();
 
 		if (!$classname)
 			return null;
@@ -288,7 +289,7 @@ class BaseController extends Controller {
 
 			for ($i = 0; $i < sizeof($a); $i++)
 			{
-				array_push($c, ['name' => key($a), 'route' => \NamespaceController::get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
+				array_push($c, ['name' => key($a), 'route' => NamespaceController::get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
 				$b = next($a);
 			}
 
@@ -384,10 +385,10 @@ class BaseController extends Controller {
 
 
 		if(!isset($a['route_name']))
-			$a['route_name'] = \NamespaceController::get_route_name();
+			$a['route_name'] = NamespaceController::get_route_name();
 
 		if(!isset($a['model_name']))
-			$a['model_name'] = \NamespaceController::get_model_name();
+			$a['model_name'] = NamespaceController::get_model_name();
 
 		if(!isset($a['view_header']))
 			$a['view_header'] = $model->view_headline();
@@ -399,7 +400,7 @@ class BaseController extends Controller {
 			$a['headline'] = '';
 
 		if (!isset($a['form_update']))
-			$a['form_update'] = \NamespaceController::get_route_name().'.update';
+			$a['form_update'] = NamespaceController::get_route_name().'.update';
 
 		if (!isset($a['edit_left_md_size']))
 			$a['edit_left_md_size'] = $this->edit_left_md_size;
@@ -411,7 +412,7 @@ class BaseController extends Controller {
 			$a['edit_right_md_size'] = $this->edit_right_md_size;
 
 		if (!isset($a['html_title']))
-			$a['html_title'] = 'NMS Prime - '.\App\Http\Controllers\BaseViewController::translate_view(\NamespaceController::module_get_pure_model_name(),'Header');
+			$a['html_title'] = 'NMS Prime - '.BaseViewController::translate_view(NamespaceController::module_get_pure_model_name(),'Header');
 
 		if (( \Module::collections()->has('ProvVoipEnvia')) && (!isset($a['envia_interactioncount'])) )
 			$a['envia_interactioncount'] = \Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
@@ -462,8 +463,8 @@ class BaseController extends Controller {
 			$obj       = static::get_model_obj();
 			$view_path = 'Generic.index';
 
-			if (View::exists(\NamespaceController::get_view_name().'.index'))
-				$view_path = \NamespaceController::get_view_name().'.index';
+			if (View::exists(NamespaceController::get_view_name().'.index'))
+				$view_path = NamespaceController::get_view_name().'.index';
 		}
 
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
@@ -531,8 +532,8 @@ class BaseController extends Controller {
 	public function index()
 	{
 		$model 			= static::get_model_obj();
-		$headline  		= \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
-		$view_header 	= \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
+		$headline  		= BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
+		$view_header 	= BaseViewController::translate_view('Overview','Header');
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
 		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
@@ -545,8 +546,8 @@ class BaseController extends Controller {
 		}
 
 		$view_path = 'Generic.index';
-		if (View::exists(\NamespaceController::get_view_name().'.index'))
-			$view_path = \NamespaceController::get_view_name().'.index';
+		if (View::exists(NamespaceController::get_view_name().'.index'))
+			$view_path = NamespaceController::get_view_name().'.index';
 
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
@@ -562,8 +563,8 @@ class BaseController extends Controller {
 	public function create()
 	{
 		$model = static::get_model_obj();
-		$view_header = \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline() , 'Header');
-		$headline    = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header , NULL, $_GET);
+		$view_header = BaseViewController::translate_view( $model->view_headline() , 'Header');
+		$headline    = BaseViewController::compute_headline(NamespaceController::get_route_name(), $view_header , NULL, $_GET);
 		$fields 	 = BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($model), $model);
 		$form_fields = BaseViewController::add_html_string ($fields, 'create');
 		// $form_fields = BaseViewController::add_html_string (static::get_controller_obj()->view_form_fields($model), $model, 'create');
@@ -572,10 +573,10 @@ class BaseController extends Controller {
 		$form_path = 'Generic.form';
 
 		// proof if there is a special view for the calling model
-		if (View::exists(\NamespaceController::get_view_name().'.create'))
-			$view_path = \NamespaceController::get_view_name().'.create';
-		if (View::exists(\NamespaceController::get_view_name().'.form'))
-			$form_path = \NamespaceController::get_view_name().'.form';
+		if (View::exists(NamespaceController::get_view_name().'.create'))
+			$view_path = NamespaceController::get_view_name().'.create';
+		if (View::exists(NamespaceController::get_view_name().'.form'))
+			$form_path = NamespaceController::get_view_name().'.form';
 
 
 		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'headline')));
@@ -640,7 +641,7 @@ class BaseController extends Controller {
 		$msg = 'Created!';
 		\Session::push('tmp_success_above_form', $msg);
 
-		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', $msg)->with('message_color', 'success');
+		return Redirect::route(NamespaceController::get_route_name().'.edit', $id)->with('message', $msg)->with('message_color', 'success');
 	}
 
 	/**
@@ -692,7 +693,7 @@ class BaseController extends Controller {
 		$model    = static::get_model_obj();
 		$view_var = $model->findOrFail($id);
 		$view_header 	= BaseViewController::translate_view($model->view_headline(),'Header');
-		$headline       = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var);
+		$headline       = BaseViewController::compute_headline(NamespaceController::get_route_name(), $view_header, $view_var);
 
 		$fields 		= BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($view_var), $view_var);
 		$form_fields	= BaseViewController::add_html_string ($fields, 'edit');
@@ -721,10 +722,10 @@ class BaseController extends Controller {
 		$form_path = 'Generic.form';
 
 		// proof if there are special views for the calling model
-		if (View::exists(\NamespaceController::get_view_name().'.edit'))
-			$view_path = \NamespaceController::get_view_name().'.edit';
-		if (View::exists(\NamespaceController::get_view_name().'.form'))
-			$form_path = \NamespaceController::get_view_name().'.form';
+		if (View::exists(NamespaceController::get_view_name().'.edit'))
+			$view_path = NamespaceController::get_view_name().'.edit';
+		if (View::exists(NamespaceController::get_view_name().'.form'))
+			$form_path = NamespaceController::get_view_name().'.form';
 
 		// $config_routes = BaseController::get_config_modules();
 		// return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations', 'extra_data')));
@@ -787,7 +788,7 @@ class BaseController extends Controller {
 			\Session::push('tmp_error_above_form', $msg);
 		}
 
-		$route_model = \NamespaceController::get_route_name();
+		$route_model = NamespaceController::get_route_name();
 
 		if (in_array($route_model, self::get_config_modules()))
 			return Redirect::route('Config.index');
@@ -920,8 +921,8 @@ class BaseController extends Controller {
 			// Error Message when no Model is specified - NOTE: delete_message must be an array of the structure below !
 			if (!Input::get('ids')) {
 				$message = 'No Entry For Deletion specified';
-				\Session::push('tmp_error_above_form', $message);
-				return Redirect::back()->with('delete_message', ['message' => $message, 'class' => \NamespaceController::get_route_name(), 'color' => 'danger']);
+				\Session::push('tmp_error_above_index_list', $message);
+				return Redirect::back()->with('delete_message', ['message' => $message, 'class' => NamespaceController::get_route_name(), 'color' => 'danger']);
 			};
 
 			$obj = static::get_model_obj();
@@ -953,7 +954,7 @@ class BaseController extends Controller {
 			}
 		}
 		$obj = isset($obj) ? $obj : static::get_model_obj();
-		$class = \NamespaceController::get_route_name();
+		$class = NamespaceController::get_route_name();
 
 		if (!$deleted && !$obj->force_delete) {
 			$message = 'Could not delete '.$class;
@@ -1008,7 +1009,7 @@ class BaseController extends Controller {
 	 */
 	public function detach($id, $function)
 	{
-		$model = \NamespaceController::get_model_name();
+		$model = NamespaceController::get_model_name();
 		$model = $model::find($id);
 
 		if (\Input::has('ids'))
@@ -1338,17 +1339,17 @@ class BaseController extends Controller {
 				($object->index_delete_disabled ? "disabled" : '').">";
 			})
             ->editColumn($first_column, function ($object) use ($first_column) {
-				return '<a href="'.route(\NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
+				return '<a href="'.route(NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
 				$object->view_icon().array_get($object, $first_column).'</strong></a>';
 			});
 
 		foreach ($edit_column_data as $column => $functionname) {
 			if($column == $first_column)
 			{
-				$DT->editColumn($column, function($object) use ($functionname) {
-					return '<a href="'.route(\NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
-					$object->view_icon().$object->$functionname().'</strong></a>';
-				});
+			$DT->editColumn($column, function($object) use ($functionname) {
+				return '<a href="'.route(NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
+				$object->view_icon().$object->$functionname().'</strong></a>';
+			});
 			} else {
 				$DT->editColumn($column, function($object) use ($functionname) {
 					return $object->$functionname();

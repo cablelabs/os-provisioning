@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth, BaseModel, Bouncer, Cache, Config, File, GlobalConfig, Input;
+use App, Auth, BaseModel, Bouncer, Cache, Config, File, Form, GlobalConfig, Input;
 use Log, Module, Redirect, Route, Str, Validator, View ;
 
 /*
@@ -174,8 +174,8 @@ class BaseViewController extends Controller {
 
 			// NOTE: Input::get should actually include $_POST global var and $_GET!!
 			// 4.(sub-task) auto-fill all field_value's with HTML Input
-			if (\Input::get($field['name']))
-				$field['field_value'] = \Input::get($field['name']);
+			if (Input::get($field['name']))
+				$field['field_value'] = Input::get($field['name']);
 
 			// 4.(sub-task) auto-fill all field_value's with HTML POST array if supposed
 			if (isset($_POST[$field['name']]))
@@ -274,7 +274,7 @@ class BaseViewController extends Controller {
 						// For hidden fields it's also important that default values are set
 						$value = ($field['field_value'] === null) && isset($field['value']) ? $field['value'] : $field['field_value'];
 						// Note: setting a selection by giving an array doesnt make sense as you can not choose anyway - it also would throw an exception as it's not allowed for hidden fields
-						$s .= \Form::hidden ($field["name"], is_array($value) ? '' : $value);
+						$s .= Form::hidden ($field["name"], is_array($value) ? '' : $value);
 						goto finish;
 					}
 			}
@@ -326,7 +326,7 @@ class BaseViewController extends Controller {
 			}
 
 			// Open Form Group
-			$s .= \Form::openGroup($field["name"], $field["description"], $additional_classes, $color);
+			$s .= Form::openGroup($field["name"], $field["description"], $additional_classes, $color);
 
 			// Output the Form Elements
 			switch ($field["form_type"])
@@ -342,31 +342,31 @@ class BaseViewController extends Controller {
 					else
 						$checked = $field['field_value'];
 
-					$s .= \Form::checkbox($field['name'], $value, null, $checked, $options);
+					$s .= Form::checkbox($field['name'], $value, null, $checked, $options);
 					break;
 
 				case 'file':
-					$s .= \Form::file($field['name'], $options);
+					$s .= Form::file($field['name'], $options);
 					break;
 
 				case 'select' :
 					if (isset($options['multiple']) && isset($field['selected']))
 						$field['field_value'] = array_keys($field['selected']);
 
-					$s .= \Form::select($field["name"], $value, $field['field_value'], $options);
+					$s .= Form::select($field["name"], $value, $field['field_value'], $options);
 					break;
 
 				case 'password' :
-					$s .= \Form::password($field['name']);
+					$s .= Form::password($field['name']);
 					break;
 
 				case 'link':
-					$s .= \Form::link($field['name'], $field['url'], isset($field['color']) ? : 'default');
+					$s .= Form::link($field['name'], $field['url'], isset($field['color']) ? : 'default');
 					break;
 
 				default:
 					$form = $field["form_type"];
-					$s .= \Form::$form($field["name"], $field['field_value'], $options);
+					$s .= Form::$form($field["name"], $field['field_value'], $options);
 					break;
 			}
 
@@ -377,7 +377,7 @@ class BaseViewController extends Controller {
 							'<i class="fa fa-2x text-info p-t-5 '.(isset($field['help_icon']) ? $field['help_icon'] : 'fa-question-circle').'"></i></a></div>';
 
 			// Close Form Group
-			$s .= \Form::closeGroup();
+			$s .= Form::closeGroup();
 
 
 
@@ -410,9 +410,6 @@ finish:
 		$value   = isset($field["value"]) ? $field["value"] : [];
 		$options = isset($field["options"]) ? $field["options"] : [];
 
-		// \Form::set_layout(['label' => 5, 'form' => 6]);
-		// d(\Form::get_layout());
-
 		switch ($field["form_type"])
 		{
 			case 'checkbox' :
@@ -420,19 +417,19 @@ finish:
 				if ($value == [])
 					$value = 1;
 
-				$s .= \Form::checkbox($field['name'], $value, null, $field['field_value']);
+				$s .= Form::checkbox($field['name'], $value, null, $field['field_value']);
 				break;
 
 			case 'select' :
-				$s .= \Form::select($field["name"], $value, $field['field_value'], $options);
+				$s .= Form::select($field["name"], $value, $field['field_value'], $options);
 				break;
 
 			case 'password' :
-				$s .= \Form::password($field['name']);
+				$s .= Form::password($field['name']);
 				break;
 
 			case 'link':
-				$s .= \Form::link($field['name'], $field['url'], isset($field['color']) ? : 'default');
+				$s .= Form::link($field['name'], $field['url'], isset($field['color']) ? : 'default');
 				break;
 
 			default:
@@ -440,7 +437,7 @@ finish:
 					return '<p name="'.$field['name'].'">'. $field['field_value'] .'</p>';
 
 				$form = $field["form_type"];
-				$s .= \Form::$form($field["name"], $field['field_value'], $options);
+				$s .= Form::$form($field["name"], $field['field_value'], $options);
 				break;
 		}
 
