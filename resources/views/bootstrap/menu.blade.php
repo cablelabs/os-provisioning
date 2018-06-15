@@ -55,12 +55,14 @@
 				<li class="nav-item dropdown m-r-20">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<i class="fa fa-user-circle-o fa-lg d-inline" aria-hidden="true"></i>
-						<span class="d-none d-sm-none d-md-inline">{{\Auth::user()->first_name.' '.\Auth::user()->last_name}}</span> <b class="caret"></b>
+						<span class="d-none d-sm-none d-md-inline">{{ $user->first_name.' '. $user->last_name }}</span> <b class="caret"></b>
 					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0;left:auto;">
-						<a class="dropdown-item" href="{{route('User.edit', \Auth::user()->id)}}"> <i class="fa fa-cog" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}</a>
-						@if (Auth::user()->isSuperAdmin())
+						<a class="dropdown-item" href="{{route('User.edit', $user->id)}}"> <i class="fa fa-cog" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}</a>
+						@if (Bouncer::can('edit', App\User::class))
 							<a class="dropdown-item" href="{{route('User.index')}}"><i class="fa fa-cogs" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserGlobSettings', 'Menu')}}</a>
+						@endif
+						@if (Bouncer::can('edit', App\Role::class))
 							<a class="dropdown-item" href="{{route('Role.index')}}"><i class="fa fa-users" aria-hidden="true"></i> {{ \App\Http\Controllers\BaseViewController::translate_view('UserRoleSettings', 'Menu')}}</a>
 						@endif
 						<div class="dropdown-divider"></div>

@@ -1,6 +1,10 @@
 		<div class="panel-heading d-flex flex-row justify-content-between">
 			<h4 class="panel-title d-flex">
-				{{ \App\Http\Controllers\BaseViewController::translate_view( $view_header, 'Header', 2)}}
+				@if (Str::contains($view_header, '<ul class="nav'))
+					{!! $view_header !!}
+				@else
+					{{ \App\Http\Controllers\BaseViewController::translate_view( $view_header, 'Header', 2) }}
+				@endif
 			</h4>
 			<div class="panel-heading-btn d-flex flex-row">
 				<a href="javascript:;"

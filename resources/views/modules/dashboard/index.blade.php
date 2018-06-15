@@ -179,7 +179,7 @@
 		}
 
 		// bar chart income
-		var chart_data_income = {{ $view['income'] ? json_encode($data['income']['chart']) : '{}' }};
+		var chart_data_income = {!! $view['income'] ? json_encode($data['income']['chart']) : '{}' !!};
 
 		if (Object.getOwnPropertyNames(chart_data_income).length != 0) {
 
