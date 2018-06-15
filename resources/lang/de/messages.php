@@ -168,6 +168,8 @@ return [
 	'Start ID Contracts'		=> 'Start Nummerierung Verträge',
 	'Start ID Modems'			=> 'Start Nummerierung Modems',
 	'Start ID Endpoints'		=> 'Start Nummerierung Endpunkte',
+	'Downstream rate coefficient' => 'Übertragungsratenkoeffizient Vorwärtskanal',
+	'Upstream rate coefficient' => 'Übertragungsratenkoeffizient Rückwärtskanal',
 	//VOIP
 	'Start ID MTA´s'			=> 'Start Nummerierung MTA\'s',
 //
