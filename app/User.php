@@ -34,20 +34,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 	 */
 	public function hasRole($role)
 	{
-			return ($this)->is($role);
-	}
-
-	/**
-	 * Check if user has super_admin rights
-	 *
-	 * @return bool
-	 * @throws \Exception
-	 */
-	public function isSuperAdmin()
-	{
-		$superuserRoleName = 'super_admin';
-
-		return $this->is($superuserRoleName);
+		return ($this)->isA($role);
 	}
 
 	/**
@@ -84,7 +71,8 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 	{
 		return array(
 			'login_name' => 'required|unique:users,login_name,'.$id.',id,deleted_at,NULL',
-			'password' => 'required|min:6'
+			'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
+			'password_confirmation' => 'min:6|required_with:password|same:password'
 		);
 	}
 

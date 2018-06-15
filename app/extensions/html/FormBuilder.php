@@ -169,7 +169,7 @@ class FormBuilder extends CollectiveFormBuilder {
 
 		// Call the parent select method so that Laravel can handle
 		// the rest of the select set up.
-		if (isset($options['style']) && (strpos($options['style'], 'simple') !== false))
+		if (isset($options['style']) && (strpos($options['style'], 'simple') == true))
 			return parent::select($name, $list, $selected, $options);
 
 		return $this->appendDiv(parent::select($name, $list, $selected, $options));

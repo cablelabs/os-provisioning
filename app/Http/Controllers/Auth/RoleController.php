@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Role;
+use Bouncer;
+use App\{ Role, User };
 use App\PermissionRole;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
@@ -11,19 +12,28 @@ class RoleController extends BaseController
 {
 	protected $edit_left_md_size = 5;
 	protected $edit_right_md_size = 7;
+	protected $many_to_many = [ User::class => 'users_ids'];
 
 	public function view_form_fields($model = null)
 	{
 		return array(
-			array('form_type' => 'text', 'name' => 'name', 'description' => 'Name'),
-			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => Role::getPossibleEnumValues('type', false)),
-			array('form_type' => 'text', 'name' => 'description', 'description' => 'Description'),
+			['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
+			['form_type' => 'text', 'name' => 'title', 'description' => 'Title'],
+			// ['form_type' => 'text', 'name' => 'scope', 'description' => 'Scope'],
+			['form_type' => 'text', 'name' => 'description', 'description' => 'Description'],
+			['form_type' => 'select', 'name' => 'users_ids[]', 'description' => 'Assign Users',
+				'value' => $model->html_list(User::all(), 'login_name'),
+				'options' => [
+					'multiple' => 'multiple',
+					Bouncer::can('edit', User::class) ? '' : 'disabled' => 'true'],
+					'help' => trans('helper.assign_users'),
+					'selected' => $model->html_list($model->users, 'name')],
 		);
 	}
 
 
 	/**
-	 * Update right/permission by given core_id
+	 * Update right/permission by given role
 	 *
 	 * @param Request $request
 	 * @return mixed|string
@@ -80,5 +90,17 @@ class RoleController extends BaseController
 		}
 
 		return redirect('admin/Role/' . \Input::get('role_id') . '/edit');
+	}
+
+	public function edit($id)
+	{
+		$view = parent::edit($id);
+		Bouncer::refresh();
+		$data = $view->getData();
+		$abilities = $data['view_var']->getAbilities();
+		$forbiddenAbilities = $data['view_var']->getForbiddenAbilities();
+
+
+		return $view->with(compact('id', 'abilities', 'forbiddenAbilities'));
 	}
 }

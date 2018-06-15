@@ -41,7 +41,8 @@ class BaseController extends Controller {
 
 	/**
 	 * Placeholder for Many-to-Many-Relation multiselect fields that should be handled generically (e.g. users of Ticket)
-	 *
+	 * If special Abilities are needed to edit the valies, place classname in key like:
+	 * [ App\User::class => 'users_ids']
 	 * NOTE: When model is deleted all pivot entries will be detached and special handling in BaseModel@delete is omitted
 	 */
 	protected $many_to_many = [];
@@ -55,13 +56,6 @@ class BaseController extends Controller {
 	 * @var Array 	['upload_field' => 'relative storage path']
 	 */
 	protected $file_upload_paths = [];
-
-
-	// Auth Vars
-	// TODO: move to Auth API
-	// protected $permissions = null;
-	// protected $permission_cores = array('model', 'net');
-
 
 	/**
 	 * Constructor
@@ -748,14 +742,14 @@ class BaseController extends Controller {
 		$data      = $controller->prepare_input(Input::all());
 		$rules     = $controller->prepare_rules($obj::rules($id), $data);
 		$validator = Validator::make($data, $rules);
-		$data      = $controller->prepare_input_post_validation ($data);
+		$data      = $controller->prepare_input_post_validation($data);
 
 		if ($validator->fails()) {
 			Log::info ('Validation Rule Error: '.$validator->errors());
 
 			$msg = 'Input invalid – please correct the following errors';
 			\Session::push('tmp_error_above_form', $msg);
-			return Redirect::back()->withErrors($validator)->withInput()->with('message', $msg)->with('message_color', 'danger');
+			return Redirect::back()->with('message', $msg)->with('message_color', 'danger')->withErrors($validator)->withInput();
 		}
 
 		// Handle file uploads generically - this must happen after the validation as moving the file before leads always to validation error
@@ -773,6 +767,7 @@ class BaseController extends Controller {
 		$obj->update($data);
 
 		// Add N:M Relations
+		if ($this->many_to_many)
 		$this->_set_many_to_many_relations($obj, $data);
 
 		// create messages depending on error state created while observer execution
@@ -875,31 +870,56 @@ class BaseController extends Controller {
 	 */
 	private function _set_many_to_many_relations($obj, $data)
 	{
-		if (!$this->many_to_many)
-			return;
+		foreach ($this->many_to_many as $class => $field_name) {
 
-		foreach ($this->many_to_many as $field)
-		{
-			if (!isset($data[$field]))
-				$data[$field] = [];
+			if ( is_string($class) && \Bouncer::cannot('edit', $class ) )
+				abort(403, trans('You are not allowed to edit {$class}'));
 
-			// relation-function_id
-			$func = explode('_', $field)[0];
-			$attached = $obj->$func->pluck('id')->all();
+			if (!isset($data[$field_name]))
+				$data[$field_name] = [];
+
+			$changed_attributes = collect();
+			$eloquent_relation_function = explode('_', $field_name)[0];
+			$eloquent_relation = $obj->$eloquent_relation_function();
+			$attached_entities = $eloquent_relation->get();
+			$attached_ids = $attached_entities->pluck('id')->all();
 
 			// attach new assignments
-			foreach ($data[$field] as $rel_id)
-			{
-				if ($rel_id && !in_array($rel_id, $attached))
-					$obj->$func()->attach($rel_id, ['created_at' => date('Y-m-d H:i:s')]);
+			foreach ($data[$field_name] as $form_id) {
+				if ($form_id && !in_array($form_id, $attached_ids)) {
+					$eloquent_relation->attach($form_id, ['created_at' => date('Y-m-d H:i:s')]);
+
+					$attribute = $eloquent_relation->get()->where('id', '=', $form_id)->first();
+
+					$attribute = $attribute->name ?? $attribute->login_name ?? 'id '. $form_id;
+					$attribute .= " attached";
+					$changed_attributes->push($attribute);
+				}
 			}
 
 			// detach removed assignments (from selected multiselect options)
-			foreach ($attached as $rel_id)
-			{
-				if (!in_array($rel_id, $data[$field]))
-					$obj->$func()->detach($rel_id);
+			foreach ($attached_ids as $foreign_id) {
+				if (!in_array($foreign_id, $data[$field_name])) {
+					$removed_entity = $attached_entities->where('id', '=', $foreign_id)->first();
+					$eloquent_relation->detach($foreign_id);
+
+					$attribute = $removed_entity->name ?? $removed_entity->login_name ?? 'id '. $foreign_id;
+					$attribute .= " removed";
+					$changed_attributes->push($attribute);
+				}
 			}
+			}
+
+		if ($changed_attributes->isNotEmpty()) {
+			$user = Auth::user();
+			\App\GuiLog::log_changes([
+					'user_id' => $user ? $user->id : 0,
+					'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
+					'method' 	=> 'updated',
+					'model' 	=> Str::singular(Str::studly($obj->table)),
+					'model_id'  => $obj->id,
+					'text'		=> $changed_attributes->implode("\n"),
+					]);
 		}
 	}
 

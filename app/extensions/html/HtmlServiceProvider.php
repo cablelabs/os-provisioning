@@ -16,8 +16,6 @@ class HtmlServiceProvider extends CollectiveHtmlServiceProvider {
     {
         $this->app->singleton('form', function($app)
         {
-
-            //dd($app);
             $form = new FormBuilder($app['html'], $app['url'], $app['view'], $app['session.store']->getToken());
 
             return $form->setSessionStore($app['session.store']);
