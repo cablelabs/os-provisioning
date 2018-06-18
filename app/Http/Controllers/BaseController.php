@@ -748,7 +748,6 @@ class BaseController extends Controller {
 		$data      = $controller->prepare_input(Input::all());
 		$rules     = $controller->prepare_rules($obj::rules($id), $data);
 		$validator = Validator::make($data, $rules);
-		$data      = $controller->prepare_input_post_validation($data);
 
 		if ($validator->fails()) {
 			Log::info ('Validation Rule Error: '.$validator->errors());
@@ -760,6 +759,7 @@ class BaseController extends Controller {
 
 		// Handle file uploads generically - this must happen after the validation as moving the file before leads always to validation error
 		$this->_handle_file_upload($data);
+		$data      = $controller->prepare_input_post_validation($data);
 
 		// update timestamp, this forces to run all observer's
 		// Note: calling touch() forces a direct save() which calls all observers before we update $data
@@ -778,7 +778,12 @@ class BaseController extends Controller {
 
 		// create messages depending on error state created while observer execution
 		// TODO: check if giving msg/color to route is still wanted or obsolete by the new tmp_*_above_* messages format
-		if (!\Session::has('error')) {
+		if (!$obj->isDirty()) {
+			$msg = 'There was no new Input! - No changes were saved to the Database';
+			$color = 'info';
+			\Session::push('tmp_info_above_form', $msg);
+		}
+		elseif (!\Session::has('error')) {
 			$msg = "Updated!";
 			$color = 'success';
 			\Session::push('tmp_success_above_form', $msg);
@@ -878,8 +883,11 @@ class BaseController extends Controller {
 	{
 		foreach ($this->many_to_many as $class => $field_name) {
 
-			if ( is_string($class) && \Bouncer::cannot('edit', $class ) )
-				abort(403, trans('You are not allowed to edit {$class}'));
+			if ( is_string($class) && \Bouncer::cannot('edit', $class ) ) {
+				if (isset($data[$field_name]))
+					abort(403, trans("You are not allowed to edit {$class}"));
+				else continue;
+			}
 
 			if (!isset($data[$field_name]))
 				$data[$field_name] = [];
@@ -916,12 +924,12 @@ class BaseController extends Controller {
 			}
 		}
 
-		if ($changed_attributes->isNotEmpty()) {
+		if (isset($changed_attributes) && $changed_attributes->isNotEmpty()) {
 			$user = Auth::user();
 			\App\GuiLog::log_changes([
 					'user_id' => $user ? $user->id : 0,
 					'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
-					'method' 	=> 'updated',
+					'method' 	=> 'updated N:M',
 					'model' 	=> Str::singular(Str::studly($obj->table)),
 					'model_id'  => $obj->id,
 					'text'		=> $changed_attributes->implode("\n"),

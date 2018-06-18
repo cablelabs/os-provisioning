@@ -71,7 +71,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 	{
 		return array(
 			'login_name' => 'required|unique:users,login_name,'.$id.',id,deleted_at,NULL',
-			'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
+			'password' => 'sometimes|min:6|confirmed',
 			'password_confirmation' => 'min:6|required_with:password|same:password'
 		);
 	}

@@ -38,10 +38,13 @@ class UserController extends BaseController {
 
 	public function prepare_input_post_validation ($data)
 	{
-		$data['password'] = \Hash::make($data['password']);
+		if (empty($data['password']))
+			unset($data['password']);
+		else
+			$data['password'] =\Hash::make($data['password']);
 
 		Bouncer::refresh();
 
-		return parent::prepare_input($data);
+		return parent::prepare_input_post_validation($data);
 	}
 }
