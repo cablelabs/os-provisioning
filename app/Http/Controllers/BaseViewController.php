@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App, Auth, BaseModel, Bouncer, Cache, Config, File, Form, GlobalConfig, Input;
-use Log, Module, Redirect, Route, Str, Validator, View ;
+use Log, Module, Redirect, Route, Session, Str, Validator, View ;
 
 /*
  * BaseViewController: Is a special Controller which will be a kind of middleware/sub-layer/helper
@@ -460,8 +460,8 @@ finish:
 	 */
 	public static function view_main_menus ()
 	{
-		if (Cache::has('menu'))
-			return Cache::get('menu');
+		if (Session::has('menu'))
+			return Session::get('menu');
 
 		$menu = [];
 		$modules = Module::enabled();
@@ -494,7 +494,7 @@ finish:
 			}
 		}
 
-		Cache::forever('menu', $menu);
+		Session::put('menu', $menu);
 		return $menu;
 	}
 
