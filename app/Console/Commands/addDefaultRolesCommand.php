@@ -2,11 +2,10 @@
 
 namespace App\Console\Commands;
 
+use Bouncer, Log;
+use App\{BaseModel, Role};
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-
-use \App\Authrole;
+use Symfony\Component\Console\Input\{InputOption, InputArgument};
 
 /**
  * Add default roles
@@ -48,37 +47,42 @@ class addDefaultRolesCommand extends Command {
 	public function fire()
 	{
 		$roles = self::get_default_roles();
-		$role_permissions = self::get_default_permissions();
-		$models = \App\Authcore::where('type', 'LIKE', 'model')->get()->all();
+		$roles_permissions = self::get_default_permissions();
+		$models = BaseModel::get_models();
 
-		foreach ($roles as $properties)
+		foreach ($roles as $role)
 		{
-			// add new Role if the ID does not exist yet in DB
-			$role_id = $properties['id'];
-
-			if (Authrole::find($role_id)) {
-				echo "Error: Role with ID ".$role_id." already exists - Discard\n";
-				\Log::error('Discard adding Role '.$properties['name'].' as there already is an entry in DB!');
+			if (Role::find($role['id'])) {
+				echo "Warning: Role with ID ".$role['id']." already exists  (". $role['name'] .") - Discarding\n";
+				Log::warning('Discard adding Role \"'.$role['name'].'\" as there already is an entry in DB!');
 				continue;
-				// throw new \Exception("Error: Role with ID ".$role_id." already exists", 1);
 			}
 			else {
-				Authrole::create($properties);
-				echo "Created role: '".$properties['name']."'\n";
+				$rules     = Role::rules($role['id']);
+				$validator = \Validator::make($role, $rules);
+
+				if ($validator->fails()) {
+					echo 'ERROR - Validation Rule Error for Role '. $role['name'] .":\n ". $validator->errors() ."\n";
+					Log::warning ('Validation Rule Error: '. $validator->errors());
+					continue;
+				}
+
+				Role::create($role);
+				echo "Created role: '".$role['name']."'\n";
 			}
 
-			if (!isset($role_permissions[$role_id])) {
+			if (!isset($roles_permissions[$role['id']])) {
 				echo "No Permissions set\n";
 				continue;
 			}
 
-			$modules_allowed = $role_permissions[$role_id]['modules'];
-			$models_allowed  = $role_permissions[$role_id]['models'];
+			$modules_allowed = $roles_permissions[$role['id']]['modules'];
+			$models_allowed  = $roles_permissions[$role['id']]['models'];
 
 			// Add all Models that shall have permitions for current role
 			foreach ($models as $model)
 			{
-				$name = explode('\\', $model->name);
+				$name = explode('\\', $model);
 				$module = $name[0] == 'Modules' ? $name[1] : $name[0];
 				$name = end($name);
 
@@ -89,20 +93,25 @@ class addDefaultRolesCommand extends Command {
 				else
 					continue;
 
-				\App\Authmetacore::updateOrCreate([
-					'core_id' => $model->id,
-					'role_id' => $role_id,
-					'view' 	  => isset($permissions['view']) && $permissions['view'],
-					'create'  => isset($permissions['create']) && $permissions['create'],
-					'edit' 	  => isset($permissions['edit']) && $permissions['edit'],
-					'delete'  => isset($permissions['delete']) && $permissions['delete'],
-					]);
+				if ( in_array('manage', $permissions)) {
+					Bouncer::allow($role['name'])->toManage($model);
+				} else {
+					if ( in_array('view', $permissions))
+						Bouncer::allow($role['name'])->to('view', $model);
 
-				// Debugging Output
-				echo "Added Permission for Role '".$properties['name']."' to Model: $name\n";
+					if ( in_array('create', $permissions))
+						Bouncer::allow($role['name'])->to('create', $model);
+
+					if ( in_array('edit', $permissions))
+						Bouncer::allow($role['name'])->to('edit', $model);
+
+					if ( in_array('delete', $permissions))
+						Bouncer::allow($role['name'])->to('delete', $model);
+				}
+
+				echo "Added Ability for Role '".$role['name']."' to Model: $name\n";
 			}
 		}
-
 	}
 
 	/**
@@ -114,21 +123,13 @@ class addDefaultRolesCommand extends Command {
 	{
 		return array(
 			array(
-				'id' => 3,
-				'name' => 'director',
-				'type' => 'role',
-				'description' => 'Like super_admin but can see Income on Dashboard',
-				),
-			array(
 				'id' => 4,
 				'name' => 'technican',
-				'type' => 'role',
 				'description' => 'Allow only technical aspects',
 				),
 			array(
 				'id' => 5,
 				'name' => 'accounting',
-				'type' => 'role',
 				'description' => 'Only accounting relevant stuff',
 			));
 	}
@@ -144,66 +145,62 @@ class addDefaultRolesCommand extends Command {
 		// technican
 		$role[4] = array(
 			'modules' => [
-				'Dashboard' => ['view' => 1],
-				'HfcBase' => ['view' => 1],
-				'HfcCustomer' => ['view' => 1],
-				'HfcReq' => ['view' => 1],
-				'ProvVoipEnvia' => ['view' => 1],
+				'Dashboard' 		=> ['view'],
+				'HfcBase' 			=> ['view'],
+				'HfcCustomer'		=> ['view'],
+				'HfcReq' 			=> ['view'],
+				'ProvVoipEnvia'		=> ['view'],
 			],
 			'models' => [
-				'AddressFunctionsTrait' => ['view' => 1],
-				'Authmetacore' 	=> ['view' => 1],
-				'Authrole' 		=> ['view' => 1],
-				'Authuser' 		=> ['view' => 1],
-				'GlobalConfig' 	=> ['view' => 1],
+				'Role' 					=> ['view'],
+				'User' 					=> ['view'],
+				'GlobalConfig'			=> ['view'],
 
-				// 'BillingBase' 	=> ['view' => 1],
-				'Item' 			=> ['view' => 1], // really?
+				'Item' 					=> ['view'],
 
-				// 'Ccc' 			=> ['view' => 1],
-				'CccAuthuser' 	=> ['view' => 1],
+				'User' 					=> ['view'],
 
-				'Cdr' 			=> ['view' => 1],
-				'GuiLog' 		=> ['view' => 1],
-				'Ticket' 		=> ['view' => 1],
+				'Cdr'					=> ['view'],
+				'GuiLog' 				=> ['view'],
+				'Ticket'				=> ['view'],
 
-				'Cmts' 			=> ['view' => 1],
-				'Contract' 		=> ['view' => 1],
-				'Modem' 		=> ['view' => 1],
-				'ProvBase' 		=> ['view' => 1],
+				'Cmts' 					=> ['view'],
+				'Contract' 				=> ['view'],
+				'Modem' 				=> ['view'],
+				'ProvBase' 				=> ['view'],
 
-				'Mta' 			=> ['view' => 1],
-				'PhonebookEntry' => ['view' => 1],
-				'Phonenumber' 	=> ['view' => 1],
-				'PhonenumberManagement' => ['view' => 1],
-				'ProvVoip' 		=> ['view' => 1],
+				'Mta' 					=> ['view'],
+				'PhonebookEntry' 		=> ['view'],
+				'Phonenumber' 			=> ['view'],
+				'PhonenumberManagement' => ['view'],
+				'ProvVoip' 				=> ['view'],
 
-				'EnviaOrderDocument' => ['view' => 1],
-				'ProvVoipEnvia' => ['view' => 1],
-				'ProvVoipEnviaHelpers' => ['view' => 1],
+				'EnviaOrderDocument' 	=> ['view'],
+				'ProvVoipEnvia' 		=> ['view'],
+				'ProvVoipEnviaHelpers' 	=> ['view'],
 
-				'Parameter' 	=> ['view' => 1],
-				'Oid' 			=> ['view' => 1],
-				'SnmpValue' 	=> ['view' => 1],
+				'Parameter' 			=> ['view'],
+				'Oid' 					=> ['view'],
+				'SnmpValue' 			=> ['view'],
 			]);
 
 		// accounting
 		$role[5] = array(
 			'modules' => [
-				'BillingBase',
-				'Dashboard',
-				'Ticketsystem',
+				'BillingBase'			=> ['view'],
+				'Dashboard'				=> ['view'],
+				'Ticketsystem'			=> ['view'],
 				],
 			'models' => [
-				'Contract',
-				'GlobalConfig',
-				'GuiLog',
-				'Modem',
-				'Mta',
-				'Phonenumber',
-				'PhonenumberManagement',
-				'PhoneTariff',
-				'ProvBase',
+				'Contract'				=> ['manage'],
+				'GlobalConfig'			=> ['manage'],
+				'GuiLog'				=> ['view'],
+				'Modem'					=> ['manage'],
+				'Mta'					=> ['manage'],
+				'Phonenumber'			=> ['view'],
+				'PhonenumberManagement'	=> ['manage'],
+				'PhoneTariff'			=> ['view'],
+				'ProvBase'				=> ['view'],
 			]);
 
 		return $role;

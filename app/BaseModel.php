@@ -417,11 +417,13 @@ class BaseModel extends Eloquent
 
 		// models to be excluded from search
 		$exclude = array(
+			'AddressFunctionsTrait',
 			'BaseModel',
 			'helpers',
 			'TRCClass',	// static data; not for standalone use
 			'CarrierCode', // cron updated data; not for standalone use
 			'EkpCode', // cron updated data; not for standalone use
+			'ProvVoipEnviaHelpers'
 		);
 		$result = array();
 
@@ -431,8 +433,8 @@ class BaseModel extends Eloquent
 		$models = glob(app_path()."/*.php");
 
 		foreach ($models as $model) {
-			$model = str_replace(app_path('Models')."/", "", $model);
-			$model = str_replace(".php", "::class", $model);
+			$model = str_replace(app_path()."/", "", $model);
+			$model = str_replace(".php", "", $model);
 			if (array_search($model, $exclude) === FALSE) {
 				array_push($result, 'App\\'.$model);
 			}
