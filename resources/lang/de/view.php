@@ -168,6 +168,7 @@ return [
 		//CMTS
 		'Header_CMTS'				=> 'CMTS|CMTSs',
 		'Header_EditCMTS'			=> 'CMTS bearbeiten',
+		'Header_Config'				=> 'Konfigurationsvorschlag|Konfigurationsvorschläge',
 		//IpPool
 		'Header_IpPool'				=> 'IP-Bereich|IP-Bereiche', //workaround
 		'Header_EditIpPool'			=> 'IP-Bereich bearbeiten',

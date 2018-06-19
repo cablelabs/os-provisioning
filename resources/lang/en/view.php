@@ -124,6 +124,7 @@ return [
 		//CMTS
 		'Header_CMTS'				=> 'CMTS|CMTSs',
 		'Header_EditCMTS'			=> 'Edit CMTS',
+		'Header_Config'				=> 'Config proposal|Config proposals',
 		//IpPool
 		'Header_IpPool'				=> 'IP-Pool|IP-Pools',
 		'Header_EditIpPool'			=> 'Edit IP-Pool',
