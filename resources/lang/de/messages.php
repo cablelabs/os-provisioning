@@ -376,6 +376,7 @@ return [
 //
 	'Priority' 				=> 'Priorität',
 	'Title' 				=> 'Titel',
+	'Created at'			=> 'Erstellt am',
 //
 // VOIP
 //
