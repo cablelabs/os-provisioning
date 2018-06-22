@@ -1,0 +1,183 @@
+\documentclass[version=last, fontsize=10pt, fromlogo=true, refline=wide, fromaddress=false, enlargefirstpage=true, numericaldate=true]{scrlttr2}
+
+\usepackage[ngerman]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{eurosym}
+\usepackage{graphicx}
+\usepackage{tabularx}
+
+\usepackage{ifthen} 								% if then else
+
+\usepackage{helvet}
+\renewcommand*\familydefault{\sfdefault}            % sorgt für serifenlose Schrift
+
+
+\makeatletter
+	% see hettstedt.tex or koma script tutorial page 397 - 402
+	\@setplength{firstfootvpos}{25.2cm} 			% set footer higher
+	\@setplength{toaddrhpos}{2.45cm}				% margin 2,45 cm
+	\@setplength{firstheadhpos}{2.45cm}
+	\@setplength{firstfoothpos}{2.45cm}				% smaller because of margin of picture
+	% Rand des Brieftextes an Rand des Briefkopfes anpassen
+	\setlength{\oddsidemargin}{\useplength{toaddrhpos}}
+	\addtolength{\oddsidemargin}{-1in}
+	\setlength{\textwidth}{16.1cm} 					% 21cm (A4) - (2 x 2.45cm) (margin)
+\makeatother
+
+
+\begin{document}
+
+	\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+	\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+	\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+	% Define own komavars
+	\newkomavar[\Tax]			{tax}
+	\newkomavar[\Court]			{court}
+	\newkomavar[\Management]	{management}
+	\newkomavar[\Dictorate]		{directorate}
+	\newkomavar[\FooterExtra]	{footerextra}
+
+	% Set KomaVars
+	\setkomavar{firsthead}	{\includegraphics[width=16.1cm]{{company\_logo}}}
+	\setkomavar{fromname}	{{company\_name}}
+	\setkomavar{fromaddress}{{company\_street}\\{company\_zip} {company\_city}}
+	\setkomavar{date}		{} % let it free
+	\setkomavar{footerextra}{}
+	\setkomavar{directorate}{{company\_directorate}}
+	\setkomavar{tax}		{USt.-IdNr.: {company\_tax\_id\_nr}\\Steuer-Nr.: {company\_tax\_nr}}
+	\setkomavar{court}		{{company\_registration\_court}}
+	\setkomavar{management}	{{company\_management}}
+	\setkomavar{frombank}	{{company\_account\_institute}\\IBAN: {company\_account\_iban}\\BIC: {company\_account\_bic}}
+
+	% location next to sender
+	\setkomavar{location}{
+		\begin{footnotesize}
+			% align on right margin
+			\raggedleft
+				Tel: {company\_phone}\\
+				Fax: {company\_fax}\\
+				eMail: {{company\_mail}}\\
+				Internet: {{company\_web}}\\
+		\end{footnotesize}
+	}
+
+	% footer
+	\setkomavar{firstfoot}{
+		\scriptsize %or tiny, small
+		\begin{flushleft}
+		\begin{tabular}[t]{@{}l l l l l l}
+
+			\ifkomavarempty{court}{}{
+				\begin{tabular}[t]{@{}l}%
+					\multicolumn{1}{@{}l@{}}{\textbf{Registergericht:}}\\
+					\usekomavar{court}
+				\end{tabular}%
+				\hfill}
+
+			\ifkomavarempty{management}{}{
+			 	\begin{tabular}[t]{@{}l@{}}
+					\multicolumn{1}{@{}l@{}}{\textbf{Vorstand:}}\\
+					\usekomavar{management}
+				\end{tabular}
+				\hfill}
+
+			\ifkomavarempty{directorate}{}{
+				\begin{tabular}[t]{@{}l@{}}%
+					\multicolumn{1}{@{}l@{}}{\textbf{Aufsichtsrat:}}\\
+					\usekomavar{directorate}
+				\end{tabular}%
+				\hfill}
+
+			\ifkomavarempty{frombank}{}{
+			 	\begin{tabular}[t]{@{}l}
+					\multicolumn{1}{@{}l@{}}{\textbf{Bankverbindung:}}\\
+					\usekomavar{frombank}
+				\end{tabular}
+				\hfill}
+
+			\ifkomavarempty{tax}{}{
+				\begin{tabular}[t]{@{}l}
+					\multicolumn{1}{@{}l@{}}{\textbf{Steuer:}}\\
+					\usekomavar{tax}
+				\end{tabular}
+				\hfill}
+
+			\ifkomavarempty{footerextra}{}{
+				\begin{tabular}[t]{@{}l}
+					\multicolumn{1}{@{}l@{}}{\textbf{Internet}}\\
+					\usekomavar{footerextra}
+				\end{tabular}}
+
+		\end{tabular}
+		\end{flushleft}
+	} % end footer
+
+
+	\begin{letter}{{contract\_address}}
+		\opening{\textbf{\Large{{invoice\_headline}}}}
+
+		% Own reference line after Headline
+		\begin{flushleft}
+			\begin{small}
+				\renewcommand{\arraystretch}{1.1}
+				\begin{tabular*}{\textwidth}{@{}l@{\extracolsep{\fill}}cr@{}}
+					\textbf{\footnotesize{Kundennummer}} & \textbf{\footnotesize{Rechnungsnummer}} & \textbf{\footnotesize{Datum}} \\
+					{contract\_nr} & {invoice\_nr} & {{date\_invoice}} \\
+				\end{tabular*}
+			\end{small}
+		\end{flushleft}
+
+		\vspace{1mm}
+
+		% item table with tabular* to define table width
+		\hspace{0.1cm}
+		\begin{flushleft}
+			\begin{small}
+				\renewcommand{\arraystretch}{1.2}
+				\begin{tabular*}{\textwidth}{@{}C{1.5cm}@{} L{10.5cm}@{} R{2cm}@{} R{2cm}}
+					\hline
+					\hline
+					\textbf{Menge}	& \textbf{Bezeichnung} & \textbf{Einzelpreis} & \textbf{Summe}\\
+					\hline
+					{item\_table\_positions}
+					\hline
+					{table\_summary}
+					\hline
+					\hline
+				\end{tabular*}
+			\end{small}
+		\end{flushleft}
+
+		~\\
+
+		% Laufzeit- & Kündigungsinformationen
+		\begin{flushleft}
+			\ifthenelse{\equal{{invoice\_headline}}{Kostenumlage}}
+			{}
+			%else
+			{
+				\ifthenelse{\equal{{last\_cancel\_date}}{}}
+					{Der Vertrag wurde gekündigt zum: {end\_of\_term}.}
+				%else
+				{
+					\begin{tabular} {@{}ll}
+						% Vertragsbeginn: {start\_of\_term}\\
+						Tariflaufzeit: & {maturity}\\
+						Nächstmögliches Laufzeitende: & {end\_of\_term}\\
+						Kündigungsfrist: & {period\_of\_notice}\\
+						Spätester Kündigungszeitpunkt: & {last\_cancel\_date}\\
+					\end{tabular}
+				}
+			}
+		\end{flushleft}
+
+		% Message
+		\begin{flushleft}
+			{invoice\_text}
+		\end{flushleft}
+
+	\end{letter}
+
+
+\end{document}
