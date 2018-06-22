@@ -994,6 +994,7 @@ class Modem extends \BaseModel {
 			$params = [
 				'street' => "$housenumber_prepared $this->street",
 				'postalcode' => $this->zip,
+				'city' => $this->city,
 				'country' => $country_code,
 				'email' => env('OSM_NOMINATIM_EMAIL'),	// has to be set (https://operations.osmfoundation.org/policies/nominatim); else 403 Forbidden
 				'format' => 'json',			// return format
@@ -1017,15 +1018,16 @@ class Modem extends \BaseModel {
 			$geojson = file_get_contents($url);
 			$geodata_raw = json_decode($geojson, true);
 
-			$matches = ['building', ];
+			$matches = ['building', 'house', 'amenity', 'shop', 'tourism'];
 			foreach ($geodata_raw as $entry) {
 				$class = array_get($entry, 'class', '');
+				$type = array_get($entry, 'type', '');
 				$display_name = array_get($entry, 'display_name', '');
 				$lat = array_get($entry, 'lat', null);
 				$lon = array_get($entry, 'lon', null);
 
 				// check if returned entry is of certain type (e.g. “highway” indicates fuzzy match)
-				if (in_array($class, $matches) && $lat && $lon) {
+				if ((in_array($class, $matches) || in_array($type, $matches)) && $lat && $lon) {
 
 					// as both variants can appear in resulting address: check for all of them
 					foreach ($housenumber_variants as $variant) {
