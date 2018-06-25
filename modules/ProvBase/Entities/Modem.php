@@ -1001,7 +1001,7 @@ class Modem extends \BaseModel {
 				'dedupe' => '1',			// only one geolocation (even if address is split to multiple places)?
 				'polygon' => '0',			// include surrounding polygons?
 				'addressdetails' => '0',	// not available using API
-
+				'limit' => '1',				// only request one result
 			];
 
 			$url = $base_url."?";
