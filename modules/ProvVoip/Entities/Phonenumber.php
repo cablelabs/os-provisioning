@@ -669,6 +669,7 @@ class PhonenumberObserver
 		// on creating there can not be a phonenumbermanagement – so we can set active state to false in each case
 		// $phonenumber->active = 0;
 
+		$this->_check_overlapping($phonenumber);
 		$this->_create_login_data($phonenumber);
 	}
 
@@ -717,6 +718,7 @@ class PhonenumberObserver
 			return false;
 		}
 
+		$this->_check_nr_change($phonenumber);
 		$this->_create_login_data($phonenumber);
 	}
 
@@ -926,6 +928,66 @@ class PhonenumberObserver
 			\Session::push('tmp_info_above_form', 'Autochanging of SIP data at envia TEL is not implemented yet.<br>You have to '.$envia_href);
 		}
 	}
+
+
+	/**
+	 * Check if an HL-Komm phonenumber existed within today and the last CDR cycle to warn the user that
+	 * creating a phonenumber with the same number can lead to wrong charges/accounting statements as there is
+	 * only a phonenumber stated in the CDR.csv
+	 */
+	private function _check_overlapping($phonenumber)
+	{
+		if (!$phonenumber->number || !\Module::collections()->has('BillingBase'))
+			return;
+
+		$sipdomain = $phonenumber->sipdomain ? : ProvVoip::first()->mta_domain;
+		$registrar = 'sip.hlkomm.net';
+
+		if (strpos($sipdomain, $registrar) === false)
+			return;
+
+		// check if number already existed within the last month(s)
+		$delay = \Modules\BillingBase\Entities\BillingBase::first()->cdr_offset;
+		$cdr_first_day_of_month = date('Y-m-01', strtotime('first day of -'.(1+$delay).' month'));
+
+		$num = \DB::table('phonenumber')
+			->where('prefix_number', '=', $phonenumber->prefix_number)
+			->where('number', '=', $phonenumber->number)
+			->where(function ($query) use ($registrar) { $query
+				->where('sipdomain', 'like', "%$registrar%")
+				->orWhereNull('sipdomain')
+				->orWhere('sipdomain', '=', '');})
+			->where(function ($query) use ($cdr_first_day_of_month) { $query
+				->whereNull('deleted_at')
+				->orWhere('deleted_at', '>=', $cdr_first_day_of_month);})
+			->count();
+
+		if ($num)
+			\Session::put('alert', trans('messages.phonenumber_overlap_hlkomm', ['delay' => 1+$delay]));
+	}
+
+
+	/**
+	 * After changing an HL-Komm phonenumber it's not possible to assign the corresponding CDRs to the contract anymore
+	 * So we should warn the user to just do this with test numbers where the customer is not charged
+	 */
+	private function _check_nr_change($phonenumber)
+	{
+		if (!\Module::collections()->has('BillingBase'))
+			return;
+
+		if (!multi_array_key_exists(['prefix_number', 'number'], $phonenumber->getDirty()))
+			return;
+
+		$sipdomain = $phonenumber->sipdomain ? : ProvVoip::first()->mta_domain;
+		$registrar = 'sip.hlkomm.net';
+
+		if (strpos($sipdomain, $registrar) === false)
+			return;
+
+		\Session::put('alert', trans('messages.phonenumber_nr_change_hlkomm'));
+	}
+
 
 
 	public function deleted($phonenumber)
