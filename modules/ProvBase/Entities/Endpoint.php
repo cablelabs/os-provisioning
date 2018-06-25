@@ -123,7 +123,7 @@ class Endpoint extends \BaseModel {
 	 */
 	public static function make_dhcp ()
 	{
-		$dir = '/etc/dhcp/nmsprime/';
+		$dir = '/etc/dhcp-nmsprime/';
 		$file_ep = $dir.'endpoints-host.conf';
 
 		$data = '';
@@ -140,7 +140,7 @@ class Endpoint extends \BaseModel {
 			die("Error writing to file");
 
 		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
-		system('/bin/chown -R apache /etc/dhcp/');
+		system('/bin/chown -R apache /etc/dhcp-nmsprime/');
 
 		return $ret > 0;
 	}

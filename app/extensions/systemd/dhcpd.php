@@ -5,14 +5,14 @@
 
 
 // check config
-exec("dhcpd -t -cf /etc/dhcp/nmsprime/dhcpd.conf &>/dev/null", $out, $ret);
+exec("dhcpd -t -cf /etc/dhcp-nmsprime/dhcpd.conf &>/dev/null", $out, $ret);
 
 // restart server
 if ($ret == 0)
 {
 	// only restart when dhcpd configfiles are not locked
-	$fn_cm  = '/etc/dhcp/nmsprime/modems-host.conf';
-	$fn_mta = '/etc/dhcp/nmsprime/mta.conf';
+	$fn_cm  = '/etc/dhcp-nmsprime/modems-host.conf';
+	$fn_mta = '/etc/dhcp-nmsprime/mta.conf';
 
 	$fp_cm  = fopen($fn_cm, "r");
 	$fp_mta = fopen($fn_mta, "r");

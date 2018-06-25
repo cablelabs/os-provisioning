@@ -9,7 +9,7 @@ class Cmts extends \BaseModel {
 
 	private static $_us_snr_path = 'data/provmon/us_snr';
 	// don't put a trailing slash here!
-	public static $cmts_include_path = '/etc/dhcp/nmsprime/cmts_gws';
+	public static $cmts_include_path = '/etc/dhcp-nmsprime/cmts_gws';
 
 	// The associated SQL table for this Model
 	public $table = 'cmts';
@@ -495,7 +495,7 @@ _exit:
 		self::make_includes();
 
 		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
-		system('/bin/chown -R apache /etc/dhcp/');
+		system('/bin/chown -R apache /etc/dhcp-nmsprime/');
 	}
 
 	/**

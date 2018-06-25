@@ -4,15 +4,14 @@ dir="/var/www/nmsprime"
 pw=$(ddns-confgen -a hmac-md5 -r /dev/urandom | grep secret)
 
 # create folders
-install -dm750 /etc/dhcp/nmsprime/cmts_gws
+install -dm750 /etc/dhcp-nmsprime/cmts_gws
 
 # change owner
-chown apache /etc/dhcp
-chown -R apache:dhcpd /etc/dhcp/nmsprime
+chown -R apache:dhcpd /etc/dhcp-nmsprime
 chown -R apache /tftpboot
 chown -R named:named /var/named/dynamic
 
-sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/dhcp/nmsprime/dhcpd.conf
+sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/dhcp-nmsprime/dhcpd.conf
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/named-nmsprime.conf
 sed -i "s/<hostname>/$(hostname | cut -d '.' -f1)/" /var/named/dynamic/{nmsprime.test,in-addr.arpa}.zone
 

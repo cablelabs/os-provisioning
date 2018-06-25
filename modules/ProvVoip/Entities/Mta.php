@@ -209,7 +209,7 @@ _failed:
 	/**
 	 * Define DHCP Config File for MTA's
 	 */
-	const CONF_FILE_PATH = '/etc/dhcp/nmsprime/mta.conf';
+	const CONF_FILE_PATH = '/etc/dhcp-nmsprime/mta.conf';
 
 	/**
 	 * Writes all mta entries to dhcp configfile
