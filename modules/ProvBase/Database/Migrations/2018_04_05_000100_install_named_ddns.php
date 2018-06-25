@@ -24,7 +24,7 @@ class InstallNamedDdns extends BaseMigration {
 		chmod('/etc/named-ddns-cpe.key', 0640);
 
 		// get DNS-PASSWORD
-		if (preg_match('/secret +"([^"]+)"/', file_get_contents('/etc/dhcp/nmsprime/dhcpd.conf'), $m))
+		if (preg_match('/secret +"([^"]+)"/', file_get_contents('/etc/dhcp-nmsprime/dhcpd.conf'), $m))
 			$pw = $m[1];
 		else
 			return;

@@ -244,8 +244,8 @@ class Modem extends \BaseModel {
 	/**
 	 * Define global constants for dhcp config files of modems (private and public)
 	 */
-	const CONF_FILE_PATH = '/etc/dhcp/nmsprime/modems-host.conf';
-	const CONF_FILE_PATH_PUB = '/etc/dhcp/nmsprime/modems-clients-public.conf';
+	const CONF_FILE_PATH = '/etc/dhcp-nmsprime/modems-host.conf';
+	const CONF_FILE_PATH_PUB = '/etc/dhcp-nmsprime/modems-clients-public.conf';
 
 
 	/**
@@ -326,7 +326,7 @@ class Modem extends \BaseModel {
 			die("Error writing to file");
 
 		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
-		system('/bin/chown -R apache /etc/dhcp/');
+		system('/bin/chown -R apache /etc/dhcp-nmsprime/');
 	}
 
 
