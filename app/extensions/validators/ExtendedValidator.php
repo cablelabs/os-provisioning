@@ -201,7 +201,7 @@ class ExtendedValidator
 			elseif (preg_match("/(ipaddress)/i", $row))
 				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", '1.1.1.1', $row);
 			else
-				$s .= "\n".preg_replace("/\\{[^\\{]*\\}/im", '1', $row);
+				$s .= "\n".preg_replace("/\\{.+\\}/im", '1', $row);
 		}
 
 		/*

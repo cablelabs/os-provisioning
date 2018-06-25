@@ -2,7 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Modules\ProvBase\Entities\Qos;
+use Modules\ProvBase\Entities\{ProvBase, Qos};
 
 class QosController extends \BaseController {
 
@@ -21,8 +21,9 @@ class QosController extends \BaseController {
 
 	public function prepare_input_post_validation($data)
 	{
-		$data['ds_rate_max_help'] = $data['ds_rate_max'] * 1024 * 1024;
-		$data['us_rate_max_help'] = $data['us_rate_max'] * 1024 * 1024;
+		$pb = ProvBase::first();
+		$data['ds_rate_max_help'] = $data['ds_rate_max'] * 1024 * 1024 * $pb->ds_rate_coefficient;
+		$data['us_rate_max_help'] = $data['us_rate_max'] * 1024 * 1024 * $pb->us_rate_coefficient;
 
 		return parent::prepare_input_post_validation($data);
 	}

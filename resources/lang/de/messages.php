@@ -73,7 +73,7 @@ return [
 	'Maturity' 					=> 'Laufzeit',
 	'modem_configfile_error'	=> 'Modem Konfigurationsdatei nicht gefunden',
 	'modem_eventlog_error'		=> 'Modem Eventlog nicht gefunden',
-	'modem_force_restart_button_title' => 'Started nur das Modem neu. Speichert keine geänderten Daten!',
+	'modem_force_restart_button_title' => 'Startet nur das Modem neu. Speichert keine geänderten Daten!',
 	'modem_lease_error'			=> 'Kein gültiger Lease gefunden',
 	'modem_lease_valid'			=> 'Modem hat einen gültigen Lease',
 	'modem_log_error'			=> 'Modem ist nicht beim Server registriert - Kein Logeintrag gefunden',
@@ -154,7 +154,7 @@ return [
 	'Language for settlement run' => 'Sprache für Abrechnungslauf',
 	'Uncertain start/end dates for tariffs' => 'Ungewisse Tarif-Start-/Enddaten',
 	//CCC
-	'Connection Info Template'	=> 'Vorlage für Verbingungsinformationen',
+	'Connection Info Template'	=> 'Vorlage für Verbindungsinformationen',
 	'Upload Template'			=> 'Vorlage hochladen',
 	//HFC
 	'SNMP Read Only Community'	=> 'SNMP Read Only Community',
@@ -168,6 +168,8 @@ return [
 	'Start ID Contracts'		=> 'Start Nummerierung Verträge',
 	'Start ID Modems'			=> 'Start Nummerierung Modems',
 	'Start ID Endpoints'		=> 'Start Nummerierung Endpunkte',
+	'Downstream rate coefficient' => 'Übertragungsratenkoeffizient Vorwärtskanal',
+	'Upstream rate coefficient' => 'Übertragungsratenkoeffizient Rückwärtskanal',
 	//VOIP
 	'Start ID MTA´s'			=> 'Start Nummerierung MTA\'s',
 //
@@ -377,6 +379,7 @@ return [
 //
 	'Priority' 				=> 'Priorität',
 	'Title' 				=> 'Titel',
+	'Created at'			=> 'Erstellt am',
 //
 // VOIP
 //
