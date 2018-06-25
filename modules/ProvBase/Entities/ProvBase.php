@@ -169,8 +169,8 @@ class ProvBaseObserver
 		if (multi_array_key_exists(['ds_rate_coefficient', 'us_rate_coefficient'], $changes)) {
 			$pb = ProvBase::first();
 			foreach(Qos::all() as $qos) {
-				$qos->ds_rate_max_help = $qos->ds_rate_max * 1024 * 1024 * $pb->ds_rate_coefficient;
-				$qos->us_rate_max_help = $qos->us_rate_max * 1024 * 1024 * $pb->us_rate_coefficient;
+				$qos->ds_rate_max_help = $qos->ds_rate_max * 1000 * 1000 * $pb->ds_rate_coefficient;
+				$qos->us_rate_max_help = $qos->us_rate_max * 1000 * 1000 * $pb->us_rate_coefficient;
 				$qos->save();
 			}
 		}
