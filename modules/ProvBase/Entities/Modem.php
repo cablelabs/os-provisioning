@@ -486,7 +486,6 @@ class Modem extends \BaseModel {
 		if (File::put($cf_file, $text) === false)
 			die("Error writing to file");
 
-		Log::info('Configfile Update for Modem: '.$this->hostname);
 		Log::debug("configfile: docsis -e $cf_file $dir../keyfile $cfg_file");
 
 		// "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
@@ -495,6 +494,7 @@ class Modem extends \BaseModel {
 		// change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
 		system('/bin/chown -R apache /tftpboot/cm');
 
+		Log::info('Configfile updated for Modem: '.$this->hostname);
 		// docsis tool always returns 0 -> so we need to proof if that way (only when docsis isnt started in background)
 		// if (file_exists($cfg_file))
 		//	 return true;

@@ -23,7 +23,8 @@ class configfileCommand extends Command implements SelfHandling, ShouldQueue {
 	 *
 	 * @var string
 	 */
-	protected $name = 'nms:configfile';
+	protected $signature = 'nms:configfile {filter?}';
+
 
 	/**
 	 * The console command description.
@@ -44,16 +45,26 @@ class configfileCommand extends Command implements SelfHandling, ShouldQueue {
 
 
 	/**
+	 * Filter (from argument) to only build cable modem or mta configfiles
+	 *
+	 * @var String 		cm|mta
+	 */
+	protected $filter = '';
+
+
+	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct($cf_id = 0)
+	public function __construct($cf_id = 0, $filter = '')
 	{
 		$this->cf_id = $cf_id;
+		$this->filter = $filter;
 
 		parent::__construct();
 	}
+
 
 	/**
 	 * Execute the console command.
@@ -67,7 +78,6 @@ class configfileCommand extends Command implements SelfHandling, ShouldQueue {
 		// handle configfile observer functionality via job in background
 		if ($this->cf_id)
 		{
-			// $cf = Configfile::withTrashed()->find($this->cf_id); 	// only if we want to build for deleted CFs - doesnt make sense right now
 			$cf = Configfile::find($this->cf_id);
 
 			$cf->build_corresponding_configfiles();
@@ -76,37 +86,50 @@ class configfileCommand extends Command implements SelfHandling, ShouldQueue {
 			return;
 		}
 
+		if ($this->input && $this->argument('filter'))
+			$this->filter = $this->argument('filter');
 
 		// Modem
-		$cms = Modem::all();
-
-		$i = 1;
-		$num = count ($cms);
-
-		foreach ($cms as $cm)
+		if (!$this->filter || $this->filter == 'cm')
 		{
-			echo "CM: create config files: $i/$num \r"; $i++;
-			$cm->make_configfile();
+			$cms = Modem::all();
+			$this->_make_configfiles($cms, 'cm');
 		}
-		echo "\n";
 
 		// MTA
-		if (\Module::collections()->has('ProvVoip'))
+		if (!$this->filter || $this->filter == 'mta')
 		{
+			if (!\Module::collections()->has('ProvVoip'))
+				return;
+
 			$mtas = \Modules\ProvVoip\Entities\Mta::all();
-
-			$i = 1;
-			$num = count ($mtas);
-
-			foreach ($mtas as $mta)
-			{
-				echo "MTA: create config files: $i/$num \r"; $i++;
-				$mta->make_configfile();
-			}
-			echo "\n";
+			$this->_make_configfiles($mtas, 'mta');
 		}
 
 	}
+
+
+	/**
+	 * @param Array  Objects of Modem or Mta
+	 */
+	private function _make_configfiles($devices, $type)
+	{
+		$i = 1;
+		$num = count($devices);
+		$type = strtoupper($type);
+
+		\Log::info("Build all $num $type configfiles");
+
+		foreach ($devices as $device)
+		{
+			echo "$type: create config files: $i/$num \r"; $i++;
+			$device->make_configfile();
+		}
+
+		echo "\n";
+	}
+
+
 
 	/**
 	 * Get the console command arguments.
@@ -116,7 +139,7 @@ class configfileCommand extends Command implements SelfHandling, ShouldQueue {
 	protected function getArguments()
 	{
 		return array(
-			// array('configfile_id', InputArgument::OPTIONAL, 'ID of Configfile - build all related CMs and MTAs for that and all children CFs'),
+			// array('filter', InputArgument::OPTIONAL, 'Build only Configfiles of CMs or MTAs (cm|mta)'),
 		);
 	}
 

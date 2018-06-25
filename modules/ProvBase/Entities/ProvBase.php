@@ -163,17 +163,21 @@ class ProvBaseObserver
 	{
 		$model->make_dhcp_glob_conf();
 
+		$changes = $model->getDirty();
+
 		// re-evaluate all qos rate_max_help fields if one or both coefficients were changed
-		if (multi_array_key_exists(['ds_rate_coefficient', 'us_rate_coefficient'], $model->getDirty())) {
+		if (multi_array_key_exists(['ds_rate_coefficient', 'us_rate_coefficient'], $changes)) {
 			$pb = ProvBase::first();
 			foreach(Qos::all() as $qos) {
-				$qos->ds_rate_max_help = $qos->ds_rate_max * 1024 * 1024 * $pb->ds_rate_coefficient;
-				$qos->us_rate_max_help = $qos->us_rate_max * 1024 * 1024 * $pb->us_rate_coefficient;
+				$qos->ds_rate_max_help = $qos->ds_rate_max * 1000 * 1000 * $pb->ds_rate_coefficient;
+				$qos->us_rate_max_help = $qos->us_rate_max * 1000 * 1000 * $pb->us_rate_coefficient;
 				$qos->save();
 			}
 		}
 
-		// TODO: if max_cpe was changed -> make all Modem Configfiles via Queue Job as this will take a long time (Nino)
+		// build all Modem Configfiles via Job as this will take a long time
+		if (multi_array_key_exists(['ds_rate_coefficient', 'us_rate_coefficient', 'max_cpe'], $changes))
+			\Queue::push(new \Modules\ProvBase\Console\configfileCommand(0, 'cm'));
 	}
 
 }
