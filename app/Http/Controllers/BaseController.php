@@ -1445,7 +1445,6 @@ class BaseController extends Controller {
 		$res = $model->select($column)
 			->where($column, 'like', '%'.\Input::get('q').'%')
 			->distinct()
-			->limit(10)
 			->pluck($column)
 			->toArray();
 
