@@ -42,9 +42,7 @@ class ContractController extends \BaseController {
 				<div class='form-group row'>
 					<label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number *</label>
 						<div class=col-md-5>
-							<select class='select2-street form-control' name='street' type=text id='street' style='background-color:whitesmoke'>
-								<option value='${model['street']}'>${model['street']}</option>
-							</select>
+							<input class='form-control' name='street' type=text value='${model['street']}' id='street' style='background-color:whitesmoke'>
 						</div>"),
 			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => '1', 'html' =>
 				"<div class=col-md-2><input class='form-control' name='house_number' type=text value='".$model['house_number']."' id='house_number' style='background-color:whitesmoke'></div>

@@ -172,13 +172,7 @@ class FormBuilder extends CollectiveFormBuilder {
 		if (isset($options['style']) && (strpos($options['style'], 'simple') !== false))
 			return parent::select($name, $list, $selected, $options);
 
-		$ret = parent::select($name, $list, $selected, $options);
-		// with select2 ajax there are no option values at time of making the view
-		// thus explicitly set the selected (i.e. old) one
-		if(strpos($options['class'], 'select2-') !== false)
-			$ret = str_replace('</select>', "<option value='$selected'>$selected</option></select>", $ret);
-
-		return $this->appendDiv($ret);
+		return $this->appendDiv(parent::select($name, $list, $selected, $options));
 	}
 
 	/**
