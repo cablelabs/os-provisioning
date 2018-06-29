@@ -36,22 +36,6 @@
 <script src="{{asset('components/nmsprime.js')}}"></script>
 <!-- ================== END PAGE LEVEL JS ================== -->
 
-<script>
-	$(document).ready(function() {
-		$( "#city" ).autocomplete({
-			source:function (data, response) {
-				$.ajax({
-					url:'/admin/Contract/select2/city?q=' + $('#city').val(),
-					success:function(data){
-						response(data);
-					}
-				})
-
-			}
-		});
-	} );
-</script>
-
 <script language="javascript">
 /*
  * global document ready function

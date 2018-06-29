@@ -1433,21 +1433,19 @@ class BaseController extends Controller {
 	}
 
 	/**
-	 * Process select2 ajax request
+	 * Process autocomplete ajax request
 	 *
 	 * @return Array
 	 *
 	 * @author Ole Ernst
 	 */
-	public function select2_ajax($column)
+	public function autocomplete_ajax($column)
 	{
 		$model = static::get_model_obj();
-		$res = $model->select($column)
+
+		return $model->select($column)
 			->where($column, 'like', '%'.\Input::get('q').'%')
 			->distinct()
-			->pluck($column)
-			->toArray();
-
-		return $res;
+			->pluck($column);
 	}
 }
