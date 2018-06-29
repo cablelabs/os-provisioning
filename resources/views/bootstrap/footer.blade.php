@@ -1,8 +1,7 @@
 <!-- ================== BEGIN BASE JS ================== -->
 <script src="{{asset('components/assets-admin/plugins/jquery/jquery-3.2.0.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/jquery/jquery-migrate-1.4.1.min.js')}}"></script>
-{{-- more recent version of jquery-ui needed --}}
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="{{asset('components/assets-admin/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/plugins/bootstrap4/js/bootstrap.bundle.min.js')}}"></script>
 
