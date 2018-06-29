@@ -13,31 +13,73 @@
 
 // Home Route
 Route::get('', array('as' => 'Home', 'uses' => 'WelcomeController@index'));
+
 /*
  * Admin Login Routes
  */
 Route::group(['prefix' => 'admin', 'middleware' => ['web']], function() {
-	Route::get('login', array('as' => 'adminLogin', 'uses' => 'Auth\LoginController@showLoginForm'));
-	Route::post('login', array('as' => 'login.post', 'uses' => 'Auth\LoginController@login'));
-	Route::post('logout', array('as' => 'logout.post', 'uses' => 'Auth\LoginController@logout'));
+	Route::get('login',	[
+		'as' => 'adminLogin',
+		'uses' => 'Auth\LoginController@showLoginForm',
+	]);
+
+	Route::post('login', [
+		'as' => 'login.post',
+		'uses' => 'Auth\LoginController@login',
+	]);
+
+	Route::post('logout', [
+		'as' => 'logout.post',
+		'uses' => 'Auth\LoginController@logout',
+	]);
 });
 
 // Core Admin API
 BaseRoute::group([], function() {
 
-	// Base routes for global search
-	BaseRoute::get('base/fulltextSearch', array('as' => 'Base.fulltextSearch', 'uses' => 'BaseController@fulltextSearch'));
-
-	BaseRoute::resource('User', 'Auth\UserController');
-	BaseRoute::resource('Role', 'Auth\RoleController');
-	BaseRoute::post('user/detach/{id}/{func}', ['as' => 'user.detach', 'uses' => 'Auth\UserController@detach']);
-	BaseRoute::post('role/UpdatePermission', ['as' => 'Permission.update', 'uses' => 'Auth\RoleController@update_permission']);
-	BaseRoute::post('role/AssignPermission', ['as' => 'Permission.assign', 'uses' => 'Auth\RoleController@assign_permission']);
-	BaseRoute::post('role/DeletePermission', ['as' => 'Permission.delete', 'uses' => 'Auth\RoleController@delete_permission']);
-
-	BaseRoute::get('Config', array('as' => 'Config.index', 'uses' => 'GlobalConfigController@index'));
 	BaseRoute::resource('GlobalConfig', 'GlobalConfigController');
 	BaseRoute::resource('GuiLog', 'GuiLogController');
-	BaseRoute::get('Guilog/FilterRecords', ['as' => 'GuiLog.filter', 'uses' => 'GuiLogController@filter']);
+	BaseRoute::resource('User', 'Auth\UserController');
+	BaseRoute::resource('Role', 'Auth\RoleController');
+
+	BaseRoute::get('base/fulltextSearch', [
+		'as' => 'Base.fulltextSearch',
+		'uses' => 'BaseController@fulltextSearch',
+	]);
+
+	BaseRoute::get('Config', [
+		'as' => 'Config.index',
+		'uses' => 'GlobalConfigController@index',
+	]);
+
+	BaseRoute::get('Guilog/FilterRecords', [
+		'as' => 'GuiLog.filter',
+		'uses' => 'GuiLogController@filter',
+		'middleware' => ["can:view,App\GuiLog"],
+	]);
+
+	BaseRoute::post('user/detach/{id}/{func}', [
+		'as' => 'user.detach',
+		'uses' => 'Auth\UserController@detach',
+		'middleware' => ["can:delete,App\User"],
+	]);
+
+	BaseRoute::post('role/AssignAbility', [
+		'as' => 'Ability.assign',
+		'uses' => 'Auth\RoleController@assign_Ability',
+		'middleware' => ["can:edit,App\Role"],
+	]);
+
+	BaseRoute::post('role/DeleteAbility', [
+		'as' => 'Ability.delete',
+		'uses' => 'Auth\RoleController@delete_Ability',
+		'middleware' => ["can:delete,App\Role"],
+	]);
+
+	BaseRoute::post('role/UpdateAbility', [
+		'as' => 'Ability.update',
+		'uses' => 'Auth\RoleController@update_permission',
+		'middleware' => ["can:edit,App\Role"],
+	]);
 
 });
