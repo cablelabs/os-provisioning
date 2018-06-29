@@ -46,6 +46,16 @@ class BaseController extends Controller {
 	protected $many_to_many = [];
 
 
+	/**
+	 * File upload paths to handle file upload fields generically - see e.g. CompanyController, SepaAccountController
+	 *
+	 * NOTE: upload field has to be named like the corresponding select field of the upload field
+	 *
+	 * @var Array 	['upload_field' => 'relative storage path']
+	 */
+	protected $file_upload_paths = [];
+
+
 	// Auth Vars
 	// TODO: move to Auth API
 	// protected $permissions = null;
@@ -306,26 +316,27 @@ class BaseController extends Controller {
 	 * @param dst_path Path to move uploaded file in
 	 * @author Patrick Reichel
 	 */
-	protected function handle_file_upload($base_field, $dst_path) {
-
+	protected function handle_file_upload($base_field, $dst_path)
+	{
 		$upload_field = $base_field."_upload";
 
-		if (Input::hasFile($upload_field)) {
+		if (!Input::hasFile($upload_field))
+			return null;
 
-			// get filename
-			$filename = Input::file($upload_field)->getClientOriginalName();
+		// get filename
+		$filename = Input::file($upload_field)->getClientOriginalName();
 
-			$ext = strrchr($filename, '.');
-			$fn  = substr($filename, 0, strlen($filename) - strlen($ext));
-			$filename = sanitize_filename($fn).$ext;
+		$ext = strrchr($filename, '.');
+		$fn  = substr($filename, 0, strlen($filename) - strlen($ext));
+		$filename = sanitize_filename($fn).$ext;
 
-			// move file
-			Input::file($upload_field)->move($dst_path, $filename);
+		// move file
+		Input::file($upload_field)->move($dst_path, $filename);
 
-			// place filename as chosen value in Input field
-			Input::merge(array($base_field => $filename));
-		}
+		// place filename as chosen value in Input field
+		Input::merge(array($base_field => $filename));
 
+		return $filename;
 	}
 
 
@@ -596,6 +607,14 @@ class BaseController extends Controller {
 		}
 		$data = $controller->prepare_input_post_validation ($data);
 
+		// Handle file uploads generically - this must happen after the validation as moving the file before leads always to validation error
+		foreach ($this->file_upload_paths as $column => $path) {
+			$filename = $this->handle_file_upload($column, storage_path($path));
+
+			if ($filename !== null)
+				$data[$column] = $filename;
+		}
+
 		$obj = $obj::create($data);
 
 		// Add N:M Relations
@@ -723,6 +742,14 @@ class BaseController extends Controller {
 			$msg = 'Input invalid – please correct the following errors';
 			\Session::push('tmp_error_above_form', $msg);
 			return Redirect::back()->withErrors($validator)->withInput()->with('message', $msg)->with('message_color', 'danger');
+		}
+
+		// Handle file uploads generically - this must happen after the validation as moving the file before leads always to validation error
+		foreach ($this->file_upload_paths as $column => $path) {
+			$filename = $this->handle_file_upload($column, storage_path($path));
+
+			if ($filename !== null)
+				$data[$column] = $filename;
 		}
 
 		// update timestamp, this forces to run all observer's
