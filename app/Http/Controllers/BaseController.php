@@ -341,6 +341,24 @@ class BaseController extends Controller {
 
 
 	/**
+	 * Handle file uploads generically in store and update function
+	 *
+	 * NOTE: use global Variable 'file_upload_paths' in Controller to specify DB column and storage path
+	 *
+	 * @param Array 	Input data array passed by reference
+	 */
+	private function _handle_file_upload(&$data)
+	{
+		foreach ($this->file_upload_paths as $column => $path) {
+			$filename = $this->handle_file_upload($column, storage_path($path));
+
+			if ($filename !== null)
+				$data[$column] = $filename;
+		}
+	}
+
+
+	/**
 	 * Set required default Variables for View
 	 * Use it like:
 	 *   View::make('Route.Name', $this->compact_prep_view(compact('ownvar1', 'ownvar2')));
@@ -608,12 +626,7 @@ class BaseController extends Controller {
 		$data = $controller->prepare_input_post_validation ($data);
 
 		// Handle file uploads generically - this must happen after the validation as moving the file before leads always to validation error
-		foreach ($this->file_upload_paths as $column => $path) {
-			$filename = $this->handle_file_upload($column, storage_path($path));
-
-			if ($filename !== null)
-				$data[$column] = $filename;
-		}
+		$this->_handle_file_upload($data);
 
 		$obj = $obj::create($data);
 
@@ -745,12 +758,7 @@ class BaseController extends Controller {
 		}
 
 		// Handle file uploads generically - this must happen after the validation as moving the file before leads always to validation error
-		foreach ($this->file_upload_paths as $column => $path) {
-			$filename = $this->handle_file_upload($column, storage_path($path));
-
-			if ($filename !== null)
-				$data[$column] = $filename;
-		}
+		$this->_handle_file_upload($data);
 
 		// update timestamp, this forces to run all observer's
 		// Note: calling touch() forces a direct save() which calls all observers before we update $data
