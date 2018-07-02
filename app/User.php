@@ -22,21 +22,6 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
 	public $table = 'users';
 
-	public function tickets() {
-		return $this->belongsToMany('\Modules\Ticketsystem\Entities\Ticket', 'ticket_user', 'user_id', 'ticket_id');
-	}
-
-	/**
-	 * Determine if the user has the given role.
-	 *
-	 * @param  mixed $role
-	 * @return boolean
-	 */
-	public function hasRole($role)
-	{
-		return ($this)->isA($role);
-	}
-
 	/**
 	 * The attributes that are mass assignable.
 	 *
@@ -62,6 +47,11 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 		'remember_token',
 	];
 
+	public function tickets()
+	{
+		return $this->belongsToMany('\Modules\Ticketsystem\Entities\Ticket', 'ticket_user', 'user_id', 'ticket_id');
+	}
+
 	/**
 	 * Validation
 	 *
@@ -82,7 +72,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 	/**
 	 * Name which is Displayed on Top and in Headline
 	 */
-	public static function view_headline()
+	public static function view_headline() : string
 	{
 		return 'Users';
 	}
@@ -90,7 +80,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 	/**
 	 *  Icon for this model
 	 */
-	public static function view_icon()
+	public static function view_icon() : string
 	{
 		return '<i class="fa fa-user-o"></i>';
 	}
@@ -104,10 +94,49 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 	 */
 	public function view_index_label()
 	{
-
 		return ['table' => $this->table,
 				'index_header' => [$this->table.'.login_name', $this->table.'.first_name', $this->table.'.last_name'],
 				'header' => $this->first_name.' '.$this->last_name,
+				'where_clauses' => ['users.id <= 100']
 			];
+	}
+
+
+	public function getHighestRank() : int
+	{
+		$ranks = $this->roles()->pluck('rank');
+		$highestRank = 0;
+
+		foreach ($ranks as $rank) {
+			$highestRank = $rank > $highestRank ? $rank : $highestRank;
+		}
+
+		return $highestRank;
+	}
+
+	public static function getHighestRankOf(User $user) : int
+	{
+		$ranks = $user->roles()->pluck('rank');
+		$highestRank = 0;
+		foreach ($ranks as $rank) {
+			$highestRank = $rank > $highestRank ? $rank : $highestRank;
+		}
+
+		return $highestRank;
+	}
+
+	public function hasHigherRankThan(User $user) : bool
+	{
+		return $this->getHighestRank() > $user->getHighestRank() ? true : false;
+	}
+
+	public function hasLowerRankThan(User $user) : bool
+	{
+		return $this->getHighestRank() < $user->getHighestRank() ? true : false;
+	}
+
+	public function hasSameRankAs(User $user) : bool
+	{
+		return $this->getHighestRank() == $user->getHighestRank() ? true : false;
 	}
 }

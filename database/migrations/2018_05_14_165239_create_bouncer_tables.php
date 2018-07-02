@@ -42,6 +42,7 @@ class CreateBouncerTables extends Migration
                 $table->string('name', 150);
                 $table->string('title')->nullable();
                 $table->string('description')->nullable();
+                $table->integer('rank')->unsigned();
                 $table->integer('level')->unsigned()->nullable();
                 $table->integer('scope')->nullable()->index();
                 $table->timestamps();
@@ -106,6 +107,7 @@ class CreateBouncerTables extends Migration
                             'id' => $role->id,
                             'name' => $role->name,
                             'title' => Str::studly($role->name),
+                            'rank' => 101 - $role->id,
                             'description' => $role->description,
                         ]);
                     Bouncer::assign($role->name)->to($user);

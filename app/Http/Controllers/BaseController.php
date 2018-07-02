@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth, BaseModel, Config, File, GlobalConfig, Input, Log, Module;
-use NoAuthenticateduserError, Redirect, Route, Str, Validator, View;
+use App, Auth, BaseModel, Bouncer, Config, File, GlobalConfig, Input, Log, Module;
+use NoAuthenticateduserError, Redirect, Route, Session, Str, Validator, View;
 use App\Exceptions\AuthException;
 use Illuminate\Support\Facades\Request;
 use Monolog\Logger;
@@ -73,7 +73,6 @@ class BaseController extends Controller {
 		App::setLocale(BaseViewController::get_user_lang());
 	}
 
-
 	/*
 	 * Base Function for Breadcrumb. -> Panel Header Right
 	 * overwrite this function in child controller if required.
@@ -118,7 +117,6 @@ class BaseController extends Controller {
 		if (!class_exists($classname))
 			return null;
 
-		$classname = $classname;
 		$obj = new $classname;
 
 		return $obj;
@@ -621,7 +619,7 @@ class BaseController extends Controller {
 			Log::info ('Validation Rule Error: '.$validator->errors());
 
 			$msg = 'Input invalid – please correct the following errors';
-			\Session::push('tmp_error_above_form', $msg);
+			Session::push('tmp_error_above_form', $msg);
 			return Redirect::back()->withErrors($validator)->withInput()->with('message', $msg)->with('message_color', 'danger');
 		}
 		$data = $controller->prepare_input_post_validation ($data);
@@ -639,7 +637,7 @@ class BaseController extends Controller {
 			return $id;
 
 		$msg = 'Created!';
-		\Session::push('tmp_success_above_form', $msg);
+		Session::push('tmp_success_above_form', $msg);
 
 		return Redirect::route(NamespaceController::get_route_name().'.edit', $id)->with('message', $msg)->with('message_color', 'success');
 	}
@@ -753,45 +751,49 @@ class BaseController extends Controller {
 			Log::info ('Validation Rule Error: '.$validator->errors());
 
 			$msg = 'Input invalid – please correct the following errors';
-			\Session::push('tmp_error_above_form', $msg);
+			Session::push('tmp_error_above_form', $msg);
 			return Redirect::back()->with('message', $msg)->with('message_color', 'danger')->withErrors($validator)->withInput();
 		}
 
 		// Handle file uploads generically - this must happen after the validation as moving the file before leads always to validation error
 		$this->_handle_file_upload($data);
-		$data      = $controller->prepare_input_post_validation($data);
+		$data = $controller->prepare_input_post_validation($data);
+
+		foreach ($obj['original'] as $key => $orig_value) {
+			if (isset($data[$key]) && $data[$key] !== $orig_value )
+			$obj->$key = $data[$key];
+		}
+
+		$changed = $obj->getDirty();
+		$changed_many = [];
 
 		// update timestamp, this forces to run all observer's
-		// Note: calling touch() forces a direct save() which calls all observers before we update $data
-		//       when exit in middleware to a new view page (like Modem restart) this kill update process
-		//       so the solution is not to run touch(), we set the updated_at field directly
-		$data['updated_at'] = \Carbon\Carbon::now(Config::get('app.timezone'));
-
-		// The Update
-		// Note: Eloquent Update requires updated_at to either be in the fillable array or to have a guarded field
-		//       without updated_at field. So we globally use a guarded field from now, to use the update timestamp
-		$obj->update($data);
+		if (!empty($changed)) {
+			$obj->updated_at = \Carbon\Carbon::now(Config::get('app.timezone'));
+			$obj->save();
+		}
 
 		// Add N:M Relations
-		if ($this->many_to_many)
-			$this->_set_many_to_many_relations($obj, $data);
+		if (isset($this->many_to_many) && is_array($this->many_to_many))
+			$changed_many = $this->_set_many_to_many_relations($obj, $data);
 
 		// create messages depending on error state created while observer execution
 		// TODO: check if giving msg/color to route is still wanted or obsolete by the new tmp_*_above_* messages format
-		if (!$obj->isDirty()) {
+
+		if (empty($changed) && empty($changed_many)) {
 			$msg = 'There was no new Input! - No changes were saved to the Database';
 			$color = 'info';
-			\Session::push('tmp_info_above_form', $msg);
+			Session::push('tmp_info_above_form', $msg);
 		}
-		elseif (!\Session::has('error')) {
+		elseif (!Session::has('error')) {
 			$msg = "Updated!";
 			$color = 'success';
-			\Session::push('tmp_success_above_form', $msg);
+			Session::push('tmp_success_above_form', $msg);
 		}
 		else {
-			$msg = \Session::get('error');
+			$msg = Session::get('error');
 			$color = 'warning';
-			\Session::push('tmp_error_above_form', $msg);
+			Session::push('tmp_error_above_form', $msg);
 		}
 
 		$route_model = NamespaceController::get_route_name();
@@ -881,25 +883,25 @@ class BaseController extends Controller {
 	 */
 	private function _set_many_to_many_relations($obj, $data)
 	{
-		foreach ($this->many_to_many as $class => $field_name) {
+		foreach ($this->many_to_many as $key => $field) {
 
-			if ( is_string($class) && \Bouncer::cannot('edit', $class ) ) {
-				if (isset($data[$field_name]))
-					abort(403, trans("You are not allowed to edit {$class}"));
-				else continue;
-			}
+			if 	(isset($field['classes']) && isset($data[$field['field']]) &&
+				(Bouncer::cannot('edit', $field['classes'][0]) || Bouncer::cannot('edit', $field['classes'][1]))) {
+					Session::push('error',"You are not allowed to edit {$field['classes'][0]} or {$field['classes'][1]}");
+					continue;
+				}
 
-			if (!isset($data[$field_name]))
-				$data[$field_name] = [];
+			if (!isset($data[$field['field']]))
+				$data[$field['field']] = [];
 
 			$changed_attributes = collect();
-			$eloquent_relation_function = explode('_', $field_name)[0];
+			$eloquent_relation_function = explode('_', $field['field'])[0];
 			$eloquent_relation = $obj->$eloquent_relation_function();
 			$attached_entities = $eloquent_relation->get();
 			$attached_ids = $attached_entities->pluck('id')->all();
 
 			// attach new assignments
-			foreach ($data[$field_name] as $form_id) {
+			foreach ($data[$field['field']] as $form_id) {
 				if ($form_id && !in_array($form_id, $attached_ids)) {
 					$eloquent_relation->attach($form_id, ['created_at' => date('Y-m-d H:i:s')]);
 
@@ -913,7 +915,7 @@ class BaseController extends Controller {
 
 			// detach removed assignments (from selected multiselect options)
 			foreach ($attached_ids as $foreign_id) {
-				if (!in_array($foreign_id, $data[$field_name])) {
+				if (!in_array($foreign_id, $data[$field['field']])) {
 					$removed_entity = $attached_entities->where('id', '=', $foreign_id)->first();
 					$eloquent_relation->detach($foreign_id);
 
@@ -935,6 +937,8 @@ class BaseController extends Controller {
 					'text'		=> $changed_attributes->implode("\n"),
 					]);
 		}
+
+		return isset($changed_attributes) ? $changed_attributes : [];
 	}
 
 
@@ -955,7 +959,7 @@ class BaseController extends Controller {
 			// Error Message when no Model is specified - NOTE: delete_message must be an array of the structure below !
 			if (!Input::get('ids')) {
 				$message = 'No Entry For Deletion specified';
-				\Session::push('tmp_error_above_index_list', $message);
+				Session::push('tmp_error_above_index_list', $message);
 				return Redirect::back()->with('delete_message', ['message' => $message, 'class' => NamespaceController::get_route_name(), 'color' => 'danger']);
 			};
 
@@ -993,17 +997,17 @@ class BaseController extends Controller {
 		if (!$deleted && !$obj->force_delete) {
 			$message = 'Could not delete '.$class;
 			$color = 'danger';
-			\Session::push('tmp_error_above_form', $message);
+			Session::push('tmp_error_above_form', $message);
 		}
 		elseif (($deleted == $to_delete) || $obj->force_delete) {
 			$message = 'Successful deleted '.$class;
 			$color = 'success';
-			\Session::push('tmp_success_above_form', $message);
+			Session::push('tmp_success_above_form', $message);
 		}
 		else {
 			$message = 'Deleted '.$deleted.' out of '.$to_delete.' '.$class;
 			$color = 'warning';
-			\Session::push('tmp_warning_above_form', $message);
+			Session::push('tmp_warning_above_form', $message);
 		}
 
 		return Redirect::back()->with('delete_message', ['message' => $message, 'class' => $class, 'color' => $color]);

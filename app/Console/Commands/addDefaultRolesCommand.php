@@ -125,11 +125,13 @@ class addDefaultRolesCommand extends Command {
 			array(
 				'id' => 4,
 				'name' => 'technican',
+				'rank' => 40,
 				'description' => 'Allow only technical aspects',
 				),
 			array(
 				'id' => 5,
 				'name' => 'accounting',
+				'rank' => 40,
 				'description' => 'Only accounting relevant stuff',
 			));
 	}

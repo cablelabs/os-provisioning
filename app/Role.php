@@ -8,20 +8,8 @@ class Role extends BaseModel
 	use IsRole;
 
 	public $table = 'roles';
+
 	protected static $undeletables = ['admin', 'support'];
-
-	public static function rules($id=null)
-	{
-		return array(
-			'name' => 'required|unique:roles,name,'.$id.',id,deleted_at,NULL',
-		);
-	}
-
-
-	public static function view_headline()
-	{
-		return 'Roles';
-	}
 
 	/**
 	 * The attributes that are mass assignable.
@@ -32,10 +20,25 @@ class Role extends BaseModel
 		'name',
 		'title',
 		'description',
+		'rank',
 	];
 
+	public static function rules($id=null)
+	{
+		return array(
+			'name' => 'required|unique:roles,name,'.$id.',id,deleted_at,NULL',
+			'rank' => 'required|integer|digits_between:0,100'
+		);
+	}
+
+	public static function view_headline() : string
+	{
+		return 'Roles';
+	}
+
+
 	// View Icon
-	public static function view_icon()
+	public static function view_icon() : string
 	{
 		return '<i class="fa fa-user-circle text-info"></i>';
 	}
@@ -45,9 +48,9 @@ class Role extends BaseModel
 	{
 		return [
 			'table'			=> $this->table,
-			'index_header'	=> [$this->table . '.name'],
+			'index_header'	=> [$this->table . '.name', $this->table . '.rank', $this->table . '.description', ],
 			'header'		=> $this->name,
-			'order_by'		=> ['0' => 'desc'],
+			'order_by'		=> ['2' => 'desc'],
 		];
 	}
 
@@ -64,6 +67,4 @@ class Role extends BaseModel
 		$ret['Base']['Permissions']['view']['view'] = 'auth.permissions';
 		return $ret;
 	}
-
-
 }

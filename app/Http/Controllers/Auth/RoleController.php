@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Bouncer;
-use App\{ Role, User };
+use Bouncer, Module;
+use App\{ Ability, BaseModel, Role, User };
 use App\PermissionRole;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
@@ -12,44 +12,28 @@ class RoleController extends BaseController
 {
 	protected $edit_left_md_size = 5;
 	protected $edit_right_md_size = 7;
-	protected $many_to_many = [ User::class => 'users_ids'];
+	protected $many_to_many = [
+		[
+			'field' => 'users_ids',
+			'classes' => [User::class, Role::class]
+		]
+	];
 
 	public function view_form_fields($model = null)
 	{
 		return array(
 			['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
 			['form_type' => 'text', 'name' => 'title', 'description' => 'Title'],
-			// ['form_type' => 'text', 'name' => 'scope', 'description' => 'Scope'],
 			['form_type' => 'text', 'name' => 'description', 'description' => 'Description'],
+			['form_type' => 'text', 'name' => 'rank', 'description' => 'Rank', 'help' => trans('helper.assign_rank')],
 			['form_type' => 'select', 'name' => 'users_ids[]', 'description' => 'Assign Users',
 				'value' => $model->html_list(User::all(), 'login_name'),
 				'options' => [
 					'multiple' => 'multiple',
-					Bouncer::can('edit', User::class) ? '' : 'disabled' => 'true'],
+					(Bouncer::can('edit', User::class) && Bouncer::can('edit', Role::class)) ? '' : 'disabled' => 'true'],
 					'help' => trans('helper.assign_users'),
 					'selected' => $model->html_list($model->users, 'name')],
 		);
-	}
-
-
-	/**
-	 * Update right/permission by given role
-	 *
-	 * @param Request $request
-	 * @return mixed|string
-	 */
-	public function update_permission(Request $request)
-	{
-		try {
-			$data = $request->all();
-			$rightModel = new PermissionRole();
-			$ret = $rightModel->update_permission($data['authmethacore_id'], $data['authmethacore_right'], $data['authmethacore_right_value']);
-		} catch (\Exception $e) {
-			// @ToDo: Logging the Exception
-			//throw $e;
-			$ret = $e->getMessage();
-		}
-		return $ret;
 	}
 
 	/**

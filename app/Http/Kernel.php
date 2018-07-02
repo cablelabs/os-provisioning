@@ -26,11 +26,11 @@ class Kernel extends HttpKernel
 			\Illuminate\View\Middleware\ShareErrorsFromSession::class,
 			\App\Http\Middleware\VerifyCsrfToken::class,
 			\Illuminate\Routing\Middleware\SubstituteBindings::class,
-			\App\Http\Middleware\ScopeBouncer::class,
 		],
 		'api' => [
 			'throttle:60,1',
-			'bindings',
+			\App\Http\Middleware\CheckApiAbility::class,
+			\Illuminate\Routing\Middleware\SubstituteBindings::class,
 		],
 	];
 
@@ -49,8 +49,6 @@ class Kernel extends HttpKernel
 		'can'         => \Illuminate\Auth\Middleware\Authorize::class,
 		'adminRedirect' => \App\Http\Middleware\RedirectIfAuthenticated::class,
 		'throttle'	  => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-		'bindings'    => \Illuminate\Routing\Middleware\SubstituteBindings::class,
-		'apiuser' => \App\Http\Middleware\CheckApiUser::class,
 		'ccc'         => \Modules\Ccc\Http\Middleware\CccMiddleware::class,
 	];
 }

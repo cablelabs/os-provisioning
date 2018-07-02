@@ -361,7 +361,7 @@ class BaseViewController extends Controller {
 					break;
 
 				case 'password' :
-					$s .= Form::password($field['name']);
+					$s .= Form::password($field['name'], $options);
 					break;
 
 				case 'link':
@@ -458,7 +458,7 @@ finish:
 	 * @return: array()
 	 * @author: Christian Schramm
 	 */
-	public static function view_main_menus ()
+	public static function view_main_menus () : array
 	{
 		if (Session::has('menu'))
 			return Session::get('menu');

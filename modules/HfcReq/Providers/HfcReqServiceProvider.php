@@ -1,4 +1,6 @@
-<?php namespace Modules\Hfcreq\Providers;
+<?php
+
+namespace Modules\Hfcreq\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

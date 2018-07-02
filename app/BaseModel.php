@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Auth, DB, Module, Schema, Str;
+use Auth, DB, Module, Schema, Session, Str;
 use App\Http\Controllers\NamespaceController;
 use App\Extensions\Database\EmptyRelation as EmptyRelation;
 use Illuminate\Database\Eloquent\{ SoftDeletes, Model as Eloquent};
@@ -148,7 +148,7 @@ class BaseModel extends Eloquent
 		$context = $parts[0];
 
 		// check if requested relation is in module context
-		if (\Str::lower($context) == 'modules') {
+		if (Str::lower($context) == 'modules') {
 
 			// check if requested module is active
 			$module = $parts[1];
@@ -415,6 +415,9 @@ class BaseModel extends Eloquent
 	 */
 	public static function get_models() {
 
+		if (Session::has('models'))
+			return Session::get('models');
+
 		// models to be excluded from search
 		$exclude = array(
 			'AddressFunctionsTrait',
@@ -436,7 +439,7 @@ class BaseModel extends Eloquent
 			$model = str_replace(app_path()."/", "", $model);
 			$model = str_replace(".php", "", $model);
 			if (array_search($model, $exclude) === FALSE) {
-				array_push($result, 'App\\'.$model);
+				$result[$model] = 'App\\'.$model;
 			}
 		}
 
@@ -459,14 +462,14 @@ class BaseModel extends Eloquent
 				$model = preg_replace("|$path/(.*?)/Entities/|", "", $model);
 				$model = str_replace(".php", "", $model);
 				if (array_search($model, $exclude) === FALSE) {
-					array_push($result, "Modules\\$module\Entities\\".$model);
+					$result[$model] = "Modules\\$module\Entities\\".$model;
 				}
 			}
 		}
 
+		Session::put('models', $result);
 		return $result;
 	}
-
 
 	protected function _guess_model_name ($s)
 	{
@@ -590,12 +593,12 @@ class BaseModel extends Eloquent
 	protected function _chooseFulltextSearchAlgo($mode, $query) {
 
 		// search query is left truncated => simple search
-		if ((\Str::startsWith($query, "%")) || (\Str::startsWith($query, "*"))) {
+		if ((Str::startsWith($query, "%")) || (Str::startsWith($query, "*"))) {
 			$mode = 'simple';
 		}
 
 		// query contains . or : => IP or MAC => simple search
-		if ((\Str::contains($query, ":")) || (\Str::contains($query, "."))) {
+		if ((Str::contains($query, ":")) || (Str::contains($query, "."))) {
 			$mode = 'simple';
 		}
 
@@ -620,10 +623,10 @@ class BaseModel extends Eloquent
 			// replace wildcard chars
 			$query = str_replace("*", "%", $query);
 			// wrap with wildcards (if not given) => necessary because of the concatenation of all table rows
-			if (!\Str::startsWith($query, "%")) {
+			if (!Str::startsWith($query, "%")) {
 				$query = "%".$query;
 			}
-			if (!\Str::endsWith($query, "%")) {
+			if (!Str::endsWith($query, "%")) {
 				$query = $query."%";
 			}
 
@@ -637,7 +640,7 @@ class BaseModel extends Eloquent
 
 			$result = $this->_doSimpleSearch($models, $query, $preselect_field, $preselect_value);
 		}
-		elseif (\Str::startsWith($mode, 'index_')) {
+		elseif (Str::startsWith($mode, 'index_')) {
 
 			if ($scope == 'all') {
 				echo "Implement searching over all database tables";
@@ -846,7 +849,7 @@ class BaseModel extends Eloquent
 	{
 		// check from where the deletion request has been triggered and set the correct var to show information
 		$prev = explode('?', \URL::previous())[0];
-		$prev = \Str::lower($prev);
+		$prev = Str::lower($prev);
 
 		if ($this->delete_children) {
 			$children = $this->get_all_children();
@@ -859,11 +862,11 @@ class BaseModel extends Eloquent
 				// do not delete anything
 				if (!$child->delete()) {
 					$msg = "Cannot delete ".$this->get_model_name()." $this->id: ".$child->get_model_name()." $child->id cannot be deleted";
-					if (\Str::endsWith($prev, 'edit')) {
-						\Session::push('tmp_error_above_relations', $msg);
+					if (Str::endsWith($prev, 'edit')) {
+						Session::push('tmp_error_above_relations', $msg);
 					}
 					else {
-						\Session::push('tmp_error_above_index_list', $msg);
+						Session::push('tmp_error_above_index_list', $msg);
 					}
 					return false;
 				}
@@ -875,7 +878,7 @@ class BaseModel extends Eloquent
 			foreach ($children['n:m'] as $child)
 			{
 				$delete_method = 'deleteNtoM'.$child->get_model_name();
-				$msg_target = \Str::endsWith($prev, 'edit') ? 'tmp_error_above_relations' : 'tmp_error_above_index_list';
+				$msg_target = Str::endsWith($prev, 'edit') ? 'tmp_error_above_relations' : 'tmp_error_above_index_list';
 
 				if (!method_exists($this, $delete_method)) {
 					// Keep Pivot Entries and children if method is not specified and just log a warning message
@@ -883,7 +886,7 @@ class BaseModel extends Eloquent
 				}
 				else if (!$this->{$delete_method}($child)) {
 					$msg = "Cannot delete ".$this->get_model_name()." $this->id: n:m relation with ".$child->get_model_name()." $child->id. cannot be deleted";
-					\Session::push($msg_target, $msg);
+					Session::push($msg_target, $msg);
 					return false;
 				}
 			}
@@ -894,20 +897,20 @@ class BaseModel extends Eloquent
 		$deleted = $this->_delete();
 		if (!$deleted) {
 			$msg = "Could not delete ".$this->get_model_name()." $this->id";
-			if (\Str::endsWith($prev, 'edit')) {
-				\Session::push('tmp_error_above_relations', $msg);
+			if (Str::endsWith($prev, 'edit')) {
+				Session::push('tmp_error_above_relations', $msg);
 			}
 			else {
-				\Session::push('tmp_error_above_index_list', $msg);
+				Session::push('tmp_error_above_index_list', $msg);
 			}
 		}
 		else {
 			$msg = "Deleted ".$this->get_model_name()." $this->id";
-			if (\Str::endsWith($prev, 'edit')) {
-				\Session::push('tmp_success_above_relations', $msg);
+			if (Str::endsWith($prev, 'edit')) {
+				Session::push('tmp_success_above_relations', $msg);
 			}
 			else {
-				\Session::push('tmp_success_above_index_list', $msg);
+				Session::push('tmp_success_above_index_list', $msg);
 			}
 		}
 
