@@ -4,7 +4,7 @@
 
       <!-- ================== BEGIN BASE CSS STYLE ================== -->
       <!-- JQuery UI & Bootstrap -->
-      <link href="{{asset('components/assets-admin/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css')}}" rel="stylesheet" />
+      <link href="{{asset('components/assets-admin/plugins/jquery-ui/jquery-ui.min.css')}}" rel="stylesheet" />
       <link href="{{asset('components/assets-admin/plugins/bootstrap4/css/bootstrap.min.css')}}" rel="stylesheet" />
 
       <!-- icons -->
