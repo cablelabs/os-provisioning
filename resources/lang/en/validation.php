@@ -49,6 +49,7 @@ return [
 		"array"   => "The :attribute may not have more than :max items.",
 	],
 	"mimes"                => "The :attribute must be a file of type: :values.",
+	'mimetypes'			=>  'Wrong mime type. See help!',
 	"min"                  => [
 		"numeric" => "The :attribute must be at least :min.",
 		"file"    => "The :attribute must be at least :min kilobytes.",

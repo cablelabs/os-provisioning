@@ -52,6 +52,7 @@ return [
 		'array'   => ':attribute darf nicht mehr als :max Elemente haben.',
 	],
 	'mimes'                => ':attribute muss den Dateityp :values haben.',
+	'mimetypes'			=>  'Falscher MimeType. Siehe Hilfe!',
 	'min'                  => [
 		'numeric' => ':attribute muss mindestens :min sein.',
 		'file'    => ':attribute muss mindestens :min Kilobytes groß sein.',

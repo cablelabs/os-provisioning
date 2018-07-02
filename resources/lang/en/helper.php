@@ -30,6 +30,7 @@ return [
 	'Company_Management'			=> 'Comma separated list of names',
 	'Company_Directorate'			=> 'Comma separated list of names',
 	'Company_TransferReason'		=> 'Template from all Invoice class data field keys - Contract Number and Invoice Nr is default',
+	'conn_info_template' 			=> 'Tex Template used to Create Connection Information on the Contract Page for a Customer',
 
 	//CostCenterController
 	'CostCenter_BillingMonth'		=> 'Accounting for yearly charged items - corresponds to the month the invoices are created for. Default: 6 (June) - if not set. Please be careful to not miss any payments when changing this!',
@@ -57,6 +58,7 @@ return [
 	//SepaAccountController
 	'SepaAccount_InvoiceHeadline'	=> 'Replaces Headline in Invoices created for this Costcenter',
 	'SepaAccount_InvoiceText'		=> 'The Text of the separate four \'Invoice Text\'-Fields is automatically chosen dependent on the total charge and SEPA Mandate and is set in the appropriate Invoice for the Customer. It is possible to use all data field keys of the Invoice Class as placeholder in the form of {fieldname} to build a kind of template. These are replaced by the actual value of the Invoice.',
+	'tex_template' 					=> 'TeX Template',
 
 	// SettlementrunController
 	'settlement_verification' 		=> 'If activated it\'s not possible to repeat the Settlement Run. Customer Invoices are only visible when this checkbox is activated.',
