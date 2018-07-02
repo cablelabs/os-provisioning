@@ -20,6 +20,7 @@ aaa session-id common
 clock timezone CET 1
 clock summer-time CEST recurring last Sun Mar 2:00 last Sun Oct 3:00
 cable admission-control preempt priority-voice
+cable util-interval 30
 !
 !
 ip subnet-zero
@@ -35,7 +36,7 @@ no ip dhcp relay information check
 ip cef
 ip ssh version 2
 login block-for 600 attempts 3 within 60
-login quiet-mode access-class 13
+login quiet-mode access-class mgmt
 !
 !
 multilink bundle-name authenticated
