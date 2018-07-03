@@ -200,14 +200,14 @@ class Modem extends \BaseModel {
 			$ret['dummy']['Mta']['relation'] = $this->mtas;
 		}
 
+		// only show endpoints (and thus the ability to create a new one) for public CPEs
+		if ($this->public) {
+			$ret['dummy']['Endpoint']['class'] = 'Endpoint';
+			$ret['dummy']['Endpoint']['relation'] = $this->endpoints;
+		}
+
 		if (\Module::collections()->has('ProvVoipEnvia'))
 		{
-			// only show endpoints (and thus the ability to create a new one) for public CPEs
-			if ($this->public) {
-				$ret['dummy']['Endpoint']['class'] = 'Endpoint';
-				$ret['dummy']['Endpoint']['relation'] = $this->endpoints;
-			}
-
 			$ret['dummy']['EnviaContract']['class'] = 'EnviaContract';
 			$ret['dummy']['EnviaContract']['relation'] = $this->enviacontracts;
 			$ret['dummy']['EnviaContract']['options']['hide_create_button'] = 1;
