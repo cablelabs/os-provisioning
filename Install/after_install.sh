@@ -73,19 +73,19 @@ cd "$dir"
 # L5 setup
 install -Dm640 -o apache -g root /dev/null /var/www/nmsprime/storage/logs/laravel.log
 chown apache /var/www/nmsprime/storage/logs/laravel.log
-php artisan clear-compiled
-php artisan optimize
+/opt/rh/rh-php71/root/usr/bin/php artisan clear-compiled
+/opt/rh/rh-php71/root/usr/bin/php artisan optimize
 
 # key:generate needs .env in root dir – create symlink to our env file
 ln -srf /etc/nmsprime/env/global.env "$dir/.env"
-php artisan key:generate
+/opt/rh/rh-php71/root/usr/bin/php artisan key:generate
 # remove the symlink and create empty .env with comment
 rm -f "$dir/.env"
 echo "# Use /etc/nmsprime/env/*.env files for configuration" > "$dir/.env"
 
-php artisan migrate
+/opt/rh/rh-php71/root/usr/bin/php artisan migrate
 # create default user roles to be later assigned to users
-php artisan nms:addDefaultRoles
+/opt/rh/rh-php71/root/usr/bin/php artisan nms:addDefaultRoles
 
 # Note: needs to run last. storage/logs is only available after artisan optimize
 chown -R apache $dir/storage $dir/bootstrap/cache

@@ -4,9 +4,9 @@ source scl_source enable rh-php71
 dir="/var/www/nmsprime"
 
 cd "$dir"
-php artisan clear-compiled
-php artisan optimize
-php artisan migrate
-php artisan queue:restart
+/opt/rh/rh-php71/root/usr/bin/php artisan clear-compiled
+/opt/rh/rh-php71/root/usr/bin/php artisan optimize
+/opt/rh/rh-php71/root/usr/bin/php artisan migrate
+/opt/rh/rh-php71/root/usr/bin/php artisan queue:restart
 
 systemctl reload httpd
