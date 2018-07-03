@@ -22,7 +22,9 @@ class InstallDhcpdRename extends BaseMigration {
 			mkdir($new, 0750, true);
 			rename("$old/log.conf", "$new/log.conf");
 		}
-		mkdir("$new/cmts_gws", 0750, true);
+
+		if (!file_exists("$new/cmts_gws"))
+			mkdir("$new/cmts_gws", 0750, true);
 
 		// move dhcp config to new folder
 		// could be either dhcpd.conf or dhcpd.conf.rpmsave
