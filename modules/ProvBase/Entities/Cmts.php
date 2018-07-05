@@ -441,39 +441,42 @@ class Cmts extends \BaseModel {
 				$pos = strrpos($data_tmp, ',');
 				$data .= substr_replace($data_tmp, '', $pos, 1).";";
 			}
-			$data .= "\n\n\t\t".'pool'."\n\t\t{\n";
-			$data .= $range;
 
-			switch ($type)
-			{
-				case 'CM':
-					$data .= "\n\t\t\t".'allow members of "CM";';
-					$data .= "\n\t\t\t".'deny unknown-clients;';
-					break;
+			if ($range) {
+				$data .= "\n\n\t\t".'pool'."\n\t\t{\n";
+				$data .= $range;
 
-				case 'CPEPriv':
-					$data .= "\n\t\t\t".'allow members of "Client";';
-					$data .= "\n\t\t\t".'deny members of "Client-Public";';
-					// $data .= "\n\t\t\t".'allow known-clients;';
-					break;
+				switch ($type)
+				{
+					case 'CM':
+						$data .= "\n\t\t\t".'allow members of "CM";';
+						$data .= "\n\t\t\t".'deny unknown-clients;';
+						break;
 
-				case 'CPEPub':
-					$data .= "\n\t\t\t".'allow members of "Client-Public";';
-					// $data .= "\n\t\t\t".'allow unknown-clients;';
-					// $data .= "\n\t\t\t".'allow known-clients;';
-					break;
+					case 'CPEPriv':
+						$data .= "\n\t\t\t".'allow members of "Client";';
+						$data .= "\n\t\t\t".'deny members of "Client-Public";';
+						// $data .= "\n\t\t\t".'allow known-clients;';
+						break;
 
-				case 'MTA':
-					$data .= "\n\t\t\t".'allow members of "MTA";';
-					// $data .= "\n\t\t\t".'allow known-clients;';
-					break;
+					case 'CPEPub':
+						$data .= "\n\t\t\t".'allow members of "Client-Public";';
+						// $data .= "\n\t\t\t".'allow unknown-clients;';
+						// $data .= "\n\t\t\t".'allow known-clients;';
+						break;
 
-				default:
-					// code...
-					break;
+					case 'MTA':
+						$data .= "\n\t\t\t".'allow members of "MTA";';
+						// $data .= "\n\t\t\t".'allow known-clients;';
+						break;
+
+					default:
+						// code...
+						break;
+				}
+
+				$data .= "\n\t\t".'}';
 			}
-
-			$data .= "\n\t\t".'}';
 
 			// append additional options
 			if ($options)
