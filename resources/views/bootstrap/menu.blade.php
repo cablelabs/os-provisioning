@@ -8,7 +8,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a href="javascript:;" class="navbar-brand d-none d-sm-none d-md-block"><span class="navbar-logo"></span> <span>{{$header}}</span></a>
+        <a href="javascript:;" class="navbar-brand d-none d-sm-none d-md-block">
+        	<span class="navbar-logo"></span>
+        	<span>{{$header}}</span>
+        </a>
       	{{-- end mobile sidebar expand / collapse button --}}
 			<div class="col tab-overflow p-t-5">
 				<ul class="nav nav-pills p-t-5">
@@ -53,38 +56,57 @@
 					</li>
 				@endif
 				<li class="nav-item dropdown m-r-20">
-					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<a id="navbarDropdown"
+						class="nav-link dropdown-toggle"
+						href="#"
+						role="button"
+						data-toggle="dropdown"
+						aria-haspopup="true"
+						aria-expanded="false">
 						<i class="fa fa-user-circle-o fa-lg d-inline" aria-hidden="true"></i>
-						<span class="d-none d-sm-none d-md-inline">{{ $user->first_name.' '. $user->last_name }}</span> <b class="caret"></b>
+						<span class="d-none d-sm-none d-md-inline">
+							{{ $user->first_name.' '. $user->last_name }}
+						</span>
+						<b class="caret"></b>
 					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0;left:auto;">
-						<a class="dropdown-item" href="{{route('User.edit', $user->id)}}"> <i class="fa fa-cog" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}</a>
-						@if (Bouncer::can('edit', App\User::class))
-							<a class="dropdown-item" href="{{route('User.index')}}"><i class="fa fa-cogs" aria-hidden="true"></i>  {{ \App\Http\Controllers\BaseViewController::translate_view('UserGlobSettings', 'Menu')}}</a>
+						<a class="dropdown-item" href="{{route('User.edit', $user->id)}}">
+							<i class="fa fa-cog" aria-hidden="true"></i>
+							{{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}
+						</a>
+						@if (Bouncer::can('update', App\User::class))
+							<a class="dropdown-item" href="{{route('User.index')}}">
+								<i class="fa fa-cogs" aria-hidden="true"></i>
+								{{ \App\Http\Controllers\BaseViewController::translate_view('UserGlobSettings', 'Menu')}}
+							</a>
 						@endif
-						@if (Bouncer::can('edit', App\Role::class))
-							<a class="dropdown-item" href="{{route('Role.index')}}"><i class="fa fa-users" aria-hidden="true"></i> {{ \App\Http\Controllers\BaseViewController::translate_view('UserRoleSettings', 'Menu')}}</a>
+						@if (Bouncer::can('update', App\Role::class))
+							<a class="dropdown-item" href="{{route('Role.index')}}">
+								<i class="fa fa-users" aria-hidden="true"></i>
+								{{ \App\Http\Controllers\BaseViewController::translate_view('UserRoleSettings', 'Menu')}}
+							</a>
 						@endif
 						<div class="dropdown-divider"></div>
-						{{ Form::open(['url' => route('logout.post')])}}
-						<button class="dropdown-item" href="#"><i class="fa fa-sign-out" aria-hidden="true"></i>
-							{{ \App\Http\Controllers\BaseViewController::translate_view('Logout', 'Menu')}}
-						</button>
-						{{ Form::close() }}
+						{!! Form::open(['url' => route('logout.post')]) !!}
+							<button class="dropdown-item" href="#">
+								<i class="fa fa-sign-out" aria-hidden="true"></i>
+								{{ \App\Http\Controllers\BaseViewController::translate_view('Logout', 'Menu')}}
+							</button>
+						{!!Form::close() !!}
 					</div>
 				</li>
 			</ul>
 		{{-- end header navigation right --}}
 		<div class="search-form bg-white">
-			{{ Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET'), 'simple') }}
-			{{ Form::hidden('mode', 'simple') }}
-			{{ Form::hidden('scope', 'all') }}
+			{!! Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET'), 'simple') !!}
+			{!! Form::hidden('mode', 'simple') !!}
+			{!! Form::hidden('scope', 'all') !!}
 			<button class="search-btn" type="submit">
 				<i class="fa fa-search fa-2x" aria-hidden="true"></i>
 			</button>
 			<input id="globalsearch" type="text" name="query" class="form-control navbar" placeholder="{{\App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search')}}">
 			<a href="#" class="close" data-dismiss="navbar-search"><i class="fa fa-angle-up fa-2x" aria-hidden="true"></i></a>
-			{{ Form::close() }}
+			{!! Form::close() !!}
 		</div>
 	</div> {{-- End ROW --}}
 </nav>

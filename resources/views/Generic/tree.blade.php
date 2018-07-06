@@ -3,7 +3,7 @@
 @section('content_top')
 
 	<li class="active"><a href={{route($route_name.'.index')}}>
-	{{\App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null)}}
+	{!!\App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null) !!}
 	{{ \App\Http\Controllers\BaseViewController::translate_view($route_name.'s', 'Header', 2) }}</a>
 	</li>
 

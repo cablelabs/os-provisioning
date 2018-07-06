@@ -35,7 +35,7 @@
           <ul class="sub-menu">
           @foreach ($typearray['submenu'] as $type => $valuearray)
           <li id="{{  Str::slug($type,'_') }}">
-            <a href="{{route($valuearray['link'])}}">
+            <a href="{{route($valuearray['link'])}}" style="overflow: hidden; white-space: nowrap;">
               <i class="fa fa-fw {{ $valuearray['icon'] }}"></i>
               <span>{{ $type }}</span>
             </a>
@@ -66,8 +66,8 @@
             </li>
             <ul class="sub-menu d-block" style="list-style-position: inside;">
               @foreach ($network->get_all_cluster_to_net() as $cluster)
-                <li id="{{$cluster->name}}" class="has-sub" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
-                  <a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}">
+                <li id="{{$cluster->name}}" class="has-sub">
+                  <a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
                     <i class="fa fa-circle-thin text-info"></i>
                     {{$cluster->name}}
                   </a>
