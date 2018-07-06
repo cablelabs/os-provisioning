@@ -115,10 +115,10 @@ class BaseRoute {
 		]);
 
 		// edit
-		Route::get("$name/{{$name}}/edit", [
+		Route::get("$name/{{$name}}", [
 			'as' => $name.'.edit',
 			'uses' => $controller.'@edit',
-			'middleware' => ['web', "can:edit,".$models[$name]],
+			'middleware' => ['web', "can:view,".$models[$name]],
 			$options,
 		]);
 
@@ -133,14 +133,14 @@ class BaseRoute {
 		Route::patch("$name/{{$name}}", [
 			'as' => $name.'.update',
 			'uses' => $controller.'@update',
-			'middleware' => ['web', "can:edit,".$models[$name]],
+			'middleware' => ['web', "can:update,".$models[$name]],
 			$options,
 		]);
 
 		Route::put("$name/{{$name}}", [
 			'as' => $name.'.update',
 			'uses' => $controller.'@update',
-			'middleware' => ['web', "can:edit,".$models[$name]],
+			'middleware' => ['web', "can:update,".$models[$name]],
 			$options,
 		]);
 
@@ -197,14 +197,14 @@ class BaseRoute {
 			Route::patch("$name/{{$name}}", [
 				'as' => $name.'.api_update',
 				'uses' => $controller.'@api_update',
-				'middleware' => ['api', 'auth.basic', "can:edit,".$models[$name]],
+				'middleware' => ['api', 'auth.basic', "can:update,".$models[$name]],
 				$options,
 			]);
 
 			Route::put("$name/{{$name}}", [
 				'as' => $name.'.api_update',
 				'uses' => $controller.'@api_update',
-				'middleware' => ['api', 'auth.basic', "can:edit,".$models[$name]],
+				'middleware' => ['api', 'auth.basic', "can:update,".$models[$name]],
 				$options,
 			]);
 
@@ -236,29 +236,40 @@ class BaseRoute {
 		Route::group($attributes, $callback);
 	}
 
-
 	/**
 	 * The following functions are simple helpers to adapt automatic authentication stuff
 	 */
+	public static function appendMiddleware($action = null)
+	{
+		if (array_key_exists('middleware', $action))
+			array_unshift($action['middleware'], 'web');
+		else
+			$action['middleware'] = ['web','auth'];
+
+		return $action;
+	}
+
+
 	public static function get($uri, $action = null)
 	{
-		$action['middleware'] = in_array('middleware', $action) ? ['web'] : ['web','auth'];
+		$action = self::appendMiddleware($action);
+
 		return Route::get($uri, $action);
 	}
 
 
-	// requires edit permissions!!!
 	public static function post($uri, $action = null)
 	{
-		$action['middleware'] = in_array('middleware', $action) ? ['web'] : ['web','auth'];
+		$action = self::appendMiddleware($action);
+
 		return Route::post($uri, $action);
 	}
 
 
-	// requires edit permissions!!!
 	public static function put($uri, $action = null)
 	{
-		$action['middleware'] = in_array('middleware', $action) ? ['web'] : ['web','auth'];
+		$action = self::appendMiddleware($action);
+
 		return Route::put($uri, $action);
 	}
 }

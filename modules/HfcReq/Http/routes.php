@@ -31,7 +31,7 @@ BaseRoute::group([], function() {
 	Route::delete('NetElementType/{netelementtype}/detach_all', [
 		'as' => 'NetElementType.detach_all',
 		'uses' => 'Modules\HfcReq\Http\Controllers\NetElementTypeController@detach_all',
-		'middleware' => ['can:update,Modules\HfcReq\Entities\NetElementType'],
+		'middleware' => ['can:delete,Modules\HfcReq\Entities\NetElementType'],
 	]);
 
 	BaseRoute::get('NetElement/{id}/delete', [
@@ -43,7 +43,7 @@ BaseRoute::group([], function() {
 	BaseRoute::get('NetElement/{id}/controlling/{parameter}/{index}', [
 		'as' => 'NetElement.controlling_edit',
 		'uses' => 'Modules\HfcSnmp\Http\Controllers\SnmpController@controlling_edit',
-		'middleware' => ['can:edit,Modules\HfcReq\Entities\NetElementType'],
+		'middleware' => ['can:view,Modules\HfcReq\Entities\NetElementType'],
 	]);
 
 	BaseRoute::put('NetElement/{id}/controlling/{parameter}/{index}', [
