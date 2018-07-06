@@ -44,7 +44,7 @@ class UserController extends BaseController {
 				'value' => $model->html_list(Role::all(), 'name'),
 				'options' => [
 					'multiple' => 'multiple',
-					(Bouncer::can('edit', User::class) && Bouncer::can('edit', Role::class)) ? '' : 'disabled' => 'true'],
+					(Bouncer::can('update', User::class) && Bouncer::can('update', Role::class)) ? '' : 'disabled' => 'true'],
 				'help' => trans('helper.assign_role'),
 				'selected' => $model->html_list($model->roles, 'name')]
 		];

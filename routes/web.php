@@ -67,7 +67,7 @@ BaseRoute::group([], function() {
 	BaseRoute::post('role/AssignAbility', [
 		'as' => 'Ability.assign',
 		'uses' => 'Auth\RoleController@assign_Ability',
-		'middleware' => ["can:edit,App\Role"],
+		'middleware' => ["can:update,App\Role"],
 	]);
 
 	BaseRoute::post('role/DeleteAbility', [
@@ -79,7 +79,7 @@ BaseRoute::group([], function() {
 	BaseRoute::post('role/UpdateAbility', [
 		'as' => 'Ability.update',
 		'uses' => 'Auth\RoleController@update_permission',
-		'middleware' => ["can:edit,App\Role"],
+		'middleware' => ["can:update,App\Role"],
 	]);
 
 });

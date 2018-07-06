@@ -2,6 +2,7 @@
 
 namespace Modules\HfcReq\Entities;
 
+use Session;
 use Modules\HfcBase\Entities\IcingaObjects;
 
 class NetElement extends \BaseModel {
@@ -117,11 +118,10 @@ class NetElement extends \BaseModel {
 		return 'warning';
 	}
 
+	//for empty relationships
 	public function get_elementtype_name()
 	{
-	$type = $this->netelementtype ? $this->netelementtype->name : '';
-
-	return $type;
+		return $this->netelementtype ? $this->netelementtype->name : '';
 	}
 
 	public function view_belongs_to ()
@@ -226,12 +226,15 @@ class NetElement extends \BaseModel {
 	 */
 	public function get_all_cluster_to_net ()
 	{
-		// return NetElement::where('net','=',$this->id)->get();
+		if (Session::has('Net-' . $this->name))
+			return Session::get('Net-' . $this->name);
 
 		$cluster_id = array_search('Cluster', NetElementType::$undeletables);
-		return NetElement::where('netelementtype_id', '=', $cluster_id)->where('net','=',$this->id)->orderBy('name')->get();
+		$return = NetElement::where('netelementtype_id', '=', $cluster_id)->where('net', '=', $this->id)->orderBy('name')->get();
 
-		// return NetElement::where('type', '=', 'CLUSTER')->where('net','=',$this->id)->get();
+		Session::put('Net-' . $this->name, $return);
+
+		return $return;
 	}
 
 

@@ -45,7 +45,8 @@ class GlobalConfigController extends BaseController {
 	/**
 	 * Returns Global Config Index Page with links to the configurable Modules
 	 *
-	 * @author Nino Ryschawy, Christian Schramm
+	 * @author Nino Ryschawy
+	 * @author Christian Schramm
 	 */
 	public function index()
 	{
@@ -89,7 +90,6 @@ class GlobalConfigController extends BaseController {
 			$form_fields[$j] = BaseViewController::add_html_string($fields[$j], 'edit');
 		}
 
-		//dd($links, $view_header, $route_name, $module_model, $form_fields);
 		return \View::make('GlobalConfig.index', $base_controller->compact_prep_view(compact('links', 'view_header', 'route_name', 'module_model', 'form_fields')));
 	}
 }

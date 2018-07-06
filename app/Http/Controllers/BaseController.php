@@ -760,13 +760,12 @@ class BaseController extends Controller {
 		$data = $controller->prepare_input_post_validation($data);
 
 		foreach ($obj['original'] as $key => $orig_value) {
-			if (isset($data[$key]) && $data[$key] !== $orig_value )
+			if (isset($data[$key]) && $data[$key] != $orig_value )
 			$obj->$key = $data[$key];
 		}
 
 		$changed = $obj->getDirty();
 		$changed_many = [];
-
 		// update timestamp, this forces to run all observer's
 		if (!empty($changed)) {
 			$obj->updated_at = \Carbon\Carbon::now(Config::get('app.timezone'));
@@ -780,7 +779,7 @@ class BaseController extends Controller {
 		// create messages depending on error state created while observer execution
 		// TODO: check if giving msg/color to route is still wanted or obsolete by the new tmp_*_above_* messages format
 
-		if (empty($changed) && empty($changed_many)) {
+		if (empty($changed) && $changed_many->isEmpty()) {
 			$msg = 'There was no new Input! - No changes were saved to the Database';
 			$color = 'info';
 			Session::push('tmp_info_above_form', $msg);
@@ -885,7 +884,7 @@ class BaseController extends Controller {
 	{
 		foreach ($this->many_to_many as $key => $field) {
 
-			if 	(isset($field['classes']) && isset($data[$field['field']]) &&
+			if 	(isset($field['classes']) &&
 				(Bouncer::cannot('edit', $field['classes'][0]) || Bouncer::cannot('edit', $field['classes'][1]))) {
 					Session::push('error',"You are not allowed to edit {$field['classes'][0]} or {$field['classes'][1]}");
 					continue;
