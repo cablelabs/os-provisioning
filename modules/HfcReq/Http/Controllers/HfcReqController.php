@@ -136,19 +136,6 @@ class HfcReqController extends \BaseController {
 		}
 	}
 
-
-	/**
-	 * Detach an existing OID from the NetElementType - since we use pivot table parameter with own MVC we can use standard destroy route
-	 */
-	// public function detach($id)
-	// {
-	// 	$devtype = NetElementType::findOrFail($id);
-	// 	$devtype->oids()->detach(array_keys(\Request::input('ids')));
-
-	// 	return \Redirect::back();
-	// }
-
-
 	/**
 	 * Detach all attached OIDs from a NetElementType
 	 */

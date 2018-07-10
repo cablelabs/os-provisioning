@@ -1,4 +1,6 @@
-<?php namespace App\Exceptions;
+<?php
+
+namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Auth\AuthenticationException;
@@ -39,8 +41,7 @@ class Handler extends ExceptionHandler {
 	public function render($request, Exception $exception)
 	{
 		// Auth Error Messages
-		if ($exception instanceof AuthException)
-		{
+		if ($exception instanceof AuthException) {
 			$msg = "AUTH failed: ";
 			$msg .= \Request::getClientIP()." tried to access ".\Request::getRequestUri();
 			$msg .= " (".$exception->getMessage().")";
@@ -56,10 +57,11 @@ class Handler extends ExceptionHandler {
 			/* return redirect(route('Auth.login'))->with('message', 'You page session expired. Please try again'); */
 		}
 
+
 		return parent::render($request, $exception);
 	}
 
-	    /**
+	/**
      * Convert an authentication exception into an unauthenticated response.
      *
      * @param  \Illuminate\Http\Request  $request

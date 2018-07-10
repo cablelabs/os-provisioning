@@ -55,7 +55,7 @@ class LoginController extends Controller
     /**
      * Show Login Page
      *
-     * @return type view
+     * @return view
      */
     public function showLoginForm()
     {
