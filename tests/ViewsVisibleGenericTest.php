@@ -1,5 +1,8 @@
 <?php
 
+namespace Tests;
+
+use Route;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -40,8 +43,8 @@ class ViewsVisibleGenericTest extends TestCase
 
 		$this->_get_routes_blacklist();
 		$this->_get_routes_to_test();
-		$this->_get_models();
 		$this->_get_user();
+		$this->_get_models();
 		$this->_get_global_config();
 
 		return $app;
@@ -91,6 +94,8 @@ class ViewsVisibleGenericTest extends TestCase
 			'*.dumpall',
 			'*.fulltextSearch',
 			'*.store',
+			'*.detach_all',
+			'*.'
 		];
 	}
 
@@ -237,6 +242,8 @@ class ViewsVisibleGenericTest extends TestCase
 			}
 			\Log::debug($msg);
 
+			echo "\nVisit ". $route->getName();
+
 			// Filter only '*.index' routes and ignore $ignores array
 			if ((\Str::endswith($route->getName(), '.index'))) {
 
@@ -275,7 +282,6 @@ class ViewsVisibleGenericTest extends TestCase
 	protected function _testGenericMVCIndexView($route) {
 
 		/* $controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]); */
-
 		// Index Page
 		$this->actingAs($this->user)
 			->visit($route->getPath())

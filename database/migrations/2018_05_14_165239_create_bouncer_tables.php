@@ -1,8 +1,8 @@
 <?php
 
-use Silber\Bouncer\Database\Models;
 
 use App\{Role, User};
+use Silber\Bouncer\Database\Models;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
