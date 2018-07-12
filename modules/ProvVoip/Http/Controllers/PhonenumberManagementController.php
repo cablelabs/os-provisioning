@@ -2,6 +2,7 @@
 
 namespace Modules\ProvVoip\Http\Controllers;
 
+use Bouncer, Session;
 use Modules\ProvVoip\Entities\{CarrierCode,EkpCode, Phonenumber, PhonenumberManagement, TRCClass};
 
 class PhonenumberManagementController extends \BaseController {
@@ -19,13 +20,10 @@ class PhonenumberManagementController extends \BaseController {
 	 */
 	public function create() {
 
-		if (
-			(!\Input::has('phonenumber_id'))
-			||
-			!(Phonenumber::find(\Input::get('phonenumber_id')))
-		) {
+		if ((!\Input::has('phonenumber_id')) ||
+			!(Phonenumber::find(\Input::get('phonenumber_id')))) {
 			$this->edit_view_save_button = false;
-			\Session::push('tmp_error_above_form', 'Cannot create phonenumbermanagement – phonenumber ID missing or phonenumber not found');
+			Session::push('tmp_error_above_form', 'Cannot create phonenumbermanagement – phonenumber ID missing or phonenumber not found');
 		}
 
 		return parent::create();
@@ -44,7 +42,7 @@ class PhonenumberManagementController extends \BaseController {
 				$mgmt = PhonenumberManagement::find($id);
 				$mgmt->phonenumber->contract_external_id = null;
 				$mgmt->phonenumber->save();
-				\Session::push('tmp_info_above_form', 'Removed envia TEL contract reference. This can be restored via „Get envia TEL contract reference“.');
+				Session::push('tmp_info_above_form', 'Removed envia TEL contract reference. This can be restored via „Get envia TEL contract reference“.');
 				return \Redirect::back();
 			}
 		}
@@ -317,16 +315,10 @@ class PhonenumberManagementController extends \BaseController {
 	 */
 	public static function _get_envia_management_jobs($phonenumbermanagement) {
 
-		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
-
-		// check if user has the right to perform actions against envia TEL API
-		// if not: don't show any actions
-		try {
-			\App\Http\Controllers\Auth\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
-		}
-		catch (AuthException $ex) {
+		if (Bouncer::cannot('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia'))
 			return null;
-		}
+
+		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
 
 		return $provvoipenvia->get_jobs_for_view($phonenumbermanagement, 'phonenumbermanagement');
 	}

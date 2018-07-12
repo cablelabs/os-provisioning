@@ -2,13 +2,11 @@
 
 namespace Acme\Validators;
 
+use File, Log, IBAN;
 use Models\Configfiles;
 use Modules\BillingBase\Entities\Product;
-
-use File , Log, IBAN;
-
-
 use Modules\ProvVoip\Entities\PhonebookEntry;
+
 
 /*
  * Our own ExtendedValidator Class

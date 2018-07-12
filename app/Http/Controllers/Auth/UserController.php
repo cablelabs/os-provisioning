@@ -23,10 +23,12 @@ class UserController extends BaseController {
 	{
 		$current_user = Auth::user();
 		$current_user_rank = $current_user->getHighestRank();
-		$user_model_rank = isset($model) ? $model->getHighestRank() : 0;
+		$user_model_rank = $model->exists ? $model->getHighestRank() : 0;
 
-		if 	($model->exists && (($current_user_rank < $user_model_rank)  ||
-			($current_user_rank == $user_model_rank && $current_user != $model)))
+		if 	($model->exists &&
+			 $current_user != $model &&
+			(($current_user_rank < $user_model_rank)  ||
+			 ($current_user_rank == $user_model_rank)))
 			abort(403, 'not authorized to edit this user');
 
 		return [

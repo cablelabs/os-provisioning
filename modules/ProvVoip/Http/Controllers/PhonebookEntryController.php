@@ -2,6 +2,7 @@
 
 namespace Modules\ProvVoip\Http\Controllers;
 
+use Bouncer;
 use Modules\ProvVoip\Entities\{PhonebookEntry, PhonenumberManagement};
 
 class PhonebookEntryController extends \BaseController {
@@ -20,11 +21,8 @@ class PhonebookEntryController extends \BaseController {
 	 */
 	public function create() {
 
-		if (
-			(!\Input::has('phonenumbermanagement_id'))
-			||
-			!(PhonenumberManagement::find(\Input::get('phonenumbermanagement_id')))
-		) {
+		if ((!\Input::has('phonenumbermanagement_id')) ||
+			!(PhonenumberManagement::find(\Input::get('phonenumbermanagement_id')))) {
 			$this->edit_view_save_button = false;
 			\Session::push('tmp_error_above_form', 'Cannot create phonebookentry – phonenumbermanagement ID missing or phonenumbermanagement not found');
 		}
@@ -226,16 +224,10 @@ class PhonebookEntryController extends \BaseController {
 	 */
 	public static function _get_envia_management_jobs($phonebookentry) {
 
-		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
-
-		// check if user has the right to perform actions against envia TEL API
-		// if not: don't show any actions
-		try {
-			\App\Http\Controllers\Auth\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
-		}
-		catch (AuthException $ex) {
+		if (Bouncer::cannot('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia'))
 			return null;
-		}
+
+		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
 
 		return $provvoipenvia->get_jobs_for_view($phonebookentry, 'phonebookentry');
 	}

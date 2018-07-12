@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Module;
+use Bouncer, Module, Str;
 
 class GlobalConfigController extends BaseController {
 
@@ -35,7 +35,7 @@ class GlobalConfigController extends BaseController {
 	public function prepare_input($data) {
 
 		// ISO 3166 country codes are uppercase
-		$data['default_country_code'] = \Str::upper($data['default_country_code']);
+		$data['default_country_code'] = Str::upper($data['default_country_code']);
 
 		$data = parent::prepare_input($data);
 		return $data;
@@ -56,7 +56,7 @@ class GlobalConfigController extends BaseController {
         $view_header = BaseViewController::translate_view("Global Configurations", 'Header');
 		$route_name = 'Config.index';
 
-		$enabled = \Module::enabled();
+		$enabled = Module::enabled();
 		$module_controller = [0 => $this];
 		$module_model = [0 => static::get_model_obj()->first()];
 
@@ -64,15 +64,17 @@ class GlobalConfigController extends BaseController {
 						'link' => 'GlobalConfig']
 					];
 		$i = 1;
+
 		foreach ($enabled as $module) {
 			$mod_path = explode('/', $module->getPath());
 			$tmp = end($mod_path);
 
 			$mod_controller_name = 'Modules\\' . $tmp . '\\Http\\Controllers\\' . $tmp . 'Controller';
+			$mod_model_namespace = 'Modules\\' . $tmp . '\\Entities\\' . $tmp;
 			$mod_controller = new $mod_controller_name;
 
-			if (method_exists($mod_controller, 'view_form_fields')) {
-				$mod_model_namespace = 'Modules\\' . $tmp . '\\Entities\\' . $tmp;
+			if (method_exists($mod_controller, 'view_form_fields') &&
+				Bouncer::can('view', $mod_model_namespace)) {
 				$mod_model = new $mod_model_namespace;
 
 				$module_controller[$i] = $mod_controller;

@@ -27,7 +27,7 @@ class Role extends BaseModel
 	{
 		return array(
 			'name' => 'required|unique:roles,name,'.$id.',id,deleted_at,NULL',
-			'rank' => 'required|integer|digits_between:0,100'
+			'rank' => 'required|integer|max:100|min:0'
 		);
 	}
 

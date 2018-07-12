@@ -1,7 +1,7 @@
 <?php
 return[
 	'MenuItems' => [
-		'Config page' => [
+		'Config Page' => [
 			'link' => 'Config.index',
 			'icon' => 'fa-book',
 			'class' => App\GlobalConfig::class
