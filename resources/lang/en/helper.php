@@ -1,9 +1,15 @@
 <?php
 
 return [
-/**
- * Index Page - Datatables
- */
+ /**
+  * Authentication and Base
+  */
+	'assign_role'					=> 'Assign one or more Roles to this User. Users without a Role cant use the NMS because they got no Permissions.',
+	'assign_users'					=> 'Assign one or more Users to this Role. Changes made here are not visible in the GuiLog of the user.',
+	'assign_rank'					=> "The Rank of a Role determines the ability to edit other users. \nYou can assign values from 0 to 100. (higher is better) \nIf a user has more than one role, the highest rank is used. \nUsers can only be edited, if the rank of the editor is higher. If the rank is equal or lower, the permission is denied."
+ /**
+  * Index Page - Datatables
+  */
 	'SortSearchColumn'				=> 'This Column cannot be searched or ordered.',
 	'PrintVisibleTable'				=> 'Prints the shown table. If the table is filtered make sure to select the \"All\" option to display everything. Loading can take a few seconds.',
 	'ExportVisibleTable'			=> 'Exports the shown table. If the table is filtered make sure to select the \"All\" option to display everything. Loading can take a few seconds.',

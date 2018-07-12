@@ -2,6 +2,12 @@
 
 return [
 /**
+ * Authentication and Base
+ */
+	'assign_role'					=> 'Diesem Nutzer eine oder mehrere Rollen zuweisen. Nutzer ohne Rolle können das NMS nicht verwenden, da sie keine Berechtigungen haben.',
+	'assign_users'					=> 'Einen oder mehrere Nutzer zu dieser Rolle zuweisen. Die Veränderung ist im GuiLog des Users nicht sichtbar, sondern nur hier.',
+	'assign_rank'					=> "Der Rang einer Rolle ist eine Einheit für die Fähigkeiten der Rolle andere Nutzer zu bearbeiten. \nEs werden werte von 0 bis 100 angenommen. (höher ist besser) \nBei mehreren Rollen gilt der höchste Rang. \nNutzer können nur bearbeitet werden, wenn der Rang des Bearbeiteten höher ist. Ist der Rang niedriger oder gleich, wird das Bearbeiten verwehrt.",
+/**
  * Index Page - Datatables
  */
 	'SortSearchColumn'				=> 'Diese Spalte kann nicht sortiert oder durchsucht werden.',

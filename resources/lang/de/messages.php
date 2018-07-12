@@ -138,6 +138,9 @@ return [
 	'Provisioning'				=> 'Provisioning',
 	'Billing Base'				=> 'Billing Base',
 	'HFC'						=> 'HFC',
+	'Rank'						=> 'Rang',
+	'Assign Users'				=> 'Benutzer zuweisen',
+	'Assign Role'				=> 'Rollen zuweisen',
 	//Global Config
 	'System Log Level'			=> 'System Logging Stufe',
 	'Headline 1'				=> 'Überschrift Kopfzeile',

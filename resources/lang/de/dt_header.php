@@ -6,6 +6,8 @@ return [
 	'users.first_name' => 'Vorname',
 	'users.last_name' => 'Nachname',
 	'roles.name' => 'Name',
+	'roles.rank' => 'Rang',
+	'roles.description' => 'Beschreibung',
 	// GuiLog
 	'guilog.created_at' => 'Zeitpunkt',
 	'guilog.username' => 'Nutzer',
