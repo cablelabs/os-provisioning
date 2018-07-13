@@ -15,7 +15,9 @@
 
 	{{-- Background Image --}}
 	<div class="login-cover">
-		<div class="login-cover-image"><img alt="" data-id="login-cover-image" src="{{asset('images/'.$image)}}"></div>
+		<div class="login-cover-image">
+			<img alt=""  data-id="login-cover-image" src="{{asset('images/'.$image)}}">
+		</div>
 		<div class="login-cover-bg"></div>
 	</div>
 
@@ -48,9 +50,11 @@
 					</div>
 
 					{{-- Remember Checkbox --}}
-					<div class="form-group m-b-20">
-						<input align="left" class="" name="remember" type="checkbox" value="1">
-						{{ Form::label('remember', \App\Http\Controllers\BaseViewController::translate_label('Remember Me!')) }}
+					<div class="form-group m-b-20 d-flex align-items-center">
+						<input align="left" class="mt-0 mb-2" name="remember" type="checkbox" value="1">
+						<label for="remember" class="control-label px-2">
+							{{ \App\Http\Controllers\BaseViewController::translate_label('Remember Me') . '!' }}
+						</label>
 					</div>
 
 					{{-- Error Message --}}
@@ -62,15 +66,6 @@
 						</font></p>
 					</div>
 					<br>
-
-			{{-- Remember Me Checkbox is disabled !
-					<div class="checkbox m-b-20">
-						<label>
-							<input type="checkbox" /> Remember Me
-						</label>
-					</div>
-			--}}
-
 					{{-- Login Button --}}
 					<div class="login-buttons">
 						<button type="submit" class="btn btn-success btn-block btn-lg">{{ \App\Http\Controllers\BaseViewController::translate_label('Sign me in') }}</button>

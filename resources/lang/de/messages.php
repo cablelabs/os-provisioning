@@ -113,6 +113,7 @@ return [
 	'Public CPE'				=> 'Öffentliches CPE',
 	'QoS next month'			=> 'QoS nächsten Monat',
 	'Real Time Values'			=> 'Echtzeitwerte',
+	'Remember Me'				=> 'An diesem Gerät eingeloggt bleiben',
 	'Salutation'				=> 'Anrede',
 	'Save'						=> 'Speichern',
 	'Save / Restart'			=> 'Speichern / Neustart',
