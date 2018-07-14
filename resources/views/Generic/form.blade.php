@@ -56,5 +56,5 @@
 @endif
 </div>
 
-{{-- java script--}}
+{{-- javascript--}}
 @include('Generic.form-js')

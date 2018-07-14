@@ -145,7 +145,7 @@
 			processing: true,
 			serverSide: true,
 			deferRender: true,
-			ajax: '{{Route("GuiLog.filter")}}?model_id={{$view_var->id}}&model={{ isset($view_var->table) ? str_singular($view_var->table) : ""}}',
+			ajax: '{{ Route("GuiLog.filter") }}?model_id={{$view_var->id}}&model={{ isset($view_var->table) ? str_singular($view_var->table) : ""}}',
 			columns:[
 						{data: 'responsive', orderable: false, searchable: false},
 						{data: 'created_at', name: 'created_at'},
@@ -163,7 +163,7 @@
 			$('{{'#'.$element}}').autocomplete({
 				source:function (data, response) {
 					$.ajax({
-						url:'/admin/Contract/autocomplete/{{$element}}?q=' + $('{{'#'.$element}}').val(),
+						url:'/admin/Contract/autocomplete/{!! $element !!}?q=' + $('#{!! $element !!}').val(),
 						success:function(data){
 							response(data);
 						}

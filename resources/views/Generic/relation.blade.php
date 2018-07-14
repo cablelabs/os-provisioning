@@ -18,13 +18,13 @@ Relation Blade is used inside a Panel Element to display relational class object
 		{{-- Create Button: (With hidden add fields if required) --}}
 		@if (!isset($options['hide_create_button']))
 
-			{{ Form::open(['url' => route($view.'.create', [$key => $view_var->id]), 'method' => 'POST', 'name' => 'createForm']) }}
-			{{ Form::hidden($key, $view_var->id) }}
+			{!! Form::open(['url' => route($view.'.create', [$key => $view_var->id]), 'method' => 'POST', 'name' => 'createForm']) !!}
+			{!! Form::hidden($key, $view_var->id) !!}
 
 			{{-- Add hidden input fields if create tag is set in $form_fields - This sets global POST Variable --}}
 			@foreach($form_fields as $field)
 				@if (array_key_exists('create', $field))
-					{{ Form::hidden($field["name"], $view_var->{$field["name"]}) }}
+					{!! Form::hidden($field["name"], $view_var->{$field["name"]}) !!}
 				@endif
 			@endforeach
 
@@ -37,7 +37,7 @@ Relation Blade is used inside a Panel Element to display relational class object
 				</a>
 			</div>
 
-			{{ Form::close() }}
+			{!! Form::close() !!}
 		@endif
 
 		{{-- Delete Button --}}
@@ -60,19 +60,19 @@ Relation Blade is used inside a Panel Element to display relational class object
 {{-- The Relation Table --}}
 @DivOpen(12)
 	@if (isset($options['many_to_many']))
-		{{ Form::open(array('route' => array($route_name.'.detach', $view_var->id, $options['many_to_many']), 'method' => 'post', 'id' => $class)) }}
+		{!! Form::open(array('route' => array($route_name.'.detach', $view_var->id, $options['many_to_many']), 'method' => 'post', 'id' => $class)) !!}
 	@else
-		{{ Form::open(array('route' => array($view.'.destroy', 0), 'method' => 'delete', 'id' => $class)) }}
+		{!! Form::open(array('route' => array($view.'.destroy', 0), 'method' => 'delete', 'id' => $class)) !!}
 	@endif
 
 	<table class="table">
 		@foreach ($relation as $rel_elem)
 			<tr class="{{isset ($rel_elem->view_index_label()['bsclass']) ? $rel_elem->view_index_label()['bsclass'] : ''}}">
-				<td width="20"> {{ Form::checkbox('ids['.$rel_elem->id.']', 1, null, null, ['style' => 'simple']) }} </td>
-				<td> {!! $rel_elem->view_icon() !!} {{ HTML::linkRoute($view.'.'.$method, is_array($rel_elem->view_index_label()) ? $rel_elem->view_index_label()['header'] : $rel_elem->view_index_label(), $rel_elem->id) }} </td>
+				<td width="20"> {!! Form::checkbox('ids['.$rel_elem->id.']', 1, null, null, ['style' => 'simple']) !!} </td>
+				<td> {!! $rel_elem->view_icon() !!} {!! HTML::linkRoute($view.'.'.$method, is_array($rel_elem->view_index_label()) ? $rel_elem->view_index_label()['header'] : $rel_elem->view_index_label(), $rel_elem->id) !!} </td>
 			</tr>
 		@endforeach
 	</table>
 
-	{{ Form::close() }}
+	{!! Form::close() !!}
 @DivClose()

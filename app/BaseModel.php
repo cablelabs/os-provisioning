@@ -1058,11 +1058,19 @@ class BaseObserver
 
 		$text = '';
 
+		$attributes = $model->getDirty();
+
+		if (in_array('remember_token', $attributes)) {
+			unset($attributes['remember_token']);
+			unset($attributes['updated_at']);
+		}
+
+		if (empty($attributes))
+			return;
+
 		// if really updated (and not updated by model->save() in observer->created() like in contract)
 		if (($action == 'updated') && (!$model->wasRecentlyCreated))
 		{
-			// $attributes = $model->getDirty();
-			// unset($attributes['updated_at']);
 
 			// skip following attributes - TODO:
 			$ignore = array(

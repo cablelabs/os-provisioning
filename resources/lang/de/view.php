@@ -105,6 +105,7 @@ return [
 		'Header_EditProv Base Config'=> 'Moduleinstellungen Provisioning bearbeiten',
 		'Header_HfcBase'			=> 'Moduleinstellungen HFC',
 		'Header_EditHfc Base Config'=> 'Moduleinstellungen HFC bearbeiten',
+		'Header_Roles'				=> 'Rolle|Rollen',
 		//Logs
 		'Header_Logs'				=> 'Logs',
 		'Header_EditLogs'			=> 'Log Details',

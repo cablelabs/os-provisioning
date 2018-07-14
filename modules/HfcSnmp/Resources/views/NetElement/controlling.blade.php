@@ -8,7 +8,7 @@
 		<!-- <META HTTP-EQUIV="refresh" CONTENT="{{$reload}}"> -->
 	@endif
 
-	{{ $headline }}
+	{!! $headline !!}
 
 @stop
 
@@ -138,7 +138,7 @@
 	<h2>No controlling defined</h2>
 @endif
 
-	{{-- java script --}}
+	{{-- javascript --}}
 	@include('Generic.form-js')
 
 
