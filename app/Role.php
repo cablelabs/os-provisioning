@@ -48,9 +48,9 @@ class Role extends BaseModel
 	{
 		return [
 			'table'			=> $this->table,
-			'index_header'	=> [$this->table . '.name', $this->table . '.rank', $this->table . '.description', ],
+			'index_header'	=> [$this->table . '.title', $this->table . '.rank', $this->table . '.description', ],
 			'header'		=> $this->name,
-			'order_by'		=> ['2' => 'desc'],
+			'order_by'		=> ['1' => 'desc'],
 		];
 	}
 
@@ -64,7 +64,7 @@ class Role extends BaseModel
 
 	public function view_has_many()
 	{
-		$ret['Base']['Permissions']['view']['view'] = 'auth.permissions';
+		$ret['Base']['Abilities']['view']['view'] = 'auth.abilities';
 		return $ret;
 	}
 }

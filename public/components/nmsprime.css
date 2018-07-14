@@ -52,6 +52,11 @@ a:hover {
     width: 100%;
 }
 
+.badge {
+    border-radius: 0.25rem;
+    padding: 5px 7px;
+}
+
 /* Breadcrumb pills custom style */
 .tab-overflow .nav.nav-pills {
     white-space: nowrap;

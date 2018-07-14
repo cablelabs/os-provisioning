@@ -421,6 +421,7 @@ class BaseModel extends Eloquent
 		// models to be excluded from search
 		$exclude = array(
 			'AddressFunctionsTrait',
+			'Ability',
 			'BaseModel',
 			'helpers',
 			'TRCClass',	// static data; not for standalone use

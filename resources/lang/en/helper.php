@@ -6,7 +6,14 @@ return [
   */
 	'assign_role'					=> 'Assign one or more Roles to this User. Users without a Role cant use the NMS because they got no Permissions.',
 	'assign_users'					=> 'Assign one or more Users to this Role. Changes made here are not visible in the GuiLog of the user.',
-	'assign_rank'					=> "The Rank of a Role determines the ability to edit other users. \nYou can assign values from 0 to 100. (higher is better) \nIf a user has more than one role, the highest rank is used. \nUsers can only be edited, if the rank of the editor is higher. If the rank is equal or lower, the permission is denied."
+	'assign_rank'					=> "The Rank of a Role determines the ability to edit other users. \nYou can assign values from 0 to 100. (higher is better) \nIf a user has more than one role, the highest rank is used. \nUsers can only be edited, if the rank of the editor is higher. If the rank is equal or lower, the permission is denied.",
+	'All abilities'					=> 'This Ability allows or forbids all authorisation requests, except for the Abilities, which are explicitly allowed or forbidden.',
+	'View everything'			=> 'This Ability allows or forbids to view all Pages.',
+	'Use api'					=> 'This Ability allows or forbids to access the API Routes with "Basic Auth" (the email is used as username).',
+	'See income chart'			=> 'This Ability allows or forbids to view the Income Chart on the Dashboard.',
+	'View analysis pages of modems'	=> 'This Ability allows or forbids to access the Analysis Pages of a Modem.',
+	'View analysis pages of cmts' => 'This Ability allows or forbids to access the Analysis Pages of a CMTS.',
+	'Download settlement runs'	=> 'This Ability allows or forbids the download of Settlement Runs.',
  /**
   * Index Page - Datatables
   */

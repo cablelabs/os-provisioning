@@ -113,10 +113,16 @@ class CreateBouncerTables extends Migration
                     Bouncer::assign($role->name)->to($user);
                 }
             }
+            //create Custom Abilities
             Bouncer::allow('admin')->everything();
+            Bouncer::allow('guest')->to('view','*'); //role for demo system or presentation
             Bouncer::allow('support')->everything();
-            Bouncer::forbid('support')->toManage(Role::class);
+            Bouncer::forbid('support')->to('use api');
             Bouncer::forbid('support')->to('see income chart');
+            Bouncer::forbid('support')->toManage(Role::class);
+            Bouncer::forbid('support')->to('download', \Modules\BillingBase\Entities\SettlementRun::class);
+            Bouncer::allow('support')->to('view_analysis_pages_of', \Modules\ProvBase\Entities\Modem::class);
+            Bouncer::allow('support')->to('view_analysis_pages_of', \Modules\ProvBase\Entities\Cmts::class);
         });
 
         Schema::dropIfExists('authrole');

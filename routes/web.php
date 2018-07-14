@@ -64,21 +64,15 @@ BaseRoute::group([], function() {
 		'middleware' => ["can:delete,App\User"],
 	]);
 
-	BaseRoute::post('role/AssignAbility', [
-		'as' => 'Ability.assign',
-		'uses' => 'Auth\RoleController@assign_Ability',
+	BaseRoute::post('role/customAbility', [
+		'as' => 'customAbility.update',
+		'uses' => 'Auth\RoleController@assignCustomAbility',
 		'middleware' => ["can:update,App\Role"],
 	]);
 
-	BaseRoute::post('role/DeleteAbility', [
-		'as' => 'Ability.delete',
-		'uses' => 'Auth\RoleController@delete_Ability',
-		'middleware' => ["can:delete,App\Role"],
-	]);
-
-	BaseRoute::post('role/UpdateAbility', [
+	BaseRoute::post('role/Ability', [
 		'as' => 'Ability.update',
-		'uses' => 'Auth\RoleController@update_permission',
+		'uses' => 'Auth\RoleController@assignModelAbility',
 		'middleware' => ["can:update,App\Role"],
 	]);
 

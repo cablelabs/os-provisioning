@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Bouncer, Module;
 use App\{ Ability, BaseModel, Role, User };
-use App\PermissionRole;
+use App\Http\Controllers\BaseViewController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 
@@ -54,37 +54,77 @@ class RoleController extends BaseController
 			}
 		}
 
-		return redirect('admin/Role/' . $data['role_id'] . '/edit');
 	}
 
 	/**
-	 * Delete permissions/rights from a role
+	 * Update right/permission by given role
 	 *
 	 * @param Request $request
-	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 * @return mixed|string
 	 */
-	public function delete_permission()
+	public function update_permission(Request $request)
 	{
-		if (\Input::has('delete_ids'))
-		{
-			foreach (\Input::get('delete_ids') as $row_id => $value) {
-				$model = new PermissionRole();
-				$ret = $model->delete_permission($row_id);
-			}
+		try {
+			$data = $request->all();
+			$rightModel = new PermissionRole();
+			$ret = $rightModel->update_permission($data['authmethacore_id'], $data['authmethacore_right'], $data['authmethacore_right_value']);
+		} catch (\Exception $e) {
+			// @ToDo: Logging the Exception
+			//throw $e;
+			$ret = $e->getMessage();
 		}
-
-		return redirect('admin/Role/' . \Input::get('role_id') . '/edit');
+		return $ret;
 	}
 
 	public function edit($id)
 	{
 		$view = parent::edit($id);
+
 		Bouncer::refresh();
+
 		$data = $view->getData();
-		$abilities = $data['view_var']->getAbilities();
-		$forbiddenAbilities = $data['view_var']->getForbiddenAbilities();
 
+		$roleAbilities = $data['view_var']->getAbilities()->pluck('title', 'id');
+		$roleForbiddenAbilities = $data['view_var']->getForbiddenAbilities()->pluck('title', 'id');
+		$modules = Module::collections()->keys();
+		$models = collect(BaseModel::get_models());
 
-		return $view->with(compact('id', 'abilities', 'forbiddenAbilities'));
+		// Permissions for the Global Config Pages
+		$modelAbilities = collect(['GlobalConfig' => collect([
+			'GlobalConfig'	=> $models->pull('GlobalConfig'),
+			'BillingBase'	=> $models->pull('BillingBase'),
+			'Ccc'			=> $models->pull('Ccc'),
+			'HfcBase'		=> $models->pull('HfcBase'),
+			'ProvBase'		=> $models->pull('ProvBase'),
+			'ProvVoip'		=> $models->pull('ProvVoip'),
+		])->keys()]);
+
+		$modelAbilities['Authentication'] = $models->filter(function ($value, $key) {
+					return (stripos($value, 'App') !== false);
+			})->keys();
+
+		foreach ($modules as $module) {
+			$modelAbilities[$module] = $models->filter(function ($value, $key) use ($module) {
+					return strpos($value, $module);
+			})->keys();
+		}
+
+		$modelAbilities = $modelAbilities->reject(function ($value, $key) {
+			return $value->isEmpty();
+		});
+
+		$userAbilities = Ability::whereNotIn('name', ['*', 'view', 'create', 'update', 'delete'])
+							->orWhere('entity_type', '*')
+							->get()
+							->pluck('title', 'id');
+
+		$userAbilities = $userAbilities->map(function ($title, $id) {
+			return collect([
+				'title' => BaseViewController::translate_label($title),
+				'helperText' => trans('helper.' . $title),
+			]);
+		});
+
+		return $view->with(compact('id', 'roleAbilities', 'roleForbiddenAbilities', 'modelAbilities', 'userAbilities', 'allowState' ));
 	}
 }

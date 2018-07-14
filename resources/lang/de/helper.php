@@ -7,6 +7,13 @@ return [
 	'assign_role'					=> 'Diesem Nutzer eine oder mehrere Rollen zuweisen. Nutzer ohne Rolle können das NMS nicht verwenden, da sie keine Berechtigungen haben.',
 	'assign_users'					=> 'Einen oder mehrere Nutzer zu dieser Rolle zuweisen. Die Veränderung ist im GuiLog des Users nicht sichtbar, sondern nur hier.',
 	'assign_rank'					=> "Der Rang einer Rolle ist eine Einheit für die Fähigkeiten der Rolle andere Nutzer zu bearbeiten. \nEs werden werte von 0 bis 100 angenommen. (höher ist besser) \nBei mehreren Rollen gilt der höchste Rang. \nNutzer können nur bearbeitet werden, wenn der Rang des Bearbeiteten höher ist. Ist der Rang niedriger oder gleich, wird das Bearbeiten verwehrt.",
+	'All abilities'				=> 'Diese Fähigkeit erlaubt oder verbietet alle Autorisierungsanfragen, außer es wurden explizit Fähigkeiten verboten oder erlaubt werden. Wenn diese Fähigkeit nicht gesetzt ist, müssen alle Berechtigungen von Hand gesetzt werden.',
+	'View everything'			=> 'Diese Fähigkeit erlaubt oder verbietet es alle Seiten zu besuchen.',
+	'Use api'					=> 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die API Routen mithilfe von "Basic Auth". Als Benutzername muss die E-Mail, welche im Profil hinterlegt ist genutzt werden.',
+	'See income chart'			=> 'Diese Fähigkeit erlaubt oder verbietet die Anzeige des Einkommensdiagramms im Dashboard.',
+	'View analysis pages of modems'	=> 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseiten der Modems.',
+	'View analysis pages of cmts' => 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseite der CMTS.',
+	'Download settlement runs'	=> 'Diese Fähigkeit erlaubt oder verbietet den Download der Abrechnungsläufe.',
 /**
  * Index Page - Datatables
  */
