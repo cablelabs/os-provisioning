@@ -175,3 +175,12 @@ function pdflatex($dir, $filename, $background = false)
 			return null;
 	}
 }
+
+
+/**
+ * Format number for Billing dependent of application/billing language
+ */
+function number_format_lang($number)
+{
+	return \App::getLocale() == 'de' ? number_format($number, 2, ',', '.') : number_format($number, 2);
+}
