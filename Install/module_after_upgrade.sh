@@ -8,6 +8,7 @@ cd "$dir"
 /opt/rh/rh-php71/root/usr/bin/php artisan module:migrate
 /opt/rh/rh-php71/root/usr/bin/php artisan queue:restart
 /opt/rh/rh-php71/root/usr/bin/php artisan nms:auth
+/opt/rh/rh-php71/root/usr/bin/php artisan route:cache
 
 systemctl reload httpd
 
