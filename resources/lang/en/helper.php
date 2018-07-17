@@ -107,6 +107,7 @@ return [
 	'contract_number' 				=> 'Attention - Customer login password is changed automatically on changing this field!',
 	'mac_formats'					=> "Allowed formats (case-insensitive):\n\n1) AA:BB:CC:DD:EE:FF\n2) AABB.CCDD.EEFF\n3) AABBCCDDEEFF",
 	'fixed_ip_warning'				=> 'Using fixed IP address is highly discouraged, as this breaks the ability to move modems and their CPEs freely among CMTSes. Instead of telling the customer a fixed IP address they should be supplied with the hostname, which will not change.',
+	'sw_rev_update_frequency'		=> 'The firmware version is updated once a day.',
 
  /**
   *	MODULE: ProvVoip

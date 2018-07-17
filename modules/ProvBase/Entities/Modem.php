@@ -63,6 +63,7 @@ class Modem extends \BaseModel {
 				'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
 				'eager_loading' => ['configfile','contract'],
 				'disable_sortsearch' => ['contract_valid' => 'false'],
+				'help' => [$this->table.'.sw_rev' => 'sw_rev_update_frequency'],
 				'order_by' => ['0' => 'desc'],
 				'where_clauses' => self::_get_where_clause(),
 			];
