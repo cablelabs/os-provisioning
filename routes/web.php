@@ -52,28 +52,21 @@ BaseRoute::group([], function() {
 		'uses' => 'GlobalConfigController@index',
 	]);
 
-	BaseRoute::get('Guilog/FilterRecords', [
-		'as' => 'GuiLog.filter',
-		'uses' => 'GuiLogController@filter',
-		'middleware' => ["can:view,App\GuiLog"],
-	]);
-
 	BaseRoute::post('user/detach/{id}/{func}', [
 		'as' => 'user.detach',
 		'uses' => 'Auth\UserController@detach',
 		'middleware' => ["can:delete,App\User"],
 	]);
 
-	BaseRoute::post('role/customAbility', [
+	BaseRoute::post('Role/customAbility', [
 		'as' => 'customAbility.update',
-		'uses' => 'Auth\RoleController@assignCustomAbility',
+		'uses' => 'Auth\AbilityController@updateCustomAbility',
 		'middleware' => ["can:update,App\Role"],
 	]);
 
-	BaseRoute::post('role/Ability', [
-		'as' => 'Ability.update',
-		'uses' => 'Auth\RoleController@assignModelAbility',
+	BaseRoute::post('Role/modelAbility', [
+		'as' => 'modelAbility.update',
+		'uses' => 'Auth\AbilityController@updateModelAbility',
 		'middleware' => ["can:update,App\Role"],
 	]);
-
 });

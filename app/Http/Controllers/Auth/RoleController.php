@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Bouncer, Module;
+use Bouncer, Module, Str;
 use App\{ Ability, BaseModel, Role, User };
 use App\Http\Controllers\BaseViewController;
 use Illuminate\Http\Request;
@@ -10,8 +10,8 @@ use App\Http\Controllers\BaseController;
 
 class RoleController extends BaseController
 {
-	protected $edit_left_md_size = 5;
-	protected $edit_right_md_size = 7;
+	protected $edit_left_md_size = 4;
+	protected $edit_right_md_size = 8;
 	protected $many_to_many = [
 		[
 			'field' => 'users_ids',
@@ -36,95 +36,16 @@ class RoleController extends BaseController
 		);
 	}
 
-	/**
-	 * Assign permissions/rights to a role
-	 *
-	 * @param Request $request
-	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-	 */
-	public function assign_permission(Request $request)
-	{
-		$data = $request->all();
-
-		if (isset($data['permission']))
-		{
-			foreach ($data['permission'] as $permission_id => $rights) {
-				$model = new PermissionRole();
-				$ret = $model->assign_permission($data['role_id'], $permission_id, $rights);
-			}
-		}
-
-	}
-
-	/**
-	 * Update right/permission by given role
-	 *
-	 * @param Request $request
-	 * @return mixed|string
-	 */
-	public function update_permission(Request $request)
-	{
-		try {
-			$data = $request->all();
-			$rightModel = new PermissionRole();
-			$ret = $rightModel->update_permission($data['authmethacore_id'], $data['authmethacore_right'], $data['authmethacore_right_value']);
-		} catch (\Exception $e) {
-			// @ToDo: Logging the Exception
-			//throw $e;
-			$ret = $e->getMessage();
-		}
-		return $ret;
-	}
-
 	public function edit($id)
 	{
 		$view = parent::edit($id);
 
-		Bouncer::refresh();
-
 		$data = $view->getData();
+		$customAbilities = AbilityController::getCustomAbilities();
+		$roleAbilities = AbilityController::mapAbilities($data['view_var']->getAbilities()) ;
+		$roleForbiddenAbilities = AbilityController::mapAbilities($data['view_var']->getForbiddenAbilities());
+		$modelAbilities = AbilityController::getModelAbilities($data['view_var'], $roleAbilities, $roleForbiddenAbilities);
 
-		$roleAbilities = $data['view_var']->getAbilities()->pluck('title', 'id');
-		$roleForbiddenAbilities = $data['view_var']->getForbiddenAbilities()->pluck('title', 'id');
-		$modules = Module::collections()->keys();
-		$models = collect(BaseModel::get_models());
-
-		// Permissions for the Global Config Pages
-		$modelAbilities = collect(['GlobalConfig' => collect([
-			'GlobalConfig'	=> $models->pull('GlobalConfig'),
-			'BillingBase'	=> $models->pull('BillingBase'),
-			'Ccc'			=> $models->pull('Ccc'),
-			'HfcBase'		=> $models->pull('HfcBase'),
-			'ProvBase'		=> $models->pull('ProvBase'),
-			'ProvVoip'		=> $models->pull('ProvVoip'),
-		])->keys()]);
-
-		$modelAbilities['Authentication'] = $models->filter(function ($value, $key) {
-					return (stripos($value, 'App') !== false);
-			})->keys();
-
-		foreach ($modules as $module) {
-			$modelAbilities[$module] = $models->filter(function ($value, $key) use ($module) {
-					return strpos($value, $module);
-			})->keys();
-		}
-
-		$modelAbilities = $modelAbilities->reject(function ($value, $key) {
-			return $value->isEmpty();
-		});
-
-		$userAbilities = Ability::whereNotIn('name', ['*', 'view', 'create', 'update', 'delete'])
-							->orWhere('entity_type', '*')
-							->get()
-							->pluck('title', 'id');
-
-		$userAbilities = $userAbilities->map(function ($title, $id) {
-			return collect([
-				'title' => BaseViewController::translate_label($title),
-				'helperText' => trans('helper.' . $title),
-			]);
-		});
-
-		return $view->with(compact('id', 'roleAbilities', 'roleForbiddenAbilities', 'modelAbilities', 'userAbilities', 'allowState' ));
+		return $view->with(compact('roleAbilities', 'roleForbiddenAbilities', 'modelAbilities', 'customAbilities'));
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use Auth;
+use Auth, Bouncer;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -24,6 +24,10 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Bouncer::useAbilityModel(\App\Ability::class);
+        Bouncer::useRoleModel(\App\Role::class);
+        Bouncer::cache();
+
         $this->registerPolicies();
 
         Auth::extend('admin', function ($app, $name, array $config) {
