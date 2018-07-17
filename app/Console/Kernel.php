@@ -140,6 +140,20 @@ class Kernel extends ConsoleKernel {
 				foreach (\Modules\ProvBase\Entities\Cmts::all() as $cmts)
 					$cmts->store_us_snrs();
 			})->everyFiveMinutes();
+
+			// update firmware version string of every modem once a day
+			$schedule->call(function () {
+				foreach (\DB::table('modem')->whereNull('deleted_at')->pluck('id') as $id) {
+					$sw = \Modules\ProvBase\Entities\Modem::get_sw_rev($id);
+					if (!$sw)
+						continue;
+
+					$sw = reset($sw);
+					$sw = reset($sw);
+					$sw = each($sw)[0];
+					\DB::statement("UPDATE modem SET sw_rev = '$sw' where id='$id'");
+				}
+			})->daily();
 		}
 
 		// Clean Up of HFC Base
