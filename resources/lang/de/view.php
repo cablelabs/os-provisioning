@@ -93,9 +93,9 @@ return [
 	//Global'Config
 		//Global
 		'Header_Global Configurations' => 'Systemkonfiguration',
-		'Header_Global Config'		=> 'Globale Konfiguration|Globale Konfigurationen',
+		'Header_Global Config' 		=> 'Globale Konfiguration|Globale Konfigurationen',
 		'Header_EditGlobal Config'	=> 'Globale Konfiguration bearbeiten',
-		'Header_Billing Config'		=> 'Moduleinstellungen für Billing Base',
+		'Header_Billing Config' 	=> 'Moduleinstellungen für Billing Base',
 		'Header_EditBilling Config' => 'Moduleinstellungen für Billing Base bearbeiten',
 		'Header_ProvVoip'			=> 'Moduleinstellungen VOIP',
 		'Header_EditProvVoip Config'=> 'Moduleinstellungen VOIP bearbeiten',
@@ -109,7 +109,19 @@ return [
 		//Logs
 		'Header_Logs'				=> 'Logs',
 		'Header_EditLogs'			=> 'Log Details',
-	//Billing Base
+		//Abilities
+		'Ability_Custom Abilities' 	=> 'Spezielle Fähigkeiten',
+		'Ability_Authentication'		=> 'Authentifizierung',
+		'Ability_GlobalConfig' 		=> 'Globale Konfigurationen',
+		'Ability_Ccc'				=> 'Kundenkontrollzentrum',
+		'Ability_BillingBase' 		=> 'Abrechnungszentrum',
+		'Ability_HFC' 				=> 'HFC Komponenten',
+		'Ability_ProvBase' 			=> 'Provisionierung',
+		'Ability_ProvVoip' 			=> 'VoIP Provisionierung',
+		'Ability_ProvVoipEnvia'		=> 'Envia VoIP',
+		'Ability_VoipMon'			=> 'VoIP Monitoring',
+
+		//Billing Base
 		//Prduct Entry
 		'Header_Product Entry'		=> 'Produkt|Produktangebot',
 		'Header_EditProduct Entry'	=> 'Produkt bearbeiten',

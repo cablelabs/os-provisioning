@@ -57,7 +57,7 @@
 
 					{{-- include pure HTML --}}
 					@if (isset($relation['html']))
-						{{$relation['html']}}
+						{!! $relation['html'] !!}
 					@endif
 
 					{{-- include a view --}}
