@@ -12,4 +12,10 @@ BaseRoute::group([], function() {
 	BaseRoute::resource('Domain', 'Modules\ProvBase\Http\Controllers\DomainController');
 	BaseRoute::resource('ProvBase', 'Modules\ProvBase\Http\Controllers\ProvBaseController');
 
+	BaseRoute::get('modem/firmware', [
+		'as' => 'Modem.firmware',
+		'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@sw_rev_view',
+		'middleware' => ['can:view,Modules\ProvBase\Entities\Modem'],
+	]);
+
 });

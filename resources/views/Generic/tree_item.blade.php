@@ -4,7 +4,8 @@
 ?>
 
 <ul>
-@foreach($items as $item)
+@foreach($items as $key => $item)
+	@if (gettype($item) == 'object')
 		<?php
 			$type = method_exists($item, 'get_icon_type') ? $item->get_icon_type() : $color_classes[$color % 4];
 		?>
@@ -21,5 +22,14 @@
 				<?php $color++; ?>
 			@endif
 		</li>
+	@else
+		<li class="f-s-14 p-t-5 nocheck" data-jstree='{"type":"default-1" }'>
+		@if(is_array($item) && is_array(reset($item)))
+			{{$key}}
+			@include('Generic.tree_item', array('items' => $item))
+		@else
+			{{ HTML::linkRoute('Modem.index', "$key: ".count($item), ['modem_show_filter' => $key]) }}
+		@endif
+	@endif
 @endforeach
 </ul>

@@ -48,14 +48,24 @@ class Modem extends \BaseModel {
 	{
 		$bsclass = $this->get_bsclass();
 
+		// we need to put the filter into the session,
+		// as the upcoming datatables AJAX request won't carry the input parameters
+		if (\Input::has('modem_show_filter'))
+			\Session::put('modem_show_filter', \Input::get('modem_show_filter'));
+		// non-datatable request
+		elseif (basename(\Route::getCurrentRoute()->getPath()) == 'Modem')
+			\Session::forget('modem_show_filter');
+
 		return ['table' => $this->table,
-				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
+				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
 				'bsclass' => $bsclass,
 				'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
 				'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
 				'eager_loading' => ['configfile','contract'],
 				'disable_sortsearch' => ['contract_valid' => 'false'],
-				'order_by' => ['0' => 'desc'], ];
+				'order_by' => ['0' => 'desc'],
+				'where_clauses' => self::_get_where_clause(),
+			];
 	}
 
 	public function get_bsclass()
@@ -83,6 +93,21 @@ class Modem extends \BaseModel {
 	public function get_us_pwr()
 	{
 		return $this->us_pwr.' dBmV';
+	}
+
+	/**
+	 * Get WHERE clause for datatable filtering.
+	 *
+	 * @author Ole Ernst
+	 */
+	private static function _get_where_clause()
+	{
+		$filter = \Session::get('modem_show_filter');
+
+		if ($filter)
+			return ["sw_rev = '$filter'"];
+		else
+			return [];
 	}
 
 	/**
@@ -564,6 +589,34 @@ class Modem extends \BaseModel {
 		return null;
 	}
 
+	/**
+	 * Get all used firmwares of specified modem(s)
+	 *
+	 * @param string $id Modem identifier (all modems if $id is null)
+	 * @return array Hierarchical object (vendor->model->sw_rev) of all used firmwares
+	 *
+	 * @author Ole Ernst
+	 */
+	public static function get_sw_rev($id = null)
+	{
+		$ret = [];
+		foreach (glob("/var/lib/cacti/rra/cm-$id*.json") as $file) {
+			if (filemtime($file) < time() - 86400 || // ignore json files, which haven't been updated within a day
+				!($json = file_get_contents($file)) ||
+				!($json = json_decode($json)) ||
+				!isset($json->descr))
+				continue;
+
+			preg_match_all("/VENDOR: ([^;]*);.*SW_REV: (.*); MODEL: (.*)>>/", $json->descr, $match);
+			$vendor = array_pop($match[1]) ? : 'n/a';
+			$sw_rev = array_pop($match[2]) ? : 'n/a';
+			$model = array_pop($match[3]) ? : 'n/a';
+
+			$ret[$vendor][$model][$sw_rev][] = explode('-', explode('.', basename($file))[0])[1];
+		}
+
+		return $ret;
+	}
 
 	/**
 	 * Restarts modem through snmpset

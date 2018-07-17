@@ -118,6 +118,7 @@ return [
 	'modem.house_number' => 'Housenr',
 	'modem.id' => 'Modem Number',
 	'modem.mac' => 'MAC Address',
+	'modem.sw_rev' => 'Firmware Version',
 	'modem.name' => 'Modem Name',
 	'modem.firstname' => 'First name',
 	'modem.lastname' => 'Surname',

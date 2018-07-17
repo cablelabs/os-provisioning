@@ -226,6 +226,23 @@ class ModemController extends \BaseController {
 		return \View::make('provbase::Modem.index', $this->compact_prep_view(compact('panel_right', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search', 'preselect_field', 'preselect_value')));
 	}
 
+	/**
+	 * Return tree view of all used firmwares
+	 *
+	 * @return View
+	 *
+	 * @author Ole Ernst
+	 */
+	public function sw_rev_view()
+	{
+		$view_var = Modem::get_sw_rev();
+
+		$headline = $view_header = 'Firmware';
+		$create_allowed = false;
+
+		return \View::make ('Generic.tree', $this->compact_prep_view(compact('headline', 'view_header', 'view_var', 'create_allowed')));
+	}
+
 
 	/**
 	 * Set nullable fields.
