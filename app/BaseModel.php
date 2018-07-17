@@ -1061,7 +1061,7 @@ class BaseObserver
 
 		$attributes = $model->getDirty();
 
-		if (in_array('remember_token', $attributes)) {
+		if (array_key_exists('remember_token', $attributes)) {
 			unset($attributes['remember_token']);
 			unset($attributes['updated_at']);
 		}

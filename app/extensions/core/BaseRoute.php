@@ -122,6 +122,12 @@ class BaseRoute {
 			$options,
 		]);
 
+		Route::get("$name/{{$name}}/log", [
+			'as' => $name . '.guilog',
+			'uses' => '\App\Http\Controllers\GuiLogController@filter',
+			'middleware' => ['web', "can:view," . $models[$name]],
+		]);
+
 		Route::get("$name/autocomplete/{column}", [
 			'as' => $name . '.autocomplete',
 			'uses' => $controller . '@autocomplete_ajax',

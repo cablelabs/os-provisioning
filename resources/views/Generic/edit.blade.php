@@ -145,7 +145,7 @@
 			processing: true,
 			serverSide: true,
 			deferRender: true,
-			ajax: '{{ Route("GuiLog.filter") }}?model_id={{$view_var->id}}&model={{ isset($view_var->table) ? str_singular($view_var->table) : ""}}',
+			ajax: '{!! Route( App\Http\Controllers\NamespaceController::get_route_name(). ".guilog", $view_var) !!}',
 			columns:[
 						{data: 'responsive', orderable: false, searchable: false},
 						{data: 'created_at', name: 'created_at'},

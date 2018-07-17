@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Str;
 use App\GuiLog;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
@@ -43,39 +44,32 @@ class GuiLogController extends BaseController {
 		return $a;
 	}
 
-	public function filter(Request $request)
+	public function filter($id, Request $request)
 	{
-		try {
-			$params = $request->all();
-			$create_allowed = $this->index_create_allowed;
-			$delete_allowed = $this->index_delete_allowed;
+		$uri = explode('/', $request->getRequestUri());
+		$routeName = NamespaceController::get_route_name();
+		$modelName = Str::lower( $uri[count($uri)-3]);
 
-			$model = $params['model'];
-			$model_id = $params['model_id'];
-
-			$request_query = GuiLog::where('model', '=', $model)
-			->where('model_id', '=', $model_id)
+		$request_query = GuiLog::where('model', '=', $modelName)
+			->where('model_id', '=', $id)
 			->orderBy('id', 'desc')
 			->get();
 
-			$DT = Datatables::of($request_query);
-			$DT ->addColumn('responsive', '')
-				->setRowClass(function ($object) {
-					$bsclass = 'info';
-					if ($object->method == 'created')
-						$bsclass = 'success';
-					if ($object->method == 'deleted')
-						$bsclass = 'danger';
-					return $bsclass;
-				})
-				->editColumn('created_at', function($object) {
-				return '<a href="'.route(\NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
-				$object->view_icon().$object->created_at.'</strong></a>';
-			});
+		$DT = Datatables::of($request_query);
+		$DT ->addColumn('responsive', '')
+			->setRowClass(function ($object) {
+				$bsclass = 'info';
+				if ($object->method == 'created')
+					$bsclass = 'success';
+				if ($object->method == 'deleted')
+					$bsclass = 'danger';
+				return $bsclass;
+			})
+			->editColumn('created_at', function($object) use ($routeName) {
+			return '<a href="'. route($routeName .'.edit', $object->id).'"><strong>'.
+			$object->view_icon().$object->created_at.'</strong></a>';
+		});
 
-			return $DT->make(true);
-		} catch (\Exception $e) {
-			throw $e;
-		}
+		return $DT->make(true);
 	}
 }
