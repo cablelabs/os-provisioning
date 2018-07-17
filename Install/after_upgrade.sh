@@ -10,3 +10,4 @@ cd "$dir"
 /opt/rh/rh-php71/root/usr/bin/php artisan queue:restart
 
 systemctl reload httpd
+systemctl restart nmsprimed
