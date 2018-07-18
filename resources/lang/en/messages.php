@@ -11,6 +11,7 @@ return [
 	// Descriptions of Form Fields in Edit/Create
 	'accCmd_processing' 	=> 'The SettlementRun is executed. Please wait until this process has finished.',
 	'alert' 				=> 'Attention!',
+	'ALL' 					=> 'ALL',
 	'Call Data Record'		=> 'Call Data Record',
 	'ccc'					=> 'Customer Control Center',
 	'cdr' 					=> 'cdr',
@@ -66,6 +67,7 @@ return [
 	'phonenumber_overlap_hlkomm' => 'This number exists or existed within the last :delay month(s). As HL Komm or Pyur only sends the phonenumber with the call data records, it won\'t be possible to assign possible made calls to the appropriate contract anymore! This can result in wrong charges. Please only add this number if it\'s a test number or you are sure that there will be no calls to be charged anymore.',
 	'show_ags' 				=> 'Show AG Select Field on Contract Page',
 	'snmp_query_failed' 	=> 'SNMP Query failed for following OIDs: ',
+	'sr_repeat' 			=> 'Repeat for specific SEPA-Account', // Settlementrun repeat
 	'upload_dependent_mib_err' => "Please Upload dependent ':name' before!! (OIDs cant be translated otherwise)",
 	'user_settings'			=> 'User Settings',
 	'user_glob_settings'	=> 'Global User Settings',
