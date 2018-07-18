@@ -9,6 +9,7 @@ return [
 	*/
 
 	// Descriptions of Form Fields in Edit/Create
+	'accCmd_invoice_creation_deactivated' => "Following contracts have deactivated invoice creation: :contractnrs",
 	'accCmd_processing' 	=> 'The SettlementRun is executed. Please wait until this process has finished.',
 	'alert' 				=> 'Attention!',
 	'ALL' 					=> 'ALL',

@@ -143,6 +143,7 @@ return [
 	'Headline 1'				=> 'Überschrift Kopfzeile',
 	'Headline 2'				=> 'Überschrift Navigationsleiste',
 	//Billing
+	'accCmd_invoice_creation_deactivated' => "Bei folgenden Verträgen wurde die Rechnungserstellung deaktiviert: :contractnrs",
 	'accCmd_processing' 		=> 'Der Abrechnungslauf wird erstellt. Bitte warten Sie bis der Prozess abgeschlossen ist.',
 	'CDR retention period' 		=> 'Aufbewahrungsfrist für Einzelverbindungsnachweise',
 	'Day of Requested Collection Date'	=> 'Monatlicher Abrechnungstag',
