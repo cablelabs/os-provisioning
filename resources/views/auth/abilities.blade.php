@@ -21,11 +21,11 @@
                     </span>
                     <button class="btn btn-sm btn-primary"
                         v-on:click="customUpdate('all')"
-                        v-show="customSaveButton">
+                        v-show="showSaveColumn">
                         <i class="fa fa-lg"
-                           :class="loadingSpinner.GlobalConfig ?'fa-circle-o-notch fa-spin' : 'fa-save'">
+                           :class="loadingSpinner.custom ?'fa-circle-o-notch fa-spin' : 'fa-save'">
                         </i>
-                        {{ trans('messages.Save') }}
+                        {{ trans('messages.Save All') }}
                     </button>
                 </span>
             </div>
@@ -65,7 +65,9 @@
                                         name="saveAbility"
                                         :value="id"
                                         v-on:click="customUpdate(id)">
-                                        <i class="fa fa-save fa-lg"></i>
+                                        <i class="fa fa-save fa-lg"
+                                           :class="loadingSpinner.custom ?'fa-circle-o-notch fa-spin' : 'fa-save'">
+                                        </i>
                                         {{ trans('messages.Save') }}
                                     </button>
                                 </div>
@@ -295,7 +297,7 @@ new Vue({
 
             this.changed[id] = false;
         }
-        this.saveAll.custom = false
+        this.loadingSpinner.custom = false;
     },
     setupModelAbilities : function() {
         for (let module in this.modelAbilities) {
@@ -333,12 +335,12 @@ new Vue({
     customAllow : function (id) {
         if (this.$refs['allowed'+ id][0].checked) {
             if (id == 1) this.allowAll = true;
-            if (this.customAbilities[id]['title'] == 'View everything') this.allowViewAll = true
+            if (this.customAbilities[id]['title'] == 'View everything') this.allowViewAll = true;
             this.roleAbilities.custom[id] = this.customAbilities[id]['localTitle'];
             delete this.roleForbiddenAbilities.custom[id];
         } else {
             if (id == 1) this.allowAll = undefined;
-            if (this.customAbilities[id]['title'] == 'View everything') this.allowViewAll = undefined
+            if (this.customAbilities[id]['title'] == 'View everything') this.allowViewAll = undefined;
             delete this.roleAbilities.custom[id];
         }
 
@@ -381,27 +383,9 @@ new Vue({
 
         return true;
     },
-    customSaveButton : function() {
-        if ((_.isEqual(this.roleAbilities.custom, this.originalRoleAbilities.custom)) &&
-            _.isEqual(this.roleForbiddenAbilities.custom, this.originalForbiddenAbilities.custom))
-            return false;
-
-        return true;
-    },
-    addSpinner : function(event) {
-        console.log(event);
-        event.target.classList.remove('fa-save');
-        event.target.classList.add('fa-circle-o-notch fa-spin');
-    },
-    removeSpinner : function (event) {
-        console.log(event);
-        event.target.classList.remove('');
-        event.target.classList.add('fa-save');
-    },
     shortcutButtonClick : function (event) {
         let module = event.target.name.split('_');
         this.setShortcutButtons(module[0], module[1]);
-
     },
     setShortcutButtons : function (action, module) {
         let actionShortcut = (action == 'manage') ? '*' : action;
@@ -438,6 +422,9 @@ new Vue({
         let self = this;
         let token = document.querySelector('input[name="_token"]').value;
 
+        this.loadingSpinner.custom = true;
+        this.loadingSpinner = _.clone(this.loadingSpinner);
+
         axios({
             method: 'post',
             url: '{!! route("customAbility.update") !!}',
@@ -454,9 +441,16 @@ new Vue({
         .then(function (response) {
             self.originalRoleAbilities.custom = response.data.roleAbilities.custom;
             self.originalForbiddenAbilities.custom = response.data.roleForbiddenAbilities.custom;
+            if(self.changed[1]) {
+                for (module in self.modelAbilities) {
+                    console.log('Updating ' + module);
+                    self.modelUpdate(module);
+                }
+            }
             for (let id in response.data.id) {
                 self.changed.splice(response.data.id[id], 1, self.hasChanged(response.data.id[id]));
             }
+            self.loadingSpinner.custom = false;
             self.showSaveColumn = self.checkChangedArray(self.changed);
         })
         .catch(function (error) {

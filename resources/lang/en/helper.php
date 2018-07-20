@@ -7,7 +7,7 @@ return [
 	'assign_role'					=> 'Assign one or more Roles to this User. Users without a Role cant use the NMS because they got no Permissions.',
 	'assign_users'					=> 'Assign one or more Users to this Role. Changes made here are not visible in the GuiLog of the user.',
 	'assign_rank'					=> "The Rank of a Role determines the ability to edit other users. \nYou can assign values from 0 to 100. (higher is better) \nIf a user has more than one role, the highest rank is used. \nIf the ability to update Users is set, the rank is also checked. Only if the rank of the editor is higher permission is granted. Furthermore, when creating or updating users, only roles with euqal or lower rank can be assigned.",
-	'All abilities'					=> 'This Ability allows or forbids all authorisation requests, except for the Abilities, which are explicitly allowed or forbidden. This is mainly a HelperAbility. If it is not set, you have to set all abilities by hand.',
+	'All abilities'					=> 'This Ability allows or forbids all authorisation requests, except for the Abilities, which are explicitly allowed or forbidden. This is mainly a HelperAbility. If it is not set, you have to set all abilities by hand. If you change this ability, when many other abilities are set, it will take some time to apply all the changes.',
 	'View everything'			=> 'This Ability allows to view all Pages. Forbidding is disabled, because in this case you should use the "forbid all abilities" ability. This is mainly a HelperAbility for guests or very low priviledged users.',
 	'Use api'					=> 'This Ability allows or forbids to access the API Routes with "Basic Auth" (the email is used as username).',
 	'See income chart'			=> 'This Ability allows or forbids to view the Income Chart on the Dashboard.',

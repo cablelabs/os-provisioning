@@ -11,7 +11,6 @@ class UserController extends BaseController {
 	protected $many_to_many = [
 		[
 			'field' => 'roles_ids',
-			'classes' => [User::class, Role::class]
 		]
 	];
 
@@ -27,6 +26,7 @@ class UserController extends BaseController {
 
 		if 	($model->exists &&
 			 $current_user != $model &&
+			 $current_user->isNotAn('admin') &&
 			(($current_user_rank < $user_model_rank)  ||
 			 ($current_user_rank == $user_model_rank)))
 			abort(403, 'not authorized to edit this user');
@@ -43,7 +43,7 @@ class UserController extends BaseController {
 			['form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active',
 				'value' => '1', 'checked' => true],
 			['form_type' => 'select', 'name' => 'roles_ids[]', 'description' => 'Assign Role',
-				'value' => $model->html_list(Role::all(), 'name'),
+				'value' => $model->html_list(Role::where('rank' , '<=', $current_user_rank)->get(), 'name'),
 				'options' => [
 					'multiple' => 'multiple',
 					(Bouncer::can('update', User::class) && Bouncer::can('update', Role::class)) ? '' : 'disabled' => 'true'],

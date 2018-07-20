@@ -41,11 +41,12 @@ class RoleController extends BaseController
 		$view = parent::edit($id);
 
 		$data = $view->getData();
-		$customAbilities = AbilityController::getCustomAbilities();
+		$actions = AbilityController::getAbilityCrudActionsArray();
 		$roleAbilities = AbilityController::mapCustomAbilities($data['view_var']->getAbilities()) ;
 		$roleForbiddenAbilities = AbilityController::mapCustomAbilities($data['view_var']->getForbiddenAbilities());
+
+		$customAbilities = AbilityController::getCustomAbilities();
 		$modelAbilities = AbilityController::getModelAbilities($data['view_var']);
-		$actions = AbilityController::getAbilityCrudActionsArray();
 
 		return $view->with(compact('roleAbilities', 'roleForbiddenAbilities', 'modelAbilities', 'customAbilities', 'actions'));
 	}
