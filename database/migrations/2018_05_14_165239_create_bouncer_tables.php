@@ -105,7 +105,7 @@ class CreateBouncerTables extends Migration
                     if(!Role::find($role->id))
                         Role::create([
                             'id' => $role->id,
-                            'name' => $role->name,
+                            'name' => !(Role::where('name', $role->name)->count()) ? $role->name : $role->name . $role->id,
                             'title' => Str::studly($role->name),
                             'rank' => 101 - $role->id,
                             'description' => $role->description,

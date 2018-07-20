@@ -424,6 +424,7 @@ class BaseModel extends Eloquent
 			'Ability',
 			'BaseModel',
 			'helpers',
+			'BillingLogger',
 			'TRCClass',	// static data; not for standalone use
 			'CarrierCode', // cron updated data; not for standalone use
 			'EkpCode', // cron updated data; not for standalone use
