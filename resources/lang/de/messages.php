@@ -287,6 +287,7 @@ return [
 	'salesmen_commission'	=> 'Provision_Verkaeufer',
 	'Invoices'				=> 'Rechnungen',
 	'Load Data...' 			=> 'Lade Daten...',
+	'Clean up directory...' => 'Räume Verzeichnis auf...',
 
 	//CostCenter
 	'Associated SEPA Account'	=> 'Verknüpftes SEPA-Konto',
