@@ -104,6 +104,9 @@
 			  "Data": {
 				"icon": "fa fa-server text-active fa-lg"
 			  },
+			  "UPS": {
+				"icon": "fa fa-stack fa-bolt text-warning fa-lg"
+			  },
 			  "default": {
 				  "icon": "fa fa-file-code-o text-success fa-lg"
 			  },
