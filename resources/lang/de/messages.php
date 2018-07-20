@@ -344,6 +344,7 @@ return [
 	'Commission Amount'		=> 'davon Provision',
 	'eom' 					=> 'zum Monatsende',
 	'Zip Files' 			=> 'Erstelle ZIP-Datei',
+	'Concatenate invoices'  => 'Erstelle zusammengefügtes Rechnungs-PDF',
 
 /**
  * Customer Control Center

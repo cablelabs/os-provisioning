@@ -116,10 +116,12 @@ function escape_latex_special_chars($string)
  *
  * @author Nino Ryschawy
  *
- * @param mixed  source files
- * @param string target filename
+ * @param 	Mixed  		source files
+ * @param 	String 		target filename
+ * @param 	Bool 		run processes multithreaded in background
+ * @return 	Integer 	PID (process ID of background process) if parallel is true, otherwise 0
  */
-function concat_pdfs($sourcefiles, $target_fn)
+function concat_pdfs($sourcefiles, $target_fn, $multithreaded = false)
 {
 	if (is_array($sourcefiles))	{
 		$cnt = count($sourcefiles);
@@ -131,10 +133,14 @@ function concat_pdfs($sourcefiles, $target_fn)
 
 	\ChannelLog::debug('billing', 'Concat '.$cnt. ' PDFs to '.$target_fn);
 
-	exec("gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=$target_fn $sourcefiles", $output, $ret);
+	$cmd_ext = $multithreaded ? '> /dev/null 2>&1 & echo $!' : '';
+	exec("gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=$target_fn $sourcefiles $cmd_ext", $output, $ret);
 
+	// Note: normally output is [] and ret is 0
 	if ($ret)
 		\ChannelLog::error('billing', "Error concatenating target file $target_fn", [$ret]);
+
+	return $multithreaded ? (int) $output[0] : 0;
 }
 
 
