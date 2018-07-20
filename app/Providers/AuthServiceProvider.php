@@ -26,6 +26,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         Bouncer::useAbilityModel(\App\Ability::class);
         Bouncer::useRoleModel(\App\Role::class);
+        Bouncer::ownedVia(\App\User::class, 'id');
         Bouncer::cache();
 
         $this->registerPolicies();

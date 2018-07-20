@@ -46,10 +46,9 @@
         @endif
       @endforeach
     </ul>
-
+    @if ($user->can('view', Modules\HfcBase\Entities\TreeErd::class))
     <ul class="nav">
       <li class="nav-header">Networks</li>
-
       @foreach ($networks as $network)
         <li id="network_{{$network->id}}" class="has-sub" data-sidebar="level1">
           <a href="javascript:;">
@@ -85,6 +84,7 @@
         </a>
       </li>
     </ul>
+    @endif
   {{-- end sidebar nav --}}
   </div>
 {{-- end sidebar scrollbar --}}

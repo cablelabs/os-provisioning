@@ -26,7 +26,7 @@ class BaseRoute {
 	{
 		$url = \Request::root();
 
-		if (\Request::is('admin/*'))
+		if (\Request::is('admin*'))
 			return $url.'/admin';
 
 		if (\Request::is('customer/*'))

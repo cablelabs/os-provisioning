@@ -70,7 +70,7 @@
 						<b class="caret"></b>
 					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0;left:auto;">
-						<a class="dropdown-item" href="{{ route('User.edit', $user->id) }}">
+						<a class="dropdown-item" href="{{ route('User.profile', $user->id) }}">
 							<i class="fa fa-cog" aria-hidden="true"></i>
 							{{ \App\Http\Controllers\BaseViewController::translate_view('UserSettings', 'Menu')}}
 						</a>

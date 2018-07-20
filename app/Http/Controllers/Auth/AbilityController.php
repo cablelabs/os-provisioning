@@ -201,8 +201,12 @@ class AbilityController extends Controller
 	 */
 	public static function getModelAbilities(Role $role)
 	{
+		$modelsToExclude = [
+			'Dashboard',
+		];
+
 		$modules = Module::collections()->keys();
-		$models = collect(BaseModel::get_models());
+		$models = collect(BaseModel::get_models())->forget($modelsToExclude);
 		$allowedAbilities = $role->getAbilities();
 		$forbiddenAbilities = $role->getForbiddenAbilities();
 

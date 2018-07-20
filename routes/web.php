@@ -52,6 +52,12 @@ BaseRoute::group([], function() {
 		'uses' => 'GlobalConfigController@index',
 	]);
 
+	BaseRoute::get('profile/{id}', [
+		'as' => 'User.profile',
+		'uses' => 'Auth\UserController@edit',
+		'middleware' => ["owns:view,App\User"],
+	]);
+
 	BaseRoute::post('user/detach/{id}/{func}', [
 		'as' => 'user.detach',
 		'uses' => 'Auth\UserController@detach',
