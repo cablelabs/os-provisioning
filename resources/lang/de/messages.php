@@ -266,7 +266,7 @@ return [
 	'Invoice Text for positive Amount without Sepa Mandate'	=> 'Rechnungstext für Positivbetrag ohne SEPA-Mandat',
 	'SEPA Account'				=> 'SEPA-Konto',
 	'SepaAccount'				=> 'SEPA-Konto', // siehe Companies
-	'sr_repeat' 				=> 'Wiederholen für bestimmtes SEPA-Konto', // Settlementrun repeat
+	'sr_repeat' 				=> 'Wiederholen für SEPA-Konto:', // Settlementrun repeat
 	'Upload CDR template'		=> 'CDR-Vorlage hochladen',
 	'Upload invoice template'	=> 'Rechnungsvorlage hochladen',
 
