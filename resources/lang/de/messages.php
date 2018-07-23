@@ -143,8 +143,10 @@ return [
 	'Headline 1'				=> 'Überschrift Kopfzeile',
 	'Headline 2'				=> 'Überschrift Navigationsleiste',
 	//Billing
+	'accCmd_error_noCC' 		=> "Dem Vertrag :contract_nr [ID :contract_id] wurde keine Kostenstelle zugewiesen. Für den Kunde wird keine Rechnung erstellt.",
 	'accCmd_invoice_creation_deactivated' => "Bei folgenden Verträgen wurde die Rechnungserstellung deaktiviert: :contractnrs",
 	'accCmd_processing' 		=> 'Der Abrechnungslauf wird erstellt. Bitte warten Sie bis der Prozess abgeschlossen ist.',
+	'accCmd_notice_CDR' 		=> "Dem Vertrag :contract_nr [ID :contract_id] werden Einzelverbindungsnachweise abgerechnet, obwohl kein gültiger Telefontarif vorliegt. (Kommt durch verzögerte Abrechnung nach Beenden des Tarifs vor)",
 	'CDR retention period' 		=> 'Aufbewahrungsfrist für Einzelverbindungsnachweise',
 	'Day of Requested Collection Date'	=> 'Monatlicher Abrechnungstag',
 	'Tax in %'					=> 'Mehrwertsteuer in %',

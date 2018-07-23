@@ -9,8 +9,10 @@ return [
 	*/
 
 	// Descriptions of Form Fields in Edit/Create
+	'accCmd_error_noCC' 	=> "Contract :contract_nr [ID :contract_id] has no CostCenter assigned. No invoice will be created for the customer.",
 	'accCmd_invoice_creation_deactivated' => "Following contracts have deactivated invoice creation: :contractnrs",
 	'accCmd_processing' 	=> 'The SettlementRun is executed. Please wait until this process has finished.',
+	'accCmd_notice_CDR' 	=> "Contract :contract_nr [ID :contract_id] has Call Data Records but no valid Voip Tariff assigned",
 	'alert' 				=> 'Attention!',
 	'ALL' 					=> 'ALL',
 	'Call Data Record'		=> 'Call Data Record',
