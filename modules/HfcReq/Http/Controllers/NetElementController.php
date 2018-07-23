@@ -80,7 +80,7 @@ class NetElementController extends HfcBaseController {
 			array('form_type' => 'text', 'name' => 'community_rw', 'description' => 'Community RW'),
 			array('form_type' => 'text', 'name' => 'address1', 'description' => 'Address Line 1'),
 			array('form_type' => 'text', 'name' => 'address2', 'description' => 'Address Line 2'),
-			array('form_type' => 'text', 'name' => 'address3', 'description' => 'Address Line 3'),
+			array('form_type' => 'text', 'name' => 'controlling_link', 'description' => 'Controlling Link'),
 			array('form_type' => 'textarea', 'name' => 'descr', 'description' => 'Description'),
 		);
 
