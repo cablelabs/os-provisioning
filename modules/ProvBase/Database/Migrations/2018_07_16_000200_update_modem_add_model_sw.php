@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 /*
  * MPR: Modem Positioning Rule
  */
-class UpdateModemAddSwRev extends BaseMigration {
+class UpdateModemAddModelSw extends BaseMigration {
 
 	protected $tablename = 'modem';
 
@@ -18,6 +18,7 @@ class UpdateModemAddSwRev extends BaseMigration {
 	public function up()
 	{
 		Schema::table($this->tablename, function(Blueprint $table) {
+			$table->string('model')->nullable()->default(NULL);
 			$table->string('sw_rev')->nullable()->default(NULL);
 		});
 
@@ -32,7 +33,7 @@ class UpdateModemAddSwRev extends BaseMigration {
 	public function down()
 	{
 		Schema::table($this->tablename, function(Blueprint $table) {
-			$table->dropColumn('sw_rev');
+			$table->dropColumn(['model', 'sw_rev']);
 		});
 	}
 

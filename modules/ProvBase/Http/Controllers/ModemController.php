@@ -233,9 +233,9 @@ class ModemController extends \BaseController {
 	 *
 	 * @author Ole Ernst
 	 */
-	public function sw_rev_view()
+	public function firmware_view()
 	{
-		$view_var = Modem::get_sw_rev();
+		$view_var = Modem::get_firmware_tree();
 
 		$headline = $view_header = 'Firmware';
 		$create_allowed = false;

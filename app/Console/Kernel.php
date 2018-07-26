@@ -144,14 +144,17 @@ class Kernel extends ConsoleKernel {
 			// update firmware version string of every modem once a day
 			$schedule->call(function () {
 				foreach (\DB::table('modem')->whereNull('deleted_at')->pluck('id') as $id) {
-					$sw = \Modules\ProvBase\Entities\Modem::get_sw_rev($id);
-					if (!$sw)
+					$tmp = \Modules\ProvBase\Entities\Modem::get_firmware_tree($id);
+					if (!$tmp)
 						continue;
 
-					$sw = reset($sw);
-					$sw = reset($sw);
-					$sw = each($sw)[0];
-					\DB::statement("UPDATE modem SET sw_rev = '$sw' where id='$id'");
+					$vendor = key($tmp);
+					$tmp = reset($tmp);
+					$model = key($tmp);
+					$tmp = reset($tmp);
+					$sw_rev = key($tmp);
+
+					\DB::statement("UPDATE modem SET model = '$vendor $model', sw_rev = '$sw_rev' where id='$id'");
 				}
 			})->daily();
 		}

@@ -57,13 +57,13 @@ class Modem extends \BaseModel {
 			\Session::forget('modem_show_filter');
 
 		return ['table' => $this->table,
-				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
+				'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
 				'bsclass' => $bsclass,
 				'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
 				'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
 				'eager_loading' => ['configfile','contract'],
 				'disable_sortsearch' => ['contract_valid' => 'false'],
-				'help' => [$this->table.'.sw_rev' => 'sw_rev_update_frequency'],
+				'help' => [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'],
 				'order_by' => ['0' => 'desc'],
 				'where_clauses' => self::_get_where_clause(),
 			];
@@ -598,7 +598,7 @@ class Modem extends \BaseModel {
 	 *
 	 * @author Ole Ernst
 	 */
-	public static function get_sw_rev($id = null)
+	public static function get_firmware_tree($id = null)
 	{
 		$ret = [];
 		foreach (glob("/var/lib/cacti/rra/cm-$id*.json") as $file) {

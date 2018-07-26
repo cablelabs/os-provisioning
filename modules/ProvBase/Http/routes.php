@@ -14,7 +14,7 @@ BaseRoute::group([], function() {
 
 	BaseRoute::get('modem/firmware', [
 		'as' => 'Modem.firmware',
-		'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@sw_rev_view',
+		'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@firmware_view',
 		'middleware' => ['can:view,Modules\ProvBase\Entities\Modem'],
 	]);
 

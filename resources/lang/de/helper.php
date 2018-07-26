@@ -107,7 +107,7 @@ return [
 	'contract_number' 				=> 'Achtung - Kundenkennwort wird bei Änderung automatisch geändert!',
 	'mac_formats'					=> "Erlaubte Formate (Groß-/Kleinschreibung nicht unterschieden):\n\n1) AA:BB:CC:DD:EE:FF\n2) AABB.CCDD.EEFF\n3) AABBCCDDEEFF",
 	'fixed_ip_warning'				=> 'Die Nutzung fester IP Adressen ist nicht empfohlen, da hierbei Modems und ihre zugehörigen CPEs nicht mehr zwsichen CMTSen verschoben werden können. Anstatt den Endkunden die jeweilige IP Adresse zu nennen, sollte ihnen der Hostname mitgeteilt werden, da sich dieser nicht ändert.',
-	'sw_rev_update_frequency'		=> 'Die Firmware Version wird einmal täglich aktualisiert.',
+	'modem_update_frequency'		=> 'Dieses Feld wird einmal täglich aktualisiert.',
 
  /**
   *	MODULE: ProvVoip
