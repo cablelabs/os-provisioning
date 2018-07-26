@@ -272,7 +272,7 @@ class Modem extends \BaseModel {
 	 */
 	const CONF_FILE_PATH = '/etc/dhcp-nmsprime/modems-host.conf';
 	const CONF_FILE_PATH_PUB = '/etc/dhcp-nmsprime/modems-clients-public.conf';
-	const IGNORE_CPE_FILE_PATH = '/etc/dhcp-nmsprime/ignore_cpe.conf';
+	const IGNORE_CPE_FILE_PATH = '/etc/dhcp-nmsprime/ignore-cpe.conf';
 
 
 	/**
