@@ -272,6 +272,7 @@ class Modem extends \BaseModel {
 	 */
 	const CONF_FILE_PATH = '/etc/dhcp-nmsprime/modems-host.conf';
 	const CONF_FILE_PATH_PUB = '/etc/dhcp-nmsprime/modems-clients-public.conf';
+	const IGNORE_CPE_FILE_PATH = '/etc/dhcp-nmsprime/ignore_cpe.conf';
 
 
 	/**
@@ -353,6 +354,86 @@ class Modem extends \BaseModel {
 
 		// chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
 		system('/bin/chown -R apache /etc/dhcp-nmsprime/');
+	}
+
+
+	/**
+	 * Creates file to ignore booting of CPE/MTA from unknown CM for multi NMS environments.
+	 * Creates a blank file if NMSPrime is the only provisioning system.
+	 *
+	 * @author Patrick Reichel
+	 */
+	public static function create_ignore_cpe_dhcp_file() {
+
+		// only add content if multiple dhcp servers exist
+		if (!ProvBase::first()->multiple_provisioning_systems) {
+			$content = "# Ignoring no devices – multiple_provisioning_systems not set in ProvBase";
+		}
+		else {
+			// get all not deleted modems
+			// attention: do not use “where('network_access', '>', '0')” to shrink the list
+			//   ⇒ MTAs shall get IPs even if network_access is disabled!
+			$modems_raw = \DB::select('SELECT hostname, mac FROM modem WHERE deleted_at IS NULL');
+			$modems = [];
+			foreach ($modems_raw as $modem) {
+				$modems[\Str::lower($modem->mac)] = $modem->hostname;
+			}
+			ksort($modems);
+
+			// get all configfiles with NetworkAccess enabled
+			exec('grep "^[[:blank:]]*NetworkAccess[[:blank:]]*1" /tftpboot/cm/*.conf', $enabled_configs, $ret);
+			if ($ret > 0) {
+				\Log::error('Error getting config files with NetworkAccess enabled in '.__METHOD__);
+			}
+
+			$hostnames = [];
+			foreach ($enabled_configs as $config) {
+				$_ = explode('.conf', $config)[0];
+				$_ = explode('/', $_);
+				array_push($hostnames, array_pop($_));
+			}
+
+			$remote_id_lines = [];
+			foreach ($modems as $mac => $hostname) {
+				if (in_array($hostname, $hostnames)) {
+					$line = "\t\t(option agent.remote-id != ".\Str::lower($mac).")";
+					array_push($remote_id_lines, $line);
+				}
+			}
+
+			$remote_id_block = implode(" and\n", $remote_id_lines);
+			$lines = [
+				"# ignore all non-modems not attached to modems provsioned by NMSPrime",
+				'class "ignore_cpe" {',
+				"\tmatch  if",
+				"\t\t(substring(option vendor-class-identifier,0,6) != \"docsis\") and",
+				$remote_id_block,
+				"\t;",
+				"",
+				"\t# log ignored devices",
+				"\tlog(info, concat(",
+				"\t\t\"IGNORING device \", binary-to-ascii(16, 8, \":\", substring(hardware,1,6)),",
+				"\t\t\" at unknown modem \", binary-to-ascii(16, 8, \":\", option agent.remote-id))",
+				"\t);",
+				"",
+				"\tignore booting;",
+				"}",
+			];
+			$content = implode("\n", $lines);
+		}
+
+		// lock
+		$fp = fopen(self::CONF_FILE_PATH, "r+");
+
+		if (!flock($fp, LOCK_EX))
+			Log::error('Could not get exclusive lock for '.self::CONF_FILE_PATH);
+
+		self::_write_dhcp_file(self::IGNORE_CPE_FILE_PATH, $content);
+
+		// unlock
+		flock($fp, LOCK_UN);
+		fclose($fp);
+
 	}
 
 
@@ -1510,6 +1591,7 @@ class ModemObserver
 
 		if (multi_array_key_exists(['contract_id', 'public', 'network_access', 'configfile_id', 'qos_id', 'mac'], $diff))
 		{
+			Modem::create_ignore_cpe_dhcp_file();
 			$modem->make_dhcp_cm();
 			$modem->restart_modem(array_key_exists('mac', $diff));
 			$modem->make_configfile();
@@ -1527,6 +1609,7 @@ class ModemObserver
 		Log::debug(__METHOD__." started for ".$modem->hostname);
 
 		// $modem->make_dhcp_cm_all();
+		Modem::create_ignore_cpe_dhcp_file();
 		$modem->make_dhcp_cm(true);
 		$modem->restart_modem();
 		$modem->delete_configfile();

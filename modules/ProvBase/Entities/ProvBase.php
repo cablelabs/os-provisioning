@@ -3,7 +3,7 @@
 namespace Modules\ProvBase\Entities;
 
 use File, GlobalConfig;
-use Modules\ProvBase\Entities\{ProvBase, Qos};
+use Modules\ProvBase\Entities\{Modem, ProvBase, Qos};
 
 class ProvBase extends \BaseModel {
 
@@ -164,6 +164,11 @@ class ProvBaseObserver
 		$model->make_dhcp_glob_conf();
 
 		$changes = $model->getDirty();
+
+		// create new CPE ignore file
+		if (array_key_exists('multiple_provisioning_systems', $changes)) {
+			Modem::create_ignore_cpe_dhcp_file();
+		}
 
 		// re-evaluate all qos rate_max_help fields if one or both coefficients were changed
 		if (multi_array_key_exists(['ds_rate_coefficient', 'us_rate_coefficient'], $changes)) {
