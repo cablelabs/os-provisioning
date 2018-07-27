@@ -904,7 +904,7 @@ class BaseController extends Controller {
 				if ($form_id && !in_array($form_id, $attached_ids)) {
 					$eloquent_relation->attach($form_id, ['created_at' => date('Y-m-d H:i:s')]);
 
-					$attribute = $eloquent_relation->get()->where('id', '=', $form_id)->first();
+					$attribute = $attached_entities->where('id', '=', $form_id)->first();
 
 					$attribute = $attribute->name ?? $attribute->login_name ?? 'id '. $form_id;
 					$attribute .= " attached";
