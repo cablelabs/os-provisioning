@@ -13,8 +13,9 @@ class CmtsController extends \BaseController {
 	{
 		$init_values = array();
 
+
 		if (!$model)
-			$model = new IpPool;
+			$model = new Cmts;
 
 		// create context: calc next free ip pool
 		if (!$model->exists)
@@ -33,6 +34,31 @@ class CmtsController extends \BaseController {
 			$init_values += array(
 				'ip' => $next_ip,
 			);
+
+		}
+
+		// CMTS type selection based on CMTS company
+		if (isset($_GET['company'])) // for auto reload
+			$company = $_GET['company'];
+		else if ($model->exists) // else if using edit.blade
+		{
+			$company = $model->company;
+			$init_values += array(
+				'type' => $model->type,
+			);
+		}
+		else // a fresh create
+			$company = 'Cisco';
+
+		// The CMTS company and type Array
+		$company_array = ['Cisco' => 'Cisco', 'Casa' => 'Casa', 'Arris' => 'Arris', 'Motorola' => 'Motorola', 'Other' => 'Other'];
+		switch ($company)
+		{
+			case 'Cisco': $type = ['ubr7225' => 'ubr7225', 'ubr7246' => 'ubr7246', 'ubr10k' => 'ubr10k']; break;
+			case 'Casa':  $type = ['C1G' => 'C1G', 'C2200' => 'C2200', 'C3200' => 'C3200', 'C100G']; break;
+			case 'Arris': $type = ['C1000' => 'C1000', 'C3' => 'C3', 'C4' => 'C4', 'E6000' => 'E6000']; break;
+			case 'Motorola': $type = ['BSR64000' => 'BSR64000', 'BSR2000' => 'BSR2000']; break;
+			default: $type = ['Other' => 'Other']; break;
 		}
 
 		/**
@@ -41,9 +67,9 @@ class CmtsController extends \BaseController {
 		// TODO: type should be jquery based select depending on the company
 		// TODO: State and Monitoring without functionality -> hidden
 		$ret_tmp = array(
+			array('form_type' => 'select', 'name' => 'company', 'description' => 'Company', 'value' => $company_array),
+			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $type),
 			array('form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname'),
-			array('form_type' => 'select', 'name' => 'company', 'description' => 'Company', 'value' => ['Cisco' => 'Cisco', 'Casa' => 'Casa']),
-			array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['ubr7225' => 'ubr7225', 'ubr10k' => 'ubr10k']),
 			array('form_type' => 'ip', 'name' => 'ip', 'description' => 'IP', 'help' => 'Online'),
 			array('form_type' => 'text', 'name' => 'community_rw', 'description' => 'SNMP Private Community String'),
 			array('form_type' => 'text', 'name' => 'community_ro', 'description' => 'SNMP Public Community String'),
