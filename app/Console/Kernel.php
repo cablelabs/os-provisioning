@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel {
 		'App\Console\Commands\authCommand',
 		'App\Console\Commands\EnsureQueueListenerIsRunning',
 		'App\Console\Commands\addDefaultRolesCommand',
+		'App\Console\Commands\AdminCommand',
 	];
 
 

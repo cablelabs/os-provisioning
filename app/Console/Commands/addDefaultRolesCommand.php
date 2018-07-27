@@ -19,7 +19,7 @@ class addDefaultRolesCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $name = 'nms:addDefaultRoles';
+	protected $name = 'auth:roles';
 
 	/**
 	 * The console command description.
