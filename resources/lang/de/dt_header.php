@@ -147,7 +147,7 @@ return [
 	'mta.mac' => 'MAC-Adresse',
 	'mta.type' => 'Provisionierungstyp',
 	// Configfile
-	'configfile.name' => 'Konfiguartionsdatei',
+	'configfile.name' => 'Konfigurationsdatei',
 	// PhonebookEntry
 	'phonebookentry.id' => 'ID',
 	// Phonenumber
