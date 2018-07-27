@@ -20,7 +20,21 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 {
 	use Authenticatable, Authorizable, HasRolesAndAbilities, Notifiable;
 
+
 	public $table = 'users';
+
+
+	/**
+	 * extending the boot functionality to observe changes
+	 *
+	 * @return void
+	 */
+	public static function boot()
+	{
+		parent::boot();
+
+		User::observe(new UserObserver);
+	}
 
 	/**
 	 * The attributes that are mass assignable.
@@ -138,5 +152,13 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 	public function hasSameRankAs(User $user) : bool
 	{
 		return $this->getHighestRank() == $user->getHighestRank() ? true : false;
+	}
+}
+
+class UserObserver
+{
+	public function created($user)
+	{
+		Bouncer::allow($user)->toOwn(User::class);
 	}
 }

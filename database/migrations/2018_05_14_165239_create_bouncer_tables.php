@@ -111,6 +111,7 @@ class CreateBouncerTables extends Migration
                             'description' => $role->description,
                         ]);
                     Bouncer::assign($role->name)->to($user);
+                    Bouncer::allow($user)->toOwn(User::class); // Ability to manage own Usermodel
                 }
             }
             //create Custom Abilities
@@ -123,6 +124,10 @@ class CreateBouncerTables extends Migration
             Bouncer::forbid('support')->to('download', \Modules\BillingBase\Entities\SettlementRun::class);
             Bouncer::allow('support')->to('view_analysis_pages_of', \Modules\ProvBase\Entities\Modem::class);
             Bouncer::allow('support')->to('view_analysis_pages_of', \Modules\ProvBase\Entities\Cmts::class);
+
+            $admin = Role::where('name', 'admin')->first();
+            $admin->rank = 101;
+            $admin->save();
         });
 
         Schema::dropIfExists('authrole');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Auth, Bouncer;
 use App\{ Role, User };
 use App\Http\Controllers\BaseController;
+use Illuminate\Auth\AuthenticationException;
 
 class UserController extends BaseController {
 
@@ -27,9 +28,9 @@ class UserController extends BaseController {
 		if 	($model->exists &&
 			 $current_user != $model &&
 			 $current_user->isNotAn('admin') &&
-			(($current_user_rank < $user_model_rank)  ||
-			 ($current_user_rank == $user_model_rank)))
-			abort(403, 'not authorized to edit this user');
+			 $current_user_rank <= $user_model_rank)
+			throw new AuthException(trans("Not allowed to acces this user") . "!");
+
 
 		return [
 			['form_type' => 'text', 'name' => 'login_name', 'description' => 'Login'],
@@ -46,7 +47,7 @@ class UserController extends BaseController {
 				'value' => $model->html_list(Role::where('rank' , '<=', $current_user_rank)->get(), 'name'),
 				'options' => [
 					'multiple' => 'multiple',
-					(Bouncer::can('update', User::class) && Bouncer::can('update', Role::class)) ? '' : 'disabled' => 'true'],
+					Bouncer::can('update', User::class) ? '' : 'disabled' => 'true'],
 				'help' => trans('helper.assign_role'),
 				'selected' => $model->html_list($model->roles, 'name')]
 		];
@@ -60,6 +61,7 @@ class UserController extends BaseController {
 		else
 			$data['password'] =\Hash::make($data['password']);
 
+		// removed to have a clean "isDirty()" in updated()
 		unset($data['password_confirmation']);
 
 		Bouncer::refresh();
