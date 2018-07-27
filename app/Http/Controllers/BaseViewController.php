@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth, BaseModel, Config, File, GlobalConfig, Input, Log, Module, Redirect, Route, Validator, View ;
+use App, Auth, BaseModel, Bouncer, Cache, Config, File, Form, GlobalConfig, Input;
+use Log, Module, Redirect, Route, Session, Str, Validator, View ;
 
 /*
  * BaseViewController: Is a special Controller which will be a kind of middleware/sub-layer/helper
@@ -173,8 +174,8 @@ class BaseViewController extends Controller {
 
 			// NOTE: Input::get should actually include $_POST global var and $_GET!!
 			// 4.(sub-task) auto-fill all field_value's with HTML Input
-			if (\Input::get($field['name']))
-				$field['field_value'] = \Input::get($field['name']);
+			if (Input::get($field['name']))
+				$field['field_value'] = Input::get($field['name']);
 
 			// 4.(sub-task) auto-fill all field_value's with HTML POST array if supposed
 			if (isset($_POST[$field['name']]))
@@ -273,7 +274,7 @@ class BaseViewController extends Controller {
 						// For hidden fields it's also important that default values are set
 						$value = ($field['field_value'] === null) && isset($field['value']) ? $field['value'] : $field['field_value'];
 						// Note: setting a selection by giving an array doesnt make sense as you can not choose anyway - it also would throw an exception as it's not allowed for hidden fields
-						$s .= \Form::hidden ($field["name"], is_array($value) ? '' : $value);
+						$s .= Form::hidden ($field["name"], is_array($value) ? '' : $value);
 						goto finish;
 					}
 			}
@@ -325,7 +326,7 @@ class BaseViewController extends Controller {
 			}
 
 			// Open Form Group
-			$s .= \Form::openGroup($field["name"], $field["description"], $additional_classes, $color);
+			$s .= Form::openGroup($field["name"], $field["description"], $additional_classes, $color);
 
 			// Output the Form Elements
 			switch ($field["form_type"])
@@ -341,31 +342,35 @@ class BaseViewController extends Controller {
 					else
 						$checked = $field['field_value'];
 
-					$s .= \Form::checkbox($field['name'], $value, null, $checked, $options);
+					$s .= Form::checkbox($field['name'], $value, null, $checked, $options);
 					break;
 
 				case 'file':
-					$s .= \Form::file($field['name'], $options);
+					$s .= Form::file($field['name'], $options);
 					break;
 
 				case 'select' :
-					if (isset($options['multiple']) && isset($field['selected']))
-						$field['field_value'] = array_keys($field['selected']);
+					if (isset($options['multiple']) && isset($field['selected'])) {
+						$escaped_field_name = Str::substr($field["name"], 0, Str::length($field["name"]) - 2);
+						$field['field_value'] = Input::old($escaped_field_name, array_keys($field['selected']));
+						// values MUST be int, because of strict type checking in Form module
+						$field['field_value'] = array_map('intval', $field['field_value']);
+					}
 
-					$s .= \Form::select($field["name"], $value, $field['field_value'], $options);
+					$s .= Form::select($field["name"], $value, $field['field_value'], $options);
 					break;
 
 				case 'password' :
-					$s .= \Form::password($field['name']);
+					$s .= Form::password($field['name'], $options);
 					break;
 
 				case 'link':
-					$s .= \Form::link($field['name'], $field['url'], isset($field['color']) ? : 'default');
+					$s .= Form::link($field['name'], $field['url'], isset($field['color']) ? : 'default');
 					break;
 
 				default:
 					$form = $field["form_type"];
-					$s .= \Form::$form($field["name"], $field['field_value'], $options);
+					$s .= Form::$form($field["name"], $field['field_value'], $options);
 					break;
 			}
 
@@ -376,7 +381,7 @@ class BaseViewController extends Controller {
 							'<i class="fa fa-2x text-info p-t-5 '.(isset($field['help_icon']) ? $field['help_icon'] : 'fa-question-circle').'"></i></a></div>';
 
 			// Close Form Group
-			$s .= \Form::closeGroup();
+			$s .= Form::closeGroup();
 
 
 
@@ -409,9 +414,6 @@ finish:
 		$value   = isset($field["value"]) ? $field["value"] : [];
 		$options = isset($field["options"]) ? $field["options"] : [];
 
-		// \Form::set_layout(['label' => 5, 'form' => 6]);
-		// d(\Form::get_layout());
-
 		switch ($field["form_type"])
 		{
 			case 'checkbox' :
@@ -419,19 +421,19 @@ finish:
 				if ($value == [])
 					$value = 1;
 
-				$s .= \Form::checkbox($field['name'], $value, null, $field['field_value']);
+				$s .= Form::checkbox($field['name'], $value, null, $field['field_value']);
 				break;
 
 			case 'select' :
-				$s .= \Form::select($field["name"], $value, $field['field_value'], $options);
+				$s .= Form::select($field["name"], $value, $field['field_value'], $options);
 				break;
 
 			case 'password' :
-				$s .= \Form::password($field['name']);
+				$s .= Form::password($field['name']);
 				break;
 
 			case 'link':
-				$s .= \Form::link($field['name'], $field['url'], isset($field['color']) ? : 'default');
+				$s .= Form::link($field['name'], $field['url'], isset($field['color']) ? : 'default');
 				break;
 
 			default:
@@ -439,7 +441,7 @@ finish:
 					return '<p name="'.$field['name'].'">'. $field['field_value'] .'</p>';
 
 				$form = $field["form_type"];
-				$s .= \Form::$form($field["name"], $field['field_value'], $options);
+				$s .= Form::$form($field["name"], $field['field_value'], $options);
 				break;
 		}
 
@@ -448,71 +450,52 @@ finish:
 
 
 	/*
-	 * Return the global prepared header links for Main Menu and provide Symbols for Modules
+	 * This Method returns The Menuobjects for the Main Menu
+	 * which constist of icon, link and class of the page
 	 *
-	 * NOTE: this function must take care of installed modules!
+	 * NOTE: this function takes care of installed modules and Permissions!
 	 *
-	 * @return: array() of header links, like
-	 * ['module name' => ['icon' => '...' ,'submodule' => [ 'name of submodule' => ['link' => 'route.entry', 'icon' => '...'], ... ] ...]
-	 *
-	 * @author: Torsten Schmidt, Christian Schramm
+	 * @return: array()
+	 * @author: Christian Schramm
 	 */
-	public static function view_main_menus ()
+	public static function view_main_menus () : array
 	{
-		$ret = array();
-		$modules = \Module::enabled();
+		if (Session::has('menu'))
+			return Session::get('menu');
 
-		// global page
-		$array = include(app_path().'/Config/header.php');
-		foreach ($array as $lines)
-		{
-			// array_push($ret, $lines);
-			foreach ($lines as $k => $line)
-			{
-				if (\Auth::user()->has_permissions(app()->getNamespace(), substr($line['link'], 0, -6))) {
-					$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
-					$ret['Global']['icon'] = 'fa-globe';
-					$ret['Global']['submenu'][$key] = $line;
-				}
+		$menu = [];
+		$modules = Module::enabled();
+		$configMenuItemKey = 'MenuItems';
+
+		$globalPages = Config::get('base.' . $configMenuItemKey);
+
+		foreach ($globalPages as $page => $settings) {
+			if (Bouncer::can('view', $settings['class'] )) {
+				$menuItem = static::translate_view($page, 'Menu');
+				$menu['Global']['icon'] = 'fa-globe';
+				$menu['Global']['submenu'][$menuItem] = $settings;
 			}
 		}
 
-		// foreach module
-		foreach ($modules as $module)
-		{
-			if (File::exists($module->getPath().'/Config/header.php'))
-			{
-				/*
-				 * TODO: use Config::get()
-				 *       this needs to fix namespace problems first
-				 */
-				$name = ($module->get('description') == '' ? $module->name : $module->get('description')); // module name
+		foreach ($modules as $module) {
+			$moduleMenuConfig= Config::get(Str::lower($module->name) . '.' . $configMenuItemKey);
+
+			if (!empty($moduleMenuConfig)) {
+				$name = Config::get(Str::lower($module->name) . '.' .'name') ?? $module->get('description');
 				$icon = ($module->get('icon') == '' ? '' : $module->get('icon'));
-				$ret[$name]['icon'] = $icon;
-
-				$array = include ($module->getPath().'/Config/header.php');
-				foreach ($array as $lines)
+				$menu[$name]['icon'] = $icon;
+				foreach ($moduleMenuConfig as $page => $settings)
 				{
-					foreach ($lines as $k => $line)
-					{
-
-						if (\Auth::user()->has_permissions($module->name, substr($line['link'], 0, -6))) {
-							$key = \App\Http\Controllers\BaseViewController::translate_view($k, 'Menu');
-							$ret[$name]['submenu'][$key] = $line;
-						}
+					if (Bouncer::can('view', $settings['class'])) {
+						$menuItem = static::translate_view($page, 'Menu');
+						$menu[$name]['submenu'][$menuItem] = $settings;
 					}
 				}
 			}
 		}
 
-		// cleanup menu
-		foreach ($ret as $menu_name => $entries) {
-			if (count($entries) == 0) {
-				unset($ret[$menu_name]);
-			}
-		}
-
-		return $ret;
+		Session::put('menu', $menu);
+		return $menu;
 	}
 
 

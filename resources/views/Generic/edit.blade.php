@@ -13,7 +13,7 @@
 
 @section('content_top')
 
-	{{ $headline }}
+	{!! $headline !!}
 
 @stop
 
@@ -25,7 +25,7 @@
 	?>
 
 	@include('Generic.above_infos')
-	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'EditForm')) }}
+	{!! Form::model($view_var, array('route' => array($form_update, $view_var->id), 'method' => 'put', 'files' => true, 'id' => 'EditForm')) !!}
 
 		@include($form_path, $view_var)
 
@@ -57,7 +57,7 @@
 
 					{{-- include pure HTML --}}
 					@if (isset($relation['html']))
-						{{$relation['html']}}
+						{!! $relation['html'] !!}
 					@endif
 
 					{{-- include a view --}}
@@ -145,7 +145,7 @@
 			processing: true,
 			serverSide: true,
 			deferRender: true,
-			ajax: '{{Route("GuiLog.filter")}}?model_id={{$view_var->id}}&model={{$view_var->table}}',
+			ajax: '{!! Route( App\Http\Controllers\NamespaceController::get_route_name(). ".guilog", $view_var) !!}',
 			columns:[
 						{data: 'responsive', orderable: false, searchable: false},
 						{data: 'created_at', name: 'created_at'},
@@ -156,6 +156,21 @@
 			],
 		});
 	$( $.fn.dataTable.tables(true) ).DataTable().responsive.recalc();
+	});
+
+	$(document).ready(function() {
+		@foreach (['street', 'zip', 'city', 'district'] as $element)
+			$('{{'#'.$element}}').autocomplete({
+				source:function (data, response) {
+					$.ajax({
+						url:'/admin/Contract/autocomplete/{!! $element !!}?q=' + $('#{!! $element !!}').val(),
+						success:function(data){
+							response(data);
+						}
+					})
+				}
+			});
+		@endforeach
 	});
 </script>
 @include('Generic.handlePanel')

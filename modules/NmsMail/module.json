@@ -1,0 +1,16 @@
+{
+    "name": "NmsMail",
+    "alias": "nmsmail",
+    "description": "",
+    "keywords": [],
+    "active": 0,
+    "order": 24,
+    "icon": "fa-paper-plane-o",
+    "providers": [
+        "Modules\\NmsMail\\Providers\\MailServiceProvider"
+    ],
+    "aliases": [],
+    "files": [
+        "start.php"
+    ]
+}

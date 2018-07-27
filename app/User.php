@@ -1,28 +1,164 @@
-<?php namespace App;
+<?php
 
+namespace App;
+
+use DB;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Notifications\Notifiable;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
-class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
+/**
+ * This is the Model, holding the User data for authentication.
+ * A User belongsToMany Roles and a Role role holds CRUD
+ * separated Permissions. To gain access data the
+ * Middleware will check for Permissions.
+ */
+class User extends BaseModel implements AuthenticatableContract, AuthorizableContract
+{
+	use Authenticatable, Authorizable, HasRolesAndAbilities, Notifiable;
 
-	use Authenticatable, CanResetPassword;
+
+	public $table = 'users';
+
 
 	/**
-	 * The database table used by the model.
+	 * extending the boot functionality to observe changes
 	 *
-	 * @var string
+	 * @return void
 	 */
-	protected $table = 'users';
+	public static function boot()
+	{
+		parent::boot();
 
+		User::observe(new UserObserver);
+	}
 
 	/**
-	 * The attributes excluded from the model's JSON form.
+	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['password', 'remember_token'];
+	protected $fillable = [
+		'first_name',
+		'last_name',
+		'login_name',
+		'email',
+		'password',
+		'language',
+		'active',
+	];
 
+	/**
+	 * The attributes that should be hidden for arrays.
+	 *
+	 * @var array
+	 */
+	protected $hidden = [
+		'password',
+		'remember_token',
+	];
+
+	public function tickets()
+	{
+		return $this->belongsToMany('\Modules\Ticketsystem\Entities\Ticket', 'ticket_user', 'user_id', 'ticket_id');
+	}
+
+	/**
+	 * Validation
+	 *
+	 *  Add your validation rules here
+	 */
+	public static function rules($id=null)
+	{
+		return array(
+			'login_name' => 'required|unique:users,login_name,'.$id.',id,deleted_at,NULL',
+			'password' => 'sometimes|min:6|confirmed',
+			'password_confirmation' => 'min:6|required_with:password|same:password',
+		);
+	}
+
+	/**
+	 * View related Code
+	 */
+	/**
+	 * Name which is Displayed on Top and in Headline
+	 */
+	public static function view_headline() : string
+	{
+		return 'Users';
+	}
+
+	/**
+	 *  Icon for this model
+	 */
+	public static function view_icon() : string
+	{
+		return '<i class="fa fa-user-o"></i>';
+	}
+
+	/**
+	 * This Method returns a configuration array to generate
+	 * the datatables on the index Page of each module.
+	 *
+	 * For more documentation look in BaseController
+	 * TODO: set color dependent of user role/permission
+	 */
+	public function view_index_label()
+	{
+		return ['table' => $this->table,
+				'index_header' => [$this->table.'.login_name', $this->table.'.first_name', $this->table.'.last_name'],
+				'header' => $this->first_name.' '.$this->last_name,
+				'where_clauses' => ['users.id <= 100']
+			];
+	}
+
+
+	public function getHighestRank() : int
+	{
+		$ranks = $this->roles()->pluck('rank');
+		$highestRank = 0;
+
+		foreach ($ranks as $rank) {
+			$highestRank = $rank > $highestRank ? $rank : $highestRank;
+		}
+
+		return $highestRank;
+	}
+
+	public static function getHighestRankOf(User $user) : int
+	{
+		$ranks = $user->roles()->pluck('rank');
+		$highestRank = 0;
+		foreach ($ranks as $rank) {
+			$highestRank = $rank > $highestRank ? $rank : $highestRank;
+		}
+
+		return $highestRank;
+	}
+
+	public function hasHigherRankThan(User $user) : bool
+	{
+		return $this->getHighestRank() > $user->getHighestRank() ? true : false;
+	}
+
+	public function hasLowerRankThan(User $user) : bool
+	{
+		return $this->getHighestRank() < $user->getHighestRank() ? true : false;
+	}
+
+	public function hasSameRankAs(User $user) : bool
+	{
+		return $this->getHighestRank() == $user->getHighestRank() ? true : false;
+	}
+}
+
+class UserObserver
+{
+	public function created($user)
+	{
+		Bouncer::allow($user)->toOwn(User::class);
+	}
 }

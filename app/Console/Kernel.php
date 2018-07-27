@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel {
 		'App\Console\Commands\authCommand',
 		'App\Console\Commands\EnsureQueueListenerIsRunning',
 		'App\Console\Commands\addDefaultRolesCommand',
+		'App\Console\Commands\AdminCommand',
 	];
 
 
@@ -24,8 +25,8 @@ class Kernel extends ConsoleKernel {
 	 * Define the application's command schedule.
 	 *
 	 * NOTE: the withoutOverlapping() statement is just for security reasons
-	 * and should never be required. But if a task hangs up, this will avoid
-	 * starting many parallel tasks. (Torsten Schmidt)
+	 * and should never be required. But if a task hangs up, this will
+	 * avoid starting many parallel tasks. (Torsten Schmidt)
 	 *
 	 * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
 	 * @return void
@@ -209,4 +210,13 @@ class Kernel extends ConsoleKernel {
 		}
 	}
 
+	  /**
+     * Register the Closure based commands for the application.
+     *
+     * @return void
+     */
+    protected function commands()
+    {
+        require base_path('routes/console.php');
+    }
 }

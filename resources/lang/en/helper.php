@@ -1,9 +1,22 @@
 <?php
 
 return [
-/**
- * Index Page - Datatables
- */
+ /**
+  * Authentication and Base
+  */
+	'assign_role'					=> 'Assign one or more Roles to this User. Users without a Role cant use the NMS because they got no Permissions.',
+	'assign_users'					=> 'Assign one or more Users to this Role. Changes made here are not visible in the GuiLog of the user.',
+	'assign_rank'					=> "The rank of a role determines the ability to edit other users. \nYou can assign values from 0 to 100. (higher is better). \nIf a user has more than one role, the highest rank is used. \nIf the ability to update users is set, the rank is also checked. Only if the rank of the editor is higher, permission is granted. Furthermore, when creating or updating users, only roles with euqal or lower rank can be assigned.",
+	'All abilities'					=> 'This ability allows or forbids all authorisation requests, except for the abilities, which are explicitly allowed or forbidden. This is mainly a helper ability. If it is not set, you have to set all abilities by hand. If you change this ability, when many other abilities are set, it will take some time to apply all the changes.',
+	'View everything'			=> 'This ability allows to view all pages. Forbidding is disabled, because in this case you should use the "forbid all abilities" ability. This is mainly a helper ability for guests or very low priviledged users.',
+	'Use api'					=> 'This ability allows or forbids to access the API routes with "Basic Auth" (the email is used as username).',
+	'See income chart'			=> 'This ability allows or forbids to view the income chart on the dashboard.',
+	'View analysis pages of modems'	=> 'This ability allows or forbids to access the analysis pages of a modem.',
+	'View analysis pages of cmts' => 'This ability allows or forbids to access the analysis pages of a CMTS.',
+	'Download settlement runs'	=> 'This ability allows or forbids the download of settlement runs. This ability has no impact if it is forbidden to manage settlement runs.',
+ /**
+  * Index Page - Datatables
+  */
 	'SortSearchColumn'				=> 'This Column cannot be searched or ordered.',
 	'PrintVisibleTable'				=> 'Prints the shown table. If the table is filtered make sure to select the \"All\" option to display everything. Loading can take a few seconds.',
 	'ExportVisibleTable'			=> 'Exports the shown table. If the table is filtered make sure to select the \"All\" option to display everything. Loading can take a few seconds.',
@@ -30,6 +43,7 @@ return [
 	'Company_Management'			=> 'Comma separated list of names',
 	'Company_Directorate'			=> 'Comma separated list of names',
 	'Company_TransferReason'		=> 'Template from all Invoice class data field keys - Contract Number and Invoice Nr is default',
+	'conn_info_template' 			=> 'Tex Template used to Create Connection Information on the Contract Page for a Customer',
 
 	//CostCenterController
 	'CostCenter_BillingMonth'		=> 'Accounting for yearly charged items - corresponds to the month the invoices are created for. Default: 6 (June) - if not set. Please be careful to not miss any payments when changing this!',
@@ -57,6 +71,7 @@ return [
 	//SepaAccountController
 	'SepaAccount_InvoiceHeadline'	=> 'Replaces Headline in Invoices created for this Costcenter',
 	'SepaAccount_InvoiceText'		=> 'The Text of the separate four \'Invoice Text\'-Fields is automatically chosen dependent on the total charge and SEPA Mandate and is set in the appropriate Invoice for the Customer. It is possible to use all data field keys of the Invoice Class as placeholder in the form of {fieldname} to build a kind of template. These are replaced by the actual value of the Invoice.',
+	'tex_template' 					=> 'TeX Template',
 
 	// SettlementrunController
 	'settlement_verification' 		=> 'If activated it\'s not possible to repeat the Settlement Run. Customer Invoices are only visible when this checkbox is activated.',

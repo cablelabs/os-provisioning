@@ -3,7 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddGeocodeSourceField {
+class AddGeocodeSourceField extends Migration
+{
 
 	// name of the table to create
 	protected $tablename = "modem";

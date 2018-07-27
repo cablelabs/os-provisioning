@@ -10,7 +10,7 @@ use Modules\ProvMon\Http\Controllers\ProvMonController;
 class Modem extends \BaseModel {
 
 	// get functions for some address select options
-	use \App\Models\AddressFunctionsTrait;
+	use \App\AddressFunctionsTrait;
 
 	// The associated SQL table for this Model
 	public $table = 'modem';
@@ -200,14 +200,14 @@ class Modem extends \BaseModel {
 			$ret['dummy']['Mta']['relation'] = $this->mtas;
 		}
 
+		// only show endpoints (and thus the ability to create a new one) for public CPEs
+		if ($this->public) {
+			$ret['dummy']['Endpoint']['class'] = 'Endpoint';
+			$ret['dummy']['Endpoint']['relation'] = $this->endpoints;
+		}
+
 		if (\Module::collections()->has('ProvVoipEnvia'))
 		{
-			// only show endpoints (and thus the ability to create a new one) for public CPEs
-			if ($this->public) {
-				$ret['dummy']['Endpoint']['class'] = 'Endpoint';
-				$ret['dummy']['Endpoint']['relation'] = $this->endpoints;
-			}
-
 			$ret['dummy']['EnviaContract']['class'] = 'EnviaContract';
 			$ret['dummy']['EnviaContract']['relation'] = $this->enviacontracts;
 			$ret['dummy']['EnviaContract']['options']['hide_create_button'] = 1;
@@ -593,7 +593,7 @@ class Modem extends \BaseModel {
 			else throw new Exception("CMTS company not set");
 
 			// success message
-			\Session::push('tmp_info_above_form', trans('messages.modem_restart_cmts'));
+			\Session::push('tmp_info_above_form', trans('messages.modem_restart_success_cmts'));
 		}
 		catch (Exception $e)
 		{
@@ -604,7 +604,7 @@ class Modem extends \BaseModel {
 				snmpset($fqdn, $config->rw_community, '1.3.6.1.2.1.69.1.1.3.0', 'i', '1', 300000, 1);
 
 				// success message - make it a warning as sth is wrong when it's not already restarted by CMTS??
-				\Session::push('tmp_info_above_form', trans('messages.modem_restart_direct'));
+				\Session::push('tmp_info_above_form', trans('messages.modem_restart_success_direct'));
 			} catch (Exception $e) {
 				\Log::error("Could not restart $this->hostname directly ('".$e->getMessage()."')");
 
@@ -1404,6 +1404,7 @@ class ModemObserver
 		}
 
 		// Refresh MPS rules
+		// Note: does not perform a save() which could trigger observer.
 		if (\Module::collections()->has('HfcCustomer'))
 		{
 			if (multi_array_key_exists(['x', 'y'], $diff)) {

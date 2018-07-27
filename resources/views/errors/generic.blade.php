@@ -24,7 +24,7 @@
         <div class="error">
             <div class="error-code m-b-10">{{$error}}<i class="fa fa-warning"></i></div>
             <div class="error-content">
-                <div class="error-message">{{$message}}</div>
+                <div class="error-message">{!! $message !!}</div>
                 @if ($error == 403)
                 	<div class="error-desc m-b-20">
 						<b>Permission denied!</b> <br />
@@ -37,7 +37,7 @@
     	        @endif
                 <div>
 					<a href="{{$link}}" class="btn btn-success">Go Back to Home Page</a><br><br>
-					<a href="javascript:history.back()" class="btn btn-success">Go Back to previous page.</a>
+					<a href="{{ URL::previous() }}" class="btn btn-success">Go Back to previous page.</a>
                 </div>
             </div>
         </div>

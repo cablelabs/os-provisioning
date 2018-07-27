@@ -6,8 +6,8 @@
     <ul class="nav">
       <li class="nav-profile">
         <div class="info">
-          {{ $framework['header2'] }}
-          <small>Version {{ $framework['version'] }}</small>
+          {!! $framework['header2'] !!}
+          <small>Version {!! $framework['version'] !!}</small>
         </div>
       </li>
     </ul>
@@ -17,7 +17,7 @@
     <ul class="nav">
       @if (\Module::collections()->has('Dashboard'))
         <li id ="dashboardsidebar" class="{{ ($route_name == 'Dashboard') ? 'active' : ''}}">
-          <a href="{{BaseRoute::get_base_url()}}/Dashboard">
+          <a href="{{route('Dashboard.index')}}">
           <i class="fa fa-home"></i>
           <span cl>Dashboard</span></a>
         </li>
@@ -35,7 +35,7 @@
           <ul class="sub-menu">
           @foreach ($typearray['submenu'] as $type => $valuearray)
           <li id="{{  Str::slug($type,'_') }}">
-            <a href="{{route($valuearray['link'])}}">
+            <a href="{{route($valuearray['link'])}}" style="overflow: hidden; white-space: nowrap;">
               <i class="fa fa-fw {{ $valuearray['icon'] }}"></i>
               <span>{{ $type }}</span>
             </a>
@@ -46,10 +46,9 @@
         @endif
       @endforeach
     </ul>
-
+    @if ($user->can('view', Modules\HfcBase\Entities\TreeErd::class))
     <ul class="nav">
       <li class="nav-header">Networks</li>
-
       @foreach ($networks as $network)
         <li id="network_{{$network->id}}" class="has-sub" data-sidebar="level1">
           <a href="javascript:;">
@@ -66,8 +65,8 @@
             </li>
             <ul class="sub-menu d-block" style="list-style-position: inside;">
               @foreach ($network->get_all_cluster_to_net() as $cluster)
-                <li id="{{$cluster->name}}" class="has-sub" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
-                  <a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}">
+                <li id="{{$cluster->name}}" class="has-sub">
+                  <a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
                     <i class="fa fa-circle-thin text-info"></i>
                     {{$cluster->name}}
                   </a>
@@ -85,6 +84,7 @@
         </a>
       </li>
     </ul>
+    @endif
   {{-- end sidebar nav --}}
   </div>
 {{-- end sidebar scrollbar --}}

@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App, Auth, BaseModel, Config, File, GlobalConfig, Input, Log, Module, NoAuthenticateduserError, Redirect, Route, Validator, View;
+use App, Auth, BaseModel, Bouncer, Config, File, GlobalConfig, Input, Log, Module;
+use NoAuthenticateduserError, Redirect, Route, Session, Str, Validator, View;
 use App\Exceptions\AuthException;
 use Illuminate\Support\Facades\Request;
 use Monolog\Logger;
@@ -40,17 +41,21 @@ class BaseController extends Controller {
 
 	/**
 	 * Placeholder for Many-to-Many-Relation multiselect fields that should be handled generically (e.g. users of Ticket)
-	 *
+	 * If special Abilities are needed to edit the valies, place classname in key like:
+	 * [ App\User::class => 'users_ids']
 	 * NOTE: When model is deleted all pivot entries will be detached and special handling in BaseModel@delete is omitted
 	 */
 	protected $many_to_many = [];
 
 
-	// Auth Vars
-	// TODO: move to Auth API
-	// protected $permissions = null;
-	// protected $permission_cores = array('model', 'net');
-
+	/**
+	 * File upload paths to handle file upload fields generically - see e.g. CompanyController, SepaAccountController
+	 *
+	 * NOTE: upload field has to be named like the corresponding select field of the upload field
+	 *
+	 * @var Array 	['upload_field' => 'relative storage path']
+	 */
+	protected $file_upload_paths = [];
 
 	/**
 	 * Constructor
@@ -68,7 +73,6 @@ class BaseController extends Controller {
 		App::setLocale(BaseViewController::get_user_lang());
 	}
 
-
 	/*
 	 * Base Function for Breadcrumb. -> Panel Header Right
 	 * overwrite this function in child controller if required.
@@ -81,7 +85,11 @@ class BaseController extends Controller {
 	 */
 	protected function get_form_tabs($view_var)
 	{
-		$class = \NamespaceController::get_model_name();
+		$class = NamespaceController::get_model_name();
+
+		if (Str::contains($class, 'GuiLog'))
+			return;
+
 		$class_name = substr(strrchr($class, "\\"), 1);
 
 		return ['0' => [
@@ -100,7 +108,7 @@ class BaseController extends Controller {
 
 	public static function get_model_obj ()
 	{
-		$classname = \NamespaceController::get_model_name();
+		$classname = NamespaceController::get_model_name();
 
 		// Rewrite model to check with new assigned Model
 		if (!$classname)
@@ -109,7 +117,6 @@ class BaseController extends Controller {
 		if (!class_exists($classname))
 			return null;
 
-		$classname = $classname;
 		$obj = new $classname;
 
 		return $obj;
@@ -117,7 +124,7 @@ class BaseController extends Controller {
 
 	public static function get_controller_obj()
 	{
-		$classname = \NamespaceController::get_controller_name();
+		$classname = NamespaceController::get_controller_name();
 
 		if (!$classname)
 			return null;
@@ -278,7 +285,7 @@ class BaseController extends Controller {
 
 			for ($i = 0; $i < sizeof($a); $i++)
 			{
-				array_push($c, ['name' => key($a), 'route' => \NamespaceController::get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
+				array_push($c, ['name' => key($a), 'route' => NamespaceController::get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
 				$b = next($a);
 			}
 
@@ -306,26 +313,45 @@ class BaseController extends Controller {
 	 * @param dst_path Path to move uploaded file in
 	 * @author Patrick Reichel
 	 */
-	protected function handle_file_upload($base_field, $dst_path) {
-
+	protected function handle_file_upload($base_field, $dst_path)
+	{
 		$upload_field = $base_field."_upload";
 
-		if (Input::hasFile($upload_field)) {
+		if (!Input::hasFile($upload_field))
+			return null;
 
-			// get filename
-			$filename = Input::file($upload_field)->getClientOriginalName();
+		// get filename
+		$filename = Input::file($upload_field)->getClientOriginalName();
 
-			$ext = strrchr($filename, '.');
-			$fn  = substr($filename, 0, strlen($filename) - strlen($ext));
-			$filename = sanitize_filename($fn).$ext;
+		$ext = pathinfo($filename, PATHINFO_EXTENSION);
+		$fn  = pathinfo($filename, PATHINFO_FILENAME);
+		$filename = sanitize_filename($fn).".$ext";
 
-			// move file
-			Input::file($upload_field)->move($dst_path, $filename);
+		// move file
+		Input::file($upload_field)->move($dst_path, $filename);
 
-			// place filename as chosen value in Input field
-			Input::merge(array($base_field => $filename));
+		// place filename as chosen value in Input field
+		Input::merge(array($base_field => $filename));
+
+		return $filename;
+	}
+
+
+	/**
+	 * Handle file uploads generically in store and update function
+	 *
+	 * NOTE: use global Variable 'file_upload_paths' in Controller to specify DB column and storage path
+	 *
+	 * @param Array 	Input data array passed by reference
+	 */
+	private function _handle_file_upload(&$data)
+	{
+		foreach ($this->file_upload_paths as $column => $path) {
+			$filename = $this->handle_file_upload($column, storage_path($path));
+
+			if ($filename !== null)
+				$data[$column] = $filename;
 		}
-
 	}
 
 
@@ -339,6 +365,8 @@ class BaseController extends Controller {
 	public function compact_prep_view ()
 	{
 		$a     = func_get_args()[0];
+
+		$a['user'] = Auth::user();
 
 		$model = static::get_model_obj();
 		if (!$model)
@@ -355,10 +383,10 @@ class BaseController extends Controller {
 
 
 		if(!isset($a['route_name']))
-			$a['route_name'] = \NamespaceController::get_route_name();
+			$a['route_name'] = NamespaceController::get_route_name();
 
 		if(!isset($a['model_name']))
-			$a['model_name'] = \NamespaceController::get_model_name();
+			$a['model_name'] = NamespaceController::get_model_name();
 
 		if(!isset($a['view_header']))
 			$a['view_header'] = $model->view_headline();
@@ -370,7 +398,7 @@ class BaseController extends Controller {
 			$a['headline'] = '';
 
 		if (!isset($a['form_update']))
-			$a['form_update'] = \NamespaceController::get_route_name().'.update';
+			$a['form_update'] = NamespaceController::get_route_name().'.update';
 
 		if (!isset($a['edit_left_md_size']))
 			$a['edit_left_md_size'] = $this->edit_left_md_size;
@@ -382,7 +410,7 @@ class BaseController extends Controller {
 			$a['edit_right_md_size'] = $this->edit_right_md_size;
 
 		if (!isset($a['html_title']))
-			$a['html_title'] = 'NMS Prime - '.\App\Http\Controllers\BaseViewController::translate_view(\NamespaceController::module_get_pure_model_name(),'Header');
+			$a['html_title'] = 'NMS Prime - '.BaseViewController::translate_view(NamespaceController::module_get_pure_model_name(),'Header');
 
 		if (( \Module::collections()->has('ProvVoipEnvia')) && (!isset($a['envia_interactioncount'])) )
 			$a['envia_interactioncount'] = \Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
@@ -433,8 +461,8 @@ class BaseController extends Controller {
 			$obj       = static::get_model_obj();
 			$view_path = 'Generic.index';
 
-			if (View::exists(\NamespaceController::get_view_name().'.index'))
-				$view_path = \NamespaceController::get_view_name().'.index';
+			if (View::exists(NamespaceController::get_view_name().'.index'))
+				$view_path = NamespaceController::get_view_name().'.index';
 		}
 
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
@@ -502,8 +530,8 @@ class BaseController extends Controller {
 	public function index()
 	{
 		$model 			= static::get_model_obj();
-		$headline  		= \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
-		$view_header 	= \App\Http\Controllers\BaseViewController::translate_view('Overview','Header');
+		$headline  		= BaseViewController::translate_view( $model->view_headline(), 'Header' , 2 );
+		$view_header 	= BaseViewController::translate_view('Overview','Header');
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
 		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
@@ -516,8 +544,8 @@ class BaseController extends Controller {
 		}
 
 		$view_path = 'Generic.index';
-		if (View::exists(\NamespaceController::get_view_name().'.index'))
-			$view_path = \NamespaceController::get_view_name().'.index';
+		if (View::exists(NamespaceController::get_view_name().'.index'))
+			$view_path = NamespaceController::get_view_name().'.index';
 
 		// TODO: show only entries a user has at view rights on model and net!!
 		Log::warning('Showing only index() elements a user can access is not yet implemented');
@@ -533,8 +561,8 @@ class BaseController extends Controller {
 	public function create()
 	{
 		$model = static::get_model_obj();
-		$view_header = \App\Http\Controllers\BaseViewController::translate_view( $model->view_headline() , 'Header');
-		$headline    = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header , NULL, $_GET);
+		$view_header = BaseViewController::translate_view( $model->view_headline() , 'Header');
+		$headline    = BaseViewController::compute_headline(NamespaceController::get_route_name(), $view_header , NULL, $_GET);
 		$fields 	 = BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($model), $model);
 		$form_fields = BaseViewController::add_html_string ($fields, 'create');
 		// $form_fields = BaseViewController::add_html_string (static::get_controller_obj()->view_form_fields($model), $model, 'create');
@@ -543,10 +571,10 @@ class BaseController extends Controller {
 		$form_path = 'Generic.form';
 
 		// proof if there is a special view for the calling model
-		if (View::exists(\NamespaceController::get_view_name().'.create'))
-			$view_path = \NamespaceController::get_view_name().'.create';
-		if (View::exists(\NamespaceController::get_view_name().'.form'))
-			$form_path = \NamespaceController::get_view_name().'.form';
+		if (View::exists(NamespaceController::get_view_name().'.create'))
+			$view_path = NamespaceController::get_view_name().'.create';
+		if (View::exists(NamespaceController::get_view_name().'.form'))
+			$form_path = NamespaceController::get_view_name().'.form';
 
 
 		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'headline')));
@@ -591,10 +619,13 @@ class BaseController extends Controller {
 			Log::info ('Validation Rule Error: '.$validator->errors());
 
 			$msg = 'Input invalid – please correct the following errors';
-			\Session::push('tmp_error_above_form', $msg);
+			Session::push('tmp_error_above_form', $msg);
 			return Redirect::back()->withErrors($validator)->withInput()->with('message', $msg)->with('message_color', 'danger');
 		}
 		$data = $controller->prepare_input_post_validation ($data);
+
+		// Handle file uploads generically - this must happen after the validation as moving the file before leads always to validation error
+		$this->_handle_file_upload($data);
 
 		$obj = $obj::create($data);
 
@@ -606,9 +637,9 @@ class BaseController extends Controller {
 			return $id;
 
 		$msg = 'Created!';
-		\Session::push('tmp_success_above_form', $msg);
+		Session::push('tmp_success_above_form', $msg);
 
-		return Redirect::route(\NamespaceController::get_route_name().'.edit', $id)->with('message', $msg)->with('message_color', 'success');
+		return Redirect::route(NamespaceController::get_route_name().'.edit', $id)->with('message', $msg)->with('message_color', 'success');
 	}
 
 	/**
@@ -660,7 +691,7 @@ class BaseController extends Controller {
 		$model    = static::get_model_obj();
 		$view_var = $model->findOrFail($id);
 		$view_header 	= BaseViewController::translate_view($model->view_headline(),'Header');
-		$headline       = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var);
+		$headline       = BaseViewController::compute_headline(NamespaceController::get_route_name(), $view_header, $view_var);
 
 		$fields 		= BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($view_var), $view_var);
 		$form_fields	= BaseViewController::add_html_string ($fields, 'edit');
@@ -689,10 +720,10 @@ class BaseController extends Controller {
 		$form_path = 'Generic.form';
 
 		// proof if there are special views for the calling model
-		if (View::exists(\NamespaceController::get_view_name().'.edit'))
-			$view_path = \NamespaceController::get_view_name().'.edit';
-		if (View::exists(\NamespaceController::get_view_name().'.form'))
-			$form_path = \NamespaceController::get_view_name().'.form';
+		if (View::exists(NamespaceController::get_view_name().'.edit'))
+			$view_path = NamespaceController::get_view_name().'.edit';
+		if (View::exists(NamespaceController::get_view_name().'.form'))
+			$form_path = NamespaceController::get_view_name().'.form';
 
 		// $config_routes = BaseController::get_config_modules();
 		// return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations', 'extra_data')));
@@ -715,44 +746,56 @@ class BaseController extends Controller {
 		$data      = $controller->prepare_input(Input::all());
 		$rules     = $controller->prepare_rules($obj::rules($id), $data);
 		$validator = Validator::make($data, $rules);
-		$data      = $controller->prepare_input_post_validation ($data);
 
 		if ($validator->fails()) {
 			Log::info ('Validation Rule Error: '.$validator->errors());
 
 			$msg = 'Input invalid – please correct the following errors';
-			\Session::push('tmp_error_above_form', $msg);
-			return Redirect::back()->withErrors($validator)->withInput()->with('message', $msg)->with('message_color', 'danger');
+			Session::push('tmp_error_above_form', $msg);
+			return Redirect::back()->with('message', $msg)->with('message_color', 'danger')->withErrors($validator)->withInput();
 		}
 
-		// update timestamp, this forces to run all observer's
-		// Note: calling touch() forces a direct save() which calls all observers before we update $data
-		//       when exit in middleware to a new view page (like Modem restart) this kill update process
-		//       so the solution is not to run touch(), we set the updated_at field directly
-		$data['updated_at'] = \Carbon\Carbon::now(Config::get('app.timezone'));
+		// Handle file uploads generically - this must happen after the validation as moving the file before leads always to validation error
+		$this->_handle_file_upload($data);
+		$data = $controller->prepare_input_post_validation($data);
 
-		// The Update
-		// Note: Eloquent Update requires updated_at to either be in the fillable array or to have a guarded field
-		//       without updated_at field. So we globally use a guarded field from now, to use the update timestamp
-		$obj->update($data);
+		foreach ($obj['original'] as $key => $orig_value) {
+			if (isset($data[$key]) && $data[$key] != $orig_value )
+			$obj->$key = $data[$key];
+		}
+
+		$changed = $obj->getDirty();
+		$changed_many = collect();
+
+		// update timestamp, this forces to run all observer's
+		if (!empty($changed)) {
+			$obj->updated_at = \Carbon\Carbon::now(Config::get('app.timezone'));
+			$obj->save();
+		}
 
 		// Add N:M Relations
-		$this->_set_many_to_many_relations($obj, $data);
+		if (isset($this->many_to_many) && is_array($this->many_to_many))
+			$changed_many = $this->_set_many_to_many_relations($obj, $data);
 
 		// create messages depending on error state created while observer execution
 		// TODO: check if giving msg/color to route is still wanted or obsolete by the new tmp_*_above_* messages format
-		if (!\Session::has('error')) {
+		if (empty($changed) && $changed_many->isEmpty()) {
+			$msg = 'There was no new Input! - No changes were saved to the Database';
+			$color = 'info';
+			Session::push('tmp_info_above_form', $msg);
+		}
+		elseif (!Session::has('error')) {
 			$msg = "Updated!";
 			$color = 'success';
-			\Session::push('tmp_success_above_form', $msg);
+			Session::push('tmp_success_above_form', $msg);
 		}
 		else {
-			$msg = \Session::get('error');
+			$msg = Session::get('error');
 			$color = 'warning';
-			\Session::push('tmp_error_above_form', $msg);
+			Session::push('tmp_error_above_form', $msg);
 		}
 
-		$route_model = \NamespaceController::get_route_name();
+		$route_model = NamespaceController::get_route_name();
 
 		if (in_array($route_model, self::get_config_modules()))
 			return Redirect::route('Config.index');
@@ -839,32 +882,62 @@ class BaseController extends Controller {
 	 */
 	private function _set_many_to_many_relations($obj, $data)
 	{
-		if (!$this->many_to_many)
-			return;
+		foreach ($this->many_to_many as $key => $field) {
 
-		foreach ($this->many_to_many as $field)
-		{
-			if (!isset($data[$field]))
-				$data[$field] = [];
+			if 	(isset($field['classes']) &&
+				(Bouncer::cannot('edit', $field['classes'][0]) || Bouncer::cannot('edit', $field['classes'][1]))) {
+					Session::push('error',"You are not allowed to edit {$field['classes'][0]} or {$field['classes'][1]}");
+					continue;
+				}
 
-			// relation-function_id
-			$func = explode('_', $field)[0];
-			$attached = $obj->$func->pluck('id')->all();
+			if (!isset($data[$field['field']]))
+				$data[$field['field']] = [];
+
+			$changed_attributes = collect();
+			$eloquent_relation_function = explode('_', $field['field'])[0];
+			$eloquent_relation = $obj->$eloquent_relation_function();
+			$attached_entities = $eloquent_relation->get();
+			$attached_ids = $attached_entities->pluck('id')->all();
 
 			// attach new assignments
-			foreach ($data[$field] as $rel_id)
-			{
-				if ($rel_id && !in_array($rel_id, $attached))
-					$obj->$func()->attach($rel_id, ['created_at' => date('Y-m-d H:i:s')]);
+			foreach ($data[$field['field']] as $form_id) {
+				if ($form_id && !in_array($form_id, $attached_ids)) {
+					$eloquent_relation->attach($form_id, ['created_at' => date('Y-m-d H:i:s')]);
+
+					$attribute = $attached_entities->where('id', '=', $form_id)->first();
+
+					$attribute = $attribute->name ?? $attribute->login_name ?? 'id '. $form_id;
+					$attribute .= " attached";
+					$changed_attributes->push($attribute);
+				}
 			}
 
 			// detach removed assignments (from selected multiselect options)
-			foreach ($attached as $rel_id)
-			{
-				if (!in_array($rel_id, $data[$field]))
-					$obj->$func()->detach($rel_id);
+			foreach ($attached_ids as $foreign_id) {
+				if (!in_array($foreign_id, $data[$field['field']])) {
+					$removed_entity = $attached_entities->where('id', '=', $foreign_id)->first();
+					$eloquent_relation->detach($foreign_id);
+
+					$attribute = $removed_entity->name ?? $removed_entity->login_name ?? 'id '. $foreign_id;
+					$attribute .= " removed";
+					$changed_attributes->push($attribute);
+				}
 			}
 		}
+
+		if (isset($changed_attributes) && $changed_attributes->isNotEmpty()) {
+			$user = Auth::user();
+			\App\GuiLog::log_changes([
+					'user_id' => $user ? $user->id : 0,
+					'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
+					'method' 	=> 'updated N:M',
+					'model' 	=> Str::singular(Str::studly($obj->table)),
+					'model_id'  => $obj->id,
+					'text'		=> $changed_attributes->implode("\n"),
+					]);
+		}
+
+		return isset($changed_attributes) ? $changed_attributes : collect();
 	}
 
 
@@ -885,8 +958,8 @@ class BaseController extends Controller {
 			// Error Message when no Model is specified - NOTE: delete_message must be an array of the structure below !
 			if (!Input::get('ids')) {
 				$message = 'No Entry For Deletion specified';
-				\Session::push('tmp_error_above_form', $message);
-				return Redirect::back()->with('delete_message', ['message' => $message, 'class' => \NamespaceController::get_route_name(), 'color' => 'danger']);
+				Session::push('tmp_error_above_index_list', $message);
+				return Redirect::back()->with('delete_message', ['message' => $message, 'class' => NamespaceController::get_route_name(), 'color' => 'danger']);
 			};
 
 			$obj = static::get_model_obj();
@@ -918,22 +991,22 @@ class BaseController extends Controller {
 			}
 		}
 		$obj = isset($obj) ? $obj : static::get_model_obj();
-		$class = \NamespaceController::get_route_name();
+		$class = NamespaceController::get_route_name();
 
 		if (!$deleted && !$obj->force_delete) {
 			$message = 'Could not delete '.$class;
 			$color = 'danger';
-			\Session::push('tmp_error_above_form', $message);
+			Session::push('tmp_error_above_form', $message);
 		}
 		elseif (($deleted == $to_delete) || $obj->force_delete) {
 			$message = 'Successful deleted '.$class;
 			$color = 'success';
-			\Session::push('tmp_success_above_form', $message);
+			Session::push('tmp_success_above_form', $message);
 		}
 		else {
 			$message = 'Deleted '.$deleted.' out of '.$to_delete.' '.$class;
 			$color = 'warning';
-			\Session::push('tmp_warning_above_form', $message);
+			Session::push('tmp_warning_above_form', $message);
 		}
 
 		return Redirect::back()->with('delete_message', ['message' => $message, 'class' => $class, 'color' => $color]);
@@ -973,7 +1046,7 @@ class BaseController extends Controller {
 	 */
 	public function detach($id, $function)
 	{
-		$model = \NamespaceController::get_model_name();
+		$model = NamespaceController::get_model_name();
 		$model = $model::find($id);
 
 		if (\Input::has('ids'))
@@ -1303,17 +1376,17 @@ class BaseController extends Controller {
 				($object->index_delete_disabled ? "disabled" : '').">";
 			})
             ->editColumn($first_column, function ($object) use ($first_column) {
-				return '<a href="'.route(\NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
+				return '<a href="'.route(NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
 				$object->view_icon().array_get($object, $first_column).'</strong></a>';
 			});
 
 		foreach ($edit_column_data as $column => $functionname) {
 			if($column == $first_column)
 			{
-				$DT->editColumn($column, function($object) use ($functionname) {
-					return '<a href="'.route(\NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
-					$object->view_icon().$object->$functionname().'</strong></a>';
-				});
+			$DT->editColumn($column, function($object) use ($functionname) {
+				return '<a href="'.route(NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
+				$object->view_icon().$object->$functionname().'</strong></a>';
+			});
 			} else {
 				$DT->editColumn($column, function($object) use ($functionname) {
 					return $object->$functionname();
@@ -1433,24 +1506,19 @@ class BaseController extends Controller {
 	}
 
 	/**
-	 * Process select2 ajax request
+	 * Process autocomplete ajax request
 	 *
 	 * @return Array
 	 *
 	 * @author Ole Ernst
 	 */
-	public function select2_ajax($column)
+	public function autocomplete_ajax($column)
 	{
 		$model = static::get_model_obj();
-		$res = $model->select($column)
+
+		return $model->select($column)
 			->where($column, 'like', '%'.\Input::get('q').'%')
 			->distinct()
-			->pluck($column)
-			->toArray();
-
-		// reshape array in the form select2 expects
-		array_walk($res, function(&$val, $key) { $val = ['id' => $val, 'text' => $val]; });
-
-		return ['results' => $res, 'more' => false];
+			->pluck($column);
 	}
 }

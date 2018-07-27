@@ -82,7 +82,7 @@ function multi_array_key_exists($needles, $haystack)
 
 /**
  * Escape Special Characters in Latex documents (before PDF conversion)
- * Used in Invoice.php & CccAuthuserController.php
+ * Used in Invoice.php & CccUserController.php
  *
  * @author Nino Ryschawy
  */

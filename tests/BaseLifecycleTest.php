@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests;
+
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -173,7 +175,7 @@ class BaseLifecycleTest extends TestCase {
 
 		// TODO: do not hard code any user class, instead fetch a user dynamically
 		//       or add it only for testing (see Laravel factory stuff)
-		$this->user = App\Authuser::findOrFail(1);
+		$this->user = App\User::findOrFail(1);
 	}
 
 
@@ -245,7 +247,7 @@ class BaseLifecycleTest extends TestCase {
 	 * The only exception is NULL – we assume that this is allowed to be used multiple times.
 	 *
 	 * If a model_id is given data can be the same for this ID (e.g. on updating a model)
-	 * 
+	 *
 	 *
 	 * @author Patrick Reichel
 	 */

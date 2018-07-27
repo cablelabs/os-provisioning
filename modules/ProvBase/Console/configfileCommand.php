@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Bus\SelfHandling;
+use Collective\Bus\Contracts\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 use Modules\ProvBase\Entities\Modem;

@@ -1,5 +1,8 @@
-<?php namespace App\Providers;
+<?php
 
+namespace App\Providers;
+
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider {
@@ -11,17 +14,12 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		// use old laravel 4.2 blade tag syntax, NOTE: delete all cached files under storage/views/ when we change this
-		\Blade::setRawTags('{{', '}}');
-		// \Blade::setContentTags('{{{', '}}}');
-		// \Blade::setEscapedContentTags('{{{', '}}}');
-
-		\Blade::directive('DivOpen', function($expression) {
+		Blade::directive('DivOpen', function ($expression) {
             return "<?php echo Form::openDivClass($expression); ?>";
         });
 
 
-		\Blade::directive('DivClose', function() {
+		Blade::directive('DivClose', function() {
             return "<?php echo Form::closeDivClass(); ?>";
         });
 	}

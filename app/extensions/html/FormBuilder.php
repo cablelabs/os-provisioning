@@ -3,8 +3,7 @@
 namespace Acme\html;
 
 use Collective\Html\FormBuilder as CollectiveFormBuilder;
-use Session;
-use Log;
+use Log, Session, Str;
 
 class FormBuilder extends CollectiveFormBuilder {
 
@@ -169,16 +168,10 @@ class FormBuilder extends CollectiveFormBuilder {
 
 		// Call the parent select method so that Laravel can handle
 		// the rest of the select set up.
-		if (isset($options['style']) && (strpos($options['style'], 'simple') !== false))
+		if (isset($options['style']) && Str::contains($options['style'],'simple'))
 			return parent::select($name, $list, $selected, $options);
 
-		$ret = parent::select($name, $list, $selected, $options);
-		// with select2 ajax there are no option values at time of making the view
-		// thus explicitly set the selected (i.e. old) one
-		if(strpos($options['class'], 'select2-') !== false)
-			$ret = str_replace('</select>', "<option value='$selected'>$selected</option></select>", $ret);
-
-		return $this->appendDiv($ret);
+		return $this->appendDiv(parent::select($name, $list, $selected, $options));
 	}
 
 	/**

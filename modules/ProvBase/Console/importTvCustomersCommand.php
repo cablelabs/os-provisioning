@@ -112,7 +112,6 @@ class importTvCustomersCommand extends Command {
 		if (!$this->confirm("IMPORTANT!!!\n\nHave global variables been adapted for this import?:
 			(1) TV Charge in Euro?
 			(2) TV product ID?
-			(3) Verstärkergeld-in-Euro/product_id
 			"))
 			return;
 
@@ -203,7 +202,7 @@ class importTvCustomersCommand extends Command {
 
 		// Discard contracts that ended last year
 		if ($contract->contract_end && ($contract->contract_end < date('Y-01-01'))) {
-			\Log::info("Contract $number is out of date");
+			\Log::info("Contract $number is out of date ($contract->contract_start - $contract->contract_end)");
 			return null;
 		}
 

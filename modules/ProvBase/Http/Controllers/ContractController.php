@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use Bouncer;
 use Modules\ProvBase\Entities\{Contract, Qos};
 use Modules\ProvVoip\Entities\PhoneTariff;
 
@@ -42,16 +43,14 @@ class ContractController extends \BaseController {
 				<div class='form-group row'>
 					<label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number *</label>
 						<div class=col-md-5>
-							<select class='select2-street form-control' name='street' type=text id='street' style='background-color:whitesmoke'>
-								<option value='${model['street']}'>${model['street']}</option>
-							</select>
+							<input class='form-control' name='street' type=text value='${model['street']}' id='street' style='background-color:whitesmoke'>
 						</div>"),
 			array('form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => '1', 'html' =>
 				"<div class=col-md-2><input class='form-control' name='house_number' type=text value='".$model['house_number']."' id='house_number' style='background-color:whitesmoke'></div>
 				</div></div>"),
-			array('form_type' => 'select', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1', 'options' => ['class' => 'select2-zip']),
-			array('form_type' => 'select', 'name' => 'city', 'description' => 'City', 'create' => '1', 'options' => ['class' => 'select2-city']),
-			array('form_type' => 'select', 'name' => 'district', 'description' => 'District', 'create' => '1', 'options' => ['class' => 'select2-district']),
+			array('form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1'),
+			array('form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => '1'),
+			array('form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => '1'),
 			array('form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'),
 			array('form_type' => 'text', 'name' => 'fax', 'description' => 'Fax'),
 			array('form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'),
@@ -126,13 +125,9 @@ class ContractController extends \BaseController {
 		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
 
 		// check if user has the right to perform actions against envia TEL API
-		// if not: don't show any actions
-		try {
-			\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
-		}
-		catch (AuthException $ex) {
+		if (Bouncer::can('view', \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia::class))
 			return null;
-		}
+
 		return $provvoipenvia->get_jobs_for_view($contract, 'contract');
 	}
 

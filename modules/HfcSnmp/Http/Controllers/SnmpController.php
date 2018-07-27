@@ -586,7 +586,7 @@ class SnmpController extends \BaseController{
 			if ($ret) {
 				// Create GuiLog Entry
 				\App\GuiLog::log_changes([
-					'authuser_id' => $user ? $user->id : 0,
+					'user_id' => $user ? $user->id : 0,
 					'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
 					'method' 	=> 'updated',
 					'model' 	=> 'NetElement',

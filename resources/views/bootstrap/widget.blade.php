@@ -30,7 +30,7 @@
         <div class="stats-link">
             <a href="{{ $link }}">
                 @if($link != 'javascript:;')
-                    {{ \App\Http\Controllers\BaseViewController::translate_view('LinkDetails', 'Dashboard') }} <i class="fa fa-arrow-circle-o-right"></i>
+                    {!! \App\Http\Controllers\BaseViewController::translate_view('LinkDetails', 'Dashboard') !!} <i class="fa fa-arrow-circle-o-right"></i>
                 @else
                     &nbsp;
                 @endif
