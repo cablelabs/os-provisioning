@@ -19,7 +19,7 @@ class RenameDeviceTypetoNetElementTypeTable extends BaseMigration {
 	 */
 	public function up()
 	{
-		Schema::rename('devicetype', $this->tablename);		
+		Schema::rename('devicetype', $this->tablename);
 
 		Schema::table($this->tablename, function(Blueprint $table)
 		{

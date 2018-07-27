@@ -8,7 +8,7 @@
 		<!-- <META HTTP-EQUIV="refresh" CONTENT="{{$reload}}"> -->
 	@endif
 
-	{{ $headline }}
+	{!! $headline !!}
 
 @stop
 
@@ -31,7 +31,7 @@
 
 @if (isset ($form_fields['list']))
 
-	{{ Form::model($view_var, array('route' => array($form_update, $view_var->id, $param_id, $index), 'method' => 'put', 'files' => true)) }}
+	{!! Form::model($view_var, array('route' => array($form_update, $view_var->id, $param_id, $index), 'method' => 'put', 'files' => true)) !!}
 
 		{{-- Error | Success Message --}}
 		@if (Session::has('message'))
@@ -54,7 +54,7 @@
 		<div class="col-md-12 row" style="padding-right: 0px;"><div class="col-md-12 well row">
 		@foreach ($form_fields['list'] as $field)
 			<div class="col-md-6">
-			{{ $field }}
+			{!! $field !!}
 			</div>
 		@endforeach
 		</div></div>
@@ -78,7 +78,7 @@
 			@foreach ($form_fields['frame']['linear'] as $frame)
 				<div class="col-md-{{$col_width}} well">
 					@foreach ($frame as $field)
-						{{ $field }}
+						{!! $field !!}
 					@endforeach
 				</div>
 			@endforeach
@@ -91,7 +91,7 @@
 				@foreach ($row as $col)
 					<div class="col-md-{{$col_width}} well">
 						@foreach ($col as $field)
-							{{ $field }}
+							{!! $field !!}
 						@endforeach
 					</div>
 				@endforeach
@@ -105,16 +105,16 @@
 				<thead>
 						<th style="padding: 4px"> Index </th>
 					@foreach ($table['head'] as $oid => $head)
-						<th align="center" style="padding: 4px">{{$head}}</th>
+						<th align="center" style="padding: 4px">{!!$head!!}</th>
 					@endforeach
 				</thead>
 				<tbody>
 					@foreach ($table['body'] as $i => $row)
 						<tr>
 							<?php $i = str_replace('.', '', $i) ?>
-							<td> {{ isset($table['3rd_dim']) ? HTML::linkRoute('NetElement.controlling_edit', $i, [$table['3rd_dim']['netelement_id'], $table['3rd_dim']['param_id'], $i]) : $i }} </td>
+							<td> {!! isset($table['3rd_dim']) ? HTML::linkRoute('NetElement.controlling_edit', $i, [$table['3rd_dim']['netelement_id'], $table['3rd_dim']['param_id'], $i]) : $i !!} </td>
 							@foreach ($row as $col)
-								<td align="center" style="padding: 4px"> {{ $col }} </td>
+								<td align="center" style="padding: 4px"> {!! $col !!} </td>
 							@endforeach
 						</tr>
 					@endforeach
@@ -125,16 +125,20 @@
 
 	{{-- Save Button --}}
 	<div class="d-flex justify-content-center">
-		<input class="btn btn-primary" style="simple" value="{{\App\Http\Controllers\BaseViewController::translate_view($save_button_name , 'Button') }}" type="submit">
+		<input
+			class="btn btn-primary"
+			style="simple"
+			value="{!! \App\Http\Controllers\BaseViewController::translate_view($save_button_name , 'Button') !!}"
+			type="submit">
 	</div>
 
-	{{ Form::close() }}
+	{!! Form::close() !!}
 
 @else
 	<h2>No controlling defined</h2>
 @endif
 
-	{{-- java script --}}
+	{{-- javascript --}}
 	@include('Generic.form-js')
 
 
@@ -171,7 +175,7 @@
 		$('#stop-button').attr("onclick", "close_source()");
 
 		console.log("Establish SSE connection");
-		this.source = new EventSource("{{ route('NetElement.sse_get_snmpvalues', [$view_var->id, $param_id, $index, $reload]); }}");
+		this.source = new EventSource("{!! route('NetElement.sse_get_snmpvalues', [$view_var->id, $param_id, $index, $reload]) !!}");
 
 		this.source.onmessage = function(e)
 		{

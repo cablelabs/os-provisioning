@@ -35,7 +35,7 @@ $(document).ready(function() {
             }
             index++;
         })).done(function() {
-            var targetPage = "{{ isset($view_header) ? $view_header : ''}}";
+            var targetPage = "{!! isset($view_header) ? $view_header : ''!!}";
             localStorage.setItem(targetPage, JSON.stringify(newValue));
             $(element).find('[data-id="title-spinner"]').delay(500).fadeOut(500, function() {
                 $(this).remove();
@@ -47,7 +47,7 @@ $(document).ready(function() {
     var handlePanelStorage = function() {
         "use strict";
         if (typeof(Storage) !== 'undefined' && typeof(localStorage) !== 'undefined') {
-            var targetPage = "{{ isset($view_header) ? $view_header : ''}}";
+            var targetPage = "{!! isset($view_header) ? $view_header : ''!!}";
             var panelPositionData = localStorage.getItem(targetPage);
 
             if (panelPositionData) {

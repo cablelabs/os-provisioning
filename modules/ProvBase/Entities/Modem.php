@@ -10,7 +10,7 @@ use Modules\ProvMon\Http\Controllers\ProvMonController;
 class Modem extends \BaseModel {
 
 	// get functions for some address select options
-	use \App\Models\AddressFunctionsTrait;
+	use \App\AddressFunctionsTrait;
 
 	// The associated SQL table for this Model
 	public $table = 'modem';
@@ -1404,6 +1404,7 @@ class ModemObserver
 		}
 
 		// Refresh MPS rules
+		// Note: does not perform a save() which could trigger observer.
 		if (\Module::collections()->has('HfcCustomer'))
 		{
 			if (multi_array_key_exists(['x', 'y'], $diff)) {

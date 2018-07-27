@@ -6,7 +6,6 @@
     "active": 1,
     "icon": "fa-database",
     "order": 20,
-    "priority": 0,
     "providers": [],
     "files": [
         "start.php"

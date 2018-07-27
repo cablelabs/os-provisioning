@@ -76,6 +76,7 @@ return [
 		//Logs
 		'Header_Logs'				=> 'Logs',
 		'Header_EditLogs'			=> 'Edit Logs',
+		'Header_Roles'				=> 'Role|Roles',
 	//Billing Base
 		//Prduct Entry
 		'Header_Product Entry'		=> 'Product Entry|Product Entries',

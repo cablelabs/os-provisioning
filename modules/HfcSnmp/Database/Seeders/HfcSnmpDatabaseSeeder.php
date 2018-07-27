@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Modules\Hfcsnmp\Database\Seeders;
 
@@ -16,7 +16,7 @@ class HfcsnmpDatabaseSeeder extends Seeder {
 	public function run()
 	{
 		Model::unguard();
-		
+
 		$this->call("Modules\HfcSnmp\Database\Seeders\MibFileTableSeeder");
 		$this->call("Modules\HfcSnmp\Database\Seeders\OIDTableSeeder");
 		$this->call("Modules\HfcSnmp\Database\Seeders\ParameterTableSeeder");

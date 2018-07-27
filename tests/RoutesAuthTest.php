@@ -1,5 +1,9 @@
 <?php
 
+namespace Tests;
+
+use Route, URL;
+
 /**
  * Tests if all routes use auth middleware
  *
@@ -9,29 +13,25 @@ class RoutesAuthTest extends TestCase {
 
 	// there can be routes not using auth middleware – define them here to exclude from testing
 	protected $routes_not_using_auth_middleware = [
-		'Auth.logout',
-		'CustomerAuth.logout',
 		'ProvVoipEnvia.cron',
 	];
 
 	// some routes make problems (e.g. returning status 500 in testing
 	// Solve this problems and remove routes from array
-	protected $problematic_routes_to_check = [
-		'Tree.delete',
-		'Modem.ping',
-		'Modem.monitoring',
-		'Modem.log',
-		'Modem.lease',
+	protected $routes_which_are_not_checked = [
+		'debugbar.openhandler',
+		'debugbar.clockwork',
+		'debugbar.assets.css',
+		'debugbar.assets.js'
 	];
 
 	// some routes do redirect to login page instead of giving status 403
 	// as these routs needs other tests you can define them here
 	protected $routes_redirecting_to_login_page = [
 		'admin',
-		'Auth.login',
-		'CustomerAuth.login',
-		'CHome',
-		'Home',
+		'adminLogin',
+		'HomeCcc',
+		'CustomerPsw',
 	];
 
 
@@ -72,45 +72,57 @@ class RoutesAuthTest extends TestCase {
 			$name = $value->getName();
 
 			// no name – no test
-			if (!boolval($name))
+			if (!boolval($name) ||
+				in_array($name, $this->routes_not_using_auth_middleware) ||
+				in_array($name, $this->routes_which_are_not_checked)
+				)
 				continue;
 
-			// route without auth middleware
-			if (in_array($name, $this->routes_not_using_auth_middleware))
-				continue;
-
-			// problems with route: TODO: check for reasons
-			if (in_array($name, $this->problematic_routes_to_check))
-				continue;
-
-			$_ = URL::route($value->getName(), [1, 1, 1, 1, 1], true);
-			$url = explode('?', $_)[0];
+			$fullUrl = URL::route($value->getName(), [1, 1, 1, 1, 1], true);
+			$url = explode('?', $fullUrl)[0];
 			$method = $value->getMethods()[0];
+			$isApiRoute = strpos($url, 'api/v');
+			$isDetatchAll = strpos($name,'detach_all');
 
-			if (in_array($name, $this->routes_redirecting_to_login_page)) {
-				// special test for redirects to login page
-				echo "\nTesting $name ($method: $url)";
+			echo "\nTesting $name ($method: $url)";
+
+			if ($isApiRoute) {
+
+				$this->call($method, $url, [], [], [], ['PHP_AUTH_USER' => 'testuser', 'PHP_AUTH_PW' => 'test']);
+				$this->assertResponseStatus( 401 ); //Unauthorized
+
+			} elseif (in_array($name, $this->routes_redirecting_to_login_page) || $method == 'GET') {
+
 				$this->visit($url)
 					->see('Username')
 					->see('Password')
 					->see('Sign me in');
-			}
-			else {
-				// all other routes should return 403 if not logged in
-				echo "\nTesting $name ($method: $url)";
+
+			} elseif ($isDetatchAll) {
+
+				$this->call($method, $url, []);
+				$this->assertResponseStatus( 302 );
+
+			} else {  // all other routes should return 403 if not logged in
+
 				$this->call($method, $url, []);
 				$this->assertResponseStatus(403);
-				$this->see('denied');
 			}
 		}
 
 		// print routes with known problems
-		if ($this->problematic_routes_to_check) {
-			echo "\n\nThere are routes with known problems (e.g. return code is 500)";
-			echo "\nSolve and remove from array!";
-		}
-		foreach ($this->problematic_routes_to_check as $r) {
-			echo "\n	$r";
+		if (!empty($this->routes_which_are_not_checked)) {
+			echo "\n\nThese routes are not checked";
+
+			foreach ($this->routes_which_are_not_checked as $route) {
+				echo "\n	$route";
+			}
+
+			echo "\n\nThese routes are not using auth middleware";
+			echo "\nPlease review them carefully - they are exposed";
+			foreach ($this->routes_not_using_auth_middleware as $route) {
+				echo "\n	$route";
+			}
 		}
 	}
 }

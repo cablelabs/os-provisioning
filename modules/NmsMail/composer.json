@@ -1,0 +1,13 @@
+{
+	"name": "nmsprime-modules/nmsmail",
+	"description": "NMS Prime MailModule",
+	"authors": [{
+		"name": "Roetzer engineering",
+		"email": "info@roetzer-engineering.com"
+	}],
+	"autoload": {
+		"psr-4": {
+			"Modules\\NmsMail\\": ""
+		}
+	}
+}

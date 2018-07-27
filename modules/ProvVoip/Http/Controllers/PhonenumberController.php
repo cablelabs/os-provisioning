@@ -2,6 +2,7 @@
 
 namespace Modules\ProvVoip\Http\Controllers;
 
+use Bouncer;
 use Modules\ProvVoip\Entities\{Mta, Phonenumber};
 
 class PhonenumberController extends \BaseController {
@@ -219,16 +220,10 @@ class PhonenumberController extends \BaseController {
 	 */
 	public static function _get_envia_management_jobs($phonenumber) {
 
-		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
-
-		// check if user has the right to perform actions against envia TEL API
-		// if not: don't show any actions
-		try {
-			\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
-		}
-		catch (AuthException $ex) {
+		if (Bouncer::cannot('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia'))
 			return null;
-		}
+
+		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
 
 		return $provvoipenvia->get_jobs_for_view($phonenumber, 'phonenumber');
 	}

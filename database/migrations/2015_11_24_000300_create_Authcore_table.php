@@ -29,7 +29,7 @@ class CreateAuthcoreTable extends BaseMigration {
 
 		// the following “seeding” is needed in every case – even if the seeders will not be run!
 		// add each existing model
-		require_once(getcwd()."/app/Models/BaseModel.php");
+		require_once(getcwd()."/app/BaseModel.php");
 		foreach(BaseModel::get_models() as $model) {
 			DB::table($this->tablename)->insert(['name'=>$model, 'type'=>'model']);
 		}

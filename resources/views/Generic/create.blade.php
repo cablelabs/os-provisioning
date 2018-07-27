@@ -11,7 +11,7 @@
 
 @section('content_top')
 
-	{{ $headline }}
+	{!! $headline !!}
 	<li><a onMouseOver="this.style.backgroundColor='#FFFFFF'"><span class="text-info">{{ \App\Http\Controllers\BaseViewController::translate_view('Create', 'Header') }}</span></a></li>
 
 @stop

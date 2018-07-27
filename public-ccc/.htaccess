@@ -5,7 +5,7 @@
     </IfModule>
 
     RewriteEngine On
-    RewriteBase /nmsprime/
+    RewriteBase /ccc/
 
     # Redirect Trailing Slashes...
     RewriteRule ^(.*)/$ /$1 [L,R=301]

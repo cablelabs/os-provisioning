@@ -1,4 +1,6 @@
-<?php namespace Modules\Hfcreq\Providers;
+<?php
+
+namespace Modules\Hfcreq\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -9,11 +11,11 @@ class HfcReqServiceProvider extends ServiceProvider {
 	 *
 	 * @var bool
 	 */
-	protected $defer = false;
+	protected $defer = true;
 
 	/**
 	 * Boot the application events.
-	 * 
+	 *
 	 * @return void
 	 */
 	public function boot()
@@ -29,13 +31,13 @@ class HfcReqServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function register()
-	{		
+	{
 		//
 	}
 
 	/**
 	 * Register config.
-	 * 
+	 *
 	 * @return void
 	 */
 	protected function registerConfig()
@@ -50,7 +52,7 @@ class HfcReqServiceProvider extends ServiceProvider {
 
 	/**
 	 * Register views.
-	 * 
+	 *
 	 * @return void
 	 */
 	public function registerViews()
@@ -70,7 +72,7 @@ class HfcReqServiceProvider extends ServiceProvider {
 
 	/**
 	 * Register translations.
-	 * 
+	 *
 	 * @return void
 	 */
 	public function registerTranslations()

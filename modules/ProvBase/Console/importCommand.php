@@ -19,7 +19,7 @@ use Modules\BillingBase\Entities\SepaMandate;
 use Modules\ProvVoip\Entities\Mta;
 use Modules\ProvVoip\Entities\Phonenumber;
 
-use Modules\Mail\Entities\Email;
+use Modules\NmsMail\Entities\Email;
 
 
 class importCommand extends Command {

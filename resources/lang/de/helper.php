@@ -2,6 +2,19 @@
 
 return [
 /**
+ * Authentication and Base
+ */
+	'assign_role'					=> 'Diesem Nutzer eine oder mehrere Rollen zuweisen. Nutzer ohne Rolle können das NMS nicht verwenden, da sie keine Berechtigungen haben.',
+	'assign_users'					=> 'Einen oder mehrere Nutzer zu dieser Rolle zuweisen. Die Veränderung ist im GuiLog des Users nicht sichtbar, sondern nur hier.',
+	'assign_rank'					=> "Der Rang einer Rolle gibt die Fähigkeiten der Rolle an, andere Nutzer zu bearbeiten. \nEs werden werte von 0 bis 100 angenommen. (höher ist besser) \nHat ein Nutzer mehrere Rollen, gilt der höchste Rang. \nWenn die Fähigkeit gesetzt ist um Nutzer bearbeiten zu können, wird außerdem der Rang geprüft. Nur wenn der Rang des Bearbeiters höher ist, wird die Anfrage genehmigt. Weiterhin können beim erstellen und bearbeiten von Nutzern nur Rollen mit dem gleichen oder einem niedrigeren Rang vergeben werden.",
+	'All abilities'				=> 'Diese Fähigkeit erlaubt oder verbietet alle Autorisierungsanfragen, außer es wurden explizit Fähigkeiten verboten oder erlaubt. Diese Fähigkeit ist besonders nützlich, wenn ein Nutzer sehr viel oder nur sehr wenig "darf". Wenn diese Fähigkeit nicht gesetzt ist, müssen alle Berechtigungen von Hand gesetzt werden. Das Ändern dieser Fähigkeit, wenn schon viele andere Fähigkeiten gesetzt sind, kann einige Zeit dauern.',
+	'View everything'			=> 'Diese Fähigkeit erlaubt es alle Seiten zu besuchen. Das Verbieten der Fähigkeit wurde deaktiviert, da in diesem Fall alle Fähigkeiten verboten werden sollten. Diese Fähigkeit ist hauptsächlich zur Hilfe da, um schnell Rechte für Gäste oder Benutzer mit nur sehr wenigen Privilegien zu setzen.',
+	'Use api'					=> 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die API Routen mithilfe von "Basic Auth". Als Benutzername muss die E-Mail, welche im Profil hinterlegt ist genutzt werden.',
+	'See income chart'			=> 'Diese Fähigkeit erlaubt oder verbietet die Anzeige des Einkommensdiagramms im Dashboard.',
+	'View analysis pages of modems'	=> 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseiten der Modems.',
+	'View analysis pages of cmts' => 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseite der CMTS.',
+	'Download settlement runs'	=> 'Diese Fähigkeit erlaubt oder verbietet den Download der Abrechnungsläufe. Wenn das Verwalten von Abrechnungsläufen verboten ist, hat diese Einstellung keine Auswirkung.',
+/**
  * Index Page - Datatables
  */
 	'SortSearchColumn'				=> 'Diese Spalte kann nicht sortiert oder durchsucht werden.',

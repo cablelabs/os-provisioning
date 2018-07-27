@@ -2,7 +2,8 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use GlobalConfig;
+use Bouncer;
+use App\GlobalConfig;
 use App\Exceptions\AuthException;
 use Modules\ProvBase\Entities\{Configfile, Endpoint, Modem, Qos};
 
@@ -128,16 +129,10 @@ class ModemController extends \BaseController {
 
 		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
 
-		// check if user has the right to perform actions against envia TEL API
-		// if not: don't show any actions
-		try {
-			\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
-		}
-		catch (AuthException $ex) {
-			return null;
-		}
+		if (Bouncer::can('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia'))
+			return $provvoipenvia->get_jobs_for_view($modem, 'modem');
 
-		return $provvoipenvia->get_jobs_for_view($modem, 'modem');
+		return null;
 	}
 
 
@@ -170,53 +165,6 @@ class ModemController extends \BaseController {
 
 		return $a;
 	}
-
-
-	/**
-	 * Display a listing of all Modem objects
-	 *
-	 * Changes to BaseController: Topography Mode when HfcCustomer Module is active
-	 *
-	 * TODO: - topo mode does not work anymore ?
-	 *       - split / use / exit with BaseController function
-	 *
-	 * @author Torsten Schmidt
-	 */
-	public function _index_todo()
-	{
-		\App\Http\Controllers\BaseAuthController::auth_check('view', $this->get_model_name());
-
-		if(!\Module::collections()->has('HfcCustomer'))
-			return parent::index();
-
-		$modems = Modem::where('id', '>', '0');
-
-		if (\Input::get('topo') == '1')
-		{
-			// Generate KML file
-			$customer = new \Modules\HfcCustomer\Http\Controllers\CustomerTopoController;
-			$file     = $customer->kml_generate ($modems);
-
-			$view_header_right = 'Topography';
-			$body_onload       = 'init_for_map';
-		}
-
-		// Prepare
-		$panel_right = [['name' => 'List', 'route' => 'Modem.index', 'link' => ['topo' => '0']],
-						['name' => 'Topography', 'route' => 'Modem.index', 'link' => ['topo' => '1']]];
-
-		$target      = ''; // TODO: use global define
-		$view_var    = $modems->get();
-		$route_name  = 'Modem';
-		$view_header = "Modems";
-		$create_allowed = $this->index_create_allowed;
-
-		$preselect_field = \Input::get('preselect_field');
-		$preselect_value = \Input::get('preselect_value');
-
-		return \View::make('provbase::Modem.index', $this->compact_prep_view(compact('panel_right', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search', 'preselect_field', 'preselect_value')));
-	}
-
 
 	/**
 	 * Perform a fulltext search.

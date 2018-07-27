@@ -15,7 +15,7 @@ class HfcreqDatabaseSeeder extends Seeder {
 	public function run()
 	{
 		Model::unguard();
-		
+
 		$this->call("Modules\HfcReq\Database\Seeders\NetElementTableSeeder");
 	}
 

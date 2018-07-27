@@ -19,7 +19,6 @@
 */
 
 require __DIR__.'/../bootstrap/autoload.php';
-
 /*
 |--------------------------------------------------------------------------
 | Turn On The Lights
@@ -48,13 +47,9 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 
 $request = Illuminate\Http\Request::capture();
 
-if ($request->is('customer/*'))
+if ($request->is('customer*'))
 {
-	/*
-	 * TODO: throw "nice looking" access error due to permisson restriction!
-	 *       Wrong http port to access admin section!
-	 */
-	echo "Wrong http port to access customer section!";
+	header('Location: /admin/login');
 
 	return;
 }
@@ -65,6 +60,7 @@ $kernel = $app->make('Illuminate\Contracts\Http\Kernel');
 $response = $kernel->handle(
 	$request = Illuminate\Http\Request::capture()
 );
+
 
 $response->send();
 

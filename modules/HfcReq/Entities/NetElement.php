@@ -2,6 +2,7 @@
 
 namespace Modules\HfcReq\Entities;
 
+use Session;
 use Modules\HfcBase\Entities\IcingaObjects;
 
 class NetElement extends \BaseModel {
@@ -117,11 +118,10 @@ class NetElement extends \BaseModel {
 		return 'warning';
 	}
 
+	//for empty relationships
 	public function get_elementtype_name()
 	{
-	$type = $this->netelementtype ? $this->netelementtype->name : '';
-
-	return $type;
+		return $this->netelementtype ? $this->netelementtype->name : '';
 	}
 
 	public function view_belongs_to ()
@@ -226,12 +226,15 @@ class NetElement extends \BaseModel {
 	 */
 	public function get_all_cluster_to_net ()
 	{
-		// return NetElement::where('net','=',$this->id)->get();
+		if (Session::has('Net-' . $this->id))
+			return Session::get('Net-' . $this->id);
 
 		$cluster_id = array_search('Cluster', NetElementType::$undeletables);
-		return NetElement::where('netelementtype_id', '=', $cluster_id)->where('net','=',$this->id)->orderBy('name')->get();
+		$return = NetElement::where('netelementtype_id', '=', $cluster_id)->where('net', '=', $this->id)->orderBy('name')->get();
 
-		// return NetElement::where('type', '=', 'CLUSTER')->where('net','=',$this->id)->get();
+		Session::put('Net-' . $this->id, $return);
+
+		return $return;
 	}
 
 
@@ -284,7 +287,7 @@ class NetElement extends \BaseModel {
 
 	public function get_native_net ()
 	{
-		return $this->_get_native_helper('Net');
+		return $this->_get_native_helper();
 	}
 
 	public function get_native_cmts ()
@@ -417,6 +420,8 @@ class NetElementObserver
 		if (!$netelement->observer_enabled)
 			return;
 
+		$this->handleSidebarClusters($netelement);
+
 		// if ($netelement->is_type_cluster())
 		// in created because otherwise netelement does not have an ID yet
 		$netelement->net 	 = $netelement->get_native_net();
@@ -429,6 +434,9 @@ class NetElementObserver
 	{
 		if (!$netelement->observer_enabled)
 			return;
+
+		if($netelement['original']['parent_id'] != $netelement['attributes']['parent_id'])
+			$this->handleSidebarClusters($netelement, 1);
 
 		$netelement->net 	 = $netelement->get_native_net();
 		$netelement->cluster = $netelement->get_native_cluster();
@@ -448,10 +456,31 @@ class NetElementObserver
 				else {
 					// Show Alert that not all indices could be assigned to the new parameter -> user has to create new indices and delete the old ones
 					// We also could delete them directly, so that user has to add them again
-					\Session::put('info', trans('messages.indices_unassigned'));
+					Session::put('info', trans('messages.indices_unassigned'));
 				}
 			}
 		}
 	}
 
+	public function deleted($netelement)
+	{
+		$this->handleSidebarClusters($netelement);
+	}
+
+	protected function handleSidebarClusters($netelement, $isUpdating = 0)
+	{
+		if (!$netelement->is_type_cluster())
+			return;
+
+		$netId = $netelement->get_native_net();
+
+		if ($isUpdating) {
+			$oldNetId = NetElement::find($netelement['original']['parent_id'])->get_native_net();
+			$netId = NetElement::find($netelement['attributes']['parent_id'])->get_native_net();
+
+			$oldNetId ? Session::forget('Net-' . $oldNetId) : '';
+		}
+
+		$netId ? Session::forget('Net-' . $netId) : Session::forget('Net-' . $netelement->id);
+	}
 }

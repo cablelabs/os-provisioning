@@ -18,21 +18,22 @@
 @section('content_top')
 	<li class="active">
 		<a href="{{route($route_name.'.index')}}">
-		    {{ $model->view_icon().' '.$headline}}
+		    {!! $model->view_icon().' '.$headline !!}
 		</a>
 	</li>
 @stop
 
 @section('content_left')
 	{{-- Headline: means icon followed by headline --}}
-    @DivOpen(12)
+    <div class="col-md-12">
         <div class="row m-b-25">
             <div class="col">
                 <h3 class="card-title">
-                    {{ $model->view_icon().' '.$headline}}
+                    {!! $model->view_icon().' '.$headline !!}
                 </h3>
             </div>
         {{-- Create Form --}}
+        @can('create', $model)
             <div class="align-self-end m-r-20">
                 @if ($create_allowed)
                     {{ Form::open(array('method' => 'GET', 'id' => 'createModel')) }}
@@ -44,6 +45,8 @@
                     {{ Form::close() }}
                 @endif
             </div>
+        @endcan
+        @can('delete', $model)
             <div class="align-self-end">
                 @if ($delete_allowed)
                     <button type="submit" class="btn btn-outline-danger m-b-10 float-right" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
@@ -52,8 +55,9 @@
                     </button>
                 @endif
             </div>
+        @endcan
         </div>
-    @DivClose()
+    </div>
 
 	@include('Generic.above_infos')
 

@@ -1,18 +1,18 @@
 <?php
 
+namespace Tests;
 
-abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
+use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Testing\TestCase as BaseTest;
+
+abstract class TestCase extends BaseTest
 {
     /**
-	 * The base URL to use while testing the application.
-	 * Strange: This needs to be empty string; otherwise we get 404 in our tests
-	 * The correct base URL has to be added to phpunit.xml
+     * The base URL to use while testing the application.
      *
      * @var string
      */
-	protected $baseUrl = '';
-
-
+    protected $baseUrl = '';
 
     /**
      * Creates the application.
@@ -22,7 +22,8 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
     public function createApplication()
     {
         $app = require __DIR__.'/../bootstrap/app.php';
-        $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+
+        $app->make(Kernel::class)->bootstrap();
 
         return $app;
     }

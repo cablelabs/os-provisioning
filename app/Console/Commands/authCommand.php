@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use Bouncer;
+use App\{Ability, Role, User};
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,7 +29,7 @@ class authCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $name = 'nms:auth';
+	protected $name = 'auth:nms';
 
 	/**
 	 * The console command description.
@@ -53,38 +55,64 @@ class authCommand extends Command {
 	 */
 	public function fire()
 	{
-		// the following “seeding” is needed in every case – even if the seeders will not be run!
-		// add each existing model
-		foreach (\App\BaseModel::get_models() as $model)
-		{
-			\App\Authcore::updateOrCreate(['name'=>$model], ['type'=>'model']);
+		$this->setVerbosity('v');
+
+		Bouncer::allow('admin')->everything();
+		Bouncer::unforbid('admin')->everything();
+
+		$this->line('Admin Role resetted.');
+
+		foreach (User::all() as $user) {
+			Bouncer::allow($user)->toOwn(User::class);
 		}
 
-		// add relations meta<->core for role super_admin
-		$models = \DB::table('authcores')->select('id')->where('type', 'LIKE', 'model')->get();
-		foreach ($models as $model) {
-			\App\Authmetacore::updateOrCreate(
-				['core_id' => $model->id,
-				 'role_id' => 1,
-				 'view' => 1,
-				 'create' => 1,
-				 'edit' => 1,
-				 'delete' => 1]
-			);
-		}
+		//create the custom abilities
+		$ability = Ability::firstOrNew([
+			'name' => 'use api',
+			'title' => 'Use api',
+			'only_owned' => '0',
+		]);
 
-		// add relations meta<->core for client every_net
-		$nets = \DB::table('authcores')->select('id')->where('type', 'LIKE', 'net')->get();
-		foreach ($nets as $net) {
-			\App\Authmetacore::updateOrCreate(
-				['core_id' => $net->id,
-				 'role_id' => 2,
-				 'view' => 1,
-				 'create' => 1,
-				 'edit' => 1,
-				 'delete' => 1]
-			);
-		}
+		$this->line('Ability: "' . $ability->title . '" processed');
+
+		$ability = Ability::firstOrNew([
+			'name' => 'see income chart',
+			'title' => 'See income chart',
+			'only_owned' => '0',
+		]);
+
+		$this->line('Ability: "' . $ability->title . '" processed');
+
+		$ability = Ability::firstOrNew([
+			'name' => 'view_analysis_pages_of',
+			'title' => 'View analysis pages of modems',
+			'entity_type' => \Modules\ProvBase\Entities\Modem::class,
+			'only_owned' => '0',
+		]);
+
+		$this->line('Ability: "' . $ability->title . '" processed');
+
+		$ability = Ability::firstOrNew([
+			'name' => 'view_analysis_pages_of',
+			'title' => 'View analysis pages of modems',
+			'entity_type' => \Modules\ProvBase\Entities\Cmts::class,
+			'only_owned' => '0',
+		]);
+
+		$this->line('Ability: "' . $ability->title . '" processed');
+
+		$ability = Ability::firstOrNew([
+			'name' => 'download',
+			'title' => 'Download settlement runs',
+			'entity_type' => \Modules\BillingBase\Entities\SettlementRun::class,
+			'only_owned' => '0',
+		]);
+
+		$this->line('Ability: "' . $ability->title . '" processed');
+
+		$this->setVerbosity('normal');
+
+		$this->info('success');
 	}
 
 	/**

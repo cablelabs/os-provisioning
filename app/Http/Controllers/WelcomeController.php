@@ -1,4 +1,5 @@
-<?php namespace App\Http\Controllers;
+<?php
+namespace App\Http\Controllers;
 
 class WelcomeController extends Controller {
 
@@ -14,28 +15,25 @@ class WelcomeController extends Controller {
 	*/
 
 	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		// $this->middleware('guest');
-	}
-
-	/**
 	 * Show the application welcome screen to the user.
 	 *
 	 * @return Response
 	 */
 	public function index()
 	{
-		$g = \GlobalConfig::first();
-		$head1 = $g->headline1;
-		$head2 = $g->headline2;
+		$server_port = \Request::getPort();
+		$admin_port = env('HTTPS_ADMIN_PORT', '8080');
+		$ccc_port   = env('HTTPS_CCC_PORT', '443');
 
-		if (\App::isLocal())
-			return view('welcome')->with(compact('head1', 'head2'));
+		if ($server_port == $admin_port)
+				return redirect(route('adminLogin'));
+
+		if ($server_port == $ccc_port)
+				return redirect(route('customerLogin'));
+
+		if (\App::isLocal() || $admin_port == $ccc_port)
+			return view('welcome')
+				->with(compact('head1', 'head2'));
 
 		abort(404);
 	}

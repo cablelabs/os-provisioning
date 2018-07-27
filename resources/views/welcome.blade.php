@@ -39,11 +39,11 @@
 
 					<div class="login-buttons">
 						<a href='admin' class="btn btn-success btn-block btn-lg" role="button">Admin Center</a>
-						<br>
+						<br><br><br>
 						<a href='customer' class="btn btn-success btn-block btn-lg" role="button">Customer Control Center</a>
 					</div>
 
-					<br><br><br>
+					<br>
 					<div class="quote">{{ Inspiring::quote() }}</div>
 
 				</div>

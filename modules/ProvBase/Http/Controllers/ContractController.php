@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use Bouncer;
 use Modules\ProvBase\Entities\{Contract, Qos};
 use Modules\ProvVoip\Entities\PhoneTariff;
 
@@ -124,13 +125,9 @@ class ContractController extends \BaseController {
 		$provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
 
 		// check if user has the right to perform actions against envia TEL API
-		// if not: don't show any actions
-		try {
-			\App\Http\Controllers\BaseAuthController::auth_check('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia');
-		}
-		catch (AuthException $ex) {
+		if (Bouncer::can('view', \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia::class))
 			return null;
-		}
+
 		return $provvoipenvia->get_jobs_for_view($contract, 'contract');
 	}
 
