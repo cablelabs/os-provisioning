@@ -765,7 +765,8 @@ class BaseController extends Controller {
 		}
 
 		$changed = $obj->getDirty();
-		$changed_many = [];
+		$changed_many = collect();
+
 		// update timestamp, this forces to run all observer's
 		if (!empty($changed)) {
 			$obj->updated_at = \Carbon\Carbon::now(Config::get('app.timezone'));
@@ -778,7 +779,6 @@ class BaseController extends Controller {
 
 		// create messages depending on error state created while observer execution
 		// TODO: check if giving msg/color to route is still wanted or obsolete by the new tmp_*_above_* messages format
-
 		if (empty($changed) && $changed_many->isEmpty()) {
 			$msg = 'There was no new Input! - No changes were saved to the Database';
 			$color = 'info';
@@ -937,7 +937,7 @@ class BaseController extends Controller {
 					]);
 		}
 
-		return isset($changed_attributes) ? $changed_attributes : [];
+		return isset($changed_attributes) ? $changed_attributes : collect();
 	}
 
 

@@ -469,17 +469,18 @@ class NetElementObserver
 
 	protected function handleSidebarClusters($netelement, $isUpdating = 0)
 	{
-		if ($netelement->is_type_cluster()) {
-			$netId = $netelement->get_native_net();
+		if (!$netelement->is_type_cluster())
+			return;
 
-			if ($isUpdating) {
-				$oldNetId = NetElement::find($netelement['original']['parent_id'])->get_native_net();
-				$netId = NetElement::find($netelement['attributes']['parent_id'])->get_native_net();
+		$netId = $netelement->get_native_net();
 
-				$oldNetId ? Session::forget('Net-' . $oldNetId) : '';
-			}
+		if ($isUpdating) {
+			$oldNetId = NetElement::find($netelement['original']['parent_id'])->get_native_net();
+			$netId = NetElement::find($netelement['attributes']['parent_id'])->get_native_net();
 
-			$netId ? Session::forget('Net-' . $netId) : Session::forget('Net-' . $netelement->id);
+			$oldNetId ? Session::forget('Net-' . $oldNetId) : '';
 		}
+
+		$netId ? Session::forget('Net-' . $netId) : Session::forget('Net-' . $netelement->id);
 	}
 }
