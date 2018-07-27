@@ -167,6 +167,7 @@ return [
 	'View analysis pages of modems'	=> 'Analyseseite der Modems aufrufen',
 	'View analysis pages of cmts' => 'Analyseseite der CMTS aufrufen',
 	'Download settlement runs'	=> 'Abrechnungsläufe downloaden',
+	'Not allowed to acces this user' => 'Zugriff auf diesen Nutzer ist nicht gestattet',
 	//Global Config
 	'System Log Level'			=> 'System Logging Stufe',
 	'Headline 1'				=> 'Überschrift Kopfzeile',

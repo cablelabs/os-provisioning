@@ -25,7 +25,7 @@
                         <i class="fa fa-lg"
                            :class="loadingSpinner.custom ?'fa-circle-o-notch fa-spin' : 'fa-save'">
                         </i>
-                        {{ trans('messages.Save All') }}
+                        {{ App\Http\Controllers\BaseViewController::translate_label('Save All') }}
                     </button>
                 </span>
             </div>
@@ -68,7 +68,7 @@
                                         <i class="fa fa-save fa-lg"
                                            :class="loadingSpinner.custom ?'fa-circle-o-notch fa-spin' : 'fa-save'">
                                         </i>
-                                        {{ trans('messages.Save') }}
+                                        {{ App\Http\Controllers\BaseViewController::translate_label('Save') }}
                                     </button>
                                 </div>
                             </td>
@@ -140,7 +140,7 @@
                                 <i class="fa fa-lg"
                                    :class="loadingSpinner.{!! $module !!} ?'fa-circle-o-notch fa-spin' : 'fa-save'">
                                 </i>
-                                {{ trans('messages.Save') }}
+                                {{ App\Http\Controllers\BaseViewController::translate_label('Save') }}
                             </span>
                         </button>
                     </span>
