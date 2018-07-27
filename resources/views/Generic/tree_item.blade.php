@@ -28,7 +28,7 @@
 			{{$key}}
 			@include('Generic.tree_item', array('items' => $item))
 		@else
-			{{ HTML::linkRoute('Modem.index', "$key: ".count($item), ['modem_show_filter' => $key]) }}
+			{!! HTML::linkRoute('Modem.index', "$key: ".count($item), ['modem_show_filter' => $key]) !!}
 		@endif
 	@endif
 @endforeach
