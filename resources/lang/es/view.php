@@ -3,7 +3,7 @@ return [
 //SEARCH
 		'Search_EnterKeyword' 		=> 'Ingresar palabra clave',
 		'Search_MatchesFor'			=> 'Coincide para',
-		'Search_In'					=> 'en',
+		'Search_In'					=> 'Buscar',
 //jQuery
 		//Translations for this at https://datatables.net/plug-ins/i18n/
 		'jQuery_sEmptyTable'		=> 'No hay datos disponibles en la tabla',
@@ -34,8 +34,8 @@ return [
 	//Main Menu
 		'Menu_MainMenu' 			=> 'Menu principal',
 		'Menu_Config Page'			=> 'Configuracion global',
-		'Menu_Logging'				=> 'Logging',
-		'Menu_Product List'			=> 'Lista de productos',
+		'Menu_Logging'				=> 'Registro de eventos',
+		'Menu_Product List'			=> 'Lista de planes',
 		'Menu_SEPA Accounts'		=> 'Cuentas SEPA',
 		'Menu_Settlement Run'		=> 'Acuerdo',
 		'Menu_Cost Center'			=> 'Centro de costos',
