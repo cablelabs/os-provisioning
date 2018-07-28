@@ -3,7 +3,7 @@ return [
 //SEARCH
 		'Search_EnterKeyword' 		=> 'Ingresar palabra clave',
 		'Search_MatchesFor'			=> 'Coincide para',
-		'Search_In'					=> 'Buscar',
+		'Search_In'					=> 'Buscar en',
 //jQuery
 		//Translations for this at https://datatables.net/plug-ins/i18n/
 		'jQuery_sEmptyTable'		=> 'No hay datos disponibles en la tabla',
