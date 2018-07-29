@@ -1,28 +1,31 @@
 <?php
 return [
 	// Index DataTable Header
+    // Missing on MPR
+	'id' => 'ID mpr',
+	'prio' => 'Prioridad',
 	// Auth
-	'authusers.login_name' => 'Nombre de inicio de sesion',
+	'authusers.login_name' => 'Nombre de usuario',
 	'authusers.first_name' => 'Nombres',
 	'authusers.last_name' => 'Apellidos',
 	'authrole.name' => 'Nombre de rol',
 	// GuiLog
-	'guilog.created_at' => 'Hora',
+	'guilog.created_at' => 'Creado el',
 	'guilog.username' => 'Usuario',
 	'guilog.method' => 'Accion',
-	'guilog.model' => 'Model',
-	'guilog.model_id' => 'Model ID',
+	'guilog.model' => 'Modelo',
+	'guilog.model_id' => 'ID del modelo',
 	// Company
-	'company.name' => 'Nombre de la compania',
+	'company.name' => 'Nombre de la compa&ntilde;ia',
 	'company.city' => 'Ciudad',
-	'company.phone' => 'Numero de celular',
+	'company.phone' => 'Numero telefonico',
 	'company.mail' => 'E-Mail',
 	// Costcenter
 	'costcenter.name' => 'Centro de costes',
 	'costcenter.number' => 'Numero',
 	//Invoices
 	'invoice.type' => 'Tipo',
-	'invoice.year' => 'Anio',
+	'invoice.year' => 'A&ntilde;o',
 	'invoice.month' => 'Mes',
 	//Item //**
 
@@ -35,7 +38,7 @@ return [
 	'salesman.lastname' => 'Apellidos',
 	'salesman.firstname' => 'Nombres',
 	// SepaAccount
-	'sepaaccount.name' => "Nombre de cuenta",
+	'sepaaccount.name' => "Nombre de cuenta SEPA",
 	'sepaaccount.institute' => 'Asociacion',
 	'sepaaccount.iban' => 'IBAN',
 	// SepaMandate
@@ -44,7 +47,7 @@ return [
 	'sepamandate.sepa_valid_to' => 'Valida hasta',
 	'sepamandate.reference' => 'Referencia de cuenta',
 	// SettlementRun
-	'settlementrun.year' => 'Anio',
+	'settlementrun.year' => 'A&ntilde;o',
 	'settlementrun.month' => 'Mes',
 	'settlementrun.created_at' => 'Creado el',
 	'verified' => 'Verificado?',
@@ -52,17 +55,18 @@ return [
 	'mpr.name' => 'Nombre',
 	// NetElement
 	'netelement.id' => 'ID',
-	'netelement.name' => 'Netelement',
+	'netelement.name' => 'Elemento de red',
 	'netelement.ip' => 'Direccion IP',
 	'netelement.state' => 'Estado',
 	'netelement.pos' => 'Posicion',
+	'netelement.options' => 'Opciones',
 	// NetElementType
-	'netelementtype.name' => 'Tipo de Netelement',
+	'netelementtype.name' => 'Tipo de elemento de red',
 	//HfcSnmp
 	'parameter.oid.name' => 'Nombre OID',
 	//Mibfile
 	'mibfile.id' => 'ID',
-	'mibfile.name' => 'Mibfile',
+	'mibfile.name' => 'Nombre MIB',
 	'mibfile.version' => 'Version',
 	// OID
 	'oid.name_gui' => 'Etiqueta de GUI',
@@ -85,19 +89,19 @@ return [
 	'cmts.company' => 'Fabricante',
 	'cmts.type' => 'Tipo',
 	// Contract
-	'contract.company' => 'Compania',
+	'contract.company' => 'Compa&ntilde;ia',
 	'contract.number' => 'Numero',
 	'contract.firstname' => 'Nombres',
 	'contract.lastname' => 'Apellidos',
 	'contract.zip' => 'ZIP',
 	'contract.city' => 'Ciudad',
 	'contract.street' => 'Calle',
-	'contract.house_number' => 'Numero de casa',
+    'contract.house_number' => 'Numero de vivienda',
 	'contract.district' => 'Distrito',
 	'contract.contract_start' => 'Fecha de inicio',
 	'contract.contract_end' => 'Fecha de fin',
 	// Domain
-	'domain.name' => 'Dominio',
+	'domain.name' => 'Nombre del dominio',
 	'domain.type' => 'Tipo',
 	'domain.alias' => 'Alias',
 	// Endpoint
@@ -113,7 +117,7 @@ return [
 	'ippool.router_ip' => 'Router IP',
 	'ippool.description' => 'Descripcion',
 	// Modem
-	'modem.house_number' => 'Numero de casa',
+    'modem.house_number' => 'Numero de vivienda',
 	'modem.id' => 'Modem ID',
 	'modem.mac' => 'Direccion MAC',
 	'modem.name' => 'Nombre del modem',
