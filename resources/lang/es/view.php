@@ -33,6 +33,7 @@ return [
     'jQuery_ImportCsv'              => 'Importar CSV',
 //MENU
 	//Main Menu
+	'Menu_Dashboards'               => 'Panel de Control',
 		'Menu_MainMenu' 			=> 'Menu principal',
 		'Menu_Config Page'			=> 'Configuracion del sistema',
 		'Menu_Logging'				=> 'Registros (acciones)',
@@ -309,7 +310,6 @@ return [
 
 //
 // DASHBOARD
-//
 	'Dashboard_Contracts'			=> 'CONTRATOS ACTIVOS',
 	'Dashboard_ContractAnalytics'	=> 'Estadisticas contrato (Ultimos 12 meses)',
 	'Dashboard_NoContracts'			=> 'No hay contratos disponibles',
@@ -322,28 +322,26 @@ return [
 	'Dashboard_NoTickets' 			=> 'No hay tickets nuevos.',
 	'Dashboard_Quickstart' 			=> 'INICIO RAPIDO',
 	'Dashboard_External' 			=> 'Externo',
-	'Dashboard_Addcontract' 			=> 'asdsad',
+	'Dashboard_Addcontract' 			=> 'Agregar Contrato',
     
 //
 // TICKET
-//
-    //State
+//ff
+//State
     'Ticket_State_New' => 'Nuevo',
-    'Ticket_State_In Process' => 'In Bearbeitung',
-    'Ticket_State_Closed' => 'Geschlossen',
+    'Ticket_State_In Process' => 'En progreso',
+    'Ticket_State_Closed' => 'Cerrado',
 
     //Type
-    'Ticket_Type_General' => 'Allgemein',
-    'Ticket_Type_Technical' => 'Technik',
-    'Ticket_Type_Accounting' => 'Buchhaltung',
+    'Ticket_Type_General' => 'General',
+    'Ticket_Type_Technical' => 'Tecnico',
+    'Ticket_Type_Accounting' => 'Facturacion',
 
     //Priority
-    'Ticket_Priority_Trivial' => 'Niedrig',
-    'Ticket_Priority_Minor' => 'Medium',
-    'Ticket_Priority_Major' => 'Hoch',
-    'Ticket_Priority_Critical' => 'Kritisch',
-
-//
+    'Ticket_Priority_Trivial' => 'Bajo',
+    'Ticket_Priority_Minor' => 'Medio',
+    'Ticket_Priority_Major' => 'Alto',
+    'Ticket_Priority_Critical' => 'Crítico',
 // Numberrange
 //
     'Numberrange_Start' => 'Inicio',
