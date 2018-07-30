@@ -68,6 +68,7 @@ return [
 		'numeric'              => ':attribute muss eine Zahl sein.',
 		'period'               => ':attribute hat ein ungültiges Format.', //custom
     'present'              => 'Das :attribute Feld muss ausgefüllt sein.',
+	'product' 				=> 'Die Produkttypen müssen wie im Hilfetext geschrieben und durch Komma getrennt angegeben werden!',
 		'regex'                => ':attribute Format ist ungültig.',
 		'required'             => ':attribute muss ausgefüllt sein.',
 		'required_if'          => ':attribute muss ausgefüllt sein, wenn :other :value ist.',
