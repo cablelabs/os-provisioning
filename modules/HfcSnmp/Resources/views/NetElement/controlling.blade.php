@@ -23,7 +23,7 @@
 	<div class="row">
 		@DivOpen(10)
 			@if ($view_var->controlling_link)
-				{{ link_to($view_var->controlling_link, 'View...', ['class' => 'btn btn-primary pull-right']) }}
+				{!! link_to($view_var->controlling_link, 'View...', ['class' => 'btn btn-primary pull-right']) !!}
 			@endif
 		@DivClose()
 		@DivOpen(2)
