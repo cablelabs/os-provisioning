@@ -6,6 +6,6 @@ dir="/var/www/nmsprime"
 cd "$dir"
 /opt/rh/rh-php71/root/usr/bin/php artisan module:publish
 /opt/rh/rh-php71/root/usr/bin/php artisan module:migrate
-/opt/rh/rh-php71/root/usr/bin/php artisan nms:auth
+/opt/rh/rh-php71/root/usr/bin/php artisan auth:nms
 
 chown -R apache $dir/storage $dir/bootstrap/cache
