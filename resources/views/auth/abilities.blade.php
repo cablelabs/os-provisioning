@@ -14,11 +14,6 @@
                     </a>
                 </h3>
                 <span class="d-flex align-items-center mx-1">
-                    <span v-if="allowAll != undefined"
-                        class="badge badge-lg mr-1"
-                        :class="[allowAll ? 'badge-danger' : 'badge-success']" >
-                        @{{ allowAll ? button.forbid : button.allow }}
-                    </span>
                     <button class="btn btn-sm btn-primary"
                         v-on:click="customUpdate('all')"
                         v-show="showSaveColumn">
@@ -98,7 +93,12 @@
                         {{ App\Http\Controllers\BaseViewController::translate_view($module, 'Ability') }}
                     </a>
                 </h3>
-                <span class="d-flex">
+                <span class="d-flex align-items-center">
+                        <span v-if="allowAll != undefined"
+                            class="badge badge-lg mr-1"
+                            :class="[allowAll ? 'badge-danger' : 'badge-success']" >
+                            @{{ allowAll ? button.forbid : button.allow }}
+                        </span>
                     @foreach($actions as $action)
                         @if($action['name'] != 'delete' && $action['name'] != 'create' || $module != 'GlobalConfig')
                         <span class="">
@@ -112,6 +112,7 @@
                                     @if($action['name'] == 'view')
                                     v-if="!(manageAll.{!! $module !!}) && allowViewAll == undefined"
                                     @endif
+                                    title="{{ App\Http\Controllers\BaseViewController::translate_view($action['name'], 'Button' )}}"
                                     >
                                 <span class="d-block d-xl-none">
                                 <i class="fa {!! $action['icon'] !!} fa-lg"

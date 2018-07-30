@@ -247,8 +247,11 @@ return [
 		'Button_Force Restart'		=> 'Neustart erzwingen',
 		'Button_Save'				=> 'Speichern',
 		'Button_Save / Restart'		=> 'Speichern / Neustart',
-		'Button_Assign roles'		=> 'Rolle zuweisen',
-		'Button_Delete selected roles'=> 'Ausgewählte Rollen entfernen',
+		'Button_manage'				=> 'Verwalten, schließt alle Basis und Sonderfähigkeiten mit ein. Schnellauswahl um alle Aktionen auf allen Seiten dieses Moduls auszuführen.',
+		'Button_view'				=> 'Schnellauswahl um alle Seiten anzusehen. Grundfähigkeit um alle anderen Fähigkeiten auszuführen.',
+		'Button_create'				=> 'Schnellauswahl um auf allen Seiten neue Elemente zu erstellen.',
+		'Button_update'				=> 'Schnellauswahl um auf allen Seiten Elemente zu verändern.',
+		'Button_delete'				=> 'Schnellauswahl um auf allen Seiten Elemente zu löschen.',
 	//BillingBase
 		//Product List
 		'Button_Create Product Entry'	=> 'Neues Produkt',

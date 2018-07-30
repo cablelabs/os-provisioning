@@ -173,6 +173,11 @@ return [
 		'Button_Force Restart'		=> 'Force Restart',
 		'Button_Save'				=> 'Save',
 		'Button_Save / Restart'		=> 'Save / Restart',
+		'Button_manage'				=> 'Managing allows or forbids to do everything with each element. This button is a shortcut to manage all entities of this module.',
+		'Button_view'				=> 'Shortcut for the view ability for all pages of this module. Viewing is the basic ability that is required for all other actions inside the GUI.',
+		'Button_create'				=> 'Shortcut for the create ability for all pages of this module.',
+		'Button_update'				=> 'Shortcut for the update ability for all pages of this module.',
+		'Button_delete'				=> 'Shortcut for the delete ability for all pages of this module.',
 	//BillingBase
 		//Product List
 		'Button_Create Product Entry'	=> 'Create Product Entry',
