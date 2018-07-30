@@ -140,6 +140,9 @@ class Kernel extends ConsoleKernel {
 				foreach (\Modules\ProvBase\Entities\Cmts::all() as $cmts)
 					$cmts->store_us_snrs();
 			})->everyFiveMinutes();
+
+			// update firmware version + model strings of all modems once a day
+			$schedule->call('\Modules\ProvBase\Entities\Modem@update_model_firmware')->daily();
 		}
 
 		// Clean Up of HFC Base

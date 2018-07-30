@@ -30,7 +30,9 @@
 	{{-- database entries inside a form with checkboxes to be able to delete one or more entries --}}
 	@DivOpen(12)
 		{!! Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete', 'onsubmit' => 'return submitMe()')) !!}
-			@include('Generic.tree_hidden_helper', array('items' => $view_var))
+			@if (!is_array($view_var))
+				@include('Generic.tree_hidden_helper', array('items' => $view_var))
+			@endif
 
 			<div id="jstree-default">
 				@include('Generic.tree_item', array('items' => $view_var, 'color' => 0))

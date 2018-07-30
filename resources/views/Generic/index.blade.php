@@ -82,6 +82,9 @@
                         @if ((!empty($model->view_index_label()['disable_sortsearch'])) && ($model->view_index_label()['disable_sortsearch'] == [$field => 'false']))
                             <i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top" data-delay='{"show":"250"}'
                             data-original-title="{{trans('helper.SortSearchColumn')}}"></i>
+                        @elseif (!empty($model->view_index_label()['help'][$field]))
+                            <i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top" data-delay='{"show":"250"}'
+                            data-original-title="{{trans('helper.'.$model->view_index_label()['help'][$field])}}"></i>
                         @endif
                         </th>
                     @endforeach
