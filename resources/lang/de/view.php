@@ -267,7 +267,7 @@ return [
 
 		//Settlement Run
 		'Button_Create Settlement Run'	=> 'Neuer Abrechnungslauf',
-		'Button_Rerun Accounting Command for current Month'	=> 'Vorgang für den aktuellen Monat erneut ausführen',
+		'Button_Rerun Accounting Command' => 'Abrechnungslauf erneut ausführen',
 		'sr_dl_logs' 					=> 'Gesamtes Logfile herunterladen',
 
 		//Numberrange

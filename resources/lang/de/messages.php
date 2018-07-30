@@ -6,6 +6,7 @@ return [
 	'Active'					=> 'Aktiv',
 	'Active?'					=> 'Aktiv?',
 	'alert' 					=> 'Achtung!',
+	'ALL' 						=> 'ALLE',
 	'Additional Options'		=> 'Zusätzliche Optionen',
 	'Address Line 1'			=> 'Adresszeile 1',
 	'Address Line 2'			=> 'Adresszeile 2',
@@ -173,7 +174,10 @@ return [
 	'Headline 1'				=> 'Überschrift Kopfzeile',
 	'Headline 2'				=> 'Überschrift Navigationsleiste',
 	//Billing
+	'accCmd_error_noCC' 		=> "Dem Vertrag :contract_nr [ID :contract_id] wurde keine Kostenstelle zugewiesen. Für den Kunde wird keine Rechnung erstellt.",
+	'accCmd_invoice_creation_deactivated' => "Bei folgenden Verträgen wurde die Rechnungserstellung deaktiviert: :contractnrs",
 	'accCmd_processing' 		=> 'Der Abrechnungslauf wird erstellt. Bitte warten Sie bis der Prozess abgeschlossen ist.',
+	'accCmd_notice_CDR' 		=> "Dem Vertrag :contract_nr [ID :contract_id] werden Einzelverbindungsnachweise abgerechnet, obwohl kein gültiger Telefontarif vorliegt. (Kommt durch verzögerte Abrechnung nach Beenden des Tarifs vor)",
 	'CDR retention period' 		=> 'Aufbewahrungsfrist für Einzelverbindungsnachweise',
 	'Day of Requested Collection Date'	=> 'Monatlicher Abrechnungstag',
 	'Tax in %'					=> 'Mehrwertsteuer in %',
@@ -293,6 +297,7 @@ return [
 	'Invoice Text for positive Amount without Sepa Mandate'	=> 'Rechnungstext für Positivbetrag ohne SEPA-Mandat',
 	'SEPA Account'				=> 'SEPA-Konto',
 	'SepaAccount'				=> 'SEPA-Konto', // siehe Companies
+	'sr_repeat' 				=> 'Wiederholen für SEPA-Konto:', // Settlementrun repeat
 	'Upload CDR template'		=> 'CDR-Vorlage hochladen',
 	'Upload invoice template'	=> 'Rechnungsvorlage hochladen',
 
@@ -315,6 +320,7 @@ return [
 	'salesmen_commission'	=> 'Provision_Verkaeufer',
 	'Invoices'				=> 'Rechnungen',
 	'Load Data...' 			=> 'Lade Daten...',
+	'Clean up directory...' => 'Räume Verzeichnis auf...',
 
 	//CostCenter
 	'Associated SEPA Account'	=> 'Verknüpftes SEPA-Konto',
@@ -371,6 +377,7 @@ return [
 	'Commission Amount'		=> 'davon Provision',
 	'eom' 					=> 'zum Monatsende',
 	'Zip Files' 			=> 'Erstelle ZIP-Datei',
+	'Concatenate invoices'  => 'Erstelle zusammengefügtes Rechnungs-PDF',
 
 /**
  * Customer Control Center

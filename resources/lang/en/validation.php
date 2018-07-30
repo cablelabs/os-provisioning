@@ -66,6 +66,7 @@ return [
 	'numeric'              => 'The :attribute must be a number.',
 	'period'               => ':attribute has an invalid format.',
 	'present'              => 'The :attribute field must be present.',
+	'product' 			=> 'Product types must be spelled like in the help message and separated by comma!',
 	'regex'                => 'The :attribute format is invalid.',
 	'required'             => 'The :attribute field is required.',
 	'required_if'          => 'The :attribute field is required when :other is :value.',
