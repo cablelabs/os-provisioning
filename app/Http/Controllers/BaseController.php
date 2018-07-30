@@ -468,6 +468,8 @@ class BaseController extends Controller {
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
 		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
+
+		$view_var = [];
 		// perform the search
 		foreach ($obj->getFulltextSearchResults($scope, $mode, $query, Input::get('preselect_field'), Input::get('preselect_value')) as $result)
 		{

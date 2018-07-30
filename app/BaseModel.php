@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Auth, DB, Module, Schema, Session, Str;
+use Auth, Bouncer, DB, Module, Schema, Session, Str;
 use App\Http\Controllers\NamespaceController;
 use App\Extensions\Database\EmptyRelation as EmptyRelation;
 use Illuminate\Database\Eloquent\{ SoftDeletes, Model as Eloquent};
@@ -478,6 +478,12 @@ class BaseModel extends Eloquent
 		return current(preg_grep ('|.*?'.$s.'$|i', $this->get_models()));
 	}
 
+	protected function onlyAllowedModels()
+	{
+		return collect($this->get_models())->reject( function($class) {
+					return Bouncer::cannot('view', $class);
+				});
+	}
 
 	/**
 	 * Preselect a sql field while searching
@@ -633,7 +639,8 @@ class BaseModel extends Eloquent
 			}
 
 			if ($scope == 'all') {
-				$models = $this->get_models();
+				$models = $this->onlyAllowedModels();
+
 				$preselect_field = $preselect_value = null;
 			}
 			else {
