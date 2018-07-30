@@ -8,5 +8,7 @@ cd "$dir"
 /opt/rh/rh-php71/root/usr/bin/php artisan optimize
 /opt/rh/rh-php71/root/usr/bin/php artisan migrate
 /opt/rh/rh-php71/root/usr/bin/php artisan queue:restart
+/opt/rh/rh-php71/root/usr/bin/php artisan route:cache
 
 systemctl reload httpd
+systemctl restart nmsprimed

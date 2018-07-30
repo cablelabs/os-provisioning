@@ -32,7 +32,7 @@
 							@if (is_object($modem_statistics))
 								<span data-toggle="tooltip" data-placement="auto" title="{{trans_choice('messages.modem_statistics',1)}}">
 									<i class="{{ $modem_statistics->fa }} fa-lg text-{{ $modem_statistics->style }}"></i>
-									<span class="badge badge-{{ $modem_statistics->style }}">{{ $modem_statistics->text }}</span>
+									<span class="badge badge-{{ $modem_statistics->style }}">{!! $modem_statistics->text !!}</span>
 								</span>
 							@endif
 						</a>

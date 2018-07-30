@@ -717,7 +717,11 @@ class Modem extends \BaseModel {
 		snmp_set_oid_output_format(SNMP_OID_OUTPUT_NUMERIC);
 		snmp_set_valueretrieval(SNMP_VALUE_LIBRARY);
 
-		$log = snmp2_real_walk($fqdn, $com, '.1.3.6.1.2.1.69.1.5.8.1');
+		try {
+			$log = snmp2_real_walk($fqdn, $com, '.1.3.6.1.2.1.69.1.5.8.1');
+		} catch (Exception $e) {
+			$log = snmprealwalk($fqdn, $com, '.1.3.6.1.2.1.69.1.5.8.1');
+		}
 		$log = ArrayHelper::snmpwalk_fold($log);
 
 		// filter unnecessary entries

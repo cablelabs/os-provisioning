@@ -22,6 +22,9 @@
 	@if ($reload)
 	<div class="row">
 		@DivOpen(10)
+			@if ($view_var->controlling_link)
+				{!! link_to($view_var->controlling_link, 'View...', ['class' => 'btn btn-primary pull-right']) !!}
+			@endif
 		@DivClose()
 		@DivOpen(2)
 			<input id="stop-button" class="btn btn-primary" style="simple" onclick="close_source()" value="Stop updating">
