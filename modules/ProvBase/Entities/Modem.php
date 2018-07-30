@@ -613,11 +613,34 @@ class Modem extends \BaseModel {
 			$sw_rev = array_pop($match[2]) ? : 'n/a';
 			$model = array_pop($match[3]) ? : 'n/a';
 
-			$ret[$vendor][$model][$sw_rev][] = explode('-', explode('.', basename($file))[0])[1];
+			if ($id)
+				return [$vendor, $model, $sw_rev];
+
+			if (!isset($ret[$vendor][$model][$sw_rev]))
+				$ret[$vendor][$model][$sw_rev] = 0;
+
+			$ret[$vendor][$model][$sw_rev] += 1;
 		}
 
 		return $ret;
 	}
+
+	/**
+	 * Update firmware and model strings of all modems
+	 *
+	 * @author Ole Ernst
+	 */
+	public static function update_model_firmware()
+	{
+		foreach (\DB::table('modem')->whereNull('deleted_at')->pluck('id') as $id) {
+			$tmp = self::get_firmware_tree($id);
+			if (!$tmp)
+				continue;
+
+			\DB::statement("UPDATE modem SET model = '$tmp[0] $tmp[1]', sw_rev = '$tmp[2]' where id='$id'");
+		}
+	}
+
 
 	/**
 	 * Restarts modem through snmpset

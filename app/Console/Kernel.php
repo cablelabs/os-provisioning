@@ -141,22 +141,8 @@ class Kernel extends ConsoleKernel {
 					$cmts->store_us_snrs();
 			})->everyFiveMinutes();
 
-			// update firmware version string of every modem once a day
-			$schedule->call(function () {
-				foreach (\DB::table('modem')->whereNull('deleted_at')->pluck('id') as $id) {
-					$tmp = \Modules\ProvBase\Entities\Modem::get_firmware_tree($id);
-					if (!$tmp)
-						continue;
-
-					$vendor = key($tmp);
-					$tmp = reset($tmp);
-					$model = key($tmp);
-					$tmp = reset($tmp);
-					$sw_rev = key($tmp);
-
-					\DB::statement("UPDATE modem SET model = '$vendor $model', sw_rev = '$sw_rev' where id='$id'");
-				}
-			})->daily();
+			// update firmware version + model strings of all modems once a day
+			$schedule->call('\Modules\ProvBase\Entities\Modem@update_model_firmware')->daily();
 		}
 
 		// Clean Up of HFC Base
