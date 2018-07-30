@@ -48,7 +48,9 @@ class dhcpCommand extends Command {
 	public function fire()
 	{
 		// Global Config part
-		ProvBase::first()->make_dhcp_glob_conf();
+		$prov = ProvBase::first();
+		$prov->make_dhcp_glob_conf();
+		$prov->make_dhcp_default_network_conf();
 
 		Modem::make_dhcp_cm_all();
 		Endpoint::make_dhcp();
