@@ -468,16 +468,9 @@ class BaseController extends Controller {
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
 		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
-
-		$view_var = [];
-		// perform the search
+		$view_var = collect();
 		foreach ($obj->getFulltextSearchResults($scope, $mode, $query, Input::get('preselect_field'), Input::get('preselect_value')) as $result)
-		{
-			if(!isset($view_var))
-				$view_var = $result->get();
-			else
-				$view_var = $view_var->merge($result->get());
-		}
+			$view_var = $view_var->merge($result->get());
 
 		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed', 'delete_allowed', 'query', 'scope')));
 	}
