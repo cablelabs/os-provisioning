@@ -8,16 +8,16 @@ Provisioning: DOCSIS
 IT Maintenance
 - Show your IT infrastructure in real-time in topography MAP and ERD - Entity Relation Diagram
 - Auto configuration of Nagios and Cacti from one database
-- Generic SNMP GUI creator 
+- Generic SNMP GUI creator
 
 For more informations: [Official Documentation](https://devel.roetzer-engineering.com/confluence/display/NMS/NMS+PRIME)
 
 
 ## Architectual Concepts
 
-NMS Prime is written with PHP 5.6, [Laravel 5](https://laravel.com/) framework and a modern, cool and responsive [Bootstrap](http://getbootstrap.com/) topic. It is tested and developed under CentOS 7 (RHEL 7).
+NMS Prime is written with PHP 7.1, [Laravel 5](https://laravel.com/) framework and a modern and responsive [Bootstrap](http://getbootstrap.com/) theme. It is tested and developed under CentOS 7 (RHEL 7).
 
-NMS Prime is build by standard Linux tools, like
+NMS Prime is build with standard Linux tools, like
 - [ISC DHCP](https://www.isc.org/downloads/dhcp/)
 - [Named](https://linux.die.net/man/8/named)
 - [Nagios](https://www.nagios.org/)
@@ -32,14 +32,14 @@ These tools are worldwide developed, approved and used. See [Design Architecture
 
 For CentOS 7 (RHEL 7):
 
-```
+```bash
 curl -vsL https://raw.githubusercontent.com/schmto/nmsprime/dev/INSTALL-REPO.sh | bash
 yum install nmsprime-*
 ```
 
 ### From source code:
 
-```
+```bash
 curl -vsL https://raw.githubusercontent.com/schmto/nmsprime/dev/INSTALL-REPO.sh | bash
 sed -i 's/\[nmsprime\]/\[nmsprime\]\nexclude=nmsprime*/' /etc/yum.repos.d/nmsprime.repo
 yum clean all && yum update -y
@@ -67,7 +67,7 @@ Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, 
 
 ## Supporters
 
-We thanks to the following supporters for helping and funding NMS Prime development. If you are interested in becoming a supporter, please read [here](https://devel.roetzer-engineering.com/confluence/pages/viewpage.action?pageId=6554183):
+We thank the following supporters for helping and funding NMS Prime development. If you are interested in becoming a supporter, please read [here](https://devel.roetzer-engineering.com/confluence/pages/viewpage.action?pageId=6554183):
 
 - **[Rötzer Engineering](https://roetzer-engineering.com)**
 - **[ERZNET](http://erznet.tv)**
@@ -83,7 +83,7 @@ We thanks to the following supporters for helping and funding NMS Prime developm
 * **Christian Schramm** - *Developer for ..* - [christian](https://github.com/cschra)
 * **Sven Arndt** - *Developer for ..* - [sven](https://github.com/todo)
 
-See also the list of [contributors](https://github.com/schmto/nms-prime/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/nmsprime/nmsprime/graphs/contributors) who participated in this project.
 
 ---
 

@@ -111,7 +111,6 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 		return ['table' => $this->table,
 				'index_header' => [$this->table.'.login_name', $this->table.'.first_name', $this->table.'.last_name'],
 				'header' => $this->first_name.' '.$this->last_name,
-				'where_clauses' => ['users.id <= 100']
 			];
 	}
 

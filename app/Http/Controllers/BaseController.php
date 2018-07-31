@@ -468,6 +468,8 @@ class BaseController extends Controller {
 		$create_allowed = static::get_controller_obj()->index_create_allowed;
 		$delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
+
+		$view_var = [];
 		// perform the search
 		foreach ($obj->getFulltextSearchResults($scope, $mode, $query, Input::get('preselect_field'), Input::get('preselect_value')) as $result)
 		{
@@ -561,6 +563,7 @@ class BaseController extends Controller {
 	public function create()
 	{
 		$model = static::get_model_obj();
+		$action = 'create';
 		$view_header = BaseViewController::translate_view( $model->view_headline() , 'Header');
 		$headline    = BaseViewController::compute_headline(NamespaceController::get_route_name(), $view_header , NULL, $_GET);
 		$fields 	 = BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($model), $model);
@@ -577,7 +580,7 @@ class BaseController extends Controller {
 			$form_path = NamespaceController::get_view_name().'.form';
 
 
-		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'headline')));
+		return View::make($view_path, $this->compact_prep_view(compact('view_header', 'form_fields', 'form_path', 'headline', 'action')));
 	}
 
 
@@ -690,6 +693,7 @@ class BaseController extends Controller {
 	{
 		$model    = static::get_model_obj();
 		$view_var = $model->findOrFail($id);
+		$action   = 'update';
 		$view_header 	= BaseViewController::translate_view($model->view_headline(),'Header');
 		$headline       = BaseViewController::compute_headline(NamespaceController::get_route_name(), $view_header, $view_var);
 
@@ -727,7 +731,7 @@ class BaseController extends Controller {
 
 		// $config_routes = BaseController::get_config_modules();
 		// return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations', 'extra_data')));
-		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations', 'method', 'additional_data')));
+		return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations', 'method', 'action', 'additional_data')));
 	}
 
 
