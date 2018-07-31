@@ -51,9 +51,9 @@ class AuthorizeOwns
     public function handle($request, Closure $next, $ability, $model)
     {
 
-        $this->auth->authenticate();
+        $user = $this->auth->authenticate();
 
-        if ($this->auth->user()->can($ability, $model::find($request->id)))
+        if ($user->can($ability, $model::find($request->id)))
             return $next($request);
 
         throw new AuthenticationException("You are not allowed to Enter this page");
