@@ -214,56 +214,53 @@ class AbilityController extends Controller
 		$customForbiddenAbilities = self::mapCustomAbilities($forbiddenAbilities);
 		$allowAll = $customForbiddenAbilities['custom']->has(1) ? true : 'falseOrUndefined';
 		$abilities = $allowAll == 'falseOrUndefined' ? self::mapModelAbilities($allowedAbilities)['model'] : self::mapModelAbilities($forbiddenAbilities)['model'];
+		$allAbilities = Ability::withTrashed()->whereIn('id', $abilities->keys())->orderBy('id', 'asc')->get();
 
 		// Grouping GlobalConfig, Authentication and HFC Permissions
 		// into "special" Groups to increase usability
 		$modelAbilities = collect([
 			'GlobalConfig' => collect([
 				'GlobalConfig','BillingBase','Ccc','HfcBase','ProvBase','ProvVoip','GuiLog'
-				])->mapWithKeys(function ($name) use ($abilities, $models) {
-						return [$name => Ability::withTrashed()->whereIn('id', $abilities->keys())
-							->where('entity_type', $models->pull($name))
-							->orderBy('id', 'asc')
-							->get()
-							->pluck('name')
-						];
+				])->mapWithKeys(function ($name) use ($models, $allAbilities) {
+					return [
+						$name => $allAbilities
+									->where('entity_type', $models->pull($name))
+									->pluck('name')
+					];
 				})
 		]);
 
 		$modelAbilities['Authentication'] = $models->filter(function ($class) {
 			return Str::contains($class, 'App');
-		})->mapWithKeys(function ($class, $name) use ($abilities, $models) {
-				return[$name => Ability::withTrashed()->whereIn('id', $abilities->keys())
-					->where('entity_type', $name == 'Role' ? 'roles' : $models->pull($name)) // Bouncer specific
-					->orderBy('id', 'asc')
-					->get()
-					->pluck('name')
-				];
+		})->mapWithKeys(function ($class, $name) use ($models, $allAbilities) {
+			return [
+				$name => $allAbilities
+							->where('entity_type', $name == 'Role' ? 'roles' : $models->pull($name)) // Bouncer specific
+							->pluck('name')
+			];
 		});
 
 		$modelAbilities['HFC'] = $models->filter(function ($class) {
 			return Str::contains($class, '\\' . 'Hfc');
-		})->mapWithKeys(function ($class, $name) use ($abilities, $models) {
-				return [$name => Ability::withTrashed()->whereIn('id', $abilities->keys())
-					->where('entity_type', $models->pull($name))
-					->orderBy('id', 'asc')
-					->get()
-					->pluck('name')
-				];
+		})->mapWithKeys(function ($class, $name) use ($models, $allAbilities) {
+			return [
+				$name => $allAbilities
+							->where('entity_type', $models->pull($name))
+							->pluck('name')
+			];
 		});
 
 		foreach ($modules as $module) {
 			$modelAbilities[$module] = $models->filter(function ($class) use ($module) {
-					return (Str::contains($class, '\\'. $module . '\\') &&
-							!Str::contains($class, '\\' . 'Hfc') &&
-							!Str::contains($class, 'App' . '\\'));
-			})->mapWithKeys(function ($class, $name) use ($abilities, $models) {
-					return [$name => Ability::withTrashed()->whereIn('id', $abilities->keys())
-						->where('entity_type', $models->pull($name))
-						->orderBy('id', 'asc')
-						->get()
-						->pluck('name')
-					];
+				return (Str::contains($class, '\\'. $module . '\\') &&
+						!Str::contains($class, '\\' . 'Hfc') &&
+						!Str::contains($class, 'App' . '\\'));
+			})->mapWithKeys(function ($class, $name) use ($models, $allAbilities) {
+				return [
+					$name => $allAbilities
+								->where('entity_type', $models->pull($name))
+								->pluck('name')
+				];
 			});
 		}
 
