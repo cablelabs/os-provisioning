@@ -756,32 +756,17 @@ class BaseController extends Controller {
 		$this->_handle_file_upload($data);
 		$data = $controller->prepare_input_post_validation($data);
 
-		foreach ($obj['original'] as $key => $orig_value) {
-			if (isset($data[$key]) && $data[$key] != $orig_value )
-			$obj->$key = $data[$key];
-		}
-
-		$changed = $obj->getDirty();
-		$changed_many = collect();
-
-		// update timestamp, this forces to run all observer's
-		if (!empty($changed)) {
-			$obj->updated_at = \Carbon\Carbon::now(Config::get('app.timezone'));
-			$obj->save();
-		}
+		// Note: Eloquent Update requires updated_at to either be in the fillable array or to have a guarded field
+		//       without updated_at field. So we globally use a guarded field from now, to use the update timestamp
+		$obj->update($data);
 
 		// Add N:M Relations
 		if (isset($this->many_to_many) && is_array($this->many_to_many))
-			$changed_many = $this->_set_many_to_many_relations($obj, $data);
+			$this->_set_many_to_many_relations($obj, $data);
 
 		// create messages depending on error state created while observer execution
 		// TODO: check if giving msg/color to route is still wanted or obsolete by the new tmp_*_above_* messages format
-		if (empty($changed) && $changed_many->isEmpty()) {
-			$msg = 'There was no new Input! - No changes were saved to the Database';
-			$color = 'info';
-			Session::push('tmp_info_above_form', $msg);
-		}
-		elseif (!Session::has('error')) {
+		if (!Session::has('error')) {
 			$msg = "Updated!";
 			$color = 'success';
 			Session::push('tmp_success_above_form', $msg);
