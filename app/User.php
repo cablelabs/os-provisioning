@@ -160,4 +160,13 @@ class UserObserver
 	{
 		Bouncer::allow($user)->toOwn(User::class);
 	}
+
+	public function updating($user)
+	{
+		// Rebuild cached sidebar when user changes his language
+		if ($user['original']['language'] != $user['attributes']['language'])
+			\Session::forget('menu');
+	}
+
+
 }
