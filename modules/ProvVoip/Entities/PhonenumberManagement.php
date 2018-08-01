@@ -199,7 +199,7 @@ class PhonenumberManagement extends \BaseModel {
 			$ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at envia TEL';
 
 			$ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
-			$enviacontracts = is_null($this->envia_contract) ? [] : [$this->envia_contract];
+			$enviacontracts = is_null($this->envia_contract) ? new Collection() : collect([$this->envia_contract]);
 			$ret['envia TEL']['EnviaContract']['relation'] = $enviacontracts;
 			$ret['envia TEL']['EnviaContract']['options']['hide_create_button'] = 1;
 			$ret['envia TEL']['EnviaContract']['options']['hide_delete_button'] = 1;
@@ -214,7 +214,7 @@ class PhonenumberManagement extends \BaseModel {
 				$ret['envia TEL']['PhonebookEntry']['options']['hide_delete_button'] = 1;
 			}
 			else {
-				$ret['envia TEL']['PhonebookEntry']['relation'] = [$relation];
+				$ret['envia TEL']['PhonebookEntry']['relation'] = collect([$relation]);
 				$ret['envia TEL']['PhonebookEntry']['options']['hide_create_button'] = 1;
 			}
 
