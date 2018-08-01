@@ -8,7 +8,7 @@ use \Modules\ProvBase\Http\Controllers\ContractController;
 /**
  * Run the lifecycle test for Contract.
  */
-class ContractLifecycleTest extends \BaseLifecycleTest {
+class ContractLifecycleTest extends \Tests\BaseLifecycleTest {
 
 	// fields to be used in update test
 	protected $update_fields = [
