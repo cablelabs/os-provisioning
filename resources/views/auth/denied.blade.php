@@ -15,7 +15,7 @@
             <div class="error-code m-b-10">Access Denied <i class="fa fa-warning"></i></div>
             <div class="error-content">
                 <div class="error-message">
-					@if ($status)
+					@if (isset($status))
 						{{ $status }}
 					@endif
 
