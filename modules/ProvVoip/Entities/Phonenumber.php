@@ -223,7 +223,7 @@ class Phonenumber extends \BaseModel {
 				$ret['Main']['PhonenumberManagement']['options']['hide_delete_button'] = 1;
 			}
 			else {
-				$ret['Main']['PhonenumberManagement']['relation'] = [$relation];
+				$ret['Main']['PhonenumberManagement']['relation'] = collect([$relation]);
 				$ret['Main']['PhonenumberManagement']['options']['hide_create_button'] = 1;
 			}
 
