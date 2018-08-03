@@ -38,6 +38,8 @@ class RoleController extends BaseController
 
 	public function edit($id)
 	{
+		Bouncer::refresh();
+
 		$view = parent::edit($id);
 
 		$data = $view->getData();

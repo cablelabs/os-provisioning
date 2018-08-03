@@ -114,11 +114,11 @@
                                     @endif
                                     title="{{ App\Http\Controllers\BaseViewController::translate_view($action['name'], 'Button' )}}"
                                     >
-                                <span class="d-block d-xl-none">
+                                <span class="d-block d-xl-none" style="pointer-events: none;">
                                 <i class="fa {!! $action['icon'] !!} fa-lg"
                                     :class="[{!! $action['name'] !!}All.{!! $module !!} ? '' : 'text-dark']"></i>
                                 </span>
-                                <span class="d-none d-xl-block">
+                                <span class="d-none d-xl-block" style="pointer-events: none;">
                                     <i class="fa {!! $action['icon'] !!} fa-lg"
                                         :class="[{!! $action['name'] !!}All.{!! $module !!} ? '' : 'text-dark']"></i>
                                     {{ App\Http\Controllers\BaseViewController::translate_label( Str::title($action['name'])) }}
@@ -283,18 +283,22 @@ new Vue({
   },
   methods: {
     setupCustomAbilities : function () {
-        if (1 in this.roleAbilities.custom)
+        if (1 in this.roleAbilities)
             this.allowAll = true;
 
-        if (1 in this.roleForbiddenAbilities.custom)
+        if (1 in this.roleForbiddenAbilities)
             this.allowAll = false;
 
         for (id in this.customAbilities) {
-            if (id in this.originalRoleAbilities.custom)
+            if (id in this.originalRoleAbilities) {
                 this.$refs['allowed'+ id][0].checked = true;
+                this.allowViewAll = (this.customAbilities[id]['title'] == 'View everything') ? true : undefined;
+            }
 
-            if (id in this.originalForbiddenAbilities.custom)
+            if (id in this.originalForbiddenAbilities) {
                 this.$refs['forbidden'+ id][0].checked = true;
+                this.allowViewAll = (this.customAbilities[id]['title'] == 'View everything') ? false : undefined;
+            }
 
             this.changed[id] = false;
         }
@@ -322,27 +326,27 @@ new Vue({
     },
     hasChanged : function (id) {
         if (this.$refs['allowed' + id][0].checked)
-            return id in this.originalRoleAbilities.custom ? false : true;
+            return id in this.originalRoleAbilities ? false : true;
 
         if (this.$refs['forbidden' + id][0].checked)
-            return id in this.originalForbiddenAbilities.custom ? false  : true;
+            return id in this.originalForbiddenAbilities ? false  : true;
 
         if (!this.$refs['allowed' + id][0].checked)
-            return id in this.originalRoleAbilities.custom || id in this.originalForbiddenAbilities.custom ? true : false;
+            return id in this.originalRoleAbilities || id in this.originalForbiddenAbilities ? true : false;
 
         if (!this.$refs['forbidden' + id][0].checked)
-            return id in this.originalForbiddenAbilities.custom || id in this.originalRoleAbilities.custom ? true  : false;
+            return id in this.originalForbiddenAbilities || id in this.originalRoleAbilities ? true  : false;
     },
     customAllow : function (id) {
         if (this.$refs['allowed'+ id][0].checked) {
             if (id == 1) this.allowAll = true;
             if (this.customAbilities[id]['title'] == 'View everything') this.allowViewAll = true;
-            this.roleAbilities.custom[id] = this.customAbilities[id]['localTitle'];
-            delete this.roleForbiddenAbilities.custom[id];
+            this.roleAbilities[id] = this.customAbilities[id]['localTitle'];
+            delete this.roleForbiddenAbilities[id];
         } else {
             if (id == 1) this.allowAll = undefined;
             if (this.customAbilities[id]['title'] == 'View everything') this.allowViewAll = undefined;
-            delete this.roleAbilities.custom[id];
+            delete this.roleAbilities[id];
         }
 
         this.$refs['forbidden'+ id][0].checked = false;
@@ -352,11 +356,11 @@ new Vue({
     customForbid : function (id) {
         if (this.$refs['forbidden'+ id][0].checked) {
             if (id == 1) this.allowAll = false;
-            this.roleForbiddenAbilities.custom[id] = this.customAbilities[id]['localTitle'];
-            delete this.roleAbilities.custom[id];
+            this.roleForbiddenAbilities[id] = this.customAbilities[id]['localTitle'];
+            delete this.roleAbilities[id];
         } else {
             if (id == 1) this.allowAll = undefined;
-            delete this.roleForbiddenAbilities.custom[id];
+            delete this.roleForbiddenAbilities[id];
         }
 
         this.$refs['allowed'+ id][0].checked = false;
@@ -433,15 +437,15 @@ new Vue({
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
             data: {
                 id: id,
-                roleAbilities: this.roleAbilities.custom,
-                roleForbiddenAbilities: this.roleForbiddenAbilities.custom,
+                roleAbilities: this.roleAbilities,
+                roleForbiddenAbilities: this.roleForbiddenAbilities,
                 changed: this.changed,
                 roleId: '{!! $view_var->id !!}'
             }
         })
         .then(function (response) {
-            self.originalRoleAbilities.custom = response.data.roleAbilities.custom;
-            self.originalForbiddenAbilities.custom = response.data.roleForbiddenAbilities.custom;
+            self.originalRoleAbilities = response.data.roleAbilities;
+            self.originalForbiddenAbilities = response.data.roleForbiddenAbilities;
             if(self.changed[1]) {
                 for (module in self.modelAbilities) {
                     console.log('Updating ' + module);

@@ -20,9 +20,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 {
 	use Authenticatable, Authorizable, HasRolesAndAbilities, Notifiable;
 
-
 	public $table = 'users';
-
 
 	/**
 	 * extending the boot functionality to observe changes

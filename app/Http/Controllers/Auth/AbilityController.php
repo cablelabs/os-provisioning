@@ -175,7 +175,7 @@ class AbilityController extends Controller
 	 */
 	public static function getCustomAbilities()
 	{
-		$customAbilities = Ability::whereNotIn('name', ['*', 'view', 'create', 'update', 'delete'])
+		$customAbilities = Ability::whereNotIn('name', self::getAbilityCrudActionsArray()->keys())
 			->orWhere('entity_type', '*')
 			->get()
 			->pluck('title', 'id')
@@ -212,12 +212,11 @@ class AbilityController extends Controller
 
 		$customAbilities = self::mapCustomAbilities($allowedAbilities);
 		$customForbiddenAbilities = self::mapCustomAbilities($forbiddenAbilities);
-		$allowAll = $customForbiddenAbilities['custom']->has(1) ? true : 'falseOrUndefined';
-		$abilities = $allowAll == 'falseOrUndefined' ? self::mapModelAbilities($allowedAbilities)['model'] : self::mapModelAbilities($forbiddenAbilities)['model'];
+		$isAllowAllEnabled = $customAbilities->has(1);
+		$abilities = $isAllowAllEnabled ? self::mapModelAbilities($forbiddenAbilities) : self::mapModelAbilities($allowedAbilities);
 		$allAbilities = Ability::withTrashed()->whereIn('id', $abilities->keys())->orderBy('id', 'asc')->get();
 
-		// Grouping GlobalConfig, Authentication and HFC Permissions
-		// into "special" Groups to increase usability
+		// Grouping GlobalConfig, Authentication and HFC Permissions to increase usability
 		$modelAbilities = collect([
 			'GlobalConfig' => collect([
 				'GlobalConfig','BillingBase','Ccc','HfcBase','ProvBase','ProvVoip','GuiLog'
@@ -282,9 +281,9 @@ class AbilityController extends Controller
 	{
 		$sortedAbilities = collect();
 
-		$sortedAbilities['custom'] = $abilities->filter(function ($ability) {
+		$sortedAbilities = $abilities->filter(function ($ability) {
 			return (Str::startsWith($ability->entity_type, '*') || $ability->entity_type == null ||
-				!in_array($ability->name, ['*', 'view', 'create', 'update', 'delete']));
+				!in_array($ability->name, self::getAbilityCrudActionsArray()->keys()));
 			})
 			->pluck('title', 'id');
 
@@ -302,9 +301,9 @@ class AbilityController extends Controller
 	{
 		$sortedAbilities = collect();
 
-		$sortedAbilities['model'] = $abilities->filter(function ($ability) {
+		$sortedAbilities = $abilities->filter(function ($ability) {
 				return (!Str::startsWith($ability->entity_type, '*') && $ability->entity_type !== null &&
-					in_array($ability->name, ['*', 'view', 'create', 'update', 'delete']));
+					in_array($ability->name, self::getAbilityCrudActionsArray()->keys()));
 			})->map(function ($ability) {
 				return ['id' => $ability->id, 'name' => $ability->name, 'entity_type' => $ability->entity_type];
 			})->keyBy('id');
