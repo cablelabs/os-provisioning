@@ -435,11 +435,18 @@ class NetElementObserver
 		if (!$netelement->observer_enabled)
 			return;
 
-		if($netelement['original']['parent_id'] != $netelement['attributes']['parent_id'])
-			$this->handleSidebarClusters($netelement, 1);
 
-		$netelement->net 	 = $netelement->get_native_net();
-		$netelement->cluster = $netelement->get_native_cluster();
+		if ($netelement['original']['parent_id'] != $netelement['attributes']['parent_id'])
+		{
+			$netelement->net 	 = $netelement->get_native_net();
+			$netelement->cluster = $netelement->get_native_cluster();
+
+			// Change Net & cluster of all childrens too
+			Netelement::where('parent_id', '=', $netelement->id)->update(['net' => $netelement->net, 'cluster' => $netelement->cluster]);
+
+			$this->handleSidebarClusters($netelement, 1);
+		}
+
 
 		// if netelementtype_id changes -> indices have to change there parameter id - otherwise they are not used anymore
 		if ($netelement['original']['netelementtype_id'] != $netelement['attributes']['netelementtype_id'])

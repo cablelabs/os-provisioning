@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Auth, Bouncer;
 use App\{ Role, User };
 use App\Http\Controllers\BaseController;
-use Illuminate\Auth\AuthenticationException;
+use App\Exceptions\AuthException;
 
 class UserController extends BaseController {
 
