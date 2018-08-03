@@ -102,7 +102,7 @@ class NetElement extends \BaseModel {
 
 	public function get_bsclass()
 	{
-		if (in_array($this->get_elementtype_name(), NetElementType::$undeletables))
+		if (in_array($this->get_elementtype_name(), ['Net', 'Cluster']))
 			return 'info';
 
 		if(!IcingaObjects::db_exists())
