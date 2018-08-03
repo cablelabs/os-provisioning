@@ -18,7 +18,7 @@ class AbilityController extends Controller
 	 * @return Collection|string
 	 * @author Christian Schramm
 	 */
-	public static function getAbilityCrudActionsArray()
+	public static function getAbilityCrudActions()
 	{
 		return collect([
 				'*' => ['name' => 'manage', 'icon' => 'fa-star', 'bsclass' => 'success'],
@@ -135,7 +135,7 @@ class AbilityController extends Controller
 	protected function registerModelAbilities(Role $role, $modelAbilities, $allowAll)
 	{
 		$models = collect(BaseModel::get_models());
-		$crudPermissions = self::getAbilityCrudActionsArray();
+		$crudPermissions = self::getAbilityCrudActions();
 
 		foreach ($modelAbilities as $model => $permissions) {
 			foreach ($permissions as $permission) {
@@ -175,7 +175,7 @@ class AbilityController extends Controller
 	 */
 	public static function getCustomAbilities()
 	{
-		$customAbilities = Ability::whereNotIn('name', self::getAbilityCrudActionsArray()->keys())
+		$customAbilities = Ability::whereNotIn('name', self::getAbilityCrudActions()->keys())
 			->orWhere('entity_type', '*')
 			->get()
 			->pluck('title', 'id')
@@ -283,7 +283,7 @@ class AbilityController extends Controller
 
 		$sortedAbilities = $abilities->filter(function ($ability) {
 			return (Str::startsWith($ability->entity_type, '*') || $ability->entity_type == null ||
-				!in_array($ability->name, self::getAbilityCrudActionsArray()->keys()));
+				!self::getAbilityCrudActions()->has($ability->name));
 			})
 			->pluck('title', 'id');
 
@@ -303,7 +303,7 @@ class AbilityController extends Controller
 
 		$sortedAbilities = $abilities->filter(function ($ability) {
 				return (!Str::startsWith($ability->entity_type, '*') && $ability->entity_type !== null &&
-					in_array($ability->name, self::getAbilityCrudActionsArray()->keys()));
+					self::getAbilityCrudActions()->has($ability->name));
 			})->map(function ($ability) {
 				return ['id' => $ability->id, 'name' => $ability->name, 'entity_type' => $ability->entity_type];
 			})->keyBy('id');

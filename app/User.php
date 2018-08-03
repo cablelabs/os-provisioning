@@ -3,6 +3,7 @@
 namespace App;
 
 use DB;
+use Bouncer;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
