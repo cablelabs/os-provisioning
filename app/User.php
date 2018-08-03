@@ -23,6 +23,8 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
 	public $table = 'users';
 
+	protected $guard = 'admin';
+
 	/**
 	 * extending the boot functionality to observe changes
 	 *
