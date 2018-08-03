@@ -30,7 +30,7 @@
                         <thead class="text-center">
                             <th>{{ App\Http\Controllers\BaseViewController::translate_label('Ability') }}</th>
                             <th>{{ App\Http\Controllers\BaseViewController::translate_label('Allow') }}</th>
-                            <th>{{ App\Http\Controllers\BaseViewController::translate_label('Forbid') }}</th>
+                            <th v-if="allowAll">{{ App\Http\Controllers\BaseViewController::translate_label('Forbid') }}</th>
                             <th v-show="!showSaveColumn"></th>
                             <th v-show="showSaveColumn">{{ App\Http\Controllers\BaseViewController::translate_label('Save Changes') }}</th>
                             <th>{{ App\Http\Controllers\BaseViewController::translate_label('Help') }}</th>
@@ -45,7 +45,7 @@
                                     v-show="id == allowAllId || (!allowAll && id != allowAllId) || allowAll == undefined"
                                     v-on:change="customAllow(id)">
                             </td>
-                            <td align="center">
+                            <td align="center" v-show="allowAll">
                                 <input type="checkbox"
                                     :ref="'forbidden' + id"
                                     :name="'ability[' + id + ']'"
@@ -94,7 +94,7 @@
                     </a>
                 </h3>
                 <span class="d-flex align-items-center">
-                        <span v-if="allowAll != undefined"
+                        <span
                             class="badge badge-lg mr-1"
                             :class="[allowAll ? 'badge-danger' : 'badge-success']" >
                             @{{ allowAll ? button.forbid : button.allow }}
@@ -321,10 +321,10 @@ new Vue({
         }
     },
     checkForbiddenVisibility : function (id) {
-        if (id == this.allowViewAllId)
+        if (id == this.allowViewAllId || id == this.allowAllId )
             return false;
 
-        return (id == this.allowAllId || (this.allowAll && id != this.allowAllId) || (this.allowAll == undefined));
+        return ((this.allowAll && id != this.allowAllId) || (this.allowAll == undefined));
     },
     checkChangedArray : function (array) {
         return array.includes(true) ? true : false;
@@ -453,7 +453,6 @@ new Vue({
             self.originalForbiddenAbilities = response.data.roleForbiddenAbilities;
             if(self.changed[self.allowAllId]) {
                 for (module in self.modelAbilities) {
-                    console.log('Updating ' + module);
                     self.modelUpdate(module);
                 }
             }
