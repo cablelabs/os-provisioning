@@ -57,18 +57,15 @@ $kernel = $app->make('Illuminate\Contracts\Http\Kernel');
  */
 $request = Illuminate\Http\Request::capture();
 
-if ($request->is('admin*'))
-{
-	header('Location: /customer/login');
-
-	return;
-}
-
 
 $response = $kernel->handle(
 	$request
 );
 
+if ($request->is('admin*'))
+	abort(404);
+
 $response->send();
+
 
 $kernel->terminate($request, $response);

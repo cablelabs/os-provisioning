@@ -372,6 +372,9 @@ class BaseController extends Controller {
 		if (!$model)
 			$model = new BaseModel;
 
+		if(!isset($a['action']))
+			$a['action'] = 'update';
+
 		if(!isset($a['networks'])){
 			$a['networks'] = [];
 			if (\Module::collections()->has('HfcReq') && Bouncer::can('view', \Modules\HfcBase\Entities\TreeErd::class))
@@ -557,6 +560,7 @@ class BaseController extends Controller {
 	{
 		$model = static::get_model_obj();
 		$action = 'create';
+
 		$view_header = BaseViewController::translate_view( $model->view_headline() , 'Header');
 		$headline    = BaseViewController::compute_headline(NamespaceController::get_route_name(), $view_header , NULL, $_GET);
 		$fields 	 = BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($model), $model);
@@ -686,7 +690,7 @@ class BaseController extends Controller {
 	{
 		$model    = static::get_model_obj();
 		$view_var = $model->findOrFail($id);
-		$action   = 'update';
+
 		$view_header 	= BaseViewController::translate_view($model->view_headline(),'Header');
 		$headline       = BaseViewController::compute_headline(NamespaceController::get_route_name(), $view_header, $view_var);
 

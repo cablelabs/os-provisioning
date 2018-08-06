@@ -2,7 +2,7 @@
 
 namespace Acme\core;
 
-use Route;
+use Request, Route;
 use App\BaseModel;
 
 
@@ -24,12 +24,13 @@ class BaseRoute {
 	 */
 	public static function get_base_url()
 	{
-		$url = \Request::root();
+		$url = Request::root();
+		$port = Request::getPort();
 
-		if (\Request::is('admin*'))
+		if ($port == env('HTTPS_ADMIN_PORT', 8080))
 			return $url.'/admin';
 
-		if (\Request::is('customer/*'))
+		if ($port == env('HTTPS_CCC_PORT', 443))
 			return $url.'/customer';
 
 		return $url; // will not work

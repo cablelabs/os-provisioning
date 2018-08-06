@@ -31,10 +31,6 @@ class WelcomeController extends Controller {
 		if ($server_port == $ccc_port)
 				return redirect(route('customerLogin'));
 
-		if (\App::isLocal() || $admin_port == $ccc_port)
-			return view('welcome')
-				->with(compact('head1', 'head2'));
-
 		abort(404);
 	}
 
