@@ -28,7 +28,7 @@
                 <div class="panel-body d-flex flex-column">
                     <table class="table table-hover mb-5">
                         <thead class="text-center">
-                            <th>{{ App\Http\Controllers\BaseViewController::translate_label('Ability') }}</th>
+                            <th class="text-left">{{ App\Http\Controllers\BaseViewController::translate_label('Ability') }}</th>
                             <th>{{ App\Http\Controllers\BaseViewController::translate_label('Allow') }}</th>
                             <th v-if="allowAll">{{ App\Http\Controllers\BaseViewController::translate_label('Forbid') }}</th>
                             <th v-show="!showSaveColumn"></th>
@@ -151,7 +151,7 @@
                 <div class="panel-body d-flex flex-column">
                 <table class="table table-hover">
                     <thead class="text-center">
-                        <th> {{ App\Http\Controllers\BaseViewController::translate_label('Name') }} </th>
+                        <th class="text-left"> {{ App\Http\Controllers\BaseViewController::translate_label('Name') }} </th>
                         <th > {{ App\Http\Controllers\BaseViewController::translate_label('Allow'). '-'.
                                  App\Http\Controllers\BaseViewController::translate_label('Forbid') }} </th>
                         <th > {{ App\Http\Controllers\BaseViewController::translate_label('Manage') }} </th>
