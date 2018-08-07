@@ -16,7 +16,7 @@ class BaseMigration extends Migration
     public function up_table_generic (&$table)
     {
         $table->increments('id');
-        //$table->engine = 'MyISAM'; // InnoDB doesn't support fulltext index in MariaDB < 10.0.5
+        $table->engine = 'MyISAM'; // InnoDB doesn't support fulltext index in MariaDB < 10.0.5
         $table->timestamps();
         $table->softDeletes();
     }

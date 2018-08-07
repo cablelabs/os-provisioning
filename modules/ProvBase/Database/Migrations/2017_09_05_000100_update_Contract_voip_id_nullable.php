@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateContractVoipIdNullable {
+class UpdateContractVoipIdNullable extends Migration {
 
 	// name of the table to create
 	protected $tablename = "contract";

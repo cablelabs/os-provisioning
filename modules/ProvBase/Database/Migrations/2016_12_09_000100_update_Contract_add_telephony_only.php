@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateContractAddTelephonyOnly{
+class UpdateContractAddTelephonyOnly extends Migration {
 
 	/**
 	 * Run the migrations.
