@@ -489,7 +489,10 @@ class Modem extends \BaseModel {
 		$network_access = 1;
 
 		if (\Module::collections()->has('ProvVoip') && (count($this->mtas))) {
-			$max_cpe = count($this->mtas) + (($this->contract->telephony_only || !$this->network_access) ? 0 : $max_cpe);
+			if (!$this->network_access && !$this->contract->telephony_only)
+				$network_access = $max_cpe = 0;
+			else
+				$max_cpe = count($this->mtas) + (($this->contract->telephony_only || !$this->network_access) ? 0 : $max_cpe);
 		}
 		else if (!$this->network_access)
 			$network_access = 0;
@@ -502,7 +505,7 @@ class Modem extends \BaseModel {
 		// make text and write to file
 		$conf = "\tNetworkAccess $network_access;\n";
 		$conf .= "\tMaxCPE $max_cpe;\n";
-		if (\Module::collections()->has('ProvVoip')) {
+		if (\Module::collections()->has('ProvVoip') && $network_access) {
 			foreach ($this->mtas as $mta)
 				$conf .= "\tCpeMacAddress $mta->mac;\n";
 		}
