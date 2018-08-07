@@ -5,20 +5,51 @@ use Illuminate\Database\Schema\Blueprint;
 
 class BaseMigration extends Migration
 {
+
+	protected $caller_classname = null;
+	protected $caller_migration_file = null;
+	protected $called_up_table_generic = false;
+
     function __construct() {
 
-		echo "Migrating ".get_class($this)."\n";
-        // get and instanciate of index maker
-        require_once(getcwd()."/app/extensions/database/FulltextIndexMaker.php");
-        $this->fim = new FulltextIndexMaker($this->tablename);
+		$this->caller_classname = get_class($this);
+		echo "Migrating ".$this->caller_classname."\n";
+
+		// get the filename of the caller class
+		$reflector = new ReflectionClass($this->caller_classname);
+        $this->caller_migration_file = basename($reflector->getFileName());
+
+		if ($this->caller_migration_file < '2018_08_07') {
+			// get and instanciate of index maker
+			require_once(getcwd()."/app/extensions/database/FulltextIndexMaker.php");
+			$this->fim = new FulltextIndexMaker($this->tablename);
+		}
+		else {
+			$this->fim = null;	// no indexes build on newer migrations (using InnoDB)
+		}
     }
 
     public function up_table_generic (&$table)
     {
-        $table->increments('id');
-        $table->engine = 'MyISAM'; // InnoDB doesn't support fulltext index in MariaDB < 10.0.5
-        $table->timestamps();
-        $table->softDeletes();
+		$this->called_up_table_generic = True;
+
+		// choose database engine and other stuff depending on date of migration
+		// older migrations e.g. used MyISAM to build fulltext indexes
+		if ($this->caller_migration_file < '2018_08_07') {
+			$table->increments('id');
+			$table->engine = 'MyISAM'; // InnoDB doesn't support fulltext index in MariaDB < 10.0.5
+			$table->timestamps();
+			$table->softDeletes();
+		}
+		else {
+			$table->increments('id');
+			$table->engine = 'InnoDB';
+			$table->timestamps();
+			$table->softDeletes();
+			$table->charset = 'utf8mb4';
+			$table->collation = 'utf8mb4_unicode_ci';
+		}
+
     }
 
     public function up()
@@ -37,10 +68,25 @@ class BaseMigration extends Migration
 	 */
     protected function set_fim_fields($fields)
     {
+		if (is_null($this->fim)) {
+			throw new ErrorException('No FulltextIndexMaker in '.$this->caller_classname.'! – Maybe you want to index an InnoDB table?');
+		}
+
         foreach ($fields as $field)
             $this->fim->add($field);
 
         // create FULLTEXT index including the given
         $this->fim->make_index();
     }
+
+	public function __destruct() {
+
+		if ((!$this->called_up_table_generic)
+			&&
+			(substr($this->caller_classname, 0, 6) == 'Create')
+		) {
+			echo "\tWARNING: up_table_generic() not called from ".$this->caller_classname.". Falling back to database defaults.";
+		}
+	}
+
 }
