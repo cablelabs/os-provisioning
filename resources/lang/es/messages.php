@@ -9,8 +9,12 @@ return [
 	*/
 
 	// Descriptions of Form Fields in Edit/Create
+	'accCmd_error_noCC' 	=> "Contrato :contract_nr [ID :contract_id] no tiene asignado Costo. No se creará ninguna factura para el cliente.",
+	'accCmd_invoice_creation_deactivated' => "Los siguientes contratos han desactivado la creación de facturas: :contractnrs",
 	'accCmd_processing' 	=> 'El Acuerdo es ejecutado. Por favor espere hasta que este proceso haya finalizado.',
+	'accCmd_notice_CDR' 	=> "El Contrato :contract_nr [ID :contract_id] tiene registros de datos de llamadas pero no tiene asignada una tarifa Voip válida",
 	'alert' 				=> 'Atencion!',
+	'ALL' 					=> 'ALL',
 	'Call Data Record'		=> 'Registo de Datos de Llamada',
 	'ccc'					=> 'Centro de Control del Cliente',
 	'cdr' 					=> 'cdr',
@@ -42,10 +46,12 @@ return [
 	'missing_product' 		=> 'Falta Producto!',
 	'modem_eventlog_error'	=> 'Modem eventlog no encontrado',
 	'modem_force_restart_button_title' => 'Solo reinicia el modem. No guarda algun dato cambiado!',
-	'modem_monitoring_error'=> 'Esto puede ser debido a que el Modem no estuvo online hasta ahora. Tenga en cuenta que Diagramas solo osn disponibles desde el punto en que el modem estuvo online. Si todos los diagras no fueron mostrados propiamente, entonces debe ser un problema mayor y debe haber una erronea misconfiguration. Por favor considere al administrador en problemas mayores.',
+	'modem_monitoring_error'=> 'Esto podría deberse a que el módem no estaba en línea hasta ahora. Tenga en cuenta que los diagramas solo están disponibles
+desde el punto en que un módem estaba en línea. Si todos los diagramas no se muestran correctamente, entonces debe ser un
+ problema más grande y debería haber una mala configuración de cactus. Por favor, considere comunicar al administrador en problemas mayores.',
 	'modem_no_diag'			=> 'Diagrams no disponibles',
-	'modem_lease_error'		=> 'No se encontro Lease valido',
-	'modem_lease_valid' 	=> 'Modem tiene un lease valido',
+	'modem_lease_error'		=> 'No se encontro Arrendamientos dhcp valido',
+	'modem_lease_valid' 	=> 'Modem tiene un Arrendamientos dhcp valido',
 	'modem_log_error' 		=> 'Modem no fue registrado en el Servidor - Ningun registro encontrado',
 	'modem_configfile_error'=> 'Archivo de configuracion del Modem no hallado',
 	'modem_offline'			=> 'Modem esta Offline',
@@ -64,6 +70,7 @@ return [
 	'phonenumber_overlap_hlkomm' => 'Este numero existe o existio entre el/los :delay mes/meses. Como HL Komm o Pyur solo envia el numero telefonico dentro de los registros de datos de llamada, no sera posible de asignar poisbles llamadas hechas, al contrato apropiado nunca mas! Esto puede resultar en cobros equivocados. Por favor, solo agregue este numero si es un numero de prueba o si esta seguro de que no habran llamadas a cobrar nunca mas.',
 	'show_ags' 				=> 'Muestra Ag Campo Seleccionado en la Pagina de Contrato',
 	'snmp_query_failed' 	=> 'Consulta SNMP fallo debido a los siguientes OIDs: ',
+	'sr_repeat' 			=> 'Repita para cuentas SEPA(s):', // Settlementrun repeat
 	'upload_dependent_mib_err' => "Por favor, antes establezca el ':name' dependiente!! (de otra manera, OIDs no podran ser traducidos)",
 	'user_settings'			=> 'Configuracion de Usuario',
 	'user_glob_settings'	=> 'Configuracion Global de Usuarios',
@@ -71,4 +78,5 @@ return [
 	'voip_extracharge_default' => 'Cargos Extra de Llamads Voip por defecto en %',
 	'voip_extracharge_mobile_national' => 'Cargos Extra de Llamadas mobiles nacionales Voip en %',
 	'Y' 					=> 'anio|anios',
+	'Assign Role'				=> 'Asignar Roles',
 ];
