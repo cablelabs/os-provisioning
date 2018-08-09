@@ -4,7 +4,7 @@ return [
 		'Search_EnterKeyword' 		=> 'Ingresar palabra clave',
 		'Search_MatchesFor'			=> 'Coincide para',
 		'Search_In'					=> 'en la tabla',
-        'Search_Search ...'         => 'Ingrese un termino de busqueda',
+                'Search_Search ...'         => 'Ingrese un termino de busqueda',
 //jQuery
 		//Translations for this at https://datatables.net/plug-ins/i18n/
 		'jQuery_sEmptyTable'		=> 'No hay datos disponibles en la tabla',
@@ -30,7 +30,7 @@ return [
 		'jQuery_colvisRestore'		=> 'Restaurar',
 		'jQuery_colvisReset'		=> 'Reset',
 		'jQuery_ExportTo'			=> 'Exportar a',
-    'jQuery_ImportCsv'              => 'Importar CSV',
+                'jQuery_ImportCsv'              => 'Importar CSV',
 //MENU
 	//Main Menu
 	'Menu_Dashboards'               => 'Panel de Control',
@@ -75,7 +75,7 @@ return [
 	//User Settings
 		'Menu_UserSettings'			=> 'Configuraciones de usuario',
 		'Menu_UserGlobSettings' 	=> 'Conf. de usuarios (global)',
-        'Menu_Logout'				=> 'Cerrar sesion',
+                'Menu_Logout'				=> 'Cerrar sesion',
 		'Menu_UserRoleSettings'		=> 'Roles (usuarios)',
 
 //HEADER
