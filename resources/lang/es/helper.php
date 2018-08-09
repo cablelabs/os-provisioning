@@ -1,6 +1,19 @@
 <?php
 
 return [
+	/**
+  * Authentication and Base
+  */
+	'assign_role'					=> 'Asigna uno o más roles a este usuario. Los usuarios sin Rol no pueden usar el NMS porque no tienen Permisos.',
+	'assign_users'					=> 'Asigna uno o más usuarios a este rol. Los cambios realizados aquí no son visibles en el GuiLog del usuario.',
+	'assign_rank'					=> "El rango de un rol determina la capacidad de editar otros usuarios. \ nPuedes asignar valores de 0 a 100. (más alto es mejor). \ nSi un usuario tiene más de un rol, se usa el rango más alto . \ nSi se establece la capacidad de actualizar usuarios, el rango también se verifica. Solo si el rango del editor es mayor, se concede permiso. Además, al crear o actualizar usuarios, solo se pueden asignar roles con rango igual o inferior.",
+	'All abilities'					=> 'Esta habilidad permite todas las solicitudes de autorización, excepto las habilidades, que están explícitamente prohibidas. Esto es principalmente una habilidad de ayuda. La prohibición está deshabilitada, porque solo se permiten las habilidades marcadas. Si esta habilidad no está marcada, debes establecer todas las habilidades a mano. Si cambias esta habilidad, cuando se establecen muchas otras habilidades, tomará hasta 1 minuto aplicar todos los cambios.',
+	'View everything'			=> 'Esta capacidad permite ver todas las páginas. La prohibición está inhabilitada porque hace que el NMS no se pueda usar. Esto es principalmente una capacidad de ayuda para los invitados o usuarios con privilegios muy bajos.',
+	'Use api'					=> 'Esta capacidad permite o prohíbe el acceso a las rutas API con "Basic Auth" (el correo electrónico se usa como nombre de usuario).',
+	'See income chart'			=> 'Esta capacidad permite o prohíbe ver la tabla de ingresos en el panel de control.',
+	'View analysis pages of modems'	=> 'Esta capacidad permite o prohíbe el acceso a las páginas de análisis de un módem.',
+	'View analysis pages of cmts' => 'Esta capacidad permite o prohíbe el acceso a las páginas de análisis de un CMTS.',
+	'Download settlement runs'	=> 'Esta capacidad permite o prohíbe la descarga de ejecuciones de liquidación. Esta capacidad no tiene ningún impacto si está prohibido administrar ejecuciones de liquidación.',
 /**
  * Index Page - Datatables
  */
@@ -94,8 +107,9 @@ return [
 	'contract_number' 				=> 'Atencion - Contrasena del Cliente es cambiado automaticamente cuando se cambia este campo!',
 	'mac_formats'					=> "Formatos permitidos (case-insensitive):\n\n1) AA:BB:CC:DD:EE:FF\n2) AABB.CCDD.EEFF\n3) AABBCCDDEEFF",
 	'fixed_ip_warning'				=> 'Usar una IP fija es altamente no recomendado, ya que pierde la habilidad de mover modems y sus CPEs libremente entre CMTSes. Envez de dar una IP fija al cliente, deberan ser provistos del hostname, el cual no cambiara.',
-
- /**
+        'modem_update_frequency'		=> 'Este campo se actualiza una vez al día.',
+ 
+	/**
   *	MODULE: ProvVoip
   */
 	//PhonenumberManagementController
