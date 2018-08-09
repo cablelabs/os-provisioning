@@ -212,6 +212,8 @@ return [
 //
 	//Verträge
 	'Academic Degree'			=> 'Akademischer Titel',
+	'contract_nr_mismatch'  	=> 'Es konnte keine nächste Vertragsnummer gefunden werden, da die Datenbankabfrage fehl schlug. Die Ursache dafür liegt bei folgenden Verträgen, die eine Vertragsnummer haben, die nicht zur Kostenstelle passt: :nrs',
+	'contract_numberrange_failure' => 'Keine freie Vertragsnummer für die gewählte Kostenstelle gefunden.',
 	'contract_early_cancel' 	=> 'Möchten Sie den Vertrag wirklich vor Tariflaufzeitende :date kündigen?',
 	'Contract number'			=> 'Vertragsnummer',
 	'Contract Nr'				=> 'Vertragsnr',

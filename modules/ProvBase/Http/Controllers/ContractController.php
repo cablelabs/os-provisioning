@@ -145,11 +145,20 @@ class ContractController extends \BaseController {
 			// generate contract number
 			$num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
 
-			if ($num)
+			if ($num) {
 				$data['number'] = $num;
-			else if (\Modules\BillingBase\Entities\NumberRange::where('type', '=', 'contract')->where('costcenter_id', $data['costcenter_id'])->count()) {
-				// show alert when there is a numberrange for costcenter but there are no more free numbers
-				session(['alert' => \App\Http\Controllers\BaseViewController::translate_view('Failure','Contract_Numberrange')]);
+
+				if (!\Session::has('alert'))
+					Session::forget('alert');
+			}
+			else {
+				// show default alert when there is a numberrange for costcenter but there are no more
+				// free numbers and no more specific error message is already set
+				$numberrange_exists = \Modules\BillingBase\Entities\NumberRange::where('type', '=', 'contract')
+					->where('costcenter_id', $data['costcenter_id'])->count();
+
+				if ($numberrange_exists && !\Session::has('alert'))
+					session(['alert' => trans('messages.contract_numberrange_failure')]);
 			}
 		}
 

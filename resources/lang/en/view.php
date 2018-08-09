@@ -256,5 +256,4 @@ return [
 //
 // Contract
 //
-	'Contract_Numberrange_Failure' => 'No free contract number for selected costcenter available!'
 ];
