@@ -16,12 +16,14 @@ return [
 	"accepted"             => "El :attribute debe ser aceptado.",
 	"active_url"           => "El :attribute no es un URL valido.",
 	"after"                => "El :attribute debe ser una fecha despues de :date.",
+	'after_or_equal'       => 'El :attribute debe ser una fecha posterior o igual a :date.',
 	"alpha"                => "El :attribute solo puede contener letras.",
 	"alpha_dash"           => "El :attribute solo puede contener letras, numeros, y guiones.",
 	"alpha_num"            => "El :attribute solo puede contener letras y numeros.",
 	"array"                => "El :attribute debe ser un array.",
 	"available" 			=> "No hay entrada disponible en los a. de config. - Por favor inserte :attribute",
 	"before"               => "El :attribute debe ser una fecha anterior a :date.",
+	'before_or_equal'      => 'El :attribute debe ser una fecha anterior o igual a :date.',
 	"between"              => [
 		"numeric" => "El :attribute debe estar entre :min y :max.",
 		"file"    => "El :attribute debe estar entre :min y :max kilobytes.",
@@ -36,12 +38,16 @@ return [
 	"different"            => "El :attribute y :other deben ser diferentes.",
 	"digits"               => "El :attribute debe ser de :digits digitos.",
 	"digits_between"       => "El :attribute debe estar entre :min y :max digitos.",
+	'dimensions'           => 'El :attribute tiene dimensiones de imagen no válidas.',
+	'distinct'             => 'El :attribute tiene un valor duplicado.',
 	"email"                => "El :attribute debe ser un correo electronico valido.",
+	'file'                 => 'El :attribute debe ser un archivo.',
 	"filled"               => "El campo :attribute es requirido.",
 	"exists"               => "El :attribute seleccionado no es valido.",
 	"image"                => "El :attribute debe ser una imagen.",
 	"in"                   => "El :attribute seleccionado no es valido.",
 	"integer"              => "El :attribute debe ser un integer.",
+	'in_array'             => 'El :attribute campo no existe en :other.',
 	"max"                  => [
 		"numeric" => "El :attribute no debe ser mayor que :max.",
 		"file"    => "El :attribute no debe ser mayor que :max kilobytes.",
@@ -59,6 +65,8 @@ return [
 	"not_in"				=> "El :attribute seleccionado no es valido.",
 	"numeric"              => "El :attribute debe ser a numero.",
 	'period' 				=> ':attribute tiene un formato invalido',
+	'present'              => 'El campo :attribute debe estar presente.',
+	'product' 			=> '¡Los tipos de productos deben escribirse como en el mensaje de ayuda y separados por comas!',
 	"regex"                => "El formato :attribute no es valido.",
 	"required"             => "El campo :attribute es requerido.",
 	"required_if"          => "El campo :attribute es requerido cuando :other es :value.",
@@ -76,6 +84,7 @@ return [
 	"unique"               => "El :attribute ya ha sido tomado.",
 	"url"                  => "El formato :attribute no es valido.",
 	"timezone"             => "El :attribute debe ser una zona valida.",
+	'uploaded'             => 'El :attribute no se pudo cargar.',
 
 
 	/*
