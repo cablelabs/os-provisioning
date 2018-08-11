@@ -208,13 +208,13 @@ class AbilityController extends Controller
 		$modules = Module::collections()->keys();
 		$models = collect(BaseModel::get_models())->forget($modelsToExclude);
 		$allowedAbilities = $role->getAbilities();
-		$forbiddenAbilities = $role->getForbiddenAbilities();
+		$isAllowAllEnabled = $allowedAbilities->where('title', 'All abilities')->first();
 
-		$customAbilities = self::mapCustomAbilities($allowedAbilities);
-		$customForbiddenAbilities = self::mapCustomAbilities($forbiddenAbilities);
-		$isAllowAllEnabled = $customAbilities->has(1);
-		$abilities = $isAllowAllEnabled ? self::mapModelAbilities($forbiddenAbilities) : self::mapModelAbilities($allowedAbilities);
-		$allAbilities = Ability::withTrashed()->whereIn('id', $abilities->keys())->orderBy('id', 'asc')->get();
+		$abilities = $isAllowAllEnabled ?
+					self::mapModelAbilities($role->getForbiddenAbilities()) :
+					self::mapModelAbilities($allowedAbilities);
+
+		$allAbilities = Ability::whereIn('id', $abilities->keys())->orderBy('id', 'asc')->get();
 
 		// Grouping GlobalConfig, Authentication and HFC Permissions to increase usability
 		$modelAbilities = collect([
