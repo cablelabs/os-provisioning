@@ -7,6 +7,7 @@ composer.lock
 .DS_Store
 *.sublime*
 *.vscode*
+*.phpintel*
 *.fuse_hidden*
 Thumbs.db
 storage/systemd/
