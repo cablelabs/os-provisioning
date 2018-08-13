@@ -18,14 +18,14 @@ class AbilityController extends Controller
 	 * @return Collection|string
 	 * @author Christian Schramm
 	 */
-	public static function getAbilityCrudActions()
+	public static function getCrudActions()
 	{
 		return collect([
-				'*' => ['name' => 'manage', 'icon' => 'fa-star', 'bsclass' => 'success'],
-		    'view' => ['name' => 'view', 'icon' => 'fa-eye', 'bsclass' => 'info'],
-		    'create' => ['name' => 'create', 'icon' => 'fa-plus', 'bsclass' => 'primary'],
-		    'update' => ['name' => 'update', 'icon' => 'fa-pencil', 'bsclass' => 'warning'],
-		    'delete' => ['name' => 'delete', 'icon' => 'fa-trash', 'bsclass' => 'danger'],
+				'*'  => ['name' => 'manage', 'icon' => 'fa-star', 'bsclass' => 'success'],
+			'view'   => ['name' => 'view', 'icon' => 'fa-eye', 'bsclass' => 'info'],
+			'create' => ['name' => 'create', 'icon' => 'fa-plus', 'bsclass' => 'primary'],
+			'update' => ['name' => 'update', 'icon' => 'fa-pencil', 'bsclass' => 'warning'],
+			'delete' => ['name' => 'delete', 'icon' => 'fa-trash', 'bsclass' => 'danger'],
 		]);
 	}
 
@@ -42,20 +42,10 @@ class AbilityController extends Controller
 	{
 		$role = Role::find($requestData->roleId);
 
-		if (intval($requestData->id)) {
-			$ability = Ability::withTrashed()->find($requestData->id);
-			$this->registerCustomAbility($requestData, $role->name, $ability);
-		} else {
-			$changedIds = [];
-			foreach ($requestData->changed as $id => $hasChanged) {
-				if ($hasChanged == null) continue;
-				array_push($changedIds, $id);
-				$ability = Ability::withTrashed()->find($id);
-				$this->registerCustomAbility($requestData, $role->name, $ability);
-			}
-		}
+		$changedIds = intval($requestData->id) ? collect($requestData->id) : collect($requestData->changed)->filter()->keys();
+		$abilities = Ability::whereIn('id', $changedIds)->get();
 
-		Bouncer::refresh();
+		$this->registerCustomAbility($requestData, $role->name, $abilities);
 
 		return collect([
 			'id' => intval($requestData->id) ? $requestData->id : $changedIds ,
@@ -85,14 +75,14 @@ class AbilityController extends Controller
 			->mapWithKeys(function ($actions, $model) use ($requestData) {
 				if (!$requestData->has($model))
 					$requestData[$model] = [];
+
 				return [$model => $requestData[$model]];
-			})->merge($requestData);
+			})
+			->merge($requestData);
 
 		$this->registerModelAbilities($role, $modelAbilities, $allowAll);
-		Bouncer::refresh();
-		$modelAbilities = self::getModelAbilities($role);
 
-		return $modelAbilities->toJson();
+		return self::getModelAbilities($role)->toJson();
 	}
 
 	/**
@@ -106,19 +96,23 @@ class AbilityController extends Controller
 	 * @return void
 	 * @author Christian Schramm
 	 */
-	protected function registerCustomAbility($requestData, $roleName, $ability)
+	protected function registerCustomAbility($requestData, $roleName, $abilities)
 	{
-		if ($requestData->changed[$ability->id] && array_key_exists($ability->id, $requestData->roleAbilities))
-			Bouncer::allow($roleName)->to($ability->name, $ability->entity_type);
+		foreach ($abilities as $ability) {
+			if ($requestData->changed[$ability->id] && array_key_exists($ability->id, $requestData->roleAbilities))
+				Bouncer::allow($roleName)->to($ability->name, $ability->entity_type);
 
-		if ($requestData->changed[$ability->id] && !array_key_exists($ability->id, $requestData->roleAbilities))
-			Bouncer::disallow($roleName)->to($ability->name, $ability->entity_type);
+			if ($requestData->changed[$ability->id] && !array_key_exists($ability->id, $requestData->roleAbilities))
+				Bouncer::disallow($roleName)->to($ability->name, $ability->entity_type);
 
-		if ($requestData->changed[$ability->id] && array_key_exists($ability->id, $requestData->roleForbiddenAbilities))
-			Bouncer::forbid($roleName)->to($ability->name, $ability->entity_type);
+			if ($requestData->changed[$ability->id] && array_key_exists($ability->id, $requestData->roleForbiddenAbilities))
+				Bouncer::forbid($roleName)->to($ability->name, $ability->entity_type);
 
-		if ($requestData->changed[$ability->id] && !array_key_exists($ability->id, $requestData->roleForbiddenAbilities))
-			Bouncer::unforbid($roleName)->to($ability->name, $ability->entity_type);
+			if ($requestData->changed[$ability->id] && !array_key_exists($ability->id, $requestData->roleForbiddenAbilities))
+				Bouncer::unforbid($roleName)->to($ability->name, $ability->entity_type);
+		}
+
+		Bouncer::refresh();
 	}
 
 	/**
@@ -135,23 +129,21 @@ class AbilityController extends Controller
 	protected function registerModelAbilities(Role $role, $modelAbilities, $allowAll)
 	{
 		$models = collect(BaseModel::get_models());
-		$crudPermissions = self::getAbilityCrudActions();
+		$crudPermissions = self::getCrudActions();
 
 		foreach ($modelAbilities as $model => $permissions) {
 			foreach ($permissions as $permission) {
-				$action = ($allowAll  == 'true' && $allowAll != 'undefined') ? ['disallow', 'forbid'] : ['unforbid', 'allow'];
 				$crudPermissions->forget($permission);
-				$firstAction = $action[0];
-				$secondAction = $action[1];
+				$actions = 	$allowAll  == 'true' && $allowAll != 'undefined' ?
+							collect(['disallow', 'forbid']) :
+							collect(['unforbid', 'allow']);
 
-				if ($permission == '*') {
-					Bouncer::$firstAction($role->name)->toManage($models[$model]);
-					Bouncer::$secondAction($role->name)->toManage($models[$model]);
-					continue;
-				}
+				$actions->each(function($action) use ($permission, $role, $models, $model) {
+					if ($permission == '*')
+						return Bouncer::$action($role->name)->toManage($models[$model]);
 
-				Bouncer::$firstAction($role->name)->to($permission, $models[$model]);
-				Bouncer::$secondAction($role->name)->to($permission, $models[$model]);
+					return Bouncer::$action($role->name)->to($permission, $models[$model]);
+				});
 			}
 
 			foreach ($crudPermissions as $permission => $options) {
@@ -165,6 +157,8 @@ class AbilityController extends Controller
 				Bouncer::unforbid($role->name)->to($permission, $models[$model]);
 			}
 		}
+
+		Bouncer::refresh();
 	}
 
 	/**
@@ -175,7 +169,7 @@ class AbilityController extends Controller
 	 */
 	public static function getCustomAbilities()
 	{
-		$customAbilities = Ability::whereNotIn('name', self::getAbilityCrudActions()->keys())
+		return Ability::whereNotIn('name', self::getCrudActions()->keys())
 			->orWhere('entity_type', '*')
 			->get()
 			->pluck('title', 'id')
@@ -186,8 +180,6 @@ class AbilityController extends Controller
 					'helperText' => trans('helper.' . $title),
 				]);
 			});
-
-		return $customAbilities;
 	}
 
 	/**
@@ -207,6 +199,7 @@ class AbilityController extends Controller
 
 		$modules = Module::collections()->keys();
 		$models = collect(BaseModel::get_models())->forget($modelsToExclude);
+
 		$allowedAbilities = $role->getAbilities();
 		$isAllowAllEnabled = $allowedAbilities->where('title', 'All abilities')->first();
 
@@ -221,53 +214,46 @@ class AbilityController extends Controller
 			'GlobalConfig' => collect([
 				'GlobalConfig','BillingBase','Ccc','HfcBase','ProvBase','ProvVoip','GuiLog'
 				])->mapWithKeys(function ($name) use ($models, $allAbilities) {
-					return [
-						$name => $allAbilities
-									->where('entity_type', $models->pull($name))
-									->pluck('name')
-					];
+					return self::getModelActions($models, $name, $allAbilities);
 				})
 		]);
 
-		$modelAbilities['Authentication'] = $models->filter(function ($class) {
-			return Str::contains($class, 'App');
-		})->mapWithKeys(function ($class, $name) use ($models, $allAbilities) {
-			return [
-				$name => $allAbilities
-							->where('entity_type', $name == 'Role' ? 'roles' : $models->pull($name)) // Bouncer specific
-							->pluck('name')
-			];
-		});
+		$modelAbilities['Authentication'] = self::getModelsAndActions('App', $models, $allAbilities);
+		$modelAbilities['HFC'] = self::getModelsAndActions('Hfc', $models, $allAbilities);
 
-		$modelAbilities['HFC'] = $models->filter(function ($class) {
-			return Str::contains($class, '\\' . 'Hfc');
-		})->mapWithKeys(function ($class, $name) use ($models, $allAbilities) {
-			return [
-				$name => $allAbilities
-							->where('entity_type', $models->pull($name))
-							->pluck('name')
-			];
-		});
+		foreach ($modules as $module)
+			$modelAbilities[$module] = self::getModelsAndActions($module, $models, $allAbilities);
 
-		foreach ($modules as $module) {
-			$modelAbilities[$module] = $models->filter(function ($class) use ($module) {
-				return (Str::contains($class, '\\'. $module . '\\') &&
-						!Str::contains($class, '\\' . 'Hfc') &&
-						!Str::contains($class, 'App' . '\\'));
-			})->mapWithKeys(function ($class, $name) use ($models, $allAbilities) {
-				return [
-					$name => $allAbilities
-								->where('entity_type', $models->pull($name))
-								->pluck('name')
-				];
-			});
-		}
-
-		$modelAbilities = $modelAbilities->reject(function ($value, $key) {
-			return $value->isEmpty();
+		$modelAbilities = $modelAbilities->reject(function ($module) {
+			return $module->isEmpty();
 		});
 
 		return $modelAbilities;
+	}
+
+	private static function getModelsAndActions($name, $models, $allAbilities)
+	{
+		return $models->filter(function ($class) use ($name) {
+			if ($name == 'App')
+				return Str::contains($class, 'App' . '\\');
+
+			if ($name == 'Hfc')
+				return Str::contains($class, '\\' . 'Hfc');
+
+			return Str::contains($class, '\\'. $name . '\\');
+		})
+		->mapWithKeys(function ($class, $name) use ($models, $allAbilities) {
+			return self::getModelActions($models, $name, $allAbilities);
+		});
+	}
+
+	private static function getModelActions($models, $name, $allAbilities)
+	{
+		return [
+			$name => $allAbilities
+					->where('entity_type', $name == 'Role' ? 'roles' : $models->pull($name)) // Bouncer specific
+					->pluck('name')
+			];
 	}
 
 	/**
@@ -279,15 +265,10 @@ class AbilityController extends Controller
 	 */
 	public static function mapCustomAbilities($abilities)
 	{
-		$sortedAbilities = collect();
-
-		$sortedAbilities = $abilities->filter(function ($ability) {
-			return (Str::startsWith($ability->entity_type, '*') || $ability->entity_type == null ||
-				!self::getAbilityCrudActions()->has($ability->name));
-			})
-			->pluck('title', 'id');
-
-		return $sortedAbilities;
+		return $abilities->filter(function($ability) {
+					return self::isCustom($ability);
+				})
+				->pluck('title', 'id');
 	}
 
 	/**
@@ -299,15 +280,22 @@ class AbilityController extends Controller
 	 */
 	public static function mapModelAbilities($abilities)
 	{
-		$sortedAbilities = collect();
+		return $abilities->filter(function($ability) {
+					return ! self::isCustom($ability);
+				})
+				->map(function ($ability) {
+					return ['id' => $ability->id,
+							'name' => $ability->name,
+							'entity_type' => $ability->entity_type
+					];
+				})
+				->keyBy('id');
+	}
 
-		$sortedAbilities = $abilities->filter(function ($ability) {
-				return (!Str::startsWith($ability->entity_type, '*') && $ability->entity_type !== null &&
-					self::getAbilityCrudActions()->has($ability->name));
-			})->map(function ($ability) {
-				return ['id' => $ability->id, 'name' => $ability->name, 'entity_type' => $ability->entity_type];
-			})->keyBy('id');
-
-		return $sortedAbilities;
+	private static function isCustom($ability)
+	{
+		return (Str::startsWith($ability->entity_type, '*') ||
+				$ability->entity_type == null ||
+				!self::getCrudActions()->has($ability->name));
 	}
 }
