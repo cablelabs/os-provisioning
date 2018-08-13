@@ -344,7 +344,12 @@ new Vue({
     },
     customAllow : function (id) {
         if (this.$refs['allowed'+ id][0].checked) {
-            if (id == this.allowAllId) this.allowAll = true;
+            if (id == this.allowAllId) {
+                this.allowAll = true;
+                this.$refs['allowed'+ this.allowViewAllId][0].checked = false;
+                this.changed[this.allowViewAllId] = false;
+                this.allowViewAll = undefined;
+            }
             if (id == this.allowViewAllId) this.allowViewAll = true;
             this.roleAbilities[id] = this.customAbilities[id]['localTitle'];
             delete this.roleForbiddenAbilities[id];
