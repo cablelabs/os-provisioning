@@ -99,6 +99,7 @@ class PhonebookEntryController extends \BaseController {
 			array('form_type' => 'select', 'name' => 'entry_type', 'description' => 'Entry type', 'value' => $model->get_options_from_list('entry_type', True)),
 			array('form_type' => 'select', 'name' => 'publish_address', 'description' => 'Publish address', 'value' => $model->get_options_from_list('publish_address', True)),
 			array('form_type' => 'text', 'name' => 'company', 'description' => 'Company'),
+			array('form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_options_from_file('salutation', True, True)),
 			array('form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic degree', 'value' => $model->get_options_from_file('academic_degree')),
 			array('form_type' => 'select', 'name' => 'noble_rank', 'description' => 'Noble rank', 'value' => $model->get_options_from_file('noble_rank')),
 			array('form_type' => 'select', 'name' => 'nobiliary_particle', 'description' => 'Nobiliary particle', 'value' => $model->get_options_from_file('nobiliary_particle')),
@@ -112,9 +113,14 @@ class PhonebookEntryController extends \BaseController {
 			array('form_type' => 'text', 'name' => 'urban_district', 'description' => 'Urban district'),
 			array('form_type' => 'select', 'name' => 'business', 'description' => 'Business', 'value' => $model->get_options_from_file('business')),
 			array('form_type' => 'select', 'name' => 'usage', 'description' => 'Number usage', 'value' => $model->get_options_from_list('usage', True)),
-			array('form_type' => 'select', 'name' => 'tag', 'description' => 'Tag', 'value' => $model->get_options_from_file('tag')),
 
 		);
+
+		// starting with API version 2.7 envia TEL ignores “tag”
+		// not sure if true for others – so only removed if provvoipenvia is enabled
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
+			array_push($ret_tmp, array('form_type' => 'select', 'name' => 'tag', 'description' => 'Tag', 'value' => $model->get_options_from_file('tag')));
+		};
 
 		// add init values if set
 		$ret = array();
@@ -140,7 +146,7 @@ class PhonebookEntryController extends \BaseController {
 	 * @author Nino Ryschawy
 	 * @author Patrick Reichel
 	 */
-	public function prep_rules($rules, $data) {
+	public function prepare_rules($rules, $data) {
 
 		// lambda to replace strings after a colon
 		$replace_after_colon = function(&$subject, $key, $replacement_data=['search'=>'', 'replace'=>'']) {

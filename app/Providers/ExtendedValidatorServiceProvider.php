@@ -32,6 +32,10 @@ class ExtendedValidatorServiceProvider extends ServiceProvider {
 		$this->app['validator']->extend('phonebook_string', 'Acme\Validators\ExtendedValidator@validatePhonebookString');
 		$this->app['validator']->extend('phonebook_predefined_string', 'Acme\Validators\ExtendedValidator@validatePhonebookPredefinedString');
 		$this->app['validator']->extend('phonebook_one_character_option', 'Acme\Validators\ExtendedValidator@validatePhonebookOneCharacterOption');
+
+		// the following validators needs to be extended implicit – have to be called even if an empty value is passed
+		$this->app['validator']->extendImplicit('phonebook_entry_type_dependend', 'Acme\Validators\ExtendedValidator@validatePhonebookEntryTypeDependend');
+
 	}
 
 	/**

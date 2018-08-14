@@ -11,10 +11,10 @@ class PhonebookEntry extends \BaseModel {
 
 
 	// Add your validation rules here
-	// Also have a look at PhonebookEntryController@prep_rules!
+	// Also have a look at PhonebookEntryController::prepare_rules (we replace form names in rules by their value)!
 	public static function rules($id=null)
 	{
-		return array(
+		$ret = [
 			'phonenumbermanagement_id' => 'required|exists:phonenumbermanagement,id,deleted_at,NULL|min:1',
 			'reverse_search' => 'required|phonebook_one_character_option',
 			'publish_in_print_media' => 'required|phonebook_one_character_option',
@@ -22,13 +22,14 @@ class PhonebookEntry extends \BaseModel {
 			'directory_assistance' => 'required|phonebook_one_character_option',
 			'entry_type' => 'required|phonebook_one_character_option',
 			'publish_address' => 'required|phonebook_one_character_option',
-			'company' => 'required_if:entry_type,F',
-			'academic_degree' => 'phonebook_predefined_string',
-			'noble_rank' => 'phonebook_predefined_string',
-			'nobiliary_particle' => 'phonebook_predefined_string',
-			'lastname' => 'required_if:entry_type,P|phonebook_string',
-			'other_name_suffix' => 'phonebook_predefined_string',
-			'firstname' => 'phonebook_string',
+			'company' => 'phonebook_entry_type_dependend:entry_type|phonebook_string',
+			'salutation' => 'phonebook_entry_type_dependend:entry_type|phonebook_predefined_string',
+			'academic_degree' => 'phonebook_entry_type_dependend:entry_type|phonebook_predefined_string',
+			'noble_rank' => 'phonebook_entry_type_dependend:entry_type|phonebook_predefined_string',
+			'nobiliary_particle' => 'phonebook_entry_type_dependend:entry_type|phonebook_predefined_string',
+			'lastname' => 'phonebook_entry_type_dependend:entry_type|phonebook_string',
+			'other_name_suffix' => 'phonebook_entry_type_dependend:entry_type|phonebook_predefined_string',
+			'firstname' => 'phonebook_entry_type_dependend:entry_type|phonebook_string',
 			'street' => 'required|phonebook_string',
 			'houseno' => 'required|phonebook_string',
 			'zipcode' => 'required|phonebook_string',
@@ -36,8 +37,15 @@ class PhonebookEntry extends \BaseModel {
 			'urban_district' => 'phonebook_string',
 			'business' => 'phonebook_predefined_string',
 			'usage' => 'required|phonebook_one_character_option',
-			'tag' => 'phonebook_predefined_string',
-		);
+		];
+
+		// starting with API version 2.7 envia TEL ignores “tag”
+		// not sure if true for others – so only removed if provvoipenvia is enabled
+		if (!\Module::collections()->has('ProvVoipEnvia')) {
+			$ret['tag'] = 'phonebook_predefined_string';
+		};
+
+		return $ret;
 	}
 
 
@@ -46,7 +54,13 @@ class PhonebookEntry extends \BaseModel {
 		if (is_null(static::$config)) {
 
 			// we have to use the raw scanner because of the special characters like “(”…
-			$config = parse_ini_string(\Storage::get('config/provvoip/phonebook_entry__config.ini'), true, INI_SCANNER_RAW);
+			if (\Module::collections()->has('ProvVoipEnvia')) {
+				// to use the envia TEL API there seems to be some special cases – use own config file
+				$config = parse_ini_string(\Storage::get('config/provvoip/phonebook_entry__config_provvoipenvia.ini'), true, INI_SCANNER_RAW);
+			}
+			else {
+				$config = parse_ini_string(\Storage::get('config/provvoip/phonebook_entry__config.ini'), true, INI_SCANNER_RAW);
+			}
 
 			// with using the raw scanner type we have to convert some values
 			// false is a string in this case – and boolval("false") == true
@@ -174,7 +188,7 @@ class PhonebookEntry extends \BaseModel {
 	 *
 	 * @author Patrick Reichel
 	 */
-	public function get_options_from_list($section, $with_placeholder=False) {
+	public function get_options_from_list($section, $with_placeholder=False, $allow_empty=False) {
 
 		$options = array();
 
@@ -183,13 +197,24 @@ class PhonebookEntry extends \BaseModel {
 		};
 
 		// placeholder
+		// if empty values are not allowed we give a hint to the user
 		if ($with_placeholder) {
-			$options[''] = 'n/a – to be set';
+			if ($allow_empty) {
+				$options[''] = '';
+			}
+			else {
+				$options[''] = 'n/a – to be set';
+			}
 		}
 
 		// the real options
 		foreach (static::$config[$section]['in_list'] as $option) {
-			$options[$option] = $option.' – '.static::$config[$section][$option];
+			$desc = static::$config[$section][$option];
+			if ($option != $desc) {
+				// write the official TCom shortcuts (if existing) – can be useful for experienced staff
+				$desc = $option.' – '.$desc;
+			}
+			$options[$option] = $desc;
 		}
 
 		return $options;
