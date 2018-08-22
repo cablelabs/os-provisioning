@@ -372,5 +372,4 @@ return [
 //
 // Contract
 //
-	'Contract_Numberrange_Failure' => 'Keine freie Vertragsnummer für die gewählte Kostenstelle gefunden.'
 ];
