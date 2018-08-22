@@ -17,6 +17,7 @@ use Modules\ProvVoip\Entities\PhonebookEntry;
 class ExtendedValidator
 {
 
+	
 	public function notNull($attribute, $value, $parameters)
 	{
 		if ($value == '' || $value == '0' || $value == null || $value == '0000-00-00')
@@ -237,7 +238,7 @@ class ExtendedValidator
 		if (!file_exists("$dir/dummy-validator.cfg") && (isset($arguments[3])))
 		{
 			// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
-        	// when laravel calls the actual validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
+        	// when laravel calls the validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
 			$validator = $arguments[3];
         	$validator->setCustomMessages(array('docsis' => $report));
         	return false;
@@ -275,7 +276,7 @@ class ExtendedValidator
 	public function validatePhonebookString($attribute, $value, $parameters) {
 
 		// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
-		// when laravel calls the actual validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
+		// when laravel calls the validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
 		$validator = \func_get_arg(3);
 
 		// for easier access and improved readability: get needed informations out of config
@@ -316,7 +317,7 @@ class ExtendedValidator
 	public function validatePhonebookPredefinedString($attribute, $value, $parameters) {
 
 		// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
-		// when laravel calls the actual validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
+		// when laravel calls the validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
 		$validator = \func_get_arg(3);
 
 		// attention: data coming into validators are still htmlencoded from view level!
@@ -340,7 +341,7 @@ class ExtendedValidator
 	public function validatePhonebookOneCharacterOption($attribute, $value, $parameters) {
 
 		// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
-		// when laravel calls the actual validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
+		// when laravel calls the validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
 		$validator = \func_get_arg(3);
 
 		// get the allowed chars out of config
@@ -351,6 +352,65 @@ class ExtendedValidator
 			return false;
 		}
 
+		return true;
+	}
+
+
+	/**
+	 * Check values that are entry_type dependend
+	 *
+	 * @param $parameters first entry needs to be the entry_type value (add “entry_type” to PhonebookEntry::rules(); will
+	 *			then be set in PhonebookEntryController::prepare_rules
+	 *
+	 * @author Patrick Reichel
+	 */
+	public function validatePhonebookEntryTypeDependend($attribute, $value, $parameters) {
+
+		// see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
+		// when laravel calls the validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
+		$validator = \func_get_arg(3);
+
+		$entry_type = $parameters[0];
+
+		// define which forms are needed to be filled/empty depending on entry_type
+		if (in_array($entry_type, ['P'])) {
+			$has_to_be_empty = [
+				'company',
+			];
+			$has_to_be_set = [
+				'salutation',
+				'lastname',
+			];
+
+		}
+		elseif (in_array($entry_type, ['B', 'F'])) {
+			$has_to_be_empty = [
+				'salutation',
+				'firstname',
+				'lastname',
+				'academic_degree',
+				'noble_rank',
+				'nobiliary_particle',
+				'other_name_suffix',
+			];
+			$has_to_be_set = [
+				'company',
+			];
+		}
+
+		// check if data is given for field that has to be empty
+		if (in_array($attribute, $has_to_be_empty) && $value) {
+			$validator->setCustomMessages(array('phonebook_entry_type_dependend' => "The $attribute field has to be empty when entry type is $entry_type."));
+			return false;
+		}
+
+		// check if needed field is empty
+		if (in_array($attribute, $has_to_be_set) && !$value) {
+			$validator->setCustomMessages(array('phonebook_entry_type_dependend' => "The $attribute field is required when entry type is $entry_type."));
+			return false;
+		}
+
+		// all checks passed
 		return true;
 	}
 

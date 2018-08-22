@@ -620,7 +620,7 @@ class BaseController extends Controller {
 
 			$msg = 'Input invalid – please correct the following errors';
 			Session::push('tmp_error_above_form', $msg);
-			return Redirect::back()->withErrors($validator)->withInput()->with('message', $msg)->with('message_color', 'danger');
+			return Redirect::back()->withErrors($validator)->withInput();
 		}
 		$data = $controller->prepare_input_post_validation ($data);
 
@@ -753,7 +753,7 @@ class BaseController extends Controller {
 
 			$msg = 'Input invalid – please correct the following errors';
 			Session::push('tmp_error_above_form', $msg);
-			return Redirect::back()->with('message', $msg)->with('message_color', 'danger')->withErrors($validator)->withInput();
+			return Redirect::back()->withErrors($validator)->withInput();
 		}
 
 		// Handle file uploads generically - this must happen after the validation as moving the file before leads always to validation error
