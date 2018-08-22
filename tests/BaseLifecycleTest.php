@@ -175,7 +175,7 @@ class BaseLifecycleTest extends TestCase {
 
 		// TODO: do not hard code any user class, instead fetch a user dynamically
 		//       or add it only for testing (see Laravel factory stuff)
-		$this->user = App\User::findOrFail(1);
+		$this->user = \App\User::findOrFail(1);
 	}
 
 
@@ -272,7 +272,7 @@ class BaseLifecycleTest extends TestCase {
 			$tries++;
 			// throw exception to avoid endless loop
 			if ($tries > 100) {
-				throw new Exception('Unable to create unique data.');
+				throw new \Exception('Unable to create unique data.');
 			};
 
 			$data_is_unique = True;
@@ -286,11 +286,13 @@ class BaseLifecycleTest extends TestCase {
 					continue;
 				}
 
-				$ids = DB::table($this->database_table)
+				$ids = \DB::table($this->database_table)
 					->select('id')
 					->where($unique_field, '=', $data[$unique_field])
 					->where('id', '!=', $model_id)
-					->get();
+					->get()
+					->toArray();
+
 
 				// if there is duplicate data for an unique field: get new seeder data
 				if ($ids) {
@@ -770,7 +772,7 @@ class BaseLifecycleTest extends TestCase {
 	 */
 	protected function tearDown()
 	{
-		$refl = new ReflectionObject($this);
+		$refl = new \ReflectionObject($this);
 		foreach ($refl->getProperties() as $prop) {
 			if (!$prop->isStatic() && 0 !== strpos($prop->getDeclaringClass()->getName(), 'PHPUnit_')) {
 				$prop->setAccessible(true);

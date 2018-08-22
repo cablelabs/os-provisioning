@@ -8,7 +8,7 @@ use Illuminate\Database\Migrations\Migration;
  *
  * @author Patrick Reichel
  */
-class UpdatePhonenumberForStoringExternalContractReference {
+class UpdatePhonenumberForStoringExternalContractReference extends Migration {
 
 	// name of the table to update
 	protected $tablename = "phonenumber";

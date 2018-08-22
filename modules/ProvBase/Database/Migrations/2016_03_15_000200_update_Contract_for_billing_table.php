@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateContractForBillingTable{
+class UpdateContractForBillingTable extends Migration {
 
     /**
 	 * Run the migrations.

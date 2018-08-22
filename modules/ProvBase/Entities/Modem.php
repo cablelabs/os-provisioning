@@ -52,8 +52,8 @@ class Modem extends \BaseModel {
 		// as the upcoming datatables AJAX request won't carry the input parameters
 		if (\Input::has('modem_show_filter'))
 			\Session::put('modem_show_filter', \Input::get('modem_show_filter'));
-		// non-datatable request
-		elseif (basename(\Route::getCurrentRoute()->getPath()) == 'Modem')
+		// non-datatable request; current route is null on testing
+		elseif (\Route::getCurrentRoute() && basename(\Route::getCurrentRoute()->getPath()) == 'Modem')
 			\Session::forget('modem_show_filter');
 
 		return ['table' => $this->table,
