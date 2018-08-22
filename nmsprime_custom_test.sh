@@ -34,6 +34,7 @@ TESTS=" modules/ProvVoip/Tests/PhonenumberLifecycleTest.php"
 TESTS=" modules/ProvBase/Tests/ModemLifecycleTest.php"
 TESTS=" modules/ProvBase/Tests/ContractLifecycleTest.php"
 TESTS=" modules/ProvVoip/Tests/PhoneTariffLifecycleTest.php"
+TESTS=" modules/BillingBase/Tests/ItemLifecycleTest.php"
 TESTS=" modules/BillingBase/Tests/ProductLifecycleTest.php"
 
 
