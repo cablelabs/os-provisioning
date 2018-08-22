@@ -107,6 +107,15 @@ return [
 		],
 	],
 
+	"docsis"             	=> ":attribute",
+	"ip"                   	=> "Dies ist keine gültige IP-Adresse im Format: 192.168.0.255",
+	"ip_in_range"		   	=> "Die angege IP-Adresse ist nicht innerhalb des spezifizierten Bereichs",
+	"ip_larger"			   	=> "Die angege IP-Adresse muss aufgrund der Angaben aus anderen Feldern eine höhere Nummer besitzen",
+	"mac"				   	=> ":attribute muss eine gültige MAC-Adresse in der Form \'aa:bb:cc:dd:ee:ff\' sein",
+	"netmask"               => "Die angegebene Netzmaske ist nicht korrekt",
+	'not_null'              => 'Dieses Feld muss ausgefüllt sein (nicht 0)',
+	'null_if'				=> 'Wert muss 0 sein',
+
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Attributes
@@ -119,22 +128,35 @@ return [
 	*/
 
 	'attributes' => [
-
-	"docsis"             		=> ":attribute",
-	"ip"                   		=> "Dies ist keine gültige IP-Adresse im Format: 192.168.0.255",
-	"ip_in_range"		   		=> "Die angege IP-Adresse ist nicht innerhalb des spezifizierten Bereichs",
-	"ip_larger"			   		=> "Die angege IP-Adresse muss aufgrund der Angaben aus anderen Feldern eine höhere Nummer besitzen",
-	"mac"				   		=> ":attribute muss eine gültige MAC-Adresse in der Form \'aa:bb:cc:dd:ee:ff\' sein",
-	"netmask"               	=> "Die angegebene Netzmaske ist nicht korrekt",
-	'not_null'              	=> 'Dieses Feld muss ausgefüllt sein (nicht 0)',
-	'null_if'					=> 'Wert muss 0 sein',
-
-		//
-	"netmask"               	=> "Die angegebene Netzmaske ist nicht korrekt",
-	'not_null'              	=> 'Dieses Feld muss ausgefüllt sein (nicht 0)',
-	'null_if'					=> 'Wert muss 0 sein',
-
-		//
-	],
+		'name'                  => 'Name',
+		'username'              => 'Benutzername',
+		'email'                 => 'E-Mail-Adresse',
+		'first_name'            => 'Vorname',
+		'last_name'             => 'Nachname',
+		'password'              => 'Passwort',
+		'password_confirmation' => 'Passwort-Bestätigung',
+		'city'                  => 'Stadt',
+		'country'               => 'Land',
+		'address'               => 'Adresse',
+		'phone'                 => 'Telefonnummer',
+		'mobile'                => 'Handynummer',
+		'age'                   => 'Alter',
+		'sex'                   => 'Geschlecht',
+		'gender'                => 'Geschlecht',
+		'day'                   => 'Tag',
+		'month'                 => 'Monat',
+		'year'                  => 'Jahr',
+		'hour'                  => 'Stunde',
+		'minute'                => 'Minute',
+		'second'                => 'Sekunde',
+		'title'                 => 'Titel',
+		'content'               => 'Inhalt',
+		'description'           => 'Beschreibung',
+		'excerpt'               => 'Auszug',
+		'date'                  => 'Datum',
+		'time'                  => 'Uhrzeit',
+		'available'             => 'verfügbar',
+		'size'                  => 'Größe',
+		],
 
 ];

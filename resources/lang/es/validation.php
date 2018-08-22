@@ -104,6 +104,15 @@ return [
 		],
 	],
 
+	"docsis"             	=> ":attribute",
+	"ip"                   => "No es una direccion IP valida, de la forma: 192.168.0.255",
+	"ip_in_range"		   => "La direccion IP no esta dentro del rango especificado anteriormente",
+	"ip_larger"			   => "La direccion IP debe tener una cifra mayor debido a lo especificado en campos anteriores",
+	"mac"				   => "El :attribute debe ser una direccion MAC de la forma: aa:bb:cc:dd:ee:ff",
+	"netmask"               => "No es una netmask correcta",
+	'not_null'              => 'Este campo tiene que ser establecido (no 0)',
+	'null_if'				=> 'Tiene que ser cero',
+
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Attributes
@@ -115,16 +124,36 @@ return [
 	|
 	*/
 
-	'attributes' => [],
-
-	"docsis"             	=> ":attribute",
-	"ip"                   => "No es una direccion IP valida, de la forma: 192.168.0.255",
-	"ip_in_range"		   => "La direccion IP no esta dentro del rango especificado anteriormente",
-	"ip_larger"			   => "La direccion IP debe tener una cifra mayor debido a lo especificado en campos anteriores",
-	"mac"				   => "El :attribute debe ser una direccion MAC de la forma: aa:bb:cc:dd:ee:ff",
-	"netmask"               => "No es una netmask correcta",
-	'not_null'              => 'Este campo tiene que ser establecido (no 0)',
-	'null_if'				=> 'Tiene que ser cero',
-
-
+	'attributes' => [
+		'name'                  => 'nombre',
+		'username'              => 'usuario',
+		'email'                 => 'correo electrónico',
+		'first_name'            => 'nombre',
+		'last_name'             => 'apellido',
+		'password'              => 'contraseña',
+		'password_confirmation' => 'confirmación de la contraseña',
+		'city'                  => 'ciudad',
+		'country'               => 'país',
+		'address'               => 'dirección',
+		'phone'                 => 'teléfono',
+		'mobile'                => 'móvil',
+		'age'                   => 'edad',
+		'sex'                   => 'sexo',
+		'gender'                => 'género',
+		'year'                  => 'año',
+		'month'                 => 'mes',
+		'day'                   => 'día',
+		'hour'                  => 'hora',
+		'minute'                => 'minuto',
+		'second'                => 'segundo',
+		'title'                 => 'título',
+		'content'               => 'contenido',
+		'body'                  => 'contenido',
+		'description'           => 'descripción',
+		'excerpt'               => 'extracto',
+		'date'                  => 'fecha',
+		'time'                  => 'hora',
+		'subject'               => 'asunto',
+		'message'               => 'mensaje',
+	],
 ];

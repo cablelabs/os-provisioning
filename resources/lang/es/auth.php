@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'failed'   => 'Diese Zugangsdaten wurden nicht in unserer Datenbank gefunden.',
-    'throttle' => 'Zu viele Login Versuche. Versuchen Sie es bitte in :seconds Sekunden erneut.',
+    'failed'   => 'Estas credenciales no coinciden con nuestros registros.',
+    'throttle' => 'Demasiados intentos de acceso. Por favor intente nuevamente en :seconds segundos.',
     'NoRoles' => 'Ihrem Account wurde(n) noch keine Rolle(n) zugewiesen.'
 ];

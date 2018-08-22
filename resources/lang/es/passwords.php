@@ -13,15 +13,9 @@ return [
 	|
 	*/
 
-	// "password" => "Passwords must be at least six characters and match the confirmation.",
-	"password" => "Las contrasenas deben ser por lo menos de 6 caracteres y han de coincidir.",
-	// "user" => "We can't find a user with that e-mail address.",
-	"user" => "No se pudo encontrar un usuario con tal correo electronico.",
-	// "token" => "This password reset token is invalid.",
-	"token" => "El token de reseteo de contrasena es invalido",
-	// "sent" => "We have e-mailed your password reset link!",
-	"sent" => "Se le ha enviado un link para resetear su contrasena!",
-	// "reset" => "Your password has been reset!",
-	"reset" => "Su contrasena ha sido reseteada!",
-
+    'password' => 'Las contraseñas deben coincidir y contener al menos 6 caracteres',
+    'reset'    => '¡Tu contraseña ha sido restablecida!',
+    'sent'     => '¡Te hemos enviado por correo el enlace para restablecer tu contraseña!',
+    'token'    => 'El token de recuperación de contraseña es inválido.',
+    'user'     => 'No podemos encontrar ningún usuario con ese correo electrónico.',
 ];
