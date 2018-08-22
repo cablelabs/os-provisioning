@@ -21,9 +21,7 @@ class ChangeEngineToInnodb extends Migration {
 	protected $logfile = null;
 
 	// add the names of tables that should not be converted to InnoDB
-	protected $tables_to_ignore = [
-		'migrations',
-	];
+	protected $tables_to_ignore = [];
 
 	/**
 	 * Constructor.
