@@ -1,5 +1,7 @@
 <?php
+
 return [
+
 	/*
 	|--------------------------------------------------------------------------
 	| Validation Language Lines
@@ -10,6 +12,7 @@ return [
 	| as the size rules. Feel free to tweak each of these messages here.
 	|
 	*/
+
 	'accepted'             => ':attribute muss akzeptiert werden.',
 	'active_url'           => ':attribute ist keine gültige Internet-Adresse.',
 	'after'                => ':attribute muss ein Datum nach dem :date sein.',
@@ -18,7 +21,7 @@ return [
 	'alpha_dash'           => ':attribute darf nur aus Buchstaben, Zahlen, Binde- und Unterstrichen bestehen. Umlaute (ä, ö, ü) und Eszett (ß) sind nicht erlaubt.',
 	'alpha_num'            => ':attribute darf nur aus Buchstaben und Zahlen bestehen.',
 	'array'                => ':attribute muss ein Array sein.',
-	'available'            => 'Kein Eintrag in Konfigurationsdateien verfügbar - Füllen Sie dieses Feld bitte aus', // custom
+	'available'            => 'Kein Eintrag in Konfigurationsdateien verfügbar - Füllen Sie dieses Feld bitte aus',
 	'before'               => ':attribute muss ein Datum vor dem :date sein.',
 	'before_or_equal'      => ':attribute muss ein Datum vor :date oder genau :date sein.',
 	'between'              => [
@@ -38,16 +41,13 @@ return [
 	'dimensions'           => ':attribute hat ein ungültiges Seitenverhältnis.',
 	'distinct'             => 'Das :attribute Feld hat einen doppelten Wert.',
 	'email'                => ':attribute Format ist ungültig.',
-	'exists'               => 'Der gewählte Wert für :attribute ist ungültig.',
 	'file'                 => ':attribute muss eine Datei sein.',
 	'filled'               => ':attribute muss ausgefüllt sein.',
+	'exists'               => 'Der gewählte Wert für :attribute ist ungültig.',
 	'image'                => ':attribute muss ein Bild sein.',
 	'in'                   => 'Der gewählte Wert für :attribute ist ungültig.',
 	'integer'              => ':attribute muss eine ganze Zahl sein.',
 	'in_array'             => 'Das :attribute Feld existiert in :other nicht.',
-	'ip'                   => ':attribute muss eine gültige IP-Adresse sein.',
-	'json'                 => ':attribute muss ein gültiger JSON-String sein.',
-	'mac'                  => 'Bitte geben Sie eine gültige MAC Adresse in der Form: aa:bb:cc:dd:ee:ff ein', // custom
 	'max'                  => [
 		'numeric' => ':attribute darf maximal :max sein.',
 		'file'    => ':attribute darf maximal :max Kilobytes groß sein.',
@@ -63,16 +63,13 @@ return [
 		'array'   => ':attribute muss mindestens :min Elemente haben.',
 	],
 	'not_in'               => 'Der gewählte Wert für :attribute ist ungültig.',
-	'null_if'              => 'Muss Null sein', //custom
-	'not_null'             => 'Dieses Feld muss gesetzt werden (nicht 0)', // custom
 	'numeric'              => ':attribute muss eine Zahl sein.',
-	'period'               => ':attribute hat ein ungültiges Format.', //custom
+	'period'               => ':attribute hat ein ungültiges Format.',
 	'present'              => 'Das :attribute Feld muss ausgefüllt sein.',
-	'product' 				=> 'Die Produkttypen müssen wie im Hilfetext geschrieben und durch Komma getrennt angegeben werden!',
+	'product' 			=> 'Die Produkttypen müssen wie im Hilfetext geschrieben und durch Komma getrennt angegeben werden!',
 	'regex'                => ':attribute Format ist ungültig.',
 	'required'             => ':attribute muss ausgefüllt sein.',
 	'required_if'          => ':attribute muss ausgefüllt sein, wenn :other :value ist.',
-	'required_unless'      => ':attribute muss ausgefüllt sein, wenn :other nicht :values ist.',
 	'required_with'        => ':attribute muss angegeben werden, wenn :values ausgefüllt wurde.',
 	'required_with_all'    => ':attribute muss angegeben werden, wenn :values ausgefüllt wurde.',
 	'required_without'     => ':attribute muss angegeben werden, wenn :values nicht ausgefüllt wurde.',
@@ -84,11 +81,11 @@ return [
 		'string'  => ':attribute muss :size Zeichen lang sein.',
 		'array'   => ':attribute muss genau :size Elemente haben.',
 	],
-	'string'               => ':attribute muss ein String sein.',
 	'timezone'             => ':attribute muss eine gültige Zeitzone sein.',
 	'unique'               => ':attribute ist schon vergeben.',
 	'uploaded'             => ':attribute konnte nicht hochgeladen werden.',
 	'url'                  => 'Das Format von :attribute ist ungültig.',
+
 
 	/*
 	|--------------------------------------------------------------------------
@@ -101,11 +98,20 @@ return [
 	|
 	*/
 
-	'custom'               => [
+	'custom' => [
 		'attribute-name' => [
 			'rule-name' => 'custom-message',
 		],
 	],
+
+	"docsis"             	=> ":attribute",
+	"ip"                   	=> "Dies ist keine gültige IP-Adresse im Format: 192.168.0.255",
+	"ip_in_range"		   	=> "Die angege IP-Adresse ist nicht innerhalb des spezifizierten Bereichs",
+	"ip_larger"			   	=> "Die angege IP-Adresse muss aufgrund der Angaben aus anderen Feldern eine höhere Nummer besitzen",
+	"mac"				   	=> ":attribute muss eine gültige MAC-Adresse in der Form \'aa:bb:cc:dd:ee:ff\' sein",
+	"netmask"               => "Die angegebene Netzmaske ist nicht korrekt",
+	'not_null'              => 'Dieses Feld muss ausgefüllt sein (nicht 0)',
+	'null_if'				=> 'Wert muss 0 sein',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -119,22 +125,34 @@ return [
 	*/
 
 	'attributes' => [
-
-	"docsis"             		=> ":attribute",
-	"ip"                   		=> "Dies ist keine gültige IP-Adresse im Format: 192.168.0.255",
-	"ip_in_range"		   		=> "Die angege IP-Adresse ist nicht innerhalb des spezifizierten Bereichs",
-	"ip_larger"			   		=> "Die angege IP-Adresse muss aufgrund der Angaben aus anderen Feldern eine höhere Nummer besitzen",
-	"mac"				   		=> ":attribute muss eine gültige MAC-Adresse in der Form \'aa:bb:cc:dd:ee:ff\' sein",
-	"netmask"               	=> "Die angegebene Netzmaske ist nicht korrekt",
-	'not_null'              	=> 'Dieses Feld muss ausgefüllt sein (nicht 0)',
-	'null_if'					=> 'Wert muss 0 sein',
-
-		//
-	"netmask"               	=> "Die angegebene Netzmaske ist nicht korrekt",
-	'not_null'              	=> 'Dieses Feld muss ausgefüllt sein (nicht 0)',
-	'null_if'					=> 'Wert muss 0 sein',
-
-		//
-	],
-
+		'name'                  => 'Name',
+		'username'              => 'Benutzername',
+		'email'                 => 'E-Mail-Adresse',
+		'first_name'            => 'Vorname',
+		'last_name'             => 'Nachname',
+		'password'              => 'Passwort',
+		'password_confirmation' => 'Passwort-Bestätigung',
+		'city'                  => 'Stadt',
+		'country'               => 'Land',
+		'address'               => 'Adresse',
+		'phone'                 => 'Telefonnummer',
+		'mobile'                => 'Handynummer',
+		'age'                   => 'Alter',
+		'sex'                   => 'Geschlecht',
+		'gender'                => 'Geschlecht',
+		'day'                   => 'Tag',
+		'month'                 => 'Monat',
+		'year'                  => 'Jahr',
+		'hour'                  => 'Stunde',
+		'minute'                => 'Minute',
+		'second'                => 'Sekunde',
+		'title'                 => 'Titel',
+		'content'               => 'Inhalt',
+		'description'           => 'Beschreibung',
+		'excerpt'               => 'Auszug',
+		'date'                  => 'Datum',
+		'time'                  => 'Uhrzeit',
+		'available'             => 'verfügbar',
+		'size'                  => 'Größe',
+		],
 ];

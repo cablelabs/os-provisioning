@@ -1,18 +1,11 @@
 <?php
 
 return [
-
-//
 //SEARCH
-//
 		'Search_EnterKeyword' 		=> 'Suchbegriff eingeben',
 		'Search_MatchesFor'			=> 'Ergebnisse für',
 		'Search_In'					=> 'in der Tabelle',
-		'Search_Search ...'			=> 'Suchbegriff eingeben ...',
-
-//
 //jQuery
-//
 		//Translations for this at https://datatables.net/plug-ins/i18n/
 		'jQuery_sEmptyTable'		=> 'Keine Daten in der Tabelle vorhanden',
 		'jQuery_sInfo'				=> '_START_ bis _END_ von _TOTAL_ Einträgen',
@@ -29,18 +22,16 @@ return [
 		'jQuery_PaginatesPrevious'	=> 'Zurück',
 		'jQuery_PaginatesNext'		=> 'Nächste',
 		'jQuery_PaginatesLast'		=> 'Letzte',
-		'jQuery_sLast'				=> ':sSortAscending aktivieren, um Spalte aufsteigend zu sortieren',
 		'jQuery_sLast'				=> ':sSortDescending aktivieren, um Spalte absteigend zu sortieren',
+		'jQuery_sLast'				=> ': activate to sort column descending',
 		'jQuery_All'				=> 'Alle',
 		'jQuery_Print'				=> 'Drucken',
 		'jQuery_colvis'				=> 'Spaltensichtbarkeit',
 		'jQuery_colvisRestore'		=> 'Wiederherstellen',
 		'jQuery_colvisReset'		=> 'Zurücksetzen',
 		'jQuery_ExportTo'			=> 'Exportieren als',
-		'jQuery_ImportCsv'		=> 'CSV importieren',
-//
+                'jQuery_ImportCsv'              => 'CSV importieren',
 //MENU
-//
 	//Main Menu
 		'Menu_MainMenu' 			=> 'Hauptmenü',
 		'Menu_Config Page'			=> 'Systemkonfiguration',
@@ -49,7 +40,6 @@ return [
 		'Menu_SEPA Accounts'		=> 'SEPA-Konten',
 		'Menu_Settlement Run'		=> 'Abrechnungslauf',
 		'Menu_Cost Center'			=> 'Kostenstelle',
-		'Menu_Number Range'			=> 'Nummernkreis',
 		'Menu_Companies'			=> 'Unternehmen',
 		'Menu_Salesmen'				=> 'Verkäufer',
 		'Menu_Tree Table'			=> 'Baumdiagramm',
@@ -67,61 +57,27 @@ return [
 		'Menu_PhoneTariffs'			=> 'Telefontarife',
 		'Menu_Envia orders'			=> 'envia TEL Aufträge',
 		'Menu_Envia contracts'		=> 'envia TEL Verträge',
-		'Menu_CDRs'					=> 'EVNs',
-		'Menu_Tickets'				=> 'Tickets',
-		'Menu_Comment'				=> 'Kommentare',
 
 	//User Settings
 		'Menu_UserSettings'			=> 'Nutzereinstellungen',
-		'Menu_UserGlobSettings'		=> 'Globale Nutzereinstellungen',
+		'Menu_UserGlobSettings' 	=> 'Globale Nutzereinstellungen',
 		'Menu_Logout'				=> 'Ausloggen',
 		'Menu_UserRoleSettings'		=> 'Nutzerrollen',
 
-//
 //HEADER
-//
 	//General
 		'Header_GlobalSearch'		=> 'Systemweite Suche',
 		'Header_Overview'			=> 'Übersicht',
 		'Header_Assigned'			=> 'Zugewiesene',
 		'Header_Create'				=> 'Erstellen',
-		'Header_Users'				=> 'Benutzer|Benutzer',
-		'Header_EditUsers'			=> 'Benutzer bearbeiten',
-	//
 	//Module specific
-	//
-	//Global'Config
-		//Global
-		'Header_Global Configurations' => 'Systemkonfiguration',
-		'Header_Global Config' 		=> 'Globale Konfiguration|Globale Konfigurationen',
-		'Header_EditGlobal Config'	=> 'Globale Konfiguration bearbeiten',
-		'Header_Billing Config' 	=> 'Moduleinstellungen für Billing Base',
-		'Header_EditBilling Config' => 'Moduleinstellungen für Billing Base bearbeiten',
-		'Header_ProvVoip'			=> 'Moduleinstellungen VOIP',
-		'Header_EditProvVoip Config'=> 'Moduleinstellungen VOIP bearbeiten',
-		'Header_Ccc Config'			=> 'Moduleinstellungen Kundenkontrollzentrum',
-		'Header_EditCcc Config'		=> 'Moduleinstellungen Kundenkontrollzentrum bearbeiten',
-		'Header_Prov Base'			=> 'Moduleinstellungen Provisioning',
-		'Header_EditProv Base Config'=> 'Moduleinstellungen Provisioning bearbeiten',
-		'Header_HfcBase'			=> 'Moduleinstellungen HFC',
-		'Header_EditHfc Base Config'=> 'Moduleinstellungen HFC bearbeiten',
-		'Header_Roles'				=> 'Rolle|Rollen',
+
+	//Global
 		//Logs
 		'Header_Logs'				=> 'Logs',
 		'Header_EditLogs'			=> 'Log Details',
-		//Abilities
-		'Ability_Custom Abilities' 	=> 'Spezielle Fähigkeiten',
-		'Ability_Authentication'		=> 'Authentifizierung',
-		'Ability_GlobalConfig' 		=> 'Globale Konfigurationen',
-		'Ability_Ccc'				=> 'Kundenkontrollzentrum',
-		'Ability_BillingBase' 		=> 'Abrechnungszentrum',
-		'Ability_HFC' 				=> 'HFC Komponenten',
-		'Ability_ProvBase' 			=> 'Provisionierung',
-		'Ability_ProvVoip' 			=> 'VoIP Provisionierung',
-		'Ability_ProvVoipEnvia'		=> 'Envia VoIP',
-		'Ability_VoipMon'			=> 'VoIP Monitoring',
-
-		//Billing Base
+		'Header_Roles'				=> 'Rolle|Rollen',
+	//Billing Base
 		//Prduct Entry
 		'Header_Product Entry'		=> 'Produkt|Produktangebot',
 		'Header_EditProduct Entry'	=> 'Produkt bearbeiten',
@@ -133,31 +89,19 @@ return [
 		'Header_Cost Center'		=> 'Kostenstelle|Kostenstellen',
 		'Header_EditCost Center'	=> 'Kostenstelle bearbeiten',
 		//Company
-		'Header_Company'			=> 'Unternehmen|Unternehmen',
 		'Header_EditCompany'		=> 'Unternehmen bearbeiten',
 		//Salesman
-		'Header_Salesman'			=> 'Verkäufer|Verkäufer',
 		'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
 		//Items
 		'Header_Item'				=> 'Posten|Posten',
-		'Header_EditItem'			=> 'Posten bearbeiten',
-		// Invoice
-		'Header_Invoice' 			=> 'Rechnung|Rechnungen',
-
-		// SepaMandate
-		'Header_SEPA Mandate' 		=> 'SEPA-Mandat',
-		//Settlement Run
-		'Header_Settlement Run'		=> 'Abrechnungslauf|Abrechnungsläufe',
-		'Header_EditSettlement Run' => 'Abrechnungslauf bearbeiten',
+		'Header_EditItem'			=> 'Posten bearbeiten', //??
 		//Numberrange
 		'Header_NumberRange'		=> 'Nummernkreis|Nummernkreise',
-
 	//SNMP Modul
 		//Device
 		'Header_Device'				=> 'Gerät|Geräte',
 		'Header_EditDevice'			=> 'Gerät bearbeiten',
 		//Device Type
-		'Header_Device Type'		=> 'Gerätetyp|Gerätetypen',
 		'Header_EditDevice Type'	=> 'Gerätetyp bearbeiten',
 	//Provisioning
 		//Contract
@@ -183,18 +127,20 @@ return [
 		'Header_EditCMTS'			=> 'CMTS bearbeiten',
 		'Header_Config'				=> 'Konfigurationsvorschlag|Konfigurationsvorschläge',
 		//IpPool
-		'Header_IpPool'				=> 'IP-Bereich|IP-Bereiche', //workaround
+		'Header_IpPool'				=> 'IP-Bereich|IP-Bereiche',
 		'Header_EditIpPool'			=> 'IP-Bereich bearbeiten',
 		'Header_IP-Pools'			=> 'IP-Bereich|IP-Bereiche',
 		'Header_EditIP-Pools'		=> 'IP-Bereich bearbeiten',
-	//Tickets
-		//Ticket
-		'Header_Tickets'			=> 'Ticket|Tickets',
-		'Header_EditTickets'		=> 'Ticket bearbeiten',
-		//Comment
-		'Header_Comment'			=> 'Kommentar|Kommentare',
-		'Header_EditComment'		=> 'Kommentar bearbeiten',
-
+		// Tickets
+		'Header_Ticket'				=> 'Ticket|Tickets',
+		'Header_EditTicket'			=> 'Edit Ticket',
+	//HFC
+		//Topography
+		'Header_Topography - Modems'=> 'Topografie - Modems',
+		'navigate'					=> 'Navigieren',
+		'draw box'					=> 'Box einzeichnen',
+		'draw polygon'				=> 'Polygon einzeichnen',
+		'modify'					=> 'Elemente ändern',
 	//VOIP
 		//MTA
 		'Header_Mta'				=> 'MTA|MTAs',
@@ -202,7 +148,7 @@ return [
 		'Header_MTAs'				=> 'MTA|MTAs',
 		'Header_EditMTAs'			=> 'MTA bearbeiten',
 		//Phonenumber
-		'Header_Phonenumber'		=> 'Telefonnummer|Telefonnummern', //workaround
+		'Header_Phonenumber'		=> 'Telefonnummer|Telefonnummern',
 		'Header_EditPhonenumber'	=> 'Telefonnummer bearbeiten',
 		'Header_Phonenumbers'		=> 'Telefonnummer|Telefonnummern',
 		'Header_EditPhonenumbers'	=> 'Telefonnummer bearbeiten',
@@ -213,34 +159,14 @@ return [
 		'Header_EnviaOrders'		=> 'envia TEL Auftrag|envia TEL Aufträge',
 		'Header_EnviaContracts'		=> 'envia TEL Vertrag|envia TEL Verträge',
 
-	//HFC
-		//Tree
-		'Header_Tree Table' 		=> 'Baumelement|Baumtabelle',
-		'Header_EditTree Table'		=> 'Baumelement bearbeiten',
-		'Header_Topography - Modems'=> 'Topografie - Modems',
-		//Topography
-		'navigate'					=> 'Navigieren',
-		'draw box'					=> 'Box einzeichnen',
-		'draw polygon'				=> 'Polygon einzeichnen',
-		'modify'					=> 'Elemente ändern',
-		//MPR
-		'Header_Mpr'				=> 'Modem Positionierungsregel|Modem Positionierungsregeln',
-		'Header_Modem Positioning Rule' => 'Modem Positionierungsregel|Modem Positionierungsregeln',
-		'Header_EditModem Positioning Rule' => 'Modem Positionierungsregel bearbeiten',
-		'Header_MprGeopos'			=> 'Geoposition für Modem Positionierungsregel|Geopositionen für Modem Positionierungsregel',
-		'Header_Modem Positioning Rule Geoposition'	=> 'Geoposition für Modem Positionierungsregel|Geopositionen für Modem Positionierungsregel',
-		'Header_EditModem Positioning Rule Geoposition' => 'Geoposition für Modem Positionierungsregel bearbeiten',
 	//Header Relation
-		'Assigned'  				=> 'Zugewiesene',
+		// 'Assigned'  				=> 'Zugewiesene',
 	//Header Controler index
-		'SEPA Account' 				=> 'SEPA-Konten',
-		'Create'					=> 'Erstelle ',
-		'Edit'						=> 'Ändere ',
+		// 'SEPA Account' 				=> 'SEPA-Konten',
+		// 'Create'					=> 'Erstelle ',
+		// 'Edit'						=> 'Ändere ',
 
-//
 //BUTTON
-//
-		'Button_Create Users'		=> 'Neuer Benutzer',
 		'Sign me in'				=> 'Einloggen',
 		'Button_Create'				=> 'Erstelle',
 		'Button_Delete'				=> 'Markierte Einträge löschen',
@@ -258,6 +184,7 @@ return [
 		//SEPA-Konto
 		'Button_Create SEPA Account'	=> 'Neues SEPA-Konto', //Workaround decide which one to use
 		'Button_Create SepaAccount'		=> 'Neues SEPA-Konto',
+
 		//CostCenter
 		'Button_Create Cost Center' 	=> 'Neue Kostenstelle', //Workaround decide which one to use
 		'Button_Create CostCenter' 		=> 'Neue Kostenstelle',
@@ -267,14 +194,10 @@ return [
 		'Button_Create Salesman'		=> 'Neuer Verkäufer',
 		//Item
 		'Button_Create Item'			=> 'Neuer Posten',
-
-		//Settlement Run
-		'Button_Create Settlement Run'	=> 'Neuer Abrechnungslauf',
-		'Button_Rerun Accounting Command' => 'Abrechnungslauf erneut ausführen',
 		'sr_dl_logs' 					=> 'Gesamtes Logfile herunterladen',
-
 		//Numberrange
 		'Button_Create NumberRange'		=> 'Neuer Nummernkreis',
+
 	//SNMP Modul
 		//Device
 		'Button_Create Device'			=> 'Neues Gerät',
@@ -283,44 +206,30 @@ return [
 
 	//Provisioning
 		//Contract
-		'Button_Create Contract'		=> 'Neuer Vertrag',
-		'Button_Create SepaMandate'		=> 'Neues SEPA-Mandat',
-		//Modems
-		'Button_Create Modem'			=> 'Neues Modem',
-		//Endpoints
-		'Button_Create Endpoints'		=> 'Neuer Endpunkt',
-		//Configfiles
-		'Button_Create Configfiles'		=> 'Neue Konfigurationsdatei',
-		//QoS
-		'Button_Create QoS'				=> 'Neue QoS-Regel',
-		//CMTS
-		'Button_Create CMTS'			=> 'Neue CMTS',
-		//IpPool
-		'Button_Create IpPool'			=> 'Neuer IP-Bereich', //workaround
-		'Button_Create IP-Pools'		=> 'Neuer IP-Bereich',
+		// 'Button_Create Contract'		=> 'Neuer Vertrag',
+		// 'Button_Create SepaMandate'		=> 'Neues SEPA-Mandat',
+		// //Modems
+		// 'Button_Create Modem'			=> 'Neues Modem',
+		// //Endpoints
+		// 'Button_Create Endpoints'		=> 'Neuer Endpunkt',
+		// //Configfiles
+		// 'Button_Create Configfiles'		=> 'Neue Konfigurationsdatei',
+		// //QoS
+		// 'Button_Create QoS'				=> 'Neue QoS-Regel',
+		// //CMTS
+		// 'Button_Create CMTS'			=> 'Neue CMTS',
+		// //IpPool
+		// 'Button_Create IpPool'			=> 'Neuer IP-Bereich', //workaround
+		// 'Button_Create IP-Pools'		=> 'Neuer IP-Bereich',
 
 
 	//VOIP
 		//MTA
-		'Button_Create Mta'				=> 'Neues MTA',
-		//Phonenumber
-		'Button_Create Phonenumber'		=> 'Neue Telefonnummer',
-		//Phone tariff
+		// 'Button_Create Mta'				=> 'Neues MTA',
+		// //Phonenumber
+		// 'Button_Create Phonenumber'		=> 'Neue Telefonnummer',
+		// //Phone tariff
 		'Button_Create Phone tariffs'	=> 'Neuer Telefontarif',
-	//HFC
-		//Tree Table
-		'Button_Create Tree Table'		=> 'Neues Baumelement',
-		//MPR
-		'Button_Create Modem Positioning Rule' => 'Neue Modem Positionierungsregel',
-		'Button_Create Mpr'				=> 'Neue MPR',
-		'Button_Create Modem Positioning Rule Geoposition' => 'Neue Geoposition für Modem Positionierungsregel',
-		'Button_Create MprGeopos'		=> 'Neue MPR-Geoposition',
-
-	//Ticket
-		//Ticket
-		'Button_Create Tickets'		=> 'Neues Ticket',
-		//Comment
-		'Button_Create Comment'		=> 'Neuer Kommentar',
 
 //
 // DASHBOARD
@@ -329,7 +238,6 @@ return [
 	'Dashboard_ContractAnalytics'	=> 'Analyse Verträge (letzte 12 Monate)',
 	'Dashboard_NoContracts'			=> 'Keine Verträge vorhanden.',
 	'Dashboard_Income'				=> 'ERLÖSE',
-	'Dashboard_Net Income'			=> 'NETTOERLÖSE',
 	'Dashboard_IncomeAnalytics'		=> 'Erlöse Detailübersicht',
 	'Dashboard_Date'				=> 'DATUM',
 	'Dashboard_LinkDetails'			=> 'Zeige Details',
@@ -339,32 +247,8 @@ return [
 	'Dashboard_Quickstart' 			=> 'SCHNELLSTART',
 
 //
-//	TICKET
-//
-	//State
-	'Ticket_State_New' => 'Neu',
-	'Ticket_State_In Process' => 'In Bearbeitung',
-	'Ticket_State_Closed' => 'Geschlossen',
-
-	//Type
-	'Ticket_Type_General' => 'Allgemein',
-	'Ticket_Type_Technical' => 'Technik',
-	'Ticket_Type_Accounting' => 'Buchhaltung',
-
-	//Priority
-	'Ticket_Priority_Trivial' => 'Niedrig',
-	'Ticket_Priority_Minor' => 'Medium',
-	'Ticket_Priority_Major' => 'Hoch',
-	'Ticket_Priority_Critical' => 'Kritisch',
-
-//
 // Numberrange
 //
-	'Numberrange_Start' => 'Beginn',
-	'Numberrange_End' => 'Ende',
-	'Numberrange_Suffix' => 'Suffix',
-	'Numberrange_Prefix' => 'Präfix',
-	'Numberrange_Type' => 'Typ',
 	//Type
 	'Numberrange_Type_contract' => 'Vertrag',
 	'Numberrange_Type_invoice' => 'Rechnung',

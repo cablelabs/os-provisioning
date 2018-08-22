@@ -1,8 +1,6 @@
 <?php
 
 return [
-	// Descriptions of Form Fields in Edit/Create
-
 	'Active'					=> 'Aktiv',
 	'Active?'					=> 'Aktiv?',
 	'alert' 					=> 'Achtung!',
@@ -273,254 +271,81 @@ return [
 //
 //Billing Base
 //
+	/*
+	|--------------------------------------------------------------------------
+	| All other Language Lines - TODO: split descriptions and messages?
+	|--------------------------------------------------------------------------
+	*/
 
-	//Product Entry
-	'Billing Cycle'				=> 'Abrechungszyklus',
-	'Bundled with VoIP product?'=> 'Mit VoIP-Produkt verknüpft?',
-	'Price (Net)'				=> 'Preis (netto)',
-	'Number of Cycles'			=> 'Anzahl der Zyklen',
-	'Product Entry'				=> 'Produktangebote',
-	'Qos (Data Rate)'			=> 'QoS (Datenrate)',
-	'with Tax calculation ?'	=> 'mit Mehrwertsteuer Berechnung?',
-	'Phone Sales Tariff'		=> 'Endkunden Telefon Tarif',
-	'Phone Purchase Tariff'		=> 'Telefon Tarif Einkauf',
-	//SEPA Accounts
-	'Account Holder'			=> 'Kontoinhaber',
-	'Account Name'				=> 'Kontoname',
-	'Choose Call Data Record template file'	=> 'Vorlage für Einzel- verbindungsnachweis',
-	'Choose invoice template file'			=> 'Rechnungsvorlage',
-	'CostCenter'				=> 'Kostenstelle',
-	'Creditor ID'				=> 'Gläubiger ID',
-	'Institute'					=> 'Kreditinstitut',
-	'Invoice Headline'			=> 'Rechnungstitel',
-	'Invoice Text for negative Amount with Sepa Mandate'	=> 'Rechnungstext für Negativbetrag mit SEPA-Mandat',
-	'Invoice Text for negative Amount without Sepa Mandate'	=> 'Rechnungstext für Negativbetrag ohne SEPA-Mandat',
-	'Invoice Text for positive Amount with Sepa Mandate'	=> 'Rechnungstext für Positivbetrag mit SEPA-Mandat',
-	'Invoice Text for positive Amount without Sepa Mandate'	=> 'Rechnungstext für Positivbetrag ohne SEPA-Mandat',
-	'SEPA Account'				=> 'SEPA-Konto',
-	'SepaAccount'				=> 'SEPA-Konto', // siehe Companies
-	'sr_repeat' 				=> 'Wiederholen für SEPA-Konto:', // Settlementrun repeat
-	'Upload CDR template'		=> 'CDR-Vorlage hochladen',
-	'Upload invoice template'	=> 'Rechnungsvorlage hochladen',
-
-	//Settlement Run Abrechnungslauf
+	// Descriptions of Form Fields in Edit/Create
+	'accCmd_error_noCC' 	=> "Dem Vertrag :contract_nr [ID :contract_id] wurde keine Kostenstelle zugewiesen. Für den Kunde wird keine Rechnung erstellt.",
+	'accCmd_invoice_creation_deactivated' => "Bei folgenden Verträgen wurde die Rechnungserstellung deaktiviert: :contractnrs",
+	'accCmd_processing' 	=> 'Der Abrechnungslauf wird erstellt. Bitte warten Sie bis der Prozess abgeschlossen ist.',
+	'accCmd_notice_CDR' 	=> "Dem Vertrag :contract_nr [ID :contract_id] werden Einzelverbindungsnachweise abgerechnet, obwohl kein gültiger Telefontarif vorliegt. (Kommt durch verzögerte Abrechnung nach Beenden des Tarifs vor)",
+	'alert' 				=> 'Achtung!',
+	'ALL' 					=> 'ALLE',
+	'Call Data Record'		=> 'Einzelverbindungsnachweis',
+	'ccc'					=> 'Kundenkontrollzentrum',
+	'cdr' 					=> 'Evn',
 	'cdr_discarded_calls' 	=> "EVN: Vertragsnr oder -ID ':contractnr' in Datenbank nicht gefunden - :count Telefongespräche der Telefonnr :phonenr mit einem Preis von :price :currency können nicht zugeordnet werden.",
 	'cdr_missing_phonenr' 	=> "EVN: Einzelverbindungsnachweise mit Telefonnummer :phonenr gefunden, die nicht in der Datenbank existiert. :count Telefongespräche mit einem Preis von :price :currency können nicht zugeordnet werden.",
 	'cdr_missing_reseller_data' => 'EVN konnte nicht geladen werden. Reseller Daten in Environment Datei fehlen!',
-	'General'				=> 'Allgemein',
-	'Verified'				=> 'Überprüft?',
-	'tariff'				=> 'Tarif',
-	'item'					=> 'Posten',
-	'sepa'					=> 'mit_SEPA',
-	'no_sepa'				=> 'ohne_SEPA',
-	'Call_Data_Records'		=> 'Einzelverbindungsnachweise',
-	'Call Data Record'		=> 'Einzelverbindungsnachweis',
-	'accounting'			=> 'Rechnungssatzdatei',
-	'booking'				=> 'Buchungssatzdatei',
-	'DD'					=> 'SEPA Lastschriften',
-	'DC'					=> 'SEPA Gutschriften',
-	'salesmen_commission'	=> 'Provision_Verkaeufer',
-	'Invoices'				=> 'Rechnungen',
-	'Load Data...' 			=> 'Lade Daten...',
-	'Clean up directory...' => 'Räume Verzeichnis auf...',
-
-	//CostCenter
-	'Associated SEPA Account'	=> 'Verknüpftes SEPA-Konto',
-	'Month to create Bill'		=> 'Monat der Rechnungserstellung',
-	//Companies
-	'Choose logo'			=> 'Logo wählen',
-	'Directorate'			=> 'Geschäftsleitung',
-	'Mail address'			=> 'Email-Adresse',
-	'Management'			=> 'Unternehmensführung',
-	'Registration Court 1'	=> 'Registergericht 1',
-	'Registration Court 2'	=> 'Registergericht 2',
-	'Registration Court 3'	=> 'Registergericht 3',
-	'Sales Tax Id Nr'		=> 'Umsatzsteuer ID-Nummer',
-	'Tax Nr'				=> 'Steuernummer',
-	'Transfer Reason for Invoices'	=> 'Verwendungszweck der Rechnung',
-	'Upload logo'			=> 'Logo hochladen',
-	'Web address'			=> 'Internet-Adresse',
-	'Zip'					=> 'PLZ',
-	// Global Config
 	'cdr_offset' 			=> 'Zeitdifferenz EVN zu Rechnung in Monaten',
-	'show_ags' 				=> 'Zeige AG Auswahlfeld auf Vertragsseite',
-	'voip_extracharge_default' => 'Preisaufschlag Telefonie Standard in %',
-	'voip_extracharge_mobile_national' => 'Preisaufschlag Telefonie Mobilfunk national in %',
-
-	//Salesman
-	'Commission in %'		=> 'Komission in %',
-	'Product List'			=> 'Produktliste',
-
-	// SepaMandate
-	'Already recurring ?' 	=> 'Bereits wiederkehrend ?',
-	'Date of Signature' 	=> 'Signaturdatum',
-	'Disable temporary' 	=> 'Temporär aussetzen',
-	'Reference Number' 		=> 'Referenznummer',
-	'Bank Institute' 		=> 'Institut',
-
-	//Settlement Run File generation
-	'Contractnr'			=> 'Vertragsnummer',
-	'Create Invoices' 		=> 'Erstelle Rechnungen',
-	'Invoicenr'				=> 'Rechnungsnummer',
-	'Calling Number'		=> 'Rufnummer',
-	'Called Number'			=> 'Angerufene Nummer',
-	'Target Month'			=> 'Abrechnungsmonat',
-	'Date'					=> 'Datum',
-	'Count'					=> 'Anzahl',
-	'Tax'					=> 'Mehrwertsteuer',
-	'RCD'					=> 'Fälligkeitsdatum',
-	'Currency'				=> 'Währung',
-	'Gross'					=> 'Brutto',
-	'Net'					=> 'Netto',
-	'MandateID'				=> 'SEPA Mandatsnummer',
-	'MandateDate'			=> 'SEPA Mandatsdatum',
-	'Commission in %'		=> 'Provision in %',
-	'Total Fee'				=> 'Gesamtgebühr',
-	'Commission Amount'		=> 'davon Provision',
-	'eom' 					=> 'zum Monatsende',
-	'Zip Files' 			=> 'Erstelle ZIP-Datei',
-	'Concatenate invoices'  => 'Erstelle zusammengefügtes Rechnungs-PDF',
-
-/**
- * Customer Control Center
- */
+	'close' 				=> 'Schliessen',
+	'contract_early_cancel' => 'Möchten Sie den Vertrag wirklich vor Tariflaufzeitende :date kündigen?',
 	'conn_info_err_create' 	=> 'Fehler beim Erstellen des PDF - Siehe LogFile!',
 	'conn_info_err_template' => 'Das Template konnte nicht gelesen werden - Bitte überprüfen Sie ob es unter Unternehmen gesetzt ist!',
+	'cpe_log_error' 		=> 'ist nicht beim Server registriert - Kein Logeintrag gefunden',
+	'cpe_not_reachable' 	=> 'aber via PING nicht erreichbar (ICMP kann herstellerabhängig vom Router geblockt werden)',
+	'cpe_fake_lease'		=> 'Der DHCP Server hat kein Lease für den Endpunkt angelegt, weil dessen IP Adresse statisch vergeben ist und der Server diesen somit nicht verfolgen muss. Das folgende Lease wurde lediglich als Referenz manuell generiert:',
+	'D' 					=> 'Tag|Tage',
+	'dashbrd_ticket' 		=> 'Neue mir zugewiesene Tickets',
+	'device_probably_online' =>	':type ist wahrscheinlich online',
+	'eom' 					=> 'zum Monatsende',
+	'envia_no_interaction' 	=> 'Keine Envia Vorgänge, die eine Bearbeitung benötigen',
+	'envia_interaction'	 	=> 'Envia Vorgang benötigt eine Bearbeitung|Envia Vorgänge benötigen Bearbeitung',
+	'home' 					=> 'Startseite',
+	'indices_unassigned' 	=> 'Einer/Einige der zugewiesenen Indizes konnten keinem Parameter zugeordnet werden! Sie werden somit aktuell nur nicht genutzt. Sie können gelöscht oder für später behalten werden. Vergleichen Sie dazu die Parameterliste im Netzelement mit der Liste der Indizes!',
+	'item_credit_amount_negative' => 'Ein negativer Betrag bei Gutschriften wird zur Lastschrift für den Kunden! Sind Sie sicher, dass der Betrag dem Kunde abgezogen werden soll?',
+	'invoice' 				=> 'Rechnung',
+	'Invoices'				=> 'Rechnungen',
 	'log_out'				=> 'Ausloggen',
+	'M' 					=> 'Monat|Monate',
+	'Mark solved'			=> 'Als gelöst markeren?',
+	'missing_product' 		=> 'Fehlendes Produkt!',
+	'modem_eventlog_error'	=> 'Modem Eventlog nicht gefunden',
+	'modem_force_restart_button_title' => 'Startet nur das Modem neu. Speichert keine geänderten Daten!',
+	'modem_monitoring_error'=> 'Möglicherweise war das Modem bis jetzt nicht online. Beachten Sie, dass Diagramme erst ab
+		dem Zeitpunkt verfügbar sind, von dem an das Modem online ist. Wurden alle Diagramme unsauber angezeigt, könnte es
+		sich um ein größeres Problem, wie eine Fehlkonfiguration von Cacti, handeln. Wenden Sie sich dazu an ihren Administrator.',
+	'modem_no_diag'			=> 'Keine Diagramme verfügbar',
+	'modem_lease_error'		=> 'Kein gültiger Lease gefunden',
+	'modem_lease_valid' 	=> 'Modem hat einen gültigen Lease',
+	'modem_log_error' 		=> 'Modem ist nicht beim Server registriert - Kein Logeintrag gefunden',
+	'modem_configfile_error'=> 'Modem Konfigurationsdatei nicht gefunden',
+	'modem_offline'			=> 'Modem ist Offline',
+	'modem_restart_error' 		=> 'Das Modem konnte nicht neugestartet werden! (offline?)',
+	'modem_restart_success_cmts' => "Das Modem wurde erfolgreich über das CMTS neugestartet",
+	'modem_restart_success_direct' => "Das Modem wurde erfolgreich direkt über SNMP neugestartet",
+	'modem_save_button_title' 	=> 'Speichert geänderte Daten. Berechnet die Geoposition neu, wenn Adressdaten geändert wurden (und weist es ggf. einer neuen MPR hinzu). Baut das Configfile und startet das Modem neu, wenn sich mindestens eines der folgenden Einträge geändert hat: Öffentliche IP, Netzwerkzugriff, Configfile, QoS, MAC-Adresse',
+	'modem_statistics'		=> 'Anzahl Online / Offline Modems',
+	'month' 				=> 'Monat',
+	'mta_configfile_error'	=> 'MTA Konfigurationsdatei nicht gefunden',
+	'noCC'					=> 'Keine Kostenstelle zugewiesen',
+	'oid_list' 				=> 'Achtung: OIDs, die nicht bereits in der Datenbank existieren werden nicht beachtet! Bitte laden Sie das zuvor zugehörige MibFile hoch!',
 	'password_change'		=> 'Passwort ändern',
 	'password_confirm'		=> 'Password bestätigen',
-	'home' 					=> 'Startseite',
-	'primary'				=> 'primär',
-	'secondary'				=> 'sekundär',
-	'disabled'				=> 'deaktiviert',
-
-//
-// DASHBOARD
-//
-	'dashbrd_ticket' 		=> 'Neue mir zugewiesene Tickets',
-
-//
-// HFC
-//
-	'indices_unassigned' 	=> 'Einer/Einige der zugewiesenen Indizes konnten keinem Parameter zugeordnet werden! Sie werden somit aktuell nur nicht genutzt. Sie können gelöscht oder für später behalten werden. Vergleichen Sie dazu die Parameterliste im Netzelement mit der Liste der Indizes!',
-
-	//MPR
-	'Value (deprecated)'          => 'Wert (veraltet)',
-	'Priority (lower runs first)' => 'Priorität (kleinere zuerst)',
-	'oid_list' 				=> 'Achtung: OIDs, die nicht bereits in der Datenbank existieren werden nicht beachtet! Bitte laden Sie das zuvor zugehörige MibFile hoch!',
-
-//
-// SNMP
-//
-	'upload_dependent_mib_err' => "Bitte Laden Sie zuvor die ':name' hoch! (Die zugehörigen OIDs können sonst nicht geparsed werden)",
-
-//
-// TICKETSYSTEM
-//
-	'Priority' 				=> 'Priorität',
-	'Title' 				=> 'Titel',
-	'Created at'			=> 'Erstellt am',
-//
-// VOIP
-//
-	//Telefon numbers
-	'Activation date'       => 'Aktivierungsdatum',
-	'Deactivation date'     => 'Deaktivierungsdatum',
 	'phonenumber_nr_change_hlkomm' => 'Beim Ändern dieser Nummer können die angefallen Gespräche der alten Nummer nicht mehr diesem Vertrag angerechnet werden, da HL Komm bzw. Pyur nur die Telefonnummer in den Einzelverbindungsnachweisen mitschickt. Bitte ändern Sie diese Nummer nur, wenn es sich um eine Testnummer handelt oder Sie sicher sind, dass keine Gespräche mehr abgerechnet werden.',
 	'phonenumber_overlap_hlkomm' => 'Diese Nummer existiert bereits oder hat im/in den letzten :delay Monat(en) exisiert. Da HL Komm oder Pyur in den Einzelverbindungsnachweisen nur die Telefonnummer mitsendet, wird es nicht möglich sein getätigte Anrufe zum richtigen Vertrag zuzuweisen! Das kann zu falschen Abrechnungen führen. Bitte fügen Sie die Nummer nur hinzu, wenn es sich um eine Testnummer handelt oder Sie sicher sind, dass keine Gespräche mehr abgerechnet werden.',
-	'SIP domain'            => 'SIP Adresse',
+	'show_ags' 				=> 'Zeige AG Auswahlfeld auf Vertragsseite',
+	'snmp_query_failed' 	=> 'SNMP Query failed for following OIDs: ',
+	'sr_repeat' 			=> 'Wiederholen für SEPA-Konto:', // Settlementrun repeat
+	'upload_dependent_mib_err' => "Bitte Laden Sie zuvor die ':name' hoch! (Die zugehörigen OIDs können sonst nicht geparsed werden)",
+	'user_settings'			=> 'User Settings',
+	'user_glob_settings'	=> 'Globale Nutzereinstellungen',
 
-//
-// ProvVoipEnvia
-//
-	'Created at' 			=> 'Erstellt am',
-	'Last status update'	=> 'Letztes Statusupdate',
-	'Last user interaction' => 'Letzte Nutzerinteraktion',
-	'Method'				=> 'Methode',
-	'Ordertype ID'			=> 'Bestellungsart ID',
-	'Ordertype'				=> 'Bestellungstyp',
-	'Orderstatus ID'		=> 'Bestellungsstatus ID',
-	'Orderstatus'			=> 'Bestellungsstatu',
-	'Orderdate'				=> 'Bestelldatum',
-	'Ordercomment'			=> 'Bestellkommentar',
-	'Envia customer reference' => 'Envia Kundenreferenz',
-	'Envia contract reference' => 'Envia Kontaktreferenz',
-	'Contract ID'			=> 'Vertrag ID',
-	'Phonenumber ID'		=> 'Telefonnummer ID',
-	'Related order ID'		=> 'Zugehörige Bestellung [ID]',
-	'Related order type'	=> 'Zugehöriger Bestellungstyp',
-	'Related order created' => 'Zugehörige Bestellung erstellt',
-	'Related order last updated' => 'Zugehörige Bestellund als letztes aktualisiert',
-	'Related order deleted'	=> 'Zugehöroge Bestellung gelöscht',
-	'Envia Order'			=> 'Envia Bestellung',
-	'Document type'			=> 'Dokumententyp',
-	'Upload document'		=> 'Dokument hochladen',
-
-//
-// VoipMon
-//
-	'Call Start'			=> 'Anruf Beginn',
-	'Call End'				=> 'Anruf Ende',
-	'Call Duration/s'		=> 'Anruf Dauer [s]',
-	'min. MOS'				=> 'minimaler MOS',
-	'Packet loss/%'			=> 'Paketverlust [%]',
-	'Jitter/ms'				=> 'Jitter [ms]',
-	'avg. Delay/ms'			=> 'durchschnittl. Verzögerung [ms]',
-	'Caller (-> Callee)'	=> 'Anrufer -> Angerufener',
-	'@Domain'				=> '@Domain',
-	'min. MOS 50ms'			=> 'minimaler MOS pro 50ms',
-	'min. MOS 200ms'		=> 'minimaler MOS pro 200ms',
-	'min. MOS adaptive 500ms'	=> 'minimaler MOS adaptiv pro 500ms',
-	'avg. MOS 50ms'			=> 'durchschnittl. MOS pro 50ms',
-	'avg. MOS 200ms'		=> 'durchschnittl. MOS pro 200ms',
-	'avg. MOS adaptive 500ms'	=> 'durchschnittl. MOS adaptiv pro 500ms',
-	'Received Packets'		=> 'Empfangene Pakete',
-	'Lost Packets'			=> 'Verlorene Pakete',
-	'avg. Delay/ms'			=> 'durchschnittl. Verzögerung [ms]',
-	'avg. Jitter/ms'		=> 'durchschnittl. Jitter [ms]',
-	'max. Jitter/ms'		=> 'maximaler Jitter [ms]',
-	'1 loss in a row'		=> 'Anzahl der Paketverluste',
-	'2 losses in a row'		=> 'Anzahl von 2 aufeinanderfoldenden Paketverlusten',
-	'3 losses in a row'		=> 'Anzahl von 3 aufeinanderfoldenden Paketverlusten',
-	'4 losses in a row'		=> 'Anzahl von 4 aufeinanderfoldenden Paketverlusten',
-	'5 losses in a row'		=> 'Anzahl von 5 aufeinanderfoldenden Paketverlusten',
-	'6 losses in a row'		=> 'Anzahl von 6 aufeinanderfoldenden Paketverlusten',
-	'7 losses in a row'		=> 'Anzahl von 7 aufeinanderfoldenden Paketverlusten',
-	'8 losses in a row'		=> 'Anzahl von 8 aufeinanderfoldenden Paketverlusten',
-	'9 losses in a row'		=> 'Anzahl von 9 aufeinanderfoldenden Paketverlusten',
-	'PDV 50ms - 70ms'		=> 'PDV von 50 bis 70ms',
-	'PDV 70ms - 90ms'		=> 'PDV von 70 bis 90ms',
-	'PDV 90ms - 120ms'		=> 'PDV von 90 bis 120ms',
-	'PDV 120ms - 150ms'		=> 'PDV von 120 bis 150ms',
-	'PDV 150ms - 200ms'		=> 'PDV von 150 bis 200ms',
-	'PDV 200ms - 300ms'		=> 'PDV von 200 bis 300ms',
-	'PDV >300 ms'			=> 'PDV von über 300ms',
-	'Callee (-> Caller)'	=> 'Angerufener -> Anrufer',
-//
-// Select Box
-//
-	//Product Entry
-	'Credit'                    => 'Gutschrift',
-	'Other'                     => 'Sonstige',
-	'Once'                      => 'einmalig',
-	'Monthly'                   => 'monatlich',
-	'Quarterly'                 => 'vierteljährlich',
-	'Yearly'                    => 'jährlich',
-	//Tree Table
-	'NET'                       => 'Netz',
-	'CMTS'                      => 'CMTS',
-	'DATA'                      => 'Daten',
-	'CLUSTER'                   => 'Cluster',
-	'NODE'                      => 'Knoten',
-	'AMP'                       => 'Verstärker',
-	'None'                      => 'Keins',
-	'Null'                      => 'Nichts ausgewählt',
-	//Configfile
-	'generic'                   => 'Allgemein',
-	'network'                   => 'Netzwerk',
-	'vendor'                    => 'Hersteller',
-	'user'                      => 'Nutzer',
-	'Yes'                       => 'Ja',
-	'No'                        => 'Nein',
-	'Mark solved'				=> 'Als gelöst markeren?',
+	'voip_extracharge_default' => 'Preisaufschlag Telefonie Standard in %',
+	'voip_extracharge_mobile_national' => 'Preisaufschlag Telefonie Mobilfunk national in %',
+	'Y' 					=> 'Jahr|Jahre',
+	'Assign Role'				=> 'Rollen zuweisen',
 ];
