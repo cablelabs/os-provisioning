@@ -1,6 +1,6 @@
 <?php
 return [
-// Index DataTable Header
+	// Index DataTable Header
 	// Auth
 	'users.login_name' => 'Loginname',
 	'users.first_name' => 'Vorname',
@@ -33,7 +33,10 @@ return [
 	'product.name' => 'Produkt',
 	'product.price' => 'Preis',
 	// Salesman
+	'salesman.id' => 'ID',
 	'salesman_id' 		=> 'Verkäufer-ID',
+	'salesman_firstname' => 'Firstname',
+	'salesman_lastname' => 'Lastname',
 	'commission in %' 	=> 'Provision in %',
 	'contract_nr' 		=> 'Kundennr',
 	'contract_name' 	=> 'Kunde',
@@ -45,9 +48,6 @@ return [
 	'charge' 			=> 'Gebühr',
 	'salesman_commission' => 'Provision',
 	'sepaaccount_id' 	=> 'SEPA-Konto',
-	'salesman.id' => 'ID',
-	'salesman.lastname' => 'Nachname',
-	'salesman.firstname' => 'Vorname',
 	// SepaAccount
 	'sepaaccount.name' => "Kontoname",
 	'sepaaccount.institute' => 'Bank',
@@ -115,8 +115,8 @@ return [
 	'domain.type' => 'Typ',
 	'domain.alias' => 'Alias',
 	// Endpoint
-	'endpoint.hostname' => 'Hostname',
 	'endpoint.ip' => 'IP',
+	'endpoint.hostname' => 'Hostname',
 	'endpoint.mac' => 'MAC',
 	'endpoint.description' => 'Beschreibung',
 	// IpPool
@@ -127,18 +127,18 @@ return [
 	'ippool.router_ip' => 'Router IP',
 	'ippool.description' => 'Beschreibung',
 	// Modem
-	'modem.id' => 'Nummer',
 	'modem.house_number' => 'Hausnr',
+	'modem.id' => 'Nummer',
 	'modem.mac' => 'MAC Adresse',
 	'modem.model' => 'Modell',
 	'modem.sw_rev' => 'Firmware Version',
 	'modem.name' => 'Modemname',
-	'modem.lastname' => 'Nachname',
 	'modem.firstname' => 'Vorname',
+	'modem.lastname' => 'Nachname',
 	'modem.city' => 'Stadt',
 	'modem.street' => 'Straße',
-	'modem.us_pwr' => 'US Pegel',
 	'modem.district' => 'Bezirk',
+	'modem.us_pwr' => 'US Pegel',
 	'modem.geocode_source' => 'Geocode-Quelle',
 	'modem.inventar_num' => 'Inventar-Nr',
 	'contract_valid' => 'Vertrag gültig?',
@@ -209,5 +209,4 @@ return [
 	'ticket.assigned_users' => 'Bearbeiter',
 	'assigned_users' => 'Bearbeiter',
 	'tickettypes.name' => 'Typ',
-
 ];

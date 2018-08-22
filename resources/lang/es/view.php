@@ -4,7 +4,7 @@ return [
 		'Search_EnterKeyword' 		=> 'Ingresar palabra clave',
 		'Search_MatchesFor'			=> 'Coincide para',
 		'Search_In'					=> 'en la tabla',
-                'Search_Search ...'         => 'Ingrese un termino de busqueda',
+        'Search_Search ...'         => 'Ingrese un termino de busqueda',
 //jQuery
 		//Translations for this at https://datatables.net/plug-ins/i18n/
 		'jQuery_sEmptyTable'		=> 'No hay datos disponibles en la tabla',
@@ -28,30 +28,27 @@ return [
 		'jQuery_Print'				=> 'Imprimir',
 		'jQuery_colvis'				=> 'Visibilidad de la columna',
 		'jQuery_colvisRestore'		=> 'Restaurar',
-		'jQuery_colvisReset'		=> 'Reset',
+		'jQuery_colvisReset'		=> 'Reiniciar',
 		'jQuery_ExportTo'			=> 'Exportar a',
-                'jQuery_ImportCsv'              => 'Importar CSV',
+                'jQuery_ImportCsv'              => 'importar CSV',
 //MENU
 	//Main Menu
-	'Menu_Dashboards'               => 'Panel de Control',
-		'Menu_MainMenu' 			=> 'Menu principal',
-		'Menu_Config Page'			=> 'Configuracion del sistema',
-		'Menu_Logging'				=> 'Registros (acciones)',
+		'Menu_MainMenu' 			=> 'Menú Principal',
+		'Menu_Config Page'			=> 'Configuración global',
+		'Menu_Logging'				=> 'Registro',
 		'Menu_Product List'			=> 'Lista de productos',
-		'Menu_SEPA Accounts'		=> 'Cuentas SEPA',
-		'Menu_Settlement Run'		=> 'Proceso de liquidacion',
-		'Menu_Cost Center'			=> 'Centro de costos',
-        'Menu_Number Range'         => 'Rango numerico',
-		'Menu_Companies'			=> 'Compa&ntilde;ias',
+		'Menu_SEPA Accounts'		=> 'Cuenta de SEPA',
+		'Menu_Settlement Run'		=> 'Settlement Run',
+		'Menu_Cost Center'			=> 'Departamento de costos',
+		'Menu_Companies'			=> 'Empresas',
 		'Menu_Salesmen'				=> 'Vendedores',
-		'Menu_Tree Table'			=> 'Diagrama de arbol',
+		'Menu_Tree Table'			=> 'Arbol de tabla',
 		'Menu_Devices'				=> 'Dispositivos',
 		'Menu_DeviceTypes'			=> 'Tipos de dispositivos',
 		'Menu_Contracts'			=> 'Contratos',
-		'Menu_Domains' 				=> 'Dominios',
-		'Menu_Modems'				=> 'Modems',
-		'Menu_Endpoints'			=> 'Puntos finales',
-		'Menu_Configfiles' 			=> 'Archivos de config.',
+		'Menu_Modems'				=> 'Módems',
+		'Menu_Endpoints'			=> 'Extremos',
+		'Menu_Configfiles' 			=> 'Archivo de configuración',
 		'Menu_QoS' 					=> 'QoS',
 		'Menu_CMTS' 				=> 'CMTS',
 		'Menu_Ip-Pools' 			=> 'IP-Pools',
@@ -323,7 +320,7 @@ return [
 	'Dashboard_Quickstart' 			=> 'INICIO RAPIDO',
 	'Dashboard_External' 			=> 'Externo',
 	'Dashboard_Addcontract' 			=> 'Agregar Contrato',
-    
+
 //
 // TICKET
 //ff

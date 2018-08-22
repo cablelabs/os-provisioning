@@ -1,34 +1,30 @@
 <?php
 return [
 	// Index DataTable Header
-    // Missing on MPR
-	'id' => 'ID mpr',
-	'prio' => 'Prioridad',
 	// Auth
 	'users.login_name' => 'Nombre de usuario',
-	'users.first_name' => 'Nombres',
-	'users.last_name' => 'Apellidos',
-	'authrole.name' => 'Nombre de rol',
-	'roles.title' => 'Nombre',
-	'roles.rank' => 'Rango',
-	'roles.description' => 'Descripcion',
+	'users.first_name' => 'Nombre',
+	'users.last_name' => 'Apellido',
+	'roles.title' => 'Función',
+	'roles.rank' => 'Nivel',
+	'roles.description' => 'Descripción 	',
 	// GuiLog
-	'guilog.created_at' => 'Creado el',
+	'guilog.created_at' => 'Hora',
 	'guilog.username' => 'Usuario',
-	'guilog.method' => 'Accion',
+	'guilog.method' => 'Acción',
 	'guilog.model' => 'Modelo',
-	'guilog.model_id' => 'ID del modelo',
+	'guilog.model_id' => 'Modelo ID',
 	// Company
-	'company.name' => 'Nombre de la compa&ntilde;ia',
+	'company.name' => 'Nombre De La Empresa',
 	'company.city' => 'Ciudad',
-	'company.phone' => 'Numero telefonico',
-	'company.mail' => 'E-Mail',
+	'company.phone' => 'Número de teléfono celular',
+	'company.mail' => 'Email',
 	// Costcenter
-	'costcenter.name' => 'Centro de costes',
-	'costcenter.number' => 'Numero',
+	'costcenter.name' => 'Precio',
+	'costcenter.number' => 'Importe',
 	//Invoices
 	'invoice.type' => 'Tipo',
-	'invoice.year' => 'A&ntilde;o',
+	'invoice.year' => 'Año',
 	'invoice.month' => 'Mes',
 	//Item //**
 
@@ -209,7 +205,7 @@ return [
 	'ticket.priority' => 'Prioridad',
 	'ticket.state' => 'Estado',
 	'ticket.user_id' => 'Creado por',
-	'ticket.created_at' => 'Creado el',
+	'ticket.created_at' => 'Creando el',
 	'ticket.assigned_users' => 'Usuarios asignados',
 	'assigned_users' => 'Usuarios asignados',
 	'tickettypes.name' => 'Tipo',

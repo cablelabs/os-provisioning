@@ -1,9 +1,9 @@
 <?php
 
 return [
-	/**
-  * Authentication and Base
-  */
+/**
+ * Authentication and Base
+ */
 	'assign_role'					=> 'Asigna uno o más roles a este usuario. Los usuarios sin Rol no pueden usar el NMS porque no tienen Permisos.',
 	'assign_users'					=> 'Asigna uno o más usuarios a este rol. Los cambios realizados aquí no son visibles en el GuiLog del usuario.',
 	'assign_rank'					=> "El rango de un rol determina la capacidad de editar otros usuarios. \ nPuedes asignar valores de 0 a 100. (más alto es mejor). \ nSi un usuario tiene más de un rol, se usa el rango más alto . \ nSi se establece la capacidad de actualizar usuarios, el rango también se verifica. Solo si el rango del editor es mayor, se concede permiso. Además, al crear o actualizar usuarios, solo se pueden asignar roles con rango igual o inferior.",
@@ -108,7 +108,7 @@ return [
 	'mac_formats'					=> "Formatos permitidos (case-insensitive):\n\n1) AA:BB:CC:DD:EE:FF\n2) AABB.CCDD.EEFF\n3) AABBCCDDEEFF",
 	'fixed_ip_warning'				=> 'Usar una IP fija es altamente no recomendado, ya que pierde la habilidad de mover modems y sus CPEs libremente entre CMTSes. Envez de dar una IP fija al cliente, deberan ser provistos del hostname, el cual no cambiara.',
         'modem_update_frequency'		=> 'Este campo se actualiza una vez al día.',
- 
+
 	/**
   *	MODULE: ProvVoip
   */

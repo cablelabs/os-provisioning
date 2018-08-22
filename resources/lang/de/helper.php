@@ -1,25 +1,25 @@
 <?php
 
 return [
-/**
- * Authentication and Base
- */
+ /**
+  * Authentication and Base
+  */
 	'assign_role'					=> 'Diesem Nutzer eine oder mehrere Rollen zuweisen. Nutzer ohne Rolle können das NMS nicht verwenden, da sie keine Berechtigungen haben.',
 	'assign_users'					=> 'Einen oder mehrere Nutzer zu dieser Rolle zuweisen. Die Veränderung ist im GuiLog des Users nicht sichtbar, sondern nur hier.',
 	'assign_rank'					=> "Der Rang einer Rolle gibt die Fähigkeiten der Rolle an, andere Nutzer zu bearbeiten. \nEs werden werte von 0 bis 100 angenommen. (höher ist besser) \nHat ein Nutzer mehrere Rollen, gilt der höchste Rang. \nWenn die Fähigkeit gesetzt ist um Nutzer bearbeiten zu können, wird außerdem der Rang geprüft. Nur wenn der Rang des Bearbeiters höher ist, wird die Anfrage genehmigt. Weiterhin können beim erstellen und bearbeiten von Nutzern nur Rollen mit dem gleichen oder einem niedrigeren Rang vergeben werden.",
-	'All abilities'				=> 'Diese Fähigkeit erlaubt alle Autorisierungsanfragen, außer es wurden explizit Fähigkeiten verboten. Diese Fähigkeit ist besonders nützlich, wenn eine Rolle sehr viel mit wenigen Ausnahmen "darf". Das Verbieten der Fähigkeit wurde deaktiviert, da es keine Auswirkungen hat (nur ausgewählte Fähigkeiten sind erlaubt). Wenn diese Fähigkeit nicht gesetzt ist, müssen alle Berechtigungen von Hand gesetzt werden. Das Ändern dieser Fähigkeit, wenn schon viele andere Fähigkeiten gesetzt sind, kann bis zu einer Minute dauern.',
+	'All abilities'					=> 'Diese Fähigkeit erlaubt alle Autorisierungsanfragen, außer es wurden explizit Fähigkeiten verboten. Diese Fähigkeit ist besonders nützlich, wenn eine Rolle sehr viel mit wenigen Ausnahmen "darf". Das Verbieten der Fähigkeit wurde deaktiviert, da es keine Auswirkungen hat (nur ausgewählte Fähigkeiten sind erlaubt). Wenn diese Fähigkeit nicht gesetzt ist, müssen alle Berechtigungen von Hand gesetzt werden. Das Ändern dieser Fähigkeit, wenn schon viele andere Fähigkeiten gesetzt sind, kann bis zu einer Minute dauern.',
 	'View everything'			=> 'Diese Fähigkeit erlaubt es alle Seiten zu besuchen. Das Verbieten der Fähigkeit wurde deaktiviert, da in diesem Fall alle Fähigkeiten verboten werden sollten. Diese Fähigkeit ist hauptsächlich zur Hilfe da, um schnell Rechte für Gäste oder Benutzer mit nur sehr wenigen Privilegien zu setzen.',
 	'Use api'					=> 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die API Routen mithilfe von "Basic Auth". Als Benutzername muss die E-Mail, welche im Profil hinterlegt ist genutzt werden.',
 	'See income chart'			=> 'Diese Fähigkeit erlaubt oder verbietet die Anzeige des Einkommensdiagramms im Dashboard.',
 	'View analysis pages of modems'	=> 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseiten der Modems.',
 	'View analysis pages of cmts' => 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseite der CMTS.',
 	'Download settlement runs'	=> 'Diese Fähigkeit erlaubt oder verbietet den Download der Abrechnungsläufe. Wenn das Verwalten von Abrechnungsläufen verboten ist, hat diese Einstellung keine Auswirkung.',
-/**
- * Index Page - Datatables
- */
+ /**
+  * Index Page - Datatables
+  */
 	'SortSearchColumn'				=> 'Diese Spalte kann nicht sortiert oder durchsucht werden.',
-	'PrintVisibleTable'				=> 'Druckt den aktuell sichtbaren Bereich der Tabelle. Um alles zu drucken bitte im Filter \"Alle\" auswählen. Das Laden kann einige Sekunden dauern.',
-	'ExportVisibleTable'			=> 'Exportiert den aktuell sichtbaren Bereich der Tabelle. Um alles zu exportieren bitte im Filter \"Alle\" auswählen. Das Laden kann einige Sekunden dauern.',
+	'PrintVisibleTable'				=> 'Druckt den aktuell sichtbaren Bereich der Tabelle. Um alles zu drucken bitte im Filter \\"Alle\\" auswählen. Das Laden kann einige Sekunden dauern.',
+	'ExportVisibleTable'			=> 'Exportiert den aktuell sichtbaren Bereich der Tabelle. Um alles zu exportieren bitte im Filter \\"Alle\\" auswählen. Das Laden kann einige Sekunden dauern.',
 	'ChangeVisibilityTable'			=> 'Mit dieser Option können Spaten ein-/ausgeblendet werden.',
 
 	// GlobalConfig
@@ -29,9 +29,9 @@ return [
   *	MODULE: BillingBase
   */
 	//BillingBaseController
-	'BillingBase_extra_charge' 		=> 'Aufschlag auf Einkaufspreis in %. Nur wenn nicht schon vom Provider berechnet!',
-	'BillingBase_cdr_retention' 	=> 'Anzahl der Monate, die Einzelverbindungsnachweise gespeichert werden dürfen/müssen.',
 	'BillingBase_cdr_offset' 		=> "ACHTUNG: Eine Erhöhung der Differenz führt bei bereits vorhandenen Daten im nächsten Abrechnungslauf zu überschriebenen EVNs - Stellen Sie sicher, dass diese gesichert/umbenannt wurden!\n\n1 - wenn die Einzelverbindungsnachweise vom Juni zu den Rechnungen vom Juli gehören; 0 - wenn beide für den selben Monat abgerechnet werden; 2 - wenn die Einzelverbindungsnachweise vom Januar zu den Rechnungen vom März gehören.",
+	'BillingBase_cdr_retention' 	=> 'Anzahl der Monate, die Einzelverbindungsnachweise gespeichert werden dürfen/müssen.',
+	'BillingBase_extra_charge' 		=> 'Aufschlag auf Einkaufspreis in %. Nur wenn nicht schon vom Provider berechnet!',
 	'BillingBase_fluid_dates' 		=> 'Aktivieren Sie diese Checkbox wenn Sie Tarife mit ungewissem Start- und/oder Enddatum eintragen möchten. In dem Fall werden 2 weitere Checkboxen (Gültig ab fest, Gültig bis fest) auf der Posten-Seite angezeigt. Weitere Erklärungen finden Sie neben diesen Feldern!',
 	'BillingBase_InvoiceNrStart' 	=> 'Rechnungsnummer startet jedes neue Jahr mit dieser Nummer.',
 	'BillingBase_ItemTermination'	=> 'Erlaubt es Kunden gebuchte Produkte nur bis zum letzten Tag des Monats zu kündigen.',
@@ -70,7 +70,7 @@ return [
 
 	//SepaAccountController
 	'SepaAccount_InvoiceHeadline'	=> 'Ersetzt die Überschrift der Rechnung, die für diese Kostenstelle erstellt wird.',
-	'SepaAccount_InvoiceText'		=> 'Der Text der vier verschiedenen \'Rechnungstext\'-Felder wird automatisch in Abhängigkeit von Gesamtkosten und SEPA-Mandat gwählt und wird in der entsprechenden Rechnung für den Kunden festgelegt. Es ist möglich, alle Datenfeld-Schlüssel der Rechnungsklasse als Platzhalter in Form von {Feldname} zu verwenden, um eine Art von Vorlage zu erstellen . Diese werden durch den Ist-Wert der Rechnung ersetzt ',
+	'SepaAccount_InvoiceText'		=> 'Der Text der vier verschiedenen \'Rechnungstext\'-Felder wird automatisch in Abhängigkeit von Gesamtkosten und SEPA-Mandat gewählt und wird in der entsprechenden Rechnung für den Kunden festgelegt. Es ist möglich, alle Datenfeld-Schlüssel der Rechnungsklasse als Platzhalter in Form von {Feldname} zu verwenden, um eine Art von Vorlage zu erstellen. Diese werden durch den Ist-Wert der Rechnung ersetzt.',
 	'tex_template' 					=> 'TeX Vorlage',
 
 	// SettlementrunController
@@ -120,25 +120,24 @@ return [
 	'PhonenumberManagement_TRC' => 'Nur zur Info: Sperrklassenänderungen müssen beim aktuellen Provider durchgeführt werden.',
 	'PhonenumberManagement_TRCWithEnvia' => 'Sperrklassenänderungen müssen auch bei EnviaTEL vorgenommen werden (Update VoIP account)!',
 	'PhonenumberManagement_Autogenerated' => 'Dieses Management wurde automatisch erzeugt. Bitte sämtliche Werte überprüfen und nach evtl. Korrektur den Haken entfernen',
-
 /**
   * MODULE VoipMon
   */
 	'mos_min_mult10' 				=> 'Minimaler Mean Opionion Score während des Anrufs',
-	'caller' 						=> 'Betrachtrung der Anrufrichtung von Anrufer zu Angerufenem',
+	'caller' 						=> 'Betrachtung der Anrufrichtung von Anrufer zu Angerufenem',
 	'a_mos_f1_min_mult10' 			=> 'Minimaler Mean Opionion Score während des Anrufs mit einem festen Jitter-Buffer von 50ms',
 	'a_mos_f2_min_mult10' 			=> 'Minimaler Mean Opionion Score während des Anrufs mit einem festen Jitter-Buffer von 200ms',
 	'a_mos_adapt_min_mult10' 		=> 'Minimaler Mean Opionion Score während des Anrufs mit einem adaptiven Jitter-Buffer von 500ms',
 	'a_mos_f1_mult10' 				=> 'durchschnittl. Mean Opionion Score während des Anrufs mit einem festen Jitter-Buffer von 50ms',
 	'a_mos_f2_mult10' 				=> 'durchschnittl. Mean Opionion Score während des Anrufs mit einem festen Jitter-Buffer von 200ms',
 	'a_mos_adapt_mult10' 			=> 'durchschnittl. Mean Opionion Score während des Anrufs mit einem adaptiven Jitter-Buffer von 500ms',
-	'a_sl1' 						=> 'Anzahl der Pakete, welche einen aufeinander folgenden Paketverlust während des Anrufs aufweisen',
-	'a_sl9' 						=> 'Anzahl der Pakete, welche neun aufeinander folgende Paketverluste während des Anrufs aufweisen',
-	'a_d50' 						=> 'Anzahl der Pakete, welche eine Paketverzögerung (Packet Delay Variation - z.B. Jitter) zwischen 50ms and 70ms aufweisen',
-	'a_d300' 						=> 'Anzahl der Pakete, welche eine Paketverzögerung (Packet Delay Variation - z.B. Jitter) von über 300ms aufweisen',
-	'called' 						=> 'Betrachtrung der Anrufrichtung von Angerufenem zum Anrufer',
+	'a_sl1' => 'Anzahl der Pakete, welche einen aufeinander folgenden Paketverlust während des Anrufs aufweisen',
+	'a_sl9' => 'Anzahl der Pakete, welche neun aufeinander folgende Paketverluste während des Anrufs aufweisen',
+	'a_d50' => 'Anzahl der Pakete, welche eine Paketverzögerung (Packet Delay Variation - z.B. Jitter) zwischen 50ms and 70ms aufweisen',
+	'a_d300' => 'Anzahl der Pakete, welche eine Paketverzögerung (Packet Delay Variation - z.B. Jitter) von über 300ms aufweisen',
+	'called' => 'Betrachtung der Anrufrichtung von Angerufenem zum Anrufer',
 /**
  * Module Ticketsystem
  */
 	'assign_user' => 'Zuweisen eines Users zu einem Ticket.',
-];
+ ];

@@ -23,7 +23,7 @@ return [
 		'jQuery_PaginatesPrevious'	=> 'Previous',
 		'jQuery_PaginatesNext'		=> 'Next',
 		'jQuery_PaginatesLast'		=> 'Last',
-		'jQuery_sLast'				=> ': activate to sort column ascending',
+		'jQuery_sLast'				=> ': activate to sort column descending',
 		'jQuery_sLast'				=> ': activate to sort column descending',
 		'jQuery_All'				=> 'All',
 		'jQuery_Print'				=> 'Print',
