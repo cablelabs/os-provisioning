@@ -38,6 +38,24 @@ return[
 				'youtube' => 'https://www.youtube.com/watch?v=aYjuWXhaV3s&t=378s', // jump to 378s
 				'url' => null],
 
+
+// ProvMon
+
+	'modem_analysis' => ['doc' => 'https://devel.roetzer-engineering.com/confluence/display/NMS/Monitoring',
+						 'youtube' => 'https://www.youtube.com/watch?v=KnCBDpKxi9g&t=144s', // jump to 145s
+						 'url' => null],
+
+	'cpe_analysis' => ['doc' => null,
+					 'youtube' => 'https://www.youtube.com/watch?v=9xc4Jlhg7fY&t=675s', // jump to 675s
+					 'url' => null],
+
+	'mta_analysis' => ['doc' => null,
+					 'youtube' => 'https://www.youtube.com/watch?v=9xc4Jlhg7fY&t=785s', // jump to 785s
+					 'url' => null],
+
+	'cmts_analysis' => ['doc' => 'https://devel.roetzer-engineering.com/confluence/display/NMS/CMTS+Analysis+and+Monitoring',
+					 	'youtube' => 'https://www.youtube.com/watch?v=a3UOtK9cduY&t=290s', // jump to 290s
+					 	'url' => null],
 // ProvVoip
 
 	'phonenumber' => [	'doc' => 'https://devel.roetzer-engineering.com/confluence/display/NMS/VoIP',
