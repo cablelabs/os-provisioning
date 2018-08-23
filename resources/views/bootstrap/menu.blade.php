@@ -35,7 +35,7 @@
 						data-toggle="dropdown"
 						aria-haspopup="true"
 						aria-expanded="false">
-						<i class="fa fa-question" aria-hidden="true"></i>
+						<i class="fa fa-question fa-2x" aria-hidden="true"></i>
 						<span class="d-none d-sm-none d-md-inline">
 						</span>
 						<b class="caret"></b>

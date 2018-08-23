@@ -738,6 +738,21 @@ class BaseModel extends Eloquent
 		return 'Need to be Set !';
 	}
 
+	// Placeholder
+	public function view_help()
+	{
+		return null;
+
+		/*
+		 * child models should have somthing like this:
+		 *
+
+			return array('doc' => 'https://devel.roetzer-engineering.com',
+						 'youtube' => 'https://www.youtube.com/channel/UCpFaWPpJLQQQLpTVeZnq_qA',
+						 'url' => null);
+		*/
+	}
+
 
 	/**
 	 *	Returns a array of all children objects of $this object
