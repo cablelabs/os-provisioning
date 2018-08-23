@@ -1095,21 +1095,22 @@ class BaseObserver
 			// get changed attributes
 			$arr = [];
 
-			foreach ($model['attributes'] as $key => $value)
-			{
+			foreach ($model['attributes'] as $key => $value) {
 				if (in_array($key, $ignore))
 					continue;
 
 				$original = $model['original'][$key];
-				if ($original != $value)
+				if ($original != $value) {
 					if (in_array($key, $hide)) {
 						$arr[] = $key;
-					}
-					else {
+					} elseif ($attributes['deleted_at'] == null) {
+						$arr[] = $key.': '.$original.'-> restored';
+						$action = 'restored';
+					} else {
 						$arr[] = $key.': '.$original.'->'.$value;
 					}
+				}
 			}
-
 			$text = implode(', ', $arr);
 		}
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Str;
-use App\GuiLog;
+use App\{BaseModel, GuiLog};
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 
@@ -19,7 +19,9 @@ class GuiLogController extends BaseController {
      */
 	public function view_form_fields($model = null)
 	{
-		$a = array(
+		$models = BaseModel::get_models();
+		$isModelTrashed = $models[$model->model]::withTrashed()->find($model->model_id)->trashed();
+		$fields = array(
 			array('form_type' => 'text', 'name' => 'username', 'description' => 'Username'),
 			array('form_type' => 'text', 'name' => 'method', 'description' => 'Method'),
 			array('form_type' => 'text', 'name' => 'model', 'description' => 'Model'),
@@ -28,9 +30,8 @@ class GuiLogController extends BaseController {
 			);
 
 		// add link of changed Model in edit view - Note: check if route exists is necessary because CccUser.edit is not available for instance
-		if ($model && \Route::getRoutes()->hasNamedRoute($model->model.'.edit'))
-		{
-			array_push($a, array('form_type' => 'text', 'name' => 'link', 'description' => 'Link', 'html' =>
+		if ($models && \Route::getRoutes()->hasNamedRoute($model->model.'.edit') && !$isModelTrashed) {
+			array_push($fields, array('form_type' => 'text', 'name' => 'link', 'description' => 'Link', 'html' =>
 				'<div class="col-md-12" style="background-color:white">
 					<div class="form-group row"><label style="margin-top: 10px;" class="col-md-4 control-label">Link</label>
 						<div class="col-md-7">
@@ -41,8 +42,39 @@ class GuiLogController extends BaseController {
 				));
 		}
 
-		return $a;
+		// addition in edit view to create link for restoring deleted models
+		if ($isModelTrashed) {
+				array_push($fields, array('form_type' => 'text', 'name' => 'deleted_at', 'description' => 'Restore', 'html' =>
+					'<div class="col-md-12" style= background-color:white">
+						<div class= "form-group row"><label style =margin-top: 10px;" class="col-md-4 control-label">Restore</label>
+							<div class="col-md-7">
+								<a class="btn btn-default btn-block" href="' .route('Guilog.restore', ['id' => $model->id]).'"> Restore '.$model->model.'</a>
+							</div>
+						</div>
+					</div>'
+				));
+		}
+
+		return $fields;
 	}
+
+	/**
+	 * Restore a soft-deleted model
+	 *
+	 * @param id GuiLog
+	 *
+	 * @author Roy Schneider
+	 */
+	public function restoreModel($id)
+	{
+		$modelArray = BaseModel::get_models();
+		$guilog = GuiLog::find($id);
+		$modelToRestore = $modelArray[$guilog->model]::withTrashed()->find($guilog->model_id);
+		$restoredModel = $modelToRestore->restore($guilog->model);
+
+		return redirect()->route($guilog->model. '.edit', ['id' => $guilog->model_id]);
+	}
+
 
 	public function filter($id, Request $request)
 	{
