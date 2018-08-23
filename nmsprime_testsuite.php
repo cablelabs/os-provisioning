@@ -53,6 +53,8 @@ class UnitTestStarter {
 
 		$this->_restore_initial_module_state();
 
+		$this->_print_lifecycle_test_coverage();
+
 		echo "\n\n";
 		echo "Finished! Check *.htm files in ".$this->basepath."/phpunit for data collected during the tests.\n\n";
 
@@ -280,6 +282,54 @@ class UnitTestStarter {
 			}
 		}
 		echo "\n";
+	}
+
+
+	/**
+	 * Calculates and prints lifecycle test coverage.
+	 *
+	 * @author Patrick Reichel
+	 */
+		protected function _print_lifecycle_test_coverage() {
+
+		$out = "\n\nLifecycle test coverage:\n";
+		$coverage = [];
+		$missing = [];
+		foreach ($this->modules_available as $module) {
+			$coverage[$module] = [];
+			$models_raw = glob("modules/$module/Entities/*.php");
+			$lifecycle_tests_raw = glob("modules/$module/Tests/*LifecycleTest.php");
+
+			$models = [];
+			$lifecycle_tests = [];
+			foreach ($models_raw as $raw) {
+				$_ = explode('/', $raw);
+				$_ = array_pop($_);
+				array_push($models, str_replace('.php', '', $_));
+			}
+			foreach ($lifecycle_tests_raw as $raw) {
+				$_ = explode('/', $raw);
+				$_ = array_pop($_);
+				$_ = str_replace('LifecycleTest', '', $_);
+				$_ = str_replace('.php', '', $_);
+				array_push($lifecycle_tests, $_);
+			}
+
+			$coverage[$module] = $models ? count($lifecycle_tests) / count($models) : 0;
+			$missing[$module] = array_diff($models, $lifecycle_tests);
+		}
+
+		// used for output alignment of percentages
+		$maxlen = max(array_map('strlen', array_keys($coverage))) + 4;
+
+		ksort($coverage);
+		foreach ($coverage as $module => $percentage) {
+			$missing_str = $missing[$module] ? "   (untested: ".implode(', ', $missing[$module]).")" : '';
+			$out .= sprintf("%s: %".($maxlen - strlen($module))."s%s%s\n", $module, round($percentage * 100), '%', $missing_str);
+        }
+
+        echo $out;
+        file_put_contents('phpunit/lifecycle_test_coverage.txt', $out);
 	}
 
 }

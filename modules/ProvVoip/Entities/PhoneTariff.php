@@ -14,7 +14,7 @@ class PhoneTariff extends \BaseModel {
 
 		return array(
 			'external_identifier' => 'required',
-			'name' => 'required',
+			'name' => 'required|unique:phonetariff,name,'.$id.',id,deleted_at,NULL',
 			'usable' => 'required|boolean',
 		);
 	}

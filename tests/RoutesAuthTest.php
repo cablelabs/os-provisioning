@@ -34,6 +34,10 @@ class RoutesAuthTest extends TestCase {
 		'CustomerPsw',
 	];
 
+	// there now is an API with own routes – add all available API versions here
+	protected $api_versions = [
+		0,
+	];
 
 
 	/**
@@ -70,6 +74,7 @@ class RoutesAuthTest extends TestCase {
 		$routeCollection = Route::getRoutes();
 		foreach ($routeCollection as $value) {
 			$name = $value->getName();
+			$method = $value->getMethods()[0];
 
 			// no name – no test
 			if (!boolval($name) ||
