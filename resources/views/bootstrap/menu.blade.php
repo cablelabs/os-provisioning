@@ -25,6 +25,17 @@
 				<li class="navbar-nav nav p-t-15">
 					<a id="togglesearch" href="javascript:;" class="icon notification waves-effect waves-light m-t-5" data-toggle="navbar-search"><i class="fa fa-search fa-lg" aria-hidden="true"></i></a>
 				</li>
+
+				{{-- Help Section --}}
+				<li  class='m-t-10' style='font-size: 2em; font-weight: bold'>
+					<a href="https://devel.roetzer-engineering.com/" target="_blank" style="text-decoration: none;">
+						<span data-toggle="tooltip" data-placement="auto" title="Official Documentation">
+							<i class="fa fa-question"></i>
+							<span class="badge"></span>
+						</span>
+					</a>
+				</li>
+
 				@if (Module::collections()->has('Dashboard'))
 					{{-- Modem Statistics (Online/Offline) --}}
 					<li  class='m-t-10' style='font-size: 2em; font-weight: bold'>
