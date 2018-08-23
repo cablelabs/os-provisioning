@@ -952,6 +952,16 @@ class Contract extends \BaseModel {
 					// default case
 					$this->_update_product_related_current_data($item);
 				}
+
+				// if no enddate is set: check if future data has to be changed to
+				// this can occur in the following scenario:
+				//	1) new item “B” created (that replaces the current item “A”) ⇒ future data changed
+				//	2) item “B” deleted ⇒ nothing done
+				//  3) end date in item “A” reset to null
+				// now we have to replace the future data by data from item “A” (again)
+				if ($this->_date_null($item->valid_to)) {
+					$this->_update_product_related_future_data($item);
+				}
 			}
 			// check if information is for the future
 			// this should be save because there is max. one of each type allowed
