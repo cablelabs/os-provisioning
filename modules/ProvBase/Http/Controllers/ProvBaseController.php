@@ -28,6 +28,8 @@ class ProvBaseController extends BaseController {
 			array('form_type' => 'text', 'name' => 'startid_contract', 'description' => 'Start ID Contracts'),
 			array('form_type' => 'text', 'name' => 'startid_modem', 'description' => 'Start ID Modems'),
 			array('form_type' => 'text', 'name' => 'startid_endpoint', 'description' => 'Start ID Endpoints'),
+
+			array('form_type' => 'checkbox', 'name' => 'multiple_provisioning_systems', 'description' => 'Multiple provisioning systems', 'help' => 'Check if there are other DHCP servers in your network'),
 		);
 	}
 

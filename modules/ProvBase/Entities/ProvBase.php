@@ -3,7 +3,7 @@
 namespace Modules\ProvBase\Entities;
 
 use File, GlobalConfig;
-use Modules\ProvBase\Entities\{ProvBase, Qos};
+use Modules\ProvBase\Entities\{Modem, ProvBase, Qos};
 
 class ProvBase extends \BaseModel {
 
@@ -11,6 +11,8 @@ class ProvBase extends \BaseModel {
 	protected $table = 'provbase';
 
 	public $name = 'Provisioning Basic Config';
+
+	const DEFAULT_NETWORK_FILE_PATH = '/etc/dhcp-nmsprime/default-network.conf';
 
 	// Don't forget to fill this array
 	// protected $fillable = ['provisioning_server', 'ro_community', 'rw_community', 'domain_name', 'notif_mail', 'dhcp_def_lease_time', 'dhcp_max_lease_time', 'startid_contract', 'startid_modem', 'startid_endpoint'];
@@ -145,6 +147,24 @@ class ProvBase extends \BaseModel {
 
 		File::put($file_dhcp_conf, $data);
 	}
+
+
+	/**
+	 * Create the default shared-network based on the provisioning server ip
+	 * address, so that dhcpd knows on which interface to listen
+	 *
+	 * @author Ole Ernst
+	 */
+	public function make_dhcp_default_network_conf()
+	{
+		$sub = new \IPv4\SubnetCalculator($this->provisioning_server, 24);
+		$net = $sub->getNetworkPortion();
+		$mask = $sub->getSubnetMask();
+
+		$data =	"shared-network ETHERNET\n{\n\tsubnet $net netmask $mask\n\t{\n\t\tdeny booting;\n\t}\n}\n";
+
+		return file_put_contents(self::DEFAULT_NETWORK_FILE_PATH, $data, LOCK_EX);
+	}
 }
 
 
@@ -164,6 +184,15 @@ class ProvBaseObserver
 		$model->make_dhcp_glob_conf();
 
 		$changes = $model->getDirty();
+
+		// create new CPE ignore file
+		if (array_key_exists('multiple_provisioning_systems', $changes)) {
+			Modem::create_ignore_cpe_dhcp_file();
+		}
+
+		// recreate default network, if provisioning server ip address has been changed
+		if (array_key_exists('provisioning_server', $changes))
+			$model->make_dhcp_default_network_conf();
 
 		// re-evaluate all qos rate_max_help fields if one or both coefficients were changed
 		if (multi_array_key_exists(['ds_rate_coefficient', 'us_rate_coefficient'], $changes)) {
