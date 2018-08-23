@@ -738,19 +738,18 @@ class BaseModel extends Eloquent
 		return 'Need to be Set !';
 	}
 
-	// Placeholder
+	/**
+	 *	The official Documentation Help Menu Function
+	 *
+	 *  See: See: config/documenation.php array
+	 *
+	 *	@author Torsten Schmidt
+	 *
+	 *	@return array of ['doc' => link, 'youtube' => link, 'url' => 'link']
+	 */
 	public function view_help()
 	{
-		return null;
-
-		/*
-		 * child models should have somthing like this:
-		 *
-
-			return array('doc' => 'https://devel.roetzer-engineering.com',
-						 'youtube' => 'https://www.youtube.com/channel/UCpFaWPpJLQQQLpTVeZnq_qA',
-						 'url' => null);
-		*/
+		return config('documentation.'.strtolower($this->get_model_name()));
 	}
 
 

@@ -74,6 +74,7 @@
                             @if ($help['youtube'])
                                 <a class="dropdown-item" href={{$help['youtube']}} target="_blank">Youtube</a>
                             @endif
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="mailto:support@roetzer-engineering.com">Request Professional Help</a>
                         </div>
             </div>
