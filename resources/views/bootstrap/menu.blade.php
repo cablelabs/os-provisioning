@@ -27,13 +27,31 @@
 				</li>
 
 				{{-- Help Section --}}
-				<li  class='m-t-10' style='font-size: 2em; font-weight: bold'>
-					<a href="https://devel.roetzer-engineering.com/" target="_blank" style="text-decoration: none;">
-						<span data-toggle="tooltip" data-placement="auto" title="Official Documentation">
-							<i class="fa fa-question"></i>
-							<span class="badge"></span>
+				<li class="nav-item dropdown">
+					<a id="navbarDropdown"
+						class="nav-link dropdown-toggle"
+						href="#"
+						role="button"
+						data-toggle="dropdown"
+						aria-haspopup="true"
+						aria-expanded="false">
+						<i class="fa fa-question" aria-hidden="true"></i>
+						<span class="d-none d-sm-none d-md-inline">
 						</span>
+						<b class="caret"></b>
 					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0;left:auto;">
+						<a class="dropdown-item" href="https://devel.roetzer-engineering.com/" target="_blank">
+							<i class="fa fa-question-circle" aria-hidden="true"></i>Official Documentation
+						</a>
+						<a class="dropdown-item" href="https://www.youtube.com/channel/UCpFaWPpJLQQQLpTVeZnq_qA" target="_blank">
+							<i class="fa fa-tv" aria-hidden="true"></i>Youtube Channel
+						</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="https://nmsprime.com/pricing" target="_blank">
+							<i class="fa fa-ambulance" aria-hidden="true"></i>Professional Help
+						</a>
+					</div>
 				</li>
 
 				@if (Module::collections()->has('Dashboard'))
