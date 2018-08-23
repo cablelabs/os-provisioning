@@ -42,14 +42,20 @@
 					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0;left:auto;">
 						<a class="dropdown-item" href="https://devel.roetzer-engineering.com/" target="_blank">
-							<i class="fa fa-question-circle" aria-hidden="true"></i>Official Documentation
+							<i class="fa fa-question-circle" aria-hidden="true" style="width: 20px;"></i>Documentation
 						</a>
 						<a class="dropdown-item" href="https://www.youtube.com/channel/UCpFaWPpJLQQQLpTVeZnq_qA" target="_blank">
-							<i class="fa fa-tv" aria-hidden="true"></i>Youtube Channel
+							<i class="fa fa-tv" aria-hidden="true" style="width: 20px;"></i>Youtube
+						</a>
+						<a class="dropdown-item" href="" target="_blank">
+							<i class="fa fa-wpforms" aria-hidden="true" style="width: 20px;"></i>Forum (coming soon)
 						</a>
 						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="mailto:support@roetzer-engineering.com" target="_blank">
+							<i class="fa fa-envelope-open" aria-hidden="true" style="width: 20px;"></i>Professional Help
+						</a>
 						<a class="dropdown-item" href="https://nmsprime.com/pricing" target="_blank">
-							<i class="fa fa-ambulance" aria-hidden="true"></i>Professional Help
+							<i class="fa fa-dollar" aria-hidden="true" style="width: 20px;"></i>Full Support – SLA
 						</a>
 					</div>
 				</li>
