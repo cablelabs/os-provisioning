@@ -1,5 +1,5 @@
 <?php
 
-	return 		[
-		'MenuItems' => []
+    return 		[
+        'MenuItems' => [],
 ];

@@ -6,6 +6,6 @@
  *
  * @author Patrick Reichel
  */
-class ChangeEngineToInnodbForNmsmail extends ChangeEngineToInnodb {
-
+class ChangeEngineToInnodbForNmsmail extends ChangeEngineToInnodb
+{
 }

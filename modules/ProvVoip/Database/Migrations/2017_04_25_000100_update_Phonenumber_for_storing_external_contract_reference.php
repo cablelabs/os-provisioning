@@ -8,24 +8,22 @@ use Illuminate\Database\Migrations\Migration;
  *
  * @author Patrick Reichel
  */
-class UpdatePhonenumberForStoringExternalContractReference extends Migration {
-
-	// name of the table to update
-	protected $tablename = "phonenumber";
+class UpdatePhonenumberForStoringExternalContractReference extends Migration
+{
+    // name of the table to update
+    protected $tablename = 'phonenumber';
 
     /**
-	 * Run the migrations.
+     * Run the migrations.
      *
      * @return void
      */
     public function up()
     {
-        Schema::table($this->tablename, function(Blueprint $table) {
-
-			$table->string('contract_external_id')->nullable()->default(NULL);
-		});
-
-	}
+        Schema::table($this->tablename, function (Blueprint $table) {
+            $table->string('contract_external_id')->nullable()->default(null);
+        });
+    }
 
     /**
      * Reverse the migrations.
@@ -34,10 +32,8 @@ class UpdatePhonenumberForStoringExternalContractReference extends Migration {
      */
     public function down()
     {
-        Schema::table($this->tablename, function(Blueprint $table)
-		{
-			$table->dropColumn('contract_external_id');
+        Schema::table($this->tablename, function (Blueprint $table) {
+            $table->dropColumn('contract_external_id');
         });
-
     }
 }

@@ -1,46 +1,39 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class UpdateProvVoipTableAddMtaDomain extends \BaseMigration {
+class UpdateProvVoipTableAddMtaDomain extends \BaseMigration
+{
+    // name of the table to create
+    protected $tablename = 'provvoip';
 
-	// name of the table to create
-	protected $tablename = 'provvoip';
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table($this->tablename, function (Blueprint $table) {
+            $table->string('mta_domain');
+        });
 
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::table($this->tablename, function(Blueprint $table) {
+        $this->set_fim_fields([
+            'mta_domain',
+        ]);
+    }
 
-			$table->string('mta_domain');
-		});
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table($this->tablename, function (Blueprint $table) {
+            $table->dropColumn('mta_domain');
+        });
 
-		$this->set_fim_fields([
-			'mta_domain',
-		]);
-	}
-
-
-
-
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::table($this->tablename, function(Blueprint $table)
-		{
-			$table->dropColumn('mta_domain');
-		});
-
-		$this->set_fim_fields([]);
-	}
-
+        $this->set_fim_fields([]);
+    }
 }

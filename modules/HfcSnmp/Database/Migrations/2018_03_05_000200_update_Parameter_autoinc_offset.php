@@ -1,13 +1,12 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 use Modules\HfcReq\Entities\NetElementType;
+use Illuminate\Database\Migrations\Migration;
 
-class UpdateParameterAutoincOffset extends Migration {
-
+class UpdateParameterAutoincOffset extends Migration
+{
     // name of the table to create
-    protected $tablename = "parameter";
+    protected $tablename = 'parameter';
 
     /**
      * Run the migrations.
@@ -29,5 +28,4 @@ class UpdateParameterAutoincOffset extends Migration {
     public function down()
     {
     }
-
 }

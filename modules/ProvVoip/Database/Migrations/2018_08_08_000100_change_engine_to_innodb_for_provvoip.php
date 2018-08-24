@@ -6,6 +6,6 @@
  *
  * @author Patrick Reichel
  */
-class ChangeEngineToInnodbForProvvoip extends ChangeEngineToInnodb {
-
+class ChangeEngineToInnodbForProvvoip extends ChangeEngineToInnodb
+{
 }

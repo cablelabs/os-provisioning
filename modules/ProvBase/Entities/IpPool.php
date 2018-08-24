@@ -3,206 +3,205 @@
 namespace Modules\ProvBase\Entities;
 
 use DB;
-use Modules\ProvBase\Entities\Cmts;
 
-class IpPool extends \BaseModel {
+class IpPool extends \BaseModel
+{
+    // The associated SQL table for this Model
+    public $table = 'ippool';
 
-	// The associated SQL table for this Model
-	public $table = 'ippool';
+    // Add your validation rules here
+    public static function rules($id = null)
+    {
+        return [
+            'net' => 'required|ip',
+            'netmask' => 'required|ip|netmask',     // netmask must not be in first place!
+            'ip_pool_start' => 'required|ip|ip_in_range:net,netmask|ip_larger:net',   // own validation - see in classes: ExtendedValidator and IpPoolController
+            'ip_pool_end' => 'required|ip|ip_in_range:net,netmask|ip_larger:ip_pool_start',
+            'router_ip' => 'required|ip|ip_in_range:net,netmask',
+            'broadcast_ip' => 'ip|ip_in_range:net,netmask|ip_larger:ip_pool_end',
+            'dns1_ip' => 'ip',
+            'dns2_ip' => 'ip',
+            'dns3_ip' => 'ip',
+        ];
+    }
 
-	// Add your validation rules here
-	public static function rules($id = null)
-	{
-		return array(
-			'net' => 'required|ip',
-			'netmask' => 'required|ip|netmask',     // netmask must not be in first place!
-			'ip_pool_start' => 'required|ip|ip_in_range:net,netmask|ip_larger:net',   // own validation - see in classes: ExtendedValidator and IpPoolController
-			'ip_pool_end' => 'required|ip|ip_in_range:net,netmask|ip_larger:ip_pool_start',
-			'router_ip' => 'required|ip|ip_in_range:net,netmask',
-			'broadcast_ip' => 'ip|ip_in_range:net,netmask|ip_larger:ip_pool_end',
-			'dns1_ip' => 'ip',
-			'dns2_ip' => 'ip',
-			'dns3_ip' => 'ip'
-		);
-	}
+    // Name of View
+    public static function view_headline()
+    {
+        return 'IP-Pools';
+    }
 
+    // View Icon
+    public static function view_icon()
+    {
+        return '<i class="fa fa-tags"></i>';
+    }
 
-	// Name of View
-	public static function view_headline()
-	{
-		return 'IP-Pools';
-	}
+    // AJAX Index list function
+    // generates datatable content and classes for model
+    public function view_index_label()
+    {
+        $bsclass = $this->get_bsclass();
 
-	// View Icon
-	public static function view_icon()
-	{
-	  return '<i class="fa fa-tags"></i>';
-	}
+        return ['table' => $this->table,
+                'index_header' => [$this->table.'.id', 'cmts.hostname', $this->table.'.type', $this->table.'.net', $this->table.'.netmask', $this->table.'.router_ip', $this->table.'.description'],
+                'header' =>  $this->type.': '.$this->net.' / '.$this->netmask,
+                'bsclass' => $bsclass,
+                'eager_loading' => ['cmts'], ];
+    }
 
-	// AJAX Index list function
-	// generates datatable content and classes for model
-	public function view_index_label()
-	{
-		$bsclass = $this->get_bsclass();
+    public function get_bsclass()
+    {
+        $bsclass = 'success';
 
-		return ['table' => $this->table,
-				'index_header' => [$this->table.'.id','cmts.hostname', $this->table.'.type', $this->table.'.net', $this->table.'.netmask', $this->table.'.router_ip', $this->table.'.description'],
-				'header' =>  $this->type.': '.$this->net.' / '.$this->netmask,
-				'bsclass' => $bsclass,
-				'eager_loading' => ['cmts']];
-	}
+        if ($this->type == 'CPEPub') {
+            $bsclass = 'warning';
+        }
+        if ($this->type == 'CPEPriv') {
+            $bsclass = 'info';
+        }
+        if ($this->type == 'MTA') {
+            $bsclass = 'danger';
+        }
 
-	public function get_bsclass()
-	{
-		$bsclass = 'success';
+        return $bsclass;
+    }
 
-		if ($this->type == 'CPEPub')
-			$bsclass = 'warning';
-		if ($this->type == 'CPEPriv')
-			$bsclass = 'info';
-		if ($this->type == 'MTA')
-			$bsclass = 'danger';
+    /**
+     * Returns all cmts hostnames for ip pools as an array
+     */
+    public function cmts_hostnames()
+    {
+        return DB::table('cmts')->select('id', 'hostname')->get();
+    }
 
-		return $bsclass;
-	}
+    /*
+     * Return the corresponding network size to the netmask,
+     * e.g. 255.255.255.240 will return 28 as integer – means /28 netmask
+     */
+    public function size()
+    {
+        // this is crazy shit from http://php.net/manual/de/function.ip2long.php
+        $long = ip2long($this->netmask);
+        $base = ip2long('255.255.255.255');
 
+        return 32 - log(($long ^ $base) + 1, 2);
+    }
 
-	/**
-	 * Returns all cmts hostnames for ip pools as an array
-	 */
-	public function cmts_hostnames ()
-	{
-		return DB::table('cmts')->select('id', 'hostname')->get();
-	}
+    /*
+     * Returns true if provisioning route to $this pool exists, otherwise false
+     */
+    public function ip_route_prov_exists()
+    {
+        return strlen(exec('/usr/sbin/ip route show '.$this->net.'/'.$this->size().' via '.$this->cmts->ip)) == 0 ? false : true;
+    }
 
+    /*
+     * Return true if $this->router_ip is online, otherwise false
+     * This implies that the CMTS Pool should be set correctly in the CMTS
+     */
+    public function ip_route_online()
+    {
+        // Ping: Only check if device is online
+        exec('sudo ping -c1 -i0 -w1 '.$this->router_ip, $ping, $ret);
 
-	/*
-	 * Return the corresponding network size to the netmask,
-	 * e.g. 255.255.255.240 will return 28 as integer – means /28 netmask
-	 */
-	public function size ()
-	{
-		// this is crazy shit from http://php.net/manual/de/function.ip2long.php
-		$long = ip2long($this->netmask);
-		$base = ip2long('255.255.255.255');
+        return $ret ? false : true;
+    }
 
-		return 32-log(($long ^ $base)+1,2);
-	}
+    /**
+     * Return the cisco wildcard mask, which is the inverted subnet mask
+     *
+     * @return string
+     *
+     * @author Ole Ernst
+     */
+    public function wildcard_mask()
+    {
+        foreach (explode('.', $this->netmask) as $val) {
+            $mask[] = ~intval($val) & 255;
+        }
 
-	/*
-	 * Returns true if provisioning route to $this pool exists, otherwise false
-	 */
-	public function ip_route_prov_exists()
-	{
-		return (strlen(exec ('/usr/sbin/ip route show '.$this->net.'/'.$this->size().' via '.$this->cmts->ip)) == 0 ? false : true);
-	}
+        return implode('.', $mask);
+    }
 
+    /**
+     * Return 'secondary' if this pool is not the first CM pool of the CMTS,
+     * otherwise an empty string
+     *
+     * @return string
+     *
+     * @author Ole Ernst
+     */
+    public function is_secondary()
+    {
+        $cm_pools = $this->cmts->ippools->filter(function ($item) {
+            return $item->type == 'CM';
+        });
 
-	/*
-	 * Return true if $this->router_ip is online, otherwise false
-	 * This implies that the CMTS Pool should be set correctly in the CMTS
-	 */
-	public function ip_route_online ()
-	{
-		// Ping: Only check if device is online
-		exec ('sudo ping -c1 -i0 -w1 '.$this->router_ip, $ping, $ret);
-		return $ret ? false : true;
-	}
+        if ($cm_pools->isEmpty() || $this->id != $cm_pools->first()->id) {
+            return 'secondary';
+        }
 
-	/**
-	 * Return the cisco wildcard mask, which is the inverted subnet mask
-	 *
-	 * @return String
-	 *
-	 * @author Ole Ernst
-	 */
-	public function wildcard_mask ()
-	{
-		foreach (explode('.', $this->netmask) as $val)
-			$mask[] = ~intval($val) & 255;
+        return '';
+    }
 
-		return implode('.', $mask);
-	}
+    /**
+     * Return the range string according to the IpPool. We need to cut out public
+     * CPE IP addresses, which have been statically assigned - so that they won't
+     * be given out to multiple CPEs
+     *
+     * @return string
+     *
+     * @author Ole Ernst
+     */
+    public function get_range()
+    {
+        $ret = "\t\t\trange ".$this->ip_pool_start.' '.$this->ip_pool_end.";\n";
+        $ep_static = Endpoint::where('fixed_ip', '=', '1');
 
-	/**
-	 * Return 'secondary' if this pool is not the first CM pool of the CMTS,
-	 * otherwise an empty string
-	 *
-	 * @return String
-	 *
-	 * @author Ole Ernst
-	 */
-	public function is_secondary ()
-	{
-		$cm_pools = $this->cmts->ippools->filter(function ($item) {
-			return $item->type == 'CM';
-		});
+        if ($this->type != 'CPEPub' || $ep_static->count() == 0) {
+            return $ret;
+        }
 
-		if($cm_pools->isEmpty() || $this->id != $cm_pools->first()->id)
-			return 'secondary';
+        $ret = '';
+        foreach ($ep_static->get() as $ep) {
+            $static[] = ip2long($ep->ip);
+        }
 
-		return '';
-	}
+        $all = range(ip2long($this->ip_pool_start), ip2long($this->ip_pool_end));
+        foreach (array_diff($all, $static) as $ip) {
+            $ret .= "\t\t\trange ".long2ip($ip).";\n";
+        }
 
-	/**
-	 * Return the range string according to the IpPool. We need to cut out public
-	 * CPE IP addresses, which have been statically assigned - so that they won't
-	 * be given out to multiple CPEs
-	 *
-	 * @return String
-	 *
-	 * @author Ole Ernst
-	 */
-	public function get_range()
-	{
-		$ret = "\t\t\trange ".$this->ip_pool_start.' '.$this->ip_pool_end.";\n";
-		$ep_static = Endpoint::where('fixed_ip', '=', '1');
+        return $ret;
+    }
 
-		if ($this->type != 'CPEPub' || $ep_static->count() == 0)
-			return $ret;
+    /**
+     * Relationships:
+     */
+    public function cmts()
+    {
+        return $this->belongsTo('Modules\ProvBase\Entities\Cmts', 'cmts_id');
+    }
 
-		$ret = '';
-		foreach($ep_static->get() as $ep)
-			$static[] = ip2long($ep->ip);
+    // belongs to a cmts - see BaseModel for explanation
+    public function view_belongs_to()
+    {
+        return $this->cmts;
+    }
 
-		$all = range(ip2long($this->ip_pool_start), ip2long($this->ip_pool_end));
-		foreach (array_diff($all, $static) as $ip)
-			$ret .= "\t\t\trange ".long2ip($ip).";\n";
+    /**
+     * BOOT:
+     * - init cmts observer
+     */
+    public static function boot()
+    {
+        parent::boot();
 
-		return $ret;
-	}
-
-
-	/**
-	 * Relationships:
-	 */
-
-	public function cmts()
-	{
-		return $this->belongsTo('Modules\ProvBase\Entities\Cmts', 'cmts_id');
-	}
-
-	// belongs to a cmts - see BaseModel for explanation
-	public function view_belongs_to ()
-	{
-		return $this->cmts;
-	}
-
-	/**
-	 * BOOT:
-	 * - init cmts observer
-	 */
-	public static function boot()
-	{
-		parent::boot();
-
-		IpPool::observe(new IpPoolObserver);
-		IpPool::observe(new \App\SystemdObserver);
-	}
-
-
+        IpPool::observe(new IpPoolObserver);
+        IpPool::observe(new \App\SystemdObserver);
+    }
 }
-
 
 /**
  * IP-Pool Observer Class
@@ -214,24 +213,25 @@ class IpPool extends \BaseModel {
  */
 class IpPoolObserver
 {
-	public function created($pool)
-	{
-		// fetch cmts object that is related to the created ippool and make dhcp conf
-		// if (isset($pool->cmts))
-			$pool->cmts->make_dhcp_conf();
-	}
+    public function created($pool)
+    {
+        // fetch cmts object that is related to the created ippool and make dhcp conf
+        // if (isset($pool->cmts))
+        $pool->cmts->make_dhcp_conf();
+    }
 
-	public function updated($pool)
-	{
-	   $pool->cmts->make_dhcp_conf();
+    public function updated($pool)
+    {
+        $pool->cmts->make_dhcp_conf();
 
-		// make dhcp conf of old cmts if relation got changed
-		if ($pool["original"]["cmts_id"] != $pool["attributes"]["cmts_id"])
-			$cmts_old = Cmts::find($pool["original"]["cmts_id"])->make_dhcp_conf();
-	}
+        // make dhcp conf of old cmts if relation got changed
+        if ($pool['original']['cmts_id'] != $pool['attributes']['cmts_id']) {
+            $cmts_old = Cmts::find($pool['original']['cmts_id'])->make_dhcp_conf();
+        }
+    }
 
-	public function deleted($pool)
-	{
-		$pool->cmts->make_dhcp_conf();
-	}
+    public function deleted($pool)
+    {
+        $pool->cmts->make_dhcp_conf();
+    }
 }

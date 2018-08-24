@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-use Auth, Bouncer;
+use Auth;
+use Bouncer;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -38,6 +39,5 @@ class AuthServiceProvider extends ServiceProvider
         Auth::extend('ccc', function ($app, $name, array $config) {
             return new cccGuard(Auth::createUserProvider($config['ccc']));
         });
-
     }
 }

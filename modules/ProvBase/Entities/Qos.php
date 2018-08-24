@@ -2,104 +2,99 @@
 
 namespace Modules\ProvBase\Entities;
 
-use Log;
+class Qos extends \BaseModel
+{
+    // The associated SQL table for this Model
+    public $table = 'qos';
 
-class Qos extends \BaseModel {
+    // Add your validation rules here
+    public static function rules($id = null)
+    {
+        return [
+            'name' => 'required',
+            'ds_rate_max' => 'required|numeric|min:0',
+            'us_rate_max' => 'required|numeric|min:0',
+        ];
+    }
 
-	// The associated SQL table for this Model
-	public $table = 'qos';
+    /**
+     * Relations
+     */
+    public function modem()
+    {
+        return $this->hasMany("Modules\ProvBase\Entities\Modem");
+    }
 
-	// Add your validation rules here
-	public static function rules($id = null)
-	{
-		return array(
-			'name' => 'required',
-			'ds_rate_max' => 'required|numeric|min:0',
-			'us_rate_max' => 'required|numeric|min:0',
-		);
-	}
+    public function prices()
+    {
+        return $this->hasMany('Modules\BillingBase\Entities\Price');
+    }
 
+    // Name of View
+    public static function view_headline()
+    {
+        return 'QoS';
+    }
 
-	/**
-	 * Relations
-	 */
-	public function modem()
-	{
-		return $this->hasMany("Modules\ProvBase\Entities\Modem");
-	}
+    // View Icon
+    public static function view_icon()
+    {
+        return '<i class="fa fa-ticket"></i>';
+    }
 
+    // AJAX Index list function
+    // generates datatable content and classes for model
+    public function view_index_label()
+    {
+        $bsclass = $this->get_bsclass();
 
-	public function prices()
-	{
-		return $this->hasMany('Modules\BillingBase\Entities\Price');
-	}
+        return ['table' => $this->table,
+                'index_header' => [$this->table.'.name', $this->table.'.ds_rate_max', $this->table.'.us_rate_max'],
+                'header' =>  $this->name,
+                'bsclass' => $bsclass,
+                'edit' => ['ds_rate_max' => 'unit_ds_rate_max', 'us_rate_max' => 'unit_us_rate_max'],
+                'order_by' => ['0' => 'asc'], ];
+    }
 
+    public function get_bsclass()
+    {
+        $bsclass = 'success';
 
-	// Name of View
-	public static function view_headline()
-	{
-		return 'QoS';
-	}
+        return $bsclass;
+    }
 
-	// View Icon
-	public static function view_icon()
-	{
-	  return '<i class="fa fa-ticket"></i>';
-	}
+    public function unit_ds_rate_max()
+    {
+        return $this->ds_rate_max.' MBit/s';
+    }
 
-	// AJAX Index list function
-	// generates datatable content and classes for model
-	public function view_index_label()
-	{
-		$bsclass = $this->get_bsclass();
+    public function unit_us_rate_max()
+    {
+        return $this->us_rate_max.' MBit/s';
+    }
 
-		return ['table' => $this->table,
-				'index_header' => [$this->table.'.name', $this->table.'.ds_rate_max', $this->table.'.us_rate_max'],
-				'header' =>  $this->name,
-				'bsclass' => $bsclass,
-				'edit' => ['ds_rate_max' => 'unit_ds_rate_max', 'us_rate_max' => 'unit_us_rate_max'],
-				'order_by' => ['0' => 'asc']];
-	}
+    /**
+     * BOOT: init quality observer
+     */
+    public static function boot()
+    {
+        parent::boot();
 
-	public function get_bsclass()
-	{
-		$bsclass = 'success';
-		return $bsclass;
-	}
-
-	public function unit_ds_rate_max()
-	{
-		return $this->ds_rate_max.' MBit/s';
-	}
-
-	public function unit_us_rate_max()
-	{
-		return $this->us_rate_max.' MBit/s';
-	}
-
-	/**
-	 * BOOT: init quality observer
-	 */
-	public static function boot()
-	{
-		parent::boot();
-
-		Qos::observe(new QosObserver);
-	}
+        Qos::observe(new QosObserver);
+    }
 }
 
 /**
  * Qos Observer Class
  * Handles changes on CMs
- *
  */
 class QosObserver
 {
-	public function creating($q)
-	{
-	}
+    public function creating($q)
+    {
+    }
 
-	public function updating($q)
-	{
-	}
+    public function updating($q)
+    {
+    }
 }

@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateModemXyFieldTable extends Migration {
-
+class UpdateModemXyFieldTable extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -12,8 +12,7 @@ class UpdateModemXyFieldTable extends Migration {
      */
     public function up()
     {
-        Schema::table('modem', function(Blueprint $table)
-        {
+        Schema::table('modem', function (Blueprint $table) {
             // NOTE: a normal float has only 2 precisions
             // NOTE: double does not work with alter table in Laravel 5.1.29. Ask google.
             //      - float(.., 8)->default(0) forces SQL to use a double field
@@ -30,11 +29,9 @@ class UpdateModemXyFieldTable extends Migration {
      */
     public function down()
     {
-        Schema::table('modem', function(Blueprint $table)
-        {
+        Schema::table('modem', function (Blueprint $table) {
             $table->float('x')->change();
             $table->float('y')->change();
         });
     }
-
 }

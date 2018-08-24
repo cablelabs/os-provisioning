@@ -10,4 +10,4 @@
 */
 App::register('Modules\ProvVoip\Providers\ProvVoipServiceProvider');
 
-require __DIR__ . '/Http/routes.php';
+require __DIR__.'/Http/routes.php';

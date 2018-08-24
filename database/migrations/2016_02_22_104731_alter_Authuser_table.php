@@ -1,12 +1,10 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\Http\Controllers\AuthuserController;
 
 class AlterAuthuserTable extends Migration
 {
-    protected $tablename = "authusers";
+    protected $tablename = 'authusers';
 
     protected $supported_languages = ['en', 'browser', 'de'];
 

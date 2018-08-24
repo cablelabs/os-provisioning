@@ -6,38 +6,36 @@ namespace Modules\ProvBase\Database\Seeders;
 use Faker\Factory as Faker;
 use Modules\ProvBase\Entities\Configfile;
 
-class ConfigfileTableSeeder extends \BaseSeeder {
+class ConfigfileTableSeeder extends \BaseSeeder
+{
+    public function run()
+    {
+        $faker = Faker::create();
 
-	public function run()
-	{
-		$faker = Faker::create();
+        foreach (range(1, self::$max_seed_l2) as $index) {
+            Configfile::create([
+                'name' => $faker->colorName(),
+                'parent_id' => 0,
+                'device' => (rand(0, 100) > 30 ? 1 : 2),
+                'text' => 'SnmpMibObject sysLocation.0 String "Test Lab" ;',
+            ]);
+        }
 
-		foreach(range(1, self::$max_seed_l2) as $index)
-		{
-			Configfile::create([
-				'name' => $faker->colorName(),
-				'parent_id' => 0,
-				'device' => (rand(0,100) > 30 ? 1 : 2),
-				'text' => 'SnmpMibObject sysLocation.0 String "Test Lab" ;'
-			]);
-		}
+        // add two firmware dummies
+        $firmware_dummies = ['fw_dummy1_v3.7.12.bin', 'fw_dummy2_v1.7-fix12.bin'];
+        foreach ($firmware_dummies as $firmware_dummy) {
+            touch('/tftpboot/fw/'.$firmware_dummy);
+        }
 
-		// add two firmware dummies
-		$firmware_dummies = array("fw_dummy1_v3.7.12.bin", "fw_dummy2_v1.7-fix12.bin");
-		foreach ($firmware_dummies as $firmware_dummy) {
-			touch("/tftpboot/fw/".$firmware_dummy);
-		}
-
-
-		// add running configfiles for cm and mta
-		// this is really ugly – so I put it at the end of the file ;-)
-		Configfile::create([
-			'name' => 'cm-base',
-			'parent_id' => 0,
-			'device' => 'cm',
-			'type' => 'generic',
-			'public' => 'yes',
-			'text' => <<<'EOT'
+        // add running configfiles for cm and mta
+        // this is really ugly – so I put it at the end of the file ;-)
+        Configfile::create([
+            'name' => 'cm-base',
+            'parent_id' => 0,
+            'device' => 'cm',
+            'type' => 'generic',
+            'public' => 'yes',
+            'text' => <<<'EOT'
 ModemCapabilities
 {
     ConcatenationSupport 1;
@@ -128,15 +126,15 @@ DsServiceFlow
 }
 GlobalPrivacyEnable 1;
 EOT
-		]);
+        ]);
 
-		Configfile::create([
-			'name' => 'Fritz!Box 6360',
-			'parent_id' => 0,
-			'device' => 'mta',
-			'type' => 'generic',
-			'public' => 'yes',
-			'text' => <<<'EOT'
+        Configfile::create([
+            'name' => 'Fritz!Box 6360',
+            'parent_id' => 0,
+            'device' => 'mta',
+            'type' => 'generic',
+            'public' => 'yes',
+            'text' => <<<'EOT'
 MtaConfigDelimiter 1;
 SnmpMibObject mib-2.140.1.1.6.0 Integer 1 ;
 SnmpMibObject enterprises.872.1.4.2.1.10.1 Integer 1 ;
@@ -226,6 +224,6 @@ SnmpMibObject snmpTargetAddrMMS.'operator' Integer 0 ;
 SnmpMibObject pktcMtaDevProvConfigHash.0 HexString 0x796cef93130a8f71447783944d93092de2eb1ba1 ;
 MtaConfigDelimiter 255;
 EOT
-		]);
-	}
+        ]);
+    }
 }

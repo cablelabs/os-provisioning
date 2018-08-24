@@ -39,33 +39,34 @@ class SyncLanguagesCommand extends Command
     public function handle()
     {
         $dir = base_path('resources/lang/de');
-        $languagefiles = collect(glob($dir."/*.php"))
-                    ->map(function($path) {
-                            return collect(explode('/', $path))->last();
-                        })
+        $languagefiles = collect(glob($dir.'/*.php'))
+                    ->map(function ($path) {
+                        return collect(explode('/', $path))->last();
+                    })
                     ->reject('validation.php');
 
-
         foreach ($languagefiles as $languagefile) {
-            $originalPath = base_path('resources/lang/en/') . $languagefile;
+            $originalPath = base_path('resources/lang/en/').$languagefile;
             $originalArray = collect(require($originalPath));
             $originalFile = collect(file($originalPath));
-            $foreign = file(base_path('resources/lang/de/') . $languagefile);
+            $foreign = file(base_path('resources/lang/de/').$languagefile);
             $modified = false;
 
             foreach ($foreign as $number => $content) {
-                if (! str_contains($content, '=>'))
+                if (! str_contains($content, '=>')) {
                     continue;
+                }
 
                 preg_match_all('/\'/', $content, $matches, PREG_OFFSET_CAPTURE);
-                $key = substr($content, $matches[0][0][1] + 1, $matches[0][1][1] - $matches[0][0][1] -1);
+                $key = substr($content, $matches[0][0][1] + 1, $matches[0][1][1] - $matches[0][0][1] - 1);
 
-                if ($originalArray->has($key))
+                if ($originalArray->has($key)) {
                     continue;
+                }
 
                 $modified = true;
-                $value = substr($content, $matches[0][2][1] + 1, $matches[0][3][1] - $matches[0][2][1] -1);
-                $content = $languagefile == "messages.php" ? str_replace($value, $key, $content) : $content;
+                $value = substr($content, $matches[0][2][1] + 1, $matches[0][3][1] - $matches[0][2][1] - 1);
+                $content = $languagefile == 'messages.php' ? str_replace($value, $key, $content) : $content;
 
                 $originalFile->splice($number, 0, $content);
             }

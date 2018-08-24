@@ -1,13 +1,12 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 use Modules\HfcReq\Entities\NetElementType;
+use Illuminate\Database\Migrations\Migration;
 
-class UpdateNetElementTypeAutoincOffset extends Migration {
-
+class UpdateNetElementTypeAutoincOffset extends Migration
+{
     // name of the table to create
-    protected $tablename = "netelementtype";
+    protected $tablename = 'netelementtype';
 
     /**
      * Run the migrations.
@@ -32,5 +31,4 @@ class UpdateNetElementTypeAutoincOffset extends Migration {
     public function down()
     {
     }
-
 }

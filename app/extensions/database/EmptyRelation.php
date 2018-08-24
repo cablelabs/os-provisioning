@@ -2,7 +2,6 @@
 
 namespace App\Extensions\Database;
 
-
 /**
  * Class to provide an empty relation.
  * This can be returned if the model we want to get the relations to does not exist
@@ -12,12 +11,29 @@ namespace App\Extensions\Database;
  *
  * @author Patrick Reichel
  */
-class EmptyRelation extends \Illuminate\Database\Eloquent\Relations\Relation {
+class EmptyRelation extends \Illuminate\Database\Eloquent\Relations\Relation
+{
+    public function __construct()
+    {
+    }
 
-	public function __construct() {}
-	public function addConstraints() {}
-	public function addEagerConstraints(array $models) {}
-	public function initRelation(array $models, $relation) {}
-	public function match(array $models, \Illuminate\Database\Eloquent\Collection $results, $relation) {}
-	public function getResults() {}
+    public function addConstraints()
+    {
+    }
+
+    public function addEagerConstraints(array $models)
+    {
+    }
+
+    public function initRelation(array $models, $relation)
+    {
+    }
+
+    public function match(array $models, \Illuminate\Database\Eloquent\Collection $results, $relation)
+    {
+    }
+
+    public function getResults()
+    {
+    }
 }

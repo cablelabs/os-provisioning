@@ -1,61 +1,54 @@
 <?php
 
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 
 /**
  * Updater to add col for technical method of purchase tariffs
  *
  * @author Patrick Reichel
  */
-class UpdatePhoneTariffTableAddMethodCol extends BaseMigration {
-
-	// name of the table to create
-	protected $tablename = "phonetariff";
-
+class UpdatePhoneTariffTableAddMethodCol extends BaseMigration
+{
+    // name of the table to create
+    protected $tablename = 'phonetariff';
 
     /**
-	 * Run the migrations.
-	 *
-	 * @author Patrick Reichel
+     * Run the migrations.
+     *
+     * @author Patrick Reichel
      *
      * @return void
      */
     public function up()
     {
-        Schema::table($this->tablename, function(Blueprint $table) {
+        Schema::table($this->tablename, function (Blueprint $table) {
+            $table->enum('voip_protocol', ['MGCP', 'SIP'])->nullable();
+        });
 
-			$table->enum('voip_protocol', ['MGCP', 'SIP'])->nullable();
-		});
-
-		$this->set_fim_fields([
-			'external_identifier',
-			'name',
-			'description',
-		]);
-
-	}
+        $this->set_fim_fields([
+            'external_identifier',
+            'name',
+            'description',
+        ]);
+    }
 
     /**
      * Reverse the migrations.
-	 *
-	 * @author Patrick Reichel
+     *
+     * @author Patrick Reichel
      *
      * @return void
      */
     public function down()
     {
-        Schema::table($this->tablename, function(Blueprint $table)
-		{
-			$table->dropColumn('voip_protocol');
+        Schema::table($this->tablename, function (Blueprint $table) {
+            $table->dropColumn('voip_protocol');
         });
 
-		$this->set_fim_fields([
-			'external_identifier',
-			'name',
-			'description',
-		]);
-
+        $this->set_fim_fields([
+            'external_identifier',
+            'name',
+            'description',
+        ]);
     }
-
 }
