@@ -15,6 +15,6 @@ return [
 
     'failed' => 'These credentials do not match our records.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'NoRoles' => 'You have no role(s) associated with your account!. Please contact your administrator.'
+    'NoRoles' => 'You have no role(s) associated with your account!. Please contact your administrator.',
 
 ];
