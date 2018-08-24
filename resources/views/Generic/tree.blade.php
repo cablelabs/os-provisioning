@@ -12,10 +12,15 @@
 @section('content_left')
 
 	@DivOpen(12)
+
 		<h1 class="page-header">
 		{!!\App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null) !!}
 		{{\App\Http\Controllers\BaseViewController::translate_view($route_name.'s', 'Header', 2) }}
 		</h1>
+
+		<div class="btn pull-right">
+			@include('Generic.documentation', ['model' => $view_var[0]])
+		</div>
 
 		@if ($create_allowed)
 			{!! Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) !!}

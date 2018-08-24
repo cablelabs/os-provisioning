@@ -47,7 +47,7 @@
             </div>
         @endcan
         @can('delete', $model)
-            <div class="align-self-end">
+            <div class="align-self-end m-r-30">
                 @if ($delete_allowed)
                     <button type="submit" class="btn btn-outline-danger m-b-10 float-right" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
                     title="{{ \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button' ) }}" form="IndexForm" name="_delete">
@@ -56,6 +56,10 @@
                 @endif
             </div>
         @endcan
+
+        {{--Help Section--}}
+        @include('Generic.documentation')
+
         </div>
     </div>
 

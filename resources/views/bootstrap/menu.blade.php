@@ -25,6 +25,41 @@
 				<li class="navbar-nav nav p-t-15">
 					<a id="togglesearch" href="javascript:;" class="icon notification waves-effect waves-light m-t-5" data-toggle="navbar-search"><i class="fa fa-search fa-lg" aria-hidden="true"></i></a>
 				</li>
+
+				{{-- Help Section --}}
+				<li class="nav-item dropdown">
+					<a id="navbarDropdown"
+						class="nav-link dropdown-toggle"
+						href="#"
+						role="button"
+						data-toggle="dropdown"
+						aria-haspopup="true"
+						aria-expanded="false">
+						<i class="fa fa-question fa-2x" aria-hidden="true"></i>
+						<span class="d-none d-sm-none d-md-inline">
+						</span>
+						<b class="caret"></b>
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0;left:auto;">
+						<a class="dropdown-item" href="https://devel.roetzer-engineering.com/" target="_blank">
+							<i class="fa fa-question-circle" aria-hidden="true" style="width: 20px;"></i>Documentation
+						</a>
+						<a class="dropdown-item" href="https://www.youtube.com/channel/UCpFaWPpJLQQQLpTVeZnq_qA" target="_blank">
+							<i class="fa fa-tv" aria-hidden="true" style="width: 20px;"></i>Youtube
+						</a>
+						<a class="dropdown-item" href="" target="_blank">
+							<i class="fa fa-wpforms" aria-hidden="true" style="width: 20px;"></i>Forum (coming soon)
+						</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="mailto:support@roetzer-engineering.com" target="_blank">
+							<i class="fa fa-envelope-open" aria-hidden="true" style="width: 20px;"></i>Professional Help
+						</a>
+						<a class="dropdown-item" href="https://nmsprime.com/pricing" target="_blank">
+							<i class="fa fa-dollar" aria-hidden="true" style="width: 20px;"></i>Full Support – SLA
+						</a>
+					</div>
+				</li>
+
 				@if (Module::collections()->has('Dashboard'))
 					{{-- Modem Statistics (Online/Offline) --}}
 					<li  class='m-t-10' style='font-size: 2em; font-weight: bold'>
