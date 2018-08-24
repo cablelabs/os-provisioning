@@ -2,174 +2,170 @@
 
 namespace Modules\HfcReq\Entities;
 
-use Modules\HfcSnmp\Entities\{ OID, Parameter};
+use Modules\HfcSnmp\Entities\OID;
+use Modules\HfcSnmp\Entities\Parameter;
 
-class NetElementType extends \BaseModel {
+class NetElementType extends \BaseModel
+{
+    // The associated SQL table for this Model
+    public $table = 'netelementtype';
 
-	// The associated SQL table for this Model
-	public $table = 'netelementtype';
+    private $max_parents = 15;
 
-	private $max_parents = 15;
+    // Add your validation rules here
+    public static function rules($id = null)
+    {
+        return [
+            'name' => 'required',
+        ];
+    }
 
+    /**
+     * View Stuff
+     */
 
-	// Add your validation rules here
-	public static function rules($id = null)
-	{
-		return array(
-			'name' => 'required',
-		);
-	}
+    // Name of View
+    public static function view_headline()
+    {
+        return 'NetElementType';
+    }
 
+    // View Icon
+    public static function view_icon()
+    {
+        return '<i class="fa fa-object-group"></i>';
+    }
 
-	/**
-	 * View Stuff
-	 */
+    // icon type for tree view
+    public function get_icon_type()
+    {
+        $type = $this->name ?: 'default';
+        if ($parent = $this->parent) {
+            $type = $parent->name;
+            while ($parent = $parent->parent) {
+                $type = $parent->name;
+            }
+        }
 
-	// Name of View
-	public static function view_headline()
-	{
-		return 'NetElementType';
-	}
+        return $type;
+    }
 
-	// View Icon
-	public static function view_icon()
-	{
-		return '<i class="fa fa-object-group"></i>';
-	}
+    // link title in index view
+    public function view_index_label()
+    {
+        // in Tree View returning an array is currently not yet implemented
+        $version = $this->version ? ' - '.$this->version : '';
 
-	// icon type for tree view
-	public function get_icon_type()
-	{
-		$type = $this->name ? : 'default';
-		if ($parent = $this->parent)
-		{
-			$type = $parent->name;
-			while ($parent = $parent->parent)
-				$type = $parent->name;
-		}
+        return $this->name.$version;
+    }
 
-		return $type;
-	}
+    // returns all objects that are related to a DeviceType
+    public function view_has_many()
+    {
+        $ret['Base']['NetElement']['class'] = 'NetElement';
+        $ret['Base']['NetElement']['relation'] = $this->netelements;
 
-	// link title in index view
-	public function view_index_label()
-	{
-		// in Tree View returning an array is currently not yet implemented
-		$version = $this->version ? ' - '.$this->version : '';
-		return $this->name.$version;
-	}
+        if (\Module::collections()->has('HfcSnmp') && ! in_array($this->name, self::$undeletables)) {
+            // $ret['Base']['Parameter']['class'] 	= 'Parameter';
+            // $ret['Base']['Parameter']['relation']	= $this->parameters;
 
-	// returns all objects that are related to a DeviceType
-	public function view_has_many()
-	{
-		$ret['Base']['NetElement']['class'] 	= 'NetElement';
-		$ret['Base']['NetElement']['relation']  = $this->netelements;
+            // Extra view for easier attachment (e.g. attach all oids from one mibfile)
+            $ret['Base']['Parameters']['view']['view'] = 'hfcreq::NetElementType.parameters';
+            $ret['Base']['Parameters']['view']['vars']['list'] = $this->parameters ?: [];
+            // Extra view for easier controlling view structure setting (html_frame, html_id of parameter)
+            $ret['Parameter Settings']['Settings']['view']['view'] = 'hfcreq::NetElementType.settings';
+        }
 
-		if (\Module::collections()->has('HfcSnmp') && !in_array($this->name, self::$undeletables))
-		{
-			// $ret['Base']['Parameter']['class'] 	= 'Parameter';
-			// $ret['Base']['Parameter']['relation']	= $this->parameters;
+        return $ret;
+    }
 
-			// Extra view for easier attachment (e.g. attach all oids from one mibfile)
-			$ret['Base']['Parameters']['view']['view'] = 'hfcreq::NetElementType.parameters';
-			$ret['Base']['Parameters']['view']['vars']['list'] = $this->parameters ? : [];
-			// Extra view for easier controlling view structure setting (html_frame, html_id of parameter)
-			$ret['Parameter Settings']['Settings']['view']['view'] = 'hfcreq::NetElementType.settings';
-		}
+    /**
+     * Relations
+     */
+    public function netelements()
+    {
+        return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'netelementtype_id');
+    }
 
-		return $ret;
-	}
+    public function parameters()
+    {
+        return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id');
+        // return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id')->orderBy('oid_id')->orderBy('id');
+    }
 
-	/**
-	 * Relations
-	 */
-	public function netelements()
-	{
-		return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'netelementtype_id');
-	}
+    // only for preconfiguration of special device types (e.g. kathreins vgp)
+    public function oid()
+    {
+        return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'pre_conf_oid_id');
+    }
 
-	public function parameters()
-	{
-		return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id');
-		// return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id')->orderBy('oid_id')->orderBy('id');
-	}
+    public function parent()
+    {
+        return $this->belongsTo('Modules\HfcReq\Entities\NetElementType');
+    }
 
-	// only for preconfiguration of special device types (e.g. kathreins vgp)
-	public function oid()
-	{
-		return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'pre_conf_oid_id');
-	}
+    public function children()
+    {
+        return $this->hasMany('Modules\HfcReq\Entities\NetElementType', 'parent_id');
+    }
 
+    public static function param_list($id)
+    {
+        $eager_loading_model = new OID;
+        $params = Parameter::where('netelementtype_id', '=', $id)->with($eager_loading_model->table)->get();
+        $list = [];
 
-	public function parent()
-	{
-		return $this->belongsTo('Modules\HfcReq\Entities\NetElementType');
-	}
+        if (! $params) {
+            return $list;
+        }
 
-	public function children ()
-	{
-		return $this->hasMany('Modules\HfcReq\Entities\NetElementType', 'parent_id');
-	}
+        foreach ($params as $param) {
+            $list[$param->id] = $param->oid->gui_name ? $param->oid->oid.' - '.$param->oid->gui_name : $param->oid->oid.' - '.$param->oid->name;
+        }
 
+        return $list;
+    }
 
-	public static function param_list($id)
-	{
-		$eager_loading_model = new OID;
-		$params = Parameter::where('netelementtype_id', '=', $id)->with($eager_loading_model->table)->get();
-		$list = [];
+    /**
+     * These Types are relevant for whole Entity Relation Diagram and therefore must not be deleted
+     * Furthermore they are ordered by there Database ID which is probably used as fix value in many places of the source code
+     * So don't change this order unless you definitly know what you are doing !!!
+     */
+    public static $undeletables = [1 => 'Net', 2 => 'Cluster', 3 => 'Cmts', 4 => 'Amplifier', 5 => 'Node', 6 => 'Data', 7 => 'UPS'];
 
-		if (!$params)
-			return $list;
+    /**
+     * Must be defined to disable delete Checkbox on index tree view
+     */
+    public static function undeletables()
+    {
+        return array_keys(NetElementType::$undeletables);
+    }
 
-		foreach ($params as $param)
-			$list[$param->id] = $param->oid->gui_name ? $param->oid->oid.' - '.$param->oid->gui_name : $param->oid->oid.' - '.$param->oid->name;
+    /**
+     * Return the base type id of the current NetElementType
+     *
+     * @note: base device means: parent_id = 0, 2 (cluster)
+     *
+     * @param
+     * @return int id of base device netelementtype
+     */
+    public function get_base_type()
+    {
+        $p = $this;
+        $i = 0;
 
-		return $list;
-	}
+        do {
+            if (! is_object($p)) {
+                return false;
+            }
 
+            if ($p->parent_id == 0 || $p->id == 2) { // exit: on base type, or cluster (which is child of net)
+                return $p->id;
+            }
 
-	/**
-	 * These Types are relevant for whole Entity Relation Diagram and therefore must not be deleted
-	 * Furthermore they are ordered by there Database ID which is probably used as fix value in many places of the source code
-	 * So don't change this order unless you definitly know what you are doing !!!
-	 */
-	public static $undeletables = [1 => 'Net', 2 => 'Cluster', 3 => 'Cmts', 4 => 'Amplifier', 5 => 'Node', 6 => 'Data', 7 => 'UPS'];
+            $p = $p->parent;
+        } while ($i++ < $this->max_parents);
 
-
-	/**
-	 * Must be defined to disable delete Checkbox on index tree view
-	 */
-	public static function undeletables()
-	{
-		return array_keys(NetElementType::$undeletables);
-	}
-
-
-	/**
-	 * Return the base type id of the current NetElementType
-	 *
-	 * @note: base device means: parent_id = 0, 2 (cluster)
-	 *
-	 * @param
-	 * @return integer id of base device netelementtype
-	 */
-	public function get_base_type()
-	{
-		$p = $this;
-		$i = 0;
-
-		do
-		{
-			if (!is_object($p))
-				return false;
-
-			if ($p->parent_id == 0 || $p->id == 2) // exit: on base type, or cluster (which is child of net)
-				return $p->id;
-
-			$p = $p->parent;
-		} while ($i++ < $this->max_parents);
-
-		return false;
-	}
-
+        return false;
+    }
 }

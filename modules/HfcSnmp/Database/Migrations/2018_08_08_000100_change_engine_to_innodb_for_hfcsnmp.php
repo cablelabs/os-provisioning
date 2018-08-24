@@ -6,6 +6,6 @@
  *
  * @author Patrick Reichel
  */
-class ChangeEngineToInnodbForHfcsnmp extends ChangeEngineToInnodb {
-
+class ChangeEngineToInnodbForHfcsnmp extends ChangeEngineToInnodb
+{
 }

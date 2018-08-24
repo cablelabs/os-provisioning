@@ -2,9 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use Silber\Bouncer\Bouncer;
-
 use Closure;
+use Silber\Bouncer\Bouncer;
 
 class ScopeBouncer
 {

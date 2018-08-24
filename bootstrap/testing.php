@@ -1,4 +1,4 @@
 <?php
 
-require("autoload.php");
-require("start.php");
+require 'autoload.php';
+require 'start.php';

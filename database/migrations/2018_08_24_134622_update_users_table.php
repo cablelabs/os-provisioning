@@ -15,7 +15,6 @@ class UpdateUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('language');
-
         });
 
         Schema::table('users', function (Blueprint $table) {
@@ -37,6 +36,5 @@ class UpdateUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->enum('language', ['en', 'browser', 'de'])->default('en');
         });
-
     }
 }

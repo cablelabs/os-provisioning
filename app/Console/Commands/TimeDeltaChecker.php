@@ -53,9 +53,9 @@ class TimeDeltaChecker extends Command
     public function handle()
     {
         // write the current “scheduler” time in file
-		$content = date("c");
-		$content .= "\n";
-		$content .= shell_exec('date --iso-8601=seconds');
-		file_put_contents('/tmp/par__laravel__time_delta_checker_output', $content);
+        $content = date('c');
+        $content .= "\n";
+        $content .= shell_exec('date --iso-8601=seconds');
+        file_put_contents('/tmp/par__laravel__time_delta_checker_output', $content);
     }
 }

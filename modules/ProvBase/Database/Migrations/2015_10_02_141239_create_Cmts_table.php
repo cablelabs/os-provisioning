@@ -1,65 +1,62 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
+use Modules\ProvBase\Entities\Cmts;
 use Illuminate\Database\Schema\Blueprint;
 
-use Modules\ProvBase\Entities\Cmts;
+class CreateCmtsTable extends BaseMigration
+{
+    // name of the table to create
+    protected $tablename = 'cmts';
 
-class CreateCmtsTable extends BaseMigration {
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create($this->tablename, function (Blueprint $table) {
+            $this->up_table_generic($table);
 
-	// name of the table to create
-	protected $tablename = "cmts";
+            $table->string('hostname');
+            $table->string('type');
+            $table->string('ip');		// bundle ip
+            $table->string('community_rw');
+            $table->string('community_ro');
+            $table->string('company');
+            $table->integer('network');
+            $table->integer('state');
+            $table->integer('monitoring');
+        });
 
+        $this->set_fim_fields(['hostname', 'type', 'ip', 'community_ro', 'community_rw', 'company']);
 
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create($this->tablename, function(Blueprint $table)
-		{
-			$this->up_table_generic($table);
+        // add fulltext index for all given fields
+        // TODO: remove ?
+        if (isset($this->index) && (count($this->index) > 0)) {
+            DB::statement('CREATE FULLTEXT INDEX '.$this->tablename.'_all ON '.$this->tablename.' ('.implode(', ', $this->index).')');
+        }
 
-			$table->string('hostname');
-			$table->string('type');
-			$table->string('ip');		// bundle ip
-			$table->string('community_rw');
-			$table->string('community_ro');
-			$table->string('company');
-			$table->integer('network');
-			$table->integer('state');
-			$table->integer('monitoring');
-		});
+        return parent::up();
+    }
 
-		$this->set_fim_fields(['hostname', 'type', 'ip', 'community_ro', 'community_rw', 'company']);
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        // empty CMTS includes
+        file_put_contents(Cmts::$cmts_include_path.'.conf', '');
 
-		// add fulltext index for all given fields
-		// TODO: remove ?
-		if (isset($this->index) && (count($this->index) > 0))
-			DB::statement("CREATE FULLTEXT INDEX ".$this->tablename."_all ON ".$this->tablename." (".implode(', ', $this->index).")");
+        Schema::drop($this->tablename);
 
-		return parent::up();
-	}
-
-
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		// empty CMTS includes
-		file_put_contents(Cmts::$cmts_include_path.'.conf', '');
-
-		Schema::drop($this->tablename);
-
-		// remove all through dhcpCommand created cmts config files
-		foreach (glob(Cmts::$cmts_include_path.'/*') as $file)
-			if(is_file($file))
-				unlink($file);
-	}
-
+        // remove all through dhcpCommand created cmts config files
+        foreach (glob(Cmts::$cmts_include_path.'/*') as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
+    }
 }

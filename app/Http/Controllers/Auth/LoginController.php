@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Cache, GlobalConfig, Log, Module;
-use Illuminate\Http\Request;
+use Log;
+use Module;
+use GlobalConfig;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -23,7 +24,7 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    private $prefix = "admin";
+    private $prefix = 'admin';
 
     /**
      * Create a new controller instance.
@@ -37,7 +38,6 @@ class LoginController extends Controller
 
     /**
      * Return a instance of the used guard
-     *
      */
     protected function guard()
     {
@@ -48,7 +48,8 @@ class LoginController extends Controller
      * Change Login Check Field to login_name
      * Laravel Standard: email
      */
-    public function username() {
+    public function username()
+    {
         return 'login_name';
     }
 
@@ -83,25 +84,26 @@ class LoginController extends Controller
         $roles = $user->roles;
         $activeModules = Module::collections();
 
-        if (!count($roles))
+        if (! count($roles)) {
             return \View::make('auth.denied')->with('message', 'No roles assigned. Please contact your administrator.');
+        }
 
         Log::debug($user->login_name.' logged in successfully!');
 
-        if (!$activeModules->has('Dashboard')) {
-            if ( ($activeModules->has('ProvBase') && !$user->can('view Contract')) ||
-                 (!$activeModules->has('ProvBase'))) {
-                if (($activeModules->has('HfcReq') && !$user->can('view NetElement')) ||
-                    (!$activeModules->has('HfcReq'))) {
-                    return $this->prefix. '/Config';
+        if (! $activeModules->has('Dashboard')) {
+            if (($activeModules->has('ProvBase') && ! $user->can('view Contract')) ||
+                 (! $activeModules->has('ProvBase'))) {
+                if (($activeModules->has('HfcReq') && ! $user->can('view NetElement')) ||
+                    (! $activeModules->has('HfcReq'))) {
+                    return $this->prefix.'/Config';
                 } else {
-                    return $this->prefix. '/NetElement';
+                    return $this->prefix.'/NetElement';
                 }
             } else {
-                return $this->prefix. '/Contract';
+                return $this->prefix.'/Contract';
             }
         } else {
-            return $this->prefix . '/';
+            return $this->prefix.'/';
         }
     }
 

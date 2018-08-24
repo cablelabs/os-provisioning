@@ -6,6 +6,6 @@
  *
  * @author Patrick Reichel
  */
-class ChangeEngineToInnodbForHfcreq extends ChangeEngineToInnodb {
-
+class ChangeEngineToInnodbForHfcreq extends ChangeEngineToInnodb
+{
 }

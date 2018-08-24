@@ -3,7 +3,8 @@
 namespace App\Console\Commands;
 
 use Bouncer;
-use App\{Role, User};
+use App\Role;
+use App\User;
 use Illuminate\Console\Command;
 
 class AdminCommand extends Command
@@ -46,14 +47,17 @@ class AdminCommand extends Command
 
         $user = User::where('login_name', $name)->first();
 
-        if ($user == null)
+        if ($user == null) {
             return $this->error('User not found. Please check if u provided the correct login name!');
+        }
 
-        Role::pluck('name')->each(function($role) use ($user) {Bouncer::retract($role)->from($user);});
+        Role::pluck('name')->each(function ($role) use ($user) {
+            Bouncer::retract($role)->from($user);
+        });
 
         Bouncer::assign('admin')->to($user);
         Bouncer::refreshFor($user);
 
-        $this->info('Role Admin assigned to ' . $user->login_name);
+        $this->info('Role Admin assigned to '.$user->login_name);
     }
 }

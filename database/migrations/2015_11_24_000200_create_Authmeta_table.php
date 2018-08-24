@@ -1,44 +1,43 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateAuthmetaTable extends BaseMigration {
+class CreateAuthmetaTable extends BaseMigration
+{
+    // name of the table to create
+    protected $tablename = 'authmetas';
 
-	// name of the table to create
-	protected $tablename = "authmetas";
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create($this->tablename, function (Blueprint $table) {
+            $this->up_table_generic($table);
 
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up() {
+            $table->string('name', 191);
+            $table->enum('type', ['role', 'client']);
+            $table->string('description');
 
-		Schema::create($this->tablename, function(Blueprint $table) {
+            $table->unique(['name', 'type']);
+        });
 
-			$this->up_table_generic($table);
+        // the following “seeding” is needed in every case – even if the seeders will not be run!
+        DB::table($this->tablename)->insert([
+            ['id' => 1, 'name'=>'super_admin', 'type'=>'role', 'description'=>'Is allowed to do everything. Used for the initial user which can add other users.'],
+            ['id' => 2, 'name'=>'every_net', 'type'=>'client', 'description'=>'Is allowed to access every net. Used for the initial user which can add other users.'],
+        ]);
+    }
 
-			$table->string('name', 191);
-			$table->enum('type', array('role', 'client'));
-			$table->string('description');
-
-			$table->unique(array('name', 'type'));
-		});
-
-		// the following “seeding” is needed in every case – even if the seeders will not be run!
-		DB::table($this->tablename)->insert([
-			['id' => 1, 'name'=>'super_admin', 'type'=>'role', 'description'=>'Is allowed to do everything. Used for the initial user which can add other users.'],
-			['id' => 2, 'name'=>'every_net', 'type'=>'client', 'description'=>'Is allowed to access every net. Used for the initial user which can add other users.'],
-		]);
-	}
-
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down() {
-		Schema::drop($this->tablename);
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop($this->tablename);
+    }
 }

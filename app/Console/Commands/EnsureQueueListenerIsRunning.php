@@ -1,15 +1,15 @@
 <?php
 
 namespace App\Console\Commands;
+
 use Illuminate\Console\Command;
 
 /**
  * See https://gist.github.com/ivanvermeyen/b72061c5d70c61e86875#file-ensurequeuelistenerisrunning-php
  *
  * NOTE: Changes by Nino Ryschawy:
-    * use "queue:work --daemon" instead of "queue:listen" as this needs approximately 10x less the cpu usage
+ * use "queue:work --daemon" instead of "queue:listen" as this needs approximately 10x less the cpu usage
  */
-
 class EnsureQueueListenerIsRunning extends Command
 {
     /**
@@ -41,7 +41,7 @@ class EnsureQueueListenerIsRunning extends Command
      */
     public function handle()
     {
-        if ( ! $this->isQueueListenerRunning()) {
+        if (! $this->isQueueListenerRunning()) {
             $this->comment('Queue listener is being started.');
             $pid = $this->startQueueListener();
             $this->saveQueueListenerPID($pid);
@@ -56,11 +56,12 @@ class EnsureQueueListenerIsRunning extends Command
      */
     private function isQueueListenerRunning()
     {
-        if ( ! $pid = $this->getLastQueueListenerPID()) {
+        if (! $pid = $this->getLastQueueListenerPID()) {
             return false;
         }
         $process = exec("ps -p $pid -opid=,cmd=");
         $processIsQueueListener = str_contains($process, 'queue:work');
+
         return $processIsQueueListener;
     }
 
@@ -71,10 +72,11 @@ class EnsureQueueListenerIsRunning extends Command
      */
     private function getLastQueueListenerPID()
     {
-        if ( ! file_exists(__DIR__ . '/queue.pid')) {
+        if (! file_exists(__DIR__.'/queue.pid')) {
             return false;
         }
-        return file_get_contents(__DIR__ . '/queue.pid');
+
+        return file_get_contents(__DIR__.'/queue.pid');
     }
 
     /**
@@ -86,7 +88,7 @@ class EnsureQueueListenerIsRunning extends Command
      */
     private function saveQueueListenerPID($pid)
     {
-        file_put_contents(__DIR__ . '/queue.pid', $pid);
+        file_put_contents(__DIR__.'/queue.pid', $pid);
     }
 
     /**
@@ -96,8 +98,9 @@ class EnsureQueueListenerIsRunning extends Command
      */
     private function startQueueListener()
     {
-        $command = 'php ' . base_path() . '/artisan queue:work --tries=1 > /dev/null & echo $!';
+        $command = 'php '.base_path().'/artisan queue:work --tries=1 > /dev/null & echo $!';
         $pid = exec($command);
+
         return $pid;
     }
 }

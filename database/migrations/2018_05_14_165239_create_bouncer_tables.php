@@ -1,7 +1,8 @@
 <?php
 
 
-use App\{Role, User};
+use App\Role;
+use App\User;
 use Silber\Bouncer\Database\Models;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -97,26 +98,28 @@ class CreateBouncerTables extends Migration
                         ->select('authrole.*')
                         ->where('users.id', '=', $user->id)->get();
                 foreach ($roles as $role) {
-                    if ($user->id == 1)
+                    if ($user->id == 1) {
                         $role->name = ($role->name == 'super_admin') ? 'admin' : $role->name;
-                    else
+                    } else {
                         $role->name = ($role->name == 'super_admin') ? 'support' : $role->name;
+                    }
 
-                    if(!Role::find($role->id))
+                    if (! Role::find($role->id)) {
                         Role::create([
                             'id' => $role->id,
-                            'name' => !(Role::where('name', $role->name)->count()) ? $role->name : $role->name . $role->id,
+                            'name' => ! (Role::where('name', $role->name)->count()) ? $role->name : $role->name.$role->id,
                             'title' => Str::studly($role->name),
                             'rank' => 101 - $role->id,
                             'description' => $role->description,
                         ]);
+                    }
                     Bouncer::assign($role->name)->to($user);
                     Bouncer::allow($user)->toOwn(User::class); // Ability to manage own Usermodel
                 }
             }
             //create Custom Abilities
             Bouncer::allow('admin')->everything();
-            Bouncer::allow('guest')->to('view','*'); //role for demo system or presentation
+            Bouncer::allow('guest')->to('view', '*'); //role for demo system or presentation
             Bouncer::allow('support')->everything();
             Bouncer::forbid('support')->to('use api');
             Bouncer::forbid('support')->to('see income chart');
@@ -149,33 +152,29 @@ class CreateBouncerTables extends Migration
 
         Schema::rename('users', 'authusers');
 
-        Schema::create('authrole', function(Blueprint $table) {
-
+        Schema::create('authrole', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->softDeletes();
 
             $table->string('name', 191);
-            $table->enum('type', array('role', 'client'));
+            $table->enum('type', ['role', 'client']);
             $table->string('description');
 
-            $table->unique(array('name', 'type'));
+            $table->unique(['name', 'type']);
         });
 
-        Schema::create('authcores', function(Blueprint $table) {
-
+        Schema::create('authcores', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->softDeletes();
             $table->string('name', 191);
-            $table->enum('type', array('model', 'net'));
+            $table->enum('type', ['model', 'net']);
             $table->string('description');
-            $table->unique(array('name', 'type'));
-
+            $table->unique(['name', 'type']);
         });
 
-        Schema::create('authuser_role', function(Blueprint $table) {
-
+        Schema::create('authuser_role', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->softDeletes();
@@ -190,11 +189,10 @@ class CreateBouncerTables extends Migration
                 ->references('id')
                 ->on('authrole');
 
-            $table->unique(array('user_id', 'role_id'));
+            $table->unique(['user_id', 'role_id']);
         });
 
-        Schema::create('authrole_core', function(Blueprint $table) {
-
+        Schema::create('authrole_core', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->softDeletes();
@@ -213,7 +211,7 @@ class CreateBouncerTables extends Migration
                 ->references('id')
                 ->on('authcores');
 
-            $table->unique(array('role_id', 'core_id'));
+            $table->unique(['role_id', 'core_id']);
         });
 
         // the following “seeding” is needed in every case – even if the seeders will not be run!
@@ -235,15 +233,14 @@ class CreateBouncerTables extends Migration
             ['id' => 2, 'name'=>'every_net', 'type'=>'client', 'description'=>'Is allowed to access every net. Used for the initial user which can add other users.'],
         ]);
 
-        DB::update("INSERT INTO authuser_role (user_id, role_id) VALUES(1, 1);");
-        DB::update("INSERT INTO authuser_role (user_id, role_id) VALUES(1, 2);");
+        DB::update('INSERT INTO authuser_role (user_id, role_id) VALUES(1, 1);');
+        DB::update('INSERT INTO authuser_role (user_id, role_id) VALUES(1, 2);');
 
         // add each existing model
-        require_once(getcwd()."/app/BaseModel.php");
-        foreach(BaseModel::get_models() as $model) {
+        require_once getcwd().'/app/BaseModel.php';
+        foreach (BaseModel::get_models() as $model) {
             DB::table('authcores')->insert(['name'=>$model, 'type'=>'model']);
         }
-
 
         // add relations meta<->core for role super_admin
         $models = DB::table('authcores')->select('id')->where('type', 'LIKE', 'model')->get();

@@ -3,22 +3,20 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateContractForBillingTable extends Migration {
-
+class UpdateContractForBillingTable extends Migration
+{
     /**
-	 * Run the migrations.
-	 * For using the envia TEL API we need some changes in storing the contracts data.
+     * Run the migrations.
+     * For using the envia TEL API we need some changes in storing the contracts data.
      *
      * @return void
      */
     public function up()
     {
-        Schema::table('contract', function(Blueprint $table)
-        {
-			$table->integer('costcenter_id');
-			$table->integer('salesman_id');
+        Schema::table('contract', function (Blueprint $table) {
+            $table->integer('costcenter_id');
+            $table->integer('salesman_id');
         });
-
     }
 
     /**
@@ -28,13 +26,11 @@ class UpdateContractForBillingTable extends Migration {
      */
     public function down()
     {
-        Schema::table('contract', function(Blueprint $table)
-		{
-			$table->dropColumn([
-				'costcenter_id',
-				'salesman_id',
-				]);
+        Schema::table('contract', function (Blueprint $table) {
+            $table->dropColumn([
+                'costcenter_id',
+                'salesman_id',
+                ]);
         });
     }
-
 }

@@ -2,5 +2,5 @@
 
 return [
   'name' => 'Ccc',
-  'MenuItems' => []
+  'MenuItems' => [],
 ];

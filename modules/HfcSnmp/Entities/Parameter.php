@@ -2,134 +2,125 @@
 
 namespace Modules\HfcSnmp\Entities;
 
-class Parameter extends \BaseModel {
+class Parameter extends \BaseModel
+{
+    public $table = 'parameter';
 
-	public $table = 'parameter';
+    public $guarded = ['name', 'table'];
 
-	public $guarded = ['name', 'table'];
+    public static function boot()
+    {
+        parent::boot();
 
+        Parameter::observe(new ParameterObserver);
+    }
 
-	public static function boot()
-	{
-		parent::boot();
+    // Add your validation rules here
+    public static function rules($id = null)
+    {
+        return [
+            'html_frame' => 'numeric|min:1',
+            'html_id' => 'numeric|min:0',
+        ];
+    }
 
-		Parameter::observe(new ParameterObserver);
-	}
+    // Name of View
+    public static function view_headline()
+    {
+        return 'Parameter';
+    }
 
+    // View Icon
+    public static function view_icon()
+    {
+        return '<i class="fa fa-dot-circle-o"></i>';
+    }
 
-	// Add your validation rules here
-	public static function rules($id = null)
-	{
-		return array(
-			'html_frame' => 'numeric|min:1',
-			'html_id' => 'numeric|min:0',
-		);
-	}
+    // AJAX Index list function
+    // generates datatable content and classes for model
+    public function view_index_label()
+    {
+        $header = isset($this->oid) ? $this->oid->name : '';
+        $header .= isset($this->oid) ? ' - '.$this->oid->oid : '';
 
-	// Name of View
-	public static function view_headline()
-	{
-		return 'Parameter';
-	}
+        return ['table' => $this->table,
+                'index_header' => ['oid.name', 'oid.oid',  'oid.access'],
+                'header' =>  $header,
+                'order_by' => ['1' => 'asc'],
+                'bsclass' => $this->get_bsclass(),
+                'eager_loading' => ['oid'], ];
+    }
 
-	// View Icon
-	public static function view_icon()
-	{
-	  return '<i class="fa fa-dot-circle-o"></i>';
-	}
+    public function get_bsclass()
+    {
+        $bsclass = 'warning';
 
-	// AJAX Index list function
-	// generates datatable content and classes for model
-	public function view_index_label()
-	{
-		$header = isset($this->oid) ? $this->oid->name : '' ;
-		$header .= isset($this->oid) ? ' - '.$this->oid->oid : '';
+        if (isset($this->oid) && $this->oid->access == 'read-only') {
+            $bsclass = 'info';
+        }
 
-		return ['table' => $this->table,
-				'index_header' => ['oid.name', 'oid.oid',  'oid.access'],
-				'header' =>  $header,
-				'order_by' => ['1' => 'asc'],
-				'bsclass' => $this->get_bsclass(),
-				'eager_loading' => ['oid']];
-	}
+        return $bsclass;
+    }
 
-	public function get_bsclass()
-	{
-		$bsclass = 'warning';
+    public function view_has_many()
+    {
+        $ret = [];
 
-		if (isset($this->oid) && $this->oid->access == 'read-only')
-			$bsclass = 'info';
+        if ($this->oid->oid_table) {
+            $ret['Base']['SubOIDs']['view']['view'] = 'hfcreq::NetElementType.parameters';
+            $ret['Base']['SubOIDs']['view']['vars']['list'] = $this->children()->orderBy('third_dimension')->orderBy('html_id')->orderBy('id')->get() ?: [];
+        }
 
-		return $bsclass;
-	}
+        return $ret;
+    }
 
-	public function view_has_many()
-	{
-		$ret = [];
+    public function view_belongs_to()
+    {
+        return $this->netelementtype;
+    }
 
-		if ($this->oid->oid_table)
-		{
-			$ret['Base']['SubOIDs']['view']['view'] = 'hfcreq::NetElementType.parameters';
-			$ret['Base']['SubOIDs']['view']['vars']['list'] = $this->children()->orderBy('third_dimension')->orderBy('html_id')->orderBy('id')->get() ? : [];
-		}
+    /**
+     * Relations
+     */
+    public function oid()
+    {
+        return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'oid_id');
+    }
 
-		return $ret;
-	}
+    public function netelementtype()
+    {
+        return $this->belongsTo('Modules\HfcReq\Entities\NetElementType', 'netelementtype_id');
+    }
 
-	public function view_belongs_to ()
-	{
-		return $this->netelementtype;
-	}
+    public function indices()
+    {
+        return $this->hasOne('Modules\HfcSnmp\Entities\Indices');
+    }
 
+    public function children()
+    {
+        return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'parent_id');
 
-	/**
-	 * Relations
-	 */
-	public function oid()
-	{
-		return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'oid_id');
-	}
+        return Parameter::where('parent_id', '=', $this->id)->orderBy('third_dimension')->orderBy('html_id')->orderBy('id')->get()->all();
+    }
 
-	public function netelementtype()
-	{
-		return $this->belongsTo('Modules\HfcReq\Entities\NetElementType', 'netelementtype_id');
-	}
+    public function third_dimension_params()
+    {
+        return $this->children()->where('third_dimension', '=', 1);
 
-	public function indices()
-	{
-		return $this->hasOne('Modules\HfcSnmp\Entities\Indices');
-	}
-
-
-
-
-	public function children()
-	{
-		return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'parent_id');
-
-		return Parameter::where('parent_id', '=', $this->id)->orderBy('third_dimension')->orderBy('html_id')->orderBy('id')->get()->all();
-	}
-
-	public function third_dimension_params()
-	{
-		return $this->children()->where('third_dimension', '=', 1);
-
-		return Parameter::where('parent_id', '=', $this->id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all();
-	}
-
+        return Parameter::where('parent_id', '=', $this->id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all();
+    }
 }
 
+class ParameterObserver
+{
+    public function creating($parameter)
+    {
+        $parameter->divide_by = str_replace([' ', "\t"], '', $parameter->divide_by);
+    }
 
-class ParameterObserver {
-
-	public function creating($parameter)
-	{
-		$parameter->divide_by = str_replace([' ', "\t"], '', $parameter->divide_by);
-	}
-
-	public function updating($parameter)
-	{
-		$parameter->divide_by = str_replace([' ', "\t"], '', $parameter->divide_by);
-	}
-
+    public function updating($parameter)
+    {
+        $parameter->divide_by = str_replace([' ', "\t"], '', $parameter->divide_by);
+    }
 }

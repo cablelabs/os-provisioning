@@ -6,13 +6,12 @@ namespace Modules\ProvVoip\Database\Seeders;
 // use Faker\Factory as Faker;
 use Modules\ProvVoip\Entities\ProvVoip;
 
-class ProvVoipConfigTableSeeder extends \BaseSeeder {
-
-	public function run()
-	{
-		ProvVoip::create([
-			'startid_mta' => 300000,
-		]);
-	}
-
+class ProvVoipConfigTableSeeder extends \BaseSeeder
+{
+    public function run()
+    {
+        ProvVoip::create([
+            'startid_mta' => 300000,
+        ]);
+    }
 }

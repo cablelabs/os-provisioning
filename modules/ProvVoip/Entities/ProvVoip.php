@@ -4,38 +4,38 @@ namespace Modules\ProvVoip\Entities;
 
 use Modules\ProvBase\Entities\ProvBase;
 
-class ProvVoip extends \BaseModel {
+class ProvVoip extends \BaseModel
+{
+    // The associated SQL table for this Model
+    protected $table = 'provvoip';
 
-	// The associated SQL table for this Model
-	protected $table = 'provvoip';
+    // Don't forget to fill this array
+    // protected $fillable = ['startid_mta'];
 
-	// Don't forget to fill this array
-	// protected $fillable = ['startid_mta'];
+    // Add your validation rules here
+    public static function rules($id = null)
+    {
+        return [
+        ];
+    }
 
-	// Add your validation rules here
-	public static function rules($id = null)
-	{
-		return array(
-		);
-	}
+    // Name of View
+    public static function view_headline()
+    {
+        return 'ProvVoip Config';
+    }
 
-	// Name of View
-	public static function view_headline()
-	{
-		return 'ProvVoip Config';
-	}
+    // link title in index view
+    public function view_index_label()
+    {
+        return 'ProvVoip';
+    }
 
-	// link title in index view
-	public function view_index_label()
-	{
-		return "ProvVoip";
-	}
-
-	// View Icon
-	public static function view_icon()
-	{
-		return '<i class="fa fa-phone"></i>';
-	}
+    // View Icon
+    public static function view_icon()
+    {
+        return '<i class="fa fa-phone"></i>';
+    }
 
     public static function boot()
     {
@@ -44,14 +44,12 @@ class ProvVoip extends \BaseModel {
         ProvVoip::observe(new ProvVoipObserver);
         ProvVoip::observe(new \App\SystemdObserver);
     }
-
 }
-
 
 class ProvVoipObserver
 {
-	public function updated($provvoip)
-	{
-		ProvBase::first()->make_dhcp_glob_conf();
-	}
+    public function updated($provvoip)
+    {
+        ProvBase::first()->make_dhcp_glob_conf();
+    }
 }
