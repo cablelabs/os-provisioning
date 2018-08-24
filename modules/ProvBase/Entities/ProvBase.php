@@ -91,7 +91,7 @@ class ProvBase extends \BaseModel {
 		$data .= "\n# zone\nzone ".$this->domain_name." {\n\tprimary 127.0.0.1;\n\tkey dhcpupdate;\n}\n";
 		$data .= "\n# reverse zone\nzone in-addr.arpa {\n\tprimary 127.0.0.1;\n\tkey dhcpupdate;\n}\n";
 
-		if (\Module::collections()->has('ProvVoip'))
+		if (\Module::collections()->has('ProvVoip') && \Schema::hasTable('provvoip'))
 		{
 			// second domain for mta's if existent
 			$mta_domain = \Modules\ProvVoip\Entities\ProvVoip::first()->mta_domain;

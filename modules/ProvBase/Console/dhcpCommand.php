@@ -55,7 +55,7 @@ class dhcpCommand extends Command {
 		Modem::make_dhcp_cm_all();
 		Endpoint::make_dhcp();
 
-		if (\Module::collections()->has('ProvVoip'))
+		if (\Module::collections()->has('ProvVoip') && \Schema::hasTable('mta'))
 			Mta::make_dhcp_mta_all();
 
 		Cmts::make_dhcp_conf_all();
