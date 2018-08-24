@@ -120,9 +120,9 @@ class importCommand extends Command {
 		// TODO(2): Adapt this Contract Filter for every Import
 		$area_filter = function ($query) use ($cluster_filter) {$query
 				->whereRaw ($cluster_filter)
-				->whereNotBetween('v.vertragsnummer', [30000, 31000])
-				->whereNotIn('v.vertragsnummer', [43206,43214,43215,43217,43218,43219,43220,43223,43233,43346,43419,43441,44029])
-				->orWhereIn('m.cluster_id', [36546, 36821])
+				// ->whereNotBetween('v.vertragsnummer', [30000, 31000])
+				// ->whereNotIn('v.vertragsnummer', [43206,43214,43215,43217,43218,43219,43220,43223,43233,43346,43419,43441,44029])
+				// ->orWhereIn('m.cluster_id', [36546, 36821])
 				// ->where(function ($query) { $query
 				// 	->whereRaw ("cm_adr.strasse like '%Flo%m%hle%'")
 				// 	->orWhereRaw ("cm_adr.strasse like 'Fl%talstr%'")
