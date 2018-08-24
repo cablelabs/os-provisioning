@@ -362,9 +362,10 @@ class importCommand extends Command {
 		// set fields with null input to ''.
 		// This fixes SQL import problem with null fields
 		$relations = $c->relationsToArray();
+		$nullable = ['contract_end'];
 		foreach( $c->toArray() as $key => $value )
 		{
-			if (array_key_exists($key, $relations))
+			if (array_key_exists($key, $relations) || in_array($key, $nullable))
 				continue;
 
 			$c->{$key} = $c->{$key} ? : '';

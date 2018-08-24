@@ -232,9 +232,10 @@ class importTvCustomersCommand extends Command {
 
 		// Set null-fields to '' to fix SQL import problem with null fields
 		$relations = $contract->relationsToArray();
+		$nullable = ['contract_end'];
 		foreach($contract->toArray() as $key => $value)
 		{
-			if (array_key_exists($key, $relations))
+			if (array_key_exists($key, $relations) || in_array($key, $nullable))
 				continue;
 
 			if ($contract->{$key} == null)
