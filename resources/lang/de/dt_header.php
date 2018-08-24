@@ -35,8 +35,8 @@ return [
 	// Salesman
 	'salesman.id' => 'ID',
 	'salesman_id' 		=> 'Verkäufer-ID',
-	'salesman_firstname' => 'Firstname',
-	'salesman_lastname' => 'Lastname',
+	'salesman_firstname' => 'Vorname',
+	'salesman_lastname' => 'Nachname',
 	'commission in %' 	=> 'Provision in %',
 	'contract_nr' 		=> 'Kundennr',
 	'contract_name' 	=> 'Kunde',
@@ -46,6 +46,8 @@ return [
 	'product_type' 		=> 'Produkttyp',
 	'product_count' 	=> 'Anzahl',
 	'charge' 			=> 'Gebühr',
+	'salesman.lastname' => 'Nachname',
+	'salesman.firstname' => 'Vorname',
 	'salesman_commission' => 'Provision',
 	'sepaaccount_id' 	=> 'SEPA-Konto',
 	// SepaAccount
@@ -73,14 +75,14 @@ return [
 	// NetElementType
 	'netelementtype.name' => 'Netzelementtyp',
 	//HfcSnmp
-	'parameter.oid.name' => 'OID Name',
+	'parameter.oid.name' => 'OID Bezeichnung',
 	//Mibfile
 	'mibfile.id' => 'ID',
 	'mibfile.name' => 'Mibfilename',
 	'mibfile.version' => 'Version',
 	// OID
 	'oid.name_gui' => 'GUI Beschriftung',
-	'oid.name' => 'OID Name',
+	'oid.name' => 'OID Bezeichnung',
 	'oid.oid' => 'OID',
 	'oid.access' => 'Schreibschutz',
 	//SnmpValue
@@ -94,7 +96,7 @@ return [
 	'email.forwardto' => 'Weiterleiten an:',
 	// CMTS
 	'cmts.id' => 'ID',
-	'cmts.hostname' => 'Hostname',
+	'cmts.hostname' => 'Server-Name',
 	'cmts.ip' => 'IP',
 	'cmts.company' => 'Hersteller',
 	'cmts.type' => 'Typ',
@@ -111,12 +113,12 @@ return [
 	'contract.contract_start' => 'Beginn',
 	'contract.contract_end' => 'Ende',
 	// Domain
-	'domain.name' => 'Domain',
+	'domain.name' => 'Domäne',
 	'domain.type' => 'Typ',
 	'domain.alias' => 'Alias',
 	// Endpoint
 	'endpoint.ip' => 'IP',
-	'endpoint.hostname' => 'Hostname',
+	'endpoint.hostname' => 'Server-Name',
 	'endpoint.mac' => 'MAC',
 	'endpoint.description' => 'Beschreibung',
 	// IpPool
@@ -131,7 +133,7 @@ return [
 	'modem.id' => 'Nummer',
 	'modem.mac' => 'MAC Adresse',
 	'modem.model' => 'Modell',
-	'modem.sw_rev' => 'Firmware Version',
+	'modem.sw_rev' => 'Firmware-Version',
 	'modem.name' => 'Modemname',
 	'modem.firstname' => 'Vorname',
 	'modem.lastname' => 'Nachname',
@@ -147,7 +149,7 @@ return [
 	'qos.ds_rate_max' => 'Maximale DS Geschwindigkeit',
 	'qos.us_rate_max' => 'Maximale US Geschwindigkeit',
 	// Mta
-	'mta.hostname' => 'Hostname',
+	'mta.hostname' => 'Server-Name',
 	'mta.mac' => 'MAC-Adresse',
 	'mta.type' => 'Provisionierungstyp',
 	// Configfile

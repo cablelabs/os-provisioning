@@ -104,6 +104,15 @@ return [
 		],
 	],
 
+	'docsis'               => ':attribute',
+	'ip'                   => 'This is not a valid IP address of the form: 192.168.0.255',
+	'ip_in_range'          => 'The IP address is not inside the previous specified range',
+	'ip_larger'            => 'The IP address must have a higher number due to address specification in earlier fields',
+	'mac'                  => 'The :attribute must be a valid MAC address in form: aa:bb:cc:dd:ee:ff',
+	'netmask'              => 'This is not a correct netmask',
+	'not_null'             => 'This field has to be set (not 0)',
+	'null_if'              => 'Has to be zero',
+
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Attributes
@@ -116,14 +125,4 @@ return [
 	*/
 
 	'attributes' => [],
-
-	'docsis'               => ':attribute',
-	'ip'                   => 'This is not a valid IP address of the form: 192.168.0.255',
-	'ip_in_range'          => 'The IP address is not inside the previous specified range',
-	'ip_larger'            => 'The IP address must have a higher number due to address specification in earlier fields',
-	'mac'                  => 'The :attribute must be a valid MAC address in form: aa:bb:cc:dd:ee:ff',
-	'netmask'              => 'This is not a correct netmask',
-	'not_null'             => 'This field has to be set (not 0)',
-	'null_if'              => 'Has to be zero',
-
 ];

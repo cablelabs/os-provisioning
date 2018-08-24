@@ -36,6 +36,9 @@ return [
 	'salesman.id' => 'ID',
 	'salesman.lastname' => 'Apellidos',
 	'salesman.firstname' => 'Nombres',
+	'salesman_id' 		=> 'ID del vendedor',
+	'salesman_firstname' => 'Nombre',
+	'salesman_lastname' => 'Apellido',
 	'commission in %' 	=> 'Comision en %',
 	'contract_nr' 		=> 'Nro. Contrato',
 	'contract_name' 	=> 'Cliente',
@@ -69,7 +72,6 @@ return [
 	'netelement.ip' => 'Direccion IP',
 	'netelement.state' => 'Estado',
 	'netelement.pos' => 'Posicion',
-	'netelement.options' => 'Opciones',
 	// NetElementType
 	'netelementtype.name' => 'Tipo de elemento de red',
 	//HfcSnmp
@@ -77,7 +79,7 @@ return [
 	//Mibfile
 	'mibfile.id' => 'ID',
 	'mibfile.name' => 'Nombre MIB',
-	'mibfile.version' => 'Version',
+	'mibfile.version' => 'Versión',
 	// OID
 	'oid.name_gui' => 'Etiqueta de GUI',
 	'oid.name' => 'Nombre OID',
@@ -103,11 +105,11 @@ return [
 	'contract.number' => 'Numero',
 	'contract.firstname' => 'Nombres',
 	'contract.lastname' => 'Apellidos',
-	'contract.zip' => 'ZIP',
+	'contract.zip' => 'Código postal',
 	'contract.city' => 'Ciudad',
 	'contract.street' => 'Calle',
-    'contract.house_number' => 'Numero de vivienda',
-	'contract.district' => 'Distrito',
+	'contract.house_number' => 'Numero de vivienda',
+	'contract.district' => 'Provincia',
 	'contract.contract_start' => 'Fecha de inicio',
 	'contract.contract_end' => 'Fecha final',
 	// Domain
@@ -122,7 +124,7 @@ return [
 	// IpPool
 	'ippool.id' => 'ID',
 	'ippool.type' => 'Tipo',
-	'ippool.net' => 'Net',
+	'ippool.net' => 'Red',
 	'ippool.netmask' => 'Máscara de red',
 	'ippool.router_ip' => 'Ip de Router',
 	'ippool.description' => 'Descripcion',
@@ -138,8 +140,8 @@ return [
 	'modem.city' => 'Ciudad',
 	'modem.street' => 'Calle',
 	'modem.district' => 'Distrito',
-	'modem.us_pwr' => 'US level',
-	'modem.geocode_source' => 'Geocode origin',
+	'modem.us_pwr' => 'Nivel US',
+	'modem.geocode_source' => 'Geolocalización',
 	'modem.inventar_num' => 'Serial',
 	'contract_valid' => 'Contrato valido?',
 	// QoS
@@ -170,7 +172,7 @@ return [
 	'phonetariff.type' => 'Tipo',
 	'phonetariff.description' => 'Descripcion',
 	'phonetariff.voip_protocol' => 'Protocolo VOIP',
-	'phonetariff.usable' => 'Usable?',
+	'phonetariff.usable' => 'Disponible?',
 	// ENVIA enviaorder
 	'enviaorder.ordertype'  => 'Tipo de orden',
 	'enviaorder.orderstatus'  => 'Estado de orden',
