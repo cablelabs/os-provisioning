@@ -15,7 +15,6 @@ return [
 
     'failed'   => 'Estas credenciales no coinciden con nuestros registros.',
     'throttle' => 'Demasiados intentos de acceso. Por favor intente nuevamente en :seconds segundos.',
-    'NoRoles' => 'Ihrem Account wurde(n) noch keine Rolle(n) zugewiesen.'
-
+    'NoRoles' => 'Ihrem Account wurde(n) noch keine Rolle(n) zugewiesen.',
 
 ];
