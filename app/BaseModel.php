@@ -409,6 +409,9 @@ class BaseModel extends Eloquent
 	/**
 	 * Get all models
 	 *
+	 * Attention: The array is cached in the session - so if modules are enabled/disabled
+	 *	you have to logout & login to rebuild the array again
+	 *
 	 * @return array of all models except base models
 	 * @author Patrick Reichel,
 	 *         Torsten Schmidt: add modules path
