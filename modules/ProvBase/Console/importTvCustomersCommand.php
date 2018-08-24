@@ -287,7 +287,7 @@ class importTvCustomersCommand extends Command {
 
 		$existing = false;
 		if ($contract->items()->count()) {
-			$existing = $contract->items->contains(function($value, $item) {
+			$existing = $contract->items->contains(function($item, $value) {
 				return in_array($item->product_id, [self::PRODUCT_ID1, self::PRODUCT_ID2]);
 			});
 		}
