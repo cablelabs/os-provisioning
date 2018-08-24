@@ -75,4 +75,10 @@ BaseRoute::group([], function() {
 		'uses' => 'Auth\AbilityController@updateModelAbility',
 		'middleware' => ["can:update,App\Role"],
 	]);
+
+	BaseRoute::get('Guilog/restore/{id}', [
+		'as' => 'Guilog.restore',
+		'uses' => 'GuiLogController@restoreModel',
+		'middleware' => ["can:delete,App\Role"],
+	]);
 });

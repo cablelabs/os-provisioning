@@ -175,6 +175,23 @@ class FormBuilder extends CollectiveFormBuilder {
 	}
 
 	/**
+	 * Determine if the value is selected. Changed from Parent Formbuilder.
+	 *
+	 * @param  string $value
+	 * @param  string $selected
+	 *
+	 * @return null|string
+	 */
+	protected function getSelectedValue($value, $selected)
+	{
+		if (is_array($selected)) {
+			return in_array($value, $selected) ? 'selected' : null;
+		}
+
+		return ((string)$value == (string)$selected) ? 'selected' : null;
+	}
+
+	/**
 	 * Create a checkbox input field.
 	 */
 	public function checkbox($name, $value = 1, $label = null, $checked = null, $options = array())

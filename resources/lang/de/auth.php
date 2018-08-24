@@ -13,7 +13,9 @@ return [
     |
     */
 
-    'failed'   => 'Diese Zugangsdaten wurden nicht in unserer Datenbank gefunden.',
+    'failed' => 'Diese Zugangsdaten wurden nicht in unserer Datenbank gefunden.',
     'throttle' => 'Zu viele Login Versuche. Versuchen Sie es bitte in :seconds Sekunden erneut.',
-    'NoRoles' => 'Ihrem Account wurde(n) noch keine Rolle(n) zugewiesen.'
+    'NoRoles' => 'Ihrem Account wurde(n) noch keine Rolle(n) zugewiesen. Bitte Kontaktieren Sie Ihren Administrator.'
+
+
 ];

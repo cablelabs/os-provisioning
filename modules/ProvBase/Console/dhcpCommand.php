@@ -48,12 +48,14 @@ class dhcpCommand extends Command {
 	public function fire()
 	{
 		// Global Config part
-		ProvBase::first()->make_dhcp_glob_conf();
+		$prov = ProvBase::first();
+		$prov->make_dhcp_glob_conf();
+		$prov->make_dhcp_default_network_conf();
 
 		Modem::make_dhcp_cm_all();
 		Endpoint::make_dhcp();
 
-		if (\Module::collections()->has('ProvVoip'))
+		if (\Module::collections()->has('ProvVoip') && \Schema::hasTable('mta'))
 			Mta::make_dhcp_mta_all();
 
 		Cmts::make_dhcp_conf_all();

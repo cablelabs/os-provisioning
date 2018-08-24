@@ -25,6 +25,12 @@ class UserController extends BaseController {
 		$current_user_rank = $current_user->getHighestRank();
 		$user_model_rank = $model->exists ? $model->getHighestRank() : 0;
 
+		$languageDirectories = collect(glob(base_path('resources/lang') . '/*'))
+			->mapWithKeys(function ($path) {
+				$langShortcut = collect(explode('/', $path))->last();
+				return [$langShortcut  => $langShortcut];
+			});
+
 		if 	($model->exists &&
 			 $current_user != $model &&
 			 $current_user->isNotAn('admin') &&
@@ -40,7 +46,7 @@ class UserController extends BaseController {
 			['form_type' => 'text', 'name' => 'last_name', 'description' => 'Lastname'],
 			['form_type' => 'text', 'name' => 'email', 'description' => 'Email'],
 			['form_type' => 'select', 'name' => 'language', 'description' => 'Language',
-				'value' => User::getPossibleEnumValues('language', false),
+				'value' => $languageDirectories,
 				'help' => trans('helper.translate')." https://crowdin.com/project/nmsprime" ],
 			['form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active',
 				'value' => '1', 'checked' => true],

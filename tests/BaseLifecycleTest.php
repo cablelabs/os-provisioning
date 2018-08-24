@@ -24,6 +24,10 @@ class BaseLifecycleTest extends TestCase {
 	// flag to print currently executed test method to stdout
 	protected $echo_running_test = True;
 
+    // flag to delete created entries from database after testing
+    // keeping them can be useful for debugging
+    protected $clean_database_after_testing = True;
+
 	// list of test method names to be run – can be used in development to work on single tests only
 	// attention: the tests are executed in order of definition – not in order of this array
 	protected $tests_to_be_run = [
@@ -760,6 +764,12 @@ class BaseLifecycleTest extends TestCase {
 				$this->notSeeInDatabase($this->database_table, ['deleted_at' => null, 'id' => $id]);
 				// check for correct entry in guilog
 				$this->seeInDatabase('guilog', ['method' => 'deleted', 'model' => $this->model_name, 'model_id' => $id,]);
+
+                // remove testing data from database
+                if ($this->clean_database_after_testing) {
+                    \DB::table($this->database_table)->where('id', '=', $id)->delete();
+                }
+
 			}
 		}
 	}

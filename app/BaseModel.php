@@ -409,6 +409,9 @@ class BaseModel extends Eloquent
 	/**
 	 * Get all models
 	 *
+	 * Attention: The array is cached in the session - so if modules are enabled/disabled
+	 *	you have to logout & login to rebuild the array again
+	 *
 	 * @return array of all models except base models
 	 * @author Patrick Reichel,
 	 *         Torsten Schmidt: add modules path
@@ -1109,21 +1112,22 @@ class BaseObserver
 			// get changed attributes
 			$arr = [];
 
-			foreach ($model['attributes'] as $key => $value)
-			{
+			foreach ($model['attributes'] as $key => $value) {
 				if (in_array($key, $ignore))
 					continue;
 
 				$original = $model['original'][$key];
-				if ($original != $value)
+				if ($original != $value) {
 					if (in_array($key, $hide)) {
 						$arr[] = $key;
-					}
-					else {
+					} elseif ($attributes['deleted_at'] == null) {
+						$arr[] = $key.': '.$original.'-> restored';
+						$action = 'restored';
+					} else {
 						$arr[] = $key.': '.$original.'->'.$value;
 					}
+				}
 			}
-
 			$text = implode(', ', $arr);
 		}
 
