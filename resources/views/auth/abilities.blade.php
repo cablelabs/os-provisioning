@@ -336,26 +336,33 @@ new Vue({
         if (this.$refs['forbidden' + id][0].checked)
             return id in this.originalForbiddenAbilities ? false  : true;
 
-        if (!this.$refs['allowed' + id][0].checked)
+        if (!this.$refs['allowed' + id][0].checked || !this.$refs['forbidden' + id][0].checked)
             return id in this.originalRoleAbilities || id in this.originalForbiddenAbilities ? true : false;
-
-        if (!this.$refs['forbidden' + id][0].checked)
-            return id in this.originalForbiddenAbilities || id in this.originalRoleAbilities ? true  : false;
     },
     customAllow : function (id) {
         if (this.$refs['allowed'+ id][0].checked) {
             if (id == this.allowAllId) {
                 this.allowAll = true;
                 this.$refs['allowed'+ this.allowViewAllId][0].checked = false;
-                this.changed[this.allowViewAllId] = false;
+                this.changed.splice(this.allowViewAllId, 1, this.hasChanged(this.allowViewAllId));
                 this.allowViewAll = undefined;
             }
-            if (id == this.allowViewAllId) this.allowViewAll = true;
+
+            if (id == this.allowViewAllId)
+                this.allowViewAll = true;
+
             this.roleAbilities[id] = this.customAbilities[id]['localTitle'];
             delete this.roleForbiddenAbilities[id];
         } else {
-            if (id == this.allowAllId) this.allowAll = undefined;
-            if (id == this.allowViewAllId) this.allowViewAll = undefined;
+
+            if (id == this.allowAllId) {
+                this.allowAll = undefined;
+                this.changed.splice(this.allowViewAllId, 1, this.hasChanged(this.allowViewAllId));
+            }
+
+            if (id == this.allowViewAllId)
+                this.allowViewAll = undefined;
+
             delete this.roleAbilities[id];
         }
 
