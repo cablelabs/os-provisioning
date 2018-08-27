@@ -172,7 +172,7 @@ return [
     'phonetariff.name' => 'Phone Tariff',
     'phonetariff.type' => 'Type',
     'phonetariff.description' => 'Description',
-    'phonetariff.voip_protocol' => 'VOIP Protokoll',
+    'phonetariff.voip_protocol' => 'VOIP Protocol',
     'phonetariff.usable' => 'Usable?',
     // ENVIA enviaorder
     'enviaorder.ordertype'  => 'Order Type',

@@ -13,8 +13,8 @@ return [
     'guilog.created_at' => 'Zeitpunkt',
     'guilog.username' => 'Nutzer',
     'guilog.method' => 'Aktion',
-    'guilog.model' => 'Model',
-    'guilog.model_id' => 'Model ID',
+    'guilog.model' => 'Tabelle',
+    'guilog.model_id' => 'ID',
     // Company
     'company.name' => 'Unternehmen',
     'company.city' => 'Stadt',

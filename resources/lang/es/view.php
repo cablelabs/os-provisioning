@@ -23,8 +23,8 @@ return [
         'jQuery_PaginatesPrevious'	=> 'Anterior',
         'jQuery_PaginatesNext'		=> 'Siguiente',
         'jQuery_PaginatesLast'		=> 'Ultimo',
-        'jQuery_sLast'				=> ': activar para ordenar la columna ascendentemente',
         'jQuery_sLast'				=> ': activar para ordenar la columna descendentemente',
+        'jQuery_sLast'				=> ': activate to sort column descending',
         'jQuery_All'				=> 'Todo',
         'jQuery_Print'				=> 'Imprimir',
         'jQuery_colvis'				=> 'Visibilidad de la columna',
@@ -59,17 +59,6 @@ return [
         'Menu_PhoneTariffs'			=> 'Tarifas telefefonicas',
         'Menu_Envia orders'			=> 'envia TEL ordenes',
         'Menu_Envia contracts'		=> 'envia TEL contratos',
-        'Menu_CDRs' 				=> 'EVNs',
-        'Menu_Tickets' 				=> 'Tickets',
-        'Menu_Comment' 				=> 'Comentarios',
-        //SNMP Module
-        'Menu_MibFile' 				=> 'Archivo MIB',
-        //Tickets
-        'Menu_TicketTypes' 				=> 'Tipos de ticket',
-        //HFC
-        'Menu_Modem Pos System'  => 'Sistema de posicionamiento - Modem',
-        'Menu_Net Element Types' => 'Tipos de elementos de red',
-        'Menu_Net Elements'      => 'Elementos de red',
 
     //User Settings
         'Menu_UserSettings'			=> 'Configuraciones de usuario',
@@ -86,8 +75,6 @@ return [
         'Header_Overview'			=> 'Panorama',
         'Header_Assigned'			=> 'Designar',
         'Header_Create'				=> 'Crear',
-        'Header_Users' 				=> 'Usuario|Usuarios',
-        'Header_EditUsers' 			=> 'Editar usuarios',
     //Module specific
     //BillingBase
         //Product List
@@ -192,21 +179,6 @@ return [
         'Header_Ticket'				=> 'Ticket|Tickets',
         'Header_EditTicket'			=> 'Editar Ticket',
     //HFC
-        //Tree
-        'Header_Tree Table' 		=> 'Tabla de arbol',
-        'Header_EditTree Table' 	=> 'Editar tabla de arbol',
-        //MPR
-        'Header_Mpr' 				=> 'Reglas de posicionamiento',
-        'Header_Modem Positioning Rule'                 => 'Reglas de posicionamiento de modem',
-        'Header_EditModem Positioning Rule'             => 'Editar reglas de posicionamiento de modem',
-        'Header_MprGeopos'                              => 'Geoposicion para reglas de posicionamiento de modem',
-        'Header_Modem Positioning Rule Geoposition'     => 'Geoposicion para reglas de posicionamiento de modem',
-        'Header_EditModem Positioning Rule Geoposition' => 'Editar geoposicion para reglas de posicionamiento de modem',
-            //gutuva-Added
-        'Header_NetElementTypes' 				=> 'Tipos de elementos de red',
-        'Header_NetElement' 				=> 'Elementos de red',
-            //SNMP
-        'Header_MIB-File' 				=> 'Archivo MIB',
         //Topography
         'Header_Topography - Modems'=> 'Topografia - Modems',
         'navigate'					=> 'Navegar',
@@ -236,11 +208,11 @@ return [
         'Header_EnviaContracts'		=> 'envia TEL contrato|envia TEL contratos',
 
     //Header Relation
-        'Assigned'  				=> 'Zugewiesene',
+        // 'Assigned'  				=> 'Zugewiesene',
     //Header Controler index
-        'SEPA Account' 				=> 'Cuenta-SEPA',
-        'Create'					=> 'Crear',
-        'Edit'						=> 'Editar',
+        // 'SEPA Account' 				=> 'SEPA-Konten',
+        // 'Create'					=> 'Erstelle ',
+        // 'Edit'						=> 'Ändere ',
 
 //BUTTON
         'Sign me in'				=> 'Iniciar sesion',
@@ -329,47 +301,13 @@ return [
     'Dashboard_Tickets' 			=> 'NUEVOS TICKETS',
     'Dashboard_NoTickets' 			=> 'No hay tickets nuevos.',
     'Dashboard_Quickstart' 			=> 'INICIO RAPIDO',
-    'Dashboard_External' 			=> 'Externo',
-    'Dashboard_Addcontract' 			=> 'Agregar Contrato',
 
 //
-// TICKET
-//ff
-//State
-    'Ticket_State_New' => 'Nuevo',
-    'Ticket_State_In Process' => 'En progreso',
-    'Ticket_State_Closed' => 'Cerrado',
-
-    //Type
-    'Ticket_Type_General' => 'General',
-    'Ticket_Type_Technical' => 'Tecnico',
-    'Ticket_Type_Accounting' => 'Facturacion',
-
-    //Priority
-    'Ticket_Priority_Trivial' => 'Bajo',
-    'Ticket_Priority_Minor' => 'Medio',
-    'Ticket_Priority_Major' => 'Alto',
-    'Ticket_Priority_Critical' => 'Crítico',
 // Numberrange
 //
-    'Numberrange_Start' => 'Inicio',
-    'Numberrange_End' => 'Fin',
-    'Numberrange_Suffix' => 'Sufijo',
-    'Numberrange_Prefix' => 'Prefijo',
-    'Numberrange_Type' => 'Tipo',
-    //
     //Type
     'Numberrange_Type_contract' => 'Contrato',
     'Numberrange_Type_invoice' => 'Factura',
-
-// GUTUVA
-    'Header_User roles' => 'Roles de usuario',
-    'Button_Create User roles' 				=> 'Crear rol',
-    'Button_Create NetElement' 				=> 'Crear elemento de red',
-    'Button_Create NetElementTypes' 				=> 'Crear tipo de elemento de red',
-    'Button_Create MIB-File' 				=> 'Crear archivo MIB',
-    'Button_Create Domains' 				=> 'Crear dominio',
-    'Button_Create TicketTypes' 				=> 'Crear tipo de ticket',
 
 //
 // Contract

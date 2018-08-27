@@ -103,6 +103,15 @@ return [
         ],
     ],
 
+    'docsis'               => ':attribute',
+    'ip'                   => 'This is not a valid IP address of the form: 192.168.0.255',
+    'ip_in_range'          => 'The IP address is not inside the previous specified range',
+    'ip_larger'            => 'The IP address must have a higher number due to address specification in earlier fields',
+    'mac'                  => 'The :attribute must be a valid MAC address in form: aa:bb:cc:dd:ee:ff',
+    'netmask'              => 'This is not a correct netmask',
+    'not_null'             => 'This field has to be set (not 0)',
+    'null_if'              => 'Has to be zero',
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes
@@ -114,15 +123,35 @@ return [
     |
     */
 
-    'attributes' => [],
-
-    'docsis'               => ':attribute',
-    'ip'                   => 'This is not a valid IP address of the form: 192.168.0.255',
-    'ip_in_range'          => 'The IP address is not inside the previous specified range',
-    'ip_larger'            => 'The IP address must have a higher number due to address specification in earlier fields',
-    'mac'                  => 'The :attribute must be a valid MAC address in form: aa:bb:cc:dd:ee:ff',
-    'netmask'              => 'This is not a correct netmask',
-    'not_null'             => 'This field has to be set (not 0)',
-    'null_if'              => 'Has to be zero',
-
+    'attributes' => [
+        'name' => 'Name',
+        'username' => 'Username',
+        'email' => 'E-Mail-Adress',
+        'first_name' => 'First Name',
+        'last_name' => 'Last Name',
+        'password' => 'Password',
+        'password_confirmation' => 'Password Confirmation',
+        'city' => 'City',
+        'country' => 'Country',
+        'address' => 'Address',
+        'phone' => 'Phone',
+        'mobile' => 'Mobile',
+        'age' => 'Age',
+        'sex' => 'Sex',
+        'gender' => 'Gender',
+        'day' => 'Day',
+        'month' => 'Month',
+        'year' => 'Year',
+        'hour' => 'Hour',
+        'minute' => 'Minute',
+        'second' => 'Second',
+        'title' => 'Title',
+        'content' => 'Content',
+        'description' => 'Description',
+        'excerpt' => 'Excerpt',
+        'date' => 'Date',
+        'time' => 'Time',
+        'available' => 'Available',
+        'size' => 'Size',
+    ],
 ];

@@ -13,8 +13,8 @@ return [
     |
     */
 
-    'failed'   => 'Estas credenciales no coinciden con nuestros registros.',
+    'failed' => 'Estas credenciales no coinciden con nuestros registros.',
     'throttle' => 'Demasiados intentos de acceso. Por favor intente nuevamente en :seconds segundos.',
-    'NoRoles' => 'Ihrem Account wurde(n) noch keine Rolle(n) zugewiesen.',
+    'NoRoles' => 'You have no role(s) associated with your account!. Please contact your administrator.',
 
 ];

@@ -47,6 +47,8 @@ return [
     'product_type' 		=> 'Product type',
     'product_count' 	=> 'Count',
     'charge' 			=> 'Charge',
+    'salesman.lastname' => 'Lastname',
+    'salesman.firstname' => 'Firstname',
     'salesman_commission' => 'Commission',
     'sepaaccount_id' 	=> 'SEPA-account',
     // SepaAccount
@@ -170,12 +172,12 @@ return [
     'phonetariff.name' => 'Phone Tariff',
     'phonetariff.type' => 'Type',
     'phonetariff.description' => 'Description',
-    'phonetariff.voip_protocol' => 'VOIP Protokoll',
+    'phonetariff.voip_protocol' => 'VOIP Protocol',
     'phonetariff.usable' => 'Usable?',
     // ENVIA enviaorder
     'enviaorder.ordertype'  => 'Order Type',
     'enviaorder.orderstatus'  => 'Order Status',
-    'escalation_level' => 'Statuslevel',
+    'escalation_level' => 'Escalation Level',
     'enviaorder.created_at'  => 'Created at',
     'enviaorder.updated_at'  => 'Updated at',
     'enviaorder.orderdate'  => 'Order date',

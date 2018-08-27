@@ -328,6 +328,6 @@ return [
     'Numberrange_Start' => 'Beginn',
     'Numberrange_End' => 'Ende',
     'Numberrange_Suffix' => 'Suffix',
-    'Numberrange_Prefix' => 'Präfix',
+    'Numberrange_Prefix' => 'Prefix',
     'Numberrange_Type' => 'Typ',
 ];

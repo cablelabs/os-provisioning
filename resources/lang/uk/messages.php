@@ -133,10 +133,10 @@ return [
     'Vendor'					=> 'Vendor',
     'Year'						=> 'Year',
     'yes' 						=> 'yes',
-    'home' 					=> 'Startseite',
-    'indices_unassigned' 	=> 'Some of the assigned Indices could not be assigned to a corresponding parameter! They are actually just not used. You can delete them or keep them for later. Just compare the list of parameters of the netelementtype with the list of indices here.',
+    'home' 						=> 'Home',
+    'indices_unassigned' 		=> 'Some of the assigned Indices could not be assigned to a corresponding parameter! They are actually just not used. You can delete them or keep them for later. Just compare the list of parameters of the netelementtype with the list of indices here.',
     'item_credit_amount_negative' => 'A negative credit amount becomes a debit! Are you sure that the customer shall be charged?',
-    'invoice' 				=> 'Invoice',
+    'invoice' 					=> 'Invoice',
     'Global Config'				=> 'Global Config',
     'GlobalConfig'				=> 'GlobalConfig',
     'VOIP'						=> 'VOIP',
@@ -150,7 +150,7 @@ return [
     'HFC'						=> 'HFC',
     'Rank'						=> 'Rank',
     'Assign Users'				=> 'Assign Users',
-    'Invoices'				=> 'Invoices',
+    'Invoices'					=> 'Invoices',
     'Ability'					=> 'Ability',
     'Allow'						=> 'Allow',
     'Allow to'					=> 'Allow to',
@@ -191,8 +191,8 @@ return [
     'Language for settlement run' => 'Language for settlement run',
     'Uncertain start/end dates for tariffs' => 'Uncertain start/end dates for tariffs',
     'modem_monitoring_error'=> 'This could be because the Modem was not online until now. Please note that Diagrams are only available
-		from the point that a modem was online. If all diagrams did not show properly then it should be a
-		bigger problem and there should be a cacti misconfiguration. Please consider the administrator on bigger problems.',
+	from the point that a modem was online. If all diagrams did not show properly then it should be a
+	bigger problem and there should be a cacti misconfiguration. Please consider the administrator on bigger problems.',
     'Connection Info Template'	=> 'Connection Info Template',
     'Upload Template'			=> 'Upload Template',
     'SNMP Read Only Community'	=> 'SNMP Read Only Community',

@@ -177,7 +177,7 @@ return [
     // ENVIA enviaorder
     'enviaorder.ordertype'  => 'Order Type',
     'enviaorder.orderstatus'  => 'Order Status',
-    'escalation_level' => 'Statuslevel',
+    'escalation_level' => 'Escalation Level',
     'enviaorder.created_at'  => 'Created at',
     'enviaorder.updated_at'  => 'Updated at',
     'enviaorder.orderdate'  => 'Order date',
