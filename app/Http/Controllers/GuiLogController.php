@@ -21,6 +21,9 @@ class GuiLogController extends BaseController
     {
         $models = BaseModel::get_models();
         $isModelTrashed = $models[$model->model]::withTrashed()->find($model->model_id)->trashed();
+        $cannotRestore = ['Invoice', 'SettlementRun'];
+        $restorable = ! in_array($model->model, $cannotRestore);
+
         $fields = [
             ['form_type' => 'text', 'name' => 'username', 'description' => 'Username'],
             ['form_type' => 'text', 'name' => 'method', 'description' => 'Method'],
@@ -42,7 +45,7 @@ class GuiLogController extends BaseController
         }
 
         // addition in edit view to create link for restoring deleted models
-        if ($isModelTrashed) {
+        if ($isModelTrashed && $restorable) {
             array_push($fields, ['form_type' => 'text', 'name' => 'deleted_at', 'description' => 'Restore', 'html' => '<div class="col-md-12" style= background-color:white">
 						<div class= "form-group row"><label style =margin-top: 10px;" class="col-md-4 control-label">Restore</label>
 							<div class="col-md-7">
@@ -70,7 +73,11 @@ class GuiLogController extends BaseController
         $modelToRestore = $modelArray[$guilog->model]::withTrashed()->find($guilog->model_id);
         $restoredModel = $modelToRestore->restore($guilog->model);
 
-        return redirect()->route($guilog->model.'.edit', ['id' => $guilog->model_id]);
+        if (\Route::has($guilog->model.'.edit')) {
+            return redirect()->route($guilog->model.'.edit', ['id' => $guilog->model_id]);
+        } else {
+            return redirect()->route('GuiLog.index');
+        }
     }
 
     public function filter($id, Request $request)
