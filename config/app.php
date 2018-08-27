@@ -81,6 +81,12 @@ return [
 
     'fallback_locale' => 'en',
 
+
+    /*
+     * TODO: please comment @cschra
+     */
+    'supported_locale' => ['en', 'de', 'es'],
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Key
