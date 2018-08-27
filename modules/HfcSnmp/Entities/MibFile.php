@@ -88,7 +88,7 @@ class MibFile extends \BaseModel
     {
         parent::boot();
 
-        MibFile::observe(new MibFileObserver);
+        self::observe(new MibFileObserver);
     }
 
     public function get_full_filepath()

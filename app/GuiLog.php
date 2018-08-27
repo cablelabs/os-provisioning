@@ -80,8 +80,8 @@ class GuiLog extends \BaseModel
     {
         \Log::notice('GuiLog: Execute cleanup() - Delete Log entries older than '.$months.' months - (hard delete older than 3 years)');
 
-        GuiLog::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL '.$months.' MONTH)'))->delete();
-        GuiLog::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL 36 MONTH)'))->forceDelete();
+        self::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL '.$months.' MONTH)'))->delete();
+        self::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL 36 MONTH)'))->forceDelete();
         // GuiLog::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL 3 MINUTE)'))->delete();
     }
 

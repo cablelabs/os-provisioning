@@ -40,6 +40,7 @@ class UserController extends BaseController
              $current_user_rank <= $user_model_rank) {
             throw new AuthException(trans('Not allowed to acces this user').'!');
         }
+
         return [
             ['form_type' => 'text', 'name' => 'login_name', 'description' => 'Login'],
             ['form_type' => 'password', 'name' => 'password', 'description' => 'Password'],

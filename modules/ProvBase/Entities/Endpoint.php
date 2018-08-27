@@ -111,8 +111,8 @@ class Endpoint extends \BaseModel
     {
         parent::boot();
 
-        Endpoint::observe(new EndpointObserver);
-        Endpoint::observe(new \App\SystemdObserver);
+        self::observe(new EndpointObserver);
+        self::observe(new \App\SystemdObserver);
     }
 
     /**
@@ -125,7 +125,7 @@ class Endpoint extends \BaseModel
 
         $data = '';
 
-        foreach (Endpoint::all() as $ep) {
+        foreach (self::all() as $ep) {
             $data .= "host $ep->hostname { hardware ethernet $ep->mac; ";
             if ($ep->fixed_ip && $ep->ip) {
                 $data .= "fixed-address $ep->ip; ";

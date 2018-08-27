@@ -35,7 +35,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     {
         parent::boot();
 
-        User::observe(new UserObserver);
+        self::observe(new UserObserver);
     }
 
     /**
@@ -129,7 +129,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $highestRank;
     }
 
-    public static function getHighestRankOf(User $user) : int
+    public static function getHighestRankOf(self $user) : int
     {
         $ranks = $user->roles()->pluck('rank');
         $highestRank = 0;
@@ -140,17 +140,17 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $highestRank;
     }
 
-    public function hasHigherRankThan(User $user) : bool
+    public function hasHigherRankThan(self $user) : bool
     {
         return $this->getHighestRank() > $user->getHighestRank() ? true : false;
     }
 
-    public function hasLowerRankThan(User $user) : bool
+    public function hasLowerRankThan(self $user) : bool
     {
         return $this->getHighestRank() < $user->getHighestRank() ? true : false;
     }
 
-    public function hasSameRankAs(User $user) : bool
+    public function hasSameRankAs(self $user) : bool
     {
         return $this->getHighestRank() == $user->getHighestRank() ? true : false;
     }

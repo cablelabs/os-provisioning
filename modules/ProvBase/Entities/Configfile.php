@@ -56,7 +56,7 @@ class Configfile extends \BaseModel
     {
         parent::boot();
 
-        Configfile::observe(new ConfigfileObserver);
+        self::observe(new ConfigfileObserver);
     }
 
     /**
@@ -69,7 +69,7 @@ class Configfile extends \BaseModel
     {
         $id = $this->id;
         // TODO: this should not be a database query
-        $children = Configfile::all()->where('parent_id', $id)->all();
+        $children = self::all()->where('parent_id', $id)->all();
         $cf_tree = [];
 
         foreach ($children as $cf) {
@@ -118,7 +118,7 @@ class Configfile extends \BaseModel
         }
         exec('openssl x509 -text -inform DER -in /tftpboot/cvc/'.$this->cvc, $cvc_help);
 
-        return join("\n", array_slice($cvc_help, 0, 11));
+        return implode("\n", array_slice($cvc_help, 0, 11));
     }
 
     /**
@@ -304,14 +304,14 @@ class Configfile extends \BaseModel
         $ops = explode(',', $match);
 
         if (count($ops) != 3 || ! is_numeric($ops[0]) || ! is_numeric($ops[2]) || ! in_array($ops[1], ['+', '-', '*', '/'])) {
-            return null;
+            return;
         }
 
         try {
             $res = eval("return $ops[0] $ops[1] $ops[2];");
         } catch (\Exception $e) {
             // e.g. divide by zero
-            return null;
+            return;
         }
 
         return preg_replace('/\\{[^\\{]*\\}/im', $res, $row);
@@ -386,7 +386,7 @@ class Configfile extends \BaseModel
     {
         $used_ids = [];
         // only public configfiles can be assigned to a modem or mta
-        foreach (Configfile::where('public', '=', 'yes')->get() as $cf) {
+        foreach (self::where('public', '=', 'yes')->get() as $cf) {
             if ((($cf->device == 'cm') && $cf->modem()->count()) ||
                 (($cf->device == 'mta') && $cf->mtas()->count())) {
                 array_push($used_ids, $cf->id);

@@ -67,7 +67,7 @@ class PhoneTariff extends \BaseModel
      */
     public static function get_purchase_tariffs()
     {
-        return PhoneTariff::__get_tariffs('purchase');
+        return self::__get_tariffs('purchase');
     }
 
     /**
@@ -79,7 +79,7 @@ class PhoneTariff extends \BaseModel
      */
     public static function get_sale_tariffs()
     {
-        return PhoneTariff::__get_tariffs('sale');
+        return self::__get_tariffs('sale');
     }
 
     /**
@@ -103,7 +103,7 @@ class PhoneTariff extends \BaseModel
         }
 
         // can be used in raw statement; $type is well known and not given from user input
-        $tariffs = PhoneTariff::where('type', $type)->where('usable', 1)->get();
+        $tariffs = self::where('type', $type)->where('usable', 1)->get();
 
         foreach ($tariffs as $tariff) {
             $ret[$tariff->id] = $tariff->name;

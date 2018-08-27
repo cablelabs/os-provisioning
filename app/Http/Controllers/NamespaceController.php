@@ -50,7 +50,7 @@ class NamespaceController
     {
         $route = Route::getCurrentRoute();
         if (! $route) {
-            return null;
+            return;
         }
 
         $a = explode('\\', $route->getActionName());
@@ -70,7 +70,7 @@ class NamespaceController
         $route = Route::getCurrentRoute();
 
         if (! $route) {
-            return null;
+            return;
         }
 
         $_ = explode('Controller@', $route->getActionName());
@@ -94,7 +94,7 @@ class NamespaceController
             return static::__module_get_mvc_namespace().'\\Entities\\'.$pure_model;
         } else {
             if (is_null($pure_model)) {
-                return null;
+                return;
             } else {
                 return  'App\\'.$pure_model;
             }

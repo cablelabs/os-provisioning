@@ -122,11 +122,11 @@ class BaseController extends Controller
 
         // Rewrite model to check with new assigned Model
         if (! $classname) {
-            return null;
+            return;
         }
 
         if (! class_exists($classname)) {
-            return null;
+            return;
         }
 
         $obj = new $classname;
@@ -139,11 +139,11 @@ class BaseController extends Controller
         $classname = NamespaceController::get_controller_name();
 
         if (! $classname) {
-            return null;
+            return;
         }
 
         if (! class_exists($classname)) {
-            return null;
+            return;
         }
 
         $obj = new $classname;
@@ -290,7 +290,7 @@ class BaseController extends Controller
             $b = current($a);
             $c = [];
 
-            for ($i = 0; $i < sizeof($a); $i++) {
+            for ($i = 0; $i < count($a); $i++) {
                 array_push($c, ['name' => key($a), 'route' => NamespaceController::get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
                 $b = next($a);
             }
@@ -322,7 +322,7 @@ class BaseController extends Controller
         $upload_field = $base_field.'_upload';
 
         if (! Input::hasFile($upload_field)) {
-            return null;
+            return;
         }
 
         // get filename

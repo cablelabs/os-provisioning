@@ -24,8 +24,6 @@ class ArrayHelper
                 return $arrayInf;
             }
         }
-
-        return null;
     }
 
     /**
@@ -76,7 +74,7 @@ class ArrayHelper
 
         foreach ($array as $value) {
             if (is_array($value)) {
-                $depth = ArrayHelper::array_depth($value) + 1;
+                $depth = self::array_depth($value) + 1;
 
                 if ($depth > $max_depth) {
                     $max_depth = $depth;

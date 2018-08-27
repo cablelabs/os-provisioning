@@ -12,7 +12,7 @@ class Indices extends \BaseModel
     {
         parent::boot();
 
-        Indices::observe(new IndicesObserver);
+        self::observe(new IndicesObserver);
     }
 
     // Add your validation rules here

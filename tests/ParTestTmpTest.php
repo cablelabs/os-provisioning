@@ -4,7 +4,7 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 
-class ParTmpTest extends Illuminate\Foundation\Testing\TestCase
+class ParTestTmpTest extends Illuminate\Foundation\Testing\TestCase
 {
     /* use WithoutMiddleware; */
 

@@ -80,7 +80,7 @@ class Qos extends \BaseModel
     {
         parent::boot();
 
-        Qos::observe(new QosObserver);
+        self::observe(new QosObserver);
     }
 }
 

@@ -60,7 +60,7 @@ class CarrierCode extends \BaseModel
         $no_carrier_list = [];
 
         // get all the carrier code data and put it into arrays
-        foreach (CarrierCode::orderBy('company')->orderBy('carrier_code')->get() as $carrier) {
+        foreach (self::orderBy('company')->orderBy('carrier_code')->get() as $carrier) {
             // assign to helper vars to make the rest of the loop easier to understand
             $id = $carrier->id;
             $carrier_code = $carrier->carrier_code;

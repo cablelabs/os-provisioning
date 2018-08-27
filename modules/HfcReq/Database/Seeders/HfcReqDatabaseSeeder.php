@@ -5,7 +5,7 @@ namespace Modules\Hfcreq\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class HfcreqDatabaseSeeder extends Seeder
+class HfcReqDatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.

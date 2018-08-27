@@ -61,7 +61,7 @@ class EkpCode extends \BaseModel
         $favorite_ekp_list = [];
 
         // get all the ekp code data and put it into arrays
-        foreach (EkpCode::orderBy('company')->orderBy('ekp_code')->get() as $ekp) {
+        foreach (self::orderBy('company')->orderBy('ekp_code')->get() as $ekp) {
             // assign to helper vars to make the rest of the loop easier to understand
             $id = $ekp->id;
             $ekp_code = $ekp->ekp_code;

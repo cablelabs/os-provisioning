@@ -385,7 +385,7 @@ class BaseViewController extends Controller
             // Help: add help icon/image behind form field
             if (isset($field['help'])) {
                 $s .= '<div name='.$field['name'].'-help class="col-1"><a data-toggle="popover" data-container="body"
-							data-trigger="hover" title="'.BaseViewController::translate_label($field['description']).'" data-placement="right" data-content="'.$field['help'].'">'.
+							data-trigger="hover" title="'.self::translate_label($field['description']).'" data-placement="right" data-content="'.$field['help'].'">'.
                             '<i class="fa fa-2x text-info p-t-5 '.(isset($field['help_icon']) ? $field['help_icon'] : 'fa-question-circle').'"></i></a></div>';
             }
 
@@ -687,7 +687,7 @@ class BaseViewController extends Controller
         // else if (Route::has($route_name.'.index'))
         // 	$s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
         if (in_array($route_name, BaseController::get_config_modules())) {	// parse: Global Config requires own link
-            $breadcrumb_path_base = "<li class='active'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).BaseViewController::translate_view('Global Configurations', 'Header')).'</li>';
+            $breadcrumb_path_base = "<li class='active'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).self::translate_view('Global Configurations', 'Header')).'</li>';
         } else {
             $breadcrumb_path_base = Route::has($route_name.'.index') ? '<li class="active">'.static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).$view_header).'</li>' : '';
         }

@@ -170,7 +170,7 @@ class importTvCustomersCommand extends Command
                 \Log::warning($msg);
                 $this->important_todos .= "\n$msg";
 
-                return null;
+                return;
             }
 
             \Log::notice("Contract $number $firstname $lastname already exists - only add TV Tarif");
@@ -201,7 +201,7 @@ class importTvCustomersCommand extends Command
         if ($contract->contract_end && ($contract->contract_end < date('Y-01-01'))) {
             \Log::info("Contract $number is out of date ($contract->contract_start - $contract->contract_end)");
 
-            return null;
+            return;
         }
 
         $contract->number = $number;
