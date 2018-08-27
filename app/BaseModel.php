@@ -994,8 +994,8 @@ class BaseObserver
 
         // TODO: analyze impacts of different return values
         //		without return (= return null): all is running, but multiple log entries are created
-        //		return false: only one log entry per change, but created of e.g. PhonenumberObserver is never called (checked this using dd()
-        //		returne true: one log entry, other observers are called
+        //		return false: only one log entry per change, but created of e.g. PhonenumberObserver is never called (checked this using dd())
+        //		return true: one log entry, other observers are called
         // that are our observations so far – we definitely should check if there are other side effects!!
         // possible hint: the BaseObserver is registered before the model's observers
         return true;
@@ -1070,7 +1070,7 @@ class BaseObserver
                 if ($original != $value) {
                     if (in_array($key, $hide)) {
                         $arr[] = $key;
-                    } elseif ($attributes['deleted_at'] == null) {
+                    } elseif (array_key_exists('deleted_at', $attributes) && $attributes['deleted_at'] == null) {
                         $arr[] = $key.': '.$original.'-> restored';
                         $action = 'restored';
                     } else {
@@ -1091,8 +1091,6 @@ class BaseObserver
         ];
 
         GuiLog::log_changes($data);
-
-        // dd($model->getObservableEvents(), $model->getEventDispatcher(), $model->getEventDispatcher()->getListeners('eloquent.created: Modules\ProvBase\Entities\Cmts')[0]);
     }
 }
 
