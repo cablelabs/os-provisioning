@@ -440,6 +440,10 @@ class BaseController extends Controller
             $a['modem_statistics'] = \Modules\Dashboard\Http\Controllers\DashboardController::get_modem_statistics();
         }
 
+        if (! isset($a['view_help'])) {
+            $a['view_help'] = $this->view_help();
+        }
+
         $a['edit_view_save_button'] = $this->edit_view_save_button;
         $a['save_button_name'] = $this->save_button_name;
         $a['second_button_name'] = $this->second_button_name;
@@ -1529,5 +1533,21 @@ class BaseController extends Controller
             ->where($column, 'like', '%'.\Input::get('q').'%')
             ->distinct()
             ->pluck($column);
+    }
+
+    /**
+     *  The official Documentation Help Menu Function
+     *
+     *  See: See: config/documenation.php array
+     *
+     *  @author Torsten Schmidt
+     *
+     *  @return array of ['doc' => link, 'youtube' => link, 'url' => 'link']
+     */
+    public function view_help()
+    {
+        // helper to get model name from controller context
+        $a = explode('\\', strtolower(NamespaceController::get_model_name()));
+        return config('documentation.'.strtolower(end($a)));
     }
 }
