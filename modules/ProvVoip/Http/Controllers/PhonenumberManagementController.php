@@ -313,7 +313,7 @@ class PhonenumberManagementController extends \BaseController
     public static function _get_envia_management_jobs($phonenumbermanagement)
     {
         if (Bouncer::cannot('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia')) {
-            return null;
+            return;
         }
 
         $provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();

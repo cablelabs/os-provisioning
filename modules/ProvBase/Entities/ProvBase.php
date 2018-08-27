@@ -51,8 +51,8 @@ class ProvBase extends \BaseModel
     {
         parent::boot();
 
-        ProvBase::observe(new ProvBaseObserver);
-        ProvBase::observe(new \App\SystemdObserver);
+        self::observe(new ProvBaseObserver);
+        self::observe(new \App\SystemdObserver);
     }
 
     /*
@@ -62,7 +62,7 @@ class ProvBase extends \BaseModel
     public static function prov_ip_online()
     {
         // Ping: Only check if device is online
-        exec('sudo ping -c1 -i0 -w1 '.ProvBase::first()->provisioning_server, $ping, $ret);
+        exec('sudo ping -c1 -i0 -w1 '.self::first()->provisioning_server, $ping, $ret);
 
         return $ret ? false : true;
     }

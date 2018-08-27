@@ -437,8 +437,6 @@ class BaseLifecycleTest extends TestCase
                 return $id;
             }
         }
-
-        return null;
     }
 
     /**

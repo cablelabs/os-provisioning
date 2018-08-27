@@ -281,7 +281,7 @@ class PhonenumberManagement extends \BaseModel
     {
         parent::boot();
 
-        PhonenumberManagement::observe(new PhonenumberManagementObserver);
+        self::observe(new PhonenumberManagementObserver);
     }
 }
 

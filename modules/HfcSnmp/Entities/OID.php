@@ -210,7 +210,5 @@ class OID extends \BaseModel
 
             return [$startval, $endval];
         }
-
-        return null;
     }
 }

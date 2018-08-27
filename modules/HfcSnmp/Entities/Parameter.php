@@ -12,7 +12,7 @@ class Parameter extends \BaseModel
     {
         parent::boot();
 
-        Parameter::observe(new ParameterObserver);
+        self::observe(new ParameterObserver);
     }
 
     // Add your validation rules here
@@ -101,14 +101,14 @@ class Parameter extends \BaseModel
     {
         return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'parent_id');
 
-        return Parameter::where('parent_id', '=', $this->id)->orderBy('third_dimension')->orderBy('html_id')->orderBy('id')->get()->all();
+        return self::where('parent_id', '=', $this->id)->orderBy('third_dimension')->orderBy('html_id')->orderBy('id')->get()->all();
     }
 
     public function third_dimension_params()
     {
         return $this->children()->where('third_dimension', '=', 1);
 
-        return Parameter::where('parent_id', '=', $this->id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all();
+        return self::where('parent_id', '=', $this->id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all();
     }
 }
 

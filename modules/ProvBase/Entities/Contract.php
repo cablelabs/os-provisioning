@@ -384,7 +384,7 @@ class Contract extends \BaseModel
     {
         // createFromFormat crashes if nothing given
         if (! boolval($date)) {
-            return null;
+            return;
         }
 
         return \Carbon\Carbon::createFromFormat('Y-m-d', $date);
@@ -1086,7 +1086,7 @@ class Contract extends \BaseModel
     {
         parent::boot();
 
-        Contract::observe(new ContractObserver);
+        self::observe(new ContractObserver);
     }
 
     /**

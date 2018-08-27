@@ -388,7 +388,7 @@ class Phonenumber extends \BaseModel
     public function enviaorders($withTrashed = false, $whereStatement = '1')
     {
         if (! \Module::collections()->has('ProvVoipEnvia')) {
-            return null;
+            return;
         }
 
         if ($withTrashed) {
@@ -418,7 +418,7 @@ class Phonenumber extends \BaseModel
 
         // no envia module ⇒ no envia contracts
         if (! \Module::collections()->has('ProvVoipEnvia')) {
-            return null;
+            return;
         }
 
         // the check is simple: if there is an external contract ID we can be sure that a contract has been created
@@ -452,7 +452,7 @@ class Phonenumber extends \BaseModel
 
         // no envia module ⇒ no envia contracts
         if (! \Module::collections()->has('ProvVoipEnvia')) {
-            return null;
+            return;
         }
 
         // if there is no external id we assume that there is no envia contract
@@ -598,7 +598,7 @@ class Phonenumber extends \BaseModel
     {
         parent::boot();
 
-        Phonenumber::observe(new PhonenumberObserver);
+        self::observe(new PhonenumberObserver);
     }
 }
 

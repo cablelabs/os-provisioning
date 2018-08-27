@@ -162,7 +162,7 @@ class UnitTestStarter
         // add additional tests
         array_push($test_dirs, '<testsuite name="Route auth tests"><file>'.$this->basepath.'/tests/RoutesAuthTest.php</file></testsuite>');
 
-        $substitutions['{{testsuite_directories}}'] = join("\n", $test_dirs);
+        $substitutions['{{testsuite_directories}}'] = implode("\n", $test_dirs);
 
         $this->_write_config_file($configfile, $substitutions);
 

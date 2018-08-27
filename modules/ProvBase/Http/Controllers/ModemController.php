@@ -131,8 +131,6 @@ class ModemController extends \BaseController
         if (Bouncer::can('view', 'Modules\ProvVoipEnvia\Entities\ProvVoipEnvia')) {
             return $provvoipenvia->get_jobs_for_view($modem, 'modem');
         }
-
-        return null;
     }
 
     /*

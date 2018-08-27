@@ -642,7 +642,7 @@ class SnmpController extends \BaseController
         if ($type->pre_conf_oid_id xor $type->pre_conf_value) {
             \Log::debug('Snmp Preconfiguration settings incomplete for this Device (NetElement)', [$this->device->name, $this->device->id]);
 
-            return null;
+            return;
         }
 
         $oid = $type->oid;
@@ -669,8 +669,6 @@ class SnmpController extends \BaseController
         snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.'.0', $oid->type, $value, $this->timeout, $this->retry);
 
         \Log::debug('Postconfigured Device for snmpset', [$this->device->name, $this->device->id]);
-
-        return null;
     }
 
     /**

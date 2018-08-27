@@ -178,7 +178,7 @@ class Mta extends \BaseModel
      */
     public function make_configfile_all()
     {
-        $mtas = Mta::all();
+        $mtas = self::all();
         foreach ($mtas as $mta) {
             if ($mta->id == 0) {
                 continue;
@@ -199,8 +199,8 @@ class Mta extends \BaseModel
     {
         parent::boot();
 
-        Mta::observe(new MtaObserver);
-        Mta::observe(new \App\SystemdObserver);
+        self::observe(new MtaObserver);
+        self::observe(new \App\SystemdObserver);
     }
 
     /**
@@ -213,11 +213,11 @@ class Mta extends \BaseModel
      */
     public static function make_dhcp_mta_all()
     {
-        Mta::clear_dhcp_conf_file();
+        self::clear_dhcp_conf_file();
 
         $data = '';
 
-        foreach (Mta::all() as $mta) {
+        foreach (self::all() as $mta) {
             if ($mta->id == 0) {
                 continue;
             }

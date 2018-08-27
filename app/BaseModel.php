@@ -125,7 +125,6 @@ class BaseModel extends Eloquent
      */
     public function view_belongs_to()
     {
-        return null;
     }
 
     /**

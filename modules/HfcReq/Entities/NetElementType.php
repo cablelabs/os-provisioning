@@ -138,7 +138,7 @@ class NetElementType extends \BaseModel
      */
     public static function undeletables()
     {
-        return array_keys(NetElementType::$undeletables);
+        return array_keys(self::$undeletables);
     }
 
     /**

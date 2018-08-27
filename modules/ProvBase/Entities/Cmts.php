@@ -37,7 +37,7 @@ class Cmts extends \BaseModel
 
     public static function make_dhcp_conf_all()
     {
-        foreach (Cmts::all() as $cmts) {
+        foreach (self::all() as $cmts) {
             $cmts->make_dhcp_conf();
         }
     }
@@ -77,8 +77,8 @@ class Cmts extends \BaseModel
     {
         parent::boot();
 
-        Cmts::observe(new CmtsObserver);
-        Cmts::observe(new \App\SystemdObserver);
+        self::observe(new CmtsObserver);
+        self::observe(new \App\SystemdObserver);
     }
 
     /**
@@ -504,7 +504,7 @@ class Cmts extends \BaseModel
     {
         $path = self::$cmts_include_path;
         $incs = '';
-        foreach (Cmts::all() as $cmts) {
+        foreach (self::all() as $cmts) {
             $incs .= "include \"$path/$cmts->id.conf\";\n";
         }
         file_put_contents($path.'.conf', $incs);

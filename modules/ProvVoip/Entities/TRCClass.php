@@ -23,7 +23,7 @@ class TRCClass extends \BaseModel
     {
         $result = [];
 
-        foreach (TRCClass::orderBy('trc_id')->get() as $trc) {
+        foreach (self::orderBy('trc_id')->get() as $trc) {
             $id = $trc->id;
             $short = $trc->trc_short;
             $desc = $trc->trc_description;

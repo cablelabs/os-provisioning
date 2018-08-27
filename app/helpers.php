@@ -172,15 +172,15 @@ function pdflatex($dir, $filename, $background = false)
         case 1:
             Log::error('PdfLatex - Syntax error in tex template (misspelled placeholder?)', [$dir.$filename]);
 
-            return null;
+            return;
         case 127:
             Log::error('Illegal Command - PdfLatex not installed!');
 
-            return null;
+            return;
         default:
             Log::error("Error executing PdfLatex - Return Code: $ret");
 
-            return null;
+            return;
     }
 }
 

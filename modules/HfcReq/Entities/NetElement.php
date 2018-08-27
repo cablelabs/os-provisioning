@@ -37,7 +37,7 @@ class NetElement extends \BaseModel
     {
         parent::boot();
 
-        NetElement::observe(new NetElementObserver);
+        self::observe(new NetElementObserver);
     }
 
     // Name of View
@@ -212,7 +212,7 @@ class NetElement extends \BaseModel
     {
         $net_id = array_search('Net', NetElementType::$undeletables);
 
-        return NetElement::where('netelementtype_id', '=', $net_id)->get();
+        return self::where('netelementtype_id', '=', $net_id)->get();
 
         // return NetElement::where('type', '=', 'NET')->get();
     }
@@ -227,7 +227,7 @@ class NetElement extends \BaseModel
         }
 
         $cluster_id = array_search('Cluster', NetElementType::$undeletables);
-        $return = NetElement::where('netelementtype_id', '=', $cluster_id)->where('net', '=', $this->id)->orderBy('name')->get();
+        $return = self::where('netelementtype_id', '=', $cluster_id)->where('net', '=', $this->id)->orderBy('name')->get();
 
         Session::put('Net-'.$this->id, $return);
 
@@ -313,7 +313,7 @@ class NetElement extends \BaseModel
      */
     public static function relation_index_build_all($call_from_cmd = 0)
     {
-        $netelements = NetElement::all();
+        $netelements = self::all();
 
         \Log::info('nms: build net and cluster index of all tree objects');
 

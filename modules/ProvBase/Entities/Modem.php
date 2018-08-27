@@ -257,8 +257,8 @@ class Modem extends \BaseModel
 
         parent::boot();
 
-        Modem::observe(new \App\SystemdObserver);
-        Modem::observe(new ModemObserver);
+        self::observe(new \App\SystemdObserver);
+        self::observe(new ModemObserver);
     }
 
     /**
@@ -320,9 +320,9 @@ class Modem extends \BaseModel
         $data_pub = '';
         $server = ProvBase::first()->provisioning_server;
 
-        Modem::clear_dhcp_conf_files();
+        self::clear_dhcp_conf_files();
 
-        foreach (Modem::all() as $modem) {
+        foreach (self::all() as $modem) {
             if ($modem->id == 0) {
                 continue;
             }
@@ -613,7 +613,7 @@ class Modem extends \BaseModel
      */
     public function make_configfile_all()
     {
-        $m = Modem::all();
+        $m = self::all();
         foreach ($m as $modem) {
             if ($modem->id == 0) {
                 continue;
@@ -666,8 +666,6 @@ class Modem extends \BaseModel
         if (isset($cmts_id)) {
             return Cmts::find($cmts_id);
         }
-
-        return null;
     }
 
     /**
@@ -737,7 +735,7 @@ class Modem extends \BaseModel
         try {
             $config = ProvBase::first();
             $fqdn = $this->hostname.'.'.$config->domain_name;
-            $cmts = Modem::get_cmts(gethostbyname($fqdn));
+            $cmts = self::get_cmts(gethostbyname($fqdn));
             $mac = $mac_changed ? $this->getOriginal('mac') : $this->mac;
             $mac_oid = implode('.', array_map('hexdec', explode(':', $mac)));
 
@@ -1137,7 +1135,7 @@ class Modem extends \BaseModel
         if (env('APP_ENV') == 'testing') {
             Log::debug('Testing mode – will not ask OSM Nominatim with faked data');
 
-            return null;
+            return;
         }
 
         $geodata = null;
@@ -1256,7 +1254,7 @@ class Modem extends \BaseModel
         if (env('APP_ENV') == 'testing') {
             Log::debug('Testing mode – will not ask Google Geocoding API with faked data');
 
-            return null;
+            return;
         }
 
         $geodata = null;
@@ -1344,13 +1342,13 @@ class Modem extends \BaseModel
                 $this->geocode_state = 'DATA_VERIFICATION_FAILED';
                 Log::warning('Google geocoding for modem '.$this->id.' failed: '.$this->geocode_state);
 
-                return null;
+                return;
             }
         } else {
             $this->geocode_state = $status;
             Log::warning('Google geocoding for modem '.$this->id.' failed: '.$this->geocode_state);
 
-            return null;
+            return;
         }
     }
 
@@ -1475,7 +1473,7 @@ class Modem extends \BaseModel
     public function proximity_search($radius)
     {
         $ids = 'id = 0';
-        foreach (Modem::all() as $modem) {
+        foreach (self::all() as $modem) {
             if ($this->_haversine_great_circle_distance($modem) < $radius) {
                 $ids .= " OR id = $modem->id";
             }
