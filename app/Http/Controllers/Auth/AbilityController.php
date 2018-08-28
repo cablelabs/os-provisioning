@@ -104,20 +104,23 @@ class AbilityController extends Controller
      */
     protected function registerCustomAbility($requestData, $roleName, $abilities)
     {
+        $allowedAbilities = collect($requestData->roleAbilities)->filter();
+        $forbiddenAbilities = collect($requestData->roleForbiddenAbilities)->filter();
+
         foreach ($abilities as $ability) {
-            if ($requestData->changed[$ability->id] && array_key_exists($ability->id, $requestData->roleAbilities)) {
+            if ($allowedAbilities->has($ability->id)) {
                 Bouncer::allow($roleName)->to($ability->name, $ability->entity_type);
             }
 
-            if ($requestData->changed[$ability->id] && ! array_key_exists($ability->id, $requestData->roleAbilities)) {
+            if (! $allowedAbilities->has($ability->id)) {
                 Bouncer::disallow($roleName)->to($ability->name, $ability->entity_type);
             }
 
-            if ($requestData->changed[$ability->id] && array_key_exists($ability->id, $requestData->roleForbiddenAbilities)) {
+            if ($forbiddenAbilities->has($ability->id)) {
                 Bouncer::forbid($roleName)->to($ability->name, $ability->entity_type);
             }
 
-            if ($requestData->changed[$ability->id] && ! array_key_exists($ability->id, $requestData->roleForbiddenAbilities)) {
+            if (! $forbiddenAbilities->has($ability->id)) {
                 Bouncer::unforbid($roleName)->to($ability->name, $ability->entity_type);
             }
         }
@@ -139,9 +142,10 @@ class AbilityController extends Controller
     protected function registerModelAbilities(Role $role, $modelAbilities, $allowAll)
     {
         $models = collect(BaseModel::get_models());
-        $crudPermissions = self::getCrudActions();
 
         foreach ($modelAbilities as $model => $permissions) {
+            $crudPermissions = self::getCrudActions();
+
             foreach ($permissions as $permission) {
                 $crudPermissions->forget($permission);
                 $actions = $allowAll == 'true' && $allowAll != 'undefined' ?
