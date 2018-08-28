@@ -45,9 +45,9 @@ class AbilityController extends Controller
      */
     protected function updateCustomAbility(Request $requestData)
     {
-        $role = Role::find($requestData->roleId);
+        $changedIds = $this->getChangedIds($requestData);
 
-        $changedIds = intval($requestData->id) ? collect($requestData->id) : collect($requestData->changed)->filter()->keys();
+        $role = Role::find($requestData->roleId);
         $abilities = Ability::whereIn('id', $changedIds)->get();
 
         $this->registerCustomAbility($requestData, $role->name, $abilities);
@@ -72,12 +72,14 @@ class AbilityController extends Controller
     protected function updateModelAbility(Request $request)
     {
         $requestData = collect($request->all())->forget('_token');
+
         $module = $requestData->pull('module');
         $allowAll = $requestData->pull('allowAll');
         $role = Role::find($requestData->pull('roleId'));
 
         $modelAbilities = self::getModelAbilities($role)[$module]
-            ->mapWithKeys(function ($actions, $model) use ($requestData) {
+            ->keys()
+            ->mapWithKeys(function ($model) use ($requestData) {
                 if (! $requestData->has($model)) {
                     $requestData[$model] = [];
                 }
@@ -161,7 +163,7 @@ class AbilityController extends Controller
                 });
             }
 
-            foreach ($crudPermissions as $permission => $options) {
+            foreach ($crudPermissions->keys() as $permission) {
                 if ($permission == '*') {
                     Bouncer::disallow($role->name)->toManage($models[$model]);
                     Bouncer::unforbid($role->name)->toManage($models[$model]);
@@ -188,7 +190,7 @@ class AbilityController extends Controller
             ->orWhere('entity_type', '*')
             ->get()
             ->pluck('title', 'id')
-            ->map(function ($title, $id) {
+            ->map(function ($title) {
                 return collect([
                     'title' => $title,
                     'localTitle' => BaseViewController::translate_label($title),
@@ -247,6 +249,16 @@ class AbilityController extends Controller
         return $modelAbilities;
     }
 
+    /**
+     * This Method performs a custom sort for Models to Modules. To keep the
+     * Ability-Interface clear and concise for the Users.
+     *
+     * @param [type] $name
+     * @param [type] $models
+     * @param [type] $allAbilities
+     * @return void
+     * @author Christian Schramm
+     */
     private static function getModelsAndActions($name, $models, $allAbilities)
     {
         return $models->filter(function ($class) use ($name) {
@@ -265,6 +277,15 @@ class AbilityController extends Controller
         });
     }
 
+    /**
+     * This method returns the assigned Actions for a given Model.
+     *
+     * @param [type] $models
+     * @param [type] $name
+     * @param [type] $allAbilities
+     * @return void
+     * @author Christian Schramm
+     */
     private static function getModelActions($models, $name, $allAbilities)
     {
         return [
@@ -272,6 +293,20 @@ class AbilityController extends Controller
                     ->where('entity_type', $name == 'Role' ? 'roles' : $models->pull($name)) // Bouncer specific
                     ->pluck('name'),
             ];
+    }
+
+    /**
+     * Check if only one or if multiple Custom Abilities were changed.
+     *
+     * @param Request $requestData
+     * @return bool
+     * @author Christian Schramm
+     */
+    private function getChangedIds($requestData)
+    {
+        return intval($requestData->id) ?
+                collect($requestData->id) :
+                collect($requestData->changed)->filter()->keys();
     }
 
     /**
@@ -310,6 +345,13 @@ class AbilityController extends Controller
                 ->keyBy('id');
     }
 
+    /**
+     * Checks if the given Ability is a Custom one.
+     *
+     * @param Ability $ability
+     * @return bool
+     * @author Christian Schramm
+     */
     private static function isCustom($ability)
     {
         return Str::startsWith($ability->entity_type, '*') ||
