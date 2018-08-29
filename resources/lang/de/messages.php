@@ -455,4 +455,5 @@ return [
     'user'                      => 'user',
     'Yes'                       => 'Yes',
     'No'                        => 'No',
+    'telephony_only'            => 'Muss aktiv sein, wenn der Kunde nur Telefonie und keinen Internetzugriff haben soll. Dies hat Einfluss auf NetworkAccess und MaxCPE im Modem Configfile.',
 ];
