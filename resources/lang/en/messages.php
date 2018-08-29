@@ -455,4 +455,5 @@ return [
     'user'                      => 'user',
     'Yes'                       => 'Yes',
     'No'                        => 'No',
+    'telephony_only'            => 'Activate if customer shall only have telephony, but no internet access. This setting influences the modems configfile parameters NetworkAcess and MaxCPE.',
 ];
