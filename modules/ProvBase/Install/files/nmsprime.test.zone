@@ -10,4 +10,4 @@ nmsprime.test		IN SOA	<hostname>.nmsprime.test. hostmaster.nmsprime.test. (
 			NS	<hostname>.nmsprime.test.
 $ORIGIN nmsprime.test.
 $TTL 86400	; 1 day
-<hostname>		A	10.255.0.1
+<hostname>		A	172.20.0.1

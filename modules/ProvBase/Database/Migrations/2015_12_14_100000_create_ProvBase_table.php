@@ -29,7 +29,7 @@ class CreateProvBaseTable extends BaseMigration
             $table->integer('startid_endpoint')->unsigned();
         });
 
-        DB::update('INSERT INTO '.$this->tablename." (provisioning_server, ro_community, rw_community, domain_name, dhcp_def_lease_time, dhcp_max_lease_time) VALUES('10.255.0.1', 'public', 'private', 'nmsprime.test', 86400, 172800);");
+        DB::update('INSERT INTO '.$this->tablename." (provisioning_server, ro_community, rw_community, domain_name, dhcp_def_lease_time, dhcp_max_lease_time) VALUES('172.20.0.1', 'public', 'private', 'nmsprime.test', 86400, 172800);");
         // create dhcpd config files
         exec('php /var/www/nmsprime/artisan nms:dhcp');
         exec('chown -R apache:dhcpd /etc/dhcp-nmsprime');

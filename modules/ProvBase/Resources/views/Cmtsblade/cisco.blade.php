@@ -75,7 +75,7 @@ no ip http secure-server
 !
 !
 ip access-list standard mgmt
- permit {{$cb->tf_net_1}} 0.0.0.255
+ permit {{$cb->tf_net_1}} 0.0.3.255
 !
 ip access-list extended cpe-private
 @foreach($cb->ippools()->where('type', '=', 'CPEPriv')->get() as $cpe_pool)
