@@ -19,7 +19,7 @@ Group blade: expandable group box, like panel, but without droppable
 				</a>
 			</h3>
 		</div>
-		<div id="{{$content}}" class="panel-collapse collapse {{(isset($expand) && $expand ? 'in' : '') }}" aria-expanded="true" style="">
+		<div id="{{$content}}" class="panel-collapse collapse {{(isset($expand) && $expand ? 'show' : '') }}" aria-expanded="true" style="">
 			<div class="panel-body">
 				@yield($content)
 			</div>

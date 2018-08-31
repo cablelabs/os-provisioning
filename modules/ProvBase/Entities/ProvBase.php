@@ -152,7 +152,7 @@ class ProvBase extends \BaseModel
      */
     public function make_dhcp_default_network_conf()
     {
-        $sub = new \IPv4\SubnetCalculator($this->provisioning_server, 24);
+        $sub = new \IPv4\SubnetCalculator($this->provisioning_server, 22);
         $net = $sub->getNetworkPortion();
         $mask = $sub->getSubnetMask();
 

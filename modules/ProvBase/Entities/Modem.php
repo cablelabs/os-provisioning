@@ -1527,6 +1527,8 @@ class ModemObserver
 
         $modem->hostname = 'cm-'.$modem->id;
         $modem->save();	 // forces to call the updating() and updated() method of the observer !
+        self::create_ignore_cpe_dhcp_file();
+
         if (\Module::collections()->has('ProvMon')) {
             Log::info("Create cacti diagrams for modem: $modem->hostname");
             \Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
@@ -1618,7 +1620,7 @@ class ModemObserver
         Log::debug(__METHOD__.' started for '.$modem->hostname);
 
         // $modem->make_dhcp_cm_all();
-        Modem::create_ignore_cpe_dhcp_file();
+        self::create_ignore_cpe_dhcp_file();
         $modem->make_dhcp_cm(true);
         $modem->restart_modem();
         $modem->delete_configfile();
