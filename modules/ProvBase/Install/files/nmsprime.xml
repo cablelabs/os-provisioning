@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zone>
+  <short>NMSPrime MGMT</short>
+  <description>Only allow NMSPrime MGMT essential services.</description>
+  <source address="172.20.0.0/22"/>
+  <service name="ntp"/>
+  <service name="ssh"/>
+  <service name="tftp"/>
+</zone>

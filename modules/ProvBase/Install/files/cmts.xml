@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<zone>
-  <short>CMTS</short>
-  <description>Only allow CMTS essential services.</description>
-  <source address="10.255.0.0/24"/>
-  <service name="ntp"/>
-  <service name="tftp"/>
-</zone>
