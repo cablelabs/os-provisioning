@@ -10,7 +10,7 @@ hostname {{$cb->hostname}}
 boot-start-marker
 boot-end-marker
 !
-enable secret 5 {{$cb->enable_secret}}
+enable secret 5 {!!$cb->enable_secret!!}
 
 !
 aaa new-model
@@ -27,7 +27,7 @@ ip subnet-zero
 !
 !
 no ip domain lookup
-ip domain name {{$cb->hostname}}.{{$cb->domain}}
+ip domain name {!!$cb->domain!!}
 ip dhcp smart-relay
 ip dhcp relay information option
 no ip dhcp relay information check
@@ -43,11 +43,11 @@ multilink bundle-name authenticated
 call rsvp-sync
 !
 !
-username admin privilege 15 secret 5 {{$cb->admin_psw}}
+username admin privilege 15 secret 5 {!!$cb->admin_psw!!}
 !
 !
 !
-interface {{$cb->interface}}
+interface {!!$cb->interface!!}
  no ip address
  no ip redirects
  no ip proxy-arp
@@ -55,7 +55,7 @@ interface {{$cb->interface}}
  speed auto
  duplex auto
  negotiation auto
- ip address {{$cb->ip}} {{$cb->netmask}}
+ ip address {{$cb->ip}} {!!$cb->netmask!!}
 !
 !
 interface Bundle1
@@ -64,10 +64,10 @@ interface Bundle1
  ip policy route-map NAT
  cable arp filter request-send 3 2
  cable arp filter reply-accept 3 2
- cable helper-address {{$cb->prov_ip}}
+ cable helper-address {!!$cb->prov_ip!!}
 !
 ip classless
-ip route 0.0.0.0 0.0.0.0 {{$cb->router_ip}}
+ip route 0.0.0.0 0.0.0.0 {!!$cb->router_ip!!}
 !
 no ip http server
 no ip http secure-server
@@ -75,7 +75,7 @@ no ip http secure-server
 !
 !
 ip access-list standard mgmt
- permit {{$cb->tf_net_1}} 0.0.3.255
+ permit {!!$cb->tf_net_1!!} 0.0.3.255
 !
 ip access-list extended cpe-private
 @foreach($cb->ippools()->where('type', '=', 'CPEPriv')->get() as $cpe_pool)
@@ -90,10 +90,10 @@ nls resp-timeout 1
 !
 route-map NAT permit 10
  match ip address cpe-private
- set ip next-hop {{$cb->nat_ip}}
+ set ip next-hop {!!$cb->nat_ip!!}
 !
-snmp-server community {{$cb->snmp_ro}} RO mgmt
-snmp-server community {{$cb->snmp_rw}} RW mgmt
+snmp-server community {!!$cb->snmp_ro!!} RO mgmt
+snmp-server community {!!$cb->snmp_rw!!} RW mgmt
 !
 !
 control-plane
@@ -127,5 +127,5 @@ exception pxf style minimal
 exception pxf flash flash:
 !
 ntp update-calendar
-ntp server {{$cb->prov_ip}}
+ntp server {!!$cb->prov_ip!!}
 !
