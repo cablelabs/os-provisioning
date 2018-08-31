@@ -586,23 +586,23 @@ class importNetUserCommand extends Command
                 $pn->country_code = '0049';
                 $pn->prefix_number = self::$prefix;
 
+                $pn->active = true;
                 if ($filter != 'SnmpMibObject iso.3.6.1.4.1.872') {
                     // ifAdminStatus 2: down, 1: up (only for Thomson and Arris)
                     // 'iso.3.6.1.2.1.2.2.1.7.9 Integer 1'
                     // 'iso.3.6.1.2.1.2.2.1.7.10 Integer 2'
 
                     $k = $i + 8;
-                    preg_match("/SnmpMibObject iso.3.6.1.2.1.2.2.1.7.$k Integer \d;/", $config, $hit);
+                    $match = [];
+                    preg_match("/SnmpMibObject iso.3.6.1.2.1.2.2.1.7.$k Integer \d;/", $config, $match);
 
-                    if (! isset($hit[0]) || ! $hit[0]) {
-                        $pn->active = false;
-                    } else {
+                    // if (! isset($match[0]) || ! $match[0]) {
+                    // } else {
+                    if ($match) {
                         // check integer value
-                        preg_match("/\d/", substr($hit[0], strpos($hit[0], 'Integer') + 5), $hit);
-                        $pn->active = $hit[0] == 1 ? true : false;
+                        preg_match("/\d/", substr($match[0], strpos($match[0], 'Integer') + 5), $match);
+                        $pn->active = $match[0] == 1 ? true : false;
                     }
-                } else {
-                    $pn->active = true;
                 }
 
                 $pn->save();
