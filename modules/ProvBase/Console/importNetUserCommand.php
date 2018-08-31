@@ -303,7 +303,6 @@ class importNetUserCommand extends Command
         $modem->mac = $old_modem->MACaddress;
         $modem->number = $old_modem->Lfd;
         $modem->name = utf8_encode($old_modem->Name);
-        $modem->network_access = $old_modem->Gesperrt_int == 'N' ? 1 : 0;
 
         // $modem->x = $old_modem->x / 10000000;
         // $modem->y = $old_modem->y / 10000000;
@@ -362,6 +361,12 @@ class importNetUserCommand extends Command
                     ->where('cpe.Kundennr', '=', $old_modem->Kundennr)
                     ->where('cpe.modem_lfd', '=', $old_modem->Lfd)
                     ->where('cpe.sec_typ', '=', 1)->get();
+
+        // Deactivate network access when gesperrt or when no cpe's attached
+        $modem->network_access = 1;
+        if ($old_modem->Gesperrt_int == 'Y' || !$comps) {
+            $modem->network_access = 0;
+        }
 
         $modem->public = 0;
         foreach ($comps as $comp) {
