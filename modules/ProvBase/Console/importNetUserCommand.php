@@ -130,7 +130,7 @@ class importNetUserCommand extends Command
              */
             $modems = $db->table('Nutzer as m')
                     ->select('m.*', 'c.memo_cfg as cm_conf_default', 'm.memo_cfg as cm_conf_changed', 'c.Pfad as cf_name')
-                    ->join('konfig as c', 'c.konfig_id', '=', 'm.konfig_id')
+                    ->leftJoin('konfig as c', 'c.konfig_id', '=', 'm.konfig_id')
                     ->where('m.Kundennr', '=', $contract->Kundennr)
                     ->where('m.sec_typ', '=', 0)->get();
 
@@ -142,7 +142,7 @@ class importNetUserCommand extends Command
                  */
                 $mtas = $db->table('Nutzer as m')
                     ->select('m.*', 'c.memo_cfg as mta_conf_default', 'm.memo_cfg as mta_conf_changed', 'c.Pfad as cf_name')
-                    ->join('konfig as c', 'c.konfig_id', '=', 'm.konfig_id')
+                    ->leftJoin('konfig as c', 'c.konfig_id', '=', 'm.konfig_id')
                     ->where('m.Kundennr', '=', $contract->Kundennr)
                     ->where('m.sec_typ', '=', 2)
                     ->where('m.modem_lfd', '=', $modem->Lfd)
