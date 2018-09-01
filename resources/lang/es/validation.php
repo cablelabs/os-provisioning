@@ -26,8 +26,8 @@ return [
     'before_or_equal'      => 'El :attribute debe ser una fecha anterior o igual a :date.',
     'between'              => [
         'numeric' => 'El :attribute debe estar entre :min y :max.',
-        'file'    => 'El :attribute debe estar entre :min y :max kilobytes.',
-        'string'  => 'El :attribute debe estar entre :min y :max caracteres.',
+        'file'    => 'El :attribute debe estar entre :min y :max kbs.',
+        'string'  => 'El :attribute debe tener entre :min y :max caracteres.',
         'array'   => 'El :attribute debe tener entre :min y :max articulos.',
     ],
     'boolean'              => 'El campo :attribute debe ser verdadero o falso.',
@@ -151,7 +151,7 @@ return [
         'excerpt' => 'extracto',
         'date' => 'fecha',
         'time' => 'hora',
-        'available' => 'Available',
-        'size' => 'Size',
+        'available' => 'Disponible',
+        'size' => 'Tamaño',
     ],
 ];
