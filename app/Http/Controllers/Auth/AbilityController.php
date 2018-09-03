@@ -20,7 +20,7 @@ class AbilityController extends Controller
      * Shorthand for abilities is used. Value is an Option array of
      * Properties which are used only inside Blade context.
      *
-     * @return Collection|string
+     * @return Collection
      * @author Christian Schramm
      */
     public static function getCrudActions()
@@ -39,7 +39,7 @@ class AbilityController extends Controller
      * Helper Abilities (like "allow all", "view all"). It is bound to the
      * Route "customAbility.update" and called via AJAX Requests.
      *
-     * @param Request $request
+     * @param Request $requestData
      * @return Collection|mixed
      * @author Christian Schramm
      */
@@ -100,11 +100,11 @@ class AbilityController extends Controller
      *
      * @param mixed $requestData
      * @param string $roleName
-     * @param Ability $ability
+     * @param Collection|Ability $abilities
      * @return void
      * @author Christian Schramm
      */
-    protected function registerCustomAbility($requestData, $roleName, $abilities)
+    protected function registerCustomAbility($requestData, string $roleName, $abilities)
     {
         $allowedAbilities = collect($requestData->roleAbilities)->filter();
         $forbiddenAbilities = collect($requestData->roleForbiddenAbilities)->filter();
@@ -231,7 +231,7 @@ class AbilityController extends Controller
             'GlobalConfig' => collect([
                 'GlobalConfig', 'BillingBase', 'Ccc', 'HfcBase', 'ProvBase', 'ProvVoip', 'GuiLog',
                 ])->mapWithKeys(function ($name) use ($models, $allAbilities) {
-                    return self::getModelActions($models, $name, $allAbilities);
+                    return self::getModelActions($name, $models, $allAbilities);
                 }),
         ]);
 
@@ -253,13 +253,13 @@ class AbilityController extends Controller
      * This Method performs a custom sort for Models to Modules. To keep the
      * Ability-Interface clear and concise for the Users.
      *
-     * @param [type] $name
-     * @param [type] $models
-     * @param [type] $allAbilities
-     * @return void
+     * @param string $name
+     * @param Collection|string $models
+     * @param Collection|Ability $allAbilities
+     * @return Collection|mixed
      * @author Christian Schramm
      */
-    private static function getModelsAndActions($name, $models, $allAbilities)
+    private static function getModelsAndActions(string $name, $models, $allAbilities)
     {
         return $models->filter(function ($class) use ($name) {
             if ($name == 'App') {
@@ -273,20 +273,20 @@ class AbilityController extends Controller
             return Str::contains($class, '\\'.$name.'\\');
         })
         ->mapWithKeys(function ($class, $name) use ($models, $allAbilities) {
-            return self::getModelActions($models, $name, $allAbilities);
+            return self::getModelActions($name, $models, $allAbilities);
         });
     }
 
     /**
      * This method returns the assigned Actions for a given Model.
      *
-     * @param [type] $models
-     * @param [type] $name
-     * @param [type] $allAbilities
-     * @return void
+     * @param string $name
+     * @param Collection|string $models
+     * @param Collection|Ability $allAbilities
+     * @return array
      * @author Christian Schramm
      */
-    private static function getModelActions($models, $name, $allAbilities)
+    private static function getModelActions(string $name, $models, $allAbilities)
     {
         return [
             $name => $allAbilities
@@ -312,7 +312,7 @@ class AbilityController extends Controller
     /**
      * Get All Abilities and return only the non-Crud based ones.
      *
-     * @param Ability $abilities
+     * @param Collection|Ability $abilities
      * @return Collection|mixed
      * @author Christian Schramm
      */
@@ -320,14 +320,13 @@ class AbilityController extends Controller
     {
         return $abilities->filter(function ($ability) {
             return self::isCustom($ability);
-        })
-                ->pluck('title', 'id');
+        })->pluck('title', 'id');
     }
 
     /**
      * Get All Abilities and return only the Crud based Abilities.
      *
-     * @param Ability $abilities
+     * @param Collection|Ability $abilities
      * @return Collection|mixed
      * @author Christian Schramm
      */
@@ -352,7 +351,7 @@ class AbilityController extends Controller
      * @return bool
      * @author Christian Schramm
      */
-    private static function isCustom($ability)
+    private static function isCustom(Ability $ability)
     {
         return Str::startsWith($ability->entity_type, '*') ||
                 $ability->entity_type == null ||

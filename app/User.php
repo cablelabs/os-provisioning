@@ -20,8 +20,6 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 {
     use Authenticatable, Authorizable, HasRolesAndAbilities, Notifiable;
 
-    const SUPPORTED_LANGUAGES = ['de', 'en', 'es'];
-
     public $table = 'users';
 
     protected $guard = 'admin';
