@@ -291,7 +291,9 @@ new Vue({
 
             if (this.customAbilities[id]['title'] == 'View everything')
                 this.allowViewAllId = id;
+        }
 
+        for (id in this.customAbilities) {
             if (id in this.originalRoleAbilities) {
                 this.$refs['allowed'+ id][0].checked = true;
                 if (id == this.allowAllId)  this.allowAll = true;
