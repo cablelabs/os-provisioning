@@ -70,7 +70,7 @@ return [
     // NetElement
     'netelement.id' => 'ID',
     'netelement.name' => 'Elemento de red',
-    'netelement.ip' => 'IP Adress',
+    'netelement.ip' => 'Direccion IP',
     'netelement.state' => 'Estado',
     'netelement.pos' => 'Posición',
     // NetElementType
