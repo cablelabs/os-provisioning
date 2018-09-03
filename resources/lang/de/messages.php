@@ -147,6 +147,7 @@ return [
     'HfcBase' 					=> 'HfcBase Konfiguration',
     'ProvBase' 					=> 'ProvBase Konfiguration',
     'ProvVoip' 					=> 'ProvVoip Konfiguration',
+    'ProvVoipEnvia' => 'ProvVoipEnvia Konfiguration',
     'HFC'						=> 'HFC',
     'Rank'						=> 'Rang',
     'Assign Users'				=> 'Benutzer zuweisen',

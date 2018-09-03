@@ -211,7 +211,11 @@ class AbilityController extends Controller
     public static function getModelAbilities(Role $role)
     {
         $modelsToExclude = [
+            'AccountingRecord',
             'Dashboard',
+            'IcingaHostStatus',
+            'IcingaObjects',
+            'ModemHelper',
         ];
 
         $modules = Module::collections()->keys();
