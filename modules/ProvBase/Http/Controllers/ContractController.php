@@ -3,6 +3,7 @@
 namespace Modules\ProvBase\Http\Controllers;
 
 use Bouncer;
+use Session;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvVoip\Entities\PhoneTariff;
@@ -142,7 +143,7 @@ class ContractController extends \BaseController
             if ($num) {
                 $data['number'] = $num;
 
-                if (! \Session::has('alert')) {
+                if (! Session::has('alert')) {
                     Session::forget('alert');
                 }
             } else {
@@ -151,7 +152,7 @@ class ContractController extends \BaseController
                 $numberrange_exists = \Modules\BillingBase\Entities\NumberRange::where('type', '=', 'contract')
                     ->where('costcenter_id', $data['costcenter_id'])->count();
 
-                if ($numberrange_exists && ! \Session::has('alert')) {
+                if ($numberrange_exists && ! Session::has('alert')) {
                     session(['alert' => trans('messages.contract_numberrange_failure')]);
                 }
             }
