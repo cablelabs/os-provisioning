@@ -119,8 +119,8 @@ class CreateBouncerTables extends Migration
             }
             //create Custom Abilities
             Bouncer::allow('admin')->everything();
-            Bouncer::allow('guest')->to('view', '*'); //role for demo system or presentation
             Bouncer::allow('support')->everything();
+            Bouncer::allow('guest')->to('view', '*'); //role for demo system or presentation
             Bouncer::forbid('support')->to('use api');
             Bouncer::forbid('support')->to('see income chart');
             Bouncer::forbid('support')->toManage(Role::class);
