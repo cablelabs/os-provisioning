@@ -98,7 +98,6 @@ class ContractController extends \BaseController
 
                 $b = array_merge($b, $b2);
             }
-
         }
 
         $c = [

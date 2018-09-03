@@ -36,7 +36,6 @@ class importNetUserCommand extends Command
      */
     protected $errors = [];
 
-
     /**
      * Mapping of old ConfigFile Names to new ConfigFile IDs
      *
@@ -100,7 +99,6 @@ class importNetUserCommand extends Command
         };
 
         $this->qoss = Qos::get();
-        // d($this->qoss->where('ds_rate_max_help', 262144)->where('us_rate_max_help', 262144)->first());
         $this->_load_mappings();
 
         // Connect to old Database
@@ -120,6 +118,7 @@ class importNetUserCommand extends Command
                 ->selectRaw('c.*, d.Mandantnr')
                 ->join('billing.vkunden as c', 'd.Kundennr', '=', 'c.Kundennr')
                 ->where($area_filter)
+                // ->where('d.Kundennr', '=', 2049)
                 ->groupBy('d.Kundennr')->orderBy('d.Kundennr')
                 ->get();
 
@@ -339,7 +338,7 @@ class importNetUserCommand extends Command
 
         // determine qos_id
         $rates = self::get_modem_data_rates($old_modem->konfig_id > 0 ? $old_modem->cm_conf_default : $old_modem->cm_conf_changed);
-        $qos = $this->qoss->whereLoose('ds_rate_max_help', (int) $rates['ds'])->whereLoose('us_rate_max_help', (int) $rates['us'])->first();
+        $qos = $this->qoss->where('ds_rate_max_help', (int) $rates['ds'])->where('us_rate_max_help', (int) $rates['us'])->first();
 
         if ($qos) {
             $modem->qos_id = $qos->id;
@@ -375,7 +374,7 @@ class importNetUserCommand extends Command
 
         // Deactivate network access when gesperrt or when no cpe's attached
         $modem->network_access = 1;
-        if ($old_modem->Gesperrt_int == 'Y' || !$comps) {
+        if ($old_modem->Gesperrt_int == 'Y' || ! $comps) {
             $modem->network_access = 0;
         }
 
