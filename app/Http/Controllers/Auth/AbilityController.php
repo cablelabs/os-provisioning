@@ -233,8 +233,19 @@ class AbilityController extends Controller
         // Grouping GlobalConfig, Authentication and HFC Permissions to increase usability
         $modelAbilities = collect([
             'GlobalConfig' => collect([
-                'GlobalConfig', 'BillingBase', 'Ccc', 'HfcBase', 'ProvBase', 'ProvVoip', 'GuiLog',
-                ])->mapWithKeys(function ($name) use ($models, $allAbilities) {
+                    'BillingBase',
+                    'Ccc',
+                    'HfcBase',
+                    'ProvBase',
+                    'ProvVoip',
+                    'ProvVoipEnvia',
+                ])
+                ->filter(function ($name) use ($modules) {
+                    return $modules->contains($name);
+                })
+                ->prepend('GlobalConfig')
+                ->push('GuiLog')
+                ->mapWithKeys(function ($name) use ($models, $allAbilities) {
                     return self::getModelActions($name, $models, $allAbilities);
                 }),
         ]);
