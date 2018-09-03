@@ -30,6 +30,14 @@ class importNetUserCommand extends Command
     protected $description = 'import all provisioning data from a NetUser database';
 
     /**
+     * Error output after import has finished
+     *
+     * @var array
+     */
+    protected $errors = [];
+
+
+    /**
      * Mapping of old ConfigFile Names to new ConfigFile IDs
      *
      * @var array
@@ -160,6 +168,9 @@ class importNetUserCommand extends Command
         }
 
         echo "\n";
+        foreach ($this->errors as $msg) {
+            $this->error($msg);
+        }
     }
 
     /**
@@ -395,10 +406,14 @@ class importNetUserCommand extends Command
 
         // Logging & Output
         if ($modem->configfile_id == 0) {
-            \Log::error('No Configfile could be assigned to Modem '.($modem->id)." Old ModemID: $old_modem->Lfd, konfig_id: $old_modem->konfig_id");
+            $msg = 'No Configfile could be assigned to Modem '.($modem->id)." Old ModemID: $old_modem->Lfd, konfig_id: $old_modem->konfig_id";
+            $this->errors[] = $msg;
+            \Log::error($msg);
         }
         if (! $modem->qos_id) {
-            \Log::error('No QoS defined for datarates '.$ret['ds_rate'].' (DS) '.$ret['us_rate']." (US) - Modem-ID: $modem->id");
+            $msg = 'No QoS defined for datarates '.$ret['ds_rate'].' (DS) '.$ret['us_rate']." (US) - Modem-ID: $modem->id";
+            $this->errors[] = $msg;
+            \Log::error($msg);
         }
 
         \Log::info("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
@@ -501,7 +516,9 @@ class importNetUserCommand extends Command
         $mta->save();
 
         if (! $mta->configfile_id) {
-            \Log::error('No Configfile could be assigned to MTA '.$mta->id." Old MtaID: $old_mta->Lfd");
+            $msg = 'No Configfile could be assigned to MTA '.$mta->id." Old MtaID: $old_mta->Lfd";
+            $this->errors[] = $msg;
+            \Log::error($msg);
         }
 
         \Log::info('ADD MTA: '.$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
