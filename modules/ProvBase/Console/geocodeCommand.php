@@ -69,7 +69,7 @@ class geocodeCommand extends Command
 
         foreach ($modems as $modem) {
             ob_start();
-            $ret = $modem->geocode();
+            $ret = $modem->geocode(true);
             ob_end_clean();
 
             if ($this->debug) {
