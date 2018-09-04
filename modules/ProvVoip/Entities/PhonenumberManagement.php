@@ -24,8 +24,8 @@ class PhonenumberManagement extends \BaseModel
             'carrier_in' => 'required|exists:carriercode,id,deleted_at,NULL',
             'carrier_out' => 'required|exists:carriercode,id,deleted_at,NULL',
             'ekp_in' => 'required|exists:ekpcode,id,deleted_at,NULL',
-            'activation_date' => 'date',
-            'deactivation_date' => 'date',
+            'activation_date' => 'nullable|date',
+            'deactivation_date' => 'nullable|date',
         ];
     }
 
