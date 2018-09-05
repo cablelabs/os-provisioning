@@ -2,19 +2,19 @@
 
 namespace Modules\provbase\Console;
 
+use Illuminate\Bus\Queueable;
 use Illuminate\Console\Command;
 use Modules\ProvBase\Entities\Modem;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Modules\ProvBase\Entities\Configfile;
-use Collective\Bus\Contracts\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class configfileCommand extends Command implements SelfHandling, ShouldQueue
+class configfileCommand extends Command implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
+    use InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * The console command name.

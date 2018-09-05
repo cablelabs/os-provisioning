@@ -79,7 +79,7 @@ return [
     'cdr_offset' 			=> 'CDR to Invoice time difference in Months',
     'close' 				=> 'Close',
     'contract_early_cancel' => 'Do you really want to cancel this contract before tariffs end of term :date is reached?',
-    'contract_nr_mismatch'  => 'Could not find the next contract number because the database query failed. This is due to the following contracts having a contract number that does not belong to their selected cost center: :nrs',
+    'contract_nr_mismatch'  => 'Could not find the next contract number because the database query failed. This is due to the following contracts having a contract number that does not belong to their selected cost center: :nrs. Please change the cost center or let the system assign a new contract number for these contracts.',
     'contract_numberrange_failure' => 'No free contract number for selected costcenter available!',
     'conn_info_err_create' 	=> 'Error Creating PDF - See Logfiles or ask Admin!',
     'conn_info_err_template' => 'Could not Read Template - See GlobalConfig or Company if it is set!',

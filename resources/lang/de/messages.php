@@ -79,7 +79,7 @@ return [
     'cdr_offset' 			=> 'Zeitdifferenz EVN zu Rechnung in Monaten',
     'close' 				=> 'Schliessen',
     'contract_early_cancel' => 'Möchten Sie den Vertrag wirklich vor Tariflaufzeitende :date kündigen?',
-    'contract_nr_mismatch'  => 'Es konnte keine nächste Vertragsnummer gefunden werden, da die Datenbankabfrage fehl schlug. Die Ursache dafür liegt bei folgenden Verträgen, die eine Vertragsnummer haben, die nicht zur Kostenstelle passt: :nrs',
+    'contract_nr_mismatch'  => 'Es konnte keine nächste Vertragsnummer gefunden werden, da die Datenbankabfrage fehl schlug. Die Ursache dafür liegt bei folgenden Verträgen, die eine Vertragsnummer haben, die nicht zur Kostenstelle passt: :nrs. Bitte tragen Sie die korrekte Kostenstelle ein oder lassen Sie eine neue Vertragsnummer für die Verträge vergeben.',
     'contract_numberrange_failure' => 'Keine freie Vertragsnummer für die gewählte Kostenstelle gefunden.',
     'conn_info_err_create' 	=> 'Fehler beim Erstellen des PDF - Siehe LogFile!',
     'conn_info_err_template' => 'Das Template konnte nicht gelesen werden - Bitte überprüfen Sie ob es unter Unternehmen gesetzt ist!',
