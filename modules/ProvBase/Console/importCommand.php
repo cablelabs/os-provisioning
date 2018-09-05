@@ -34,6 +34,13 @@ class importCommand extends Command
     protected $description = 'import km3';
 
     /**
+     * Errors that will be written to stdout when command finishes
+     *
+     * @var array
+     */
+    protected $errors = [];
+
+    /**
      * Mapping of old Internet Tarif Names to new Tarif IDs
      *
      * @var array
@@ -234,6 +241,9 @@ class importCommand extends Command
         }
 
         echo "\n";
+        foreach ($this->errors as $msg) {
+            $this->error($msg);
+        }
     }
 
     /**
@@ -453,12 +463,14 @@ class importCommand extends Command
             $item_n = $items_new->where('product_id', $prod_id)->all();
 
             if ($item_n) {
-                \Log::info("\tItem $key for Contract ".$new_contract->id.' already exists');
+                \Log::info("\tItem $key for Contract ".$new_contract->number.' already exists');
                 continue;
             }
 
             if ($prod_id <= 0) {
-                \Log::error("\tProduct $prod_id does not exist for $key: $tarif");
+                $msg = "\tProduct $prod_id does not exist for $key: $tarif [ContractNr $new_contract->number]";
+                \Log::error($msg);
+                $this->errors = $msg;
                 continue;
             }
 
@@ -567,7 +579,7 @@ class importCommand extends Command
             $prod_id = isset($this->add_items[$item->id]) ? $this->add_items[$item->id] : null;
 
             if (! $prod_id) {
-                \Log::error("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
+                \Log::notice("\tCan not map Artikel \"$item->artikel\" - ID $item->id does not exist in internal mapping table");
                 continue;
             }
 
@@ -707,7 +719,9 @@ class importCommand extends Command
 
         // Output
         if ($modem->configfile_id == 0) {
-            \Log::error('No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->id");
+            $msg = "No Configfile could be assigned to Modem $modem->id Old ModemID: $old_modem->id [ContractNr $new_contract->number]";
+            \Log::error($msg);
+            $this->errors = $msg;
         }
 
         \Log::info("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
