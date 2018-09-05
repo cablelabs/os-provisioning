@@ -132,14 +132,14 @@ function concat_pdfs($sourcefiles, $target_fn, $multithreaded = false)
         $cnt = count(explode(' ', trim($sourcefiles)));
     }
 
-    \ChannelLog::debug('billing', 'Concat '.$cnt.' PDFs to '.$target_fn);
+    ChannelLog::debug('billing', 'Concat '.$cnt.' PDFs to '.$target_fn);
 
     $cmd_ext = $multithreaded ? '> /dev/null 2>&1 & echo $!' : '';
     exec("gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=$target_fn $sourcefiles $cmd_ext", $output, $ret);
 
     // Note: normally output is [] and ret is 0
     if ($ret) {
-        \ChannelLog::error('billing', "Error concatenating target file $target_fn", [$ret]);
+        ChannelLog::error('billing', "Error concatenating target file $target_fn", [$ret]);
     }
 
     return $multithreaded ? (int) $output[0] : 0;
