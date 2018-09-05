@@ -15,6 +15,7 @@ return [
 
     'failed' => 'Diese Zugangsdaten wurden nicht in unserer Datenbank gefunden.',
     'throttle' => 'Zu viele Login Versuche. Versuchen Sie es bitte in :seconds Sekunden erneut.',
-    'NoRoles' => 'You have no role(s) associated with your account!. Please contact your administrator.',
+    'NoRoles' => 'Es wurden keine Rollen mit Ihrem Account verknüpft. Bitte wenden Sie sich an Ihren Administrator.',
 
+    'EnviaOrderDocument' => 'Zugriff zu EnviaOrder Dokument ist nicht erlaubt.\nIhnen fehlt eventuell die Berechtigung für ProvVoipEnvia - Bitte wenden Sie sich an Ihren Administrator.',
 ];
