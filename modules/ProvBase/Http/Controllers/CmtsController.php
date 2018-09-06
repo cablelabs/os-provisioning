@@ -50,11 +50,11 @@ class CmtsController extends \BaseController
         }
 
         // The CMTS company and type Array
-        foreach (config('provbase.cmts') as $vendor => $__type)
+        foreach (config('provbase.cmts') as $vendor => $__type) {
             $company_array[$vendor] = $vendor;
+        }
 
         $type = config('provbase.cmts.'.$company);
-
 
         /**
          * label has to be the same like column in sql table

@@ -126,8 +126,9 @@ class Cmts extends \BaseModel
         $view_var = $this;
         $cb = $this;
 
-        if (\View::exists('provbase::Cmtsblade.'.strtolower($view_var->company)))
+        if (\View::exists('provbase::Cmtsblade.'.strtolower($view_var->company))) {
             return strip_tags(view('provbase::Cmtsblade.'.strtolower($this->company), compact('cb', 'view_var'))->render());
+        }
 
         return '';
     }
