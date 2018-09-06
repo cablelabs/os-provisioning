@@ -12,7 +12,7 @@ class Configfile extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'configfile';
 
-    public $guarded = ['firmware_upload'];
+    public $guarded = ['cvc_upload', 'firmware_upload'];
 
     // Add your validation rules here
     public static function rules($id = null)

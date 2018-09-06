@@ -361,7 +361,7 @@ class Modem extends \BaseModel
 
         // only add content if multiple dhcp servers exist
         if (! ProvBase::first()->multiple_provisioning_systems) {
-            $content = '# Ignoring no devices – multiple_provisioning_systems not set in ProvBase';
+            $content = "# Ignoring no devices – multiple_provisioning_systems not set in ProvBase\n";
         } else {
             // get all not deleted modems
             // attention: do not use “where('network_access', '>', '0')” to shrink the list
