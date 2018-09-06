@@ -33,6 +33,7 @@ class ConfigfileController extends \BaseController
             ['form_type' => 'select', 'name' => 'firmware', 'description' => 'Choose Firmware File', 'value' => $firmware_files],
             ['form_type' => 'file', 'name' => 'firmware_upload', 'description' => 'or: Upload Firmware File'],
             ['form_type' => 'select', 'name' => 'cvc', 'description' => 'Choose Certificate File', 'value' => $cvc_files, 'help' => $model->get_cvc_help()],
+            ['form_type' => 'file', 'name' => 'cvc_upload', 'description' => 'or: Upload Certificate File'],
         ];
     }
 
@@ -55,8 +56,9 @@ class ConfigfileController extends \BaseController
     public function store($redirect = true)
     {
 
-        // check and handle uploaded firmware files
+        // check and handle uploaded firmware and cvc files
         $this->handle_file_upload('firmware', '/tftpboot/fw/');
+        $this->handle_file_upload('cvc', '/tftpboot/cvc/');
 
         // finally: call base method
         return parent::store();
@@ -69,8 +71,9 @@ class ConfigfileController extends \BaseController
     public function update($id)
     {
 
-        // check and handle uploaded firmware files
+        // check and handle uploaded firmware and cvc files
         $this->handle_file_upload('firmware', '/tftpboot/fw/');
+        $this->handle_file_upload('cvc', '/tftpboot/cvc/');
 
         // finally: call base method
         return parent::update($id);
