@@ -52,10 +52,7 @@
 						</a>
 						<div class="dropdown-divider"></div>
 						<a class="dropdown-item" href="mailto:support@roetzer-engineering.com" target="_blank">
-							<i class="fa fa-envelope-open" aria-hidden="true" style="width: 20px;"></i>Professional Help
-						</a>
-						<a class="dropdown-item" href="https://nmsprime.com/pricing" target="_blank">
-							<i class="fa fa-dollar" aria-hidden="true" style="width: 20px;"></i>Full Support – SLA
+							<i class="fa fa-envelope-open" aria-hidden="true" style="width: 20px;"></i>Request Professional Help
 						</a>
 					</div>
 				</li>
