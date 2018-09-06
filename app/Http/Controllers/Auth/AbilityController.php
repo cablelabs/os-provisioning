@@ -211,11 +211,11 @@ class AbilityController extends Controller
     public static function getModelAbilities(Role $role)
     {
         $modelsToExclude = [
-            'AccountingRecord',
-            'Dashboard',
-            'IcingaHostStatus',
-            'IcingaObjects',
-            'ModemHelper',
+            'AccountingRecord', // has no UI/Route associated
+            'Dashboard',        // has its own Authorization checks
+            'IcingaHostStatus', // has no UI/Route associated
+            'IcingaObjects',    // has no UI/Route associated
+            'ModemHelper',      // has no UI/Route associated
         ];
 
         $modules = Module::collections()->keys();
@@ -238,7 +238,6 @@ class AbilityController extends Controller
                     'HfcBase',
                     'ProvBase',
                     'ProvVoip',
-                    'ProvVoipEnvia',
                 ])
                 ->filter(function ($name) use ($modules) {
                     return $modules->contains($name);
