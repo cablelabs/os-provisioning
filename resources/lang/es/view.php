@@ -24,7 +24,6 @@ return [
         'jQuery_PaginatesNext'		=> 'Siguiente',
         'jQuery_PaginatesLast'		=> 'Ultimo',
         'jQuery_sLast'				=> ': activar para ordenar la columna descendentemente',
-        'jQuery_sLast'				=> ': activar para ordenar las columnas de forma descendente',
         'jQuery_All'				=> 'Todo',
         'jQuery_Print'				=> 'Imprimir',
         'jQuery_colvis'				=> 'Visibilidad de la columna',
