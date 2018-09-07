@@ -24,7 +24,6 @@ return [
         'jQuery_PaginatesNext'		=> 'Next',
         'jQuery_PaginatesLast'		=> 'Last',
         'jQuery_sLast'				=> ': activate to sort column ascending',
-        'jQuery_sLast'				=> ': activate to sort column descending',
         'jQuery_All'				=> 'All',
         'jQuery_Print'				=> 'Print',
         'jQuery_colvis'				=> 'Column Visibility',
