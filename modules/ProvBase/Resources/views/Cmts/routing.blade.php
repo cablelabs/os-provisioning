@@ -27,7 +27,6 @@ File: <i>/etc/sysconfig/network-scripts/route-...</i><br><br>
 
 <div style="padding-left: 20px;">
 <pre>
-interface bundle 1
  @include ('provbase::Cmtsblade.bundle_ips')
 </pre>
 </div>
