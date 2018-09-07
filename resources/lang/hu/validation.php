@@ -108,7 +108,6 @@ return [
         ],
     ],
 
-    'docsis'               => ':attribute',
     'ip'                   => 'This is not a valid IP address of the form: 192.168.0.255',
     'ip_in_range'          => 'The IP address is not inside the previous specified range',
     'ip_larger'            => 'The IP address must have a higher number due to address specification in earlier fields',

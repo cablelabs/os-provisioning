@@ -2,5 +2,3 @@ preserve_hierarchy: true
 files:
   - source: /resources/lang/en/*.php
     translation: /resources/lang/%two_letters_code%/%file_name%.php
-    update_option: update_as_unapproved
-    escape_quotes: '2'
