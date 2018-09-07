@@ -17,4 +17,5 @@ return [
     'throttle' => 'Demasiados intentos de acceso. Por favor intente nuevamente en :seconds segundos.',
     'NoRoles' => 'No tienes ningún rol asociado con su cuenta!. Por favor, póngase en contacto con su administrador.',
 
+    'EnviaOrderDocument' => 'Access to EnviaOrderDocument not allowed.\\nYou might be missing Permissions for ProvVoipEnvia - Please contact your administrator.',
 ];

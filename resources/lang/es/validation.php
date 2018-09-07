@@ -98,8 +98,13 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'password' => [
+            'regex' => 'The password has to be at least 10 characters long and fulfill three of these requirements:
+                        <li>Uppercase characters (A – Z)</li>
+                        <li>Lowercase characters (a – z)</li>
+                        <li>Digits (0 – 9)</li>
+                        <li>Non-alphanumeric (For example: !, $, #, or %)</li>
+                        <li>Unicode characters</li>',
         ],
     ],
 
