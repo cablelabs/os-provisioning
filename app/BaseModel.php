@@ -717,7 +717,6 @@ class BaseModel extends Eloquent
         return 'Need to be Set !';
     }
 
-
     /**
      *	Returns a array of all children objects of $this object
      *  Note: - Must be called from object context

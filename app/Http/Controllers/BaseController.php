@@ -1548,6 +1548,7 @@ class BaseController extends Controller
     {
         // helper to get model name from controller context
         $a = explode('\\', strtolower(NamespaceController::get_model_name()));
+
         return config('documentation.'.strtolower(end($a)));
     }
 }

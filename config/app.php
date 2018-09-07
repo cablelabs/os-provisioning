@@ -81,7 +81,6 @@ return [
 
     'fallback_locale' => 'en',
 
-
     /*
      * TODO: please comment @cschra
      */
