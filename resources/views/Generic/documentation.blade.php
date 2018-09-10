@@ -9,7 +9,7 @@
                 if (isset($documentation))
                     $help = config('documentation.'.strtolower($documentation));
                 else
-                    $help = $model->view_help();
+                    $help = $view_help;
             ?>
 
             @if ($help['doc'])

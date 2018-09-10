@@ -718,20 +718,6 @@ class BaseModel extends Eloquent
     }
 
     /**
-     *	The official Documentation Help Menu Function
-     *
-     *  See: See: config/documenation.php array
-     *
-     *	@author Torsten Schmidt
-     *
-     *	@return array of ['doc' => link, 'youtube' => link, 'url' => 'link']
-     */
-    public function view_help()
-    {
-        return config('documentation.'.strtolower($this->get_model_name()));
-    }
-
-    /**
      *	Returns a array of all children objects of $this object
      *  Note: - Must be called from object context
      *        - this requires straight forward names of tables an
