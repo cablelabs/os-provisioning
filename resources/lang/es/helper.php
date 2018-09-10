@@ -4,10 +4,10 @@ return [
  /*
   * Authentication and Base
   */
-    'translate'					=> 'You can help translating NMS PRIME at',
+    'translate'					=> 'Usted puede ayudar a traducir primer NMS en',
     'assign_role'					=> 'Asigna uno o más roles a este usuario. Los usuarios sin Rol no pueden usar el NMS porque no tienen Permisos.',
     'assign_users'					=> 'Asigna uno o más usuarios a este rol. Los cambios realizados aquí no son visibles en el GuiLog del usuario.',
-    'assign_rank'					=> 'El rango de un rol determina la capacidad de editar otros usuarios. <br \>Puedes asignar valores de 0 a 100. (más alto es mejor). <br \>Si un usuario tiene más de un rol, se usa el rango más alto . <br \>Si se establece la capacidad de actualizar usuarios, el rango también se verifica. Solo si el rango del editor es mayor, se concede permiso. Además, al crear o actualizar usuarios, solo se pueden asignar roles con rango igual o inferior.',
+    'assign_rank'					=> 'El rango de una función determina la posibilidad de editar otros usuarios. <br \\>puede asignar valores de 0 a 100. (mayor es mejor). <br \\>si un usuario tiene más de una función, se utiliza el rango más alto. <br \\>si se establece la posibilidad de actualizar los usuarios, la fila también se comprueba. Solamente si el rango del editor es mayor, se concede el permiso. Además, al crear o actualizar los usuarios, pueden asignarse sólo funciones con rango igual o inferior.',
     'All abilities'					=> 'Esta habilidad permite todas las solicitudes de autorización, excepto las habilidades, que están explícitamente prohibidas. Esto es principalmente una habilidad de ayuda. La prohibición está deshabilitada, porque solo se permiten las habilidades marcadas. Si esta habilidad no está marcada, debes establecer todas las habilidades a mano. Si cambias esta habilidad, cuando se establecen muchas otras habilidades, tomará hasta 1 minuto aplicar todos los cambios.',
     'View everything'			=> 'Esta capacidad permite ver todas las páginas. La prohibición está inhabilitada porque hace que el NMS no se pueda usar. Esto es principalmente una capacidad de ayuda para los invitados o usuarios con privilegios muy bajos.',
     'Use api'					=> 'Esta capacidad permite o prohíbe el acceso a las rutas API con "Basic Auth" (el correo electrónico se usa como nombre de usuario).',
@@ -38,7 +38,7 @@ return [
     'BillingBase_ItemTermination'	=> 'Permitir a los Clientes solo cancelar productos reservados el ultimo dia del mes',
     'BillingBase_MandateRef'		=> "Un Formulario puede ser construido con columnas SQL de las tablas contrato/mandato - posibles campos: \n",
     'BillingBase_showAGs' 			=> 'Adiciona una lista seleccionada con personas contactadas a la pagina de contrato. La lista tiene que ser almacenada en un directorio Alamacenamiento apropiado - revise el codigo fuente!',
-    'BillingBase_SplitSEPA'			=> 'Sepa Transfers are split to different XML-Files dependent of their transfer type',
+    'BillingBase_SplitSEPA'			=> 'Las transferencias de Sepa se dividen en diferentes archivos XML dependiendo de su tipo de transferencia',
 
     //CompanyController
     'Company_Management'			=> 'Lista de nombres separada por comas',

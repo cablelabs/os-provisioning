@@ -59,6 +59,9 @@ class ProvBaseServiceProvider extends ServiceProvider
             __DIR__.'/../Config/config.php' => config_path('provbase.php'),
         ]);
         $this->mergeConfigFrom(
+            __DIR__.'/../Config/cmts.php', 'provbase.cmts'
+        );
+        $this->mergeConfigFrom(
             __DIR__.'/../Config/config.php', 'provbase'
         );
     }

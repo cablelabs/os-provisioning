@@ -291,7 +291,9 @@ new Vue({
 
             if (this.customAbilities[id]['title'] == 'View everything')
                 this.allowViewAllId = id;
+        }
 
+        for (id in this.customAbilities) {
             if (id in this.originalRoleAbilities) {
                 this.$refs['allowed'+ id][0].checked = true;
                 if (id == this.allowAllId)  this.allowAll = true;
@@ -343,26 +345,22 @@ new Vue({
         if (this.$refs['allowed'+ id][0].checked) {
             if (id == this.allowAllId) {
                 this.allowAll = true;
+                this.allowViewAll = undefined;
                 this.$refs['allowed'+ this.allowViewAllId][0].checked = false;
                 this.changed.splice(this.allowViewAllId, 1, this.hasChanged(this.allowViewAllId));
-                this.allowViewAll = undefined;
+                delete this.roleAbilities[this.allowViewAllId];
             }
 
-            if (id == this.allowViewAllId)
-                this.allowViewAll = true;
-
+            this.allowViewAll =  id == this.allowViewAllId ? true : this.allowViewAll;
             this.roleAbilities[id] = this.customAbilities[id]['localTitle'];
             delete this.roleForbiddenAbilities[id];
         } else {
-
             if (id == this.allowAllId) {
                 this.allowAll = undefined;
                 this.changed.splice(this.allowViewAllId, 1, this.hasChanged(this.allowViewAllId));
             }
 
-            if (id == this.allowViewAllId)
-                this.allowViewAll = undefined;
-
+            this.allowViewAll =  id == this.allowViewAllId ? undefined : this.allowViewAll;
             delete this.roleAbilities[id];
         }
 
@@ -372,11 +370,9 @@ new Vue({
     },
     customForbid : function (id) {
         if (this.$refs['forbidden'+ id][0].checked) {
-            if (id == this.allowAllId) this.allowAll = false;
             this.roleForbiddenAbilities[id] = this.customAbilities[id]['localTitle'];
             delete this.roleAbilities[id];
         } else {
-            if (id == this.allowAllId) this.allowAll = undefined;
             delete this.roleForbiddenAbilities[id];
         }
 

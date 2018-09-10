@@ -20,8 +20,6 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 {
     use Authenticatable, Authorizable, HasRolesAndAbilities, Notifiable;
 
-    const SUPPORTED_LANGUAGES = ['de', 'en', 'es'];
-
     public $table = 'users';
 
     protected $guard = 'admin';
@@ -77,8 +75,8 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     {
         return [
             'login_name' => 'required|unique:users,login_name,'.$id.',id,deleted_at,NULL',
-            'password' => 'sometimes|min:6|confirmed',
-            'password_confirmation' => 'min:6|required_with:password|same:password',
+            'password' => 'sometimes|min:10|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/|confirmed',
+            'password_confirmation' => 'min:10|required_with:password|same:password',
         ];
     }
 

@@ -24,7 +24,6 @@ return [
         'jQuery_PaginatesNext'		=> 'Siguiente',
         'jQuery_PaginatesLast'		=> 'Ultimo',
         'jQuery_sLast'				=> ': activar para ordenar la columna descendentemente',
-        'jQuery_sLast'				=> ': activate to sort column descending',
         'jQuery_All'				=> 'Todo',
         'jQuery_Print'				=> 'Imprimir',
         'jQuery_colvis'				=> 'Visibilidad de la columna',
@@ -39,7 +38,7 @@ return [
         'Menu_Logging'				=> 'Registro',
         'Menu_Product List'			=> 'Lista de productos',
         'Menu_SEPA Accounts'		=> 'Cuenta de SEPA',
-        'Menu_Settlement Run'		=> 'Settlement Run',
+        'Menu_Settlement Run'		=> 'Procesos de liquidacion',
         'Menu_Cost Center'			=> 'Departamento de costos',
         'Menu_Companies'			=> 'Empresas',
         'Menu_Salesmen'				=> 'Vendedores',
@@ -49,7 +48,7 @@ return [
         'Menu_Contracts'			=> 'Contratos',
         'Menu_Modems'				=> 'Módems',
         'Menu_Endpoints'			=> 'Extremos',
-        'Menu_Number Range'			=> 'Nummernkreis',
+        'Menu_Number Range'			=> 'Intervalo de números',
         'Menu_Configfiles' 			=> 'Archivo de configuración',
         'Menu_QoS' 					=> 'QoS',
         'Menu_CMTS' 				=> 'CMTS',
@@ -117,11 +116,11 @@ return [
         'Header_EditCost Center'	=> 'Editar centro de costos',
         //Company
         'Header_EditCompany'		=> 'Editar compa&ntilde;ia',
-        'Ability_Custom Abilities' 	=> 'Custom Abilities',
-        'Ability_Authentication'		=> 'Authentication',
-        'Ability_GlobalConfig' 		=> 'GlobalConfig',
-        'Ability_Ccc'				=> 'Ccc',
-        'Ability_BillingBase' 		=> 'BillingBase',
+        'Ability_Custom Abilities' 	=> 'Aptitudes personalizadas',
+        'Ability_Authentication'		=> 'Autenticación',
+        'Ability_GlobalConfig' 		=> 'Configuración global',
+        'Ability_Ccc'				=> 'CCC',
+        'Ability_BillingBase' 		=> 'Módulo de facturación',
         'Ability_HFC' 				=> 'HFC',
         'Ability_ProvBase' 			=> 'ProvBase',
         'Ability_ProvVoip' 			=> 'ProvVoip',
@@ -171,9 +170,9 @@ return [
         'Header_EditCMTS'			=> 'Editar CMTS',
         'Header_Config'				=> 'Config. propuesta|Config. propuestas',
         //IpPool
-        'Header_IpPool'				=> 'IP-Pool|IP-Pools',
+        'Header_IpPool'				=> 'Pool de IP|IP-pool\'s',
         'Header_EditIpPool'			=> 'Editar IP-Pool',
-        'Header_IP-Pools'			=> 'IP-Pool|IP-Pools',
+        'Header_IP-Pools'			=> 'Pool de IP|IP-pool\'s',
         'Header_EditIP-Pools'		=> 'Editar IP-Pool',
         // Tickets
         'Header_Ticket'				=> 'Ticket|Tickets',
@@ -197,7 +196,7 @@ return [
         'Header_Phonenumbers'		=> 'Numeros telefonicos',
         'Header_EditPhonenumbers'	=> 'Editar numeros telefonicos',
         'Header_Tickets'			=> 'Ticket|Tickets',
-        'Header_EditTickets'		=> 'Edit Tickets',
+        'Header_EditTickets'		=> 'Editar Ticket',
         //Phone tariff
         'Header_Comment'			=> 'Comentarios',
         'Header_EditComment'		=> 'Editar comentarios',
@@ -281,7 +280,7 @@ return [
         'Button_Create Configfiles'		=> 'Crear archivos de configuracion',
         // //QoS
         'Button_Create Settlement Run'	=> 'Crear proceso de liquidacion',
-        'Button_Rerun Accounting Command' => 'Rerun Accounting Command',
+        'Button_Rerun Accounting Command' => 'Vuelva a ejecutar comando de contabilidad',
         'Button_Create QoS'				=> 'Crear regla QoS',
         // //CMTS
         'Button_Create CMTS'			=> 'Crear CMTS',
@@ -311,7 +310,7 @@ return [
 
 //
 // Contract
-    'Dashboard_Net Income'			=> 'NETTOERLÖSE',
+    'Dashboard_Net Income'			=> 'INGRESOS NETOS',
 //
     'Contract_Numberrange_Failure' => 'No se encuentra disponible el numero de contrato libre para el centro de costos seleccionado!',
 

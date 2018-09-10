@@ -26,7 +26,7 @@ class BaseModel extends Eloquent
     // flag showing if children also shall be deleted on Model::delete()
     protected $delete_children = true;
 
-    public $voip_enabled;
+    public $external_voip_enabled;
     public $billing_enabled;
     protected $fillable = [];
 
@@ -67,7 +67,7 @@ class BaseModel extends Eloquent
         parent::__construct($attributes);
 
         // set helper variables
-        $this->voip_enabled = $this->voip_enabled();
+        $this->external_voip_enabled = $this->external_voip_enabled();
         $this->billing_enabled = $this->billing_enabled();
     }
 
@@ -280,7 +280,7 @@ class BaseModel extends Eloquent
      *
      * @return true if one of the VoIP modules is enabled (currently only ProvVoipEnvia), else false
      */
-    public function voip_enabled()
+    public function external_voip_enabled()
     {
         $voip_modules = [
             'ProvVoipEnvia',

@@ -30,6 +30,13 @@ class importNetUserCommand extends Command
     protected $description = 'import all provisioning data from a NetUser database';
 
     /**
+     * Error output after import has finished
+     *
+     * @var array
+     */
+    protected $errors = [];
+
+    /**
      * Mapping of old ConfigFile Names to new ConfigFile IDs
      *
      * @var array
@@ -92,7 +99,6 @@ class importNetUserCommand extends Command
         };
 
         $this->qoss = Qos::get();
-        // d($this->qoss->where('ds_rate_max_help', 262144)->where('us_rate_max_help', 262144)->first());
         $this->_load_mappings();
 
         // Connect to old Database
@@ -112,6 +118,7 @@ class importNetUserCommand extends Command
                 ->selectRaw('c.*, d.Mandantnr')
                 ->join('billing.vkunden as c', 'd.Kundennr', '=', 'c.Kundennr')
                 ->where($area_filter)
+                // ->where('d.Kundennr', '=', 2049)
                 ->groupBy('d.Kundennr')->orderBy('d.Kundennr')
                 ->get();
 
@@ -130,7 +137,7 @@ class importNetUserCommand extends Command
              */
             $modems = $db->table('Nutzer as m')
                     ->select('m.*', 'c.memo_cfg as cm_conf_default', 'm.memo_cfg as cm_conf_changed', 'c.Pfad as cf_name')
-                    ->join('konfig as c', 'c.konfig_id', '=', 'm.konfig_id')
+                    ->leftJoin('konfig as c', 'c.konfig_id', '=', 'm.konfig_id')
                     ->where('m.Kundennr', '=', $contract->Kundennr)
                     ->where('m.sec_typ', '=', 0)->get();
 
@@ -142,7 +149,7 @@ class importNetUserCommand extends Command
                  */
                 $mtas = $db->table('Nutzer as m')
                     ->select('m.*', 'c.memo_cfg as mta_conf_default', 'm.memo_cfg as mta_conf_changed', 'c.Pfad as cf_name')
-                    ->join('konfig as c', 'c.konfig_id', '=', 'm.konfig_id')
+                    ->leftJoin('konfig as c', 'c.konfig_id', '=', 'm.konfig_id')
                     ->where('m.Kundennr', '=', $contract->Kundennr)
                     ->where('m.sec_typ', '=', 2)
                     ->where('m.modem_lfd', '=', $modem->Lfd)
@@ -160,6 +167,9 @@ class importNetUserCommand extends Command
         }
 
         echo "\n";
+        foreach ($this->errors as $msg) {
+            $this->error($msg);
+        }
     }
 
     /**
@@ -303,7 +313,6 @@ class importNetUserCommand extends Command
         $modem->mac = $old_modem->MACaddress;
         $modem->number = $old_modem->Lfd;
         $modem->name = utf8_encode($old_modem->Name);
-        $modem->network_access = $old_modem->Gesperrt_int == 'N' ? 1 : 0;
 
         // $modem->x = $old_modem->x / 10000000;
         // $modem->y = $old_modem->y / 10000000;
@@ -329,7 +338,7 @@ class importNetUserCommand extends Command
 
         // determine qos_id
         $rates = self::get_modem_data_rates($old_modem->konfig_id > 0 ? $old_modem->cm_conf_default : $old_modem->cm_conf_changed);
-        $qos = $this->qoss->whereLoose('ds_rate_max_help', (int) $rates['ds'])->whereLoose('us_rate_max_help', (int) $rates['us'])->first();
+        $qos = $this->qoss->where('ds_rate_max_help', (int) $rates['ds'])->where('us_rate_max_help', (int) $rates['us'])->first();
 
         if ($qos) {
             $modem->qos_id = $qos->id;
@@ -363,6 +372,12 @@ class importNetUserCommand extends Command
                     ->where('cpe.modem_lfd', '=', $old_modem->Lfd)
                     ->where('cpe.sec_typ', '=', 1)->get();
 
+        // Deactivate network access when gesperrt or when no cpe's attached
+        $modem->network_access = 1;
+        if ($old_modem->Gesperrt_int == 'Y' || ! $comps) {
+            $modem->network_access = 0;
+        }
+
         $modem->public = 0;
         foreach ($comps as $comp) {
             if ($comp->Ip_adr[0] != '1') {
@@ -390,10 +405,14 @@ class importNetUserCommand extends Command
 
         // Logging & Output
         if ($modem->configfile_id == 0) {
-            \Log::error('No Configfile could be assigned to Modem '.($modem->id)." Old ModemID: $old_modem->Lfd, konfig_id: $old_modem->konfig_id");
+            $msg = 'No Configfile could be assigned to Modem '.($modem->id)." Old ModemID: $old_modem->Lfd, konfig_id: $old_modem->konfig_id";
+            $this->errors[] = $msg;
+            \Log::error($msg);
         }
         if (! $modem->qos_id) {
-            \Log::error('No QoS defined for datarates '.$ret['ds_rate'].' (DS) '.$ret['us_rate']." (US) - Modem-ID: $modem->id");
+            $msg = 'No QoS defined for datarates '.$ret['ds_rate'].' (DS) '.$ret['us_rate']." (US) - Modem-ID: $modem->id";
+            $this->errors[] = $msg;
+            \Log::error($msg);
         }
 
         \Log::info("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
@@ -496,7 +515,9 @@ class importNetUserCommand extends Command
         $mta->save();
 
         if (! $mta->configfile_id) {
-            \Log::error('No Configfile could be assigned to MTA '.$mta->id." Old MtaID: $old_mta->Lfd");
+            $msg = 'No Configfile could be assigned to MTA '.$mta->id." Old MtaID: $old_mta->Lfd";
+            $this->errors[] = $msg;
+            \Log::error($msg);
         }
 
         \Log::info('ADD MTA: '.$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
@@ -581,23 +602,23 @@ class importNetUserCommand extends Command
                 $pn->country_code = '0049';
                 $pn->prefix_number = self::$prefix;
 
+                $pn->active = true;
                 if ($filter != 'SnmpMibObject iso.3.6.1.4.1.872') {
                     // ifAdminStatus 2: down, 1: up (only for Thomson and Arris)
                     // 'iso.3.6.1.2.1.2.2.1.7.9 Integer 1'
                     // 'iso.3.6.1.2.1.2.2.1.7.10 Integer 2'
 
                     $k = $i + 8;
-                    preg_match("/SnmpMibObject iso.3.6.1.2.1.2.2.1.7.$k Integer \d;/", $config, $hit);
+                    $match = [];
+                    preg_match("/SnmpMibObject iso.3.6.1.2.1.2.2.1.7.$k Integer \d;/", $config, $match);
 
-                    if (! isset($hit[0]) || ! $hit[0]) {
-                        $pn->active = false;
-                    } else {
+                    // if (! isset($match[0]) || ! $match[0]) {
+                    // } else {
+                    if ($match) {
                         // check integer value
-                        preg_match("/\d/", substr($hit[0], strpos($hit[0], 'Integer') + 5), $hit);
-                        $pn->active = $hit[0] == 1 ? true : false;
+                        preg_match("/\d/", substr($match[0], strpos($match[0], 'Integer') + 5), $match);
+                        $pn->active = $match[0] == 1 ? true : false;
                     }
-                } else {
-                    $pn->active = true;
                 }
 
                 $pn->save();

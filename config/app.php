@@ -164,7 +164,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\ExtendedValidatorServiceProvider::class,
 
-        Collective\Bus\BusServiceProvider::class,
+        Illuminate\Bus\BusServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
         Nwidart\Modules\LaravelModulesServiceProvider::class,

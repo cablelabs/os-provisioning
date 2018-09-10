@@ -29,7 +29,7 @@ class CmtsController extends \BaseController
                 $next_ip = long2ip(ip2long($ips[0]->ip) - 1);
             } // calc: next_ip = last_ip-1
             else {
-                $next_ip = env('CMTS_SETUP_FIRST_IP', '10.255.0.254');
+                $next_ip = env('CMTS_SETUP_FIRST_IP', '172.20.3.253');
             } // default first ip
 
             $init_values += [
@@ -50,14 +50,11 @@ class CmtsController extends \BaseController
         }
 
         // The CMTS company and type Array
-        $company_array = ['Cisco' => 'Cisco', 'Casa' => 'Casa', 'Arris' => 'Arris', 'Motorola' => 'Motorola', 'Other' => 'Other'];
-        switch ($company) {
-            case 'Cisco': $type = ['ubr7225' => 'ubr7225', 'ubr7246' => 'ubr7246', 'ubr10k' => 'ubr10k']; break;
-            case 'Casa':  $type = ['C1G' => 'C1G', 'C2200' => 'C2200', 'C3200' => 'C3200', 'C100G']; break;
-            case 'Arris': $type = ['C1000' => 'C1000', 'C3' => 'C3', 'C4' => 'C4', 'E6000' => 'E6000']; break;
-            case 'Motorola': $type = ['BSR64000' => 'BSR64000', 'BSR2000' => 'BSR2000']; break;
-            default: $type = ['Other' => 'Other']; break;
+        foreach (config('provbase.cmts') as $vendor => $__type) {
+            $company_array[$vendor] = $vendor;
         }
+
+        $type = config('provbase.cmts.'.$company);
 
         /**
          * label has to be the same like column in sql table

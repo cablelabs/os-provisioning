@@ -12,7 +12,7 @@ class ProvBaseConfigTableSeeder extends \BaseSeeder
     {
         $faker = Faker::create();
         ProvBase::create([
-            'provisioning_server' => '10.255.0.1',
+            'provisioning_server' => '172.20.0.1',
             'ro_community' => 'public',
             'rw_community' => 'private',
             'notif_mail' => $faker->email,

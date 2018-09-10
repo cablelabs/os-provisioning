@@ -18,9 +18,12 @@
 		{{\App\Http\Controllers\BaseViewController::translate_view($route_name.'s', 'Header', 2) }}
 		</h1>
 
-		<div class="btn pull-right">
-			@include('Generic.documentation', ['model' => $view_var[0]])
-		</div>
+		{{-- we also use this blade for showing the firmware distribution, which doesn't use models --}}
+		@if (isset($view_var[0]))
+			<div class="btn pull-right">
+				@include('Generic.documentation', ['model' => $view_var[0]])
+			</div>
+		@endif
 
 		@if ($create_allowed)
 			{!! Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) !!}

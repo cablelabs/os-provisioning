@@ -9,7 +9,6 @@ ip access-list extended bundle_in_acl
 @foreach($cb->ippools()->where('type', '=', 'CM')->get() as $cm_pool)
  permit ip any host {{$cm_pool->router_ip}}
 @endforeach
- permit ip any 10.255.0.0 0.0.0.255
  deny   ip any 10.0.0.0 0.255.255.255
  deny   ip any 100.64.0.0 0.63.255.255
 @foreach($cb->ippools()->where('type', '=', 'MTA')->get() as $mta_pool)

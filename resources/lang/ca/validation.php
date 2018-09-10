@@ -98,12 +98,16 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'password' => [
+            'regex' => 'The password has to be at least 10 characters long and fulfill three of these requirements:
+                        <li>Uppercase characters (A – Z)</li>
+                        <li>Lowercase characters (a – z)</li>
+                        <li>Digits (0 – 9)</li>
+                        <li>Non-alphanumeric (For example: !, $, #, or %)</li>
+                        <li>Unicode characters</li>',
         ],
     ],
 
-    'docsis'               => ':attribute',
     'ip'                   => 'This is not a valid IP address of the form: 192.168.0.255',
     'ip_in_range'          => 'The IP address is not inside the previous specified range',
     'ip_larger'            => 'The IP address must have a higher number due to address specification in earlier fields',

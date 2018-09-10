@@ -26,8 +26,8 @@ return [
     'before_or_equal'      => 'El :attribute debe ser una fecha anterior o igual a :date.',
     'between'              => [
         'numeric' => 'El :attribute debe estar entre :min y :max.',
-        'file'    => 'El :attribute debe estar entre :min y :max kilobytes.',
-        'string'  => 'El :attribute debe estar entre :min y :max caracteres.',
+        'file'    => 'El :attribute debe estar entre :min y :max kbs.',
+        'string'  => 'El :attribute debe tener entre :min y :max caracteres.',
         'array'   => 'El :attribute debe tener entre :min y :max articulos.',
     ],
     'boolean'              => 'El campo :attribute debe ser verdadero o falso.',
@@ -98,12 +98,16 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'password' => [
+            'regex' => 'The password has to be at least 10 characters long and fulfill three of these requirements:
+                        <li>Uppercase characters (A – Z)</li>
+                        <li>Lowercase characters (a – z)</li>
+                        <li>Digits (0 – 9)</li>
+                        <li>Non-alphanumeric (For example: !, $, #, or %)</li>
+                        <li>Unicode characters</li>',
         ],
     ],
 
-    'docsis'               => ':attribute',
     'ip'                   => 'No es una direccion IP valida, de la forma: 192.168.0.255',
     'ip_in_range'          => 'La direccion IP no esta dentro del rango especificado anteriormente',
     'ip_larger'            => 'La direccion IP debe tener una cifra mayor debido a lo especificado en campos anteriores',
@@ -151,7 +155,7 @@ return [
         'excerpt' => 'extracto',
         'date' => 'fecha',
         'time' => 'hora',
-        'available' => 'Available',
-        'size' => 'Size',
+        'available' => 'Disponible',
+        'size' => 'Tamaño',
     ],
 ];

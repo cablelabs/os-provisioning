@@ -361,7 +361,7 @@ class Modem extends \BaseModel
 
         // only add content if multiple dhcp servers exist
         if (! ProvBase::first()->multiple_provisioning_systems) {
-            $content = '# Ignoring no devices – multiple_provisioning_systems not set in ProvBase';
+            $content = "# Ignoring no devices – multiple_provisioning_systems not set in ProvBase\n";
         } else {
             // get all not deleted modems
             // attention: do not use “where('network_access', '>', '0')” to shrink the list
@@ -1046,7 +1046,7 @@ class Modem extends \BaseModel
     // use geocode_last_status()
     private $geocode_state = null;
 
-    /*
+    /**
      * Modem Geocoding Function
      * Geocode the modem address value in a geoposition and update values to x,y. Please
      * note that the function is working in object context, so no addr parameters are required.
@@ -1527,6 +1527,8 @@ class ModemObserver
 
         $modem->hostname = 'cm-'.$modem->id;
         $modem->save();	 // forces to call the updating() and updated() method of the observer !
+        Modem::create_ignore_cpe_dhcp_file();
+
         if (\Module::collections()->has('ProvMon')) {
             Log::info("Create cacti diagrams for modem: $modem->hostname");
             \Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
@@ -1557,24 +1559,33 @@ class ModemObserver
             return;
         }
 
+        // get changed values
         $diff = $modem->getDirty();
+
+        // if testing: do not try to geocode or position modems (faked data; slows down the process)
+        if (\App::runningUnitTests()) {
+            return;
+        }
 
         // Use Updating to set the geopos before a save() is called.
         // Notice: that we can not call save() in update(). This will re-trigger
         //         the Observer and re-call update() -> endless loop is the result.
-        if (multi_array_key_exists(['x', 'y'], $diff)) {
-            // geodata changed ⇒ manually entered geodata
-            // set origin to username (except if running from console command)
-            // this also prevents asking the geocoding APIs on seeded modems
-            if (! \App::runningInConsole()) {
+        if (
+            ($modem->wasRecentlyCreated)    // new modem
+            ||
+            (multi_array_key_exists(['street', 'house_number', 'zip', 'city'], $diff))  // address changed
+        ) {
+            $modem->geocode(false);
+        } elseif (multi_array_key_exists(['x', 'y'], $diff)) {  // manually changed geodata
+            if (! \App::runningInConsole()) {    // change geocode_source only from MVC (and do not overwrite data from geocode command)
+                // set origin to username
                 $user = \Auth::user();
                 $modem->geocode_source = $user->first_name.' '.$user->last_name;
             }
-        } elseif (multi_array_key_exists(['street', 'house_number', 'zip', 'city'], $diff)) {
-            // address changed ⇒ try to geocode new address
-            $modem->geocode(false);
-            $diff['x'] = true; 			// refresh Mpr by setting changed attribute to true
         }
+
+        // check if more values have changed – especially “x” and “y” which refreshes MPR
+        $diff = $modem->getDirty();
 
         // Refresh MPS rules
         // Note: does not perform a save() which could trigger observer.

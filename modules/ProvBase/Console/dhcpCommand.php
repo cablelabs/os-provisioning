@@ -48,6 +48,7 @@ class dhcpCommand extends Command
         $prov->make_dhcp_default_network_conf();
 
         Modem::make_dhcp_cm_all();
+        Modem::create_ignore_cpe_dhcp_file();
         Endpoint::make_dhcp();
 
         if (\Module::collections()->has('ProvVoip') && \Schema::hasTable('mta')) {
