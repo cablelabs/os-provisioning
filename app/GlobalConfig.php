@@ -54,7 +54,7 @@ class GlobalConfig extends BaseModel
             $commit = exec('cd '.app_path().' && git rev-parse --short HEAD');
             $github = 'https://github.com/schmto/nmsprime/commits/'.exec('cd '.app_path().' && git rev-parse HEAD');
 
-            $version = '<b>GIT</b>: '.$branch.' - '.'<a target=_blank href='.$github.'>'.$commit.'</a>';
+            $version = '<b>GIT</b>: '.$branch.' - '.'<a target=_blank class="text-success" href='.$github.'>'.$commit.'</a>';
         }
 
         return $version;
