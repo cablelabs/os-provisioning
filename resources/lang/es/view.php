@@ -133,6 +133,7 @@ return [
         'Header_EditItem'			=> 'Editar articulo', //??
         //Numberrange
         'Header_NumberRange'		=> 'Rango numerico',
+        'Header_Numberranges'        => 'Círculos de números',
     //SNMP Modul
         //Device
         'Header_Device'				=> 'Dispositivo|Dispositivos',

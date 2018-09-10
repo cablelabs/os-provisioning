@@ -133,6 +133,7 @@ return [
         'Header_EditItem'			=> 'Edit Item', //??
         //Numberrange
         'Header_NumberRange'		=> 'Numberrange|Numberranges',
+        'Header_Numberranges'        => 'Numberranges',
     //SNMP Modul
         //Device
         'Header_Device'				=> 'Device|Devices',
