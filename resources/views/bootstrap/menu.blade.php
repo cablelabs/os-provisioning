@@ -9,8 +9,7 @@
             <span class="icon-bar"></span>
         </button>
         <a href="javascript:;" class="navbar-brand d-none d-sm-none d-md-block">
-        	<span class="navbar-logo"></span>
-        	<span>{{$header}}</span>
+            <span><img src="{{asset('images/nmsprime-logo.png')}}" style="width:100%; margin-top:-10px; margin-left:5px" class=""></span>
         </a>
       	{{-- end mobile sidebar expand / collapse button --}}
 			<div class="col tab-overflow p-t-5">
