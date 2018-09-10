@@ -24,20 +24,21 @@
 		{{-- begin login --}}
 		<div class="login login-v2 animated fadeInDown">
 
-			{{-- begin brand --}}
-			<div class="login-header">
-				<div class="brand">
-					<span class="logo"></span> {{ $head1 }}
-					<small>{{ $head2 }}</small>
-				</div>
-				<div class="icon">
-					<i class="fa fa-sign-in"></i>
-				</div>
-			</div>
 
 			{{-- end brand --}}
 			<div class="login-content">
-				{{ Form::open(array('url' => $prefix.'/login')) }}
+
+			{{-- begin brand --}}
+				<div class="login-header" style="margin-top:120px;">
+					<div class="icon">
+						<i class="fa fa-sign-in" style="font-color:#b7b7b7;"></i>
+					</div>
+				</div>
+				<div class="brand m-b-20">
+					<img src="{{asset('images/nmsprime-logo-white.png')}}" class="img-fluid">
+				</div>
+				<div>
+					{{ Form::open(array('url' => $prefix.'/login')) }}
 
 					{{-- Username --}}
 					<div class="form-group m-b-20">
@@ -72,6 +73,7 @@
 					</div>
 
 				{{ Form::close() }}
+				</div>
 			</div>
 		</div>
 		{{-- end login --}}
