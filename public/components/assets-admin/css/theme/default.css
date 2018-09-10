@@ -11,26 +11,26 @@ Website: http://www.seantheme.com/color-admin-v3.0/admin/html/
     border-color: #4DCACA #31A3A3 #1D8888;
 }
 .navbar.navbar-inverse .navbar-brand,
-.sidebar .nav > li.active > a, 
-.sidebar .nav > li.active > a:focus, 
+.sidebar .nav > li.active > a,
+.sidebar .nav > li.active > a:focus,
 .sidebar .nav > li.active > a:hover,
-.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a, 
-.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a, 
+.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a,
+.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a,
 .page-sidebar-minified .sidebar .nav > li.has-sub.active > a,
 .label.label-theme,
 .btn.btn-scroll-to-top {
-    background: #00acac;
+    background: #8ec73a;
 }
 .navbar.navbar-inverse .navbar-brand {
     color: #fff !important;
 }
 .text-theme,
 .sidebar .sub-menu > li.active > a:before {
-    color: #00acac;
+    color: #8ec73a;
 }
 @media (max-width: 767px) {
     .navbar-inverse .navbar-header {
-        background: #00acac;
+        background: #8ec73a;
     }
 }
 
@@ -38,16 +38,16 @@ Website: http://www.seantheme.com/color-admin-v3.0/admin/html/
 /* Added in v1.5 */
 
 .gradient-enabled .navbar.navbar-inverse .navbar-brand,
-.gradient-enabled .sidebar .nav > li.active > a, 
-.gradient-enabled .sidebar .nav > li.active > a:focus, 
+.gradient-enabled .sidebar .nav > li.active > a,
+.gradient-enabled .sidebar .nav > li.active > a:focus,
 .gradient-enabled .sidebar .nav > li.active > a:hover,
-.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a, 
-.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a, 
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a,
+.gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a,
 .gradient-enabled.page-sidebar-minified .sidebar .nav > li.has-sub.active > a,
 .gradient-enabled .label.label-theme,
 .gradient-enabled .btn.btn-scroll-to-top,
-.gradient-enabled .top-menu .nav > li.active > a, 
-.gradient-enabled .top-menu .nav > li.active > a:focus, 
+.gradient-enabled .top-menu .nav > li.active > a,
+.gradient-enabled .top-menu .nav > li.active > a:focus,
 .gradient-enabled .top-menu .nav > li.active > a:hover {
     background: rgb(0,210,210); /* Old browsers */
     /* IE9 SVG, needs conditional override of 'filter' to 'none' */
@@ -58,32 +58,32 @@ Website: http://www.seantheme.com/color-admin-v3.0/admin/html/
     background: -o-linear-gradient(top,  rgba(0,210,210,1) 0%,rgba(0,172,172,1) 100%); /* Opera 11.10+ */
     background: -ms-linear-gradient(top,  rgba(0,210,210,1) 0%,rgba(0,172,172,1) 100%); /* IE10+ */
     background: linear-gradient(to bottom,  rgba(0,210,210,1) 0%,rgba(0,172,172,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00d2d2', endColorstr='#00acac',GradientType=0 ); /* IE6-8 */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00d2d2', endColorstr='#8ec73a',GradientType=0 ); /* IE6-8 */
 }
 .pace-progress {
-    background: #00acac;
+    background: #8ec73a;
 }
 .pace .pace-activity {
-    border-top-color: #00acac;
-    border-left-color: #00acac;
+    border-top-color: #8ec73a;
+    border-left-color: #8ec73a;
 }
 
 
 /* Added in v1.7 */
 
 .page-with-light-sidebar .sidebar .nav > li.active > a > i {
-    color: #00acac;
+    color: #8ec73a;
 }
 .page-with-light-sidebar .sidebar .nav > li.active > a .badge,
 .page-with-light-sidebar .sidebar .nav > li.active > a .label.label-theme {
-    background: #00acac;
+    background: #8ec73a;
 }
 
 
 /* Added in v1.9 */
 
-.top-menu .nav > li.active > a, 
-.top-menu .nav > li.active > a:focus, 
+.top-menu .nav > li.active > a,
+.top-menu .nav > li.active > a:focus,
 .top-menu .nav > li.active > a:hover {
-    background: #00acac;
+    background: #8ec73a;
 }

@@ -581,7 +581,7 @@ label {
 .sidebar .nav > li.active > a:hover,
 .sidebar .nav > li.active > a:focus {
     color: #fff;
-    background: #00acac;
+    background: #8ec73a;
 }
 .sidebar .nav > li.active > a .label.label-success,
 .sidebar .nav > li.active > a .badge.badge-success {
@@ -679,7 +679,7 @@ label {
     color: #889097;
 }
 .sidebar .sub-menu > li.active > a:before {
-    color: #00acac;
+    color: #8ec73a;
 }
 .sidebar .nav .sub-menu > li > a .caret {
     float: right;
@@ -1043,10 +1043,10 @@ label {
 .has-success .radio-inline,
 .has-success .checkbox-inline,
 .has-success .form-control-feedback {
-    color: #00acac;
+    color: #8ec73a;
 }
 .has-success .form-control {
-    border-color: #00acac;
+    border-color: #8ec73a;
 }
 .has-success .form-control:focus {
     border-color: #008a8a;
@@ -1303,7 +1303,7 @@ legend {
 }
 .badge.badge-success,
 .label.label-success {
-    background: #00acac ;
+    background: #8ec73a ;
 }
 .badge.badge-info,
 .label.label-info {
@@ -1416,7 +1416,7 @@ legend {
     box-shadow: none;
 }
 .progress-bar.progress-bar-success {
-    background-color: #00acac;
+    background-color: #8ec73a;
 }
 .progress-bar.progress-bar-info {
     background-color: #49b6d6;
@@ -1742,8 +1742,8 @@ legend {
 
 .btn.btn-success {
     color: #fff;
-    background: #00acac;
-    border-color: #00acac;
+    background: #8ec73a;
+    border-color: #8ec73a;
 }
 .btn.btn-success:hover,
 .btn.btn-success:focus,
@@ -2706,7 +2706,7 @@ a.text-inverse:hover,
 a.text-inverse:focus {
     color: #575d63 !important;
 }
-.text-success { color: #00acac !important; }
+.text-success { color: #8ec73a !important; }
 a.text-success:hover,
 a.text-success:focus {
     color: #33bdbd !important;
@@ -2762,7 +2762,7 @@ a.text-white:focus {
 .bg-yellow-darker { background: #b6c832 !important; }
 .bg-yellow-lighter { background: #e9fb65 !important; }
 
-.bg-green { background: #00acac !important; }
+.bg-green { background: #8ec73a !important; }
 .bg-green-darker { background: #008a8a !important; }
 .bg-green-lighter { background: #33bdbd !important; }
 
@@ -2975,7 +2975,7 @@ a.text-white:focus {
 }
 .dataTables_wrapper table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child:before,
 .dataTables_wrapper table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child:before {
-    background: #00acac;
+    background: #8ec73a;
 }
 body div.dataTables_wrapper div.dataTables_paginate ul.pagination {
     margin: 5px 0;
@@ -3292,7 +3292,7 @@ ul.tagit.inverse li.tagit-choice-editable { background: #2d353c !important; }
 ul.tagit.white li.tagit-choice-editable { background: #fff !important; border: 1px solid #ddd !important; color: #000 !important; }
 ul.tagit.primary li.tagit-choice-editable { background: #348fe2 !important; }
 ul.tagit.info li.tagit-choice-editable { background: #49b6d6 !important; }
-ul.tagit.success li.tagit-choice-editable { background: #00acac !important; }
+ul.tagit.success li.tagit-choice-editable { background: #8ec73a !important; }
 ul.tagit.warning li.tagit-choice-editable { background: #f59c1a !important; }
 ul.tagit.danger li.tagit-choice-editable { background: #ff5b57 !important; }
 ul.tagit li.tagit-choice .tagit-close {
@@ -3356,7 +3356,7 @@ ul.tagit.inverse li.tagit-choice .tagit-close:focus .ui-icon-close:before {
 }
 .parsley-success {
     background: #cceeee !important;
-    border-color: #00acac !important;
+    border-color: #8ec73a !important;
 }
 .parsley-error:focus,
 .parsley-success:focus {
@@ -3445,7 +3445,7 @@ ul.tagit.inverse li.tagit-choice .tagit-close:focus .ui-icon-close:before {
 .bwizard-steps li.active,
 .bwizard-steps li.active:hover,
 .bwizard-steps li.active:focus {
-    background: #00acac !important;
+    background: #8ec73a !important;
 }
 .bwizard-steps li.active .label {
     background: url(../img/transparent/black-0.2.png) !important;
@@ -3896,7 +3896,7 @@ body .fc button:active {
 .todolist > li.active > a:hover .todolist-input i:before,
 .todolist > li.active > a:focus .todolist-input i:before {
     content: '\f14a';
-    color: #00acac;
+    color: #8ec73a;
     opacity: 1.0;
     filter: alpha(opacity=100);
 }
@@ -4391,7 +4391,7 @@ body .fc button:active {
 }
 .timeline .timeline-icon a:hover,
 .timeline .timeline-icon a:focus {
-    background: #00acac;
+    background: #8ec73a;
 }
 .timeline .timeline-body {
     margin-left: 25%;
@@ -4433,7 +4433,7 @@ body .fc button:active {
 }
 .timeline-header .username,
 .timeline-header .username a {
-    color: #00acac;
+    color: #8ec73a;
 }
 .timeline img {
     max-width: 100%;
@@ -4557,7 +4557,7 @@ body .fc button:active {
     color: #999;
 }
 .coming-soon a {
-    color: #00acac;
+    color: #8ec73a;
 }
 .coming-soon .coming-soon-content {
     color: #333;
@@ -4712,7 +4712,7 @@ body .fc button:active {
 .range-handle {
     cursor: pointer !important;
 }
-.range-quantity { background: #00acac !important; }
+.range-quantity { background: #8ec73a !important; }
 .red .range-quantity { background: #ff5b57 !important; }
 .blue .range-quantity { background: #348fe2 !important; }
 .purple .range-quantity { background: #727cb6 !important; }
@@ -5387,7 +5387,7 @@ body .fc button:active {
     background: #fff;
 }
 .list-email > li.list-group-item.success:before {
-    background: #00acac;
+    background: #8ec73a;
 }
 .list-email > li.list-group-item.info:before {
     background-color: #49b6d6;
@@ -5789,7 +5789,7 @@ body.flat-black {
 .flat-black .bwizard-steps li.active,
 .flat-black .bwizard-steps li.active:hover,
 .flat-black .bwizard-steps li.active:focus {
-    background: #00acac !important;
+    background: #8ec73a !important;
 }
 .flat-black .bwizard-steps li:hover,
 .flat-black .bwizard-steps li:focus {
@@ -5862,7 +5862,7 @@ body.flat-black {
     right: 0;
     text-align: center;
     height: 3px;
-    background: #00acac;
+    background: #8ec73a;
     -webkit-transition: width 1s;
     -moz-transition: width 1s;
     -o-transition: width 1s;
@@ -5887,8 +5887,8 @@ body.flat-black {
     width: 14px;
     height: 14px;
     border: solid 2px transparent;
-    border-top-color: #00acac;
-    border-left-color: #00acac;
+    border-top-color: #8ec73a;
+    border-left-color: #8ec73a;
     border-radius: 10px;
     -webkit-animation: pace-spinner 400ms linear infinite;
     -moz-animation: pace-spinner 400ms linear infinite;
@@ -6773,7 +6773,7 @@ body .bootstrap-datetimepicker-widget table td {
 .top-menu .nav > li.active > a,
 .top-menu .nav > li.active > a:hover,
 .top-menu .nav > li.active > a:focus{
-    background: #00acac;
+    background: #8ec73a;
     color: #fff;
 }
 
@@ -7058,8 +7058,8 @@ body .bootstrap-datetimepicker-widget table td {
 	border-color: #348fe2;
 }
 .checkbox.checkbox-css.checkbox-success input:checked + label:before {
-	background: #00acac;
-	border-color: #00acac;
+	background: #8ec73a;
+	border-color: #8ec73a;
 }
 .checkbox.checkbox-css.checkbox-info input:checked + label:before {
 	background: #49b6d6;
@@ -7115,8 +7115,8 @@ body .bootstrap-datetimepicker-widget table td {
 	border-color: #348fe2;
 }
 .radio.radio-css.radio-success input:checked + label:before {
-	background: #00acac;
-	border-color: #00acac;
+	background: #8ec73a;
+	border-color: #8ec73a;
 }
 .radio.radio-css.radio-info input:checked + label:before {
 	background: #49b6d6;
@@ -7143,7 +7143,7 @@ body .bootstrap-datetimepicker-widget table td {
 	box-shadow: none !important;
 }
 .sweet-alert .sa-icon.sa-success {
-  border-color: #00acac !important;
+  border-color: #8ec73a !important;
 }
 .sweet-alert .btn-success:focus {
 	border-color: #008a8a !important;
@@ -7152,7 +7152,7 @@ body .bootstrap-datetimepicker-widget table td {
 	border-color: rgba(0, 172, 172, 0.2) !important;
 }
 .sweet-alert .sa-icon.sa-success .sa-line {
-	background-color: #00acac !important;
+	background-color: #8ec73a !important;
 }
 .sweet-alert .sa-icon.sa-info {
 	border-color: #49b6d6 !important;
@@ -7263,8 +7263,8 @@ body .bootstrap-datetimepicker-widget table td {
 	background-color: transparent;
 }
 .card-success {
-	background-color: #00acac;
-	border-color: #00acac;
+	background-color: #8ec73a;
+	border-color: #8ec73a;
 }
 .card-success .card-header,
 .card-success .card-footer {
