@@ -9,8 +9,6 @@
 		<script>setTimeout("document.getElementById('error').style.display='none';", 3000);</script>
 	</head>
 
-	@include ('bootstrap.header')
-
 	<body class="pace-top">
 
 	{{-- Background Image --}}
