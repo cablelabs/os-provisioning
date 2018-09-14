@@ -82,4 +82,9 @@ BaseRoute::group([], function () {
         'uses' => 'GuiLogController@restoreModel',
         'middleware' => ["can:delete,App\Role"],
     ]);
+
+    BaseRoute::post('Sla', [
+        'as' => 'Sla.klicked_sla',
+        'uses' => 'SlaController@klicked_sla',
+    ]);
 });
