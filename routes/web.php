@@ -40,6 +40,8 @@ BaseRoute::group([], function () {
     BaseRoute::resource('GuiLog', 'GuiLogController');
     BaseRoute::resource('User', 'Auth\UserController');
     BaseRoute::resource('Role', 'Auth\RoleController');
+    BaseRoute::resource('Sla', 'SlaController');
+    BaseRoute::resource('SupportRequest', 'SupportRequestController');
 
     BaseRoute::get('base/fulltextSearch', [
         'as' => 'Base.fulltextSearch',
