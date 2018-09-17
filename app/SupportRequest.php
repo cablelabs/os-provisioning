@@ -108,11 +108,9 @@ class SupportRequestObserver
         $data = http_build_query($data_arr);
 
         $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_URL, 'https://nms10.erznet.tv/mail.php');
-        curl_setopt($ch, CURLOPT_URL, 'https://192.168.0.174:9876/mail.php');
+        curl_setopt($ch, CURLOPT_URL, 'https://repo.nmsprime.com:9999/mail.php');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        // curl_setopt($ch, CURLOPT_POST ,count($data));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
         $result = curl_exec($ch);
