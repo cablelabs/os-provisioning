@@ -281,7 +281,7 @@ return [
         'Button_Create Configfiles'		=> 'Konfigurationsdatei erstellen',
         // //QoS
         'Button_Create Settlement Run'	=> 'Abrechnungslauf erstellen',
-        'Button_Rerun Accounting Command' => 'Rechnungsführung neu starten',
+        'Button_Rerun Accounting Command' => 'Rechnungslauf neu starten',
         'Button_Create QoS'				=> 'QoS-Regel erstellen',
         // //CMTS
         'Button_Create CMTS'			=> 'CMTS anlegen',
@@ -327,7 +327,7 @@ return [
     'Ticket_Priority_Critical' => 'Kritisch',
     'Numberrange_Start' => 'Beginn',
     'Numberrange_End' => 'Ende',
-    'Numberrange_Suffix' => 'Vorzeichen',
+    'Numberrange_Suffix' => 'Suffix',
     'Numberrange_Prefix' => 'Präfix',
     'Numberrange_Type' => 'Typ',
 ];
