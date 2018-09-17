@@ -173,7 +173,7 @@ class importTvCustomersCommand extends Command
                 return;
             }
 
-            \Log::notice("Contract $number $firstname $lastname already exists - only add TV Tarif");
+            \Log::notice("Vertrag $number existiert bereits übereinstimmend ($firstname $lastname) - füge nur TV Tarif hinzu");
 
             return $contract;
         } else {
@@ -185,7 +185,7 @@ class importTvCustomersCommand extends Command
 
             if ($existing) {
                 // $msg = "Customer $number is probably already added with different contract number [$existing->number] (found same name [$firstname $lastname], city & street [$street]). Check this manually!";
-                $msg = "Kunde $number existiert bereits unter der Vertragsnummer $existing->number (selber Name, Stadt, Straße: $firstname $lastname, $city, $street gefunden). Füge nur Tarif hinzu.";
+                $msg = "Kunde $number existiert bereits unter der Vertragsnummer $existing->number (selber Name, Stadt, Straße: , $city, $street gefunden). Füge nur TV Tarif hinzu.";
                 \Log::warning($msg);
 
                 return $existing;
