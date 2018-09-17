@@ -279,9 +279,16 @@ class Modem extends \BaseModel
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
 
+        // FF-00-00-00-00 to FF-FF-FF-FF-FF reserved according to RFC7042
+        if (stripos($this->mac, 'ff:') === 0) {
+            return;
+        }
+
         $ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
 
-        if (\Module::collections()->has('ProvVoip') && $this->mtas()->count()) {
+        if (\Module::collections()->has('ProvVoip') && $this->mtas()->pluck('mac')->filter(function ($mac) {
+            return stripos($mac, 'ff:') !== 0;
+        })->count()) {
             $ret .= ' option ccc.dhcp-server-1 '.($server ?: ProvBase::first()->provisioning_server).';';
         }
 
@@ -292,7 +299,10 @@ class Modem extends \BaseModel
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
 
-        return 'subclass "Client-Public" '.$this->mac.'; # CM id:'.$this->id."\n";
+        // FF-00-00-00-00 to FF-FF-FF-FF-FF reserved according to RFC7042
+        if (stripos($this->mac, 'ff:') !== 0) {
+            return 'subclass "Client-Public" '.$this->mac.'; # CM id:'.$this->id."\n";
+        }
     }
 
     /**
