@@ -48,7 +48,7 @@ return [
         'Menu_Contracts'			=> 'Verträge',
         'Menu_Modems'				=> 'Modems',
         'Menu_Endpoints'			=> 'Endpunkte',
-        'Menu_Number Range'			=> 'Nummernkreis',
+        'Menu_Number Range'         => 'Nummernkreis',
         'Menu_Configfiles' 			=> 'Konfigurationsdateien',
         'Menu_QoS' 					=> 'QoS',
         'Menu_CMTS' 				=> 'CMTS',
@@ -132,7 +132,8 @@ return [
         'Header_Item'				=> 'Posten|Posten',
         'Header_EditItem'			=> 'Posten bearbeiten', //??
         //Numberrange
-        'Header_NumberRange'		=> 'Nummernkreis|Nummernkreise',
+        'Header_NumberRange'        => 'Nummernkreis|Nummernkreise',
+        'Header_Numberranges'        => 'Nummernkreise',
     //SNMP Modul
         //Device
         'Header_Device'				=> 'Gerät|Geräte',

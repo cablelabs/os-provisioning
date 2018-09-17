@@ -284,8 +284,8 @@ return [
     'Product Entry'				=> 'Produkteintrag',
     'Qos (Data Rate)'			=> 'QoS (Datenrate)',
     'with Tax calculation ?'	=> 'mit Steuern berechnen?',
-    'Phone Sales Tariff'		=> 'Telefon Vertrieb Tarif',
-    'Phone Purchase Tariff'		=> 'Telefon Enkauf Vertrag',
+    'Phone Sales Tariff'		=> 'Telefontarif Verkauf/Endkunde',
+    'Phone Purchase Tariff'		=> 'Telefontarif Einkauf',
     'sr_repeat' 			=> 'Wiederholen für SEPA-Konto:', // Settlementrun repeat
     'Account Holder'			=> 'Kontoinhaber',
     'Account Name'				=> 'Kontoname',
