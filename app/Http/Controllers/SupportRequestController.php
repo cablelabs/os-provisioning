@@ -14,6 +14,7 @@ class SupportRequestController extends BaseController
             'Service Problems' => 'Service Problems',
             'General Questions' => 'General Questions',
             'CMTS or CM Issues' => 'CMTS or CM Issues',
+            'Others' => 'Others',
             ];
         $priorities = [
             'Critical' => 'Critical',
