@@ -80,7 +80,17 @@ class BaseMigration extends Migration
             &&
             (substr($this->caller_classname, 0, 6) == 'Create')
         ) {
-            echo "\tWARNING: up_table_generic() not called from ".$this->caller_classname.'. Falling back to database defaults.';
+            // only warn if not rolling back – unfortunately we have to step through the stacktrace…
+            $rollback = false;
+            foreach (debug_backtrace() as $caller) {
+                if (\Str::contains(array_get($caller, 'class', ''), 'RollbackCommand')) {
+                    $rollback = true;
+                    break;
+                }
+            }
+            if (! $rollback) {
+                echo "\tWARNING: up_table_generic() not called from ".$this->caller_classname.'. Falling back to database defaults.';
+            }
         }
     }
 }
