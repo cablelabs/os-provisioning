@@ -67,7 +67,6 @@ class Sla extends BaseModel
         }
     }
 
-
     /**
      * Return the actual SLA size based on the real size of the network
      * also if no SLA is set at all
