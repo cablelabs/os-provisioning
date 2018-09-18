@@ -20,6 +20,15 @@ class Sla extends BaseModel
         'normal' => ['time' => '9to5', 'Response time' => '<b><2w</b> (typical < 3 days)', 'RT without SLA' => '<i class="fa fa-times fa-lg text-danger" title="undefined"></i>'],
         ];
 
+    public static $threshholds = [
+            'xs' => ['modems' => 10, 'contracts' => 40, 'cmts' => 1, 'netelements' => 10],
+            's' => ['modems' => 100, 'contracts' => 400, 'cmts' => 1, 'netelements' => 10],
+            'm' => ['modems' => 500, 'contracts' => 2000, 'cmts' => 2, 'netelements' => 50],
+            'l' => ['modems' => 1000, 'contracts' => 4000, 'cmts' => 4, 'netelements' => 100],
+            'xl' => ['modems' => 2500, 'contracts' => 10000, 'cmts' => 6, 'netelements' => 250],
+            'xxl' => ['modems' => 5000, 'contracts' => 20000, 'cmts' => 10, 'netelements' => 500],
+            ];
+
     public static function rules($id = null)
     {
         return [
@@ -58,6 +67,28 @@ class Sla extends BaseModel
         }
     }
 
+
+    /**
+     * Return the actual SLA size based on the real size of the network
+     * also if no SLA is set at all
+     *
+     * @return string of [xs | s | m | l | xl | xxl]
+     */
+    public function get_sla_size()
+    {
+        $this->set_sla_dependent_values();
+
+        foreach (array_reverse(self::$threshholds) as $size => $table) {
+            foreach ($table as $key => $value) {
+                if ($this->{'num_'.$key} >= $value) {
+                    return $size;
+                }
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Determine if Service Level Agreement is valid for this system
      *
@@ -71,16 +102,7 @@ class Sla extends BaseModel
 
         $this->set_sla_dependent_values();
 
-        $threshholds = [
-            'xs' => ['modems' => 10, 'contracts' => 40, 'cmts' => 1, 'netelements' => 10],
-            's' => ['modems' => 100, 'contracts' => 400, 'cmts' => 1, 'netelements' => 10],
-            'm' => ['modems' => 500, 'contracts' => 2000, 'cmts' => 2, 'netelements' => 50],
-            'l' => ['modems' => 1000, 'contracts' => 4000, 'cmts' => 4, 'netelements' => 100],
-            'xl' => ['modems' => 2500, 'contracts' => 10000, 'cmts' => 6, 'netelements' => 250],
-            'xxl' => ['modems' => 5000, 'contracts' => 20000, 'cmts' => 10, 'netelements' => 500],
-            ];
-
-        foreach ($threshholds[$this->name] as $key => $value) {
+        foreach (self::$threshholds[$this->name] as $key => $value) {
             if ($this->{'num_'.$key} >= $value) {
                 return false;
             }
