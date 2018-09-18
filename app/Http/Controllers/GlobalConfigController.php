@@ -91,7 +91,8 @@ class GlobalConfigController extends BaseController
 
         // Add SLA Tab
         $module_controller[$i] = new \App\Http\Controllers\SlaController;
-        $module_model[$i] = new \App\Sla;
+        $sla_model = new \App\Sla;
+        $module_model[$i] = $sla_model->first();
         $links[$i] = ['name' => 'SLA', 'link' => 'Sla'];
 
         for ($j = 0; $j <= $i; $j++) {
