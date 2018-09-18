@@ -40,6 +40,8 @@ BaseRoute::group([], function () {
     BaseRoute::resource('GuiLog', 'GuiLogController');
     BaseRoute::resource('User', 'Auth\UserController');
     BaseRoute::resource('Role', 'Auth\RoleController');
+    BaseRoute::resource('Sla', 'SlaController');
+    BaseRoute::resource('SupportRequest', 'SupportRequestController');
 
     BaseRoute::get('base/fulltextSearch', [
         'as' => 'Base.fulltextSearch',
@@ -79,5 +81,10 @@ BaseRoute::group([], function () {
         'as' => 'Guilog.restore',
         'uses' => 'GuiLogController@restoreModel',
         'middleware' => ["can:delete,App\Role"],
+    ]);
+
+    BaseRoute::post('Sla', [
+        'as' => 'Sla.klicked_sla',
+        'uses' => 'SlaController@klicked_sla',
     ]);
 });
