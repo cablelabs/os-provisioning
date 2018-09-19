@@ -409,7 +409,7 @@ class importTvCustomersCommand extends Command
         if (! $valid) {
             \Log::debug("Contract $contract->number has no valid SepaMandate");
 
-            // Set CostCenter for current SepaMandate if customer pays TV charge in cash
+            // Set CostCenter for current SepaMandate in case customer pays TV charge in cash
             SepaMandate::where('contract_id', '=', $contract->id)
                 ->where(function ($query) {
                     $query->whereNull('costcenter_id')->orWhere('costcenter_id', '=', 0);
@@ -421,10 +421,17 @@ class importTvCustomersCommand extends Command
 
         $signature_date = date('Y-m-d', strtotime($line[self::S_SIGNATURE]));
 
-        if ($contract->sepamandates && $contract->sepamandates->contains('signature_date', $signature_date)) {
-            \Log::notice("Contract $contract->number already has SEPA-mandate with signature date $signature_date");
+        // Check and return if SepaMandate with this IBAN currently exists and is valid
+        if ($contract->sepamandates && $contract->sepamandates->contains('sepa_iban', $line[self::S_IBAN])) {
+            $mandates = $contract->sepamandates->where('sepa_iban', $line[self::S_IBAN]);
 
-            return;
+            foreach ($mandates as $sm) {
+                if ((! $sm->sepa_valid_to || ($sm->sepa_valid_to > date('Y-m-d')) || ($sm->signature_date > $signature_date))) {
+                    \Log::notice("Contract $contract->number already has SEPA-mandate with IBAN ".$line[self::S_IBAN]);
+
+                    return;
+                }
+            }
         }
 
         SepaMandate::create([
