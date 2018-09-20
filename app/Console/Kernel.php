@@ -54,6 +54,9 @@ class Kernel extends ConsoleKernel
         // Remove all Log Entries older than 90 days
         $schedule->call('\App\GuiLog@cleanup')->weekly();
 
+        // Parse News from repo server and save to local JSON file
+        $schedule->call('\Modules\Dashboard\Http\Controllers\DashboardController@newsLoadToFile')->hourly();
+
         // Command to remove obsolete data in storage
         $schedule->command('main:storage_cleaner')->dailyAt('04:18');
 
