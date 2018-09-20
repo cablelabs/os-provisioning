@@ -253,7 +253,7 @@ class importTvCustomersCommand extends Command
             // TODO: Check if customer/name & address already exists with another contract number
             $contract = Contract::where('firstname', '=', $firstname)->where('lastname', '=', $lastname)
                 // make Straße or Str. respective ..straße or ..str. indifferent on searching in DB
-                ->whereIn('street', [$street, str_replace(['traße', 'traße'], 'tr.', $street)])
+                ->whereIn('street', [$street, str_replace('traße', 'tr.', $street)])
                 ->where('city', '=', $city)->first();
 
             if ($contract) {
