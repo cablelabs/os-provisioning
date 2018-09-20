@@ -63,7 +63,7 @@ class Sla extends BaseModel
         }
 
         if (\Module::collections()->has('HfcReq')) {
-            $this->num_netelements = \Modules\HfcReq\Entities\Netelement::count();
+            $this->num_netelements = \Modules\HfcReq\Entities\NetElement::count();
         }
     }
 
