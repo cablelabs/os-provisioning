@@ -23,9 +23,9 @@ class SlaController extends BaseController
     /**
      * Set Session key that is used later when support request is actually made
      */
-    public function klicked_sla()
+    public function clicked_sla()
     {
-        \Session::push('klicked_sla', true);
-        \Log::debug('Get SLA klicked');
+        \Session::push('clicked_sla', true);
+        \Log::debug('Get SLA clicked');
     }
 }

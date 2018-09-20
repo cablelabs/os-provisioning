@@ -46,7 +46,7 @@
         <div class='col-md-2'>
         </div>
         <div class='col-md-2'>
-            <a class="btn btn-info btn-block" id='request' href="{{route('SupportRequest.create')}}">{{\Session::has('klicked_sla') ? 'Request Support' : 'Get Help without SLA'}}</a>
+            <a class="btn btn-info btn-block" id='request' href="{{route('SupportRequest.create')}}">{{\Session::has('clicked_sla') ? 'Request Support' : 'Get Help without SLA'}}</a>
         </div>
     </div>
 
@@ -61,7 +61,7 @@
 
             /* push boolean variable to session on server */
             $.ajax({
-                url: "{{route('Sla.klicked_sla')}}",
+                url: "{{route('Sla.clicked_sla')}}",
                 type: "post",
                 data: {
                     _token: "{{\Session::get('_token')}}",

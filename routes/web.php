@@ -83,8 +83,9 @@ BaseRoute::group([], function () {
         'middleware' => ["can:delete,App\Role"],
     ]);
 
-    BaseRoute::post('Sla', [
-        'as' => 'Sla.klicked_sla',
-        'uses' => 'SlaController@klicked_sla',
+    BaseRoute::post('Sla/clicked', [
+        'as' => 'Sla.clicked_sla',
+        'uses' => 'SlaController@clicked_sla',
     ]);
+
 });
