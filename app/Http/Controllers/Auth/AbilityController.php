@@ -245,6 +245,7 @@ class AbilityController extends Controller
                 })
                 ->prepend('GlobalConfig')
                 ->push('GuiLog')
+                ->push('Sla')
                 ->mapWithKeys(function ($name) use ($models, $allAbilities) {
                     return self::getModelActions($name, $models, $allAbilities);
                 }),

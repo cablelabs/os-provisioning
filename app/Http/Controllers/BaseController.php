@@ -167,6 +167,8 @@ class BaseController extends Controller
                 $links[($module->get('description') == '') ? $tmp : $module->get('description')] = $tmp;
             }
         }
+        // Sla (service level agreement) is not a separate module, but belongs to GlobalConfig
+        $links['Sla'] = 'Sla';
 
         return $links;
     }
