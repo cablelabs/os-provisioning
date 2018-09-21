@@ -50,6 +50,40 @@ class authCommand extends Command
         parent::__construct();
     }
 
+    protected static function customAbilities()
+    {
+        return collect([
+            [
+                'name' => 'use api',
+                'title' => 'Use api',
+                'only_owned' => '0',
+            ],
+            [
+                'name' => 'see income chart',
+                'title' => 'See income chart',
+                'only_owned' => '0',
+            ],
+            [
+                'name' => 'view_analysis_pages_of',
+                'title' => 'View analysis pages of modems',
+                'entity_type' => \Modules \ProvBase \Entities \Modem::class,
+                'only_owned'  =>'0',
+            ],
+            [
+                'name' => 'view_analysis_pages_of',
+                'title' => 'View analysis pages of modems',
+                'entity_type' => \Modules \ProvBase \Entities \Cmts::class,
+                'only_owned'  =>'0',
+            ],
+            [
+                'name' => 'download',
+                'title' => 'Download settlement runs',
+                'entity_type' => \Modules \BillingBase \Entities \SettlementRun::class,
+                'only_owned' =>'0',
+            ],
+        ]);
+    }
+
     /**
      * Execute the console command.
      *
@@ -57,64 +91,13 @@ class authCommand extends Command
      */
     public function fire()
     {
-        $this->setVerbosity('v');
+        $this->resetAdminRole();
 
-        Bouncer::allow('admin')->everything();
-        Bouncer::unforbid('admin')->everything();
+        $this->resetUserPermissions();
 
-        $this->line('Admin Role resetted.');
+        $this->resetCustomAbilities();
 
-        foreach (User::all() as $user) {
-            Bouncer::allow($user)->toOwn(User::class);
-        }
-
-        //create the custom abilities
-        $ability = Ability::firstOrNew([
-            'name' => 'use api',
-            'title' => 'Use api',
-            'only_owned' => '0',
-        ]);
-
-        $this->line('Ability: "'.$ability->title.'" processed');
-
-        $ability = Ability::firstOrNew([
-            'name' => 'see income chart',
-            'title' => 'See income chart',
-            'only_owned' => '0',
-        ]);
-
-        $this->line('Ability: "'.$ability->title.'" processed');
-
-        $ability = Ability::firstOrNew([
-            'name' => 'view_analysis_pages_of',
-            'title' => 'View analysis pages of modems',
-            'entity_type' => \Modules\ProvBase\Entities\Modem::class,
-            'only_owned' => '0',
-        ]);
-
-        $this->line('Ability: "'.$ability->title.'" processed');
-
-        $ability = Ability::firstOrNew([
-            'name' => 'view_analysis_pages_of',
-            'title' => 'View analysis pages of modems',
-            'entity_type' => \Modules\ProvBase\Entities\Cmts::class,
-            'only_owned' => '0',
-        ]);
-
-        $this->line('Ability: "'.$ability->title.'" processed');
-
-        $ability = Ability::firstOrNew([
-            'name' => 'download',
-            'title' => 'Download settlement runs',
-            'entity_type' => \Modules\BillingBase\Entities\SettlementRun::class,
-            'only_owned' => '0',
-        ]);
-
-        $this->line('Ability: "'.$ability->title.'" processed');
-
-        $this->setVerbosity('normal');
-
-        $this->info('success');
+        $this->info('Successfully resetted Authentification');
     }
 
     /**
@@ -139,5 +122,50 @@ class authCommand extends Command
         return [
             // array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
         ];
+    }
+
+    protected function resetAdminRole()
+    {
+        $this->setVerbosity('v');
+
+        Bouncer::allow('admin')->everything();
+        Bouncer::unforbid('admin')->everything();
+
+        $this->line('Admin Role resetted.');
+
+        $this->setVerbosity('normal');
+    }
+
+    protected function resetUserPermissions()
+    {
+        $this->setVerbosity('vv');
+
+        foreach (User::all() as $user) {
+            Bouncer::allow($user)->toOwn(User::class);
+            $this->line($user->login_name.' was given Permission to edit its own Model.');
+        }
+
+        $this->setVerbosity('v');
+
+        $this->line('User Permissions resetted.');
+
+        $this->setVerbosity('normal');
+    }
+
+    protected function resetCustomAbilities()
+    {
+        $this->setVerbosity('vv');
+
+        foreach (self::customAbilities() as $ability) {
+            $ability = Ability::firstOrNew($ability);
+
+            $this->line('Ability: "'.$ability->title.'" processed');
+        }
+
+        $this->setVerbosity('v');
+
+        $this->line('Custom Abilities resetted.');
+
+        $this->setVerbosity('normal');
     }
 }
