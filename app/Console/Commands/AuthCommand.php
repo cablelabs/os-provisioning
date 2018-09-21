@@ -7,24 +7,11 @@ use App\Role;
 use App\User;
 use App\Ability;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-/*
- * Set default rights for all Modules
- *
- * NOTE: Module Installation requires a technic to re-install or install some modules after
- *       basic "php artisan migrate" script will be run. Patrick set all default right via migration.
- *       But this will not work for update/re-installation of Modules. So this script will do this job
- *
- *       Example: ISP starts with only provbase module, after a year he needs provvoip. Only running
- *                module:migrate will not adapte the required Auth needed for access.
- *
- * NOTE: This Command could be used in the feature to adapt auth/access rights via command line.
- *
- * @autor Torsten Schmidt
- */
-class authCommand extends Command
+class AuthCommand extends Command
 {
     /**
      * The console command name.
@@ -38,7 +25,7 @@ class authCommand extends Command
      *
      * @var string
      */
-    protected $description = 'update authentication tables and access rights';
+    protected $description = 'Reset Authentication and Access Permissions';
 
     /**
      * Create a new command instance.
@@ -50,7 +37,12 @@ class authCommand extends Command
         parent::__construct();
     }
 
-    protected static function customAbilities()
+    /**
+     * Holds the Custom Abilities, which should be resetted
+     *
+     * @return Collection
+     */
+    protected static function customAbilities() : Collection
     {
         return collect([
             [
@@ -66,19 +58,19 @@ class authCommand extends Command
             [
                 'name' => 'view_analysis_pages_of',
                 'title' => 'View analysis pages of modems',
-                'entity_type' => \Modules \ProvBase \Entities \Modem::class,
+                'entity_type' => \Modules\ProvBase\Entities\Modem::class,
                 'only_owned'  =>'0',
             ],
             [
                 'name' => 'view_analysis_pages_of',
                 'title' => 'View analysis pages of modems',
-                'entity_type' => \Modules \ProvBase \Entities \Cmts::class,
+                'entity_type' => \Modules\ProvBase\Entities\Cmts::class,
                 'only_owned'  =>'0',
             ],
             [
                 'name' => 'download',
                 'title' => 'Download settlement runs',
-                'entity_type' => \Modules \BillingBase \Entities \SettlementRun::class,
+                'entity_type' => \Modules\BillingBase\Entities\SettlementRun::class,
                 'only_owned' =>'0',
             ],
         ]);
@@ -89,7 +81,7 @@ class authCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function fire() : void
     {
         $this->resetAdminRole();
 
@@ -124,7 +116,12 @@ class authCommand extends Command
         ];
     }
 
-    protected function resetAdminRole()
+    /**
+     * Reset the Admin Role.
+     *
+     * @return void
+     */
+    protected function resetAdminRole() : void
     {
         $this->setVerbosity('v');
 
@@ -136,7 +133,12 @@ class authCommand extends Command
         $this->setVerbosity('normal');
     }
 
-    protected function resetUserPermissions()
+    /**
+     * Give each User ownage over his own User Model for Usermanagement.
+     *
+     * @return void
+     */
+    protected function resetUserPermissions() : void
     {
         $this->setVerbosity('vv');
 
@@ -152,7 +154,12 @@ class authCommand extends Command
         $this->setVerbosity('normal');
     }
 
-    protected function resetCustomAbilities()
+    /**
+     * Create all Custom abilities, if they are deleted or modified by accident
+     *
+     * @return void
+     */
+    protected function resetCustomAbilities() : void
     {
         $this->setVerbosity('vv');
 
