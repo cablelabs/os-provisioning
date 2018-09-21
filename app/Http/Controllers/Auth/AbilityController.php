@@ -216,6 +216,7 @@ class AbilityController extends Controller
             'IcingaHostStatus', // has no UI/Route associated
             'IcingaObjects',    // has no UI/Route associated
             'ModemHelper',      // has no UI/Route associated
+            'SupportRequest',   // authorization makes no sense
         ];
 
         $modules = Module::collections()->keys();

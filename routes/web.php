@@ -41,7 +41,33 @@ BaseRoute::group([], function () {
     BaseRoute::resource('User', 'Auth\UserController');
     BaseRoute::resource('Role', 'Auth\RoleController');
     BaseRoute::resource('Sla', 'SlaController');
-    BaseRoute::resource('SupportRequest', 'SupportRequestController');
+
+    // As we dont want authorization middleware (only authentication) we can not set the routes with our general function and have to set them manually
+    BaseRoute::get("SupportRequest", [
+        'uses' => "SupportRequestController@index",
+        'as'   => "SupportRequest.index",
+        ]);
+    BaseRoute::post("SupportRequest", [
+        'uses' => "SupportRequestController@store",
+        'as'   => "SupportRequest.store",
+        ]);
+    BaseRoute::get("SupportRequest/create", [
+        'uses' => "SupportRequestController@create",
+        'as'   => "SupportRequest.create",
+        ]);
+    BaseRoute::get("SupportRequest/{id}", [
+        'uses' => "SupportRequestController@edit",
+        'as'   => "SupportRequest.edit",
+        ]);
+    BaseRoute::put("SupportRequest/{id}", [
+        'uses' => "SupportRequestController@update",
+        'as'   => "SupportRequest.update",
+        ]);
+    BaseRoute::get("SupportRequest/{id}/log", [
+        'uses' => '\App\Http\Controllers\GuiLogController@filter',
+        'as' => "SupportRequest.guilog",
+    ]);
+
 
     BaseRoute::get('base/fulltextSearch', [
         'as' => 'Base.fulltextSearch',
