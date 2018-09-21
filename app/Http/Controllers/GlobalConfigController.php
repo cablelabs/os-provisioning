@@ -90,12 +90,15 @@ class GlobalConfigController extends BaseController
         }
 
         // Add SLA Tab
-        $module_controller[$i] = new \App\Http\Controllers\SlaController;
-        $sla_model = new \App\Sla;
-        $module_model[$i] = $sla_model->first();
-        $links[$i] = ['name' => 'SLA', 'link' => 'Sla'];
+        if (Bouncer::can('view', '\App\Sla')) {
+            $module_controller[$i] = new \App\Http\Controllers\SlaController;
+            $sla_model = new \App\Sla;
+            $module_model[$i] = $sla_model->first();
+            $links[$i] = ['name' => 'SLA', 'link' => 'Sla'];
+            $i++;
+        }
 
-        for ($j = 0; $j <= $i; $j++) {
+        for ($j = 0; $j < $i; $j++) {
             $fields[$j] = BaseViewController::prepare_form_fields($module_controller[$j]->view_form_fields($module_model[$j]), $module_model[$j]);
             $form_fields[$j] = BaseViewController::add_html_string($fields[$j], 'edit');
         }

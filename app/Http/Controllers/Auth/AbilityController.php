@@ -216,6 +216,7 @@ class AbilityController extends Controller
             'IcingaHostStatus', // has no UI/Route associated
             'IcingaObjects',    // has no UI/Route associated
             'ModemHelper',      // has no UI/Route associated
+            'SupportRequest',   // authorization makes no sense
         ];
 
         $modules = Module::collections()->keys();
@@ -244,6 +245,7 @@ class AbilityController extends Controller
                 })
                 ->prepend('GlobalConfig')
                 ->push('GuiLog')
+                ->push('Sla')
                 ->mapWithKeys(function ($name) use ($models, $allAbilities) {
                     return self::getModelActions($name, $models, $allAbilities);
                 }),
