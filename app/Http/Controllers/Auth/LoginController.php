@@ -109,6 +109,22 @@ class LoginController extends Controller
     }
 
     /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        $locale = in_array($user->language, Config::get('app.supported_locale')) ? $user->language : 'en';
+
+        App::setLocale($locale);
+
+        $request->session()->put('language', $locale);
+    }
+
+    /**
      * This function will be called if user has no access to a certain area
      * or has no valid login at all.
      */

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App;
 use Auth;
+use Config;
 use Bouncer;
+use Session;
 use App\Role;
 use App\User;
 use App\Exceptions\AuthException;
@@ -75,6 +78,11 @@ class UserController extends BaseController
         unset($data['password_confirmation']);
 
         Bouncer::refresh();
+
+        $locale = in_array($data['language'], Config::get('app.supported_locale')) ? $data['language'] : 'en';
+
+        App::setLocale($locale);
+        Session::put('language', $locale);
 
         return parent::prepare_input_post_validation($data);
     }
