@@ -92,20 +92,19 @@ class LoginController extends Controller
 
         Log::debug($user->login_name.' logged in successfully!');
 
-        if (! $activeModules->has('Dashboard')) {
-            if (($activeModules->has('ProvBase') && ! $user->can('view Contract')) ||
-                 (! $activeModules->has('ProvBase'))) {
-                if (($activeModules->has('HfcReq') && ! $user->can('view NetElement')) ||
-                    (! $activeModules->has('HfcReq'))) {
-                    return $this->prefix.'/Config';
-                } else {
-                    return $this->prefix.'/NetElement';
-                }
-            } else {
-                return $this->prefix.'/Contract';
+        if ($activeModules->has('Dashboard')) {
+             return $this->prefix.'/';
+        }
+
+        if ((! $activeModules->has('ProvBase')) ||
+            ($activeModules->has('ProvBase') && $user->cannot('view Contract'))) {
+
+            if ((! $activeModules->has('HfcReq')) ||
+                ($activeModules->has('HfcReq') && ! $user->cannot('view NetElement'))) {
+                return $this->prefix.'/Config';
             }
-        } else {
-            return $this->prefix.'/';
+
+            return $this->prefix.'/NetElement';
         }
     }
 
