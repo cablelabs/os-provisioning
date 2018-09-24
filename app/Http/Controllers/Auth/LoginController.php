@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use Log;
 use Module;
-use Session;
 use GlobalConfig;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -93,12 +92,11 @@ class LoginController extends Controller
         Log::debug($user->login_name.' logged in successfully!');
 
         if ($activeModules->has('Dashboard')) {
-             return $this->prefix.'/';
+            return $this->prefix.'/';
         }
 
         if ((! $activeModules->has('ProvBase')) ||
             ($activeModules->has('ProvBase') && $user->cannot('view Contract'))) {
-
             if ((! $activeModules->has('HfcReq')) ||
                 ($activeModules->has('HfcReq') && ! $user->cannot('view NetElement'))) {
                 return $this->prefix.'/Config';

@@ -110,7 +110,7 @@ class BaseViewController extends Controller
 
         $user = Auth::user();
 
-        if (! $user ) {
+        if (! $user) {
             $language = substr(explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])[0], 0, 2);
 
             return in_array($language, Config::get('app.supported_locale')) ? $language : 'en';
