@@ -20,7 +20,7 @@ class AbilityController extends Controller
      * Shorthand for abilities is used. Value is an Option array of
      * Properties which are used only inside Blade context.
      *
-     * @return Collection
+     * @return Illuminate\Support\Collection
      * @author Christian Schramm
      */
     public static function getCrudActions()
@@ -39,8 +39,8 @@ class AbilityController extends Controller
      * Helper Abilities (like "allow all", "view all"). It is bound to the
      * Route "customAbility.update" and called via AJAX Requests.
      *
-     * @param Request $requestData
-     * @return Collection|mixed
+     * @param Illuminate\Http\Request $requestData
+     * @return Illuminate\Support\Collection
      * @author Christian Schramm
      */
     protected function updateCustomAbility(Request $requestData)
@@ -65,8 +65,8 @@ class AbilityController extends Controller
      * and delete. It is bound to the Route "modelAbility.update" and is
      * called via AJAX Requests.
      *
-     * @param Request $request
-     * @return json|string
+     * @param Illuminate\Http\Request $request
+     * @return json
      * @author Christian Schramm
      */
     protected function updateModelAbility(Request $request)
@@ -100,7 +100,7 @@ class AbilityController extends Controller
      *
      * @param mixed $requestData
      * @param string $roleName
-     * @param Collection|Ability $abilities
+     * @param Illuminate\Database\Eloquent\Collection $abilities
      * @return void
      * @author Christian Schramm
      */
@@ -135,9 +135,9 @@ class AbilityController extends Controller
      * Gate with respect to the "allow all" ability. Only changed Abilities
      * are handled to increase the Performance.
      *
-     * @param Role $role
-     * @param Collection|mixed $modelAbilities
-     * @param mixed $allowAll
+     * @param App\Role $role
+     * @param Illuminate\Database\Eloquent\Collection $modelAbilities
+     * @param string $allowAll
      * @return void
      * @author Christian Schramm
      */
@@ -181,7 +181,7 @@ class AbilityController extends Controller
     /**
      * Get all non-Crud Abilities and Compose a Collection to use in Blade
      *
-     * @return Collection|mixed
+     * @return Illuminate\Database\Eloquent\Collection
      * @author Christian Schramm
      */
     public static function getCustomAbilities()
@@ -204,8 +204,8 @@ class AbilityController extends Controller
      * the Blade. Some Abilities are Grouped by Custom Rules, but mostly the
      * Module Context is used. The Grouping was done to increase the UX.
      *
-     * @param Role $role
-     * @return Collection|mixed
+     * @param App\Role $role
+     * @return Illuminate\Database\Eloquent\Collection
      * @author Christian Schramm
      */
     public static function getModelAbilities(Role $role)
@@ -268,9 +268,9 @@ class AbilityController extends Controller
      * Ability-Interface clear and concise for the Users.
      *
      * @param string $name
-     * @param Collection|string $models
-     * @param Collection|Ability $allAbilities
-     * @return Collection|mixed
+     * @param Illuminate\Support\Collection $models
+     * @param Illuminate\Database\Eloquent\Collection $allAbilities
+     * @return Illuminate\Support\Collection
      * @author Christian Schramm
      */
     private static function getModelsAndActions(string $name, $models, $allAbilities)
@@ -295,8 +295,8 @@ class AbilityController extends Controller
      * This method returns the assigned Actions for a given Model.
      *
      * @param string $name
-     * @param Collection|string $models
-     * @param Collection|Ability $allAbilities
+     * @param Illuminate\Support\Collection $models
+     * @param Illuminate\Database\Eloquent\Collection $allAbilities
      * @return array
      * @author Christian Schramm
      */
@@ -312,7 +312,7 @@ class AbilityController extends Controller
     /**
      * Check if only one or if multiple Custom Abilities were changed.
      *
-     * @param Request $requestData
+     * @param Illuminate\Http\Request $requestData
      * @return bool
      * @author Christian Schramm
      */
@@ -326,8 +326,8 @@ class AbilityController extends Controller
     /**
      * Get All Abilities and return only the non-Crud based ones.
      *
-     * @param Collection|Ability $abilities
-     * @return Collection|mixed
+     * @param Illuminate\Database\Eloquent\Collection $abilities
+     * @return Illuminate\Support\Collection
      * @author Christian Schramm
      */
     public static function mapCustomAbilities($abilities)
@@ -340,8 +340,8 @@ class AbilityController extends Controller
     /**
      * Get All Abilities and return only the Crud based Abilities.
      *
-     * @param Collection|Ability $abilities
-     * @return Collection|mixed
+     * @param Illuminate\Database\Eloquent\Collection $abilities
+     * @return Illuminate\Support\Collection
      * @author Christian Schramm
      */
     public static function mapModelAbilities($abilities)
@@ -361,7 +361,7 @@ class AbilityController extends Controller
     /**
      * Checks if the given Ability is a Custom one.
      *
-     * @param Ability $ability
+     * @param App\Ability $ability
      * @return bool
      * @author Christian Schramm
      */
