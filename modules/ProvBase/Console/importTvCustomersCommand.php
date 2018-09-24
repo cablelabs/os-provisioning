@@ -160,38 +160,17 @@ class importTvCustomersCommand extends Command
         $city = $arr[0];
         $district = isset($arr[1]) ? $arr[1] : '';
 
-        $contract = Contract::where('number', '=', $number)->first();
-
+        $contract = $this->contract_exists($number, $firstname, $lastname, $street, $city);
+        // if existing contract was found update the contact and return it
         if ($contract) {
-            // Check if name and address differs - could be a different customer
-            if ($contract->firstname != $firstname || $contract->lastname != $lastname || $contract->street != $street) {
-                // $msg = "Contract [$number] already exists with different name or street - Pls check & add manually!";
-                $msg = "Vertragsnummer $number existiert bereits, aber Name, Straße oder Stadt weichen ab - Bitte fügen Sie den Vertrag manuell hinzu!";
-                \Log::warning($msg);
-                $this->important_todos .= "\n$msg";
-
-                return;
+            if ($this->option('ag')) {
+                Contract::where('id', $contract->id)->update(['contact' => $this->option('ag')]);
             }
-
-            \Log::notice("Vertrag $number existiert bereits übereinstimmend ($firstname $lastname) - füge nur TV Tarif hinzu");
 
             return $contract;
-        } else {
-            // TODO: Check if customer/name & address already exists with another contract number
-            $existing = Contract::where('firstname', '=', $firstname)->where('lastname', '=', $lastname)
-                // make Straße or Str. respective ..straße or ..str. indifferent on searching in DB
-                ->whereIn('street', [$street, str_replace(['traße', 'traße'], 'tr.', $street)])
-                ->where('city', '=', $city)->first();
-
-            if ($existing) {
-                // $msg = "Customer $number is probably already added with different contract number [$existing->number] (found same name [$firstname $lastname], city & street [$street]). Check this manually!";
-                $msg = "Kunde $number existiert bereits unter der Vertragsnummer $existing->number (selber Name, Stadt, Straße: , $city, $street gefunden). Füge nur TV Tarif hinzu.";
-                \Log::warning($msg);
-
-                return $existing;
-            }
         }
 
+        // Add new contract
         $contract = new Contract;
 
         $contract->contract_start = $line[self::C_START] ? date('Y-m-d', strtotime($line[self::C_START])) : '2000-01-01';
@@ -246,6 +225,43 @@ class importTvCustomersCommand extends Command
 
         // Log
         \Log::info("Add Contract $contract->number: $contract->firstname, $contract->lastname");
+
+        return $contract;
+    }
+
+    /**
+     * Check if already a (n internet) contract exists for this customer
+     *
+     * @return object  contract if exists, otherwise null or []
+     */
+    private function contract_exists($number, $firstname, $lastname, $street, $city)
+    {
+        $contract = Contract::where('number', '=', $number)->first();
+
+        if ($contract) {
+            // Check if name and address differs - could be a different customer
+            if ($contract->firstname != $firstname || $contract->lastname != $lastname || $contract->street != $street) {
+                $msg = "Vertragsnummer $number existiert bereits, aber Name, Straße oder Stadt weichen ab - Bitte fügen Sie den Vertrag manuell hinzu!";
+                \Log::warning($msg);
+                $this->important_todos .= "\n$msg";
+
+                return;
+            }
+
+            \Log::notice("Vertrag $number existiert bereits übereinstimmend ($firstname $lastname) - füge nur TV Tarif hinzu");
+        } else {
+            // TODO: Check if customer/name & address already exists with another contract number
+            $contract = Contract::where('firstname', '=', $firstname)->where('lastname', '=', $lastname)
+                // make Straße or Str. respective ..straße or ..str. indifferent on searching in DB
+                ->whereIn('street', [$street, str_replace('traße', 'tr.', $street)])
+                ->where('city', '=', $city)->first();
+
+            if ($contract) {
+                // $msg = "Customer $number is probably already added with different contract number [$contract->number] (found same name [$firstname $lastname], city & street [$street]). Check this manually!";
+                $msg = "Kunde $number existiert bereits unter der Vertragsnummer $contract->number (selber Name, Stadt, Straße: , $city, $street gefunden). Füge nur TV Tarif hinzu.";
+                \Log::warning($msg);
+            }
+        }
 
         return $contract;
     }
@@ -393,7 +409,7 @@ class importTvCustomersCommand extends Command
         if (! $valid) {
             \Log::debug("Contract $contract->number has no valid SepaMandate");
 
-            // Set CostCenter for current SepaMandate if customer pays TV charge in cash
+            // Set CostCenter for current SepaMandate in case customer pays TV charge in cash
             SepaMandate::where('contract_id', '=', $contract->id)
                 ->where(function ($query) {
                     $query->whereNull('costcenter_id')->orWhere('costcenter_id', '=', 0);
@@ -405,10 +421,17 @@ class importTvCustomersCommand extends Command
 
         $signature_date = date('Y-m-d', strtotime($line[self::S_SIGNATURE]));
 
-        if ($contract->sepamandates && $contract->sepamandates->contains('signature_date', $signature_date)) {
-            \Log::notice("Contract $contract->number already has SEPA-mandate with signature date $signature_date");
+        // Check and return if SepaMandate with this IBAN currently exists and is valid
+        if ($contract->sepamandates && $contract->sepamandates->contains('sepa_iban', $line[self::S_IBAN])) {
+            $mandates = $contract->sepamandates->where('sepa_iban', $line[self::S_IBAN]);
 
-            return;
+            foreach ($mandates as $sm) {
+                if ((! $sm->sepa_valid_to || ($sm->sepa_valid_to > date('Y-m-d')) || ($sm->signature_date > $signature_date))) {
+                    \Log::notice("Contract $contract->number already has SEPA-mandate with IBAN ".$line[self::S_IBAN]);
+
+                    return;
+                }
+            }
         }
 
         SepaMandate::create([
