@@ -79,11 +79,6 @@ class UserController extends BaseController
 
         Bouncer::refresh();
 
-        $locale = in_array($data['language'], Config::get('app.supported_locale')) ? $data['language'] : 'en';
-
-        App::setLocale($locale);
-        Session::put('language', $locale);
-
         return parent::prepare_input_post_validation($data);
     }
 }

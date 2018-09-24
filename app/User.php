@@ -2,7 +2,10 @@
 
 namespace App;
 
+use App;
+use Config;
 use Bouncer;
+use Session;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
@@ -165,7 +168,14 @@ class UserObserver
     {
         // Rebuild cached sidebar when user changes his language
         if ($user['original']['language'] != $user['attributes']['language']) {
-            \Session::forget('menu');
+            Session::forget('menu');
+
+            $userLang = in_array($user['attributes']['language'], Config::get('app.supported_locale'))
+                    ? $user['attributes']['language']
+                    : 'en';
+
+            App::setLocale($userLang);
+            Session::put('language', $userLang);
         }
     }
 }

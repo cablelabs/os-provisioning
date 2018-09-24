@@ -96,9 +96,9 @@ class BaseViewController extends Controller
     /**
      * Detect the user language from Session or browser
      *
-     * @return void
+     * @return string
      */
-    public static function get_user_lang()
+    public static function get_user_lang() : string
     {
         if (Session::has('language')) {
             return Session::get('language');
@@ -116,9 +116,11 @@ class BaseViewController extends Controller
             return in_array($language, Config::get('app.supported_locale')) ? $language : 'en';
         }
 
-        Session::put('language', $user->language);
+        $userLang = $user ? $user->language : 'en';
 
-        return $user ? $user->language : 'en';
+        Session::put('language',  $userLang );
+
+        return  $userLang;
     }
 
     /**
