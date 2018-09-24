@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App;
 use Log;
+use Config;
 use Module;
+use Bouncer;
 use GlobalConfig;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -75,8 +78,6 @@ class LoginController extends Controller
     /**
      * Show Default Page after successful login
      *
-     * TODO: Redirect to a global overview page
-     *
      * @return type Redirect
      */
     private function redirectTo()
@@ -92,18 +93,18 @@ class LoginController extends Controller
         Log::debug($user->login_name.' logged in successfully!');
 
         if ($activeModules->has('Dashboard')) {
-            return $this->prefix.'/';
+            return route('Dashboard.index');
         }
 
-        if ((! $activeModules->has('ProvBase')) ||
-            ($activeModules->has('ProvBase') && $user->cannot('view Contract'))) {
-            if ((! $activeModules->has('HfcReq')) ||
-                ($activeModules->has('HfcReq') && ! $user->cannot('view NetElement'))) {
-                return $this->prefix.'/Config';
-            }
-
-            return $this->prefix.'/NetElement';
+        if ($activeModules->has('ProvBase') && Bouncer::can('view', \Modules\ProvBase\Entities\Contract::class)) {
+            return route('Contract.index');
         }
+
+        if (Bouncer::can('view', \Modules\HfcReq\Entities\NetElement::class)) {
+            return route('NetElement.index');
+        }
+
+        return route('GlobalConfig.index');
     }
 
     /**
