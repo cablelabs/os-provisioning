@@ -38,7 +38,7 @@ class AuthCommand extends Command
     }
 
     /**
-     * Holds the Custom Abilities, which should be resetted
+     * Holds the Custom Abilities, which should be reset
      *
      * @return Collection
      */
@@ -89,7 +89,7 @@ class AuthCommand extends Command
 
         $this->resetCustomAbilities();
 
-        $this->info('Successfully resetted Authentification');
+        $this->info('Successfully reset Authentification');
     }
 
     /**
@@ -128,7 +128,7 @@ class AuthCommand extends Command
         Bouncer::allow('admin')->everything();
         Bouncer::unforbid('admin')->everything();
 
-        $this->line('Admin Role resetted.');
+        $this->line('Admin Role reset.');
 
         $this->setVerbosity('normal');
     }
@@ -149,7 +149,7 @@ class AuthCommand extends Command
 
         $this->setVerbosity('v');
 
-        $this->line('User Permissions resetted.');
+        $this->line('User Permissions reset.');
 
         $this->setVerbosity('normal');
     }
@@ -171,7 +171,7 @@ class AuthCommand extends Command
 
         $this->setVerbosity('v');
 
-        $this->line('Custom Abilities resetted.');
+        $this->line('Custom Abilities reset.');
 
         $this->setVerbosity('normal');
     }
