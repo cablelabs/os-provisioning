@@ -1,0 +1,2 @@
+# reload httpd weekly in order to use a new tls certificate if one was generated via acme-tiny
+0 0 * * 0 root /usr/bin/systemctl reload httpd.service > /dev/null 2>&1
