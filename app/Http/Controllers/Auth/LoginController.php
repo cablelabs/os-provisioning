@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App;
 use Log;
+use Config;
 use Module;
+use Bouncer;
 use GlobalConfig;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -66,15 +70,13 @@ class LoginController extends Controller
         $head2 = $globalConfig->headline2;
         $image = 'main-pic-1.jpg';
 
-        \App::setLocale(\App\Http\Controllers\BaseViewController::get_user_lang());
+        App::setLocale(\App\Http\Controllers\BaseViewController::get_user_lang());
 
         return \View::make('auth.login', compact('head1', 'head2', 'prefix', 'image'));
     }
 
     /**
      * Show Default Page after successful login
-     *
-     * TODO: Redirect to a global overview page
      *
      * @return type Redirect
      */
@@ -90,21 +92,35 @@ class LoginController extends Controller
 
         Log::debug($user->login_name.' logged in successfully!');
 
-        if (! $activeModules->has('Dashboard')) {
-            if (($activeModules->has('ProvBase') && ! $user->can('view Contract')) ||
-                 (! $activeModules->has('ProvBase'))) {
-                if (($activeModules->has('HfcReq') && ! $user->can('view NetElement')) ||
-                    (! $activeModules->has('HfcReq'))) {
-                    return $this->prefix.'/Config';
-                } else {
-                    return $this->prefix.'/NetElement';
-                }
-            } else {
-                return $this->prefix.'/Contract';
-            }
-        } else {
-            return $this->prefix.'/';
+        if ($activeModules->has('Dashboard')) {
+            return route('Dashboard.index');
         }
+
+        if ($activeModules->has('ProvBase') && Bouncer::can('view', \Modules\ProvBase\Entities\Contract::class)) {
+            return route('Contract.index');
+        }
+
+        if (Bouncer::can('view', \Modules\HfcReq\Entities\NetElement::class)) {
+            return route('NetElement.index');
+        }
+
+        return route('GlobalConfig.index');
+    }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        $locale = in_array($user->language, Config::get('app.supported_locale')) ? $user->language : 'en';
+
+        App::setLocale($locale);
+
+        $request->session()->put('language', $locale);
     }
 
     /**

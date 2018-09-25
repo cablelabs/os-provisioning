@@ -93,29 +93,34 @@ class BaseViewController extends Controller
         return $string;
     }
 
-    // TODO: take language from user setting or the language with highest priority from browser
-    // @Nino Ryschawy
-    public static function get_user_lang()
+    /**
+     * Detect the user language from Session or browser
+     *
+     * @return string
+     */
+    public static function get_user_lang() : string
     {
-        $user = Auth::user();
-
-        $language = $user ? $user->language : 'browser';
-
-        if ($language == 'browser') {
-            // default
-            if (! isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-                return 'en';
-            }
-
-            $languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-            if (strpos($languages[0], 'de') !== false) {
-                return 'de';
-            } else {
-                return 'en';
-            }
+        if (Session::has('language')) {
+            return Session::get('language');
         }
 
-        return $language;
+        if (! isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            return 'en';
+        }
+
+        $user = Auth::user();
+
+        if (! $user) {
+            $language = substr(explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])[0], 0, 2);
+
+            return in_array($language, Config::get('app.supported_locale')) ? $language : 'en';
+        }
+
+        $userLang = $user ? $user->language : 'en';
+
+        Session::put('language', $userLang);
+
+        return  $userLang;
     }
 
     /**

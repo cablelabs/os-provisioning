@@ -2,7 +2,10 @@
 
 namespace App;
 
+use App;
+use Config;
 use Bouncer;
+use Session;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
@@ -75,7 +78,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     {
         return [
             'login_name' => 'required|unique:users,login_name,'.$id.',id,deleted_at,NULL',
-            'password' => 'sometimes|min:10|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/|confirmed',
+            'password' => 'sometimes|min:10|regex:/^\S*(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[0-9])(?=\S*[\d\x])(?=\S*[^\w])\S*$/|confirmed',
             'password_confirmation' => 'min:10|required_with:password|same:password',
         ];
     }
@@ -165,7 +168,14 @@ class UserObserver
     {
         // Rebuild cached sidebar when user changes his language
         if ($user['original']['language'] != $user['attributes']['language']) {
-            \Session::forget('menu');
+            Session::forget('menu');
+
+            $userLang = in_array($user['attributes']['language'], Config::get('app.supported_locale'))
+                    ? $user['attributes']['language']
+                    : 'en';
+
+            App::setLocale($userLang);
+            Session::put('language', $userLang);
         }
     }
 }
