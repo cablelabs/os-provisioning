@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App;
 use Auth;
-use Config;
 use Bouncer;
-use Session;
 use App\Role;
 use App\User;
 use App\Exceptions\AuthException;

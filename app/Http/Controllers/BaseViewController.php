@@ -118,7 +118,7 @@ class BaseViewController extends Controller
 
         $userLang = $user ? $user->language : 'en';
 
-        Session::put('language',  $userLang );
+        Session::put('language', $userLang);
 
         return  $userLang;
     }

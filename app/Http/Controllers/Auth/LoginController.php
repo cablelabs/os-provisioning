@@ -70,7 +70,7 @@ class LoginController extends Controller
         $head2 = $globalConfig->headline2;
         $image = 'main-pic-1.jpg';
 
-        \App::setLocale(\App\Http\Controllers\BaseViewController::get_user_lang());
+        App::setLocale(\App\Http\Controllers\BaseViewController::get_user_lang());
 
         return \View::make('auth.login', compact('head1', 'head2', 'prefix', 'image'));
     }
