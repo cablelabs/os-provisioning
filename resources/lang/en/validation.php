@@ -100,11 +100,10 @@ return [
     'custom' => [
         'password' => [
             'regex' => 'The password has to fullfil each criteria, listed below:
-                        <li>At least 10 characters</li>
+                        <li>At least 8 characters</li>
                         <li>Uppercase characters (A – Z)</li>
                         <li>Lowercase characters (a – z)</li>
-                        <li>Digits (0 – 9)</li>
-                        <li>Special characters (For example: !, $, ä or ß)</li>',
+                        <li>Digits (0 – 9)</li>',
         ],
     ],
 

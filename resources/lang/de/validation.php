@@ -100,11 +100,10 @@ return [
     'custom' => [
         'password' => [
             'regex' => 'Das Passwort muss die folgenden Kriterien Erfüllen:
-                        <li>Mindestens 10 Zeichen</li>
+                        <li>Mindestens 8 Zeichen</li>
                         <li>Großbuchstaben (A – Z)</li>
                         <li>Kleinbuchstaben (a – z)</li>
-                        <li>Ziffern (0 – 9)</li>
-                        <li>Sonderzeichen (Zum Beispiel: !, $, ä oder ß)</li>',
+                        <li>Ziffern (0 – 9)</li>',
         ],
     ],
 
