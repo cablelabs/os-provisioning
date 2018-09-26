@@ -35,6 +35,10 @@
 				<div class="brand m-b-20">
 					<img src="{{asset('images/nmsprime-logo-white.png')}}" class="img-fluid">
 				</div>
+				<div align="center">
+					<h4>{{ $head1 }}</h4>
+					<h5>{{ $head2 }}</h5>
+				</div>
 				<div>
 					{{ Form::open(array('url' => $prefix.'/login')) }}
 
