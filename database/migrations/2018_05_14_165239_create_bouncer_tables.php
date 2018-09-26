@@ -124,9 +124,8 @@ class CreateBouncerTables extends Migration
             Bouncer::forbid('support')->to('use api');
             Bouncer::forbid('support')->to('see income chart');
             Bouncer::forbid('support')->toManage(Role::class);
-            Bouncer::forbid('support')->to('download', \Modules\BillingBase\Entities\SettlementRun::class);
-            Bouncer::allow('support')->to('view_analysis_pages_of', \Modules\ProvBase\Entities\Modem::class);
-            Bouncer::allow('support')->to('view_analysis_pages_of', \Modules\ProvBase\Entities\Cmts::class);
+
+            \Artisan::call('auth:nms');
 
             $admin = Role::where('name', 'admin')->first();
             $admin->rank = 101;

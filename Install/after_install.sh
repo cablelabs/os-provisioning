@@ -85,7 +85,7 @@ echo "# Use /etc/nmsprime/env/*.env files for configuration" > "$dir/.env"
 
 /opt/rh/rh-php71/root/usr/bin/php artisan migrate
 # create default user roles to be later assigned to users
-/opt/rh/rh-php71/root/usr/bin/php artisan nms:addDefaultRoles
+/opt/rh/rh-php71/root/usr/bin/php artisan auth:roles
 
 # Note: needs to run last. storage/logs is only available after artisan optimize
 chown -R apache $dir/storage $dir/bootstrap/cache

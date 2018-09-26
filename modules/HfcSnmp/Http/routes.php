@@ -1,6 +1,7 @@
 <?php
 
 BaseRoute::group([], function () {
+    BaseRoute::resource('Indices', 'Modules\HfcSnmp\Http\Controllers\IndicesController');
     BaseRoute::resource('MibFile', 'Modules\HfcSnmp\Http\Controllers\MibFileController');
     BaseRoute::resource('OID', 'Modules\HfcSnmp\Http\Controllers\OIDController');
     BaseRoute::resource('Parameter', 'Modules\HfcSnmp\Http\Controllers\ParameterController');
