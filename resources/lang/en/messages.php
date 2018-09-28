@@ -458,4 +458,11 @@ return [
     'Yes'                       => 'Yes',
     'No'                        => 'No',
     'telephony_only'            => 'Activate if customer shall only have telephony, but no internet access. This setting influences the modems configfile parameters NetworkAcess and MaxCPE.',
+    'OID for PreConfiguration Setting' => 'OID for PreConfiguration Setting',
+    'PreConfiguration Value' => 'PreConfiguration Value',
+    'PreConfiguration Time Offset' => 'PreConfiguration Time Offset',
+    'Reload Time - Controlling View' => 'Reload Time - Controlling View',
+    'Due Date'                  => 'Due Date',
+    'Type'                      => 'Type',
+    'Assigned users'            => 'Assigned users',
 ];
