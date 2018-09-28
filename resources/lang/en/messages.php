@@ -482,4 +482,5 @@ return [
     'support'                   => 'Support',
     'Balance'                   => 'Balance',
     'Week'                      => 'Week',
+    'log_msg_descr'             => 'Klick to see log message descriptions',
 ];

@@ -482,4 +482,5 @@ return [
     'support'                   => 'Hilfe',
     'Balance'                   => 'Saldo',
     'Week'                      => 'Woche',
+    'log_msg_descr'             => 'Zeige Beschreibungen zu den Logeinträgen',
 ];
