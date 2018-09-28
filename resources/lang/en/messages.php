@@ -273,6 +273,8 @@ return [
     'Usable'					=> 'Usable',
     'password_change'		=> 'Change Password',
     'password_confirm'		=> 'Confirm Password',
+    'phonenumber_missing'       => 'Phonenumber :phonenr of contract :contractnr is missing but :provider charged calls.',
+    'phonenumber_mismatch'      => 'Phonenumber :phonenr does not belong to contract :contractnr. The wrong contract/customer could be charged for these calls.',
     'phonenumber_nr_change_hlkomm' => 'Please be aware that future call data records can not be assigned to this contract anymore when you change this number. This is because HL Komm or Pyur only sends the phonenumber with the call data records.',
     'phonenumber_overlap_hlkomm' => 'This number exists or existed within the last :delay month(s). As HL Komm or Pyur only sends the phonenumber with the call data records, it won\'t be possible to assign possible made calls to the appropriate contract anymore! This can result in wrong charges. Please only add this number if it\'s a test number or you are sure that there will be no calls to be charged anymore.',
     'show_ags' 				=> 'Show AG Select Field on Contract Page',
