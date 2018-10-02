@@ -58,6 +58,9 @@ return [
         'Menu_PhoneTariffs'			=> 'Telefontarife',
         'Menu_Envia orders'			=> 'envia TEL Aufträge',
         'Menu_Envia contracts'		=> 'envia TEL Verträge',
+        'Menu_Net Elements'         => 'Netzelemente',
+        'Menu_Net Element Types'    => 'Netzelementtypen',
+        'Menu_TicketTypes'          => 'Tickettypen',
 
     //User Settings
         'Menu_UserSettings'			=> 'Nutzereinstellungen',
@@ -134,6 +137,8 @@ return [
         //Numberrange
         'Header_NumberRange'        => 'Nummernkreis|Nummernkreise',
         'Header_Numberranges'        => 'Nummernkreise',
+        'Header_Files'              => 'Dateien',
+        'Header_SepaAccount'        => 'SEPA-Konten',
     //SNMP Modul
         //Device
         'Header_Device'				=> 'Gerät|Geräte',
@@ -178,6 +183,7 @@ return [
         // Tickets
         'Header_Ticket'				=> 'Ticket|Tickets',
         'Header_EditTicket'			=> 'Ticket bearbeiten',
+        'Header_TicketTypes'        => 'Tickettypen',
     //HFC
         //Topography
         'Header_Topography - Modems'=> 'Topografie - Modems',
@@ -185,6 +191,7 @@ return [
         'draw box'					=> 'Box einzeichnen',
         'draw polygon'				=> 'Polygon einzeichnen',
         'modify'					=> 'Elemente ändern',
+        'Header_NetElement'         => 'Netzelemente',
     //VOIP
         //MTA
         'Header_Mta'				=> 'MTA|MTAs',
