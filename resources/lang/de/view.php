@@ -183,7 +183,7 @@ return [
         // Tickets
         'Header_Ticket'				=> 'Ticket|Tickets',
         'Header_EditTicket'			=> 'Ticket bearbeiten',
-        'Header_TicketTypes'        => 'TicketTypes',
+        'Header_TicketTypes'        => 'Tickettypen',
     //HFC
         //Topography
         'Header_Topography - Modems'=> 'Topografie - Modems',
