@@ -4,7 +4,15 @@
  * The official documentation array which will be linked for official HELP
  */
 
-return[
+// prefer retrieved documentation over installed one
+$file = storage_path('app/data/dashboard/documentation.json');
+if (file_exists($file) && $ret = json_decode(file_get_contents($file), true)) {
+    if (is_array($ret) && ! empty($ret)) {
+        return $ret;
+    }
+}
+
+return [
 
 // Prov Base
 
@@ -101,4 +109,4 @@ return[
                 'youtube' => 'https://www.youtube.com/watch?v=QDsxx6oe4mw&t=600s',
                 'url' => null, ],
 
-    ];
+];
