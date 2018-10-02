@@ -80,9 +80,9 @@
 		</div>
 		{{-- end login --}}
 
-	</body>
-
 	@include ('bootstrap.footer')
+	
+	</body>
 </html>
 
 
