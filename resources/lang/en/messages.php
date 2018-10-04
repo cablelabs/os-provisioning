@@ -469,4 +469,5 @@ return [
     'Due Date'                  => 'Due Date',
     'Type'                      => 'Type',
     'Assigned users'            => 'Assigned users',
+    'active contracts'          => 'Active contracts',
 ];
