@@ -469,4 +469,5 @@ return [
     'Due Date'                  => 'Fälligkeitsdatum',
     'Type'                      => 'Typ',
     'Assigned users'            => 'Zugewiesene Nutzer',
+    'active contracts'          => 'Aktive Verträge',
 ];
