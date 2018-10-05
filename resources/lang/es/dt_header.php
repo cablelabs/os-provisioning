@@ -2,6 +2,8 @@
 
 return [
     // Index DataTable Header
+    'id'            => 'ID',
+    'prio'          => 'Priority',
     // Auth
     'users.login_name' => 'Nombre de usuario',
     'users.first_name' => 'Nombre',
@@ -67,6 +69,7 @@ return [
     'verified' => 'Verificado?',
     // MPR
     'mpr.name' => 'Nombre',
+    'mpr.id'    => 'ID',
     // NetElement
     'netelement.id' => 'ID',
     'netelement.name' => 'Elemento de red',

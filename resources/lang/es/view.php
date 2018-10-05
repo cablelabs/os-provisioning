@@ -58,6 +58,9 @@ return [
         'Menu_PhoneTariffs'			=> 'Tarifas telefefonicas',
         'Menu_Envia orders'			=> 'envia TEL ordenes',
         'Menu_Envia contracts'		=> 'envia TEL contratos',
+        'Menu_Net Elements'         => 'Net Elements',
+        'Menu_Net Element Types'    => 'Net Element Types',
+        'Menu_TicketTypes'          => 'TicketTypes',
 
     //User Settings
         'Menu_UserSettings'			=> 'Configuraciones de usuario',
@@ -134,6 +137,8 @@ return [
         //Numberrange
         'Header_NumberRange'		=> 'Rango numerico',
         'Header_Numberranges'        => 'Círculos de números',
+        'Header_Files'              => 'Files',
+        'Header_SepaAccount'        => 'SEPA-Accounts',
     //SNMP Modul
         //Device
         'Header_Device'				=> 'Dispositivo|Dispositivos',
@@ -177,7 +182,8 @@ return [
         'Header_EditIP-Pools'		=> 'Editar IP-Pool',
         // Tickets
         'Header_Ticket'				=> 'Ticket|Tickets',
-        'Header_EditTicket'			=> 'Editar Ticket',
+        'Header_EditTicket'         => 'Editar Ticket',
+        'Header_TicketTypes'        => 'TicketTypes',
     //HFC
         //Topography
         'Header_Topography - Modems'=> 'Topografia - Modems',
@@ -185,6 +191,7 @@ return [
         'draw box'					=> 'Dibujar caja',
         'draw polygon'				=> 'Dibujar poligono',
         'modify'					=> 'Modificar elementos',
+        'Header_NetElement'         => 'Netelements',
     //VOIP
         //MTA
         'Header_Mta'				=> 'MTA|MTAs',
