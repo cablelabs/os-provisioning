@@ -54,8 +54,9 @@ class BaseRoute
     public static function resource(string $name, string $controller, array $options = [])
     {
         $models = BaseModel::get_models();
-        if (! isset($models[$name]))
+        if (! isset($models[$name])) {
             return;
+        }
 
         // Index
         Route::get($name, [
