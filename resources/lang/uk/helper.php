@@ -53,6 +53,7 @@ return [
     'Item_ProductId'				=> 'All fields besides Billing Cycle have to be cleared before a type change! Otherwise items can not be saved in most cases',
     'Item_ValidFrom'				=> 'For One Time Payments the fields can be used to split payment - Only YYYY-MM is considered then!',
     'Item_ValidFromFixed'			=> 'Checked by default! Uncheck if the tariff shall stay inactive when start date is reached (e.g. if customer is waiting for a phone number porting). The tariff will not start and not be charged until you activate the checkbox. Further the start date will be incremented every day by one day after reaching the start date. Info: The date is not updated by external orders (e.g. from telephony provider).',
+    'Item_validTo'                  => 'It\'s possible to specify the number of months here - e.g. \'12M\' for 12 months. For monthly paid products it will just add the number of months - so start date 2018-05-04 will be valid to 2019-05-04. Single paid items with splitted payment will be charged 12 times - end date will be 2019-04-31 then.',
     'Item_ValidToFixed'				=> 'Checked by default! Uncheck if the end date is uncertain. If unchecked the tariff will not end and will be charged until you activate the checkbox. Further when the end date is reached it will be incremented every day by one day. Info: The date is not updated by external orders (e.g. from telephony provider).',
     'Item_CreditAmount'				=> 'Net Amount to be credited to Customer. Take Care: a negative amount becomes a debit!',
 
