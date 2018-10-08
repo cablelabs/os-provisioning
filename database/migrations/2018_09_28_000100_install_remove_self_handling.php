@@ -20,6 +20,10 @@ class InstallRemoveSelfHandling extends BaseMigration
     {
         foreach ($this->files as $file) {
             $file = base_path().$file;
+            if (! file_exists($file)) {
+                continue;
+            }
+
             $str = file_get_contents($file);
             $str = preg_replace(
                 "/use Illuminate\\\\Console\\\\Command;\nuse Illuminate\\\\Contracts\\\\Bus\\\\SelfHandling;/",
@@ -40,6 +44,10 @@ class InstallRemoveSelfHandling extends BaseMigration
     {
         foreach ($this->files as $file) {
             $file = base_path().$file;
+            if (! file_exists($file)) {
+                continue;
+            }
+
             $str = file_get_contents($file);
             $str = preg_replace(
                 '/use Illuminate\\\\Console\\\\Command;/',
