@@ -37,18 +37,18 @@ These tools are worldwide developed, approved and used. See [Design Architecture
 For CentOS 7 (RHEL 7):
 
 ```bash
-curl -vsL https://raw.githubusercontent.com/schmto/nmsprime/dev/INSTALL-REPO.sh | bash
+curl -vsL https://raw.githubusercontent.com/nmsprime/nmsprime/dev/INSTALL-REPO.sh | bash
 yum install nmsprime-*
 ```
 
 ### From source code:
 
 ```bash
-curl -vsL https://raw.githubusercontent.com/schmto/nmsprime/dev/INSTALL-REPO.sh | bash
+curl -vsL https://raw.githubusercontent.com/nmsprime/nmsprime/dev/INSTALL-REPO.sh | bash
 sed -i 's/\[nmsprime\]/\[nmsprime\]\nexclude=nmsprime*/' /etc/yum.repos.d/nmsprime.repo
 yum clean all && yum update -y
 yum install git composer
-git clone https://github.com/schmto/nmsprime.git /var/www/nmsprime
+git clone https://github.com/nmsprime/nmsprime.git /var/www/nmsprime
 cd /var/www/nmsprime
 ./install-from-git.sh -y
 ```

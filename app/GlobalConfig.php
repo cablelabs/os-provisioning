@@ -52,7 +52,7 @@ class GlobalConfig extends BaseModel
         if (preg_match('/not installed/', $version)) {
             $branch = exec('cd '.app_path().' && git rev-parse --abbrev-ref HEAD');
             $commit = exec('cd '.app_path().' && git rev-parse --short HEAD');
-            $github = 'https://github.com/schmto/nmsprime/commits/'.exec('cd '.app_path().' && git rev-parse HEAD');
+            $github = 'https://github.com/nmsprime/nmsprime/commits/'.exec('cd '.app_path().' && git rev-parse HEAD');
 
             $version = '<b>GIT</b>: '.$branch.' - '.'<a target=_blank class="text-success" href='.$github.'>'.$commit.'</a>';
         }
