@@ -1320,26 +1320,21 @@ class Modem extends \BaseModel
             return ['No pre-equalization data found'];
         }
 
-        $ret['power'] = $preq['power'];
-        $ret['energy'] = $preq['energy'];
-        $ret['chart'] = $this->_chart($preq['energy']);
-        $ret['tdr'] = $preq['tdr'];
-        $ret['max'] = $preq['max'];
-        $ret['fft'] = $preq['fft'];
-        $ret['axis'] = $this->_xaxis();
+        $preq['axis'] = $this->_xaxis();
+        $preq['chart'] = $this->_chart($preq['energy']);
 
-        return $ret;
+        return $preq;
     }
 
     private function _chart($ene)
     {
-        $chart = [];
-        $min = min($ene);
-        foreach ($ene as $value) {
-            $chart[] = round($min);
-        }
+        $min = round(min($ene));
 
-        return $chart;
+        return collect($ene)
+            ->map(function () use ($min) {
+                return $min;
+            })
+            ->toArray();
     }
 
     private function _xaxis()
