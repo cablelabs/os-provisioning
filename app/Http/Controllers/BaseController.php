@@ -80,8 +80,7 @@ class BaseController extends Controller
      */
     public function __construct()
     {
-        // set language
-        App::setLocale(BaseViewController::get_user_lang());
+        // place your code here
     }
 
     /*
