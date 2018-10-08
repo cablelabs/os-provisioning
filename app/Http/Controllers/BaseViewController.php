@@ -157,9 +157,11 @@ class BaseViewController extends Controller
                     $field['description'] = $field['description'].' *';
                 }
 
-                // 2. Add Placeholder YYYY-MM-DD for all date fields
+                // 2. Add Placeholder YYYY-MM-DD for all date fields if not yet set
                 if (preg_match('/(.*?)date(.*?)/', $rules[$field['name']])) {
-                    $field['options']['placeholder'] = 'YYYY-MM-DD';
+                    if (! isset($field['options']['placeholder'])) {
+                        $field['options']['placeholder'] = 'YYYY-MM-DD';
+                    }
                 }
             }
 
