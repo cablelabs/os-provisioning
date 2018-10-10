@@ -470,4 +470,8 @@ return [
     'Type'                      => 'Typ',
     'Assigned users'            => 'Zugewiesene Nutzer',
     'active contracts'          => 'Aktive Verträge',
+    'total'                     => 'Insgesamt',
+    'new_items'                 => 'Neue Posten',
+    'new_customers'             => 'Neukunden',
+    'cancellations'             => 'Kündigungen',
 ];

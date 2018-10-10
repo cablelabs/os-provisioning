@@ -470,4 +470,8 @@ return [
     'Type'                      => 'Type',
     'Assigned users'            => 'Assigned users',
     'active contracts'          => 'Active contracts',
+    'total'                     => 'Balance',
+    'new_items'                 => 'New items',
+    'new_customers'             => 'New customers',
+    'cancellations'             => 'Cancellations',
 ];
