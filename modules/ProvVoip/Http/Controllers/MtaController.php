@@ -2,6 +2,7 @@
 
 namespace Modules\ProvVoip\Http\Controllers;
 
+use Illuminate\Support\Facades\Input;
 use Modules\ProvVoip\Entities\Mta;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Configfile;
@@ -16,14 +17,32 @@ class MtaController extends \BaseController
      */
     public function view_form_fields($model = null)
     {
-        if (! $model) {
+        if (!$model) {
             $model = new Mta;
+        }
+
+        $mac = Input::get('mac', '');
+        if ($mac === '') {
+            $modem_id = Input::get('modem_id', 0);
+            if (boolval($modem_id)) {
+                $modem = Modem::find($modem_id);
+                if ($modem) {
+                    $mac = $modem->mac;
+//                    Uncomment this block if you want to suggest mac address of next mta (if modem has already a mta)
+//                    if($last_mta = $modem->mtas()->orderBy('updated_at', 'desc')->first()){
+//                        $mac = $last_mta->mac;
+//                    }
+                    $dec_mac = hexdec($mac);
+                    $dec_mac++;
+                    $mac = rtrim(strtoupper(chunk_split(dechex($dec_mac), 2, ':')), ':');
+                }
+            }
         }
 
         // label has to be the same like column in sql table
         // TODO: Type is without functionality -> hidden
         return [
-            ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')],
+            ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'value' => $mac, 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly']],
             ['form_type' => 'text', 'name' => 'modem_id', 'description' => 'Modem', 'hidden' => 1],
             ['form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $this->_add_empty_first_element_to_options($model->html_list($model->configfiles(), 'name'))],
