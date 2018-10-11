@@ -470,4 +470,5 @@ return [
     'Type'                      => 'Type',
     'Assigned users'            => 'Assigned users',
     'active contracts'          => 'Active contracts',
+    'support'                   => 'Support',
 ];
