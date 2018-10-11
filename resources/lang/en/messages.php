@@ -474,4 +474,5 @@ return [
     'new_items'                 => 'New items',
     'new_customers'             => 'New customers',
     'cancellations'             => 'Cancellations',
+    'support'                   => 'Support',
 ];

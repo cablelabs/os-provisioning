@@ -474,4 +474,5 @@ return [
     'new_items'                 => 'Neue Posten',
     'new_customers'             => 'Neukunden',
     'cancellations'             => 'Kündigungen',
+    'support'                   => 'Hilfe',
 ];
