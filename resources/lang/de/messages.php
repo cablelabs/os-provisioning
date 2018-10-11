@@ -470,4 +470,5 @@ return [
     'Type'                      => 'Typ',
     'Assigned users'            => 'Zugewiesene Nutzer',
     'active contracts'          => 'Aktive Verträge',
+    'support'                   => 'Hilfe',
 ];
