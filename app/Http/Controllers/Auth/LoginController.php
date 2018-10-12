@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App;
 use Log;
-use Config;
 use Module;
 use Bouncer;
 use GlobalConfig;
