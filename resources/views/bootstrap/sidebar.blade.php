@@ -62,7 +62,6 @@
                 <i class="fa fa-circle text-success"></i>
                 {{$network->name}}
               </a>
-            </li>
             <ul class="sub-menu d-block" style="list-style-position: inside;">
               @foreach ($network->get_all_cluster_to_net() as $cluster)
                 <li id="{{$cluster->name}}" class="has-sub">
@@ -73,10 +72,10 @@
                 </li>
               @endforeach
             </ul>
-          </ul>
-        </li>
+          </li>
+        </ul>
+      </li>
       @endforeach
-    </ul>
     @endcan
     {{-- sidebar minify button --}}
     <li>
@@ -84,6 +83,7 @@
       <i class="fa fa-angle-double-left"></i>
       </a>
     </li>
+  </ul>
   {{-- end sidebar nav --}}
   </div>
 {{-- end sidebar scrollbar --}}
