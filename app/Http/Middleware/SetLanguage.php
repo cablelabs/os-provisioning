@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use App;
 use Closure;
+use Session;
+use Modules\Ccc\Entities\Ccc;
 use App\Http\Controllers\BaseViewController;
 
 class SetLanguage
@@ -17,6 +19,12 @@ class SetLanguage
      */
     public function handle($request, Closure $next)
     {
+        if ($request->is('customer*')) {
+            App::setLocale(Session::get('ccc-language') ?: checkLocale(Ccc::first()->language));
+
+            return $next($request);
+        }
+
         App::setLocale(BaseViewController::get_user_lang());
 
         return $next($request);
