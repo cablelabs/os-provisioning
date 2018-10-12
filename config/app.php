@@ -82,9 +82,17 @@ return [
     'fallback_locale' => 'en',
 
     /*
-     * TODO: please comment @cschra
-     */
-    'supported_locale' => ['en', 'de', 'es'],
+    |--------------------------------------------------------------------------
+    | Application Supported locales
+    |--------------------------------------------------------------------------
+    |
+    | The supported locales determines all two character language identifiers
+    | that are actively translated. This array will increase by time as NMS
+    | Prime is translated into new languages. You can help translating at
+    | https://crowdin.com/project/nmsprime
+    |
+    */
+    'supported_locales' => ['en', 'de', 'es'],
 
     /*
     |--------------------------------------------------------------------------

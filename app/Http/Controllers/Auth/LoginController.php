@@ -116,7 +116,7 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        $locale = in_array($user->language, Config::get('app.supported_locale')) ? $user->language : 'en';
+        $locale = checkLocale($user->language);
 
         App::setLocale($locale);
 

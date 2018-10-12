@@ -3,7 +3,6 @@
 namespace App;
 
 use App;
-use Config;
 use Bouncer;
 use Session;
 use Illuminate\Auth\Authenticatable;
@@ -170,9 +169,7 @@ class UserObserver
         if ($user['original']['language'] != $user['attributes']['language']) {
             Session::forget('menu');
 
-            $userLang = in_array($user['attributes']['language'], Config::get('app.supported_locale'))
-                    ? $user['attributes']['language']
-                    : 'en';
+            $userLang = checkLocale($user['attributes']['language']);
 
             App::setLocale($userLang);
             Session::put('language', $userLang);
