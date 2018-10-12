@@ -1136,6 +1136,10 @@ class SystemdObserver
 
     public function deleted($model)
     {
+        if (! $model->observer_enabled) {
+            return;
+        }
+
         \Log::debug('systemd: observer called from delete context');
 
         if (! is_dir(storage_path('systemd'))) {
