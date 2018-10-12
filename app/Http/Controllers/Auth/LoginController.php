@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App;
 use Log;
-use Config;
 use Module;
 use Bouncer;
 use GlobalConfig;
@@ -70,9 +69,23 @@ class LoginController extends Controller
         $head2 = $globalConfig->headline2;
         $image = 'main-pic-1.jpg';
 
-        App::setLocale(\App\Http\Controllers\BaseViewController::get_user_lang());
-
         return \View::make('auth.login', compact('head1', 'head2', 'prefix', 'image'));
+    }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        $locale = checkLocale($user->language);
+
+        App::setLocale($locale);
+
+        $request->session()->put('language', $locale);
     }
 
     /**
@@ -105,22 +118,6 @@ class LoginController extends Controller
         }
 
         return route('GlobalConfig.index');
-    }
-
-    /**
-     * The user has been authenticated.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
-     * @return mixed
-     */
-    protected function authenticated(Request $request, $user)
-    {
-        $locale = in_array($user->language, Config::get('app.supported_locale')) ? $user->language : 'en';
-
-        App::setLocale($locale);
-
-        $request->session()->put('language', $locale);
     }
 
     /**

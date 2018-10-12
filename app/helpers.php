@@ -191,3 +191,18 @@ function number_format_lang($number)
 {
     return \App::getLocale() == 'de' ? number_format($number, 2, ',', '.') : number_format($number, 2);
 }
+
+/**
+ * This determines if the given locale is supported by NMS Prime. It returns a
+ * two letters language ISO 639-1 code of a supported language. The default
+ * is set to English, when no other configuration in 'app/config' is set.
+ *
+ * @param string|null $locale
+ * @return string
+ */
+function checkLocale($locale = null) : string
+{
+    return in_array($locale, config('app.supported_locales')) ?
+            $locale :
+            config('app.locale', config('app.fallback_locale', 'en'));
+}

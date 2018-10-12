@@ -18,7 +18,7 @@ class UpdateUsersTable extends Migration
         });
 
         Schema::table('users', function (Blueprint $table) {
-            $table->string('language')->default('de');
+            $table->string('language')->default(checkLocale());
         });
     }
 

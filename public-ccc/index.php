@@ -46,8 +46,13 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 |
 */
 
+$request = Illuminate\Http\Request::capture();
+
+
 $kernel = $app->make('Illuminate\Contracts\Http\Kernel');
 
+
+$response = $kernel->handle($request);
 
 /*
  * Check permissions: disable all admin pages and/or redirect
@@ -55,17 +60,10 @@ $kernel = $app->make('Illuminate\Contracts\Http\Kernel');
  *
  * @author: Torsten Schmidt
  */
-$request = Illuminate\Http\Request::capture();
-
-
-$response = $kernel->handle(
-	$request
-);
-
-if ($request->is('admin*'))
-	abort(404);
+if ($request->is('admin*')) {
+    abort(404);
+}
 
 $response->send();
-
 
 $kernel->terminate($request, $response);
