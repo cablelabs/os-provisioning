@@ -2,9 +2,9 @@
 
 namespace Modules\ProvVoip\Http\Controllers;
 
-use Illuminate\Support\Facades\Input;
 use Modules\ProvVoip\Entities\Mta;
 use Modules\ProvBase\Entities\Modem;
+use Illuminate\Support\Facades\Input;
 use Modules\ProvBase\Entities\Configfile;
 
 class MtaController extends \BaseController
@@ -17,7 +17,7 @@ class MtaController extends \BaseController
      */
     public function view_form_fields($model = null)
     {
-        if (!$model) {
+        if (! $model) {
             $model = new Mta;
         }
 
@@ -42,7 +42,7 @@ class MtaController extends \BaseController
         // label has to be the same like column in sql table
         // TODO: Type is without functionality -> hidden
         return [
-            ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'value' => $mac, 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')],
+            ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'init_value' => $mac, 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly']],
             ['form_type' => 'text', 'name' => 'modem_id', 'description' => 'Modem', 'hidden' => 1],
             ['form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $this->_add_empty_first_element_to_options($model->html_list($model->configfiles(), 'name'))],
