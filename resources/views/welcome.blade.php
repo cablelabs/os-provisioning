@@ -52,11 +52,6 @@
 		</div>
 		{{-- end login --}}
 
+		@include ('bootstrap.footer')
 	</body>
-
-
-
-	<body>
-	</body>
-	@include ('bootstrap.footer')
 </html>
