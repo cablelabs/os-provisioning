@@ -1,14 +1,12 @@
 <!doctype html>
 <html>
-
 <head>
 	<meta charset="utf-8">
 	<title>{{$html_title}}</title>
 	@include ('bootstrap.header')
 	@yield('head')
 </head>
-
-<body <?php if(isset($body_onload)) echo "onload=$body_onload()";?> >
+<body<?php if(isset($body_onload)) echo " onload=$body_onload()";?>>
 
 	<div id="page-container" class="fade page-sidebar-fixed page-header-fixed in">
 
@@ -37,5 +35,4 @@
 </a>
 
 </body>
-
 </html>

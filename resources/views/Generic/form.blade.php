@@ -15,7 +15,7 @@
 <?php $col = \Acme\Html\FormBuilder::get_layout_form_col_md()['label'] ?>
 
 <div id='top_message' class="note note-{{ Session::get('message_color')}} fade in m-b-15" style="display:none;">
-	<strong><h5>{{ Session::get('message') }}</h5></strong>
+	<h5>{{ Session::get('message') }}</h5>
 </div>
 
 

@@ -19,7 +19,7 @@
         <li id ="dashboardsidebar" class="{{ ($route_name == 'Dashboard') ? 'active' : ''}}">
           <a href="{{route('Dashboard.index')}}">
           <i class="fa fa-home"></i>
-          <span cl>Dashboard</span></a>
+          <span>Dashboard</span></a>
         </li>
       @endif
 
@@ -45,9 +45,9 @@
         </li>
         @endif
       @endforeach
-    </ul>
+
     @can('view', Modules\HfcBase\Entities\TreeErd::class)
-    <ul class="nav">
+
       <li class="nav-header">Networks</li>
       @foreach ($networks as $network)
         <li id="network_{{$network->id}}" class="has-sub" data-sidebar="level1">
@@ -62,7 +62,6 @@
                 <i class="fa fa-circle text-success"></i>
                 {{$network->name}}
               </a>
-            </li>
             <ul class="sub-menu d-block" style="list-style-position: inside;">
               @foreach ($network->get_all_cluster_to_net() as $cluster)
                 <li id="{{$cluster->name}}" class="has-sub">
@@ -73,17 +72,19 @@
                 </li>
               @endforeach
             </ul>
-          </ul>
-        </li>
+          </li>
+        </ul>
+      </li>
       @endforeach
-    </ul>
+
     @endcan
     {{-- sidebar minify button --}}
     <li>
       <a href="javascript:;" class="sidebar-minify-btn hidden-xs" data-click="sidebar-minify">
-      <i class="fa fa-angle-double-left"></i>
+        <i class="fa fa-angle-double-left"></i>
       </a>
     </li>
+  </ul>
   {{-- end sidebar nav --}}
   </div>
 {{-- end sidebar scrollbar --}}

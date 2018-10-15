@@ -119,7 +119,7 @@
 						@endif
 						<div class="dropdown-divider"></div>
 						{!! Form::open(['url' => route('logout.post')]) !!}
-							<button class="dropdown-item" href="#">
+							<button class="dropdown-item">
 								<i class="fa fa-sign-out" aria-hidden="true"></i>
 								{{ \App\Http\Controllers\BaseViewController::translate_view('Logout', 'Menu')}}
 							</button>

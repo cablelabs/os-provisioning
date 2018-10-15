@@ -13,7 +13,7 @@
                         {{ App\Http\Controllers\BaseViewController::translate_view('Custom Abilities', 'Ability') }}
                     </a>
                 </h3>
-                <span class="d-flex align-items-center mx-1">
+                <div class="d-flex align-items-center mx-1">
                     <button class="btn btn-sm btn-primary"
                         v-on:click="customUpdate('all')"
                         v-show="showSaveColumn">
@@ -22,18 +22,20 @@
                         </i>
                         {{ App\Http\Controllers\BaseViewController::translate_label('Save All') }}
                     </button>
-                </span>
+                </div>
             </div>
             <div id="customAbilities" class="panel-collapse collapse" aria-expanded="true" style="">
                 <div class="panel-body d-flex flex-column">
                     <table class="table table-hover mb-5">
                         <thead class="text-center">
+                          <tr>
                             <th class="text-left">{{ App\Http\Controllers\BaseViewController::translate_label('Ability') }}</th>
                             <th>{{ App\Http\Controllers\BaseViewController::translate_label('Allow') }}</th>
                             <th v-if="allowAll">{{ App\Http\Controllers\BaseViewController::translate_label('Forbid') }}</th>
                             <th v-show="!showSaveColumn"></th>
                             <th v-show="showSaveColumn">{{ App\Http\Controllers\BaseViewController::translate_label('Save Changes') }}</th>
                             <th>{{ App\Http\Controllers\BaseViewController::translate_label('Help') }}</th>
+                          </tr>
                         </thead>
                         <tr v-for="(ability, id) in customAbilities">
                             <td v-text="ability['localTitle']"></td>
@@ -151,6 +153,7 @@
                 <div class="panel-body d-flex flex-column">
                 <table class="table table-hover">
                     <thead class="text-center">
+                      <tr>
                         <th class="text-left"> {{ App\Http\Controllers\BaseViewController::translate_label('Name') }} </th>
                         <th > {{ App\Http\Controllers\BaseViewController::translate_label('Allow'). '-'.
                                  App\Http\Controllers\BaseViewController::translate_label('Forbid') }} </th>
@@ -171,6 +174,7 @@
                             {{ App\Http\Controllers\BaseViewController::translate_label('Delete') }}
                         </th>
                         @endif
+                      </tr>
                     </thead>
                 @foreach ($entities as $name => $permission)
                     <tr>
