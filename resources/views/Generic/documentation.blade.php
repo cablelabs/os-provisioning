@@ -1,6 +1,6 @@
         {{--Help Section--}}
     <div class="align-self-end m-r-20 dropdown btn-group">
-        <button type="button" class="btn btn-outline m-b-10 float-right dropdown-toggle" style="simple" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
+        <button type="button" class="btn btn-outline m-b-10 float-right dropdown-toggle" style="simple" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-delay='{"show":"250"}' data-placement="top"
             title="{{ trans('messages.support') }}" form="IndexForm" name="support">
             <i class="fa fa-question fa-2x" aria-hidden="true"></i>
         </button>

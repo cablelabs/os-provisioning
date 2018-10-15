@@ -45,9 +45,9 @@
         </li>
         @endif
       @endforeach
-    </ul>
+
     @can('view', Modules\HfcBase\Entities\TreeErd::class)
-    <ul class="nav">
+
       <li class="nav-header">Networks</li>
       @foreach ($networks as $network)
         <li id="network_{{$network->id}}" class="has-sub" data-sidebar="level1">
@@ -76,11 +76,12 @@
         </ul>
       </li>
       @endforeach
+      
     @endcan
     {{-- sidebar minify button --}}
     <li>
       <a href="javascript:;" class="sidebar-minify-btn hidden-xs" data-click="sidebar-minify">
-      <i class="fa fa-angle-double-left"></i>
+        <i class="fa fa-angle-double-left"></i>
       </a>
     </li>
   </ul>

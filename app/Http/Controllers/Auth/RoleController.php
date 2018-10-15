@@ -25,13 +25,18 @@ class RoleController extends BaseController
             ['form_type' => 'text', 'name' => 'title', 'description' => 'Title'],
             ['form_type' => 'text', 'name' => 'description', 'description' => 'Description'],
             ['form_type' => 'text', 'name' => 'rank', 'description' => 'Rank', 'help' => trans('helper.assign_rank')],
-            ['form_type' => 'select', 'name' => 'users_ids[]', 'description' => 'Assign Users',
+            [
+                'form_type' => 'select',
+                'name' => 'users_ids[]',
+                'description' => 'Assign Users',
                 'value' => $model->html_list(User::all(), 'login_name'),
                 'options' => [
                     'multiple' => 'multiple',
-                    (Bouncer::can('update', User::class) && Bouncer::can('update', Role::class)) ? '' : 'disabled', ],
-                    'help' => trans('helper.assign_users'),
-                    'selected' => $model->html_list($model->users, 'name'), ],
+                    (Bouncer::can('update', User::class) && Bouncer::can('update', Role::class)) ? '' : 'disabled',
+                  ],
+                'help' => trans('helper.assign_users'),
+                'selected' => $model->html_list($model->users, 'name'),
+            ],
         ];
     }
 
