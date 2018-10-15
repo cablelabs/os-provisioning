@@ -29,8 +29,9 @@ return [
     'invoice.type' => 'Typ',
     'invoice.year' => 'Jahr',
     'invoice.month' => 'Monat',
-    //Item //**
-
+    //Item
+    'item.valid_from' => 'Posten Gültig ab',
+    'item.valid_to' => 'Posten Gültig bis',
     // Product
     'product.type' => 'Typ',
     'product.name' => 'Produkt',
@@ -114,8 +115,8 @@ return [
     'contract.street' => 'Straße',
     'contract.house_number' => 'Hausnr',
     'contract.district' => 'Bezirk',
-    'contract.contract_start' => 'Beginn',
-    'contract.contract_end' => 'Ende',
+    'contract.contract_start' => 'Vertragsbeginn',
+    'contract.contract_end' => 'Vertragsende',
     // Domain
     'domain.name' => 'Domäne',
     'domain.type' => 'Typ',
