@@ -19,7 +19,7 @@
         <li id ="dashboardsidebar" class="{{ ($route_name == 'Dashboard') ? 'active' : ''}}">
           <a href="{{route('Dashboard.index')}}">
           <i class="fa fa-home"></i>
-          <span cl>Dashboard</span></a>
+          <span>Dashboard</span></a>
         </li>
       @endif
 
@@ -76,7 +76,7 @@
         </ul>
       </li>
       @endforeach
-      
+
     @endcan
     {{-- sidebar minify button --}}
     <li>
