@@ -297,7 +297,7 @@ return [
         'Button_Create IP-Pools'		=> 'IpPool anlegen',
 
 // DASHBOARD
-    'Dashboard_Contracts'			=> 'AKTIVE VERTRÄGE HEUTE',
+    'Dashboard_Contracts'			=> 'AKTIVE VERTRÄGE',
     'Dashboard_ContractAnalytics'	=> 'Analyse Verträge (letzte 12 Monate)',
     'Dashboard_NoContracts'			=> 'Keine Verträge vorhanden.',
     'Dashboard_Income'				=> 'ERLÖSE',
