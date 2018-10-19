@@ -372,7 +372,7 @@ return [
     'Total Fee'				=> 'Gebühren insgesamt',
     'Commission Amount'		=> 'Provision',
     'Zip Files' 			=> 'ZIP Dateien',
-    'Concatenate invoices'  => 'Rechnungen verketten',
+    'Concatenate invoices'  => 'Füge Rechnungen zusammen',
     'primary'				=> 'Primär',
     'secondary'				=> 'Sekundär',
     'disabled'				=> 'deaktiviert',
@@ -483,4 +483,6 @@ return [
     'Balance'                   => 'Saldo',
     'Week'                      => 'Woche',
     'log_msg_descr'             => 'Zeige Beschreibungen zu den Logeinträgen',
+    'postalInvoices'            => 'Postalische Rechnungen',
+    'zipCmdProcessing'          => 'PDF mit postalischen Rechnungen wird erstellt',
 ];
