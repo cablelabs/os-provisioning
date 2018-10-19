@@ -9,7 +9,7 @@
             <span class="icon-bar"></span>
         </button>
         <a href="javascript:;" class="navbar-brand d-none d-sm-none d-md-block">
-            <span><img src="{{asset('images/nmsprime-logo.png')}}" style="width:100%; margin-top:-10px; margin-left:5px" class=""></span>
+            <img src="{{asset('images/nmsprime-logo.png')}}" style="width:80%; margin-top:-10px; margin-left:5px" class="">
         </a>
       	{{-- end mobile sidebar expand / collapse button --}}
 			<div class="col tab-overflow p-t-5">
@@ -33,7 +33,8 @@
 						role="button"
 						data-toggle="dropdown"
 						aria-haspopup="true"
-						aria-expanded="false">
+						aria-expanded="false"
+						style="padding: 12px 10x 8px 8px;">
 						<i class="fa fa-question fa-2x" aria-hidden="true"></i>
 						<span class="d-none d-sm-none d-md-inline">
 						</span>
