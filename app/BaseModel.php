@@ -1002,6 +1002,10 @@ class BaseObserver
 
     public function deleted($model)
     {
+        if (! $model->observer_enabled) {
+            return;
+        }
+
         $this->add_log_entry($model, __FUNCTION__);
 
         // TODO: analyze impacts of different return values
@@ -1136,10 +1140,6 @@ class SystemdObserver
 
     public function deleted($model)
     {
-        if (! $model->observer_enabled) {
-            return;
-        }
-
         \Log::debug('systemd: observer called from delete context');
 
         if (! is_dir(storage_path('systemd'))) {
