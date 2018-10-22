@@ -235,6 +235,7 @@ return [
         'Button_create'				=> 'Acceso directo para la capacidad de crear todas las páginas de este módulo.',
         'Button_update'				=> 'Acceso directo para la capacidad de crear todas las páginas de este módulo.',
         'Button_delete'				=> 'Acceso directo para la capacidad de crear todas las páginas de este módulo.',
+        'Button_downloadCSV'        => 'Download CSV',
         'Button_Create Product Entry'	=> 'Crear producto',
         //CostCenter
         'Button_Create Cost Center' 	=> 'Crear centro costos', //Workaround decide which one to use
@@ -298,7 +299,7 @@ return [
 
 // DASHBOARD
     'Dashboard_Contracts'			=> 'CONTRATOS ACTIVOS',
-    'Dashboard_ContractAnalytics'	=> 'Estadisticas contrato (Ultimos 12 meses)',
+    'Dashboard_ContractAnalytics'	=> 'Contract Analytics',
     'Dashboard_NoContracts'			=> 'No hay contratos disponibles',
     'Dashboard_Income'				=> 'GANANCIAS',
     'Dashboard_IncomeAnalytics'		=> 'Detalles de ganancias',
@@ -307,7 +308,15 @@ return [
     'Dashboard_Other'				=> 'Otros',
     'Dashboard_Tickets' 			=> 'NUEVOS TICKETS',
     'Dashboard_NoTickets' 			=> 'No hay tickets nuevos.',
-    'Dashboard_Quickstart' 			=> 'INICIO RAPIDO',
+    'Dashboard_Quickstart' 			=> 'Quickstart',
+    'Dashboard_AddContract'         => 'Add Contract',
+    'Dashboard_AddTicket'           => 'Add Ticket',
+    'Dashboard_ImpairedModem'       => 'Impaired Modems',
+    'Dashboard_External'            => 'External',
+    'Dashboard_Docu'                => 'Documentation',
+    'Dashboard_RequestHelp'         => 'Request Help',
+    'Dashboard_Help'                => 'Help',
+    'Dashboard_WeeklyCustomers'     => 'Weekly Customer Overview',
 
 //
 // Numberrange
@@ -318,7 +327,7 @@ return [
 
 //
 // Contract
-    'Dashboard_Net Income'			=> 'INGRESOS NETOS',
+    'Dashboard_Net Income'			=> 'NET PROCEEDS',
 //
     'Contract_Numberrange_Failure' => 'No se encuentra disponible el numero de contrato libre para el centro de costos seleccionado!',
 
