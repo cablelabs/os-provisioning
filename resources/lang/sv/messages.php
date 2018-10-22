@@ -478,4 +478,6 @@ return [
     'new_customers'             => 'New customers',
     'cancellations'             => 'Cancellations',
     'support'                   => 'Support',
+    'Balance'                   => 'Balance',
+    'Week'                      => 'Week',
 ];
