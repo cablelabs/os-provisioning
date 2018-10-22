@@ -478,4 +478,6 @@ return [
     'new_customers'             => 'Neukunden',
     'cancellations'             => 'Kündigungen',
     'support'                   => 'Hilfe',
+    'Balance'                   => 'Saldo',
+    'Week'                      => 'Woche',
 ];

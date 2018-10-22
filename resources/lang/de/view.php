@@ -235,6 +235,7 @@ return [
         'Button_create'				=> 'Schnellauswahl um auf allen Seiten neue Elemente zu erstellen.',
         'Button_update'				=> 'Schnellauswahl um auf allen Seiten Elemente zu verändern.',
         'Button_delete'				=> 'Schnellauswahl um auf allen Seiten Elemente zu löschen.',
+        'Button_downloadCSV'        => 'CSV herunterladen',
         'Button_Create Product Entry'	=> 'Neues Produkt',
         //CostCenter
         'Button_Create Cost Center' 	=> 'Neue Kostenstelle', //Workaround decide which one to use
@@ -298,16 +299,24 @@ return [
 
 // DASHBOARD
     'Dashboard_Contracts'			=> 'AKTIVE VERTRÄGE',
-    'Dashboard_ContractAnalytics'	=> 'Analyse Verträge (letzte 12 Monate)',
+    'Dashboard_ContractAnalytics'	=> 'Vertragsanalyse',
     'Dashboard_NoContracts'			=> 'Keine Verträge vorhanden.',
     'Dashboard_Income'				=> 'ERLÖSE',
-    'Dashboard_IncomeAnalytics'		=> 'Erlöse Detailübersicht',
+    'Dashboard_IncomeAnalytics'		=> 'Einkommensübersicht',
     'Dashboard_Date'				=> 'DATUM',
     'Dashboard_LinkDetails'			=> 'Zeige Details',
     'Dashboard_Other'				=> 'Sonstiges',
     'Dashboard_Tickets' 			=> 'NEUE TICKETS',
     'Dashboard_NoTickets' 			=> 'Keine neuen Tickets.',
-    'Dashboard_Quickstart' 			=> 'SCHNELLSTART',
+    'Dashboard_Quickstart'          => 'Schnellstart',
+    'Dashboard_AddContract'         => 'Vertrag hinzufügen',
+    'Dashboard_AddTicket'           => 'Ticket hinzufügen',
+    'Dashboard_ImpairedModem'       => 'Modems mit Störungen',
+    'Dashboard_External'            => 'Extern',
+    'Dashboard_Docu'                => 'Dokumentation',
+    'Dashboard_RequestHelp'         => 'Hilfe anfordern',
+    'Dashboard_Help'                => 'Hilfe',
+    'Dashboard_WeeklyCustomers'     => 'Kundenübersicht',
 
 //
 // Numberrange
@@ -318,7 +327,7 @@ return [
 
 //
 // Contract
-    'Dashboard_Net Income'			=> 'Nettoerlöse',
+    'Dashboard_Net Income'			=> 'NETTOERLÖSE',
 //
     'Contract_Numberrange_Failure' => 'Keine freie Vertragsnummer für die gewählte Kostenstelle gefunden.',
 
