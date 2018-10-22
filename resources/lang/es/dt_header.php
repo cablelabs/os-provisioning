@@ -77,6 +77,7 @@ return [
     'netelement.ip' => 'Direccion IP',
     'netelement.state' => 'Estado',
     'netelement.pos' => 'Posición',
+    'netelement.options' => 'Options',
     // NetElementType
     'netelementtype.name' => 'Tipo de elemento de red',
     //HfcSnmp
