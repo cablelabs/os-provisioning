@@ -478,4 +478,6 @@ desde el punto en que un módem estaba en línea. Si todos los diagramas no se m
     'new_customers'             => 'New customers',
     'cancellations'             => 'Cancellations',
     'support'                   => 'Support',
+    'Balance'                   => 'Balance',
+    'Week'                      => 'Week',
 ];
