@@ -299,7 +299,7 @@ return [
 
 // DASHBOARD
     'Dashboard_Contracts'			=> 'ACTIVE CONTRACTS',
-    'Dashboard_ContractAnalytics'	=> 'Contract Analytics (Last 12 Months)',
+    'Dashboard_ContractAnalytics'	=> 'Contract Analytics',
     'Dashboard_NoContracts'			=> 'No contracts available.',
     'Dashboard_Income'				=> 'INCOME',
     'Dashboard_IncomeAnalytics'		=> 'Income Details',
@@ -316,7 +316,7 @@ return [
     'Dashboard_Docu'                => 'Documentation',
     'Dashboard_RequestHelp'         => 'Request Help',
     'Dashboard_Help'                => 'Help',
-    'Dashboard_WeeklyCustomers'     => 'Weekly Customers',
+    'Dashboard_WeeklyCustomers'     => 'Weekly Customer Overview',
 
 //
 // Numberrange

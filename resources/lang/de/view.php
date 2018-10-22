@@ -299,7 +299,7 @@ return [
 
 // DASHBOARD
     'Dashboard_Contracts'			=> 'AKTIVE VERTRÄGE',
-    'Dashboard_ContractAnalytics'	=> 'Vertragsanalyse (letzten 12 Monate)',
+    'Dashboard_ContractAnalytics'	=> 'Vertragsanalyse',
     'Dashboard_NoContracts'			=> 'Keine Verträge vorhanden.',
     'Dashboard_Income'				=> 'ERLÖSE',
     'Dashboard_IncomeAnalytics'		=> 'Einkommensübersicht',
@@ -311,12 +311,12 @@ return [
     'Dashboard_Quickstart'          => 'Schnellstart',
     'Dashboard_AddContract'         => 'Vertrag hinzufügen',
     'Dashboard_AddTicket'           => 'Ticket hinzufügen',
-    'Dashboard_ImpairedModem'       => 'Signalgestörte Modems',
+    'Dashboard_ImpairedModem'       => 'Modems mit Störungen',
     'Dashboard_External'            => 'Extern',
     'Dashboard_Docu'                => 'Dokumentation',
     'Dashboard_RequestHelp'         => 'Hilfe anfordern',
     'Dashboard_Help'                => 'Hilfe',
-    'Dashboard_WeeklyCustomers'     => 'Wöchentliche Kunden',
+    'Dashboard_WeeklyCustomers'     => 'Kundenübersicht',
 
 //
 // Numberrange
@@ -327,7 +327,7 @@ return [
 
 //
 // Contract
-    'Dashboard_Net Income'			=> 'NETTOERLÖS',
+    'Dashboard_Net Income'			=> 'NETTOERLÖSE',
 //
     'Contract_Numberrange_Failure' => 'Keine freie Vertragsnummer für die gewählte Kostenstelle gefunden.',
 
