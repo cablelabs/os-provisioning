@@ -235,6 +235,7 @@ return [
         'Button_create'				=> 'Shortcut for the create ability for all pages of this module.',
         'Button_update'				=> 'Shortcut for the update ability for all pages of this module.',
         'Button_delete'				=> 'Shortcut for the delete ability for all pages of this module.',
+        'Button_downloadCSV'        => 'Download CSV',
         'Button_Create Product Entry'	=> 'Create Product Entry',
         //CostCenter
         'Button_Create Cost Center' 	=> 'Create Cost Center', //Workaround decide which one to use
@@ -298,7 +299,7 @@ return [
 
 // DASHBOARD
     'Dashboard_Contracts'			=> 'ACTIVE CONTRACTS',
-    'Dashboard_ContractAnalytics'	=> 'Contract Analytics (Last 12 Months)',
+    'Dashboard_ContractAnalytics'	=> 'Contract Analytics',
     'Dashboard_NoContracts'			=> 'No contracts available.',
     'Dashboard_Income'				=> 'INCOME',
     'Dashboard_IncomeAnalytics'		=> 'Income Details',
@@ -307,7 +308,15 @@ return [
     'Dashboard_Other'				=> 'Other',
     'Dashboard_Tickets' 			=> 'NEW TICKETS',
     'Dashboard_NoTickets' 			=> 'No new Tickets.',
-    'Dashboard_Quickstart' 			=> 'QUICKSTART',
+    'Dashboard_Quickstart' 			=> 'Quickstart',
+    'Dashboard_AddContract'         => 'Add Contract',
+    'Dashboard_AddTicket'           => 'Add Ticket',
+    'Dashboard_ImpairedModem'       => 'Impaired Modems',
+    'Dashboard_External'            => 'External',
+    'Dashboard_Docu'                => 'Documentation',
+    'Dashboard_RequestHelp'         => 'Request Help',
+    'Dashboard_Help'                => 'Help',
+    'Dashboard_WeeklyCustomers'     => 'Weekly Customer Overview',
 
 //
 // Numberrange
@@ -318,7 +327,7 @@ return [
 
 //
 // Contract
-    'Dashboard_Net Income'			=> 'NETTOERLÖSE',
+    'Dashboard_Net Income'			=> 'NET PROCEEDS',
 //
     'Contract_Numberrange_Failure' => 'No free contract number for selected costcenter available!',
 
