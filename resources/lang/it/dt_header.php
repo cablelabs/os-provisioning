@@ -29,8 +29,9 @@ return [
     'invoice.type' => 'Type',
     'invoice.year' => 'Year',
     'invoice.month' => 'Month',
-    //Item //**
-
+    //Item
+    'item.valid_from' => 'Item Valid from',
+    'item.valid_to' => 'Item Valid to',
     // Product
     'product.type' => 'Type',
     'product.name' => 'Product Name',
@@ -76,6 +77,7 @@ return [
     'netelement.ip' => 'IP Adress',
     'netelement.state' => 'State',
     'netelement.pos' => 'Position',
+    'netelement.options' => 'Options',
     // NetElementType
     'netelementtype.name' => 'Netelementtype',
     //HfcSnmp
@@ -114,8 +116,8 @@ return [
     'contract.street' => 'Street',
     'contract.house_number' => 'Housenr',
     'contract.district' => 'District',
-    'contract.contract_start' => 'Startdate',
-    'contract.contract_end' => 'Enddate',
+    'contract.contract_start' => 'Contract Start',
+    'contract.contract_end' => 'Contract End',
     // Domain
     'domain.name' => 'Domain',
     'domain.type' => 'Type',
