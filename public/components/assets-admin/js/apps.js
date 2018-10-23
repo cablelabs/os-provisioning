@@ -260,7 +260,7 @@ var handlePanelAction = function() {
     });
     $(document).on('click', '[data-click=panel-remove]', function(e) {
         e.preventDefault();
-        $(this).tooltip('destroy');
+        $(this).tooltip('dispose');
         $(this).closest('.panel').remove();
     });
 
@@ -328,11 +328,6 @@ var handlePanelAction = function() {
         var target = $(this).closest('.panel');
         var targetBody = $(target).find('.panel-body');
         var targetTop = 40;
-        if ($(targetBody).length !== 0) {
-            var targetOffsetTop = $(target).offset().top;
-            var targetBodyOffsetTop = $(targetBody).offset().top;
-            targetTop = targetBodyOffsetTop - targetOffsetTop;
-        }
 
         if ($('body').hasClass('panel-expand') && $(target).hasClass('panel-expand')) {
             $('body, .panel').removeClass('panel-expand');
