@@ -469,8 +469,10 @@ class NetElementObserver
         $netId = $netelement->get_native_net();
 
         if ($isUpdating) {
-            $oldNetId = NetElement::find($netelement['original']['parent_id'])->get_native_net();
-            $netId = NetElement::find($netelement['attributes']['parent_id'])->get_native_net();
+            $oldNet = NetElement::find($netelement['original']['parent_id']);
+            $net = NetElement::find($netelement['attributes']['parent_id']);
+            $oldNetId = $oldNet ? $oldNet->get_native_net() : 0;
+            $netId = $net ? $net->get_native_net() : 0;
 
             $oldNetId ? Session::forget('Net-'.$oldNetId) : '';
         }
