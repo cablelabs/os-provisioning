@@ -31,7 +31,9 @@ return [
     'invoice.month' => 'Month',
     //Item
     'item.valid_from' => 'Item Valid from',
+    'item.valid_from_fixed' => 'Item Valid from fixed',
     'item.valid_to' => 'Item Valid to',
+    'item.valid_to_fixed' => 'Item Valid to fixed',
     // Product
     'product.type' => 'Type',
     'product.name' => 'Product Name',
