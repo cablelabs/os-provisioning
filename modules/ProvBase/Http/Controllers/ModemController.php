@@ -133,36 +133,39 @@ class ModemController extends \BaseController
         }
     }
 
-    /*
+    /**
      * Modem Tabs Controller. -> Panel Header Right
-     * See: BaseController native function for more infos
+     * See: BaseController native function for more information
      *
-     * @param view_var: the model object to be displayed
+     * @param Modules\ProvBase\Entities\Modem
      * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
      * @author: Torsten Schmidt
      */
-    protected function get_form_tabs($view_var)
+    protected function get_form_tabs($model)
     {
-        $a = [
-            ['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$view_var->id]],
+        // defines which edit page you came from
+        \Session::put('Edit', 'Modem');
+
+        $tabs = [
+            ['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$model->id]],
         ];
 
         if (! \Module::collections()->has('ProvMon')) {
-            return $a;
+            return $tabs;
         }
 
-        array_push($a, ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => [$view_var->id]]);
-        array_push($a, ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => [$view_var->id]]);
+        array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => [$model->id]],
+            ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => [$model->id]]);
 
-        // MTA: only show MTA analysis if Modem has MTAs
-        if (isset($view_var->mtas) && isset($view_var->mtas[0])) {
-            array_push($a, ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => [$view_var->id]]);
+        // MTA: only show MTA analysis if Modem has MTA's
+        if (isset($model->mtas) && isset($model->mtas[0])) {
+            array_push($tabs, ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => [$model->id]]);
         }
 
-        // add tab for GuiLog
-        array_push($a, parent::get_form_tabs($view_var)[0]);
+        // add 'Logging' tab
+        array_push($tabs, parent::get_form_tabs($model)[0]);
 
-        return $a;
+        return $tabs;
     }
 
     /**
