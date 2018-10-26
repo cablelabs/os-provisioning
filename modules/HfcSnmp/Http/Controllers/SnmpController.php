@@ -9,7 +9,6 @@ use Modules\HfcSnmp\Entities\Parameter;
 use Modules\HfcReq\Entities\NetElementType;
 use App\Http\Controllers\BaseViewController;
 use Modules\ProvMon\Http\Controllers\ProvMonController;
-use Modules\HfcReq\Http\Controllers\NetElementController;
 
 class SnmpController extends \BaseController
 {

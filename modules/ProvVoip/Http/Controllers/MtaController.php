@@ -85,5 +85,4 @@ class MtaController extends \BaseController
 
         return $tabs;
     }
-
 }

@@ -4,8 +4,8 @@ namespace Modules\HfcReq\Http\Controllers;
 
 use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcReq\Entities\NetElementType;
-use \Modules\ProvMon\Http\Controllers\ProvMonController;
 use Modules\HfcBase\Http\Controllers\HfcBaseController;
+use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class NetElementController extends HfcBaseController
 {
@@ -89,7 +89,6 @@ class NetElementController extends HfcBaseController
         ];
     }
 
-
     /**
      * Show tabs in Netelement edit page.
      *
@@ -99,7 +98,7 @@ class NetElementController extends HfcBaseController
      */
     protected function get_form_tabs($model)
     {
-        $provmon =  new ProvMonController();
+        $provmon = new ProvMonController();
 
         if ($this->dummyElement($model) != false) {
             return $this->dummyElement($model);
@@ -109,7 +108,6 @@ class NetElementController extends HfcBaseController
 
         return $provmon->loggingTab($tabs, $model);
     }
-
 
     /**
      * Check if Netelement has no Netelementtype.
