@@ -8,6 +8,7 @@ use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcSnmp\Entities\Parameter;
 use Modules\HfcReq\Entities\NetElementType;
 use App\Http\Controllers\BaseViewController;
+use Modules\ProvMon\Http\Controllers\ProvMonController;
 use Modules\HfcReq\Http\Controllers\NetElementController;
 
 class SnmpController extends \BaseController
@@ -84,9 +85,8 @@ class SnmpController extends \BaseController
         $view_var = $netelem;
         $route_name = \NamespaceController::get_route_name();
         $headline = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var).' > controlling';
-        $panel_right = new NetElementController;
-        $panel_right = $panel_right->prepare_tabs($view_var);
-        // TODO: add topography, erd tabs – see: TreeErdController, line 114
+        $provmon = new ProvMonController;
+        $panel_right = $provmon->checkNetelementtype($netelem);
 
         $view_path = 'hfcsnmp::NetElement.controlling';
         $form_path = 'Generic.form';
