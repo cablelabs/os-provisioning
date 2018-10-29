@@ -85,7 +85,7 @@ class SnmpController extends \BaseController
         $route_name = \NamespaceController::get_route_name();
         $headline = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var).' > controlling';
         $provmon = new ProvMonController;
-        $panel_right = $provmon->checkNetelementtype($netelem);
+        $tabs = $provmon->checkNetelementtype($netelem);
 
         $view_path = 'hfcsnmp::NetElement.controlling';
         $form_path = 'Generic.form';
@@ -93,7 +93,7 @@ class SnmpController extends \BaseController
 
         $reload = $this->device->netelementtype->page_reload_time ?: 0;
 
-        return \View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'panel_right', 'form_fields', 'form_update', 'route_name', 'headline', 'reload', 'param_id', 'index')));
+        return \View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'tabs', 'form_fields', 'form_update', 'route_name', 'headline', 'reload', 'param_id', 'index')));
     }
 
     /**

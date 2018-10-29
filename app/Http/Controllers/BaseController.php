@@ -269,11 +269,11 @@ class BaseController extends Controller
     }
 
     /**
-     * Prepare Breadcrumb - $panel_right header
+     * Prepare Breadcrumb - $tabs header
      * Priority Handling: get_form_tabs(), view_has_many()
      *
      * @param view_var: the view_var parameter from edit() context
-     * @return panel_right prepared array for default.blade
+     * @return tabs prepared array for default.blade
      */
     protected function prepare_tabs($view_var)
     {
@@ -723,7 +723,7 @@ class BaseController extends Controller
         // $form_fields	= BaseViewController::add_html_string (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
 
         // prepare_tabs & prep_right_panels are redundant - TODO: improve
-        $panel_right = $this->prepare_tabs($view_var);
+        $tabs = $this->prepare_tabs($view_var);
         $relations = BaseViewController::prep_right_panels($view_var);
 
         // check if there is additional data to be passed to blade template
@@ -752,8 +752,8 @@ class BaseController extends Controller
         }
 
         // $config_routes = BaseController::get_config_modules();
-        // return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'panel_right', 'relations', 'extra_data')));
-        return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'panel_right', 'relations', 'method', 'action', 'additional_data')));
+        // return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'tabs', 'relations', 'extra_data')));
+        return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'tabs', 'relations', 'method', 'action', 'additional_data')));
     }
 
     /**
