@@ -105,7 +105,7 @@ return [
     'email.forwardto' => 'Weiterleiten an:',
     // CMTS
     'cmts.id' => 'ID',
-    'cmts.hostname' => 'Server-Name',
+    'cmts.hostname' => 'Name',
     'cmts.ip' => 'IP',
     'cmts.company' => 'Hersteller',
     'cmts.type' => 'Typ',
