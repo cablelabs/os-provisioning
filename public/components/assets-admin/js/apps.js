@@ -1,4 +1,6 @@
 /*
+For updating this file also see commit 2042e79 
+
 Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7 & Bootstrap 4.0.0-Alpha 6
 Version: 3.0.0
 Author: Sean Ngu
