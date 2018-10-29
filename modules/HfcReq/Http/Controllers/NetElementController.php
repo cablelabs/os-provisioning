@@ -99,34 +99,19 @@ class NetElementController extends HfcBaseController
     protected function get_form_tabs($model)
     {
         $provmon = new ProvMonController();
+        $model = $model ?: new NetElement;
 
-        if ($this->dummyElement($model) != false) {
-            return $this->dummyElement($model);
-        }
-
-        $tabs = $provmon->checkNetelementtype($model);
-
-        return $provmon->loggingTab($tabs, $model);
-    }
-
-    /**
-     * Check if Netelement has no Netelementtype.
-     *
-     * @author Roy Schneider
-     * @param Modules\HfcReq\Entities\NetElement
-     * @return array or bool
-     */
-    protected function dummyElement($model)
-    {
-        if ($model->netelementtype == null) {
+        if (! isset($model->netelementtype)) {
             return [
-                ['name' => 'Edit', 'route' => 'NetElement.edit', 'link' => [$model->id]],
+                ['name' => 'Edit', 'route' => 'NetElement.edit', 'link' => $model->id],
                 ['name' => 'Controlling', 'route' => 'NetElement.controlling_edit', 'link' => [$model->id, 0, 0]],
                 parent::get_form_tabs($model)[0],
             ];
         }
 
-        return false;
+        $tabs = $provmon->checkNetelementtype($model);
+
+        return $provmon->loggingTab($tabs, $model);
     }
 
     /**

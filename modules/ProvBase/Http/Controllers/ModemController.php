@@ -147,19 +147,19 @@ class ModemController extends \BaseController
         \Session::put('Edit', 'Modem');
 
         $tabs = [
-            ['name' => 'Edit', 'route' => 'Modem.edit', 'link' => [$model->id]],
+            ['name' => 'Edit', 'route' => 'Modem.edit', 'link' => $model->id],
         ];
 
         if (! \Module::collections()->has('ProvMon')) {
             return $tabs;
         }
 
-        array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => [$model->id]],
-            ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => [$model->id]]);
+        array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => $model->id],
+            ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => $model->id]);
 
         // MTA: only show MTA analysis if Modem has MTA's
         if (isset($model->mtas) && isset($model->mtas[0])) {
-            array_push($tabs, ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => [$model->id]]);
+            array_push($tabs, ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => $model->id]);
         }
 
         // add 'Logging' tab

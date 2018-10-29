@@ -71,14 +71,14 @@ class MtaController extends \BaseController
         \Session::put('Edit', 'MTA');
 
         $tabs = [
-            ['name' => 'Edit', 'route' => 'Mta.edit', 'link' => [$model->id]],
+            ['name' => 'Edit', 'route' => 'Mta.edit', 'link' => $model->id],
         ];
 
         if (\Module::collections()->has('ProvMon')) {
             array_push($tabs,
-                ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => [$model->modem_id]],
-                ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => [$model->modem_id]],
-                ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => [$model->modem_id]],
+                ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => $model->modem_id],
+                ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => $model->modem_id],
+                ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => $model->modem_id],
                 parent::get_form_tabs($model)[0]
             );
         }
