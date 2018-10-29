@@ -154,12 +154,14 @@ class ModemController extends \BaseController
             return $tabs;
         }
 
-        array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => $model->id],
-            ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => $model->id]);
+        if (\Bouncer::can('view_analysis_pages_of', Modem::class)) {
+            array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => $model->id],
+                ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => $model->id]);
 
-        // MTA: only show MTA analysis if Modem has MTA's
-        if (isset($model->mtas) && isset($model->mtas[0])) {
-            array_push($tabs, ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => $model->id]);
+            // MTA: only show MTA analysis if Modem has MTA's
+            if (isset($model->mtas) && isset($model->mtas[0])) {
+                array_push($tabs, ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => $model->id]);
+            }
         }
 
         // add 'Logging' tab

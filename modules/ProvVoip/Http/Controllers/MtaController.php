@@ -74,14 +74,14 @@ class MtaController extends \BaseController
             ['name' => 'Edit', 'route' => 'Mta.edit', 'link' => $model->id],
         ];
 
-        if (\Module::collections()->has('ProvMon')) {
+        if (\Module::collections()->has('ProvMon') && \Bouncer::can('view_analysis_pages_of', Modem::class)) {
             array_push($tabs,
                 ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => $model->modem_id],
                 ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => $model->modem_id],
-                ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => $model->modem_id],
-                parent::get_form_tabs($model)[0]
+                ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => $model->modem_id]
             );
         }
+        array_push($tabs, parent::get_form_tabs($model)[0]);
 
         return $tabs;
     }
