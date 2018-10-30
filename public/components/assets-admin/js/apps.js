@@ -1,4 +1,6 @@
 /*
+For updating this file also see commit 2042e79 
+
 Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.7 & Bootstrap 4.0.0-Alpha 6
 Version: 3.0.0
 Author: Sean Ngu
@@ -260,7 +262,7 @@ var handlePanelAction = function() {
     });
     $(document).on('click', '[data-click=panel-remove]', function(e) {
         e.preventDefault();
-        $(this).tooltip('destroy');
+        $(this).tooltip('dispose');
         $(this).closest('.panel').remove();
     });
 
@@ -328,11 +330,6 @@ var handlePanelAction = function() {
         var target = $(this).closest('.panel');
         var targetBody = $(target).find('.panel-body');
         var targetTop = 40;
-        if ($(targetBody).length !== 0) {
-            var targetOffsetTop = $(target).offset().top;
-            var targetBodyOffsetTop = $(targetBody).offset().top;
-            targetTop = targetBodyOffsetTop - targetOffsetTop;
-        }
 
         if ($('body').hasClass('panel-expand') && $(target).hasClass('panel-expand')) {
             $('body, .panel').removeClass('panel-expand');

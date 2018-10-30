@@ -1161,9 +1161,7 @@ html {
 }
 
 .d-flex {
-  display: -webkit-box !important;
-  display: -ms-flexbox !important;
-  display: flex !important;
+  display: flex;
 }
 
 .d-inline-flex {
