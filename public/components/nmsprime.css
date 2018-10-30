@@ -401,8 +401,7 @@ table .index_check {
   from{ opacity:0 }
   to{ opacity:1 }
 }
-
-.flex-column
+.panel-body
 {
-overflow-y: auto !important;
+overflow-y: auto;
 }
