@@ -482,7 +482,7 @@ return [
     'support'                   => 'Support',
     'Balance'                   => 'Balance',
     'Week'                      => 'Week',
-    'log_msg_descr'             => 'Klick to see log message descriptions',
+    'log_msg_descr'             => 'Click to see log message descriptions',
     'postalInvoices'            => 'Postal invoices',
     'zipCmdProcessing'          => 'PDF with postal invoices is being created',
     'last'                      => 'last',
