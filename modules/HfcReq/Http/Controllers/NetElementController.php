@@ -5,30 +5,31 @@ namespace Modules\HfcReq\Http\Controllers;
 use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcReq\Entities\NetElementType;
 use Modules\HfcBase\Http\Controllers\HfcBaseController;
+use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class NetElementController extends HfcBaseController
 {
     /**
      * defines the formular fields for the edit and create view
      */
-    public function view_form_fields($model = null)
+    public function view_form_fields($netelement = null)
     {
-        $model = $model ?: new NetElement;
+        $netelement = $netelement ?: new NetElement;
 
-        $empty_field = $model->exists;
+        $empty_field = $netelement->exists;
         $netelems = NetElement::join('netelementtype as nt', 'nt.id', '=', 'netelementtype_id')
             ->select(['netelement.id as id', 'netelement.name as name', 'nt.name as ntname'])
             ->get();
-        $parents = $model->html_list($netelems, ['ntname', 'name'], true, ': ');
-        $kml_files = $model->kml_files();
+        $parents = $netelement->html_list($netelems, ['ntname', 'name'], true, ': ');
+        $kml_files = $netelement->kml_files();
 
         // parse which netelementtype we want to edit/create
         // NOTE: this is for auto reload via HTML GET
         $type = 0;
         if (isset($_GET['netelementtype_id'])) {
             $type = $_GET['netelementtype_id'];
-        } elseif ($model->netelementtype) {
-            $type = $model->netelementtype->get_base_type();
+        } elseif ($netelement->netelementtype) {
+            $type = $netelement->netelementtype->get_base_type();
         }
 
         /*
@@ -38,11 +39,11 @@ class NetElementController extends HfcBaseController
         $prov_device_hidden = 1;
 
         if ($type == 3) { // cmts
-            $prov_device = $model->html_list(\Modules\ProvBase\Entities\Cmts::get(['id', 'hostname']), 'hostname', $empty_field);
+            $prov_device = $netelement->html_list(\Modules\ProvBase\Entities\Cmts::get(['id', 'hostname']), 'hostname', $empty_field);
         }
 
         if ($type == 4 || $type == 5) { // amp || node
-            $prov_device = $model->html_list(\DB::table('modem')->where('deleted_at', '=', null)->get(['id', 'name']), ['id', 'name'], $empty_field, ': ');
+            $prov_device = $netelement->html_list(\DB::table('modem')->where('deleted_at', '=', null)->get(['id', 'name']), ['id', 'name'], $empty_field, ': ');
         }
 
         if ($prov_device) {
@@ -54,15 +55,15 @@ class NetElementController extends HfcBaseController
          * Options array is hidden when not used
          */
         $options_array = ['form_type' => 'text', 'name' => 'options', 'description' => 'Options'];
-        if ($model->netelementtype && $model->netelementtype->get_base_type() == 2) {
-            $options_array = ['form_type' => 'select', 'name' => 'options', 'description' => 'RF Card Setting (DSxUS)', 'value' => $model->get_options_array()];
+        if ($netelement->netelementtype && $netelement->netelementtype->get_base_type() == 2) {
+            $options_array = ['form_type' => 'select', 'name' => 'options', 'description' => 'RF Card Setting (DSxUS)', 'value' => $netelement->get_options_array()];
         }
 
         /*
          * return
          */
         return [
-            ['form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $model->html_list(NetElementType::get(['id', 'name']), 'name'), 'hidden' => 0],
+            ['form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $netelement->html_list(NetElementType::get(['id', 'name']), 'name'), 'hidden' => 0],
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
             // array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['NET' => 'NET', 'CMTS' => 'CMTS', 'DATA' => 'DATA', 'CLUSTER' => 'CLUSTER', 'NODE' => 'NODE', 'AMP' => 'AMP']),
             // net is automatically detected in Observer
@@ -88,13 +89,28 @@ class NetElementController extends HfcBaseController
         ];
     }
 
-    protected function get_form_tabs($view_var)
+    /**
+     * Show tabs in Netelement edit page.
+     *
+     * @author Roy Schneider
+     * @param Modules\HfcReq\Entities\NetElement
+     * @return array
+     */
+    protected function get_form_tabs($netelement)
     {
-        return [
-            ['name' => 'Edit', 'route' => 'NetElement.edit', 'link' => [$view_var->id]],
-            ['name' => 'Controlling', 'route' => 'NetElement.controlling_edit', 'link' => [$view_var->id, 0, 0]],
-            parent::get_form_tabs($view_var)[0],
-        ];
+        $provmon = new ProvMonController();
+        $netelement = $netelement ?: new NetElement;
+
+        if (! isset($netelement->netelementtype)) {
+            return [
+                ['name' => 'Edit', 'route' => 'NetElement.edit', 'link' => $netelement->id],
+                parent::get_form_tabs($netelement)[0],
+            ];
+        }
+
+        $tabs = $provmon->checkNetelementtype($netelement);
+
+        return $provmon->loggingTab($tabs, $netelement);
     }
 
     /**
