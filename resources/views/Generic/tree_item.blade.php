@@ -16,7 +16,7 @@
 
 			{!! HTML::linkRoute("$route_name.edit", $item->view_index_label(), $item->id) !!}
 
-			@if($item->children()->count() > 0)
+			@if($item->children->count() > 0)
 				@include('Generic.tree_item', array('items' => $item->children, 'color' => $color++))
 			@else
 				<?php $color++; ?>
