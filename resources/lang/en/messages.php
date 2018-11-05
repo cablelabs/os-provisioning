@@ -485,4 +485,7 @@ return [
     'log_msg_descr'             => 'Klick to see log message descriptions',
     'postalInvoices'            => 'Postal invoices',
     'zipCmdProcessing'          => 'PDF with postal invoices is being created',
+    'last'                      => 'last',
+    'of'                        => 'of',
+    'parts'                     => 'part|parts',
 ];

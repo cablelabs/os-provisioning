@@ -485,4 +485,7 @@ return [
     'log_msg_descr'             => 'Zeige Beschreibungen zu den Logeinträgen',
     'postalInvoices'            => 'Postalische Rechnungen',
     'zipCmdProcessing'          => 'PDF mit postalischen Rechnungen wird erstellt',
+    'last'                      => 'Letzter|Letzte',
+    'of'                        => 'von',
+    'parts'                     => 'Teil|Teile',
 ];
