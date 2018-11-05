@@ -404,7 +404,7 @@ table .index_check {
 .panel-body {
   overflow-y: auto;
 }
-.nav-tabs > li.active > a:hover{
+.nav-tabs > li.active > a:hover {
   border: 1px solid #ddd !important;
   border-bottom-color: #fff !important;
 }
