@@ -370,6 +370,7 @@ class BaseController extends Controller
         $a['user'] = Auth::user();
 
         $model = static::get_model_obj();
+
         if (! $model) {
             $model = new BaseModel;
         }
@@ -449,7 +450,9 @@ class BaseController extends Controller
         $a['save_button_title_key'] = $this->save_button_title_key;
 
         // Get Framework Informations
-        $gc = GlobalConfig::first();
+        $gc = \Cache::remember('GlobalConfig', 60, function () {
+            return GlobalConfig::first();
+        });
         $a['framework']['header1'] = $gc->headline1;
         $a['framework']['header2'] = $gc->headline2;
         $a['framework']['version'] = $gc->version();
