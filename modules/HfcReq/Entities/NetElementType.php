@@ -62,16 +62,16 @@ class NetElementType extends \BaseModel
     // returns all objects that are related to a DeviceType
     public function view_has_many()
     {
-        $ret['Base']['NetElement']['class'] = 'NetElement';
-        $ret['Base']['NetElement']['relation'] = $this->netelements;
+        $ret['Edit']['NetElement']['class'] = 'NetElement';
+        $ret['Edit']['NetElement']['relation'] = $this->netelements;
 
         if (\Module::collections()->has('HfcSnmp') && ! in_array($this->name, self::$undeletables)) {
             // $ret['Base']['Parameter']['class'] 	= 'Parameter';
             // $ret['Base']['Parameter']['relation']	= $this->parameters;
 
             // Extra view for easier attachment (e.g. attach all oids from one mibfile)
-            $ret['Base']['Parameters']['view']['view'] = 'hfcreq::NetElementType.parameters';
-            $ret['Base']['Parameters']['view']['vars']['list'] = $this->parameters ?: [];
+            $ret['Edit']['Parameters']['view']['view'] = 'hfcreq::NetElementType.parameters';
+            $ret['Edit']['Parameters']['view']['vars']['list'] = $this->parameters ?: [];
             // Extra view for easier controlling view structure setting (html_frame, html_id of parameter)
             $ret['Parameter Settings']['Settings']['view']['view'] = 'hfcreq::NetElementType.settings';
         }

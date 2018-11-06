@@ -209,21 +209,21 @@ class Phonenumber extends \BaseModel
 
             // can be created if no one exists, can be deleted if one exists
             if (is_null($relation)) {
-                $ret['Main']['PhonenumberManagement']['relation'] = new Collection();
-                $ret['Main']['PhonenumberManagement']['options']['hide_delete_button'] = 1;
+                $ret['Edit']['PhonenumberManagement']['relation'] = new Collection();
+                $ret['Edit']['PhonenumberManagement']['options']['hide_delete_button'] = 1;
             } else {
-                $ret['Main']['PhonenumberManagement']['relation'] = collect([$relation]);
-                $ret['Main']['PhonenumberManagement']['options']['hide_create_button'] = 1;
+                $ret['Edit']['PhonenumberManagement']['relation'] = collect([$relation]);
+                $ret['Edit']['PhonenumberManagement']['options']['hide_create_button'] = 1;
             }
 
-            $ret['Main']['PhonenumberManagement']['class'] = 'PhonenumberManagement';
+            $ret['Edit']['PhonenumberManagement']['class'] = 'PhonenumberManagement';
         }
 
         if (\Module::collections()->has('ProvVoipEnvia')) {
             // TODO: auth - loading controller from model could be a security issue ?
-            $ret['Main']['envia TEL API']['html'] = '<h4>Available envia TEL API jobs</h4>';
-            $ret['Main']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-            $ret['Main']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
+            $ret['Edit']['envia TEL API']['html'] = '<h4>Available envia TEL API jobs</h4>';
+            $ret['Edit']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+            $ret['Edit']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
         }
 
         if (\Module::collections()->has('VoipMon')) {
