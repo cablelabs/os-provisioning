@@ -7,6 +7,7 @@ use App\GlobalConfig;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class ModemController extends \BaseController
 {
@@ -145,16 +146,18 @@ class ModemController extends \BaseController
     {
         // defines which edit page you came from
         \Session::put('Edit', 'Modem');
+        $provmon = new ProvMonController;
 
-        $tabs = [
-            ['name' => 'Edit', 'route' => 'Modem.edit', 'link' => $model->id],
-        ];
+        $tabs = [];
 
         if (! \Module::collections()->has('ProvMon')) {
+            $tabs =[['name' => 'Edit', 'route' => 'Modem.edit', 'link' => $model->id]];
+            $provmon->loggingTab($tabs, $model);
             return $tabs;
         }
 
         if (\Bouncer::can('view_analysis_pages_of', Modem::class)) {
+            $tabs =[['name' => 'Edit', 'route' => 'Modem.edit', 'link' => $model->id]];
             array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => $model->id],
                 ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => $model->id]);
 
@@ -165,7 +168,7 @@ class ModemController extends \BaseController
         }
 
         // add 'Logging' tab
-        array_push($tabs, parent::get_form_tabs($model)[0]);
+        $tabs = $provmon->loggingTab($tabs, $model);
 
         return $tabs;
     }

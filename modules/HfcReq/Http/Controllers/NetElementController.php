@@ -102,10 +102,8 @@ class NetElementController extends HfcBaseController
         $netelement = $netelement ?: new NetElement;
 
         if (! isset($netelement->netelementtype)) {
-            return [
-                ['name' => 'Edit', 'route' => 'NetElement.edit', 'link' => $netelement->id],
-                parent::get_form_tabs($netelement)[0],
-            ];
+            $tabs = [['name' => 'Edit', 'route' => 'NetElement.edit', 'link' => $netelement->id]];
+            $provmon->loggingTab($tabs, $netelement);
         }
 
         $tabs = $provmon->checkNetelementtype($netelement);
