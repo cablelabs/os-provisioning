@@ -170,7 +170,7 @@ class Kernel extends ConsoleKernel
 
         // Automatic Power Control based on measured SNR
         if (\Module::collections()->has('ProvMon')) {
-            $schedule->command('nms:apc')->everyMinute();
+            $schedule->command('nms:agc')->everyMinute();
             $schedule->command('nms:cacti')->daily();
         }
 
