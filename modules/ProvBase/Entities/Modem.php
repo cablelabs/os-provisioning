@@ -7,7 +7,6 @@ use File;
 use Exception;
 use GlobalConfig;
 use Acme\php\ArrayHelper;
-use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class Modem extends \BaseModel
 {

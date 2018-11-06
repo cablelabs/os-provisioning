@@ -757,7 +757,7 @@ class SnmpController extends \BaseController
 
         $error = '';
         $message = $msg;
-        return \View::make('errors.generic', compact('message', 'error'));
 
+        return \View::make('errors.generic', compact('message', 'error'));
     }
 }

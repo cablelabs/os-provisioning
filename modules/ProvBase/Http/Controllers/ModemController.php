@@ -151,13 +151,14 @@ class ModemController extends \BaseController
         $tabs = [];
 
         if (! \Module::collections()->has('ProvMon')) {
-            $tabs =[['name' => 'Edit', 'route' => 'Modem.edit', 'link' => $model->id]];
+            $tabs = [['name' => 'Edit', 'route' => 'Modem.edit', 'link' => $model->id]];
             $provmon->loggingTab($tabs, $model);
+
             return $tabs;
         }
 
         if (\Bouncer::can('view_analysis_pages_of', Modem::class)) {
-            $tabs =[['name' => 'Edit', 'route' => 'Modem.edit', 'link' => $model->id]];
+            $tabs = [['name' => 'Edit', 'route' => 'Modem.edit', 'link' => $model->id]];
             array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => $model->id],
                 ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => $model->id]);
 

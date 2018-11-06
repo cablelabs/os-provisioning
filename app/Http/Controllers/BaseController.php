@@ -279,25 +279,25 @@ class BaseController extends Controller
     {
         // Version 1
         $ret = $this->get_form_tabs($view_var);
-         if (count($ret) > 2) {
+        if (count($ret) > 2) {
             return $ret;
         }
-         // view_has_many() Version 2
+        // view_has_many() Version 2
         $a = $view_var->view_has_many();
         if (BaseViewController::get_view_has_many_api_version($a) == 2) {
             // get actual blade to $b
             $b = current($a);
             $c = [];
-             for ($i = 0; $i < count($a); $i++) {
+            for ($i = 0; $i < count($a); $i++) {
                 array_push($c, ['name' => key($a), 'route' => NamespaceController::get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
                 $b = next($a);
             }
-             // add tab for GuiLog
+            // add tab for GuiLog
             if ($ret) {
                 array_push($c, $ret[0]);
             }
 
-             return $c;
+            return $c;
         } else {
             return $ret;
         }
