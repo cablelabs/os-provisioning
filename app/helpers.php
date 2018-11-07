@@ -119,7 +119,7 @@ function escape_latex_special_chars($string)
  * @param 	mixed  		source files
  * @param 	string 		target filename
  * @param 	bool 		run processes multithreaded in background
- * @return 	int 	PID (process ID of background process) if parallel is true, otherwise 0
+ * @return 	int 	    PID (process ID of background process) if parallel is true, otherwise 0
  */
 function concat_pdfs($sourcefiles, $target_fn, $multithreaded = false)
 {
@@ -135,7 +135,7 @@ function concat_pdfs($sourcefiles, $target_fn, $multithreaded = false)
     ChannelLog::debug('billing', 'Concat '.$cnt.' PDFs to '.$target_fn);
 
     $cmd_ext = $multithreaded ? '> /dev/null 2>&1 & echo $!' : '';
-    exec("gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=$target_fn $sourcefiles $cmd_ext", $output, $ret);
+    exec("gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile='$target_fn' $sourcefiles $cmd_ext", $output, $ret);
 
     // Note: normally output is [] and ret is 0
     if ($ret) {

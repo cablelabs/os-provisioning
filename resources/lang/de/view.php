@@ -288,9 +288,10 @@ return [
         // //Configfiles
         'Button_Create Configfiles'		=> 'Konfigurationsdatei erstellen',
         // //QoS
-        'Button_Create Settlement Run'	=> 'Abrechnungslauf erstellen',
+        'Button_create_post_invoices_pdf' => 'Erstelle PDF mit postalischen Rechnungen',
+        'Button_Create Settlement Run'  => 'Abrechnungslauf erstellen',
         'Button_Rerun Accounting Command' => 'Rechnungslauf neu starten',
-        'Button_Create QoS'				=> 'QoS-Regel erstellen',
+        'Button_Create QoS'             => 'QoS-Regel erstellen',
         // //CMTS
         'Button_Create CMTS'			=> 'CMTS anlegen',
         // //IpPool

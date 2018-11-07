@@ -288,7 +288,8 @@ return [
         // //Configfiles
         'Button_Create Configfiles'		=> 'Create Configfile',
         // //QoS
-        'Button_Create Settlement Run'	=> 'Create Settlement Run',
+        'Button_create_post_invoices_pdf'  => 'Create Postal Invoices PDF',
+        'Button_Create Settlement Run'  => 'Create Settlement Run',
         'Button_Rerun Accounting Command' => 'Rerun Accounting Command',
         'Button_Create QoS'				=> 'Create QoS-Rule',
         // //CMTS
