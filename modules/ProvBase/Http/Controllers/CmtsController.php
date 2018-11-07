@@ -94,9 +94,10 @@ class CmtsController extends \BaseController
             return [];
         }
 
-        $tabs = [['name' => 'Edit', 'route' => 'Cmts.edit', 'link' => $cmts->id]];
+        $tabs = [];
 
         if (\Bouncer::can('view_analysis_pages_of', Cmts::class)) {
+            $tabs = [['name' => 'Edit', 'route' => 'Cmts.edit', 'link' => $cmts->id]];
             array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.cmts', 'link' => $cmts->id]);
         }
 

@@ -269,6 +269,41 @@ class BaseController extends Controller
     }
 
     /**
+     * Prepare Breadcrumb - $panel_right header
+     * Priority Handling: get_form_tabs(), view_has_many()
+     *
+     * @param view_var: the view_var parameter from edit() context
+     * @return panel_right prepared array for default.blade
+     */
+    protected function prepare_tabs($view_var)
+    {
+        // Version 1
+        $ret = $this->get_form_tabs($view_var);
+        if (count($ret) > 2) {
+            return $ret;
+        }
+        // view_has_many() Version 2
+        $a = $view_var->view_has_many();
+        if (BaseViewController::get_view_has_many_api_version($a) == 2) {
+            // get actual blade to $b
+            $b = current($a);
+            $c = [];
+            for ($i = 0; $i < count($a); $i++) {
+                array_push($c, ['name' => key($a), 'route' => NamespaceController::get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
+                $b = next($a);
+            }
+            // add tab for GuiLog
+            if ($ret) {
+                array_push($c, $ret[0]);
+            }
+
+            return $c;
+        } else {
+            return $ret;
+        }
+    }
+
+    /**
      * Handle file uploads.
      * - check if a file is uploaded
      * - if so:
@@ -684,7 +719,8 @@ class BaseController extends Controller
         // $form_fields	= BaseViewController::add_html_string (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
 
         // prepare_tabs & prep_right_panels are redundant - TODO: improve
-        $tabs = $this->get_form_tabs($view_var);
+        $tabs = $this->prepare_tabs($view_var);
+
         $relations = BaseViewController::prep_right_panels($view_var);
 
         // check if there is additional data to be passed to blade template

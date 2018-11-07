@@ -98,18 +98,18 @@ class Cmts extends \BaseModel
     public function view_has_many()
     {
         // related IP Pools
-        $ret['Base']['IpPool']['class'] = 'IpPool';
-        $ret['Base']['IpPool']['relation'] = $this->ippools;
+        $ret['Edit']['IpPool']['class'] = 'IpPool';
+        $ret['Edit']['IpPool']['relation'] = $this->ippools;
 
         // Routing page
         $this->prep_cmts_config_page();
-        $ret['Base']['Config']['view']['vars'] = ['cb' => $this]; // cb .. CMTS blade
-        $ret['Base']['Config']['view']['view'] = 'provbase::Cmts.overview';
+        $ret['Edit']['Config']['view']['vars'] = ['cb' => $this]; // cb .. CMTS blade
+        $ret['Edit']['Config']['view']['view'] = 'provbase::Cmts.overview';
 
         // rf card page
         $this->prep_rfcard_page();
-        $ret['Base']['Cluster']['view']['vars'] = ['rf' => $this]; // rf .. RF card blade
-        $ret['Base']['Cluster']['view']['view'] = 'provbase::Rfcardblade.overview';
+        $ret['Edit']['Cluster']['view']['vars'] = ['rf' => $this]; // rf .. RF card blade
+        $ret['Edit']['Cluster']['view']['view'] = 'provbase::Rfcardblade.overview';
         // uncomment: to use default blade instead
         //$ret['Base']['NetElement']['class'] = 'NetElement';
         //$ret['Base']['NetElement']['relation'] = $this->clusters;

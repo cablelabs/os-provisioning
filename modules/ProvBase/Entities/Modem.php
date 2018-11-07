@@ -219,29 +219,29 @@ class Modem extends \BaseModel
 
         // we use a dummy here as this will be overwritten by ModemController::get_form_tabs()
         if (\Module::collections()->has('ProvVoip')) {
-            $ret['dummy']['Mta']['class'] = 'Mta';
-            $ret['dummy']['Mta']['relation'] = $this->mtas;
+            $ret['Edit']['Mta']['class'] = 'Mta';
+            $ret['Edit']['Mta']['relation'] = $this->mtas;
         }
 
         // only show endpoints (and thus the ability to create a new one) for public CPEs
         if ($this->public) {
-            $ret['dummy']['Endpoint']['class'] = 'Endpoint';
-            $ret['dummy']['Endpoint']['relation'] = $this->endpoints;
+            $ret['Edit']['Endpoint']['class'] = 'Endpoint';
+            $ret['Edit']['Endpoint']['relation'] = $this->endpoints;
         }
 
         if (\Module::collections()->has('ProvVoipEnvia')) {
-            $ret['dummy']['EnviaContract']['class'] = 'EnviaContract';
-            $ret['dummy']['EnviaContract']['relation'] = $this->enviacontracts;
-            $ret['dummy']['EnviaContract']['options']['hide_create_button'] = 1;
-            $ret['dummy']['EnviaContract']['options']['hide_delete_button'] = 1;
+            $ret['Edit']['EnviaContract']['class'] = 'EnviaContract';
+            $ret['Edit']['EnviaContract']['relation'] = $this->enviacontracts;
+            $ret['Edit']['EnviaContract']['options']['hide_create_button'] = 1;
+            $ret['Edit']['EnviaContract']['options']['hide_delete_button'] = 1;
 
-            $ret['dummy']['EnviaOrder']['class'] = 'EnviaOrder';
-            $ret['dummy']['EnviaOrder']['relation'] = $this->_envia_orders;
+            $ret['Edit']['EnviaOrder']['class'] = 'EnviaOrder';
+            $ret['Edit']['EnviaOrder']['relation'] = $this->_envia_orders;
             $ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at envia TEL';
 
             // TODO: auth - loading controller from model could be a security issue ?
-            $ret['dummy']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-            $ret['dummy']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ModemController::_get_envia_management_jobs($this);
+            $ret['Edit']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+            $ret['Edit']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ModemController::_get_envia_management_jobs($this);
         }
 
         return $ret;
