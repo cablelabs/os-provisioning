@@ -15,7 +15,7 @@ Relation Blade is used inside a Panel Element to display relational class object
 
 @DivOpen(12)
 	<div class="row">
-	@can('create', $relation->get(0))
+	@can('create', Session::get('models.'.$class))
 		{{-- Create Button: (With hidden add fields if required) --}}
 		@if (!isset($options['hide_create_button']))
 
