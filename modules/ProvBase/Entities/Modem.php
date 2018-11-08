@@ -78,7 +78,7 @@ class Modem extends \BaseModel
             case 0:	$bsclass = 'success'; break; // online
             case 1: $bsclass = 'warning'; break; // warning
             case 2: $bsclass = 'warning'; break; // critical
-            case 3: $bsclass = 'danger'; $us_pwr = 'offline'; break; // offline
+            case 3: $bsclass = $this->network_access && $this->contract->check_validity('Now') ? 'danger' : 'info'; break; // offline
 
             default: $bsclass = 'danger'; break;
         }
