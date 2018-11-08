@@ -1164,59 +1164,58 @@ class Contract extends \BaseModel
      *
      * @param string 	Internet|Voip|TV  - Type of which the contracts next possible cancelation date is dependent
      * @return array 	[end of term, next possible cancelation date, tariff]
-     *
-     * NOTE: if cancelation date is empty -> customer has no tariff or has already canceled
+     *         null     no tariff to consider
+         * NOTE: if cancelation date is empty -> customer has already canceled
      */
-    public function get_next_cancel_date($type = 'Internet')
+    public function getCancelationDates()
     {
-        if (! in_array($type, ['Internet', 'Voip', 'TV'])) {
-            throw new Exception('No Tariff Type');
+        // check if contract was already canceled
+        if ($this->get_end_time()) {
+            return [
+                'end_of_term' => $this->contract_end,
+                'cancelation_day' => '',
+                ];
         }
-        // get last tariff
-        $tariff = $this->items()
+
+        // get last internet & voip tariff (take last added if multiple valid tariffs)
+        // TODO?: get current inet tariff and all tariffs that start after - check if current tariffs pon is reached than take next if exist?
+        $tariffs = $this->items()
             ->join('product as p', 'item.product_id', '=', 'p.id')
-            ->where('type', '=', $type)
+            ->select('item.*', 'p.type', 'p.bundled_with_voip', 'p.name')
+            ->whereIn('type', ['Internet', 'Voip'])
             ->where(function ($query) {
                 $query
                 ->where('item.valid_to', '>=', date('Y-m-d'))
                 ->orWhereNull('item.valid_to')
                 ->orWhere('item.valid_to', '=', '');
-            }
+                }
             )
-            ->where('valid_from_fixed', '=', 1)
-            ->orderBy('valid_from', 'desc')
-            ->first();
+            ->orderBy('item.valid_from', 'desc')
+            ->with('product')
+            ->get();
 
-        // check voip and tv tariffs also
-        if (! $tariff) {
-            switch ($type) {
-                case 'Internet':
-                    $type = 'Voip'; break;
+        $inet = $tariffs->where('type', '=', 'Internet')->first();
+        $tariff = $inet;
 
-                case 'Voip':
-                    $type = 'TV'; break;
+        // use voip tariff if no inet tariff exists or (inet is not bundled with voip and voip was created last)
+        if (! $inet || ! $inet->bundled_with_voip) {
+            // take last added (voip or inet)
+            $voip = $tariffs->where('type', '=', 'Voip')->first();
 
-                case 'TV':
-                    // customer has no tariff
-                    return [
-                        'end_of_term' => '',
-                        'cancelation_day' => '',
-                        ];
+            if ($voip) {
+                $tariff = $inet && ($inet->valid_from >= $voip->valid_from) ? $inet : $voip;
             }
-
-            return $this->get_next_cancel_date($type);
         }
 
-        // last tariff already canceled -> contract canceled
-        if ($tariff->get_end_time()) {
-            return [
-                'end_of_term' => $tariff->valid_to,
-                'cancelation_day' => '',
-                'tariff' => $tariff,
-                ];
+        if (! $tariff) {
+            return null;
         }
 
-        return array_merge($tariff->get_next_cancel_date(), ['tariff' => $tariff]);
+        // return end_of_term, last cancelation_day, tariff
+        $ret = $tariff->getNextCancelationDate();
+        $ret['tariff'] = $tariff;
+
+        return $ret;
     }
 }
 
