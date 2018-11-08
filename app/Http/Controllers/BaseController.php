@@ -184,14 +184,9 @@ class BaseController extends Controller
      */
     protected function _nullify_fields($data, $nullable_fields = [])
     {
-        foreach ($this->view_form_fields(static::get_model_obj()) as $field) {
-            // set all nullable fields to null if not given
-            if (array_key_exists($field['name'], $data)) {
-                if (array_search($field['name'], $nullable_fields) !== false) {
-                    if ($data[$field['name']] == '') {
-                        $data[$field['name']] = null;
-                    }
-                }
+        foreach ($nullable_fields as $field) {
+            if (isset($data[$field]) && ! $data[$field]) {
+                $data[$field] = null;
             }
         }
 
