@@ -1165,7 +1165,7 @@ class Contract extends \BaseModel
      * @param string 	Internet|Voip|TV  - Type of which the contracts next possible cancelation date is dependent
      * @return array 	[end of term, next possible cancelation date, tariff]
      *         null     no tariff to consider
-         * NOTE: if cancelation date is empty -> customer has already canceled
+     *      NOTE: if cancelation date is empty -> customer has already canceled
      */
     public function getCancelationDates()
     {
@@ -1188,8 +1188,7 @@ class Contract extends \BaseModel
                 ->where('item.valid_to', '>=', date('Y-m-d'))
                 ->orWhereNull('item.valid_to')
                 ->orWhere('item.valid_to', '=', '');
-                }
-            )
+            })
             ->orderBy('item.valid_from', 'desc')
             ->with('product')
             ->get();
@@ -1208,7 +1207,7 @@ class Contract extends \BaseModel
         }
 
         if (! $tariff) {
-            return null;
+            return;
         }
 
         // return end_of_term, last cancelation_day, tariff
