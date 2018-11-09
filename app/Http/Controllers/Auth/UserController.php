@@ -31,8 +31,9 @@ class UserController extends BaseController
             ->mapWithKeys(function ($path) {
                 $langShortcut = basename($path);
 
-                return [$langShortcut  => $langShortcut];
-            });
+                return [$langShortcut  => config('language.'.$langShortcut)];
+            })
+            ->put('browser', 'Browser');
 
         if ($model->exists &&
              $current_user != $model &&

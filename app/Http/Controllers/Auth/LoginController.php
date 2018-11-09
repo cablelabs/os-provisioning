@@ -81,11 +81,7 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        $locale = checkLocale($user->language);
-
-        App::setLocale($locale);
-
-        $request->session()->put('language', $locale);
+        return App::setLocale(\App\Http\Controllers\BaseViewController::get_user_lang());
     }
 
     /**
