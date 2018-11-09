@@ -498,4 +498,5 @@ return [
     'Cable Modem'               => 'Cable Modem',
     'CPE Private'               => 'CPE Private',
     'CPE Public'                => 'CPE Public',
+    'MTA'                       => 'MTA',
 ];

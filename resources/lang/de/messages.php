@@ -495,7 +495,8 @@ return [
     'nearest amp/node object'   => 'Nächster Verstärker/Knoten',
     'assosicated upstream interface' => 'Zugewiesenes Upstream Interface',
     'cluster (deprecated)'      => 'Cluster (veraltet)',
-    'Cable Modem'               => 'KabelModem',
+    'Cable Modem'               => 'Kabelmodem',
     'CPE Private'               => 'privates CPE',
     'CPE Public'                => 'öffentliches CPE',
+    'MTA'                       => 'MTA',
 ];

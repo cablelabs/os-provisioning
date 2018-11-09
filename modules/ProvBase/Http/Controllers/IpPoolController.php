@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Http\Controllers;
 
 use Modules\ProvBase\Entities\Cmts;
 use Modules\ProvBase\Entities\IpPool;
+use App\Http\Controllers\BaseViewController;
 
 class IpPoolController extends \BaseController
 {
@@ -20,10 +21,12 @@ class IpPoolController extends \BaseController
             $model = new IpPool;
         }
 
-        $types = collect(['CM' => 'Cable Modem', 'CPEPriv' => 'CPE Private', 'CPEPub' => 'CPE Public', 'MTA' => 'MTA'])
-            ->map(function ($string) {
-                return trans("messages.{$string}");
-            });
+        $types = BaseviewController::translateArray([
+            'CM' => 'Cable Modem',
+            'CPEPriv' => 'CPE Private',
+            'CPEPub' => 'CPE Public',
+            'MTA' => 'MTA'
+        ]);
 
         // create context: calc next free ip pool
         if (! $model->exists) {
