@@ -79,6 +79,24 @@ return [
     'settlement_verification' 		=> 'If activated it\'s not possible to repeat the Settlement Run. Customer Invoices are only visible when this checkbox is activated.',
 
  /*
+  * MODULE: Dashboard
+  */
+    'next'							=> 'Next step: ',
+    'set_isp_name'					=> 'Set internet service provider name',
+    'create_cmts'					=> 'Create first CMTS',
+    'create_cm_pool'				=> 'Create first cablemodem IP pool',
+    'create_cpepriv_pool'			=> 'Create first private CPE IP pool',
+    'create_qos'					=> 'Create first QoS profile',
+    'create_product'				=> 'Create first billing product',
+    'create_configfile'				=> 'Create first configfile',
+    'create_sepa_account'			=> 'Create first SEPA account',
+    'create_cost_center'			=> 'Create first cost center',
+    'create_contract'				=> 'Create first contract',
+    'create_nominatim'				=> 'Set an email address (OSM_NOMINATIM_EMAIL) in /etc/nmsprime/env/global.env to enable geocoding for modems',
+    'create_nameserver'				=> 'Set your nameserver to 127.0.0.1 in /etc/resolv.conf and make sure it won\'t be overwritten via DHCP (see DNS and PEERDNS in /etc/sysconfig/network-scripts/ifcfg-*)',
+    'create_modem'					=> 'Create first modem',
+
+ /*
   *	MODULE: HfcReq
   */
     'netelementtype_reload' 		=> 'In Seconds. Zero to deactivate autoreload. Decimals possible.',
