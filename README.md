@@ -6,20 +6,23 @@
 
 Open Source Provisioning and Management Software for network operators:
 
-Provisioning: DOCSIS
+*Provisioning: DOCSIS*
 - At the time we are highly focused on DOCSIS provisioning - including VoIP
 
-IT Maintenance
-- Show your IT infrastructure in real-time in topography MAP and ERD - Entity Relation Diagram
+*IT Maintenance*
+- Show your *IT infrastructure in real-time* in topography MAP and ERD - Entity Relation Diagram
 - Auto configuration of Nagios and Cacti from one database
 - Generic SNMP GUI creator
+- CMTS Management
+- Billing for cable networks and ticket-System
+- Cable ingress detection
 
-For more informations: [Official Documentation](https://devel.roetzer-engineering.com/confluence/display/NMS/NMS+PRIME)
+For more information head over to our [Official Documentation](https://devel.roetzer-engineering.com/confluence/display/NMS/NMS+PRIME)
 
 
 ## Architectual Concepts
 
-NMS Prime is written with PHP 7.1, [Laravel 5](https://laravel.com/) framework and a modern and responsive [Bootstrap](http://getbootstrap.com/) theme. It is tested and developed under CentOS 7 (RHEL 7).
+NMS Prime is written with PHP 7.1, [Laravel 5.3](https://laravel.com/) framework and a modern and responsive [Bootstrap](http://getbootstrap.com/) theme. It is tested and developed under CentOS 7 (RHEL 7).
 
 NMS Prime is build with standard Linux tools, like
 - [ISC DHCP](https://www.isc.org/downloads/dhcp/)
@@ -53,12 +56,12 @@ cd /var/www/nmsprime
 ./install-from-git.sh -y
 ```
 
-For more Informations [Installation](https://devel.roetzer-engineering.com/confluence/display/NMS/Installation)
+For more Information have a look at the [Installation Process](https://devel.roetzer-engineering.com/confluence/display/NMS/Installation)
 
 
 ---
 
-## Contributing
+## How to contribute
 
 Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
@@ -79,16 +82,9 @@ We thank the following supporters for helping and funding NMS Prime development.
 - **[MEK Cable](http://mek-cable.de)**
 - **[KM3](https://km3.de)**
 
-## Authors
+## Contributors
 
-* **Torsten Schmidt** - *Initial work* - [torsten](https://github.com/schmto)
-* **Nino Ryschawy** - *Maintainer/Developer* - [nino](https://github.com/NinoRy)
-* **Ole Ernst** - *Maintainer/Developer* - [ole](https://github.com/olebowle)
-* **Patrick Reichel** - *Sub-Maintainer/Developer for ..* - [xee8ai](https://github.com/xee8ai)
-* **Christian Schramm** - *Developer for ..* - [christian](https://github.com/cschra)
-* **Sven Arndt** - *Developer for ..* - [sven](https://github.com/todo)
-
-See also the list of [contributors](https://github.com/nmsprime/nmsprime/graphs/contributors) who participated in this project.
+See the list of [contributors](https://github.com/nmsprime/nmsprime/graphs/contributors) who participated in this project.
 
 ---
 
