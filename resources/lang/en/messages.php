@@ -490,4 +490,12 @@ return [
     'parts'                     => 'part|parts',
     'purchase'                  => 'purchase',
     'sale'                      => 'sale',
+    'position rectangle'        => 'position rectangle',
+    'position polygon'          => 'position polygon',
+    'nearest amp/node object'   => 'nearest amp/node object',
+    'assosicated upstream interface' => 'assosicated upstream interface',
+    'cluster (deprecated)'      => 'cluster (deprecated)',
+    'Cable Modem'               => 'Cable Modem',
+    'CPE Private'               => 'CPE Private',
+    'CPE Public'                => 'CPE Public',
 ];

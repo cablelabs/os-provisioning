@@ -20,6 +20,11 @@ class IpPoolController extends \BaseController
             $model = new IpPool;
         }
 
+        $types = collect(['CM' => 'Cable Modem', 'CPEPriv' => 'CPE Private', 'CPEPub' => 'CPE Public', 'MTA' => 'MTA'])
+            ->map(function ($string) {
+                return trans("messages.{$string}");
+            });
+
         // create context: calc next free ip pool
         if (! $model->exists) {
             $init_values = [];
@@ -76,7 +81,7 @@ class IpPoolController extends \BaseController
         // label has to be the same like column in sql table
         $ret_tmp = [
             ['form_type' => 'select', 'name' => 'cmts_id', 'description' => 'CMTS Hostname', 'value' => $model->html_list($model->cmts_hostnames(), 'hostname'), 'hidden' => 1],
-            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['CM' => 'Cable Modem', 'CPEPriv' => 'CPE Private', 'CPEPub' => 'CPE Public', 'MTA' => 'MTA']],
+            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types, 'options' => ['translate' => true]],
             ['form_type' => 'text', 'name' => 'net', 'description' => 'Net'],
             ['form_type' => 'text', 'name' => 'netmask', 'description' => 'Netmask'],
             ['form_type' => 'text', 'name' => 'ip_pool_start', 'description' => 'First IP'],
