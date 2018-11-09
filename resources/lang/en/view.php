@@ -346,4 +346,7 @@ return [
     'Numberrange_Suffix' => 'Suffix',
     'Numberrange_Prefix' => 'Prefix',
     'Numberrange_Type' => 'Type',
+
+// Error
+    'error_specify_id'          => 'No specified hostname for IP address (cm-...)',
 ];
