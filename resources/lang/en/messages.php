@@ -488,4 +488,6 @@ return [
     'last'                      => 'last',
     'of'                        => 'of',
     'parts'                     => 'part|parts',
+    'purchase'                  => 'purchase',
+    'sale'                      => 'sale',
 ];
