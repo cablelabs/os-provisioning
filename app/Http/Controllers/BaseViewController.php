@@ -110,7 +110,7 @@ class BaseViewController extends Controller
 
         $user = Auth::user();
 
-        if (! $user) {
+        if (! $user || $user->language == 'browser') {
             // check the Browser for the accepted language
             return checkLocale(substr(explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])[0], 0, 2));
         }
@@ -469,7 +469,7 @@ class BaseViewController extends Controller
      */
     public static function view_main_menus() : array
     {
-        if (Session::has('menu')) {
+        if (Session::has('menu') && Auth::user()->language !== 'browser') {
             return Session::get('menu');
         }
 

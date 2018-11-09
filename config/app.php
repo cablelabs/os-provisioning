@@ -92,7 +92,7 @@ return [
     | https://crowdin.com/project/nmsprime
     |
     */
-    'supported_locales' => ['en', 'de', 'es'],
+    'supported_locales' => ['en', 'de', 'es', 'browser'],
 
     /*
     |--------------------------------------------------------------------------
