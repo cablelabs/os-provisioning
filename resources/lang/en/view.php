@@ -348,5 +348,5 @@ return [
     'Numberrange_Type' => 'Type',
 
 // Error
-    'error_specify_id'          => 'No specified hostname for IP address (cm-...)',
+    'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
 ];
