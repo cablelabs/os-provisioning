@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Http\Controllers;
 
 use Modules\ProvBase\Entities\Cmts;
 use Modules\ProvBase\Entities\IpPool;
+use App\Http\Controllers\BaseViewController;
 
 class IpPoolController extends \BaseController
 {
@@ -19,6 +20,13 @@ class IpPoolController extends \BaseController
         if (! $model) {
             $model = new IpPool;
         }
+
+        $types = BaseviewController::translateArray([
+            'CM' => 'Cable Modem',
+            'CPEPriv' => 'CPE Private',
+            'CPEPub' => 'CPE Public',
+            'MTA' => 'MTA',
+        ]);
 
         // create context: calc next free ip pool
         if (! $model->exists) {
@@ -76,7 +84,7 @@ class IpPoolController extends \BaseController
         // label has to be the same like column in sql table
         $ret_tmp = [
             ['form_type' => 'select', 'name' => 'cmts_id', 'description' => 'CMTS Hostname', 'value' => $model->html_list($model->cmts_hostnames(), 'hostname'), 'hidden' => 1],
-            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['CM' => 'Cable Modem', 'CPEPriv' => 'CPE Private', 'CPEPub' => 'CPE Public', 'MTA' => 'MTA']],
+            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types, 'options' => ['translate' => true]],
             ['form_type' => 'text', 'name' => 'net', 'description' => 'Net'],
             ['form_type' => 'text', 'name' => 'netmask', 'description' => 'Netmask'],
             ['form_type' => 'text', 'name' => 'ip_pool_start', 'description' => 'First IP'],

@@ -94,6 +94,49 @@ class BaseViewController extends Controller
     }
 
     /**
+     * Translate every value of a given Array
+     *
+     * @param array $array or iterable
+     * @param string $file
+     * @return Illuminate\Support\Collection
+     */
+    public static function translateArray($array, $file = 'messages')
+    {
+        return collect($array)->map(function ($string) use ($file) {
+            return trans("{$file}.{$string}");
+        });
+    }
+
+    /**
+     * Get all two letter language strings as array
+     *
+     * @return Illuminate\Support\Collection
+     */
+    public static function getAllLanguages()
+    {
+        return collect(glob(base_path('resources/lang').'/*'))
+            ->mapWithKeys(function ($path) {
+                $langShortcut = basename($path);
+
+                return [$langShortcut => $langShortcut];
+            });
+    }
+
+    /**
+     * Generate the Array for Language selection in select fields
+     *
+     * @param array $languageArray or iterable
+     * @return Illuminate\Support\Collection
+     */
+    public static function generateLanguageArray($languageArray)
+    {
+        return collect($languageArray)
+            ->mapWithKeys(function ($langShortcut) {
+                return [$langShortcut  => config('language.'.$langShortcut)];
+            });
+    }
+
+    /**
      * Detect the user language from Session or browser
      *
      * @return string

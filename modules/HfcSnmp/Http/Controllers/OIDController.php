@@ -34,10 +34,10 @@ class OIDController extends \BaseController
             ['form_type' => 'text', 'name' => 'oid', 'description' => 'OID', 'options' => ['readonly']],
             ['form_type' => 'text', 'name' => 'syntax', 'description' => 'Syntax', 'options' => ['readonly']],
             ['form_type' => 'text', 'name' => 'access', 'description' => 'Access', 'options' => ['readonly'], 'space' => 1],
-            ['form_type' => 'select', 'name' => 'html_type', 'description' => 'HTML Type', 'value' => $html_types, 'select' => $html_types],
+            ['form_type' => 'select', 'name' => 'html_type', 'description' => 'HTML Type', 'value' => $html_types, 'options' => ['translate' => true], 'select' => $html_types],
 
             ['form_type' => 'checkbox', 'name' => 'oid_table', 'description' => 'Is SNMP Table'],
-            ['form_type' => 'select', 'name' => 'type', 'description' => 'SNMP Type', 'value' => $snmp_types, 'select' => $snmp_types_select],
+            ['form_type' => 'select', 'name' => 'type', 'description' => 'SNMP Type', 'value' => $snmp_types, 'options' => ['translate' => true], 'select' => $snmp_types_select],
             ['form_type' => 'text', 'name' => 'unit_divisor', 'description' => 'Unit Divisor', 'select' => 'i u'],
             ['form_type' => 'text', 'name' => 'startvalue', 'description' => 'Start Value', 'select' => 'select i u'],
             ['form_type' => 'text', 'name' => 'stepsize', 'description' => 'Stepsize', 'select' => 'select i u'],

@@ -8,6 +8,7 @@ use App\Role;
 use App\User;
 use App\Exceptions\AuthException;
 use App\Http\Controllers\BaseController;
+use App\Http\Controllers\BaseViewController;
 
 class UserController extends BaseController
 {
@@ -27,13 +28,9 @@ class UserController extends BaseController
         $current_user_rank = $current_user->getHighestRank();
         $user_model_rank = $model->exists ? $model->getHighestRank() : 0;
 
-        $languageDirectories = collect(glob(base_path('resources/lang').'/*'))
-            ->mapWithKeys(function ($path) {
-                $langShortcut = basename($path);
-
-                return [$langShortcut  => config('language.'.$langShortcut)];
-            })
-            ->put('browser', 'Browser');
+        $languageDirectories = BaseViewController::getAllLanguages();
+        $languages = BaseViewController::generateLanguageArray($languageDirectories)
+                    ->put('browser', 'Browser');
 
         if ($model->exists &&
              $current_user != $model &&
@@ -50,7 +47,7 @@ class UserController extends BaseController
             ['form_type' => 'text', 'name' => 'last_name', 'description' => 'Lastname'],
             ['form_type' => 'text', 'name' => 'email', 'description' => 'Email'],
             ['form_type' => 'select', 'name' => 'language', 'description' => 'Language',
-                'value' => $languageDirectories,
+                'value' => $languages,
                 'help' => trans('helper.translate').' https://crowdin.com/project/nmsprime', ],
             ['form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active',
                 'value' => '1', 'checked' => true, ],
