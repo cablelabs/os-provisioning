@@ -347,4 +347,7 @@ return [
     'Numberrange_Suffix' => 'Suffix',
     'Numberrange_Prefix' => 'Präfix',
     'Numberrange_Type' => 'Typ',
+
+// Error
+    'error_specify_id'          => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
 ];
