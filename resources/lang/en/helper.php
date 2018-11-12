@@ -58,6 +58,7 @@ return [
     'Item_CreditAmount'				=> 'Net Amount to be credited to Customer. Take Care: a negative amount becomes a debit!',
 
     //ProductController
+    'Product_bundle'                => 'On bundled tarifs the minimum runtime of the contract is determined only be the internet tariff. Otherwise the last starting valid tariff (Voip or Internet) dictates this date.',
     'Product_maturity_min'          => 'Tariff minimum period/runtime/term. E.g. 14D (14 days), 3M (three months), 1Y (one year)',
     'Product_maturity'              => 'Tariff period/runtime/term extension after the minimum runtime. Will be automatically added when tariff was not canceled before period of notice. Default 1 month. E.g. 14D (14 days), 3M (three months), 1Y (one year)',
     'Product_Name' 					=> 'For Credits it is possible to assign a Type by adding the type name to the Name of the Credit - e.g.: \'Credit Device\'',

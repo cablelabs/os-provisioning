@@ -58,6 +58,7 @@ return [
     'Item_CreditAmount'				=> 'Nettobetrag, der dem Kunde gutgeschrieben werden soll. Achtung: Ein negativer Betrag wird dem Kunde abgezogen!',
 
     //ProductController
+    'Product_bundle'                => 'Ist der Tarif mit dem Voip-Tarif gebündelt, wird die Gesamtvertragslaufzeit eines Kunden nur anhand des Internet-Tarifs bestimmt. Anderenfalls bestimmt der Tarif (Voip oder Internet) darüber, der zuletzt begonnen hat.',
     'Product_maturity_min'          => 'Beispiele: 14D (14 Tage), 3M (Drei Monate), 1Y (Ein Jahr)',
     'Product_maturity' 				=> 'Laufzeitverlängerung nach der Mindestlaufzeit. Die Gesamtlaufzeit wird automatisch um diese Zeit verlängert, wenn der Tarif nicht vor der Kündigungsfrist gekündigt wurde. Default: 1 Monat. Beispiele: 14D (14 Tage), 3M (Drei Monate), 1Y (Ein Jahr)',
     'Product_Name' 					=> 'Für Kredite ist es möglich einen Typ zuzuweisen, indem der Typname dem Namen des Kredits angefügt wird - z.B.: \'Kredit Gerät\'',
