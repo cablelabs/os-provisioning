@@ -100,7 +100,8 @@ class BaseViewController extends Controller
      * @param string $file
      * @return Illuminate\Support\Collection
      */
-    public static function translateArray($array, $file = 'messages') {
+    public static function translateArray($array, $file = 'messages')
+    {
         return collect($array)->map(function ($string) use ($file) {
             return trans("{$file}.{$string}");
         });
@@ -111,10 +112,12 @@ class BaseViewController extends Controller
      *
      * @return Illuminate\Support\Collection
      */
-    public static function getAllLanguages() {
+    public static function getAllLanguages()
+    {
         return collect(glob(base_path('resources/lang').'/*'))
             ->mapWithKeys(function ($path) {
                 $langShortcut = basename($path);
+
                 return [$langShortcut => $langShortcut];
             });
     }
@@ -125,7 +128,8 @@ class BaseViewController extends Controller
      * @param array $languageArray or iterable
      * @return Illuminate\Support\Collection
      */
-    public static function generateLanguageArray($languageArray) {
+    public static function generateLanguageArray($languageArray)
+    {
         return collect($languageArray)
             ->mapWithKeys(function ($langShortcut) {
                 return [$langShortcut  => config('language.'.$langShortcut)];

@@ -25,7 +25,7 @@ class IpPoolController extends \BaseController
             'CM' => 'Cable Modem',
             'CPEPriv' => 'CPE Private',
             'CPEPub' => 'CPE Public',
-            'MTA' => 'MTA'
+            'MTA' => 'MTA',
         ]);
 
         // create context: calc next free ip pool
