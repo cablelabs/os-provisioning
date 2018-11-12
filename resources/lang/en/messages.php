@@ -499,4 +499,5 @@ return [
     'CPE Private'               => 'CPE Private',
     'CPE Public'                => 'CPE Public',
     'MTA'                       => 'MTA',
+    'Minimum Maturity'          => 'Minimum Maturity',
 ];

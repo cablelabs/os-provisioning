@@ -184,14 +184,9 @@ class BaseController extends Controller
      */
     protected function _nullify_fields($data, $nullable_fields = [])
     {
-        foreach ($this->view_form_fields(static::get_model_obj()) as $field) {
-            // set all nullable fields to null if not given
-            if (array_key_exists($field['name'], $data)) {
-                if (array_search($field['name'], $nullable_fields) !== false) {
-                    if ($data[$field['name']] == '') {
-                        $data[$field['name']] = null;
-                    }
-                }
+        foreach ($nullable_fields as $field) {
+            if (isset($data[$field]) && ! $data[$field]) {
+                $data[$field] = null;
             }
         }
 
@@ -370,6 +365,7 @@ class BaseController extends Controller
         $a['user'] = Auth::user();
 
         $model = static::get_model_obj();
+
         if (! $model) {
             $model = new BaseModel;
         }
@@ -449,7 +445,9 @@ class BaseController extends Controller
         $a['save_button_title_key'] = $this->save_button_title_key;
 
         // Get Framework Informations
-        $gc = GlobalConfig::first();
+        $gc = \Cache::remember('GlobalConfig', 60, function () {
+            return GlobalConfig::first();
+        });
         $a['framework']['header1'] = $gc->headline1;
         $a['framework']['header2'] = $gc->headline2;
         $a['framework']['version'] = $gc->version();

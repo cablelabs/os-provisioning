@@ -499,4 +499,5 @@ return [
     'CPE Private'               => 'Private CPE-IPs',
     'CPE Public'                => 'Öffentliche CPE-IPs',
     'MTA'                       => 'MTA',
+    'Minimum Maturity'          => 'Mindestlaufzeit',
 ];

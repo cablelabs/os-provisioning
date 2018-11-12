@@ -58,9 +58,11 @@ return [
     'Item_CreditAmount'				=> 'Nettobetrag, der dem Kunde gutgeschrieben werden soll. Achtung: Ein negativer Betrag wird dem Kunde abgezogen!',
 
     //ProductController
-    'Product_maturity' 				=> 'Beispiele: 14D (14 Tage), 3M (Drei Monate), 1Y (Ein Jahr)',
+    'Product_maturity_min'          => 'Beispiele: 14D (14 Tage), 3M (Drei Monate), 1Y (Ein Jahr)',
+    'Product_maturity' 				=> 'Laufzeitverlängerung nach der Mindestlaufzeit. Die Gesamtlaufzeit wird automatisch um diese Zeit verlängert, wenn der Tarif nicht vor der Kündigungsfrist gekündigt wurde. Default: 1 Monat. Beispiele: 14D (14 Tage), 3M (Drei Monate), 1Y (Ein Jahr)',
     'Product_Name' 					=> 'Für Kredite ist es möglich einen Typ zuzuweisen, indem der Typname dem Namen des Kredits angefügt wird - z.B.: \'Kredit Gerät\'',
     'Product_Number_of_Cycles' 		=> 'Achtung! Für alle Produkte, die in einem wiederkehrenden Zyklus bezahlt werden steht der Preis für jede einzelne Zahlung. Für Produkte, die einmalig bezahlt werden wird der Preis durch die Anzahl der Zyklen geteilt.',
+    'Product_pod'                   => 'Beispiele: 14D (14 Tage), 3M (Drei Monate), 1Y (Ein Jahr)',
     'Product_Type'					=> 'Alle Felder außer dem Abrechnungszyklus müssen vor eine Änderung des Produkts gelöscht werde! Andernfalls können die Produkte in den meisten Fällen nicht gespeichert werden.',
 
     //SalesmanController
@@ -77,6 +79,24 @@ return [
 
     // SettlementrunController
     'settlement_verification' 		=> 'Mit aktivierter Checkbox kann der Abrechnungslauf nicht wiederholt werden. Rechnungen der Kunden werden nur mit aktivierter Checkbox angezeigt.',
+
+ /*
+  * MODULE: Dashboard
+  */
+    'next'							=> 'Nächster Schritt: ',
+    'set_isp_name'					=> 'Namen des Internetanbieters setzen',
+    'create_cmts'					=> 'Erste CMTS anlegen',
+    'create_cm_pool'				=> 'Ersten Kabelmodem IP-Bereich anlegen',
+    'create_cpepriv_pool'			=> 'Ersten privaten CPE IP-Bereich anlegen',
+    'create_qos'					=> 'Erstes QoS Profil anlegen',
+    'create_product'				=> 'Erstes Abrechnungsprodukt anlegen',
+    'create_configfile'				=> 'Erste Konfigurationsdatei anlegen',
+    'create_sepa_account'			=> 'Erstes SEPA-Konto anlegen',
+    'create_cost_center'			=> 'Erste Kostenstelle anlegen',
+    'create_contract'				=> 'Ersten Vertrag anlegen',
+    'create_nominatim'				=> 'E-Mail Adresse (OSM_NOMINATIM_EMAIL) in /etc/nmsprime/env/global.env eintragen, um die Geolokalisation für Modems zu ermöglichen',
+    'create_nameserver'				=> 'Den Nameserver in /etc/resolv.conf auf 127.0.0.1 setzen und sicherstellen, dass dieser nicht via DHCP überschrieben wird (siehe DNS und PEERDNS in /etc/sysconfig/network-scripts/ifcfg-*)',
+    'create_modem'					=> 'Erstes Modem anlegen',
 
  /*
   *	MODULE: HfcReq
