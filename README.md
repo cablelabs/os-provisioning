@@ -6,11 +6,12 @@
 
 Open Source Provisioning and Management Software for network operators:
 
-*Provisioning: DOCSIS*
-- At the time we are highly focused on DOCSIS provisioning - including VoIP
+**Provisioning: DOCSIS**
+- At the time we are highly focused on **cable provisioning**
+- including VoIP provisioning
 
-*IT Maintenance*
-- Show your *IT infrastructure in real-time* in topography MAP and ERD - Entity Relation Diagram
+**IT Maintenance**
+- Show your IT infrastructure in real-time in topography MAP and ERD - Entity Relation Diagram
 - Auto configuration of Nagios and Cacti from one database
 - Generic SNMP GUI creator
 - CMTS Management
@@ -20,7 +21,7 @@ Open Source Provisioning and Management Software for network operators:
 For more information head over to our [Official Documentation](https://devel.roetzer-engineering.com/confluence/display/NMS/NMS+PRIME)
 
 
-## Architectual Concepts
+## Architectural Concepts
 
 NMS Prime is written with PHP 7.1, [Laravel 5.3](https://laravel.com/) framework and a modern and responsive [Bootstrap](http://getbootstrap.com/) theme. It is tested and developed under CentOS 7 (RHEL 7).
 
