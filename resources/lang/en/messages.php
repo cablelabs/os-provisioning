@@ -488,4 +488,5 @@ return [
     'last'                      => 'last',
     'of'                        => 'of',
     'parts'                     => 'part|parts',
+    'Minimum Maturity'          => 'Minimum Maturity',
 ];

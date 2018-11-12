@@ -488,4 +488,5 @@ return [
     'last'                      => 'Letzter|Letzte',
     'of'                        => 'von',
     'parts'                     => 'Teil|Teile',
+    'Minimum Maturity'          => 'Mindestlaufzeit',
 ];
