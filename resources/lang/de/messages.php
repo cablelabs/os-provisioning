@@ -496,7 +496,7 @@ return [
     'assosicated upstream interface' => 'Zugewiesenes Upstream Interface',
     'cluster (deprecated)'      => 'Cluster (veraltet)',
     'Cable Modem'               => 'Kabelmodem',
-    'CPE Private'               => 'privates CPE',
-    'CPE Public'                => 'öffentliches CPE',
+    'CPE Private'               => 'Private CPE-IPs',
+    'CPE Public'                => 'Öffentliche CPE-IPs',
     'MTA'                       => 'MTA',
 ];
