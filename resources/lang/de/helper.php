@@ -79,6 +79,24 @@ return [
     'settlement_verification' 		=> 'Mit aktivierter Checkbox kann der Abrechnungslauf nicht wiederholt werden. Rechnungen der Kunden werden nur mit aktivierter Checkbox angezeigt.',
 
  /*
+  * MODULE: Dashboard
+  */
+    'next'							=> 'Nächster Schritt: ',
+    'set_isp_name'					=> 'Namen des Internetanbieters setzen',
+    'create_cmts'					=> 'Erste CMTS anlegen',
+    'create_cm_pool'				=> 'Ersten Kabelmodem IP-Bereich anlegen',
+    'create_cpepriv_pool'			=> 'Ersten privaten CPE IP-Bereich anlegen',
+    'create_qos'					=> 'Erstes QoS Profil anlegen',
+    'create_product'				=> 'Erstes Abrechnungsprodukt anlegen',
+    'create_configfile'				=> 'Erste Konfigurationsdatei anlegen',
+    'create_sepa_account'			=> 'Erstes SEPA-Konto anlegen',
+    'create_cost_center'			=> 'Erste Kostenstelle anlegen',
+    'create_contract'				=> 'Ersten Vertrag anlegen',
+    'create_nominatim'				=> 'E-Mail Adresse (OSM_NOMINATIM_EMAIL) in /etc/nmsprime/env/global.env eintragen, um die Geolokalisation für Modems zu ermöglichen',
+    'create_nameserver'				=> 'Den Nameserver in /etc/resolv.conf auf 127.0.0.1 setzen und sicherstellen, dass dieser nicht via DHCP überschrieben wird (siehe DNS und PEERDNS in /etc/sysconfig/network-scripts/ifcfg-*)',
+    'create_modem'					=> 'Erstes Modem anlegen',
+
+ /*
   *	MODULE: HfcReq
   */
     'netelementtype_reload' 		=> 'In Sekunden. 0s zum Deaktivieren des Autoreloads. Nachkommastellen möglich.',
