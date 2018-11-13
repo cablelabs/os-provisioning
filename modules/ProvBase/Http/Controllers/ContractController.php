@@ -66,7 +66,7 @@ class ContractController extends \BaseController
         if (\Module::collections()->has('BillingBase')) {
             $b = [
                     ['form_type' => 'checkbox', 'name' => 'telephony_only', 'description' => 'Telephony only', 'value' => '1', trans('messages.telephony_only'), 'hidden' => 1],
-                    ['form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'value' => '1'],
+                    ['form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'checked' => 1],
                     ['form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $model->html_list(\Modules\BillingBase\Entities\CostCenter::all(), 'name', true)],
                     ['form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => $model->html_list(\Modules\BillingBase\Entities\Salesman::all(), ['firstname', 'lastname'], true, ' - '), 'space' => '1'],
                     // NOTE: qos is required as hidden field to automatically create modem with correct contract qos class
