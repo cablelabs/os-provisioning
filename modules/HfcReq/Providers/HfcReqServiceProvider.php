@@ -14,6 +14,13 @@ class HfcReqServiceProvider extends ServiceProvider
     protected $defer = true;
 
     /**
+     * The artisan commands provided by this module
+     */
+    protected $commands = [
+        'Modules\HfcReq\Console\agcCommand',
+    ];
+
+    /**
      * Boot the application events.
      *
      * @return void
@@ -32,7 +39,7 @@ class HfcReqServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->commands($this->commands);
     }
 
     /**

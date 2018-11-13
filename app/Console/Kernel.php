@@ -146,6 +146,11 @@ class Kernel extends ConsoleKernel
             $schedule->call('\Modules\ProvBase\Entities\Modem@update_model_firmware')->daily();
         }
 
+        // Automatic Power Control based on measured SNR
+        if (\Module::collections()->has('HfcReq')) {
+            $schedule->command('nms:agc')->everyMinute();
+        }
+
         // Clean Up of HFC Base
         if (\Module::collections()->has('HfcBase')) {
             // Rebuid all Configfiles
@@ -168,9 +173,7 @@ class Kernel extends ConsoleKernel
             $schedule->command('nms:modem-refresh')->everyFiveMinutes();
         }
 
-        // Automatic Power Control based on measured SNR
         if (\Module::collections()->has('ProvMon')) {
-            $schedule->command('nms:agc')->everyMinute();
             $schedule->command('nms:cacti')->daily();
         }
 
