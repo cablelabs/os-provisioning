@@ -1278,7 +1278,7 @@ class ContractObserver
 
                 if (\Module::collections()->has('BillingBase') && $contract->contract_end && $contract->contract_end != $contract['original']['contract_end']) {
                     // Alert if end is lower than tariffs end of term
-                    $ret = $contract->get_next_cancel_date();
+                    $ret = $contract->getCancelationDates();
 
                     if ($ret['cancelation_day'] && $contract->contract_end < $ret['end_of_term']) {
                         \Session::put('alert', trans('messages.contract_early_cancel', ['date' => $ret['end_of_term']]));
