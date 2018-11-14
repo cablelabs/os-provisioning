@@ -17,7 +17,6 @@ class ConfigfileController extends \BaseController
             $model = new Configfile;
         }
 
-        $parents = $model->html_list(Configfile::where('id', '!=', $model->id)->get()->all(), 'name', true);
         $firmware_files = Configfile::get_files('fw');
         $cvc_files = Configfile::get_files('cvc');
 
@@ -27,7 +26,8 @@ class ConfigfileController extends \BaseController
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
             ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['generic' => 'generic', 'network' => 'network', 'vendor' => 'vendor', 'user' => 'user'], 'hidden' => 1],
             ['form_type' => 'select', 'name' => 'device', 'description' => 'Device', 'value' => ['cm' => 'CM', 'mta' => 'MTA']],
-            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Configfile', 'value' => $parents],
+            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Configfile',
+                 'value' => $model->html_list(Configfile::where('id', '!=', $model->id)->get(), ['device', 'name'], true, ': '), ],
             ['form_type' => 'select', 'name' => 'public', 'description' => 'Public Use', 'value' => ['yes' => 'Yes', 'no' => 'No']],
             ['form_type' => 'textarea', 'name' => 'text', 'description' => 'Config File Parameters'],
             ['form_type' => 'select', 'name' => 'firmware', 'description' => 'Choose Firmware File', 'value' => $firmware_files],
