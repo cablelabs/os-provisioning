@@ -500,4 +500,6 @@ return [
     'CPE Public'                => 'Öffentliche CPE-IPs',
     'MTA'                       => 'MTA',
     'Minimum Maturity'          => 'Mindestlaufzeit',
+    'Concatenate postal invoices...' => 'Füge postalische Rechnungen zusammen...',
+
 ];
