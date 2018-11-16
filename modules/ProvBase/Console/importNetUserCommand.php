@@ -378,10 +378,21 @@ class importNetUserCommand extends Command
             $modem->network_access = 0;
         }
 
-        $modem->public = 0;
+        // Determine if Device has a public IP
+        $validator = new \Acme\Validators\ExtendedValidator;
+        $privateIps = [0 => ['10.0.0.0', '255.0.0.0'], 1 => ['192.168.0.0', '255.255.0.0'], 2 => ['172.16.0.0', '255.224.0.0']];
+        $modem->public = 1;
+
         foreach ($comps as $comp) {
-            if ($comp->Ip_adr[0] != '1') {
-                $modem->public = 1;
+            foreach ($privateIps as $range) {
+                if ($validator->validateIpInRange(null, $comp->Ip_adr, $range)) {
+                    $modem->public = 0;
+                    break;
+                }
+            }
+
+            if ($modem->public) {
+                \Log::debug("Set public IP of $modem->hostname because of IP $comp->Ip_adr");
                 break;
             }
         }
@@ -573,7 +584,7 @@ class importNetUserCommand extends Command
                     preg_match("/SnmpMibObject $oid.$id String (.*?);/", $config, $hit);
 
                     if (! isset($hit[0]) || ! $hit[0]) {
-                        \Log::notice("Missing $col_name for possible phonenumber $i. Discard number of MTA $mta->id.");
+                        \Log::debug("Missing $col_name for possible phonenumber $i. Discard number of MTA $mta->id.");
                         break;
                     }
 
@@ -593,7 +604,11 @@ class importNetUserCommand extends Command
                     $pn->{$col_name} = $string;
                 }
 
-                if (! $pn->username || ! $pn->password || ! $pn->sipdomain) {
+                // Discard numbers with less than 2 of 4 informations
+                if ((! $pn->number || ! $pn->username) && ! $pn->password && ! $pn->sipdomain) {
+                    if ($pn->number || $pn->username) {
+                        \Log::warning("Ignore phoneumber $pn->number (number), $pn->username (username) as password and sipdomain are empty");
+                    }
                     continue;
                 }
 
@@ -623,6 +638,12 @@ class importNetUserCommand extends Command
 
                 $pn->save();
                 Log::info('ADD Phonenumber: '.$pn->id.', '.$mta->id.', '.$pn->username.', '.($pn->active ? 'active' : 'inactive (but currently set fix to active)'));
+
+                foreach (['username', 'password', 'sipdomain'] as $property) {
+                    if (! $pn->{$property}) {
+                        \Log::warning("Missing $property in phonenumber $pn->id (ID), $pn->username (username)");
+                    }
+                }
             }
         }
     }
