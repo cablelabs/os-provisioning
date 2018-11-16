@@ -30,7 +30,7 @@ class NetElement extends \BaseModel
             'community_ro' 	=> 'regex:/(^[A-Za-z0-9]+$)+/',
             'community_rw' 	=> 'regex:/(^[A-Za-z0-9]+$)+/',
             'netelementtype_id'	=> 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
-            'agc_offset'	=> 'numeric|between:-99.9,99.9',
+            'agc_offset'	=> 'nullable|numeric|between:-99.9,99.9',
         ];
     }
 
