@@ -450,6 +450,8 @@ class NetElement extends \BaseModel
 
         $com = $this->community_rw ?: \Modules\ProvBase\Entities\ProvBase::first()->rw_community;
 
+        // retrieve numeric values only
+        snmp_set_quick_print(true);
         foreach ($idxs as $idx) {
             try {
                 $snr = snmp2_get($ip, $com, ".1.3.6.1.2.1.10.127.1.1.4.1.5.$idx");
@@ -471,19 +473,19 @@ class NetElement extends \BaseModel
 
             $offset = $this->agc_offset;
             // the reference SNR is 24 dB
-            $r = round($rx + 24 - $snr, 1) + $offset;
+            $r = round($rx + 24*10 - $snr, 1) + $offset * 10;
             // minimum actual power is 0 dB
             if ($r < 0) {
-                $r = ($offset < 0) ? 0 : $offset;
+                $r = ($offset < 0) ? 0 : $offset * 10;
             }
             // maximum actual power is 10 dB
-            if ($r > 10) {
-                $r = 10;
+            if ($r > 100) {
+                $r = 100;
             }
 
             echo "$idx: $r\t($snr)\n";
             try {
-                snmp2_set($ip, $com, ".1.3.6.1.4.1.4491.2.1.20.1.25.1.2.$idx", 'i', 10 * $r);
+                snmp2_set($ip, $com, ".1.3.6.1.4.1.4491.2.1.20.1.25.1.2.$idx", 'i', $r);
             } catch (\Exception $e) {
                 \Log::error("Error while setting new exptected us power for cluster $this->name ($idx: $r)");
             }
