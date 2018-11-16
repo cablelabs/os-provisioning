@@ -500,4 +500,5 @@ return [
     'CPE Public'                => 'CPE Public',
     'MTA'                       => 'MTA',
     'Minimum Maturity'          => 'Minimum Maturity',
+    'Concatenate postal invoices...' => 'Concatenate postal invoices...',
 ];
