@@ -22,7 +22,7 @@
 						?>
 						<li class="nav-item {{$class}}" role="tab"> {{ HTML::linkRoute($tab['route'], $tab['name'], $tab['link']) }}</li>
 					@elseif ($tab['name'] == "Logging")
-						<li class="nav-item order-12 ml-auto" role="tab"><a id="loggingtab" class="" href="#logging" data-toggle="tab"> Logging</a></li>
+						<li class="nav-item order-12 ml-auto" role="tab" style="float: right"><a id="loggingtab" class="" href="#logging" data-toggle="tab"> Logging</a></li>
 					@else
 						<li role="tab"> {{ HTML::linkRoute($tab['route'], $tab['name'], $tab['link']) }}</li>
 					@endif
