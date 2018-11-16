@@ -50,6 +50,15 @@ class NetElementController extends HfcBaseController
             $prov_device_hidden = 0;
         }
 
+        $cluster = false;
+        // netelement is a cluster or will be created as type cluster
+        if ($netelement->netelementtype_id == 2 || (! $netelement->exists && \Input::get('netelementtype_id') == 2)) {
+            $cluster = true;
+        }
+
+        // this is just a helper and won't be stored in the database
+        $netelement->enable_agc = $netelement->exists && $netelement->agc_offset !== null;
+
         /*
          * cluster: rf card settings
          * Options array is hidden when not used
@@ -85,8 +94,30 @@ class NetElementController extends HfcBaseController
             ['form_type' => 'text', 'name' => 'address1', 'description' => 'Address Line 1'],
             ['form_type' => 'text', 'name' => 'address2', 'description' => 'Address Line 2'],
             ['form_type' => 'text', 'name' => 'controlling_link', 'description' => 'Controlling Link'],
+            ['form_type' => 'checkbox', 'name' => 'enable_agc', 'description' => 'Enable AGC', 'help' => trans('helper.enable_agc'), 'hidden' => ! $cluster],
+            ['form_type' => 'text', 'name' => 'agc_offset', 'description' => 'AGC offset', 'help' => trans('helper.agc_offset'), 'checkbox' => 'show_on_enable_agc', 'hidden' => ! $cluster],
             ['form_type' => 'textarea', 'name' => 'descr', 'description' => 'Description'],
         ];
+    }
+
+    public function prepare_input($data)
+    {
+        $data = parent::prepare_input($data);
+
+        // set default offset if none was given
+        if (empty($data['agc_offset'])) {
+            $data['agc_offset'] = 0.0;
+        }
+
+        // set agc_offset to NULL if AGC is disabled
+        if (empty($data['enable_agc'])) {
+            $data['agc_offset'] = null;
+        }
+
+        // enable_agc is just a helper to decide if agc_offset should be NULL, thus we can unset it now
+        unset($data['enable_agc']);
+
+        return $data;
     }
 
     /**

@@ -501,5 +501,6 @@ return [
     'MTA'                       => 'MTA',
     'Minimum Maturity'          => 'Mindestlaufzeit',
     'Concatenate postal invoices...' => 'Füge postalische Rechnungen zusammen...',
-
+    'Enable AGC'                => 'AGC aktivieren',
+    'AGC offset'                => 'AGC Versatz',
 ];

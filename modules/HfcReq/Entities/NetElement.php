@@ -30,6 +30,7 @@ class NetElement extends \BaseModel
             'community_ro' 	=> 'regex:/(^[A-Za-z0-9]+$)+/',
             'community_rw' 	=> 'regex:/(^[A-Za-z0-9]+$)+/',
             'netelementtype_id'	=> 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
+            'agc_offset'	=> 'between:-99.9,99.9',
         ];
     }
 
@@ -400,6 +401,93 @@ class NetElement extends \BaseModel
         }
 
         return [];
+    }
+
+    /**
+     * Get the IP address if set, otherwise return IP address of parent CMTS
+     *
+     * @author Ole Ernst
+     *
+     * @return string: IP address (null if not found)
+     */
+    private function _get_ip()
+    {
+        if ($this->ip) {
+            return $this->ip;
+        }
+
+        if (! $cmts = $this->get_parent_cmts()) {
+            return;
+        }
+
+        return $cmts->ip ?: null;
+    }
+
+    /**
+     * Apply automatic gain control for a cluster
+     *
+     * @author Ole Ernst
+     */
+    public function apply_agc()
+    {
+        // ignore non-clusters
+        if ($this->netelementtype_id != 2) {
+            return;
+        }
+        // ignore cluster if its IP address can't be determined
+        if (! $ip = $this->_get_ip()) {
+            return;
+        }
+
+        // get all docsIfUpstreamChannelTable indices of cluster
+        $idxs = $this->indices
+            ->filter(function ($idx) {
+                return $idx->parameter->oid->oid == '.1.3.6.1.2.1.10.127.1.1.2';
+            })->pluck('indices')
+            ->map(function ($i) {
+                return explode(',', $i);
+            })->collapse();
+
+        $com = $this->community_rw ?: \Modules\ProvBase\Entities\ProvBase::first()->rw_community;
+
+        foreach ($idxs as $idx) {
+            try {
+                $snr = snmp2_get($ip, $com, ".1.3.6.1.2.1.10.127.1.1.4.1.5.$idx");
+                if (! $snr) {
+                    // continue if snr is zero (i.e. no CM on the channel)
+                    continue;
+                }
+            } catch (\Exception $e) {
+                \Log::error("Could not get SNR for cluster $this->name ($idx)");
+                continue;
+            }
+
+            try {
+                $rx = snmp2_get($ip, $com, ".1.3.6.1.4.1.4491.2.1.20.1.25.1.2.$idx");
+            } catch (\Exception $e) {
+                \Log::error("Could not get RX power for cluster $this->name ($idx)");
+                continue;
+            }
+
+            $offset = $this->agc_offset;
+            // the reference SNR is 24 dB
+            $r = round($rx + 24 - $snr, 1) + $offset;
+            // minimum actual power is 0 dB
+            if ($r < 0) {
+                $r = ($offset < 0) ? 0 : $offset;
+            }
+            // maximum actual power is 10 dB
+            if ($r > 10) {
+                $r = 10;
+            }
+
+            echo "$idx: $r\t($snr)\n";
+            try {
+                snmp2_set($ip, $com, ".1.3.6.1.4.1.4491.2.1.20.1.25.1.2.$idx", 'i', 10 * $r);
+            } catch (\Exception $e) {
+                \Log::error("Error while setting new exptected us power for cluster $this->name ($idx: $r)");
+            }
+        }
     }
 }
 

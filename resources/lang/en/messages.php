@@ -501,4 +501,6 @@ return [
     'MTA'                       => 'MTA',
     'Minimum Maturity'          => 'Minimum Maturity',
     'Concatenate postal invoices...' => 'Concatenate postal invoices...',
+    'Enable AGC'                => 'Enable AGC',
+    'AGC offset'                => 'AGC offset',
 ];
