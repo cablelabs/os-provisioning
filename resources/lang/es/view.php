@@ -288,7 +288,8 @@ return [
         // //Configfiles
         'Button_Create Configfiles'		=> 'Crear archivos de configuracion',
         // //QoS
-        'Button_Create Settlement Run'	=> 'Crear proceso de liquidacion',
+        'Button_create_post_invoices_pdf'  => 'Create Postal Invoices PDF',
+        'Button_Create Settlement Run'  => 'Crear proceso de liquidacion',
         'Button_Rerun Accounting Command' => 'Vuelva a ejecutar comando de contabilidad',
         'Button_Create QoS'				=> 'Crear regla QoS',
         // //CMTS
@@ -346,4 +347,7 @@ return [
     'Numberrange_Suffix' => 'Sufijo',
     'Numberrange_Prefix' => 'Prefijo',
     'Numberrange_Type' => 'Tipo',
+
+// Error
+    'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
 ];

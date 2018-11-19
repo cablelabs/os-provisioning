@@ -58,9 +58,12 @@ return [
     'Item_CreditAmount'				=> 'Cantidad Neta a ser acreditada al Cliente. Cuidado: una cantidad negativa viene a ser un debito!',
 
     //ProductController
-    'Product_maturity' 				=> 'Periodo/Tiempo de ejecucion. P.ej. 14D (14 dias), 3M (3 meses), 1Y (1 anio)',
+    'Product_bundle'                => 'On bundled tarifs the minimum runtime of the contract is determined only be the internet tariff. Otherwise the last starting valid tariff (Voip or Internet) dictates this date.',
+    'Product_maturity_min'          => 'Tariff minimum period/runtime/term. E.g. 14D (14 days), 3M (three months), 1Y (one year)',
+    'Product_maturity'              => 'Tariff period/runtime/term extension after the minimum runtime. Will be automatically added when tariff was not canceled before period of notice. Default 1 month. E.g. 14D (14 days), 3M (three months), 1Y (one year)',
     'Product_Name' 					=> 'Para creditos es posible de asignar un Tipo aniadiendo el tipo de nombre al Nombre del Credito - p.ej.: \'Credito de Dispositivo\'',
     'Product_Number_of_Cycles' 		=> 'Ten cuidado!: para todos los productos pagados repetidos, el precio aplica para cada deuda, para productos pagados de una, el Precio es dividido por el numero de ciclos',
+    'Product_pod'                   => 'E.g. 14D (14 days), 3M (three months), 1Y (one year)',
     'Product_Type'					=> 'Todos los campos ademas del Ciclo de Facturacion tienen que ser despejados antes de algun cambio! De otra manera, los productos no seran guardados en la mayoria de los casos',
 
     //SalesmanController
@@ -77,6 +80,24 @@ return [
 
     // SettlementrunController
     'settlement_verification' 		=> 'Si es activada, no es posible de repetir el Acuerdo. Las Facturas del Cliente son solo visibles cuando esta casilla esta marcada.',
+
+ /*
+  * MODULE: Dashboard
+  */
+    'next'							=> 'Next step: ',
+    'set_isp_name'					=> 'Set internet service provider name',
+    'create_cmts'					=> 'Create first CMTS',
+    'create_cm_pool'				=> 'Create first cablemodem IP pool',
+    'create_cpepriv_pool'			=> 'Create first private CPE IP pool',
+    'create_qos'					=> 'Create first QoS profile',
+    'create_product'				=> 'Create first billing product',
+    'create_configfile'				=> 'Create first configfile',
+    'create_sepa_account'			=> 'Create first SEPA account',
+    'create_cost_center'			=> 'Create first cost center',
+    'create_contract'				=> 'Create first contract',
+    'create_nominatim'				=> 'Set an email address (OSM_NOMINATIM_EMAIL) in /etc/nmsprime/env/global.env to enable geocoding for modems',
+    'create_nameserver'				=> 'Set your nameserver to 127.0.0.1 in /etc/resolv.conf and make sure it won\'t be overwritten via DHCP (see DNS and PEERDNS in /etc/sysconfig/network-scripts/ifcfg-*)',
+    'create_modem'					=> 'Create first modem',
 
  /*
   *	MODULE: HfcReq
@@ -110,6 +131,8 @@ return [
     'mac_formats'					=> "Formatos permitidos (case-insensitive):\n\n1) AA:BB:CC:DD:EE:FF\n2) AABB.CCDD.EEFF\n3) AABBCCDDEEFF",
     'fixed_ip_warning'				=> 'Usar una IP fija es altamente no recomendado, ya que pierde la habilidad de mover modems y sus CPEs libremente entre CMTSes. Envez de dar una IP fija al cliente, deberan ser provistos del hostname, el cual no cambiara.',
     'modem_update_frequency'		=> 'Este campo se actualiza una vez al día.',
+    'enable_agc'					=> 'Enable upstream automatic gain control.',
+    'agc_offset'					=> 'Upstream automatic gain control offset in dB. (default: 0.0)',
 
  /*
   *	MODULE: ProvVoip
