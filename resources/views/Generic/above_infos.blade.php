@@ -56,8 +56,8 @@ foreach ($tmp_msg_above_keys as $tmp_msg_above_key) {
 		$tmp_msg_above_shown = True;
 	?>
 	@foreach ($tmp_msg_above_msg as $tmp_msg)
-		<div style="{{ $tmp_style }}">
-			{{ $tmp_msg }}
+		<div style="{!! $tmp_style !!}">
+			{!! $tmp_msg !!}
 		</div>
 	@endforeach
 	<?php
