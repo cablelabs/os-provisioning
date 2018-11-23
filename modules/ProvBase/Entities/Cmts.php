@@ -3,7 +3,6 @@
 namespace Modules\ProvBase\Entities;
 
 use File;
-use Acme\php\ArrayHelper;
 
 class Cmts extends \BaseModel
 {
@@ -307,16 +306,29 @@ class Cmts extends \BaseModel
 
         try {
             try {
+                $freq = [];
+                foreach (snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.1.2.1.2') as $idx => $f) {
+                    $freq[last(explode('.', $idx))] = strval($f / 1000000);
+                }
                 // DOCS-IF3-MIB::docsIf3CmtsCmRegStatusIPv4Addr, ...
                 $ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.3.1.5');
                 $snrs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.4.1.4');
 
-                foreach ($ips as $i_key => $i_val) {
-                    $i_key = last(explode('.', $i_key));
-                    $tmp = array_filter($snrs, function ($s_key) use ($i_key) {
-                        return strpos($s_key, $i_key) !== false;
-                    }, ARRAY_FILTER_USE_KEY);
-                    $ret[long2ip(hexdec($i_val))] = ArrayHelper::ArrayDiv(array_values($tmp));
+                foreach ($ips as $ip_idx => $ip) {
+                    $ip = long2ip(hexdec($ip));
+                    if ($ip == '0.0.0.0') {
+                        continue;
+                    }
+                    $ip_idx = last(explode('.', $ip_idx));
+
+                    foreach ($snrs as $idx => $snr) {
+                        if (strpos($idx, $ip_idx) === false) {
+                            continue;
+                        }
+                        $idx = last(explode('.', $idx));
+
+                        $ret[$ip][$freq[$idx]] = $snr / 10;
+                    }
                 }
             } catch (\Exception $e) {
                 if (strpos($e->getMessage(), 'No Such Object available on this agent at this OID') === false) {
@@ -325,13 +337,27 @@ class Cmts extends \BaseModel
                 // try DOCSIS2.0 - DOCS-IF-MIB::docsIfCmtsCmStatusIpAddress, ...
                 $ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.3.3.1.3');
                 $snrs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.3.3.1.13');
+                $us_idxs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.3.3.1.5');
 
-                foreach ($ips as $i_key => $i_val) {
-                    $i_key = last(explode('.', $i_key));
-                    $tmp = array_filter($snrs, function ($s_key) use ($i_key) {
-                        return strpos($s_key, $i_key) !== false;
-                    }, ARRAY_FILTER_USE_KEY);
-                    $ret[$i_val] = ArrayHelper::ArrayDiv(array_values($tmp));
+                foreach ($ips as $ip_idx => $ip) {
+                    if ($ip == '0.0.0.0') {
+                        continue;
+                    }
+                    $ip_idx = last(explode('.', $ip_idx));
+
+                    foreach ($snrs as $idx => $snr) {
+                        if (strpos($idx, $ip_idx) === false) {
+                            continue;
+                        }
+                        $idx = last(explode('.', $idx));
+
+                        $us_idx = array_filter($us_idxs, function ($us_idx) use ($idx) {
+                            return strpos($us_idx, $idx) !== false;
+                        }, ARRAY_FILTER_USE_KEY);
+                        $us_idx = last($us_idx);
+
+                        $ret[$ip][$freq[$us_idx]] = $snr / 10;
+                    }
                 }
             }
         } catch (\Exception $e) {
