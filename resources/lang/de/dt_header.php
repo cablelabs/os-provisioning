@@ -220,4 +220,7 @@ return [
     'ticket.assigned_users' => 'Bearbeiter',
     'assigned_users' => 'Bearbeiter',
     'tickettypes.name' => 'Typ',
+
+    //Ccc
+    'ccc.page_html_header' => 'Kundenkontrollzentrum'
 ];
