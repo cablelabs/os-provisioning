@@ -69,7 +69,7 @@ return [
     'Lastname'					=> 'Nachname',
     'Last IP'					=> 'Letzte IP',
     'ccc'					    => 'Kundenkontrollzentrum',
-    'ccc.page_html_header'      => 'Kundenkontrollzentrum',
+    'page_html_header'          => 'Kundenkontrollzentrum',
     'MAC Address'				=> 'MAC Adresse',
     'Main Menu'					=> 'Hauptmenü',
     'Maturity' 					=> 'Laufzeit',
