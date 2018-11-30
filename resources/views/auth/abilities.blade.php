@@ -463,14 +463,21 @@ new Vue({
         .then(function (response) {
             self.originalRoleAbilities = response.data.roleAbilities;
             self.originalForbiddenAbilities = response.data.roleForbiddenAbilities;
+
             if(self.changed[self.allowAllId]) {
                 for (module in self.modelAbilities) {
                     self.modelUpdate(module);
                 }
             }
-            for (let id in response.data.id) {
-                self.changed.splice(response.data.id[id], 1, self.hasChanged(response.data.id[id]));
+
+            if (typeof response.data.id === 'object'){
+                for (let id in response.data.id) {
+                    self.changed.splice(response.data.id[id], 1, self.hasChanged(response.data.id[id]));
+                }
+            } else {
+                self.changed.splice(response.data.id, 1, self.hasChanged(response.data.id));
             }
+
             self.loadingSpinner.custom = false;
             self.showSaveColumn = self.checkChangedArray(self.changed);
         })
