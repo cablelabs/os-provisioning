@@ -63,7 +63,7 @@ class AuthCommand extends Command
             ],
             [
                 'name' => 'view_analysis_pages_of',
-                'title' => 'View analysis pages of modems',
+                'title' => 'View analysis pages of cmts',
                 'entity_type' => \Modules\ProvBase\Entities\Cmts::class,
                 'only_owned'  =>'0',
             ],
@@ -164,9 +164,9 @@ class AuthCommand extends Command
         $this->setVerbosity('vv');
 
         foreach (self::customAbilities() as $ability) {
-            $ability = Ability::firstOrNew($ability);
+            $ability = Ability::firstOrCreate($ability);
 
-            $this->line('Ability: "'.$ability->title.'" processed');
+            $this->line("Ability {$ability->title} processed. It has id {$ability->id}");
         }
 
         $this->setVerbosity('v');
