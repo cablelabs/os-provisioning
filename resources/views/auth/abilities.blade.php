@@ -299,13 +299,13 @@ new Vue({
 
         for (id in this.customAbilities) {
             if (id in this.originalRoleAbilities) {
-                this.$refs['allowed'+ id][0].checked = true;
+                this.$refs['allowed' + id][0].checked = true;
                 if (id == this.allowAllId)  this.allowAll = true;
                 if (id == this.allowViewAllId) this.allowViewAll = true;
             }
 
             if (id in this.originalForbiddenAbilities) {
-                this.$refs['forbidden'+ id][0].checked = true;
+                this.$refs['forbidden' + id][0].checked = true;
                 if (id == this.allowAllId) this.allowAll = false;
                 if (id == this.allowViewAllId) this.allowViewAll = false;
             }
@@ -346,11 +346,11 @@ new Vue({
             return id in this.originalRoleAbilities || id in this.originalForbiddenAbilities ? true : false;
     },
     customAllow : function (id) {
-        if (this.$refs['allowed'+ id][0].checked) {
+        if (this.$refs['allowed' + id][0].checked) {
             if (id == this.allowAllId) {
                 this.allowAll = true;
                 this.allowViewAll = undefined;
-                this.$refs['allowed'+ this.allowViewAllId][0].checked = false;
+                this.$refs['allowed' + this.allowViewAllId][0].checked = false;
                 this.changed.splice(this.allowViewAllId, 1, this.hasChanged(this.allowViewAllId));
                 delete this.roleAbilities[this.allowViewAllId];
             }
@@ -368,19 +368,19 @@ new Vue({
             delete this.roleAbilities[id];
         }
 
-        this.$refs['forbidden'+ id][0].checked = false;
+        this.$refs['forbidden' + id][0].checked = false;
         this.changed.splice(id, 1, this.hasChanged(id));
         this.showSaveColumn = this.checkChangedArray(this.changed);
     },
     customForbid : function (id) {
-        if (this.$refs['forbidden'+ id][0].checked) {
+        if (this.$refs['forbidden' + id][0].checked) {
             this.roleForbiddenAbilities[id] = this.customAbilities[id]['localTitle'];
             delete this.roleAbilities[id];
         } else {
             delete this.roleForbiddenAbilities[id];
         }
 
-        this.$refs['allowed'+ id][0].checked = false;
+        this.$refs['allowed' + id][0].checked = false;
         this.changed.splice(id, 1, this.hasChanged(id));
         this.showSaveColumn = this.checkChangedArray(this.changed);
     },
