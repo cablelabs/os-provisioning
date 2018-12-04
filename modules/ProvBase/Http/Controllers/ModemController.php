@@ -253,6 +253,29 @@ class ModemController extends \BaseController
     }
 
     /**
+     * Return status of modem via API
+     *
+     * @return JsonResponse
+     *
+     * @author Ole Ernst
+     */
+    public function api_status($ver, $id)
+    {
+        if ($ver !== '0') {
+            return response()->json(['ret' => "Version $ver not supported"]);
+        }
+
+        if (! $modem = static::get_model_obj()->find($id)) {
+            return response()->json(['ret' => 'Object not found']);
+        }
+
+        $domain_name = \Modules\ProvBase\Entities\ProvBase::first()->domain_name;
+        exec("sudo ping -c1 -i0 -w1 {$modem->hostname}.$domain_name", $ping, $offline);
+
+        return response()->json(['ret' => 'success', 'online' => ! $offline]);
+    }
+
+    /**
      * Set nullable fields.
      *
      * @author Patrick Reichel
