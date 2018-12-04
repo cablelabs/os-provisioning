@@ -120,7 +120,7 @@ class ContractController extends \BaseController
         $provvoipenvia = new \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia();
 
         // check if user has the right to perform actions against envia TEL API
-        if (Bouncer::can('view', \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia::class)) {
+        if (Bouncer::cannot('view', \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia::class)) {
             return;
         }
 
