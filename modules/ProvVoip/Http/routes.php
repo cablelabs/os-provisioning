@@ -7,4 +7,12 @@ BaseRoute::group([], function () {
     BaseRoute::resource('ProvVoip', 'Modules\ProvVoip\Http\Controllers\ProvVoipController');
     BaseRoute::resource('PhonebookEntry', 'Modules\ProvVoip\Http\Controllers\PhonebookEntryController');
     BaseRoute::resource('PhoneTariff', 'Modules\ProvVoip\Http\Controllers\PhoneTariffController');
+
+    Route::group(['prefix' => 'api/v{ver}'], function () {
+        Route::get('Mta/{Mta}/restart', [
+            'as' => 'Mta.api_restart',
+            'uses' => 'Modules\ProvVoip\Http\Controllers\MtaController@api_restart',
+            'middleware' => ['api', 'auth.basic', 'can:update,Modules\ProvVoip\Entities\Mta'],
+        ]);
+    });
 });

@@ -276,6 +276,35 @@ class ModemController extends \BaseController
     }
 
     /**
+     * Restart modem via API
+     *
+     * @return JsonResponse
+     *
+     * @author Ole Ernst
+     */
+    public function api_restart($ver, $id)
+    {
+        if ($ver !== '0') {
+            return response()->json(['ret' => "Version $ver not supported"]);
+        }
+
+        if (! $modem = static::get_model_obj()->find($id)) {
+            return response()->json(['ret' => 'Object not found']);
+        }
+
+        $modem->restart_modem();
+
+        $err = collect([
+            \Session::get('tmp_info_above_form'),
+            \Session::get('tmp_warning_above_form'),
+            \Session::get('tmp_error_above_form'),
+        ])->collapse()
+        ->implode(', ');
+
+        return response()->json(['ret' => $err ?: 'success']);
+    }
+
+    /**
      * Set nullable fields.
      *
      * @author Patrick Reichel
