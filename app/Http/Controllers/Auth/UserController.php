@@ -6,6 +6,7 @@ use Auth;
 use Bouncer;
 use App\Role;
 use App\User;
+use Carbon\Carbon;
 use App\Exceptions\AuthException;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\BaseViewController;
@@ -67,6 +68,8 @@ class UserController extends BaseController
             unset($data['password']);
         } else {
             $data['password'] = \Hash::make($data['password']);
+            $data['password_changed_at'] = Carbon::now()->toDateTimeString();
+            session()->forget('GlobalNotification.shouldChangePassword');
         }
 
         // removed to have a clean "isDirty()" in updated()
