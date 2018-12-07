@@ -92,7 +92,7 @@ class LoginController extends Controller
                     'message' => 'shouldChangePassword',
                     'level' => 'danger',
                     'reason' => $user->isPasswordExpired() ? 'PasswordExpired' : 'newUser',
-                ]
+                ],
             ]);
         }
 

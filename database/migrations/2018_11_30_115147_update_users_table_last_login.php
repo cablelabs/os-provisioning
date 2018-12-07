@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 
 class UpdateUsersTableLastLogin extends BaseMigration
 {
@@ -21,7 +20,6 @@ class UpdateUsersTableLastLogin extends BaseMigration
         Schema::table('global_config', function (Blueprint $table) {
             $table->unsignedInteger('passwordResetInterval')->default(120);
         });
-
     }
 
     /**
