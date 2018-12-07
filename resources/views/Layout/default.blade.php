@@ -15,6 +15,22 @@
 	@include ('bootstrap.sidebar')
 
 		<div id="content" class="content p-t-15">
+			@if(session('GlobalNotification'))
+				@foreach (session('GlobalNotification') as $name => $options)
+					<div class="alert alert-{{ $options['level'] }} alert-dismissible fade show" role="alert">
+						<h4 class="text-center alert-heading">{{ trans('messages.' . $options['message']) }} </h4>
+						<p class="mb-0 text-center">
+							{{ trans('messages.' . $options['reason']) }}
+							<a href="{{ route('User.profile', $user->id) }}" class="alert-link">
+									{{ trans('messages.PasswordClick') }}
+							</a>
+						</p>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+				@endforeach
+			@endif
 			<div class="row">
 				@yield ('content')
 			</div>
