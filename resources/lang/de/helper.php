@@ -25,6 +25,7 @@ return [
 
     // GlobalConfig
     'ISO_3166_ALPHA-2'				=> 'ISO 3166 ALPHA-2 (zwei Zeichen, z.B. „DE“). Genutzt in Formularen mit Adressdaten um das Land anzugeben.',
+    'PasswordReset'           => 'Diese Einstellung bestimmt, in welchem Intervall die Nutzer des Administrationsbereiches zum Ändern ihres Passworts aufgefordert werden. Setzen Sie diesen Wert auf 0, um Passwörter unendlich lang gültig zu halten.',
 
  /*
   *	MODULE: BillingBase

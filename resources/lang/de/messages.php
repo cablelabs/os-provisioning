@@ -509,4 +509,9 @@ return [
     'noSpectrum'                => 'Für dieses Modem kann kein Spektrum erstellt werden',
     'createSpectrum'            => 'Spektrum erstellen',
     'configfile_outdated'       => 'Konfigurationsdatei ist veraltet - Fehler beim Generieren der Datei!',
+    'shouldChangePassword'       => 'Bitte ändern Sie Ihr Passwort!',
+    'PasswordExpired'           => 'Ihr Passwort ist abgelaufen. Passwörter sollten regelmäßig gewechselt werden um sicher zu bleiben. Vielen Dank!',
+    'newUser'                   => 'Willkommen in NMS Prime. Bitte ändern Sie zur Sicherheit Ihr Passwort. Vielen Dank!',
+    'Password Reset Interval'   => 'Passwortwechsel-Intervall',
+    'PasswordClick'             => 'Klicken Sie HIER um Ihr Passwort zu ändern.',
 ];
