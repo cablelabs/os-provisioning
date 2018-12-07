@@ -487,7 +487,7 @@ class importCommand extends Command
             if ($prod_id <= 0) {
                 $msg = "\tProduct $prod_id does not exist for $key: $tarif [ContractNr $new_contract->number]";
                 \Log::error($msg);
-                $this->errors = $msg;
+                $this->errors[] = $msg;
                 continue;
             }
 
@@ -742,7 +742,7 @@ class importCommand extends Command
         if ($modem->configfile_id == 0) {
             $msg = "No Configfile could be assigned to Modem $modem->id Old ModemID: $old_modem->id [ContractNr $new_contract->number]";
             \Log::error($msg);
-            $this->errors = $msg;
+            $this->errors[] = $msg;
         }
 
         \Log::info("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
@@ -891,7 +891,7 @@ class importCommand extends Command
 
     private static function _blockcpe($contract)
     {
-        \Log::info("Disable network_access of all modems of contract number $contract->number");
+        \Log::notice("Disable network_access of all modems of contract number $contract->number");
 
         foreach ($contract->modems as $cm) {
             $cm->network_access = 0;
