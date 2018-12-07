@@ -34,6 +34,23 @@ class importCommand extends Command
     protected $description = 'import km3';
 
     /**
+     * Contract ID for NetElement Modems
+     *
+     * @var integer
+     */
+    protected static $ne_contract_id = 1;
+
+    /**
+     * Set to true if customers that had volume tariffs shall get a credit
+     * NOTE: Please specify product ID then
+     *
+     * @var bool
+     * @var integer
+     */
+    protected static $credit = false;
+    protected static $credit_id = 0;
+
+    /**
      * Errors that will be written to stdout when command finishes
      *
      * @var array
@@ -492,6 +509,10 @@ class importCommand extends Command
      */
     private function add_tarif_credit($new_contract, $old_contract)
     {
+        if (! self::$credit) {
+            return;
+        }
+
         // TODO(3) check restrictions of volume tarifs!
         if ((strpos($old_contract->tariffname, 'Volumen') === false) && (strpos($old_contract->tariffname, 'Speed') === false) && (strpos($old_contract->tariffname, 'Basic') === false)) {
             return;
@@ -501,7 +522,7 @@ class importCommand extends Command
 
         Item::create([
             'contract_id' 		=> $new_contract->id,
-            'product_id' 		=> 10,
+            'product_id' 		=> self::$credit_id,
             'valid_from' 		=> date('Y-m-01', strtotime('first day of next month')),
             'valid_from_fixed' 	=> 1,
             'valid_to' 			=> date('Y-m-d', strtotime('last day of next year')),
@@ -854,7 +875,7 @@ class importCommand extends Command
 
         Log::info('ADD NETELEMENT Modems');
 
-        $contract = Contract::find(500000);
+        $contract = Contract::find(self::$ne_contract_id);
 
         echo "ADD NETELEMENT Modems\n";
         $bar = $this->output->createProgressBar(count($devices));
