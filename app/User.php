@@ -5,6 +5,7 @@ namespace App;
 use App;
 use Bouncer;
 use Session;
+use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
@@ -153,6 +154,37 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     public function hasSameRankAs(self $user) : bool
     {
         return $this->getHighestRank() == $user->getHighestRank() ? true : false;
+    }
+
+    /**
+     * Checks if this is the first own Login of a User.
+     *
+     * @param App\User $user
+     * @return bool
+     */
+    public function isFirstLogin() : bool
+    {
+        return $this->last_login_at == null || $this->password_changed_at == null;
+    }
+
+    /**
+     * Checks if the password of the current user is expired.
+     *
+     * @param App\User $user
+     * @param Carbon\Carbon $now
+     * @return bool
+     */
+    public function isPasswordExpired() : bool
+    {
+        $passwordInterval = \Cache::get('GlobalConfig')->passwordResetInterval;
+
+        if ($passwordInterval === 0) {
+            return false;
+        }
+
+        return Carbon::now()
+            ->subDays($passwordInterval)
+            ->greaterThan($this->password_changed_at);
     }
 }
 

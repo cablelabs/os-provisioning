@@ -16,6 +16,7 @@ class GlobalConfig extends BaseModel
         return [
             'mail' => 'email',
             'default_country_code' => 'regex:/^[A-Z]{2}$/',
+            'passwordResetInterval' => 'min:0,integer',
         ];
     }
 
