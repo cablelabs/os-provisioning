@@ -503,4 +503,5 @@ return [
     'Concatenate postal invoices...' => 'Füge postalische Rechnungen zusammen...',
     'Enable AGC'                => 'AGC aktivieren',
     'AGC offset'                => 'AGC Versatz',
+    'configfile_outdated'       => 'Konfigurationsdatei ist veraltet - Fehler beim Generieren der Datei!',
 ];
