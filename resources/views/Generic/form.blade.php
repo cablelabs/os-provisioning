@@ -32,7 +32,7 @@
 		<div class='col-6'>
 		@endif
 		<div class="text-center">
-			<button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_save" value="1" {{ $button_title }}>
+			<button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_save" value="1" {!! $button_title !!}>
 				<i class="fa fa-save fa-lg m-r-10" aria-hidden="true"></i>
 				{{ \App\Http\Controllers\BaseViewController::translate_view($save_button_name , 'Button') }}
 			</button>
@@ -46,7 +46,7 @@
 		<div class='col-6'>
 		@endif
 		<div class="text-center">
-			<button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_2nd_action" value="1" {{ $second_button_title }}>
+			<button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_2nd_action" value="1" {!! $second_button_title !!}>
 				<i class="fa fa-refresh fa-lg m-r-10" aria-hidden="true"></i>
 				{{ \App\Http\Controllers\BaseViewController::translate_view($second_button_name , 'Button') }}
 			</button>
