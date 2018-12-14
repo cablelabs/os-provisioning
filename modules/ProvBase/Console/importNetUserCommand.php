@@ -558,13 +558,14 @@ class importNetUserCommand extends Command
             'SnmpMibObject iso.3.6.1.4.1.4115' => [
                 'username' => 'iso.3.6.1.4.1.4115.11.1.1.1.2',
                 'password' => 'iso.3.6.1.4.1.4115.11.1.1.1.5',
-                // sipdomain is probably always set globally!
+                // TODO: sipdomain is probably always set globally!
                 'sipdomain' => 'iso.3.6.1.4.1.4115.11.1.5',
             ],
             // FritzBox
             'SnmpMibObject iso.3.6.1.4.1.872' => [
                 'username' => 'iso.3.6.1.4.1.872.1.4.3.1.4',
                 'password' => 'iso.3.6.1.4.1.872.1.4.3.1.5',
+                // TODO: sipdomain is probably always set globally!
                 'sipdomain' => 'iso.3.6.1.4.1.872.1.4.2.1.12',
             ],
             ];
@@ -609,6 +610,7 @@ class importNetUserCommand extends Command
                         }
                     }
 
+                    // TODO: set sipdomain variable for all phonenumbers of an MTA
                     $pn->{$col_name} = $string;
                 }
 
@@ -645,7 +647,7 @@ class importNetUserCommand extends Command
                 }
 
                 $pn->save();
-                Log::info('ADD Phonenumber: '.$pn->id.', '.$mta->id.', '.$pn->username.', '.($pn->active ? 'active' : 'inactive (but currently set fix to active)'));
+                Log::info('ADD Phonenumber: '.$pn->id.', '.$mta->id.', '.$pn->username.', '.($pn->active ? 'active' : 'inactive (but currently set fix to active), '.$pn->sipdomain));
 
                 foreach (['username', 'password', 'sipdomain'] as $property) {
                     if (! $pn->{$property}) {
