@@ -368,6 +368,27 @@ class FormBuilder extends CollectiveFormBuilder
     }
 
     /**
+     * Create a form range slider (Ion.RangeSlider).
+     *
+     * @author Roy Schneider
+     * @param string $name
+     * @param int $value
+     * @param array $options
+     * @return HTML
+     */
+    public function slider($name, $value = null, $options = [])
+    {
+        $options['prefix'] = isset($options['prefix']) ? $options['prefix'] : null;
+        $options['postfix'] = isset($options['postfix']) ? $options['postfix'] : null;
+        $options['skin'] = isset($options['skin']) ? $options['skin'] : 'square';
+        $options['step'] = isset($options['step']) ? $options['step'] : '1';
+
+        return '<div class="col-md-7" style="padding: 15px">
+                    <input type="text" id="slider" data-skin="'.$options['skin'].'" data-min="'.$options['min'].'" data-max="'.$options['max'].'" data-step="'.$options['step'].'" value="'.$value.'" data-postfix="'.$options['postfix'].'" data-prefix="'.$options['prefix'].'" name="'.$name.'"/>
+                </div>';
+    }
+
+    /**
      * Create a form traffic light.
      * 0 = green, 1 = yellow , 2 = red, error/null = grey
      *

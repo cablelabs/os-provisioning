@@ -31,6 +31,8 @@
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/pdfmake.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/vfs_fonts.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/buttons.colVis.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/ionRangeSlider/js/ion.rangeSlider.js')}}"></script>
+
 
 <script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
 <script src="{{asset('components/nmsprime.js')}}"></script>

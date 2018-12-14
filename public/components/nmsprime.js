@@ -169,6 +169,16 @@ function rezizeTextareas() {
   });
 }
 
+/*
+ * Init form range slider
+ */
+function rangeSlider(argument) {
+  $("#slider").ionRangeSlider({
+    type: 'single',
+    grid: true,
+  });
+}
+
 var NMS = function () {
 	"use strict";
 
@@ -180,6 +190,7 @@ var NMS = function () {
 			saveTabPillState();
       positionErdPopover();
       rezizeTextareas();
+      rangeSlider();
 		},
   };
 }();
