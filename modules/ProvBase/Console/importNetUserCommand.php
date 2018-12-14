@@ -91,12 +91,11 @@ class importNetUserCommand extends Command
         $area_filter = function ($query) use ($cluster_filter) {
             $query
                 ->whereRaw($cluster_filter)
-                // ->where(function ($query) { $query
-                // 	->whereRaw ("cm_adr.strasse like '%Flo%m%hle%'")
-                // 	->orWhereRaw ("cm_adr.ort like '%/OT Flo%'");}
-                // 	)
-;
-        };
+                ->where(function ($query) { $query
+                    ->whereRaw ("cm_adr.strasse like '%Flo%m%hle%'")
+                    ->orWhereRaw ("cm_adr.ort like '%/OT Flo%'");}
+                );
+            };
 
         $this->qoss = Qos::get();
         $this->_load_mappings();
@@ -118,7 +117,7 @@ class importNetUserCommand extends Command
                 ->selectRaw('c.*, d.Mandantnr')
                 ->join('billing.vkunden as c', 'd.Kundennr', '=', 'c.Kundennr')
                 ->where($area_filter)
-                // ->where('d.Kundennr', '=', 2049)
+                ->whereIn('d.Kundennr', [9, 331, 2139, 2152, 2181, 2184])
                 ->groupBy('d.Kundennr')->orderBy('d.Kundennr')
                 ->get();
 
@@ -220,8 +219,8 @@ class importNetUserCommand extends Command
     /**
      * Add Contract Data
      *
-     * @param 	old_contract 		Object 		Contract from old DB
-     * @param 	new_contracts 		Array 		All existing Contracts of new DB
+     * @param   old_contract        Object      Contract from old DB
+     * @param   new_contracts       Array       All existing Contracts of new DB
      */
     private function add_contract($old_contract)
     {
@@ -238,8 +237,8 @@ class importNetUserCommand extends Command
         $c->number = $old_contract->Kundennr;
         $c->number2 = $old_contract->Kundennr;
         $c->number4 = $old_contract->Kundennr;
-        // $c->salutation 		= $old_contract->anrede;
-        // $c->company 		= $old_contract->firma;
+        // $c->salutation   = $old_contract->anrede;
+        // $c->company      = $old_contract->firma;
         $names = explode(',', $old_contract->Name_1);
         $c->firstname = isset($names[1]) ? trim($names[1]) : '';
         $c->lastname = isset($names[0]) ? trim($names[0]) : '';
@@ -254,15 +253,15 @@ class importNetUserCommand extends Command
         $c->fax = $old_contract->Fax;
         $c->email = $old_contract->Email;
 
-        // $c->birthday 		= $old_contract->geburtsdatum ? : null;
+        // $c->birthday         = $old_contract->geburtsdatum ? : null;
 
         $c->network_access = 1;
         // Datumfirst & Datumlast are always null
         $c->contract_start = date('Y-m-d', strtotime('first day of this month'));
-        // $c->contract_end   	= $old_contract->abgeklemmt ? : null;
-        // $c->create_invoice 	= $old_contract->rechnung;
+        // $c->contract_end     = $old_contract->abgeklemmt ? : null;
+        // $c->create_invoice   = $old_contract->rechnung;
 
-        // $c->costcenter_id 	= $this->option('cc') ? : 0; // Dittersdorf=1, new one would be 3
+        // $c->costcenter_id    = $this->option('cc') ? : 0; // Dittersdorf=1, new one would be 3
         $c->cluster = $old_contract->Mandantnr;
         $c->net = $old_contract->Mandantnr;
 
@@ -293,7 +292,7 @@ class importNetUserCommand extends Command
     /**
      * Add Modem to the new Contract
      *
-     * @param 	new_modems 		All modems already existing in new system for this contract
+     * @param   new_modems      All modems already existing in new system for this contract
      */
     private function add_modem($new_contract, $old_modem, $db_con)
     {
@@ -436,8 +435,8 @@ class importNetUserCommand extends Command
     /**
      * Extract Cable Modem data rates from configfile
      *
-     * @param  string 	Modem Configfile
-     * @return array 	Datarates [DS, US]
+     * @param  string   Modem Configfile
+     * @return array    Datarates [DS, US]
      */
     public static function get_modem_data_rates($config)
     {
@@ -448,13 +447,13 @@ class importNetUserCommand extends Command
         $conditions = [
             'ds' => [
                 'MaxRateSustained'  => '/DsServiceFlow(.*?)}/ms',
-                'MaxRateDown' 		=> '/ClassOfService(.*?)}/ms',
-                'max_down_rate =' 	=> '/cos {(.*?)}/ms',
+                'MaxRateDown'       => '/ClassOfService(.*?)}/ms',
+                'max_down_rate ='   => '/cos {(.*?)}/ms',
                 ],
             'us' => [
                 'MaxRateSustained'  => '/UsServiceFlow(.*?)}/ms',
-                'MaxRateUp' 		=> '/ClassOfService(.*?)}/ms',
-                'max_up_rate =' 	=> '/cos {(.*?)}/ms',
+                'MaxRateUp'         => '/ClassOfService(.*?)}/ms',
+                'max_up_rate ='     => '/cos {(.*?)}/ms',
                 ],
             ];
 
@@ -539,8 +538,8 @@ class importNetUserCommand extends Command
     /**
      * Extract phonenumber infos from configfile and add new entry/entries to database
      *
-     * @param string 	MTA-Configfile
-     * @param object 	New MTA
+     * @param string    MTA-Configfile
+     * @param object    New MTA
      */
     public static function add_phonenumbers_from_config($config, $mta)
     {
