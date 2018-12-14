@@ -366,4 +366,48 @@ class FormBuilder extends CollectiveFormBuilder
     {
         return '</div>';
     }
+
+    /**
+     * Create a form traffic light.
+     * 0 = green, 1 = yellow , 2 = red, error/null = grey
+     *
+     * @author Roy Schneider
+     * @param string $name
+     * @param int $value
+     * @param array $options
+     * @return HTML
+     */
+    public function trafficLight($name, $value = null, $options = [])
+    {
+        $color = $this->trafficLightColor($value, $options);
+
+        return '<div class="col-md-7" style="text-align: center; margin-top: 5px;">
+                    <div class="btn btn-'.$color[0].' btn-circle trafficLight"></div>
+                    <div class="btn btn-'.$color[1].' btn-circle trafficLight"></div>
+                    <div class="btn btn-'.$color[2].' btn-circle trafficLight"></div>
+                </div>';
+    }
+
+    /**
+     * Defines the color of the traffic light depending on the values in view_form_fields.
+     *
+     * @author Roy Schneider
+     * @param int $value
+     * @param array $options
+     * @return array [$color0, $color1, $color2]
+     */
+    public function trafficLightColor($value, $options)
+    {
+        if (empty($options) || $value == null) {
+            return ['default', 'default', 'default'];
+        }
+
+        if (! isset($options['type'])) {
+            isset($options['green']) && $value == $options['green'] ? $color0 = 'success' : $color0 = 'default';
+            isset($options['yellow']) && $value == $options['yellow'] ? $color1 = 'warning' : $color1 = 'default';
+            isset($options['red']) && $value == $options['red'] ? $color2 = 'danger' : $color2 = 'default';
+
+            return [$color0, $color1, $color2];
+        }
+    }
 }
