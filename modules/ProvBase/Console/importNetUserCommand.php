@@ -55,7 +55,7 @@ class importNetUserCommand extends Command
      *
      * @var string
      */
-    protected static $prefix = '036424';
+    protected static $prefix = ['036424', '036481'];
 
     /**
      * Create a new command instance.
@@ -75,10 +75,12 @@ class importNetUserCommand extends Command
     public function fire()
     {
         // NOTE: Search for TODO(2) for Contract Filter!
-        // if (!$this->confirm("IMPORTANT!!!\n\nHave following things been prepared for this import?:
-        // 	(1) Created Mapping Configfile?
-        // 	(2) Has Contract filter been correctly set up (in source code)?\n"))
-        // 	return;
+        if (! $this->confirm("IMPORTANT!!!\n\nHave following things been prepared for this import?:
+            (1) Created Mapping Configfile?
+            (2) Has Contract filter been correctly set up (in source code)
+            (3) Adapted phonenumber prefix
+            \n"))
+            return;
 
         // Pre - Testing
         if (! Configfile::count()) {
@@ -597,7 +599,14 @@ class importNetUserCommand extends Command
                             break;
                         }
 
-                        $pn->number = str_replace(self::$prefix, '', $string);
+                        // better use regex or make sure that only the begin of the string is replaced by another way
+                        $prefix = '';
+                        foreach (self::$prefix as $prefix) {
+                            if (\Str::startsWith($string, $prefix)) {
+                                $pn->number = substr_replace($string, '', 0, strlen($prefix));
+                                break;
+                            }
+                        }
                     }
 
                     $pn->{$col_name} = $string;
@@ -614,7 +623,7 @@ class importNetUserCommand extends Command
                 $pn->mta_id = $mta->id;
                 $pn->port = $i;
                 $pn->country_code = '0049';
-                $pn->prefix_number = self::$prefix;
+                $pn->prefix_number = $prefix;
 
                 $pn->active = true;
                 if ($filter != 'SnmpMibObject iso.3.6.1.4.1.872') {
