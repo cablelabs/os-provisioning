@@ -113,11 +113,6 @@ class ModemController extends \BaseController
         return array_merge($a, $b, $c);
     }
 
-    protected function prepare_input_post_validation($data)
-    {
-        return unify_mac($data);
-    }
-
     /**
      * Get all management jobs for envia TEL
      *
@@ -272,7 +267,7 @@ class ModemController extends \BaseController
         // ISO 3166 country codes are uppercase
         $data['country_code'] = \Str::upper($data['country_code']);
 
-        return $data;
+        return unify_mac($data);
     }
 
     public function prepare_rules($rules, $data)
