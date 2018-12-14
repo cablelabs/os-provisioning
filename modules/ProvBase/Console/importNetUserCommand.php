@@ -79,8 +79,9 @@ class importNetUserCommand extends Command
             (1) Created Mapping Configfile?
             (2) Has Contract filter been correctly set up (in source code)
             (3) Adapted phonenumber prefix
-            \n"))
+            \n")) {
             return;
+        }
 
         // Pre - Testing
         if (! Configfile::count()) {
@@ -93,11 +94,12 @@ class importNetUserCommand extends Command
         $area_filter = function ($query) use ($cluster_filter) {
             $query
                 ->whereRaw($cluster_filter)
-                ->where(function ($query) { $query
-                    ->whereRaw ("cm_adr.strasse like '%Flo%m%hle%'")
-                    ->orWhereRaw ("cm_adr.ort like '%/OT Flo%'");}
-                );
-            };
+                ->where(function ($query) {
+                    $query
+                    ->whereRaw("cm_adr.strasse like '%Flo%m%hle%'")
+                    ->orWhereRaw("cm_adr.ort like '%/OT Flo%'");
+                });
+        };
 
         $this->qoss = Qos::get();
         $this->_load_mappings();

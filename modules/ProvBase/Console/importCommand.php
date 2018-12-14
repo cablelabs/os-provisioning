@@ -36,7 +36,7 @@ class importCommand extends Command
     /**
      * Contract ID for NetElement Modems
      *
-     * @var integer
+     * @var int
      */
     protected static $ne_contract_id = 1;
 
@@ -45,7 +45,7 @@ class importCommand extends Command
      * NOTE: Please specify product ID then
      *
      * @var bool
-     * @var integer
+     * @var int
      */
     protected static $credit = false;
     protected static $credit_id = 0;
