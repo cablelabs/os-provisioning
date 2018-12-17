@@ -631,7 +631,7 @@ class importCommand extends Command
                 'valid_to' 			=> $item->bis,
                 'valid_to_fixed' 	=> 1,
                 'credit_amount' 	=> (-1) * $item->preis,
-                'accounting_text' 	=> $item->buchungstext,
+                'accounting_text' 	=> is_null($item->buchungstext) ? '' : $item->buchungstext,
             ]);
         }
     }
