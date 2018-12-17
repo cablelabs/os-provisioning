@@ -41,6 +41,13 @@ class importCommand extends Command
     protected static $ne_contract_id = 1;
 
     /**
+     * Old Prefix of contract numbers
+     *
+     * @var string
+     */
+    protected static $contract_nr_prefix = '002-';
+
+    /**
      * Set to true if customers that had volume tariffs shall get a credit
      * NOTE: Please specify product ID then
      *
@@ -351,8 +358,8 @@ class importCommand extends Command
 
         // import all other fields
         $c->number = $old_contract->vertragsnummer;
-        $c->number2 = '002-'.$old_contract->vertragsnummer;
-        $c->number4 = '002-'.$old_contract->kundennr;
+        $c->number2 = self::$contract_nr_prefix.$old_contract->vertragsnummer;
+        $c->number4 = self::$contract_nr_prefix.$old_contract->kundennr;
         $c->salutation = $old_contract->anrede;
         $c->company = $old_contract->firma;
         $c->firstname = $old_contract->vorname;
