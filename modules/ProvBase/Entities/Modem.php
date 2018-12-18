@@ -582,6 +582,10 @@ class Modem extends \BaseModel
         }
 
         // MaxCPE MUST be between 1 and 254 according to the standard
+        if ($max_cpe < 1) {
+            $max_cpe = 1;
+            $network_access = 0;
+        }
         if ($max_cpe > 254) {
             $max_cpe = 254;
         }

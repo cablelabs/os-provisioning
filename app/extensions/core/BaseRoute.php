@@ -204,6 +204,13 @@ class BaseRoute
                 $options,
             ]);
 
+            Route::get("$name/{{$name}}/status", [
+                'as' => $name.'.api_status',
+                'uses' => $controller.'@api_status',
+                'middleware' => ['api', 'auth.basic', 'can:view,'.$models[$name]],
+                $options,
+            ]);
+
             Route::patch("$name/{{$name}}", [
                 'as' => $name.'.api_update',
                 'uses' => $controller.'@api_update',

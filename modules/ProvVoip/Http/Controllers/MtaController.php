@@ -85,4 +85,33 @@ class MtaController extends \BaseController
 
         return $tabs;
     }
+
+    /**
+     * Restart MTA via API
+     *
+     * @return JsonResponse
+     *
+     * @author Ole Ernst
+     */
+    public function api_restart($ver, $id)
+    {
+        if ($ver !== '0') {
+            return response()->json(['ret' => "Version $ver not supported"]);
+        }
+
+        if (! $mta = static::get_model_obj()->find($id)) {
+            return response()->json(['ret' => 'Object not found']);
+        }
+
+        $mta->restart();
+
+        $err = collect([
+            \Session::get('tmp_info_above_form'),
+            \Session::get('tmp_warning_above_form'),
+            \Session::get('tmp_error_above_form'),
+        ])->collapse()
+        ->implode(', ');
+
+        return response()->json(['ret' => $err ?: 'success']);
+    }
 }

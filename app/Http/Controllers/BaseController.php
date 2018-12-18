@@ -1085,6 +1085,22 @@ class BaseController extends Controller
     }
 
     /**
+     * Get status of object via API
+     *
+     * @author Ole Ernst
+     *
+     * @return JsonResponse
+     */
+    public function api_status($ver, $id)
+    {
+        if ($ver === '0') {
+            return response()->json(['ret' => 'success']);
+        } else {
+            return response()->json(['ret' => "Version $ver not supported"]);
+        }
+    }
+
+    /**
      * API equivalent of index()
      *
      * @author Ole Ernst

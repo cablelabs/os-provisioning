@@ -257,7 +257,7 @@ class BaseViewController extends Controller
                 // Ping: Only check if ip is online
                 if ($model[$field['name']]) {
                     // $model[$field['name']] is null e.g. on Cmts/create
-                    exec('sudo ping -c1 -i0 -w1 '.$model[$field['name']], $ping, $offline);
+                    exec('sudo ping -c1 -i0 -w1 '.explode(':', $model[$field['name']])[0], $ping, $offline);
 
                     if ($offline) {
                         $field['help'] = 'Device seems to be Offline!';
