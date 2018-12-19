@@ -372,7 +372,7 @@ class FormBuilder extends CollectiveFormBuilder
      *
      * @author Roy Schneider
      * @param string $name
-     * @param int $value
+     * @param mixed $value
      * @param array $options
      * @return HTML
      */

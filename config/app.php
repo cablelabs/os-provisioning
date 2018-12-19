@@ -246,4 +246,15 @@ return [
         'Bouncer' => Silber\Bouncer\BouncerFacade::class,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | NMSPRIME Application Environment
+    |--------------------------------------------------------------------------
+    |
+    | These values are nmsprime specific environment variables.
+    | They are all set in your global.env file.
+    |
+    */
+    'googleApiKey' => env('GOOGLE_API_KEY'),
+
 ];
