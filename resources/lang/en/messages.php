@@ -504,5 +504,9 @@ return [
     'Concatenate postal invoices...' => 'Concatenate postal invoices...',
     'Enable AGC'                => 'Enable AGC',
     'AGC offset'                => 'AGC offset',
+    'spectrum'                  => 'Spectrum',
+    'levelTenthDb'              => 'Level in dB',
+    'noSpectrum'                => 'No Spectrum available for this Modem',
+    'createSpectrum'            => 'Create Spectrum',
     'configfile_outdated'       => 'Configfile is outdated - Error while generating the file!',
 ];
