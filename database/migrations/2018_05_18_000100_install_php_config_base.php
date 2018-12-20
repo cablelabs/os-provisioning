@@ -26,6 +26,9 @@ class InstallPhpConfigBase extends BaseMigration
 
         $tz = date_default_timezone_get();
         foreach (['/etc/php.ini', '/etc/opt/rh/rh-php71/php.ini'] as $file) {
+            if (! is_file($file)) {
+                continue;
+            }
             $str = file_get_contents($file);
             $str = preg_replace('/^;date\.timezone =$/m', "date.timezone = $tz", $str);
             $str = preg_replace('/^memory_limit =.*/m', 'memory_limit = 1024M', $str);

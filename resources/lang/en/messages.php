@@ -508,5 +508,5 @@ return [
     'levelTenthDb'              => 'Level in dB',
     'noSpectrum'                => 'No Spectrum available for this Modem',
     'createSpectrum'            => 'Create Spectrum',
-
+    'configfile_outdated'       => 'Configfile is outdated - Error while generating the file!',
 ];

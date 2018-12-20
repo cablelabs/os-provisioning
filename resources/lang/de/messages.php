@@ -508,5 +508,5 @@ return [
     'levelDb'                   => 'Pegel in dB',
     'noSpectrum'                => 'Für dieses Modem kann kein Spektrum erstellt werden',
     'createSpectrum'            => 'Spektrum erstellen',
-
+    'configfile_outdated'       => 'Konfigurationsdatei ist veraltet - Fehler beim Generieren der Datei!',
 ];
