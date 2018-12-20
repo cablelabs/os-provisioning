@@ -938,8 +938,7 @@ class Contract extends \BaseModel
         }
 
         if (! $valid_tariff) {
-            $this->qos_id = 0;
-            $this->save();
+            self::where('id', $this->id)->update(['qos_id' => 0]);
         }
     }
 

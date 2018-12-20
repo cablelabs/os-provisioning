@@ -34,6 +34,30 @@ class importCommand extends Command
     protected $description = 'import km3';
 
     /**
+     * Contract ID for NetElement Modems
+     *
+     * @var int
+     */
+    protected static $ne_contract_id = 1;
+
+    /**
+     * Old Prefix of contract numbers
+     *
+     * @var string
+     */
+    protected static $contract_nr_prefix = '002-';
+
+    /**
+     * Set to true if customers that had volume tariffs shall get a credit
+     * NOTE: Please specify product ID then
+     *
+     * @var bool
+     * @var int
+     */
+    protected static $credit = false;
+    protected static $credit_id = 0;
+
+    /**
      * Errors that will be written to stdout when command finishes
      *
      * @var array
@@ -334,8 +358,8 @@ class importCommand extends Command
 
         // import all other fields
         $c->number = $old_contract->vertragsnummer;
-        $c->number2 = '002-'.$old_contract->vertragsnummer;
-        $c->number4 = '002-'.$old_contract->kundennr;
+        $c->number2 = self::$contract_nr_prefix.$old_contract->vertragsnummer;
+        $c->number4 = self::$contract_nr_prefix.$old_contract->kundennr;
         $c->salutation = $old_contract->anrede;
         $c->company = $old_contract->firma;
         $c->firstname = $old_contract->vorname;
@@ -470,7 +494,7 @@ class importCommand extends Command
             if ($prod_id <= 0) {
                 $msg = "\tProduct $prod_id does not exist for $key: $tarif [ContractNr $new_contract->number]";
                 \Log::error($msg);
-                $this->errors = $msg;
+                $this->errors[] = $msg;
                 continue;
             }
 
@@ -492,6 +516,10 @@ class importCommand extends Command
      */
     private function add_tarif_credit($new_contract, $old_contract)
     {
+        if (! self::$credit) {
+            return;
+        }
+
         // TODO(3) check restrictions of volume tarifs!
         if ((strpos($old_contract->tariffname, 'Volumen') === false) && (strpos($old_contract->tariffname, 'Speed') === false) && (strpos($old_contract->tariffname, 'Basic') === false)) {
             return;
@@ -501,7 +529,7 @@ class importCommand extends Command
 
         Item::create([
             'contract_id' 		=> $new_contract->id,
-            'product_id' 		=> 10,
+            'product_id' 		=> self::$credit_id,
             'valid_from' 		=> date('Y-m-01', strtotime('first day of next month')),
             'valid_from_fixed' 	=> 1,
             'valid_to' 			=> date('Y-m-d', strtotime('last day of next year')),
@@ -603,7 +631,7 @@ class importCommand extends Command
                 'valid_to' 			=> $item->bis,
                 'valid_to_fixed' 	=> 1,
                 'credit_amount' 	=> (-1) * $item->preis,
-                'accounting_text' 	=> $item->buchungstext,
+                'accounting_text' 	=> is_null($item->buchungstext) ? '' : $item->buchungstext,
             ]);
         }
     }
@@ -721,7 +749,7 @@ class importCommand extends Command
         if ($modem->configfile_id == 0) {
             $msg = "No Configfile could be assigned to Modem $modem->id Old ModemID: $old_modem->id [ContractNr $new_contract->number]";
             \Log::error($msg);
-            $this->errors = $msg;
+            $this->errors[] = $msg;
         }
 
         \Log::info("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
@@ -854,7 +882,7 @@ class importCommand extends Command
 
         Log::info('ADD NETELEMENT Modems');
 
-        $contract = Contract::find(500000);
+        $contract = Contract::find(self::$ne_contract_id);
 
         echo "ADD NETELEMENT Modems\n";
         $bar = $this->output->createProgressBar(count($devices));
@@ -870,7 +898,7 @@ class importCommand extends Command
 
     private static function _blockcpe($contract)
     {
-        \Log::info("Disable network_access of all modems of contract number $contract->number");
+        \Log::notice("Disable network_access of all modems of contract number $contract->number");
 
         foreach ($contract->modems as $cm) {
             $cm->network_access = 0;
