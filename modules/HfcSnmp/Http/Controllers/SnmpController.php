@@ -248,7 +248,7 @@ class SnmpController extends \BaseController
                         continue;
                     }
 
-                    $value = self::_build_diff_and_divide($subparam, $index, $results, $value, isset($old_vals->{$oid}) ? $old_vals->{$oid} : 0);
+                    $value = self::_build_diff_and_divide($subparam, $index, $results, $value, $old_vals);
 
                     // order results for initial view
                     if ($ordered) {
@@ -280,7 +280,7 @@ class SnmpController extends \BaseController
                     $index = strrchr($oid, '.'); 								// row in table
                     $suboid = substr($oid, 0, strlen($oid) - strlen($index)); 	// column in table
                     // join relevant information before calling diff function
-                    $value = self::_build_diff_and_divide($param, $index, $results, $value, isset($old_vals->{$oid}) ? $old_vals->{$oid} : 0);
+                    $value = self::_build_diff_and_divide($param, $index, $results, $value, $old_vals);
 
                     // order results for initial view
                     if ($ordered) {
@@ -336,8 +336,10 @@ class SnmpController extends \BaseController
      *
      * @author Nino Ryschawy
      */
-    private static function _build_diff_and_divide($param, &$index, &$results, $value, $old_value)
+    private static function _build_diff_and_divide($param, &$index, &$results, $value, $old_values)
     {
+        $old_value = isset($old_values->{$param->oidoid.$index}) ? $old_values->{$param->oidoid.$index} : 0;
+
         // Subtract old value from new value
         if ($param->diff_param) {
             $value -= $old_value;
@@ -349,12 +351,20 @@ class SnmpController extends \BaseController
                 $param->divide_by = \Acme\php\ArrayHelper::str_to_array($param->divide_by);
             }
 
-            $divisor = 0;
+            $divisor_total = 0;
             foreach ($param->divide_by as $divisor_oid) {
-                $divisor += $results[$divisor_oid.$index];
+                $divisor = $results[$divisor_oid.$index];
+
+                // For differential params build difference of divisor to old value as well
+                if ($param->diff_param) {
+                    $old_value = isset($old_values->{$divisor_oid.$index}) ? $old_values->{$divisor_oid.$index} : 0;
+                    $divisor = $results[$divisor_oid.$index] - $old_value;
+                }
+
+                $divisor_total += $divisor;
             }
 
-            $value = $divisor ? round($value / $divisor * 100, 2) : $value;
+            $value = $divisor_total ? round($value / $divisor_total * 100, 2) : $value;
         }
         // divide value by fix number (e.g. to change the power(Potenz) of the value)
         elseif ($param->oid->unit_divisor && is_numeric($value)) {
