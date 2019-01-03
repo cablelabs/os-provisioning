@@ -32,24 +32,24 @@
 	</div>
 	@endif
 
-@if (isset ($form_fields['list']))
+	{{-- Error | Success Message --}}
+	@if (Session::has('message'))
+		@DivOpen(12)
+			@if (Session::get('message_color') == 'primary')
+				@DivOpen(5) @DivClose()
+				@DivOpen(4)
+			@endif
+			<h4 style='color:{{ Session::get('message_color') }}' id='success_msg'>{{ Session::get('message') }}</h4>
+			@if (Session::get('message_color') == 'primary')
+				@DivClose()
+			@endif
+		@DivClose()
+		<?php Session::forget(['message', 'message_color']) ?>
+	@endif
 
-	{!! Form::model($view_var, array('route' => array($form_update, $view_var->id, $param_id, $index), 'method' => 'put', 'files' => true)) !!}
+	@if (isset ($form_fields['list']))
 
-		{{-- Error | Success Message --}}
-		@if (Session::has('message'))
-			@DivOpen(12)
-				@if (Session::get('message_color') == 'primary')
-					@DivOpen(5) @DivClose()
-					@DivOpen(4)
-				@endif
-				<h4 style='color:{{ Session::get('message_color') }}' id='success_msg'>{{ Session::get('message') }}</h4>
-				@if (Session::get('message_color') == 'primary')
-					@DivClose()
-				@endif
-			@DivClose()
-		@endif
-
+		{!! Form::model($view_var, array('route' => array($form_update, $view_var->id, $param_id, $index), 'method' => 'put', 'files' => true)) !!}
 
 		{{-- LIST --}}
 

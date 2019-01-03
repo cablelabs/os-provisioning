@@ -3,6 +3,7 @@
 namespace Modules\HfcSnmp\Http\Controllers;
 
 use Log;
+use Exception;
 use Modules\HfcSnmp\Entities\OID;
 use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcSnmp\Entities\Parameter;
@@ -21,9 +22,9 @@ class SnmpController extends \BaseController
     private $device;
 
     /**
-     * @var  array  of OID-Objects that threw an exception during SNMP-Set
+     * @var  array  of OID-Strings that threw an exception during SNMP-Set
      */
-    private $set_errors = [];
+    private $errors = [];
 
     /**
      * @var  bool 	If Set we only want to show the 3rd dimension parameters of this index for the controlling view
@@ -75,7 +76,7 @@ class SnmpController extends \BaseController
 
         try {
             $form_fields = $this->get_snmp_values($params, true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return self::handle_exception($e);
         }
 
@@ -92,6 +93,14 @@ class SnmpController extends \BaseController
         $form_update = 'NetElement.controlling_update';
 
         $reload = $this->device->netelementtype->page_reload_time ?: 0;
+
+        if ($this->errors) {
+            $message = trans('messages.snmp.errors_walk', ['oids' => implode(', ', $this->errors)]);
+            $message_color = 'blue';
+
+            \Session::flash('message', $message);
+            \Session::flash('message_color', $message_color);
+        }
 
         return \View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'tabs', 'form_fields', 'form_update', 'route_name', 'headline', 'reload', 'param_id', 'index')));
     }
@@ -118,8 +127,8 @@ class SnmpController extends \BaseController
         $msg_color = 'blue';
 
         // Set Error Message in case some OIDs could not be set
-        if ($this->set_errors) {
-            $msg = 'The following Parameters could not be Set: '.implode(', ', $this->set_errors).'!';
+        if ($this->errors) {
+            $msg = trans('messages.snmp.errors_set', ['oids' => implode(', ', $this->errors)]);
             $msg_color = 'red';
         }
 
@@ -272,7 +281,7 @@ class SnmpController extends \BaseController
             }
             // Non Table Param - can not have subparams
             else {
-                $results = $this->snmp_walk($param->oid->oid, $indices);
+                $results = $this->snmp_walk($param->oid, $indices);
                 $values_to_store = array_merge($values_to_store, $results);
 
                 // Calculate differential param
@@ -420,7 +429,8 @@ class SnmpController extends \BaseController
      *
      * NOTE: snmp2 is minimum 20 times faster for several snmpwalks
      *
-     * @param 	string 	SNMP Object Identifier
+     * @param 	object
+     * @param   array   of strings
      * @return 	array 	SNMP values in form: [OID => value]
      *
      * @author Torsten Schmidt, Nino Ryschawy
@@ -429,27 +439,39 @@ class SnmpController extends \BaseController
     {
         $community = $this->_get_community();
 
+        $oid_s = $oid->oid;
+
         // Log
-        Log::debug('snmpwalk '.$this->device->ip.' '.$oid);
+        Log::debug('snmpwalk '.$this->device->ip.' '.$oid_s);
 
         if ($indices) {
             try {
-                // check if snmp version 2 is supported - use it - otherwise use version 1
-                snmp2_get($this->device->ip, $community, '1.3.6.1.2.1.1.1', $this->timeout, $this->retry);
-
                 foreach ($indices as $index) {
-                    $results[$oid.'.'.$index] = snmp2_get($this->device->ip, $community, $oid.'.'.$index, $this->timeout, $this->retry);
+                    $results["$oid_s.$index"] = snmp2_get($this->device->ip, $community, "$oid_s.$index", $this->timeout, $this->retry);
                 }
-            } catch (\Exception $e) {
-                foreach ($indices as $index) {
-                    $results[$oid.'.'.$index] = snmpget($this->device->ip, $community, $oid.'.'.$index, $this->timeout, $this->retry);
+            } catch (Exception $e) {
+                try {
+                    foreach ($indices as $index) {
+                        $results["$oid_s.$index"] = snmpget($this->device->ip, $community, "$oid_s.$index", $this->timeout, $this->retry);
+                    }
+                } catch (Exception $e) {
+                    $results = [];
+
+                    $name = $oid->name_gui ?: $oid->name;
+                    $this->errors[] = "$name (.$index)";
                 }
             }
         } else {
             try {
-                $results = snmp2_real_walk($this->device->ip, $community, $oid, $this->timeout, $this->retry);
-            } catch (\Exception $e) {
-                $results = snmprealwalk($this->device->ip, $community, $oid, $this->timeout, $this->retry);
+                $results = snmp2_real_walk($this->device->ip, $community, $oid_s, $this->timeout, $this->retry);
+            } catch (Exception $e) {
+                try {
+                    $results = snmprealwalk($this->device->ip, $community, $oid_s, $this->timeout, $this->retry);
+                } catch (Exception $e) {
+                    $results = [];
+
+                    $this->errors[] = $oid->name_gui ?: $oid->name;
+                }
             }
         }
 
@@ -482,13 +504,19 @@ class SnmpController extends \BaseController
             foreach ($param->children as $param) {
                 // Note: snmpwalk -CE ends on this OID - makes it much faster
                 // exec('snmpwalk -v2c -CE 1.3.6.1.2.1.10.127.1.1.1.1.3.6725 -c'.$this->_get_community().' '.$this->device->ip.' '.$oid->oid, $results);
-                $results += $this->snmp_walk($param->oid->oid, $indices);
+                $results += $this->snmp_walk($param->oid, $indices);
             }
         }
         // standard table OID (all suboids(columns) and elements (rows))
         else {
             Log::debug('snmp2_real_walk (table) '.$this->device->ip.' '.$oid->oid);
-            $results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->oid);
+            try {
+                $results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->oid);
+            } catch (Exception $e) {
+                $results = [];
+
+                $this->errors[] = $oid->name_gui ?: $oid->name;
+            }
         }
 
         if (! $results) {
@@ -598,7 +626,7 @@ class SnmpController extends \BaseController
 
                 $old_vals->{$full_oid} = $value;
             } else {
-                $this->set_errors[] = $oid_o->name_gui ?: $oid_o->name;
+                $this->errors[] = $oid_o->name_gui ?: $oid_o->name;
             }
         }
 
@@ -736,7 +764,7 @@ class SnmpController extends \BaseController
     /**
      * Returns the appropriate View dependent on the thrown Exception
      */
-    private static function handle_exception(\Exception $e)
+    private static function handle_exception(Exception $e)
     {
         $msg = $e->getMessage();
 

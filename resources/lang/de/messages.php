@@ -136,6 +136,10 @@ return [
     'Save / Restart'			=> 'Speichern / Neustart',
     'Serial Number'				=> 'Seriennummer',
     'Sign me in' 				=> 'Anmelden',
+    'snmp' => [
+        'errors_walk' => 'Die Abfrage folgender OIDs schlug fehl: :oids',
+        'errors_set' => 'Das Setzen folgender Parameter schlug fehl: :oids',
+    ],
     'State'						=> 'Status',
     'Street'					=> 'Straße',
     'Typee'						=> 'Typ',
