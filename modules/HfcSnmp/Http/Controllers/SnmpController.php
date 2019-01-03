@@ -3,6 +3,7 @@
 namespace Modules\HfcSnmp\Http\Controllers;
 
 use Log;
+use Session;
 use Exception;
 use Modules\HfcSnmp\Entities\OID;
 use Modules\HfcReq\Entities\NetElement;
@@ -77,7 +78,19 @@ class SnmpController extends \BaseController
         try {
             $form_fields = $this->get_snmp_values($params, true);
         } catch (Exception $e) {
-            return self::handle_exception($e);
+            $form_fields = null;
+        }
+
+        // Error messages
+        if (isset($e)) {
+            Session::push('tmp_error_above_form', $e->getMessage());
+        }
+        elseif (! $form_fields) {
+            $msg = trans('messages.snmp.undefined');
+            Session::push('tmp_info_above_form', $msg);
+        } elseif ($this->errors) {
+            $msg = trans('messages.snmp.errors_walk', ['oids' => implode(', ', $this->errors)]);
+            Session::push('tmp_error_above_form', $msg);
         }
 
         // Init View
@@ -93,14 +106,6 @@ class SnmpController extends \BaseController
         $form_update = 'NetElement.controlling_update';
 
         $reload = $this->device->netelementtype->page_reload_time ?: 0;
-
-        if ($this->errors) {
-            $message = trans('messages.snmp.errors_walk', ['oids' => implode(', ', $this->errors)]);
-            $message_color = 'blue';
-
-            \Session::flash('message', $message);
-            \Session::flash('message_color', $message_color);
-        }
 
         return \View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'tabs', 'form_fields', 'form_update', 'route_name', 'headline', 'reload', 'param_id', 'index')));
     }
@@ -129,10 +134,11 @@ class SnmpController extends \BaseController
         // Set Error Message in case some OIDs could not be set
         if ($this->errors) {
             $msg = trans('messages.snmp.errors_set', ['oids' => implode(', ', $this->errors)]);
-            $msg_color = 'red';
+
+            Session::push('tmp_error_above_form', $msg);
         }
 
-        return \Redirect::route('NetElement.controlling_edit', [$id, $param_id, $index])->with('message', $msg)->with('message_color', $msg_color);
+        return \Redirect::route('NetElement.controlling_edit', [$id, $param_id, $index]);
     }
 
     /**
@@ -437,6 +443,7 @@ class SnmpController extends \BaseController
      */
     public function snmp_walk($oid, $indices = [])
     {
+        $results = [];
         $community = $this->_get_community();
 
         $oid_s = $oid->oid;
@@ -446,19 +453,33 @@ class SnmpController extends \BaseController
 
         if ($indices) {
             try {
+                // check if snmp version 2 is supported - use it - otherwise use version 1
+                snmp2_get($this->device->ip, $community, '1.3.6.1.2.1.1.1.0', $this->timeout, $this->retry);
+
                 foreach ($indices as $index) {
-                    $results["$oid_s.$index"] = snmp2_get($this->device->ip, $community, "$oid_s.$index", $this->timeout, $this->retry);
+                    try {
+                        $results["$oid_s.$index"] = snmp2_get($this->device->ip, $community, "$oid_s.$index", $this->timeout, $this->retry);
+                    } catch (Exception $e) {
+                        $name = $oid->name_gui ?: $oid->name;
+                        $this->errors[] = "$name.$index";
+                        \Log::error("snmp2_get: $name.$index");
+                    }
                 }
             } catch (Exception $e) {
                 try {
+                    snmpget($this->device->ip, $community, '1.3.6.1.2.1.1.1.0', $this->timeout, $this->retry);
+
                     foreach ($indices as $index) {
-                        $results["$oid_s.$index"] = snmpget($this->device->ip, $community, "$oid_s.$index", $this->timeout, $this->retry);
+                        try {
+                            $results["$oid_s.$index"] = snmp2_get($this->device->ip, $community, "$oid_s.$index", $this->timeout, $this->retry);
+                        } catch (Exception $e) {
+                            $name = $oid->name_gui ?: $oid->name;
+                            $this->errors[] = "$name.$index";
+                            \Log::error("snmpget: $name.$index");
+                        }
                     }
                 } catch (Exception $e) {
                     $results = [];
-
-                    $name = $oid->name_gui ?: $oid->name;
-                    $this->errors[] = "$name (.$index)";
                 }
             }
         } else {
@@ -473,6 +494,10 @@ class SnmpController extends \BaseController
                     $this->errors[] = $oid->name_gui ?: $oid->name;
                 }
             }
+        }
+
+        if (isset($e) && ! $results) {
+            self::check_reachability($e);
         }
 
         return $results;
@@ -513,9 +538,11 @@ class SnmpController extends \BaseController
             try {
                 $results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->oid);
             } catch (Exception $e) {
-                $results = [];
+                self::check_reachability($e);
 
+                $results = [];
                 $this->errors[] = $oid->name_gui ?: $oid->name;
+                \Log::error("snmp2_real_walk: ".$oid->name_gui ?: $oid->name);
             }
         }
 
@@ -762,40 +789,17 @@ class SnmpController extends \BaseController
     }
 
     /**
-     * Returns the appropriate View dependent on the thrown Exception
+     * Check if device was reachable via snmp
+     *
+     * @param exception
+     * @throws exception    when device is not reachable
      */
-    private static function handle_exception(Exception $e)
+    public static function check_reachability(Exception $e)
     {
         $msg = $e->getMessage();
 
-        // Wrong index specified
-        if (strpos($msg, 'snmp2_get') !== false && strpos($msg, 'No Such Instance currently exists') !== false) {
-            $oid = substr($msg, $start = (strpos($msg, '\'') + 1), strpos(substr($msg, $start + 1), '\'') + 1);
-
-            $index = strrchr($oid, '.');
-            $oid = substr($oid, 0, strlen($oid) - strlen($index));
-            $index = substr($index, 1);
-
-            $error = 'snmp_get() failed';
-            $message = "There's no Index '$index' for this OID '$oid' on this NetElement! Change this Index please!";
-
-            return \View::make('errors.generic', compact('message', 'error'));
+        if (stripos($msg, 'Name or service not known') !== false || stripos($msg, 'No response from') !== false) {
+            throw new Exception(trans('messages.snmp.unreachable'));
         }
-
-        // Device not reachable/online
-        if (strpos($msg, 'snmp') !== false && (($x = strpos($msg, 'No response from')) !== false)) {
-            $ip = substr($msg, $x + 16, 15);
-            $method = explode(':', $msg)[0];
-
-            $error = "$method failed";
-            $message = "Device with IP $ip not reachable";
-
-            return \View::make('errors.generic', compact('message', 'error'));
-        }
-
-        $error = '';
-        $message = $msg;
-
-        return \View::make('errors.generic', compact('message', 'error'));
     }
 }

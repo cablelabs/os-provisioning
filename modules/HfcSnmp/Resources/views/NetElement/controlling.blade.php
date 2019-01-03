@@ -32,20 +32,9 @@
 	</div>
 	@endif
 
-	{{-- Error | Success Message --}}
-	@if (Session::has('message'))
-		@DivOpen(12)
-			@if (Session::get('message_color') == 'primary')
-				@DivOpen(5) @DivClose()
-				@DivOpen(4)
-			@endif
-			<h4 style='color:{{ Session::get('message_color') }}' id='success_msg'>{{ Session::get('message') }}</h4>
-			@if (Session::get('message_color') == 'primary')
-				@DivClose()
-			@endif
-		@DivClose()
-		<?php Session::forget(['message', 'message_color']) ?>
-	@endif
+	{{-- Error Message --}}
+	<?php $blade_type = 'form' ?>
+	@include('Generic.above_infos')
 
 	@if (isset ($form_fields['list']))
 
@@ -137,8 +126,6 @@
 
 	{!! Form::close() !!}
 
-@else
-	<h2>No controlling defined</h2>
 @endif
 
 	{{-- javascript --}}

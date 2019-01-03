@@ -139,6 +139,7 @@ return [
     'snmp' => [
         'errors_walk' => 'Querying the following OIDs failed: :oids',
         'errors_set' => 'The following Parameters could not be Set: :oids',
+        'unreachable' => 'The device is not reachable via SNMP.'
     ],
     'State'						=> 'State',
     'Street'					=> 'Street',

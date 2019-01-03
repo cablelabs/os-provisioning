@@ -139,6 +139,7 @@ return [
     'snmp' => [
         'errors_walk' => 'Die Abfrage folgender OIDs schlug fehl: :oids',
         'errors_set' => 'Das Setzen folgender Parameter schlug fehl: :oids',
+        'unreachable' => 'Das Gerät ist nicht per SNMP erreichbar.',
     ],
     'State'						=> 'Status',
     'Street'					=> 'Straße',
