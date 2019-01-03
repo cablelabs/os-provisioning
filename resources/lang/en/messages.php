@@ -239,7 +239,7 @@ return [
     'modem_restart_success_direct' => 'Restarted Modem directly via SNMP',
     'Item'						=> 'Item',
     'Items'						=> 'Items',
-    'modem_save_button_title' 	=> 'Saves changed data. Determines new geoposition when address data was changed (and assigns it to a new MPR if necessary). Rebuilds the configfile and restarts the modem if at least one of the following has changed: Public IP, network access, configfile, QoS, MAC-address',
+    'modem_save_button_title' 	=> 'Saves changed data. Determines new geoposition when address data was changed and assigns it to a new MPR (if x/y coordinate was automatically or manually changed). Rebuilds the configfile and restarts the modem if at least one of the following has changed: Public IP, network access, configfile, QoS, MAC-address.',
     'Product'					=> 'Product',
     'Start date' 				=> 'Start date',
     'Active from start date' 	=> 'Active from start date',

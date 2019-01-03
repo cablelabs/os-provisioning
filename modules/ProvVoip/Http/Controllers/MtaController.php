@@ -53,7 +53,7 @@ class MtaController extends \BaseController
         ];
     }
 
-    protected function prepare_input_post_validation($data)
+    protected function prepare_input($data)
     {
         return unify_mac($data);
     }

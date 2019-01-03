@@ -408,3 +408,50 @@ table .index_check {
   border: 1px solid #ddd !important;
   border-bottom-color: #fff !important;
 }
+
+@media(max-width: 1024px)
+{
+    .card, .ui-sortable
+    {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin: 0;
+    }
+
+    .widget .d-flex
+    {
+        display: block;
+    }
+
+    #jstree-default ul
+    {
+        margin: 0;
+        padding: 0px !important;
+        padding-left: 10px !important;
+    }
+
+    #jstree-default ul li
+    {
+        margin: 0;
+        padding: 0px !important;
+        padding-left: 10px !important;
+    }
+
+    #jstree-default ul li div
+    {
+        background: #fff;
+    }
+
+    .row > [class*="col-"].ui-sortable
+    {
+        min-height: 0px;
+    }
+}
+
+.trafficLight {
+    pointer-events: none;
+    height: 25px;
+    box-shadow: 1px 2px 3px #000;
+}
