@@ -13,7 +13,6 @@
 @stop
 
 
-
 @section ('content_left')
 
 	@include ('Generic.logging')
@@ -36,12 +35,11 @@
 	<?php $blade_type = 'form' ?>
 	@include('Generic.above_infos')
 
+	{{-- PARAMETERS --}}
 	@if (isset ($form_fields['list']))
-
 		{!! Form::model($view_var, array('route' => array($form_update, $view_var->id, $param_id, $index), 'method' => 'put', 'files' => true)) !!}
 
 		{{-- LIST --}}
-
 		@if ($form_fields['list'])
 		<div class="col-md-12 row" style="padding-right: 0px;"><div class="col-md-12 well row">
 		@foreach ($form_fields['list'] as $field)
@@ -51,7 +49,6 @@
 		@endforeach
 		</div></div>
 		@endif
-
 
 		{{-- FRAMES --}}
 		@if ($form_fields['frame']['linear'])
@@ -90,7 +87,6 @@
 			</div>
 		@endforeach
 
-
 		{{-- TABLES --}}
 		@foreach ($form_fields['table'] as $table)
 			<table class="table controllingtable table-condensed table-bordered d-table" id="datatable">
@@ -114,7 +110,6 @@
 			</table>
 		@endforeach
 
-
 	{{-- Save Button --}}
 	<div class="d-flex justify-content-center">
 		<input
@@ -131,8 +126,8 @@
 	{{-- javascript --}}
 	@include('Generic.form-js')
 
-
 @stop
+
 
 @section('javascript_extra')
 {{-- JS DATATABLE CONFIG --}}

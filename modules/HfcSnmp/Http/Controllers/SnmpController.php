@@ -84,8 +84,7 @@ class SnmpController extends \BaseController
         // Error messages
         if (isset($e)) {
             Session::push('tmp_error_above_form', $e->getMessage());
-        }
-        elseif (! $form_fields) {
+        } elseif (! $form_fields) {
             $msg = trans('messages.snmp.undefined');
             Session::push('tmp_info_above_form', $msg);
         } elseif ($this->errors) {
@@ -542,7 +541,7 @@ class SnmpController extends \BaseController
 
                 $results = [];
                 $this->errors[] = $oid->name_gui ?: $oid->name;
-                \Log::error("snmp2_real_walk: ".$oid->name_gui ?: $oid->name);
+                \Log::error('snmp2_real_walk: '.$oid->name_gui ?: $oid->name);
             }
         }
 
