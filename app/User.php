@@ -177,7 +177,9 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      */
     public function isPasswordExpired() : bool
     {
-        $passwordInterval = \Cache::get('GlobalConfig')->passwordResetInterval;
+        $passwordInterval = \Cache::get('GlobalConfig', function () {
+            return \App\GlobalConfig::first();
+        })->passwordResetInterval;
 
         if ($passwordInterval === 0) {
             return false;
