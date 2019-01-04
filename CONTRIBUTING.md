@@ -33,7 +33,7 @@
 
 * If you want to contribute to [Forum](https://devel.roetzer-engineering.com/confluence/display/nmsprimeforum) please use anaonymous users for now.
 
-* If you want to contribute to [Official Documentation](https://devel.roetzer-engineering.com/confluence/display/NMS/NMS+PRIME), use either comment function or request a confluence access under [Mail](support@roetzer-engineering.com).
+* If you want to contribute to [Official Documentation](https://devel.roetzer-engineering.com/confluence/display/NMS/NMS+PRIME), use either comment function or request a confluence access under support@roetzer-engineering.com.
 
 NMS Prime is a open source project. We encourage you to [become a member](https://www.nmsprime.com/about)!
 
