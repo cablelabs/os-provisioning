@@ -13,7 +13,6 @@
 @stop
 
 
-
 @section ('content_left')
 
 	@include ('Generic.logging')
@@ -32,27 +31,15 @@
 	</div>
 	@endif
 
-@if (isset ($form_fields['list']))
+	{{-- Error Message --}}
+	<?php $blade_type = 'form' ?>
+	@include('Generic.above_infos')
 
-	{!! Form::model($view_var, array('route' => array($form_update, $view_var->id, $param_id, $index), 'method' => 'put', 'files' => true)) !!}
-
-		{{-- Error | Success Message --}}
-		@if (Session::has('message'))
-			@DivOpen(12)
-				@if (Session::get('message_color') == 'primary')
-					@DivOpen(5) @DivClose()
-					@DivOpen(4)
-				@endif
-				<h4 style='color:{{ Session::get('message_color') }}' id='success_msg'>{{ Session::get('message') }}</h4>
-				@if (Session::get('message_color') == 'primary')
-					@DivClose()
-				@endif
-			@DivClose()
-		@endif
-
+	{{-- PARAMETERS --}}
+	@if (isset ($form_fields['list']))
+		{!! Form::model($view_var, array('route' => array($form_update, $view_var->id, $param_id, $index), 'method' => 'put', 'files' => true)) !!}
 
 		{{-- LIST --}}
-
 		@if ($form_fields['list'])
 		<div class="col-md-12 row" style="padding-right: 0px;"><div class="col-md-12 well row">
 		@foreach ($form_fields['list'] as $field)
@@ -62,7 +49,6 @@
 		@endforeach
 		</div></div>
 		@endif
-
 
 		{{-- FRAMES --}}
 		@if ($form_fields['frame']['linear'])
@@ -101,7 +87,6 @@
 			</div>
 		@endforeach
 
-
 		{{-- TABLES --}}
 		@foreach ($form_fields['table'] as $table)
 			<table class="table controllingtable table-condensed table-bordered d-table" id="datatable">
@@ -125,7 +110,6 @@
 			</table>
 		@endforeach
 
-
 	{{-- Save Button --}}
 	<div class="d-flex justify-content-center">
 		<input
@@ -137,15 +121,13 @@
 
 	{!! Form::close() !!}
 
-@else
-	<h2>No controlling defined</h2>
 @endif
 
 	{{-- javascript --}}
 	@include('Generic.form-js')
 
-
 @stop
+
 
 @section('javascript_extra')
 {{-- JS DATATABLE CONFIG --}}

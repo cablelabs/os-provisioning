@@ -373,6 +373,9 @@ class MtaObserver
             if (array_key_exists('mac', $modifications)) {
                 $mta->make_dhcp_mta();
                 $mta->modem->make_configfile();
+
+                // in case mta mac begun with or is changed to 'ff:' the modem dhcp entry has to be changed as well
+                $mta->modem->make_dhcp_cm();
             }
 
             $mta->make_configfile();

@@ -150,6 +150,7 @@ function concat_pdfs($sourcefiles, $target_fn, $multithreaded = false)
  *
  * @param string 	directory & filename
  * @param bool 	 	start latex process in background (for faster SettlementRun)
+ * @return int      return value of pdflatex - 0 on success
  */
 function pdflatex($dir, $filename, $background = false)
 {
@@ -167,21 +168,52 @@ function pdflatex($dir, $filename, $background = false)
 
     system($cmd, $ret);
 
-    switch ($ret) {
-        case 0: break;
-        case 1:
-            Log::error('PdfLatex - Syntax error in tex template (misspelled placeholder?)', [$dir.$filename]);
-
-            return;
-        case 127:
-            Log::error('Illegal Command - PdfLatex not installed!');
-
-            return;
-        default:
-            Log::error("Error executing PdfLatex - Return Code: $ret");
-
-            return;
+    if ($ret) {
+        // log error
+        pdflatex_error_msg($ret, true, $dir.$filename);
     }
+
+    return $ret;
+}
+
+/**
+ * Return error message when pdflatex fails
+ *
+ * @param int       pdflatex return code
+ * @param bool      log message or not
+ * @param string    path of file
+ * @return string   message
+ */
+function pdflatex_error_msg($code, $log = false, $filename = '')
+{
+    switch ($code) {
+        case 0:
+            // success
+            break;
+        case 1:
+            $msg_key = 'syntax';
+            $msg_var = $filename ? "[$filename]" : '';
+
+            break;
+        case 127:
+            $msg_key = 'missing';
+            $msg_var = '';
+
+            break;
+        default:
+            $msg_key = 'default';
+            $msg_var = $code;
+
+            break;
+    }
+
+    $msg = trans("messages.pdflatex.$msg_key", ['var' => $msg_var]);
+
+    if ($log) {
+        Log::error($msg);
+    }
+
+    return $msg;
 }
 
 /**
