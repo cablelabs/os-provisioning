@@ -7,7 +7,7 @@
 
 * **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/nmsprime/nmsprime/issues).
 
-* If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/nmsprime/nmsprime/issues/new). Be sure to include a **title and clear description**, as much relevant information as possible.
+* If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/nmsprime/nmsprime/issues/new?template=bug_report.md). Be sure to include a **title and clear description**, as much relevant information as possible.
 
 #### **Did you write a patch that fixes a bug?**
 
@@ -19,7 +19,7 @@
 
 #### **Do you intend to add a new feature or change an existing one?**
 
-* Suggest your change at [Github Issues](https://github.com/nmsprime/nmsprime/issues), try to get feedback from core members before you start 
+* Suggest your change at [Github Issues Feature request](https://github.com/nmsprime/nmsprime/issues/new?template=feature_request.md), try to get feedback from core members before you start 
 
 * Writing your code
 
