@@ -23,9 +23,9 @@ return [
     'Company'					=> 'Firma',
     'conninfo' => [
         'error' => 'Fehler beim Erstellen der PDF-Datei: ',
+        'missing_company' => 'Dem SEPA-Konto ":var" ist kein Unternehmen zugewiesen.',
         'missing_costcenter' => 'Dem Vertrag ist keine Kostenstelle zugewiesen.',
         'missing_sepaaccount' => 'Der Kostenstelle ":var" ist kein SEPA-Konto zugewiesen.',
-        'missing_company' => 'Dem SEPA-Konto ":var" ist kein Unternehmen zugewiesen.',
         'missing_template' => 'Die Vorlage für die Verbindungsinformationen im Unternehmen ":var" ist nicht gesetzt.',
         'missing_template_file' => 'Die Vorlage der Verbindungsinformationen im Unternehmen ":var" existiert nicht als Datei.',
         'read_failure' => 'Fehler beim Lesen/Template ist leer.',
