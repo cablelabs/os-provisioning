@@ -7,6 +7,7 @@ use Log;
 use Module;
 use Bouncer;
 use GlobalConfig;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -76,12 +77,27 @@ class LoginController extends Controller
      * The user has been authenticated.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
+     * @param  App\User  $user
      * @return mixed
      */
     protected function authenticated(Request $request, $user)
     {
-        return App::setLocale(\App\Http\Controllers\BaseViewController::get_user_lang());
+        $now = Carbon::now();
+        $request->session()->put('GlobalNotification', []);
+        App::setLocale(\App\Http\Controllers\BaseViewController::get_user_lang());
+
+        if ($user->isPasswordExpired() || $user->isFirstLogin()) {
+            $request->session()->flash('GlobalNotification', [
+                'shouldChangePassword' => [
+                    'message' => 'shouldChangePassword',
+                    'level' => 'danger',
+                    'reason' => $user->isPasswordExpired() ? 'PasswordExpired' : 'newUser',
+                ],
+            ]);
+        }
+
+        $user->last_login_at = $now->toDateTimeString();
+        $user->save();
     }
 
     /**

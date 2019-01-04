@@ -7,15 +7,13 @@ class GlobalConfig extends BaseModel
     // The associated SQL table for this Model
     protected $table = 'global_config';
 
-    // Don't forget to fill this array
-    protected $fillable = ['name', 'street', 'city', 'phone', 'mail', 'log_level', 'headline1', 'headline2', 'default_country_code'];
-
     // Add your validation rules here
     public static function rules($id = null)
     {
         return [
             'mail' => 'email',
             'default_country_code' => 'regex:/^[A-Z]{2}$/',
+            'passwordResetInterval' => 'min:0,integer',
         ];
     }
 
