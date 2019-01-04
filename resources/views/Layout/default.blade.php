@@ -6,7 +6,7 @@
 	@include ('bootstrap.header')
 	@yield('head')
 </head>
-<body {{ isset($body_onload) ? "onload='$body_onload()'" : ""}}>
+<body {{ isset($body_onload) ? "onload=$body_onload()" : ""}}>
 
 	<div id="page-container" class="fade page-sidebar-fixed page-header-fixed in">
 
