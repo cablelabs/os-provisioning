@@ -25,7 +25,7 @@
 	{!! $fields['html'] !!}
 @endforeach
 
-@can($action, $model_name )
+@if(Bouncer::can($action, $model_name) || Bouncer::can($action, $view_var))
 	<div class="row d-flex justify-content-center">
 	@if ($edit_view_save_button)
 		@if ($edit_view_second_button)
@@ -56,6 +56,6 @@
 		@endif
 	@endif
 	</div>
-@endcan
+@endif
 {{-- javascript--}}
 @include('Generic.form-js')
