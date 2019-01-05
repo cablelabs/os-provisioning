@@ -17,7 +17,7 @@
 
 * Before submitting, please read the [Contribute Code to NMS Prime](https://devel.roetzer-engineering.com/confluence/x/YARk) guide to know more about coding conventions and benchmarks. Pull request fixing a regular bug (bugfix branch) MUST be opened against the dev branch. Pull request fixing a critical bug (hotfix branch) MUST be opened against both master and dev branch. See [Git Workflow](https://devel.roetzer-engineering.com/confluence/x/SwFs) for more details.
 
-#### **Do you want to help translating NMS Prime?**
+#### **Do you want to help translate NMS Prime?**
 We use the [crowdin](https://crowdin.com/project/nmsprime) project for generic languange translation. No coding knowledge required!
 
 #### **Do you intend to add a new feature or change an existing one?**
