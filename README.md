@@ -66,12 +66,6 @@ For more Information have a look at the [Installation Process](https://devel.roe
 
 Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
-* [Language Translation](https://crowdin.com/project/nmsprime)
-* [Report a bug](https://devel.roetzer-engineering.com/confluence/display/NMS/Report+a+Bug)
-* [Ticket-System](https://devel.roetzer-engineering.com/confluence/display/NMS/Open+Tickets+Overview)
-* [Versioning](https://devel.roetzer-engineering.com/confluence/display/NMS/Versioning+Schema)
-
-
 ---
 
 ## Supporters
