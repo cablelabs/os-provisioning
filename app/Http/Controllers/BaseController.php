@@ -1110,7 +1110,15 @@ class BaseController extends Controller
     public function api_index($ver)
     {
         if ($ver === '0') {
-            return static::get_model_obj()->all();
+            $model = static::get_model_obj();
+            foreach (Input::all() as $key => $val) {
+                $model = $model->where($key, $val);
+            }
+            try {
+                return $model->get();
+            } catch (\Exception $e) {
+                return response()->json(['ret' => $e]);
+            }
         } else {
             return response()->json(['ret' => "Version $ver not supported"]);
         }
