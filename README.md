@@ -66,20 +66,10 @@ For more Information have a look at the [Installation Process](https://devel.roe
 
 Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
----
-
-## Supporters
-
-We thank the following supporters for helping and funding NMS Prime development. If you are interested in becoming a supporter, please read [here](https://devel.roetzer-engineering.com/confluence/pages/viewpage.action?pageId=6554183):
-
-- **[Rötzer Engineering](https://roetzer-engineering.com)**
-- **[ERZNET](http://erznet.tv)**
-- **[MEK Cable](http://mek-cable.de)**
-- **[KM3](https://km3.de)**
 
 ## Contributors
 
-See the list of [contributors](https://github.com/nmsprime/nmsprime/graphs/contributors) who participated in this project.
+See the list of [contributors](https://github.com/nmsprime/nmsprime/graphs/contributors) who participated in this project. NMS Prime is an open source project. We encourage you to [become a member](https://www.nmsprime.com/about)!
 
 ---
 
