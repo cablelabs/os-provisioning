@@ -35,8 +35,7 @@ class BugfixRolesTable extends BaseMigration
         }
 
         Bouncer::allow('guest')->to('view', '*');
-        Bouncer::allow('guest')->to('view_analysis_pages_of', \Modules\ProvBase\Entities\Modem::class);
-        Bouncer::allow('guest')->to('view_analysis_pages_of', \Modules\ProvBase\Entities\Cmts::class);
+        Bouncer::allow('guest')->to('view_analysis_pages_of', '*');
     }
 
     /**
