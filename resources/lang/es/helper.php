@@ -25,6 +25,7 @@ return [
 
     // GlobalConfig
     'ISO_3166_ALPHA-2'				=> 'ISO 3166 ALPHA-2 (dos caracteres, p.e. “US”). Usado en formularios de direccion para especificar el pais.',
+    'PasswordReset'           => 'This property defines the timespan in days in which the users of the administration panel should change their passwords. If you want to disable the password reset message, set the value to 0.',
 
  /*
   *	MODULE: BillingBase
