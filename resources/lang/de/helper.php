@@ -166,4 +166,5 @@ return [
  * Module Ticketsystem
  */
     'assign_user' => 'Zuweisen eines Users zu einem Ticket.',
+    'mail_env'    => 'Nächster Schritt: Host/Nutzernamen/Passwort in /etc/nmsprime/env/global.env eintragen, um Emails im Bezug auf Tickets zu erhalten.',
  ];

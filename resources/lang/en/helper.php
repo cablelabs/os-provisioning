@@ -166,4 +166,6 @@ return [
  * Module Ticketsystem
  */
     'assign_user' => 'Allowed to assign an user to a ticket.',
+    'mail_env'    => 'Next: Set your Host/Username/Password in /etc/nmsprime/env/global.env to enable receiving Emails concerning Tickets',
+
  ];
