@@ -171,6 +171,7 @@ return [
     'phonenr_deact' => 'Deactivation date',
     'phonenr_state' => 'Status',
     'modem_city' => 'Modem city',
+    'sipdomain' => 'SIP Domain',
     // Phonenumbermanagement
     'phonenumbermanagement.id' => 'ID',
     'phonenumbermanagement.activation_date' => 'Activation date',
