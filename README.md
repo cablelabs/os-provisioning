@@ -14,7 +14,7 @@ Open Source Network Provisioning Tool and Management Platform:
 - for cable networks
 - **voip billing** for cable modems
 
-**network management platform**
+**Network Management Platform**
 - **Cable ingress detection**
 - Show your IT infrastructure in real-time in topography MAP and ERD - Entity Relation Diagram
 - Auto configuration of **Nagios** and **Cacti** from one database
