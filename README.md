@@ -6,9 +6,9 @@
 
 Open Source Network Provisioning Tool and Management Platform:
 
-**Provisioning Tool**
-- **network provisioning** for cable networks
-- **VoIP provisioning** for cable networks
+**Provisioning Tool** for cable networks / docsis networks
+- **network provisioning**
+- **VoIP provisioning**
 
 **ISP Billing**
 - for cable networks
