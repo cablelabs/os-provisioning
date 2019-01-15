@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class ChangeProductTypesToPostalDelivery extends Migration
@@ -36,7 +34,7 @@ class ChangeProductTypesToPostalDelivery extends Migration
      */
     public function down()
     {
-        $products = \DB::table('product')->where('type' , 'Postal')->get();
+        $products = \DB::table('product')->where('type', 'Postal')->get();
         $ids = null;
 
         foreach ($products as $product) {
@@ -46,7 +44,7 @@ class ChangeProductTypesToPostalDelivery extends Migration
         $productIds = implode(';\n', $ids);
 
         \Storage::put('/config/billingbase/post-invoice-product-ids', $productIds);
-        \DB::table('product')->where('type' , 'Postal')->update(['type' => 'Other']);
+        \DB::table('product')->where('type', 'Postal')->update(['type' => 'Other']);
 
         DB::statement("ALTER TABLE product MODIFY COLUMN type ENUM('Internet','TV','Voip','Device','Credit','Other') NOT NULL");
     }
