@@ -4,19 +4,23 @@
 
 # NMS Prime
 
-Open Source Provisioning and Management Software for network operators:
+Open Source Network Provisioning Tool and Management Platform:
 
-**Provisioning: DOCSIS**
-- At the time we are highly focused on **cable provisioning**
-- including VoIP provisioning
+**Provisioning Tool**
+- **network provisioning** for cable networks
+- **VoIP provisioning** for cable networks
 
-**IT Maintenance**
+**ISP Billing**
+- for cable networks
+- **voip billing** for cable modems
+
+**network management platform**
+- **Cable ingress detection**
 - Show your IT infrastructure in real-time in topography MAP and ERD - Entity Relation Diagram
-- Auto configuration of Nagios and Cacti from one database
+- Auto configuration of **Nagios** and **Cacti** from one database
+- **ticket System**
 - Generic SNMP GUI creator
-- CMTS Management
-- Billing for cable networks and ticket-System
-- Cable ingress detection
+- **CMTS** Management
 
 For more information head over to our [Official Documentation](https://devel.roetzer-engineering.com/confluence/display/NMS/NMS+PRIME)
 
