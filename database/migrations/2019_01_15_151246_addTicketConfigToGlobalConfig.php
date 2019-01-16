@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use Modules\Ticketsystem\Entities\Ticket;
 use Illuminate\Database\Migrations\Migration;
 
 class AddTicketConfigToGlobalConfig extends Migration
