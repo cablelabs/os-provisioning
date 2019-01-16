@@ -4,21 +4,21 @@
 
 # [NMS PRIME](https://nmsprime.com)
 
-[NMS PRIME](https://nmsprime.com) is a Network Provisioning Tool and Network Management Platform specialized for Cable-, DOCSIS- and Broadband-Networks developed under an open source model.
+[NMS PRIME](https://nmsprime.com) is THE Open Source Network Provisioning Tool and Network Management Platform specialized for Cable-, DOCSIS- and Broadband-Networks.
 
 **Provisioning Tool**
-- **network provisioning**
+- **Network provisioning**
 - **VoIP provisioning**
 
 **ISP Billing**
 - for cable networks
-- **voip billing** for cable modems
+- **VoIP billing** for cable modems
 
 **Network Management Platform**
 - **Cable ingress detection**
 - Show your IT infrastructure in real-time in topography MAP and ERD - Entity Relation Diagram
 - Auto configuration of **Nagios** and **Cacti** from one database
-- **ticket System**
+- **Ticket System**
 - Generic SNMP GUI creator
 - **CMTS** Management
 
@@ -27,7 +27,9 @@ For more information head over to our [Official Documentation](https://devel.roe
 
 ## Architectural Concepts
 
-NMS Prime is written with PHP 7.1, [Laravel 5.3](https://laravel.com/) framework and a modern and responsive [Bootstrap](http://getbootstrap.com/) theme. It is tested and developed under CentOS 7 (RHEL 7).
+NMS Prime is based on the [Laravel](https://laravel.com/) Framework and uses [PHP 7](https://php.net) for the Back-End and a modern and responsive [Bootstrap](http://getbootstrap.com/) Theme for the Front-End.
+
+It is tested and developed under CentOS 7 (RHEL 7).
 
 NMS Prime is build with standard Linux tools, like
 - [ISC DHCP](https://www.isc.org/downloads/dhcp/)
@@ -35,7 +37,7 @@ NMS Prime is build with standard Linux tools, like
 - [Nagios](https://www.nagios.org/)
 - [Cacti](https://www.cacti.net/index.php)
 
-These tools are worldwide developed, approved and used. See [Design Architecture](https://devel.roetzer-engineering.com/confluence/display/NMS/Architecture+Guidelines) for more information
+These tools are actively developed, approved and used. See [Design Architecture](https://devel.roetzer-engineering.com/confluence/display/NMS/Architecture+Guidelines) for more information.
 
 
 ## Installation
