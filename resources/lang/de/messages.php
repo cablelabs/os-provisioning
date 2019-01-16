@@ -541,4 +541,6 @@ return [
     'deletedTicketUsers'        => 'Gelöscht von Ticket :id',
     'deletedTicketUsersMessage' => 'Du wurdest aus dem Ticket Nr. :id entfernt.',
     'ticketUpdatedMessage'      => 'das Ticket wurde geändert',
+    'noReplyMail'               => 'Adresse der Noreply E-mail',
+    'noReplyName'               => 'Name der Noreply E-mail',
 ];
