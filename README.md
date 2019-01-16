@@ -2,9 +2,9 @@
 [![StyleCI](https://github.styleci.io/repos/109520753/shield?branch=dev)](https://github.styleci.io/repos/109520753)
 
 
-# NMS Prime
+# NMS PRIME
 
-Open Source Network Provisioning Tool and Management Platform:
+Network Provisioning Tool and Network Management Platform for cable networks:
 
 **Provisioning Tool** for cable networks / docsis networks
 - **network provisioning**
