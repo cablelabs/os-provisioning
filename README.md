@@ -4,9 +4,10 @@
 
 # NMS PRIME
 
-Network Provisioning Tool and Network Management Platform for cable networks:
+Network Provisioning Tool and Network Management Platform.
+Specialized for Cable-, DOCSIS- and Broadband-Networks:
 
-**Provisioning Tool** for cable networks / docsis networks
+**Provisioning Tool**
 - **network provisioning**
 - **VoIP provisioning**
 
