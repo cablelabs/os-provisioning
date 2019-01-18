@@ -17,7 +17,7 @@
 **Network Management Platform**
 - **Cable ingress detection**
 - Show your IT infrastructure in real-time in topography MAP and ERD - Entity Relation Diagram
-- Auto configuration of **Nagios** and **Cacti** from one database
+- Auto configuration of **Icinga** and **Cacti** from one database
 - **Ticket System**
 - Generic SNMP GUI creator
 - **CMTS** Management
@@ -34,7 +34,7 @@ It is tested and developed under CentOS 7 (RHEL 7).
 NMS Prime is build with standard Linux tools, like
 - [ISC DHCP](https://www.isc.org/downloads/dhcp/)
 - [Named](https://linux.die.net/man/8/named)
-- [Nagios](https://www.nagios.org/)
+- [Icinga](https://icinga.com/)
 - [Cacti](https://www.cacti.net/index.php)
 
 These tools are actively developed, approved and used. See [Design Architecture](https://devel.roetzer-engineering.com/confluence/display/NMS/Architecture+Guidelines) for more information.
