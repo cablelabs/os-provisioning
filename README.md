@@ -2,36 +2,42 @@
 [![StyleCI](https://github.styleci.io/repos/109520753/shield?branch=dev)](https://github.styleci.io/repos/109520753)
 
 
-# NMS Prime
+# [NMS PRIME](https://nmsprime.com)
 
-Open Source Provisioning and Management Software for network operators:
+[NMS PRIME](https://nmsprime.com) is THE Open Source Network Provisioning Tool and Network Management Platform specialized for Cable-, DOCSIS- and Broadband-Networks.
 
-**Provisioning: DOCSIS**
-- At the time we are highly focused on **cable provisioning**
-- including VoIP provisioning
+**Provisioning Tool**
+- **Network provisioning**
+- **VoIP provisioning**
 
-**IT Maintenance**
+**ISP Billing**
+- for cable networks
+- **VoIP billing** for cable modems
+
+**Network Management Platform**
+- **Cable ingress detection**
 - Show your IT infrastructure in real-time in topography MAP and ERD - Entity Relation Diagram
-- Auto configuration of Nagios and Cacti from one database
+- Auto configuration of **Icinga** and **Cacti** from one database
+- **Ticket System**
 - Generic SNMP GUI creator
-- CMTS Management
-- Billing for cable networks and ticket-System
-- Cable ingress detection
+- **CMTS** Management
 
 For more information head over to our [Official Documentation](https://devel.roetzer-engineering.com/confluence/display/NMS/NMS+PRIME)
 
 
 ## Architectural Concepts
 
-NMS Prime is written with PHP 7.1, [Laravel 5.3](https://laravel.com/) framework and a modern and responsive [Bootstrap](http://getbootstrap.com/) theme. It is tested and developed under CentOS 7 (RHEL 7).
+NMS Prime is based on the [Laravel](https://laravel.com/) Framework and uses [PHP 7](https://php.net) for the Back-End and a modern and responsive [Bootstrap](http://getbootstrap.com/) Theme for the Front-End.
+
+It is tested and developed under CentOS 7 (RHEL 7).
 
 NMS Prime is build with standard Linux tools, like
 - [ISC DHCP](https://www.isc.org/downloads/dhcp/)
 - [Named](https://linux.die.net/man/8/named)
-- [Nagios](https://www.nagios.org/)
+- [Icinga](https://icinga.com/)
 - [Cacti](https://www.cacti.net/index.php)
 
-These tools are worldwide developed, approved and used. See [Design Architecture](https://devel.roetzer-engineering.com/confluence/display/NMS/Architecture+Guidelines) for more information
+These tools are actively developed, approved and used. See [Design Architecture](https://devel.roetzer-engineering.com/confluence/display/NMS/Architecture+Guidelines) for more information.
 
 
 ## Installation
