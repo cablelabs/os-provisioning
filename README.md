@@ -1,4 +1,4 @@
-<img src="https://github.com/nmsprime/nmsprime/raw/dev/public/images/nmsprime-logo.png" width="250" align="center"/>
+<div align="center"><img src="https://github.com/nmsprime/nmsprime/raw/dev/public/images/nmsprime-logo.png" width="250"/></div>
 
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/nmsprime/localized.svg)](https://crowdin.com/project/nmsprime)
 [![StyleCI](https://github.styleci.io/repos/109520753/shield?branch=dev)](https://github.styleci.io/repos/109520753)
