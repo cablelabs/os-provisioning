@@ -16,6 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         //'App\Model' => 'App\Policies\ModelPolicy',
+        \App\User::class => \App\Policies\UpdateProfilePolicy::class,
     ];
 
     /**
@@ -39,5 +40,8 @@ class AuthServiceProvider extends ServiceProvider
         Auth::extend('ccc', function ($app, $name, array $config) {
             return new cccGuard(Auth::createUserProvider($config['ccc']));
         });
+
+        // allow users to update their own profile
+        Gate::define('User.update', 'App\Policies\UpdateProfilePolicy@update');
     }
 }
