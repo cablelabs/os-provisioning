@@ -25,7 +25,7 @@ class UpdateProfilePolicy
      * Determine whether the user can create users.
      *
      * @param  \App\User  $user
-     * @return mixed
+     * @return bool
      */
     public function create(User $user)
     {
@@ -33,7 +33,7 @@ class UpdateProfilePolicy
     }
 
     /**
-     * Determine whether the user can update the user.
+     * Determine whether the user can update their own profile.
      *
      * @param  \App\User  $user
      * @param  \App\User  $user
@@ -41,7 +41,7 @@ class UpdateProfilePolicy
      */
     public function update(User $user)
     {
-        //
+        return \Auth::user()->id == $user->id;
     }
 
     /**
@@ -54,19 +54,5 @@ class UpdateProfilePolicy
     public function delete(User $user)
     {
         //
-    }
-
-    /**
-     * Authorize users to edit their own profile.
-     * -> authorize action before the incoming request even reaches the routes.
-     *
-     * @param \App\User $user
-     * @return bool
-     */
-    public function before($user)
-    {
-        if (\Auth::user()->id == $user->id) {
-            return true;
-        }
     }
 }

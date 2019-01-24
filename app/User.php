@@ -210,4 +210,18 @@ class UserObserver
             Session::put('language', $userLang);
         }
     }
+
+    public function deleting($user)
+    {
+        $modelRank = $user->getHighestRank();
+        $authRank = \Auth::user()->getHighestRank();
+
+        if ($authRank == '101') {
+            return;
+        }
+
+        if ($modelRank >= $authRank) {
+            return false;
+        }
+    }
 }
