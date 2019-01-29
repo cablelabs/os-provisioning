@@ -2,6 +2,8 @@
 
 namespace Modules\HfcReq\Entities;
 
+use Auth;
+use Cache;
 use Session;
 use Modules\HfcBase\Entities\IcingaObjects;
 
@@ -219,20 +221,17 @@ class NetElement extends \BaseModel
     }
 
     /**
-     * Return all NetElements of NetElementType with name=Cluster belonging to a special NetElement of Type Net (NetElementType with name=Net)
+     * Return all NetElements of NetElementType with name=Cluster belonging to a
+     * special NetElement of Type Net (NetElementType with name=Net)
+     * Cached for 5 Minutes
      */
     public function get_all_cluster_to_net()
     {
-        if (Session::has('Net-'.$this->id)) {
-            return Session::get('Net-'.$this->id);
-        }
+        return Cache::remember(Auth::user()->login_name.'Net-'.$this->id, 5, function () {
+            $cluster_id = array_search('Cluster', NetElementType::$undeletables);
 
-        $cluster_id = array_search('Cluster', NetElementType::$undeletables);
-        $return = self::where('netelementtype_id', '=', $cluster_id)->where('net', '=', $this->id)->orderBy('name')->get();
-
-        Session::put('Net-'.$this->id, $return);
-
-        return $return;
+            return self::where('netelementtype_id', '=', $cluster_id)->where('net', '=', $this->id)->orderBy('name')->get();
+        });
     }
 
     /**
@@ -519,7 +518,7 @@ class NetElementObserver
             return;
         }
 
-        if ($netelement['original']['parent_id'] != $netelement['attributes']['parent_id']) {
+        if ($netelement->isDirty('parent_id') || $netelement->isDirty('name')) {
             $netelement->net = $netelement->get_native_net();
             $netelement->cluster = $netelement->get_native_cluster();
 
@@ -559,6 +558,7 @@ class NetElementObserver
         }
 
         $netId = $netelement->get_native_net();
+        $user = Auth::user()->login_name;
 
         if ($isUpdating) {
             $oldNet = NetElement::find($netelement['original']['parent_id']);
@@ -566,9 +566,9 @@ class NetElementObserver
             $oldNetId = $oldNet ? $oldNet->get_native_net() : 0;
             $netId = $net ? $net->get_native_net() : 0;
 
-            $oldNetId ? Session::forget('Net-'.$oldNetId) : '';
+            $oldNetId ? Cache::forget($user.'Net-'.$oldNetId) : '';
         }
 
-        $netId ? Session::forget('Net-'.$netId) : Session::forget('Net-'.$netelement->id);
+        $netId ? Cache::forget($user.'Net-'.$netId) : Cache::forget($user.'Net-'.$netelement->id);
     }
 }
