@@ -897,9 +897,12 @@ class BaseController extends Controller
      */
     private function _set_many_to_many_relations($obj, $data)
     {
+        if (Bouncer::cannot('update', \App\User::class)) {
+            return;
+        }
         foreach ($this->many_to_many as $key => $field) {
             if (isset($field['classes']) &&
-                (Bouncer::cannot('edit', $field['classes'][0]) || Bouncer::cannot('edit', $field['classes'][1]))) {
+                (Bouncer::cannot('update', $field['classes'][0]) || Bouncer::cannot('update', $field['classes'][1]))) {
                 Session::push('error', "You are not allowed to edit {$field['classes'][0]} or {$field['classes'][1]}");
                 continue;
             }
