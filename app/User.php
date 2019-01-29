@@ -213,14 +213,14 @@ class UserObserver
 
     public function deleting($user)
     {
-        $modelRank = $user->getHighestRank();
-        $authRank = \Auth::user()->getHighestRank();
+        $self = \Auth::user();
+        $authRank = $self->getHighestRank();
 
         if ($authRank == '101') {
             return;
         }
 
-        if ($modelRank >= $authRank) {
+        if ($self->hasSameRankAs($user) || $self->hasLowerRankThan($user)) {
             return false;
         }
     }

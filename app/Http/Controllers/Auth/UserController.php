@@ -79,4 +79,23 @@ class UserController extends BaseController
 
         return parent::prepare_input_post_validation($data);
     }
+
+    public function edit($id)
+    {
+        $view = parent::edit($id);
+
+        if (\Route::currentRouteName() == 'User.profile') {
+            $form_update = 'Profile.update';
+            $headline = '';
+
+            return $view->with(compact('form_update', 'headline'));
+        }
+
+        return $view;
+    }
+
+    public function store($redirect = true)
+    {
+        return redirect()->route('User.index');
+    }
 }

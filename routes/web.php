@@ -84,6 +84,12 @@ BaseRoute::group([], function () {
         'middleware' => ['owns:view,App\User'],
     ]);
 
+    BaseRoute::put('profile/{id}', [
+        'as' => 'Profile.update',
+        'uses' => 'Auth\UserController@update',
+        'middleware' => ['owns:update,App\User'],
+    ]);
+
     BaseRoute::post('user/detach/{id}/{func}', [
         'as' => 'user.detach',
         'uses' => 'Auth\UserController@detach',
