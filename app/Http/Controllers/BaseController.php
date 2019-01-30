@@ -897,9 +897,10 @@ class BaseController extends Controller
      */
     private function _set_many_to_many_relations($obj, $data)
     {
-        if (Bouncer::cannot('update', \App\User::class)) {
+        if (Bouncer::cannot('update', get_class($obj))) {
             return;
         }
+
         foreach ($this->many_to_many as $key => $field) {
             if (isset($field['classes']) &&
                 (Bouncer::cannot('update', $field['classes'][0]) || Bouncer::cannot('update', $field['classes'][1]))) {
