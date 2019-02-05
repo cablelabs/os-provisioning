@@ -12,6 +12,7 @@ trait AddressFunctionsTrait
      */
     public function get_salutation_options()
     {
+        // ATTENTION: perform changes at validation rules in Contract, too
         $defaults = [
             '',
             'Herr',
