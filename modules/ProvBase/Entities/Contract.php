@@ -525,7 +525,6 @@ class Contract extends \BaseModel
      */
     protected function _update_network_access_from_items()
     {
-
         // check if DB update is required
         $contract_changed = false;
 
@@ -605,18 +604,15 @@ class Contract extends \BaseModel
      */
     protected function _update_inet_voip_dates()
     {
-
         // items only exist if Billingbase is enabled
         if (! \Module::collections()->has('BillingBase')) {
             return;
         }
 
-        // get tomorrow and today as Carbon objects – so they can directly be compared to the dates at items
         $tomorrow = \Carbon\Carbon::tomorrow();
         $today = \Carbon\Carbon::today();
 
         foreach ($this->items as $key => $item) {
-
             if (! $item->product) {
                 \Log::error("Product of item $item->id (ID) of contract ".$item->contract->number.' (number) is missing');
                 unset($this->items[$key]);
@@ -659,10 +655,11 @@ class Contract extends \BaseModel
             // finally: save the change(s)
             if ($item_changed) {
                 // avoid endless loop - dont unnecessarily call daily_conversion again
-                // also the following old concerns are vitiated by disabling the observer
-                    // attention: update youngest valid_from items first (to avoid problems in relation with
-                    // ItemObserver::update() which else set valid_to smaller than valid_from in some cases)!
-                    // and to avoid “Multipe valid tariffs active” warning
+                /* also the following old concerns are vitiated by disabling the observer:
+                    * attention: update youngest valid_from items first (to avoid problems in relation with
+                    * ItemObserver::update() which else set valid_to smaller than valid_from in some cases)!
+                    * and to avoid “Multipe valid tariffs active” warning
+                */
                 $item->observer_dailyconversion = false;
                 $item->save();
             }
@@ -833,7 +830,7 @@ class Contract extends \BaseModel
 
         // This is an error! There should only be one active item per type and contract
         if ($count > 1) {
-            \Log::Error('There are '.$count.' active items of product type '.$type.' assigned to contract '.$this->number.' ['.$this->id.'].');
+            \Log::warning('There are '.$count.' active items of product type '.$type.' assigned to contract '.$this->number.' ['.$this->id.'].');
         }
 
         return ['item' => $tariff, 'count' => $count];
@@ -860,7 +857,6 @@ class Contract extends \BaseModel
         $valid_tariff = false;
 
         foreach ($this->items as $item) {
-
             if (! $item->product) {
                 \Log::error("Product of item $item->id (ID) of contract ".$item->contract->number.' (number) is missing');
 
@@ -1239,7 +1235,6 @@ class ContractObserver
 
         $changed_fields = $contract->getDirty();
 
-        // Note: isset is way faster regarding the performance than array_key_exists, but returns false if value of key is null which is not important here - See upmost comment on: http://php.net/manual/de/function.array-key-exists.php
         if (isset($changed_fields['number'])) {
             // change customer information - take care - this automatically changes login psw of customer
             if ($customer = $contract->CccUser) {

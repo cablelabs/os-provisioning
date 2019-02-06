@@ -261,7 +261,5 @@ function whereLaterOrEqualThanDate($column, $date = '')
             ->where($column, '>=', $date)
             ->orWhereNull($column)
             ->orWhere($column, '=', '');
-        };
+    };
 }
-
-?>
