@@ -439,15 +439,28 @@ class Contract extends \BaseModel
             $this->_update_network_access_from_contract();
         } else {
 
+            // Get items by only 1 db query & set them as contract relations to work with them in next functions
+            // with that there are no more refresh database queries necessary (items do not have to be reloaded again)
+            $items = $this->items()
+                ->leftJoin('product', 'product.id', '=', 'item.product_id')
+                ->whereIn('product.type', ['Internet', 'Voip'])
+                ->where(whereLaterOrEqualThanDate('item.valid_to'), date('Y-m-d'))
+                // ->orderBy('valid_from', 'desc')
+                ->select('item.*')
+                ->with('product')
+                ->get();
+
+            $this->setRelations(['items' => $items]);
+
             // Task 3: Check and possibly update item's valid_from and valid_to dates
             $this->_update_inet_voip_dates();
 
-            $this->load('items');
-            // $this->fresh();
+            // deprecated - but kept for reference
+            // $this->load('items'); $this->fresh();
 
             // Task 4: Check and possibly change product related data (qos_id, voip, purchase_tariff)
             // for this contract depending on the start/end times of its items
-            $this->update_product_related_data($this->items);
+            $this->update_product_related_data();
 
             // NOTE: Keep this order! - update network access after all adaptions are made
             // Task 1 & 2 included
@@ -586,7 +599,7 @@ class Contract extends \BaseModel
      * Attention: Have in mind that changing item dates also fires in ItemObserver::updating()
      * which for example possibly changes contracts (voip_id, purchase_tariff) etc.!
      *
-     * @author Patrick Reichel
+     * @author Patrick Reichel, Nino Ryschawy
      *
      * @return null
      */
@@ -602,20 +615,18 @@ class Contract extends \BaseModel
         $tomorrow = \Carbon\Carbon::tomorrow();
         $today = \Carbon\Carbon::today();
 
-        // check for each item on contract
-        // attention: update youngest valid_from items first (to avoid problems in relation with
-        // ItemObserver::update() which else set valid_to smaller than valid_from in some cases)!
-        // and to avoid “Multipe valid tariffs active” warning
+        foreach ($this->items as $key => $item) {
 
-        foreach ($this->items_sorted_by_valid_from_desc as $item) {
-            $type = isset($item->product) ? $item->product->type : '';
+            if (! $item->product) {
+                \Log::error("Product of item $item->id (ID) of contract ".$item->contract->number.' (number) is missing');
+                unset($this->items[$key]);
 
-            if (! in_array($type, ['Voip', 'Internet'])) {
                 continue;
             }
 
             // flag to decide if item has to be saved at the end of the loop
             $item_changed = false;
+            $type = $item->product->type;
 
             // if the startdate is fixed: ignore
             if (! boolval($item->valid_from_fixed)) {
@@ -844,11 +855,11 @@ class Contract extends \BaseModel
      *
      * @return null
      */
-    public function update_product_related_data($items)
+    public function update_product_related_data()
     {
         $valid_tariff = false;
 
-        foreach ($items as $item) {
+        foreach ($this->items as $item) {
 
             if (! $item->product) {
                 \Log::error("Product of item $item->id (ID) of contract ".$item->contract->number.' (number) is missing');
@@ -875,16 +886,18 @@ class Contract extends \BaseModel
                 // check if there is more than one active item for given type ⇒ this is an error
                 // this can happen if one fixes thè start date of one and forgets to fix the end date
                 // of an other item
-                $valid_tariff_info = $this->_get_valid_tariff_item_and_count($type);
+                if (! isset($valid_tariff_info[$type])) {
+                    $valid_tariff_info[$type] = $this->_get_valid_tariff_item_and_count($type);
+                }
 
                 $valid_tariff = true;
 
-                if ($valid_tariff_info['count'] > 1) {
+                if ($valid_tariff_info[$type]['count'] > 1) {
                     // this should never occur!!
-                    if ($valid_tariff_info['item']->id != $item->id) {
-                        \Log::Warning('Using newer item '.$valid_tariff_info['item']->id.' instead of '.$item->id.' to update current data on contract '.$this->number.' ['.$this->id.'].');
+                    if ($valid_tariff_info[$type]['item']->id != $item->id) {
+                        \Log::Warning('Using newer item '.$valid_tariff_info[$type]['item']->id.' instead of '.$item->id.' to update current data on contract '.$this->number.' ['.$this->id.'].');
                     }
-                    $this->_update_product_related_current_data($valid_tariff_info['item']);
+                    $this->_update_product_related_current_data($valid_tariff_info[$type]['item']);
                 } else {
                     // default case
                     $this->_update_product_related_current_data($item);

@@ -44,7 +44,7 @@ class contractCommand extends Command
             return false;
         }
 
-        $cs = Contract::all();
+        $cs = Contract::where(whereLaterOrEqualThanDate('contract_end', date('Y-m-d')))->get();
 
         $i = 1;
         $num = count($cs);
