@@ -518,7 +518,7 @@ class NetElementObserver
             return;
         }
 
-        if ($netelement->isDirty('parent_id') || $netelement->isDirty('name')) {
+        if ($netelement->isDirty('parent_id', 'name')) {
             $netelement->net = $netelement->get_native_net();
             $netelement->cluster = $netelement->get_native_cluster();
 
@@ -529,14 +529,14 @@ class NetElementObserver
         }
 
         // if netelementtype_id changes -> indices have to change there parameter id - otherwise they are not used anymore
-        if ($netelement['original']['netelementtype_id'] != $netelement['attributes']['netelementtype_id']) {
+        if ($netelement->isDirty('netelementtype_id')) {
             $new_params = $netelement->netelementtype->parameters;
 
-            foreach ($netelement->indices as $indices) {
-                // assign each indices of parameter to new parameter with same oid
-                if ($new_params->contains('oid_id', $indices->parameter->oid->id)) {
-                    $indices->parameter_id = $new_params->where('oid_id', $indices->parameter->oid->id)->first()->id;
-                    $indices->save();
+            foreach ($netelement->indices as $indice) {
+                // assign each indice of parameter to new parameter with same oid
+                if ($new_params->contains('oid_id', $indice->parameter->oid->id)) {
+                    $indice->parameter_id = $new_params->where('oid_id', $indice->parameter->oid->id)->first()->id;
+                    $indice->save();
                 } else {
                     // Show Alert that not all indices could be assigned to the new parameter -> user has to create new indices and delete the old ones
                     // We also could delete them directly, so that user has to add them again
