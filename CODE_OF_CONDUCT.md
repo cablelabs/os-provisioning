@@ -10,4 +10,4 @@ We promote and welcome an **open society**, from which many new and **good ideas
 If you want to **contribute to NMS Prime** you are free to submit code, which we will review and add, if it meets our requirements.
 Take a look at our [How to contribute to NMS Prime](https://github.com/nmsprime/nmsprime/blob/dev/CONTRIBUTING.md)
 
-Also see [Get Involved](https://devel.roetzer-engineering.com/confluence/display/NMS/Get+involved) in our official documentation for more.
+Also see [Get Involved](https://devel.roetzer-engineering.com/confluence/display/NMS/Get+involved) in our official documentation for more information.
