@@ -69,14 +69,14 @@ class importCommand extends Command
      *
      * @var array
      */
-    protected $old_sys_inet_tarifs;
+    protected $old_sys_inet_tariffs;
 
     /**
      * Mapping of old Voip Tarif IDs to new Voip Tarif IDs
      *
      * @var array
      */
-    protected $old_sys_voip_tarifs;
+    protected $old_sys_voip_tariffs;
 
     /**
      * Mapping of old Qos-Group ID to new QoS ID
@@ -132,7 +132,7 @@ class importCommand extends Command
         if (! $this->confirm("IMPORTANT!!!\n\nHave following things been prepared for this import?:
 			(1) Created Mapping Configfile?
 			(2) Has Contract filter been correctly set up (in source code)?
-			(3) Shall volume tarifs get Credits (in source code)?\n")) {
+			(3) Shall volume tariffs get Credits (in source code)?\n")) {
             return;
         }
 
@@ -263,8 +263,8 @@ class importCommand extends Command
 
             // Add Billing related Data
             if (\Module::collections()->has('BillingBase')) {
-                $this->add_tarifs($c, $products_new, $contract);
-                $this->add_tarif_credit($c, $contract);
+                $this->add_tariffs($c, $products_new, $contract);
+                $this->add_tariff_credit($c, $contract);
                 $this->add_sepamandate($c, $contract, $km3);
                 $this->add_additional_items($c, $km3, $contract);
             }
@@ -291,7 +291,7 @@ class importCommand extends Command
     {
         $arr = require $this->argument('filename');
 
-        $mappings = ['old_sys_inet_tarifs', 'old_sys_voip_tarifs', 'groupsToQos', 'configfiles', 'add_items', 'cluster'];
+        $mappings = ['old_sys_inet_tariffs', 'old_sys_voip_tariffs', 'groupsToQos', 'configfiles', 'add_items', 'cluster'];
 
         foreach ($mappings as $key) {
             if (isset($arr[$key])) {
@@ -434,30 +434,30 @@ class importCommand extends Command
     }
 
     /**
-     * Return the appropriate Product ID from new System dependent on the tarif of the old systems contract
+     * Return the appropriate Product ID from new System dependent on the tariff of the old systems contract
      *
-     * @param 	tarif 	String|Integer 		Old systems internet tarif name | Voip Tarif ID
+     * @param 	tariff 	String|Integer 		Old systems internet tariff name | Voip Tarif ID
      * @return 			int 			Product ID | -1 on Error
      *
      * @author 	Nino Ryschawy
      */
-    private function _map_tarif_to_prod($tarif)
+    private function _map_tariff_to_prod($tariff)
     {
         // Voip
-        if (is_int($tarif)) {
-            if (! array_key_exists($tarif, $this->old_sys_voip_tarifs)) {
+        if (is_int($tariff)) {
+            if (! array_key_exists($tariff, $this->old_sys_voip_tariffs)) {
                 return -1;
             }
 
-            return $this->old_sys_voip_tarifs[$tarif];
+            return $this->old_sys_voip_tariffs[$tariff];
         }
 
         // Inet
-        if (! array_key_exists($tarif, $this->old_sys_inet_tarifs)) {
+        if (! array_key_exists($tariff, $this->old_sys_inet_tariffs)) {
             return -1;
         }
 
-        return is_int($this->old_sys_inet_tarifs[$tarif]) ? $this->old_sys_inet_tarifs[$tarif] : -1;
+        return is_int($this->old_sys_inet_tariffs[$tariff]) ? $this->old_sys_inet_tariffs[$tariff] : -1;
     }
 
     /**
@@ -478,11 +478,11 @@ class importCommand extends Command
     /**
      * Add Tarifs to corresponding Contract of new System
      *
-     * TODO: Tarif next month can not be set as is - has still ID - Separate inet & voip tarif mappings and map all by id
+     * TODO: Tarif next month can not be set as is - has still ID - Separate inet & voip tariff mappings and map all by id
      */
-    private function add_tarifs($new_contract, $products_new, $old_contract)
+    private function add_tariffs($new_contract, $products_new, $old_contract)
     {
-        $tarifs = [
+        $tariffs = [
             'tarif' 			=> $old_contract->tariffname,
             'tarif_next_month'  => $old_contract->tarif_next_month,
             'voip' 				=> $old_contract->telefontarif,
@@ -490,8 +490,8 @@ class importCommand extends Command
 
         $items_new = $new_contract->items;
 
-        foreach ($tarifs as $key => $tarif) {
-            if (! $tarif) {
+        foreach ($tariffs as $key => $tariff) {
+            if (! $tariff) {
                 \Log::info("\tNo $key Item exists in old System");
                 continue;
             }
@@ -504,7 +504,7 @@ class importCommand extends Command
                 }
             }
 
-            $prod_id = $this->_map_tarif_to_prod($tarif);
+            $prod_id = $this->_map_tariff_to_prod($tariff);
             $item_n = $items_new->where('product_id', $prod_id)->all();
 
             if ($item_n) {
@@ -513,7 +513,7 @@ class importCommand extends Command
             }
 
             if ($prod_id <= 0) {
-                $msg = "\tProduct $prod_id does not exist for $key: $tarif [ContractNr $new_contract->number]";
+                $msg = "\tProduct $prod_id does not exist for $key: $tariff [ContractNr $new_contract->number]";
                 \Log::error($msg);
                 $this->errors[] = $msg;
                 continue;
@@ -535,13 +535,13 @@ class importCommand extends Command
     /**
      * Add extra credit item (5 Euro gross - 1 Year) if customer had an old volume tariff
      */
-    private function add_tarif_credit($new_contract, $old_contract)
+    private function add_tariff_credit($new_contract, $old_contract)
     {
         if (! self::$credit) {
             return;
         }
 
-        // TODO(3) check restrictions of volume tarifs!
+        // TODO(3) check restrictions of volume tariffs!
         if ((strpos($old_contract->tariffname, 'Volumen') === false) && (strpos($old_contract->tariffname, 'Speed') === false) && (strpos($old_contract->tariffname, 'Basic') === false)) {
             return;
         }
