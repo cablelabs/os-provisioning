@@ -196,8 +196,8 @@ class importCommand extends Command
                 ->join('tbl_adressen as a', 'v.ansprechpartner', '=', 'a.id')
                 ->join('tbl_adressen as kadr', 'k.rechnungsanschrift', '=', 'kadr.id')
                 ->join('tbl_adressen as cm_adr', 'm.adresse', '=', 'cm_adr.id')
-                ->join('tbl_tarif as t', 'v.tarif', '=', 't.id')
-                ->join('tbl_posten as p', 't.posten_volumen_extern', '=', 'p.id')
+                ->leftJoin('tbl_tarif as t', 'v.tarif', '=', 't.id')
+                ->leftJoin('tbl_posten as p', 't.posten_volumen_extern', '=', 'p.id')
                 ->where('v.deleted', '=', false)
                 ->where('m.deleted', '=', false)
                 ->whereRaw('(v.abgeklemmt is null or v.abgeklemmt >= CURRENT_DATE)') 		// dont import out-of-date contracts
