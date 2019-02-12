@@ -228,6 +228,12 @@ class importCommand extends Command
             foreach ($modems as $modem) {
                 $m = $this->add_modem($c, $modem, $km3);
 
+                if ($c->relationLoaded('modems')) {
+                    $c->modems->add($m);
+                } else {
+                    $c->setRelation('modems', $m);
+                }
+
                 /*
                  * MTA Import
                  */
@@ -384,10 +390,7 @@ class importCommand extends Command
         $c->phone = str_replace('/', '', $old_contract->tel);
         $c->fax = $old_contract->fax;
         $c->email = $old_contract->email;
-
-        // TODO: Fix that birthday and contract_end are '0000-00-00' in DB when not set
         $c->birthday = $old_contract->geburtsdatum ?: null;
-
         $c->network_access = $old_contract->network_access;
         $c->contract_start = $old_contract->angeschlossen;
         $c->contract_end = $old_contract->abgeklemmt ?: null;
@@ -443,9 +446,11 @@ class importCommand extends Command
      */
     private function map_cluster_id($cluster_id, $net = 0)
     {
-        // old cluster ID => cluster ID in new System
-        // TODO: Add new Cluster IDs when they exist in new system
-        return $this->cluster[$cluster_id][$net];
+        if (isset($this->cluster[$cluster_id][$net])) {
+            return $this->cluster[$cluster_id][$net];
+        }
+
+        return 0;
     }
 
     /**
@@ -890,6 +895,14 @@ class importCommand extends Command
         Log::info('ADD NETELEMENT Modems');
 
         $contract = Contract::find(self::$ne_contract_id);
+
+        if (! $contract) {
+            $msg = 'Wrong contract ID '.self::$ne_contract_id.' for netelement modems! Could not find this contract.';
+            $this->error($msg);
+            Log::error($msg.' Stop.');
+
+            exit(1);
+        }
 
         echo "ADD NETELEMENT Modems\n";
         $bar = $this->output->createProgressBar(count($devices));
