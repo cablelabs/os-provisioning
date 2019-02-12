@@ -652,7 +652,7 @@ class BaseController extends Controller
             return $id;
         }
 
-        $msg = 'Created!';
+        $msg = trans('messages.created');
         Session::push('tmp_success_above_form', $msg);
 
         return Redirect::route(NamespaceController::get_route_name().'.edit', $id)->with('message', $msg)->with('message_color', 'success');

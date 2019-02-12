@@ -97,7 +97,7 @@ class UserController extends BaseController
     public function store($redirect = true)
     {
         parent::store($redirect);
-        \Session::push('tmp_success_above_index_list', 'Created!');
+        \Session::push('tmp_success_above_index_list', trans('messages.created'));
 
         return redirect()->route('User.index');
     }
