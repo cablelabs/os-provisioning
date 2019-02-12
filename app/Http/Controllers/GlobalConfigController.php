@@ -29,7 +29,7 @@ class GlobalConfigController extends BaseController
             ['form_type' => 'text', 'name' => 'default_country_code', 'description' => 'Default country code', 'help' => trans('helper.ISO_3166_ALPHA-2')],
             ];
 
-        if (\Schema::hasColumn('global_config', 'noReplyMail')) {
+        if (\Module::collections()->has('Ticketsystem') && array_key_exists('noReplyMail', \GlobalConfig::first()['attributes'])) {
             array_push($form,
                 ['form_type' => 'text', 'name' => 'noReplyMail', 'description' => trans('messages.noReplyMail'), 'help' => trans('helper.noReplyMail')],
                 ['form_type' => 'text', 'name' => 'noReplyName', 'description' => trans('messages.noReplyName'), 'help' => trans('helper.noReplyName')]
