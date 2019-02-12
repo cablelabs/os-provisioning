@@ -434,33 +434,6 @@ class importCommand extends Command
     }
 
     /**
-     * Return the appropriate Product ID from new System dependent on the tariff of the old systems contract
-     *
-     * @param 	tariff 	String|Integer 		Old systems internet tariff name | Voip Tarif ID
-     * @return 			int 			Product ID | -1 on Error
-     *
-     * @author 	Nino Ryschawy
-     */
-    private function _map_tariff_to_prod($tariff)
-    {
-        // Voip
-        if (is_int($tariff)) {
-            if (! array_key_exists($tariff, $this->old_sys_voip_tariffs)) {
-                return -1;
-            }
-
-            return $this->old_sys_voip_tariffs[$tariff];
-        }
-
-        // Inet
-        if (! array_key_exists($tariff, $this->old_sys_inet_tariffs)) {
-            return -1;
-        }
-
-        return is_int($this->old_sys_inet_tariffs[$tariff]) ? $this->old_sys_inet_tariffs[$tariff] : -1;
-    }
-
-    /**
      * Return ID of Cluster/Net for new System from old systems cluster/net ID
      *
      * @param 	cluster_id 		Integer
@@ -483,7 +456,7 @@ class importCommand extends Command
     private function add_tariffs($new_contract, $products_new, $old_contract)
     {
         $tariffs = [
-            'tarif' 			=> $old_contract->tariffname,
+            'tarif' 			=> $old_contract->tarif,
             'tarif_next_month'  => $old_contract->tarif_next_month,
             'voip' 				=> $old_contract->telefontarif,
             ];
@@ -491,31 +464,43 @@ class importCommand extends Command
         $items_new = $new_contract->items;
 
         foreach ($tariffs as $key => $tariff) {
+            $prod_id = -1;
+
             if (! $tariff) {
                 \Log::info("\tNo $key Item exists in old System");
                 continue;
             }
 
-            // Discard voip tariff if new contract doesnt have MTA
             if ($key == 'voip') {
+                // Discard voip tariff if new contract doesnt have MTA
                 if (! isset($new_contract->has_mta)) {
                     Log::notice('Discard voip tariff as contract has no MTA assigned', [$new_contract->number]);
+
                     continue;
+                }
+
+                if (array_key_exists($tariff, $this->old_sys_voip_tariffs)) {
+                    $prod_id = $this->old_sys_voip_tariffs[$tariff];
+                }
+            } else {
+                if (array_key_exists($tariff, $this->old_sys_inet_tariffs)) {
+                    $prod_id = $this->old_sys_inet_tariffs[$tariff];
                 }
             }
 
-            $prod_id = $this->_map_tariff_to_prod($tariff);
+            if ($prod_id == -1) {
+                $type = $key == 'voip' ? 'voip' : 'internet';
+                $msg = "Missing mapping for $type tariff $tariff (ID in km3 DB). Don't add voip item to contract $new_contract->number.";
+                \Log::error($msg);
+                $this->errors[] = $msg;
+
+                continue;
+            }
+
             $item_n = $items_new->where('product_id', $prod_id)->all();
 
             if ($item_n) {
                 \Log::info("\tItem $key for Contract ".$new_contract->number.' already exists');
-                continue;
-            }
-
-            if ($prod_id <= 0) {
-                $msg = "\tProduct $prod_id does not exist for $key: $tariff [ContractNr $new_contract->number]";
-                \Log::error($msg);
-                $this->errors[] = $msg;
                 continue;
             }
 
@@ -733,9 +718,15 @@ class importCommand extends Command
         $modem->zip = $new_contract->zip;
         $modem->city = $new_contract->city;
         $modem->qos_id = $new_contract->qos_id;
-
         $modem->contract_id = $new_contract->id;
-        $modem->configfile_id = isset($this->configfiles[$old_modem->cf_name]) && is_int($this->configfiles[$old_modem->cf_name]) ? $this->configfiles[$old_modem->cf_name] : 0;
+
+        if (isset($this->configfiles[$old_modem->configfile])) {
+            $modem->configfile_id = $this->configfiles[$old_modem->configfile];
+        } else {
+            $msg = "Missing mapping for configfile $old_modem->configfile (ID in km3 DB). Modem '$modem->mac' of contract $new_contract->number will not have a configfile assigned.";
+            \Log::error($msg);
+            $this->errors[] = $msg;
+        }
 
         // check if assigned cpe has public ip (starts with 7 or 8)
         // NOTE: if even 1 of the cpe's has a public IP we assign a public IP for all CPE's here
@@ -767,11 +758,6 @@ class importCommand extends Command
         ob_end_clean();
 
         // Output
-        if ($modem->configfile_id == 0) {
-            $msg = "No Configfile could be assigned to Modem $modem->id Old ModemID: $old_modem->id [ContractNr $new_contract->number]";
-            \Log::error($msg);
-            $this->errors[] = $msg;
-        }
 
         \Log::info("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
 
