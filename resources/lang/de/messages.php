@@ -401,7 +401,7 @@ return [
     'Created at'			=> 'Erstellt am',
     'Activation date'       => 'Aktivierungsdatum',
     'Deactivation date'     => 'Deaktivierungsdatum',
-    'SIP domain'            => 'SIP-Domäne',
+    'SIP domain'            => 'Registrar',
     'Created at' 			=> 'Erstellt am',
     'Last status update'	=> 'Letztes Update',
     'Last user interaction' => 'Letzte Interaktion',

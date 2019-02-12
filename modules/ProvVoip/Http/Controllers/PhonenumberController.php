@@ -161,7 +161,7 @@ class PhonenumberController extends \BaseController
         $sipdomain = [
             'form_type' => 'text',
             'name' => 'sipdomain',
-            'description' => 'SIP domain',
+            'description' => trans('messages.SIP domain'),
         ];
         if ($options) {
             $sipdomain['options'] = $options;
