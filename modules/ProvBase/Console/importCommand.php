@@ -396,7 +396,9 @@ class importCommand extends Command
         $c->contract_end = $old_contract->abgeklemmt ?: null;
         $c->create_invoice = $old_contract->rechnung;
 
-        $c->costcenter_id = $this->option('cc') ?: 3; // Dittersdorf=1, new one would be 3
+        if (\Module::collections()->has('BillingBase')) {
+            $c->costcenter_id = $this->option('cc');
+        }
         $c->cluster = $this->map_cluster_id($old_contract->cluster_id);
         $c->net = $this->map_cluster_id($old_contract->cluster_id, 1);
 
