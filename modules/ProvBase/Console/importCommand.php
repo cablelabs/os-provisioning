@@ -79,6 +79,15 @@ class importCommand extends Command
     protected $old_sys_voip_tarifs;
 
     /**
+     * Mapping of old Qos-Group ID to new QoS ID
+     *
+     * only in case Billing is not used
+     *
+     * @var array
+     */
+    protected $groupsToQos;
+
+    /**
      * Mapping of old ConfigFile Names to new ConfigFile IDs
      *
      * @var array
@@ -253,10 +262,12 @@ class importCommand extends Command
             }
 
             // Add Billing related Data
-            $this->add_tarifs($c, $products_new, $contract);
-            $this->add_tarif_credit($c, $contract);
-            $this->add_sepamandate($c, $contract, $km3);
-            $this->add_additional_items($c, $km3, $contract);
+            if (\Module::collections()->has('BillingBase')) {
+                $this->add_tarifs($c, $products_new, $contract);
+                $this->add_tarif_credit($c, $contract);
+                $this->add_sepamandate($c, $contract, $km3);
+                $this->add_additional_items($c, $km3, $contract);
+            }
 
             // disable network access where blockcpe is set
             if ($contract->blockcpe) {
@@ -280,13 +291,12 @@ class importCommand extends Command
     {
         $arr = require $this->argument('filename');
 
-        $this->old_sys_inet_tarifs = $arr['old_sys_inet_tarifs'];
-        $this->old_sys_voip_tarifs = $arr['old_sys_voip_tarifs'];
-        $this->configfiles = $arr['configfiles'];
-        $this->add_items = $arr['add_items'];
+        $mappings = ['old_sys_inet_tarifs', 'old_sys_voip_tarifs', 'groupsToQos', 'configfiles', 'add_items', 'cluster'];
 
-        if (isset($arr['cluster'])) {
-            $this->cluster = $arr['cluster'];
+        foreach ($mappings as $key) {
+            if (isset($arr[$key])) {
+                $this->{$key} = $arr[$key];
+            }
         }
     }
 
@@ -386,6 +396,17 @@ class importCommand extends Command
         $c->costcenter_id = $this->option('cc') ?: 3; // Dittersdorf=1, new one would be 3
         $c->cluster = $this->map_cluster_id($old_contract->cluster_id);
         $c->net = $this->map_cluster_id($old_contract->cluster_id, 1);
+
+        // Set qos_id if it won't be set via tariffs (items) because billing module is disabled
+        if (! \Module::collections()->has('BillingBase')) {
+            if (isset($this->groupsToQos[$old_contract->qosgroup])) {
+                $c->qos_id = $this->groupsToQos[$old_contract->qosgroup];
+            } else {
+                $msg = "Mapping für QoS-Profil $old_contract->qosgroup fehlt. QoS konnte in Vertrag $c->number nicht gesetzt werden!";
+                \Log::error($msg);
+                $this->errors[] = $msg;
+            }
+        }
 
         // set fields with null input to ''.
         // This fixes SQL import problem with null fields
