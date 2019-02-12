@@ -532,7 +532,7 @@ return [
     'Password Reset Interval'   => 'Password Reset Interval',
     'PasswordClick'             => 'Please click HERE to change your password.',
     'hello'                     => 'Hello',
-    'newTicketAssigned'         => 'there is a new Ticket assigned to you',
+    'newTicketAssigned'         => 'there is a new Ticket assigned to you.',
     'ticket'                    => 'Ticket',
     'title'                     => 'Title',
     'description'               => 'Description',

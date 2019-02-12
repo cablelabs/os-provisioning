@@ -157,5 +157,6 @@ return [
         'time' => 'Uhrzeit',
         'available' => 'verfügbar',
         'size' => 'Größe',
+        'users_ids' => 'Zugewiesene Nutzer',
     ],
 ];

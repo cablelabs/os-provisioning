@@ -532,7 +532,7 @@ return [
     'Password Reset Interval'   => 'Passwortwechsel-Intervall',
     'PasswordClick'             => 'Klicken Sie HIER um Ihr Passwort zu ändern.',
     'hello'                     => 'Hallo',
-    'newTicketAssigned'         => 'dir wurde ein neues Ticket zugewiesen',
+    'newTicketAssigned'         => 'dir wurde ein neues Ticket zugewiesen.',
     'ticket'                    => 'Ticket',
     'title'                     => 'Titel',
     'description'               => 'Beschreibung',
@@ -540,7 +540,7 @@ return [
     'newTicket'                 => 'Neues Ticket',
     'deletedTicketUsers'        => 'Gelöscht von Ticket :id',
     'deletedTicketUsersMessage' => 'Du wurdest aus dem Ticket Nr. :id entfernt.',
-    'ticketUpdatedMessage'      => 'das Ticket wurde geändert',
+    'ticketUpdatedMessage'      => 'das Ticket wurde geändert.',
     'noReplyMail'               => 'Adresse der Noreply E-mail',
     'noReplyName'               => 'Name der Noreply E-mail',
 ];
