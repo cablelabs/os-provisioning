@@ -166,4 +166,8 @@ return [
  * Module Ticketsystem
  */
     'assign_user' => 'Zuweisen eines Users zu einem Ticket.',
+    'mail_env'    => 'Nächster Schritt: Host/Nutzernamen/Passwort in /etc/nmsprime/env/global.env eintragen, um Emails im Bezug auf Tickets zu erhalten.',
+    'noReplyMail' => 'Die E-Mail-Adresse, die als Absender angezeigt werden soll, wenn Tickets geändert/erstellt werden. Die Adresse muss nicht existieren. Z.B. example@example.com',
+    'noReplyName' => 'Der Name, der als Absender angezeigt werden soll, wenn Tickets geändert/erstellt werden. Z.B: NMS Prime',
+    'ticket_settings' => 'Nächster Schritt: Den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration angeben.',
  ];

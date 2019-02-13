@@ -156,5 +156,6 @@ return [
         'time' => 'Time',
         'available' => 'Available',
         'size' => 'Size',
+        'users_ids' => 'Assigned Users',
     ],
 ];
