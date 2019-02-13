@@ -401,7 +401,7 @@ return [
     'Created at'			=> 'Created at',
     'Activation date'       => 'Activation date',
     'Deactivation date'     => 'Deactivation date',
-    'SIP domain'            => 'SIP domain',
+    'SIP domain'            => 'Registrar',
     'Created at' 			=> 'Created at',
     'Last status update'	=> 'Last status update',
     'Last user interaction' => 'Last user interaction',
@@ -531,5 +531,6 @@ return [
     'newUser'                   => 'Welcome to NMS Prime. Please change your Passwort to secure your account properly. Thank You!',
     'Password Reset Interval'   => 'Password Reset Interval',
     'PasswordClick'             => 'Please click HERE to change your password.',
+    'deleteSettlementRun'       => 'Deleting settlementrun :time...',
     'created'                   => 'Created!',
 ];

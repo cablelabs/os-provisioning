@@ -155,6 +155,11 @@ class Configfile extends \BaseModel
      */
     private function __text_make($device, $type, $sw_up = false)
     {
+        // for cfs of type modem, mta or generic
+        // get global config - provisioning settings
+        $db_schemata ['provbase'][0] = Schema::getColumnListing('provbase');
+        $provbase = ProvBase::get();
+
         // array to extend the configfile; e.g. for firmware
         $config_extensions = [];
 
@@ -232,6 +237,10 @@ class Configfile extends \BaseModel
                     $db_schemata['phonenumber'][$phone->port] = Schema::getColumnListing('phonenumber');
                 }
 
+                break;
+
+            // for Base
+            case 'generic':
                 break;
 
             // this is for unknown types – atm we do nothing

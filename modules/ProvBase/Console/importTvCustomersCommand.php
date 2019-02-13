@@ -196,7 +196,7 @@ class importTvCustomersCommand extends Command
         $contract->salutation = self::map_salutation($line[self::C_SALUT]);
         $contract->phone = str_replace(['/', '-', ' '], '', $line[self::C_TEL]);
         $contract->description = $line[self::C_DESC1]."\n".$line[self::C_DESC2]."\n".$line[self::C_DESC3];
-        $contract->costcenter_id = $this->option('cc'); 		// Dittersdorf=1
+        $contract->costcenter_id = $this->option('ccContract'); 		// Dittersdorf=1
         if ($this->option('ag')) {
             $contract->contact = $this->option('ag');
         }
@@ -397,7 +397,7 @@ class importTvCustomersCommand extends Command
             'valid_to' 			=> $contract->contract_end,
             'valid_to_fixed' 	=> 1,
             // 'credit_amount' 	=> $credit_amount,
-            'costcenter_id' 	=> $this->option('cc'),
+            'costcenter_id' 	=> $this->option('ccContract'),
             ]);
 
         \Log::info("Add Credit [Product ID $product_id] for Amplifier to Contract $contract->number");
@@ -445,7 +445,7 @@ class importTvCustomersCommand extends Command
             'sepa_institute' 	=> $line[self::S_INST],
             'sepa_valid_from' 	=> date('Y-m-d', strtotime($line[self::S_SIGNATURE])),
             'state' 			=> 'RCUR',
-            'costcenter_id' 	=> $this->option('cc'),
+            'costcenter_id' 	=> $this->option('ccSepa'),
             // 'sepa_valid_to' 	=> NULL,
             ]);
 
@@ -472,8 +472,9 @@ class importTvCustomersCommand extends Command
     protected function getOptions()
     {
         return [
-            ['cc', null, InputOption::VALUE_REQUIRED, 'CostCenter ID for all the imported Contracts', 0],
+            ['ccContract', null, InputOption::VALUE_REQUIRED, 'CostCenter ID for all the imported Contracts', 0],
             ['ag', null, InputOption::VALUE_OPTIONAL, 'Antenna Community ID for all the imported Contracts', 0],
+            ['ccSepa', null, InputOption::VALUE_REQUIRED, 'CostCenter ID for all the sepa mandates', 0],
         ];
     }
 }
