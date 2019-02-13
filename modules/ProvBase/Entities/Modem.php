@@ -490,7 +490,7 @@ class Modem extends \BaseModel
 
         // TODO: check for hostname to avoid deleting the wrong entry when mac exists multiple times in DB !?
         foreach ($conf as $key => $line) {
-            if (strpos($line, $this->hostname) !== false) {
+            if (strpos($line, "$this->hostname {") !== false) {
                 unset($conf[$key]);
                 break;
             }
