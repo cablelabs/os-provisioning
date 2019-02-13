@@ -401,7 +401,7 @@ return [
     'Created at'			=> 'Created at',
     'Activation date'       => 'Activation date',
     'Deactivation date'     => 'Deactivation date',
-    'SIP domain'            => 'SIP domain',
+    'SIP domain'            => 'Registrar',
     'Created at' 			=> 'Created at',
     'Last status update'	=> 'Last status update',
     'Last user interaction' => 'Last user interaction',
@@ -543,4 +543,6 @@ return [
     'ticketUpdatedMessage'      => 'this ticket has been updated.',
     'noReplyMail'               => 'Addresse of noreply E-mail',
     'noReplyName'               => 'Name of noreply E-mail',
+    'deleteSettlementRun'       => 'Deleting settlementrun :time...',
+    'created'                   => 'Created!',
 ];

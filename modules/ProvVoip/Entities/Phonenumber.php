@@ -47,7 +47,7 @@ class Phonenumber extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         return ['table' => $this->table,
-                'index_header' => [$this->table.'.number', 'phonenumbermanagement.activation_date', 'phonenumbermanagement.deactivation_date', 'phonenr_state', 'modem_city'],
+                'index_header' => [$this->table.'.number', 'phonenumbermanagement.activation_date', 'phonenumbermanagement.deactivation_date', 'phonenr_state', 'modem_city', 'sipdomain'],
                 'header' => 'Port '.$this->port.': '.$this->prefix_number.'/'.$this->number,
                 'bsclass' => $bsclass,
                 'edit' => ['phonenumbermanagement.activation_date' => 'get_act', 'phonenumbermanagement.deactivation_date' => 'get_deact', 'phonenr_state' => 'get_state', 'number' => 'build_number', 'modem_city' => 'modem_city'],
