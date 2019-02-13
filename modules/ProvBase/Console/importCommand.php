@@ -739,10 +739,21 @@ class importCommand extends Command
         // NOTE: if even 1 of the cpe's has a public IP we assign a public IP for all CPE's here
         $comps = $db_con->table('tbl_computer')->select('ip')->where('modem', '=', $old_modem->id)->get();
 
-        $modem->public = 0;
+        // Determine if Device has a public IP
+        $validator = new \Acme\Validators\ExtendedValidator;
+        $privateIps = [['10.0.0.0', '255.0.0.0'], ['192.168.0.0', '255.255.0.0'], ['172.16.0.0', '255.224.0.0'], ['100.64.0.0', '255.192.0.0']];
+        $modem->public = 1;
+
         foreach ($comps as $comp) {
-            if ($comp->ip[0] != '1') {
-                $modem->public = 1;
+            foreach ($privateIps as $range) {
+                if ($validator->validateIpInRange(null, $comp->ip, $range)) {
+                    $modem->public = 0;
+                    break;
+                }
+            }
+
+            if ($modem->public) {
+                \Log::debug("Set public IP for $modem->hostname because of IP $comp->ip");
                 break;
             }
         }
