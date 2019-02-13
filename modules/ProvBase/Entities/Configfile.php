@@ -158,8 +158,7 @@ class Configfile extends \BaseModel
         // for cfs of type modem, mta or generic
         // get global config - provisioning settings
         $db_schemata ['provbase'][0] = Schema::getColumnListing('provbase');
-        $model = new ProvBase;
-        $provbase = $model->get();
+        $provbase = ProvBase::get();
 
         // array to extend the configfile; e.g. for firmware
         $config_extensions = [];
