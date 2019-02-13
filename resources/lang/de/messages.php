@@ -532,4 +532,5 @@ return [
     'Password Reset Interval'   => 'Passwortwechsel-Intervall',
     'PasswordClick'             => 'Klicken Sie HIER um Ihr Passwort zu ändern.',
     'deleteSettlementRun'       => 'Abrechnungslauf :time wird gelöscht...',
+    'created'                   => 'Erstellt!',
 ];

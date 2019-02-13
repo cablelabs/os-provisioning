@@ -532,4 +532,5 @@ return [
     'Password Reset Interval'   => 'Password Reset Interval',
     'PasswordClick'             => 'Please click HERE to change your password.',
     'deleteSettlementRun'       => 'Deleting settlementrun :time...',
+    'created'                   => 'Created!',
 ];

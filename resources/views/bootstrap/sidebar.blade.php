@@ -63,6 +63,7 @@
                 {{$network->name}}
               </a>
             <ul class="sub-menu d-block" style="list-style-position: inside;">
+              {{-- Network-Clusters are Cached for 5 minutes --}}
               @foreach ($network->get_all_cluster_to_net() as $cluster)
                 <li id="{{$cluster->name}}" class="has-sub">
                   <a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
