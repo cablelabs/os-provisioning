@@ -652,7 +652,7 @@ class BaseController extends Controller
             return $id;
         }
 
-        $msg = 'Created!';
+        $msg = trans('messages.created');
         Session::push('tmp_success_above_form', $msg);
 
         return Redirect::route(NamespaceController::get_route_name().'.edit', $id)->with('message', $msg)->with('message_color', 'success');
@@ -897,9 +897,13 @@ class BaseController extends Controller
      */
     private function _set_many_to_many_relations($obj, $data)
     {
+        if (Bouncer::cannot('update', get_class($obj))) {
+            return;
+        }
+
         foreach ($this->many_to_many as $key => $field) {
             if (isset($field['classes']) &&
-                (Bouncer::cannot('edit', $field['classes'][0]) || Bouncer::cannot('edit', $field['classes'][1]))) {
+                (Bouncer::cannot('update', $field['classes'][0]) || Bouncer::cannot('update', $field['classes'][1]))) {
                 Session::push('error', "You are not allowed to edit {$field['classes'][0]} or {$field['classes'][1]}");
                 continue;
             }
