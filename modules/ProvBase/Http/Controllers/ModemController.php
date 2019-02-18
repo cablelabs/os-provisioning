@@ -77,7 +77,8 @@ class ModemController extends \BaseController
             [['form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1']];
 
         if (\Module::collections()->has('HfcCustomer')) {
-            $geopos = link_to_route('CustomerModem.show', 'Geopos X/Y', ['true', $model->id]);
+            $rect = [round($model->x, 4) - 0.0001, round($model->x, 4) + 0.0001, round($model->y, 4) - 0.0001, round($model->y, 4) + 0.0001];
+            $geopos = link_to_route('CustomerModem.show', 'Geopos X/Y', ['true', $model->id]).'    ('.link_to_route('CustomerRect.show', 'Umgebung', $rect).')';
         } else {
             $geopos = 'Geopos X/Y';
         }
