@@ -34,7 +34,6 @@ class Contract extends \BaseModel
             'city' => 'required',
             'phone' => 'required',
             'email' => 'email',
-            'birthday' => 'required|date',
             'contract_start' => 'date',
             'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
         ];
