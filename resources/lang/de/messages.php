@@ -546,4 +546,5 @@ return [
     'noReplyName'               => 'Name der Noreply E-mail',
     'deleteSettlementRun'       => 'Abrechnungslauf :time wird gelöscht...',
     'created'                   => 'Erstellt!',
+    'proximity'                 => 'Umgebungssuche',
 ];

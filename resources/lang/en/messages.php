@@ -546,4 +546,5 @@ return [
     'noReplyName'               => 'Name of noreply E-mail',
     'deleteSettlementRun'       => 'Deleting settlementrun :time...',
     'created'                   => 'Created!',
+    'proximity'                 => 'Proximity search',
 ];
