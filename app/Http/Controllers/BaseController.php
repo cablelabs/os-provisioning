@@ -1012,12 +1012,12 @@ class BaseController extends Controller
 
         if (! $deleted && ! $obj->force_delete) {
             $message = 'Could not delete '.$class;
+            // Session::push('tmp_error_above_form', $message);
             $color = 'danger';
-            Session::push('tmp_error_above_form', $message);
         } elseif (($deleted == $to_delete) || $obj->force_delete) {
             $message = 'Successful deleted '.$class;
+            // Session::push('tmp_success_above_form', $message);
             $color = 'success';
-            Session::push('tmp_success_above_form', $message);
         } else {
             $message = 'Deleted '.$deleted.' out of '.$to_delete.' '.$class;
             $color = 'warning';

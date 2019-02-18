@@ -566,4 +566,10 @@ return [
     'created'                   => 'Created!',
     'Urban district'            => 'Urban district',
     'Zipcode'                   => 'Zipcode',
+    'base' => [
+        'delete' => [
+            'success' => 'Deleted :model :id',
+            'fail' => 'Could not delete :model :id',
+        ],
+    ],
 ];

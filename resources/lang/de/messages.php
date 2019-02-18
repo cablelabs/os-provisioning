@@ -566,4 +566,10 @@ return [
     'created'                   => 'Erstellt!',
     'Urban district'            => 'Ortsnamenzusatz',
     'Zipcode'                   => 'Postleitzahl',
+    'base' => [
+        'delete' => [
+            'success' => ':model :id wurde gelöscht',
+            'fail' => ':model :id konnte nicht gelöscht werden',
+        ],
+    ],
 ];
