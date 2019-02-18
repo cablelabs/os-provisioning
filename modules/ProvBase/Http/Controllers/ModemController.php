@@ -17,8 +17,12 @@ class ModemController extends \BaseController
 
     // save button title ? for a help message
     protected $edit_view_second_button = true;
-    protected $second_button_name = 'Force Restart';
+    protected $second_button_name = 'Restart via CMTS';
     protected $second_button_title_key = 'modem_force_restart_button_title';
+
+    protected $edit_view_third_button = true;
+    protected $third_button_name = 'Reset Modem';
+    protected $third_button_title_key = 'modem_reset_button_title';
 
     /**
      * defines the formular fields for the edit and create view
@@ -338,12 +342,12 @@ class ModemController extends \BaseController
      */
     public function update($id)
     {
-        if (! \Input::has('_2nd_action')) {
+        if (! \Input::has('_2nd_action') && ! \Input::has('_3rd_action')) {
             return parent::update($id);
         }
 
         $modem = Modem::find($id);
-        $modem->restart_modem();
+        $modem->restart_modem(false, \Input::has('_3rd_action'));
 
         return \Redirect::back();
     }

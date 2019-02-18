@@ -39,6 +39,10 @@ class BaseController extends Controller
     protected $second_button_name = 'Missing action name';
     protected $second_button_title_key = null;
 
+    protected $edit_view_third_button = false;
+    protected $third_button_name = 'Missing action name';
+    protected $third_button_title_key = null;
+
     protected $relation_create_button = 'Create';
 
     // if set to true a create button on index view is available
@@ -442,6 +446,9 @@ class BaseController extends Controller
         $a['second_button_name'] = $this->second_button_name;
         $a['edit_view_second_button'] = $this->edit_view_second_button;
         $a['second_button_title_key'] = $this->second_button_title_key;
+        $a['third_button_name'] = $this->third_button_name;
+        $a['edit_view_third_button'] = $this->edit_view_third_button;
+        $a['third_button_title_key'] = $this->third_button_title_key;
         $a['save_button_title_key'] = $this->save_button_title_key;
 
         // Get Framework Informations
