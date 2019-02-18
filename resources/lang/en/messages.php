@@ -100,7 +100,13 @@ return [
     'cdr_missing_reseller_data' => 'Missing Reseller Data in Environment File!',
     'cdr_offset' 			=> 'CDR to Invoice time difference in Months',
     'close' 				=> 'Close',
-    'contract_early_cancel' => 'Do you really want to cancel this contract before tariffs end of term :date is reached?',
+    'contract' => [
+        'concede_credit' => 'There are yearly charged items that were already charged (by full price). Please check if the customer shall get a credit!',
+        'early_cancel' => 'Do you really want to cancel this contract before tariffs end of term :date is reached?',
+        ],
+    'iteM' => [
+        'concede_credit' => 'This item was already charged (by full price). Please check if the customer shall get a credit!',
+    ],
     'contract_nr_mismatch'  => 'Could not find the next contract number because the database query failed. This is due to the following contracts having a contract number that does not belong to their selected cost center: :nrs. Please change the cost center or let the system assign a new contract number for these contracts.',
     'contract_numberrange_failure' => 'No free contract number for selected costcenter available!',
     'cpe_log_error' 		=> 'was not registering on Server - No log entry found',

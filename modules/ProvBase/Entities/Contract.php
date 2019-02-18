@@ -1259,31 +1259,48 @@ class ContractObserver
 
         $contract->push_to_modems();
 
-        if ($contract['original']) {
-            // Note: implement this commented way if there are more checkings for better code structure - but this reduces performance on one of the most used functions of the user!
-            // $changed_fields = $contract->getDirty();
+        $changed_fields = $contract->getDirty();
 
-            // Note: isset is way faster regarding the performance than array_key_exists, but returns false if value of key is null which is not important here - See upmost comment on: http://php.net/manual/de/function.array-key-exists.php
-            // if (isset($changed_fields['number']))
-            if ($contract->number != $contract['original']['number']) {
-                // change customer information - take care - this automatically changes login psw of customer
-                if ($customer = $contract->CccUser) {
-                    $customer->update();
+        // Note: isset is way faster regarding the performance than array_key_exists, but returns false if value of key is null which is not important here - See upmost comment on: http://php.net/manual/de/function.array-key-exists.php
+        if (isset($changed_fields['number'])) {
+            // change customer information - take care - this automatically changes login psw of customer
+            if ($customer = $contract->CccUser) {
+                $customer->update();
+            }
+        }
+
+        if (isset($changed_fields['contract_start']) || isset($changed_fields['contract_end'])) {
+            $contract->daily_conversion();
+
+            if (\Module::collections()->has('BillingBase') && $contract->contract_end && isset($changed_fields['contract_end'])) {
+                // Alert if end is lower than tariffs end of term
+                $ret = $contract->getCancelationDates();
+
+                if ($ret['cancelation_day'] && $contract->contract_end < $ret['end_of_term']) {
+                    \Session::put('alert.danger', trans('messages.contract.early_cancel', ['date' => $ret['end_of_term']]));
                 }
             }
+        }
 
-            // if (isset($changed_fields['contract_start']) || isset($changed_fields['contract_end']))
-            if ($contract->contract_start != $contract['original']['contract_start'] || $contract->contract_end != $contract['original']['contract_end']) {
-                $contract->daily_conversion();
+        // Show alert when contract is canceled and there are yearly payed items that were charged already (by probably full amount) - customer should get a credit then
+        if (isset($changed_fields['contract_end'])) {
+            $query = $contract->items()->join('product as p', 'item.product_id', '=', 'p.id')
+                    ->where('p.billing_cycle', 'Yearly');
 
-                if (\Module::collections()->has('BillingBase') && $contract->contract_end && $contract->contract_end != $contract['original']['contract_end']) {
-                    // Alert if end is lower than tariffs end of term
-                    $ret = $contract->getCancelationDates();
+            if (date('Y', strtotime($contract->contract_end)) == date('Y')) {
+                $query = $query->where('payed_month', '!=', 0);
+            } elseif (date('m') == '01' && $contract->contract_end != date('Y-12-31', strtotime('last year')) &&
+                date('Y', strtotime($contract->contract_end)) == (date('Y') - 1)
+                ) {
+                // e.g. in january of current year the user enters belatedly a cancelation date of last year in dec
+            } else {
+                return;
+            }
 
-                    if ($ret['cancelation_day'] && $contract->contract_end < $ret['end_of_term']) {
-                        \Session::put('alert', trans('messages.contract_early_cancel', ['date' => $ret['end_of_term']]));
-                    }
-                }
+            $concede_credit = $query->count();
+
+            if ($concede_credit) {
+                \Session::put('alert.warning', trans('messages.contract.concede_credit'));
             }
         }
     }

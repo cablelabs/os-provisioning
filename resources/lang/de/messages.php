@@ -100,7 +100,13 @@ return [
     'cdr_missing_reseller_data' => 'EVN konnte nicht geladen werden. Reseller Daten in Environment Datei fehlen!',
     'cdr_offset' 			=> 'Zeitdifferenz EVN zu Rechnung in Monaten',
     'close' 				=> 'Schliessen',
-    'contract_early_cancel' => 'Möchten Sie den Vertrag wirklich vor Tariflaufzeitende :date kündigen?',
+    'contract' => [
+        'concede_credit' => 'Es existieren Posten mit jährlichem Abrechnungszyklus, die bereits (in vollem Umfang) abgerechnet wurden. Bitte prüfen Sie, ob der Kunde eine Gutschrift erhalten soll!',
+        'early_cancel' => 'Möchten Sie den Vertrag wirklich vor Tariflaufzeitende :date kündigen?',
+        ],
+    'iteM' => [
+        'concede_credit' => 'Dieser Posten wurde bereits abgerechnet (möglicherweise für das komplette Jahr). Bitte prüfen Sie, ob der Kunde eine Gutschrift erhalten soll!',
+    ],
     'contract_nr_mismatch'  => 'Es konnte keine nächste Vertragsnummer gefunden werden, da die Datenbankabfrage fehl schlug. Die Ursache dafür liegt bei folgenden Verträgen, die eine Vertragsnummer haben, die nicht zur Kostenstelle passt: :nrs. Bitte tragen Sie die korrekte Kostenstelle ein oder lassen Sie eine neue Vertragsnummer für die Verträge vergeben.',
     'contract_numberrange_failure' => 'Keine freie Vertragsnummer für die gewählte Kostenstelle gefunden.',
     'cpe_log_error' 		=> 'ist nicht beim Server registriert - Kein Logeintrag gefunden',
