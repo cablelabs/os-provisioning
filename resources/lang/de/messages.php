@@ -318,6 +318,7 @@ return [
     'snmp_query_failed' 	=> 'SNMP-Abfrage fehlgeschlagen für folgende OIDs: ',
     'Billing Cycle'				=> 'Abrechnungszyklus',
     'Bundled with VoIP product?'=> 'Gebündelt mit VoIP-Produkt?',
+    'Calculate proportionately' => 'Anteilig berechnen',
     'Price (Net)'				=> 'Preis (Netto)',
     'Number of Cycles'			=> 'Anzahl der Zyklen',
     'Product Entry'				=> 'Produkteintrag',

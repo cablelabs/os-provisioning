@@ -318,6 +318,7 @@ return [
     'snmp_query_failed' 	=> 'SNMP Query failed for following OIDs: ',
     'Billing Cycle'				=> 'Billing Cycle',
     'Bundled with VoIP product?'=> 'Bundled with VoIP product?',
+    'Calculate proportionately' => 'Calculate proportionately',
     'Price (Net)'				=> 'Price (Net)',
     'Number of Cycles'			=> 'Number of Cycles',
     'Product Entry'				=> 'Product Entry',
