@@ -26,15 +26,16 @@ class Contract extends \BaseModel
             'number2' => 'string|unique:contract,number2,'.$id.',id,deleted_at,NULL',
             'number3' => 'string|unique:contract,number3,'.$id.',id,deleted_at,NULL',
             // 'number4' => 'string|unique:contract,number4,'.$id.',id,deleted_at,NULL', 	// old customer number must not be unique!
-            'firstname' => 'required',
-            'lastname' => 'required',
+            'company' => 'required_if:salutation,Firma,Behörde',
+            'firstname' => 'required_if:salutation,Herr,Frau',
+            'lastname' => 'required_if:salutation,Herr,Frau',
             'street' => 'required',
             'house_number' => 'required',
             'zip' => 'required',
             'city' => 'required',
             'phone' => 'required',
             'email' => 'email',
-            'birthday' => 'required|date',
+            'birthday' => 'required_if:salutation,Herr,Frau|nullable|date',
             'contract_start' => 'date',
             'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
         ];

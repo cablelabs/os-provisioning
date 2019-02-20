@@ -165,6 +165,7 @@ class ContractController extends \BaseController
             'contract_end',
             'voip_contract_start',
             'voip_contract_end',
+            'birthday',
         ];
         $data = $this->_nullify_fields($data, $nullable_fields);
 
