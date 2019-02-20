@@ -592,7 +592,13 @@ class Modem extends \BaseModel
 
         // make text and write to file
         $conf = "\tNetworkAccess $network_access;\n";
-        $conf .= "\tMaxCPE $max_cpe;\n";
+
+        // don't use auto generated MaxCPE if it is explicitly set in the configfile
+        // see https://stackoverflow.com/a/643136 for stripping multiline comments
+        if (! \Str::contains(preg_replace('!/\*.*?\*/!s', '', $cf->text), 'MaxCPE')) {
+            $conf .= "\tMaxCPE $max_cpe;\n";
+        }
+
         if (\Module::collections()->has('ProvVoip') && $network_access) {
             foreach ($this->mtas as $mta) {
                 $conf .= "\tCpeMacAddress $mta->mac;\n";
