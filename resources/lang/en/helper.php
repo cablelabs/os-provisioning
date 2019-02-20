@@ -134,6 +134,7 @@ return [
     'modem_update_frequency'		=> 'This field is updated once a day.',
     'enable_agc'					=> 'Enable upstream automatic gain control.',
     'agc_offset'					=> 'Upstream automatic gain control offset in dB. (default: 0.0)',
+    'configfile_count'              => 'The number in brackets indicates how often the respective configurationfile is already used.',
 
  /*
   *	MODULE: ProvVoip

@@ -721,12 +721,7 @@ class BaseModel extends Eloquent
 
         $ret = [];
         foreach ($tmp as $id => $value) {
-            if (array_key_exists($id, $counts)) {
-                $value .= ' ('.$counts[$id].')';
-            } else {
-                $value .= ' (0)';
-            }
-            $ret[$id] = $value;
+            $ret[$id] = array_key_exists($id, $counts) ? $value.' ('.$counts[$id].')' : $value.' (0)';
         }
 
         return $ret;

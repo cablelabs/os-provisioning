@@ -134,6 +134,7 @@ return [
     'modem_update_frequency'		=> 'Dieses Feld wird einmal täglich aktualisiert.',
     'enable_agc'					=> 'Aktiviere automatische Verstärkungsregelung in Rückkanalrichtung.',
     'agc_offset'					=> 'Verschiebung des automatischen Verstärkungsregelungwertes in Rückkanalrichtung in dB. (Vorgabewert: 0.0)',
+    'configfile_count'              => 'Die Zahl in Klammern zeigt an, wie häufig die jeweilige Konfigurationsdatei bereits verwendet wird.',
 
  /*
   *	MODULE: ProvVoip
