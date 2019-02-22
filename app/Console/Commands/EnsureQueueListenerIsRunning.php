@@ -101,6 +101,8 @@ class EnsureQueueListenerIsRunning extends Command
         $command = 'php '.base_path().'/artisan queue:work --tries=1 --timeout=9999 > /dev/null & echo $!';
         $pid = exec($command);
 
+        \Log::info('Start general queue worker');
+
         return $pid;
     }
 }
