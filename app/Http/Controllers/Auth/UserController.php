@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Auth;
 use Bouncer;
+use Session;
 use App\Role;
 use App\User;
 use Carbon\Carbon;
@@ -97,7 +98,13 @@ class UserController extends BaseController
     public function store($redirect = true)
     {
         parent::store($redirect);
-        \Session::push('tmp_success_above_index_list', trans('messages.created'));
+
+        // if validation fails redirect back
+        if (! empty(Session::get('errors'))) {
+            return redirect()->back();
+        }
+
+        Session::push('tmp_success_above_index_list', trans('messages.created'));
 
         return redirect()->route('User.index');
     }
