@@ -542,8 +542,8 @@ return [
     'Enable AGC'                => 'Enable AGC',
     'AGC offset'                => 'AGC offset',
     'spectrum'                  => 'Spectrum',
-    'levelTenthDb'              => 'Level in dB',
-    'noSpectrum'                => 'No Spectrum available for this Modem',
+    'levelDb'                   => 'Level in dBmV',
+    'noSpectrum'                => 'No Spectrum available for this Modem.',
     'createSpectrum'            => 'Create Spectrum',
     'configfile_outdated'       => 'Configfile is outdated - Error while generating the file!',
     'shouldChangePassword'       => 'Please change your password!',
@@ -573,4 +573,5 @@ return [
             'fail' => 'Could not delete :model :id',
         ],
     ],
+    'pleaseWait'                => 'This may take a few seconds. Please wait until the process has finished.',
 ];
