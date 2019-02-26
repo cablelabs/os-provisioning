@@ -258,7 +258,7 @@ class Mta extends \BaseModel
         $conf = file(self::CONF_FILE_PATH);
 
         foreach ($conf as $key => $line) {
-            if (strpos($line, $replace) !== false) {
+            if (strpos($line, "$replace {") !== false) {
                 unset($conf[$key]);
                 break;
             }

@@ -94,15 +94,17 @@
 	@endforeach
 	</div>
 
-	{{-- Alert / Info --}}
-	@foreach (['alert', 'info'] as $notif)
-		@if (Session::has($notif))
-			@include('bootstrap.alert', array('message' => Session::get($notif), 'color' => $notif == 'alert' ? 'danger' : $notif))
-			<?php Session::forget($notif); ?>
-		@endif
-	@endforeach
 
 @endif
+
+	{{-- Alert --}}
+	@if (Session::has('alert'))
+		@foreach (Session::get('alert') as $notif => $message)
+			@include('bootstrap.alert', array('message' => $message, 'color' => $notif))
+			<?php Session::forget("alert.$notif"); ?>
+		@endforeach
+	@endif
+
 @stop
 
 @section('javascript')

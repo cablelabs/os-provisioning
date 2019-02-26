@@ -926,7 +926,7 @@ class PhonenumberObserver
             ->count();
 
         if ($num) {
-            \Session::put('alert', trans('messages.phonenumber_overlap_hlkomm', ['delay' => 1 + $delay]));
+            \Session::put('alert.danger', trans('messages.phonenumber_overlap_hlkomm', ['delay' => 1 + $delay]));
         }
     }
 
@@ -951,7 +951,7 @@ class PhonenumberObserver
             return;
         }
 
-        \Session::put('alert', trans('messages.phonenumber_nr_change_hlkomm'));
+        \Session::put('alert.danger', trans('messages.phonenumber_nr_change_hlkomm'));
     }
 
     public function deleted($phonenumber)
