@@ -1158,23 +1158,40 @@ class Contract extends \BaseModel
     }
 
     /**
-     * Get Contracts next possible cancelation dates - dependent of tariff type (default: Internet)
+     * Get Contracts next possible cancelation dates - dependent of internet or voip item
      *
      * @author Nino Ryschawy
      *
-     * @param string 	Internet|Voip|TV  - Type of which the contracts next possible cancelation date is dependent
-     * @return array 	[end of term, next possible cancelation date, tariff]
-     *         null     no tariff to consider
-     *      NOTE: if cancelation date is empty -> customer has already canceled
+     * @param string 	Date for that cancelation dates shall be retrieved: e.g. for today (for alert in observer)
+     *                  or last day of last month (settlement run)
+     * @return array 	case 1: default
+     *                  case 2: contract was already canceled (important for settlement run) - 'canceled_to' is set
+     *
+     * NOTE: if date is last day of last month it's automatically assumed that cancelation dates are requested for/from the settlement run
      */
-    public function getCancelationDates()
+    public function getCancelationDates($date = '')
     {
-        // check if contract was already canceled
-        if ($this->get_end_time()) {
-            return [
-                'end_of_term' => $this->contract_end,
-                'cancelation_day' => '',
-                ];
+        $ret = [
+            'cancelation_day' => '',
+            'canceled_to' => '',
+            'end_of_term' => '',
+            'maturity' => '',
+            'tariff' => null,
+        ];
+
+        // check if contract was already canceled for settlement run
+        if (! $this->isDirty('contract_end') && $this->contract_end && $this->get_end_time()) {
+            $ret['canceled_to'] = $this->contract_end;
+
+            return $ret;
+        }
+
+        // e.g. check for current date or for settlement run
+        if (! $date) {
+            $date = date('Y-m-d');
+        } elseif ($date == date('Y-m-d', strtotime('last day of last month'))) {
+            // this is important for the filter of the following db query
+            $date = date('Y-m-d', strtotime('first day of this month'));
         }
 
         // get last internet & voip tariff (take last added if multiple valid tariffs)
@@ -1183,9 +1200,9 @@ class Contract extends \BaseModel
             ->join('product as p', 'item.product_id', '=', 'p.id')
             ->select('item.*', 'p.type', 'p.bundled_with_voip', 'p.name')
             ->whereIn('type', ['Internet', 'Voip'])
-            ->where(function ($query) {
+            ->where(function ($query) use ($date) {
                 $query
-                ->where('item.valid_to', '>=', date('Y-m-d'))
+                ->where('item.valid_to', '>=', $date)
                 ->orWhereNull('item.valid_to')
                 ->orWhere('item.valid_to', '=', '');
             })
@@ -1207,11 +1224,11 @@ class Contract extends \BaseModel
         }
 
         if (! $tariff) {
-            return;
+            return $ret;
         }
 
         // return end_of_term, last cancelation_day, tariff
-        $ret = $tariff->getNextCancelationDate();
+        $ret = array_merge($ret, $tariff->getNextCancelationDate($date));
         $ret['tariff'] = $tariff;
 
         return $ret;
@@ -1276,7 +1293,7 @@ class ContractObserver
                 // Alert if end is lower than tariffs end of term
                 $ret = $contract->getCancelationDates();
 
-                if ($ret['cancelation_day'] && $contract->contract_end < $ret['end_of_term']) {
+                if ($ret['end_of_term'] && $contract->contract_end < $ret['end_of_term']) {
                     \Session::put('alert.danger', trans('messages.contract.early_cancel', ['date' => $ret['end_of_term']]));
                 }
             }
