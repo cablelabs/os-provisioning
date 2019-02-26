@@ -158,6 +158,8 @@ return [
     'snmp' => [
         'errors_walk' => 'Querying the following OIDs failed: :oids.',
         'errors_set' => 'The following Parameters could not be Set: :oids.',
+        'missing_cmts' => 'The cluster misses a superior CMTS as parent device.',
+        'undefined' => 'For this netelementtype is no controlling defined.',
         'unreachable' => 'The device is not reachable via SNMP.',
     ],
     'State'						=> 'State',

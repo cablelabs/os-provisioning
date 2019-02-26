@@ -158,6 +158,8 @@ return [
     'snmp' => [
         'errors_walk' => 'Die Abfrage folgender OIDs schlug fehl: :oids.',
         'errors_set' => 'Das Setzen folgender Parameter schlug fehl: :oids.',
+        'missing_cmts' => 'Dem Cluster fehlt ein übergeordnetes CMTS.',
+        'undefined' => 'Für diesen Netzelementtyp ist kein Controlling definiert.',
         'unreachable' => 'Das Gerät ist nicht per SNMP erreichbar.',
     ],
     'State'						=> 'Status',
