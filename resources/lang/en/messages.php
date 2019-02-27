@@ -501,7 +501,6 @@ return [
     'user'                      => 'user',
     'Yes'                       => 'Yes',
     'No'                        => 'No',
-    'has telephony'             => 'Activate if customer shall have telephony. This setting influences the modems configfile parameters NetworkAcess and MaxCPE.',
     'Has telephony'             => 'Has telephony',
     'OID for PreConfiguration Setting' => 'OID for PreConfiguration Setting',
     'PreConfiguration Value' => 'PreConfiguration Value',

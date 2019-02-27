@@ -501,7 +501,6 @@ return [
     'user'                      => 'Benutzer',
     'Yes'                       => 'Ja',
     'No'                        => 'Nein',
-    'has_telephony'             => 'Muss aktiv sein, wenn der Kunde Telefonie haben soll. Dies hat Einfluss auf NetworkAccess und MaxCPE im Modem Configfile.',
     'Has telephony'             => 'Hat Telefonie',
     'OID for PreConfiguration Setting' => 'OID für Vorkonfiguration',
     'PreConfiguration Value'    => 'Wert für Vorkonfiguration',

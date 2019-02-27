@@ -137,6 +137,7 @@ return [
     'modem_update_frequency'		=> 'Dieses Feld wird einmal täglich aktualisiert.',
     'enable_agc'					=> 'Aktiviere automatische Verstärkungsregelung in Rückkanalrichtung.',
     'agc_offset'					=> 'Verschiebung des automatischen Verstärkungsregelungwertes in Rückkanalrichtung in dB. (Vorgabewert: 0.0)',
+    'has_telephony'                 => 'Muss aktiv sein, wenn der Kunde Telefonie haben soll, aber kein Internet hat. Das Flag kann aktuell nicht genutzt werden, um die Telefonie bei Verträgen mit Internet zu deaktivieren. Dazu muss das MTA gelöscht oder die Telefonnummer deaktiviert werden. Info: Die Einstellung hat Einfluss auf NetworkAccess und MaxCPE im Modem Configfile - siehe Modem-Analyse im Tab \'Configfile\'',
 
  /*
   *	MODULE: ProvVoip
