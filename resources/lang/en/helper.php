@@ -128,7 +128,7 @@ return [
   */
     'rate_coefficient'				=> 'MaxRateSustained will be multiplied by this value to grant the user more (> 1.0) throughput than subscribed.',
     //ModemController
-    'Modem_NetworkAccess'			=> 'Network Access for CPEs. (MTAs are not considered and will always go online when all other configurations are correct). Take care: With Billing-Module this checkbox will be overwritten by daily check if tariff changes.',
+    'Modem_InternetAccess'			=> 'Internet Access for CPEs. (MTAs are not considered and will always go online when all other configurations are correct). Take care: With Billing-Module this checkbox will be overwritten by daily check if tariff changes.',
     'Modem_InstallationAddressChangeDate'	=> 'In case of (physical) relocation of the modem: Add startdate for the new address here. If readonly there is a pending address change order at Envia.',
     'Modem_GeocodeOrigin'			=> 'Where does geocode data come from? If set to “n/a” address could not be geocoded against any API. Will be set to your name on manually changed geodata.',
     'contract_number' 				=> 'Attention - Customer login password is changed automatically on changing this field!',

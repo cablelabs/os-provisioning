@@ -80,7 +80,7 @@ class ContractController extends \BaseController
             $qoss = Qos::all();
 
             $b = [
-                ['form_type' => 'checkbox', 'name' => 'network_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1', 'checked' => 1],
+                ['form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1', 'checked' => 1],
                 ['form_type' => 'checkbox', 'name' => 'telephony_only', 'description' => 'Telephony only', 'help' => trans('messages.telephony_only')],
                 ['form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list($qoss, 'name')],
                 ['form_type' => 'select', 'name' => 'next_qos_id', 'description' => 'QoS next month', 'value' => $model->html_list($qoss, 'name', true)],

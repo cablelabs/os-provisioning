@@ -90,7 +90,7 @@ class Contract extends \BaseModel
     {
         $bsclass = 'success';
 
-        if (! $this->network_access) {
+        if (! $this->internet_access) {
             $bsclass = 'active';
 
             // '$this->id' to dont check when index table header is determined!
@@ -424,8 +424,8 @@ class Contract extends \BaseModel
      * The Daily Scheduling Function
      *
      * Tasks:
-     *  1. Check if $this contract end date is expired -> disable network_access
-     *  2. Check if $this is a new contract and activate it -> enable network_access
+     *  1. Check if $this contract end date is expired -> disable internet_access
+     *  2. Check if $this is a new contract and activate it -> enable internet_access
      *  3. Change QoS id and Voip id if actual valid (billing-) tariff changes
      *
      * @return none
@@ -482,7 +482,7 @@ class Contract extends \BaseModel
     }
 
     /**
-     * This enables/disables network_access according to start and end date of the contract.
+     * This enables/disables internet_access according to start and end date of the contract.
      * Used if billing is disabled.
      *
      * @author Torsten Schmidt
@@ -491,18 +491,18 @@ class Contract extends \BaseModel
     {
         $now = \Carbon\Carbon::now();
 
-        // Task 1: Check if $this contract end date is expired -> disable network_access
+        // Task 1: Check if $this contract end date is expired -> disable internet_access
         if ($this->contract_end) {
             $end = $this->_date_to_carbon($this->contract_end);
-            if ($end->lt($now) && ! $this->_date_null($end) && $this->network_access == 1) {
+            if ($end->lt($now) && ! $this->_date_null($end) && $this->internet_access == 1) {
                 \Log::Info('daily: contract: disable based on ending contract date for '.$this->id);
 
-                $this->network_access = 0;
+                $this->internet_access = 0;
                 $this->changes_on_daily_conversion = true;
             }
         }
 
-        // Task 2: Check if $this is a new contract and activate it -> enable network_access
+        // Task 2: Check if $this is a new contract and activate it -> enable internet_access
         // Note: to avoid enabling contracts which are disabled manually, we also check if
         //       maximum time beetween start contract and now() is not older than 1 day.
         // Note: This requires the daily scheduling to run well
@@ -510,10 +510,10 @@ class Contract extends \BaseModel
         // TODO: give them a good testing
         if ($this->contract_start) {
             $start = $this->_date_to_carbon($this->contract_start);
-            if ($start->lt($now) && ! $this->_date_null($start) && $start->diff($now)->days <= 1 && $this->network_access == 0) {
+            if ($start->lt($now) && ! $this->_date_null($start) && $start->diff($now)->days <= 1 && $this->internet_access == 0) {
                 \Log::Info('daily: contract: enable contract based on start contract date for '.$this->id);
 
-                $this->network_access = 1;
+                $this->internet_access = 1;
                 $this->changes_on_daily_conversion = true;
             }
         }
@@ -539,10 +539,10 @@ class Contract extends \BaseModel
 
         if (! $this->check_validity('Now')) {
             // invalid contract - disable every access
-            if ($this->network_access) {
-                $this->network_access = 0;
+            if ($this->internet_access) {
+                $this->internet_access = 0;
                 $this->changes_on_daily_conversion = true;
-                \Log::Info('daily: contract: disabling network_access based on active internet/voip items for contract '.$this->id);
+                \Log::Info('daily: contract: disabling internet_access based on active internet/voip items for contract '.$this->id);
             }
 
             if ($this->telephony_only) {
@@ -552,10 +552,10 @@ class Contract extends \BaseModel
             }
         } elseif (! $active_count_internet) {
             // valid contract, but no valid internet tariff
-            if ($this->network_access) {
-                $this->network_access = 0;
+            if ($this->internet_access) {
+                $this->internet_access = 0;
                 $this->changes_on_daily_conversion = true;
-                \Log::Info('daily: contract: disabling network_access based on active internet/voip items for contract '.$this->id);
+                \Log::Info('daily: contract: disabling internet_access based on active internet/voip items for contract '.$this->id);
             }
 
             if ($active_count_voip && ! $this->telephony_only) {
@@ -575,10 +575,10 @@ class Contract extends \BaseModel
                 \Log::info('daily: contract: unset telephony_only as customer has internet tariff now', [$this->id]);
             }
 
-            if (! $this->network_access) {
-                $this->network_access = 1;
+            if (! $this->internet_access) {
+                $this->internet_access = 1;
                 $this->changes_on_daily_conversion = true;
-                \Log::Info('daily: contract: enabling network_access based on active internet/voip items for contract '.$this->id);
+                \Log::Info('daily: contract: enabling internet_access based on active internet/voip items for contract '.$this->id);
             }
         }
     }
@@ -1008,7 +1008,7 @@ class Contract extends \BaseModel
 
     /**
      * Push all settings from Contract layer to the related child Modems (for $this)
-     * This includes: network_access, qos_id
+     * This includes: internet_access, qos_id
      *
      * Note: We call this function from Observer context so a change of the explained
      *       fields will push this changes to the child Modems
@@ -1025,7 +1025,7 @@ class Contract extends \BaseModel
         //       Note: This requires to use the Eloquent Context to run all Observers
         //       an to rebuild and restart the involved modems
         foreach ($this->modems as $modem) {
-            $modem->network_access = $this->network_access;
+            $modem->internet_access = $this->internet_access;
             $modem->qos_id = $this->qos_id;
             $modem->save();
 

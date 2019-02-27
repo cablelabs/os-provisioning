@@ -121,7 +121,7 @@ return [
     'envia_interaction'	 	=> 'Envia Order requires Interaction|Envia Orders require Interaction',
     'Net'						=> 'Net',
     'Netmask'					=> 'Netmask',
-    'Network Access'			=> 'Network Access',
+    'Internet Access'			=> 'Internet Access',
     'no' 						=> 'no',
     'Noble rank'                => 'Noble rank',
     'Nobiliary particle'        => 'Nobiliary particle',

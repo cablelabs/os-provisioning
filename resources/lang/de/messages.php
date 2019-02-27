@@ -121,7 +121,7 @@ return [
     'envia_interaction'	 	=> 'Envia Vorgang benötigt eine Bearbeitung|Envia Vorgänge benötigen Bearbeitung',
     'Net'						=> 'Netto',
     'Netmask'					=> 'Netzmaske',
-    'Network Access'			=> 'Netzwerkzugriff',
+    'Internet Access'			=> 'Internetzugriff',
     'no' 						=> 'nein',
     'Noble rank'                => 'Historischer Namenszusatz/Adelstitel',
     'Nobiliary particle'        => 'Vorsatzwort',
