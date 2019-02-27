@@ -545,10 +545,10 @@ class Contract extends \BaseModel
                 \Log::Info('daily: contract: disabling internet_access based on active internet/voip items for contract '.$this->id);
             }
 
-            if ($this->telephony_only) {
-                $this->telephony_only = 0;
+            if ($this->has_telephony) {
+                $this->has_telephony = 0;
                 $this->changes_on_daily_conversion = true;
-                \Log::info('daily: contract: Unset telephony_only as contract is invalid!', [$this->id]);
+                \Log::info('daily: contract: Unset has_telephony as contract is invalid!', [$this->id]);
             }
         } elseif (! $active_count_internet) {
             // valid contract, but no valid internet tariff
@@ -558,21 +558,21 @@ class Contract extends \BaseModel
                 \Log::Info('daily: contract: disabling internet_access based on active internet/voip items for contract '.$this->id);
             }
 
-            if ($active_count_voip && ! $this->telephony_only) {
-                $this->telephony_only = 1;
+            if ($active_count_voip && ! $this->has_telephony) {
+                $this->has_telephony = 1;
                 $this->changes_on_daily_conversion = true;
-                \Log::Info('daily: contract: switch to telephony_only', [$this->id]);
-            } elseif (! $active_count_voip && $this->telephony_only) {
-                $this->telephony_only = 0;
+                \Log::Info('daily: contract: switch to has_telephony', [$this->id]);
+            } elseif (! $active_count_voip && $this->has_telephony) {
+                $this->has_telephony = 0;
                 $this->changes_on_daily_conversion = true;
-                \Log::Info('daily: contract: switch from telephony_only to internet + telephony tariff', [$this->id]);
+                \Log::Info('daily: contract: switch from has_telephony to internet + telephony tariff', [$this->id]);
             }
         } else {
             // valid contract and valid internet tariff
-            if ($this->telephony_only) {
-                $this->telephony_only = 0;
+            if ($this->has_telephony) {
+                $this->has_telephony = 0;
                 $this->changes_on_daily_conversion = true;
-                \Log::info('daily: contract: unset telephony_only as customer has internet tariff now', [$this->id]);
+                \Log::info('daily: contract: unset has_telephony as customer has internet tariff now', [$this->id]);
             }
 
             if (! $this->internet_access) {
@@ -1029,7 +1029,7 @@ class Contract extends \BaseModel
             $modem->qos_id = $this->qos_id;
             $modem->save();
 
-            if (isset($changes['telephony_only']) && ! $modem->needs_restart()) {
+            if (isset($changes['has_telephony']) && ! $modem->needs_restart()) {
                 $modem->restart_modem();
                 $modem->make_configfile();
             }

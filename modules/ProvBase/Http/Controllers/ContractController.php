@@ -65,7 +65,7 @@ class ContractController extends \BaseController
 
         if (\Module::collections()->has('BillingBase')) {
             $b = [
-                    ['form_type' => 'checkbox', 'name' => 'telephony_only', 'description' => 'Telephony only', 'value' => '1', trans('messages.telephony_only'), 'hidden' => 1],
+                    ['form_type' => 'checkbox', 'name' => 'has_telephony', 'description' => 'Has telephony', 'value' => '1', trans('messages.has_telephony'), 'hidden' => 1],
                     ['form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'checked' => 1],
                     ['form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $model->html_list(\Modules\BillingBase\Entities\CostCenter::all(), 'name', true)],
                     ['form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => $model->html_list(\Modules\BillingBase\Entities\Salesman::all(), ['firstname', 'lastname'], true, ' - '), 'space' => '1'],
@@ -81,7 +81,7 @@ class ContractController extends \BaseController
 
             $b = [
                 ['form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1', 'checked' => 1],
-                ['form_type' => 'checkbox', 'name' => 'telephony_only', 'description' => 'Telephony only', 'help' => trans('messages.telephony_only')],
+                ['form_type' => 'checkbox', 'name' => 'has_telephony', 'description' => 'Has telephony', 'help' => trans('messages.has_telephony')],
                 ['form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list($qoss, 'name')],
                 ['form_type' => 'select', 'name' => 'next_qos_id', 'description' => 'QoS next month', 'value' => $model->html_list($qoss, 'name', true)],
             ];
