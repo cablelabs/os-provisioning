@@ -433,6 +433,9 @@ class Contract extends \BaseModel
      */
     public function daily_conversion()
     {
+        // we don't check items that ended before defined here (in days)
+        $item_max_ended_before = 7;
+
         \Log::Debug('Starting daily conversion for contract '.$this->number, [$this->id]);
 
         if (! \Module::collections()->has('BillingBase')) {
@@ -444,7 +447,7 @@ class Contract extends \BaseModel
             $items = $this->items()
                 ->leftJoin('product', 'product.id', '=', 'item.product_id')
                 ->whereIn('product.type', ['Internet', 'Voip'])
-                ->where(whereLaterOrEqualThanDate('item.valid_to'), date('Y-m-d'))
+                ->where(whereLaterOrEqualThanDate('item.valid_to', date('Y-m-d', strtotime("-$item_max_ended_before days"))))
                 // ->orderBy('valid_from', 'desc')
                 ->select('item.*')
                 ->with('product')
