@@ -433,8 +433,11 @@ class Contract extends \BaseModel
      */
     public function daily_conversion()
     {
-        // we don't check items that ended before defined here (in days)
-        $item_max_ended_before = 7;
+        // we don't check old invalid items that ended before this number of days in past
+        // 90 days is a security span in case it was somehow not possible to examine this function for some days
+        // To let the contractCommand belatedly correct everything all former items are needed as well
+        // (e.g. in case valid_to_fixed=0 and end date would have always set to today)
+        $item_max_ended_before = 90;
 
         \Log::Debug('Starting daily conversion for contract '.$this->number, [$this->id]);
 
