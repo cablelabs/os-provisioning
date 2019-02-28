@@ -442,7 +442,7 @@ class Contract extends \BaseModel
         \Log::Debug('Starting daily conversion for contract '.$this->number, [$this->id]);
 
         if (! \Module::collections()->has('BillingBase')) {
-            $this->_update_network_access_from_contract();
+            $this->_update_internet_access_from_contract();
         } else {
 
             // Get items by only 1 db query & set them as contract relations to work with them in next functions
@@ -470,7 +470,7 @@ class Contract extends \BaseModel
 
             // NOTE: Keep this order! - update network access after all adaptions are made
             // Task 1 & 2 included
-            $this->_update_network_access_from_items();
+            $this->_update_service_access_from_items();
 
             if (\Module::collections()->has('Mail')) {
                 $this->_update_email_index();
@@ -490,7 +490,7 @@ class Contract extends \BaseModel
      *
      * @author Torsten Schmidt
      */
-    protected function _update_network_access_from_contract()
+    protected function _update_internet_access_from_contract()
     {
         $now = \Carbon\Carbon::now();
 
@@ -529,7 +529,7 @@ class Contract extends \BaseModel
      *
      * @author Patrick Reichel, Nino Ryschawy
      */
-    protected function _update_network_access_from_items()
+    protected function _update_service_access_from_items()
     {
         // check if DB update is required
         $contract_changed = false;
@@ -1220,7 +1220,6 @@ class ContractObserver
         if (! $contract->observer_enabled) {
             return;
         }
-
 
         $changed_fields = $contract->getDirty();
 
