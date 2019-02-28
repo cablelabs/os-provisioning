@@ -566,16 +566,24 @@ class Modem extends \BaseModel
         }
 
         // Evaluate network access (NA) and MaxCPE count
-        // Note: NA becomes only zero when there are no mta's and modems NA is false (e.g. no internet tariff)
+        // Note: NA becomes only zero when internet is disabled on contract (no valid tariff) or modem (manually) and contract has no telephony
         $cpe_cnt = \Modules\ProvBase\Entities\ProvBase::first()->max_cpe;
         $max_cpe = $cpe_cnt ?: 2; 		// default 2
         $internet_access = 1;
 
         if (\Module::collections()->has('ProvVoip') && (count($this->mtas))) {
-            if (! $this->network_access && ! $this->contract->telephony_only) {
-                $network_access = $max_cpe = 0;
+            if ($this->internet_access || $this->contract->has_telephony || $this->contract->internet_access) {
+                if (! $this->internet_access) {
+                    $max_cpe = 0;
+
+                    if (! $this->contract->has_telephony) {
+                        $internet_access = 0;
+                    }
+                }
+
+                $max_cpe += $this->mtas->count();
             } else {
-                $max_cpe = count($this->mtas) + (($this->contract->telephony_only || ! $this->network_access) ? 0 : $max_cpe);
+                $internet_access = $max_cpe = 0;
             }
         } elseif (! $this->internet_access) {
             $internet_access = 0;

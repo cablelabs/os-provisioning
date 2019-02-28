@@ -537,22 +537,14 @@ class Contract extends \BaseModel
         $active_count_internet = $active_tariff_info_internet['count'];
         $active_count_voip = $active_tariff_info_voip['count'];
 
-        if (! $this->check_validity('Now')) {
-            // invalid contract - disable every access
-            if ($this->internet_access) {
-                $this->internet_access = 0;
+        if ($this->check_validity('Now')) {
+            // valid internet tariff
+            if ($active_count_internet && ! $this->internet_access) {
+                $this->internet_access = 1;
                 $this->changes_on_daily_conversion = true;
-                \Log::Info('daily: contract: disabling internet_access based on active internet/voip items for contract '.$this->id);
-            }
-
-            if ($this->has_telephony) {
-                $this->has_telephony = 0;
-                $this->changes_on_daily_conversion = true;
-                \Log::info('daily: contract: Unset has_telephony as contract is invalid!', [$this->id]);
-            }
-        } elseif (! $active_count_internet) {
-            // valid contract, but no valid internet tariff
-            if ($this->internet_access) {
+                \Log::Info('daily: contract: enabling internet_access based on active internet/voip items for contract '.$this->id);
+            // no valid internet tariff
+            } elseif (! $active_count_internet && $this->internet_access) {
                 $this->internet_access = 0;
                 $this->changes_on_daily_conversion = true;
                 \Log::Info('daily: contract: disabling internet_access based on active internet/voip items for contract '.$this->id);
@@ -565,20 +557,20 @@ class Contract extends \BaseModel
             } elseif (! $active_count_voip && $this->has_telephony) {
                 $this->has_telephony = 0;
                 $this->changes_on_daily_conversion = true;
-                \Log::Info('daily: contract: switch from has_telephony to internet + telephony tariff', [$this->id]);
+                \Log::Info('daily: contract: switch from has_telephony to no telephony tariff', [$this->id]);
             }
         } else {
-            // valid contract and valid internet tariff
+            // invalid contract - disable every access
+            if ($this->internet_access) {
+                $this->internet_access = 0;
+                $this->changes_on_daily_conversion = true;
+                \Log::Info('daily: contract: disabling internet_access based on active internet/voip items for contract '.$this->id);
+            }
+
             if ($this->has_telephony) {
                 $this->has_telephony = 0;
                 $this->changes_on_daily_conversion = true;
-                \Log::info('daily: contract: unset has_telephony as customer has internet tariff now', [$this->id]);
-            }
-
-            if (! $this->internet_access) {
-                $this->internet_access = 1;
-                $this->changes_on_daily_conversion = true;
-                \Log::Info('daily: contract: enabling internet_access based on active internet/voip items for contract '.$this->id);
+                \Log::info('daily: contract: Unset has_telephony as contract is invalid!', [$this->id]);
             }
         }
     }
