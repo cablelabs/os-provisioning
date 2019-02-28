@@ -475,9 +475,9 @@ class Contract extends \BaseModel
         }
 
         if ($this->changes_on_daily_conversion) {
-            // NOTE: it's actually not necessary to take care of an endless loop as daily_conversion does
-            // not change contracts start or end date and only then the function is called again
+            $this->observer_enabled = false;
             $this->save();
+            $this->push_to_modems();
         }
     }
 
@@ -1002,29 +1002,21 @@ class Contract extends \BaseModel
      * Push all settings from Contract layer to the related child Modems (for $this)
      * This includes: internet_access, qos_id
      *
-     * Note: We call this function from Observer context so a change of the explained
-     *       fields will push this changes to the child Modems
+     * Called in daily_conversion only if sth changed
+     *
      * Note: This allows only 1 tariff qos_id for all modems
      *
-     * @return: none
-     * @author: Torsten Schmidt
+     * @author: Torsten Schmidt, Nino Ryschawy
      */
     public function push_to_modems()
     {
-        $changes = $this->getDirty();
-
-        // TODO: Speed-up: Could this be done with a single eloquent update statement ?
-        //       Note: This requires to use the Eloquent Context to run all Observers
-        //       an to rebuild and restart the involved modems
         foreach ($this->modems as $modem) {
             $modem->internet_access = $this->internet_access;
             $modem->qos_id = $this->qos_id;
+            $modem->observer_enabled = false;
             $modem->save();
-
-            if (isset($changes['has_telephony']) && ! $modem->needs_restart()) {
-                $modem->restart_modem();
-                $modem->make_configfile();
-            }
+            $modem->restart_modem();
+            $modem->make_configfile();
         }
     }
 
@@ -1226,7 +1218,6 @@ class ContractObserver
             return;
         }
 
-        $contract->push_to_modems();
 
         $changed_fields = $contract->getDirty();
 
