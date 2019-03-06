@@ -21,7 +21,7 @@ class contractCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Contract Scheduling Command (call with daily, daily_all_contracts or monthly)';
+    protected $description = 'Contract Scheduling Command (call with daily, daily_all or monthly)';
 
     /**
      * Create a new command instance.
@@ -47,8 +47,8 @@ class contractCommand extends Command
         $max_date = date('Y-m-d', strtotime("+$days_around_start_and_enddates days"));
         $today = date('Y-m-d');
 
-        if (! in_array($this->argument('date'), ['daily', 'daily_all_contracts', 'monthly'])) {
-            echo "Wrong/missing argument\n";
+        if (! in_array($this->argument('date'), ['daily', 'daily_all', 'monthly'])) {
+            $this->error('Wrong/missing argument');
 
             return false;
         }
@@ -66,8 +66,11 @@ class contractCommand extends Command
                     ->join('item', 'contract.id', '=', 'item.contract_id')
                     ->join('product', 'product.id', '=', 'item.product_id')
                     ->whereIn('product.type', ['Internet', 'Voip'])
-                    ->whereBetween('item.valid_from', [$min_date, $max_date])
-                    ->orWhereBetween('item.valid_to', [$min_date, $max_date])
+                    ->where(function ($query) use ($min_date, $max_date) {
+                        // using advanced where clause to set brackets properly
+                        $query->whereBetween('item.valid_from', [$min_date, $max_date])
+                              ->orWhereBetween('item.valid_to', [$min_date, $max_date]);
+                    })
                     ->groupBy('contract.id')
                     ->get();
             } else {
@@ -84,7 +87,7 @@ class contractCommand extends Command
             echo "contract month: $i/$num \r";
             $i++;
 
-            if ($this->argument('date') == 'daily') {
+            if (in_array($this->argument('date'), ['daily', 'daily_all'])) {
                 $c->daily_conversion();
             }
 
@@ -105,7 +108,7 @@ class contractCommand extends Command
     protected function getArguments()
     {
         return [
-            ['date', InputArgument::REQUIRED, 'daily/daily_all_contracts/monthly'],
+            ['date', InputArgument::REQUIRED, 'daily/daily_all/monthly'],
         ];
     }
 
