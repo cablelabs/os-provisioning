@@ -53,7 +53,7 @@ class contractCommand extends Command
             return false;
         }
 
-        if (\Str::endswith($this->argument('date'), '_all_contracts')) {
+        if (\Str::endswith($this->argument('date'), '_all')) {
             // fallback mode – runs conversions on every contract
             $cs = Contract::all();
         } else {
@@ -72,6 +72,7 @@ class contractCommand extends Command
                               ->orWhereBetween('item.valid_to', [$min_date, $max_date]);
                     })
                     ->groupBy('contract.id')
+                    ->select('contract.*')
                     ->get();
             } else {
                 $cs = Contract::where(whereLaterOrEqualThanDate('contract_end', $min_date))
