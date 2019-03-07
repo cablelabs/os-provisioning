@@ -694,6 +694,39 @@ class BaseModel extends Eloquent
         return $ret;
     }
 
+    /**
+     * Generic function to build a list with key of id and usage count.
+     *
+     * @param array         $array          list of Models/Objects
+     * @param String/Array  $column         sql column name(s) that contain(s) the description of the entry
+     * @param bool          $empty_option   true it first entry shall be empty
+     * @param string        $colname        the column to count
+     * @param string        $count_at       the database table to count at
+     * @return array        $ret            list
+     *
+     * @author Patrick Reichel
+     */
+    public function html_list_with_count($array, $columns, $empty_option = false, $separator = '--', $colname = '', $count_at = '')
+    {
+        $tmp = $this->html_list($array, $columns, $empty_option, $separator);
+        if (! $colname || ! $count_at) {
+            return $tmp;
+        }
+
+        $counts_raw = \DB::select("SELECT $colname AS value, COUNT($colname) AS count FROM $count_at WHERE deleted_at IS NULL GROUP BY $colname");
+        $counts = [];
+        foreach ($counts_raw as $entry) {
+            $counts[$entry->value] = $entry->count;
+        }
+
+        $ret = [];
+        foreach ($tmp as $id => $value) {
+            $ret[$id] = array_key_exists($id, $counts) ? $value.' ('.$counts[$id].')' : $value.' (0)';
+        }
+
+        return $ret;
+    }
+
     // Placeholder
     public static function view_headline()
     {
