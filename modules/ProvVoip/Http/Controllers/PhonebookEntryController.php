@@ -100,7 +100,7 @@ class PhonebookEntryController extends \BaseController
             ['form_type' => 'select', 'name' => 'noble_rank', 'description' => 'Noble rank', 'value' => $model->get_options_from_file('noble_rank')],
             ['form_type' => 'select', 'name' => 'nobiliary_particle', 'description' => 'Nobiliary particle', 'value' => $model->get_options_from_file('nobiliary_particle')],
             ['form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname'],
-            ['form_type' => 'text', 'name' => 'other_name_suffix', 'description' => 'Other name suffix'],
+            ['form_type' => 'select', 'name' => 'other_name_suffix', 'description' => 'Other name suffix', 'value' => $model->get_options_from_file('other_name_suffix')],
             ['form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname'],
             ['form_type' => 'text', 'name' => 'street', 'description' => 'Street'],
             ['form_type' => 'text', 'name' => 'houseno', 'description' => 'House number'],

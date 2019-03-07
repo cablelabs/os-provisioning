@@ -16,19 +16,27 @@ class GlobalConfigController extends BaseController
     public function view_form_fields($model = null)
     {
         // label has to be the same like column in sql table
-        return [
+        $form = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'ISP Name'],
             ['form_type' => 'text', 'name' => 'street', 'description' => 'Street'],
             ['form_type' => 'text', 'name' => 'city', 'description' => 'City'],
             ['form_type' => 'text', 'name' => 'phone', 'description' => 'Phonenumber'],
             ['form_type' => 'text', 'name' => 'mail', 'description' => 'E-Mail Address'],
-
             ['form_type' => 'select', 'name' => 'log_level', 'description' => 'System Log Level', 'value' => $this->log_level, 'hidden' => 1],
             ['form_type' => 'text', 'name' => 'passwordResetInterval', 'description' => 'Password Reset Interval', 'help' => trans('helper.PasswordReset')],
             ['form_type' => 'text', 'name' => 'headline1', 'description' => 'Headline 1'],
             ['form_type' => 'text', 'name' => 'headline2', 'description' => 'Headline 2'],
             ['form_type' => 'text', 'name' => 'default_country_code', 'description' => 'Default country code', 'help' => trans('helper.ISO_3166_ALPHA-2')],
             ];
+
+        if (\Module::collections()->has('Ticketsystem') && array_key_exists('noReplyMail', \GlobalConfig::first()['attributes'])) {
+            array_push($form,
+                ['form_type' => 'text', 'name' => 'noReplyMail', 'description' => trans('messages.noReplyMail'), 'help' => trans('helper.noReplyMail')],
+                ['form_type' => 'text', 'name' => 'noReplyName', 'description' => trans('messages.noReplyName'), 'help' => trans('helper.noReplyName')]
+            );
+        }
+
+        return $form;
     }
 
     /**

@@ -78,7 +78,7 @@ class Modem extends \BaseModel
             case 0:	$bsclass = 'success'; break; // online
             case 1: $bsclass = 'warning'; break; // warning
             case 2: $bsclass = 'warning'; break; // critical
-            case 3: $bsclass = $this->network_access && $this->contract->check_validity('Now') ? 'danger' : 'info'; break; // offline
+            case 3: $bsclass = $this->internet_access && $this->contract->check_validity('Now') ? 'danger' : 'info'; break; // offline
 
             default: $bsclass = 'danger'; break;
         }
@@ -374,8 +374,8 @@ class Modem extends \BaseModel
             $content = "# Ignoring no devices – multiple_provisioning_systems not set in ProvBase\n";
         } else {
             // get all not deleted modems
-            // attention: do not use “where('network_access', '>', '0')” to shrink the list
-            //   ⇒ MTAs shall get IPs even if network_access is disabled!
+            // attention: do not use “where('internet_access', '>', '0')” to shrink the list
+            //   ⇒ MTAs shall get IPs even if internet_access is disabled!
             $modems_raw = \DB::select('SELECT hostname, mac FROM modem WHERE deleted_at IS NULL');
             $modems = [];
             foreach ($modems_raw as $modem) {
@@ -490,7 +490,7 @@ class Modem extends \BaseModel
 
         // TODO: check for hostname to avoid deleting the wrong entry when mac exists multiple times in DB !?
         foreach ($conf as $key => $line) {
-            if (strpos($line, $this->hostname) !== false) {
+            if (strpos($line, "$this->hostname {") !== false) {
                 unset($conf[$key]);
                 break;
             }
@@ -549,57 +549,58 @@ class Modem extends \BaseModel
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
 
-        $modem = $this;
-        $id = $modem->id;
-        $mac = $modem->mac;
-        $host = $modem->hostname;
-
         /* Configfile */
         $dir = '/tftpboot/cm/';
-        $cf_file = $dir."cm-$id.conf";
-        $cfg_file = $dir."cm-$id.cfg";
+        $cf_file = $dir."cm-$this->id.conf";
+        $cfg_file = $dir."cm-$this->id.cfg";
 
-        $cf = $modem->configfile;
-
-        if (! $cf) {
+        if (! $this->configfile) {
             return false;
         }
 
         // Evaluate network access (NA) and MaxCPE count
-        // Note: NA becomes only zero when there are no mta's and modems NA is false (e.g. no internet tariff)
+        // Note: NA becomes only zero when internet is disabled on contract (no valid tariff) or modem (manually) and contract has no telephony
         $cpe_cnt = \Modules\ProvBase\Entities\ProvBase::first()->max_cpe;
         $max_cpe = $cpe_cnt ?: 2; 		// default 2
-        $network_access = 1;
+        $internet_access = 1;
 
         if (\Module::collections()->has('ProvVoip') && (count($this->mtas))) {
-            if (! $this->network_access && ! $this->contract->telephony_only) {
-                $network_access = $max_cpe = 0;
+            if ($this->internet_access || $this->contract->has_telephony || $this->contract->internet_access) {
+                if (! $this->internet_access) {
+                    $max_cpe = 0;
+
+                    if (! $this->contract->has_telephony) {
+                        $internet_access = 0;
+                    }
+                }
+
+                $max_cpe += $this->mtas->count();
             } else {
-                $max_cpe = count($this->mtas) + (($this->contract->telephony_only || ! $this->network_access) ? 0 : $max_cpe);
+                $internet_access = $max_cpe = 0;
             }
-        } elseif (! $this->network_access) {
-            $network_access = 0;
+        } elseif (! $this->internet_access) {
+            $internet_access = 0;
         }
 
         // MaxCPE MUST be between 1 and 254 according to the standard
         if ($max_cpe < 1) {
             $max_cpe = 1;
-            $network_access = 0;
+            $internet_access = 0;
         }
         if ($max_cpe > 254) {
             $max_cpe = 254;
         }
 
         // make text and write to file
-        $conf = "\tNetworkAccess $network_access;\n";
+        $conf = "\tNetworkAccess $internet_access;\n";
         $conf .= "\tMaxCPE $max_cpe;\n";
-        if (\Module::collections()->has('ProvVoip') && $network_access) {
+        if (\Module::collections()->has('ProvVoip') && $internet_access) {
             foreach ($this->mtas as $mta) {
                 $conf .= "\tCpeMacAddress $mta->mac;\n";
             }
         }
 
-        $text = "Main\n{\n".$conf.$cf->text_make($modem, 'modem')."\n}";
+        $text = "Main\n{\n".$conf.$this->configfile->text_make($this, 'modem')."\n}";
 
         if (File::put($cf_file, $text) === false) {
             die('Error writing to file');
@@ -608,16 +609,13 @@ class Modem extends \BaseModel
         Log::debug("configfile: docsis -e $cf_file $dir../keyfile $cfg_file");
 
         // "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
+        // docsis tool always returns 0
         exec("docsis -e $cf_file $dir../keyfile $cfg_file >/dev/null 2>&1 &", $out);
 
         // change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
         system('/bin/chown -R apache /tftpboot/cm');
 
         Log::info('Configfile updated for Modem: '.$this->hostname);
-        // docsis tool always returns 0 -> so we need to proof if that way (only when docsis isnt started in background)
-        // if (file_exists($cfg_file))
-        //	 return true;
-        // return false;
 
         return true;
     }
@@ -1521,7 +1519,7 @@ class Modem extends \BaseModel
             return 1;
         }
 
-        if (multi_array_key_exists(['contract_id', 'public', 'network_access', 'configfile_id', 'qos_id'], $diff)) {
+        if (multi_array_key_exists(['contract_id', 'public', 'internet_access', 'configfile_id', 'qos_id'], $diff)) {
             return -1;
         }
 
@@ -1628,7 +1626,7 @@ class ModemObserver
         // only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
         $diff = $modem->getDirty();
 
-        if (multi_array_key_exists(['contract_id', 'public', 'network_access', 'configfile_id', 'qos_id', 'mac'], $diff)) {
+        if (multi_array_key_exists(['contract_id', 'public', 'internet_access', 'configfile_id', 'qos_id', 'mac'], $diff)) {
             Modem::create_ignore_cpe_dhcp_file();
             $modem->make_dhcp_cm();
             $modem->restart_modem(array_key_exists('mac', $diff));

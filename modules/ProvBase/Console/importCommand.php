@@ -69,14 +69,23 @@ class importCommand extends Command
      *
      * @var array
      */
-    protected $old_sys_inet_tarifs;
+    protected $old_sys_inet_tariffs;
 
     /**
      * Mapping of old Voip Tarif IDs to new Voip Tarif IDs
      *
      * @var array
      */
-    protected $old_sys_voip_tarifs;
+    protected $old_sys_voip_tariffs;
+
+    /**
+     * Mapping of old Qos-Group ID to new QoS ID
+     *
+     * only in case Billing is not used
+     *
+     * @var array
+     */
+    protected $groupsToQos;
 
     /**
      * Mapping of old ConfigFile Names to new ConfigFile IDs
@@ -123,7 +132,7 @@ class importCommand extends Command
         if (! $this->confirm("IMPORTANT!!!\n\nHave following things been prepared for this import?:
 			(1) Created Mapping Configfile?
 			(2) Has Contract filter been correctly set up (in source code)?
-			(3) Shall volume tarifs get Credits (in source code)?\n")) {
+			(3) Shall volume tariffs get Credits (in source code)?\n")) {
             return;
         }
 
@@ -187,8 +196,8 @@ class importCommand extends Command
                 ->join('tbl_adressen as a', 'v.ansprechpartner', '=', 'a.id')
                 ->join('tbl_adressen as kadr', 'k.rechnungsanschrift', '=', 'kadr.id')
                 ->join('tbl_adressen as cm_adr', 'm.adresse', '=', 'cm_adr.id')
-                ->join('tbl_tarif as t', 'v.tarif', '=', 't.id')
-                ->join('tbl_posten as p', 't.posten_volumen_extern', '=', 'p.id')
+                ->leftJoin('tbl_tarif as t', 'v.tarif', '=', 't.id')
+                ->leftJoin('tbl_posten as p', 't.posten_volumen_extern', '=', 'p.id')
                 ->where('v.deleted', '=', false)
                 ->where('m.deleted', '=', false)
                 ->whereRaw('(v.abgeklemmt is null or v.abgeklemmt >= CURRENT_DATE)') 		// dont import out-of-date contracts
@@ -218,6 +227,12 @@ class importCommand extends Command
 
             foreach ($modems as $modem) {
                 $m = $this->add_modem($c, $modem, $km3);
+
+                if ($c->relationLoaded('modems')) {
+                    $c->modems->add($m);
+                } else {
+                    $c->setRelation('modems', $m);
+                }
 
                 /*
                  * MTA Import
@@ -253,10 +268,12 @@ class importCommand extends Command
             }
 
             // Add Billing related Data
-            $this->add_tarifs($c, $products_new, $contract);
-            $this->add_tarif_credit($c, $contract);
-            $this->add_sepamandate($c, $contract, $km3);
-            $this->add_additional_items($c, $km3, $contract);
+            if (\Module::collections()->has('BillingBase')) {
+                $this->add_tariffs($c, $products_new, $contract);
+                $this->add_tariff_credit($c, $contract);
+                $this->add_sepamandate($c, $contract, $km3);
+                $this->add_additional_items($c, $km3, $contract);
+            }
 
             // disable network access where blockcpe is set
             if ($contract->blockcpe) {
@@ -280,13 +297,12 @@ class importCommand extends Command
     {
         $arr = require $this->argument('filename');
 
-        $this->old_sys_inet_tarifs = $arr['old_sys_inet_tarifs'];
-        $this->old_sys_voip_tarifs = $arr['old_sys_voip_tarifs'];
-        $this->configfiles = $arr['configfiles'];
-        $this->add_items = $arr['add_items'];
+        $mappings = ['old_sys_inet_tariffs', 'old_sys_voip_tariffs', 'groupsToQos', 'configfiles', 'add_items', 'cluster'];
 
-        if (isset($arr['cluster'])) {
-            $this->cluster = $arr['cluster'];
+        foreach ($mappings as $key) {
+            if (isset($arr[$key])) {
+                $this->{$key} = $arr[$key];
+            }
         }
     }
 
@@ -374,18 +390,29 @@ class importCommand extends Command
         $c->phone = str_replace('/', '', $old_contract->tel);
         $c->fax = $old_contract->fax;
         $c->email = $old_contract->email;
-
-        // TODO: Fix that birthday and contract_end are '0000-00-00' in DB when not set
         $c->birthday = $old_contract->geburtsdatum ?: null;
 
-        $c->network_access = $old_contract->network_access;
+        $c->internet_access = $old_contract->internet_access;
         $c->contract_start = $old_contract->angeschlossen;
         $c->contract_end = $old_contract->abgeklemmt ?: null;
         $c->create_invoice = $old_contract->rechnung;
 
-        $c->costcenter_id = $this->option('cc') ?: 3; // Dittersdorf=1, new one would be 3
+        if (\Module::collections()->has('BillingBase')) {
+            $c->costcenter_id = $this->option('cc');
+        }
         $c->cluster = $this->map_cluster_id($old_contract->cluster_id);
         $c->net = $this->map_cluster_id($old_contract->cluster_id, 1);
+
+        // Set qos_id if it won't be set via tariffs (items) because billing module is disabled
+        if (! \Module::collections()->has('BillingBase')) {
+            if (isset($this->groupsToQos[$old_contract->qosgroup])) {
+                $c->qos_id = $this->groupsToQos[$old_contract->qosgroup];
+            } else {
+                $msg = "Mapping für QoS-Profil $old_contract->qosgroup fehlt. QoS konnte in Vertrag $c->number nicht gesetzt werden!";
+                \Log::error($msg);
+                $this->errors[] = $msg;
+            }
+        }
 
         // set fields with null input to ''.
         // This fixes SQL import problem with null fields
@@ -413,33 +440,6 @@ class importCommand extends Command
     }
 
     /**
-     * Return the appropriate Product ID from new System dependent on the tarif of the old systems contract
-     *
-     * @param 	tarif 	String|Integer 		Old systems internet tarif name | Voip Tarif ID
-     * @return 			int 			Product ID | -1 on Error
-     *
-     * @author 	Nino Ryschawy
-     */
-    private function _map_tarif_to_prod($tarif)
-    {
-        // Voip
-        if (is_int($tarif)) {
-            if (! array_key_exists($tarif, $this->old_sys_voip_tarifs)) {
-                return -1;
-            }
-
-            return $this->old_sys_voip_tarifs[$tarif];
-        }
-
-        // Inet
-        if (! array_key_exists($tarif, $this->old_sys_inet_tarifs)) {
-            return -1;
-        }
-
-        return is_int($this->old_sys_inet_tarifs[$tarif]) ? $this->old_sys_inet_tarifs[$tarif] : -1;
-    }
-
-    /**
      * Return ID of Cluster/Net for new System from old systems cluster/net ID
      *
      * @param 	cluster_id 		Integer
@@ -449,52 +449,66 @@ class importCommand extends Command
      */
     private function map_cluster_id($cluster_id, $net = 0)
     {
-        // old cluster ID => cluster ID in new System
-        // TODO: Add new Cluster IDs when they exist in new system
-        return $this->cluster[$cluster_id][$net];
+        if (isset($this->cluster[$cluster_id][$net])) {
+            return $this->cluster[$cluster_id][$net];
+        }
+
+        return 0;
     }
 
     /**
      * Add Tarifs to corresponding Contract of new System
      *
-     * TODO: Tarif next month can not be set as is - has still ID - Separate inet & voip tarif mappings and map all by id
+     * TODO: Tarif next month can not be set as is - has still ID - Separate inet & voip tariff mappings and map all by id
      */
-    private function add_tarifs($new_contract, $products_new, $old_contract)
+    private function add_tariffs($new_contract, $products_new, $old_contract)
     {
-        $tarifs = [
-            'tarif' 			=> $old_contract->tariffname,
+        $tariffs = [
+            'tarif' 			=> $old_contract->tarif,
             'tarif_next_month'  => $old_contract->tarif_next_month,
             'voip' 				=> $old_contract->telefontarif,
             ];
 
         $items_new = $new_contract->items;
 
-        foreach ($tarifs as $key => $tarif) {
-            if (! $tarif) {
+        foreach ($tariffs as $key => $tariff) {
+            $prod_id = -1;
+
+            if (! $tariff) {
                 \Log::info("\tNo $key Item exists in old System");
                 continue;
             }
 
-            // Discard voip tariff if new contract doesnt have MTA
             if ($key == 'voip') {
+                // Discard voip tariff if new contract doesnt have MTA
                 if (! isset($new_contract->has_mta)) {
                     Log::notice('Discard voip tariff as contract has no MTA assigned', [$new_contract->number]);
+
                     continue;
+                }
+
+                if (array_key_exists($tariff, $this->old_sys_voip_tariffs)) {
+                    $prod_id = $this->old_sys_voip_tariffs[$tariff];
+                }
+            } else {
+                if (array_key_exists($tariff, $this->old_sys_inet_tariffs)) {
+                    $prod_id = $this->old_sys_inet_tariffs[$tariff];
                 }
             }
 
-            $prod_id = $this->_map_tarif_to_prod($tarif);
+            if ($prod_id == -1) {
+                $type = $key == 'voip' ? 'voip' : 'internet';
+                $msg = "Missing mapping for $type tariff $tariff (ID in km3 DB). Don't add voip item to contract $new_contract->number.";
+                \Log::error($msg);
+                $this->errors[] = $msg;
+
+                continue;
+            }
+
             $item_n = $items_new->where('product_id', $prod_id)->all();
 
             if ($item_n) {
                 \Log::info("\tItem $key for Contract ".$new_contract->number.' already exists');
-                continue;
-            }
-
-            if ($prod_id <= 0) {
-                $msg = "\tProduct $prod_id does not exist for $key: $tarif [ContractNr $new_contract->number]";
-                \Log::error($msg);
-                $this->errors[] = $msg;
                 continue;
             }
 
@@ -514,13 +528,13 @@ class importCommand extends Command
     /**
      * Add extra credit item (5 Euro gross - 1 Year) if customer had an old volume tariff
      */
-    private function add_tarif_credit($new_contract, $old_contract)
+    private function add_tariff_credit($new_contract, $old_contract)
     {
         if (! self::$credit) {
             return;
         }
 
-        // TODO(3) check restrictions of volume tarifs!
+        // TODO(3) check restrictions of volume tariffs!
         if ((strpos($old_contract->tariffname, 'Volumen') === false) && (strpos($old_contract->tariffname, 'Speed') === false) && (strpos($old_contract->tariffname, 'Basic') === false)) {
             return;
         }
@@ -691,7 +705,7 @@ class importCommand extends Command
         $modem->serial_num = $old_modem->serial_num;
         $modem->inventar_num = $old_modem->inventar_num;
         $modem->description = $old_modem->beschreibung;
-        $modem->network_access = $old_modem->network_access;
+        $modem->internet_access = $old_modem->internet_access;
 
         $modem->x = $old_modem->x / 10000000;
         $modem->y = $old_modem->y / 10000000;
@@ -712,18 +726,35 @@ class importCommand extends Command
         $modem->zip = $new_contract->zip;
         $modem->city = $new_contract->city;
         $modem->qos_id = $new_contract->qos_id;
-
         $modem->contract_id = $new_contract->id;
-        $modem->configfile_id = isset($this->configfiles[$old_modem->cf_name]) && is_int($this->configfiles[$old_modem->cf_name]) ? $this->configfiles[$old_modem->cf_name] : 0;
+
+        if (isset($this->configfiles[$old_modem->configfile])) {
+            $modem->configfile_id = $this->configfiles[$old_modem->configfile];
+        } else {
+            $msg = "Missing mapping for configfile $old_modem->configfile (ID in km3 DB). Modem '$modem->mac' of contract $new_contract->number will not have a configfile assigned.";
+            \Log::error($msg);
+            $this->errors[] = $msg;
+        }
 
         // check if assigned cpe has public ip (starts with 7 or 8)
         // NOTE: if even 1 of the cpe's has a public IP we assign a public IP for all CPE's here
         $comps = $db_con->table('tbl_computer')->select('ip')->where('modem', '=', $old_modem->id)->get();
 
-        $modem->public = 0;
+        // Determine if Device has a public IP
+        $validator = new \Acme\Validators\ExtendedValidator;
+        $privateIps = [['10.0.0.0', '255.0.0.0'], ['192.168.0.0', '255.255.0.0'], ['172.16.0.0', '255.224.0.0'], ['100.64.0.0', '255.192.0.0']];
+        $modem->public = 1;
+
         foreach ($comps as $comp) {
-            if ($comp->ip[0] != '1') {
-                $modem->public = 1;
+            foreach ($privateIps as $range) {
+                if ($validator->validateIpInRange(null, $comp->ip, $range)) {
+                    $modem->public = 0;
+                    break;
+                }
+            }
+
+            if ($modem->public) {
+                \Log::debug("Set public IP for $modem->hostname because of IP $comp->ip");
                 break;
             }
         }
@@ -746,11 +777,6 @@ class importCommand extends Command
         ob_end_clean();
 
         // Output
-        if ($modem->configfile_id == 0) {
-            $msg = "No Configfile could be assigned to Modem $modem->id Old ModemID: $old_modem->id [ContractNr $new_contract->number]";
-            \Log::error($msg);
-            $this->errors[] = $msg;
-        }
 
         \Log::info("ADD MODEM: $modem->mac, QOS-$modem->qos_id, CF-$modem->configfile_id, $modem->street, $modem->zip, $modem->city, Public: ".($modem->public ? 'yes' : 'no'));
 
@@ -884,6 +910,14 @@ class importCommand extends Command
 
         $contract = Contract::find(self::$ne_contract_id);
 
+        if (! $contract) {
+            $msg = 'Wrong contract ID '.self::$ne_contract_id.' for netelement modems! Could not find this contract.';
+            $this->error($msg);
+            Log::error($msg.' Stop.');
+
+            exit(1);
+        }
+
         echo "ADD NETELEMENT Modems\n";
         $bar = $this->output->createProgressBar(count($devices));
         $bar->start();
@@ -898,10 +932,10 @@ class importCommand extends Command
 
     private static function _blockcpe($contract)
     {
-        \Log::notice("Disable network_access of all modems of contract number $contract->number");
+        \Log::notice("Disable internet_access of all modems of contract number $contract->number");
 
         foreach ($contract->modems as $cm) {
-            $cm->network_access = 0;
+            $cm->internet_access = 0;
             $cm->save();
         }
     }

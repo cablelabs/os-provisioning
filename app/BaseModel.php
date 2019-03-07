@@ -864,8 +864,8 @@ class BaseModel extends Eloquent
     public function delete()
     {
         // check from where the deletion request has been triggered and set the correct var to show information
-        $prev = explode('?', \URL::previous())[0];
-        $prev = Str::lower($prev);
+        $prev = explode('/', explode('?', \URL::previous())[0]);
+        $target = preg_match('/[a-z]/i', end($prev)) ? 'above_index_list' : 'above_relations';
 
         if ($this->delete_children) {
             $children = $this->get_all_children();
@@ -878,11 +878,7 @@ class BaseModel extends Eloquent
                 // do not delete anything
                 if (! $child->delete()) {
                     $msg = 'Cannot delete '.$this->get_model_name()." $this->id: ".$child->get_model_name()." $child->id cannot be deleted";
-                    if (Str::endsWith($prev, 'edit')) {
-                        Session::push('tmp_error_above_relations', $msg);
-                    } else {
-                        Session::push('tmp_error_above_index_list', $msg);
-                    }
+                    Session::push("tmp_error_$target", $msg);
 
                     return false;
                 }
@@ -893,14 +889,13 @@ class BaseModel extends Eloquent
             // this should be handled in class methods because BaseModel cannot know the possible problems
             foreach ($children['n:m'] as $child) {
                 $delete_method = 'deleteNtoM'.$child->get_model_name();
-                $msg_target = Str::endsWith($prev, 'edit') ? 'tmp_error_above_relations' : 'tmp_error_above_index_list';
 
                 if (! method_exists($this, $delete_method)) {
                     // Keep Pivot Entries and children if method is not specified and just log a warning message
                     \Log::warning($this->get_model_name().' - N:M pivot entry deletion handling not implemented for '.$child->get_model_name());
                 } elseif (! $this->{$delete_method}($child)) {
                     $msg = 'Cannot delete '.$this->get_model_name()." $this->id: n:m relation with ".$child->get_model_name()." $child->id. cannot be deleted";
-                    Session::push($msg_target, $msg);
+                    Session::push("tmp_error_$target", $msg);
 
                     return false;
                 }
@@ -909,20 +904,12 @@ class BaseModel extends Eloquent
 
         // always return this value (also in your derived classes!)
         $deleted = $this->_delete();
-        if (! $deleted) {
-            $msg = 'Could not delete '.$this->get_model_name()." $this->id";
-            if (Str::endsWith($prev, 'edit')) {
-                Session::push('tmp_error_above_relations', $msg);
-            } else {
-                Session::push('tmp_error_above_index_list', $msg);
-            }
+        if ($deleted) {
+            $msg = trans('messages.base.delete.success', ['model' => $this->get_model_name(), 'id' => $this->id]);
+            Session::push("tmp_success_$target", $msg);
         } else {
-            $msg = 'Deleted '.$this->get_model_name()." $this->id";
-            if (Str::endsWith($prev, 'edit')) {
-                Session::push('tmp_success_above_relations', $msg);
-            } else {
-                Session::push('tmp_success_above_index_list', $msg);
-            }
+            $msg = trans('messages.base.delete.fail', ['model' => $this->get_model_name(), 'id' => $this->id]);
+            Session::push("tmp_error_$target", $msg);
         }
 
         return $deleted;

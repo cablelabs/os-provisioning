@@ -47,7 +47,7 @@ class Phonenumber extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         return ['table' => $this->table,
-                'index_header' => [$this->table.'.number', 'phonenumbermanagement.activation_date', 'phonenumbermanagement.deactivation_date', 'phonenr_state', 'modem_city'],
+                'index_header' => [$this->table.'.number', 'phonenumbermanagement.activation_date', 'phonenumbermanagement.deactivation_date', 'phonenr_state', 'modem_city', 'sipdomain'],
                 'header' => 'Port '.$this->port.': '.$this->prefix_number.'/'.$this->number,
                 'bsclass' => $bsclass,
                 'edit' => ['phonenumbermanagement.activation_date' => 'get_act', 'phonenumbermanagement.deactivation_date' => 'get_deact', 'phonenr_state' => 'get_state', 'number' => 'build_number', 'modem_city' => 'modem_city'],
@@ -297,7 +297,7 @@ class Phonenumber extends \BaseModel
      *
      * @author Patrick Reichel
      */
-    protected function _phonenumber_reassignment_allowed($cur_modem, $new_modem)
+    public function phonenumber_reassignment_allowed($cur_modem, $new_modem)
     {
 
         // check if modems belong to the same contract
@@ -353,7 +353,7 @@ class Phonenumber extends \BaseModel
             $cur_modem = $this->mta->modem;
             $candidate_modems = $cur_modem->contract->modems;
             foreach ($candidate_modems as $tmp_modem) {
-                if ($this->_phonenumber_reassignment_allowed($cur_modem, $tmp_modem)) {
+                if ($this->phonenumber_reassignment_allowed($cur_modem, $tmp_modem)) {
                     foreach ($tmp_modem->mtas as $mta) {
                         $ret[$mta->id] = $mta->hostname.' ('.$mta->mac.')';
                     }
@@ -669,7 +669,7 @@ class PhonenumberObserver
             return true;
         }
 
-        if (! $this->_phonenumber_reassignment_allowed($old_mta->modem, $new_mta->modem)) {
+        if (! $phonenumber->phonenumber_reassignment_allowed($old_mta->modem, $new_mta->modem)) {
             \Session::push('tmp_error_above_form', "Reassignement of phonenumber to MTA $new_mta->id not allowed");
 
             return false;
@@ -926,7 +926,7 @@ class PhonenumberObserver
             ->count();
 
         if ($num) {
-            \Session::put('alert', trans('messages.phonenumber_overlap_hlkomm', ['delay' => 1 + $delay]));
+            \Session::put('alert.danger', trans('messages.phonenumber_overlap_hlkomm', ['delay' => 1 + $delay]));
         }
     }
 
@@ -951,7 +951,7 @@ class PhonenumberObserver
             return;
         }
 
-        \Session::put('alert', trans('messages.phonenumber_nr_change_hlkomm'));
+        \Session::put('alert.danger', trans('messages.phonenumber_nr_change_hlkomm'));
     }
 
     public function deleted($phonenumber)

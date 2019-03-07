@@ -34,10 +34,12 @@ return [
     'item.valid_from_fixed' => 'Ab Startdatum aktiv',
     'item.valid_to' => 'Posten Gültig bis',
     'item.valid_to_fixed' => 'Festes Enddatum',
-    // Product
-    'product.type' => 'Typ',
-    'product.name' => 'Produkt',
-    'product.price' => 'Preis',
+    'product' => [
+        'proportional' => 'Anteilig',
+        'type' => 'Typ',
+        'name' => 'Produkt',
+        'price' => 'Preis',
+        ],
     // Salesman
     'salesman.id' => 'ID',
     'salesman_id' 		=> 'Verkäufer-ID',
@@ -172,6 +174,7 @@ return [
     'phonenr_deact' => 'Deaktivierungsdatum',
     'phonenr_state' => 'Status',
     'modem_city' => 'Modem-Ort',
+    'sipdomain' => 'Registrar',
     // Phonenumbermanagement
     'phonenumbermanagement.id' => 'ID',
     'phonenumbermanagement.activation_date' => 'Aktivierungsdatum',

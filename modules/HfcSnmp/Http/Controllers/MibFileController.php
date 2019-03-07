@@ -147,7 +147,7 @@ class MibFileController extends \BaseController
             return $ret;
         }
 
-        return \Redirect::route('MibFile.edit', $id)->with('message', 'Created!')->with('message_color', 'blue');
+        return \Redirect::route('MibFile.edit', $id)->with('message', trans('messages.created'))->with('message_color', 'blue');
     }
 
     /**

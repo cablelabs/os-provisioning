@@ -74,7 +74,7 @@ class ModemTableSeeder extends \BaseSeeder
         $ret = [
             'mac' => $faker->macAddress(),
             'description' => $faker->realText(200),
-            'network_access' => $faker->boolean(),
+            'internet_access' => $faker->boolean(),
             'public' => (rand(0, 100) < 5 ? 1 : 0),
             'serial_num' => $faker->sentence(),
             'inventar_num' => $faker->sentence(),

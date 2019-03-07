@@ -134,11 +134,24 @@ class NetElementType extends \BaseModel
     public static $undeletables = [1 => 'Net', 2 => 'Cluster', 3 => 'Cmts', 4 => 'Amplifier', 5 => 'Node', 6 => 'Data', 7 => 'UPS'];
 
     /**
-     * Must be defined to disable delete Checkbox on index tree view
+     * Must be defined to disable delete Checkbox on index tree view.
+     * Only deletable if there is no netelement assigned.
+     *
+     * @author Roy Schneider
+     * @return array
      */
     public static function undeletables()
     {
-        return array_keys(self::$undeletables);
+        $used = [];
+        $all = self::all();
+
+        foreach ($all as $netelementtype) {
+            if ($netelementtype->netelements()->count()) {
+                $used[] = $netelementtype->id;
+            }
+        }
+
+        return array_unique(array_merge(array_keys(self::$undeletables), $used));
     }
 
     /**
