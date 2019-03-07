@@ -128,8 +128,8 @@ return [
   */
     'rate_coefficient'				=> 'MaxRateSustained wird mit diesem Wert multipliziert, um den Nutzer eine höhere (> 1.0) Übertragungsrate als gebucht zu gewähren.',
     //ModemController
-    'Modem_NetworkAccess'			=> 'Netzwerkzugriff für CPEs. (MTAs werden nicht beachtet und gehen immer online, wenn alle restlich notwendigen Konfigurationen korrekt vorgenommen wurden) - Achtung: Mit Billingmodul wird diese Checkbox während der nächtlichen Prüfung (nur) bei Tarifänderung überschrieben.',
-    'Modem_InstallationAddressChangeDate'	=> 'Wenn das Feld nur lesbar ist, existiert bereits ein offener Auftrag.',
+    'Modem_InternetAccess'			=> 'Internetzugriff für CPEs. (MTAs werden nicht beachtet und gehen immer online, wenn alle restlich notwendigen Konfigurationen korrekt vorgenommen wurden) - Achtung: Mit Billingmodul wird diese Checkbox während der nächtlichen Prüfung (nur) bei Tarifänderung überschrieben.',
+    'Modem_InstallationAddressChangeDate'	=> 'Datum der Änderung der Installationsadresse. Wenn nur lesbar existiert bereits ein offener Auftrag.',
     'Modem_GeocodeOrigin'			=> 'Quelle der Geodaten. Falls hier „n/a“ steht konnte die Adresse nicht aufgelöst werden. Bei manueller Änderung der Geodaten wird der aktuelle Nutzer eingetragen.',
     'contract_number' 				=> 'Achtung - Kundenkennwort wird bei Änderung automatisch geändert!',
     'mac_formats'					=> "Erlaubte Formate (Groß-/Kleinschreibung nicht unterschieden):\n\n1) AA:BB:CC:DD:EE:FF\n2) AABB.CCDD.EEFF\n3) AABBCCDDEEFF",
@@ -137,6 +137,7 @@ return [
     'modem_update_frequency'		=> 'Dieses Feld wird einmal täglich aktualisiert.',
     'enable_agc'					=> 'Aktiviere automatische Verstärkungsregelung in Rückkanalrichtung.',
     'agc_offset'					=> 'Verschiebung des automatischen Verstärkungsregelungwertes in Rückkanalrichtung in dB. (Vorgabewert: 0.0)',
+    'has_telephony'                 => 'Muss aktiv sein, wenn der Kunde Telefonie haben soll, aber kein Internet hat. Das Flag kann aktuell nicht genutzt werden, um die Telefonie bei Verträgen mit Internet zu deaktivieren. Dazu muss das MTA gelöscht oder die Telefonnummer deaktiviert werden. Info: Die Einstellung hat Einfluss auf NetworkAccess und MaxCPE im Modem Configfile - siehe Modem-Analyse im Tab \'Configfile\'',
 
  /*
   *	MODULE: ProvVoip

@@ -17,6 +17,9 @@ class Contract extends \BaseModel
     public $expires = false;			// flag if contract expires this month - used in accounting command
     public $charge = [];				// total charge for each different Sepa Account with net and tax values
 
+    // temporary variable used during daily conversion
+    private $changes_on_daily_conversion = false;
+
     // Add your validation rules here
     // TODO: dependencies of active modules (billing)
     public static function rules($id = null)
@@ -87,7 +90,7 @@ class Contract extends \BaseModel
     {
         $bsclass = 'success';
 
-        if (! $this->network_access) {
+        if (! $this->internet_access) {
             $bsclass = 'active';
 
             // '$this->id' to dont check when index table header is determined!
@@ -421,85 +424,88 @@ class Contract extends \BaseModel
      * The Daily Scheduling Function
      *
      * Tasks:
-     *  1. Check if $this contract end date is expired -> disable network_access
-     *  2. Check if $this is a new contract and activate it -> enable network_access
+     *  1. Check if $this contract end date is expired -> disable internet_access
+     *  2. Check if $this is a new contract and activate it -> enable internet_access
      *  3. Change QoS id and Voip id if actual valid (billing-) tariff changes
-     *
-     * @TODO try to avoid the use of multiple saves, instead use one save at the end
      *
      * @return none
      * @author Torsten Schmidt, Nino Ryschawy, Patrick Reichel
      */
     public function daily_conversion()
     {
+        // we don't check old invalid items that ended before this number of days in past
+        // 90 days is a security span in case it was somehow not possible to examine this function for some days
+        // To let the contractCommand belatedly correct everything all former items are needed as well
+        // (e.g. in case valid_to_fixed=0 and end date would have always set to today)
+        $item_max_ended_before = 90;
+
         \Log::Debug('Starting daily conversion for contract '.$this->number, [$this->id]);
 
         if (! \Module::collections()->has('BillingBase')) {
-            $this->_update_network_access_from_contract();
+            $this->_update_internet_access_from_contract();
         } else {
+
+            // Get items by only 1 db query & set them as contract relations to work with them in next functions
+            // with that there are no more refresh database queries necessary (items do not have to be reloaded again)
+            $items = $this->items()
+                ->leftJoin('product', 'product.id', '=', 'item.product_id')
+                ->whereIn('product.type', ['Internet', 'Voip'])
+                ->where(whereLaterOrEqualThanDate('item.valid_to', date('Y-m-d', strtotime("-$item_max_ended_before days"))))
+                // ->orderBy('valid_from', 'desc')
+                ->select('item.*')
+                ->with('product')
+                ->get();
+
+            $this->setRelations(['items' => $items]);
 
             // Task 3: Check and possibly update item's valid_from and valid_to dates
             $this->_update_inet_voip_dates();
 
-            $this->load('items');
-            // $this->fresh();
+            // deprecated - but kept for reference
+            // $this->load('items'); $this->fresh();
 
             // Task 4: Check and possibly change product related data (qos_id, voip, purchase_tariff)
             // for this contract depending on the start/end times of its items
-            $this->update_product_related_data($this->items);
+            $this->update_product_related_data();
 
             // NOTE: Keep this order! - update network access after all adaptions are made
             // Task 1 & 2 included
-            $this->_update_network_access_from_items();
+            $this->_update_service_access_from_items();
 
             if (\Module::collections()->has('Mail')) {
                 $this->_update_email_index();
             }
+        }
 
-            // commented out by par for reference ⇒ if all is running this can savely be removed
-            /* $qos_id = ($tariff = $this->get_valid_tariff('Internet')) ? $tariff->product->qos_id : 0; */
-
-            /* if ($this->qos_id != $qos_id) */
-            /* { */
-            /* 	\Log::Info("daily: contract: changed qos_id (tariff) to $qos_id for Contract ".$this->number, [$this->id]); */
-            /* 	$this->qos_id = $qos_id; */
-            /* 	$this->save(); */
-            /* 	$this->push_to_modems(); */
-            /* } */
-
-            /* $voip_id = ($tariff = $this->get_valid_tariff('Voip')) ? $tariff->product->voip_sales_tariff_id : 0; */
-
-            /* if ($this->voip_id != $voip_id) */
-            /* { */
-            /* 	\Log::Info("daily: contract: changed voip_id (tariff) to $voip_id for Contract ".$this->number, [$this->id]); */
-            /* 	$this->voip_id = $voip_id; */
-            /* 	$this->save(); */
-            /* } */
+        if ($this->changes_on_daily_conversion) {
+            $this->observer_enabled = false;
+            $this->save();
+            $this->push_to_modems();
         }
     }
 
     /**
-     * This enables/disables network_access according to start and end date of the contract.
+     * This enables/disables internet_access according to start and end date of the contract.
      * Used if billing is disabled.
      *
      * @author Torsten Schmidt
      */
-    protected function _update_network_access_from_contract()
+    protected function _update_internet_access_from_contract()
     {
         $now = \Carbon\Carbon::now();
 
-        // Task 1: Check if $this contract end date is expired -> disable network_access
+        // Task 1: Check if $this contract end date is expired -> disable internet_access
         if ($this->contract_end) {
             $end = $this->_date_to_carbon($this->contract_end);
-            if ($end->lt($now) && ! $this->_date_null($end) && $this->network_access == 1) {
+            if ($end->lt($now) && ! $this->_date_null($end) && $this->internet_access == 1) {
                 \Log::Info('daily: contract: disable based on ending contract date for '.$this->id);
 
-                $this->network_access = 0;
-                $this->save();
+                $this->internet_access = 0;
+                $this->changes_on_daily_conversion = true;
             }
         }
 
-        // Task 2: Check if $this is a new contract and activate it -> enable network_access
+        // Task 2: Check if $this is a new contract and activate it -> enable internet_access
         // Note: to avoid enabling contracts which are disabled manually, we also check if
         //       maximum time beetween start contract and now() is not older than 1 day.
         // Note: This requires the daily scheduling to run well
@@ -507,11 +513,11 @@ class Contract extends \BaseModel
         // TODO: give them a good testing
         if ($this->contract_start) {
             $start = $this->_date_to_carbon($this->contract_start);
-            if ($start->lt($now) && ! $this->_date_null($start) && $start->diff($now)->days <= 1 && $this->network_access == 0) {
+            if ($start->lt($now) && ! $this->_date_null($start) && $start->diff($now)->days <= 1 && $this->internet_access == 0) {
                 \Log::Info('daily: contract: enable contract based on start contract date for '.$this->id);
 
-                $this->network_access = 1;
-                $this->save();
+                $this->internet_access = 1;
+                $this->changes_on_daily_conversion = true;
             }
         }
     }
@@ -523,9 +529,8 @@ class Contract extends \BaseModel
      *
      * @author Patrick Reichel, Nino Ryschawy
      */
-    protected function _update_network_access_from_items()
+    protected function _update_service_access_from_items()
     {
-
         // check if DB update is required
         $contract_changed = false;
 
@@ -535,53 +540,41 @@ class Contract extends \BaseModel
         $active_count_internet = $active_tariff_info_internet['count'];
         $active_count_voip = $active_tariff_info_voip['count'];
 
-        if (! $this->check_validity('Now')) {
-            // invalid contract - disable every access
-            if ($this->network_access) {
-                $this->network_access = 0;
-                $contract_changed = true;
-                \Log::Info('daily: contract: disabling network_access based on active internet/voip items for contract '.$this->id);
+        if ($this->check_validity('Now')) {
+            // valid internet tariff
+            if ($active_count_internet && ! $this->internet_access) {
+                $this->internet_access = 1;
+                $this->changes_on_daily_conversion = true;
+                \Log::Info('daily: contract: enabling internet_access based on active internet/voip items for contract '.$this->id);
+            // no valid internet tariff
+            } elseif (! $active_count_internet && $this->internet_access) {
+                $this->internet_access = 0;
+                $this->changes_on_daily_conversion = true;
+                \Log::Info('daily: contract: disabling internet_access based on active internet/voip items for contract '.$this->id);
             }
 
-            if ($this->telephony_only) {
-                $this->telephony_only = 0;
-                $contract_changed = true;
-                \Log::info('daily: contract: Unset telephony_only as contract is invalid!', [$this->id]);
-            }
-        } elseif (! $active_count_internet) {
-            // valid contract, but no valid internet tariff
-            if ($this->network_access) {
-                $this->network_access = 0;
-                $contract_changed = true;
-                \Log::Info('daily: contract: disabling network_access based on active internet/voip items for contract '.$this->id);
-            }
-
-            if ($active_count_voip && ! $this->telephony_only) {
-                $this->telephony_only = 1;
-                $contract_changed = true;
-                \Log::Info('daily: contract: switch to telephony_only', [$this->id]);
-            } elseif (! $active_count_voip && $this->telephony_only) {
-                $this->telephony_only = 0;
-                $contract_changed = true;
-                \Log::Info('daily: contract: switch from telephony_only to internet + telephony tariff', [$this->id]);
+            if ($active_count_voip && ! $this->has_telephony) {
+                $this->has_telephony = 1;
+                $this->changes_on_daily_conversion = true;
+                \Log::Info('daily: contract: switch to has_telephony', [$this->id]);
+            } elseif (! $active_count_voip && $this->has_telephony) {
+                $this->has_telephony = 0;
+                $this->changes_on_daily_conversion = true;
+                \Log::Info('daily: contract: switch from has_telephony to no telephony tariff', [$this->id]);
             }
         } else {
-            // valid contract and valid internet tariff
-            if ($this->telephony_only) {
-                $this->telephony_only = 0;
-                $contract_changed = true;
-                \Log::info('daily: contract: unset telephony_only as customer has internet tariff now', [$this->id]);
+            // invalid contract - disable every access
+            if ($this->internet_access) {
+                $this->internet_access = 0;
+                $this->changes_on_daily_conversion = true;
+                \Log::Info('daily: contract: disabling internet_access based on active internet/voip items for contract '.$this->id);
             }
 
-            if (! $this->network_access) {
-                $this->network_access = 1;
-                $contract_changed = true;
-                \Log::Info('daily: contract: enabling network_access based on active internet/voip items for contract '.$this->id);
+            if ($this->has_telephony) {
+                $this->has_telephony = 0;
+                $this->changes_on_daily_conversion = true;
+                \Log::info('daily: contract: Unset has_telephony as contract is invalid!', [$this->id]);
             }
-        }
-
-        if ($contract_changed) {
-            $this->save();
         }
     }
 
@@ -603,36 +596,31 @@ class Contract extends \BaseModel
      * Attention: Have in mind that changing item dates also fires in ItemObserver::updating()
      * which for example possibly changes contracts (voip_id, purchase_tariff) etc.!
      *
-     * @author Patrick Reichel
+     * @author Patrick Reichel, Nino Ryschawy
      *
      * @return null
      */
     protected function _update_inet_voip_dates()
     {
-
         // items only exist if Billingbase is enabled
         if (! \Module::collections()->has('BillingBase')) {
             return;
         }
 
-        // get tomorrow and today as Carbon objects – so they can directly be compared to the dates at items
         $tomorrow = \Carbon\Carbon::tomorrow();
         $today = \Carbon\Carbon::today();
 
-        // check for each item on contract
-        // attention: update youngest valid_from items first (to avoid problems in relation with
-        // ItemObserver::update() which else set valid_to smaller than valid_from in some cases)!
-        // and to avoid “Multipe valid tariffs active” warning
+        foreach ($this->items as $key => $item) {
+            if (! $item->product) {
+                \Log::error("Product of item $item->id (ID) of contract ".$item->contract->number.' (number) is missing');
+                unset($this->items[$key]);
 
-        foreach ($this->items_sorted_by_valid_from_desc as $item) {
-            $type = isset($item->product) ? $item->product->type : '';
-
-            if (! in_array($type, ['Voip', 'Internet'])) {
                 continue;
             }
 
             // flag to decide if item has to be saved at the end of the loop
             $item_changed = false;
+            $type = $item->product->type;
 
             // if the startdate is fixed: ignore
             if (! boolval($item->valid_from_fixed)) {
@@ -664,6 +652,13 @@ class Contract extends \BaseModel
 
             // finally: save the change(s)
             if ($item_changed) {
+                // avoid endless loop - dont unnecessarily call daily_conversion again
+                /* also the following old concerns are vitiated by disabling the observer:
+                    * attention: update youngest valid_from items first (to avoid problems in relation with
+                    * ItemObserver::update() which else set valid_to smaller than valid_from in some cases)!
+                    * and to avoid “Multipe valid tariffs active” warning
+                */
+                $item->observer_dailyconversion = false;
                 $item->save();
             }
         }
@@ -833,7 +828,7 @@ class Contract extends \BaseModel
 
         // This is an error! There should only be one active item per type and contract
         if ($count > 1) {
-            \Log::Error('There are '.$count.' active items of product type '.$type.' assigned to contract '.$this->number.' ['.$this->id.'].');
+            \Log::warning('There are '.$count.' active items of product type '.$type.' assigned to contract '.$this->number.' ['.$this->id.'].');
         }
 
         return ['item' => $tariff, 'count' => $count];
@@ -855,34 +850,18 @@ class Contract extends \BaseModel
      *
      * @return null
      */
-    public function update_product_related_data($items)
+    public function update_product_related_data()
     {
-
-        // set qos_id to zero - this is necessary because one could accidentially activate network access on modem page and the customer now has the old tariff activated however this tariff is not assigned anymore
-        //  (2) better extract voip & inet items directly!? - why iterate over all items? is call of get_valid_tariff() multiple times not very bad ??
-        // Better to set qos_id to the one with the lowest data rates ?
-        // $qos_id = Qos::orderBy('us_rate_max')->orderBy('ds_rate_max')->first()->id;
-        if (! count($items) && boolval($this->qos_id)) {
-            $this->qos_id = 0;
-            $this->save();
-
-            return;
-        }
-
         $valid_tariff = false;
 
-        foreach ($items as $item) {
+        foreach ($this->items as $item) {
+            if (! $item->product) {
+                \Log::error("Product of item $item->id (ID) of contract ".$item->contract->number.' (number) is missing');
 
-            // a given item can be null – check and ignore
-            if (! $item) {
                 continue;
             }
 
-            $type = isset($item->product) ? $item->product->type : '';
-            // process only particular product types
-            if (! in_array($type, ['Voip', 'Internet'])) {
-                continue;
-            }
+            $type = $item->product->type;
 
             // check which month is affected by the currently investigated item
             if (
@@ -901,16 +880,18 @@ class Contract extends \BaseModel
                 // check if there is more than one active item for given type ⇒ this is an error
                 // this can happen if one fixes thè start date of one and forgets to fix the end date
                 // of an other item
-                $valid_tariff_info = $this->_get_valid_tariff_item_and_count($type);
+                if (! isset($valid_tariff_info[$type])) {
+                    $valid_tariff_info[$type] = $this->_get_valid_tariff_item_and_count($type);
+                }
 
                 $valid_tariff = true;
 
-                if ($valid_tariff_info['count'] > 1) {
+                if ($valid_tariff_info[$type]['count'] > 1) {
                     // this should never occur!!
-                    if ($valid_tariff_info['item']->id != $item->id) {
-                        \Log::Warning('Using newer item '.$valid_tariff_info['item']->id.' instead of '.$item->id.' to update current data on contract '.$this->number.' ['.$this->id.'].');
+                    if ($valid_tariff_info[$type]['item']->id != $item->id) {
+                        \Log::Warning('Using newer item '.$valid_tariff_info[$type]['item']->id.' instead of '.$item->id.' to update current data on contract '.$this->number.' ['.$this->id.'].');
                     }
-                    $this->_update_product_related_current_data($valid_tariff_info['item']);
+                    $this->_update_product_related_current_data($valid_tariff_info[$type]['item']);
                 } else {
                     // default case
                     $this->_update_product_related_current_data($item);
@@ -939,7 +920,8 @@ class Contract extends \BaseModel
         }
 
         if (! $valid_tariff) {
-            self::where('id', $this->id)->update(['qos_id' => 0]);
+            $this->qos_id = 0;
+            $this->changes_on_daily_conversion = true;
         }
     }
 
@@ -951,6 +933,7 @@ class Contract extends \BaseModel
      * @param $item to be analyzed
      *
      * @return null
+     * Sets global var $changes_on_daily_conversion when contract data has changed
      */
     protected function _update_product_related_current_data($item)
     {
@@ -961,41 +944,34 @@ class Contract extends \BaseModel
             // check if there are changes in state for voip_id and purchase_tariff
             if ($this->voip_id != $item->product->voip_sales_tariff_id) {
                 $this->voip_id = $item->product->voip_sales_tariff_id;
-                $contract_changed = true;
+                $this->changes_on_daily_conversion = true;
                 \Log::Info('contract: changing voip_id to '.$this->voip_id.' for contract '.$this->number, [$this->id]);
             }
             if ($this->purchase_tariff != $item->product->voip_purchase_tariff_id) {
                 $this->purchase_tariff = $item->product->voip_purchase_tariff_id;
-                $contract_changed = true;
+                $this->changes_on_daily_conversion = true;
                 \Log::Info('contract: changing purchase_tariff to '.$this->purchase_tariff.' for contract '.$this->number, [$this->id]);
-            }
-
-            if ($contract_changed) {
-                $this->save();
             }
         }
 
         if ($item->product->type == 'Internet') {
             if ($this->qos_id != $item->product->qos_id) {
                 $this->qos_id = $item->product->qos_id;
-                $contract_changed = true;
+                $this->changes_on_daily_conversion = true;
                 \Log::Info('contract: changing  qos_id to '.$this->qos_id.' for contract '.$this->number, [$this->id]);
             }
-        }
-
-        if ($contract_changed) {
-            $this->save();
         }
     }
 
     /**
      * Check for (and possibly perform) product related changes in contract for the next month
      *
-     * @author Patrick Reichel
+     * @author Patrick Reichel, Nino Ryschawy
      *
      * @param $item to be analyzed
      *
      * @return null
+     * Sets global var $changes_on_daily_conversion when contract data has changed
      */
     protected function _update_product_related_future_data($item)
     {
@@ -1006,12 +982,12 @@ class Contract extends \BaseModel
             // check if there are changes in state for voip_id and purchase_tariff
             if ($this->next_voip_id != $item->product->voip_sales_tariff_id) {
                 $this->next_voip_id = $item->product->voip_sales_tariff_id;
-                $contract_changed = true;
+                $this->changes_on_daily_conversion = true;
                 \Log::Info('contract: changing next_voip_id to '.$this->next_voip_id.' for contract '.$this->number, [$this->id]);
             }
             if ($this->next_purchase_tariff != $item->product->voip_purchase_tariff_id) {
                 $this->next_purchase_tariff = $item->product->voip_purchase_tariff_id;
-                $contract_changed = true;
+                $this->changes_on_daily_conversion = true;
                 \Log::Info('contract: changing next_purchase_tariff to '.$this->next_purchase_tariff.' for contract '.$this->number, [$this->id]);
             }
         }
@@ -1019,43 +995,31 @@ class Contract extends \BaseModel
         if ($item->product->type == 'Internet') {
             if ($this->next_qos_id != $item->product->qos_id) {
                 $this->next_qos_id = $item->product->qos_id;
-                $contract_changed = true;
+                $this->changes_on_daily_conversion = true;
                 \Log::Info('contract: changing next_qos_id to '.$this->next_qos_id.' for contract '.$this->number, [$this->id]);
             }
         }
-
-        if ($contract_changed) {
-            $this->save();
-        }
     }
 
-    /*
+    /**
      * Push all settings from Contract layer to the related child Modems (for $this)
-     * This includes: network_access, qos_id
+     * This includes: internet_access, qos_id
      *
-     * Note: We call this function from Observer context so a change of the explained
-     *       fields will push this changes to the child Modems
+     * Called in daily_conversion only if sth changed
+     *
      * Note: This allows only 1 tariff qos_id for all modems
      *
-     * @return: none
-     * @author: Torsten Schmidt
+     * @author: Torsten Schmidt, Nino Ryschawy
      */
     public function push_to_modems()
     {
-        $changes = $this->getDirty();
-
-        // TODO: Speed-up: Could this be done with a single eloquent update statement ?
-        //       Note: This requires to use the Eloquent Context to run all Observers
-        //       an to rebuild and restart the involved modems
         foreach ($this->modems as $modem) {
-            $modem->network_access = $this->network_access;
+            $modem->internet_access = $this->internet_access;
             $modem->qos_id = $this->qos_id;
+            $modem->observer_enabled = false;
             $modem->save();
-
-            if (isset($changes['telephony_only']) && ! $modem->needs_restart()) {
-                $modem->restart_modem();
-                $modem->make_configfile();
-            }
+            $modem->restart_modem();
+            $modem->make_configfile();
         }
     }
 
@@ -1257,11 +1221,8 @@ class ContractObserver
             return;
         }
 
-        $contract->push_to_modems();
-
         $changed_fields = $contract->getDirty();
 
-        // Note: isset is way faster regarding the performance than array_key_exists, but returns false if value of key is null which is not important here - See upmost comment on: http://php.net/manual/de/function.array-key-exists.php
         if (isset($changed_fields['number'])) {
             // change customer information - take care - this automatically changes login psw of customer
             if ($customer = $contract->CccUser) {
@@ -1303,15 +1264,6 @@ class ContractObserver
                 \Session::put('alert.warning', trans('messages.contract.concede_credit'));
             }
         }
-    }
-
-    public function saved($contract)
-    {
-        if (! $contract->observer_enabled) {
-            return;
-        }
-
-        $contract->push_to_modems();
     }
 }
 

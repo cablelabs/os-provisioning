@@ -391,7 +391,8 @@ class importCommand extends Command
         $c->fax = $old_contract->fax;
         $c->email = $old_contract->email;
         $c->birthday = $old_contract->geburtsdatum ?: null;
-        $c->network_access = $old_contract->network_access;
+
+        $c->internet_access = $old_contract->internet_access;
         $c->contract_start = $old_contract->angeschlossen;
         $c->contract_end = $old_contract->abgeklemmt ?: null;
         $c->create_invoice = $old_contract->rechnung;
@@ -704,7 +705,7 @@ class importCommand extends Command
         $modem->serial_num = $old_modem->serial_num;
         $modem->inventar_num = $old_modem->inventar_num;
         $modem->description = $old_modem->beschreibung;
-        $modem->network_access = $old_modem->network_access;
+        $modem->internet_access = $old_modem->internet_access;
 
         $modem->x = $old_modem->x / 10000000;
         $modem->y = $old_modem->y / 10000000;
@@ -931,10 +932,10 @@ class importCommand extends Command
 
     private static function _blockcpe($contract)
     {
-        \Log::notice("Disable network_access of all modems of contract number $contract->number");
+        \Log::notice("Disable internet_access of all modems of contract number $contract->number");
 
         foreach ($contract->modems as $cm) {
-            $cm->network_access = 0;
+            $cm->internet_access = 0;
             $cm->save();
         }
     }
