@@ -158,6 +158,8 @@ return [
     'snmp' => [
         'errors_walk' => 'Querying the following OIDs failed: :oids.',
         'errors_set' => 'The following Parameters could not be Set: :oids.',
+        'missing_cmts' => 'The cluster misses a superior CMTS as parent device.',
+        'undefined' => 'For this netelementtype is no controlling defined.',
         'unreachable' => 'The device is not reachable via SNMP.',
     ],
     'State'						=> 'State',
@@ -245,6 +247,12 @@ return [
     'Start ID Endpoints'		=> 'Start ID Endpoints',
     'Downstream rate coefficient' => 'Downstream rate coefficient',
     'Upstream rate coefficient' => 'Upstream rate coefficient',
+    'modemAnalysis' => [
+        'cpeMacMissmatch' => 'The state of internet access and telephony could not be determined as minimum 1 CPE MAC address differs from the MACs of the assigned MTAs.',
+        'fullAccess' => 'Internet access and telephony is allowed. (according to configfile)',
+        'noNetworkAccess' => 'Internet access and telephony is blocked. (according to configfile)',
+        'onlyVoip' => 'Internet access is blocked. Only telephony is allowed. (according to configfile)',
+    ],
     'modem_no_diag'			=> 'No Diagrams available',
     'Start ID MTA´s'			=> 'Start ID MTA´s',
     'modem_lease_error'		=> 'No valid Lease found',

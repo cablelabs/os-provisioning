@@ -158,6 +158,8 @@ return [
     'snmp' => [
         'errors_walk' => 'Die Abfrage folgender OIDs schlug fehl: :oids.',
         'errors_set' => 'Das Setzen folgender Parameter schlug fehl: :oids.',
+        'missing_cmts' => 'Dem Cluster fehlt ein übergeordnetes CMTS.',
+        'undefined' => 'Für diesen Netzelementtyp ist kein Controlling definiert.',
         'unreachable' => 'Das Gerät ist nicht per SNMP erreichbar.',
     ],
     'State'						=> 'Status',
@@ -245,7 +247,13 @@ return [
     'Start ID Endpoints'		=> 'Start Nummerierung Endpunkte',
     'Downstream rate coefficient' => 'Übertragungsratenkoeffizient Vorwärtskanal',
     'Upstream rate coefficient' => 'Übertragungsratenkoeffizient Rückwärtskanal',
-    'modem_no_diag'			=> 'Keine Diagramme verfügbar',
+    'modemAnalysis' => [
+        'cpeMacMissmatch' => 'Der Status über Internetzugriff und Telefonie kann nicht ermittelt werden, da sich im Configfile mindestens eine der CPE MAC Adressen von den MACs der zugewiesenen MTAs unterscheidet.',
+        'fullAccess' => 'Internetzugriff und Telefonie ist freigeschalten. (gemäß Configfile)',
+        'noNetworkAccess' => 'Internetzugriff und Telefonie ist gesperrt. (gemäß Configfile)',
+        'onlyVoip' => 'Internetzugriff ist gesperrt. Nur Telefonie ist erlaubt. (gemäß Configfile)',
+    ],
+    'modem_no_diag'         => 'Keine Diagramme verfügbar',
     'Start ID MTA´s'			=> 'Start Nummerierung MTA\'s',
     'modem_lease_error'		=> 'Kein gültiger Lease gefunden',
     'modem_lease_valid' 	=> 'Modem hat einen gültigen Lease',
