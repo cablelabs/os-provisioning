@@ -70,9 +70,10 @@ Relation Blade is used inside a Panel Element to display relational class object
 
 	<table class="table">
 		@foreach ($relation as $rel_elem)
-			<tr class="{{isset ($rel_elem->view_index_label()['bsclass']) ? $rel_elem->view_index_label()['bsclass'] : ''}}">
+		    <?php $labelData = $rel_elem->view_index_label(); ?>
+			<tr class="{{isset ($labelData['bsclass']) ? $labelData['bsclass'] : ''}}">
 				<td width="20"> {!! Form::checkbox('ids['.$rel_elem->id.']', 1, null, null, ['style' => 'simple']) !!} </td>
-				<td> {!! $rel_elem->view_icon() !!} {!! HTML::linkRoute($view.'.'.$method, is_array($rel_elem->view_index_label()) ? $rel_elem->view_index_label()['header'] : $rel_elem->view_index_label(), $rel_elem->id) !!} </td>
+				<td> {!! $rel_elem->view_icon() !!} {!! HTML::linkRoute($view.'.'.$method, is_array($labelData) ? $labelData['header'] : $labelData, $rel_elem->id) !!} </td>
 			</tr>
 		@endforeach
 	</table>
