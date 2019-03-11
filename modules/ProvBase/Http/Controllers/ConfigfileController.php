@@ -75,6 +75,7 @@ class ConfigfileController extends \BaseController
 
         if ($error) {
             \Session::push('tmp_error_above_form', $error);
+
             return redirect()->back();
         }
 
@@ -196,14 +197,13 @@ class ConfigfileController extends \BaseController
     public function checkAndSetContent($content, $noName)
     {
         if ($noName) {
-                Input::merge($content);
-                Input::merge(['import' => 'import']);
+            Input::merge($content);
+            Input::merge(['import' => 'import']);
 
-                // only continue if the input would pass the validation
-                if (\Validator::make($content, $this->prepare_rules(Configfile::rules(), $content))->fails()) {
-                    return true;
-                }
-
+            // only continue if the input would pass the validation
+            if (\Validator::make($content, $this->prepare_rules(Configfile::rules(), $content))->fails()) {
+                return true;
+            }
         } else {
             Configfile::create($content);
         }
