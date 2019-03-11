@@ -223,7 +223,8 @@ return [
 
 //BUTTON
         'Sign me in'				=> 'Einloggen',
-        'Button_Create'				=> 'Erstelle',
+        'Button_Create'             => 'Erstelle',
+        'Button_Export'				=> 'Exportieren',
         'Button_Delete'				=> 'Markierte Einträge löschen',
         'Button_Force Restart'		=> 'Neustart erzwingen',
         'Button_Save'				=> 'Speichern',

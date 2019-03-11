@@ -582,4 +582,10 @@ return [
         ],
     ],
     'pleaseWait'                => 'Das Erstellen des Spektrums kann einige Sekunden dauern.',
+    'import'                    => 'Importieren',
+    'exportConfigfiles'         => 'Exportiert diese Konfigurationsdatei und deren untergeordnete Dateien.',
+    'importTree'                => 'Bitte geben Sie die dazu zugehörige Übergeordnete Konfigurationsdatei an.',
+    'exportSuccess'             => ':name exportiert!',
+    'setManually'               => ':file von :name muss manuell hinzugefügt werden.',
+    'invalidJson'               => 'Die ausgewählte Datei ist falsch formattiert oder keine JSON.',
 ];
