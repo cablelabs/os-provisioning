@@ -18,7 +18,7 @@ class Configfile extends \BaseModel
     public static function rules($id = null)
     {
         return [
-            'name' => 'required|unique:configfile,name,'.$id.',id,deleted_at,NULL',
+            'name' => 'required_without:import|unique:configfile,name,'.$id.',id,deleted_at,NULL',
             'text' => 'docsis',
             'cvc' => 'required_with:firmware',
         ];

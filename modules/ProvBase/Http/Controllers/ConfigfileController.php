@@ -2,11 +2,16 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use Illuminate\Support\Facades\Input;
 use Modules\ProvBase\Entities\Configfile;
 
 class ConfigfileController extends \BaseController
 {
     protected $index_tree_view = true;
+
+    protected $edit_view_second_button = true;
+    protected $second_button_name = 'Export';
+    protected $second_button_title_key = 'exportConfigfiles';
 
     /**
      * defines the formular fields for the edit and create view
@@ -22,7 +27,8 @@ class ConfigfileController extends \BaseController
 
         // label has to be the same like column in sql table
         // TODO: type is without functionality -> hidden
-        return [
+
+        $form = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
             ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['generic' => 'generic', 'network' => 'network', 'vendor' => 'vendor', 'user' => 'user'], 'hidden' => 1],
             ['form_type' => 'select', 'name' => 'device', 'description' => 'Device', 'value' => ['cm' => 'CM', 'mta' => 'MTA']],
@@ -35,6 +41,12 @@ class ConfigfileController extends \BaseController
             ['form_type' => 'select', 'name' => 'cvc', 'description' => 'Choose Certificate File', 'value' => $cvc_files, 'help' => $model->get_cvc_help()],
             ['form_type' => 'file', 'name' => 'cvc_upload', 'description' => 'or: Upload Certificate File'],
         ];
+
+        if (\Route::currentRouteName() == 'Configfile.create') {
+            array_push($form, ['form_type' => 'file', 'name' => 'import', 'description' => trans('messages.import'), 'help' => trans('messages.importTree')]);
+        }
+
+        return $form;
     }
 
     /**
