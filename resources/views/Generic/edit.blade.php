@@ -87,7 +87,7 @@
 		{{-- The Bootstap Panel to include --}}
 		@include ('bootstrap.panel', [
 			'content' => "content_$i",
-			'view_header' => trans('view.Header_Assigned').' '.\App\Http\Controllers\BaseViewController::translate_view($view, 'Header' , 2),
+			'view_header' => \App\Http\Controllers\BaseViewController::translate_view($view, 'Header' , 2),
 			'md' => 12,
 			'options' => $relation['panelOptions'] ?? null,
 			])
