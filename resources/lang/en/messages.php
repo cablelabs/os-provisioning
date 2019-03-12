@@ -248,8 +248,10 @@ return [
     'Downstream rate coefficient' => 'Downstream rate coefficient',
     'Upstream rate coefficient' => 'Upstream rate coefficient',
     'modemAnalysis' => [
+        'cfOutdated' => 'The modem doesn\'t run with the actual configfile. The last download was before the built time of the configfile.',
         'cpeMacMissmatch' => 'The state of internet access and telephony could not be determined as minimum 1 CPE MAC address differs from the MACs of the assigned MTAs.',
         'fullAccess' => 'Internet access and telephony is allowed. (according to configfile)',
+        'missingLD' => 'Info: The last configfile download was too long ago to determine if the modem has incured the actual configurations.',
         'noNetworkAccess' => 'Internet access and telephony is blocked. (according to configfile)',
         'onlyVoip' => 'Internet access is blocked. Only telephony is allowed. (according to configfile)',
     ],
