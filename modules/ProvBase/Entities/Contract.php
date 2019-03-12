@@ -124,7 +124,7 @@ class Contract extends \BaseModel
             $ret['Billing']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
             $ret['Billing']['Invoice']['class'] = 'Invoice';
-            $ret['Billing']['Invoice']['relation'] = $this->invoices;
+            $ret['Billing']['Invoice']['relation'] = $this->invoices()->orderBy('id', 'desc')->get();
             $ret['Billing']['Invoice']['options']['hide_delete_button'] = 1;
             $ret['Billing']['Invoice']['options']['hide_create_button'] = 1;
         }
