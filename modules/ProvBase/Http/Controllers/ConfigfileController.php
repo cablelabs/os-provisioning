@@ -95,8 +95,7 @@ class ConfigfileController extends \BaseController
             return;
         }
 
-        $importedFile = Input::file('import');
-        $content = $this->replaceIds(\File::get($importedFile));
+        $content = $this->replaceIds(\File::get(Input::file('import')));
 
         $json = json_decode($content, true);
 
@@ -125,12 +124,12 @@ class ConfigfileController extends \BaseController
 
         // to prevent overwriting id's
         // if there already exists a configfile, use the highest id and increment by one
-        // else use the highest id from the imported file
+        // else start at 0
+        $startId = 0;
         if ($configfile) {
             $startId = ++$configfile->id;
         } else {
-            preg_match('/\d+/', end($importedIds), $maxId);
-            $startId = ++$maxId[0];
+            $startId++;
         }
 
         // when there is no parent for this configfile, replace the id's
@@ -144,7 +143,7 @@ class ConfigfileController extends \BaseController
         // replace first parent_id with parent_id of input
         preg_match_all('/[a-t]{6}.[d-i]{2}["][:]\d+[,]/', $content, $ids);
         $parentId = array_shift($ids[0]);
-        $input = Input::all()['parent_id'];
+        $input = Input::get('parent_id');
 
         return str_replace($parentId, 'parent_id":'.$input.',', $content);
     }
@@ -154,34 +153,34 @@ class ConfigfileController extends \BaseController
      *
      * @author Roy Schneider
      * @param array $content
-     * @param bool $noName
+     * @param bool $hasName
      */
-    public function recreateTree($content, $noName)
+    public function recreateTree($content, $hasName)
     {
-        // if there are children, remove children key and create configfile
-        if (array_key_exists('children', $content)) {
-            $children[] = array_pop($content);
+        // if there are no children
+        if (! array_key_exists('children', $content)) {
+            $this->checkAndSetContent($content, $hasName);
 
-            if ($this->checkAndSetContent($content, $noName)) {
-                return;
-            }
+            return;
+        }
 
-            // session message if configfile had assigned cvc/firmware
-            foreach ([$content['firmware'], $content['cvc']] as $file) {
-                if ($file != '') {
-                    \Session::push('tmp_warning_above_form', trans('messages.setManually', ['name' => $content['name'], 'file' => $file]));
-                }
-            }
+        $children[] = array_pop($content);
 
-            // recursively for all children
-            foreach ($children as $group) {
-                foreach ($group as $child) {
-                    $this->recreateTree($child, false);
-                }
+        if ($this->checkAndSetContent($content, $hasName)) {
+            return;
+        }
+
+        // session message if configfile had assigned cvc/firmware
+        foreach ([$content['firmware'], $content['cvc']] as $file) {
+            if ($file != '') {
+                \Session::push('tmp_warning_above_form', trans('messages.setManually', ['name' => $content['name'], 'file' => $file]));
             }
-        } else {
-            if ($this->checkAndSetContent($content, $noName)) {
-                return;
+        }
+
+        // recursively for all children
+        foreach ($children as $group) {
+            foreach ($group as $child) {
+                $this->recreateTree($child, false);
             }
         }
     }
@@ -191,21 +190,23 @@ class ConfigfileController extends \BaseController
      *
      * @author Roy Schneider
      * @param array $content
-     * @param bool $noName
+     * @param bool $hasName
      * @return bool
      */
-    public function checkAndSetContent($content, $noName)
+    public function checkAndSetContent($content, $hasName)
     {
-        if ($noName) {
-            Input::merge($content);
-            Input::merge(['import' => 'import']);
-
-            // only continue if the input would pass the validation
-            if (\Validator::make($content, $this->prepare_rules(Configfile::rules(), $content))->fails()) {
-                return true;
-            }
-        } else {
+        if (! $hasName) {
             Configfile::create($content);
+
+            return;
+        }
+
+        Input::merge($content);
+        Input::merge(['import' => 'import']);
+
+        // only continue if the input would pass the validation
+        if (\Validator::make($content, $this->prepare_rules(Configfile::rules(), $content))->fails()) {
+            return true;
         }
     }
 
