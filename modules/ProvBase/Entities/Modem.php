@@ -596,7 +596,7 @@ class Modem extends \BaseModel
 
         // don't use auto generated MaxCPE if it is explicitly set in the configfile
         // see https://stackoverflow.com/a/643136 for stripping multiline comments
-        if (! \Str::contains(preg_replace('!/\*.*?\*/!s', '', $cf->text), 'MaxCPE')) {
+        if (! \Str::contains(preg_replace('!/\*.*?\*/!s', '', $this->configfile->text), 'MaxCPE')) {
             $conf .= "\tMaxCPE $max_cpe;\n";
         }
 
