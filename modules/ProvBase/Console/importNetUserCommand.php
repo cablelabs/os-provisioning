@@ -259,7 +259,7 @@ class importNetUserCommand extends Command
 
         // $c->birthday         = $old_contract->geburtsdatum ? : null;
 
-        $c->network_access = 1;
+        $c->internet_access = 1;
         // Datumfirst & Datumlast are always null
         $c->contract_start = date('Y-m-d', strtotime('first day of this month'));
         // $c->contract_end     = $old_contract->abgeklemmt ? : null;
@@ -376,9 +376,9 @@ class importNetUserCommand extends Command
                     ->where('cpe.sec_typ', '=', 1)->get();
 
         // Deactivate network access when gesperrt or when no cpe's attached
-        $modem->network_access = 1;
+        $modem->internet_access = 1;
         if ($old_modem->Gesperrt_int == 'Y' || ! $comps) {
-            $modem->network_access = 0;
+            $modem->internet_access = 0;
         }
 
         // Determine if Device has a public IP

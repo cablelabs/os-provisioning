@@ -540,7 +540,7 @@ class NetElementObserver
                 } else {
                     // Show Alert that not all indices could be assigned to the new parameter -> user has to create new indices and delete the old ones
                     // We also could delete them directly, so that user has to add them again
-                    Session::put('info', trans('messages.indices_unassigned'));
+                    Session::put('alert.info', trans('messages.indices_unassigned'));
                 }
             }
         }

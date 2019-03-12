@@ -157,9 +157,7 @@
 			{}
 			%else
 			{
-				\ifthenelse{\equal{{last\_cancel\_date}}{}}
-					{Der Vertrag wurde gekündigt zum: {end\_of\_term}.}
-				%else
+				\ifthenelse{\equal{{canceled\_to}}{}}
 				{
 					\begin{tabular} {@{}ll}
 						% Vertragsbeginn: {start\_of\_term}\\
@@ -169,6 +167,8 @@
 						Spätester Kündigungszeitpunkt: & {last\_cancel\_date}\\
 					\end{tabular}
 				}
+				%else
+				{Der Vertrag wurde gekündigt zum: {canceled\_to}.}
 			}
 		\end{flushleft}
 

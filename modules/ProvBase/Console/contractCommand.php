@@ -21,7 +21,7 @@ class contractCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Contract Scheduling Command (call with daily or monthly)';
+    protected $description = 'Contract Scheduling Command (call with daily, daily_all or monthly)';
 
     /**
      * Create a new command instance.
@@ -40,11 +40,46 @@ class contractCommand extends Command
      */
     public function fire()
     {
-        if (! ($this->argument('date') == 'daily' || $this->argument('date') == 'monthly')) {
+        // we don't check contracts that ended before defined here (in days)
+        $days_around_start_and_enddates = 7;
+
+        $min_date = date('Y-m-d', strtotime("-$days_around_start_and_enddates days"));
+        $max_date = date('Y-m-d', strtotime("+$days_around_start_and_enddates days"));
+        $today = date('Y-m-d');
+
+        if (! in_array($this->argument('date'), ['daily', 'daily_all', 'monthly'])) {
+            $this->error('Wrong/missing argument');
+
             return false;
         }
 
-        $cs = Contract::all();
+        if (\Str::endswith($this->argument('date'), '_all')) {
+            // fallback mode – runs conversions on every contract
+            $cs = Contract::all();
+        } else {
+            // shrink the list of contracts to run daily conversion on – this is an expensive operation
+            if (\Module::collections()->has('BillingBase')) {
+                // attention: do not check if valid_to or valid_from is fixed – we need them both
+                //      (change item dates, trigger online state of modems)
+                $cs = Contract::where(whereLaterOrEqualThanDate('contract_end', $min_date))
+                    ->where('contract_start', '<=', $today)
+                    ->join('item', 'contract.id', '=', 'item.contract_id')
+                    ->join('product', 'product.id', '=', 'item.product_id')
+                    ->whereIn('product.type', ['Internet', 'Voip'])
+                    ->where(function ($query) use ($min_date, $max_date) {
+                        // using advanced where clause to set brackets properly
+                        $query->whereBetween('item.valid_from', [$min_date, $max_date])
+                              ->orWhereBetween('item.valid_to', [$min_date, $max_date]);
+                    })
+                    ->groupBy('contract.id')
+                    ->select('contract.*')
+                    ->get();
+            } else {
+                $cs = Contract::where(whereLaterOrEqualThanDate('contract_end', $min_date))
+                    ->where('contract_start', '<=', date('Y-m-d'))
+                    ->get();
+            }
+        }
 
         $i = 1;
         $num = count($cs);
@@ -53,7 +88,7 @@ class contractCommand extends Command
             echo "contract month: $i/$num \r";
             $i++;
 
-            if ($this->argument('date') == 'daily') {
+            if (in_array($this->argument('date'), ['daily', 'daily_all'])) {
                 $c->daily_conversion();
             }
 
@@ -74,7 +109,7 @@ class contractCommand extends Command
     protected function getArguments()
     {
         return [
-            ['date', InputArgument::REQUIRED, 'daily/monthly'],
+            ['date', InputArgument::REQUIRED, 'daily/daily_all/monthly'],
         ];
     }
 

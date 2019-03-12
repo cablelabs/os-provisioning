@@ -23,6 +23,11 @@ class SnmpController extends \BaseController
     private $device;
 
     /**
+     * @var  object     Used for parent cmts of a cluster
+     */
+    private $parent_device;
+
+    /**
      * @var  array  of OID-Strings that threw an exception during SNMP-Set
      */
     private $errors = [];
@@ -50,7 +55,13 @@ class SnmpController extends \BaseController
         if ($device->netelementtype_id == 2) {
             $cmts = $device->get_parent_cmts();
             $this->parent_device = $cmts ?: null;
-            $this->device->ip = $this->device->ip ?: $cmts->ip;
+            if (! $this->device->ip) {
+                if ($cmts) {
+                    $this->device->ip = $cmts->ip;
+                } else {
+                    Session::push('tmp_info_above_form', trans('messages.snmp.missing_cmts'));
+                }
+            }
         }
 
         $this->snmp_def_mode();
@@ -84,7 +95,7 @@ class SnmpController extends \BaseController
         // Error messages
         if (isset($e)) {
             Session::push('tmp_error_above_form', $e->getMessage());
-        } elseif (! $form_fields) {
+        } elseif (! $form_fields && ! Session::exists('tmp_info_above_form')) {
             $msg = trans('messages.snmp.undefined');
             Session::push('tmp_info_above_form', $msg);
         } elseif ($this->errors) {
