@@ -248,6 +248,7 @@ return [
     'Start ID Endpoints'		=> 'Start ID Endpoints',
     'Downstream rate coefficient' => 'Downstream rate coefficient',
     'Upstream rate coefficient' => 'Upstream rate coefficient',
+    'Additional modem reset button' => 'Additional modem reset button',
     'modemAnalysis' => [
         'cpeMacMissmatch' => 'The state of internet access and telephony could not be determined as minimum 1 CPE MAC address differs from the MACs of the assigned MTAs.',
         'fullAccess' => 'Internet access and telephony is allowed. (according to configfile)',

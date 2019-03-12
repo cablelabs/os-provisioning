@@ -20,9 +20,16 @@ class ModemController extends \BaseController
     protected $second_button_name = 'Restart via CMTS';
     protected $second_button_title_key = 'modem_force_restart_button_title';
 
-    protected $edit_view_third_button = true;
-    protected $third_button_name = 'Reset Modem';
-    protected $third_button_title_key = 'modem_reset_button_title';
+    public function __construct()
+    {
+        if (\Modules\ProvBase\Entities\ProvBase::first()->additional_modem_reset) {
+            $this->edit_view_third_button = true;
+            $this->third_button_name = 'Reset Modem';
+            $this->third_button_title_key = 'modem_reset_button_title';
+        }
+
+        parent::__construct();
+    }
 
     /**
      * defines the formular fields for the edit and create view

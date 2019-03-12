@@ -248,6 +248,7 @@ return [
     'Start ID Endpoints'		=> 'Start Nummerierung Endpunkte',
     'Downstream rate coefficient' => 'Übertragungsratenkoeffizient Vorwärtskanal',
     'Upstream rate coefficient' => 'Übertragungsratenkoeffizient Rückwärtskanal',
+    'Additional modem reset button' => 'Zusätzlicher Modem Reset Button',
     'modemAnalysis' => [
         'cpeMacMissmatch' => 'Der Status über Internetzugriff und Telefonie kann nicht ermittelt werden, da sich im Configfile mindestens eine der CPE MAC Adressen von den MACs der zugewiesenen MTAs unterscheidet.',
         'fullAccess' => 'Internetzugriff und Telefonie ist freigeschalten. (gemäß Configfile)',
