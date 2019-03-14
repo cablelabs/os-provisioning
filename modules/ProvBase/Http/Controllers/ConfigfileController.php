@@ -120,17 +120,9 @@ class ConfigfileController extends \BaseController
         $importedIds = array_unique($importedIds[0]);
         sort($importedIds, SORT_NATURAL);
 
-        $configfile = Configfile::withTrashed()->orderBy('id', 'desc')->first();
+        $maxId = Configfile::withTrashed()->max('id');
 
-        // to prevent overwriting id's
-        // if there already exists a configfile, use the highest id and increment by one
-        // else start at 0
-        $startId = 0;
-        if ($configfile) {
-            $startId = ++$configfile->id;
-        } else {
-            $startId++;
-        }
+        $startId = $maxId ? ++$maxId : 0;
 
         // when there is no parent for this configfile, replace the id's
         foreach ($importedIds as $id) {
