@@ -263,3 +263,20 @@ function whereLaterOrEqualThanDate($column, $date = '')
             ->orWhere($column, '=', '');
     };
 }
+
+function clearFailedJobs($command = 'all')
+{
+    if ($command == 'all') {
+        \DB::table('failed_jobs')->delete();
+    }
+
+    $failed_jobs = \DB::table('failed_jobs')->get();
+
+    foreach ($failed_jobs as $failed_job) {
+        $commandName = json_decode($failed_job->payload)->data->commandName;
+
+        if (\Str::contains($commandName, $command)) {
+            \Artisan::call('queue:forget', ['id' => $failed_job->id]);
+        }
+    }
+}
