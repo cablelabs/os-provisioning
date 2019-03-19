@@ -17,8 +17,19 @@ class ModemController extends \BaseController
 
     // save button title ? for a help message
     protected $edit_view_second_button = true;
-    protected $second_button_name = 'Force Restart';
+    protected $second_button_name = 'Restart via CMTS';
     protected $second_button_title_key = 'modem_force_restart_button_title';
+
+    public function __construct()
+    {
+        if (\Modules\ProvBase\Entities\ProvBase::first()->additional_modem_reset) {
+            $this->edit_view_third_button = true;
+            $this->third_button_name = 'Reset Modem';
+            $this->third_button_title_key = 'modem_reset_button_title';
+        }
+
+        parent::__construct();
+    }
 
     /**
      * defines the formular fields for the edit and create view
@@ -77,7 +88,8 @@ class ModemController extends \BaseController
             [['form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1']];
 
         if (\Module::collections()->has('HfcCustomer')) {
-            $geopos = link_to_route('CustomerModem.show', 'Geopos X/Y', ['true', $model->id]);
+            $rect = [round($model->x, 4) - 0.0001, round($model->x, 4) + 0.0001, round($model->y, 4) - 0.0001, round($model->y, 4) + 0.0001];
+            $geopos = link_to_route('CustomerModem.show', 'Geopos X/Y', ['true', $model->id]).'    ('.link_to_route('CustomerRect.show', trans('messages.proximity'), $rect).')';
         } else {
             $geopos = 'Geopos X/Y';
         }
@@ -337,12 +349,12 @@ class ModemController extends \BaseController
      */
     public function update($id)
     {
-        if (! \Input::has('_2nd_action')) {
+        if (! \Input::has('_2nd_action') && ! \Input::has('_3rd_action')) {
             return parent::update($id);
         }
 
         $modem = Modem::find($id);
-        $modem->restart_modem();
+        $modem->restart_modem(false, \Input::has('_3rd_action'));
 
         return \Redirect::back();
     }

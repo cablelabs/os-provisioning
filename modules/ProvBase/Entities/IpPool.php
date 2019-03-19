@@ -156,24 +156,26 @@ class IpPool extends \BaseModel
      */
     public function get_range()
     {
-        $ret = "\t\t\trange ".$this->ip_pool_start.' '.$this->ip_pool_end.";\n";
         $ep_static = Endpoint::where('fixed_ip', '=', '1');
 
         if ($this->type != 'CPEPub' || $ep_static->count() == 0) {
-            return $ret;
+            return "\t\t\t#pool: $this->type $this->ip_pool_start $this->ip_pool_end\n\t\t\trange $this->ip_pool_start $this->ip_pool_end;\n";
         }
 
-        $ret = '';
         foreach ($ep_static->get() as $ep) {
             $static[] = ip2long($ep->ip);
         }
 
-        $all = range(ip2long($this->ip_pool_start), ip2long($this->ip_pool_end));
-        foreach (array_diff($all, $static) as $ip) {
-            $ret .= "\t\t\trange ".long2ip($ip).";\n";
+        $leases = array_diff(range(ip2long($this->ip_pool_start), ip2long($this->ip_pool_end)), $static);
+        $start = long2ip(reset($leases));
+        $end = long2ip(end($leases));
+
+        $pool = "\t\t\t#pool: $this->type $start $end\n";
+        foreach ($leases as $lease) {
+            $pool .= "\t\t\trange ".long2ip($lease).";\n";
         }
 
-        return $ret;
+        return $pool;
     }
 
     /**

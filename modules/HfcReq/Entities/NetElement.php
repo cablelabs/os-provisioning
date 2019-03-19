@@ -159,9 +159,9 @@ class NetElement extends \BaseModel
         return $this->hasMany('Modules\HfcSnmp\Entities\Indices', 'netelement_id');
     }
 
-    public function icingaobjects()
+    public function getIcingaobjectsAttribute()
     {
-        return $this->hasOne('Modules\HfcBase\Entities\IcingaObjects', 'name1')->where('objecttype_id', '=', '1');
+        return IcingaObjects::where('name1', "{$this->id}_{$this->name}")->where('icinga_objects.objecttype_id', '1')->where('icinga_objects.is_active', '1')->first();
     }
 
     public function parent()
