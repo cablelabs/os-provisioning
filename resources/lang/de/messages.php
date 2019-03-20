@@ -250,8 +250,10 @@ return [
     'Upstream rate coefficient' => 'Übertragungsratenkoeffizient Rückwärtskanal',
     'Additional modem reset button' => 'Zusätzlicher Modem Reset Button',
     'modemAnalysis' => [
+        'cfOutdated' => 'Das Modem läuft nicht mit dem aktuellen Configfile! Der letzte Download fand vor dem Erzeugen des Configfiles statt.',
         'cpeMacMissmatch' => 'Der Status über Internetzugriff und Telefonie kann nicht ermittelt werden, da sich im Configfile mindestens eine der CPE MAC Adressen von den MACs der zugewiesenen MTAs unterscheidet.',
         'fullAccess' => 'Internetzugriff und Telefonie ist freigeschalten. (gemäß Configfile)',
+        'missingLD' => 'Info: Der letzte Download des Configfiles ist zu lang her, um festzustellen ob das Modem die aktuellen Konfigurationen übernommen hat.',
         'noNetworkAccess' => 'Internetzugriff und Telefonie ist gesperrt. (gemäß Configfile)',
         'onlyVoip' => 'Internetzugriff ist gesperrt. Nur Telefonie ist erlaubt. (gemäß Configfile)',
     ],
