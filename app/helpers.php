@@ -264,10 +264,17 @@ function whereLaterOrEqualThanDate($column, $date = '')
     };
 }
 
+/**
+ * Clear failed jobs table in database for specific command or the whole table
+ *
+ * @param string
+ */
 function clearFailedJobs($command = 'all')
 {
     if ($command == 'all') {
         \DB::table('failed_jobs')->delete();
+
+        return;
     }
 
     $failed_jobs = \DB::table('failed_jobs')->get();
