@@ -1150,7 +1150,7 @@ class Contract extends \BaseModel
             'canceled_to' => '',
             'end_of_term' => '',
             'maturity' => '',
-            'tariff' => null,
+            'tariff' => null,           // current valid tariff
         ];
 
         // check if contract was already canceled for settlement run
