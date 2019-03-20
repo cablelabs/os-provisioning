@@ -52,11 +52,13 @@ systemctl enable mariadb
 
 # populate timezone info and set php timezone based on the local one
 mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
-sed -e "s|^;date.timezone =$|date.timezone = $(timedatectl | grep 'Time zone' | cut -d':' -f2 | xargs | cut -d' ' -f1)|" \
+zone=$(timedatectl | grep 'Time zone' | cut -d':' -f2 | cut -d' ' -f2)
+sed -e "s|^;date.timezone =$|date.timezone = $zone|" \
     -e 's/^memory_limit =.*/memory_limit = 1024M/' \
     -e 's/^upload_max_filesize =.*/upload_max_filesize = 50M/' \
     -e 's/^post_max_size =.*/post_max_size = 50M/' \
     -i /etc/{,opt/rh/rh-php71/}php.ini
+sed -i "s|'timezone' *=>.*|'timezone' => '$zone',|" "$dir/config/app.php"
 
 # create mysql db
 mysql -u root -e "CREATE DATABASE nmsprime CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';"
