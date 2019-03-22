@@ -62,12 +62,21 @@ class ConfigfileController extends \BaseController
     }
 
     /**
+     * Dont show export button on create page
+     */
+    public function create()
+    {
+        $this->edit_view_second_button = false;
+
+        return parent::create();
+    }
+
+    /**
      * Overwrites the base method => we need to handle file uploads
      * @author Patrick Reichel
      */
     public function store($redirect = true)
     {
-
         // check and handle uploaded firmware and cvc files
         $this->handle_file_upload('firmware', '/tftpboot/fw/');
         $this->handle_file_upload('cvc', '/tftpboot/cvc/');
