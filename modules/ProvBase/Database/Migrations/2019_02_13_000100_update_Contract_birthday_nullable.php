@@ -1,9 +1,8 @@
 <?php
 
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 
-class UpdateContractBirthdayNullable extends Migration
+class UpdateContractBirthdayNullable extends BaseMigration
 {
     // name of the table to change
     protected $tablename = 'contract';
