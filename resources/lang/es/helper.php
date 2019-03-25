@@ -7,7 +7,7 @@ return [
     'translate'					=> 'Usted puede ayudar a traducir primer NMS en',
     'assign_role'					=> 'Asigna uno o más roles a este usuario. Los usuarios sin Rol no pueden usar el NMS porque no tienen Permisos.',
     'assign_users'					=> 'Asigna uno o más usuarios a este rol. Los cambios realizados aquí no son visibles en el GuiLog del usuario.',
-    'assign_rank'					=> 'El rango de una función determina la posibilidad de editar otros usuarios. <br \\>puede asignar valores de 0 a 100. (mayor es mejor). <br \\>si un usuario tiene más de una función, se utiliza el rango más alto. <br \\>si se establece la posibilidad de actualizar los usuarios, la fila también se comprueba. Solamente si el rango del editor es mayor, se concede el permiso. Además, al crear o actualizar los usuarios, pueden asignarse sólo funciones con rango igual o inferior.',
+    'assign_rank'					=> 'El rango de una función determina la posibilidad de editar otros usuarios. <br \>puede asignar valores de 0 a 100. (mayor es mejor). <br \>si un usuario tiene más de una función, se utiliza el rango más alto. <br \>si se establece la posibilidad de actualizar los usuarios, la fila también se comprueba. Solamente si el rango del editor es mayor, se concede el permiso. Además, al crear o actualizar los usuarios, pueden asignarse sólo funciones con rango igual o inferior.',
     'All abilities'					=> 'Esta habilidad permite todas las solicitudes de autorización, excepto las habilidades, que están explícitamente prohibidas. Esto es principalmente una habilidad de ayuda. La prohibición está deshabilitada, porque solo se permiten las habilidades marcadas. Si esta habilidad no está marcada, debes establecer todas las habilidades a mano. Si cambias esta habilidad, cuando se establecen muchas otras habilidades, tomará hasta 1 minuto aplicar todos los cambios.',
     'View everything'			=> 'Esta capacidad permite ver todas las páginas. La prohibición está inhabilitada porque hace que el NMS no se pueda usar. Esto es principalmente una capacidad de ayuda para los invitados o usuarios con privilegios muy bajos.',
     'Use api'					=> 'Esta capacidad permite o prohíbe el acceso a las rutas API con "Basic Auth" (el correo electrónico se usa como nombre de usuario).',
@@ -25,7 +25,7 @@ return [
 
     // GlobalConfig
     'ISO_3166_ALPHA-2'				=> 'ISO 3166 ALPHA-2 (dos caracteres, p.e. “US”). Usado en formularios de direccion para especificar el pais.',
-    'PasswordReset'           => 'This property defines the timespan in days in which the users of the administration panel should change their passwords. If you want to disable the password reset message, set the value to 0.',
+    'PasswordReset'           => 'Esta propiedad define el intervalo de tiempo en días en los que los usuarios del panel de administración deben cambiar sus contraseñas. Si desea deshabilitar el mensaje de restablecimiento de contraseña, establezca el valor en 0.',
 
  /*
   *	MODULE: BillingBase
@@ -54,18 +54,21 @@ return [
     'Item_ProductId'				=> 'Todos los campos ademas del Ciclo de Facturacion tienen que ser despejados antes de algun cambio! De otra manera, los articulos no podran ser guardados en la mayoria de los casos',
     'Item_ValidFrom'				=> 'Para Pagos de Una Vez los campos pueden ser usados para dividir pagos - Solo YYYY-MM es considerado entonces!',
     'Item_ValidFromFixed'			=> 'Marcado por defecto! Desmarque si la tarifa deberia quedar inactiva cuando una fecha de inicio es alcanzada (p.ej. si el cliente esta esperando por transferencia de numero telefonico). La tarifa no sera iniciada y no sera cargada hasta que active la casilla. Luego, la fecha de inicio sera incrementada cada dia un dia despues de alcanzar la fecha de inicio. Nota: La fecha no es actualizada por ordenes externas (p.ej. desde proveedor de telefonia).',
-    'Item_validTo'                  => 'It\'s possible to specify the number of months here - e.g. \'12M\' for 12 months. For monthly paid products it will just add the number of months - so start date 2018-05-04 will be valid to 2019-05-04. Single paid items with splitted payment will be charged 12 times - end date will be 2019-04-31 then.',
+    'Item_validTo'                  => 'Es posible especificar el número de meses aquí-por ejemplo, \' 12M \' durante 12 meses. Para los productos de pago mensuales sólo agregará el número de meses-por lo que la fecha de inicio 2018-05-04 será válida para 2019-05-04. Los artículos pagados individuales con el pago dividido serán cargados 12 veces-la fecha del final será 2019-04-31 entonces.',
     'Item_ValidToFixed'				=> 'Marcado por defecto! Desmarcar si la fecha de pazo es desconocida. Si es desmarcada, la tarifa no acabara y sera cargada hasta que active la casilla. Luego, cuando la fecha de plazo es alcanzada, sera incrementada cada dia en un dia. Nota: La fecha no es actualizada por ordenes externas (p.ej. desde proveedor de telefonia).',
     'Item_CreditAmount'				=> 'Cantidad Neta a ser acreditada al Cliente. Cuidado: una cantidad negativa viene a ser un debito!',
 
     //ProductController
-    'Product_bundle'                => 'On bundled tarifs the minimum runtime of the contract is determined only be the internet tariff. Otherwise the last starting valid tariff (Voip or Internet) dictates this date.',
-    'Product_maturity_min'          => 'Tariff minimum period/runtime/term. E.g. 14D (14 days), 3M (three months), 1Y (one year)',
-    'Product_maturity'              => 'Tariff period/runtime/term extension after the minimum runtime. Will be automatically added when tariff was not canceled before period of notice. Default 1 month. E.g. 14D (14 days), 3M (three months), 1Y (one year)',
-    'Product_Name' 					=> 'Para creditos es posible de asignar un Tipo aniadiendo el tipo de nombre al Nombre del Credito - p.ej.: \'Credito de Dispositivo\'',
+    'product' => [
+        'bundle'                => 'On bundled tarifs the minimum runtime of the contract is determined only be the internet tariff. Otherwise the last starting valid tariff (Voip or Internet) dictates this date.',
+        'maturity_min'          => 'Tariff minimum period/runtime/term. E.g. 14D (14 days), 3M (three months), 1Y (one year)',
+        'maturity'              => 'Tariff period/runtime/term extension after the minimum runtime. Will be automatically added when tariff was not canceled before period of notice. Default 1 month. E.g. 14D (14 days), 3M (three months), 1Y (one year)',
+        'Name'                  => 'For Credits it is possible to assign a Type by adding the type name to the Name of the Credit - e.g.: \'Credit Device\'',
+        'pod'                   => 'E.g. 14D (14 days), 3M (three months), 1Y (one year)',
+        'proportional'          => 'Activate this checkbox when items that begin during the current settlement run shall be charged proportionately. E.g. if an monthly paid item starts in the middle of the month the customer would be charged only half of the full price in this settlement run.',
+        'Type'                  => 'All fields besides Billing Cycle have to be cleared before a type change! Otherwise products can not be saved in most cases',
+        ],
     'Product_Number_of_Cycles' 		=> 'Ten cuidado!: para todos los productos pagados repetidos, el precio aplica para cada deuda, para productos pagados de una, el Precio es dividido por el numero de ciclos',
-    'Product_pod'                   => 'E.g. 14D (14 days), 3M (three months), 1Y (one year)',
-    'Product_Type'					=> 'Todos los campos ademas del Ciclo de Facturacion tienen que ser despejados antes de algun cambio! De otra manera, los productos no seran guardados en la mayoria de los casos',
 
     //SalesmanController
     'Salesman_ProductList'			=> 'Aniadir todos los tipos de Producto por los cuales se obtiene comision - posible: ',
@@ -85,20 +88,20 @@ return [
  /*
   * MODULE: Dashboard
   */
-    'next'							=> 'Next step: ',
-    'set_isp_name'					=> 'Set internet service provider name',
-    'create_cmts'					=> 'Create first CMTS',
-    'create_cm_pool'				=> 'Create first cablemodem IP pool',
-    'create_cpepriv_pool'			=> 'Create first private CPE IP pool',
-    'create_qos'					=> 'Create first QoS profile',
-    'create_product'				=> 'Create first billing product',
-    'create_configfile'				=> 'Create first configfile',
-    'create_sepa_account'			=> 'Create first SEPA account',
-    'create_cost_center'			=> 'Create first cost center',
-    'create_contract'				=> 'Create first contract',
-    'create_nominatim'				=> 'Set an email address (OSM_NOMINATIM_EMAIL) in /etc/nmsprime/env/global.env to enable geocoding for modems',
-    'create_nameserver'				=> 'Set your nameserver to 127.0.0.1 in /etc/resolv.conf and make sure it won\'t be overwritten via DHCP (see DNS and PEERDNS in /etc/sysconfig/network-scripts/ifcfg-*)',
-    'create_modem'					=> 'Create first modem',
+    'next'							=> 'Siguiente paso: ',
+    'set_isp_name'					=> 'Nombre de proveedor de servicio de red',
+    'create_cmts'					=> 'Crear el primer CMTS',
+    'create_cm_pool'				=> 'Crear primer IP Pool para Cable Modem',
+    'create_cpepriv_pool'			=> 'Crear primer pool privado CPE IP',
+    'create_qos'					=> 'Crear primer perfil QoS',
+    'create_product'				=> 'Crear primer producto de facturación',
+    'create_configfile'				=> 'Crear primer archivo de configuración',
+    'create_sepa_account'			=> 'Crear cuenta SEPA',
+    'create_cost_center'			=> 'Crear primer centro de costo',
+    'create_contract'				=> 'Crear contrato',
+    'create_nominatim'				=> 'Establecer una dirección de correo electrónico (OSM_NOMINATIM_EMAIL) en /etc/nmsprime/env/global.env para habilitar geocodificación para módem',
+    'create_nameserver'				=> 'Establezca su servidor de nombres a 127.0.0.1 en /etc/resolv.conf y asegúrese de que no será sobreescrito a través de DHCP (vea DNS y PEERDNS en /etc/sysconfig/network-scripts/ifcfg-*)',
+    'create_modem'					=> 'Crear primer módem',
 
  /*
   *	MODULE: HfcReq
@@ -124,16 +127,19 @@ return [
   *	MODULE: ProvBase
   */
     'rate_coefficient'				=> 'La Maxima Tarifa Sostenida sera multiplicada por este valor para otorgar al usuario mas (> 1.0) rendimiento que el suscrito.',
+    'additional_modem_reset'		=> 'Check if an additional button should be displayed, which resets the modem via SNMP without querying the CMTS.',
     //ModemController
-    'Modem_NetworkAccess'			=> 'Acceso a la Red para CPEs. (MTAs no son considerados y iran siempre online cuando las demas configuraciones sean correctas). Cuidado: Con el Modulo-Facturacion, esta casilla sera siempre sobrescrita diariamente si la tarifa cambia.',
+    'Modem_InternetAccess'			=> 'Internet Access for CPEs. (MTAs are not considered and will always go online when all other configurations are correct). Take care: With Billing-Module this checkbox will be overwritten by daily check if tariff changes.',
     'Modem_InstallationAddressChangeDate'	=> 'En caso de (fisico) reubicacion del modem: Agregar fecha de inicio para la nueva direccion ahi. Si es solo lectura, hay una orden de cambio de direccion pendiente en Envia.',
     'Modem_GeocodeOrigin'			=> 'De donde vienen los datos geocode? Si se establece a "n/a", la direccion no podra ser geocoded para cualquier API. Sera establecido a su nombre en cambios manuales de geodata.',
     'contract_number' 				=> 'Atencion - Contrasena del Cliente es cambiado automaticamente cuando se cambia este campo!',
     'mac_formats'					=> "Formatos permitidos (case-insensitive):\n\n1) AA:BB:CC:DD:EE:FF\n2) AABB.CCDD.EEFF\n3) AABBCCDDEEFF",
     'fixed_ip_warning'				=> 'Usar una IP fija es altamente no recomendado, ya que pierde la habilidad de mover modems y sus CPEs libremente entre CMTSes. Envez de dar una IP fija al cliente, deberan ser provistos del hostname, el cual no cambiara.',
     'modem_update_frequency'		=> 'Este campo se actualiza una vez al día.',
-    'enable_agc'					=> 'Enable upstream automatic gain control.',
-    'agc_offset'					=> 'Upstream automatic gain control offset in dB. (default: 0.0)',
+    'enable_agc'					=> 'Activar el control automático de ganancia para upstream.',
+    'agc_offset'					=> 'Control de ganancia automática en dB (por defecto: 0.0)',
+    'configfile_count'              => 'The number in brackets indicates how often the respective configurationfile is already used.',
+    'has_telephony'                 => 'Activate if customer shall have telephony but has no internet. This flag can actually not be used to disable telephony on contracts with internet. Please delete the MTA or disable the phonenumber for that. Info: The setting influences the modems configfile parameters NetworkAcess and MaxCPE - see modems analyses page tab \'Configfile\'',
 
  /*
   *	MODULE: ProvVoip
@@ -166,4 +172,8 @@ return [
  * Module Ticketsystem
  */
     'assign_user' => ' Permitido de asignar un usuario a un ticket',
+    'mail_env'    => 'Siguiente: Establece tu Host/Usuario/Contraseña en /etc/nmsprime/env/global.env para permitir recibir Emails en Tickets',
+    'noReplyMail' => 'La dirección de correo electrónico que debe ser mostrada como remitente, al crear/editar tickets. Esta dirección no tiene que existir. Por ejemplo: ejemplo@ejemplo.com',
+    'noReplyName' => 'El nombre que debe mostrarse como remitente, al crear/editar tickets. Por ejemplo: NMS Prime',
+    'ticket_settings' => 'Siguiente: Establecer nombre y dirección no responder en la página de configuración global.',
  ];

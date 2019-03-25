@@ -17,14 +17,14 @@ return [
         'jQuery_sLengthMenu'		=> 'Show _MENU_ entries',
         'jQuery_sLoadingRecords'	=> 'Loading...',
         'jQuery_sProcessing'		=> 'Processing...',
-        'jQuery_sSearch'			=> 'Search:',
+        'jQuery_sSearch'			=> 'Căutare:',
         'jQuery_sZeroRecords'		=> 'No matching records found',
-        'jQuery_PaginatesFirst'		=> 'First',
-        'jQuery_PaginatesPrevious'	=> 'Previous',
-        'jQuery_PaginatesNext'		=> 'Next',
-        'jQuery_PaginatesLast'		=> 'Last',
+        'jQuery_PaginatesFirst'		=> 'Prima',
+        'jQuery_PaginatesPrevious'	=> 'Înapoi',
+        'jQuery_PaginatesNext'		=> 'Următor',
+        'jQuery_PaginatesLast'		=> 'Ultimul',
         'jQuery_sLast'				=> ': activate to sort column ascending',
-        'jQuery_All'				=> 'All',
+        'jQuery_All'				=> 'Toate',
         'jQuery_Print'				=> 'Print',
         'jQuery_colvis'				=> 'Column Visibility',
         'jQuery_colvisRestore'		=> 'Restore',
@@ -40,7 +40,7 @@ return [
         'Menu_SEPA Accounts'		=> 'SEPA Accounts',
         'Menu_Settlement Run'		=> 'Settlement Run',
         'Menu_Cost Center'			=> 'Cost Center',
-        'Menu_Companies'			=> 'Companies',
+        'Menu_Companies'			=> 'Companii',
         'Menu_Salesmen'				=> 'Salesmen',
         'Menu_Tree Table'			=> 'Tree Table',
         'Menu_Devices'				=> 'Devices',
@@ -155,6 +155,7 @@ return [
         //Modems
         'Header_Modems'				=> 'Modem|Modems', //workaround
         'Header_Invoice' 			=> 'Invoice|Invoices',
+        'Header_OldInvoices'        => 'Old Invoices',
         'Header_EditModems'			=> 'Edit Modem',
         'Header_Modem'				=> 'Modem|Modems',
         'Header_SEPA Mandate' 		=> 'SEPA Mandate',
@@ -350,4 +351,5 @@ return [
 
 // Error
     'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
+    'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
 ];

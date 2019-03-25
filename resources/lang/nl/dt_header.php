@@ -34,10 +34,12 @@ return [
     'item.valid_from_fixed' => 'Item Valid from fixed',
     'item.valid_to' => 'Item Valid to',
     'item.valid_to_fixed' => 'Item Valid to fixed',
-    // Product
-    'product.type' => 'Type',
-    'product.name' => 'Product Name',
-    'product.price' => 'Price',
+    'product' => [
+        'proportional' => 'Proportionate',
+        'type' => 'Type',
+        'name' => 'Product Name',
+        'price' => 'Price',
+    ],
     // Salesman
     'salesman.id' => 'ID',
     'salesman_id' 		=> 'Salesman-ID',
@@ -171,6 +173,7 @@ return [
     'phonenr_deact' => 'Deactivation date',
     'phonenr_state' => 'Status',
     'modem_city' => 'Modem city',
+    'sipdomain' => 'Registrar',
     // Phonenumbermanagement
     'phonenumbermanagement.id' => 'ID',
     'phonenumbermanagement.activation_date' => 'Activation date',
