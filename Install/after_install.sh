@@ -58,7 +58,7 @@ sed -e "s|^;date.timezone =$|date.timezone = $zone|" \
     -e 's/^upload_max_filesize =.*/upload_max_filesize = 50M/' \
     -e 's/^post_max_size =.*/post_max_size = 50M/' \
     -i /etc/{,opt/rh/rh-php71/}php.ini
-sed -i "s|'timezone' *=>.*|'timezone' => '$zone',|" "$dir/config/app.php"
+sed -i "s|^#APP_TIMEZONE=|APP_TIMEZONE=$zone|" /etc/nmsprime/env/global.env
 
 # create mysql db
 mysql -u root -e "CREATE DATABASE nmsprime CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';"
