@@ -392,7 +392,7 @@ class importCommand extends Command
         $c->email = $old_contract->email;
         $c->birthday = $old_contract->geburtsdatum ?: null;
 
-        $c->internet_access = $old_contract->internet_access;
+        $c->internet_access = $old_contract->network_access;
         $c->contract_start = $old_contract->angeschlossen;
         $c->contract_end = $old_contract->abgeklemmt ?: null;
         $c->create_invoice = $old_contract->rechnung;
@@ -705,7 +705,7 @@ class importCommand extends Command
         $modem->serial_num = $old_modem->serial_num;
         $modem->inventar_num = $old_modem->inventar_num;
         $modem->description = $old_modem->beschreibung;
-        $modem->internet_access = $old_modem->internet_access;
+        $modem->internet_access = $old_modem->network_access;
 
         $modem->x = $old_modem->x / 10000000;
         $modem->y = $old_modem->y / 10000000;
