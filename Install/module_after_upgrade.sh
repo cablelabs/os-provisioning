@@ -9,6 +9,7 @@ cd "$dir"
 /opt/rh/rh-php71/root/usr/bin/php artisan queue:restart
 /opt/rh/rh-php71/root/usr/bin/php artisan auth:nms
 /opt/rh/rh-php71/root/usr/bin/php artisan route:cache
+/opt/rh/rh-php71/root/usr/bin/php artisan view:clear
 
 systemctl reload httpd
 
