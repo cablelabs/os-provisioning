@@ -1,37 +1,35 @@
-#!/usr/bin/bash
+#!/bin/bash
 dir='/var/www/nmsprime'
-out='/tmp'
 
 handle_module() {
-	if [ "$1" == 'base' ]
+	if [[ "$1" == 'base' ]]
 	then
-		path="$dir/Install"
+		cfg="$dir/Install/config.cfg"
 	else
-		path="$dir/modules/$1/Install"
+		cfg="$(dirname $1)/Install/config.cfg"
 	fi
 
-	# backup config files
-	if [ -f "$path/config.cfg" ]; then
+	if [[ -f "$cfg" ]]; then
 		while read -r line; do
-			f_to=$(echo "$line" | cut -d'=' -f2 | xargs)
-			mkdir -p $(dirname "$out$f_to")
-			cp -a "$f_to" "$out$f_to"
-		done < <(awk '/\[files\]/{flag=1;next}/\[/{flag=0}flag' "$path/config.cfg" | grep '=')
+			files+=($(echo "$line" | cut -d'=' -f2 | xargs))
+		done < <(awk '/\[files\]/{flag=1;next}/\[/{flag=0}flag' "$cfg" | grep '=')
+
+		for file in $(grep '^configfiles' "$cfg" | cut -d'=' -f2 | grep -o '"[^"]\+"' | tr -d '"'); do
+			files+=("$(dirname $1)/$file")
+		done
 	fi
 }
 
 display_help() {
-	echo "Usage: $0 [-o outdir] [-p mysql_root_password]" >&2
+	echo "Usage: $0 -p mysql_root_password [> output-file.tar.gz]" >&2
 	exit 1
 }
 
-while getopts ":o:p:h" opt; do
+while getopts ":p:h" opt; do
 	case $opt in
 		h)
 			display_help
-			;;
-		o)
-			out="$OPTARG"
+			exit 0
 			;;
 		p)
 			pw="$OPTARG"
@@ -39,50 +37,42 @@ while getopts ":o:p:h" opt; do
 		\?)
 			echo "Invalid option: -$OPTARG" >&2
 			display_help
+			exit 1
 			;;
 	esac
 done
 
-date=$(date +%Y%m%dT%H%M%S)
-out="$out/$date"
-mkdir -p "$out"
+if [[ -z "$pw" ]]; then
+	display_help
+	exit 1
+fi
 
-# dump all needed databases
-mysqldump -u root --password="$pw" --databases cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc > "$out/dump.sql"
+excludes=(
+	"$dir/storage/app/tmp"
+	"$dir/storage/framework"
+)
 
-# backup all rrd files
-mkdir -p "$out/var/lib/cacti"
-rsync -a /var/lib/cacti/rra "$out/var/lib/cacti/"
+folders=(
+	"$dir/storage"
+	'/etc/firewalld'
+	'/tftpboot'
+	'/var/lib/cacti/rra'
+	'/var/lib/dhcpd'
+	'/var/named/dynamic'
+)
 
-# backup dhcpd lease file
-systemctl restart dhcpd
-mkdir -p "$out/var/lib/dhcpd"
-cp -a /var/lib/dhcpd/dhcpd.leases "$out/var/lib/dhcpd/"
+files=()
+rpm_files=$(rpm -qa 'nmsprime*' -c)
+if [[ -n "$rpm_files" ]]
+then
+	# rpm
+	readarray -t files <<< "$rpm_files"
+else
+	# git
+	handle_module base
+	for module in "$dir"/modules/*/module.json; do
+		handle_module "$module"
+	done
+fi
 
-# backup named zone files
-mkdir -p "$out/var/named/dynamic"
-cp -a /var/named/dynamic/*.zone "$out/var/named/dynamic/"
-
-# backup firewalld zones
-mkdir -p "$out/etc/firewalld/zones"
-rsync -a /etc/firewalld/zones "$out/etc/firewalld"
-
-# backup tftpboot folder
-mkdir -p "$out/tftpboot"
-rsync -a /tftpboot "$out"
-
-# backup nmsprime storage folder excluding temporary data
-mkdir -p "$out$dir"
-rsync -a --exclude framework "$dir/storage" "$out$dir"
-
-# backup config files of nmsprime and all its modules
-handle_module base
-for file in $(find modules/ -name module.json); do
-	handle_module "$(echo "$file" | cut -d'/' -f2)"
-	# backup module.json, stating if modules is enabled or not
-	mkdir -p $(dirname "$out$dir/$file")
-	cp -a "$dir/$file" "$out$dir/$file"
-done
-
-cd "$out/.."
-tar czf "$date.tar.gz" "$date"
+tar --exclude-from <(IFS=$'\n'; echo "${excludes[*]}") --transform="s|dev/stdin|databases.sql|;s|^|$(date +%Y%m%dT%H%M%S)/|" --hard-dereference -czh /dev/stdin "${folders[@]}" "${files[@]}" <<< "$(mysqldump -u root --password="$pw" --databases cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc)"
