@@ -52,13 +52,14 @@ excludes=(
 	"$dir/storage/framework"
 )
 
-folders=(
-	"$dir/storage"
+static=(
 	'/etc/firewalld'
+	'/root/databases.sql.gz'
 	'/tftpboot'
 	'/var/lib/cacti/rra'
 	'/var/lib/dhcpd'
 	'/var/named/dynamic'
+	"$dir/storage"
 )
 
 files=()
@@ -75,4 +76,5 @@ else
 	done
 fi
 
-tar --exclude-from <(IFS=$'\n'; echo "${excludes[*]}") --transform="s|dev/stdin|databases.sql|;s|^|$(date +%Y%m%dT%H%M%S)/|" --hard-dereference -czh /dev/stdin "${folders[@]}" "${files[@]}" <<< "$(mysqldump -u root --password="$pw" --databases cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc)"
+mysqldump -u root --password="$pw" --databases cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc | gzip > /root/databases.sql.gz
+tar --exclude-from <(IFS=$'\n'; echo "${excludes[*]}") --transform="s|^|$(date +%Y%m%dT%H%M%S)/|" --hard-dereference -cz "${static[@]}" "${files[@]}"
