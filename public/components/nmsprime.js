@@ -52,10 +52,17 @@ if (typeof(Storage) !== "undefined") {
         $('#' + sitem + ' .sub-menu ').css("display", "block");
         $('#' + chitem).addClass("active");
 	}
-		$('#sidebar .sub-menu li').click(function (event) {
-			localStorage.setItem("clicked-item", $(this).attr('id'));
-			localStorage.setItem("sidebar-item", $(this).closest('[data-sidebar=level1]').attr('id'));
+		$('#sidebar ul > li').click(function (event) {
+            localStorage.setItem("sidebar-item", $(this).attr('id'));
+            localStorage.setItem("clicked-item", $(this).attr('id'));
 		});
+
+        $('#sidebar .sub-menu  li').click(function (event) {
+            event.stopPropagation();
+            localStorage.setItem("sidebar-item", $(this).closest('[data-sidebar=level1]').attr('id'));
+            localStorage.setItem("clicked-item", $(this).attr('id'));
+        });
+
 } else {
   console.log("sorry, no Web Storage Support - Cant save State of Sidebar -please update your Browser")
 }

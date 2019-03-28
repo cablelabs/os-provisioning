@@ -2,6 +2,8 @@
 
 namespace Modules\HfcReq\Http\Controllers;
 
+use App\Http\Controllers\BaseViewController;
+use View;
 use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcReq\Entities\NetElementType;
 use Modules\HfcBase\Http\Controllers\HfcBaseController;
@@ -9,6 +11,16 @@ use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class NetElementController extends HfcBaseController
 {
+    public function index()
+    {
+        $model = static::get_model_obj();
+        $headline = BaseViewController::translate_view($model->view_headline(), 'Header', 2);
+        $view_header = BaseViewController::translate_view('Overview', 'Header');
+        $create_allowed = static::get_controller_obj()->index_create_allowed;
+        $delete_allowed = static::get_controller_obj()->index_delete_allowed;
+        return View::make('Generic.index', $this->compact_prep_view(compact('headline', 'view_header', 'model', 'create_allowed', 'delete_allowed')));
+    }
+
     /**
      * defines the formular fields for the edit and create view
      */

@@ -1,7 +1,18 @@
-@extends('provvoip::layouts.master')
+@extends ('Layout.default')
 
 @section('content')
-	
-	<h1>Hello World</h1>
+
+	<div class="col-md-12">
+
+		<h1 class="page-header">{{ $title }}</h1>
+
+		{{--Quickstart--}}
+
+		<div class="row">
+			<div class="col-md-12">
+				@include('provvoip::widgets.quickstart')
+			</div>
+		</div>
+	</div>
 	
 @stop

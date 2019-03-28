@@ -3,9 +3,16 @@
 namespace Modules\ProvVoip\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
+use View;
 
 class ProvVoipController extends BaseController
 {
+    public function index(){
+
+        $title = 'Prov Voip Dashboard';
+        return View::make('provvoip::index', $this->compact_prep_view(compact('title')));
+    }
+
     /**
      * defines the formular fields for the edit and create view
      */

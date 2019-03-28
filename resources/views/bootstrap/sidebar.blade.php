@@ -26,11 +26,14 @@
       <li class="nav-header">Navigation</li>
       @foreach ($view_header_links as $module_name => $typearray)
         @if (isset($typearray['submenu']))
-        <li id="{{ Str::slug($module_name,'_')}}" class="has-sub" data-sidebar="level1">
-          <a href="javascript:;">
+        <li id="{{ Str::slug($module_name,'_')}}" class="has-sub {{ ($route_name == $module_name) ? 'active' : ''}}" data-sidebar="level1">
+            @if (isset($typearray['link']))
+                <a href="{{route($typearray['link'])}}">
+            @else <a href="javascript:;">
+            @endif
             <i class="fa fa-fw {{ $typearray['icon'] }}"></i>
             <b class="caret pull-right"></b>
-            <span>{{$module_name}}</span>
+            <span>{{$typearray['translated_name'] ?? $module_name}}</span>
           </a>
           <ul class="sub-menu">
           @foreach ($typearray['submenu'] as $type => $valuearray)

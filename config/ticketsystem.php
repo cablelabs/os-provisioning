@@ -4,6 +4,7 @@ namespace Modules\Ticketsystem\Entities;
 
 return [
     'name' => 'Ticket',
+    'link' => 'Ticket.dashboard',
     'MenuItems' => [
         'TicketTypes' => [
             'link' => 'TicketType.index',
