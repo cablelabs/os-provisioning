@@ -2,8 +2,6 @@
 
 namespace Modules\ProvBase\Entities;
 
-use Modules\ProvBase\Http\Controllers\ProvBaseController;
-
 return  [
     'name' => 'ProvBase',
     'link' => 'ProvBase.index',
