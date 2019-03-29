@@ -455,3 +455,9 @@ table .index_check {
     height: 25px;
     box-shadow: 1px 2px 3px #000;
 }
+
+.timeline .timeline-icon a{
+    width: 20px;
+    height: 20px;
+    background: #d9e0e7;
+}
