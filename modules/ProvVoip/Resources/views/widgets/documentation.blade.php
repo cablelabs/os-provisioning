@@ -8,21 +8,21 @@
     {{-- info/data --}}
     <div class="stats-info d-flex">
 
-      {!! HTML::decode (HTML::link('https://devel.roetzer-engineering.com/confluence/display/NMS/Provisioning',
+      {!! HTML::decode (HTML::link('https://devel.roetzer-engineering.com/confluence/display/NMS/VoIP',
   			'<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
   				<i style="font-size: 25px;" class="img-center fa fa-question-circle p-10"></i><br />
   				<span class="username text-ellipsis text-center">'.trans('view.Dashboard_Docu').'</span>
   			</span>',['target' => '_blank']))
   		!!}
 
-      {!! HTML::decode (HTML::link('https://youtu.be/RjMlhKQXgU4',
+      {!! HTML::decode (HTML::link('https://youtu.be/SxTsflcNeUQ',
   			'<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
   				<i style="font-size: 25px;" class="img-center fa fa-tv p-10"></i><br />
   				<span class="username text-ellipsis text-center">Youtube</span>
   			</span>', ['target' => '_blank']))
   		!!}
 
-      {!! HTML::decode (HTML::link('https://devel.roetzer-engineering.com/confluence/display/nmsprimeforum/Provisioning+General',
+      {!! HTML::decode (HTML::link('https://devel.roetzer-engineering.com/confluence/display/nmsprimeforum/VoIP',
   			'<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
   				<i style="font-size: 25px;" class="img-center fa fa-wpforms p-10"></i><br />
   				<span class="username text-ellipsis text-center">Forum</span>
