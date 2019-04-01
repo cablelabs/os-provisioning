@@ -466,7 +466,9 @@ class importCommand extends Command
         $tariffs = [
             'tarif' 			=> $old_contract->tarif,
             'tarif_next_month'  => $old_contract->tarif_next_month,
-            'voip' 				=> $old_contract->telefontarif,
+            'tarif_next'        => $old_contract->tarif_next,
+            'telefontarif'      => $old_contract->telefontarif,
+            'telefontarif_next' => $old_contract->telefontarif_next,
             ];
 
         $items_new = $new_contract->items;
@@ -475,11 +477,11 @@ class importCommand extends Command
             $prod_id = -1;
 
             if (! $tariff) {
-                \Log::info("\tNo $key Item exists in old System");
+                \Log::debug("\tNo $key Item exists in old System");
                 continue;
             }
 
-            if ($key == 'voip') {
+            if ($key == 'telefontarif') {
                 // Discard voip tariff if new contract doesnt have MTA
                 if (! isset($new_contract->has_mta)) {
                     Log::notice('Discard voip tariff as contract has no MTA assigned', [$new_contract->number]);
@@ -497,7 +499,7 @@ class importCommand extends Command
             }
 
             if ($prod_id == -1) {
-                $type = $key == 'voip' ? 'voip' : 'internet';
+                $type = $key == 'telefontarif' ? 'voip' : 'internet';
                 $msg = "Missing mapping for $type tariff $tariff (ID in km3 DB). Don't add voip item to contract $new_contract->number.";
                 \Log::error($msg);
                 $this->errors[] = $msg;
@@ -512,12 +514,19 @@ class importCommand extends Command
                 continue;
             }
 
+            $valid_from = $old_contract->angeschlossen;
+            if ($key == 'tarif_next_month') {
+                $valid_from = date('Y-m-01', strtotime('first day of next month'));
+            } elseif (strpos($key, 'tarif_next') !== false) {
+                $valid_from = date('Y-m-d', strtotime($old_contract->{$key.'_date'}));
+            }
+
             Item::create([
                 'contract_id' 		=> $new_contract->id,
                 'product_id' 		=> $prod_id,
-                'valid_from' 		=> $key == 'tarif_next_month' ? date('Y-m-01', strtotime('first day of next month')) : $old_contract->angeschlossen,
+                'valid_from' 		=> $valid_from,
                 'valid_from_fixed' 	=> 1,
-                'valid_to' 			=> $key == 'tarif_next_month' ? null : $old_contract->abgeklemmt,
+                'valid_to' 			=> $old_contract->abgeklemmt,
                 'valid_to_fixed' 	=> 1,
                 ]);
 
