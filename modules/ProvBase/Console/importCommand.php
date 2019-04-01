@@ -612,10 +612,10 @@ class importCommand extends Command
     private function add_additional_items($new_contract, $db_con, $old_contract)
     {
         // Additional Items
-        $items = $db_con->table(\DB::raw('tbl_zusatzposten z, tbl_posten p'))
-                ->selectRaw('p.id, p.artikel, z.von, z.bis, z.menge, z.buchungstext, z.preis')
+        $items = $db_con->table('tbl_zusatzposten as z')
+                ->join('tbl_posten as p', 'z.posten', '=', 'p.id')
+                ->select(['p.id', 'p.artikel', 'z.von', 'z.bis', 'z.menge', 'z.buchungstext', 'z.preis', 'z.abrechnen', 'z.abgerechnet'])
                 ->where('z.vertrag', '=', $old_contract->id)
-                ->whereRaw('z.posten = p.id')
                 ->where('z.closed', '=', 'false')
                 ->where(function ($query) {
                     $query
@@ -645,13 +645,19 @@ class importCommand extends Command
 
             \Log::info("\tAdd Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
 
+            $valid_to = $item->bis;
+            if (! $item->von) {
+                $months = $item->abrechnen - $item->abgerechnet;
+                $valid_to = date('Y-m-d', strtotime("last day of +$months month"));
+            }
+
             Item::create([
                 'contract_id' 		=> $new_contract->id,
                 'product_id' 		=> $this->add_items[$item->id],
                 'count' 			=> $item->menge,
                 'valid_from' 		=> $item->von ?: date('Y-m-d'),
                 'valid_from_fixed' 	=> 1,
-                'valid_to' 			=> $item->bis,
+                'valid_to' 			=> $valid_to,
                 'valid_to_fixed' 	=> 1,
                 'credit_amount' 	=> (-1) * $item->preis,
                 'accounting_text' 	=> is_null($item->buchungstext) ? '' : $item->buchungstext,
