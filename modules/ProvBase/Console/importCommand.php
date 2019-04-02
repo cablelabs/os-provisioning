@@ -239,7 +239,7 @@ class importCommand extends Command
                  */
                 $mtas = $km3->table('tbl_computer as c')
                     ->join('tbl_packetcablemtas as mta', 'mta.computer', '=', 'c.id')
-                    ->selectRaw('c.*, mta.*, mta.id as id')
+                    ->select(['c.*', 'mta.*', 'mta.id as id'])
                     ->where('c.modem', '=', $modem->id)
                     ->where('c.deleted', '=', 'false')
                     ->where('mta.deleted', '=', 'false')
@@ -816,17 +816,11 @@ class importCommand extends Command
             return $new_mta;
         }
 
-        $cf = $db_con->table('tbl_configfiles')->where('id', '=', $old_mta->configfile)->first();
-
-        if ($cf) {
-            $cf = $cf->name;
-        }
-
         $mta = new MTA;
 
         $mta->modem_id = $new_modem->id;
         $mta->mac = $old_mta->mac_adresse;
-        $mta->configfile_id = isset($this->configfiles[$cf]) && is_int($this->configfiles[$cf]) ? $this->configfiles[$cf] : 0;
+        $mta->configfile_id = $this->configfiles[$old_mta->configfile] ?? 0;
         $mta->type = 'sip';
 
         $mta->save();
@@ -835,7 +829,7 @@ class importCommand extends Command
 
         \Log::info('ADD MTA: '.$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
 
-        if (! $cf) {
+        if (! $mta->configfile_id) {
             Log::warning("No Configfile set on MTA $mta->id (ID)");
         }
 
