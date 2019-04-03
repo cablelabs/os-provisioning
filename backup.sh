@@ -53,11 +53,25 @@ excludes=(
 )
 
 static=(
+	'/etc/cron.d'
+	'/etc/dhcp-nmsprime'
+	'/etc/hostname'
 	'/etc/firewalld'
-	'/root/databases.sql.gz'
+	'/etc/group'
+	'/etc/named'*
+	'/etc/nmsprime'
+	'/etc/passwd'
+	'/etc/pki/tls/private'
+	'/etc/shadow'
+	'/etc/sysconfig/network-scripts/ifcfg-'*
+	'/etc/sysconfig/network-scripts/route-'*
+	'/home'
+	'/root'
 	'/tftpboot'
+	'/var/lib/acme'
 	'/var/lib/cacti/rra'
 	'/var/lib/dhcpd'
+	'/var/log'
 	'/var/named/dynamic'
 	"$dir/storage"
 )
@@ -77,4 +91,4 @@ else
 fi
 
 mysqldump -u root --password="$pw" --databases cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc | gzip > /root/databases.sql.gz
-tar --exclude-from <(IFS=$'\n'; echo "${excludes[*]}") --transform="s|^|$(date +%Y%m%dT%H%M%S)/|" --hard-dereference -cz "${static[@]}" "${files[@]}"
+tar --exclude-from <(IFS=$'\n'; echo "${excludes[*]}") --transform="s|etc/group|ref/etc/group|;s|etc/nmsprime/env|ref/etc/nmsprime/env|;s|etc/passwd|ref/etc/passwd|;s|etc/shadow|ref/etc/shadow|;s|^|$(date +%Y%m%dT%H%M%S)/|" --hard-dereference -cz "${static[@]}" "${files[@]}"
