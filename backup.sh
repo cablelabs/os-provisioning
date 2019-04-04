@@ -1,5 +1,6 @@
 #!/bin/bash
 dir='/var/www/nmsprime'
+ref_dir='ref'
 
 handle_module() {
 	if [[ "$1" == 'base' ]]
@@ -76,6 +77,17 @@ static=(
 	"$dir/storage"
 )
 
+# transformed files won't overwrite their system counterparts while untarring
+# instead they will be put into /$ref_dir for reference/diffing
+transform=(
+	"s|etc/group|$ref_dir/etc/group|"
+	"s|etc/nmsprime/env|$ref_dir/etc/nmsprime/env|"
+	"s|etc/passwd|$ref_dir/etc/passwd|"
+	"s|etc/shadow|$ref_dir/etc/shadow|"
+	"s|etc/sysconfig|$ref_dir/etc/sysconfig|"
+	"s|^|$(date +%Y%m%dT%H%M%S)/|"
+)
+
 files=()
 rpm_files=$(rpm -qa 'nmsprime*' -c)
 if [[ -n "$rpm_files" ]]
@@ -91,4 +103,4 @@ else
 fi
 
 mysqldump -u root --password="$pw" --databases cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc | gzip > /root/databases.sql.gz
-tar --exclude-from <(IFS=$'\n'; echo "${excludes[*]}") --transform="s|etc/group|ref/etc/group|;s|etc/nmsprime/env|ref/etc/nmsprime/env|;s|etc/passwd|ref/etc/passwd|;s|etc/shadow|ref/etc/shadow|;s|^|$(date +%Y%m%dT%H%M%S)/|" --hard-dereference -cz "${static[@]}" "${files[@]}"
+tar --exclude-from <(IFS=$'\n'; echo "${excludes[*]}") --transform=$(IFS=';'; echo "${transform[*]}") --hard-dereference -cz "${static[@]}" "${files[@]}"
