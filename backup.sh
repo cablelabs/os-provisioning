@@ -1,5 +1,6 @@
 #!/bin/bash
 dir='/var/www/nmsprime'
+db_dir='db_dumps'
 ref_dir='ref'
 
 handle_module() {
@@ -22,18 +23,15 @@ handle_module() {
 }
 
 display_help() {
-	echo "Usage: $0 -p mysql_root_password [> output-file.tar.gz]" >&2
+	echo "Usage: $0 [> output-file.tar.gz]" >&2
 	exit 1
 }
 
-while getopts ":p:h" opt; do
+while getopts "h" opt; do
 	case $opt in
 		h)
 			display_help
 			exit 0
-			;;
-		p)
-			pw="$OPTARG"
 			;;
 		\?)
 			echo "Invalid option: -$OPTARG" >&2
@@ -42,11 +40,6 @@ while getopts ":p:h" opt; do
 			;;
 	esac
 done
-
-if [[ -z "$pw" ]]; then
-	display_help
-	exit 1
-fi
 
 excludes=(
 	"$dir/storage/app/tmp"
@@ -102,5 +95,25 @@ else
 	done
 fi
 
-mysqldump -u root --password="$pw" --databases cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc | gzip > /root/databases.sql.gz
+mkdir -p "/root/$db_dir"
+for db in cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc; do
+	case "$db" in
+	'cacti')
+		auth=$(php -r 'require_once "/etc/cacti/db.php"; echo "$database_default\n$database_password\n$database_username\n";' | xargs)
+		;;
+	'nmsprime')
+		auth=$(grep '^DB_DATABASE\|^DB_USERNAME\|^DB_PASSWORD' /etc/nmsprime/env/global.env | sort | cut -d'=' -f2 | xargs)
+		;;
+	'nmsprime_ccc')
+		auth=$(grep '^CCC_DB_DATABASE\|^CCC_DB_USERNAME\|^CCC_DB_PASSWORD' /etc/nmsprime/env/ccc.env | sort | cut -d'=' -f2 | xargs)
+		;;
+	*)
+		auth=$(awk "/\[$db\]/{flag=1;next}/\[/{flag=0}flag" /etc/icingaweb2/resources.ini | grep '^dbname\|^username\|^password' | sort | cut -d'=' -f2 | xargs)
+		;;
+	esac
+
+	read -r -a auths <<< "$auth"
+	mysqldump -u "${auths[2]}" --password="${auths[1]}" "${auths[0]}" | gzip > "/root/$db_dir/${auths[0]}.sql.gz"
+done
+
 tar --exclude-from <(IFS=$'\n'; echo "${excludes[*]}") --transform=$(IFS=';'; echo "${transform[*]}") --hard-dereference -cz "${static[@]}" "${files[@]}"
