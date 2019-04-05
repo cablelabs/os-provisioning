@@ -22,8 +22,10 @@ gpg --list-keys "$key_id" > /dev/null 2>&1 || exit 1
 # check if awscli is available
 which aws > /dev/null || exit 1
 
-# run backup script, encrypt and push into the s3 bucket
+# run backup script, encrypt and push into the aws s3 bucket
 /var/www/nmsprime/backup.sh | gpg --encrypt --recipient "$key_id" --trust-model always | aws s3 cp - $(date "+s3://$bucket/$dir/%Y%m%dT%H%M%S.tar.gz.gpg")
+# upload stderr of tar (see backup.sh) to aws s3 as well
+aws s3 cp /root/backup-nmsprime.txt "s3://$bucket/$dir/"
 
 # delete backup of 2 days ago except for wednesdays, thus keeping the monday backups
 # deleting older monday versions should be done using an aws s3 lifecycle rule
