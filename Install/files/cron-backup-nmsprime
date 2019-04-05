@@ -1,0 +1,1 @@
+#0 2 * * * root /var/www/nmsprime/aws.sh > /dev/null 2>&1
