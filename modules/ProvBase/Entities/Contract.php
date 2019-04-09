@@ -110,14 +110,13 @@ class Contract extends \BaseModel
     // View Relation.
     public function view_has_many()
     {
+        $ret['Edit']['Modem'] = $this->modems;
+
         if (\Module::collections()->has('BillingBase')) {
             // view has many version 1
-            $ret['Edit']['Modem'] = $this->modems;
             $ret['Edit']['Item'] = $this->items;
             $ret['Edit']['SepaMandate'] = $this->sepamandates;
         }
-
-        $ret['Edit']['Modem'] = $this->modems;
 
         if (\Module::collections()->has('BillingBase')) {
             // view has many version 2
@@ -134,7 +133,7 @@ class Contract extends \BaseModel
             $invoicesPanel1 = collect();
             $countPanel1 = $this->invoices->count() > 15 ? 15 : $this->invoices->count();
 
-            for ($i=0; $i < $countPanel1; $i++) {
+            for ($i = 0; $i < $countPanel1; $i++) {
                 $invoicesPanel1->push($this->invoices[$i]);
             }
 
@@ -147,7 +146,7 @@ class Contract extends \BaseModel
             if ($this->invoices->count() > 15) {
                 $invoicesPanel2 = collect();
 
-                for ($i=15; $i < $this->invoices->count(); $i++) {
+                for ($i = 15; $i < $this->invoices->count(); $i++) {
                     $invoicesPanel2->push($this->invoices[$i]);
                 }
 
