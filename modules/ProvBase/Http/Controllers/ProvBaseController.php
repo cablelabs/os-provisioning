@@ -42,6 +42,7 @@ class ProvBaseController extends BaseController
             ['form_type' => 'text', 'name' => 'startid_endpoint', 'description' => 'Start ID Endpoints'],
 
             ['form_type' => 'checkbox', 'name' => 'multiple_provisioning_systems', 'description' => 'Multiple provisioning systems', 'help' => 'Check if there are other DHCP servers in your network'],
+            ['form_type' => 'checkbox', 'name' => 'additional_modem_reset', 'description' => 'Additional modem reset button', 'help' => trans('helper.additional_modem_reset')],
         ];
     }
 }

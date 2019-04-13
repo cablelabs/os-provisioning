@@ -6,9 +6,8 @@
  * @author Nino Ryschawy
  */
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 
-class UpdateContractModemRenameColumns extends Migration
+class UpdateContractModemRenameColumns extends BaseMigration
 {
     /**
      * Run the migrations.

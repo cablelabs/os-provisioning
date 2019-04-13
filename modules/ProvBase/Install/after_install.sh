@@ -15,6 +15,8 @@ sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/dhcp-nmsprime/dhcpd.conf
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/named-nmsprime.conf
 sed -i "s/<hostname>/$(hostname | cut -d '.' -f1)/" /var/named/dynamic/{nmsprime.test,in-addr.arpa}.zone
 
+echo $'\ninclude /etc/chrony.d/*.conf' >> /etc/chrony.conf
+
 systemctl daemon-reload
 
 systemctl enable chronyd

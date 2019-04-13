@@ -263,3 +263,27 @@ function whereLaterOrEqualThanDate($column, $date = '')
             ->orWhere($column, '=', '');
     };
 }
+
+/**
+ * Clear failed jobs table in database for specific command or the whole table
+ *
+ * @param string
+ */
+function clearFailedJobs($command = 'all')
+{
+    if ($command == 'all') {
+        \DB::table('failed_jobs')->delete();
+
+        return;
+    }
+
+    $failed_jobs = \DB::table('failed_jobs')->get();
+
+    foreach ($failed_jobs as $failed_job) {
+        $commandName = json_decode($failed_job->payload)->data->commandName;
+
+        if (\Str::contains($commandName, $command)) {
+            \Artisan::call('queue:forget', ['id' => $failed_job->id]);
+        }
+    }
+}
