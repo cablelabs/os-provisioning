@@ -22,8 +22,11 @@ gpg --list-keys "$key_id" > /dev/null 2>&1 || exit 1
 # check if awscli is available
 which aws > /dev/null || exit 1
 
+# expected size for aws stream upload (upper limit), due to compression the actual size should be smaller
+size=$(du -sbc /home /root /var/lib/cacti/rra /var/www/nmsprime/storage /tftpboot /var/log | tail -1 | cut -f1)
+
 # run backup script, encrypt and push into the aws s3 bucket, gpg doesn't need to compress (-z0) as we already have a gzipped tar
-/var/www/nmsprime/backup.sh | gpg -z0 --encrypt --recipient "$key_id" --trust-model always | aws s3 cp - $(date "+s3://$bucket/$dir/%Y%m%dT%H%M%S.tar.gz.gpg")
+/var/www/nmsprime/backup.sh | gpg -z0 --encrypt --recipient "$key_id" --trust-model always | aws s3 cp - $(date "+s3://$bucket/$dir/%Y%m%dT%H%M%S.tar.gz.gpg") --expected-size "$size"
 # upload stderr of tar (see backup.sh) to aws s3 as well
 aws s3 cp /root/backup-nmsprime.txt "s3://$bucket/$dir/"
 
