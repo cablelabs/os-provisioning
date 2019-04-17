@@ -239,7 +239,7 @@ class importCommand extends Command
                  */
                 $mtas = $km3->table('tbl_computer as c')
                     ->join('tbl_packetcablemtas as mta', 'mta.computer', '=', 'c.id')
-                    ->selectRaw('c.*, mta.*, mta.id as id')
+                    ->select(['c.*', 'mta.*', 'mta.id as id'])
                     ->where('c.modem', '=', $modem->id)
                     ->where('c.deleted', '=', 'false')
                     ->where('mta.deleted', '=', 'false')
@@ -392,7 +392,7 @@ class importCommand extends Command
         $c->email = $old_contract->email;
         $c->birthday = $old_contract->geburtsdatum ?: null;
 
-        $c->internet_access = $old_contract->internet_access;
+        $c->internet_access = $old_contract->network_access;
         $c->contract_start = $old_contract->angeschlossen;
         $c->contract_end = $old_contract->abgeklemmt ?: null;
         $c->create_invoice = $old_contract->rechnung;
@@ -466,7 +466,9 @@ class importCommand extends Command
         $tariffs = [
             'tarif' 			=> $old_contract->tarif,
             'tarif_next_month'  => $old_contract->tarif_next_month,
-            'voip' 				=> $old_contract->telefontarif,
+            'tarif_next'        => $old_contract->tarif_next,
+            'telefontarif'      => $old_contract->telefontarif,
+            'telefontarif_next' => $old_contract->telefontarif_next,
             ];
 
         $items_new = $new_contract->items;
@@ -475,11 +477,11 @@ class importCommand extends Command
             $prod_id = -1;
 
             if (! $tariff) {
-                \Log::info("\tNo $key Item exists in old System");
+                \Log::debug("\tNo $key Item exists in old System");
                 continue;
             }
 
-            if ($key == 'voip') {
+            if ($key == 'telefontarif') {
                 // Discard voip tariff if new contract doesnt have MTA
                 if (! isset($new_contract->has_mta)) {
                     Log::notice('Discard voip tariff as contract has no MTA assigned', [$new_contract->number]);
@@ -497,7 +499,7 @@ class importCommand extends Command
             }
 
             if ($prod_id == -1) {
-                $type = $key == 'voip' ? 'voip' : 'internet';
+                $type = $key == 'telefontarif' ? 'voip' : 'internet';
                 $msg = "Missing mapping for $type tariff $tariff (ID in km3 DB). Don't add voip item to contract $new_contract->number.";
                 \Log::error($msg);
                 $this->errors[] = $msg;
@@ -512,12 +514,19 @@ class importCommand extends Command
                 continue;
             }
 
+            $valid_from = $old_contract->angeschlossen;
+            if ($key == 'tarif_next_month') {
+                $valid_from = date('Y-m-01', strtotime('first day of next month'));
+            } elseif (strpos($key, 'tarif_next') !== false) {
+                $valid_from = date('Y-m-d', strtotime($old_contract->{$key.'_date'}));
+            }
+
             Item::create([
                 'contract_id' 		=> $new_contract->id,
                 'product_id' 		=> $prod_id,
-                'valid_from' 		=> $key == 'tarif_next_month' ? date('Y-m-01', strtotime('first day of next month')) : $old_contract->angeschlossen,
+                'valid_from' 		=> $valid_from,
                 'valid_from_fixed' 	=> 1,
-                'valid_to' 			=> $key == 'tarif_next_month' ? null : $old_contract->abgeklemmt,
+                'valid_to' 			=> $old_contract->abgeklemmt,
                 'valid_to_fixed' 	=> 1,
                 ]);
 
@@ -603,10 +612,10 @@ class importCommand extends Command
     private function add_additional_items($new_contract, $db_con, $old_contract)
     {
         // Additional Items
-        $items = $db_con->table(\DB::raw('tbl_zusatzposten z, tbl_posten p'))
-                ->selectRaw('p.id, p.artikel, z.von, z.bis, z.menge, z.buchungstext, z.preis')
+        $items = $db_con->table('tbl_zusatzposten as z')
+                ->join('tbl_posten as p', 'z.posten', '=', 'p.id')
+                ->select(['p.id', 'p.artikel', 'z.von', 'z.bis', 'z.menge', 'z.buchungstext', 'z.preis', 'z.abrechnen', 'z.abgerechnet'])
                 ->where('z.vertrag', '=', $old_contract->id)
-                ->whereRaw('z.posten = p.id')
                 ->where('z.closed', '=', 'false')
                 ->where(function ($query) {
                     $query
@@ -636,16 +645,22 @@ class importCommand extends Command
 
             \Log::info("\tAdd Item [$new_contract->number]: $item->artikel (from: $item->von, to: $item->bis, price: $item->preis) [Old ID: $item->id]");
 
+            $valid_to = $item->bis;
+            if (! $item->von) {
+                $months = $item->abrechnen - $item->abgerechnet;
+                $valid_to = date('Y-m-d', strtotime("last day of +$months month"));
+            }
+
             Item::create([
                 'contract_id' 		=> $new_contract->id,
                 'product_id' 		=> $this->add_items[$item->id],
                 'count' 			=> $item->menge,
                 'valid_from' 		=> $item->von ?: date('Y-m-d'),
                 'valid_from_fixed' 	=> 1,
-                'valid_to' 			=> $item->bis,
+                'valid_to' 			=> $valid_to,
                 'valid_to_fixed' 	=> 1,
                 'credit_amount' 	=> (-1) * $item->preis,
-                'accounting_text' 	=> is_null($item->buchungstext) ? '' : $item->buchungstext,
+                'accounting_text' 	=> is_null($item->buchungstext) ? '' : utf8_encode($item->buchungstext),
             ]);
         }
     }
@@ -705,7 +720,7 @@ class importCommand extends Command
         $modem->serial_num = $old_modem->serial_num;
         $modem->inventar_num = $old_modem->inventar_num;
         $modem->description = $old_modem->beschreibung;
-        $modem->internet_access = $old_modem->internet_access;
+        $modem->internet_access = $old_modem->network_access;
 
         $modem->x = $old_modem->x / 10000000;
         $modem->y = $old_modem->y / 10000000;
@@ -801,17 +816,11 @@ class importCommand extends Command
             return $new_mta;
         }
 
-        $cf = $db_con->table('tbl_configfiles')->where('id', '=', $old_mta->configfile)->first();
-
-        if ($cf) {
-            $cf = $cf->name;
-        }
-
         $mta = new MTA;
 
         $mta->modem_id = $new_modem->id;
         $mta->mac = $old_mta->mac_adresse;
-        $mta->configfile_id = isset($this->configfiles[$cf]) && is_int($this->configfiles[$cf]) ? $this->configfiles[$cf] : 0;
+        $mta->configfile_id = $this->configfiles[$old_mta->configfile] ?? 0;
         $mta->type = 'sip';
 
         $mta->save();
@@ -820,7 +829,7 @@ class importCommand extends Command
 
         \Log::info('ADD MTA: '.$mta->id.', '.$mta->mac.', CF-'.$mta->configfile_id);
 
-        if (! $cf) {
+        if (! $mta->configfile_id) {
             Log::warning("No Configfile set on MTA $mta->id (ID)");
         }
 

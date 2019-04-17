@@ -1,0 +1,41 @@
+Apotheken
+Bars
+Behörden
+Bezirksregierung
+Botschaften
+Bundespolizei
+Bundesregierung
+Bundeswehr
+Cafés
+Campingplätze
+Deutsche Telekom
+Feuerwehr
+Finanzbehörden
+Forstverwaltungen
+Gaststätten, Restaurants
+Gemeindeverwaltungen
+Gerichte
+Gästehäuser
+Hotels
+Justizbehörden
+Kindergärten und -heime
+Kirchen, evangelische
+Kirchen, katholische
+Kirchen, relig. Gemeinschaften
+Konsulate
+Krankenhäuser
+Landesregierung
+Museen
+Polizei
+Schulen, Förderschulen
+Schulen, Gesamtschulen
+Schulen, Sonderschulen
+Schulen, allgemein bildende Schulen
+Schulen, berufsbildende Schulen
+Schulen, sonstige Schulen
+Senat
+Seniorenheime
+Stadtverwaltung
+Straßenbauverwaltung
+Verwaltungsgemeinschaft der Städte und Gemeinden
+Zoll

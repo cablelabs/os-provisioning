@@ -52,8 +52,7 @@ return [
     |
     */
 
-    /* 'timezone' => 'CET', */
-    'timezone' => 'Europe/Berlin',
+    'timezone' => env('APP_TIMEZONE', 'Europe/Berlin'),
 
     /*
     |--------------------------------------------------------------------------

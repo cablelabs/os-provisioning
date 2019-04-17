@@ -220,6 +220,7 @@ return [
     'missing_product' 		=> 'Fehlendes Produkt!',
     'modem_eventlog_error'	=> 'Modem Eventlog nicht gefunden',
     'modem_force_restart_button_title' => 'Startet nur das Modem neu. Speichert keine geänderten Daten!',
+    'modem_reset_button_title' => 'Resettet nur das Modem. Speichert keine geänderten Daten!',
     'CDR retention period' 		=> 'Aufbewahrungsfrist für Einzelverbindungsnachweise',
     'Day of Requested Collection Date'	=> 'Monatlicher Abrechnungstag',
     'Tax in %'					=> 'Mehrwertsteuer in %',
@@ -247,9 +248,12 @@ return [
     'Start ID Endpoints'		=> 'Start Nummerierung Endpunkte',
     'Downstream rate coefficient' => 'Übertragungsratenkoeffizient Vorwärtskanal',
     'Upstream rate coefficient' => 'Übertragungsratenkoeffizient Rückwärtskanal',
+    'Additional modem reset button' => 'Zusätzlicher Modem Reset Button',
     'modemAnalysis' => [
+        'cfOutdated' => 'Das Modem läuft nicht mit dem aktuellen Configfile! Der letzte Download fand vor dem Erzeugen des Configfiles statt.',
         'cpeMacMissmatch' => 'Der Status über Internetzugriff und Telefonie kann nicht ermittelt werden, da sich im Configfile mindestens eine der CPE MAC Adressen von den MACs der zugewiesenen MTAs unterscheidet.',
         'fullAccess' => 'Internetzugriff und Telefonie ist freigeschalten. (gemäß Configfile)',
+        'missingLD' => 'Info: Der letzte Download des Configfiles ist zu lang her, um festzustellen ob das Modem die aktuellen Konfigurationen übernommen hat.',
         'noNetworkAccess' => 'Internetzugriff und Telefonie ist gesperrt. (gemäß Configfile)',
         'onlyVoip' => 'Internetzugriff ist gesperrt. Nur Telefonie ist erlaubt. (gemäß Configfile)',
     ],
@@ -588,4 +592,5 @@ return [
     'exportSuccess'             => ':name exportiert!',
     'setManually'               => ':file von :name muss manuell hinzugefügt werden.',
     'invalidJson'               => 'Die ausgewählte Datei ist falsch formattiert oder keine JSON.',
+    'proximity'                 => 'Umgebungssuche',
 ];

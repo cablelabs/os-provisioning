@@ -220,6 +220,7 @@ return [
     'missing_product' 		=> 'Missing Product!',
     'modem_eventlog_error'	=> 'Modem eventlog not found',
     'modem_force_restart_button_title' => 'Only restarts the modem. Doesn\'t save any changed data!',
+    'modem_reset_button_title' => 'Only resets the modem. Doesn\'t save any changed data!',
     'CDR retention period' 		=> 'CDR retention period',
     'Day of Requested Collection Date'	=> 'Day of Requested Collection Date',
     'Tax in %'					=> 'Tax in %',
@@ -247,9 +248,12 @@ return [
     'Start ID Endpoints'		=> 'Start ID Endpoints',
     'Downstream rate coefficient' => 'Downstream rate coefficient',
     'Upstream rate coefficient' => 'Upstream rate coefficient',
+    'Additional modem reset button' => 'Additional modem reset button',
     'modemAnalysis' => [
+        'cfOutdated' => 'The modem doesn\'t run with the actual configfile. The last download was before the built time of the configfile.',
         'cpeMacMissmatch' => 'The state of internet access and telephony could not be determined as minimum 1 CPE MAC address differs from the MACs of the assigned MTAs.',
         'fullAccess' => 'Internet access and telephony is allowed. (according to configfile)',
+        'missingLD' => 'Info: The last configfile download was too long ago to determine if the modem has incured the actual configurations.',
         'noNetworkAccess' => 'Internet access and telephony is blocked. (according to configfile)',
         'onlyVoip' => 'Internet access is blocked. Only telephony is allowed. (according to configfile)',
     ],
@@ -588,4 +592,5 @@ return [
     'exportSuccess'             => ':name exported!',
     'setManually'               => ':file of :name has to be set manually.',
     'invalidJson'               => 'The selected file is not correctly formatted or not a JSON!',
+    'proximity'                 => 'Proximity search',
 ];

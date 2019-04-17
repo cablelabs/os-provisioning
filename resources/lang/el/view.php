@@ -155,6 +155,7 @@ return [
         //Modems
         'Header_Modems'				=> 'Modem|Modems', //workaround
         'Header_Invoice' 			=> 'Invoice|Invoices',
+        'Header_OldInvoices'        => 'Old Invoices',
         'Header_EditModems'			=> 'Edit Modem',
         'Header_Modem'				=> 'Modem|Modems',
         'Header_SEPA Mandate' 		=> 'SEPA Mandate',
@@ -350,4 +351,5 @@ return [
 
 // Error
     'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
+    'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
 ];

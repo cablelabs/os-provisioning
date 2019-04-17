@@ -99,14 +99,15 @@ return [
 
     'custom' => [
         'password' => [
-            'regex' => 'The password has to fullfil each criteria, listed below:
-                        <li>At least 8 characters</li>
-                        <li>Uppercase characters (A – Z)</li>
-                        <li>Lowercase characters (a – z)</li>
-                        <li>Digits (0 – 9)</li>',
+            'regex' => 'La contraseña tiene los siguiente criterios que debe seguir:
+                        <li>Minimo 8 caracteres</li>
+                        <li>Mayuscula (A – Z)</li>
+                        <li>Minuscula (a – z)</li>
+                        <li>Digito (0 – 9)</li>\',',
         ],
     ],
 
+    'docsis'               => ':atributo',
     'ip'                   => 'No es una direccion IP valida, de la forma: 192.168.0.255',
     'ip_in_range'          => 'La direccion IP no esta dentro del rango especificado anteriormente',
     'ip_larger'            => 'La direccion IP debe tener una cifra mayor debido a lo especificado en campos anteriores',
@@ -114,6 +115,8 @@ return [
     'netmask'              => 'No es una netmask correcta',
     'not_null'             => 'Este campo tiene que ser establecido (no 0)',
     'null_if'              => 'Tiene que ser cero',
+
+    'needed_depending_on_salutation' => 'El campo :attribute es necesario para el saludo elegido.',
 
     /*
     |--------------------------------------------------------------------------
@@ -127,34 +130,42 @@ return [
     */
 
     'attributes' => [
-        'name' => 'nombre',
-        'username' => 'usuario',
+        'address' => 'dirección',
+        'age' => 'edad',
+        'available' => 'Disponible',
+        'birthday' => 'Fecha nacimiento',
+        'city' => 'ciudad',
+        'company' => 'Empresa',
+        'content' => 'contenido',
+        'country' => 'país',
+        'date' => 'fecha',
+        'day' => 'día',
+        'description' => 'descripción',
+        'docsis' => 'DOCSIS',
         'email' => 'correo electrónico',
+        'excerpt' => 'extracto',
         'first_name' => 'nombre',
+        'firstname' => 'Nombres',
+        'gender' => 'género',
+        'hour' => 'hora',
         'last_name' => 'apellido',
+        'minute' => 'minuto',
+        'mobile' => 'móvil',
+        'month' => 'mes',
+        'name' => 'nombre',
+        'lastname' => 'Apellido',
         'password' => 'contraseña',
         'password_confirmation' => 'confirmación de la contraseña',
-        'city' => 'ciudad',
-        'country' => 'país',
-        'address' => 'dirección',
         'phone' => 'teléfono',
-        'mobile' => 'móvil',
-        'age' => 'edad',
-        'sex' => 'sexo',
-        'gender' => 'género',
-        'day' => 'día',
-        'month' => 'mes',
-        'year' => 'año',
-        'hour' => 'hora',
-        'minute' => 'minuto',
+        'salutation' => 'Tratamiento',
         'second' => 'segundo',
-        'title' => 'título',
-        'content' => 'contenido',
-        'description' => 'descripción',
-        'excerpt' => 'extracto',
-        'date' => 'fecha',
-        'time' => 'hora',
-        'available' => 'Disponible',
+        'sex' => 'sexo',
         'size' => 'Tamaño',
+        'time' => 'hora',
+        'title' => 'título',
+        'users_ids' => 'Usuarios asignados',
+        'username' => 'usuario',
+        'year' => 'año',
+        'zip' => 'Código Postal',
     ],
 ];

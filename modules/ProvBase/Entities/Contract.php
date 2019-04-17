@@ -111,6 +111,7 @@ class Contract extends \BaseModel
     public function view_has_many()
     {
         if (\Module::collections()->has('BillingBase')) {
+            // view has many version 1
             $ret['Edit']['Modem'] = $this->modems;
             $ret['Edit']['Item'] = $this->items;
             $ret['Edit']['SepaMandate'] = $this->sepamandates;
@@ -119,14 +120,29 @@ class Contract extends \BaseModel
         $ret['Edit']['Modem'] = $this->modems;
 
         if (\Module::collections()->has('BillingBase')) {
+            // view has many version 2
             $ret['Billing']['Item']['class'] = 'Item';
             $ret['Billing']['Item']['relation'] = $this->items;
             $ret['Billing']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
+
+            // Show invoices in 2 panels - 2nd panel with old invoices collapsed and in 2 columns
+            $p1 = $this->invoices()->orderBy('id', 'desc')->take(15)->get();
+
             $ret['Billing']['Invoice']['class'] = 'Invoice';
-            $ret['Billing']['Invoice']['relation'] = $this->invoices;
+            $ret['Billing']['Invoice']['relation'] = $p1;
             $ret['Billing']['Invoice']['options']['hide_delete_button'] = 1;
             $ret['Billing']['Invoice']['options']['hide_create_button'] = 1;
+
+            if ($p1->count() == 15) {
+                $p2 = $this->invoices()->orderBy('id', 'desc')->where('id', '<', $p1->last()->id)->get();
+
+                if (! $p2->isEmpty()) {
+                    $ret['Billing']['OldInvoices']['view']['view'] = 'billingbase::Contract.oldInvoices';
+                    $ret['Billing']['OldInvoices']['view']['vars']['invoices'] = $p2;
+                    $ret['Billing']['OldInvoices']['panelOptions']['display'] = 'none';
+                }
+            }
         }
 
         if (\Module::collections()->has('ProvVoipEnvia')) {
@@ -1140,7 +1156,7 @@ class Contract extends \BaseModel
             'canceled_to' => '',
             'end_of_term' => '',
             'maturity' => '',
-            'tariff' => null,
+            'tariff' => null,           // current valid tariff
         ];
 
         // check if contract was already canceled for settlement run

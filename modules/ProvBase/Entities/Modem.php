@@ -593,7 +593,13 @@ class Modem extends \BaseModel
 
         // make text and write to file
         $conf = "\tNetworkAccess $internet_access;\n";
-        $conf .= "\tMaxCPE $max_cpe;\n";
+
+        // don't use auto generated MaxCPE if it is explicitly set in the configfile
+        // see https://stackoverflow.com/a/643136 for stripping multiline comments
+        if (! \Str::contains(preg_replace('!/\*.*?\*/!s', '', $this->configfile->text), 'MaxCPE')) {
+            $conf .= "\tMaxCPE $max_cpe;\n";
+        }
+
         if (\Module::collections()->has('ProvVoip') && $internet_access) {
             foreach ($this->mtas as $mta) {
                 $conf .= "\tCpeMacAddress $mta->mac;\n";
@@ -738,7 +744,7 @@ class Modem extends \BaseModel
     /**
      * Restarts modem through snmpset
      */
-    public function restart_modem($mac_changed = false)
+    public function restart_modem($mac_changed = false, $modem_reset = false)
     {
         // Log
         Log::info('restart modem '.$this->hostname);
@@ -750,6 +756,10 @@ class Modem extends \BaseModel
             $cmts = self::get_cmts(gethostbyname($fqdn));
             $mac = $mac_changed ? $this->getOriginal('mac') : $this->mac;
             $mac_oid = implode('.', array_map('hexdec', explode(':', $mac)));
+
+            if ($modem_reset) {
+                throw new Exception('Reset Modem directly');
+            }
 
             if ($cmts && $cmts->company == 'Cisco') {
                 // delete modem entry in cmts - CISCO-DOCS-EXT-MIB::cdxCmCpeDeleteNow

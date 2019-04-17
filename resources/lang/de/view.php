@@ -154,7 +154,8 @@ return [
         'Header_SepaMandate'		=> 'SEPA-Mandat|SEPA-Mandate',
         //Modems
         'Header_Modems'				=> 'Modem|Modems', //workaround
-        'Header_Invoice' 			=> 'Rechnung|Rechnungen',
+        'Header_Invoice'            => 'Rechnung|Rechnungen',
+        'Header_OldInvoices'        => 'Ältere Rechnungen',
         'Header_EditModems'			=> 'Modem bearbeiten',
         'Header_Modem'				=> 'Modem|Modems',
         'Header_SEPA Mandate' 		=> 'SEPA Mandat',

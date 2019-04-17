@@ -58,9 +58,9 @@ return [
         'Menu_PhoneTariffs'			=> 'Tarifas telefefonicas',
         'Menu_Envia orders'			=> 'envia TEL ordenes',
         'Menu_Envia contracts'		=> 'envia TEL contratos',
-        'Menu_Net Elements'         => 'Net Elements',
-        'Menu_Net Element Types'    => 'Net Element Types',
-        'Menu_TicketTypes'          => 'TicketTypes',
+        'Menu_Net Elements'         => 'Elementos de Red',
+        'Menu_Net Element Types'    => 'Tipos de Elementos de Red',
+        'Menu_TicketTypes'          => 'Tipo de Ticket',
 
     //User Settings
         'Menu_UserSettings'			=> 'Configuraciones de usuario',
@@ -137,8 +137,8 @@ return [
         //Numberrange
         'Header_NumberRange'		=> 'Rango numerico',
         'Header_Numberranges'        => 'Círculos de números',
-        'Header_Files'              => 'Files',
-        'Header_SepaAccount'        => 'SEPA-Accounts',
+        'Header_Files'              => 'Archivos',
+        'Header_SepaAccount'        => 'Cuenta de SEPA',
     //SNMP Modul
         //Device
         'Header_Device'				=> 'Dispositivo|Dispositivos',
@@ -155,6 +155,7 @@ return [
         //Modems
         'Header_Modems'				=> 'Modem|Modems', //workaround
         'Header_Invoice' 			=> 'Facturas',
+        'Header_OldInvoices'        => 'Old Invoices',
         'Header_EditModems'			=> 'Editar modem',
         'Header_Modem'				=> 'Modem|Modems',
         'Header_SEPA Mandate' 		=> 'Mandatos-SEPA',
@@ -183,7 +184,7 @@ return [
         // Tickets
         'Header_Ticket'				=> 'Ticket|Tickets',
         'Header_EditTicket'         => 'Editar Ticket',
-        'Header_TicketTypes'        => 'TicketTypes',
+        'Header_TicketTypes'        => 'Tipo de Ticket',
     //HFC
         //Topography
         'Header_Topography - Modems'=> 'Topografia - Modems',
@@ -191,7 +192,7 @@ return [
         'draw box'					=> 'Dibujar caja',
         'draw polygon'				=> 'Dibujar poligono',
         'modify'					=> 'Modificar elementos',
-        'Header_NetElement'         => 'Netelements',
+        'Header_NetElement'         => 'Elemento de red',
     //VOIP
         //MTA
         'Header_Mta'				=> 'MTA|MTAs',
@@ -235,7 +236,7 @@ return [
         'Button_create'				=> 'Acceso directo para la capacidad de crear todas las páginas de este módulo.',
         'Button_update'				=> 'Acceso directo para la capacidad de crear todas las páginas de este módulo.',
         'Button_delete'				=> 'Acceso directo para la capacidad de crear todas las páginas de este módulo.',
-        'Button_downloadCSV'        => 'Download CSV',
+        'Button_downloadCSV'        => 'Descargar CSV',
         'Button_Create Product Entry'	=> 'Crear producto',
         //CostCenter
         'Button_Create Cost Center' 	=> 'Crear centro costos', //Workaround decide which one to use
@@ -288,7 +289,7 @@ return [
         // //Configfiles
         'Button_Create Configfiles'		=> 'Crear archivos de configuracion',
         // //QoS
-        'Button_create_post_invoices_pdf'  => 'Create Postal Invoices PDF',
+        'Button_create_post_invoices_pdf'  => 'Crear Facturas Postales PDF',
         'Button_Create Settlement Run'  => 'Crear proceso de liquidacion',
         'Button_Rerun Accounting Command' => 'Vuelva a ejecutar comando de contabilidad',
         'Button_Create QoS'				=> 'Crear regla QoS',
@@ -300,7 +301,7 @@ return [
 
 // DASHBOARD
     'Dashboard_Contracts'			=> 'CONTRATOS ACTIVOS',
-    'Dashboard_ContractAnalytics'	=> 'Contract Analytics',
+    'Dashboard_ContractAnalytics'	=> 'Análisis de contrato',
     'Dashboard_NoContracts'			=> 'No hay contratos disponibles',
     'Dashboard_Income'				=> 'GANANCIAS',
     'Dashboard_IncomeAnalytics'		=> 'Detalles de ganancias',
@@ -309,15 +310,15 @@ return [
     'Dashboard_Other'				=> 'Otros',
     'Dashboard_Tickets' 			=> 'NUEVOS TICKETS',
     'Dashboard_NoTickets' 			=> 'No hay tickets nuevos.',
-    'Dashboard_Quickstart' 			=> 'Quickstart',
-    'Dashboard_AddContract'         => 'Add Contract',
-    'Dashboard_AddTicket'           => 'Add Ticket',
-    'Dashboard_ImpairedModem'       => 'Impaired Modems',
-    'Dashboard_External'            => 'External',
-    'Dashboard_Docu'                => 'Documentation',
-    'Dashboard_RequestHelp'         => 'Request Help',
-    'Dashboard_Help'                => 'Help',
-    'Dashboard_WeeklyCustomers'     => 'Weekly Customer Overview',
+    'Dashboard_Quickstart' 			=> 'Inicio rápido',
+    'Dashboard_AddContract'         => 'Añadir Contrato',
+    'Dashboard_AddTicket'           => 'Agregar ticket',
+    'Dashboard_ImpairedModem'       => 'Módems deteriorados',
+    'Dashboard_External'            => 'Externo',
+    'Dashboard_Docu'                => 'Documentación',
+    'Dashboard_RequestHelp'         => 'Solicitar ayuda',
+    'Dashboard_Help'                => 'Ayuda',
+    'Dashboard_WeeklyCustomers'     => 'Resumen semanal del cliente',
 
 //
 // Numberrange
@@ -328,7 +329,7 @@ return [
 
 //
 // Contract
-    'Dashboard_Net Income'			=> 'NET PROCEEDS',
+    'Dashboard_Net Income'			=> 'Ganancias netas',
 //
     'Contract_Numberrange_Failure' => 'No se encuentra disponible el numero de contrato libre para el centro de costos seleccionado!',
 
@@ -349,5 +350,6 @@ return [
     'Numberrange_Type' => 'Tipo',
 
 // Error
-    'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
+    'error_specify_id'          => 'Por favor especifique el nombre de host en lugar de la dirección ip.',
+    'error_ticket_settings'     => 'Por favor introduzca el nombre y dirección correo de auto respuesta en la página de configuración global.',
 ];
