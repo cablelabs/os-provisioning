@@ -45,6 +45,14 @@ class Kernel extends ConsoleKernel
         // define some helpers
         $is_first_day_of_month = (date('d') == '01') ? true : false;
 
+        // calculate an offset that can be used to time-shift cron commands
+        // (e.g. to distribute load on external APIs)
+        // use like: ->dailyAt(date("H:i", strtotime("04:04 + $time_offset min")));
+        $key = getenv('APP_KEY') ? : 'n/a';
+        $hash = sha1($key);
+        $subhash = substr($hash, -2);   // [00..ff] => [0..255]
+        $time_offset = hexdec($subhash) % 32;    // offset in [0..31] minutes
+
         $schedule->command('queue:checkup')->everyMinute();
 
         $schedule->call('\Modules\Dashboard\Entities\BillingAnalysis@saveIncomeToJson')->dailyAt('00:07');
@@ -80,20 +88,20 @@ class Kernel extends ConsoleKernel
             // Update status of envia orders
             // Do this at the very beginning of a day
             $schedule->command('provvoipenvia:update_envia_orders')
-                ->dailyAt('00:01');
+                ->dailyAt(date("H:i", strtotime("04:04 + $time_offset min")));
             /* ->everyMinute(); */
 
             // Get envia TEL customer reference for contracts without this information
             $schedule->command('provvoipenvia:get_envia_customer_references')
-                ->dailyAt('01:13');
+                ->dailyAt(date("H:i", strtotime("01:13 + $time_offset min")));
 
             // Get/update envia TEL contracts
             $schedule->command('provvoipenvia:get_envia_contracts_by_customer')
-                ->dailyAt('01:18');
+                ->dailyAt(date("H:i", strtotime("01:18 + $time_offset min")));
 
             // Process envia TEL orders (do so after getting envia contracts)
             $schedule->command('provvoipenvia:process_envia_orders')
-                ->dailyAt('03:18');
+                ->dailyAt(date("H:i", strtotime("03:18 + $time_offset min")));
 
             // Get envia TEL contract reference for phonenumbers without this information or inactive linked envia contract
             // on first of a month: run in complete mode
@@ -104,7 +112,7 @@ class Kernel extends ConsoleKernel
                 $tmp_cmd = 'provvoipenvia:get_envia_contract_references';
             }
             $schedule->command($tmp_cmd)
-                ->dailyAt('03:23');
+                ->dailyAt(date("H:i", strtotime("03:23 + $time_offset min")));
 
             // Update voice data
             // on first of a month: run in complete mode
@@ -114,7 +122,7 @@ class Kernel extends ConsoleKernel
                 $tmp_cmd = 'provvoipenvia:update_voice_data';
             }
             $schedule->command($tmp_cmd)
-                ->dailyAt('03:53');
+                ->dailyAt(date("H:i", strtotime("01:23 + $time_offset min")));
         }
 
         // ProvBase Schedules
