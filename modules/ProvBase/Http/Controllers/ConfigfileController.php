@@ -133,12 +133,9 @@ class ConfigfileController extends \BaseController
 
         $startId = $maxId ? ++$maxId : 0;
 
-        // when there is no parent for this configfile, replace the id's
         foreach ($importedIds as $id) {
-            if ($id != 'id":0,') {
-                $content = str_replace($id, 'id":'.$startId.',', $content);
-                $startId++;
-            }
+            $content = str_replace($id, 'id":'.$startId.',', $content);
+            $startId++;
         }
 
         // replace first parent_id with parent_id of input
@@ -171,11 +168,13 @@ class ConfigfileController extends \BaseController
             return;
         }
 
-        // session message if configfile had assigned cvc/firmware
-        foreach ([$content['firmware'], $content['cvc']] as $file) {
-            if ($file != '') {
-                \Session::push('tmp_warning_above_form', trans('messages.setManually', ['name' => $content['name'], 'file' => $file]));
-            }
+        // session message if configfile had assigned cvc/firmware which doesn't exist
+        if ($content['cvc'] != '' && ! file_exists('/tftpboot/cvc/'.$content['cvc'])) {
+            \Session::push('tmp_warning_above_form', trans('messages.setManually', ['name' => $content['name'], 'file' => $content['cvc']]));
+        }
+
+        if ($content['firmware'] != '' && ! file_exists('/tftpboot/fw/'.$content['firmware'])) {
+            \Session::push('tmp_warning_above_form', trans('messages.setManually', ['name' => $content['name'], 'file' => $content['firmware']]));
         }
 
         // recursively for all children
