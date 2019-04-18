@@ -1,6 +1,5 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'dunning', 'namespace' => 'Modules\Dunning\Http\Controllers'], function()
-{
-    Route::get('/', 'DunningController@index');
+BaseRoute::group([], function () {
+    BaseRoute::resource('Debt', 'Modules\Dunning\Http\Controllers\DebtController');
 });

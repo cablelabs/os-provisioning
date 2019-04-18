@@ -136,6 +136,11 @@ class Contract extends \BaseModel
                 $invoicesPanel1->push($this->invoices[$i]);
             }
 
+            if (\Module::collections()->has('Dunning')) {
+                $ret['Billing']['Debt']['class'] = 'Debt';
+                $ret['Billing']['Debt']['relation'] = $this->debts;
+            }
+
             $ret['Billing']['Invoice']['class'] = 'Invoice';
             $ret['Billing']['Invoice']['relation'] = $invoicesPanel1;
             $ret['Billing']['Invoice']['options']['hide_delete_button'] = 1;
@@ -192,6 +197,11 @@ class Contract extends \BaseModel
     /*
      * Relations
      */
+    public function debts()
+    {
+        return $this->hasMany('Modules\Dunning\Entities\Debt');
+    }
+
     public function modems()
     {
         return $this->hasMany('Modules\ProvBase\Entities\Modem');
