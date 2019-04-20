@@ -10,7 +10,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                @include('provbase::widgets.quickstart')
+                @include('Generic.quickstart')
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
     <div class="col-md-12">
         <div class="row">
             @if ($contracts_data['table'])
-            @section ('contract_analytics')
+            @section ('weekly_contracts')
                 @include('provbase::panels.weekly_contracts')
             @stop
                 @include ('bootstrap.panel', array ('content' => "weekly_contracts", 'view_header' => trans('view.Dashboard_WeeklyCustomers'), 'md' => 7, 'height' => 'auto', 'i' => '1'))
