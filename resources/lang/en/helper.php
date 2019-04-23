@@ -145,6 +145,8 @@ return [
   *	MODULE: ProvVoip
   */
     //PhonenumberManagementController
+    'PhonenumberManagement_activation_date' => 'Will be sent to provider as desired date, triggers active state of the phonenumber.',
+    'PhonenumberManagement_deactivation_date' => 'Will be sent to provider as desired date, triggers active state of the phonenumber.',
     'PhonenumberManagement_CarrierIn' => 'On incoming porting: set to previous Telco.',
     'PhonenumberManagement_CarrierInWithEnvia' => 'On incoming porting: set to previous Telco. In case of a new number set this to EnviaTEL',
     'PhonenumberManagement_EkpIn' => 'On incoming porting: set to previous Telco.',
@@ -176,4 +178,5 @@ return [
     'noReplyMail' => 'The E-mail address which should be displayed as the sender, while creating/editing tickets. This address does not have to exist. For example: example@example.com',
     'noReplyName' => 'The name which should be displayed as the sender, while creating/editing tickets. For example: NMS Prime',
     'ticket_settings' => 'Next: Set noreply name and address in Global Config Page.',
+    'carrier_out'      => 'Carrier code of the future contractual partner. If left blank the phonenumber will be deleted.',
  ];

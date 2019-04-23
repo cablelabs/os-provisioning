@@ -145,6 +145,8 @@ return [
   *	MODULE: ProvVoip
   */
     //PhonenumberManagementController
+    'PhonenumberManagement_activation_date' => 'Wird als Wunschtermin der Schaltung zum Provider geschickt und für die Ermittlung des Aktiv-Status der Rufnummer verwendet.',
+    'PhonenumberManagement_deactivation_date' => 'Wird als Wunschtermin der Abschaltung zum Provider geschickt und für die Ermittlung des Aktiv-Status der Rufnummer verwendet.',
     'PhonenumberManagement_CarrierIn' => 'Bei eingehender Portierung auf vorherigen Provider setzen. Bei Beantragung einer neuen Rufnummer EnviaTEL auswählen.',
     'PhonenumberManagement_CarrierInWithEnvia' => 'Bei Beantragung einer neuen Rufnummer setzen Sie dieses Feld auf EnviaTEL.',
     'PhonenumberManagement_EkpIn' => 'Bei eingehender Portierung auf vorherigen Provider setzen. Bei Beantragung einer neuen Rufnummer EnviaTEL auswählen.',
@@ -176,4 +178,5 @@ return [
     'noReplyMail' => 'Die E-Mail-Adresse, die als Absender angezeigt werden soll, wenn Tickets geändert/erstellt werden. Die Adresse muss nicht existieren. Z.B. example@example.com',
     'noReplyName' => 'Der Name, der als Absender angezeigt werden soll, wenn Tickets geändert/erstellt werden. Z.B: NMS Prime',
     'ticket_settings' => 'Nächster Schritt: Den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration angeben.',
+    'carrier_out'      => 'Carriercode des zukünftigen Vertragspartners der Rufnummer. Wenn leer, wird die Rufnummer gelöscht.',
  ];

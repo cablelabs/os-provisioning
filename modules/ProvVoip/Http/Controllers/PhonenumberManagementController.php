@@ -282,6 +282,7 @@ class PhonenumberManagementController extends \BaseController
                 'description' => 'Carrier out',
                 'value' => CarrierCode::carrier_list_for_form_select(true),
                 'checkbox' => 'show_on_porting_out',
+                'help' => trans('helper.carrier_out'),
                 'space' => '1',
             ],
             [
