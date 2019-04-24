@@ -530,3 +530,8 @@ table .index_check {
 #page-container.page-sidebar-minified .nav ul.sub-menu li i.fa+span{
   display: inline;
 }
+
+span.centerblock {
+    display: block;
+    text-align: center;
+}

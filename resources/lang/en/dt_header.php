@@ -193,7 +193,7 @@ return [
     'enviaorder.orderdate'  => 'Order date',
     'enviaorder_current'  => 'Action needed?',
     //ENVIA Contract
-    'enviacontract.envia_contract_reference' => 'envia TEL Contract reference',
+    'enviacontract.envia_contract_reference' => 'envia TEL contract reference',
     'enviacontract.state' => 'Status',
     'enviacontract.start_date' => 'Start Date',
     'enviacontract.end_date' => 'End Date',
