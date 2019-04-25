@@ -10,5 +10,7 @@ cd "$dir"
 /opt/rh/rh-php71/root/usr/bin/php artisan queue:restart
 /opt/rh/rh-php71/root/usr/bin/php artisan route:cache
 
+chown -R apache storage bootstrap/cache /var/log/nmsprime
+
 systemctl reload httpd
 systemctl restart nmsprimed

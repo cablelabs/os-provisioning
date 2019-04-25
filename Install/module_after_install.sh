@@ -8,4 +8,4 @@ cd "$dir"
 /opt/rh/rh-php71/root/usr/bin/php artisan module:migrate
 /opt/rh/rh-php71/root/usr/bin/php artisan auth:nms
 
-chown -R apache $dir/storage $dir/bootstrap/cache
+chown -R apache storage bootstrap/cache /var/log/nmsprime

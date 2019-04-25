@@ -12,5 +12,5 @@ cd "$dir"
 
 systemctl reload httpd
 
-chown -R apache $dir/storage $dir/bootstrap/cache
+chown -R apache storage bootstrap/cache /var/log/nmsprime
 chown -R apache:dhcpd /etc/dhcp-nmsprime
