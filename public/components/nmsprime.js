@@ -61,7 +61,11 @@ if (typeof(Storage) !== "undefined") {
         var li_item = $(this).closest('[data-sidebar=level1]');
         if(li_item.hasClass('expand')){
             li_item.removeClass('expand');
-        }else li_item.addClass('expand');
+            li_item.children('.sub-menu').css('display', 'none');
+        }else {
+            li_item.children('.sub-menu').css('display', 'block');
+            li_item.addClass('expand');
+        }
 		});
 
     $('#sidebar .sub-menu  li').click(function (event) {

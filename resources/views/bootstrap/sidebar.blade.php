@@ -33,7 +33,7 @@
                     <i class="fa fa-fw {{ $typearray['icon'] }}"></i>
                     <span>{{$typearray['translated_name'] ?? $module_name}}</span>
                 </a>
-                <a class="caret-link" href="javascript:;">
+                <a class="caret-link" href="javascript:;" style="width: 20%">
                     <b class="caret pull-right"></b>
                 </a>
             @else
@@ -41,7 +41,7 @@
                 <i class="fa fa-fw {{ $typearray['icon'] }}"></i>
                 <span>{{$typearray['translated_name'] ?? $module_name}}</span>
                 </a>
-                <a class="caret-link" href="javascript:;">
+                <a class="caret-link" href="javascript:;"  style="width: 20%">
                     <b class="caret pull-right"></b>
                 </a>
             @endif
