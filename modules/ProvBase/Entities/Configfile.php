@@ -12,13 +12,13 @@ class Configfile extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'configfile';
 
-    public $guarded = ['cvc_upload', 'firmware_upload'];
+    public $guarded = ['cvc_upload', 'firmware_upload', 'import'];
 
     // Add your validation rules here
     public static function rules($id = null)
     {
         return [
-            'name' => 'required|unique:configfile,name,'.$id.',id,deleted_at,NULL',
+            'name' => 'required_without:import|unique:configfile,name,'.$id.',id,deleted_at,NULL',
             'text' => 'docsis',
             'cvc' => 'required_with:firmware',
         ];

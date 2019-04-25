@@ -228,7 +228,8 @@ return [
 
 //BUTTON
         'Sign me in'				=> 'Login',
-        'Button_Create'				=> 'Create',
+        'Button_Create'             => 'Create',
+        'Button_Create'				=> 'Export',
         'Button_Delete'				=> 'Delete marked Elements',
         'Button_Force Restart'		=> 'Force Restart',
         'Button_Save'				=> 'Save',
