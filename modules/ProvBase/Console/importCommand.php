@@ -482,7 +482,7 @@ class importCommand extends Command
                 continue;
             }
 
-            if ($key == 'telefontarif') {
+            if (\Str::startsWith($key, 'telefontarif')) {
                 // Discard voip tariff if new contract doesnt have MTA
                 if (! isset($new_contract->has_mta)) {
                     Log::notice('Discard voip tariff as contract has no MTA assigned', [$new_contract->number]);
@@ -500,7 +500,7 @@ class importCommand extends Command
             }
 
             if ($prod_id == -1) {
-                $type = $key == 'telefontarif' ? 'voip' : 'internet';
+                $type = \Str::startsWith($key, 'telefontarif') ? 'voip' : 'internet';
                 $msg = "Missing mapping for $type tariff $tariff (ID in km3 DB). Don't add voip item to contract $new_contract->number.";
                 \Log::error($msg);
                 $this->errors[] = $msg;
