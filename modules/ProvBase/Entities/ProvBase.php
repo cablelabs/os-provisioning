@@ -202,5 +202,13 @@ class ProvBaseObserver
         if (multi_array_key_exists(['ds_rate_coefficient', 'us_rate_coefficient', 'max_cpe'], $changes)) {
             \Queue::push(new \Modules\ProvBase\Console\configfileCommand(0, 'cm'));
         }
+
+        if (array_key_exists('ro_community', $changes)) {
+            // update cacti database: replace the original snmp ro_community with the new one
+            \DB::connection('mysql-cacti')
+                ->table('host')
+                ->where('snmp_community', $model->getOriginal('ro_community'))
+                ->update(['snmp_community' => $model->ro_community]);
+        }
     }
 }
