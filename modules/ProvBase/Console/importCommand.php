@@ -468,6 +468,7 @@ class importCommand extends Command
             'tarif_next_month'  => $old_contract->tarif_next_month,
             'tarif_next'        => $old_contract->tarif_next,
             'telefontarif'      => $old_contract->telefontarif,
+            'telefontarif_next_month' => $old_contract->telefontarif_next_month,
             'telefontarif_next' => $old_contract->telefontarif_next,
             ];
 
@@ -515,7 +516,7 @@ class importCommand extends Command
             }
 
             $valid_from = $old_contract->angeschlossen;
-            if ($key == 'tarif_next_month') {
+            if (strpos($key, 'tarif_next_month') !== false) {
                 $valid_from = date('Y-m-01', strtotime('first day of next month'));
             } elseif (strpos($key, 'tarif_next') !== false) {
                 $valid_from = date('Y-m-d', strtotime($old_contract->{$key.'_date'}));
