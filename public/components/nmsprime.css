@@ -462,6 +462,29 @@ table .index_check {
     background: #d9e0e7;
 }
 
+.timeline > li + li {
+    margin-top: 20px;
+}
+
+.timeline > .timeline-time .date{
+    font-size: 13px;
+}
+.timeline > .timeline-time .time{
+    font-size: 20px;
+}
+.timeline-header {
+    padding-bottom: 0;
+}
+.timeline .timeline-body:before {
+    top: 12px;
+}
+.timeline .timeline-body {
+    padding: 10px 16px;
+}
+.timeline-header + .timeline-content, .timeline-header + .timeline-footer, .timeline-content + .timeline-footer {
+    margin-top: 0;
+}
+
 .navbar.navbar-inverse .navbar-brand,
 .sidebar .nav > li.active >div,
 .sidebar .nav > li.active >div:focus,
