@@ -44,9 +44,16 @@ class Debt extends \BaseModel
     // generates datatable content and classes for model
     public function view_index_label()
     {
+        $bsclass = 'success';
+
+        if ($this->amount > 0) {
+            $bsclass = 'warning';
+        }
+
         return ['table' => $this->table,
                 'index_header' => ['date', 'amount', 'fee'],
-                'header' => "$this->amount / $this->fee ($this->date)",
+                'header' => (string) ($this->amount + $this->fee).\Modules\BillingBase\Providers\Currency::get()." ($this->date)",
+                'bsclass' => $bsclass,
             ];
     }
 
