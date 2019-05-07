@@ -104,6 +104,7 @@ function escape_latex_special_chars($string)
             '_'  => '\\_',
             '~'  => '\\~{}',
             '^'  => '\\^{}',
+            '€'  => '\\euro',   // there could be products containing “€”
     ];
 
     return strtr($string, $map);
