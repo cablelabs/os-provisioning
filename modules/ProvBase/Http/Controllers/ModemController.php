@@ -47,7 +47,7 @@ class ModemController extends \BaseController
 
         $pos = explode(',', \Input::get('pos'));
         if (count($pos) == 2) {
-            list($model['x'], $model['y']) = $pos;
+            [$model['x'], $model['y']] = $pos;
         }
 
         $installation_address_change_date_options = ['placeholder' => 'YYYY-MM-DD'];
