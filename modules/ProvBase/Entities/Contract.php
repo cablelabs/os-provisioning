@@ -175,7 +175,7 @@ class Contract extends \BaseModel
             $ret['envia TEL']['Modem']['relation'] = $this->modems;
         }
 
-        if (\Module::collections()->has('Ccc')) {
+        if (\Module::collections()->has('Ccc') && \Module::collections()->has('BillingBase')) {
             $ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
         }
 
