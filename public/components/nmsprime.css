@@ -17,6 +17,20 @@ a:hover {
     text-decoration:underline
 }
 
+input[type="checkbox"] {
+	margin: 0 auto;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+	appearance: none;
+	width: 34px;
+	text-align: center;
+	background: #fff !important;
+}
+input[type="checkbox"]:checked:after {
+	content: '\2714';
+	font-size: 26px;
+}
+
 /* Selectv2 responsive */
 .select2-container {
     width: 100% !important;
