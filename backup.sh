@@ -1,88 +1,119 @@
-#!/usr/bin/bash
+#!/bin/bash
 dir='/var/www/nmsprime'
-out='/tmp'
+db_dir='db_dumps'
+ref_dir='ref'
 
 handle_module() {
-	if [ "$1" == 'base' ]
+	if [[ "$1" == 'base' ]]
 	then
-		path="$dir/Install"
+		cfg="$dir/Install/config.cfg"
 	else
-		path="$dir/modules/$1/Install"
+		cfg="$(dirname $1)/Install/config.cfg"
 	fi
 
-	# backup config files
-	if [ -f "$path/config.cfg" ]; then
+	if [[ -f "$cfg" ]]; then
 		while read -r line; do
-			f_to=$(echo "$line" | cut -d'=' -f2 | xargs)
-			mkdir -p $(dirname "$out$f_to")
-			cp -a "$f_to" "$out$f_to"
-		done < <(awk '/\[files\]/{flag=1;next}/\[/{flag=0}flag' "$path/config.cfg" | grep '=')
+			files+=($(echo "$line" | cut -d'=' -f2 | xargs))
+		done < <(awk '/\[files\]/{flag=1;next}/\[/{flag=0}flag' "$cfg" | grep '=')
+
+		for file in $(grep '^configfiles' "$cfg" | cut -d'=' -f2 | grep -o '"[^"]\+"' | tr -d '"'); do
+			files+=("$(dirname $1)/$file")
+		done
 	fi
 }
 
 display_help() {
-	echo "Usage: $0 [-o outdir] [-p mysql_root_password]" >&2
+	echo "Usage: $0 [> output-file.tar.gz]" >&2
 	exit 1
 }
 
-while getopts ":o:p:h" opt; do
+while getopts "h" opt; do
 	case $opt in
 		h)
 			display_help
-			;;
-		o)
-			out="$OPTARG"
-			;;
-		p)
-			pw="$OPTARG"
+			exit 0
 			;;
 		\?)
 			echo "Invalid option: -$OPTARG" >&2
 			display_help
+			exit 1
 			;;
 	esac
 done
 
-date=$(date +%Y%m%dT%H%M%S)
-out="$out/$date"
-mkdir -p "$out"
+excludes=(
+	"$dir/storage/app/tmp"
+	"$dir/storage/framework"
+)
 
-# dump all needed databases
-mysqldump -u root --password="$pw" --databases cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc > "$out/dump.sql"
+static=(
+	'/etc/cron.d'
+	'/etc/dhcp-nmsprime'
+	'/etc/hostname'
+	'/etc/firewalld'
+	'/etc/group'
+	'/etc/named'*
+	'/etc/nmsprime'
+	'/etc/passwd'
+	'/etc/pki/tls/private'
+	'/etc/shadow'
+	'/etc/sysconfig/network-scripts/ifcfg-'*
+	'/etc/sysconfig/network-scripts/route-'*
+	'/home'
+	'/root'
+	'/tftpboot'
+	'/var/lib/acme'
+	'/var/lib/cacti/rra'
+	'/var/lib/dhcpd'
+	'/var/log'
+	'/var/named/dynamic'
+	"$dir/storage"
+)
 
-# backup all rrd files
-mkdir -p "$out/var/lib/cacti"
-rsync -a /var/lib/cacti/rra "$out/var/lib/cacti/"
+# transformed files won't overwrite their system counterparts while untarring
+# instead they will be put into /$ref_dir for reference/diffing
+transform=(
+	"s|etc/group|$ref_dir/etc/group|"
+	"s|etc/nmsprime/env|$ref_dir/etc/nmsprime/env|"
+	"s|etc/passwd|$ref_dir/etc/passwd|"
+	"s|etc/shadow|$ref_dir/etc/shadow|"
+	"s|etc/sysconfig|$ref_dir/etc/sysconfig|"
+	"s|^|$(date +%Y%m%dT%H%M%S)/|"
+)
 
-# backup dhcpd lease file
-systemctl restart dhcpd
-mkdir -p "$out/var/lib/dhcpd"
-cp -a /var/lib/dhcpd/dhcpd.leases "$out/var/lib/dhcpd/"
+files=()
+rpm_files=$(rpm -qa 'nmsprime*' -c)
+if [[ -n "$rpm_files" ]]
+then
+	# rpm
+	readarray -t files <<< "$rpm_files"
+else
+	# git
+	handle_module base
+	for module in "$dir"/modules/*/module.json; do
+		handle_module "$module"
+	done
+fi
 
-# backup named zone files
-mkdir -p "$out/var/named/dynamic"
-cp -a /var/named/dynamic/*.zone "$out/var/named/dynamic/"
+mkdir -p "/root/$db_dir"
+for db in cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc; do
+	case "$db" in
+	'cacti')
+		auth=$(php -r 'require_once "/etc/cacti/db.php"; echo "$database_default\n$database_password\n$database_username\n";' | xargs)
+		;;
+	'nmsprime')
+		auth=$(grep '^DB_DATABASE\|^DB_USERNAME\|^DB_PASSWORD' /etc/nmsprime/env/global.env | sort | cut -d'=' -f2 | xargs)
+		;;
+	'nmsprime_ccc')
+		auth=$(grep '^CCC_DB_DATABASE\|^CCC_DB_USERNAME\|^CCC_DB_PASSWORD' /etc/nmsprime/env/ccc.env | sort | cut -d'=' -f2 | xargs)
+		;;
+	*)
+		auth=$(awk "/\[$db\]/{flag=1;next}/\[/{flag=0}flag" /etc/icingaweb2/resources.ini | grep '^dbname\|^username\|^password' | sort | cut -d'=' -f2 | xargs)
+		;;
+	esac
 
-# backup firewalld zones
-mkdir -p "$out/etc/firewalld/zones"
-rsync -a /etc/firewalld/zones "$out/etc/firewalld"
-
-# backup tftpboot folder
-mkdir -p "$out/tftpboot"
-rsync -a /tftpboot "$out"
-
-# backup nmsprime storage folder excluding temporary data
-mkdir -p "$out$dir"
-rsync -a --exclude framework "$dir/storage" "$out$dir"
-
-# backup config files of nmsprime and all its modules
-handle_module base
-for file in $(find modules/ -name module.json); do
-	handle_module "$(echo "$file" | cut -d'/' -f2)"
-	# backup module.json, stating if modules is enabled or not
-	mkdir -p $(dirname "$out$dir/$file")
-	cp -a "$dir/$file" "$out$dir/$file"
+	read -r -a auths <<< "$auth"
+	mysqldump -u "${auths[2]}" --password="${auths[1]}" "${auths[0]}" | gzip > "/root/$db_dir/${auths[0]}.sql.gz"
 done
 
-cd "$out/.."
-tar czf "$date.tar.gz" "$date"
+tar --exclude-from <(IFS=$'\n'; echo "${excludes[*]}") --transform=$(IFS=';'; echo "${transform[*]}") --hard-dereference -cz "${static[@]}" "${files[@]}" 2> /root/backup-nmsprime.txt
