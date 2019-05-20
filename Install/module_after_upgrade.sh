@@ -9,8 +9,9 @@ cd "$dir"
 /opt/rh/rh-php71/root/usr/bin/php artisan queue:restart
 /opt/rh/rh-php71/root/usr/bin/php artisan auth:nms
 /opt/rh/rh-php71/root/usr/bin/php artisan route:cache
+/opt/rh/rh-php71/root/usr/bin/php artisan view:clear
 
 systemctl reload httpd
 
-chown -R apache $dir/storage $dir/bootstrap/cache
+chown -R apache storage bootstrap/cache /var/log/nmsprime
 chown -R apache:dhcpd /etc/dhcp-nmsprime

@@ -110,14 +110,13 @@ class Contract extends \BaseModel
     // View Relation.
     public function view_has_many()
     {
+        $ret['Edit']['Modem'] = $this->modems;
+
         if (\Module::collections()->has('BillingBase')) {
             // view has many version 1
-            $ret['Edit']['Modem'] = $this->modems;
             $ret['Edit']['Item'] = $this->items;
             $ret['Edit']['SepaMandate'] = $this->sepamandates;
         }
-
-        $ret['Edit']['Modem'] = $this->modems;
 
         if (\Module::collections()->has('BillingBase')) {
             // view has many version 2
@@ -126,22 +125,34 @@ class Contract extends \BaseModel
             $ret['Billing']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
 
-            // Show invoices in 2 panels - 2nd panel with old invoices collapsed and in 2 columns
-            $p1 = $this->invoices()->orderBy('id', 'desc')->take(15)->get();
+            // Show invoices in 2 panels
+            if (! $this->relationLoaded('invoices')) {
+                $this->setRelation('invoices', $this->invoices()->orderBy('id', 'desc')->get());
+            }
+
+            $invoicesPanel1 = collect();
+            $countPanel1 = $this->invoices->count() > 15 ? 15 : $this->invoices->count();
+
+            for ($i = 0; $i < $countPanel1; $i++) {
+                $invoicesPanel1->push($this->invoices[$i]);
+            }
 
             $ret['Billing']['Invoice']['class'] = 'Invoice';
-            $ret['Billing']['Invoice']['relation'] = $p1;
+            $ret['Billing']['Invoice']['relation'] = $invoicesPanel1;
             $ret['Billing']['Invoice']['options']['hide_delete_button'] = 1;
             $ret['Billing']['Invoice']['options']['hide_create_button'] = 1;
 
-            if ($p1->count() == 15) {
-                $p2 = $this->invoices()->orderBy('id', 'desc')->where('id', '<', $p1->last()->id)->get();
+            // 2nd panel with old invoices - collapsed and in 2 columns
+            if ($this->invoices->count() > 15) {
+                $invoicesPanel2 = collect();
 
-                if (! $p2->isEmpty()) {
-                    $ret['Billing']['OldInvoices']['view']['view'] = 'billingbase::Contract.oldInvoices';
-                    $ret['Billing']['OldInvoices']['view']['vars']['invoices'] = $p2;
-                    $ret['Billing']['OldInvoices']['panelOptions']['display'] = 'none';
+                for ($i = 15; $i < $this->invoices->count(); $i++) {
+                    $invoicesPanel2->push($this->invoices[$i]);
                 }
+
+                $ret['Billing']['OldInvoices']['view']['view'] = 'billingbase::Contract.oldInvoices';
+                $ret['Billing']['OldInvoices']['view']['vars']['invoices'] = $invoicesPanel2;
+                $ret['Billing']['OldInvoices']['panelOptions']['display'] = 'none';
             }
         }
 
@@ -164,7 +175,7 @@ class Contract extends \BaseModel
             $ret['envia TEL']['Modem']['relation'] = $this->modems;
         }
 
-        if (\Module::collections()->has('Ccc')) {
+        if (\Module::collections()->has('Ccc') && \Module::collections()->has('BillingBase')) {
             $ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
         }
 

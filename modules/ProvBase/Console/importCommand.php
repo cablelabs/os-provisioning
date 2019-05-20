@@ -468,6 +468,7 @@ class importCommand extends Command
             'tarif_next_month'  => $old_contract->tarif_next_month,
             'tarif_next'        => $old_contract->tarif_next,
             'telefontarif'      => $old_contract->telefontarif,
+            'telefontarif_next_month' => $old_contract->telefontarif_next_month,
             'telefontarif_next' => $old_contract->telefontarif_next,
             ];
 
@@ -481,7 +482,7 @@ class importCommand extends Command
                 continue;
             }
 
-            if ($key == 'telefontarif') {
+            if (\Str::startsWith($key, 'telefontarif')) {
                 // Discard voip tariff if new contract doesnt have MTA
                 if (! isset($new_contract->has_mta)) {
                     Log::notice('Discard voip tariff as contract has no MTA assigned', [$new_contract->number]);
@@ -499,7 +500,7 @@ class importCommand extends Command
             }
 
             if ($prod_id == -1) {
-                $type = $key == 'telefontarif' ? 'voip' : 'internet';
+                $type = \Str::startsWith($key, 'telefontarif') ? 'voip' : 'internet';
                 $msg = "Missing mapping for $type tariff $tariff (ID in km3 DB). Don't add voip item to contract $new_contract->number.";
                 \Log::error($msg);
                 $this->errors[] = $msg;
@@ -515,7 +516,7 @@ class importCommand extends Command
             }
 
             $valid_from = $old_contract->angeschlossen;
-            if ($key == 'tarif_next_month') {
+            if (strpos($key, 'tarif_next_month') !== false) {
                 $valid_from = date('Y-m-01', strtotime('first day of next month'));
             } elseif (strpos($key, 'tarif_next') !== false) {
                 $valid_from = date('Y-m-d', strtotime($old_contract->{$key.'_date'}));
