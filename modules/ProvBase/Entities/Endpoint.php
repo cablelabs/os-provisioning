@@ -78,7 +78,7 @@ class Endpoint extends \BaseModel
                 $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone.\nsend\n";
                 $cmd .= "update delete $rev.in-addr.arpa.\nsend\n";
             } else {
-                $mangle = exec("echo '{$this->getOriginal('mac')}' | tr -cd '[:xdigit:]' | xxd -r -p | openssl dgst -sha256 -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())'");
+                $mangle = exec("echo '{$this->getOriginal('mac')}' | tr -cd '[:xdigit:]' | xxd -r -p | openssl dgst -sha256 -mac hmac -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())'");
                 $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone.\nsend\n";
                 $cmd .= "update delete $mangle.cpe.$zone.\nsend\n";
             }
@@ -91,7 +91,7 @@ class Endpoint extends \BaseModel
             } else {
                 // other endpoints will get a CNAME and PTR record (mangle <-> hostname)
                 // mangle name is based on cm and cpe mac
-                $mangle = exec("echo '$this->mac' | tr -cd '[:xdigit:]' | xxd -r -p | openssl dgst -sha256 -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())'");
+                $mangle = exec("echo '$this->mac' | tr -cd '[:xdigit:]' | xxd -r -p | openssl dgst -sha256 -mac hmac -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())'");
                 $cmd .= "update add $this->hostname.cpe.$zone. 3600 CNAME $mangle.cpe.$zone.\nsend\n";
                 $cmd .= "update add $mangle.cpe.$zone. 3600 PTR $this->hostname.cpe.$zone.\nsend\n";
             }
