@@ -41,7 +41,7 @@
         <div class='col-md-1'>
         </div>
         <div class='col-md-2'>
-            <a class="btn btn-info btn-block" target='_blank' id='get_sla' href="https://www.nmsprime.com/pricing">Get SLA</a>
+            <a class="btn btn-info btn-block" target='_blank' id='get_sla' href="https://shop.nmsprime.com">Get SLA</a>
         </div>
         <div class='col-md-2'>
         </div>

@@ -85,7 +85,7 @@ class Sla extends BaseModel
             }
         }
 
-        return false;
+        return 'xs';
     }
 
     /**
