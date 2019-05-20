@@ -1,0 +1,6 @@
+Defaults:apache        !requiretty
+apache  ALL=(root) NOPASSWD: /usr/bin/hostnamectl
+apache  ALL=(root) NOPASSWD: /usr/bin/systemctl restart named.service
+apache  ALL=(root) NOPASSWD: /usr/sbin/rndc sync -clean
+apache  ALL=(root) NOPASSWD: /usr/bin/sed -i -f /var/www/nmsprime/storage/app/tmp/update-domain.sed /etc/named-nmsprime.conf
+apache  ALL=(root) NOPASSWD: /usr/bin/sed -i -f /var/www/nmsprime/storage/app/tmp/update-domain.sed /var/named/dynamic/nmsprime.test.zone
