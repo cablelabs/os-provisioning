@@ -63,9 +63,9 @@ return [
     'sepaaccount.institute' => 'Bank',
     'sepaaccount.iban' => 'IBAN',
     // SepaMandate
-    'sepamandate.sepa_holder' => 'Kontoinhaber',
-    'sepamandate.sepa_valid_from' => 'Gültig ab',
-    'sepamandate.sepa_valid_to' => 'Gültig bis',
+    'sepamandate.holder' => 'Kontoinhaber',
+    'sepamandate.valid_from' => 'Gültig ab',
+    'sepamandate.valid_to' => 'Gültig bis',
     'sepamandate.reference' => 'Kontoreferenz',
     // SettlementRun
     'settlementrun.year' => 'Jahr',

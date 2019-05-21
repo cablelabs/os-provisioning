@@ -63,9 +63,9 @@ return [
     'sepaaccount.institute' => 'Institute',
     'sepaaccount.iban' => 'IBAN',
     // SepaMandate
-    'sepamandate.sepa_holder' => 'Account Holder',
-    'sepamandate.sepa_valid_from' => 'Valid from',
-    'sepamandate.sepa_valid_to' => 'Valid to',
+    'sepamandate.holder' => 'Account Holder',
+    'sepamandate.valid_from' => 'Valid from',
+    'sepamandate.valid_to' => 'Valid to',
     'sepamandate.reference' => 'Account reference',
     // SettlementRun
     'settlementrun.year' => 'Year',

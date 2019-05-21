@@ -73,8 +73,8 @@ class SpkTransactionParser extends TransactionParserEngine
 
         // Get SepaMandate by iban & mref
         $sepamandate = \Modules\BillingBase\Entities\SepaMandate::withTrashed()
-            ->where('reference', $mref)->where('sepa_iban', $iban)
-            ->orderBy('deleted_at')->orderBy('sepa_valid_from', 'desc')->first();
+            ->where('reference', $mref)->where('iban', $iban)
+            ->orderBy('deleted_at')->orderBy('valid_from', 'desc')->first();
 
         if ($sepamandate) {
             $debt->sepamandate_id = $sepamandate->id;
@@ -161,6 +161,9 @@ class SpkTransactionParser extends TransactionParserEngine
         $ident[] = "IBAN $iban";
         $ident = implode(',', $ident);
         $logmsg = "MT940: Transaction of $holder with $ident";
+
+        $sepamandate = \Modules\BillingBase\Entities\SepaMandate::where('iban', $iban)
+            ->orderBy('valid_from', 'desc')->first();
 
         if (! ($contract || $invoice || $sepamandate)) {
             \Log::notice("$logmsg discarded. Neither contract, nor invoice, nor sepa mandate could be found.");
