@@ -599,7 +599,7 @@ return [
             'deleted'       => 'löscht',
             'updated'       => 'aktualisiert',
             'updated N:M'   => 'aktualisiert',
-        ]
+        ],
     ],
     'Modem'                         => 'Modem',
     'PhonenumberManagement'         => 'Phonenumber Management',
