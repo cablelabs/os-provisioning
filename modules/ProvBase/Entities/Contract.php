@@ -486,7 +486,7 @@ class Contract extends \BaseModel
             $items = $this->items()
                 ->leftJoin('product', 'product.id', '=', 'item.product_id')
                 ->whereIn('product.type', ['Internet', 'Voip'])
-                ->where(whereLaterOrEqualThanDate('item.valid_to', date('Y-m-d', strtotime("-$item_max_ended_before days"))))
+                ->where(whereLaterOrEqual('item.valid_to', date('Y-m-d', strtotime("-$item_max_ended_before days"))))
                 // ->orderBy('valid_from', 'desc')
                 ->select('item.*')
                 ->with('product')

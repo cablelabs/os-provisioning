@@ -245,17 +245,13 @@ function checkLocale($locale = null) : string
  * NOTE: For end dates an empty column is later - it's cumbersome to always write these 5 lines of code
  *
  * @param string    db column name - must be table.column in joined statements
- * @param string    date string like '2019-02-06' - default is today
+ * @param string    date string like '2019-02-06'
  * @return function db query to use in (chained) where clause
  *
  * @author Nino Ryschawy
  */
-function whereLaterOrEqualThanDate($column, $date = '')
+function whereLaterOrEqual($column, $date)
 {
-    if (! $date) {
-        $date = date('Y-m-d');
-    }
-
     return function ($query) use ($column, $date) {
         $query
             ->where($column, '>=', $date)
