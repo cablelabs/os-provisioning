@@ -46,7 +46,7 @@
 				@endforeach
 				</div>
 			@elseif (is_string($currently_free_numbers))
-				{{ $currently_free_numbers }}
+				{!! $currently_free_numbers !!}
 			@endif
 
 		@stop
