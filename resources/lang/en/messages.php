@@ -593,10 +593,14 @@ return [
     'setManually'               => ':file of :name has to be set manually.',
     'invalidJson'               => 'The selected file is not correctly formatted or not a JSON!',
     'proximity'                 => 'Proximity search',
-    'dashboard_log_created'         => 'created',
-    'dashboard_log_deleted'         => 'deleted',
-    'dashboard_log_updated'         => 'updated',
-    'dashboard_log_updated N:M'     => 'updated',
+    'dashboard'                 => [
+        'log' =>[
+            'created'       => 'created',
+            'deleted'       => 'deleted',
+            'updated'       => 'updated',
+            'updated N:M'   => 'updated',
+            ]
+    ],
     'Modem'                         => 'Modem',
     'PhonenumberManagement'         => 'Phonenumber Management',
     'NetElement'                    => 'Netelement',

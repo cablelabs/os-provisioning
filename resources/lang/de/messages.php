@@ -593,10 +593,14 @@ return [
     'setManually'               => ':file von :name muss manuell hinzugefügt werden.',
     'invalidJson'               => 'Die ausgewählte Datei ist falsch formattiert oder keine JSON.',
     'proximity'                 => 'Umgebungssuche',
-    'dashboard_log_created'         => 'erstellt',
-    'dashboard_log_deleted'         => 'löscht',
-    'dashboard_log_updated'         => 'aktualisiert',
-    'dashboard_log_updated N:M'     => 'aktualisiert',
+    'dashboard'                 => [
+        'log' =>[
+            'created'       => 'erstellt',
+            'deleted'       => 'löscht',
+            'updated'       => 'aktualisiert',
+            'updated N:M'   => 'aktualisiert',
+        ]
+    ],
     'Modem'                         => 'Modem',
     'PhonenumberManagement'         => 'Phonenumber Management',
     'NetElement'                    => 'Netzelement',

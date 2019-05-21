@@ -270,7 +270,7 @@ return [
         'Button_Create Phonenumber'		=> 'Telefonnummer anlegen',
         'Button_Create Tree Table'		=> 'Baumdiagramm anlegen',
         'Button_Create Modem Positioning Rule' => 'Modem Positionierungsregel erstellen',
-        'Button_Create Mpr'				=> 'Modem Positionierungsregel Geoposition erstellen',
+        'Button_Create Mpr'				=> 'Modem Positionierungsregel erstellen',
         'Button_Create Modem Positioning Rule Geoposition' => 'MprGeopos erstellen',
         'Button_Create MprGeopos'		=> 'MprGeopos erstellen',
         'Button_Create Tickets'		=> 'Ticket erstellen',
