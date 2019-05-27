@@ -39,7 +39,23 @@ class TransactionParser
 
         $debt = $this->engine->parse($transaction);
 
-        // TODO: Check if debt already exists
+        // Check if debt already exists
+        if ($debt) {
+            $exists = Debt::where('date', $debt->date)->where('description', $debt->description)->where('amount', $debt->amount)
+                ->where('fee', $debt->fee)->where('contract_id', $debt->contract_id)
+                ->count();
+
+            if ($exists) {
+                $debitCredit = $transaction->getDebitCredit() == 'C' ? 'Credit' : 'Debit';
+                \ChannelLog::debug('dunning', trans('dunning::messages.transaction.exists', [
+                    'debitCredit' => trans("view.$debitCredit"),
+                    'description' => $transaction->getDescription(),
+                    'price' => $transaction->getPrice(),
+                    ]));
+
+                return;
+            }
+        }
 
         return $debt;
     }

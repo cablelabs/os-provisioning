@@ -19,13 +19,13 @@ class CreateDebtTable extends BaseMigration
             // Relations
             $table->integer('contract_id');
             // $table->string('mandateref');
-            $table->integer('sepamandate_id');
-            $table->integer('invoice_id');
+            $table->integer('sepamandate_id')->nullable();
+            $table->integer('invoice_id')->nullable();
 
-            $table->date('date');
-            $table->float('amount', 10, 4);
-            $table->float('fee', 10, 4);
-            $table->string('description');
+            $table->date('date');           // Date of transaction
+            $table->float('amount', 10, 4)->nullable();
+            $table->float('fee', 10, 4)->nullable();
+            $table->string('description')->nullable();
 
             return parent::up();
         });

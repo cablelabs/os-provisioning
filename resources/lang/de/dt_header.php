@@ -2,6 +2,7 @@
 
 return [
     // Index DataTable Header
+    'amount' => 'Betrag',
     'id'            => 'ID',
     'prio'          => 'Priorität',
     // Auth
@@ -34,6 +35,7 @@ return [
     'item.valid_from_fixed' => 'Ab Startdatum aktiv',
     'item.valid_to' => 'Posten Gültig bis',
     'item.valid_to_fixed' => 'Festes Enddatum',
+    'fee' => 'Gebühr',
     'product' => [
         'proportional' => 'Anteilig',
         'type' => 'Typ',

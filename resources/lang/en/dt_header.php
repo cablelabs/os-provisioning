@@ -2,6 +2,7 @@
 
 return [
     // Index DataTable Header
+    'amount' => 'Amount',
     'id'            => 'ID',
     'prio'          => 'Priority',
     // Auth
@@ -34,6 +35,7 @@ return [
     'item.valid_from_fixed' => 'Item Valid from fixed',
     'item.valid_to' => 'Item Valid to',
     'item.valid_to_fixed' => 'Item Valid to fixed',
+    'fee' => 'Fee',
     'product' => [
         'proportional' => 'Proportionate',
         'type' => 'Type',

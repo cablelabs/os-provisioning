@@ -143,6 +143,18 @@ class SpkTransactionParser extends TransactionParserEngine
         $reason = implode('', $reason);
         $ret = self::searchNumbers($reason);
 
+        if ($ret['exclude']) {
+            ChannelLog::info('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.credit.missInvoice'));
+
+            return;
+        }
+
+        // if (! $ret['contractNr'] && ! $ret['invoiceNr']) {
+        //     ChannelLog::debug('dunning', "$logmsg discarded. ");
+
+        //     return;
+        // }
+
         $contract = $invoice = $sepamandate = null;
         if ($ret['contractNr']) {
             $contract = \Modules\ProvBase\Entities\Contract::where('number', $ret['contractNr'])->first();
@@ -173,16 +185,27 @@ class SpkTransactionParser extends TransactionParserEngine
 
         // Determine contract id and log mismatches
         if ($contract) {
-            if ($invoice && $contract->id != $invoice->contract_id) {
-                \Log::debug("$logmsg discarded. Contract and invoice number from transfer reason do not match to the same contract in the database.");
+            if ($invoice)
+                if ($contract->id != $invoice->contract_id) {
+                    ChannelLog::info('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.credit.diff.contractInvoice', [
+                        'contract' => $contract->number,
+                        'invoice' => $invoice->contract->number,
+                        ]));
 
-                return;
-            }
+                    return;
+                }
 
-            if ($sepamandate && $contract->id != $sepamandate->contract_id) {
-                \Log::debug("$logmsg discarded. Found sepamandate belongs to different contract ($contract->number).");
+            if ($sepamandate) {
+                if ($contract->id != $sepamandate->contract_id) {
+                    ChannelLog::notice('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.credit.diff.contractSepa', [
+                        'contract' => $contract->number,
+                        'sepamandate' => $sepamandate->contract->number,
+                        ]));
 
-                return;
+                    return;
+                }
+
+                $debt->sepamandate_id = $sepamandate->id;
             }
 
             $debt->contract_id = $contract->id;
@@ -190,7 +213,10 @@ class SpkTransactionParser extends TransactionParserEngine
             if ($sepamandate && $sepamandate->contract_id != $invoice->contract_id) {
                 \Log::debug("$logmsg discarded. Found sepamandate belongs to different contract ($contract->number) than the found invoice (".$invoice->contract->number.').');
 
-                return;
+                    return;
+                }
+
+                $debt->sepamandate_id = $sepamandate->id;
             }
 
             $debt->contract_id = $invoice->contract_id;
@@ -199,6 +225,7 @@ class SpkTransactionParser extends TransactionParserEngine
         }
 
         $debt->amount = -1 * $transaction->getPrice();
+        $debt->description = $reason;
 
         \Log::debug("$logmsg will add a debt if it doesnt exist yet.");
 
@@ -208,24 +235,39 @@ class SpkTransactionParser extends TransactionParserEngine
     /**
      * Search for contract and invoice number in credit transfer reason to assign debt to appropriate customer
      *
-     * @TODO: Find numbers language dependent
-     *
      * @param string
      * @return array
      */
     private static function searchNumbers($transferReason)
     {
-        // Match examples: Rechnungsnummer|Rechnungsnr|RE.-NR.|RG.-NR. 2018/3/48616
-        preg_match('/R(.*?)n(.*?)r(.*?)(\d{4}\/\d+\/\d+)/i', $transferReason, $matchInvoice);
-        $invoiceNr = $matchInvoice ? $matchInvoice[4] : 0;
+        // Match examples: Rechnungsnummer|Rechnungsnr|RE.-NR.|RG.-NR.|RG 2018/3/48616
+        preg_match('/R(.*?)((n(.*?)r)|G)(.*?)(\d{4}\/\d+\/\d+)/i', $transferReason, $matchInvoice);
+        $invoiceNr = $matchInvoice ? $matchInvoice[6] : '';
 
         // Match examples: Kundennummer|Kd-Nr|Kd.nr.|Kd.-Nr. 13451
-        preg_match('/K(.*?)d(.*?)n(.*?)r(.*?)(\d{1,5})/i', $transferReason, $matchContract);
+        preg_match('/K(.*?)d(.*?)n(.*?)r(.*?)([1-7]\d{1,4})/i', $transferReason, $matchContract);
         $contractNr = $matchContract ? $matchContract[5] : 0;
 
+        // Special invoice numbers that ensure that transaction definitely doesn't belong to NMSPrime
+        $exclude = '';
+        if (\Storage::exists('config/dunning/transferExcludes')) {
+            $excludes = include storage_path('app/config/dunning/transferExcludes');
+
+            foreach ($excludes as $regex => $group) {
+                preg_match($regex, $transferReason, $matchInvoiceSpecial);
+
+                if ($matchInvoiceSpecial) {
+                    $exclude = $matchInvoiceSpecial[$group];
+
+                    break;
+                }
+            }
+        }
+
         return [
-            'invoiceNr' => $invoiceNr,
             'contractNr' => $contractNr,
+            'invoiceNr' => $invoiceNr,
+            'exclude' => $exclude,
         ];
     }
 }
