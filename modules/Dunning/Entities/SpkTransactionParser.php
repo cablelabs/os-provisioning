@@ -15,7 +15,6 @@ class SpkTransactionParser extends TransactionParserEngine
         }
 
         if ($debt) {
-            // $debt->date = \Carbon\Carbon::createFromTimestamp($transaction->getValueTimestamp());
             $debt->date = $transaction->getValueTimestamp('Y-m-d H:i:s');
         }
 
