@@ -26,6 +26,9 @@ return [
     // Costcenter
     'costcenter.name' => 'CostCenter',
     'costcenter.number' => 'Number',
+    'debt' => [
+        'date' => 'Date',
+        ],
     //Invoices
     'invoice.type' => 'Type',
     'invoice.year' => 'Year',

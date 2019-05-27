@@ -215,6 +215,9 @@ return [
         'Header_EnviaOrders'		=> 'envia TEL Auftrag|envia TEL Aufträge',
         'Header_EnviaContracts'		=> 'envia TEL Vertrag|envia TEL Verträge',
 
+        'Header_Debt'               => 'Historie Offene Posten',
+        'Header_DebtResult'         => 'Offene Posten gesamt',
+
     //Header Relation
         // 'Assigned'  				=> 'Zugewiesene',
     //Header Controler index

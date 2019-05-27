@@ -219,6 +219,9 @@ return [
         'Header_EnviaOrders'		=> 'envia TEL order|envia TEL orders',
         'Header_EnviaContracts'		=> 'envia TEL contract|envia TEL contracts',
 
+        'Header_Debt'               => 'Debt history',
+        'Header_DebtResult'         => 'Outstanding payments total',
+
     //Header Relation
         // 'Assigned'  				=> 'Zugewiesene',
     //Header Controler index
