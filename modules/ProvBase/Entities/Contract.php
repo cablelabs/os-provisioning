@@ -124,6 +124,12 @@ class Contract extends \BaseModel
             $ret['Billing']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
 
+            if (\Module::collections()->has('Dunning')) {
+                // resulting outstanding amount
+                $ret['Billing']['DebtResult']['view']['view'] = 'dunning::Debt.result';
+                $ret['Billing']['DebtResult']['view']['vars']['debt'] = $this->getResultingDebt();
+            }
+
             // Show invoices in 2 panels
             if (! $this->relationLoaded('invoices')) {
                 $this->setRelation('invoices', $this->invoices()->orderBy('id', 'desc')->get());
@@ -139,6 +145,7 @@ class Contract extends \BaseModel
             if (\Module::collections()->has('Dunning')) {
                 $ret['Billing']['Debt']['class'] = 'Debt';
                 $ret['Billing']['Debt']['relation'] = $this->debts;
+                $ret['Billing']['Debt']['panelOptions']['display'] = 'none';
             }
 
             $ret['Billing']['Invoice']['class'] = 'Invoice';
@@ -1233,6 +1240,20 @@ class Contract extends \BaseModel
 
         return $ret;
     }
+
+    /**
+     * Return the outstanding amount
+     */
+    public function getResultingDebt()
+    {
+        if (! \Module::collections()->has('Dunning')) {
+            return;
+        }
+
+        return \Modules\Dunning\Entities\Debt::where('contract_id', $this->id)->sum('amount');
+    }
+
+
 }
 
 /**
