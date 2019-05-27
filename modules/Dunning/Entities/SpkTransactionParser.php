@@ -2,6 +2,8 @@
 
 namespace Modules\Dunning\Entities;
 
+use ChannelLog;
+
 class SpkTransactionParser extends TransactionParserEngine
 {
     public function parse(\Kingsquare\Banking\Transaction $transaction)
@@ -30,12 +32,12 @@ class SpkTransactionParser extends TransactionParserEngine
 
         foreach ($descriptionArray as $key => $line) {
             if (\Str::startsWith($line, '20EREF+')) {
-                $invoiceNr = str_replace(['20EREF', '+RG '], '', $line);
+                $invoiceNr = utf8_encode(str_replace(['20EREF', '+RG '], '', $line));
                 continue;
             }
 
             if (\Str::startsWith($line, '21MREF+')) {
-                $mref = str_replace('21MREF+', '', $line);
+                $mref = utf8_encode(str_replace('21MREF+', '', $line));
                 continue;
             }
 
@@ -57,19 +59,25 @@ class SpkTransactionParser extends TransactionParserEngine
             }
 
             if (\Str::startsWith($line, '31')) {
-                $iban = substr($line, 2);
+                $iban = utf8_encode(substr($line, 2));
                 continue;
             }
 
             if (\Str::startsWith($line, '32')) {
-                $holder = substr($line, 2);
+                $holder = utf8_encode(substr($line, 2));
                 continue;
             }
         }
 
         // Use module specific language file or better global file because of Crowdin?
-        // $logmsg = trans('Dunning::messages.transactionLog', ['invoiceNr' => $invoiceNr, 'reference' => $mref, 'price' => $price, 'iban' => $iban]);
-        $logmsg = "MT940: Transaction of $holder with invoice NR $invoiceNr, SepaMandate reference $mref, price ".$transaction->getPrice().", IBAN $iban";
+        $logmsg = trans('dunning::messages.transaction.default.debit', [
+            'holder' => $holder,
+            'invoiceNr' => $invoiceNr,
+            'mref' => $mref,
+            'price' => number_format_lang($transaction->getPrice()),
+            'iban' => $iban,
+            ]);
+        // $logmsg = "Transaction of $holder with invoice NR $invoiceNr, SepaMandate reference $mref, price ".$transaction->getPrice().", IBAN $iban";
 
         // Get SepaMandate by iban & mref
         $sepamandate = \Modules\BillingBase\Entities\SepaMandate::withTrashed()
@@ -88,7 +96,7 @@ class SpkTransactionParser extends TransactionParserEngine
 
             // Check if Transaction refers to same Contract via SepaMandate and Invoice
             if ($sepamandate && $sepamandate->contract_id != $invoice->contract_id) {
-                \Log::notice("$logmsg discarded. Referenced SepaMandate and Invoice belong to different contract.");
+                ChannelLog::notice('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.debit.diffContractSepa'));
 
                 return;
             }
@@ -97,7 +105,7 @@ class SpkTransactionParser extends TransactionParserEngine
             $debt->contract_id = $invoice->contract_id;
         } else {
             if (! $sepamandate) {
-                \Log::debug("$logmsg discarded. Neither SepaMandate nor invoice nr could be found in the database.");
+                ChannelLog::info('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.debit.missSepaInvoice'));
 
                 return;
             }
@@ -106,9 +114,9 @@ class SpkTransactionParser extends TransactionParserEngine
             $debt->contract_id = $sepamandate->contract_id;
         }
 
-        $debt->description = implode('; ', $description);
+        $debt->description = utf8_encode(implode('; ', $description));
 
-        \Log::debug("$logmsg will add a debt if it doesnt exist yet.");
+        ChannelLog::debug('dunning', trans('dunning::messages.transaction.create')." $logmsg");
 
         return $debt;
     }
@@ -118,19 +126,19 @@ class SpkTransactionParser extends TransactionParserEngine
         $debt = new Debt;
         $descriptionArray = explode('?', $transaction->getDescription());
         $reason = [];
-        $holder = $iban = '';
+        $holder = '';
 
         // Credit (Überweisung)
         foreach ($descriptionArray as $key => $line) {
             // Transfer reason is 20 + 21 + 22 + 23
             if (\Str::startsWith($line, ['20', '21', '22', '23'])) {
                 $str = str_replace(['SVWZ', 'EREF'], '', substr($line, 2));
-                $reason[] = str_replace('+', ' ', $str);
+                $reason[] = trim(str_replace('+', ' ', $str));
             }
 
             // IBAN is usually not existent in the DB for credits - we could still try to check as it would find the customer in at least some cases
             if (\Str::startsWith($line, '31')) {
-                $iban = substr($line, 2);
+                $iban = utf8_encode(substr($line, 2));
                 continue;
             }
 
@@ -138,9 +146,21 @@ class SpkTransactionParser extends TransactionParserEngine
                 $holder = substr($line, 2);
                 continue;
             }
+
+            if (\Str::startsWith($line, '33')) {
+                $holder .= substr($line, 2);
+                continue;
+            }
+
         }
 
-        $reason = implode('', $reason);
+        // Concatenate standard part of log message
+        $holder = utf8_encode($holder);
+        $price = number_format_lang($transaction->getPrice());
+        $reason = utf8_encode(implode('', $reason));
+        $logmsg = trans('dunning::messages.transaction.default.credit', ['holder' => $holder, 'price' => $price, 'iban' => $iban, 'reason' => $reason]);
+        // $logmsg = "Transaction of $holder with price $price, IBAN $iban and transfer reason '$reason'";
+
         $ret = self::searchNumbers($reason);
 
         if ($ret['exclude']) {
@@ -164,21 +184,12 @@ class SpkTransactionParser extends TransactionParserEngine
             $invoice = \Modules\BillingBase\Entities\Invoice::where('number', $ret['invoiceNr'])->where('type', 'Invoice')->first();
             $ident[] = 'invoice nr '.$ret['invoiceNr'];
         }
-        if ($iban) {
-            $sepamandate = \Modules\BillingBase\Entities\SepaMandate::where('sepa_iban', $iban)
-                ->orderBy('sepa_valid_from', 'desc')->first();
-        }
-
-        $ident[] = 'price '.$transaction->getPrice();
-        $ident[] = "IBAN $iban";
-        $ident = implode(',', $ident);
-        $logmsg = "MT940: Transaction of $holder with $ident";
 
         $sepamandate = \Modules\BillingBase\Entities\SepaMandate::where('iban', $iban)
             ->orderBy('valid_from', 'desc')->first();
 
         if (! ($contract || $invoice || $sepamandate)) {
-            \Log::notice("$logmsg discarded. Neither contract, nor invoice, nor sepa mandate could be found.");
+            ChannelLog::notice('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.credit.missAll'));
 
             return;
         }
@@ -210,8 +221,12 @@ class SpkTransactionParser extends TransactionParserEngine
 
             $debt->contract_id = $contract->id;
         } elseif ($invoice) {
-            if ($sepamandate && $sepamandate->contract_id != $invoice->contract_id) {
-                \Log::debug("$logmsg discarded. Found sepamandate belongs to different contract ($contract->number) than the found invoice (".$invoice->contract->number.').');
+            if ($sepamandate) {
+                if ($sepamandate->contract_id != $invoice->contract_id) {
+                    ChannelLog::notice('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.credit.diff.invoiceSepa', [
+                        'sepamandate' => $sepamandate->contract->number,
+                        'invoice' => $invoice->contract->number,
+                        ]));
 
                     return;
                 }
@@ -227,7 +242,7 @@ class SpkTransactionParser extends TransactionParserEngine
         $debt->amount = -1 * $transaction->getPrice();
         $debt->description = $reason;
 
-        \Log::debug("$logmsg will add a debt if it doesnt exist yet.");
+        ChannelLog::debug('dunning', trans('dunning::messages.transaction.create')." $logmsg");
 
         return $debt;
     }
