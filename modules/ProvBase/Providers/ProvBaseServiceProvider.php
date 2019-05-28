@@ -24,6 +24,7 @@ class ProvBaseServiceProvider extends ServiceProvider
         'Modules\ProvBase\Console\importTvCustomersCommand',
         'Modules\ProvBase\Console\importNetUserCommand',
         'Modules\ProvBase\Console\geocodeCommand',
+        'Modules\ProvBase\Console\HardwareSupportCommand',
     ];
 
     /**
