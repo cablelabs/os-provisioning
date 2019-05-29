@@ -1499,7 +1499,7 @@ class Modem extends \BaseModel
     public function proximity_search($radius)
     {
         $ids = [0];
-        foreach (\DB::table('modem')->select('id', 'x', 'y')->where('deleted_at',null)->get() as $modem) {
+        foreach (\DB::table('modem')->select('id', 'x', 'y')->where('deleted_at', null)->get() as $modem) {
             if ($this->_haversine_great_circle_distance($modem) < $radius) {
                 array_push($ids, $modem->id);
             }
