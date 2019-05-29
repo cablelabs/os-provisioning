@@ -593,4 +593,5 @@ return [
     'setManually'               => ':file von :name muss manuell hinzugefügt werden.',
     'invalidJson'               => 'Die ausgewählte Datei ist falsch formattiert oder keine JSON.',
     'proximity'                 => 'Umgebungssuche',
+    'all'                       => 'Alle',
 ];

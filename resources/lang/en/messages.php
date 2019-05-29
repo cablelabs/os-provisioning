@@ -593,4 +593,5 @@ return [
     'setManually'               => ':file of :name has to be set manually.',
     'invalidJson'               => 'The selected file is not correctly formatted or not a JSON!',
     'proximity'                 => 'Proximity search',
+    'all'                       => 'All',
 ];
