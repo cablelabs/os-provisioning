@@ -287,3 +287,29 @@ function clearFailedJobs($command = 'all')
         }
     }
 }
+
+/**
+ * Format date string dependent of set locale language
+ *
+ * @param $date
+ * @return false|int|string
+ */
+function langDateFormat($date)
+{
+    if (! $date) {
+        return $date;
+    }
+
+    $date = is_int($date) ? $date : strtotime($date);
+
+    switch (\App::getLocale()) {
+        case 'de':
+            return date('d.m.Y', $date);
+
+        case 'es':
+            return date('d/m/Y', $date);
+
+        default:
+            return date('d-m-Y', $date);
+    }
+}

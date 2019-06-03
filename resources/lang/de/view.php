@@ -239,19 +239,28 @@ return [
         'Button_delete'				=> 'Schnellauswahl um auf allen Seiten Elemente zu löschen.',
         'Button_downloadCSV'        => 'CSV herunterladen',
         'Button_Create Product Entry'	=> 'Neues Produkt',
+        // Product
+        'Button_Create Product'         => 'Produkt erstellen',
+        // Settlementrun
+        'Button_Create SettlementRun'   => 'Abrechnungslauf erstellen',
         //CostCenter
         'Button_Create Cost Center' 	=> 'Neue Kostenstelle', //Workaround decide which one to use
-        'Button_Create CostCenter' 		=> 'Neue Kostenstelle',
+        'Button_Create CostCenter' 		=> 'Kostenstelle erstellen',
         'Button_Create Users'			=> 'Benutzer anlegen',
         //Company
-        'Button_Create Company'			=> 'Neues Unternehmen',
+        'Button_Create Company'			=> 'Unternehmen erstellen',
         //Salesman
-        'Button_Create Salesman'		=> 'Neuer Verkäufer',
+        'Button_Create Salesman'		=> 'Verkäufer erstellen',
         //Item
         'Button_Create Item'			=> 'Neuer Posten',
         'sr_dl_logs' 					=> 'Gesamtes Logfile herunterladen',
         //Numberrange
-        'Button_Create NumberRange'		=> 'Neuer Nummernkreis',
+        'Button_Create NumberRange'		=> 'Nummernkreis erstellen',
+
+    //HFC
+        'Button_Create NetElementType'  => 'Netzelementtyp erstellen',
+        'Button_Create NetElement'      => 'Netzelement erstellen',
+        'Button_Create MibFile'         => 'MibFile erstellen',
 
     //SNMP Modul
         //Device
@@ -261,10 +270,12 @@ return [
         'Button_Create Phonenumber'		=> 'Telefonnummer anlegen',
         'Button_Create Tree Table'		=> 'Baumdiagramm anlegen',
         'Button_Create Modem Positioning Rule' => 'Modem Positionierungsregel erstellen',
-        'Button_Create Mpr'				=> 'Modem Positionierungsregel Geoposition erstellen',
+        'Button_Create Mpr'				=> 'Modem Positionierungsregel erstellen',
         'Button_Create Modem Positioning Rule Geoposition' => 'MprGeopos erstellen',
         'Button_Create MprGeopos'		=> 'MprGeopos erstellen',
         'Button_Create Tickets'		=> 'Ticket erstellen',
+        'Button_Create Ticket'           => 'Ticket erstellen',
+        'Button_Create TicketType'       => 'Tickettypen erstellen',
 
         'Button_Create Comment'		=> 'Kommentar erstellen',
         //SEPA-Konto
@@ -273,29 +284,37 @@ return [
         'SEPA Account' 				=> 'SEPA-Konto',
         'Create'					=> 'Erstelle ',
         'Edit'						=> 'Bearbeite ',
-        'Button_Create SepaAccount'		=> 'Neues SEPA-Konto',
+        'Button_Create SepaAccount'		=> 'SEPA-Konto erstellen',
 
     //Provisioning
         //Contract
         'Button_Create Contract'		=> 'Vertrag erstellen',
         'Button_Create SepaMandate'		=> 'SEPA-Mandat erstellen',
+        // Domains
+        'Button_Create Domain'          => 'Domain erstellen',
         // //Modems
         'Button_Create Modem'			=> 'Modem erstellen',
         // //Endpoints
         'Button_Create Endpoints'		=> 'Endpunkt erstellen',
+        'Button_Create Endpoint'        => 'Endpunkt erstellen',
         //MTA
         'Button_Create Mta'				=> 'MTA erstellen',
         // //Phonenumber
         'Button_Create Phone tariffs'	=> 'Neuer Telefontarif',
+        'Button_Create PhoneTariff'     => 'Telefontarif anlegen',
+
         // //Configfiles
         'Button_Create Configfiles'		=> 'Konfigurationsdatei erstellen',
+        'Button_Create Configfile'     => 'Konfigurationsdatei erstellen',
         // //QoS
         'Button_create_post_invoices_pdf' => 'Erstelle PDF mit postalischen Rechnungen',
         'Button_Create Settlement Run'  => 'Abrechnungslauf erstellen',
         'Button_Rerun Accounting Command' => 'Rechnungslauf neu starten',
         'Button_Create QoS'             => 'QoS-Regel erstellen',
+        'Button_Create Qos'             => 'QOS-Regel erstellen',
         // //CMTS
         'Button_Create CMTS'			=> 'CMTS anlegen',
+        'Button_Create Cmts'            => 'CMTS anlegen',
         // //IpPool
         'Button_Create IpPool'			=> 'IpPool anlegen', //workaround
         'Button_Create IP-Pools'		=> 'IpPool anlegen',

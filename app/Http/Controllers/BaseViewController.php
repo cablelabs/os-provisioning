@@ -537,6 +537,9 @@ class BaseViewController extends Controller
                 $name = Config::get(Str::lower($module->name).'.'.'name') ?? $module->get('description');
                 $icon = ($module->get('icon') == '' ? '' : $module->get('icon'));
                 $menu[$name]['icon'] = $icon;
+                $menu[$name]['link'] = Config::get(Str::lower($module->name).'.link');
+                $menu[$name]['translated_name'] = static::translate_view($name, 'Menu');
+
                 foreach ($moduleMenuConfig as $page => $settings) {
                     if (Bouncer::can('view', $settings['class'])) {
                         $menuItem = static::translate_view($page, 'Menu');

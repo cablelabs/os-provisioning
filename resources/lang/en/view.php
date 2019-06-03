@@ -35,6 +35,7 @@ return [
     //Main Menu
         'Menu_MainMenu' 			=> 'Main Menu',
         'Menu_Config Page'			=> 'Global Config Page',
+        'Menu_BillingBase'			=> 'Billing Base',
         'Menu_Logging'				=> 'Logging',
         'Menu_Product List'			=> 'Product List',
         'Menu_SEPA Accounts'		=> 'SEPA Accounts',
@@ -46,6 +47,8 @@ return [
         'Menu_Devices'				=> 'Devices',
         'Menu_DeviceTypes'			=> 'Devicetypes',
         'Menu_Contracts'			=> 'Contracts',
+        'Menu_HfcBase'			    => 'HFC',
+        'Menu_ProvBase'			    => 'Provisioning',
         'Menu_Modems'				=> 'Modems',
         'Menu_Endpoints'			=> 'Endpoints',
         'Menu_Number Range'			=> 'Number Range',
@@ -53,6 +56,7 @@ return [
         'Menu_QoS' 					=> 'QoS',
         'Menu_CMTS' 				=> 'CMTS',
         'Menu_Ip-Pools' 			=> 'IP-Pools',
+        'Menu_ProvVoip'			    => 'VoIP',
         'Menu_MTAs' 				=> 'MTAs',
         'Menu_Phonenumbers'			=> 'Phonenumbers',
         'Menu_PhoneTariffs'			=> 'PhoneTariffs',
@@ -239,6 +243,8 @@ return [
         'Button_delete'				=> 'Shortcut for the delete ability for all pages of this module.',
         'Button_downloadCSV'        => 'Download CSV',
         'Button_Create Product Entry'	=> 'Create Product Entry',
+        'Button_Create Product'	=> 'Create Product',
+        'Button_Create SettlementRun'	=> 'Create Settlement Run',
         //CostCenter
         'Button_Create Cost Center' 	=> 'Create Cost Center', //Workaround decide which one to use
         'Button_Create CostCenter' 		=> 'Create Cost Center',
@@ -252,6 +258,10 @@ return [
         'sr_dl_logs' 					=> 'Download whole logfile',
         //Numberrange
         'Button_Create NumberRange'		=> 'Create Numberrange',
+    //HFC
+        'Button_Create NetElementType' => 'Create NetElement Type',
+        'Button_Create NetElement'     => 'Create NetElement',
+        'Button_Create MibFile'     => 'Create Mib-File',
 
     //SNMP Modul
         //Device
@@ -278,27 +288,35 @@ return [
     //Provisioning
         //Contract
         'Button_Create Contract'		=> 'Create Contract',
+        'Button_Create Domain'		=> 'Create Domain',
         'Button_Create SepaMandate'		=> 'Create SEPA-Mandate',
         // //Modems
         'Button_Create Modem'			=> 'Create Modem',
         // //Endpoints
         'Button_Create Endpoints'		=> 'Create Endpoints',
+        'Button_Create Endpoint'		=> 'Create Endpoint',
         //MTA
-        'Button_Create Mta'				=> 'Neues MTA',
+        'Button_Create Mta'				=> 'Create MTA',
         // //Phonenumber
         'Button_Create Phone tariffs'	=> 'Create Phonetariffs',
+        'Button_Create PhoneTariff' 	=> 'Create Phonetariff',
         // //Configfiles
-        'Button_Create Configfiles'		=> 'Create Configfile',
+        'Button_Create Configfile'		=> 'Create Configfile',
         // //QoS
         'Button_create_post_invoices_pdf'  => 'Create Postal Invoices PDF',
         'Button_Create Settlement Run'  => 'Create Settlement Run',
         'Button_Rerun Accounting Command' => 'Rerun Accounting Command',
         'Button_Create QoS'				=> 'Create QoS-Rule',
+        'Button_Create Qos'				=> 'Create QoS-Rule',
         // //CMTS
         'Button_Create CMTS'			=> 'Create CMTS',
+        'Button_Create Cmts'			=> 'Create CMTS',
         // //IpPool
         'Button_Create IpPool'			=> 'Create IpPool', //workaround
         'Button_Create IP-Pools'		=> 'Create IpPools',
+    //Tickets
+        'Button_Create TicketType'     => 'Create Ticket Type',
+        'Button_Create Ticket'         => 'Create Ticket ',
 
 // DASHBOARD
     'Dashboard_Contracts'			=> 'ACTIVE CONTRACTS',

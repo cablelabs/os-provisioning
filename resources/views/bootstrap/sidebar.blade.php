@@ -26,12 +26,23 @@
       <li class="nav-header">Navigation</li>
       @foreach ($view_header_links as $module_name => $typearray)
         @if (isset($typearray['submenu']))
-        <li id="{{ Str::slug($module_name,'_')}}" class="has-sub" data-sidebar="level1">
-          <a href="javascript:;">
-            <i class="fa fa-fw {{ $typearray['icon'] }}"></i>
-            <b class="caret pull-right"></b>
-            <span>{{$module_name}}</span>
-          </a>
+        <li id="{{ Str::slug($module_name,'_')}}" class="has-sub {{ ($route_name == $module_name) ? 'active' : ''}}" data-sidebar="level1">
+            <div style="padding: 8px 20px;line-height: 20px;color: #a8acb1;display: flex;justify-content: space-between;align-items: center;" class="">
+              @if (isset($typearray['link']))
+                <a href="{{route($typearray['link'])}}">
+                  <i class="fa fa-fw {{ $typearray['icon'] }}"></i>
+                  <span>{{$typearray['translated_name'] ?? $module_name}}</span>
+                </a>
+              @else
+                <a class="caret-link" href="javascript:;">
+                  <i class="fa fa-fw {{ $typearray['icon'] }}"></i>
+                  <span>{{$typearray['translated_name'] ?? $module_name}}</span>
+                </a>
+              @endif
+              <a class="caret-link" href="javascript:;" style="width: 20%; height: 20px; display:block; text-align: right">
+                <b class="caret"></b>
+              </a>
+            </div>
           <ul class="sub-menu">
           @foreach ($typearray['submenu'] as $type => $valuearray)
           <li id="{{  Str::slug($type,'_') }}">
