@@ -18,9 +18,9 @@ initComplete: function () {
     var state = this.api().state.loaded();
     if (state) {
         this.api().columns().eq(0).each(function (colIdx) {
-            var colSearch = state.columns[colIdx].search;
+            var colSearch = state.columns[colIdx].search.search.replace(/\\/g, "");
             if (colSearch.search) {
-                $('input', this.column(colIdx).footer()).val(colSearch.search);
+                $('input', this.column(colIdx).footer()).val(colSearch);
             }
         });
     }
