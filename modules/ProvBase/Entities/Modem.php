@@ -53,7 +53,7 @@ class Modem extends \BaseModel
             \Session::put('modem_show_filter', \Input::get('modem_show_filter'));
         }
         // non-datatable request; current route is null on testing
-        elseif (\Route::getCurrentRoute() && basename(\Route::getCurrentRoute()->getPath()) == 'Modem') {
+        elseif (\Route::getCurrentRoute() && basename(\Route::getCurrentRoute()->uri) == 'Modem') {
             \Session::forget('modem_show_filter');
         }
 
