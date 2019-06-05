@@ -523,3 +523,10 @@ table .index_check {
 .sidebar .has-sub.expand > .sub-menu {
     display: block;
 }
+
+#page-container.page-sidebar-minified .nav li i.fa+span{
+  display: none;
+}
+#page-container.page-sidebar-minified .nav ul.sub-menu li i.fa+span{
+  display: inline;
+}
