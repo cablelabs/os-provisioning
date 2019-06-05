@@ -8,7 +8,7 @@ initComplete: function () {
         if ($(this.footer()).hasClass('searchable')){
             $(input).appendTo($(column.footer()).empty())
             .on('keyup', function () {
-                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                var val = $(this).val();
 
                 column.search(val ? val : '', true, false).draw();
             });
@@ -18,9 +18,9 @@ initComplete: function () {
     var state = this.api().state.loaded();
     if (state) {
         this.api().columns().eq(0).each(function (colIdx) {
-            var colSearch = state.columns[colIdx].search;
+            var colSearch = state.columns[colIdx].search.search;
             if (colSearch.search) {
-                $('input', this.column(colIdx).footer()).val(colSearch.search);
+                $('input', this.column(colIdx).footer()).val(colSearch);
             }
         });
     }
