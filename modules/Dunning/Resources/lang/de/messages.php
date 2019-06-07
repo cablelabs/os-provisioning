@@ -2,7 +2,7 @@
 
 return [
     'transaction' => [
-        'create' => "Erstelle offenen Posten aufgrund von",
+        'create' => 'Erstelle offenen Posten aufgrund von',
         'credit' => [
             'diff' => [
                 'contractInvoice' => 'Der Vertrag :contract und die Rechnungsnummer aus dem Verwendungszweck gehören nicht zum selben Vertrag (Die Rechnung gehört zum Vertrag :invoice)',

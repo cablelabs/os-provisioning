@@ -2,7 +2,7 @@
 
 return [
     'transaction' => [
-        'create' => "Create debt because of",
+        'create' => 'Create debt because of',
         'credit' => [
             'diff' => [
                 'contractInvoice' => 'Contract :contract and invoice number from transfer reason do not belong to the same contract. (Invoice belongs to contract :invoice)',

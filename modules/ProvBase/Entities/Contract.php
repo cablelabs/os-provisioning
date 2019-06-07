@@ -1252,8 +1252,6 @@ class Contract extends \BaseModel
 
         return \Modules\Dunning\Entities\Debt::where('contract_id', $this->id)->sum('amount');
     }
-
-
 }
 
 /**

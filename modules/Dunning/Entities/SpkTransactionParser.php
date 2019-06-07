@@ -150,7 +150,6 @@ class SpkTransactionParser extends TransactionParserEngine
                 $holder .= substr($line, 2);
                 continue;
             }
-
         }
 
         // Concatenate standard part of log message
@@ -195,7 +194,7 @@ class SpkTransactionParser extends TransactionParserEngine
 
         // Determine contract id and log mismatches
         if ($contract) {
-            if ($invoice)
+            if ($invoice) {
                 if ($contract->id != $invoice->contract_id) {
                     ChannelLog::info('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.credit.diff.contractInvoice', [
                         'contract' => $contract->number,
@@ -204,6 +203,7 @@ class SpkTransactionParser extends TransactionParserEngine
 
                     return;
                 }
+            }
 
             if ($sepamandate) {
                 if ($contract->id != $sepamandate->contract_id) {

@@ -64,7 +64,7 @@ class ContractController extends \BaseController
         }
 
         if (\Module::collections()->has('BillingBase')) {
-            $days = range(0,28);
+            $days = range(0, 28);
             $days[0] = null;
 
             $b = [
