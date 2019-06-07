@@ -31,15 +31,18 @@ return [
   *	MODULE: BillingBase
   */
     //BillingBaseController
-    'BillingBase_cdr_offset' 		=> "ACHTUNG: Eine Erhöhung der Differenz führt bei bereits vorhandenen Daten im nächsten Abrechnungslauf zu überschriebenen EVNs - Stellen Sie sicher, dass diese gesichert/umbenannt wurden!\n\n1 - wenn die Einzelverbindungsnachweise vom Juni zu den Rechnungen vom Juli gehören; 0 - wenn beide für den selben Monat abgerechnet werden; 2 - wenn die Einzelverbindungsnachweise vom Januar zu den Rechnungen vom März gehören.",
-    'BillingBase_cdr_retention' 	=> 'Anzahl der Monate, die Einzelverbindungsnachweise gespeichert werden dürfen/müssen.',
-    'BillingBase_extra_charge' 		=> 'Aufschlag auf Einkaufspreis in %. Nur wenn nicht schon vom Provider berechnet!',
-    'BillingBase_fluid_dates' 		=> 'Aktivieren Sie diese Checkbox wenn Sie Tarife mit ungewissem Start- und/oder Enddatum eintragen möchten. In dem Fall werden 2 weitere Checkboxen (Gültig ab fest, Gültig bis fest) auf der Posten-Seite angezeigt. Weitere Erklärungen finden Sie neben diesen Feldern!',
-    'BillingBase_InvoiceNrStart' 	=> 'Rechnungsnummer startet jedes neue Jahr mit dieser Nummer.',
-    'BillingBase_ItemTermination'	=> 'Erlaubt es Kunden gebuchte Produkte nur bis zum letzten Tag des Monats zu kündigen.',
-    'BillingBase_MandateRef'		=> "Eine Vorlage kann mit SQL-Spalten des Auftrags oder mit der Mandat-Tabelle erstellt werden - mögliche Felder: \n",
-    'BillingBase_showAGs' 			=> 'Fügt eine Auswahlliste mit Ansprechpartnern von Antennengemeinschaften zur Vertragsseite hinzu. Die Liste muss als Textdatei im Storage hinterlegt werden. Siehe Quellcode!',
-    'BillingBase_SplitSEPA'			=> 'SEPA-Überweisungen sind in unterschiedliche XML-Dateien aufgeteilt, abhängig von ihrem Übertragungstyp.',
+    'BillingBase' => [
+        'cdr_offset'        => "ACHTUNG: Eine Erhöhung der Differenz führt bei bereits vorhandenen Daten im nächsten Abrechnungslauf zu überschriebenen EVNs - Stellen Sie sicher, dass diese gesichert/umbenannt wurden!\n\n1 - wenn die Einzelverbindungsnachweise vom Juni zu den Rechnungen vom Juli gehören; 0 - wenn beide für den selben Monat abgerechnet werden; 2 - wenn die Einzelverbindungsnachweise vom Januar zu den Rechnungen vom März gehören.",
+        'cdr_retention'     => 'Anzahl der Monate, die Einzelverbindungsnachweise gespeichert werden dürfen/müssen.',
+        'extra_charge'      => 'Aufschlag auf Einkaufspreis in %. Nur wenn nicht schon vom Provider berechnet!',
+        'fluid_dates'       => 'Aktivieren Sie diese Checkbox wenn Sie Tarife mit ungewissem Start- und/oder Enddatum eintragen möchten. In dem Fall werden 2 weitere Checkboxen (Gültig ab fest, Gültig bis fest) auf der Posten-Seite angezeigt. Weitere Erklärungen finden Sie neben diesen Feldern!',
+        'InvoiceNrStart'    => 'Rechnungsnummer startet jedes neue Jahr mit dieser Nummer.',
+        'ItemTermination'   => 'Erlaubt es Kunden gebuchte Produkte nur bis zum letzten Tag des Monats zu kündigen.',
+        'MandateRef'        => "Eine Vorlage kann mit SQL-Spalten des Auftrags oder mit der Mandat-Tabelle erstellt werden - mögliche Felder: \n",
+        'rcd'               => 'Globales Fälligkeits- und Buchungsdatum. Dieses kann auf Vertragsebene auch spezifisch für den Vertrag gesetzt werden.',
+        'showAGs'           => 'Fügt eine Auswahlliste mit Ansprechpartnern von Antennengemeinschaften zur Vertragsseite hinzu. Die Liste muss als Textdatei im Storage hinterlegt werden. Siehe Quellcode!',
+        'SplitSEPA'         => 'SEPA-Überweisungen sind in unterschiedliche XML-Dateien aufgeteilt, abhängig von ihrem Übertragungstyp.',
+        ],
 
     //CompanyController
     'Company_Management'			=> 'Trennung der Namen durch Komma.',
