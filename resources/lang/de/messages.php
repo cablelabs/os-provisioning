@@ -43,7 +43,7 @@ return [
     'International prefix'		=> 'Ländervorwahl',
     'Country code'				=> 'Ländercode',
     // Descriptions of Form Fields in Edit/Create
-    'accCmd_error_noCC' 	=> 'Dem Vertrag :contract_nr [ID :contract_id] wurde keine Kostenstelle zugewiesen. Für den Kunde wird keine Rechnung erstellt.',
+    'accCmd_error_noCC' 	=> 'Den Verträgen :numbers wurde keine Kostenstelle zugewiesen. Für die Kunden wird keine Rechnung erstellt.',
     'accCmd_invoice_creation_deactivated' => 'Bei folgenden Verträgen wurde die Rechnungserstellung deaktiviert: :contractnrs',
     'Create'					=> 'Erstelle',
     'accCmd_processing' 	=> 'Der Abrechnungslauf wird erstellt. Bitte warten Sie bis der Prozess abgeschlossen ist.',
@@ -383,6 +383,7 @@ return [
     'Assign Role'				=> 'Rollen zuweisen',
     'Load Data...' 			=> 'Daten werden geladen...',
     'Clean up directory...' => 'Bereinige Verzeichnis...',
+    'Parse call data record file(s)...' => 'Parse Einzelverbindungsnachweisdatei(en)...',
     'Associated SEPA Account'	=> 'Verknüpftes SEPA-Konto',
     'Month to create Bill'		=> 'Monat für den eine Rechnung erstellt werden soll',
     'Choose logo'			=> 'Logo auswählen',

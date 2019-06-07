@@ -43,7 +43,7 @@ return [
     'International prefix'		=> 'International prefix',
     'Country code'				=> 'Country code',
     // Descriptions of Form Fields in Edit/Create
-    'accCmd_error_noCC' 	=> 'Contract :contract_nr [ID :contract_id] has no CostCenter assigned. No invoice will be created for the customer.',
+    'accCmd_error_noCC' 	=> 'The contracts :numbers have no CostCenter assigned. No invoice will be created for these customers.',
     'accCmd_invoice_creation_deactivated' => 'Following contracts have deactivated invoice creation: :contractnrs',
     'Create'					=> 'Create',
     'accCmd_processing' 	=> 'The SettlementRun is executed. Please wait until this process has finished.',
@@ -383,6 +383,7 @@ return [
     'Assign Role'				=> 'Assign Roles',
     'Load Data...' 			=> 'Load Data...',
     'Clean up directory...' => 'Clean up directory...',
+    'Parse call data record file(s)...' => 'Parse call data record file(s)...',
     'Associated SEPA Account'	=> 'Associated SEPA Account',
     'Month to create Bill'		=> 'Month to create Bill',
     'Choose logo'			=> 'Choose logo',
