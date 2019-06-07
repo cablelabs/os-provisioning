@@ -129,6 +129,9 @@ return [
  /*
   *	MODULE: ProvBase
   */
+    'contract' => [
+        'valueDate' => 'Tag im Monat des separaten Buchungsdatums. Überschreibt das Fälligkeitsdatum aus den globalen Konfigurationen für diesen Vertrag in der SEPA XML. Die Bank bucht den Betrag dann an diesem Tag ab.',
+    ],
     'rate_coefficient'				=> 'MaxRateSustained wird mit diesem Wert multipliziert, um den Nutzer eine höhere (> 1.0) Übertragungsrate als gebucht zu gewähren.',
     'additional_modem_reset'		=> 'Zeigt einen zusätzlichen Modem Reset Button an, um das Modem ohne Hilfe der CMTS direkt per SNMP neu zu starten.',
     //ModemController

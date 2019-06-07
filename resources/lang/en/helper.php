@@ -39,7 +39,7 @@ return [
         'InvoiceNrStart'    => 'Invoice Number Counter starts every new year with this number',
         'ItemTermination'   => 'Allow Customers only to terminate booked products on last day of month',
         'MandateRef'        => "A Template can be built with sql columns of contract or mandate table - possible fields: \n",
-        'rcd'               => "Is also the date of value. Can also be set specifically for a contract on contract page",
+        'rcd'               => 'Is also the date of value. Can also be set specifically for a contract on contract page',
         'showAGs'           => 'Adds a select list with contact persons to the contract page. The list has to be stored in appropriate Storage directory - check source code!',
         'SplitSEPA'         => 'Sepa Transfers are split to different XML-Files dependent of their transfer type',
         ],
@@ -129,6 +129,9 @@ return [
  /*
   *	MODULE: ProvBase
   */
+    'contract' => [
+        'valueDate' => 'Day of month for specific date of value. Overrides the requested collection date from global config for this contract in the SEPA XML.',
+    ],
     'rate_coefficient'				=> 'MaxRateSustained will be multiplied by this value to grant the user more (> 1.0) throughput than subscribed.',
     'additional_modem_reset'		=> 'Check if an additional button should be displayed, which resets the modem via SNMP without querying the CMTS.',
     //ModemController

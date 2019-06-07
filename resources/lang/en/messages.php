@@ -48,6 +48,7 @@ return [
     'Create'					=> 'Create',
     'accCmd_processing' 	=> 'The SettlementRun is executed. Please wait until this process has finished.',
     'Date of installation address change'	=> 'Date of installation address change',
+    'Date of value'             => 'Date of value',
     'Delete'					=> 'Delete',
     'Day'						=> 'Day',
     'Description'				=> 'Description',
