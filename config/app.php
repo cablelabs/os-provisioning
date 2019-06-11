@@ -178,6 +178,7 @@ return [
         Intervention\Validation\ValidationServiceProvider::class,
         Acme\html\HtmlServiceProvider::class,
         Silber\Bouncer\BouncerServiceProvider::class,
+        Laravel\Tinker\TinkerServiceProvider::class,
     ],
 
     /*
