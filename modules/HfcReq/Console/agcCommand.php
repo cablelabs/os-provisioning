@@ -39,7 +39,7 @@ class agcCommand extends Command
      * @return true
      * @author: Ole Ernst
      */
-    public function fire()
+    public function handle()
     {
         // get all clusters having a non-null AGC offset
         foreach (NetElement::where('netelementtype_id', 2)->whereNotNull('agc_offset')->get() as $netelement) {

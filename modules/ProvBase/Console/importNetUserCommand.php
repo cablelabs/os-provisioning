@@ -72,7 +72,7 @@ class importNetUserCommand extends Command
      *
      * NOTE: Check TODOs before Import!
      */
-    public function fire()
+    public function handle()
     {
         // NOTE: Search for TODO(2) for Contract Filter!
         if (! $this->confirm("IMPORTANT!!!\n\nHave following things been prepared for this import?:
