@@ -1,6 +1,5 @@
 <?php
 
-
 class InstallDhcpdRename extends BaseMigration
 {
     protected $tablename = '';

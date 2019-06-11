@@ -159,7 +159,7 @@ class FormBuilder extends CollectiveFormBuilder
         $selected = null,
         array $selectAttributes = [],
         array $optionsAttributes = []
-    ){
+    ) {
         $optionsAttributes = $this->appendClassToOptions('form-control', $optionsAttributes);
 
         if (isset($optionsAttributes['translate'])) {
@@ -238,7 +238,7 @@ class FormBuilder extends CollectiveFormBuilder
      */
     public function plainSelect($name, $list = [], $selected = null, $options = [])
     {
-        return $this->appendDiv(parent::select($name,$list, $selected, $selectAttributes = [], $options));
+        return $this->appendDiv(parent::select($name, $list, $selected, $selectAttributes = [], $options));
     }
 
     public function open(array $options = [])

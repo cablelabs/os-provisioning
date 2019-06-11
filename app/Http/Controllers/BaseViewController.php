@@ -641,9 +641,9 @@ class BaseViewController extends Controller
             }
 
             if ($i == 0) {
-                $breadcrumb_path = "<li class='nav-tabs'>".static::__link_route_html($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).$breadcrumb_path.'</li>';
+                $breadcrumb_path = "<li class='nav-tabs'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).$breadcrumb_path.'</li>';
             } else {
-                $breadcrumb_path = '<li>'.static::__link_route_html($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).'</li>'.$breadcrumb_path;
+                $breadcrumb_path = '<li>'.static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).'</li>'.$breadcrumb_path;
             }
 
             return $breadcrumb_path;

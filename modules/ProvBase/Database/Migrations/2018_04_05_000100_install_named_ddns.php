@@ -1,6 +1,5 @@
 <?php
 
-
 class InstallNamedDdns extends BaseMigration
 {
     protected $tablename = '';
