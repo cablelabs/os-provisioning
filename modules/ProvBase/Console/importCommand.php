@@ -145,7 +145,7 @@ class importCommand extends Command
             return $this->error('no configfile entry exists to use');
         }
 
-        if (! Product::count()) {
+        if (\Module::collections()->has('BillingBase') && ! Product::count()) {
             return $this->error('no product entry exists to use');
         }
 
