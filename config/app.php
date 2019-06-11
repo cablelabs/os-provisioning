@@ -173,7 +173,7 @@ return [
 
         Illuminate\Bus\BusServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-        Yajra\Datatables\DatatablesServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
         Nwidart\Modules\LaravelModulesServiceProvider::class,
         Intervention\Validation\ValidationServiceProvider::class,
         Acme\html\HtmlServiceProvider::class,
@@ -240,7 +240,7 @@ return [
         'NamespaceController' => App\Http\Controllers\NamespaceController::class,
         'BaseModel' => App\BaseModel::class,
         'GlobalConfig' => App\GlobalConfig::class,
-        'Datatables' => Yajra\Datatables\Facades\Datatables::class,
+        'Datatables' => Yajra\DataTables\Facades\DataTables::class,
         'ChannelLog' => Acme\log\ChannelLog::class,
         'Module' => Nwidart\Modules\Facades\Module::class,
         'Bouncer' => Silber\Bouncer\BouncerFacade::class,
