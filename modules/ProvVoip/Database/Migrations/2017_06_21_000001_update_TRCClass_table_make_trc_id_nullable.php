@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Updater to add col for technical method of purchase tariffs
  *

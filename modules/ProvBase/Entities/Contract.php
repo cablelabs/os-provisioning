@@ -2,7 +2,6 @@
 
 namespace Modules\ProvBase\Entities;
 
-use Modules\BillingBase\Entities\Invoice;
 use Modules\BillingBase\Entities\SettlementRun;
 
 class Contract extends \BaseModel
