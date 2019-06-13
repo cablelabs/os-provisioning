@@ -1619,7 +1619,7 @@ class ModemObserver
             if (multi_array_key_exists(['x', 'y'], $diff)) {
                 // suppress output in this case
                 ob_start();
-                \Modules\HfcCustomer\Entities\Mpr::refresh($modem);
+                \Modules\HfcCustomer\Entities\Mpr::ruleMatching($modem);
                 ob_end_clean();
             }
         }
