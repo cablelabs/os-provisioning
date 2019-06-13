@@ -82,7 +82,7 @@ class DebtController extends \BaseController
             $request_query = $request_query->whereRaw($where_clause);
         }
 
-        $DT = Datatables::of($request_query);
+        $DT = Datatables::make($request_query);
         $DT->addColumn('responsive', '')
             ->addColumn('checkbox', '');
 
@@ -117,6 +117,6 @@ class DebtController extends \BaseController
             return $object->view_index_label()['bsclass'];
         });
 
-        return $DT->make(true);
+        return $DT->rawColumns(['checkbox', $first_column])->make(true);
     }
 }
