@@ -73,7 +73,7 @@ return [
     'sepamandate.holder' => 'Kontoinhaber',
     'sepamandate.valid_from' => 'Gültig ab',
     'sepamandate.valid_to' => 'Gültig bis',
-    'sepamandate.reference' => 'Kontoreferenz',
+    'sepamandate.reference' => 'Mandatsreferenz',
     // SettlementRun
     'settlementrun.year' => 'Jahr',
     'settlementrun.month' => 'Monat',
