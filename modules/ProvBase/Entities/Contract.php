@@ -109,25 +109,24 @@ class Contract extends \BaseModel
     // View Relation.
     public function view_has_many()
     {
-        $ret['Edit']['Modem'] = $this->modems;
-
-        if (\Module::collections()->has('BillingBase')) {
-            // view has many version 1
-            $ret['Edit']['Item'] = $this->items;
-            $ret['Edit']['SepaMandate'] = $this->sepamandates;
-        }
+        $ret['Edit']['Modem']['class'] = 'Modem';
+        $ret['Edit']['Modem']['relation'] = $this->modems;
 
         if (\Module::collections()->has('BillingBase')) {
             // view has many version 2
+            $ret['Edit']['Item']['class'] = 'Item';
+            $ret['Edit']['Item']['relation'] = $this->items;
             $ret['Billing']['Item']['class'] = 'Item';
             $ret['Billing']['Item']['relation'] = $this->items;
+            $ret['Edit']['SepaMandate']['class'] = 'SepaMandate';
+            $ret['Edit']['SepaMandate']['relation'] = $this->sepamandates;
             $ret['Billing']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
 
             if (\Module::collections()->has('Dunning')) {
                 // resulting outstanding amount
-                $ret['Billing']['DebtResult']['view']['view'] = 'dunning::Debt.result';
-                $ret['Billing']['DebtResult']['view']['vars']['debt'] = $this->getResultingDebt();
+                $ret['Edit']['DebtResult']['view']['view'] = 'dunning::Debt.result';
+                $ret['Edit']['DebtResult']['view']['vars']['debt'] = $this->getResultingDebt();
             }
 
             // Show invoices in 2 panels
@@ -145,7 +144,7 @@ class Contract extends \BaseModel
             if (\Module::collections()->has('Dunning')) {
                 $ret['Billing']['Debt']['class'] = 'Debt';
                 $ret['Billing']['Debt']['relation'] = $this->debts;
-                $ret['Billing']['Debt']['panelOptions']['display'] = 'none';
+                // $ret['Billing']['Debt']['panelOptions']['display'] = 'none';
             }
 
             $ret['Billing']['Invoice']['class'] = 'Invoice';
@@ -191,7 +190,8 @@ class Contract extends \BaseModel
         }
 
         if (\Module::collections()->has('Ticketsystem')) {
-            $ret['Edit']['Ticket'] = $this->tickets;
+            $ret['Edit']['Ticket']['class'] = 'Ticket';
+            $ret['Edit']['Ticket']['relation'] = $this->tickets;
         }
 
         if (\Module::collections()->has('Mail')) {

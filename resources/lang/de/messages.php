@@ -61,6 +61,7 @@ return [
     'DeviceTypes'				=> 'Gerätetypen',
     'Directory assistance'      => 'Nutzung Auskunft',
     'District'					=> 'Ortsteil',
+    'Dunning'                   => 'Mahnwesen',
     'Edit'						=> 'Ändern -',
     'Edit '						=> 'Ändere ',
     'Endpoints'					=> 'Endpunkte',

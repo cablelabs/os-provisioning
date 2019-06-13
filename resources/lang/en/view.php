@@ -33,6 +33,8 @@ return [
                 'jQuery_ImportCsv'              => 'import CSV',
 //MENU
     //Main Menu
+        'Menu_Debt'                 => 'Debts',
+        'Menu_Dunning'              => 'Dunning',
         'Menu_MainMenu' 			=> 'Main Menu',
         'Menu_Config Page'			=> 'Global Config Page',
         'Menu_BillingBase'			=> 'Billing Base',

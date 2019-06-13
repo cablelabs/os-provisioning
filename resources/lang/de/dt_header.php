@@ -5,6 +5,7 @@ return [
     'amount' => 'Betrag',
     'id'            => 'ID',
     'prio'          => 'Priorität',
+    'sum' => 'Summe',
     // Auth
     'users.login_name' => 'Loginname',
     'users.first_name' => 'Vorname',

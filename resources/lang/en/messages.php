@@ -61,6 +61,7 @@ return [
     'DeviceTypes'				=> 'DeviceTypes',
     'Directory assistance'      => 'Directory assistance',
     'District'					=> 'District',
+    'Dunning'                   => 'Dunning',
     'Edit'						=> 'Edit',
     'Edit '						=> 'Edit ',
     'Endpoints'					=> 'Endpoints',

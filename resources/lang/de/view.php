@@ -33,6 +33,7 @@ return [
                 'jQuery_ImportCsv'              => 'CSV importieren',
 //MENU
     //Main Menu
+        'Menu_Debt'                 => 'Offene Posten',
         'Menu_MainMenu' 			=> 'Hauptmenü',
         'Menu_Config Page'			=> 'Systemkonfiguration',
         'Menu_Logging'				=> 'Logs',

@@ -37,7 +37,7 @@ class Debt extends \BaseModel
 
     public static function view_icon()
     {
-        return '<i class="fa fa-creative-commons"></i>';
+        return '<i class="fa fa-usd"></i>';
     }
 
     // AJAX Index list function
@@ -46,7 +46,7 @@ class Debt extends \BaseModel
     {
         $bsclass = 'success';
 
-        if ($this->amount > 0) {
+        if ($this->sum() > 0) {
             $bsclass = 'warning';
         }
 
@@ -54,10 +54,12 @@ class Debt extends \BaseModel
                 'index_header' => ['contract.firstname', 'contract.lastname', 'debt.date', 'sum', 'amount', 'debt.total_fee' /*,'SEPA'*/],
                 'header' => (string) ($this->amount + $this->total_fee).\Modules\BillingBase\Providers\Currency::get()." ($this->date)",
                 'bsclass' => $bsclass,
-                'eager_loading' => ['contract.sepamandates.costcenter'],
+                // 'eager_loading' => ['contract.sepamandates.costcenter'],
+                'eager_loading' => ['contract'],
                 'edit' => [
                     'contract.firstname' => 'getContractFirstname',
                     'contract.lastname' => 'getContractLastname',
+                    'sum' => 'sum',
                     // 'SEPA' => 'hasSepa',
                 ],
             ];

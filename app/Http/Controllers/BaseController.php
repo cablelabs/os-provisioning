@@ -393,6 +393,10 @@ class BaseController extends Controller
             $a['route_name'] = NamespaceController::get_route_name();
         }
 
+        if (! isset($a['ajax_route_name'])) {
+            $a['ajax_route_name'] = $a['route_name'].'.data';
+        }
+
         if (! isset($a['model_name'])) {
             $a['model_name'] = NamespaceController::get_model_name();
         }
@@ -721,7 +725,7 @@ class BaseController extends Controller
 
         $fields = BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($view_var), $view_var);
         $form_fields = BaseViewController::add_html_string($fields, 'edit');
-        // $form_fields	= BaseViewController::add_html_string (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
+        // $form_fields = BaseViewController::add_html_string (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
 
         // prepare_tabs & prep_right_panels are redundant - TODO: improve
         $tabs = $this->prepare_tabs($view_var);

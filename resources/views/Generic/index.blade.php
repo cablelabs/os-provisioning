@@ -173,7 +173,7 @@ $(document).ready(function() {
             processing: true, {{-- show loader--}}
             serverSide: true, {{-- enable Serverside Handling--}}
             deferRender: true,
-            ajax: '{{ isset($route_name) && $route_name!= "Config.index"  ? route($route_name.'.data') : "" }}',
+            ajax: '{{ isset($ajax_route_name) && $route_name != "Config.index" ? route($ajax_route_name) : "" }}',
             {{-- generic Col Header generation --}}
                 @include('datatables.genericColHeader')
         @endif
