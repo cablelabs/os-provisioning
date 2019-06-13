@@ -8,6 +8,7 @@ use Session;
 use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Modules\Ticketsystem\Entities\Ticket;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -67,7 +68,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
     public function tickets()
     {
-        return $this->belongsToMany('\Modules\Ticketsystem\Entities\Ticket', 'ticket_user', 'user_id', 'ticket_id');
+        return $this->belongsToMany(Ticket::class, 'ticket_user', 'ticket_id', 'user_id');
     }
 
     /**
