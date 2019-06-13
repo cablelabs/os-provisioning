@@ -1243,6 +1243,8 @@ class Contract extends \BaseModel
 
     /**
      * Return the outstanding amount
+     *
+     * @return float
      */
     public function getResultingDebt()
     {
@@ -1250,7 +1252,16 @@ class Contract extends \BaseModel
             return;
         }
 
-        return \Modules\Dunning\Entities\Debt::where('contract_id', $this->id)->sum('amount');
+        $sum = \Modules\Dunning\Entities\Debt::where('contract_id', $this->id)
+            ->groupBy('contract_id')
+            ->selectRaw('(SUM(amount) + SUM(total_fee)) as sum')
+            ->first();
+
+        if (! $sum) {
+            return 0;
+        }
+
+        return $sum->sum;
     }
 }
 

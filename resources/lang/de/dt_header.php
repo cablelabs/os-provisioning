@@ -28,6 +28,7 @@ return [
     'costcenter.number' => 'Nummer',
     'debt' => [
         'date' => 'Transaktionsdatum',
+        'total_fee' => 'Gebühren',
         ],
     //Invoices
     'invoice.type' => 'Typ',

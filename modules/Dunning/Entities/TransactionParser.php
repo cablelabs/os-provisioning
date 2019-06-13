@@ -33,30 +33,44 @@ class TransactionParser
 
         if (! $this->engine instanceof TransactionParserEngine) {
             \Log::error('Engine does not extend \Modules\Dunning\Entities\TransactionParserEngine');
+            throw new Exception('Engine does not extend \Modules\Dunning\Entities\TransactionParserEngine');
 
             return;
         }
 
         $debt = $this->engine->parse($transaction);
 
-        // Check if debt already exists
-        if ($debt) {
-            $exists = Debt::where('date', $debt->date)->where('description', $debt->description)->where('amount', $debt->amount)
-                ->where('fee', $debt->fee)->where('contract_id', $debt->contract_id)
-                ->count();
-
-            if ($exists) {
-                $debitCredit = $transaction->getDebitCredit() == 'C' ? 'Credit' : 'Debit';
-                \ChannelLog::debug('dunning', trans('dunning::messages.transaction.exists', [
-                    'debitCredit' => trans("view.$debitCredit"),
-                    'description' => $transaction->getDescription(),
-                    'price' => $transaction->getPrice(),
-                    ]));
-
-                return;
-            }
+        if ($this->debtExists($debt, $transaction)) {
+            return;
         }
 
         return $debt;
+    }
+
+    /**
+     * Checks if debt was already added by same or another uploaded transaction.sta file
+     */
+    public function debtExists($debt, $transaction)
+    {
+        if (! $debt) {
+            return false;
+        }
+
+        $exists = Debt::where('date', $debt->date)->where('description', $debt->description)->where('amount', $debt->amount)
+            ->where('bank_fee', $debt->bank_fee ?: 0)->where('contract_id', $debt->contract_id)
+            ->count();
+
+        if ($exists) {
+            $debitCredit = $transaction->getDebitCredit() == 'C' ? 'Credit' : 'Debit';
+            \ChannelLog::debug('dunning', trans('dunning::messages.transaction.exists', [
+                'debitCredit' => trans("view.$debitCredit"),
+                'description' => $transaction->getDescription(),
+                'price' => $transaction->getPrice(),
+                ]));
+
+            return true;
+        }
+
+        return false;
     }
 }

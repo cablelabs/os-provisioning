@@ -23,8 +23,9 @@ class CreateDebtTable extends BaseMigration
             $table->integer('invoice_id')->nullable();
 
             $table->date('date');           // Date of transaction
-            $table->float('amount', 10, 4)->nullable();
-            $table->float('fee', 10, 4)->nullable();
+            $table->float('amount', 10, 4);
+            $table->float('bank_fee', 10, 4);
+            $table->float('total_fee', 10, 4);
             $table->string('description')->nullable();
 
             return parent::up();

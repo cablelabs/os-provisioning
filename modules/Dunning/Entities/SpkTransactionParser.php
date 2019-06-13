@@ -6,12 +6,18 @@ use ChannelLog;
 
 class SpkTransactionParser extends TransactionParserEngine
 {
+    public $excludeRegexesRelPath = 'app/config/dunning/transferExcludes.php';
+    public $excludeRegexes;
+
+    public $conf;
+
     public function parse(\Kingsquare\Banking\Transaction $transaction)
     {
         if ($transaction->getDebitCredit() == 'D') {
-            $debt = self::parseDebit($transaction);
+            $debt = $this->parseDebit($transaction);
+            $this->addFee($debt);
         } else {
-            $debt = self::parseCredit($transaction);
+            $debt = $this->parseCredit($transaction);
         }
 
         if ($debt) {
@@ -21,12 +27,12 @@ class SpkTransactionParser extends TransactionParserEngine
         return $debt;
     }
 
-    private static function parseDebit($transaction)
+    private function parseDebit($transaction)
     {
         $debt = new Debt;
         $description = [];
         $holder = $iban = $invoiceNr = $mref = '';
-        $debt->amount = $debt->fee = 0;
+        $debt->amount = $debt->bank_fee = 0;
         $descriptionArray = explode('?', $transaction->getDescription());
 
         foreach ($descriptionArray as $key => $line) {
@@ -41,8 +47,8 @@ class SpkTransactionParser extends TransactionParserEngine
             }
 
             if (\Str::startsWith($line, '23COAM+')) {
-                $debt->fee = trim(str_replace('23COAM+', '', $line));
-                $debt->fee = str_replace(',', '.', $debt->fee);
+                $debt->bank_fee = trim(str_replace('23COAM+', '', $line));
+                $debt->bank_fee = str_replace(',', '.', $debt->bank_fee);
                 continue;
             }
 
@@ -120,7 +126,7 @@ class SpkTransactionParser extends TransactionParserEngine
         return $debt;
     }
 
-    private static function parseCredit($transaction)
+    private function parseCredit($transaction)
     {
         $debt = new Debt;
         $descriptionArray = explode('?', $transaction->getDescription());
@@ -159,7 +165,7 @@ class SpkTransactionParser extends TransactionParserEngine
         $logmsg = trans('dunning::messages.transaction.default.credit', ['holder' => $holder, 'price' => $price, 'iban' => $iban, 'reason' => $reason]);
         // $logmsg = "Transaction of $holder with price $price, IBAN $iban and transfer reason '$reason'";
 
-        $ret = self::searchNumbers($reason);
+        $ret = $this->searchNumbers($reason);
 
         if ($ret['exclude']) {
             ChannelLog::info('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.credit.missInvoice'));
@@ -246,13 +252,40 @@ class SpkTransactionParser extends TransactionParserEngine
         return $debt;
     }
 
+    private function addFee($debt)
+    {
+        // lazy loading of global dunning conf
+        if (is_null($this->conf)) {
+            $this->loadConf();
+        }
+
+        if ($debt && $this->conf['fee']) {
+            $debt->total_fee = $this->conf['total'] ? $this->conf['fee'] : $debt->bank_fee + $this->conf['fee'];
+        }
+
+        return $debt;
+    }
+
+    /**
+     * Load dunning model and store relevant config in global variable
+     */
+    private function loadConf()
+    {
+        $conf = Dunning::first();
+
+        $this->conf = [
+            'fee' => $conf->fee,
+            'total' => $conf->total,
+        ];
+    }
+
     /**
      * Search for contract and invoice number in credit transfer reason to assign debt to appropriate customer
      *
      * @param string
      * @return array
      */
-    private static function searchNumbers($transferReason)
+    private function searchNumbers($transferReason)
     {
         // Match examples: Rechnungsnummer|Rechnungsnr|RE.-NR.|RG.-NR.|RG 2018/3/48616
         preg_match('/R(.*?)((n(.*?)r)|G)(.*?)(\d{4}\/\d+\/\d+)/i', $transferReason, $matchInvoice);
@@ -263,18 +296,18 @@ class SpkTransactionParser extends TransactionParserEngine
         $contractNr = $matchContract ? $matchContract[5] : 0;
 
         // Special invoice numbers that ensure that transaction definitely doesn't belong to NMSPrime
+        if (is_null($this->excludeRegexes)) {
+            $this->loadExcludeRegexes();
+        }
+
         $exclude = '';
-        if (\Storage::exists('config/dunning/transferExcludes')) {
-            $excludes = include storage_path('app/config/dunning/transferExcludes');
+        foreach ($this->excludeRegexes as $regex => $group) {
+            preg_match($regex, $transferReason, $matchInvoiceSpecial);
 
-            foreach ($excludes as $regex => $group) {
-                preg_match($regex, $transferReason, $matchInvoiceSpecial);
+            if ($matchInvoiceSpecial) {
+                $exclude = $matchInvoiceSpecial[$group];
 
-                if ($matchInvoiceSpecial) {
-                    $exclude = $matchInvoiceSpecial[$group];
-
-                    break;
-                }
+                break;
             }
         }
 
@@ -283,5 +316,16 @@ class SpkTransactionParser extends TransactionParserEngine
             'invoiceNr' => $invoiceNr,
             'exclude' => $exclude,
         ];
+    }
+
+    private function loadExcludeRegexes()
+    {
+        if (! \Storage::exists('config/dunning/transferExcludes')) {
+            $this->excludeRegexes = include storage_path($this->excludeRegexesRelPath);
+        }
+
+        if (! $this->excludeRegexes) {
+            $this->excludeRegexes = [];
+        }
     }
 }

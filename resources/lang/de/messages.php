@@ -73,6 +73,7 @@ return [
     'Entry in print media'      => 'Datennutzung Print-Verzeichnisse',
     'Entry type'                => 'Suchverzeichnis',
     'Fee'                       => 'Gebühr',
+    'Fee for return debit notes' => 'Gebühr für Rücklastschriften',
     'First IP'					=> 'Erste IP',
     'Firstname'					=> 'Vorname',
     'Fixed IP'					=> 'Statische IP',

@@ -51,8 +51,8 @@ class Debt extends \BaseModel
         }
 
         return ['table' => $this->table,
-                'index_header' => ['contract.firstname', 'contract.lastname', 'debt.date', 'amount', 'fee', /*'SEPA'*/],
-                'header' => (string) ($this->amount + $this->fee).\Modules\BillingBase\Providers\Currency::get()." ($this->date)",
+                'index_header' => ['contract.firstname', 'contract.lastname', 'debt.date', 'sum', 'amount', 'debt.total_fee' /*,'SEPA'*/],
+                'header' => (string) ($this->amount + $this->total_fee).\Modules\BillingBase\Providers\Currency::get()." ($this->date)",
                 'bsclass' => $bsclass,
                 'eager_loading' => ['contract.sepamandates.costcenter'],
                 'edit' => [
@@ -71,6 +71,11 @@ class Debt extends \BaseModel
     public function getContractLastname()
     {
         return $this->contract->lastname;
+    }
+
+    public function sum()
+    {
+        return $this->amount + $this->total_fee;
     }
 
     public function hasSepa()

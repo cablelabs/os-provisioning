@@ -73,6 +73,7 @@ return [
     'Entry in print media'      => 'Entry in print media',
     'Entry type'                => 'Entry type',
     'Fee'                       => 'Fee',
+    'Fee for return debit notes' => 'Fee for return debit notes',
     'First IP'					=> 'First IP',
     'Firstname'					=> 'Firstname',
     'Fixed IP'					=> 'Fixed IP',
