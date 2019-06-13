@@ -190,7 +190,10 @@ class SpkTransactionParser extends TransactionParserEngine
         }
 
         $sepamandate = \Modules\BillingBase\Entities\SepaMandate::where('iban', $iban)
-            ->orderBy('valid_from', 'desc')->first();
+            ->orderBy('valid_from', 'desc')
+            ->where('valid_from', '<=', $transaction->getValueTimestamp('Y-m-d'))
+            ->where(whereLaterOrEqual('valid_to', $transaction->getValueTimestamp('Y-m-d')))
+            ->first();
 
         if (! ($contract || $invoice || $sepamandate)) {
             ChannelLog::notice('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.credit.missAll'));
