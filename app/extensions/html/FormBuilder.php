@@ -158,7 +158,8 @@ class FormBuilder extends CollectiveFormBuilder
         $list = [],
         $selected = null,
         array $selectAttributes = [],
-        array $optionsAttributes = []
+        array $optionsAttributes = [],
+        array $optgroupsAttributes = []
     ) {
         $optionsAttributes = $this->appendClassToOptions('form-control', $optionsAttributes);
 
@@ -238,7 +239,7 @@ class FormBuilder extends CollectiveFormBuilder
      */
     public function plainSelect($name, $list = [], $selected = null, $options = [])
     {
-        return $this->appendDiv(parent::select($name, $list, $selected, $selectAttributes = [], $options));
+        return $this->appendDiv(parent::select($name, $list, $selected, $options));
     }
 
     public function open(array $options = [])

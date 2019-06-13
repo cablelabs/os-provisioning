@@ -7,7 +7,7 @@
   "require": {
     "laravel/framework": "5.5.*",
     "soapbox/laravel-formatter": "2.x",
-    "laravelcollective/html": "5.4.*",
+    "laravelcollective/html": "5.5.*",
     "intervention/validation": "~1.1.3",
     "digitick/sepa-xml": "1.1.*",
     "globalcitizen/php-iban": "2.6.*",
