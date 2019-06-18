@@ -8,6 +8,13 @@
 
 # ./get_config_diff.sh > config.diff
 
+ignore=(
+	'/etc/dhcp-nmsprime/mta.conf'
+	'/var/log/nmsprime/tftpd-cm.log'
+	'/var/named/dynamic/in-addr.arpa.zone'
+	'/var/named/dynamic/nmsprime.test.zone'
+)
+
 for file in $(find /var/www/nmsprime -path "*/Install/config.cfg"); do
 	while read -r line; do
 		f_from="$(dirname $file)/files/$(echo "$line" | cut -d'=' -f1 | xargs)"
@@ -23,5 +30,5 @@ for file in $(find /var/www/nmsprime -path "*/Install/config.cfg"); do
 		fi
 
 		diff -u "$f_to" "$f_from"
-	done < <(awk '/\[files\]/{flag=1;next}/\[/{flag=0}flag' "$file" | grep '=')
+	done < <(awk '/\[files\]/{flag=1;next}/\[/{flag=0}flag' "$file" | grep '=' | sed -f <(printf '\|%s|d\n' "${ignore[@]}"))
 done
