@@ -147,15 +147,13 @@ class BaseViewController extends Controller
             return Session::get('language');
         }
 
-        if (! isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            return checkLocale();
-        }
-
         $user = Auth::user();
 
         if (! $user || $user->language == 'browser') {
             // check the Browser for the accepted language
-            return checkLocale(substr(explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])[0], 0, 2));
+            return isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ?
+                checkLocale(substr(explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])[0], 0, 2)) :
+                checkLocale();
         }
 
         Session::put('language', $userLang = checkLocale($user->language));
