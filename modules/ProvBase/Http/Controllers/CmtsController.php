@@ -88,7 +88,7 @@ class CmtsController extends \BaseController
      * @param Modules\ProvBase\Entities\Cmts
      * @return array
      */
-    protected function get_form_tabs($cmts)
+    protected function editTabs($cmts)
     {
         if (! \Module::collections()->has('ProvMon')) {
             return [];
@@ -101,7 +101,7 @@ class CmtsController extends \BaseController
             array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.cmts', 'link' => $cmts->id]);
         }
 
-        array_push($tabs, parent::get_form_tabs($cmts)[0]);
+        array_push($tabs, parent::editTabs($cmts)[0]);
 
         return $tabs;
     }

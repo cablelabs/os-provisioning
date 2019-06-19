@@ -67,7 +67,7 @@ class MtaController extends \BaseController
      * @return array
      * @author Roy Schneider
      */
-    protected function get_form_tabs($model)
+    protected function editTabs($model)
     {
         \Session::put('Edit', 'MTA');
 
@@ -82,7 +82,7 @@ class MtaController extends \BaseController
                 ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => $model->modem_id]
             );
         }
-        array_push($tabs, parent::get_form_tabs($model)[0]);
+        array_push($tabs, parent::editTabs($model)[0]);
 
         return $tabs;
     }

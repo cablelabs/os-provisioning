@@ -147,7 +147,7 @@ class ModemController extends \BaseController
      * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
      * @author: Torsten Schmidt
      */
-    protected function get_form_tabs($model)
+    protected function editTabs($model)
     {
         // defines which edit page you came from
         \Session::put('Edit', 'Modem');

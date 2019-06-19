@@ -140,7 +140,7 @@ class NetElementController extends HfcBaseController
      * @param Modules\HfcReq\Entities\NetElement
      * @return array
      */
-    protected function get_form_tabs($netelement)
+    protected function editTabs($netelement)
     {
         $provmon = new ProvMonController();
         $netelement = $netelement ?: new NetElement;

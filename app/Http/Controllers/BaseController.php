@@ -88,16 +88,14 @@ class BaseController extends Controller
     }
 
     /*
-     * Base Function for Breadcrumb. -> Panel Header Right
+     * Base Function to generate array to build tabs for edit page
      * overwrite this function in child controller if required.
-     *
-     * NOTE: Breadcrumb means Panel Header Right in Bootstrap language
      *
      * @param view_var: the model object to be displayed
      * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
      * @author: Torsten Schmidt
      */
-    protected function get_form_tabs($view_var)
+    protected function editTabs($view_var)
     {
         $class = NamespaceController::get_model_name();
 
@@ -269,7 +267,7 @@ class BaseController extends Controller
 
     /**
      * Prepare Breadcrumb - $panel_right header
-     * Priority Handling: get_form_tabs(), view_has_many()
+     * Priority Handling: editTabs(), view_has_many()
      *
      * @param view_var: the view_var parameter from edit() context
      * @return panel_right prepared array for default.blade
@@ -277,7 +275,7 @@ class BaseController extends Controller
     protected function prepare_tabs($view_var)
     {
         // Version 1
-        $ret = $this->get_form_tabs($view_var);
+        $ret = $this->editTabs($view_var);
         if (count($ret) > 2) {
             return $ret;
         }
