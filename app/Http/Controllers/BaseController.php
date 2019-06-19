@@ -87,32 +87,34 @@ class BaseController extends Controller
         // place your code here
     }
 
-    /*
-     * Base Function to generate array to build tabs for edit page
-     * overwrite this function in child controller if required.
+    /**
+     * Base Function containing the default tabs for each model
+     * Overwrite/Extend this function in child controller to add more tabs refering to new pages
+     * Use models view_has_many() to add/structure panels inside separate tabs
      *
-     * @param view_var: the model object to be displayed
-     * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
-     * @author: Torsten Schmidt
+     * @param model: the model object to be displayed
+     * @return: array of tab descriptions - e.g. [['name' => '..', 'route' => '', 'link' => [$model->id]], .. ]
+     * @author: Torsten Schmidt, Nino Ryschawy
      */
-    protected function editTabs($view_var)
+    protected function editTabs($model)
     {
-        $class = NamespaceController::get_model_name();
+        $class = get_class($model);
 
         if (Str::contains($class, 'GuiLog')) {
             return;
         }
 
-        $class_name = substr(strrchr($class, '\\'), 1);
+        $class_name = $model->get_model_name();
 
-        return ['0' => [
-            'name' => 'Logging',
-            'route' => 'GuiLog.filter',
-            'link' => ['model_id' => $view_var->id, 'model' => $class_name],
-        ],
-        '1' => ['name' => 'Edit',
-                'route' => $class_name.'.edit',
-                'link' => ['model_id' => $view_var->id, 'model' => $class_name],
+        return [[
+                'name' => 'Edit',
+                // 'route' => $class_name.'.edit',
+                // 'link' => ['model_id' => $model->id, 'model' => $class_name],
+            ],
+            [
+                'name' => 'Logging',
+                'route' => 'GuiLog.filter',
+                'link' => ['model_id' => $model->id, 'model' => $class_name],
             ],
         ];
     }
@@ -266,38 +268,40 @@ class BaseController extends Controller
     }
 
     /**
-     * Prepare Breadcrumb - $panel_right header
-     * Priority Handling: editTabs(), view_has_many()
+     * Prepare tabs for edit page
+     * Merge defined tabs from editTabs() and view_has_many()
      *
-     * @param view_var: the view_var parameter from edit() context
-     * @return panel_right prepared array for default.blade
+     * @author Nino Ryschawy
+     * @param relations  from view_has_many()
+     * @param tabs       from editTabs()
+     * @return array     tabs for split-no-panel.blade and edit.blade
      */
-    protected function prepare_tabs($view_var)
+    protected function prepare_tabs($relations, $tabs)
     {
-        // Version 1
-        $ret = $this->editTabs($view_var);
-        if (count($ret) > 2) {
-            return $ret;
+        // Generate tabs from array structure of relations
+        foreach ($relations as $tab => $panels) {
+            if (! $this->tabDefined($tab, $tabs)) {
+                $tabs[] = ['name' => $tab];
+            }
         }
-        // view_has_many() Version 2
-        $a = $view_var->view_has_many();
-        if (BaseViewController::get_view_has_many_api_version($a) == 2) {
-            // get actual blade to $b
-            $b = current($a);
-            $c = [];
-            for ($i = 0; $i < count($a); $i++) {
-                array_push($c, ['name' => key($a), 'route' => NamespaceController::get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
-                $b = next($a);
-            }
-            // add tab for GuiLog
-            if ($ret) {
-                array_push($c, $ret[0]);
-            }
 
-            return $c;
-        } else {
-            return $ret;
+        return $tabs;
+    }
+
+    /**
+     * Check if tab of relations (defined in view_has_many()) is already defined tabs from editTabs()
+     *
+     * @return bool
+     */
+    private function tabDefined($relationsTab, $editTabs)
+    {
+        foreach ($editTabs as $key => $array) {
+            if ($array['name'] == $relationsTab) {
+                return true;
+            }
         }
+
+        return false;
     }
 
     /**
@@ -723,12 +727,10 @@ class BaseController extends Controller
 
         $fields = BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($view_var), $view_var);
         $form_fields = BaseViewController::add_html_string($fields, 'edit');
-        // $form_fields = BaseViewController::add_html_string (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
 
-        // prepare_tabs & prep_right_panels are redundant - TODO: improve
-        $tabs = $this->prepare_tabs($view_var);
-
-        $relations = BaseViewController::prep_right_panels($view_var);
+        // view_has_many should actually be a controller function!
+        $relations = $view_var->view_has_many();
+        $tabs = $this->prepare_tabs($relations, $this->editTabs($view_var));
 
         // check if there is additional data to be passed to blade template
         // on demand overwrite base method _get_additional_data_for_edit_view($model)

@@ -34,70 +34,64 @@
 @stop
 
 
-<?php $api = App\Http\Controllers\BaseViewController::get_view_has_many_api_version($relations) ?>
-
 @section('content_right')
-@if(isset($relations) && !empty($relations))
-<div class="col-md-{{isset($edit_right_md_size) ? $edit_right_md_size : 4}} ui-sortable">
-    @foreach($relations as $view => $relation)
 
-    <?php if (!isset($i)) $i = 0; else $i++; ?>
+    @if(isset($relations) && !empty($relations))
+        <div class="col-md-{{isset($edit_right_md_size) ? $edit_right_md_size : 4}} ui-sortable">
+            <div class="tab-content">
+                @foreach ($tabs as $key => $tab)
+                    @php $firstKey = $key == 0 ? $tab['name'] : '';
+                    @endphp
+                    @if (isset($relations[$tab['name']]))
+                        <div class="tab-pane {{$firstKey == $tab['name'] ? 'active' : ''}}" id="{{$tab['name']}}">
+                            @foreach($relations[$tab['name']] as $view => $relation)
 
-    {{-- The section content for the new Panel --}}
-    @section("content_$i")
+                                {{-- The section content for the new Panel --}}
+                                @section($tab['name'].$view)
+                                    @if (is_array($relation))
 
-            {{-- old API: directly load relation view. NOTE: old API new class var is $view --}}
-            @if ($api == 1)
-                @include('Generic.relation', [$relation, 'class' => $view, 'key' => strtolower($view_var->table).'_id'])
-            @endif
+                                        {{-- include pure HTML --}}
+                                        @if (isset($relation['html']))
+                                            {!! $relation['html'] !!}
+                                        @endif
 
-            {{-- new API: parse data --}}
-            @if ($api == 2)
-                @if (is_array($relation))
+                                        {{-- include a view --}}
+                                        @if (isset($relation['view']))
+                                            @if (is_string($relation['view']))
+                                                @include ($relation['view'])
+                                            @endif
+                                            @if (is_array($relation['view']))
+                                                @include ($relation['view']['view'], isset($relation['view']['vars']) ? $relation['view']['vars'] : [])
+                                                <?php $md_size = isset($relation['view']['vars']['md_size']) ? $relation['view']['vars']['md_size'] : null; ?>
+                                            @endif
+                                        @endif
 
-                    {{-- include pure HTML --}}
-                    @if (isset($relation['html']))
-                        {!! $relation['html'] !!}
+                                        {{-- include a relational class/object/table, like Contract->Modem --}}
+                                        @if (isset($relation['class']) && isset($relation['relation']))
+                                            @include('Generic.relation', ['relation' => $relation['relation'],
+                                                                          'class' => $relation['class'],
+                                                                          'key' => strtolower($view_var->table).'_id',
+                                                                          'options' => isset($relation['options']) ? ($relation['options']) : null])
+                                        @endif
+
+                                    @endif
+                                @stop
+
+                                {{-- The Bootstap Panel to include --}}
+                                @include ('bootstrap.panel', [
+                                    'content' => $tab['name'].$view,
+                                    'view_header' => \App\Http\Controllers\BaseViewController::translate_view($view, 'Header' , 2),
+                                    'md' => 12,
+                                    'options' => $relation['panelOptions'] ?? null,
+                                    ])
+
+                            @endforeach
+                        </div>
                     @endif
-
-                    {{-- include a view --}}
-                    @if (isset($relation['view']))
-                        @if (is_string($relation['view']))
-                            @include ($relation['view'])
-                        @endif
-                        @if (is_array($relation['view']))
-                            @include ($relation['view']['view'], isset($relation['view']['vars']) ? $relation['view']['vars'] : [])
-                            <?php $md_size = isset($relation['view']['vars']['md_size']) ? $relation['view']['vars']['md_size'] : null; ?>
-                        @endif
-                    @endif
-
-                    {{-- include a relational class/object/table, like Contract->Modem --}}
-                    @if (isset($relation['class']) && isset($relation['relation']))
-                        @include('Generic.relation', ['relation' => $relation['relation'],
-                                                      'class' => $relation['class'],
-                                                      'key' => strtolower($view_var->table).'_id',
-                                                      'options' => isset($relation['options']) ? ($relation['options']) : null])
-                    @endif
-
-                @endif
-            @endif
-
-        @stop
-
-        {{-- The Bootstap Panel to include --}}
-        @include ('bootstrap.panel', [
-            'content' => "content_$i",
-            'view_header' => \App\Http\Controllers\BaseViewController::translate_view($view, 'Header' , 2),
-            'md' => 12,
-            'options' => $relation['panelOptions'] ?? null,
-            ])
-            {{-- 'md' => isset($md_size) ? $md_size : (isset($edit_right_md_size) ? $edit_right_md_size : 4))) --}}
-
-    @endforeach
-    </div>
-
-
-@endif
+                @endforeach
+            </div>
+        </div>
+    @endif
 
     {{-- Alert --}}
     @if (Session::has('alert'))
@@ -116,7 +110,8 @@
         $('.tab-content').toggle();
     });
 
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    // $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $('#loggingtab').click(function (e) {
         var table = $('table.datatable').DataTable(
         {
         {{-- STANDARD CONFIGURATION --}}
