@@ -71,9 +71,7 @@ class MtaController extends \BaseController
     {
         \Session::put('Edit', 'MTA');
 
-        $tabs = [
-            ['name' => 'Edit', 'route' => 'Mta.edit', 'link' => $model->id],
-        ];
+        $tabs = parent::editTabs($model);
 
         if (\Module::collections()->has('ProvMon') && \Bouncer::can('view_analysis_pages_of', Modem::class)) {
             array_push($tabs,
@@ -82,7 +80,6 @@ class MtaController extends \BaseController
                 ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => $model->modem_id]
             );
         }
-        array_push($tabs, parent::editTabs($model)[0]);
 
         return $tabs;
     }

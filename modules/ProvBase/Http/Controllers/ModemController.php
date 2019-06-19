@@ -151,19 +151,14 @@ class ModemController extends \BaseController
     {
         // defines which edit page you came from
         \Session::put('Edit', 'Modem');
-        $provmon = new ProvMonController;
 
-        $tabs = [];
+        $tabs = parent::editTabs($model);
 
         if (! \Module::collections()->has('ProvMon')) {
-            $tabs = [['name' => 'Edit', 'route' => 'Modem.edit', 'link' => $model->id]];
-            $provmon->loggingTab($tabs, $model);
-
             return $tabs;
         }
 
         if (\Bouncer::can('view_analysis_pages_of', Modem::class)) {
-            $tabs = [['name' => 'Edit', 'route' => 'Modem.edit', 'link' => $model->id]];
             array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => $model->id],
                 ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => $model->id]);
 
@@ -172,9 +167,6 @@ class ModemController extends \BaseController
                 array_push($tabs, ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => $model->id]);
             }
         }
-
-        // add 'Logging' tab
-        $tabs = $provmon->loggingTab($tabs, $model);
 
         return $tabs;
     }
