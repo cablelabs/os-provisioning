@@ -93,6 +93,12 @@ class IpPool extends \BaseModel
      */
     public function ip_route_prov_exists()
     {
+        // route is online without setting a static route,
+        // e.g. an external router is used (default gateway)
+        if ($this->ip_route_online()) {
+            return true;
+        }
+
         return strlen(exec('/usr/sbin/ip route show '.$this->net.'/'.$this->size().' via '.$this->cmts->ip)) == 0 ? false : true;
     }
 
