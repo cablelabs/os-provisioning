@@ -40,17 +40,17 @@ class MibFile extends \BaseModel
     // generates datatable content and classes for model
     public function view_index_label()
     {
-        $bsclass = $this->get_bsclass();
-
         return ['table' => $this->table,
                 'index_header' => [$this->table.'.id', $this->table.'.name',  $this->table.'.version'],
                 'header' =>  $this->name,
-                'order_by' => ['1' => 'asc'], ];
+                'bsclass' => $this->get_bsclass(),
+                'order_by' => ['1' => 'asc'],
+            ];
     }
 
     public function get_bsclass()
     {
-        $bsclass = $this->oids->first() ? 'success' : 'info';
+        $bsclass = $this->oids()->count() ? 'success' : 'info';
 
         return $bsclass;
     }
