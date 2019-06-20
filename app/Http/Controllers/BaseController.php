@@ -18,7 +18,7 @@ use BaseModel;
 use Validator;
 use GlobalConfig;
 use Monolog\Logger;
-use Yajra\Datatables\Datatables;
+use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Request;
 
 /*
@@ -1407,8 +1407,8 @@ class BaseController extends Controller
             $request_query = $request_query->whereRaw($where_clause);
         }
 
-        $DT = Datatables::of($request_query);
-        $DT->addColumn('responsive', '')
+        $DT = DataTables::make($request_query)
+            ->addColumn('responsive', '')
             ->addColumn('checkbox', '');
 
         foreach ($filter_column_data as $column => $custom_query) {
@@ -1449,7 +1449,7 @@ class BaseController extends Controller
             return $bsclass;
         });
 
-        return $DT->make(true);
+        return $DT->rawColumns(['checkbox', $first_column])->make();
     }
 
     // NOTE: Import is a fast-forward-copy from https://github.com/LaravelDaily/Laravel-Import-CSV-Demo

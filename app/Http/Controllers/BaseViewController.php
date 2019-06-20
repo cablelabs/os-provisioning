@@ -537,6 +537,9 @@ class BaseViewController extends Controller
                 $name = Config::get(Str::lower($module->name).'.'.'name') ?? $module->get('description');
                 $icon = ($module->get('icon') == '' ? '' : $module->get('icon'));
                 $menu[$name]['icon'] = $icon;
+                $menu[$name]['link'] = Config::get(Str::lower($module->name).'.link');
+                $menu[$name]['translated_name'] = static::translate_view($name, 'Menu');
+
                 foreach ($moduleMenuConfig as $page => $settings) {
                     if (Bouncer::can('view', $settings['class'])) {
                         $menuItem = static::translate_view($page, 'Menu');
@@ -638,9 +641,9 @@ class BaseViewController extends Controller
             }
 
             if ($i == 0) {
-                $breadcrumb_path = "<li class='nav-tabs'>".static::__link_route_html($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).$breadcrumb_path.'</li>';
+                $breadcrumb_path = "<li class='nav-tabs'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).$breadcrumb_path.'</li>';
             } else {
-                $breadcrumb_path = '<li>'.static::__link_route_html($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).'</li>'.$breadcrumb_path;
+                $breadcrumb_path = '<li>'.static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).'</li>'.$breadcrumb_path;
             }
 
             return $breadcrumb_path;

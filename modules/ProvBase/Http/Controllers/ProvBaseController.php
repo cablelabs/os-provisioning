@@ -2,10 +2,22 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use View;
 use App\Http\Controllers\BaseController;
+use Modules\Dashboard\Entities\BillingAnalysis;
 
 class ProvBaseController extends BaseController
 {
+    public function index()
+    {
+        $data['income'] = BillingAnalysis::getIncomeData();
+        $title = 'Provisioning Dashboard';
+        $create_allowed = static::get_controller_obj()->index_create_allowed;
+        $contracts_data = BillingAnalysis::getContractData();
+
+        return View::make('provbase::index', $this->compact_prep_view(compact('title', 'create_allowed', 'contracts_data')));
+    }
+
     /**
      * defines the formular fields for the edit and create view
      */

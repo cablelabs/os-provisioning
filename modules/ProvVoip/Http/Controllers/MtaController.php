@@ -5,7 +5,6 @@ namespace Modules\ProvVoip\Http\Controllers;
 use Modules\ProvVoip\Entities\Mta;
 use Modules\ProvBase\Entities\Modem;
 use Illuminate\Support\Facades\Input;
-use Modules\ProvBase\Entities\Configfile;
 
 class MtaController extends \BaseController
 {

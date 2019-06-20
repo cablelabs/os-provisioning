@@ -1,6 +1,5 @@
-Bankleitzahl;Bezeichnung;Ort;BIC
 10000000;Bundesbank;Berlin;MARKDEF1100
-10010010;Postbank Ndl der DB Privat- und Firmenkundenbank;Berlin;PBNKDEFF100
+10010010;Postbank Ndl der DB Privat- und Firmenkundenbank;Berlin;PBNKDEFFXXX
 10010111;DSK Hyp;Berlin;ESSEDE5F100
 10010424;Aareal Bank;Berlin;AARBDE5W100
 10011001;N26 Bank;Berlin;NTSBDEB1XXX
@@ -74,13 +73,14 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 10110400;Investitionsbank Berlin;Berlin;IBBBDEBBXXX
 10110600;Quirin Privatbank;Berlin;QUBKDEBBXXX
 10120100;Weberbank;Berlin;WELADED1WBB
-10120800;VON ESSEN Bank;Berlin;VONEDE33BLN
-10130600;Isbank Fil Berlin;Berlin;ISBKDEFXBER
+10120800;BNP Paribas Ndl. Deutschland former VON ESSEN Bank;München;VONEDE33BLN
+10130600;Isbank Fil Berlin;Berlin;ISBKDEFXXXX
 10130800;FinTech Group Bank;Frankfurt am Main;BIWBDE33XXX
-10220500;Bank of Scotland Ndl Berlin;Berlin;BOFSDEB1XXX
+10220500;Lloyds Bank;Berlin;BOFSDEB1XXX
 10220600;Sydbank Filiale Berlin;Berlin;SYBKDE22BER
 10310600;Tradegate Wertpapierhandelsbank Berlin;Berlin;TRDADEB1PBK
 11010100;solarisBank;Berlin;SOBKDEBBXXX
+11010101;solarisBank Gf (S);Berlin;SOBKDEB2XXX
 12016836;KfW Kreditanstalt für Wiederaufbau;Berlin;KFWIDEFF100
 12030000;Deutsche Kreditbank Berlin;Berlin;BYLADEM1001
 12030900;Merck Finck Privatbankiers;Berlin;MEFIDEMM100
@@ -382,7 +382,11 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 20041133;comdirect bank;Quickborn;COBADEHD001
 20041144;comdirect bank;Quickborn;COBADEHD044
 20041155;comdirect bank;Quickborn;COBADEHD055
-20050000;HSH Nordbank Hamburg;Hamburg;HSHNDEHH200
+20041166;comdirect bank;Quickborn;COBADEHD066
+20041177;comdirect bank;Quickborn;COBADEHD077
+20041188;comdirect bank;Quickborn;COBADEHD088
+20041199;comdirect bank;Quickborn;COBADEHD099
+20050000;Hamburg Commercial Bank, ehemals HSH Nordbank Hamburg;Hamburg;HSHNDEHHXXX
 20050550;Hamburger Sparkasse;Hamburg;HASPDEHHXXX
 20060000;DZ BANK;Hamburg;GENODEFF200
 20069111;Norderstedter Bank -alt-;Norderstedt;GENODEF1NDR
@@ -458,7 +462,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 20120000;Joh. Berenberg, Gossler & Co;Hamburg;BEGODEHHXXX
 20120100;M.M.Warburg & CO;Hamburg;WBWCDEHHXXX
 20120200;BHF-BANK;Hamburg;BHFBDEFF200
-20120400;start bausparkasse;Hamburg;DRBKDEH1XXX
+20120400;start:bausparkasse;Hamburg;DRBKDEH1XXX
 20120520;Bank für Sozialwirtschaft;Hamburg;BFSWDE33HAN
 20120600;Goyer & Göppel;Hamburg;GOGODEH1XXX
 20120700;Hanseatic Bank;Hamburg;HSTBDEHHXXX
@@ -477,7 +481,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 20220400;Warburg, M.M. - Hypothekenbank;Hamburg;MMWHDEH1XXX
 20220800;SAXO PAYMENTS;Hamburg;SXPYDEHHXXX
 20230300;Otto M. Schröder Bank;Hamburg;OSCBDEH1XXX
-20230600;Isbank Fil Hamburg;Hamburg;ISBKDEFXHAM
+20230600;Isbank Hamburg;Hamburg;ISBKDEFXXXX
 20230800;Max Heinr. Sutor;Hamburg;MHSBDEHBXXX
 20310300;Europäisch-Iranische Handelsbank;Hamburg;EIHBDEHHXXX
 20320500;Danske Bank;Hamburg;DABADEHHXXX
@@ -583,7 +587,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 21020600;Sydbank Filiale Kiel;Kiel;SYBKDE22KIE
 21040010;Commerzbank;Kiel;COBADEFFXXX
 21042076;Commerzbank;Eckernförde;COBADEFFXXX
-21050000;HSH Nordbank Hamburg, Kiel;Hamburg;HSHNDEHHXXX
+21050000;Hamburg Commercial Bank, ehemals HSH Nordbank Hamburg;Hamburg;HSHNDEHHXXX
 21050170;Förde Sparkasse;Kiel;NOLADE21KIE
 21051275;Bordesholmer Sparkasse;Bordesholm;NOLADE21BOR
 21051580;Sparkasse Kreis Plön -alt-;Plön;NOLADE21PLN
@@ -615,7 +619,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 21450000;Sparkasse Mittelholstein;Rendsburg;NOLADE21RDB
 21451205;Sparkasse Büdelsdorf -alt-;Büdelsdorf;NOLADE21BDF
 21452030;Sparkasse Hohenwestedt -alt-;Hohenwestedt;NOLADE21HWS
-21463603;Volksbank-Raiffeisenbank im Kreis Rendsburg;Rendsburg;GENODEF1NTO
+21463603;Volksbank-Raiffeisenbank im Kreis Rendsburg;Osterrönfeld;GENODEF1NTO
 21464671;Raiffeisenbank;Todenbüttel;GENODEF1TOB
 21480003;Commerzbank vormals Dresdner Bank;Rendsburg;DRESDEFF214
 21510600;Sydbank Filiale Flensburg;Flensburg;SYBKDE22XXX
@@ -662,7 +666,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 22290031;Volksbank Raiffeisenbank Itzehoe;Itzehoe;GENODEF1VIT
 23000000;Bundesbank eh Lübeck;Hamburg;MARKDEF1230
 23040022;Commerzbank;Lübeck;COBADEFFXXX
-23050000;HSH Nordbank Hamburg;Hamburg;HSHNDEHH230
+23050000;Hamburg Commercial Bank, ehemals HSH Nordbank Hamburg;Hamburg;HSHNDEHH230
 23050101;Sparkasse zu Lübeck;Lübeck;NOLADE21SPL
 23051030;Sparkasse Südholstein;Neumünster;NOLADE21SHO
 23052750;Kreissparkasse Herzogtum Lauenburg;Ratzeburg;NOLADE21RZB
@@ -916,7 +920,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 26981062;Commerzbank vormals Dresdner Bank;Wolfsburg;DRESDEFF269
 26989221;Commerzbank vormals Dresdner Bank ITGK;Wolfsburg;DRESDEFFI11
 26991066;Volksbank Braunschweig Wolfsburg;Wolfsburg;GENODEF1WOB
-27010200;VON ESSEN Bank;Braunschweig;VONEDE33BRA
+27010200;BNP Paribas Ndl. Deutschland former VON ESSEN Bank;München;VONEDE33BRA
 27020000;Volkswagen Bank;Braunschweig;VOWADE2BXXX
 27020001;Audi Bank Zndl d Volkswagen Bank;Braunschweig;AUDFDE21XXX
 27020003;Skoda Bank;Braunschweig;SKODDE21XXX
@@ -985,6 +989,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 28061822;Volksbank Oldenburg;Oldenburg;GENODEF1EDE
 28062165;Raiffeisenbank Rastede;Rastede;GENODEF1RSE
 28062249;Vereinigte Volksbank;Hude;GENODEF1HUD
+28062299;Vereinigte Volksbank GAA;Hude;GENODEF1HUD
 28062560;Volksbank Lohne-Mühlen;Lohne (Oldenburg);GENODEF1LON
 28062740;Volksbank Bookholzberg-Lemwerder -alt-;Ganderkesee;GENODEF1GBH
 28062913;Volksbank Bösel;Bösel;GENODEF1BSL
@@ -1121,6 +1126,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 29172655;Deutsche Bank;Verden (Aller);DEUTDEHB291
 29190024;Bremische Volksbank;Bremen;GENODEF1HB1
 29190330;Volksbank Bremen-Nord;Bremen;GENODEF1HB2
+29190399;Volksbank Bremen-Nord (Gf GAA);Bremen;GENODEF1HB2
 29240024;Commerzbank;Bremerhaven;COBADEFFXXX
 29250000;Weser-Elbe Sparkasse;Bremerhaven;BRLADE21BRS
 29250150;Kreissparkasse Wesermünde-Hadeln -alt-;Bremerhaven;BRLADE21BRK
@@ -1133,7 +1139,6 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 30010400;IKB Deutsche Industriebank;Düsseldorf;IKBDDEDDXXX
 30010444;IKB Privatkunden - IKB Deutsche Industriebank;Düsseldorf;IKBDDEDDDIR
 30010700;MUFG Bank (Europe) Germany Branch;Düsseldorf;BOTKDEDXXXX
-30015500;easybank Niederlassung Deutschland;Düsseldorf;QLCKDED1XXX
 30019000;ipagoo - German Branch;Düsseldorf;IPAGDEDFXXX
 30020500;BHF-BANK;Düsseldorf;BHFBDEFF300
 30020700;Mizuho Bank Filiale Düsseldorf;Düsseldorf;MHCBDEDDXXX
@@ -1387,7 +1392,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 36000000;Bundesbank;Essen;MARKDEF1360
 36010043;Postbank Ndl der DB Privat- und Firmenkundenbank;Essen;PBNKDEFFXXX
 36010111;DSK Hyp;Essen;ESSEDE5F360
-36010200;VON ESSEN Bank;Essen;VONEDE33XXX
+36010200;BNP Paribas Ndl. Deutschland former VON ESSEN BANK;München;VONEDE33XXX
 36010424;Aareal Bank;Essen;AARBDE5W360
 36010600;NIBC Bank Deutschland;Frankfurt am Main;GABKDE3EXXX
 36020030;National-Bank Essen;Essen;NBAGDE3EXXX
@@ -2286,7 +2291,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 50110300;DVB Bank;Frankfurt am Main;DVKBDEFFXXX
 50110400;AKA Ausfuhrkredit GmbH;Frankfurt am Main;AUSKDEFFXXX
 50110500;NATIXIS Zweigniederlassung Deutschland;Frankfurt am Main;NATXDEFFXXX
-50110636;Standard Chartered Bank Germany Branch;Frankfurt am Main;SCBLDEF1DTC
+50110636;Standard Chartered Bank;Frankfurt am Main;SCBLDEFXXXX
 50110700;Frankfurter Bankgesellschaft (Deutschland);Frankfurt am Main;FBGADEF1XXX
 50110800;J.P. Morgan;Frankfurt am Main;CHASDEFXXXX
 50110801;J.P. Morgan, Internal Reference;Frankfurt am Main;CHASDEFXVR1
@@ -2297,7 +2302,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 50120383;Bethmann Bank;Frankfurt am Main;DELBDE33XXX
 50120500;Credit Suisse (Deutschland);Frankfurt am Main;CRESDE55XXX
 50120600;Bank of Communications Frankfurt branch;Frankfurt am Main;COMMDEFFXXX
-50120900;VakifBank International Wien Zndl Frankfurt;Frankfurt am Main;TVBADEFFXXX
+50120900;VakifBank International Wien Zndl Deutschland;Köln;TVBADEFFXXX
 50123400;VTB Bank (Europe) Zndl Frankfurt am Main (Direktbank);Frankfurt am Main;DOBADEF1XXX
 50127000;PKO Bank Polski Niederlassung Deutschland;Frankfurt am Main;BPKODEFFXXX
 50130000;National Bank of Pakistan Zndl Frankfurt;Frankfurt am Main;NBPADEFFXXX
@@ -2317,7 +2322,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 50220085;UBS Europe;Frankfurt am Main;SMHBDEFFXXX
 50220101;Kommunalkredit Austria, Zweigstelle Deutschland;Frankfurt am Main;INVODEF2XXX
 50220300;WOORI BANK EUROPE;Frankfurt am Main;HVBKDEFFXXX
-50220500;Bank of Scotland;Frankfurt am Main;BOFSDEF1XXX
+50220500;Lloyds Bank;Berlin;BOFSDEF1XXX
 50220707;CAIXABANK Zweigniederlassung Deutschland;Frankfurt am Main;CAIXDEFFXXX
 50220900;Hauck & Aufhäuser Privatbankiers;Frankfurt am Main;HAUKDEFFXXX
 50230000;ABC International Bank Frankfurt am Main;Frankfurt am Main;ABCADEFFXXX
@@ -2483,6 +2488,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 51210700;NIBC Bank Zndl Frankfurt am Main;Frankfurt am Main;NZFMDEF1XXX
 51210800;Societe Generale;Frankfurt am Main;SOGEDEFFXXX
 51210801;SOCIETE GENERALE;Frankfurt am Main;SOGEDEFF1XX
+51210802;Societe Generale;Frankfurt am Main;SOGEDEFFXXX
 51211000;NATIXIS Pfandbriefbank;Frankfurt am Main;NATXDEFPXXX
 51220200;Skandinaviska Enskilda Banken (publ) Frankfurt Branch;Frankfurt am Main;ESSEDEFFXXX
 51220211;DSK Hyp;Frankfurt am Main;ESSEDE5F512
@@ -2491,8 +2497,8 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 51220800;Banco do Brasil;Frankfurt am Main;BRASDEFFXXX
 51220900;Morgan Stanley Bank;Frankfurt am Main;MSFFDEFPXXX
 51220910;Morgan Stanley Bank;Frankfurt am Main;MSFFDEFXCND
-51230500;Standard Chartered Bank Germany Branch, Frankfurt;Frankfurt am Main;SCBLDEFXXXX
-51230502;Standard Chartered Bank Germany Branch;Frankfurt am Main;SCBLDEF1ETC
+51230500;Standard Chartered Bank;Frankfurt am Main;SCBLDEFXXXX
+51230502;Standard Chartered Bank;Frankfurt am Main;SCBLDEFXXXX
 51230555;Ikano Bank;Wiesbaden;PLFGDE5AIKB
 51230600;Europe ARAB Bank;Frankfurt am Main;ARABDEFFXXX
 51230800;Wirecard Bank;Aschheim;WIREDEMMXXX
@@ -2713,7 +2719,6 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 54862500;VR Bank Südpfalz;Landau in der Pfalz;GENODE61SUW
 54891300;VR Bank Südliche Weinstraße-Wasgau;Bad Bergzabern;GENODE61BZA
 55000000;Bundesbank;Mainz;MARKDEF1550
-55010111;DSK Hyp;Mainz;ESSEDE5F550
 55010400;Aareal Bank GF - BK01 -;Wiesbaden;AARBDE5WDOM
 55010424;Aareal Bank;Mainz;AARBDE5W550
 55010625;Aareal Bank Clearing Wiesbaden;Wiesbaden;AARBDE5WCLE
@@ -2946,6 +2951,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 59020090;UniCredit Bank - HypoVereinsbank;Völklingen;HYVEDEMM432
 59020090;UniCredit Bank - HypoVereinsbank;St. Wendel;HYVEDEMM432
 59020090;UniCredit Bank - HypoVereinsbank;Neunkirchen;HYVEDEMM432
+59020400;mediserv Bank;Saarbrücken;MEGHDE81XXX
 59040000;Commerzbank;Saarbrücken;COBADEFFXXX
 59050000;Landesbank Saar;Saarbrücken;SALADE55XXX
 59050101;Sparkasse Saarbrücken;Saarbrücken;SAKSDE55XXX
@@ -2986,7 +2992,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 60020290;UniCredit Bank - HypoVereinsbank;Lindenberg i. Allgäu;HYVEDEMM473
 60020290;UniCredit Bank - HypoVereinsbank;Heilbronn;HYVEDEMM473
 60020290;UniCredit Bank - HypoVereinsbank;Friedrichshafen;HYVEDEMM473
-60020300;VON ESSEN Bank;Stuttgart;VONEDE33STG
+60020300;BNP Paribas Ndl. Deutschland former VON ESSEN Bank;München;VONEDE33STG
 60030000;Mercedes-Benz Bank;Stuttgart;MEBEDE6SDCB
 60030100;Bankhaus Bauer, Stuttgart;Stuttgart;BHBADES1XXX
 60030200;Bankhaus Ellwanger & Geiger;Stuttgart;ELGEDES1XXX
@@ -3413,7 +3419,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 66020286;UniCredit Bank - HypoVereinsbank;Baden-Baden;HYVEDEMM475
 66020500;Bank für Sozialwirtschaft;Karlsruhe;BFSWDE33KRL
 66020566;Bank für Sozialwirtschaft;Karlsruhe;BFSWDE33KRL
-66030600;Isbank Fil Karlsruhe;Karlsruhe;ISBKDEFXKRL
+66030600;Isbank Mannheim;Mannheim;ISBKDEFXXXX
 66040018;Commerzbank;Karlsruhe;COBADEFFXXX
 66040026;Commerzbank/Kreditcenter Badenia;Karlsruhe;COBADEFFXXX
 66050000;Landesbank Baden-Württemberg;Karlsruhe;SOLADEST660
@@ -3806,13 +3812,13 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 70090606;apoBank;München;DAAEDED1006
 70090606;apoBank;Augsburg;DAAEDED1027
 70091500;Volksbank Raiffeisenbank Dachau;Dachau;GENODEF1DCA
+70091510;Volksbank Raiffeisenbank Dachau (Gf GAA);Dachau;GENODEF1DCA
 70091600;VR-Bank Landsberg-Ammersee;Landsberg am Lech;GENODEF1DSS
 70091900;VR-Bank Erding -alt-;Erding;GENODEF1EDV
 70093200;Volksbank Raiffeisenbank Starnberg-Herrsching-Landsberg;Starnberg;GENODEF1STH
 70093400;VR-Bank Ismaning Hallbergmoos Neufahrn;Ismaning;GENODEF1ISV
 70110088;Postbank Ndl der DB Privat- und Firmenkundenbank;München;PBNKDEFFXXX
 70110500;Münchener Hypothekenbank;München;MHYPDEMMXXX
-70110600;UBI BANCA Niederlassung München;München;BEPODEMMXXX
 70120100;State Street Bank International;München;SBOSDEMXXXX
 70120400;BNP Paribas Niederlassung Deutschland;München;DABBDEMMXXX
 70120500;CACEIS Bank, Germany Branch;München;FMBKDEMMXXX
@@ -4232,7 +4238,6 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 75390000;Volksbank Raiffeisenbank Nordoberpfalz;Weiden i.d.OPf.;GENODEF1WEV
 76000000;Bundesbank;Nürnberg;MARKDEF1760
 76010085;Postbank Ndl der DB Privat- und Firmenkundenbank;Nürnberg;PBNKDEFFXXX
-76010111;DSK Hyp;Nürnberg;ESSEDE5F760
 76020070;UniCredit Bank - HypoVereinsbank;Nürnberg;HYVEDEMM460
 76020070;UniCredit Bank - HypoVereinsbank;Lauf a.d.Pegnitz;HYVEDEMM460
 76020070;UniCredit Bank - HypoVereinsbank;Neumarkt i.d.OPf.;HYVEDEMM460
@@ -4256,6 +4261,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 76052080;Sparkasse Neumarkt i d OPf-Parsberg;Neumarkt i.d.OPf.;BYLADEM1NMA
 76060000;DZ BANK;Nürnberg;GENODEFF760
 76060618;Volksbank Raiffeisenbank;Nürnberg;GENODEF1N02
+76060620;Volksbank Raiffeisenbank Nürnberg (Gf GAA);Nürnberg;GENODEF1N02
 76061025;Raiffeisen Spar+Kreditbank Lauf a d Pegnitz;Lauf a.d.Pegnitz;GENODEF1LAU
 76061482;Raiffeisenbank Hersbruck;Hersbruck;GENODEF1HSB
 76069369;Raiffeisenbank Auerbach-Freihung;Auerbach i.d.OPf.;GENODEF1AUO
@@ -4277,7 +4283,6 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 76069564;Raiffeisenbank Oberferrieden-Burgthann;Burgthann;GENODEF1BTO
 76069576;Raiffeisenbank Plankstetten;Berching;GENODEF1BPL
 76069598;Raiffeisenbank Großhabersdorf-Roßtal -alt-;Roßtal;GENODEF1RSS
-76069601;VR-Bank Rothenburg -alt-;Rothenburg ob der Tauber;GENODEF1RT2
 76069602;Raiffeisenbank Seebachgrund;Heßdorf;GENODEF1HSE
 76069611;Raiffeisenbank Unteres Vilstal;Schmidmühlen;GENODEF1SDM
 76069635;Raiffeisenbank Ursensollen-Ammerthal-Hohenburg -alt-;Ursensollen;GENODEF1URS
@@ -4359,7 +4364,7 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 76551540;Vereinigte Sparkassen Gunzenhausen;Gunzenhausen;BYLADEM1GUN
 76551860;Stadt- und Kreissparkasse Rothenburg -alt-;Rothenburg ob der Tauber;BYLADEM1ROT
 76560060;VR-Bank Mittelfranken West;Ansbach;GENODEF1ANS
-76591000;VR Bank Feuchtwangen-Dinkelsbühl;Dinkelsbühl;GENODEF1DKV
+76591000;VR-Bank Feuchtwangen-Dinkelsbühl;Dinkelsbühl;GENODEF1DKV
 77020070;UniCredit Bank - HypoVereinsbank;Bamberg;HYVEDEMM411
 77020070;UniCredit Bank - HypoVereinsbank;Lichtenfels;HYVEDEMM411
 77040080;Commerzbank Bamberg;Bamberg;COBADEFFXXX
@@ -4436,7 +4441,6 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 79063060;Raiffeisenbank Estenfeld-Bergtheim;Estenfeld;GENODEF1EFD
 79063122;Raiffeisenbank Höchberg;Höchberg;GENODEF1HBG
 79065028;VR-Bank Bad Kissingen;Bad Kissingen;GENODEF1BRK
-79066082;Raiffeisenbank -alt-;Altertheim;GENODEF1AHE
 79069001;Raiffeisenbank Volkacher Mainschleife - Wiesentheid;Volkach;GENODEF1WED
 79069010;VR-Bank Schweinfurt;Schweinfurt;GENODEF1ATE
 79069031;Raiffeisenbank Bütthard-Gaukönigshofen;Bütthard;GENODEF1BHD
@@ -4910,3 +4914,4 @@ Bankleitzahl;Bezeichnung;Ort;BIC
 87095974;Volksbank-Raiffeisenbank Glauchau;Glauchau;GENODEF1GC1
 87096124;Volksbank Mittweida;Mittweida;GENODEF1MIW
 87096214;Volksbank Chemnitz;Chemnitz;GENODEF1CH1
+Bankleitzahl;Bezeichnung;Ort;BIC

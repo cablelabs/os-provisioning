@@ -781,7 +781,7 @@ class SnmpController extends \BaseController
      */
     private function _get_community($access = 'ro')
     {
-        return $this->device->{'community_'.$access} ?: \Modules\ProvBase\Entities\ProvBase::get([$access.'_community'])->first()->{$access.'_community'};
+        return $this->device->{'community_'.$access} ?: \Modules\Hfc\Entities\HfcBase::get([$access.'_community'])->first()->{$access.'_community'};
     }
 
     /**

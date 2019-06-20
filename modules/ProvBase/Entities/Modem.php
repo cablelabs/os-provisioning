@@ -53,7 +53,7 @@ class Modem extends \BaseModel
             \Session::put('modem_show_filter', \Input::get('modem_show_filter'));
         }
         // non-datatable request; current route is null on testing
-        elseif (\Route::getCurrentRoute() && basename(\Route::getCurrentRoute()->getPath()) == 'Modem') {
+        elseif (\Route::getCurrentRoute() && basename(\Route::getCurrentRoute()->uri) == 'Modem') {
             \Session::forget('modem_show_filter');
         }
 
@@ -1619,7 +1619,7 @@ class ModemObserver
             if (multi_array_key_exists(['x', 'y'], $diff)) {
                 // suppress output in this case
                 ob_start();
-                \Modules\HfcCustomer\Entities\Mpr::refresh($modem);
+                \Modules\HfcCustomer\Entities\Mpr::ruleMatching($modem);
                 ob_end_clean();
             }
         }
