@@ -37,7 +37,7 @@
 @section('content_right')
 
     @if(isset($relations) && !empty($relations))
-        <div class="col-md-{{isset($edit_right_md_size) ? $edit_right_md_size : 4}} ui-sortable">
+        <div class="col-lg-{{isset($edit_right_md_size) ? $edit_right_md_size : 4}}">
             <div class="tab-content">
                 @foreach ($tabs as $key => $tab)
                     @php $firstKey = $key == 0 ? $tab['name'] : '';
@@ -81,7 +81,6 @@
                                 @include ('bootstrap.panel', [
                                     'content' => $tab['name'].$view,
                                     'view_header' => \App\Http\Controllers\BaseViewController::translate_view($view, 'Header' , 2),
-                                    'md' => 12,
                                     'options' => $relation['panelOptions'] ?? null,
                                     ])
 

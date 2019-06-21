@@ -9,11 +9,15 @@
 ?>
 
 {{-- begin col-dyn --}}
-<div class="col-md-{{$md}} ui-sortable">
-	<div class="panel panel-inverse card-2 d-flex flex-column" data-sortable-id="table-index-{{ isset($i) ? $i : '1'}}">
+@if(isset($md))
+<div class="col-{{ $md }}">
+@endif
+	<div class="panel panel-inverse card-2" data-sort-id="{{ isset($tab) ? $tab['name'] . '-' . $view : 1 }}">
 		@include ('bootstrap.panel-header', ['view_header' => $view_header])
-		<div class="panel-body fader d-flex flex-column" style="overflow-y:{{ $overflow_y }}; {{ $style }}; {{ $display }}">
+		<div class="panel-body fader" style="overflow-y:{{ $overflow_y }}; {{ $style }}; {{ $display }}">
 			@yield($content)
 		</div>
 	</div>
+@if(isset($md))
 </div>
+@endif
