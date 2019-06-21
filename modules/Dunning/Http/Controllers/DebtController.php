@@ -6,7 +6,6 @@ use View;
 use Yajra\Datatables\Datatables;
 use Modules\Dunning\Entities\Debt;
 use App\Http\Controllers\BaseViewController;
-use App\Http\Controllers\NamespaceController;
 
 class DebtController extends \BaseController
 {

@@ -5,7 +5,6 @@ namespace Modules\ProvBase\Http\Controllers;
 use Bouncer;
 use App\GlobalConfig;
 use Modules\ProvBase\Entities\Modem;
-use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class ModemController extends \BaseController
 {
