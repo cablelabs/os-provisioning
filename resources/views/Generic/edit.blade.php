@@ -106,7 +106,7 @@
 @if(isset($tabs))
 <script language="javascript">
     $('#loggingtab').click(function() {
-        $('.tab-content').toggle();
+        $('#logging').toggle();
     });
 
     // $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
