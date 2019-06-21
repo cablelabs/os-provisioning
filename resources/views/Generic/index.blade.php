@@ -10,21 +10,21 @@
 --}}
 
 <?php
-	$blade_type = 'index_list';
+    $blade_type = 'index_list';
 ?>
 
 @extends ('Layout.split84-nopanel')
 
 @section('content_top')
-	<li class="active">
-		<a href="{{route($route_name.'.index')}}">
-		    {!! $model->view_icon().' '.$headline !!}
-		</a>
-	</li>
+    <li class="active">
+        <a href="{{route($route_name.'.index')}}">
+            {!! $model->view_icon().' '.$headline !!}
+        </a>
+    </li>
 @stop
 
 @section('content_left')
-	{{-- Headline: means icon followed by headline --}}
+    {{-- Headline: means icon followed by headline --}}
     <div class="col-md-12">
         <div class="row m-b-25">
             <div class="col">
@@ -63,7 +63,7 @@
         </div>
     </div>
 
-	@include('Generic.above_infos')
+    @include('Generic.above_infos')
 
     {{-- database entries inside a form with checkboxes to be able to delete one or more entries --}}
     {{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete', 'id' => 'IndexForm')) }}

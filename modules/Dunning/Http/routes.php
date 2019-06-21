@@ -12,7 +12,7 @@ BaseRoute::group([], function () {
     BaseRoute::resource('Dunning', 'Modules\Dunning\Http\Controllers\DunningController');
     BaseRoute::resource('Debt', 'Modules\Dunning\Http\Controllers\DebtController');
 
-    Route::get("Debt/result/datatables", [
+    Route::get('Debt/result/datatables', [
         'as' => 'Debt.result.data',
         'uses' => 'Modules\Dunning\Http\Controllers\DebtController@result_datatables_ajax',
         'middleware' => ['web', 'can:view,Modules\Dunning\Entities\Debt'],
