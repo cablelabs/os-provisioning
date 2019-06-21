@@ -68,7 +68,7 @@ var loadPanelPositionFromStorage = function() {
                     if ($(targetId).length !== 0) {
                         var targetHtml = $(targetId).clone()
                         $(targetId).remove()
-                        $('#' + targetColumn).append(targetHtml)
+                        $('[id ="' + targetColumn + '"]').append(targetHtml)
                         $('[data-sort-id="'+ data.id +'"]').attr('data-init','true')
                     }
                 })
