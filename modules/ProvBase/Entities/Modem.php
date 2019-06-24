@@ -1569,12 +1569,8 @@ class ModemObserver
         // check if this is running if you decide to implement moving of modems to other contracts
         // watch Ticket LAR-106
         if (\Module::collections()->has('ProvVoipEnvia')) {
-            if (
-                // updating is also called on create – so we have to check this
-                (! $modem->wasRecentlyCreated)
-                &&
-                ($modem['original']['contract_id'] != $modem->contract_id)
-            ) {
+            // updating is also called on create – so we have to check this
+            if ((! $modem->wasRecentlyCreated) && ($modem->isDirty('contract_id'))) {
                 // returning false should cancel the updating: verify this! There has been some problems with deleting modems – we had to put the logic in Modem::delete() probably caused by our Base* classes…
                 // see: http://laravel-tricks.com/tricks/cancelling-a-model-save-update-delete-through-events
                 return false;

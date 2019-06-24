@@ -714,7 +714,7 @@ class PhonenumberObserver
      */
     protected function _check_and_process_mta_change($phonenumber)
     {
-        $old_mta_id = intval($phonenumber['original']['mta_id']);
+        $old_mta_id = intval($phonenumber->getOriginal('mta_id'));
         $new_mta_id = intval($phonenumber->mta_id);
 
         // if the MTA has not been changed we have nothing to do :-)
@@ -840,13 +840,7 @@ class PhonenumberObserver
      */
     protected function _check_and_process_sip_data_change($phonenumber)
     {
-        if (
-            ($phonenumber['original']['username'] != $phonenumber->username)
-            ||
-            ($phonenumber['original']['password'] != $phonenumber->password)
-            ||
-            ($phonenumber['original']['sipdomain'] != $phonenumber->sipdomain)
-        ) {
+        if ($phonenumber->isDirty('username', 'password', 'sipdomain')) {
             $this->_check_and_process_sip_data_change_for_envia($phonenumber);
         }
     }

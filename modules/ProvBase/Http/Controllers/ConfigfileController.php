@@ -249,7 +249,7 @@ class ConfigfileController extends \BaseController
     public function exportTree($id, $configfiles)
     {
         $model = $configfiles->where('id', $id)->first();
-        $tree = $model['attributes'];
+        $tree = $model->getAttributes();
 
         $children = $configfiles->where('parent_id', $id)->all();
 

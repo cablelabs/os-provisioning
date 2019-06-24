@@ -561,8 +561,8 @@ class NetElementObserver
         $user = Auth::user()->login_name;
 
         if ($isUpdating) {
-            $oldNet = NetElement::find($netelement['original']['parent_id']);
-            $net = NetElement::find($netelement['attributes']['parent_id']);
+            $oldNet = NetElement::find($netelement->getOriginal('parent_id'));
+            $net = NetElement::find($netelement->parent_id);
             $oldNetId = $oldNet ? $oldNet->get_native_net() : 0;
             $netId = $net ? $net->get_native_net() : 0;
 

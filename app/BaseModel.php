@@ -1076,12 +1076,12 @@ class BaseObserver
             // get changed attributes
             $arr = [];
 
-            foreach ($model['attributes'] as $key => $value) {
+            foreach ($model->getAttributes() as $key => $value) {
                 if (in_array($key, $ignore)) {
                     continue;
                 }
 
-                $original = $model['original'][$key];
+                $original = $model->getOriginal($key);
                 if ($original != $value) {
                     if (in_array($key, $hide)) {
                         $arr[] = $key;

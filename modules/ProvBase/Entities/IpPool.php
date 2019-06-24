@@ -237,8 +237,8 @@ class IpPoolObserver
         $pool->cmts->make_dhcp_conf();
 
         // make dhcp conf of old cmts if relation got changed
-        if ($pool['original']['cmts_id'] != $pool['attributes']['cmts_id']) {
-            $cmts_old = Cmts::find($pool['original']['cmts_id'])->make_dhcp_conf();
+        if ($pool->isDirty('cmts_id')) {
+            $cmts_old = Cmts::find($pool->getOriginal('cmts_id'))->make_dhcp_conf();
         }
     }
 

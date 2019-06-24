@@ -202,10 +202,10 @@ class UserObserver
     public function updating($user)
     {
         // Rebuild cached sidebar when user changes his language
-        if ($user['original']['language'] != $user['attributes']['language']) {
+        if ($user->isDirty('language')) {
             Session::forget('menu');
 
-            $userLang = checkLocale($user['attributes']['language']);
+            $userLang = checkLocale($user->language);
 
             App::setLocale($userLang);
             Session::put('language', $userLang);
