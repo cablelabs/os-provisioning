@@ -222,7 +222,7 @@ class ConfigfileController extends \BaseController
      */
     public function update($id)
     {
-        if (! Request::has('_2nd_action')) {
+        if (! Request::filled('_2nd_action')) {
             // check and handle uploaded firmware and cvc files
             $this->handle_file_upload('firmware', '/tftpboot/fw/');
             $this->handle_file_upload('cvc', '/tftpboot/cvc/');

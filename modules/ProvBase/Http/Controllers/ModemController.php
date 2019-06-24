@@ -338,12 +338,12 @@ class ModemController extends \BaseController
      */
     public function update($id)
     {
-        if (! \Request::has('_2nd_action') && ! \Request::has('_3rd_action')) {
+        if (! \Request::filled('_2nd_action') && ! \Request::filled('_3rd_action')) {
             return parent::update($id);
         }
 
         $modem = Modem::find($id);
-        $modem->restart_modem(false, \Request::has('_3rd_action'));
+        $modem->restart_modem(false, \Request::filled('_3rd_action'));
 
         return \Redirect::back();
     }

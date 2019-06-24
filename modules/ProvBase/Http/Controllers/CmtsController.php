@@ -38,7 +38,7 @@ class CmtsController extends \BaseController
         }
 
         // CMTS type selection based on CMTS company
-        if (\Request::has('company')) { // for auto reload
+        if (\Request::filled('company')) { // for auto reload
             $company = \Request::get('company');
         } elseif ($model->exists) { // else if using edit.blade
             $company = $model->company;

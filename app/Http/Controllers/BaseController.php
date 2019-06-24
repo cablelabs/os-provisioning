@@ -881,8 +881,7 @@ class BaseController extends Controller
 
         foreach ($fields as $field) {
             $name = $field['name'];
-            // we can't use Request::has($name), as it claims $name does not exists, if it is an empty string
-            $data[$name] = array_key_exists($name, $inputs) ? $inputs[$name] : $field['field_value'];
+            $data[$name] = Request::has($name) ? Request::input($name) : $field['field_value'];
         }
 
         return $data;
