@@ -4,19 +4,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | PDO Fetch Style
-    |--------------------------------------------------------------------------
-    |
-    | By default, database results will be returned as instances of the PHP
-    | stdClass object; however, you may desire to retrieve records in an
-    | array format for simplicity. Here you can tweak the fetch style.
-    |
-    */
-
-    'fetch' => PDO::FETCH_CLASS,
-
-    /*
-    |--------------------------------------------------------------------------
     | Default Database Connection Name
     |--------------------------------------------------------------------------
     |
@@ -47,9 +34,9 @@ return [
     'connections' => [
 
         'sqlite' => [
-            'driver'   => 'sqlite',
-            'database' => storage_path().'/database.sqlite',
-            'prefix'   => '',
+            'driver' => 'sqlite',
+            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'prefix' => '',
         ],
 
         // NMS Prime default connection
@@ -58,11 +45,13 @@ return [
             'host'      => env('DB_HOST', 'localhost'),
             'database'  => env('DB_DATABASE', 'nmsprime'),
             'username'  => env('DB_USERNAME', 'nmsprime'),
-            'password'  => env('DB_PASSWORD', ''),
-            'charset'   => 'utf8mb4',
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix'    => '',
-            'strict'    => false,
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
         ],
 
         // A mysql root connection
@@ -74,11 +63,13 @@ return [
             'host'      => env('ROOT_DB_HOST', 'localhost'),
             'database'  => env('ROOT_DB_DATABASE', 'nmsprime'),
             'username'  => env('ROOT_DB_USERNAME', 'root'),
-            'password'  => env('ROOT_DB_PASSWORD', ''),
-            'charset'   => 'utf8mb4',
+            'password' => env('ROOT_DB_PASSWORD', ''),
+            'unix_socket' => env('ROOT_DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix'    => '',
-            'strict'    => false,
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
         ],
 
         // Config Host connection.
@@ -89,10 +80,12 @@ return [
             'database'  => env('DB_CONFIG_DATABASE', env('DB_DATABASE', 'nmsprime')),
             'username'  => env('DB_CONFIG_USERNAME', env('DB_USERNAME', 'nmsprime')),
             'password'  => env('DB_CONFIG_PASSWORD', env('DB_PASSWORD', '')),
-            'charset'   => 'utf8mb4',
+            'unix_socket' => env('DB_CONFIG_SOCKET', env('DB_SOCKET', '')),
+            'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix'    => '',
-            'strict'    => false,
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
         ],
 
         // mysql cacti connection
@@ -102,10 +95,12 @@ return [
             'database'  => env('CACTI_DB_DATABASE', 'cacti'),
             'username'  => env('CACTI_DB_USERNAME', 'cactiuser'),
             'password'  => env('CACTI_DB_PASSWORD', ''),
-            'charset'   => 'utf8mb4',
+            'unix_socket' => env('CACTI_DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix'    => '',
-            'strict'    => false,
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
         ],
 
         // for km3 import command only
@@ -116,11 +111,10 @@ return [
             'database' => env('DB_IMPORT_DATABASE', 'db_nms'),
             'username' => env('DB_IMPORT_USERNAME', 'schmto'),
             'password' => env('DB_IMPORT_PASSWORD', ''),
-            'charset'  => 'utf8',
-            // 'collation' => 'utf8_unicode_ci',
-            'collation' => 'utf8_general_ci',
-            'prefix'   => '',
-            'schema'   => 'public',
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
         ],
 
         // mysql CCC connection
@@ -130,19 +124,23 @@ return [
             'database'  => env('CCC_DB_DATABASE', env('DB_DATABASE', 'forge')),
             'username'  => env('CCC_DB_USERNAME', env('DB_USERNAME', '')),
             'password'  => env('CCC_DB_PASSWORD', env('DB_PASSWORD', '')),
-            'charset'   => 'utf8mb4',
+            'unix_socket' => env('CCC_DB_SOCKET', env('DB_SOCKET', '')),
+            'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'prefix'    => '',
-            'strict'    => false,
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
         ],
 
         'sqlsrv' => [
-            'driver'   => 'sqlsrv',
-            'host'     => env('DB_HOST', 'localhost'),
+            'driver' => 'sqlsrv',
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
-            'prefix'   => '',
+            'charset' => 'utf8',
+            'prefix' => '',
         ],
 
         // mysql voip monitoring
@@ -212,7 +210,7 @@ return [
 
     'redis' => [
 
-        'cluster' => false,
+        'client' => 'predis',
 
         'default' => [
             'host' => env('REDIS_HOST', '127.0.0.1'),

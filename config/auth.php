@@ -1,6 +1,7 @@
 <?php
 
 return [
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
@@ -11,10 +12,12 @@ return [
     | as required, but they're a perfect start for most applications.
     |
     */
+
     'defaults' => [
         'guard'        => 'admin',
         'passwords'    => 'admin',
     ],
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -31,6 +34,7 @@ return [
     | Supported: "session", "token"
     |
     */
+
     'guards' => [
         'admin' => [
             'driver'   => 'session',
@@ -45,6 +49,7 @@ return [
             'provider' => 'admin',
         ],
     ],
+
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -61,6 +66,7 @@ return [
     | Supported: "database", "eloquent"
     |
     */
+
     'providers' => [
         'admin' => [
             'driver' => 'eloquent',
@@ -71,14 +77,11 @@ return [
             'model' => \Modules\Ccc\Entities\CccUser::class,
         ],
     ],
+
     /*
     |--------------------------------------------------------------------------
     | Resetting Passwords
     |--------------------------------------------------------------------------
-    |
-    | Here you may set the options for resetting passwords including the view
-    | that is your password reset e-mail. You may also set the name of the
-    | table that maintains all of the reset tokens for your application.
     |
     | You may specify multiple password reset configurations if you have more
     | than one user table or model in the application and you want to have
@@ -89,7 +92,7 @@ return [
     | they have less time to be guessed. You may change this as needed.
     |
     */
-    // TODO:
+
     'passwords' => [
         'admin' => [
             'provider' => 'admin',
