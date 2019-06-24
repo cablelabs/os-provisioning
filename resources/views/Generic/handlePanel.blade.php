@@ -12,6 +12,8 @@ var handlePanel = function () {
             handlePanelPosition(ui.item)
         }
     });
+
+    // Note: panels with class col as parent are handled automatically via apps.js
 };
 
 var handlePanelPosition = function(element) {

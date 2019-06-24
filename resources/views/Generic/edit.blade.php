@@ -82,6 +82,7 @@
                                     'content' => $tab['name'].$view,
                                     'view_header' => \App\Http\Controllers\BaseViewController::translate_view($view, 'Header' , 2),
                                     'options' => $relation['panelOptions'] ?? null,
+                                    'handlePanelPosBy' => 'nmsprime',
                                     ])
 
                             @endforeach
