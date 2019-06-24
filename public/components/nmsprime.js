@@ -106,7 +106,7 @@ var saveTabPillState = function() {
     json = JSON.parse(tabsState || "{}");
 
     $.each(json, function(containerId, href) {
-      return $("#" + containerId + " a[href=" + href + "]").tab('show');
+      return $("#" + containerId + " a[href='" + href + "']").tab('show');
     });
 
     $("ul.nav.nav-pills, ul.nav.nav-tabs").each(function() {
