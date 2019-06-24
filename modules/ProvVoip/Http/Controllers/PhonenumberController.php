@@ -85,10 +85,10 @@ class PhonenumberController extends \BaseController
         // label has to be the same like column in sql table
         $ret = [
             [
-                'form_type' => 'select',
+                'form_type' => 'text',
                 'name' => 'country_code',
                 'description' => 'International prefix',
-                'value' => Phonenumber::getPossibleEnumValues('country_code'),
+                'help' => 'Usually, 4 digit number required for international calls.',
             ],
             [
                 'form_type' => 'text',
