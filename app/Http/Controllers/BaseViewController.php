@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use App;
 use Str;
 use Auth;
-use File;
 use Form;
-use View;
-use Input;
 use Route;
 use Config;
 use Module;
 use Bouncer;
+use Request;
 use Session;
 use BaseModel;
 
@@ -232,10 +230,10 @@ class BaseViewController extends Controller
                 $field['field_value'] = $model[$field['name']];
             }
 
-            // NOTE: Input::get should actually include $_POST global var and $_GET!!
+            // NOTE: Request::get should actually include $_POST global var and $_GET!!
             // 4.(sub-task) auto-fill all field_value's with HTML Input
-            if (Input::get($field['name'])) {
-                $field['field_value'] = Input::get($field['name']);
+            if (Request::get($field['name'])) {
+                $field['field_value'] = Request::get($field['name']);
             }
 
             // 4.(sub-task) auto-fill all field_value's with HTML POST array if supposed
@@ -417,7 +415,7 @@ class BaseViewController extends Controller
                 case 'select':
                     if (isset($options['multiple']) && isset($field['selected'])) {
                         $escaped_field_name = Str::substr($field['name'], 0, Str::length($field['name']) - 2);
-                        $field['field_value'] = Input::old($escaped_field_name, array_keys($field['selected']));
+                        $field['field_value'] = Request::old($escaped_field_name, array_keys($field['selected']));
                         // values MUST be int, because of strict type checking in Form module
                         $field['field_value'] = array_map('intval', $field['field_value']);
                     }

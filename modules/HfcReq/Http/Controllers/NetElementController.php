@@ -65,7 +65,7 @@ class NetElementController extends HfcBaseController
 
         $cluster = false;
         // netelement is a cluster or will be created as type cluster
-        if ($netelement->netelementtype_id == 2 || (! $netelement->exists && \Input::get('netelementtype_id') == 2)) {
+        if ($netelement->netelementtype_id == 2 || (! $netelement->exists && \Request::get('netelementtype_id') == 2)) {
             $cluster = true;
         }
 

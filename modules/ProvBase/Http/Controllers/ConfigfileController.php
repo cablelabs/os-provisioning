@@ -100,11 +100,11 @@ class ConfigfileController extends \BaseController
      */
     public function importTree()
     {
-        if (! Input::hasFile('import')) {
+        if (! Request::hasFile('import')) {
             return;
         }
 
-        $content = $this->replaceIds(\File::get(Input::file('import')));
+        $content = $this->replaceIds(\File::get(Request::file('import')));
 
         $json = json_decode($content, true);
 
@@ -112,7 +112,7 @@ class ConfigfileController extends \BaseController
             return trans('messages.invalidJson');
         }
 
-        $this->recreateTree($json, Input::get()['name'] == '' ? true : false, Configfile::all()->pluck('name'));
+        $this->recreateTree($json, Request::get()['name'] == '' ? true : false, Configfile::all()->pluck('name'));
     }
 
     /**
@@ -141,7 +141,7 @@ class ConfigfileController extends \BaseController
         // replace first parent_id with parent_id of input
         preg_match_all('/[a-t]{6}.[d-i]{2}["][:]\d+[,]/', $content, $ids);
         $parentId = array_shift($ids[0]);
-        $input = Input::get('parent_id');
+        $input = Request::get('parent_id');
 
         return str_replace($parentId, 'parent_id":'.$input.',', $content);
     }
@@ -207,8 +207,8 @@ class ConfigfileController extends \BaseController
             return;
         }
 
-        Input::merge($content);
-        Input::merge(['import' => 'import']);
+        Request::merge($content);
+        Request::merge(['import' => 'import']);
 
         // only continue if the input would pass the validation
         if (\Validator::make($content, $this->prepare_rules(Configfile::rules(), $content))->fails()) {
@@ -222,7 +222,7 @@ class ConfigfileController extends \BaseController
      */
     public function update($id)
     {
-        if (! Input::has('_2nd_action')) {
+        if (! Request::has('_2nd_action')) {
             // check and handle uploaded firmware and cvc files
             $this->handle_file_upload('firmware', '/tftpboot/fw/');
             $this->handle_file_upload('cvc', '/tftpboot/cvc/');

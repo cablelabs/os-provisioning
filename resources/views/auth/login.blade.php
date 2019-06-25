@@ -44,7 +44,7 @@
 
 					{{-- Username --}}
 					<div class="form-group m-b-20">
-					{{ Form::text('login_name', Input::old('login_name'), array('autofocus'=>'autofocus', 'class' => "form-control input-lg", 'placeholder' => \App\Http\Controllers\BaseViewController::translate_label('Username'), 'style' => 'simple')) }}
+					{{ Form::text('login_name', Request::old('login_name'), array('autofocus'=>'autofocus', 'class' => "form-control input-lg", 'placeholder' => \App\Http\Controllers\BaseViewController::translate_label('Username'), 'style' => 'simple')) }}
 					</div>
 
 					{{-- Password --}}
@@ -81,7 +81,7 @@
 		{{-- end login --}}
 
 	@include ('bootstrap.footer')
-	
+
 	</body>
 </html>
 

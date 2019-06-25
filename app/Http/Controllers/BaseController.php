@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App;
 use Log;
 use Str;
 use Auth;
-use File;
 use View;
-use Input;
-use Route;
 use Config;
 use Bouncer;
+use Request;
 use Session;
 use Redirect;
 use BaseModel;
@@ -19,7 +16,6 @@ use Validator;
 use GlobalConfig;
 use Monolog\Logger;
 use Yajra\DataTables\DataTables;
-use Illuminate\Support\Facades\Request;
 
 /*
  * BaseController: The Basic Controller in our MVC design.
@@ -319,22 +315,22 @@ class BaseController extends Controller
     {
         $upload_field = $base_field.'_upload';
 
-        if (! Input::hasFile($upload_field)) {
+        if (! Request::hasFile($upload_field)) {
             return;
         }
 
         // get filename
-        $filename = Input::file($upload_field)->getClientOriginalName();
+        $filename = Request::file($upload_field)->getClientOriginalName();
 
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
         $fn = pathinfo($filename, PATHINFO_FILENAME);
         $filename = sanitize_filename($fn).".$ext";
 
         // move file
-        Input::file($upload_field)->move($dst_path, $filename);
+        Request::file($upload_field)->move($dst_path, $filename);
 
         // place filename as chosen value in Input field
-        Input::merge([$base_field => $filename]);
+        Request::merge([$base_field => $filename]);
 
         return $filename;
     }
@@ -476,13 +472,13 @@ class BaseController extends Controller
     public function fulltextSearch()
     {
         // get the search scope
-        $scope = Input::get('scope');
+        $scope = Request::get('scope');
 
         // get the mode to use and transform to sql syntax
-        $mode = Input::get('mode');
+        $mode = Request::get('mode');
 
         // get the query to search for
-        $query = Input::get('query');
+        $query = Request::get('query');
 
         if ($scope == 'all') {
             $view_path = 'Generic.searchglobal';
@@ -501,7 +497,7 @@ class BaseController extends Controller
         $delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
         $view_var = collect();
-        foreach ($obj->getFulltextSearchResults($scope, $mode, $query, Input::get('preselect_field'), Input::get('preselect_value')) as $result) {
+        foreach ($obj->getFulltextSearchResults($scope, $mode, $query, Request::get('preselect_field'), Request::get('preselect_value')) as $result) {
             $view_var = $view_var->merge($result->get());
         }
 
@@ -638,7 +634,7 @@ class BaseController extends Controller
         $controller = static::get_controller_obj();
 
         // Prepare and Validate Input
-        $data = $controller->prepare_input(Input::all());
+        $data = $controller->prepare_input(Request::all());
         $rules = $controller->prepare_rules($obj::rules(), $data);
         $validator = Validator::make($data, $rules);
 
@@ -774,7 +770,7 @@ class BaseController extends Controller
         $controller = static::get_controller_obj();
 
         // Prepare and Validate Input
-        $data = $controller->prepare_input(Input::all());
+        $data = $controller->prepare_input(Request::all());
         $rules = $controller->prepare_rules($obj::rules($id), $data);
         $validator = Validator::make($data, $rules);
 
@@ -880,12 +876,12 @@ class BaseController extends Controller
     private static function _api_prepopulate_fields($obj, $ctrl)
     {
         $fields = BaseViewController::prepare_form_fields($ctrl->view_form_fields($obj), $obj);
-        $inputs = Input::all();
+        $inputs = Request::all();
         $data = [];
 
         foreach ($fields as $field) {
             $name = $field['name'];
-            // we can't use Input::has($name), as it claims $name does not exists, if it is an empty string
+            // we can't use Request::has($name), as it claims $name does not exists, if it is an empty string
             $data[$name] = array_key_exists($name, $inputs) ? $inputs[$name] : $field['field_value'];
         }
 
@@ -984,7 +980,7 @@ class BaseController extends Controller
         // bulk delete
         if ($id == 0) {
             // Error Message when no Model is specified - NOTE: delete_message must be an array of the structure below !
-            if (! Input::get('ids')) {
+            if (! Request::get('ids')) {
                 $message = 'No Entry For Deletion specified';
                 Session::push('tmp_error_above_index_list', $message);
 
@@ -993,7 +989,7 @@ class BaseController extends Controller
 
             $obj = static::get_model_obj();
 
-            foreach (Input::get('ids') as $id => $val) {
+            foreach (Request::get('ids') as $id => $val) {
                 $obj = $obj->findOrFail($id);
                 $to_delete++;
 
@@ -1076,8 +1072,8 @@ class BaseController extends Controller
         $model = NamespaceController::get_model_name();
         $model = $model::find($id);
 
-        if (\Input::has('ids')) {
-            $model->{$function}()->detach(array_keys(\Input::get('ids')));
+        if (\Request::has('ids')) {
+            $model->{$function}()->detach(array_keys(\Request::get('ids')));
         }
 
         return \Redirect::back();
@@ -1129,7 +1125,7 @@ class BaseController extends Controller
         }
 
         $query = static::get_model_obj();
-        foreach (Input::all() as $key => $val) {
+        foreach (Request::all() as $key => $val) {
             $query = $query->where($key, $val);
         }
 
@@ -1150,7 +1146,7 @@ class BaseController extends Controller
     {
         $this->output_format = 'json';
 
-        $data = Input::all();
+        $data = Request::all();
         $id = $data['id'];
         $func = $data['function'];
 
@@ -1578,7 +1574,7 @@ class BaseController extends Controller
         $model = static::get_model_obj();
 
         return $model->select($column)
-            ->where($column, 'like', '%'.\Input::get('q').'%')
+            ->where($column, 'like', '%'.\Request::get('q').'%')
             ->distinct()
             ->pluck($column);
     }
