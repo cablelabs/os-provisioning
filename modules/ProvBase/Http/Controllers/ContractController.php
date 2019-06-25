@@ -39,7 +39,7 @@ class ContractController extends \BaseController
             ['form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic Degree', 'value' => $model->get_academic_degree_options()],
             ['form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => '1'],
             ['form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => '1', 'space' => '1'],
-            ['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1', 'html' => "<div class=col-md-12 style='background-color:whitesmoke'>
+            ['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1', 'autocomplete' => [], 'html' => "<div class=col-md-12 style='background-color:whitesmoke'>
 				<div class='form-group row'>
 					<label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number *</label>
 						<div class=col-md-5>
@@ -47,9 +47,9 @@ class ContractController extends \BaseController
 						</div>"],
             ['form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => '1', 'html' => "<div class=col-md-2><input class='form-control' name='house_number' type=text value='".$model['house_number']."' id='house_number' style='background-color:whitesmoke'></div>
 				</div></div>"],
-            ['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1'],
-            ['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => '1'],
-            ['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => '1'],
+            ['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1', 'autocomplete' => []],
+            ['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => '1', 'autocomplete' => []],
+            ['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => '1', 'autocomplete' => []],
             ['form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'],
             ['form_type' => 'text', 'name' => 'fax', 'description' => 'Fax'],
             ['form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'],

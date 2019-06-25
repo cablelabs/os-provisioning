@@ -273,6 +273,18 @@ class BaseViewController extends Controller
                 $field['form_type'] = 'text';
             }
 
+            // 6. prepare autocomplete field
+            if (isset($field['autocomplete']) && is_array($field['autocomplete'])) {
+                if (count($field['autocomplete']) === 0) {
+                    $field['autocomplete'][] = explode('.', Route::currentRouteName())[0];
+                }
+                if (count($field['autocomplete']) === 1) {
+                    $field['autocomplete'][] = $field['name'];
+                }
+            } else {
+                unset($field['autocomplete']);
+            }
+
             array_push($ret, $field);
         }
 

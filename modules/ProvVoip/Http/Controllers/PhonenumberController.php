@@ -162,6 +162,7 @@ class PhonenumberController extends \BaseController
             'form_type' => 'text',
             'name' => 'sipdomain',
             'description' => trans('messages.SIP domain'),
+            'autocomplete' => [],
         ];
         if ($options) {
             $sipdomain['options'] = $options;
