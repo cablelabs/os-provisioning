@@ -17,7 +17,7 @@
                     @else
                         {{-- probably the <a> tag must be set to active according to docu --}}
                         <li class="nav-item {{$firstKey == $tab['name'] ? 'show' : ''}}" role="tab">
-                            <a class="{{$firstKey == $tab['name'] ? 'active' : ''}}" href="#{{$tab['name']}}" data-toggle="tab">{{$tab['name']}}</a>
+                            <a id="{{$tab['name'].'tab'}}" class="{{$firstKey == $tab['name'] ? 'active' : ''}}" href="#{{$tab['name']}}" data-toggle="tab">{{$tab['name']}}</a>
                         </li>
                     @endif
                 @endforeach

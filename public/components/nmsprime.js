@@ -88,6 +88,12 @@ if (typeof(Storage) !== "undefined") {
 * http://stackoverflow.com/posts/16984739/revisions
 */
 var saveTabPillState = function() {
+  // Show tab from hash
+  // Note: for an URL with hash the function above will not be initialised and therefore will not save the tab state
+  if (window.location.hash) {
+    return $(window.location.hash + 'tab').tab('show');
+  }
+
   $(function() {
     var json, tabsState;
     $('a[data-toggle="pill"], a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
