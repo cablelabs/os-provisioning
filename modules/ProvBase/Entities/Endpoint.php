@@ -11,7 +11,7 @@ class Endpoint extends \BaseModel
     {
         return [
             'mac' => 'required|mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL',
-            'hostname' => 'regex:/^[0-9A-Za-z\-]+$/|required|unique:endpoint,hostname,'.$id.',id,deleted_at,NULL',
+            'hostname' => 'regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/|required|unique:endpoint,hostname,'.$id.',id,deleted_at,NULL',
             'ip' => 'required|ip|unique:endpoint,ip,'.$id.',id,deleted_at,NULL',
         ];
     }
