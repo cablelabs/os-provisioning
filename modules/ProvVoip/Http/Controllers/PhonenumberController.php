@@ -89,6 +89,7 @@ class PhonenumberController extends \BaseController
                 'name' => 'country_code',
                 'description' => 'International prefix',
                 'help' => 'Usually, 4 digit number required for international calls.',
+                'autocomplete' => [],
             ],
             [
                 'form_type' => 'text',
