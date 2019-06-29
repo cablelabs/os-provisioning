@@ -8,7 +8,6 @@
         }
     ],
     "require": {
-        "kingsquare/php-mt940": "^1.4"
     },
     "autoload": {
         "psr-4": {
