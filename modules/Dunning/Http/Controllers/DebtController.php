@@ -99,7 +99,7 @@ class DebtController extends \BaseController
             return "<input style='simple' align='center' class='' name='ids[".$object->id."]' type='checkbox' value='1' ".
                 ($object->index_delete_disabled ? 'disabled' : '').'>';
         })->editColumn($first_column, function ($object) use ($first_column) {
-            return '<a href="'.route('Contract.edit', $object->contract_id).'?blade=1"><strong>'.array_get($object, $first_column).'</strong></a>';
+            return '<a href="'.route('Contract.edit', $object->contract_id).'#Billing"><strong>'.array_get($object, $first_column).'</strong></a>';
         });
 
         foreach ($edit_column_data as $column => $functionname) {
