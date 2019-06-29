@@ -144,7 +144,6 @@ class Contract extends \BaseModel
             if (\Module::collections()->has('Dunning')) {
                 $ret['Billing']['Debt']['class'] = 'Debt';
                 $ret['Billing']['Debt']['relation'] = $this->debts;
-                // $ret['Billing']['Debt']['panelOptions']['display'] = 'none';
             }
 
             $ret['Billing']['Invoice']['class'] = 'Invoice';
@@ -206,7 +205,7 @@ class Contract extends \BaseModel
      */
     public function debts()
     {
-        return $this->hasMany('Modules\Dunning\Entities\Debt');
+        return $this->hasMany('Modules\Dunning\Entities\Debt')->orderBy('date', 'desc');
     }
 
     public function modems()
