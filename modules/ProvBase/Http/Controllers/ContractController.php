@@ -64,11 +64,14 @@ class ContractController extends \BaseController
         }
 
         if (\Module::collections()->has('BillingBase')) {
+            $days = range(0, 28);
+            $days[0] = null;
+
             $b = [
                     ['form_type' => 'checkbox', 'name' => 'has_telephony', 'description' => 'Has telephony', 'value' => '1', 'help' => trans('helper.has_telephony'), 'hidden' => 1],
                     ['form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'checked' => 1],
+                    ['form_type' => 'select', 'name' => 'value_date', 'description' => 'Date of value', 'value' => $days, 'help' => trans('helper.contract.valueDate')],
                     ['form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $model->html_list(\Modules\BillingBase\Entities\CostCenter::all(), 'name', true)],
-                    ['form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => $model->html_list(\Modules\BillingBase\Entities\Salesman::all(), ['firstname', 'lastname'], true, ' - '), 'space' => '1'],
                     // NOTE: qos is required as hidden field to automatically create modem with correct contract qos class
                     ['form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'hidden' => 1],
                 ];
@@ -76,6 +79,8 @@ class ContractController extends \BaseController
             if (\Modules\BillingBase\Entities\BillingBase::first()->show_ags) {
                 $b[] = ['form_type' => 'select', 'name' => 'contact', 'description' => 'Contact Persons', 'value' => \Modules\BillingBase\Entities\BillingBase::contactPersons()];
             }
+
+            $b[] = ['form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => $model->html_list(\Modules\BillingBase\Entities\Salesman::all(), ['firstname', 'lastname'], true, ' - '), 'space' => '1'];
         } else {
             $qoss = Qos::all();
 
@@ -166,6 +171,7 @@ class ContractController extends \BaseController
             'voip_contract_start',
             'voip_contract_end',
             'birthday',
+            'value_date',
         ];
         $data = $this->_nullify_fields($data, $nullable_fields);
 

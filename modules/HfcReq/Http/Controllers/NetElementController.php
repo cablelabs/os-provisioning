@@ -140,19 +140,14 @@ class NetElementController extends HfcBaseController
      * @param Modules\HfcReq\Entities\NetElement
      * @return array
      */
-    protected function get_form_tabs($netelement)
+    protected function editTabs($netelement)
     {
-        $provmon = new ProvMonController();
-        $netelement = $netelement ?: new NetElement;
+        $defaultTabs = parent::editTabs($netelement);
 
-        if (! isset($netelement->netelementtype)) {
-            $tabs = [['name' => 'Edit', 'route' => 'NetElement.edit', 'link' => $netelement->id]];
-            $provmon->loggingTab($tabs, $netelement);
-        }
+        $tabs = ProvMonController::checkNetelementtype($netelement);
+        $tabs[] = $defaultTabs[1];
 
-        $tabs = $provmon->checkNetelementtype($netelement);
-
-        return $provmon->loggingTab($tabs, $netelement);
+        return $tabs;
     }
 
     /**

@@ -27,19 +27,22 @@ return [
     'ISO_3166_ALPHA-2'				=> 'ISO 3166 ALPHA-2 (two characters, e.g. “US”). Used in address forms to specify the country.',
     'PasswordReset'           => 'This property defines the timespan in days in which the users of the administration panel should change their passwords. If you want to disable the password reset message, set the value to 0.',
 
- /*
-  *	MODULE: BillingBase
-  */
+    /*
+     *	MODULE: BillingBase
+     */
     //BillingBaseController
-    'BillingBase_cdr_offset' 		=> "TAKE CARE: incrementing this when having data from settlement runs leads to overwritten CDRs during next run - make sure to save/rename the history!\n\nExample: Set to 1 if Call Data Records from June belong to Invoices of July, Zero if it's the same month, 2 if CDRs of January belong to Invoices of March.",
-    'BillingBase_cdr_retention' 	=> 'Months that Call Data Records may/have to be kept save',
-    'BillingBase_extra_charge' 		=> 'Additional mark-on to purchase price. Only when not calculated through provider!',
-    'BillingBase_fluid_dates' 		=> 'Check this box if you want to add tariffs with uncertain start and/or end date. If checked two new checkboxes (Valid from fixed, Valid to fixed) will appear on Item\'s edit/create page. Check out their help messages for further explanation!',
-    'BillingBase_InvoiceNrStart' 	=> 'Invoice Number Counter starts every new year with this number',
-    'BillingBase_ItemTermination'	=> 'Allow Customers only to terminate booked products on last day of month',
-    'BillingBase_MandateRef'		=> "A Template can be built with sql columns of contract or mandate table - possible fields: \n",
-    'BillingBase_showAGs' 			=> 'Adds a select list with contact persons to the contract page. The list has to be stored in appropriate Storage directory - check source code!',
-    'BillingBase_SplitSEPA'			=> 'Sepa Transfers are split to different XML-Files dependent of their transfer type',
+    'BillingBase' => [
+        'cdr_offset'        => "TAKE CARE: incrementing this when having data from settlement runs leads to overwritten CDRs during next run - make sure to save/rename the history!\n\nExample: Set to 1 if Call Data Records from June belong to Invoices of July, Zero if it's the same month, 2 if CDRs of January belong to Invoices of March.",
+        'cdr_retention'     => 'Months that Call Data Records may/have to be kept save',
+        'extra_charge'      => 'Additional mark-on to purchase price. Only when not calculated through provider!',
+        'fluid_dates'       => 'Check this box if you want to add tariffs with uncertain start and/or end date. If checked two new checkboxes (Valid from fixed, Valid to fixed) will appear on Item\'s edit/create page. Check out their help messages for further explanation!',
+        'InvoiceNrStart'    => 'Invoice Number Counter starts every new year with this number',
+        'ItemTermination'   => 'Allow Customers only to terminate booked products on last day of month',
+        'MandateRef'        => "A Template can be built with sql columns of contract or mandate table - possible fields: \n",
+        'rcd'               => 'Is also the date of value. Can also be set specifically for a contract on contract page',
+        'showAGs'           => 'Adds a select list with contact persons to the contract page. The list has to be stored in appropriate Storage directory - check source code!',
+        'SplitSEPA'         => 'Sepa Transfers are split to different XML-Files dependent of their transfer type',
+        ],
 
     //CompanyController
     'Company_Management'			=> 'Comma separated list of names',
@@ -126,8 +129,12 @@ return [
  /*
   *	MODULE: ProvBase
   */
+    'contract' => [
+        'valueDate' => 'Day of month for specific date of value. Overrides the requested collection date from global config for this contract in the SEPA XML.',
+    ],
     'rate_coefficient'				=> 'MaxRateSustained will be multiplied by this value to grant the user more (> 1.0) throughput than subscribed.',
     'additional_modem_reset'		=> 'Check if an additional button should be displayed, which resets the modem via SNMP without querying the CMTS.',
+    'openning_new_tab_for_modem' => 'Check the box to open the modem edit page in new tab in topography view.',
     //ModemController
     'Modem_InternetAccess'			=> 'Internet Access for CPEs. (MTAs are not considered and will always go online when all other configurations are correct). Take care: With Billing-Module this checkbox will be overwritten by daily check if tariff changes.',
     'Modem_InstallationAddressChangeDate'	=> 'In case of (physical) relocation of the modem: Add startdate for the new address here. If readonly there is a pending address change order at Envia.',

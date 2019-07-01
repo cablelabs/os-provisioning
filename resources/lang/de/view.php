@@ -33,6 +33,7 @@ return [
                 'jQuery_ImportCsv'              => 'CSV importieren',
 //MENU
     //Main Menu
+        'Menu_Debt'                 => 'Offene Posten',
         'Menu_MainMenu' 			=> 'Hauptmenü',
         'Menu_Config Page'			=> 'Systemkonfiguration',
         'Menu_Logging'				=> 'Logs',
@@ -215,6 +216,9 @@ return [
         'Header_EnviaOrders'		=> 'envia TEL Auftrag|envia TEL Aufträge',
         'Header_EnviaContracts'		=> 'envia TEL Vertrag|envia TEL Verträge',
 
+        'Header_Debt'               => 'Historie Offene Posten',
+        'Header_DebtResult'         => 'Offene Posten gesamt',
+
     //Header Relation
         // 'Assigned'  				=> 'Zugewiesene',
     //Header Controler index
@@ -372,4 +376,14 @@ return [
 // Error
     'error_specify_id'          => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
     'error_ticket_settings'     => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
+
+    'bankTransfer' => 'Bank-Transaktionen',
+    'Credit' => 'Gutschrift',
+    'Debit' => 'Lastschrift',
+    'Discard' => 'Missachte',
+    'Level' => 'Level',
+    'Message' => 'Nachricht',
+    'SettlementRun' => 'Abrechnungslauf',
+    'Time' => 'Zeit',
+    'Type' => 'Typ',
 ];

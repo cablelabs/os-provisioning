@@ -88,20 +88,17 @@ class CmtsController extends \BaseController
      * @param Modules\ProvBase\Entities\Cmts
      * @return array
      */
-    protected function get_form_tabs($cmts)
+    protected function editTabs($cmts)
     {
         if (! \Module::collections()->has('ProvMon')) {
             return [];
         }
 
-        $tabs = [];
+        $tabs = parent::editTabs($cmts);
 
         if (\Bouncer::can('view_analysis_pages_of', Cmts::class)) {
-            $tabs = [['name' => 'Edit', 'route' => 'Cmts.edit', 'link' => $cmts->id]];
             array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.cmts', 'link' => $cmts->id]);
         }
-
-        array_push($tabs, parent::get_form_tabs($cmts)[0]);
 
         return $tabs;
     }

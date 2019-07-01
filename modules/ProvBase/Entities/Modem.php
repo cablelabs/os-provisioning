@@ -217,7 +217,7 @@ class Modem extends \BaseModel
     {
         $ret = [];
 
-        // we use a dummy here as this will be overwritten by ModemController::get_form_tabs()
+        // we use a dummy here as this will be overwritten by ModemController::editTabs()
         if (\Module::collections()->has('ProvVoip')) {
             $ret['Edit']['Mta']['class'] = 'Mta';
             $ret['Edit']['Mta']['relation'] = $this->mtas;
@@ -237,7 +237,7 @@ class Modem extends \BaseModel
 
             $ret['Edit']['EnviaOrder']['class'] = 'EnviaOrder';
             $ret['Edit']['EnviaOrder']['relation'] = $this->_envia_orders;
-            $ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at envia TEL';
+            $ret['Edit']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at envia TEL';
 
             // TODO: auth - loading controller from model could be a security issue ?
             $ret['Edit']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';

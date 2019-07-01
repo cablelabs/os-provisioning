@@ -4,7 +4,6 @@
         $list = Modules\HfcReq\Entities\NetElementType::param_list($view_var->id);
     @endphp
 
-
     <div class="col-md-12">
     <div class="form-group row">
     {!! Form::label('param_id', 'Choose Parameter') !!}
@@ -23,7 +22,6 @@
     {!! Form::label('html_id', 'Order ID') !!}
     {!! Form::text('html_id') !!}
     </div></div>
-
 
     {!! Form::submit('Set Value(s)') !!}
 

@@ -57,9 +57,10 @@ class MibFile extends \BaseModel
 
     public function view_has_many()
     {
-        return [
-            'OID' => $this->oids,
-        ];
+        $ret['Edit']['OID']['class'] = 'OID';
+        $ret['Edit']['OID']['relation'] = $this->oids;
+
+        return $ret;
     }
 
     //Overwrite from BaseModel to add version
