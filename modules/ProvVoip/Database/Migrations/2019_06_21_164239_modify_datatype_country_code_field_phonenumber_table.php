@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-
-class ModifyDatatypeCountryCodeFieldPhonenumberTable extends Migration
+class ModifyDatatypeCountryCodeFieldPhonenumberTable extends BaseMigration
 {
     protected $tablename = 'phonenumber';
 
