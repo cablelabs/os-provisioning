@@ -89,7 +89,7 @@ class Contract extends \BaseModel
     {
         $bsclass = 'success';
 
-        if (! $this->internet_access) {
+        if (! ($this->internet_access || $this->has_telephony)) {
             $bsclass = 'active';
 
             // '$this->id' to dont check when index table header is determined!
