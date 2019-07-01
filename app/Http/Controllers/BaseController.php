@@ -1387,6 +1387,7 @@ class BaseController extends Controller
         $filter_column_data = isset($dt_config['filter']) ? $dt_config['filter'] : [];
         $eager_loading_tables = isset($dt_config['eager_loading']) ? $dt_config['eager_loading'] : [];
         $additional_raw_where_clauses = isset($dt_config['where_clauses']) ? $dt_config['where_clauses'] : [];
+        $raw_columns = $dt_config['raw_columns'] ?? []; // not run through htmlentities()
 
         // if no id Column is drawn, draw it to generate links with id
         ! array_has($header_fields, $dt_config['table'].'.id') ? array_push($header_fields, 'id') : null;
@@ -1450,7 +1451,9 @@ class BaseController extends Controller
             return $bsclass;
         });
 
-        return $DT->rawColumns(['checkbox', $first_column])->make();
+        array_unshift($raw_columns, 'checkbox', $first_column); // add everywhere used raw columns
+
+        return $DT->rawColumns($raw_columns)->make();
     }
 
     // NOTE: Import is a fast-forward-copy from https://github.com/LaravelDaily/Laravel-Import-CSV-Demo
