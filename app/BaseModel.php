@@ -409,6 +409,7 @@ class BaseModel extends Eloquent
             'AddressFunctionsTrait',
             'Ability',
             'BaseModel',
+            'CsvData',
             'helpers',
             'BillingLogger',
             'BillingAnalysis',
