@@ -31,6 +31,6 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //Facade to Object binding
-        $this->app->alias(Acme\log\ChannelWriter::class, 'chanellog');
+        $this->app->alias(\Acme\log\ChannelWriter::class, 'chanellog');
     }
 }
