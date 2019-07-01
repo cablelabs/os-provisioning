@@ -17,7 +17,7 @@
     "markrogoyski/ipv4-subnet-calculator": "3.*",
     "nwidart/laravel-modules": "^2.0",
     "doctrine/dbal": "^2.7",
-    "silber/bouncer": "v1.0.0-rc.4",
+    "silber/bouncer": "v1.0.0-rc.5",
     "kingsquare/php-mt940": "^1.5"
   },
   "require-dev": {
