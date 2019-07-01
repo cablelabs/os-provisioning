@@ -529,3 +529,13 @@ table .index_check {
 #page-container.page-sidebar-minified .nav ul.sub-menu li i.fa+span{
   display: inline;
 }
+
+.tab-overflow .nav.nav-pills > li, .tab-overflow.nav.nav-pills > li {
+    display: inline-block !important;
+}
+
+ul.nav.nav-pills li {
+    max-height: 50px !important;
+    overflow: hidden !important;
+    overflow-y: auto !important;
+}

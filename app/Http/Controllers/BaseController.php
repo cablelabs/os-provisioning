@@ -1314,12 +1314,9 @@ class BaseController extends Controller
      */
     public static function get_storage_file_list($dir)
     {
-        $files_raw = \Storage::files("config/$dir");
         $files[null] = 'None';
-
-        foreach ($files_raw as $file) {
-            $name = explode('/', $file);
-            $name = array_pop($name);
+        foreach (\Storage::files("config/$dir") as $file) {
+            $name = basename($file);
             $files[$name] = $name;
         }
 
