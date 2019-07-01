@@ -19,7 +19,8 @@
     "nwidart/laravel-modules": "^1.0",
     "doctrine/dbal": "^2.7",
     "silber/bouncer": "v1.0.0-rc.4",
-    "laravel/tinker": "^1.0"
+    "laravel/tinker": "^1.0",
+    "kingsquare/php-mt940": "^1.5"
   },
   "require-dev": {
     "phpunit/phpunit": "~5.7",

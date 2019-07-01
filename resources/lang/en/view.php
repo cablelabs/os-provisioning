@@ -33,6 +33,8 @@ return [
                 'jQuery_ImportCsv'              => 'import CSV',
 //MENU
     //Main Menu
+        'Menu_Debt'                 => 'Debts',
+        'Menu_Dunning'              => 'Dunning',
         'Menu_MainMenu' 			=> 'Main Menu',
         'Menu_Config Page'			=> 'Global Config Page',
         'Menu_BillingBase'			=> 'Billing Base',
@@ -219,6 +221,9 @@ return [
         'Header_EnviaOrders'		=> 'envia TEL order|envia TEL orders',
         'Header_EnviaContracts'		=> 'envia TEL contract|envia TEL contracts',
 
+        'Header_Debt'               => 'Debt history',
+        'Header_DebtResult'         => 'Outstanding payments total',
+
     //Header Relation
         // 'Assigned'  				=> 'Zugewiesene',
     //Header Controler index
@@ -371,4 +376,14 @@ return [
 // Error
     'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
     'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
+
+    'bankTransfer' => 'Bank transfers',
+    'Credit' => 'Credit',
+    'Debit' => 'Debit',
+    'Discard' => 'Discard',
+    'Level' => 'Level',
+    'Message' => 'Message',
+    'SettlementRun' => 'SettlementRun',
+    'Time' => 'Time',
+    'Type' => 'Type',
 ];

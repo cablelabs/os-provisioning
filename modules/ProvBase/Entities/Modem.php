@@ -217,7 +217,7 @@ class Modem extends \BaseModel
     {
         $ret = [];
 
-        // we use a dummy here as this will be overwritten by ModemController::get_form_tabs()
+        // we use a dummy here as this will be overwritten by ModemController::editTabs()
         if (\Module::collections()->has('ProvVoip')) {
             $ret['Edit']['Mta']['class'] = 'Mta';
             $ret['Edit']['Mta']['relation'] = $this->mtas;
