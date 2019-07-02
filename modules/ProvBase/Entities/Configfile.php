@@ -417,6 +417,61 @@ class Configfile extends \BaseModel
 
         return $used_ids;
     }
+
+    /**
+     * Creates all configfiles for all modems.
+     * Logic from ConfigfileCommand nms:configfile.
+     */
+    public function execute($filter = null, $id = null)
+    {
+        \Log::debug("configfileCommand called with configfile id: $id");
+
+        // handle configfile observer functionality via job in background
+        if ($id) {
+            $cf = self::find($id);
+
+            $cf->build_corresponding_configfiles();
+            $cf->search_children(1);
+
+            return;
+        }
+
+        // Modem
+        if (! $filter || $filter == 'cm') {
+            $cms = Modem::all();
+            $this->build_configfiles($cms, 'cm');
+        }
+
+        // MTA
+        if (! $filter || $filter == 'mta') {
+            if (! \Module::collections()->has('ProvVoip')) {
+                return;
+            }
+
+            $mtas = \Modules\ProvVoip\Entities\Mta::all();
+            $this->build_configfiles($mtas, 'mta');
+        }
+    }
+
+    /**
+     * @param array  Objects of Modem or Mta
+     */
+    public function build_configfiles($devices, $type)
+    {
+        $i = 1;
+        $num = count($devices);
+        $type = strtoupper($type);
+
+        \Log::info("Build all $num $type configfiles");
+
+        foreach ($devices as $device) {
+            echo "$type: create config files: $i/$num \r";
+            $i++;
+            $device->make_configfile();
+        }
+
+        echo "\n";
+    }
 }
 
 /**
@@ -436,7 +491,7 @@ class ConfigfileObserver
 
     public function updated($configfile)
     {
-        \Queue::push(new \Modules\ProvBase\Console\configfileCommand($configfile->id));
+        \Queue::push(new \Modules\ProvBase\Jobs\ConfigfileJob(null, $configfile->id));
         // $configfile->build_corresponding_configfiles();
         // with parameter one the children are built
         // $configfile->search_children(1);
