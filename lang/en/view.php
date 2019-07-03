@@ -75,6 +75,7 @@ return [
     'Menu_OverdueDebts'         => 'Overdue debts',
     'Menu_ProvVoip'             => 'VoIP',
     'Menu_PropertyManagement'   => 'Property Management',
+    'Menu_DocumentTemplates'    => 'Dokument-Templates',
     'Menu_MTA'                  => 'MTAs',
     'Menu_Phonenumber'          => 'Phonenumbers',
     'Menu_PhoneTariff'          => 'PhoneTariffs',
@@ -215,7 +216,13 @@ return [
     'Header_Ticket'             => 'Ticket|Tickets',
     'Header_EditTicket'         => 'Edit Ticket',
     'Header_TicketType'         => 'Ticket Types',
+<<<<<<< HEAD:lang/en/view.php
     'Header_TicketReceiver'     => 'Ticket Receiver',
+=======
+    // Documents
+    'Header_DocumentTemplate'   => 'Document template|Document templates',
+    'Header_DocumentTemplateDerived' => 'derived document template|derived document templates',
+>>>>>>> Add translations.:resources/lang/en/view.php
     //HFC
     'Header_Link'               => 'Link',
     //Topography
@@ -366,6 +373,7 @@ return [
     // //IpPool
     'Button_Create IpPool'          => 'Create IpPool', //workaround
     'Button_Create IP-Pools'        => 'Create IpPools',
+    'Button_Create DocumentTemplate' => 'Create Document Template',
 
     // Select Fields
     'select' => [

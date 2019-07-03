@@ -75,6 +75,7 @@ return [
     'Menu_OverdueDebts'         => 'Offene Posten',
     'Menu_ProvVoip'             => 'VoIP',
     'Menu_PropertyManagement'   => 'Gebäudeverwaltung',
+    'Menu_DocumentTemplates'    => 'Dokument-Vorlagen',
     'Menu_MTA'                  => 'MTAs',
     'Menu_Phonenumber'          => 'Telefonnummern',
     'Menu_PhoneTariff'          => 'Telefontarife',
@@ -215,6 +216,9 @@ return [
     'Header_EditTicket'         => 'Ticket bearbeiten',
     'Header_TicketType'         => 'Tickettyp|Tickettypen',
     'Header_TicketReceiver'     => 'Ticketzentrale',
+    // Documents
+    'Header_DocumentTemplate'   => 'Dokument-Vorlage|Dokument-Vorlagen',
+    'Header_DocumentTemplateDerived' => 'geerbte Dokument-Vorlage|geerbte Dokument-Vorlagen',
     //HFC
     'Header_Link'               => 'Link',
     //Topography
@@ -365,6 +369,7 @@ return [
     // //IpPool
     'Button_Create IpPool'          => 'IpPool anlegen', //workaround
     'Button_Create IP-Pools'        => 'IpPool anlegen',
+    'Button_Create DocumentTemplate' => 'Dokument-Vorlage anlegen',
 
     // Select Fields
     'select' => [

@@ -60,6 +60,15 @@ return [
         'total_fee' => 'Fee',
         'voucher_nr' => 'Voucher nr',
     ],
+    // DocumentTemplate
+    'documenttemplate' => [
+        'file' => 'Template file',
+        'format' => 'Template format',
+    ],
+    // DocumentType
+    'documenttype' => [
+        'type_view' => 'Document type',
+    ],
     //Invoices
     'invoice.type' => 'Type',
     'invoice.year' => 'Year',
