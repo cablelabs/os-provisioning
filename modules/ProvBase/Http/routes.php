@@ -24,6 +24,7 @@ BaseRoute::group([], function () {
     BaseRoute::resource('Qos', 'Modules\ProvBase\Http\Controllers\QosController');
     BaseRoute::resource('Contract', 'Modules\ProvBase\Http\Controllers\ContractController');
     BaseRoute::resource('Domain', 'Modules\ProvBase\Http\Controllers\DomainController');
+    BaseRoute::resource('DocumentTemplate', 'Modules\ProvBase\Http\Controllers\DocumentTemplateController');
     BaseRoute::resource('ProvBase', 'Modules\ProvBase\Http\Controllers\ProvBaseController');
     BaseRoute::resource('ModemOption', 'Modules\ProvBase\Http\Controllers\ModemOptionController');
 
