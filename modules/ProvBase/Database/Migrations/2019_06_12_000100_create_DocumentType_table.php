@@ -104,6 +104,8 @@ class CreateDocumentTypeTable extends BaseMigration
             $entry['created_at'] = $entry['updated_at'] = date('Y-m-d H:i:s');
             DB::table($this->tablename)->insert($entry);
         }
+
+        Artisan::call('nms:translateDatabase', ['lang' => 'en', 'table' => 'documenttype']);
     }
 
     /**
