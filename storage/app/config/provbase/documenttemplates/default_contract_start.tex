@@ -1,0 +1,29 @@
+\opening{\textbf{\Large{{Vertragsbeginn}}}}
+
+{{Contract.aggregated-greeting-phrase-de}}\\
+
+wir freuen uns, Sie als Kunden zu begrüßen. Vielen Dank für Ihr Vertrauen in unsere
+Firma.\\
+
+Bitte geben Sie bei Anfragen stets Ihre Vertragsnummer an.
+\begin{tabbing}
+	Kundennummer: ~~~~ \= {{Contract.number}} \\
+	Vertragsnummer: \> {{Contract.number}} \\
+	Vertragsbeginn: \> {{Contract.modified-contract-start-de}} \\
+	{{BillingBase.aggregated-tabbed-item-data-de}}
+
+	% add SEPA mandate data if exists
+	\ifthenelse{\equal{{{DocumentMeta.aggregated-tabbedsepadata-de-exists}}}{yes}}
+	{
+		~\\
+		{{BillingBase.aggregated-tabbed-item-sepadata-de}}
+	}
+
+\end{tabbing}
+
+Bitte teilen Sie uns Änderungen Ihrer persönlichen Daten schnellstmöglich in Schriftform mit.\\
+
+~\\
+Mit freundlichen Grüßen\\
+
+{{Company.name}}
