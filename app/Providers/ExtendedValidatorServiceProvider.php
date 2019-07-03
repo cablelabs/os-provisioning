@@ -49,6 +49,7 @@ class ExtendedValidatorServiceProvider extends ServiceProvider
         $this->app['validator']->extend('phonebook_predefined_string', 'App\extensions\validators\ExtendedValidator@validatePhonebookPredefinedString');
         $this->app['validator']->extend('phonebook_string', 'App\extensions\validators\ExtendedValidator@validatePhonebookString');
         $this->app['validator']->extend('product', 'App\extensions\validators\ExtendedValidator@validateProductType');
+        $this->app['validator']->extend('template_type_unique', 'App\extensions\validators\ExtendedValidator@validateDocumentTemplateTypeIsUnique');
 
         $this->app['validator']->extend('empty', 'App\extensions\validators\ExtendedValidator@validateEmpty');
 

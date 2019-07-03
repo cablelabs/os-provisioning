@@ -673,4 +673,57 @@ class ExtendedValidator
 
         return true;
     }
+
+    /**
+     * Checks if a document template is unique for a given company/sepaaccount combination
+     * @param $parameters Has to be set in prepare_rules
+     *
+     * @author Patrick Reichel
+     */
+    public function validateDocumentTemplateTypeIsUnique($attribute, $value, $parameters)
+    {
+        // see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
+        // when laravel calls the validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
+        $validator = \func_get_arg(3);
+
+        // check for sepaaccount, first
+        if ($parameters[2] == 'sepaaccount_id') {
+            $template_count = \Modules\ProvBase\Entities\DocumentTemplate::where('sepaaccount_id', '=', $parameters[3])->where($attribute, '=', $value)->where('id', '<>', $parameters[1])->count();
+            if ($template_count) {
+                $validator->setCustomMessages(['template_type_unique' => 'A template of the chosen document type already exists for this SEPA account']);
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+        // then for compan
+        if ($parameters[2] == 'company_id') {
+            $template_count = \Modules\ProvBase\Entities\DocumentTemplate::where('company_id', '=', $parameters[3])->where('sepaaccount_id', '=', 0)->where($attribute, '=', $value)->where('id', '<>', $parameters[1])->count();
+            if ($template_count) {
+                $validator->setCustomMessages(['template_type_unique' => 'A template of the chosen document type already exists for this company']);
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+        // then for base templates
+        if ($parameters[2] == 'base') {
+            $template_count = \Modules\ProvBase\Entities\DocumentTemplate::where('company_id', '=', 0)->where('sepaaccount_id', '=', 0)->where($attribute, '=', $value)->where('id', '<>', $parameters[1])->count();
+            if ($template_count) {
+                $validator->setCustomMessages(['template_type_unique' => 'A base template of the chosen document type already exists.']);
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+        // everything else is invalid
+        return false;
+
+    }
 }
