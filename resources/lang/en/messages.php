@@ -632,4 +632,5 @@ return [
     'Termination date'          => 'Termination date',
     'Carrier out'               => 'Carrier out',
     'geopos_x_y'                => 'Geopos Lon/Lat',
+    'error'                     => 'Error',
 ];

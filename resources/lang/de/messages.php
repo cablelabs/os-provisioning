@@ -632,4 +632,5 @@ return [
     'Termination date'          => 'Deaktivierungsdatum',
     'Carrier out'               => 'Carrier (Folgevertrag)',
     'geopos_x_y'                => 'geografische Länge/Breite',
+    'error'                     => 'Fehler',
 ];
