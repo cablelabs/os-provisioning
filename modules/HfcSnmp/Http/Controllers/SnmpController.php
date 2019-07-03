@@ -108,8 +108,7 @@ class SnmpController extends \BaseController
         $view_var = $netelem;
         $route_name = \NamespaceController::get_route_name();
         $headline = BaseViewController::compute_headline(\NamespaceController::get_route_name(), $view_header, $view_var).' > controlling';
-        $provmon = new ProvMonController;
-        $tabs = $provmon->checkNetelementtype($netelem);
+        $tabs = ProvMonController::checkNetelementtype($netelem);
 
         $view_path = 'hfcsnmp::NetElement.controlling';
         $form_path = 'Generic.form';

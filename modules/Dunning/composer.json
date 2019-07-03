@@ -1,0 +1,17 @@
+{
+    "name": "nwidart/dunning",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "require": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Dunning\\": ""
+        }
+    }
+}

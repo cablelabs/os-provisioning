@@ -5,7 +5,6 @@ namespace Modules\ProvBase\Http\Controllers;
 use Bouncer;
 use App\GlobalConfig;
 use Modules\ProvBase\Entities\Modem;
-use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class ModemController extends \BaseController
 {
@@ -147,23 +146,18 @@ class ModemController extends \BaseController
      * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
      * @author: Torsten Schmidt
      */
-    protected function get_form_tabs($model)
+    protected function editTabs($model)
     {
         // defines which edit page you came from
         \Session::put('Edit', 'Modem');
-        $provmon = new ProvMonController;
 
-        $tabs = [];
+        $tabs = parent::editTabs($model);
 
         if (! \Module::collections()->has('ProvMon')) {
-            $tabs = [['name' => 'Edit', 'route' => 'Modem.edit', 'link' => $model->id]];
-            $provmon->loggingTab($tabs, $model);
-
             return $tabs;
         }
 
         if (\Bouncer::can('view_analysis_pages_of', Modem::class)) {
-            $tabs = [['name' => 'Edit', 'route' => 'Modem.edit', 'link' => $model->id]];
             array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => $model->id],
                 ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => $model->id]);
 
@@ -172,9 +166,6 @@ class ModemController extends \BaseController
                 array_push($tabs, ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => $model->id]);
             }
         }
-
-        // add 'Logging' tab
-        $tabs = $provmon->loggingTab($tabs, $model);
 
         return $tabs;
     }

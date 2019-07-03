@@ -2,8 +2,10 @@
 
 return [
     // Index DataTable Header
+    'amount' => 'Amount',
     'id'            => 'ID',
     'prio'          => 'Priority',
+    'sum' => 'Sum',
     // Auth
     'users.login_name' => 'Login Name',
     'users.first_name' => 'Given Name',
@@ -25,6 +27,10 @@ return [
     // Costcenter
     'costcenter.name' => 'CostCenter',
     'costcenter.number' => 'Number',
+    'debt' => [
+        'date' => 'Date',
+        'total_fee' => 'Fee',
+        ],
     //Invoices
     'invoice.type' => 'Type',
     'invoice.year' => 'Year',
@@ -34,6 +40,7 @@ return [
     'item.valid_from_fixed' => 'Item Valid from fixed',
     'item.valid_to' => 'Item Valid to',
     'item.valid_to_fixed' => 'Item Valid to fixed',
+    'fee' => 'Fee',
     'product' => [
         'proportional' => 'Proportionate',
         'type' => 'Type',
@@ -63,9 +70,9 @@ return [
     'sepaaccount.institute' => 'Institute',
     'sepaaccount.iban' => 'IBAN',
     // SepaMandate
-    'sepamandate.sepa_holder' => 'Account Holder',
-    'sepamandate.sepa_valid_from' => 'Valid from',
-    'sepamandate.sepa_valid_to' => 'Valid to',
+    'sepamandate.holder' => 'Account Holder',
+    'sepamandate.valid_from' => 'Valid from',
+    'sepamandate.valid_to' => 'Valid to',
     'sepamandate.reference' => 'Account reference',
     // SettlementRun
     'settlementrun.year' => 'Year',

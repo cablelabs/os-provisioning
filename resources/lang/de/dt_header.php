@@ -2,8 +2,10 @@
 
 return [
     // Index DataTable Header
+    'amount' => 'Betrag',
     'id'            => 'ID',
     'prio'          => 'Priorität',
+    'sum' => 'Summe',
     // Auth
     'users.login_name' => 'Loginname',
     'users.first_name' => 'Vorname',
@@ -25,6 +27,10 @@ return [
     // Costcenter
     'costcenter.name' => 'Kostenstelle',
     'costcenter.number' => 'Nummer',
+    'debt' => [
+        'date' => 'Transaktionsdatum',
+        'total_fee' => 'Gebühren',
+        ],
     //Invoices
     'invoice.type' => 'Typ',
     'invoice.year' => 'Jahr',
@@ -34,6 +40,7 @@ return [
     'item.valid_from_fixed' => 'Ab Startdatum aktiv',
     'item.valid_to' => 'Posten Gültig bis',
     'item.valid_to_fixed' => 'Festes Enddatum',
+    'fee' => 'Gebühr',
     'product' => [
         'proportional' => 'Anteilig',
         'type' => 'Typ',
@@ -63,10 +70,10 @@ return [
     'sepaaccount.institute' => 'Bank',
     'sepaaccount.iban' => 'IBAN',
     // SepaMandate
-    'sepamandate.sepa_holder' => 'Kontoinhaber',
-    'sepamandate.sepa_valid_from' => 'Gültig ab',
-    'sepamandate.sepa_valid_to' => 'Gültig bis',
-    'sepamandate.reference' => 'Kontoreferenz',
+    'sepamandate.holder' => 'Kontoinhaber',
+    'sepamandate.valid_from' => 'Gültig ab',
+    'sepamandate.valid_to' => 'Gültig bis',
+    'sepamandate.reference' => 'Mandatsreferenz',
     // SettlementRun
     'settlementrun.year' => 'Jahr',
     'settlementrun.month' => 'Monat',
