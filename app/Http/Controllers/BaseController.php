@@ -1414,8 +1414,20 @@ class BaseController extends Controller
             ->addColumn('checkbox', '');
 
         foreach ($filter_column_data as $column => $custom_query) {
-            $DT->filterColumn($column, function ($query, $keyword) use ($custom_query) {
-                $query->whereRaw($custom_query, ["%{$keyword}%"]);
+            // backward compatibility – accept strings as input, too
+            if (is_string($custom_query)) {
+                $custom_query = ['query' => $custom_query, 'eagers' => []];
+            } else {
+                if (! is_array($custom_query)) {
+                    throw new \Exception('$custom_query has to be string or array');
+                }
+            }
+
+            $DT->with('contract')->filterColumn($column, function ($query, $keyword) use ($custom_query) {
+                foreach ($custom_query['eagers'] as $eager) {
+                    $query->with($eager);
+                }
+                $query->whereRaw($custom_query['query'], ["%{$keyword}%"]);
             });
         }
 

@@ -530,6 +530,11 @@ table .index_check {
   display: inline;
 }
 
+span.centerblock {
+    display: block;
+    text-align: center;
+}
+
 .tab-overflow .nav.nav-pills > li, .tab-overflow.nav.nav-pills > li {
     display: inline-block !important;
 }
