@@ -3,9 +3,12 @@
 namespace Modules\Dunning\Entities;
 
 /**
- * This class is intended to parse a Kingsquare\Banking\Transaction and create a \Modules\Dunning\Entities\Dept of it
- * This implements the parsing of the transactions description field that can vary from bank to bank, what is missing in the Kingsquare composer package
- * The class is structured as \Kingsquare\Parser\Banking\Mt940
+ * This class is intended to parse a Kingsquare\Banking\Transaction and create a \Modules\Dunning\Entities\Debt of it
+ *
+ * Tasks:
+    * Detect correct parser (engine)
+    * Call parse function of parser
+    * Check if debt exists
  *
  * @author Nino Ryschawy
  */
@@ -13,28 +16,32 @@ class TransactionParser
 {
     public $engine;
 
+    public function __construct($text)
+    {
+        $this->engine = $this->detectParser($text);
+    }
+
+    /**
+     * Determines the correct parser dependent of the Mt940.sta file
+     *
+     * @param string
+     * @return DefaultTransactionParser
+     */
+    private static function detectParser($text)
+    {
+        // Actually works for Sparkasse and Volksbank
+        return new DefaultTransactionParser;
+        // return new SpkTransactionParser;
+    }
+
     /**
      * Parse the given transaction and create an \Modules\Dunning\Entities\Dept object.
      *
      * @return object
      */
-    public function parse(\Kingsquare\Banking\Transaction $transaction, TransactionParserEngine $engine = null)
+    public function parse(\Kingsquare\Banking\Transaction $transaction)
     {
         if (! $transaction || $transaction->getPrice() == 0) {
-            return;
-        }
-
-        // Get engine only once - assume here that parsing one MT940 file only needs one engine
-        if ($engine) {
-            $this->engine = $engine;
-        } elseif (! $this->engine) {
-            $this->engine = TransactionParserEngine::__getInstance($transaction);
-        }
-
-        if (! $this->engine instanceof TransactionParserEngine) {
-            \Log::error('Engine does not extend \Modules\Dunning\Entities\TransactionParserEngine');
-            throw new Exception('Engine does not extend \Modules\Dunning\Entities\TransactionParserEngine');
-
             return;
         }
 
