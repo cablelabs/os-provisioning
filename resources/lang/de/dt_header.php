@@ -3,6 +3,7 @@
 return [
     // Index DataTable Header
     'amount' => 'Betrag',
+    'iban' => 'IBAN',
     'id'            => 'ID',
     'prio'          => 'Priorität',
     'sum' => 'Summe',
@@ -74,6 +75,7 @@ return [
     'sepamandate.valid_from' => 'Gültig ab',
     'sepamandate.valid_to' => 'Gültig bis',
     'sepamandate.reference' => 'Mandatsreferenz',
+    'sepamandate.disable' => 'Deaktiviert',
     // SettlementRun
     'settlementrun.year' => 'Jahr',
     'settlementrun.month' => 'Monat',
