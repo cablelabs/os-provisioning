@@ -11,7 +11,7 @@ use Modules\BillingBase\Entities\SepaMandate;
 class DefaultTransactionParser
 {
     protected $conf;
-    public $excludeRegexesRelPath = 'app/config/dunning/transferExcludes.php';
+    public $excludeRegexesRelPath = 'config/dunning/transferExcludes.php';
     protected $excludeRegexes;
 
     /**
@@ -439,8 +439,8 @@ class DefaultTransactionParser
 
     private function getExcludeRegexes()
     {
-        if (! \Storage::exists('config/dunning/transferExcludes')) {
-            $this->excludeRegexes = include storage_path($this->excludeRegexesRelPath);
+        if (\Storage::exists($this->excludeRegexesRelPath)) {
+            $this->excludeRegexes = include storage_path("app/$this->excludeRegexesRelPath");
         }
 
         if (! $this->excludeRegexes) {
