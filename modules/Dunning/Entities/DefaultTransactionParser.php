@@ -89,18 +89,19 @@ class DefaultTransactionParser
                 }
             }
 
-            if (\Str::startsWith($line, '31')) {
+            // if (\Str::startsWith($line, '31')) {
+            if ($key == '31') {
                 $iban = utf8_encode($line);
                 continue;
             }
 
-            if (\Str::startsWith($line, ['32', '33'])) {
+            if (in_array($key, ['32', '33'])) {
                 $holder = utf8_encode($line);
                 continue;
             }
 
             // 60 to 63
-            if (preg_match('/^6[0-3]/', $line)) {
+            if (preg_match('/^6[0-3]/', $key)) {
                 $description[] = $line;
 
                 continue;
@@ -214,7 +215,8 @@ class DefaultTransactionParser
 
             // Check if Transaction refers to same Contract via SepaMandate and Invoice
             if ($sepamandate && $sepamandate->contract_id != $invoice->contract_id) {
-                ChannelLog::notice('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.debit.diffContractSepa'));
+                // As debits are structured by NMSPrime in sepa xml - this is actually an error and should not happen
+                ChannelLog::warning('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.debit.diffContractSepa'));
 
                 return false;
             }
@@ -305,31 +307,53 @@ class DefaultTransactionParser
     }
 
     /**
-     * Check if there's no mismatch in relation of contract to sepamandate or invoice
-     * Set relation IDs on debt object if all is correct
+     * Set contract_id of debt only if a correct invoice number is given in the transfer reason
      *
-     * @return bool     true on success, false on mismatch
+     * NOTE: Invoice number is mandatory as transaction could otherwise have a totally different intention
+     *  e.g. like costs for electrician or sth else not handled by NMSPrime
+     *
+     * @return bool     true on success, false otherwise
      */
     private function setCreditDebtRelations($debt, $numbers, $iban, $transaction, $logmsg)
     {
-        $logmsg = trans('view.Discard')." $logmsg. ";
-        $contract = $invoice = $sepamandate = null;
+        $invoiceNr = $numbers['invoiceNr'] ?: $numbers['eref'];
+        $invoice = Invoice::where('number', $invoiceNr)->where('type', 'Invoice')->first();
 
-        if ($numbers['contractNr']) {
-            $contract = \Modules\ProvBase\Entities\Contract::where('number', $numbers['contractNr'])->first();
+        if ($invoice) {
+            $debt->contract_id = $invoice->contract_id;
+            $debt->invoice_id = $invoice->id;
+
+            return true;
         }
 
-        if ($numbers['invoiceNr']) {
-            if ($numbers['eref'] && ($numbers['eref'] != $numbers['invoiceNr'])) {
-//TODO
-                ChannelLog::info('dunning', $logmsg.trans('dunning::messages.transaction.credit.diff.invoice'));
+        $logmsg = trans('view.Discard')." $logmsg.";
+        $hint = '';
 
-                return false;
+        if ($invoiceNr) {
+            $logmsg .= ' '.trans('dunning::messages.transaction.credit.noInvoice.notFound', ['number' => $invoiceNr]);
+        } else {
+            $logmsg .= ' '.trans('dunning::messages.transaction.credit.noInvoice.default');
+        }
+
+        // Give hints to what contract the transaction could be assigned
+        // Or still add debt if it's almost secure that the transaction belongs to the customer and NMSPrime
+        if ($numbers['contractNr']) {
+            $contracts = Contract::where('number', 'like', '%'.$numbers['contractNr'].'%')->get();
+
+            if ($contracts->count() > 1) {
+                // As the prefix und suffix of the contract number is not considered it's possible to finde multiple contracts
+                // When that happens we need to take this into consideration
+                ChannelLog::error('dunning', trans('dunning::messages.transaction.credit.multipleContracts'));
+            } elseif ($contracts->count() == 1) {
+                // Create debt only if contract number is found and amount is same like in last invoice
+                $ret = $this->addDebtBySpecialMatch($debt, $contracts->first(), $transaction);
+
+                if ($ret) {
+                    return true;
+                }
+
+                $hint .= ' '.trans('dunning::messages.transaction.credit.noInvoice.contract', ['contract' => $numbers['contractNr']]);
             }
-
-            $invoice = \Modules\BillingBase\Entities\Invoice::where('number', $numbers['invoiceNr'])->where('type', 'Invoice')->first();
-        } elseif ($numbers['eref']) {
-            $invoice = \Modules\BillingBase\Entities\Invoice::where('number', $numbers['eref'])->where('type', 'Invoice')->first();
         }
 
         $sepamandate = SepaMandate::where('iban', $iban)
@@ -338,59 +362,52 @@ class DefaultTransactionParser
             ->where(whereLaterOrEqual('valid_to', $transaction->getValueTimestamp('Y-m-d')))
             ->with('contract')
             ->first();
-// TODO: check sepamandate mref against iban ?
 
-        if (! ($contract || $invoice || $sepamandate)) {
-            ChannelLog::notice('dunning', $logmsg.trans('dunning::messages.transaction.credit.missAll'));
+        if ($sepamandate) {
+            // Create debt only if contract number is found and amount is same like in last invoice
+            $ret = $this->addDebtBySpecialMatch($debt, $sepamandate->contract, $transaction);
 
+            if ($ret) {
+                return true;
+            }
+
+            $hint .= ' '.trans('dunning::messages.transaction.credit.noInvoice.sepa', ['contract' => $sepamandate->contract->number]);
+        }
+
+        if ($hint) {
+            ChannelLog::notice('dunning', $logmsg.$hint);
+        } else {
+            ChannelLog::info('dunning', $logmsg);
+        }
+
+        return false;
+    }
+
+    /**
+     * Add debt even if reference to invoice can not be established in the special cases of
+     *  (1) found contract number
+     *  (2) found sepa mandate
+     *  AND corresponding invoice amount is the same as the amount of the transaction
+     *
+     * @return bool
+     */
+    private function addDebtBySpecialMatch($debt, $contract, $transaction)
+    {
+        if (is_null($this->conf)) {
+            $this->getConf();
+        }
+
+        $invoice = Invoice::where('contract_id', $contract->id)
+            ->where('type', 'Invoice')
+            ->where('created_at', '<', $transaction->getValueTimestamp('Y-m-d'))
+            ->orderBy('created_at', 'desc')->first();
+
+        if (! $invoice || (round($invoice->charge * (1 + $this->conf['tax']/100), 2) != $transaction->getPrice())) {
             return false;
         }
 
-        // Determine contract id and log mismatches
-        if ($contract) {
-            if ($invoice) {
-                if ($contract->id != $invoice->contract_id) {
-                    ChannelLog::info('dunning', $logmsg.trans('dunning::messages.transaction.credit.diff.contractInvoice', [
-                        'contract' => $contract->number,
-                        'invoice' => $invoice->contract->number,
-                        ]));
-
-                    return false;
-                }
-            }
-
-            if ($sepamandate) {
-                if ($contract->id != $sepamandate->contract_id) {
-                    ChannelLog::notice('dunning', $logmsg.trans('dunning::messages.transaction.credit.diff.contractSepa', [
-                        'contract' => $contract->number,
-                        'sepamandate' => $sepamandate->contract->number,
-                        ]));
-
-                    return false;
-                }
-
-                $debt->sepamandate_id = $sepamandate->id;
-            }
-
-            $debt->contract_id = $contract->id;
-        } elseif ($invoice) {
-            if ($sepamandate) {
-                if ($sepamandate->contract_id != $invoice->contract_id) {
-                    ChannelLog::notice('dunning', $logmsg.trans('dunning::messages.transaction.credit.diff.invoiceSepa', [
-                        'sepamandate' => $sepamandate->contract->number,
-                        'invoice' => $invoice->contract->number,
-                        ]));
-
-                    return false;
-                }
-
-                $debt->sepamandate_id = $sepamandate->id;
-            }
-
-            $debt->contract_id = $invoice->contract_id;
-        } else {
-            $debt->contract_id = $sepamandate->contract_id;
-        }
+        $debt->contract_id = $contract->id;
+        $debt->addedBySpecialMatch = true;
 
         return true;
     }
@@ -417,11 +434,13 @@ class DefaultTransactionParser
      */
     private function getConf()
     {
-        $conf = Dunning::first();
+        $dunningConf = Dunning::first();
+        $billingConf = BillingBase::first();
 
         $this->conf = [
-            'fee' => $conf->fee,
-            'total' => $conf->total,
+            'fee' => $dunningConf->fee,
+            'total' => $dunningConf->total,
+            'tax' => $billingConf->tax,
         ];
     }
 
@@ -434,12 +453,16 @@ class DefaultTransactionParser
     private function searchNumbers($transferReason)
     {
         // Match examples: Rechnungsnummer|Rechnungsnr|RE.-NR.|RG.-NR.|RG 2018/3/48616
-        preg_match('/R(.*?)((n(.*?)r)|G)(.*?)(\d{4}\/\d+\/\d+)/i', $transferReason, $matchInvoice);
-        $invoiceNr = $matchInvoice ? $matchInvoice[6] : '';
+        // preg_match('/R(.*?)((n(.*?)r)|G)(.*?)(\d{4}\/\d+\/\d+)/i', $transferReason, $matchInvoice);
+        // $invoiceNr = $matchInvoice ? $matchInvoice[6] : '';
 
-        // Match examples: Kundennummer|Kd-Nr|Kd.nr.|Kd.-Nr. 13451
-        preg_match('/K(.*?)d(.*?)n(.*?)r(.*?)([1-7]\d{1,4})/i', $transferReason, $matchContract);
-        $contractNr = $matchContract ? $matchContract[5] : 0;
+        // Match invoice numbers in NMSPrime default format: Year/CostCenter-ID/incrementing number - examples 2018/3/48616, 2019/15/201
+        preg_match('/2\d{3}\/\d+\/\d+/i', $transferReason, $matchInvoice);
+        $invoiceNr = $matchInvoice ? $matchInvoice[0] : '';
+
+        // Match examples: Kundennummer|Kd-Nr|Kd.nr.|Kd.-Nr.|Kn|Knr 13451
+        preg_match('/K(.*?)[ndr](.*?)([1-7]\d{1,4})/i', $transferReason, $matchContract);
+        $contractNr = $matchContract ? $matchContract[3] : 0;
 
         // Special invoice numbers that ensure that transaction definitely doesn't belong to NMSPrime
         if (is_null($this->excludeRegexes)) {
