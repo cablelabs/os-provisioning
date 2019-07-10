@@ -69,6 +69,10 @@ class DefaultTransactionParser
         $amount = $bank_fee = 0;
         $descriptionArray = explode('?', $transaction->getDescription());
 
+        if ($this->discardDebitTransactionType($descriptionArray[0])) {
+            return;
+        }
+
         foreach ($descriptionArray as $line) {
             $key = substr($line, 0, 2);
             $line = substr($line, 2);
@@ -124,6 +128,26 @@ class DefaultTransactionParser
         ChannelLog::debug('dunning', trans('dunning::messages.transaction.create')." $logmsg");
 
         return $debt;
+    }
+
+    /**
+     * Determine whether a debit transaction should be discarded dependent of transaction code or GVC (Geschäftsvorfallcode)
+     * See https://www.hettwer-beratung.de/sepa-spezialwissen/sepa-technische-anforderungen/sepa-gesch%C3%A4ftsvorfallcodes-gvc-mt-940/
+     * These transactions can never belong to NMSPrime
+     *
+     * @param  string
+     * @return bool
+     */
+    private function discardDebitTransactionType($code)
+    {
+        // ABSCHLUSS or SEPA-Überweisung
+        $codesToDiscard = ['177', '805'];
+
+        if (in_array($code, $codesToDiscard)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
