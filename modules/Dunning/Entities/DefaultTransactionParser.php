@@ -39,6 +39,11 @@ class DefaultTransactionParser
         'PURP+' => '',              // Volksbank Purpose ?
     ];
 
+    /**
+     * Parse a transaction
+     *
+     * @return obj  Debt
+     */
     public function parse(\Kingsquare\Banking\Transaction $transaction)
     {
         if ($transaction->getDebitCredit() == 'D') {
@@ -46,7 +51,6 @@ class DefaultTransactionParser
             $this->addFee($debt);
         } else {
             $debt = $this->parseCredit($transaction);
-            // $debt = null;
         }
 
         if ($debt) {
@@ -247,7 +251,6 @@ class DefaultTransactionParser
         foreach ($descriptionArray as $key => $line) {
             // Transfer reason is 20 to 29
             if (preg_match('/^2[0-9]/', $line)) {
-
                 $line = substr($line, 2);
 
                 if (\Str::startsWith($line, 'EREF+')) {
@@ -402,7 +405,7 @@ class DefaultTransactionParser
             ->where('created_at', '<', $transaction->getValueTimestamp('Y-m-d'))
             ->orderBy('created_at', 'desc')->first();
 
-        if (! $invoice || (round($invoice->charge * (1 + $this->conf['tax']/100), 2) != $transaction->getPrice())) {
+        if (! $invoice || (round($invoice->charge * (1 + $this->conf['tax'] / 100), 2) != $transaction->getPrice())) {
             return false;
         }
 

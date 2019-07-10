@@ -6,9 +6,9 @@ namespace Modules\Dunning\Entities;
  * This class is intended to parse a Kingsquare\Banking\Transaction and create a \Modules\Dunning\Entities\Debt of it
  *
  * Tasks:
-    * Detect correct parser (engine)
-    * Call parse function of parser
-    * Check if debt exists
+ *  Detect correct parser (engine)
+ *  Call parse function of parser
+ *  Check if debt exists
  *
  * @author Nino Ryschawy
  */
