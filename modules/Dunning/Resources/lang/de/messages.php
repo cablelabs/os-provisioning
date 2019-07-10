@@ -31,4 +31,5 @@ return [
         ],
         'exists' => 'Ignoriere Transaktion. :debitCredit wurde bereits importiert. (Betrag :price; Beschreibung :description)',
     ],
+    'parseMt940Failed' => 'Fehler beim parsen der hochgeladenen Datei. Siehe Logfile. (:msg)',
 ];

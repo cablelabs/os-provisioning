@@ -31,4 +31,5 @@ return [
         ],
         'exists' => 'Ignore :debitCredit transaction as debt was already imported. (Price :price; Description :description)',
     ],
+    'parseMt940Failed' => 'Error on parsing the uploaded file. See logfile. (:msg)',
 ];
