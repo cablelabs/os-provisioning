@@ -2,6 +2,8 @@
 
 namespace Modules\Dunning\Entities;
 
+use Modules\ProvBase\Entities\Contract;
+
 class Debt extends \BaseModel
 {
     // The associated SQL table for this Model
@@ -94,7 +96,7 @@ class Debt extends \BaseModel
      */
     public function contract()
     {
-        return $this->belongsTo('Modules\ProvBase\Entities\Contract');
+        return $this->belongsTo(Contract::class);
     }
 }
 

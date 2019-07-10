@@ -3,6 +3,10 @@
 namespace Modules\Dunning\Entities;
 
 use ChannelLog;
+use Modules\ProvBase\Entities\Contract;
+use Modules\BillingBase\Entities\Invoice;
+use Modules\BillingBase\Entities\BillingBase;
+use Modules\BillingBase\Entities\SepaMandate;
 
 class DefaultTransactionParser
 {
@@ -170,7 +174,7 @@ class DefaultTransactionParser
     private function setDebitDebtRelations($debt, $invoiceNr, $mref, $iban, $logmsg)
     {
         // Get SepaMandate by iban & mref
-        $sepamandate = \Modules\BillingBase\Entities\SepaMandate::withTrashed()
+        $sepamandate = SepaMandate::withTrashed()
             ->where('reference', $mref)->where('iban', $iban)
             ->orderBy('deleted_at')->orderBy('valid_from', 'desc')->first();
 
@@ -179,7 +183,7 @@ class DefaultTransactionParser
         }
 
         // Get Invoice
-        $invoice = \Modules\BillingBase\Entities\Invoice::where('number', $invoiceNr)->where('type', 'Invoice')->first();
+        $invoice = Invoice::where('number', $invoiceNr)->where('type', 'Invoice')->first();
 
         if ($invoice) {
             $debt->invoice_id = $invoice->id;
@@ -304,10 +308,11 @@ class DefaultTransactionParser
             $invoice = \Modules\BillingBase\Entities\Invoice::where('number', $numbers['eref'])->where('type', 'Invoice')->first();
         }
 
-        $sepamandate = \Modules\BillingBase\Entities\SepaMandate::where('iban', $iban)
+        $sepamandate = SepaMandate::where('iban', $iban)
             ->orderBy('valid_from', 'desc')
             ->where('valid_from', '<=', $transaction->getValueTimestamp('Y-m-d'))
             ->where(whereLaterOrEqual('valid_to', $transaction->getValueTimestamp('Y-m-d')))
+            ->with('contract')
             ->first();
 // TODO: check sepamandate mref against iban ?
 
