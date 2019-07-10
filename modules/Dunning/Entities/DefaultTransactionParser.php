@@ -373,16 +373,19 @@ class DefaultTransactionParser
 
     private function addFee($debt)
     {
+        if (! $debt) {
+            return;
+        }
+
         // lazy loading of global dunning conf
         if (is_null($this->conf)) {
             $this->getConf();
         }
 
-        if ($debt && $this->conf['fee']) {
+        $debt->total_fee = $debt->bank_fee;
+        if ($this->conf['fee']) {
             $debt->total_fee = $this->conf['total'] ? $this->conf['fee'] : $debt->bank_fee + $this->conf['fee'];
         }
-
-        return $debt;
     }
 
     /**
