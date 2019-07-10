@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'addedDebts' => 'Füge offene Posten zu folgenden :count Verträgen hinzu: :numbers',
     'transaction' => [
         'create' => 'Erstelle offenen Posten aufgrund von',
         'credit' => [

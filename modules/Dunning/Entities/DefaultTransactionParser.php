@@ -407,6 +407,7 @@ class DefaultTransactionParser
         }
 
         $debt->contract_id = $contract->id;
+        // Collect debts added in special case and show only one log message at end
         $debt->addedBySpecialMatch = true;
 
         return true;

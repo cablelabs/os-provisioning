@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'addedDebts' => 'Add debts to the following :count contracts: :numbers',
     'transaction' => [
         'create' => 'Create debt because of',
         'credit' => [
