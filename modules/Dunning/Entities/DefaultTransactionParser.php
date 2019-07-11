@@ -16,6 +16,9 @@ class DefaultTransactionParser
     public $excludeRegexesRelPath = 'config/dunning/transferExcludes.php';
     protected $excludeRegexes;
     private $debt;
+    private $logMsg;
+
+
     /**
      * Designators in transfer reason and it's corresponding variable names for the mandatory entries
      * = Bezeichner
@@ -44,6 +47,7 @@ class DefaultTransactionParser
     public function __construct()
     {
         $this->debt = new Debt;
+        $this->logMsg = '';
     }
     /**
      * Parse a transaction
@@ -117,7 +121,7 @@ class DefaultTransactionParser
             }
         }
 
-        $logmsg = trans('dunning::messages.transaction.default.debit', [
+        $this->logMsg = trans('dunning::messages.transaction.default.debit', [
             'holder' => $holder,
             'invoiceNr' => $invoiceNr,
             'mref' => $mref,
@@ -125,7 +129,7 @@ class DefaultTransactionParser
             'iban' => $iban,
             ]);
 
-        $success = $this->setDebitDebtRelations($invoiceNr, $mref, $iban, $logmsg);
+        $success = $this->setDebitDebtRelations($invoiceNr, $mref, $iban);
 
         if ($success === false) {
             return $this->debt = null;
@@ -135,7 +139,7 @@ class DefaultTransactionParser
         $this->debt->bank_fee = $bank_fee;
         $this->debt->description = substr(utf8_encode(implode('', $description)), 0, 255);
 
-        ChannelLog::debug('dunning', trans('dunning::messages.transaction.create')." $logmsg");
+        ChannelLog::debug('dunning', trans('dunning::messages.transaction.create')." $this->logMsg");
     }
 
     /**
@@ -203,7 +207,7 @@ class DefaultTransactionParser
      *
      * @return bool     true on success, false on mismatch
      */
-    private function setDebitDebtRelations($invoiceNr, $mref, $iban, $logmsg)
+    private function setDebitDebtRelations($invoiceNr, $mref, $iban)
     {
         // Get SepaMandate by iban & mref
         $sepamandate = SepaMandate::withTrashed()
@@ -223,7 +227,7 @@ class DefaultTransactionParser
             // Check if Transaction refers to same Contract via SepaMandate and Invoice
             if ($sepamandate && $sepamandate->contract_id != $invoice->contract_id) {
                 // As debits are structured by NMSPrime in sepa xml - this is actually an error and should not happen
-                ChannelLog::warning('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.debit.diffContractSepa'));
+                ChannelLog::warning('dunning', trans('view.Discard')." $this->logMsg. ".trans('dunning::messages.transaction.debit.diffContractSepa'));
 
                 return false;
             }
@@ -232,7 +236,7 @@ class DefaultTransactionParser
             $this->debt->contract_id = $invoice->contract_id;
         } else {
             if (! $sepamandate) {
-                ChannelLog::info('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.debit.missSepaInvoice'));
+                ChannelLog::info('dunning', trans('view.Discard')." $this->logMsg. ".trans('dunning::messages.transaction.debit.missSepaInvoice'));
 
                 return false;
             }
@@ -284,19 +288,19 @@ class DefaultTransactionParser
         $holder = utf8_encode(implode('', $holder));
         $reason = utf8_encode(trim(implode('', $reason)));
         $price = number_format_lang($transaction->getPrice());
-        $logmsg = trans('dunning::messages.transaction.default.credit', ['holder' => $holder, 'price' => $price, 'iban' => $iban, 'reason' => $reason]);
+        $this->logMsg = trans('dunning::messages.transaction.default.credit', ['holder' => $holder, 'price' => $price, 'iban' => $iban, 'reason' => $reason]);
 
         $numbers = $this->searchNumbers($reason);
 
         if ($numbers['exclude']) {
-            ChannelLog::info('dunning', trans('view.Discard')." $logmsg. ".trans('dunning::messages.transaction.credit.missInvoice'));
+            ChannelLog::info('dunning', trans('view.Discard')." $this->logMsg. ".trans('dunning::messages.transaction.credit.missInvoice'));
             return $this->debt = null;
         }
 
         $numbers['eref'] = $invoiceNr ?? null;
         $numbers['mref'] = $mref ?? null;
 
-        $success = $this->setCreditDebtRelations($numbers, $iban, $transaction, $logmsg);
+        $success = $this->setCreditDebtRelations($numbers, $iban, $transaction);
 
         if ($success === false) {
             return $this->debt = null;
@@ -305,7 +309,7 @@ class DefaultTransactionParser
         $this->debt->amount = -1 * $transaction->getPrice();
         $this->debt->description = $reason;
 
-        ChannelLog::debug('dunning', trans('dunning::messages.transaction.create')." $logmsg");
+        ChannelLog::debug('dunning', trans('dunning::messages.transaction.create')." $this->logMsg");
     }
 
     /**
@@ -316,7 +320,7 @@ class DefaultTransactionParser
      *
      * @return bool     true on success, false otherwise
      */
-    private function setCreditDebtRelations($numbers, $iban, $transaction, $logmsg)
+    private function setCreditDebtRelations($numbers, $iban, $transaction)
     {
         $invoiceNr = $numbers['invoiceNr'] ?: $numbers['eref'];
         $invoice = Invoice::where('number', $invoiceNr)->where('type', 'Invoice')->first();
@@ -328,13 +332,13 @@ class DefaultTransactionParser
             return true;
         }
 
-        $logmsg = trans('view.Discard')." $logmsg.";
+        $this->logMsg = trans('view.Discard')." $this->logMsg.";
         $hint = '';
 
         if ($invoiceNr) {
-            $logmsg .= ' '.trans('dunning::messages.transaction.credit.noInvoice.notFound', ['number' => $invoiceNr]);
+            $this->logMsg .= ' '.trans('dunning::messages.transaction.credit.noInvoice.notFound', ['number' => $invoiceNr]);
         } else {
-            $logmsg .= ' '.trans('dunning::messages.transaction.credit.noInvoice.default');
+            $this->logMsg .= ' '.trans('dunning::messages.transaction.credit.noInvoice.default');
         }
 
         // Give hints to what contract the transaction could be assigned
@@ -377,9 +381,9 @@ class DefaultTransactionParser
         }
 
         if ($hint) {
-            ChannelLog::notice('dunning', $logmsg.$hint);
+            ChannelLog::notice('dunning', $this->logMsg.$hint);
         } else {
-            ChannelLog::info('dunning', $logmsg);
+            ChannelLog::info('dunning', $this->logMsg);
         }
 
         return false;
