@@ -3,6 +3,7 @@
 namespace Modules\Dunning\Entities;
 
 use ChannelLog;
+use Illuminate\Support\Str;
 use Modules\ProvBase\Entities\Contract;
 use Modules\BillingBase\Entities\Invoice;
 use Modules\BillingBase\Entities\BillingBase;
@@ -93,7 +94,7 @@ class DefaultTransactionParser
                 }
             }
 
-            // if (\Str::startsWith($line, '31')) {
+            // if (Str::startsWith($line, '31')) {
             if ($key == '31') {
                 $iban = utf8_encode($line);
                 continue;
@@ -163,19 +164,19 @@ class DefaultTransactionParser
      */
     private function getVarFromDesignator($line)
     {
-        if (! \Str::startsWith($line, array_keys(self::$designators))) {
+        if (! Str::startsWith($line, array_keys(self::$designators))) {
             // Descriptions without designator
             return ['varName' => 'description', 'value' => $line];
         }
 
         foreach (self::$designators as $key => $varName) {
             // Descriptions with designator
-            if (\Str::startsWith($line, $key) && ! $varName) {
+            if (Str::startsWith($line, $key) && ! $varName) {
                 return ['varName' => 'description', 'value' => str_replace($key, '', $line)];
             }
 
             // Mandatory variables
-            if (\Str::startsWith($line, $key) && $varName) {
+            if (Str::startsWith($line, $key) && $varName) {
                 if (in_array($key, ['COAM+', 'OAMT+'])) {
                     // Get fee and amount
                     $value = trim(str_replace($key, '', $line));
@@ -253,12 +254,12 @@ class DefaultTransactionParser
             if (preg_match('/^2[0-9]/', $line)) {
                 $line = substr($line, 2);
 
-                if (\Str::startsWith($line, 'EREF+')) {
+                if (Str::startsWith($line, 'EREF+')) {
                     $invoiceNr = trim(str_replace('EREF+', '', $line));
                     continue;
                 }
 
-                if (\Str::startsWith($line, 'MREF+')) {
+                if (Str::startsWith($line, 'MREF+')) {
                     $mref = trim(str_replace('MREF+', '', $line));
                     continue;
                 }
@@ -268,12 +269,12 @@ class DefaultTransactionParser
             }
 
             // IBAN is usually not existent in the DB for credits - we could still try to check as it would find the customer in at least some cases
-            if (\Str::startsWith($line, '31')) {
+            if (Str::startsWith($line, '31')) {
                 $iban = utf8_encode(substr($line, 2));
                 continue;
             }
 
-            if (\Str::startsWith($line, ['32', '33'])) {
+            if (Str::startsWith($line, ['32', '33'])) {
                 $holder[] = substr($line, 2);
                 continue;
             }
