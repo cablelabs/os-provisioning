@@ -232,9 +232,6 @@ class BaseController extends Controller
                 $field['name'] = str_replace('[]', '', $field['name']);
                 continue; 			// multiselects will have array in data so don't trim
             }
-
-            // trim all inputs as default
-            $data[$field['name']] = trim($data[$field['name']]);
         }
 
         return $data;
