@@ -397,9 +397,7 @@ class DefaultTransactionParser
      */
     private function addDebtBySpecialMatch($debt, $contract, $transaction)
     {
-        if (is_null($this->conf)) {
-            $this->getConf();
-        }
+        $this->getConf();
 
         $invoice = Invoice::where('contract_id', $contract->id)
             ->where('type', 'Invoice')
@@ -439,6 +437,10 @@ class DefaultTransactionParser
      */
     private function getConf()
     {
+        if (! is_null($this->conf)) {
+            return;
+        }
+
         $dunningConf = Dunning::first();
         $billingConf = BillingBase::first();
 
