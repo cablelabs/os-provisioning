@@ -56,9 +56,9 @@ class DefaultTransactionParser
     public function __construct(\Kingsquare\Banking\Transaction $transaction)
     {
         $this->debt = new Debt;
-        $this->amount = 0;
-        $this->bank_fee = 0;
         $this->transaction = $transaction;
+
+        $this->amount = $this->bank_fee = 0;
         $this->description = $this->holder = $this->reason = [];
         $this->iban = $this->invoiceNr = $this->logMsg = $this->mref = '';
     }
@@ -205,7 +205,7 @@ class DefaultTransactionParser
         }
 
         $this->debt->amount = -1 * $this->transaction->getPrice();
-        $this->debt->description = $reason;
+        $this->debt->description = $this->reason;
 
         ChannelLog::debug('dunning', trans('dunning::messages.transaction.create')." $this->logMsg");
     }
@@ -278,11 +278,7 @@ class DefaultTransactionParser
             $hint .= ' '.trans('dunning::messages.transaction.credit.noInvoice.sepa', ['contract' => $sepamandate->contract->number]);
         }
 
-        if ($hint) {
-            ChannelLog::notice('dunning', $this->logMsg.$hint);
-        } else {
-            ChannelLog::info('dunning', $this->logMsg);
-        }
+        ChannelLog::notice('dunning', $this->logMsg.$hint);
 
         return false;
     }
