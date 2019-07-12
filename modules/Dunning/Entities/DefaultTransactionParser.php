@@ -14,7 +14,6 @@ class DefaultTransactionParser
 {
     /**
      * Transaction Variables
-     *
      */
     private $amount;
     private $bank_fee;
@@ -184,7 +183,7 @@ class DefaultTransactionParser
      */
     private function addFee()
     {
-        if (!$this->debt instanceof Debt) {
+        if (! $this->debt instanceof Debt) {
             return;
         }
 
@@ -212,13 +211,14 @@ class DefaultTransactionParser
                 'holder' => $this->holder,
                 'price' => number_format_lang($this->transaction->getPrice()),
                 'iban' => $this->iban,
-                'reason' => $this->reason]
-            );
+                'reason' => $this->reason,
+            ]);
 
         $numbers = $this->searchNumbers();
 
         if ($numbers['exclude']) {
             ChannelLog::info('dunning', trans('view.Discard')." $this->logMsg. ".trans('dunning::messages.transaction.credit.missInvoice'));
+
             return $this->debt = null;
         }
 
