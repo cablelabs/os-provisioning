@@ -72,7 +72,6 @@ class DefaultTransactionParser
     {
         if ($this->transaction->getDebitCredit() == 'D') {
             $this->parseDebit();
-            $this->addFee();
         } else {
             $this->parseCredit();
         }
@@ -110,67 +109,9 @@ class DefaultTransactionParser
         $this->debt->amount = $this->amount;
         $this->debt->bank_fee = $this->bank_fee;
         $this->debt->description = $this->description;
+        $this->addFee();
 
         ChannelLog::debug('dunning', trans('dunning::messages.transaction.create')." $this->logMsg");
-    }
-
-    /**
-     * Determine whether a debit transaction should be discarded dependent of transaction code or GVC (Geschäftsvorfallcode)
-     * See https://www.hettwer-beratung.de/sepa-spezialwissen/sepa-technische-anforderungen/sepa-gesch%C3%A4ftsvorfallcodes-gvc-mt-940/
-     * These transactions can never belong to NMSPrime
-     *
-     * @param  string
-     * @return bool
-     */
-    private function discardDebitTransactionType($code)
-    {
-        // ABSCHLUSS or SEPA-Überweisung
-        $codesToDiscard = ['177', '805'];
-
-        if (in_array($code, $codesToDiscard)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Parse a Transaction description line for (1) mandatory informations and (2) transfer reason
-     *
-     * @param  string   line of transfer reason without beginning number
-     * @return array
-     */
-    private function getVarFromDesignator($line)
-    {
-        if (! Str::startsWith($line, array_keys(self::$designators))) {
-            // Descriptions without designator
-            return ['varName' => 'description', 'value' => $line];
-        }
-
-        foreach (self::$designators as $key => $varName) {
-            // Descriptions with designator
-            if (Str::startsWith($line, $key) && ! $varName) {
-                return ['varName' => 'description', 'value' => str_replace($key, '', $line)];
-            }
-
-            // Mandatory variables
-            if (Str::startsWith($line, $key) && $varName) {
-                if (in_array($key, ['COAM+', 'OAMT+'])) {
-                    // Get fee and amount
-                    $value = trim(str_replace($key, '', $line));
-                    $value = str_replace(',', '.', $value);
-                } else {
-                    // Get mref and invoice nr
-                    if ($key == 'EREF+') {
-                        $key .= 'RG ';
-                    }
-
-                    $value = utf8_encode(trim(str_replace($key, '', $line)));
-                }
-
-                return ['varName' => $varName, 'value' => $value];
-            }
-        }
     }
 
     /**
@@ -220,9 +161,27 @@ class DefaultTransactionParser
         return true;
     }
 
+
+    private function addFee()
+    {
+        if (!$this->debt instanceof Debt) {
+            return;
+        }
+
+        // lazy loading of global dunning conf
+        $this->getConf();
+
+        $this->debt->total_fee = $this->debt->bank_fee;
+        if ($this->conf['fee']) {
+            $this->debt->total_fee = $this->conf['total'] ? $this->conf['fee'] : $this->debt->bank_fee + $this->conf['fee'];
+        }
+    }
+
     private function parseCredit()
     {
-        $this->parseDescriptionArray();
+        if ($this->parseDescriptionArray() === false) {
+            return $this->debt = null;
+        }
 
         $this->logMsg = trans('dunning::messages.transaction.default.credit', [
                 'holder' => $this->holder,
@@ -356,21 +315,6 @@ class DefaultTransactionParser
         return true;
     }
 
-    private function addFee()
-    {
-        if (!$this->debt instanceof Debt) {
-            return;
-        }
-
-        // lazy loading of global dunning conf
-        $this->getConf();
-
-        $this->debt->total_fee = $this->debt->bank_fee;
-        if ($this->conf['fee']) {
-            $this->debt->total_fee = $this->conf['total'] ? $this->conf['fee'] : $this->debt->bank_fee + $this->conf['fee'];
-        }
-    }
-
     /**
      * Load dunning model and store relevant config in global variable
      */
@@ -499,6 +443,65 @@ class DefaultTransactionParser
 
         $this->holder = utf8_encode(implode('', $this->holder));
         $this->reason = utf8_encode(trim(implode('', $this->reason)));
-        $this->description = substr(utf8_encode(implode('', $this->description)), 0, 255)
+        $this->description = substr(utf8_encode(implode('', $this->description)), 0, 255);
+    }
+
+    /**
+     * Determine whether a debit transaction should be discarded dependent of transaction code or GVC (Geschäftsvorfallcode)
+     * See https://www.hettwer-beratung.de/sepa-spezialwissen/sepa-technische-anforderungen/sepa-gesch%C3%A4ftsvorfallcodes-gvc-mt-940/
+     * These transactions can never belong to NMSPrime
+     *
+     * @param  string
+     * @return bool
+     */
+    private function discardDebitTransactionType($code)
+    {
+        // ABSCHLUSS or SEPA-Überweisung
+        $codesToDiscard = ['177', '805'];
+
+        if (in_array($code, $codesToDiscard)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Parse a Transaction description line for (1) mandatory informations and (2) transfer reason
+     *
+     * @param  string   line of transfer reason without beginning number
+     * @return array
+     */
+    private function getVarFromDesignator($line)
+    {
+        if (! Str::startsWith($line, array_keys(self::$designators))) {
+            // Descriptions without designator
+            return ['varName' => 'description', 'value' => $line];
+        }
+
+        foreach (self::$designators as $key => $varName) {
+            // Descriptions with designator
+            if (Str::startsWith($line, $key) && ! $varName) {
+                return ['varName' => 'description', 'value' => str_replace($key, '', $line)];
+            }
+
+            // Mandatory variables
+            if (Str::startsWith($line, $key) && $varName) {
+                if (in_array($key, ['COAM+', 'OAMT+'])) {
+                    // Get fee and amount
+                    $value = trim(str_replace($key, '', $line));
+                    $value = str_replace(',', '.', $value);
+                } else {
+                    // Get mref and invoice nr
+                    if ($key == 'EREF+') {
+                        $key .= 'RG ';
+                    }
+
+                    $value = utf8_encode(trim(str_replace($key, '', $line)));
+                }
+
+                return ['varName' => $varName, 'value' => $value];
+            }
+        }
     }
 }
