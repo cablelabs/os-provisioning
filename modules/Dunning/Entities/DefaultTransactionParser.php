@@ -12,12 +12,21 @@ use Modules\BillingBase\Entities\SepaMandate;
 
 class DefaultTransactionParser
 {
-    protected $conf;
-    public $excludeRegexesRelPath = 'config/dunning/transferExcludes.php';
-    protected $excludeRegexes;
+    private $amount;
+    private $bank_fee;
     private $debt;
+    private $description;
+    private $holder;
+    private $iban;
+    private $invoiceNr;
     private $logMsg;
+    private $mref;
+    private $reason;
+    private $transaction;
 
+    protected $conf;
+    protected $excludeRegexes;
+    public $excludeRegexesRelPath = 'config/dunning/transferExcludes.php';
 
     /**
      * Designators in transfer reason and it's corresponding variable names for the mandatory entries
@@ -44,27 +53,32 @@ class DefaultTransactionParser
         'PURP+' => '',              // Volksbank Purpose ?
     ];
 
-    public function __construct()
+    public function __construct(\Kingsquare\Banking\Transaction $transaction)
     {
         $this->debt = new Debt;
-        $this->logMsg = '';
+        $this->amount = 0;
+        $this->bank_fee = 0;
+        $this->transaction = $transaction;
+        $this->description = $this->holder = $this->reason = [];
+        $this->iban = $this->invoiceNr = $this->logMsg = $this->mref = '';
     }
+
     /**
      * Parse a transaction
      *
      * @return obj  Debt
      */
-    public function parse(\Kingsquare\Banking\Transaction $transaction)
+    public function parse()
     {
-        if ($transaction->getDebitCredit() == 'D') {
-            $this->parseDebit($transaction);
+        if ($this->transaction->getDebitCredit() == 'D') {
+            $this->parseDebit();
             $this->addFee();
         } else {
-            $this->parseCredit($transaction);
+            $this->parseCredit();
         }
 
         if ($this->debt instanceof Debt) {
-            $this->debt->date = $transaction->getValueTimestamp('Y-m-d H:i:s');
+            $this->debt->date = $this->transaction->getValueTimestamp('Y-m-d H:i:s');
         }
 
         return $this->debt;
@@ -75,7 +89,7 @@ class DefaultTransactionParser
      *
      * @return obj  Debt or null
      */
-    private function parseDebit($transaction)
+    private function parseDebit()
     {
         $description = [];
         $amount = $bank_fee = 0;
@@ -122,22 +136,20 @@ class DefaultTransactionParser
         }
 
         $this->logMsg = trans('dunning::messages.transaction.default.debit', [
-            'holder' => $holder,
-            'invoiceNr' => $invoiceNr,
-            'mref' => $mref,
-            'price' => number_format_lang($transaction->getPrice()),
-            'iban' => $iban,
+            'holder' => $this->holder,
+            'invoiceNr' => $this->invoiceNr,
+            'mref' => $this->mref,
+            'price' => number_format_lang($this->transaction->getPrice()),
+            'iban' => $this->iban,
             ]);
 
-        $success = $this->setDebitDebtRelations($invoiceNr, $mref, $iban);
-
-        if ($success === false) {
+        if ($this->setDebitDebtRelations() === false) {
             return $this->debt = null;
         }
 
-        $this->debt->amount = $amount;
-        $this->debt->bank_fee = $bank_fee;
-        $this->debt->description = substr(utf8_encode(implode('', $description)), 0, 255);
+        $this->debt->amount = $this->amount;
+        $this->debt->bank_fee = $this->bank_fee;
+        $this->debt->description = $this->description;
 
         ChannelLog::debug('dunning', trans('dunning::messages.transaction.create')." $this->logMsg");
     }
@@ -207,11 +219,11 @@ class DefaultTransactionParser
      *
      * @return bool     true on success, false on mismatch
      */
-    private function setDebitDebtRelations($invoiceNr, $mref, $iban)
+    private function setDebitDebtRelations()
     {
         // Get SepaMandate by iban & mref
         $sepamandate = SepaMandate::withTrashed()
-            ->where('reference', $mref)->where('iban', $iban)
+            ->where('reference', $this->mref)->where('iban', $this->iban)
             ->orderBy('deleted_at')->orderBy('valid_from', 'desc')->first();
 
         if ($sepamandate) {
@@ -219,7 +231,7 @@ class DefaultTransactionParser
         }
 
         // Get Invoice
-        $invoice = Invoice::where('number', $invoiceNr)->where('type', 'Invoice')->first();
+        $invoice = Invoice::where('number', $this->invoiceNr)->where('type', 'Invoice')->first();
 
         if ($invoice) {
             $this->debt->invoice_id = $invoice->id;
@@ -248,16 +260,18 @@ class DefaultTransactionParser
         return true;
     }
 
-    private function parseCredit($transaction)
+    private function parseCredit()
     {
         $iban = '';
         $reason = $holder = [];
         $descriptionArray = explode('?', $transaction->getDescription());
 
-        foreach ($descriptionArray as $key => $line) {
-            // Transfer reason is 20 to 29
-            if (preg_match('/^2[0-9]/', $line)) {
-                $line = substr($line, 2);
+        $this->logMsg = trans('dunning::messages.transaction.default.credit', [
+                'holder' => $this->holder,
+                'price' => number_format_lang($this->transaction->getPrice()),
+                'iban' => $this->iban,
+                'reason' => $this->reason]
+            );
 
                 if (Str::startsWith($line, 'EREF+')) {
                     $invoiceNr = trim(str_replace('EREF+', '', $line));
@@ -297,16 +311,14 @@ class DefaultTransactionParser
             return $this->debt = null;
         }
 
-        $numbers['eref'] = $invoiceNr ?? null;
-        $numbers['mref'] = $mref ?? null;
+        $numbers['eref'] = $this->invoiceNr ?? null;
+        $numbers['mref'] = $this->mref ?? null;
 
-        $success = $this->setCreditDebtRelations($numbers, $iban, $transaction);
-
-        if ($success === false) {
+        if ($this->setCreditDebtRelations($numbers) === false) {
             return $this->debt = null;
         }
 
-        $this->debt->amount = -1 * $transaction->getPrice();
+        $this->debt->amount = -1 * $this->transaction->getPrice();
         $this->debt->description = $reason;
 
         ChannelLog::debug('dunning', trans('dunning::messages.transaction.create')." $this->logMsg");
@@ -320,10 +332,10 @@ class DefaultTransactionParser
      *
      * @return bool     true on success, false otherwise
      */
-    private function setCreditDebtRelations($numbers, $iban, $transaction)
+    private function setCreditDebtRelations($numbers)
     {
-        $invoiceNr = $numbers['invoiceNr'] ?: $numbers['eref'];
-        $invoice = Invoice::where('number', $invoiceNr)->where('type', 'Invoice')->first();
+        $this->invoiceNr = $this->invoiceNr ?: $numbers['eref'];
+        $invoice = Invoice::where('number', $this->invoiceNr)->where('type', 'Invoice')->first();
 
         if ($invoice) {
             $this->debt->contract_id = $invoice->contract_id;
@@ -335,8 +347,8 @@ class DefaultTransactionParser
         $this->logMsg = trans('view.Discard')." $this->logMsg.";
         $hint = '';
 
-        if ($invoiceNr) {
-            $this->logMsg .= ' '.trans('dunning::messages.transaction.credit.noInvoice.notFound', ['number' => $invoiceNr]);
+        if ($this->invoiceNr) {
+            $this->logMsg .= ' '.trans('dunning::messages.transaction.credit.noInvoice.notFound', ['number' => $this->invoiceNr]);
         } else {
             $this->logMsg .= ' '.trans('dunning::messages.transaction.credit.noInvoice.default');
         }
@@ -352,7 +364,7 @@ class DefaultTransactionParser
                 ChannelLog::error('dunning', trans('dunning::messages.transaction.credit.multipleContracts'));
             } elseif ($contracts->count() == 1) {
                 // Create debt only if contract number is found and amount is same like in last invoice
-                $ret = $this->addDebtBySpecialMatch($contracts->first(), $transaction);
+                $ret = $this->addDebtBySpecialMatch($contracts->first());
 
                 if ($ret) {
                     return true;
@@ -362,16 +374,16 @@ class DefaultTransactionParser
             }
         }
 
-        $sepamandate = SepaMandate::where('iban', $iban)
+        $sepamandate = SepaMandate::where('iban', $this->iban)
             ->orderBy('valid_from', 'desc')
-            ->where('valid_from', '<=', $transaction->getValueTimestamp('Y-m-d'))
-            ->where(whereLaterOrEqual('valid_to', $transaction->getValueTimestamp('Y-m-d')))
+            ->where('valid_from', '<=', $this->transaction->getValueTimestamp('Y-m-d'))
+            ->where(whereLaterOrEqual('valid_to', $this->transaction->getValueTimestamp('Y-m-d')))
             ->with('contract')
             ->first();
 
         if ($sepamandate) {
             // Create debt only if contract number is found and amount is same like in last invoice
-            $ret = $this->addDebtBySpecialMatch($sepamandate->contract, $transaction);
+            $ret = $this->addDebtBySpecialMatch($sepamandate->contract);
 
             if ($ret) {
                 return true;
@@ -397,16 +409,16 @@ class DefaultTransactionParser
      *
      * @return bool
      */
-    private function addDebtBySpecialMatch($contract, $transaction)
+    private function addDebtBySpecialMatch($contract)
     {
         $this->getConf();
 
         $invoice = Invoice::where('contract_id', $contract->id)
             ->where('type', 'Invoice')
-            ->where('created_at', '<', $transaction->getValueTimestamp('Y-m-d'))
+            ->where('created_at', '<', $this->transaction->getValueTimestamp('Y-m-d'))
             ->orderBy('created_at', 'desc')->first();
 
-        if (! $invoice || (round($invoice->charge * (1 + $this->conf['tax'] / 100), 2) != $transaction->getPrice())) {
+        if (! $invoice || (round($invoice->charge * (1 + $this->conf['tax'] / 100), 2) != $this->transaction->getPrice())) {
             return false;
         }
 
@@ -425,7 +437,6 @@ class DefaultTransactionParser
 
         // lazy loading of global dunning conf
         $this->getConf();
-
 
         $this->debt->total_fee = $this->debt->bank_fee;
         if ($this->conf['fee']) {
@@ -458,18 +469,18 @@ class DefaultTransactionParser
      * @param string
      * @return array
      */
-    private function searchNumbers($transferReason)
+    private function searchNumbers()
     {
         // Match examples: Rechnungsnummer|Rechnungsnr|RE.-NR.|RG.-NR.|RG 2018/3/48616
-        // preg_match('/R(.*?)((n(.*?)r)|G)(.*?)(\d{4}\/\d+\/\d+)/i', $transferReason, $matchInvoice);
+        // preg_match('/R(.*?)((n(.*?)r)|G)(.*?)(\d{4}\/\d+\/\d+)/i', $this->reason, $matchInvoice);
         // $invoiceNr = $matchInvoice ? $matchInvoice[6] : '';
 
         // Match invoice numbers in NMSPrime default format: Year/CostCenter-ID/incrementing number - examples 2018/3/48616, 2019/15/201
-        preg_match('/2\d{3}\/\d+\/\d+/i', $transferReason, $matchInvoice);
-        $invoiceNr = $matchInvoice ? $matchInvoice[0] : '';
+        preg_match('/2\d{3}\/\d+\/\d+/i', $this->reason, $matchInvoice);
+        $this->invoiceNr = $matchInvoice ? $matchInvoice[0] : '';
 
         // Match examples: Kundennummer|Kd-Nr|Kd.nr.|Kd.-Nr.|Kn|Knr 13451
-        preg_match('/K(.*?)[ndr](.*?)([1-7]\d{1,4})/i', $transferReason, $matchContract);
+        preg_match('/K(.*?)[ndr](.*?)([1-7]\d{1,4})/i', $this->reason, $matchContract);
         $contractNr = $matchContract ? $matchContract[3] : 0;
 
         // Special invoice numbers that ensure that transaction definitely doesn't belong to NMSPrime
@@ -479,7 +490,7 @@ class DefaultTransactionParser
 
         $exclude = '';
         foreach ($this->excludeRegexes as $regex => $group) {
-            preg_match($regex, $transferReason, $matchInvoiceSpecial);
+            preg_match($regex, $this->reason, $matchInvoiceSpecial);
 
             if ($matchInvoiceSpecial) {
                 $exclude = $matchInvoiceSpecial[$group];
@@ -490,7 +501,6 @@ class DefaultTransactionParser
 
         return [
             'contractNr' => $contractNr,
-            'invoiceNr' => $invoiceNr,
             'exclude' => $exclude,
         ];
     }
