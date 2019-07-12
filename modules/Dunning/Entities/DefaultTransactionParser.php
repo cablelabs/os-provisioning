@@ -34,6 +34,8 @@ class DefaultTransactionParser
      */
     private $transaction;
 
+    // ABSCHLUSS or SEPA-Überweisung
+    protected $codesToDiscard = ['177', '805'];
     protected $conf;
     protected $excludeRegexes;
 
@@ -486,10 +488,7 @@ class DefaultTransactionParser
      */
     private function discardDebitTransactionType($code)
     {
-        // ABSCHLUSS or SEPA-Überweisung
-        $codesToDiscard = ['177', '805'];
-
-        if (in_array($code, $codesToDiscard)) {
+        if (in_array($code, $this->codesToDiscard)) {
             return true;
         }
 
