@@ -70,11 +70,9 @@ class DefaultTransactionParser
      */
     public function parse()
     {
-        if ($this->transaction->getDebitCredit() == 'D') {
-            $this->parseDebit();
-        } else {
-            $this->parseCredit();
-        }
+        $action = ($this->transaction->getDebitCredit() == 'D') ? 'parseDebit' : 'parseCredit';
+
+        $this->$action();
 
         if ($this->debt instanceof Debt) {
             $this->debt->date = $this->transaction->getValueTimestamp('Y-m-d H:i:s');
