@@ -12,6 +12,10 @@ use Modules\BillingBase\Entities\SepaMandate;
 
 class DefaultTransactionParser
 {
+    /**
+     * Transaction Variables
+     *
+     */
     private $amount;
     private $bank_fee;
     private $debt;
@@ -22,10 +26,17 @@ class DefaultTransactionParser
     private $logMsg;
     private $mref;
     private $reason;
+
+    /**
+     * Transaction that needs to be set on Class initialization.
+     *
+     * @var \Kingsquare\Banking\Transaction
+     */
     private $transaction;
 
     protected $conf;
     protected $excludeRegexes;
+
     public $excludeRegexesRelPath = 'config/dunning/transferExcludes.php';
 
     /**
@@ -53,6 +64,11 @@ class DefaultTransactionParser
         'PURP+' => '',              // Volksbank Purpose ?
     ];
 
+    /**
+     * Initialize Variables
+     *
+     * @param \Kingsquare\Banking\Transaction $transaction
+     */
     public function __construct(\Kingsquare\Banking\Transaction $transaction)
     {
         $this->debt = new Debt;
@@ -64,9 +80,9 @@ class DefaultTransactionParser
     }
 
     /**
-     * Parse a transaction
+     * Check wheter the transaction is Credit or Debit and call the respective Function
      *
-     * @return obj  Debt
+     * @return Modules\Dunning\Entities\Debt
      */
     public function parse()
     {
@@ -82,7 +98,7 @@ class DefaultTransactionParser
     }
 
     /**
-     * Parse a debit transaction
+     * Set Debt Properties and create log output for Dredit
      *
      * @return void|null
      */
@@ -159,7 +175,11 @@ class DefaultTransactionParser
         return true;
     }
 
-
+    /**
+     * If there is a Fee set in Global Config, add it to the Debt
+     *
+     * @return void
+     */
     private function addFee()
     {
         if (!$this->debt instanceof Debt) {
@@ -175,6 +195,11 @@ class DefaultTransactionParser
         }
     }
 
+    /**
+     * Set Debt Properties and create log output for Credit
+     *
+     * @return void
+     */
     private function parseCredit()
     {
         if ($this->parseDescriptionArray() === false) {
@@ -310,7 +335,9 @@ class DefaultTransactionParser
     }
 
     /**
-     * Load dunning model and store relevant config in global variable
+     * Load dunning config model and store relevant properties in global property
+     *
+     * @return void
      */
     private function getConf()
     {
@@ -331,7 +358,6 @@ class DefaultTransactionParser
     /**
      * Search for contract and invoice number in credit transfer reason to assign debt to appropriate customer
      *
-     * @param string
      * @return array
      */
     private function searchNumbers()
@@ -370,6 +396,11 @@ class DefaultTransactionParser
         ];
     }
 
+    /**
+     * Check for Regular Expressions to exclude.
+     *
+     * @return void
+     */
     private function getExcludeRegexes()
     {
         if (\Storage::exists($this->excludeRegexesRelPath)) {
@@ -381,6 +412,11 @@ class DefaultTransactionParser
         }
     }
 
+    /**
+     * Parse one mt940 transaction
+     *
+     * @return void|bool
+     */
     protected function parseDescriptionArray()
     {
         $descriptionArray = explode('?', $this->transaction->getDescription());
