@@ -87,52 +87,12 @@ class DefaultTransactionParser
     /**
      * Parse a debit transaction
      *
-     * @return obj  Debt or null
+     * @return void|null
      */
     private function parseDebit()
     {
-        $description = [];
-        $amount = $bank_fee = 0;
-        $holder = $iban = $invoiceNr = $mref = '';
-        $descriptionArray = explode('?', $transaction->getDescription());
-
-        if ($this->discardDebitTransactionType($descriptionArray[0])) {
+        if ($this->parseDescriptionArray() === false) {
             return $this->debt = null;
-        }
-
-        foreach ($descriptionArray as $line) {
-            $key = substr($line, 0, 2);
-            $line = substr($line, 2);
-
-            // 20  to 29
-            if (preg_match('/^2[0-9]/', $key)) {
-                $ret = $this->getVarFromDesignator($line);
-
-                if ($ret['varName'] == 'description') {
-                    $description[] = $ret['value'];
-                } else {
-                    $varName = $ret['varName'];
-                    $$varName = $ret['value'];
-                }
-            }
-
-            // if (Str::startsWith($line, '31')) {
-            if ($key == '31') {
-                $iban = utf8_encode($line);
-                continue;
-            }
-
-            if (in_array($key, ['32', '33'])) {
-                $holder = utf8_encode($line);
-                continue;
-            }
-
-            // 60 to 63
-            if (preg_match('/^6[0-3]/', $key)) {
-                $description[] = $line;
-
-                continue;
-            }
         }
 
         $this->logMsg = trans('dunning::messages.transaction.default.debit', [
@@ -262,9 +222,7 @@ class DefaultTransactionParser
 
     private function parseCredit()
     {
-        $iban = '';
-        $reason = $holder = [];
-        $descriptionArray = explode('?', $transaction->getDescription());
+        $this->parseDescriptionArray();
 
         $this->logMsg = trans('dunning::messages.transaction.default.credit', [
                 'holder' => $this->holder,
@@ -273,38 +231,7 @@ class DefaultTransactionParser
                 'reason' => $this->reason]
             );
 
-                if (Str::startsWith($line, 'EREF+')) {
-                    $invoiceNr = trim(str_replace('EREF+', '', $line));
-                    continue;
-                }
-
-                if (Str::startsWith($line, 'MREF+')) {
-                    $mref = trim(str_replace('MREF+', '', $line));
-                    continue;
-                }
-
-                $reason[] = str_replace(array_keys(self::$designators), '', $line);
-                continue;
-            }
-
-            // IBAN is usually not existent in the DB for credits - we could still try to check as it would find the customer in at least some cases
-            if (Str::startsWith($line, '31')) {
-                $iban = utf8_encode(substr($line, 2));
-                continue;
-            }
-
-            if (Str::startsWith($line, ['32', '33'])) {
-                $holder[] = substr($line, 2);
-                continue;
-            }
-        }
-
-        $holder = utf8_encode(implode('', $holder));
-        $reason = utf8_encode(trim(implode('', $reason)));
-        $price = number_format_lang($transaction->getPrice());
-        $this->logMsg = trans('dunning::messages.transaction.default.credit', ['holder' => $holder, 'price' => $price, 'iban' => $iban, 'reason' => $reason]);
-
-        $numbers = $this->searchNumbers($reason);
+        $numbers = $this->searchNumbers();
 
         if ($numbers['exclude']) {
             ChannelLog::info('dunning', trans('view.Discard')." $this->logMsg. ".trans('dunning::messages.transaction.credit.missInvoice'));
@@ -514,5 +441,64 @@ class DefaultTransactionParser
         if (! $this->excludeRegexes) {
             $this->excludeRegexes = [];
         }
+    }
+
+    protected function parseDescriptionArray()
+    {
+        $descriptionArray = explode('?', $this->transaction->getDescription());
+
+        if ($this->discardDebitTransactionType($descriptionArray[0])) {
+            return false;
+        }
+
+        foreach ($descriptionArray as $line) {
+            $key = substr($line, 0, 2);
+            $line = substr($line, 2);
+            // Transfer reason is 20 to 29
+            if (preg_match('/^2[0-9]/', $line)) {
+                $ret = $this->getVarFromDesignator($line);
+
+                if ($ret['varName'] == 'description') {
+                    $this->description[] = $ret['value'];
+                } else {
+                    $varName = $ret['varName'];
+                    $this->$varName = $ret['value'];
+                }
+
+                if (Str::startsWith($line, 'EREF+')) {
+                    $this->invoiceNr = trim(str_replace('EREF+', '', $line));
+                    continue;
+                }
+
+                if (Str::startsWith($line, 'MREF+')) {
+                    $this->mref = trim(str_replace('MREF+', '', $line));
+                    continue;
+                }
+
+                $this->reason[] = str_replace(array_keys(self::$designators), '', $line);
+                continue;
+            }
+            // IBAN is usually not existent in the DB for credits - we could still try to check as it would find the customer in at least some cases
+            if ($key == '31') {
+                $this->iban = utf8_encode($line);
+                continue;
+            }
+
+            if (in_array($key, ['32', '33'])) {
+                $this->holder[] = utf8_encode($line);
+                continue;
+            }
+
+            // 60 to 63
+            if (preg_match('/^6[0-3]/', $key)) {
+                $this->description[] = $line;
+
+                continue;
+            }
+        }
+
+        $this->holder = utf8_encode(implode('', $this->holder));
+        $this->reason = utf8_encode(trim(implode('', $this->reason)));
+        $this->description = substr(utf8_encode(implode('', $this->description)), 0, 255)
     }
 }
