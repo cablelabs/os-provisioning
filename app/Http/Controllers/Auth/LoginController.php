@@ -119,6 +119,10 @@ class LoginController extends Controller
 
         Log::debug($user->login_name.' logged in successfully!');
 
+        if($user->initial_dashboard !== ''){
+            return route($user->initial_dashboard);
+        }
+
         if ($activeModules->has('Dashboard')) {
             return route('Dashboard.index');
         }
