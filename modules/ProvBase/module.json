@@ -6,8 +6,11 @@
     "active": 1,
     "icon": "fa-database",
     "order": 20,
-    "providers": [],
+    "providers": [
+        "Modules\\ProvBase\\Providers\\ProvBaseServiceProvider"
+    ],
     "files": [
         "start.php"
-    ]
+    ],
+    "requires": []
 }
