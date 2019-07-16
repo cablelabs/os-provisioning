@@ -303,7 +303,7 @@ class Configfile extends \BaseModel
         $match = [];
         foreach ($rows as $row) {
             // Ignore all rows with {xyz} content which can not be replaced
-            if (preg_match('/\\{[^\\{]*\\}/im', $row, $match) && ($row = self::_calc_eval($row, $match)) === null) {
+            if (preg_match('/\\{.*\\}/im', $row, $match) && ($row = self::_calc_eval($row, $match)) === null) {
                 continue;
             }
 
@@ -324,18 +324,27 @@ class Configfile extends \BaseModel
         $match = trim($match[0], '{}');
         $ops = explode(',', $match);
 
-        if (count($ops) != 3 || ! is_numeric($ops[0]) || ! is_numeric($ops[2]) || ! in_array($ops[1], ['+', '-', '*', '/'])) {
+        if (count($ops) != 3 || ! in_array($ops[1], ['+', '-', '*', '/', '?'])) {
             return;
         }
 
-        try {
-            $res = eval("return $ops[0] $ops[1] $ops[2];");
-        } catch (\Exception $e) {
-            // e.g. divide by zero
-            return;
+        /*
+         * overwrite configfile variable {}, which couldn't be resolved
+         * via the database with a default value (i.e. $ops[2])
+         * syntax: {{phonenumber.active.1},?,2};
+         */
+        if ($ops[1] === '?') {
+            $res = \Str::contains($ops[0], '}') ? $ops[2] : $ops[0];
+        } elseif (is_numeric($ops[0]) || is_numeric($ops[2])) {
+            try {
+                $res = eval("return $ops[0] $ops[1] $ops[2];");
+            } catch (\Exception $e) {
+                // e.g. divide by zero
+                return;
+            }
         }
 
-        return preg_replace('/\\{[^\\{]*\\}/im', $res, $row);
+        return preg_replace('/\\{.*\\}/im', $res, $row);
     }
 
     /**
