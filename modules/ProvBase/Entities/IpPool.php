@@ -167,6 +167,10 @@ class IpPool extends \BaseModel
         }
 
         $leases = array_diff(range(ip2long($this->ip_pool_start), ip2long($this->ip_pool_end)), $static);
+        if (! $leases) {
+            return;
+        }
+
         $start = long2ip(reset($leases));
         $end = long2ip(end($leases));
 

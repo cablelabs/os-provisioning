@@ -5,7 +5,6 @@ namespace Modules\ProvVoip\Http\Controllers;
 use Modules\ProvVoip\Entities\Mta;
 use Modules\ProvBase\Entities\Modem;
 use Illuminate\Support\Facades\Input;
-use Modules\ProvBase\Entities\Configfile;
 
 class MtaController extends \BaseController
 {
@@ -68,13 +67,11 @@ class MtaController extends \BaseController
      * @return array
      * @author Roy Schneider
      */
-    protected function get_form_tabs($model)
+    protected function editTabs($model)
     {
         \Session::put('Edit', 'MTA');
 
-        $tabs = [
-            ['name' => 'Edit', 'route' => 'Mta.edit', 'link' => $model->id],
-        ];
+        $tabs = parent::editTabs($model);
 
         if (\Module::collections()->has('ProvMon') && \Bouncer::can('view_analysis_pages_of', Modem::class)) {
             array_push($tabs,
@@ -83,7 +80,6 @@ class MtaController extends \BaseController
                 ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => $model->modem_id]
             );
         }
-        array_push($tabs, parent::get_form_tabs($model)[0]);
 
         return $tabs;
     }

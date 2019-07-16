@@ -104,6 +104,7 @@ function escape_latex_special_chars($string)
             '_'  => '\\_',
             '~'  => '\\~{}',
             '^'  => '\\^{}',
+            '€'  => '\\euro',   // there could be products containing “€”
     ];
 
     return strtr($string, $map);
@@ -245,17 +246,13 @@ function checkLocale($locale = null) : string
  * NOTE: For end dates an empty column is later - it's cumbersome to always write these 5 lines of code
  *
  * @param string    db column name - must be table.column in joined statements
- * @param string    date string like '2019-02-06' - default is today
+ * @param string    date string like '2019-02-06'
  * @return function db query to use in (chained) where clause
  *
  * @author Nino Ryschawy
  */
-function whereLaterOrEqualThanDate($column, $date = '')
+function whereLaterOrEqual($column, $date)
 {
-    if (! $date) {
-        $date = date('Y-m-d');
-    }
-
     return function ($query) use ($column, $date) {
         $query
             ->where($column, '>=', $date)
@@ -285,5 +282,31 @@ function clearFailedJobs($command = 'all')
         if (\Str::contains($commandName, $command)) {
             \Artisan::call('queue:forget', ['id' => $failed_job->id]);
         }
+    }
+}
+
+/**
+ * Format date string dependent of set locale language
+ *
+ * @param $date
+ * @return false|int|string
+ */
+function langDateFormat($date)
+{
+    if (! $date) {
+        return $date;
+    }
+
+    $date = is_int($date) ? $date : strtotime($date);
+
+    switch (\App::getLocale()) {
+        case 'de':
+            return date('d.m.Y', $date);
+
+        case 'es':
+            return date('d/m/Y', $date);
+
+        default:
+            return date('d-m-Y', $date);
     }
 }

@@ -468,6 +468,7 @@ class importCommand extends Command
             'tarif_next_month'  => $old_contract->tarif_next_month,
             'tarif_next'        => $old_contract->tarif_next,
             'telefontarif'      => $old_contract->telefontarif,
+            'telefontarif_next_month' => $old_contract->telefontarif_next_month,
             'telefontarif_next' => $old_contract->telefontarif_next,
             ];
 
@@ -481,7 +482,7 @@ class importCommand extends Command
                 continue;
             }
 
-            if ($key == 'telefontarif') {
+            if (\Str::startsWith($key, 'telefontarif')) {
                 // Discard voip tariff if new contract doesnt have MTA
                 if (! isset($new_contract->has_mta)) {
                     Log::notice('Discard voip tariff as contract has no MTA assigned', [$new_contract->number]);
@@ -499,7 +500,7 @@ class importCommand extends Command
             }
 
             if ($prod_id == -1) {
-                $type = $key == 'telefontarif' ? 'voip' : 'internet';
+                $type = \Str::startsWith($key, 'telefontarif') ? 'voip' : 'internet';
                 $msg = "Missing mapping for $type tariff $tariff (ID in km3 DB). Don't add voip item to contract $new_contract->number.";
                 \Log::error($msg);
                 $this->errors[] = $msg;
@@ -515,7 +516,7 @@ class importCommand extends Command
             }
 
             $valid_from = $old_contract->angeschlossen;
-            if ($key == 'tarif_next_month') {
+            if (strpos($key, 'tarif_next_month') !== false) {
                 $valid_from = date('Y-m-01', strtotime('first day of next month'));
             } elseif (strpos($key, 'tarif_next') !== false) {
                 $valid_from = date('Y-m-d', strtotime($old_contract->{$key.'_date'}));
@@ -592,12 +593,12 @@ class importCommand extends Command
                 'contract_id' 		=> $new_contract->id,
                 'reference' 		=> $new_contract->number ?: '', 			// TODO: number circle ?
                 'signature_date' 	=> $mandate->datum ?: '',
-                'sepa_holder' 		=> $mandate->kontoinhaber ? utf8_encode($mandate->kontoinhaber) : '',
-                'sepa_iban'			=> $mandate->iban ?: '',
-                'sepa_bic' 			=> $mandate->bic ?: '',
-                'sepa_institute' 	=> $mandate->institut ?: '',
-                'sepa_valid_from' 	=> $mandate->gueltig_ab,
-                'sepa_valid_to' 	=> $mandate->gueltig_bis,
+                'holder' 		=> $mandate->kontoinhaber ? utf8_encode($mandate->kontoinhaber) : '',
+                'iban'			=> $mandate->iban ?: '',
+                'bic' 			=> $mandate->bic ?: '',
+                'institute' 	=> $mandate->institut ?: '',
+                'valid_from' 	=> $mandate->gueltig_ab,
+                'valid_to' 	=> $mandate->gueltig_bis,
                 'disable' 			=> $old_contract->einzug ? false : true,
                 'state' 			=> 'RCUR',
                 ]);
@@ -983,14 +984,14 @@ class importCommand extends Command
     public static function update_mandates_correct_encoding($db_con)
     {
         foreach (SepaMandate::all() as $m) {
-            if ($m->contract->firstname.' '.$m->contract->lastname == $m->sepa_holder) {
+            if ($m->contract->firstname.' '.$m->contract->lastname == $m->holder) {
                 continue;
             }
 
             $mandate_old = $db_con->table(\DB::raw('tbl_sepamandate s, tbl_lastschriftkonten l'))
                     ->selectRaw('s.*, l.*, l.id as id')
                     ->whereRaw('s.id = l.sepamandat')
-                    ->where('l.iban', '=', $m->sepa_iban)
+                    ->where('l.iban', '=', $m->iban)
                     ->where('s.deleted', '=', 'false')
                     ->where('l.deleted', '=', 'false')
                     ->orderBy('l.id')
@@ -1003,13 +1004,13 @@ class importCommand extends Command
 
             $mandate_old = $mandate_old[0];
 
-            if ($m->sepa_holder == $mandate_old->kontoinhaber) {
+            if ($m->holder == $mandate_old->kontoinhaber) {
                 continue;
             }
 
-            echo "\nSEPAMANDATE UPDATE [$m->id]: $m->sepa_holder to $mandate_old->kontoinhaber";
+            echo "\nSEPAMANDATE UPDATE [$m->id]: $m->holder to $mandate_old->kontoinhaber";
 
-            $m->sepa_holder = $mandate_old->kontoinhaber ? utf8_encode($mandate_old->kontoinhaber) : '';
+            $m->holder = $mandate_old->kontoinhaber ? utf8_encode($mandate_old->kontoinhaber) : '';
 
             $m->save();
         }

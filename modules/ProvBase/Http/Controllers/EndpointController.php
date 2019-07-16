@@ -2,8 +2,6 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Modules\ProvBase\Entities\Modem;
-
 class EndpointController extends \BaseController
 {
     protected $index_create_allowed = false;

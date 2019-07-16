@@ -52,10 +52,28 @@ if (typeof(Storage) !== "undefined") {
         $('#' + sitem + ' .sub-menu ').css("display", "block");
         $('#' + chitem).addClass("active");
 	}
-		$('#sidebar .sub-menu li').click(function (event) {
-			localStorage.setItem("clicked-item", $(this).attr('id'));
-			localStorage.setItem("sidebar-item", $(this).closest('[data-sidebar=level1]').attr('id'));
+    $('#sidebar ul > li').click(function (event) {
+        localStorage.setItem("sidebar-item", $(this).attr('id'));
+        localStorage.setItem("clicked-item", $(this).attr('id'));
+    });
+
+    $('#sidebar ul > li > div > .caret-link').click(function (event) {
+        var li_item = $(this).closest('[data-sidebar=level1]');
+        if(li_item.hasClass('expand')){
+            li_item.removeClass('expand');
+            li_item.children('.sub-menu').css('display', 'none');
+        }else {
+            li_item.children('.sub-menu').css('display', 'block');
+            li_item.addClass('expand');
+        }
 		});
+
+    $('#sidebar .sub-menu  li').click(function (event) {
+        event.stopPropagation();
+        localStorage.setItem("sidebar-item", $(this).closest('[data-sidebar=level1]').attr('id'));
+        localStorage.setItem("clicked-item", $(this).attr('id'));
+    });
+
 } else {
   console.log("sorry, no Web Storage Support - Cant save State of Sidebar -please update your Browser")
 }
@@ -70,6 +88,12 @@ if (typeof(Storage) !== "undefined") {
 * http://stackoverflow.com/posts/16984739/revisions
 */
 var saveTabPillState = function() {
+  // Show tab from hash
+  // Note: for an URL with hash the function above will not be initialised and therefore will not save the tab state
+  if (window.location.hash) {
+    return $(window.location.hash + 'tab').tab('show');
+  }
+
   $(function() {
     var json, tabsState;
     $('a[data-toggle="pill"], a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
@@ -88,7 +112,7 @@ var saveTabPillState = function() {
     json = JSON.parse(tabsState || "{}");
 
     $.each(json, function(containerId, href) {
-      return $("#" + containerId + " a[href=" + href + "]").tab('show');
+      return $("#" + containerId + " a[href='" + href + "']").tab('show');
     });
 
     $("ul.nav.nav-pills, ul.nav.nav-tabs").each(function() {

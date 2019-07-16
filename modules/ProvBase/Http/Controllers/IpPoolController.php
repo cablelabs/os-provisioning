@@ -2,7 +2,6 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Modules\ProvBase\Entities\Cmts;
 use Modules\ProvBase\Entities\IpPool;
 use App\Http\Controllers\BaseViewController;
 

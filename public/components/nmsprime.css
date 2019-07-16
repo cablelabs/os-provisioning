@@ -17,6 +17,20 @@ a:hover {
     text-decoration:underline
 }
 
+input[type="checkbox"].form-control {
+	margin: 0 auto;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+	appearance: none;
+	width: 34px;
+	text-align: center;
+	background: #fff !important;
+}
+input[type="checkbox"].form-control:checked:after {
+	content: '\2714';
+	font-size: 26px;
+}
+
 /* Selectv2 responsive */
 .select2-container {
     width: 100% !important;
@@ -415,7 +429,6 @@ table .index_check {
     {
         -webkit-box-flex: 0;
         -ms-flex: 0 0 100%;
-        flex: 0 0 100%;
         max-width: 100%;
         margin: 0;
     }
@@ -454,4 +467,80 @@ table .index_check {
     pointer-events: none;
     height: 25px;
     box-shadow: 1px 2px 3px #000;
+}
+
+.timeline .timeline-icon a{
+    width: 20px;
+    height: 20px;
+    background: #d9e0e7;
+}
+
+.timeline > li + li {
+    margin-top: 20px;
+}
+
+.timeline > .timeline-time .date{
+    font-size: 13px;
+}
+.timeline > .timeline-time .time{
+    font-size: 20px;
+}
+.timeline-header {
+    padding-bottom: 0;
+}
+.timeline .timeline-body:before {
+    top: 12px;
+}
+.timeline .timeline-body {
+    padding: 10px 16px;
+}
+.timeline-header + .timeline-content, .timeline-header + .timeline-footer, .timeline-content + .timeline-footer {
+    margin-top: 0;
+}
+
+.navbar.navbar-inverse .navbar-brand,
+.sidebar .nav > li.active >div,
+.sidebar .nav > li.active >div:focus,
+.sidebar .nav > li.active >div:hover,
+.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a,
+.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a,
+.page-sidebar-minified .sidebar .nav > li.has-sub.active > a{
+    background: #8ec73a;
+}
+.sidebar .sub-menu > li.active > div >a:before {
+    color: #8ec73a;
+}
+
+.sidebar .nav > li > div> a {
+    color: #a8acb1;
+}
+
+.sidebar .nav > li.active > div > a, .sidebar .nav > li.active > div> a:hover, .sidebar .nav > li.active > div > a:focus {
+    color: #fff;
+    background: #8ec73a;
+}
+.sidebar .has-sub.expand > .sub-menu {
+    display: block;
+}
+
+#page-container.page-sidebar-minified .nav li i.fa+span{
+  display: none;
+}
+#page-container.page-sidebar-minified .nav ul.sub-menu li i.fa+span{
+  display: inline;
+}
+
+span.centerblock {
+    display: block;
+    text-align: center;
+}
+
+.tab-overflow .nav.nav-pills > li, .tab-overflow.nav.nav-pills > li {
+    display: inline-block !important;
+}
+
+ul.nav.nav-pills li {
+    max-height: 50px !important;
+    overflow: hidden !important;
+    overflow-y: auto !important;
 }

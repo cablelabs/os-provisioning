@@ -10,21 +10,21 @@
 --}}
 
 <?php
-	$blade_type = 'index_list';
+    $blade_type = 'index_list';
 ?>
 
 @extends ('Layout.split84-nopanel')
 
 @section('content_top')
-	<li class="active">
-		<a href="{{route($route_name.'.index')}}">
-		    {!! $model->view_icon().' '.$headline !!}
-		</a>
-	</li>
+    <li class="active">
+        <a href="{{route($route_name.'.index')}}">
+            {!! $model->view_icon().' '.$headline !!}
+        </a>
+    </li>
 @stop
 
 @section('content_left')
-	{{-- Headline: means icon followed by headline --}}
+    {{-- Headline: means icon followed by headline --}}
     <div class="col-md-12">
         <div class="row m-b-25">
             <div class="col">
@@ -63,7 +63,7 @@
         </div>
     </div>
 
-	@include('Generic.above_infos')
+    @include('Generic.above_infos')
 
     {{-- database entries inside a form with checkboxes to be able to delete one or more entries --}}
     {{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete', 'id' => 'IndexForm')) }}
@@ -141,6 +141,7 @@ $(document).ready(function() {
         autoWidth: false, {{-- Option to ajust Table to Width of container --}}
         dom: 'lBfrtip', {{-- sets order and what to show  --}}
         stateSave: true, {{-- Save Search Filters and visible Columns --}}
+        stateDuration: 60 * 60 * 24, {{-- Time the State is used - set to 24h --}}
         lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "{{ trans('view.jQuery_All') }}" ] ], {{-- Filter to List # Datasets --}}
         {{-- Responsive Column --}}
         columnDefs: [],
@@ -172,7 +173,7 @@ $(document).ready(function() {
             processing: true, {{-- show loader--}}
             serverSide: true, {{-- enable Serverside Handling--}}
             deferRender: true,
-            ajax: '{{ isset($route_name) && $route_name!= "Config.index"  ? route($route_name.'.data') : "" }}',
+            ajax: '{{ isset($ajax_route_name) && $route_name != "Config.index" ? route($ajax_route_name) : "" }}',
             {{-- generic Col Header generation --}}
                 @include('datatables.genericColHeader')
         @endif

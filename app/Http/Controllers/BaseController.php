@@ -18,7 +18,7 @@ use BaseModel;
 use Validator;
 use GlobalConfig;
 use Monolog\Logger;
-use Yajra\Datatables\Datatables;
+use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Request;
 
 /*
@@ -87,34 +87,34 @@ class BaseController extends Controller
         // place your code here
     }
 
-    /*
-     * Base Function for Breadcrumb. -> Panel Header Right
-     * overwrite this function in child controller if required.
+    /**
+     * Base Function containing the default tabs for each model
+     * Overwrite/Extend this function in child controller to add more tabs refering to new pages
+     * Use models view_has_many() to add/structure panels inside separate tabs
      *
-     * NOTE: Breadcrumb means Panel Header Right in Bootstrap language
-     *
-     * @param view_var: the model object to be displayed
-     * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
-     * @author: Torsten Schmidt
+     * @param model: the model object to be displayed
+     * @return: array of tab descriptions - e.g. [['name' => '..', 'route' => '', 'link' => [$model->id]], .. ]
+     * @author: Torsten Schmidt, Nino Ryschawy
      */
-    protected function get_form_tabs($view_var)
+    protected function editTabs($model)
     {
-        $class = NamespaceController::get_model_name();
+        $class = get_class($model);
 
         if (Str::contains($class, 'GuiLog')) {
             return;
         }
 
-        $class_name = substr(strrchr($class, '\\'), 1);
+        $class_name = $model->get_model_name();
 
-        return ['0' => [
-            'name' => 'Logging',
-            'route' => 'GuiLog.filter',
-            'link' => ['model_id' => $view_var->id, 'model' => $class_name],
-        ],
-        '1' => ['name' => 'Edit',
-                'route' => $class_name.'.edit',
-                'link' => ['model_id' => $view_var->id, 'model' => $class_name],
+        return [[
+                'name' => 'Edit',
+                // 'route' => $class_name.'.edit',
+                // 'link' => ['model_id' => $model->id, 'model' => $class_name],
+            ],
+            [
+                'name' => 'Logging',
+                'route' => 'GuiLog.filter',
+                'link' => ['model_id' => $model->id, 'model' => $class_name],
             ],
         ];
     }
@@ -268,38 +268,40 @@ class BaseController extends Controller
     }
 
     /**
-     * Prepare Breadcrumb - $panel_right header
-     * Priority Handling: get_form_tabs(), view_has_many()
+     * Prepare tabs for edit page
+     * Merge defined tabs from editTabs() and view_has_many()
      *
-     * @param view_var: the view_var parameter from edit() context
-     * @return panel_right prepared array for default.blade
+     * @author Nino Ryschawy
+     * @param relations  from view_has_many()
+     * @param tabs       from editTabs()
+     * @return array     tabs for split-no-panel.blade and edit.blade
      */
-    protected function prepare_tabs($view_var)
+    protected function prepare_tabs($relations, $tabs)
     {
-        // Version 1
-        $ret = $this->get_form_tabs($view_var);
-        if (count($ret) > 2) {
-            return $ret;
+        // Generate tabs from array structure of relations
+        foreach ($relations as $tab => $panels) {
+            if (! $this->tabDefined($tab, $tabs)) {
+                $tabs[] = ['name' => $tab];
+            }
         }
-        // view_has_many() Version 2
-        $a = $view_var->view_has_many();
-        if (BaseViewController::get_view_has_many_api_version($a) == 2) {
-            // get actual blade to $b
-            $b = current($a);
-            $c = [];
-            for ($i = 0; $i < count($a); $i++) {
-                array_push($c, ['name' => key($a), 'route' => NamespaceController::get_route_name().'.edit', 'link' => [$view_var->id, 'blade='.$i]]);
-                $b = next($a);
-            }
-            // add tab for GuiLog
-            if ($ret) {
-                array_push($c, $ret[0]);
-            }
 
-            return $c;
-        } else {
-            return $ret;
+        return $tabs;
+    }
+
+    /**
+     * Check if tab of relations (defined in view_has_many()) is already defined tabs from editTabs()
+     *
+     * @return bool
+     */
+    private function tabDefined($relationsTab, $editTabs)
+    {
+        foreach ($editTabs as $key => $array) {
+            if ($array['name'] == $relationsTab) {
+                return true;
+            }
         }
+
+        return false;
     }
 
     /**
@@ -391,6 +393,10 @@ class BaseController extends Controller
 
         if (! isset($a['route_name'])) {
             $a['route_name'] = NamespaceController::get_route_name();
+        }
+
+        if (! isset($a['ajax_route_name'])) {
+            $a['ajax_route_name'] = $a['route_name'].'.data';
         }
 
         if (! isset($a['model_name'])) {
@@ -721,12 +727,10 @@ class BaseController extends Controller
 
         $fields = BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($view_var), $view_var);
         $form_fields = BaseViewController::add_html_string($fields, 'edit');
-        // $form_fields	= BaseViewController::add_html_string (static::get_controller_obj()->view_form_fields($view_var), $view_var, 'edit');
 
-        // prepare_tabs & prep_right_panels are redundant - TODO: improve
-        $tabs = $this->prepare_tabs($view_var);
-
-        $relations = BaseViewController::prep_right_panels($view_var);
+        // view_has_many should actually be a controller function!
+        $relations = $view_var->view_has_many();
+        $tabs = $this->prepare_tabs($relations, $this->editTabs($view_var));
 
         // check if there is additional data to be passed to blade template
         // on demand overwrite base method _get_additional_data_for_edit_view($model)
@@ -1310,12 +1314,9 @@ class BaseController extends Controller
      */
     public static function get_storage_file_list($dir)
     {
-        $files_raw = \Storage::files("config/$dir");
         $files[null] = 'None';
-
-        foreach ($files_raw as $file) {
-            $name = explode('/', $file);
-            $name = array_pop($name);
+        foreach (\Storage::files("config/$dir") as $file) {
+            $name = basename($file);
             $files[$name] = $name;
         }
 
@@ -1386,6 +1387,7 @@ class BaseController extends Controller
         $filter_column_data = isset($dt_config['filter']) ? $dt_config['filter'] : [];
         $eager_loading_tables = isset($dt_config['eager_loading']) ? $dt_config['eager_loading'] : [];
         $additional_raw_where_clauses = isset($dt_config['where_clauses']) ? $dt_config['where_clauses'] : [];
+        $raw_columns = $dt_config['raw_columns'] ?? []; // not run through htmlentities()
 
         // if no id Column is drawn, draw it to generate links with id
         ! array_has($header_fields, $dt_config['table'].'.id') ? array_push($header_fields, 'id') : null;
@@ -1407,13 +1409,25 @@ class BaseController extends Controller
             $request_query = $request_query->whereRaw($where_clause);
         }
 
-        $DT = Datatables::of($request_query);
-        $DT->addColumn('responsive', '')
+        $DT = DataTables::make($request_query)
+            ->addColumn('responsive', '')
             ->addColumn('checkbox', '');
 
         foreach ($filter_column_data as $column => $custom_query) {
-            $DT->filterColumn($column, function ($query, $keyword) use ($custom_query) {
-                $query->whereRaw($custom_query, ["%{$keyword}%"]);
+            // backward compatibility – accept strings as input, too
+            if (is_string($custom_query)) {
+                $custom_query = ['query' => $custom_query, 'eagers' => []];
+            } else {
+                if (! is_array($custom_query)) {
+                    throw new \Exception('$custom_query has to be string or array');
+                }
+            }
+
+            $DT->with('contract')->filterColumn($column, function ($query, $keyword) use ($custom_query) {
+                foreach ($custom_query['eagers'] as $eager) {
+                    $query->with($eager);
+                }
+                $query->whereRaw($custom_query['query'], ["%{$keyword}%"]);
             });
         }
 
@@ -1449,7 +1463,9 @@ class BaseController extends Controller
             return $bsclass;
         });
 
-        return $DT->make(true);
+        array_unshift($raw_columns, 'checkbox', $first_column); // add everywhere used raw columns
+
+        return $DT->rawColumns($raw_columns)->make();
     }
 
     // NOTE: Import is a fast-forward-copy from https://github.com/LaravelDaily/Laravel-Import-CSV-Demo

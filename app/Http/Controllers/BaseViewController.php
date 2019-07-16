@@ -537,6 +537,9 @@ class BaseViewController extends Controller
                 $name = Config::get(Str::lower($module->name).'.'.'name') ?? $module->get('description');
                 $icon = ($module->get('icon') == '' ? '' : $module->get('icon'));
                 $menu[$name]['icon'] = $icon;
+                $menu[$name]['link'] = Config::get(Str::lower($module->name).'.link');
+                $menu[$name]['translated_name'] = static::translate_view($name, 'Menu');
+
                 foreach ($moduleMenuConfig as $page => $settings) {
                     if (Bouncer::can('view', $settings['class'])) {
                         $menuItem = static::translate_view($page, 'Menu');
@@ -638,9 +641,9 @@ class BaseViewController extends Controller
             }
 
             if ($i == 0) {
-                $breadcrumb_path = "<li class='nav-tabs'>".static::__link_route_html($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).$breadcrumb_path.'</li>';
+                $breadcrumb_path = "<li class='nav-tabs'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).$breadcrumb_path.'</li>';
             } else {
-                $breadcrumb_path = '<li>'.static::__link_route_html($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).'</li>'.$breadcrumb_path;
+                $breadcrumb_path = '<li>'.static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).'</li>'.$breadcrumb_path;
             }
 
             return $breadcrumb_path;
@@ -763,49 +766,6 @@ class BaseViewController extends Controller
         }
 
         return 2;
-    }
-
-    /**
-     * Prepare Right Panels to View
-     *
-     * @param $view_var: object/model to be displayed
-     * @return: array() of fields with added ['html'] element containing the preformed html content
-     *
-     * @author: Torsten Schmidt
-     */
-    public static function prep_right_panels($view_var)
-    {
-        $arr = $view_var->view_has_many();
-        $api = static::get_view_has_many_api_version($arr);
-
-        if ($api == 1) {
-            $relations = $arr;
-        }
-
-        if ($api == 2) {
-            // API 2: use HTML GET 'blade' to switch between tabs
-            // TODO: validate Input blade
-            $blade = 0;
-            if (Input::get('blade') != '') {
-                $blade = Input::get('blade');
-            }
-
-            // get actual blade to $b from array of all blades in $arr
-            // $arr = $view_var->view_has_many();
-
-            if (count($arr) == 1) {
-                return current($arr);
-            }
-
-            $b = current($arr);
-            for ($i = 0; $i < $blade; $i++) {
-                $b = next($arr);
-            } // move to next blade/tab
-
-            $relations = $b;
-        }
-
-        return $relations;
     }
 
     /*

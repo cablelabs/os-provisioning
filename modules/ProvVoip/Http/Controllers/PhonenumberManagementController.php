@@ -154,6 +154,7 @@ class PhonenumberManagementController extends \BaseController
                 'form_type' => 'text',
                 'name' => 'activation_date',
                 'description' => 'Activation date',
+                'help' => trans('helper.PhonenumberManagement_activation_date'),
             ],
             [
                 'form_type' => 'text',
@@ -260,6 +261,7 @@ class PhonenumberManagementController extends \BaseController
                 'name' => 'deactivation_date',
                 'description' => 'Termination date',
                 'hidden' => $hide_flags['deactivation_date'],
+                'help' => trans('helper.PhonenumberManagement_deactivation_date'),
             ],
             [
                 'form_type' => 'text',
@@ -280,6 +282,7 @@ class PhonenumberManagementController extends \BaseController
                 'description' => 'Carrier out',
                 'value' => CarrierCode::carrier_list_for_form_select(true),
                 'checkbox' => 'show_on_porting_out',
+                'help' => trans('helper.carrier_out'),
                 'space' => '1',
             ],
             [

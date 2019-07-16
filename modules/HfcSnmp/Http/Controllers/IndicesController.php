@@ -3,7 +3,6 @@
 namespace Modules\HfcSnmp\Http\Controllers;
 
 use Modules\HfcReq\Entities\NetElement;
-use Modules\HfcSnmp\Entities\Parameter;
 use Modules\HfcReq\Entities\NetElementType;
 
 class IndicesController extends \BaseController

@@ -61,7 +61,7 @@ class contractCommand extends Command
             if (\Module::collections()->has('BillingBase')) {
                 // attention: do not check if valid_to or valid_from is fixed – we need them both
                 //      (change item dates, trigger online state of modems)
-                $cs = Contract::where(whereLaterOrEqualThanDate('contract_end', $min_date))
+                $cs = Contract::where(whereLaterOrEqual('contract_end', $min_date))
                     ->where('contract_start', '<=', $today)
                     ->join('item', 'contract.id', '=', 'item.contract_id')
                     ->join('product', 'product.id', '=', 'item.product_id')
@@ -75,7 +75,7 @@ class contractCommand extends Command
                     ->select('contract.*')
                     ->get();
             } else {
-                $cs = Contract::where(whereLaterOrEqualThanDate('contract_end', $min_date))
+                $cs = Contract::where(whereLaterOrEqual('contract_end', $min_date))
                     ->where('contract_start', '<=', date('Y-m-d'))
                     ->get();
             }

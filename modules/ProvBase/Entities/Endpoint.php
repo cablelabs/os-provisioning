@@ -2,8 +2,6 @@
 
 namespace Modules\ProvBase\Entities;
 
-use File;
-
 class Endpoint extends \BaseModel
 {
     // The associated SQL table for this Model
