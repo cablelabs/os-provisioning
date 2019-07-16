@@ -78,6 +78,7 @@ return [
     'settlementrun.year' => 'Jahr',
     'settlementrun.month' => 'Monat',
     'settlementrun.created_at' => 'Erstellt am',
+    'settlementrun.executed_at' => 'Durchgeführt am',
     'verified' => 'Überprüft?',
     // MPR
     'mpr.name' => 'Name',
