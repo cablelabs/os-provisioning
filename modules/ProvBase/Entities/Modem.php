@@ -217,7 +217,7 @@ class Modem extends \BaseModel
     {
         $ret = [];
 
-        // we use a dummy here as this will be overwritten by ModemController::get_form_tabs()
+        // we use a dummy here as this will be overwritten by ModemController::editTabs()
         if (\Module::collections()->has('ProvVoip')) {
             $ret['Edit']['Mta']['class'] = 'Mta';
             $ret['Edit']['Mta']['relation'] = $this->mtas;
@@ -237,7 +237,7 @@ class Modem extends \BaseModel
 
             $ret['Edit']['EnviaOrder']['class'] = 'EnviaOrder';
             $ret['Edit']['EnviaOrder']['relation'] = $this->_envia_orders;
-            $ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at envia TEL';
+            $ret['Edit']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at envia TEL';
 
             // TODO: auth - loading controller from model could be a security issue ?
             $ret['Edit']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
@@ -1498,10 +1498,10 @@ class Modem extends \BaseModel
 
     public function proximity_search($radius)
     {
-        $ids = 'id = 0';
-        foreach (self::all() as $modem) {
+        $ids = [0];
+        foreach (\DB::table('modem')->select('id', 'x', 'y')->where('deleted_at', null)->get() as $modem) {
             if ($this->_haversine_great_circle_distance($modem) < $radius) {
-                $ids .= " OR id = $modem->id";
+                array_push($ids, $modem->id);
             }
         }
 

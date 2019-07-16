@@ -89,7 +89,7 @@ class Contract extends \BaseModel
     {
         $bsclass = 'success';
 
-        if (! $this->internet_access) {
+        if (! ($this->internet_access || $this->has_telephony)) {
             $bsclass = 'active';
 
             // '$this->id' to dont check when index table header is determined!
@@ -109,20 +109,25 @@ class Contract extends \BaseModel
     // View Relation.
     public function view_has_many()
     {
-        $ret['Edit']['Modem'] = $this->modems;
-
-        if (\Module::collections()->has('BillingBase')) {
-            // view has many version 1
-            $ret['Edit']['Item'] = $this->items;
-            $ret['Edit']['SepaMandate'] = $this->sepamandates;
-        }
+        $ret['Edit']['Modem']['class'] = 'Modem';
+        $ret['Edit']['Modem']['relation'] = $this->modems;
 
         if (\Module::collections()->has('BillingBase')) {
             // view has many version 2
+            $ret['Edit']['Item']['class'] = 'Item';
+            $ret['Edit']['Item']['relation'] = $this->items;
             $ret['Billing']['Item']['class'] = 'Item';
             $ret['Billing']['Item']['relation'] = $this->items;
+            $ret['Edit']['SepaMandate']['class'] = 'SepaMandate';
+            $ret['Edit']['SepaMandate']['relation'] = $this->sepamandates;
             $ret['Billing']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
+
+            if (\Module::collections()->has('Dunning')) {
+                // resulting outstanding amount
+                $ret['Edit']['DebtResult']['view']['view'] = 'dunning::Debt.result';
+                $ret['Edit']['DebtResult']['view']['vars']['debt'] = $this->getResultingDebt();
+            }
 
             // Show invoices in 2 panels
             if (! $this->relationLoaded('invoices')) {
@@ -134,6 +139,11 @@ class Contract extends \BaseModel
 
             for ($i = 0; $i < $countPanel1; $i++) {
                 $invoicesPanel1->push($this->invoices[$i]);
+            }
+
+            if (\Module::collections()->has('Dunning')) {
+                $ret['Billing']['Debt']['class'] = 'Debt';
+                $ret['Billing']['Debt']['relation'] = $this->debts;
             }
 
             $ret['Billing']['Invoice']['class'] = 'Invoice';
@@ -179,7 +189,8 @@ class Contract extends \BaseModel
         }
 
         if (\Module::collections()->has('Ticketsystem')) {
-            $ret['Edit']['Ticket'] = $this->tickets;
+            $ret['Edit']['Ticket']['class'] = 'Ticket';
+            $ret['Edit']['Ticket']['relation'] = $this->tickets;
         }
 
         if (\Module::collections()->has('Mail')) {
@@ -192,6 +203,11 @@ class Contract extends \BaseModel
     /*
      * Relations
      */
+    public function debts()
+    {
+        return $this->hasMany('Modules\Dunning\Entities\Debt')->orderBy('date', 'desc');
+    }
+
     public function modems()
     {
         return $this->hasMany('Modules\ProvBase\Entities\Modem');
@@ -476,7 +492,7 @@ class Contract extends \BaseModel
             $items = $this->items()
                 ->leftJoin('product', 'product.id', '=', 'item.product_id')
                 ->whereIn('product.type', ['Internet', 'Voip'])
-                ->where(whereLaterOrEqualThanDate('item.valid_to', date('Y-m-d', strtotime("-$item_max_ended_before days"))))
+                ->where(whereLaterOrEqual('item.valid_to', date('Y-m-d', strtotime("-$item_max_ended_before days"))))
                 // ->orderBy('valid_from', 'desc')
                 ->select('item.*')
                 ->with('product')
@@ -1222,6 +1238,29 @@ class Contract extends \BaseModel
         $ret['tariff'] = $tariff;
 
         return $ret;
+    }
+
+    /**
+     * Return the outstanding amount
+     *
+     * @return float
+     */
+    public function getResultingDebt()
+    {
+        if (! \Module::collections()->has('Dunning')) {
+            return;
+        }
+
+        $sum = \Modules\Dunning\Entities\Debt::where('contract_id', $this->id)
+            ->groupBy('contract_id')
+            ->selectRaw('(SUM(amount) + SUM(total_fee)) as sum')
+            ->first();
+
+        if (! $sum) {
+            return 0;
+        }
+
+        return $sum->sum;
     }
 }
 

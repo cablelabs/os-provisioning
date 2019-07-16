@@ -33,6 +33,8 @@ return [
                 'jQuery_ImportCsv'              => 'import CSV',
 //MENU
     //Main Menu
+        'Menu_Debt'                 => 'Debts',
+        'Menu_Dunning'              => 'Dunning',
         'Menu_MainMenu' 			=> 'Main Menu',
         'Menu_Config Page'			=> 'Global Config Page',
         'Menu_BillingBase'			=> 'Billing Base',
@@ -60,8 +62,8 @@ return [
         'Menu_MTAs' 				=> 'MTAs',
         'Menu_Phonenumbers'			=> 'Phonenumbers',
         'Menu_PhoneTariffs'			=> 'PhoneTariffs',
-        'Menu_Envia orders'			=> 'envia TEL orders',
-        'Menu_Envia contracts'		=> 'envia TEL contracts',
+        'Menu_envia TEL orders'		=> 'envia TEL orders',
+        'Menu_envia TEL contracts'	=> 'envia TEL contracts',
         'Menu_Net Elements'         => 'Net Elements',
         'Menu_Net Element Types'    => 'Net Element Types',
         'Menu_TicketTypes'          => 'TicketTypes',
@@ -216,8 +218,11 @@ return [
         'Header_Phone tariffs'		=> 'Phonetariff|Phonetariffs',
         'Header_EditPhone tariffs'	=> 'Edit Phonetariffs',
     //ProvVoipEnvia
-        'Header_EnviaOrders'		=> 'envia TEL order|envia TEL orders',
-        'Header_EnviaContracts'		=> 'envia TEL contract|envia TEL contracts',
+        'Header_envia TEL orders'	=> 'envia TEL order|envia TEL orders',
+        'Header_envia TEL contracts' => 'envia TEL contract|envia TEL contracts',
+
+        'Header_Debt'               => 'Debt history',
+        'Header_DebtResult'         => 'Outstanding payments total',
 
     //Header Relation
         // 'Assigned'  				=> 'Zugewiesene',
@@ -371,4 +376,14 @@ return [
 // Error
     'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
     'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
+
+    'bankTransfer' => 'Bank transfers',
+    'Credit' => 'Credit',
+    'Debit' => 'Debit',
+    'Discard' => 'Discard',
+    'Level' => 'Level',
+    'Message' => 'Message',
+    'SettlementRun' => 'SettlementRun',
+    'Time' => 'Time',
+    'Type' => 'Type',
 ];

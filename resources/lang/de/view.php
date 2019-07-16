@@ -33,6 +33,7 @@ return [
                 'jQuery_ImportCsv'              => 'CSV importieren',
 //MENU
     //Main Menu
+        'Menu_Debt'                 => 'Offene Posten',
         'Menu_MainMenu' 			=> 'Hauptmenü',
         'Menu_Config Page'			=> 'Systemkonfiguration',
         'Menu_Logging'				=> 'Logs',
@@ -56,8 +57,8 @@ return [
         'Menu_MTAs' 				=> 'MTAs',
         'Menu_Phonenumbers'			=> 'Telefonnummern',
         'Menu_PhoneTariffs'			=> 'Telefontarife',
-        'Menu_Envia orders'			=> 'envia TEL Aufträge',
-        'Menu_Envia contracts'		=> 'envia TEL Verträge',
+        'Menu_envia TEL orders'		=> 'envia-TEL-Aufträge',
+        'Menu_envia TEL contracts'	=> 'envia-TEL-Verträge',
         'Menu_Net Elements'         => 'Netzelemente',
         'Menu_Net Element Types'    => 'Netzelementtypen',
         'Menu_TicketTypes'          => 'Tickettypen',
@@ -127,7 +128,7 @@ return [
         'Ability_HFC' 				=> 'HFC',
         'Ability_ProvBase' 			=> 'Provisionierung Basismodul',
         'Ability_ProvVoip' 			=> 'Provisionierung für VoiP',
-        'Ability_ProvVoipEnvia'		=> 'Provisionierung für EnviaVoip',
+        'Ability_ProvVoipEnvia'		=> 'Provisionierung für envia TEL',
         'Ability_VoipMon'			=> 'Voip Monitor',
         //Salesman
         'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
@@ -212,8 +213,11 @@ return [
         'Header_Phone tariffs'		=> 'Telefontarif|Telefontarife',
         'Header_EditPhone tariffs'	=> 'Telefontarif bearbeiten',
     //ProvVoipEnvia
-        'Header_EnviaOrders'		=> 'envia TEL Auftrag|envia TEL Aufträge',
-        'Header_EnviaContracts'		=> 'envia TEL Vertrag|envia TEL Verträge',
+        'Header_envia TEL orders'	=> 'envia-TEL-Auftrag|envia-TEL-Aufträge',
+        'Header_envia TEL contract' => 'envia-TEL-Vertrag|envia-TEL-Verträge',
+
+        'Header_Debt'               => 'Historie Offene Posten',
+        'Header_DebtResult'         => 'Offene Posten gesamt',
 
     //Header Relation
         // 'Assigned'  				=> 'Zugewiesene',
@@ -372,4 +376,14 @@ return [
 // Error
     'error_specify_id'          => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
     'error_ticket_settings'     => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
+
+    'bankTransfer' => 'Bank-Transaktionen',
+    'Credit' => 'Gutschrift',
+    'Debit' => 'Lastschrift',
+    'Discard' => 'Missachte',
+    'Level' => 'Level',
+    'Message' => 'Nachricht',
+    'SettlementRun' => 'Abrechnungslauf',
+    'Time' => 'Zeit',
+    'Type' => 'Typ',
 ];

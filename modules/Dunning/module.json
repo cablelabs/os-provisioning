@@ -1,0 +1,17 @@
+{
+    "name": "Dunning",
+    "alias": "dunning",
+    "description": "Dunning",
+    "keywords": [],
+    "active": 1,
+    "order": 30,
+    "icon": "fa-envelope",
+    "providers": [
+        "Modules\\Dunning\\Providers\\DunningServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

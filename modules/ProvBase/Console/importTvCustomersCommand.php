@@ -423,11 +423,11 @@ class importTvCustomersCommand extends Command
         $signature_date = date('Y-m-d', strtotime($line[self::S_SIGNATURE]));
 
         // Check and return if SepaMandate with this IBAN currently exists and is valid
-        if ($contract->sepamandates && $contract->sepamandates->contains('sepa_iban', $line[self::S_IBAN])) {
-            $mandates = $contract->sepamandates->where('sepa_iban', $line[self::S_IBAN]);
+        if ($contract->sepamandates && $contract->sepamandates->contains('iban', $line[self::S_IBAN])) {
+            $mandates = $contract->sepamandates->where('iban', $line[self::S_IBAN]);
 
             foreach ($mandates as $sm) {
-                if ((! $sm->sepa_valid_to || ($sm->sepa_valid_to > date('Y-m-d')) || ($sm->signature_date > $signature_date))) {
+                if ((! $sm->valid_to || ($sm->valid_to > date('Y-m-d')) || ($sm->signature_date > $signature_date))) {
                     \Log::notice("Contract $contract->number already has SEPA-mandate with IBAN ".$line[self::S_IBAN]);
 
                     return;
@@ -436,17 +436,17 @@ class importTvCustomersCommand extends Command
         }
 
         SepaMandate::create([
-            'contract_id' 		=> $contract->id,
-            'reference' 		=> $line[self::C_NR],
-            'signature_date' 	=> $signature_date,
-            'sepa_holder' 		=> $line[self::S_HOLDER],
-            'sepa_iban'			=> $line[self::S_IBAN],
-            'sepa_bic' 			=> $line[self::S_BIC],
-            'sepa_institute' 	=> $line[self::S_INST],
-            'sepa_valid_from' 	=> date('Y-m-d', strtotime($line[self::S_SIGNATURE])),
-            'state' 			=> 'RCUR',
-            'costcenter_id' 	=> $this->option('ccSepa'),
-            // 'sepa_valid_to' 	=> NULL,
+            'contract_id' 	=> $contract->id,
+            'reference' 	=> $line[self::C_NR],
+            'signature_date' => $signature_date,
+            'holder'        => $line[self::S_HOLDER],
+            'iban'			=> $line[self::S_IBAN],
+            'bic' 			=> $line[self::S_BIC],
+            'institute' 	=> $line[self::S_INST],
+            'valid_from' 	=> date('Y-m-d', strtotime($line[self::S_SIGNATURE])),
+            'state' 		=> 'RCUR',
+            'costcenter_id' => $this->option('ccSepa'),
+            // 'valid_to' 	=> NULL,
             ]);
 
         \Log::info('Add SepaMandate [IBAN: '.$line[self::S_IBAN]."] for contract $contract->number");

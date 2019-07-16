@@ -40,26 +40,27 @@ class MibFile extends \BaseModel
     // generates datatable content and classes for model
     public function view_index_label()
     {
-        $bsclass = $this->get_bsclass();
-
         return ['table' => $this->table,
                 'index_header' => [$this->table.'.id', $this->table.'.name',  $this->table.'.version'],
                 'header' =>  $this->name,
-                'order_by' => ['1' => 'asc'], ];
+                'bsclass' => $this->get_bsclass(),
+                'order_by' => ['1' => 'asc'],
+            ];
     }
 
     public function get_bsclass()
     {
-        $bsclass = $this->oids->first() ? 'success' : 'info';
+        $bsclass = $this->oids()->count() ? 'success' : 'info';
 
         return $bsclass;
     }
 
     public function view_has_many()
     {
-        return [
-            'OID' => $this->oids,
-        ];
+        $ret['Edit']['OID']['class'] = 'OID';
+        $ret['Edit']['OID']['relation'] = $this->oids;
+
+        return $ret;
     }
 
     //Overwrite from BaseModel to add version
