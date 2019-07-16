@@ -57,7 +57,7 @@ class cpeHostnameCommand extends Command
             if (preg_match('/;\s*binding state active;.*set ip = "([^"]*).*set hw_mac = "([^"]*)/s', $lease, $match)) {
                 $octets = explode('.', $match[1]);
                 if ((! filter_var($match[1], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE)) ||
-                    ($octets[0] == 100 && $octets[0] >= 64 && $octets[0] <= 127)) {
+                    ($octets[0] == 100 && $octets[1] >= 64 && $octets[1] <= 127)) {
                     continue;
                 }
                 exec("/etc/named-ddns.sh $match[2] $match[1] 0\n");
