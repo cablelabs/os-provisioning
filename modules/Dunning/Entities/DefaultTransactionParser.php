@@ -367,11 +367,11 @@ class DefaultTransactionParser
         // $invoiceNr = $matchInvoice ? $matchInvoice[6] : '';
 
         // Match invoice numbers in NMSPrime default format: Year/CostCenter-ID/incrementing number - examples 2018/3/48616, 2019/15/201
-        preg_match('/2\d{3}\/\d+\/\d+/i', $this->reason, $matchInvoice);
+        preg_match('/2\d{3}\/\d+\/\d+/i', $this->description, $matchInvoice);
         $this->invoiceNr = $matchInvoice ? $matchInvoice[0] : '';
 
-        // Match examples: Kundennummer|Kd-Nr|Kd.nr.|Kd.-Nr.|Kn|Knr 13451
-        preg_match('/K(.*?)[ndr](.*?)([1-7]\d{1,4})/i', $this->reason, $matchContract);
+        // Match examples: Kundennummer|Kd-Nr|Kd.nr.|Kd.-Nr.|Kn|Customernr|Cr|Cnr|Knr 13451
+        preg_match('/[CK](.*?)[ndr](.*?)([1-7]\d{1,4})/i', $this->description, $matchContract);
         $contractNr = $matchContract ? $matchContract[3] : 0;
 
         // Special invoice numbers that ensure that transaction definitely doesn't belong to NMSPrime
