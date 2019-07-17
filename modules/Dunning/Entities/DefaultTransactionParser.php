@@ -313,6 +313,8 @@ class DefaultTransactionParser
      *  AND corresponding invoice amount is the same as the amount of the transaction
      *
      * @return bool
+     *
+     * TODO: Add debt for Debits with Customer nr and total debt = transaction amount
      */
     private function addDebtBySpecialMatch($contract)
     {
