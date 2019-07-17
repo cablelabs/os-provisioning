@@ -15,11 +15,9 @@ namespace Modules\Dunning\Entities;
 class TransactionParser
 {
     public $engine;
-    private $transaction;
 
-    public function __construct(\Kingsquare\Banking\Transaction $transaction, $text)
+    public function __construct($text)
     {
-        $this->transaction = $transaction;
         $this->engine = $this->detectParser($text);
     }
 
@@ -29,10 +27,10 @@ class TransactionParser
      * @param string
      * @return DefaultTransactionParser
      */
-    private function detectParser($text)
+    private static function detectParser($text)
     {
         // Actually works for Sparkasse and Volksbank
-        return new DefaultTransactionParser($this->transaction);
+        return new DefaultTransactionParser;
         // return new SpkTransactionParser;
     }
 
@@ -41,15 +39,15 @@ class TransactionParser
      *
      * @return object
      */
-    public function parse()
+    public function parse(\Kingsquare\Banking\Transaction $transaction)
     {
-        if (! $this->transaction || $this->transaction->getPrice() == 0) {
+        if (! $transaction || $transaction->getPrice() == 0) {
             return;
         }
 
-        $debt = $this->engine->parse();
+        $debt = $this->engine->parse($transaction);
 
-        if ($this->debtExists($debt)) {
+        if ($this->debtExists($debt, $transaction)) {
             return;
         }
 
@@ -59,7 +57,7 @@ class TransactionParser
     /**
      * Checks if debt was already added by same or another uploaded transaction.sta file
      */
-    public function debtExists($debt)
+    public function debtExists($debt, $transaction)
     {
         if (! $debt) {
             return false;
@@ -70,11 +68,11 @@ class TransactionParser
             ->count();
 
         if ($exists) {
-            $debitCredit = $this->transaction->getDebitCredit() == 'C' ? 'Credit' : 'Debit';
+            $debitCredit = $transaction->getDebitCredit() == 'C' ? 'Credit' : 'Debit';
             \ChannelLog::debug('dunning', trans('dunning::messages.transaction.exists', [
                 'debitCredit' => trans("view.$debitCredit"),
-                'description' => $this->transaction->getDescription(),
-                'price' => $this->transaction->getPrice(),
+                'description' => $transaction->getDescription(),
+                'price' => $transaction->getPrice(),
                 ]));
 
             return true;
