@@ -23,7 +23,6 @@ class DefaultTransactionParser
     private $invoiceNr;
     private $logMsg;
     private $mref;
-    private $reason;
 
     /**
      * Transaction that needs to be set on Class initialization.
@@ -76,7 +75,7 @@ class DefaultTransactionParser
         $this->transaction = $transaction;
 
         $this->amount = $this->bank_fee = 0;
-        $this->description = $this->holder = $this->reason = [];
+        $this->description = $this->holder = [];
         $this->iban = $this->invoiceNr = $this->logMsg = $this->mref = '';
 
         $action = $transaction->getDebitCredit() == 'D' ? 'parseDebit' : 'parseCredit';
@@ -109,6 +108,7 @@ class DefaultTransactionParser
             'mref' => $this->mref,
             'price' => number_format_lang($this->transaction->getPrice()),
             'iban' => $this->iban,
+            'reason' => $this->description,
             ]);
 
         if ($this->setDebitDebtRelations() === false) {
@@ -205,7 +205,7 @@ class DefaultTransactionParser
                 'holder' => $this->holder,
                 'price' => number_format_lang($this->transaction->getPrice()),
                 'iban' => $this->iban,
-                'reason' => $this->reason,
+                'reason' => $this->description,
             ]);
 
         $numbers = $this->searchNumbers();
@@ -224,7 +224,7 @@ class DefaultTransactionParser
         }
 
         $this->debt->amount = -1 * $this->transaction->getPrice();
-        $this->debt->description = $this->reason;
+        $this->debt->description = $this->description;
 
         ChannelLog::debug('dunning', trans('dunning::messages.transaction.create')." $this->logMsg");
     }
@@ -381,7 +381,7 @@ class DefaultTransactionParser
 
         $exclude = '';
         foreach ($this->excludeRegexes as $regex => $group) {
-            preg_match($regex, $this->reason, $matchInvoiceSpecial);
+            preg_match($regex, $this->description, $matchInvoiceSpecial);
 
             if ($matchInvoiceSpecial) {
                 $exclude = $matchInvoiceSpecial[$group];
@@ -420,6 +420,7 @@ class DefaultTransactionParser
     protected function parseDescription()
     {
         $descriptionArray = explode('?', $this->transaction->getDescription());
+        $reason = [];
 
         if ($this->discardDebitTransactionType($descriptionArray[0])) {
             return false;
@@ -434,7 +435,7 @@ class DefaultTransactionParser
                 $ret = $this->getVarFromDesignator($line);
 
                 if ($ret['varName'] == 'description') {
-                    $this->description[] = $ret['value'];
+                    $reason[] = $ret['value'];
                 } else {
                     $varName = $ret['varName'];
                     $this->$varName = $ret['value'];
@@ -455,15 +456,16 @@ class DefaultTransactionParser
 
             // 60 to 63
             if (preg_match('/^6[0-3]/', $key)) {
-                $this->description[] = $line;
+                $reason[] = $line;
 
                 continue;
             }
         }
 
         $this->holder = utf8_encode(implode('', $this->holder));
-        $this->reason = utf8_encode(trim(implode('', $this->reason)));
-        $this->description = substr(utf8_encode(implode('', $this->description)), 0, 255);
+        $this->description = substr(utf8_encode(implode('', $reason)), 0, 255);
+
+        return true;
     }
 
     /**
