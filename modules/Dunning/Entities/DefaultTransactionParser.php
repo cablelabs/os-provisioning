@@ -2,7 +2,6 @@
 
 namespace Modules\Dunning\Entities;
 
-use Debt;
 use ChannelLog;
 use Illuminate\Support\Str;
 use Modules\ProvBase\Entities\Contract;
@@ -66,28 +65,21 @@ class DefaultTransactionParser
     ];
 
     /**
-     * Initialize Variables
+     * Check wheter the transaction is Credit or Debit and call the respective Function
      *
-     * @param \Kingsquare\Banking\Transaction $transaction
+     * @return Modules\Dunning\Entities\Debt
      */
-    public function __construct(\Kingsquare\Banking\Transaction $transaction)
+    public function parse(\Kingsquare\Banking\Transaction $transaction)
     {
+        // Initialize Variables
         $this->debt = new Debt;
         $this->transaction = $transaction;
 
         $this->amount = $this->bank_fee = 0;
         $this->description = $this->holder = $this->reason = [];
         $this->iban = $this->invoiceNr = $this->logMsg = $this->mref = '';
-    }
 
-    /**
-     * Check wheter the transaction is Credit or Debit and call the respective Function
-     *
-     * @return Modules\Dunning\Entities\Debt
-     */
-    public function parse()
-    {
-        $action = ($this->transaction->getDebitCredit() == 'D') ? 'parseDebit' : 'parseCredit';
+        $action = $transaction->getDebitCredit() == 'D' ? 'parseDebit' : 'parseCredit';
 
         $this->$action();
 
@@ -95,17 +87,19 @@ class DefaultTransactionParser
             $this->debt->date = $this->transaction->getValueTimestamp('Y-m-d H:i:s');
         }
 
+        // TODO: Dont add log entry if debt already exists
+
         return $this->debt;
     }
 
     /**
-     * Set Debt Properties and create log output for Dredit
+     * Set Debt Properties and create log output for Debit
      *
      * @return void|null
      */
     private function parseDebit()
     {
-        if ($this->parseDescriptionArray() === false) {
+        if ($this->parseDescription() === false) {
             return $this->debt = null;
         }
 
@@ -203,7 +197,7 @@ class DefaultTransactionParser
      */
     private function parseCredit()
     {
-        if ($this->parseDescriptionArray() === false) {
+        if ($this->parseDescription() === false) {
             return $this->debt = null;
         }
 
@@ -303,7 +297,11 @@ class DefaultTransactionParser
             $hint .= ' '.trans('dunning::messages.transaction.credit.noInvoice.sepa', ['contract' => $sepamandate->contract->number]);
         }
 
-        ChannelLog::notice('dunning', $this->logMsg.$hint);
+        if ($hint) {
+            ChannelLog::notice('dunning', $this->logMsg.$hint);
+        } else {
+            ChannelLog::info('dunning', $this->logMsg);
+        }
 
         return false;
     }
@@ -417,9 +415,9 @@ class DefaultTransactionParser
     /**
      * Parse one mt940 transaction
      *
-     * @return void|bool
+     * @return bool
      */
-    protected function parseDescriptionArray()
+    protected function parseDescription()
     {
         $descriptionArray = explode('?', $this->transaction->getDescription());
 
@@ -430,8 +428,9 @@ class DefaultTransactionParser
         foreach ($descriptionArray as $line) {
             $key = substr($line, 0, 2);
             $line = substr($line, 2);
+
             // Transfer reason is 20 to 29
-            if (preg_match('/^2[0-9]/', $line)) {
+            if (intval($key) >= 20 && intval($key) <= 29) {
                 $ret = $this->getVarFromDesignator($line);
 
                 if ($ret['varName'] == 'description') {
@@ -441,27 +440,16 @@ class DefaultTransactionParser
                     $this->$varName = $ret['value'];
                 }
 
-                if (Str::startsWith($line, 'EREF+')) {
-                    $this->invoiceNr = trim(str_replace('EREF+', '', $line));
-                    continue;
-                }
-
-                if (Str::startsWith($line, 'MREF+')) {
-                    $this->mref = trim(str_replace('MREF+', '', $line));
-                    continue;
-                }
-
-                $this->reason[] = str_replace(array_keys(self::$designators), '', $line);
                 continue;
             }
-            // IBAN is usually not existent in the DB for credits - we could still try to check as it would find the customer in at least some cases
+
             if ($key == '31') {
                 $this->iban = utf8_encode($line);
                 continue;
             }
 
             if (in_array($key, ['32', '33'])) {
-                $this->holder[] = utf8_encode($line);
+                $this->holder[] = $line;
                 continue;
             }
 
@@ -523,7 +511,7 @@ class DefaultTransactionParser
                 } else {
                     // Get mref and invoice nr
                     if ($key == 'EREF+') {
-                        $key .= 'RG ';
+                        $key = ['EREF+', 'RG '];
                     }
 
                     $value = utf8_encode(trim(str_replace($key, '', $line)));
