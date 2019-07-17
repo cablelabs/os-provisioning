@@ -12,7 +12,7 @@ return [
             // ],
             // 'missAll' => 'Es konnte weder eine zugehörige Vertragsnummer, noch ein SEPA-Mandat, noch eine Rechnungsnummer gefunden werden.',
             'missInvoice' => 'Der Verwendungszweck enthält eine Rechnungsnummer, die nicht zu NMSPrime gehört.',
-            'multipleContracts' => 'NMSPrime beachtet derzeit weder Prä- noch Suffix der Vertragsnummern um den Vertrag zu bestimmen, der der Transaktion zugeordnet sein könnte.',
+            'multipleContracts' => 'NMSPrime beachtet derzeit weder Prä- noch Suffix der Vertragsnummern, um den Vertrag zu bestimmen, der der Transaktion zugeordnet sein könnte.',
             'noInvoice' => [
                 'contract' => 'Die Überweisung könnte zur im Verwendungszweck angegeben Vertragsnummer :contract gehören.',
                 'default' => 'Die (korrekte) Rechnungsnummer fehlt im Verwendungszweck.',
@@ -23,7 +23,7 @@ return [
         ],
         'debit' => [
             'diffContractSepa' => 'SEPA-Mandat und Rechnungsnummer gehören zu unterschiedlichen Verträgen.',
-            'missSepaInvoice' => 'Weder das SEPA-Mandat noch die Rechnungsnummer konnten in der Datenbank gefunden werden.',
+            'missSepaInvoice' => 'Weder das SEPA-Mandat, noch die Rechnungsnummer konnten in der Datenbank gefunden werden.',
         ],
         'default' => [
             'debit' => 'Lastschrift-Transaktion von \':holder\' mit Rechnungsnr \':invoiceNr\', SEPA-Mandatsreferenz \':mref\', Betrag :price, IBAN \':iban\' und Verwendungszweck \':reason\'',
