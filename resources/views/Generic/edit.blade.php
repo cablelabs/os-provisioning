@@ -156,21 +156,6 @@
         });
     $( $.fn.dataTable.tables(true) ).DataTable().responsive.recalc();
     });
-
-    $(document).ready(function() {
-        @foreach (['street', 'zip', 'city', 'district'] as $element)
-            $('{{'#'.$element}}').autocomplete({
-                source:function (data, response) {
-                    $.ajax({
-                        url:'/admin/Contract/autocomplete/{!! $element !!}?q=' + $('#{!! $element !!}').val(),
-                        success:function(data){
-                            response(data);
-                        }
-                    })
-                }
-            });
-        @endforeach
-    });
 </script>
 @include('Generic.handlePanel')
 @endif

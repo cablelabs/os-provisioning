@@ -224,9 +224,11 @@ class ProvBaseObserver
             exec("sudo sed -i -f $sed_file /etc/named-nmsprime.conf");
 
             file_put_contents($sed_file, "s/{$model->getOriginal('domain_name')}/$model->domain_name/g");
-            exec('sudo rndc sync -clean');
-            exec("sudo sed -i -f $sed_file /var/named/dynamic/nmsprime.test.zone");
+            exec("sudo sed -i -f $sed_file /etc/named-ddns.sh");
 
+            exec('sudo rndc sync -clean');
+            exec("sudo sed -i -f $sed_file /var/named/dynamic/in-addr.arpa.zone");
+            exec("sudo sed -i -f $sed_file /var/named/dynamic/nmsprime.test.zone");
             exec('sudo systemctl restart named.service');
             unlink($sed_file);
         }

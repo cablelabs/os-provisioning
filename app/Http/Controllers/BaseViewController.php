@@ -147,15 +147,13 @@ class BaseViewController extends Controller
             return Session::get('language');
         }
 
-        if (! isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            return checkLocale();
-        }
-
         $user = Auth::user();
 
         if (! $user || $user->language == 'browser') {
             // check the Browser for the accepted language
-            return checkLocale(substr(explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])[0], 0, 2));
+            return isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ?
+                checkLocale(substr(explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])[0], 0, 2)) :
+                checkLocale();
         }
 
         Session::put('language', $userLang = checkLocale($user->language));
@@ -273,6 +271,18 @@ class BaseViewController extends Controller
                 }
 
                 $field['form_type'] = 'text';
+            }
+
+            // 6. prepare autocomplete field
+            if (isset($field['autocomplete']) && is_array($field['autocomplete'])) {
+                if (count($field['autocomplete']) === 0) {
+                    $field['autocomplete'][] = explode('.', Route::currentRouteName())[0];
+                }
+                if (count($field['autocomplete']) === 1) {
+                    $field['autocomplete'][] = $field['name'];
+                }
+            } else {
+                unset($field['autocomplete']);
             }
 
             array_push($ret, $field);

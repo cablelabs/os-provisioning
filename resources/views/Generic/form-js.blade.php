@@ -59,6 +59,23 @@ NOTE: - java include section is in default blade at bottom of text
 
                 @endif
 
+                @if (array_key_exists('autocomplete', $field) && count($field['autocomplete']) === 2)
+
+                    $(document).ready(function() {
+                        $('{{'#'.$field["name"]}}').autocomplete({
+                            source:function (data, response) {
+                                $.ajax({
+                                    url:'/admin/{!! reset($field["autocomplete"]) !!}/autocomplete/{!! end($field["autocomplete"]) !!}?q=' + $('#{!! $field["name"] !!}').val(),
+                                    success:function(data){
+                                        response(data);
+                                    }
+                                })
+                            }
+                        });
+                    });
+
+                @endif
+
             @endforeach
         @endif
 

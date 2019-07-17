@@ -145,7 +145,7 @@ class importCommand extends Command
             return $this->error('no configfile entry exists to use');
         }
 
-        if (! Product::count()) {
+        if (\Module::collections()->has('BillingBase') && ! Product::count()) {
             return $this->error('no product entry exists to use');
         }
 
@@ -759,12 +759,12 @@ class importCommand extends Command
         // Determine if Device has a public IP
         $validator = new \Acme\Validators\ExtendedValidator;
         $privateIps = [['10.0.0.0', '255.0.0.0'], ['192.168.0.0', '255.255.0.0'], ['172.16.0.0', '255.224.0.0'], ['100.64.0.0', '255.192.0.0']];
-        $modem->public = 1;
+        $modem->public = 0;
 
         foreach ($comps as $comp) {
             foreach ($privateIps as $range) {
-                if ($validator->validateIpInRange(null, $comp->ip, $range)) {
-                    $modem->public = 0;
+                if (! $validator->validateIpInRange(null, $comp->ip, $range)) {
+                    $modem->public = 1;
                     break;
                 }
             }
