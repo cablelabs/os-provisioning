@@ -200,7 +200,7 @@ class ProvBaseObserver
 
         // build all Modem Configfiles via Job as this will take a long time
         if (multi_array_key_exists(['ds_rate_coefficient', 'us_rate_coefficient', 'max_cpe'], $changes)) {
-            \Queue::push(new \Modules\ProvBase\Console\configfileCommand(0, 'cm'));
+            \Queue::push(new \Modules\ProvBase\Jobs\ConfigfileJob('cm'));
         }
 
         if (array_key_exists('ro_community', $changes)) {
