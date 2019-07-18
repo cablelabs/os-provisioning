@@ -2,5 +2,3 @@ preserve_hierarchy: true
 files:
   - source: /resources/lang/en/*.php
     translation: /resources/lang/%two_letters_code%/%file_name%.php
-  - source: /modules/Dunning/Resources/lang/en/*.php
-    translation: /modules/Dunning/Resources/lang/%two_letters_code%/%file_name%.php
