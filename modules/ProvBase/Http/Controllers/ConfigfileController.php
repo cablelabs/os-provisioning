@@ -2,7 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Modules\ProvBase\Entities\Configfile;
 
 class ConfigfileController extends \BaseController
