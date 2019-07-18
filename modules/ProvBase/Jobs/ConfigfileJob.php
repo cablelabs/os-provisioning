@@ -35,7 +35,7 @@ class ConfigfileJob implements ShouldQueue
     {
         $configfile = new \Modules\ProvBase\Entities\Configfile;
         if (isset($this->cfId)) {
-            $configfile->execute(null, $this->filter);
+            $configfile->execute(null, $this->cfId);
 
             return;
         }
