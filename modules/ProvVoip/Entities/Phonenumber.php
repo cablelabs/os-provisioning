@@ -3,6 +3,7 @@
 namespace Modules\ProvVoip\Entities;
 
 use Illuminate\Support\Collection;
+use Modules\ProvVoipEnvia\Entities\EnviaOrder;
 
 class Phonenumber extends \BaseModel
 {
@@ -388,14 +389,16 @@ class Phonenumber extends \BaseModel
     public function enviaorders($withTrashed = false, $whereStatement = '1')
     {
         if (! \Module::collections()->has('ProvVoipEnvia')) {
-            return;
+            return new \App\Extensions\Database\EmptyRelation();
         }
 
+        $orders = $this->belongsToMany(EnviaOrder::class, 'enviaorder_phonenumber',
+                            'enviaorder_id', 'phonenumber_id')
+                        ->whereRaw($whereStatement)
+                        ->withTimestamps();
+
         if ($withTrashed) {
-            $orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->withTrashed()->whereRaw($whereStatement)->withTimestamps();
-        } else {
-            $orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id')->whereRaw($whereStatement)->withTimestamps();
-            /* $orders = $this->belongsToMany('Modules\ProvVoipEnvia\Entities\EnviaOrder', 'enviaorder_phonenumber', 'phonenumber_id', 'enviaorder_id'); */
+            return $orders->withTrashed();
         }
 
         return $orders;
@@ -711,7 +714,7 @@ class PhonenumberObserver
      */
     protected function _check_and_process_mta_change($phonenumber)
     {
-        $old_mta_id = intval($phonenumber['original']['mta_id']);
+        $old_mta_id = intval($phonenumber->getOriginal('mta_id'));
         $new_mta_id = intval($phonenumber->mta_id);
 
         // if the MTA has not been changed we have nothing to do :-)
@@ -837,13 +840,7 @@ class PhonenumberObserver
      */
     protected function _check_and_process_sip_data_change($phonenumber)
     {
-        if (
-            ($phonenumber['original']['username'] != $phonenumber->username)
-            ||
-            ($phonenumber['original']['password'] != $phonenumber->password)
-            ||
-            ($phonenumber['original']['sipdomain'] != $phonenumber->sipdomain)
-        ) {
+        if ($phonenumber->isDirty('username', 'password', 'sipdomain')) {
             $this->_check_and_process_sip_data_change_for_envia($phonenumber);
         }
     }

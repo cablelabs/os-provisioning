@@ -38,7 +38,7 @@ class contractCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         // we don't check contracts that ended before defined here (in days)
         $days_around_start_and_enddates = 7;

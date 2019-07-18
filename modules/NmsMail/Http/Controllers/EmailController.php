@@ -12,8 +12,8 @@ class EmailController extends \BaseController
     public function view_form_fields($model = null)
     {
         // create: get contract from input
-        if (\Input::get('contract_id')) {
-            $contract = Contract::findOrFail(\Input::get('contract_id'));
+        if (\Request::get('contract_id')) {
+            $contract = Contract::findOrFail(\Request::get('contract_id'));
         }
         // edit: get contract from model, takes precedence
         if ($model->contract) {

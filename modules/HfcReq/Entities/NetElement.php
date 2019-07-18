@@ -28,9 +28,9 @@ class NetElement extends \BaseModel
         return [
             'name' 			=> 'required|string',
             // 'ip' 			=> 'ip', 		// also hostname is permitted and soon also mac
-            'pos' 			=> 'geopos',
-            'community_ro' 	=> 'regex:/(^[A-Za-z0-9]+$)+/',
-            'community_rw' 	=> 'regex:/(^[A-Za-z0-9]+$)+/',
+            'pos' 			=> 'nullable|geopos',
+            'community_ro' 	=> 'nullable|regex:/(^[A-Za-z0-9]+$)+/',
+            'community_rw' 	=> 'nullable|regex:/(^[A-Za-z0-9]+$)+/',
             'netelementtype_id'	=> 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
             'agc_offset'	=> 'nullable|numeric|between:-99.9,99.9',
         ];
@@ -561,8 +561,8 @@ class NetElementObserver
         $user = Auth::user()->login_name;
 
         if ($isUpdating) {
-            $oldNet = NetElement::find($netelement['original']['parent_id']);
-            $net = NetElement::find($netelement['attributes']['parent_id']);
+            $oldNet = NetElement::find($netelement->getOriginal('parent_id'));
+            $net = NetElement::find($netelement->parent_id);
             $oldNetId = $oldNet ? $oldNet->get_native_net() : 0;
             $netId = $net ? $net->get_native_net() : 0;
 

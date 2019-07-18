@@ -32,7 +32,7 @@
                                         <td>
                                             <select name="fields[{{ $key }}]">
                                                 @foreach ($db_fields as $db_field)
-                                                    <option value="{{ (\Request::has('header')) ? $db_field : $loop->index }}"
+                                                    <option value="{{ (\Request::filled('header')) ? $db_field : $loop->index }}"
                                                         {{-- $loop will work with > L5.3 --}}
                                                         @if ($key === $db_field) selected @endif>{{ $db_field }}</option>
                                                 @endforeach

@@ -24,8 +24,8 @@ class PhonenumberManagementController extends \BaseController
      */
     public function create()
     {
-        if ((! \Input::has('phonenumber_id')) ||
-            ! (Phonenumber::find(\Input::get('phonenumber_id')))) {
+        if ((! \Request::filled('phonenumber_id')) ||
+            ! (Phonenumber::find(\Request::get('phonenumber_id')))) {
             $this->edit_view_save_button = false;
             Session::push('tmp_error_above_form', 'Cannot create phonenumbermanagement – phonenumber ID missing or phonenumber not found');
         }
@@ -40,7 +40,7 @@ class PhonenumberManagementController extends \BaseController
      */
     public function edit($id)
     {
-        if (\Input::has('clear_envia_reference')) {
+        if (\Request::filled('clear_envia_reference')) {
             if (\Module::collections()->has('ProvVoipEnvia')) {
                 $mgmt = PhonenumberManagement::find($id);
                 $mgmt->phonenumber->contract_external_id = null;
@@ -67,9 +67,9 @@ class PhonenumberManagementController extends \BaseController
         // in most cases the subscriber is identical to contract partner ⇒ on create we prefill these values with data from contract
         if (! $model->exists) {
             if (
-                (! \Input::has('phonenumber_id'))
+                (! \Request::filled('phonenumber_id'))
                 ||
-                ! ($phonenumber = Phonenumber::find(\Input::get('phonenumber_id')))
+                ! ($phonenumber = Phonenumber::find(\Request::get('phonenumber_id')))
             ) {
                 return [];
             }

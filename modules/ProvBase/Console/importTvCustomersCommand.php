@@ -101,7 +101,7 @@ class importTvCustomersCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         if (! $this->confirm("IMPORTANT!!!\n\nHave global variables been adapted for this import?:
 			(1) TV Charge in Euro?

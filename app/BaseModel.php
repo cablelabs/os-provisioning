@@ -235,10 +235,14 @@ class BaseModel extends Eloquent
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany or \App\Extensions\Database\EmptyRelation
      * @author Patrick Reichel
      */
-    public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null)
+    public function belongsToMany($related, $table = null, $foreignPivotKey = null,
+                                  $relatedPivotKey = null, $parentKey = null,
+                                  $relatedKey = null, $relation = null)
     {
         if ($this->_relationAvailable($related)) {
-            return parent::belongsToMany($related, $table, $foreignKey, $otherKey, $relation);
+            return parent::belongsToMany($related, $table, $foreignPivotKey,
+                                         $relatedPivotKey, $parentKey,
+                                         $relatedKey, $relation);
         } else {
             return new EmptyRelation();
         }
@@ -409,6 +413,7 @@ class BaseModel extends Eloquent
             'AddressFunctionsTrait',
             'Ability',
             'BaseModel',
+            'CsvData',
             'helpers',
             'BillingLogger',
             'BillingAnalysis',
@@ -1071,12 +1076,12 @@ class BaseObserver
             // get changed attributes
             $arr = [];
 
-            foreach ($model['attributes'] as $key => $value) {
+            foreach ($model->getAttributes() as $key => $value) {
                 if (in_array($key, $ignore)) {
                     continue;
                 }
 
-                $original = $model['original'][$key];
+                $original = $model->getOriginal($key);
                 if ($original != $value) {
                     if (in_array($key, $hide)) {
                         $arr[] = $key;

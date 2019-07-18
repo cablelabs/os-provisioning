@@ -4,6 +4,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
+
+    'name' => env('APP_NAME', 'NMSPrime'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |
@@ -12,6 +25,7 @@ return [
     | services your application utilizes. Set this in your ".env" file.
     |
     */
+
     'env' => env('APP_ENV', 'production'),
 
     /*
@@ -25,7 +39,7 @@ return [
     |
     */
 
-    'debug' =>  env('APP_DEBUG'),
+    'debug' => env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -124,8 +138,6 @@ return [
     'log' => env('APP_LOG', 'single'),
     'log_level' => env('APP_LOG_LEVEL', 'error'),
     'log_max_files' => env('APP_LOG_MAX_FILES', 30),
-    // 'log' => 'daily',
-    // 'log_max_files' => 30,
 
     /*
     |--------------------------------------------------------------------------
@@ -144,6 +156,8 @@ return [
          * Laravel Framework Service Providers...
          */
         Illuminate\Auth\AuthServiceProvider::class,
+        Illuminate\Broadcasting\BroadcastServiceProvider::class,
+        Illuminate\Bus\BusServiceProvider::class,
         Illuminate\Cache\CacheServiceProvider::class,
         Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
         Illuminate\Cookie\CookieServiceProvider::class,
@@ -153,6 +167,7 @@ return [
         Illuminate\Foundation\Providers\FoundationServiceProvider::class,
         Illuminate\Hashing\HashServiceProvider::class,
         Illuminate\Mail\MailServiceProvider::class,
+        Illuminate\Notifications\NotificationServiceProvider::class,
         Illuminate\Pagination\PaginationServiceProvider::class,
         Illuminate\Pipeline\PipelineServiceProvider::class,
         Illuminate\Queue\QueueServiceProvider::class,
@@ -162,23 +177,20 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
+        // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ExtendedValidatorServiceProvider::class,
 
         Illuminate\Bus\BusServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-        Yajra\DataTables\DataTablesServiceProvider::class,
-        Nwidart\Modules\LaravelModulesServiceProvider::class,
-        Intervention\Validation\ValidationServiceProvider::class,
         Acme\html\HtmlServiceProvider::class,
-        Silber\Bouncer\BouncerServiceProvider::class,
-        Laravel\Tinker\TinkerServiceProvider::class,
     ],
 
     /*
@@ -198,6 +210,7 @@ return [
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
         'Blade' => Illuminate\Support\Facades\Blade::class,
+        'Broadcast' => Illuminate\Support\Facades\Broadcast::class,
         'Bus' => Illuminate\Support\Facades\Bus::class,
         'Cache' => Illuminate\Support\Facades\Cache::class,
         'Config' => Illuminate\Support\Facades\Config::class,
@@ -227,8 +240,6 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
-        'Input'     => Illuminate\Support\Facades\Input::class,
-        'Inspiring' => Illuminate\Foundation\Inspiring::class,
         'Form'      => Collective\Html\FormFacade::class,
         'Html'      => Collective\Html\HtmlFacade::class,
         'HTML'      => Collective\Html\HtmlFacade::class,
@@ -240,10 +251,7 @@ return [
         'NamespaceController' => App\Http\Controllers\NamespaceController::class,
         'BaseModel' => App\BaseModel::class,
         'GlobalConfig' => App\GlobalConfig::class,
-        'Datatables' => Yajra\DataTables\Facades\DataTables::class,
         'ChannelLog' => Acme\log\ChannelLog::class,
-        'Module' => Nwidart\Modules\Facades\Module::class,
-        'Bouncer' => Silber\Bouncer\BouncerFacade::class,
     ],
 
     /*

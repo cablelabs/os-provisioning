@@ -38,7 +38,7 @@ class AdminCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         Bouncer::allow('admin')->everything();
         Bouncer::unforbid('admin')->everything();

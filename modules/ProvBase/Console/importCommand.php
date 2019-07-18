@@ -126,7 +126,7 @@ class importCommand extends Command
      * Check TODO(<nrs>) before Import!
      * (* set cluster mapping table)
      */
-    public function fire()
+    public function handle()
     {
         // NOTE: Search by TODO(2) for Contract Filter and TODO(3) to change restrictions for adding credits!
         if (! $this->confirm("IMPORTANT!!!\n\nHave following things been prepared for this import?:

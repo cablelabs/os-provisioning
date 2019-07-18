@@ -2,6 +2,8 @@
 
 namespace Modules\HfcReq\Http\Controllers;
 
+use Request;
+use Redirect;
 use Modules\HfcSnmp\Entities\OID;
 use Modules\HfcSnmp\Entities\Parameter;
 use Modules\HfcReq\Entities\NetElementType;
@@ -50,18 +52,18 @@ class NetElementTypeController extends HfcReqController
      */
     public function settings($id)
     {
-        if (! \Request::has('param_id')) {
-            return \Redirect::back();
+        if (! Request::filled('param_id')) {
+            return Redirect::back();
         }
 
-        $html_frame = \Request::input('html_frame');
-        $html_id = \Request::input('html_id');
+        $html_frame = Request::input('html_frame');
+        $html_id = Request::input('html_id');
 
         if (! $html_frame && ! $html_id) {
-            return \Redirect::back();
+            return Redirect::back();
         }
 
-        $params = Parameter::find(\Request::input('param_id'));
+        $params = Parameter::find(Request::input('param_id'));
 
         // TODO: If this gets slow we could easily optimize it by doing direct sql updates
         foreach ($params as $param) {
@@ -76,6 +78,6 @@ class NetElementTypeController extends HfcReqController
             $param->save();
         }
 
-        return \Redirect::route('NetElementType.edit', $id);
+        return Redirect::route('NetElementType.edit', $id);
     }
 }

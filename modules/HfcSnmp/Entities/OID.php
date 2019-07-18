@@ -72,11 +72,6 @@ class OID extends \BaseModel
         return $this->belongsTo('Modules\HfcSnmp\Entities\MibFile');
     }
 
-    // public function netelementtypes()
-    // {
-    // 	return $this->belongsToMany('Modules\HfcReq\Entities\NetElementType', 'netelementtype_oid', 'oid_id', 'netelementtype_id');
-    // }
-
     public function parameters()
     {
         // NOTE: This should be done with eager loading if not already done by laravel automatically, because oid relation is needed close to all the time

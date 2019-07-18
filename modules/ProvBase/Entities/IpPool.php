@@ -18,10 +18,10 @@ class IpPool extends \BaseModel
             'ip_pool_start' => 'required|ip|ip_in_range:net,netmask|ip_larger:net',   // own validation - see in classes: ExtendedValidator and IpPoolController
             'ip_pool_end' => 'required|ip|ip_in_range:net,netmask|ip_larger:ip_pool_start',
             'router_ip' => 'required|ip|ip_in_range:net,netmask',
-            'broadcast_ip' => 'ip|ip_in_range:net,netmask|ip_larger:ip_pool_end',
-            'dns1_ip' => 'ip',
-            'dns2_ip' => 'ip',
-            'dns3_ip' => 'ip',
+            'broadcast_ip' => 'nullable|ip|ip_in_range:net,netmask|ip_larger:ip_pool_end',
+            'dns1_ip' => 'nullable|ip',
+            'dns2_ip' => 'nullable|ip',
+            'dns3_ip' => 'nullable|ip',
         ];
     }
 
@@ -237,8 +237,8 @@ class IpPoolObserver
         $pool->cmts->make_dhcp_conf();
 
         // make dhcp conf of old cmts if relation got changed
-        if ($pool['original']['cmts_id'] != $pool['attributes']['cmts_id']) {
-            $cmts_old = Cmts::find($pool['original']['cmts_id'])->make_dhcp_conf();
+        if ($pool->isDirty('cmts_id')) {
+            $cmts_old = Cmts::find($pool->getOriginal('cmts_id'))->make_dhcp_conf();
         }
     }
 

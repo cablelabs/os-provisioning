@@ -42,7 +42,7 @@ class ModemController extends \BaseController
             $model->country_code = $config->default_country_code;
         }
 
-        $pos = explode(',', \Input::get('pos'));
+        $pos = explode(',', \Request::get('pos'));
         if (count($pos) == 2) {
             [$model['x'], $model['y']] = $pos;
         }
@@ -188,11 +188,11 @@ class ModemController extends \BaseController
         }
 
         // get the search scope
-        $scope = \Input::get('scope');
-        $mode = \Input::get('mode');
-        $query = \Input::get('query');
-        $pre_f = \Input::get('preselect_field');
-        $pre_v = \Input::get('preselect_value');
+        $scope = \Request::get('scope');
+        $mode = \Request::get('mode');
+        $query = \Request::get('query');
+        $pre_f = \Request::get('preselect_field');
+        $pre_v = \Request::get('preselect_value');
         $pre_t = '';
 
         // perform Modem search
@@ -203,7 +203,7 @@ class ModemController extends \BaseController
         $contracts = $obj->getFulltextSearchResults('contract', $mode, $query, $pre_f, $pre_v)[0];
 
         // generate Topography
-        if (\Input::get('topo') == '1') {
+        if (\Request::get('topo') == '1') {
             // Generate KML file
             $customer = new \Modules\HfcCustomer\Http\Controllers\CustomerTopoController;
             $file = $customer->kml_generate($modems);
@@ -225,8 +225,8 @@ class ModemController extends \BaseController
         $view_header = 'Modems '.$pre_t;
         $create_allowed = $this->index_create_allowed;
 
-        $preselect_field = \Input::get('preselect_field');
-        $preselect_value = \Input::get('preselect_value');
+        $preselect_field = \Request::get('preselect_field');
+        $preselect_value = \Request::get('preselect_value');
 
         return \View::make('provbase::Modem.index', $this->compact_prep_view(compact('tabs', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search', 'preselect_field', 'preselect_value')));
     }
@@ -338,12 +338,12 @@ class ModemController extends \BaseController
      */
     public function update($id)
     {
-        if (! \Input::has('_2nd_action') && ! \Input::has('_3rd_action')) {
+        if (! \Request::filled('_2nd_action') && ! \Request::filled('_3rd_action')) {
             return parent::update($id);
         }
 
         $modem = Modem::find($id);
-        $modem->restart_modem(false, \Input::has('_3rd_action'));
+        $modem->restart_modem(false, \Request::filled('_3rd_action'));
 
         return \Redirect::back();
     }

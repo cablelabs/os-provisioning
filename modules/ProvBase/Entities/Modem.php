@@ -49,8 +49,8 @@ class Modem extends \BaseModel
 
         // we need to put the filter into the session,
         // as the upcoming datatables AJAX request won't carry the input parameters
-        if (\Input::has('modem_show_filter')) {
-            \Session::put('modem_show_filter', \Input::get('modem_show_filter'));
+        if (\Request::filled('modem_show_filter')) {
+            \Session::put('modem_show_filter', \Request::get('modem_show_filter'));
         }
         // non-datatable request; current route is null on testing
         elseif (\Route::getCurrentRoute() && basename(\Route::getCurrentRoute()->uri) == 'Modem') {
@@ -1569,12 +1569,8 @@ class ModemObserver
         // check if this is running if you decide to implement moving of modems to other contracts
         // watch Ticket LAR-106
         if (\Module::collections()->has('ProvVoipEnvia')) {
-            if (
-                // updating is also called on create – so we have to check this
-                (! $modem->wasRecentlyCreated)
-                &&
-                ($modem['original']['contract_id'] != $modem->contract_id)
-            ) {
+            // updating is also called on create – so we have to check this
+            if ((! $modem->wasRecentlyCreated) && ($modem->isDirty('contract_id'))) {
                 // returning false should cancel the updating: verify this! There has been some problems with deleting modems – we had to put the logic in Modem::delete() probably caused by our Base* classes…
                 // see: http://laravel-tricks.com/tricks/cancelling-a-model-save-update-delete-through-events
                 return false;

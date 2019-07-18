@@ -20,8 +20,8 @@ class PhonebookEntryController extends \BaseController
      */
     public function create()
     {
-        if ((! \Input::has('phonenumbermanagement_id')) ||
-            ! (PhonenumberManagement::find(\Input::get('phonenumbermanagement_id')))) {
+        if ((! \Request::filled('phonenumbermanagement_id')) ||
+            ! (PhonenumberManagement::find(\Request::get('phonenumbermanagement_id')))) {
             $this->edit_view_save_button = false;
             \Session::push('tmp_error_above_form', 'Cannot create phonebookentry – phonenumbermanagement ID missing or phonenumbermanagement not found');
         }
@@ -45,9 +45,9 @@ class PhonebookEntryController extends \BaseController
         // in most cases the phonebook data is identical to contract's data ⇒ on create we prefill these values with data from contract
         if (! $model->exists) {
             if (
-                (! \Input::has('phonenumbermanagement_id'))
+                (! \Request::filled('phonenumbermanagement_id'))
                 ||
-                ! ($phonenumbermanagement = PhonenumberManagement::find(\Input::get('phonenumbermanagement_id')))
+                ! ($phonenumbermanagement = PhonenumberManagement::find(\Request::get('phonenumbermanagement_id')))
             ) {
                 return [];
             }

@@ -4,7 +4,6 @@ namespace Modules\ProvVoip\Http\Controllers;
 
 use Modules\ProvVoip\Entities\Mta;
 use Modules\ProvBase\Entities\Modem;
-use Illuminate\Support\Facades\Input;
 
 class MtaController extends \BaseController
 {
@@ -20,9 +19,9 @@ class MtaController extends \BaseController
             $model = new Mta;
         }
 
-        $mac = Input::get('mac', '');
+        $mac = Request::get('mac', '');
         if ($mac === '') {
-            $modem_id = Input::get('modem_id', 0);
+            $modem_id = Request::get('modem_id', 0);
             if (boolval($modem_id)) {
                 $modem = Modem::find($modem_id);
                 if ($modem) {

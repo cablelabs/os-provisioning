@@ -13,13 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\Inspire',
-        'App\Console\Commands\TimeDeltaChecker',
-        'App\Console\Commands\StorageCleaner',
-        'App\Console\Commands\AuthCommand',
-        'App\Console\Commands\EnsureQueueListenerIsRunning',
-        'App\Console\Commands\addDefaultRolesCommand',
-        'App\Console\Commands\AdminCommand',
+        //
     ];
 
     /**
@@ -229,5 +223,7 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         require base_path('routes/console.php');
+
+        $this->load(__DIR__.'/Commands');
     }
 }

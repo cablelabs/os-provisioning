@@ -23,7 +23,7 @@ class Domain extends \BaseModel
     public static function rules($id = null)
     {
         return [
-            'name' => 'regex:/^[0-9A-Za-z\.\-\_]+$/|required',
+            'name' => 'required|regex:/^[0-9A-Za-z\.\-\_]+$/',
             'type' => 'required',
         ];
     }
