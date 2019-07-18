@@ -2,7 +2,9 @@
 
 namespace App;
 
-class CsvData extends BaseModel
+use Illuminate\Database\Eloquent\Model;
+
+class CsvData extends Model
 {
     protected $table = 'csv_data';
 
