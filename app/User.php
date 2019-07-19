@@ -28,6 +28,11 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
     protected $guard = 'admin';
 
+    protected $dates = [
+        'last_login_at',
+        'password_changed_at',
+    ];
+
     /**
      * extending the boot functionality to observe changes
      *

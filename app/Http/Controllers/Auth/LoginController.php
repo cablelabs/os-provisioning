@@ -82,7 +82,6 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        $now = Carbon::now();
         $request->session()->put('GlobalNotification', []);
         App::setLocale(\App\Http\Controllers\BaseViewController::get_user_lang());
 
@@ -96,8 +95,7 @@ class LoginController extends Controller
             ]);
         }
 
-        $user->last_login_at = $now->toDateTimeString();
-        $user->save();
+        $user->update(['last_login_at' => Carbon::now()]);
     }
 
     /**
