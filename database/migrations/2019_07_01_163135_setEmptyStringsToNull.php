@@ -37,7 +37,6 @@ class SetEmptyStringsToNull extends Migration
             'enviaorder_phonenumber',   // n to m
             'failed_jobs',              // Laravel
             'guilog',                   // not set by user
-            'item',                     // n to m
             'jobs',                     // Laravel
             'migrations',               // Laravel
             'permissions',              // Bouncer
@@ -72,7 +71,8 @@ class SetEmptyStringsToNull extends Migration
 
                 $type = DB::connection()->getDoctrineColumn($tableName, $column)->getType()->getName();
 
-                if ($column == 'id') {
+                if ($column == 'id' ||
+                    ($tableName == 'items' && $column == 'valid_from')) {
                     continue;
                 }
 
