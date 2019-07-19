@@ -73,7 +73,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
     public function tickets()
     {
-        return $this->belongsToMany(Ticket::class, 'ticket_user', 'ticket_id', 'user_id');
+        return $this->belongsToMany(Ticket::class, 'ticket_user', 'user_id', 'ticket_id');
     }
 
     /**

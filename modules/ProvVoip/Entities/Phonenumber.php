@@ -393,7 +393,7 @@ class Phonenumber extends \BaseModel
         }
 
         $orders = $this->belongsToMany(EnviaOrder::class, 'enviaorder_phonenumber',
-                            'enviaorder_id', 'phonenumber_id')
+                            'phonenumber_id', 'enviaorder_id')
                         ->whereRaw($whereStatement)
                         ->withTimestamps();
 
