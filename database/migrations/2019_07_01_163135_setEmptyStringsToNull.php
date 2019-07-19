@@ -89,7 +89,7 @@ class SetEmptyStringsToNull extends Migration
                 });
 
                 // set empty strings to NULL
-                DB::statement("UPDATE $tableName SET `$column`=NULL WHERE `$column`='';");
+                DB::statement("UPDATE $tableName SET `$column`=NULL WHERE `$column`='' and `$column` NOT IN ('0');");
             }
         }
     }
