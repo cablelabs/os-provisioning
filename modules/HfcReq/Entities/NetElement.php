@@ -113,11 +113,11 @@ class NetElement extends \BaseModel
             return 'warning';
         }
 
-        $tmp = $this->icingaobjects;
-        if ($tmp && $tmp->is_active) {
-            $tmp = $tmp->icingahoststatus;
-            if ($tmp) {
-                return $tmp->last_hard_state ? 'danger' : 'success';
+        $icingaObj = $this->icingaobjects;
+        if ($icingaObj && $icingaObj->is_active) {
+            $icingaObj = $icingaObj->icingahoststatus;
+            if ($icingaObj) {
+                return $icingaObj->last_hard_state ? 'danger' : 'success';
             }
         }
 
