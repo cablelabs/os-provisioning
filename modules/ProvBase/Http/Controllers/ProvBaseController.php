@@ -44,6 +44,10 @@ class ProvBaseController extends BaseController
             ['form_type' => 'checkbox', 'name' => 'modem_edit_page_new_tab', 'description' => 'Opening Modem Edit Page in New Tab', 'help' => trans('helper.openning_new_tab_for_modem')],
             ['form_type' => 'checkbox', 'name' => 'multiple_provisioning_systems', 'description' => 'Multiple provisioning systems', 'help' => 'Check if there are other DHCP servers in your network'],
             ['form_type' => 'checkbox', 'name' => 'additional_modem_reset', 'description' => 'Additional modem reset button', 'help' => trans('helper.additional_modem_reset')],
+
+            ['form_type' => 'text', 'name' => 'alert1', 'description' => 'Message Alert 1'],
+            ['form_type' => 'text', 'name' => 'alert2', 'description' => 'Message Alert 2'],
+            ['form_type' => 'text', 'name' => 'alert3', 'description' => 'Message Alert 3'],
         ];
     }
 }

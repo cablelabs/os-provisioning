@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Modules\ProvBase\Entities\ProvBase;
 
 class LoginController extends Controller
 {
@@ -97,6 +98,29 @@ class LoginController extends Controller
                     'reason' => $user->isPasswordExpired() ? 'PasswordExpired' : 'newUser',
                 ],
             ]);
+        }
+        if($user->isNotAn('admin')){
+            $alerts = [];
+            $provbase = ProvBase::first();
+            if($provbase->alert1 !== ''){
+                $alerts['alert1'] = [
+                    'message' => $provbase->alert1,
+                    'level' => 'info',
+                    'reason'=>''];
+            }
+            if($provbase->alert2 !== ''){
+                $alerts['alert2'] = [
+                    'message' => $provbase->alert2,
+                    'level' => 'info',
+                    'reason' => ''];
+            }
+            if($provbase->alert3 !== ''){
+                $alerts['alert3'] = [
+                    'message' => $provbase->alert3,
+                    'level' => 'info',
+                    'reason' => ''];
+            }
+            $request->session()->flash('DashboardNotification', $alerts);
         }
 
         $user->update(['last_login_at' => Carbon::now()]);
