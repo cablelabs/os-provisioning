@@ -10,7 +10,7 @@
 
 		<div class="row">
 			<div class="col-md-12">
-				@include('Generic.quickstart')
+				@include('provvoip::widgets.quickstart')
 			</div>
 		</div>
 	</div>
