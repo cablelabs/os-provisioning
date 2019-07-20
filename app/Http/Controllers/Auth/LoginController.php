@@ -12,8 +12,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Modules\ProvBase\Entities\ProvBase;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
@@ -99,26 +99,26 @@ class LoginController extends Controller
                 ],
             ]);
         }
-        if($user->isNotAn('admin')){
+        if ($user->isNotAn('admin')) {
             $alerts = [];
             $provbase = ProvBase::first();
-            if($provbase->alert1 !== ''){
+            if ($provbase->alert1 !== '') {
                 $alerts['alert1'] = [
                     'message' => $provbase->alert1,
                     'level' => 'info',
-                    'reason'=>''];
+                    'reason'=>'', ];
             }
-            if($provbase->alert2 !== ''){
+            if ($provbase->alert2 !== '') {
                 $alerts['alert2'] = [
                     'message' => $provbase->alert2,
                     'level' => 'info',
-                    'reason' => ''];
+                    'reason' => '', ];
             }
-            if($provbase->alert3 !== ''){
+            if ($provbase->alert3 !== '') {
                 $alerts['alert3'] = [
                     'message' => $provbase->alert3,
                     'level' => 'info',
-                    'reason' => ''];
+                    'reason' => '', ];
             }
             $request->session()->flash('DashboardNotification', $alerts);
         }
