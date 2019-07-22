@@ -100,3 +100,4 @@ chmod -R g-w /etc/nmsprime/env
 # log
 chmod 644 /var/log/messages
 systemctl restart rsyslog
+systemd-tmpfiles --create

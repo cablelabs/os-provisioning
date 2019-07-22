@@ -9,3 +9,4 @@ cd "$dir"
 /opt/rh/rh-php71/root/usr/bin/php artisan auth:nms
 
 chown -R apache storage bootstrap/cache /var/log/nmsprime
+systemd-tmpfiles --create
