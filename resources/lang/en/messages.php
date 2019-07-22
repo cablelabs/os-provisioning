@@ -318,6 +318,7 @@ return [
     'noCC'					=> 'no Costcenter assigned',
     'IP-Pools'					=> 'IP-Pools',
     'Type of Pool'				=> 'Type of Pool',
+    'Type of signal' => 'Signalart',
     'IP network'				=> 'IP network',
     'IP netmask'				=> 'IP netmask',
     'IP router'					=> 'IP router',

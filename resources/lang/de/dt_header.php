@@ -3,9 +3,14 @@
 return [
     // Index DataTable Header
     'amount' => 'Betrag',
+    'city' => 'Stadt',
+    'house_nr' => 'Hausnr',
     'iban' => 'IBAN',
     'id'            => 'ID',
+    'name' => 'Name',
     'prio'          => 'Priorität',
+    'street' => 'Straße',
+    'zip' => 'PLZ',
     'sum' => 'Summe',
     // Auth
     'users.login_name' => 'Loginname',
@@ -166,6 +171,12 @@ return [
     'modem.sw_rev' => 'Firmware-Version',
     'modem.us_pwr' => 'US Pegel',
     'contract_valid' => 'Vertrag gültig?',
+    // Node
+    'node' => [
+        'name' => 'Name',
+        'headend' => 'Kopfstelle',
+        'type' => 'Signalart',
+    ],
     // QoS
     'qos.name' => 'QoS Name',
     'qos.ds_rate_max' => 'Maximale DS Geschwindigkeit',

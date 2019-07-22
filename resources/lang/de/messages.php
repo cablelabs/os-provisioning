@@ -318,6 +318,7 @@ return [
     'noCC'					=> 'Keine Kostenstelle zugewiesen',
     'IP-Pools'					=> 'IP-Bereich',
     'Type of Pool'				=> 'Art des IP-Bereichs',
+    'Type of signal' => 'Type of Signal',
     'IP network'				=> 'IP Netz',
     'IP netmask'				=> 'IP Netzmaske',
     'IP router'					=> 'IP Router',

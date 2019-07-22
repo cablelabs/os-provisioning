@@ -37,6 +37,7 @@ return [
         'Menu_Debt'                 => 'Debts',
         'Menu_Dunning'              => 'Dunning',
         'Menu_MainMenu'             => 'Main Menu',
+        'Menu_Node'                 => 'Nodes',
         'Menu_Config Page'          => 'Global Config Page',
         'Menu_Logging'				=> 'Logging',
         'Menu_Product List'			=> 'Product List',
@@ -224,6 +225,7 @@ return [
 
         'Header_Debt'               => 'Debt history',
         'Header_DebtResult'         => 'Outstanding payments total',
+        'Header_Node'               => 'Nodes',
 
     //Header Relation
         // 'Assigned'  				=> 'Zugewiesene',

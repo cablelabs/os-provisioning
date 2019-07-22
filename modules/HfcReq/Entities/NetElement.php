@@ -194,6 +194,21 @@ class NetElement extends \BaseModel
         return $parent;
     }
 
+    /**
+     * Get List of netelements for edit view select field
+     *
+     * @return array
+     */
+    public function getParentList()
+    {
+        $netelems = \DB::table('netelement')->join('netelementtype as nt', 'nt.id', '=', 'netelementtype_id')
+            ->select(['netelement.id as id', 'netelement.name as name', 'nt.name as ntname'])
+            ->whereNull('netelement.deleted_at')
+            ->get();
+
+        return $this->html_list($netelems, ['ntname', 'name'], true, ': ');
+    }
+
     // TODO: rename, avoid recursion
     public function get_non_location_parent($layer = '')
     {
