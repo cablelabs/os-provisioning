@@ -400,7 +400,7 @@ return [
     'Web address'			=> 'Web address',
     'Zip'					=> 'Zip',
     'Commission in %'		=> 'Commission in %',
-    'Product List'			=> 'Product List',
+    'Product Types'			=> 'Product Type(s)',
     'Already recurring ?' 	=> 'Already recurring ?',
     'Date of Signature' 	=> 'Date of Signature',
     'Disable temporary' 	=> 'Disable temporary',

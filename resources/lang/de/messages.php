@@ -400,7 +400,7 @@ return [
     'Web address'			=> 'Web-Adresse',
     'Zip'					=> 'PLZ',
     'Commission in %'		=> 'Provision in %',
-    'Product List'			=> 'Produktangebot',
+    'Product Types'			=> 'Produkttyp(en)',
     'Already recurring ?' 	=> 'Bereits wiederkehrend?',
     'Date of Signature' 	=> 'Datum der Unterzeichnung',
     'Disable temporary' 	=> 'Vorübergehend deaktivieren',
