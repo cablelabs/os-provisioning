@@ -5,6 +5,7 @@ return [
     'amount' => 'Betrag',
     'city' => 'Stadt',
     'expansion_degree' => 'Ausbaugrad',
+    'floor' => 'Etage',
     'group_contract' => 'Gruppenvertrag',
     'house_nr' => 'Hausnr',
     'iban' => 'IBAN',
@@ -15,6 +16,11 @@ return [
     'street' => 'Straße',
     'zip' => 'PLZ',
     'sum' => 'Summe',
+    'apartment' => [
+        'number' => 'Nummer',
+        'connected' => 'Angeklemmt',
+        'occupied' => 'Bewohnt',
+    ],
     // Auth
     'users.login_name' => 'Loginname',
     'users.first_name' => 'Vorname',

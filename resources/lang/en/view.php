@@ -33,6 +33,7 @@ return [
                 'jQuery_ImportCsv'              => 'import CSV',
 //MENU
     //Main Menu
+        'Menu_Apartment'            => 'Apartments',
         'Menu_BillingBase'          => 'Billing Base',
         'Menu_Debt'                 => 'Debts',
         'Menu_Dunning'              => 'Dunning',
@@ -77,10 +78,11 @@ return [
         'Menu_Logout'				=> 'Logout',
         'Menu_UserRoleSettings'		=> 'User Roles',
 
+        'Menu_CDRs'                 => 'CDRs',
+        'Menu_Tickets'              => 'Tickets',
+        'Menu_Comment'              => 'Comments',
 //HEADER
-        'Menu_CDRs'					=> 'CDRs',
-        'Menu_Tickets'				=> 'Tickets',
-        'Menu_Comment'				=> 'Comments',
+        'Header_Apartment' => 'Apartments',
     //General
         'Header_GlobalSearch'		=> 'Global Search',
         'Header_Overview'			=> 'Overview',
