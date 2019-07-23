@@ -4,10 +4,13 @@ return [
     // Index DataTable Header
     'amount' => 'Betrag',
     'city' => 'Stadt',
+    'expansion_degree' => 'Ausbaugrad',
+    'group_contract' => 'Gruppenvertrag',
     'house_nr' => 'Hausnr',
     'iban' => 'IBAN',
     'id'            => 'ID',
     'name' => 'Name',
+    'number' => 'Nummer',
     'prio'          => 'Priorität',
     'street' => 'Straße',
     'zip' => 'PLZ',
@@ -238,6 +241,14 @@ return [
     'numberrange.suffix' => 'Suffix',
     'numberrange.type' => 'Typ',
     'numberrange.costcenter.name' => 'Kostenstelle',
+    'realty' => [
+        'name' => 'Name',
+        'administration' => 'Hausverwaltung',
+        'agreement_from' => 'Gültig von',
+        'agreement_to' => 'Gültig bis',
+        'concession_agreement' => 'Gestattungsvertrag',
+        'last_restoration' => 'Letzte Restaurierung/Sanierung',
+    ],
     // Ticket
     'ticket.id' => 'ID',
     'ticket.name' => 'Titel',

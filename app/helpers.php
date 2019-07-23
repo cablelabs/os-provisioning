@@ -311,3 +311,24 @@ function langDateFormat($date)
             return date('d-m-Y', $date);
     }
 }
+
+/**
+ * Get list of entries from specific table for select formular field in edit view
+ *
+ * @return array
+ */
+function selectList($table, $columns, $empty_option = false, $separator = '--')
+{
+    $model = new \App\BaseModel;
+
+    if (is_array($columns)) {
+        $select = $columns;
+        $select[] = 'id';
+    } else {
+        $select = ['id', $columns];
+    }
+
+    $entries = is_string($table) ? DB::table($table)->whereNull('deleted_at')->select($select)->get() : $table;
+
+    return $model->html_list($entries, $columns, $empty_option, $separator);
+}

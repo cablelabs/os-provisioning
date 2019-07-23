@@ -68,6 +68,7 @@ return [
         'Menu_envia TEL contracts'	=> 'envia-TEL-Verträge',
         'Menu_Net Elements'         => 'Netzelemente',
         'Menu_Net Element Types'    => 'Netzelementtypen',
+        'Menu_Realty'               => 'Liegenschaften',
         'Menu_TicketTypes'          => 'Tickettypen',
 
     //User Settings
@@ -226,6 +227,7 @@ return [
         'Header_Debt'               => 'Historie Offene Posten',
         'Header_DebtResult'         => 'Offene Posten gesamt',
         'Header_Node'               => 'Übertragungspunkte',
+        'Header_Realty'             => 'Liegenschaften',
 
     //Header Relation
         // 'Assigned'  				=> 'Zugewiesene',

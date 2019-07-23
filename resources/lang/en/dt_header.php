@@ -4,10 +4,13 @@ return [
     // Index DataTable Header
     'amount' => 'Amount',
     'city' => 'City',
+    'expansion_degree' => 'Expansion degree',
+    'group_contract' => 'Group contract',
     'house_nr' => 'Housenr',
     'iban' => 'IBAN',
     'id'            => 'ID',
     'name' => 'Name',
+    'number' => 'Number',
     'prio'          => 'Priority',
     'street' => 'Street',
     'sum' => 'Sum',
@@ -235,6 +238,14 @@ return [
     'numberrange.suffix' => 'Suffix',
     'numberrange.type' => 'Type',
     'numberrange.costcenter.name' => 'Cost center',
+    'realty' => [
+        'name' => 'Name',
+        'administration' => 'Administration',
+        'agreement_from' => 'Valid from',
+        'agreement_to' => 'Valid to',
+        'concession_agreement' => 'Concession agreement',
+        'last_restoration' => 'Last restoration',
+    ],
     // Ticket
     'ticket.id' => 'ID',
     'ticket.name' => 'Title',
