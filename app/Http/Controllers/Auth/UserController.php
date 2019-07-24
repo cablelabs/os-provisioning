@@ -65,16 +65,11 @@ class UserController extends BaseController
 
     public function prepare_input_post_validation($data)
     {
-        if (isset($data['password']) && empty($data['password'])) {
-            unset($data['password']);
-        } else {
+        if (isset($data['password'])) {
             $data['password'] = \Hash::make($data['password']);
-            $data['password_changed_at'] = Carbon::now()->toDateTimeString();
+            $data['password_changed_at'] = Carbon::now();
             session()->forget('GlobalNotification.shouldChangePassword');
         }
-
-        // removed to have a clean "isDirty()" in updated()
-        unset($data['password_confirmation']);
 
         Bouncer::refresh();
 
