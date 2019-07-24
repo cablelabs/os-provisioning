@@ -33,11 +33,11 @@ return [
                 'jQuery_ImportCsv'              => 'import CSV',
 //MENU
     //Main Menu
+        'Menu_BillingBase'          => 'Billing Base',
         'Menu_Debt'                 => 'Debts',
         'Menu_Dunning'              => 'Dunning',
-        'Menu_MainMenu' 			=> 'Main Menu',
-        'Menu_Config Page'			=> 'Global Config Page',
-        'Menu_BillingBase'			=> 'Billing Base',
+        'Menu_MainMenu'             => 'Main Menu',
+        'Menu_Config Page'          => 'Global Config Page',
         'Menu_Logging'				=> 'Logging',
         'Menu_Product List'			=> 'Product List',
         'Menu_SEPA Accounts'		=> 'SEPA Accounts',
@@ -59,6 +59,7 @@ return [
         'Menu_CMTS' 				=> 'CMTS',
         'Menu_Ip-Pools' 			=> 'IP-Pools',
         'Menu_ProvVoip'			    => 'VoIP',
+        'Menu_PropertyManagement'   => 'Property Management',
         'Menu_MTAs' 				=> 'MTAs',
         'Menu_Phonenumbers'			=> 'Phonenumbers',
         'Menu_PhoneTariffs'			=> 'PhoneTariffs',

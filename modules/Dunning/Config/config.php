@@ -3,7 +3,7 @@
 namespace Modules\Dunning\Entities;
 
 return [
-    'name' => trans('dunning::view.menu.Dunning'),
+    'name' => 'Dunning',
     'MenuItems' => [
         'Debt' => [
             'link'	=> 'Debt.result',
