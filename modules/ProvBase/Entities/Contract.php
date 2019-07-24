@@ -200,6 +200,13 @@ class Contract extends \BaseModel
         return $ret;
     }
 
+    public function view_belongs_to()
+    {
+        if (\Module::collections()->has('PropertyManagement')) {
+            return $this->apartment ?: $this->realty;
+        }
+    }
+
     /*
      * Relations
      */
@@ -326,6 +333,16 @@ class Contract extends \BaseModel
         return $this->hasMany('Modules\Ticketsystem\Entities\Ticket');
     }
 
+    public function realty()
+    {
+        return $this->belongsTo(\Modules\PropertyManagement\Entities\Realty::class);
+    }
+
+    public function apartment()
+    {
+        return $this->belongsTo(\Modules\PropertyManagement\Entities\Apartment::class);
+    }
+
     /**
      * Generate use a new user login password
      * This does not save the involved model
@@ -333,6 +350,29 @@ class Contract extends \BaseModel
     public function generate_password($length = 10)
     {
         $this->password = \Acme\php\Password::generate_password($length);
+    }
+
+    /**
+     * Get list of apartments for select field of edit view
+     *
+     * @return array
+     */
+    public static function getApartmentsList()
+    {
+        $apartments = \DB::table('apartment')->join('realty', 'realty.id', '=', 'apartment.realty_id')
+            ->select(['apartment.id as id', 'name', 'apartment.number as anum', 'realty.number as rnum', 'floor'])
+            ->whereNull('apartment.deleted_at')
+            ->get();
+
+        foreach ($apartments as $a) {
+            $ret[$a->id] = "$a->id: ";
+            $ret[$a->id] .= $a->rnum ? "$a->rnum " : '';
+            $ret[$a->id] .= $a->name ? "($a->name) - " : '-';
+            $ret[$a->id] .= $a->anum ? "$a->anum " : '';
+            $ret[$a->id] .= $a->floor ? "($a->floor) " : '';
+        }
+
+        return $ret;
     }
 
     /**

@@ -40,13 +40,13 @@ class ContractController extends \BaseController
             ['form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => '1'],
             ['form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => '1', 'space' => '1'],
             ['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1', 'autocomplete' => [], 'html' => "<div class=col-md-12 style='background-color:whitesmoke'>
-				<div class='form-group row'>
-					<label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number *</label>
-						<div class=col-md-5>
-							<input class='form-control' name='street' type=text value='${model['street']}' id='street' style='background-color:whitesmoke'>
-						</div>"],
+                <div class='form-group row'>
+                    <label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number *</label>
+                        <div class=col-md-5>
+                            <input class='form-control' name='street' type=text value='${model['street']}' id='street' style='background-color:whitesmoke'>
+                        </div>"],
             ['form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => '1', 'html' => "<div class=col-md-2><input class='form-control' name='house_number' type=text value='".$model['house_number']."' id='house_number' style='background-color:whitesmoke'></div>
-				</div></div>"],
+                </div></div>"],
             ['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1', 'autocomplete' => []],
             ['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => '1', 'autocomplete' => []],
             ['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => '1', 'autocomplete' => []],
@@ -104,6 +104,11 @@ class ContractController extends \BaseController
 
                 $b = array_merge($b, $b2);
             }
+        }
+
+        if (\Module::collections()->has('PropertyManagement')) {
+            $b[] = ['form_type' => 'select', 'name' => 'realty_id', 'description' => 'Realty', 'value' => selectList('realty', ['number', 'name'], true, ' - '), 'hidden' => 0];
+            $b[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'value' => Contract::getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList'), 'space' => '1'];
         }
 
         $c = [
