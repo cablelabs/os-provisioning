@@ -421,6 +421,7 @@ return [
     'MandateID'				=> 'MandateID',
     'MandateDate'			=> 'MandateDate',
     'Commission in %'		=> 'Commission in %',
+    'Total' => 'Total',
     'Total Fee'				=> 'Total Fee',
     'Commission Amount'		=> 'Commission Amount',
     'Zip Files' 			=> 'Zip Files',

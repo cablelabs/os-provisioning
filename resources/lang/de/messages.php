@@ -421,6 +421,7 @@ return [
     'MandateID'     => 'SEPA Mandatsnummer',
     'MandateDate'   => 'SEPA Mandatsdatum',
     'Commission in %'		=> 'Provision in %',
+    'Total' => 'Absolut',
     'Total Fee'				=> 'Gebühren insgesamt',
     'Commission Amount'		=> 'Provision',
     'Zip Files' 			=> 'ZIP Dateien',
