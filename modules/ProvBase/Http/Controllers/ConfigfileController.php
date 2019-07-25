@@ -2,7 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Modules\ProvBase\Entities\Configfile;
 
 class ConfigfileController extends \BaseController
@@ -26,11 +26,9 @@ class ConfigfileController extends \BaseController
         $cvc_files = Configfile::get_files('cvc');
 
         // label has to be the same like column in sql table
-        // TODO: type is without functionality -> hidden
 
         $form = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
-            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['generic' => 'generic', 'network' => 'network', 'vendor' => 'vendor', 'user' => 'user'], 'hidden' => 1],
             ['form_type' => 'select', 'name' => 'device', 'description' => 'Device', 'value' => ['cm' => 'CM', 'mta' => 'MTA']],
             ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Configfile',
                  'value' => $model->html_list(Configfile::where('id', '!=', $model->id)->get(), ['device', 'name'], true, ': '), ],

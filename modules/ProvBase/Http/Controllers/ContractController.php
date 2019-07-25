@@ -157,7 +157,7 @@ class ContractController extends \BaseController
                     ->where('costcenter_id', $data['costcenter_id'])->count();
 
                 if ($numberrange_exists && ! Session::has('alert')) {
-                    session(['alert' => trans('messages.contract_numberrange_failure')]);
+                    session(['alert.danger' => trans('messages.contract_numberrange_failure')]);
                 }
             }
         }
