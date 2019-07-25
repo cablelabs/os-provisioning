@@ -999,12 +999,9 @@ class Modem extends \BaseModel
                 'ds_snr' => $arr['avgDsSNR'],
                 ];
 
-        $status = \DB::connection('mysql-cacti')->table('host')
-            ->where('description', '=', $this->hostname)
-            ->select('status')->first()->status;
         // modem is offline, if we use last value of cacti instead of setting it
         // to zero, it would seem as if the modem is still online
-        if ($status == 1) {
+        if (count(array_unique($res)) === 1 && end($res) === 'U') {
             array_walk($res, function (&$val) {
                 $val = 0;
             });
