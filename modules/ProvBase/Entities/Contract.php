@@ -364,6 +364,8 @@ class Contract extends \BaseModel
             ->whereNull('apartment.deleted_at')
             ->get();
 
+        $ret[null] = null;
+
         foreach ($apartments as $a) {
             $ret[$a->id] = "$a->id: ";
             $ret[$a->id] .= $a->rnum ? "$a->rnum " : '';
