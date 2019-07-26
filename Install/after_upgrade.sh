@@ -15,3 +15,4 @@ chown -R apache storage bootstrap/cache /var/log/nmsprime
 
 systemctl reload httpd
 systemctl restart nmsprimed
+systemd-tmpfiles --create
