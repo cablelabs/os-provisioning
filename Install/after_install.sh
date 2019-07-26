@@ -63,7 +63,7 @@ sed -i "s|^#APP_TIMEZONE=|APP_TIMEZONE=$zone|" /etc/nmsprime/env/global.env
 # create mysql db
 mysql -u root -e "CREATE DATABASE nmsprime CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';"
 
-mysql -u root -e "GRANT ALL ON nmsprime.* TO 'nmsprime'@'localhost' IDENTIFIED BY '$pw'";
+mysql -u root -e "GRANT ALL ON nmsprime.* TO 'nmsprime'@'localhost' IDENTIFIED BY '$pw';"
 sed -i "s/^DB_PASSWORD=$/DB_PASSWORD=$pw/" "$env"
 
 
