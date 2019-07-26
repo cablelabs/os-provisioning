@@ -6,7 +6,8 @@ dir="/var/www/nmsprime"
 cd "$dir"
 /opt/rh/rh-php71/root/usr/bin/php artisan module:publish
 /opt/rh/rh-php71/root/usr/bin/php artisan module:migrate
-/opt/rh/rh-php71/root/usr/bin/php artisan queue:restart
+#/opt/rh/rh-php71/root/usr/bin/php artisan queue:restart
+pkill -f "artisan queue:work"
 /opt/rh/rh-php71/root/usr/bin/php artisan auth:nms
 /opt/rh/rh-php71/root/usr/bin/php artisan route:cache
 /opt/rh/rh-php71/root/usr/bin/php artisan view:clear
