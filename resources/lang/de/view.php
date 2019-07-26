@@ -33,10 +33,12 @@ return [
                 'jQuery_ImportCsv'              => 'CSV importieren',
 //MENU
     //Main Menu
+        'Menu_Apartment'            => 'Wohnungen',
         'Menu_BillingBase'          => 'Billing Base',
         'Menu_Debt'                 => 'Offene Posten',
         'Menu_Dunning'              => 'Mahnwesen',
         'Menu_MainMenu'             => 'Hauptmenü',
+        'Menu_Node'                 => 'Übertragungspunkte',
         'Menu_Config Page'			=> 'Systemkonfiguration',
         'Menu_Logging'				=> 'Logs',
         'Menu_Product List'			=> 'Produktangebot',
@@ -67,6 +69,7 @@ return [
         'Menu_envia TEL contracts'	=> 'envia-TEL-Verträge',
         'Menu_Net Elements'         => 'Netzelemente',
         'Menu_Net Element Types'    => 'Netzelementtypen',
+        'Menu_Realty'               => 'Liegenschaften',
         'Menu_TicketTypes'          => 'Tickettypen',
 
     //User Settings
@@ -75,10 +78,11 @@ return [
         'Menu_Logout'				=> 'Ausloggen',
         'Menu_UserRoleSettings'		=> 'Nutzerrollen',
 
+        'Menu_CDRs'                 => 'EVNs',
+        'Menu_Tickets'              => 'Tickets',
+        'Menu_Comment'              => 'Kommentare',
 //HEADER
-        'Menu_CDRs'					=> 'EVNs',
-        'Menu_Tickets'				=> 'Tickets',
-        'Menu_Comment'				=> 'Kommentare',
+        'Header_Apartment' => 'Wohnungen',
     //General
         'Header_GlobalSearch'		=> 'Systemweite Suche',
         'Header_Overview'			=> 'Übersicht',
@@ -224,6 +228,8 @@ return [
 
         'Header_Debt'               => 'Historie Offene Posten',
         'Header_DebtResult'         => 'Offene Posten gesamt',
+        'Header_Node'               => 'Übertragungspunkte',
+        'Header_Realty'             => 'Liegenschaften',
 
     //Header Relation
         // 'Assigned'  				=> 'Zugewiesene',

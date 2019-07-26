@@ -3,10 +3,24 @@
 return [
     // Index DataTable Header
     'amount' => 'Amount',
+    'city' => 'City',
+    'expansion_degree' => 'Expansion degree',
+    'floor' => 'Floor',
+    'group_contract' => 'Group contract',
+    'house_nr' => 'Housenr',
     'iban' => 'IBAN',
     'id'            => 'ID',
+    'name' => 'Name',
+    'number' => 'Number',
     'prio'          => 'Priority',
+    'street' => 'Street',
     'sum' => 'Sum',
+    'zip' => 'ZIP',
+    'apartment' => [
+        'number' => 'Number',
+        'connected' => 'Connected',
+        'occupied' => 'Occupied',
+    ],
     // Auth
     'users.login_name' => 'Login Name',
     'users.first_name' => 'Given Name',
@@ -165,6 +179,12 @@ return [
     'modem.sw_rev' => 'Firmware Version',
     'modem.us_pwr' => 'US level',
     'contract_valid' => 'Contract valid?',
+    // Node
+    'node' => [
+        'name' => 'Name',
+        'headend' => 'Headend',
+        'type' => 'Type of signal',
+    ],
     // QoS
     'qos.name' => 'QoS Name',
     'qos.ds_rate_max' => 'Maximum DS Speed',
@@ -224,6 +244,14 @@ return [
     'numberrange.suffix' => 'Suffix',
     'numberrange.type' => 'Type',
     'numberrange.costcenter.name' => 'Cost center',
+    'realty' => [
+        'name' => 'Name',
+        'administration' => 'Administration',
+        'agreement_from' => 'Valid from',
+        'agreement_to' => 'Valid to',
+        'concession_agreement' => 'Concession agreement',
+        'last_restoration_on' => 'Last restoration',
+    ],
     // Ticket
     'ticket.id' => 'ID',
     'ticket.name' => 'Title',

@@ -3,10 +3,24 @@
 return [
     // Index DataTable Header
     'amount' => 'Betrag',
+    'city' => 'Stadt',
+    'expansion_degree' => 'Ausbaugrad',
+    'floor' => 'Etage',
+    'group_contract' => 'Gruppenvertrag',
+    'house_nr' => 'Hausnr',
     'iban' => 'IBAN',
     'id'            => 'ID',
+    'name' => 'Name',
+    'number' => 'Nummer',
     'prio'          => 'Priorität',
+    'street' => 'Straße',
+    'zip' => 'PLZ',
     'sum' => 'Summe',
+    'apartment' => [
+        'number' => 'Nummer',
+        'connected' => 'Angeklemmt',
+        'occupied' => 'Bewohnt',
+    ],
     // Auth
     'users.login_name' => 'Loginname',
     'users.first_name' => 'Vorname',
@@ -166,6 +180,12 @@ return [
     'modem.sw_rev' => 'Firmware-Version',
     'modem.us_pwr' => 'US Pegel',
     'contract_valid' => 'Vertrag gültig?',
+    // Node
+    'node' => [
+        'name' => 'Name',
+        'headend' => 'Kopfstelle',
+        'type' => 'Signalart',
+    ],
     // QoS
     'qos.name' => 'QoS Name',
     'qos.ds_rate_max' => 'Maximale DS Geschwindigkeit',
@@ -227,6 +247,14 @@ return [
     'numberrange.suffix' => 'Suffix',
     'numberrange.type' => 'Typ',
     'numberrange.costcenter.name' => 'Kostenstelle',
+    'realty' => [
+        'name' => 'Name',
+        'administration' => 'Hausverwaltung',
+        'agreement_from' => 'Gültig von',
+        'agreement_to' => 'Gültig bis',
+        'concession_agreement' => 'Gestattungsvertrag',
+        'last_restoration_on' => 'Letzte Restaurierung/Sanierung',
+    ],
     // Ticket
     'ticket.id' => 'ID',
     'ticket.name' => 'Titel',
