@@ -253,7 +253,7 @@ return [
         'agreement_from' => 'Gültig von',
         'agreement_to' => 'Gültig bis',
         'concession_agreement' => 'Gestattungsvertrag',
-        'last_restoration' => 'Letzte Restaurierung/Sanierung',
+        'last_restoration_on' => 'Letzte Restaurierung/Sanierung',
     ],
     // Ticket
     'ticket.id' => 'ID',

@@ -250,7 +250,7 @@ return [
         'agreement_from' => 'Valid from',
         'agreement_to' => 'Valid to',
         'concession_agreement' => 'Concession agreement',
-        'last_restoration' => 'Last restoration',
+        'last_restoration_on' => 'Last restoration',
     ],
     // Ticket
     'ticket.id' => 'ID',
