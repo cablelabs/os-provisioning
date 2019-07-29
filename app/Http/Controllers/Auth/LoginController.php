@@ -7,6 +7,7 @@ use Log;
 use Module;
 use Bouncer;
 use GlobalConfig;
+use App\BaseModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -82,6 +83,9 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
+        // Set (cached) session key with model namespaces for authorization functionaity
+        BaseModel::get_models();
+
         $request->session()->put('GlobalNotification', []);
         App::setLocale(\App\Http\Controllers\BaseViewController::get_user_lang());
 
