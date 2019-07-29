@@ -114,7 +114,12 @@ return [
         'concede_credit' => 'Dieser Posten wurde bereits abgerechnet (möglicherweise für das komplette Jahr). Bitte prüfen Sie, ob der Kunde eine Gutschrift erhalten soll!',
     ],
     'contract_nr_mismatch'  => 'Es konnte keine nächste Vertragsnummer gefunden werden, da die Datenbankabfrage fehl schlug. Die Ursache dafür liegt bei folgenden Verträgen, die eine Vertragsnummer haben, die nicht zur Kostenstelle passt: :nrs. Bitte tragen Sie die korrekte Kostenstelle ein oder lassen Sie eine neue Vertragsnummer für die Verträge vergeben.',
-    'contract_numberrange_failure' => 'Keine freie Vertragsnummer für die gewählte Kostenstelle gefunden.',
+    'contract' => [
+        'numberrange' => [
+            'failure' => 'Keine freie Vertragsnummer für die gewählte Kostenstelle gefunden.',
+            'missing' => 'Es konnte keine neue Kundennummer vergeben werden, da die Kostenstelle über keinen Nummernkreis verfügt.',
+        ],
+    ],
     'cpe_log_error' 		=> 'ist nicht beim Server registriert - Kein Logeintrag gefunden',
     'cpe_not_reachable' 	=> 'aber via PING nicht erreichbar (ICMP kann herstellerabhängig vom Router geblockt werden)',
     'cpe_fake_lease'		=> 'Der DHCP Server hat kein Lease für den Endpunkt angelegt, weil dessen IP Adresse statisch vergeben ist und der Server diesen somit nicht verfolgen muss. Das folgende Lease wurde lediglich als Referenz manuell generiert:',
