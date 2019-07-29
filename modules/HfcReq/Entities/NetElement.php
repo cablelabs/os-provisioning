@@ -97,19 +97,13 @@ class NetElement extends \BaseModel
                 'edit' => ['netelementtype.name' => 'get_elementtype_name'], ];
     }
 
-    /**
-     * Get Bootstrap class for colorization
-     *
-     * @param mixed     bool or null
-     *  true if db_exists() was already checked - Used to reduce DB queries and improve bad performance of DashboardController::_get_impaired_netelements()
-     */
-    public function get_bsclass($db_exists = null)
+    public function get_bsclass()
     {
         if (in_array($this->get_elementtype_name(), ['Net', 'Cluster'])) {
             return 'info';
         }
 
-        if ($db_exists === false || (is_null($db_exists) && ! IcingaObjects::db_exists())) {
+        if (! IcingaObjects::db_exists()) {
             return 'warning';
         }
 
@@ -165,19 +159,15 @@ class NetElement extends \BaseModel
     }
 
     /**
-     * Relationship with two (composite) keys
-     *
      * As Android and Iphone app developers use wrong columns to display object name, we use the relation
      * column to describe the object as well
-     *
-     * TODO: Use https://github.com/topclaudy/compoships or use single primary key again
      */
-    public function getIcingaobjectsAttribute()
+    public function icingaobjects()
     {
-        return IcingaObjects::where('name1', "{$this->id}_{$this->name}")
+        return $this
+            ->hasOne('Modules\HfcBase\Entities\IcingaObjects', 'name1', 'id_name')
             ->where('icinga_objects.objecttype_id', '1')
-            ->where('icinga_objects.is_active', '1')
-            ->with('icingahoststatus')->first();
+            ->where('icinga_objects.is_active', '1');
     }
 
     public function parent()
