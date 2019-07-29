@@ -44,7 +44,7 @@ class SetEmptyStringsToNull extends Migration
             'trcclass',                 // not set by user
             'ticket_user',              // n to m
             'tickettype_ticket',        // n to m
-            'users',                    // already configured
+            // 'users',                    // already configured
         ];
 
         $tables = $tables->flip()->forget($except)->keys();
@@ -57,7 +57,7 @@ class SetEmptyStringsToNull extends Migration
             // get rules for this table
             $nullable = [];
             foreach ($rules as $field => $rule) {
-                $nullable[$field] = (in_array('required', explode('|', $rule))) ? false : true;
+                $nullable[$field] = in_array('required', explode('|', $rule)) || in_array('sometimes', explode('|', $rule)) ? false : true;
             }
 
             // get all column names

@@ -36,10 +36,10 @@ class Contract extends \BaseModel
             'zip' => 'required',
             'city' => 'required',
             'phone' => 'required',
-            'email' => 'email',
+            'email' => 'nullable|email',
             'birthday' => 'required_if:salutation,Herr,Frau|nullable|date',
             'contract_start' => 'date',
-            'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
+            'contract_end' => 'nullable|date', // |after:now -> implies we can not change stuff in an out-dated contract
         ];
 
         if (\Module::collections()->has('BillingBase')) {

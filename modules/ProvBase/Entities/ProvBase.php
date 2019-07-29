@@ -20,7 +20,7 @@ class ProvBase extends \BaseModel
     public static function rules($id = null)
     {
         return [
-            'provisioning_server' => 'ip',
+            'provisioning_server' => 'nullable|ip',
             // TODO: Add max_cpe rule when validation errors are displayed again
             // 'max_cpe' => 'numeric|min:1|max:254',
         ];
