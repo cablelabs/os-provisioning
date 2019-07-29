@@ -5,7 +5,7 @@ namespace Modules\HfcReq\Entities;
 use Auth;
 use Cache;
 use Session;
-use Modules\HfcBase\Entities\IcingaObjects;
+use Modules\HfcBase\Entities\IcingaObject;
 
 class NetElement extends \BaseModel
 {
@@ -103,11 +103,11 @@ class NetElement extends \BaseModel
             return 'info';
         }
 
-        if (! IcingaObjects::db_exists()) {
+        if (! IcingaObject::db_exists()) {
             return 'warning';
         }
 
-        $icingaObj = $this->icingaobjects;
+        $icingaObj = $this->icingaobject;
         if ($icingaObj && $icingaObj->is_active) {
             $icingaObj = $icingaObj->icingahoststatus;
             if ($icingaObj) {
@@ -162,10 +162,10 @@ class NetElement extends \BaseModel
      * As Android and Iphone app developers use wrong columns to display object name, we use the relation
      * column to describe the object as well
      */
-    public function icingaobjects()
+    public function icingaobject()
     {
         return $this
-            ->hasOne('Modules\HfcBase\Entities\IcingaObjects', 'name1', 'id_name')
+            ->hasOne('Modules\HfcBase\Entities\IcingaObject', 'name1', 'id_name')
             ->where('icinga_objects.objecttype_id', '1')
             ->where('icinga_objects.is_active', '1');
     }

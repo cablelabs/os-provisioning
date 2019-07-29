@@ -214,7 +214,7 @@ class AbilityController extends Controller
             'AccountingRecord', // has no UI/Route associated
             'Dashboard',        // has its own Authorization checks
             'IcingaHostStatus', // has no UI/Route associated
-            'IcingaObjects',    // has no UI/Route associated
+            'IcingaObject',     // has no UI/Route associated
             'ModemHelper',      // has no UI/Route associated
             'SupportRequest',   // authorization makes no sense
         ];
