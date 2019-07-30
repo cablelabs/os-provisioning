@@ -11,7 +11,7 @@ class Dunning extends \BaseModel
     public static function rules($id = null)
     {
         return [
-            'fee' => 'numeric',
+            'fee' => 'nullable|numeric',
         ];
     }
 

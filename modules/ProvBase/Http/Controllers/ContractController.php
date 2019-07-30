@@ -161,8 +161,12 @@ class ContractController extends \BaseController
                 $numberrange_exists = \Modules\BillingBase\Entities\NumberRange::where('type', '=', 'contract')
                     ->where('costcenter_id', $data['costcenter_id'])->count();
 
-                if ($numberrange_exists && ! Session::has('alert')) {
-                    session(['alert.danger' => trans('messages.contract_numberrange_failure')]);
+                if ($numberrange_exists) {
+                    if (! Session::has('alert')) {
+                        session(['alert.danger' => trans('messages.contract.numberrange.failure')]);
+                    }
+                } else {
+                    Session::push('tmp_error_above_form', trans('messages.contract.numberrange.missing'));
                 }
             }
         }

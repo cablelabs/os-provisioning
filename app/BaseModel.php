@@ -676,7 +676,7 @@ class BaseModel extends Eloquent
      */
     public function html_list($array, $columns, $empty_option = false, $separator = '--')
     {
-        $ret = $empty_option ? [0 => null] : [];
+        $ret = $empty_option ? [null => null] : [];
 
         if (is_string($columns)) {
             foreach ($array as $a) {

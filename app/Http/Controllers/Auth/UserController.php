@@ -63,6 +63,22 @@ class UserController extends BaseController
         ];
     }
 
+    public function prepare_input($data)
+    {
+        $data = parent::prepare_input($data);
+
+        // Dont require password and password confirmation on updating a User (e.g. language)
+        if (! $data['password']) {
+            $route = \Route::getCurrentRoute();
+
+            if (isset($route->parameters()['User']) && $route->parameters()['User']) {
+                unset($data['password'], $data['password_confirmation']);
+            }
+        }
+
+        return $data;
+    }
+
     public function prepare_input_post_validation($data)
     {
         if (isset($data['password'])) {

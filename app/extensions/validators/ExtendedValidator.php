@@ -158,21 +158,6 @@ class ExtendedValidator
     }
 
     /*
-     * Date or Null
-     */
-    public function validateDateOrNull($attribute, $value, $parameters)
-    {
-        if (! $value || $value == '0000-00-00') {
-            return true;
-        }
-
-        // See: http://stackoverflow.com/questions/13194322/php-regex-to-check-date-is-in-yyyy-mm-dd-format
-        $dt = \DateTime::createFromFormat('Y-m-d', $value);
-
-        return $dt !== false && ! array_sum($dt->getLastErrors());
-    }
-
-    /*
      * DOCSIS configfile validation
      */
     public function validateDocsis($attribute, $value, $parameters)
