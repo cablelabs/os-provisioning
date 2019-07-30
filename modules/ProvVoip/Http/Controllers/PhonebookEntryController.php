@@ -71,19 +71,6 @@ class PhonebookEntryController extends \BaseController
             $init_values = [];
         }
 
-        // helper to set selected correctly
-        // if nothing is set we need to return an empty string – on null every entry in dropdown get a selected option
-        /* $get_selected = function($field) { */
-
-        /* 	if (!is_null($this->model->$field)) { */
-        /* 		dd($this->model->$field); */
-        /* 		return $this->model->$field; */
-        /* 	} */
-        /* 	else { */
-        /* 		return ''; */
-        /* 	} */
-        /* }; */
-
         $ret_tmp = [
 
             /* todo: write the rest of the form (attention: some special cases!!!) */

@@ -153,13 +153,6 @@ class PhonebookEntry extends \BaseModel
         return $bsclass;
     }
 
-    // link title in index view
-    public function get_view_link_title()
-    {
-        /* return $this->id; */
-        return 'PhonebookEntry';
-    }
-
     /**
      * ALL RELATIONS
      * link with phonenumbers

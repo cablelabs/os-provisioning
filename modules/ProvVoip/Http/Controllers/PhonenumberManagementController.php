@@ -135,11 +135,9 @@ class PhonenumberManagementController extends \BaseController
         // label has to be the same like column in sql table
         $ret_tmp = [
             [
-                'form_type' => 'select',
+                'form_type' => 'text',
                 'name' => 'phonenumber_id',
                 'description' => 'Phonenumber',
-                'value' => $model->html_list($model->phonenumber(),
-                'id'),
                 'hidden' => '1',
             ],
             [

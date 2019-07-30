@@ -112,34 +112,6 @@ class PhonenumberManagement extends \BaseModel
     }
 
     /**
-     * return a list [id => number] of all phonenumbers
-     */
-    public function phonenumber_list()
-    {
-        $ret = [];
-        foreach ($this->phonenumber()['phonenumbers'] as $phonenumber) {
-            $ret[$phonenumber->id] = $phonenumber->prefix_number.'/'.$phonemumber->number;
-        }
-
-        return $ret;
-    }
-
-    /**
-     * return a list [id => number] of all phonenumber
-     */
-    public function phonenumber_list_with_dummies()
-    {
-        $ret = [];
-        foreach ($this->phonenumber() as $phonenumber_tmp) {
-            foreach ($phonenumber_tmp as $phonenumber) {
-                $ret[$phonenumber->id] = $phonenumber->prefix_number.'/'.$phonemumber->number;
-            }
-        }
-
-        return $ret;
-    }
-
-    /**
      * Get relation to trc classes.
      *
      * @author Patrick Reichel
