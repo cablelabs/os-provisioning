@@ -12,7 +12,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Modules\ProvBase\Entities\ProvBase;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -99,31 +98,42 @@ class LoginController extends Controller
                 ],
             ]);
         }
-        if ($user->isNotAn('admin')) {
-            $alerts = [];
-            $provbase = ProvBase::first();
-            if ($provbase->alert1 !== '') {
-                $alerts['alert1'] = [
-                    'message' => $provbase->alert1,
-                    'level' => 'info',
-                    'reason'=>'', ];
-            }
-            if ($provbase->alert2 !== '') {
-                $alerts['alert2'] = [
-                    'message' => $provbase->alert2,
-                    'level' => 'info',
-                    'reason' => '', ];
-            }
-            if ($provbase->alert3 !== '') {
-                $alerts['alert3'] = [
-                    'message' => $provbase->alert3,
-                    'level' => 'info',
-                    'reason' => '', ];
-            }
-            $request->session()->flash('DashboardNotification', $alerts);
-        }
+
+        self::setDashboardNotifications();
 
         $user->update(['last_login_at' => Carbon::now()]);
+    }
+
+    /**
+     * Set global notification messages in session on login
+     */
+    private static function setDashboardNotifications()
+    {
+        $alerts = [];
+        $conf = GlobalConfig::first();
+
+        if ($conf->alert1) {
+            $alerts['alert1'] = [
+                'message' => $conf->alert1,
+                'level' => 'info',
+                'reason'=>'', ];
+        }
+
+        if ($conf->alert2) {
+            $alerts['alert2'] = [
+                'message' => $conf->alert2,
+                'level' => 'warning',
+                'reason' => '', ];
+        }
+
+        if ($conf->alert3) {
+            $alerts['alert3'] = [
+                'message' => $conf->alert3,
+                'level' => 'danger',
+                'reason' => '', ];
+        }
+
+        \Session::flash('DashboardNotification', $alerts);
     }
 
     /**

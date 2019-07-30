@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddAlertsFieldsToProvbaseTable extends Migration
+class AddAlertsFieldsToGlobalconfigTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class AddAlertsFieldsToProvbaseTable extends Migration
      */
     public function up()
     {
-        Schema::table('provbase', function (Blueprint $table) {
-            $table->string('alert1')->default('');
-            $table->string('alert2')->default('');
-            $table->string('alert3')->default('');
+        Schema::table('global_config', function (Blueprint $table) {
+            $table->string('alert1')->nullable();
+            $table->string('alert2')->nullable();
+            $table->string('alert3')->nullable();
         });
     }
 
@@ -27,7 +27,7 @@ class AddAlertsFieldsToProvbaseTable extends Migration
      */
     public function down()
     {
-        Schema::table('provbase', function (Blueprint $table) {
+        Schema::table('global_config', function (Blueprint $table) {
             $table->dropColumn(['alert1', 'alert2', 'alert3']);
         });
     }

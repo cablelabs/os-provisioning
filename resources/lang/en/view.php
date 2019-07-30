@@ -386,11 +386,15 @@ return [
 
     'bankTransfer' => 'Bank transfers',
     'Credit' => 'Credit',
+    'critical' => 'critical',
     'Debit' => 'Debit',
     'Discard' => 'Discard',
+    'Global notification' => 'Global notification',
+    'info' => 'info',
     'Level' => 'Level',
     'Message' => 'Message',
     'SettlementRun' => 'SettlementRun',
     'Time' => 'Time',
     'Type' => 'Type',
+    'warning' => 'warning',
 ];
