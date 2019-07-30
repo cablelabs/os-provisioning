@@ -37,7 +37,7 @@ class cpeHostnameCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $pw = env('DNS_PASSWORD');
         $domain = ProvBase::first()->domain_name;
