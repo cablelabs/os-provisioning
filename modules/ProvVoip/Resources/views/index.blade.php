@@ -9,19 +9,13 @@
         {{--Quickstart--}}
 
         <div class="row">
-            <div class="col-md-12">
+            @DivOpen(3)
                 @include('provvoip::widgets.quickstart')
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-7">
+            @DivClose()
 
-            </div>
-            <div class="col-md-5">
+            @DivOpen(5)
                 @include('provvoip::widgets.documentation')
-            </div>
+            @DivClose()
         </div>
     </div>
 
