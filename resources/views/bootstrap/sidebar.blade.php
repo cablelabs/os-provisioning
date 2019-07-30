@@ -15,14 +15,6 @@
 
     {{-- begin sidebar nav --}}
     <ul class="nav">
-      @if (\Module::collections()->has('Dashboard'))
-        <li id ="dashboardsidebar" class="{{ ($route_name == 'Dashboard') ? 'active' : ''}}">
-          <a href="{{route('Dashboard.index')}}">
-          <i class="fa fa-home"></i>
-          <span>Dashboard</span></a>
-        </li>
-      @endif
-
       <li class="nav-header">Navigation</li>
       @foreach ($view_header_links as $module_name => $typearray)
         @if (isset($typearray['submenu']))
