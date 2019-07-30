@@ -234,7 +234,7 @@ class BaseController extends Controller
             }
         }
 
-        return $data; // remove Inputs that are null
+        return $data;
     }
 
     /**

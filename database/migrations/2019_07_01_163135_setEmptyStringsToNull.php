@@ -44,7 +44,6 @@ class SetEmptyStringsToNull extends Migration
             'trcclass',                 // not set by user
             'ticket_user',              // n to m
             'tickettype_ticket',        // n to m
-            // 'users',                    // already configured
         ];
 
         $tables = $tables->flip()->forget($except)->keys();
