@@ -10,12 +10,11 @@ class ProvBaseController extends BaseController
 {
     public function index()
     {
-        $data['income'] = BillingAnalysis::getIncomeData();
         $title = 'Provisioning Dashboard';
-        $create_allowed = static::get_controller_obj()->index_create_allowed;
+
         $contracts_data = BillingAnalysis::getContractData();
 
-        return View::make('provbase::index', $this->compact_prep_view(compact('title', 'create_allowed', 'contracts_data')));
+        return View::make('provbase::index', $this->compact_prep_view(compact('title', 'contracts_data')));
     }
 
     /**
