@@ -25,43 +25,67 @@
         {{--Quickstart--}}
 
         <div class="row">
-            <div class="col-md-12">
-                @include('provbase::widgets.quickstart')
-            </div>
+            @DivOpen(7)
+            @include('provbase::widgets.quickstart')
+            @DivClose()
+            @DivOpen(2)
+            @DivClose()
+
+            @DivOpen(3)
+            @include ('bootstrap.widget',
+                array (
+                    'content' => 'date',
+                    'widget_icon' => 'calendar',
+                    'widget_bg_color' => 'purple',
+                )
+            )
+            @DivClose()
         </div>
     </div>
     <div class="col-md-12">
         <div class="row">
-            @if ($contracts_data['table'])
-            @section ('weekly_contracts')
-                @include('provbase::panels.weekly_contracts')
-            @stop
-            @include ('bootstrap.panel', array ('content' => "weekly_contracts", 'view_header' => trans('view.Dashboard_WeeklyCustomers'), 'md' => 7, 'height' => 'auto', 'i' => '1'))
-            @endif
-            <div class="col-md-5">
-                <div class="row">
-                    @DivOpen(6)
-                    @include ('bootstrap.widget',
-                        array (
-                           'content' => 'contracts_total',
-							'widget_icon' => 'users',
-							'widget_bg_color' => 'green',
-							'link_target' => '#anchor-contracts',
-                        )
-                    )
-                    @DivClose()
-                    @DivOpen(6)
-                    @include ('bootstrap.widget',
-                        array (
-                            'content' => 'date',
-                            'widget_icon' => 'calendar',
-                            'widget_bg_color' => 'purple',
-                        )
-                    )
-                    @DivClose()
+            @DivOpen(3)
+            @include ('bootstrap.widget',
+                array (
+                   'content' => 'contracts_total',
+                    'widget_icon' => 'users',
+                    'widget_bg_color' => 'green',
+                    'link_target' => '#anchor-contracts',
+                )
+            )
+            @DivClose()
+        </div>
+        <div class="row">
+            @DivOpen(4)
+            <div class="widget widget-stats bg-blue">
+                {{-- info/data --}}
+                <div class="stats-info text-center">
+
+                    {!! HTML::decode (HTML::linkRoute('Modem.firmware',
+                        '<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
+                            <i style="font-size: 25px;" class="img-center fa fa-file-code-o p-10"></i><br />
+                            <span class="username text-ellipsis text-center">Firmwares</span>
+                        </span>'))
+                    !!}
+
+                    {!! HTML::decode (HTML::linkRoute('CustomerTopo.show_impaired',
+                        '<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
+                            <i style="font-size: 25px;" class="img-center fa fa-hdd-o text-danger p-10"></i><br />
+                            <span class="username text-ellipsis text-center">'.trans('view.Dashboard_ImpairedModem').'</span>
+                        </span>'))
+                    !!}
+
+                    {{-- reference link --}}
+                    <div class="stats-link"><a href="#"><br></a></div>
+
                 </div>
-                @include('provbase::widgets.documentation')
+            @DivClose()
+            </div>
+                <div class="col-md-4">
+                    @include('provbase::widgets.documentation')
+                </div>
             </div>
         </div>
-    </div>
+        </div>
+
 @stop
