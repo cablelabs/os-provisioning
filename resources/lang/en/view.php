@@ -393,6 +393,7 @@ return [
     'info' => 'info',
     'Level' => 'Level',
     'Message' => 'Message',
+    'showChanges' => 'Show the change|Show :num changes',
     'SettlementRun' => 'SettlementRun',
     'Time' => 'Time',
     'Type' => 'Type',

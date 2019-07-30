@@ -398,6 +398,7 @@ return [
     'info' => 'Info',
     'Level' => 'Level',
     'Message' => 'Nachricht',
+    'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
     'SettlementRun' => 'Abrechnungslauf',
     'Time' => 'Zeit',
     'Type' => 'Typ',
