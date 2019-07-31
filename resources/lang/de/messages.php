@@ -264,6 +264,7 @@ return [
     'Additional modem reset button' => 'Zusätzlicher Modem Reset Button',
     'modemAnalysis' => [
         'cfOutdated' => 'Das Modem läuft nicht mit dem aktuellen Configfile! Der letzte Download fand vor dem Erzeugen des Configfiles statt.',
+        'cfError' => 'Beim Erstellen des Configfiles gab es einen Fehler! Es existiert daher noch kein Configfile für dieses Modem. Bitte im Laravel Log für eine genauere Fehlerbeschreibung nachsehen.',
         'cpeMacMissmatch' => 'Der Status über Internetzugriff und Telefonie kann nicht ermittelt werden, da sich im Configfile mindestens eine der CPE MAC Adressen von den MACs der zugewiesenen MTAs unterscheidet.',
         'fullAccess' => 'Internetzugriff und Telefonie ist freigeschalten. (gemäß Configfile)',
         'missingLD' => 'Info: Der letzte Download des Configfiles ist zu lang her, um festzustellen ob das Modem die aktuellen Konfigurationen übernommen hat.',
