@@ -612,16 +612,23 @@ class Modem extends \BaseModel
             die('Error writing to file');
         }
 
+        Log::info('Trying to build configfile for modem '.$this->hostname);
         Log::debug("configfile: docsis -e $cf_file $dir../keyfile $cfg_file");
 
         // "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
-        // docsis tool always returns 0
         exec("docsis -e $cf_file $dir../keyfile $cfg_file >/dev/null 2>&1 &", $out);
+
+        // TODO: Error handling
+        // This is not trivial because docsis is started in background:
+        //      - therefore return value is always “0” (independent of the actual error code)
+        //      - STDERR output is not redirected and is stored in $out – but too late for a check
+        //      - same problem with checks for existance and date comparisions of .cfg files
+        // As there is no solution ATM (except removing the “&” and slowing down the whole process) nothing is done here!
+        //
+        // As a workaround there will be an Icinga check (existance of .cfg files and comparision of the dates of .conf and .cfg files)
 
         // change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
         system('/bin/chown -R apache /tftpboot/cm');
-
-        Log::info('Configfile updated for Modem: '.$this->hostname);
 
         return true;
     }
