@@ -86,6 +86,9 @@ class Endpoint extends \BaseModel
                 $rev = implode('.', array_reverse(explode('.', $this->ip)));
                 $cmd .= "update add $this->hostname.cpe.$zone. 3600 A $this->ip\nsend\n";
                 $cmd .= "update add $rev.in-addr.arpa. 3600 PTR $this->hostname.cpe.$zone.\nsend\n";
+                if ($this->add_reverse) {
+                    $cmd .= "update add $rev.in-addr.arpa. 3600 PTR $this->add_reverse.\nsend\n";
+                }
             } else {
                 // other endpoints will get a CNAME record (hostname -> mangle)
                 // mangle name is based on cm mac address
