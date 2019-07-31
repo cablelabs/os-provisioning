@@ -79,6 +79,7 @@ return [
     'First IP'					=> 'First IP',
     'Firstname'					=> 'Firstname',
     'Fixed IP'					=> 'Fixed IP',
+    'Additional rDNS record'	=> 'Additional rDNS record',
     'Floor'                     => 'Floor',
     'Force Restart'				=> 'Force Restart',
     'Geocode origin'			=> 'Geocode origin',
