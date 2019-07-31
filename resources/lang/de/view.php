@@ -394,6 +394,7 @@ return [
     'critical' => 'kritisch',
     'Debit' => 'Lastschrift',
     'Discard' => 'Missachte',
+    'Global' => 'Global',
     'Global notification' => 'Globale Benachrichtigung',
     'info' => 'Info',
     'Level' => 'Level',

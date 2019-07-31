@@ -73,7 +73,7 @@ class UserController extends BaseController
                     Bouncer::can('update', User::class) ? '' : 'disabled' => 'true', ],
                 'help' => trans('helper.assign_role'),
                 'selected' => $model->html_list($model->roles, 'name'), ],
-            ['form_type' => 'select', 'name' => 'initial_dashboard', 'description' => 'Initial Dashboard',
+            ['form_type' => 'select', 'name' => 'initial_dashboard', 'description' => 'Default login page',
                 'value' => $dashboard_options,
             ],
         ];

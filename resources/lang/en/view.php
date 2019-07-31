@@ -389,6 +389,7 @@ return [
     'critical' => 'critical',
     'Debit' => 'Debit',
     'Discard' => 'Discard',
+    'Global' => 'Global',
     'Global notification' => 'Global notification',
     'info' => 'info',
     'Level' => 'Level',

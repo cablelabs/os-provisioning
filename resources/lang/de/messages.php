@@ -50,6 +50,7 @@ return [
     'accCmd_processing'     => 'Der Abrechnungslauf wird erstellt. Bitte warten Sie bis der Prozess abgeschlossen ist.',
     'Date of installation address change'   => 'Datum der Änderung der Installationsadresse',
     'Date of value'             => 'Buchungstag',
+    'Default login page'        => 'Default Login Seite',
     'Delete'                    => 'Lösche',
     'Day'                       => 'Tag',
     'Description'               => 'Beschreibung',
