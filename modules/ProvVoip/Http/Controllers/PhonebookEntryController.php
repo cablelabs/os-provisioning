@@ -71,6 +71,15 @@ class PhonebookEntryController extends \BaseController
             $init_values = [];
         }
 
+        if (\Module::collections()->has('ProvVoipEnvia')) {
+            $last_update_telekom = max($model->external_creation_date, $model->external_update_date);
+            if ($last_update_telekom) {
+                \Session::push('tmp_info_above_form', trans('messages.PhonebookEntry_lastExternalUpdateTelekom').": $last_update_telekom");
+            } else {
+                \Session::push('tmp_warning_above_form', trans('messages.PhonebookEntry_noExternalUpdateTelekom'));
+            }
+        }
+
         $ret_tmp = [
 
             /* todo: write the rest of the form (attention: some special cases!!!) */
