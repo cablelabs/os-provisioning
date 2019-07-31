@@ -34,7 +34,7 @@ return [
 //MENU
     //Main Menu
         'Menu_Apartment'            => 'Wohnungen',
-        'Menu_BillingBase'          => 'Billing Base',
+        'Menu_BillingBase'          => 'Billing',
         'Menu_Debt'                 => 'Offene Posten',
         'Menu_Dunning'              => 'Mahnwesen',
         'Menu_MainMenu'             => 'Hauptmenü',

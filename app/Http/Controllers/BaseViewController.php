@@ -531,6 +531,7 @@ class BaseViewController extends Controller
         $globalPages = Config::get('base.'.$configMenuItemKey);
 
         $menu['Global']['link'] = Config::get('base.link');
+        $menu['Global']['translated_name'] = 'Global';
         foreach ($globalPages as $page => $settings) {
             if (Bouncer::can('view', $settings['class'])) {
                 $menuItem = static::translate_view($page, 'Menu');

@@ -34,7 +34,7 @@ return [
 //MENU
     //Main Menu
         'Menu_Apartment'            => 'Apartments',
-        'Menu_BillingBase'          => 'Billing Base',
+        'Menu_BillingBase'          => 'Billing',
         'Menu_Debt'                 => 'Debts',
         'Menu_Dunning'              => 'Dunning',
         'Menu_MainMenu'             => 'Main Menu',
