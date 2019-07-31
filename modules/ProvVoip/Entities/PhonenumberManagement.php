@@ -160,7 +160,8 @@ class PhonenumberManagement extends \BaseModel
         if (\Module::collections()->has('ProvVoipEnvia')) {
             $ret['envia TEL']['EnviaOrder']['class'] = 'EnviaOrder';
             $ret['envia TEL']['EnviaOrder']['relation'] = $this->_envia_orders;
-            $ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at envia TEL';
+            $ret['envia TEL']['EnviaOrder']['options']['create_button_text'] = trans('provvoipenvia::view.enviaOrder.createButton');
+            $ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = trans('provvoipenvia::view.enviaOrder.deleteButton');
 
             $ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
             $enviacontracts = is_null($this->envia_contract) ? new Collection() : collect([$this->envia_contract]);
@@ -182,8 +183,8 @@ class PhonenumberManagement extends \BaseModel
             }
 
             // TODO: auth - loading controller from model could be a security issue ?
-            $ret['envia TEL']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-            $ret['envia TEL']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberManagementController::_get_envia_management_jobs($this);
+            $ret['envia TEL']['EnviaAPI']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+            $ret['envia TEL']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberManagementController::_get_envia_management_jobs($this);
         } else {
             $ret = [];
         }

@@ -215,6 +215,7 @@ return [
         'Header_EditPhonenumber'	=> 'Telefonnummer bearbeiten',
         'Header_Phonenumbers'		=> 'Telefonnummer|Telefonnummern',
         'Header_EditPhonenumbers'	=> 'Telefonnummer bearbeiten',
+        'Header_PhonebookEntry'		=> 'Telefonbucheintrag',
         'Header_Tickets'			=> 'Ticket|Tickets',
         'Header_EditTickets'		=> 'Ticket bearbeiten',
         //Phone tariff
@@ -223,8 +224,9 @@ return [
         'Header_Phone tariffs'		=> 'Telefontarif|Telefontarife',
         'Header_EditPhone tariffs'	=> 'Telefontarif bearbeiten',
     //ProvVoipEnvia
-        'Header_envia TEL orders'	=> 'envia-TEL-Auftrag|envia-TEL-Aufträge',
-        'Header_envia TEL contract' => 'envia-TEL-Vertrag|envia-TEL-Verträge',
+        'Header_EnviaAPI'           => 'envia-TEL-API',
+        'Header_EnviaContract'      => 'envia-TEL-Vertrag|envia-TEL-Verträge',
+        'Header_EnviaOrder'	        => 'envia-TEL-Auftrag|envia-TEL-Aufträge',
 
         'Header_Debt'               => 'Historie Offene Posten',
         'Header_DebtResult'         => 'Offene Posten gesamt',
@@ -384,6 +386,9 @@ return [
     'Numberrange_Suffix' => 'Suffix',
     'Numberrange_Prefix' => 'Präfix',
     'Numberrange_Type' => 'Typ',
+
+// VoIP
+    'PhonebookEntry' => 'Telefonbucheintrag',
 
 // Error
     'error_specify_id'          => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',

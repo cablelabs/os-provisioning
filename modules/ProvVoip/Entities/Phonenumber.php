@@ -222,9 +222,8 @@ class Phonenumber extends \BaseModel
 
         if (\Module::collections()->has('ProvVoipEnvia')) {
             // TODO: auth - loading controller from model could be a security issue ?
-            $ret['Edit']['envia TEL API']['html'] = '<h4>Available envia TEL API jobs</h4>';
-            $ret['Edit']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-            $ret['Edit']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
+            $ret['Edit']['EnviaAPI']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+            $ret['Edit']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberController::_get_envia_management_jobs($this);
         }
 
         if (\Module::collections()->has('VoipMon')) {
