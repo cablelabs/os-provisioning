@@ -41,9 +41,14 @@ class cpeHostnameCommand extends Command
     {
         $pw = env('DNS_PASSWORD');
         $domain = ProvBase::first()->domain_name;
+        $zones = array_map(function ($zone) {
+            return basename($zone, '.zone');
+        }, glob('/var/named/dynamic/*in-addr.arpa.zone'));
+
+        $zones[] = $domain;
 
         // remove all .cpe.$domain forward and reverse DNS entries
-        foreach ([$domain, 'in-addr.arpa'] as $zone) {
+        foreach ($zones as $zone) {
             $cmd = shell_exec("dig -tAXFR $zone | grep '\.cpe\.$domain.' | awk '{ print \"update delete\", $1 }'; echo send");
             $handle = popen("/usr/bin/nsupdate -v -l -y dhcpupdate:$pw", 'w');
             fwrite($handle, $cmd);
