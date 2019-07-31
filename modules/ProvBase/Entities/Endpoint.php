@@ -87,11 +87,10 @@ class Endpoint extends \BaseModel
                 $cmd .= "update add $this->hostname.cpe.$zone. 3600 A $this->ip\nsend\n";
                 $cmd .= "update add $rev.in-addr.arpa. 3600 PTR $this->hostname.cpe.$zone.\nsend\n";
             } else {
-                // other endpoints will get a CNAME and PTR record (mangle <-> hostname)
-                // mangle name is based on cm and cpe mac
+                // other endpoints will get a CNAME record (hostname -> mangle)
+                // mangle name is based on cm mac address
                 $mangle = exec("echo '$this->mac' | tr -cd '[:xdigit:]' | xxd -r -p | openssl dgst -sha256 -mac hmac -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())'");
                 $cmd .= "update add $this->hostname.cpe.$zone. 3600 CNAME $mangle.cpe.$zone.\nsend\n";
-                $cmd .= "update add $mangle.cpe.$zone. 3600 PTR $this->hostname.cpe.$zone.\nsend\n";
             }
         }
 
