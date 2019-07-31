@@ -111,17 +111,15 @@ return [
     'contract' => [
         'concede_credit' => 'There are yearly charged items that were already charged (by full price). Please check if the customer shall get a credit!',
         'early_cancel' => 'Do you really want to cancel this contract before tariffs end of term :date is reached?',
-        ],
-    'iteM' => [
-        'concede_credit' => 'This item was already charged (by full price). Please check if the customer shall get a credit!',
-    ],
-    'contract_nr_mismatch'  => 'Could not find the next contract number because the database query failed. This is due to the following contracts having a contract number that does not belong to their selected cost center: :nrs. Please change the cost center or let the system assign a new contract number for these contracts.',
-    'contract' => [
         'numberrange' => [
             'failure' => 'No free contract number for selected costcenter available!',
             'missing' => 'The contract number could not be determined as the costcenter does not have a number range assigned.',
         ],
     ],
+    'iteM' => [
+        'concede_credit' => 'This item was already charged (by full price). Please check if the customer shall get a credit!',
+    ],
+    'contract_nr_mismatch'  => 'Could not find the next contract number because the database query failed. This is due to the following contracts having a contract number that does not belong to their selected cost center: :nrs. Please change the cost center or let the system assign a new contract number for these contracts.',
     'cpe_log_error'         => 'was not registering on Server - No log entry found',
     'cpe_not_reachable'     => 'but not reachable from WAN-side due to manufacturing reasons (it can be possible to enable ICMP response via modem configfile)',
     'cpe_fake_lease'        => 'The DHCP server has not generated a lease for this endpoint, because the IP address is statically assigned and the server does not need to keep track of it. The following lease has been manually generated for reference only:',
