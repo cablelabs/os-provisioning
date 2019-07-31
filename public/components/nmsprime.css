@@ -488,10 +488,21 @@ table .index_check {
 .timeline-header {
     padding-bottom: 0;
 }
+
+.timeline:before{
+    left: 1% !important;
+}
+
+.timeline .timeline-icon{
+    left: -4% !important;
+}
+
 .timeline .timeline-body:before {
     top: 12px;
 }
 .timeline .timeline-body {
+    margin-right: 5%;
+    margin-left: 5%;
     padding: 10px 16px;
 }
 .timeline-header + .timeline-content, .timeline-header + .timeline-footer, .timeline-content + .timeline-footer {

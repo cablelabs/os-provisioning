@@ -34,6 +34,22 @@ class UserController extends BaseController
         $languages = BaseViewController::generateLanguageArray($languageDirectories)
                     ->put('browser', 'Browser');
 
+        $view_header_links = BaseViewController::view_main_menus();
+        $dashboard_options = ['Dashboard.index' => 'Dashboard'];
+        foreach ($view_header_links as $module_name => $typearray) {
+            if (isset($typearray['link'])) {
+                $dashboard_options[$typearray['link']] = $typearray['translated_name'];
+            }
+            if (isset($typearray['submenu'])) {
+                foreach ($typearray['submenu'] as $type => $valuearray) {
+                    $dashboard_options[$valuearray['link']] = (isset($typearray['translated_name']) ? $typearray['translated_name'] : $module_name).': '.$type;
+                }
+            }
+        }
+//        echo '<pre>';
+//        print_r($dashboard_options);
+//        exit;
+
         if ($model->exists &&
              $current_user != $model &&
              $current_user->isNotAn('admin') &&
@@ -60,6 +76,9 @@ class UserController extends BaseController
                     Bouncer::can('update', User::class) ? '' : 'disabled' => 'true', ],
                 'help' => trans('helper.assign_role'),
                 'selected' => $model->html_list($model->roles, 'name'), ],
+            ['form_type' => 'select', 'name' => 'initial_dashboard', 'description' => 'Initial Dashboard',
+                'value' => $dashboard_options,
+            ],
         ];
     }
 

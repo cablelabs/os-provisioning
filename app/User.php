@@ -59,6 +59,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         'language',
         'active',
         'password_changed_at',
+        'initial_dashboard',
     ];
 
     /**

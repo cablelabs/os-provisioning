@@ -9,7 +9,7 @@ class ProvVoipController extends BaseController
 {
     public function index()
     {
-        $title = 'Prov Voip Dashboard';
+        $title = 'VoIP Dashboard';
 
         return View::make('provvoip::index', $this->compact_prep_view(compact('title')));
     }

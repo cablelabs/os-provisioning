@@ -2,27 +2,21 @@
 
 @section('content')
 
-	<div class="col-md-12">
+    <div class="col-md-12">
 
-		<h1 class="page-header">{{ $title }}</h1>
+        <h1 class="page-header">{{ $title }}</h1>
 
-		{{--Quickstart--}}
+        {{--Quickstart--}}
 
-		<div class="row">
-			<div class="col-md-12">
-				@include('Generic.quickstart')
-			</div>
-		</div>
-	</div>
-	<div class="col-md-12">
-		<div class="row">
-			<div class="col-md-7">
+        <div class="row">
+            @DivOpen(3)
+                @include('provvoip::widgets.quickstart')
+            @DivClose()
 
-			</div>
-			<div class="col-md-5">
-				@include('provvoip::widgets.documentation')
-			</div>
-		</div>
-	</div>
-	
+            @DivOpen(5)
+                @include('provvoip::widgets.documentation')
+            @DivClose()
+        </div>
+    </div>
+
 @stop

@@ -391,11 +391,16 @@ return [
 
     'bankTransfer' => 'Bank-Transaktionen',
     'Credit' => 'Gutschrift',
+    'critical' => 'kritisch',
     'Debit' => 'Lastschrift',
     'Discard' => 'Missachte',
+    'Global notification' => 'Globale Benachrichtigung',
+    'info' => 'Info',
     'Level' => 'Level',
     'Message' => 'Nachricht',
+    'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
     'SettlementRun' => 'Abrechnungslauf',
     'Time' => 'Zeit',
     'Type' => 'Typ',
+    'warning' => 'Warnung',
 ];
