@@ -8,7 +8,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <span class="navbar-brand d-none d-sm-none d-md-block"><img src="{{asset('images/nmsprime-logo.png')}}" style="width:100%; margin-top:-10px; margin-left:5px" class=""></span>
+
+        {{-- NMSPrime Logo with link to global dashboard --}}
+        <span class="navbar-brand d-none d-sm-none d-md-block">
+          <a href="{{route('Dashboard.index')}}">
+            <img src="{{asset('images/nmsprime-logo.png')}}" style="width:100%; margin-top:-10px; margin-left:5px" class="">
+          </a>
+        </span>
+
         {{-- end mobile sidebar expand / collapse button --}}
       <div class="col tab-overflow p-t-5">
         <ul class="nav nav-pills p-t-5">
