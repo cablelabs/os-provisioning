@@ -91,7 +91,7 @@ class Endpoint extends \BaseModel
                 }
             } else {
                 // other endpoints will get a CNAME record (hostname -> mangle)
-                // mangle name is based on cm mac address
+                // mangle name is based only on cpe mac address
                 $mangle = exec("echo '$this->mac' | tr -cd '[:xdigit:]' | xxd -r -p | openssl dgst -sha256 -mac hmac -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())'");
                 $cmd .= "update add $this->hostname.cpe.$zone. 3600 CNAME $mangle.cpe.$zone.\nsend\n";
             }
