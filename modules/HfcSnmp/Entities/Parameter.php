@@ -67,8 +67,8 @@ class Parameter extends \BaseModel
         $ret = [];
 
         if ($this->oid->oid_table) {
-            $ret['Base']['SubOIDs']['view']['view'] = 'hfcreq::NetElementType.parameters';
-            $ret['Base']['SubOIDs']['view']['vars']['list'] = $this->children()->orderBy('third_dimension')->orderBy('html_id')->orderBy('id')->get() ?: [];
+            $ret['Edit']['SubOIDs']['view']['view'] = 'hfcreq::NetElementType.parameters';
+            $ret['Edit']['SubOIDs']['view']['vars']['list'] = $this->children()->orderBy('third_dimension')->orderBy('html_id')->orderBy('id')->get() ?: [];
         }
 
         return $ret;
