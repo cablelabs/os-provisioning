@@ -126,20 +126,22 @@ class PhonenumberManagementController extends \BaseController
             $trc_help = trans('helper.PhonenumberManagement_TRCWithEnvia');
             $carrier_in_help = trans('helper.PhonenumberManagement_CarrierInWithEnvia');
             $ekp_in_help = trans('helper.PhonenumberManagement_EkpInWithEnvia');
+            $ext_act_help = trans('helper.PhonenumberManagement_ExternalActivationDateWithEnvia');
+            $ext_deact_help = trans('helper.PhonenumberManagement_ExternalDeactivationDateWithEnvia');
         } else {
             $trc_help = trans('helper.PhonenumberManagement_TRC');
             $carrier_in_help = trans('helper.PhonenumberManagement_CarrierIn');
             $ekp_in_help = trans('helper.PhonenumberManagement_EkpIn');
+            $ext_act_help = trans('helper.PhonenumberManagement_ExternalActivationDate');
+            $ext_deact_help = trans('helper.PhonenumberManagement_ExternalDeactivationDate');
         }
 
         // label has to be the same like column in sql table
         $ret_tmp = [
             [
-                'form_type' => 'select',
+                'form_type' => 'text',
                 'name' => 'phonenumber_id',
                 'description' => 'Phonenumber',
-                'value' => $model->html_list($model->phonenumber(),
-                'id'),
                 'hidden' => '1',
             ],
             [
@@ -161,6 +163,7 @@ class PhonenumberManagementController extends \BaseController
                 'name' => 'external_activation_date',
                 'description' => 'External activation date',
                 'options' => ['readonly'],
+                'help' => $ext_act_help,
                 'hidden' => $hide_flags['external_activation_date'],
             ],
             [
@@ -268,6 +271,7 @@ class PhonenumberManagementController extends \BaseController
                 'name' => 'external_deactivation_date',
                 'description' => 'External deactivation date',
                 'options' => ['readonly'],
+                'help' => $ext_deact_help,
                 'hidden' => $hide_flags['external_deactivation_date'],
             ],
             [

@@ -215,6 +215,7 @@ return [
         'Header_EditPhonenumber'	=> 'Edit Phonenumber',
         'Header_Phonenumbers'		=> 'Phonenumber|Phonenumbers',
         'Header_EditPhonenumbers'	=> 'Edit Phonenumber',
+        'Header_PhonebookEntry'		=> 'Phonebook entry',
         'Header_Tickets'			=> 'Ticket|Tickets',
         'Header_EditTickets'		=> 'Edit Tickets',
         //Phone tariff
@@ -223,8 +224,9 @@ return [
         'Header_Phone tariffs'		=> 'Phonetariff|Phonetariffs',
         'Header_EditPhone tariffs'	=> 'Edit Phonetariffs',
     //ProvVoipEnvia
-        'Header_envia TEL orders'	=> 'envia TEL order|envia TEL orders',
-        'Header_envia TEL contracts' => 'envia TEL contract|envia TEL contracts',
+        'Header_EnviaAPI'           => 'envia TEL API',
+        'Header_EnviaContract'      => 'envia TEL contract|envia TEL contracts',
+        'Header_EnviaOrder'         => 'envia TEL order|envia TEL orders',
 
         'Header_Debt'               => 'Debt history',
         'Header_DebtResult'         => 'Outstanding payments total',
@@ -379,6 +381,9 @@ return [
     'Numberrange_Suffix' => 'Suffix',
     'Numberrange_Prefix' => 'Prefix',
     'Numberrange_Type' => 'Type',
+
+// VoIP
+    'PhonebookEntry' => 'Phonebook entry',
 
 // Error
     'error_specify_id'          => 'Please specify the hostname instead of the ip address.',

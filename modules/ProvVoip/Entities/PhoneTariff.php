@@ -52,12 +52,6 @@ class PhoneTariff extends \BaseModel
         return 'PhoneTariffs';
     }
 
-    // link title in index view
-    public function get_view_link_title()
-    {
-        return $this->name.' ('.$this->type.')';
-    }
-
     /**
      * Returns all purchase tariffs that are flagged as usable.
      *

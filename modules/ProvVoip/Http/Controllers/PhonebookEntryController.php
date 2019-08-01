@@ -71,18 +71,14 @@ class PhonebookEntryController extends \BaseController
             $init_values = [];
         }
 
-        // helper to set selected correctly
-        // if nothing is set we need to return an empty string – on null every entry in dropdown get a selected option
-        /* $get_selected = function($field) { */
-
-        /* 	if (!is_null($this->model->$field)) { */
-        /* 		dd($this->model->$field); */
-        /* 		return $this->model->$field; */
-        /* 	} */
-        /* 	else { */
-        /* 		return ''; */
-        /* 	} */
-        /* }; */
+        if (\Module::collections()->has('ProvVoipEnvia')) {
+            $last_update_telekom = max($model->external_creation_date, $model->external_update_date);
+            if ($last_update_telekom) {
+                \Session::push('tmp_info_above_form', trans('messages.PhonebookEntry_lastExternalUpdateTelekom').": $last_update_telekom");
+            } else {
+                \Session::push('tmp_warning_above_form', trans('messages.PhonebookEntry_noExternalUpdateTelekom'));
+            }
+        }
 
         $ret_tmp = [
 

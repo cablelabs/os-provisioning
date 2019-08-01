@@ -112,34 +112,6 @@ class PhonenumberManagement extends \BaseModel
     }
 
     /**
-     * return a list [id => number] of all phonenumbers
-     */
-    public function phonenumber_list()
-    {
-        $ret = [];
-        foreach ($this->phonenumber()['phonenumbers'] as $phonenumber) {
-            $ret[$phonenumber->id] = $phonenumber->prefix_number.'/'.$phonemumber->number;
-        }
-
-        return $ret;
-    }
-
-    /**
-     * return a list [id => number] of all phonenumber
-     */
-    public function phonenumber_list_with_dummies()
-    {
-        $ret = [];
-        foreach ($this->phonenumber() as $phonenumber_tmp) {
-            foreach ($phonenumber_tmp as $phonenumber) {
-                $ret[$phonenumber->id] = $phonenumber->prefix_number.'/'.$phonemumber->number;
-            }
-        }
-
-        return $ret;
-    }
-
-    /**
      * Get relation to trc classes.
      *
      * @author Patrick Reichel
@@ -188,7 +160,8 @@ class PhonenumberManagement extends \BaseModel
         if (\Module::collections()->has('ProvVoipEnvia')) {
             $ret['envia TEL']['EnviaOrder']['class'] = 'EnviaOrder';
             $ret['envia TEL']['EnviaOrder']['relation'] = $this->_envia_orders;
-            $ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at envia TEL';
+            $ret['envia TEL']['EnviaOrder']['options']['create_button_text'] = trans('provvoipenvia::view.enviaOrder.createButton');
+            $ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = trans('provvoipenvia::view.enviaOrder.deleteButton');
 
             $ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
             $enviacontracts = is_null($this->envia_contract) ? new Collection() : collect([$this->envia_contract]);
@@ -210,8 +183,8 @@ class PhonenumberManagement extends \BaseModel
             }
 
             // TODO: auth - loading controller from model could be a security issue ?
-            $ret['envia TEL']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-            $ret['envia TEL']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberManagementController::_get_envia_management_jobs($this);
+            $ret['envia TEL']['EnviaAPI']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+            $ret['envia TEL']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberManagementController::_get_envia_management_jobs($this);
         } else {
             $ret = [];
         }
