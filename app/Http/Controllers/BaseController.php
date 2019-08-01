@@ -729,16 +729,6 @@ class BaseController extends Controller
         // on demand overwrite base method _get_additional_data_for_edit_view($model)
         $additional_data = $this->_get_additional_data_for_edit_view($view_var);
 
-        // we explicitly set the method to call in relation links
-        // if not given we set default to “edit“ to meet former behavior
-        foreach ($relations as $rel_key => $relation) {
-            if (! array_key_exists('method', $relation)) {
-                $method = 'edit';
-            } else {
-                $method = 'show';
-            }
-        }
-
         $view_path = 'Generic.edit';
         $form_path = 'Generic.form';
 
@@ -751,8 +741,7 @@ class BaseController extends Controller
         }
 
         // $config_routes = BaseController::get_config_modules();
-        // return View::make ($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'config_routes', 'link_header', 'tabs', 'relations', 'extra_data')));
-        return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'tabs', 'relations', 'method', 'action', 'additional_data')));
+        return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'tabs', 'relations', 'action', 'additional_data')));
     }
 
     /**

@@ -71,6 +71,7 @@
                                             @include('Generic.relation', ['relation' => $relation['relation'],
                                                                           'class' => $relation['class'],
                                                                           'key' => strtolower($view_var->table).'_id',
+                                                                          'method' => $relation['method'] ?? 'edit',
                                                                           'options' => isset($relation['options']) ? ($relation['options']) : null])
                                         @endif
 

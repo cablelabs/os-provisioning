@@ -42,13 +42,10 @@ class UserController extends BaseController
             }
             if (isset($typearray['submenu'])) {
                 foreach ($typearray['submenu'] as $type => $valuearray) {
-                    $dashboard_options[$valuearray['link']] = (isset($typearray['translated_name']) ? $typearray['translated_name'] : $module_name).': '.$type;
+                    $dashboard_options[$valuearray['link']] = ($typearray['translated_name'] ?? $module_name).': '.$type;
                 }
             }
         }
-//        echo '<pre>';
-//        print_r($dashboard_options);
-//        exit;
 
         if ($model->exists &&
              $current_user != $model &&
@@ -76,7 +73,7 @@ class UserController extends BaseController
                     Bouncer::can('update', User::class) ? '' : 'disabled' => 'true', ],
                 'help' => trans('helper.assign_role'),
                 'selected' => $model->html_list($model->roles, 'name'), ],
-            ['form_type' => 'select', 'name' => 'initial_dashboard', 'description' => 'Initial Dashboard',
+            ['form_type' => 'select', 'name' => 'initial_dashboard', 'description' => 'Default login page',
                 'value' => $dashboard_options,
             ],
         ];
