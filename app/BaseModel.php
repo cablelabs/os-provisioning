@@ -32,6 +32,8 @@ class BaseModel extends Eloquent
 
     public $observer_enabled = true;
 
+    protected $connection = 'mysql';
+
     /**
      * View specific stuff
      */

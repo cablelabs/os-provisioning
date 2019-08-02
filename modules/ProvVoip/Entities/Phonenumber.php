@@ -488,11 +488,7 @@ class Phonenumber extends \BaseModel
      */
     public function cdrs()
     {
-        $this->connection = 'mysql-voipmonitor';
-        $relation = $this->hasMany('Modules\VoipMon\Entities\Cdr');
-        $this->connection = 'mysql';
-
-        return $relation;
+        return $this->hasMany('Modules\VoipMon\Entities\Cdr');
     }
 
     /**
