@@ -22,8 +22,7 @@ NOTE: will be used from form-js blade and must be called inside java context
 @if ($field['form_type'] == 'select')
     @foreach($field['select'] as $val => $hide)
         <?php $val = is_string($val) ? $val = '"'.$val.'"' : $val; ?>
-        if ($('#{!! $field['name'] !!}').val() == {!! $val !!})
-        {
+        if ($('#{!! $field['name'] !!}').val() == {!! $val !!}) {
             $(".{{$hide}}").show();
         }
     @endforeach
