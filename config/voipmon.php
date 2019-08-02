@@ -3,7 +3,7 @@
 namespace Modules\VoipMon\Entities;
 
 return [
-    'name' => 'VoIP',
+    'name' => 'VoipMon',
     'MenuItems' => [
         'CDRs' => [
             'link'	=> 'Cdr.index',
