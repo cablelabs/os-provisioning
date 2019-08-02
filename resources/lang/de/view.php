@@ -38,7 +38,7 @@ return [
         'Menu_Debt'                 => 'OP-Liste',
         'Menu_Dunning'              => 'Mahnwesen',
         'Menu_MainMenu'             => 'Hauptmenü',
-        'Menu_Node'                 => 'Übertragungspunkte',
+        'Menu_Node'                 => 'Übergabepunkte',
         'Menu_Config Page'			=> 'Systemkonfiguration',
         'Menu_Logging'				=> 'Logs',
         'Menu_Product List'			=> 'Produktangebot',
@@ -231,7 +231,7 @@ return [
 
         'Header_Debt'               => 'Historie Offene Posten',
         'Header_DebtResult'         => 'Offene Posten gesamt',
-        'Header_Node'               => 'Übertragungspunkte',
+        'Header_Node'               => 'Übergabepunkte',
         'Header_Realty'             => 'Liegenschaften',
 
     //Header Relation
