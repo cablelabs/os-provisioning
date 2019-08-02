@@ -227,7 +227,8 @@ class Phonenumber extends \BaseModel
         }
 
         if (\Module::collections()->has('VoipMon')) {
-            $ret['Monitoring']['Cdr'] = $this->cdrs()->orderBy('id', 'DESC')->get();
+            $ret['Monitoring']['Cdr']['class'] = 'Cdr';
+            $ret['Monitoring']['Cdr']['relation'] = $this->cdrs()->orderBy('id', 'DESC')->get();
         }
 
         return $ret;
