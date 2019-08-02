@@ -89,6 +89,8 @@ echo "# Use /etc/nmsprime/env/*.env files for configuration" > "$dir/.env"
 # create default user roles to be later assigned to users
 /opt/rh/rh-php71/root/usr/bin/php artisan auth:roles
 
+/opt/rh/rh-php71/root/usr/bin/php artisan config:cache
+
 # Note: needs to run last. storage/logs is only available after artisan optimize
 chown -R apache storage bootstrap/cache /var/log/nmsprime
 
