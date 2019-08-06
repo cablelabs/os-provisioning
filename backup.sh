@@ -97,6 +97,8 @@ fi
 
 mkdir -p "/root/$db_dir"
 for db in cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc; do
+# centos8
+#for db in cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc radius; do
 	case "$db" in
 	'cacti')
 		auth=$(php -r 'require_once "/etc/cacti/db.php"; echo "$database_default\n$database_password\n$database_username\n";' | xargs)
@@ -106,6 +108,9 @@ for db in cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc; do
 		;;
 	'nmsprime_ccc')
 		auth=$(grep '^CCC_DB_DATABASE\|^CCC_DB_USERNAME\|^CCC_DB_PASSWORD' /etc/nmsprime/env/ccc.env | sort | cut -d'=' -f2 | xargs)
+		;;
+	'radius')
+		auth=$(grep '^RADIUS_DB_DATABASE\|^RADIUS_DB_USERNAME\|^RADIUS_DB_PASSWORD' /etc/nmsprime/env/provbase.env | sort | cut -d'=' -f2 | xargs)
 		;;
 	*)
 		auth=$(awk "/\[$db\]/{flag=1;next}/\[/{flag=0}flag" /etc/icingaweb2/resources.ini | grep '^dbname\|^username\|^password' | sort | cut -d'=' -f2 | xargs)

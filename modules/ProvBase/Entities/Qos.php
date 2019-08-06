@@ -30,6 +30,11 @@ class Qos extends \BaseModel
         return $this->hasMany('Modules\BillingBase\Entities\Price');
     }
 
+    public function radgroupreplies()
+    {
+        return $this->hasMany('Modules\ProvBase\Entities\RadGroupReply', 'groupname');
+    }
+
     // Name of View
     public static function view_headline()
     {
@@ -86,15 +91,34 @@ class Qos extends \BaseModel
 
 /**
  * Qos Observer Class
- * Handles changes on CMs
+ * Handles changes on QoSs
  */
 class QosObserver
 {
-    public function creating($q)
+    public function created($qos)
     {
+        foreach (RadGroupReply::$radiusAttributes as $key => $attributes) {
+            foreach ($attributes as $attribute) {
+                $new = new RadGroupReply;
+                $new->groupname = $qos->id;
+                $new->attribute = $attribute;
+                $new->op = ':=';
+                $new->value = $qos->{$key};
+                $new->save();
+            }
+        }
     }
 
-    public function updating($q)
+    public function updated($qos)
     {
+        // update only ds/us if their values were changed
+        foreach (array_intersect_key(RadGroupReply::$radiusAttributes, $qos->getDirty()) as $key => $attributes) {
+            $qos->radgroupreplies()->whereIn('attribute', $attributes)->update(['value' => $qos->{$key}]);
+        }
+    }
+
+    public function deleted($qos)
+    {
+        $qos->radgroupreplies()->delete();
     }
 }

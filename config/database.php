@@ -170,6 +170,19 @@ return [
             'strict'    => false,
         ],
 
+        // mysql freeradius connection
+        'mysql-radius' => [
+            'driver'    => 'mysql',
+            'host'      => env('RADIUS_DB_HOST', env('DB_HOST', 'localhost')),
+            'database'  => env('RADIUS_DB_DATABASE', env('DB_DATABASE', 'radius')),
+            'username'  => env('RADIUS_DB_USERNAME', env('DB_USERNAME', 'radius')),
+            'password'  => env('RADIUS_DB_PASSWORD', env('DB_PASSWORD', 'radpass')),
+            'charset'   => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],
+
         'mysql-netuser' => [
             'driver'    => 'mysql',
             'host'      => env('DB_IMPORT_HOST', 'localhost'),
