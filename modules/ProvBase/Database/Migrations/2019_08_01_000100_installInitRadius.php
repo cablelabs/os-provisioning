@@ -11,7 +11,8 @@ class InstallInitRadius extends BaseMigration
      */
     public function up()
     {
-        \DB::unprepared(file_get_contents('/etc/raddb/mods-config/sql/main/mysql/schema.sql'));
+        // use schema from git, since it adds the id column in radusergroup
+        \DB::unprepared(file_get_contents('https://raw.githubusercontent.com/FreeRADIUS/freeradius-server/b838f5178fe092598fb3459dedb5e1ea49b41340/raddb/mods-config/sql/main/mysql/schema.sql'));
 
         $defReply = new Modules\ProvBase\Entities\RadGroupReply;
         $defReply->groupname = $defReply::$defaultGroup;
