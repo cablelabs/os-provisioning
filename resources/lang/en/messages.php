@@ -596,6 +596,10 @@ return [
         'delete' => [
             'success' => 'Deleted :model :id',
             'fail' => 'Could not delete :model :id',
+            'failChild' => 'Cannot delete :model :id: :child_model :child_id cannot be deleted',
+            'failChildNM' => 'Cannot delete :model :id: n:m relation with :child_model :child_id cannot be deleted',
+            'noEntry' => 'No entry for deletion specified',
+            'multiSuccess' => 'Deleted :deleted out of :to_delete :model',
         ],
     ],
     'pleaseWait'                => 'This may take a few seconds. Please wait until the process has finished.',
@@ -649,4 +653,5 @@ return [
     'Carrier out'               => 'Carrier out',
     'geopos_x_y'                => 'Geopos Lon/Lat',
     'error'                     => 'Error',
+    'couldNotDelete'            => 'Could not delete :0',
 ];
