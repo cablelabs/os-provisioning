@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Database\Schema\Blueprint;
+
 class InstallInitRadius extends BaseMigration
 {
     protected $tablename = '';
@@ -11,8 +13,19 @@ class InstallInitRadius extends BaseMigration
      */
     public function up()
     {
+        Schema::table('modem', function (Blueprint $table) {
+            // align with freeradius DB
+            $table->string('ppp_username', 64)->default('')->index();
+        });
+
         // use schema from git, since it adds the id column in radusergroup
         \DB::unprepared(file_get_contents('https://raw.githubusercontent.com/FreeRADIUS/freeradius-server/b838f5178fe092598fb3459dedb5e1ea49b41340/raddb/mods-config/sql/main/mysql/schema.sql'));
+
+        foreach (['radacct', 'radcheck', 'radpostauth', 'radreply', 'radusergroup'] as $table) {
+            Schema::table($table, function (Blueprint $table) {
+                $table->foreign('username')->references('ppp_username')->on('modem')->onDelete('cascade')->onUpdate('cascade');
+            });
+        }
 
         $defReply = new Modules\ProvBase\Entities\RadGroupReply;
         $defReply->groupname = $defReply::$defaultGroup;
