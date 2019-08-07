@@ -207,38 +207,35 @@ class PhonenumberManagement extends \BaseModel
             // check from where the deletion request has been triggered and set the correct var to show information
             $prev = explode('?', \URL::previous())[0];
             $prev = \Str::lower($prev);
+            if (\Str::endsWith($prev, 'edit')) {
+                $msg_target = 'tmp_error_above_relations';
+            } else {
+                $msg_target = 'tmp_error_above_index_list';
+            }
 
             // check if there is a not completely terminated envia TEL contract related to this management
             if ($this->envia_contract) {
                 if (in_array($this->envia_contract->state, ['Aktiv', 'In Realisierung'])) {
                     $msg = "Cannot delete PhonenumberManagement $this->id: There is an active or pending envia TEL contract";
-                    if (\Str::endsWith($prev, 'edit')) {
-                        \Session::push('tmp_error_above_relations', $msg);
-                    } else {
-                        \Session::push('tmp_error_above_index_list', $msg);
-                    }
+                    \Session::push($msg_target, $msg);
 
                     return false;
                 }
                 if (in_array($this->envia_contract->state, ['Gekündigt'])) {
                     if ($this->envia_contract->end_date > \Carbon\Carbon::now()->toDateTimeString()) {
                         $msg = "Cannot delete PhonenumberManagement $this->id: There is an envia TEL contract with enddate greater or equal than today";
-                        if (\Str::endsWith($prev, 'edit')) {
-                            \Session::push('tmp_error_above_relations', $msg);
-                        } else {
-                            \Session::push('tmp_error_above_index_list', $msg);
-                        }
+                        \Session::push($msg_target, $msg);
 
                         return false;
                     }
                 }
             }
 
-            // check start and end dates
-
             // remove PhonebookEntry if one
             if ($this->phonebookentry) {
-                $this->phonebookentry->delete();
+                $msg = trans('provvoipenvia::messages.phonenumbermanagementNotDeletableReasonPhonebookentry', [$this->id]);
+                \Session::push($msg_target, $msg);
+                return false;
             }
         }
 
