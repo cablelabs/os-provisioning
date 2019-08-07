@@ -221,7 +221,7 @@ class PhonenumberManagement extends \BaseModel
                     return false;
                 }
                 if (in_array($this->envia_contract->state, ['Gekündigt'])) {
-                    if ($this->envia_contract->end_date <= \Carbon\Carbon::now()->toDateTimeString()) {
+                    if ($this->envia_contract->end_date > \Carbon\Carbon::now()->toDateTimeString()) {
                         $msg = "Cannot delete PhonenumberManagement $this->id: There is an envia TEL contract with enddate greater or equal than today";
                         if (\Str::endsWith($prev, 'edit')) {
                             \Session::push('tmp_error_above_relations', $msg);
