@@ -16,6 +16,8 @@ class InstallInitRadius extends BaseMigration
         Schema::table($this->tablename, function (Blueprint $table) {
             // align with freeradius DB
             $table->string('ppp_username', 64)->nullable();
+            // nmsprime default
+            $table->string('ppp_password', 191)->nullable();
         });
 
         // use schema from git, since it adds the id column in radusergroup

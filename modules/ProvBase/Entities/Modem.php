@@ -275,6 +275,16 @@ class Modem extends \BaseModel
         return $this->belongsTo(\Modules\PropertyManagement\Entities\Realty::class);
     }
 
+    public function radcheck()
+    {
+        return $this->hasOne('Modules\ProvBase\Entities\RadCheck', 'username', 'ppp_username');
+    }
+
+    public function radusergroups()
+    {
+        return $this->hasMany('Modules\ProvBase\Entities\RadUserGroup', 'username', 'ppp_username');
+    }
+
     /*
      * Relation Views
      */
@@ -1342,6 +1352,108 @@ class Modem extends \BaseModel
 
         return $arr;
     }
+
+    /**
+     * Check if modem throughput is provisioned via PPP(oE)
+     *
+     * @return  true if PPP(oE) is used
+     *          false if PPP(oE) is not used
+     *
+     * @author Ole Ernst
+     */
+    public function isPPP()
+    {
+        return boolval($this->ppp_username);
+    }
+
+    /**
+     * Synchronize radcheck with modem table, if PPPoE is used.
+     *
+     * @author Ole Ernst
+     */
+    private function updateRadCheck($delete)
+    {
+        if ($delete || ! $this->isPPP() || ! $this->internet_access) {
+            $this->radcheck()->delete();
+
+            return;
+        }
+
+        // add RadCheck, if it doesn't exist
+        if (! $this->radcheck()->count()) {
+            $psw = $this->ppp_password;
+            if (! $psw) {
+                $psw = \Acme\php\Password::generate_password();
+                // don't trigger an event
+                // TODO: this should be done using https://stackoverflow.com/a/55931917 once we are at laravel 5.7
+                \DB::update('UPDATE modem set ppp_password = ? where deleted_at is NULL and id = ?', [$psw, $this->id]);
+            }
+
+            $check = new RadCheck;
+            $check->username = $this->ppp_username;
+            $check->attribute = 'Cleartext-Password';
+            $check->op = ':=';
+            $check->value = $psw;
+            $check->save();
+
+            return;
+        }
+
+        // update existing RadCheck, if password was changed
+        if (array_key_exists('ppp_password', $this->getDirty())) {
+            $check = $this->radcheck;
+            $check->value = $this->ppp_password;
+            $check->save();
+        }
+    }
+
+    /**
+     * Synchronize radusergroups with modem table, if PPPoE is used.
+     *
+     * @author Ole Ernst
+     */
+    private function updateRadUserGroups($delete)
+    {
+        if ($delete || ! $this->isPPP() || ! $this->internet_access) {
+            $groups = $this->radusergroups()->delete();
+
+            return;
+        }
+
+        // add RadUserGroups, if non-exisiting
+        if (! $this->radusergroups()->count()) {
+            // default and QoS-specific group
+            foreach ([RadGroupReply::$defaultGroup, $this->qos_id] as $groupname) {
+                $group = new RadUserGroup;
+                $group->username = $this->ppp_username;
+                $group->groupname = $groupname;
+                $group->save();
+            }
+
+            return;
+        }
+
+        // update existing RadUserGroups, if qos was changed
+        if (array_key_exists('qos_id', $this->getDirty())) {
+            $this->radusergroups()
+                ->where('groupname', '!=', RadGroupReply::$defaultGroup)
+                ->update(['groupname' => $this->qos_id]);
+        }
+    }
+
+    /**
+     * Synchronize the freeradius tables with NMSPrime.
+     * This function should be called on created(), updated() and deleted()
+     * in the modem observer.
+     *
+     * @author Ole Ernst
+     */
+    public function updateRadius($delete)
+    {
+        $this->updateRadCheck($delete);
+        $this->updateRadUserGroups($delete);
+        // TODO: restart modem
+    }
 }
 
 /**
@@ -1362,9 +1474,11 @@ class ModemObserver
         $modem->save();	 // forces to call the updating() and updated() method of the observer !
         Modem::create_ignore_cpe_dhcp_file();
 
-        if (\Module::collections()->has('ProvMon')) {
+        $modem->updateRadius(false);
+
+        if (\Module::collections()->has('ProvMon') && ! $modem->isPPP()) {
             Log::info("Create cacti diagrams for modem: $modem->hostname");
-            // \Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
+            \Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
         }
 
         if (\Module::collections()->has('PropertyManagement')) {
@@ -1426,7 +1540,7 @@ class ModemObserver
             if (multi_array_key_exists(['x', 'y'], $diff)) {
                 // suppress output in this case
                 ob_start();
-                // \Modules\HfcCustomer\Entities\Mpr::ruleMatching($modem);
+                \Modules\HfcCustomer\Entities\Mpr::ruleMatching($modem);
                 ob_end_clean();
             }
         }
@@ -1450,6 +1564,10 @@ class ModemObserver
             $modem->make_configfile();
         }
 
+        if (! $modem->wasRecentlyCreated) {
+            $modem->updateRadius(false);
+        }
+
         // ATTENTION:
         // If we ever think about moving modems to other contracts we have to delete envia TEL related stuff, too –
         // check contract_ext* and installation_address_change_date
@@ -1470,5 +1588,7 @@ class ModemObserver
         $modem->make_dhcp_cm(true);
         $modem->restart_modem();
         $modem->delete_configfile();
+
+        $modem->updateRadius(true);
     }
 }
