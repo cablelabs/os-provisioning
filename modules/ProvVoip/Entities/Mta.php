@@ -378,7 +378,7 @@ class MtaObserver
                 $mta->modem->make_configfile();
 
                 // in case mta mac begun with or is changed to 'ff:' the modem dhcp entry has to be changed as well
-                $mta->modem->make_dhcp_cm();
+                $mta->modem->make_dhcp_cm(false, true);
             }
 
             $mta->make_configfile();
