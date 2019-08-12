@@ -38,33 +38,33 @@ class CmtsController extends \BaseController
             ];
         }
 
-        // CMTS type selection based on CMTS company
+        // CMTS series selection based on CMTS company
         if (\Request::filled('company')) { // for auto reload
             $company = \Request::get('company');
         } elseif ($model->exists) { // else if using edit.blade
             $company = $model->company;
             $init_values += [
-                'type' => $model->type,
+                'series' => $model->series,
             ];
         } else { // a fresh create
             $company = 'Cisco';
         }
 
-        // The CMTS company and type Array
-        foreach (config('provbase.cmts') as $vendor => $__type) {
+        // The CMTS company and series Array
+        foreach (config('provbase.cmts') as $vendor => $__series) {
             $company_array[$vendor] = $vendor;
         }
 
-        $type = config('provbase.cmts.'.$company);
+        $series = config('provbase.cmts.'.$company);
 
         /**
          * label has to be the same like column in sql table
          */
-        // TODO: type should be jquery based select depending on the company
+        // TODO: series should be jquery based select depending on the company
         // TODO: State and Monitoring without functionality -> hidden
         $ret_tmp = [
             ['form_type' => 'select', 'name' => 'company', 'description' => 'Company', 'value' => $company_array],
-            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $type],
+            ['form_type' => 'select', 'name' => 'series', 'description' => 'Series', 'value' => $series],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname'],
             ['form_type' => 'ip', 'name' => 'ip', 'description' => 'IP', 'help' => 'Online'],
             ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'SNMP Private Community String'],

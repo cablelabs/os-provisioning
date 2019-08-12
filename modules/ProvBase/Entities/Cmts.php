@@ -52,7 +52,7 @@ class Cmts extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         $ret = ['table' => $this->table,
-            'index_header' => [$this->table.'.id', $this->table.'.hostname', $this->table.'.ip', $this->table.'.company', $this->table.'.type'],
+            'index_header' => [$this->table.'.id', $this->table.'.hostname', $this->table.'.ip', $this->table.'.company', $this->table.'.series'],
             'header' =>  $this->hostname,
             'bsclass' => $bsclass,
             'order_by' => ['0' => 'asc'], ];
@@ -210,8 +210,8 @@ class Cmts extends \BaseModel
         // NOTE: this is quit insecure and should be a different psw that the encrypted ones above!
         $this->vty_psw = env('CMTS_VTY_PASSWORD', 'adminvty');
 
-        // type specific settings
-        switch ($this->type) {
+        // series specific settings
+        switch ($this->series) {
             case 'ubr7225':
                 $this->interface = 'GigabitEthernet0/1';
                 break;
@@ -244,7 +244,7 @@ class Cmts extends \BaseModel
         $this->admin_psw = '<span title="CMTS_ADMIN_PASSWORD and CMTS_SAVE_ENCRYPTED_PASSWORDS"><b>'.$this->admin_psw.'</b></span>';
         $this->vty_psw = '<span title="CMTS_VTY_PASSWORD"><b>'.$this->vty_psw.'</b></span>';
         $this->prov_ip = '<span title="Set in Global Config Page / Provisioning / Provisioning Server IP"><b>'.$this->prov_ip.'</b></span>';
-        $this->interface = '<span title="Depending on CMTS Device Company and Type"><b>'.$this->interface.'</b></span>';
+        $this->interface = '<span title="Depending on CMTS Device Company and Series"><b>'.$this->interface.'</b></span>';
         $this->domain = '<span title="Set in Global Config Page / Provisioning / Domain Name"><b>'.$this->domain.'</b></span>';
         $this->router_ip = '<span title="CMTS_DEFAULT_GW"><b>'.$this->router_ip.'</b></span>';
         $this->netmask = '<span title="CMTS_IP_NETMASK"><b>'.$this->netmask.'</b></span>';
