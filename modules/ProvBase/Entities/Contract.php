@@ -31,10 +31,14 @@ class Contract extends \BaseModel
             'company' => 'required_if:salutation,Firma,Behörde',
             'firstname' => 'required_if:salutation,Herr,Frau',
             'lastname' => 'required_if:salutation,Herr,Frau',
-            'street' => 'required',
-            'house_number' => 'required',
-            'zip' => 'required',
-            'city' => 'required',
+
+            'street' => 'required_without_all:realty_id,apartment_id',
+            'house_number' => 'required_without_all:realty_id,apartment_id',
+            'zip' => 'required_without_all:realty_id,apartment_id',
+            'city' => 'required_without_all:realty_id,apartment_id',
+            // Only one contract per apartment
+            'apartment_id' => 'nullable|unique:contract,apartment_id,'.$id.',id,deleted_at,NULL',
+
             'phone' => 'required',
             'email' => 'nullable|email',
             'birthday' => 'required_if:salutation,Herr,Frau|nullable|date',
@@ -1308,6 +1312,35 @@ class Contract extends \BaseModel
 
         // return $sum;
     }
+
+    /**
+     * Store address from Realty/Apartment internally in contract table too
+     */
+    public function updateAddressFromProperty()
+    {
+        if (! \Module::collections()->has('PropertyManagement')) {
+            return;
+        }
+
+        $realty = $this->getRealty();
+
+        if (! $realty) {
+            return;
+        }
+
+        self::where('id', $this->id)->update([
+            'street' => $realty->street,
+            'house_number' => $realty->house_nr,
+            'zip' => $realty->zip,
+            'city' => $realty->city,
+            'district' => $realty->district,
+            ]);
+    }
+
+    public function getRealty()
+    {
+        return $this->apartment ? $this->apartment->realty : $this->realty;
+    }
 }
 
 /**
@@ -1330,6 +1363,8 @@ class ContractObserver
     public function created($contract)
     {
         $contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
+
+        $contract->updateAddressFromProperty();
     }
 
     public function updating($contract)
@@ -1391,6 +1426,10 @@ class ContractObserver
             if ($concede_credit) {
                 \Session::put('alert.warning', trans('messages.contract.concede_credit'));
             }
+        }
+
+        if (multi_array_key_exists(['realty_id', 'apartment_id'], $changed_fields)) {
+            $contract->updateAddressFromProperty();
         }
     }
 
