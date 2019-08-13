@@ -204,27 +204,18 @@ class PhonenumberManagement extends \BaseModel
         // we have to check this here as using ModemObserver::deleting() with return false does not prevent the monster from deleting child model instances!
         if (\Module::collections()->has('ProvVoipEnvia')) {
 
-            // check from where the deletion request has been triggered and set the correct var to show information
-            $prev = explode('?', \URL::previous())[0];
-            $prev = \Str::lower($prev);
-            if (\Str::endsWith($prev, 'edit')) {
-                $msg_target = 'tmp_error_above_relations';
-            } else {
-                $msg_target = 'tmp_error_above_index_list';
-            }
-
             // check if there is a not completely terminated envia TEL contract related to this management
             if ($this->envia_contract) {
                 if (in_array($this->envia_contract->state, ['Aktiv', 'In Realisierung'])) {
-                    $msg = "Cannot delete PhonenumberManagement $this->id: There is an active or pending envia TEL contract";
-                    \Session::push($msg_target, $msg);
+                    $msg = trans('provvoipenvia::messages.phonenumbermanagementNotDeletable', [$this->id]).trans('provvoipenvia::messages.phonenumbermanagementNotDeletableReasonActiveEnviaContract');
+                    $this->addAboveMessage($msg, 'error');
 
                     return false;
                 }
                 if (in_array($this->envia_contract->state, ['Gekündigt'])) {
                     if ($this->envia_contract->end_date > \Carbon\Carbon::now()->toDateTimeString()) {
-                        $msg = "Cannot delete PhonenumberManagement $this->id: There is an envia TEL contract with enddate greater or equal than today";
-                        \Session::push($msg_target, $msg);
+                        $msg = trans('provvoipenvia::messages.phonenumbermanagementNotDeletable', [$this->id]).trans('provvoipenvia::messages.phonenumbermanagementNotDeletableReasonEnviaContractEndDate');
+                        $this->addAboveMessage($msg, 'error');
 
                         return false;
                     }
@@ -233,11 +224,12 @@ class PhonenumberManagement extends \BaseModel
 
             // remove PhonebookEntry if one
             if ($this->phonebookentry) {
-                $msg = trans('provvoipenvia::messages.phonenumbermanagementNotDeletableReasonPhonebookentry', [$this->id]);
-                \Session::push($msg_target, $msg);
+                $msg = trans('provvoipenvia::messages.phonenumbermanagementNotDeletable', [$this->id]).trans('provvoipenvia::messages.phonenumbermanagementNotDeletableReasonPhonebookentry');
+                $this->addAboveMessage($msg, 'error');
                 return false;
             }
         }
+
 
         // when arriving here: start the standard deletion procedure
         return parent::delete();

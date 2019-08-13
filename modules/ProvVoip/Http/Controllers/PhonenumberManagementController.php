@@ -45,7 +45,8 @@ class PhonenumberManagementController extends \BaseController
                 $mgmt = PhonenumberManagement::find($id);
                 $mgmt->phonenumber->contract_external_id = null;
                 $mgmt->phonenumber->save();
-                Session::push('tmp_info_above_form', 'Removed envia TEL contract reference. This can be restored via „Get envia TEL contract reference“.');
+                $msg = trans('provvoipenvia::messages.phonenumbermanagementRemovedEnviaRef');
+                $mgmt->addAboveMessage($msg, 'info', 'form');
 
                 return \Redirect::back();
             }

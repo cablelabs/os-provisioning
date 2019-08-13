@@ -638,8 +638,8 @@ class BaseController extends Controller
         if ($validator->fails()) {
             Log::info('Validation Rule Error: '.$validator->errors());
 
-            $msg = 'Input invalid – please correct the following errors';
-            Session::push('tmp_error_above_form', $msg);
+            $msg = trans('validation.invalid_input');
+            $obj->addAboveMessage($msg, 'error', 'form');
 
             return Redirect::back()->withErrors($validator)->withInput();
         }
@@ -659,7 +659,7 @@ class BaseController extends Controller
         }
 
         $msg = trans('messages.created');
-        Session::push('tmp_success_above_form', $msg);
+        $obj->addAboveMessage($msg, 'success', 'form');
 
         return Redirect::route(NamespaceController::get_route_name().'.edit', $id)->with('message', $msg)->with('message_color', 'success');
     }
@@ -763,8 +763,8 @@ class BaseController extends Controller
         if ($validator->fails()) {
             Log::info('Validation Rule Error: '.$validator->errors());
 
-            $msg = 'Input invalid – please correct the following errors';
-            Session::push('tmp_error_above_form', $msg);
+            $msg = trans('validation.invalid_input');
+            $obj->addAboveMessage($msg, 'error', 'form');
 
             return Redirect::back()->withErrors($validator)->withInput();
         }
@@ -793,11 +793,11 @@ class BaseController extends Controller
         if (! Session::has('error')) {
             $msg = 'Updated!';
             $color = 'success';
-            Session::push('tmp_success_above_form', $msg);
+            $obj->addAboveMessage($msg, 'success', 'form');
         } else {
             $msg = Session::get('error');
             $color = 'warning';
-            Session::push('tmp_error_above_form', $msg);
+            $obj->addAboveMessage($msg, 'error', 'form');
         }
 
         $route_model = NamespaceController::get_route_name();
@@ -964,15 +964,15 @@ class BaseController extends Controller
         $deleted = 0;
         // bulk delete
         if ($id == 0) {
+            $obj = static::get_model_obj();
+
             // Error Message when no Model is specified - NOTE: delete_message must be an array of the structure below !
             if (! Request::get('ids')) {
-                $message = 'No Entry For Deletion specified';
-                Session::push('tmp_error_above_index_list', $message);
+                $message = trans('messages.base.delete.noEntry');
+                $obj->addAboveMessage($message, 'error');
 
                 return Redirect::back()->with('delete_message', ['message' => $message, 'class' => NamespaceController::get_route_name(), 'color' => 'danger']);
             }
-
-            $obj = static::get_model_obj();
 
             foreach (Request::get('ids') as $id => $val) {
                 $obj = $obj->findOrFail($id);
@@ -1003,17 +1003,17 @@ class BaseController extends Controller
         $class = NamespaceController::get_route_name();
 
         if (! $deleted && ! $obj->force_delete) {
-            $message = 'Could not delete '.$class;
-            // Session::push('tmp_error_above_form', $message);
             $color = 'danger';
+            $message = trans('messages.base.delete.fail', ['model' => $class, 'id' => '']);
+            $obj->addAboveMessage($message, 'error');
         } elseif (($deleted == $to_delete) || $obj->force_delete) {
-            $message = 'Successful deleted '.$class;
-            // Session::push('tmp_success_above_form', $message);
             $color = 'success';
+            $message = trans('messages.base.delete.success', ['model' => $class, 'id' => '']);
+            $obj->addAboveMessage($message, 'success');
         } else {
-            $message = 'Deleted '.$deleted.' out of '.$to_delete.' '.$class;
             $color = 'warning';
-            Session::push('tmp_warning_above_form', $message);
+            $message = trans('messages.base.delete.multiSuccess', ['deleted' => $deleted, 'to_delete' => $to_delete, 'model' => $class]);
+            $obj->addAboveMessage($message, 'warning');
         }
 
         return Redirect::back()->with('delete_message', ['message' => $message, 'class' => $class, 'color' => $color]);

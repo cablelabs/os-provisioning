@@ -869,10 +869,6 @@ class BaseModel extends Eloquent
      */
     public function delete()
     {
-        // check from where the deletion request has been triggered and set the correct var to show information
-        $prev = explode('/', explode('?', \URL::previous())[0]);
-        $target = preg_match('/[a-z]/i', end($prev)) ? 'above_index_list' : 'above_relations';
-
         if ($this->delete_children) {
             $children = $this->get_all_children();
             // find and delete all children
@@ -883,8 +879,8 @@ class BaseModel extends Eloquent
                 // if one direct or indirect child cannot be deleted:
                 // do not delete anything
                 if (! $child->delete()) {
-                    $msg = 'Cannot delete '.$this->get_model_name()." $this->id: ".$child->get_model_name()." $child->id cannot be deleted";
-                    Session::push("tmp_error_$target", $msg);
+                    $msg = trans('messages.base.delete.failChild', ['model' => $this->get_model_name(), 'id' => $this->id, 'child_model' => $child->get_model_name(), 'child_id' => $child->id]);
+                    $this->addAboveMessage($msg, 'error');
 
                     return false;
                 }
@@ -900,8 +896,8 @@ class BaseModel extends Eloquent
                     // Keep Pivot Entries and children if method is not specified and just log a warning message
                     \Log::warning($this->get_model_name().' - N:M pivot entry deletion handling not implemented for '.$child->get_model_name());
                 } elseif (! $this->{$delete_method}($child)) {
-                    $msg = 'Cannot delete '.$this->get_model_name()." $this->id: n:m relation with ".$child->get_model_name()." $child->id. cannot be deleted";
-                    Session::push("tmp_error_$target", $msg);
+                    $msg = trans('messages.base.delete.failChildNM', ['model' => $this->get_model_name(), 'id' => $this->id, 'child_model' => $child->get_model_name(), 'child_id' => $child->id]);
+                    $this->addAboveMessage($msg, 'error');
 
                     return false;
                 }
@@ -912,10 +908,10 @@ class BaseModel extends Eloquent
         $deleted = $this->_delete();
         if ($deleted) {
             $msg = trans('messages.base.delete.success', ['model' => $this->get_model_name(), 'id' => $this->id]);
-            Session::push("tmp_success_$target", $msg);
+            $this->addAboveMessage($msg, 'success');
         } else {
             $msg = trans('messages.base.delete.fail', ['model' => $this->get_model_name(), 'id' => $this->id]);
-            Session::push("tmp_error_$target", $msg);
+            $this->addAboveMessage($msg, 'error');
         }
 
         return $deleted;
