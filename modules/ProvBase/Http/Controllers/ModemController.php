@@ -105,12 +105,12 @@ class ModemController extends \BaseController
             ['form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options()],
             ['form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname'],
             ['form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname'],
-            array_merge(['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'select' => 'noProperty', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
             array_merge(['form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number'], $selectPropertyMgmt),
-            array_merge(['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'select' => 'noProperty', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
-            array_merge(['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'select' => 'noProperty', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
-            array_merge(['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'select' => 'noProperty', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
-            ['form_type' => 'text', 'name' => 'country_code', 'description' => 'Country code', 'help' => 'ISO 3166 ALPHA-2 (two characters)'],
+            array_merge(['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'country_code', 'description' => 'Country code', 'help' => 'ISO 3166 ALPHA-2 (two characters)'], $selectPropertyMgmt),
         ];
 
         if (\Module::collections()->has('PropertyManagement')) {
