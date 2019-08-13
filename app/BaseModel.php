@@ -988,6 +988,74 @@ class BaseModel extends Eloquent
 
         return true;
     }
+
+
+    /**
+     * Helper to show info line above index_list|form depending on previous URL.
+     *
+     * @param string    $msg    The message to be shown
+     * @param string    $type  The type [info|success|warning|error], default is 'info'
+     * @param string    $place  Where to show the message above [index_list, form, relations];
+     *                              if not given try to determine from previous URL
+     *
+     * @return boolean  true if message could be generated, false else
+     *
+     * @author Patrick Reichel
+     */
+    public function addAboveMessage($msg, $type='info', $place=null) {
+
+        $allowed_types = [
+            'info',     // blue
+            'success',  // green
+            'warning',  // orange
+            'error',    // red
+        ];
+        $allowed_places = [
+            'index_list',
+            'form',
+            'relations',
+        ];
+
+        // check if type is valid
+        if (!in_array($type, $allowed_types)) {
+            throw new \UnexpectedValueException('$type has to be in ['.implode('|', $allowed_types).'], “'.$type.'” given.');
+        };
+
+        // determine or check place
+        if (is_null($place)) {
+            // check from where the deletion request has been triggered and set the correct var to show information
+            // snippet taken from https://stackoverflow.com/questions/40690202/previous-route-name-in-laravel-5-1-5-8
+            try {
+                $prev_route_name = app('router')->getRoutes()->match(app('request')->create(\URL::previous()))->getName();
+            } catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception) {
+                // Exception is thrown if no mathing route found (e.g. if coming from outside).
+                \Log::warning('Could not determine previous route: '.$exception);
+                return false;
+            }
+            if (\Str::endsWith($prev_route_name, '.edit')) {
+                $place = 'form';
+            } else {
+                $place = 'index_list';
+            }
+        }
+        else {
+            if (!in_array($place, $allowed_places)) {
+                throw new \UnexpectedValueException('$place has to be in ['.implode('|', $allowed_places).'], “'.$place.'” given.');
+            };
+        };
+
+        // build the message target
+        $target = 'tmp_'.$type.'_above_'.$place;
+
+        // push to session ⇒ will be shown once via resources/views/Generic/above_infos.blade.php
+        try {
+            \Session::push($target, $msg);
+            return true;
+        } catch (\Exception $exception) {
+            \Log::error("Could not session push “$msg” to $target: ".$exception);
+            return false;
+        }
+    }
 }
 
 /**
