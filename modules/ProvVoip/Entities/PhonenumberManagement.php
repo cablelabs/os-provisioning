@@ -226,10 +226,10 @@ class PhonenumberManagement extends \BaseModel
             if ($this->phonebookentry) {
                 $msg = trans('provvoipenvia::messages.phonenumbermanagementNotDeletable', [$this->id]).trans('provvoipenvia::messages.phonenumbermanagementNotDeletableReasonPhonebookentry');
                 $this->addAboveMessage($msg, 'error');
+
                 return false;
             }
         }
-
 
         // when arriving here: start the standard deletion procedure
         return parent::delete();

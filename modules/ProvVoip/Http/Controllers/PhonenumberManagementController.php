@@ -3,7 +3,6 @@
 namespace Modules\ProvVoip\Http\Controllers;
 
 use Bouncer;
-use Session;
 use Modules\ProvVoip\Entities\EkpCode;
 use Modules\ProvVoip\Entities\TRCClass;
 use Modules\ProvVoip\Entities\CarrierCode;
