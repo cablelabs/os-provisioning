@@ -18,22 +18,6 @@ class PhonenumberManagementController extends \BaseController
     protected $index_create_allowed = false;
 
     /**
-     * Extend create: check if a phonenumber exists to attach this management to
-     *
-     * @author Patrick Reichel
-     */
-    public function create()
-    {
-        if ((! \Request::filled('phonenumber_id')) ||
-            ! (Phonenumber::find(\Request::get('phonenumber_id')))) {
-            $this->edit_view_save_button = false;
-            Session::push('tmp_error_above_form', 'Cannot create phonenumbermanagement – phonenumber ID missing or phonenumber not found');
-        }
-
-        return parent::create();
-    }
-
-    /**
      * Add functionality to clear envia TEL reference for this phonenumber(management)
      *
      * @author Patrick Reichel
