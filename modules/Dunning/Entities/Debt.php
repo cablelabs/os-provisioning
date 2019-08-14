@@ -17,6 +17,8 @@ class Debt extends \BaseModel
         return [
             'amount' => 'required',
             'date' => 'required|date',
+            'voucher_nr' => 'required',
+            'due_date' => 'date|nullable',
         ];
     }
 
