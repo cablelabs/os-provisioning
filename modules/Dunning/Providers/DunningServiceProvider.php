@@ -15,6 +15,13 @@ class DunningServiceProvider extends ServiceProvider
     protected $defer = false;
 
     /**
+     * The artisan commands provided by this module
+     */
+    protected $commands = [
+        'Modules\Dunning\Console\ImportDebtCommand',
+    ];
+
+    /**
      * Boot the application events.
      *
      * @return void
@@ -34,7 +41,7 @@ class DunningServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->commands($this->commands);
     }
 
     /**
