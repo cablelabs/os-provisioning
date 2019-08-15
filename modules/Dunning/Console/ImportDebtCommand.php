@@ -21,8 +21,9 @@ class ImportDebtCommand extends Command
     const VOUCHER_NR = 4;
     const DATE = 5;
     const AMOUNT = 9;
-    const DUN_DATE = 10;
-    const INDICATOR = 11;
+    const DESC = 10;
+    const DUN_DATE = 11;
+    const INDICATOR = 12;
 
     /**
      * Execute the console command
@@ -74,6 +75,7 @@ class ImportDebtCommand extends Command
             'amount' => str_replace(',', '.', $line[self::AMOUNT]),
             'date' => date('Y-m-d', strtotime($line[self::DATE])),
             'dunning_date' => $line[self::DUN_DATE] ? date('Y-m-d', strtotime($line[self::DUN_DATE])) : null,
+            'description' => $line[self::DESC],
             'indicator' => $line[self::INDICATOR] > 0 ? $line[self::INDICATOR] : 0,
             ]);
     }
