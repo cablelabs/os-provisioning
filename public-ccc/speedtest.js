@@ -8,9 +8,9 @@
 /*
    This is the main interface between your webpage and the speedtest.
    It hides the speedtest web worker to the page, and provides many convenient functions to control the test.
-   
+
    The best way to learn how to use this is to look at the basic example, but here's some documentation.
-  
+
    To initialize the test, create a new Speedtest object:
     var s=new Speedtest();
    Now you can think of this as a finite state machine. These are the states (use getState() to see them):
@@ -36,7 +36,7 @@
             - ulProgress: progress of the upload test as a float 0-1
             - pingProgress: progress of the ping/jitter test as a float 0-1
             - testState: state of the test (-1=not started, 0=starting, 1=download test, 2=ping+jitter test, 3=upload test, 4=finished, 5=aborted)
-            - clientIp: IP address of the client performing the test (and optionally ISP and distance) 
+            - clientIp: IP address of the client performing the test (and optionally ISP and distance)
         At the end of the test, the onend function will be called, with a boolean specifying whether the test was aborted or if it ended normally.
         The test can be aborted at any time with abort().
         At the end of the test, it will move to state 4
@@ -65,7 +65,6 @@ Speedtest.prototype = {
    * Change one of the test settings from their defaults.
    * - parameter: string with the name of the parameter that you want to set
    * - value: new value for the parameter
-   *
    * Invalid values or nonexistant parameters will be ignored by the speedtest worker.
    */
   setParameter: function(parameter, value) {
