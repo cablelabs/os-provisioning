@@ -22,7 +22,7 @@ class Modem extends \BaseModel
     {
         return [
             'mac' => 'required|mac|unique:modem,mac,'.$id.',id,deleted_at,NULL',
-            'birthday' => 'date',
+            'birthday' => 'nullable|date',
             'country_code' => 'regex:/^[A-Z]{2}$/',
             'contract_id' => 'required|exists:contract,id,deleted_at,NULL',
             'configfile_id' => 'required|exists:configfile,id,deleted_at,NULL,device,cm,public,yes',
@@ -49,11 +49,11 @@ class Modem extends \BaseModel
 
         // we need to put the filter into the session,
         // as the upcoming datatables AJAX request won't carry the input parameters
-        if (\Input::has('modem_show_filter')) {
-            \Session::put('modem_show_filter', \Input::get('modem_show_filter'));
+        if (\Request::filled('modem_show_filter')) {
+            \Session::put('modem_show_filter', \Request::get('modem_show_filter'));
         }
         // non-datatable request; current route is null on testing
-        elseif (\Route::getCurrentRoute() && basename(\Route::getCurrentRoute()->getPath()) == 'Modem') {
+        elseif (\Route::getCurrentRoute() && basename(\Route::getCurrentRoute()->uri) == 'Modem') {
             \Session::forget('modem_show_filter');
         }
 
@@ -217,7 +217,7 @@ class Modem extends \BaseModel
     {
         $ret = [];
 
-        // we use a dummy here as this will be overwritten by ModemController::get_form_tabs()
+        // we use a dummy here as this will be overwritten by ModemController::editTabs()
         if (\Module::collections()->has('ProvVoip')) {
             $ret['Edit']['Mta']['class'] = 'Mta';
             $ret['Edit']['Mta']['relation'] = $this->mtas;
@@ -237,11 +237,12 @@ class Modem extends \BaseModel
 
             $ret['Edit']['EnviaOrder']['class'] = 'EnviaOrder';
             $ret['Edit']['EnviaOrder']['relation'] = $this->_envia_orders;
-            $ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at envia TEL';
+            $ret['Edit']['EnviaOrder']['options']['create_button_text'] = trans('provvoipenvia::view.enviaOrder.createButton');
+            $ret['Edit']['EnviaOrder']['options']['delete_button_text'] = trans('provvoipenvia::view.enviaOrder.deleteButton');
 
             // TODO: auth - loading controller from model could be a security issue ?
-            $ret['Edit']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-            $ret['Edit']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ModemController::_get_envia_management_jobs($this);
+            $ret['Edit']['EnviaAPI']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+            $ret['Edit']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ModemController::_get_envia_management_jobs($this);
         }
 
         return $ret;
@@ -612,16 +613,23 @@ class Modem extends \BaseModel
             die('Error writing to file');
         }
 
+        Log::info('Trying to build configfile for modem '.$this->hostname);
         Log::debug("configfile: docsis -e $cf_file $dir../keyfile $cfg_file");
 
         // "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
-        // docsis tool always returns 0
         exec("docsis -e $cf_file $dir../keyfile $cfg_file >/dev/null 2>&1 &", $out);
+
+        // TODO: Error handling
+        // This is not trivial because docsis is started in background:
+        //      - therefore return value is always “0” (independent of the actual error code)
+        //      - STDERR output is not redirected and is stored in $out – but too late for a check
+        //      - same problem with checks for existance and date comparisions of .cfg files
+        // As there is no solution ATM (except removing the “&” and slowing down the whole process) nothing is done here!
+        //
+        // As a workaround there will be an Icinga check (existance of .cfg files and comparision of the dates of .conf and .cfg files)
 
         // change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
         system('/bin/chown -R apache /tftpboot/cm');
-
-        Log::info('Configfile updated for Modem: '.$this->hostname);
 
         return true;
     }
@@ -999,12 +1007,9 @@ class Modem extends \BaseModel
                 'ds_snr' => $arr['avgDsSNR'],
                 ];
 
-        $status = \DB::connection('mysql-cacti')->table('host')
-            ->where('description', '=', $this->hostname)
-            ->select('status')->first()->status;
         // modem is offline, if we use last value of cacti instead of setting it
         // to zero, it would seem as if the modem is still online
-        if ($status == 1) {
+        if (count(array_unique($res)) === 1 && end($res) === 'U') {
             array_walk($res, function (&$val) {
                 $val = 0;
             });
@@ -1498,10 +1503,10 @@ class Modem extends \BaseModel
 
     public function proximity_search($radius)
     {
-        $ids = 'id = 0';
-        foreach (self::all() as $modem) {
+        $ids = [0];
+        foreach (\DB::table('modem')->select('id', 'x', 'y')->where('deleted_at', null)->get() as $modem) {
             if ($this->_haversine_great_circle_distance($modem) < $radius) {
-                $ids .= " OR id = $modem->id";
+                array_push($ids, $modem->id);
             }
         }
 
@@ -1569,12 +1574,8 @@ class ModemObserver
         // check if this is running if you decide to implement moving of modems to other contracts
         // watch Ticket LAR-106
         if (\Module::collections()->has('ProvVoipEnvia')) {
-            if (
-                // updating is also called on create – so we have to check this
-                (! $modem->wasRecentlyCreated)
-                &&
-                ($modem['original']['contract_id'] != $modem->contract_id)
-            ) {
+            // updating is also called on create – so we have to check this
+            if ((! $modem->wasRecentlyCreated) && ($modem->isDirty('contract_id'))) {
                 // returning false should cancel the updating: verify this! There has been some problems with deleting modems – we had to put the logic in Modem::delete() probably caused by our Base* classes…
                 // see: http://laravel-tricks.com/tricks/cancelling-a-model-save-update-delete-through-events
                 return false;
@@ -1619,7 +1620,7 @@ class ModemObserver
             if (multi_array_key_exists(['x', 'y'], $diff)) {
                 // suppress output in this case
                 ob_start();
-                \Modules\HfcCustomer\Entities\Mpr::refresh($modem);
+                \Modules\HfcCustomer\Entities\Mpr::ruleMatching($modem);
                 ob_end_clean();
             }
         }

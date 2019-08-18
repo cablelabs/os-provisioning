@@ -33,8 +33,13 @@ return [
                 'jQuery_ImportCsv'              => 'import CSV',
 //MENU
     //Main Menu
-        'Menu_MainMenu' 			=> 'Main Menu',
-        'Menu_Config Page'			=> 'Global Config Page',
+        'Menu_Apartment'            => 'Apartments',
+        'Menu_BillingBase'          => 'Billing',
+        'Menu_Debt'                 => 'Debts',
+        'Menu_Dunning'              => 'Dunning',
+        'Menu_MainMenu'             => 'Main Menu',
+        'Menu_Node'                 => 'Nodes',
+        'Menu_Config Page'          => 'Global Config Page',
         'Menu_Logging'				=> 'Logging',
         'Menu_Product List'			=> 'Product List',
         'Menu_SEPA Accounts'		=> 'SEPA Accounts',
@@ -46,6 +51,8 @@ return [
         'Menu_Devices'				=> 'Devices',
         'Menu_DeviceTypes'			=> 'Devicetypes',
         'Menu_Contracts'			=> 'Contracts',
+        'Menu_HfcBase'			    => 'HFC',
+        'Menu_ProvBase'			    => 'Provisioning',
         'Menu_Modems'				=> 'Modems',
         'Menu_Endpoints'			=> 'Endpoints',
         'Menu_Number Range'			=> 'Number Range',
@@ -53,13 +60,16 @@ return [
         'Menu_QoS' 					=> 'QoS',
         'Menu_CMTS' 				=> 'CMTS',
         'Menu_Ip-Pools' 			=> 'IP-Pools',
+        'Menu_ProvVoip'			    => 'VoIP',
+        'Menu_PropertyManagement'   => 'Property Management',
         'Menu_MTAs' 				=> 'MTAs',
         'Menu_Phonenumbers'			=> 'Phonenumbers',
         'Menu_PhoneTariffs'			=> 'PhoneTariffs',
-        'Menu_Envia orders'			=> 'envia TEL orders',
-        'Menu_Envia contracts'		=> 'envia TEL contracts',
+        'Menu_envia TEL orders'		=> 'envia TEL orders',
+        'Menu_envia TEL contracts'	=> 'envia TEL contracts',
         'Menu_Net Elements'         => 'Net Elements',
         'Menu_Net Element Types'    => 'Net Element Types',
+        'Menu_Realty'               => 'Realties',
         'Menu_TicketTypes'          => 'TicketTypes',
 
     //User Settings
@@ -68,10 +78,11 @@ return [
         'Menu_Logout'				=> 'Logout',
         'Menu_UserRoleSettings'		=> 'User Roles',
 
+        'Menu_CDRs'                 => 'CDRs',
+        'Menu_Tickets'              => 'Tickets',
+        'Menu_Comment'              => 'Comments',
 //HEADER
-        'Menu_CDRs'					=> 'CDRs',
-        'Menu_Tickets'				=> 'Tickets',
-        'Menu_Comment'				=> 'Comments',
+        'Header_Apartment' => 'Apartments',
     //General
         'Header_GlobalSearch'		=> 'Global Search',
         'Header_Overview'			=> 'Overview',
@@ -204,6 +215,7 @@ return [
         'Header_EditPhonenumber'	=> 'Edit Phonenumber',
         'Header_Phonenumbers'		=> 'Phonenumber|Phonenumbers',
         'Header_EditPhonenumbers'	=> 'Edit Phonenumber',
+        'Header_PhonebookEntry'		=> 'Phonebook entry',
         'Header_Tickets'			=> 'Ticket|Tickets',
         'Header_EditTickets'		=> 'Edit Tickets',
         //Phone tariff
@@ -212,8 +224,14 @@ return [
         'Header_Phone tariffs'		=> 'Phonetariff|Phonetariffs',
         'Header_EditPhone tariffs'	=> 'Edit Phonetariffs',
     //ProvVoipEnvia
-        'Header_EnviaOrders'		=> 'envia TEL order|envia TEL orders',
-        'Header_EnviaContracts'		=> 'envia TEL contract|envia TEL contracts',
+        'Header_EnviaAPI'           => 'envia TEL API',
+        'Header_EnviaContract'      => 'envia TEL contract|envia TEL contracts',
+        'Header_EnviaOrder'         => 'envia TEL order|envia TEL orders',
+
+        'Header_Debt'               => 'Debt history',
+        'Header_DebtResult'         => 'Outstanding payments total',
+        'Header_Node'               => 'Nodes',
+        'Header_Realty'             => 'Realties',
 
     //Header Relation
         // 'Assigned'  				=> 'Zugewiesene',
@@ -239,6 +257,8 @@ return [
         'Button_delete'				=> 'Shortcut for the delete ability for all pages of this module.',
         'Button_downloadCSV'        => 'Download CSV',
         'Button_Create Product Entry'	=> 'Create Product Entry',
+        'Button_Create Product'	=> 'Create Product',
+        'Button_Create SettlementRun'	=> 'Create Settlement Run',
         //CostCenter
         'Button_Create Cost Center' 	=> 'Create Cost Center', //Workaround decide which one to use
         'Button_Create CostCenter' 		=> 'Create Cost Center',
@@ -252,6 +272,10 @@ return [
         'sr_dl_logs' 					=> 'Download whole logfile',
         //Numberrange
         'Button_Create NumberRange'		=> 'Create Numberrange',
+    //HFC
+        'Button_Create NetElementType' => 'Create NetElement Type',
+        'Button_Create NetElement'     => 'Create NetElement',
+        'Button_Create MibFile'     => 'Create Mib-File',
 
     //SNMP Modul
         //Device
@@ -278,27 +302,35 @@ return [
     //Provisioning
         //Contract
         'Button_Create Contract'		=> 'Create Contract',
+        'Button_Create Domain'		=> 'Create Domain',
         'Button_Create SepaMandate'		=> 'Create SEPA-Mandate',
         // //Modems
         'Button_Create Modem'			=> 'Create Modem',
         // //Endpoints
         'Button_Create Endpoints'		=> 'Create Endpoints',
+        'Button_Create Endpoint'		=> 'Create Endpoint',
         //MTA
-        'Button_Create Mta'				=> 'Neues MTA',
+        'Button_Create Mta'				=> 'Create MTA',
         // //Phonenumber
         'Button_Create Phone tariffs'	=> 'Create Phonetariffs',
+        'Button_Create PhoneTariff' 	=> 'Create Phonetariff',
         // //Configfiles
-        'Button_Create Configfiles'		=> 'Create Configfile',
+        'Button_Create Configfile'		=> 'Create Configfile',
         // //QoS
         'Button_create_post_invoices_pdf'  => 'Create Postal Invoices PDF',
         'Button_Create Settlement Run'  => 'Create Settlement Run',
         'Button_Rerun Accounting Command' => 'Rerun Accounting Command',
         'Button_Create QoS'				=> 'Create QoS-Rule',
+        'Button_Create Qos'				=> 'Create QoS-Rule',
         // //CMTS
         'Button_Create CMTS'			=> 'Create CMTS',
+        'Button_Create Cmts'			=> 'Create CMTS',
         // //IpPool
         'Button_Create IpPool'			=> 'Create IpPool', //workaround
         'Button_Create IP-Pools'		=> 'Create IpPools',
+    //Tickets
+        'Button_Create TicketType'     => 'Create Ticket Type',
+        'Button_Create Ticket'         => 'Create Ticket ',
 
 // DASHBOARD
     'Dashboard_Contracts'			=> 'ACTIVE CONTRACTS',
@@ -350,7 +382,26 @@ return [
     'Numberrange_Prefix' => 'Prefix',
     'Numberrange_Type' => 'Type',
 
+// VoIP
+    'PhonebookEntry' => 'Phonebook entry',
+
 // Error
     'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
     'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
+
+    'bankTransfer' => 'Bank transfers',
+    'Credit' => 'Credit',
+    'critical' => 'critical',
+    'Debit' => 'Debit',
+    'Discard' => 'Discard',
+    'Global' => 'Global',
+    'Global notification' => 'Global notification',
+    'info' => 'info',
+    'Level' => 'Level',
+    'Message' => 'Message',
+    'showChanges' => 'Show the change|Show :num changes',
+    'SettlementRun' => 'SettlementRun',
+    'Time' => 'Time',
+    'Type' => 'Type',
+    'warning' => 'warning',
 ];

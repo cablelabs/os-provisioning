@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use App;
 use Str;
 use Auth;
-use File;
 use Form;
-use View;
-use Input;
 use Route;
 use Config;
 use Module;
 use Bouncer;
+use Request;
 use Session;
 use BaseModel;
 
@@ -147,15 +145,13 @@ class BaseViewController extends Controller
             return Session::get('language');
         }
 
-        if (! isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            return checkLocale();
-        }
-
         $user = Auth::user();
 
         if (! $user || $user->language == 'browser') {
             // check the Browser for the accepted language
-            return checkLocale(substr(explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])[0], 0, 2));
+            return isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ?
+                checkLocale(substr(explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])[0], 0, 2)) :
+                checkLocale();
         }
 
         Session::put('language', $userLang = checkLocale($user->language));
@@ -234,10 +230,10 @@ class BaseViewController extends Controller
                 $field['field_value'] = $model[$field['name']];
             }
 
-            // NOTE: Input::get should actually include $_POST global var and $_GET!!
+            // NOTE: Request::get should actually include $_POST global var and $_GET!!
             // 4.(sub-task) auto-fill all field_value's with HTML Input
-            if (Input::get($field['name'])) {
-                $field['field_value'] = Input::get($field['name']);
+            if (Request::get($field['name'])) {
+                $field['field_value'] = Request::get($field['name']);
             }
 
             // 4.(sub-task) auto-fill all field_value's with HTML POST array if supposed
@@ -273,6 +269,18 @@ class BaseViewController extends Controller
                 }
 
                 $field['form_type'] = 'text';
+            }
+
+            // 6. prepare autocomplete field
+            if (isset($field['autocomplete']) && is_array($field['autocomplete'])) {
+                if (count($field['autocomplete']) === 0) {
+                    $field['autocomplete'][] = explode('.', Route::currentRouteName())[0];
+                }
+                if (count($field['autocomplete']) === 1) {
+                    $field['autocomplete'][] = $field['name'];
+                }
+            } else {
+                unset($field['autocomplete']);
             }
 
             array_push($ret, $field);
@@ -407,7 +415,7 @@ class BaseViewController extends Controller
                 case 'select':
                     if (isset($options['multiple']) && isset($field['selected'])) {
                         $escaped_field_name = Str::substr($field['name'], 0, Str::length($field['name']) - 2);
-                        $field['field_value'] = Input::old($escaped_field_name, array_keys($field['selected']));
+                        $field['field_value'] = Request::old($escaped_field_name, array_keys($field['selected']));
                         // values MUST be int, because of strict type checking in Form module
                         $field['field_value'] = array_map('intval', $field['field_value']);
                     }
@@ -522,6 +530,8 @@ class BaseViewController extends Controller
 
         $globalPages = Config::get('base.'.$configMenuItemKey);
 
+        $menu['Global']['link'] = Config::get('base.link');
+        $menu['Global']['translated_name'] = trans('view.Global');
         foreach ($globalPages as $page => $settings) {
             if (Bouncer::can('view', $settings['class'])) {
                 $menuItem = static::translate_view($page, 'Menu');
@@ -537,6 +547,9 @@ class BaseViewController extends Controller
                 $name = Config::get(Str::lower($module->name).'.'.'name') ?? $module->get('description');
                 $icon = ($module->get('icon') == '' ? '' : $module->get('icon'));
                 $menu[$name]['icon'] = $icon;
+                $menu[$name]['link'] = Config::get(Str::lower($module->name).'.link');
+                $menu[$name]['translated_name'] = static::translate_view($name, 'Menu');
+
                 foreach ($moduleMenuConfig as $page => $settings) {
                     if (Bouncer::can('view', $settings['class'])) {
                         $menuItem = static::translate_view($page, 'Menu');
@@ -638,9 +651,9 @@ class BaseViewController extends Controller
             }
 
             if ($i == 0) {
-                $breadcrumb_path = "<li class='nav-tabs'>".static::__link_route_html($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).$breadcrumb_path.'</li>';
+                $breadcrumb_path = "<li class='nav-tabs'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).$breadcrumb_path.'</li>';
             } else {
-                $breadcrumb_path = '<li>'.static::__link_route_html($view.'.edit', BaseViewController::translate_view($name, 'Header'), $model->id).'</li>'.$breadcrumb_path;
+                $breadcrumb_path = '<li>'.static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).'</li>'.$breadcrumb_path;
             }
 
             return $breadcrumb_path;
@@ -763,49 +776,6 @@ class BaseViewController extends Controller
         }
 
         return 2;
-    }
-
-    /**
-     * Prepare Right Panels to View
-     *
-     * @param $view_var: object/model to be displayed
-     * @return: array() of fields with added ['html'] element containing the preformed html content
-     *
-     * @author: Torsten Schmidt
-     */
-    public static function prep_right_panels($view_var)
-    {
-        $arr = $view_var->view_has_many();
-        $api = static::get_view_has_many_api_version($arr);
-
-        if ($api == 1) {
-            $relations = $arr;
-        }
-
-        if ($api == 2) {
-            // API 2: use HTML GET 'blade' to switch between tabs
-            // TODO: validate Input blade
-            $blade = 0;
-            if (Input::get('blade') != '') {
-                $blade = Input::get('blade');
-            }
-
-            // get actual blade to $b from array of all blades in $arr
-            // $arr = $view_var->view_has_many();
-
-            if (count($arr) == 1) {
-                return current($arr);
-            }
-
-            $b = current($arr);
-            for ($i = 0; $i < $blade; $i++) {
-                $b = next($arr);
-            } // move to next blade/tab
-
-            $relations = $b;
-        }
-
-        return $relations;
     }
 
     /*

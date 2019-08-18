@@ -72,7 +72,7 @@ class importNetUserCommand extends Command
      *
      * NOTE: Check TODOs before Import!
      */
-    public function fire()
+    public function handle()
     {
         // NOTE: Search for TODO(2) for Contract Filter!
         if (! $this->confirm("IMPORTANT!!!\n\nHave following things been prepared for this import?:
@@ -384,12 +384,12 @@ class importNetUserCommand extends Command
         // Determine if Device has a public IP
         $validator = new \Acme\Validators\ExtendedValidator;
         $privateIps = [['10.0.0.0', '255.0.0.0'], ['192.168.0.0', '255.255.0.0'], ['172.16.0.0', '255.224.0.0'], ['100.64.0.0', '255.192.0.0']];
-        $modem->public = 1;
+        $modem->public = 0;
 
         foreach ($comps as $comp) {
             foreach ($privateIps as $range) {
-                if ($validator->validateIpInRange(null, $comp->Ip_adr, $range)) {
-                    $modem->public = 0;
+                if (! $validator->validateIpInRange(null, $comp->Ip_adr, $range)) {
+                    $modem->public = 1;
                     break;
                 }
             }

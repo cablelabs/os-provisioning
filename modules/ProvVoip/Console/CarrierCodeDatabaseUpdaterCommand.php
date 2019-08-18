@@ -65,7 +65,7 @@ class CarrierCodeDatabaseUpdaterCommand extends Command
      *
      * @return null
      */
-    public function fire()
+    public function handle()
     {
         if (\Module::collections()->has('ProvVoipEnvia')) {
             // we get the data directly from envia TEL API

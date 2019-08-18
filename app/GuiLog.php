@@ -40,7 +40,9 @@ class GuiLog extends \BaseModel
                 'bsclass' => $bsclass,
                 'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
                 'edit'	=> ['model_id' => 'generate_model_link'],
-                'order_by' => ['0' => 'desc'], ];
+                'order_by' => ['0' => 'desc'],
+                'raw_columns' => ['model_id'],
+            ];
     }
 
     public function get_bsclass()

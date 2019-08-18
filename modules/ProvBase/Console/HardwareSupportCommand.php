@@ -57,19 +57,8 @@ class HardwareSupportCommand extends Command
             $hostname = $modem->hostname.'.'.$this->domain_name;
             $support_state = 'not-supported';
             if($modem->serial_num !== ''){
-                try {
-                    // First: get docsis mode, some MIBs depend on special DOCSIS version so we better check it first
-                    $docsis = snmpget($hostname, $ro_community, '1.3.6.1.2.1.10.127.1.1.5.0'); // 1: D1.0, 2: D1.1, 3: D2.0, 4: D3.0
-                } catch (\Exception $e) {
-                    if (strpos($e->getMessage(), 'php_network_getaddresses: getaddrinfo failed: Name or service not known') !== false ||
-                        strpos($e->getMessage(), 'No response from') !== false) {
-//                        continue;
-                    } elseif (strpos($e->getMessage(), 'Error in packet at') !== false) {
-                        $docsis = 1;
-                    }
-                }
-                //TODO: check the response before we assign serial no to the modem
-//                $modem->serial_no = snmpget($hostname, $ro_community, '1.3.6.1.2.1.69.1.1.4.0');
+                //TODO: check the response on a live system, not tested on a fully integrated system
+                $modem->serial_num = snmpget($hostname, $ro_community, '1.3.6.1.2.1.69.1.1.4.0');
             }
             $modem_serial_no_md5 = md5($modem->serial_num);
             $contents = file_get_contents('https://support.nmsprime.com/hwsn/api.php?q='.$modem_serial_no_md5);
@@ -82,7 +71,7 @@ class HardwareSupportCommand extends Command
                     $support_state = 'verifying';
                 }
             }
-            var_dump($support_state);
+
             $modem->support_state = $support_state;
             $modem->save();
         }
@@ -90,34 +79,24 @@ class HardwareSupportCommand extends Command
         foreach ($cmtses as $cmts) {
             $hostname = $modem->hostname.'.'.$this->domain_name;
             $support_state = 'not-supported';
-            try {
-                // First: get docsis mode, some MIBs depend on special DOCSIS version so we better check it first
-                $docsis = snmpget($hostname, $ro_community, '1.3.6.1.2.1.10.127.1.1.5.0'); // 1: D1.0, 2: D1.1, 3: D2.0, 4: D3.0
-            } catch (\Exception $e) {
-                if (strpos($e->getMessage(), 'php_network_getaddresses: getaddrinfo failed: Name or service not known') !== false ||
-                    strpos($e->getMessage(), 'No response from') !== false) {
-//                        continue;
-                } elseif (strpos($e->getMessage(), 'Error in packet at') !== false) {
-                    $docsis = 1;
-                }
-            }
-            //TODO: Test snmpwalk response on real cmts
+
+            //TODO: Test snmpwalk response a live system, not tested on a fully integrated system
             $cmts_serials = snmpwalk($hostname, $ro_community, '1.3.6.1.2.1.47.1.1.1.1.11');
             $count_found = 0;
-            foreach ($cmts_serials as $cmts_serial_){
+            foreach ($cmts_serials as $cmts_serial){
 
-                $cmts_serial_md5 = md5($cmts_serial_);
+                $cmts_serial_md5 = md5($cmts_serial);
                 $contents = file_get_contents('https://support.nmsprime.com/hwsn/api.php?q='.$cmts_serial_md5);
 
                 if ($contents !== '') {
                     $result = json_decode($contents, true);
-                    if (isset($result[$modem_serial_no_md5]) && $result[$modem_serial_no_md5] === 'valid') {
+                    if (isset($result[$cmts_serial_md5]) && $result[$cmts_serial_md5] === 'valid') {
                         $count_found++;
                     }
                 }
             }
 
-            if($count_found > 0){
+            if($count_found){
                 switch ($percentage = $count_found/count($cmts_serials)*100){
                     case $percentage > 80 && $percentage <=95:
                         $support_state = 'restricted';
@@ -139,7 +118,7 @@ class HardwareSupportCommand extends Command
      * Set PHP SNMP Default Values
      * Note: Must be only called once per Object Init
      *
-     * Note: copy from SnmpController
+     * Note: copied from SnmpController
      *
      */
     private function snmp_def_mode()

@@ -39,17 +39,17 @@ class ContractController extends \BaseController
             ['form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic Degree', 'value' => $model->get_academic_degree_options()],
             ['form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => '1'],
             ['form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => '1', 'space' => '1'],
-            ['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1', 'html' => "<div class=col-md-12 style='background-color:whitesmoke'>
-				<div class='form-group row'>
-					<label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number *</label>
-						<div class=col-md-5>
-							<input class='form-control' name='street' type=text value='${model['street']}' id='street' style='background-color:whitesmoke'>
-						</div>"],
+            ['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1', 'autocomplete' => [], 'html' => "<div class=col-md-12 style='background-color:whitesmoke'>
+                <div class='form-group row'>
+                    <label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number *</label>
+                        <div class=col-md-5>
+                            <input class='form-control' name='street' type=text value='${model['street']}' id='street' style='background-color:whitesmoke'>
+                        </div>"],
             ['form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => '1', 'html' => "<div class=col-md-2><input class='form-control' name='house_number' type=text value='".$model['house_number']."' id='house_number' style='background-color:whitesmoke'></div>
-				</div></div>"],
-            ['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1'],
-            ['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => '1'],
-            ['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => '1'],
+                </div></div>"],
+            ['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1', 'autocomplete' => []],
+            ['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => '1', 'autocomplete' => []],
+            ['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => '1', 'autocomplete' => []],
             ['form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'],
             ['form_type' => 'text', 'name' => 'fax', 'description' => 'Fax'],
             ['form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'],
@@ -64,11 +64,14 @@ class ContractController extends \BaseController
         }
 
         if (\Module::collections()->has('BillingBase')) {
+            $days = range(0, 28);
+            $days[0] = null;
+
             $b = [
                     ['form_type' => 'checkbox', 'name' => 'has_telephony', 'description' => 'Has telephony', 'value' => '1', 'help' => trans('helper.has_telephony'), 'hidden' => 1],
                     ['form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'checked' => 1],
-                    ['form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => $model->html_list(\Modules\BillingBase\Entities\CostCenter::all(), 'name', true)],
-                    ['form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => $model->html_list(\Modules\BillingBase\Entities\Salesman::all(), ['firstname', 'lastname'], true, ' - '), 'space' => '1'],
+                    ['form_type' => 'select', 'name' => 'value_date', 'description' => 'Date of value', 'value' => $days, 'help' => trans('helper.contract.valueDate')],
+                    ['form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => selectList('costcenter', 'name', true)],
                     // NOTE: qos is required as hidden field to automatically create modem with correct contract qos class
                     ['form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'hidden' => 1],
                 ];
@@ -76,6 +79,8 @@ class ContractController extends \BaseController
             if (\Modules\BillingBase\Entities\BillingBase::first()->show_ags) {
                 $b[] = ['form_type' => 'select', 'name' => 'contact', 'description' => 'Contact Persons', 'value' => \Modules\BillingBase\Entities\BillingBase::contactPersons()];
             }
+
+            $b[] = ['form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => selectList('salesman', ['firstname', 'lastname'], true, ' - '), 'space' => '1'];
         } else {
             $qoss = Qos::all();
 
@@ -99,6 +104,11 @@ class ContractController extends \BaseController
 
                 $b = array_merge($b, $b2);
             }
+        }
+
+        if (\Module::collections()->has('PropertyManagement')) {
+            $b[] = ['form_type' => 'select', 'name' => 'realty_id', 'description' => 'Realty', 'value' => selectList('realty', ['number', 'name'], true, ' - '), 'hidden' => 0];
+            $b[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'value' => Contract::getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList'), 'space' => '1'];
         }
 
         $c = [
@@ -151,8 +161,12 @@ class ContractController extends \BaseController
                 $numberrange_exists = \Modules\BillingBase\Entities\NumberRange::where('type', '=', 'contract')
                     ->where('costcenter_id', $data['costcenter_id'])->count();
 
-                if ($numberrange_exists && ! Session::has('alert')) {
-                    session(['alert' => trans('messages.contract_numberrange_failure')]);
+                if ($numberrange_exists) {
+                    if (! Session::has('alert')) {
+                        session(['alert.danger' => trans('messages.contract.numberrange.failure')]);
+                    }
+                } else {
+                    Session::push('tmp_error_above_form', trans('messages.contract.numberrange.missing'));
                 }
             }
         }
@@ -166,6 +180,7 @@ class ContractController extends \BaseController
             'voip_contract_start',
             'voip_contract_end',
             'birthday',
+            'value_date',
         ];
         $data = $this->_nullify_fields($data, $nullable_fields);
 

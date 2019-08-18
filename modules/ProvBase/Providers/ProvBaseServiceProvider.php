@@ -11,7 +11,7 @@ class ProvBaseServiceProvider extends ServiceProvider
      *
      * @var bool
      */
-    protected $defer = true;
+    protected $defer = false;
 
     /**
      * The artisan commands provided by this module
@@ -19,6 +19,7 @@ class ProvBaseServiceProvider extends ServiceProvider
     protected $commands = [
         'Modules\ProvBase\Console\configfileCommand',
         'Modules\ProvBase\Console\contractCommand',
+        'Modules\ProvBase\Console\cpeHostnameCommand',
         'Modules\ProvBase\Console\dhcpCommand',
         'Modules\ProvBase\Console\importCommand',
         'Modules\ProvBase\Console\importTvCustomersCommand',

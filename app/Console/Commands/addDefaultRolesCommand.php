@@ -46,7 +46,7 @@ class addDefaultRolesCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $roles = self::get_default_roles();
         $roles_permissions = self::get_default_permissions();

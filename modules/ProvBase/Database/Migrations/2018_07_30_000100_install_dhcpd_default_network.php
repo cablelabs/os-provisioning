@@ -1,6 +1,5 @@
 <?php
 
-
 class InstallDhcpdDefaultNetwork extends BaseMigration
 {
     protected $tablename = '';

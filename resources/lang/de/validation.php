@@ -32,6 +32,7 @@ return [
     ],
     'boolean'              => ':attribute muss entweder "true" oder "false" sein.',
     'confirmed'            => ':attribute stimmt nicht mit der Bestätigung überein.',
+    'creditor_id'          => ':attribute ist ungültig.',
     'date'                 => ':attribute muss ein gültiges Datum sein.',
     'dateornull'           => 'Tragen Sie bitte ein gültiges Datum ein oder lassen Sie das Feld frei',
     'date_format'          => ':attribute entspricht nicht dem gültigen Format für :format.',

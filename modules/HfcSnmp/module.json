@@ -2,13 +2,16 @@
     "name": "HfcSnmp",
     "alias": "hfcsnmp",
     "description": "SNMP Module",
-    "icon": "fa-sliders",
     "keywords": [],
     "active": 1,
     "order": 11,
     "priority": 0,
-    "providers": [],
+    "icon": "fa-sliders",
+    "providers": [
+        "Modules\\HfcSnmp\\Providers\\HfcSnmpServiceProvider"
+    ],
     "files": [
         "start.php"
-    ]
+    ],
+    "requires": []
 }

@@ -36,7 +36,7 @@ class PhonenumberCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $phonenumbers = Phonenumber::all();
 

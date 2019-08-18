@@ -5,7 +5,7 @@ namespace Modules\HfcReq\Entities;
 use Auth;
 use Cache;
 use Session;
-use Modules\HfcBase\Entities\IcingaObjects;
+use Modules\HfcBase\Entities\IcingaObject;
 
 class NetElement extends \BaseModel
 {
@@ -27,10 +27,9 @@ class NetElement extends \BaseModel
     {
         return [
             'name' 			=> 'required|string',
-            // 'ip' 			=> 'ip', 		// also hostname is permitted and soon also mac
-            'pos' 			=> 'geopos',
-            'community_ro' 	=> 'regex:/(^[A-Za-z0-9]+$)+/',
-            'community_rw' 	=> 'regex:/(^[A-Za-z0-9]+$)+/',
+            'pos' 			=> 'nullable|geopos',
+            'community_ro' 	=> 'nullable|regex:/(^[A-Za-z0-9]+$)+/',
+            'community_rw' 	=> 'nullable|regex:/(^[A-Za-z0-9]+$)+/',
             'netelementtype_id'	=> 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
             'agc_offset'	=> 'nullable|numeric|between:-99.9,99.9',
         ];
@@ -104,15 +103,15 @@ class NetElement extends \BaseModel
             return 'info';
         }
 
-        if (! IcingaObjects::db_exists()) {
+        if (! IcingaObject::db_exists()) {
             return 'warning';
         }
 
-        $tmp = $this->icingaobjects;
-        if ($tmp && $tmp->is_active) {
-            $tmp = $tmp->icingahoststatus;
-            if ($tmp) {
-                return $tmp->last_hard_state ? 'danger' : 'success';
+        $icingaObj = $this->icingaobject;
+        if ($icingaObj && $icingaObj->is_active) {
+            $icingaObj = $icingaObj->icingahoststatus;
+            if ($icingaObj) {
+                return $icingaObj->last_hard_state ? 'danger' : 'success';
             }
         }
 
@@ -159,9 +158,16 @@ class NetElement extends \BaseModel
         return $this->hasMany('Modules\HfcSnmp\Entities\Indices', 'netelement_id');
     }
 
-    public function getIcingaobjectsAttribute()
+    /**
+     * As Android and Iphone app developers use wrong columns to display object name, we use the relation
+     * column to describe the object as well
+     */
+    public function icingaobject()
     {
-        return IcingaObjects::where('name1', "{$this->id}_{$this->name}")->where('icinga_objects.objecttype_id', '1')->where('icinga_objects.is_active', '1')->first();
+        return $this
+            ->hasOne('Modules\HfcBase\Entities\IcingaObject', 'name1', 'id_name')
+            ->where('icinga_objects.objecttype_id', '1')
+            ->where('icinga_objects.is_active', '1');
     }
 
     public function parent()
@@ -192,6 +198,21 @@ class NetElement extends \BaseModel
         } while (! $parent->netelementtype || $parent->netelementtype->get_base_type() != 3);
 
         return $parent;
+    }
+
+    /**
+     * Get List of netelements for edit view select field
+     *
+     * @return array
+     */
+    public function getParentList()
+    {
+        $netelems = \DB::table('netelement')->join('netelementtype as nt', 'nt.id', '=', 'netelementtype_id')
+            ->select(['netelement.id as id', 'netelement.name as name', 'nt.name as ntname'])
+            ->whereNull('netelement.deleted_at')
+            ->get();
+
+        return $this->html_list($netelems, ['ntname', 'name'], true, ': ');
     }
 
     // TODO: rename, avoid recursion
@@ -561,8 +582,8 @@ class NetElementObserver
         $user = Auth::user()->login_name;
 
         if ($isUpdating) {
-            $oldNet = NetElement::find($netelement['original']['parent_id']);
-            $net = NetElement::find($netelement['attributes']['parent_id']);
+            $oldNet = NetElement::find($netelement->getOriginal('parent_id'));
+            $net = NetElement::find($netelement->parent_id);
             $oldNetId = $oldNet ? $oldNet->get_native_net() : 0;
             $netId = $net ? $net->get_native_net() : 0;
 

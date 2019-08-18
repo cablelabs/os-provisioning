@@ -40,7 +40,7 @@ class dhcpCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         // Global Config part
         $prov = ProvBase::first();

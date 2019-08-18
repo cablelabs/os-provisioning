@@ -4,6 +4,7 @@ namespace Modules\ProvVoip\Entities;
 
 return [
     'name' => 'VoIP',
+    'link' => 'ProvVoip.index',
     'MenuItems' => [
         'MTAs' => [
             'link'	=> 'Mta.index',

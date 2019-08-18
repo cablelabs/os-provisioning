@@ -2,9 +2,9 @@
 
 namespace Modules\Hfcreq\Http\Controllers;
 
+use Request;
 use Modules\HfcSnmp\Entities\OID;
 use Modules\HfcSnmp\Entities\Parameter;
-use Modules\HfcReq\Entities\NetElementType;
 use App\Http\Controllers\BaseViewController;
 use App\Http\Controllers\NamespaceController;
 
@@ -63,8 +63,8 @@ class HfcReqController extends \BaseController
     public function attach_oids($id)
     {
         // Selected MibFile
-        if (\Request::has('mibfile_id')) {
-            if (($mibfile_id = \Request::input('mibfile_id')) == 0) {
+        if (Request::filled('mibfile_id')) {
+            if (($mibfile_id = Request::input('mibfile_id')) == 0) {
                 return \Redirect::back();
             }
 
@@ -73,9 +73,9 @@ class HfcReqController extends \BaseController
         }
 
         // List from Textarea
-        if (\Request::has('oid_list')) {
+        if (Request::filled('oid_list')) {
             $delimiters = [',', ';', "\n"];
-            $oid_list = str_replace($delimiters, $delimiters[0], \Request::input('oid_list'));
+            $oid_list = str_replace($delimiters, $delimiters[0], Request::input('oid_list'));
             $oid_list = explode($delimiters[0], $oid_list);
 
             foreach ($oid_list as $oid) {
@@ -88,8 +88,8 @@ class HfcReqController extends \BaseController
         }
 
         // Multiselect
-        if (\Request::has('oid_id')) {
-            $oids = \Request::input('oid_id');
+        if (Request::filled('oid_id')) {
+            $oids = Request::input('oid_id');
         }
 
         // $devtype = NetElementType::findOrFail($id);

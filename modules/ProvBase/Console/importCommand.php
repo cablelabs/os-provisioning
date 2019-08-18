@@ -126,7 +126,7 @@ class importCommand extends Command
      * Check TODO(<nrs>) before Import!
      * (* set cluster mapping table)
      */
-    public function fire()
+    public function handle()
     {
         // NOTE: Search by TODO(2) for Contract Filter and TODO(3) to change restrictions for adding credits!
         if (! $this->confirm("IMPORTANT!!!\n\nHave following things been prepared for this import?:
@@ -145,7 +145,7 @@ class importCommand extends Command
             return $this->error('no configfile entry exists to use');
         }
 
-        if (! Product::count()) {
+        if (\Module::collections()->has('BillingBase') && ! Product::count()) {
             return $this->error('no product entry exists to use');
         }
 
@@ -593,12 +593,12 @@ class importCommand extends Command
                 'contract_id' 		=> $new_contract->id,
                 'reference' 		=> $new_contract->number ?: '', 			// TODO: number circle ?
                 'signature_date' 	=> $mandate->datum ?: '',
-                'sepa_holder' 		=> $mandate->kontoinhaber ? utf8_encode($mandate->kontoinhaber) : '',
-                'sepa_iban'			=> $mandate->iban ?: '',
-                'sepa_bic' 			=> $mandate->bic ?: '',
-                'sepa_institute' 	=> $mandate->institut ?: '',
-                'sepa_valid_from' 	=> $mandate->gueltig_ab,
-                'sepa_valid_to' 	=> $mandate->gueltig_bis,
+                'holder' 		=> $mandate->kontoinhaber ? utf8_encode($mandate->kontoinhaber) : '',
+                'iban'			=> $mandate->iban ?: '',
+                'bic' 			=> $mandate->bic ?: '',
+                'institute' 	=> $mandate->institut ?: '',
+                'valid_from' 	=> $mandate->gueltig_ab,
+                'valid_to' 	=> $mandate->gueltig_bis,
                 'disable' 			=> $old_contract->einzug ? false : true,
                 'state' 			=> 'RCUR',
                 ]);
@@ -759,12 +759,12 @@ class importCommand extends Command
         // Determine if Device has a public IP
         $validator = new \Acme\Validators\ExtendedValidator;
         $privateIps = [['10.0.0.0', '255.0.0.0'], ['192.168.0.0', '255.255.0.0'], ['172.16.0.0', '255.224.0.0'], ['100.64.0.0', '255.192.0.0']];
-        $modem->public = 1;
+        $modem->public = 0;
 
         foreach ($comps as $comp) {
             foreach ($privateIps as $range) {
-                if ($validator->validateIpInRange(null, $comp->ip, $range)) {
-                    $modem->public = 0;
+                if (! $validator->validateIpInRange(null, $comp->ip, $range)) {
+                    $modem->public = 1;
                     break;
                 }
             }
@@ -984,14 +984,14 @@ class importCommand extends Command
     public static function update_mandates_correct_encoding($db_con)
     {
         foreach (SepaMandate::all() as $m) {
-            if ($m->contract->firstname.' '.$m->contract->lastname == $m->sepa_holder) {
+            if ($m->contract->firstname.' '.$m->contract->lastname == $m->holder) {
                 continue;
             }
 
             $mandate_old = $db_con->table(\DB::raw('tbl_sepamandate s, tbl_lastschriftkonten l'))
                     ->selectRaw('s.*, l.*, l.id as id')
                     ->whereRaw('s.id = l.sepamandat')
-                    ->where('l.iban', '=', $m->sepa_iban)
+                    ->where('l.iban', '=', $m->iban)
                     ->where('s.deleted', '=', 'false')
                     ->where('l.deleted', '=', 'false')
                     ->orderBy('l.id')
@@ -1004,13 +1004,13 @@ class importCommand extends Command
 
             $mandate_old = $mandate_old[0];
 
-            if ($m->sepa_holder == $mandate_old->kontoinhaber) {
+            if ($m->holder == $mandate_old->kontoinhaber) {
                 continue;
             }
 
-            echo "\nSEPAMANDATE UPDATE [$m->id]: $m->sepa_holder to $mandate_old->kontoinhaber";
+            echo "\nSEPAMANDATE UPDATE [$m->id]: $m->holder to $mandate_old->kontoinhaber";
 
-            $m->sepa_holder = $mandate_old->kontoinhaber ? utf8_encode($mandate_old->kontoinhaber) : '';
+            $m->holder = $mandate_old->kontoinhaber ? utf8_encode($mandate_old->kontoinhaber) : '';
 
             $m->save();
         }

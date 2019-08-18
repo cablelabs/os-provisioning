@@ -2,7 +2,6 @@
 
 namespace Modules\ProvBase\Entities;
 
-use Modules\BillingBase\Entities\Invoice;
 use Modules\BillingBase\Entities\SettlementRun;
 
 class Contract extends \BaseModel
@@ -26,8 +25,8 @@ class Contract extends \BaseModel
     {
         $rules = [
             'number' => 'string|unique:contract,number,'.$id.',id,deleted_at,NULL',
-            'number2' => 'string|unique:contract,number2,'.$id.',id,deleted_at,NULL',
-            'number3' => 'string|unique:contract,number3,'.$id.',id,deleted_at,NULL',
+            'number2' => 'nullable|string|unique:contract,number2,'.$id.',id,deleted_at,NULL',
+            'number3' => 'nullable|string|unique:contract,number3,'.$id.',id,deleted_at,NULL',
             // 'number4' => 'string|unique:contract,number4,'.$id.',id,deleted_at,NULL', 	// old customer number must not be unique!
             'company' => 'required_if:salutation,Firma,Behörde',
             'firstname' => 'required_if:salutation,Herr,Frau',
@@ -37,10 +36,10 @@ class Contract extends \BaseModel
             'zip' => 'required',
             'city' => 'required',
             'phone' => 'required',
-            'email' => 'email',
+            'email' => 'nullable|email',
             'birthday' => 'required_if:salutation,Herr,Frau|nullable|date',
             'contract_start' => 'date',
-            'contract_end' => 'dateornull', // |after:now -> implies we can not change stuff in an out-dated contract
+            'contract_end' => 'nullable|date', // |after:now -> implies we can not change stuff in an out-dated contract
         ];
 
         if (\Module::collections()->has('BillingBase')) {
@@ -90,7 +89,7 @@ class Contract extends \BaseModel
     {
         $bsclass = 'success';
 
-        if (! $this->internet_access) {
+        if (! ($this->internet_access || $this->has_telephony)) {
             $bsclass = 'active';
 
             // '$this->id' to dont check when index table header is determined!
@@ -110,20 +109,25 @@ class Contract extends \BaseModel
     // View Relation.
     public function view_has_many()
     {
-        $ret['Edit']['Modem'] = $this->modems;
-
-        if (\Module::collections()->has('BillingBase')) {
-            // view has many version 1
-            $ret['Edit']['Item'] = $this->items;
-            $ret['Edit']['SepaMandate'] = $this->sepamandates;
-        }
+        $ret['Edit']['Modem']['class'] = 'Modem';
+        $ret['Edit']['Modem']['relation'] = $this->modems;
 
         if (\Module::collections()->has('BillingBase')) {
             // view has many version 2
+            $ret['Edit']['Item']['class'] = 'Item';
+            $ret['Edit']['Item']['relation'] = $this->items;
             $ret['Billing']['Item']['class'] = 'Item';
             $ret['Billing']['Item']['relation'] = $this->items;
+            $ret['Edit']['SepaMandate']['class'] = 'SepaMandate';
+            $ret['Edit']['SepaMandate']['relation'] = $this->sepamandates;
             $ret['Billing']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
+
+            if (\Module::collections()->has('Dunning')) {
+                // resulting outstanding amount
+                $ret['Edit']['DebtResult']['view']['view'] = 'dunning::Debt.result';
+                $ret['Edit']['DebtResult']['view']['vars']['debt'] = $this->getResultingDebt();
+            }
 
             // Show invoices in 2 panels
             if (! $this->relationLoaded('invoices')) {
@@ -135,6 +139,11 @@ class Contract extends \BaseModel
 
             for ($i = 0; $i < $countPanel1; $i++) {
                 $invoicesPanel1->push($this->invoices[$i]);
+            }
+
+            if (\Module::collections()->has('Dunning')) {
+                $ret['Billing']['Debt']['class'] = 'Debt';
+                $ret['Billing']['Debt']['relation'] = $this->debts;
             }
 
             $ret['Billing']['Invoice']['class'] = 'Invoice';
@@ -164,11 +173,12 @@ class Contract extends \BaseModel
 
             $ret['envia TEL']['EnviaOrder']['class'] = 'EnviaOrder';
             $ret['envia TEL']['EnviaOrder']['relation'] = $this->_envia_orders;
-            $ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = 'Cancel order at envia TEL';
+            $ret['envia TEL']['EnviaOrder']['options']['create_button_text'] = trans('provvoipenvia::view.enviaOrder.createButton');
+            $ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = trans('provvoipenvia::view.enviaOrder.deleteButton');
 
             // TODO: auth - loading controller from model could be a security issue ?
-            $ret['envia TEL']['envia TEL API']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-            $ret['envia TEL']['envia TEL API']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
+            $ret['envia TEL']['EnviaAPI']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+            $ret['envia TEL']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
 
             // for better navigation: show modems also in envia TEL blade
             $ret['envia TEL']['Modem']['class'] = 'Modem';
@@ -180,7 +190,8 @@ class Contract extends \BaseModel
         }
 
         if (\Module::collections()->has('Ticketsystem')) {
-            $ret['Edit']['Ticket'] = $this->tickets;
+            $ret['Edit']['Ticket']['class'] = 'Ticket';
+            $ret['Edit']['Ticket']['relation'] = $this->tickets;
         }
 
         if (\Module::collections()->has('Mail')) {
@@ -190,9 +201,21 @@ class Contract extends \BaseModel
         return $ret;
     }
 
+    public function view_belongs_to()
+    {
+        if (\Module::collections()->has('PropertyManagement')) {
+            return $this->apartment ?: $this->realty;
+        }
+    }
+
     /*
      * Relations
      */
+    public function debts()
+    {
+        return $this->hasMany('Modules\Dunning\Entities\Debt')->orderBy('date', 'desc');
+    }
+
     public function modems()
     {
         return $this->hasMany('Modules\ProvBase\Entities\Modem');
@@ -311,6 +334,16 @@ class Contract extends \BaseModel
         return $this->hasMany('Modules\Ticketsystem\Entities\Ticket');
     }
 
+    public function realty()
+    {
+        return $this->belongsTo(\Modules\PropertyManagement\Entities\Realty::class);
+    }
+
+    public function apartment()
+    {
+        return $this->belongsTo(\Modules\PropertyManagement\Entities\Apartment::class);
+    }
+
     /**
      * Generate use a new user login password
      * This does not save the involved model
@@ -318,6 +351,31 @@ class Contract extends \BaseModel
     public function generate_password($length = 10)
     {
         $this->password = \Acme\php\Password::generate_password($length);
+    }
+
+    /**
+     * Get list of apartments for select field of edit view
+     *
+     * @return array
+     */
+    public static function getApartmentsList()
+    {
+        $apartments = \DB::table('apartment')->join('realty', 'realty.id', '=', 'apartment.realty_id')
+            ->select(['apartment.id as id', 'name', 'apartment.number as anum', 'realty.number as rnum', 'floor'])
+            ->whereNull('apartment.deleted_at')
+            ->get();
+
+        $ret[null] = null;
+
+        foreach ($apartments as $a) {
+            $ret[$a->id] = "$a->id: ";
+            $ret[$a->id] .= $a->rnum ? "$a->rnum " : '';
+            $ret[$a->id] .= $a->name ? "($a->name) - " : '-';
+            $ret[$a->id] .= $a->anum ? "$a->anum " : '';
+            $ret[$a->id] .= $a->floor ? "($a->floor) " : '';
+        }
+
+        return $ret;
     }
 
     /**
@@ -477,7 +535,7 @@ class Contract extends \BaseModel
             $items = $this->items()
                 ->leftJoin('product', 'product.id', '=', 'item.product_id')
                 ->whereIn('product.type', ['Internet', 'Voip'])
-                ->where(whereLaterOrEqualThanDate('item.valid_to', date('Y-m-d', strtotime("-$item_max_ended_before days"))))
+                ->where(whereLaterOrEqual('item.valid_to', date('Y-m-d', strtotime("-$item_max_ended_before days"))))
                 // ->orderBy('valid_from', 'desc')
                 ->select('item.*')
                 ->with('product')
@@ -1223,6 +1281,29 @@ class Contract extends \BaseModel
         $ret['tariff'] = $tariff;
 
         return $ret;
+    }
+
+    /**
+     * Return the outstanding amount
+     *
+     * @return float
+     */
+    public function getResultingDebt()
+    {
+        if (! \Module::collections()->has('Dunning')) {
+            return;
+        }
+
+        $sum = \Modules\Dunning\Entities\Debt::where('contract_id', $this->id)
+            ->groupBy('contract_id')
+            ->selectRaw('(SUM(amount) + SUM(total_fee)) as sum')
+            ->first();
+
+        if (! $sum) {
+            return 0;
+        }
+
+        return $sum->sum;
     }
 }
 

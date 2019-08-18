@@ -49,7 +49,7 @@ class geocodeCommand extends Command
      * @return mixed
      * @author Torsten Schmidt, Patrick Reichel
      */
-    public function fire()
+    public function handle()
     {
         $this->getParams();
 

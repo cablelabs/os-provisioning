@@ -8,6 +8,7 @@ use Session;
 use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Modules\Ticketsystem\Entities\Ticket;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -26,6 +27,11 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     public $table = 'users';
 
     protected $guard = 'admin';
+
+    protected $dates = [
+        'last_login_at',
+        'password_changed_at',
+    ];
 
     /**
      * extending the boot functionality to observe changes
@@ -53,6 +59,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         'language',
         'active',
         'password_changed_at',
+        'initial_dashboard',
     ];
 
     /**
@@ -67,7 +74,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
     public function tickets()
     {
-        return $this->belongsToMany('\Modules\Ticketsystem\Entities\Ticket', 'ticket_user', 'user_id', 'ticket_id');
+        return $this->belongsToMany(Ticket::class, 'ticket_user', 'user_id', 'ticket_id');
     }
 
     /**
@@ -78,6 +85,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     public static function rules($id = null)
     {
         return [
+            'email' => 'nullable|email',
             'login_name' => 'required|unique:users,login_name,'.$id.',id,deleted_at,NULL',
             'password' => 'sometimes|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|confirmed',
             'password_confirmation' => 'min:8|required_with:password|same:password',
@@ -201,10 +209,10 @@ class UserObserver
     public function updating($user)
     {
         // Rebuild cached sidebar when user changes his language
-        if ($user['original']['language'] != $user['attributes']['language']) {
+        if ($user->isDirty('language')) {
             Session::forget('menu');
 
-            $userLang = checkLocale($user['attributes']['language']);
+            $userLang = checkLocale($user->language);
 
             App::setLocale($userLang);
             Session::put('language', $userLang);

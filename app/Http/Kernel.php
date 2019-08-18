@@ -9,10 +9,16 @@ class Kernel extends HttpKernel
     /**
      * The application's global HTTP middleware stack.
      *
+     * These middleware are run during every request to your application.
+     *
      * @var array
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
+        \App\Http\Middleware\TrimStrings::class,
+        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\TrustProxies::class,
     ];
 
     /**
@@ -25,15 +31,18 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
+            // \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\SetLanguage::class,
         ],
+
         'api' => [
             'throttle:60,1',
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            'bindings',
             \App\Http\Middleware\CheckApiAbility::class,
+            \App\Http\Middleware\SetLanguage::class,
         ],
     ];
 
@@ -43,15 +52,15 @@ class Kernel extends HttpKernel
      * These middleware may be assigned to groups or used individually.
      *
      * @var array
-     * @author Torsten Schmidt
      */
     protected $routeMiddleware = [
-        'auth'        => \Illuminate\Auth\Middleware\Authenticate::class,
-        'auth.basic'  => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'can'         => \Illuminate\Auth\Middleware\Authorize::class,
-        'owns'         => \App\Http\Middleware\AuthorizeOwns::class,
+        'auth'          => \Illuminate\Auth\Middleware\Authenticate::class,
+        'auth.basic'    => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'bindings'      => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'can'           => \Illuminate\Auth\Middleware\Authorize::class,
+        'owns'          => \App\Http\Middleware\AuthorizeOwns::class,
+        'throttle'      => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'adminRedirect' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'throttle'	  => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'cccRedirect' => \Modules\Ccc\Http\Middleware\CccRedirectIfAuthenticated::class,
+        'cccRedirect'   => \Modules\Ccc\Http\Middleware\CccRedirectIfAuthenticated::class,
     ];
 }

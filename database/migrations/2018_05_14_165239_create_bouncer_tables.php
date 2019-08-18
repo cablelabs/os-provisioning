@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Role;
 use App\User;
 use Silber\Bouncer\Database\Models;

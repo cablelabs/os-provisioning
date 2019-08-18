@@ -4,6 +4,7 @@ namespace Modules\BillingBase\Entities;
 
 return [
     'name' => 'BillingBase',
+    'link' => 'BillingBase.index',
     'MenuItems' => [
         'Product List' => [
             'link'	=> 'Product.index',

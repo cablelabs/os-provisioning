@@ -3,7 +3,8 @@
 namespace Modules\HfcReq\Entities;
 
 return [
-    'name' => 'HFC',
+    'name' => 'HfcBase',
+    'link' => 'HfcBase.index',
     'MenuItems' => [
         'Net Element Types' => [
             'link'	=> 'NetElementType.index',

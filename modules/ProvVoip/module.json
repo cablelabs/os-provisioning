@@ -2,13 +2,16 @@
     "name": "ProvVoip",
     "alias": "provvoip",
     "description": "VOIP",
-    "icon": "fa-phone",
     "keywords": [],
     "active": 1,
     "order": 21,
     "priority": 0,
-    "providers": [],
+    "icon": "fa-phone",
+    "providers": [
+        "Modules\\ProvVoip\\Providers\\ProvVoipServiceProvider"
+    ],
     "files": [
         "start.php"
-    ]
+    ],
+    "requires": []
 }

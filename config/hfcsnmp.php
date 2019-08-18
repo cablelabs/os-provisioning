@@ -3,7 +3,8 @@
 namespace Modules\HfcSnmp\Entities;
 
 return [
-    'name' => 'HFC',
+    'name' => 'HfcBase',
+    'link' => 'HfcBase.index',
     'MenuItems' => [
         'MibFile' => [
             'link' => 'MibFile.index',

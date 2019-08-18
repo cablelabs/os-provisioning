@@ -83,9 +83,10 @@ class Mta extends \BaseModel
 
     public function view_has_many()
     {
-        return [
-            'Phonenumber' => $this->phonenumbers,
-        ];
+        $ret['Edit']['Phonenumber']['class'] = 'Phonenumber';
+        $ret['Edit']['Phonenumber']['relation'] = $this->phonenumbers;
+
+        return $ret;
     }
 
     /**
@@ -151,6 +152,8 @@ class Mta extends \BaseModel
         Log::info("docsis -eu -p $conf_file $cfg_file");
         // "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
         exec("docsis -eu -p $conf_file $cfg_file >/dev/null 2>&1 &", $out);
+
+        // TODO: Error handling missing (see Modem for more information)
 
         // this only is valid when we dont execute docsis in background
         // if (!file_exists($cfg_file))

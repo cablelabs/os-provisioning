@@ -74,6 +74,7 @@ class NetElementType extends \BaseModel
             $ret['Edit']['Parameters']['view']['vars']['list'] = $this->parameters ?: [];
             // Extra view for easier controlling view structure setting (html_frame, html_id of parameter)
             $ret['Parameter Settings']['Settings']['view']['view'] = 'hfcreq::NetElementType.settings';
+            $ret['Parameter Settings']['Settings']['view']['vars']['list'] = self::param_list($this->id);
         }
 
         return $ret;

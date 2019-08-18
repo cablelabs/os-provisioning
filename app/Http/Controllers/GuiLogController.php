@@ -6,7 +6,7 @@ use Str;
 use App\GuiLog;
 use App\BaseModel;
 use Illuminate\Http\Request;
-use Yajra\Datatables\Datatables;
+use Yajra\DataTables\DataTables;
 
 class GuiLogController extends BaseController
 {
@@ -91,8 +91,8 @@ class GuiLogController extends BaseController
             ->orderBy('id', 'desc')
             ->get();
 
-        $DT = Datatables::of($request_query);
-        $DT->addColumn('responsive', '')
+        return DataTables::make($request_query)
+            ->addColumn('responsive', '')
             ->setRowClass(function ($object) {
                 $bsclass = 'info';
                 if ($object->method == 'created') {
@@ -106,9 +106,9 @@ class GuiLogController extends BaseController
             })
             ->editColumn('created_at', function ($object) use ($routeName) {
                 return '<a href="'.route($routeName.'.edit', $object->id).'"><strong>'.
-            $object->view_icon().$object->created_at.'</strong></a>';
-            });
-
-        return $DT->make(true);
+                        $object->view_icon().$object->created_at.'</strong></a>';
+            })
+            ->rawColumns(['created_at'])
+            ->make();
     }
 }

@@ -24,8 +24,8 @@ class PhonenumberManagementController extends \BaseController
      */
     public function create()
     {
-        if ((! \Input::has('phonenumber_id')) ||
-            ! (Phonenumber::find(\Input::get('phonenumber_id')))) {
+        if ((! \Request::filled('phonenumber_id')) ||
+            ! (Phonenumber::find(\Request::get('phonenumber_id')))) {
             $this->edit_view_save_button = false;
             Session::push('tmp_error_above_form', 'Cannot create phonenumbermanagement – phonenumber ID missing or phonenumber not found');
         }
@@ -40,7 +40,7 @@ class PhonenumberManagementController extends \BaseController
      */
     public function edit($id)
     {
-        if (\Input::has('clear_envia_reference')) {
+        if (\Request::filled('clear_envia_reference')) {
             if (\Module::collections()->has('ProvVoipEnvia')) {
                 $mgmt = PhonenumberManagement::find($id);
                 $mgmt->phonenumber->contract_external_id = null;
@@ -67,9 +67,9 @@ class PhonenumberManagementController extends \BaseController
         // in most cases the subscriber is identical to contract partner ⇒ on create we prefill these values with data from contract
         if (! $model->exists) {
             if (
-                (! \Input::has('phonenumber_id'))
+                (! \Request::filled('phonenumber_id'))
                 ||
-                ! ($phonenumber = Phonenumber::find(\Input::get('phonenumber_id')))
+                ! ($phonenumber = Phonenumber::find(\Request::get('phonenumber_id')))
             ) {
                 return [];
             }
@@ -126,20 +126,22 @@ class PhonenumberManagementController extends \BaseController
             $trc_help = trans('helper.PhonenumberManagement_TRCWithEnvia');
             $carrier_in_help = trans('helper.PhonenumberManagement_CarrierInWithEnvia');
             $ekp_in_help = trans('helper.PhonenumberManagement_EkpInWithEnvia');
+            $ext_act_help = trans('helper.PhonenumberManagement_ExternalActivationDateWithEnvia');
+            $ext_deact_help = trans('helper.PhonenumberManagement_ExternalDeactivationDateWithEnvia');
         } else {
             $trc_help = trans('helper.PhonenumberManagement_TRC');
             $carrier_in_help = trans('helper.PhonenumberManagement_CarrierIn');
             $ekp_in_help = trans('helper.PhonenumberManagement_EkpIn');
+            $ext_act_help = trans('helper.PhonenumberManagement_ExternalActivationDate');
+            $ext_deact_help = trans('helper.PhonenumberManagement_ExternalDeactivationDate');
         }
 
         // label has to be the same like column in sql table
         $ret_tmp = [
             [
-                'form_type' => 'select',
+                'form_type' => 'text',
                 'name' => 'phonenumber_id',
                 'description' => 'Phonenumber',
-                'value' => $model->html_list($model->phonenumber(),
-                'id'),
                 'hidden' => '1',
             ],
             [
@@ -154,12 +156,14 @@ class PhonenumberManagementController extends \BaseController
                 'form_type' => 'text',
                 'name' => 'activation_date',
                 'description' => 'Activation date',
+                'help' => trans('helper.PhonenumberManagement_activation_date'),
             ],
             [
                 'form_type' => 'text',
                 'name' => 'external_activation_date',
                 'description' => 'External activation date',
                 'options' => ['readonly'],
+                'help' => $ext_act_help,
                 'hidden' => $hide_flags['external_activation_date'],
             ],
             [
@@ -260,12 +264,14 @@ class PhonenumberManagementController extends \BaseController
                 'name' => 'deactivation_date',
                 'description' => 'Termination date',
                 'hidden' => $hide_flags['deactivation_date'],
+                'help' => trans('helper.PhonenumberManagement_deactivation_date'),
             ],
             [
                 'form_type' => 'text',
                 'name' => 'external_deactivation_date',
                 'description' => 'External deactivation date',
                 'options' => ['readonly'],
+                'help' => $ext_deact_help,
                 'hidden' => $hide_flags['external_deactivation_date'],
             ],
             [
@@ -280,6 +286,7 @@ class PhonenumberManagementController extends \BaseController
                 'description' => 'Carrier out',
                 'value' => CarrierCode::carrier_list_for_form_select(true),
                 'checkbox' => 'show_on_porting_out',
+                'help' => trans('helper.carrier_out'),
                 'space' => '1',
             ],
             [

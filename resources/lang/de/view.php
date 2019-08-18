@@ -33,7 +33,12 @@ return [
                 'jQuery_ImportCsv'              => 'CSV importieren',
 //MENU
     //Main Menu
-        'Menu_MainMenu' 			=> 'Hauptmenü',
+        'Menu_Apartment'            => 'Wohnungen',
+        'Menu_BillingBase'          => 'Billing',
+        'Menu_Debt'                 => 'Offene Posten',
+        'Menu_Dunning'              => 'Mahnwesen',
+        'Menu_MainMenu'             => 'Hauptmenü',
+        'Menu_Node'                 => 'Übertragungspunkte',
         'Menu_Config Page'			=> 'Systemkonfiguration',
         'Menu_Logging'				=> 'Logs',
         'Menu_Product List'			=> 'Produktangebot',
@@ -46,6 +51,8 @@ return [
         'Menu_Devices'				=> 'Geräte',
         'Menu_DeviceTypes'			=> 'Gerätetypen',
         'Menu_Contracts'			=> 'Verträge',
+        'Menu_HfcBase'              => 'HFC',
+        'Menu_ProvBase'             => 'Provisioning',
         'Menu_Modems'				=> 'Modems',
         'Menu_Endpoints'			=> 'Endpunkte',
         'Menu_Number Range'         => 'Nummernkreis',
@@ -53,13 +60,16 @@ return [
         'Menu_QoS' 					=> 'QoS',
         'Menu_CMTS' 				=> 'CMTS',
         'Menu_Ip-Pools' 			=> 'IP-Bereiche',
+        'Menu_ProvVoip'             => 'VoIP',
+        'Menu_PropertyManagement'   => 'Liegenschafts - Verwaltung',
         'Menu_MTAs' 				=> 'MTAs',
         'Menu_Phonenumbers'			=> 'Telefonnummern',
         'Menu_PhoneTariffs'			=> 'Telefontarife',
-        'Menu_Envia orders'			=> 'envia TEL Aufträge',
-        'Menu_Envia contracts'		=> 'envia TEL Verträge',
+        'Menu_envia TEL orders'		=> 'envia-TEL-Aufträge',
+        'Menu_envia TEL contracts'	=> 'envia-TEL-Verträge',
         'Menu_Net Elements'         => 'Netzelemente',
         'Menu_Net Element Types'    => 'Netzelementtypen',
+        'Menu_Realty'               => 'Liegenschaften',
         'Menu_TicketTypes'          => 'Tickettypen',
 
     //User Settings
@@ -68,10 +78,11 @@ return [
         'Menu_Logout'				=> 'Ausloggen',
         'Menu_UserRoleSettings'		=> 'Nutzerrollen',
 
+        'Menu_CDRs'                 => 'EVNs',
+        'Menu_Tickets'              => 'Tickets',
+        'Menu_Comment'              => 'Kommentare',
 //HEADER
-        'Menu_CDRs'					=> 'EVNs',
-        'Menu_Tickets'				=> 'Tickets',
-        'Menu_Comment'				=> 'Kommentare',
+        'Header_Apartment' => 'Wohnungen',
     //General
         'Header_GlobalSearch'		=> 'Systemweite Suche',
         'Header_Overview'			=> 'Übersicht',
@@ -127,7 +138,7 @@ return [
         'Ability_HFC' 				=> 'HFC',
         'Ability_ProvBase' 			=> 'Provisionierung Basismodul',
         'Ability_ProvVoip' 			=> 'Provisionierung für VoiP',
-        'Ability_ProvVoipEnvia'		=> 'Provisionierung für EnviaVoip',
+        'Ability_ProvVoipEnvia'		=> 'Provisionierung für envia TEL',
         'Ability_VoipMon'			=> 'Voip Monitor',
         //Salesman
         'Header_EditSalesman'		=> 'Verkäufer bearbeiten',
@@ -204,6 +215,7 @@ return [
         'Header_EditPhonenumber'	=> 'Telefonnummer bearbeiten',
         'Header_Phonenumbers'		=> 'Telefonnummer|Telefonnummern',
         'Header_EditPhonenumbers'	=> 'Telefonnummer bearbeiten',
+        'Header_PhonebookEntry'		=> 'Telefonbucheintrag',
         'Header_Tickets'			=> 'Ticket|Tickets',
         'Header_EditTickets'		=> 'Ticket bearbeiten',
         //Phone tariff
@@ -212,8 +224,14 @@ return [
         'Header_Phone tariffs'		=> 'Telefontarif|Telefontarife',
         'Header_EditPhone tariffs'	=> 'Telefontarif bearbeiten',
     //ProvVoipEnvia
-        'Header_EnviaOrders'		=> 'envia TEL Auftrag|envia TEL Aufträge',
-        'Header_EnviaContracts'		=> 'envia TEL Vertrag|envia TEL Verträge',
+        'Header_EnviaAPI'           => 'envia-TEL-API',
+        'Header_EnviaContract'      => 'envia-TEL-Vertrag|envia-TEL-Verträge',
+        'Header_EnviaOrder'	        => 'envia-TEL-Auftrag|envia-TEL-Aufträge',
+
+        'Header_Debt'               => 'Historie Offene Posten',
+        'Header_DebtResult'         => 'Offene Posten gesamt',
+        'Header_Node'               => 'Übertragungspunkte',
+        'Header_Realty'             => 'Liegenschaften',
 
     //Header Relation
         // 'Assigned'  				=> 'Zugewiesene',
@@ -239,19 +257,28 @@ return [
         'Button_delete'				=> 'Schnellauswahl um auf allen Seiten Elemente zu löschen.',
         'Button_downloadCSV'        => 'CSV herunterladen',
         'Button_Create Product Entry'	=> 'Neues Produkt',
+        // Product
+        'Button_Create Product'         => 'Produkt erstellen',
+        // Settlementrun
+        'Button_Create SettlementRun'   => 'Abrechnungslauf erstellen',
         //CostCenter
         'Button_Create Cost Center' 	=> 'Neue Kostenstelle', //Workaround decide which one to use
-        'Button_Create CostCenter' 		=> 'Neue Kostenstelle',
+        'Button_Create CostCenter' 		=> 'Kostenstelle erstellen',
         'Button_Create Users'			=> 'Benutzer anlegen',
         //Company
-        'Button_Create Company'			=> 'Neues Unternehmen',
+        'Button_Create Company'			=> 'Unternehmen erstellen',
         //Salesman
-        'Button_Create Salesman'		=> 'Neuer Verkäufer',
+        'Button_Create Salesman'		=> 'Verkäufer erstellen',
         //Item
         'Button_Create Item'			=> 'Neuer Posten',
         'sr_dl_logs' 					=> 'Gesamtes Logfile herunterladen',
         //Numberrange
-        'Button_Create NumberRange'		=> 'Neuer Nummernkreis',
+        'Button_Create NumberRange'		=> 'Nummernkreis erstellen',
+
+    //HFC
+        'Button_Create NetElementType'  => 'Netzelementtyp erstellen',
+        'Button_Create NetElement'      => 'Netzelement erstellen',
+        'Button_Create MibFile'         => 'MibFile erstellen',
 
     //SNMP Modul
         //Device
@@ -261,10 +288,12 @@ return [
         'Button_Create Phonenumber'		=> 'Telefonnummer anlegen',
         'Button_Create Tree Table'		=> 'Baumdiagramm anlegen',
         'Button_Create Modem Positioning Rule' => 'Modem Positionierungsregel erstellen',
-        'Button_Create Mpr'				=> 'Modem Positionierungsregel Geoposition erstellen',
+        'Button_Create Mpr'				=> 'Modem Positionierungsregel erstellen',
         'Button_Create Modem Positioning Rule Geoposition' => 'MprGeopos erstellen',
         'Button_Create MprGeopos'		=> 'MprGeopos erstellen',
         'Button_Create Tickets'		=> 'Ticket erstellen',
+        'Button_Create Ticket'           => 'Ticket erstellen',
+        'Button_Create TicketType'       => 'Tickettypen erstellen',
 
         'Button_Create Comment'		=> 'Kommentar erstellen',
         //SEPA-Konto
@@ -273,29 +302,37 @@ return [
         'SEPA Account' 				=> 'SEPA-Konto',
         'Create'					=> 'Erstelle ',
         'Edit'						=> 'Bearbeite ',
-        'Button_Create SepaAccount'		=> 'Neues SEPA-Konto',
+        'Button_Create SepaAccount'		=> 'SEPA-Konto erstellen',
 
     //Provisioning
         //Contract
         'Button_Create Contract'		=> 'Vertrag erstellen',
         'Button_Create SepaMandate'		=> 'SEPA-Mandat erstellen',
+        // Domains
+        'Button_Create Domain'          => 'Domain erstellen',
         // //Modems
         'Button_Create Modem'			=> 'Modem erstellen',
         // //Endpoints
         'Button_Create Endpoints'		=> 'Endpunkt erstellen',
+        'Button_Create Endpoint'        => 'Endpunkt erstellen',
         //MTA
         'Button_Create Mta'				=> 'MTA erstellen',
         // //Phonenumber
         'Button_Create Phone tariffs'	=> 'Neuer Telefontarif',
+        'Button_Create PhoneTariff'     => 'Telefontarif anlegen',
+
         // //Configfiles
         'Button_Create Configfiles'		=> 'Konfigurationsdatei erstellen',
+        'Button_Create Configfile'     => 'Konfigurationsdatei erstellen',
         // //QoS
         'Button_create_post_invoices_pdf' => 'Erstelle PDF mit postalischen Rechnungen',
         'Button_Create Settlement Run'  => 'Abrechnungslauf erstellen',
         'Button_Rerun Accounting Command' => 'Rechnungslauf neu starten',
         'Button_Create QoS'             => 'QoS-Regel erstellen',
+        'Button_Create Qos'             => 'QOS-Regel erstellen',
         // //CMTS
         'Button_Create CMTS'			=> 'CMTS anlegen',
+        'Button_Create Cmts'            => 'CMTS anlegen',
         // //IpPool
         'Button_Create IpPool'			=> 'IpPool anlegen', //workaround
         'Button_Create IP-Pools'		=> 'IpPool anlegen',
@@ -350,7 +387,26 @@ return [
     'Numberrange_Prefix' => 'Präfix',
     'Numberrange_Type' => 'Typ',
 
+// VoIP
+    'PhonebookEntry' => 'Telefonbucheintrag',
+
 // Error
     'error_specify_id'          => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
     'error_ticket_settings'     => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
+
+    'bankTransfer' => 'Bank-Transaktionen',
+    'Credit' => 'Gutschrift',
+    'critical' => 'kritisch',
+    'Debit' => 'Lastschrift',
+    'Discard' => 'Missachte',
+    'Global' => 'Global',
+    'Global notification' => 'Globale Benachrichtigung',
+    'info' => 'Info',
+    'Level' => 'Level',
+    'Message' => 'Nachricht',
+    'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
+    'SettlementRun' => 'Abrechnungslauf',
+    'Time' => 'Zeit',
+    'Type' => 'Typ',
+    'warning' => 'Warnung',
 ];

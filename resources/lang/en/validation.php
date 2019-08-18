@@ -32,6 +32,7 @@ return [
     ],
     'boolean'              => 'The :attribute field must be true or false.',
     'confirmed'            => 'The :attribute confirmation does not match.',
+    'creditor_id'          => ':attribute is not valid.',
     'date'                 => 'The :attribute is not a valid date.',
     'dateornull'           => 'This has to be a valid date or empty',
     'date_format'          => 'The :attribute does not match the format :format.',

@@ -11,7 +11,7 @@ class GlobalConfig extends BaseModel
     public static function rules($id = null)
     {
         return [
-            'mail' => 'email',
+            'mail' => 'nullable|email',
             'default_country_code' => 'regex:/^[A-Z]{2}$/',
             'passwordResetInterval' => 'min:0,integer',
         ];

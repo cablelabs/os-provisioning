@@ -1,0 +1,17 @@
+{
+    "name": "nmsprime-modules/dunning",
+    "description": "",
+    "authors": [
+        {
+            "name": "Roetzer engineering",
+            "email": "info@roetzer-engineering.com"
+        }
+    ],
+    "require": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Dunning\\": ""
+        }
+    }
+}

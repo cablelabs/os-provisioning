@@ -153,11 +153,17 @@ class FormBuilder extends CollectiveFormBuilder
     /**
      * Create a select box field.
      */
-    public function select($name, $list = [], $selected = null, $options = [])
-    {
-        $options = $this->appendClassToOptions('form-control', $options);
+    public function select(
+        $name,
+        $list = [],
+        $selected = null,
+        array $selectAttributes = [],
+        array $optionsAttributes = [],
+        array $optgroupsAttributes = []
+    ) {
+        $optionsAttributes = $this->appendClassToOptions('form-control', $optionsAttributes);
 
-        if (isset($options['translate'])) {
+        if (isset($optionsAttributes['translate'])) {
             foreach ($list as $key => $value) {
                 $list[$key] = \App\Http\Controllers\BaseViewController::translate_label($value);
             }
@@ -165,28 +171,11 @@ class FormBuilder extends CollectiveFormBuilder
 
         // Call the parent select method so that Laravel can handle
         // the rest of the select set up.
-        if (isset($options['style']) && Str::contains($options['style'], 'simple')) {
-            return parent::select($name, $list, $selected, $options);
+        if (isset($optionsAttributes['style']) && Str::contains($optionsAttributes['style'], 'simple')) {
+            return parent::select($name, $list, $selected, $selectAttributes, $optionsAttributes);
         }
 
-        return $this->appendDiv(parent::select($name, $list, $selected, $options));
-    }
-
-    /**
-     * Determine if the value is selected. Changed from Parent Formbuilder.
-     *
-     * @param  string $value
-     * @param  string $selected
-     *
-     * @return null|string
-     */
-    protected function getSelectedValue($value, $selected)
-    {
-        if (is_array($selected)) {
-            return in_array($value, $selected) ? 'selected' : null;
-        }
-
-        return ((string) $value == (string) $selected) ? 'selected' : null;
+        return $this->appendDiv(parent::select($name, $list, $selected, $selectAttributes, $optionsAttributes));
     }
 
     /**

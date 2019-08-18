@@ -7,6 +7,7 @@ use Log;
 use Module;
 use Bouncer;
 use GlobalConfig;
+use App\BaseModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -82,7 +83,9 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        $now = Carbon::now();
+        // Set (cached) session key with model namespaces for authorization functionaity
+        BaseModel::get_models();
+
         $request->session()->put('GlobalNotification', []);
         App::setLocale(\App\Http\Controllers\BaseViewController::get_user_lang());
 
@@ -96,8 +99,41 @@ class LoginController extends Controller
             ]);
         }
 
-        $user->last_login_at = $now->toDateTimeString();
-        $user->save();
+        self::setDashboardNotifications();
+
+        $user->update(['last_login_at' => Carbon::now()]);
+    }
+
+    /**
+     * Set global notification messages in session on login
+     */
+    private static function setDashboardNotifications()
+    {
+        $alerts = [];
+        $conf = GlobalConfig::first();
+
+        if ($conf->alert1) {
+            $alerts['alert1'] = [
+                'message' => $conf->alert1,
+                'level' => 'info',
+                'reason'=>'', ];
+        }
+
+        if ($conf->alert2) {
+            $alerts['alert2'] = [
+                'message' => $conf->alert2,
+                'level' => 'warning',
+                'reason' => '', ];
+        }
+
+        if ($conf->alert3) {
+            $alerts['alert3'] = [
+                'message' => $conf->alert3,
+                'level' => 'danger',
+                'reason' => '', ];
+        }
+
+        \Session::flash('DashboardNotification', $alerts);
     }
 
     /**
@@ -116,6 +152,10 @@ class LoginController extends Controller
         }
 
         Log::debug($user->login_name.' logged in successfully!');
+
+        if ($user->initial_dashboard !== '') {
+            return route($user->initial_dashboard);
+        }
 
         if ($activeModules->has('Dashboard')) {
             return route('Dashboard.index');

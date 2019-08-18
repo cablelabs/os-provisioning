@@ -1,6 +1,7 @@
 <?php
 
 return[
+    'link' => 'Dashboard.index',
     'MenuItems' => [
         'Config Page' => [
             'link' => 'Config.index',

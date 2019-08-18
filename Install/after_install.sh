@@ -53,7 +53,7 @@ systemctl enable mariadb
 # populate timezone info and set php timezone based on the local one
 mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
 zone=$(timedatectl | grep 'Time zone' | cut -d':' -f2 | cut -d' ' -f2)
-sed -e "s|^;date.timezone =$|date.timezone = $zone|" \
+sed -e "s|^;date.timezone =.*|date.timezone = $zone|" \
     -e 's/^memory_limit =.*/memory_limit = 1024M/' \
     -e 's/^upload_max_filesize =.*/upload_max_filesize = 50M/' \
     -e 's/^post_max_size =.*/post_max_size = 50M/' \
@@ -63,7 +63,7 @@ sed -i "s|^#APP_TIMEZONE=|APP_TIMEZONE=$zone|" /etc/nmsprime/env/global.env
 # create mysql db
 mysql -u root -e "CREATE DATABASE nmsprime CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';"
 
-mysql -u root -e "GRANT ALL ON nmsprime.* TO 'nmsprime'@'localhost' IDENTIFIED BY '$pw'";
+mysql -u root -e "GRANT ALL ON nmsprime.* TO 'nmsprime'@'localhost' IDENTIFIED BY '$pw';"
 sed -i "s/^DB_PASSWORD=$/DB_PASSWORD=$pw/" "$env"
 
 
@@ -89,6 +89,8 @@ echo "# Use /etc/nmsprime/env/*.env files for configuration" > "$dir/.env"
 # create default user roles to be later assigned to users
 /opt/rh/rh-php71/root/usr/bin/php artisan auth:roles
 
+/opt/rh/rh-php71/root/usr/bin/php artisan config:cache
+
 # Note: needs to run last. storage/logs is only available after artisan optimize
 chown -R apache storage bootstrap/cache /var/log/nmsprime
 
@@ -100,3 +102,4 @@ chmod -R g-w /etc/nmsprime/env
 # log
 chmod 644 /var/log/messages
 systemctl restart rsyslog
+systemd-tmpfiles --create

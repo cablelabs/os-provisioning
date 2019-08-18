@@ -2,7 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 use Modules\ProvBase\Entities\Configfile;
 
 class ConfigfileController extends \BaseController
@@ -26,11 +26,9 @@ class ConfigfileController extends \BaseController
         $cvc_files = Configfile::get_files('cvc');
 
         // label has to be the same like column in sql table
-        // TODO: type is without functionality -> hidden
 
         $form = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
-            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['generic' => 'generic', 'network' => 'network', 'vendor' => 'vendor', 'user' => 'user'], 'hidden' => 1],
             ['form_type' => 'select', 'name' => 'device', 'description' => 'Device', 'value' => ['cm' => 'CM', 'mta' => 'MTA']],
             ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Configfile',
                  'value' => $model->html_list(Configfile::where('id', '!=', $model->id)->get(), ['device', 'name'], true, ': '), ],
@@ -100,11 +98,11 @@ class ConfigfileController extends \BaseController
      */
     public function importTree()
     {
-        if (! Input::hasFile('import')) {
+        if (! Request::hasFile('import')) {
             return;
         }
 
-        $content = $this->replaceIds(\File::get(Input::file('import')));
+        $content = $this->replaceIds(\File::get(Request::file('import')));
 
         $json = json_decode($content, true);
 
@@ -112,7 +110,7 @@ class ConfigfileController extends \BaseController
             return trans('messages.invalidJson');
         }
 
-        $this->recreateTree($json, Input::get()['name'] == '' ? true : false, Configfile::all()->pluck('name'));
+        $this->recreateTree($json, Request::get()['name'] == '' ? true : false, Configfile::all()->pluck('name'));
     }
 
     /**
@@ -141,7 +139,7 @@ class ConfigfileController extends \BaseController
         // replace first parent_id with parent_id of input
         preg_match_all('/[a-t]{6}.[d-i]{2}["][:]\d+[,]/', $content, $ids);
         $parentId = array_shift($ids[0]);
-        $input = Input::get('parent_id');
+        $input = Request::get('parent_id');
 
         return str_replace($parentId, 'parent_id":'.$input.',', $content);
     }
@@ -207,8 +205,8 @@ class ConfigfileController extends \BaseController
             return;
         }
 
-        Input::merge($content);
-        Input::merge(['import' => 'import']);
+        Request::merge($content);
+        Request::merge(['import' => 'import']);
 
         // only continue if the input would pass the validation
         if (\Validator::make($content, $this->prepare_rules(Configfile::rules(), $content))->fails()) {
@@ -222,7 +220,7 @@ class ConfigfileController extends \BaseController
      */
     public function update($id)
     {
-        if (! Input::has('_2nd_action')) {
+        if (! Request::filled('_2nd_action')) {
             // check and handle uploaded firmware and cvc files
             $this->handle_file_upload('firmware', '/tftpboot/fw/');
             $this->handle_file_upload('cvc', '/tftpboot/cvc/');
@@ -249,7 +247,7 @@ class ConfigfileController extends \BaseController
     public function exportTree($id, $configfiles)
     {
         $model = $configfiles->where('id', $id)->first();
-        $tree = $model['attributes'];
+        $tree = $model->getAttributes();
 
         $children = $configfiles->where('parent_id', $id)->all();
 

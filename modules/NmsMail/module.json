@@ -12,5 +12,6 @@
     "aliases": [],
     "files": [
         "start.php"
-    ]
+    ],
+    "requires": []
 }

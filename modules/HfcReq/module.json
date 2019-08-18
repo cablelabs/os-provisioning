@@ -12,5 +12,6 @@
     "icon": "fa-random",
     "files": [
         "start.php"
-    ]
+    ],
+    "requires": []
 }

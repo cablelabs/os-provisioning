@@ -1,6 +1,5 @@
 <?php
 
-
 class InstallRemoveSelfHandling extends BaseMigration
 {
     protected $tablename = '';

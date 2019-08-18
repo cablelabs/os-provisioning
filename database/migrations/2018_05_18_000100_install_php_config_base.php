@@ -1,6 +1,5 @@
 <?php
 
-
 class InstallPhpConfigBase extends BaseMigration
 {
     protected $tablename = '';

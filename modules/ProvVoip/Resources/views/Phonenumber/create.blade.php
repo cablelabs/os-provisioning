@@ -42,11 +42,10 @@
 				<div id="free_numbers_return">
 				@foreach ($currently_free_numbers as $free_number)
 					<a href="#">{{ $free_number }}</a><br>
-					{{-- {{ $free_number }}<br> --}}
 				@endforeach
 				</div>
 			@elseif (is_string($currently_free_numbers))
-				{{ $currently_free_numbers }}
+				{!! $currently_free_numbers !!}
 			@endif
 
 		@stop

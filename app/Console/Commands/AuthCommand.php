@@ -81,7 +81,7 @@ class AuthCommand extends Command
      *
      * @return mixed
      */
-    public function fire() : void
+    public function handle() : void
     {
         $this->resetAdminRole();
 

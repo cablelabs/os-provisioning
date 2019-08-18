@@ -32,6 +32,8 @@ class BaseModel extends Eloquent
 
     public $observer_enabled = true;
 
+    protected $connection = 'mysql';
+
     /**
      * View specific stuff
      */
@@ -235,22 +237,25 @@ class BaseModel extends Eloquent
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany or \App\Extensions\Database\EmptyRelation
      * @author Patrick Reichel
      */
-    public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null)
+    public function belongsToMany($related, $table = null, $foreignPivotKey = null,
+                                  $relatedPivotKey = null, $parentKey = null,
+                                  $relatedKey = null, $relation = null)
     {
         if ($this->_relationAvailable($related)) {
-            return parent::belongsToMany($related, $table, $foreignKey, $otherKey, $relation);
+            return parent::belongsToMany($related, $table, $foreignPivotKey,
+                                         $relatedPivotKey, $parentKey,
+                                         $relatedKey, $relation);
         } else {
             return new EmptyRelation();
         }
     }
 
     /**
-     * Basefunction for returning all objects that a model can have a relation to
-     * Place this function in the model where the edit/create view shall show all related objects
+     * Basefunction to define tabs with associated panels (relation or view) for the models edit page
+     * E.g. Add relation panel 'modems' on the right side of the contract edit page - see ContractController::view_has_many()
+     * Note: Use Controller::editTabs() to define tabs refering to new pages
      *
-     * @author Nino Ryschawy
-     *
-     * @return an array with the appropriate hasMany()-functions of the model
+     * @return array
      */
     public function view_has_many()
     {
@@ -410,6 +415,7 @@ class BaseModel extends Eloquent
             'AddressFunctionsTrait',
             'Ability',
             'BaseModel',
+            'CsvData',
             'helpers',
             'BillingLogger',
             'BillingAnalysis',
@@ -672,7 +678,7 @@ class BaseModel extends Eloquent
      */
     public function html_list($array, $columns, $empty_option = false, $separator = '--')
     {
-        $ret = $empty_option ? [0 => null] : [];
+        $ret = $empty_option ? [null => null] : [];
 
         if (is_string($columns)) {
             foreach ($array as $a) {
@@ -1072,12 +1078,12 @@ class BaseObserver
             // get changed attributes
             $arr = [];
 
-            foreach ($model['attributes'] as $key => $value) {
+            foreach ($model->getAttributes() as $key => $value) {
                 if (in_array($key, $ignore)) {
                     continue;
                 }
 
-                $original = $model['original'][$key];
+                $original = $model->getOriginal($key);
                 if ($original != $value) {
                     if (in_array($key, $hide)) {
                         $arr[] = $key;
