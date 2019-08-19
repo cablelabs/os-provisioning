@@ -1,4 +1,6 @@
-dir="/var/www/nmsprime"
+dir='/var/www/nmsprime'
+env='/etc/nmsprime/env'
+source "$env/root.env"
 # unfortunately dhcpd does not support hmacs other than hmac-md5
 # see: https://bugs.centos.org/view.php?id=12107
 pw=$(ddns-confgen -a hmac-md5 -r /dev/urandom | grep secret)
