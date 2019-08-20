@@ -42,7 +42,7 @@ class HardwareSupportCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $this->snmp_def_mode();
         $modems = Modem::all();
@@ -54,7 +54,7 @@ class HardwareSupportCommand extends Command
             $support_state = 'not-supported';
             if ($modem->serial_num !== '') {
                 //TODO: check the response on a live system, not tested on a fully integrated system
-                $modem->serial_num = snmpget($hostname, $ro_community, '1.3.6.1.2.1.69.1.1.4.0');
+                $modem->serial_num = snmpget($hostname, $ro_community, '1.3.6.1.2.1.69.1.1.4.0'); //TODO: Handle Exception
             }
             $modem_serial_no_md5 = md5($modem->serial_num);
             $contents = file_get_contents('https://support.nmsprime.com/hwsn/api.php?q='.$modem_serial_no_md5);
@@ -77,7 +77,7 @@ class HardwareSupportCommand extends Command
             $support_state = 'not-supported';
 
             //TODO: Test snmpwalk response a live system, not tested on a fully integrated system
-            $cmts_serials = snmpwalk($hostname, $ro_community, '1.3.6.1.2.1.47.1.1.1.1.11');
+            $cmts_serials = snmpwalk($hostname, $ro_community, '1.3.6.1.2.1.47.1.1.1.1.11'); //TODO: Handle Exception
             $count_found = 0;
             foreach ($cmts_serials as $cmts_serial) {
                 $cmts_serial_md5 = md5($cmts_serial);
