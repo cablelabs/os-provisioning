@@ -80,6 +80,13 @@ See the list of [contributors](https://github.com/nmsprime/nmsprime/graphs/contr
 
 ---
 
+## Donate
+
+If you like our project and want do help us grow you can also buy us a coffee or two.
+[![](https://www.paypalobjects.com/en_US/DK/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EXGQS35VD6UVU&source=url)
+
+---
+
 ## License
 
 This project is licensed under the GPLv3 License - see the [LICENSE](LICENSE.md) file for details. For more informations: [License Article](https://devel.roetzer-engineering.com/confluence/display/NMS/License)
