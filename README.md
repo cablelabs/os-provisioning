@@ -82,7 +82,8 @@ See the list of [contributors](https://github.com/nmsprime/nmsprime/graphs/contr
 
 ## Donate
 
-If you like our project and want to help us grow you can also buy us a coffee or two.
+If you like NMS Prime, feel free to support us.
+
 [![](https://www.paypalobjects.com/en_US/DK/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EXGQS35VD6UVU&source=url)
 
 ---
