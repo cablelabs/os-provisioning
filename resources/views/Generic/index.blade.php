@@ -50,8 +50,8 @@
             <div class="align-self-end m-r-30">
                 @if ($delete_allowed)
                     <button type="submit" class="btn btn-outline-danger m-b-10 float-right" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
-                    title="{{ \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button' ) }}" form="IndexForm" name="_delete">
-                            <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
+                        title="{{ \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button' ) }}" form="IndexForm" name="_delete">
+                        <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
                     </button>
                 @endif
             </div>
@@ -68,6 +68,12 @@
     {{-- database entries inside a form with checkboxes to be able to delete one or more entries --}}
     {{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete', 'id' => 'IndexForm')) }}
     {{-- INIT DT --}}
+
+    @php
+        $methodExists = method_exists(BaseController::get_model_obj(), 'view_index_label');
+        $indexTableInfo = $methodExists ? $model->view_index_label() : [];
+    @endphp
+
     <table class="table table-hover datatable table-bordered d-table" id="datatable">
         {{-- Get Headerdata and translate with translation files --}}
         <thead> {{-- TABLE HEADER --}}
@@ -80,15 +86,15 @@
                     </th>
                 @endif
                 {{-- Get Header if possible with new Format - for Backwards compatibility old one stays --}}
-                @if (isset($model) && method_exists( BaseController::get_model_obj() , 'view_index_label' ) && is_array($model->view_index_label()) && isset($model->view_index_label()['index_header']))
-                    @foreach ($model->view_index_label()['index_header'] as $field)
+                @if (isset($model) && $methodExists && is_array($indexTableInfo) && isset($indexTableInfo['index_header']))
+                    @foreach ($indexTableInfo['index_header'] as $field)
                         <th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.'.$field).' ' }}
-                        @if ((!empty($model->view_index_label()['disable_sortsearch'])) && ($model->view_index_label()['disable_sortsearch'] == [$field => 'false']))
-                            <i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top" data-delay='{"show":"250"}'
-                            data-original-title="{{trans('helper.SortSearchColumn')}}"></i>
-                        @elseif (!empty($model->view_index_label()['help'][$field]))
-                            <i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top" data-delay='{"show":"250"}'
-                            data-original-title="{{trans('helper.'.$model->view_index_label()['help'][$field])}}"></i>
+                        @if ((!empty($indexTableInfo['disable_sortsearch'])) && ($indexTableInfo['disable_sortsearch'] == [$field => 'false']))
+                            <i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top"
+                                data-delay='{"show":"250"}' data-original-title="{{trans('helper.SortSearchColumn')}}"></i>
+                        @elseif (!empty($indexTableInfo['help'][$field]))
+                            <i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top"
+                                data-delay='{"show":"250"}' data-original-title="{{trans('helper.'.$indexTableInfo['help'][$field])}}"></i>
                         @endif
                         </th>
                     @endforeach
@@ -98,14 +104,14 @@
         <tbody> {{-- Table DATA --}}
         </tbody>
         <tfoot> {{-- TABLE FOOTER--}}
-        @if (isset($model) && method_exists( BaseController::get_model_obj() , 'view_index_label' ))
+        @if (isset($model) && $methodExists)
             <tr>
                 <th></th>  {{-- Responsive Column --}}
                 @if (isset($delete_allowed) && $delete_allowed == true)
                     <th></th> {{-- Checkbox Column if delete is allowed --}}
                 @endif
-                @foreach ($model->view_index_label()['index_header'] as $field)
-                    @if ((!empty($model->view_index_label()['disable_sortsearch'])) && ( array_has( $model->view_index_label()['disable_sortsearch'] , $field) ) )
+                @foreach ($indexTableInfo['index_header'] as $field)
+                    @if ((!empty($indexTableInfo['disable_sortsearch'])) && ( array_has( $indexTableInfo['disable_sortsearch'] , $field) ) )
                         <th></th>
                     @else
                         <th class="searchable"></th>
