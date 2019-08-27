@@ -14,6 +14,10 @@ class DebtController extends \BaseController
      */
     public function view_form_fields($model = null)
     {
+        if (! $model->date) {
+            $model->date = date('Y-m-d');
+        }
+
         // label has to be the same like column in sql table
         return [
             ['form_type' => 'text', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 1],
@@ -30,6 +34,15 @@ class DebtController extends \BaseController
 
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
+    }
+
+    public function prepare_input($data)
+    {
+        $data['indicator'] = $data['indicator'] ?? 0;
+        $data['bank_fee'] = $data['bank_fee'] ?? 0;
+        $data['total_fee'] = $data['total_fee'] ?? 0;
+
+        return parent::prepare_input($data);
     }
 
     /**

@@ -68,8 +68,11 @@ class contractCommand extends Command
                     ->whereIn('product.type', ['Internet', 'Voip'])
                     ->where(function ($query) use ($min_date, $max_date) {
                         // using advanced where clause to set brackets properly
-                        $query->whereBetween('item.valid_from', [$min_date, $max_date])
-                              ->orWhereBetween('item.valid_to', [$min_date, $max_date]);
+                        $query
+                            ->whereBetween('item.valid_from', [$min_date, $max_date])
+                            ->orWhereBetween('item.valid_to', [$min_date, $max_date])
+                            ->orWhereBetween('contract.contract_start', [$min_date, $max_date])
+                            ->orWhereBetween('contract.contract_end', [$min_date, $max_date]);
                     })
                     ->groupBy('contract.id')
                     ->select('contract.*')
