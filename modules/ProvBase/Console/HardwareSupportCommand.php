@@ -4,8 +4,7 @@ namespace Modules\provbase\Console;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Modules\ProvBase\Entities\Cmts;
-use Modules\ProvBase\Entities\Modem;
+use Illuminate\Support\Facades\DB;
 use Modules\ProvBase\Entities\ProvBase;
 
 class HardwareSupportCommand extends Command
@@ -45,8 +44,8 @@ class HardwareSupportCommand extends Command
     public function handle()
     {
         $this->snmp_def_mode();
-        $modems = Modem::all();
-        $cmtses = Cmts::all();
+        $modems = DB::table('modem')->get();
+        $cmtses = DB::table('cmts')->get();
         $ro_community = ProvBase::first()->ro_community;
 
         foreach ($modems as $modem) {
