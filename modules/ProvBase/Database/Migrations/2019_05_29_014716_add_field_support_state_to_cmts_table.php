@@ -14,7 +14,7 @@ class AddFieldSupportStateToCmtsTable extends Migration
     public function up()
     {
         Schema::table('cmts', function (Blueprint $table) {
-            $table->enum('support_state', ['verifying', 'full-support', 'not-supported', 'restricted'])->default('verifying');
+            $table->string('support_state', 30)->default('verifying');
         });
     }
 
