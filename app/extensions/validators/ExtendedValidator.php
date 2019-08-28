@@ -129,16 +129,16 @@ class ExtendedValidator
 
         // TODO: add more countries, improve by check against check digits
         $creditor_id_length = [
-            'AT' => 18,			// Austria
-            'BE' => 20,			// Belgium
-            'DE' => 18,			// Germany
-            'EE' => 20,			// Estonia
+            'AT' => 18,         // Austria
+            'BE' => 20,         // Belgium
+            'DE' => 18,         // Germany
+            'EE' => 20,         // Estonia
             'ES' => 16,
             'FR' => 13,
             'IT' => 23,
-            'LU' => 26,			// Luxembourg
+            'LU' => 26,         // Luxembourg
             'NL' => 19,
-            'PT' => 13,			// Portugal
+            'PT' => 13,         // Portugal
             ];
 
         if (strlen($value) != (isset($creditor_id_length[$country_code]) ? $creditor_id_length[$country_code] : 1000)) {
@@ -202,7 +202,7 @@ class ExtendedValidator
             exec("rm -f $dir/dummy-validator.cfg && docsis -e $cf_file $dir/../keyfile $dir/dummy-validator.cfg 2>&1", $outs);
         } elseif ($device == 'mta') {
             Log::info("Validation: docsis -p $cf_file $dir/dummy-validator.cfg");
-            exec("rm -f $dir/dummy-validator.cfg && docsis -p $cf_file $dir/dummy-validator.cfg 2>&1", $outs, $ret);	//return value is always 0
+            exec("rm -f $dir/dummy-validator.cfg && docsis -p $cf_file $dir/dummy-validator.cfg 2>&1", $outs, $ret);    //return value is always 0
         }
 
         /*
@@ -258,10 +258,16 @@ class ExtendedValidator
      */
     public function validatePhonebookString($attribute, $value, $parameters)
     {
-
         // see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
         // when laravel calls the validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
         $validator = \func_get_arg(3);
+
+        // as of commit f2d4af6840abed1e2192855346d8f1af65758711 now empty strings are “null”
+        // so we classify all kinds of empty strings as valid
+        // this is save – if empty strings are not allowed another rule will strike; e.g. “required”
+        if (! $value) {
+            return true;
+        }
 
         // for easier access and improved readability: get needed informations out of config
         $maxlen = PhonebookEntry::$config[$attribute]['maxlen'];
@@ -346,7 +352,7 @@ class ExtendedValidator
      * Check values that are entry_type dependend
      *
      * @param $parameters first entry needs to be the entry_type value (add “entry_type” to PhonebookEntry::rules(); will
-     *			then be set in PhonebookEntryController::prepare_rules
+     *          then be set in PhonebookEntryController::prepare_rules
      *
      * @author Patrick Reichel
      */
