@@ -68,7 +68,7 @@ class HardwareSupportCommand extends Command
                     }
 
                     $modem->support_state = $support_state;
-                    DB::table('modem')->where('id', $modem->id)->update(['serial_num' => $modem->serial_num, 'support_state' => $support_state]);
+                    DB::table('modem')->where('id', $modem->id)->update(['serial_num' => $modem->serial_num, 'support_state' => $support_state, 'updated_at'=> (Carbon::now())->toDateTimeString()]);
                 } catch (\Exception $exception) {
                     $this->error($exception->getMessage());
                 }
@@ -107,7 +107,7 @@ class HardwareSupportCommand extends Command
                         $support_state = 'verifying';
                     }
                 }
-                DB::table('cmts')->where('id', $cmts->id)->update(['support_state' => $support_state]);
+                DB::table('cmts')->where('id', $cmts->id)->update(['support_state' => $support_state, 'updated_at'=> (Carbon::now())->toDateTimeString()]);
             } catch (\Exception $exception) {
                 $this->error($exception->getMessage());
             }
