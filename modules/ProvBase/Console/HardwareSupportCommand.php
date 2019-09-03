@@ -72,7 +72,7 @@ class HardwareSupportCommand extends Command
             }
 
             $modem->support_state = $support_state;
-            $modem->save();
+            DB::table('modem')->where('id', $modem->id)->update(['serial_num' => $modem->serial_num, 'support_state'=> $support_state]);
         }
 
         foreach ($cmtses as $cmts) {
@@ -111,8 +111,7 @@ class HardwareSupportCommand extends Command
                 }
             }
         }
-        $cmts->support_state = $support_state;
-        $cmts->save();
+        DB::table('cmts')->where('id', $cmts->id)->update(['support_state'=> $support_state]);
     }
 
     /**
