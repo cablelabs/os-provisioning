@@ -97,15 +97,14 @@ class HardwareSupportCommand extends Command
                 }
 
                 if ($count_found) {
-                    switch ($percentage = $count_found / count($cmts_serials) * 100) {
-                        case $percentage > 80 && $percentage <= 95:
-                            $support_state = 'restricted';
-                            break;
-                        case $percentage > 95:
-                            $support_state = 'full-supported';
-                            break;
-                        case (Carbon::parse($cmts->created_at))->diffInWeeks(Carbon::now()) < 6:
-                            $support_state = 'verifying';
+                    $percentage = $count_found / count($cmts_serials) * 100;
+
+                    if ($percentage > 95){
+                        $support_state = 'full-supported';
+                    }elseif ($percentage > 80 && $percentage <= 95){
+                        $support_state = 'restricted';
+                    }elseif((Carbon::parse($cmts->created_at))->diffInWeeks(Carbon::now()) < 6) {
+                        $support_state = 'verifying';
                     }
                 }
                 DB::table('cmts')->where('id', $cmts->id)->update(['support_state' => $support_state]);
