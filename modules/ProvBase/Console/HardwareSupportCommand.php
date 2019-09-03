@@ -55,7 +55,7 @@ class HardwareSupportCommand extends Command
                 //TODO: check the response on a live system, not tested on a fully integrated system
                 try {
                     $modem->serial_num = snmpget($hostname, $ro_community, '1.3.6.1.2.1.69.1.1.4.0'); //TODO: Handle Exception
-                }catch (\SNMPException $exception){
+                }catch (\Exception $exception){
                     $this->error($exception->getMessage());
                 }
             }
@@ -72,7 +72,7 @@ class HardwareSupportCommand extends Command
             }
 
             $modem->support_state = $support_state;
-            $modem->save();
+            DB::table('modem')->where('id', $modem->id)->update(['serial_num' => $modem->serial_num, 'support_state'=> $support_state]);
         }
 
         foreach ($cmtses as $cmts) {
@@ -82,7 +82,7 @@ class HardwareSupportCommand extends Command
             //TODO: Test snmpwalk response a live system, not tested on a fully integrated system
             try {
                 $cmts_serials = snmpwalk($hostname, $ro_community, '1.3.6.1.2.1.47.1.1.1.1.11'); //TODO: Handle Exception
-            }catch (\SNMPException $exception){
+            }catch (\Exception $exception){
                 $this->error($exception->getMessage());
             }
             $count_found = 0;
@@ -111,8 +111,7 @@ class HardwareSupportCommand extends Command
                 }
             }
         }
-        $cmts->support_state = $support_state;
-        $cmts->save();
+        DB::table('cmts')->where('id', $cmts->id)->update(['support_state'=> $support_state]);
     }
 
     /**
