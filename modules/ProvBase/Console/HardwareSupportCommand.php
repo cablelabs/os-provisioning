@@ -66,7 +66,7 @@ class HardwareSupportCommand extends Command
                 $result = json_decode($contents, true);
                 if (isset($result[$modem_serial_no_md5]) && $result[$modem_serial_no_md5] === 'valid') {
                     $support_state = 'full-support';
-                } elseif ($modem->created_at->diffInWeeks(Carbon::now()) < 6) {
+                } elseif ((Carbon::parse($modem->created_at))->diffInWeeks(Carbon::now()) < 6) {
                     $support_state = 'verifying';
                 }
             }
@@ -106,7 +106,7 @@ class HardwareSupportCommand extends Command
                     case $percentage > 95:
                         $support_state = 'full-supported';
                         break;
-                    case $cmts->created_at->diffInWeeks(Carbon::now()) < 6:
+                    case (Carbon::parse($cmts->created_at))->diffInWeeks(Carbon::now()) < 6:
                         $support_state = 'verifying';
                 }
             }
