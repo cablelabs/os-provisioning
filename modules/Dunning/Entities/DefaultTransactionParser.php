@@ -84,6 +84,8 @@ class DefaultTransactionParser
 
         if ($this->debt instanceof Debt) {
             $this->debt->date = $this->transaction->getValueTimestamp('Y-m-d H:i:s');
+
+            $this->debt->missing_amount = $this->debt->amount + $this->debt->total_fee;
         }
 
         // TODO: Dont add log entry if debt already exists

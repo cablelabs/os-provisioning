@@ -131,6 +131,7 @@ return [
     'device_probably_online' => ':type ist wahrscheinlich online',
     'eom'                   => 'zum Monatsende',
     'envia_no_interaction'  => 'Keine envia-TEL-Aufrträge, die eine Bearbeitung benötigen',
+    'Missing amount'        => 'Ausstand',
     'Month'                     => 'Monat',
     'envia_interaction'     => 'envia-TEL-Auftrag benötigt eine Bearbeitung|envia-TEL-Aufträge benötigen Bearbeitung',
     'Net'                       => 'Netto',

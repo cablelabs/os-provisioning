@@ -24,6 +24,7 @@ class DebtController extends \BaseController
             ['form_type' => 'text', 'name' => 'voucher_nr', 'description' => 'Voucher number'],
             ['form_type' => 'text', 'name' => 'number', 'description' => 'Payment number', 'space' => 1],
             ['form_type' => 'text', 'name' => 'amount', 'description' => 'Amount'],
+            ['form_type' => 'text', 'name' => 'missing_amount', 'description' => 'Missing amount', 'hidden' => 'C', 'options' => ['readonly']],
             ['form_type' => 'text', 'name' => 'bank_fee', 'description' => 'Bank fee'],
             ['form_type' => 'text', 'name' => 'total_fee', 'description' => 'Total fee', 'help' => trans('dunning::help.debt.total_fee'), 'space' => 1],
             ['form_type' => 'text', 'name' => 'date', 'description' => 'Voucher date'],         // Belegdatum
@@ -32,6 +33,7 @@ class DebtController extends \BaseController
             ['form_type' => 'text', 'name' => 'indicator', 'description' => 'Dunning indicator'],
             ['form_type' => 'text', 'name' => 'dunning_date', 'description' => 'Dunning date', 'space' => 1],
 
+            ['form_type' => 'checkbox', 'name' => 'cleared', 'description' => trans('dunning::view.cleared'), 'options' => ['onclick' => "return false;", 'readonly']],
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
     }

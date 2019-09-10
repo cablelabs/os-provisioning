@@ -131,6 +131,7 @@ return [
     'device_probably_online' => ':type is probably online',
     'eom'                   => 'to end of month',
     'envia_no_interaction'  => 'No envia TEL orders require interaction',
+    'Missing amount'        => 'Missing amount',
     'Month'                     => 'Month',
     'envia_interaction'     => 'envia TEL order requires interaction|envia TEL orders require interaction',
     'Net'                       => 'Net',
