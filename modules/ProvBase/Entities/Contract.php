@@ -213,7 +213,7 @@ class Contract extends \BaseModel
      */
     public function debts()
     {
-        return $this->hasMany('Modules\Dunning\Entities\Debt')->orderBy('date', 'desc');
+        return $this->hasMany('Modules\Dunning\Entities\Debt')->orderBy('date', 'desc')->orderBy('id', 'desc');
     }
 
     public function modems()
