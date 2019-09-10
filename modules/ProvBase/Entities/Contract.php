@@ -1303,7 +1303,14 @@ class Contract extends \BaseModel
             return 0;
         }
 
-        return $sum->sum;
+        // https://stackoverflow.com/questions/17210787/php-float-calculation-error-when-subtracting
+        $sum = round($sum->sum, 2);
+
+        if ($sum == 0) {
+            return 0;
+        }
+
+        return $sum;
     }
 }
 

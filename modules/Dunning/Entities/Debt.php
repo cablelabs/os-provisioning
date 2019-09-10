@@ -103,7 +103,7 @@ class Debt extends \BaseModel
 
     public function sum()
     {
-        return $this->amount + $this->total_fee;
+        return round($this->amount + $this->total_fee, 4);
     }
 
     public function hasSepa()
