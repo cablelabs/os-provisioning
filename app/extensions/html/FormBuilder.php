@@ -325,21 +325,22 @@ class FormBuilder extends CollectiveFormBuilder
      */
     public function closeGroup()
     {
-        // Get the last added name from the groupStack and
-        // remove it from the array.
+        $html = '';
+
+        // Get the last added name from the groupStack and remove it from the array
         $name = array_pop($this->groupStack);
 
         // Get the formatted errors for this form group.
         $errors = $this->getFormattedErrors($name);
 
-        // Get Layout col-md Setting
-        $col = 4;
-        if (isset(static::$layout_form_col_md['label'])) {
-            $col = static::$layout_form_col_md['label'];
+        // Append the errors to the group and close it out.
+        if ($errors) {
+            $col = static::$layout_form_col_md['label'] ?? 4;
+
+            $html = '<div class=col-md-'.$col.'></div><div class=col-md-'.(12 - $col).'>'.$errors.'</div>';
         }
 
-        // Append the errors to the group and close it out.
-        return '<div class=col-md-'.$col.'></div><div class=col-md-'.(12 - $col).'>'.$errors.'</div></div>'.$this->closeDivClass();
+        return $html.'</div>'.$this->closeDivClass();
     }
 
     public function openDivClass($col = 9, $color = false)
