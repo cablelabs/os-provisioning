@@ -3,6 +3,7 @@
 namespace Modules\Dunning\Entities;
 
 use Modules\ProvBase\Entities\Contract;
+use Modules\BillingBase\Providers\Currency;
 
 class Debt extends \BaseModel
 {
@@ -52,13 +53,9 @@ class Debt extends \BaseModel
     {
         $bsclass = $this->getBsClass();
 
-        if ($this->sum() > 0) {
-            $bsclass = 'warning';
-        }
-
         return ['table' => $this->table,
                 'index_header' => ['contract.firstname', 'contract.lastname', 'debt.date', 'sum', 'amount', 'debt.total_fee' /*,'SEPA'*/],
-                'header' => (string) ($this->amount + $this->total_fee).\Modules\BillingBase\Providers\Currency::get()." ($this->date)",
+                'header' => $this->label(),
                 'bsclass' => $bsclass,
                 // 'eager_loading' => ['contract.sepamandates.costcenter'],
                 'eager_loading' => ['contract'],
@@ -84,6 +81,14 @@ class Debt extends \BaseModel
         }
 
         return $bsclass;
+    }
+
+    public function label()
+    {
+        $label = (string) ($this->sum()).Currency::get()." ($this->date)";
+        $label .= ' - '.trans('dunning::view.open').': '.$this->missing_amount.Currency::get();
+
+        return $label;
     }
 
     public function getContractFirstname()
