@@ -50,7 +50,7 @@ class Debt extends \BaseModel
     // generates datatable content and classes for model
     public function view_index_label()
     {
-        $bsclass = 'success';
+        $bsclass = $this->getBsClass();
 
         if ($this->sum() > 0) {
             $bsclass = 'warning';
@@ -69,6 +69,21 @@ class Debt extends \BaseModel
                     // 'SEPA' => 'hasSepa',
                 ],
             ];
+    }
+
+    public function getBsClass()
+    {
+        $bsclass = 'success';
+
+        if ($this->sum() > 0) {
+            $bsclass = 'warning';
+        }
+
+        if ($this->cleared) {
+            $bsclass = $this->missing_amount >= 0 ? 'active' : 'success';
+        }
+
+        return $bsclass;
     }
 
     public function getContractFirstname()
