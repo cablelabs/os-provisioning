@@ -268,7 +268,7 @@ class DefaultTransactionParser
             if ($contracts->count() > 1) {
                 // As the prefix und suffix of the contract number is not considered it's possible to finde multiple contracts
                 // When that happens we need to take this into consideration
-                ChannelLog::error('dunning', trans('dunning::messages.transaction.credit.multipleContracts'));
+                ChannelLog::error('dunning', trans('dunning::messages.transaction.credit.multipleContracts', ['number' => $numbers['contractNr']]));
             } elseif ($contracts->count() == 1) {
                 // Create debt only if contract number is found and amount is same like in last invoice
                 $ret = $this->addDebtBySpecialMatch($contracts->first());
@@ -375,7 +375,7 @@ class DefaultTransactionParser
         $this->invoiceNr = $matchInvoice ? $matchInvoice[0] : '';
 
         // Match examples: Kundennummer|Kd-Nr|Kd.nr.|Kd.-Nr.|Kn|Customernr|Cr|Cnr|Knr 13451
-        preg_match('/[CK](.*?)[ndr](.*?)([1-7]\d{1,4})/i', $this->description, $matchContract);
+        preg_match('/[CK](.*?)[ndr](.*?)([1-7]\d{4})/i', $this->description, $matchContract);
         $contractNr = $matchContract ? $matchContract[3] : 0;
 
         // Special invoice numbers that ensure that transaction definitely doesn't belong to NMSPrime
