@@ -18,8 +18,28 @@ class DebtController extends \BaseController
             $model->date = date('Y-m-d');
         }
 
+        if (! $model->cleared && (! $model->id || ! Debt::where('parent_id', $model->id)->count())) {
+            $selectList[null] = null;
+            $contract_id = $model->contract_id ?: \Request::get('contract_id');
+
+            // Type 1 (sta): Bank file upload with whole history of debts
+            // Type 2 (csv): Debt import from financial accounting software (no history, only still open debts)
+            $debts = Debt::where('contract_id', $contract_id)->where('cleared', 0)
+                ->whereNull('parent_id')
+                ->where('id', '!=', $model->id)
+                ->get();
+
+            foreach ($debts as $debt) {
+                $selectList[$debt->id] = $debt->label();
+            }
+
+            $fields1[] = ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Debt to clear', 'value' => $selectList];
+        } else {
+            $fields1[] = ['form_type' => 'text', 'name' => 'parent_id', 'description' => 'Debt to clear', 'hidden' => 1];
+        }
+
         // label has to be the same like column in sql table
-        return [
+        $fields2 = [
             ['form_type' => 'text', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 1],
             ['form_type' => 'text', 'name' => 'voucher_nr', 'description' => 'Voucher number'],
             ['form_type' => 'text', 'name' => 'number', 'description' => 'Payment number', 'space' => 1],
@@ -36,6 +56,8 @@ class DebtController extends \BaseController
             ['form_type' => 'checkbox', 'name' => 'cleared', 'description' => trans('dunning::view.cleared'), 'options' => ['onclick' => "return false;", 'readonly']],
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
+
+        return array_merge($fields1, $fields2);
     }
 
     public function prepare_input($data)

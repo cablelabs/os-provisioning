@@ -72,6 +72,8 @@ class DefaultTransactionParser
     {
         // Initialize Variables
         $this->debt = new Debt;
+        // We try to find a debt to clear when parent_id is 0
+        $this->debt->parent_id = 0;
         $this->transaction = $transaction;
 
         $this->amount = $this->bank_fee = 0;

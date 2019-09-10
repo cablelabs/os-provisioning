@@ -2,6 +2,9 @@
 
 return [
     'addedDebts' => 'Füge offene Posten zu folgenden :count Verträgen hinzu: :numbers',
+    'amountExceeded' => 'Die Summe der eingezahlten Beträge übersteigt den Betrag des offenen Postens.',
+    'clearParentId' => 'Die Beziehung zum eingestellten OP wurde gelöscht, da sie keinen Sinn ergibt, da beide OPs einen positiven/negativen Betrag haben.',
+    'parseMt940Failed' => 'Fehler beim parsen der hochgeladenen Datei. Siehe Logfile. (:msg)',
     'transaction' => [
         'create' => 'Erstelle offenen Posten aufgrund von',
         'credit' => [
@@ -31,5 +34,4 @@ return [
         ],
         'exists' => 'Ignoriere Transaktion. :debitCredit wurde bereits importiert. (Betrag :price; Beschreibung :description)',
     ],
-    'parseMt940Failed' => 'Fehler beim parsen der hochgeladenen Datei. Siehe Logfile. (:msg)',
 ];

@@ -2,6 +2,9 @@
 
 return [
     'addedDebts' => 'Add debts to the following :count contracts: :numbers',
+    'amountExceeded' => 'The cumulated amount of the placed deposits exceeds the amount of the debt.',
+    'clearParentId' => 'Cleared relation to debt as it doesnt make sense as both amounts are positive/negative.',
+    'parseMt940Failed' => 'Error on parsing the uploaded file. See logfile. (:msg)',
     'transaction' => [
         'create' => 'Create debt because of',
         'credit' => [
@@ -31,5 +34,4 @@ return [
         ],
         'exists' => 'Ignore :debitCredit transaction as debt was already imported. (Price :price; Description :description)',
     ],
-    'parseMt940Failed' => 'Error on parsing the uploaded file. See logfile. (:msg)',
 ];
