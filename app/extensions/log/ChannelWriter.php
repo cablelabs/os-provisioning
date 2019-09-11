@@ -17,7 +17,7 @@ class ChannelWriter
             'path' => 'logs/billing.log',
             'level' => Logger::DEBUG,
         ],
-        'dunning' => [
+        'overduedebts' => [
             'path' => 'logs/bank-transactions.log',
             'level' => Logger::DEBUG,
         ],

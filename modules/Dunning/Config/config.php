@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Dunning\Entities;
+namespace Modules\OverdueDebts\Entities;
 
 return [
-    'name' => 'Dunning',
+    'name' => 'OverdueDebts',
     // Change the type by inserting DEBT_MGMT_TYPE=csv in /etc/nmsprime/env/dunning.php
     'debtMgmtType' => env('DEBT_MGMT_TYPE', 'sta'),
     'MenuItems' => [

@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Dunning\Entities;
+namespace Modules\OverdueDebts\Entities;
 
-class Dunning extends \BaseModel
+class OverdueDebts extends \BaseModel
 {
     // The associated SQL table for this Model
-    public $table = 'dunning';
+    public $table = 'overduedebts';
 
     // Add your validation rules here
     public static function rules($id = null)
@@ -22,7 +22,7 @@ class Dunning extends \BaseModel
     // Name of View
     public static function view_headline()
     {
-        return 'Dunning';
+        return 'OverdueDebts';
     }
 
     // View Icon

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Dunning\Console;
+namespace Modules\OverdueDebts\Console;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -69,7 +69,7 @@ class ImportDebtCommand extends Command
             return;
         }
 
-        \Modules\Dunning\Entities\Debt::create([
+        \Modules\OverdueDebts\Entities\Debt::create([
             'contract_id' => $contract->id,
             'voucher_nr' => $line[self::VOUCHER_NR],
             'amount' => str_replace(',', '.', $line[self::AMOUNT]),

@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Dunning\Http\Controllers;
+namespace Modules\OverdueDebts\Http\Controllers;
 
 use View;
 use Yajra\Datatables\Datatables;
-use Modules\Dunning\Entities\Debt;
+use Modules\OverdueDebts\Entities\Debt;
 use App\Http\Controllers\BaseViewController;
 
 class DebtController extends \BaseController
@@ -46,14 +46,14 @@ class DebtController extends \BaseController
             ['form_type' => 'text', 'name' => 'amount', 'description' => 'Amount'],
             ['form_type' => 'text', 'name' => 'missing_amount', 'description' => 'Missing amount', 'hidden' => 'C', 'options' => ['readonly']],
             ['form_type' => 'text', 'name' => 'bank_fee', 'description' => 'Bank fee'],
-            ['form_type' => 'text', 'name' => 'total_fee', 'description' => 'Total fee', 'help' => trans('dunning::help.debt.total_fee'), 'space' => 1],
+            ['form_type' => 'text', 'name' => 'total_fee', 'description' => 'Total fee', 'help' => trans('overduedebts::help.debt.total_fee'), 'space' => 1],
             ['form_type' => 'text', 'name' => 'date', 'description' => 'Voucher date'],         // Belegdatum
             ['form_type' => 'text', 'name' => 'due_date', 'description' => 'RCD', 'space' => 1],
 
             ['form_type' => 'text', 'name' => 'indicator', 'description' => 'Dunning indicator'],
             ['form_type' => 'text', 'name' => 'dunning_date', 'description' => 'Dunning date', 'space' => 1],
 
-            ['form_type' => 'checkbox', 'name' => 'cleared', 'description' => trans('dunning::view.cleared'), 'options' => ['onclick' => "return false;", 'readonly']],
+            ['form_type' => 'checkbox', 'name' => 'cleared', 'description' => trans('overduedebts::view.cleared'), 'options' => ['onclick' => "return false;", 'readonly']],
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
 
@@ -79,7 +79,7 @@ class DebtController extends \BaseController
     public function result()
     {
         $model = static::get_model_obj();
-        $headline = trans('dunning::view.debt.headline');
+        $headline = trans('overduedebts::view.debt.headline');
         $view_header = BaseViewController::translate_view('Overview', 'Header');
         $create_allowed = $delete_allowed = false;
 

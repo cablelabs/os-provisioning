@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Dunning\Database\Seeders;
+namespace Modules\OverdueDebts\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class DunningDatabaseSeeder extends Seeder
+class OverdueDebtsDatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.

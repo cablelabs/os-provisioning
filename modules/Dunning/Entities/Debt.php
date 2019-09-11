@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Dunning\Entities;
+namespace Modules\OverdueDebts\Entities;
 
 use Modules\ProvBase\Entities\Contract;
 use Modules\BillingBase\Providers\Currency;
@@ -88,7 +88,7 @@ class Debt extends \BaseModel
     public function label()
     {
         $label = (string) ($this->sum()).Currency::get()." ($this->date)";
-        $label .= ' - '.trans('dunning::view.open').': '.$this->missing_amount.Currency::get();
+        $label .= ' - '.trans('overduedebts::view.open').': '.$this->missing_amount.Currency::get();
 
         return $label;
     }
@@ -128,12 +128,12 @@ class Debt extends \BaseModel
     // One debt can have multiple payments (debt children) that will clear the debt
     public function children()
     {
-        return $this->hasMany('Modules\Dunning\Entities\Debt', 'parent_id');
+        return $this->hasMany('Modules\OverdueDebts\Entities\Debt', 'parent_id');
     }
 
     public function parent()
     {
-        return $this->belongsTo('Modules\Dunning\Entities\Debt');
+        return $this->belongsTo('Modules\OverdueDebts\Entities\Debt');
     }
 
     /**
@@ -146,7 +146,7 @@ class Debt extends \BaseModel
         $payments = [];
 
         // TODO: Config checking actually not necessary as below query would also return [] for csv type as invoice_id (inheritly) is never set
-        if (config('dunning.debtMgmtType') == 'csv' || ! $this->children->isEmpty()) {
+        if (config('overduedebts.debtMgmtType') == 'csv' || ! $this->children->isEmpty()) {
             $payments = $this->children;
         }
 
@@ -271,7 +271,7 @@ class DebtObserver
 
         // Show warning when clearing transaction amount is bigger than the debt - deprecated
         // if ($debtToClear->missing_amount < 0) {
-        //     \Session::put('alert.warning', trans('dunning::messages.amountExceeded'));
+        //     \Session::put('alert.warning', trans('overduedebts::messages.amountExceeded'));
         // }
 
         $debtToClear->debtObserverEnabled = false;
@@ -282,7 +282,7 @@ class DebtObserver
     {
         Debt::where('id', $debt->id)->update(['parent_id' => null]);
 
-        \Session::push('tmp_error_above_form', trans('dunning::messages.clearParentId'));
+        \Session::push('tmp_error_above_form', trans('overduedebts::messages.clearParentId'));
     }
 
     private function getDebtToClear($debt, $original = false)
@@ -292,7 +292,7 @@ class DebtObserver
             return Debt::find($debt->getOriginal()['parent_id']);
         }
 
-        if ($debt->parent_id || config('dunning.debtMgmtType') == 'csv') {
+        if ($debt->parent_id || config('overduedebts.debtMgmtType') == 'csv') {
             return $debt->parent;
         }
 

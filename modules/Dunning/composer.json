@@ -1,5 +1,5 @@
 {
-    "name": "nmsprime-modules/dunning",
+    "name": "nmsprime-modules/overduedebts",
     "description": "",
     "authors": [
         {
@@ -11,7 +11,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Modules\\Dunning\\": ""
+            "Modules\\OverdueDebts\\": ""
         }
     }
 }

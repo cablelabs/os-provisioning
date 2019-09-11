@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Dunning\Entities;
+namespace Modules\OverdueDebts\Entities;
 
 use ChannelLog;
 use Illuminate\Support\Str;
@@ -36,7 +36,7 @@ class DefaultTransactionParser
     protected $conf;
     protected $excludeRegexes;
 
-    public $excludeRegexesRelPath = 'config/dunning/transferExcludes.php';
+    public $excludeRegexesRelPath = 'config/overduedebts/transferExcludes.php';
 
     /**
      * Designators in transfer reason and it's corresponding variable names for the mandatory entries
@@ -66,7 +66,7 @@ class DefaultTransactionParser
     /**
      * Check wheter the transaction is Credit or Debit and call the respective Function
      *
-     * @return Modules\Dunning\Entities\Debt
+     * @return Modules\OverdueDebts\Entities\Debt
      */
     public function parse(\Kingsquare\Banking\Transaction $transaction)
     {
@@ -106,7 +106,7 @@ class DefaultTransactionParser
             return $this->debt = null;
         }
 
-        $this->logMsg = trans('dunning::messages.transaction.default.debit', [
+        $this->logMsg = trans('overduedebts::messages.transaction.default.debit', [
             'holder' => $this->holder,
             'invoiceNr' => $this->invoiceNr,
             'mref' => $this->mref,
@@ -124,7 +124,7 @@ class DefaultTransactionParser
         $this->debt->description = $this->description;
         $this->addFee();
 
-        ChannelLog::debug('dunning', trans('dunning::messages.transaction.create')." $this->logMsg");
+        ChannelLog::debug('overduedebts', trans('overduedebts::messages.transaction.create')." $this->logMsg");
     }
 
     /**
@@ -153,7 +153,7 @@ class DefaultTransactionParser
             // Check if Transaction refers to same Contract via SepaMandate and Invoice
             if ($sepamandate && $sepamandate->contract_id != $invoice->contract_id) {
                 // As debits are structured by NMSPrime in sepa xml - this is actually an error and should not happen
-                ChannelLog::warning('dunning', trans('view.Discard')." $this->logMsg. ".trans('dunning::messages.transaction.debit.diffContractSepa'));
+                ChannelLog::warning('overduedebts', trans('view.Discard')." $this->logMsg. ".trans('overduedebts::messages.transaction.debit.diffContractSepa'));
 
                 return false;
             }
@@ -162,7 +162,7 @@ class DefaultTransactionParser
             $this->debt->contract_id = $invoice->contract_id;
         } else {
             if (! $sepamandate) {
-                ChannelLog::info('dunning', trans('view.Discard')." $this->logMsg. ".trans('dunning::messages.transaction.debit.missSepaInvoice'));
+                ChannelLog::info('overduedebts', trans('view.Discard')." $this->logMsg. ".trans('overduedebts::messages.transaction.debit.missSepaInvoice'));
 
                 return false;
             }
@@ -185,7 +185,7 @@ class DefaultTransactionParser
             return;
         }
 
-        // lazy loading of global dunning conf
+        // lazy loading of global overduedebts conf
         $this->getConf();
 
         $this->debt->total_fee = $this->debt->bank_fee;
@@ -205,7 +205,7 @@ class DefaultTransactionParser
             return $this->debt = null;
         }
 
-        $this->logMsg = trans('dunning::messages.transaction.default.credit', [
+        $this->logMsg = trans('overduedebts::messages.transaction.default.credit', [
                 'holder' => $this->holder,
                 'price' => number_format_lang($this->transaction->getPrice()),
                 'iban' => $this->iban,
@@ -215,7 +215,7 @@ class DefaultTransactionParser
         $numbers = $this->searchNumbers();
 
         if ($numbers['exclude']) {
-            ChannelLog::info('dunning', trans('view.Discard')." $this->logMsg. ".trans('dunning::messages.transaction.credit.missInvoice'));
+            ChannelLog::info('overduedebts', trans('view.Discard')." $this->logMsg. ".trans('overduedebts::messages.transaction.credit.missInvoice'));
 
             return $this->debt = null;
         }
@@ -230,7 +230,7 @@ class DefaultTransactionParser
         $this->debt->amount = -1 * $this->transaction->getPrice();
         $this->debt->description = $this->description;
 
-        ChannelLog::debug('dunning', trans('dunning::messages.transaction.create')." $this->logMsg");
+        ChannelLog::debug('overduedebts', trans('overduedebts::messages.transaction.create')." $this->logMsg");
     }
 
     /**
@@ -257,9 +257,9 @@ class DefaultTransactionParser
         $hint = '';
 
         if ($this->invoiceNr) {
-            $this->logMsg .= ' '.trans('dunning::messages.transaction.credit.noInvoice.notFound', ['number' => $this->invoiceNr]);
+            $this->logMsg .= ' '.trans('overduedebts::messages.transaction.credit.noInvoice.notFound', ['number' => $this->invoiceNr]);
         } else {
-            $this->logMsg .= ' '.trans('dunning::messages.transaction.credit.noInvoice.default');
+            $this->logMsg .= ' '.trans('overduedebts::messages.transaction.credit.noInvoice.default');
         }
 
         // Give hints to what contract the transaction could be assigned
@@ -270,7 +270,7 @@ class DefaultTransactionParser
             if ($contracts->count() > 1) {
                 // As the prefix und suffix of the contract number is not considered it's possible to finde multiple contracts
                 // When that happens we need to take this into consideration
-                ChannelLog::error('dunning', trans('dunning::messages.transaction.credit.multipleContracts', ['number' => $numbers['contractNr']]));
+                ChannelLog::error('overduedebts', trans('overduedebts::messages.transaction.credit.multipleContracts', ['number' => $numbers['contractNr']]));
             } elseif ($contracts->count() == 1) {
                 // Create debt only if contract number is found and amount is same like in last invoice
                 $ret = $this->addDebtBySpecialMatch($contracts->first());
@@ -279,7 +279,7 @@ class DefaultTransactionParser
                     return true;
                 }
 
-                $hint .= ' '.trans('dunning::messages.transaction.credit.noInvoice.contract', ['contract' => $numbers['contractNr']]);
+                $hint .= ' '.trans('overduedebts::messages.transaction.credit.noInvoice.contract', ['contract' => $numbers['contractNr']]);
             }
         }
 
@@ -298,13 +298,13 @@ class DefaultTransactionParser
                 return true;
             }
 
-            $hint .= ' '.trans('dunning::messages.transaction.credit.noInvoice.sepa', ['contract' => $sepamandate->contract->number]);
+            $hint .= ' '.trans('overduedebts::messages.transaction.credit.noInvoice.sepa', ['contract' => $sepamandate->contract->number]);
         }
 
         if ($hint) {
-            ChannelLog::notice('dunning', $this->logMsg.$hint);
+            ChannelLog::notice('overduedebts', $this->logMsg.$hint);
         } else {
-            ChannelLog::info('dunning', $this->logMsg);
+            ChannelLog::info('overduedebts', $this->logMsg);
         }
 
         return false;
@@ -341,7 +341,7 @@ class DefaultTransactionParser
     }
 
     /**
-     * Load dunning config model and store relevant properties in global property
+     * Load OverdueDebts config model and store relevant properties in global property
      *
      * @return void
      */
@@ -351,12 +351,12 @@ class DefaultTransactionParser
             return;
         }
 
-        $dunningConf = Dunning::first();
+        $debtConf = OverdueDebts::first();
         $billingConf = BillingBase::first();
 
         $this->conf = [
-            'fee' => $dunningConf->fee,
-            'total' => $dunningConf->total,
+            'fee' => $debtConf->fee,
+            'total' => $debtConf->total,
             'tax' => $billingConf->tax,
         ];
     }

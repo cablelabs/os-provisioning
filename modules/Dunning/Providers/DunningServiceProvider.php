@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Dunning\Providers;
+namespace Modules\OverdueDebts\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 
-class DunningServiceProvider extends ServiceProvider
+class OverdueDebtsServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -18,7 +18,7 @@ class DunningServiceProvider extends ServiceProvider
      * The artisan commands provided by this module
      */
     protected $commands = [
-        'Modules\Dunning\Console\ImportDebtCommand',
+        'Modules\OverdueDebts\Console\ImportDebtCommand',
     ];
 
     /**
@@ -52,10 +52,10 @@ class DunningServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('dunning.php'),
+            __DIR__.'/../Config/config.php' => config_path('overduedebts.php'),
         ], 'config');
         $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'dunning'
+            __DIR__.'/../Config/config.php', 'overduedebts'
         );
     }
 
@@ -66,7 +66,7 @@ class DunningServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/dunning');
+        $viewPath = resource_path('views/modules/overduedebts');
 
         $sourcePath = __DIR__.'/../Resources/views';
 
@@ -75,8 +75,8 @@ class DunningServiceProvider extends ServiceProvider
         ]);
 
         $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path.'/modules/dunning';
-        }, \Config::get('view.paths')), [$sourcePath]), 'dunning');
+            return $path.'/modules/overduedebts';
+        }, \Config::get('view.paths')), [$sourcePath]), 'overduedebts');
     }
 
     /**
@@ -86,12 +86,12 @@ class DunningServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/dunning');
+        $langPath = resource_path('lang/modules/overduedebts');
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'dunning');
+            $this->loadTranslationsFrom($langPath, 'overduedebts');
         } else {
-            $this->loadTranslationsFrom(__DIR__.'/../Resources/lang', 'dunning');
+            $this->loadTranslationsFrom(__DIR__.'/../Resources/lang', 'overduedebts');
         }
     }
 

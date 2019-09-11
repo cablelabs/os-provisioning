@@ -1,13 +1,13 @@
 {
-    "name": "Dunning",
-    "alias": "dunning",
-    "description": "Dunning",
+    "name": "OverdueDebts",
+    "alias": "overduedebts",
+    "description": "Management of outstanding/overdue payments",
     "keywords": [],
     "active": 1,
     "order": 30,
     "icon": "fa-envelope",
     "providers": [
-        "Modules\\Dunning\\Providers\\DunningServiceProvider"
+        "Modules\\OverdueDebts\\Providers\\DunningServiceProvider"
     ],
     "aliases": {},
     "files": [

@@ -60,6 +60,7 @@ return [
         'Menu_QoS' 					=> 'QoS',
         'Menu_CMTS' 				=> 'CMTS',
         'Menu_Ip-Pools' 			=> 'IP-Bereiche',
+        'Menu_OverdueDebts'         => 'Offene Posten',
         'Menu_ProvVoip'             => 'VoIP',
         'Menu_PropertyManagement'   => 'Liegenschafts - Verwaltung',
         'Menu_MTAs' 				=> 'MTAs',

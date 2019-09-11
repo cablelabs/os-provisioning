@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Dunning\Entities;
+namespace Modules\OverdueDebts\Entities;
 
 /**
- * This class is intended to parse a Kingsquare\Banking\Transaction and create a \Modules\Dunning\Entities\Debt of it
+ * This class is intended to parse a Kingsquare\Banking\Transaction and create a \Modules\OverdueDebts\Entities\Debt of it
  *
  * Tasks:
  *  Detect correct parser (engine)
@@ -35,7 +35,7 @@ class TransactionParser
     }
 
     /**
-     * Parse the given transaction and create an \Modules\Dunning\Entities\Dept object.
+     * Parse the given transaction and create an \Modules\OverdueDebts\Entities\Dept object.
      *
      * @return object
      */
@@ -69,7 +69,7 @@ class TransactionParser
 
         if ($exists) {
             $debitCredit = $transaction->getDebitCredit() == 'C' ? 'Credit' : 'Debit';
-            \ChannelLog::debug('dunning', trans('dunning::messages.transaction.exists', [
+            \ChannelLog::debug('overduedebts', trans('overduedebts::messages.transaction.exists', [
                 'debitCredit' => trans("view.$debitCredit"),
                 'description' => $transaction->getDescription(),
                 'price' => $transaction->getPrice(),
