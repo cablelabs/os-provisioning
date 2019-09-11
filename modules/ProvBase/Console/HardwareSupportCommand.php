@@ -51,37 +51,37 @@ class HardwareSupportCommand extends Command
         foreach ($modems as $modem) {
             $hostname = $modem->hostname . '.' . $this->domain_name;
             $support_state = 'not-supported';
-            if ($modem->serial_num !== '') {
-                //TODO: check the response on a live system, not tested on a fully integrated system
+            if (!isset($modem->serial_num) || $modem->serial_num === '') {
                 try {
-                    $modem->serial_num = snmpget($hostname, $ro_community, '1.3.6.1.2.1.69.1.1.4.0'); //TODO: Handle Exception
-                    $modem_serial_no_md5 = md5($modem->serial_num);
-                    $contents = file_get_contents('https://support.nmsprime.com/hwsn/api.php?q=' . $modem_serial_no_md5);
-
-                    if ($contents !== '') {
-                        $result = json_decode($contents, true);
-                        if (isset($result[$modem_serial_no_md5]) && $result[$modem_serial_no_md5] === 'valid') {
-                            $support_state = 'full-support';
-                        } elseif ((Carbon::parse($modem->created_at))->diffInWeeks(Carbon::now()) < 6) {
-                            $support_state = 'verifying';
-                        }
-                    }
-
-                    $modem->support_state = $support_state;
-                    DB::table('modem')->where('id', $modem->id)->update(['serial_num' => $modem->serial_num, 'support_state' => $support_state, 'updated_at'=> (Carbon::now())->toDateTimeString()]);
+                    $modem->serial_num = snmpget($hostname, $ro_community, '1.3.6.1.2.1.69.1.1.4.0');
                 } catch (\Exception $exception) {
                     $this->error($exception->getMessage());
                 }
             }
+            $modem_serial_no_md5 = md5($modem->serial_num);
+            $contents = file_get_contents('https://support.nmsprime.com/hwsn/api.php?q=' . $modem_serial_no_md5);
+
+            if ($contents !== '') {
+                $result = json_decode($contents, true);
+                if (isset($result[$modem_serial_no_md5]) && $result[$modem_serial_no_md5] === 'valid') {
+                    $support_state = 'full-supported';
+                } elseif ((Carbon::parse($modem->created_at))->diffInWeeks(Carbon::now()) < 6) {
+                    $support_state = 'verifying';
+                }
+            }
+
+            DB::table('modem')->where('id', $modem->id)->update(['serial_num' => $modem->serial_num, 'support_state' => $support_state, 'updated_at' => (Carbon::now())->toDateTimeString()]);
         }
 
         foreach ($cmtses as $cmts) {
-            $hostname = $modem->hostname . '.' . $this->domain_name;
+
+            $hostname = $cmts->ip;
             $support_state = 'not-supported';
 
-            //TODO: Test snmpwalk response a live system, not tested on a fully integrated system
             try {
-                $cmts_serials = snmpwalk($hostname, $ro_community, '1.3.6.1.2.1.47.1.1.1.1.11'); //TODO: Handle Exception
+
+                $cmts_serials = snmpwalk($hostname, $ro_community, '1.3.6.1.2.1.47.1.1.1.1.11');
+                $cmts_serials = array_filter($cmts_serials, 'strlen');
 
                 $count_found = 0;
                 foreach ($cmts_serials as $cmts_serial) {
@@ -99,15 +99,16 @@ class HardwareSupportCommand extends Command
                 if ($count_found) {
                     $percentage = $count_found / count($cmts_serials) * 100;
 
-                    if ($percentage > 95){
+                    if ($percentage > 95) {
                         $support_state = 'full-supported';
-                    }elseif ($percentage > 80 && $percentage <= 95){
+                    } elseif ($percentage > 80 && $percentage <= 95) {
                         $support_state = 'restricted';
-                    }elseif((Carbon::parse($cmts->created_at))->diffInWeeks(Carbon::now()) < 6) {
+                    } elseif ((Carbon::parse($cmts->created_at))->diffInWeeks(Carbon::now()) < 6) {
                         $support_state = 'verifying';
                     }
                 }
-                DB::table('cmts')->where('id', $cmts->id)->update(['support_state' => $support_state, 'updated_at'=> (Carbon::now())->toDateTimeString()]);
+                $this->info(sprintf('CMTS %s is %s%% supported', $cmts->hostname, $percentage));
+                DB::table('cmts')->where('id', $cmts->id)->update(['support_state' => $support_state, 'updated_at' => (Carbon::now())->toDateTimeString()]);
             } catch (\Exception $exception) {
                 $this->error($exception->getMessage());
             }

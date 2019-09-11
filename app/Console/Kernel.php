@@ -148,7 +148,7 @@ class Kernel extends ConsoleKernel
             $schedule->call('\Modules\ProvBase\Entities\Modem@update_model_firmware')->daily();
 
             // Hardware support check for modems and CMTS
-            $schedule->command('nms:hardware-support daily')->daily()->at('01:00');
+            $schedule->command('nms:hardware-support daily')->twiceDaily(10, 14);
         }
 
         // Automatic Power Control based on measured SNR
