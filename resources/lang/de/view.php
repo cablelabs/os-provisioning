@@ -35,7 +35,7 @@ return [
     //Main Menu
         'Menu_Apartment'            => 'Wohnungen',
         'Menu_BillingBase'          => 'Billing',
-        'Menu_Debt'                 => 'Offene Posten',
+        'Menu_Debt'                 => 'OP-Liste',
         'Menu_Dunning'              => 'Mahnwesen',
         'Menu_MainMenu'             => 'Hauptmenü',
         'Menu_Node'                 => 'Übertragungspunkte',

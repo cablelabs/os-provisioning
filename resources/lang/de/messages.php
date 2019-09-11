@@ -518,6 +518,7 @@ return [
     'Credit' => 'Gutschrift',
     'Other'                     => 'Sonstiges',
     'Once'                      => 'Einmalig',
+    'Overdue debts'             => 'Offene Posten',
     'Monthly'                   => 'Monatlich',
     'Quarterly'                 => 'Vierteljährlich',
     'Yearly'                    => 'Jährlich',
