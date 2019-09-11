@@ -51,7 +51,6 @@ class Kernel extends ConsoleKernel
 
         $schedule->call('\Modules\Dashboard\Entities\BillingAnalysis@saveIncomeToJson')->dailyAt('00:07');
         $schedule->call('\Modules\Dashboard\Entities\BillingAnalysis@saveContractsToJson')->hourly();
-        $schedule->call('\Modules\Dashboard\Http\Controllers\DashboardController@save_modem_statistics')->everyMinute();
 
         // Remove all Log Entries older than 90 days
         $schedule->call('\App\GuiLog@cleanup')->weekly();
