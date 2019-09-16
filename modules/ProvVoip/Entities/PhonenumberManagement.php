@@ -213,7 +213,7 @@ class PhonenumberManagement extends \BaseModel
                     return false;
                 }
                 if (in_array($this->envia_contract->state, ['Gekündigt'])) {
-                    if ($this->envia_contract->end_date > \Carbon\Carbon::now()->toDateTimeString()) {
+                    if ($this->envia_contract->end_date > now()) {
                         $msg = trans('provvoipenvia::messages.phonenumbermanagementNotDeletable', [$this->id]).trans('provvoipenvia::messages.phonenumbermanagementNotDeletableReasonEnviaContractEndDate');
                         $this->addAboveMessage($msg, 'error');
 

@@ -989,7 +989,7 @@ class BaseModel extends Eloquent
      * Helper to show info line above index_list|form depending on previous URL.
      *
      * @param string    $msg    The message to be shown
-     * @param string    $type  The type [info|success|warning|error], default is 'info'
+     * @param string    $type   The type [info|success|warning|error], default is 'info'
      * @param string    $place  Where to show the message above [index_list, form, relations];
      *                              if not given try to determine from previous URL
      *
@@ -1043,15 +1043,7 @@ class BaseModel extends Eloquent
         $target = 'tmp_'.$type.'_above_'.$place;
 
         // push to session ⇒ will be shown once via resources/views/Generic/above_infos.blade.php
-        try {
-            \Session::push($target, $msg);
-
-            return true;
-        } catch (\Exception $exception) {
-            \Log::error("Could not session push “$msg” to $target: ".$exception);
-
-            return false;
-        }
+        Session::push($target, $msg);
     }
 }
 
