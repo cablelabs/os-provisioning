@@ -64,6 +64,8 @@ return [
     'Directory assistance'      => 'Nutzung Auskunft',
     'District'                  => 'Ortsteil',
     'Dunning'                   => 'Mahnwesen',
+    'Dunning date'              => 'Mahndatum',
+    'Dunning indicator'         => 'Mahnkennzeichen',
     'Edit'                      => 'Ändern -',
     'Edit '                     => 'Ändere ',
     'Endpoints'                 => 'Endpunkte',
@@ -573,6 +575,7 @@ return [
     'configfile_outdated'       => 'Konfigurationsdatei ist veraltet - Fehler beim Generieren der Datei!',
     'shouldChangePassword'       => 'Bitte ändern Sie Ihr Passwort!',
     'PasswordExpired'           => 'Ihr Passwort ist abgelaufen. Passwörter sollten regelmäßig gewechselt werden um sicher zu bleiben. Vielen Dank!',
+    'Payment number'            => 'OP-Nummer',
     'newUser'                   => 'Willkommen in NMS Prime. Bitte ändern Sie zur Sicherheit Ihr Passwort. Vielen Dank!',
     'Password Reset Interval'   => 'Passwortwechsel-Intervall',
     'PasswordClick'             => 'Klicken Sie HIER um Ihr Passwort zu ändern.',
@@ -653,4 +656,6 @@ return [
     'Carrier out'               => 'Carrier (Folgevertrag)',
     'geopos_x_y'                => 'geografische Länge/Breite',
     'error'                     => 'Fehler',
+    'Voucher date'              => 'Belegdatum',
+    'Voucher number'            => 'Belegnummer',
 ];

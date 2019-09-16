@@ -14,15 +14,35 @@ class DebtController extends \BaseController
      */
     public function view_form_fields($model = null)
     {
+        if (! $model->date) {
+            $model->date = date('Y-m-d');
+        }
+
         // label has to be the same like column in sql table
         return [
             ['form_type' => 'text', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 1],
+            ['form_type' => 'text', 'name' => 'voucher_nr', 'description' => 'Voucher number'],
+            ['form_type' => 'text', 'name' => 'number', 'description' => 'Payment number', 'space' => 1],
             ['form_type' => 'text', 'name' => 'amount', 'description' => 'Amount'],
-            ['form_type' => 'text', 'name' => 'total_fee', 'description' => 'Total fee'],
             ['form_type' => 'text', 'name' => 'bank_fee', 'description' => 'Bank fee'],
-            ['form_type' => 'text', 'name' => 'date', 'description' => 'Date'],         // Belegdatum
+            ['form_type' => 'text', 'name' => 'total_fee', 'description' => 'Total fee', 'help' => trans('dunning::help.debt.total_fee'), 'space' => 1],
+            ['form_type' => 'text', 'name' => 'date', 'description' => 'Voucher date'],         // Belegdatum
+            ['form_type' => 'text', 'name' => 'due_date', 'description' => 'RCD', 'space' => 1],
+
+            ['form_type' => 'text', 'name' => 'indicator', 'description' => 'Dunning indicator'],
+            ['form_type' => 'text', 'name' => 'dunning_date', 'description' => 'Dunning date', 'space' => 1],
+
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
+    }
+
+    public function prepare_input($data)
+    {
+        $data['indicator'] = $data['indicator'] ?? 0;
+        $data['bank_fee'] = $data['bank_fee'] ?? 0;
+        $data['total_fee'] = $data['total_fee'] ?? 0;
+
+        return parent::prepare_input($data);
     }
 
     /**

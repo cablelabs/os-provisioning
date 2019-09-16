@@ -485,7 +485,7 @@ class BaseViewController extends Controller
                 break;
 
             case 'select':
-                $s .= Form::select($field['name'], $value, $field['field_value'], $options);
+                $s .= Form::select($field['name'], $value, $field['field_value'], [], $options);
                 break;
 
             case 'password':

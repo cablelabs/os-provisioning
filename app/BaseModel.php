@@ -395,7 +395,7 @@ class BaseModel extends Eloquent
     }
 
     /**
-     * Get all models
+     * Get all models extending the BaseModel
      *
      * Attention: The array is cached in the session - so if modules are enabled/disabled
      *	you have to logout & login to rebuild the array again
@@ -435,7 +435,10 @@ class BaseModel extends Eloquent
             $model = str_replace(app_path().'/', '', $model);
             $model = str_replace('.php', '', $model);
             if (array_search($model, $exclude) === false) {
-                $result[$model] = 'App\\'.$model;
+                $namespace = 'App\\'.$model;
+                if (is_subclass_of($namespace, '\App\BaseModel')) {
+                    $result[$model] = $namespace;
+                }
             }
         }
 
@@ -458,7 +461,10 @@ class BaseModel extends Eloquent
                 $model = preg_replace("|$path/(.*?)/Entities/|", '', $model);
                 $model = str_replace('.php', '', $model);
                 if (array_search($model, $exclude) === false) {
-                    $result[$model] = "Modules\\$module\Entities\\".$model;
+                    $namespace = "Modules\\$module\Entities\\".$model;
+                    if (is_subclass_of($namespace, '\App\BaseModel')) {
+                        $result[$model] = $namespace;
+                    }
                 }
             }
         }
