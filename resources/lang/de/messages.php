@@ -720,4 +720,6 @@ return [
     'mail_not_sent'             => 'Die E-Mail konnte nicht gesendet werden - E-Mail Daten in Environment Datei fehlen!',
     'NoSnmpAccess'              => "Bitte setzen Sie den Community :ACCESS String für das Netzelement ':name'",
     'SnmpAccessException'       => 'Snmp Zugriff Verweigert',
+    'error_reading_file'        => 'Fehler beim Lesen der Datei :0!',
+    'error_writing_file'        => 'Fehler beim Schreiben der Datei :0!',
 ];

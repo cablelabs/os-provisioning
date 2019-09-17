@@ -720,4 +720,6 @@ return [
     'mail_not_sent'             => 'Email could not be delivered - Missing email data in environment file!',
     'NoSnmpAccess'              => "Please set your community :ACCESS access for Netelement ':name'",
     'SnmpAccessException'       => 'Snmp Access Declined',
+    'error_reading_file'        => 'Error reading file :0!',
+    'error_writing_file'        => 'Error writing file :0!',
 ];
