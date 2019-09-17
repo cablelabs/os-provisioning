@@ -541,6 +541,33 @@ class Contract extends \BaseModel
     }
 
     /**
+     * Get related documenttemplate of given documenttype.
+     *
+     * @param [type] $documenttype_id
+     * @return void
+     *
+     * @author Patrick Reichel
+     */
+    public function get_documenttemplate_by_type($documenttype_id)
+    {
+        if (!\Module::collections()->has('BillingBase')) {
+            // there should – because of validation in documenttemplates – be only one of the given type
+            return DocumentTemplate::where('documenttype_id', '=', $documenttype_id)->get();
+        }
+
+        return $this->costcenter->sepaaccount->get_documenttemplate_by_type($documenttype_id);
+    }
+
+    /**
+     * Generate use a new user login password
+     * This does not save the involved model
+     */
+    public function generate_password($length = 10)
+    {
+        $this->password = \Acme\php\Password::generate_password($length);
+    }
+
+    /**
      * Helper to get the customer number (may be identical with the contract number).
      * As there is no hard coded customer number in database we have to use this mapper. The semantic meaning of number…number4 can be defined in global configuration.
      *
