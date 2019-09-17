@@ -110,6 +110,8 @@ return [
     ],
 
     'docsis'               => ':attribute',
+    'comma_separated_hostnames_or_ips'  =>  'Dies ist keine kommaseparierte Liste von Hostnamen und/oder IP-Adressen',
+    'hostname_or_ip'       => 'Dies ist weder ein Hostname noch eine IP-Adresse',
     'ip'                   => 'Dies ist keine gültige IP-Adresse',
     'ipv4'                 => 'Dies muss eine gültige IPv4 Addresse der Form: 192.168.0.255 sein. (gemäß spezifiziertem Netz)',
     'ipv6'                 => 'Dies muss eine gültige IPv6 Addresse sein. (gemäß spezifiziertem Netz)',
