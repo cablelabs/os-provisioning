@@ -473,7 +473,7 @@ class DocumentTemplate extends \BaseModel
             $lines[] = 'Gläubiger-ID: \> '.$models['SepaAccount']->creditorid.' \\\\';
         }
         elseif (1 < count($combinations)) {
-            hier weiter
+            throw new \Exception('Processing multipe SEPA mandates at contract start not yet implemented');
         }
 
 
@@ -527,30 +527,26 @@ class DocumentTemplate extends \BaseModel
     /**
      * Collect data to create a document from all affected models
      *
-     * @param   int     $model_id   The initial model to be used
+     * @param   object  $model  The initial model to be used
      * @return  array   The collected data (with LaTeX placeholders as keys)
      *
      * @author Patrick Reichel
      */
-    public function collect_data($model_id=null)
+    public function collect_data($model=null)
     {
-        $test_mode = is_null($model_id);
+        $test_mode = is_null($model);
         $documenttype = $this->documenttype;
 
         // check for special case: testing of lettehead templates
         if ('letterhead' == $documenttype->type) {
             return $this->_collect_data_for_letterhead_test();
         }
-        // add data from company and sepaaccount first
-
-        $model_path = 'Modules\\'.$documenttype->module.'\\Entities\\'.$documenttype->model;
 
         $models = [];
 
-        if (! $test_mode) {
-            $model = $model_path::findOrFail($model_id);
-        } else {
+        if ($test_mode) {
             // in test mode => get a random model
+            $model_path = 'Modules\\'.$documenttype->module.'\\Entities\\'.$documenttype->model;
             $model = $model_path::all()->random();
         }
 
@@ -567,8 +563,6 @@ class DocumentTemplate extends \BaseModel
         }
         elseif ('Contract' == $documenttype->model) {
             $contract = $model;
-// @TODO: remove
-$contract = \Modules\ProvBase\Entities\Contract::find(500035);
             $models[] = $contract;
         }
 

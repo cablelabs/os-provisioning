@@ -213,18 +213,51 @@ class DocumentTemplateController extends \BaseController
     public function test($template_id)
     {
         $documenttemplate = DocumentTemplate::find($template_id);
+        $data = $documenttemplate->collect_data();
+
+        return $this->_render_latex($documenttemplate, $data, True);
+    }
+
+    /**
+     * Renders a template – creates a new document.
+     *
+     * @author Patrick Reichel
+     */
+    public function render($documenttemplate, &$model=null)
+    {
+
         $documenttype = $documenttemplate->documenttype;
 
+        $data = $documenttemplate->collect_data($model);
+
+        if ($documenttemplate->format == 'LaTeX') {
+            return $this->_render_latex($documenttemplate, $data);
+        } else {
+            throw new \Exception('Rendering of '.$documenttemplate->format.' documenttemplates yet implemented.');
+        }
+    }
+
+    /**
+     * Wrapper to call pdflatex.
+     *
+     * @author Patrick Reichel
+     */
+    protected function _render_latex(&$documenttemplate, &$data, $test=False)
+    {
+        $template_id = $documenttemplate->id;
         $tmpdir = shell_exec('mktemp -d');
 
         // if null is returned: something went wrong
         if (is_null($tmpdir)) {
             \Session::push('tmp_error_above_form', trans('provbase::messages.documentTemplate.tmpdirCreationFailed'));
             \Log::error('Could not create temporary directory using mktemp');
-            return \Redirect::route('DocumentTemplate.edit', $template_id);
+            if ($test) {
+                return \Redirect::route('DocumentTemplate.edit', $template_id);
+            } else {
+                return redirect()->back();
+            }
         }
 
-        $data = $documenttemplate->collect_data();
         $tmpdir = trim($tmpdir);
 
         $output_path = $tmpdir;
@@ -242,7 +275,11 @@ class DocumentTemplateController extends \BaseController
                 'other_files' => [$documenttemplate->file => $latex],
             ];
             \Session::push('tmp_error_above_form', trans('provbase::messages.documentTemplate.pdfAuditFailed'));
-            return \Redirect::route('DocumentTemplate.edit', $template_id)->with('pdf_creation_test', $ret);
+            if ($test) {
+                return \Redirect::route('DocumentTemplate.edit', $template_id)->with('pdf_creation_test', $ret);
+            } else {
+                return redirect()->back();
+            }
         }
 
         file_put_contents($output_path.'/'.$documenttemplate->file, $latex);
@@ -264,86 +301,38 @@ class DocumentTemplateController extends \BaseController
             }
         }
 
-        /* $pdf = null; */
-        if (is_null($pdf)) {
-            \Session::push('tmp_error_above_form', trans('provbase::messages.documentTemplate.pdfCreateTestFailed'));
-            $ret = [
-                'success' => false,
-                'url' => null,
-                'other_files' => $file_contents,
-            ];
+        if ($test) {
+            if (is_null($pdf)) {
+                \Session::push('tmp_error_above_form', trans('provbase::messages.documentTemplate.pdfCreateTestFailed'));
+                $ret = [
+                    'success' => false,
+                    'url' => null,
+                    'other_files' => $file_contents,
+                ];
 
-        } else {
-            \Session::push('tmp_success_above_form', trans('provbase::messages.documentTemplate.pdfCreateTestSuccess'));
-            $ret = [
-                'success' => true,
-                'url' => \URL::route('DocumentTemplate.download_pdf', base64_encode($tmpdir.'/'.basename($pdf))),
-                'other_files' => $file_contents,
-            ];
+            } else {
+                \Session::push('tmp_success_above_form', trans('provbase::messages.documentTemplate.pdfCreateTestSuccess'));
+                $ret = [
+                    'success' => true,
+                    'url' => \URL::route('DocumentTemplate.download_pdf', base64_encode($tmpdir.'/'.basename($pdf))),
+                    'other_files' => $file_contents,
+                ];
 
-        }
-        $ret['cmd'] = $cmd;
-        $ret['pdflatex_output'] = implode("\n", $pdflatex_output);
-        $ret['usable_placeholders'] = $data;
-
-        return \Redirect::route('DocumentTemplate.edit', $template_id)->with('pdf_creation_test', $ret);
-    }
-
-    /**
-     * Renders a template – creates a new document.
-     *
-     * @author Patrick Reichel
-     */
-    public function render($template_id, &$model=null)
-    {
-
-        $documenttemplate = DocumentTemplate::find($template_id);
-        $documenttype = $documenttemplate->documenttype;
-
-        /* $data = */
-
-        if ($documenttemplate->format == 'LaTeX') {
-            $this->_render_latex($documenttemplate, $model);
-        } else {
-            throw new \Exception('Rendering of '.$documenttemplate->format.' documenttemplates yet implemented.');
-        }
-    }
-
-    /**
-     * Wrapper to call pdflatex.
-     *
-     * @author Patrick Reichel
-     */
-    protected function _render_latex(&$documenttemplate, &$model)
-    {
-
-        if (is_null($model)) {
-            $model = \Modules\ProvBase\Entities\Contract::find(500010);
-            d($model, $this->get_full_german_postal_address($model));
-            $path = storage_path('app/'.$this->document_base_path);
-
-            $aux_path = $path.'/workbench';
-            $output_path = $path.'/workbench';
-            $args = [
-                '-aux-directory='.$aux_path,
-                '-output-directory='.$output_path,
-            ];
-            list($errcode, $stdout, $stderr) = pdflatex($path, $documenttemplate->file, false, $args);
-            d($ret);
-            // this is a test – use seeded data
-            throw new \Exception('Not yet implemented.');
-        } else {
-            // check for letterhead – cannot be used directly in real rendering
-            if ('letterhead' == $documenttype->type) {
-                \Session::push('tmp_error_above_form', trans('provbase::messages.documentTemplate.letterheadNotUsable'));
-                return null;
             }
+            $ret['cmd'] = $cmd;
+            $ret['pdflatex_output'] = implode("\n", $pdflatex_output);
+            $ret['usable_placeholders'] = $data;
 
-            $modelname = '\\Modules\\'.$documenttype->module.'\\Entities\\'.$documenttype->model;
-            $model = $modelname::find($model_id);
-
-            throw new \Exception('Not yet implemented.');
+            return \Redirect::route('DocumentTemplate.edit', $template_id)->with('pdf_creation_test', $ret);
+        } else {
+            if (is_null($pdf)) {
+                \Session::push('tmp_error_above_form', trans('provbase::messages.documentTemplate.pdfCreateTestFailed'));
+                return redirect()->back();
+            } else {
+                return $pdf;
+            }
         }
+
     }
 
     /**
