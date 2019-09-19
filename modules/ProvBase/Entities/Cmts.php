@@ -13,6 +13,9 @@ class Cmts extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'cmts';
 
+    // Attributes
+    protected $appends = ['formatted_support_state'];
+
     // Add your validation rules here
     public static function rules($id = null)
     {
@@ -67,6 +70,29 @@ class Cmts extends \BaseModel
         }
 
         return $bsclass;
+    }
+
+    /**
+     * Return Fontawesome emoji class, and Bootstrap text color
+     * @return array
+     */
+    public function get_faSmileClass(){
+        switch ($this->support_state){
+            case 'full-support':      {$faClass = 'fa-smile-o'; $bsClass = 'success';}  break;
+            case 'verifying':         {$faClass = 'fa-meh-o';   $bsClass = 'warning';}  break;
+            case 'restricted':         {$faClass = 'fa-frown-o';   $bsClass = 'warning';}  break;
+            case 'not-supported':     {$faClass = 'fa-frown-o'; $bsClass = 'danger';}   break;
+            default: {$faClass = 'fa-smile'; $bsClass = 'success';} break;
+        }
+        return ['fa-class'=> $faClass, 'bs-class'=> $bsClass];
+    }
+
+    /**
+     * Formatted attribute of support state.
+     * @return string
+     */
+    public function getFormattedSupportStateAttribute(){
+        return ucfirst(str_replace('-', ' ', $this->support_state));
     }
 
     /**

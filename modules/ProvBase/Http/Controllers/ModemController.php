@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use App\Sla;
 use Bouncer;
 use App\GlobalConfig;
 use Modules\ProvBase\Entities\Modem;
@@ -78,6 +79,10 @@ class ModemController extends \BaseController
             ['form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'],
             ['form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1', 'help' => trans('helper.Modem_InternetAccess')],
             ];
+
+        if (Sla::first()->valid()){
+            $a[] = ['form_type'=> 'text', 'name' => 'formatted_support_state', 'description' => 'Support State', 'field_value'=> ucfirst(str_replace("-", " ", $model->support_state)), 'help'=>trans('helper.Modem_InternetAccess'), 'help_icon'=> $model->get_faSmileClass()['fa-class'], 'options' =>['readonly'], 'color'=>$model->get_faSmileClass()['bs-class']];
+        }
 
         $b = \Module::collections()->has('BillingBase') ?
             [['form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'hidden' => 1, 'space' => '1']]

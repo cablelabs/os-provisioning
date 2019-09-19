@@ -16,6 +16,8 @@ class Modem extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'modem';
 
+    protected $appends = ['formatted_support_state'];
+
     // Add your validation rules here
     // see: http://stackoverflow.com/questions/22405762/laravel-update-model-with-unique-validation-rule-for-attribute
     public static function rules($id = null)
@@ -86,6 +88,20 @@ class Modem extends \BaseModel
         return $bsclass;
     }
 
+    /**
+     * Return Fontawesome emoji class, and Bootstrap text color
+     * @return array
+     */
+    public function get_faSmileClass(){
+        switch ($this->support_state){
+            case 'full-support':      {$faClass = 'fa-smile-o'; $bsClass = 'success';}  break;
+            case 'verifying':         {$faClass = 'fa-meh-o';   $bsClass = 'warning';}  break;
+            case 'not-supported':     {$faClass = 'fa-frown-o'; $bsClass = 'danger';}   break;
+            default: {$faClass = 'fa-smile'; $bsClass = 'success';} break;
+        }
+        return ['fa-class'=> $faClass, 'bs-class'=> $bsClass];
+    }
+
     public function get_contract_valid()
     {
         return $this->contract->check_validity('Now') ? \App\Http\Controllers\BaseViewController::translate_label('yes') : \App\Http\Controllers\BaseViewController::translate_label('no');
@@ -127,6 +143,14 @@ class Modem extends \BaseModel
     public function qualities()
     {
         return \DB::table('qos')->whereNull('deleted_at')->get();
+    }
+
+    /**
+     * Formatted attribute of support state.
+     * @return string
+     */
+    public function getFormattedSupportStateAttribute(){
+        return ucfirst(str_replace('-', ' ', $this->support_state));
     }
 
     /**
