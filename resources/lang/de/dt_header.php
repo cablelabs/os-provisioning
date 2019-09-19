@@ -43,8 +43,13 @@ return [
     'costcenter.name' => 'Kostenstelle',
     'costcenter.number' => 'Nummer',
     'debt' => [
-        'date' => 'Transaktionsdatum',
+        'date' => 'Belegdatum',
+        'due_date' => 'Fälligkeitsdatum',
+        'indicator' => 'Mahnkennzeichen',
+        'missing_amount' => 'Ausstand',
+        'number' => 'OP-Nummer',
         'total_fee' => 'Gebühren',
+        'voucher_nr' => 'Belegnr',
         ],
     //Invoices
     'invoice.type' => 'Typ',

@@ -35,7 +35,7 @@ return [
     //Main Menu
         'Menu_Apartment'            => 'Apartments',
         'Menu_BillingBase'          => 'Billing',
-        'Menu_Debt'                 => 'Debts',
+        'Menu_Debt'                 => 'Debt list',
         'Menu_Dunning'              => 'OverdueDebts',
         'Menu_MainMenu'             => 'Main Menu',
         'Menu_Node'                 => 'Nodes',
