@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Entities;
 
+use App\Sla;
 use Log;
 use File;
 use Exception;
@@ -59,17 +60,23 @@ class Modem extends \BaseModel
             \Session::forget('modem_show_filter');
         }
 
-        return ['table' => $this->table,
-                'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
-                'bsclass' => $bsclass,
-                'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
-                'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
-                'eager_loading' => ['configfile', 'contract'],
-                'disable_sortsearch' => ['contract_valid' => 'false'],
-                'help' => [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'],
-                'order_by' => ['0' => 'desc'],
-                'where_clauses' => self::_get_where_clause(),
-            ];
+        $ret = ['table' => $this->table,
+            'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
+            'bsclass' => $bsclass,
+            'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
+            'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
+            'eager_loading' => ['configfile', 'contract'],
+            'disable_sortsearch' => ['contract_valid' => 'false'],
+            'help' => [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'],
+            'order_by' => ['0' => 'desc'],
+            'where_clauses' => self::_get_where_clause(),
+        ];
+
+        if (Sla::first()->valid()){
+            $ret['index_header'][] =  $this->table.'.formatted_support_state';
+        }
+
+        return $ret;
     }
 
     public function get_bsclass()

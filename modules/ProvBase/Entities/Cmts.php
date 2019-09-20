@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Entities;
 
+use App\Sla;
 use File;
 
 class Cmts extends \BaseModel
@@ -50,11 +51,17 @@ class Cmts extends \BaseModel
     {
         $bsclass = $this->get_bsclass();
 
-        return ['table' => $this->table,
-                'index_header' => [$this->table.'.id', $this->table.'.hostname', $this->table.'.ip', $this->table.'.company', $this->table.'.type'],
-                'header' =>  $this->hostname,
-                'bsclass' => $bsclass,
-                'order_by' => ['0' => 'asc'], ];
+        $ret = ['table' => $this->table,
+            'index_header' => [$this->table.'.id', $this->table.'.hostname', $this->table.'.ip', $this->table.'.company', $this->table.'.type'],
+            'header' =>  $this->hostname,
+            'bsclass' => $bsclass,
+            'order_by' => ['0' => 'asc'], ];
+
+        if (Sla::first()->valid()){
+            $ret['index_header'][] =  $this->table.'.formatted_support_state';
+        }
+
+        return $ret;
     }
 
     public function get_bsclass()
