@@ -1296,17 +1296,14 @@ class Contract extends \BaseModel
 
         $sum = \Modules\OverdueDebts\Entities\Debt::where('contract_id', $this->id)
             ->groupBy('contract_id')
-            ->selectRaw('(SUM(amount) + SUM(total_fee)) as sum')
-            ->first();
-
-        if (! $sum) {
-            return 0;
-        }
+            // ->selectRaw('(SUM(amount) + SUM(total_fee)) as sum')
+            ->select('missing_amount')
+            ->sum('missing_amount');
 
         // https://stackoverflow.com/questions/17210787/php-float-calculation-error-when-subtracting
-        $sum = round($sum->sum, 2);
+        $sum = round($sum, 2);
 
-        if ($sum == 0) {
+        if (! $sum || $sum == 0) {
             return 0;
         }
 
