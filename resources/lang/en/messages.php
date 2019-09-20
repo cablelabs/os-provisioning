@@ -518,6 +518,7 @@ return [
     'Credit'                    => 'Credit',
     'Other'                     => 'Other',
     'Once'                      => 'Once',
+    'Overdue debts'             => 'Overdue debts',
     'Monthly'                   => 'Monthly',
     'Quarterly'                 => 'Quarterly',
     'Yearly'                    => 'Yearly',
