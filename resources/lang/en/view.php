@@ -390,7 +390,6 @@ return [
     'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
     'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
 
-    'bankTransfer' => 'Bank transfers',
     'Credit' => 'Credit',
     'critical' => 'critical',
     'Debit' => 'Debit',
