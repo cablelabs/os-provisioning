@@ -35,8 +35,8 @@ return [
     //Main Menu
         'Menu_Apartment'            => 'Apartments',
         'Menu_BillingBase'          => 'Billing',
-        'Menu_Debt'                 => 'Debts',
-        'Menu_Dunning'              => 'Dunning',
+        'Menu_Debt'                 => 'Debt list',
+        'Menu_Dunning'              => 'OverdueDebts',
         'Menu_MainMenu'             => 'Main Menu',
         'Menu_Node'                 => 'Nodes',
         'Menu_Config Page'          => 'Global Config Page',
@@ -60,6 +60,7 @@ return [
         'Menu_QoS' 					=> 'QoS',
         'Menu_CMTS' 				=> 'CMTS',
         'Menu_Ip-Pools' 			=> 'IP-Pools',
+        'Menu_OverdueDebts'         => 'Overdue debts',
         'Menu_ProvVoip'			    => 'VoIP',
         'Menu_PropertyManagement'   => 'Property Management',
         'Menu_MTAs' 				=> 'MTAs',
@@ -389,7 +390,6 @@ return [
     'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
     'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
 
-    'bankTransfer' => 'Bank transfers',
     'Credit' => 'Credit',
     'critical' => 'critical',
     'Debit' => 'Debit',

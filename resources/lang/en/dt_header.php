@@ -44,7 +44,12 @@ return [
     'costcenter.number' => 'Number',
     'debt' => [
         'date' => 'Date',
+        'due_date' => 'Due date',
+        'indicator' => 'Dunning indicator',
+        'missing_amount' => 'Missing amount',
+        'number' => 'debt number',
         'total_fee' => 'Fee',
+        'voucher_nr' => 'Voucher nr',
         ],
     //Invoices
     'invoice.type' => 'Type',
