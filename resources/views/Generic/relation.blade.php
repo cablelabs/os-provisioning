@@ -49,7 +49,7 @@ Relation Blade is used inside a Panel Element to display relational class object
                         data-toggle="tooltip"
                         data-delay='{"show":"250"}'
                         data-placement="top"
-                        form="{{$class}}"
+                        form="{{$tab['name'].$class}}"
                         style="simple"
                         title="{{ !isset($options['delete_button_text']) ? \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button') : trans($options['delete_button_text']) }}">
                             <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
@@ -65,7 +65,7 @@ Relation Blade is used inside a Panel Element to display relational class object
     @if (isset($options['many_to_many']))
         {!! Form::open(array('route' => array($route_name.'.detach', $view_var->id, $options['many_to_many']), 'method' => 'post', 'id' => $class)) !!}
     @else
-        {!! Form::open(array('route' => array($view.'.destroy', 0), 'method' => 'delete', 'id' => $class)) !!}
+        {!! Form::open(array('route' => array($view.'.destroy', 0), 'method' => 'delete', 'id' => $tab['name'].$class)) !!}
     @endif
 
     <table class="table">

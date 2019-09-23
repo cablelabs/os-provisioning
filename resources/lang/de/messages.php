@@ -174,6 +174,7 @@ return [
         'errors_walk' => 'Die Abfrage folgender OIDs schlug fehl: :oids.',
         'errors_set' => 'Das Setzen folgender Parameter schlug fehl: :oids.',
         'missing_cmts' => 'Dem Cluster fehlt ein übergeordnetes CMTS.',
+        'missingIp' => 'Das Netzelement ist nicht erreichbar, da keine IP bzw. kein Hostname zugewiesen wurde.',
         'undefined' => 'Für diesen Netzelementtyp ist kein Controlling definiert.',
         'unreachable' => 'Das Gerät ist nicht per SNMP erreichbar.',
     ],

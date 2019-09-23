@@ -59,7 +59,7 @@ class SnmpController extends \BaseController
                 if ($cmts) {
                     $this->device->ip = $cmts->ip;
                 } else {
-                    Session::push('tmp_info_above_form', trans('messages.snmp.missing_cmts'));
+                    Session::push('tmp_error_above_form', trans('messages.snmp.missing_cmts'));
                 }
             }
         }
@@ -95,9 +95,8 @@ class SnmpController extends \BaseController
         // Error messages
         if (isset($e)) {
             Session::push('tmp_error_above_form', $e->getMessage());
-        } elseif (! $form_fields && ! Session::exists('tmp_info_above_form')) {
-            $msg = trans('messages.snmp.undefined');
-            Session::push('tmp_info_above_form', $msg);
+        } elseif (! $form_fields && ! Session::exists('tmp_error_above_form')) {
+            Session::push('tmp_error_above_form', trans('messages.snmp.undefined'));
         } elseif ($this->errors) {
             $msg = trans('messages.snmp.errors_walk', ['oids' => implode(', ', $this->errors)]);
             Session::push('tmp_error_above_form', $msg);
@@ -229,6 +228,8 @@ class SnmpController extends \BaseController
 
         // TODO: if device not reachable take already saved SnmpValues from Database but show a hint - check via snmpget !?
         if (! $this->device->ip) {
+            Session::push('tmp_error_above_form', trans('messages.snmp.missingIp'));
+
             return [];
         }
 
