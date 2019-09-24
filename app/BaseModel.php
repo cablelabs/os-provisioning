@@ -875,10 +875,6 @@ class BaseModel extends Eloquent
      */
     public function delete()
     {
-        // check from where the deletion request has been triggered and set the correct var to show information
-        $prev = explode('/', explode('?', \URL::previous())[0]);
-        $target = preg_match('/[a-z]/i', end($prev)) ? 'above_index_list' : 'above_relations';
-
         if ($this->delete_children) {
             $children = $this->get_all_children();
             // find and delete all children
@@ -889,8 +885,8 @@ class BaseModel extends Eloquent
                 // if one direct or indirect child cannot be deleted:
                 // do not delete anything
                 if (! $child->delete()) {
-                    $msg = 'Cannot delete '.$this->get_model_name()." $this->id: ".$child->get_model_name()." $child->id cannot be deleted";
-                    Session::push("tmp_error_$target", $msg);
+                    $msg = trans('messages.base.delete.failChild', ['model' => $this->get_model_name(), 'id' => $this->id, 'child_model' => $child->get_model_name(), 'child_id' => $child->id]);
+                    $this->addAboveMessage($msg, 'error');
 
                     return false;
                 }
@@ -906,8 +902,8 @@ class BaseModel extends Eloquent
                     // Keep Pivot Entries and children if method is not specified and just log a warning message
                     \Log::warning($this->get_model_name().' - N:M pivot entry deletion handling not implemented for '.$child->get_model_name());
                 } elseif (! $this->{$delete_method}($child)) {
-                    $msg = 'Cannot delete '.$this->get_model_name()." $this->id: n:m relation with ".$child->get_model_name()." $child->id. cannot be deleted";
-                    Session::push("tmp_error_$target", $msg);
+                    $msg = trans('messages.base.delete.failChildNM', ['model' => $this->get_model_name(), 'id' => $this->id, 'child_model' => $child->get_model_name(), 'child_id' => $child->id]);
+                    $this->addAboveMessage($msg, 'error');
 
                     return false;
                 }
@@ -918,10 +914,10 @@ class BaseModel extends Eloquent
         $deleted = $this->_delete();
         if ($deleted) {
             $msg = trans('messages.base.delete.success', ['model' => $this->get_model_name(), 'id' => $this->id]);
-            Session::push("tmp_success_$target", $msg);
+            $this->addAboveMessage($msg, 'success');
         } else {
             $msg = trans('messages.base.delete.fail', ['model' => $this->get_model_name(), 'id' => $this->id]);
-            Session::push("tmp_error_$target", $msg);
+            $this->addAboveMessage($msg, 'error');
         }
 
         return $deleted;
@@ -993,6 +989,67 @@ class BaseModel extends Eloquent
         }
 
         return true;
+    }
+
+    /**
+     * Helper to show info line above index_list|form depending on previous URL.
+     *
+     * @param string    $msg    The message to be shown
+     * @param string    $type   The type [info|success|warning|error], default is 'info'
+     * @param string    $place  Where to show the message above [index_list, form, relations];
+     *                              if not given try to determine from previous URL
+     *
+     * @return bool  true if message could be generated, false else
+     *
+     * @author Patrick Reichel
+     */
+    public function addAboveMessage($msg, $type = 'info', $place = null)
+    {
+        $allowed_types = [
+            'info',     // blue
+            'success',  // green
+            'warning',  // orange
+            'error',    // red
+        ];
+        $allowed_places = [
+            'index_list',
+            'form',
+            'relations',
+        ];
+
+        // check if type is valid
+        if (! in_array($type, $allowed_types)) {
+            throw new \UnexpectedValueException('$type has to be in ['.implode('|', $allowed_types).'], “'.$type.'” given.');
+        }
+
+        // determine or check place
+        if (is_null($place)) {
+            // check from where the deletion request has been triggered and set the correct var to show information
+            // snippet taken from https://stackoverflow.com/questions/40690202/previous-route-name-in-laravel-5-1-5-8
+            try {
+                $prev_route_name = app('router')->getRoutes()->match(app('request')->create(\URL::previous()))->getName();
+            } catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception) {
+                // Exception is thrown if no mathing route found (e.g. if coming from outside).
+                \Log::warning('Could not determine previous route: '.$exception);
+
+                return false;
+            }
+            if (\Str::endsWith($prev_route_name, '.edit')) {
+                $place = 'form';
+            } else {
+                $place = 'index_list';
+            }
+        } else {
+            if (! in_array($place, $allowed_places)) {
+                throw new \UnexpectedValueException('$place has to be in ['.implode('|', $allowed_places).'], “'.$place.'” given.');
+            }
+        }
+
+        // build the message target
+        $target = 'tmp_'.$type.'_above_'.$place;
+
+        // push to session ⇒ will be shown once via resources/views/Generic/above_infos.blade.php
+        Session::push($target, $msg);
     }
 }
 

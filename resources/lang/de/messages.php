@@ -606,6 +606,10 @@ return [
         'delete' => [
             'success' => ':model :id wurde gelöscht',
             'fail' => ':model :id konnte nicht gelöscht werden',
+            'failChild' => 'Kann :model :id nicht löschen: :child_model :child_id kann nicht gelöscht werden',
+            'failChildNM' => 'Kann :model :id nicht löschen: n:m-Beziehung mit :child_model :child_id kann nicht gelöscht werden',
+            'noEntry' => 'Kein Eintrag zum Löschen ausgewählt',
+            'multiSuccess' => ':deleted von :to_delete :model gelöscht',
         ],
     ],
     'pleaseWait'                => 'Das Erstellen des Spektrums kann einige Sekunden dauern.',

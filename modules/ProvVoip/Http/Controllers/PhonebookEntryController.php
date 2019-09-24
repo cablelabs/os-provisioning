@@ -14,22 +14,6 @@ class PhonebookEntryController extends \BaseController
     protected $index_create_allowed = false;
 
     /**
-     * Extend create: check if a phonenumbermanagement exists to attach this phonebook entry to
-     *
-     * @author Patrick Reichel
-     */
-    public function create()
-    {
-        if ((! \Request::filled('phonenumbermanagement_id')) ||
-            ! (PhonenumberManagement::find(\Request::get('phonenumbermanagement_id')))) {
-            $this->edit_view_save_button = false;
-            \Session::push('tmp_error_above_form', 'Cannot create phonebookentry – phonenumbermanagement ID missing or phonenumbermanagement not found');
-        }
-
-        return parent::create();
-    }
-
-    /**
      * defines the formular fields for the edit and create view
      */
     public function view_form_fields($model = null)
@@ -74,9 +58,11 @@ class PhonebookEntryController extends \BaseController
         if (\Module::collections()->has('ProvVoipEnvia')) {
             $last_update_telekom = max($model->external_creation_date, $model->external_update_date);
             if ($last_update_telekom) {
-                \Session::push('tmp_info_above_form', trans('messages.PhonebookEntry_lastExternalUpdateTelekom').": $last_update_telekom");
+                $msg = trans('messages.PhonebookEntry_lastExternalUpdateTelekom').": $last_update_telekom";
+                $model->addAboveMessage($msg, 'info', 'form');
             } else {
-                \Session::push('tmp_warning_above_form', trans('messages.PhonebookEntry_noExternalUpdateTelekom'));
+                $msg = trans('messages.PhonebookEntry_noExternalUpdateTelekom');
+                $model->addAboveMessage($msg, 'warning', 'form');
             }
         }
 

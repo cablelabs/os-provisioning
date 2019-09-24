@@ -673,7 +673,8 @@ class PhonenumberObserver
         }
 
         if (! $phonenumber->phonenumber_reassignment_allowed($old_mta->modem, $new_mta->modem)) {
-            \Session::push('tmp_error_above_form', "Reassignement of phonenumber to MTA $new_mta->id not allowed");
+            $msg = trans('validation.reassign_phonenumber_to_mta_fail', ['id' => $new_mta->id]);
+            $phonenumber->addAboveMessage($msg, 'error', 'form');
 
             return false;
         }
@@ -759,7 +760,8 @@ class PhonenumberObserver
         if (
             (! $phonenumber->contract_external_id)
         ) {
-            \Session::push('tmp_info_above_form', 'Number has not been created at envia TEL – will not change any modem data.');
+            $msg = trans('provvoipenvia::messages.phonenumberNotCreatedAtEnviaNoModemChange');
+            $phonenumber->addAboveMessage($msg, 'info', 'form');
 
             return;
         }
@@ -829,7 +831,8 @@ class PhonenumberObserver
             }
             $numbers = '<br>&nbsp;&nbsp;'.implode('<br>&nbsp;&nbsp;', $numbers);
 
-            \Session::push('tmp_info_above_form', 'There are still phonenumbers attached to '.$modem_href."! Don't forget to move them, too:".$numbers);
+            $msg = trans('provvoipenvia::messages.modemStillNumbersAttached', ['href' => $modem_href, 'numbers' => $numbers]);
+            $phonenumber->addAboveMessage($msg, 'warning', 'form');
         }
     }
 
@@ -877,10 +880,11 @@ class PhonenumberObserver
                 'phonenumber_id' => $phonenumber->id,
                 ];
 
-            $title = 'DO THIS MANUALLY NOW!';
+            $title = trans('provvoipenvia::messages.doManuallyNow');
             $envia_href = \HTML::linkRoute('ProvVoipEnvia.request', $title, $parameters);
 
-            \Session::push('tmp_info_above_form', 'Autochanging of SIP data at envia TEL is not implemented yet.<br>You have to '.$envia_href);
+            $msg = trans('provvoipenvia::messages.sipDateNotChangedAutomaticallyAtEnvia', ['href' => $envia_href]);
+            $phonenumber->addAboveMessage($msg, 'warning', 'form');
         }
     }
 
