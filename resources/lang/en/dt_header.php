@@ -135,6 +135,7 @@ return [
     'cmts.company' => 'Manufacturer',
     'cmts.type' => 'Type',
     'cmts.formatted_support_state' => 'Support State',
+    'cmts.support_state' => 'Support State',
     // Contract
     'contract.city' => 'City',
     'contract.company' => 'Company',
@@ -179,7 +180,8 @@ return [
     'modem.street' => 'Street',
     'modem.sw_rev' => 'Firmware Version',
     'modem.us_pwr' => 'US level',
-    'modem.formatted_support_state' => 'Suport State',
+    'modem.support_state' => 'Suport State',
+    'modem.formatted_support_state' => 'Support State',
     'contract_valid' => 'Contract valid?',
     // Node
     'node' => [
