@@ -56,7 +56,7 @@ class HardwareSupportCommand extends Command
                 try {
                     $modem->serial_num = snmpget($hostname, $ro_community, '1.3.6.1.2.1.69.1.1.4.0');
                 } catch (\Exception $exception) {
-                    $this->error($exception->getMessage());
+                    $this->error("Modem: {$modem->hostname}, snmp Exception: " . $exception->getMessage());
                 }
             }
             $modem_serial_no_md5 = md5($modem->serial_num);
@@ -111,7 +111,7 @@ class HardwareSupportCommand extends Command
                 $this->info(sprintf('CMTS %s is %s%% supported', $cmts->hostname, $percentage));
                 DB::table('cmts')->where('id', $cmts->id)->update(['support_state' => $support_state, 'updated_at' => (Carbon::now())->toDateTimeString()]);
             } catch (\Exception $exception) {
-                $this->error($exception->getMessage());
+                $this->error("CMTS: {$hostname}, error message: ".$exception->getMessage());
             }
         }
     }
