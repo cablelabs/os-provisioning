@@ -28,6 +28,30 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // if provha is disabled: run main commands
+        if (! \Module::collections()->has('ProvHA')) {
+            $this->scheduleMain($schedule);
+        }
+
+        // check if master or slave
+        if ('master' == env('PROVHA__OWN_STATE')) {
+            $this->scheduleMain($schedule);
+        } else {
+            $this->scheduleSlave($schedule);
+        }
+
+    }
+
+
+    /**
+     * Run scheduled commands for single and master instances.
+     *
+     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @return void
+     *
+     */
+    protected function scheduleMain(Schedule $schedule)
+    {
         /* $schedule->command('inspire') */
         /* 		 ->hourly(); */
 
@@ -211,6 +235,18 @@ class Kernel extends ConsoleKernel
             $schedule->command('voipmon:match_records')->everyFiveMinutes();
             $schedule->command('voipmon:delete_old_records')->daily();
         }
+    }
+
+    /**
+     * Run scheduled commands on slave instances.
+     *
+     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @return void
+     *
+     */
+    protected function scheduleSlave(Schedule $schedule)
+    {
+        $schedule->command('provha:rebuild_slave_config')->everyMinute()->withoutOverlapping();
     }
 
     /**
