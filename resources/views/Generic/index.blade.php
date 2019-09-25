@@ -70,7 +70,7 @@
     {{-- INIT DT --}}
 
     @php
-        $methodExists = method_exists(BaseController::get_model_obj(), 'view_index_label');
+        $methodExists = method_exists($model, 'view_index_label');
         $indexTableInfo = $methodExists ? $model->view_index_label() : [];
     @endphp
 
