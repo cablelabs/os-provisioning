@@ -25,7 +25,6 @@ class HardwareSupportCommand extends Command
 
     protected $provBaseSettings;
 
-
     /**
      * Create a new command instance.
      *
@@ -52,15 +51,15 @@ class HardwareSupportCommand extends Command
         foreach ($modems as $modem) {
             $hostname = "{$modem->hostname}.{$this->provBaseSettings->domain_name}";
             $support_state = 'not-supported';
-            if (!isset($modem->serial_num) || $modem->serial_num === '') {
+            if (! isset($modem->serial_num) || $modem->serial_num === '') {
                 try {
                     $modem->serial_num = snmpget($hostname, $ro_community, '1.3.6.1.2.1.69.1.1.4.0');
                 } catch (\Exception $exception) {
-                    $this->error("Modem: {$modem->hostname}, snmp Exception: " . $exception->getMessage());
+                    $this->error("Modem: {$modem->hostname}, snmp Exception: ".$exception->getMessage());
                 }
             }
             $modem_serial_no_md5 = md5($modem->serial_num);
-            $contents = file_get_contents('https://support.nmsprime.com/hwsn/api.php?q=' . $modem_serial_no_md5);
+            $contents = file_get_contents('https://support.nmsprime.com/hwsn/api.php?q='.$modem_serial_no_md5);
 
             if ($contents !== '') {
                 $result = json_decode($contents, true);
@@ -75,19 +74,17 @@ class HardwareSupportCommand extends Command
         }
 
         foreach ($cmtses as $cmts) {
-
             $hostname = $cmts->ip;
             $support_state = 'not-supported';
 
             try {
-
                 $cmts_serials = snmpwalk($hostname, $ro_community, '1.3.6.1.2.1.47.1.1.1.1.11');
                 $cmts_serials = array_filter($cmts_serials, 'strlen');
 
                 $count_found = 0;
                 foreach ($cmts_serials as $cmts_serial) {
                     $cmts_serial_md5 = md5($cmts_serial);
-                    $contents = file_get_contents('https://support.nmsprime.com/hwsn/api.php?q=' . $cmts_serial_md5);
+                    $contents = file_get_contents('https://support.nmsprime.com/hwsn/api.php?q='.$cmts_serial_md5);
 
                     if ($contents !== '') {
                         $result = json_decode($contents, true);

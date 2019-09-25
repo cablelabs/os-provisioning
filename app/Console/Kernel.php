@@ -149,7 +149,7 @@ class Kernel extends ConsoleKernel
             $schedule->call('\Modules\ProvBase\Entities\Modem@update_model_firmware')->daily();
 
             // Hardware support check for modems and CMTS
-            if(Sla::first()->valid()){
+            if (Sla::first()->valid()) {
                 $schedule->command('nms:hardware-support daily')->twiceDaily(10, 14);
             }
         }
