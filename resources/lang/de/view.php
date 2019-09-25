@@ -35,7 +35,7 @@ return [
     //Main Menu
         'Menu_Apartment'            => 'Wohnungen',
         'Menu_BillingBase'          => 'Billing',
-        'Menu_Debt'                 => 'Offene Posten',
+        'Menu_Debt'                 => 'OP-Liste',
         'Menu_Dunning'              => 'Mahnwesen',
         'Menu_MainMenu'             => 'Hauptmenü',
         'Menu_Node'                 => 'Übertragungspunkte',
@@ -60,6 +60,7 @@ return [
         'Menu_QoS' 					=> 'QoS',
         'Menu_CMTS' 				=> 'CMTS',
         'Menu_Ip-Pools' 			=> 'IP-Bereiche',
+        'Menu_OverdueDebts'         => 'Offene Posten',
         'Menu_ProvVoip'             => 'VoIP',
         'Menu_PropertyManagement'   => 'Liegenschafts - Verwaltung',
         'Menu_MTAs' 				=> 'MTAs',
@@ -394,7 +395,6 @@ return [
     'error_specify_id'          => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
     'error_ticket_settings'     => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
 
-    'bankTransfer' => 'Bank-Transaktionen',
     'Credit' => 'Gutschrift',
     'critical' => 'kritisch',
     'Debit' => 'Lastschrift',

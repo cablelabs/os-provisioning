@@ -123,9 +123,9 @@ class Contract extends \BaseModel
             $ret['Billing']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
 
-            if (\Module::collections()->has('Dunning')) {
+            if (\Module::collections()->has('OverdueDebts')) {
                 // resulting outstanding amount
-                $ret['Edit']['DebtResult']['view']['view'] = 'dunning::Debt.result';
+                $ret['Edit']['DebtResult']['view']['view'] = 'overduedebts::Debt.result';
                 $ret['Edit']['DebtResult']['view']['vars']['debt'] = $this->getResultingDebt();
             }
 
@@ -141,7 +141,7 @@ class Contract extends \BaseModel
                 $invoicesPanel1->push($this->invoices[$i]);
             }
 
-            if (\Module::collections()->has('Dunning')) {
+            if (\Module::collections()->has('OverdueDebts')) {
                 $ret['Billing']['Debt']['class'] = 'Debt';
                 $ret['Billing']['Debt']['relation'] = $this->debts;
             }
@@ -213,7 +213,7 @@ class Contract extends \BaseModel
      */
     public function debts()
     {
-        return $this->hasMany('Modules\Dunning\Entities\Debt')->orderBy('date', 'desc');
+        return $this->hasMany('Modules\OverdueDebts\Entities\Debt')->orderBy('date', 'desc')->orderBy('id', 'desc');
     }
 
     public function modems()
@@ -1290,20 +1290,24 @@ class Contract extends \BaseModel
      */
     public function getResultingDebt()
     {
-        if (! \Module::collections()->has('Dunning')) {
+        if (! \Module::collections()->has('OverdueDebts')) {
             return;
         }
 
-        $sum = \Modules\Dunning\Entities\Debt::where('contract_id', $this->id)
+        $sum = \Modules\OverdueDebts\Entities\Debt::where('contract_id', $this->id)
             ->groupBy('contract_id')
-            ->selectRaw('(SUM(amount) + SUM(total_fee)) as sum')
-            ->first();
+            // ->selectRaw('(SUM(amount) + SUM(total_fee)) as sum')
+            ->select('missing_amount')
+            ->sum('missing_amount');
 
-        if (! $sum) {
+        // https://stackoverflow.com/questions/17210787/php-float-calculation-error-when-subtracting
+        $sum = round($sum, 2);
+
+        if (! $sum || $sum == 0) {
             return 0;
         }
 
-        return $sum->sum;
+        return $sum;
     }
 }
 

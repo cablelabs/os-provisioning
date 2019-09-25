@@ -49,6 +49,7 @@ return [
     'in'                   => 'Der gewählte Wert für :attribute ist ungültig.',
     'integer'              => ':attribute muss eine ganze Zahl sein.',
     'in_array'             => 'Das :attribute Feld existiert in :other nicht.',
+    'invalid_input'        => 'Ungültige Eingabe – bitte korrigieren Sie die unten aufgeführten Fehler.',
     'max'                  => [
         'numeric' => ':attribute darf maximal :max sein.',
         'file'    => ':attribute darf maximal :max Kilobytes groß sein.',
@@ -118,6 +119,7 @@ return [
     'null_if'              => 'Wert muss 0 sein',
 
     'needed_depending_on_salutation' => ':attribute muss bei der gewählten Anrede ausgefüllt sein.',
+    'reassign_phonenumber_to_mta_fail' => 'Die Telefonnummer kann nicht an MTA :id angehängt werden.',
 
     /*
     |--------------------------------------------------------------------------

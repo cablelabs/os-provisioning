@@ -49,6 +49,7 @@ return [
     'in'                   => 'The selected :attribute is invalid.',
     'integer'              => 'The :attribute must be an integer.',
     'in_array'             => 'The :attribute field does not exist in :other.',
+    'invalid_input'        => 'Input invalid – please correct the following errors.',
     'max'                  => [
         'numeric' => 'The :attribute may not be greater than :max.',
         'file'    => 'The :attribute may not be greater than :max kilobytes.',
@@ -118,6 +119,7 @@ return [
     'null_if'              => 'Has to be zero',
 
     'needed_depending_on_salutation' => 'The :attribute field is required for the chosen salutation.',
+    'reassign_phonenumber_to_mta_fail' => 'Reassignement of phonenumber to MTA :id not allowed',
 
     /*
     |--------------------------------------------------------------------------

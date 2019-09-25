@@ -162,6 +162,10 @@ class ExtendedValidator
      */
     public function validateDocsis($attribute, $value, $parameters)
     {
+        if (! $value) {
+            return true;
+        }
+
         $arguments = func_get_args();
 
         /* Configfile */
