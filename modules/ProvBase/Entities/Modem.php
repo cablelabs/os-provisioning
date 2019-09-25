@@ -2,9 +2,9 @@
 
 namespace Modules\ProvBase\Entities;
 
-use App\Sla;
 use Log;
 use File;
+use App\Sla;
 use Exception;
 use GlobalConfig;
 use Acme\php\ArrayHelper;
@@ -72,8 +72,8 @@ class Modem extends \BaseModel
             'where_clauses' => self::_get_where_clause(),
         ];
 
-        if (Sla::first()->valid()){
-            $ret['index_header'][] =  $this->table.'.support_state';
+        if (Sla::first()->valid()) {
+            $ret['index_header'][] = $this->table.'.support_state';
             $ret['edit']['support_state'] = 'getSupportState';
             $ret['raw_columns'][] = 'support_state';
         }
@@ -101,13 +101,15 @@ class Modem extends \BaseModel
      * Return Fontawesome emoji class, and Bootstrap text color
      * @return array
      */
-    public function getFaSmileClass(){
-        switch ($this->support_state){
-            case 'full-support':      {$faClass = 'fa-smile-o'; $bsClass = 'success';}  break;
-            case 'verifying':         {$faClass = 'fa-meh-o';   $bsClass = 'warning';}  break;
-            case 'not-supported':     {$faClass = 'fa-frown-o'; $bsClass = 'danger';}   break;
-            default: {$faClass = 'fa-smile'; $bsClass = 'success';} break;
+    public function getFaSmileClass()
+    {
+        switch ($this->support_state) {
+            case 'full-support':      {$faClass = 'fa-smile-o'; $bsClass = 'success'; }  break;
+            case 'verifying':         {$faClass = 'fa-meh-o'; $bsClass = 'warning'; }  break;
+            case 'not-supported':     {$faClass = 'fa-frown-o'; $bsClass = 'danger'; }   break;
+            default: {$faClass = 'fa-smile'; $bsClass = 'success'; } break;
         }
+
         return ['fa-class'=> $faClass, 'bs-class'=> $bsClass];
     }
 
@@ -121,8 +123,9 @@ class Modem extends \BaseModel
         return $this->us_pwr.' dBmV';
     }
 
-    public function getSupportState(){
-        return $this->formatted_support_state ." <i class='pull-right fa fa-2x ".$this->getFaSmileClass()['fa-class']. " text-" .$this->getFaSmileClass()['bs-class']."'></i>";
+    public function getSupportState()
+    {
+        return $this->formatted_support_state." <i class='pull-right fa fa-2x ".$this->getFaSmileClass()['fa-class'].' text-'.$this->getFaSmileClass()['bs-class']."'></i>";
     }
 
     /**
@@ -162,7 +165,8 @@ class Modem extends \BaseModel
      * Formatted attribute of support state.
      * @return string
      */
-    public function getFormattedSupportStateAttribute(){
+    public function getFormattedSupportStateAttribute()
+    {
         return ucfirst(str_replace('-', ' ', $this->support_state));
     }
 

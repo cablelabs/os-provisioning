@@ -72,14 +72,14 @@ class CmtsController extends \BaseController
             ['form_type' => 'text', 'name' => 'state', 'description' => 'State', 'hidden' => 1],
             ['form_type' => 'text', 'name' => 'monitoring', 'description' => 'Monitoring', 'hidden' => 1],
         ];
-        if (Sla::first()->valid()){
+        if (Sla::first()->valid()) {
             $ret_tmp[] = ['form_type'=> 'text',
                 'name' => 'formatted_support_state',
                 'description' => 'Support State',
-                'field_value'=> ucfirst(str_replace("-", " ", $model->support_state)),
+                'field_value'=> ucfirst(str_replace('-', ' ', $model->support_state)),
                 'help'=>trans('helper.Cmts_SupportState_'.$model->support_state),
                 'help_icon'=> $model->getFaSmileClass()['fa-class'],
-                'options' =>['readonly'], 'color'=> $model->getFaSmileClass()['bs-class']];
+                'options' =>['readonly'], 'color'=> $model->getFaSmileClass()['bs-class'], ];
         }
 
         // add init values if set

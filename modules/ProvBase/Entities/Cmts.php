@@ -2,8 +2,8 @@
 
 namespace Modules\ProvBase\Entities;
 
-use App\Sla;
 use File;
+use App\Sla;
 
 class Cmts extends \BaseModel
 {
@@ -57,8 +57,8 @@ class Cmts extends \BaseModel
             'bsclass' => $bsclass,
             'order_by' => ['0' => 'asc'], ];
 
-        if (Sla::first()->valid()){
-            $ret['index_header'][] =  $this->table.'.support_state';
+        if (Sla::first()->valid()) {
+            $ret['index_header'][] = $this->table.'.support_state';
             $ret['edit']['support_state'] = 'getSupportState';
             $ret['raw_columns'][] = 'support_state';
         }
@@ -85,26 +85,30 @@ class Cmts extends \BaseModel
      * Return Fontawesome emoji class, and Bootstrap text color
      * @return array
      */
-    public function getFaSmileClass(){
-        switch ($this->support_state){
-            case 'full-support':      {$faClass = 'fa-smile-o'; $bsClass = 'success';}  break;
-            case 'verifying':         {$faClass = 'fa-meh-o';   $bsClass = 'warning';}  break;
-            case 'restricted':         {$faClass = 'fa-meh-o';   $bsClass = 'success';}  break;
-            case 'not-supported':     {$faClass = 'fa-frown-o'; $bsClass = 'danger';}   break;
-            default: {$faClass = 'fa-smile'; $bsClass = 'success';} break;
+    public function getFaSmileClass()
+    {
+        switch ($this->support_state) {
+            case 'full-support':      {$faClass = 'fa-smile-o'; $bsClass = 'success'; }  break;
+            case 'verifying':         {$faClass = 'fa-meh-o'; $bsClass = 'warning'; }  break;
+            case 'restricted':         {$faClass = 'fa-meh-o'; $bsClass = 'success'; }  break;
+            case 'not-supported':     {$faClass = 'fa-frown-o'; $bsClass = 'danger'; }   break;
+            default: {$faClass = 'fa-smile'; $bsClass = 'success'; } break;
         }
+
         return ['fa-class'=> $faClass, 'bs-class'=> $bsClass];
     }
 
-    public function getSupportState(){
-        return $this->formatted_support_state ." <i class='pull-right fa fa-2x ".$this->getFaSmileClass()['fa-class']. " text-" .$this->getFaSmileClass()['bs-class']."'></i>";
+    public function getSupportState()
+    {
+        return $this->formatted_support_state." <i class='pull-right fa fa-2x ".$this->getFaSmileClass()['fa-class'].' text-'.$this->getFaSmileClass()['bs-class']."'></i>";
     }
 
     /**
      * Formatted attribute of support state.
      * @return string
      */
-    public function getFormattedSupportStateAttribute(){
+    public function getFormattedSupportStateAttribute()
+    {
         return ucfirst(str_replace('-', ' ', $this->support_state));
     }
 
