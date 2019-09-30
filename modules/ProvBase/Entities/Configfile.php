@@ -17,11 +17,15 @@ class Configfile extends \BaseModel
     // Add your validation rules here
     public static function rules($id = null)
     {
-        return [
-            'name' => 'required_without:import|unique:configfile,name,'.$id.',id,deleted_at,NULL',
-            'text' => 'docsis',
-            'cvc' => 'required_with:firmware',
-        ];
+        $rules = ['name' => 'required_without:import|unique:configfile,name,'.$id.',id,deleted_at,NULL',
+                'text' => 'docsis',
+                'cvc' => 'required_with:firmware', ];
+
+        if (\Request::get('device') == 'tr069') {
+            $rules['text'] = 'tr069';
+        }
+
+        return $rules;
     }
 
     // Name of View
