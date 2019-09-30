@@ -81,7 +81,7 @@ class ModemController extends \BaseController
             ];
 
         if (Sla::first()->valid()) {
-            $a[] = ['form_type'=> 'text', 'name' => 'formatted_support_state', 'description' => 'Support State', 'field_value'=> ucfirst(str_replace('-', ' ', $model->support_state)), 'help'=>trans('helper.Modem_SupportState_'.$model->support_state), 'help_icon'=> $model->getFaSmileClass()['fa-class'], 'options' =>['readonly'], 'color'=>$model->getFaSmileClass()['bs-class']];
+            $a[] = ['form_type'=> 'text', 'name' => 'formatted_support_state', 'description' => 'Support State', 'field_value'=> ucfirst(str_replace('-', ' ', $model->support_state)), 'help'=>trans('helper.modemSupportState.'.$model->support_state), 'help_icon'=> $model->getFaSmileClass()['fa-class'], 'options' =>['readonly'], 'color'=>$model->getFaSmileClass()['bs-class']];
         }
 
         $b = \Module::collections()->has('BillingBase') ?
