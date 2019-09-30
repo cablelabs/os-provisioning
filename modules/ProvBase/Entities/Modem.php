@@ -771,10 +771,10 @@ class Modem extends \BaseModel
             return;
         }
 
-        $preset = $this->createGenieAcsProvisions($text) ? preg_replace('/("type"\s*:\s*"provision"\s*,\s*"name"\s*:\s*".*?").*?;"(?=})/ms', '\\1', $text) : $text;
+        $preset = $this->createGenieAcsProvisions($text) ? preg_replace('/("type"\s*:\s*"provision"\s*,\s*"name"\s*:\s*".*?").*?;"/ms', '\\1', $text) : $text;
         $data = '';
 
-        foreach (preg_split('/(?<=},)/', $preset) as $key => $config) {
+        foreach (preg_split('/(?<=");/', $preset) as $key => $config) {
             if ($config == '') {
                 continue;
             }
@@ -807,6 +807,7 @@ class Modem extends \BaseModel
         $provisions = $matches[0];
         foreach($provisions as $provision) {
             $provision = preg_split('/("type"\s*:\s*"?|\s*"?,\s*"name"\s*:\s*"?|\s*"?,\s*"value"\s*:\s*"?|";},$)/s', $provision);
+            $url = 'http://'.ProvBase::first()['provisioning_server'].'/provisions/'.$provision[2];
             $this->callGenieAcsApi($url, 'PUT', $provision[3]);
         }
 
@@ -1504,7 +1505,8 @@ class Modem extends \BaseModel
                 $psw = \Acme\php\Password::generate_password();
                 // don't trigger an event
                 // TODO: this should be done using https://stackoverflow.com/a/55931917 once we are at laravel 5.7
-                \DB::update('UPDATE modem set ppp_password = ? where deleted_at is NULL and id = ?', [$psw, $this->id]);
+                //\DB::update('UPDATE modem set ppp_password = ? where deleted_at is NULL and id = ?', [$psw, $this->id]);
+                $this->ppp_password = $psw;
             }
 
             $check = new RadCheck;
@@ -1587,8 +1589,9 @@ class ModemObserver
     public function created($modem)
     {
         if ($modem->configfile->device == 'tr069') {
-            \Queue::push($modem->createGenieAcsPresets());
             $modem->hostname = 'tr-'.$modem->id;
+            $modem->updateRadius(false);
+            \Queue::push(new \Modules\ProvBase\Jobs\ConfigfileJob(null, $modem->configfile->id));
             $modem->save();
 
             return;
@@ -1600,7 +1603,6 @@ class ModemObserver
         $modem->save();	 // forces to call the updating() and updated() method of the observer !
         Modem::create_ignore_cpe_dhcp_file();
 
-        $modem->updateRadius(false);
 
         if (\Module::collections()->has('ProvMon') && ! $modem->isPPP()) {
             Log::info("Create cacti diagrams for modem: $modem->hostname");
