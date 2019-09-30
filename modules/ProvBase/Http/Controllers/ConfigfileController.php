@@ -29,7 +29,7 @@ class ConfigfileController extends \BaseController
 
         $form = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
-            ['form_type' => 'select', 'name' => 'device', 'description' => 'Device', 'value' => ['cm' => 'CM', 'mta' => 'MTA']],
+            ['form_type' => 'select', 'name' => 'device', 'description' => 'Device', 'value' => ['cm' => 'CM', 'mta' => 'MTA', 'tr069' => 'TR-69']],
             ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Configfile',
                  'value' => $model->html_list(Configfile::where('id', '!=', $model->id)->get(), ['device', 'name'], true, ': '), ],
             ['form_type' => 'select', 'name' => 'public', 'description' => 'Public Use', 'value' => ['yes' => 'Yes', 'no' => 'No']],

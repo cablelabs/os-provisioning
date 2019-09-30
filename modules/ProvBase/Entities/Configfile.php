@@ -157,7 +157,7 @@ class Configfile extends \BaseModel
      *
      * @param sw_up 	Bool 	true if Software upgrade statement is already set -> then the next one is discarded (child CF has priority)
      */
-    private function __text_make($device, $type, $sw_up = false)
+    public function __text_make($device, $type, $sw_up = false)
     {
         // for cfs of type modem, mta or generic
         // get global config - provisioning settings
@@ -259,6 +259,11 @@ class Configfile extends \BaseModel
             case 'generic':
                 break;
 
+            case 'tr069':
+                $db_schemata ['modem'][0] = Schema::getColumnListing('modem');
+                $modem = [$device];
+                break;
+
             // this is for unknown types – atm we do nothing
             default:
                 return false;
@@ -297,24 +302,44 @@ class Configfile extends \BaseModel
         /*
          * Search and Replace Configfile TEXT
          */
-        $text = str_replace($search, $replace, $this->text);
-        $rows = explode("\n", $text);
+        $text = str_replace($search, $replace, $this->text ?? $device->text);
 
-        // finally: append extensions; they have to be an array with one entry per line
-        $rows = array_merge($rows, $config_extensions);
+        if ($this->device != 'tr069' && $device->device != 'tr069') {
+            $rows = explode("\n", $text);
 
-        $result = '';
-        $match = [];
-        foreach ($rows as $row) {
-            // Ignore all rows with {xyz} content which can not be replaced
-            if (preg_match('/\\{.*\\}/im', $row, $match) && ($row = self::_calc_eval($row, $match)) === null) {
-                continue;
+            // finally: append extensions; they have to be an array with one entry per line
+            $rows = array_merge($rows, $config_extensions);
+
+            $result = '';
+            $match = [];
+            foreach ($rows as $row) {
+                // Ignore all rows with {xyz} content which can not be replaced
+                if (preg_match('/\\{[^\\{]*\\}/im', $row, $match) && ($row = self::_calc_eval($row, $match)) === null) {
+                    continue;
+                }
+                $result .= "\n\t".$row;
             }
 
-            $result .= "\n\t".$row;
+            return $result;
         }
 
-        return $result;
+        $lines = preg_split('/(?<=");/', $text);
+        $return = '';
+
+        if ($lines[max(array_keys($lines))] == '') {
+            unset($lines[max(array_keys($lines))]);
+        }
+
+        foreach ($lines as $key => $line) {
+            if ($line != '') {
+                $return .= '{'.$line.'}';
+                if (max(array_keys($lines)) != $key) {
+                    $return .= ', ';
+                }
+            }
+        }
+
+        return '['.$return.']';
     }
 
     /**
