@@ -765,7 +765,7 @@ class Modem extends \BaseModel
      */
     public function createGenieAcsPresets($text = null)
     {
-        $text = $text ?? \Modules\ProvBase\Entities\Modem::join('configfile', 'modem.configfile_id', 'configfile.id')->where('modem.id', $this->id)->first()->text;
+        $text = $text ?? self::join('configfile', 'modem.configfile_id', 'configfile.id')->where('modem.id', $this->id)->first()->text;
 
         if (! $text) {
             return;
@@ -805,7 +805,7 @@ class Modem extends \BaseModel
         }
 
         $provisions = $matches[0];
-        foreach($provisions as $provision) {
+        foreach ($provisions as $provision) {
             $provision = preg_split('/("type"\s*:\s*"?|\s*"?,\s*"name"\s*:\s*"?|\s*"?,\s*"value"\s*:\s*"?|";},$)/s', $provision);
             $url = 'http://'.ProvBase::first()['provisioning_server'].'/provisions/'.$provision[2];
             $this->callGenieAcsApi($url, 'PUT', $provision[3]);
@@ -1602,7 +1602,6 @@ class ModemObserver
         $modem->hostname = 'cm-'.$modem->id;
         $modem->save();	 // forces to call the updating() and updated() method of the observer !
         Modem::create_ignore_cpe_dhcp_file();
-
 
         if (\Module::collections()->has('ProvMon') && ! $modem->isPPP()) {
             Log::info("Create cacti diagrams for modem: $modem->hostname");
