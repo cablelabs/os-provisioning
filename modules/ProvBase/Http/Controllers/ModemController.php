@@ -8,6 +8,7 @@ use Request;
 use App\GlobalConfig;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Contract;
+use Modules\ProvBase\Entities\ProvBase;
 use App\Http\Controllers\BaseViewController;
 
 class ModemController extends \BaseController
@@ -23,7 +24,7 @@ class ModemController extends \BaseController
 
     public function __construct()
     {
-        if (\Modules\ProvBase\Entities\ProvBase::first()->additional_modem_reset) {
+        if (ProvBase::first()->additional_modem_reset) {
             $this->edit_view_third_button = true;
             $this->third_button_name = 'Reset Modem';
             $this->third_button_title_key = 'modem_reset_button_title';
@@ -327,7 +328,7 @@ class ModemController extends \BaseController
             return response()->json(['ret' => 'Object not found']);
         }
 
-        $domain_name = \Modules\ProvBase\Entities\ProvBase::first()->domain_name;
+        $domain_name = ProvBase::first()->domain_name;
         exec("sudo ping -c1 -i0 -w1 {$modem->hostname}.$domain_name", $ping, $offline);
 
         return response()->json(['ret' => 'success', 'online' => ! $offline]);
@@ -423,11 +424,33 @@ class ModemController extends \BaseController
      */
     public function update($id)
     {
+        $modem = Modem::find($id);
+        $configfile = \Modules\ProvBase\Entities\Configfile::join('modem', 'modem.configfile_id', 'configfile.id')->where('configfile.id', $modem->configfile_id)->first();
+
+        if ($configfile->device == 'tr069' && Request::filled('_2nd_action')) {
+            $url = ProvBase::first()['provisioning_server'];
+            $data = '{ "name": "reboot" }';
+            $class = new \Modules\ProvBase\Entities\Modem;
+
+            $model = $class->getGenieAcsModel($url, $modem->serial_num, $modem->mac);
+
+            if ($model) {
+                $json = json_decode($model, true);
+                $deviceId = rawurlencode($json[0]['_id']);
+                $success = $modem->callGenieAcsApi("http://$url:7557/devices/$deviceId/tasks?timeout=3000&connection_request", 'POST', $data);
+            }
+
+            if (! $success) {
+                \Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
+            }
+
+            return \Redirect::back();
+        }
+
         if (! Request::filled('_2nd_action') && ! Request::filled('_3rd_action')) {
             return parent::update($id);
         }
 
-        $modem = Modem::find($id);
         $modem->restart_modem(false, Request::filled('_3rd_action'));
 
         return \Redirect::back();

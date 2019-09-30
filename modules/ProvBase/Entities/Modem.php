@@ -758,6 +758,124 @@ class Modem extends \BaseModel
     }
 
     /**
+     * Create TR-069 configfile.
+     * GenieACS API: https://github.com/genieacs/genieacs/wiki/API-Reference
+     *
+     * @author Roy Schneider
+     */
+    public function createGenieAcsPresets($text = null)
+    {
+        $text = $text ?? \Modules\ProvBase\Entities\Modem::join('configfile', 'modem.configfile_id', 'configfile.id')->where('modem.id', $this->id)->first()->text;
+
+        if (! $text) {
+            return;
+        }
+
+        $preset = $this->createGenieAcsProvisions($text) ? preg_replace('/("type"\s*:\s*"provision"\s*,\s*"name"\s*:\s*".*?").*?;"(?=})/ms', '\\1', $text) : $text;
+        $data = '';
+
+        foreach (preg_split('/(?<=},)/', $preset) as $key => $config) {
+            if ($config == '') {
+                continue;
+            }
+
+            $data .= $config;
+        }
+
+        foreach (['sn' => $this->serial_num, 'mac' => $this->mac] as $name => $identifier) {
+            $this->callGenieAcsApi(
+                'http://'.ProvBase::first()['provisioning_server'].':7557/presets/'.$name.'_'.$this->id,
+                'PUT',
+                '{ "weight": 0, "precondition": "{\"VirtualParameters.SerialNumber\":\"'.strtoupper($identifier).'\"}", "events":  { "0 BOOTSTRAP": true }, "configurations": '.$data.'}'
+            );
+        }
+    }
+
+    /**
+     * Create Provision from configfile.text.
+     *
+     * @author Roy Schneider
+     * @param string $text
+     * @return bool
+     */
+    public function createGenieAcsProvisions($text)
+    {
+        if (! preg_match_all('/{(?:(?!"type").)*("type"\s*:\s*"provision".*?;(?="}))/s', $text, $matches)) {
+            return false;
+        }
+
+        $provisions = $matches[0];
+        foreach($provisions as $provision) {
+            $provision = preg_split('/("type"\s*:\s*"?|\s*"?,\s*"name"\s*:\s*"?|\s*"?,\s*"value"\s*:\s*"?|";},$)/s', $provision);
+            $this->callGenieAcsApi($url, 'PUT', $provision[3]);
+        }
+
+        return true;
+    }
+
+    /**
+     * Call API of GenieACS via PHP Curl.
+     *
+     * @author Roy Schneider
+     * @param string $url
+     * @param string $customRequest
+     * @param string $data
+     * @return mixed $result
+     */
+    public function callGenieAcsApi($url, $customRequest, $data = null)
+    {
+        $ch = curl_init();
+
+        curl_setopt_array($ch, [
+                    CURLOPT_URL => $url,
+                    CURLOPT_RETURNTRANSFER => $customRequest == 'GET' ? true : false,
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_CUSTOMREQUEST => $customRequest,
+                    CURLOPT_POSTFIELDS => $data,
+                ]);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return $result;
+    }
+
+    /**
+     * Get device from GenieACS via API.
+     *
+     * @author Roy Schneider
+     * @param string $url
+     * @param string $serialNumber
+     * @param string $mac
+     * @return mixed $length
+     */
+    public function getGenieAcsModel($url, $serialNumber, $mac)
+    {
+        $model = file_get_contents("http://$url:7557/devices/?query=%7B%22VirtualParameters.SerialNumber%22%3A%22$serialNumber%22%7D");
+        $length = preg_match('/[a-z]+/', $model);
+
+        if ($length == 0) {
+            $model = file_get_contents("http://$url:7557/devices/?query=%7B%22VirtualParameters.SerialNumber%22%3A%22$mac%22%7D");
+            $length = preg_match('/[a-z]+/', $model);
+        }
+
+        return $length != 0 ? $model : null;
+    }
+
+    /**
+     * Delete GenieACS Presets.
+     *
+     * @author Roy Schneider
+     */
+    public function deleteGenieAcsPreset()
+    {
+        $this->callGenieAcsApi(
+            'http://'.ProvBase::first()['provisioning_server'].':7557/presets/'.$this->id,
+            'DELETE'
+        );
+    }
+
+    /**
      * Get CMTS a CM is registered on
      *
      * @param  string 	ip 		address of cm
@@ -1468,6 +1586,14 @@ class ModemObserver
 {
     public function created($modem)
     {
+        if ($modem->configfile->device == 'tr069') {
+            \Queue::push($modem->createGenieAcsPresets());
+            $modem->hostname = 'tr-'.$modem->id;
+            $modem->save();
+
+            return;
+        }
+
         Log::debug(__METHOD__.' started for '.$modem->hostname);
 
         $modem->hostname = 'cm-'.$modem->id;
@@ -1508,6 +1634,11 @@ class ModemObserver
 
         // get changed values
         $diff = $modem->getDirty();
+
+        $configfile = Configfile::where('id', $modem->configfile_id)->first();
+        if ($configfile->device == 'tr069' && multi_array_key_exists(['serial_num', 'mac'], $diff)) {
+            \Queue::push($modem->createGenieAcsPresets($configfile->__text_make($modem, 'tr069')));
+        }
 
         // if testing: do not try to geocode or position modems (faked data; slows down the process)
         if (\App::runningUnitTests()) {
@@ -1557,11 +1688,13 @@ class ModemObserver
         // only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
         $diff = $modem->getDirty();
 
-        if (multi_array_key_exists(['contract_id', 'public', 'internet_access', 'configfile_id', 'qos_id', 'mac'], $diff)) {
-            Modem::create_ignore_cpe_dhcp_file();
-            $modem->make_dhcp_cm();
-            $modem->restart_modem(array_key_exists('mac', $diff));
-            $modem->make_configfile();
+        if (Configfile::select(['device'])->where('id', $modem->configfile_id)->first()->device == 'cm') {
+            if (multi_array_key_exists(['contract_id', 'public', 'internet_access', 'configfile_id', 'qos_id', 'mac'], $diff)) {
+                Modem::create_ignore_cpe_dhcp_file();
+                $modem->make_dhcp_cm();
+                $modem->restart_modem(array_key_exists('mac', $diff));
+                $modem->make_configfile();
+            }
         }
 
         if (! $modem->wasRecentlyCreated) {
@@ -1583,12 +1716,15 @@ class ModemObserver
     {
         Log::debug(__METHOD__.' started for '.$modem->hostname);
 
-        // $modem->make_dhcp_cm_all();
-        Modem::create_ignore_cpe_dhcp_file();
-        $modem->make_dhcp_cm(true);
-        $modem->restart_modem();
-        $modem->delete_configfile();
-
-        $modem->updateRadius(true);
+        if (Configfile::select(['device'])->where('id', $modem->configfile_id)->first()->device == 'cm') {
+            // $modem->make_dhcp_cm_all();
+            Modem::create_ignore_cpe_dhcp_file();
+            $modem->make_dhcp_cm(true);
+            $modem->restart_modem();
+            $modem->delete_configfile();
+        } else {
+            $modem->deleteGenieAcsPreset();
+            $modem->updateRadius(true);
+        }
     }
 }

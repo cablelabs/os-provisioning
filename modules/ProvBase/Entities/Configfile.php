@@ -468,6 +468,20 @@ class Configfile extends \BaseModel
         if ($id) {
             $cf = self::find($id);
 
+            if ($cf->device == 'tr069') {
+                $modems = \Modules\ProvBase\Entities\Modem::select('*', 'modem.id')->join('configfile', 'configfile.id', 'modem.configfile_id')->where('configfile_id', $id)->get();
+
+                if ($modems->count() == 0) {
+                    return \Redirect::back();
+                }
+
+                $url = ProvBase::first()['provisioning_server'];
+
+                foreach ($modems as $key => $modem) {
+                    $modem->createGenieAcsPresets($this->__text_make($modem, 'tr069'));
+                }
+            }
+
             $cf->build_corresponding_configfiles();
             $cf->search_children(1);
 
@@ -476,8 +490,17 @@ class Configfile extends \BaseModel
 
         // Modem
         if (! $filter || $filter == 'cm') {
-            $cms = Modem::all();
+            $cms = Modem::join('configfile', 'configfile.id', 'modem.configfile_id')->where('configfile.device', 'cm')->get();
             $this->build_configfiles($cms, 'cm');
+        }
+
+        // Tr-069
+        if (! $filter || $filter == 'tr069') {
+            $modems = Modem::select('*', 'modem.id')->join('configfile', 'configfile.id', 'modem.configfile_id')->where('configfile.device', 'tr069')->get();
+            foreach ($modems as $modem) {
+                $this->build_configfiles($modems, 'tr069');
+                $modem->createGenieAcsPresets($this->__text_make($modem, 'tr069'));
+            }
         }
 
         // MTA
