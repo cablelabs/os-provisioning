@@ -30,7 +30,7 @@ class Modem extends \BaseModel
             'birthday' => 'nullable|date',
             'country_code' => 'regex:/^[A-Z]{2}$/',
             'contract_id' => 'required|exists:contract,id,deleted_at,NULL',
-            'configfile_id' => 'required|exists:configfile,id,deleted_at,NULL,device,cm,public,yes',
+            'configfile_id' => 'required|exists:configfile,id,deleted_at,NULL,public,yes',
             // Note: realty_id and apartment_id validations are done in ModemController@prepare_rules
             // 'realty_id' => 'nullable|empty_with:apartment_id',
         ];
@@ -162,7 +162,7 @@ class Modem extends \BaseModel
      */
     public function configfiles()
     {
-        return DB::table('configfile')->select(['id', 'name'])->whereNull('deleted_at')->where('device', '=', 'CM')->where('public', '=', 'yes')->get();
+        return DB::table('configfile')->select(['id', 'name'])->whereNull('deleted_at')->whereIn('device', ['cm', 'tr069'])->where('public', '=', 'yes')->get();
         // return Configfile::select(['id', 'name'])->where('device', '=', 'CM')->where('public', '=', 'yes')->get();
     }
 

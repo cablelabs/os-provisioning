@@ -76,17 +76,19 @@ class ModemController extends \BaseController
             $selectPropertyMgmt = ['select' => 'noRealty noApartment'];
             $help['contract'] = ['help' => trans('propertymanagement::help.modem.contract_id')];
         }
+        $cfIds = $this->dynamicDisplayFormFields();
 
         // label has to be the same like column in sql table
         $a = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
-            ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly'], 'hidden' => 'C', 'space' => 1],
+            ['form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list_with_count($model->configfiles(), 'name', false, '', 'configfile_id', 'modem'), 'help' => trans('helper.configfile_count'), 'select' => $cfIds['all']],
+            ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'select' => $cfIds['cm'], 'options' => ['readonly'], 'hidden' => 'C', 'space' => 1],
             // TODO: show this dropdown only if necessary (e.g. not if creating a modem from contract context)
-            ['form_type' => 'text', 'name' => 'ppp_username', 'description' => 'Username', 'options' => [$model->exists ? 'readonly' : '']],
-            ['form_type' => 'text', 'name' => 'ppp_password', 'description' => 'Password', 'hidden' => 'C'],
-            array_merge(['form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 'E', 'value' => $model->contracts()], $help['contract']),
             ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')],
-            ['form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list_with_count($model->configfiles(), 'name', false, '', 'configfile_id', 'modem'), 'help' => trans('helper.configfile_count')],
+            ['form_type' => 'text', 'name' => 'serial_num', 'description' => trans('messages.Serial Number'), 'select' => $cfIds['tr069']],
+            ['form_type' => 'text', 'name' => 'ppp_username', 'description' => trans('messages.Username'), 'select' => $cfIds['tr069'], 'options' => [$model->exists ? 'readonly' : '']],
+            ['form_type' => 'text', 'name' => 'ppp_password', 'description' => trans('messages.Password'), 'select' => $cfIds['tr069'], 'hidden' => 'C'],
+            array_merge(['form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 'E', 'value' => $model->contracts()], $help['contract']),
             ['form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'],
             ['form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1', 'help' => trans('helper.Modem_InternetAccess')],
             ];
@@ -144,12 +146,42 @@ class ModemController extends \BaseController
             ['form_type' => 'text', 'name' => 'geocode_source', 'description' => 'Geocode origin', 'help' => trans('helper.Modem_GeocodeOrigin'), 'space' => 1],
 
             ['form_type' => 'text', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => $installation_address_change_date_options, 'help' => trans('helper.Modem_InstallationAddressChangeDate')], // Date of adress change for notification at telephone provider - important for localisation of emergency calls
-            ['form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number'],
             ['form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'],
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
 
         return array_merge($a, $b, $c, $d);
+    }
+
+    /**
+     * Change form fields based on selected configfile device (cm || tr069)
+     *
+     * @author Roy Schneider
+     * @return array with array of all ids from configfile of device cm or tr069 and string of ids from configfile of device cm/tr069
+     */
+    public function dynamicDisplayFormFields()
+    {
+        $ids = [];
+        $cm = '';
+        $tr069 = '';
+
+        foreach (['cm', 'tr069'] as $device) {
+            foreach (\DB::table('configfile')->where('deleted_at', null)->where('device', $device)->get() as $configfile) {
+                $$device .= ' '.$configfile->id;
+            }
+        }
+
+        foreach (\DB::table('configfile')->select(['id'])->whereIn('device', ['cm', 'tr069'])->where('deleted_at', null)->get() as $key => $cf) {
+            $ids[] = $cf->id;
+        }
+
+        // equal keys and values
+        $ids = array_combine($ids, $ids);
+
+        // select a string != '' so that the class with that name will be hidden in form-js-select.blade.php
+        $tr069 = $tr069 != '' ? $tr069 : 'hide';
+
+        return ['all' => $ids, 'cm' => $cm, 'tr069' => $tr069];
     }
 
     /**

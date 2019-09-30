@@ -670,4 +670,5 @@ return [
     'couldNotDelete'            => 'Could not delete :0',
     'Voucher date'              => 'Voucher date',
     'Voucher number'            => 'Voucher number',
+    'wrongMacOrSerialNumber'    => 'Please correct MAC/serial number',
 ];

@@ -669,4 +669,5 @@ return [
     'error'                     => 'Fehler',
     'Voucher date'              => 'Belegdatum',
     'Voucher number'            => 'Belegnummer',
+    'wrongMacOrSerialNumber'    => 'Bitte korrigieren Sie die MAC und oder die Seriennummer.',
 ];
