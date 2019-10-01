@@ -441,7 +441,7 @@ class BaseViewController extends Controller
             if (isset($field['help'])) {
                 $s .= '<div name='.$field['name'].'-help class="col-1"><a data-toggle="popover" data-container="body"
 							data-trigger="hover" title="'.self::translate_label($field['description']).'" data-placement="right" data-content="'.$field['help'].'">'.
-                            '<i class="fa fa-2x text-info p-t-5 '.(isset($field['help_icon']) ? $field['help_icon'] : 'fa-question-circle').'"></i></a></div>';
+                            '<i class="fa fa-2x p-t-5 '.(isset($field['help_icon']) ? $field['help_icon'] : 'fa-question-circle').' text-'.(isset($field['color']) ? $field['color'] : 'info').'"></i></a></div>';
             }
 
             // Close Form Group

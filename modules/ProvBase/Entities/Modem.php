@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Entities;
 
 use Log;
 use File;
+use App\Sla;
 use Exception;
 use GlobalConfig;
 use Acme\php\ArrayHelper;
@@ -15,6 +16,8 @@ class Modem extends \BaseModel
 
     // The associated SQL table for this Model
     public $table = 'modem';
+
+    protected $appends = ['formatted_support_state'];
 
     // Add your validation rules here
     // see: http://stackoverflow.com/questions/22405762/laravel-update-model-with-unique-validation-rule-for-attribute
@@ -57,17 +60,25 @@ class Modem extends \BaseModel
             \Session::forget('modem_show_filter');
         }
 
-        return ['table' => $this->table,
-                'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
-                'bsclass' => $bsclass,
-                'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
-                'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
-                'eager_loading' => ['configfile', 'contract'],
-                'disable_sortsearch' => ['contract_valid' => 'false'],
-                'help' => [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'],
-                'order_by' => ['0' => 'desc'],
-                'where_clauses' => self::_get_where_clause(),
-            ];
+        $ret = ['table' => $this->table,
+            'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
+            'bsclass' => $bsclass,
+            'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
+            'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
+            'eager_loading' => ['configfile', 'contract'],
+            'disable_sortsearch' => ['contract_valid' => 'false'],
+            'help' => [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'],
+            'order_by' => ['0' => 'desc'],
+            'where_clauses' => self::_get_where_clause(),
+        ];
+
+        if (Sla::first()->valid()) {
+            $ret['index_header'][] = $this->table.'.support_state';
+            $ret['edit']['support_state'] = 'getSupportState';
+            $ret['raw_columns'][] = 'support_state';
+        }
+
+        return $ret;
     }
 
     public function get_bsclass()
@@ -86,6 +97,22 @@ class Modem extends \BaseModel
         return $bsclass;
     }
 
+    /**
+     * Return Fontawesome emoji class, and Bootstrap text color
+     * @return array
+     */
+    public function getFaSmileClass()
+    {
+        switch ($this->support_state) {
+            case 'full-support':      {$faClass = 'fa-smile-o'; $bsClass = 'success'; }  break;
+            case 'verifying':         {$faClass = 'fa-meh-o'; $bsClass = 'warning'; }  break;
+            case 'not-supported':     {$faClass = 'fa-frown-o'; $bsClass = 'danger'; }   break;
+            default: {$faClass = 'fa-smile'; $bsClass = 'success'; } break;
+        }
+
+        return ['fa-class'=> $faClass, 'bs-class'=> $bsClass];
+    }
+
     public function get_contract_valid()
     {
         return $this->contract->check_validity('Now') ? \App\Http\Controllers\BaseViewController::translate_label('yes') : \App\Http\Controllers\BaseViewController::translate_label('no');
@@ -94,6 +121,11 @@ class Modem extends \BaseModel
     public function get_us_pwr()
     {
         return $this->us_pwr.' dBmV';
+    }
+
+    public function getSupportState()
+    {
+        return $this->formatted_support_state." <i class='pull-right fa fa-2x ".$this->getFaSmileClass()['fa-class'].' text-'.$this->getFaSmileClass()['bs-class']."'></i>";
     }
 
     /**
@@ -127,6 +159,15 @@ class Modem extends \BaseModel
     public function qualities()
     {
         return \DB::table('qos')->whereNull('deleted_at')->get();
+    }
+
+    /**
+     * Formatted attribute of support state.
+     * @return string
+     */
+    public function getFormattedSupportStateAttribute()
+    {
+        return ucfirst(str_replace('-', ' ', $this->support_state));
     }
 
     /**
