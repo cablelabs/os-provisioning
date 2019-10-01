@@ -1393,6 +1393,13 @@ class ContractObserver
             }
         }
     }
+
+    public function deleting($contract)
+    {
+        if ($contract->cccUser) {
+            $contract->cccUser->delete();
+        }
+    }
 }
 
 /**

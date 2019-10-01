@@ -24,6 +24,8 @@ class BaseMigration extends Migration
         } else {
             $this->fim = null;	// no indexes build on newer migrations (using InnoDB)
         }
+
+        DB::getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
     }
 
     public function up_table_generic(&$table)

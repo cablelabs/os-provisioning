@@ -105,7 +105,7 @@ class GuiLogController extends BaseController
                 return $bsclass;
             })
             ->editColumn('created_at', function ($object) use ($routeName) {
-                return '<a href="'.route($routeName.'.edit', $object->id).'"><strong>'.
+                return '<a href="'.route($routeName.'.edit', $object->id).'" title="'.str_replace(', ', '1&#013;', $object->text).'"><strong>'.
                         $object->view_icon().$object->created_at.'</strong></a>';
             })
             ->rawColumns(['created_at'])
