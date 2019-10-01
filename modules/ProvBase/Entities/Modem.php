@@ -772,21 +772,12 @@ class Modem extends \BaseModel
         }
 
         $preset = $this->createGenieAcsProvisions($text) ? preg_replace('/("type"\s*:\s*"provision"\s*,\s*"name"\s*:\s*".*?").*?;"/ms', '\\1', $text) : $text;
-        $data = '';
-
-        foreach (preg_split('/(?<=");/', $preset) as $key => $config) {
-            if ($config == '') {
-                continue;
-            }
-
-            $data .= $config;
-        }
 
         foreach (['sn' => $this->serial_num, 'mac' => $this->mac] as $name => $identifier) {
             $this->callGenieAcsApi(
                 'http://'.ProvBase::first()['provisioning_server'].':7557/presets/'.$name.'_'.$this->id,
                 'PUT',
-                '{ "weight": 0, "precondition": "{\"VirtualParameters.SerialNumber\":\"'.strtoupper($identifier).'\"}", "events":  { "0 BOOTSTRAP": true }, "configurations": '.$data.'}'
+                '{ "weight": 0, "precondition": "{\"VirtualParameters.SerialNumber\":\"'.strtoupper($identifier).'\"}", "events":  { "0 BOOTSTRAP": true }, "configurations": '.$preset.'}'
             );
         }
     }
@@ -807,7 +798,7 @@ class Modem extends \BaseModel
         $provisions = $matches[0];
         foreach ($provisions as $provision) {
             $provision = preg_split('/("type"\s*:\s*"?|\s*"?,\s*"name"\s*:\s*"?|\s*"?,\s*"value"\s*:\s*"?|";},$)/s', $provision);
-            $url = 'http://'.ProvBase::first()['provisioning_server'].'/provisions/'.$provision[2];
+            $url = 'http://'.ProvBase::first()['provisioning_server'].':7557/provisions/'.$provision[2];
             $this->callGenieAcsApi($url, 'PUT', $provision[3]);
         }
 
@@ -864,16 +855,62 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Delete GenieACS Presets.
+     * Get preset from GenieACS via API.
+     *
+     * @author Roy Schneider
+     * @param string $url
+     * @param string $serialNumber
+     * @param string $mac
+     * @return mixed $length
+     */
+    public function getGenieAcsPreset($url, $id)
+    {
+        $model = file_get_contents("http://$url:7557/presets/?query=%7B%22_id%22%3A%22sn_$id%22%7D");
+        $length = preg_match('/[a-z]+/', $model);
+
+        if ($length == 0) {
+            $model = file_get_contents("http://$url:7557/presets/?query=%7B%22_id%22%3A%22mac_$id%22%7D");
+            $length = preg_match('/[a-z]+/', $model);
+        }
+
+        return $length != 0 ? $model : null;
+    }
+
+    /**
+     * Delete GenieACS presets.
      *
      * @author Roy Schneider
      */
     public function deleteGenieAcsPreset()
     {
-        $this->callGenieAcsApi(
-            'http://'.ProvBase::first()['provisioning_server'].':7557/presets/'.$this->id,
-            'DELETE'
-        );
+        foreach (['mac_', 'sn_'] as $name) {
+            $this->callGenieAcsApi(
+                'http://'.ProvBase::first()['provisioning_server'].":7557/presets/$name$this->id",
+                'DELETE'
+            );
+        }
+    }
+
+    /**
+     * Delete GenieACS provision.
+     *
+     * @author Roy Schneider
+     */
+    public function deleteGenieAcsProvision()
+    {
+        $provision = $this->getGenieAcsPreset(ProvBase::first()['provisioning_server'], $this->id);
+        preg_match_all('/("type":"provision","name":")(.*?(?="))/s', $provision, $matches);
+
+        foreach ($matches as $match) {
+            foreach ($match as $name) {
+                if (strpos($name, '"') === false) {
+                    $this->callGenieAcsApi(
+                        'http://'.ProvBase::first()['provisioning_server'].":7557/provisions/$name",
+                        'DELETE'
+                    );
+                }
+            }
+        }
     }
 
     /**
@@ -1724,6 +1761,7 @@ class ModemObserver
             $modem->restart_modem();
             $modem->delete_configfile();
         } else {
+            $modem->deleteGenieAcsProvision();
             $modem->deleteGenieAcsPreset();
             $modem->updateRadius(true);
         }
