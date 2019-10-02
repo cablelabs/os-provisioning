@@ -21,6 +21,9 @@ return [
         'connected' => 'Angeklemmt',
         'occupied' => 'Bewohnt',
     ],
+    'contact' => [
+        'administration' => 'Hausverwaltung',
+    ],
     // Auth
     'users.login_name' => 'Loginname',
     'users.first_name' => 'Vorname',
@@ -134,6 +137,14 @@ return [
     'email.greylisting' => 'Greylisting Aktiv?',
     'email.blacklisting' => 'E-Mail auf Blacklist?',
     'email.forwardto' => 'Weiterleiten an:',
+    'contact.firstname1' => 'Vorname 1',
+    'firstname2' => 'Vorname 2',
+    'lastname1' => 'Nachname 1',
+    'lastname2' => 'Nachname 2',
+    'tel' => 'Telefonnummer',
+    'tel_private' => 'Telefonnummer privat',
+    'email1' => 'E-Mail 1',
+    'email2' => 'E-Mail 2',
     // CMTS
     'cmts.id' => 'ID',
     'cmts.hostname' => 'Name',
@@ -142,10 +153,10 @@ return [
     'cmts.type' => 'Typ',
     // Contract
     'contract.city' => 'Stadt',
-    'contract.company' => 'Firma',
+    'company' => 'Firma',
     'contract.contract_end' => 'Vertragsende',
     'contract.contract_start' => 'Vertragsbeginn',
-    'contract.district' => 'Bezirk',
+    'district' => 'Bezirk',
     'contract.firstname' => 'Vorname',
     'contract.house_number' => 'Hausnr',
     'contract.id' => 'Vertrag',

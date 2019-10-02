@@ -35,6 +35,7 @@ return [
     //Main Menu
         'Menu_Apartment'            => 'Apartments',
         'Menu_BillingBase'          => 'Billing',
+        'Menu_Contact'              => 'Contacts',
         'Menu_Debt'                 => 'Debt list',
         'Menu_Dunning'              => 'OverdueDebts',
         'Menu_MainMenu'             => 'Main Menu',
@@ -229,6 +230,7 @@ return [
         'Header_EnviaContract'      => 'envia TEL contract|envia TEL contracts',
         'Header_EnviaOrder'         => 'envia TEL order|envia TEL orders',
 
+        'Header_Contact'            => 'Contacts',
         'Header_Debt'               => 'Debt history',
         'Header_DebtResult'         => 'Outstanding payments total',
         'Header_Node'               => 'Nodes',

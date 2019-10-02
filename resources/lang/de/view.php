@@ -35,6 +35,7 @@ return [
     //Main Menu
         'Menu_Apartment'            => 'Wohnungen',
         'Menu_BillingBase'          => 'Billing',
+        'Menu_Contact'              => 'Ansprechpartner',
         'Menu_Debt'                 => 'OP-Liste',
         'Menu_Dunning'              => 'Mahnwesen',
         'Menu_MainMenu'             => 'Hauptmenü',
@@ -229,6 +230,7 @@ return [
         'Header_EnviaContract'      => 'envia-TEL-Vertrag|envia-TEL-Verträge',
         'Header_EnviaOrder'	        => 'envia-TEL-Auftrag|envia-TEL-Aufträge',
 
+        'Header_Contact'            => 'Ansprechpartner',
         'Header_Debt'               => 'Historie Offene Posten',
         'Header_DebtResult'         => 'Offene Posten gesamt',
         'Header_Node'               => 'Übergabepunkte',

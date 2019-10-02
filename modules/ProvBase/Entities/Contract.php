@@ -72,7 +72,7 @@ class Contract extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         $ret = ['table' => $this->table,
-                'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.company', $this->table.'.zip', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.contract_start', $this->table.'.contract_end'],
+                'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number', $this->table.'.contract_start', $this->table.'.contract_end'],
                 'header' =>  $this->number.' '.$this->firstname.' '.$this->lastname,
                 'bsclass' => $bsclass,
                 'order_by' => ['0' => 'asc'], ];
