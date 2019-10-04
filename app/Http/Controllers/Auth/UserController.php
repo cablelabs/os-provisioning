@@ -85,9 +85,10 @@ class UserController extends BaseController
 
         // Dont require password and password confirmation on updating a User (e.g. language)
         if (! $data['password']) {
-            $route = \Route::getCurrentRoute();
+            $routeParams = \Route::getCurrentRoute()->parameters();
+            $permission = $routeParams['id'] ?? Bouncer::can('update', User::class);
 
-            if (isset($route->parameters()['User']) && $route->parameters()['User']) {
+            if ($permission) {
                 unset($data['password'], $data['password_confirmation']);
             }
         }
