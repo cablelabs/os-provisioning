@@ -173,7 +173,7 @@ class NetElementType extends \BaseModel
                 return false;
             }
 
-            if ($p->parent_id == 0 || $p->id == 2) { // exit: on base type, or cluster (which is child of net)
+            if ($p->parent_id == null || $p->id == 2) { // exit: on base type, or cluster (which is child of net)
                 return $p->id;
             }
 
