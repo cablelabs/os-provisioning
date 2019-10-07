@@ -267,6 +267,8 @@ return [
     'realty' => [
         'agreement_from' => 'Valid from',
         'agreement_to' => 'Valid to',
+        'apartmentCount' => 'Total apartments',
+        'apartmentCountConnected' => 'Connected apartments',
         'concession_agreement' => 'Concession agreement',
         'contact_id' => 'Administration',
         'contact_local_id' => 'Local contact',
