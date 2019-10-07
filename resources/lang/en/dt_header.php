@@ -265,11 +265,12 @@ return [
     'numberrange.type' => 'Type',
     'numberrange.costcenter.name' => 'Cost center',
     'realty' => [
-        'name' => 'Name',
-        'administration' => 'Administration',
         'agreement_from' => 'Valid from',
         'agreement_to' => 'Valid to',
         'concession_agreement' => 'Concession agreement',
+        'contact_id' => 'Administration',
+        'contact_local_id' => 'Local contact',
+        'name' => 'Name',
         'last_restoration_on' => 'Last restoration',
     ],
     // Ticket

@@ -264,11 +264,13 @@ return [
     'numberrange.type' => 'Typ',
     'numberrange.costcenter.name' => 'Kostenstelle',
     'realty' => [
-        'name' => 'Name',
         'administration' => 'Hausverwaltung',
         'agreement_from' => 'Gültig von',
         'agreement_to' => 'Gültig bis',
         'concession_agreement' => 'Gestattungsvertrag',
+        'contact_id' => 'Hausverwaltung',
+        'contact_local_id' => 'Lokaler Kontakt',
+        'name' => 'Name',
         'last_restoration_on' => 'Letzte Restaurierung/Sanierung',
     ],
     // Ticket
