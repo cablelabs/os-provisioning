@@ -18,7 +18,7 @@ return [
     'sum' => 'Summe',
     'apartment' => [
         'number' => 'Nummer',
-        'connected' => 'Angeklemmt',
+        'connected' => 'Angeschlossen',
         'occupied' => 'Bewohnt',
     ],
     'contact' => [

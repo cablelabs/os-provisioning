@@ -157,6 +157,7 @@ return [
     'Confirm Password'                  => 'Passwort bestätigen',
     'Phone'                     => 'Telefon',
     'Phone ID next month'       => 'Telefon ID nächsten Monat',
+    'Phone private'             => 'Telefon privat',
     'Phonenumber'               => 'Telefonnummer',
     'Phonenumbers'              => 'Telefonnummern',
     'Phonenumbers List'         => 'Telefonnummernliste',
