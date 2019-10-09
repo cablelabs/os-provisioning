@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use App\Sla;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -148,9 +147,7 @@ class Kernel extends ConsoleKernel
             $schedule->call('\Modules\ProvBase\Entities\Modem@update_model_firmware')->daily();
 
             // Hardware support check for modems and CMTS
-            if (Sla::first()->valid()) {
-                $schedule->command('nms:hardware-support daily')->twiceDaily(10, 14);
-            }
+            $schedule->command('nms:hardware-support daily')->twiceDaily(10, 14);
         }
 
         // Automatic Power Control based on measured SNR

@@ -43,6 +43,10 @@ class HardwareSupportCommand extends Command
      */
     public function handle()
     {
+        if (! \App\Sla::first()->valid()) {
+            return;
+        }
+
         $this->snmp_def_mode();
         $modems = DB::table('modem')->get();
         $cmtses = DB::table('cmts')->get();
