@@ -97,7 +97,7 @@ class Contract extends \BaseModel
             $bsclass = 'active';
 
             // '$this->id' to dont check when index table header is determined!
-            if ($this->id && $this->check_validity('now')) {
+            if ($this->id && $this->isValid('now')) {
                 $bsclass = 'warning';
             }
         }
@@ -629,7 +629,7 @@ class Contract extends \BaseModel
         $active_count_internet = $active_tariff_info_internet['count'];
         $active_count_voip = $active_tariff_info_voip['count'];
 
-        if ($this->check_validity('Now')) {
+        if ($this->isValid('Now')) {
             // valid internet tariff
             if ($active_count_internet && ! $this->internet_access) {
                 $this->internet_access = 1;
@@ -902,7 +902,7 @@ class Contract extends \BaseModel
         }
 
         foreach ($tariffs as $item) {
-            if (! $item->check_validity('Now')) {
+            if (! $item->isValid('Now')) {
                 continue;
             }
 
@@ -1183,7 +1183,7 @@ class Contract extends \BaseModel
                 continue;
             }
 
-            if ($m->disable || ! $m->check_validity($timespan)) {
+            if ($m->disable || ! $m->isValid($timespan)) {
                 continue;
             }
 

@@ -89,7 +89,7 @@ class Modem extends \BaseModel
             case 0:	$bsclass = 'success'; break; // online
             case 1: $bsclass = 'warning'; break; // warning
             case 2: $bsclass = 'warning'; break; // critical
-            case 3: $bsclass = $this->internet_access && $this->contract->check_validity('Now') ? 'danger' : 'info'; break; // offline
+            case 3: $bsclass = $this->internet_access && $this->contract->isValid('Now') ? 'danger' : 'info'; break; // offline
 
             default: $bsclass = 'danger'; break;
         }
@@ -115,7 +115,7 @@ class Modem extends \BaseModel
 
     public function get_contract_valid()
     {
-        return $this->contract->check_validity('Now') ? \App\Http\Controllers\BaseViewController::translate_label('yes') : \App\Http\Controllers\BaseViewController::translate_label('no');
+        return $this->contract->isValid('Now') ? \App\Http\Controllers\BaseViewController::translate_label('yes') : \App\Http\Controllers\BaseViewController::translate_label('no');
     }
 
     public function get_us_pwr()
