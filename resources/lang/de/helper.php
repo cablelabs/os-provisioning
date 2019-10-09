@@ -72,7 +72,7 @@ return [
   */
     'next'                          => 'Nächster Schritt: ',
     'set_isp_name'                  => 'Namen des Internetanbieters setzen',
-    'create_cmts'                   => 'Erste CMTS anlegen',
+    'create_netgw'                  => 'Erstes NetGw/CMTS anlegen',
     'create_cm_pool'                => 'Ersten Kabelmodem IP-Bereich anlegen',
     'create_cpepriv_pool'           => 'Ersten privaten CPE IP-Bereich anlegen',
     'create_qos'                    => 'Erstes QoS Profil anlegen',

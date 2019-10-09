@@ -150,14 +150,14 @@ return [
     'tel_private' => 'Phonenumber private',
     'email1' => 'E-Mail 1',
     'email2' => 'E-Mail 2',
-    // CMTS
-    'cmts.id' => 'ID',
-    'cmts.hostname' => 'Hostname',
-    'cmts.ip' => 'IP',
-    'cmts.company' => 'Manufacturer',
-    'cmts.type' => 'Type',
-    'cmts.formatted_support_state' => 'Support State',
-    'cmts.support_state' => 'Support State',
+    // NetGw
+    'netgws.id' => 'ID',
+    'netgws.hostname' => 'Hostname',
+    'netgws.ip' => 'IP',
+    'netgws.company' => 'Manufacturer',
+    'netgws.series' => 'Series',
+    'netgws.formatted_support_state' => 'Support State',
+    'netgws.support_state' => 'Support State',
     // Contract
     'contract.city' => 'City',
     'company' => 'Company',
@@ -182,6 +182,7 @@ return [
     'endpoint.description' => 'Description',
     // IpPool
     'ippool.id' => 'ID',
+    'netgw.hostname' => 'Hostname',
     'ippool.type' => 'Type',
     'ippool.net' => 'Net',
     'ippool.netmask' => 'Netmask',

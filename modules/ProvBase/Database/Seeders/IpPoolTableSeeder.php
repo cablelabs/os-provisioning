@@ -29,12 +29,12 @@ class IpPoolTableSeeder extends \BaseSeeder
         // in seeding mode: choose random NetGw to create modem at
         if ($topic == 'seed') {
             $netgw = NetGw::all()->random(1);
-            $netgw_id = $netgw->id;
+            $net_gw_id = $netgw->id;
         } else {
             if (! is_null($netgw)) {
-                $netgw_id = $netgw->id;
+                $net_gw_id = $netgw->id;
             } else {
-                $netgw_id = null;
+                $net_gw_id = null;
             }
         }
 
@@ -42,7 +42,7 @@ class IpPoolTableSeeder extends \BaseSeeder
         $n = $faker->numberBetween(0, 255);
 
         $ret = [
-            'netgw_id' => NetGw::all()->random(1)->id,
+            'net_gw_id' => NetGw::all()->random(1)->id,
             'type' => rand(0, 3),
             'net' => '10.'.$m.'.'.$n.'.0',
             'netmask' => '255.255.255.0',

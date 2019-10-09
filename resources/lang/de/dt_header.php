@@ -151,12 +151,12 @@ return [
     'tel_private' => 'Telefonnummer privat',
     'email1' => 'E-Mail 1',
     'email2' => 'E-Mail 2',
-    // CMTS
-    'cmts.id' => 'ID',
-    'cmts.hostname' => 'Name',
-    'cmts.ip' => 'IP',
-    'cmts.company' => 'Hersteller',
-    'cmts.type' => 'Typ',
+    // NetGw
+    'netgws.id' => 'ID',
+    'netgws.hostname' => 'Name',
+    'netgws.ip' => 'IP',
+    'netgws.company' => 'Hersteller',
+    'netgws.series' => 'Serie',
     // Contract
     'contract.city' => 'Stadt',
     'company' => 'Firma',
@@ -181,6 +181,7 @@ return [
     'endpoint.description' => 'Beschreibung',
     // IpPool
     'ippool.id' => 'ID',
+    'netgw.hostname' => 'Name',
     'ippool.type' => 'Typ',
     'ippool.net' => 'Netz',
     'ippool.netmask' => 'Netzmaske',

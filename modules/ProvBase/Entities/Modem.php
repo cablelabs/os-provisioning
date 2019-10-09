@@ -929,13 +929,13 @@ class Modem extends \BaseModel
 
         foreach ($ippools as $pool) {
             if ($validator->validateIpInRange(0, $ip, [$pool->net, $pool->netmask])) {
-                $netgw_id = $pool->netgw_id;
+                $net_gw_id = $pool->net_gw_id;
                 break;
             }
         }
 
-        if (isset($netgw_id)) {
-            return NetGw::find($netgw_id);
+        if (isset($net_gw_id)) {
+            return NetGw::find($net_gw_id);
         }
     }
 

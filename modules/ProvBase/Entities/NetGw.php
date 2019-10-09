@@ -12,7 +12,7 @@ class NetGw extends \BaseModel
     public static $netgw_include_path = '/etc/dhcp-nmsprime/cmts_gws';
 
     // The associated SQL table for this Model
-    public $table = 'netgw';
+    public $table = 'netgws';
 
     // Attributes
     protected $appends = ['formatted_support_state'];
@@ -21,7 +21,7 @@ class NetGw extends \BaseModel
     public static function rules($id = null)
     {
         return [
-            'hostname' => 'required|unique:netgw,hostname,'.$id.',id,deleted_at,NULL',  	// unique: table, column, exception , (where clause)
+            'hostname' => 'required|unique:netgws,hostname,'.$id.',id,deleted_at,NULL',  	// unique: table, column, exception , (where clause)
             'company' => 'required',
         ];
     }
@@ -29,7 +29,7 @@ class NetGw extends \BaseModel
     // Name of View
     public static function view_headline()
     {
-        return 'NetGw';
+        return 'NetGws';
     }
 
     // View Icon
@@ -268,7 +268,7 @@ class NetGw extends \BaseModel
 
         $clusters = [];
         if ($netelement) {
-            foreach (\Modules\HfcReq\Entities\NetElement::where('netgw_id', $netelement->id)->get() as $ne) {
+            foreach (\Modules\HfcReq\Entities\NetElement::where('net_gw_id', $netelement->id)->get() as $ne) {
                 if ($ne->get_base_netelementtype() == 2) {
                     $clusters[$ne->id] = $ne;
                 }

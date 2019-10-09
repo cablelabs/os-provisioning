@@ -72,7 +72,7 @@ return [
   */
     'next'                          => 'Next step: ',
     'set_isp_name'                  => 'Set internet service provider name',
-    'create_cmts'                   => 'Create first CMTS',
+    'create_netgw'                  => 'Create first NetGw/CMTS',
     'create_cm_pool'                => 'Create first cablemodem IP pool',
     'create_cpepriv_pool'           => 'Create first private CPE IP pool',
     'create_qos'                    => 'Create first QoS profile',

@@ -36,10 +36,10 @@ return  [
             'icon'	=> 'fa-ticket',
             'class' => Qos::class,
         ],
-        'CMTS' => [
-            'link'	=> 'Cmts.index',
+        'NetGws' => [
+            'link'	=> 'NetGw.index',
             'icon'	=> 'fa-server',
-            'class' => Cmts::class,
+            'class' => NetGw::class,
         ],
         'Ip-Pools' => [
             'link'	=> 'IpPool.index',

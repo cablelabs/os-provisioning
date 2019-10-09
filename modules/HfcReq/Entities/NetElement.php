@@ -355,7 +355,7 @@ class NetElement extends \BaseModel
             $i++;
 
             if ($call_from_cmd == 2) {
-                echo "\n$debug - net:".$netelement->net.', clu:'.$netelement->cluster.', netgw:'.$netelement->netgw_id;
+                echo "\n$debug - net:".$netelement->net.', clu:'.$netelement->cluster.', netgw:'.$netelement->net_gw_id;
             }
         }
 

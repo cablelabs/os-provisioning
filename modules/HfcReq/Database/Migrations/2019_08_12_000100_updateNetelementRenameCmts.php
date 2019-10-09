@@ -1,6 +1,6 @@
 <?php
 
-use Modules\HfcReq\Entities\NetElementType;
+use Illuminate\Database\Schema\Blueprint;
 
 class UpdateNetelementRenameCmts extends BaseMigration
 {
@@ -15,7 +15,7 @@ class UpdateNetelementRenameCmts extends BaseMigration
     public function up()
     {
         Schema::table($this->tablename, function (Blueprint $table) {
-            $table->renameColumn('cmts', 'netgw_id');
+            $table->renameColumn('cmts', 'net_gw_id');
         });
     }
 
@@ -27,7 +27,7 @@ class UpdateNetelementRenameCmts extends BaseMigration
     public function down()
     {
         Schema::table($this->tablename, function (Blueprint $table) {
-            $table->renameColumn('netgw_id', 'cmts');
+            $table->renameColumn('net_gw_id', 'cmts');
         });
     }
 }

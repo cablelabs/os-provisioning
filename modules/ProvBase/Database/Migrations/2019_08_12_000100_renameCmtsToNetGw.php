@@ -24,7 +24,7 @@ class RenameCmtsToNetGw extends BaseMigration
         });
 
         Schema::table('ippool', function (Blueprint $table) {
-            $table->renameColumn('cmts_id', 'netgw_id');
+            $table->renameColumn('cmts_id', 'net_gw_id');
         });
     }
 
@@ -46,7 +46,7 @@ class RenameCmtsToNetGw extends BaseMigration
         Schema::rename($this->tablename, 'cmts');
 
         Schema::table('ippool', function (Blueprint $table) {
-            $table->renameColumn('netgw_id', 'cmts_id');
+            $table->renameColumn('net_gw_id', 'cmts_id');
         });
     }
 }
