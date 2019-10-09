@@ -1,22 +1,22 @@
 {{--
 
-CMTS Config Overview Blade
-This is the top level blade for CMTS config
+NETGW Config Overview Blade
+This is the top level blade for NETGW config
 
 --}}
 
 <div class="panel-group" id="accordion">
 
 @section ('group_1')
-	@include ('provbase::Cmtsblade.setup')
+	@include ('provbase::NetGwBlade.setup')
 @stop
 
 @section ('group_2')
-	@include ('provbase::Cmts.routing')
+	@include ('provbase::NetGw.routing')
 @stop
 
 @section ('group_3')
-	@include ('provbase::Cmtsblade.load')
+	@include ('provbase::NetGwBlade.load')
 @stop
 
 @include('bootstrap.group', ['header' => 'Setup', 'content' => 'group_1', 'expand' => !\Modules\ProvBase\Entities\ProvBase::prov_ip_online()])

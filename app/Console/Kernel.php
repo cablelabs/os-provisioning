@@ -139,7 +139,7 @@ class Kernel extends ConsoleKernel
             $schedule->command('nms:contract daily')->daily()->at('00:03');
             $schedule->command('nms:contract monthly')->monthly()->at('00:13');
             $schedule->call(function () {
-                foreach (\Modules\ProvBase\Entities\Cmts::all() as $cmts) {
+                foreach (\Modules\ProvBase\Entities\NetGw::where('type', 'cmts')->get() as $cmts) {
                     $cmts->store_us_snrs();
                 }
             })->everyFiveMinutes();

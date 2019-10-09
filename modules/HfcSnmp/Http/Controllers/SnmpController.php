@@ -23,7 +23,7 @@ class SnmpController extends \BaseController
     private $device;
 
     /**
-     * @var  object     Used for parent cmts of a cluster
+     * @var  object     Used for parent netgw of a cluster
      */
     private $parent_device;
 
@@ -51,15 +51,15 @@ class SnmpController extends \BaseController
         $this->device = $device;
         $this->index = $index ? [$index] : 0;
 
-        // Search parent CMTS for type cluster
+        // Search parent NetGw for type cluster
         if ($device->netelementtype_id == 2) {
-            $cmts = $device->get_parent_cmts();
-            $this->parent_device = $cmts ?: null;
+            $netgw = $device->get_parent_netgw();
+            $this->parent_device = $netgw ?: null;
             if (! $this->device->ip) {
-                if ($cmts) {
-                    $this->device->ip = $cmts->ip;
+                if ($netgw) {
+                    $this->device->ip = $netgw->ip;
                 } else {
-                    Session::push('tmp_error_above_form', trans('messages.snmp.missing_cmts'));
+                    Session::push('tmp_error_above_form', trans('messages.snmp.missing_netgw'));
                 }
             }
         }
@@ -162,7 +162,7 @@ class SnmpController extends \BaseController
 
         $device = $this->device;
 
-        // use parent cmts for cluster
+        // use parent netgw for cluster
         if ($this->device->netelementtype_id == 2) {
             if (! $this->parent_device) {
                 return [];

@@ -49,8 +49,8 @@ class NetElementController extends HfcBaseController
         $prov_device = [];
         $prov_device_hidden = 1;
 
-        if ($type == 3) { // cmts
-            $prov_device = $netelement->html_list(\Modules\ProvBase\Entities\Cmts::get(['id', 'hostname']), 'hostname', $empty_field);
+        if ($type == 3) { // netgw
+            $prov_device = $netelement->html_list(\Modules\ProvBase\Entities\NetGw::get(['id', 'hostname']), 'hostname', $empty_field);
         }
 
         if ($type == 4 || $type == 5) { // amp || node
@@ -85,7 +85,7 @@ class NetElementController extends HfcBaseController
         return [
             ['form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $netelement->html_list(NetElementType::get(['id', 'name']), 'name'), 'hidden' => 0],
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
-            // array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['NET' => 'NET', 'CMTS' => 'CMTS', 'DATA' => 'DATA', 'CLUSTER' => 'CLUSTER', 'NODE' => 'NODE', 'AMP' => 'AMP']),
+            // array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['NET' => 'NET', 'NETGW' => 'NETGW', 'DATA' => 'DATA', 'CLUSTER' => 'CLUSTER', 'NODE' => 'NODE', 'AMP' => 'AMP']),
             // net is automatically detected in Observer
             // array('form_type' => 'select', 'name' => 'net', 'description' => 'Net', 'value' => $nets),
             ['form_type' => 'ip', 'name' => 'ip', 'description' => 'IP address'],

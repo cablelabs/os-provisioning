@@ -44,10 +44,10 @@ class IpPool extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         return ['table' => $this->table,
-                'index_header' => [$this->table.'.id', 'cmts.hostname', $this->table.'.type', $this->table.'.net', $this->table.'.netmask', $this->table.'.router_ip', $this->table.'.description'],
+                'index_header' => [$this->table.'.id', 'netgw.hostname', $this->table.'.type', $this->table.'.net', $this->table.'.netmask', $this->table.'.router_ip', $this->table.'.description'],
                 'header' =>  $this->type.': '.$this->net.' / '.$this->netmask,
                 'bsclass' => $bsclass,
-                'eager_loading' => ['cmts'], ];
+                'eager_loading' => ['netgw'], ];
     }
 
     public function get_bsclass()
@@ -68,11 +68,11 @@ class IpPool extends \BaseModel
     }
 
     /**
-     * Returns all cmts hostnames for ip pools as an array
+     * Returns all netgw hostnames for ip pools as an array
      */
-    public function cmts_hostnames()
+    public function netgw_hostnames()
     {
-        return DB::table('cmts')->select('id', 'hostname')->get();
+        return DB::table('netgw')->select('id', 'hostname')->get();
     }
 
     /*
@@ -99,12 +99,12 @@ class IpPool extends \BaseModel
             return true;
         }
 
-        return strlen(exec('/usr/sbin/ip route show '.$this->net.'/'.$this->size().' via '.$this->cmts->ip)) == 0 ? false : true;
+        return strlen(exec('/usr/sbin/ip route show '.$this->net.'/'.$this->size().' via '.$this->netgw->ip)) == 0 ? false : true;
     }
 
     /*
      * Return true if $this->router_ip is online, otherwise false
-     * This implies that the CMTS Pool should be set correctly in the CMTS
+     * This implies that the NETGW pool should be set correctly in the NETGW
      */
     public function ip_route_online()
     {
@@ -131,7 +131,7 @@ class IpPool extends \BaseModel
     }
 
     /**
-     * Return 'secondary' if this pool is not the first CM pool of the CMTS,
+     * Return 'secondary' if this pool is not the first CM pool of the NETGW,
      * otherwise an empty string
      *
      * @return string
@@ -140,7 +140,7 @@ class IpPool extends \BaseModel
      */
     public function is_secondary()
     {
-        $cm_pools = $this->cmts->ippools->filter(function ($item) {
+        $cm_pools = $this->netgw->ippools->filter(function ($item) {
             return $item->type == 'CM';
         });
 
@@ -191,20 +191,20 @@ class IpPool extends \BaseModel
     /**
      * Relationships:
      */
-    public function cmts()
+    public function netgw()
     {
-        return $this->belongsTo('Modules\ProvBase\Entities\Cmts', 'cmts_id');
+        return $this->belongsTo('Modules\ProvBase\Entities\NetGw');
     }
 
-    // belongs to a cmts - see BaseModel for explanation
+    // belongs to a netgw - see BaseModel for explanation
     public function view_belongs_to()
     {
-        return $this->cmts;
+        return $this->netgw;
     }
 
     /**
      * BOOT:
-     * - init cmts observer
+     * - init ippool observer
      */
     public static function boot()
     {
@@ -227,23 +227,34 @@ class IpPoolObserver
 {
     public function created($pool)
     {
-        // fetch cmts object that is related to the created ippool and make dhcp conf
-        // if (isset($pool->cmts))
-        $pool->cmts->make_dhcp_conf();
+        if ($pool->$netgw->type != 'cmts') {
+            return;
+        }
+
+        // fetch netgw object that is related to the created ippool and make dhcp conf
+        $pool->netgw->make_dhcp_conf();
     }
 
     public function updated($pool)
     {
-        $pool->cmts->make_dhcp_conf();
+        if ($pool->$netgw->type != 'cmts') {
+            return;
+        }
 
-        // make dhcp conf of old cmts if relation got changed
-        if ($pool->isDirty('cmts_id')) {
-            $cmts_old = Cmts::find($pool->getOriginal('cmts_id'))->make_dhcp_conf();
+        $pool->netgw->make_dhcp_conf();
+
+        // make dhcp conf of old netgw if relation got changed
+        if ($pool->isDirty('netgw_id')) {
+            NetGw::find($pool->getOriginal('netgw_id'))->make_dhcp_conf();
         }
     }
 
     public function deleted($pool)
     {
-        $pool->cmts->make_dhcp_conf();
+        if ($pool->$netgw->type != 'cmts') {
+            return;
+        }
+
+        $pool->netgw->make_dhcp_conf();
     }
 }

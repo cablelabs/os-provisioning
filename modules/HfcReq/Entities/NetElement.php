@@ -181,11 +181,11 @@ class NetElement extends \BaseModel
     }
 
     /**
-     * Get first parent being a CMTS
+     * Get first parent of type NetGw
      *
-     * @return object NetElement 	(or NULL if there is no parent CMTS)
+     * @return object NetElement 	(or NULL if there is no parent NetGw)
      */
-    public function get_parent_cmts()
+    public function get_parent_netgw()
     {
         $parent = $this;
 
@@ -307,9 +307,9 @@ class NetElement extends \BaseModel
         return $this->_get_native_helper();
     }
 
-    public function get_native_cmts()
+    public function get_native_netgw()
     {
-        return $this->_get_native_helper('Cmts');
+        return $this->_get_native_helper('NetGw');
     }
 
     // TODO: depracted, remove
@@ -347,7 +347,7 @@ class NetElement extends \BaseModel
 
             $netelement->update(['net' => $netelement->get_native_net(),
                                  'cluster' => $netelement->get_native_cluster(),
-                                 'cmts' => $netelement->get_native_cmts(), ]);
+                                 'netgw' => $netelement->get_native_netgw(), ]);
 
             if ($call_from_cmd == 1) {
                 echo "$debug\r";
@@ -377,20 +377,20 @@ class NetElement extends \BaseModel
         return $this->netelementtype_id == array_search('Cluster', NetElementType::$undeletables);
     }
 
-    public function is_type_cmts()
+    public function is_type_netgw()
     {
         if (! $this->netelementtype) {
             return false;
         }
 
-        return $this->netelementtype->get_base_type() == 3; // 3 .. is base element for cmts
+        return $this->netelementtype->get_base_type() == 3; // 3 .. is base element for netgw
     }
 
     /**
      * Return the base NetElementType id
      *
      * @param
-     * @return int [1: Net, 2: Cluster, 3: Cmts, 4: Amp, 5: Node, 6: Data]
+     * @return int [1: Net, 2: Cluster, 3: NetGw, 4: Amp, 5: Node, 6: Data]
      */
     public function get_base_netelementtype()
     {
@@ -424,7 +424,7 @@ class NetElement extends \BaseModel
     }
 
     /**
-     * Get the IP address if set, otherwise return IP address of parent CMTS
+     * Get the IP address if set, otherwise return IP address of parent NetGw
      *
      * @author Ole Ernst
      *
@@ -436,11 +436,11 @@ class NetElement extends \BaseModel
             return $this->ip;
         }
 
-        if (! $cmts = $this->get_parent_cmts()) {
+        if (! $netgw = $this->get_parent_netgw()) {
             return;
         }
 
-        return $cmts->ip ?: null;
+        return $netgw->ip ?: null;
     }
 
     /**

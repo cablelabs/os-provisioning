@@ -5,14 +5,14 @@ namespace Modules\ProvBase\Entities;
 use File;
 use App\Sla;
 
-class Cmts extends \BaseModel
+class NetGw extends \BaseModel
 {
     private static $_us_snr_path = 'data/provmon/us_snr';
     // don't put a trailing slash here!
-    public static $cmts_include_path = '/etc/dhcp-nmsprime/cmts_gws';
+    public static $netgw_include_path = '/etc/dhcp-nmsprime/cmts_gws';
 
     // The associated SQL table for this Model
-    public $table = 'cmts';
+    public $table = 'netgw';
 
     // Attributes
     protected $appends = ['formatted_support_state'];
@@ -21,7 +21,7 @@ class Cmts extends \BaseModel
     public static function rules($id = null)
     {
         return [
-            'hostname' => 'required|unique:cmts,hostname,'.$id.',id,deleted_at,NULL',  	// unique: table, column, exception , (where clause)
+            'hostname' => 'required|unique:netgw,hostname,'.$id.',id,deleted_at,NULL',  	// unique: table, column, exception , (where clause)
             'company' => 'required',
         ];
     }
@@ -29,7 +29,7 @@ class Cmts extends \BaseModel
     // Name of View
     public static function view_headline()
     {
-        return 'CMTS';
+        return 'NetGw';
     }
 
     // View Icon
@@ -40,7 +40,7 @@ class Cmts extends \BaseModel
 
     public static function make_dhcp_conf_all()
     {
-        foreach (self::all() as $cmts) {
+        foreach (self::where('type', 'cmts')->get() as $cmts) {
             $cmts->make_dhcp_conf();
         }
     }
@@ -70,7 +70,7 @@ class Cmts extends \BaseModel
     {
         $bsclass = 'success';
 
-        // TODO: use cmts state value
+        // TODO: use netgw state value
         if ($this->state == 1) {
             $bsclass = 'warning';
         }
@@ -113,13 +113,13 @@ class Cmts extends \BaseModel
     }
 
     /**
-     * BOOT - init cmts observer
+     * BOOT - init netgw observer
      */
     public static function boot()
     {
         parent::boot();
 
-        self::observe(new CmtsObserver);
+        self::observe(new NetGwObserver);
         self::observe(new \App\SystemdObserver);
     }
 
@@ -136,7 +136,7 @@ class Cmts extends \BaseModel
         return $this->hasOne('Modules\HfcReq\Entities\NetElement', 'prov_device_id');
     }
 
-    // returns all objects that are related to a cmts
+    // returns all objects that are related to a netgw
     public function view_has_many()
     {
         // related IP Pools
@@ -144,9 +144,9 @@ class Cmts extends \BaseModel
         $ret['Edit']['IpPool']['relation'] = $this->ippools;
 
         // Routing page
-        $this->prep_cmts_config_page();
-        $ret['Edit']['Config']['view']['vars'] = ['cb' => $this]; // cb .. CMTS blade
-        $ret['Edit']['Config']['view']['view'] = 'provbase::Cmts.overview';
+        $this->prep_netgw_config_page();
+        $ret['Edit']['Config']['view']['vars'] = ['cb' => $this]; // cb .. NetGw blade
+        $ret['Edit']['Config']['view']['view'] = 'provbase::NetGw.overview';
 
         // rf card page
         $this->prep_rfcard_page();
@@ -160,16 +160,16 @@ class Cmts extends \BaseModel
     }
 
     /*
-     * Return the CMTS config as clear text
+     * Return the NetGw config as clear text
      */
-    public function get_raw_cmts_config()
+    public function get_raw_netgw_config()
     {
-        $this->prep_cmts_config_page();
+        $this->prep_netgw_config_page();
         $view_var = $this;
         $cb = $this;
 
-        if (\View::exists('provbase::Cmtsblade.'.strtolower($view_var->company))) {
-            return strip_tags(view('provbase::Cmtsblade.'.strtolower($this->company), compact('cb', 'view_var'))->render());
+        if (\View::exists('provbase::NetGwBlade.'.strtolower($view_var->company))) {
+            return strip_tags(view('provbase::NetGwBlade.'.strtolower($this->company), compact('cb', 'view_var'))->render());
         }
 
         return '';
@@ -180,12 +180,12 @@ class Cmts extends \BaseModel
      *
      * See: https://serverfault.com/questions/26188/code-to-generate-cisco-secret-password-hashes/46399
      *
-     * NOTE: dont encrypt if CMTS_SAVE_ENCRYPTED_PASSWORDS is set in env file
+     * NOTE: dont encrypt if NETGW_SAVE_ENCRYPTED_PASSWORDS is set in env file
      */
     public function create_cisco_encrypt($psw)
     {
         // Dont encrypt password, it is still encrypted
-        if (env('CMTS_SAVE_ENCRYPTED_PASSWORDS', false)) {
+        if (env('NETGW_SAVE_ENCRYPTED_PASSWORDS', false)) {
             return $psw;
         }
 
@@ -195,20 +195,20 @@ class Cmts extends \BaseModel
     }
 
     /*
-     * CMTS Config Page:
-     * Prepare Cmts Config Variables
+     * NetGw Config Page:
+     * Prepare NetGw Config Variables
      *
-     * They are required in Cmtsblade's
+     * They are required in NetGwBlade's
      *
      * NOTE: this will fit 90% of generic installations
      */
-    public function prep_cmts_config_page()
+    public function prep_netgw_config_page()
     {
         // password section
-        $this->enable_secret = $this->create_cisco_encrypt(env('CMTS_ENABLE_SECRET', 'admin'));
-        $this->admin_psw = $this->create_cisco_encrypt(env('CMTS_ADMIN_PASSWORD', 'admin'));
+        $this->enable_secret = $this->create_cisco_encrypt(env('NETGW_ENABLE_SECRET', 'admin'));
+        $this->admin_psw = $this->create_cisco_encrypt(env('NETGW_ADMIN_PASSWORD', 'admin'));
         // NOTE: this is quit insecure and should be a different psw that the encrypted ones above!
-        $this->vty_psw = env('CMTS_VTY_PASSWORD', 'adminvty');
+        $this->vty_psw = env('NETGW_VTY_PASSWORD', 'adminvty');
 
         // series specific settings
         switch ($this->series) {
@@ -231,34 +231,34 @@ class Cmts extends \BaseModel
         $this->prov_if = (isset($prov_if[0]) ? $prov_if[0] : 'eth');
 
         $this->domain = ProvBase::first()->domain_name;
-        $this->router_ip = env('CMTS_DEFAULT_GW', '172.20.3.254');
-        $this->netmask = env('CMTS_IP_NETMASK', '255.255.252.0');
-        $this->tf_net_1 = env('CMTS_TRANSFER_NET', '172.20.0.0'); // servers with /24
-        $this->nat_ip = env('CMTS_NAT_IP', '172.20.0.2'); // second server ip is mostlikely NAT
+        $this->router_ip = env('NETGW_DEFAULT_GW', '172.20.3.254');
+        $this->netmask = env('NETGW_IP_NETMASK', '255.255.252.0');
+        $this->tf_net_1 = env('NETGW_TRANSFER_NET', '172.20.0.0'); // servers with /24
+        $this->nat_ip = env('NETGW_NAT_IP', '172.20.0.2'); // second server ip is mostlikely NAT
 
         $this->snmp_ro = $this->get_ro_community();
         $this->snmp_rw = $this->get_rw_community();
 
         // Help section: onhover
-        $this->enable_secret = '<span title="CMTS_ENABLE_SECRET and CMTS_SAVE_ENCRYPTED_PASSWORDS"><b>'.$this->enable_secret.'</b></span>';
-        $this->admin_psw = '<span title="CMTS_ADMIN_PASSWORD and CMTS_SAVE_ENCRYPTED_PASSWORDS"><b>'.$this->admin_psw.'</b></span>';
-        $this->vty_psw = '<span title="CMTS_VTY_PASSWORD"><b>'.$this->vty_psw.'</b></span>';
+        $this->enable_secret = '<span title="NETGW_ENABLE_SECRET and NETGW_SAVE_ENCRYPTED_PASSWORDS"><b>'.$this->enable_secret.'</b></span>';
+        $this->admin_psw = '<span title="NETGW_ADMIN_PASSWORD and NETGW_SAVE_ENCRYPTED_PASSWORDS"><b>'.$this->admin_psw.'</b></span>';
+        $this->vty_psw = '<span title="NETGW_VTY_PASSWORD"><b>'.$this->vty_psw.'</b></span>';
         $this->prov_ip = '<span title="Set in Global Config Page / Provisioning / Provisioning Server IP"><b>'.$this->prov_ip.'</b></span>';
-        $this->interface = '<span title="Depending on CMTS Device Company and Series"><b>'.$this->interface.'</b></span>';
+        $this->interface = '<span title="Depending on NETGW Device Company and Series"><b>'.$this->interface.'</b></span>';
         $this->domain = '<span title="Set in Global Config Page / Provisioning / Domain Name"><b>'.$this->domain.'</b></span>';
-        $this->router_ip = '<span title="CMTS_DEFAULT_GW"><b>'.$this->router_ip.'</b></span>';
-        $this->netmask = '<span title="CMTS_IP_NETMASK"><b>'.$this->netmask.'</b></span>';
-        $this->tf_net_1 = '<span title="CMTS_TRANSFER_NET"><b>'.$this->tf_net_1.'</b></span>';
-        $this->nat_ip = '<span title="CMTS_NAT_IP"><b>'.$this->nat_ip.'</b></span>';
-        $this->snmp_ro = '<span title="Set in CMTS page or Global Config Page / Provisioning if empty in CMTS page"><b>'.$this->snmp_ro.'</b></span>';
-        $this->snmp_rw = '<span title="Set in CMTS page or Global Config Page / Provisioning if empty in CMTS page"><b>'.$this->snmp_rw.'</b></span>';
+        $this->router_ip = '<span title="NETGW_DEFAULT_GW"><b>'.$this->router_ip.'</b></span>';
+        $this->netmask = '<span title="NETGW_IP_NETMASK"><b>'.$this->netmask.'</b></span>';
+        $this->tf_net_1 = '<span title="NETGW_TRANSFER_NET"><b>'.$this->tf_net_1.'</b></span>';
+        $this->nat_ip = '<span title="NETGW_NAT_IP"><b>'.$this->nat_ip.'</b></span>';
+        $this->snmp_ro = '<span title="Set in NETGW page or Global Config Page / Provisioning if empty in NETGW page"><b>'.$this->snmp_ro.'</b></span>';
+        $this->snmp_rw = '<span title="Set in NETGW page or Global Config Page / Provisioning if empty in NETGW page"><b>'.$this->snmp_rw.'</b></span>';
     }
 
     /*
-     * CMTS Config Page:
-     * Prepare Cmts Config Variables
+     * NETGW Config Page:
+     * Prepare NetGw Config Variables
      *
-     * They are required in Cmtsblade's
+     * They are required in NetGwBlade's
      *
      * NOTE: this will fit 90% of generic installations
      */
@@ -466,7 +466,7 @@ class Cmts extends \BaseModel
      */
     public function make_dhcp_conf()
     {
-        $file = self::$cmts_include_path."/$this->id.conf";
+        $file = self::$netgw_include_path."/$this->id.conf";
 
         if ($this->id == 0) {
             return -1;
@@ -581,7 +581,7 @@ class Cmts extends \BaseModel
      */
     public static function make_includes()
     {
-        $path = self::$cmts_include_path;
+        $path = self::$netgw_include_path;
         $incs = '';
         foreach (self::all() as $cmts) {
             $incs .= "include \"$path/$cmts->id.conf\";\n";
@@ -598,32 +598,44 @@ class Cmts extends \BaseModel
  *              'deleting', 'deleted', 'saving', 'saved',
  *              'restoring', 'restored',
  */
-class CmtsObserver
+class NetGwObserver
 {
-    public static $cmts_tftp_path = '/tftpboot/cmts';
+    public static $netgw_tftp_path = '/tftpboot/cmts';
 
-    public function created($cmts)
+    public function created($netgw)
     {
-        if (\Module::collections()->has('ProvMon')) {
-            \Artisan::call('nms:cacti', ['--modem-id' => 0, '--cmts-id' => $cmts->id]);
+        if ($netgw->type != 'cmts') {
+            return;
         }
-        $cmts->make_dhcp_conf();
 
-        File::put(self::$cmts_tftp_path."/$cmts->id.cfg", $cmts->get_raw_cmts_config());
+        if (\Module::collections()->has('ProvMon')) {
+            \Artisan::call('nms:cacti', ['--modem-id' => 0, '--netgw-id' => $netgw->id]);
+        }
+        $netgw->make_dhcp_conf();
+
+        File::put(self::$netgw_tftp_path."/$netgw->id.cfg", $netgw->get_raw_netgw_config());
     }
 
-    public function updated($cmts)
+    public function updated($netgw)
     {
-        $cmts->make_dhcp_conf();
+        if ($netgw->type != 'cmts') {
+            return;
+        }
 
-        File::put(self::$cmts_tftp_path."/$cmts->id.cfg", $cmts->get_raw_cmts_config());
+        $netgw->make_dhcp_conf();
+
+        File::put(self::$netgw_tftp_path."/$netgw->id.cfg", $netgw->get_raw_netgw_config());
     }
 
-    public function deleted($cmts)
+    public function deleted($netgw)
     {
-        File::delete(Cmts::$cmts_include_path."/$cmts->id.conf");
-        File::delete(self::$cmts_tftp_path."/$cmts->id.cfg");
+        if ($netgw->type != 'cmts') {
+            return;
+        }
 
-        Cmts::make_includes();
+        File::delete(NetGw::$netgw_include_path."/$netgw->id.conf");
+        File::delete(self::$netgw_tftp_path."/$netgw->id.cfg");
+
+        NetGw::make_includes();
     }
 }

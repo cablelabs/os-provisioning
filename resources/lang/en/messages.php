@@ -182,7 +182,7 @@ return [
     'snmp' => [
         'errors_walk' => 'Querying the following OIDs failed: :oids.',
         'errors_set' => 'The following Parameters could not be Set: :oids.',
-        'missing_cmts' => 'The cluster misses a superior CMTS as parent device.',
+        'missing_netgw' => 'The cluster misses a superior CMTS as parent device.',
         'missingIp' => 'The netelement is not reachable as it has no IP or hostname defined.',
         'undefined' => 'For this netelementtype is no controlling defined.',
         'unreachable' => 'The device is not reachable via SNMP.',
@@ -306,7 +306,7 @@ return [
     'Start Date'                => 'Start Date',
     'modem_restart_error'       => 'Could not restart Modem! (offline?)',
     'Contact Persons'           => 'Contact Persons',
-    'modem_restart_success_cmts' => 'Restarted modem via CMTS',
+    'modem_restart_success_netgw' => 'Restarted modem via CMTS',
     'Accounting Text (optional)'=> 'Accounting Text (optional)',
     'Cost Center (optional)'    => 'Cost Center (optional)',
     'Credit Amount'             => 'Credit Amount',

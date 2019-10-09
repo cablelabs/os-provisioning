@@ -19,7 +19,7 @@ class ModemController extends \BaseController
 
     // save button title ? for a help message
     protected $edit_view_second_button = true;
-    protected $second_button_name = 'Restart via CMTS';
+    protected $second_button_name = 'Restart via NetGw';
     protected $second_button_title_key = 'modem_force_restart_button_title';
 
     public function __construct()

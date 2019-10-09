@@ -1,7 +1,7 @@
 {{--
 
-CMTS Setup Blade:
-HOWTO: setup a new CMTS
+NETGW Setup Blade:
+HOWTO: setup a new NETGW
 
 --}}
 
@@ -13,13 +13,13 @@ HOWTO: setup a new CMTS
 @endif
 
 
-{{-- CMTS setup code --}}
+{{-- NETGW setup code --}}
 <pre>
 interface {!!$cb->interface!!}
  ip address {!!$cb->ip!!} {!!$cb->netmask!!}
  no shutdown
 
-copy tftp://{!!$cb->prov_ip!!}/cmts/{!!$cb->hostname!!}.cfg startup-config
+copy tftp://{!!$cb->prov_ip!!}/netgw/{!!$cb->hostname!!}.cfg startup-config
 
 reload
 </pre>

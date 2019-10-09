@@ -132,7 +132,7 @@ class NetElementType extends \BaseModel
      * Furthermore they are ordered by there Database ID which is probably used as fix value in many places of the source code
      * So don't change this order unless you definitly know what you are doing !!!
      */
-    public static $undeletables = [1 => 'Net', 2 => 'Cluster', 3 => 'Cmts', 4 => 'Amplifier', 5 => 'Node', 6 => 'Data', 7 => 'UPS'];
+    public static $undeletables = [1 => 'Net', 2 => 'Cluster', 3 => 'NetGw', 4 => 'Amplifier', 5 => 'Node', 6 => 'Data', 7 => 'UPS'];
 
     /**
      * Must be defined to disable delete Checkbox on index tree view.

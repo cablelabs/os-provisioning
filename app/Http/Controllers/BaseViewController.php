@@ -252,7 +252,7 @@ class BaseViewController extends Controller
             if ($field['form_type'] == 'ip' || $field['form_type'] == 'ping') {
                 // Ping: Only check if ip is online
                 if ($model[$field['name']]) {
-                    // $model[$field['name']] is null e.g. on Cmts/create
+                    // $model[$field['name']] is null e.g. on NetGw/create
                     exec('sudo ping -c1 -i0 -w1 '.explode(':', $model[$field['name']])[0], $ping, $offline);
 
                     if ($offline) {

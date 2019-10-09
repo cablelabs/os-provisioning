@@ -170,7 +170,7 @@ class addDefaultRolesCommand extends Command
                 'GuiLog' 				=> ['view'],
                 'Ticket'				=> ['view'],
 
-                'Cmts' 					=> ['view'],
+                'NetGw' 				=> ['view'],
                 'Contract' 				=> ['view'],
                 'Modem' 				=> ['view'],
                 'ProvBase' 				=> ['view'],

@@ -23,14 +23,14 @@ File: <i>/etc/sysconfig/network-scripts/route-...</i><br><br>
 
 <hr>
 
-<b>CMTS Bundle Interface</b><br><br>
+<b>NetGw Bundle Interface</b><br><br>
 
 <div style="padding-left: 20px;">
 <pre>
- @include ('provbase::Cmtsblade.bundle_ips')
+ @include ('provbase::NetGwBlade.bundle_ips')
 </pre>
 </div>
 
 @if ($cb->missing_routes)
-	<div class="label label-danger">!!! CMTS IP OFFLINE !!!</div>
+	<div class="label label-danger">!!! NetGw IP OFFLINE !!!</div>
 @endif

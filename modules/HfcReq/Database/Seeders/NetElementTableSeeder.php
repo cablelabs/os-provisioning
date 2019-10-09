@@ -15,7 +15,7 @@ class NetElementTableSeeder extends \BaseSeeder
     // {
     // 	switch ($t) {
     // 		case '1': return 'NET';
-    // 		case '2': return 'CMTS';
+    // 		case '2': return 'NETGW';
     // 		case '3': return 'DATA';
     // 		case '4': return 'CLUSTER';
     // 		case '5': return 'NODE';

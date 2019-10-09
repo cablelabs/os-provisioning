@@ -914,14 +914,14 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Get CMTS a CM is registered on
+     * Get NETGW a CM is registered on
      *
      * @param  string 	ip 		address of cm
-     * @return object 	CMTS
+     * @return object 	NETGW
      *
      * @author Nino Ryschawy
      */
-    public static function get_cmts($ip)
+    public static function get_netgw($ip)
     {
         $validator = new \Acme\Validators\ExtendedValidator;
 
@@ -929,13 +929,13 @@ class Modem extends \BaseModel
 
         foreach ($ippools as $pool) {
             if ($validator->validateIpInRange(0, $ip, [$pool->net, $pool->netmask])) {
-                $cmts_id = $pool->cmts_id;
+                $netgw_id = $pool->netgw_id;
                 break;
             }
         }
 
-        if (isset($cmts_id)) {
-            return Cmts::find($cmts_id);
+        if (isset($netgw_id)) {
+            return NetGw::find($netgw_id);
         }
     }
 
@@ -1006,7 +1006,7 @@ class Modem extends \BaseModel
         try {
             $config = ProvBase::first();
             $fqdn = $this->hostname.'.'.$config->domain_name;
-            $cmts = self::get_cmts(gethostbyname($fqdn));
+            $netgw = self::get_netgw(gethostbyname($fqdn));
             $mac = $mac_changed ? $this->getOriginal('mac') : $this->mac;
             $mac_oid = implode('.', array_map('hexdec', explode(':', $mac)));
 
@@ -1014,25 +1014,25 @@ class Modem extends \BaseModel
                 throw new Exception('Reset Modem directly');
             }
 
-            if ($cmts && $cmts->company == 'Cisco') {
-                // delete modem entry in cmts - CISCO-DOCS-EXT-MIB::cdxCmCpeDeleteNow
-                snmpset($cmts->ip, $cmts->get_rw_community(), '1.3.6.1.4.1.9.9.116.1.3.1.1.9.'.$mac_oid, 'i', '1', 300000, 1);
-            } elseif ($cmts && $cmts->company == 'Casa') {
-                // reset modem via cmts, deleting is not possible - CASA-CABLE-CMCPE-MIB::casaCmtsCmCpeResetNow
-                snmpset($cmts->ip, $cmts->get_rw_community(), '1.3.6.1.4.1.20858.10.12.1.3.1.7.'.$mac_oid, 'i', '1', 300000, 1);
+            if ($netgw && $netgw->company == 'Cisco') {
+                // delete modem entry in netgw - CISCO-DOCS-EXT-MIB::cdxCmCpeDeleteNow
+                snmpset($netgw->ip, $netgw->get_rw_community(), '1.3.6.1.4.1.9.9.116.1.3.1.1.9.'.$mac_oid, 'i', '1', 300000, 1);
+            } elseif ($netgw && $netgw->company == 'Casa') {
+                // reset modem via netgw, deleting is not possible - CASA-CABLE-CMCPE-MIB::casaCmtsCmCpeResetNow
+                snmpset($netgw->ip, $netgw->get_rw_community(), '1.3.6.1.4.1.20858.10.12.1.3.1.7.'.$mac_oid, 'i', '1', 300000, 1);
             } else {
-                throw new Exception('CMTS company not set');
+                throw new Exception('NETGW company not set');
             }
             // success message
-            \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_cmts'));
+            \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_netgw'));
         } catch (Exception $e) {
-            \Log::error("Could not delete $this->hostname from CMTS ('".$e->getMessage()."'). Let's try to restart it directly.");
+            \Log::error("Could not delete $this->hostname from NETGW ('".$e->getMessage()."'). Let's try to restart it directly.");
 
             try {
                 // restart modem - DOCS-CABLE-DEV-MIB::docsDevResetNow
                 snmpset($fqdn, $config->rw_community, '1.3.6.1.2.1.69.1.1.3.0', 'i', '1', 300000, 1);
 
-                // success message - make it a warning as sth is wrong when it's not already restarted by CMTS??
+                // success message - make it a warning as sth is wrong when it's not already restarted by NETGW??
                 \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_direct'));
             } catch (Exception $e) {
                 \Log::error("Could not restart $this->hostname directly ('".$e->getMessage()."')");
@@ -1292,7 +1292,7 @@ class Modem extends \BaseModel
      * relevant attribute was modified.
      *
      * @return 1 if reset via Modem or original mac is needed (mac was changed)
-     *		  -1 for reset via CMTS (faster),
+     *		  -1 for reset via NETGW (faster),
      *		   0 if no restart is needed
      *
      * @author Ole Ernst, Nino Ryschawy
@@ -1303,7 +1303,7 @@ class Modem extends \BaseModel
     {
         $diff = $this->getDirty();
 
-        // in case mac was changed, reset via cmts - or take original mac
+        // in case mac was changed, reset via netgw - or take original mac
         if (array_key_exists('mac', $diff)) {
             return 1;
         }
@@ -1642,7 +1642,7 @@ class ModemObserver
 
         if (\Module::collections()->has('ProvMon') && ! $modem->isPPP()) {
             Log::info("Create cacti diagrams for modem: $modem->hostname");
-            \Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
+            \Artisan::call('nms:cacti', ['--netgw-id' => 0, '--modem-id' => $modem->id]);
         }
 
         if (\Module::collections()->has('PropertyManagement')) {

@@ -157,7 +157,7 @@ class EndpointObserver
     public function created($endpoint)
     {
         $endpoint->make_dhcp();
-        Cmts::make_dhcp_conf_all();
+        NetGw::make_dhcp_conf_all();
         $endpoint->nsupdate();
     }
 
@@ -172,14 +172,14 @@ class EndpointObserver
     public function updated($endpoint)
     {
         $endpoint->make_dhcp();
-        Cmts::make_dhcp_conf_all();
+        NetGw::make_dhcp_conf_all();
         $endpoint->nsupdate();
     }
 
     public function deleted($endpoint)
     {
         $endpoint->make_dhcp();
-        Cmts::make_dhcp_conf_all();
+        NetGw::make_dhcp_conf_all();
         $endpoint->nsupdate(true);
     }
 }

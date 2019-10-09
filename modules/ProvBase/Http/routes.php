@@ -2,7 +2,7 @@
 
 BaseRoute::group([], function () {
     BaseRoute::resource('Modem', 'Modules\ProvBase\Http\Controllers\ModemController');
-    BaseRoute::resource('Cmts', 'Modules\ProvBase\Http\Controllers\CmtsController');
+    BaseRoute::resource('NetGw', 'Modules\ProvBase\Http\Controllers\NetGwController');
     BaseRoute::resource('IpPool', 'Modules\ProvBase\Http\Controllers\IpPoolController');
     BaseRoute::resource('Endpoint', 'Modules\ProvBase\Http\Controllers\EndpointController');
     BaseRoute::resource('Configfile', 'Modules\ProvBase\Http\Controllers\ConfigfileController');

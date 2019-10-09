@@ -158,7 +158,7 @@ return [
     'snmp' => [
         'errors_walk' => 'Querying the following OIDs failed: :oids.',
         'errors_set' => 'Los siguientes parámetros no se pudieron establecer: :oids.',
-        'missing_cmts' => 'The cluster misses a superior CMTS as parent device.',
+        'missing_netgw' => 'The cluster misses a superior CMTS as parent device.',
         'undefined' => 'For this netelementtype is no controlling defined.',
         'unreachable' => 'El dispositivo no es accesible vía el SNMP.',
     ],
@@ -280,7 +280,7 @@ desde el punto en que un módem estaba en línea. Si todos los diagramas no se m
     'Start Date' 				=> 'Fecha de inicio',
     'modem_restart_error' 		=> 'No se pudo reiniciar Modem! (offline?)',
     'Contact Persons' 			=> 'Personas de contacto',
-    'modem_restart_success_cmts' => 'Modem reiniciado via CMTS',
+    'modem_restart_success_netgw' => 'Modem reiniciado via CMTS',
     'Accounting Text (optional)'=> 'Informacion adicional (opcional)',
     'Cost Center (optional)'	=> 'Centro de costo (opcional)',
     'Credit Amount' 			=> 'Importe de crédito',

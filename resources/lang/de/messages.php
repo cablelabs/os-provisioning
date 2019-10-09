@@ -182,7 +182,7 @@ return [
     'snmp' => [
         'errors_walk' => 'Die Abfrage folgender OIDs schlug fehl: :oids.',
         'errors_set' => 'Das Setzen folgender Parameter schlug fehl: :oids.',
-        'missing_cmts' => 'Dem Cluster fehlt ein übergeordnetes CMTS.',
+        'missing_netgw' => 'Dem Cluster fehlt ein übergeordnetes CMTS.',
         'missingIp' => 'Das Netzelement ist nicht erreichbar, da keine IP bzw. kein Hostname zugewiesen wurde.',
         'undefined' => 'Für diesen Netzelementtyp ist kein Controlling definiert.',
         'unreachable' => 'Das Gerät ist nicht per SNMP erreichbar.',
@@ -306,7 +306,7 @@ return [
     'Start Date'                => 'Startdatum',
     'modem_restart_error'       => 'Das Modem konnte nicht neugestartet werden! (offline?)',
     'Contact Persons'           => 'Antennengemeinschaft/Kontakt',
-    'modem_restart_success_cmts' => 'Das Modem wurde erfolgreich über das CMTS neugestartet',
+    'modem_restart_success_netgw' => 'Das Modem wurde erfolgreich über das CMTS neugestartet',
     'Accounting Text (optional)'=> 'Verwendungszweck (optional)',
     'Cost Center (optional)'    => 'Kostenstelle (optional)',
     'Credit Amount'             => 'Gutschrift - Betrag',
