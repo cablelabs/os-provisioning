@@ -555,3 +555,97 @@ ul.nav.nav-pills li {
     overflow: hidden !important;
     overflow-y: auto !important;
 }
+
+body{
+    text-align:center;
+    font-family:"Roboto",sans-serif;
+  }
+
+#startStopBtn{
+    display:inline-block;
+    margin:0 auto;
+    color:#6060AA;
+    background-color:rgba(0,0,0,0);
+    border:0.15em solid #6060FF;
+    border-radius:0.3em;
+    transition:all 0.3s;
+    box-sizing:border-box;
+    width:8em; height:3em;
+    line-height:2.7em;
+    cursor:pointer;
+    box-shadow: 0 0 0 rgba(0,0,0,0.1), inset 0 0 0 rgba(0,0,0,0.1);
+  }
+  #startStopBtn:hover{
+    box-shadow: 0 0 2em rgba(0,0,0,0.1), inset 0 0 1em rgba(0,0,0,0.1);
+  }
+  #startStopBtn.running{
+    background-color:#FF3030;
+    border-color:#FF6060;
+    color:#FFFFFF;
+  }
+  #startStopBtn:before{
+    content:"Start";
+  }
+  #startStopBtn.running:before{
+    content:"Abort";
+  }
+  #test{
+    margin-top:2em;
+    margin-bottom:2em;
+  }
+  div.testArea{
+    display:inline-block;
+    width:16em;
+    height:12.5em;
+    position:relative;
+    box-sizing:border-box;
+  }
+  div.testName{
+    position:absolute;
+    top:0.1em; left:0;
+    width:100%;
+    font-size:1.4em;
+    z-index:9;
+  }
+  div.meterText{
+    position:absolute;
+    bottom:1.55em; left:0;
+    width:100%;
+    font-size:2.5em;
+    z-index:9;
+  }
+  div.meterText:empty:before{
+    content:"0.00";
+  }
+  div.unit{
+    position:absolute;
+    bottom:2em; left:0;
+    width:100%;
+    z-index:9;
+  }
+  div.testArea canvas{
+    position:absolute;
+    top:0; left:0; width:100%; height:100%;
+    z-index:1;
+  }
+  div.testGroup{
+    display:inline-block;
+  }
+  #shareArea{
+    width:95%;
+    max-width:40em;
+    margin:0 auto;
+    margin-top:2em;
+  }
+  #shareArea > *{
+    display:block;
+    width:100%;
+    height:auto;
+    margin: 0.25em 0;
+  }
+  @media all and (max-width:40em){
+    div.testGroup{
+      display:block;
+      margin: 0 auto;
+    }
+  }
