@@ -55,8 +55,9 @@ class SetEmptyStringsToNull extends Migration
 
             // get rules for this table
             $nullable = [];
+            $required = ['sometimes', 'required'];
             foreach ($rules as $field => $rule) {
-                $nullable[$field] = in_array('required', explode('|', $rule)) || in_array('sometimes', explode('|', $rule)) ? false : true;
+                $nullable[$field] = empty(array_intersect($required, explode('|', $rule))) ? true : false;
             }
 
             // get all column names
@@ -70,8 +71,7 @@ class SetEmptyStringsToNull extends Migration
 
                 $type = DB::connection()->getDoctrineColumn($tableName, $column)->getType()->getName();
 
-                if ($column == 'id' ||
-                    ($tableName == 'items' && $column == 'valid_from')) {
+                if ($column == 'id' || ($tableName == 'items' && $column == 'valid_from')) {
                     continue;
                 }
 
