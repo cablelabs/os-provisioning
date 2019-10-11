@@ -35,25 +35,26 @@ class ContractController extends \BaseController
             ['form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2'), 'options' => ['class' => 'collapse']],
             ['form_type' => 'text', 'name' => 'number3', 'description' => $model->get_column_description('number3'), 'help' => 'If left empty contract number will be used as customer number, too.', 'options' => ['class' => 'collapse']],
             ['form_type' => 'text', 'name' => 'number4', 'description' => $model->get_column_description('number4'), 'space' => 1, 'options' => ['class' => 'collapse']],
-            ['form_type' => 'text', 'name' => 'company', 'description' => 'Company', 'create' => '1'],
-            ['form_type' => 'text', 'name' => 'department', 'description' => 'Department', 'create' => '1'],
-            ['form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options(), 'create' => '1'],
+            // 'create' makes this field a hidden input field in Modem create form - so the company, etc. will be already set from contract when the user wants to create a new modem
+            ['form_type' => 'text', 'name' => 'company', 'description' => 'Company', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'department', 'description' => 'Department', 'create' => ['Modem']],
+            ['form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options(), 'create' => ['Modem']],
             ['form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic Degree', 'value' => $model->get_academic_degree_options()],
-            ['form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => '1'],
-            ['form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => '1', 'space' => '1'],
-            // array_merge(['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1', 'autocomplete' => [], 'html' => "<div class=col-md-12 style='background-color:whitesmoke'>
+            ['form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => ['Modem'], 'space' => '1'],
+            // array_merge(['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => ['Modem'], 'autocomplete' => [], 'html' => "<div class=col-md-12 style='background-color:whitesmoke'>
             //     <div class='form-group row'>
             //         <label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number *</label>
             //             <div class=col-md-5>
             //                 <input class='form-control' name='street' type=text value='${model['street']}' id='street' style='background-color:whitesmoke'>
             //             </div>"], $selectPropertyMgmt),
-            // array_merge(['form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => '1', 'html' => "<div class=col-md-2><input class='form-control' name='house_number' type=text value='".$model['house_number']."' id='house_number' style='background-color:whitesmoke'></div>
+            // array_merge(['form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => ['Modem'], 'html' => "<div class=col-md-2><input class='form-control' name='house_number' type=text value='".$model['house_number']."' id='house_number' style='background-color:whitesmoke'></div>
             //     </div></div>"], $selectPropertyMgmt),
-            array_merge(['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => '1', 'autocomplete' => []], $selectPropertyMgmt),
-            array_merge(['form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => '1'], $selectPropertyMgmt),
-            array_merge(['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => '1', 'autocomplete' => []], $selectPropertyMgmt),
-            array_merge(['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => '1', 'autocomplete' => []], $selectPropertyMgmt),
-            array_merge(['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => '1', 'autocomplete' => []], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => ['Modem'], 'autocomplete' => []], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => ['Modem']], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => ['Modem'], 'autocomplete' => []], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => ['Modem'], 'autocomplete' => []], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => ['Modem'], 'autocomplete' => []], $selectPropertyMgmt),
         ];
 
         if (! \Module::collections()->has('Ccc')) {
@@ -69,7 +70,7 @@ class ContractController extends \BaseController
             ['form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'],
             ['form_type' => 'text', 'name' => 'fax', 'description' => 'Fax'],
             ['form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'],
-            ['form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'create' => '1', 'space' => '1'],
+            ['form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'create' => ['Modem'], 'space' => '1'],
             ['form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'], // TODO: create default 'value' => date("Y-m-d")
             ['form_type' => 'text', 'name' => 'contract_end', 'description' => 'Contract End'],
 
@@ -85,7 +86,7 @@ class ContractController extends \BaseController
                     ['form_type' => 'select', 'name' => 'value_date', 'description' => 'Date of value', 'value' => $days, 'help' => trans('helper.contract.valueDate')],
                     ['form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => selectList('costcenter', 'name', true)],
                     // NOTE: qos is required as hidden field to automatically create modem with correct contract qos class
-                    ['form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'hidden' => 1],
+                    ['form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'create' => ['Modem'], 'hidden' => 1],
                 ];
 
             if (\Modules\BillingBase\Entities\BillingBase::first()->show_ags) {
@@ -97,9 +98,9 @@ class ContractController extends \BaseController
             $qoss = Qos::all();
 
             $c = [
-                ['form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1', 'create' => '1', 'checked' => 1],
+                ['form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1', 'create' => ['Modem'], 'checked' => 1],
                 ['form_type' => 'checkbox', 'name' => 'has_telephony', 'description' => 'Has telephony', 'help' => trans('helper.has_telephony')],
-                ['form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => '1', 'value' => $model->html_list($qoss, 'name')],
+                ['form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'create' => ['Modem'], 'value' => $model->html_list($qoss, 'name')],
                 ['form_type' => 'select', 'name' => 'next_qos_id', 'description' => 'QoS next month', 'value' => $model->html_list($qoss, 'name', true)],
             ];
 

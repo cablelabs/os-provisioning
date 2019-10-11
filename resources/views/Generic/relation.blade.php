@@ -24,7 +24,7 @@ Relation Blade is used inside a Panel Element to display relational class object
 
             {{-- Add hidden input fields if create tag is set in $form_fields - This sets global POST Variable --}}
             @foreach($form_fields as $field)
-                @if (array_key_exists('create', $field))
+                @if (array_key_exists('create', $field) && in_array($class, $field['create']))
                     {!! Form::hidden($field["name"], $view_var->{$field["name"]}) !!}
                 @endif
             @endforeach
