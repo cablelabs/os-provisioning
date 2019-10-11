@@ -583,7 +583,7 @@ class NetGw extends \BaseModel
     {
         $path = self::$netgw_include_path;
         $incs = '';
-        foreach (self::all() as $cmts) {
+        foreach (self::where('type', 'cmts')->get() as $cmts) {
             $incs .= "include \"$path/$cmts->id.conf\";\n";
         }
         file_put_contents($path.'.conf', $incs);

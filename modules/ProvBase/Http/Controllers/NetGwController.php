@@ -77,7 +77,7 @@ class NetGwController extends \BaseController
                 'name' => 'formatted_support_state',
                 'description' => 'Support State',
                 'field_value'=> ucfirst(str_replace('-', ' ', $model->support_state)),
-                'help'=>trans('helper.cmtsSupportState.'.$model->support_state),
+                'help'=>trans('helper.netGwSupportState.'.$model->support_state),
                 'help_icon'=> $model->getFaSmileClass()['fa-class'],
                 'options' =>['readonly'], 'color'=> $model->getFaSmileClass()['bs-class'], ];
         }
