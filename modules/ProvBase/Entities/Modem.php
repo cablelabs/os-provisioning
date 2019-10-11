@@ -261,6 +261,15 @@ class Modem extends \BaseModel
      */
     public function view_belongs_to()
     {
+        $relation = null;
+        if (\Module::collections()->has('PropertyManagement')) {
+            $relation = $this->apartment ?: $this->realty;
+        }
+
+        if ($relation) {
+            return collect([$relation, $this->contract]);
+        }
+
         return $this->contract;
     }
 
