@@ -1370,12 +1370,13 @@ class BaseController extends Controller
         $additional_raw_where_clauses = isset($dt_config['where_clauses']) ? $dt_config['where_clauses'] : [];
         $raw_columns = $dt_config['raw_columns'] ?? []; // not run through htmlentities()
 
-        // if no id Column is drawn, draw it to generate links with id
-        ! array_has($header_fields, $dt_config['table'].'.id') ? array_push($header_fields, 'id') : null;
-
         if (empty($eager_loading_tables)) { //use eager loading only when its needed
             $request_query = $model::select($dt_config['table'].'.*');
-            $first_column = substr(head($header_fields), strlen($dt_config['table']) + 1);
+
+            $first_column = head($header_fields);
+            if (strpos($first_column, $dt_config['table'].'.') === 0) {
+                $first_column = substr($first_column, strlen($dt_config['table']) + 1);
+            }
         } else {
             $request_query = $model::with($eager_loading_tables)->select($dt_config['table'].'.*'); //eager loading | select($select_column_data);
             if (starts_with(head($header_fields), $dt_config['table'])) {

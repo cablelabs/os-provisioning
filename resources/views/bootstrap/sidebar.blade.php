@@ -60,7 +60,7 @@
             <span>{{$network->name}}</span>
           </a>
           <ul class="sub-menu" style="padding-left:0;list-style:none;">
-            <li id="{{$network->name}}" class="has-sub" data-sidebar="level2">
+            <li id="submenu_network_{{$network->id}}" class="has-sub" data-sidebar="level2">
               <a href="{{BaseRoute::get_base_url()}}/Tree/erd/net/{{$network->id}}">
                 <i class="fa fa-circle text-success"></i>
                 {{$network->name}}
@@ -68,7 +68,7 @@
             <ul class="sub-menu d-block" style="list-style-position: inside;">
               {{-- Network-Clusters are Cached for 5 minutes --}}
               @foreach ($network->get_all_cluster_to_net() as $cluster)
-                <li id="{{$cluster->name}}" class="has-sub">
+                <li id="cluster_{{$cluster->id}}" class="has-sub">
                   <a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
                     <i class="fa fa-circle-thin text-info"></i>
                     {{$cluster->name}}
