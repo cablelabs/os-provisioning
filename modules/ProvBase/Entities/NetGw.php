@@ -268,7 +268,7 @@ class NetGw extends \BaseModel
 
         $clusters = [];
         if ($netelement) {
-            foreach (\Modules\HfcReq\Entities\NetElement::where('net_gw_id', $netelement->id)->get() as $ne) {
+            foreach (\Modules\HfcReq\Entities\NetElement::where('netgw_id', $netelement->id)->get() as $ne) {
                 if ($ne->get_base_netelementtype() == 2) {
                     $clusters[$ne->id] = $ne;
                 }

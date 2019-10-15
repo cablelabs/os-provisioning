@@ -99,7 +99,7 @@ class IpPool extends \BaseModel
             return true;
         }
 
-        return strlen(exec('/usr/sbin/ip route show '.$this->net.'/'.$this->size().' via '.$this->netGw->ip)) == 0 ? false : true;
+        return strlen(exec('/usr/sbin/ip route show '.$this->net.'/'.$this->size().' via '.$this->netgw->ip)) == 0 ? false : true;
     }
 
     /*
@@ -140,7 +140,7 @@ class IpPool extends \BaseModel
      */
     public function is_secondary()
     {
-        $cm_pools = $this->netGw->ippools->filter(function ($item) {
+        $cm_pools = $this->netgw->ippools->filter(function ($item) {
             return $item->type == 'CM';
         });
 
@@ -191,7 +191,7 @@ class IpPool extends \BaseModel
     /**
      * Relationships:
      */
-    public function netGw()
+    public function netgw()
     {
         return $this->belongsTo('Modules\ProvBase\Entities\NetGw');
     }
@@ -199,7 +199,7 @@ class IpPool extends \BaseModel
     // belongs to a netgw - see BaseModel for explanation
     public function view_belongs_to()
     {
-        return $this->netGw;
+        return $this->netgw;
     }
 
     /**
@@ -227,34 +227,34 @@ class IpPoolObserver
 {
     public function created($pool)
     {
-        if ($pool->netGw->type != 'cmts') {
+        if ($pool->netgw->type != 'cmts') {
             return;
         }
 
-        // fetch netGw object that is related to the created ippool and make dhcp conf
-        $pool->netGw->make_dhcp_conf();
+        // fetch netgw object that is related to the created ippool and make dhcp conf
+        $pool->netgw->make_dhcp_conf();
     }
 
     public function updated($pool)
     {
-        if ($pool->netGw->type != 'cmts') {
+        if ($pool->netgw->type != 'cmts') {
             return;
         }
 
-        $pool->netGw->make_dhcp_conf();
+        $pool->netgw->make_dhcp_conf();
 
-        // make dhcp conf of old netGw if relation got changed
-        if ($pool->isDirty('net_gw_id')) {
-            NetGw::find($pool->getOriginal('net_gw_id'))->make_dhcp_conf();
+        // make dhcp conf of old netgw if relation got changed
+        if ($pool->isDirty('netgw_id')) {
+            NetGw::find($pool->getOriginal('netgw_id'))->make_dhcp_conf();
         }
     }
 
     public function deleted($pool)
     {
-        if ($pool->netGw->type != 'cmts') {
+        if ($pool->netgw->type != 'cmts') {
             return;
         }
 
-        $pool->netGw->make_dhcp_conf();
+        $pool->netgw->make_dhcp_conf();
     }
 }

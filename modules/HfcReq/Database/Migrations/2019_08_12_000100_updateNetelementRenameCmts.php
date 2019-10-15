@@ -15,7 +15,7 @@ class UpdateNetelementRenameCmts extends BaseMigration
     public function up()
     {
         Schema::table($this->tablename, function (Blueprint $table) {
-            $table->renameColumn('cmts', 'net_gw_id');
+            $table->renameColumn('cmts', 'netgw_id');
         });
     }
 
@@ -27,7 +27,7 @@ class UpdateNetelementRenameCmts extends BaseMigration
     public function down()
     {
         Schema::table($this->tablename, function (Blueprint $table) {
-            $table->renameColumn('net_gw_id', 'cmts');
+            $table->renameColumn('netgw_id', 'cmts');
         });
     }
 }
