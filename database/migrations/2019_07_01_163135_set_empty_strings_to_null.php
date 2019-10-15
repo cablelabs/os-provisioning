@@ -61,8 +61,9 @@ class SetEmptyStringsToNull extends Migration
             }
 
             // get all column names
+            $tableColumns = $this->getTableColumns($tableName);
             foreach (DB::getSchemaBuilder()->getColumnListing($tableName) as $column) {
-                $rawType = $this->getTableColumns($tableName)[$column];
+                $rawType = $tableColumns[$column];
 
                 // if type != enum
                 if (Str::startsWith($rawType, 'enum')) {
@@ -71,11 +72,11 @@ class SetEmptyStringsToNull extends Migration
 
                 $type = DB::connection()->getDoctrineColumn($tableName, $column)->getType()->getName();
 
-                if ($column == 'id' || ($tableName == 'items' && $column == 'valid_from')) {
+                if ($column === 'id') {
                     continue;
                 }
 
-                if ($type == 'smallint') {
+                if ($type === 'smallint') {
                     $type = 'smallInteger';
                 }
 
