@@ -227,7 +227,7 @@ class IpPoolObserver
 {
     public function created($pool)
     {
-        if ($pool->$netGw->type != 'cmts') {
+        if ($pool->netGw->type != 'cmts') {
             return;
         }
 
@@ -237,7 +237,7 @@ class IpPoolObserver
 
     public function updated($pool)
     {
-        if ($pool->$netGw->type != 'cmts') {
+        if ($pool->netGw->type != 'cmts') {
             return;
         }
 
@@ -251,7 +251,7 @@ class IpPoolObserver
 
     public function deleted($pool)
     {
-        if ($pool->$netGw->type != 'cmts') {
+        if ($pool->netGw->type != 'cmts') {
             return;
         }
 
