@@ -803,44 +803,48 @@ class BaseModel extends Eloquent
 
         // Lookup all SQL Tables
         foreach (DB::select('SHOW TABLES') as $table) {
-            // Lookup SQL Fields for current $table
-            foreach (Schema::getColumnListing($table->$tables_var_name) as $column) {
-                // check if $column is actual table name object added by '_id'
-                if ($column == $this->table.'_id') {
-                    if (in_array($column, $exceptions)) {
-                        continue;
-                    }
+            $tablename = $table->{$tables_var_name};
 
-                    // get all objects with $column
-                    $query = 'SELECT * FROM '.$table->$tables_var_name.' WHERE '.$column.'='.$this->id;
-                    foreach (DB::select($query) as $child) {
-                        $class_child_name = $this->_guess_model_name($table->$tables_var_name);
-                        // check if we got a model name
-                        if ($class_child_name) {
-                            // yes! 1:n relation
-                            $class = new $class_child_name;
-                            $rel = $class->find($child->id);
-                            if (! is_null($rel)) {
-                                array_push($relations['1:n'], $rel);
+            // Get SQL columns for current table
+            foreach (Schema::getColumnListing($tablename) as $column) {
+                // check if $column is actual table name + '_id'
+                if ($column != $this->table.'_id') {
+                    continue;
+                }
+
+                if (in_array($column, $exceptions)) {
+                    continue;
+                }
+
+                // get all objects with $column
+                $query = 'SELECT * FROM '.$tablename.' WHERE '.$column.'='.$this->id;
+                foreach (DB::select($query) as $child) {
+                    $class_child_name = $this->_guess_model_name($tablename);
+                    // check if we got a model name
+                    if ($class_child_name) {
+                        // yes! 1:n relation
+                        $class = new $class_child_name;
+                        $rel = $class->find($child->id);
+                        if (! is_null($rel)) {
+                            array_push($relations['1:n'], $rel);
+                        }
+                    } else {
+                        // seems to be a n:m relation
+                        $parts = explode('_', $tablename);
+                        foreach ($parts as $part) {
+                            $class_child_name = $this->_guess_model_name($part);
+
+                            // one of the models in pivot tables is the current model – skip
+                            if ($class_child_name == get_class($this)) {
+                                continue;
                             }
-                        } else {
-                            // seems to be a n:m relation
-                            $parts = explode('_', $table->$tables_var_name);
-                            foreach ($parts as $part) {
-                                $class_child_name = $this->_guess_model_name($part);
 
-                                // one of the models in pivot tables is the current model – skip
-                                if ($class_child_name == get_class($this)) {
-                                    continue;
-                                }
-
-                                // add other model instances to relation array if existing
-                                $class = new $class_child_name;
-                                $id_col = $part.'_id';
-                                $rel = $class->find($child->{$id_col});
-                                if (! is_null($rel)) {
-                                    array_push($relations['n:m'], $rel);
-                                }
+                            // add other model instances to relation array if existing
+                            $class = new $class_child_name;
+                            $id_col = $part.'_id';
+                            $rel = $class->find($child->{$id_col});
+                            if (! is_null($rel)) {
+                                array_push($relations['n:m'], $rel);
                             }
                         }
                     }

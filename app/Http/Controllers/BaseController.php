@@ -1405,7 +1405,7 @@ class BaseController extends Controller
                 }
             }
 
-            $DT->with('contract')->filterColumn($column, function ($query, $keyword) use ($custom_query) {
+            $DT->filterColumn($column, function ($query, $keyword) use ($custom_query) {
                 foreach ($custom_query['eagers'] as $eager) {
                     $query->with($eager);
                 }

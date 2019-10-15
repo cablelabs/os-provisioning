@@ -85,10 +85,12 @@ return [
     'salesman.firstname' => 'Vorname',
     'salesman_commission' => 'Provision',
     'sepaaccount_id' 	=> 'SEPA-Konto',
-    // SepaAccount
-    'sepaaccount.name' => 'Kontoname',
-    'sepaaccount.institute' => 'Bank',
-    'sepaaccount.iban' => 'IBAN',
+    'sepaaccount' => [
+        'iban' => 'IBAN',
+        'institute' => 'Bank',
+        'name' => 'Kontoname',
+        'template_invoice' => 'Rechnungsvorlage',
+    ],
     // SepaMandate
     'sepamandate.holder' => 'Kontoinhaber',
     'sepamandate.valid_from' => 'Gültig ab',
