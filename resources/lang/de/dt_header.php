@@ -152,11 +152,11 @@ return [
     'email1' => 'E-Mail 1',
     'email2' => 'E-Mail 2',
     // NetGw
-    'netgws.id' => 'ID',
-    'netgws.hostname' => 'Name',
-    'netgws.ip' => 'IP',
-    'netgws.company' => 'Hersteller',
-    'netgws.series' => 'Serie',
+    'netgw.id' => 'ID',
+    'netgw.hostname' => 'Name',
+    'netgw.ip' => 'IP',
+    'netgw.company' => 'Hersteller',
+    'netgw.series' => 'Serie',
     // Contract
     'contract.city' => 'Stadt',
     'company' => 'Firma',
@@ -181,7 +181,6 @@ return [
     'endpoint.description' => 'Beschreibung',
     // IpPool
     'ippool.id' => 'ID',
-    'netgw.hostname' => 'Name',
     'ippool.type' => 'Typ',
     'ippool.net' => 'Netz',
     'ippool.netmask' => 'Netzmaske',

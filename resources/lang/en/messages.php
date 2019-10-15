@@ -233,7 +233,7 @@ return [
     'Use api'                   => 'Use api',
     'See income chart'          => 'See income chart',
     'View analysis pages of modems' => 'View analysis pages of modems',
-    'View analysis pages of netgws' => 'View analysis pages of netgws',
+    'View analysis pages of netgw' => 'View analysis pages of netgws',
     'Download settlement runs'  => 'Download settlement runs',
     'Not allowed to acces this user' => 'Not allowed to acces this user',
     'log_out'               => 'Log Out',

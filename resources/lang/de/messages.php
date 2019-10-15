@@ -233,7 +233,7 @@ return [
     'Use api'                   => 'API benutzen',
     'See income chart'          => 'Einkommensdiagramm ansehen',
     'View analysis pages of modems' => 'Analyseseite der Modems aufrufen',
-    'View analysis pages of netgws' => 'Analyseseite der NetGws aufrufen',
+    'View analysis pages of netgw' => 'Analyseseite der NetGws aufrufen',
     'Download settlement runs'  => 'Abrechnungsläufe downloaden',
     'Not allowed to acces this user' => 'Zugriff auf diesen Nutzer ist nicht gestattet',
     'log_out'               => 'Ausloggen',

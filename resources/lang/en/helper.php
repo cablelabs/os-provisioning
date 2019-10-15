@@ -14,7 +14,7 @@ return [
     'Use api'                   => 'This ability allows or forbids to access the API routes with "Basic Auth" (the email is used as username).',
     'See income chart'          => 'This ability allows or forbids to view the income chart on the dashboard.',
     'View analysis pages of modems' => 'This ability allows or forbids to access the analysis pages of a modem.',
-    'View analysis pages of netgws' => 'This ability allows or forbids to access the analysis pages of a NetGw.',
+    'View analysis pages of netgw' => 'This ability allows or forbids to access the analysis pages of a NetGw.',
     'Download settlement runs'  => 'This ability allows or forbids the download of settlement runs. This ability has no impact if it is forbidden to manage settlement runs.',
  /*
   * Index Page - Datatables

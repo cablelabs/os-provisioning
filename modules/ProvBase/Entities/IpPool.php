@@ -72,7 +72,7 @@ class IpPool extends \BaseModel
      */
     public function netgw_hostnames()
     {
-        return DB::table('netgws')->select('id', 'hostname')->get();
+        return DB::table('netgw')->select('id', 'hostname')->get();
     }
 
     /*

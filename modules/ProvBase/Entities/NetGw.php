@@ -12,7 +12,7 @@ class NetGw extends \BaseModel
     public static $netgw_include_path = '/etc/dhcp-nmsprime/cmts_gws';
 
     // The associated SQL table for this Model
-    public $table = 'netgws';
+    public $table = 'netgw';
 
     // Attributes
     protected $appends = ['formatted_support_state'];
@@ -21,7 +21,7 @@ class NetGw extends \BaseModel
     public static function rules($id = null)
     {
         return [
-            'hostname' => 'required|unique:netgws,hostname,'.$id.',id,deleted_at,NULL',  	// unique: table, column, exception , (where clause)
+            'hostname' => 'required|unique:netgw,hostname,'.$id.',id,deleted_at,NULL',  	// unique: table, column, exception , (where clause)
             'company' => 'required',
         ];
     }
@@ -128,7 +128,7 @@ class NetGw extends \BaseModel
      */
     public function ippools()
     {
-        return $this->hasMany('Modules\ProvBase\Entities\IpPool');
+        return $this->hasMany('Modules\ProvBase\Entities\IpPool', 'netgw_id');
     }
 
     public function netelement()

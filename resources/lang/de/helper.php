@@ -14,7 +14,7 @@ return [
     'Use api'                   => 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die API Routen mithilfe von "Basic Auth". Als Benutzername muss die E-Mail, welche im Profil hinterlegt ist genutzt werden.',
     'See income chart'          => 'Diese Fähigkeit erlaubt oder verbietet die Anzeige des Einkommensdiagramms im Dashboard.',
     'View analysis pages of modems' => 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseiten der Modems.',
-    'View analysis pages of netgws' => 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseite der NetGws.',
+    'View analysis pages of netgw' => 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseite der NetGws.',
     'Download settlement runs'  => 'Diese Fähigkeit erlaubt oder verbietet den Download der Abrechnungsläufe. Wenn das Verwalten von Abrechnungsläufen verboten ist, hat diese Einstellung keine Auswirkung.',
  /*
   * Index Page - Datatables

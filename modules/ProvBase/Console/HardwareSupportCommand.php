@@ -49,7 +49,7 @@ class HardwareSupportCommand extends Command
 
         $this->snmp_def_mode();
         $modems = DB::table('modem')->whereNull('deleted_at')->get();
-        $cmtses = DB::table('netgws')->whereNull('deleted_at')->where('type', 'cmts')->get();
+        $cmtses = DB::table('netgw')->whereNull('deleted_at')->where('type', 'cmts')->get();
         $ro_community = $this->provBaseSettings->ro_community;
 
         foreach ($modems as $modem) {

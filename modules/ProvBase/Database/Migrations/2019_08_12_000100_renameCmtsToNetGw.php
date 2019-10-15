@@ -4,7 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 class RenameCmtsToNetGw extends BaseMigration
 {
-    protected $tablename = 'netgws';
+    protected $tablename = 'netgw';
 
     /**
      * Run the migrations.
