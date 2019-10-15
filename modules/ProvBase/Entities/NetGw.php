@@ -567,6 +567,9 @@ class NetGw extends \BaseModel
             if ($range) {
                 $data .= "\n\n\t\t".'pool'."\n\t\t{\n";
                 $data .= $range;
+                if (\Module::collections()->has('ProvHA')) {
+                    $data .= "\n\t\t\t".'failover peer "dhcpd-failover";'."\n";
+                }
 
                 switch ($type) {
                     case 'CM':
