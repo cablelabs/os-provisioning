@@ -27,23 +27,6 @@ return [
     'ISO_3166_ALPHA-2'				=> 'ISO 3166 ALPHA-2 (zwei Zeichen, z.B. „DE“). Genutzt in Formularen mit Adressdaten um das Land anzugeben.',
     'PasswordReset'           => 'Diese Einstellung bestimmt, in welchem Intervall die Nutzer des Administrationsbereiches zum Ändern ihres Passworts aufgefordert werden. Setzen Sie diesen Wert auf 0, um Passwörter unendlich lang gültig zu halten.',
 
- /*
-  *	MODULE: BillingBase
-  */
-    //BillingBaseController
-    'BillingBase' => [
-        'cdr_offset'        => "ACHTUNG: Eine Erhöhung der Differenz führt bei bereits vorhandenen Daten im nächsten Abrechnungslauf zu überschriebenen EVNs - Stellen Sie sicher, dass diese gesichert/umbenannt wurden!\n\n1 - wenn die Einzelverbindungsnachweise vom Juni zu den Rechnungen vom Juli gehören; 0 - wenn beide für den selben Monat abgerechnet werden; 2 - wenn die Einzelverbindungsnachweise vom Januar zu den Rechnungen vom März gehören.",
-        'cdr_retention'     => 'Anzahl der Monate, die Einzelverbindungsnachweise gespeichert werden dürfen/müssen.',
-        'extra_charge'      => 'Aufschlag auf Einkaufspreis in %. Nur wenn nicht schon vom Provider berechnet!',
-        'fluid_dates'       => 'Aktivieren Sie diese Checkbox wenn Sie Tarife mit ungewissem Start- und/oder Enddatum eintragen möchten. In dem Fall werden 2 weitere Checkboxen (Gültig ab fest, Gültig bis fest) auf der Posten-Seite angezeigt. Weitere Erklärungen finden Sie neben diesen Feldern!',
-        'InvoiceNrStart'    => 'Rechnungsnummer startet jedes neue Jahr mit dieser Nummer.',
-        'ItemTermination'   => 'Erlaubt es Kunden gebuchte Produkte nur bis zum letzten Tag des Monats zu kündigen.',
-        'MandateRef'        => "Eine Vorlage kann mit SQL-Spalten des Auftrags oder mit der Mandat-Tabelle erstellt werden - mögliche Felder: \n",
-        'rcd'               => 'Globales Fälligkeits- und Buchungsdatum. Dieses kann auf Vertragsebene auch spezifisch für den Vertrag gesetzt werden.',
-        'showAGs'           => 'Fügt eine Auswahlliste mit Ansprechpartnern von Antennengemeinschaften zur Vertragsseite hinzu. Die Liste muss als Textdatei im Storage hinterlegt werden. Siehe Quellcode!',
-        'SplitSEPA'         => 'SEPA-Überweisungen sind in unterschiedliche XML-Dateien aufgeteilt, abhängig von ihrem Übertragungstyp.',
-        ],
-
     //CompanyController
     'Company_Management'			=> 'Trennung der Namen durch Komma.',
     'Company_Directorate'			=> 'Trennung der Namen durch Komma.',
@@ -79,11 +62,6 @@ return [
     // SepaMandate
     'sm_cc' 						=> 'Tragen Sie hier eine Kostenstelle ein, um über dieses Konto nur Posten/Produkte abzurechnen, die derselben Kostenstelle zugewiesen sind. Dem Konto eines SEPA-Mandats ohne zugewiesene Kostenstelle werden alle entstandenen Kosten abgebucht, die keinem anderen Mandat zugordnet werden können. Anmerkung: Entstehen Kosten, die keinem SEPA-Mandat zugeordnet werden können, wird angenommen, dass diese in bar beglichen werden.',
     'sm_recur' 						=> 'Aktivieren, wenn vor dem Anlegen bereits Transaktionen von diesem Konto vorgenommen worden. Setzt den Status auf Folgelastschrift. Anmerkung: Wird nur bei der ersten Lastschrift beachtet!',
-
-    //SepaAccountController
-    'SepaAccount_InvoiceHeadline'	=> 'Ersetzt die Überschrift der Rechnung, die für diese Kostenstelle erstellt wird.',
-    'SepaAccount_InvoiceText'		=> 'Der Text der vier verschiedenen \'Rechnungstext\'-Felder wird automatisch in Abhängigkeit von Gesamtkosten und SEPA-Mandat gewählt und wird in der entsprechenden Rechnung für den Kunden festgelegt. Es ist möglich, alle Datenfeld-Schlüssel der Rechnungsklasse als Platzhalter in Form von {Feldname} zu verwenden, um eine Art von Vorlage zu erstellen. Diese werden durch den Ist-Wert der Rechnung ersetzt.',
-    'tex_template' 					=> 'TeX Vorlage',
 
     // SettlementrunController
     'settlement_verification' 		=> 'Die Rechnungen der Kunden werden nur mit aktivierter Checkbox angezeigt. Der Haken kann nur gesetzt werden, wenn der letzte Rechnungslauf für ALLE SEPA-Konten ausgeführt wurde (damit keine Änderungen missachtet werden). Info: Mit aktivierter Checkbox kann der Abrechnungslauf nicht wiederholt werden.',
