@@ -1360,6 +1360,16 @@ class ContractObserver
             }
         }
 
+        // Set all related items start date to contracts start date if this behaviour is wished via global config
+        if (isset($changed_fields['contract_start']) && Module::collections()->has('BillingBase')) {
+            $conf = \Modules\BillingBase\Entities\BillingBase::first();
+
+            if ($conf->adapt_item_start) {
+                // Note: Calling item->save() is not necessary as contract->daily_conversion is called after and manages everything that is to do
+                \Modules\BillingBase\Entities\Item::where('contract_id', $contract->id)->update(['valid_from' => $contract->contract_start]);
+            }
+        }
+
         if (isset($changed_fields['contract_start']) || isset($changed_fields['contract_end'])) {
             $contract->daily_conversion();
 
