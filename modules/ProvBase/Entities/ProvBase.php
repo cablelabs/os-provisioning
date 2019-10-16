@@ -72,6 +72,34 @@ class ProvBase extends \BaseModel
     }
 
     /**
+     * Create the vivso.2 option to provide multiple TFTP IPs.
+     * see https://www.excentis.com/blog/how-provision-cable-modem-using-isc-dhcp-server for details
+     *
+     * @author Patrick Reichel
+     */
+    public function getDHCPOptionVivso2($ips) {
+
+        $hex_ips = [];
+        foreach ($ips as $ip) {
+            $ip_split = explode('.', $ip);
+            $ip_hex = sprintf('%02x:%02x:%02x:%02x', $ip_split[0], $ip_split[1], $ip_split[2], $ip_split[3]);
+            $hex_ips[] = $ip_hex;
+        }
+
+        // option “syntax”:
+        // option vivso <enterprise number> <length of the vivso TLV contents> <option type> <option length> <option value>
+        $ret = [
+            '00:00:11:8b',                          // dotted hex for 4491 (= CableLabs)
+            sprintf('%02x', (4 * count($ips) + 2)), // bytes per IP + one byte for type + one byte for length
+            '02',                                   // hex for option type 2
+            sprintf('%02x', 4 * count($ips)),       // 4 bytes for each IP address
+            implode(':', $hex_ips),
+        ];
+
+        return implode(':', $ret);
+    }
+
+    /**
      * Create the global configuration file for DHCP Server from Global Config Parameters
      * Set correct Domain Name on Server from GUI (Permissions via sudoers-file needed!!)
      *
@@ -81,14 +109,34 @@ class ProvBase extends \BaseModel
     {
         $file_dhcp_conf = '/etc/dhcp-nmsprime/global.conf';
 
+        if (! \Module::collections()->has('ProvHA')) {
+            $provha = null;
+            $own_ip = $this->provisioning_server;
+            $ip_list = $own_ip;
+        } else {
+            $provha = \DB::table('provha')->first();
+            if ('master' == config('provha.hostinfo.own_state')) {
+                $own_ip = $provha->master;
+                $peer_ip = explode(',', $provha->slaves)[0];
+            } else {
+                $own_ip = explode(',', $provha->slaves)[0];
+                $peer_ip = $provha->master;
+            }
+            $ip_list = "$own_ip,$peer_ip";
+        }
+
         $data = 'ddns-domainname "'.$this->domain_name.'.";'."\n";
         $data .= 'option domain-name "'.$this->domain_name.'";'."\n";
-        $data .= 'option domain-name-servers '.$this->provisioning_server.";\n";
+        $data .= 'option domain-name-servers '.$ip_list.";\n";
         $data .= 'default-lease-time '.$this->dhcp_def_lease_time.";\n";
         $data .= 'max-lease-time '.$this->dhcp_max_lease_time.";\n";
-        $data .= 'next-server '.$this->provisioning_server.";\n";
-        $data .= 'option log-servers '.$this->provisioning_server.";\n";
-        $data .= 'option time-servers '.$this->provisioning_server.";\n";
+        $data .= 'next-server '.$own_ip.";\n";
+        if (! is_null($provha)) {
+            $data .= "\n# option vivso.2 (CL_V4OPTION_TFTPSERVERS, see https://www.excentis.com/blog/how-provision-cable-modem-using-isc-dhcp-server)\n";
+            $data .= 'option vivso '.$this->getDHCPOptionVivso2([$own_ip, $peer_ip]).";\n\n";
+        }
+        $data .= 'option log-servers '.$ip_list.";\n";
+        $data .= 'option time-servers '.$ip_list.";\n";
         $data .= 'option time-offset '.date('Z').";\n";
 
         $data .= "\n# zone\nzone ".$this->domain_name." {\n\tprimary 127.0.0.1;\n\tkey dhcpupdate;\n}\n";
