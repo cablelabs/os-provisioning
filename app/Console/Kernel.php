@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
         }
 
         // check if master or slave
-        if ('master' == env('PROVHA__OWN_STATE')) {
+        if ('master' == config('provha.hostinfo.own_state')) {
             $this->scheduleMain($schedule);
         } else {
             $this->scheduleSlave($schedule);
