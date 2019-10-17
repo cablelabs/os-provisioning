@@ -6,6 +6,7 @@ use App\Sla;
 use Bouncer;
 use App\GlobalConfig;
 use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\Contract;
 
 class ModemController extends \BaseController
 {
@@ -68,6 +69,8 @@ class ModemController extends \BaseController
             }
         }
 
+        $selectPropertyMgmt = \Module::collections()->has('PropertyManagement') ? ['select' => 'noProperty'] : [];
+
         // label has to be the same like column in sql table
         $a = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
@@ -102,12 +105,20 @@ class ModemController extends \BaseController
             ['form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options()],
             ['form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname'],
             ['form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname'],
-            ['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'autocomplete' => ['Contract']],
-            ['form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number'],
-            ['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'autocomplete' => ['Contract']],
-            ['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'autocomplete' => ['Contract']],
-            ['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'autocomplete' => ['Contract']],
-            ['form_type' => 'text', 'name' => 'country_code', 'description' => 'Country code', 'help' => 'ISO 3166 ALPHA-2 (two characters)'],
+            array_merge(['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number'], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'country_code', 'description' => 'Country code', 'help' => 'ISO 3166 ALPHA-2 (two characters)'], $selectPropertyMgmt),
+        ];
+
+        if (\Module::collections()->has('PropertyManagement')) {
+            $c[] = ['form_type' => 'select', 'name' => 'realty_id', 'description' => 'Realty', 'value' => selectList('realty', ['number', 'name'], true, ' - '), 'hidden' => 0];
+            $c[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'value' => Contract::getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList'), 'space' => '1'];
+        }
+
+        $d = [
             ['form_type' => 'text', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => $installation_address_change_date_options, 'help' => trans('helper.Modem_InstallationAddressChangeDate')], // Date of adress change for notification at telephone provider - important for localisation of emergency calls
             ['form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => '1', 'options' => ['placeholder' => 'YYYY-MM-DD']],
 
@@ -124,7 +135,7 @@ class ModemController extends \BaseController
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
 
-        return array_merge($a, $b, $c);
+        return array_merge($a, $b, $c, $d);
     }
 
     /**

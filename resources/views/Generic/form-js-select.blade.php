@@ -11,9 +11,13 @@ NOTE: will be used from form-js blade and must be called inside java context
 
 <?php
     // generate hide all variable, to hide all classes
-    $hide_all = '';
-    foreach ($field['select'] as $select)
-        $hide_all .= ' $(".'.$select.'").hide();';
+    $classes = [];
+    foreach ($field['select'] as $class) {
+        $classes[] = ".$class";
+    }
+
+    $classes = implode(', ', $classes);
+    $hide_all = "$('$classes').hide();";
 ?>
 
 {!! $hide_all !!}
@@ -22,8 +26,7 @@ NOTE: will be used from form-js blade and must be called inside java context
 @if ($field['form_type'] == 'select')
     @foreach($field['select'] as $val => $hide)
         <?php $val = is_string($val) ? $val = '"'.$val.'"' : $val; ?>
-        if ($('#{!! $field['name'] !!}').val() == {!! $val !!})
-        {
+        if ($('#{!! $field['name'] !!}').val() == {!! $val !!}) {
             $(".{{$hide}}").show();
         }
     @endforeach

@@ -4,6 +4,7 @@ return [
     // Index DataTable Header
     'amount' => 'Amount',
     'city' => 'City',
+    'connection_type' => 'Connection type',
     'expansion_degree' => 'Expansion degree',
     'floor' => 'Floor',
     'group_contract' => 'Group contract',
@@ -20,6 +21,9 @@ return [
         'number' => 'Number',
         'connected' => 'Connected',
         'occupied' => 'Occupied',
+    ],
+    'contact' => [
+        'administration' => 'Administration',
     ],
     // Auth
     'users.login_name' => 'Login Name',
@@ -135,6 +139,14 @@ return [
     'email.greylisting' => 'Greylisting active?',
     'email.blacklisting' => 'On Blacklist?',
     'email.forwardto' => 'Forward to:',
+    'contact.firstname1' => 'Firstname 1',
+    'lastname1' => 'Lastname 1',
+    'firstname2' => 'Firstname 2',
+    'lastname2' => 'Lastname 2',
+    'tel' => 'Phonenumber',
+    'tel_private' => 'Phonenumber private',
+    'email1' => 'E-Mail 1',
+    'email2' => 'E-Mail 2',
     // CMTS
     'cmts.id' => 'ID',
     'cmts.hostname' => 'Hostname',
@@ -145,10 +157,10 @@ return [
     'cmts.support_state' => 'Support State',
     // Contract
     'contract.city' => 'City',
-    'contract.company' => 'Company',
+    'company' => 'Company',
     'contract.contract_end' => 'Contract End',
     'contract.contract_start' => 'Contract Start',
-    'contract.district' => 'District',
+    'district' => 'District',
     'contract.firstname' => 'Firstname',
     'contract.house_number' => 'Housenr',
     'contract.id' => 'Contract',
@@ -256,11 +268,14 @@ return [
     'numberrange.type' => 'Type',
     'numberrange.costcenter.name' => 'Cost center',
     'realty' => [
-        'name' => 'Name',
-        'administration' => 'Administration',
         'agreement_from' => 'Valid from',
         'agreement_to' => 'Valid to',
+        'apartmentCount' => 'Total apartments',
+        'apartmentCountConnected' => 'Connected apartments',
         'concession_agreement' => 'Concession agreement',
+        'contact_id' => 'Administration',
+        'contact_local_id' => 'Local contact',
+        'name' => 'Name',
         'last_restoration_on' => 'Last restoration',
     ],
     // Ticket

@@ -89,7 +89,7 @@ class Modem extends \BaseModel
             case 0:	$bsclass = 'success'; break; // online
             case 1: $bsclass = 'warning'; break; // warning
             case 2: $bsclass = 'warning'; break; // critical
-            case 3: $bsclass = $this->internet_access && $this->contract->check_validity('Now') ? 'danger' : 'info'; break; // offline
+            case 3: $bsclass = $this->internet_access && $this->contract->isValid('Now') ? 'danger' : 'info'; break; // offline
 
             default: $bsclass = 'danger'; break;
         }
@@ -115,7 +115,7 @@ class Modem extends \BaseModel
 
     public function get_contract_valid()
     {
-        return $this->contract->check_validity('Now') ? \App\Http\Controllers\BaseViewController::translate_label('yes') : \App\Http\Controllers\BaseViewController::translate_label('no');
+        return $this->contract->isValid('Now') ? \App\Http\Controllers\BaseViewController::translate_label('yes') : \App\Http\Controllers\BaseViewController::translate_label('no');
     }
 
     public function get_us_pwr()
@@ -246,11 +246,30 @@ class Modem extends \BaseModel
         return $this->belongsTo('Modules\HfcReq\Entities\NetElement', 'netelement_id');
     }
 
+    public function apartment()
+    {
+        return $this->belongsTo(\Modules\PropertyManagement\Entities\Apartment::class);
+    }
+
+    public function realty()
+    {
+        return $this->belongsTo(\Modules\PropertyManagement\Entities\Realty::class);
+    }
+
     /*
      * Relation Views
      */
     public function view_belongs_to()
     {
+        $relation = null;
+        if (\Module::collections()->has('PropertyManagement')) {
+            $relation = $this->apartment ?: $this->realty;
+        }
+
+        if ($relation) {
+            return collect([$relation, $this->contract]);
+        }
+
         return $this->contract;
     }
 
@@ -1429,6 +1448,35 @@ class Modem extends \BaseModel
 
         return 0;
     }
+
+    /**
+     * Store address from Realty/Apartment internally in modem table too, as it is used in many places (e.g. EnviaAPI)
+     */
+    public function updateAddressFromProperty()
+    {
+        if (! \Module::collections()->has('PropertyManagement')) {
+            return;
+        }
+
+        $realty = $this->getRealty();
+
+        if (! $realty) {
+            return;
+        }
+
+        self::where('id', $this->id)->update([
+            'street' => $realty->street,
+            'house_number' => $realty->house_nr,
+            'zip' => $realty->zip,
+            'city' => $realty->city,
+            'district' => $realty->district,
+            ]);
+    }
+
+    public function getRealty()
+    {
+        return $this->apartment ? $this->apartment->realty : $this->realty;
+    }
 }
 
 /**
@@ -1451,7 +1499,11 @@ class ModemObserver
 
         if (\Module::collections()->has('ProvMon')) {
             Log::info("Create cacti diagrams for modem: $modem->hostname");
-            \Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
+            // \Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
+        }
+
+        if (\Module::collections()->has('PropertyManagement')) {
+            $modem->updateAddressFromProperty();
         }
     }
 
@@ -1509,7 +1561,7 @@ class ModemObserver
             if (multi_array_key_exists(['x', 'y'], $diff)) {
                 // suppress output in this case
                 ob_start();
-                \Modules\HfcCustomer\Entities\Mpr::ruleMatching($modem);
+                // \Modules\HfcCustomer\Entities\Mpr::ruleMatching($modem);
                 ob_end_clean();
             }
         }
@@ -1538,6 +1590,10 @@ class ModemObserver
         // check contract_ext* and installation_address_change_date
         // moving then should only be allowed without attached phonenumbers and terminated envia TEL contract!
         // cleaner in Patrick's opinion would be to delete and re-create the modem
+
+        if (multi_array_key_exists(['realty_id', 'apartment_id'], $diff)) {
+            $modem->updateAddressFromProperty();
+        }
     }
 
     public function deleted($modem)
