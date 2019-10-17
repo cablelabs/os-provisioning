@@ -23,8 +23,8 @@ return [
     'Business'                  => 'Business',
     'City'                      => 'City',
     'Choose KML file'           => 'Choose KML file',
-
     'Company'                   => 'Company',
+    'Connection type'           => 'Connection type',
     'conninfo' => [
         'error' => 'Error on PDF creation: ',
         'missing_company' => 'The SEPA account ":var" has no company assigned.',

@@ -23,8 +23,8 @@ return [
     'Business'                  => 'Berufs-/Geschäftsbezeichnung',
     'City'                      => 'Stadt',
     'Choose KML file'           => 'Wähle KML file',
-
     'Company'                   => 'Firma',
+    'Connection type'           => 'Anschlusstyp',
     'conninfo' => [
         'error' => 'Fehler beim Erstellen der PDF-Datei: ',
         'missing_company' => 'Dem SEPA-Konto ":var" ist kein Unternehmen zugewiesen.',

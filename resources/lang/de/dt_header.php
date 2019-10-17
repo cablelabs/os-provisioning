@@ -4,6 +4,7 @@ return [
     // Index DataTable Header
     'amount' => 'Betrag',
     'city' => 'Stadt',
+    'connection_type' => 'Anschlusstyp',
     'expansion_degree' => 'Ausbaugrad',
     'floor' => 'Etage',
     'group_contract' => 'Gruppen-vertrag',

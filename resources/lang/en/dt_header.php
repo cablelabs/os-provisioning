@@ -4,6 +4,7 @@ return [
     // Index DataTable Header
     'amount' => 'Amount',
     'city' => 'City',
+    'connection_type' => 'Connection type',
     'expansion_degree' => 'Expansion degree',
     'floor' => 'Floor',
     'group_contract' => 'Group contract',
