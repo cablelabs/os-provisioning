@@ -561,6 +561,7 @@ body{
     font-family:"Roboto",sans-serif;
   }
 
+
 #startStopBtn{
     display:inline-block;
     margin:0 auto;
@@ -589,7 +590,7 @@ body{
   #startStopBtn.running:before{
     content:"Abort";
   }
-  #test{
+  #speedtest{
     margin-top:2em;
     margin-bottom:2em;
   }
