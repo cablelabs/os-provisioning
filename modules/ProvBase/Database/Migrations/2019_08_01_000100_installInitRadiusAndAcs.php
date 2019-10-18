@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 
-class InstallInitRadius extends BaseMigration
+class InstallInitRadiusAndAcs extends BaseMigration
 {
     protected $tablename = 'modem';
 
@@ -65,8 +65,16 @@ class InstallInitRadius extends BaseMigration
             $observer->created($qos);
         }
 
-        exec('systemctl enable radiusd.service');
-        exec('systemctl start radiusd.service');
+        $filename = '/lib/node_modules/genieacs/config/config.json';
+        $provServer = Modules\ProvBase\Entities\ProvBase::first()['provisioning_server'];
+        $content = file_get_contents($filename);
+        $content = preg_replace('/^\s*"FS_HOSTNAME"\s*:.*/m', "  \"FS_HOSTNAME\" : \"$provServer\",", $content);
+        file_put_contents($filename, $content);
+
+        foreach (['radiusd', 'mongod', 'genieacs-cwmp', 'genieacs-fs', 'genieacs-nbi'] as $service) {
+            exec("systemctl enable $service.service");
+            exec("systemctl start $service.service");
+        }
     }
 
     /**
