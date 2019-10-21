@@ -25,6 +25,26 @@ class AddDefaultGenieAcsParameterProvisionsAndPresets extends BaseMigration
 
         $requests = [
             [
+                'url' => 'objects/0',
+                'data' => '{}',
+            ],
+            [
+                'url' => 'objects/1',
+                'data' => '{}',
+            ],
+            [
+                'url' => 'objects/2',
+                'data' => '{}',
+            ],
+            [
+                'url' => 'objects/3',
+                'data' => '{}',
+            ],
+            [
+                'url' => 'objects/4',
+                'data' => '{}',
+            ],
+            [
                 'url' => 'provisions/Refresh_VParams',
                 'data' => 'declare("VirtualParameters.*", {value: Date.now()});',
             ],
