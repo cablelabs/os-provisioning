@@ -2,6 +2,8 @@
 
 namespace Modules\ProvBase\Entities;
 
+use Module;
+use Session;
 use Modules\BillingBase\Entities\SettlementRun;
 
 class Contract extends \BaseModel
@@ -46,7 +48,7 @@ class Contract extends \BaseModel
             'contract_end' => 'nullable|date', // |after:now -> implies we can not change stuff in an out-dated contract
         ];
 
-        if (\Module::collections()->has('BillingBase')) {
+        if (Module::collections()->has('BillingBase')) {
             $rules['costcenter_id'] = 'required|numeric|min:1';
         }
 
@@ -77,7 +79,7 @@ class Contract extends \BaseModel
                 'bsclass' => $bsclass,
                 'order_by' => ['0' => 'asc'], ];
 
-        if (\Module::collections()->has('BillingBase')) {
+        if (Module::collections()->has('BillingBase')) {
             $ret['index_header'][] = 'costcenter.name';
             $ret['eager_loading'] = ['costcenter'];
             $ret['edit'] = ['costcenter.name' => 'get_costcenter_name'];
@@ -116,7 +118,7 @@ class Contract extends \BaseModel
         $ret['Edit']['Modem']['class'] = 'Modem';
         $ret['Edit']['Modem']['relation'] = $this->modems;
 
-        if (\Module::collections()->has('BillingBase')) {
+        if (Module::collections()->has('BillingBase')) {
             // view has many version 2
             $ret['Edit']['Item']['class'] = 'Item';
             $ret['Edit']['Item']['relation'] = $this->items;
@@ -127,7 +129,7 @@ class Contract extends \BaseModel
             $ret['Billing']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
 
-            if (\Module::collections()->has('OverdueDebts')) {
+            if (Module::collections()->has('OverdueDebts')) {
                 // resulting outstanding amount
                 $ret['Edit']['DebtResult']['view']['view'] = 'overduedebts::Debt.result';
                 $ret['Edit']['DebtResult']['view']['vars']['debt'] = $this->getResultingDebt();
@@ -145,7 +147,7 @@ class Contract extends \BaseModel
                 $invoicesPanel1->push($this->invoices[$i]);
             }
 
-            if (\Module::collections()->has('OverdueDebts')) {
+            if (Module::collections()->has('OverdueDebts')) {
                 $ret['Billing']['Debt']['class'] = 'Debt';
                 $ret['Billing']['Debt']['relation'] = $this->debts;
             }
@@ -169,7 +171,7 @@ class Contract extends \BaseModel
             }
         }
 
-        if (\Module::collections()->has('ProvVoipEnvia')) {
+        if (Module::collections()->has('ProvVoipEnvia')) {
             $ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
             $ret['envia TEL']['EnviaContract']['relation'] = $this->enviacontracts;
             $ret['envia TEL']['EnviaContract']['options']['hide_create_button'] = 1;
@@ -189,16 +191,16 @@ class Contract extends \BaseModel
             $ret['envia TEL']['Modem']['relation'] = $this->modems;
         }
 
-        if (\Module::collections()->has('Ccc') && \Module::collections()->has('BillingBase')) {
+        if (Module::collections()->has('Ccc') && Module::collections()->has('BillingBase')) {
             $ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
         }
 
-        if (\Module::collections()->has('Ticketsystem')) {
+        if (Module::collections()->has('Ticketsystem')) {
             $ret['Edit']['Ticket']['class'] = 'Ticket';
             $ret['Edit']['Ticket']['relation'] = $this->tickets;
         }
 
-        if (\Module::collections()->has('Mail')) {
+        if (Module::collections()->has('Mail')) {
             $ret['Email']['Email'] = $this->emails;
         }
 
@@ -207,7 +209,7 @@ class Contract extends \BaseModel
 
     public function view_belongs_to()
     {
-        if (\Module::collections()->has('PropertyManagement')) {
+        if (Module::collections()->has('PropertyManagement')) {
             return $this->apartment ?: $this->realty;
         }
     }
@@ -230,7 +232,7 @@ class Contract extends \BaseModel
      */
     public function enviacontracts()
     {
-        if (! \Module::collections()->has('ProvVoipEnvia')) {
+        if (! Module::collections()->has('ProvVoipEnvia')) {
             throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
         } else {
             return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaContract');
@@ -276,7 +278,7 @@ class Contract extends \BaseModel
      */
     protected function _envia_orders()
     {
-        if (! \Module::collections()->has('ProvVoipEnvia')) {
+        if (! Module::collections()->has('ProvVoipEnvia')) {
             throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
         }
 
@@ -447,7 +449,7 @@ class Contract extends \BaseModel
     {
 
         // if voip module is not active: there can be no phonenumbers
-        if (! \Module::collections()->has('ProvVoip')) {
+        if (! Module::collections()->has('ProvVoip')) {
             return [];
         }
 
@@ -530,7 +532,7 @@ class Contract extends \BaseModel
 
         \Log::Debug('Starting daily conversion for contract '.$this->number, [$this->id]);
 
-        if (! \Module::collections()->has('BillingBase')) {
+        if (! Module::collections()->has('BillingBase')) {
             $this->_update_internet_access_from_contract();
         } else {
 
@@ -561,7 +563,7 @@ class Contract extends \BaseModel
             // Task 1 & 2 included
             $this->_update_service_access_from_items();
 
-            if (\Module::collections()->has('Mail')) {
+            if (Module::collections()->has('Mail')) {
                 $this->_update_email_index();
             }
         }
@@ -692,7 +694,7 @@ class Contract extends \BaseModel
     protected function _update_inet_voip_dates()
     {
         // items only exist if Billingbase is enabled
-        if (! \Module::collections()->has('BillingBase')) {
+        if (! Module::collections()->has('BillingBase')) {
             return;
         }
 
@@ -810,7 +812,7 @@ class Contract extends \BaseModel
     public function monthly_conversion()
     {
         // with billing module -> done by daily conversion
-        if (\Module::collections()->has('BillingBase')) {
+        if (Module::collections()->has('BillingBase')) {
             return;
         }
 
@@ -884,7 +886,7 @@ class Contract extends \BaseModel
      */
     protected function _get_valid_tariff_item_and_count($type)
     {
-        if (! \Module::collections()->has('BillingBase')) {
+        if (! Module::collections()->has('BillingBase')) {
             return ['item' => null, 'count' => 0];
         }
 
@@ -1294,7 +1296,7 @@ class Contract extends \BaseModel
      */
     public function getResultingDebt()
     {
-        if (! \Module::collections()->has('OverdueDebts')) {
+        if (! Module::collections()->has('OverdueDebts')) {
             return;
         }
 
@@ -1354,7 +1356,7 @@ class ContractObserver
 {
     public function creating($contract)
     {
-        if (! \Module::collections()->has('BillingBase')) {
+        if (! Module::collections()->has('BillingBase')) {
             $contract->sepa_iban = strtoupper($contract->sepa_iban);
             $contract->sepa_bic = strtoupper($contract->sepa_bic);
         }
@@ -1372,7 +1374,7 @@ class ContractObserver
         $original_number = $contract->getOriginal('number');
         $original_costcenter_id = $contract->getOriginal('costcenter_id');
 
-        if (! \Module::collections()->has('BillingBase')) {
+        if (! Module::collections()->has('BillingBase')) {
             $contract->sepa_iban = strtoupper($contract->sepa_iban);
             $contract->sepa_bic = strtoupper($contract->sepa_bic);
         }
@@ -1393,15 +1395,25 @@ class ContractObserver
             }
         }
 
+        // Set all related items start date to contracts start date if this behaviour is wished via global config
+        if (isset($changed_fields['contract_start']) && Module::collections()->has('BillingBase')) {
+            $conf = \Modules\BillingBase\Entities\BillingBase::first();
+
+            if ($conf->adapt_item_start) {
+                // Note: Calling item->save() is not necessary as contract->daily_conversion is called after and manages everything that is to do
+                \Modules\BillingBase\Entities\Item::where('contract_id', $contract->id)->update(['valid_from' => $contract->contract_start]);
+            }
+        }
+
         if (isset($changed_fields['contract_start']) || isset($changed_fields['contract_end'])) {
             $contract->daily_conversion();
 
-            if (\Module::collections()->has('BillingBase') && $contract->contract_end && isset($changed_fields['contract_end'])) {
+            if (Module::collections()->has('BillingBase') && $contract->contract_end && isset($changed_fields['contract_end'])) {
                 // Alert if end is lower than tariffs end of term
                 $ret = $contract->getCancelationDates();
 
                 if ($ret['end_of_term'] && $contract->contract_end < $ret['end_of_term']) {
-                    \Session::put('alert.danger', trans('messages.contract.early_cancel', ['date' => $ret['end_of_term']]));
+                    Session::put('alert.danger', trans('messages.contract.early_cancel', ['date' => $ret['end_of_term']]));
                 }
             }
         }
@@ -1424,7 +1436,7 @@ class ContractObserver
             $concede_credit = $query->count();
 
             if ($concede_credit) {
-                \Session::put('alert.warning', trans('messages.contract.concede_credit'));
+                Session::put('alert.warning', trans('messages.contract.concede_credit'));
             }
         }
 
@@ -1477,7 +1489,7 @@ abstract class VoipRelatedDataUpdater
     protected function _check_modules()
     {
         foreach ($this->modules_to_be_active as $module) {
-            if (! \Module::collections()->has($module)) {
+            if (! Module::collections()->has($module)) {
                 return false;
             }
         }

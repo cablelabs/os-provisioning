@@ -27,23 +27,6 @@ return [
     'ISO_3166_ALPHA-2'				=> 'ISO 3166 ALPHA-2 (two characters, e.g. “US”). Used in address forms to specify the country.',
     'PasswordReset'           => 'This property defines the timespan in days in which the users of the administration panel should change their passwords. If you want to disable the password reset message, set the value to 0.',
 
-    /*
-     *	MODULE: BillingBase
-     */
-    //BillingBaseController
-    'BillingBase' => [
-        'cdr_offset'        => "TAKE CARE: incrementing this when having data from settlement runs leads to overwritten CDRs during next run - make sure to save/rename the history!\n\nExample: Set to 1 if Call Data Records from June belong to Invoices of July, Zero if it's the same month, 2 if CDRs of January belong to Invoices of March.",
-        'cdr_retention'     => 'Months that Call Data Records may/have to be kept save',
-        'extra_charge'      => 'Additional mark-on to purchase price. Only when not calculated through provider!',
-        'fluid_dates'       => 'Check this box if you want to add tariffs with uncertain start and/or end date. If checked two new checkboxes (Valid from fixed, Valid to fixed) will appear on Item\'s edit/create page. Check out their help messages for further explanation!',
-        'InvoiceNrStart'    => 'Invoice Number Counter starts every new year with this number',
-        'ItemTermination'   => 'Allow Customers only to terminate booked products on last day of month',
-        'MandateRef'        => "A Template can be built with sql columns of contract or mandate table - possible fields: \n",
-        'rcd'               => 'Is also the date of value. Can also be set specifically for a contract on contract page',
-        'showAGs'           => 'Adds a select list with contact persons to the contract page. The list has to be stored in appropriate Storage directory - check source code!',
-        'SplitSEPA'         => 'Sepa Transfers are split to different XML-Files dependent of their transfer type',
-        ],
-
     //CompanyController
     'Company_Management'			=> 'Comma separated list of names',
     'Company_Directorate'			=> 'Comma separated list of names',
@@ -79,11 +62,6 @@ return [
     // SepaMandate
     'sm_cc' 						=> 'If a cost center is assigned only products related to the same cost center will be charged of this account. Leave this field empty if all charges that can not be assigned to another SEPA-Mandate with specific cost center shall be debited of this account. Note: It is assumed that all emerging costs that can not be assigned to any SEPA-Mandate will be payed in cash!',
     'sm_recur' 						=> 'Activate if there already have been transactions of this account before the creation of this mandate. Sets the status to recurring. Note: This flag is only considered on first transaction!',
-
-    //SepaAccountController
-    'SepaAccount_InvoiceHeadline'	=> 'Replaces Headline in Invoices created for this Costcenter',
-    'SepaAccount_InvoiceText'		=> 'The Text of the separate four \'Invoice Text\'-Fields is automatically chosen dependent on the total charge and SEPA Mandate and is set in the appropriate Invoice for the Customer. It is possible to use all data field keys of the Invoice Class as placeholder in the form of {fieldname} to build a kind of template. These are replaced by the actual value of the Invoice.',
-    'tex_template' 					=> 'TeX Template',
 
     // SettlementrunController
     'settlement_verification' 		=> 'Customer Invoices are only visible when this checkbox is activated. The checkbox can only be activated if the last run was executed for ALL SEPA accounts (to not miss any changes). Info: If activated it\'s not possible to repeat the Settlement Run.',
