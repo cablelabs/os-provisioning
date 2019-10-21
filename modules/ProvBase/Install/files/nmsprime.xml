@@ -7,4 +7,5 @@
   <service name="radius"/>
   <service name="ssh"/>
   <service name="tftp"/>
+  <port protocol="tcp" port="7547"/>
 </zone>
