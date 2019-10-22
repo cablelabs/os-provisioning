@@ -30,6 +30,14 @@ class InstallInitRadiusAndAcs extends BaseMigration
         $defReply->value = 300;
         $defReply->save();
 
+        // this (Fall-Through) must be the last DB entry of $defaultGroup
+        $defReply = new Modules\ProvBase\Entities\RadGroupReply;
+        $defReply->groupname = $defReply::$defaultGroup;
+        $defReply->attribute = 'Fall-Through';
+        $defReply->op = '=';
+        $defReply->value = 'Yes';
+        $defReply->save();
+
         $config = DB::connection('mysql-radius')->getConfig();
 
         $find = [
