@@ -292,6 +292,8 @@ return [
         'Button_Create Modem Positioning Rule Geoposition' => 'Create MprGeopos',
         'Button_Create MprGeopos'		=> 'Create MprGeopos',
         'Button_Create Tickets'		=> 'Create Tickets',
+        'Button_Create Ticket'         => 'Create Ticket ',
+        'Button_Create TicketType'     => 'Create Ticket Type',
 
         'Button_Create Comment'		=> 'Create Comment',
         //SEPA-Konto
@@ -304,6 +306,10 @@ return [
 
     //Provisioning
         //Contract
+        'Button_Create Apartment'       => 'Create Apartment',
+        'Button_Create Node'            => 'Create Node',
+        'Button_Create Realty'          => 'Create Realty',
+
         'Button_Create Contract'		=> 'Create Contract',
         'Button_Create Domain'		=> 'Create Domain',
         'Button_Create SepaMandate'		=> 'Create SEPA-Mandate',
@@ -331,9 +337,6 @@ return [
         // //IpPool
         'Button_Create IpPool'			=> 'Create IpPool', //workaround
         'Button_Create IP-Pools'		=> 'Create IpPools',
-    //Tickets
-        'Button_Create TicketType'     => 'Create Ticket Type',
-        'Button_Create Ticket'         => 'Create Ticket ',
 
 // DASHBOARD
     'Dashboard_Contracts'			=> 'ACTIVE CONTRACTS',

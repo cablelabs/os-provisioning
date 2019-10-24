@@ -260,9 +260,7 @@ return [
         'Button_delete'				=> 'Schnellauswahl um auf allen Seiten Elemente zu löschen.',
         'Button_downloadCSV'        => 'CSV herunterladen',
         'Button_Create Product Entry'	=> 'Neues Produkt',
-        // Product
         'Button_Create Product'         => 'Produkt erstellen',
-        // Settlementrun
         'Button_Create SettlementRun'   => 'Abrechnungslauf erstellen',
         //CostCenter
         'Button_Create Cost Center' 	=> 'Neue Kostenstelle', //Workaround decide which one to use
@@ -277,7 +275,6 @@ return [
         'sr_dl_logs' 					=> 'Gesamtes Logfile herunterladen',
         //Numberrange
         'Button_Create NumberRange'		=> 'Nummernkreis erstellen',
-
     //HFC
         'Button_Create NetElementType'  => 'Netzelementtyp erstellen',
         'Button_Create NetElement'      => 'Netzelement erstellen',
@@ -309,10 +306,13 @@ return [
 
     //Provisioning
         //Contract
+        'Button_Create Apartment'       => 'Wohnung anlegen',
+        'Button_Create Node'            => 'Übergabepunkt anlegen',
+        'Button_Create Realty'          => 'Liegenschaft anlegen',
+
         'Button_Create Contract'		=> 'Vertrag erstellen',
-        'Button_Create SepaMandate'		=> 'SEPA-Mandat erstellen',
-        // Domains
         'Button_Create Domain'          => 'Domain erstellen',
+        'Button_Create SepaMandate'     => 'SEPA-Mandat erstellen',
         // //Modems
         'Button_Create Modem'			=> 'Modem erstellen',
         // //Endpoints
@@ -323,9 +323,7 @@ return [
         // //Phonenumber
         'Button_Create Phone tariffs'	=> 'Neuer Telefontarif',
         'Button_Create PhoneTariff'     => 'Telefontarif anlegen',
-
         // //Configfiles
-        'Button_Create Configfiles'		=> 'Konfigurationsdatei erstellen',
         'Button_Create Configfile'     => 'Konfigurationsdatei erstellen',
         // //QoS
         'Button_create_post_invoices_pdf' => 'Erstelle PDF mit postalischen Rechnungen',
