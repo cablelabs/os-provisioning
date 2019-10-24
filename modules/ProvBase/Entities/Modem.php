@@ -63,7 +63,7 @@ class Modem extends \BaseModel
         $ret = ['table' => $this->table,
             'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
             'bsclass' => $bsclass,
-            'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
+            'header' => $this->label(),
             'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
             'eager_loading' => ['configfile', 'contract'],
             'disable_sortsearch' => ['contract_valid' => 'false'],
@@ -95,6 +95,15 @@ class Modem extends \BaseModel
         }
 
         return $bsclass;
+    }
+
+    public function label()
+    {
+        // return $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : '');
+        $label = $this->mac.($this->name ? ' - '.$this->name : '');
+        $label .= $this->firstname ? ' - '.$this->firstname.' '.$this->lastname : '';
+
+        return $label;
     }
 
     /**
