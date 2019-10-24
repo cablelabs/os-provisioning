@@ -70,7 +70,7 @@ class ModemController extends \BaseController
             }
         }
 
-        $selectPropertyMgmt = \Module::collections()->has('PropertyManagement') ? ['select' => 'noProperty'] : [];
+        $selectPropertyMgmt = \Module::collections()->has('PropertyManagement') ? ['select' => 'noRealty noApartment'] : [];
 
         // label has to be the same like column in sql table
         $a = [
@@ -115,8 +115,14 @@ class ModemController extends \BaseController
         ];
 
         if (\Module::collections()->has('PropertyManagement')) {
-            $c[] = ['form_type' => 'select', 'name' => 'realty_id', 'description' => 'Realty', 'value' => selectList('realty', ['number', 'name'], true, ' - '), 'hidden' => 0];
-            $c[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'value' => Contract::getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList'), 'space' => '1'];
+            if (Request::has('contract_id')) {
+                $model->contract_id = Request::get('contract_id');
+            }
+
+            $realties = $model->getSelectableRealties();
+
+            $c[] = ['form_type' => 'select', 'name' => 'realty_id', 'description' => 'Realty', 'select' => 'noApartment', 'value' => $realties, 'hidden' => 0];
+            $c[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'select' => 'noRealty', 'value' => $model->getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList'), 'space' => '1'];
         }
 
         $d = [

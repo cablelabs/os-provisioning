@@ -1473,9 +1473,84 @@ class Modem extends \BaseModel
             ]);
     }
 
+    /**
+     * Get the Realty that the Modem belongs to directly or via Apartment
+     *
+     * @return \Modules\PropertyManagement\Entities\Realty
+     */
     public function getRealty()
     {
+        if (! \Module::collections()->has('PropertyManagement')) {
+            return;
+        }
+
         return $this->apartment ? $this->apartment->realty : $this->realty;
+    }
+
+    /**
+     * Get list of apartments for select field of edit view
+     *
+     * @return array
+     */
+    public function getApartmentsList()
+    {
+        if (! \Module::collections()->has('PropertyManagement')) {
+            return [];
+        }
+
+        // Only show apartments with no modem or with modems from same contract
+        $apartments = \DB::table('apartment')->join('realty', 'realty.id', '=', 'apartment.realty_id')
+            ->leftJoin('modem', 'modem.apartment_id', 'apartment.id')
+            ->select(['realty.*', 'apartment.id as id', 'apartment.number as anum', 'realty.number as rnum', 'floor'])
+            ->whereNull('apartment.deleted_at')
+            ->where(function ($query) {
+                $query
+                ->whereNull('modem.id')
+                ->orWhere('modem.contract_id', $this->contract_id);
+            })
+            ->get();
+
+        $arr[null] = null;
+        foreach ($apartments as $apartment) {
+            $arr[$apartment->id] = \Modules\PropertyManagement\Entities\Apartment::labelFromData($apartment);
+        }
+
+        return $arr;
+    }
+
+    /**
+     * Get list of realties for select field of Modem edit view
+     *
+     * @return array
+     */
+    public function getSelectableRealties()
+    {
+        if (! \Module::collections()->has('PropertyManagement')) {
+            return [];
+        }
+
+        // Show only realties that do not have apartments
+        // and where no contract is assigned yet
+        // and if realty already has a modem assigned than only show it if that modem has same contract ID
+        $realties = \DB::table('realty')
+            ->leftJoin('apartment as a', 'a.realty_id', 'realty.id')
+            ->leftJoin('modem', 'modem.realty_id', 'realty.id')
+            ->whereNull('a.id')->whereNull('realty.deleted_at')
+            ->where('group_contract', 0)
+            ->where(function ($query) {
+                $query
+                ->whereNull('modem.id')
+                ->orWhere('modem.contract_id', $this->contract_id);
+            })
+            ->select('realty.*')->get();
+
+        $arr[null] = null;
+        foreach ($realties as $realty) {
+            $arr[$realty->id] = \Modules\PropertyManagement\Entities\Realty::labelFromData($realty);
+        }
+
+        return $arr;
+        // return selectList($realties, ['number', 'name'], true, ' - ');
     }
 }
 
