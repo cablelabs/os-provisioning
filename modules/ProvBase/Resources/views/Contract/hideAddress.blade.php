@@ -1,15 +1,18 @@
 @if (\Module::collections()->has('PropertyManagement'))
 <script type="text/javascript">
-    if (! ($('#realty_id').val() == '' && $('#apartment_id').val() == '')) {
-        $(".noProperty").hide();
+
+    function showFields() {
+        if ($('#realty_id').val() == '') {
+            $(".noRealty").show();
+        } else {
+            $(".noRealty").hide();
+        }
     }
 
-    $('#realty_id, #apartment_id').change(function() {
-        if ($('#realty_id').val() == '' && $('#apartment_id').val() == '') {
-            $(".noProperty").show();
-        } else {
-            $(".noProperty").hide();
-        }
+    showFields();
+
+    $('#realty_id').change(function() {
+        showFields();
     });
 </script>
 @endif

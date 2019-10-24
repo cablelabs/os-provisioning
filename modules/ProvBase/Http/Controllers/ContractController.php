@@ -26,11 +26,15 @@ class ContractController extends \BaseController
 
         $r = $a = $b = $c1 = $c2 = $d = [];
 
-        $selectPropertyMgmt = \Module::collections()->has('PropertyManagement') ? ['select' => 'noProperty'] : [];
+        $selectPropertyMgmt = [];
+        if (Module::collections()->has('PropertyManagement')) {
+            $hasModems = $model->modems()->count() ? true : false;
+            $selectPropertyMgmt = ! $hasModems ? ['select' => 'noRealty'] : [];
+        }
+
 
         // label has to be the same like column in sql table
         $a = [
-
             // basic data
             ['form_type' => 'text', 'name' => 'number', 'description' => $model->get_column_description('number'), 'help' => trans('helper.contract_number')],
             ['form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2'), 'options' => ['class' => 'collapse']],
@@ -62,9 +66,11 @@ class ContractController extends \BaseController
             unset($a[0]['help']);
         }
 
-        if (\Module::collections()->has('PropertyManagement')) {
-            $a[] = ['form_type' => 'select', 'name' => 'realty_id', 'description' => 'Realty', 'value' => selectList('realty', ['number', 'name'], true, ' - '), 'hidden' => 0];
-            $a[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'value' => Contract::getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList'), 'space' => '1'];
+        if (Module::collections()->has('PropertyManagement') && ! $hasModems) {
+            $realties = $model->getSelectableRealties();
+
+            $a[] = ['form_type' => 'select', 'name' => 'realty_id', 'value' => $realties, 'description' => 'Realty', 'hidden' => 0];
+            // $a[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'value' => Modem::getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList'), 'space' => '1'];
         }
 
         $b = [
