@@ -68,11 +68,14 @@
 
                                         {{-- include a relational class/object/table, like Contract->Modem --}}
                                         @if (isset($relation['class']) && isset($relation['relation']))
-                                            @include('Generic.relation', ['relation' => $relation['relation'],
-                                                                          'class' => $relation['class'],
-                                                                          'key' => strtolower($view_var->table).'_id',
-                                                                          'method' => $relation['method'] ?? 'edit',
-                                                                          'options' => isset($relation['options']) ? ($relation['options']) : null])
+                                            @include('Generic.relation', [
+                                                'relation' => $relation['relation'],
+                                                'class' => $relation['class'],
+                                                'info' => $relation['info'] ?? '',
+                                                'key' => strtolower($view_var->table).'_id',
+                                                'method' => $relation['method'] ?? 'edit',
+                                                'options' => isset($relation['options']) ? ($relation['options']) : null,
+                                            ])
                                         @endif
 
                                     @endif

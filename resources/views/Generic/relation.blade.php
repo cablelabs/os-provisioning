@@ -14,6 +14,21 @@ Relation Blade is used inside a Panel Element to display relational class object
 @endif
 
 @DivOpen(12)
+    @if ($info)
+        @if (strlen($info) < 200)
+            <div class="alert alert-info fade show" style="padding-bottom: 0.5rem; padding-top: 0.5rem">
+              <span class="close" data-dismiss="alert">×</span>
+              {{ $info }}
+            </div>
+        @else
+            <div class="col-md-1">
+                <a data-toggle="popover" data-container="body" data-trigger="hover" title="Info" data-placement="right" data-content="{{ $info }}">
+                    <i class="fa fa-2x p-t-5 fa-question-circle text-info"></i>
+                </a>
+            </div>
+        @endif
+    @endif
+
     <div class="row">
     @can('create', Session::get('models.'.$class))
         {{-- Create Button: (With hidden add fields if required) --}}
