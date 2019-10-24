@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use Module;
 use Bouncer;
 use Session;
 use Modules\ProvBase\Entities\Qos;
@@ -57,7 +58,7 @@ class ContractController extends \BaseController
             array_merge(['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => ['Modem'], 'autocomplete' => []], $selectPropertyMgmt),
         ];
 
-        if (! \Module::collections()->has('Ccc')) {
+        if (! Module::collections()->has('Ccc')) {
             unset($a[0]['help']);
         }
 
@@ -76,7 +77,7 @@ class ContractController extends \BaseController
 
         ];
 
-        if (\Module::collections()->has('BillingBase')) {
+        if (Module::collections()->has('BillingBase')) {
             $days = range(0, 28);
             $days[0] = null;
 
@@ -153,7 +154,7 @@ class ContractController extends \BaseController
         $data['contract_start'] = $data['contract_start'] ?: date('Y-m-d');
 
         // generate contract number
-        if (! $data['number'] && \Module::collections()->has('BillingBase') && $data['costcenter_id']) {
+        if (! $data['number'] && Module::collections()->has('BillingBase') && $data['costcenter_id']) {
             // generate contract number
             $num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
 
