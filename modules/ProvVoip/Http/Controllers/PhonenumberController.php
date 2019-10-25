@@ -85,6 +85,20 @@ class PhonenumberController extends \BaseController
         // label has to be the same like column in sql table
         $ret = [
             [
+                'form_type' => 'select',
+                'name' => 'mta_id',
+                'description' => 'MTA',
+                'value' => $mta_list,
+                'hidden' => 'C',
+                'help' => $reassign_help,
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'port',
+                'description' => 'Port',
+                'space' => 1,
+            ],
+            [
                 'form_type' => 'text',
                 'name' => 'country_code',
                 'description' => 'International prefix',
@@ -102,19 +116,7 @@ class PhonenumberController extends \BaseController
                 'name' => 'number',
                 'description' => 'Number',
                 'help' => 'The phonenumber to port or a free number given by your provider.',
-            ],
-            [
-                'form_type' => 'select',
-                'name' => 'mta_id',
-                'description' => 'MTA',
-                'value' => $mta_list,
-                'hidden' => 'C',
-                'help' => $reassign_help,
-            ],
-            [
-                'form_type' => 'text',
-                'name' => 'port',
-                'description' => 'Port',
+                'space' => 1,
             ],
         ];
 
@@ -145,6 +147,7 @@ class PhonenumberController extends \BaseController
             'form_type' => 'text',
             'name' => 'password',
             'description' => 'Password',
+            'space' => 1,
         ];
         if ($options) {
             $password['options'] = $options;
