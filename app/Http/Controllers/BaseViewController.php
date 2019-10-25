@@ -69,10 +69,10 @@ class BaseViewController extends Controller
     /**
      * Searches for a string in the language files under resources/lang/ and returns it for the active application language
      * used in everything view related
-     * @param string: 	string that is searched in resspurces/lang/{App-language}/view.php
-     * @param type: 	can be Header, Menu, Button, jQuery, Search
-     * @param count: 	standard at 1 , For plural translation - needs to be seperated with pipe "|""
-     *					example: Index Headers -> in view.php: 'Header_Mta'	=> 'MTA|MTAs',
+     * @param string:   string that is searched in resspurces/lang/{App-language}/view.php
+     * @param type:     can be Header, Menu, Button, jQuery, Search
+     * @param count:    standard at 1 , For plural translation - needs to be seperated with pipe "|""
+     *                  example: Index Headers -> in view.php: 'Header_Mta' => 'MTA|MTAs',
      * @author Christian Schramm
      */
     public static function translate_view($string, $type, $count = 1)
@@ -440,8 +440,10 @@ class BaseViewController extends Controller
             // Help: add help icon/image behind form field
             if (isset($field['help'])) {
                 $s .= '<div name='.$field['name'].'-help class="col-1"><a data-toggle="popover" data-container="body"
-							data-trigger="hover" title="'.self::translate_label($field['description']).'" data-placement="right" data-content="'.$field['help'].'">'.
-                            '<i class="fa fa-2x p-t-5 '.(isset($field['help_icon']) ? $field['help_icon'] : 'fa-question-circle').' text-'.(isset($field['color']) ? $field['color'] : 'info').'"></i></a></div>';
+                    data-trigger="hover" title="'.self::translate_label($field['description']).'" data-placement="right" data-content="'.$field['help'].'">'.
+                    '<i class="fa fa-2x p-t-5 '.(isset($field['help_icon']) ? $field['help_icon'] : 'fa-question-circle').
+                        ' text-'.(isset($field['color']) ? $field['color'] : 'info').'">
+                    </i></a></div>';
             }
 
             // Close Form Group
@@ -742,19 +744,19 @@ class BaseViewController extends Controller
         }
 
         // Base Link to Index Table in front of all relations
-        // if (in_array($route_name, BaseController::get_config_modules()))	// parse: Global Config requires own link
-        // 	$s = \HTML::linkRoute('Config.index', BaseViewController::translate_view('Global Configurations', 'Header')).': '.$s;
+        // if (in_array($route_name, BaseController::get_config_modules())) // parse: Global Config requires own link
+        //  $s = \HTML::linkRoute('Config.index', BaseViewController::translate_view('Global Configurations', 'Header')).': '.$s;
         // else if (Route::has($route_name.'.index'))
-        // 	$s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
-        if (in_array($route_name, BaseController::get_config_modules())) {	// parse: Global Config requires own link
+        //  $s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
+        if (in_array($route_name, BaseController::get_config_modules())) {  // parse: Global Config requires own link
             $breadcrumb_path_base = "<li class='active'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).self::translate_view('Global Configurations', 'Header')).'</li>';
         } else {
             $breadcrumb_path_base = Route::has($route_name.'.index') ? '<li class="active">'.static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).$view_header).'</li>' : '';
         }
 
-        if (! $breadcrumb_paths) {	// if this array is still empty: put the one and only breadcrumb path in this array
+        if (! $breadcrumb_paths) {  // if this array is still empty: put the one and only breadcrumb path in this array
             array_push($breadcrumb_paths, $breadcrumb_path_base.$breadcrumb_path);
-        } else {	// multiple breadcrumb paths: show overture on a single line
+        } else {    // multiple breadcrumb paths: show overture on a single line
             array_unshift($breadcrumb_paths, $breadcrumb_path_base);
         }
 

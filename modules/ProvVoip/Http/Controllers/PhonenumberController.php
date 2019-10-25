@@ -55,18 +55,18 @@ class PhonenumberController extends \BaseController
             }
 
             $active_checkbox = ['form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'html' => '<div class="col-md-12" style="background-color:white">
-					<div class="form-group row"><label for="active" style="margin-top: 10px;" class="col-md-4 control-label">Active</label>
-						<div class="col-md-7">
-							<input name="active" type="hidden" id="active" value="'.$active_state.'">
-							'.$active_symbol.'
-						</div>
-						<div title="Automatically set by (de)activation date in phonenumber management" name=active-help class=col-md-1>'.\HTML::image(asset('images/help.png'), '?', ['width' => 20]).'</div>
-						<div class=col-md-4>
-						</div>
-						<div class=col-md-8>
-						</div>
-					</div>
-				</div>',
+                    <div class="form-group row"><label for="active" style="margin-top: 10px;" class="col-md-4 control-label">Active</label>
+                        <div class="col-md-7">
+                            <input name="active" type="hidden" id="active" value="'.$active_state.'">
+                            '.$active_symbol.'
+                        </div>
+                        <div title="Automatically set by (de)activation date in phonenumber management" name=active-help class=col-md-1>'.\HTML::image(asset('images/help.png'), '?', ['width' => 20]).'</div>
+                        <div class=col-md-4>
+                        </div>
+                        <div class=col-md-8>
+                        </div>
+                    </div>
+                </div>',
                 ];
         }
 
