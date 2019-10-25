@@ -104,7 +104,7 @@ class FormBuilder extends CollectiveFormBuilder
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.
-        return parent::label($name, $value, $options);
+        return parent::label($name, $value, $options, $escape_html);
     }
 
     /**
@@ -315,7 +315,7 @@ class FormBuilder extends CollectiveFormBuilder
         // set it to an empty string.
         // NOTE: margin-top style moves label down to same horizontal
         //       line like html fields on right side (Torsten Schmidt)
-        $label = $label ? $this->label($name, $label, ['style' => 'margin-top: 10px;']) : '';
+        $label = $label ? $this->label($name, $label, ['style' => 'margin-top: 10px;'], false) : '';
 
         return $this->openDivClass(12, $color).'<div'.$this->html->attributes($options).'>'.$label;
     }
