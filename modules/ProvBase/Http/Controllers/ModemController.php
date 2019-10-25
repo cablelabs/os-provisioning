@@ -8,6 +8,7 @@ use Request;
 use App\GlobalConfig;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Contract;
+use App\Http\Controllers\BaseViewController;
 
 class ModemController extends \BaseController
 {
@@ -131,12 +132,7 @@ class ModemController extends \BaseController
 
             ['form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number'],
             ['form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'],
-
-            ['form_type' => 'text', 'name' => 'x', 'description' => 'Geopos X', 'html' => "<div class=col-md-12 style='background-color:whitesmoke'>
-				<div class='form-group row'><label for=x class='col-md-4 control-label' style='margin-top: 10px;'>$geopos</label>
-				<div class=col-md-3><input class=form-control name=x type=text value='".$model['x']."' id=x style='background-color:whitesmoke'></div>"],
-            ['form_type' => 'text', 'name' => 'y', 'description' => 'Geopos Y', 'html' => "<div class=col-md-3><input class=form-control name=y type=text value='".$model['y']."' id=y style='background-color:whitesmoke'></div>
-				</div></div>"],
+            ['form_type' => 'html', 'name' => 'geopos', 'description' => $geopos, 'html' => BaseViewController::geoPosFields($model)],
 
             ['form_type' => 'text', 'name' => 'geocode_source', 'description' => 'Geocode origin', 'help' => trans('helper.Modem_GeocodeOrigin')],
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],

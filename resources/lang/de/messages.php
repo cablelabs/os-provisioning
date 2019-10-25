@@ -663,7 +663,7 @@ return [
     'Subscriber district'       => 'Ortsteil (Altvertrag)',
     'Termination date'          => 'Deaktivierungsdatum',
     'Carrier out'               => 'Carrier (Folgevertrag)',
-    'geopos_x_y'                => 'geografische Länge/Breite',
+    'geopos_x_y'                => 'Geografische Länge/Breite',
     'error'                     => 'Fehler',
     'Voucher date'              => 'Belegdatum',
     'Voucher number'            => 'Belegnummer',
