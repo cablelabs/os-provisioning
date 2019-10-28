@@ -417,7 +417,7 @@ class SnmpController extends \BaseController
         }
 
         if ($oid->access == 'read-only') {
-            $options[] = 'readonly';
+            $options['htmlReadonly'] = 'readonly';
         }
 
         // description of table is set only once for table head
