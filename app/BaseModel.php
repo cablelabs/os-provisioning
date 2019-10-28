@@ -1055,6 +1055,13 @@ class BaseModel extends Eloquent
         // push to session ⇒ will be shown once via resources/views/Generic/above_infos.blade.php
         Session::push($target, $msg);
     }
+
+    public static function getUser()
+    {
+        $user = \Auth::user();
+
+        return $user ? $user->first_name.' '.$user->last_name : 'cronjob';
+    }
 }
 
 /**
