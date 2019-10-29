@@ -136,12 +136,23 @@ class NetGw extends \BaseModel
         return $this->hasOne('Modules\HfcReq\Entities\NetElement', 'prov_device_id');
     }
 
+    public function nas()
+    {
+        return $this->hasMany('Modules\ProvBase\Entities\Nas', 'shortname');
+    }
+
     // returns all objects that are related to a netgw
     public function view_has_many()
     {
         // related IP Pools
         $ret['Edit']['IpPool']['class'] = 'IpPool';
         $ret['Edit']['IpPool']['relation'] = $this->ippools;
+
+        if ($this->type == 'bras') {
+            // related network access server
+            $ret['Edit']['Nas']['class'] = 'Nas';
+            $ret['Edit']['Nas']['relation'] = $this->nas;
+        }
 
         // Routing page
         $this->prep_netgw_config_page();

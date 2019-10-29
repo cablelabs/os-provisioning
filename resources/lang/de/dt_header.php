@@ -286,6 +286,10 @@ return [
         'street' => 'Straße',
         'zip' => 'PLZ',
     ],
+    // NAS
+    'nas' => [
+        'nasname' => 'Name',
+    ],
     // Ticket
     'ticket.id' => 'ID',
     'ticket.name' => 'Titel',

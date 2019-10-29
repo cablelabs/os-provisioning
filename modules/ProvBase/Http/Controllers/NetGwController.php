@@ -63,6 +63,7 @@ class NetGwController extends \BaseController
         // TODO: series should be jquery based select depending on the company
         // TODO: State and Monitoring without functionality -> hidden
         $ret_tmp = [
+            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => NetGw::getPossibleEnumValues('type')],
             ['form_type' => 'select', 'name' => 'company', 'description' => 'Company', 'value' => $company_array],
             ['form_type' => 'select', 'name' => 'series', 'description' => 'Series', 'value' => $series],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname'],
