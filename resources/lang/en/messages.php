@@ -15,6 +15,7 @@ return [
     'Address Line 2'            => 'Address Line 2',
     'Address Line 3'            => 'Address Line 3',
     'Amount'                    => 'Amount',
+    'Apartment number'          => 'Apartment number',
     'Assigned'                  => 'Assigned',
     'BIC'                       => 'BIC',
     'Bank fee'                  => 'Bank fee',

@@ -66,11 +66,17 @@ class ContractController extends \BaseController
             unset($a[0]['help']);
         }
 
-        if (Module::collections()->has('PropertyManagement') && ! $hasModems) {
-            $realties = $model->getSelectableRealties();
+        if (Module::collections()->has('PropertyManagement')) {
+            if (! $hasModems) {
+                $realties = $model->getSelectableRealties();
 
-            $a[] = ['form_type' => 'select', 'name' => 'realty_id', 'value' => $realties, 'description' => 'Realty', 'hidden' => 0];
-            // $a[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'value' => Modem::getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList'), 'space' => '1'];
+                $a[] = ['form_type' => 'select', 'name' => 'realty_id', 'value' => $realties, 'description' => 'Realty', 'hidden' => 0, 'space' => 1];
+                // $a[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'value' => Modem::getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList'), 'space' => '1'];
+            } else {
+                $a[14]['space'] = 1;
+            }
+        } else {
+            $a[] = ['form_type' => 'text', 'name' => 'apartment_nr', 'description' => 'Apartment number', 'space' => 1];
         }
 
         $b = [
