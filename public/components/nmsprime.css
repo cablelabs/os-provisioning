@@ -556,12 +556,6 @@ ul.nav.nav-pills li {
     overflow-y: auto !important;
 }
 
-body{
-    text-align:center;
-    font-family:"Roboto",sans-serif;
-  }
-
-
 #startStopBtn{
     display:inline-block;
     margin:0 auto;
