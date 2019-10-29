@@ -35,6 +35,7 @@ return [
         'missing_template_file' => 'The file of the selected template for the connection informations in the company ":var" does not exist.',
         'read_failure' => 'Empty template or failure on reading it',
     ],
+    'Contact'                   => 'Contact',
     'Contract Number'           => 'Contract Number',
     'Contract Start'            => 'Contract Start',
     'Contract End'              => 'Contract End',

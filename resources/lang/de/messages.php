@@ -35,6 +35,7 @@ return [
         'missing_template_file' => 'Die Vorlage der Verbindungsinformationen im Unternehmen ":var" existiert nicht als Datei.',
         'read_failure' => 'Fehler beim Lesen/Template ist leer.',
     ],
+    'Contact'                   => 'Hausverwaltung',
     'Contract Number'           => 'Vertragsnummer',
     'Contract Start'            => 'Vertragsbeginn',
     'Contract End'              => 'Vertragsende',
