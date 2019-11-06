@@ -47,7 +47,7 @@ class SyncLanguagesCommand extends Command
 
         foreach ($languagefiles as $languagefile) {
             $originalPath = base_path('resources/lang/en/').$languagefile;
-            $originalArray = collect(require($originalPath));
+            $originalArray = collect(require $originalPath);
             $originalFile = collect(file($originalPath));
             $foreign = file(base_path('resources/lang/de/').$languagefile);
             $modified = false;

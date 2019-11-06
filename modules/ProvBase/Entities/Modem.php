@@ -1131,7 +1131,7 @@ class Modem extends \BaseModel
 
             Log::info('Trying to geocode modem '.$this->id." against $url");
 
-            $geojson = file_get_contents($url);
+            $geojson = file_get_contents($url, false, stream_context_create(['http'=> ['timeout' => 5]]));
             $geodata_raw = json_decode($geojson, true);
 
             $matches = ['building', 'house', 'amenity', 'shop', 'tourism'];
@@ -1228,7 +1228,7 @@ class Modem extends \BaseModel
         Log::info('Trying to geocode modem '.$this->id." against $url");
 
         // get the json response
-        $resp_json = file_get_contents($url);
+        $resp_json = file_get_contents($url, false, stream_context_create(['http'=> ['timeout' => 5]]));
         $resp = json_decode($resp_json, true);
 
         $status = array_get($resp, 'status', 'n/a');
