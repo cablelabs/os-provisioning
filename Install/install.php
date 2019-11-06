@@ -38,7 +38,7 @@ function config($dir_root, $module = 'base', $options = '')
     }
 
     if (isset($cfg['depends'])) {
-        $depends = '--depends '.str_replace(' ', ' --depends ', $cfg['depends']);
+        $depends = '--depends "'.implode('" --depends "', explode(';', $cfg['depends'])).'"';
     }
 
     if (isset($cfg['exclude'])) {

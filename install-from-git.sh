@@ -38,10 +38,10 @@ handle_module() {
 
 	if [ -f "$path/config.cfg" ]; then
 		# install dependencies
-		depends=$(grep '^depends[[:space:]]*=' "$path/config.cfg" | cut -d'=' -f2 | xargs | tr -d '"')
-		if [ -n "$depends" ]; then
-			if exec_cmd "$1: yum install $depends? [Y/n] "; then
-				/usr/bin/yum install -y $depends
+		IFS=';' read -r -a depends <<< $(grep '^depends[[:space:]]*=' "$path/config.cfg" | cut -d'=' -f2- | xargs)
+		if [ ${#depends[@]} -ne 0 ]; then
+			if exec_cmd "$1: yum install ${depends[@]}? [Y/n] "; then
+				/usr/bin/yum install -y "${depends[@]}"
 			fi
 		fi
 		# copy files
