@@ -28,7 +28,7 @@ class ContractController extends \BaseController
 
         $selectPropertyMgmt = [];
         if (Module::collections()->has('PropertyManagement')) {
-            $hasModems = $model->modems()->count() ? true : false;
+            $hasModems = $model->modems->count() ? true : false;
             $selectPropertyMgmt = ! $hasModems ? ['select' => 'noRealty'] : [];
         }
 
