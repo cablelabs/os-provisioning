@@ -51,7 +51,13 @@
 
     @can('view', Modules\HfcBase\Entities\TreeErd::class)
 
-      <li class="nav-header">Networks</li>
+      <li class="nav-header">{{ trans('view.Menu_Nets') }}</li>
+      <li id="network_overview" class="has-sub" data-sidebar="level1">
+        <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}">
+          <i class="fa fa-sitemap"></i>
+        <span>{{ trans('view.Menu_allNets') }}</span>
+        </a>
+      </li>
       @foreach ($networks as $network)
         <li id="network_{{$network->id}}" class="has-sub" data-sidebar="level1">
           <a href="javascript:;">

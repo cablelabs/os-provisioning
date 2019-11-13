@@ -73,6 +73,8 @@ return [
         'Menu_Net Element Types'    => 'Netzelementtypen',
         'Menu_Realty'               => 'Liegenschaften',
         'Menu_TicketTypes'          => 'Tickettypen',
+        'Menu_Nets'                 => 'Netze',
+        'Menu_allNets'              => 'Alle Netze',
 
     //User Settings
         'Menu_UserSettings'			=> 'Nutzereinstellungen',
