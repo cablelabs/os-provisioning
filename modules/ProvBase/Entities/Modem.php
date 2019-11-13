@@ -1188,6 +1188,7 @@ class Modem extends \BaseModel
     /**
      * Get list of apartments for select field of edit view
      *
+     * @author Nino Ryschawy
      * @return array
      */
     public function getApartmentsList()
@@ -1196,16 +1197,69 @@ class Modem extends \BaseModel
             return [];
         }
 
-        // Only show apartments with no modem or with modems from same contract
-        $apartments = \DB::table('apartment')->join('realty', 'realty.id', '=', 'apartment.realty_id')
+        // Contracts indirectly related to an apartment that are not canceled
+        // under these can be a potential new contract of an apartment that already has a modem with a canceled contract
+        $contractSubQuery = Contract::join('modem', 'modem.contract_id', 'contract.id')
+            ->join('apartment', 'modem.apartment_id', 'apartment.id')
+            ->whereNull('contract.contract_end')
+            ->whereNull('modem.deleted_at')->whereNull('contract.deleted_at')->whereNull('apartment.deleted_at')
+            ->select('contract.id', 'apartment.id as apartmentId'
+                // , 'contract.number', 'contract.firstname', 'contract.lastname', 'contract.contract_start', 'contract.contract_end',
+                // 'modem.mac', 'contract.created_at',
+                );
+
+        /* All apartments that either
+            (1) do not have a modem assigned
+            (2) or that have already a modem assigned that belongs to the same contract as this modem belongs to
+            (3) or that have a contract that is already canceled
+        */
+        $apartmentsSubQuery = \Modules\PropertyManagement\Entities\Apartment::join('realty', 'realty.id', 'apartment.realty_id')
             ->leftJoin('modem', 'modem.apartment_id', 'apartment.id')
-            ->select(['realty.*', 'apartment.id as id', 'apartment.number as anum', 'realty.number as rnum', 'floor'])
+            ->leftJoin('contract', 'contract.id', 'modem.contract_id')
             ->whereNull('apartment.deleted_at')
             ->where(function ($query) {
                 $query
                 ->whereNull('modem.id')
-                ->orWhere('modem.contract_id', $this->contract_id);
+                ->orWhereNotNull('contract.contract_end');
+
+                if ($this->contract_id) {
+                    $query->orWhere('modem.contract_id', $this->contract_id);
+                }
             })
+            ->select('realty.street', 'realty.house_nr', 'realty.city', 'apartment.id as apartmentId', 'apartment.number as anum', 'floor',
+                'modem.id as modemId', 'contract.id as cId'
+                // , 'realty.zip', 'realty.district', 'realty.number as rnum',
+                // 'contract.number as cnum', 'contract.firstname', 'contract.lastname', 'contract.contract_start', 'contract.contract_end',
+                );
+
+        // All the apartments (that have no contract or a/many canceled contract(s)) from the subquery are left joined
+        // with the possible new contracts to filter (dont show) apartments that indeed have a canceled contract but have
+        // already a new valid one assigned
+        // TODO: From Laravel v5.6 on it is possible to use fromSub()
+        $apartments = DB::table(DB::raw("({$apartmentsSubQuery->toSql()}) as apartments"))
+            ->mergeBindings($apartmentsSubQuery->getQuery())
+            ->select('apartments.street', 'apartments.house_nr', 'apartments.city', 'apartments.apartmentId as id',
+                'apartments.anum as number', 'floor'
+                // 'apartments.cnum', 'apartments.firstname', 'apartments.lastname', 'apartments.contract_start', 'apartments.contract_end',
+                // 'newContract.number as newContractNr'
+                )
+            ->leftJoin(DB::raw("({$contractSubQuery->toSql()}) as newContract"), 'newContract.apartmentId', '=', 'apartments.apartmentId')
+            ->mergeBindings($contractSubQuery->getQuery())
+            ->where(function ($query) {
+                $query
+                ->whereNull('apartments.modemId')
+                ->orWhere(function ($query) {
+                    $query
+                    ->whereNotNull('apartments.cId')
+                    ->where('apartments.cId', $this->contract_id);
+                })
+                ->orWhere(function ($query) {
+                    $query
+                    ->whereNull('newContract.id')
+                    ->orWhere('newContract.id', $this->contract_id);
+                });
+            })
+            ->orderBy('apartments.street')->orderBy('apartments.house_nr')->orderBy('apartments.anum')
             ->get();
 
         $arr[null] = null;
@@ -1227,20 +1281,63 @@ class Modem extends \BaseModel
             return [];
         }
 
-        // Show only realties that do not have apartments
-        // and where no contract is assigned yet
-        // and if realty already has a modem assigned than only show it if that modem has same contract ID
-        $realties = \DB::table('realty')
-            ->leftJoin('apartment as a', 'a.realty_id', 'realty.id')
+        // Contracts indirectly related to a Realty that are not canceled
+        // under these can be a potential new contract of a Realty that already has a modem with a canceled contract
+        $contractSubQuery = Contract::join('modem', 'modem.contract_id', 'contract.id')
+            ->join('realty', 'modem.realty_id', 'realty.id')
+            ->whereNull('contract.contract_end')
+            ->whereNull('modem.deleted_at')->whereNull('contract.deleted_at')->whereNull('realty.deleted_at')
+            ->select('contract.id', 'realty.id as realtyId');
+
+        /* All Realties that do not have an Apartment assigned and
+            (1) do not have a modem assigned
+            (2) or that have already a modem assigned that belongs to the same contract as this modem belongs to
+            (3) or that have a contract that is already canceled
+        */
+        $realtiesSubQuery = \Modules\PropertyManagement\Entities\Realty::leftJoin('apartment as a', 'a.realty_id', 'realty.id')
             ->leftJoin('modem', 'modem.realty_id', 'realty.id')
+            ->leftJoin('contract', 'contract.id', 'modem.contract_id')
             ->whereNull('a.id')->whereNull('realty.deleted_at')
+            ->whereNull('a.deleted_at')->whereNull('modem.deleted_at')
             ->where('group_contract', 0)
             ->where(function ($query) {
                 $query
                 ->whereNull('modem.id')
-                ->orWhere('modem.contract_id', $this->contract_id);
+                ->orWhereNotNull('contract.contract_end');
+
+                if ($this->contract_id) {
+                    $query->orWhere('modem.contract_id', $this->contract_id);
+                }
             })
-            ->select('realty.*')->get();
+            ->select('realty.*', 'modem.id as modemId', 'contract.id as cId');
+
+        /* Show only realties that do not have apartments and
+            (1) no modem/contract
+            (2) or a canceled contract and no new contract
+            (3) or the modem has same contract ID as current modem with valid contract
+        */
+        $realties = DB::table(DB::raw("({$realtiesSubQuery->toSql()}) as realties"))
+            ->mergeBindings($realtiesSubQuery->getQuery())
+            ->select('realties.*')
+            ->leftJoin(DB::raw("({$contractSubQuery->toSql()}) as newContract"), 'newContract.realtyId', '=', 'realties.id')
+            ->mergeBindings($contractSubQuery->getQuery())
+            ->where(function ($query) {
+                $query
+                ->whereNull('realties.modemId')
+                ->orWhere(function ($query) {
+                    $query
+                    ->whereNotNull('realties.cId')
+                    ->where('realties.cId', $this->contract_id);
+                })
+                ->orWhere(function ($query) {
+                    $query
+                    ->whereNull('newContract.id')
+                    ->orWhere('newContract.id', $this->contract_id);
+                });
+            })
+            ->orderBy('realties.street')->orderBy('realties.house_nr')
+            ->groupBy('realties.id')
+            ->get();
 
         $arr[null] = null;
         foreach ($realties as $realty) {
@@ -1248,7 +1345,6 @@ class Modem extends \BaseModel
         }
 
         return $arr;
-        // return selectList($realties, ['number', 'name'], true, ' - ');
     }
 }
 
