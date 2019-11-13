@@ -71,14 +71,18 @@ class ModemController extends \BaseController
             }
         }
 
-        $selectPropertyMgmt = \Module::collections()->has('PropertyManagement') ? ['select' => 'noRealty noApartment'] : [];
+        $help['contract'] = $selectPropertyMgmt = [];
+        if (\Module::collections()->has('PropertyManagement')) {
+            $selectPropertyMgmt = ['select' => 'noRealty noApartment'];
+            $help['contract'] = ['help' => trans('propertymanagement::help.modem.contract_id')];
+        }
 
         // label has to be the same like column in sql table
         $a = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly'], 'hidden' => 'C', 'space' => 1],
             // TODO: show this dropdown only if necessary (e.g. not if creating a modem from contract context)
-            ['form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 'E', 'value' => $model->html_list($model->contracts(), 'lastname')],
+            array_merge(['form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 'E', 'value' => $model->contracts()], $help['contract']),
             ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')],
             ['form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list_with_count($model->configfiles(), 'name', false, '', 'configfile_id', 'modem'), 'help' => trans('helper.configfile_count')],
             ['form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'],
@@ -352,6 +356,23 @@ class ModemController extends \BaseController
     {
         if (! \Module::collections()->has('BillingBase')) {
             $rules['qos_id'] = 'required|exists:qos,id,deleted_at,NULL';
+        }
+
+        if (\Module::collections()->has('PropertyManagement')) {
+            // If modem belongs to a realty the contract_id must be the same like the one of the
+            // other modems of this realty as we assume it is a single family house then
+            if ($data['contract_id'] && $data['realty_id']) {
+                $modem = Modem::join('realty', 'modem.realty_id', 'realty.id')
+                    ->where('realty.id', $data['realty_id'])
+                    ->whereNull('modem.deleted_at')
+                    ->groupBy('modem.id')
+                    ->select('modem.*')
+                    ->first();
+
+                if ($modem) {
+                    $rules['contract_id'] = '|In:'.$modem->contract_id;
+                }
+            }
         }
 
         return parent::prepare_rules($rules, $data);

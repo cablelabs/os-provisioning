@@ -76,7 +76,7 @@ class Contract extends \BaseModel
 
         $ret = ['table' => $this->table,
                 'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number', $this->table.'.contract_start', $this->table.'.contract_end'],
-                'header' =>  $this->number.' '.$this->firstname.' '.$this->lastname,
+                'header' =>  self::labelFromData($this),
                 'bsclass' => $bsclass,
                 'order_by' => ['0' => 'asc'], ];
 
@@ -106,6 +106,14 @@ class Contract extends \BaseModel
         }
 
         return $bsclass;
+    }
+
+    /**
+     * @return string
+     */
+    public static function labelFromData($contract)
+    {
+        return $contract->number.' - '.$contract->firstname.' '.$contract->lastname;
     }
 
     public function get_costcenter_name()

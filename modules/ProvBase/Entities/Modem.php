@@ -232,7 +232,14 @@ class Modem extends \BaseModel
      */
     public function contracts()
     {
-        return DB::table('contract')->whereNull('deleted_at')->get();
+        $contracts = DB::table('contract')->whereNull('deleted_at')->get();
+
+        $list = [];
+        foreach ($contracts as $contract) {
+            $list[$contract->id] = Contract::labelFromData($contract);
+        }
+
+        return $list;
     }
 
     public function mtas()
