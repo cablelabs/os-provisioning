@@ -248,8 +248,10 @@ class Contract extends \BaseModel
         return \Modules\PropertyManagement\Entities\Realty::join('apartment', 'realty.id', 'apartment.realty_id')
             ->join('modem', 'apartment.id', 'modem.apartment_id')
             ->join('contract', 'contract.id', 'modem.contract_id')
-            ->select('realty.*')
             ->where('contract.id', $this->id)
+            ->whereNull('modem.deleted_at')
+            ->whereNull('apartment.deleted_at')
+            ->select('realty.*')
             ->first();
     }
 
