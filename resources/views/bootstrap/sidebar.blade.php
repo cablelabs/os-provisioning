@@ -37,7 +37,7 @@
             </div>
           <ul class="sub-menu">
           @foreach ($typearray['submenu'] as $type => $valuearray)
-          <li id="{{  Str::slug($type,'_') }}">
+          <li id="{{ Str::slug($type,'_') }}">
             <a href="{{route($valuearray['link'])}}" style="overflow: hidden; white-space: nowrap;">
               <i class="fa fa-fw {{ $valuearray['icon'] }}"></i>
               <span>{{ $type }}</span>
@@ -67,15 +67,15 @@
           </a>
           <ul class="sub-menu" style="padding-left:0;list-style:none;">
             <li id="submenu_network_{{$network->id}}" class="has-sub" data-sidebar="level2">
-              <a href="{{BaseRoute::get_base_url()}}/Tree/erd/net/{{$network->id}}">
+              <a href="{{ route('TreeErd.show', ['field' => 'net', 'search' => $network->id]) }}">
                 <i class="fa fa-circle text-success"></i>
                 {{$network->name}}
               </a>
             <ul class="sub-menu d-block" style="list-style-position: inside;">
               {{-- Network-Clusters are Cached for 5 minutes --}}
               @foreach ($network->get_all_cluster_to_net() as $cluster)
-                <li id="cluster_{{$cluster->id}}" class="has-sub">
-                  <a href="{{BaseRoute::get_base_url()}}/Tree/erd/cluster/{{$cluster->id}}" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
+                <li id="cluster_{{$cluster->id}}" class="has-sub" data-sidebar="level3">
+                  <a href="{{ route('TreeErd.show', ['field' => 'cluster', 'search' => $cluster->id]) }}" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
                     <i class="fa fa-circle-thin text-info"></i>
                     {{$cluster->name}}
                   </a>
