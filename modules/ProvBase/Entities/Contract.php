@@ -1443,17 +1443,42 @@ class Contract extends \BaseModel
             return [];
         }
 
-        // Only for group contracts
-        // and where no contract is assigned yet
-        $realties = \DB::table('realty')
-            ->leftJoin('contract', 'contract.realty_id', 'realty.id')
-            ->where('group_contract', 1)->whereNull('realty.deleted_at')
+        // New valid group contracts belonging to a realty
+        $contractSubQuery = Contract::join('realty', 'contract.realty_id', 'realty.id')
+            ->where('group_contract', 1)
+            ->whereNull('contract.contract_end')
+            ->whereNull('contract.deleted_at')->whereNull('realty.deleted_at')
+            ->select('contract.id', 'realty.id as realtyId');
+
+        /* All Realties that have group contract set and
+            (1) do not have a contract assigned
+            (2) or that have a contract that is already canceled
+        */
+        $realtiesSubQuery = \Modules\PropertyManagement\Entities\Realty::leftJoin('contract', 'contract.realty_id', 'realty.id')
+            ->where('group_contract', 1)
+            ->whereNull('realty.deleted_at')
             ->where(function ($query) {
                 $query
                 ->whereNull('contract.id')
-                ->orWhere('contract.id', $this->id);
+                ->orWhereNotNull('contract.contract_end');
             })
-            ->select('realty.*')
+            ->select('realty.*', 'contract.id as cId');
+
+        // Left join realties with new contract and filter realties that either
+        // have no contract or a canceled contract and no new valid contract
+        $realties = DB::table(DB::raw("({$realtiesSubQuery->toSql()}) as realties"))
+            ->mergeBindings($realtiesSubQuery->getQuery())
+            ->select('realties.*')
+            ->leftJoin(DB::raw("({$contractSubQuery->toSql()}) as newContract"), 'newContract.realtyId', '=', 'realties.id')
+            ->mergeBindings($contractSubQuery->getQuery())
+            ->where('realties.group_contract', 1)
+            ->where(function ($query) {
+                $query
+                ->whereNull('realties.cId')
+                ->orWhereNull('newContract.id');
+            })
+            ->orderBy('realties.street')->orderBy('realties.house_nr')
+            ->groupBy('realties.id')
             ->get();
 
         $arr[null] = null;
@@ -1462,7 +1487,6 @@ class Contract extends \BaseModel
         }
 
         return $arr;
-        // return selectList($realties, ['number', 'name'], true, ' - ');
     }
 }
 
