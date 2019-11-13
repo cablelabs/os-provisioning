@@ -163,7 +163,8 @@ return [
         //Contract
         'Header_Salesman'           => 'Salesman|Salesmen',
         'Header_Contract'           => 'Contract|Contracts',
-        'Header_ContractInfo'       => 'Info: Contracts in apartments',
+        'Header_ContractInfoApartments' => 'Info: Contracts in apartments',
+        'Header_ContractInfoRealty' => 'Info: Contract of modems',
         'Header_EditContract'       => 'Edit Contract',
         'Header_GroupContract'      => 'Group Contract',
         'Header_SepaMandate'        => 'SEPA-Mandate|SEPA-Mandates',
