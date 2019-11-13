@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Entities;
 
+use DB;
 use Module;
 use Session;
 use Modules\BillingBase\Entities\SettlementRun;

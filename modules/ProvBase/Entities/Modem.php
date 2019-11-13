@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Entities;
 
+use DB;
 use Log;
 use File;
 use App\Sla;
@@ -159,7 +160,7 @@ class Modem extends \BaseModel
      */
     public function configfiles()
     {
-        return \DB::table('configfile')->select(['id', 'name'])->whereNull('deleted_at')->where('device', '=', 'CM')->where('public', '=', 'yes')->get();
+        return DB::table('configfile')->select(['id', 'name'])->whereNull('deleted_at')->where('device', '=', 'CM')->where('public', '=', 'yes')->get();
         // return Configfile::select(['id', 'name'])->where('device', '=', 'CM')->where('public', '=', 'yes')->get();
     }
 
@@ -168,7 +169,7 @@ class Modem extends \BaseModel
      */
     public function qualities()
     {
-        return \DB::table('qos')->whereNull('deleted_at')->get();
+        return DB::table('qos')->whereNull('deleted_at')->get();
     }
 
     /**
@@ -231,8 +232,7 @@ class Modem extends \BaseModel
      */
     public function contracts()
     {
-        // Contract::select(['id', 'lastname'])->get();
-        return \DB::table('contract')->whereNull('deleted_at')->get();
+        return DB::table('contract')->whereNull('deleted_at')->get();
     }
 
     public function mtas()
@@ -447,7 +447,7 @@ class Modem extends \BaseModel
             // get all not deleted modems
             // attention: do not use “where('internet_access', '>', '0')” to shrink the list
             //   ⇒ MTAs shall get IPs even if internet_access is disabled!
-            $modems_raw = \DB::select('SELECT hostname, mac FROM modem WHERE deleted_at IS NULL');
+            $modems_raw = DB::select('SELECT hostname, mac FROM modem WHERE deleted_at IS NULL');
             $modems = [];
             foreach ($modems_raw as $modem) {
                 $modems[\Str::lower($modem->mac)] = $modem->hostname;
@@ -809,13 +809,13 @@ class Modem extends \BaseModel
      */
     public static function update_model_firmware()
     {
-        foreach (\DB::table('modem')->whereNull('deleted_at')->pluck('id') as $id) {
+        foreach (DB::table('modem')->whereNull('deleted_at')->pluck('id') as $id) {
             $tmp = self::get_firmware_tree($id);
             if (! $tmp) {
                 continue;
             }
 
-            \DB::statement("UPDATE modem SET model = '$tmp[0] $tmp[1]', sw_rev = '$tmp[2]' where id='$id'");
+            DB::statement("UPDATE modem SET model = '$tmp[0] $tmp[1]', sw_rev = '$tmp[2]' where id='$id'");
         }
     }
 
@@ -1103,7 +1103,7 @@ class Modem extends \BaseModel
     public function proximity_search($radius)
     {
         $ids = [0];
-        foreach (\DB::table('modem')->select('id', 'x', 'y')->where('deleted_at', null)->get() as $modem) {
+        foreach (DB::table('modem')->select('id', 'x', 'y')->where('deleted_at', null)->get() as $modem) {
             if ($this->_haversine_great_circle_distance($modem) < $radius) {
                 array_push($ids, $modem->id);
             }
