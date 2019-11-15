@@ -36,6 +36,7 @@ return [
         'Menu_Apartment'            => 'Wohnungen',
         'Menu_BillingBase'          => 'Billing',
         'Menu_Contact'              => 'Ansprechpartner',
+        'Menu_CutoffList'           => 'Abschaltliste',
         'Menu_Debt'                 => 'OP-Liste',
         'Menu_Dunning'              => 'Mahnwesen',
         'Menu_MainMenu'             => 'Hauptmenü',

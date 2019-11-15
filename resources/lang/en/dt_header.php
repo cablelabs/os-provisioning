@@ -4,6 +4,7 @@ return [
     // Index DataTable Header
     'amount' => 'Amount',
     'city' => 'City',
+    'connected' => 'Connected',
     'connection_type' => 'Connection type',
     'expansion_degree' => 'Expansion degree',
     'floor' => 'Floor',
@@ -13,9 +14,11 @@ return [
     'id'            => 'ID',
     'name' => 'Name',
     'number' => 'Number',
+    'occupied' => 'Occupied',
     'prio'          => 'Priority',
     'street' => 'Street',
     'sum' => 'Sum',
+    'type' => 'Type',
     'zip' => 'ZIP',
     'apartment' => [
         'number' => 'Number',

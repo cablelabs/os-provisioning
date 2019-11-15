@@ -36,6 +36,7 @@ return [
         'Menu_Apartment'            => 'Apartments',
         'Menu_BillingBase'          => 'Billing',
         'Menu_Contact'              => 'Contacts',
+        'Menu_CutoffList'           => 'Cut off list',
         'Menu_Debt'                 => 'Debt list',
         'Menu_Dunning'              => 'OverdueDebts',
         'Menu_MainMenu'             => 'Main Menu',
