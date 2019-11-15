@@ -1364,10 +1364,10 @@ class BaseController extends Controller
         $dt_config = $model->view_index_label();
 
         $header_fields = $dt_config['index_header'];
-        $edit_column_data = isset($dt_config['edit']) ? $dt_config['edit'] : [];
-        $filter_column_data = isset($dt_config['filter']) ? $dt_config['filter'] : [];
-        $eager_loading_tables = isset($dt_config['eager_loading']) ? $dt_config['eager_loading'] : [];
-        $additional_raw_where_clauses = isset($dt_config['where_clauses']) ? $dt_config['where_clauses'] : [];
+        $edit_column_data = $dt_config['edit'] ?? [];
+        $filter_column_data = $dt_config['filter'] ?? [];
+        $eager_loading_tables = $dt_config['eager_loading'] ?? [];
+        $additional_raw_where_clauses = $dt_config['where_clauses'] ?? [];
         $raw_columns = $dt_config['raw_columns'] ?? []; // not run through htmlentities()
 
         if (empty($eager_loading_tables)) { //use eager loading only when its needed
