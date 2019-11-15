@@ -775,9 +775,9 @@ class Modem extends \BaseModel
 
         foreach (['sn' => $this->serial_num, 'mac' => $this->mac] as $name => $identifier) {
             $this->callGenieAcsApi(
-                'http://'.ProvBase::first()['provisioning_server'].':7557/presets/'.$name.'_'.$this->id,
+                "http://localhost:7557/presets/{$name}_{$this->id}",
                 'PUT',
-                '{ "weight": 0, "precondition": "{\"VirtualParameters.SerialNumber\":\"'.strtoupper($identifier).'\"}", "events":  { "0 BOOTSTRAP": true }, "configurations": '.$preset.'}'
+                '{ "weight": 0, "precondition": "{\"_deviceId._SerialNumber\":\"'.strtoupper($identifier).'\"}", "events":  { "0 BOOTSTRAP": true }, "configurations": '.$preset.'}'
             );
         }
     }
@@ -798,7 +798,7 @@ class Modem extends \BaseModel
         $provisions = $matches[0];
         foreach ($provisions as $provision) {
             $provision = preg_split('/("type"\s*:\s*"?|\s*"?,\s*"name"\s*:\s*"?|\s*"?,\s*"value"\s*:\s*"?|";},$)/s', $provision);
-            $url = 'http://'.ProvBase::first()['provisioning_server'].':7557/provisions/'.$provision[2];
+            $url = 'http://localhost:7557/provisions/'.$provision[2];
             $this->callGenieAcsApi($url, 'PUT', $provision[3]);
         }
 
@@ -833,47 +833,51 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Get device from GenieACS via API.
+     * Get decoded json object of device from GenieACS via API.
      *
-     * @author Roy Schneider
-     * @param string $url
-     * @param string $serialNumber
-     * @param string $mac
-     * @return mixed $length
+     * @param string $projection
+     * @return mixed
+     *
+     * @author Ole Ernst
      */
-    public function getGenieAcsModel($url, $serialNumber, $mac)
+    public function getGenieAcsModel($projection = null)
     {
-        $model = file_get_contents("http://$url:7557/devices/?query=%7B%22VirtualParameters.SerialNumber%22%3A%22$serialNumber%22%7D");
-        $length = preg_match('/[a-z]+/', $model);
+        foreach ([$this->serial_num, $this->mac] as $serial) {
+            $serial = strtoupper($serial);
+            $url = "http://localhost:7557/devices/?query={\"_deviceId._SerialNumber\":\"$serial\"}";
+            if ($projection) {
+                $url .= "&projection=$projection";
+            }
 
-        if ($length == 0) {
-            $model = file_get_contents("http://$url:7557/devices/?query=%7B%22VirtualParameters.SerialNumber%22%3A%22$mac%22%7D");
-            $length = preg_match('/[a-z]+/', $model);
+            $genieModel = json_decode(file_get_contents($url));
+
+            if (! empty($genieModel)) {
+                break;
+            }
         }
 
-        return $length != 0 ? $model : null;
+        return reset($genieModel);
     }
 
     /**
      * Get preset from GenieACS via API.
      *
-     * @author Roy Schneider
-     * @param string $url
-     * @param string $serialNumber
-     * @param string $mac
-     * @return mixed $length
+     * @return mixed
+     *
+     * @author Ole Ernst
      */
-    public function getGenieAcsPreset($url, $id)
+    public function getGenieAcsPreset()
     {
-        $model = file_get_contents("http://$url:7557/presets/?query=%7B%22_id%22%3A%22sn_$id%22%7D");
-        $length = preg_match('/[a-z]+/', $model);
-
-        if ($length == 0) {
-            $model = file_get_contents("http://$url:7557/presets/?query=%7B%22_id%22%3A%22mac_$id%22%7D");
+        foreach (['sn', 'mac'] as $name) {
+            $model = file_get_contents("http://localhost:7557/presets/?query={\"_id\":\"{$name}_{$this->id}\"}");
             $length = preg_match('/[a-z]+/', $model);
+
+            if ($length) {
+                break;
+            }
         }
 
-        return $length != 0 ? $model : null;
+        return $length ? $model : null;
     }
 
     /**
@@ -883,11 +887,8 @@ class Modem extends \BaseModel
      */
     public function deleteGenieAcsPreset()
     {
-        foreach (['mac_', 'sn_'] as $name) {
-            $this->callGenieAcsApi(
-                'http://'.ProvBase::first()['provisioning_server'].":7557/presets/$name$this->id",
-                'DELETE'
-            );
+        foreach (['sn', 'mac'] as $name) {
+            $this->callGenieAcsApi("http://localhost:7557/presets/${name}_{$this->id}", 'DELETE');
         }
     }
 
@@ -898,16 +899,13 @@ class Modem extends \BaseModel
      */
     public function deleteGenieAcsProvision()
     {
-        $provision = $this->getGenieAcsPreset(ProvBase::first()['provisioning_server'], $this->id);
+        $provision = $this->getGenieAcsPreset();
         preg_match_all('/("type":"provision","name":")(.*?(?="))/s', $provision, $matches);
 
         foreach ($matches as $match) {
             foreach ($match as $name) {
                 if (strpos($name, '"') === false) {
-                    $this->callGenieAcsApi(
-                        'http://'.ProvBase::first()['provisioning_server'].":7557/provisions/$name",
-                        'DELETE'
-                    );
+                    $this->callGenieAcsApi("http://localhost:7557/provisions/$name", 'DELETE');
                 }
             }
         }
@@ -1520,6 +1518,19 @@ class Modem extends \BaseModel
     public function isPPP()
     {
         return boolval($this->ppp_username);
+    }
+
+    /**
+     * Check if modem is provisioned via TR069
+     *
+     * @return  true if TR069 is used
+     *          false if TR069 is not used
+     *
+     * @author Ole Ernst
+     */
+    public function isTR069()
+    {
+        return $this->configfile->device === 'tr069';
     }
 
     /**

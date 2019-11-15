@@ -428,16 +428,11 @@ class ModemController extends \BaseController
         $configfile = \Modules\ProvBase\Entities\Configfile::join('modem', 'modem.configfile_id', 'configfile.id')->where('configfile.id', $modem->configfile_id)->first();
 
         if ($configfile->device == 'tr069' && Request::filled('_2nd_action')) {
-            $url = ProvBase::first()['provisioning_server'];
-            $data = '{ "name": "reboot" }';
-            $class = new \Modules\ProvBase\Entities\Modem;
-
-            $model = $class->getGenieAcsModel($url, $modem->serial_num, $modem->mac);
+            $model = $modem->getGenieAcsModel('_id');
 
             if ($model) {
-                $json = json_decode($model, true);
-                $deviceId = rawurlencode($json[0]['_id']);
-                $success = $modem->callGenieAcsApi("http://$url:7557/devices/$deviceId/tasks?timeout=3000&connection_request", 'POST', $data);
+                $deviceId = rawurlencode($model->_id);
+                $success = $modem->callGenieAcsApi("http://localhost:7557/devices/$deviceId/tasks?timeout=3000&connection_request", 'POST', '{ "name": "reboot" }');
             }
 
             if (! $success) {
