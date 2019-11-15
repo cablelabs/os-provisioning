@@ -1220,11 +1220,8 @@ class Modem extends \BaseModel
             ->where(function ($query) {
                 $query
                 ->whereNull('modem.id')
+                ->orWhere('modem.contract_id', $this->contract_id)
                 ->orWhereNotNull('contract.contract_end');
-
-                if ($this->contract_id) {
-                    $query->orWhere('modem.contract_id', $this->contract_id);
-                }
             })
             ->select('realty.street', 'realty.house_nr', 'realty.city', 'apartment.id as apartmentId', 'apartment.number as anum', 'floor',
                 'modem.id as modemId', 'contract.id as cId'
@@ -1303,11 +1300,8 @@ class Modem extends \BaseModel
             ->where(function ($query) {
                 $query
                 ->whereNull('modem.id')
+                ->orWhere('modem.contract_id', $this->contract_id)
                 ->orWhereNotNull('contract.contract_end');
-
-                if ($this->contract_id) {
-                    $query->orWhere('modem.contract_id', $this->contract_id);
-                }
             })
             ->select('realty.*', 'modem.id as modemId', 'contract.id as cId');
 

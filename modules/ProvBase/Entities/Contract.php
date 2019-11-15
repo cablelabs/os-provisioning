@@ -1460,6 +1460,7 @@ class Contract extends \BaseModel
             ->where(function ($query) {
                 $query
                 ->whereNull('contract.id')
+                ->orWhere('realty.id', $this->realty_id)
                 ->orWhereNotNull('contract.contract_end');
             })
             ->select('realty.*', 'contract.id as cId');
@@ -1475,6 +1476,7 @@ class Contract extends \BaseModel
             ->where(function ($query) {
                 $query
                 ->whereNull('realties.cId')
+                ->orWhere('realties.cId', $this->id)
                 ->orWhereNull('newContract.id');
             })
             ->orderBy('realties.street')->orderBy('realties.house_nr')
