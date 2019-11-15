@@ -36,8 +36,7 @@ class GuiLogController extends BaseController
         if ($models && \Route::getRoutes()->hasNamedRoute($model->model.'.edit') && ! $isModelTrashed) {
             $route = route($model->model.'.edit', ['id' => $model->model_id]);
 
-            $fields[] = ['form_type' => 'html', 'name' => 'link', 'description' => 'Link', 'html' =>
-                '<div class="col-md-7">
+            $fields[] = ['form_type' => 'html', 'name' => 'link', 'description' => 'Link', 'html' => '<div class="col-md-7">
 					<a class="btn btn-default btn-block" href="'.$route.'"> '.$model->model.' '.$model->model_id.'</a>
 				</div>',
             ];
@@ -47,8 +46,7 @@ class GuiLogController extends BaseController
         if ($isModelTrashed && $restorable) {
             $route = route('Guilog.restore', ['id' => $model->id]);
 
-            $fields[] = ['form_type' => 'html', 'name' => 'deleted_at', 'description' => 'Restore', 'html' => '
-				<div class="col-md-7">
+            $fields[] = ['form_type' => 'html', 'name' => 'deleted_at', 'description' => 'Restore', 'html' => '<div class="col-md-7">
 					<a class="btn btn-default btn-block" href="'.$route.'"> Restore '.$model->model.'</a>
 				</div>',
             ];

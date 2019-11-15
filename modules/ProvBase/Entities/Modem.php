@@ -7,7 +7,6 @@ use Log;
 use File;
 use App\Sla;
 use Exception;
-use GlobalConfig;
 use Acme\php\ArrayHelper;
 
 class Modem extends \BaseModel

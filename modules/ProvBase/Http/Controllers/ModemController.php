@@ -125,7 +125,6 @@ class ModemController extends \BaseController
             $c[] = ['form_type' => 'text', 'name' => 'apartment_nr', 'description' => 'Apartment number', 'space' => 1];
         }
 
-
         if (\Module::collections()->has('PropertyManagement')) {
             if (Request::has('contract_id')) {
                 $model->contract_id = Request::get('contract_id');

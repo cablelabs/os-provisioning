@@ -1342,8 +1342,8 @@ class Contract extends \BaseModel
      * A group contract is a contract just added to charge multiple contracts belonging to one administration by the TV fee
      *
      * NOTE: Returns
-        * false if contract is actually a group contract
-        * true if
+     *  false if contract is actually a group contract
+     *  true if
      *
      * @author Nino Ryschawy
      * @return bool
@@ -1441,7 +1441,7 @@ class Contract extends \BaseModel
         }
 
         // New valid group contracts belonging to a realty
-        $contractSubQuery = Contract::join('realty', 'contract.realty_id', 'realty.id')
+        $contractSubQuery = self::join('realty', 'contract.realty_id', 'realty.id')
             ->where('group_contract', 1)
             ->whereNull('contract.contract_end')
             ->whereNull('contract.deleted_at')->whereNull('realty.deleted_at')
