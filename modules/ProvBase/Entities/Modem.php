@@ -31,6 +31,8 @@ class Modem extends \BaseModel
             'country_code' => 'regex:/^[A-Z]{2}$/',
             'contract_id' => 'required|exists:contract,id,deleted_at,NULL',
             'configfile_id' => 'required|exists:configfile,id,deleted_at,NULL,device,cm,public,yes',
+            // Note: realty_id and apartment_id validations are done in ModemController@prepare_rules
+            // 'realty_id' => 'nullable|empty_with:apartment_id',
         ];
     }
 

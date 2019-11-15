@@ -39,9 +39,6 @@ class Contract extends \BaseModel
             'house_number' => 'required_without_all:realty_id,apartment_id',
             'zip' => 'required_without_all:realty_id,apartment_id',
             'city' => 'required_without_all:realty_id,apartment_id',
-            // Only one contract per apartment
-            // 'apartment_id' => 'nullable|unique:contract,apartment_id,'.$id.',id,deleted_at,NULL',
-
             'phone' => 'required',
             'email' => 'nullable|email',
             'birthday' => 'required_if:salutation,Herr,Frau|nullable|date',

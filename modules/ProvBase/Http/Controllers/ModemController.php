@@ -370,8 +370,14 @@ class ModemController extends \BaseController
                     ->first();
 
                 if ($modem) {
-                    $rules['contract_id'] = '|In:'.$modem->contract_id;
+                    $rules['contract_id'] .= '|In:'.$modem->contract_id;
                 }
+            }
+
+            if ($data['realty_id']) {
+                $rules['apartment_id'] = 'empty';
+            } elseif ($data['apartment_id']) {
+                $rules['realty_id'] = 'empty';
             }
         }
 

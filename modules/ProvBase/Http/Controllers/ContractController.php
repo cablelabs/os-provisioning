@@ -208,6 +208,26 @@ class ContractController extends \BaseController
         return $data;
     }
 
+    public function prepare_rules($rules, $data)
+    {
+        if (\Module::collections()->has('PropertyManagement')) {
+            // Only group contracts without modems can belong to a Realty directly - with CMs realty_id must be null
+            if ($data['realty_id'] && isset($data['id'])) {
+                $modems = Contract::join('modem', 'modem.contract_id', 'contract.id')
+                    ->where('contract.id', $data['id'])
+                    ->whereNull('modem.deleted_at')
+                    ->whereNull('contract.deleted_at')
+                    ->count();
+
+                if ($modems) {
+                    $rules['realty_id'] = 'empty';
+                }
+            }
+        }
+
+        return parent::prepare_rules($rules, $data);
+    }
+
     /**
      * Overwrite BaseController method => not required dates should be set to null if not set
      * Otherwise we get entries like 0000-00-00, which cause crashes on validation rules in case of update
