@@ -8,7 +8,7 @@ use App\GlobalConfig;
 
 /**
  * Geocoding API
- * Translate an address (like: Deutschland, Marienberg, Waldrand 4) in a geoposition (x,y)
+ * Translate an address (like: Deutschland, Marienberg, Waldrand 4) into a geoposition (x,y)
  *
  * Used in Modem, Node, Realty
  *
