@@ -25,5 +25,15 @@ return [
             'icon'  => 'fa-address-card-o',
             'class' => Contact::class,
         ],
+        // Realties and Apartments where signal needs to be cut off caused by e.g. contract cancelation
+        'CutoffList' => [
+            'link'  => 'CutoffList.index',
+            // 'link'  => 'Realty.cutoff',
+            // 'icon'  => 'fa-bolt',
+            'icon'  => 'fa fa-chain-broken',
+            // 'icon'  => 'fa fa-fw fa-chain-broken',
+            // 'icon'  => 'fa-scissors',
+            'class' => Realty::class,
+        ],
     ],
 ];

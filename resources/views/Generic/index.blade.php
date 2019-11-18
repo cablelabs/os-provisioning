@@ -66,7 +66,9 @@
     @include('Generic.above_infos')
 
     {{-- database entries inside a form with checkboxes to be able to delete one or more entries --}}
-    {{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete', 'id' => 'IndexForm')) }}
+    @if ($delete_allowed)
+        {{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete', 'id' => 'IndexForm')) }}
+    @endif
     {{-- INIT DT --}}
 
     @php
@@ -121,7 +123,9 @@
         @endif
         </tfoot>
     </table>
-    {{ Form::close() }}
+    @if ($delete_allowed)
+        {{ Form::close() }}
+    @endif
 @stop
 
 @section('javascript')

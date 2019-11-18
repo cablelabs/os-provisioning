@@ -430,4 +430,11 @@ class ExtendedValidator
 
         return false;
     }
+
+    public function validateEmpty($attribute, $value, $parameters)
+    {
+        // d($value, $attribute, $parameters, $this->getValue($parameters[0]));
+
+        return $value ? false : true;
+    }
 }

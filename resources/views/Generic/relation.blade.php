@@ -14,12 +14,27 @@ Relation Blade is used inside a Panel Element to display relational class object
 @endif
 
 @DivOpen(12)
+    @if ($info)
+        @if (strlen($info) < 200)
+            <div class="alert alert-info fade show" style="padding-bottom: 0.5rem; padding-top: 0.5rem">
+              <span class="close" data-dismiss="alert">×</span>
+              {{ $info }}
+            </div>
+        @else
+            <div class="col-md-1">
+                <a data-toggle="popover" data-container="body" data-trigger="hover" title="Info" data-placement="right" data-content="{{ $info }}">
+                    <i class="fa fa-2x p-t-5 fa-question-circle text-info"></i>
+                </a>
+            </div>
+        @endif
+    @endif
+
     <div class="row">
     @can('create', Session::get('models.'.$class))
         {{-- Create Button: (With hidden add fields if required) --}}
-        @if (!isset($options['hide_create_button']))
+        @if (! isset($options['hide_create_button']))
 
-            {!! Form::open(['url' => route($view.'.create', [$key => $view_var->id]), 'method' => 'POST', 'name' => 'createForm']) !!}
+            {!! Form::open(['url' => route($class.'.create', [$key => $view_var->id]), 'method' => 'POST', 'name' => 'createForm']) !!}
             {!! Form::hidden($key, $view_var->id) !!}
 
             {{-- Add hidden input fields if create tag is set in $form_fields - This sets global POST Variable --}}
@@ -30,9 +45,9 @@ Relation Blade is used inside a Panel Element to display relational class object
             @endforeach
 
             <div class="col align-self-start">
-                <a href="{{ route($view.'.create', [$key => $view_var->id]) }}">
+                <a href="{{ route($class.'.create', [$key => $view_var->id]) }}">
                     <button class="btn btn-outline-primary float-right m-b-10" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
-                        title="{{ isset($options['create_button_text']) ? trans($options['create_button_text']) : \App\Http\Controllers\BaseViewController::translate_view('Create '.$view, 'Button') }}">
+                        title="{{ isset($options['create_button_text']) ? trans($options['create_button_text']) : \App\Http\Controllers\BaseViewController::translate_view('Create '.$class, 'Button') }}">
                         <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
                     </button>
                 </a>
@@ -43,7 +58,7 @@ Relation Blade is used inside a Panel Element to display relational class object
     @endcan
     @can('delete', $relation->get(0))
         {{-- Delete Button --}}
-        @if (!isset($options['hide_delete_button']) && isset($relation[0]))
+        @if (! isset($options['hide_delete_button']) && isset($relation[0]))
             <div class="col align-self-end">
                 <button class="btn btn-outline-danger m-b-10 float-right"
                         data-toggle="tooltip"
@@ -61,11 +76,12 @@ Relation Blade is used inside a Panel Element to display relational class object
 @DivClose()
 
 {{-- The Relation Table --}}
+@if (isset($relation[0]))
 @DivOpen(12)
     @if (isset($options['many_to_many']))
         {!! Form::open(array('route' => array($route_name.'.detach', $view_var->id, $options['many_to_many']), 'method' => 'post', 'id' => $class)) !!}
     @else
-        {!! Form::open(array('route' => array($view.'.destroy', 0), 'method' => 'delete', 'id' => $tab['name'].$class)) !!}
+        {!! Form::open(array('route' => array($class.'.destroy', 0), 'method' => 'delete', 'id' => $tab['name'].$class)) !!}
     @endif
 
     <table class="table">
@@ -73,10 +89,11 @@ Relation Blade is used inside a Panel Element to display relational class object
             <?php $labelData = $rel_elem->view_index_label(); ?>
             <tr class="{{isset ($labelData['bsclass']) ? $labelData['bsclass'] : ''}}">
                 <td width="20"> {!! Form::checkbox('ids['.$rel_elem->id.']', 1, null, null, ['style' => 'simple']) !!} </td>
-                <td> {!! $rel_elem->view_icon() !!} {!! HTML::linkRoute($view.'.'.$method, is_array($labelData) ? $labelData['header'] : $labelData, $rel_elem->id) !!} </td>
+                <td> {!! $rel_elem->view_icon() !!} {!! HTML::linkRoute($class.'.'.$method, is_array($labelData) ? $labelData['header'] : $labelData, $rel_elem->id) !!} </td>
             </tr>
         @endforeach
     </table>
 
     {!! Form::close() !!}
 @DivClose()
+@endif

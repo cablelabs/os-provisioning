@@ -54,19 +54,11 @@ class PhonenumberController extends \BaseController
                 $active_symbol = '<div style="color: #f00; '.$active_symbol_style.'">✘</div>';
             }
 
-            $active_checkbox = ['form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'html' => '<div class="col-md-12" style="background-color:white">
-					<div class="form-group row"><label for="active" style="margin-top: 10px;" class="col-md-4 control-label">Active</label>
-						<div class="col-md-7">
-							<input name="active" type="hidden" id="active" value="'.$active_state.'">
-							'.$active_symbol.'
-						</div>
-						<div title="Automatically set by (de)activation date in phonenumber management" name=active-help class=col-md-1>'.\HTML::image(asset('images/help.png'), '?', ['width' => 20]).'</div>
-						<div class=col-md-4>
-						</div>
-						<div class=col-md-8>
-						</div>
-					</div>
-				</div>',
+            $active_checkbox = ['form_type' => 'html', 'name' => 'active', 'description' => 'Active',
+                'html' => '<div class="col-md-7">
+                        <input name="active" type="hidden" id="active" value="'.$active_state.'">'.$active_symbol.'
+                    </div>',
+                'help' => 'Automatically set by (de)activation date in phonenumber management',
                 ];
         }
 
@@ -85,6 +77,20 @@ class PhonenumberController extends \BaseController
         // label has to be the same like column in sql table
         $ret = [
             [
+                'form_type' => 'select',
+                'name' => 'mta_id',
+                'description' => 'MTA',
+                'value' => $mta_list,
+                'hidden' => 'C',
+                'help' => $reassign_help,
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'port',
+                'description' => 'Port',
+                'space' => 1,
+            ],
+            [
                 'form_type' => 'text',
                 'name' => 'country_code',
                 'description' => 'International prefix',
@@ -102,19 +108,7 @@ class PhonenumberController extends \BaseController
                 'name' => 'number',
                 'description' => 'Number',
                 'help' => 'The phonenumber to port or a free number given by your provider.',
-            ],
-            [
-                'form_type' => 'select',
-                'name' => 'mta_id',
-                'description' => 'MTA',
-                'value' => $mta_list,
-                'hidden' => 'C',
-                'help' => $reassign_help,
-            ],
-            [
-                'form_type' => 'text',
-                'name' => 'port',
-                'description' => 'Port',
+                'space' => 1,
             ],
         ];
 
@@ -145,6 +139,7 @@ class PhonenumberController extends \BaseController
             'form_type' => 'text',
             'name' => 'password',
             'description' => 'Password',
+            'space' => 1,
         ];
         if ($options) {
             $password['options'] = $options;

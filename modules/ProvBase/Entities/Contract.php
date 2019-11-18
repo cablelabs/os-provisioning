@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Entities;
 
+use DB;
 use Module;
 use Session;
 use Modules\BillingBase\Entities\SettlementRun;
@@ -38,9 +39,6 @@ class Contract extends \BaseModel
             'house_number' => 'required_without_all:realty_id,apartment_id',
             'zip' => 'required_without_all:realty_id,apartment_id',
             'city' => 'required_without_all:realty_id,apartment_id',
-            // Only one contract per apartment
-            'apartment_id' => 'nullable|unique:contract,apartment_id,'.$id.',id,deleted_at,NULL',
-
             'phone' => 'required',
             'email' => 'nullable|email',
             'birthday' => 'required_if:salutation,Herr,Frau|nullable|date',
@@ -75,7 +73,7 @@ class Contract extends \BaseModel
 
         $ret = ['table' => $this->table,
                 'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number', $this->table.'.contract_start', $this->table.'.contract_end'],
-                'header' =>  $this->number.' '.$this->firstname.' '.$this->lastname,
+                'header' =>  self::labelFromData($this),
                 'bsclass' => $bsclass,
                 'order_by' => ['0' => 'asc'], ];
 
@@ -107,6 +105,14 @@ class Contract extends \BaseModel
         return $bsclass;
     }
 
+    /**
+     * @return string
+     */
+    public static function labelFromData($contract)
+    {
+        return $contract->number.' - '.$contract->firstname.' '.$contract->lastname;
+    }
+
     public function get_costcenter_name()
     {
         return $costcenter = $this->costcenter ? $this->costcenter->name : trans('messages.noCC');
@@ -128,6 +134,23 @@ class Contract extends \BaseModel
             $ret['Edit']['SepaMandate']['relation'] = $this->sepamandates;
             $ret['Billing']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
+
+            if (Module::collections()->has('PropertyManagement')) {
+                if ($this->realty_id) {
+                    $ret['Edit']['Modem']['options']['hide_delete_button'] = 1;
+                    $ret['Edit']['Modem']['options']['hide_create_button'] = 1;
+                    $ret['Edit']['Modem']['info'] = trans('propertymanagement::messages.groupContract.modem');
+                }
+
+                // Check if contract belongs to a group contract
+                $groupContract = $this->belongsToGroupContract();
+                if ($groupContract) {
+                    $msg = $groupContract === true ? trans('propertymanagement::messages.groupContract.item') : trans('propertymanagement::messages.groupContract.probably');
+
+                    $ret['Edit']['Item']['info'] = $msg;
+                    $ret['Billing']['Item']['info'] = $msg;
+                }
+            }
 
             if (Module::collections()->has('OverdueDebts')) {
                 // resulting outstanding amount
@@ -209,9 +232,33 @@ class Contract extends \BaseModel
 
     public function view_belongs_to()
     {
-        if (Module::collections()->has('PropertyManagement')) {
-            return $this->apartment ?: $this->realty;
+        return $this->getRealty();
+    }
+
+    /**
+     * Get Realty directly (works for group contract) or via modem->apartment->realty
+     *
+     * @author Nino Ryschawy
+     * @return \Modules\PropertyManagement\Entities\Realty
+     */
+    public function getRealty()
+    {
+        if (! Module::collections()->has('PropertyManagement')) {
+            return;
         }
+
+        if ($this->realty_id) {
+            return $this->realty;
+        }
+
+        return \Modules\PropertyManagement\Entities\Realty::join('apartment', 'realty.id', 'apartment.realty_id')
+            ->join('modem', 'apartment.id', 'modem.apartment_id')
+            ->join('contract', 'contract.id', 'modem.contract_id')
+            ->where('contract.id', $this->id)
+            ->whereNull('modem.deleted_at')
+            ->whereNull('apartment.deleted_at')
+            ->select('realty.*')
+            ->first();
     }
 
     /*
@@ -357,31 +404,6 @@ class Contract extends \BaseModel
     public function generate_password($length = 10)
     {
         $this->password = \Acme\php\Password::generate_password($length);
-    }
-
-    /**
-     * Get list of apartments for select field of edit view
-     *
-     * @return array
-     */
-    public static function getApartmentsList()
-    {
-        $apartments = \DB::table('apartment')->join('realty', 'realty.id', '=', 'apartment.realty_id')
-            ->select(['apartment.id as id', 'name', 'apartment.number as anum', 'realty.number as rnum', 'floor'])
-            ->whereNull('apartment.deleted_at')
-            ->get();
-
-        $ret[null] = null;
-
-        foreach ($apartments as $a) {
-            $ret[$a->id] = "$a->id: ";
-            $ret[$a->id] .= $a->rnum ? "$a->rnum " : '';
-            $ret[$a->id] .= $a->name ? "($a->name) - " : '-';
-            $ret[$a->id] .= $a->anum ? "$a->anum " : '';
-            $ret[$a->id] .= $a->floor ? "($a->floor) " : '';
-        }
-
-        return $ret;
     }
 
     /**
@@ -1316,32 +1338,154 @@ class Contract extends \BaseModel
     }
 
     /**
-     * Store address from Realty/Apartment internally in contract table too
+     * Check if contract belongs to a group contract
+     * A group contract is a contract just added to charge multiple contracts belonging to one administration by the TV fee
+     *
+     * NOTE: Returns
+     *  false if contract is actually a group contract
+     *  true if
+     *
+     * @author Nino Ryschawy
+     * @return bool
      */
-    public function updateAddressFromProperty()
+    public function belongsToGroupContract()
     {
-        if (! \Module::collections()->has('PropertyManagement')) {
-            return;
+        if (! Module::collections()->has('PropertyManagement')) {
+            return false;
+        }
+
+        // Is group contract itself
+        if ($this->realty_id) {
+            return false;
         }
 
         $realty = $this->getRealty();
 
         if (! $realty) {
+            return false;
+        }
+
+        // Check in all group contracts of that administration contact
+        // Probably
+        if (! $realty->group_contract) {
+            $groupContracts = self::join('realty', 'realty.id', 'contract.realty_id')
+                ->join('contact', 'contact.id', 'realty.contact_id')
+                ->where('contact_id', $realty->contact_id)
+                ->where('realty.group_contract', 1)
+                ->count();
+
+            return $groupContracts ? 'probably' : false;
+        }
+
+        return true;
+
+        // TODO: Check by single query - this is not working yet
+        // $realty = \Modules\PropertyManagement\Entities\Realty::join('apartment', 'realty.id', 'apartment.realty_id')
+        //     // Get realty via modem->apartment
+        //     ->join('modem', 'apartment.id', 'modem.apartment_id')
+        //     ->join('contract as ac', 'ac.id', 'modem.contract_id')
+        //     ->where('ac.id', $this->id)
+
+        //     // Check if realty has group contract directly
+        //     ->leftJoin('contract as gc', 'gc.realty_id', 'realty.id')
+        //     ->where('realty.group_contract', 1)
+        //     ->whereNotNull('gc.id')
+
+        //     // Check if contact has a realty with a group contract
+        //     ->leftJoin('contact', 'contact.id', 'realty.contact_id')
+        //     ->join('realty as altr', 'contact.id', 'realty.contact_id')
+        //     ->join('contract as altc', 'altc.realty_id', 'altr.id')
+
+        //     ->orWhere(function ($query) {
+        //         $query
+        //         ->where('altr.group_contract', 1)
+        //         ->where('altr.id', '!=', 'realty.id');
+        //     })
+        //     ->whereNotNull('altc.id')
+        //     ->select('realty.*', 'altr.*', 'altc.id as alternativeContractId')
+        //     ->get();
+    }
+
+    /**
+     * Synchronize address of Realty and Contract as contract address is used in e.g. invoice
+     * Note: This is only done for group contracts (with direct relation to Realty)
+     */
+    public function updateAddressFromProperty()
+    {
+        if (! Module::collections()->has('PropertyManagement')) {
+            return;
+        }
+
+        if (! $this->realty) {
             return;
         }
 
         self::where('id', $this->id)->update([
-            'street' => $realty->street,
-            'house_number' => $realty->house_nr,
-            'zip' => $realty->zip,
-            'city' => $realty->city,
-            'district' => $realty->district,
+            'street' => $this->realty->street,
+            'house_number' => $this->realty->house_nr,
+            'zip' => $this->realty->zip,
+            'city' => $this->realty->city,
+            'district' => $this->realty->district,
             ]);
     }
 
-    public function getRealty()
+    /**
+     * Get list of realties for select field of edit view
+     *
+     * @return array
+     */
+    public function getSelectableRealties()
     {
-        return $this->apartment ? $this->apartment->realty : $this->realty;
+        if (! \Module::collections()->has('PropertyManagement')) {
+            return [];
+        }
+
+        // New valid group contracts belonging to a realty
+        $contractSubQuery = self::join('realty', 'contract.realty_id', 'realty.id')
+            ->where('group_contract', 1)
+            ->whereNull('contract.contract_end')
+            ->whereNull('contract.deleted_at')->whereNull('realty.deleted_at')
+            ->select('contract.id', 'realty.id as realtyId');
+
+        /* All Realties that have group contract set and
+            (1) do not have a contract assigned
+            (2) or that have a contract that is already canceled
+        */
+        $realtiesSubQuery = \Modules\PropertyManagement\Entities\Realty::leftJoin('contract', 'contract.realty_id', 'realty.id')
+            ->where('group_contract', 1)
+            ->whereNull('realty.deleted_at')
+            ->where(function ($query) {
+                $query
+                ->whereNull('contract.id')
+                ->orWhere('realty.id', $this->realty_id)
+                ->orWhereNotNull('contract.contract_end');
+            })
+            ->select('realty.*', 'contract.id as cId');
+
+        // Left join realties with new contract and filter realties that either
+        // have no contract or a canceled contract and no new valid contract
+        $realties = DB::table(DB::raw("({$realtiesSubQuery->toSql()}) as realties"))
+            ->mergeBindings($realtiesSubQuery->getQuery())
+            ->select('realties.*')
+            ->leftJoin(DB::raw("({$contractSubQuery->toSql()}) as newContract"), 'newContract.realtyId', '=', 'realties.id')
+            ->mergeBindings($contractSubQuery->getQuery())
+            ->where('realties.group_contract', 1)
+            ->where(function ($query) {
+                $query
+                ->whereNull('realties.cId')
+                ->orWhere('realties.cId', $this->id)
+                ->orWhereNull('newContract.id');
+            })
+            ->orderBy('realties.street')->orderBy('realties.house_nr')
+            ->groupBy('realties.id')
+            ->get();
+
+        $arr[null] = null;
+        foreach ($realties as $realty) {
+            $arr[$realty->id] = \Modules\PropertyManagement\Entities\Realty::labelFromData($realty);
+        }
+
+        return $arr;
     }
 }
 

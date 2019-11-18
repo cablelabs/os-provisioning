@@ -5,7 +5,7 @@ buttons: [
         titleAttr: "{{ trans('helper.PrintVisibleTable') }}",
         exportOptions: {columns: ':visible.content'}
     },
-    @if (Str::contains(Route::currentRouteName(),'index'))
+    @if (Str::contains(Route::currentRouteName(),'index') && Route::has($route_name.'.import'))
     {
 	text: '{{ trans("view.jQuery_ImportCsv") }}',
 	action: function ( e, dt, button, config ) {

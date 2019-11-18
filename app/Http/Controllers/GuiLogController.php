@@ -34,26 +34,22 @@ class GuiLogController extends BaseController
 
         // add link of changed Model in edit view - Note: check if route exists is necessary because CccUser.edit is not available for instance
         if ($models && \Route::getRoutes()->hasNamedRoute($model->model.'.edit') && ! $isModelTrashed) {
-            array_push($fields, ['form_type' => 'text', 'name' => 'link', 'description' => 'Link', 'html' => '<div class="col-md-12" style="background-color:white">
-					<div class="form-group row"><label style="margin-top: 10px;" class="col-md-4 control-label">Link</label>
-						<div class="col-md-7">
-							<a class="btn btn-default btn-block" href="'.route($model->model.'.edit', ['id' => $model->model_id]).'"> '.$model->model.' '.$model->model_id.'</a>
-						</div>
-					</div>
+            $route = route($model->model.'.edit', ['id' => $model->model_id]);
+
+            $fields[] = ['form_type' => 'html', 'name' => 'link', 'description' => 'Link', 'html' => '<div class="col-md-7">
+					<a class="btn btn-default btn-block" href="'.$route.'"> '.$model->model.' '.$model->model_id.'</a>
 				</div>',
-                ]);
+            ];
         }
 
         // addition in edit view to create link for restoring deleted models
         if ($isModelTrashed && $restorable) {
-            array_push($fields, ['form_type' => 'text', 'name' => 'deleted_at', 'description' => 'Restore', 'html' => '<div class="col-md-12" style= background-color:white">
-						<div class= "form-group row"><label style =margin-top: 10px;" class="col-md-4 control-label">Restore</label>
-							<div class="col-md-7">
-								<a class="btn btn-default btn-block" href="'.route('Guilog.restore', ['id' => $model->id]).'"> Restore '.$model->model.'</a>
-							</div>
-						</div>
-					</div>',
-                ]);
+            $route = route('Guilog.restore', ['id' => $model->id]);
+
+            $fields[] = ['form_type' => 'html', 'name' => 'deleted_at', 'description' => 'Restore', 'html' => '<div class="col-md-7">
+					<a class="btn btn-default btn-block" href="'.$route.'"> Restore '.$model->model.'</a>
+				</div>',
+            ];
         }
 
         return $fields;

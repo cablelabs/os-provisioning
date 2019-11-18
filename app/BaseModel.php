@@ -790,6 +790,7 @@ class BaseModel extends Eloquent
             'country_id',	// not used yet
             //'mibfile_id',
             //'oid_id',
+            'node_id',
             'product_id',
             'qos_id',
             'salesman_id',
@@ -807,7 +808,6 @@ class BaseModel extends Eloquent
 
             // Get SQL columns for current table
             foreach (Schema::getColumnListing($tablename) as $column) {
-                // check if $column is actual table name + '_id'
                 if ($column != $this->table.'_id') {
                     continue;
                 }
@@ -816,10 +816,11 @@ class BaseModel extends Eloquent
                     continue;
                 }
 
-                // get all objects with $column
-                $query = 'SELECT * FROM '.$tablename.' WHERE '.$column.'='.$this->id;
-                foreach (DB::select($query) as $child) {
+                $children = DB::table($tablename)->where($column, $this->id)->get();
+
+                foreach ($children as $child) {
                     $class_child_name = $this->_guess_model_name($tablename);
+
                     // check if we got a model name
                     if ($class_child_name) {
                         // yes! 1:n relation
@@ -828,24 +829,27 @@ class BaseModel extends Eloquent
                         if (! is_null($rel)) {
                             array_push($relations['1:n'], $rel);
                         }
-                    } else {
-                        // seems to be a n:m relation
-                        $parts = explode('_', $tablename);
-                        foreach ($parts as $part) {
-                            $class_child_name = $this->_guess_model_name($part);
 
-                            // one of the models in pivot tables is the current model – skip
-                            if ($class_child_name == get_class($this)) {
-                                continue;
-                            }
+                        continue;
+                    }
 
-                            // add other model instances to relation array if existing
-                            $class = new $class_child_name;
-                            $id_col = $part.'_id';
-                            $rel = $class->find($child->{$id_col});
-                            if (! is_null($rel)) {
-                                array_push($relations['n:m'], $rel);
-                            }
+                    // seems to be a n:m relation
+                    $parts = explode('_', $tablename);
+                    foreach ($parts as $part) {
+                        $class_child_name = $this->_guess_model_name($part);
+
+                        // one of the models in pivot tables is the current model – skip
+                        if ($class_child_name == get_class($this)) {
+                            continue;
+                        }
+
+                        // add other model instances to relation array if existing
+                        $class = new $class_child_name;
+                        $id_col = $part.'_id';
+                        // TODO: Replace next line with $rel = $class_child_name::find($child->{$id_col});
+                        $rel = $class->find($child->{$id_col});
+                        if (! is_null($rel)) {
+                            array_push($relations['n:m'], $rel);
                         }
                     }
                 }
@@ -1054,6 +1058,13 @@ class BaseModel extends Eloquent
 
         // push to session ⇒ will be shown once via resources/views/Generic/above_infos.blade.php
         Session::push($target, $msg);
+    }
+
+    public static function getUser()
+    {
+        $user = \Auth::user();
+
+        return $user ? $user->first_name.' '.$user->last_name : 'cronjob';
     }
 }
 

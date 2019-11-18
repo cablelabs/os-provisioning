@@ -69,10 +69,10 @@ class BaseViewController extends Controller
     /**
      * Searches for a string in the language files under resources/lang/ and returns it for the active application language
      * used in everything view related
-     * @param string: 	string that is searched in resspurces/lang/{App-language}/view.php
-     * @param type: 	can be Header, Menu, Button, jQuery, Search
-     * @param count: 	standard at 1 , For plural translation - needs to be seperated with pipe "|""
-     *					example: Index Headers -> in view.php: 'Header_Mta'	=> 'MTA|MTAs',
+     * @param string:   string that is searched in resspurces/lang/{App-language}/view.php
+     * @param type:     can be Header, Menu, Button, jQuery, Search
+     * @param count:    standard at 1 , For plural translation - needs to be seperated with pipe "|""
+     *                  example: Index Headers -> in view.php: 'Header_Mta' => 'MTA|MTAs',
      * @author Christian Schramm
      */
     public static function translate_view($string, $type, $count = 1)
@@ -318,12 +318,6 @@ class BaseViewController extends Controller
         foreach ($fields as $field) {
             $s = '';
 
-            // ignore fields with 'html' parameter
-            if (isset($field['html'])) {
-                array_push($ret, $field);
-                continue;
-            }
-
             // hidden stuff
             if (array_key_exists('hidden', $field)) {
                 $hidden = $field['hidden'];
@@ -431,6 +425,10 @@ class BaseViewController extends Controller
                     $s .= Form::link($field['name'], $field['url'], isset($field['color']) ?: 'default');
                     break;
 
+                case 'html':
+                    $s .= $field['html'];
+                    break;
+
                 default:
                     $form = $field['form_type'];
                     $s .= Form::$form($field['name'], $field['field_value'], $options);
@@ -439,15 +437,14 @@ class BaseViewController extends Controller
 
             // Help: add help icon/image behind form field
             if (isset($field['help'])) {
-                $s .= '<div name='.$field['name'].'-help class="col-1"><a data-toggle="popover" data-container="body"
-							data-trigger="hover" title="'.self::translate_label($field['description']).'" data-placement="right" data-content="'.$field['help'].'">'.
-                            '<i class="fa fa-2x p-t-5 '.(isset($field['help_icon']) ? $field['help_icon'] : 'fa-question-circle').' text-'.(isset($field['color']) ? $field['color'] : 'info').'"></i></a></div>';
+                $s .= self::helpIcon($field);
             }
 
             // Close Form Group
             $s .= Form::closeGroup();
 
             finish:
+
             // Space Element between fields and color switching
             if (array_key_exists('space', $field)) {
                 $s .= '<div class=col-md-12><br></div>';
@@ -507,6 +504,40 @@ class BaseViewController extends Controller
         }
 
         return $s;
+    }
+
+    /**
+     * Compose HTML of help icon from form field
+     *
+     * @param array  $field  Entry of view_form_fields()
+     * @return string
+     */
+    public static function helpIcon($field)
+    {
+        $bsClass = $field['color'] ?? 'info';
+        $title = isset($field['description']) ? self::translate_label($field['description']) : '';
+        $icon = $field['help_icon'] ?? 'fa-question-circle';
+
+        return '<div class="col-1">
+            <a data-toggle="popover" data-container="body" data-trigger="hover" title="'.$title.'" data-placement="right" data-content="'.$field['help'].'">'.
+                '<i class="fa fa-2x p-t-5 '.$icon.' text-'.$bsClass.'"></i>
+            </a></div>';
+    }
+
+    /**
+     * Get HTML string for geoposition fields to use for html key in view_form_fields()
+     * (e.g. Modem, Node, Realty)
+     *
+     * @return string
+     */
+    public static function geoPosFields($model)
+    {
+        return "<div class=col-md-3>
+                <input class=form-control name=x type=text value='".$model['x']."' id=x style='background-color:inherit'>
+            </div>
+            <div class=col-md-4>
+                <input class=form-control name=y type=text value='".$model['y']."' id=y style='background-color:inherit'>
+            </div>";
     }
 
     /*
@@ -742,19 +773,19 @@ class BaseViewController extends Controller
         }
 
         // Base Link to Index Table in front of all relations
-        // if (in_array($route_name, BaseController::get_config_modules()))	// parse: Global Config requires own link
-        // 	$s = \HTML::linkRoute('Config.index', BaseViewController::translate_view('Global Configurations', 'Header')).': '.$s;
+        // if (in_array($route_name, BaseController::get_config_modules())) // parse: Global Config requires own link
+        //  $s = \HTML::linkRoute('Config.index', BaseViewController::translate_view('Global Configurations', 'Header')).': '.$s;
         // else if (Route::has($route_name.'.index'))
-        // 	$s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
-        if (in_array($route_name, BaseController::get_config_modules())) {	// parse: Global Config requires own link
+        //  $s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
+        if (in_array($route_name, BaseController::get_config_modules())) {  // parse: Global Config requires own link
             $breadcrumb_path_base = "<li class='active'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).self::translate_view('Global Configurations', 'Header')).'</li>';
         } else {
             $breadcrumb_path_base = Route::has($route_name.'.index') ? '<li class="active">'.static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).$view_header).'</li>' : '';
         }
 
-        if (! $breadcrumb_paths) {	// if this array is still empty: put the one and only breadcrumb path in this array
+        if (! $breadcrumb_paths) {  // if this array is still empty: put the one and only breadcrumb path in this array
             array_push($breadcrumb_paths, $breadcrumb_path_base.$breadcrumb_path);
-        } else {	// multiple breadcrumb paths: show overture on a single line
+        } else {    // multiple breadcrumb paths: show overture on a single line
             array_unshift($breadcrumb_paths, $breadcrumb_path_base);
         }
 

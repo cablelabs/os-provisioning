@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use Module;
 use Bouncer;
 use Session;
 use Modules\ProvBase\Entities\Qos;
@@ -25,11 +26,14 @@ class ContractController extends \BaseController
 
         $r = $a = $b = $c1 = $c2 = $d = [];
 
-        $selectPropertyMgmt = \Module::collections()->has('PropertyManagement') ? ['select' => 'noProperty'] : [];
+        $selectPropertyMgmt = [];
+        if (Module::collections()->has('PropertyManagement')) {
+            $hasModems = $model->modems->count() ? true : false;
+            $selectPropertyMgmt = ! $hasModems ? ['select' => 'noRealty'] : [];
+        }
 
         // label has to be the same like column in sql table
         $a = [
-
             // basic data
             ['form_type' => 'text', 'name' => 'number', 'description' => $model->get_column_description('number'), 'help' => trans('helper.contract_number')],
             ['form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2'), 'options' => ['class' => 'collapse']],
@@ -57,13 +61,18 @@ class ContractController extends \BaseController
             array_merge(['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => ['Modem'], 'autocomplete' => []], $selectPropertyMgmt),
         ];
 
-        if (! \Module::collections()->has('Ccc')) {
+        if (! Module::collections()->has('Ccc')) {
             unset($a[0]['help']);
         }
 
-        if (\Module::collections()->has('PropertyManagement')) {
-            $a[] = ['form_type' => 'select', 'name' => 'realty_id', 'description' => 'Realty', 'value' => selectList('realty', ['number', 'name'], true, ' - '), 'hidden' => 0];
-            $a[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'value' => Contract::getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList'), 'space' => '1'];
+        if (Module::collections()->has('PropertyManagement')) {
+            if (! $hasModems) {
+                $a[] = ['form_type' => 'select', 'name' => 'realty_id', 'value' => $model->getSelectableRealties(), 'description' => 'Realty', 'hidden' => 0, 'space' => 1];
+            } else {
+                $a[14]['space'] = 1;
+            }
+        } else {
+            $a[] = ['form_type' => 'text', 'name' => 'apartment_nr', 'description' => 'Apartment number', 'space' => 1];
         }
 
         $b = [
@@ -76,7 +85,7 @@ class ContractController extends \BaseController
 
         ];
 
-        if (\Module::collections()->has('BillingBase')) {
+        if (Module::collections()->has('BillingBase')) {
             $days = range(0, 28);
             $days[0] = null;
 
@@ -153,7 +162,7 @@ class ContractController extends \BaseController
         $data['contract_start'] = $data['contract_start'] ?: date('Y-m-d');
 
         // generate contract number
-        if (! $data['number'] && \Module::collections()->has('BillingBase') && $data['costcenter_id']) {
+        if (! $data['number'] && Module::collections()->has('BillingBase') && $data['costcenter_id']) {
             // generate contract number
             $num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
 
@@ -193,6 +202,26 @@ class ContractController extends \BaseController
         $data = $this->_nullify_fields($data, $nullable_fields);
 
         return $data;
+    }
+
+    public function prepare_rules($rules, $data)
+    {
+        if (\Module::collections()->has('PropertyManagement')) {
+            // Only group contracts without modems can belong to a Realty directly - with CMs realty_id must be null
+            if ($data['realty_id'] && isset($data['id'])) {
+                $modems = Contract::join('modem', 'modem.contract_id', 'contract.id')
+                    ->where('contract.id', $data['id'])
+                    ->whereNull('modem.deleted_at')
+                    ->whereNull('contract.deleted_at')
+                    ->count();
+
+                if ($modems) {
+                    $rules['realty_id'] = 'empty';
+                }
+            }
+        }
+
+        return parent::prepare_rules($rules, $data);
     }
 
     /**
