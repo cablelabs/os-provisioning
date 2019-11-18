@@ -66,7 +66,7 @@ return [
     'DeviceTypes'               => 'Gerätetypen',
     'Directory assistance'      => 'Nutzung Auskunft',
     'District'                  => 'Ortsteil',
-    'OverdueDebts'                   => 'Mahnwesen',
+    'OverdueDebts'              => 'Offene Posten',
     'Dunning date'              => 'Mahndatum',
     'Dunning indicator'         => 'Mahnkennzeichen',
     'Edit'                      => 'Ändern -',
