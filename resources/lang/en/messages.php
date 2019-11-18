@@ -66,7 +66,7 @@ return [
     'DeviceTypes'               => 'DeviceTypes',
     'Directory assistance'      => 'Directory assistance',
     'District'                  => 'District',
-    'OverdueDebts'                   => 'OverdueDebts',
+    'OverdueDebts'              => 'Overdue debts',
     'Dunning date'              => 'Dunning date',
     'Dunning indicator'         => 'Dunning indicator',
     'Edit'                      => 'Edit',
