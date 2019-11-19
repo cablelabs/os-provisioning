@@ -155,7 +155,9 @@ class Contract extends \BaseModel
             if (Module::collections()->has('OverdueDebts')) {
                 // resulting outstanding amount
                 $ret['Edit']['DebtResult']['view']['view'] = 'overduedebts::Debt.result';
-                $ret['Edit']['DebtResult']['view']['vars']['debt'] = $this->getResultingDebt();
+                $resultingDebt = $this->getResultingDebt();
+                $ret['Edit']['DebtResult']['view']['vars']['debt'] = $resultingDebt['amount'];
+                $ret['Edit']['DebtResult']['view']['vars']['bsclass'] = $resultingDebt['bsclass'];
             }
 
             // Show invoices in 2 panels
@@ -1312,29 +1314,73 @@ class Contract extends \BaseModel
     }
 
     /**
-     * Return the outstanding amount
+     * Return the outstanding amount and the bootstrap class
      *
-     * @return float
+     * @return array [(Float) amount, (String) bsclass]
      */
     public function getResultingDebt()
     {
-        if (! Module::collections()->has('OverdueDebts')) {
-            return;
+        // https://stackoverflow.com/questions/17210787/php-float-calculation-error-when-subtracting
+        // return \Modules\OverdueDebts\Entities\Debt::where('contract_id', $this->id)
+        //     ->groupBy('contract_id')
+        //     ->select('missing_amount')
+        //     ->sum('missing_amount');
+        $ret = $this->blockInetFromDebts();
+
+        $bsclass = '';
+        if ($ret['block']) {
+            $bsclass = 'danger';
+        } elseif ($ret['amount'] < 0) {
+            $bsclass = 'success';
+        } elseif ($ret['amount'] > 0) {
+            $bsclass = 'warning';
         }
 
-        return \Modules\OverdueDebts\Entities\Debt::where('contract_id', $this->id)
-            ->groupBy('contract_id')
-            ->select('missing_amount')
-            ->sum('missing_amount');
+        return [
+            'amount' => $ret['amount'],
+            'bsclass' => $bsclass,
+        ];
+    }
 
-        // https://stackoverflow.com/questions/17210787/php-float-calculation-error-when-subtracting
-        // $sum = round($sum, 2);
+    /**
+     * Check if the Contract has Debts that exceed the threshholds of the module configuration and therefore the internet has to be blocked
+     *
+     * @author Nino Ryschawy
+     * @return array    [(Float) total amount of debts, (Bool) internet should be blocked]
+     */
+    public function blockInetFromDebts()
+    {
+        if (! Module::collections()->has('OverdueDebts')) {
+            return [
+                'amount' => 0,
+                'block' => false,
+            ];
+        }
 
-        // if (! $sum || $sum == 0) {
-            // return 0;
-        // }
+        $posDebtCount = $this->debts->where('missing_amount', '>', 0)->count();
 
-        // return $sum;
+        $totalAmount = 0;
+        foreach ($this->debts as $debt) {
+            $totalAmount += $debt->missing_amount;
+        }
+
+        $highestIndicator = $this->debts->sortByDesc('indicator')->first();
+        $highestIndicator = $highestIndicator ? $highestIndicator->indicator : 0;
+
+        $conf = app()->make('OverdueDebtsConfig')->get();
+
+        $block =
+            // Amount threshold is exceeded
+            ($conf->import_inet_block_amount && ($totalAmount >= $conf->import_inet_block_amount)) ||
+            // More than max num of positive debts
+            ($conf->import_inet_block_debts && ($posDebtCount >= $conf->import_inet_block_debts)) ||
+            // Highest dunning indicator too high
+            ($conf->import_inet_block_indicator && ($highestIndicator >= $conf->import_inet_block_indicator));
+
+        return [
+            'amount' => $totalAmount,
+            'block' => $block,
+        ];
     }
 
     /**
