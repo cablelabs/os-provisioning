@@ -616,8 +616,56 @@ class BaseController extends Controller
 
         $model = static::get_model_obj();
         $fields = BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($model), $model);
+        $fields = $this->apiHandleHtmlFields($fields);
 
         return response()->json($fields);
+    }
+
+    /**
+     * As form fields with form_type => 'html' can have multiple Input fields these have to be extracted for the API
+     *  This replaces the html form field by multiple fields expressing the input fields that the html field contains
+     *
+     * @author Nino Ryschawy
+     * @return array
+     */
+    private function apiHandleHtmlFields($fields)
+    {
+        foreach ($fields as $key => $field) {
+            if (! (isset($field['form_type']) && $field['form_type'] == 'html' && isset($field['html']))) {
+                continue;
+            }
+
+            preg_match_all('/<input.*?>/', $field['html'], $matches);
+
+            if (! $matches) {
+                continue;
+            }
+
+            foreach ($matches[0] as $input) {
+                preg_match('/name=(.*?) /', $input, $name);
+
+                if (! $name) {
+                    $name = $field['name'] ?? 'without name';
+                    Log::error("Name of input field $name of view_form_fields missing");
+
+                    continue;
+                }
+
+                $name = str_replace(['"', "'"], '', $name[1]);
+
+                $field['name'] = $name;
+
+                if (count($matches[0]) > 1) {
+                    $field['description'] .= ' '.$name;
+                }
+
+                $fields[] = $field;
+            }
+
+            unset($fields[$key]);
+        }
+
+        return $fields;
     }
 
     /**
@@ -859,9 +907,10 @@ class BaseController extends Controller
      *
      * @return array
      */
-    private static function _api_prepopulate_fields($obj, $ctrl)
+    private function _api_prepopulate_fields($obj, $ctrl)
     {
         $fields = BaseViewController::prepare_form_fields($ctrl->view_form_fields($obj), $obj);
+        $fields = $this->apiHandleHtmlFields($fields);
         $inputs = Request::all();
         $data = [];
 
