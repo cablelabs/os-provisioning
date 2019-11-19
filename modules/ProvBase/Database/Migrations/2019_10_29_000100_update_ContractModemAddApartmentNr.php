@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 
-class UpdateContractModemAddApartment extends BaseMigration
+class UpdateContractModemAddApartmentNr extends BaseMigration
 {
     /**
      * Run the migrations. Apartment nr is needed if PropertyManagement module is disabled
