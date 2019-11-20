@@ -809,17 +809,17 @@ class Modem extends \BaseModel
      * Call API of GenieACS via PHP Curl.
      *
      * @author Roy Schneider
-     * @param string $url
+     * @param string $route
      * @param string $customRequest
      * @param string $data
      * @return mixed $result
      */
-    public function callGenieAcsApi($url, $customRequest, $data = null)
+    public function callGenieAcsApi($route, $customRequest, $data = null)
     {
         $ch = curl_init();
 
         curl_setopt_array($ch, [
-                    CURLOPT_URL => $url,
+                    CURLOPT_URL => "http://localhost:7557/$route",
                     CURLOPT_RETURNTRANSFER => $customRequest == 'GET' ? true : false,
                     CURLOPT_SSL_VERIFYPEER => false,
                     CURLOPT_CUSTOMREQUEST => $customRequest,
@@ -844,12 +844,12 @@ class Modem extends \BaseModel
     {
         foreach ([$this->serial_num, $this->mac] as $serial) {
             $serial = strtoupper($serial);
-            $url = "http://localhost:7557/devices/?query={\"_deviceId._SerialNumber\":\"$serial\"}";
+            $route = "devices/?query={\"_deviceId._SerialNumber\":\"$serial\"}";
             if ($projection) {
-                $url .= "&projection=$projection";
+                $route .= "&projection=$projection";
             }
 
-            $genieModel = json_decode(file_get_contents($url));
+            $genieModel = json_decode($this->callGenieAcsApi($route, 'GET'));
 
             if (! empty($genieModel)) {
                 break;
@@ -888,7 +888,7 @@ class Modem extends \BaseModel
     public function deleteGenieAcsPreset()
     {
         foreach (['sn', 'mac'] as $name) {
-            $this->callGenieAcsApi("http://localhost:7557/presets/${name}_{$this->id}", 'DELETE');
+            $this->callGenieAcsApi("presets/${name}_$this->id", 'DELETE');
         }
     }
 
