@@ -294,48 +294,27 @@ class Configfile extends \BaseModel
         }
 
         // DEBUG: var_dump ($search, $replace);
-
         /*
          * Search and Replace Configfile TEXT
          */
         $text = str_replace($search, $replace, $this->text ?? $device->text);
 
-        if ($this->device != 'tr069' && $device->device != 'tr069') {
-            $rows = explode("\n", $text);
+        $rows = explode("\n", $text);
 
-            // finally: append extensions; they have to be an array with one entry per line
-            $rows = array_merge($rows, $config_extensions);
+        // finally: append extensions; they have to be an array with one entry per line
+        $rows = array_merge($rows, $config_extensions);
 
-            $result = '';
-            $match = [];
-            foreach ($rows as $row) {
-                // Ignore all rows with {xyz} content which can not be replaced
-                if (preg_match('/\\{[^\\{]*\\}/im', $row, $match) && ($row = self::_calc_eval($row, $match)) === null) {
-                    continue;
-                }
-                $result .= "\n\t".$row;
+        $result = '';
+        $match = [];
+        foreach ($rows as $row) {
+            // Ignore all rows with {xyz} content which can not be replaced
+            if (preg_match('/\\{[^\\{]*\\}/im', $row, $match) && ($row = self::_calc_eval($row, $match)) === null) {
+                continue;
             }
-
-            return $result;
+            $result .= "\n\t".$row;
         }
 
-        $lines = preg_split('/(?<=");/', $text);
-        $return = '';
-
-        if ($lines[max(array_keys($lines))] == '') {
-            unset($lines[max(array_keys($lines))]);
-        }
-
-        foreach ($lines as $key => $line) {
-            if ($line != '') {
-                $return .= '{'.$line.'}';
-                if (max(array_keys($lines)) != $key) {
-                    $return .= ', ';
-                }
-            }
-        }
-
-        return '['.$return.']';
+        return $result;
     }
 
     /**
