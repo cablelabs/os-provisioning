@@ -256,8 +256,18 @@ class Configfile extends \BaseModel
                 break;
 
             case 'tr069':
-                $db_schemata ['modem'][0] = Schema::getColumnListing('modem');
                 $modem = [$device];
+                $db_schemata['modem'][0] = Schema::getColumnListing('modem');
+
+                if (! $device->mtas->first()) {
+                    break;
+                }
+                foreach ($device->mtas->first()->phonenumbers as $phone) {
+                    // use the port number as primary index key, so {phonenumber.number.1} will be the phone with port 1, not id 1 !
+                    $phonenumber[$phone->port] = $phone;
+                    // get description of table phonennumbers; one subarray per (possible) number
+                    $db_schemata['phonenumber'][$phone->port] = Schema::getColumnListing('phonenumber');
+                }
                 break;
 
             // this is for unknown types – atm we do nothing
