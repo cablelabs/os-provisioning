@@ -761,24 +761,34 @@ class Modem extends \BaseModel
      * Create TR-069 configfile.
      * GenieACS API: https://github.com/genieacs/genieacs/wiki/API-Reference
      *
-     * @author Roy Schneider
+     * @author Ole Ernst
      */
     public function createGenieAcsPresets($text = null)
     {
-        $text = $text ?? self::join('configfile', 'modem.configfile_id', 'configfile.id')->where('modem.id', $this->id)->first()->text;
-
+        $text = $text ?? $this->configfile->text;
         if (! $text) {
             return;
         }
 
-        $preset = $this->createGenieAcsProvisions($text) ? preg_replace('/("type"\s*:\s*"provision"\s*,\s*"name"\s*:\s*".*?").*?;"/ms', '\\1', $text) : $text;
+        $this->createGenieAcsProvisions($text);
 
         foreach (['sn' => $this->serial_num, 'mac' => $this->mac] as $name => $identifier) {
-            $this->callGenieAcsApi(
-                "http://localhost:7557/presets/{$name}_{$this->id}",
-                'PUT',
-                '{ "weight": 0, "precondition": "{\"_deviceId._SerialNumber\":\"'.strtoupper($identifier).'\"}", "events":  { "0 BOOTSTRAP": true }, "configurations": '.$preset.'}'
-            );
+            $preset = [
+                'weight' => 0,
+                'precondition' => json_encode([
+                    '_deviceId._SerialNumber' => strtoupper($identifier),
+                ]),
+                'events' => [
+                    '0 BOOTSTRAP' => true,
+                ],
+                'configurations' => [
+                    [
+                        'type' => 'provision',
+                        'name' => $this->id,
+                    ],
+                ],
+            ];
+            $this->callGenieAcsApi("presets/{$name}_{$this->id}", 'PUT', json_encode($preset));
         }
     }
 
@@ -791,18 +801,57 @@ class Modem extends \BaseModel
      */
     public function createGenieAcsProvisions($text)
     {
-        if (! preg_match_all('/{(?:(?!"type").)*("type"\s*:\s*"provision".*?;(?="}))/s', $text, $matches)) {
-            return false;
+        $prefix = '';
+        $prov = [];
+
+        foreach (preg_split('/\r\n|\r|\n/', $text) as $line) {
+            $vals = str_getcsv(trim($line), ';');
+            if (! count($vals) || ! in_array($vals[0], ['add', 'clr', 'commit', 'del', 'get', 'jmp', 'reboot', 'set'])) {
+                continue;
+            }
+
+            if (! isset($vals[1])) {
+                $vals[1] = '';
+            }
+
+            $path = trim("$prefix.$vals[1]", '.');
+
+            switch ($vals[0]) {
+                case 'add':
+                    if (isset($vals[2])) {
+                        $prov[] = "declare('$path.[$vals[2]]', {value: Date.now()}, {path: 1});";
+                    }
+                    break;
+                case 'clr':
+                    $prov[] = "clear('$path', Date.now());";
+                    break;
+                case 'commit':
+                    $prov[] = 'commit();';
+                    break;
+                case 'del':
+                    $prov[] = "declare('$path.[]', null, {path: 0})";
+                    break;
+                case 'get':
+                    $prov[] = "declare('$path.*', {path: Date.now()});";
+                    break;
+                case 'jmp':
+                    $prefix = trim($vals[1], '.');
+                    break;
+                case 'reboot':
+                    if (! $vals[1]) {
+                        $vals[1] = 0;
+                    }
+                    $prov[] = "declare(\"Reboot\", null, {value: Date.now() - ($vals[1] * 1000)});";
+                    break;
+                case 'set':
+                    if (isset($vals[2])) {
+                        $prov[] = "declare('$path', {value: Date.now()} , {value: '$vals[2]'});";
+                    }
+                    break;
+            }
         }
 
-        $provisions = $matches[0];
-        foreach ($provisions as $provision) {
-            $provision = preg_split('/("type"\s*:\s*"?|\s*"?,\s*"name"\s*:\s*"?|\s*"?,\s*"value"\s*:\s*"?|";},$)/s', $provision);
-            $url = 'http://localhost:7557/provisions/'.$provision[2];
-            $this->callGenieAcsApi($url, 'PUT', $provision[3]);
-        }
-
-        return true;
+        $this->callGenieAcsApi("provisions/$this->id", 'PUT', implode("\r\n", $prov));
     }
 
     /**
@@ -860,27 +909,6 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Get preset from GenieACS via API.
-     *
-     * @return mixed
-     *
-     * @author Ole Ernst
-     */
-    public function getGenieAcsPreset()
-    {
-        foreach (['sn', 'mac'] as $name) {
-            $model = file_get_contents("http://localhost:7557/presets/?query={\"_id\":\"{$name}_{$this->id}\"}");
-            $length = preg_match('/[a-z]+/', $model);
-
-            if ($length) {
-                break;
-            }
-        }
-
-        return $length ? $model : null;
-    }
-
-    /**
      * Delete GenieACS presets.
      *
      * @author Roy Schneider
@@ -899,16 +927,7 @@ class Modem extends \BaseModel
      */
     public function deleteGenieAcsProvision()
     {
-        $provision = $this->getGenieAcsPreset();
-        preg_match_all('/("type":"provision","name":")(.*?(?="))/s', $provision, $matches);
-
-        foreach ($matches as $match) {
-            foreach ($match as $name) {
-                if (strpos($name, '"') === false) {
-                    $this->callGenieAcsApi("http://localhost:7557/provisions/$name", 'DELETE');
-                }
-            }
-        }
+        $this->callGenieAcsApi("provisions/$this->id", 'DELETE');
     }
 
     /**
