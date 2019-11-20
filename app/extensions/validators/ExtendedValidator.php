@@ -173,6 +173,11 @@ class ExtendedValidator
         if ($device == null) {
             return false;
         }
+        if ($device == 'tr069') {
+            // configfile is csv, nothing to validate
+            return true;
+        }
+
         $dir = "/tftpboot/$device";
         $cf_file = $dir.'dummy-validator.conf';
 
@@ -436,30 +441,5 @@ class ExtendedValidator
         // d($value, $attribute, $parameters, $this->getValue($parameters[0]));
 
         return $value ? false : true;
-    }
-
-    /**
-     * Check if string is a valid tr069 configfile.
-     * TODO: improve with createTr069Presets function
-     *
-     * @author Roy Schneider
-     */
-    public function validateTr069($attribute, $value, $parameters)
-    {
-        // display one parameter per line
-        $values = preg_replace("(;|:\s*|,\s*)", "\r\n", preg_replace('/("type"\s*:\s*"provision".*?);";/s', '', $value));
-        $lines = explode("\r\n", $values);
-        foreach ($lines as $line) {
-            if ($line == '') {
-                continue;
-            }
-
-            // if the string isn't between ""
-            if (! starts_with($line, '"') || ! ends_with($line, '"')) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
