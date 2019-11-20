@@ -639,6 +639,12 @@ class Modem extends \BaseModel
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
 
+        if ($this->isTR069()) {
+            $this->createGenieAcsPresets($this->configfile->text_make($this, 'tr069'));
+
+            return;
+        }
+
         /* Configfile */
         $dir = '/tftpboot/cm/';
         $cf_file = $dir."cm-$this->id.conf";
@@ -1702,11 +1708,6 @@ class ModemObserver
 
         // get changed values
         $diff = $modem->getDirty();
-
-        $configfile = Configfile::where('id', $modem->configfile_id)->first();
-        if ($configfile->device == 'tr069' && multi_array_key_exists(['serial_num', 'mac'], $diff)) {
-            \Queue::push($modem->createGenieAcsPresets($configfile->__text_make($modem, 'tr069')));
-        }
 
         // if testing: do not try to geocode or position modems (faked data; slows down the process)
         if (\App::runningUnitTests()) {

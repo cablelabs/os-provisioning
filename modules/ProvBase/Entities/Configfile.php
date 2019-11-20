@@ -153,7 +153,7 @@ class Configfile extends \BaseModel
      *
      * @param sw_up 	Bool 	true if Software upgrade statement is already set -> then the next one is discarded (child CF has priority)
      */
-    public function __text_make($device, $type, $sw_up = false)
+    private function __text_make($device, $type, $sw_up = false)
     {
         // for cfs of type modem, mta or generic
         // get global config - provisioning settings
@@ -452,21 +452,6 @@ class Configfile extends \BaseModel
         // handle configfile observer functionality via job in background
         if ($id) {
             $cf = self::find($id);
-
-            if ($cf->device == 'tr069') {
-                $modems = \Modules\ProvBase\Entities\Modem::select('*', 'modem.id')->join('configfile', 'configfile.id', 'modem.configfile_id')->where('configfile_id', $id)->get();
-
-                if ($modems->count() == 0) {
-                    return \Redirect::back();
-                }
-
-                $url = ProvBase::first()['provisioning_server'];
-
-                foreach ($modems as $key => $modem) {
-                    $modem->createGenieAcsPresets($this->__text_make($modem, 'tr069'));
-                }
-            }
-
             $cf->build_corresponding_configfiles();
             $cf->search_children(1);
 
@@ -484,7 +469,6 @@ class Configfile extends \BaseModel
             $modems = Modem::select('*', 'modem.id')->join('configfile', 'configfile.id', 'modem.configfile_id')->where('configfile.device', 'tr069')->get();
             foreach ($modems as $modem) {
                 $this->build_configfiles($modems, 'tr069');
-                $modem->createGenieAcsPresets($this->__text_make($modem, 'tr069'));
             }
         }
 
