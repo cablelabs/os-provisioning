@@ -69,7 +69,7 @@ class Configfile extends \BaseModel
     {
         $id = $this->id;
         // TODO: this should not be a database query
-        $children = self::where('parent_id', $id)->all();
+        $children = self::where('parent_id', $id)->get();
         $cf_tree = [];
 
         foreach ($children as $cf) {
