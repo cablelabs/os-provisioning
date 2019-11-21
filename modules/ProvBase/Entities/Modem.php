@@ -909,14 +909,26 @@ class Modem extends \BaseModel
                 $route .= "&projection=$projection";
             }
 
-            $genieModel = json_decode($this->callGenieAcsApi($route, 'GET'));
+            $model = json_decode($this->callGenieAcsApi($route, 'GET'));
 
-            if (! empty($genieModel)) {
+            if (! empty($model)) {
                 break;
             }
         }
+        $model = reset($model);
 
-        return reset($genieModel);
+        if (! $projection) {
+            return $model;
+        }
+
+        foreach (explode('.', $projection) as $idx) {
+            if (! isset($model->{$idx})) {
+                return false;
+            }
+            $model = $model->{$idx};
+        }
+
+        return $model;
     }
 
     /**

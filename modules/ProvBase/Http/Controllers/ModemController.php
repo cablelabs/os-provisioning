@@ -431,7 +431,7 @@ class ModemController extends \BaseController
             $model = $modem->getGenieAcsModel('_id');
 
             if ($model) {
-                $deviceId = rawurlencode($model->_id);
+                $deviceId = rawurlencode($model);
                 $success = $modem->callGenieAcsApi("devices/$deviceId/tasks?timeout=3000&connection_request", 'POST', '{ "name": "reboot" }');
             }
 
