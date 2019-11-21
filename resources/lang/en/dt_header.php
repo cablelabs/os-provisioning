@@ -6,6 +6,7 @@ return [
     'city' => 'City',
     'connected' => 'Connected',
     'connection_type' => 'Connection type',
+    'email' => 'Email',
     'expansion_degree' => 'Expansion degree',
     'floor' => 'Floor',
     'group_contract' => 'Group contract',
