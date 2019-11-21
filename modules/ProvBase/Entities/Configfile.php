@@ -258,6 +258,8 @@ class Configfile extends \BaseModel
             case 'tr069':
                 $modem = [$device];
                 $db_schemata['modem'][0] = Schema::getColumnListing('modem');
+                $qos = [$device->qos];
+                $db_schemata['qos'][0] = Schema::getColumnListing('qos');
 
                 if (! $device->mtas->first()) {
                     break;
