@@ -808,7 +808,12 @@ class Modem extends \BaseModel
     public function createGenieAcsProvisions($text)
     {
         $prefix = '';
-        $prov = [];
+
+        // during bootstrap always clear the info we have about the device
+        $prov = [
+            "clear('Device', Date.now());",
+            "clear('InternetGatewayDevice', Date.now());",
+        ];
 
         foreach (preg_split('/\r\n|\r|\n/', $text) as $line) {
             $vals = str_getcsv(trim($line), ';');
@@ -847,7 +852,7 @@ class Modem extends \BaseModel
                     if (! $vals[1]) {
                         $vals[1] = 0;
                     }
-                    $prov[] = "declare(\"Reboot\", null, {value: Date.now() - ($vals[1] * 1000)});";
+                    $prov[] = "declare('Reboot', null, {value: Date.now() - ($vals[1] * 1000)});";
                     break;
                 case 'set':
                     if (isset($vals[2])) {
