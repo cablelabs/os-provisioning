@@ -887,7 +887,13 @@ class Modem extends \BaseModel
                 ]);
 
         $result = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+
+        // No such device
+        if ($status == 202) {
+            $result = false;
+        }
 
         return $result;
     }
