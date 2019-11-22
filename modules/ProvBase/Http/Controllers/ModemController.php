@@ -83,7 +83,7 @@ class ModemController extends \BaseController
         $a = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
             ['form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list_with_count($model->configfiles(), 'name', false, '', 'configfile_id', 'modem'), 'help' => trans('helper.configfile_count'), 'select' => $cfIds['all']],
-            ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'select' => $cfIds['cm'], 'options' => ['readonly'], 'hidden' => 'C', 'space' => 1],
+            ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly'], 'hidden' => 'C', 'space' => 1],
             // TODO: show this dropdown only if necessary (e.g. not if creating a modem from contract context)
             ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')],
             ['form_type' => 'text', 'name' => 'serial_num', 'description' => trans('messages.Serial Number'), 'select' => $cfIds['tr069']],
@@ -416,6 +416,17 @@ class ModemController extends \BaseController
         }
 
         return parent::prepare_rules($rules, $data);
+    }
+
+    public function store($redirect = true)
+    {
+        if (Request::get('ppp_username') && ! \Modules\ProvBase\Entities\IpPool::findNextUnusedBrasIPAddress(Request::get('public'))) {
+            \Session::push('tmp_error_above_form', trans('messages.ippool_exhausted'));
+
+            return \Redirect::back()->withInput();
+        }
+
+        return parent::store();
     }
 
     /**

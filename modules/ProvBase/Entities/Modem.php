@@ -1664,6 +1664,32 @@ class Modem extends \BaseModel
         $this->updateRadUserGroups($delete);
         // TODO: restart modem
     }
+
+    public function nsupdate($delete = false)
+    {
+        $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name.'.';
+        $ip = $delete ? gethostbyname($fqdn) : IpPool::findNextUnusedBrasIPAddress($this->public);
+
+        if (! $ip || $ip == $fqdn) {
+            return;
+        }
+
+        $rev = implode('.', array_reverse(explode('.', $ip))).'.in-addr.arpa.';
+
+        $cmd = '';
+        if ($delete) {
+            $cmd .= "update delete $fqdn\nsend\n";
+            $cmd .= "update delete $rev\nsend\n";
+        } else {
+            $cmd .= "update add $fqdn 3600 A $ip\nsend\n";
+            $cmd .= "update add $rev 3600 PTR $fqdn\nsend\n";
+        }
+
+        $pw = env('DNS_PASSWORD');
+        $handle = popen("/usr/bin/nsupdate -v -l -y dhcpupdate:$pw", 'w');
+        fwrite($handle, $cmd);
+        pclose($handle);
+    }
 }
 
 /**
@@ -1678,28 +1704,32 @@ class ModemObserver
 {
     public function created($modem)
     {
-        if ($modem->configfile->device == 'tr069') {
-            $modem->hostname = 'tr-'.$modem->id;
-            $modem->updateRadius(false);
-            \Queue::push(new \Modules\ProvBase\Jobs\ConfigfileJob(null, $modem->configfile->id));
-            $modem->save();
-
-            return;
-        }
-
         Log::debug(__METHOD__.' started for '.$modem->hostname);
-
-        $modem->hostname = 'cm-'.$modem->id;
-        $modem->save();	 // forces to call the updating() and updated() method of the observer !
-        Modem::create_ignore_cpe_dhcp_file();
-
-        if (\Module::collections()->has('ProvMon') && ! $modem->isPPP()) {
-            Log::info("Create cacti diagrams for modem: $modem->hostname");
-            \Artisan::call('nms:cacti', ['--netgw-id' => 0, '--modem-id' => $modem->id]);
-        }
 
         if (\Module::collections()->has('PropertyManagement')) {
             $modem->updateAddressFromProperty();
+        }
+
+        if ($modem->isPPP()) {
+            $modem->hostname = 'ppp-'.$modem->id;
+            $modem->nsupdate(false);
+            $modem->updateRadius(false);
+            $modem->save();
+        } else {
+            $modem->hostname = 'cm-'.$modem->id;
+            $modem->save();  // forces to call the updating() and updated() method of the observer !
+            Modem::create_ignore_cpe_dhcp_file();
+
+            if (\Module::collections()->has('ProvMon')) {
+                Log::info("Create cacti diagrams for modem: $modem->hostname");
+                \Artisan::call('nms:cacti', ['--netgw-id' => 0, '--modem-id' => $modem->id]);
+            }
+        }
+
+        if ($modem->isTR069()) {
+            // this needs to be called after updateRadius(false), since this creates the password
+            // which might be used here
+            \Queue::push(new \Modules\ProvBase\Jobs\ConfigfileJob(null, $modem->configfile->id));
         }
     }
 
@@ -1802,16 +1832,20 @@ class ModemObserver
     {
         Log::debug(__METHOD__.' started for '.$modem->hostname);
 
-        if (Configfile::select(['device'])->where('id', $modem->configfile_id)->first()->device == 'cm') {
+        if ($modem->isTR069()) {
+            $modem->deleteGenieAcsProvision();
+            $modem->deleteGenieAcsPreset();
+        }
+
+        if ($modem->isPPP()) {
+            $modem->nsupdate(true);
+            $modem->updateRadius(true);
+        } else {
             // $modem->make_dhcp_cm_all();
             Modem::create_ignore_cpe_dhcp_file();
             $modem->make_dhcp_cm(true);
             $modem->restart_modem();
             $modem->delete_configfile();
-        } else {
-            $modem->deleteGenieAcsProvision();
-            $modem->deleteGenieAcsPreset();
-            $modem->updateRadius(true);
         }
     }
 }

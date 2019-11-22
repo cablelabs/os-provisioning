@@ -338,6 +338,7 @@ return [
     'SNMP Public Community String'  => 'SNMP öffentlicher Community String',
     'noCC'                  => 'Keine Kostenstelle zugewiesen',
     'IP-Pools'                  => 'IP-Bereich',
+    'ippool_exhausted'          => 'Keine freien IP Adressen gefunden: Bitte den vorhanden IpPool erweitern oder neuen anlegen',
     'Type of Pool'              => 'Art des IP-Bereichs',
     'Type of signal' => 'Signaltyp/Anschlussart',
     'IP network'                => 'IP Netz',
