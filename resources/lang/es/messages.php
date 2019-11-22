@@ -284,7 +284,7 @@ desde el punto en que un módem estaba en línea. Si todos los diagramas no se m
     'Accounting Text (optional)'=> 'Informacion adicional (opcional)',
     'Cost Center (optional)'	=> 'Centro de costo (opcional)',
     'Credit Amount' 			=> 'Importe de crédito',
-    'modem_restart_success_direct' => 'Modem reiniciado directamente por SNMP',
+    'modem_restart_success_direct' => 'Modem reiniciado directamente por SNMP/TR069',
     'Item'						=> 'Artículo',
     'Items'						=> 'Artículos',
     'modem_save_button_title' 	=> 'Guarda datos cambiados. Determina una nueva geoposition cuando los datos de direccion han sido cambiados (y lo asigna a un nuevo MPR si es necesario). Reconstruye el archivo de configuracion y reinicia el modem si por lo menos algo de lo siguiente ha sido cambiado: IP Publica, acceso a la red, archivo de configuracion, QoS, direccion-MAC',

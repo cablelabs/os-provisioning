@@ -310,7 +310,7 @@ return [
     'Accounting Text (optional)'=> 'Accounting Text (optional)',
     'Cost Center (optional)'    => 'Cost Center (optional)',
     'Credit Amount'             => 'Credit Amount',
-    'modem_restart_success_direct' => 'Restarted Modem directly via SNMP',
+    'modem_restart_success_direct' => 'Restarted Modem directly via SNMP/TR069',
     'Item'                      => 'Item',
     'Items'                     => 'Items',
     'modem_save_button_title'   => 'Saves changed data. Determines new geoposition when address data was changed and assigns it to a new MPR (if x/y coordinate was automatically or manually changed). Rebuilds the configfile and restarts the modem if at least one of the following has changed: Public IP, network access, configfile, QoS, MAC-address.',

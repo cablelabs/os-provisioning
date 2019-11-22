@@ -310,7 +310,7 @@ return [
     'Accounting Text (optional)'=> 'Verwendungszweck (optional)',
     'Cost Center (optional)'    => 'Kostenstelle (optional)',
     'Credit Amount'             => 'Gutschrift - Betrag',
-    'modem_restart_success_direct' => 'Das Modem wurde erfolgreich direkt über SNMP neugestartet',
+    'modem_restart_success_direct' => 'Das Modem wurde erfolgreich direkt über SNMP/TR069',
     'Item'                      => 'Posten',
     'Items'                     => 'Posten',
     'modem_save_button_title'   => 'Speichert geänderte Daten. Berechnet die Geoposition neu, wenn Adressdaten geändert wurden und weist es ggf. einer neuen MPR hinzu (falls sich x/y Koordinate geändert hat oder manuell geändert wurde). Baut das Configfile und startet das Modem neu, wenn sich mindestens eines der folgenden Einträge geändert hat: Öffentliche IP, Netzwerkzugriff, Configfile, QoS, MAC-Adresse.',

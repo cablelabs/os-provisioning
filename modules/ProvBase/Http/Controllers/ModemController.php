@@ -435,28 +435,11 @@ class ModemController extends \BaseController
      */
     public function update($id)
     {
-        $modem = Modem::find($id);
-        $configfile = \Modules\ProvBase\Entities\Configfile::join('modem', 'modem.configfile_id', 'configfile.id')->where('configfile.id', $modem->configfile_id)->first();
-
-        if ($configfile->device == 'tr069' && Request::filled('_2nd_action')) {
-            $model = $modem->getGenieAcsModel('_id');
-
-            if ($model) {
-                $deviceId = rawurlencode($model);
-                $success = $modem->callGenieAcsApi("devices/$deviceId/tasks?timeout=3000&connection_request", 'POST', '{ "name": "reboot" }');
-            }
-
-            if (! $success) {
-                \Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
-            }
-
-            return \Redirect::back();
-        }
-
         if (! Request::filled('_2nd_action') && ! Request::filled('_3rd_action')) {
             return parent::update($id);
         }
 
+        $modem = Modem::find($id);
         $modem->restart_modem(false, Request::filled('_3rd_action'));
 
         return \Redirect::back();

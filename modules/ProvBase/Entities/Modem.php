@@ -915,6 +915,11 @@ class Modem extends \BaseModel
                 break;
             }
         }
+
+        if (! $model) {
+            return false;
+        }
+
         $model = reset($model);
 
         if (! $projection) {
@@ -1041,6 +1046,28 @@ class Modem extends \BaseModel
     {
         // Log
         Log::info('restart modem '.$this->hostname);
+
+        if ($this->isTR069()) {
+            $id = $this->getGenieAcsModel('_id');
+            if (! $id) {
+                \Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
+
+                return;
+            }
+
+            $id = rawurlencode($id);
+            $success = $this->callGenieAcsApi("devices/$id/tasks?timeout=3000&connection_request", 'POST', '{ "name" : "reboot" }');
+
+            if (! $success) {
+                \Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
+
+                return;
+            }
+
+            \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_direct'));
+
+            return;
+        }
 
         // if hostname cant be resolved we dont want to have an php error
         try {
