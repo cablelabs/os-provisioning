@@ -461,16 +461,15 @@ class Configfile extends \BaseModel
         }
 
         // Modem
-        if (! $filter || $filter == 'cm') {
-            $cms = Modem::join('configfile', 'configfile.id', 'modem.configfile_id')->where('configfile.device', 'cm')->get();
-            $this->build_configfiles($cms, 'cm');
-        }
+        foreach (['cm', 'tr069'] as $type) {
+            if (! $filter || $filter == $type) {
+                $modems = Modem::join('configfile', 'configfile.id', 'modem.configfile_id')
+                    ->where('configfile.device', $type)
+                    ->whereNull('configfile.deleted_at')
+                    ->select('modem.*')
+                    ->get();
 
-        // Tr-069
-        if (! $filter || $filter == 'tr069') {
-            $modems = Modem::select('*', 'modem.id')->join('configfile', 'configfile.id', 'modem.configfile_id')->where('configfile.device', 'tr069')->get();
-            foreach ($modems as $modem) {
-                $this->build_configfiles($modems, 'tr069');
+                $this->build_configfiles($modems, $type);
             }
         }
 
