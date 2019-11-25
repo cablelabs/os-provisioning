@@ -110,7 +110,7 @@ class ConfigfileController extends \BaseController
             return trans('messages.invalidJson');
         }
 
-        $this->recreateTree($json, Request::get()['name'] == '' ? true : false, Configfile::all()->pluck('name'));
+        $this->recreateTree($json, Request::get('name') == '' ? true : false, Configfile::all()->pluck('name'));
     }
 
     /**
