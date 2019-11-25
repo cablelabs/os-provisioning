@@ -74,10 +74,10 @@ class InstallInitRadiusAndAcs extends BaseMigration
         }
 
         $filename = '/lib/node_modules/genieacs/config/config.json';
-        $provServer = Modules\ProvBase\Entities\ProvBase::first()['provisioning_server'];
-        $content = file_get_contents($filename);
-        $content = preg_replace('/^\s*"FS_HOSTNAME"\s*:.*/m', "  \"FS_HOSTNAME\" : \"$provServer\",", $content);
-        file_put_contents($filename, $content);
+        $conf = json_decode(file_get_contents($filename));
+        unset($conf->FS_HOSTNAME);
+        $conf->NBI_INTERFACE = 'localhost';
+        file_put_contents($filename, json_encode($conf));
 
         foreach (['radiusd', 'mongod', 'genieacs-cwmp', 'genieacs-fs', 'genieacs-nbi'] as $service) {
             exec("systemctl enable $service.service");
