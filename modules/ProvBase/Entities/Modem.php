@@ -280,6 +280,11 @@ class Modem extends \BaseModel
         return $this->hasOne('Modules\ProvBase\Entities\RadCheck', 'username', 'ppp_username');
     }
 
+    public function radreply()
+    {
+        return $this->hasOne('Modules\ProvBase\Entities\RadReply', 'username', 'ppp_username');
+    }
+
     public function radusergroups()
     {
         return $this->hasMany('Modules\ProvBase\Entities\RadUserGroup', 'username', 'ppp_username');
@@ -1661,6 +1666,27 @@ class Modem extends \BaseModel
         }
     }
 
+    private function updateRadReply($delete)
+    {
+        if ($delete || ! $this->isPPP() || ! $this->internet_access) {
+            $this->radreply()->delete();
+
+            return;
+        }
+
+        // add RadReply, if it doesn't exist
+        if (! $this->radreply()->count()) {
+            $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name.'.';
+
+            $reply = new RadReply;
+            $reply->username = $this->ppp_username;
+            $reply->attribute = 'Framed-IP-Address';
+            $reply->op = ':=';
+            $reply->value = gethostbyname($this->fqdn);
+            $reply->save();
+        }
+    }
+
     /**
      * Synchronize radusergroups with modem table, if PPPoE is used.
      *
@@ -1705,6 +1731,7 @@ class Modem extends \BaseModel
     public function updateRadius($delete)
     {
         $this->updateRadCheck($delete);
+        $this->updateRadReply($delete);
         $this->updateRadUserGroups($delete);
         // TODO: restart modem
     }
