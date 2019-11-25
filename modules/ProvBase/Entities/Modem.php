@@ -1048,10 +1048,10 @@ class Modem extends \BaseModel
     /**
      * Restarts modem through snmpset
      */
-    public function restart_modem($mac_changed = false, $modem_reset = false)
+    public function restart_modem($mac_changed = false, $modem_reset = false, $factoryReset = false)
     {
         // Log
-        Log::info('restart modem '.$this->hostname);
+        Log::info('restart/factoryReset modem '.$this->hostname);
 
         if ($this->isTR069()) {
             $id = $this->getGenieAcsModel('_id');
@@ -1062,7 +1062,8 @@ class Modem extends \BaseModel
             }
 
             $id = rawurlencode($id);
-            $success = $this->callGenieAcsApi("devices/$id/tasks?timeout=3000&connection_request", 'POST', '{ "name" : "reboot" }');
+            $action = $factoryReset ? 'factoryReset' : 'reboot';
+            $success = $this->callGenieAcsApi("devices/$id/tasks?timeout=3000&connection_request", 'POST', "{ \"name\" : \"$action\" }");
 
             if (! $success) {
                 \Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
@@ -1121,6 +1122,16 @@ class Modem extends \BaseModel
                 }
             }
         }
+    }
+
+    /**
+     * Perform a factory reset on a TR-069 device
+     *
+     * @author: Ole Ernst
+     */
+    public function factoryReset()
+    {
+        return $this->restart_modem(false, false, true);
     }
 
     /**
