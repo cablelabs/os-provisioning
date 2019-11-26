@@ -120,16 +120,30 @@ class ConfigfileController extends \BaseController
     public function replaceIds($content)
     {
         // array of in file existing id's (id":number,)
-        preg_match_all('/id":\d+,/', $content, $importedIds);
-        $importedIds = array_unique($importedIds[0]);
+        preg_match_all('/id":(\d+),/', $content, $importedIds);
+        $importedIdStrings = array_unique($importedIds[0]);
+        $importedIds = array_unique($importedIds[1]);
+        sort($importedIdStrings, SORT_NATURAL);
         sort($importedIds, SORT_NATURAL);
 
         $maxId = Configfile::withTrashed()->max('id');
         $startId = $maxId ? ++$maxId : 1;
+        $tempImportId = $startId + last($importedIds) + 1;
 
-        foreach ($importedIds as $id) {
-            $content = str_replace($id, 'id":'.$startId.',', $content);
+        if (strpos($content, 'id":'.$startId.',')) {
+            $this->replaceDuplicateId($content, $importedIds, $importedIdStrings, $startId, $tempImportId);
+            $tempImportId++;
+        }
+
+        foreach ($importedIdStrings as $key => $idString) {
+            if (($startId + 1) === $importedIds[$key]) {
+                $this->replaceDuplicateId($content, $importedIds, $importedIdStrings, $startId + 1, $tempImportId);
+            }
+
+            $content = str_replace($idString, 'id":'.$startId.',', $content);
+
             $startId++;
+            $tempImportId++;
         }
 
         // Uploaded File has a Root CF
@@ -141,6 +155,19 @@ class ConfigfileController extends \BaseController
         preg_match_all('/parent_id":\d+,/', $content, $parentIds);
 
         return str_replace(array_shift($parentIds[0]), 'parent_id":'.Request::get('parent_id').',', $content);
+    }
+
+    protected function replaceDuplicateId(&$content, &$importedIds, &$importedIdStrings, $start, $tempImportId)
+    {
+        $content = str_replace('id":'.($start).',', 'id":'.($tempImportId).',', $content);
+
+        $importedIds = array_map(function ($id) use ($start, $tempImportId) {
+            return $id == $start ? $tempImportId : intval($id);
+        }, $importedIds);
+
+        $importedIdStrings = array_map(function ($idString) use ($start, $tempImportId) {
+            return $idString === 'id":'.($start).',' ? 'id":'.($tempImportId).',' : $idString;
+        }, $importedIdStrings);
     }
 
     /**
