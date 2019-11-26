@@ -1668,9 +1668,6 @@ class Modem extends \BaseModel
             $psw = $this->ppp_password;
             if (! $psw) {
                 $psw = \Acme\php\Password::generate_password();
-                // don't trigger an event
-                // TODO: this should be done using https://stackoverflow.com/a/55931917 once we are at laravel 5.7
-                //\DB::update('UPDATE modem set ppp_password = ? where deleted_at is NULL and id = ?', [$psw, $this->id]);
                 $this->ppp_password = $psw;
             }
 
@@ -1822,12 +1819,6 @@ class ModemObserver
                 \Artisan::call('nms:cacti', ['--netgw-id' => 0, '--modem-id' => $modem->id]);
             }
         }
-
-        if ($modem->isTR069()) {
-            // this needs to be called after updateRadius(false), since this creates the password
-            // which might be used here
-            \Queue::push(new \Modules\ProvBase\Jobs\ConfigfileJob(null, $modem->configfile->id));
-        }
     }
 
     public function updating($modem)
@@ -1901,13 +1892,13 @@ class ModemObserver
         // only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
         $diff = $modem->getDirty();
 
-        if (Configfile::select(['device'])->where('id', $modem->configfile_id)->first()->device == 'cm') {
-            if (multi_array_key_exists(['contract_id', 'public', 'internet_access', 'configfile_id', 'qos_id', 'mac'], $diff)) {
+        if (multi_array_key_exists(['contract_id', 'public', 'internet_access', 'configfile_id', 'qos_id', 'mac'], $diff)) {
+            if (! $modem->isTR069()) {
                 Modem::create_ignore_cpe_dhcp_file();
                 $modem->make_dhcp_cm();
                 $modem->restart_modem(array_key_exists('mac', $diff));
-                $modem->make_configfile();
             }
+            $modem->make_configfile();
         }
 
         if (! $modem->wasRecentlyCreated) {
