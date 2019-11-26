@@ -76,16 +76,16 @@ class ConfigfileController extends \BaseController
      */
     public function store($redirect = true)
     {
-        // check and handle uploaded firmware and cvc files
-        $this->handle_file_upload('firmware', '/tftpboot/fw/');
-        $this->handle_file_upload('cvc', '/tftpboot/cvc/');
-        $error = $this->importTree();
-
-        if ($error) {
+        if (Request::hasFile('import')) {
+            $error = $this->importTree();
             \Session::push('tmp_error_above_form', $error);
 
             return redirect()->back();
         }
+
+        // check and handle uploaded firmware and cvc files
+        $this->handle_file_upload('firmware', '/tftpboot/fw/');
+        $this->handle_file_upload('cvc', '/tftpboot/cvc/');
 
         // finally: call base method
         return parent::store();
@@ -99,10 +99,6 @@ class ConfigfileController extends \BaseController
      */
     public function importTree()
     {
-        if (! Request::hasFile('import')) {
-            return;
-        }
-
         $content = $this->replaceIds(\File::get(Request::file('import')));
 
         $json = json_decode($content, true);
@@ -111,7 +107,7 @@ class ConfigfileController extends \BaseController
             return trans('messages.invalidJson');
         }
 
-        $this->recreateTree($json, Request::get('name') == '' ? true : false, Configfile::all()->pluck('name'));
+        $this->recreateTree($json, Request::filled('name'), Configfile::pluck('name'));
     }
 
     /**
@@ -197,22 +193,23 @@ class ConfigfileController extends \BaseController
      *
      * @author Roy Schneider
      * @param array $content
-     * @param bool $hasName
+     * @param bool $requestHasNameInput
      * @return bool
      */
-    public function checkAndSetContent($content, $hasName)
+    public function checkAndSetContent($configfile, $requestHasNameInput)
     {
-        if (! $hasName) {
-            Configfile::create($content);
+        // CF-Form was not filled
+        if (! $requestHasNameInput) {
+            Configfile::create($configfile);
 
             return;
         }
 
-        Request::merge($content);
+        Request::merge($configfile);
         Request::merge(['import' => 'import']);
 
         // only continue if the input would pass the validation
-        if (\Validator::make($content, $this->prepare_rules(Configfile::rules(), $content))->fails()) {
+        if (\Validator::make($configfile, $this->prepare_rules(Configfile::rules(), $configfile))->fails()) {
             return true;
         }
     }
