@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Request;
 use Modules\ProvBase\Entities\Configfile;
 
@@ -123,25 +124,27 @@ class ConfigfileController extends \BaseController
     public function replaceIds($content)
     {
         // array of in file existing id's (id":number,)
-        preg_match_all('/[i][d]["][:]\d+[,]/', $content, $importedIds);
+        preg_match_all('/id":\d+,/', $content, $importedIds);
         $importedIds = array_unique($importedIds[0]);
         sort($importedIds, SORT_NATURAL);
 
         $maxId = Configfile::withTrashed()->max('id');
-
-        $startId = $maxId ? ++$maxId : 0;
+        $startId = $maxId ? ++$maxId : 1;
 
         foreach ($importedIds as $id) {
             $content = str_replace($id, 'id":'.$startId.',', $content);
             $startId++;
         }
 
-        // replace first parent_id with parent_id of input
-        preg_match_all('/[a-t]{6}.[d-i]{2}["][:]\d+[,]/', $content, $ids);
-        $parentId = array_shift($ids[0]);
-        $input = Request::get('parent_id');
+        // Uploaded File has a Root CF
+        if (Str::contains($content, 'parent_id":null,')) {
+            return $content;
+        }
 
-        return str_replace($parentId, 'parent_id":'.$input.',', $content);
+        // if CF-subbranch, replace parent_id with parent_id of input
+        preg_match_all('/parent_id":\d+,/', $content, $parentIds);
+
+        return str_replace(array_shift($parentIds[0]), 'parent_id":'.Request::get('parent_id').',', $content);
     }
 
     /**
