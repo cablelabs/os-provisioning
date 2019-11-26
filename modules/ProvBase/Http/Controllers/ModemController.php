@@ -383,6 +383,10 @@ class ModemController extends \BaseController
         // ISO 3166 country codes are uppercase
         $data['country_code'] = \Str::upper($data['country_code']);
 
+        if (isset($data['serial_num'])) {
+            $data['serial_num'] = \Str::upper($data['serial_num']);
+        }
+
         return unify_mac($data);
     }
 

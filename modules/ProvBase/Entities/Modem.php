@@ -783,24 +783,23 @@ class Modem extends \BaseModel
 
         $this->createGenieAcsProvisions($text);
 
-        foreach (['sn' => $this->serial_num, 'mac' => $this->mac] as $name => $identifier) {
-            $preset = [
-                'weight' => 0,
-                'precondition' => json_encode([
-                    '_deviceId._SerialNumber' => strtoupper($identifier),
-                ]),
-                'events' => [
-                    '0 BOOTSTRAP' => true,
+        $preset = [
+            'weight' => 0,
+            'precondition' => json_encode([
+                '_deviceId._SerialNumber' => $this->serial_num,
+            ]),
+            'events' => [
+                '0 BOOTSTRAP' => true,
+            ],
+            'configurations' => [
+                [
+                    'type' => 'provision',
+                    'name' => $this->id,
                 ],
-                'configurations' => [
-                    [
-                        'type' => 'provision',
-                        'name' => $this->id,
-                    ],
-                ],
-            ];
-            self::callGenieAcsApi("presets/{$name}_{$this->id}", 'PUT', json_encode($preset));
-        }
+            ],
+        ];
+
+        self::callGenieAcsApi("presets/$this->id", 'PUT', json_encode($preset));
     }
 
     /**
@@ -949,19 +948,12 @@ class Modem extends \BaseModel
      */
     public function getGenieAcsModel($projection = null)
     {
-        foreach ([$this->serial_num, $this->mac] as $serial) {
-            $serial = strtoupper($serial);
-            $route = "devices/?query={\"_deviceId._SerialNumber\":\"$serial\"}";
-            if ($projection) {
-                $route .= "&projection=$projection";
-            }
-
-            $model = json_decode(self::callGenieAcsApi($route, 'GET'));
-
-            if (! empty($model)) {
-                break;
-            }
+        $route = "devices/?query={\"_deviceId._SerialNumber\":\"$this->serial_num\"}";
+        if ($projection) {
+            $route .= "&projection=$projection";
         }
+
+        $model = json_decode(self::callGenieAcsApi($route, 'GET'));
 
         if (! $model) {
             return false;
@@ -990,9 +982,7 @@ class Modem extends \BaseModel
      */
     public function deleteGenieAcsPreset()
     {
-        foreach (['sn', 'mac'] as $name) {
-            self::callGenieAcsApi("presets/${name}_$this->id", 'DELETE');
-        }
+        self::callGenieAcsApi("presets/$this->id", 'DELETE');
     }
 
     /**
