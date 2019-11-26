@@ -799,7 +799,7 @@ class Modem extends \BaseModel
                     ],
                 ],
             ];
-            $this->callGenieAcsApi("presets/{$name}_{$this->id}", 'PUT', json_encode($preset));
+            self::callGenieAcsApi("presets/{$name}_{$this->id}", 'PUT', json_encode($preset));
         }
     }
 
@@ -867,7 +867,7 @@ class Modem extends \BaseModel
             }
         }
 
-        $this->callGenieAcsApi("provisions/$this->id", 'PUT', implode("\r\n", $prov));
+        self::callGenieAcsApi("provisions/$this->id", 'PUT', implode("\r\n", $prov));
     }
 
     /**
@@ -879,7 +879,7 @@ class Modem extends \BaseModel
      * @param string $data
      * @return mixed $result
      */
-    public function callGenieAcsApi($route, $customRequest, $data = null)
+    public static function callGenieAcsApi($route, $customRequest, $data = null)
     {
         $ch = curl_init();
 
@@ -920,7 +920,7 @@ class Modem extends \BaseModel
                 $route .= "&projection=$projection";
             }
 
-            $model = json_decode($this->callGenieAcsApi($route, 'GET'));
+            $model = json_decode(self::callGenieAcsApi($route, 'GET'));
 
             if (! empty($model)) {
                 break;
@@ -955,7 +955,7 @@ class Modem extends \BaseModel
     public function deleteGenieAcsPreset()
     {
         foreach (['sn', 'mac'] as $name) {
-            $this->callGenieAcsApi("presets/${name}_$this->id", 'DELETE');
+            self::callGenieAcsApi("presets/${name}_$this->id", 'DELETE');
         }
     }
 
@@ -966,7 +966,7 @@ class Modem extends \BaseModel
      */
     public function deleteGenieAcsProvision()
     {
-        $this->callGenieAcsApi("provisions/$this->id", 'DELETE');
+        self::callGenieAcsApi("provisions/$this->id", 'DELETE');
     }
 
     /**
@@ -1068,7 +1068,7 @@ class Modem extends \BaseModel
 
             $id = rawurlencode($id);
             $action = $factoryReset ? 'factoryReset' : 'reboot';
-            $success = $this->callGenieAcsApi("devices/$id/tasks?timeout=3000&connection_request", 'POST', "{ \"name\" : \"$action\" }");
+            $success = self::callGenieAcsApi("devices/$id/tasks?timeout=3000&connection_request", 'POST', "{ \"name\" : \"$action\" }");
 
             if (! $success) {
                 \Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
