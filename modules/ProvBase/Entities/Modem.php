@@ -804,6 +804,42 @@ class Modem extends \BaseModel
     }
 
     /**
+     * Refresh the online state of all TR069 device by checking
+     * if they last informed us within the last 5 minutes
+     *
+     * @author Ole Ernst
+     */
+    public static function refreshTR069()
+    {
+        $query = [
+            '_lastInform' => [
+                '$gt' => \Carbon\Carbon::now('UTC')->subMinute(5)->toIso8601ZuluString(),
+            ],
+        ];
+
+        $query = json_encode($query);
+        $route = "devices/?query=$query&projection=_deviceId._SerialNumber";
+
+        $online = array_map(function ($value) {
+            return $value->_deviceId->_SerialNumber ?? null;
+        }, json_decode(self::callGenieAcsApi($route, 'GET')));
+
+        DB::beginTransaction();
+        // make all tr069 devices offline
+        // toBase() is needed since updated_at is ambiguous
+        self::join('configfile', 'configfile.id', 'modem.configfile_id')
+            ->where('configfile.device', 'tr069')
+            ->whereNull('configfile.deleted_at')
+            ->toBase()
+            ->update(['us_pwr' => 0, 'modem.updated_at' => now()]);
+
+        // make all tr069 devices online, which informed us in the last 5 minutes
+        // for now we set them to a sensible DOCIS US power level to make them green
+        self::whereIn('serial_num', $online)->update(['us_pwr' => 45]);
+        DB::commit();
+    }
+
+    /**
      * Create Provision from configfile.text.
      *
      * @author Roy Schneider
