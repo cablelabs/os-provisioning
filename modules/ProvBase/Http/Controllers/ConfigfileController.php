@@ -157,6 +157,18 @@ class ConfigfileController extends \BaseController
         return str_replace(array_shift($parentIds[0]), 'parent_id":'.Request::get('parent_id').',', $content);
     }
 
+    /**
+     * If the Imported Configfiles have IDs that are in the range of the new
+     * created Configfiles the IDs are overwritten and cause DB errors. The
+     * Ids get replaced with a higher number to prevent that.
+     *
+     * @param string $content
+     * @param array $importedIds
+     * @param array $importedIdStrings
+     * @param int $start
+     * @param int $tempImportId
+     * @return void
+     */
     protected function replaceDuplicateId(&$content, &$importedIds, &$importedIdStrings, $start, $tempImportId)
     {
         $content = str_replace('id":'.($start).',', 'id":'.($tempImportId).',', $content);
