@@ -1932,6 +1932,7 @@ class ModemObserver
         if ($modem->isTR069()) {
             $modem->deleteGenieAcsProvision();
             $modem->deleteGenieAcsPreset();
+            $modem->factoryReset();
         }
 
         if ($modem->isPPP()) {
