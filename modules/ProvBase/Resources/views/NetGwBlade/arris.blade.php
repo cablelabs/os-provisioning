@@ -19,7 +19,13 @@ cable load-balance policy 1 rule 1
 snmp-server
 no ip domain-lookup
 logging host {!!$cb->prov_ip!!} facility local0
+@if (! \Module::collections()->has('ProvHA'))
 ntp server {!!$cb->prov_ip!!} burst prefer minpoll 6 maxpoll 10 version 4 key 0
+@else
+@foreach ($cb->provha_servers as $provha_server)
+ntp server {!!$provha_server!!} burst prefer minpoll 6 maxpoll 10 version 4 key 0
+@endforeach
+@endif
 clock timezone Europe/Berlin
 clock network ntp
 enable secret 5 {!!$cb->enable_secret!!}
@@ -53,7 +59,13 @@ interface cable-mac 1
 exit
 interface cable-mac 1.0
 @include('provbase::NetGwBlade.bundle_ips')
+@if (! \Module::collections()->has('ProvHA'))
  cable helper-address {!!$cb->prov_ip!!}
+@else
+@foreach ($cb->provha_servers as $provha_server)
+ cable helper-address {!!$provha_server!!}
+@endforeach
+@endif
 exit
 interface cable-mac 1 cable bundle master
 interface cable-mac 1 no shutdown

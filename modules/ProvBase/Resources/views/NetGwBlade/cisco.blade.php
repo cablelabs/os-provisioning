@@ -63,8 +63,15 @@ interface Bundle1
  ip policy route-map NAT
  cable arp filter request-send 3 2
  cable arp filter reply-accept 3 2
+@if (! \Module::collections()->has('ProvHA'))
  cable helper-address {!!$cb->prov_ip!!}
+@else
+@foreach ($cb->provha_servers as $provha_server)
+ cable helper-address {!!$provha_server!!}
+@endforeach
+@endif
  @include('provbase::NetGwBlade.ipv6')
+
 !
 ip classless
 ip route 0.0.0.0 0.0.0.0 {!!$cb->router_ip!!}
@@ -127,5 +134,11 @@ exception pxf style minimal
 exception pxf flash flash:
 !
 ntp update-calendar
+@if (! \Module::collections()->has('ProvHA'))
 ntp server {!!$cb->prov_ip!!}
+@else
+@foreach ($cb->provha_servers as $provha_server)
+ntp server {!!$provha_server!!}
+@endforeach
+@endif
 !
