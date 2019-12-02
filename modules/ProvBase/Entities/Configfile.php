@@ -503,6 +503,25 @@ class Configfile extends \BaseModel
 
         echo "\n";
     }
+
+    /**
+     * Get monitoring config based on the json string found in the configfile
+     *
+     * @author Ole Ernst
+     */
+    public function getMonitoringConfig()
+    {
+        if (! preg_match('/#monitoring:({.*})/', $this->text, $matches)) {
+            return false;
+        }
+
+        $conf = json_decode($matches[1], true);
+        if (! $conf) {
+            return false;
+        }
+
+        return $conf;
+    }
 }
 
 /**
