@@ -1712,7 +1712,7 @@ class Modem extends \BaseModel
             $reply->username = $this->ppp_username;
             $reply->attribute = 'Framed-IP-Address';
             $reply->op = ':=';
-            $reply->value = gethostbyname($this->fqdn);
+            $reply->value = gethostbyname($fqdn);
             $reply->save();
         }
     }
