@@ -883,7 +883,7 @@ class Modem extends \BaseModel
                     $prov[] = "declare('$path.[]', null, {path: 0})";
                     break;
                 case 'get':
-                    $prov[] = "declare('$path.*', {path: Date.now()});";
+                    $prov[] = "declare('$path.*', {value: Date.now()});";
                     break;
                 case 'jmp':
                     $prefix = trim($vals[1], '.');
