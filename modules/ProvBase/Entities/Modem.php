@@ -800,6 +800,12 @@ class Modem extends \BaseModel
         ];
 
         self::callGenieAcsApi("presets/$this->id", 'PUT', json_encode($preset));
+
+        unset($preset['events']['0 BOOTSTRAP']);
+        $preset['events']['2 PERIODIC'] = true;
+        $preset['configurations'][0]['name'] = "mon-{$this->configfile->id}";
+
+        self::callGenieAcsApi("presets/mon-$this->id", 'PUT', json_encode($preset));
     }
 
     /**
@@ -983,6 +989,7 @@ class Modem extends \BaseModel
     public function deleteGenieAcsPreset()
     {
         self::callGenieAcsApi("presets/$this->id", 'DELETE');
+        self::callGenieAcsApi("presets/mon-$this->id", 'DELETE');
     }
 
     /**

@@ -536,11 +536,14 @@ class ConfigfileObserver
 {
     public function created($configfile)
     {
+        $this->updateProvision($configfile, false);
         // When a Configfile was created we can not already have a relation - so dont call command
     }
 
     public function updated($configfile)
     {
+        $this->updateProvision($configfile, false);
+
         \Queue::push(new \Modules\ProvBase\Jobs\ConfigfileJob(null, $configfile->id));
         // $configfile->build_corresponding_configfiles();
         // with parameter one the children are built
@@ -549,6 +552,36 @@ class ConfigfileObserver
 
     public function deleted($configfile)
     {
+        $this->updateProvision($configfile, true);
         // Actually it's only possible to delete configfiles that are not related to any cm/mta - so no CFs need to be built
+    }
+
+    /**
+     * Update monitoring provision of the corresponding configfile.
+     *
+     * The provision is assigned to every tr069 device having this configfile.
+     * This makes sure, that we retrieve all objects to be monitored during every PERIODIC INFORM.
+     *
+     * @author Ole Ernst
+     */
+    private function updateProvision($configfile, $deleted)
+    {
+        // always delete provision, GenieACS doesn't mind deleting non-exisiting provisions
+        // this way we don't need to care for a dirty $configfile->device
+        \Modules\ProvBase\Entities\Modem::callGenieAcsApi("provisions/mon-$configfile->id", 'DELETE');
+
+        // nothing to do
+        if ($deleted || $configfile->device != 'tr069') {
+            return;
+        }
+
+        $prov = [];
+        $conf = $configfile->getMonitoringConfig() ?: [];
+        foreach (new \RecursiveIteratorIterator(new \RecursiveArrayIterator($conf), \RecursiveIteratorIterator::LEAVES_ONLY) as $value) {
+            // get all parameters, which haven't been updated in the last 5 minutes, -10 seconds to account for possible CPE jitter
+            $prov[] = "declare('$value', {value: Date.now() - (290 * 1000)});";
+        }
+
+        \Modules\ProvBase\Entities\Modem::callGenieAcsApi("provisions/mon-$configfile->id", 'PUT', implode("\r\n", $prov));
     }
 }
