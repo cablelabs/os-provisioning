@@ -3,5 +3,6 @@
   <short>CPE</short>
   <description>Only allow CPE essential services.</description>
   <source address="100.64.0.0/10"/>
+  <service name="dns"/>
   <port protocol="tcp" port="7547"/>
 </zone>
