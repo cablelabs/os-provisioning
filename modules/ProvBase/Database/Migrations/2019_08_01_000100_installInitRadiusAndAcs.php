@@ -75,9 +75,29 @@ class InstallInitRadiusAndAcs extends BaseMigration
 
         $filename = '/lib/node_modules/genieacs/config/config.json';
         $conf = json_decode(file_get_contents($filename));
+        // firmware files are hosted on same machine as CWMP
         unset($conf->FS_HOSTNAME);
+        // enable TLS for CWMP messages (ACS <-> CPE)
+        $conf->CWMP_SSL = true;
+        // northbound interface is localhost only, thus we don't need TLS
         $conf->NBI_INTERFACE = 'localhost';
         file_put_contents($filename, json_encode($conf));
+
+        $crt = glob('/var/lib/acme/certs/*.crt');
+        if (count($crt) == 1) {
+            $crt = reset($crt);
+            $link['crt'] = $crt;
+            $link['key'] = '/etc/pki/tls/private/'.basename($crt, '.crt').'.key';
+        } else {
+            $link['crt'] = '/etc/httpd/ssl/httpd.pem';
+            $link['key'] = '/etc/httpd/ssl/httpd.key';
+        }
+
+        foreach ($link as $ext => $target) {
+            exec("ln -srf $target /lib/node_modules/genieacs/config/cwmp.$ext");
+        }
+
+        chmod('/lib/node_modules/genieacs/config/cwmp.key', 0444);
 
         foreach (['radiusd', 'mongod', 'genieacs-cwmp', 'genieacs-fs', 'genieacs-nbi'] as $service) {
             exec("systemctl enable $service.service");

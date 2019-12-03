@@ -1,0 +1,2 @@
+# restart genieacs-cwmp daily in order to use a new tls certificate if one was generated via acme-tiny
+0 0 * * * root /usr/bin/systemctl restart genieacs-cwmp.service > /dev/null 2>&1
