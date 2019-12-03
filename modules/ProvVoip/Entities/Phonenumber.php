@@ -181,6 +181,17 @@ class Phonenumber extends \BaseModel
         return $this->prefix_number.'/'.$this->number;
     }
 
+    public function asString()
+    {
+        if ($this->country_code == '0049' && $this->prefix_number[0] == 0) {
+            return $this->prefix_number.$this->number;
+        }
+
+        $local = $this->prefix_number[0] == 0 ? substr($this->prefix_number, 1) : $this->prefix_number;
+
+        return $this->country_code.$local.$this->number;
+    }
+
     public function modem_city()
     {
         return $this->mta->modem->zip.' '.$this->mta->modem->city;

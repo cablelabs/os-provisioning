@@ -22,6 +22,9 @@ class Contract extends \BaseModel
     // temporary variable used during daily conversion
     private $changes_on_daily_conversion = false;
 
+    // Via modems -> mtas -> phonenumbers assigned Phonenumbers shown as read-only info field in edit view
+    public $guarded = ['related_phonenrs'];
+
     // Add your validation rules here
     // TODO: dependencies of active modules (billing)
     public static function rules($id = null)
