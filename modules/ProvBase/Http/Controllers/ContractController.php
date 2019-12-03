@@ -208,7 +208,7 @@ class ContractController extends \BaseController
     {
         if (\Module::collections()->has('PropertyManagement')) {
             // Only group contracts without modems can belong to a Realty directly - with CMs realty_id must be null
-            if ($data['realty_id'] && isset($data['id'])) {
+            if (isset($data['realty_id']) && $data['realty_id'] && isset($data['id'])) {
                 $modems = Contract::join('modem', 'modem.contract_id', 'contract.id')
                     ->where('contract.id', $data['id'])
                     ->whereNull('modem.deleted_at')
