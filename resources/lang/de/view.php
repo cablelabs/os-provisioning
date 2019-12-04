@@ -166,7 +166,7 @@ return [
         //Contract
         'Header_Salesman'           => 'Verkäufer|Verkäufer',
         'Header_Contract'           => 'Vertrag|Verträge',
-        'Header_ContractInfoApartment' => 'Info: Verträge in Wohnungen',
+        'Header_ContractInfoApartment' => 'Verträge der Liegenschaft (Info)',
         'Header_ContractInfoRealty' => 'Info: Vertrag der Modems',
         'Header_EditContract'       => 'Vertrag bearbeiten',
         'Header_GroupContract'      => 'Gruppenvertrag',

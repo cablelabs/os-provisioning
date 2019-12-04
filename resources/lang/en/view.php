@@ -166,7 +166,7 @@ return [
         //Contract
         'Header_Salesman'           => 'Salesman|Salesmen',
         'Header_Contract'           => 'Contract|Contracts',
-        'Header_ContractInfoApartments' => 'Info: Contracts in apartments',
+        'Header_ContractInfoApartments' => 'Contracts of realty (info)',
         'Header_ContractInfoRealty' => 'Info: Contract of modems',
         'Header_EditContract'       => 'Edit Contract',
         'Header_GroupContract'      => 'Group Contract',

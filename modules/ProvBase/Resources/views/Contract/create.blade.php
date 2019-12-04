@@ -1,5 +1,7 @@
 @extends ('Generic.create')
 
 @section ('javascript_extra')
-    @include('provbase::Contract.hideAddress')
+    @if (Module::collections()->has('PropertyManagement'))
+        @include('provbase::Contract.hideAddress')
+    @endif
 @stop
