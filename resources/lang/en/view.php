@@ -345,6 +345,10 @@ return [
         'Button_Create IP-Pools'        => 'Create IpPools',
 
 // DASHBOARD
+    'dashboard' => [
+        'contractIndexPage' => 'Contracts',
+        'ticketIndexPage' => 'Tickets',
+    ],
     'Dashboard_Contracts'           => 'ACTIVE CONTRACTS',
     'Dashboard_ContractAnalytics'   => 'Contract Analytics',
     'Dashboard_NoContracts'         => 'No contracts available.',
@@ -356,8 +360,6 @@ return [
     'Dashboard_Tickets'             => 'NEW TICKETS',
     'Dashboard_NoTickets'           => 'No new Tickets.',
     'Dashboard_Quickstart'          => 'Quickstart',
-    'Dashboard_AddContract'         => 'Add Contract',
-    'Dashboard_AddTicket'           => 'Add Ticket',
     'Dashboard_ImpairedModem'       => 'Impaired Modems',
     'Dashboard_External'            => 'External',
     'Dashboard_Docu'                => 'Documentation',
