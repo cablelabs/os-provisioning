@@ -1328,19 +1328,27 @@ class Contract extends \BaseModel
         //     ->groupBy('contract_id')
         //     ->select('missing_amount')
         //     ->sum('missing_amount');
-        $ret = $this->blockInetFromDebts();
+        $block = false;
+        if (config('overduedebts.debtMgmtType') == 'csv') {
+            $block = $this->blockInetFromDebts();
+        }
+
+        $totalAmount = 0;
+        foreach ($this->debts as $debt) {
+            $totalAmount += $debt->missing_amount;
+        }
 
         $bsclass = '';
-        if ($ret['block']) {
+        if ($block) {
             $bsclass = 'danger';
-        } elseif ($ret['amount'] < 0) {
+        } elseif ($totalAmount < 0) {
             $bsclass = 'success';
-        } elseif ($ret['amount'] > 0) {
+        } elseif ($totalAmount > 0) {
             $bsclass = 'warning';
         }
 
         return [
-            'amount' => $ret['amount'],
+            'amount' => $totalAmount,
             'bsclass' => $bsclass,
         ];
     }
@@ -1349,25 +1357,37 @@ class Contract extends \BaseModel
      * Check if the Contract has Debts that exceed the threshholds of the module configuration and therefore the internet has to be blocked
      *
      * @author Nino Ryschawy
-     * @return array    [(Float) total amount of debts, (Bool) internet should be blocked]
+     * @return bool     internet should be blocked
      */
     public function blockInetFromDebts()
     {
         if (! Module::collections()->has('OverdueDebts')) {
-            return [
-                'amount' => 0,
-                'block' => false,
-            ];
+            return false;
         }
 
-        $posDebtCount = $this->debts->where('missing_amount', '>', 0)->count();
+        $parser = new \Modules\OverdueDebts\Entities\DefaultTransactionParser;
+        $debts = clone $this->debts;
+
+        // Filter special debts to exclude (special voucher number and customer had less then 4 weeks to pay)
+        foreach ($debts as $key => $debt) {
+            $arr = $parser->searchNumbers($debt->voucher_nr);
+
+            // In SWIFT bank file specific transactions have be to excluded, but in CSV they shall be considered
+            // Date must be smaller than 4 weeks before now/created_at to make sure the customers have enough time to pay
+            // Note: Consider created_at date as result could otherwise be marked as red, but internet was not blocked
+            if ($arr['exclude'] && (strtotime($debt->date) > strtotime('-4 week', strtotime($debt->created_at)))) {
+                $debts->forget($key);
+            }
+        }
+
+        $posDebtCount = $debts->where('missing_amount', '>', 0)->count();
 
         $totalAmount = 0;
-        foreach ($this->debts as $debt) {
+        foreach ($debts as $debt) {
             $totalAmount += $debt->missing_amount;
         }
 
-        $highestIndicator = $this->debts->sortByDesc('indicator')->first();
+        $highestIndicator = $debts->sortByDesc('indicator')->first();
         $highestIndicator = $highestIndicator ? $highestIndicator->indicator : 0;
 
         $conf = app()->make('OverdueDebtsConfig')->get();
@@ -1380,10 +1400,7 @@ class Contract extends \BaseModel
             // Highest dunning indicator too high
             ($conf->import_inet_block_indicator && ($highestIndicator >= $conf->import_inet_block_indicator));
 
-        return [
-            'amount' => $totalAmount,
-            'block' => $block,
-        ];
+        return $block;
     }
 
     /**
