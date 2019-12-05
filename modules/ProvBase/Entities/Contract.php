@@ -139,10 +139,11 @@ class Contract extends \BaseModel
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
 
             if (Module::collections()->has('PropertyManagement')) {
-                if ($this->realty_id) {
+                if ($this->realty_id || $this->apartment_id) {
                     $ret['Edit']['Modem']['options']['hide_delete_button'] = 1;
                     $ret['Edit']['Modem']['options']['hide_create_button'] = 1;
-                    $ret['Edit']['Modem']['info'] = trans('propertymanagement::messages.groupContract.modem');
+                    $infoKey = $this->realty_id ? 'groupContract.modem' : 'tvContract';
+                    $ret['Edit']['Modem']['info'] = trans("propertymanagement::messages.$infoKey");
                 }
 
                 // Check if contract belongs to a group contract
@@ -237,17 +238,6 @@ class Contract extends \BaseModel
 
     public function view_belongs_to()
     {
-        return $this->getRealty();
-    }
-
-    /**
-     * Get Realty directly (works for group contract) or via modem->apartment->realty
-     *
-     * @author Nino Ryschawy
-     * @return \Modules\PropertyManagement\Entities\Realty
-     */
-    public function getRealty()
-    {
         if (! Module::collections()->has('PropertyManagement')) {
             return;
         }
@@ -256,14 +246,19 @@ class Contract extends \BaseModel
             return $this->realty;
         }
 
-        return \Modules\PropertyManagement\Entities\Realty::join('apartment', 'realty.id', 'apartment.realty_id')
-            ->join('modem', 'apartment.id', 'modem.apartment_id')
-            ->join('contract', 'contract.id', 'modem.contract_id')
-            ->where('contract.id', $this->id)
-            ->whereNull('modem.deleted_at')
-            ->whereNull('apartment.deleted_at')
-            ->select('realty.*')
-            ->first();
+        if ($this->apartment_id) {
+            return $this->apartment;
+        }
+
+        if ($this->modems->isNotEmpty()) {
+            return \Modules\PropertyManagement\Entities\Apartment::join('modem', 'apartment.id', 'modem.apartment_id')
+                ->join('contract', 'contract.id', 'modem.contract_id')
+                ->where('contract.id', $this->id)
+                ->whereNull('modem.deleted_at')
+                ->whereNull('apartment.deleted_at')
+                ->select('apartment.*')
+                ->first();
+        }
     }
 
     /*
@@ -403,12 +398,34 @@ class Contract extends \BaseModel
     }
 
     /**
-     * Generate use a new user login password
-     * This does not save the involved model
+     * Emulate a belongsTo contract->realty relation consisting actually of chain contract->modem->apartment->realty
+     * Note: A direct contract->realty relation can not exist
+     *
+     * @return \Modules\PropertyManagement\Entities\Realty
      */
-    public function generate_password($length = 10)
+    public function getRealtyAttribute()
     {
-        $this->password = \Acme\php\Password::generate_password($length);
+        if ($this->relationLoaded('realty')) {
+            return $this->getRelation('realty');
+        }
+
+        $realty = $this->realty();
+        $this->setRelation('realty', $realty);
+
+        return $realty;
+    }
+
+    public function realty()
+    {
+        return self::join('modem', 'modem.contract_id', 'contract.id')
+            ->join('apartment', 'apartment.id', 'modem.apartment_id')
+            ->join('realty', 'apartment.realty_id', 'realty.id')
+            ->where('contract.id', $this->id)
+            ->whereNull('modem.deleted_at')
+            ->whereNull('apartment.deleted_at')
+            ->whereNull('realty.deleted_at')
+            ->select('realty.*')
+            ->first();
     }
 
     /**
@@ -1424,7 +1441,7 @@ class Contract extends \BaseModel
             return false;
         }
 
-        $realty = $this->getRealty();
+        $realty = $this->apartment_id ? $this->apartment->realty : $this->realty_via_modem;
 
         if (! $realty) {
             return false;
@@ -1492,6 +1509,34 @@ class Contract extends \BaseModel
             'city' => $this->realty->city,
             'district' => $this->realty->district,
             ]);
+    }
+
+    /**
+     * Get list of Apartments for select field of edit view
+     *
+     * @return array
+     */
+    public function getSelectableApartments()
+    {
+        if (! \Module::collections()->has('PropertyManagement')) {
+            return [];
+        }
+
+        // All Apartments without Modems
+        // TODO: Filter all Apartments with a valid Contract?
+        $apartments = DB::table('apartment')->leftJoin('modem', 'modem.apartment_id', 'apartment.id')
+            ->join('realty', 'realty.id', 'apartment.realty_id')
+            ->whereNull('modem.id')
+            ->whereNull('modem.deleted_at')
+            ->select('apartment.*', 'realty.street', 'realty.house_nr', 'realty.city')
+            ->get();
+
+        $arr[null] = null;
+        foreach ($apartments as $apartment) {
+            $arr[$apartment->id] = \Modules\PropertyManagement\Entities\Apartment::labelFromData($apartment);
+        }
+
+        return $arr;
     }
 
     /**

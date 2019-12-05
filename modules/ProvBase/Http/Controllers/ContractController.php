@@ -45,7 +45,7 @@ class ContractController extends \BaseController
         $selectPropertyMgmt = [];
         if (Module::collections()->has('PropertyManagement')) {
             $hasModems = $model->modems->count() ? true : false;
-            $selectPropertyMgmt = ! $hasModems ? ['select' => 'noRealty'] : [];
+            $selectPropertyMgmt = ! $hasModems ? ['select' => 'noRealty noApartment'] : [];
         }
 
         // label has to be the same like column in sql table
@@ -83,7 +83,8 @@ class ContractController extends \BaseController
 
         if (Module::collections()->has('PropertyManagement')) {
             if (! $hasModems) {
-                $a[] = ['form_type' => 'select', 'name' => 'realty_id', 'value' => $model->getSelectableRealties(), 'description' => 'Realty', 'hidden' => 0, 'space' => 1];
+                $a[] = ['form_type' => 'select', 'name' => 'apartment_id', 'value' => $model->getSelectableApartments(), 'select' => 'noRealty',  'description' => 'Apartment', 'hidden' => 0];
+                $a[] = ['form_type' => 'select', 'name' => 'realty_id', 'value' => $model->getSelectableRealties(), 'select' => 'noApartment', 'description' => 'Realty', 'hidden' => 0, 'space' => 1];
             } else {
                 $a[14]['space'] = 1;
             }
