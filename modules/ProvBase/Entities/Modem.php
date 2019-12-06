@@ -1675,6 +1675,9 @@ class Modem extends \BaseModel
             $psw = $this->ppp_password;
             if (! $psw) {
                 $psw = \Acme\php\Password::generate_password();
+                // update ppp_password without invoking the observer
+                self::where('id', $this->id)->update(['ppp_password' => $psw]);
+                // set $this->ppp_password as well to keep model in sync, e.g. getDirty()
                 $this->ppp_password = $psw;
             }
 
