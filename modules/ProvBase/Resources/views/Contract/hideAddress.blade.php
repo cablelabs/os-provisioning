@@ -1,20 +1,20 @@
 <script type="text/javascript">
 
     function showFields() {
-        if ($('#realty_id').val() == '' && $('#apartment_id').val() == '') {
-            $(".noRealty, .noApartment").show();
-        } else if ($('#realty_id').val() != '') {
+        if ($('#contact_id').val() == '' && $('#apartment_id').val() == '') {
+            $(".noContact, .noApartment").show();
+        } else if ($('#contact_id').val() != '') {
             $(".noApartment").show();
-            $(".noRealty").hide();
+            $(".noContact").hide();
         } else {
-            $(".noRealty").show();
+            $(".noContact").show();
             $(".noApartment").hide();
         }
     }
 
     showFields();
 
-    $('#realty_id, #apartment_id').change(function() {
+    $('#contact_id, #apartment_id').change(function() {
         showFields();
     });
 </script>

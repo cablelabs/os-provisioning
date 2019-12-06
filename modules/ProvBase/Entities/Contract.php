@@ -139,10 +139,10 @@ class Contract extends \BaseModel
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
 
             if (Module::collections()->has('PropertyManagement')) {
-                if ($this->realty_id || $this->apartment_id) {
+                if ($this->contact_id || $this->apartment_id) {
                     $ret['Edit']['Modem']['options']['hide_delete_button'] = 1;
                     $ret['Edit']['Modem']['options']['hide_create_button'] = 1;
-                    $infoKey = $this->realty_id ? 'groupContract.modem' : 'tvContract';
+                    $infoKey = $this->contact_id ? 'groupContract.modem' : 'tvContract';
                     $ret['Edit']['Modem']['info'] = trans("propertymanagement::messages.$infoKey");
                 }
 
@@ -1425,7 +1425,7 @@ class Contract extends \BaseModel
      *
      * NOTE: Returns
      *  false if contract is actually a group contract
-     *  true if
+     *  true if realty of contract belongs to a contract
      *
      * @author Nino Ryschawy
      * @return bool
@@ -1441,51 +1441,14 @@ class Contract extends \BaseModel
             return false;
         }
 
-        $realty = $this->apartment_id ? $this->apartment->realty : $this->realty_via_modem;
+        $realty = $this->apartment_id ? $this->apartment->realty : $this->realty;
 
         if (! $realty) {
             return false;
         }
 
-        // Check in all group contracts of that administration contact
-        // Probably
-        if (! $realty->group_contract) {
-            $groupContracts = self::join('realty', 'realty.id', 'contract.realty_id')
-                ->join('contact', 'contact.id', 'realty.contact_id')
-                ->where('contact_id', $realty->contact_id)
-                ->where('realty.group_contract', 1)
-                ->count();
-
-            return $groupContracts ? 'probably' : false;
-        }
-
-        return true;
-
-        // TODO: Check by single query - this is not working yet
-        // $realty = \Modules\PropertyManagement\Entities\Realty::join('apartment', 'realty.id', 'apartment.realty_id')
-        //     // Get realty via modem->apartment
-        //     ->join('modem', 'apartment.id', 'modem.apartment_id')
-        //     ->join('contract as ac', 'ac.id', 'modem.contract_id')
-        //     ->where('ac.id', $this->id)
-
-        //     // Check if realty has group contract directly
-        //     ->leftJoin('contract as gc', 'gc.realty_id', 'realty.id')
-        //     ->where('realty.group_contract', 1)
-        //     ->whereNotNull('gc.id')
-
-        //     // Check if contact has a realty with a group contract
-        //     ->leftJoin('contact', 'contact.id', 'realty.contact_id')
-        //     ->join('realty as altr', 'contact.id', 'realty.contact_id')
-        //     ->join('contract as altc', 'altc.realty_id', 'altr.id')
-
-        //     ->orWhere(function ($query) {
-        //         $query
-        //         ->where('altr.group_contract', 1)
-        //         ->where('altr.id', '!=', 'realty.id');
-        //     })
-        //     ->whereNotNull('altc.id')
-        //     ->select('realty.*', 'altr.*', 'altc.id as alternativeContractId')
-        //     ->get();
+        // TODO: Check if contract is valid?
+        return $realty->contract_id ? true : false;
     }
 
     /**
@@ -1511,6 +1474,15 @@ class Contract extends \BaseModel
             ]);
     }
 
+    public function isGroupContract()
+    {
+        if (! \Module::collections()->has('PropertyManagement')) {
+            return false;
+        }
+
+        return $this->contact_id ? true : false;
+    }
+
     /**
      * Get list of Apartments for select field of edit view
      *
@@ -1534,65 +1506,6 @@ class Contract extends \BaseModel
         $arr[null] = null;
         foreach ($apartments as $apartment) {
             $arr[$apartment->id] = \Modules\PropertyManagement\Entities\Apartment::labelFromData($apartment);
-        }
-
-        return $arr;
-    }
-
-    /**
-     * Get list of realties for select field of edit view
-     *
-     * @return array
-     */
-    public function getSelectableRealties()
-    {
-        if (! \Module::collections()->has('PropertyManagement')) {
-            return [];
-        }
-
-        // New valid group contracts belonging to a realty
-        $contractSubQuery = self::join('realty', 'contract.realty_id', 'realty.id')
-            ->where('group_contract', 1)
-            ->whereNull('contract.contract_end')
-            ->whereNull('contract.deleted_at')->whereNull('realty.deleted_at')
-            ->select('contract.id', 'realty.id as realtyId');
-
-        /* All Realties that have group contract set and
-            (1) do not have a contract assigned
-            (2) or that have a contract that is already canceled
-        */
-        $realtiesSubQuery = \Modules\PropertyManagement\Entities\Realty::leftJoin('contract', 'contract.realty_id', 'realty.id')
-            ->where('group_contract', 1)
-            ->whereNull('realty.deleted_at')
-            ->where(function ($query) {
-                $query
-                ->whereNull('contract.id')
-                ->orWhere('realty.id', $this->realty_id)
-                ->orWhereNotNull('contract.contract_end');
-            })
-            ->select('realty.*', 'contract.id as cId');
-
-        // Left join realties with new contract and filter realties that either
-        // have no contract or a canceled contract and no new valid contract
-        $realties = DB::table(DB::raw("({$realtiesSubQuery->toSql()}) as realties"))
-            ->mergeBindings($realtiesSubQuery->getQuery())
-            ->select('realties.*')
-            ->leftJoin(DB::raw("({$contractSubQuery->toSql()}) as newContract"), 'newContract.realtyId', '=', 'realties.id')
-            ->mergeBindings($contractSubQuery->getQuery())
-            ->where('realties.group_contract', 1)
-            ->where(function ($query) {
-                $query
-                ->whereNull('realties.cId')
-                ->orWhere('realties.cId', $this->id)
-                ->orWhereNull('newContract.id');
-            })
-            ->orderBy('realties.street')->orderBy('realties.house_nr')
-            ->groupBy('realties.id')
-            ->get();
-
-        $arr[null] = null;
-        foreach ($realties as $realty) {
-            $arr[$realty->id] = \Modules\PropertyManagement\Entities\Realty::labelFromData($realty);
         }
 
         return $arr;

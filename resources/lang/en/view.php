@@ -169,7 +169,7 @@ return [
         'Header_ContractInfoApartments' => 'Contracts of realty (info)',
         'Header_ContractInfoRealty' => 'Info: Contract of modems',
         'Header_EditContract'       => 'Edit Contract',
-        'Header_GroupContract'      => 'Group Contract',
+        'Header_GroupContracts'      => 'Group Contracts',
         'Header_SepaMandate'        => 'SEPA-Mandate|SEPA-Mandates',
         //Modems
         'Header_Modems'             => 'Modem|Modems', //workaround
