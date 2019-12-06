@@ -1701,6 +1701,8 @@ class Modem extends \BaseModel
 
     private function updateRadReply($delete)
     {
+        $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name.'.';
+
         if ($delete || ! $this->isPPP() || ! $this->internet_access) {
             $this->radreply()->delete();
 
@@ -1709,12 +1711,17 @@ class Modem extends \BaseModel
 
         // add RadReply, if it doesn't exist
         if (! $this->radreply()->count()) {
-            $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name.'.';
-
             $reply = new RadReply;
             $reply->username = $this->ppp_username;
             $reply->attribute = 'Framed-IP-Address';
             $reply->op = ':=';
+            $reply->value = gethostbyname($fqdn);
+            $reply->save();
+        }
+
+        // update existing RadReply, if public was changed
+        if (array_key_exists('public', $this->getDirty())) {
+            $reply = $this->radreply;
             $reply->value = gethostbyname($fqdn);
             $reply->save();
         }
@@ -1763,6 +1770,11 @@ class Modem extends \BaseModel
      */
     public function updateRadius($delete)
     {
+        $this->nsupdate($delete || ! $this->internet_access);
+
+        $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name.'.';
+        $delete |= gethostbyname($fqdn) == $fqdn;
+
         $this->updateRadCheck($delete);
         $this->updateRadReply($delete);
         $this->updateRadUserGroups($delete);
@@ -1771,10 +1783,20 @@ class Modem extends \BaseModel
 
     public function nsupdate($delete = false)
     {
-        $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name.'.';
-        $ip = $delete ? gethostbyname($fqdn) : IpPool::findNextUnusedBrasIPAddress($this->public);
+        if (! $this->isPPP()) {
+            return;
+        }
 
-        if (! $ip || $ip == $fqdn) {
+        $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name.'.';
+
+        $ip = gethostbyname($fqdn);
+        if (! $delete && ! $ip = IpPool::findNextUnusedBrasIPAddress($this->public)) {
+            \Session::push('tmp_error_above_form', trans('messages.ippool_exhausted'));
+
+            return;
+        }
+
+        if ($ip == $fqdn) {
             return;
         }
 
@@ -1816,7 +1838,6 @@ class ModemObserver
 
         if ($modem->isPPP()) {
             $modem->hostname = 'ppp-'.$modem->id;
-            $modem->nsupdate(false);
             $modem->updateRadius(false);
             $modem->save();
         } else {
@@ -1911,9 +1932,11 @@ class ModemObserver
             $modem->make_configfile();
         }
 
-        if (! $modem->wasRecentlyCreated) {
-            $modem->updateRadius(false);
+        if (array_key_exists('public', $diff)) {
+            $modem->nsupdate(true);
         }
+
+        $modem->updateRadius(false);
 
         // ATTENTION:
         // If we ever think about moving modems to other contracts we have to delete envia TEL related stuff, too –
@@ -1937,7 +1960,6 @@ class ModemObserver
         }
 
         if ($modem->isPPP()) {
-            $modem->nsupdate(true);
             $modem->updateRadius(true);
         } else {
             // $modem->make_dhcp_cm_all();
