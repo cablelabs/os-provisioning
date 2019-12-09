@@ -1089,7 +1089,7 @@ class Modem extends \BaseModel
     public function restart_modem($mac_changed = false, $modem_reset = false, $factoryReset = false)
     {
         // Log
-        Log::info('restart/factoryReset modem '.$this->hostname);
+        Log::info(($factoryReset ? 'factoryReset' : 'restart').' modem '.$this->hostname);
 
         if ($this->isTR069()) {
             $id = $this->getGenieAcsModel('_id');
@@ -1696,6 +1696,8 @@ class Modem extends \BaseModel
             $check = $this->radcheck;
             $check->value = $this->ppp_password;
             $check->save();
+            $this->make_configfile();
+            $this->factoryReset();
         }
     }
 
@@ -1724,6 +1726,7 @@ class Modem extends \BaseModel
             $reply = $this->radreply;
             $reply->value = gethostbyname($fqdn);
             $reply->save();
+            $this->restart_modem();
         }
     }
 
@@ -1758,6 +1761,7 @@ class Modem extends \BaseModel
             $this->radusergroups()
                 ->where('groupname', '!=', RadGroupReply::$defaultGroup)
                 ->update(['groupname' => $this->qos_id]);
+            $this->restart_modem();
         }
     }
 
@@ -1778,7 +1782,6 @@ class Modem extends \BaseModel
         $this->updateRadCheck($delete);
         $this->updateRadReply($delete);
         $this->updateRadUserGroups($delete);
-        // TODO: restart modem
     }
 
     public function nsupdate($delete = false)
