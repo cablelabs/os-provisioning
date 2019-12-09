@@ -1701,6 +1701,11 @@ class Modem extends \BaseModel
         }
     }
 
+    /**
+     * Synchronize radreply with modem table, if PPPoE is used.
+     *
+     * @author Ole Ernst
+     */
     private function updateRadReply($delete)
     {
         $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name.'.';
@@ -1784,6 +1789,11 @@ class Modem extends \BaseModel
         $this->updateRadUserGroups($delete);
     }
 
+    /**
+     * Set/Delete hostnames for PPP devices (ppp-$this->id)
+     *
+     * @author Ole Ernst
+     */
     public function nsupdate($delete = false)
     {
         if (! $this->isPPP()) {
