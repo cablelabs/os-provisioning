@@ -403,6 +403,7 @@ return [
     'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
     'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
 
+    'company' => 'Company',
     'Credit' => 'Credit',
     'critical' => 'critical',
     'Debit' => 'Debit',
@@ -412,6 +413,7 @@ return [
     'info' => 'info',
     'Level' => 'Level',
     'Message' => 'Message',
+    'name' => 'Name',
     'showChanges' => 'Show the change|Show :num changes',
     'SettlementRun' => 'SettlementRun',
     'Time' => 'Time',

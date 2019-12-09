@@ -403,6 +403,7 @@ return [
     'error_specify_id'          => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
     'error_ticket_settings'     => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
 
+    'company' => 'Firma',
     'Credit' => 'Gutschrift',
     'critical' => 'kritisch',
     'Debit' => 'Lastschrift',
@@ -412,6 +413,7 @@ return [
     'info' => 'Info',
     'Level' => 'Level',
     'Message' => 'Nachricht',
+    'name' => 'Name',
     'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
     'SettlementRun' => 'Abrechnungslauf',
     'Time' => 'Zeit',

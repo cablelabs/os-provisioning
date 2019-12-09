@@ -436,19 +436,12 @@ class Contract extends \BaseModel
     }
 
     /**
-     * Helper to get the contract number.
-     * As there is no hard coded contract number in database we have to use this mapper. The semantic meaning of number…number4 can be defined in global configuration.
-     *
-     * @author Patrick Reichel
-     *
-     * @todo: in this first step the relation is hardcoded within the function. Later on we have to check the mapping against the configuration.
-     * @return current contract number
+     * Generate use a new user login password
+     * This does not save the involved model
      */
-    public function contract_number()
+    public function generate_password($length = 10)
     {
-        $contract_number = $this->number;
-
-        return $contract_number;
+        $this->password = \Acme\php\Password::generate_password($length);
     }
 
     /**
