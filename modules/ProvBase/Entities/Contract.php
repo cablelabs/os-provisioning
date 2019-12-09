@@ -154,6 +154,13 @@ class Contract extends \BaseModel
                     $ret['Edit']['Item']['info'] = $msg;
                     $ret['Billing']['Item']['info'] = $msg;
                 }
+
+                // Check if contract is a group contract
+                if ($this->isGroupContract()) {
+                    $tabName = trans('propertymanagement::view.propertyManagement');
+                    $ret[$tabName]['Realty']['class'] = 'Realty';
+                    $ret[$tabName]['Realty']['relation'] = $this->realties;
+                }
             }
 
             if (Module::collections()->has('OverdueDebts')) {
@@ -200,7 +207,7 @@ class Contract extends \BaseModel
             }
         }
 
-        if (Module::collections()->has('ProvVoipEnvia')) {
+        if (Module::collections()->has('ProvVoipEnvia') && (! Module::collections()->has('PropertyManagement') || ! $this->isGroupContract())) {
             $ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
             $ret['envia TEL']['EnviaContract']['relation'] = $this->enviacontracts;
             $ret['envia TEL']['EnviaContract']['options']['hide_create_button'] = 1;
@@ -387,9 +394,9 @@ class Contract extends \BaseModel
         return $this->hasMany(\Modules\Ticketsystem\Entities\Ticket::class);
     }
 
-    public function realty()
+    public function realties()
     {
-        return $this->belongsTo(\Modules\PropertyManagement\Entities\Realty::class);
+        return $this->HasMany(\Modules\PropertyManagement\Entities\Realty::class)->orderBy('street')->orderBy('house_nr');
     }
 
     public function apartment()
