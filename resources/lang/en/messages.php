@@ -97,6 +97,7 @@ return [
     'Internet Access'           => 'Internet Access',
     'Inventar Number'           => 'Inventar Number',
     'Invoice'                   => 'Invoice',
+    'invoiceText'               => 'Invoice text',
     'Call Data Record'      => 'Call Data Record',
     'IP address'                => 'IP address',
     'Language'                  => 'Language',
