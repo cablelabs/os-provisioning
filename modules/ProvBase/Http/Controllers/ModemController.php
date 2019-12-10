@@ -166,13 +166,13 @@ class ModemController extends \BaseController
         $cm = '';
         $tr069 = '';
 
-        foreach (['cm', 'tr069'] as $device) {
+        foreach (Modem::TYPES as $device) {
             foreach (\DB::table('configfile')->where('deleted_at', null)->where('device', $device)->get() as $configfile) {
                 $$device .= ' '.$configfile->id;
             }
         }
 
-        foreach (\DB::table('configfile')->select(['id'])->whereIn('device', ['cm', 'tr069'])->where('deleted_at', null)->get() as $key => $cf) {
+        foreach (\DB::table('configfile')->select(['id'])->whereIn('device', Modem::TYPES)->where('deleted_at', null)->get() as $key => $cf) {
             $ids[] = $cf->id;
         }
 

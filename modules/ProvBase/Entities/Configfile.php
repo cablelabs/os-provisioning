@@ -461,7 +461,7 @@ class Configfile extends \BaseModel
         }
 
         // Modem
-        foreach (['cm', 'tr069'] as $type) {
+        foreach (Modem::TYPES as $type) {
             if (! $filter || $filter == $type) {
                 $modems = Modem::join('configfile', 'configfile.id', 'modem.configfile_id')
                     ->where('configfile.device', $type)

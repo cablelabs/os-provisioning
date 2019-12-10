@@ -15,6 +15,8 @@ class Modem extends \BaseModel
     use \App\AddressFunctionsTrait;
     use \App\Extensions\Geocoding\Geocoding;
 
+    const TYPES = ['cm', 'tr069'];
+
     // The associated SQL table for this Model
     public $table = 'modem';
 
@@ -162,7 +164,7 @@ class Modem extends \BaseModel
      */
     public function configfiles()
     {
-        return DB::table('configfile')->select(['id', 'name'])->whereNull('deleted_at')->whereIn('device', ['cm', 'tr069'])->where('public', '=', 'yes')->get();
+        return DB::table('configfile')->select(['id', 'name'])->whereNull('deleted_at')->whereIn('device', self::TYPES)->where('public', '=', 'yes')->get();
         // return Configfile::select(['id', 'name'])->where('device', '=', 'CM')->where('public', '=', 'yes')->get();
     }
 
