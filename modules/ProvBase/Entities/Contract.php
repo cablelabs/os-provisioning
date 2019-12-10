@@ -1510,6 +1510,95 @@ class Contract extends \BaseModel
 
         return $arr;
     }
+
+    /**
+     * Compose list of ordered Realties belonging to a group Contract to be displayed on an Invoice
+     *
+     * @return array
+     */
+    public function composeRealtyList()
+    {
+        if ($this->realties->isEmpty()) {
+            return [];
+        }
+
+        // Initialise array
+        foreach ($this->realties as $key => $realty) {
+            $realties[$realty->street][] = str_replace(' ', '', strtolower($realty->house_nr));
+        }
+
+        // Sort array by street, even/odd housenr and housenr
+        foreach ($realties as $street => $housenrs) {
+            natsort($housenrs);
+
+            foreach ($housenrs as $housenr) {
+                preg_match('/\d*/', $housenr, $nr);
+
+                if (! $nr[0]) {
+                    ChannelLog::error('billingbase', trans('propertymanagement::messages.invoice.invalidRealtyHousenr', ['id' => $realty->id, 'nr' => $realty->house_nr, 'contractnr' => $contract->number]));
+
+                    continue;
+                }
+
+                $nr = intval($nr[0]);
+
+                if (isset($list[$street][$nr % 2 ? 'odd' : 'even'][$nr])) {
+                    if (is_string($list[$street][$nr % 2 ? 'odd' : 'even'][$nr])) {
+                        $list[$street][$nr % 2 ? 'odd' : 'even'][$nr] = [$list[$street][$nr % 2 ? 'odd' : 'even'][$nr], $housenr];
+                    } else {
+                        $list[$street][$nr % 2 ? 'odd' : 'even'][$nr][] = $housenr;
+                    }
+                } else {
+                    $list[$street][$nr % 2 ? 'odd' : 'even'][$nr] = $housenr;
+                }
+            }
+        }
+
+        // Build groups in case buildings are adjacent (neighbours)
+        foreach ($list as $street => $streets) {
+            foreach ($streets as $evenOdd => $nrs) {
+                $previous = $key = 0;
+
+                foreach ($nrs as $nr => $block) {
+                    if ($previous && ($previous + 2 != $nr)) {
+                        $key++;
+                    }
+
+                    $groupList[$street][$evenOdd][$key][] = $block;
+
+                    $previous = $nr;
+                }
+            }
+        }
+
+        // Take first and last house of each group
+        foreach ($groupList as $street => $streets) {
+            foreach ($streets as $evenOdd => $groups) {
+                foreach ($groups as $group) {
+                    if (count($group) == 1) {
+                        if (is_string($group[0])) {
+                            $objList[] = $street.' '.$group[0];
+                        } else {
+                            $separator = count($group[0]) == 2 ? ',' : '-';
+
+                            $objList[] = $street.' '.$group[0][0].$separator.end($group[0]);
+                        }
+
+                        continue;
+                    }
+
+                    $separator = count($group) == 2 ? ',' : '-';
+
+                    $first = is_string($group[0]) ? $group[0] : $group[0][0];
+                    $last = is_string(end($group)) ? end($group) : end(end($group));
+
+                    $objList[] = $street.' '.$first.$separator.$last;
+                }
+            }
+        }
+
+        return $objList;
+    }
 }
 
 /**

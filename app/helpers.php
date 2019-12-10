@@ -312,6 +312,17 @@ function langDateFormat($date)
     }
 }
 
+function moneyFormat($amount)
+{
+    switch (\App::getLocale()) {
+        case 'de':
+            return number_format($amount, 2, ',', '.');
+
+        default:
+            return number_format($amount, 2);
+    }
+}
+
 /**
  * Get list of entries from specific table for select formular field in edit view
  *
