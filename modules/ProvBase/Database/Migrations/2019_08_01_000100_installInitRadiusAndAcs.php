@@ -21,6 +21,7 @@ class InstallInitRadiusAndAcs extends BaseMigration
         });
 
         // use schema from git, since it adds the id column in radusergroup
+        // centos8: reset to /etc/raddb/mods-config/sql/main/mysql/schema.sql
         \DB::unprepared(file_get_contents('https://raw.githubusercontent.com/FreeRADIUS/freeradius-server/b838f5178fe092598fb3459dedb5e1ea49b41340/raddb/mods-config/sql/main/mysql/schema.sql'));
 
         $defReply = new Modules\ProvBase\Entities\RadGroupReply;
