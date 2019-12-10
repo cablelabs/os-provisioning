@@ -63,7 +63,7 @@ class Nas extends \BaseModel
 
     public function netgw()
     {
-        return $this->belongsTo('Modules\ProvBase\Entities\NetGw', 'shortname');
+        return $this->belongsTo(NetGw::class, 'shortname');
     }
 
     public function netgws()

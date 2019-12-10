@@ -134,28 +134,28 @@ class NetElement extends \BaseModel
      */
     public function modems()
     {
-        return $this->hasMany('Modules\ProvBase\Entities\Modem', 'netelement_id');
+        return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id');
     }
 
     // Relation to MPRs Modem Positioning Rules
     public function mprs()
     {
-        return $this->hasMany('Modules\HfcCustomer\Entities\Mpr', 'netelement_id');
+        return $this->hasMany(\Modules\HfcCustomer\Entities\Mpr::class, 'netelement_id');
     }
 
     public function snmpvalues()
     {
-        return $this->hasMany('Modules\HfcSnmp\Entities\SnmpValue', 'netelement_id');
+        return $this->hasMany(\Modules\HfcSnmp\Entities\SnmpValue::class, 'netelement_id');
     }
 
     public function netelementtype()
     {
-        return $this->belongsTo('Modules\HfcReq\Entities\NetElementType');
+        return $this->belongsTo(NetElementType::class);
     }
 
     public function indices()
     {
-        return $this->hasMany('Modules\HfcSnmp\Entities\Indices', 'netelement_id');
+        return $this->hasMany(\Modules\HfcSnmp\Entities\Indices::class, 'netelement_id');
     }
 
     /**
@@ -165,19 +165,19 @@ class NetElement extends \BaseModel
     public function icingaobject()
     {
         return $this
-            ->hasOne('Modules\HfcBase\Entities\IcingaObject', 'name1', 'id_name')
+            ->hasOne(\Modules\HfcBase\Entities\IcingaObject::class, 'name1', 'id_name')
             ->where('icinga_objects.objecttype_id', '1')
             ->where('icinga_objects.is_active', '1');
     }
 
     public function parent()
     {
-        return $this->belongsTo('Modules\HfcReq\Entities\NetElement', 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     public function children()
     {
-        return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     /**
@@ -238,7 +238,7 @@ class NetElement extends \BaseModel
 
         return self::where('netelementtype_id', '=', $net_id)->get();
 
-        // return NetElement::where('type', '=', 'NET')->get();
+        // return self::where('type', '=', 'NET')->get();
     }
 
     /**

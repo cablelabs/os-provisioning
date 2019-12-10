@@ -128,22 +128,22 @@ class Configfile extends \BaseModel
      */
     public function modem()
     {
-        return $this->hasMany('Modules\ProvBase\Entities\Modem');
+        return $this->hasMany(Modem::class);
     }
 
     public function mtas()
     {
-        return $this->hasMany('Modules\ProvVoip\Entities\Mta');
+        return $this->hasMany(\Modules\ProvVoip\Entities\Mta::class);
     }
 
     public function children()
     {
-        return $this->hasMany('Modules\ProvBase\Entities\Configfile', 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     public function parent()
     {
-        return $this->belongsTo('Modules\ProvBase\Entities\Configfile');
+        return $this->belongsTo(self::class);
     }
 
     /**
@@ -568,7 +568,7 @@ class ConfigfileObserver
     {
         // always delete provision, GenieACS doesn't mind deleting non-exisiting provisions
         // this way we don't need to care for a dirty $configfile->device
-        \Modules\ProvBase\Entities\Modem::callGenieAcsApi("provisions/mon-$configfile->id", 'DELETE');
+        Modem::callGenieAcsApi("provisions/mon-$configfile->id", 'DELETE');
 
         // nothing to do
         if ($deleted || $configfile->device != 'tr069') {
@@ -582,6 +582,6 @@ class ConfigfileObserver
             $prov[] = "declare('$value', {value: Date.now() - (290 * 1000)});";
         }
 
-        \Modules\ProvBase\Entities\Modem::callGenieAcsApi("provisions/mon-$configfile->id", 'PUT', implode("\r\n", $prov));
+        Modem::callGenieAcsApi("provisions/mon-$configfile->id", 'PUT', implode("\r\n", $prov));
     }
 }

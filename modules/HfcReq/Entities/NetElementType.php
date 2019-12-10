@@ -85,29 +85,29 @@ class NetElementType extends \BaseModel
      */
     public function netelements()
     {
-        return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'netelementtype_id');
+        return $this->hasMany(NetElement::class, 'netelementtype_id');
     }
 
     public function parameters()
     {
-        return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id');
-        // return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id')->orderBy('oid_id')->orderBy('id');
+        return $this->hasMany(\Modules\HfcSnmp\Entities\Parameter::class, 'netelementtype_id');
+        // return $this->hasMany(\Modules\HfcSnmp\Entities\Parameter::class, 'netelementtype_id')->orderBy('oid_id')->orderBy('id');
     }
 
     // only for preconfiguration of special device types (e.g. kathreins vgp)
     public function oid()
     {
-        return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'pre_conf_oid_id');
+        return $this->belongsTo(\Modules\HfcSnmp\Entities\OID::class, 'pre_conf_oid_id');
     }
 
     public function parent()
     {
-        return $this->belongsTo('Modules\HfcReq\Entities\NetElementType');
+        return $this->belongsTo(self::class);
     }
 
     public function children()
     {
-        return $this->hasMany('Modules\HfcReq\Entities\NetElementType', 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     public static function param_list($id)

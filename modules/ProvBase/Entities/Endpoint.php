@@ -62,7 +62,7 @@ class Endpoint extends \BaseModel
      */
     public function modem()
     {
-        return $this->belongsTo('Modules\ProvBase\Entities\Modem');
+        return $this->belongsTo(Modem::class);
     }
 
     public function nsupdate($del = false)

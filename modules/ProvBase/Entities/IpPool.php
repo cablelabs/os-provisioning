@@ -252,7 +252,7 @@ class IpPool extends \BaseModel
      */
     public function netgw()
     {
-        return $this->belongsTo('Modules\ProvBase\Entities\NetGw');
+        return $this->belongsTo(NetGw::class);
     }
 
     // belongs to a netgw - see BaseModel for explanation

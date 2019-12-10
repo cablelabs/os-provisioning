@@ -200,7 +200,7 @@ class Modem extends \BaseModel
             throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
         }
 
-        return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->where('ordertype', 'NOT LIKE', 'order/create_attachment');
+        return $this->hasMany(\Modules\ProvVoipEnvia\Entities\EnviaOrder::class)->where('ordertype', 'NOT LIKE', 'order/create_attachment');
     }
 
     /**
@@ -211,23 +211,23 @@ class Modem extends \BaseModel
         if (! \Module::collections()->has('ProvVoipEnvia')) {
             throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
         } else {
-            return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaContract');
+            return $this->hasMany(\Modules\ProvVoipEnvia\Entities\EnviaContract::class);
         }
     }
 
     public function configfile()
     {
-        return $this->belongsTo('Modules\ProvBase\Entities\Configfile');
+        return $this->belongsTo(Configfile::class);
     }
 
     public function qos()
     {
-        return $this->belongsTo("Modules\ProvBase\Entities\Qos");
+        return $this->belongsTo(Qos::class);
     }
 
     public function contract()
     {
-        return $this->belongsTo('Modules\ProvBase\Entities\Contract', 'contract_id');
+        return $this->belongsTo(Contract::class, 'contract_id');
     }
 
     /**
@@ -248,23 +248,23 @@ class Modem extends \BaseModel
 
     public function mtas()
     {
-        return $this->hasMany('Modules\ProvVoip\Entities\Mta');
+        return $this->hasMany(\Modules\ProvVoip\Entities\Mta::class);
     }
 
     public function endpoints()
     {
-        return $this->hasMany('Modules\ProvBase\Entities\Endpoint');
+        return $this->hasMany(Endpoint::class);
     }
 
     // TODO: deprecated! use netelement function instead - search for all places where this function is used
     public function tree()
     {
-        return $this->belongsTo('Modules\HfcReq\Entities\NetElement');
+        return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class);
     }
 
     public function nelelement()
     {
-        return $this->belongsTo('Modules\HfcReq\Entities\NetElement', 'netelement_id');
+        return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class, 'netelement_id');
     }
 
     public function apartment()
@@ -279,17 +279,17 @@ class Modem extends \BaseModel
 
     public function radcheck()
     {
-        return $this->hasOne('Modules\ProvBase\Entities\RadCheck', 'username', 'ppp_username');
+        return $this->hasOne(RadCheck::class, 'username', 'ppp_username');
     }
 
     public function radreply()
     {
-        return $this->hasOne('Modules\ProvBase\Entities\RadReply', 'username', 'ppp_username');
+        return $this->hasOne(RadReply::class, 'username', 'ppp_username');
     }
 
     public function radusergroups()
     {
-        return $this->hasMany('Modules\ProvBase\Entities\RadUserGroup', 'username', 'ppp_username');
+        return $this->hasMany(RadUserGroup::class, 'username', 'ppp_username');
     }
 
     /*
@@ -663,7 +663,7 @@ class Modem extends \BaseModel
 
         // Evaluate network access (NA) and MaxCPE count
         // Note: NA becomes only zero when internet is disabled on contract (no valid tariff) or modem (manually) and contract has no telephony
-        $cpe_cnt = \Modules\ProvBase\Entities\ProvBase::first()->max_cpe;
+        $cpe_cnt = ProvBase::first()->max_cpe;
         $max_cpe = $cpe_cnt ?: 2; 		// default 2
         $internet_access = 1;
 

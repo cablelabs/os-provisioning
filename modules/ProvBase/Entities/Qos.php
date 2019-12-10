@@ -22,17 +22,17 @@ class Qos extends \BaseModel
      */
     public function modem()
     {
-        return $this->hasMany("Modules\ProvBase\Entities\Modem");
+        return $this->hasMany(Modem::class);
     }
 
     public function prices()
     {
-        return $this->hasMany('Modules\BillingBase\Entities\Price');
+        return $this->hasMany(\Modules\BillingBase\Entities\Price::class);
     }
 
     public function radgroupreplies()
     {
-        return $this->hasMany('Modules\ProvBase\Entities\RadGroupReply', 'groupname');
+        return $this->hasMany(RadGroupReply::class, 'groupname');
     }
 
     // Name of View

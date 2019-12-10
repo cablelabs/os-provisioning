@@ -62,12 +62,12 @@ class Indices extends \BaseModel
      */
     public function parameter()
     {
-        return $this->belongsTo('Modules\HfcSnmp\Entities\Parameter');
+        return $this->belongsTo(Parameter::class);
     }
 
     public function netelement()
     {
-        return $this->belongsTo('Modules\HfcReq\Entities\NetElement', 'netelement_id');
+        return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class, 'netelement_id');
     }
 }
 

@@ -128,17 +128,17 @@ class NetGw extends \BaseModel
      */
     public function ippools()
     {
-        return $this->hasMany('Modules\ProvBase\Entities\IpPool', 'netgw_id');
+        return $this->hasMany(IpPool::class, 'netgw_id');
     }
 
     public function netelement()
     {
-        return $this->hasOne('Modules\HfcReq\Entities\NetElement', 'prov_device_id');
+        return $this->hasOne(\Modules\HfcReq\Entities\NetElement::class, 'prov_device_id');
     }
 
     public function nas()
     {
-        return $this->hasMany('Modules\ProvBase\Entities\Nas', 'shortname');
+        return $this->hasMany(Nas::class, 'shortname');
     }
 
     // returns all objects that are related to a netgw

@@ -84,22 +84,22 @@ class Parameter extends \BaseModel
      */
     public function oid()
     {
-        return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'oid_id');
+        return $this->belongsTo(OID::class, 'oid_id');
     }
 
     public function netelementtype()
     {
-        return $this->belongsTo('Modules\HfcReq\Entities\NetElementType', 'netelementtype_id');
+        return $this->belongsTo(\Modules\HfcReq\Entities\NetElementType::class, 'netelementtype_id');
     }
 
     public function indices()
     {
-        return $this->hasOne('Modules\HfcSnmp\Entities\Indices');
+        return $this->hasOne(Indices::class);
     }
 
     public function children()
     {
-        return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
 
         return self::where('parent_id', '=', $this->id)->orderBy('third_dimension')->orderBy('html_id')->orderBy('id')->get()->all();
     }

@@ -192,7 +192,7 @@ class Phonenumber extends \BaseModel
      */
     public function mta()
     {
-        return $this->belongsTo('Modules\ProvVoip\Entities\Mta', 'mta_id');
+        return $this->belongsTo(Mta::class, 'mta_id');
     }
 
     // belongs to an mta
@@ -373,7 +373,7 @@ class Phonenumber extends \BaseModel
      */
     public function phonenumbermanagement()
     {
-        return $this->hasOne('Modules\ProvVoip\Entities\PhonenumberManagement');
+        return $this->hasOne(PhonenumberManagement::class);
     }
 
     /**
@@ -488,7 +488,7 @@ class Phonenumber extends \BaseModel
      */
     public function cdrs()
     {
-        return $this->hasMany('Modules\VoipMon\Entities\Cdr');
+        return $this->hasMany(\Modules\VoipMon\Entities\Cdr::class);
     }
 
     /**

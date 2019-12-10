@@ -266,12 +266,12 @@ class Contract extends \BaseModel
      */
     public function debts()
     {
-        return $this->hasMany('Modules\OverdueDebts\Entities\Debt')->orderBy('date', 'desc')->orderBy('id', 'desc');
+        return $this->hasMany(\Modules\OverdueDebts\Entities\Debt::class)->orderBy('date', 'desc')->orderBy('id', 'desc');
     }
 
     public function modems()
     {
-        return $this->hasMany('Modules\ProvBase\Entities\Modem');
+        return $this->hasMany(Modem::class);
     }
 
     /**
@@ -282,7 +282,7 @@ class Contract extends \BaseModel
         if (! Module::collections()->has('ProvVoipEnvia')) {
             throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
         } else {
-            return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaContract');
+            return $this->hasMany(\Modules\ProvVoipEnvia\Entities\EnviaContract::class);
         }
     }
 
@@ -291,7 +291,7 @@ class Contract extends \BaseModel
      */
     public function phonetariff_purchase()
     {
-        return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'purchase_tariff');
+        return $this->belongsTo(\Modules\ProvVoip\Entities\PhoneTariff::class, 'purchase_tariff');
     }
 
     /**
@@ -299,7 +299,7 @@ class Contract extends \BaseModel
      */
     public function phonetariff_purchase_next()
     {
-        return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_purchase_tariff');
+        return $this->belongsTo(\Modules\ProvVoip\Entities\PhoneTariff::class, 'next_purchase_tariff');
     }
 
     /**
@@ -307,7 +307,7 @@ class Contract extends \BaseModel
      */
     public function phonetariff_sale()
     {
-        return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'voip_id');
+        return $this->belongsTo(\Modules\ProvVoip\Entities\PhoneTariff::class, 'voip_id');
     }
 
     /**
@@ -315,7 +315,7 @@ class Contract extends \BaseModel
      */
     public function phonetariff_sale_next()
     {
-        return $this->belongsTo('Modules\ProvVoip\Entities\PhoneTariff', 'next_voip_id');
+        return $this->belongsTo(\Modules\ProvVoip\Entities\PhoneTariff::class, 'next_voip_id');
     }
 
     /**
@@ -329,27 +329,27 @@ class Contract extends \BaseModel
             throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
         }
 
-        return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->where('ordertype', 'NOT LIKE', 'order/create_attachment');
+        return $this->hasMany(\Modules\ProvVoipEnvia\Entities\EnviaOrder::class)->where('ordertype', 'NOT LIKE', 'order/create_attachment');
     }
 
     public function items()
     {
-        return $this->hasMany('Modules\BillingBase\Entities\Item');
+        return $this->hasMany(\Modules\BillingBase\Entities\Item::class);
     }
 
     public function items_sorted_by_valid_from_desc()
     {
-        return $this->hasMany('Modules\BillingBase\Entities\Item')->orderBy('valid_from', 'desc');
+        return $this->hasMany(\Modules\BillingBase\Entities\Item::class)->orderBy('valid_from', 'desc');
     }
 
     public function sepamandates()
     {
-        return $this->hasMany('Modules\BillingBase\Entities\SepaMandate');
+        return $this->hasMany(\Modules\BillingBase\Entities\SepaMandate::class);
     }
 
     public function emails()
     {
-        return $this->hasMany('Modules\NmsMail\Entities\Email');
+        return $this->hasMany(\Modules\NmsMail\Entities\Email::class);
     }
 
     public function get_email_count()
@@ -361,30 +361,30 @@ class Contract extends \BaseModel
 
     public function costcenter()
     {
-        return $this->belongsTo('Modules\BillingBase\Entities\CostCenter', 'costcenter_id');
+        return $this->belongsTo(\Modules\BillingBase\Entities\CostCenter::class, 'costcenter_id');
     }
 
     public function salesman()
     {
-        return $this->belongsTo('Modules\BillingBase\Entities\Salesman');
+        return $this->belongsTo(\Modules\BillingBase\Entities\Salesman::class);
     }
 
     public function invoices()
     {
-        return $this->hasMany('Modules\BillingBase\Entities\Invoice');
+        return $this->hasMany(\Modules\BillingBase\Entities\Invoice::class);
         // $srs  = SettlementRun::where('verified', '=', '0')->get(['id'])->pluck('id')->all();
         // $hide = $srs ? : 0;
-        // return $this->hasMany('Modules\BillingBase\Entities\Invoice')->where('contract_id', '=', $this->id)->where('settlementrun_id', '!=', [$hide]);
+        // return $this->hasMany(\Modules\BillingBase\Entities\Invoice::class)->where('contract_id', '=', $this->id)->where('settlementrun_id', '!=', [$hide]);
     }
 
     public function CccUser()
     {
-        return $this->hasOne('Modules\Ccc\Entities\CccUser');
+        return $this->hasOne(\Modules\Ccc\Entities\CccUser::class);
     }
 
     public function tickets()
     {
-        return $this->hasMany('Modules\Ticketsystem\Entities\Ticket');
+        return $this->hasMany(\Modules\Ticketsystem\Entities\Ticket::class);
     }
 
     public function realty()

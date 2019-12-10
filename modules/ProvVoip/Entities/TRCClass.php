@@ -16,7 +16,7 @@ class TRCClass extends \BaseModel
 
     public function phonenumbermanagements()
     {
-        return $this->hasMany('Modules\ProvVoip\Entities\PhonenumberManagement');
+        return $this->hasMany(PhonenumberManagement::class);
     }
 
     public static function trcclass_list_for_form_select()
