@@ -68,7 +68,7 @@ class Nas extends \BaseModel
 
     public function netgws()
     {
-        return \DB::table($this->netgw()->getRelated()->table)->whereNull('deleted_at')->get();
+        return \DB::table($this->netgw->table)->whereNull('deleted_at')->get();
     }
 }
 
