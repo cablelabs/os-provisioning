@@ -577,10 +577,9 @@ class ConfigfileObserver
 
         $prov = [];
         $conf = $configfile->getMonitoringConfig() ?: [];
-        foreach (new \RecursiveIteratorIterator(new \RecursiveArrayIterator($conf), \RecursiveIteratorIterator::LEAVES_ONLY) as $value) {
-            // get all parameters, which haven't been updated in the last 5 minutes, -10 seconds to account for possible CPE jitter
-            $prov[] = "declare('$value', {value: Date.now() - (290 * 1000)});";
-        }
+        $prov = array_map(function ($value) {
+            return "declare('$value', {value: Date.now() - (290 * 1000)});";
+        }, \Illuminate\Support\Arr::flatten($conf));
 
         Modem::callGenieAcsApi("provisions/mon-$configfile->id", 'PUT', implode("\r\n", $prov));
     }

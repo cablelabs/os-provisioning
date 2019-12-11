@@ -27,8 +27,7 @@ class NetGwTableSeeder extends \BaseSeeder
         $conf = config('provbase.netgw');
         $company = array_keys($conf);
 
-        $iter = new RecursiveIteratorIterator(new RecursiveArrayIterator($conf));
-        $series = iterator_to_array($iter, false);
+        $series = \Illuminate\Support\Arr::flatten($conf);
 
         $type = array_values(NetGw::getPossibleEnumValues('type'));
 
