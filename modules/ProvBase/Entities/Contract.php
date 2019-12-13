@@ -1563,7 +1563,7 @@ class Contract extends \BaseModel
                 preg_match('/\d*/', $housenr, $nr);
 
                 if (! $nr[0]) {
-                    ChannelLog::error('billingbase', trans('propertymanagement::messages.invoice.invalidRealtyHousenr', ['id' => $realty->id, 'nr' => $realty->house_nr, 'contractnr' => $contract->number]));
+                    \ChannelLog::error('billingbase', trans('propertymanagement::messages.invoice.invalidRealtyHousenr', ['id' => $realty->id, 'nr' => $realty->house_nr, 'contractnr' => $contract->number]));
 
                     continue;
                 }
