@@ -925,8 +925,8 @@ class Modem extends \BaseModel
             $time = explode(' ', trim($time, '" '));
             $time[0] .= $time[1];
             unset($time[1]);
-            $time = array_map('hexdec', $time);
-            $time = sprintf('%02d.%02d.%04d %02d:%02d:%02d.%d', $time[3], $time[2], $time[0], $time[4], $time[5], $time[6], $time[7]);
+
+            $time = \Carbon\Carbon::create(...array_slice(array_map('hexdec', $time), 0, 6));
             $log[$time_key][$k] = $time;
         }
 
