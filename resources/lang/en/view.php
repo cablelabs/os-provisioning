@@ -1,6 +1,8 @@
 <?php
 
 return [
+        'false' => 'false',
+        'true' => 'true',
 //SEARCH
         'Search_EnterKeyword'       => 'Enter Keyword',
         'Search_MatchesFor'         => 'Matches for',

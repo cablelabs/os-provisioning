@@ -1,6 +1,8 @@
 <?php
 
 return [
+        'false' => 'ja',
+        'true' => 'nein',
 //SEARCH
         'Search_EnterKeyword'       => 'Suchbegriff eingeben',
         'Search_MatchesFor'         => 'Ergebnisse für',

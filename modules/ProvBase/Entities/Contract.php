@@ -83,10 +83,21 @@ class Contract extends \BaseModel
         if (Module::collections()->has('BillingBase')) {
             $ret['index_header'][] = 'costcenter.name';
             $ret['eager_loading'] = ['costcenter'];
-            $ret['edit'] = ['costcenter.name' => 'get_costcenter_name'];
+            $ret['edit']['costcenter.name'] = 'get_costcenter_name';
+        }
+
+        if (Module::collections()->has('PropertyManagement')) {
+            $ret['index_header'][] = 'contact_id';
+            $ret['edit']['contact_id'] = 'isGroupContractAsString';
+            $ret['filter']['contact_id'] = $this->groupContractFilterQuery();
         }
 
         return $ret;
+    }
+
+    public function isGroupContractAsString()
+    {
+        return $this->isGroupContract() ? trans('view.true') : trans('view.false');
     }
 
     /**
@@ -95,6 +106,10 @@ class Contract extends \BaseModel
     public function get_bsclass()
     {
         $bsclass = 'success';
+
+        if ($this->isGroupContract()) {
+            return 'info';
+        }
 
         if (! ($this->internet_access || $this->has_telephony)) {
             $bsclass = 'active';
@@ -207,7 +222,8 @@ class Contract extends \BaseModel
             }
         }
 
-        if (Module::collections()->has('ProvVoipEnvia') && (! Module::collections()->has('PropertyManagement') || ! $this->isGroupContract())) {
+        if (Module::collections()->has('ProvVoipEnvia') &&
+            (! Module::collections()->has('PropertyManagement') || (! $this->isGroupContract() && ! $this->apartment_id))) {
             $ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
             $ret['envia TEL']['EnviaContract']['relation'] = $this->enviacontracts;
             $ret['envia TEL']['EnviaContract']['options']['hide_create_button'] = 1;
@@ -1487,6 +1503,11 @@ class Contract extends \BaseModel
         }
 
         return $this->contact_id ? true : false;
+    }
+
+    public function groupContractFilterQuery()
+    {
+        return "id in (SELECT id from contract WHERE IF(contact_id is null, '".trans('view.false')."', '".trans('view.true')."') like ?)";
     }
 
     /**
