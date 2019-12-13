@@ -440,6 +440,7 @@ class Contract extends \BaseModel
 
     public function realty()
     {
+        // TODO - Laravel5.8/L5.8: use hasManyThrough or intermediate Tables (see https://laravel.com/docs/5.8/eloquent-relationships#has-one-through and https://laravel.com/docs/5.8/eloquent-relationships#defining-custom-intermediate-table-models)
         return self::join('modem', 'modem.contract_id', 'contract.id')
             ->join('apartment', 'apartment.id', 'modem.apartment_id')
             ->join('realty', 'apartment.realty_id', 'realty.id')
