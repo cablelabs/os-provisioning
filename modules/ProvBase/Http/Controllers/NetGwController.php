@@ -56,6 +56,7 @@ class NetGwController extends \BaseController
         }
 
         $series = config('provbase.netgw.'.$company);
+        $types = array_map('strtoupper', (array_combine(NetGw::TYPES, NetGw::TYPES)));
 
         /**
          * label has to be the same like column in sql table
@@ -63,7 +64,7 @@ class NetGwController extends \BaseController
         // TODO: series should be jquery based select depending on the company
         // TODO: State and Monitoring without functionality -> hidden
         $ret_tmp = [
-            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => NetGw::getPossibleEnumValues('type')],
+            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types],
             ['form_type' => 'select', 'name' => 'company', 'description' => 'Company', 'value' => $company_array],
             ['form_type' => 'select', 'name' => 'series', 'description' => 'Series', 'value' => $series],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname'],

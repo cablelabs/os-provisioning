@@ -7,6 +7,8 @@ use App\Sla;
 
 class NetGw extends \BaseModel
 {
+    const TYPES = ['cmts', 'bras'];
+
     private static $_us_snr_path = 'data/provmon/us_snr';
     // don't put a trailing slash here!
     public static $netgw_include_path = '/etc/dhcp-nmsprime/cmts_gws';
@@ -20,9 +22,12 @@ class NetGw extends \BaseModel
     // Add your validation rules here
     public static function rules($id = null)
     {
+        $types = implode(self::TYPES, ',');
+
         return [
             'hostname' => 'required|unique:netgw,hostname,'.$id.',id,deleted_at,NULL',  	// unique: table, column, exception , (where clause)
             'company' => 'required',
+            'type' => "required|in:$types",
         ];
     }
 

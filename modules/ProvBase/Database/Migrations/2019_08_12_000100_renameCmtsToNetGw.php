@@ -20,7 +20,7 @@ class RenameCmtsToNetGw extends BaseMigration
         });
 
         Schema::table($this->tablename, function (Blueprint $table) {
-            $table->enum('type', ['cmts', 'bras']);
+            $table->string('type')->default('cmts');
         });
 
         Schema::table('ippool', function (Blueprint $table) {

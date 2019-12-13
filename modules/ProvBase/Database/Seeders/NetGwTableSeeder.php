@@ -29,7 +29,7 @@ class NetGwTableSeeder extends \BaseSeeder
 
         $series = \Illuminate\Support\Arr::flatten($conf);
 
-        $type = array_values(NetGw::getPossibleEnumValues('type'));
+        $type = NetGw::TYPES;
 
         $ret = [
             'hostname' => $faker->unique->name,
