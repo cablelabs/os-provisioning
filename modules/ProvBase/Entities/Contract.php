@@ -1453,24 +1453,30 @@ class Contract extends \BaseModel
 
     /**
      * Synchronize address of Realty and Contract as contract address is used in e.g. invoice
-     * Note: This is only done for group contracts (with direct relation to Realty)
+     *
+     * @param \Modules\PropertyManagement\Entities\Realty
+     * @param array  of Contract IDs to update multiple Contracts by one DB query
      */
-    public function updateAddressFromProperty()
+    public function updateAddressFromProperty($realty = null, $ids = [])
     {
         if (! Module::collections()->has('PropertyManagement')) {
             return;
         }
 
-        if (! $this->realty) {
+        if (! $realty) {
+            $realty = $this->realty;
+        }
+
+        if (! $realty) {
             return;
         }
 
-        self::where('id', $this->id)->update([
-            'street' => $this->realty->street,
-            'house_number' => $this->realty->house_nr,
-            'zip' => $this->realty->zip,
-            'city' => $this->realty->city,
-            'district' => $this->realty->district,
+        self::whereIn('id', $ids ?: [$this->id])->update([
+            'street' => $realty->street,
+            'house_number' => $realty->house_nr,
+            'zip' => $realty->zip,
+            'city' => $realty->city,
+            'district' => $realty->district,
             ]);
     }
 

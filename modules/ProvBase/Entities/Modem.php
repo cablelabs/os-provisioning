@@ -1440,21 +1440,26 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Store address from Realty/Apartment internally in modem table too, as it is used in many places (e.g. EnviaAPI)
+     * Store address from Realty internally in modem table too, as it is used in many places (e.g. EnviaAPI)
+     *
+     * @param \Modules\PropertyManagement\Entities\Realty
+     * @param array  of Contract IDs to update multiple Contracts by one DB query
      */
-    public function updateAddressFromProperty()
+    public function updateAddressFromProperty($realty = null, $ids = [])
     {
         if (! \Module::collections()->has('PropertyManagement')) {
             return;
         }
 
-        $realty = $this->getRealty();
+        if (! $realty) {
+            $realty = $this->apartment ? $this->apartment->realty : null;
+        }
 
         if (! $realty) {
             return;
         }
 
-        self::where('id', $this->id)->update([
+        self::where('id', $ids ?: [$this->id])->update([
             'street' => $realty->street,
             'house_number' => $realty->house_nr,
             'zip' => $realty->zip,
