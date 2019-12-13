@@ -105,7 +105,6 @@ class ContractController extends \BaseController
             ['form_type' => 'text', 'name' => 'contract_end', 'description' => 'Contract End'],
         ];
 
-
         if (Module::collections()->has('BillingBase')) {
             $days = range(0, 28);
             $days[0] = null;
