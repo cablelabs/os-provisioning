@@ -9,6 +9,7 @@ use App\GlobalConfig;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\ProvBase;
+use Modules\ProvBase\Entities\Configfile;
 use App\Http\Controllers\BaseViewController;
 
 class ModemController extends \BaseController
@@ -162,27 +163,15 @@ class ModemController extends \BaseController
      */
     public function dynamicDisplayFormFields()
     {
-        $ids = [];
-        $cm = '';
-        $tr069 = '';
+        $all = Configfile::pluck('id');
+        $cfIds['all'] = $all->combine($all)->toArray();
 
-        foreach (Modem::TYPES as $device) {
-            foreach (\DB::table('configfile')->where('deleted_at', null)->where('device', $device)->get() as $configfile) {
-                $$device .= ' '.$configfile->id;
-            }
+        // for now only tr069 is needed
+        foreach (/*Modem::TYPES*/['tr069'] as $type) {
+            $cfIds[$type] = Configfile::where('device', $type)->pluck('id')->implode(' ') ?: 'hide';
         }
 
-        foreach (\DB::table('configfile')->select(['id'])->whereIn('device', Modem::TYPES)->where('deleted_at', null)->get() as $key => $cf) {
-            $ids[] = $cf->id;
-        }
-
-        // equal keys and values
-        $ids = array_combine($ids, $ids);
-
-        // select a string != '' so that the class with that name will be hidden in form-js-select.blade.php
-        $tr069 = $tr069 != '' ? $tr069 : 'hide';
-
-        return ['all' => $ids, 'cm' => $cm, 'tr069' => $tr069];
+        return $cfIds;
     }
 
     /**
@@ -419,7 +408,7 @@ class ModemController extends \BaseController
             }
         }
 
-        if (\Modules\ProvBase\Entities\Configfile::find($data['configfile_id'])->device == 'tr069') {
+        if (Configfile::find($data['configfile_id'])->device == 'tr069') {
             $id = \Route::current()->hasParameter('Modem') ? \Route::current()->parameters()['Modem'] : 0;
             $rules['serial_num'] = "required|unique:modem,serial_num,$id,id,deleted_at,NULL";
             $rules['ppp_username'] = "required|unique:modem,ppp_username,$id,id,deleted_at,NULL";
