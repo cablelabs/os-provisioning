@@ -412,7 +412,7 @@ class Contract extends \BaseModel
 
     public function realties()
     {
-        return $this->HasMany(\Modules\PropertyManagement\Entities\Realty::class)->orderBy('street')->orderBy('house_nr');
+        return $this->hasMany(\Modules\PropertyManagement\Entities\Realty::class)->orderBy('street')->orderBy('house_nr');
     }
 
     public function apartment()
