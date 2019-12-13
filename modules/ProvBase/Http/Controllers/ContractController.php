@@ -24,6 +24,22 @@ class ContractController extends \BaseController
             $model = new Contract;
         }
 
+        // Compose related phonenumbers as readonly info field
+        if (Module::collections()->has('ProvVoip')) {
+            // Get some necessary relations by one DB query as first step to reduce further queries when accessing related models
+            $modems = $model->modems()->with('mtas.phonenumbers')->get();
+            $model->setRelation('modems', $modems);
+
+            $pns = [];
+            foreach ($modems as $modem) {
+                foreach ($modem->related_phonenumbers() as $pn) {
+                    $pns[] = $pn->asString();
+                }
+            }
+
+            $model->related_phonenrs = implode(', ', $pns);
+        }
+
         $r = $a = $b = $c1 = $c2 = $d = [];
 
         $selectPropertyMgmt = [];
@@ -75,14 +91,18 @@ class ContractController extends \BaseController
             $a[] = ['form_type' => 'text', 'name' => 'apartment_nr', 'description' => 'Apartment number', 'space' => 1];
         }
 
-        $b = [
-            ['form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'],
+        $b1[] = ['form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'];
+
+        if (Module::collections()->has('ProvVoip')) {
+            $b1[] = ['form_type' => 'text', 'name' => 'related_phonenrs', 'description' => trans('provvoip::view.contractRelatedPns'), 'options' => ['readonly']];
+        }
+
+        $b2 = [
             ['form_type' => 'text', 'name' => 'fax', 'description' => 'Fax'],
             ['form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'],
             ['form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'create' => ['Modem'], 'space' => '1'],
             ['form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'], // TODO: create default 'value' => date("Y-m-d")
             ['form_type' => 'text', 'name' => 'contract_end', 'description' => 'Contract End'],
-
         ];
 
         if (Module::collections()->has('BillingBase')) {
@@ -132,7 +152,7 @@ class ContractController extends \BaseController
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
 
-        return array_merge($a, $b, $c, $d);
+        return array_merge($a, $b1, $b2, $c, $d);
     }
 
     /**
