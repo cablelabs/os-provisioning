@@ -134,28 +134,28 @@ class NetElement extends \BaseModel
      */
     public function modems()
     {
-        return $this->hasMany('Modules\ProvBase\Entities\Modem', 'netelement_id');
+        return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id');
     }
 
     // Relation to MPRs Modem Positioning Rules
     public function mprs()
     {
-        return $this->hasMany('Modules\HfcCustomer\Entities\Mpr', 'netelement_id');
+        return $this->hasMany(\Modules\HfcCustomer\Entities\Mpr::class, 'netelement_id');
     }
 
     public function snmpvalues()
     {
-        return $this->hasMany('Modules\HfcSnmp\Entities\SnmpValue', 'netelement_id');
+        return $this->hasMany(\Modules\HfcSnmp\Entities\SnmpValue::class, 'netelement_id');
     }
 
     public function netelementtype()
     {
-        return $this->belongsTo('Modules\HfcReq\Entities\NetElementType');
+        return $this->belongsTo(NetElementType::class);
     }
 
     public function indices()
     {
-        return $this->hasMany('Modules\HfcSnmp\Entities\Indices', 'netelement_id');
+        return $this->hasMany(\Modules\HfcSnmp\Entities\Indices::class, 'netelement_id');
     }
 
     /**
@@ -165,27 +165,27 @@ class NetElement extends \BaseModel
     public function icingaobject()
     {
         return $this
-            ->hasOne('Modules\HfcBase\Entities\IcingaObject', 'name1', 'id_name')
+            ->hasOne(\Modules\HfcBase\Entities\IcingaObject::class, 'name1', 'id_name')
             ->where('icinga_objects.objecttype_id', '1')
             ->where('icinga_objects.is_active', '1');
     }
 
     public function parent()
     {
-        return $this->belongsTo('Modules\HfcReq\Entities\NetElement', 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     public function children()
     {
-        return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     /**
-     * Get first parent being a CMTS
+     * Get first parent of type NetGw
      *
-     * @return object NetElement 	(or NULL if there is no parent CMTS)
+     * @return object NetElement 	(or NULL if there is no parent NetGw)
      */
-    public function get_parent_cmts()
+    public function get_parent_netgw()
     {
         $parent = $this;
 
@@ -238,7 +238,7 @@ class NetElement extends \BaseModel
 
         return self::where('netelementtype_id', '=', $net_id)->get();
 
-        // return NetElement::where('type', '=', 'NET')->get();
+        // return self::where('type', '=', 'NET')->get();
     }
 
     /**
@@ -307,9 +307,9 @@ class NetElement extends \BaseModel
         return $this->_get_native_helper();
     }
 
-    public function get_native_cmts()
+    public function get_native_netgw()
     {
-        return $this->_get_native_helper('Cmts');
+        return $this->_get_native_helper('NetGw');
     }
 
     // TODO: depracted, remove
@@ -347,7 +347,7 @@ class NetElement extends \BaseModel
 
             $netelement->update(['net' => $netelement->get_native_net(),
                                  'cluster' => $netelement->get_native_cluster(),
-                                 'cmts' => $netelement->get_native_cmts(), ]);
+                                 'netgw' => $netelement->get_native_netgw(), ]);
 
             if ($call_from_cmd == 1) {
                 echo "$debug\r";
@@ -355,7 +355,7 @@ class NetElement extends \BaseModel
             $i++;
 
             if ($call_from_cmd == 2) {
-                echo "\n$debug - net:".$netelement->net.', clu:'.$netelement->cluster.', cmts:'.$netelement->cmts;
+                echo "\n$debug - net:".$netelement->net.', clu:'.$netelement->cluster.', netgw:'.$netelement->netgw_id;
             }
         }
 
@@ -377,20 +377,20 @@ class NetElement extends \BaseModel
         return $this->netelementtype_id == array_search('Cluster', NetElementType::$undeletables);
     }
 
-    public function is_type_cmts()
+    public function is_type_netgw()
     {
         if (! $this->netelementtype) {
             return false;
         }
 
-        return $this->netelementtype->get_base_type() == 3; // 3 .. is base element for cmts
+        return $this->netelementtype->get_base_type() == 3; // 3 .. is base element for netgw
     }
 
     /**
      * Return the base NetElementType id
      *
      * @param
-     * @return int [1: Net, 2: Cluster, 3: Cmts, 4: Amp, 5: Node, 6: Data]
+     * @return int [1: Net, 2: Cluster, 3: NetGw, 4: Amp, 5: Node, 6: Data]
      */
     public function get_base_netelementtype()
     {
@@ -424,7 +424,7 @@ class NetElement extends \BaseModel
     }
 
     /**
-     * Get the IP address if set, otherwise return IP address of parent CMTS
+     * Get the IP address if set, otherwise return IP address of parent NetGw
      *
      * @author Ole Ernst
      *
@@ -436,11 +436,11 @@ class NetElement extends \BaseModel
             return $this->ip;
         }
 
-        if (! $cmts = $this->get_parent_cmts()) {
+        if (! $netgw = $this->get_parent_netgw()) {
             return;
         }
 
-        return $cmts->ip ?: null;
+        return $netgw->ip ?: null;
     }
 
     /**

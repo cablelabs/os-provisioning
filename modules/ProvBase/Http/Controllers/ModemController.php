@@ -8,6 +8,8 @@ use Request;
 use App\GlobalConfig;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Contract;
+use Modules\ProvBase\Entities\ProvBase;
+use Modules\ProvBase\Entities\Configfile;
 use App\Http\Controllers\BaseViewController;
 
 class ModemController extends \BaseController
@@ -18,12 +20,12 @@ class ModemController extends \BaseController
 
     // save button title ? for a help message
     protected $edit_view_second_button = true;
-    protected $second_button_name = 'Restart via CMTS';
+    protected $second_button_name = 'Restart via NetGw';
     protected $second_button_title_key = 'modem_force_restart_button_title';
 
     public function __construct()
     {
-        if (\Modules\ProvBase\Entities\ProvBase::first()->additional_modem_reset) {
+        if (ProvBase::first()->additional_modem_reset) {
             $this->edit_view_third_button = true;
             $this->third_button_name = 'Reset Modem';
             $this->third_button_title_key = 'modem_reset_button_title';
@@ -76,15 +78,19 @@ class ModemController extends \BaseController
             $selectPropertyMgmt = ['select' => 'noRealty noApartment'];
             $help['contract'] = ['help' => trans('propertymanagement::help.modem.contract_id')];
         }
+        $cfIds = $this->dynamicDisplayFormFields();
 
         // label has to be the same like column in sql table
         $a = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
+            ['form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list_with_count($model->configfiles(), 'name', false, '', 'configfile_id', 'modem'), 'help' => trans('helper.configfile_count'), 'select' => $cfIds['all']],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly'], 'hidden' => 'C', 'space' => 1],
             // TODO: show this dropdown only if necessary (e.g. not if creating a modem from contract context)
-            array_merge(['form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 'E', 'value' => $model->contracts()], $help['contract']),
             ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')],
-            ['form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list_with_count($model->configfiles(), 'name', false, '', 'configfile_id', 'modem'), 'help' => trans('helper.configfile_count')],
+            ['form_type' => 'text', 'name' => 'serial_num', 'description' => trans('messages.Serial Number'), 'select' => $cfIds['tr069']],
+            ['form_type' => 'text', 'name' => 'ppp_username', 'description' => trans('messages.Username'), 'select' => $cfIds['tr069'], 'options' => [$model->exists ? 'readonly' : '']],
+            ['form_type' => 'text', 'name' => 'ppp_password', 'description' => trans('messages.Password'), 'select' => $cfIds['tr069'], 'hidden' => 'C'],
+            array_merge(['form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 'E', 'value' => $model->contracts()], $help['contract']),
             ['form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'],
             ['form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1', 'help' => trans('helper.Modem_InternetAccess')],
             ];
@@ -142,12 +148,30 @@ class ModemController extends \BaseController
             ['form_type' => 'text', 'name' => 'geocode_source', 'description' => 'Geocode origin', 'help' => trans('helper.Modem_GeocodeOrigin'), 'space' => 1],
 
             ['form_type' => 'text', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => $installation_address_change_date_options, 'help' => trans('helper.Modem_InstallationAddressChangeDate')], // Date of adress change for notification at telephone provider - important for localisation of emergency calls
-            ['form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number'],
             ['form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'],
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
 
         return array_merge($a, $b, $c, $d);
+    }
+
+    /**
+     * Change form fields based on selected configfile device (cm || tr069)
+     *
+     * @author Roy Schneider
+     * @return array with array of all ids from configfile of device cm or tr069 and string of ids from configfile of device cm/tr069
+     */
+    public function dynamicDisplayFormFields()
+    {
+        $all = Configfile::pluck('id');
+        $cfIds['all'] = $all->combine($all)->toArray();
+
+        // for now only tr069 is needed
+        foreach (/*Modem::TYPES*/['tr069'] as $type) {
+            $cfIds[$type] = Configfile::where('device', $type)->pluck('id')->implode(' ') ?: 'hide';
+        }
+
+        return $cfIds;
     }
 
     /**
@@ -293,7 +317,7 @@ class ModemController extends \BaseController
             return response()->json(['ret' => 'Object not found']);
         }
 
-        $domain_name = \Modules\ProvBase\Entities\ProvBase::first()->domain_name;
+        $domain_name = ProvBase::first()->domain_name;
         exec("sudo ping -c1 -i0 -w1 {$modem->hostname}.$domain_name", $ping, $offline);
 
         return response()->json(['ret' => 'success', 'online' => ! $offline]);
@@ -348,6 +372,10 @@ class ModemController extends \BaseController
         // ISO 3166 country codes are uppercase
         $data['country_code'] = \Str::upper($data['country_code']);
 
+        if (isset($data['serial_num'])) {
+            $data['serial_num'] = \Str::upper($data['serial_num']);
+        }
+
         return unify_mac($data);
     }
 
@@ -380,7 +408,24 @@ class ModemController extends \BaseController
             }
         }
 
+        if (Configfile::find($data['configfile_id'])->device == 'tr069') {
+            $id = \Route::current()->hasParameter('Modem') ? \Route::current()->parameters()['Modem'] : 0;
+            $rules['serial_num'] = "required|unique:modem,serial_num,$id,id,deleted_at,NULL";
+            $rules['ppp_username'] = "required|unique:modem,ppp_username,$id,id,deleted_at,NULL";
+        }
+
         return parent::prepare_rules($rules, $data);
+    }
+
+    public function store($redirect = true)
+    {
+        if (Request::get('ppp_username') && ! \Modules\ProvBase\Entities\IpPool::findNextUnusedBrasIPAddress(Request::get('public'))) {
+            \Session::push('tmp_error_above_form', trans('messages.ippool_exhausted'));
+
+            return \Redirect::back()->withInput();
+        }
+
+        return parent::store();
     }
 
     /**

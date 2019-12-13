@@ -152,12 +152,12 @@ return [
     'tel_private' => 'Telefonnummer privat',
     'email1' => 'E-Mail 1',
     'email2' => 'E-Mail 2',
-    // CMTS
-    'cmts.id' => 'ID',
-    'cmts.hostname' => 'Name',
-    'cmts.ip' => 'IP',
-    'cmts.company' => 'Hersteller',
-    'cmts.type' => 'Typ',
+    // NetGw
+    'netgw.id' => 'ID',
+    'netgw.hostname' => 'Name',
+    'netgw.ip' => 'IP',
+    'netgw.company' => 'Hersteller',
+    'netgw.series' => 'Serie',
     // Contract
     'contract.city' => 'Stadt',
     'company' => 'Firma',
@@ -286,6 +286,10 @@ return [
         'name' => 'Name',
         'street' => 'Straße',
         'zip' => 'PLZ',
+    ],
+    // NAS
+    'nas' => [
+        'nasname' => 'Name',
     ],
     // Ticket
     'ticket.id' => 'ID',

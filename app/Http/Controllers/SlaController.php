@@ -15,7 +15,7 @@ class SlaController extends BaseController
             ['form_type' => 'text', 'name' => 'license', 'description' => 'License'],
             // ['form_type' => 'text', 'name' => 'num_contracts', 'description' => ''],
             // ['form_type' => 'text', 'name' => 'num_modems', 'description' => ''],
-            // ['form_type' => 'text', 'name' => 'num_cmts', 'description' => ''],
+            // ['form_type' => 'text', 'name' => 'num_netgw', 'description' => ''],
             // ['form_type' => 'text', 'name' => 'system_status', 'description' => ''],
             ];
     }

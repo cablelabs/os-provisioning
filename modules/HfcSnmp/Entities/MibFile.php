@@ -79,7 +79,7 @@ class MibFile extends \BaseModel
      */
     public function oids()
     {
-        return $this->hasMany('Modules\HfcSnmp\Entities\OID', 'mibfile_id')->orderBy('oid');
+        return $this->hasMany(OID::class, 'mibfile_id')->orderBy('oid');
     }
 
     /**

@@ -159,7 +159,7 @@ class PhonebookEntry extends \BaseModel
      */
     public function phonenumbermanagement()
     {
-        return $this->belongsTo('Modules\ProvVoip\Entities\PhonenumberManagement');
+        return $this->belongsTo(PhonenumberManagement::class);
     }
 
     // belongs to an phonenumber

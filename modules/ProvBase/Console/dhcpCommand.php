@@ -4,8 +4,8 @@ namespace Modules\provbase\Console;
 
 use Illuminate\Console\Command;
 use Modules\ProvVoip\Entities\Mta;
-use Modules\ProvBase\Entities\Cmts;
 use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\NetGw;
 use Modules\ProvBase\Entities\Endpoint;
 use Modules\ProvBase\Entities\ProvBase;
 
@@ -55,7 +55,7 @@ class dhcpCommand extends Command
             Mta::make_dhcp_mta_all();
         }
 
-        Cmts::make_dhcp_conf_all();
+        NetGw::make_dhcp_conf_all();
 
         // Restart dhcp server
         $dir = storage_path('systemd/');

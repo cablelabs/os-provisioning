@@ -173,6 +173,11 @@ class ExtendedValidator
         if ($device == null) {
             return false;
         }
+        if ($device == 'tr069') {
+            // configfile is csv, nothing to validate
+            return true;
+        }
+
         $dir = "/tftpboot/$device";
         $cf_file = $dir.'dummy-validator.conf';
 

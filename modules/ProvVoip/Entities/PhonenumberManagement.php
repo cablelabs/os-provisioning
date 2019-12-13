@@ -90,7 +90,7 @@ class PhonenumberManagement extends \BaseModel
      */
     public function phonenumber()
     {
-        return $this->belongsTo('Modules\ProvVoip\Entities\Phonenumber');
+        return $this->belongsTo(Phonenumber::class);
     }
 
     /**
@@ -101,7 +101,7 @@ class PhonenumberManagement extends \BaseModel
         if (! \Module::collections()->has('ProvVoipEnvia')) {
             throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
         } else {
-            return $this->belongsTo('Modules\ProvVoipEnvia\Entities\EnviaContract', 'enviacontract_id');
+            return $this->belongsTo(\Modules\ProvVoipEnvia\Entities\EnviaContract::class, 'enviacontract_id');
         }
     }
 
@@ -118,7 +118,7 @@ class PhonenumberManagement extends \BaseModel
      */
     public function trc_class()
     {
-        return $this->hasOne('Modules\ProvVoip\Entities\TRCClass', 'trcclass');
+        return $this->hasOne(TRCClass::class, 'trcclass');
     }
 
     /**
@@ -132,7 +132,7 @@ class PhonenumberManagement extends \BaseModel
             throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
         }
 
-        /* return $this->phonenumber->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment'); */
+        /* return $this->phonenumber->hasMany(\Modules\ProvVoipEnvia\Entities\EnviaOrder::class)->withTrashed()->where('ordertype', 'NOT LIKE', 'order/create_attachment'); */
         return $this->phonenumber->enviaorders(true, "ordertype NOT LIKE 'order/create_attachment'");
     }
 
@@ -143,7 +143,7 @@ class PhonenumberManagement extends \BaseModel
      */
     public function phonebookentry()
     {
-        return $this->hasOne('Modules\ProvVoip\Entities\PhonebookEntry', 'phonenumbermanagement_id');
+        return $this->hasOne(PhonebookEntry::class, 'phonenumbermanagement_id');
     }
 
     // has zero or one phonebookentry object related

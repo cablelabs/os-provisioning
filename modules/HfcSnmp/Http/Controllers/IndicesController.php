@@ -16,9 +16,9 @@ class IndicesController extends \BaseController
 
         $netelem = NetElement::find($netelement_id);
 
-        // get params from parent cmts for cluster
+        // get params from parent netgw for cluster
         if ($netelem->netelementtype_id == 2) {
-            $netelem = $netelem->get_parent_cmts();
+            $netelem = $netelem->get_parent_netgw();
         }
 
         $params = $netelem ? NetElementType::param_list($netelem->netelementtype_id) : [];

@@ -14,7 +14,7 @@ return [
     'Use api'                   => 'This ability allows or forbids to access the API routes with "Basic Auth" (the email is used as username).',
     'See income chart'          => 'This ability allows or forbids to view the income chart on the dashboard.',
     'View analysis pages of modems' => 'This ability allows or forbids to access the analysis pages of a modem.',
-    'View analysis pages of cmts' => 'This ability allows or forbids to access the analysis pages of a CMTS.',
+    'View analysis pages of netgw' => 'This ability allows or forbids to access the analysis pages of a NetGw.',
     'Download settlement runs'  => 'This ability allows or forbids the download of settlement runs. This ability has no impact if it is forbidden to manage settlement runs.',
  /*
   * Index Page - Datatables
@@ -72,7 +72,7 @@ return [
   */
     'next'                          => 'Next step: ',
     'set_isp_name'                  => 'Set internet service provider name',
-    'create_cmts'                   => 'Create first CMTS',
+    'create_netgw'                  => 'Create first NetGw/CMTS',
     'create_cm_pool'                => 'Create first cablemodem IP pool',
     'create_cpepriv_pool'           => 'Create first private CPE IP pool',
     'create_qos'                    => 'Create first QoS profile',
@@ -112,21 +112,21 @@ return [
         'valueDate' => 'Day of month for specific date of value. Overrides the requested collection date from global config for this contract in the SEPA XML.',
     ],
     'rate_coefficient'              => 'MaxRateSustained will be multiplied by this value to grant the user more (> 1.0) throughput than subscribed.',
-    'additional_modem_reset'        => 'Check if an additional button should be displayed, which resets the modem via SNMP without querying the CMTS.',
+    'additional_modem_reset'        => 'Check if an additional button should be displayed, which resets the modem via SNMP without querying the NetGw.',
     'openning_new_tab_for_modem' => 'Check the box to open the modem edit page in new tab in topography view.',
     //ModemController
     'Modem_InternetAccess'          => 'Internet Access for CPEs. (MTAs are not considered and will always go online when all other configurations are correct). Take care: With Billing-Module this checkbox will be overwritten by daily check if tariff changes.',
     'Modem_InstallationAddressChangeDate'   => 'In case of (physical) relocation of the modem: Add startdate for the new address here. If readonly there is a pending address change order at envia TEL.',
     'Modem_GeocodeOrigin'           => 'Where does geocode data come from? If set to “n/a” address could not be geocoded against any API. Will be set to your name on manually changed geodata.',
-    'cmtsSupportState' => [
-        'full-support' => 'More than 95% of cmts modules are listed as supported devices.',
-        'restricted' => 'Between 80%-95% of cmts modules are listed as supported devices.',
-        'not-supported' => 'Less than 80% of cmts modules are listed as supported devices.',
-        'verifying' => 'Less than 80% of cmts modules are listed as supported devices, but the CMTS is still within the verification period of 6 weeks',
+    'netGwSupportState' => [
+        'full-support' => 'More than 95% of netGw modules are listed as supported devices.',
+        'restricted' => 'Between 80%-95% of netGw modules are listed as supported devices.',
+        'not-supported' => 'Less than 80% of netGw modules are listed as supported devices.',
+        'verifying' => 'Less than 80% of netGw modules are listed as supported devices, but the netGw is still within the verification period of 6 weeks',
     ],
     'contract_number'               => 'Attention - Customer login password is changed automatically on changing this field!',
     'mac_formats'                   => "Allowed formats (case-insensitive):\n\n1) AA:BB:CC:DD:EE:FF\n2) AABB.CCDD.EEFF\n3) AABBCCDDEEFF",
-    'fixed_ip_warning'              => 'Using fixed IP address is highly discouraged, as this breaks the ability to move modems and their CPEs freely among CMTSes. Instead of telling the customer a fixed IP address they should be supplied with the hostname, which will not change.',
+    'fixed_ip_warning'              => 'Using fixed IP address is highly discouraged, as this breaks the ability to move modems and their CPEs freely among NetGws. Instead of telling the customer a fixed IP address they should be supplied with the hostname, which will not change.',
     'addReverse'                    => 'To set an additional reverse DNS record, e.g. for e-mail servers',
     'modem_update_frequency'        => 'This field is updated once a day.',
     'modemSupportState' => [

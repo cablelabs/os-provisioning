@@ -1,6 +1,6 @@
 <?php
 
-use Modules\ProvBase\Entities\Cmts;
+use Modules\ProvBase\Entities\NetGw;
 use Illuminate\Database\Schema\Blueprint;
 
 class CreateCmtsTable extends BaseMigration
@@ -48,12 +48,12 @@ class CreateCmtsTable extends BaseMigration
     public function down()
     {
         // empty CMTS includes
-        file_put_contents(Cmts::$cmts_include_path.'.conf', '');
+        file_put_contents(NetGw::$netgw_include_path.'.conf', '');
 
         Schema::drop($this->tablename);
 
         // remove all through dhcpCommand created cmts config files
-        foreach (glob(Cmts::$cmts_include_path.'/*') as $file) {
+        foreach (glob(NetGw::$netgw_include_path.'/*') as $file) {
             if (is_file($file)) {
                 unlink($file);
             }

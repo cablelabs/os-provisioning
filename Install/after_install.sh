@@ -4,9 +4,10 @@ source scl_source enable rh-php71
 #
 # variables
 #
-dir="/var/www/nmsprime"
-env="/etc/nmsprime/env/global.env"
+dir='/var/www/nmsprime'
+env='/etc/nmsprime/env'
 pw=$(pwgen 12 1) # SQL password for user nmsprime
+root_pw=$(pwgen 12 1) # SQL password for root
 
 
 #
@@ -58,14 +59,24 @@ sed -e "s|^;date.timezone =.*|date.timezone = $zone|" \
     -e 's/^upload_max_filesize =.*/upload_max_filesize = 50M/' \
     -e 's/^post_max_size =.*/post_max_size = 50M/' \
     -i /etc/{,opt/rh/rh-php71/}php.ini
-sed -i "s|^#APP_TIMEZONE=|APP_TIMEZONE=$zone|" /etc/nmsprime/env/global.env
 
-# create mysql db
-mysql -u root -e "CREATE DATABASE nmsprime CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';"
+sed -e "s|^#APP_TIMEZONE=|APP_TIMEZONE=$zone|" \
+    -e "s/^DB_PASSWORD=$/DB_PASSWORD=$pw/" \
+    -i "$env/global.env"
 
-mysql -u root -e "GRANT ALL ON nmsprime.* TO 'nmsprime'@'localhost' IDENTIFIED BY '$pw';"
-sed -i "s/^DB_PASSWORD=$/DB_PASSWORD=$pw/" "$env"
+# mysql_secure_installation + create nmsprime DB
+mysql -u root << EOF
+UPDATE mysql.user SET Password=PASSWORD('$root_pw') WHERE User='root';
+DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+DELETE FROM mysql.user WHERE User='';
+DROP DATABASE IF EXISTS test;
+DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
+FLUSH PRIVILEGES;
+CREATE DATABASE nmsprime CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';
+GRANT ALL ON nmsprime.* TO 'nmsprime'@'localhost' IDENTIFIED BY '$pw';
+EOF
 
+sed -i "s/^ROOT_DB_PASSWORD=$/ROOT_DB_PASSWORD=$root_pw/" "$env/root.env"
 
 #
 # Laravel
@@ -79,11 +90,11 @@ chown apache /var/www/nmsprime/storage/logs/laravel.log
 /opt/rh/rh-php71/root/usr/bin/php artisan optimize
 
 # key:generate needs .env in root dir – create symlink to our env file
-ln -srf /etc/nmsprime/env/global.env "$dir/.env"
+ln -srf "$env/global.env" "$dir/.env"
 /opt/rh/rh-php71/root/usr/bin/php artisan key:generate
 # remove the symlink and create empty .env with comment
 rm -f "$dir/.env"
-echo "# Use /etc/nmsprime/env/*.env files for configuration" > "$dir/.env"
+echo "# Use $env/*.env files for configuration" > "$dir/.env"
 
 /opt/rh/rh-php71/root/usr/bin/php artisan migrate
 # create default user roles to be later assigned to users
@@ -95,9 +106,11 @@ echo "# Use /etc/nmsprime/env/*.env files for configuration" > "$dir/.env"
 chown -R apache storage bootstrap/cache /var/log/nmsprime
 
 # make .env files readable for apache
-chgrp -R apache /etc/nmsprime/env
-chmod -R o-rwx /etc/nmsprime/env
-chmod -R g-w /etc/nmsprime/env
+chgrp -R apache "$env"
+chmod 640 "$env"
+# only allow root to read/write mysql root credentials
+chown root:root "$env/root.env"
+chmod 600 "$env/root.env"
 
 # log
 chmod 644 /var/log/messages

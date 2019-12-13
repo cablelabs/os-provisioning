@@ -60,12 +60,12 @@ class Email extends \BaseModel
 
     public function contract()
     {
-        return $this->belongsTo('Modules\ProvBase\Entities\Contract');
+        return $this->belongsTo(\Modules\ProvBase\Entities\Contract::class);
     }
 
     public function domain()
     {
-        return $this->belongsTo('Modules\ProvBase\Entities\Domain');
+        return $this->belongsTo(\Modules\ProvBase\Entities\Domain::class);
     }
 
     /**

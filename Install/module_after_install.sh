@@ -1,10 +1,8 @@
 # source environment variables to use php 7.1
 source scl_source enable rh-php71
+env='/etc/nmsprime/env'
 
-dir="/var/www/nmsprime"
-
-cd "$dir"
-
+cd '/var/www/nmsprime'
 /opt/rh/rh-php71/root/usr/bin/php artisan module:publish
 /opt/rh/rh-php71/root/usr/bin/php artisan module:migrate
 #/opt/rh/rh-php71/root/usr/bin/php artisan queue:restart
@@ -19,3 +17,10 @@ systemctl reload httpd
 chown -R apache storage bootstrap/cache /var/log/nmsprime
 chown -R apache:dhcpd /etc/dhcp-nmsprime
 systemd-tmpfiles --create
+
+# make .env files readable for apache
+chgrp -R apache "$env"
+chmod 640 "$env"
+# only allow root to read/write mysql root credentials
+chown root:root "$env/root.env"
+chmod 600 "$env/root.env"

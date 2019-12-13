@@ -16,7 +16,7 @@ return [
 
 // Prov Base
 
-    'cmts' => ['doc' => 'https://devel.roetzer-engineering.com/confluence/display/NMS/CMTS+setup',
+    'netgw' => ['doc' => 'https://devel.roetzer-engineering.com/confluence/display/NMS/CMTS+setup',
                 'youtube' => 'https://www.youtube.com/watch?v=g-OChuE3mf4',
                 'url' => null, ],
 
@@ -60,7 +60,7 @@ return [
                      'youtube' => 'https://www.youtube.com/watch?v=9xc4Jlhg7fY&t=785s', // jump to 785s
                      'url' => null, ],
 
-    'cmts_analysis' => ['doc' => 'https://devel.roetzer-engineering.com/confluence/display/NMS/CMTS+Analysis+and+Monitoring',
+    'netgw_analysis' => ['doc' => 'https://devel.roetzer-engineering.com/confluence/display/NMS/CMTS+Analysis+and+Monitoring',
                         'youtube' => 'https://www.youtube.com/watch?v=a3UOtK9cduY&t=290s', // jump to 290s
                         'url' => null, ],
 // ProvVoip

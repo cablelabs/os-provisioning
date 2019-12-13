@@ -14,7 +14,7 @@ return [
     'Use api'                   => 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die API Routen mithilfe von "Basic Auth". Als Benutzername muss die E-Mail, welche im Profil hinterlegt ist genutzt werden.',
     'See income chart'          => 'Diese Fähigkeit erlaubt oder verbietet die Anzeige des Einkommensdiagramms im Dashboard.',
     'View analysis pages of modems' => 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseiten der Modems.',
-    'View analysis pages of cmts' => 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseite der CMTS.',
+    'View analysis pages of netgw' => 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseite der NetGws.',
     'Download settlement runs'  => 'Diese Fähigkeit erlaubt oder verbietet den Download der Abrechnungsläufe. Wenn das Verwalten von Abrechnungsläufen verboten ist, hat diese Einstellung keine Auswirkung.',
  /*
   * Index Page - Datatables
@@ -72,7 +72,7 @@ return [
   */
     'next'                          => 'Nächster Schritt: ',
     'set_isp_name'                  => 'Namen des Internetanbieters setzen',
-    'create_cmts'                   => 'Erste CMTS anlegen',
+    'create_netgw'                  => 'Erstes NetGw/CMTS anlegen',
     'create_cm_pool'                => 'Ersten Kabelmodem IP-Bereich anlegen',
     'create_cpepriv_pool'           => 'Ersten privaten CPE IP-Bereich anlegen',
     'create_qos'                    => 'Erstes QoS Profil anlegen',
@@ -112,21 +112,21 @@ return [
         'valueDate' => 'Tag im Monat des separaten Buchungsdatums. Überschreibt das Fälligkeitsdatum aus den globalen Konfigurationen für diesen Vertrag in der SEPA XML. Die Bank bucht den Betrag dann an diesem Tag ab.',
     ],
     'rate_coefficient'              => 'MaxRateSustained wird mit diesem Wert multipliziert, um den Nutzer eine höhere (> 1.0) Übertragungsrate als gebucht zu gewähren.',
-    'additional_modem_reset'        => 'Zeigt einen zusätzlichen Modem Reset Button an, um das Modem ohne Hilfe der CMTS direkt per SNMP neu zu starten.',
+    'additional_modem_reset'           => 'Zeigt einen zusätzlichen Modem Reset Button an, um das Modem ohne Hilfe des NetGws direkt per SNMP neu zu starten.',
     'openning_new_tab_for_modem' => 'Öffnet die Modem-Edit Seite in einem neuen Fenster (Topographie).',
     //ModemController
     'Modem_InternetAccess'          => 'Internetzugriff für CPEs. (MTAs werden nicht beachtet und gehen immer online, wenn alle restlich notwendigen Konfigurationen korrekt vorgenommen wurden) - Achtung: Mit Billingmodul wird diese Checkbox während der nächtlichen Prüfung (nur) bei Tarifänderung überschrieben.',
     'Modem_InstallationAddressChangeDate'   => 'Datum der Änderung der Installationsadresse. Wenn nur lesbar existiert bereits ein offener Auftrag.',
     'Modem_GeocodeOrigin'           => 'Quelle der Geodaten. Falls hier „n/a“ steht konnte die Adresse nicht aufgelöst werden. Bei manueller Änderung der Geodaten wird der aktuelle Nutzer eingetragen.',
-    'cmtsSupportState' => [
+    'netGwSupportState' => [
         'full-supported' => 'Mehr als 95% der integrierten Module wurden als unterstützte Geräte gelistet.',
         'restricted' => 'Zwischen 80%-95% der integrierten Module wurden als unterstützte Geräte gelistet.',
         'not-supported' => 'Weniger als 80% der integrierten Module wurden als unterstützte Geräte gelistet.',
-        'verifying' => 'Weniger als 80% der integrierten Module wurden als unterstützte Geräte gelistet. Das CMTS befindet aber noch in der Verifikationszeitspanne von 6 Wochen.',
+        'verifying' => 'Weniger als 80% der integrierten Module wurden als unterstützte Geräte gelistet. Das netGw befindet aber noch in der Verifikationszeitspanne von 6 Wochen.',
     ],
     'contract_number'               => 'Achtung - Kundenkennwort wird bei Änderung automatisch geändert!',
     'mac_formats'                   => "Erlaubte Formate (Groß-/Kleinschreibung nicht unterschieden):\n\n1) AA:BB:CC:DD:EE:FF\n2) AABB.CCDD.EEFF\n3) AABBCCDDEEFF",
-    'fixed_ip_warning'              => 'Die Nutzung fester IP Adressen ist nicht empfohlen, da hierbei Modems und ihre zugehörigen CPEs nicht mehr zwsichen CMTSen verschoben werden können. Anstatt den Endkunden die jeweilige IP Adresse zu nennen, sollte ihnen der Hostname mitgeteilt werden, da sich dieser nicht ändert.',
+    'fixed_ip_warning'              => 'Die Nutzung fester IP Adressen ist nicht empfohlen, da hierbei Modems und ihre zugehörigen CPEs nicht mehr zwsichen NetGws verschoben werden können. Anstatt den Endkunden die jeweilige IP Adresse zu nennen, sollte ihnen der Hostname mitgeteilt werden, da sich dieser nicht ändert.',
     'addReverse'                    => 'Zum Setzen eines zusätzlichen Reverse DNS Eintrags, z.B. für E-Mail Server',
     'modem_update_frequency'        => 'Dieses Feld wird einmal täglich aktualisiert.',
     'modemSupportState' => [

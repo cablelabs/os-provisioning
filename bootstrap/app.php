@@ -39,7 +39,7 @@ $files = scandir($env_dir);
 
 // read environmental data from files ending with .env
 foreach ($files as $f) {
-    if (substr($f, -4) == '.env') {
+    if (substr($f, -4) == '.env' && is_readable("$env_dir/$f")) {
         $dotenv = new \Dotenv\Dotenv($env_dir, $f);
         // do not use $dotenv->overload() as this overwrites data from .env.testing
         // this results e.g. in app.env==local instead of testing

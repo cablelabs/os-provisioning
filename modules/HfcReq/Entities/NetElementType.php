@@ -85,29 +85,29 @@ class NetElementType extends \BaseModel
      */
     public function netelements()
     {
-        return $this->hasMany('Modules\HfcReq\Entities\NetElement', 'netelementtype_id');
+        return $this->hasMany(NetElement::class, 'netelementtype_id');
     }
 
     public function parameters()
     {
-        return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id');
-        // return $this->hasMany('Modules\HfcSnmp\Entities\Parameter', 'netelementtype_id')->orderBy('oid_id')->orderBy('id');
+        return $this->hasMany(\Modules\HfcSnmp\Entities\Parameter::class, 'netelementtype_id');
+        // return $this->hasMany(\Modules\HfcSnmp\Entities\Parameter::class, 'netelementtype_id')->orderBy('oid_id')->orderBy('id');
     }
 
     // only for preconfiguration of special device types (e.g. kathreins vgp)
     public function oid()
     {
-        return $this->belongsTo('Modules\HfcSnmp\Entities\OID', 'pre_conf_oid_id');
+        return $this->belongsTo(\Modules\HfcSnmp\Entities\OID::class, 'pre_conf_oid_id');
     }
 
     public function parent()
     {
-        return $this->belongsTo('Modules\HfcReq\Entities\NetElementType');
+        return $this->belongsTo(self::class);
     }
 
     public function children()
     {
-        return $this->hasMany('Modules\HfcReq\Entities\NetElementType', 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     public static function param_list($id)
@@ -132,7 +132,7 @@ class NetElementType extends \BaseModel
      * Furthermore they are ordered by there Database ID which is probably used as fix value in many places of the source code
      * So don't change this order unless you definitly know what you are doing !!!
      */
-    public static $undeletables = [1 => 'Net', 2 => 'Cluster', 3 => 'Cmts', 4 => 'Amplifier', 5 => 'Node', 6 => 'Data', 7 => 'UPS'];
+    public static $undeletables = [1 => 'Net', 2 => 'Cluster', 3 => 'NetGw', 4 => 'Amplifier', 5 => 'Node', 6 => 'Data', 7 => 'UPS'];
 
     /**
      * Must be defined to disable delete Checkbox on index tree view.

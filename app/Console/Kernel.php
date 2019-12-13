@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use App\Sla;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -139,18 +138,19 @@ class Kernel extends ConsoleKernel
             $schedule->command('nms:contract daily')->daily()->at('00:03');
             $schedule->command('nms:contract monthly')->monthly()->at('00:13');
             $schedule->call(function () {
-                foreach (\Modules\ProvBase\Entities\Cmts::all() as $cmts) {
+                foreach (\Modules\ProvBase\Entities\NetGw::where('type', 'cmts')->get() as $cmts) {
                     $cmts->store_us_snrs();
                 }
             })->everyFiveMinutes();
+
+            // refresh the online state of all TR069 device
+            $schedule->call('\Modules\ProvBase\Entities\Modem@refreshTR069')->everyFiveMinutes();
 
             // update firmware version + model strings of all modems once a day
             $schedule->call('\Modules\ProvBase\Entities\Modem@update_model_firmware')->daily();
 
             // Hardware support check for modems and CMTS
-            if (Sla::first()->valid()) {
-                $schedule->command('nms:hardware-support daily')->twiceDaily(10, 14);
-            }
+            $schedule->command('nms:hardware-support daily')->twiceDaily(10, 14);
         }
 
         // Automatic Power Control based on measured SNR

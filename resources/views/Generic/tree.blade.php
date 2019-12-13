@@ -102,7 +102,7 @@
               "Cluster": {
                 "icon": "fa fa-soundcloud text-warning fa-lg"
               },
-              "Cmts": {
+              "NetGw": {
                 "icon": "fa fa-building text-success fa-lg"
               },
               "Amplifier": {

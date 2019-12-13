@@ -151,14 +151,14 @@ return [
     'tel_private' => 'Phonenumber private',
     'email1' => 'E-Mail 1',
     'email2' => 'E-Mail 2',
-    // CMTS
-    'cmts.id' => 'ID',
-    'cmts.hostname' => 'Hostname',
-    'cmts.ip' => 'IP',
-    'cmts.company' => 'Manufacturer',
-    'cmts.type' => 'Type',
-    'cmts.formatted_support_state' => 'Support State',
-    'cmts.support_state' => 'Support State',
+    // NetGw
+    'netgw.id' => 'ID',
+    'netgw.hostname' => 'Hostname',
+    'netgw.ip' => 'IP',
+    'netgw.company' => 'Manufacturer',
+    'netgw.series' => 'Series',
+    'netgw.formatted_support_state' => 'Support State',
+    'netgw.support_state' => 'Support State',
     // Contract
     'contract.city' => 'City',
     'company' => 'Company',
@@ -286,6 +286,10 @@ return [
         'name' => 'Name',
         'street' => 'Street',
         'zip' => 'ZIP',
+    ],
+    // NAS
+    'nas' => [
+        'nasname' => 'Name',
     ],
     // Ticket
     'ticket.id' => 'ID',

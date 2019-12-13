@@ -13,7 +13,7 @@ class SupportRequestController extends BaseController
             'Network Outage' => 'Network Outage',
             'Service Problems' => 'Service Problems',
             'General Questions' => 'General Questions',
-            'CMTS or CM Issues' => 'CMTS or CM Issues',
+            'NetGw/CMTS or CM Issues' => 'NetGw/CMTS or CM Issues',
             'Others' => 'Others',
             ];
         $priorities = [

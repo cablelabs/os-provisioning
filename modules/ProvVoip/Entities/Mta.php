@@ -94,17 +94,17 @@ class Mta extends \BaseModel
      */
     public function configfile()
     {
-        return $this->belongsTo('Modules\ProvBase\Entities\Configfile', 'configfile_id');
+        return $this->belongsTo(\Modules\ProvBase\Entities\Configfile::class, 'configfile_id');
     }
 
     public function modem()
     {
-        return $this->belongsTo('Modules\ProvBase\Entities\Modem', 'modem_id');
+        return $this->belongsTo(\Modules\ProvBase\Entities\Modem::class, 'modem_id');
     }
 
     public function phonenumbers()
     {
-        return $this->hasMany('Modules\ProvVoip\Entities\Phonenumber');
+        return $this->hasMany(Phonenumber::class);
     }
 
     // return all Configfile Objects for MTAs

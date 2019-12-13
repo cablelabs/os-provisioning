@@ -52,7 +52,7 @@ interface cable-mac 1
  cable cm-status event-type all max-event-holdoff 32000
 exit
 interface cable-mac 1.0
-@include('provbase::Cmtsblade.bundle_ips')
+@include('provbase::NetGwBlade.bundle_ips')
  cable helper-address {!!$cb->prov_ip!!}
 exit
 interface cable-mac 1 cable bundle master

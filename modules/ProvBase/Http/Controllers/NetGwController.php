@@ -3,9 +3,9 @@
 namespace Modules\ProvBase\Http\Controllers;
 
 use App\Sla;
-use Modules\ProvBase\Entities\Cmts;
+use Modules\ProvBase\Entities\NetGw;
 
-class CmtsController extends \BaseController
+class NetGwController extends \BaseController
 {
     /**
      * defines the formular fields for the edit and create view
@@ -15,22 +15,22 @@ class CmtsController extends \BaseController
         $init_values = [];
 
         if (! $model) {
-            $model = new Cmts;
+            $model = new NetGw;
         }
 
         // create context: calc next free ip pool
         if (! $model->exists) {
             $init_values = [];
 
-            // fetch all CMTS ip's and order them
-            $ips = Cmts::where('id', '>', '0')->orderBy(\DB::raw('INET_ATON(ip)'))->get();
+            // fetch all NETGW ip's and order them
+            $ips = NetGw::where('id', '>', '0')->orderBy(\DB::raw('INET_ATON(ip)'))->get();
 
-            // still CMTS added?
+            // still NETGW added?
             if ($ips->count() > 0) {
                 $next_ip = long2ip(ip2long($ips[0]->ip) - 1);
             } // calc: next_ip = last_ip-1
             else {
-                $next_ip = env('CMTS_SETUP_FIRST_IP', '172.20.3.253');
+                $next_ip = env('NETGW_SETUP_FIRST_IP', '172.20.3.253');
             } // default first ip
 
             $init_values += [
@@ -38,33 +38,35 @@ class CmtsController extends \BaseController
             ];
         }
 
-        // CMTS type selection based on CMTS company
+        // NETGW series selection based on NETGW company
         if (\Request::filled('company')) { // for auto reload
             $company = \Request::get('company');
         } elseif ($model->exists) { // else if using edit.blade
             $company = $model->company;
             $init_values += [
-                'type' => $model->type,
+                'series' => $model->series,
             ];
         } else { // a fresh create
             $company = 'Cisco';
         }
 
-        // The CMTS company and type Array
-        foreach (config('provbase.cmts') as $vendor => $__type) {
+        // The NETGW company and series Array
+        foreach (config('provbase.netgw') as $vendor => $__series) {
             $company_array[$vendor] = $vendor;
         }
 
-        $type = config('provbase.cmts.'.$company);
+        $series = config('provbase.netgw.'.$company);
+        $types = array_map('strtoupper', (array_combine(NetGw::TYPES, NetGw::TYPES)));
 
         /**
          * label has to be the same like column in sql table
          */
-        // TODO: type should be jquery based select depending on the company
+        // TODO: series should be jquery based select depending on the company
         // TODO: State and Monitoring without functionality -> hidden
         $ret_tmp = [
+            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types],
             ['form_type' => 'select', 'name' => 'company', 'description' => 'Company', 'value' => $company_array],
-            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $type],
+            ['form_type' => 'select', 'name' => 'series', 'description' => 'Series', 'value' => $series],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname'],
             ['form_type' => 'ip', 'name' => 'ip', 'description' => 'IP', 'help' => 'Online'],
             ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'SNMP Private Community String'],
@@ -77,7 +79,7 @@ class CmtsController extends \BaseController
                 'name' => 'formatted_support_state',
                 'description' => 'Support State',
                 'field_value'=> ucfirst(str_replace('-', ' ', $model->support_state)),
-                'help'=>trans('helper.cmtsSupportState.'.$model->support_state),
+                'help'=>trans('helper.netGwSupportState.'.$model->support_state),
                 'help_icon'=> $model->getFaSmileClass()['fa-class'],
                 'options' =>['readonly'], 'color'=> $model->getFaSmileClass()['bs-class'], ];
         }
@@ -95,19 +97,19 @@ class CmtsController extends \BaseController
     }
 
     /**
-     * @param Modules\ProvBase\Entities\Cmts
+     * @param Modules\ProvBase\Entities\NetGw
      * @return array
      */
-    protected function editTabs($cmts)
+    protected function editTabs($netgw)
     {
         if (! \Module::collections()->has('ProvMon')) {
             return [];
         }
 
-        $tabs = parent::editTabs($cmts);
+        $tabs = parent::editTabs($netgw);
 
-        if (\Bouncer::can('view_analysis_pages_of', Cmts::class)) {
-            array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.cmts', 'link' => $cmts->id]);
+        if (\Bouncer::can('view_analysis_pages_of', NetGw::class)) {
+            array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.netgw', 'link' => $netgw->id]);
         }
 
         return $tabs;

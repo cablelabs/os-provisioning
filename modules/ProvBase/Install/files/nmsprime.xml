@@ -3,7 +3,10 @@
   <short>NMSPrime MGMT</short>
   <description>Only allow NMSPrime MGMT essential services.</description>
   <source address="172.20.0.0/22"/>
+  <service name="dns"/>
   <service name="ntp"/>
+  <service name="radius"/>
   <service name="ssh"/>
   <service name="tftp"/>
+  <port protocol="tcp" port="7547"/>
 </zone>

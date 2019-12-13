@@ -6,8 +6,8 @@ use Modules\ProvBase\Http\Controllers\IpPoolController;
 
 class IpPoolLifecycleTest extends \BaseLifecycleTest
 {
-    // modem can only be created from Cmts.edit
-    protected $create_from_model_context = '\Modules\ProvBase\Entities\Cmts';
+    // modem can only be created from NetGw.edit
+    protected $create_from_model_context = '\Modules\ProvBase\Entities\NetGw';
 
     // create form is filled with initial data from IpPoolController
     protected $creating_empty_should_fail = false;

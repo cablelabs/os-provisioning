@@ -63,8 +63,8 @@ class AuthCommand extends Command
             ],
             [
                 'name' => 'view_analysis_pages_of',
-                'title' => 'View analysis pages of cmts',
-                'entity_type' => \Modules\ProvBase\Entities\Cmts::class,
+                'title' => 'View analysis pages of netgw',
+                'entity_type' => \Modules\ProvBase\Entities\NetGw::class,
                 'only_owned'  =>'0',
             ],
             [

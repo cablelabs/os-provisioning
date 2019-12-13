@@ -15,6 +15,8 @@ class Modem extends \BaseModel
     use \App\AddressFunctionsTrait;
     use \App\Extensions\Geocoding\Geocoding;
 
+    const TYPES = ['cm', 'tr069'];
+
     // The associated SQL table for this Model
     public $table = 'modem';
 
@@ -26,10 +28,11 @@ class Modem extends \BaseModel
     {
         return [
             'mac' => 'required|mac|unique:modem,mac,'.$id.',id,deleted_at,NULL',
+            'ppp_username' => 'nullable|unique:modem,ppp_username,'.$id.',id,deleted_at,NULL',
             'birthday' => 'nullable|date',
             'country_code' => 'regex:/^[A-Z]{2}$/',
             'contract_id' => 'required|exists:contract,id,deleted_at,NULL',
-            'configfile_id' => 'required|exists:configfile,id,deleted_at,NULL,device,cm,public,yes',
+            'configfile_id' => 'required|exists:configfile,id,deleted_at,NULL,public,yes',
             // Note: realty_id and apartment_id validations are done in ModemController@prepare_rules
             // 'realty_id' => 'nullable|empty_with:apartment_id',
         ];
@@ -161,7 +164,7 @@ class Modem extends \BaseModel
      */
     public function configfiles()
     {
-        return DB::table('configfile')->select(['id', 'name'])->whereNull('deleted_at')->where('device', '=', 'CM')->where('public', '=', 'yes')->get();
+        return DB::table('configfile')->select(['id', 'name'])->whereNull('deleted_at')->whereIn('device', self::TYPES)->where('public', '=', 'yes')->get();
         // return Configfile::select(['id', 'name'])->where('device', '=', 'CM')->where('public', '=', 'yes')->get();
     }
 
@@ -197,7 +200,7 @@ class Modem extends \BaseModel
             throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
         }
 
-        return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaOrder')->where('ordertype', 'NOT LIKE', 'order/create_attachment');
+        return $this->hasMany(\Modules\ProvVoipEnvia\Entities\EnviaOrder::class)->where('ordertype', 'NOT LIKE', 'order/create_attachment');
     }
 
     /**
@@ -208,23 +211,23 @@ class Modem extends \BaseModel
         if (! \Module::collections()->has('ProvVoipEnvia')) {
             throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
         } else {
-            return $this->hasMany('Modules\ProvVoipEnvia\Entities\EnviaContract');
+            return $this->hasMany(\Modules\ProvVoipEnvia\Entities\EnviaContract::class);
         }
     }
 
     public function configfile()
     {
-        return $this->belongsTo('Modules\ProvBase\Entities\Configfile');
+        return $this->belongsTo(Configfile::class);
     }
 
     public function qos()
     {
-        return $this->belongsTo("Modules\ProvBase\Entities\Qos");
+        return $this->belongsTo(Qos::class);
     }
 
     public function contract()
     {
-        return $this->belongsTo('Modules\ProvBase\Entities\Contract', 'contract_id');
+        return $this->belongsTo(Contract::class, 'contract_id');
     }
 
     /**
@@ -245,23 +248,23 @@ class Modem extends \BaseModel
 
     public function mtas()
     {
-        return $this->hasMany('Modules\ProvVoip\Entities\Mta');
+        return $this->hasMany(\Modules\ProvVoip\Entities\Mta::class);
     }
 
     public function endpoints()
     {
-        return $this->hasMany('Modules\ProvBase\Entities\Endpoint');
+        return $this->hasMany(Endpoint::class);
     }
 
     // TODO: deprecated! use netelement function instead - search for all places where this function is used
     public function tree()
     {
-        return $this->belongsTo('Modules\HfcReq\Entities\NetElement');
+        return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class);
     }
 
     public function nelelement()
     {
-        return $this->belongsTo('Modules\HfcReq\Entities\NetElement', 'netelement_id');
+        return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class, 'netelement_id');
     }
 
     public function apartment()
@@ -272,6 +275,21 @@ class Modem extends \BaseModel
     public function realty()
     {
         return $this->belongsTo(\Modules\PropertyManagement\Entities\Realty::class);
+    }
+
+    public function radcheck()
+    {
+        return $this->hasOne(RadCheck::class, 'username', 'ppp_username');
+    }
+
+    public function radreply()
+    {
+        return $this->hasOne(RadReply::class, 'username', 'ppp_username');
+    }
+
+    public function radusergroups()
+    {
+        return $this->hasMany(RadUserGroup::class, 'username', 'ppp_username');
     }
 
     /*
@@ -628,6 +646,12 @@ class Modem extends \BaseModel
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
 
+        if ($this->isTR069()) {
+            $this->createGenieAcsPresets($this->configfile->text_make($this, 'tr069'));
+
+            return;
+        }
+
         /* Configfile */
         $dir = '/tftpboot/cm/';
         $cf_file = $dir."cm-$this->id.conf";
@@ -639,7 +663,7 @@ class Modem extends \BaseModel
 
         // Evaluate network access (NA) and MaxCPE count
         // Note: NA becomes only zero when internet is disabled on contract (no valid tariff) or modem (manually) and contract has no telephony
-        $cpe_cnt = \Modules\ProvBase\Entities\ProvBase::first()->max_cpe;
+        $cpe_cnt = ProvBase::first()->max_cpe;
         $max_cpe = $cpe_cnt ?: 2; 		// default 2
         $internet_access = 1;
 
@@ -747,14 +771,248 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Get CMTS a CM is registered on
+     * Create TR-069 configfile.
+     * GenieACS API: https://github.com/genieacs/genieacs/wiki/API-Reference
+     *
+     * @author Ole Ernst
+     */
+    public function createGenieAcsPresets($text = null)
+    {
+        $text = $text ?? $this->configfile->text;
+        if (! $text) {
+            return;
+        }
+
+        $this->createGenieAcsProvisions($text);
+
+        $preset = [
+            'weight' => 0,
+            'precondition' => json_encode([
+                '_deviceId._SerialNumber' => $this->serial_num,
+            ]),
+            'events' => [
+                '0 BOOTSTRAP' => true,
+            ],
+            'configurations' => [
+                [
+                    'type' => 'provision',
+                    'name' => $this->id,
+                ],
+            ],
+        ];
+
+        self::callGenieAcsApi("presets/$this->id", 'PUT', json_encode($preset));
+
+        unset($preset['events']['0 BOOTSTRAP']);
+        $preset['events']['2 PERIODIC'] = true;
+        $preset['configurations'][0]['name'] = "mon-{$this->configfile->id}";
+
+        self::callGenieAcsApi("presets/mon-$this->id", 'PUT', json_encode($preset));
+    }
+
+    /**
+     * Refresh the online state of all TR069 device by checking
+     * if they last informed us within the last 5 minutes
+     *
+     * @author Ole Ernst
+     */
+    public static function refreshTR069()
+    {
+        $query = [
+            '_lastInform' => [
+                '$gt' => \Carbon\Carbon::now('UTC')->subMinute(5)->toIso8601ZuluString(),
+            ],
+        ];
+
+        $query = json_encode($query);
+        $route = "devices/?query=$query&projection=_deviceId._SerialNumber";
+
+        $online = array_map(function ($value) {
+            return $value->_deviceId->_SerialNumber ?? null;
+        }, json_decode(self::callGenieAcsApi($route, 'GET')));
+
+        DB::beginTransaction();
+        // make all tr069 devices offline
+        // toBase() is needed since updated_at is ambiguous
+        self::join('configfile', 'configfile.id', 'modem.configfile_id')
+            ->where('configfile.device', 'tr069')
+            ->whereNull('configfile.deleted_at')
+            ->toBase()
+            ->update(['us_pwr' => 0, 'modem.updated_at' => now()]);
+
+        // make all tr069 devices online, which informed us in the last 5 minutes
+        // for now we set them to a sensible DOCIS US power level to make them green
+        self::whereIn('serial_num', $online)->update(['us_pwr' => 45]);
+        DB::commit();
+    }
+
+    /**
+     * Create Provision from configfile.text.
+     *
+     * @author Roy Schneider
+     * @param string $text
+     * @return bool
+     */
+    public function createGenieAcsProvisions($text)
+    {
+        $prefix = '';
+
+        // during bootstrap always clear the info we have about the device
+        $prov = [
+            "clear('Device', Date.now());",
+            "clear('InternetGatewayDevice', Date.now());",
+        ];
+
+        foreach (preg_split('/\r\n|\r|\n/', $text) as $line) {
+            $vals = str_getcsv(trim($line), ';');
+            if (! count($vals) || ! in_array($vals[0], ['add', 'clr', 'commit', 'del', 'get', 'jmp', 'reboot', 'set'])) {
+                continue;
+            }
+
+            if (! isset($vals[1])) {
+                $vals[1] = '';
+            }
+
+            $path = trim("$prefix.$vals[1]", '.');
+
+            switch ($vals[0]) {
+                case 'add':
+                    if (isset($vals[2])) {
+                        $prov[] = "declare('$path.[$vals[2]]', {value: Date.now()}, {path: 1});";
+                    }
+                    break;
+                case 'clr':
+                    $prov[] = "clear('$path', Date.now());";
+                    break;
+                case 'commit':
+                    $prov[] = 'commit();';
+                    break;
+                case 'del':
+                    $prov[] = "declare('$path.[]', null, {path: 0})";
+                    break;
+                case 'get':
+                    $prov[] = "declare('$path.*', {value: Date.now()});";
+                    break;
+                case 'jmp':
+                    $prefix = trim($vals[1], '.');
+                    break;
+                case 'reboot':
+                    if (! $vals[1]) {
+                        $vals[1] = 0;
+                    }
+                    $prov[] = "declare('Reboot', null, {value: Date.now() - ($vals[1] * 1000)});";
+                    break;
+                case 'set':
+                    if (isset($vals[2])) {
+                        $prov[] = "declare('$path', {value: Date.now()} , {value: '$vals[2]'});";
+                    }
+                    break;
+            }
+        }
+
+        self::callGenieAcsApi("provisions/$this->id", 'PUT', implode("\r\n", $prov));
+    }
+
+    /**
+     * Call API of GenieACS via PHP Curl.
+     *
+     * @author Roy Schneider
+     * @param string $route
+     * @param string $customRequest
+     * @param string $data
+     * @return mixed $result
+     */
+    public static function callGenieAcsApi($route, $customRequest, $data = null)
+    {
+        $ch = curl_init();
+
+        curl_setopt_array($ch, [
+                    CURLOPT_URL => "http://localhost:7557/$route",
+                    CURLOPT_RETURNTRANSFER => $customRequest == 'GET' ? true : false,
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_CUSTOMREQUEST => $customRequest,
+                    CURLOPT_POSTFIELDS => $data,
+                ]);
+
+        $result = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        // No such device
+        if ($status == 202) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get decoded json object of device from GenieACS via API.
+     *
+     * @param string $projection
+     * @return mixed
+     *
+     * @author Ole Ernst
+     */
+    public function getGenieAcsModel($projection = null)
+    {
+        $route = "devices/?query={\"_deviceId._SerialNumber\":\"$this->serial_num\"}";
+        if ($projection) {
+            $route .= "&projection=$projection";
+        }
+
+        $model = json_decode(self::callGenieAcsApi($route, 'GET'));
+
+        if (! $model) {
+            return false;
+        }
+
+        $model = reset($model);
+
+        if (! $projection) {
+            return $model;
+        }
+
+        foreach (explode('.', $projection) as $idx) {
+            if (! isset($model->{$idx})) {
+                return false;
+            }
+            $model = $model->{$idx};
+        }
+
+        return $model;
+    }
+
+    /**
+     * Delete GenieACS presets.
+     *
+     * @author Roy Schneider
+     */
+    public function deleteGenieAcsPreset()
+    {
+        self::callGenieAcsApi("presets/$this->id", 'DELETE');
+        self::callGenieAcsApi("presets/mon-$this->id", 'DELETE');
+    }
+
+    /**
+     * Delete GenieACS provision.
+     *
+     * @author Roy Schneider
+     */
+    public function deleteGenieAcsProvision()
+    {
+        self::callGenieAcsApi("provisions/$this->id", 'DELETE');
+    }
+
+    /**
+     * Get NETGW a CM is registered on
      *
      * @param  string 	ip 		address of cm
-     * @return object 	CMTS
+     * @return object 	NETGW
      *
      * @author Nino Ryschawy
      */
-    public static function get_cmts($ip)
+    public static function get_netgw($ip)
     {
         $validator = new \Acme\Validators\ExtendedValidator;
 
@@ -762,13 +1020,13 @@ class Modem extends \BaseModel
 
         foreach ($ippools as $pool) {
             if ($validator->validateIpInRange(0, $ip, [$pool->net, $pool->netmask])) {
-                $cmts_id = $pool->cmts_id;
+                $netgw_id = $pool->netgw_id;
                 break;
             }
         }
 
-        if (isset($cmts_id)) {
-            return Cmts::find($cmts_id);
+        if (isset($netgw_id)) {
+            return NetGw::find($netgw_id);
         }
     }
 
@@ -830,16 +1088,39 @@ class Modem extends \BaseModel
     /**
      * Restarts modem through snmpset
      */
-    public function restart_modem($mac_changed = false, $modem_reset = false)
+    public function restart_modem($mac_changed = false, $modem_reset = false, $factoryReset = false)
     {
         // Log
-        Log::info('restart modem '.$this->hostname);
+        Log::info(($factoryReset ? 'factoryReset' : 'restart').' modem '.$this->hostname);
+
+        if ($this->isTR069()) {
+            $id = $this->getGenieAcsModel('_id');
+            if (! $id) {
+                \Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
+
+                return;
+            }
+
+            $id = rawurlencode($id);
+            $action = $factoryReset ? 'factoryReset' : 'reboot';
+            $success = self::callGenieAcsApi("devices/$id/tasks?timeout=3000&connection_request", 'POST', "{ \"name\" : \"$action\" }");
+
+            if (! $success) {
+                \Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
+
+                return;
+            }
+
+            \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_direct'));
+
+            return;
+        }
 
         // if hostname cant be resolved we dont want to have an php error
         try {
             $config = ProvBase::first();
             $fqdn = $this->hostname.'.'.$config->domain_name;
-            $cmts = self::get_cmts(gethostbyname($fqdn));
+            $netgw = self::get_netgw(gethostbyname($fqdn));
             $mac = $mac_changed ? $this->getOriginal('mac') : $this->mac;
             $mac_oid = implode('.', array_map('hexdec', explode(':', $mac)));
 
@@ -847,25 +1128,25 @@ class Modem extends \BaseModel
                 throw new Exception('Reset Modem directly');
             }
 
-            if ($cmts && $cmts->company == 'Cisco') {
-                // delete modem entry in cmts - CISCO-DOCS-EXT-MIB::cdxCmCpeDeleteNow
-                snmpset($cmts->ip, $cmts->get_rw_community(), '1.3.6.1.4.1.9.9.116.1.3.1.1.9.'.$mac_oid, 'i', '1', 300000, 1);
-            } elseif ($cmts && $cmts->company == 'Casa') {
-                // reset modem via cmts, deleting is not possible - CASA-CABLE-CMCPE-MIB::casaCmtsCmCpeResetNow
-                snmpset($cmts->ip, $cmts->get_rw_community(), '1.3.6.1.4.1.20858.10.12.1.3.1.7.'.$mac_oid, 'i', '1', 300000, 1);
+            if ($netgw && $netgw->company == 'Cisco') {
+                // delete modem entry in netgw - CISCO-DOCS-EXT-MIB::cdxCmCpeDeleteNow
+                snmpset($netgw->ip, $netgw->get_rw_community(), '1.3.6.1.4.1.9.9.116.1.3.1.1.9.'.$mac_oid, 'i', '1', 300000, 1);
+            } elseif ($netgw && $netgw->company == 'Casa') {
+                // reset modem via netgw, deleting is not possible - CASA-CABLE-CMCPE-MIB::casaCmtsCmCpeResetNow
+                snmpset($netgw->ip, $netgw->get_rw_community(), '1.3.6.1.4.1.20858.10.12.1.3.1.7.'.$mac_oid, 'i', '1', 300000, 1);
             } else {
-                throw new Exception('CMTS company not set');
+                throw new Exception('NETGW company not set');
             }
             // success message
-            \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_cmts'));
+            \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_netgw'));
         } catch (Exception $e) {
-            \Log::error("Could not delete $this->hostname from CMTS ('".$e->getMessage()."'). Let's try to restart it directly.");
+            \Log::error("Could not delete $this->hostname from NETGW ('".$e->getMessage()."'). Let's try to restart it directly.");
 
             try {
                 // restart modem - DOCS-CABLE-DEV-MIB::docsDevResetNow
                 snmpset($fqdn, $config->rw_community, '1.3.6.1.2.1.69.1.1.3.0', 'i', '1', 300000, 1);
 
-                // success message - make it a warning as sth is wrong when it's not already restarted by CMTS??
+                // success message - make it a warning as sth is wrong when it's not already restarted by NETGW??
                 \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_direct'));
             } catch (Exception $e) {
                 \Log::error("Could not restart $this->hostname directly ('".$e->getMessage()."')");
@@ -881,6 +1162,16 @@ class Modem extends \BaseModel
                 }
             }
         }
+    }
+
+    /**
+     * Perform a factory reset on a TR-069 device
+     *
+     * @author: Ole Ernst
+     */
+    public function factoryReset()
+    {
+        return $this->restart_modem(false, false, true);
     }
 
     /**
@@ -1125,7 +1416,7 @@ class Modem extends \BaseModel
      * relevant attribute was modified.
      *
      * @return 1 if reset via Modem or original mac is needed (mac was changed)
-     *		  -1 for reset via CMTS (faster),
+     *		  -1 for reset via NETGW (faster),
      *		   0 if no restart is needed
      *
      * @author Ole Ernst, Nino Ryschawy
@@ -1136,7 +1427,7 @@ class Modem extends \BaseModel
     {
         $diff = $this->getDirty();
 
-        // in case mac was changed, reset via cmts - or take original mac
+        // in case mac was changed, reset via netgw - or take original mac
         if (array_key_exists('mac', $diff)) {
             return 1;
         }
@@ -1341,6 +1632,205 @@ class Modem extends \BaseModel
 
         return $arr;
     }
+
+    /**
+     * Check if modem throughput is provisioned via PPP(oE)
+     *
+     * @return  true if PPP(oE) is used
+     *          false if PPP(oE) is not used
+     *
+     * @author Ole Ernst
+     */
+    public function isPPP()
+    {
+        return boolval($this->ppp_username);
+    }
+
+    /**
+     * Check if modem is provisioned via TR069
+     *
+     * @return  true if TR069 is used
+     *          false if TR069 is not used
+     *
+     * @author Ole Ernst
+     */
+    public function isTR069()
+    {
+        return $this->configfile->device === 'tr069';
+    }
+
+    /**
+     * Synchronize radcheck with modem table, if PPPoE is used.
+     *
+     * @author Ole Ernst
+     */
+    private function updateRadCheck($delete)
+    {
+        if ($delete || ! $this->isPPP() || ! $this->internet_access) {
+            $this->radcheck()->delete();
+
+            return;
+        }
+
+        // add RadCheck, if it doesn't exist
+        if (! $this->radcheck()->count()) {
+            $psw = $this->ppp_password;
+            if (! $psw) {
+                $psw = \Acme\php\Password::generate_password();
+                // update ppp_password without invoking the observer
+                self::where('id', $this->id)->update(['ppp_password' => $psw]);
+                // set $this->ppp_password as well to keep model in sync, e.g. getDirty()
+                $this->ppp_password = $psw;
+            }
+
+            $check = new RadCheck;
+            $check->username = $this->ppp_username;
+            $check->attribute = 'Cleartext-Password';
+            $check->op = ':=';
+            $check->value = $psw;
+            $check->save();
+
+            return;
+        }
+
+        // update existing RadCheck, if password was changed
+        if (array_key_exists('ppp_password', $this->getDirty())) {
+            $check = $this->radcheck;
+            $check->value = $this->ppp_password;
+            $check->save();
+            $this->make_configfile();
+            $this->factoryReset();
+        }
+    }
+
+    /**
+     * Synchronize radreply with modem table, if PPPoE is used.
+     *
+     * @author Ole Ernst
+     */
+    private function updateRadReply($delete)
+    {
+        $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name.'.';
+
+        if ($delete || ! $this->isPPP() || ! $this->internet_access) {
+            $this->radreply()->delete();
+
+            return;
+        }
+
+        // add RadReply, if it doesn't exist
+        if (! $this->radreply()->count()) {
+            $reply = new RadReply;
+            $reply->username = $this->ppp_username;
+            $reply->attribute = 'Framed-IP-Address';
+            $reply->op = ':=';
+            $reply->value = gethostbyname($fqdn);
+            $reply->save();
+        }
+
+        // update existing RadReply, if public was changed
+        if (array_key_exists('public', $this->getDirty())) {
+            $reply = $this->radreply;
+            $reply->value = gethostbyname($fqdn);
+            $reply->save();
+            $this->restart_modem();
+        }
+    }
+
+    /**
+     * Synchronize radusergroups with modem table, if PPPoE is used.
+     *
+     * @author Ole Ernst
+     */
+    private function updateRadUserGroups($delete)
+    {
+        if ($delete || ! $this->isPPP() || ! $this->internet_access) {
+            $groups = $this->radusergroups()->delete();
+
+            return;
+        }
+
+        // add RadUserGroups, if non-exisiting
+        if (! $this->radusergroups()->count()) {
+            // default and QoS-specific group
+            foreach ([RadGroupReply::$defaultGroup, $this->qos_id] as $groupname) {
+                $group = new RadUserGroup;
+                $group->username = $this->ppp_username;
+                $group->groupname = $groupname;
+                $group->save();
+            }
+
+            return;
+        }
+
+        // update existing RadUserGroups, if qos was changed
+        if (array_key_exists('qos_id', $this->getDirty())) {
+            $this->radusergroups()
+                ->where('groupname', '!=', RadGroupReply::$defaultGroup)
+                ->update(['groupname' => $this->qos_id]);
+            $this->restart_modem();
+        }
+    }
+
+    /**
+     * Synchronize the freeradius tables with NMSPrime.
+     * This function should be called on created(), updated() and deleted()
+     * in the modem observer.
+     *
+     * @author Ole Ernst
+     */
+    public function updateRadius($delete)
+    {
+        $this->nsupdate($delete || ! $this->internet_access);
+
+        $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name.'.';
+        $delete |= gethostbyname($fqdn) == $fqdn;
+
+        $this->updateRadCheck($delete);
+        $this->updateRadReply($delete);
+        $this->updateRadUserGroups($delete);
+    }
+
+    /**
+     * Set/Delete hostnames for PPP devices (ppp-$this->id)
+     *
+     * @author Ole Ernst
+     */
+    public function nsupdate($delete = false)
+    {
+        if (! $this->isPPP()) {
+            return;
+        }
+
+        $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name.'.';
+
+        $ip = gethostbyname($fqdn);
+        if (! $delete && ! $ip = IpPool::findNextUnusedBrasIPAddress($this->public)) {
+            \Session::push('tmp_error_above_form', trans('messages.ippool_exhausted'));
+
+            return;
+        }
+
+        if ($ip == $fqdn) {
+            return;
+        }
+
+        $rev = implode('.', array_reverse(explode('.', $ip))).'.in-addr.arpa.';
+
+        $cmd = '';
+        if ($delete) {
+            $cmd .= "update delete $fqdn\nsend\n";
+            $cmd .= "update delete $rev\nsend\n";
+        } else {
+            $cmd .= "update add $fqdn 3600 A $ip\nsend\n";
+            $cmd .= "update add $rev 3600 PTR $fqdn\nsend\n";
+        }
+
+        $pw = env('DNS_PASSWORD');
+        $handle = popen("/usr/bin/nsupdate -v -l -y dhcpupdate:$pw", 'w');
+        fwrite($handle, $cmd);
+        pclose($handle);
+    }
 }
 
 /**
@@ -1357,17 +1847,23 @@ class ModemObserver
     {
         Log::debug(__METHOD__.' started for '.$modem->hostname);
 
-        $modem->hostname = 'cm-'.$modem->id;
-        $modem->save();	 // forces to call the updating() and updated() method of the observer !
-        Modem::create_ignore_cpe_dhcp_file();
-
-        if (\Module::collections()->has('ProvMon')) {
-            Log::info("Create cacti diagrams for modem: $modem->hostname");
-            // \Artisan::call('nms:cacti', ['--cmts-id' => 0, '--modem-id' => $modem->id]);
-        }
-
         if (\Module::collections()->has('PropertyManagement')) {
             $modem->updateAddressFromProperty();
+        }
+
+        if ($modem->isPPP()) {
+            $modem->hostname = 'ppp-'.$modem->id;
+            $modem->updateRadius(false);
+            $modem->save();
+        } else {
+            $modem->hostname = 'cm-'.$modem->id;
+            $modem->save();  // forces to call the updating() and updated() method of the observer !
+            Modem::create_ignore_cpe_dhcp_file();
+
+            if (\Module::collections()->has('ProvMon')) {
+                Log::info("Create cacti diagrams for modem: $modem->hostname");
+                \Artisan::call('nms:cacti', ['--netgw-id' => 0, '--modem-id' => $modem->id]);
+            }
         }
     }
 
@@ -1425,7 +1921,7 @@ class ModemObserver
             if (multi_array_key_exists(['x', 'y'], $diff)) {
                 // suppress output in this case
                 ob_start();
-                // \Modules\HfcCustomer\Entities\Mpr::ruleMatching($modem);
+                \Modules\HfcCustomer\Entities\Mpr::ruleMatching($modem);
                 ob_end_clean();
             }
         }
@@ -1443,11 +1939,19 @@ class ModemObserver
         $diff = $modem->getDirty();
 
         if (multi_array_key_exists(['contract_id', 'public', 'internet_access', 'configfile_id', 'qos_id', 'mac'], $diff)) {
-            Modem::create_ignore_cpe_dhcp_file();
-            $modem->make_dhcp_cm();
-            $modem->restart_modem(array_key_exists('mac', $diff));
+            if (! $modem->isTR069()) {
+                Modem::create_ignore_cpe_dhcp_file();
+                $modem->make_dhcp_cm();
+                $modem->restart_modem(array_key_exists('mac', $diff));
+            }
             $modem->make_configfile();
         }
+
+        if (array_key_exists('public', $diff)) {
+            $modem->nsupdate(true);
+        }
+
+        $modem->updateRadius(false);
 
         // ATTENTION:
         // If we ever think about moving modems to other contracts we have to delete envia TEL related stuff, too –
@@ -1464,10 +1968,20 @@ class ModemObserver
     {
         Log::debug(__METHOD__.' started for '.$modem->hostname);
 
-        // $modem->make_dhcp_cm_all();
-        Modem::create_ignore_cpe_dhcp_file();
-        $modem->make_dhcp_cm(true);
-        $modem->restart_modem();
-        $modem->delete_configfile();
+        if ($modem->isTR069()) {
+            $modem->deleteGenieAcsProvision();
+            $modem->deleteGenieAcsPreset();
+            $modem->factoryReset();
+        }
+
+        if ($modem->isPPP()) {
+            $modem->updateRadius(true);
+        } else {
+            // $modem->make_dhcp_cm_all();
+            Modem::create_ignore_cpe_dhcp_file();
+            $modem->make_dhcp_cm(true);
+            $modem->restart_modem();
+            $modem->delete_configfile();
+        }
     }
 }

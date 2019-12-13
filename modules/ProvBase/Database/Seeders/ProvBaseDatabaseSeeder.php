@@ -16,7 +16,7 @@ class ProvBaseDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call('Modules\ProvBase\Database\Seeders\CmtsTableSeeder');
+        $this->call('Modules\ProvBase\Database\Seeders\NetGwTableSeeder');
         $this->call('Modules\ProvBase\Database\Seeders\IpPoolTableSeeder');
         $this->call('Modules\ProvBase\Database\Seeders\ConfigfileTableSeeder');
         $this->call('Modules\ProvBase\Database\Seeders\QosTableSeeder');

@@ -203,7 +203,7 @@ class Phonenumber extends \BaseModel
      */
     public function mta()
     {
-        return $this->belongsTo('Modules\ProvVoip\Entities\Mta', 'mta_id');
+        return $this->belongsTo(Mta::class, 'mta_id');
     }
 
     // belongs to an mta
@@ -384,7 +384,7 @@ class Phonenumber extends \BaseModel
      */
     public function phonenumbermanagement()
     {
-        return $this->hasOne('Modules\ProvVoip\Entities\PhonenumberManagement');
+        return $this->hasOne(PhonenumberManagement::class);
     }
 
     /**
@@ -499,7 +499,7 @@ class Phonenumber extends \BaseModel
      */
     public function cdrs()
     {
-        return $this->hasMany('Modules\VoipMon\Entities\Cdr');
+        return $this->hasMany(\Modules\VoipMon\Entities\Cdr::class);
     }
 
     /**
@@ -656,8 +656,7 @@ class PhonenumberObserver
 
     public function created($phonenumber)
     {
-        $phonenumber->mta->make_configfile();
-        $phonenumber->mta->restart();
+        $this->renewConfig($phonenumber);
     }
 
     /**
@@ -715,8 +714,7 @@ class PhonenumberObserver
         $this->_check_and_process_sip_data_change($phonenumber);
 
         // rebuild the current mta's configfile and restart the modem – has to be done in each case
-        $phonenumber->mta->make_configfile();
-        $phonenumber->mta->restart();
+        $this->renewConfig($phonenumber);
     }
 
     /**
@@ -966,10 +964,26 @@ class PhonenumberObserver
         \Session::put('alert.danger', trans('messages.phonenumber_nr_change_hlkomm'));
     }
 
+    /**
+     * Rebuild the current configfile/provision and restart/factoryReset the device
+     *
+     * @param $phonenumber \Modules\ProvVoip\Entities\Phonenumber
+     * @author Ole Ernst
+     */
+    private function renewConfig($phonenumber)
+    {
+        if ($phonenumber->mta->modem->isTR069()) {
+            $phonenumber->mta->modem->make_configfile();
+            $phonenumber->mta->modem->factoryReset();
+        } else {
+            $phonenumber->mta->make_configfile();
+            $phonenumber->mta->restart();
+        }
+    }
+
     public function deleted($phonenumber)
     {
-        $phonenumber->mta->make_configfile();
-        $phonenumber->mta->restart();
+        $this->renewConfig($phonenumber);
 
         // check if this number has been the last on old modem ⇒ if so remove envia related data from modem
         if (! $phonenumber->mta->modem->has_phonenumbers_attached()) {

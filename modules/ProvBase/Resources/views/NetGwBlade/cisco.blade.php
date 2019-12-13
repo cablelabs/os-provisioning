@@ -59,7 +59,7 @@ interface {!!$cb->interface!!}
 !
 !
 interface Bundle1
-@include('provbase::Cmtsblade.bundle_ips')
+@include('provbase::NetGwBlade.bundle_ips')
  ip access-group bundle_in_acl in
  ip policy route-map NAT
  cable arp filter request-send 3 2
@@ -82,7 +82,7 @@ ip access-list extended cpe-private
  permit ip {{$cpe_pool->net}} {{$cpe_pool->wildcard_mask()}} any
 @endforeach
 !
-@include('provbase::Cmtsblade.acl_bundle')
+@include('provbase::NetGwBlade.acl_bundle')
 !
 logging cmts ipc-cable log-level errors
 cpd cr-id 1
