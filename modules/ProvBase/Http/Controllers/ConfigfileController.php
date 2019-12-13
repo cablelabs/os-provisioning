@@ -3,6 +3,7 @@
 namespace Modules\ProvBase\Http\Controllers;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
 use Modules\ProvBase\Entities\Configfile;
 
@@ -95,13 +96,13 @@ class ConfigfileController extends \BaseController
      * Generate tree of configfiles.
      *
      * @author Roy Schneider
-     * @return mixed values
+     * @return void|string Void on Success, Error message on failure
      */
     public function importTree()
     {
-        $content = $this->replaceIds(\File::get(Request::file('import')));
-
-        $json = json_decode($content, true);
+        $import = File::get(Request::file('import'));
+        $import = $this->replaceIds($import);
+        $json = json_decode($import, true);
 
         if (! $json) {
             return trans('messages.invalidJson');
@@ -114,10 +115,10 @@ class ConfigfileController extends \BaseController
      * Replace all id's and parent_id's.
      *
      * @author Roy Schneider
-     * @param string $content
+     * @param string $content JSON String from uploaded File
      * @return string
      */
-    public function replaceIds($content)
+    public function replaceIds(string $content): string
     {
         // array of in file existing id's (id":number,)
         preg_match_all('/id":(\d+),/', $content, $importedIds);
@@ -162,14 +163,14 @@ class ConfigfileController extends \BaseController
      * created Configfiles the IDs are overwritten and cause DB errors. The
      * Ids get replaced with a higher number to prevent that.
      *
-     * @param string $content
-     * @param array $importedIds
-     * @param array $importedIdStrings
-     * @param int $start
-     * @param int $tempImportId
+     * @param string $content   JSON string from uploaded file
+     * @param array $importedIds[int]   Original ids from imported JSON as integer
+     * @param array $importedIdStrings[string]  Strings with the ids that should be replaced
+     * @param int $start    possible duplicate id
+     * @param int $tempImportId     high id number that guarantees no conflict
      * @return void
      */
-    protected function replaceDuplicateId(&$content, &$importedIds, &$importedIdStrings, $start, $tempImportId)
+    protected function replaceDuplicateId(string &$content, array &$importedIds, array &$importedIdStrings, int $start, int $tempImportId): void
     {
         $content = str_replace('id":'.($start).',', 'id":'.($tempImportId).',', $content);
 
@@ -186,10 +187,12 @@ class ConfigfileController extends \BaseController
      * Recursively create all configfiles with related children.
      *
      * @author Roy Schneider
-     * @param array $content
-     * @param bool $hasName
+     * @param array $content    Current Configfile
+     * @param bool $hasName     Take Name of Input field for first Configfile?
+     * @param Illuminate\Support\Collection $originalConfigfiles    Data of all Configfiles
+     * @return void
      */
-    public function recreateTree($content, $hasName, $originalConfigfiles)
+    public function recreateTree(array $content, bool $hasName, \Illuminate\Support\Collection $originalConfigfiles): void
     {
         // see if this name already exists
         while ($originalConfigfiles->contains($content['name'])) {
@@ -235,13 +238,13 @@ class ConfigfileController extends \BaseController
      * @param bool $requestHasNameInput
      * @return bool
      */
-    public function checkAndSetContent($configfile, $requestHasNameInput)
+    public function checkAndSetContent(array $configfile, bool $requestHasNameInput): bool
     {
         // CF-Form was not filled
         if (! $requestHasNameInput) {
             Configfile::create($configfile);
 
-            return;
+            return false;
         }
 
         Request::merge($configfile);
