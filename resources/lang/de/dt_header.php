@@ -159,6 +159,7 @@ return [
     'netgw.company' => 'Hersteller',
     'netgw.series' => 'Serie',
     // Contract
+    'contact_id' => 'Gruppenvertrag',
     'contract.city' => 'Stadt',
     'company' => 'Firma',
     'contract.contract_end' => 'Vertragsende',

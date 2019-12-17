@@ -1,6 +1,8 @@
 <?php
 
 return [
+        'false' => 'false',
+        'true' => 'true',
 //SEARCH
         'Search_EnterKeyword'       => 'Enter Keyword',
         'Search_MatchesFor'         => 'Matches for',
@@ -166,10 +168,10 @@ return [
         //Contract
         'Header_Salesman'           => 'Salesman|Salesmen',
         'Header_Contract'           => 'Contract|Contracts',
-        'Header_ContractInfoApartments' => 'Info: Contracts in apartments',
+        'Header_ContractInfoApartments' => 'Contracts of realty (info)',
         'Header_ContractInfoRealty' => 'Info: Contract of modems',
         'Header_EditContract'       => 'Edit Contract',
-        'Header_GroupContract'      => 'Group Contract',
+        'Header_GroupContracts'      => 'Group Contracts',
         'Header_SepaMandate'        => 'SEPA-Mandate|SEPA-Mandates',
         //Modems
         'Header_Modems'             => 'Modem|Modems', //workaround
@@ -403,6 +405,7 @@ return [
     'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
     'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
 
+    'company' => 'Company',
     'Credit' => 'Credit',
     'critical' => 'critical',
     'Debit' => 'Debit',
@@ -412,6 +415,7 @@ return [
     'info' => 'info',
     'Level' => 'Level',
     'Message' => 'Message',
+    'name' => 'Name',
     'showChanges' => 'Show the change|Show :num changes',
     'SettlementRun' => 'SettlementRun',
     'Time' => 'Time',

@@ -1,6 +1,8 @@
 <?php
 
 return [
+        'false' => 'nein',
+        'true' => 'ja',
 //SEARCH
         'Search_EnterKeyword'       => 'Suchbegriff eingeben',
         'Search_MatchesFor'         => 'Ergebnisse für',
@@ -166,10 +168,10 @@ return [
         //Contract
         'Header_Salesman'           => 'Verkäufer|Verkäufer',
         'Header_Contract'           => 'Vertrag|Verträge',
-        'Header_ContractInfoApartment' => 'Info: Verträge in Wohnungen',
+        'Header_ContractInfoApartment' => 'Verträge der Liegenschaft (Info)',
         'Header_ContractInfoRealty' => 'Info: Vertrag der Modems',
         'Header_EditContract'       => 'Vertrag bearbeiten',
-        'Header_GroupContract'      => 'Gruppenvertrag',
+        'Header_GroupContracts'      => 'Gruppenverträge',
         'Header_SepaMandate'        => 'SEPA-Mandat|SEPA-Mandate',
         //Modems
         'Header_Modems'             => 'Modem|Modems', //workaround
@@ -236,7 +238,7 @@ return [
         'Header_EnviaContract'      => 'envia-TEL-Vertrag|envia-TEL-Verträge',
         'Header_EnviaOrder'         => 'envia-TEL-Auftrag|envia-TEL-Aufträge',
 
-        'Header_Contact'            => 'Ansprechpartner',
+        'Header_Contact'            => 'Ansprechpartner / Hausverwaltungen',
         'Header_Debt'               => 'Historie Offene Posten',
         'Header_DebtResult'         => 'Offene Posten gesamt',
         'Header_Node'               => 'Übergabepunkte',
@@ -403,6 +405,7 @@ return [
     'error_specify_id'          => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
     'error_ticket_settings'     => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
 
+    'company' => 'Firma',
     'Credit' => 'Gutschrift',
     'critical' => 'kritisch',
     'Debit' => 'Lastschrift',
@@ -412,6 +415,7 @@ return [
     'info' => 'Info',
     'Level' => 'Level',
     'Message' => 'Nachricht',
+    'name' => 'Name',
     'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
     'SettlementRun' => 'Abrechnungslauf',
     'Time' => 'Zeit',

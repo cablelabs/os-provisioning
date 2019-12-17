@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use DB;
 use Module;
 use Bouncer;
 use Session;
@@ -45,7 +46,14 @@ class ContractController extends \BaseController
         $selectPropertyMgmt = [];
         if (Module::collections()->has('PropertyManagement')) {
             $hasModems = $model->modems->count() ? true : false;
-            $selectPropertyMgmt = ! $hasModems ? ['select' => 'noRealty'] : [];
+            $selectPropertyMgmt = ! $hasModems ? ['select' => 'noApartment'] : [];
+
+            // Only group Contracts are assigned to a Contact
+            $contacts = DB::table('contact')->where('administration', 1)->whereNull('deleted_at')->get();
+            $contactList[null] = null;
+            foreach ($contacts as $contact) {
+                $contactList[$contact->id] = \Modules\PropertyManagement\Entities\Contact::labelFromData($contact);
+            }
         }
 
         // label has to be the same like column in sql table
@@ -83,7 +91,8 @@ class ContractController extends \BaseController
 
         if (Module::collections()->has('PropertyManagement')) {
             if (! $hasModems) {
-                $a[] = ['form_type' => 'select', 'name' => 'realty_id', 'value' => $model->getSelectableRealties(), 'description' => 'Realty', 'hidden' => 0, 'space' => 1];
+                $a[] = ['form_type' => 'select', 'name' => 'apartment_id', 'value' => $model->getSelectableApartments(), 'select' => 'noContact',  'description' => 'Apartment', 'hidden' => 0];
+                $a[] = ['form_type' => 'select', 'name' => 'contact_id', 'value' => $contactList, 'select' => 'noApartment', 'description' => 'Contact', 'hidden' => 0, 'space' => 1];
             } else {
                 $a[14]['space'] = 1;
             }
@@ -227,16 +236,15 @@ class ContractController extends \BaseController
     public function prepare_rules($rules, $data)
     {
         if (\Module::collections()->has('PropertyManagement')) {
-            // Only group contracts without modems can belong to a Realty directly - with CMs realty_id must be null
-            if (isset($data['realty_id']) && $data['realty_id'] && isset($data['id'])) {
+            // Only group contracts without modems can belong to a Contact directly - with CMs contact_id must be null
+            if (isset($data['contact_id']) && $data['contact_id'] && isset($data['id'])) {
                 $modems = Contract::join('modem', 'modem.contract_id', 'contract.id')
                     ->where('contract.id', $data['id'])
                     ->whereNull('modem.deleted_at')
-                    ->whereNull('contract.deleted_at')
                     ->count();
 
                 if ($modems) {
-                    $rules['realty_id'] = 'empty';
+                    $rules['contact_id'] = 'empty';
                 }
             }
         }

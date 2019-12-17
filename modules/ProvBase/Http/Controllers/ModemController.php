@@ -75,9 +75,10 @@ class ModemController extends \BaseController
 
         $help['contract'] = $selectPropertyMgmt = [];
         if (\Module::collections()->has('PropertyManagement')) {
-            $selectPropertyMgmt = ['select' => 'noRealty noApartment'];
+            $selectPropertyMgmt = ['select' => 'noApartment'];
             $help['contract'] = ['help' => trans('propertymanagement::help.modem.contract_id')];
         }
+
         $cfIds = $this->dynamicDisplayFormFields();
 
         // label has to be the same like column in sql table
@@ -136,10 +137,7 @@ class ModemController extends \BaseController
                 $model->contract_id = Request::get('contract_id');
             }
 
-            $realties = $model->getSelectableRealties();
-
-            $c[] = ['form_type' => 'select', 'name' => 'realty_id', 'description' => 'Realty', 'select' => 'noApartment', 'value' => $realties, 'hidden' => 0];
-            $c[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'select' => 'noRealty', 'value' => $model->getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList'), 'space' => '1'];
+            $c[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'value' => $model->getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList'), 'space' => '1'];
         }
 
         $d = [
@@ -383,29 +381,6 @@ class ModemController extends \BaseController
     {
         if (! \Module::collections()->has('BillingBase')) {
             $rules['qos_id'] = 'required|exists:qos,id,deleted_at,NULL';
-        }
-
-        if (\Module::collections()->has('PropertyManagement')) {
-            // If modem belongs to a realty the contract_id must be the same like the one of the
-            // other modems of this realty as we assume it is a single family house then
-            if ($data['contract_id'] && $data['realty_id']) {
-                $modem = Modem::join('realty', 'modem.realty_id', 'realty.id')
-                    ->where('realty.id', $data['realty_id'])
-                    ->whereNull('modem.deleted_at')
-                    ->groupBy('modem.id')
-                    ->select('modem.*')
-                    ->first();
-
-                if ($modem) {
-                    $rules['contract_id'] .= '|In:'.$modem->contract_id;
-                }
-            }
-
-            if ($data['realty_id']) {
-                $rules['apartment_id'] = 'empty';
-            } elseif ($data['apartment_id']) {
-                $rules['realty_id'] = 'empty';
-            }
         }
 
         if (Configfile::find($data['configfile_id'])->device == 'tr069') {
