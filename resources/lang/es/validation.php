@@ -32,6 +32,7 @@ return [
     ],
     'boolean'              => 'El campo :attribute debe ser verdadero o falso.',
     'confirmed'            => 'El :attribute de confirmacion no coincide.',
+    'creditor_id'          => ':attribute no es válido.',
     'date'                 => 'El :attribute no es una fecha valida.',
     'dateornull'           => 'Tiene que ser una fecha valida o vacia',
     'date_format'          => 'El :attribute no coincide con el formato :format.',
@@ -48,6 +49,7 @@ return [
     'in'                   => 'El :attribute seleccionado no es valido.',
     'integer'              => 'El :attribute debe ser un integer.',
     'in_array'             => 'El :attribute campo no existe en :other.',
+    'invalid_input'        => 'Entrada no válida – por favor corrija los siguientes errores.',
     'max'                  => [
         'numeric' => 'El :attribute no debe ser mayor que :max.',
         'file'    => 'El :attribute no debe ser mayor que :max kilobytes.',
@@ -100,14 +102,14 @@ return [
     'custom' => [
         'password' => [
             'regex' => 'La contraseña tiene los siguiente criterios que debe seguir:
-                        <li>Minimo 8 caracteres</li>
-                        <li>Mayuscula (A – Z)</li>
-                        <li>Minuscula (a – z)</li>
-                        <li>Digito (0 – 9)</li>\',',
+                        <li>Mínimo 8 caracteres</li>
+                        <li>Mayúscula (A – Z)</li>
+                        <li>Minúscula (a – z)</li>
+                        <li>Dígito (0 – 9)</li>\',',
         ],
     ],
 
-    'docsis'               => ':atributo',
+    'docsis'               => ':attribute',
     'ip'                   => 'No es una direccion IP valida, de la forma: 192.168.0.255',
     'ip_in_range'          => 'La direccion IP no esta dentro del rango especificado anteriormente',
     'ip_larger'            => 'La direccion IP debe tener una cifra mayor debido a lo especificado en campos anteriores',
@@ -117,6 +119,7 @@ return [
     'null_if'              => 'Tiene que ser cero',
 
     'needed_depending_on_salutation' => 'El campo :attribute es necesario para el saludo elegido.',
+    'reassign_phonenumber_to_mta_fail' => 'Asignación de número de teléfono a MTA :id no permitido',
 
     /*
     |--------------------------------------------------------------------------

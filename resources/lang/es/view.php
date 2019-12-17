@@ -1,6 +1,8 @@
 <?php
 
 return [
+        'false' => 'false',
+        'true' => 'true',
 //SEARCH
         'Search_EnterKeyword'       => 'Ingresar palabra clave',
         'Search_MatchesFor'         => 'Coincide para',
@@ -33,7 +35,14 @@ return [
                 'jQuery_ImportCsv'              => 'importar CSV',
 //MENU
     //Main Menu
+        'Menu_Apartment'            => 'Apartamentos',
+        'Menu_BillingBase'          => 'Facturación',
+        'Menu_Contact'              => 'Contactos',
+        'Menu_CutoffList'           => 'Lista de cortados',
+        'Menu_Debt'                 => 'Lista de deudas',
+        'Menu_Dunning'              => 'Deudas vencidas',
         'Menu_MainMenu'             => 'Menú Principal',
+        'Menu_Node'                 => 'Nodos',
         'Menu_Config Page'          => 'Configuración global',
         'Menu_Logging'              => 'Registro',
         'Menu_Product List'         => 'Lista de productos',
@@ -46,21 +55,29 @@ return [
         'Menu_Devices'              => 'Dispositivos',
         'Menu_DeviceTypes'          => 'Tipos de dispositivos',
         'Menu_Contracts'            => 'Contratos',
+        'Menu_HfcBase'              => 'HFC',
+        'Menu_ProvBase'             => 'Aprovisionamiento',
         'Menu_Modems'               => 'Módems',
         'Menu_Endpoints'            => 'Extremos',
         'Menu_Number Range'         => 'Intervalo de números',
         'Menu_Configfiles'          => 'Archivo de configuración',
         'Menu_QoS'                  => 'QoS',
-        'Menu_CMTS'                 => 'CMTS',
+        'Menu_NetGws'               => 'NetGws',
         'Menu_Ip-Pools'             => 'IP-Pools',
+        'Menu_OverdueDebts'         => 'Deudas vencidas',
+        'Menu_ProvVoip'             => 'VoIP',
+        'Menu_PropertyManagement'   => 'Gestión de propiedades',
         'Menu_MTAs'                 => 'MTAs',
         'Menu_Phonenumbers'         => 'Numeros telefonicos',
         'Menu_PhoneTariffs'         => 'Tarifas telefefonicas',
-        'Menu_Envia orders'         => 'envia TEL ordenes',
-        'Menu_Envia contracts'      => 'envia TEL contratos',
+        'Menu_envia TEL orders'     => 'ordenes TEL de envia',
+        'Menu_envia TEL contracts'  => 'contratos TEL de envia',
         'Menu_Net Elements'         => 'Elementos de Red',
         'Menu_Net Element Types'    => 'Tipos de Elementos de Red',
+        'Menu_Realty'               => 'Bienes raíces',
         'Menu_TicketTypes'          => 'Tipo de Ticket',
+        'Menu_Nets'                 => 'Redes',
+        'Menu_allNets'              => 'Todas las redes',
 
     //User Settings
         'Menu_UserSettings'         => 'Configuraciones de usuario',
@@ -68,10 +85,11 @@ return [
         'Menu_Logout'               => 'Cerrar sesion',
         'Menu_UserRoleSettings'     => 'Roles (usuarios)',
 
-//HEADER
         'Menu_CDRs'                 => 'EVNs',
         'Menu_Tickets'              => 'Tickets',
         'Menu_Comment'              => 'Comentarios',
+//HEADER
+        'Header_Apartment' => 'Apartamentos',
     //General
         'Header_GlobalSearch'       => 'Busqueda global',
         'Header_Overview'           => 'Panorama',
@@ -150,12 +168,15 @@ return [
         //Contract
         'Header_Salesman'           => 'Vendedores',
         'Header_Contract'           => 'Contrato|Contratos',
+        'Header_ContractInfoApartments' => 'Contracts of realty (info)',
+        'Header_ContractInfoRealty' => 'Información: Contrato de módems',
         'Header_EditContract'       => 'Editar contrato',
+        'Header_GroupContracts'      => 'Group Contracts',
         'Header_SepaMandate'        => 'Orden SEPA|Ordenes SEPA',
         //Modems
         'Header_Modems'             => 'Modem|Modems', //workaround
         'Header_Invoice'            => 'Facturas',
-        'Header_OldInvoices'        => 'Old Invoices',
+        'Header_OldInvoices'        => 'Facturas antiguas',
         'Header_EditModems'         => 'Editar modem',
         'Header_Modem'              => 'Modem|Modems',
         'Header_SEPA Mandate'       => 'Mandatos-SEPA',
@@ -172,9 +193,9 @@ return [
         'Header_QoS'                => 'Reglas-QoS',
         'Header_Device Type'        => 'Tipo de dispositivo',
         'Header_EditQoS'            => 'Editar reglas-QoS',
-        //CMTS
-        'Header_CMTS'               => 'CMTS|CMTSs',
-        'Header_EditCMTS'           => 'Editar CMTS',
+        //NetGw
+        'Header_NetGW'              => 'NetGW|NetGWs',
+        'Header_EditNetGW'          => 'Edit NetGW',
         'Header_Config'             => 'Config. propuesta|Config. propuestas',
         //IpPool
         'Header_IpPool'             => 'Pool de IP|IP-pool\'s',
@@ -204,6 +225,7 @@ return [
         'Header_EditPhonenumber'    => 'Editar numero telefonico',
         'Header_Phonenumbers'       => 'Numeros telefonicos',
         'Header_EditPhonenumbers'   => 'Editar numeros telefonicos',
+        'Header_PhonebookEntry'     => 'Entrada de libreta telefónica',
         'Header_Tickets'            => 'Ticket|Tickets',
         'Header_EditTickets'        => 'Editar Ticket',
         //Phone tariff
@@ -212,8 +234,15 @@ return [
         'Header_Phone tariffs'      => 'Tarifa telefonica|Tarifas telefonicas',
         'Header_EditPhone tariffs'  => 'Editar tarifas telefonicas',
     //ProvVoipEnvia
-        'Header_EnviaOrders'        => 'envia TEL orden|envia TEL ordenes',
-        'Header_EnviaContracts'     => 'envia TEL contrato|envia TEL contratos',
+        'Header_EnviaAPI'           => 'API TEL de envia',
+        'Header_EnviaContract'      => 'contrato TEL de envia|contratos TEL de envia',
+        'Header_EnviaOrder'         => 'envia TEL orden|envia TEL ordenes',
+
+        'Header_Contact'            => 'Contactos',
+        'Header_Debt'               => 'Historial de deuda',
+        'Header_DebtResult'         => 'Total de pagos pendientes',
+        'Header_Node'               => 'Nodos',
+        'Header_Realty'             => 'Bienes raices',
 
     //Header Relation
         // 'Assigned'               => 'Zugewiesene',
@@ -225,6 +254,7 @@ return [
 //BUTTON
         'Sign me in'                => 'Iniciar sesion',
         'Button_Create'             => 'Crear',
+        'Button_Create'             => 'Exportar',
         'Button_Delete'             => 'Borrar elementos marcados',
         'Button_Force Restart'      => 'Forzar reinicio',
         'Button_Save'               => 'Guardar',
@@ -238,6 +268,8 @@ return [
         'Button_delete'             => 'Acceso directo para la capacidad de crear todas las páginas de este módulo.',
         'Button_downloadCSV'        => 'Descargar CSV',
         'Button_Create Product Entry'   => 'Crear producto',
+        'Button_Create Product' => 'Crear producto',
+        'Button_Create SettlementRun'   => 'Crear proceso de liquidación',
         //CostCenter
         'Button_Create Cost Center'     => 'Crear centro costos', //Workaround decide which one to use
         'Button_Create CostCenter'      => 'Crear centro costos',
@@ -251,6 +283,10 @@ return [
         'sr_dl_logs'                    => 'Descargar logfile',
         //Numberrange
         'Button_Create NumberRange'     => 'Crear rango numerico',
+    //HFC
+        'Button_Create NetElementType' => 'Crear tipo de elemento de red',
+        'Button_Create NetElement'     => 'Crear elemento de red',
+        'Button_Create MibFile'     => 'Crear archivo Mib',
 
     //SNMP Modul
         //Device
@@ -264,6 +300,8 @@ return [
         'Button_Create Modem Positioning Rule Geoposition' => 'Crear regla de geoposicionamiento de modem',
         'Button_Create MprGeopos'       => 'Crear geoposicionamiento MPR',
         'Button_Create Tickets'     => 'Crear ticket',
+        'Button_Create Ticket'         => 'Crear Ticket ',
+        'Button_Create TicketType'     => 'Crear tipo de ticket',
 
         'Button_Create Comment'     => 'Crear comentario',
         //SEPA-Konto
@@ -276,30 +314,43 @@ return [
 
     //Provisioning
         //Contract
+        'Button_Create Apartment'       => 'Crear Apartamento',
+        'Button_Create Node'            => 'Crear Nodo',
+        'Button_Create Realty'          => 'Crear propiedad',
+
         'Button_Create Contract'        => 'Crear contrato',
+        'Button_Create Domain'      => 'Crear dominio',
         'Button_Create SepaMandate'     => 'Crear mandado SEPA',
         // //Modems
         'Button_Create Modem'           => 'Crear modem',
         // //Endpoints
         'Button_Create Endpoints'       => 'Crear punto final',
+        'Button_Create Endpoint'        => 'Crear punto final',
         //MTA
         'Button_Create Mta'             => 'Crear MTA',
         // //Phonenumber
         'Button_Create Phone tariffs'   => 'Crear tarifa telefonica',
+        'Button_Create PhoneTariff'     => 'Crear tarifa telefónica',
         // //Configfiles
-        'Button_Create Configfiles'     => 'Crear archivos de configuracion',
+        'Button_Create Configfile'      => 'Crear archivo de configuración',
         // //QoS
         'Button_create_post_invoices_pdf'  => 'Crear Facturas Postales PDF',
         'Button_Create Settlement Run'  => 'Crear proceso de liquidacion',
         'Button_Rerun Accounting Command' => 'Vuelva a ejecutar comando de contabilidad',
         'Button_Create QoS'             => 'Crear regla QoS',
-        // //CMTS
-        'Button_Create CMTS'            => 'Crear CMTS',
+        'Button_Create Qos'             => 'Crear regla QoS',
+        // //NetGws
+        'Button_Create NetGws'          => 'Create NetGw',
+        'Button_Create Netgws'          => 'Create NetGw',
         // //IpPool
         'Button_Create IpPool'          => 'Crear IP-Pool', //workaround
         'Button_Create IP-Pools'        => 'Crear IP-Pools',
 
 // DASHBOARD
+    'dashboard' => [
+        'contractIndexPage' => 'Contracts',
+        'ticketIndexPage' => 'Tickets',
+    ],
     'Dashboard_Contracts'           => 'CONTRATOS ACTIVOS',
     'Dashboard_ContractAnalytics'   => 'Análisis de contrato',
     'Dashboard_NoContracts'         => 'No hay contratos disponibles',
@@ -311,8 +362,6 @@ return [
     'Dashboard_Tickets'             => 'NUEVOS TICKETS',
     'Dashboard_NoTickets'           => 'No hay tickets nuevos.',
     'Dashboard_Quickstart'          => 'Inicio rápido',
-    'Dashboard_AddContract'         => 'Añadir Contrato',
-    'Dashboard_AddTicket'           => 'Agregar ticket',
     'Dashboard_ImpairedModem'       => 'Módems deteriorados',
     'Dashboard_External'            => 'Externo',
     'Dashboard_Docu'                => 'Documentación',
@@ -349,7 +398,27 @@ return [
     'Numberrange_Prefix' => 'Prefijo',
     'Numberrange_Type' => 'Tipo',
 
+// VoIP
+    'PhonebookEntry' => 'Entrada de libreta telefónica',
+
 // Error
     'error_specify_id'          => 'Por favor especifique el nombre de host en lugar de la dirección ip.',
     'error_ticket_settings'     => 'Por favor introduzca el nombre y dirección correo de auto respuesta en la página de configuración global.',
+
+    'company' => 'Company',
+    'Credit' => 'Crédito',
+    'critical' => 'crítico',
+    'Debit' => 'Débito',
+    'Discard' => 'Descartar',
+    'Global' => 'Global',
+    'Global notification' => 'Notificación global',
+    'info' => 'información',
+    'Level' => 'Nivel',
+    'Message' => 'Mensaje',
+    'name' => 'Name',
+    'showChanges' => 'Mostrar el cambio|Mostrar :num cambios',
+    'SettlementRun' => 'Arreglo',
+    'Time' => 'Hora',
+    'Type' => 'Tipo',
+    'warning' => 'advertencia',
 ];
