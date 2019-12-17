@@ -16,6 +16,7 @@ pkill -f "artisan queue:work"
 
 systemctl reload httpd
 
+rm -f storage/framework/sessions/*
 chown -R apache storage bootstrap/cache /var/log/nmsprime
 systemctl restart nmsprimed
 systemd-tmpfiles --create
