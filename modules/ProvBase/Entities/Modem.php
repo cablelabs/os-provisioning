@@ -5,6 +5,7 @@ namespace Modules\ProvBase\Entities;
 use DB;
 use Log;
 use File;
+use Module;
 use App\Sla;
 use Exception;
 use Acme\php\ArrayHelper;
@@ -196,7 +197,7 @@ class Modem extends \BaseModel
      */
     protected function _envia_orders()
     {
-        if (! \Module::collections()->has('ProvVoipEnvia')) {
+        if (! Module::collections()->has('ProvVoipEnvia')) {
             throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
         }
 
@@ -208,7 +209,7 @@ class Modem extends \BaseModel
      */
     public function enviacontracts()
     {
-        if (! \Module::collections()->has('ProvVoipEnvia')) {
+        if (! Module::collections()->has('ProvVoipEnvia')) {
             throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
         } else {
             return $this->hasMany(\Modules\ProvVoipEnvia\Entities\EnviaContract::class);
@@ -298,7 +299,7 @@ class Modem extends \BaseModel
     public function view_belongs_to()
     {
         $relation = null;
-        if (\Module::collections()->has('PropertyManagement')) {
+        if (Module::collections()->has('PropertyManagement')) {
             $relation = $this->apartment;
         }
 
@@ -314,7 +315,7 @@ class Modem extends \BaseModel
         $ret = [];
 
         // we use a dummy here as this will be overwritten by ModemController::editTabs()
-        if (\Module::collections()->has('ProvVoip')) {
+        if (Module::collections()->has('ProvVoip')) {
             $ret['Edit']['Mta']['class'] = 'Mta';
             $ret['Edit']['Mta']['relation'] = $this->mtas;
         }
@@ -325,7 +326,7 @@ class Modem extends \BaseModel
             $ret['Edit']['Endpoint']['relation'] = $this->endpoints;
         }
 
-        if (\Module::collections()->has('ProvVoipEnvia')) {
+        if (Module::collections()->has('ProvVoipEnvia')) {
             $ret['Edit']['EnviaContract']['class'] = 'EnviaContract';
             $ret['Edit']['EnviaContract']['relation'] = $this->enviacontracts;
             $ret['Edit']['EnviaContract']['options']['hide_create_button'] = 1;
@@ -383,7 +384,7 @@ class Modem extends \BaseModel
 
         $ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
 
-        if (\Module::collections()->has('ProvVoip') && $this->mtas()->pluck('mac')->filter(function ($mac) {
+        if (Module::collections()->has('ProvVoip') && $this->mtas()->pluck('mac')->filter(function ($mac) {
             return stripos($mac, 'ff:') !== 0;
         })->count()) {
             $ret .= ' option ccc.dhcp-server-1 '.($server ?: ProvBase::first()->provisioning_server).';';
@@ -667,7 +668,7 @@ class Modem extends \BaseModel
         $max_cpe = $cpe_cnt ?: 2; 		// default 2
         $internet_access = 1;
 
-        if (\Module::collections()->has('ProvVoip') && (count($this->mtas))) {
+        if (Module::collections()->has('ProvVoip') && (count($this->mtas))) {
             if ($this->internet_access || $this->contract->has_telephony || $this->contract->internet_access) {
                 if (! $this->internet_access) {
                     $max_cpe = 0;
@@ -703,7 +704,7 @@ class Modem extends \BaseModel
             $conf .= "\tMaxCPE $max_cpe;\n";
         }
 
-        if (\Module::collections()->has('ProvVoip') && $internet_access) {
+        if (Module::collections()->has('ProvVoip') && $internet_access) {
             foreach ($this->mtas as $mta) {
                 $conf .= "\tCpeMacAddress $mta->mac;\n";
             }
@@ -1292,7 +1293,7 @@ class Modem extends \BaseModel
     {
 
         // if there is no voip module ⇒ there can be no numbers
-        if (! \Module::collections()->has('ProvVoip')) {
+        if (! Module::collections()->has('ProvVoip')) {
             return false;
         }
 
@@ -1315,7 +1316,7 @@ class Modem extends \BaseModel
     {
 
         // if voip module is not active: there can be no phonenumbers
-        if (! \Module::collections()->has('ProvVoip')) {
+        if (! Module::collections()->has('ProvVoip')) {
             return [];
         }
 
@@ -1388,7 +1389,7 @@ class Modem extends \BaseModel
 
         // first: check if envia module is enabled
         // if not: do nothing – this database fields could be in use by another voip provider module!
-        if (! \Module::collections()->has('ProvVoipEnvia')) {
+        if (! Module::collections()->has('ProvVoipEnvia')) {
             return;
         }
 
@@ -1447,7 +1448,7 @@ class Modem extends \BaseModel
      */
     public function updateAddressFromProperty($realty = null, $ids = [])
     {
-        if (! \Module::collections()->has('PropertyManagement')) {
+        if (! Module::collections()->has('PropertyManagement')) {
             return;
         }
 
@@ -1476,7 +1477,7 @@ class Modem extends \BaseModel
      */
     public function getApartmentsList()
     {
-        if (! \Module::collections()->has('PropertyManagement')) {
+        if (! Module::collections()->has('PropertyManagement')) {
             return [];
         }
 
@@ -1764,7 +1765,7 @@ class ModemObserver
     {
         Log::debug(__METHOD__.' started for '.$modem->hostname);
 
-        if (\Module::collections()->has('PropertyManagement')) {
+        if (Module::collections()->has('PropertyManagement')) {
             $modem->updateAddressFromProperty();
         }
 
@@ -1777,7 +1778,7 @@ class ModemObserver
             $modem->save();  // forces to call the updating() and updated() method of the observer !
             Modem::create_ignore_cpe_dhcp_file();
 
-            if (\Module::collections()->has('ProvMon')) {
+            if (Module::collections()->has('ProvMon')) {
                 Log::info("Create cacti diagrams for modem: $modem->hostname");
                 \Artisan::call('nms:cacti', ['--netgw-id' => 0, '--modem-id' => $modem->id]);
             }
@@ -1791,7 +1792,7 @@ class ModemObserver
         // reminder: on active envia TEL module: moving modem to other contract is not allowed!
         // check if this is running if you decide to implement moving of modems to other contracts
         // watch Ticket LAR-106
-        if (\Module::collections()->has('ProvVoipEnvia')) {
+        if (Module::collections()->has('ProvVoipEnvia')) {
             // updating is also called on create – so we have to check this
             if ((! $modem->wasRecentlyCreated) && ($modem->isDirty('contract_id'))) {
                 // returning false should cancel the updating: verify this! There has been some problems with deleting modems – we had to put the logic in Modem::delete() probably caused by our Base* classes…
@@ -1834,7 +1835,7 @@ class ModemObserver
 
         // Refresh MPS rules
         // Note: does not perform a save() which could trigger observer.
-        if (\Module::collections()->has('HfcCustomer')) {
+        if (Module::collections()->has('HfcCustomer')) {
             if (multi_array_key_exists(['x', 'y'], $diff)) {
                 // suppress output in this case
                 ob_start();
