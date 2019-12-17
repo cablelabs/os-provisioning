@@ -85,6 +85,7 @@ class InstallInitRadiusAndAcs extends BaseMigration
         file_put_contents($filename, json_encode($conf));
 
         $crt = glob('/var/lib/acme/certs/*.crt');
+        $link = [];
         if (count($crt) == 1) {
             $crt = reset($crt);
             $link['crt'] = $crt;

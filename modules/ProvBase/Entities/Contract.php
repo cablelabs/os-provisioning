@@ -1168,9 +1168,11 @@ class Contract extends \BaseModel
         foreach ($this->modems as $modem) {
             $modem->internet_access = $this->internet_access;
             $modem->qos_id = $this->qos_id;
+            $modem->observer_enabled = false;
             $modem->save();
             $modem->restart_modem();
             $modem->make_configfile();
+            $modem->updateRadius(false);
         }
     }
 
