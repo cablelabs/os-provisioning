@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use Module;
 use App\Sla;
 use Bouncer;
 use Request;
@@ -58,7 +59,7 @@ class ModemController extends \BaseController
         if (
             ($model['installation_address_change_date'])
             &&
-            (\Module::collections()->has('ProvVoipEnvia'))
+            (Module::collections()->has('ProvVoipEnvia'))
         ) {
             $orders = \Modules\ProvVoipEnvia\Entities\EnviaOrder::
                 where('modem_id', '=', $model->id)->
@@ -74,12 +75,19 @@ class ModemController extends \BaseController
         }
 
         $help['contract'] = $selectPropertyMgmt = [];
-        if (\Module::collections()->has('PropertyManagement')) {
+        if (Module::collections()->has('PropertyManagement')) {
             $selectPropertyMgmt = ['select' => 'noApartment'];
             $help['contract'] = ['help' => trans('propertymanagement::help.modem.contract_id')];
         }
 
         $cfIds = $this->dynamicDisplayFormFields();
+
+        if (Module::collections()->has('HfcCustomer')) {
+            $rect = [round($model->x, 4) - 0.0001, round($model->x, 4) + 0.0001, round($model->y, 4) - 0.0001, round($model->y, 4) + 0.0001];
+            $geopos = link_to_route('CustomerModem.show', trans('messages.geopos_x_y'), ['true', $model->id]).'    ('.link_to_route('CustomerRect.show', trans('messages.proximity'), $rect).')';
+        } else {
+            $geopos = trans('messages.geopos_x_y');
+        }
 
         // label has to be the same like column in sql table
         $a = [
@@ -97,19 +105,7 @@ class ModemController extends \BaseController
             ];
 
         if (Sla::first()->valid()) {
-            $a[] = ['form_type'=> 'text', 'name' => 'formatted_support_state', 'description' => 'Support State', 'field_value'=> ucfirst(str_replace('-', ' ', $model->support_state)), 'help'=>trans('helper.modemSupportState.'.$model->support_state), 'help_icon'=> $model->getFaSmileClass()['fa-class'], 'options' =>['readonly'], 'color'=>$model->getFaSmileClass()['bs-class']];
-        }
-
-        $b = \Module::collections()->has('BillingBase') ?
-            [['form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'hidden' => 1, 'space' => '1']]
-            :
-            [['form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1']];
-
-        if (\Module::collections()->has('HfcCustomer')) {
-            $rect = [round($model->x, 4) - 0.0001, round($model->x, 4) + 0.0001, round($model->y, 4) - 0.0001, round($model->y, 4) + 0.0001];
-            $geopos = link_to_route('CustomerModem.show', trans('messages.geopos_x_y'), ['true', $model->id]).'    ('.link_to_route('CustomerRect.show', trans('messages.proximity'), $rect).')';
-        } else {
-            $geopos = trans('messages.geopos_x_y');
+            $a[] = ['form_type'=> 'text', 'name' => 'formatted_support_state', 'description' => 'Support State', 'field_value' => ucfirst(str_replace('-', ' ', $model->support_state)), 'help'=>trans('helper.modemSupportState.'.$model->support_state), 'help_icon'=> $model->getFaSmileClass()['fa-class'], 'options' =>['readonly'], 'color'=>$model->getFaSmileClass()['bs-class']];
         }
 
         $c = [
@@ -125,23 +121,23 @@ class ModemController extends \BaseController
             array_merge(['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
             array_merge(['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
             array_merge(['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'autocomplete' => ['Contract']], $selectPropertyMgmt),
-
+            array_merge(['form_type' => 'text', 'name' => 'country_code', 'description' => 'Country code', 'help' => 'ISO 3166 ALPHA-2 (two characters)'], $selectPropertyMgmt),
         ];
 
-        if (! \Module::collections()->has('PropertyManagement')) {
-            $c[] = ['form_type' => 'text', 'name' => 'apartment_nr', 'description' => 'Apartment number', 'space' => 1];
+        if (Module::collections()->has('PropertyManagement')) {
+            $c[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'value' => $model->getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList')];
+        } else {
+            $c[] = ['form_type' => 'text', 'name' => 'apartment_nr', 'description' => 'Apartment number'];
         }
 
-        if (\Module::collections()->has('PropertyManagement')) {
-            if (Request::has('contract_id')) {
-                $model->contract_id = Request::get('contract_id');
-            }
-
-            $c[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'value' => $model->getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList'), 'space' => '1'];
+        if (Module::collections()->has('BillingBase')) {
+            $b = [['form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'hidden' => 1, 'space' => '1']];
+        } else {
+            $b = [['form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1']];
+            $c[12] = array_merge($c[12], ['space' => 1]);
         }
 
         $d = [
-            array_merge(['form_type' => 'text', 'name' => 'country_code', 'description' => 'Country code', 'help' => 'ISO 3166 ALPHA-2 (two characters)'], $selectPropertyMgmt),
             ['form_type' => 'html', 'name' => 'geopos', 'description' => $geopos, 'html' => BaseViewController::geoPosFields($model)],
             ['form_type' => 'text', 'name' => 'geocode_source', 'description' => 'Geocode origin', 'help' => trans('helper.Modem_GeocodeOrigin'), 'space' => 1],
 
@@ -203,7 +199,7 @@ class ModemController extends \BaseController
 
         $tabs = parent::editTabs($model);
 
-        if (! \Module::collections()->has('ProvMon')) {
+        if (! Module::collections()->has('ProvMon')) {
             return $tabs;
         }
 
@@ -233,7 +229,7 @@ class ModemController extends \BaseController
     {
         $obj = static::get_model_obj();
 
-        if (! \Module::collections()->has('HfcCustomer')) {
+        if (! Module::collections()->has('HfcCustomer')) {
             return parent::fulltextSearch();
         }
 
@@ -379,7 +375,7 @@ class ModemController extends \BaseController
 
     public function prepare_rules($rules, $data)
     {
-        if (! \Module::collections()->has('BillingBase')) {
+        if (! Module::collections()->has('BillingBase')) {
             $rules['qos_id'] = 'required|exists:qos,id,deleted_at,NULL';
         }
 
