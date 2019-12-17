@@ -2,6 +2,8 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
 use Modules\ProvBase\Entities\Configfile;
 
@@ -75,16 +77,16 @@ class ConfigfileController extends \BaseController
      */
     public function store($redirect = true)
     {
-        // check and handle uploaded firmware and cvc files
-        $this->handle_file_upload('firmware', '/tftpboot/fw/');
-        $this->handle_file_upload('cvc', '/tftpboot/cvc/');
-        $error = $this->importTree();
-
-        if ($error) {
+        if (Request::hasFile('import')) {
+            $error = $this->importTree();
             \Session::push('tmp_error_above_form', $error);
 
             return redirect()->back();
         }
+
+        // check and handle uploaded firmware and cvc files
+        $this->handle_file_upload('firmware', '/tftpboot/fw/');
+        $this->handle_file_upload('cvc', '/tftpboot/cvc/');
 
         // finally: call base method
         return parent::store();
@@ -94,64 +96,103 @@ class ConfigfileController extends \BaseController
      * Generate tree of configfiles.
      *
      * @author Roy Schneider
-     * @return mixed values
+     * @return void|string Void on Success, Error message on failure
      */
     public function importTree()
     {
-        if (! Request::hasFile('import')) {
-            return;
-        }
-
-        $content = $this->replaceIds(\File::get(Request::file('import')));
-
-        $json = json_decode($content, true);
+        $import = File::get(Request::file('import'));
+        $import = $this->replaceIds($import);
+        $json = json_decode($import, true);
 
         if (! $json) {
             return trans('messages.invalidJson');
         }
 
-        $this->recreateTree($json, Request::get()['name'] == '' ? true : false, Configfile::all()->pluck('name'));
+        $this->recreateTree($json, Request::filled('name'), Configfile::pluck('name'));
     }
 
     /**
      * Replace all id's and parent_id's.
      *
      * @author Roy Schneider
-     * @param string $content
+     * @param string $content JSON String from uploaded File
      * @return string
      */
-    public function replaceIds($content)
+    public function replaceIds(string $content): string
     {
         // array of in file existing id's (id":number,)
-        preg_match_all('/[i][d]["][:]\d+[,]/', $content, $importedIds);
-        $importedIds = array_unique($importedIds[0]);
+        preg_match_all('/id":(\d+),/', $content, $importedIds);
+        $importedIdStrings = array_unique($importedIds[0]);
+        $importedIds = array_unique($importedIds[1]);
+        sort($importedIdStrings, SORT_NATURAL);
         sort($importedIds, SORT_NATURAL);
 
         $maxId = Configfile::withTrashed()->max('id');
+        $startId = $maxId ? ++$maxId : 1;
+        $tempImportId = $startId + last($importedIds) + 1;
 
-        $startId = $maxId ? ++$maxId : 0;
-
-        foreach ($importedIds as $id) {
-            $content = str_replace($id, 'id":'.$startId.',', $content);
-            $startId++;
+        if (strpos($content, 'id":'.$startId.',')) {
+            $this->replaceDuplicateId($content, $importedIds, $importedIdStrings, $startId, $tempImportId);
+            $tempImportId++;
         }
 
-        // replace first parent_id with parent_id of input
-        preg_match_all('/[a-t]{6}.[d-i]{2}["][:]\d+[,]/', $content, $ids);
-        $parentId = array_shift($ids[0]);
-        $input = Request::get('parent_id');
+        foreach ($importedIdStrings as $key => $idString) {
+            if (($startId + 1) === $importedIds[$key]) {
+                $this->replaceDuplicateId($content, $importedIds, $importedIdStrings, $startId + 1, $tempImportId);
+            }
 
-        return str_replace($parentId, 'parent_id":'.$input.',', $content);
+            $content = str_replace($idString, 'id":'.$startId.',', $content);
+
+            $startId++;
+            $tempImportId++;
+        }
+
+        // Uploaded File has a Root CF
+        if (Str::contains($content, 'parent_id":null,')) {
+            return $content;
+        }
+
+        // if CF-subbranch, replace parent_id with parent_id of input
+        preg_match_all('/parent_id":\d+,/', $content, $parentIds);
+
+        return str_replace(array_shift($parentIds[0]), 'parent_id":'.Request::get('parent_id').',', $content);
+    }
+
+    /**
+     * If the Imported Configfiles have IDs that are in the range of the new
+     * created Configfiles the IDs are overwritten and cause DB errors. The
+     * Ids get replaced with a higher number to prevent that.
+     *
+     * @param string $content   JSON string from uploaded file
+     * @param array $importedIds[int]   Original ids from imported JSON as integer
+     * @param array $importedIdStrings[string]  Strings with the ids that should be replaced
+     * @param int $start    possible duplicate id
+     * @param int $tempImportId     high id number that guarantees no conflict
+     * @return void
+     */
+    protected function replaceDuplicateId(string &$content, array &$importedIds, array &$importedIdStrings, int $start, int $tempImportId): void
+    {
+        $content = str_replace('id":'.($start).',', 'id":'.($tempImportId).',', $content);
+
+        $importedIds = array_map(function ($id) use ($start, $tempImportId) {
+            return $id == $start ? $tempImportId : intval($id);
+        }, $importedIds);
+
+        $importedIdStrings = array_map(function ($idString) use ($start, $tempImportId) {
+            return $idString === 'id":'.($start).',' ? 'id":'.($tempImportId).',' : $idString;
+        }, $importedIdStrings);
     }
 
     /**
      * Recursively create all configfiles with related children.
      *
      * @author Roy Schneider
-     * @param array $content
-     * @param bool $hasName
+     * @param array $content    Current Configfile
+     * @param bool $hasName     Take Name of Input field for first Configfile?
+     * @param Illuminate\Support\Collection $originalConfigfiles    Data of all Configfiles
+     * @return void
      */
-    public function recreateTree($content, $hasName, $originalConfigfiles)
+    public function recreateTree(array $content, bool $hasName, \Illuminate\Support\Collection $originalConfigfiles): void
     {
         // see if this name already exists
         while ($originalConfigfiles->contains($content['name'])) {
@@ -193,23 +234,24 @@ class ConfigfileController extends \BaseController
      * Create configfiles or replace input if validation passes.
      *
      * @author Roy Schneider
-     * @param array $content
-     * @param bool $hasName
+     * @param array $configfile Config file data
+     * @param bool $requestHasNameInput
      * @return bool
      */
-    public function checkAndSetContent($content, $hasName)
+    public function checkAndSetContent(array $configfile, bool $requestHasNameInput): bool
     {
-        if (! $hasName) {
-            Configfile::create($content);
+        // CF-Form was not filled
+        if (! $requestHasNameInput) {
+            Configfile::create($configfile);
 
-            return;
+            return false;
         }
 
-        Request::merge($content);
+        Request::merge($configfile);
         Request::merge(['import' => 'import']);
 
         // only continue if the input would pass the validation
-        if (\Validator::make($content, $this->prepare_rules(Configfile::rules(), $content))->fails()) {
+        if (\Validator::make($configfile, $this->prepare_rules(Configfile::rules(), $configfile))->fails()) {
             return true;
         }
     }
