@@ -1460,7 +1460,7 @@ class Modem extends \BaseModel
             return;
         }
 
-        self::where('id', $ids ?: [$this->id])->update([
+        self::whereIn('id', $ids ?: [$this->id])->update([
             'street' => $realty->street,
             'house_number' => $realty->house_nr,
             'zip' => $realty->zip,
@@ -1877,7 +1877,7 @@ class ModemObserver
         // moving then should only be allowed without attached phonenumbers and terminated envia TEL contract!
         // cleaner in Patrick's opinion would be to delete and re-create the modem
 
-        if (multi_array_key_exists(['realty_id', 'apartment_id'], $diff)) {
+        if (array_key_exists('apartment_id', $diff)) {
             $modem->updateAddressFromProperty();
         }
     }
