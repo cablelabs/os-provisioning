@@ -234,7 +234,7 @@ class ConfigfileController extends \BaseController
      * Create configfiles or replace input if validation passes.
      *
      * @author Roy Schneider
-     * @param array $content
+     * @param array $configfile Config file data
      * @param bool $requestHasNameInput
      * @return bool
      */
