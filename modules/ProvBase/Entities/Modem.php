@@ -1769,12 +1769,13 @@ class ModemObserver
             $modem->updateAddressFromProperty();
         }
 
+        $hostname = ($modem->isPPP() ? 'ppp-' : 'cm-').$modem->id;
+        $modem->hostname = $hostname;
+
         if ($modem->isPPP()) {
-            $modem->hostname = 'ppp-'.$modem->id;
             $modem->updateRadius(false);
             $modem->save();
         } else {
-            $modem->hostname = 'cm-'.$modem->id;
             $modem->save();  // forces to call the updating() and updated() method of the observer !
             Modem::create_ignore_cpe_dhcp_file();
 
@@ -1783,6 +1784,10 @@ class ModemObserver
                 \Artisan::call('nms:cacti', ['--netgw-id' => 0, '--modem-id' => $modem->id]);
             }
         }
+
+        // always set hostname, even if updating() fails (returns false)
+        // this is needed for a consistent dhcpd config
+        Modem::where('id', $modem->id)->update(['hostname' => $hostname]);
     }
 
     public function updating($modem)
