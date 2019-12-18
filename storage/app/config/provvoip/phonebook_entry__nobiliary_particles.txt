@@ -1,124 +1,124 @@
 a
-á
 à
+á
 aan de
 Aan den
-Al
 al
-Am
+Al
 am
-An
+Am
 an
+An
 an de
-An der
 an der
-Auf dem
+An der
 auf dem
+Auf dem
 auf den
-Auf der
 auf der
-aufm
-Auf'm
+Auf der
 auf'm
-Aus dem
+Auf'm
+aufm
 aus dem
+Aus dem
 aus den
-Aus der
 aus der
-Bei der
+Aus der
 bei der
+Bei der
 beim
-Ben
 ben
-D'
+Ben
 d'
-Da
+D'
 da
-Dal
+Da
 dal
-Das
+Dal
 das
-De
+Das
 de
+De
 de l'
-De La
-De la
-de La
 de la
-De Las
-de Las
+de La
+De la
+De La
 de las
+de Las
+De Las
 de le
-De los
 de los
-Del
+De los
 del
+Del
 della
 dem
-Den
 den
-Der
+Den
 der
-Des
+Der
 des
-Di
+Des
 di
-Do
+Di
 do
+Do
 Don
 don le
-Dos
 dos
-Du
+Dos
 du
-El
+Du
 el
-Grosse
-Große
+El
 grosse
 große
+Grosse
+Große
 grote
 II
 il
-Im
 im
+Im
 in
-In de
 in de
-In den
+In de
 in den
-In der
+In den
 in der
-In het
+In der
 in het
-int
-In't
+In het
 in't
+In't
+int
 jan de
-Kleine
 kleine
-La
+Kleine
 la
+La
 lal
-Le
 le
-Lo
+Le
 lo
+Lo
 Mac
-Op de
 op de
-Op den
+Op de
 op den
+Op den
 Op het
 op te
 Op ten
 Op't
-Te
 te
-Ten
+Te
 ten
-Ter
+Ten
 ter
+Ter
 tho
 thom
 thor
@@ -126,38 +126,38 @@ to
 tom
 tor
 tum
-Van
 van
-Van De
-Van de
-van De
+Van
 van de
+van De
+Van de
+Van De
 van dem
-Van Den
-Van den
 van den
-Van Der
-Van der
+Van den
+Van Den
 van der
+Van der
+Van Der
 van gen
 van het
 van't
 vel
-Vom
 vom
+Vom
 vom zum
-Von
 von
-Von de
+Von
 von de
-Von dem
+Von de
 von dem
-Von Den
-Von den
+Von dem
 von den
-Von Der
-Von der
+Von den
+Von Den
 von der
+Von der
+Von Der
 von Ehr
 von la
 von le
@@ -168,17 +168,17 @@ von und zu
 von zum
 von zur
 vor
-Vor dem
 vor dem
-Vor den
+Vor dem
 vor den
-Vor der
+Vor den
 vor der
+Vor der
 vorm
 vorn
-Zu
 zu
-Zum
+Zu
 zum
-Zur
+Zum
 zur
+Zur
