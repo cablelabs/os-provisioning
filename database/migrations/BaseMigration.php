@@ -26,6 +26,7 @@ class BaseMigration extends Migration
         }
 
         DB::getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+        Schema::defaultStringLength(191);
     }
 
     public function up_table_generic(&$table)
