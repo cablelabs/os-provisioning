@@ -830,7 +830,7 @@ class Modem extends \BaseModel
 
         $online = array_map(function ($value) {
             return $value->_deviceId->_SerialNumber ?? null;
-        }, json_decode(self::callGenieAcsApi($route, 'GET')));
+        }, json_decode(self::callGenieAcsApi($route, 'GET')) ?: []);
 
         DB::beginTransaction();
         // make all tr069 devices offline
