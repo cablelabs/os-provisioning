@@ -12,10 +12,10 @@ Deutsche Telekom
 Feuerwehr
 Finanzbehörden
 Forstverwaltungen
+Gästehäuser
 Gaststätten, Restaurants
 Gemeindeverwaltungen
 Gerichte
-Gästehäuser
 Hotels
 Justizbehörden
 Kindergärten und -heime
@@ -27,11 +27,11 @@ Krankenhäuser
 Landesregierung
 Museen
 Polizei
+Schulen, allgemein bildende Schulen
+Schulen, berufsbildende Schulen
 Schulen, Förderschulen
 Schulen, Gesamtschulen
 Schulen, Sonderschulen
-Schulen, allgemein bildende Schulen
-Schulen, berufsbildende Schulen
 Schulen, sonstige Schulen
 Senat
 Seniorenheime

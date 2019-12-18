@@ -71,8 +71,8 @@ B.S.S.
 B.Sc(Econ)
 B.Sc.
 B.Sc. Dr.rer.nat
-B.Sc. Psychologie
 B.sc. Psychologie
+B.Sc. Psychologie
 B.Sc.(Comp.)
 B.Sc.(Cur.Occ.)
 B.Sc.(Env.Health)
@@ -125,8 +125,8 @@ Bakk.theol.
 Bankfachwirt(BA)
 BauIng.grad.
 BBA
-Bc.
 bc.
+Bc.
 BcA.
 BergIng.grad.
 Betriebsw.(VWA)
@@ -136,6 +136,7 @@ Betriebswirt(BA)
 Betriebswirt(HWK)
 Betriebswirt(IHK)
 Betriebswirt(VWA)
+Betriebswirtin(IHK)
 Betriebswirtin(VWA)
 BNS
 BSc
@@ -186,6 +187,9 @@ DI
 Dip.Betr.-u. Prod.-Ing.ETH
 Dip.Chem.ETH
 dip.EPG-EPF
+Dipl-Musiker Dipl-Musiklehrer
+Dipl-Sachverständige
+Dipl-Stimm- u Sprachheillehrer
 Dipl.
 dipl. BW-Ing.
 Dipl. Grafik-Designer
@@ -193,6 +197,7 @@ Dipl. Grafik-Designerin
 Dipl. Orthoptistin (SOG)
 Dipl. Schreinermeister
 Dipl. Sprach- Stimmheilpädagoge
+Dipl. Volkswirt
 Dipl.-Agr.Biol.
 Dipl.-Agr.Ing.
 Dipl.-Agr.Ing.(FH)
@@ -212,11 +217,9 @@ Dipl.-Akupunkteur
 Dipl.-Altenpfleger
 Dipl.-Amerikanist
 Dipl.-Amerikanistin
-dipl.analyt.Psych.
 Dipl.-Anglist
 Dipl.-Anglistin
 Dipl.-Arabist Oek.
-dipl.Arch.
 Dipl.-Arch.
 Dipl.-Arch. Dipl.-Ing.
 Dipl.-Arch.(FH)
@@ -228,13 +231,7 @@ Dipl.-Architektin ETH
 Dipl.-Architektin(FH)
 Dipl.-Archivar
 Dipl.-art
-dipl.Astrologe
-dipl.Astrologin
-dipl.Astronom
 Dipl.-Atem- u. Leibtherap.
-dipl.Atempädagoge
-dipl.Atempädagogin
-dipl.Atemtherapeutin
 Dipl.-Audio Engineer
 Dipl.-Ballettpädagogin
 Dipl.-Bankbetriebswirt
@@ -251,11 +248,9 @@ Dipl.-BauIng. Dipl.-Designer
 Dipl.-BauIng. Dipl.-Ing.
 Dipl.-BauIng. Dipl.-Ing.(FH)
 Dipl.-BauIng. Dipl.-Wirtsch.
-Dipl.BauIng. Dipl.Wirtsch.Ing.
 Dipl.-BauIng.(FH)
 Dipl.-BauIng.(TH)
 Dipl.-BauIng.(TU)
-dipl.Bau-Ing.ETH
 Dipl.-BauIng.grad.
 Dipl.-BauIng.Univ.
 Dipl.-Bauingenieur
@@ -264,21 +259,19 @@ Dipl.-Bauingenieurin
 Dipl.-Baukeramiker
 Dipl.-Bauökologe
 Dipl.-Bauphysiker
-dipl.Behindertenpädagogin
 Dipl.-Ber.Päd.(FH)
 Dipl.-BergbauIng.
 Dipl.-Berging.
 Dipl.-Berging.(FH)
 Dipl.-Bergingenieur
 Dipl.-Berufspäd.
-Dipl.Berufspäd.Dipl.Ing.(TU)
 Dipl.-Berufspäd.Univ.
 Dipl.-Berufspädagogin
 Dipl.-Berufspädagogin(FH)
+Dipl.-Betr.-Wirt(FH)
 Dipl.-Betr.Wirt
 Dipl.-Betr.wirt Dipl.-Ing.(FH)
 Dipl.-Betr.Wirt Dipl.-Kfm.
-Dipl.-Betr.-Wirt(FH)
 Dipl.-Betr.Wirtin Dipl.-Kffr.
 Dipl.-Betriebsökonom (BA)
 Dipl.-Betriebspädagoge
@@ -301,6 +294,7 @@ Dipl.-Betriebswirt(BA)
 Dipl.-Betriebswirt(FH)
 Dipl.-Betriebswirt(VWA)
 Dipl.-Betriebswirt(WA)
+Dipl.-Betriebswirte (FH)
 Dipl.-Betriebswirtin
 Dipl.-Betriebswirtin(BA)
 Dipl.-Betriebswirtin(FH)
@@ -317,7 +311,6 @@ Dipl.-Bibl.(FH)
 Dipl.-Bibliothekar
 Dipl.-Bibliothekarin
 Dipl.-Bibliothekarin(FH)
-dipl.bildender Künstler
 Dipl.-Bildhauer
 Dipl.-Bildhauerin
 Dipl.-Biochem.
@@ -354,7 +347,6 @@ Dipl.-BrauIng. Dipl.-Kfm.
 Dipl.-Braumeister
 Dipl.-Braumst.
 Dipl.-Btrw.(FH)
-dipl.Buchhalter
 Dipl.-Bühnenbildner/in
 Dipl.-Bundesbankbetriebsw.
 Dipl.-Business Assistent
@@ -362,12 +354,12 @@ Dipl.-Bw. Dipl.-Braumstr.
 Dipl.-Bw. Dipl.-Immobilienw.
 Dipl.-Bw. Dipl.-Ing.(FH)
 Dipl.-Bw. Dipl.-Mus.
-Dipl.-Bw. Dipl.oec.soc.
 Dipl.-Bw. Dipl.-Soziologe
 Dipl.-Bw. Dipl.-Verw.Wirt
 Dipl.-Bw. Dipl.-Vw.
 Dipl.-Bw. Dipl.-Wirtsch.
 Dipl.-Bw. Dipl.-Wirtsch.Ing.
+Dipl.-Bw. Dipl.oec.soc.
 Dipl.-Bw.(FH)
 Dipl.-C.Bioenergetikerin
 Dipl.-Cellist
@@ -376,24 +368,19 @@ Dipl.-Chem.
 Dipl.-Chem.(FH)
 Dipl.-Chem.(Umweltchemie)
 Dipl.-Chem.-Ing.
-dipl.Chem.-Ing. ETH
 Dipl.-Chem.oec.
 Dipl.-Chem.Univ.
 Dipl.-Chemieingenieur
 Dipl.-Chemiker
-dipl.Chemiker FH
 Dipl.-Chemikerin
 Dipl.-Chiropraktiker
 Dipl.-Chordirigent
-dipl.Choreographin
 Dipl.-Choreographin
 Dipl.-Coach
 Dipl.-Colorist
 Dipl.-Coloristin
 Dipl.-Computermath.
-dipl.Controller
 Dipl.-Controller
-Dipl.dent.
 Dipl.-Des.
 Dipl.-Des. dipl. bild. Künstl.
 Dipl.-Des. Dipl.-Ing.
@@ -404,7 +391,6 @@ Dipl.-Designer
 Dipl.-Designer(FH)
 Dipl.-Designerin
 Dipl.-Designerin(FH)
-dipl.Diätassistentin
 Dipl.-Dirigent
 Dipl.-Dirigentin
 Dipl.-disc.pol.
@@ -424,8 +410,6 @@ Dipl.-Dramat.Univ.
 Dipl.-Dyskalkulietrainer
 Dipl.-Dyskalkulietrainerin
 Dipl.-Ehe-Partnerschaftsmentor
-dipl.Einzelhandelskaufmann
-Dipl.El.-Ing.ETH
 Dipl.-ElektroIng.
 Dipl.-Emailgestalterin
 Dipl.-Encausticerin
@@ -436,12 +420,9 @@ Dipl.-Enterostomatherapeut
 Dipl.-Entspannungspädagogin
 Dipl.-Ergotherapeut
 Dipl.-Ergotherapeutin
-dipl.Ernährungsberater
-dipl.Ernährungsberaterin
 Dipl.-ErnährungsIng.
 Dipl.-Ernährungswiss.
 Dipl.-Ernährungswiss.Univ.
-Dipl.Erziehungswissenschaftler
 Dipl.-Ethn.
 Dipl.-Eutoniepädagogin
 Dipl.-Fachber.
@@ -461,7 +442,6 @@ Dipl.-Farbberaterin
 Dipl.-Farbdesignerin
 Dipl.-Feng Shui-Berater
 Dipl.-Feng Shui-Beraterin
-Dipl.fil.
 Dipl.-Finanzier.- u. Leas.Wirt
 Dipl.-Finanzökonom
 Dipl.-Finanzökonomin
@@ -535,7 +515,6 @@ Dipl.-Geol.Ing.(FH)
 Dipl.-Geol.Univ.
 Dipl.-Geologe
 Dipl.-Geologin
-Dipl.Geomatik-Ing.ETH
 Dipl.-Geoök.
 Dipl.-Geoökol.
 Dipl.-Geoökol. Dipl.-Geogr.
@@ -563,9 +542,7 @@ Dipl.-Gesangslehrerin
 Dipl.-Gesangspädagoge
 Dipl.-Gesangspädagogin
 Dipl.-Gesellschaftswiss.
-dipl.Gesprächstherapeutin
 Dipl.-Gesprächstherapeutin
-dipl.Gestalter FH
 Dipl.-Gestalterin
 Dipl.-Gesundheitsberaterin
 Dipl.-Gesundheitsfachwirt(FH)
@@ -587,8 +564,8 @@ Dipl.-Glasgestalter
 Dipl.-Glasgestalterin
 Dipl.-Golflehrer
 Dipl.-Golflehrerin
-Dipl.-Grafikdesigner
 Dipl.-Grafik-Designer
+Dipl.-Grafikdesigner
 Dipl.-Grafikdesigner(FH)
 Dipl.-Grafikdesignerin
 Dipl.-Grafikdesignerin(FH)
@@ -599,7 +576,6 @@ Dipl.-Grafikerin
 Dipl.-Graphologe
 Dipl.-Graphologin
 Dipl.-Gwl.
-dipl.Handelskaufmann
 Dipl.-Handelslehrer
 Dipl.-Handelslehrerin
 Dipl.-Handelsvertreter(CDH)
@@ -662,7 +638,6 @@ Dipl.-Immobilienwirt(DIA)
 Dipl.-Immobilienwirt(VWA)
 Dipl.-Immobilienwirtin
 Dipl.-Immobilienwirtin(VWA)
-Dipl.in audiovisuellen Medien
 Dipl.-Inc.
 Dipl.-Ind.Arch.
 Dipl.-Ind.Biol.
@@ -684,7 +659,6 @@ Dipl.-Inf.(FH)
 Dipl.-Inf.Univ.
 Dipl.-Inf.Wirt(FH)
 Dipl.-Inform (TU)
-Dipl.inform.
 Dipl.-Inform.
 Dipl.-Inform. B.Sc.
 Dipl.-Inform. Dipl.-Math.
@@ -708,7 +682,6 @@ Dipl.-Informatiker(PL)
 Dipl.-Informatiker(TU)
 Dipl.-Informatikerin
 Dipl.-Informatikerin(FH)
-Dipl.Informatik-Ing.ETH
 Dipl.-Informationsjurist(FH)
 Dipl.-Informationsjuristin(FH)
 Dipl.-Informationsw.
@@ -756,14 +729,11 @@ Dipl.-Ing. Dipl.-Kam.
 Dipl.-Ing. Dipl.-Kfm.
 Dipl.-Ing. Dipl.-Math.
 Dipl.-Ing. Dipl.-Naut.
-Dipl.-Ing. Dipl.oec.publ.
-Dipl.-Ing. Dipl.oec.troph.
 Dipl.-Ing. Dipl.-Ök.
 Dipl.-Ing. Dipl.-Ökol.
 Dipl.-Ing. Dipl.-Päd.
 Dipl.-Ing. Dipl.-Phys.
 Dipl.-Ing. Dipl.-Raumplaner
-Dipl.-Ing. Dipl.rer.pol.
 Dipl.-Ing. Dipl.-Theol.
 Dipl.-Ing. Dipl.-Übersetzer
 Dipl.-Ing. Dipl.-Verw.Wirt
@@ -773,8 +743,11 @@ Dipl.-Ing. Dipl.-Wirt.(FH)
 Dipl.-Ing. Dipl.-Wirt.Ing.
 Dipl.-Ing. Dipl.-Wirt.Ing.(FH)
 Dipl.-Ing. Dipl.-Wirt.Ing.(TH)
-Dipl.-Ing. Dipl.Wirtsch.Ing.
 Dipl.-Ing. Dipl.-Wirtsch.Ing.
+Dipl.-Ing. Dipl.oec.publ.
+Dipl.-Ing. Dipl.oec.troph.
+Dipl.-Ing. Dipl.rer.pol.
+Dipl.-Ing. Dipl.Wirtsch.Ing.
 Dipl.-Ing. Dr.
 Dipl.-Ing. Dr.h.c.
 Dipl.-Ing. Dr.med.vet.
@@ -782,6 +755,7 @@ Dipl.-Ing. Dr.rer.nat.
 Dipl.-Ing. Dr.techn.
 Dipl.-Ing. ETH
 Dipl.-Ing. Eur.Ing.
+Dipl.-Ing. Informatik
 Dipl.-Ing. Ing.grad.
 Dipl.-Ing. Ing.päd.
 Dipl.-Ing. Lic.rer.reg.
@@ -794,7 +768,6 @@ Dipl.-Ing. MBA
 Dipl.-Ing. MBA (UK)
 Dipl.-Ing. Prof.
 Dipl.-Ing.(BA)
-Dipl.Ing.(BA) Dipl.Wirt.(FH)
 Dipl.-Ing.(Be)
 Dipl.-Ing.(FA)
 Dipl.-Ing.(FH)
@@ -811,11 +784,11 @@ Dipl.-Ing.(FH) Dipl.-Ing.Univ.
 Dipl.-Ing.(FH) Dipl.-Kfm.
 Dipl.-Ing.(FH) Dipl.-Ök.
 Dipl.-Ing.(FH) Dipl.-Päd.
-Dipl.-Ing.(FH) Dipl.rer.pol.
 Dipl.-Ing.(FH) Dipl.-Verw.
 Dipl.-Ing.(FH) Dipl.-Verw.Wirt
 Dipl.-Ing.(FH) Dipl.-Wi.-Ing
 Dipl.-Ing.(FH) Dipl.-Wirtsch.
+Dipl.-Ing.(FH) Dipl.rer.pol.
 Dipl.-Ing.(FH) Dr.med.
 Dipl.-Ing.(FH) Dr.med.dent.
 Dipl.-Ing.(FH) Forst
@@ -825,6 +798,7 @@ Dipl.-Ing.(FH) M.A.
 Dipl.-Ing.(FH) M.B.A.
 Dipl.-Ing.(FH) M.Eng.
 Dipl.-Ing.(FH) M.Sc.
+Dipl.-Ing.(FH) Maschinenbau
 Dipl.-Ing.(GB)
 Dipl.-Ing.(PL)
 Dipl.-Ing.(TH)
@@ -835,16 +809,17 @@ Dipl.-Ing.(TU)
 Dipl.-Ing.(TU/FH)
 Dipl.-Ing.(TU/TH)
 Dipl.-Ing.(Univ. Sarajevo)
+Dipl.-Ing.-Inf.
+Dipl.-Ing.-Päd.
 Dipl.-Ing.agr.
 Dipl.-Ing.agr. Dipl.-Wirt.Ing.
 Dipl.-Ing.agr. MA
 Dipl.-Ing.agr.(FH)
 Dipl.-Ing.Agr.(TU)
-Dipl.Ing.-Agr.ETH
 Dipl.-Ing.agr.oec.
 Dipl.-Ing.agr.Univ.
-Dipl.-Ing.Agrar
 Dipl.-Ing.agrar
+Dipl.-Ing.Agrar
 Dipl.-Ing.Agrar(Univ.Musketon)
 Dipl.-Ing.Arch.
 Dipl.-Ing.arch. Dipl.-Des.
@@ -859,13 +834,10 @@ Dipl.-Ing.Bau(FH)
 Dipl.-Ing.chem.
 Dipl.-Ing.chem.(FH)
 Dipl.-Ing.Des.
-dipl.Ing.FH
-dipl.ing.geod.
 Dipl.-Ing.grad.
 Dipl.-Ing.grad.(FH)
 Dipl.-Ing.habil.
 Dipl.-Ing.hort.
-Dipl.-Ing.-Inf.
 Dipl.-Ing.jur.
 Dipl.-Ing.mont.
 Dipl.-Ing.mult.(FH)
@@ -874,9 +846,8 @@ Dipl.-Ing.oec. Dipl.-Ing.agr.
 Dipl.-Ing.Ök.
 Dipl.-Ing.Ök.(FH)
 Dipl.-Ing.Ök.Jur.
-Dipl.-Ing.Päd.
 Dipl.-Ing.päd.
-Dipl.-Ing.-Päd.
+Dipl.-Ing.Päd.
 Dipl.-Ing.päd.(TU)
 Dipl.-Ing.paed.
 Dipl.-Ing.pharm.
@@ -894,6 +865,7 @@ Dipl.-Ing.troph.
 Dipl.-Ing.Univ.
 Dipl.-Ing.Univ.(FH)
 Dipl.-Ing.vet.
+Dipl.-Inge.
 Dipl.-Ingenieur
 Dipl.-Ingenieurin
 Dipl.-Ingr.
@@ -920,8 +892,8 @@ Dipl.-Jur. Dipl.-Gesell.Wiss.
 Dipl.-Jur. Dipl.-Ing.(FH)
 Dipl.-Jur. Dipl.-Kfm.
 Dipl.-Jur. Dipl.-Ök.
-Dipl.-Jur. Dipl.rer.oec.
 Dipl.-Jur. Dipl.-Verwaltungsw.
+Dipl.-Jur. Dipl.rer.oec.
 Dipl.-Jur.(RUB)
 Dipl.-Jur.Ing.
 Dipl.-Jur.lic.(Univ. Oradea)
@@ -996,7 +968,6 @@ Dipl.-Kfm. Dipl.-Verwaltungsw.
 Dipl.-Kfm. Dipl.-Volksw.
 Dipl.-Kfm. Dipl.-Volkswirt
 Dipl.-Kfm. Dipl.-W.Ing.(FH)
-Dipl.Kfm. Dipl.Wirt.Ing. MBA
 Dipl.-Kfm. Dipl.-Wirtsch.Ing.
 Dipl.-Kfm. Dipl.-Wirtsch.Päd.
 Dipl.-Kfm. Dr.
@@ -1025,7 +996,6 @@ Dipl.-Klavierlehrer
 Dipl.-Klavierlehrerin
 Dipl.-Klavierpädagoge
 Dipl.-Klavierpädagogin
-dipl.Klavierstimmer
 Dipl.-Komm.Des.
 Dipl.-Komm.Des.(FH)
 Dipl.-Komm.Designer(FH)
@@ -1053,7 +1023,6 @@ Dipl.-Krankenpfleger
 Dipl.-Krankenschwester
 Dipl.-Kriminalist
 Dipl.-Kriminologe
-Dipl.Kriminologin
 Dipl.-Kriminologin
 Dipl.-Krist.
 Dipl.-Kristallograph
@@ -1089,7 +1058,6 @@ Dipl.-Kunstwiss.
 Dipl.-Kunstwissenschaftler
 Dipl.-Kunstwissenschaftlerin
 Dipl.-Kybernetiker
-Dipl.L. Dipl.Rehab.Päd.
 Dipl.-Laborchemiker
 Dipl.-Landschaftsarchitekt
 Dipl.-Landschaftsarchitektin
@@ -1111,17 +1079,16 @@ Dipl.-Lebensmittelchemiker
 Dipl.-Lebensmittelchemikerin
 Dipl.-Lebensmittelingenieur
 Dipl.-Lebensmitteltechn.
+Dipl.-Legast-u. Dyskalkulietr.
 Dipl.-Legastheniepädagogin
 Dipl.-Legasthenietrainer
 Dipl.-Legasthenietrainerin
-Dipl.-Legast-u. Dyskalkulietr.
 Dipl.-Lehrer
 Dipl.-Lehrer Dipl.-Hist.
 Dipl.-Lehrerin
 Dipl.-Lerntherapeut
 Dipl.-Lerntherapeutin
 Dipl.-Linguist
-Dipl.Lm.-Ing.ETH
 Dipl.-LM-Ing.
 Dipl.-Log.
 Dipl.-Logist.
@@ -1138,12 +1105,9 @@ Dipl.-MarketingRef.
 Dipl.-Marketingwirt
 Dipl.-Marketingwirt(BAW)
 Dipl.-Masch.BauIng.
-Dipl.Masch.-Ing.ETH
 Dipl.-Maschinenbauing.
 Dipl.-Maschinenbauingenieur
 Dipl.-Maskenbildnerin
-Dipl.math.
-dipl.math.
 Dipl.-Math.
 Dipl.-Math. Dipl.-Bw.(FH)
 Dipl.-Math. Dipl.-Inf.
@@ -1162,32 +1126,26 @@ Dipl.-Math.Univ.
 Dipl.-Mathematiker
 Dipl.-Mathematiker(FH)
 Dipl.-Mathematikerin
-Dipl.med.
 Dipl.-Med.
 Dipl.-Med. Dipl.-Betriebswirt
-Dipl.med. Dipl.-Psych.
 Dipl.-Med. Dipl.-Psych.
 Dipl.-Med. TCM
-Dipl.med.(Univ.Wuhan)
 Dipl.-Med.agr.
 Dipl.-Med.dent.
 Dipl.-Med.Inf.(FH)
 Dipl.-Med.Ing.
 Dipl.-Med.Ök.(FH)
-Dipl.med.päd.
 Dipl.-Med.Päd.
 Dipl.-Med.Pädagoge
 Dipl.-Med.Pädagogin
-Dipl.med.paed.
-Dipl.med.vet.
 Dipl.-Med.vet.
 Dipl.-Mediasystemdesigner(FH)
 Dipl.-Mediatorin
 Dipl.-Mediatorin(FH)
+Dipl.-Medien-inf.
 Dipl.-Medienberater
 Dipl.-Medienbetriebswirt
 Dipl.-Mediengestalter
-Dipl.-Medien-inf.
 Dipl.-Medieninf.(FH)
 Dipl.-Medieninform.(FH)
 Dipl.-Mediening.
@@ -1245,7 +1203,6 @@ Dipl.-Museologin
 Dipl.-Musiker
 Dipl.-Musiker Dipl.-Musikpäd.
 Dipl.-Musikerin
-Dipl.Musikerin Dipl.Musikpäd.
 Dipl.-Musikerzieher
 Dipl.-Musikerzieherin
 Dipl.-Musikl.
@@ -1268,13 +1225,11 @@ Dipl.-Musikwissenschaftler
 Dipl.-Musikwissenschaftlerin
 Dipl.-Nat.
 Dipl.-Nat.hist.
-Dipl.Natw.ETH
 Dipl.-Nautiker
 Dipl.-Nautikerin
 Dipl.-Neurowiss.
 Dipl.-Nordist
 Dipl.-Objektdesigner
-Dipl.oec.
 Dipl.-Oec.
 Dipl.-Oec. Dipl.-Betriebsw.
 Dipl.-Oec. Dipl.-Betriebswirt
@@ -1300,8 +1255,8 @@ Dipl.-oec.paed. Dipl.-oec.Ing.
 Dipl.-oec.publ.
 Dipl.-oec.soc.
 Dipl.-oec.troph.
-Dipl.-Oec.troph.(FH)
 Dipl.-oec.troph.(FH)
+Dipl.-Oec.troph.(FH)
 Dipl.-oec.troph.Univ.
 Dipl.-Oec.Univ.
 Dipl.-Oecotroph.
@@ -1325,7 +1280,6 @@ Dipl.-Ök.Med.(FH)
 Dipl.-Ök.Techn.
 Dipl.-Ökologe
 Dipl.-Ökologin
-dipl.Ökon.FH
 Dipl.-Ökonom
 Dipl.-Ökonom Dipl.-Inform.
 Dipl.-Ökonom Dipl.-Ing.
@@ -1333,10 +1287,8 @@ Dipl.-Ökonom Univ.
 Dipl.-Ökonomin
 Dipl.-Ökonomin MSc(USA)
 Dipl.-Ökonomin Univ.
-Dipl.Ökonomin(PL)
 Dipl.-Ökotroph.
 Dipl.-Ökotrophologin
-Dipl.Online-Journalist(FH)
 Dipl.-Optiker
 Dipl.-Optikerin
 Dipl.-Orchestermusiker
@@ -1388,9 +1340,7 @@ Dipl.-Pflegewirtin
 Dipl.-Pflegewirtin(FH)
 Dipl.-Pharm ETH
 Dipl.-Pharm.
-Dipl.Pharm.Wiss.ETH
 Dipl.-Pharmazeut
-dipl.Pharmazeut ETH
 Dipl.-Pharmazeutin
 Dipl.-Phil.
 Dipl.-Phil. Dipl.-Ing.oec.
@@ -1428,7 +1378,6 @@ Dipl.-Physikerin
 Dipl.-Physikingenieur
 Dipl.-Physiologe
 Dipl.-Physiologin
-Dipl.physiotherap.
 Dipl.-Physiotherapeut
 Dipl.-Physiotherapeut Bac.
 Dipl.-Physiotherapeut(FH)
@@ -1437,9 +1386,7 @@ Dipl.-Physiotherapeutin(FH)
 Dipl.-Pianist
 Dipl.-Pianistin
 Dipl.-Plastiker
-dipl.Pneopädin
 Dipl.-Pneopädin
-Dipl.pol.
 Dipl.-Pol.
 Dipl.-Pol. Dipl.-Hdl.
 Dipl.-Pol. Dipl.-Ing.oec.
@@ -1458,24 +1405,22 @@ Dipl.-Psych.
 Dipl.-Psych. Dipl.-Betriebsw.
 Dipl.-Psych. Dipl.-Biologe
 Dipl.-Psych. Dipl.-Des.
-Dipl.Psych. Dipl.Gerontologin
 Dipl.-Psych. Dipl.-Heilpäd.
 Dipl.-Psych. Dipl.-Inf.
 Dipl.-Psych. Dipl.-Ing.
 Dipl.-Psych. Dipl.-Kffr.
 Dipl.-Psych. Dipl.-Kfm.
-Dipl.Psych. Dipl.Musiklehrerin
-Dipl.-Psych. Dipl.oec.troph.
 Dipl.-Psych. Dipl.-Päd.
 Dipl.-Psych. Dipl.-Pädagoge
-Dipl.-Psych. Dipl.Rel.päd.(FH)
 Dipl.-Psych. Dipl.-Soz.
 Dipl.-Psych. Dipl.-Soz.päd.
-Dipl.-Psych. Dipl.Soz.päd.(FH)
 Dipl.-Psych. Dipl.-Soz.wiss.
 Dipl.-Psych. Dipl.-Sportl.
 Dipl.-Psych. Dipl.-Theol.
 Dipl.-Psych. Dipl.-Volksw.
+Dipl.-Psych. Dipl.oec.troph.
+Dipl.-Psych. Dipl.Rel.päd.(FH)
+Dipl.-Psych. Dipl.Soz.päd.(FH)
 Dipl.-Psych. Dr.
 Dipl.-Psych. Dr.habil
 Dipl.-Psych. Dr.med.
@@ -1505,7 +1450,6 @@ Dipl.-Psychotherapeutin
 Dipl.-Raumausstatter
 Dipl.-Raumgestalterin
 Dipl.-Raumplaner
-Dipl.Rech.Wiss.ETH
 Dipl.-Rechtspfleger
 Dipl.-Rechtspfleger(FH)
 Dipl.-Rechtspflegerin
@@ -1518,8 +1462,8 @@ Dipl.-Region.-Wiss.
 Dipl.-Regionalwiss.
 Dipl.-Regisseur
 Dipl.-Regisseurin
-Dipl.-Reha.-päd.
 Dipl.-Reha-Psychologe(FH)
+Dipl.-Reha.-päd.
 Dipl.-Reitpäd.
 Dipl.-Reitpädagoge
 Dipl.-Reitpädagogin
@@ -1530,23 +1474,6 @@ Dipl.-Religionspädagoge
 Dipl.-Religionspädagoge(FH)
 Dipl.-Religionspädagogin
 Dipl.-Religionspädagogin(FH)
-Dipl.rer.agr.
-Dipl.rer.com.
-Dipl.rer.cult.
-Dipl.rer.hort.
-Dipl.rer.mil.
-Dipl.rer.nat.
-Dipl.rer.nat.petrol.
-Dipl.rer.oec.
-Dipl.rer.ök.
-Dipl.rer.pol.
-Dipl.rer.pol. Dipl.-Hdl.
-Dipl.rer.pol. Dipl.-Ing.(FH)
-Dipl.rer.pol.ök.
-Dipl.rer.pol.techn.
-Dipl.rer.publ. Dipl.-Vww.
-Dipl.rer.soc.
-Dipl.rer.soc. Dr.
 Dipl.-Rest.
 Dipl.-Rest.(FH)
 Dipl.-Restaurator
@@ -1554,8 +1481,6 @@ Dipl.-Restaurator Univ.
 Dipl.-Restaurator(FH)
 Dipl.-Restauratorin
 Dipl.-Restauratorin(FH)
-dipl.Rhythmikpädagoge
-dipl.Rhythmikpädagogin
 Dipl.-Rhythml.
 Dipl.-Rom.
 Dipl.-Rom.Univ.
@@ -1570,9 +1495,6 @@ Dipl.-Sachverständiger(DIA)
 Dipl.-Sachverständiger(E.I.A.)
 Dipl.-Sänger
 Dipl.-Sängerin
-Dipl.sc.med.
-Dipl.sc.pol.
-Dipl.sc.pol.Univ.
 Dipl.-Schauspielerin
 Dipl.-Schmuckdesigner
 Dipl.-Schmuckdesignerin
@@ -1606,8 +1528,8 @@ Dipl.-Soz.päd. Dipl.-Rel.Päd.
 Dipl.-Soz.päd. Dipl.-Soz.
 Dipl.-Soz.päd. M.A.
 Dipl.-Soz.päd.(BA)
-Dipl.-Soz.Päd.(FH)
 Dipl.-Soz.päd.(FH)
+Dipl.-Soz.Päd.(FH)
 Dipl.-Soz.Päd.(FH) Dipl.-Ing.
 Dipl.-Soz.Päd.(FH) Mag.phil.
 Dipl.-Soz.päd.grad.
@@ -1653,8 +1575,6 @@ Dipl.-Soziologin
 Dipl.-Sparkassenbetriebsw.
 Dipl.-Sparkassenbetriebswirt
 Dipl.-Sparkassenbetriebswirtin
-Dipl.spec.
-Dipl.Sport II
 Dipl.-Sporting.
 Dipl.-Sportl.
 Dipl.-Sportlehrer
@@ -1704,7 +1624,6 @@ Dipl.-Stat.
 Dipl.-Stat.(FH)
 Dipl.-Statistiker
 Dipl.-Statistikerin
-dipl.Steinbildhauer
 Dipl.-Steuerjur.(FH)
 Dipl.-Stom.
 Dipl.-Stom. MSc
@@ -1731,7 +1650,6 @@ Dipl.-Technikübersetzer
 Dipl.-Technikübersetzer(FH)
 Dipl.-Technoinform.
 Dipl.-Technomath.Univ.
-dipl.Textilchemiker
 Dipl.-Textilchemiker
 Dipl.-Textildesigner
 Dipl.-Textildesigner(FH)
@@ -1794,13 +1712,10 @@ Dipl.-Übersetzerin
 Dipl.-Übersetzerin M.A.
 Dipl.-Übersetzerin Univ.
 Dipl.-Übersetzerin(FH)
-dipl.Umwelt-Ing.ETH
-Dipl.Umwelt-Natw.ETH
 Dipl.-Umweltw.
 Dipl.-Umweltwiss.
 Dipl.-Urgeschichtler
 Dipl.-VerfahrensIng.
-Dipl.Verfahrens-Ing.ETH
 Dipl.-Verhaltensbiologin
 Dipl.-Verhaltenstherapeutin
 Dipl.-Verk.wirtsch.
@@ -1818,12 +1733,11 @@ Dipl.-Vermögensmanagerin
 Dipl.-Versich.Ökonom
 Dipl.-Versich.Wiss.
 Dipl.-Versicherungsbetriebsw.
-dipl.Versicherungsmathematiker
 Dipl.-Verw.
 Dipl.-Verw. Dipl.-Phys.
-Dipl.-Verw.- u. Betriebswirt
 Dipl.-Verw.(FH)
 Dipl.-Verw.(FH) Mag.rer.publ.
+Dipl.-Verw.- u. Betriebswirt
 Dipl.-Verw.Betriebsw.(FH)
 Dipl.-Verw.Ing.
 Dipl.-Verw.Ök.(FH)
@@ -1841,9 +1755,7 @@ Dipl.-Verwaltungswirt(FH)
 Dipl.-Verwaltungswirtin
 Dipl.-Verwaltungswirtin(BA)
 Dipl.-Verwaltungswirtin(FH)
-Dipl.Verwaltungswirt-Polizei(FH)
 Dipl.-Verwaltungswiss.
-Dipl.vet.med.
 Dipl.-Vet.Med.
 Dipl.-Veterinär
 Dipl.-Veterinär Dr.
@@ -1903,8 +1815,6 @@ Dipl.-Werbegrafiker
 Dipl.-Werbeökonom
 Dipl.-Werbewirt
 Dipl.-Werkkünstler
-Dipl.Werkstoff-Ing.ETH
-Dipl.Wi.jur.(FH) Dipl.Bw.(FH)
 Dipl.-Wipäd.
 Dipl.-Wirt
 Dipl.-Wirt(FH)
@@ -1921,7 +1831,9 @@ Dipl.-Wirt.Math.Univ.
 Dipl.-Wirt.Psych.
 Dipl.-Wirt.techn.
 Dipl.-Wirtchem.
+Dipl.-Wirtsch-Sin.(FH)
 Dipl.-Wirtsch.
+Dipl.-Wirtsch.-Japan.(FH)
 Dipl.-Wirtsch.Arab.(FH)
 Dipl.-Wirtsch.Betriebsw.
 Dipl.-Wirtsch.Inf.
@@ -1932,7 +1844,6 @@ Dipl.-Wirtsch.Ing MAE
 Dipl.-Wirtsch.Ing.
 Dipl.-Wirtsch.Ing. Dipl.-Kfm.
 Dipl.-Wirtsch.Ing. Dipl.-Phys.
-Dipl.Wirtsch.Ing. Dipl.Psych.
 Dipl.-Wirtsch.Ing. Dr.-Ing.
 Dipl.-Wirtsch.Ing. MA Phil.
 Dipl.-Wirtsch.Ing. MBA
@@ -1940,7 +1851,6 @@ Dipl.-Wirtsch.Ing.(FH)
 Dipl.-Wirtsch.Ing.(TU)
 Dipl.-Wirtsch.Ing.grad.
 Dipl.-Wirtsch.Ing.Univ.
-Dipl.-Wirtsch.-Japan.(FH)
 Dipl.-Wirtsch.jur.
 Dipl.-Wirtsch.jur.(FH)
 Dipl.-Wirtsch.Malayologe(FH)
@@ -1977,7 +1887,6 @@ Dipl.-Wirtschaftspsych.
 Dipl.-Wirtschaftspsych.(FH)
 Dipl.-Wirtschaftssinologe(FH)
 Dipl.-Wirtschaftssinologin(FH)
-Dipl.-Wirtsch-Sin.(FH)
 Dipl.-Wiss.org.
 Dipl.-Wissenschaftler
 Dipl.-WiWi
@@ -1985,14 +1894,111 @@ Dipl.-Wjur.
 Dipl.-Wjur.(FH)
 Dipl.-Yogalehrer
 Dipl.-Yogalehrerin
-Dipl-Musiker Dipl-Musiklehrer
+dipl.analyt.Psych.
+dipl.Arch.
+dipl.Astrologe
+dipl.Astrologin
+dipl.Astronom
+dipl.Atempädagoge
+dipl.Atempädagogin
+dipl.Atemtherapeutin
+dipl.Bau-Ing.ETH
+Dipl.BauIng. Dipl.Wirtsch.Ing.
+dipl.Behindertenpädagogin
+Dipl.Berufspäd.Dipl.Ing.(TU)
+dipl.bildender Künstler
+dipl.Buchhalter
+dipl.Chem.-Ing. ETH
+dipl.Chemiker FH
+dipl.Choreographin
+dipl.Controller
+Dipl.dent.
+dipl.Diätassistentin
+dipl.Einzelhandelskaufmann
+Dipl.El.-Ing.ETH
+dipl.Ernährungsberater
+dipl.Ernährungsberaterin
+Dipl.Erziehungswissenschaftler
+Dipl.fil.
+Dipl.Geomatik-Ing.ETH
+dipl.Gesprächstherapeutin
+dipl.Gestalter FH
+dipl.Handelskaufmann
+Dipl.in audiovisuellen Medien
+Dipl.inform.
+Dipl.Informatik-Ing.ETH
+Dipl.Ing.(BA) Dipl.Wirt.(FH)
+Dipl.Ing.-Agr.ETH
+dipl.Ing.FH
+dipl.ing.geod.
+Dipl.Kfm. Dipl.Wirt.Ing. MBA
+dipl.Klavierstimmer
+Dipl.Kriminologin
+Dipl.L. Dipl.Rehab.Päd.
+Dipl.Lm.-Ing.ETH
+Dipl.Masch.-Ing.ETH
+dipl.math.
+Dipl.math.
+Dipl.med.
+Dipl.med. Dipl.-Psych.
+Dipl.med.(Univ.Wuhan)
+Dipl.med.päd.
+Dipl.med.paed.
+Dipl.med.vet.
+Dipl.Musikerin Dipl.Musikpäd.
+Dipl.Natw.ETH
+Dipl.oec.
+dipl.Ökon.FH
+Dipl.Ökonomin(PL)
+Dipl.Online-Journalist(FH)
+Dipl.Pharm.Wiss.ETH
+dipl.Pharmazeut ETH
+Dipl.physiotherap.
+dipl.Pneopädin
+Dipl.pol.
+Dipl.Psych. Dipl.Gerontologin
+Dipl.Psych. Dipl.Musiklehrerin
+Dipl.Rech.Wiss.ETH
+Dipl.rer.agr.
+Dipl.rer.com.
+Dipl.rer.cult.
+Dipl.rer.hort.
+Dipl.rer.mil.
+Dipl.rer.nat.
+Dipl.rer.nat.petrol.
+Dipl.rer.oec.
+Dipl.rer.ök.
+Dipl.rer.pol.
+Dipl.rer.pol. Dipl.-Hdl.
+Dipl.rer.pol. Dipl.-Ing.(FH)
+Dipl.rer.pol.ök.
+Dipl.rer.pol.techn.
+Dipl.rer.publ. Dipl.-Vww.
+Dipl.rer.soc.
+Dipl.rer.soc. Dr.
+dipl.Rhythmikpädagoge
+dipl.Rhythmikpädagogin
+Dipl.sc.med.
+Dipl.sc.pol.
+Dipl.sc.pol.Univ.
+Dipl.spec.
+Dipl.Sport II
+dipl.Steinbildhauer
+dipl.Textilchemiker
+dipl.Umwelt-Ing.ETH
+Dipl.Umwelt-Natw.ETH
+Dipl.Verfahrens-Ing.ETH
+dipl.Versicherungsmathematiker
+Dipl.Verwaltungswirt-Polizei(FH)
+Dipl.vet.med.
+Dipl.Werkstoff-Ing.ETH
+Dipl.Wi.jur.(FH) Dipl.Bw.(FH)
+Dipl.Wirtsch.Ing. Dipl.Psych.
 Diplom-Fotodesigner
 Diplom-Gebärdensprachdolm.(FH)
 Diplom-Grafik-Designer(FH)
 Diplom-Kauffrau
 Diplom-Osteopath
-Dipl-Sachverständige
-Dipl-Stimm- u Sprachheillehrer
 DLA
 DMG
 Doc. M.B.A.
@@ -2002,8 +2008,8 @@ doc.med.univ.(Uni Semmelweis)
 doc.medic.univ.(Univ. Pécs)
 Docteur en médecine
 Docteur Médecine Stomatologie
-Doctor
 doctor
+Doctor
 Doctor en Med./Au(S. Domingo)
 Doctor Medic.
 Doctor Medic.(UMF Craiova)
@@ -2027,15 +2033,16 @@ Dott.(Univ. Bologna)
 Dott.(Univ. Messina)
 Dott.(Univ. Rom)
 Dott.(Univ. Turin)
-Dott.giur.
 Dott.-Ing.
+Dott.giur.
 Dott.med.
 Dott.med.vet.
 Dott.proc.
 Dott.ssa
 Dottore
-dr
+Dr-medic
 Dr.
+Dr. (UMF Bukarest)
 Dr. (UniSa)
 Dr. apl.Prof.
 Dr. Ass.Prof. in Marketing
@@ -2048,7 +2055,6 @@ Dr. Dipl.-Agrarbiologin.
 Dr. Dipl.-AgrarIng.
 Dr. Dipl.-AgrarIng.(FH)
 Dr. Dipl.-Archivar(FH)
-Dr. dipl.Astronom
 Dr. Dipl.-Astronom
 Dr. Dipl.-BankKfm.
 Dr. Dipl.-Bauing.
@@ -2073,7 +2079,6 @@ Dr. Dipl.-Chem. Dipl.-Übers.
 Dr. Dipl.-Chem.Ing.
 Dr. Dipl.-Chemiker
 Dr. Dipl.-Chemikerin
-Dr. Dipl.dent.
 Dr. Dipl.-Des.
 Dr. Dipl.-Designer
 Dr. Dipl.-Dolm.
@@ -2125,7 +2130,6 @@ Dr. Dipl.-Informatiker
 Dr. Dipl.-Informatikerin
 Dr. Dipl.-Ing.
 Dr. Dipl.-Ing. Dipl.-Kfm.
-Dr. Dipl.Ing. Dipl.Wirt.Ing.
 Dr. Dipl.-Ing. Dipl.-Wirt.Ing.
 Dr. Dipl.-Ing.(FH)
 Dr. Dipl.-Ing.agr.
@@ -2146,7 +2150,6 @@ Dr. Dipl.-Kfm. Dipl.-Phys.
 Dr. Dipl.-Kfm. Dipl.-Psych.
 Dr. Dipl.-Kfm. Dipl.-Soz.
 Dr. Dipl.-Kfm. Dipl.-Volksw.
-Dr. Dipl.Kfm. Mag.rer.soc.oec.
 Dr. Dipl.-Klavierpädagogin
 Dr. Dipl.-Kunsttherapeutin
 Dr. Dipl.-Landw.
@@ -2191,12 +2194,10 @@ Dr. Dipl.-Physiker
 Dr. Dipl.-Physikerin
 Dr. Dipl.-Pol.
 Dr. Dipl.-Psych.
-Dr. Dipl.Psych. Dipl.Gerontol.
 Dr. Dipl.-Psych. Dipl.-Kfm.
 Dr. Dipl.-Psych. Dipl.-Math.
 Dr. Dipl.-Psych. Dipl.-Päd.
 Dr. Dipl.-Psych. Dipl.-Phys.
-Dr. Dipl.Psych. Dipl.RelPäd.FH
 Dr. Dipl.-Psych. Dipl.-Theol.
 Dr. Dipl.-Psych. M.A.
 Dr. Dipl.-Psych. Priv.Doz.
@@ -2204,11 +2205,8 @@ Dr. Dipl.-Psych.habil.
 Dr. Dipl.-Psych.Univ.
 Dr. Dipl.-Psychologe
 Dr. Dipl.-Psychologin
-Dr. Dipl.rer.pol.
-Dr. Dipl.rer.pol.techn.
 Dr. Dipl.-Restauratorin
 Dr. Dipl.-Sachverständiger
-Dr. Dipl.sc.pol.Dipl.-Ing.agr.
 Dr. Dipl.-Soz.
 Dr. Dipl.-Sozialw.
 Dr. Dipl.-Sozialwirt
@@ -2234,11 +2232,9 @@ Dr. Dipl.-Übersetzer
 Dr. Dipl.-Übersetzerin
 Dr. Dipl.-Verw.Betriebsw.
 Dr. Dipl.-Verwaltungswirt
-Dr. Dipl.vet.med.
 Dr. Dipl.-Veterinär
 Dr. Dipl.-Volksw.
 Dr. Dipl.-Volksw. Dipl.-Kfm.
-Dr. Dipl.Volksw. Dipl.Sozialw.
 Dr. Dipl.-Volkswirt
 Dr. Dipl.-Volkswirtin
 Dr. Dipl.-Wirt.
@@ -2247,6 +2243,17 @@ Dr. Dipl.-Wirtsch.-Inf.
 Dr. Dipl.-Wirtsch.Ing.
 Dr. Dipl.-Wirtschaftler
 Dr. Dipl.-Wirtschaftlerin
+Dr. dipl.Astronom
+Dr. Dipl.dent.
+Dr. Dipl.Ing. Dipl.Wirt.Ing.
+Dr. Dipl.Kfm. Mag.rer.soc.oec.
+Dr. Dipl.Psych. Dipl.Gerontol.
+Dr. Dipl.Psych. Dipl.RelPäd.FH
+Dr. Dipl.rer.pol.
+Dr. Dipl.rer.pol.techn.
+Dr. Dipl.sc.pol.Dipl.-Ing.agr.
+Dr. Dipl.vet.med.
+Dr. Dipl.Volksw. Dipl.Sozialw.
 Dr. Dott.
 Dr. Doz.
 Dr. Dr.
@@ -2258,7 +2265,6 @@ Dr. Dr. Dipl.-Kaufmann
 Dr. Dr. Dipl.-Kffr.
 Dr. Dr. Dipl.-Kfm.
 Dr. Dr. Dipl.-Math.
-Dr. Dr. Dipl.oec.med.
 Dr. Dr. Dipl.-Ökotrophologin
 Dr. Dr. Dipl.-Phys.
 Dr. Dr. Dipl.-Psych.
@@ -2267,6 +2273,7 @@ Dr. Dr. Dipl.-Psychologin
 Dr. Dr. Dipl.-Volksw.
 Dr. Dr. Dipl.-Volkswirt
 Dr. Dr. Dipl.-Volkswirtin
+Dr. Dr. Dipl.oec.med.
 Dr. Dr. Dr.
 Dr. Dr. Dr. Dr.
 Dr. Dr. Dr. M.A.
@@ -2288,10 +2295,10 @@ Dr. Dr.(HUN)
 Dr. Dr.(Univ. Rom)
 Dr. Dr.(Univ. Turin)
 Dr. Dr.(YU)
-Dr. Dr.h.c.
-Dr. Dr.habil.
 Dr. Dr.-Ing.
 Dr. Dr.-Ing.E.h.
+Dr. Dr.h.c.
+Dr. Dr.habil.
 Dr. Dr.jur.
 Dr. Dr.med.
 Dr. Dr.med. Dipl.-Chem.
@@ -2346,7 +2353,7 @@ Dr. MBA
 Dr. MBA MM
 Dr. MCL
 Dr. MDSc
-dr. med.
+Dr. med.
 Dr. Mr.
 Dr. MSc
 Dr. MSc MSc
@@ -2455,6 +2462,57 @@ Dr.(Univ.Bogota)
 Dr.(Univ.Bratislava)
 Dr.(USA)
 Dr.(YU)
+Dr.-Ing.
+Dr.-Ing. Dipl.-Bauing.
+Dr.-Ing. Dipl.-Biol.
+Dr.-Ing. Dipl.-Biologe
+Dr.-Ing. Dipl.-Biologin
+Dr.-Ing. Dipl.-Chem.
+Dr.-Ing. Dipl.-Chemiker
+Dr.-Ing. Dipl.-Chemikerin
+Dr.-Ing. Dipl.-Des.
+Dr.-Ing. Dipl.-Inform.
+Dr.-Ing. Dipl.-Ing.
+Dr.-Ing. Dipl.-Kfm.
+Dr.-Ing. Dipl.-Math.
+Dr.-Ing. Dipl.-Min.
+Dr.-Ing. Dipl.-Ökonom
+Dr.-Ing. Dipl.-Ökonomin
+Dr.-Ing. Dipl.-Phys.
+Dr.-Ing. Dipl.-Physiker
+Dr.-Ing. Dipl.-Physikerin
+Dr.-Ing. Dipl.-Psych.
+Dr.-Ing. Dipl.-Volksw.
+Dr.-Ing. Dipl.-Wirtsch.Ing.
+Dr.-Ing. Dipl.rer.pol.
+Dr.-Ing. Dr.-Ing.E.h.
+Dr.-Ing. Dr.jur.
+Dr.-Ing. Dr.med.
+Dr.-Ing. Dr.oec.
+Dr.-Ing. Dr.phil.
+Dr.-Ing. Dr.rer.nat.
+Dr.-Ing. Dr.rer.pol.
+Dr.-Ing. Dr.sc.mult.
+Dr.-Ing. lic.iur.
+Dr.-Ing. M.Sc.
+Dr.-Ing. Prof.
+Dr.-Ing. Prof. a.D.
+Dr.-Ing.agr.
+Dr.-Ing.agr. Dr.h.c.
+Dr.-Ing.arch.
+Dr.-Ing.E.h.
+Dr.-Ing.e.h. Dipl.-Ing.
+Dr.-Ing.grad.
+Dr.-Ing.h.c.
+Dr.-Ing.habil.
+Dr.-Ing.habil. Dipl.-Geol.
+Dr.-Ing.habil. Dipl.-Ing.
+Dr.-Ing.habil. Dipl.-Metalloge
+Dr.-Ing.habil. Prof.
+Dr.-Ing.oec.
+Dr.-Ing.phys.
+Dr.-medic stom.
+Dr.-medic.stom.(R)
 Dr./Med.Univ.Budapest
 Dr.agr.
 Dr.agr. Dipl.-Biol.
@@ -2482,8 +2540,8 @@ Dr.disc.pol.
 Dr.div.
 Dr.div.h.c.
 Dr.Dr. Dipl.-Phys. Dipl.-Chem.
-Dr.E.h.
 Dr.e.h.
+Dr.E.h.
 Dr.ès.sc. Dr.Eng.
 Dr.forest.
 Dr.geol.
@@ -2504,60 +2562,11 @@ Dr.habil. Dipl.-Geol.
 Dr.habil. Dipl.-Geologe
 Dr.habil. Dipl.-Ing.
 Dr.habil. Dipl.-Phys.
-Dr.habil. Dipl.sc.pol.
 Dr.habil. Dipl.-Volksw.
+Dr.habil. Dipl.sc.pol.
 Dr.habil.Prof.
 Dr.hist.
 Dr.inform.
-Dr.-Ing.
-Dr.-Ing. Dipl.-Bauing.
-Dr.-Ing. Dipl.-Biol.
-Dr.-Ing. Dipl.-Biologe
-Dr.-Ing. Dipl.-Biologin
-Dr.-Ing. Dipl.-Chem.
-Dr.-Ing. Dipl.-Chemiker
-Dr.-Ing. Dipl.-Chemikerin
-Dr.-Ing. Dipl.-Des.
-Dr.-Ing. Dipl.-Inform.
-Dr.-Ing. Dipl.-Ing.
-Dr.-Ing. Dipl.-Kfm.
-Dr.-Ing. Dipl.-Math.
-Dr.-Ing. Dipl.-Min.
-Dr.-Ing. Dipl.-Ökonom
-Dr.-Ing. Dipl.-Ökonomin
-Dr.-Ing. Dipl.-Phys.
-Dr.-Ing. Dipl.-Physiker
-Dr.-Ing. Dipl.-Physikerin
-Dr.-Ing. Dipl.-Psych.
-Dr.-Ing. Dipl.rer.pol.
-Dr.-Ing. Dipl.-Volksw.
-Dr.-Ing. Dipl.-Wirtsch.Ing.
-Dr.-Ing. Dr.-Ing.E.h.
-Dr.-Ing. Dr.jur.
-Dr.-Ing. Dr.med.
-Dr.-Ing. Dr.oec.
-Dr.-Ing. Dr.phil.
-Dr.-Ing. Dr.rer.nat.
-Dr.-Ing. Dr.rer.pol.
-Dr.-Ing. Dr.sc.mult.
-Dr.-Ing. lic.iur.
-Dr.-Ing. M.Sc.
-Dr.-Ing. Prof.
-Dr.-Ing. Prof. a.D.
-Dr.-Ing.agr.
-Dr.-Ing.agr. Dr.h.c.
-Dr.-Ing.arch.
-Dr.-Ing.E.h.
-Dr.-Ing.e.h. Dipl.-Ing.
-Dr.-Ing.grad.
-Dr.-Ing.h.c.
-Dr.-Ing.habil.
-Dr.-Ing.habil. Dipl.-Geol.
-Dr.-Ing.habil. Dipl.-Ing.
-Dr.-Ing.habil. Dipl.-Metalloge
-Dr.-Ing.habil. Prof.
-Dr.-Ing.oec.
-Dr.-Ing.phys.
 Dr.iur.
 Dr.iur. LL.M.
 Dr.iur. LL.M.(GB)
@@ -2581,11 +2590,11 @@ Dr.jur. Dipl.-Phys.
 Dr.jur. Dipl.-Pol.
 Dr.jur. Dipl.-Psych.
 Dr.jur. Dipl.-Psychologe
-Dr.jur. Dipl.rer.pol.
 Dr.jur. Dipl.-Volksw.
-Dr.jur. Dr.h.c.
+Dr.jur. Dipl.rer.pol.
 Dr.jur. Dr.-Ing.
 Dr.jur. Dr.-Ing.agr.
+Dr.jur. Dr.h.c.
 Dr.jur. Dr.med.
 Dr.jur. Dr.oec.publ.
 Dr.jur. Dr.phil .Dipl-Psych.
@@ -2614,6 +2623,7 @@ Dr.math.nat.
 Dr.med.
 Dr.med. B.A. M.Sc.
 Dr.med. B.A.(Univ. Taiwan)
+Dr.med. Bachelor of Chinese Medicine
 Dr.med. Dipl.-Betriebswirtin
 Dr.med. Dipl.-Biochem.
 Dr.med. Dipl.-Biol.
@@ -2636,7 +2646,6 @@ Dr.med. Dipl.-Min.
 Dr.med. Dipl.-Musiktherapeut
 Dr.med. Dipl.-Musiktherapeutin
 Dr.med. Dipl.-Oec.med.
-Dr.med. Dipl.oec.troph.
 Dr.med. Dipl.-Päd.
 Dr.med. Dipl.-Phys.
 Dr.med. Dipl.-Physiker
@@ -2644,7 +2653,6 @@ Dr.med. Dipl.-Physikerin
 Dr.med. Dipl.-Psych.
 Dr.med. Dipl.-Psychologe
 Dr.med. Dipl.-Psychologin
-Dr.med. Dipl.rer.nat.
 Dr.med. Dipl.-Soz.
 Dr.med. Dipl.-Soziologe
 Dr.med. Dipl.-Soziologin
@@ -2655,16 +2663,18 @@ Dr.med. Dipl.-Theol.
 Dr.med. Dipl.-Theol. M.A.
 Dr.med. Dipl.-Theologe
 Dr.med. Dipl.-Troph.
+Dr.med. Dipl.oec.troph.
+Dr.med. Dipl.rer.nat.
 Dr.med. Dr.
 Dr.med. Dr.(CO)
 Dr.med. Dr.(UMF Temeschburg)
+Dr.med. Dr.-Ing.
 Dr.med. Dr.agr.
 Dr.med. Dr.biol.hom.
 Dr.med. Dr.biol.hum.
 Dr.med. Dr.dent.
 Dr.med. Dr.disc.pol.
 Dr.med. Dr.h.c.
-Dr.med. Dr.-Ing.
 Dr.med. Dr.jur.
 Dr.med. Dr.med.
 Dr.med. Dr.med.dent.
@@ -2742,7 +2752,9 @@ Dr.med.(Univ. Zagreb)
 Dr.med.(Univ. Zürich)
 Dr.med.(WMI Sofia)
 Dr.med.(YU)
+Dr.Med.-Inf.
 Dr.med.cir.(Univ. Asuncion)
+dr.med.dent.
 Dr.med.dent.
 Dr.med.dent. BDS
 Dr.med.dent. D.D.S.(USA)
@@ -2788,7 +2800,6 @@ Dr.med.habil. Dr.rer.nat.
 Dr.med.habil. Mr.
 Dr.med.habil. Priv.Doz.
 Dr.med.habil.Doz.
-Dr.Med.-Inf.
 Dr.med.jur.
 Dr.med.med.
 Dr.med.nat.
@@ -2800,8 +2811,8 @@ Dr.med.sc. Dr. paed.
 Dr.med.stom.
 Dr.med.stom.(IMF Bukarest)
 Dr.med.stom.(RO)
-Dr.med.Univ.
 Dr.med.univ.
+Dr.med.Univ.
 Dr.med.univ. Dr.med.dent.
 Dr.med.univ. Dr.phil.
 Dr.med.univ. et med.dent.
@@ -2820,7 +2831,6 @@ Dr.med.vet.(IAg Temeschburg)
 Dr.med.vet.(PL)
 Dr.med.vet.habil.
 Dr.med.vub.
-Dr.-medic stom.
 Dr.medic stom. (UMF Neumarkt)
 Dr.medic.
 Dr.medic. Dr.med.
@@ -2842,7 +2852,6 @@ Dr.medic.stom.(IM Temeschburg)
 Dr.medic.stom.(IMF Bukarest)
 Dr.medic.stom.(IMF Neumarkt)
 Dr.medic.stom.(R)
-Dr.-medic.stom.(R)
 Dr.medic.stom.(RO)
 Dr.medic.stom.(UMF Bukarest)
 Dr.medic.stom.(UMF Timisoara)
@@ -2915,10 +2924,8 @@ Dr.phil. Dipl.-Päd.
 Dr.phil. Dipl.-Pädagoge
 Dr.phil. Dipl.-Pädagogin
 Dr.phil. Dipl.-Psych.
-Dr.phil. Dipl.Psych. Dipl.Päd.
 Dr.phil. Dipl.-Psychologe
 Dr.phil. Dipl.-Psychologin
-Dr.phil. Dipl.rer.pol.
 Dr.phil. Dipl.-Romanist
 Dr.phil. Dipl.-Soz.
 Dr.phil. Dipl.-Soziologe
@@ -2926,6 +2933,8 @@ Dr.phil. Dipl.-Sportlehrer
 Dr.phil. Dipl.-Übersetzerin
 Dr.phil. Dipl.-Volksw.
 Dr.phil. Dipl.-Volkswirt
+Dr.phil. Dipl.Psych. Dipl.Päd.
+Dr.phil. Dipl.rer.pol.
 Dr.phil. Dr.h.c.
 Dr.phil. Dr.jur.
 Dr.phil. Dr.med.
@@ -3006,7 +3015,6 @@ Dr.rer.nat. Dipl.-Mathematiker
 Dr.rer.nat. Dipl.-Met.
 Dr.rer.nat. Dipl.-Min.
 Dr.rer.nat. Dipl.-Mineraloge
-Dr.rer.nat. Dipl.oec.troph.
 Dr.rer.nat. Dipl.-Phys.
 Dr.rer.nat. Dipl.-Physiker
 Dr.rer.nat. Dipl.-Physikerin
@@ -3014,6 +3022,7 @@ Dr.rer.nat. Dipl.-Psych.
 Dr.rer.nat. Dipl.-Psychologe
 Dr.rer.nat. Dipl.-Psychologin
 Dr.rer.nat. Dipl.-Volksw.
+Dr.rer.nat. Dipl.oec.troph.
 Dr.rer.nat. Dr.agr.
 Dr.rer.nat. Dr.med.
 Dr.rer.nat. Dr.phil.
@@ -3043,10 +3052,10 @@ Dr.rer.oec.publ.
 Dr.rer.physiol.
 Dr.rer.physiol. Dipl.-Chem.
 Dr.rer.pol.
+Dr.rer.pol. Dipl-BusinessAsst.
 Dr.rer.pol. Dipl.-Betriebsw.
 Dr.rer.pol. Dipl.-Betriebswirt
 Dr.rer.pol. Dipl.-Ing.
-Dr.rer.pol. Dipl.Ing. agr.
 Dr.rer.pol. Dipl.-Kauffrau
 Dr.rer.pol. Dipl.-Kaufmann
 Dr.rer.pol. Dipl.-Kffr.
@@ -3059,7 +3068,7 @@ Dr.rer.pol. Dipl.-Volksw.
 Dr.rer.pol. Dipl.-Volkswirt
 Dr.rer.pol. Dipl.-Volkswirtin
 Dr.rer.pol. Dipl.-Wirtsch.Ing.
-Dr.rer.pol. Dipl-BusinessAsst.
+Dr.rer.pol. Dipl.Ing. agr.
 Dr.rer.pol. Dr.phil. Dr.jur.
 Dr.rer.pol. Dr.rer.nat.
 Dr.rer.pol. Dr.sc.phil.
@@ -3149,8 +3158,8 @@ Dr.theol.(evang.)
 Dr.theol.(kath.)
 Dr.Theologie Dr.h.c.
 Dr.troph.
-Dr.Univ.
 Dr.univ.
+Dr.Univ.
 Dr.Univ.(H)
 Dr.Univ.(Istanbul)
 Dr.univ.(MU Budapest)
@@ -3165,6 +3174,7 @@ Dres.
 Dres. Dipl.-Phys.
 Dres.(IMF Neumarkt)
 Dres.(UMF Klausenburg)
+Dres.-medic. (RO)
 Dres.dent.
 Dres.iur.
 Dres.jur.
@@ -3173,14 +3183,12 @@ Dres.med. Dipl.-Psych.
 Dres.med.dent.
 Dres.med.et.al.
 Dres.med.vet.
-Dres.-medic. (RO)
 Dres.medic.stom.
 Dres.rer.nat.
-Dr-medic
 drs
 drs (NL)
-Drs.
 drs.
+Drs.
 Drs.(NL)
 Drs.med.
 Drs.med.dent.
@@ -3219,8 +3227,8 @@ Immobilienwirtin(Dipl.-VWA)
 Immobilienwirtin(VWA)
 Ind.-Design.grad.
 Inform.-Betriebsw.(VWA)
-Ing.
 ing.
+Ing.
 Ing.grad.
 Ing.grad.agr.
 ing.microtechn.dipl.EPF
@@ -3249,8 +3257,8 @@ Ldo.med.
 LEA
 lek.
 lek.med.
-Lic.
 lic.
+Lic.
 lic. Dr.
 lic.(sc.rel.)
 Lic.AES
@@ -3263,18 +3271,18 @@ lic.oec.
 lic.oec. (publ.)
 lic.oec.HSG
 lic.oec.int.
-Lic.phil.
 lic.phil.
+Lic.phil.
 Lic.Psych.
-Lic.rer.pol.
 lic.rer.pol.
-Lic.rer.publ.
+Lic.rer.pol.
 lic.rer.publ.
+Lic.rer.publ.
 lic.rer.publ.HSG
 lic.rer.reg.
 lic.rer.soc.
-Lic.theol.
 lic.theol.
+Lic.theol.
 Litt.D.
 Liz.Sportwissenschaft
 LL.B
@@ -3606,8 +3614,8 @@ Priv.Doz. Dr. Dr. Dr.
 Priv.Doz. Dr. Dr.habil.
 Priv.Doz. Dr. Dr.med.
 Priv.Doz. Dr. Dr.med.habil.
-Priv.Doz. Dr.habil.
 Priv.Doz. Dr.-Ing.
+Priv.Doz. Dr.habil.
 Priv.Doz. Dr.med.
 Priv.Doz. Dr.med. Dr.
 Priv.Doz. Dr.med. Dr.med.
@@ -3694,12 +3702,12 @@ Prof. Dipl.-Pol.
 Prof. Dipl.-Psych.
 Prof. Dipl.-Psychologe
 Prof. Dipl.-Psychologin
-Prof. Dipl.rer.pol.
 Prof. Dipl.-Sozialwirt
 Prof. Dipl.-Volksw.
 Prof. Dipl.-Volkswirt
 Prof. Dipl.-Volkswirtin
 Prof. Dipl.-Wirtsch.Ing.
+Prof. Dipl.rer.pol.
 Prof. Dr.
 Prof. Dr. Dipl.-Arch.
 Prof. Dr. Dipl.-Betriebswirt
@@ -3749,12 +3757,12 @@ Prof. Dr. Dr. Dr.
 Prof. Dr. Dr. Dr.h.c.
 Prof. Dr. Dr. MD USA
 Prof. Dr. Dr. Univ.Prof.
+Prof. Dr. Dr.-Ing.
+Prof. Dr. Dr.-Ing.habil.
 Prof. Dr. Dr.em.
 Prof. Dr. Dr.h.c.
 Prof. Dr. Dr.h.c.mult.
 Prof. Dr. Dr.habil.
-Prof. Dr. Dr.-Ing.
-Prof. Dr. Dr.-Ing.habil.
 Prof. Dr. Dr.med.
 Prof. Dr. Dr.med. Dr.h.c.
 Prof. Dr. Dr.med.dent.
@@ -3773,6 +3781,25 @@ Prof. Dr. Univ.Prof.
 Prof. Dr. Univ.Prof.(umn)
 Prof. Dr.(Univ. Miskolc)
 Prof. Dr.(Univ. Moskau)
+Prof. Dr.-Ing.
+Prof. Dr.-Ing. Dipl.-Ing.
+Prof. Dr.-Ing. Dipl.-Ing.paed.
+Prof. Dr.-Ing. Dipl.-Math.
+Prof. Dr.-Ing. Dipl.-Phys.
+Prof. Dr.-Ing. Dr.-Ing.E.h.
+Prof. Dr.-Ing. Dr.h.c.
+Prof. Dr.-Ing. Dr.h.c.mult.
+Prof. Dr.-Ing. Prof.h.c.
+Prof. Dr.-Ing.-oec.
+Prof. Dr.-Ing.E.h.
+Prof. Dr.-Ing.et.agr.habil.
+Prof. Dr.-Ing.h.c.
+Prof. Dr.-Ing.habil Dr.h.c
+Prof. Dr.-Ing.habil.
+Prof. Dr.-Ing.habil. Dr.h.c.
+Prof. Dr.-Ing.habil. Dr.nat.
+Prof. Dr.-Ing.habil. Dr.oec.
+Prof. Dr.-Ing.habil. Dr.phil.
 Prof. Dr.agr.
 Prof. Dr.agr.habil.
 Prof. Dr.apl.
@@ -3786,25 +3813,6 @@ Prof. Dr.h.c.(EC)
 Prof. Dr.h.c.mult.
 Prof. Dr.habil.
 Prof. Dr.habil. Dipl.-Chem.
-Prof. Dr.-Ing.
-Prof. Dr.-Ing. Dipl.-Ing.
-Prof. Dr.-Ing. Dipl.-Ing.paed.
-Prof. Dr.-Ing. Dipl.-Math.
-Prof. Dr.-Ing. Dipl.-Phys.
-Prof. Dr.-Ing. Dr.h.c.
-Prof. Dr.-Ing. Dr.h.c.mult.
-Prof. Dr.-Ing. Dr.-Ing.E.h.
-Prof. Dr.-Ing. Prof.h.c.
-Prof. Dr.-Ing.E.h.
-Prof. Dr.-Ing.et.agr.habil.
-Prof. Dr.-Ing.h.c.
-Prof. Dr.-Ing.habil Dr.h.c
-Prof. Dr.-Ing.habil.
-Prof. Dr.-Ing.habil. Dr.h.c.
-Prof. Dr.-Ing.habil. Dr.nat.
-Prof. Dr.-Ing.habil. Dr.oec.
-Prof. Dr.-Ing.habil. Dr.phil.
-Prof. Dr.-Ing.-oec.
 Prof. Dr.iur.
 Prof. Dr.iur.h.c.
 Prof. Dr.iur.utr. Dr.rer.pol.
@@ -3884,8 +3892,8 @@ Prof. Dr.rer.nat. Dipl.-Chem.
 Prof. Dr.rer.nat. Dipl.-Ing.
 Prof. Dr.rer.nat. Dipl.-Phys.
 Prof. Dr.rer.nat. Dipl.-Psych.
-Prof. Dr.rer.nat. Dr.h.c.
 Prof. Dr.rer.nat. Dr.-Ing.
+Prof. Dr.rer.nat. Dr.h.c.
 Prof. Dr.rer.nat. Dr.sc.
 Prof. Dr.rer.nat.habil.
 Prof. Dr.rer.oec.
@@ -3951,14 +3959,21 @@ Prof.(Univ. New York) Dr.
 Prof.(Univ. Plovdiv) Dr.med.
 Prof.(UPB)
 Prof.(USA) Dr.med.
+Prof.-Ing.
+Prof.-Ing. Dr.
+Prof.-jur.
+Prof.-math. Dr.
+Prof.-med.
+Prof.-med.(China)
+Prof.-theol.
 Prof.Dr.-Ing.Dr.h.c.mult. i.R.
 Prof.em.
 Prof.em. Dr.
 Prof.em. Dr. Dr.
 Prof.em. Dr. Dr.h.c.mult.
+Prof.em. Dr.-Ing.habil.
 Prof.em. Dr.agr.habil.
 Prof.em. Dr.habil.
-Prof.em. Dr.-Ing.habil.
 Prof.em. Dr.med.
 Prof.em. Dr.med. Dr.med.h.c.
 Prof.em. Dr.med.habil.
@@ -3981,15 +3996,8 @@ Prof.h.c.(Univ.Sofia) Dr.
 Prof.habil.
 Prof.habil. Dr.jur.
 Prof.hc.Dr.
-Prof.-Ing.
-Prof.-Ing. Dr.
-Prof.-jur.
-Prof.-math. Dr.
-Prof.-med.
-Prof.-med.(China)
 Prof.med.dent.
 Prof.rer.nat.
-Prof.-theol.
 Prof.vertr. Dipl.-Ing.
 Profesor de EGB
 Professeur de Danse
@@ -4007,10 +4015,10 @@ Religionspädagogin grad.
 S.Th.D.
 San.-Rat Dr.
 Sc.D.
-Soz.arb.grad.
 Soz.-Dipl.(VWA)
-Soz.Päd.(FH)
+Soz.arb.grad.
 Soz.päd.(FH)
+Soz.Päd.(FH)
 Soz.Päd.grad.
 Sozialpäd.(FH)
 SR Dr.
@@ -4041,9 +4049,9 @@ Univ.Prof. Dr. Dr.
 Univ.Prof. Dr. Dr. Dr.
 Univ.Prof. Dr. Dr.habil.
 Univ.Prof. Dr. Dr.med.
-Univ.Prof. Dr.habil.
 Univ.Prof. Dr.-Ing.
 Univ.Prof. Dr.-Ing.habil.
+Univ.Prof. Dr.habil.
 Univ.Prof. Dr.jur.
 Univ.Prof. Dr.med.
 Univ.Prof. Dr.med.dent.
