@@ -6,6 +6,6 @@ cd '/var/www/nmsprime'
 systemctl reload httpd
 
 rm -f storage/framework/sessions/*
-chown -R apache storage bootstrap/cache /var/log/nmsprime
+chown -R apache storage bootstrap/cache
 systemctl restart nmsprimed
 systemd-tmpfiles --create
