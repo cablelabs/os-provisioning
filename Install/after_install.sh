@@ -103,7 +103,7 @@ echo "# Use $env/*.env files for configuration" > "$dir/.env"
 /opt/rh/rh-php71/root/usr/bin/php artisan config:cache
 
 # Note: needs to run last. storage/logs is only available after artisan optimize
-chown -R apache storage bootstrap/cache /var/log/nmsprime
+chown -R apache storage bootstrap/cache
 
 # make .env files readable for apache
 chgrp -R apache "$env"
