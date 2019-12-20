@@ -1525,34 +1525,33 @@ class BaseController extends Controller
     {
         $path = $request->file('csv_file')->getRealPath();
 
-        if ($request->has('header')) {
-            $data = \Maatwebsite\Excel\Facades\Excel::load($path, function ($reader) {
-            })->get()->toArray();
-        } else {
-            $data = array_map('str_getcsv', file($path));
-        }
+        // if ($request->has('header')) {
+        //     $data = \Maatwebsite\Excel\Facades\Excel::load($path, function ($reader) {
+        //     })->get()->toArray();
+        // }
 
-        if (count($data) > 0) {
-            if ($request->has('header')) {
-                $csv_header_fields = [];
-                foreach ($data[0] as $key => $value) {
-                    $csv_header_fields[] = $key;
-                }
-            }
-            $csv_data = array_slice($data, 0, 2);
+        $data = file($path);
 
-            $csv_data_file = \App\CsvData::create([
-                'csv_filename' => $request->file('csv_file')->getClientOriginalName(),
-                'csv_header' => $request->has('header'),
-                'csv_data' => json_encode($data),
-                ]);
-        } else {
+        if (! count($data)) {
             return redirect()->back();
         }
 
-        $db_fields = \Schema::getColumnListing(static::get_model_obj()->getTable());
+        foreach ($data as $key => $line) {
+            $data[$key] = str_getcsv($line, ';');
+        }
 
-        // d($csv_header_fields, $csv_data, $csv_data_file, $db_fields);
+        $csv_header_fields = $request->has('header') ? $data[0] : [];
+        $offset = $request->has('header') ? 1 : 0;
+
+        $csv_data = array_slice($data, $offset, $offset + 2);
+
+        $csv_data_file = \App\CsvData::create([
+            'csv_filename' => $request->file('csv_file')->getClientOriginalName(),
+            'csv_header' => $request->has('header'),
+            'csv_data' => json_encode($data),
+            ]);
+
+        $db_fields = \Schema::getColumnListing(static::get_model_obj()->getTable());
 
         return View::make('Generic.import_fields', $this->compact_prep_view(compact('csv_header_fields', 'csv_data', 'csv_data_file', 'db_fields')));
     }
