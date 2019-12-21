@@ -7,6 +7,7 @@ cd '/var/www/nmsprime'
 # TODO: if a new nmsprime- package is installed as a dependency
 #       the migration may not run for the last, but next to last package
 if [ $(rpm -qa nmsprime-* --queryformat '%{VERSION}-%{RELEASE}\n' | sort | uniq -c | awk '{print $1}' | sort -u | wc -l) -eq 1 ]; then
+  rm -f /var/www/nmsprime/config/excel.php
   /opt/rh/rh-php71/root/usr/bin/php artisan config:cache
   /opt/rh/rh-php71/root/usr/bin/php artisan clear-compiled
   /opt/rh/rh-php71/root/usr/bin/php artisan optimize
