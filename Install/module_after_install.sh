@@ -3,13 +3,13 @@ source scl_source enable rh-php71
 env='/etc/nmsprime/env'
 
 cd '/var/www/nmsprime'
+/opt/rh/rh-php71/root/usr/bin/php artisan config:cache
 /opt/rh/rh-php71/root/usr/bin/php artisan module:publish
 /opt/rh/rh-php71/root/usr/bin/php artisan module:migrate
 #/opt/rh/rh-php71/root/usr/bin/php artisan queue:restart
 pkill -f "artisan queue:work"
 /opt/rh/rh-php71/root/usr/bin/php artisan auth:nms
 /opt/rh/rh-php71/root/usr/bin/php artisan route:cache
-/opt/rh/rh-php71/root/usr/bin/php artisan config:cache
 /opt/rh/rh-php71/root/usr/bin/php artisan view:clear
 
 systemctl reload httpd
