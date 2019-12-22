@@ -7,6 +7,7 @@ use Log;
 use File;
 use Module;
 use App\Sla;
+use Request;
 use Exception;
 use Acme\php\ArrayHelper;
 
@@ -1479,6 +1480,10 @@ class Modem extends \BaseModel
     {
         if (! Module::collections()->has('PropertyManagement')) {
             return [];
+        }
+
+        if (Request::has('contract_id')) {
+            $this->contract_id = Request::get('contract_id');
         }
 
         // Contracts indirectly related to an apartment that are not canceled
