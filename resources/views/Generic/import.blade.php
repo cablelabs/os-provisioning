@@ -51,7 +51,11 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12 col-md-offset-4">
-                                    <b>NOTES on runnning without observers:</b>
+                                    <b>NOTES</b>
+                                    <ul>
+                                        <li> CSV must be separated by semicolon ';' </li>
+                                    </ul>
+                                    <b>Running without observers:</b>
                                     <ul>
                                       <li>imports without observers (create/creating) are faster, BUT</li>
                                       <li>often requires require manual work afterwards, like running some <code>php artisan</code> commands from CLI</li>

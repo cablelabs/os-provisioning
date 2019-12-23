@@ -23,19 +23,6 @@ class HardwareSupportCommand extends Command
      */
     protected $description = 'checks for hardware support of each modem and CMTS';
 
-    protected $provBaseSettings;
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->provBaseSettings = ProvBase::first();
-        parent::__construct();
-    }
-
     /**
      * Execute the console command - Check for hardware support for each modem and each CMTS modules
      *
@@ -47,13 +34,15 @@ class HardwareSupportCommand extends Command
             return;
         }
 
+        $provBaseSettings = ProvBase::first();
+
         $this->snmp_def_mode();
         $modems = DB::table('modem')->whereNull('deleted_at')->get();
         $cmtses = DB::table('netgw')->whereNull('deleted_at')->where('type', 'cmts')->get();
-        $ro_community = $this->provBaseSettings->ro_community;
+        $ro_community = $provBaseSettings->ro_community;
 
         foreach ($modems as $modem) {
-            $hostname = "{$modem->hostname}.{$this->provBaseSettings->domain_name}";
+            $hostname = "{$modem->hostname}.{$provBaseSettings->domain_name}";
             $support_state = 'not-supported';
             if (! isset($modem->serial_num) || $modem->serial_num === '') {
                 try {

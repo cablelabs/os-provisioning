@@ -42,6 +42,11 @@ class dhcpCommand extends Command
      */
     public function handle()
     {
+        // don't run this command during a new installation
+        if (! Modem::count()) {
+            return;
+        }
+
         // Global Config part
         $prov = ProvBase::first();
         $prov->make_dhcp_glob_conf();
