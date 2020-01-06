@@ -1448,10 +1448,8 @@ class BaseController extends Controller
             // backward compatibility – accept strings as input, too
             if (is_string($custom_query)) {
                 $custom_query = ['query' => $custom_query, 'eagers' => []];
-            } else {
-                if (! is_array($custom_query)) {
-                    throw new \Exception('$custom_query has to be string or array');
-                }
+            } elseif (! is_array($custom_query)) {
+                throw new \Exception('$custom_query has to be string or array');
             }
 
             $DT->filterColumn($column, function ($query, $keyword) use ($custom_query) {
@@ -1462,34 +1460,34 @@ class BaseController extends Controller
             });
         }
 
-        $DT->editColumn('checkbox', function ($object) {
-            if (method_exists($object, 'set_index_delete')) {
-                $object->set_index_delete();
+        $DT->editColumn('checkbox', function ($model) {
+            if (method_exists($model, 'set_index_delete')) {
+                $model->set_index_delete();
             }
 
-            return "<input style='simple' align='center' class='' name='ids[".$object->id."]' type='checkbox' value='1' ".
-                ($object->index_delete_disabled ? 'disabled' : '').'>';
+            return "<input style='simple' align='center' class='' name='ids[".$model->id."]' type='checkbox' value='1' ".
+                ($model->index_delete_disabled ? 'disabled' : '').'>';
         })
-            ->editColumn($first_column, function ($object) use ($first_column) {
-                return '<a href="'.route(NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
-                $object->view_icon().array_get($object, $first_column).'</strong></a>';
+            ->editColumn($first_column, function ($model) use ($first_column) {
+                return '<a href="'.route(NamespaceController::get_route_name().'.edit', $model->id).'"><strong>'.
+                $model->view_icon().$model[$first_column].'</strong></a>';
             });
 
         foreach ($edit_column_data as $column => $functionname) {
             if ($column == $first_column) {
-                $DT->editColumn($column, function ($object) use ($functionname) {
-                    return '<a href="'.route(NamespaceController::get_route_name().'.edit', $object->id).'"><strong>'.
-                $object->view_icon().$object->$functionname().'</strong></a>';
+                $DT->editColumn($column, function ($model) use ($functionname) {
+                    return '<a href="'.route(NamespaceController::get_route_name().'.edit', $model->id).
+                        '"><strong>'.$model->view_icon().$model->$functionname().'</strong></a>';
                 });
             } else {
-                $DT->editColumn($column, function ($object) use ($functionname) {
-                    return $object->$functionname();
+                $DT->editColumn($column, function ($model) use ($functionname) {
+                    return $model->$functionname();
                 });
             }
         }
 
-        $DT->setRowClass(function ($object) {
-            $bsclass = isset($object->view_index_label()['bsclass']) ? $object->view_index_label()['bsclass'] : 'info';
+        $DT->setRowClass(function ($model) {
+            $bsclass = isset($model->view_index_label()['bsclass']) ? $model->view_index_label()['bsclass'] : 'info';
 
             return $bsclass;
         });
