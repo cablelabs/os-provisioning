@@ -20,9 +20,12 @@ class GuiLogController extends BaseController
     public function view_form_fields($model = null)
     {
         $models = BaseModel::get_models();
-        $isModelTrashed = $models[$model->model]::withTrashed()->find($model->model_id)->trashed();
         $cannotRestore = ['Invoice', 'SettlementRun'];
         $restorable = ! in_array($model->model, $cannotRestore);
+        $isForceDeleteDisabled = ! $model->getDefaultProperty($models[$model->model], 'forceDeleting');
+        $isModelTrashed = $isForceDeleteDisabled ?
+            $models[$model->model]::withTrashed()->find($model->model_id)->trashed() :
+            false;
 
         $fields = [
             ['form_type' => 'text', 'name' => 'username', 'description' => 'Username'],
