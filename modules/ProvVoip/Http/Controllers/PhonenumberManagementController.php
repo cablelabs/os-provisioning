@@ -189,14 +189,14 @@ class PhonenumberManagementController extends \BaseController
                 'form_type' => 'select',
                 'name' => 'subscriber_salutation',
                 'description' => 'Subscriber salutation',
-                'value' => $model->get_salutation_options(),
+                'value' => $model->getSalutationOptions(),
                 'checkbox' => 'show_on_porting_in',
             ],
             [
                 'form_type' => 'select',
                 'name' => 'subscriber_academic_degree',
                 'description' => 'Subscriber academic degree',
-                'value' => $model->get_academic_degree_options(),
+                'value' => $model->getAcademicDegreeOptions(),
                 'checkbox' => 'show_on_porting_in',
             ],
             [
