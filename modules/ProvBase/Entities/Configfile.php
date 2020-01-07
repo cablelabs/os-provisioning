@@ -431,10 +431,10 @@ class Configfile extends \BaseModel
     public static function undeletables()
     {
         $used_ids = [];
+
         // only public configfiles can be assigned to a modem or mta
-        foreach (self::where('public', '=', 'yes')->get() as $cf) {
-            if ((($cf->device == 'cm') && $cf->modem()->count()) ||
-                (($cf->device == 'mta') && $cf->mtas()->count())) {
+        foreach (self::where('public', 'yes')->withCount('modem', 'mtas')->with('parent')->get() as $cf) {
+            if ((($cf->device == 'cm') && $cf->modem_count) || (($cf->device == 'mta') && $cf->mtas_count)) {
                 array_push($used_ids, $cf->id);
                 self::_add_parent($used_ids, $cf);
             }
