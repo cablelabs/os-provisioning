@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateSalutationAndAcademicDegreeFiles extends Migration
+class InstallCreateSalutationAndAcademicDegreeFiles extends BaseMigration
 {
     protected $path = 'config/provbase/formoptions/';
     protected $salutations_person_file = 'salutations_person.txt';
