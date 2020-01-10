@@ -20,9 +20,12 @@ class GuiLogController extends BaseController
     public function view_form_fields($model = null)
     {
         $models = BaseModel::get_models();
-        $isModelTrashed = $models[$model->model]::withTrashed()->find($model->model_id)->trashed();
         $cannotRestore = ['Invoice', 'SettlementRun'];
         $restorable = ! in_array($model->model, $cannotRestore);
+        $isForceDeleteDisabled = ! $model->getDefaultProperty($models[$model->model], 'forceDeleting');
+        $isModelTrashed = $isForceDeleteDisabled ?
+            $models[$model->model]::withTrashed()->find($model->model_id)->trashed() :
+            false;
 
         $fields = [
             ['form_type' => 'text', 'name' => 'username', 'description' => 'Username'],
@@ -32,13 +35,18 @@ class GuiLogController extends BaseController
             ['form_type' => 'textarea', 'name' => 'text', 'description' => 'Changed Attributes'],
             ];
 
-        // add link of changed Model in edit view - Note: check if route exists is necessary because CccUser.edit is not available for instance
+        // add link of changed Model in edit view - Note: check if route exists is necessary because CccUser.edit is
+        // not available for instance
         if ($models && \Route::getRoutes()->hasNamedRoute($model->model.'.edit') && ! $isModelTrashed) {
             $route = route($model->model.'.edit', ['id' => $model->model_id]);
 
-            $fields[] = ['form_type' => 'html', 'name' => 'link', 'description' => 'Link', 'html' => '<div class="col-md-7">
-					<a class="btn btn-default btn-block" href="'.$route.'"> '.$model->model.' '.$model->model_id.'</a>
-				</div>',
+            $fields[] = [
+                'form_type' => 'html',
+                'name' => 'link',
+                'description' => 'Link',
+                'html' => '<div class="col-md-7">
+                        <a class="btn btn-default btn-block" href="'.$route.'">'.$model->model.' '.$model->model_id.'</a>
+                    </div>',
             ];
         }
 
@@ -46,9 +54,13 @@ class GuiLogController extends BaseController
         if ($isModelTrashed && $restorable) {
             $route = route('Guilog.restore', ['id' => $model->id]);
 
-            $fields[] = ['form_type' => 'html', 'name' => 'deleted_at', 'description' => 'Restore', 'html' => '<div class="col-md-7">
-					<a class="btn btn-default btn-block" href="'.$route.'"> Restore '.$model->model.'</a>
-				</div>',
+            $fields[] = [
+                'form_type' => 'html',
+                'name' => 'deleted_at',
+                'description' => 'Restore',
+                'html' => '<div class="col-md-7">
+                        <a class="btn btn-default btn-block" href="'.$route.'"> Restore '.$model->model.'</a>
+                    </div>',
             ];
         }
 
@@ -67,7 +79,7 @@ class GuiLogController extends BaseController
         $modelArray = BaseModel::get_models();
         $guilog = GuiLog::find($id);
         $modelToRestore = $modelArray[$guilog->model]::withTrashed()->find($guilog->model_id);
-        $restoredModel = $modelToRestore->restore($guilog->model);
+        $modelToRestore->restore($guilog->model);
 
         if (\Route::has($guilog->model.'.edit')) {
             return redirect()->route($guilog->model.'.edit', ['id' => $guilog->model_id]);
@@ -89,20 +101,21 @@ class GuiLogController extends BaseController
 
         return DataTables::make($request_query)
             ->addColumn('responsive', '')
-            ->setRowClass(function ($object) {
+            ->setRowClass(function ($guilog) {
                 $bsclass = 'info';
-                if ($object->method == 'created') {
+                if ($guilog->method == 'created') {
                     $bsclass = 'success';
                 }
-                if ($object->method == 'deleted') {
+                if ($guilog->method == 'deleted') {
                     $bsclass = 'danger';
                 }
 
                 return $bsclass;
             })
-            ->editColumn('created_at', function ($object) use ($routeName) {
-                return '<a href="'.route($routeName.'.edit', $object->id).'" title="'.str_replace(', ', '1&#013;', $object->text).'"><strong>'.
-                        $object->view_icon().$object->created_at.'</strong></a>';
+            ->editColumn('created_at', function ($guilog) use ($routeName) {
+                return '<a href="'.route($routeName.'.edit', $guilog->id).
+                        '" title="'.str_replace(', ', '1&#013;', $guilog->text).'"><strong>'.
+                        $guilog->view_icon().$guilog->created_at.'</strong></a>';
             })
             ->rawColumns(['created_at'])
             ->make();

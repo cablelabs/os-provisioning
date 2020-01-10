@@ -130,6 +130,23 @@ class BaseModel extends Eloquent
     }
 
     /**
+     * Use PHP Reflection API to receive the default of a given Property.
+     * CAUTION this returns not the current state of the property.
+     *
+     * @param string $class Basename of class or fully qualified classname
+     * @param string $property Property you want to receive the default value for
+     * @return mixed
+     */
+    public function getDefaultProperty(string $class, string $property)
+    {
+        if (! strpos($class, '\\')) {
+            $class = $this->get_models()[$class];
+        }
+
+        return (new \ReflectionClass($class))->getDefaultProperties()[$property];
+    }
+
+    /**
      * Checks if the requested relation is installed and enabled.
      * If so all is fine – otherwise we return flag to create special empty eloquent relation.
      *
