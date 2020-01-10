@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
-class AddConfigfileIdToIndex extends \BaseMigration
+class AddConfigfileIdToIndexMta extends \BaseMigration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,8 @@ class AddConfigfileIdToIndex extends \BaseMigration
      */
     public function up()
     {
-        Schema::table('modem', function (Blueprint $table) {
+        Schema::table('mta', function (Blueprint $table) {
             $table->index('configfile_id');
-        });
-
-        Schema::table('configfile', function (Blueprint $table) {
-            $table->index('parent_id');
         });
     }
 
@@ -28,12 +24,8 @@ class AddConfigfileIdToIndex extends \BaseMigration
      */
     public function down()
     {
-        Schema::table('modem', function (Blueprint $table) {
+        Schema::table('mta', function (Blueprint $table) {
             $table->dropIndex(['configfile_id']);
-        });
-
-        Schema::table('configfile', function (Blueprint $table) {
-            $table->dropIndex(['parent_id']);
         });
     }
 }
