@@ -9,3 +9,5 @@ rm -f storage/framework/sessions/*
 chown -R apache storage bootstrap/cache
 systemctl restart nmsprimed
 systemd-tmpfiles --create
+
+chmod 644 /etc/cron.d/*
