@@ -554,7 +554,8 @@ class BaseController extends Controller
         $delete_allowed = static::get_controller_obj()->index_delete_allowed;
 
         if ($this->index_tree_view) {
-            $view_var = $model::where('parent_id', null)->get();
+            // TODO: remove orWhere statement when it is sure that parent_id is nullable and can not be 0 in all NMSPrime instances and after new installation!!!
+            $view_var = $model::whereNull('parent_id')->orWhere('parent_id', 0)->get();
             $undeletables = $model::undeletables();
 
             return View::make('Generic.tree', $this->compact_prep_view(compact('headline', 'view_header', 'view_var', 'create_allowed', 'undeletables')));
