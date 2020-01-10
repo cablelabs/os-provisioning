@@ -633,7 +633,7 @@ desde el punto en que un módem estaba en línea. Si todos los diagramas no se m
             'deleted'       => 'borrado',
             'updated'       => 'actualizado',
             'updated N:M'   => 'actualizado',
-            ],
+        ],
     ],
     'Modem'                         => 'Módem',
     'PhonenumberManagement'         => 'Gestión de número telefónico',

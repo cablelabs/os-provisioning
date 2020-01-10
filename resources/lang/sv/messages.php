@@ -633,7 +633,7 @@ return [
             'deleted'       => 'deleted',
             'updated'       => 'updated',
             'updated N:M'   => 'updated',
-            ],
+        ],
     ],
     'Modem'                         => 'Modem',
     'PhonenumberManagement'         => 'Phonenumber Management',

@@ -58,7 +58,7 @@ return [
         'number' => 'número de deuda',
         'total_fee' => 'Tarifa',
         'voucher_nr' => 'Nr de voucher',
-        ],
+    ],
     //Invoices
     'invoice.type' => 'Tipo',
     'invoice.year' => 'Año',
