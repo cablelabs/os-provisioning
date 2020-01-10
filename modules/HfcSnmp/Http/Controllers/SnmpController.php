@@ -431,7 +431,7 @@ class SnmpController extends \BaseController
             'field_value' 	=> $value,
             'options' 		=> $options,
             // 'help' 			=> $oid->description,
-            ];
+        ];
 
         if ($oid->html_type == 'select') {
             $field['value'] = $oid->get_select_values();
@@ -659,7 +659,7 @@ class SnmpController extends \BaseController
                     'model' 	=> 'NetElement',
                     'model_id'  => $this->device->netelementtype_id == 2 ? $device->id : $this->device->id,
                     'text' 		=> ($oid_o->name_gui ?: $oid_o->name)." ($full_oid):  '".$old_val."' => '$value'",
-                    ]);
+                ]);
 
                 $old_vals->{$full_oid} = $value;
             } else {

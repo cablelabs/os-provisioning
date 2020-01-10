@@ -30,7 +30,7 @@ class UpdateContractForBillingTable extends Migration
             $table->dropColumn([
                 'costcenter_id',
                 'salesman_id',
-                ]);
+            ]);
         });
     }
 }

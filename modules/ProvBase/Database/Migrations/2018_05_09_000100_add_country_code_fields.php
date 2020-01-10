@@ -49,8 +49,8 @@ class AddCountryCodeFields extends Migration
         $global_table = 'global_config';
         Schema::table($global_table, function (Blueprint $table) {
             $table->dropColumn([
-                    'default_country_code',
-                ]);
+                'default_country_code',
+            ]);
         });
     }
 }

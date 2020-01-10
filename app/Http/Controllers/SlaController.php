@@ -17,7 +17,7 @@ class SlaController extends BaseController
             // ['form_type' => 'text', 'name' => 'num_modems', 'description' => ''],
             // ['form_type' => 'text', 'name' => 'num_netgw', 'description' => ''],
             // ['form_type' => 'text', 'name' => 'system_status', 'description' => ''],
-            ];
+        ];
     }
 
     /**

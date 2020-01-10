@@ -37,10 +37,10 @@ class Nas extends \BaseModel
     public function view_index_label()
     {
         return ['table' => $this->table,
-                'index_header' => ["{$this->table}.nasname", 'netgw.hostname'],
-                'header' =>  $this->nasname,
-                'bsclass' => $this->get_bsclass(),
-                'eager_loading' => ['netgw'],
+            'index_header' => ["{$this->table}.nasname", 'netgw.hostname'],
+            'header' =>  $this->nasname,
+            'bsclass' => $this->get_bsclass(),
+            'eager_loading' => ['netgw'],
         ];
     }
 

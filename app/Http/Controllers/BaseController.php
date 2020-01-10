@@ -103,10 +103,10 @@ class BaseController extends Controller
         $class_name = $model->get_model_name();
 
         return [[
-                'name' => 'Edit',
-                // 'route' => $class_name.'.edit',
-                // 'link' => ['model_id' => $model->id, 'model' => $class_name],
-            ],
+            'name' => 'Edit',
+            // 'route' => $class_name.'.edit',
+            // 'link' => ['model_id' => $model->id, 'model' => $class_name],
+        ],
             [
                 'name' => 'Logging',
                 'route' => 'GuiLog.filter',
@@ -988,13 +988,13 @@ class BaseController extends Controller
         if (isset($changed_attributes) && $changed_attributes->isNotEmpty()) {
             $user = Auth::user();
             \App\GuiLog::log_changes([
-                    'user_id' => $user ? $user->id : 0,
-                    'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
-                    'method' 	=> 'updated N:M',
-                    'model' 	=> Str::singular(Str::studly($obj->table)),
-                    'model_id'  => $obj->id,
-                    'text'		=> $changed_attributes->implode("\n"),
-                    ]);
+                'user_id' => $user ? $user->id : 0,
+                'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
+                'method' 	=> 'updated N:M',
+                'model' 	=> Str::singular(Str::studly($obj->table)),
+                'model_id'  => $obj->id,
+                'text'		=> $changed_attributes->implode("\n"),
+            ]);
         }
 
         return isset($changed_attributes) ? $changed_attributes : collect();
@@ -1547,7 +1547,7 @@ class BaseController extends Controller
             'csv_filename' => $request->file('csv_file')->getClientOriginalName(),
             'csv_header' => $request->has('header'),
             'csv_data' => json_encode($data),
-            ]);
+        ]);
 
         $db_fields = \Schema::getColumnListing(static::get_model_obj()->getTable());
 

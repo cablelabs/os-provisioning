@@ -58,7 +58,7 @@ return [
         'number' => 'debt number',
         'total_fee' => 'Fee',
         'voucher_nr' => 'Voucher nr',
-        ],
+    ],
     //Invoices
     'invoice.type' => 'Type',
     'invoice.year' => 'Year',

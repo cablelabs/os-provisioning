@@ -15,12 +15,12 @@ class SupportRequestController extends BaseController
             'General Questions' => 'General Questions',
             'NetGw/CMTS or CM Issues' => 'NetGw/CMTS or CM Issues',
             'Others' => 'Others',
-            ];
+        ];
         $priorities = [
             'Critical' => 'Critical',
             'Major' => 'Major',
             'Minor' => 'Minor',
-            ];
+        ];
 
         // label has to be the same like column in sql table
         return [
@@ -29,7 +29,7 @@ class SupportRequestController extends BaseController
             ['form_type' => 'text', 'name' => 'mail', 'description' => 'Mail'],
             ['form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'],
             ['form_type' => 'textarea', 'name' => 'text', 'description' => 'Description'],
-            ];
+        ];
     }
 
     public function index()

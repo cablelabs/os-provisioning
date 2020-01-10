@@ -94,18 +94,18 @@ function escape_latex_special_chars($string)
 
     // NOTE: "\\" has to be on top as it otherwise would replace all replacements in following loop
     $map = [
-            '\\' => '\\textbackslash',
-            '#'  => '\\#',
-            '$'  => '\$',
-            '%'  => '\\%',
-            '&'  => '\\&',
-            '{'  => '\\{',
-            '}'  => '\\}',
-            '_'  => '\\_',
-            '~'  => '\\~{}',
-            '^'  => '\\^{}',
-            '€'  => '\\euro',   // there could be products containing “€”
-            '´' => '\'',
+        '\\' => '\\textbackslash',
+        '#'  => '\\#',
+        '$'  => '\$',
+        '%'  => '\\%',
+        '&'  => '\\&',
+        '{'  => '\\{',
+        '}'  => '\\}',
+        '_'  => '\\_',
+        '~'  => '\\~{}',
+        '^'  => '\\^{}',
+        '€'  => '\\euro',   // there could be products containing “€”
+        '´' => '\'',
     ];
 
     return strtr($string, $map);
@@ -234,7 +234,7 @@ function number_format_lang($number)
  * @param string|null $locale
  * @return string
  */
-function checkLocale($locale = null) : string
+function checkLocale($locale = null): string
 {
     return in_array($locale, config('app.supported_locales')) ?
             $locale :

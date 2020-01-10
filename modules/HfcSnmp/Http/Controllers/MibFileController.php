@@ -125,7 +125,7 @@ class MibFileController extends \BaseController
             'filename'  => $filename,
             'version' 	=> $version,
             'description' => $description,
-            ]);
+        ]);
 
         // MOVE file to Storage (if necessary)
         if (! $error) {

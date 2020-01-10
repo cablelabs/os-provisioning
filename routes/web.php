@@ -46,23 +46,23 @@ BaseRoute::group([], function () {
     BaseRoute::get('SupportRequest', [
         'uses' => 'SupportRequestController@index',
         'as'   => 'SupportRequest.index',
-        ]);
+    ]);
     BaseRoute::post('SupportRequest', [
         'uses' => 'SupportRequestController@store',
         'as'   => 'SupportRequest.store',
-        ]);
+    ]);
     BaseRoute::get('SupportRequest/create', [
         'uses' => 'SupportRequestController@create',
         'as'   => 'SupportRequest.create',
-        ]);
+    ]);
     BaseRoute::get('SupportRequest/{id}', [
         'uses' => 'SupportRequestController@edit',
         'as'   => 'SupportRequest.edit',
-        ]);
+    ]);
     BaseRoute::put('SupportRequest/{id}', [
         'uses' => 'SupportRequestController@update',
         'as'   => 'SupportRequest.update',
-        ]);
+    ]);
     BaseRoute::get('SupportRequest/{id}/log', [
         'uses' => '\App\Http\Controllers\GuiLogController@filter',
         'as' => 'SupportRequest.guilog',

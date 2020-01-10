@@ -40,9 +40,9 @@ class Endpoint extends \BaseModel
         }
 
         return ['table' => $this->table,
-                'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.ip', $this->table.'.description'],
-                'header' =>  $header,
-                'bsclass' => $bsclass, ];
+            'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.ip', $this->table.'.description'],
+            'header' =>  $header,
+            'bsclass' => $bsclass, ];
     }
 
     public function get_bsclass()

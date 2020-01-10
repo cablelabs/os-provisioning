@@ -44,11 +44,11 @@ class Parameter extends \BaseModel
         $header .= isset($this->oid) ? ' - '.$this->oid->oid : '';
 
         return ['table' => $this->table,
-                'index_header' => ['oid.name', 'oid.oid',  'oid.access'],
-                'header' =>  $header,
-                'order_by' => ['1' => 'asc'],
-                'bsclass' => $this->get_bsclass(),
-                'eager_loading' => ['oid'], ];
+            'index_header' => ['oid.name', 'oid.oid',  'oid.access'],
+            'header' =>  $header,
+            'order_by' => ['1' => 'asc'],
+            'bsclass' => $this->get_bsclass(),
+            'eager_loading' => ['oid'], ];
     }
 
     public function get_bsclass()

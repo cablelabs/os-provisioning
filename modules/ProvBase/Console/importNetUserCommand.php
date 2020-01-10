@@ -358,7 +358,7 @@ class importNetUserCommand extends Command
                 'us_rate_max' => $rates['us'] / 1024000,
                 'ds_rate_max_help' => $rates['ds'],
                 'us_rate_max_help' => $rates['us'],
-                ]);
+            ]);
 
             \Log::info("ADD QoS with ID $qos->id, Name $qos->name, ds_rate_max_help ".$rates['ds'].' us_rate_max_help '.$rates['us']);
 
@@ -453,13 +453,13 @@ class importNetUserCommand extends Command
                 'MaxRateSustained'  => '/DsServiceFlow(.*?)}/ms',
                 'MaxRateDown'       => '/ClassOfService(.*?)}/ms',
                 'max_down_rate ='   => '/cos {(.*?)}/ms',
-                ],
+            ],
             'us' => [
                 'MaxRateSustained'  => '/UsServiceFlow(.*?)}/ms',
                 'MaxRateUp'         => '/ClassOfService(.*?)}/ms',
                 'max_up_rate ='     => '/cos {(.*?)}/ms',
-                ],
-            ];
+            ],
+        ];
 
         foreach ($conditions as $direction => $subconditions) {
             foreach ($subconditions as $key => $condition) {
@@ -570,7 +570,7 @@ class importNetUserCommand extends Command
                 // TODO: sipdomain is probably always set globally!
                 'sipdomain' => 'iso.3.6.1.4.1.872.1.4.2.1.12',
             ],
-            ];
+        ];
 
         foreach ($types as $filter => $fields) {
             if (strpos($config, $filter) === false) {

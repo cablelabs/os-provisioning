@@ -89,12 +89,12 @@ class NetElement extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         return ['table' => $this->table,
-                'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name',  $this->table.'.ip', $this->table.'.pos', $this->table.'.options'],
-                'header' =>  $this->id.' - '.$this->name,
-                'bsclass' => $bsclass,
-                'order_by' => ['0' => 'asc'],
-                'eager_loading' => ['netelementtype'],
-                'edit' => ['netelementtype.name' => 'get_elementtype_name'], ];
+            'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name',  $this->table.'.ip', $this->table.'.pos', $this->table.'.options'],
+            'header' =>  $this->id.' - '.$this->name,
+            'bsclass' => $bsclass,
+            'order_by' => ['0' => 'asc'],
+            'eager_loading' => ['netelementtype'],
+            'edit' => ['netelementtype.name' => 'get_elementtype_name'], ];
     }
 
     public function get_bsclass()
@@ -346,8 +346,8 @@ class NetElement extends \BaseModel
             \Log::debug($debug);
 
             $netelement->update(['net' => $netelement->get_native_net(),
-                                 'cluster' => $netelement->get_native_cluster(),
-                                 'netgw' => $netelement->get_native_netgw(), ]);
+                'cluster' => $netelement->get_native_cluster(),
+                'netgw' => $netelement->get_native_netgw(), ]);
 
             if ($call_from_cmd == 1) {
                 echo "$debug\r";

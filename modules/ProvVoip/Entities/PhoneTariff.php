@@ -41,9 +41,9 @@ class PhoneTariff extends \BaseModel
         }
 
         return ['table' => $this->table,
-                'index_header' => [$this->table.'.name', $this->table.'.type', $this->table.'.description', $this->table.'.voip_protocol', $this->table.'.usable'],
-                'bsclass' => $bsclass,
-                'header' => $this->name.' ('.$this->type.')', ];
+            'index_header' => [$this->table.'.name', $this->table.'.type', $this->table.'.description', $this->table.'.voip_protocol', $this->table.'.usable'],
+            'bsclass' => $bsclass,
+            'header' => $this->name.' ('.$this->type.')', ];
     }
 
     // Name of View

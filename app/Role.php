@@ -32,13 +32,13 @@ class Role extends BaseModel
         ];
     }
 
-    public static function view_headline() : string
+    public static function view_headline(): string
     {
         return 'Roles';
     }
 
     // View Icon
-    public static function view_icon() : string
+    public static function view_icon(): string
     {
         return '<i class="fa fa-user-circle text-info"></i>';
     }

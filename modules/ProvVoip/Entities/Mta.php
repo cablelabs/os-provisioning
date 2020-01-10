@@ -47,12 +47,12 @@ class Mta extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         return ['table' => $this->table,
-                'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.type', 'configfile.name'],
-                'header' => $this->hostname.' - '.$this->mac,
-                'bsclass' => $bsclass,
-                'order_by' => ['3' => 'asc'],
-                'edit' => ['configfile.name' => 'has_configfile_assigned'],
-                'eager_loading' => ['configfile'], ];
+            'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.type', 'configfile.name'],
+            'header' => $this->hostname.' - '.$this->mac,
+            'bsclass' => $bsclass,
+            'order_by' => ['3' => 'asc'],
+            'edit' => ['configfile.name' => 'has_configfile_assigned'],
+            'eager_loading' => ['configfile'], ];
     }
 
     public function get_bsclass()

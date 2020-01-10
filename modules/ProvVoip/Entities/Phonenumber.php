@@ -48,13 +48,13 @@ class Phonenumber extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         return ['table' => $this->table,
-                'index_header' => [$this->table.'.number', 'phonenumbermanagement.activation_date', 'phonenumbermanagement.deactivation_date', 'phonenr_state', 'modem_city', 'sipdomain'],
-                'header' => 'Port '.$this->port.': '.$this->prefix_number.'/'.$this->number,
-                'bsclass' => $bsclass,
-                'edit' => ['phonenumbermanagement.activation_date' => 'get_act', 'phonenumbermanagement.deactivation_date' => 'get_deact', 'phonenr_state' => 'get_state', 'number' => 'build_number', 'modem_city' => 'modem_city'],
-                'eager_loading' => ['phonenumbermanagement', 'mta.modem'],
-                'disable_sortsearch' => ['phonenr_state' => 'false', 'modem_city' => 'false'],
-                'filter' => ['phonenumber.number' => $this->number_query()], ];
+            'index_header' => [$this->table.'.number', 'phonenumbermanagement.activation_date', 'phonenumbermanagement.deactivation_date', 'phonenr_state', 'modem_city', 'sipdomain'],
+            'header' => 'Port '.$this->port.': '.$this->prefix_number.'/'.$this->number,
+            'bsclass' => $bsclass,
+            'edit' => ['phonenumbermanagement.activation_date' => 'get_act', 'phonenumbermanagement.deactivation_date' => 'get_deact', 'phonenr_state' => 'get_state', 'number' => 'build_number', 'modem_city' => 'modem_city'],
+            'eager_loading' => ['phonenumbermanagement', 'mta.modem'],
+            'disable_sortsearch' => ['phonenr_state' => 'false', 'modem_city' => 'false'],
+            'filter' => ['phonenumber.number' => $this->number_query()], ];
     }
 
     public function number_query()
@@ -887,7 +887,7 @@ class PhonenumberObserver
                 'job' => 'voip_account_update',
                 'origin' => urlencode(\URL::previous()),
                 'phonenumber_id' => $phonenumber->id,
-                ];
+            ];
 
             $title = trans('provvoipenvia::messages.doManuallyNow');
             $envia_href = \HTML::linkRoute('ProvVoipEnvia.request', $title, $parameters);

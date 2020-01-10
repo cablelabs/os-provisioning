@@ -33,7 +33,7 @@ class GuiLogController extends BaseController
             ['form_type' => 'text', 'name' => 'model', 'description' => 'Model'],
             ['form_type' => 'text', 'name' => 'model_id', 'description' => 'ID'],
             ['form_type' => 'textarea', 'name' => 'text', 'description' => 'Changed Attributes'],
-            ];
+        ];
 
         // add link of changed Model in edit view - Note: check if route exists is necessary because CccUser.edit is
         // not available for instance

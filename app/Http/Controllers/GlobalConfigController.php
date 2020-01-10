@@ -76,8 +76,8 @@ class GlobalConfigController extends BaseController
         $module_model = [0 => static::get_model_obj()->first()];
 
         $links = [0 => ['name' => 'Global Config',
-                        'link' => 'GlobalConfig', ],
-                    ];
+            'link' => 'GlobalConfig', ],
+        ];
         $i = 1;
 
         foreach ($enabled as $module) {

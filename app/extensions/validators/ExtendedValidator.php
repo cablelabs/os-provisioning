@@ -139,7 +139,7 @@ class ExtendedValidator
             'LU' => 26,         // Luxembourg
             'NL' => 19,
             'PT' => 13,         // Portugal
-            ];
+        ];
 
         if (strlen($value) != (isset($creditor_id_length[$country_code]) ? $creditor_id_length[$country_code] : 1000)) {
             return false;

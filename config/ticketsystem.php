@@ -11,8 +11,8 @@ return [
             'icon'	=> 'fa-ticket',
             'class' => TicketType::class,
         ],
-    'Tickets' => [
-      'link' => 'Ticket.index',
+        'Tickets' => [
+            'link' => 'Ticket.index',
             'icon'	=> 'fa-ticket',
             'class' => Ticket::class,
         ],

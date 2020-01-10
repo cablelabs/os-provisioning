@@ -141,9 +141,9 @@ class PhonebookEntry extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         return ['table' => $this->table,
-                'index_header' => [$this->table.'.id'],
-                'header' => trans('view.PhonebookEntry'),
-                'bsclass' => $bsclass, ];
+            'index_header' => [$this->table.'.id'],
+            'header' => trans('view.PhonebookEntry'),
+            'bsclass' => $bsclass, ];
     }
 
     public function get_bsclass()

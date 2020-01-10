@@ -1,6 +1,6 @@
 <?php
 
 return [
-  'name' => 'Ccc',
-  'MenuItems' => [],
+    'name' => 'Ccc',
+    'MenuItems' => [],
 ];

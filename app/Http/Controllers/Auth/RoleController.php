@@ -33,7 +33,7 @@ class RoleController extends BaseController
                 'options' => [
                     'multiple' => 'multiple',
                     (Bouncer::can('update', User::class) && Bouncer::can('update', Role::class)) ? '' : 'disabled',
-                  ],
+                ],
                 'help' => trans('helper.assign_users'),
                 'selected' => $model->html_list($model->users, 'name'),
             ],
