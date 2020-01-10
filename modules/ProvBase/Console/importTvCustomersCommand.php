@@ -82,7 +82,7 @@ class importTvCustomersCommand extends Command
         15 		=> 61,
         16 		=> 58,
         '16,5'  => 52, // & 57
-        ];
+    ];
 
     /**
      * Create a new command instance.
@@ -339,7 +339,7 @@ class importTvCustomersCommand extends Command
             'valid_from_fixed' 	=> 1,
             'valid_to' 			=> $contract->contract_end,
             'valid_to_fixed' 	=> 1,
-            ]);
+        ]);
 
         \Log::info("Add TV Tariff $product_id for Contract $contract->number");
     }
@@ -398,7 +398,7 @@ class importTvCustomersCommand extends Command
             'valid_to_fixed' 	=> 1,
             // 'credit_amount' 	=> $credit_amount,
             'costcenter_id' 	=> $this->option('ccContract'),
-            ]);
+        ]);
 
         \Log::info("Add Credit [Product ID $product_id] for Amplifier to Contract $contract->number");
     }
@@ -447,7 +447,7 @@ class importTvCustomersCommand extends Command
             'state' 		=> 'RCUR',
             'costcenter_id' => $this->option('ccSepa'),
             // 'valid_to' 	=> NULL,
-            ]);
+        ]);
 
         \Log::info('Add SepaMandate [IBAN: '.$line[self::S_IBAN]."] for contract $contract->number");
     }

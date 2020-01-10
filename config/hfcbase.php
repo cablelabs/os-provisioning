@@ -4,4 +4,4 @@
         'name' => 'HfcBase',
         'link' => 'HfcBase.index',
         'MenuItems' => [],
-];
+    ];

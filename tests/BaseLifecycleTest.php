@@ -722,7 +722,7 @@ class BaseLifecycleTest extends TestCase
                 '_token' => Session::token(),
                 '_method' => 'DELETE',
                 'ids' => $post_ids,
-                ];
+            ];
 
             // the url to send the POST request to
             $url = '/admin/'.$this->model_name.'/0';

@@ -139,7 +139,7 @@ class BaseViewController extends Controller
      *
      * @return string
      */
-    public static function get_user_lang() : string
+    public static function get_user_lang(): string
     {
         if (Session::has('language')) {
             return Session::get('language');
@@ -549,7 +549,7 @@ class BaseViewController extends Controller
      * @return: array()
      * @author: Christian Schramm
      */
-    public static function view_main_menus() : array
+    public static function view_main_menus(): array
     {
         if (Session::has('menu') && Auth::user()->language !== 'browser') {
             return Session::get('menu');

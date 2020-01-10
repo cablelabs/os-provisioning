@@ -1,7 +1,7 @@
 <?php
 
 return [
- /*
+    /*
   * Authentication and Base
   */
     'translate'                 => 'Sie können dabei helfen NMS Prime zu übersetzen. Besuchen Sie:',
@@ -16,7 +16,7 @@ return [
     'View analysis pages of modems' => 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseiten der Modems.',
     'View analysis pages of netgw' => 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseite der NetGws.',
     'Download settlement runs'  => 'Diese Fähigkeit erlaubt oder verbietet den Download der Abrechnungsläufe. Wenn das Verwalten von Abrechnungsläufen verboten ist, hat diese Einstellung keine Auswirkung.',
- /*
+    /*
   * Index Page - Datatables
   */
     'SortSearchColumn'              => 'Diese Spalte kann nicht sortiert oder durchsucht werden.',
@@ -54,7 +54,7 @@ return [
         'pod'                   => 'Beispiele: 14D (14 Tage), 3M (Drei Monate), 1Y (Ein Jahr)',
         'proportional'          => 'Setzen Sie diesen Haken, wenn Posten, die innerhalb des aktuellen Abrechnungszyklus beginnen, anteilig berechnet werden sollen. Somit würde bei einem monatlich abzurechnenden Produkt mit Beginn in der Mitte des Monats im aktuellen Abrechnungszyklus nur die Hälfte des vollen Preises abgerechnet werden.',
         'Type'                  => 'Alle Felder außer dem Abrechnungszyklus müssen vor einer Änderung des Produkts gelöscht werden! Andernfalls können die Produkte in den meisten Fällen nicht gespeichert werden.',
-        ],
+    ],
     'Product_Number_of_Cycles'      => 'Achtung! Für alle Produkte, die in einem wiederkehrenden Zyklus bezahlt werden steht der Preis für jede einzelne Zahlung. Für Produkte, die einmalig bezahlt werden wird der Preis durch die Anzahl der Zyklen geteilt.',
 
     //SalesmanController
@@ -67,7 +67,7 @@ return [
     // SettlementrunController
     'settlement_verification'       => 'Die Rechnungen der Kunden werden nur mit aktivierter Checkbox angezeigt. Der Haken kann nur gesetzt werden, wenn der letzte Rechnungslauf für ALLE SEPA-Konten ausgeführt wurde (damit keine Änderungen missachtet werden). Info: Mit aktivierter Checkbox kann der Abrechnungslauf nicht wiederholt werden.',
 
- /*
+    /*
   * MODULE: Dashboard
   */
     'next'                          => 'Nächster Schritt: ',
@@ -85,14 +85,14 @@ return [
     'create_nameserver'             => 'Den Nameserver in /etc/resolv.conf auf 127.0.0.1 setzen und sicherstellen, dass dieser nicht via DHCP überschrieben wird (siehe DNS und PEERDNS in /etc/sysconfig/network-scripts/ifcfg-*)',
     'create_modem'                  => 'Erstes Modem anlegen',
 
- /*
+    /*
   * MODULE: HfcReq
   */
     'netelementtype_reload'         => 'In Sekunden. 0s zum Deaktivieren des Autoreloads. Nachkommastellen möglich.',
     'netelementtype_time_offset'    => 'In Sekunden. Nachkommastellen möglich.',
     'undeleteables'                 => 'Net & Cluster können weder gelöscht werden, noch kann der Name geändert werden, da die Existenz dieser Typen Vorraussetzung für die Erzeugung des Entitity-Relationship-Diagramms ist.',
 
- /*
+    /*
   * MODULE: HfcSnmp
   */
     'mib_filename'                  => 'Der Dateiname setzt sich aus MIB Name und Revision zusammen. Existiert bereits ein MIB-File mit selbem Dateiname und ist identisch, kann dieses nicht erneut angelegt werden.',
@@ -105,7 +105,7 @@ return [
     'parameter_html_frame'          => 'Durch Eintragen einer zweistelligen Framenummer wird der Parameter dem Frame auf der Seite zugewiesen. Durch das Eintragen unterschiedlicher Framenummern bei den Parmetern wird die Seite gemäß der Nummer aufgeteilt. Dabei entspricht die erste Zahl der Zeile und die zweite Zahl der Spalte. Auf SubOIDs von Tabellen hat die Framenummer keinen Einfluss (aber auf 3. Dimension-Parameter!).',
     'parameter_html_id'             => 'Durch Eintragen einer ID wird der Parameter in Reihe zu den anderen Parametern gemäß der ID (aufsteigend) angeordnet. In Tabellen kann durch setzen der ID im Sub-Parameter die Spaltenanordnung verändert werden.',
 
- /*
+    /*
   * MODULE: ProvBase
   */
     'contract' => [
@@ -139,7 +139,7 @@ return [
     'configfile_count'              => 'Die Zahl in Klammern zeigt an, wie häufig die jeweilige Konfigurationsdatei bereits verwendet wird.',
     'has_telephony'                 => 'Muss aktiv sein, wenn der Kunde Telefonie haben soll, aber kein Internet hat. Das Flag kann aktuell nicht genutzt werden, um die Telefonie bei Verträgen mit Internet zu deaktivieren. Dazu muss das MTA gelöscht oder die Telefonnummer deaktiviert werden. Info: Die Einstellung hat Einfluss auf NetworkAccess und MaxCPE im Modem Configfile - siehe Modem-Analyse im Tab \'Configfile\'',
 
- /*
+    /*
   * MODULE: ProvVoip
   */
     //PhonenumberManagementController
@@ -156,7 +156,7 @@ return [
     'PhonenumberManagement_ExternalDeactivationDate' => 'Datum der Deaktivierung beim Provider.',
     'PhonenumberManagement_ExternalDeactivationDateWithEnvia' => 'Datum der Deaktivierung bei envia TEL.',
     'PhonenumberManagement_Autogenerated' => 'Dieses Management wurde automatisch erzeugt. Bitte sämtliche Werte überprüfen und nach evtl. Korrektur den Haken entfernen',
-/*
+    /*
   * MODULE VoipMon
   */
     'mos_min_mult10'                => 'Minimaler Mean Opionion Score während des Anrufs',
@@ -172,7 +172,7 @@ return [
     'a_d50' => 'Anzahl der Pakete, welche eine Paketverzögerung (Packet Delay Variation - z.B. Jitter) zwischen 50ms and 70ms aufweisen',
     'a_d300' => 'Anzahl der Pakete, welche eine Paketverzögerung (Packet Delay Variation - z.B. Jitter) von über 300ms aufweisen',
     'called' => 'Betrachtung der Anrufrichtung von Angerufenem zum Anrufer',
-/*
+    /*
  * Module Ticketsystem
  */
     'assign_user' => 'Zuweisen eines Users zu einem Ticket.',
@@ -181,4 +181,4 @@ return [
     'noReplyName' => 'Der Name, der als Absender angezeigt werden soll, wenn Tickets geändert/erstellt werden. Z.B: NMS Prime',
     'ticket_settings' => 'Nächster Schritt: Den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration angeben.',
     'carrier_out'      => 'Carriercode des zukünftigen Vertragspartners der Rufnummer. Wenn leer, wird die Rufnummer gelöscht.',
- ];
+];

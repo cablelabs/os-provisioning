@@ -42,7 +42,7 @@ class AuthCommand extends Command
      *
      * @return Collection
      */
-    protected static function customAbilities() : Collection
+    protected static function customAbilities(): Collection
     {
         return collect([
             [
@@ -81,7 +81,7 @@ class AuthCommand extends Command
      *
      * @return mixed
      */
-    public function handle() : void
+    public function handle(): void
     {
         $this->resetAdminRole();
 
@@ -121,7 +121,7 @@ class AuthCommand extends Command
      *
      * @return void
      */
-    protected function resetAdminRole() : void
+    protected function resetAdminRole(): void
     {
         $this->setVerbosity('v');
 
@@ -138,7 +138,7 @@ class AuthCommand extends Command
      *
      * @return void
      */
-    protected function resetUserPermissions() : void
+    protected function resetUserPermissions(): void
     {
         $this->setVerbosity('vv');
 
@@ -159,7 +159,7 @@ class AuthCommand extends Command
      *
      * @return void
      */
-    protected function resetCustomAbilities() : void
+    protected function resetCustomAbilities(): void
     {
         $this->setVerbosity('vv');
 

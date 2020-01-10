@@ -99,7 +99,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     /**
      * Name which is Displayed on Top and in Headline
      */
-    public static function view_headline() : string
+    public static function view_headline(): string
     {
         return 'Users';
     }
@@ -107,7 +107,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     /**
      *  Icon for this model
      */
-    public static function view_icon() : string
+    public static function view_icon(): string
     {
         return '<i class="fa fa-user-o"></i>';
     }
@@ -122,12 +122,12 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     public function view_index_label()
     {
         return ['table' => $this->table,
-                'index_header' => [$this->table.'.login_name', $this->table.'.first_name', $this->table.'.last_name'],
-                'header' => $this->first_name.' '.$this->last_name,
-            ];
+            'index_header' => [$this->table.'.login_name', $this->table.'.first_name', $this->table.'.last_name'],
+            'header' => $this->first_name.' '.$this->last_name,
+        ];
     }
 
-    public function getHighestRank() : int
+    public function getHighestRank(): int
     {
         $ranks = $this->roles()->pluck('rank');
         $highestRank = 0;
@@ -139,7 +139,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $highestRank;
     }
 
-    public static function getHighestRankOf(self $user) : int
+    public static function getHighestRankOf(self $user): int
     {
         $ranks = $user->roles()->pluck('rank');
         $highestRank = 0;
@@ -150,17 +150,17 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $highestRank;
     }
 
-    public function hasHigherRankThan(self $user) : bool
+    public function hasHigherRankThan(self $user): bool
     {
         return $this->getHighestRank() > $user->getHighestRank() ? true : false;
     }
 
-    public function hasLowerRankThan(self $user) : bool
+    public function hasLowerRankThan(self $user): bool
     {
         return $this->getHighestRank() < $user->getHighestRank() ? true : false;
     }
 
-    public function hasSameRankAs(self $user) : bool
+    public function hasSameRankAs(self $user): bool
     {
         return $this->getHighestRank() == $user->getHighestRank() ? true : false;
     }
@@ -171,7 +171,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      * @param App\User $user
      * @return bool
      */
-    public function isFirstLogin() : bool
+    public function isFirstLogin(): bool
     {
         return $this->last_login_at == null || $this->password_changed_at == null;
     }
@@ -183,7 +183,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      * @param Carbon\Carbon $now
      * @return bool
      */
-    public function isPasswordExpired() : bool
+    public function isPasswordExpired(): bool
     {
         $passwordInterval = \Cache::get('GlobalConfig', function () {
             return \App\GlobalConfig::first();

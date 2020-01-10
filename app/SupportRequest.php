@@ -14,13 +14,13 @@ class SupportRequest extends BaseModel
         ];
     }
 
-    public static function view_headline() : string
+    public static function view_headline(): string
     {
         return 'Support Request';
     }
 
     // View Icon
-    public static function view_icon() : string
+    public static function view_icon(): string
     {
         return '<i class="fa fa-user-circle text-info"></i>';
     }
@@ -103,7 +103,7 @@ class SupportRequestObserver
             'destination'   => $destination,
             'supportrequest' => $supportrequest->getDirty(),
             'system_status' => SupportRequest::system_status(),
-            ];
+        ];
 
         $data = http_build_query($data_arr);
 

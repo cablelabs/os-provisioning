@@ -26,7 +26,7 @@ class AbilityController extends Controller
     public static function getCrudActions()
     {
         return collect([
-                '*'  => ['name' => 'manage', 'icon' => 'fa-star', 'bsclass' => 'success'],
+            '*'  => ['name' => 'manage', 'icon' => 'fa-star', 'bsclass' => 'success'],
             'view'   => ['name' => 'view', 'icon' => 'fa-eye', 'bsclass' => 'info'],
             'create' => ['name' => 'create', 'icon' => 'fa-plus', 'bsclass' => 'primary'],
             'update' => ['name' => 'update', 'icon' => 'fa-pencil', 'bsclass' => 'warning'],
@@ -234,13 +234,13 @@ class AbilityController extends Controller
         // Grouping GlobalConfig, Authentication and HFC Permissions to increase usability
         $modelAbilities = collect([
             'GlobalConfig' => collect([
-                    'BillingBase',
-                    'Ccc',
-                    'HfcBase',
-                    'ProvBase',
-                    'ProvVoip',
-                    'OverdueDebts',
-                ])
+                'BillingBase',
+                'Ccc',
+                'HfcBase',
+                'ProvBase',
+                'ProvVoip',
+                'OverdueDebts',
+            ])
                 ->filter(function ($name) use ($modules) {
                     return $modules->contains($name);
                 })
@@ -309,7 +309,7 @@ class AbilityController extends Controller
             $name => $allAbilities
                     ->where('entity_type', $name == 'Role' ? 'roles' : $models->pull($name)) // Bouncer specific
                     ->pluck('name'),
-            ];
+        ];
     }
 
     /**
@@ -354,8 +354,8 @@ class AbilityController extends Controller
         })
                 ->map(function ($ability) {
                     return ['id' => $ability->id,
-                            'name' => $ability->name,
-                            'entity_type' => $ability->entity_type,
+                        'name' => $ability->name,
+                        'entity_type' => $ability->entity_type,
                     ];
                 })
                 ->keyBy('id');

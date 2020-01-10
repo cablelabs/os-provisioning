@@ -470,7 +470,7 @@ class importCommand extends Command
             'telefontarif'      => $old_contract->telefontarif,
             'telefontarif_next_month' => $old_contract->telefontarif_next_month,
             'telefontarif_next' => $old_contract->telefontarif_next,
-            ];
+        ];
 
         $items_new = $new_contract->items;
 
@@ -529,7 +529,7 @@ class importCommand extends Command
                 'valid_from_fixed' 	=> 1,
                 'valid_to' 			=> $old_contract->abgeklemmt,
                 'valid_to_fixed' 	=> 1,
-                ]);
+            ]);
 
             \Log::info("ITEM ADD $key: ".$products_new->find($prod_id)->name.' ('.$prod_id.')');
         }
@@ -559,7 +559,7 @@ class importCommand extends Command
             'valid_to' 			=> date('Y-m-d', strtotime('last day of next year')),
             'valid_to_fixed' 	=> 1,
             'credit_amount' 	=> 4.2017,
-            ]);
+        ]);
     }
 
     /**
@@ -601,7 +601,7 @@ class importCommand extends Command
                 'valid_to' 	=> $mandate->gueltig_bis,
                 'disable' 			=> $old_contract->einzug ? false : true,
                 'state' 			=> 'RCUR',
-                ]);
+            ]);
 
             \Log::info('SEPAMANDATE ADD: '.utf8_encode($mandate->kontoinhaber).', '.$mandate->iban.', '.$mandate->institut.', '.$mandate->datum);
         }
@@ -686,7 +686,7 @@ class importCommand extends Command
                 'blacklisting' 	=> $email->blacklisting,
                 'greylisting' 	=> $email->greylisting,
                 'forwardto' 	=> $email->forwardto ?: '',
-                ]);
+            ]);
         }
 
         // Log

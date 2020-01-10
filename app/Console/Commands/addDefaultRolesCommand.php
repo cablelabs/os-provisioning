@@ -131,7 +131,7 @@ class addDefaultRolesCommand extends Command
                 'name' => 'technican',
                 'rank' => 40,
                 'description' => 'Allow only technical aspects',
-                ],
+            ],
             [
                 'id' => 5,
                 'name' => 'accounting',
@@ -196,7 +196,7 @@ class addDefaultRolesCommand extends Command
                 'BillingBase'			=> ['view'],
                 'Dashboard'				=> ['view'],
                 'Ticketsystem'			=> ['view'],
-                ],
+            ],
             'models' => [
                 'Contract'				=> ['manage'],
                 'GlobalConfig'			=> ['manage'],

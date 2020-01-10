@@ -18,16 +18,16 @@ class Sla extends BaseModel
         'total outage' => ['time' => '24x7', 'Response time' => '<b><2h</b>', 'RT without SLA' => '<i class="fa fa-times fa-lg text-danger" title="undefined"></i>'],
         'critical' => ['time' => '9to5', 'Response time' => '<b><3d</b> (typical same day)', 'RT without SLA' => '<i class="fa fa-times fa-lg text-danger" title="undefined"></i>'],
         'normal' => ['time' => '9to5', 'Response time' => '<b><2w</b> (typical < 3 days)', 'RT without SLA' => '<i class="fa fa-times fa-lg text-danger" title="undefined"></i>'],
-        ];
+    ];
 
     public static $threshholds = [
-            'xs' => ['modems' => 10, 'contracts' => 40, 'netgw' => 1, 'netelements' => 10],
-            's' => ['modems' => 100, 'contracts' => 400, 'netgw' => 1, 'netelements' => 10],
-            'm' => ['modems' => 500, 'contracts' => 2000, 'netgw' => 2, 'netelements' => 50],
-            'l' => ['modems' => 1000, 'contracts' => 4000, 'netgw' => 4, 'netelements' => 100],
-            'xl' => ['modems' => 2500, 'contracts' => 10000, 'netgw' => 6, 'netelements' => 250],
-            'xxl' => ['modems' => 5000, 'contracts' => 20000, 'netgw' => 10, 'netelements' => 500],
-            ];
+        'xs' => ['modems' => 10, 'contracts' => 40, 'netgw' => 1, 'netelements' => 10],
+        's' => ['modems' => 100, 'contracts' => 400, 'netgw' => 1, 'netelements' => 10],
+        'm' => ['modems' => 500, 'contracts' => 2000, 'netgw' => 2, 'netelements' => 50],
+        'l' => ['modems' => 1000, 'contracts' => 4000, 'netgw' => 4, 'netelements' => 100],
+        'xl' => ['modems' => 2500, 'contracts' => 10000, 'netgw' => 6, 'netelements' => 250],
+        'xxl' => ['modems' => 5000, 'contracts' => 20000, 'netgw' => 10, 'netelements' => 500],
+    ];
 
     public static function rules($id = null)
     {
@@ -37,13 +37,13 @@ class Sla extends BaseModel
         ];
     }
 
-    public static function view_headline() : string
+    public static function view_headline(): string
     {
         return 'SLA';
     }
 
     // View Icon
-    public static function view_icon() : string
+    public static function view_icon(): string
     {
         return '<i class="fa fa-user-circle text-info"></i>';
     }

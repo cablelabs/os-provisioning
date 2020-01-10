@@ -59,7 +59,7 @@ class PhonenumberController extends \BaseController
                         <input name="active" type="hidden" id="active" value="'.$active_state.'">'.$active_symbol.'
                     </div>',
                 'help' => 'Automatically set by (de)activation date in phonenumber management',
-                ];
+            ];
         }
 
         $reassign_help = 'Can be used to assign the phonenumber (and related data) to another MTA.';

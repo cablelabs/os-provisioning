@@ -121,10 +121,10 @@ class Modem extends \BaseModel
     public function getFaSmileClass()
     {
         switch ($this->support_state) {
-            case 'full-support':      {$faClass = 'fa-smile-o'; $bsClass = 'success'; }  break;
-            case 'verifying':         {$faClass = 'fa-meh-o'; $bsClass = 'warning'; }  break;
-            case 'not-supported':     {$faClass = 'fa-frown-o'; $bsClass = 'danger'; }   break;
-            default: {$faClass = 'fa-smile'; $bsClass = 'success'; } break;
+            case 'full-support':      $faClass = 'fa-smile-o'; $bsClass = 'success'; break;
+            case 'verifying':         $faClass = 'fa-meh-o'; $bsClass = 'warning'; break;
+            case 'not-supported':     $faClass = 'fa-frown-o'; $bsClass = 'danger'; break;
+            default: $faClass = 'fa-smile'; $bsClass = 'success'; break;
         }
 
         return ['fa-class'=> $faClass, 'bs-class'=> $bsClass];
@@ -929,12 +929,12 @@ class Modem extends \BaseModel
         $ch = curl_init();
 
         curl_setopt_array($ch, [
-                    CURLOPT_URL => "http://localhost:7557/$route",
-                    CURLOPT_RETURNTRANSFER => $customRequest == 'GET' ? true : false,
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_CUSTOMREQUEST => $customRequest,
-                    CURLOPT_POSTFIELDS => $data,
-                ]);
+            CURLOPT_URL => "http://localhost:7557/$route",
+            CURLOPT_RETURNTRANSFER => $customRequest == 'GET' ? true : false,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_CUSTOMREQUEST => $customRequest,
+            CURLOPT_POSTFIELDS => $data,
+        ]);
 
         $result = curl_exec($ch);
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -1467,7 +1467,7 @@ class Modem extends \BaseModel
             'zip' => $realty->zip,
             'city' => $realty->city,
             'district' => $realty->district,
-            ]);
+        ]);
     }
 
     /**

@@ -21,7 +21,7 @@ class ProvVoipServiceProvider extends ServiceProvider
         '\Modules\ProvVoip\Console\EkpCodeDatabaseUpdaterCommand',
         '\Modules\ProvVoip\Console\TRCClassDatabaseUpdaterCommand',
         '\Modules\ProvVoip\Console\PhonenumberCommand',
-        ];
+    ];
 
     /**
      * Boot the application events.

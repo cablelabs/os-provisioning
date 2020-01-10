@@ -58,7 +58,7 @@ return [
         'number' => 'OP-Nummer',
         'total_fee' => 'Gebühren',
         'voucher_nr' => 'Belegnr',
-        ],
+    ],
     //Invoices
     'invoice.type' => 'Typ',
     'invoice.year' => 'Jahr',
@@ -74,7 +74,7 @@ return [
         'type' => 'Typ',
         'name' => 'Produkt',
         'price' => 'Preis',
-        ],
+    ],
     // Salesman
     'salesman.id' => 'ID',
     'salesman_id' 		=> 'Verkäufer-ID',

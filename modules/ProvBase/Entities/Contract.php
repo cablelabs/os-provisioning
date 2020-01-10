@@ -75,10 +75,10 @@ class Contract extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         $ret = ['table' => $this->table,
-                'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', 'email', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number', $this->table.'.contract_start', $this->table.'.contract_end'],
-                'header' =>  self::labelFromData($this),
-                'bsclass' => $bsclass,
-                'order_by' => ['0' => 'asc'], ];
+            'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', 'email', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number', $this->table.'.contract_start', $this->table.'.contract_end'],
+            'header' =>  self::labelFromData($this),
+            'bsclass' => $bsclass,
+            'order_by' => ['0' => 'asc'], ];
 
         if (Module::collections()->has('BillingBase')) {
             $ret['index_header'][] = 'costcenter.name';
@@ -1496,7 +1496,7 @@ class Contract extends \BaseModel
             'zip' => $realty->zip,
             'city' => $realty->city,
             'district' => $realty->district,
-            ]);
+        ]);
     }
 
     public function isGroupContract()

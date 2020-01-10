@@ -36,13 +36,13 @@ class GuiLog extends \BaseModel
         $bsclass = $this->get_bsclass();
         //dd($this->method);
         return ['table' => $this->table,
-                'index_header' => [$this->table.'.created_at', $this->table.'.username', $this->table.'.method', $this->table.'.model', $this->table.'.model_id'],
-                'bsclass' => $bsclass,
-                'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
-                'edit'	=> ['model_id' => 'generate_model_link'],
-                'order_by' => ['0' => 'desc'],
-                'raw_columns' => ['model_id'],
-            ];
+            'index_header' => [$this->table.'.created_at', $this->table.'.username', $this->table.'.method', $this->table.'.model', $this->table.'.model_id'],
+            'bsclass' => $bsclass,
+            'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
+            'edit'	=> ['model_id' => 'generate_model_link'],
+            'order_by' => ['0' => 'desc'],
+            'raw_columns' => ['model_id'],
+        ];
     }
 
     public function get_bsclass()

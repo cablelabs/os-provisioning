@@ -41,11 +41,11 @@ class MibFile extends \BaseModel
     public function view_index_label()
     {
         return ['table' => $this->table,
-                'index_header' => [$this->table.'.id', $this->table.'.name',  $this->table.'.version'],
-                'header' =>  $this->name,
-                'bsclass' => $this->get_bsclass(),
-                'order_by' => ['1' => 'asc'],
-            ];
+            'index_header' => [$this->table.'.id', $this->table.'.name',  $this->table.'.version'],
+            'header' =>  $this->name,
+            'bsclass' => $this->get_bsclass(),
+            'order_by' => ['1' => 'asc'],
+        ];
     }
 
     public function get_bsclass()
