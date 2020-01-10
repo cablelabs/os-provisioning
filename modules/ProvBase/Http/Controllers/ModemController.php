@@ -111,7 +111,7 @@ class ModemController extends \BaseController
         $c = [
             ['form_type' => 'text', 'name' => 'company', 'description' => 'Company'],
             ['form_type' => 'text', 'name' => 'department', 'description' => 'Department'],
-            ['form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options()],
+            ['form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->getSalutationOptions()],
             ['form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname'],
             ['form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname'],
             ['form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'space' => 1, 'options' => ['placeholder' => 'YYYY-MM-DD']],

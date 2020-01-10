@@ -12,6 +12,9 @@ use Modules\ProvVoip\Entities\PhoneTariff;
 
 class ContractController extends \BaseController
 {
+    // get functions for some address select options
+    use \App\AddressFunctionsTrait;
+
     protected $relation_create_button = 'Add';
 
     /**
@@ -66,8 +69,8 @@ class ContractController extends \BaseController
             // 'create' makes this field a hidden input field in Modem create form - so the company, etc. will be already set from contract when the user wants to create a new modem
             ['form_type' => 'text', 'name' => 'company', 'description' => 'Company', 'create' => ['Modem']],
             ['form_type' => 'text', 'name' => 'department', 'description' => 'Department', 'create' => ['Modem']],
-            ['form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->get_salutation_options(), 'create' => ['Modem']],
-            ['form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic Degree', 'value' => $model->get_academic_degree_options()],
+            ['form_type' => 'select', 'name' => 'salutation', 'description' => 'Salutation', 'value' => $model->getSalutationOptions(), 'create' => ['Modem']],
+            ['form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic Degree', 'value' => $model->getAcademicDegreeOptions()],
             ['form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => ['Modem']],
             ['form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => ['Modem'], 'space' => '1'],
             // array_merge(['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => ['Modem'], 'autocomplete' => [], 'html' => "<div class=col-md-12 style='background-color:whitesmoke'>
@@ -247,6 +250,11 @@ class ContractController extends \BaseController
                     $rules['contact_id'] = 'empty';
                 }
             }
+        }
+
+        foreach ($rules as $name => $rule) {
+            $rules[$name] = str_replace('placeholder_salutations_person', implode(',', $this->getSalutationOptionsPerson()), $rules[$name]);
+            $rules[$name] = str_replace('placeholder_salutations_institution', implode(',', $this->getSalutationOptionsInstitution()), $rules[$name]);
         }
 
         return parent::prepare_rules($rules, $data);
