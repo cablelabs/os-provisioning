@@ -74,6 +74,8 @@ class SetEmptyStringsToNull extends Migration
                 $nullable[$field] = empty(array_intersect($required, explode('|', $rule))) ? true : false;
             }
 
+            dump("Set empty strings to null in {$tableName} table.");
+
             // get all column names
             $tableColumns = $this->getTableColumns($tableName);
             foreach (DB::getSchemaBuilder()->getColumnListing($tableName) as $column) {
@@ -87,7 +89,11 @@ class SetEmptyStringsToNull extends Migration
                 $type = DB::connection()->getDoctrineColumn($tableName, $column)->getType()->getName();
 
                 // exceptions: id, booleans and foreign keys
-                if ($column === 'id' || $type === 'boolean' || ($type == 'integer' && Str::endsWith($column, '_id'))) {
+                if (
+                    $column === 'id' ||
+                    $type === 'boolean' ||
+                    ($column !== 'parent_id' && $type == 'integer' && Str::endsWith($column, '_id'))
+                ) {
                     continue;
                 }
 
