@@ -1,14 +1,28 @@
 <?php
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class SetEmptyStringsToNull extends Migration
 {
+    protected $path;
+
+    protected const TABLES = [
+        'abilities',
+        'csv_data',
+        'guilog',
+        'roles',
+        'sla',
+        'supportrequest',
+        'users',
+    ];
+
     public function __construct()
     {
+        $this->path = dirname((new ReflectionClass(get_called_class()))->getFileName());
         DB::getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
         Schema::defaultStringLength(191);
     }
@@ -24,7 +38,8 @@ class SetEmptyStringsToNull extends Migration
         $models = collect(\App\BaseModel::get_models())->mapWithKeys(function ($namespace, $modelName) {
             return [strtolower($modelName) => $namespace];
         });
-        $tables = collect(Schema::getConnection()->getDoctrineSchemaManager()->listTableNames());
+        $tables = collect(Schema::getConnection()->getDoctrineSchemaManager()->listTableNames())
+            ->intersect($this->getModuletables());
 
         // tables of Laravel, Bouncer Package, programmatic filled models and "n to m"-Relationships
         $skipped = [
@@ -158,5 +173,17 @@ class SetEmptyStringsToNull extends Migration
         }
 
         return $columns->toArray();
+    }
+
+    public function getModuleTables()
+    {
+        if (Str::contains($this->path, base_path('modules'))) {
+            return collect(File::files($this->path.'/../../Entities'))
+                ->map(function ($file) {
+                    return Str::replaceFirst('.php', '', Str::lower($file->getFileName()));
+                });
+        }
+
+        return self::TABLES;
     }
 }
