@@ -74,7 +74,7 @@ class SetEmptyStringsToNull extends Migration
                 $nullable[$field] = empty(array_intersect($required, explode('|', $rule))) ? true : false;
             }
 
-            dump("Set empty strings to null in {$tableName} table.");
+            echo "Set empty strings to null in {$tableName} table.\n";
 
             // get all column names
             $tableColumns = $this->getTableColumns($tableName);
