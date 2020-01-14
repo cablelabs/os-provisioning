@@ -11,10 +11,7 @@ class SetEmptyStringsToNull extends Migration
     protected $path;
 
     protected const TABLES = [
-        'abilities',
-        'csv_data',
-        'guilog',
-        'roles',
+        'global_config',
         'sla',
         'supportrequest',
         'users',
