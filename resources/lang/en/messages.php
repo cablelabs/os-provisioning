@@ -600,7 +600,7 @@ return [
     'ticketUpdated'             => 'Ticket :id updated',
     'newTicket'                 => 'New ticket',
     'deletedTicketUsers'        => 'Deleted from ticket :id',
-    'deletedTicketUsersMessage' => 'You have been removed from ticket Nr. :id.',
+    'deletedTicketUsersMessage' => 'You have been removed from a ticket.',
     'ticketUpdatedMessage'      => 'this ticket has been updated.',
     'noReplyMail'               => 'Addresse of noreply E-mail',
     'noReplyName'               => 'Name of noreply E-mail',
