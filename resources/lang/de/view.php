@@ -340,8 +340,8 @@ return [
     'Button_Create QoS'             => 'QoS-Regel erstellen',
     'Button_Create Qos'             => 'QOS-Regel erstellen',
     // //NetGws
-    'Button_Create NetGws'          => 'NetGw anlegen',
-    'Button_Create Netgws'          => 'NetGw anlegen',
+    'Button_Create NetGw'          => 'NetGw anlegen',
+    'Button_Create NetGw'          => 'NetGw anlegen',
     // //IpPool
     'Button_Create IpPool'          => 'IpPool anlegen', //workaround
     'Button_Create IP-Pools'        => 'IpPool anlegen',
