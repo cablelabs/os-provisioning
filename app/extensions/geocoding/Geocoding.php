@@ -168,7 +168,15 @@ trait Geocoding
             $className = (new \ReflectionClass($this))->getShortName();
             Log::info("Trying to geocode $className $this->id against $url");
 
-            $geojson = file_get_contents($url, false, stream_context_create(['http'=> ['timeout' => 5]]));
+            set_error_handler(function () { /* ignore errors */
+            });
+            $geojson = file_get_contents($url, false, stream_context_create(['http'=> ['timeout' => 3]]));
+            restore_error_handler();
+
+            if (! $geojson) {
+                return false;
+            }
+
             $geodata_raw = json_decode($geojson, true);
 
             $matches = ['building', 'house', 'amenity', 'shop', 'tourism'];
@@ -268,7 +276,15 @@ trait Geocoding
         Log::info("Trying to geocode $className $this->id against $url");
 
         // get the json response
-        $resp_json = file_get_contents($url, false, stream_context_create(['http'=> ['timeout' => 5]]));
+        set_error_handler(function () { /* ignore errors */
+        });
+        $resp_json = file_get_contents($url, false, stream_context_create(['http'=> ['timeout' => 3]]));
+        restore_error_handler();
+
+        if (! $resp_json) {
+            return false;
+        }
+
         $resp = json_decode($resp_json, true);
 
         $status = array_get($resp, 'status', 'n/a');
