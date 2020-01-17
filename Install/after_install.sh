@@ -116,5 +116,3 @@ chmod 600 "$env/root.env"
 chmod 644 /var/log/messages
 systemctl restart rsyslog
 systemd-tmpfiles --create
-
-chmod 644 /etc/cron.d/*
