@@ -22,6 +22,7 @@ class Modem extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'modem';
 
+    public $guarded = ['formatted_support_state'];
     protected $appends = ['formatted_support_state'];
 
     // Add your validation rules here

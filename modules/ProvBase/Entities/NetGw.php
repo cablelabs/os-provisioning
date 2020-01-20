@@ -17,6 +17,7 @@ class NetGw extends \BaseModel
     public $table = 'netgw';
 
     // Attributes
+    public $guarded = ['formatted_support_state'];
     protected $appends = ['formatted_support_state'];
 
     // Add your validation rules here
