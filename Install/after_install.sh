@@ -86,6 +86,7 @@ cd "$dir"
 # L5 setup
 install -Dm640 -o apache -g root /dev/null /var/www/nmsprime/storage/logs/laravel.log
 chown apache /var/www/nmsprime/storage/logs/laravel.log
+rm -rf /var/www/nmsprime/bootstrap/cache/*
 /opt/rh/rh-php71/root/usr/bin/php artisan clear-compiled
 /opt/rh/rh-php71/root/usr/bin/php artisan optimize
 
