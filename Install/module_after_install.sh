@@ -3,6 +3,7 @@ source scl_source enable rh-php71
 env='/etc/nmsprime/env'
 
 cd '/var/www/nmsprime'
+rm -rf /var/www/nmsprime/bootstrap/cache/*
 /opt/rh/rh-php71/root/usr/bin/php artisan config:cache
 /opt/rh/rh-php71/root/usr/bin/php artisan module:publish
 /opt/rh/rh-php71/root/usr/bin/php artisan module:migrate
