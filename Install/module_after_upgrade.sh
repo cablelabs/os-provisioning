@@ -27,5 +27,3 @@ rm -f storage/framework/sessions/*
 chown -R apache storage bootstrap/cache /var/log/nmsprime
 chown -R apache:dhcpd /etc/dhcp-nmsprime
 systemd-tmpfiles --create
-
-chmod 644 /etc/cron.d/*

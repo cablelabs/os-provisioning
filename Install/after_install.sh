@@ -107,7 +107,7 @@ chown -R apache storage bootstrap/cache
 
 # make .env files readable for apache
 chgrp -R apache "$env"
-chmod 640 "$env"
+chmod 640 "$env"/*.env
 # only allow root to read/write mysql root credentials
 chown root:root "$env/root.env"
 chmod 600 "$env/root.env"
@@ -116,5 +116,3 @@ chmod 600 "$env/root.env"
 chmod 644 /var/log/messages
 systemctl restart rsyslog
 systemd-tmpfiles --create
-
-chmod 644 /etc/cron.d/*
