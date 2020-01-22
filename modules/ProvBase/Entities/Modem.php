@@ -606,6 +606,7 @@ class Modem extends \BaseModel
         if ($this->public || ($original && $original['public'])) {
             $data_pub = $this->generate_cm_dhcp_entry_pub();
 
+            $conf_pub = [];
             if (file_exists(self::CONF_FILE_PATH_PUB)) {
                 $conf_pub = file(self::CONF_FILE_PATH_PUB);
             } else {
