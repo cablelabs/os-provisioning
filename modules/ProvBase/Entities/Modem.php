@@ -606,6 +606,7 @@ class Modem extends \BaseModel
         if ($this->public || ($original && $original['public'])) {
             $data_pub = $this->generate_cm_dhcp_entry_pub();
 
+            $conf_pub = [];
             if (file_exists(self::CONF_FILE_PATH_PUB)) {
                 $conf_pub = file(self::CONF_FILE_PATH_PUB);
             } else {
@@ -1123,7 +1124,8 @@ class Modem extends \BaseModel
         try {
             $config = ProvBase::first();
             $fqdn = $this->hostname.'.'.$config->domain_name;
-            $netgw = self::get_netgw(gethostbyname($fqdn));
+            $ip = gethostbyname($fqdn);
+            $netgw = self::get_netgw($ip);
             $mac = $mac_changed ? $this->getOriginal('mac') : $this->mac;
             $mac_oid = implode('.', array_map('hexdec', explode(':', $mac)));
 
@@ -1131,15 +1133,30 @@ class Modem extends \BaseModel
                 throw new Exception('Reset Modem directly');
             }
 
-            if ($netgw && $netgw->company == 'Cisco') {
-                // delete modem entry in netgw - CISCO-DOCS-EXT-MIB::cdxCmCpeDeleteNow
-                snmpset($netgw->ip, $netgw->get_rw_community(), '1.3.6.1.4.1.9.9.116.1.3.1.1.9.'.$mac_oid, 'i', '1', 300000, 1);
-            } elseif ($netgw && $netgw->company == 'Casa') {
-                // reset modem via netgw, deleting is not possible - CASA-CABLE-CMCPE-MIB::casaCmtsCmCpeResetNow
-                snmpset($netgw->ip, $netgw->get_rw_community(), '1.3.6.1.4.1.20858.10.12.1.3.1.7.'.$mac_oid, 'i', '1', 300000, 1);
-            } else {
-                throw new Exception('NETGW company not set');
+            if ($fqdn == $ip) {
+                \Log::error("Could not restart $this->hostname. DNS server can not resolve hostname.");
+
+                return;
             }
+
+            if (! $netgw) {
+                throw new Exception('NetGw could not be determined for modem');
+            }
+
+            if (! in_array($netgw->company, ['Casa', 'Cisco'])) {
+                throw new Exception("Modem restart via NetGw vendor $netgw->company not yet implemented");
+            }
+
+            if ($netgw->company == 'Cisco') {
+                $oid = '1.3.6.1.4.1.9.9.116.1.3.1.1.9.';
+            }
+
+            if ($netgw->company == 'Casa') {
+                $oid = '1.3.6.1.4.1.20858.10.12.1.3.1.7.';
+            }
+
+            snmpset($netgw->ip, $netgw->get_rw_community(), $oid.$mac_oid, 'i', '1', 300000, 1);
+
             // success message
             \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_netgw'));
         } catch (Exception $e) {

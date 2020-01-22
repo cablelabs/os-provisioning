@@ -2,7 +2,7 @@ buttons: [
     {
         extend: 'print',
         className: 'btn-sm btn-primary',
-        titleAttr: "{{ trans('helper.PrintVisibleTable') }}",
+        titleAttr: "{!! trans('helper.PrintVisibleTable') !!}",
         exportOptions: {columns: ':visible.content'}
     },
     @if (Str::contains(Route::currentRouteName(),'index') && Route::has($route_name.'.import'))
@@ -17,7 +17,7 @@ buttons: [
     {
         extend: 'collection',
         text: "{{ trans('view.jQuery_ExportTo') }}",
-        titleAttr: "{{ trans('helper.ExportVisibleTable') }}",
+        titleAttr: "{!! trans('helper.ExportVisibleTable') !!}",
         className: 'btn-sm btn-primary',
         autoClose: true,
         buttons: [
@@ -61,7 +61,7 @@ buttons: [
     {
         extend: 'colvis',
         className: 'btn-sm btn-primary',
-        titleAttr: "{{ trans('helper.ChangeVisibilityTable') }}",
+        titleAttr: "{!! trans('helper.ChangeVisibilityTable') !!}",
         columns: ':not(.nocolvis)',
         postfixButtons: [
             {

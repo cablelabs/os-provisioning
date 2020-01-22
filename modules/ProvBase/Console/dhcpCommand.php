@@ -42,11 +42,6 @@ class dhcpCommand extends Command
      */
     public function handle()
     {
-        // don't run this command during a new installation
-        if (! Modem::count()) {
-            return;
-        }
-
         // Global Config part
         $prov = ProvBase::first();
         $prov->make_dhcp_glob_conf();
@@ -60,7 +55,12 @@ class dhcpCommand extends Command
             Mta::make_dhcp_mta_all();
         }
 
-        NetGw::make_dhcp_conf_all();
+        // don't run this command during a new installation
+        // this is needed, due to cmts to netgw renaming
+        $table = (new \ReflectionClass(NetGw::class))->getDefaultProperties()['table'];
+        if (\Schema::hasTable($table)) {
+            NetGw::make_dhcp_conf_all();
+        }
 
         // Restart dhcp server
         $dir = storage_path('systemd/');
