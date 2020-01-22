@@ -38,7 +38,7 @@ trait Geocoding
         // first try to get geocoding from OSM
         try {
             $geodata = $this->_geocode_osm_nominatim();
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $msg = 'Error in geocoding against OSM Nominatim: '.$ex->getMessage();
             Session::push('tmp_error_above_form', $msg);
             Log::error("$msg (".get_class($ex).' in '.$ex->getFile().' line '.$ex->getLine().')');
@@ -48,7 +48,7 @@ trait Geocoding
         if (! $geodata) {
             try {
                 $geodata = $this->_geocode_google_maps($save);
-            } catch (Exception $ex) {
+            } catch (\Exception $ex) {
                 $msg = 'Error in geocoding against google maps: '.$ex->getMessage();
                 Session::push('tmp_error_above_form', $msg);
                 Log::error("$msg (".get_class($ex).' in '.$ex->getFile().' line '.$ex->getLine().')');
@@ -168,14 +168,7 @@ trait Geocoding
             $className = (new \ReflectionClass($this))->getShortName();
             Log::info("Trying to geocode $className $this->id against $url");
 
-            set_error_handler(function () { /* ignore errors */
-            });
             $geojson = file_get_contents($url, false, stream_context_create(['http'=> ['timeout' => 3]]));
-            restore_error_handler();
-
-            if (! $geojson) {
-                return false;
-            }
 
             $geodata_raw = json_decode($geojson, true);
 
@@ -276,14 +269,7 @@ trait Geocoding
         Log::info("Trying to geocode $className $this->id against $url");
 
         // get the json response
-        set_error_handler(function () { /* ignore errors */
-        });
         $resp_json = file_get_contents($url, false, stream_context_create(['http'=> ['timeout' => 3]]));
-        restore_error_handler();
-
-        if (! $resp_json) {
-            return false;
-        }
 
         $resp = json_decode($resp_json, true);
 
