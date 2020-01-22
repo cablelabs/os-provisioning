@@ -8,7 +8,6 @@ use File;
 use Module;
 use App\Sla;
 use Request;
-use Exception;
 use Acme\php\ArrayHelper;
 
 class Modem extends \BaseModel
@@ -1130,7 +1129,7 @@ class Modem extends \BaseModel
             $mac_oid = implode('.', array_map('hexdec', explode(':', $mac)));
 
             if ($modem_reset) {
-                throw new Exception('Reset Modem directly');
+                throw new \Exception('Reset Modem directly');
             }
 
             if ($fqdn == $ip) {
@@ -1140,11 +1139,11 @@ class Modem extends \BaseModel
             }
 
             if (! $netgw) {
-                throw new Exception('NetGw could not be determined for modem');
+                throw new \Exception('NetGw could not be determined for modem');
             }
 
             if (! in_array($netgw->company, ['Casa', 'Cisco'])) {
-                throw new Exception("Modem restart via NetGw vendor $netgw->company not yet implemented");
+                throw new \Exception("Modem restart via NetGw vendor $netgw->company not yet implemented");
             }
 
             if ($netgw->company == 'Cisco') {
@@ -1159,7 +1158,7 @@ class Modem extends \BaseModel
 
             // success message
             \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_netgw'));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             \Log::error("Could not delete $this->hostname from NETGW ('".$e->getMessage()."'). Let's try to restart it directly.");
 
             try {
@@ -1168,7 +1167,7 @@ class Modem extends \BaseModel
 
                 // success message - make it a warning as sth is wrong when it's not already restarted by NETGW??
                 \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_direct'));
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 \Log::error("Could not restart $this->hostname directly ('".$e->getMessage()."')");
 
                 if (((strpos($e->getMessage(), 'php_network_getaddresses: getaddrinfo failed: Name or service not known') !== false) ||
@@ -1212,10 +1211,10 @@ class Modem extends \BaseModel
 
         try {
             $log = snmp2_real_walk($fqdn, $com, '.1.3.6.1.2.1.69.1.5.8.1');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             try {
                 $log = snmprealwalk($fqdn, $com, '.1.3.6.1.2.1.69.1.5.8.1');
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 return;
             }
         }

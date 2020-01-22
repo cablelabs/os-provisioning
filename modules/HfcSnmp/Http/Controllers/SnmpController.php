@@ -4,7 +4,6 @@ namespace Modules\HfcSnmp\Http\Controllers;
 
 use Log;
 use Session;
-use Exception;
 use Modules\HfcSnmp\Entities\OID;
 use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcSnmp\Entities\Parameter;
@@ -88,7 +87,7 @@ class SnmpController extends \BaseController
 
         try {
             $form_fields = $this->get_snmp_values($params, true);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $form_fields = null;
         }
 
@@ -469,36 +468,36 @@ class SnmpController extends \BaseController
                 foreach ($indices as $index) {
                     try {
                         $results["$oid_s.$index"] = snmp2_get($this->device->ip, $community, "$oid_s.$index", $this->timeout, $this->retry);
-                    } catch (Exception $e) {
+                    } catch (\Exception $e) {
                         $name = $oid->name_gui ?: $oid->name;
                         $this->errors[] = "$name.$index";
                         \Log::error("snmp2_get: $name.$index");
                     }
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 try {
                     snmpget($this->device->ip, $community, '1.3.6.1.2.1.1.1.0', $this->timeout, $this->retry);
 
                     foreach ($indices as $index) {
                         try {
                             $results["$oid_s.$index"] = snmp2_get($this->device->ip, $community, "$oid_s.$index", $this->timeout, $this->retry);
-                        } catch (Exception $e) {
+                        } catch (\Exception $e) {
                             $name = $oid->name_gui ?: $oid->name;
                             $this->errors[] = "$name.$index";
                             \Log::error("snmpget: $name.$index");
                         }
                     }
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $results = [];
                 }
             }
         } else {
             try {
                 $results = snmp2_real_walk($this->device->ip, $community, $oid_s, $this->timeout, $this->retry);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 try {
                     $results = snmprealwalk($this->device->ip, $community, $oid_s, $this->timeout, $this->retry);
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $results = [];
 
                     $this->errors[] = $oid->name_gui ?: $oid->name;
@@ -547,7 +546,7 @@ class SnmpController extends \BaseController
             Log::debug('snmp2_real_walk (table) '.$this->device->ip.' '.$oid->oid);
             try {
                 $results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->oid);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 self::check_reachability($e);
 
                 $results = [];
@@ -576,7 +575,7 @@ class SnmpController extends \BaseController
         $old_vals = $this->_values();
 
         if (! $old_vals) {
-            throw new Exception('Error: Stored SNMP Values were deleted!');
+            throw new \Exception('Error: Stored SNMP Values were deleted!');
         }
         // TODO: get empty collection or already filled with OIDs to increase performance if probable
         // $oids = $this->_get_oid_collection();
@@ -804,12 +803,12 @@ class SnmpController extends \BaseController
      * @param exception
      * @throws exception    when device is not reachable
      */
-    public static function check_reachability(Exception $e)
+    public static function check_reachability(\Exception $e)
     {
         $msg = $e->getMessage();
 
         if (stripos($msg, 'Name or service not known') !== false || stripos($msg, 'No response from') !== false) {
-            throw new Exception(trans('messages.snmp.unreachable'));
+            throw new \Exception(trans('messages.snmp.unreachable'));
         }
     }
 }

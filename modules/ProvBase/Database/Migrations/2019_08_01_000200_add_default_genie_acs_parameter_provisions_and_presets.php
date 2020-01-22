@@ -17,7 +17,7 @@ class AddDefaultGenieAcsParameterProvisionsAndPresets extends BaseMigration
             try {
                 file_get_contents("$url/provisions/");
                 break;
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 sleep(1);
                 $i++;
             }
