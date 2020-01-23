@@ -347,7 +347,7 @@ class NetElement extends \BaseModel
 
             $netelement->update(['net' => $netelement->get_native_net(),
                 'cluster' => $netelement->get_native_cluster(),
-                'netgw' => $netelement->get_native_netgw(), ]);
+                'netgw_id' => $netelement->get_native_netgw(), ]);
 
             if ($call_from_cmd == 1) {
                 echo "$debug\r";
