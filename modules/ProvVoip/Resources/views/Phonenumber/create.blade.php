@@ -15,7 +15,7 @@
 			try {
 				$currently_free_numbers = \Modules\ProvVoipEnvia\Entities\ProvVoipEnvia::get_free_numbers_for_view();
 			}
-			catch (Exception $ex) {
+			catch (\Exception $ex) {
 				echo "Exception getting free numbers from envia TEL: ".$ex->getMessage();
 			}
 		}

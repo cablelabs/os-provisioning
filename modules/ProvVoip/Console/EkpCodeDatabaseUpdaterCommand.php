@@ -177,7 +177,7 @@ class EkpCodeDatabaseUpdaterCommand extends Command
     {
         try {
             $this->csv = array_map('str_getcsv', str_getcsv(\Storage::get($this->csv_file), "\n"));
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             Log:error($this->name.': Something went wrong reading CSV file ('.$this->csv_file.') => '.$ex->getMessage());
 
             return false;

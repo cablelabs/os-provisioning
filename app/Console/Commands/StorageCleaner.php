@@ -113,7 +113,7 @@ class StorageCleaner extends Command
                 \Log::debug('Calling '.$entry['function'].'() for '.$entry['path']);
                 $function = $entry['function'];
                 $this->${'function'}($entry);
-            } catch (Exception $ex) {
+            } catch (\Exception $ex) {
                 if (array_key_exists('path', $entry)) {
                     $path = $entry['path'];
                 } else {
@@ -219,7 +219,7 @@ class StorageCleaner extends Command
                     $tar_return = explode("\n", $tar_return);
                     $tar_return_log = array_slice($tar_return, 0, 3);
                     \Log::debug('Calling "'.$tar_cmd.'" returned '.count($tar_return).' lines, beginning with '.implode('\n ', $tar_return_log));
-                } catch (Exception $ex) {
+                } catch (\Exception $ex) {
                     \Log::error("Exception calling '$tar_cmd': ".$ex->getMessage());
                 }
 

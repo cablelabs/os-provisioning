@@ -147,7 +147,7 @@ class ChangeEngineToInnodb extends Migration
 
         try {
             $migration_data = json_decode(\Storage::get($this->logfile), true);
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             echo "\tError reading ".$this->logfile.': '.get_class($ex).' ('.$ex->getMessage().")\n";
             $migration_data['migrations'] = [];	// we can do nothing
         }

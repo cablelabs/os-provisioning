@@ -8,7 +8,6 @@ use Session;
 use App\Role;
 use App\User;
 use Carbon\Carbon;
-use App\Exceptions\AuthException;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\BaseViewController;
 
@@ -51,7 +50,7 @@ class UserController extends BaseController
              $current_user != $model &&
              $current_user->isNotAn('admin') &&
              $current_user_rank <= $user_model_rank) {
-            throw new AuthException(trans('Not allowed to acces this user').'!');
+            throw new \App\Exceptions\AuthException(trans('Not allowed to acces this user').'!');
         }
 
         return [

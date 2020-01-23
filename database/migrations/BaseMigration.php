@@ -66,7 +66,7 @@ class BaseMigration extends Migration
     protected function set_fim_fields($fields)
     {
         if (is_null($this->fim)) {
-            throw new ErrorException('No FulltextIndexMaker in '.$this->caller_classname.'! – Maybe you want to index an InnoDB table?');
+            throw new \ErrorException('No FulltextIndexMaker in '.$this->caller_classname.'! – Maybe you want to index an InnoDB table?');
         }
 
         foreach ($fields as $field) {
