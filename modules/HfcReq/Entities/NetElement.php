@@ -6,6 +6,7 @@ use Auth;
 use Cache;
 use Session;
 use Modules\HfcBase\Entities\IcingaObject;
+use Modules\HfcCustomer\Entities\ModemHelper;
 
 class NetElement extends \BaseModel
 {
@@ -127,6 +128,32 @@ class NetElement extends \BaseModel
     public function view_belongs_to()
     {
         return $this->netelementtype;
+    }
+
+    /**
+     * Scopes
+     */
+
+    /**
+     * Scope to receive active connected Modems with several important counts.
+     *
+     * @param Illuminate\Database\Query\Builder $query
+     * @return Illuminate\Database\Query\Builder
+     */
+    public function scopeWithActiveModems($query)
+    {
+        return $query->where('id', '>', '2')
+        ->with('netelementtype', 'parent', 'ms_avg')
+        ->orderBy('pos')
+        ->withCount([
+            'modems',
+            'modems as ms_num' => function ($query) {
+                $query->where('us_pwr', '>', '0');
+            },
+            'modems as ms_cri' => function ($query) {
+                $query->where('us_pwr', '>', ModemHelper::$single_critical_us);
+            },
+        ]);
     }
 
     /**
