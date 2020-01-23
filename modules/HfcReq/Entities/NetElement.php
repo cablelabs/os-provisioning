@@ -104,7 +104,7 @@ class NetElement extends \BaseModel
             return 'info';
         }
 
-        if (! IcingaObject::db_exists()) {
+        if (! array_key_exists('icingaobject', $this->relations) && ! IcingaObject::db_exists()) {
             return 'warning';
         }
 
