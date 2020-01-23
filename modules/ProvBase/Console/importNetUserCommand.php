@@ -485,7 +485,7 @@ class importNetUserCommand extends Command
                     preg_match("/$key [0-9.]+/", $match, $hit);
 
                     if (! isset($hit[0]) || ! $hit[0]) {
-                        throw new Exception('Missing case on parsing modem configfile for datarates');
+                        throw new \Exception('Missing case on parsing modem configfile for datarates');
                     }
                     $delimiter = $key == 'max_down_rate =' || $key == 'max_up_rate =' ? '=' : ' ';
 

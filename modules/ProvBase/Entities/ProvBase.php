@@ -111,7 +111,7 @@ class ProvBase extends \BaseModel
             $hostname = explode('.', $fqdn);
 
             if (! isset($hostname[0])) {
-                throw new Exception('Hostname of Server not Set! Please specify a hostname via command line first!', 1);
+                throw new \Exception('Hostname of Server not Set! Please specify a hostname via command line first!', 1);
             } else {
                 $hostname = $hostname[0];
             }
