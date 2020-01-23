@@ -208,6 +208,32 @@ class NetElement extends \BaseModel
     }
 
     /**
+     * Get the average upstream power of connected modems
+     *
+     * @return HasMany Filtered and aggregated modem Relationship
+     */
+    public function ms_avg()
+    {
+        return $this->modems()
+            ->selectRaw('AVG(us_pwr) as ms_avg, netelement_id')
+            ->groupBy('netelement_id');
+    }
+
+    /**
+     * Laravel Magic Method to access average upstream power of connected modems
+     *
+     * @return int
+     */
+    public function getMsAvgAttribute()
+    {
+        if (! array_key_exists('ms_avg', $this->relations)) {
+            $this->load('ms_avg');
+        }
+
+        return round($this->getRelation('ms_avg')->first()->ms_avg, 1);
+    }
+
+    /**
      * Get first parent of type NetGw
      *
      * @return object NetElement 	(or NULL if there is no parent NetGw)
