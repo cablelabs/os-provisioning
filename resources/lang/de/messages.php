@@ -676,4 +676,6 @@ return [
     'no_ERD_File'               => 'Es konnte leider kein ERD-Diagramm erzeugt werden. Bitte versuchen Sie es später erneut.',
     'default_modem_picture'     => 'Bitte fügen Sie ein Bild des Gerätes in public/images/modems ein.',
     'Deprecated'                => 'Veraltet',
+    'Number'                    => 'Nummer',
+    'House_number'              => 'Hausnummer',
 ];
