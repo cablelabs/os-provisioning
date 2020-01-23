@@ -140,9 +140,9 @@ class NetElement extends \BaseModel
      * @param Illuminate\Database\Query\Builder $query
      * @return Illuminate\Database\Query\Builder
      */
-    public function scopeWithActiveModems($query)
+    public function scopeWithActiveModems($query, $field = 'id', $operator = '>', $id = 2)
     {
-        return $query->where('id', '>', '2')
+        return $query->where($field, $operator, $id)
         ->with('netelementtype', 'parent', 'ms_avg')
         ->orderBy('pos')
         ->withCount([
