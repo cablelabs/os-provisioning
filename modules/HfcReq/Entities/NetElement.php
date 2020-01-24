@@ -6,7 +6,6 @@ use Auth;
 use Cache;
 use Session;
 use Modules\HfcBase\Entities\IcingaObject;
-use Modules\HfcCustomer\Entities\ModemHelper;
 
 class NetElement extends \BaseModel
 {
@@ -142,16 +141,17 @@ class NetElement extends \BaseModel
      */
     public function scopeWithActiveModems($query, $field = 'id', $operator = '>', $id = 2)
     {
+        $ModemHelper = \Modules\HfcCustomer\Entities\ModemHelper::class;
+
         return $query->where($field, $operator, $id)
-        ->with('netelementtype', 'parent')
         ->orderBy('pos')
         ->withCount([
             'modems',
             'modems as modems_online_count' => function ($query) {
                 $query->where('us_pwr', '>', '0');
             },
-            'modems as modems_critical_count' => function ($query) {
-                $query->where('us_pwr', '>', ModemHelper::$single_critical_us);
+            'modems as modems_critical_count' => function ($query) use ($ModemHelper) {
+                $query->where('us_pwr', '>', $ModemHelper::$single_critical_us);
             },
         ]);
     }
