@@ -147,10 +147,10 @@ class NetElement extends \BaseModel
         ->orderBy('pos')
         ->withCount([
             'modems',
-            'modems as ms_num' => function ($query) {
+            'modems as modems_online_count' => function ($query) {
                 $query->where('us_pwr', '>', '0');
             },
-            'modems as ms_cri' => function ($query) {
+            'modems as modems_critical_count' => function ($query) {
                 $query->where('us_pwr', '>', ModemHelper::$single_critical_us);
             },
         ]);
@@ -215,7 +215,7 @@ class NetElement extends \BaseModel
     public function modemsUpstreamAvg()
     {
         return $this->modems()
-            ->selectRaw('AVG(us_pwr) as ms_avg, netelement_id')
+            ->selectRaw('AVG(us_pwr) as us_pwr_avg, netelement_id')
             ->groupBy('netelement_id');
     }
 
@@ -225,7 +225,7 @@ class NetElement extends \BaseModel
             ->where('us_pwr', '>', '0')
             ->where('x', '<>', '0')
             ->where('y', '<>', '0')
-            ->selectRaw('AVG(us_pwr) as ms_avg, AVG(x) as x_avg, AVG(y) as y_avg, netelement_id')
+            ->selectRaw('AVG(us_pwr) as us_pwr_avg, AVG(x) as x_avg, AVG(y) as y_avg, netelement_id')
             ->groupBy('netelement_id');
     }
 
@@ -234,17 +234,17 @@ class NetElement extends \BaseModel
      *
      * @return int
      */
-    public function getMsAvgAttribute()
+    public function getModemsUsPwrAvgAttribute()
     {
         if (array_key_exists('modemsUpstreamAndPositionAvg', $this->relations)) {
-            return round($this->getRelation('modemsUpstreamAndPositionAvg')->first()->ms_avg, 1);
+            return round($this->getRelation('modemsUpstreamAndPositionAvg')->first()->us_pwr_avg, 1);
         }
 
         if (! array_key_exists('modemsUpstreamAvg', $this->relations)) {
             $this->load('modemsUpstreamAvg');
         }
 
-        return round($this->getRelation('modemsUpstreamAvg')->first()->ms_avg, 1);
+        return round($this->getRelation('modemsUpstreamAvg')->first()->us_pwr_avg, 1);
     }
 
     /**
@@ -253,7 +253,7 @@ class NetElement extends \BaseModel
      *
      * @return int
      */
-    public function getMsAvgWithPosAttribute()
+    public function getModemsUsPwrPosAvgsAttribute()
     {
         if (! array_key_exists('modemsUpstreamAndPositionAvg', $this->relations)) {
             $this->load('modemsUpstreamAndPositionAvg');
