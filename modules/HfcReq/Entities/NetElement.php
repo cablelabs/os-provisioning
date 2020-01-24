@@ -143,7 +143,7 @@ class NetElement extends \BaseModel
     public function scopeWithActiveModems($query, $field = 'id', $operator = '>', $id = 2)
     {
         return $query->where($field, $operator, $id)
-        ->with('netelementtype', 'parent', 'ms_avg')
+        ->with('netelementtype', 'parent')
         ->orderBy('pos')
         ->withCount([
             'modems',
@@ -212,10 +212,20 @@ class NetElement extends \BaseModel
      *
      * @return HasMany Filtered and aggregated modem Relationship
      */
-    public function ms_avg()
+    public function modemsUpstreamAvg()
     {
         return $this->modems()
             ->selectRaw('AVG(us_pwr) as ms_avg, netelement_id')
+            ->groupBy('netelement_id');
+    }
+
+    public function modemsUpstreamAndPositionAvg()
+    {
+        return $this->modems()
+            ->where('us_pwr', '>', '0')
+            ->where('x', '<>', '0')
+            ->where('y', '<>', '0')
+            ->selectRaw('AVG(us_pwr) as ms_avg, AVG(x) as x_avg, AVG(y) as y_avg, netelement_id')
             ->groupBy('netelement_id');
     }
 
@@ -226,11 +236,30 @@ class NetElement extends \BaseModel
      */
     public function getMsAvgAttribute()
     {
-        if (! array_key_exists('ms_avg', $this->relations)) {
-            $this->load('ms_avg');
+        if (array_key_exists('modemsUpstreamAndPositionAvg', $this->relations)) {
+            return round($this->getRelation('modemsUpstreamAndPositionAvg')->first()->ms_avg, 1);
         }
 
-        return round($this->getRelation('ms_avg')->first()->ms_avg, 1);
+        if (! array_key_exists('modemsUpstreamAvg', $this->relations)) {
+            $this->load('modemsUpstreamAvg');
+        }
+
+        return round($this->getRelation('modemsUpstreamAvg')->first()->ms_avg, 1);
+    }
+
+    /**
+     * Laravel Magic Method to access aggregated modem stats
+     * here: upstream, x and y geopos
+     *
+     * @return int
+     */
+    public function getMsAvgWithPosAttribute()
+    {
+        if (! array_key_exists('modemsUpstreamAndPositionAvg', $this->relations)) {
+            $this->load('modemsUpstreamAndPositionAvg');
+        }
+
+        return $this->getRelation('modemsUpstreamAndPositionAvg')->first();
     }
 
     /**
