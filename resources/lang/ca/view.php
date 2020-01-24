@@ -76,8 +76,8 @@ return [
     'Menu_Net Element Types'    => 'Net Element Types',
     'Menu_Realty'               => 'Realties',
     'Menu_TicketTypes'          => 'TicketTypes',
-    'Menu_Nets'                 => 'Netze',
-    'Menu_allNets'              => 'Alle Netze',
+    'Menu_Nets'                 => 'Nets',
+    'Menu_allNets'              => 'All networks',
 
     //User Settings
     'Menu_UserSettings'         => 'User Settings',
