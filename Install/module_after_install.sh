@@ -9,6 +9,7 @@ rm -rf /var/www/nmsprime/bootstrap/cache/*
 /opt/rh/rh-php71/root/usr/bin/php artisan module:migrate
 #/opt/rh/rh-php71/root/usr/bin/php artisan queue:restart
 pkill -f "artisan queue:work"
+/opt/rh/rh-php71/root/usr/bin/php artisan bouncer:clean
 /opt/rh/rh-php71/root/usr/bin/php artisan auth:nms
 /opt/rh/rh-php71/root/usr/bin/php artisan route:cache
 /opt/rh/rh-php71/root/usr/bin/php artisan view:clear
