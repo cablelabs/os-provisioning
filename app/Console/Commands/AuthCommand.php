@@ -3,13 +3,11 @@
 namespace App\Console\Commands;
 
 use Bouncer;
-use App\Role;
 use App\User;
 use App\Ability;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
+use Nwidart\Modules\Facades\Module;
 
 class AuthCommand extends Command
 {
@@ -55,25 +53,39 @@ class AuthCommand extends Command
                 'title' => 'See income chart',
                 'only_owned' => '0',
             ],
-            [
-                'name' => 'view_analysis_pages_of',
-                'title' => 'View analysis pages of modems',
-                'entity_type' => \Modules\ProvBase\Entities\Modem::class,
-                'only_owned'  =>'0',
-            ],
-            [
-                'name' => 'view_analysis_pages_of',
-                'title' => 'View analysis pages of netgw',
-                'entity_type' => \Modules\ProvBase\Entities\NetGw::class,
-                'only_owned'  =>'0',
-            ],
-            [
-                'name' => 'download',
-                'title' => 'Download settlement runs',
-                'entity_type' => \Modules\BillingBase\Entities\SettlementRun::class,
-                'only_owned' =>'0',
-            ],
-        ]);
+        ])->pipe(function ($collection) {
+            if (Module::collections()->has('ProvBase')) {
+                $collection = $collection->concat([
+                    [
+                        'name' => 'view_analysis_pages_of',
+                        'title' => 'View analysis pages of modems',
+                        'entity_type' => \Modules\ProvBase\Entities\Modem::class,
+                        'only_owned'  =>'0',
+                    ],
+                    [
+                        'name' => 'view_analysis_pages_of',
+                        'title' => 'View analysis pages of netgw',
+                        'entity_type' => \Modules\ProvBase\Entities\NetGw::class,
+                        'only_owned'  =>'0',
+                    ],
+                ]);
+            }
+
+            return $collection;
+        })->pipe(function ($collection) {
+            if (Module::collections()->has('BillingBase')) {
+                $collection = $collection->concat([
+                    [
+                        'name' => 'download',
+                        'title' => 'Download settlement runs',
+                        'entity_type' => \Modules\BillingBase\Entities\SettlementRun::class,
+                        'only_owned' =>'0',
+                    ],
+                ]);
+            }
+
+            return $collection;
+        });
     }
 
     /**
