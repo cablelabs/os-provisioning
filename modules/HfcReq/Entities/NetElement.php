@@ -207,6 +207,15 @@ class NetElement extends \BaseModel
         return $this->hasMany(self::class, 'parent_id');
     }
 
+    public function clusters()
+    {
+        $cluster_id = array_search('Cluster', NetElementType::$undeletables);
+
+        return $this->hasMany(self::class, 'net')
+            ->where('id', '!=', $this->id)
+            ->where('netelementtype_id', $cluster_id);
+    }
+
     /**
      * Get the average upstream power of connected modems
      *
@@ -314,26 +323,14 @@ class NetElement extends \BaseModel
     /**
      * Return all NetElements of NetElementType Net (name = 'Net')
      */
-    public static function get_all_net()
+    public static function getNetsWithClusters()
     {
-        $net_id = array_search('Net', NetElementType::$undeletables);
+        return Cache::remember(Auth::user()->login_name.'-Nets', 5, function () {
+            $net_id = array_search('Net', NetElementType::$undeletables);
 
-        return self::where('netelementtype_id', '=', $net_id)->get();
-
-        // return self::where('type', '=', 'NET')->get();
-    }
-
-    /**
-     * Return all NetElements of NetElementType with name=Cluster belonging to a
-     * special NetElement of Type Net (NetElementType with name=Net)
-     * Cached for 5 Minutes
-     */
-    public function get_all_cluster_to_net()
-    {
-        return Cache::remember(Auth::user()->login_name.'Net-'.$this->id, 5, function () {
-            $cluster_id = array_search('Cluster', NetElementType::$undeletables);
-
-            return self::where('netelementtype_id', '=', $cluster_id)->where('net', '=', $this->id)->orderBy('name')->get();
+            return self::where('netelementtype_id', '=', $net_id)
+                ->with('clusters')
+                ->get();
         });
     }
 
@@ -605,13 +602,13 @@ class NetElementObserver
             return;
         }
 
-        $this->handleSidebarClusters($netelement);
+        $this->flushSidebarNetCache();
 
         // if ($netelement->is_type_cluster())
         // in created because otherwise netelement does not have an ID yet
         $netelement->net = $netelement->get_native_net();
         $netelement->cluster = $netelement->get_native_cluster();
-        $netelement->observer_enabled = false; 		// don't execute functions in updating again
+        $netelement->observer_enabled = false;  // don't execute functions in updating again
         $netelement->save();
     }
 
@@ -622,16 +619,20 @@ class NetElementObserver
         }
 
         if ($netelement->isDirty('parent_id', 'name')) {
+            $this->flushSidebarNetCache();
             $netelement->net = $netelement->get_native_net();
             $netelement->cluster = $netelement->get_native_cluster();
 
             // Change Net & cluster of all childrens too
-            Netelement::where('parent_id', '=', $netelement->id)->update(['net' => $netelement->net, 'cluster' => $netelement->cluster]);
-
-            $this->handleSidebarClusters($netelement, 1);
+            Netelement::where('parent_id', '=', $netelement->id)
+                ->update([
+                    'net' => $netelement->net,
+                    'cluster' => $netelement->cluster,
+                ]);
         }
 
-        // if netelementtype_id changes -> indices have to change there parameter id - otherwise they are not used anymore
+        // if netelementtype_id changes -> indices have to change there parameter id
+        // otherwise they are not used anymore
         if ($netelement->isDirty('netelementtype_id')) {
             $new_params = $netelement->netelementtype->parameters;
 
@@ -649,29 +650,13 @@ class NetElementObserver
         }
     }
 
-    public function deleted($netelement)
+    public function deleted()
     {
-        $this->handleSidebarClusters($netelement);
+        $this->flushSidebarNetCache();
     }
 
-    protected function handleSidebarClusters($netelement, $isUpdating = 0)
+    protected function flushSidebarNetCache()
     {
-        if (! $netelement->is_type_cluster()) {
-            return;
-        }
-
-        $netId = $netelement->get_native_net();
-        $user = Auth::user()->login_name;
-
-        if ($isUpdating) {
-            $oldNet = NetElement::find($netelement->getOriginal('parent_id'));
-            $net = NetElement::find($netelement->parent_id);
-            $oldNetId = $oldNet ? $oldNet->get_native_net() : 0;
-            $netId = $net ? $net->get_native_net() : 0;
-
-            $oldNetId ? Cache::forget($user.'Net-'.$oldNetId) : '';
-        }
-
-        $netId ? Cache::forget($user.'Net-'.$netId) : Cache::forget($user.'Net-'.$netelement->id);
+        Cache::forget(Auth::user()->login_name.'-Nets');
     }
 }
