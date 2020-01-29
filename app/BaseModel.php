@@ -26,8 +26,6 @@ class BaseModel extends Eloquent
     // flag showing if children also shall be deleted on Model::delete()
     protected $delete_children = true;
 
-    public $external_voip_enabled;
-    public $billing_enabled;
     protected $fillable = [];
 
     public $observer_enabled = true;
@@ -42,36 +40,6 @@ class BaseModel extends Eloquent
 
     // Add Comment here. ..
     protected $guarded = ['id'];
-
-    /**
-     * Constructor.
-     * Used to set some helper variables.
-     *
-     * @author Patrick Reichel
-     *
-     * @param $attributes pass through to Eloquent contstructor.
-     */
-    public function __construct($attributes = [])
-    {
-        // Config Host Setup
-        // @note: This could be used to fetch configuration tables
-        //        (like configfiles) from a global NMS Prime system
-        // @author: Torsten Schmidt
-        $env = env('DB_CONFIG_TABLES', false);
-
-        if ($env && strpos($env, $this->table) !== false) {
-            $this->connection = 'mysql-config';
-            \Log::debug('Use mysql-config connection to access '.$this->table.' table');
-        }
-
-        // call Eloquent constructor
-        // $attributes are needed! (or e.g. seeding and creating will not work)
-        parent::__construct($attributes);
-
-        // set helper variables
-        $this->external_voip_enabled = $this->external_voip_enabled();
-        $this->billing_enabled = $this->billing_enabled();
-    }
 
     /**
      * Helper to get the model name.
@@ -95,9 +63,8 @@ class BaseModel extends Eloquent
 
         $model_name = static::class;
 
-        // App\Auth is booted during authentication and doesnt need/have an observe method
         // GuiLog has to be excluded to prevent an infinite loop log entry creation
-        if ($model_name == 'App\Auth' || $model_name == 'App\GuiLog') {
+        if ($model_name == GuiLog::class) {
             return;
         }
 
@@ -290,57 +257,6 @@ class BaseModel extends Eloquent
     public function view_has_one()
     {
         return [];
-    }
-
-    /**
-     * Check if VoIP is enabled.
-     *
-     * TODO: - move to Contract/ContractController or use directly,
-     *         ore use fucntion directly instead of helpers variable
-     *
-     * @author Patrick Reichel
-     *
-     * @return true if one of the VoIP modules is enabled (currently only ProvVoipEnvia), else false
-     */
-    public function external_voip_enabled()
-    {
-        $voip_modules = [
-            'ProvVoipEnvia',
-        ];
-
-        foreach ($voip_modules as $module) {
-            if (\Module::collections()->has($module)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Check if billing is enabled.
-     *
-     * TODO: - currently this is a dummy (= we don't have a billing module yet!!)
-     *       - move to Contract/ContractController or use directly,
-     *         ore use fucntion directly instead of helpers variable
-     *
-     * @author Patrick Reichel
-     *
-     * @return true if one of the billing modules is enabled, else false
-     */
-    public function billing_enabled()
-    {
-        $billing_modules = [
-            'BillingBase',
-        ];
-
-        foreach ($billing_modules as $module) {
-            if (\Module::collections()->has($module)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

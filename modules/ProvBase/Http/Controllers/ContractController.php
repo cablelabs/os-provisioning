@@ -145,7 +145,7 @@ class ContractController extends \BaseController
                 ['form_type' => 'select', 'name' => 'next_qos_id', 'description' => 'QoS next month', 'value' => $model->html_list($qoss, 'name', true)],
             ];
 
-            if ($model->external_voip_enabled) {
+            if (\Module::collections()->has('ProvVoipEnvia')) {
                 $purchase_tariffs = PhoneTariff::get_purchase_tariffs();
                 $sales_tariffs = PhoneTariff::get_sale_tariffs();
 
