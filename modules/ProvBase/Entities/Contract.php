@@ -44,13 +44,17 @@ class Contract extends \BaseModel
             'city' => 'required_without_all:realty_id,apartment_id',
             'phone' => 'required',
             'email' => 'nullable|email',
-            'birthday' => 'required_if:salutation,placeholder_salutations_person|nullable|date',
+            'birthday' => 'nullable|date',
             'contract_start' => 'date',
             'contract_end' => 'nullable|date', // |after:now -> implies we can not change stuff in an out-dated contract
         ];
 
         if (Module::collections()->has('BillingBase')) {
             $rules['costcenter_id'] = 'required|numeric|min:1';
+        }
+
+        if (Module::collections()->has('BillingBase') || Module::collections()->has('ProvVoipEnvia')) {
+            $rules['birthday'] .= '|required_if:salutation,placeholder_salutations_person';
         }
 
         return $rules;
