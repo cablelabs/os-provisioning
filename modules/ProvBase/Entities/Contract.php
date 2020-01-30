@@ -51,6 +51,8 @@ class Contract extends \BaseModel
 
         if (Module::collections()->has('BillingBase')) {
             $rules['costcenter_id'] = 'required|numeric|min:1';
+        } else {
+            $rules['number'] .= '|nullable';
         }
 
         if (Module::collections()->has('BillingBase') || Module::collections()->has('ProvVoipEnvia')) {
