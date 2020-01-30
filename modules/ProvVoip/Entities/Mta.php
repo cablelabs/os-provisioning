@@ -44,12 +44,10 @@ class Mta extends \BaseModel
     // generates datatable content and classes for model
     public function view_index_label()
     {
-        $bsclass = $this->get_bsclass();
-
         return ['table' => $this->table,
             'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.type', 'configfile.name'],
             'header' => $this->hostname.' - '.$this->mac,
-            'bsclass' => $bsclass,
+            'bsclass' => $this->get_bsclass(),
             'order_by' => ['3' => 'asc'],
             'edit' => ['configfile.name' => 'has_configfile_assigned'],
             'eager_loading' => ['configfile'], ];
@@ -58,7 +56,7 @@ class Mta extends \BaseModel
     public function get_bsclass()
     {
         $bsclass = 'info';
-        if (! isset($this->configfile)) {
+        if (! array_key_exists('configfile', $this->relations)) {
             $bsclass = 'danger';
         }
 
