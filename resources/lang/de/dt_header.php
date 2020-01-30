@@ -164,7 +164,7 @@ return [
     'company' => 'Firma',
     'contract.contract_end' => 'Vertragsende',
     'contract.contract_start' => 'Vertragsbeginn',
-    'district' => 'Bezirk',
+    'contract.district' => 'Bezirk',
     'contract.firstname' => 'Vorname',
     'contract.house_number' => 'Hausnr',
     'contract.id' => 'Vertrag',
