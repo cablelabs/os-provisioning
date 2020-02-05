@@ -63,7 +63,7 @@ class NetGw extends \BaseModel
             'bsclass' => $bsclass,
             'order_by' => ['0' => 'asc'], ];
 
-        if (Sla::first()->valid()) {
+        if (Sla::firstCached()->valid()) {
             $ret['index_header'][] = $this->table.'.support_state';
             $ret['edit']['support_state'] = 'getSupportState';
             $ret['raw_columns'][] = 'support_state';

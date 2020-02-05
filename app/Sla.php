@@ -2,6 +2,9 @@
 
 namespace App;
 
+use Cache;
+use Carbon\Carbon;
+
 class Sla extends BaseModel
 {
     public $table = 'sla';
@@ -28,6 +31,13 @@ class Sla extends BaseModel
         'xl' => ['modems' => 2500, 'contracts' => 10000, 'netgw' => 6, 'netelements' => 250],
         'xxl' => ['modems' => 5000, 'contracts' => 20000, 'netgw' => 10, 'netelements' => 500],
     ];
+
+    public static function firstCached()
+    {
+        return Cache::remember('sla', Carbon::parse('1 day'), function () {
+            return self::first();
+        });
+    }
 
     public static function rules($id = null)
     {
@@ -99,14 +109,16 @@ class Sla extends BaseModel
             return false;
         }
 
-        $this->set_sla_dependent_values();
+        return Cache::remember('sla_valid', Carbon::parse('1 day'), function () {
+            $this->set_sla_dependent_values();
 
-        foreach (self::$threshholds[$this->name] as $key => $value) {
-            if ($this->{'num_'.$key} >= $value) {
-                return false;
+            foreach (self::$threshholds[$this->name] as $key => $value) {
+                if ($this->{'num_'.$key} >= $value) {
+                    return false;
+                }
             }
-        }
 
-        return true;
+            return true;
+        });
     }
 }
