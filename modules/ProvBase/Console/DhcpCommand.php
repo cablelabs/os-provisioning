@@ -70,6 +70,16 @@ class DhcpCommand extends Command
             }
         }
 
+        // check if we have to build failover conf
+        if (
+            (\Module::collections()->has('ProvHA'))
+            &&
+            // check if master or slave
+            (in_array(config('provha.hostinfo.own_state'), ['master', 'slave']))
+        ) {
+            \Modules\ProvHA\Entities\ProvHA::make_dhcp_failover_conf();
+        }
+
         // Restart dhcp server
         $dir = storage_path('systemd/');
         if (! is_dir($dir)) {
