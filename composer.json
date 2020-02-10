@@ -28,8 +28,8 @@
     "symfony/dom-crawler": "~3.0",
     "symfony/css-selector": "~3.0",
     "laravel/tinker": "^1.0",
-    "filp/whoops": "~2.0",
-    "fzaninotto/faker": "~1.5.0"
+    "fzaninotto/faker": "~1.5.0",
+    "facade/ignition": "^1.14"
   },
   "autoload": {
     "classmap": [
