@@ -17,6 +17,7 @@ if [ $(rpm -qa nmsprime-* --queryformat '%{VERSION}-%{RELEASE}\n' | sort | uniq 
   /opt/rh/rh-php71/root/usr/bin/php artisan module:publish
   #/opt/rh/rh-php71/root/usr/bin/php artisan queue:restart
   pkill -f "artisan queue:work"
+  /opt/rh/rh-php71/root/usr/bin/php artisan bouncer:clean
   /opt/rh/rh-php71/root/usr/bin/php artisan auth:nms
   /opt/rh/rh-php71/root/usr/bin/php artisan route:cache
   /opt/rh/rh-php71/root/usr/bin/php artisan view:clear
