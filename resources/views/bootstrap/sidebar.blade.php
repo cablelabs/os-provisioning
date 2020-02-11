@@ -73,7 +73,7 @@
               </a>
             <ul class="sub-menu d-block" style="list-style-position: inside;">
               {{-- Network-Clusters are Cached for 5 minutes --}}
-              @foreach ($network->get_all_cluster_to_net() as $cluster)
+              @foreach ($network->clusters as $cluster)
                 <li id="cluster_{{$cluster->id}}" class="has-sub" data-sidebar="level3">
                   <a href="{{ route('TreeErd.show', ['field' => 'cluster', 'search' => $cluster->id]) }}" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
                     <i class="fa fa-circle-thin text-info"></i>

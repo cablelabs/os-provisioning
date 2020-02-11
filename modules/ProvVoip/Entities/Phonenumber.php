@@ -45,16 +45,16 @@ class Phonenumber extends \BaseModel
     // generates datatable content and classes for model
     public function view_index_label()
     {
-        $bsclass = $this->get_bsclass();
-
-        return ['table' => $this->table,
+        return [
+            'table' => $this->table,
             'index_header' => [$this->table.'.number', 'phonenumbermanagement.activation_date', 'phonenumbermanagement.deactivation_date', 'phonenr_state', 'modem_city', 'sipdomain'],
             'header' => 'Port '.$this->port.': '.$this->prefix_number.'/'.$this->number,
-            'bsclass' => $bsclass,
+            'bsclass' => $this->get_bsclass(),
             'edit' => ['phonenumbermanagement.activation_date' => 'get_act', 'phonenumbermanagement.deactivation_date' => 'get_deact', 'phonenr_state' => 'get_state', 'number' => 'build_number', 'modem_city' => 'modem_city'],
             'eager_loading' => ['phonenumbermanagement', 'mta.modem'],
             'disable_sortsearch' => ['phonenr_state' => 'false', 'modem_city' => 'false'],
-            'filter' => ['phonenumber.number' => $this->number_query()], ];
+            'filter' => ['phonenumber.number' => $this->number_query()],
+        ];
     }
 
     public function number_query()
@@ -64,33 +64,28 @@ class Phonenumber extends \BaseModel
 
     public function get_bsclass()
     {
-        $management = $this->phonenumbermanagement;
-        if (is_null($management)) {
-            $bsclass = 'warning';
-        } else {
-            $act = $management->activation_date;
-            $deact = $management->deactivation_date;
-            // deal with legacy problem of zero dates
-            if (! boolval($act)) {
-                $bsclass = 'danger';
-            } elseif ($act > date('c')) {
-                $bsclass = 'warning';
-            } else {
-                if (! boolval($deact)) {
-                    $bsclass = 'success';
-                } else {
-                    if ($deact > date('c')) {
-                        $state = 'Active. Deactivation date set but not reached yet.';
-                        $bsclass = 'warning';
-                    } else {
-                        $state = 'Deactivated.';
-                        $bsclass = 'info';
-                    }
-                }
-            }
+        if (! array_key_exists('phonenumbermanagement', $this->relations)) {
+            return 'warning';
         }
 
-        return $bsclass;
+        $management = $this->phonenumbermanagement;
+        $act = $management ? $management->activation_date : null;
+        $deact = $management ? $management->deactivation_date : null;
+
+        // deal with legacy problem of zero dates
+        if (! boolval($act)) {
+            return 'danger';
+        }
+
+        if ($act > date('c')) {
+            return 'warning';
+        }
+
+        if (! boolval($deact)) {
+            return 'success';
+        }
+
+        return $deact > date('c') ? 'warning' : 'info';
     }
 
     public function get_state()

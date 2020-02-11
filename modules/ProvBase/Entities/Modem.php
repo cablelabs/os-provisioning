@@ -80,7 +80,7 @@ class Modem extends \BaseModel
             'where_clauses' => self::_get_where_clause(),
         ];
 
-        if (Sla::first()->valid()) {
+        if (Sla::firstCached()->valid()) {
             $ret['index_header'][] = $this->table.'.support_state';
             $ret['edit']['support_state'] = 'getSupportState';
             $ret['raw_columns'][] = 'support_state';

@@ -33,11 +33,10 @@ class GuiLog extends \BaseModel
     // generates datatable content and classes for model
     public function view_index_label()
     {
-        $bsclass = $this->get_bsclass();
-        //dd($this->method);
-        return ['table' => $this->table,
+        return [
+            'table' => $this->table,
             'index_header' => [$this->table.'.created_at', $this->table.'.username', $this->table.'.method', $this->table.'.model', $this->table.'.model_id'],
-            'bsclass' => $bsclass,
+            'bsclass' => $this->get_bsclass(),
             'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
             'edit'	=> ['model_id' => 'generate_model_link'],
             'order_by' => ['0' => 'desc'],
