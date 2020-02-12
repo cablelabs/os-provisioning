@@ -44,7 +44,7 @@ return [
     'Menu_MainMenu'             => 'Hauptmenü',
     'Menu_Node'                 => 'Übergabepunkte',
     'Menu_Config Page'          => 'Systemkonfiguration',
-    'Menu_Logging'              => 'Logs',
+    'Menu_Log'                  => 'Log',
     'Menu_Product List'         => 'Produktangebot',
     'Menu_SEPA Accounts'        => 'SEPA-Konten',
     'Menu_Settlement Run'       => 'Abrechnungslauf',

@@ -44,7 +44,7 @@ return [
     'Menu_MainMenu'             => 'Main Menu',
     'Menu_Node'                 => 'Nodes',
     'Menu_Config Page'          => 'Global Config Page',
-    'Menu_Logging'              => 'Logging',
+    'Menu_Log'                  => 'Log',
     'Menu_Product List'         => 'Product List',
     'Menu_SEPA Accounts'        => 'SEPA Accounts',
     'Menu_Settlement Run'       => 'Settlement Run',

@@ -224,6 +224,7 @@ class NetElement extends \BaseModel
     public function modemsUpstreamAvg()
     {
         return $this->modems()
+            ->where('us_pwr', '>', '0')
             ->selectRaw('AVG(us_pwr) as us_pwr_avg, netelement_id')
             ->groupBy('netelement_id');
     }

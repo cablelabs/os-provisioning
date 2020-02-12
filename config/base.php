@@ -8,7 +8,7 @@ return[
             'icon' => 'fa-book',
             'class' => App\GlobalConfig::class,
         ],
-        'Logging' => [
+        'Log' => [
             'link' => 'GuiLog.index',
             'icon' => 'fa-history',
             'class' => App\GuiLog::class,
