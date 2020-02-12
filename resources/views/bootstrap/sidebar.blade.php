@@ -37,8 +37,8 @@
             </div>
           <ul class="sub-menu">
           @foreach ($typearray['submenu'] as $type => $valuearray)
-          <li id="{{ Str::slug($type,'_') }}">
-            <a href="{{route($valuearray['link'])}}" style="overflow: hidden; white-space: nowrap;">
+          <li id="menu-{{ Str::slug($type,'_') }}">
+            <a href="{{ route($valuearray['link']) }}" style="overflow: hidden; white-space: nowrap;">
               <i class="fa fa-fw {{ $valuearray['icon'] }}"></i>
               <span>{{ $type }}</span>
             </a>
