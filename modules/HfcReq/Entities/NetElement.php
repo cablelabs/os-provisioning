@@ -247,14 +247,14 @@ class NetElement extends \BaseModel
     public function getModemsUsPwrAvgAttribute()
     {
         if (array_key_exists('modemsUpstreamAndPositionAvg', $this->relations)) {
-            return round($this->getRelation('modemsUpstreamAndPositionAvg')->first()->us_pwr_avg, 1);
+            return round(optional($this->getRelation('modemsUpstreamAndPositionAvg')->first())->us_pwr_avg, 1);
         }
 
         if (! array_key_exists('modemsUpstreamAvg', $this->relations)) {
             $this->load('modemsUpstreamAvg');
         }
 
-        return round($this->getRelation('modemsUpstreamAvg')->first()->us_pwr_avg, 1);
+        return round(optional($this->getRelation('modemsUpstreamAvg')->first())->us_pwr_avg, 1);
     }
 
     /**
@@ -269,7 +269,7 @@ class NetElement extends \BaseModel
             $this->load('modemsUpstreamAndPositionAvg');
         }
 
-        return $this->getRelation('modemsUpstreamAndPositionAvg')->first();
+        return optional($this->getRelation('modemsUpstreamAndPositionAvg')->first());
     }
 
     /**
