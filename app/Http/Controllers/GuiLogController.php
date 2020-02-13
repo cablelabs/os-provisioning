@@ -111,7 +111,7 @@ class GuiLogController extends BaseController
             })
             ->editColumn('created_at', function ($guilog) use ($routeName) {
                 return '<a href="'.route($routeName.'.edit', $guilog->id).
-                        '" title="'.str_replace(', ', '1&#013;', $guilog->text).'"><strong>'.
+                        '" title="'.e(str_replace(', ', '1&#013;', $guilog->text)).'"><strong>'.
                         $guilog->view_icon().$guilog->created_at.'</strong></a>';
             })
             ->rawColumns(['created_at'])
