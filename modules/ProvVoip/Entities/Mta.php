@@ -81,7 +81,7 @@ class Mta extends \BaseModel
     public function view_has_many()
     {
         $ret['Edit']['Phonenumber']['class'] = 'Phonenumber';
-        $ret['Edit']['Phonenumber']['relation'] = $this->phonenumbers;
+        $ret['Edit']['Phonenumber']['relation'] = $this->phonenumbers()->with('phonenumbermanagement')->get();
 
         return $ret;
     }
