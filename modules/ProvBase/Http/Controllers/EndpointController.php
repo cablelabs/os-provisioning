@@ -28,16 +28,11 @@ class EndpointController extends \BaseController
     {
         $data = parent::prepare_input($data);
 
-        return unify_mac($data);
-    }
-
-    public function prepare_rules($rules, $data)
-    {
-        // as we are setting IP to “null” if no fixed IP is used: remove rule in this case
-        if ($data['fixed_ip'] == '0') {
-            $rules['ip'] = '';
+        // delete possibly existing ip to avoid later collisions in validation rules
+        if ($data['fixed_ip'] == 0) {
+            $data['ip'] = null;
         }
 
-        return $rules;
+        return unify_mac($data);
     }
 }

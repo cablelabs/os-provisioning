@@ -12,7 +12,7 @@ class Endpoint extends \BaseModel
         return [
             'mac' => 'required|mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL',
             'hostname' => 'required|regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/|unique:endpoint,hostname,'.$id.',id,deleted_at,NULL',
-            'ip' => 'required|ip|unique:endpoint,ip,'.$id.',id,deleted_at,NULL',
+            'ip' => 'nullable|required_if:fixed_ip,1|ip|unique:endpoint,ip,'.$id.',id,deleted_at,NULL',
         ];
     }
 
