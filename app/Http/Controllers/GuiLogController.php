@@ -102,15 +102,12 @@ class GuiLogController extends BaseController
         return DataTables::make($request_query)
             ->addColumn('responsive', '')
             ->setRowClass(function ($guilog) {
-                $bsclass = 'info';
-                if ($guilog->method == 'created') {
-                    $bsclass = 'success';
-                }
-                if ($guilog->method == 'deleted') {
-                    $bsclass = 'danger';
-                }
+                $lookup = [
+                    'created' => 'success',
+                    'deleted' => 'danger',
+                ];
 
-                return $bsclass;
+                return $lookup[$guilog->method] ?? 'info';
             })
             ->editColumn('created_at', function ($guilog) use ($routeName) {
                 return '<a href="'.route($routeName.'.edit', $guilog->id).
