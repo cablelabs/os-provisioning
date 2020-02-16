@@ -80,8 +80,9 @@ class Mta extends \BaseModel
 
     public function view_has_many()
     {
+        $this->setRelation('phonenumbers', $this->phonenumbers()->with('phonenumbermanagement')->get());
         $ret['Edit']['Phonenumber']['class'] = 'Phonenumber';
-        $ret['Edit']['Phonenumber']['relation'] = $this->phonenumbers()->with('phonenumbermanagement')->get();
+        $ret['Edit']['Phonenumber']['relation'] = $this->phonenumbers;
 
         return $ret;
     }

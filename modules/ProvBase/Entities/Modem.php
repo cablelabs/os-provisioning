@@ -315,10 +315,10 @@ class Modem extends \BaseModel
     {
         $ret = [];
 
-        // we use a dummy here as this will be overwritten by ModemController::editTabs()
         if (Module::collections()->has('ProvVoip')) {
+            $this->setRelation('mtas', $this->mtas()->with('configfile')->get());
             $ret['Edit']['Mta']['class'] = 'Mta';
-            $ret['Edit']['Mta']['relation'] = $this->mtas()->with('configfile')->get();
+            $ret['Edit']['Mta']['relation'] = $this->mtas;
         }
 
         // only show endpoints (and thus the ability to create a new one) for public CPEs
