@@ -55,12 +55,11 @@ class Mta extends \BaseModel
 
     public function get_bsclass()
     {
-        $bsclass = 'info';
         if (! array_key_exists('configfile', $this->relations)) {
-            $bsclass = 'danger';
+            return 'danger';
         }
 
-        return $bsclass;
+        return 'info';
     }
 
     public function has_configfile_assigned()
@@ -81,6 +80,7 @@ class Mta extends \BaseModel
 
     public function view_has_many()
     {
+        $this->setRelation('phonenumbers', $this->phonenumbers()->with('phonenumbermanagement')->get());
         $ret['Edit']['Phonenumber']['class'] = 'Phonenumber';
         $ret['Edit']['Phonenumber']['relation'] = $this->phonenumbers;
 

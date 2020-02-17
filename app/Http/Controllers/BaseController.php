@@ -1488,9 +1488,11 @@ class BaseController extends Controller
         }
 
         $DT->setRowClass(function ($model) {
-            $bsclass = isset($model->view_index_label()['bsclass']) ? $model->view_index_label()['bsclass'] : 'info';
+            if (method_exists($model, 'get_bsclass')) {
+                return $model->get_bsclass() ?: 'info';
+            }
 
-            return $bsclass;
+            return $model->view_index_label()['bsclass'] ?? 'info';
         });
 
         array_unshift($raw_columns, 'checkbox', $first_column); // add everywhere used raw columns
