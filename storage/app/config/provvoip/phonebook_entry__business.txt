@@ -2277,6 +2277,7 @@ Atemzentrum
 Äthiopisches Restaurant
 Athletikstudio
 Attorney at law
+Audioelektronik
 Audiomarketing
 Audioprodukte
 Audioproduktion
@@ -5149,6 +5150,7 @@ Biotopgestaltung
 Bioverwertung
 Biovollkornbäckerei
 Bioweine
+Bioweinerzeuger
 Bisambekämpfung
 Bischof
 Bistro
@@ -9457,6 +9459,7 @@ Fachanwälte für Arbeits-, Familien- und Strafrecht
 Fachanwälte für Arbeitsrecht
 Fachanwälte für Bank- und Kapitalmarktrecht
 Fachanwälte für Familienrecht
+Fachanwälte für Insolvenzrecht
 Fachanwälte für Medizinrecht
 Fachanwälte für Sozialrecht
 Fachanwälte für Steuerrecht
@@ -14401,6 +14404,7 @@ Großhandel für Isoliermaterialien
 Großhandel für Jagdbedarf
 Großhandel für Kerzen
 Großhandel für Kinderbekleidung
+Großhandel für Kommunikationstechnik
 Großhandel für Küchen
 Großhandel für Küchengeschirr
 Großhandel für Künstlerbedarf
@@ -14962,6 +14966,7 @@ Handelsvertreter für Tonträger
 Handelsvertreter i.R.
 Handelsvertreter Industrievertretungen
 Handelsvertreterin
+Handelsvertretung
 Handelsvertretung der Elektroindustrie
 Handelsvertretung der Milchwirtschaft
 Handelsvertretung für Abgastechnik
@@ -21763,6 +21768,7 @@ Landwirtschaftlicher Verkaufsberater
 Landwirtschaftlicher Vertrieb
 Landwirtschaftlicher Wirtschaftsberater
 Landwirtschaftliches Einzelunternehmen
+Landwirtschaftliches Lagerhaus
 Landwirtschaftliches Lohnunternehmen
 Landwirtschaftliches Unternehmen
 Landwirtschaftliches Versuchswesen
@@ -22728,6 +22734,7 @@ Luftschiffführer
 Luftschiffwerbung
 Luftsicherheitsschulung
 Lufttechnik
+Lüftungs, Klima u. Kältetechnik
 Lüftungsanlagenbau
 Lüftungsanlagenreinigung
 Lüftungsanlagenservice
@@ -25785,6 +25792,7 @@ Objektpflegeservice
 Objektplaner
 Objektplanung
 Objektreinigung
+Objektrestaurator
 Objektschutz
 Objektschutztechnik
 Objektsicherungen
@@ -28303,6 +28311,7 @@ Privatdozentin
 Privatlehrer
 Privatlehrer für Naturwissenschaften
 Privatlehrerin
+Privatpraxis für Orthopädie, Sportmedizin
 Privatpraxis für physikalische Therapie
 Privatpraxis für Physiotherapie
 Problembaumfällung
@@ -31765,6 +31774,7 @@ Schornsteintechniker
 Schornsteintechnologie
 Schornsteinvertrieb
 Schotterbetrieb
+Schottervertrieb
 Schotterwerk
 Schrägaufzugservice
 Schrankenanlagen
@@ -34776,6 +34786,7 @@ Stuhlherstellung
 Stuhlmacherei
 Stuhlverleih Tischlerei
 Stuhlwerkstatt
+Stukkateur
 Stukkateurbetrieb
 Stukkateurmeister
 Stukkateurmeisterfachbetrieb
@@ -36611,6 +36622,7 @@ Transportbetrieb
 Transportbüro
 Transportdienst
 Transportdienstleistung
+Transporte
 Transportergebrauchtwagenzentrum
 Transporterhandel
 Transporterverleih
@@ -39711,6 +39723,7 @@ Werbedruck
 Werbedruckerei
 Werbedruckservice
 Werbedrucktechnik
+Werbeentwicklerin
 Werbefachberater
 Werbefachberatung
 Werbefachbüro
