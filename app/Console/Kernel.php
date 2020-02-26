@@ -35,6 +35,7 @@ class Kernel extends ConsoleKernel
             // check if master or slave
             if ('master' == config('provha.hostinfo.own_state')) {
                 $this->scheduleMain($schedule);
+                $this->scheduleMaster($schedule);
             } else {
                 $this->scheduleSlave($schedule);
             }
@@ -246,6 +247,18 @@ class Kernel extends ConsoleKernel
     protected function scheduleSlave(Schedule $schedule)
     {
         $schedule->command('provha:rebuild_slave_config')->everyMinute()->withoutOverlapping();
+    }
+
+    /**
+     * Run scheduled commands on master instances.
+     *
+     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @return void
+     *
+     */
+    protected function scheduleMaster(Schedule $schedule)
+    {
+        $schedule->command('provha:sync_ha_master_files')->hourlyAt(04);
     }
 
     /**
