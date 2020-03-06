@@ -519,7 +519,7 @@ class BaseViewController extends Controller
         $icon = $field['help_icon'] ?? 'fa-question-circle';
 
         return '<div class="col-1">
-            <a data-toggle="popover" data-container="body" data-trigger="hover" title="'.$title.'" data-placement="right" data-content="'.$field['help'].'">'.
+            <a data-toggle="popover" data-html="true" data-container="body" data-trigger="hover" title="'.$title.'" data-placement="right" data-content="'.$field['help'].'">'.
                 '<i class="fa fa-2x p-t-5 '.$icon.' text-'.$bsClass.'"></i>
             </a></div>';
     }
