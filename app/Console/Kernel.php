@@ -193,8 +193,9 @@ class Kernel extends ConsoleKernel
             $schedule->call('\Modules\BillingBase\Entities\Invoice@cleanup')->monthly();
             // Reset payed_month column for yearly charged items for january settlementrun (in february)
             $schedule->call(function () {
-                \Modules\BillingBase\Entities\Item::where('payed_month', '!=', '0')->update(['payed_month' => '0']);
+                \Modules\BillingBase\Entities\Item::where('payed_month', '!=', '0')->update(['payed_month' => '0', 'updated_at' => date('Y-m-d H:i:s')]);
                 \Log::info('Reset all items payed_month flag to 0');
+                // TODO: Remove last * for Laravel version > 5.6
             })->cron('10 0 1 2 * *');
 
             // wrapping into a check if table billingbase exists (if not that crashes on every “php artisan” command – e.g. on migrations
