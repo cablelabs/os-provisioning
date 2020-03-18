@@ -1322,7 +1322,7 @@ class Contract extends \BaseModel
         $tariffs = $this->items()
             ->join('product as p', 'item.product_id', '=', 'p.id')
             ->select('item.*', 'p.type', 'p.bundled_with_voip', 'p.name')
-            ->whereIn('type', ['Internet', 'Voip'])
+            ->whereIn('type', ['Internet', 'Voip', 'TV'])
             ->where(function ($query) use ($date) {
                 $query
                 ->where('item.valid_to', '>=', $date)
@@ -1346,15 +1346,19 @@ class Contract extends \BaseModel
             }
         }
 
+        // Only take TV tariff if no inet and no voip tariff are valid
+        if (! $tariff) {
+            $tariff = $tariffs->where('type', 'TV')->first();
+        }
+
         if (! $tariff) {
             return $ret;
         }
 
         // return end_of_term, last cancelation_day, tariff
-        $ret = array_merge($ret, $tariff->getNextCancelationDate($date));
         $ret['tariff'] = $tariff;
 
-        return $ret;
+        return array_merge($ret, $tariff->getNextCancelationDate($date));
     }
 
     /**
