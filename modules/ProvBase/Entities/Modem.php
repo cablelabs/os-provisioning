@@ -868,7 +868,7 @@ class Modem extends \BaseModel
 
         foreach (preg_split('/\r\n|\r|\n/', $text) as $line) {
             $vals = str_getcsv(trim($line), ';');
-            if (! count($vals) || ! in_array($vals[0], ['add', 'clr', 'commit', 'del', 'get', 'jmp', 'reboot', 'set'])) {
+            if (! count($vals) || ! in_array($vals[0], ['add', 'clr', 'commit', 'del', 'get', 'jmp', 'reboot', 'set', 'fw'])) {
                 continue;
             }
 
@@ -908,6 +908,13 @@ class Modem extends \BaseModel
                 case 'set':
                     if (isset($vals[2])) {
                         $prov[] = "declare('$path', {value: Date.now()} , {value: '$vals[2]'});";
+                    }
+                    break;
+                case 'fw':
+                    if (! empty($vals[1]) && ! empty($vals[2])) {
+                        $prov[] = "declare('Downloads.[FileType:$vals[1]]', {path: 1}, {path: 1});";
+                        $prov[] = "declare('Downloads.[FileType:$vals[1]].FileName', {value: 1}, {value: '$vals[2]'});";
+                        $prov[] = "declare('Downloads.[FileType:$vals[1]].Download', {value: 1}, {value: Date.now()});";
                     }
                     break;
             }
