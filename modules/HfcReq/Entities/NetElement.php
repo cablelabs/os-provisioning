@@ -14,6 +14,8 @@ class NetElement extends \BaseModel
 
     // The associated SQL table for this Model
     public $table = 'netelement';
+    // Always get netelementtype with it to reduce DB queries as it's very probable that netelementtype is queried
+    protected $with = ['netelementtype'];
 
     public $guarded = ['kml_file_upload'];
 
