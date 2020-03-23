@@ -674,4 +674,5 @@ return [
     'wrongMacOrSerialNumber'    => 'Bitte korrigieren Sie die MAC und oder die Seriennummer.',
     'no_Netelements'            => 'Es sind noch keine Netzelemente vorhanden. Bitte legen sie zuerst ein Netzelement an.',
     'no_ERD_File'               => 'Es konnte leider kein ERD-Diagramm erzeugt werden. Bitte versuchen Sie es später erneut.',
+    'default_modem_picture'     => 'Bitte fügen Sie ein Bild des Gerätes in public/images/modems ein.',
 ];
