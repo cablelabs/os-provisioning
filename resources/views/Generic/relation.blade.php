@@ -56,23 +56,25 @@ Relation Blade is used inside a Panel Element to display relational class object
             {!! Form::close() !!}
         @endif
     @endcan
-    @can('delete', $relation->get(0))
-        {{-- Delete Button --}}
-        @if (! isset($options['hide_delete_button']) && isset($relation[0]))
-            <div class="col align-self-end">
-                <button class="btn btn-outline-danger m-b-10 float-right"
-                        data-toggle="tooltip"
-                        data-delay='{"show":"250"}'
-                        data-placement="top"
-                        form="{{$tab['name'].$class}}"
-                        style="simple"
-                        title="{{ !isset($options['delete_button_text']) ? \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button') : trans($options['delete_button_text']) }}">
-                            <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
-                </button>
-            </div>
-        @endif
-    @endcan
-    </div>
+    @if($relation)
+        @can('delete', $relation->get(0))
+            {{-- Delete Button --}}
+            @if (! isset($options['hide_delete_button']) && isset($relation[0]))
+                <div class="col align-self-end">
+                    <button class="btn btn-outline-danger m-b-10 float-right"
+                            data-toggle="tooltip"
+                            data-delay='{"show":"250"}'
+                            data-placement="top"
+                            form="{{$tab['name'].$class}}"
+                            style="simple"
+                            title="{{ !isset($options['delete_button_text']) ? \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button') : trans($options['delete_button_text']) }}">
+                                <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
+                    </button>
+                </div>
+            @endif
+        @endcan
+        </div>
+    @endif
 @DivClose()
 
 {{-- The Relation Table --}}
