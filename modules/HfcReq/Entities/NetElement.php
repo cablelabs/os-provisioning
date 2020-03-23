@@ -146,7 +146,17 @@ class NetElement extends \BaseModel
 
     public function view_belongs_to()
     {
-        return $this->netelementtype;
+        $ret = new \Illuminate\Database\Eloquent\Collection([$this->netelementtype]);
+
+        if ($this->apartment_id) {
+            $ret->add($this->apartment);
+        }
+
+        if ($this->parent_id) {
+            $ret->add($this->parent);
+        }
+
+        return $ret;
     }
 
     /**
