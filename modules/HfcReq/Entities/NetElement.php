@@ -205,6 +205,11 @@ class NetElement extends \BaseModel
         return $this->hasMany(\Modules\HfcSnmp\Entities\Indices::class, 'netelement_id');
     }
 
+    public function apartment()
+    {
+        return $this->belongsTo(\Modules\PropertyManagement\Entities\Apartment::class);
+    }
+
     /**
      * As Android and Iphone app developers use wrong columns to display object name, we use the relation
      * column to describe the object as well
@@ -325,6 +330,27 @@ class NetElement extends \BaseModel
             ->get();
 
         return $this->html_list($netelems, ['ntname', 'name'], true, ': ');
+    }
+
+    public function getApartmentsList()
+    {
+        $apartments = \Modules\PropertyManagement\Entities\Apartment::leftJoin('netelement as n', 'apartment.id', 'n.apartment_id')
+            ->whereNull('n.deleted_at')
+            ->where(function ($query) {
+                $query
+                ->whereNull('n.id')
+                ->orWhere('apartment.id', $this->apartment_id);
+            })
+            ->select('apartment.*')
+            ->get();
+
+        $list[null] = null;
+
+        foreach ($apartments as $apartment) {
+            $list[$apartment->id] = \Modules\PropertyManagement\Entities\Apartment::labelFromData($apartment);
+        }
+
+        return $list;
     }
 
     // TODO: rename, avoid recursion

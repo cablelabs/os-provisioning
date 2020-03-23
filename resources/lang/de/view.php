@@ -244,6 +244,7 @@ return [
     'Header_Node'               => 'Übergabepunkte',
     'Header_Realty'             => 'Liegenschaften',
     'Header_SubNetElement'      => 'Untergeordnete Netzelemente',
+    'Header_tap'                => 'Steuerbarer Abzweiger-Port',
 
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',
