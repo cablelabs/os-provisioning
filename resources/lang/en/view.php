@@ -243,6 +243,7 @@ return [
     'Header_DebtResult'         => 'Outstanding payments total',
     'Header_Node'               => 'Nodes',
     'Header_Realty'             => 'Realties',
+    'Header_SubNetElement'      => 'Subordinated Netelements',
 
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',

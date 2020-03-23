@@ -243,6 +243,7 @@ return [
     'Header_DebtResult'         => 'Offene Posten gesamt',
     'Header_Node'               => 'Übergabepunkte',
     'Header_Realty'             => 'Liegenschaften',
+    'Header_SubNetElement'      => 'Untergeordnete Netzelemente',
 
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',

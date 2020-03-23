@@ -68,8 +68,10 @@ class NetElement extends \BaseModel
         // }
 
         if (\Module::collections()->has('HfcCustomer')) {
-            $ret['Edit']['Mpr']['class'] = 'Mpr';
-            $ret['Edit']['Mpr']['relation'] = $this->mprs;
+            if ($this->netelementtype->get_base_type() != 9) {
+                $ret['Edit']['Mpr']['class'] = 'Mpr';
+                $ret['Edit']['Mpr']['relation'] = $this->mprs;
+            }
         }
 
         if (\Module::collections()->has('HfcSnmp')) {
@@ -79,6 +81,11 @@ class NetElement extends \BaseModel
             }
 
             // see NetElementController@controlling_edit for Controlling Tab!
+        }
+
+        if ($this->netelementtype->get_base_type() == 8) {
+            $ret['Edit']['SubNetElement']['class'] = 'NetElement';
+            $ret['Edit']['SubNetElement']['relation'] = $this->children;
         }
 
         return $ret;
