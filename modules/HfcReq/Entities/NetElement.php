@@ -108,8 +108,19 @@ class NetElement extends \BaseModel
 
     public function get_bsclass()
     {
-        if (in_array($this->get_elementtype_name(), ['Net', 'Cluster'])) {
+        if (in_array($this->netelementtype_id, [1, 2])) {
             return 'info';
+        }
+
+        if ($this->netelementtype->get_base_type() == 9) {
+            switch ($this->state) {
+                case 'off':
+                    return 'danger';
+                case 'attenuated':
+                    return 'warning';
+                default: // on
+                    return 'success';
+            }
         }
 
         if (! array_key_exists('icingaobject', $this->relations) && ! IcingaObject::db_exists()) {
