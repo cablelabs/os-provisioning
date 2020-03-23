@@ -11,6 +11,7 @@ return [
     'Active'                    => 'Active',
     'Active?'                   => 'Active?',
     'Additional Options'        => 'Additional Options',
+    'Address'                   => 'Adress',
     'Address Line 1'            => 'Address Line 1',
     'Address Line 2'            => 'Address Line 2',
     'Address Line 3'            => 'Address Line 3',

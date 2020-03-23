@@ -132,7 +132,7 @@ class NetElementType extends \BaseModel
      * Furthermore they are ordered by there Database ID which is probably used as fix value in many places of the source code
      * So don't change this order unless you definitly know what you are doing !!!
      */
-    public static $undeletables = [1 => 'Net', 2 => 'Cluster', 3 => 'NetGw', 4 => 'Amplifier', 5 => 'Node', 6 => 'Data', 7 => 'UPS'];
+    public static $undeletables = [1 => 'Net', 2 => 'Cluster', 3 => 'NetGw', 4 => 'Amplifier', 5 => 'Node', 6 => 'Data', 7 => 'UPS', 8 => 'Tap', 9 => 'Tap-Port'];
 
     /**
      * Must be defined to disable delete Checkbox on index tree view.
@@ -173,12 +173,15 @@ class NetElementType extends \BaseModel
                 return false;
             }
 
-            if ($p->parent_id == null || $p->id == 2) { // exit: on base type, or cluster (which is child of net)
+            // exit: on base type, or cluster (which is child of net), or tap-port
+            if ($p->parent_id == null || in_array($p->id, [2, 9])) {
                 return $p->id;
             }
 
             $p = $p->parent;
         } while ($i++ < $this->max_parents);
+
+        \Log::error('Chain or parent-children NetElementTypes is too long');
 
         return false;
     }
