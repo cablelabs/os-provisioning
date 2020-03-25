@@ -12,7 +12,7 @@ class Configfile extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'configfile';
 
-    public $guarded = ['cvc_upload', 'firmware_upload', 'import'];
+    public $guarded = ['firmware_upload', 'import'];
 
     // Add your validation rules here
     public static function rules($id = null)
@@ -20,7 +20,6 @@ class Configfile extends \BaseModel
         return [
             'name' => 'required_without:import|unique:configfile,name,'.$id.',id,deleted_at,NULL',
             'text' => 'docsis',
-            'cvc' => 'required_with:firmware',
         ];
     }
 
@@ -104,21 +103,6 @@ class Configfile extends \BaseModel
         }
 
         return $files;
-    }
-
-    /**
-     * Returns text section of Code Validation Certificate in a human readable format
-     * while skipping non-relevant sections (i.e. hashes)
-     * @author Ole Ernst
-     */
-    public function get_cvc_help()
-    {
-        if (! $this->cvc) {
-            return "The Code Validation Certificate 'cvc.der' can be extracted from a firmware image 'fw.img' by issuing:\n\nopenssl pkcs7 -print_certs -inform DER -in fw.img | openssl x509 -outform DER -out cvc.der";
-        }
-        exec('openssl x509 -text -inform DER -in /tftpboot/cvc/'.$this->cvc, $cvc_help);
-
-        return implode("\n", array_slice($cvc_help, 0, 11));
     }
 
     /**
@@ -212,11 +196,9 @@ class Configfile extends \BaseModel
                     array_push($config_extensions, 'SnmpMibObject docsDevSwAdminStatus.0 Integer 2; /* allow provisioning upgrade */');
                     // array_push($config_extensions, 'SwUpgradeServer $server_ip;');
                     array_push($config_extensions, 'SwUpgradeFilename "fw/'.$this->firmware.'";');
+                    exec("openssl pkcs7 -print_certs -inform DER -in $this->firmware | openssl x509 -outform DER | xxd -p -c 254 | sed 's/^/MfgCVCData 0x/; s/$/;/'", $config_extensions);
                 }
 
-                if ($this->cvc && ! $sw_up) {
-                    exec('xxd -p -c 254 /tftpboot/cvc/'.$this->cvc." | sed 's/^/MfgCVCData 0x/; s/$/;/'", $config_extensions);
-                }
                 break;
 
             // this is for mtas
