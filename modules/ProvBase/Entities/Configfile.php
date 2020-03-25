@@ -261,6 +261,10 @@ class Configfile extends \BaseModel
                 $qos = [$device->qos];
                 $db_schemata['qos'][0] = Schema::getColumnListing('qos');
 
+                if ($this->firmware) {
+                    Modem::callGenieAcsApi("files/$this->firmware", 'PUT', ['file' => "/tftpboot/fw/$this->firmware"], ['Content-Type: application/x-www-form-urlencoded']);
+                }
+
                 if (! $device->mtas->first()) {
                     break;
                 }

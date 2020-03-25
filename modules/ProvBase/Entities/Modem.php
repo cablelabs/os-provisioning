@@ -932,7 +932,7 @@ class Modem extends \BaseModel
      * @param string $data
      * @return mixed $result
      */
-    public static function callGenieAcsApi($route, $customRequest, $data = null)
+    public static function callGenieAcsApi($route, $customRequest, $data = null, $header = [])
     {
         $ch = curl_init();
 
@@ -942,6 +942,7 @@ class Modem extends \BaseModel
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_CUSTOMREQUEST => $customRequest,
             CURLOPT_POSTFIELDS => $data,
+            CURLOPT_HTTPHEADER => $header,
         ]);
 
         $result = curl_exec($ch);
