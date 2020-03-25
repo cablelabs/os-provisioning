@@ -62,12 +62,14 @@ class NetGwController extends \BaseController
         // TODO: (For BRAS) Make company and series field nullable and add empty field to company_array
         $ret_tmp = [
             ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types, 'select' => $types],
-            ['form_type' => 'select', 'name' => 'company', 'description' => 'Company', 'value' => $company_array, 'select' => 'CMTS'],
-            ['form_type' => 'select', 'name' => 'series', 'description' => 'Series', 'value' => $series, 'select' => 'CMTS'],
+            ['form_type' => 'select', 'name' => 'company', 'description' => 'Company', 'value' => $company_array],
+            ['form_type' => 'select', 'name' => 'series', 'description' => 'Series', 'value' => $series],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname'],
             ['form_type' => 'ip', 'name' => 'ip', 'description' => 'IP', 'help' => 'Online'],
             ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'SNMP Private Community String'],
             ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'SNMP Public Community String'],
+            ['form_type' => 'text', 'name' => 'username', 'description' => 'SSH username', 'select' => 'OLT'],
+            ['form_type' => 'text', 'name' => 'password', 'description' => 'SSH password', 'select' => 'OLT'],
             // The following fields are currently not used
             // ['form_type' => 'text', 'name' => 'state', 'description' => 'State', 'hidden' => 1],
             // ['form_type' => 'text', 'name' => 'monitoring', 'description' => 'Monitoring', 'hidden' => 1],

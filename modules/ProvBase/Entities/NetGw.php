@@ -7,7 +7,7 @@ use App\Sla;
 
 class NetGw extends \BaseModel
 {
-    const TYPES = ['cmts', 'bras'];
+    const TYPES = ['cmts', 'bras', 'olt'];
 
     private static $_us_snr_path = 'data/provmon/us_snr';
     // don't put a trailing slash here!
