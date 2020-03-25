@@ -138,6 +138,7 @@ return [
     'agc_offset'                    => 'Verschiebung des automatischen Verstärkungsregelungwertes in Rückkanalrichtung in dB. (Vorgabewert: 0.0)',
     'configfile_count'              => 'Die Zahl in Klammern zeigt an, wie häufig die jeweilige Konfigurationsdatei bereits verwendet wird.',
     'has_telephony'                 => 'Muss aktiv sein, wenn der Kunde Telefonie haben soll, aber kein Internet hat. Das Flag kann aktuell nicht genutzt werden, um die Telefonie bei Verträgen mit Internet zu deaktivieren. Dazu muss das MTA gelöscht oder die Telefonnummer deaktiviert werden. Info: Die Einstellung hat Einfluss auf NetworkAccess und MaxCPE im Modem Configfile - siehe Modem-Analyse im Tab \'Configfile\'',
+    'ssh_auto_prov'                 => 'Periodisches Ausführen eines auf das OLT angepasstes Skript um ONTs automatisch online zu bringen.',
 
     /*
   * MODULE: ProvVoip

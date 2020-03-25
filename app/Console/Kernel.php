@@ -141,6 +141,10 @@ class Kernel extends ConsoleKernel
                 foreach (\Modules\ProvBase\Entities\NetGw::where('type', 'cmts')->get() as $cmts) {
                     $cmts->store_us_snrs();
                 }
+
+                foreach (\Modules\ProvBase\Entities\NetGw::where('type', 'olt')->where('ssh_auto_prov', '1')->get() as $olt) {
+                    $olt->runSshAutoProv();
+                }
             })->everyFiveMinutes();
 
             // refresh the online state of all TR069 device

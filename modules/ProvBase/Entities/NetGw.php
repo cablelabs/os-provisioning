@@ -605,6 +605,33 @@ class NetGw extends \BaseModel
         }
         file_put_contents($path.'.conf', $incs);
     }
+
+    /**
+     * Run vendor/series dependent OLT script to get yet unconfigured ONTs online,
+     * such that we can establish a PPPoE session with them
+     *
+     * @author Ole Ernst
+     */
+    public function runSshAutoProv()
+    {
+        if ($this->type != 'olt' ||
+            ! $this->ssh_auto_prov ||
+            ! $this->username ||
+            ! $this->password ||
+            ! $this->ip) {
+            return;
+        }
+
+        $path = \Module::getModulePath('ProvBase/Console/scripts/olt/');
+        $script = $path.\Str::lower("{$this->company}_{$this->series}.sh");
+
+        if (! file_exists($script)) {
+            return;
+        }
+
+        // run script in background since this function is called from Kernel.php
+        exec("bash \"$script\" \"$this->ip\" \"$this->username\" \"$this->password\" > /dev/null &");
+    }
 }
 
 /**

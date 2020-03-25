@@ -68,8 +68,9 @@ class NetGwController extends \BaseController
             ['form_type' => 'ip', 'name' => 'ip', 'description' => 'IP', 'help' => 'Online'],
             ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'SNMP Private Community String'],
             ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'SNMP Public Community String'],
-            ['form_type' => 'text', 'name' => 'username', 'description' => 'SSH username', 'select' => 'OLT'],
-            ['form_type' => 'text', 'name' => 'password', 'description' => 'SSH password', 'select' => 'OLT'],
+            ['form_type' => 'checkbox', 'name' => 'ssh_auto_prov', 'description' => 'Auto-Provisioning via SSH', 'value' => '1', 'select' => 'OLT', 'help' => trans('helper.ssh_auto_prov')],
+            ['form_type' => 'text', 'name' => 'username', 'description' => 'SSH username', 'checkbox' => 'show_on_ssh_auto_prov'],
+            ['form_type' => 'text', 'name' => 'password', 'description' => 'SSH password', 'checkbox' => 'show_on_ssh_auto_prov'],
             // The following fields are currently not used
             // ['form_type' => 'text', 'name' => 'state', 'description' => 'State', 'hidden' => 1],
             // ['form_type' => 'text', 'name' => 'monitoring', 'description' => 'Monitoring', 'hidden' => 1],
@@ -94,6 +95,19 @@ class NetGwController extends \BaseController
         }
 
         return $ret;
+    }
+
+    protected function prepare_input($data)
+    {
+        $data = parent::prepare_input($data);
+
+        // delete possibly existing ssh credentials
+        if ($data['ssh_auto_prov'] == 0) {
+            $data['username'] = null;
+            $data['password'] = null;
+        }
+
+        return $data;
     }
 
     /**

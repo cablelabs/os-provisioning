@@ -138,6 +138,7 @@ return [
     'agc_offset'                    => 'Upstream automatic gain control offset in dB. (default: 0.0)',
     'configfile_count'              => 'The number in brackets indicates how often the respective configurationfile is already used.',
     'has_telephony'                 => 'Activate if customer shall have telephony but has no internet. This flag can actually not be used to disable telephony on contracts with internet. Please delete the MTA or disable the phonenumber for that. Info: The setting influences the modems configfile parameters NetworkAcess and MaxCPE - see modems analyses page tab \'Configfile\'',
+    'ssh_auto_prov'                 => 'Periodically run a script tailored to the OLT in order to automatically bring ONTs online.',
 
     /*
   * MODULE: ProvVoip
