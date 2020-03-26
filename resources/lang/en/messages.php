@@ -679,4 +679,9 @@ return [
     'Deprecated'                => 'Deprecated',
     'Number'                    => 'Number',
     'House_number'              => 'House number',
+    'no_Netelements'            => 'There are no net elements to display. Please create a net element at first.',
+    'no_ERD_File'               => 'It was not possible to generate the ERD diagram. Please try again later.',
+    'start_frequency_spectrum'  => 'Start frequency of the spectrum in MHz',
+    'stop_frequency_spectrum'   => 'Stop frequency of the spectrum in MHz',
+    'span_spectrum'             => 'Frequency span of the spectrum in MHz',
 ];
