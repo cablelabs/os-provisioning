@@ -196,7 +196,7 @@ class Configfile extends \BaseModel
                     array_push($config_extensions, 'SnmpMibObject docsDevSwAdminStatus.0 Integer 2; /* allow provisioning upgrade */');
                     // array_push($config_extensions, 'SwUpgradeServer $server_ip;');
                     array_push($config_extensions, 'SwUpgradeFilename "fw/'.$this->firmware.'";');
-                    exec("openssl pkcs7 -print_certs -inform DER -in $this->firmware | openssl x509 -outform DER | xxd -p -c 254 | sed 's/^/MfgCVCData 0x/; s/$/;/'", $config_extensions);
+                    exec("openssl pkcs7 -print_certs -inform DER -in /tftpboot/fw/$this->firmware | openssl x509 -outform DER | xxd -p -c 254 | sed 's/^/MfgCVCData 0x/; s/$/;/'", $config_extensions);
                 }
 
                 break;
