@@ -25,7 +25,6 @@ class ConfigfileController extends \BaseController
         }
 
         $firmware_files = Configfile::get_files('fw');
-        $cvc_files = Configfile::get_files('cvc');
 
         // label has to be the same like column in sql table
 
@@ -38,8 +37,7 @@ class ConfigfileController extends \BaseController
             ['form_type' => 'textarea', 'name' => 'text', 'description' => 'Config File Parameters'],
             ['form_type' => 'select', 'name' => 'firmware', 'description' => 'Choose Firmware File', 'value' => $firmware_files],
             ['form_type' => 'file', 'name' => 'firmware_upload', 'description' => 'or: Upload Firmware File'],
-            ['form_type' => 'select', 'name' => 'cvc', 'description' => 'Choose Certificate File', 'value' => $cvc_files, 'help' => $model->get_cvc_help()],
-            ['form_type' => 'file', 'name' => 'cvc_upload', 'description' => 'or: Upload Certificate File'],
+
         ];
 
         if (\Route::currentRouteName() == 'Configfile.create') {
@@ -84,9 +82,8 @@ class ConfigfileController extends \BaseController
             return redirect()->back();
         }
 
-        // check and handle uploaded firmware and cvc files
+        // check and handle uploaded firmware files
         $this->handle_file_upload('firmware', '/tftpboot/fw/');
-        $this->handle_file_upload('cvc', '/tftpboot/cvc/');
 
         // finally: call base method
         return parent::store();
@@ -213,11 +210,7 @@ class ConfigfileController extends \BaseController
             return;
         }
 
-        // session message if configfile had assigned cvc/firmware which doesn't exist
-        if ($content['cvc'] != '' && ! file_exists('/tftpboot/cvc/'.$content['cvc'])) {
-            \Session::push('tmp_warning_above_form', trans('messages.setManually', ['name' => $content['name'], 'file' => $content['cvc']]));
-        }
-
+        // session message if configfile had assigned firmware which doesn't exist
         if ($content['firmware'] != '' && ! file_exists('/tftpboot/fw/'.$content['firmware'])) {
             \Session::push('tmp_warning_above_form', trans('messages.setManually', ['name' => $content['name'], 'file' => $content['firmware']]));
         }
@@ -263,9 +256,8 @@ class ConfigfileController extends \BaseController
     public function update($id)
     {
         if (! Request::filled('_2nd_action')) {
-            // check and handle uploaded firmware and cvc files
+            // check and handle uploaded firmware files
             $this->handle_file_upload('firmware', '/tftpboot/fw/');
-            $this->handle_file_upload('cvc', '/tftpboot/cvc/');
 
             // finally: call base method
             return parent::update($id);

@@ -5,4 +5,5 @@
   <source address="100.64.0.0/10"/>
   <service name="dns"/>
   <port protocol="tcp" port="7547"/>
+  <port protocol="tcp" port="7567"/>
 </zone>
