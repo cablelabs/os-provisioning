@@ -329,6 +329,19 @@ class BaseController extends Controller
         // place filename as chosen value in Input field
         Request::merge([$base_field => $filename]);
 
+        if (\Module::collections()->has('ProvBase') && $base_field == 'firmware' && Request::get('device') == 'tr069') {
+            // file upload using curl_file_create and method PUT adds headers
+            // Content-Disposition, Content-Type and boundaries, which corrupts
+            // the file to be uploaded, thus call curl from command line
+            /*
+            \Modules\ProvBase\Entities\Modem::callGenieAcsApi("files/$filename", 'PUT',
+                ['file' => curl_file_create("/tftpboot/fw/$filename")],
+                ['Content-Type: application/x-www-form-urlencoded']
+            );
+            */
+            exec("curl -i \"http://localhost:7557/files/$filename\" -X PUT --data-binary @\"/tftpboot/fw/$filename\"");
+        }
+
         return $filename;
     }
 
