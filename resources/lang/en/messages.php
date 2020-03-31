@@ -691,4 +691,6 @@ return [
     'start_frequency_spectrum'  => 'Start frequency of the spectrum in MHz',
     'stop_frequency_spectrum'   => 'Stop frequency of the spectrum in MHz',
     'span_spectrum'             => 'Frequency span of the spectrum in MHz',
+    'contribute_modem_picture'  => 'Default device - Please contribute an image of your device to our GitHub page. Click the image to get redirected.',
+    'no_modem_picture'          => 'There is currently no image available.',
 ];
