@@ -258,17 +258,6 @@ class Modem extends \BaseModel
         return $this->hasMany(Endpoint::class);
     }
 
-    // TODO: deprecated! use netelement function instead - search for all places where this function is used
-    public function tree()
-    {
-        return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class);
-    }
-
-    public function nelelement()
-    {
-        return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class, 'netelement_id');
-    }
-
     public function apartment()
     {
         return $this->belongsTo(\Modules\PropertyManagement\Entities\Apartment::class);
