@@ -1,5 +1,7 @@
 <?php
 
 return [
-    'tabControlling' => 'Tab controlling',
+	'lineNr' => 'Line number',
+    'tapControlling' => 'Tap controlling',
+    'videoControlling' => 'Video-Settings',
 ];

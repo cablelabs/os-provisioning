@@ -1,5 +1,7 @@
 <?php
 
 return [
-    'tabControlling' => 'Abzweiger-Steuerung',
+    'lineNr' => 'Leitungsnummer',
+    'tapControlling' => 'Abzweiger-Steuerung',
+    'videoControlling' => 'Video-Einstellungen',
 ];
