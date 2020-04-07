@@ -7,7 +7,7 @@ use App\Sla;
 
 class NetGw extends \BaseModel
 {
-    const TYPES = ['cmts', 'bras', 'olt'];
+    const TYPES = ['cmts', 'bras', 'olt', 'dslam'];
 
     private static $_us_snr_path = 'data/provmon/us_snr';
     // don't put a trailing slash here!
@@ -250,6 +250,7 @@ class NetGw extends \BaseModel
         $this->domain = ProvBase::first()->domain_name;
         $this->router_ip = env('NETGW_DEFAULT_GW', '172.20.3.254');
         $this->netmask = env('NETGW_IP_NETMASK', '255.255.252.0');
+        $this->prefix = env('NETGW_IP_PREFIX', '22');
         $this->tf_net_1 = env('NETGW_TRANSFER_NET', '172.20.0.0'); // servers with /24
         $this->nat_ip = env('NETGW_NAT_IP', '172.20.0.2'); // second server ip is mostlikely NAT
 
@@ -265,6 +266,7 @@ class NetGw extends \BaseModel
         $this->domain = '<span title="Set in Global Config Page / Provisioning / Domain Name"><b>'.$this->domain.'</b></span>';
         $this->router_ip = '<span title="NETGW_DEFAULT_GW"><b>'.$this->router_ip.'</b></span>';
         $this->netmask = '<span title="NETGW_IP_NETMASK"><b>'.$this->netmask.'</b></span>';
+        $this->prefix = '<span title="NETGW_IP_PREFIX"><b>'.$this->prefix.'</b></span>';
         $this->tf_net_1 = '<span title="NETGW_TRANSFER_NET"><b>'.$this->tf_net_1.'</b></span>';
         $this->nat_ip = '<span title="NETGW_NAT_IP"><b>'.$this->nat_ip.'</b></span>';
         $this->snmp_ro = '<span title="Set in NETGW page or Global Config Page / Provisioning if empty in NETGW page"><b>'.$this->snmp_ro.'</b></span>';
