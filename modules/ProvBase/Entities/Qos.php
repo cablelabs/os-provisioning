@@ -99,6 +99,10 @@ class QosObserver
     {
         foreach (RadGroupReply::$radiusAttributes as $key => $attributes) {
             foreach ($attributes as $attribute) {
+                if (! $qos->{$key}) {
+                    continue;
+                }
+
                 $new = new RadGroupReply;
                 $new->groupname = $qos->id;
                 $new->attribute = $attribute;
