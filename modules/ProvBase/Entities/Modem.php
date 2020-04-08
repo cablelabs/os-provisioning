@@ -385,12 +385,10 @@ class Modem extends \BaseModel
     /**
      * Returns the config file entry string for a cable modem in dependency of private or public ip
      *
-     * TODO: use object context instead of parameters (Torsten)
-     *
      * @author Nino Ryschawy
      * @return string
      */
-    private function generate_cm_dhcp_entry($server = '')
+    private function generate_cm_dhcp_entry()
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
 
@@ -408,7 +406,22 @@ class Modem extends \BaseModel
         if (Module::collections()->has('ProvVoip') && $this->mtas()->pluck('mac')->filter(function ($mac) {
             return stripos($mac, 'ff:') !== 0;
         })->count()) {
-            $ret .= ' option ccc.dhcp-server-1 '.($server ?: ProvBase::first()->provisioning_server).';';
+            if(! Module::collections()->has('ProvHA')) {
+                $ret .= ' option ccc.dhcp-server-1 ' . ProvBase::first()->provisioning_server . ';';
+            } else {
+                $provha = \Modules\ProvHA\Entities\ProvHA::first();
+                $master = $provha->master;
+                $slave = explode(',', $provha->slaves)[0] ?: null;
+                if ('master' == config('provha.hostinfo.own_state')) {
+                    $ret .= " option ccc.dhcp-server-1 $master;";
+                    if ($slave) {
+                        $ret .= " option ccc.SecondaryDHCPServer $slave;";
+                    }
+                } elseif ('slave' == config('provha.hostinfo.own_state')) {
+                    $ret .= " option ccc.dhcp-server-1 $slave;";
+                    $ret .= " option ccc.SecondaryDHCPServer $master;";
+                }
+            }
         }
 
         return $ret."}\n";
@@ -451,7 +464,6 @@ class Modem extends \BaseModel
 
         $data = '';
         $data_pub = '';
-        $server = ProvBase::first()->provisioning_server;
 
         self::clear_dhcp_conf_files();
 
@@ -461,7 +473,7 @@ class Modem extends \BaseModel
             }
 
             // all
-            $data .= $modem->generate_cm_dhcp_entry($server);
+            $data .= $modem->generate_cm_dhcp_entry();
 
             // public ip
             if ($modem->public) {
