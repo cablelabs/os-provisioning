@@ -16,6 +16,8 @@ class QosController extends \BaseController
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
             ['form_type' => 'text', 'name' => 'ds_rate_max', 'description' => 'DS Rate [MBit/s]'],
             ['form_type' => 'text', 'name' => 'us_rate_max', 'description' => 'US Rate [MBit/s]'],
+            ['form_type' => 'text', 'name' => 'ds_name', 'description' => 'DS PPPoE Name'],
+            ['form_type' => 'text', 'name' => 'us_name', 'description' => 'US PPPoE Name'],
         ];
     }
 
