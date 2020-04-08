@@ -28,7 +28,7 @@ class AddNetGwCredentials extends BaseMigration
     public function down()
     {
         Schema::table($this->tablename, function (Blueprint $table) {
-            $table->dropColumn(['username', 'password', ['ssh_auto_prov']]);
+            $table->dropColumn(['username', 'password', 'ssh_auto_prov']);
         });
     }
 }
