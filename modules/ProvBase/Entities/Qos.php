@@ -105,9 +105,9 @@ class QosObserver
 
                 $new = new RadGroupReply;
                 $new->groupname = $qos->id;
-                $new->attribute = $attribute;
-                $new->op = ':=';
-                $new->value = $qos->{$key};
+                $new->attribute = $attribute[0];
+                $new->op = $attribute[1];
+                $new->value = sprintf($attribute[2], $qos->{$key});
                 $new->save();
             }
         }
@@ -117,7 +117,12 @@ class QosObserver
     {
         // update only ds/us if their values were changed
         foreach (array_intersect_key(RadGroupReply::$radiusAttributes, $qos->getDirty()) as $key => $attributes) {
-            $qos->radgroupreplies()->whereIn('attribute', $attributes)->update(['value' => $qos->{$key}]);
+            foreach ($attributes as $attribute) {
+                $qos->radgroupreplies()
+                    ->where('attribute', $attribute[0])
+                    ->where('value', 'like', $attribute[3])
+                    ->update(['value' => sprintf($attribute[2], $qos->{$key})]);
+            }
         }
     }
 

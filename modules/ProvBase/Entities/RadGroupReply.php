@@ -17,12 +17,18 @@ class RadGroupReply extends \BaseModel
     // https://help.ubnt.com/hc/en-us/articles/204977464-EdgeRouter-PPPoE-Server-Rate-Limiting-Using-WISPr-RADIUS-Attributes
     public static $radiusAttributes = [
         'ds_rate_max_help' => [
-            'Ascend-Xmit-Rate',
-            'WISPr-Bandwidth-Max-Down',
+            ['Ascend-Xmit-Rate', ':=', '%d', '%'],
+            ['WISPr-Bandwidth-Max-Down', ':=', '%d', '%'],
         ],
         'us_rate_max_help' => [
-            'Ascend-Data-Rate',
-            'WISPr-Bandwidth-Max-Up',
+            ['Ascend-Data-Rate', ':=', '%d', '%'],
+            ['WISPr-Bandwidth-Max-Up', ':=', '%d', '%'],
+        ],
+        'ds_name' => [
+            ['Cisco-Avpair', '+=', 'ip:sub-qos-policy-out=%s', 'ip:sub-qos-policy-out=%'],
+        ],
+        'us_name' => [
+            ['Cisco-Avpair', '+=', 'ip:sub-qos-policy-in=%s', 'ip:sub-qos-policy-in=%'],
         ],
     ];
 
