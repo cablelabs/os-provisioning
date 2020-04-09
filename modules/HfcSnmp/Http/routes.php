@@ -35,4 +35,10 @@ BaseRoute::group([], function () {
         'uses' => 'Modules\HfcSnmp\Http\Controllers\TapController@switchTapState',
         'middleware' => ['can:update,Modules\HfcReq\Entities\NetElement'],
     ]);
+
+    BaseRoute::post('NetElement/switchVideoLine', [
+        'as' => 'NetElement.switchVideoLine',
+        'uses' => 'Modules\HfcSnmp\Http\Controllers\TapController@switchVideoLine',
+        'middleware' => ['can:update,Modules\HfcReq\Entities\NetElement'],
+    ]);
 });

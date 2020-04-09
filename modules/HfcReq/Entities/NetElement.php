@@ -232,6 +232,11 @@ class NetElement extends \BaseModel
             ->where('icinga_objects.is_active', '1');
     }
 
+    public function clusterObj()
+    {
+        return $this->belongsTo(self::class, 'cluster');
+    }
+
     public function parent()
     {
         return $this->belongsTo(self::class, 'parent_id');

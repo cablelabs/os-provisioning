@@ -18,7 +18,7 @@ class TapController extends \BaseController
     {
         $netelement = NetElement::where('id', $id)->with('clusterObj')->first();
 
-        $lineNr = $netelement->clusterObj ? $netelement->clusterObj->rkm_line_nr : null;
+        $lineNr = $netelement->clusterObj ? $netelement->clusterObj->rkm_line_number : null;
 
         // Init View
         $view_header = trans('hfcreq::view.tapControlling').': '.$netelement->name;
@@ -44,6 +44,47 @@ class TapController extends \BaseController
         }
 
         return $this->switchState();
+    }
+
+    /**
+     * Switch Sat-Kabel-Video-Encoder line to the requested number or to automatic switching
+     *
+     * NOTE: No login required with HTTP base authentication
+     *
+     * @return string - 'OK' on success
+     */
+    public function switchVideoLine()
+    {
+        $hfcBaseConf = \Modules\HfcBase\Entities\HfcBase::first();
+        $line = Request::get('line');
+
+        if ($line == 'auto') {
+            // Turn on auto switching of line
+            $url = 'http://'.$hfcBaseConf->video_controller.'/ajax?t=1&c=0xFF';
+        } else {
+            // send parameter with random value to bypass caching server
+            $url = 'http://'.$hfcBaseConf->video_controller.'/ajax?t=1&c=0x01&p='.$line.'&'.rand(100, 999);
+        }
+        // Get line
+        // $url = 'http://'.$hfcBaseConf->video_controller.'/ajax?t=1&c=0x02';
+
+        Log::info('Set Sat-Kabel-Video-Encoder line to '.$line);
+
+        $ch = curl_init($url);
+
+        curl_setopt_array($ch, [
+            CURLOPT_USERPWD => $hfcBaseConf->video_controller_username.':'.$hfcBaseConf->video_controller_password,
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
+
+        $ret = curl_exec($ch);
+
+        // Returns '1:0x01=187' or '1:0xFF=187'
+        if (strpos($ret, '1:0x') !== false) {
+            return 'OK';
+        }
+
+        return $ret;
     }
 
     /**

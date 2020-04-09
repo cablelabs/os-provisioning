@@ -655,6 +655,7 @@ return [
     'EKP in'                    => 'EKP (Altvertrag)',
     'Incoming porting'          => 'Eingehende Rufnummernportierung',
     'Outgoing porting'          => 'Ausgehende Rufnummernportierung',
+    'Set'                       => 'Setzen',
     'Subscriber company'        => 'Firma (Altvertrag)',
     'Subscriber department'     => 'Abteilung (Altvertrag)',
     'Subscriber salutation'     => 'Anrede (Altvertrag)',

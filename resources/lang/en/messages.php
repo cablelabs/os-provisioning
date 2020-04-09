@@ -655,6 +655,7 @@ return [
     'EKP in'                    => 'EKP in',
     'Incoming porting'          => 'Incoming porting',
     'Outgoing porting'          => 'Outgoing porting',
+    'Set'                       => 'Set',
     'Subscriber company'        => 'Subscriber company',
     'Subscriber department'     => 'Subscriber department',
     'Subscriber salutation'     => 'Subscriber salutation',

@@ -138,7 +138,14 @@ class NetElementController extends HfcBaseController
             ];
         }
 
-        return array_merge($a, $b);
+        $c = [];
+        if (\Module::collections()->has('HfcSnmp') && $type == 2) {
+            $c = [
+                ['form_type' => 'text', 'name' => 'rkm_line_number', 'description' => 'RKM line number'],
+            ];
+        }
+
+        return array_merge($a, $b, $c);
     }
 
     public function prepare_input($data)
