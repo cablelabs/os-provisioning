@@ -59,7 +59,6 @@ class NetElementController extends HfcBaseController
             $hidden4TapPort = 1;
 
             $addressDesc1 = 'RKS Port'; // Used as address to control the attenuation setting via Sat-Kabel-RKS-Server
-
         } else {
             $parents = $netelement->getParentList();
             $types = NetElementType::get(['id', 'name']);

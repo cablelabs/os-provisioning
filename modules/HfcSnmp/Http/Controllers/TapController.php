@@ -6,7 +6,6 @@ use Log;
 use Request;
 use NamespaceController;
 use Modules\HfcReq\Entities\NetElement;
-use Modules\HfcReq\Entities\NetElementType;
 use App\Http\Controllers\BaseViewController;
 use Modules\ProvMon\Http\Controllers\ProvMonController;
 
@@ -14,7 +13,7 @@ class TapController extends \BaseController
 {
     const relCookiePath = 'app/tmp/cookie';
 
-	public function show($id)
+    public function show($id)
     {
         $netelement = NetElement::where('id', $id)->with('clusterObj')->first();
 
@@ -33,6 +32,13 @@ class TapController extends \BaseController
         return \View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'tabs', 'route_name', 'headline', 'hfcBaseConf', 'lineNr')));
     }
 
+    /**
+     * Switch Sat-Kabel-Tap-Port to requested state
+     *
+     * States can be: A - on, B - attenuated, C - off
+     *
+     * @return string - 'OK' on success
+     */
     public function switchTapState()
     {
         Log::debug(__FUNCTION__);
@@ -96,7 +102,7 @@ class TapController extends \BaseController
     {
         $cookie = storage_path(self::relCookiePath);
 
-        if (file_exists($cookie) && (time() - filemtime($cookie) <= 30*60)) {
+        if (file_exists($cookie) && (time() - filemtime($cookie) <= 30 * 60)) {
             return false;
         }
 
@@ -127,7 +133,9 @@ class TapController extends \BaseController
         $ret = curl_exec($ch);
         curl_close($ch);
 
-        Log::debug('Logged in to Sat-Kabel-RKM-server');
+        if ($ret !== false) {
+            Log::debug('Logged in to Sat-Kabel-RKM-Server');
+        }
 
         return $ret;
     }
@@ -138,14 +146,13 @@ class TapController extends \BaseController
         $state = Request::get('state');
 
         $hfcBaseConf = \Modules\HfcBase\Entities\HfcBase::first();
-        $rkmServer = $hfcBaseConf->rkm_server;
         $netelement = NetElement::find($id);
 
         $tap = explode('~', $netelement->address1);
         $tap = $tap[1] ?? 0;
 
-        $url = $rkmServer.'/index.php?page=rks';
-        // $url = $rkmServer.'/index.php';
+        $url = $hfcBaseConf->rkm_server.'/index.php?page=rks';
+        // $url = $hfcBaseConf->rkm_server.'/index.php';
         $data = [
             // 'action' => 'switchRks' for GET, 'action' => 'switchExt' for POST directly - but doesn't work yet - (returns 'address missing')
             'action' => 'switch',
@@ -153,15 +160,16 @@ class TapController extends \BaseController
             'type' => 'RKS',
             'tap' => $tap,
             'state' => $state,
-            // 'user' => 'user',
-            // 'pass' => 'password',
+            // 'user' => $hfcBaseConf->rkm_server_username,
+            // 'pass' => $hfcBaseConf->rkm_server_password,
         ];
 
         // ProvVoipEnviaController for better explanation of options
         $curlOptions = [
             CURLOPT_URL => $url,
-            CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => $data,
+            // CURLOPT_POSTFIELDS => http_build_query($data),
+            // CURLOPT_POSTFIELDS => $queryParams,
             // CURLOPT_COOKIELIST => curl_getinfo($ch, CURLINFO_COOKIELIST)[0],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_COOKIEFILE => storage_path(self::relCookiePath),
@@ -172,7 +180,8 @@ class TapController extends \BaseController
 
         $ret = curl_exec($ch);
 
-// d($data, $ch, $ret, curl_getinfo($ch, CURLINFO_HTTP_CODE), curl_error($ch));
+        // d($ret, $ch, $data, curl_getinfo($ch, CURLINFO_HTTP_CODE), curl_error($ch));
+
         // #RKS+SET: OK (000004D2;0;A;0;000000)
         if (strpos($ret, '#RKS+SET: OK') !== false) {
             $netelement->state = $state;
@@ -195,22 +204,3 @@ class TapController extends \BaseController
         return 'HTTP Code: '.$httpCode;
     }
 }
-
-
-// Tested but not necessary curl options
-// CURLOPT_HTTPHEADER => [
-//     'Content-type: application/x-www-form-urlencoded;charset="utf-8"',
-//     // 'Accept: text/xml',
-//     'Accept: application/json, text/javascript, */*; q=0.01',
-//     'Cache-Control: no-cache',
-//     'Pragma: no-cache',
-// ],
-// CURLOPT_USERPWD => "admin:satkabel",
-// CURLOPT_COOKIEFILE => storage_path(self::relCookiePath),
-// CURLOPT_COOKIEJAR => storage_path(self::relCookiePath),
-// CURLOPT_POSTFIELDS => http_build_query($data),
-// CURLOPT_COOKIESESSION => true,
-// CURLOPT_FOLLOWLOCATION => true,
-// CURLOPT_VERBOSE => false,
-// return server answer instead of echoing it instantly
-// CURLOPT_COOKIE => 'PHPSESSID=e1pugprv6sl7e1u4j9pkobdt54; cod=15.18',

@@ -1,7 +1,7 @@
 <?php
 
+use Modules\HfcReq\Entities\NetElementType;
 use Illuminate\Database\Migrations\Migration;
-use \Modules\HfcReq\Entities\NetElementType;
 
 class UpdateNetElementTypeAddTap extends Migration
 {
@@ -19,7 +19,7 @@ class UpdateNetElementTypeAddTap extends Migration
         do {
             $id++;
 
-            $exists = NetElementType::whereIn('id', [$id, $id+1])->first();
+            $exists = NetElementType::whereIn('id', [$id, $id + 1])->first();
         } while ($exists);
 
         if ($id != 8) {

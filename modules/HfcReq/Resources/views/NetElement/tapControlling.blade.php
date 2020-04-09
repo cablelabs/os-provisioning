@@ -109,7 +109,7 @@
         // console.log("set " + address + " from " + current_state + " to " + state);
         // var type = "RKS";
 
-        $("#response").html("");
+        removeReturnMsg('switchStateResponse');
 
         $.ajax({
             // async: false,
@@ -129,25 +129,15 @@
                 // user: 'user',
                 // pass: 'password',
             },
-            error: function(data, status) {$("#response").html(data + ":" + status);},
+            error: function(data, status) {
+                $("#switchStateResponse").html(data + ": " + status);
+            },
             success: function(data) {
-                console.log("Response: " + data);
-
-                if (! $("#response").hasClass('alert')) {
-                    $("#response").addClass('alert');
-                }
-
-                $("#response").html(data);
-
                 if (data == 'OK') {
                     setActiveState(state);
-
-                    $("#response").removeClass('alert-danger');
-                    $("#response").addClass('alert-success');
-                } else {
-                    $("#response").removeClass('alert-success');
-                    $("#response").addClass('alert-danger');
                 }
+
+                showReturnMsg('switchStateResponse', data);
 
                 // var valid = data.search("RKS");     //answer ok
                 // var error = data.search("Error");   //error
@@ -269,19 +259,19 @@
         $('#state'+state).addClass('activated');
     }
 
-    function getTapNumber(address)
-    {
-        var tap = 0;
+    // function getTapNumber(address)
+    // {
+    //     var tap = 0;
 
-        if (address.search('~') !== -1) {  //TAP?
-            var array = address.split('~');
+    //     if (address.search('~') !== -1) {  //TAP?
+    //         var array = address.split('~');
 
-            address = array[0];
-            tap = array[1];
-        }
+    //         address = array[0];
+    //         tap = array[1];
+    //     }
 
-        return tap;
-    }
+    //     return tap;
+    // }
 
     var setImgSize = function () {
         $("#video").width($(window).width() / 2.2);
