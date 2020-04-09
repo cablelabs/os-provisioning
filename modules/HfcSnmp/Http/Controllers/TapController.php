@@ -96,11 +96,11 @@ class TapController extends \BaseController
     {
         $cookie = storage_path(self::relCookiePath);
 
-        if (file_exists($cookie) && (time() - filemtime($cookie) >= 30*60)) {
-            return true;
+        if (file_exists($cookie) && (time() - filemtime($cookie) <= 30*60)) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     public function login()
