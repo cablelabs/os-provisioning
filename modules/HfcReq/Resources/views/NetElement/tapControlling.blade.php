@@ -11,10 +11,14 @@
 <div class="row">
 <div class="col-md-4">
     @section ('tap controlling')
-        <button id="stateA" type="button" class="btn btn-success btn-lg m-r-10 m-b-5 rkm-button" onclick="sendSwitchCmd('A')">0 dB</button>
-        <button id="stateB" type="button" class="btn btn-warning btn-lg m-r-10 m-b-5 rkm-button" onclick="sendSwitchCmd('B')">-6 dB</button>
-        <button id="stateC" type="button" class="btn btn-danger btn-lg m-r-10 m-b-5 rkm-button" onclick="sendSwitchCmd('C')">-40 dB</button>
-        <div id="response" class="m-t-10"></div>
+    <div class="row controlling-container">
+        <button id="stateA" type="button" class="btn btn-success btn-lg rkm-button" onclick="sendSwitchCmd('A')">0 dB</button>
+        <button id="stateB" type="button" class="btn btn-warning btn-lg rkm-button" onclick="sendSwitchCmd('B')">-6 dB</button>
+        <button id="stateC" type="button" class="btn btn-danger btn-lg rkm-button" onclick="sendSwitchCmd('C')">-40 dB</button>
+    </div>
+    <div class="row controlling-container">
+        <div id="switchStateResponse" class="m-t-10 ajaxResponse"></div>
+    </div>
     @stop
 
     @include ('bootstrap.panel', [
