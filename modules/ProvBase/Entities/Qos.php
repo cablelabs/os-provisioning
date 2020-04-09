@@ -102,13 +102,7 @@ class QosObserver
                 if (! $qos->{$key}) {
                     continue;
                 }
-
-                $new = new RadGroupReply;
-                $new->groupname = $qos->id;
-                $new->attribute = $attribute[0];
-                $new->op = $attribute[1];
-                $new->value = sprintf($attribute[2], $qos->{$key});
-                $new->save();
+                self::addRadGroupReply($qos, $attribute, $key);
             }
         }
     }
@@ -118,10 +112,18 @@ class QosObserver
         // update only ds/us if their values were changed
         foreach (array_intersect_key(RadGroupReply::$radiusAttributes, $qos->getDirty()) as $key => $attributes) {
             foreach ($attributes as $attribute) {
-                $qos->radgroupreplies()
-                    ->where('attribute', $attribute[0])
-                    ->where('value', 'like', $attribute[3])
-                    ->update(['value' => sprintf($attribute[2], $qos->{$key})]);
+                $reply = $qos->radgroupreplies()->where('attribute', $attribute[0])->where('value', 'like', $attribute[3]);
+
+                // value might be null, since not all QoS vlaues are required (e.g. DS/US QoS name)
+                if ($qos->{$key}) {
+                    if ($reply->count()) {
+                        $reply->update(['value' => sprintf($attribute[2], $qos->{$key})]);
+                    } else {
+                        self::addRadGroupReply($qos, $attribute, $key);
+                    }
+                } else {
+                    $reply->delete();
+                }
             }
         }
     }
@@ -129,5 +131,20 @@ class QosObserver
     public function deleted($qos)
     {
         $qos->radgroupreplies()->delete();
+    }
+
+    /**
+     * Add a RadGroupReply
+     *
+     * @author: Ole Ernst
+     */
+    private static function addRadGroupReply($qos, $attribute, $key)
+    {
+        $new = new RadGroupReply;
+        $new->groupname = $qos->id;
+        $new->attribute = $attribute[0];
+        $new->op = $attribute[1];
+        $new->value = sprintf($attribute[2], $qos->{$key});
+        $new->save();
     }
 }
