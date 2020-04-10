@@ -95,9 +95,15 @@ class Qos extends \BaseModel
  */
 class QosObserver
 {
+    public function __construct()
+    {
+        $file = storage_path('app/config/provbase/radius/attributes.php');
+        $this->radiusAttributes = file_exists($file) ? require $file : RadGroupReply::$radiusAttributes;
+    }
+
     public function created($qos)
     {
-        foreach (RadGroupReply::$radiusAttributes as $key => $attributes) {
+        foreach ($this->radiusAttributes as $key => $attributes) {
             foreach ($attributes as $attribute) {
                 if (! $qos->{$key}) {
                     continue;
@@ -110,7 +116,7 @@ class QosObserver
     public function updated($qos)
     {
         // update only ds/us if their values were changed
-        foreach (array_intersect_key(RadGroupReply::$radiusAttributes, $qos->getDirty()) as $key => $attributes) {
+        foreach (array_intersect_key($this->radiusAttributes, $qos->getDirty()) as $key => $attributes) {
             foreach ($attributes as $attribute) {
                 $reply = $qos->radgroupreplies()->where('attribute', $attribute[0])->where('value', 'like', $attribute[3]);
 
