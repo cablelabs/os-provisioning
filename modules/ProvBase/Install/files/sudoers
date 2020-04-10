@@ -7,3 +7,4 @@ apache  ALL=(root) NOPASSWD: /usr/bin/sed -i -f /var/www/nmsprime/storage/app/tm
 apache  ALL=(root) NOPASSWD: /usr/bin/sed -i -f /var/www/nmsprime/storage/app/tmp/update-domain.sed /etc/named-nmsprime.conf
 apache  ALL=(root) NOPASSWD: /usr/bin/sed -i -f /var/www/nmsprime/storage/app/tmp/update-domain.sed /var/named/dynamic/in-addr.arpa.zone
 apache  ALL=(root) NOPASSWD: /usr/bin/sed -i -f /var/www/nmsprime/storage/app/tmp/update-domain.sed /var/named/dynamic/nmsprime.test.zone
+apache  ALL=(root) NOPASSWD: /usr/bin/sed -i -f /var/www/nmsprime/storage/app/tmp/update-sqlippool.sed /etc/raddb/mods-available/sqlippool
