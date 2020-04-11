@@ -65,6 +65,7 @@ class SetEmptyStringsToNull extends Migration
             'radcheck',
             'radgroupcheck',
             'radgroupreply',
+            'radippool',
             'radpostauth',
             'radreply',
             'radusergroup',
