@@ -286,6 +286,8 @@ class IpPoolObserver
 {
     public function created($pool)
     {
+        self::updateRadIpPool($pool);
+
         if ($pool->netgw->type != 'cmts') {
             return;
         }
@@ -296,6 +298,8 @@ class IpPoolObserver
 
     public function updated($pool)
     {
+        self::updateRadIpPool($pool);
+
         if ($pool->netgw->type != 'cmts') {
             return;
         }
@@ -310,10 +314,66 @@ class IpPoolObserver
 
     public function deleted($pool)
     {
+        self::updateRadIpPool($pool);
+
         if ($pool->netgw->type != 'cmts') {
             return;
         }
 
         $pool->netgw->make_dhcp_conf();
+    }
+
+    /**
+     * Handle changes of radippool based on ippool
+     * This is called on created/updated/deleted in IpPool observer
+     *
+     * @author Ole Ernst
+     */
+    private static function updateRadIpPool($pool)
+    {
+        if ($pool->netgw->type != 'bras') {
+            return;
+        }
+
+        $now = array_map('long2ip',
+            range(
+                ip2long($pool->ip_pool_start),
+                ip2long($pool->ip_pool_end)
+            )
+        );
+
+        // delete pool
+        if ($pool->deleted_at) {
+            RadIpPool::whereIn('framedipaddress', $now)->delete();
+
+            return;
+        }
+
+        $org = array_map('long2ip',
+            range(
+                ip2long($pool->getOriginal('ip_pool_start')),
+                ip2long($pool->getOriginal('ip_pool_end'))
+            )
+        );
+
+        // update type (CPEPriv, CPEPub) if it was changed
+        if ($pool->isDirty('type')) {
+            RadIpPool::whereIn('framedipaddress', $org)->update(['pool_name' => $pool->type]);
+        }
+
+        // we don't simply delete the old pool and create a new one,
+        // since we would lose important state, such as the expiry_time
+        if (multi_array_key_exists(['ip_pool_start', 'ip_pool_end'], $pool->getDirty())) {
+            RadIpPool::whereIn('framedipaddress', array_diff($org, $now))->delete();
+
+            $insert = [];
+            foreach (array_diff($now, $org) as $ip) {
+                $insert[] = [
+                    'pool_name' => $pool->type,
+                    'framedipaddress' => $ip,
+                ];
+            }
+            RadIpPool::insert($insert);
+        }
     }
 }
