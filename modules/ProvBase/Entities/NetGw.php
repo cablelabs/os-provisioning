@@ -137,6 +137,22 @@ class NetGw extends \BaseModel
         return $this->hasMany(IpPool::class, 'netgw_id');
     }
 
+    public function allBrasIpPools()
+    {
+        $ids = [];
+
+        // show all BRAS ippools for every BRAS
+        if ($this->type == 'bras') {
+            $ids = self::join('ippool', 'ippool.netgw_id', 'netgw.id')
+                ->where('netgw.type', $this->type)
+                ->whereNull('netgw.deleted_at')
+                ->whereNull('ippool.deleted_at')
+                ->pluck('ippool.id');
+        }
+
+        return $this->ippools()->orWhereIn('id', $ids);
+    }
+
     public function netelement()
     {
         return $this->hasOne(\Modules\HfcReq\Entities\NetElement::class, 'prov_device_id');
@@ -155,6 +171,7 @@ class NetGw extends \BaseModel
         $ret['Edit']['IpPool']['relation'] = $this->ippools;
 
         if ($this->type == 'bras') {
+            $ret['Edit']['IpPool']['relation'] = $this->allBrasIpPools;
             // related network access server
             $ret['Edit']['Nas']['class'] = 'Nas';
             $ret['Edit']['Nas']['relation'] = $this->nas;
