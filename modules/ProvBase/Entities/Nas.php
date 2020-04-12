@@ -76,21 +76,21 @@ class NasObserver
 {
     public function created($nas)
     {
-        $this->reloadRadiusd();
+        $this->restartRadiusd();
     }
 
     public function updated($nas)
     {
-        $this->reloadRadiusd();
+        $this->restartRadiusd();
     }
 
     public function deleted($nas)
     {
-        $this->reloadRadiusd();
+        $this->restartRadiusd();
     }
 
-    private function reloadRadiusd()
+    private function restartRadiusd()
     {
-        exec('sudo systemctl reload radiusd.service');
+        exec('sudo systemctl restart radiusd.service');
     }
 }

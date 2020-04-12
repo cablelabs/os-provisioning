@@ -194,11 +194,11 @@ class ProvBaseObserver
                 ->where('attribute', 'Session-Timeout')
                 ->update(['value' => $model->dhcp_def_lease_time]);
 
-            // adjust radiusd config and reload it
+            // adjust radiusd config and restart it
             $sed = storage_path('app/tmp/update-sqlippool.sed');
             file_put_contents($sed, "s/^\s*lease_duration\s*=.*/\tlease_duration = $model->dhcp_def_lease_time/");
             exec("sudo sed -i -f $sed /etc/raddb/mods-available/sqlippool");
-            exec('sudo systemctl reload radiusd.service');
+            exec('sudo systemctl restart radiusd.service');
             unlink($sed);
         }
 
