@@ -275,6 +275,7 @@ return [
     'Downstream rate coefficient' => 'Downstream rate coefficient',
     'Upstream rate coefficient' => 'Upstream rate coefficient',
     'Additional modem reset button' => 'Additional modem reset button',
+    'Allocate PPPoE IPs randomly' => 'Allocate PPPoE IPs randomly',
     'modemAnalysis' => [
         'cfOutdated' => 'The modem doesn\'t run with the actual configfile. The last download was before the built time of the configfile.',
         'cfError' => 'There was an error creating the config file! Please be aware that this modem has currently no config file. Please check if the configfile can be created properly. To Test this, please execute the following command on the command line:',

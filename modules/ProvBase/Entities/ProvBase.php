@@ -202,6 +202,17 @@ class ProvBaseObserver
             unlink($sed);
         }
 
+        if (array_key_exists('random_ip_allocation', $changes)) {
+            $queryPath = storage_path('app/config/provbase/radius/queries.conf');
+            if ($model->random_ip_allocation) {
+                $query = 'allocate_find = "SELECT framedipaddress FROM ${ippool_table} WHERE pool_name = \'%{control:Pool-Name}\' AND expiry_time IS NULL ORDER BY RAND() LIMIT 1 FOR UPDATE"';
+            } else {
+                $query = 'allocate_find = "SELECT framedipaddress FROM ${ippool_table} WHERE pool_name = \'%{control:Pool-Name}\' AND (expiry_time < NOW() OR expiry_time IS NULL) ORDER BY (username <> \'%{User-Name}\'), (callingstationid <> \'%{Calling-Station-Id}\'), expiry_time LIMIT 1 FOR UPDATE"';
+            }
+            file_put_contents($queryPath, $query."\n");
+            exec('sudo systemctl restart radiusd.service');
+        }
+
         // re-evaluate all qos rate_max_help fields if one or both coefficients were changed
         if (multi_array_key_exists(['ds_rate_coefficient', 'us_rate_coefficient'], $changes)) {
             $pb = ProvBase::first();

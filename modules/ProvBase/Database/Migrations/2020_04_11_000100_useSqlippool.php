@@ -19,7 +19,8 @@ class UseSqlippool extends BaseMigration
 
         // adjust radiusd sqlippool IP lease duration
         $leaseTime = Modules\ProvBase\Entities\ProvBase::first()->dhcp_def_lease_time;
-        exec("sed -i 's/^\s*lease_duration\s*=.*/\tlease_duration = $leaseTime/' /etc/raddb/mods-available/sqlippool");
+        $queryPath = storage_path('app/config/provbase/radius/queries.conf');
+        exec("sed -i -e 's/^\s*lease_duration\s*=.*/\tlease_duration = $leaseTime/' -e '/^\s*\$INCLUDE/i\\\\t\$INCLUDE $queryPath' /etc/raddb/mods-available/sqlippool");
 
         // enable sqlippool
         $link = '/etc/raddb/mods-enabled/sqlippool';
