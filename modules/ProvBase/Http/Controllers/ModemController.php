@@ -389,17 +389,6 @@ class ModemController extends \BaseController
         return parent::prepare_rules($rules, $data);
     }
 
-    public function store($redirect = true)
-    {
-        if (Request::get('ppp_username') && ! \Modules\ProvBase\Entities\IpPool::findNextUnusedBrasIPAddress(Request::get('public'))) {
-            \Session::push('tmp_error_above_form', trans('messages.ippool_exhausted'));
-
-            return \Redirect::back()->withInput();
-        }
-
-        return parent::store();
-    }
-
     /**
      * Inheritet update function to handle force restart button as
      * we dont want to update the modem when this button is clicked

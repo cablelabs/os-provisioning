@@ -1657,40 +1657,6 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Synchronize radreply with modem table, if PPPoE is used.
-     *
-     * @author Ole Ernst
-     */
-    private function updateRadReply($delete)
-    {
-        $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name.'.';
-
-        if ($delete || ! $this->isPPP() || ! $this->internet_access) {
-            $this->radreply()->delete();
-
-            return;
-        }
-
-        // add RadReply, if it doesn't exist
-        if (! $this->radreply()->count()) {
-            $reply = new RadReply;
-            $reply->username = $this->ppp_username;
-            $reply->attribute = 'Framed-IP-Address';
-            $reply->op = ':=';
-            $reply->value = gethostbyname($fqdn);
-            $reply->save();
-        }
-
-        // update existing RadReply, if public was changed
-        if (array_key_exists('public', $this->getDirty())) {
-            $reply = $this->radreply;
-            $reply->value = gethostbyname($fqdn);
-            $reply->save();
-            $this->restart_modem();
-        }
-    }
-
-    /**
      * Synchronize radusergroups with modem table, if PPPoE is used.
      *
      * @author Ole Ernst
@@ -1732,57 +1698,12 @@ class Modem extends \BaseModel
      *
      * @author Ole Ernst
      */
-    public function updateRadius($delete)
+    public function updateRadius()
     {
-        $this->nsupdate($delete || ! $this->internet_access);
+        $deleted = $this->deleted_at;
 
-        $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name.'.';
-        $delete |= gethostbyname($fqdn) == $fqdn;
-
-        $this->updateRadCheck($delete);
-        $this->updateRadReply($delete);
-        $this->updateRadUserGroups($delete);
-    }
-
-    /**
-     * Set/Delete hostnames for PPP devices (ppp-$this->id)
-     *
-     * @author Ole Ernst
-     */
-    public function nsupdate($delete = false)
-    {
-        if (! $this->isPPP()) {
-            return;
-        }
-
-        $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name.'.';
-
-        $ip = gethostbyname($fqdn);
-        if (! $delete && ! $ip = IpPool::findNextUnusedBrasIPAddress($this->public)) {
-            \Session::push('tmp_error_above_form', trans('messages.ippool_exhausted'));
-
-            return;
-        }
-
-        if ($ip == $fqdn) {
-            return;
-        }
-
-        $rev = implode('.', array_reverse(explode('.', $ip))).'.in-addr.arpa.';
-
-        $cmd = '';
-        if ($delete) {
-            $cmd .= "update delete $fqdn\nsend\n";
-            $cmd .= "update delete $rev\nsend\n";
-        } else {
-            $cmd .= "update add $fqdn 3600 A $ip\nsend\n";
-            $cmd .= "update add $rev 3600 PTR $fqdn\nsend\n";
-        }
-
-        $pw = env('DNS_PASSWORD');
-        $handle = popen("/usr/bin/nsupdate -v -l -y dhcpupdate:$pw", 'w');
-        fwrite($handle, $cmd);
-        pclose($handle);
+        $this->updateRadCheck($deleted);
+        $this->updateRadUserGroups($deleted);
     }
 }
 
@@ -1811,17 +1732,19 @@ class ModemObserver
         // this is needed for a consistent dhcpd config
         Modem::where('id', $modem->id)->update(['hostname' => $hostname]);
 
-        if ($modem->isPPP()) {
-            $modem->updateRadius(false);
-            $modem->save();
-        } else {
-            $modem->save();  // forces to call the updating() and updated() method of the observer !
-            Modem::create_ignore_cpe_dhcp_file();
+        $modem->updateRadius();
 
-            if (Module::collections()->has('ProvMon')) {
-                Log::info("Create cacti diagrams for modem: $modem->hostname");
-                \Artisan::call('nms:cacti', ['--netgw-id' => 0, '--modem-id' => $modem->id]);
-            }
+        $modem->save();  // forces to call the updating() and updated() method of the observer !
+
+        if ($modem->isPPP()) {
+            return;
+        }
+
+        Modem::create_ignore_cpe_dhcp_file();
+
+        if (Module::collections()->has('ProvMon')) {
+            Log::info("Create cacti diagrams for modem: $modem->hostname");
+            \Artisan::call('nms:cacti', ['--netgw-id' => 0, '--modem-id' => $modem->id]);
         }
     }
 
@@ -1905,11 +1828,7 @@ class ModemObserver
             $modem->make_configfile();
         }
 
-        if (array_key_exists('public', $diff)) {
-            $modem->nsupdate(true);
-        }
-
-        $modem->updateRadius(false);
+        $modem->updateRadius();
 
         // ATTENTION:
         // If we ever think about moving modems to other contracts we have to delete envia TEL related stuff, too –
@@ -1932,14 +1851,16 @@ class ModemObserver
             $modem->factoryReset();
         }
 
+        $modem->updateRadius();
+
         if ($modem->isPPP()) {
-            $modem->updateRadius(true);
-        } else {
-            // $modem->make_dhcp_cm_all();
-            Modem::create_ignore_cpe_dhcp_file();
-            $modem->make_dhcp_cm(true);
-            $modem->restart_modem();
-            $modem->delete_configfile();
+            return;
         }
+
+        // $modem->make_dhcp_cm_all();
+        Modem::create_ignore_cpe_dhcp_file();
+        $modem->make_dhcp_cm(true);
+        $modem->restart_modem();
+        $modem->delete_configfile();
     }
 }

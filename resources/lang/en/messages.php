@@ -340,7 +340,6 @@ return [
     'SNMP Public Community String'  => 'SNMP Public Community String',
     'noCC'                  => 'no Costcenter assigned',
     'IP-Pools'                  => 'IP-Pools',
-    'ippool_exhausted'          => 'no free IP addresses found: Please extend the existing IpPool or create a new one',
     'Type of Pool'              => 'Type of Pool',
     'Type of signal' => 'Type of signal',
     'IP network'                => 'IP network',
