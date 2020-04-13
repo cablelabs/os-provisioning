@@ -1664,13 +1664,15 @@ class Modem extends \BaseModel
     private function updateRadUserGroups($delete)
     {
         if ($delete || ! $this->isPPP() || ! $this->internet_access) {
-            $groups = $this->radusergroups()->delete();
+            $this->radusergroups()->delete();
 
             return;
         }
 
-        // add RadUserGroups, if non-exisiting
-        if (! $this->radusergroups()->count()) {
+        // renew RadUserGroups, if non-exisiting or not as expected
+        if ($this->radusergroups()->count() != 2) {
+            $this->radusergroups()->delete();
+
             // default and QoS-specific group
             foreach ([RadGroupReply::$defaultGroup, $this->qos_id] as $groupname) {
                 $group = new RadUserGroup;
