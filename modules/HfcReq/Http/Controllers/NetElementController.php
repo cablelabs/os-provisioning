@@ -167,15 +167,6 @@ class NetElementController extends HfcBaseController
         return $data;
     }
 
-    public function prepare_rules($rules, $data)
-    {
-        if ($data['netelementtype_id'] == 9) {
-            $rules['address1'] = 'required|regex:/^([0-9A-F]{2}){4}(~\d)*$/';
-        }
-
-        return parent::prepare_rules($rules, $data);
-    }
-
     /**
      * Show tabs in Netelement edit page.
      *
