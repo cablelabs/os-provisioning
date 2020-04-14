@@ -6,6 +6,7 @@ return [
     'city' => 'Stadt',
     'connected' => 'Angeschlossen',
     'connection_type' => 'Anschlusstyp',
+    'deprecated' => 'Veraltet',
     'email' => 'Email',
     'expansion_degree' => 'Ausbaugrad',
     'floor' => 'Etage',
