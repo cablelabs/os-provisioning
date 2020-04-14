@@ -18,7 +18,7 @@ class NetElement extends \BaseModel
     public $guarded = ['kml_file_upload'];
 
     public $kml_path = 'app/data/hfcbase/kml_static';
-    private $max_parents = 25;
+    private $max_parents = 50;
 
     public $snmpvalues = ['attributes' => [], 'original' => []];
 
@@ -609,6 +609,8 @@ class NetElementObserver
         // in created because otherwise netelement does not have an ID yet
         $netelement->net = $netelement->get_native_net();
         $netelement->cluster = $netelement->get_native_cluster();
+        $this->checkNetCluster($netelement);
+
         $netelement->observer_enabled = false;  // don't execute functions in updating again
         $netelement->save();
     }
@@ -621,8 +623,10 @@ class NetElementObserver
 
         if ($netelement->isDirty('parent_id', 'name')) {
             $this->flushSidebarNetCache();
+
             $netelement->net = $netelement->get_native_net();
             $netelement->cluster = $netelement->get_native_cluster();
+            $this->checkNetCluster($netelement);
 
             // Change Net & cluster of all childrens too
             Netelement::where('parent_id', '=', $netelement->id)
@@ -659,5 +663,19 @@ class NetElementObserver
     protected function flushSidebarNetCache()
     {
         Cache::forget(Auth::user()->login_name.'-Nets');
+    }
+
+    /**
+     * Return error message when net or cluster ID couldn't be determined as this would result in hiding the element in the ERD
+     */
+    private function checkNetCluster($netelement)
+    {
+        if (! $netelement->net) {
+            return Session::push('tmp_error_above_form', trans('hfcreq::messages.netelement.noNet'));
+        }
+
+        if (! $netelement->net) {
+            return Session::push('tmp_error_above_form', trans('hfcreq::messages.netelement.noCluster'));
+        }
     }
 }

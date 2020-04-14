@@ -305,7 +305,8 @@ class Modem extends \BaseModel
         }
 
         if ($relation) {
-            return collect([$relation, $this->contract]);
+            // Let contract be first as just the first relation is used in modem analyses - see top.blade.php
+            return collect([$this->contract, $relation]);
         }
 
         return $this->contract;
