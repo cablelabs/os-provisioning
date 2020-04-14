@@ -283,6 +283,11 @@ class Modem extends \BaseModel
         return $this->hasMany(RadUserGroup::class, 'username', 'ppp_username');
     }
 
+    public function radacct()
+    {
+        return $this->hasMany(RadAcct::class, 'username', 'ppp_username');
+    }
+
     /*
      * Relation Views
      */
@@ -804,28 +809,21 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Refresh the online state of all TR069 device by checking
-     * if they last informed us within the last 5 minutes
+     * Refresh the online state of all PPP device by checking if their last
+     * accounting update was within the last $defaultInterimIntervall seconds
      *
      * @author Ole Ernst
      */
-    public static function refreshTR069()
+    public static function refreshPPP()
     {
-        $query = [
-            '_lastInform' => [
-                '$gt' => \Carbon\Carbon::now('UTC')->subMinute(5)->toIso8601ZuluString(),
-            ],
-        ];
-
-        $query = json_encode($query);
-        $route = "devices/?query=$query&projection=_deviceId._SerialNumber";
-
-        $online = array_map(function ($value) {
-            return $value->_deviceId->_SerialNumber ?? null;
-        }, json_decode(self::callGenieAcsApi($route, 'GET')) ?: []);
+        $online = RadAcct::where(
+            'acctupdatetime',
+            '>=',
+            \Carbon\Carbon::now()->subSeconds(RadGroupReply::$defaultInterimIntervall)
+        )->pluck('username');
 
         DB::beginTransaction();
-        // make all tr069 devices offline
+        // make all ppp devices offline
         // toBase() is needed since updated_at is ambiguous
         self::join('configfile', 'configfile.id', 'modem.configfile_id')
             ->where('configfile.device', 'tr069')
@@ -833,9 +831,10 @@ class Modem extends \BaseModel
             ->toBase()
             ->update(['us_pwr' => 0, 'modem.updated_at' => now()]);
 
-        // make all tr069 devices online, which informed us in the last 5 minutes
+        // set all ppp devices online, which sent us an accounting update
+        // in the last $defaultInterimIntervall seconds
         // for now we set them to a sensible DOCIS US power level to make them green
-        self::whereIn('serial_num', $online)->update(['us_pwr' => 45]);
+        self::whereIn('ppp_username', $online)->update(['us_pwr' => 45]);
         DB::commit();
     }
 

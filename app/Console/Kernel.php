@@ -147,8 +147,8 @@ class Kernel extends ConsoleKernel
                 }
             })->everyFiveMinutes();
 
-            // refresh the online state of all TR069 device
-            $schedule->call('\Modules\ProvBase\Entities\Modem@refreshTR069')->everyFiveMinutes();
+            // refresh the online state of all PPP device
+            $schedule->call('\Modules\ProvBase\Entities\Modem@refreshPPP')->everyFiveMinutes();
 
             // update firmware version + model strings of all modems once a day
             $schedule->call('\Modules\ProvBase\Entities\Modem@update_model_firmware')->daily();
