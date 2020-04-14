@@ -17,7 +17,11 @@
         <button id="stateC" type="button" class="btn btn-danger btn-lg rkm-button" onclick="sendSwitchCmd('C')">-40 dB</button>
     </div>
     <div class="row controlling-container">
-        <div id="switchStateResponse" class="m-t-10 ajaxResponse"></div>
+        @if (! $hfcBaseConf->rkm_server)
+            <div class="m-t-10 alert alert-danger ajaxResponse">{{ trans('hfcsnmp::messages.missingConf', ['device' => 'RKM-Server']) }}</div>
+        @else
+            <div id="switchStateResponse" class="m-t-10 ajaxResponse"></div>
+        @endif
     </div>
     @stop
 
@@ -41,7 +45,11 @@
         </a>
     </div>
     <div class="row controlling-container">
-        <div id="setLineResponse" class="m-t-10 ajaxResponse"></div>
+        @if (! $hfcBaseConf->video_controller)
+            <div class="m-t-10 alert alert-danger ajaxResponse">{{ trans('hfcsnmp::messages.missingConf', ['device' => 'Video Controller']) }}</div>
+        @else
+            <div id="setLineResponse" class="m-t-10 ajaxResponse"></div>
+        @endif
     </div>
     <div class="form-group row m-r-5" style="justify-content: center;">
         <button id="setLineAuto" type="button" class="btn btn-purple m-r-10 m-b-5" onclick="setLine('auto')">{{trans('hfcsnmp::view.autoSwitchOn')}}</button>
@@ -62,8 +70,12 @@
         @DivOpen(1)
         @DivClose()
         @DivOpen(6)
-            <img id="video" src="http://{{$hfcBaseConf->video_encoder}}/mjpg/1/video.mjpg?camera=1" alt="http://193.168.231.77:2019/mjpg/1/video.mjpg?camera=1">
-            <!-- <img id="video" src="http://{{$hfcBaseConf->video_encoder}}/jpg/1/image.jpg?timestamp=1584552846920"> -->
+            @if (! $hfcBaseConf->video_encoder)
+                <div class="m-t-10 alert alert-danger ajaxResponse">{{ trans('hfcsnmp::messages.missingConf', ['device' => 'Video Encoder']) }}</div>
+            @else
+            <!-- <img id="video" src="http://{{$hfcBaseConf->video_encoder}}/mjpg/1/video.mjpg?camera=1" alt="http://193.168.231.77:2019/mjpg/1/video.mjpg?camera=1"> -->
+            <img id="video" src="http://{{$hfcBaseConf->video_encoder}}/jpg/1/image.jpg?timestamp=1584552846920">
+            @endif
         @DivClose()
     @DivClose()
 @DivClose()
@@ -117,6 +129,7 @@
             // url: 'http://{{$hfcBaseConf->rkm_server}}' + '/index.php',
             type: 'post',
             url: '{{ "/admin/NetElement/switchTapState" }}',
+            timeout: 4000,
             data: {
                 _token: "{{\Session::get('_token')}}",
                 id: '{{ $view_var->id }}',
@@ -130,7 +143,7 @@
                 // pass: 'password',
             },
             error: function(data, status) {
-                $("#switchStateResponse").html(data + ": " + status);
+                showReturnMsg('switchStateResponse', "{{ trans('hfcsnmp::messages.ajaxError') }} (" + status + ': ' + data + ')');
             },
             success: function(data) {
                 if (data == 'OK') {
@@ -161,12 +174,13 @@
         $.ajax({
             type: 'post',
             url: '{{ "/admin/NetElement/switchVideoLine" }}',
+            timeout: 4000,
             data: {
                 _token: "{{\Session::get('_token')}}",
                 line: line,
             },
             error: function(data, status) {
-                $("#setLineResponse").html(data + ': ' + status);
+                showReturnMsg('setLineResponse', "{{ trans('hfcsnmp::messages.ajaxError') }} (" + status + ': ' + data + ')');
             },
             success: function(data) {
                 showReturnMsg('setLineResponse', data);
