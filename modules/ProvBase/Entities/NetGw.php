@@ -17,7 +17,7 @@ class NetGw extends \BaseModel
     public $table = 'netgw';
 
     // Attributes
-    public $guarded = ['formatted_support_state'];
+    public $guarded = ['formatted_support_state', 'nas_secret'];
     protected $appends = ['formatted_support_state'];
 
     // Add your validation rules here
@@ -160,7 +160,7 @@ class NetGw extends \BaseModel
 
     public function nas()
     {
-        return $this->hasMany(Nas::class, 'shortname');
+        return $this->hasOne(Nas::class, 'shortname');
     }
 
     // returns all objects that are related to a netgw
@@ -172,9 +172,6 @@ class NetGw extends \BaseModel
 
         if ($this->type == 'bras') {
             $ret['Edit']['IpPool']['relation'] = $this->allBrasIpPools;
-            // related network access server
-            $ret['Edit']['Nas']['class'] = 'Nas';
-            $ret['Edit']['Nas']['relation'] = $this->nas;
         }
 
         // Routing page
@@ -667,6 +664,8 @@ class NetGwObserver
 
     public function created($netgw)
     {
+        self::updateNas($netgw);
+
         if ($netgw->type != 'cmts') {
             return;
         }
@@ -681,6 +680,8 @@ class NetGwObserver
 
     public function updated($netgw)
     {
+        self::updateNas($netgw);
+
         if ($netgw->type != 'cmts') {
             return;
         }
@@ -692,6 +693,8 @@ class NetGwObserver
 
     public function deleted($netgw)
     {
+        self::updateNas($netgw);
+
         if ($netgw->type != 'cmts') {
             return;
         }
@@ -700,5 +703,33 @@ class NetGwObserver
         File::delete(self::$netgw_tftp_path."/$netgw->id.cfg");
 
         NetGw::make_includes();
+    }
+
+    /**
+     * Handle changes of nas based on netgw
+     * This is called on created/updated/deleted in NetGw observer
+     *
+     * @author Ole Ernst
+     */
+    private static function updateNas($netgw)
+    {
+        // netgw is deleted or its type was changed to != bras
+        if ($netgw->deleted_at || $netgw->type != 'bras') {
+            $netgw->nas()->delete();
+            exec('sudo systemctl restart radiusd.service');
+
+            return;
+        }
+
+        // we need to use \Request::get() since nas_secret is guarded
+        $update = ['nasname' => $netgw->ip, 'secret' => \Request::get('nas_secret')];
+
+        if ($netgw->nas()->count()) {
+            $netgw->nas()->update($update);
+        } else {
+            Nas::insert(array_merge($update, ['shortname' => $netgw->id]));
+        }
+
+        exec('sudo systemctl restart radiusd.service');
     }
 }
