@@ -882,6 +882,10 @@ class BaseViewController extends Controller
     {
         $ret = '3';
 
+        if ($val == 'n/a') {
+            return $ret;
+        }
+
         switch ($entity) {
         case 'rx power dbmv':
             $ret = self::_colorize($val, [-3, -1, 15, 20]);
@@ -895,6 +899,9 @@ class BaseViewController extends Controller
             }
                 break;
         case 'microreflection -dbc':
+            if ($val == 0) {
+                break;
+            }
             $ret = self::_colorize($val, [20, 30]);
             break;
         case 'avg utilization %':

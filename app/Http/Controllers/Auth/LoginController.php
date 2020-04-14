@@ -101,7 +101,7 @@ class LoginController extends Controller
 
         self::setDashboardNotifications();
 
-        $user->update(['last_login_at' => Carbon::now()]);
+        App\User::where('id', $user->id)->update(['last_login_at' => Carbon::now()]);
     }
 
     /**

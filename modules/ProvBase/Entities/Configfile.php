@@ -335,7 +335,7 @@ class Configfile extends \BaseModel
             $res = \Str::contains($ops[0], '}') ? $ops[2] : $ops[0];
         } elseif (is_numeric($ops[0]) || is_numeric($ops[2])) {
             try {
-                $res = eval("return $ops[0] $ops[1] $ops[2];");
+                $res = round(eval("return $ops[0] $ops[1] $ops[2];"));
             } catch (\Exception $e) {
                 // e.g. divide by zero
                 return;

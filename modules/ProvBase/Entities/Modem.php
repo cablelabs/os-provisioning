@@ -258,17 +258,6 @@ class Modem extends \BaseModel
         return $this->hasMany(Endpoint::class);
     }
 
-    // TODO: deprecated! use netelement function instead - search for all places where this function is used
-    public function tree()
-    {
-        return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class);
-    }
-
-    public function nelelement()
-    {
-        return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class, 'netelement_id');
-    }
-
     public function apartment()
     {
         return $this->belongsTo(\Modules\PropertyManagement\Entities\Apartment::class);
@@ -1135,7 +1124,6 @@ class Modem extends \BaseModel
             $ip = gethostbyname($fqdn);
             $netgw = self::get_netgw($ip);
             $mac = $mac_changed ? $this->getOriginal('mac') : $this->mac;
-            $mac_oid = implode('.', array_map('hexdec', explode(':', $mac)));
 
             if ($modem_reset) {
                 throw new \Exception('Reset Modem directly');
@@ -1151,19 +1139,35 @@ class Modem extends \BaseModel
                 throw new \Exception('NetGw could not be determined for modem');
             }
 
-            if (! in_array($netgw->company, ['Casa', 'Cisco'])) {
+            if (! in_array($netgw->company, ['Casa', 'Cisco', 'Motorola'])) {
                 throw new \Exception("Modem restart via NetGw vendor $netgw->company not yet implemented");
             }
 
             if ($netgw->company == 'Cisco') {
-                $oid = '1.3.6.1.4.1.9.9.116.1.3.1.1.9.';
+                $param = [
+                    '1.3.6.1.4.1.9.9.116.1.3.1.1.9.'.implode('.', array_map('hexdec', explode(':', $mac))),
+                    'i',
+                    '1',
+                ];
             }
 
             if ($netgw->company == 'Casa') {
-                $oid = '1.3.6.1.4.1.20858.10.12.1.3.1.7.';
+                $param = [
+                    '1.3.6.1.4.1.20858.10.12.1.3.1.7.'.implode('.', array_map('hexdec', explode(':', $mac))),
+                    'i',
+                    '1',
+                ];
             }
 
-            snmpset($netgw->ip, $netgw->get_rw_community(), $oid.$mac_oid, 'i', '1', 300000, 1);
+            if ($netgw->company == 'Motorola') {
+                $param = [
+                    '1.3.6.1.4.1.4981.2.2.2.0',
+                    'x',
+                    implode(' ', explode(':', $mac)),
+                ];
+            }
+
+            snmpset($netgw->ip, $netgw->get_rw_community(), $param[0], $param[1], $param[2], 300000, 1);
 
             // success message
             \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_netgw'));
