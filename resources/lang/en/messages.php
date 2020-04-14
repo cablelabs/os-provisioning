@@ -675,7 +675,7 @@ return [
     'Voucher date'              => 'Voucher date',
     'Voucher number'            => 'Voucher number',
     'wrongMacOrSerialNumber'    => 'Please correct MAC/serial number',
-    'no_Netelements'            => 'There are no net elements to display. Please create a net element at first.',
+    'no_Netelements'            => 'There are no net elements to display. Please create a net element first and make sure it has a geoposition!',
     'no_ERD_File'               => 'It was not possible to generate the ERD diagram. Please try again later.',
     'default_modem_picture'     => 'Default device - Please contribute an image of your device in public/images/modems.',
     'Deprecated'                => 'Deprecated',
