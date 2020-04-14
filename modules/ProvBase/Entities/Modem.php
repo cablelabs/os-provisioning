@@ -288,6 +288,11 @@ class Modem extends \BaseModel
         return $this->hasMany(RadAcct::class, 'username', 'ppp_username');
     }
 
+    public function radpostauth()
+    {
+        return $this->hasMany(RadPostAuth::class, 'username', 'ppp_username');
+    }
+
     /*
      * Relation Views
      */

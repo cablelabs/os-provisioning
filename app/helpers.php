@@ -343,3 +343,12 @@ function selectList($table, $columns, $empty_option = false, $separator = '--')
 
     return $model->html_list($entries, $columns, $empty_option, $separator);
 }
+
+// http://jeffreysambells.com/2012/10/25/human-readable-filesize-php
+function humanFilesize($bytes, $dec = 2)
+{
+    $size = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    $factor = floor((strlen($bytes) - 1) / 3);
+
+    return sprintf("%.{$dec}f", $bytes / pow(1024, $factor)).@$size[$factor];
+}
