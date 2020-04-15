@@ -61,8 +61,8 @@
                                                 @include ($relation['view'])
                                             @endif
                                             @if (is_array($relation['view']))
-                                                @include ($relation['view']['view'], isset($relation['view']['vars']) ? $relation['view']['vars'] : [])
-                                                <?php $md_size = isset($relation['view']['vars']['md_size']) ? $relation['view']['vars']['md_size'] : null; ?>
+                                                @include ($relation['view']['view'], $relation['view']['vars'] ?? [])
+                                                <?php $md_size = isset($relation['view']['vars']['md_size']) ?? null; ?>
                                             @endif
                                         @endif
 
