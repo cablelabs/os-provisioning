@@ -120,11 +120,11 @@ class NetElement extends \BaseModel
             return 'info';
         }
 
-        if ($this->netelementtype && $this->netelementtype->get_base_type() == 9) {
+        if ($this->netelementtype && $this->netelementtype_id == 9) {
             switch ($this->state) {
-                case 'off':
+                case 'C': // off
                     return 'danger';
-                case 'attenuated':
+                case 'B': // attenuated
                     return 'warning';
                 default: // on
                     return 'success';
