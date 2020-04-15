@@ -849,91 +849,89 @@ class BaseViewController extends Controller
      *
      * @author: Ole Ernst
      */
-    private static function _colorize($val, $limit, $inv = false)
+    private static function colorize($val, $limit, $inv = false)
     {
         if ($val < $limit[0] || (isset($limit[3]) && $val > $limit[3])) {
-            return $inv ? 0 : 2;
+            return $inv ? 'success' : 'danger';
         }
 
         if ($val >= $limit[1]) {
             if (! isset($limit[2])) {
-                return $inv ? 2 : 0;
+                return $inv ? 'danger' : 'success';
             }
 
             if ($val <= $limit[2]) {
-                return $inv ? 2 : 0;
+                return $inv ? 'danger' : 'success';
             }
         }
 
-        return 1;
+        return 'warning';
     }
 
     /**
-     * Evaluate if the value is good(0), average(1) or bad(2) in the given context
+     * Evaluate the value in the given context
      *
-     * @param dir: downstream, upstream
-     * @param entity: the entity to check (power, modulation, ureflections)
+     * @param dir: Downstream, Upstream
+     * @param entity: the entity to check (power, modulation, ureflections, etc.)
      * @param value: array containing all values (can be used for several us/ds channels)
      * @return: array of same size as $value containing evaluation results
      *
      * @author: Ole Ernst
      */
-    public static function get_quality_color($dir, $mod, $entity, $val)
+    public static function getQualityColor($dir, $mod, $entity, $val)
     {
-        $ret = '3';
+        $ret = '';
 
         if ($val == 'n/a') {
             return $ret;
         }
 
         switch ($entity) {
-        case 'rx power dbmv':
-            $ret = self::_colorize($val, [-3, -1, 15, 20]);
+        case 'Rx Power dBmV':
+            $ret = self::colorize($val, [-3, -1, 15, 20]);
             break;
-        case 'power dbmv':
-            if ($dir == 'downstream') {
-                $ret = self::_colorize($val, [-20, -10, 15, 20]);
+        case 'Power dBmV':
+            if ($dir == 'Downstream') {
+                $ret = self::colorize($val, [-20, -10, 15, 20]);
             }
-            if ($dir == 'upstream') {
-                $ret = self::_colorize($val, [22, 27, 50, 56]);
+            if ($dir == 'Upstream') {
+                $ret = self::colorize($val, [22, 27, 50, 56]);
             }
                 break;
-        case 'microreflection -dbc':
+        case 'Microreflection -dBc':
             if ($val == 0) {
                 break;
             }
-            $ret = self::_colorize($val, [20, 30]);
+            $ret = self::colorize($val, [20, 30]);
             break;
-        case 'avg utilization %':
-            $ret = self::_colorize($val, [0, 0, 70, 90]);
+        case 'Avg Utilization %':
+            $ret = self::colorize($val, [0, 0, 70, 90]);
             break;
-        case 'snr db':
-        case 'mer db':
-            if ($mod == 'qpsk') {
-                $ret = self::_colorize($val, [14, 17]);
+        case 'SNR dB':
+        case 'MER dB':
+            if ($mod == 'QPSK') {
+                $ret = self::colorize($val, [14, 17]);
             }
-            if ($mod == '16qam') {
-                $ret = self::_colorize($val, [20, 23]);
+            if ($mod == '16QAM') {
+                $ret = self::colorize($val, [20, 23]);
             }
-            if ($mod == '32qam') {
-                $ret = self::_colorize($val, [22, 25]);
+            if ($mod == '32QAM') {
+                $ret = self::colorize($val, [22, 25]);
             }
-            if ($mod == '64qam' || $mod == '0') { // no docsIfCmtsModulationTable entry
-                $ret = self::_colorize($val, [26, 29]);
+            if ($mod == '64QAM' || $mod == 'QAM64' || $mod == '0') { // no docsIfCmtsModulationTable entry
+                $ret = self::colorize($val, [26, 29]);
             }
-            if ($mod == 'qam64') {
-                $ret = self::_colorize($val, [26, 29]);
+            if ($mod == 'QAM256') {
+                $ret = self::colorize($val, [32, 35]);
             }
-            if ($mod == 'qam256') {
-                $ret = self::_colorize($val, [32, 35]);
-            }
-                break;
+            break;
         }
 
         return $ret;
     }
 
-    public static function get_quality_color_orig($dir, $entity, $values)
+    // TODO: merge with getQualityColor
+    public static function getQualityColorOrig($dir, $entity, $values)
     {
         $ret = [];
         if ($entity == 'snr' && $dir == 'ds') {
@@ -947,33 +945,33 @@ class BaseViewController extends Controller
             switch ($entity) {
             case 'pwr':
                 if ($dir == 'ds') {
-                    $ret[] = self::_colorize($val, [-20, -10, 15, 20]);
+                    $ret[] = self::colorize($val, [-20, -10, 15, 20]);
                 }
                 if ($dir == 'us') {
-                    $ret[] = self::_colorize($val, [22, 27, 50, 56]);
+                    $ret[] = self::colorize($val, [22, 27, 50, 56]);
                 }
                 break;
             case 'qpsk':
-                $ret[] = self::_colorize($val, [14, 17]);
+                $ret[] = self::colorize($val, [14, 17]);
                 break;
             case '16qam':
-                $ret[] = self::_colorize($val, [20, 23]);
+                $ret[] = self::colorize($val, [20, 23]);
                 break;
             case '32qam':
-                $ret[] = self::_colorize($val, [22, 25]);
+                $ret[] = self::colorize($val, [22, 25]);
                 break;
             case '64qam':
-                $ret[] = self::_colorize($val, [26, 29]);
+                $ret[] = self::colorize($val, [26, 29]);
                 break;
             case '256qam':
-                $ret[] = self::_colorize($val, [32, 35]);
+                $ret[] = self::colorize($val, [32, 35]);
                 break;
             case 'urefl':
-                $ret[] = self::_colorize($val, [20, 30]);
+                $ret[] = self::colorize($val, [20, 30]);
                 break;
             case 'us':
                 if ($dir == 'ds') {
-                    $ret[] = self::_colorize($val, [5, 12], true);
+                    $ret[] = self::colorize($val, [5, 12], true);
                 }
                 break;
             }
