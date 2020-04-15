@@ -871,7 +871,7 @@ class BaseViewController extends Controller
     /**
      * Evaluate the value in the given context
      *
-     * @param dir: Downstream, Upstream
+     * @param dir: ds (downstream), us (upstream)
      * @param entity: the entity to check (power, modulation, ureflections, etc.)
      * @param value: array containing all values (can be used for several us/ds channels)
      * @return: array of same size as $value containing evaluation results
@@ -890,11 +890,12 @@ class BaseViewController extends Controller
         case 'Rx Power dBmV':
             $ret = self::colorize($val, [-3, -1, 15, 20]);
             break;
+        case 'pwr':
         case 'Power dBmV':
-            if ($dir == 'Downstream') {
+            if ($dir == 'ds') {
                 $ret = self::colorize($val, [-20, -10, 15, 20]);
             }
-            if ($dir == 'Upstream') {
+            if ($dir == 'us') {
                 $ret = self::colorize($val, [22, 27, 50, 56]);
             }
                 break;
@@ -907,74 +908,34 @@ class BaseViewController extends Controller
         case 'Avg Utilization %':
             $ret = self::colorize($val, [0, 0, 70, 90]);
             break;
+        case 'snr':
         case 'SNR dB':
         case 'MER dB':
             if ($mod == 'QPSK') {
                 $ret = self::colorize($val, [14, 17]);
             }
-            if ($mod == '16QAM') {
+            if ($mod == 'QAM16') {
                 $ret = self::colorize($val, [20, 23]);
             }
-            if ($mod == '32QAM') {
+            if ($mod == 'QAM32') {
                 $ret = self::colorize($val, [22, 25]);
             }
-            if ($mod == '64QAM' || $mod == 'QAM64' || $mod == '0') { // no docsIfCmtsModulationTable entry
+            // $mod == '0': no docsIfCmtsModulationTable entry
+            // $dir == 'us': snr_us modem property in CustomerTopoController
+            if ($mod == 'QAM64' || $mod == '0' || $dir = 'us') {
                 $ret = self::colorize($val, [26, 29]);
             }
-            if ($mod == 'QAM256') {
+            // $dir = 'ds': snr_ds modem property in CustomerTopoController
+            if ($mod == 'QAM256' || $dir = 'ds') {
                 $ret = self::colorize($val, [32, 35]);
             }
             break;
-        }
-
-        return $ret;
-    }
-
-    // TODO: merge with getQualityColor
-    public static function getQualityColorOrig($dir, $entity, $values)
-    {
-        $ret = [];
-        if ($entity == 'snr' && $dir == 'ds') {
-            $entity = '256qam';
-        }
-        if ($entity == 'snr' && $dir == 'us') {
-            $entity = '64qam';
-        }
-
-        foreach ($values as $val) {
-            switch ($entity) {
-            case 'pwr':
-                if ($dir == 'ds') {
-                    $ret[] = self::colorize($val, [-20, -10, 15, 20]);
-                }
-                if ($dir == 'us') {
-                    $ret[] = self::colorize($val, [22, 27, 50, 56]);
-                }
-                break;
-            case 'qpsk':
-                $ret[] = self::colorize($val, [14, 17]);
-                break;
-            case '16qam':
-                $ret[] = self::colorize($val, [20, 23]);
-                break;
-            case '32qam':
-                $ret[] = self::colorize($val, [22, 25]);
-                break;
-            case '64qam':
-                $ret[] = self::colorize($val, [26, 29]);
-                break;
-            case '256qam':
-                $ret[] = self::colorize($val, [32, 35]);
-                break;
-            case 'urefl':
-                $ret[] = self::colorize($val, [20, 30]);
-                break;
-            case 'us':
-                if ($dir == 'ds') {
-                    $ret[] = self::colorize($val, [5, 12], true);
-                }
-                break;
+        // ds_us modem property in CustomerTopoController
+        case 'us':
+            if ($dir == 'ds') {
+                $ret = self::colorize($val, [5, 12], true);
             }
+            break;
         }
 
         return $ret;
