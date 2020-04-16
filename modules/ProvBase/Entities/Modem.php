@@ -1742,10 +1742,6 @@ class ModemObserver
 
         $modem->save();  // forces to call the updating() and updated() method of the observer !
 
-        if ($modem->isPPP()) {
-            return;
-        }
-
         Modem::create_ignore_cpe_dhcp_file();
 
         if (Module::collections()->has('ProvMon')) {
