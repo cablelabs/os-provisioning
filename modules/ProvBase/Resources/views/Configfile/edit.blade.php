@@ -1,0 +1,209 @@
+@extends ('Generic.edit')
+
+@section('content_left')
+    @include ('Generic.logging')
+    <?php
+        $blade_type = 'relations';
+    ?>
+
+    @include('Generic.above_infos')
+    {!! Form::model($view_var, ['route' => [$form_update, $view_var->id], 'method' => 'put', 'files' => true, 'id' => 'EditForm']) !!}
+
+        @include($form_path, $view_var)
+
+    {{ Form::close() }}
+
+@if (multi_array_key_exists(['lists', 'searchFlag'], $additional_data))
+<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
+<script src="https://unpkg.com/vuedraggable@2.20.0/dist/vuedraggable.umd.min.js"></script>
+
+<style type="text/css">
+.dragdropfield
+{
+margin-top: 15px;
+padding: 10px;
+background: #f5f5f5;
+}
+.box
+{
+text-align: left;
+display: inline-block;
+vertical-align: top;
+margin: 5px;
+padding: 10px;
+width: 45%;
+}
+.h
+{
+cursor: pointer;
+}
+.h input
+{
+font-weight: normal;
+font-size: 20px;
+padding: 10px;
+background: transparent;
+border: 0;
+}
+.listitem div
+{
+margin: 5px;
+padding: 10px;
+background: #f2f2f2;
+}
+.listitem input
+{
+display: block;
+box-sizing: border-box;
+width: 100%;
+}
+.dropzone
+{
+min-height: 50px;
+}
+.newlist
+{
+margin-top: 12px;
+}
+@media(max-width: 800px)
+{
+.box
+{
+width: 100%;
+}
+}
+</style>
+
+<div id="app" class="dragdropfield">
+    <h2>Build your interface:</h2>
+    <div class="box" id="left">
+        <draggable v-model="lists" :group="{ name: 'g1' }" class="droplist" >
+            <div v-for="(list, key) in lists" v-if="key != '0'" class="list-group">
+                <div class="listbox">
+                    <div class="h">
+                        <input type="text" v-model="list.name">
+                        <button class="btn btn-primary" @click="delList(key)">Delete list</button>
+                    </div>
+                    <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone">
+                        <div class="listitem" v-for="(item, id) in list.content" :key="item.id">
+                            <div :class="item.id">@{{ item.id }} : <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id)"/></div>
+                        </div>
+                    </draggable>
+                </div>
+            </div>
+        </draggable>
+
+        <div class="newlist">
+            <input type="text" v-model="listName" placeholder="Name of new list" />
+            <button class="btn btn-primary" @click="addList()">Add new list</button>
+        </div>
+    </div>
+
+    <div class="box" id="right">
+        <div :group="{ name: 'g1' }" class="droplist" >
+            <div v-for="(list, key) in lists" v-if="key == '0'" class="list-group">
+                <div class="listbox">
+                    <div class="h">
+                        <input type="text" value="Parameters for this device" readonly="true">
+                    </div>
+                    <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone">
+                        <div class="listitem" v-for="(item, id) in list.content" :key="item.id">
+                            <div :class="item.id">@{{ item.id }} <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id)"/></div>
+                        </div>
+                    </draggable>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+var app = new Vue({
+    el: '#app',
+    data: {
+        listName: '',
+        lists: [ {!!$additional_data['lists']!!} ]
+    },
+    methods: {
+        onKeyUp: function(newval, key, id) {
+            this.lists[key].content[id].name=newval;
+        },
+        addList: function() {
+            if (! this.listName) {
+                return;
+            }
+
+            this.lists.push({
+                name: this.listName,
+                content: []
+            });
+
+            this.listName = '';
+        },
+        delList: function(key) {
+            if (key == 0) {
+                //the list on the right side can not be deleted
+                return;
+            }
+
+            //move elements from that list back to the main list
+            for (var i=0;i<this.lists[key].content.length;i++) {
+                moveId=this.lists[key].content[i].id;
+                moveName=this.lists[key].content[i].name;
+                this.lists[0].content.push({'id': moveId, 'name': moveName});
+            }
+
+            //delete elements in reverse order so that the keys are not regenerated
+            for (var i=this.lists[key].content.length-1;i>=0;i--) {
+                this.lists[key].content.splice(i, 1);
+            }
+
+            //delete the list
+            this.lists.splice(key, 1);
+        },
+    },
+    updated: function () {
+        this.$nextTick(function () {
+            json='{';
+            for (var key=1;key<this.lists.length;key++) {
+                if (key>1) {
+                    json+=',';
+                }
+                json+='"'+this.lists[key].name.replace('"','\\"')+'":{'
+
+                injson='';
+                try {
+                    for (var i=0;i<this.lists[key].content.length;i++) {
+                        insertId=this.lists[key].content[i].id.replace('"','\\"');
+                        insertName=this.lists[key].content[i].name.replace('"','\\"');
+                        if (i>0) {
+                            injson+=',';
+                        }
+                        injson+='"'+insertId+'":"'+insertName+'"';
+                    }
+                }
+                catch(err) {}
+                injson+='}';
+
+                json+=injson;
+            }
+            json+='}';
+
+            json='{{$additional_data['searchFlag']}}'+json;
+
+            //appending/replacing
+            if (document.getElementById("text").value.toLowerCase().indexOf("{{$additional_data['searchFlag']}}") === -1) {
+                document.getElementById("text").value=json+"\n\n"+document.getElementById("text").value;
+            }
+            else {
+                document.getElementById("text").value=document.getElementById("text").value.replace(/^{{$additional_data['searchFlag']}}(.*)$/mg,json);
+            }
+        })
+    },
+});
+</script>
+@endif
+
+@stop

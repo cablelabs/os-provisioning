@@ -89,6 +89,101 @@ class ConfigfileController extends \BaseController
         return parent::store();
     }
 
+    public function getFromDevices($devicesContent)
+    {
+        $jsonDecode = json_decode($devicesContent, true);
+        if ($jsonDecode != null) {
+            foreach ($jsonDecode as $key => $jsonElement) {
+                return $jsonElement;
+            }
+        }
+
+        return [];
+    }
+
+    public function buildElementList($devicesJson, $inPath = '')
+    {
+        // some devices do have "Device:" and others may have "InternetGatewayDevice:"
+        $parametersArray = [];
+        $tmpInPath = $inPath;
+        if (! empty($tmpInPath) && substr($tmpInPath, 0, -1) != '.') {
+            $tmpInPath .= '.';
+        }
+        foreach ($devicesJson as $key => $elementJson) {
+            $inPath = $tmpInPath.$key;
+            if (substr($key, 0, 1) != '_') {
+                // elements with underscore that do have subelements should not exist
+                $parametersArray[] = ['id' => $inPath, 'name' => $inPath];
+                if (is_array($elementJson)) {
+                    $parametersArray = array_merge($parametersArray, $this->buildElementList($elementJson, $inPath));
+                }
+            }
+        }
+
+        return $parametersArray;
+    }
+
+    protected function _get_additional_data_for_edit_view($model)
+    {
+        $searchFlag = '#monitoring:';
+
+        $jsonFromDb = '{}';
+        $textFromDb = $model->text;
+        $textExplode = explode("\n", $textFromDb);
+        foreach ($textExplode as $line) {
+            if (substr($line, 0, strlen($searchFlag)) == $searchFlag) {
+                $jsonFromDb = substr($line, strlen($searchFlag));
+                break;
+            }
+        }
+        $modemSerials = $model->modem()->distinct()->pluck('serial_num');
+
+        foreach ($modemSerials as $modemSerial) {
+            if ($modemSerial != null) {
+                $modemQuery = 'http://localhost:7557/devices?query=%7B%22_deviceId._SerialNumber%22%3A%22'.$modemSerial.'%22%7D';
+                $modemQres = @file_get_contents($modemQuery);
+                $parametersArray = $this->buildElementList($this->getFromDevices($modemQres));
+                if (! empty($parametersArray)) {
+                    break;
+                }
+            }
+        }
+
+        if (! empty($parametersArray)) {
+            $jsonArrayDb = json_decode($jsonFromDb, true);
+            $jsonArrayPage = [];
+            $listCounter = 0;
+
+            // delete all parameters of the config in the list we got from /devices so that no parameter is in both lists
+            foreach ((array) $jsonArrayDb as $jsName => $jsonArray) {
+                $jsonArrayPage[$listCounter]['name'] = $jsName;
+                foreach ($jsonArray as $jKey => $jElement) {
+                    $jsonArrayPage[$listCounter]['content'][] = ['id' => $jKey, 'name' => $jElement];
+                    foreach ($parametersArray as $oKey => $oElement) {
+                        if ($jKey == $oElement['id']) {
+                            unset($parametersArray[$oKey]);
+                        }
+                    }
+                }
+                $listCounter++;
+            }
+
+            $jsonEncParametersArray = json_encode(array_values($parametersArray));
+
+            $lists = '{"name":"listdevices", "content":'.$jsonEncParametersArray.'},';
+            foreach ($jsonArrayPage as $jsName => $jsonArray) {
+                if (! array_key_exists('content', $jsonArray)) {
+                    $jsonArray['content'] = [];
+                }
+                $lists .= ''.json_encode($jsonArray).',';
+            }
+
+            return ['lists' => $lists, 'searchFlag' => $searchFlag];
+        }
+
+        return [];
+    }
+
     /**
      * Generate tree of configfiles.
      *
