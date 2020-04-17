@@ -28,8 +28,8 @@ class NetElement extends \BaseModel
         return [
             'name' 			=> 'required|string',
             'pos' 			=> 'nullable|geopos',
-            'community_ro' 	=> 'nullable|regex:/(^[A-Za-z0-9]+$)+/',
-            'community_rw' 	=> 'nullable|regex:/(^[A-Za-z0-9]+$)+/',
+            'community_ro' 	=> 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
+            'community_rw' 	=> 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
             'netelementtype_id'	=> 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
             'agc_offset'	=> 'nullable|numeric|between:-99.9,99.9',
         ];
