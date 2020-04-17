@@ -44,18 +44,18 @@ class NetElementController extends HfcBaseController
         }
 
         $hidden4TapPort = $hidden4Tap = 0;
-        $hidden4Tap = $type == 8 ? 1 : 0;
         $addressDesc1 = 'Address Line 1';
         $addressDesc2 = 'Address Line 2';
 
         if ($type == 8) {
             $addressDesc1 = 'RKS '.trans('messages.Address'); // Used as address to control the attenuation setting via Sat-Kabel-RKS-Server
             $addressDesc2 = trans('messages.Address');
+            $hidden4Tap = 1;
         }
 
         if ($type == 9) {
             $parents = $netelement->html_list(NetElement::where('netelementtype_id', 8)->get(), 'name');
-            $types = NetElementType::where('id', 9)->get(['id', 'name']);
+            $types = NetElementType::where('id', $type)->get(['id', 'name']);
             $hidden4TapPort = 1;
 
             $addressDesc1 = 'RKS Port'; // Used as address to control the attenuation setting via Sat-Kabel-RKS-Server
