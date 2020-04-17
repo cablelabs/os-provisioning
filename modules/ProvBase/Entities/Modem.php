@@ -1621,9 +1621,9 @@ class Modem extends \BaseModel
      *
      * @author Ole Ernst
      */
-    private function updateRadCheck($delete)
+    private function updateRadCheck()
     {
-        if ($delete || ! $this->isPPP() || ! $this->internet_access) {
+        if ($this->deleted_at || ! $this->isPPP() || ! $this->internet_access) {
             $this->radcheck()->delete();
 
             return;
@@ -1665,9 +1665,9 @@ class Modem extends \BaseModel
      *
      * @author Ole Ernst
      */
-    private function updateRadUserGroups($delete)
+    private function updateRadUserGroups()
     {
-        if ($delete || ! $this->isPPP() || ! $this->internet_access) {
+        if ($this->deleted_at || ! $this->isPPP() || ! $this->internet_access) {
             $this->radusergroups()->delete();
 
             return;
@@ -1706,10 +1706,8 @@ class Modem extends \BaseModel
      */
     public function updateRadius()
     {
-        $deleted = $this->deleted_at;
-
-        $this->updateRadCheck($deleted);
-        $this->updateRadUserGroups($deleted);
+        $this->updateRadCheck();
+        $this->updateRadUserGroups();
     }
 }
 
