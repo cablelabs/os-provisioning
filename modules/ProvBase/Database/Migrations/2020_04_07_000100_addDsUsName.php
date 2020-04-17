@@ -2,9 +2,10 @@
 
 use Illuminate\Database\Schema\Blueprint;
 
-class AddNetGwCredentials extends BaseMigration
+class AddDsUSName extends BaseMigration
 {
-    protected $tablename = 'netgw';
+    // name of the table to create
+    protected $tablename = 'qos';
 
     /**
      * Run the migrations.
@@ -14,9 +15,8 @@ class AddNetGwCredentials extends BaseMigration
     public function up()
     {
         Schema::table($this->tablename, function (Blueprint $table) {
-            $table->string('username')->nullable();
-            $table->string('password')->nullable();
-            $table->boolean('ssh_auto_prov')->default(0);
+            $table->string('ds_name')->nullable();
+            $table->string('us_name')->nullable();
         });
     }
 
@@ -28,7 +28,7 @@ class AddNetGwCredentials extends BaseMigration
     public function down()
     {
         Schema::table($this->tablename, function (Blueprint $table) {
-            $table->dropColumn(['username', 'password', 'ssh_auto_prov']);
+            $table->dropColumn(['ds_name', 'us_name']);
         });
     }
 }

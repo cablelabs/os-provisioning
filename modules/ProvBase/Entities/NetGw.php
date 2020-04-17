@@ -7,7 +7,7 @@ use App\Sla;
 
 class NetGw extends \BaseModel
 {
-    const TYPES = ['cmts', 'bras', 'olt'];
+    const TYPES = ['cmts', 'bras', 'olt', 'dslam'];
 
     private static $_us_snr_path = 'data/provmon/us_snr';
     // don't put a trailing slash here!
@@ -17,7 +17,7 @@ class NetGw extends \BaseModel
     public $table = 'netgw';
 
     // Attributes
-    public $guarded = ['formatted_support_state'];
+    public $guarded = ['formatted_support_state', 'nas_secret'];
     protected $appends = ['formatted_support_state'];
 
     // Add your validation rules here
@@ -137,6 +137,22 @@ class NetGw extends \BaseModel
         return $this->hasMany(IpPool::class, 'netgw_id');
     }
 
+    public function allBrasIpPools()
+    {
+        $ids = [];
+
+        // show all BRAS ippools for every BRAS
+        if ($this->type == 'bras') {
+            $ids = self::join('ippool', 'ippool.netgw_id', 'netgw.id')
+                ->where('netgw.type', $this->type)
+                ->whereNull('netgw.deleted_at')
+                ->whereNull('ippool.deleted_at')
+                ->pluck('ippool.id');
+        }
+
+        return $this->ippools()->orWhereIn('id', $ids);
+    }
+
     public function netelement()
     {
         return $this->hasOne(\Modules\HfcReq\Entities\NetElement::class, 'prov_device_id');
@@ -144,7 +160,7 @@ class NetGw extends \BaseModel
 
     public function nas()
     {
-        return $this->hasMany(Nas::class, 'shortname');
+        return $this->hasOne(Nas::class, 'shortname');
     }
 
     // returns all objects that are related to a netgw
@@ -155,9 +171,7 @@ class NetGw extends \BaseModel
         $ret['Edit']['IpPool']['relation'] = $this->ippools;
 
         if ($this->type == 'bras') {
-            // related network access server
-            $ret['Edit']['Nas']['class'] = 'Nas';
-            $ret['Edit']['Nas']['relation'] = $this->nas;
+            $ret['Edit']['IpPool']['relation'] = $this->allBrasIpPools;
         }
 
         // Routing page
@@ -250,6 +264,7 @@ class NetGw extends \BaseModel
         $this->domain = ProvBase::first()->domain_name;
         $this->router_ip = env('NETGW_DEFAULT_GW', '172.20.3.254');
         $this->netmask = env('NETGW_IP_NETMASK', '255.255.252.0');
+        $this->prefix = env('NETGW_IP_PREFIX', '22');
         $this->tf_net_1 = env('NETGW_TRANSFER_NET', '172.20.0.0'); // servers with /24
         $this->nat_ip = env('NETGW_NAT_IP', '172.20.0.2'); // second server ip is mostlikely NAT
 
@@ -265,6 +280,7 @@ class NetGw extends \BaseModel
         $this->domain = '<span title="Set in Global Config Page / Provisioning / Domain Name"><b>'.$this->domain.'</b></span>';
         $this->router_ip = '<span title="NETGW_DEFAULT_GW"><b>'.$this->router_ip.'</b></span>';
         $this->netmask = '<span title="NETGW_IP_NETMASK"><b>'.$this->netmask.'</b></span>';
+        $this->prefix = '<span title="NETGW_IP_PREFIX"><b>'.$this->prefix.'</b></span>';
         $this->tf_net_1 = '<span title="NETGW_TRANSFER_NET"><b>'.$this->tf_net_1.'</b></span>';
         $this->nat_ip = '<span title="NETGW_NAT_IP"><b>'.$this->nat_ip.'</b></span>';
         $this->snmp_ro = '<span title="Set in NETGW page or Global Config Page / Provisioning if empty in NETGW page"><b>'.$this->snmp_ro.'</b></span>';
@@ -648,6 +664,8 @@ class NetGwObserver
 
     public function created($netgw)
     {
+        self::updateNas($netgw);
+
         if ($netgw->type != 'cmts') {
             return;
         }
@@ -662,6 +680,8 @@ class NetGwObserver
 
     public function updated($netgw)
     {
+        self::updateNas($netgw);
+
         if ($netgw->type != 'cmts') {
             return;
         }
@@ -673,6 +693,8 @@ class NetGwObserver
 
     public function deleted($netgw)
     {
+        self::updateNas($netgw);
+
         if ($netgw->type != 'cmts') {
             return;
         }
@@ -681,5 +703,33 @@ class NetGwObserver
         File::delete(self::$netgw_tftp_path."/$netgw->id.cfg");
 
         NetGw::make_includes();
+    }
+
+    /**
+     * Handle changes of nas based on netgw
+     * This is called on created/updated/deleted in NetGw observer
+     *
+     * @author Ole Ernst
+     */
+    private static function updateNas($netgw)
+    {
+        // netgw is deleted or its type was changed to != bras
+        if ($netgw->deleted_at || $netgw->type != 'bras') {
+            $netgw->nas()->delete();
+            exec('sudo systemctl restart radiusd.service');
+
+            return;
+        }
+
+        // we need to use \Request::get() since nas_secret is guarded
+        $update = ['nasname' => $netgw->ip, 'secret' => \Request::get('nas_secret')];
+
+        if ($netgw->nas()->count()) {
+            $netgw->nas()->update($update);
+        } else {
+            Nas::insert(array_merge($update, ['shortname' => $netgw->id]));
+        }
+
+        exec('sudo systemctl restart radiusd.service');
     }
 }

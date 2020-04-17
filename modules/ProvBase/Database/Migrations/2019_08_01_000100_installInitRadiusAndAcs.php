@@ -23,21 +23,7 @@ class InstallInitRadiusAndAcs extends BaseMigration
         // use schema from git, since it adds the id column in radusergroup
         // centos8: reset to /etc/raddb/mods-config/sql/main/mysql/schema.sql
         \DB::unprepared(file_get_contents('https://raw.githubusercontent.com/FreeRADIUS/freeradius-server/b838f5178fe092598fb3459dedb5e1ea49b41340/raddb/mods-config/sql/main/mysql/schema.sql'));
-
-        $defReply = new Modules\ProvBase\Entities\RadGroupReply;
-        $defReply->groupname = $defReply::$defaultGroup;
-        $defReply->attribute = 'Acct-Interim-Interval';
-        $defReply->op = ':=';
-        $defReply->value = 300;
-        $defReply->save();
-
-        // this (Fall-Through) must be the last DB entry of $defaultGroup
-        $defReply = new Modules\ProvBase\Entities\RadGroupReply;
-        $defReply->groupname = $defReply::$defaultGroup;
-        $defReply->attribute = 'Fall-Through';
-        $defReply->op = '=';
-        $defReply->value = 'Yes';
-        $defReply->save();
+        Modules\ProvBase\Entities\RadGroupReply::repopulate();
 
         $config = DB::connection('mysql-radius')->getConfig();
 
@@ -68,11 +54,6 @@ class InstallInitRadiusAndAcs extends BaseMigration
         symlink('/etc/raddb/mods-available/sql', $link);
         // we can't user php chrgp, since it always dereferences symbolic links
         exec("chgrp -h radiusd $link");
-
-        $observer = new Modules\ProvBase\Entities\QosObserver;
-        foreach (Modules\ProvBase\Entities\Qos::all() as $qos) {
-            $observer->created($qos);
-        }
 
         $filename = '/lib/node_modules/genieacs/config/config.json';
         $conf = json_decode(file_get_contents($filename));

@@ -2,10 +2,10 @@
 
 namespace Modules\ProvBase\Entities;
 
-class Nas extends \BaseModel
+class RadPostAuth extends \BaseModel
 {
     // The associated SQL table for this Model
-    public $table = 'nas';
+    public $table = 'radpostauth';
 
     public $timestamps = false;
     protected $forceDeleting = true;

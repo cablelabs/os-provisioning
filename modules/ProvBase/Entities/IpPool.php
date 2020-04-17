@@ -189,65 +189,6 @@ class IpPool extends \BaseModel
     }
 
     /**
-     * Returns the next unused IP address of all BRAS NetGWs, if none is found
-     * false is returned
-     *
-     * We don't look at a specific BRAS, since the IP addresses can be assigned
-     * to any BRAS using RADIUS attributes (Framed-IP-Address) and will be
-     * announced via OSPF as a /32 route
-     *
-     * @return mixed
-     *
-     * @author Ole Ernst
-     */
-    public static function findNextUnusedBrasIPAddress($public)
-    {
-        $type = $public ? 'CPEpub' : 'CPEpriv';
-
-        $pools = \DB::table('netgw')
-            ->join('ippool', 'netgw.id', '=', 'ippool.netgw_id')
-            ->where('netgw.type', 'bras')
-            ->where('ippool.type', $type)
-            ->whereNull('netgw.deleted_at')
-            ->whereNull('ippool.deleted_at')
-            ->get();
-
-        $all = [];
-        foreach ($pools as $pool) {
-            $all = array_merge($all, range(ip2long($pool->ip_pool_start), ip2long($pool->ip_pool_end)));
-        }
-        sort($all);
-
-        /*
-        // for a larger number of hosts this is probably slow,
-        // since we gethostbyname() for every individual host
-        $used = \DB::table('configfile')
-            ->join('modem', 'configfile.id', '=', 'modem.configfile_id')
-            ->where('configfile.device', 'tr069')
-            ->whereNull('configfile.deleted_at')
-            ->whereNull('modem.deleted_at')
-            ->pluck('modem.hostname')
-            ->transform(function ($item, $key) {
-                return ip2long(gethostbyname($item));
-            })->toArray();
-        */
-
-        // a zone transfer should be quicker
-        $zone = ProvBase::first()->domain_name;
-        $used = shell_exec("dig -tAXFR $zone | grep '^ppp-[[:digit:]]\+' | awk '{print $5}' | sort -u");
-        $used = array_map('ip2long', explode("\n", trim($used)));
-        sort($used);
-
-        $free = array_diff($all, $used);
-
-        if (empty($free)) {
-            return false;
-        }
-
-        return long2ip(reset($free));
-    }
-
-    /**
      * Relationships:
      */
     public function netgw()
@@ -286,6 +227,8 @@ class IpPoolObserver
 {
     public function created($pool)
     {
+        self::updateRadIpPool($pool);
+
         if ($pool->netgw->type != 'cmts') {
             return;
         }
@@ -296,6 +239,8 @@ class IpPoolObserver
 
     public function updated($pool)
     {
+        self::updateRadIpPool($pool);
+
         if ($pool->netgw->type != 'cmts') {
             return;
         }
@@ -310,10 +255,66 @@ class IpPoolObserver
 
     public function deleted($pool)
     {
+        self::updateRadIpPool($pool);
+
         if ($pool->netgw->type != 'cmts') {
             return;
         }
 
         $pool->netgw->make_dhcp_conf();
+    }
+
+    /**
+     * Handle changes of radippool based on ippool
+     * This is called on created/updated/deleted in IpPool observer
+     *
+     * @author Ole Ernst
+     */
+    private static function updateRadIpPool($pool)
+    {
+        if ($pool->netgw->type != 'bras') {
+            return;
+        }
+
+        $now = array_map('long2ip',
+            range(
+                ip2long($pool->ip_pool_start),
+                ip2long($pool->ip_pool_end)
+            )
+        );
+
+        // delete pool
+        if ($pool->deleted_at) {
+            RadIpPool::whereIn('framedipaddress', $now)->delete();
+
+            return;
+        }
+
+        $org = array_map('long2ip',
+            range(
+                ip2long($pool->getOriginal('ip_pool_start')),
+                ip2long($pool->getOriginal('ip_pool_end'))
+            )
+        );
+
+        // update type (CPEPriv, CPEPub) if it was changed
+        if ($pool->isDirty('type')) {
+            RadIpPool::whereIn('framedipaddress', $org)->update(['pool_name' => $pool->type]);
+        }
+
+        // we don't simply delete the old pool and create a new one,
+        // since we would lose important state, such as the expiry_time
+        if (multi_array_key_exists(['ip_pool_start', 'ip_pool_end'], $pool->getDirty())) {
+            RadIpPool::whereIn('framedipaddress', array_diff($org, $now))->delete();
+
+            $insert = [];
+            foreach (array_diff($now, $org) as $ip) {
+                $insert[] = [
+                    'pool_name' => $pool->type,
+                    'framedipaddress' => $ip,
+                ];
+            }
+            RadIpPool::insert($insert);
+        }
     }
 }

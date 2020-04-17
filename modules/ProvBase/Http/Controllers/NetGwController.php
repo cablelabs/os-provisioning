@@ -38,6 +38,11 @@ class NetGwController extends \BaseController
             ];
         }
 
+        $nas_secret = '';
+        if ($model->type == 'bras' && $model->nas) {
+            $nas_secret = $model->nas->secret;
+        }
+
         // NETGW series selection based on NETGW company
         if (\Request::filled('company')) { // for auto reload
             $company = \Request::get('company');
@@ -61,13 +66,14 @@ class NetGwController extends \BaseController
         // TODO: series should be jquery based select depending on the company
         // TODO: (For BRAS) Make company and series field nullable and add empty field to company_array
         $ret_tmp = [
-            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types, 'select' => $types],
             ['form_type' => 'select', 'name' => 'company', 'description' => 'Company', 'value' => $company_array],
             ['form_type' => 'select', 'name' => 'series', 'description' => 'Series', 'value' => $series],
+            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types, 'select' => $types],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname'],
             ['form_type' => 'ip', 'name' => 'ip', 'description' => 'IP', 'help' => 'Online'],
             ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'SNMP Private Community String'],
             ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'SNMP Public Community String'],
+            ['form_type' => 'text', 'name' => 'nas_secret', 'description' => 'RADIUS Client secret', 'select' => 'BRAS', 'init_value' => $nas_secret],
             ['form_type' => 'checkbox', 'name' => 'ssh_auto_prov', 'description' => 'Auto-Provisioning via SSH', 'value' => '1', 'select' => 'OLT', 'help' => trans('helper.ssh_auto_prov')],
             ['form_type' => 'text', 'name' => 'username', 'description' => 'SSH username', 'checkbox' => 'show_on_ssh_auto_prov'],
             ['form_type' => 'text', 'name' => 'password', 'description' => 'SSH password', 'checkbox' => 'show_on_ssh_auto_prov'],
@@ -108,6 +114,15 @@ class NetGwController extends \BaseController
         }
 
         return $data;
+    }
+
+    public function prepare_rules($rules, $data)
+    {
+        if ($data['type'] == 'bras') {
+            $rules['nas_secret'] = 'required';
+        }
+
+        return parent::prepare_rules($rules, $data);
     }
 
     /**
