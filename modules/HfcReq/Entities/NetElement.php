@@ -4,7 +4,6 @@ namespace Modules\HfcReq\Entities;
 
 use Auth;
 use Cache;
-use Request;
 use Session;
 use Modules\HfcBase\Entities\IcingaObject;
 
@@ -36,11 +35,6 @@ class NetElement extends \BaseModel
             'netelementtype_id'	=> 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
             'agc_offset'	=> 'nullable|numeric|between:-99.9,99.9',
         ];
-
-        if (Request::get('netelementtype_id') == 9) {
-            // address1 for Tap-Ports is required and must be unique
-            $rules['address1'] = 'required|unique:netelement,address1,'.$id.',id,deleted_at,NULL,netelementtype_id,9|regex:/^([0-9A-F]{2}){4}(~\d)*$/';
-        }
 
         return $rules;
     }
