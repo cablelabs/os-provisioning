@@ -35,6 +35,11 @@ class Qos extends \BaseModel
         return $this->hasMany(RadGroupReply::class, 'groupname');
     }
 
+    public function products()
+    {
+        return $this->hasMany(\Modules\BillingBase\Entities\Product::class);
+    }
+
     // Name of View
     public static function view_headline()
     {
@@ -76,6 +81,22 @@ class Qos extends \BaseModel
     public function unit_us_rate_max()
     {
         return $this->us_rate_max.' MBit/s';
+    }
+
+    public static function setIndexDeleteTitle()
+    {
+        return trans('messages.indexDeleteDisabledTitle', ['relation' => trans('messages.Product')]);
+    }
+
+    public function set_index_delete()
+    {
+        if (! \Module::collections()->has('BillingBase')) {
+            return false;
+        }
+
+        $relatedProducts = $this->products()->whereNull('product.deleted_at')->count();
+
+        return $this->index_delete_disabled = $relatedProducts >= 0;
     }
 
     /**
