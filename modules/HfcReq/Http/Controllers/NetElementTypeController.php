@@ -17,25 +17,26 @@ class NetElementTypeController extends HfcReqController
      */
     public function view_form_fields($model = null)
     {
-        $hidden = in_array($model->name, ['Net', 'Cluster']);
-        $parents = $model->html_list(NetElementType::whereNotIn('name', ['Net', 'Cluster'])->get(['id', 'name']), 'name', true);
+        $hidden4Net = in_array($model->id, [1, 2]) ? 1 : 0;     // Net, Cluster
+        $hidden4Tap = in_array($model->id, [8, 9]) ? 1 : 0;     // Tap, Tap-Port
+        $parents = $model->html_list(NetElementType::whereNotIn('id', [1, 2, 8, 9])->get(['id', 'name']), 'name', true);
 
         // label(name) has to be the same like column in sql table
         $a = [
-            ['form_type' => 'text', 'name' => 'name', 'description' => 'Name', 'options' => $hidden ? ['readonly'] : []],
-            ['form_type' => 'text', 'name' => 'vendor', 'description' => 'Vendor', 'hidden' => $hidden ? '1' : '0'],
-            ['form_type' => 'text', 'name' => 'version', 'description' => 'Version', 'hidden' => $hidden ? '1' : '0'],
-            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Device Type', 'value' => $parents, 'hidden' => $hidden ? '1' : '0', 'space' => 1],
+            ['form_type' => 'text', 'name' => 'name', 'description' => 'Name', 'options' => $hidden4Net ? ['readonly'] : []],
+            ['form_type' => 'text', 'name' => 'vendor', 'description' => 'Vendor', 'hidden' => $hidden4Net],
+            ['form_type' => 'text', 'name' => 'version', 'description' => 'Version', 'hidden' => $hidden4Net],
+            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Device Type', 'value' => $parents, 'hidden' => $hidden4Net || $hidden4Tap, 'space' => 1],
             // possibly load only OIDs from Mibs that are related to this Device/NetElement-Type
-            ['form_type' => 'select', 'name' => 'pre_conf_oid_id', 'description' => 'OID for PreConfiguration Setting', 'value' => OID::oid_list(true)],
-            ['form_type' => 'text', 'name' => 'pre_conf_value', 'description' => 'PreConfiguration Value'],
-            ['form_type' => 'text', 'name' => 'pre_conf_time_offset', 'description' => 'PreConfiguration Time Offset', 'space' => 1, 'help' => trans('helper.netelementtype_time_offset')],
-            ['form_type' => 'text', 'name' => 'page_reload_time', 'description' => 'Reload Time - Controlling View', 'help' => trans('helper.netelementtype_reload')],
+            ['form_type' => 'select', 'name' => 'pre_conf_oid_id', 'description' => 'OID for PreConfiguration Setting', 'hidden' => $hidden4Net || $hidden4Tap, 'value' => OID::oid_list(true)],
+            ['form_type' => 'text', 'name' => 'pre_conf_value', 'description' => 'PreConfiguration Value', 'hidden' => $hidden4Net || $hidden4Tap],
+            ['form_type' => 'text', 'name' => 'pre_conf_time_offset', 'description' => 'PreConfiguration Time Offset', 'hidden' => $hidden4Net || $hidden4Tap, 'space' => 1, 'help' => trans('helper.netelementtype_time_offset')],
+            ['form_type' => 'text', 'name' => 'page_reload_time', 'description' => 'Reload Time - Controlling View', 'hidden' => $hidden4Tap, 'help' => trans('helper.netelementtype_reload')],
             ['form_type' => 'text', 'name' => 'icon_name', 'description' => 'Icon'],
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
 
-        if ($hidden) {
+        if ($hidden4Net) {
             $a[0]['help'] = trans('helper.undeleteables');
         }
 

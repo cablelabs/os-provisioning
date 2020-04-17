@@ -168,7 +168,7 @@ return [
     //Contract
     'Header_Salesman'           => 'Salesman|Salesmen',
     'Header_Contract'           => 'Contract|Contracts',
-    'Header_ContractInfoApartments' => 'Contracts of realty (info)',
+    'Header_ContractInfoApartment' => 'Contracts of realty (info)',
     'Header_ContractInfoRealty' => 'Info: Contract of modems',
     'Header_EditContract'       => 'Edit Contract',
     'Header_GroupContracts'      => 'Group Contracts',
@@ -243,6 +243,8 @@ return [
     'Header_DebtResult'         => 'Outstanding payments total',
     'Header_Node'               => 'Nodes',
     'Header_Realty'             => 'Realties',
+    'Header_SubNetElement'      => 'Subordinated Netelements',
+    'Header_tap'                => 'Controllable tap port',
 
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',

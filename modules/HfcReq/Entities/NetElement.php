@@ -14,6 +14,8 @@ class NetElement extends \BaseModel
 
     // The associated SQL table for this Model
     public $table = 'netelement';
+    // Always get netelementtype with it to reduce DB queries as it's very probable that netelementtype is queried
+    protected $with = ['netelementtype'];
 
     public $guarded = ['kml_file_upload'];
 
@@ -25,7 +27,7 @@ class NetElement extends \BaseModel
     // Add your validation rules here
     public static function rules($id = null)
     {
-        return [
+        $rules = [
             'name' 			=> 'required|string',
             'pos' 			=> 'nullable|geopos',
             'community_ro' 	=> 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
@@ -33,6 +35,8 @@ class NetElement extends \BaseModel
             'netelementtype_id'	=> 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
             'agc_offset'	=> 'nullable|numeric|between:-99.9,99.9',
         ];
+
+        return $rules;
     }
 
     public static function boot()
@@ -66,8 +70,10 @@ class NetElement extends \BaseModel
         // }
 
         if (\Module::collections()->has('HfcCustomer')) {
-            $ret['Edit']['Mpr']['class'] = 'Mpr';
-            $ret['Edit']['Mpr']['relation'] = $this->mprs;
+            if ($this->netelementtype->get_base_type() != 9) {
+                $ret['Edit']['Mpr']['class'] = 'Mpr';
+                $ret['Edit']['Mpr']['relation'] = $this->mprs;
+            }
         }
 
         if (\Module::collections()->has('HfcSnmp')) {
@@ -77,6 +83,11 @@ class NetElement extends \BaseModel
             }
 
             // see NetElementController@controlling_edit for Controlling Tab!
+        }
+
+        if ($this->netelementtype->get_base_type() == 8) {
+            $ret['Edit']['SubNetElement']['class'] = 'NetElement';
+            $ret['Edit']['SubNetElement']['relation'] = $this->children;
         }
 
         return $ret;
@@ -99,8 +110,19 @@ class NetElement extends \BaseModel
 
     public function get_bsclass()
     {
-        if (in_array($this->get_elementtype_name(), ['Net', 'Cluster'])) {
+        if (in_array($this->netelementtype_id, [1, 2])) {
             return 'info';
+        }
+
+        if ($this->netelementtype && $this->netelementtype_id == 9) {
+            switch ($this->state) {
+                case 'C': // off
+                    return 'danger';
+                case 'B': // attenuated
+                    return 'warning';
+                default: // on
+                    return 'success';
+            }
         }
 
         if (! array_key_exists('icingaobject', $this->relations) && ! IcingaObject::db_exists()) {
@@ -126,7 +148,17 @@ class NetElement extends \BaseModel
 
     public function view_belongs_to()
     {
-        return $this->netelementtype;
+        $ret = new \Illuminate\Database\Eloquent\Collection([$this->netelementtype]);
+
+        if ($this->apartment_id) {
+            $ret->add($this->apartment);
+        }
+
+        if ($this->parent_id) {
+            $ret->add($this->parent);
+        }
+
+        return $ret;
     }
 
     /**
@@ -185,6 +217,11 @@ class NetElement extends \BaseModel
         return $this->hasMany(\Modules\HfcSnmp\Entities\Indices::class, 'netelement_id');
     }
 
+    public function apartment()
+    {
+        return $this->belongsTo(\Modules\PropertyManagement\Entities\Apartment::class);
+    }
+
     /**
      * As Android and Iphone app developers use wrong columns to display object name, we use the relation
      * column to describe the object as well
@@ -195,6 +232,11 @@ class NetElement extends \BaseModel
             ->hasOne(\Modules\HfcBase\Entities\IcingaObject::class, 'name1', 'id_name')
             ->where('icinga_objects.objecttype_id', '1')
             ->where('icinga_objects.is_active', '1');
+    }
+
+    public function clusterObj()
+    {
+        return $this->belongsTo(self::class, 'cluster');
     }
 
     public function parent()
@@ -305,6 +347,27 @@ class NetElement extends \BaseModel
             ->get();
 
         return $this->html_list($netelems, ['ntname', 'name'], true, ': ');
+    }
+
+    public function getApartmentsList()
+    {
+        $apartments = \Modules\PropertyManagement\Entities\Apartment::leftJoin('netelement as n', 'apartment.id', 'n.apartment_id')
+            ->whereNull('n.deleted_at')
+            ->where(function ($query) {
+                $query
+                ->whereNull('n.id')
+                ->orWhere('apartment.id', $this->apartment_id);
+            })
+            ->select('apartment.*')
+            ->get();
+
+        $list[null] = null;
+
+        foreach ($apartments as $apartment) {
+            $list[$apartment->id] = \Modules\PropertyManagement\Entities\Apartment::labelFromData($apartment);
+        }
+
+        return $list;
     }
 
     // TODO: rename, avoid recursion

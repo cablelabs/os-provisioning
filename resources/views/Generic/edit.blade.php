@@ -67,7 +67,7 @@
                                         @endif
 
                                         {{-- include a relational class/object/table, like Contract->Modem --}}
-                                        @if (isset($relation['class']) && isset($relation['relation']))
+                                        @if (isset($relation['class']) && array_key_exists('relation', $relation))
                                             @include('Generic.relation', [
                                                 'relation' => $relation['relation'],
                                                 'class' => $relation['class'],

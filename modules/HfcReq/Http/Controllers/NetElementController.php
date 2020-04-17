@@ -3,6 +3,7 @@
 namespace Modules\HfcReq\Http\Controllers;
 
 use View;
+use Request;
 use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcReq\Entities\NetElementType;
 use App\Http\Controllers\BaseViewController;
@@ -30,17 +31,37 @@ class NetElementController extends HfcBaseController
         $netelement = $netelement ?: new NetElement;
 
         $empty_field = $netelement->exists;
-        $parents = $netelement->getParentList();
 
         $kml_files = $netelement->kml_files();
 
         // parse which netelementtype we want to edit/create
         // NOTE: this is for auto reload via HTML GET
         $type = 0;
-        if (isset($_GET['netelementtype_id'])) {
-            $type = $_GET['netelementtype_id'];
+        if (Request::has('netelementtype_id')) {
+            $type = Request::get('netelementtype_id');
         } elseif ($netelement->netelementtype) {
             $type = $netelement->netelementtype->get_base_type();
+        }
+
+        $hidden4TapPort = $hidden4Tap = 0;
+        $addressDesc1 = 'Address Line 1';
+        $addressDesc2 = 'Address Line 2';
+
+        if ($type == 8) {
+            $addressDesc1 = 'RKS '.trans('messages.Address'); // Used as address to control the attenuation setting via Sat-Kabel-RKS-Server
+            $addressDesc2 = trans('messages.Address');
+            $hidden4Tap = 1;
+        }
+
+        if ($type == 9) {
+            $parents = $netelement->html_list(NetElement::where('netelementtype_id', 8)->get(), 'name');
+            $types = NetElementType::where('id', $type)->get(['id', 'name']);
+            $hidden4TapPort = 1;
+
+            $addressDesc1 = 'RKS Port'; // Used as address to control the attenuation setting via Sat-Kabel-RKS-Server
+        } else {
+            $parents = $netelement->getParentList();
+            $types = NetElementType::get(['id', 'name']);
         }
 
         /*
@@ -63,7 +84,7 @@ class NetElementController extends HfcBaseController
 
         $cluster = false;
         // netelement is a cluster or will be created as type cluster
-        if ($netelement->netelementtype_id == 2 || (! $netelement->exists && \Request::get('netelementtype_id') == 2)) {
+        if ($netelement->netelementtype_id == 2 || (! $netelement->exists && Request::get('netelementtype_id') == 2)) {
             $cluster = true;
         }
 
@@ -82,33 +103,48 @@ class NetElementController extends HfcBaseController
         /*
          * return
          */
-        return [
-            ['form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $netelement->html_list(NetElementType::get(['id', 'name']), 'name'), 'hidden' => 0],
+        $a = [
+            ['form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $netelement->html_list($types, 'name'), 'hidden' => 0],
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
             // array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['NET' => 'NET', 'NETGW' => 'NETGW', 'DATA' => 'DATA', 'CLUSTER' => 'CLUSTER', 'NODE' => 'NODE', 'AMP' => 'AMP']),
             // net is automatically detected in Observer
             // array('form_type' => 'select', 'name' => 'net', 'description' => 'Net', 'value' => $nets),
-            ['form_type' => 'ip', 'name' => 'ip', 'description' => 'IP address'],
-            ['form_type' => 'text', 'name' => 'link', 'description' => 'HTML Link'],
+            ['form_type' => 'ip', 'name' => 'ip', 'description' => 'IP address', 'hidden' => $hidden4TapPort || $hidden4Tap],
+            ['form_type' => 'text', 'name' => 'link', 'description' => 'HTML Link', 'hidden' => $hidden4TapPort || $hidden4Tap],
             ['form_type' => 'select', 'name' => 'prov_device_id', 'description' => 'Provisioning Device', 'value' => $prov_device, 'hidden' => $prov_device_hidden],
-            ['form_type' => 'text', 'name' => 'pos', 'description' => 'Geoposition'],
+            ['form_type' => 'text', 'name' => 'pos', 'description' => 'Geoposition', 'hidden' => $hidden4TapPort],
             ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Object', 'value' => $parents],
-
-            $options_array,
+            array_merge($options_array, ['hidden' => $hidden4TapPort || $hidden4Tap]),
             // array('form_type' => 'select', 'name' => 'state', 'description' => 'State', 'value' => ['OK' => 'OK', 'YELLOW' => 'YELLOW', 'RED' => 'RED'], 'options' => ['readonly']),
 
             ['form_type' => 'select', 'name' => 'kml_file', 'description' => 'Choose KML file', 'value' => $kml_files],
             ['form_type' => 'file', 'name' => 'kml_file_upload', 'description' => 'or: Upload KML file', 'space' => 1],
 
-            ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'Community RO'],
-            ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'Community RW'],
-            ['form_type' => 'text', 'name' => 'address1', 'description' => 'Address Line 1'],
-            ['form_type' => 'text', 'name' => 'address2', 'description' => 'Address Line 2'],
-            ['form_type' => 'text', 'name' => 'controlling_link', 'description' => 'Controlling Link'],
+            ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'Community RO', 'hidden' => $hidden4TapPort || $hidden4Tap],
+            ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'Community RW', 'hidden' => $hidden4TapPort || $hidden4Tap],
+            ['form_type' => 'text', 'name' => 'address1', 'description' => $addressDesc1],
+            ['form_type' => 'text', 'name' => 'address2', 'description' => $addressDesc2, 'hidden' => $hidden4TapPort],
+            ['form_type' => 'text', 'name' => 'controlling_link', 'description' => 'Controlling Link', 'hidden' => $hidden4TapPort || $hidden4Tap],
             ['form_type' => 'checkbox', 'name' => 'enable_agc', 'description' => 'Enable AGC', 'help' => trans('helper.enable_agc'), 'hidden' => ! $cluster],
             ['form_type' => 'text', 'name' => 'agc_offset', 'description' => 'AGC offset', 'help' => trans('helper.agc_offset'), 'checkbox' => 'show_on_enable_agc', 'hidden' => ! $cluster],
             ['form_type' => 'textarea', 'name' => 'descr', 'description' => 'Description'],
         ];
+
+        $b = [];
+        if (\Module::collections()->has('PropertyManagement') && $type == 9) {
+            $b = [
+                ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'value' => $netelement->getApartmentsList()],
+            ];
+        }
+
+        $c = [];
+        if (\Module::collections()->has('HfcSnmp') && $type == 2) {
+            $c = [
+                ['form_type' => 'text', 'name' => 'rkm_line_number', 'description' => 'RKM line number'],
+            ];
+        }
+
+        return array_merge($a, $b, $c);
     }
 
     public function prepare_input($data)
@@ -129,6 +165,16 @@ class NetElementController extends HfcBaseController
         unset($data['enable_agc']);
 
         return $data;
+    }
+
+    public function prepare_rules($rules, $data)
+    {
+        if ($data['netelementtype_id'] == 9) {
+            $id = $data['id'] ?? null;
+            $rules['address1'] = 'required|unique:netelement,address1,'.$id.',id,deleted_at,NULL,netelementtype_id,9|regex:/^([0-9A-F]{2}){4}(~\d)+$/';
+        }
+
+        return parent::prepare_rules($rules, $data);
     }
 
     /**
