@@ -19,15 +19,11 @@
 
     {{-- Stop SSE Button --}}
     @if ($reload)
-    <div class="row">
-        @DivOpen(10)
-            @if ($view_var->controlling_link)
-                {!! link_to($view_var->controlling_link, 'View...', ['class' => 'btn btn-primary pull-right']) !!}
-            @endif
-        @DivClose()
-        @DivOpen(2)
-            <input id="stop-button" class="btn btn-primary" style="simple" onclick="close_source()" value="Stop updating">
-        @DivClose()
+    <div class="row justify-content-end">
+        @if ($view_var->controlling_link)
+            {!! link_to($view_var->controlling_link, 'View...', ['class' => 'btn btn-primary mb-3']) !!}
+        @endif
+        <input id="stop-button" class="btn btn-primary mb-3 ml-5 mr-4" onclick="close_source()" value="Stop updating">
     </div>
     @endif
 
