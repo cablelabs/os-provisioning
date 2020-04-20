@@ -852,20 +852,20 @@ class BaseViewController extends Controller
     private static function colorize($val, $limit, $inv = false)
     {
         if ($val < $limit[0] || (isset($limit[3]) && $val > $limit[3])) {
-            return $inv ? 'success' : 'danger';
+            return $inv ? 0 : 2;
         }
 
         if ($val >= $limit[1]) {
             if (! isset($limit[2])) {
-                return $inv ? 'danger' : 'success';
+                return $inv ? 2 : 0;
             }
 
             if ($val <= $limit[2]) {
-                return $inv ? 'danger' : 'success';
+                return $inv ? 2 : 0;
             }
         }
 
-        return 'warning';
+        return 1;
     }
 
     /**
@@ -874,16 +874,18 @@ class BaseViewController extends Controller
      * @param dir: ds (downstream), us (upstream)
      * @param entity: the entity to check (power, modulation, ureflections, etc.)
      * @param value: array containing all values (can be used for several us/ds channels)
-     * @return: array of same size as $value containing evaluation results
+     * @param toString: return human readable interpretation of color value (bootstrap class)
+     * @return: evaluation result
      *
      * @author: Ole Ernst
      */
-    public static function getQualityColor($dir, $mod, $entity, $val)
+    public static function getQualityColor($dir, $mod, $entity, $val, $toString)
     {
-        $ret = '';
+        $ret = 3;
+        $colors = ['success', 'warning', 'danger', ''];
 
         if ($val === 'n/a') {
-            return $ret;
+            return $toString ? $colors[$ret] : $ret;
         }
 
         switch ($entity) {
@@ -938,6 +940,6 @@ class BaseViewController extends Controller
             break;
         }
 
-        return $ret;
+        return $toString ? $colors[$ret] : $ret;
     }
 }
