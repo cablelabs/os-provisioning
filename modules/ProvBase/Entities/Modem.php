@@ -1268,7 +1268,7 @@ class Modem extends \BaseModel
         $ret[] = ['Time', '#', 'Text'];
 
         // reshape array into the right format
-        foreach (array_reverse(array_keys(reset($log))) as $idx) {
+        foreach (array_keys(reset($log)) as $idx) {
             foreach ($log as $k => $v) {
                 $ret[$idx][] = $v[$idx];
             }
