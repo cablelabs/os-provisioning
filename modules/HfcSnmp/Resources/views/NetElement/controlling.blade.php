@@ -132,23 +132,7 @@
 @section('javascript_extra')
 {{-- JS DATATABLE CONFIG --}}
 <script language="javascript">
-    var table = $('table.controllingtable').DataTable(
-        {
-        {{-- Translate Datatables Base --}}
-            @include('datatables.lang')
-        {{-- Buttons above Datatable for export, print and change Column Visibility --}}
-            @include('datatables.buttons')
-        iDisplayLength: -1,
-        responsive: true,
-        autoWidth: false, {{-- Option to ajust Table to Width of container --}}
-        dom:    "<'row'<'col-sm-12'B>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-5'i>>", {{-- sets order and what to show  --}}
-        stateSave: true, {{-- Save Search Filters and visible Columns --}}
-        fixedHeader: {
-            headerOffset: $('#header').outerHeight(),
-        },
-    });
+
     window.onresize = function(event) {
         table.responsive.recalc();
     }
@@ -191,6 +175,13 @@
     {
         if (Number("{{$reload}}"))
             setTimeout(update_snmp_values(), "{{$reload}}" * 1000);
+
+        $('.controllingtable').DataTable({
+            // stateSave: true,
+            dom: 'lBfrtip',
+            @include('datatables.buttons')
+            @include('datatables.lang')
+        });
     });
 
 </script>
