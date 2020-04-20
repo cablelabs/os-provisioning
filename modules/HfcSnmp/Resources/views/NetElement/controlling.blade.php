@@ -85,7 +85,7 @@
 
         {{-- TABLES --}}
         @foreach ($form_fields['table'] as $table)
-            <table class="table controllingtable table-condensed table-bordered d-table" id="datatable">
+            <table class="table controllingtable table-bordered">
                 <thead>
                         <th style="padding: 4px"> Index </th>
                     @foreach ($table['head'] as $oid => $head)
@@ -110,7 +110,6 @@
     <div class="d-flex justify-content-center">
         <input
             class="btn btn-primary"
-            style="simple"
             value="{!! \App\Http\Controllers\BaseViewController::translate_view($save_button_name , 'Button') !!}"
             type="submit">
     </div>
@@ -169,8 +168,9 @@
 
     $(document).ready(function()
     {
-        if (Number("{{$reload}}"))
+        if (Number("{{$reload}}")) {
             setTimeout(update_snmp_values(), "{{$reload}}" * 1000);
+        }
 
         $('.controllingtable').DataTable({
             // stateSave: true,
