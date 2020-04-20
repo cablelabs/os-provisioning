@@ -882,7 +882,7 @@ class BaseViewController extends Controller
     {
         $ret = '';
 
-        if ($val == 'n/a') {
+        if ($val === 'n/a') {
             return $ret;
         }
 
