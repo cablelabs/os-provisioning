@@ -922,11 +922,11 @@ class BaseViewController extends Controller
             }
             // $mod == '0': no docsIfCmtsModulationTable entry
             // $dir == 'us': snr_us modem property in CustomerTopoController
-            if ($mod == 'QAM64' || $mod == '0' || $dir = 'us') {
+            if ($mod == 'QAM64' || $mod == '0' || $dir == 'us') {
                 $ret = self::colorize($val, [26, 29]);
             }
             // $dir = 'ds': snr_ds modem property in CustomerTopoController
-            if ($mod == 'QAM256' || $dir = 'ds') {
+            if ($mod == 'QAM256' || $dir == 'ds') {
                 $ret = self::colorize($val, [32, 35]);
             }
             break;
