@@ -150,7 +150,7 @@
             for (var key in data) {
                 if (document.getElementsByName(key)[0] instanceof HTMLInputElement) {
                     document.getElementsByName(key)[0].value = data[key];
-                } else {
+                } else if (document.getElementsByName(key)[0] != undefined) {
                     document.getElementsByName(key)[0].innerHTML = data[key];
                 }
             }
