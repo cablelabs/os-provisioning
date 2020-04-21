@@ -147,12 +147,12 @@
 
             console.log("Received data");
 
-            for (var key in data)
-            {
-                if (document.getElementsByName(key)[0] instanceof HTMLInputElement)
+            for (var key in data) {
+                if (document.getElementsByName(key)[0] instanceof HTMLInputElement) {
                     document.getElementsByName(key)[0].value = data[key];
-                else
+                } else {
                     document.getElementsByName(key)[0].innerHTML = data[key];
+                }
             }
         }
     }
