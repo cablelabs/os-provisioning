@@ -1,11 +1,12 @@
-if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 hostname username password" >&2
+if [ "$#" -ne 4 ]; then
+    echo "Usage: $0 hostname username password vlan" >&2
     exit 1
 fi
 
 hostname="$1"
 username="$2"
 password="$3"
+vlan="$4"
 
 interfaces=$(expect <<- EOF |
 set timeout 5
@@ -21,7 +22,6 @@ EOF
 grep '^interface gpon-onu_' | cut -d' ' -f2)
 
 cmd=''
-vlan=101
 while read interface; do
     cmd+='conf t\n'
     cmd+="interface $interface\n"

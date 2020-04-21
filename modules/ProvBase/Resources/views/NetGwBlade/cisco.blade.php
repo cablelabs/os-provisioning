@@ -47,15 +47,14 @@ username admin privilege 15 secret 5 {!!$cb->admin_psw!!}
 !
 !
 !
-interface {!!$cb->interface!!}
- no ip address
+interface {!!$cb->interface!!}.{!!$cb->mgmt_vlan!!}
+ ip address {{$cb->ip}} {!!$cb->netmask!!}
  no ip redirects
  no ip proxy-arp
  media-type rj45
  speed auto
  duplex auto
  negotiation auto
- ip address {{$cb->ip}} {!!$cb->netmask!!}
 !
 !
 interface Bundle1

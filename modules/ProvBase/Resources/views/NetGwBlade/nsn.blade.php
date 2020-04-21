@@ -12,15 +12,15 @@ bridge
  xdsl 1 line-config default
  bridgebase taggingmode single
  bridgebase routing-mode unrestricted
- vlan create 100-101
- vlan add 100 9-14 tagged
- vlan add 101 1/1-8/1 untagged 9-14 tagged
- bridgeport 1/1-8/1 pvid 101
+ vlan create {!!$cb->mgmt_vlan!!},{!!$cb->customer_vlan!!}
+ vlan add {!!$cb->mgmt_vlan!!} 9-14 tagged
+ vlan add {!!$cb->customer_vlan!!} 1/1-8/1 untagged 9-14 tagged
+ bridgeport 1/1-8/1 pvid {!!$cb->customer_vlan!!}
  bridgeport 9-14 pvid 1
  bridgeport host-protocol pppoe 1/1-8/1
  xdsl 1-8 enable
 !
-interface br100
+interface br{!!$cb->mgmt_vlan!!}
  no shutdown
  ip address {!!$cb->ip!!}/{!!$cb->prefix!!}
 !
