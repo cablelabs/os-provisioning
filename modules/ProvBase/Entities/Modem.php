@@ -1259,16 +1259,19 @@ class Modem extends \BaseModel
 
         // translate severity level of log entry to datatable colors
         $color_key = array_keys($log)[2];
+        $text_key = array_keys($log)[3];
+
+        $ignore = ['T3 time', 'T4 time'];
+        $trans = ['', 'danger', 'danger', 'danger', 'danger', 'warning', 'success', '', 'info'];
         foreach ($log[$color_key] as $k => $color_idx) {
-            $trans = ['', 'danger', 'danger', 'danger', 'danger', 'warning', 'success', '', 'info'];
-            $log[$color_key][$k] = $trans[$color_idx];
+            $log[$color_key][$k] = \Str::contains($log[$text_key][$k], $ignore) ? '' : $trans[$color_idx];
         }
 
         // add table headers
         $ret[] = ['Time', '#', 'Text'];
 
         // reshape array into the right format
-        foreach (array_reverse(array_keys(reset($log))) as $idx) {
+        foreach (array_keys(reset($log)) as $idx) {
             foreach ($log as $k => $v) {
                 $ret[$idx][] = $v[$idx];
             }
