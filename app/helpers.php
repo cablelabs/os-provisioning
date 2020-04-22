@@ -350,5 +350,5 @@ function humanFilesize($bytes, $dec = 2)
     $size = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     $factor = floor((strlen($bytes) - 1) / 3);
 
-    return sprintf("%.{$dec}f", $bytes / pow(1024, $factor)).@$size[$factor];
+    return sprintf("%.{$dec}f ", $bytes / pow(1024, $factor)).@$size[$factor];
 }
