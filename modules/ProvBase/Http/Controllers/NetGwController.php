@@ -55,19 +55,13 @@ class NetGwController extends \BaseController
             $company = 'Cisco';
         }
 
-        // The NETGW company and series Array
-        foreach (config('provbase.netgw') as $vendor => $__series) {
-            $company_array[$vendor] = $vendor;
-        }
-
-        $series = config('provbase.netgw.'.$company);
         $types = array_map('strtoupper', (array_combine(NetGw::TYPES, NetGw::TYPES)));
 
         // TODO: series should be jquery based select depending on the company
         // TODO: (For BRAS) Make company and series field nullable and add empty field to company_array
         $ret_tmp = [
-            ['form_type' => 'select', 'name' => 'company', 'description' => 'Company', 'value' => $company_array],
-            ['form_type' => 'select', 'name' => 'series', 'description' => 'Series', 'value' => $series],
+            ['form_type' => 'select', 'name' => 'company', 'description' => 'Company', 'value' => $this->getSelectFromConfig()],
+            ['form_type' => 'select', 'name' => 'series', 'description' => 'Series', 'value' => $this->getSelectFromConfig($company)],
             ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types, 'select' => $types],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname'],
             ['form_type' => 'ip', 'name' => 'ip', 'description' => 'IP', 'help' => 'Online'],
@@ -101,6 +95,18 @@ class NetGwController extends \BaseController
         }
 
         return $ret;
+    }
+
+    private function getSelectFromConfig($key = null)
+    {
+        $config = config('provbase.netgw'.($key ? ".$key" : ''));
+        $config['Other'] = 'Other';
+
+        if (! $key) {
+            $config = array_keys($config);
+        }
+
+        return array_combine($config, $config);
     }
 
     protected function prepare_input($data)
