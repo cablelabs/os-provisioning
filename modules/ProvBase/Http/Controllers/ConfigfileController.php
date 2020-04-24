@@ -154,34 +154,34 @@ class ConfigfileController extends \BaseController
             return [];
         }
 
-            $jsonArrayPage = [];
-            $listCounter = 0;
+        $jsonArrayPage = [];
+        $listCounter = 0;
 
-            // delete all parameters of the config in the list we got from /devices so that no parameter is in both lists
-            foreach (json_decode($jsonFromDb, true) as $jsName => $jsonArray) {
-                $jsonArrayPage[$listCounter]['name'] = $jsName;
-                foreach ($jsonArray as $jKey => $jElement) {
-                    $jsonArrayPage[$listCounter]['content'][] = ['id' => $jKey, 'name' => $jElement];
-                    foreach ($parametersArray as $oKey => $oElement) {
-                        if ($jKey == $oElement['id']) {
-                            unset($parametersArray[$oKey]);
-                        }
+        // delete all parameters of the config in the list we got from /devices so that no parameter is in both lists
+        foreach (json_decode($jsonFromDb, true) as $jsName => $jsonArray) {
+            $jsonArrayPage[$listCounter]['name'] = $jsName;
+            foreach ($jsonArray as $jKey => $jElement) {
+                $jsonArrayPage[$listCounter]['content'][] = ['id' => $jKey, 'name' => $jElement];
+                foreach ($parametersArray as $oKey => $oElement) {
+                    if ($jKey == $oElement['id']) {
+                        unset($parametersArray[$oKey]);
                     }
                 }
-                $listCounter++;
             }
+            $listCounter++;
+        }
 
-            $jsonEncParametersArray = json_encode(array_values($parametersArray));
+        $jsonEncParametersArray = json_encode(array_values($parametersArray));
 
-            $lists = '{"name":"listdevices", "content":'.$jsonEncParametersArray.'},';
-            foreach ($jsonArrayPage as $jsName => $jsonArray) {
-                if (! array_key_exists('content', $jsonArray)) {
-                    $jsonArray['content'] = [];
-                }
-                $lists .= ''.json_encode($jsonArray).',';
+        $lists = '{"name":"listdevices", "content":'.$jsonEncParametersArray.'},';
+        foreach ($jsonArrayPage as $jsName => $jsonArray) {
+            if (! array_key_exists('content', $jsonArray)) {
+                $jsonArray['content'] = [];
             }
+            $lists .= ''.json_encode($jsonArray).',';
+        }
 
-            return ['lists' => $lists, 'searchFlag' => $searchFlag];
+        return ['lists' => $lists, 'searchFlag' => $searchFlag];
     }
 
     /**
