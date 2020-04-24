@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Http\Controllers;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Modules\ProvBase\Entities\Modem;
 use Illuminate\Support\Facades\Request;
 use Modules\ProvBase\Entities\Configfile;
 
@@ -129,37 +130,35 @@ class ConfigfileController extends \BaseController
             return [];
         }
 
+        $jsonFromDb = '{}';
         $searchFlag = '#monitoring:';
 
-        $jsonFromDb = '{}';
-        $textFromDb = $model->text;
-        $textExplode = explode("\n", $textFromDb);
-        foreach ($textExplode as $line) {
+        foreach (explode("\n", $model->text) as $line) {
             if (substr($line, 0, strlen($searchFlag)) == $searchFlag) {
                 $jsonFromDb = substr($line, strlen($searchFlag));
                 break;
             }
         }
-        $modemSerials = $model->modem()->distinct()->pluck('serial_num');
+        $modemSerials = $model->modem()->whereNotNull('serial_num')->distinct()->pluck('serial_num');
 
         foreach ($modemSerials as $modemSerial) {
-            if ($modemSerial != null) {
-                $modemQuery = 'http://localhost:7557/devices?query=%7B%22_deviceId._SerialNumber%22%3A%22'.$modemSerial.'%22%7D';
-                $modemQres = @file_get_contents($modemQuery);
-                $parametersArray = $this->buildElementList($this->getFromDevices($modemQres));
-                if (! empty($parametersArray)) {
-                    break;
-                }
+            $modemQres = Modem::callGenieAcsApi("devices/?query={\"_deviceId._SerialNumber\":\"{$modemSerial}\"}", 'GET');
+            $parametersArray = $this->buildElementList($this->getFromDevices($modemQres));
+
+            if (! empty($parametersArray)) {
+                break;
             }
         }
 
-        if (! empty($parametersArray)) {
-            $jsonArrayDb = json_decode($jsonFromDb, true);
+        if (empty($parametersArray)) {
+            return [];
+        }
+
             $jsonArrayPage = [];
             $listCounter = 0;
 
             // delete all parameters of the config in the list we got from /devices so that no parameter is in both lists
-            foreach ((array) $jsonArrayDb as $jsName => $jsonArray) {
+            foreach (json_decode($jsonFromDb, true) as $jsName => $jsonArray) {
                 $jsonArrayPage[$listCounter]['name'] = $jsName;
                 foreach ($jsonArray as $jKey => $jElement) {
                     $jsonArrayPage[$listCounter]['content'][] = ['id' => $jKey, 'name' => $jElement];
@@ -183,9 +182,6 @@ class ConfigfileController extends \BaseController
             }
 
             return ['lists' => $lists, 'searchFlag' => $searchFlag];
-        }
-
-        return [];
     }
 
     /**
