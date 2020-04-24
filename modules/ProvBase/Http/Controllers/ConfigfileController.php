@@ -142,8 +142,8 @@ class ConfigfileController extends \BaseController
         $modemSerials = $model->modem()->whereNotNull('serial_num')->distinct()->pluck('serial_num');
 
         foreach ($modemSerials as $modemSerial) {
-            $modemQres = Modem::callGenieAcsApi("devices/?query={\"_deviceId._SerialNumber\":\"{$modemSerial}\"}", 'GET');
-            $parametersArray = $this->buildElementList($this->getFromDevices($modemQres));
+            $modem = Modem::callGenieAcsApi("devices/?query={\"_deviceId._SerialNumber\":\"{$modemSerial}\"}", 'GET');
+            $parametersArray = $this->buildElementList($this->getFromDevices($modem));
 
             if (! empty($parametersArray)) {
                 break;
@@ -171,14 +171,13 @@ class ConfigfileController extends \BaseController
             $listCounter++;
         }
 
-        $jsonEncParametersArray = json_encode(array_values($parametersArray));
+        array_unshift($jsonArrayPage, ['name' => 'listdevices', 'content' => array_values($parametersArray)]);
 
-        $lists = '{"name":"listdevices", "content":'.$jsonEncParametersArray.'},';
-        foreach ($jsonArrayPage as $jsName => $jsonArray) {
+        foreach ($jsonArrayPage as $jsonArray) {
             if (! array_key_exists('content', $jsonArray)) {
                 $jsonArray['content'] = [];
             }
-            $lists .= ''.json_encode($jsonArray).',';
+            $lists[] = $jsonArray;
         }
 
         return ['lists' => $lists, 'searchFlag' => $searchFlag];

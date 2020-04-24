@@ -124,7 +124,7 @@ var app = new Vue({
     el: '#app',
     data: {
         listName: '',
-        lists: [ {!!$additional_data['lists']!!} ]
+        lists: @json($additional_data['lists'])
     },
     methods: {
         onKeyUp: function(newval, key, id) {
