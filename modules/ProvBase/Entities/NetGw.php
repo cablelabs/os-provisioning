@@ -267,6 +267,8 @@ class NetGw extends \BaseModel
         $this->prefix = env('NETGW_IP_PREFIX', '22');
         $this->tf_net_1 = env('NETGW_TRANSFER_NET', '172.20.0.0'); // servers with /24
         $this->nat_ip = env('NETGW_NAT_IP', '172.20.0.2'); // second server ip is mostlikely NAT
+        $this->mgmt_vlan = env('MGMT_VLAN', '100');
+        $this->customer_vlan = env('CUSTOMER_VLAN', '101');
 
         $this->snmp_ro = $this->get_ro_community();
         $this->snmp_rw = $this->get_rw_community();
@@ -283,6 +285,8 @@ class NetGw extends \BaseModel
         $this->prefix = '<span title="NETGW_IP_PREFIX"><b>'.$this->prefix.'</b></span>';
         $this->tf_net_1 = '<span title="NETGW_TRANSFER_NET"><b>'.$this->tf_net_1.'</b></span>';
         $this->nat_ip = '<span title="NETGW_NAT_IP"><b>'.$this->nat_ip.'</b></span>';
+        $this->mgmt_vlan = '<span title="MGMT_VLAN"><b>'.$this->mgmt_vlan.'</b></span>';
+        $this->customer_vlan = '<span title="CUSTOMER_VLAN"><b>'.$this->customer_vlan.'</b></span>';
         $this->snmp_ro = '<span title="Set in NETGW page or Global Config Page / Provisioning if empty in NETGW page"><b>'.$this->snmp_ro.'</b></span>';
         $this->snmp_rw = '<span title="Set in NETGW page or Global Config Page / Provisioning if empty in NETGW page"><b>'.$this->snmp_rw.'</b></span>';
     }
@@ -645,8 +649,10 @@ class NetGw extends \BaseModel
             return;
         }
 
+        $vlan = env('CUSTOMER_VLAN', '101');
+
         // run script in background since this function is called from Kernel.php
-        exec("bash \"$script\" \"$this->ip\" \"$this->username\" \"$this->password\" > /dev/null &");
+        exec("bash \"$script\" \"$this->ip\" \"$this->username\" \"$this->password\" \"$vlan\" > /dev/null &");
     }
 }
 

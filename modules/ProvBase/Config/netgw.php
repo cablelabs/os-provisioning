@@ -1,11 +1,12 @@
 <?php
 
-    return [
-        'Cisco'  => ['ubr7225' => 'ubr7225', 'ubr7246' => 'ubr7246', 'ubr10k' => 'ubr10k'],
-        'Casa'   => ['C1G' => 'C1G', 'C2200' => 'C2200', 'C3200' => 'C3200', 'C100G' => 'C100G'],
-        'Arris'  => ['C1000' => 'C1000', 'C3' => 'C3', 'C4' => 'C4', 'E6000' => 'E6000'],
-        'Motorola' => ['BSR64000' => 'BSR64000', 'BSR2000' => 'BSR2000'],
-        'ZTE' => ['C320' => 'C320'],
-        'NSN' => ['hiX5608' => 'hiX5608'],
-        'Other' => ['Other' => 'Other'],
-    ];
+return [
+    'Arris'     => ['C1000', 'C3', 'C4', 'E6000'],
+    'Casa'      => ['C1G', 'C2200', 'C3200', 'C100G'],
+    'Cisco'     => ['ubr7225', 'ubr7246', 'ubr10k', 'ASR1000'],
+    'Motorola'  => ['BSR2000', 'BSR64000'],
+    'NSN'       => ['hiX5608'],
+    'Ubiquiti'  => ['EdgeRouter'],
+    'ZTE'       => ['C320'],
+    'ZyXEL'     => ['IES4204', 'OLT1404A', 'OLT1408A'],
+];

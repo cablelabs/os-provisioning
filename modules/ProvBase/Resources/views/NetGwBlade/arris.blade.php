@@ -57,7 +57,7 @@ interface cable-mac 1.0
 exit
 interface cable-mac 1 cable bundle master
 interface cable-mac 1 no shutdown
-interface {!!$cb->interface!!}
+interface {!!$cb->interface!!}.{!!$cb->mgmt_vlan!!}
  ip address {{$cb->ip}} {!!$cb->netmask!!}
  no shutdown
 exit

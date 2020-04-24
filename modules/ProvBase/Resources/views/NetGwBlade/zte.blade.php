@@ -5,7 +5,7 @@ The generic ZTE OLT config blade
 --}}
 
 vlan database
-  vlan 1,100-101
+  vlan 1,{!!$cb->mgmt_vlan!!},{!!$cb->customer_vlan!!}
 !
 gpon
   profile tcont MAX-UP type 4 maximum 1244160
@@ -23,7 +23,7 @@ onu-profile gpon remote universal
   service INET gemport 1 untag
   vlan port eth_0/1 mode transparent
 !
-interface vlan 100
+interface vlan {!!$cb->mgmt_vlan!!}
   ip address {!!$cb->ip!!} {!!$cb->netmask!!}
 !
 interface gpon-olt_x/y/z
@@ -31,7 +31,7 @@ interface gpon-olt_x/y/z
 !
 interface gei_x/y/z
   switchport mode hybrid
-  switchport vlan 100-101 tag
+  switchport vlan {!!$cb->mgmt_vlan!!},{!!$cb->customer_vlan!!} tag
 !
 ip route 0.0.0.0 0.0.0.0 {!!$cb->prov_ip!!}
 !

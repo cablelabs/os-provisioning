@@ -15,7 +15,7 @@ HOWTO: setup a new NETGW
 
 {{-- NETGW setup code --}}
 <pre>
-interface {!!$cb->interface!!}
+interface {!!$cb->interface!!}.{!!$cb->mgmt_vlan!!}
  ip address {!!$cb->ip!!} {!!$cb->netmask!!}
  no shutdown
 
