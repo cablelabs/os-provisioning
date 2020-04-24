@@ -125,6 +125,10 @@ class ConfigfileController extends \BaseController
 
     protected function _get_additional_data_for_edit_view($model)
     {
+        if ($model->device != 'tr069') {
+            return [];
+        }
+
         $searchFlag = '#monitoring:';
 
         $jsonFromDb = '{}';
