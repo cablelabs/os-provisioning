@@ -92,11 +92,8 @@ class ConfigfileController extends \BaseController
 
     public function getFromDevices($devicesContent)
     {
-        $jsonDecode = json_decode($devicesContent, true);
-        if ($jsonDecode != null) {
-            foreach ($jsonDecode as $key => $jsonElement) {
-                return $jsonElement;
-            }
+        if ($jsonDecode = json_decode($devicesContent, true)) {
+            return reset($jsonDecode);
         }
 
         return [];
