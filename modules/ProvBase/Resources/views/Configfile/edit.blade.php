@@ -18,63 +18,6 @@
 <script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
 <script src="https://unpkg.com/vuedraggable@2.20.0/dist/vuedraggable.umd.min.js"></script>
 
-<style type="text/css">
-.dragdropfield
-{
-margin-top: 15px;
-padding: 10px;
-background: #f5f5f5;
-}
-.box
-{
-text-align: left;
-display: inline-block;
-vertical-align: top;
-margin: 5px;
-padding: 10px;
-width: 45%;
-}
-.h
-{
-cursor: pointer;
-}
-.h input
-{
-font-weight: normal;
-font-size: 20px;
-padding: 10px;
-background: transparent;
-border: 0;
-}
-.listitem div
-{
-margin: 5px;
-padding: 10px;
-background: #f2f2f2;
-}
-.listitem input
-{
-display: block;
-box-sizing: border-box;
-width: 100%;
-}
-.dropzone
-{
-min-height: 50px;
-}
-.newlist
-{
-margin-top: 12px;
-}
-@media(max-width: 800px)
-{
-.box
-{
-width: 100%;
-}
-}
-</style>
-
 <div id="app" class="dragdropfield">
     <h2>Build your interface:</h2>
     <div class="box" id="left">

@@ -90,6 +90,11 @@ class ConfigfileController extends \BaseController
         return parent::store();
     }
 
+    /**
+     * Returns content from devices.json
+     *
+     * @author Robin Sachse
+     */
     public function getFromDevices($devicesContent)
     {
         if ($jsonDecode = json_decode($devicesContent, true)) {
@@ -99,6 +104,12 @@ class ConfigfileController extends \BaseController
         return [];
     }
 
+    /**
+     * Extracts all valid elements and their subelements from devices.json for
+     * the current device and returns these as array
+     *
+     * @author Robin Sachse
+     */
     public function buildElementList($devicesJson, $inPath = '')
     {
         // some devices do have "Device:" and others may have "InternetGatewayDevice:"
@@ -121,7 +132,14 @@ class ConfigfileController extends \BaseController
         return $parametersArray;
     }
 
-    protected function _get_additional_data_for_edit_view($model)
+    /**
+     * Handles the output of a Drag&Drop interface below a tr096 config, if the
+     * current config is used by at least one modem that is also known in
+     * devices.json
+     *
+     * @author Robin Sachse
+     */
+    protected function getAdditionalDataForEditView($model)
     {
         if ($model->device != 'tr069') {
             return [];
@@ -154,7 +172,8 @@ class ConfigfileController extends \BaseController
         $jsonArrayPage = [];
         $listCounter = 0;
 
-        // delete all parameters of the config in the list we got from /devices so that no parameter is in both lists
+        // delete all parameters of the config in the list we got from /devices
+        // so that no parameter is in both lists
         foreach (json_decode($jsonFromDb, true) as $jsName => $jsonArray) {
             $jsonArrayPage[$listCounter]['name'] = $jsName;
             foreach ($jsonArray as $jKey => $jElement) {

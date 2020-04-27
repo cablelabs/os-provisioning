@@ -524,7 +524,7 @@ class BaseController extends Controller
      *
      * @return data to be injected; should be an array
      */
-    protected function _get_additional_data_for_edit_view($model)
+    protected function getAdditionalDataForEditView($model)
     {
         return [];
     }
@@ -788,8 +788,8 @@ class BaseController extends Controller
         $tabs = $this->prepare_tabs($relations, $this->editTabs($view_var));
 
         // check if there is additional data to be passed to blade template
-        // on demand overwrite base method _get_additional_data_for_edit_view($model)
-        $additional_data = $this->_get_additional_data_for_edit_view($view_var);
+        // on demand overwrite base method getAdditionalDataForEditView($model)
+        $additional_data = $this->getAdditionalDataForEditView($view_var);
 
         $view_path = 'Generic.edit';
         $form_path = 'Generic.form';
