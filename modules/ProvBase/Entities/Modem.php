@@ -821,6 +821,8 @@ class Modem extends \BaseModel
      */
     public static function refreshPPP()
     {
+        $hf = array_flip(config('hfcreq.hfParameters'));
+
         $online = RadAcct::where(
             'acctupdatetime',
             '>=',
@@ -834,12 +836,12 @@ class Modem extends \BaseModel
             ->where('configfile.device', 'tr069')
             ->whereNull('configfile.deleted_at')
             ->toBase()
-            ->update(['us_pwr' => 0, 'modem.updated_at' => now()]);
+            ->update(array_merge(array_combine($hf, [0, 0, 0, 0]), ['modem.updated_at' => now()]));
 
         // set all ppp devices online, which sent us an accounting update
         // in the last $defaultInterimIntervall seconds
         // for now we set them to a sensible DOCIS US power level to make them green
-        self::whereIn('ppp_username', $online)->update(['us_pwr' => 45]);
+        self::whereIn('ppp_username', $online)->update(array_combine($hf, [40, 36, 0, 36]));
         DB::commit();
     }
 
