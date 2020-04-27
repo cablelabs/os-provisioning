@@ -177,9 +177,9 @@ class ConfigfileController extends \BaseController
         foreach (json_decode($jsonFromDb, true) as $jsName => $jsonArray) {
             $jsonArrayPage[$listCounter]['name'] = $jsName;
             foreach ($jsonArray as $jKey => $jElement) {
-                $jsonArrayPage[$listCounter]['content'][] = ['id' => $jKey, 'name' => $jElement];
+                $jsonArrayPage[$listCounter]['content'][] = ['id' => $jElement, 'name' => $jKey];
                 foreach ($parametersArray as $oKey => $oElement) {
-                    if ($jKey == $oElement['id']) {
+                    if ($jElement == $oElement['id']) {
                         unset($parametersArray[$oKey]);
                     }
                 }

@@ -124,7 +124,7 @@ var app = new Vue({
                         if (i>0) {
                             injson+=',';
                         }
-                        injson+='"'+insertId+'":"'+insertName+'"';
+                        injson+='"'+insertName+'":"'+insertId+'"';
                     }
                 }
                 catch(err) {}
