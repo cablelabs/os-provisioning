@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Http\Controllers;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Modules\ProvBase\Entities\Modem;
 use Illuminate\Support\Facades\Request;
 use Modules\ProvBase\Entities\Configfile;
 
@@ -87,6 +88,115 @@ class ConfigfileController extends \BaseController
 
         // finally: call base method
         return parent::store();
+    }
+
+    /**
+     * Returns content from devices.json
+     *
+     * @author Robin Sachse
+     */
+    public function getFromDevices($devicesContent)
+    {
+        if ($jsonDecode = json_decode($devicesContent, true)) {
+            return reset($jsonDecode);
+        }
+
+        return [];
+    }
+
+    /**
+     * Extracts all valid elements and their subelements from devices.json for
+     * the current device and returns these as array
+     *
+     * @author Robin Sachse
+     */
+    public function buildElementList($devicesJson, $inPath = '')
+    {
+        // some devices do have "Device:" and others may have "InternetGatewayDevice:"
+        $parametersArray = [];
+        $tmpInPath = $inPath;
+        if (! empty($tmpInPath) && substr($tmpInPath, 0, -1) != '.') {
+            $tmpInPath .= '.';
+        }
+        foreach ($devicesJson as $key => $elementJson) {
+            $inPath = $tmpInPath.$key;
+            if (substr($key, 0, 1) != '_') {
+                // elements with underscore that do have subelements should not exist
+                $parametersArray[] = ['id' => $inPath, 'name' => $inPath];
+                if (is_array($elementJson)) {
+                    $parametersArray = array_merge($parametersArray, $this->buildElementList($elementJson, $inPath));
+                }
+            }
+        }
+
+        return $parametersArray;
+    }
+
+    /**
+     * Handles the output of a Drag&Drop interface below a tr096 config, if the
+     * current config is used by at least one modem that is also known in
+     * devices.json
+     *
+     * @author Robin Sachse
+     */
+    protected function getAdditionalDataForEditView($model)
+    {
+        if ($model->device != 'tr069') {
+            return [];
+        }
+
+        $jsonFromDb = '{}';
+        $searchFlag = '#monitoring:';
+
+        foreach (explode("\n", $model->text) as $line) {
+            if (substr($line, 0, strlen($searchFlag)) == $searchFlag) {
+                $jsonFromDb = substr($line, strlen($searchFlag));
+                break;
+            }
+        }
+        $modemSerials = $model->modem()->whereNotNull('serial_num')->distinct()->pluck('serial_num');
+
+        foreach ($modemSerials as $modemSerial) {
+            $modem = Modem::callGenieAcsApi("devices/?query={\"_deviceId._SerialNumber\":\"{$modemSerial}\"}", 'GET');
+            $parametersArray = $this->buildElementList($this->getFromDevices($modem));
+
+            if (! empty($parametersArray)) {
+                break;
+            }
+        }
+
+        if (empty($parametersArray)) {
+            return [];
+        }
+
+        $jsonArrayPage = [];
+        $listCounter = 0;
+
+        // delete all parameters of the config in the list we got from /devices
+        // so that no parameter is in both lists
+        foreach (json_decode($jsonFromDb, true) as $jsName => $jsonArray) {
+            $jsonArrayPage[$listCounter]['name'] = $jsName;
+            foreach ($jsonArray as $jKey => $jElement) {
+                $jsonArrayPage[$listCounter]['content'][] = ['id' => $jElement, 'name' => $jKey];
+                foreach ($parametersArray as $oKey => $oElement) {
+                    if ($jElement == $oElement['id']) {
+                        unset($parametersArray[$oKey]);
+                    }
+                }
+            }
+            $listCounter++;
+        }
+
+        array_unshift($jsonArrayPage, ['name' => 'listdevices', 'content' => array_values($parametersArray)]);
+
+        foreach ($jsonArrayPage as $jsonArray) {
+            if (! array_key_exists('content', $jsonArray)) {
+                $jsonArray['content'] = [];
+            }
+            $lists[] = $jsonArray;
+        }
+
+        return ['lists' => $lists, 'searchFlag' => $searchFlag];
     }
 
     /**
