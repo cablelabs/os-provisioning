@@ -14,9 +14,9 @@
     {{ Form::close() }}
 
 @if (multi_array_key_exists(['lists', 'searchFlag'], $additional_data))
-<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js"></script>
-<script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
-<script src="https://unpkg.com/vuedraggable@2.20.0/dist/vuedraggable.umd.min.js"></script>
+<script src="{{asset('components/assets-admin/plugins/vue/dist/vue.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/sortable/Sortable.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/vuedraggable/dist/vuedraggable.umd.min.js')}}"></script>
 
 <div id="app" class="dragdropfield">
     <h2>Build your interface:</h2>
