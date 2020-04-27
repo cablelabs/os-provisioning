@@ -21,14 +21,14 @@
 <div id="app" class="dragdropfield">
     <h2>Build your interface:</h2>
     <div class="box" id="left">
-        <draggable v-model="lists" :group="{ name: 'g1' }" class="droplist" >
+        <draggable v-model="lists" :group="{ name: 'g1' }" class="droplist" :options="{draggable: '.list-group', filter: 'input', preventOnFilter: false}">
             <div v-for="(list, key) in lists" v-if="key != '0'" class="list-group">
                 <div class="listbox">
                     <div class="h">
                         <input type="text" v-model="list.name">
                         <button class="btn btn-primary" @click="delList(key)">Delete list</button>
                     </div>
-                    <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone">
+                    <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone" :options="{draggable: '.listitem', filter: 'input', preventOnFilter: false}">
                         <div class="listitem" v-for="(item, id) in list.content" :key="item.id">
                             <div :class="item.id">@{{ item.id }} : <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id)"/></div>
                         </div>
@@ -50,7 +50,7 @@
                     <div class="h">
                         <input type="text" value="Parameters for this device" readonly="true">
                     </div>
-                    <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone">
+                    <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone" :options="{draggable: '.listitem', filter: 'input', preventOnFilter: false}">
                         <div class="listitem" v-for="(item, id) in list.content" :key="item.id">
                             <div :class="item.id">@{{ item.id }} <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id)"/></div>
                         </div>
