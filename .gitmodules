@@ -1,0 +1,9 @@
+[submodule "public/components/assets-admin/plugins/vue"]
+	path = public/components/assets-admin/plugins/vue
+	url = https://github.com/vuejs/vue
+[submodule "public/components/assets-admin/plugins/sortable"]
+	path = public/components/assets-admin/plugins/sortable
+	url = https://github.com/SortableJS/Sortable
+[submodule "public/components/assets-admin/plugins/vuedraggable"]
+	path = public/components/assets-admin/plugins/vuedraggable
+	url = https://github.com/SortableJS/Vue.Draggable
