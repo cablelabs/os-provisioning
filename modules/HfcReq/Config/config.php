@@ -17,4 +17,10 @@ return [
             'class' => NetElement::class,
         ],
     ],
+    'hfParameters' => [
+        'us_pwr' => 'US Power',
+        'us_snr' => 'US SNR',
+        'ds_pwr' => 'DS Power',
+        'ds_snr' => 'DS SNR',
+    ],
 ];
