@@ -1,12 +1,12 @@
-[submodule "public/components/assets-admin/plugins/vue"]
+[submodule "public/components/assets-admin/plugins/vue"] # @v2.6.11
 	path = public/components/assets-admin/plugins/vue
 	url = https://github.com/vuejs/vue
 	ignore = all
-[submodule "public/components/assets-admin/plugins/sortable"]
+[submodule "public/components/assets-admin/plugins/sortable"] # @1.10.2
 	path = public/components/assets-admin/plugins/sortable
 	url = https://github.com/SortableJS/Sortable
 	ignore = all
-[submodule "public/components/assets-admin/plugins/vuedraggable"]
+[submodule "public/components/assets-admin/plugins/vuedraggable"] # @v2.23.2
 	path = public/components/assets-admin/plugins/vuedraggable
 	url = https://github.com/SortableJS/Vue.Draggable
 	ignore = all
