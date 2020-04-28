@@ -5,15 +5,6 @@ buttons: [
         titleAttr: "{!! trans('helper.PrintVisibleTable') !!}",
         exportOptions: {columns: ':visible.content'}
     },
-    @if (Str::contains(Route::currentRouteName(),'index') && Route::has($route_name.'.import'))
-    {
-	text: '{{ trans("view.jQuery_ImportCsv") }}',
-	action: function ( e, dt, button, config ) {
-		window.location = "{{ isset($route_name) ? route($route_name.'.import') : '' }}";
-		},
-	className: 'btn-sm btn-primary'
-    },
-    @endif
     {
         extend: 'collection',
         text: "{{ trans('view.jQuery_ExportTo') }}",

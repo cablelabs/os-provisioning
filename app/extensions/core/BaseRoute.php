@@ -97,28 +97,6 @@ class BaseRoute
             $options,
         ]);
 
-        // Import
-        Route::get("$name/import", [
-            'as' => $name.'.import',
-            'uses' => $controller.'@import',
-            'middleware' => ['web', 'can:create,'.$models[$name]],
-            $options,
-        ]);
-
-        Route::post("$name/import_parse", [
-            'as' => $name.'.import_parse',
-            'uses' => $controller.'@import_parse',
-            'middleware' => ['web', 'can:create,'.$models[$name]],
-            $options,
-        ]);
-
-        Route::post("$name/import_process", [
-            'as' => $name.'.import_process',
-            'uses' => $controller.'@import_process',
-            'middleware' => ['web', 'can:create,'.$models[$name]],
-            $options,
-        ]);
-
         // edit
         Route::get("$name/{{$name}}", [
             'as' => $name.'.edit',
