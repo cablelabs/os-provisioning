@@ -32,7 +32,6 @@ return [
     'jQuery_colvisRestore'      => 'Restore',
     'jQuery_colvisReset'        => 'Reset',
     'jQuery_ExportTo'           => 'Export to',
-    'jQuery_ImportCsv'              => 'import CSV',
     //MENU
     //Main Menu
     'Menu_Apartment'            => 'Apartments',
