@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
-class DropCsvImportTable extends BaseMigration
+class DropCsvDataTable extends BaseMigration
 {
     protected $tablename = 'csv_data';
 
