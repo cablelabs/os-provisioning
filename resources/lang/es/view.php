@@ -32,7 +32,6 @@ return [
     'jQuery_colvisRestore'      => 'Restaurar',
     'jQuery_colvisReset'        => 'Reiniciar',
     'jQuery_ExportTo'           => 'Exportar a',
-    'jQuery_ImportCsv'              => 'importar CSV',
     //MENU
     //Main Menu
     'Menu_Apartment'            => 'Apartamentos',
@@ -44,7 +43,7 @@ return [
     'Menu_MainMenu'             => 'Menú Principal',
     'Menu_Node'                 => 'Nodos',
     'Menu_Config Page'          => 'Configuración global',
-    'Menu_Logging'              => 'Registro',
+    'Menu_Log'                  => 'Registro',
     'Menu_Product List'         => 'Lista de productos',
     'Menu_SEPA Accounts'        => 'Cuenta de SEPA',
     'Menu_Settlement Run'       => 'Procesos de liquidacion',
@@ -168,7 +167,7 @@ return [
     //Contract
     'Header_Salesman'           => 'Vendedores',
     'Header_Contract'           => 'Contrato|Contratos',
-    'Header_ContractInfoApartments' => 'Contracts of realty (info)',
+    'Header_ContractInfoApartment' => 'Contracts of realty (info)',
     'Header_ContractInfoRealty' => 'Información: Contrato de módems',
     'Header_EditContract'       => 'Editar contrato',
     'Header_GroupContracts'      => 'Group Contracts',
@@ -243,6 +242,8 @@ return [
     'Header_DebtResult'         => 'Total de pagos pendientes',
     'Header_Node'               => 'Nodos',
     'Header_Realty'             => 'Bienes raices',
+    'Header_SubNetElement'      => 'Subordinated Netelements',
+    'Header_tap'                => 'Controllable tap port',
 
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',

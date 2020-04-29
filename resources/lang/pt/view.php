@@ -32,7 +32,6 @@ return [
     'jQuery_colvisRestore'      => 'Restore',
     'jQuery_colvisReset'        => 'Reset',
     'jQuery_ExportTo'           => 'Export to',
-    'jQuery_ImportCsv'              => 'import CSV',
     //MENU
     //Main Menu
     'Menu_Apartment'            => 'Apartments',
@@ -44,7 +43,7 @@ return [
     'Menu_MainMenu'             => 'Main Menu',
     'Menu_Node'                 => 'Nodes',
     'Menu_Config Page'          => 'Global Config Page',
-    'Menu_Logging'              => 'Logging',
+    'Menu_Log'                  => 'Log',
     'Menu_Product List'         => 'Product List',
     'Menu_SEPA Accounts'        => 'SEPA Accounts',
     'Menu_Settlement Run'       => 'Settlement Run',
@@ -168,7 +167,7 @@ return [
     //Contract
     'Header_Salesman'           => 'Salesman|Salesmen',
     'Header_Contract'           => 'Contract|Contracts',
-    'Header_ContractInfoApartments' => 'Contracts of realty (info)',
+    'Header_ContractInfoApartment' => 'Contracts of realty (info)',
     'Header_ContractInfoRealty' => 'Info: Contract of modems',
     'Header_EditContract'       => 'Edit Contract',
     'Header_GroupContracts'      => 'Group Contracts',
@@ -243,6 +242,8 @@ return [
     'Header_DebtResult'         => 'Outstanding payments total',
     'Header_Node'               => 'Nodes',
     'Header_Realty'             => 'Realties',
+    'Header_SubNetElement'      => 'Subordinated Netelements',
+    'Header_tap'                => 'Controllable tap port',
 
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',
