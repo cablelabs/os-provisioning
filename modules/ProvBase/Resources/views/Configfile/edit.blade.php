@@ -30,7 +30,7 @@
                     </div>
                     <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone" :options="{draggable: '.listitem', filter: 'input', preventOnFilter: false}">
                         <div class="listitem" v-for="(item, id) in list.content" :key="item.id">
-                            <div :class="item.id">@{{ item.id }} : <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id)"/></div>
+                            <div :class="item.id">@{{ item.id }} <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id)"/></div>
                         </div>
                     </draggable>
                 </div>
