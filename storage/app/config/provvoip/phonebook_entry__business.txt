@@ -4454,6 +4454,7 @@ Berufsförderungsdienst
 Berufsförderungsinstitut
 Berufsförderungswerk
 Berufsfortbildungsstätte
+BerufsGeschaeftsbezeichnung
 Berufsimkerei
 Berufskleiderfabrikation
 Berufskleidungsmietservice
@@ -9908,6 +9909,7 @@ Fachärztinnen für Innere Medizin-Rheumatologie
 Fachärztinnen für Kinder- und Jugendmedizin
 Fachärztinnen für Kinderheilkunde
 Fachärztinnen für Kinderheilkunde und Jugendmedizin
+Fachärztinnen für Neurologie
 Fachärztinnen für Neurologie und Psychiatrie
 Fachärztinnen für Nuklearmedizin
 Fachärztinnen für Psychiatrie
@@ -13818,6 +13820,7 @@ Gesundheitstherapeut
 Gesundheitstherapeutin
 Gesundheitstrainer
 Gesundheitstrainerin
+Gesundheitstraining
 Gesundheitswissenschaftler
 Gesundheitswissenschaftlerin
 Gesundheitszentrum
@@ -14405,6 +14408,7 @@ Großhandel für Jagdbedarf
 Großhandel für Kerzen
 Großhandel für Kinderbekleidung
 Großhandel für Kommunikationstechnik
+Großhandel für Kosmetikeinrichtung
 Großhandel für Küchen
 Großhandel für Küchengeschirr
 Großhandel für Künstlerbedarf
@@ -15534,6 +15538,7 @@ Heilpraktikerin für Klangtherapie
 Heilpraktikerin für Klassische Homöopathie
 Heilpraktikerin für Körperorientierte Psychotherapie
 Heilpraktikerin für Kunsttherapie
+Heilpraktikerin für LösUS
 Heilpraktikerin für Naturheilverfahren
 Heilpraktikerin für Osteopathie
 Heilpraktikerin für Physiotherapie
@@ -25515,6 +25520,7 @@ Nutzviehmarkt
 ö.b.u.v. Sachverständiger für Abwasserbeseitigung
 ö.b.u.v. Sachverständiger für Akustik
 ö.b.u.v. Sachverständiger für Bauschäden
+ö.b.u.v. Sachverständiger für Bautentrocknung
 ö.b.u.v. Sachverständiger für Bauwerksabdichtungen
 ö.b.u.v. Sachverständiger für Blitzschutzbau
 ö.b.u.v. Sachverständiger für das Bootsbauerhandwerk
@@ -32174,6 +32180,7 @@ Schweinezucht
 Schweinezuchtbetrieb
 Schweißaggregate
 Schweißarbeit
+Schweißarbeiten
 Schweißatelier
 Schweißbetrieb
 Schweißdienst
@@ -35332,6 +35339,7 @@ Technische Industrievertretung
 Technische Informatik
 Technische Konfektionärin
 Technische Kundenberatung
+Technische Kunststoffe
 Technische Kunststoffsysteme
 Technische Lehrerin a.D.
 Technische Liegenschaftsverwaltungen
@@ -38154,6 +38162,7 @@ Vermietung von Verkehrszeichen
 Vermietung von Wohnraum
 Vermietungsagentur
 Vermietungsbüro
+Vermietungsservice
 Vermitlung von Investmentfonds
 Vermittler für Werbeflächen
 Vermittlung für Ferienunterkünfte
@@ -38383,6 +38392,7 @@ Versicherungsfachfrau (BWV)
 Versicherungsfachlehrer
 Versicherungsfachmann
 Versicherungsfachmann ( BWV)
+Versicherungsfachmann (IHK)
 Versicherungsfachwirt
 Versicherungsfachwirte
 Versicherungsfachwirtin
@@ -38973,6 +38983,7 @@ Visagistenschule
 Visagistenstudio
 Visagistin
 Visaservice
+Visezeralchirurgie
 Visitenkartendruck
 Visitenkartenvertrieb
 Visualtraining
