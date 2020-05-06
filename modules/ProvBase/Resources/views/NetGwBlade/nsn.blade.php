@@ -9,7 +9,7 @@ hostname {{$cb->hostname}}
 bridge
  xdsl add line-config-profile default
  xdsl line-config-profile default use-profile-number profile17a
- xdsl 1 line-config default
+ xdsl 1-8 line-config default
  bridgebase taggingmode single
  bridgebase routing-mode unrestricted
  vlan create {!!$cb->mgmt_vlan!!},{!!$cb->customer_vlan!!}
