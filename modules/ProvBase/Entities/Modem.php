@@ -1299,7 +1299,7 @@ class Modem extends \BaseModel
             }
         }
 
-        if ($this->us_pwr > \Modules\HfcCustomer\Entities\ModemHelper::$single_critical_us) {
+        if ($this->us_pwr > config('hfccustomer.threshhold.single.us.critical')) {
             if ($return_type == 'string') {
                 return 'critical';
             } else {
@@ -1307,7 +1307,7 @@ class Modem extends \BaseModel
             }
         }
 
-        if ($this->us_pwr > \Modules\HfcCustomer\Entities\ModemHelper::$single_warning_us) {
+        if ($this->us_pwr > config('hfccustomer.threshhold.single.us.warning')) {
             if ($return_type == 'string') {
                 return 'warning';
             } else {

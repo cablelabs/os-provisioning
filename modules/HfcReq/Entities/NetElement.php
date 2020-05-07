@@ -173,8 +173,6 @@ class NetElement extends \BaseModel
      */
     public function scopeWithActiveModems($query, $field = 'id', $operator = '>', $id = 2)
     {
-        $ModemHelper = \Modules\HfcCustomer\Entities\ModemHelper::class;
-
         return $query->where($field, $operator, $id)
         ->orderBy('pos')
         ->withCount([
@@ -182,8 +180,8 @@ class NetElement extends \BaseModel
             'modems as modems_online_count' => function ($query) {
                 $query->where('us_pwr', '>', '0');
             },
-            'modems as modems_critical_count' => function ($query) use ($ModemHelper) {
-                $query->where('us_pwr', '>', $ModemHelper::$single_critical_us);
+            'modems as modems_critical_count' => function ($query) {
+                $query->where('us_pwr', '>', config('hfccustomer.threshhold.single.us.critical'));
             },
         ]);
     }
