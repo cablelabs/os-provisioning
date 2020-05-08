@@ -352,3 +352,16 @@ function humanFilesize($bytes, $dec = 2)
 
     return sprintf("%.{$dec}f ", $bytes / pow(1024, $factor)).@$size[$factor];
 }
+
+/**
+ * Negates all values that are given as parameter
+ *
+ * @param int ...$values
+ * @return array
+ */
+function negate(int ...$values): array
+{
+    return array_map(function ($value) {
+        return -1 * $value;
+    }, $values);
+}
