@@ -257,11 +257,12 @@ class NetGw extends \BaseModel
         }
 
         // get provisioning IP and interface
-        $this->prov_ip = ProvBase::first()->provisioning_server;
+        $conf = ProvBase::first();
+        $this->prov_ip = $conf->provisioning_server;
         exec('ip a | grep '.$this->prov_ip.' | tr " " "\n" | tail -n1', $prov_if);
         $this->prov_if = (isset($prov_if[0]) ? $prov_if[0] : 'eth');
 
-        $this->domain = ProvBase::first()->domain_name;
+        $this->domain = $conf->domain_name;
         $this->router_ip = env('NETGW_DEFAULT_GW', '172.20.3.254');
         $this->netmask = env('NETGW_IP_NETMASK', '255.255.252.0');
         $this->prefix = env('NETGW_IP_PREFIX', '22');
@@ -270,8 +271,8 @@ class NetGw extends \BaseModel
         $this->mgmt_vlan = env('MGMT_VLAN', '100');
         $this->customer_vlan = env('CUSTOMER_VLAN', '101');
 
-        $this->snmp_ro = $this->get_ro_community();
-        $this->snmp_rw = $this->get_rw_community();
+        $this->snmp_ro = $this->community_ro ?: $conf->ro_community;
+        $this->snmp_rw = $this->community_rw ?: $conf->rw_community;
 
         // Help section: onhover
         $this->enable_secret = '<span title="NETGW_ENABLE_SECRET and NETGW_SAVE_ENCRYPTED_PASSWORDS"><b>'.$this->enable_secret.'</b></span>';
