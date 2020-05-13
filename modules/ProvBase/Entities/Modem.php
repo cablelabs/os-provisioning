@@ -1634,8 +1634,9 @@ class Modem extends \BaseModel
             return;
         }
 
-        // add RadCheck, if it doesn't exist
-        if (! $this->radcheck()->count()) {
+        // renew RadCheck, if non-exisiting or not as expected
+        if ($this->radcheck()->count() != 2) {
+            $this->radcheck()->delete();
             $psw = $this->ppp_password;
             if (! $psw) {
                 $psw = \Acme\php\Password::generate_password();
@@ -1650,6 +1651,13 @@ class Modem extends \BaseModel
             $check->attribute = 'Cleartext-Password';
             $check->op = ':=';
             $check->value = $psw;
+            $check->save();
+
+            $check = new RadCheck;
+            $check->username = $this->ppp_username;
+            $check->attribute = 'Pool-Name';
+            $check->op = ':=';
+            $check->value = $this->public ? 'CPEPub' : 'CPEPriv';
             $check->save();
 
             return;
