@@ -202,7 +202,7 @@ class EndpointObserver
 
         // reset state of original ip address
         RadIpPool::where('framedipaddress', $endpoint->getOriginal('ip'))
-            ->update(['expiry_time' => null]);
+            ->update(['expiry_time' => null, 'username' => '']);
 
         if ($endpoint->deleted_at || ! $endpoint->ip || ! $endpoint->modem->isPPP()) {
             return;
@@ -218,6 +218,6 @@ class EndpointObserver
 
         // set expiry_time to 'infinity' for reserved ip addresses
         RadIpPool::where('framedipaddress', $endpoint->ip)
-            ->update(['expiry_time' => '9999-12-31 23:59:59']);
+            ->update(['expiry_time' => '9999-12-31 23:59:59', 'username' => $endpoint->modem->ppp_username]);
     }
 }
