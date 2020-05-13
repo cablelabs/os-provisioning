@@ -1683,7 +1683,10 @@ class Modem extends \BaseModel
             $this->radusergroups()->delete();
 
             // default and QoS-specific group
-            foreach ([RadGroupReply::$defaultGroup, $this->qos_id] as $groupname) {
+            foreach (array_unique([RadGroupReply::$defaultGroup, $this->qos_id]) as $groupname) {
+                if ($groupname === null) {
+                    continue;
+                }
                 $group = new RadUserGroup;
                 $group->username = $this->ppp_username;
                 $group->groupname = $groupname;
