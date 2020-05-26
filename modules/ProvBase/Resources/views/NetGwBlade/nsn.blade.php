@@ -22,7 +22,7 @@ bridge
 !
 interface br{!!$cb->mgmt_vlan!!}
  no shutdown
- ip address {!!$cb->ip!!}/{!!$cb->prefix!!}
+ ip address {{$cb->ip}}/{!!$cb->prefix!!}
 !
 snmp community ro {!!$cb->snmp_ro!!} {!!$cb->prov_ip!!}
 snmp community rw {!!$cb->snmp_rw!!} {!!$cb->prov_ip!!}

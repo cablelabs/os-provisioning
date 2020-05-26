@@ -24,7 +24,7 @@ onu-profile gpon remote universal
   vlan port eth_0/1 mode transparent
 !
 interface vlan {!!$cb->mgmt_vlan!!}
-  ip address {!!$cb->ip!!} {!!$cb->netmask!!}
+  ip address {{$cb->ip}} {!!$cb->netmask!!}
 !
 interface gpon-olt_x/y/z
   auto-learning enable

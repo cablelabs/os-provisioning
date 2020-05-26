@@ -16,7 +16,7 @@ HOWTO: setup a new NETGW
 {{-- NETGW setup code --}}
 <pre>
 interface {!!$cb->interface!!}.{!!$cb->mgmt_vlan!!}
- ip address {!!$cb->ip!!} {!!$cb->netmask!!}
+ ip address {{$cb->ip}} {!!$cb->netmask!!}
  no shutdown
 
 copy tftp://{!!$cb->prov_ip!!}/netgw/{!!$cb->hostname!!}.cfg startup-config
