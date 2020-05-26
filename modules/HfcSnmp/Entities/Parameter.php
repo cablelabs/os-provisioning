@@ -7,6 +7,7 @@ class Parameter extends \BaseModel
     public $table = 'parameter';
 
     public $guarded = ['name', 'table'];
+    protected $with = ['oid'];
 
     public static function boot()
     {
