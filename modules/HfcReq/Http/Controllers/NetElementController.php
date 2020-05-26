@@ -55,13 +55,13 @@ class NetElementController extends HfcBaseController
 
         if ($type == 9) {
             $parents = $netelement->html_list(NetElement::where('netelementtype_id', 8)->get(), 'name');
-            $types = NetElementType::where('id', $type)->get(['id', 'name']);
+            $types = NetElementType::where('id', $type)->get();
             $hidden4TapPort = 1;
 
             $addressDesc1 = 'RKS Port'; // Used as address to control the attenuation setting via Sat-Kabel-RKS-Server
         } else {
             $parents = $netelement->getParentList();
-            $types = NetElementType::get(['id', 'name']);
+            $types = NetElementType::get();
         }
 
         /*
@@ -104,7 +104,7 @@ class NetElementController extends HfcBaseController
          * return
          */
         $a = [
-            ['form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $netelement->html_list($types, 'name'), 'hidden' => 0],
+            ['form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $netelement->html_list($types, ['name', 'version'], true, ' - '), 'hidden' => 0],
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
             // array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['NET' => 'NET', 'NETGW' => 'NETGW', 'DATA' => 'DATA', 'CLUSTER' => 'CLUSTER', 'NODE' => 'NODE', 'AMP' => 'AMP']),
             // net is automatically detected in Observer
