@@ -131,7 +131,7 @@ class NetElement extends \BaseModel
 
         $icingaObj = $this->icingaobject;
         if ($icingaObj && $icingaObj->is_active) {
-            $icingaObj = $icingaObj->icingahoststatus;
+            $icingaObj = $icingaObj->hoststatus;
             if ($icingaObj) {
                 return $icingaObj->last_hard_state ? 'danger' : 'success';
             }
