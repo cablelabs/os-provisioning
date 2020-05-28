@@ -67,7 +67,7 @@
           <li  class='m-t-10' style='font-size: 2em; font-weight: bold'>
             <a href="{{ route('CustomerTopo.show_impaired') }}" style="text-decoration: none;">
               @if (is_object($modem_statistics))
-                <span data-toggle="tooltip" data-placement="auto" title="{{trans('messages.modem_statistics',1)}}">
+                <span data-toggle="tooltip" data-placement="auto" title="{{ trans('messages.modem_statistics') }}">
                   <i class="{{ $modem_statistics->fa }} fa-lg text-{{ $modem_statistics->style }}"></i>
                   <span class="badge badge-{{ $modem_statistics->style }}">{!! $modem_statistics->text !!}</span>
                 </span>
