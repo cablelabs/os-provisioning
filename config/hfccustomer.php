@@ -32,8 +32,8 @@ return [
         ],
         'avg' => [
             'us' => [
-                'warning' => 35,
-                'critical' => 40,
+                'warning' => 45,
+                'critical' => 52,
             ],
             'percentage' => [
                 'warning' => 70,
