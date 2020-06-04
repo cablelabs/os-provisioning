@@ -181,7 +181,7 @@ class NetElement extends \BaseModel
                 $query->where('us_pwr', '>', '0');
             },
             'modems as modems_critical_count' => function ($query) {
-                $query->where('us_pwr', '>', config('hfccustomer.threshhold.single.us.critical'));
+                $query->where('us_pwr', '>=', config('hfccustomer.threshhold.single.us.critical'));
             },
         ]);
     }
