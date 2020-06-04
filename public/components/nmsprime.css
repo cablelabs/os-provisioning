@@ -684,8 +684,23 @@ ul.nav.nav-pills li {
 .dragdropfield .newlist {
     margin-top: 12px;
 }
-@media(max-width: 800px) {
+@media (max-width: 800px) {
     .dragdropfield .box {
         width: 100%;
+    }
+}
+@media (min-width: 1700px) {
+    .d-wide-table-cell {
+        display: table-cell !important;
+    }
+
+    .d-wide-none {
+        display: none !important;
+    }
+}
+
+@media (min-width: 1200px) and (max-width: 1699px) {
+    .breakAll {
+        word-break: break-all;
     }
 }
