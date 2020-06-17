@@ -425,7 +425,7 @@ return [
     'Registration Court 3'  => 'Verwaltungsgericht 3',
     'Sales Tax Id Nr'       => 'Umsatzsteuer-Nr',
     'Tax Nr'                => 'Steuer-Nr.',
-    'Transfer Reason for Invoices'  => 'Grund für Rechnungsübertrag',
+    'Transfer Reason for Invoices'  => 'Verwendungszweck für Rechnung (Format)',
     'Upload logo'           => 'Logo hochladen',
     'Web address'           => 'Web-Adresse',
     'Zip'                   => 'PLZ',
