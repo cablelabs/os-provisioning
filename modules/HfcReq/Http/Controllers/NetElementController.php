@@ -149,6 +149,7 @@ class NetElementController extends HfcBaseController
 
     public function prepare_input($data)
     {
+        $data['name'] = str_replace(['"', '\\'], '', $data['name']);
         $data = parent::prepare_input($data);
 
         // set default offset if none was given
