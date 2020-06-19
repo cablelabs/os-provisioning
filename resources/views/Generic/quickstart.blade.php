@@ -23,5 +23,5 @@
         @endforeach
     </div>
     {{-- reference link --}}
-    <div class="stats-link"><a href="#">{{ trans('view.Dashboard_Quickstart') }}</a></div>
+    <div class="stats-link noHover"><a href="#">{{ trans('view.Dashboard_Quickstart') }}</a></div>
 </div>

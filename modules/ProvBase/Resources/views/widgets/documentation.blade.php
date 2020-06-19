@@ -38,5 +38,5 @@
 
     </div>
     {{-- reference link --}}
-    <div class="stats-link"><a href="#">{{ trans('view.Dashboard_Help') }}</a></div>
+    <div class="stats-link noHover"><a href="#">{{ trans('view.Dashboard_Help') }}</a></div>
 </div>

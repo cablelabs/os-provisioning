@@ -76,7 +76,7 @@
                     !!}
 
                     {{-- reference link --}}
-                    <div class="stats-link"><a href="#"><br></a></div>
+                    <div class="stats-link noHover"><a href="#"><br></a></div>
 
                 </div>
             @DivClose()
