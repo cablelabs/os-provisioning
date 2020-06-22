@@ -383,7 +383,7 @@ class Modem extends \BaseModel
             return;
         }
 
-        $ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
+        $ret = 'host '.$this->hostname.' { hardware ethernet '.$this->mac.'; filename "cm/'.$this->hostname.'.cfg"; ddns-hostname "'.$this->hostname.'";';
 
         if (Module::collections()->has('ProvVoip') && $this->mtas()->pluck('mac')->filter(function ($mac) {
             return stripos($mac, 'ff:') !== 0;
@@ -587,7 +587,7 @@ class Modem extends \BaseModel
 
         $conf = file(self::CONF_FILE_PATH);
 
-        // TODO: check for hostname to avoid deleting the wrong entry when mac exists multiple times in DB !?
+        // Check for hostname to avoid deleting the wrong entry when mac exists multiple times in DB !?
         foreach ($conf as $key => $line) {
             if (strpos($line, "$this->hostname {") !== false) {
                 unset($conf[$key]);
