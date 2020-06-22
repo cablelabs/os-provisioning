@@ -162,12 +162,13 @@ class Modem extends \BaseModel
     }
 
     /**
-     * return all Configfile Objects for CMs
+     * return all Configfile Objects for CMs (for Edit view)
      */
     public function configfiles()
     {
-        return DB::table('configfile')->select(['id', 'name'])->whereNull('deleted_at')->whereIn('device', self::TYPES)->where('public', '=', 'yes')->get();
-        // return Configfile::select(['id', 'name'])->where('device', '=', 'CM')->where('public', '=', 'yes')->get();
+        $types = $this->exists ? [$this->configfile->device] : self::TYPES;
+
+        return Configfile::select(['id', 'name'])->where('public', '=', 'yes')->whereIn('device', $types)->get();
     }
 
     /**
