@@ -258,7 +258,7 @@ class Configfile extends \BaseModel
             default:
                 return false;
 
-        }	// switch
+        } // switch
 
         // Generate search and replace arrays
         $search = [];
@@ -319,6 +319,12 @@ class Configfile extends \BaseModel
      */
     protected static function _calc_eval($row, $match)
     {
+        // allow left-over {} in case of raw genieacs commands,
+        // since this might be valid code, e.g. {value: Date.now()}
+        if (\Str::startsWith($row, 'raw;')) {
+            return $row;
+        }
+
         $match = trim($match[0], '{}');
         $ops = explode(',', $match);
 
@@ -380,7 +386,7 @@ class Configfile extends \BaseModel
             $modem->make_configfile();
         }
 
-        $mtas = $this->mtas;		// This should be a one-to-one relation
+        $mtas = $this->mtas; // This should be a one-to-one relation
         foreach ($mtas as $mta) {
             $mta->make_configfile();
         }
@@ -408,7 +414,7 @@ class Configfile extends \BaseModel
      * @author Ole Ernst
      *
      * NOTE: DB::table would reduce time again by 30%, setting index_delete_disabled of CFs
-     *	instead of creating used_ids array slows function down
+     *       instead of creating used_ids array slows function down
      */
     public static function undeletables()
     {
