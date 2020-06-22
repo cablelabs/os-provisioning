@@ -1753,8 +1753,6 @@ class ModemObserver
 
         $modem->save();  // forces to call the updating() and updated() method of the observer !
 
-        Modem::create_ignore_cpe_dhcp_file();
-
         if (Module::collections()->has('ProvMon')) {
             Log::info("Create cacti diagrams for modem: $modem->hostname");
             \Artisan::call('nms:cacti', ['--netgw-id' => 0, '--modem-id' => $modem->id]);
