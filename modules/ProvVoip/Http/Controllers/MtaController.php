@@ -31,9 +31,11 @@ class MtaController extends \BaseController
 //                    if($last_mta = $modem->mtas()->orderBy('updated_at', 'desc')->first()){
 //                        $mac = $last_mta->mac;
 //                    }
-                    $dec_mac = hexdec($mac);
-                    $dec_mac++;
-                    $mac = rtrim(strtoupper(chunk_split(str_pad(dechex($dec_mac), 12, '0', STR_PAD_LEFT), 2, ':')), ':');
+                    if ($mac) {
+                        $dec_mac = hexdec($mac);
+                        $dec_mac++;
+                        $mac = rtrim(strtoupper(chunk_split(str_pad(dechex($dec_mac), 12, '0', STR_PAD_LEFT), 2, ':')), ':');
+                    }
                 }
             }
         }
@@ -111,5 +113,17 @@ class MtaController extends \BaseController
         ->implode(', ');
 
         return response()->json(['ret' => $err ?: 'success']);
+    }
+
+    public function prepare_rules($rules, $data)
+    {
+        $modem = Modem::where('id', $data['modem_id'])->with('configfile')->first();
+
+        if ($modem->configfile->device == 'cm') {
+            $id = $data['id'] ?? null;
+            $rules['mac'] .= '|required|unique:mta,mac,'.$id.',id,deleted_at,NULL'; //|unique:mta,mac',
+        }
+
+        return parent::prepare_rules($rules, $data);
     }
 }

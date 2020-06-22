@@ -384,6 +384,9 @@ class ModemController extends \BaseController
             $id = \Route::current()->hasParameter('Modem') ? \Route::current()->parameters()['Modem'] : 0;
             $rules['serial_num'] = "required|unique:modem,serial_num,$id,id,deleted_at,NULL";
             $rules['ppp_username'] = "required|unique:modem,ppp_username,$id,id,deleted_at,NULL";
+        } else {
+            $id = $data['id'] ?? null;
+            $rules['mac'] .= '|required|unique:modem,mac,'.$id.',id,deleted_at,NULL';
         }
 
         return parent::prepare_rules($rules, $data);

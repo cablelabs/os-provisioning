@@ -29,7 +29,7 @@ class Modem extends \BaseModel
     public static function rules($id = null)
     {
         return [
-            'mac' => 'required|mac|unique:modem,mac,'.$id.',id,deleted_at,NULL',
+            'mac' => 'mac',
             'ppp_username' => 'nullable|unique:modem,ppp_username,'.$id.',id,deleted_at,NULL',
             'birthday' => 'nullable|date',
             'country_code' => 'regex:/^[A-Z]{2}$/',
@@ -107,8 +107,8 @@ class Modem extends \BaseModel
 
     public function label()
     {
-        // return $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : '');
-        $label = $this->mac.($this->name ? ' - '.$this->name : '');
+        $label = $this->mac ?: $this->ppp_username;
+        $label .= $this->name ? ' - '.$this->name : '';
         $label .= $this->firstname ? ' - '.$this->firstname.' '.$this->lastname : '';
 
         return $label;

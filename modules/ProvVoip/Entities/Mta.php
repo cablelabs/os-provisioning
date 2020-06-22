@@ -17,7 +17,7 @@ class Mta extends \BaseModel
     public static function rules($id = null)
     {
         return [
-            'mac' => 'required|mac|unique:mta,mac,'.$id.',id,deleted_at,NULL', //|unique:mta,mac',
+            'mac' => 'mac',
             'modem_id' => 'required|exists:modem,id,deleted_at,NULL|min:1',
             'configfile_id' => 'required|exists:configfile,id,deleted_at,NULL|min:1',
             // 'hostname' => 'required|unique:mta,hostname,'.$id,
@@ -46,7 +46,7 @@ class Mta extends \BaseModel
     {
         return ['table' => $this->table,
             'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.type', 'configfile.name'],
-            'header' => $this->hostname.' - '.$this->mac,
+            'header' => $this->hostname.($this->mac ? ' - '.$this->mac : ''),
             'bsclass' => $this->get_bsclass(),
             'order_by' => ['3' => 'asc'],
             'edit' => ['configfile.name' => 'has_configfile_assigned'],
