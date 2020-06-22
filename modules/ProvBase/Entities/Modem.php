@@ -383,6 +383,10 @@ class Modem extends \BaseModel
             return;
         }
 
+        if (! $this->mac) {
+            return '';
+        }
+
         $ret = 'host '.$this->hostname.' { hardware ethernet '.$this->mac.'; filename "cm/'.$this->hostname.'.cfg"; ddns-hostname "'.$this->hostname.'";';
 
         if (Module::collections()->has('ProvVoip') && $this->mtas()->pluck('mac')->filter(function ($mac) {
@@ -397,6 +401,10 @@ class Modem extends \BaseModel
     private function generate_cm_dhcp_entry_pub()
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
+
+        if (! $this->mac) {
+            return '';
+        }
 
         // FF-00-00-00-00 to FF-FF-FF-FF-FF reserved according to RFC7042
         if (stripos($this->mac, 'ff:') !== 0) {
@@ -475,7 +483,7 @@ class Modem extends \BaseModel
             // get all not deleted modems
             // attention: do not use “where('internet_access', '>', '0')” to shrink the list
             //   ⇒ MTAs shall get IPs even if internet_access is disabled!
-            $modems_raw = DB::select('SELECT hostname, mac FROM modem WHERE deleted_at IS NULL');
+            $modems_raw = self::whereNotNull('mac')->get();
             $modems = [];
             foreach ($modems_raw as $modem) {
                 $modems[\Str::lower($modem->mac)] = $modem->hostname;
@@ -595,7 +603,7 @@ class Modem extends \BaseModel
             }
         }
 
-        if (! $delete) {
+        if (! $delete && $data) {
             $conf[] = $data;
         }
 
@@ -622,8 +630,7 @@ class Modem extends \BaseModel
                 }
             }
 
-            // $conf_pub = str_replace($replace_pub, '', $conf_pub);
-            if (! $delete && $this->public) {
+            if (! $delete && $this->public && $data_pub) {
                 $conf_pub[] = $data_pub;
             }
 
@@ -1825,11 +1832,9 @@ class ModemObserver
         $diff = $modem->getDirty();
 
         if (multi_array_key_exists(['contract_id', 'public', 'internet_access', 'configfile_id', 'qos_id', 'mac'], $diff)) {
-            if (! $modem->isTR069()) {
-                Modem::create_ignore_cpe_dhcp_file();
-                $modem->make_dhcp_cm();
-                $modem->restart_modem(array_key_exists('mac', $diff));
-            }
+            Modem::create_ignore_cpe_dhcp_file();
+            $modem->make_dhcp_cm();
+            $modem->restart_modem(array_key_exists('mac', $diff));
             $modem->make_configfile();
         }
 
@@ -1858,11 +1863,6 @@ class ModemObserver
 
         $modem->updateRadius();
 
-        if ($modem->isPPP()) {
-            return;
-        }
-
-        // $modem->make_dhcp_cm_all();
         Modem::create_ignore_cpe_dhcp_file();
         $modem->make_dhcp_cm(true);
         $modem->restart_modem();

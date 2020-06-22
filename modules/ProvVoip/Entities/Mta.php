@@ -220,7 +220,7 @@ class Mta extends \BaseModel
 
         foreach (self::all() as $mta) {
             // FF-00-00-00-00 to FF-FF-FF-FF-FF reserved according to RFC7042
-            if ($mta->id == 0 || stripos($mta->mac, 'ff:') === 0) {
+            if ($mta->id == 0 || stripos($mta->mac, 'ff:') === 0 || ! $mta->mac) {
                 continue;
             }
 
@@ -267,7 +267,7 @@ class Mta extends \BaseModel
 
         // Note: dont replace directly as this wouldnt add the entry for a new created mta
         // FF-00-00-00-00 to FF-FF-FF-FF-FF reserved according to RFC7042
-        if (! $delete && stripos($this->mac, 'ff:') !== 0) {
+        if (! $delete && stripos($this->mac, 'ff:') !== 0 && $this->mac) {
             $conf[] = 'host mta-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "mta/mta-'.$this->id.'.cfg"; ddns-hostname "mta-'.$this->id.'"; option host-name "'.$this->id.'"; }'."\n";
         }
 
