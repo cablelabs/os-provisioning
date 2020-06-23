@@ -14,7 +14,11 @@
             @DivClose()
 
             @DivOpen(5)
-                @include('provvoip::widgets.documentation')
+                @include('Generic.widgets.moduleDocu', [ 'urls' => [
+                        'documentation' => 'https://devel.roetzer-engineering.com/confluence/display/NMS/VoIP',
+                        'youtube' => 'https://youtu.be/SxTsflcNeUQ',
+                        'forum' => 'https://devel.roetzer-engineering.com/confluence/display/nmsprimeforum/VoIP',
+                    ]])
             @DivClose()
         </div>
     </div>
