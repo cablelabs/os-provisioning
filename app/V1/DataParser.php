@@ -1,6 +1,6 @@
 <?php
 /**
- * Architect
+ * Data Parser
  *
  * @package    App\V1
  * @author     Esben Petersen
@@ -9,13 +9,11 @@
 
 namespace App\V1;
 
-use InvalidArgumentException;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-class Architect
+class DataParser
 {
-    private $modeResolvers = [];
-
     /**
      * Parse a collection using given modes.
      * @param  mixed $data The collection to be parsed
@@ -31,7 +29,7 @@ class Architect
             return substr_count($b, '.')-substr_count($a, '.');
         });
 
-        if (Utility::isCollection($data)) {
+        if (self::isCollection($data)) {
             $parsed = $this->parseCollection($modes, $data, $return);
         } else {
             $parsed = $this->parseResource($modes, $data, $return);
@@ -39,12 +37,7 @@ class Architect
 
         if ($key !== null) {
             $return[$key] = $parsed;
-        } else {
-            if (in_array('sideload', $modes)) {
-                throw new InvalidArgumentException('$key cannot be null when ' .
-                    'resources are transformed using sideload.');
-            }
-
+        }else{
             $return = $parsed;
         }
 
@@ -85,12 +78,9 @@ class Architect
     private function parseResource(array $modes, &$resource, &$root, $fullPropertyPath = '')
     {
         foreach ($modes as $relation => $mode) {
-            $modeResolver = $this->resolveMode($mode);
 
             $steps = explode('.', $relation);
 
-            // Get the first resource in the relation
-            // TODO: Refactor
             $property = array_shift($steps);
             if (is_array($resource)) {
                 if ($resource[$property] === null) {
@@ -106,11 +96,7 @@ class Architect
                 $object = &$resource->{$property};
             }
 
-            if (empty($steps)) {
-                // This is the deepest level. Resolve it.
-                $fullPropertyPath .= $relation;
-                $object = $this->modeResolvers[$mode]->resolve($relation, $object, $root, $fullPropertyPath);
-            } else {
+            if (!empty($steps)) {
                 // More levels exist in this relation.
                 // We want a drill down and resolve the deepest level first.
 
@@ -123,7 +109,7 @@ class Architect
                 // to populate the root level properly.
                 $fullPropertyPath .= $property . '.';
 
-                if (Utility::isCollection($object)) {
+                if (self::isCollection($object)) {
                     $object = $this->parseCollection($modes, $object, $root, $fullPropertyPath);
                 } else {
                     $object = $this->parseResource($modes, $object, $root, $fullPropertyPath);
@@ -132,47 +118,53 @@ class Architect
 
             // Reset the full property path after running a full relation
             $fullPropertyPath = '';
-            Utility::setProperty($resource, $property, $object);
+            self::setProperty($resource, $property, $object);
         }
 
         return $resource;
     }
 
-    /**
-     * Resolve a mode resolver class if it has not been resolved before
-     * @param  string $mode The mode to be resolved
-     * @return Optimus\Architect\ModeResolver\ModeResolverInterface
-     */
-    private function resolveMode($mode)
-    {
-        if (!isset($this->modeResolers[$mode])) {
-            $this->modeResolvers[$mode] = $this->createModeResolver($mode);
-        }
 
-        return $this->modeResolvers[$mode];
+    /**
+     * @param $objectOrArray
+     * @param $property
+     * @param $value
+     */
+    public static function setProperty(&$objectOrArray, $property, $value)
+    {
+        if ($objectOrArray instanceof Model) {
+            if ($property) {
+                if ($objectOrArray->relationLoaded($property) && !self::isPrimitive($value)) {
+                    $objectOrArray->setRelation($property, $value);
+                } else {
+                    unset($objectOrArray[$property]);
+                    $objectOrArray->setAttribute($property, $value);
+                }
+            }
+        } elseif (is_array($objectOrArray)) {
+            $objectOrArray[$property] = $value;
+        } else {
+            $objectOrArray->{$property} = $value;
+        }
     }
 
     /**
-     * Instantiate a mode resolver class
-     * @param  string $mode [description]
-     * @return Optimus\Architect\ModeResolver\ModeResolverInterface
+     * Is the variable a primitive type
+     * @param  mixed  $input
+     * @return boolean
      */
-    private function createModeResolver($mode)
+    public static function isPrimitive($input)
     {
-        $class = 'Optimus\Architect\ModeResolver\\';
-        switch ($mode) {
-            default:
-            case 'embed':
-                $class .= 'EmbedModeResolver';
-                break;
-            case 'ids':
-                $class .= 'IdsModeResolver';
-                break;
-            case 'sideload':
-                $class .= 'SideloadModeResolver';
-                break;
-        }
+        return !is_array($input) && !($input instanceof Model) && !($input instanceof Collection);
+    }
 
-        return new $class;
+    /**
+     * Is the input a collection of resources?
+     * @param  mixed  $input
+     * @return boolean
+     */
+    public static function isCollection($input)
+    {
+        return is_array($input) || $input instanceof Collection;
     }
 }
