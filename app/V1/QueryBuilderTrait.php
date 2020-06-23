@@ -1,6 +1,6 @@
 <?php
 /**
- * Eloquent Builder Trait
+ * Query Builder Trait
  *
  * @package    App\V1
  * @author     Esben Petersen
@@ -9,7 +9,6 @@
 
 namespace App\V1;
 
-
 use DB;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -17,8 +16,9 @@ use InvalidArgumentException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
-trait EloquentBuilderTrait
-{
+trait QueryBuilderTrait{
+
+
     /**
      * Apply resource options to a query builder
      * @param  Builder $queryBuilder
@@ -60,11 +60,8 @@ trait EloquentBuilderTrait
         if (isset($limit)) {
             $queryBuilder->limit($limit);
         }
-
-        if (isset($start)) {
-            $queryBuilder->offset($start);
-        } else if (isset($page)) {
-            if (!isset($limit)) {
+        if (isset($page)) {
+            if (! isset($limit)) {
                 throw new InvalidArgumentException('A limit is required when using page.');
             }
 
@@ -116,15 +113,14 @@ trait EloquentBuilderTrait
         // Destructure Shorthand Filtering Syntax if filter is Shorthand
         if (! array_key_exists('key', $filter) && count($filter) >= 3) {
             $filter = [
-                'key'      => (array_key_exists(0, $filter) ? $filter[0] : null),
-                'operator' => (array_key_exists(1, $filter) ? $filter[1] : null),
-                'value'    => (array_key_exists(2, $filter) ? $filter[2] : null),
+                'key'      => ($filter[0] ?: null),
+                'operator' => ($filter[1] ?: null),
+                'value'    => ($filter[2] ?: null),
                 'not'      => (array_key_exists(3, $filter) ? $filter[3] : null),
             ];
         }
 
-        // $value, $not, $key, $operator
-        extract($filter);
+        extract($filter); // $value, $not, $key, $operator
 
         $dbType = $queryBuilder->getConnection()->getDriverName();
 
@@ -149,9 +145,9 @@ trait EloquentBuilderTrait
                         'sw' => $value.'%' // starts with
                     ];
 
-                    $castToText = (($dbType === 'pgsql') ? 'TEXT' : 'CHAR');
+                    $castToText = (($dbType === 'postgres') ? 'TEXT' : 'CHAR');
                     $databaseField = DB::raw(sprintf('CAST(%s.%s AS ' . $castToText . ')', $table, $key));
-                    $clauseOperator = ($not ? 'NOT':'') . (($dbType === 'pgsql') ? 'ILIKE' : 'LIKE');
+                    $clauseOperator = ($not ? 'NOT':'') . (($dbType === 'postgres') ? 'ILIKE' : 'LIKE');
                     $value = $valueString[$operator];
                     break;
                 case 'eq':
@@ -289,9 +285,9 @@ trait EloquentBuilderTrait
             if ($relation instanceof BelongsTo) {
                 $queryBuilder->join(
                     $relation->getRelated()->getTable(),
-                    $relation->getQualifiedForeignKeyName(),
+                    $model->getTable().'.'.$relation->getQualifiedForeignKeyName(),
                     '=',
-                    $relation->getQualifiedOwnerKeyName(),
+                    $relation->getRelated()->getTable().'.'.$relation->getOwnerKey(),
                     $type
                 );
             } elseif ($relation instanceof BelongsToMany) {
@@ -299,14 +295,14 @@ trait EloquentBuilderTrait
                     $relation->getTable(),
                     $relation->getQualifiedParentKeyName(),
                     '=',
-                    $relation->getQualifiedForeignPivotKeyName(),
+                    $relation->getQualifiedForeignKeyName(),
                     $type
                 );
                 $queryBuilder->join(
                     $relation->getRelated()->getTable(),
                     $relation->getRelated()->getTable().'.'.$relation->getRelated()->getKeyName(),
                     '=',
-                    $relation->getQualifiedRelatedPivotKeyName(),
+                    $relation->getQualifiedRelatedKeyName(),
                     $type
                 );
             } else {
