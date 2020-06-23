@@ -2,15 +2,14 @@
 /**
  * Data Parser
  *
- * @package    App\V1
  * @author     Esben Petersen
  * @link       https://github.com/esbenp/architect/blob/master/src/Architect.php
  */
 
 namespace App\V1;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class DataParser
 {
@@ -26,7 +25,7 @@ class DataParser
         $return = [];
 
         uksort($modes, function ($a, $b) {
-            return substr_count($b, '.')-substr_count($a, '.');
+            return substr_count($b, '.') - substr_count($a, '.');
         });
 
         if (self::isCollection($data)) {
@@ -37,7 +36,7 @@ class DataParser
 
         if ($key !== null) {
             $return[$key] = $parsed;
-        }else{
+        } else {
             $return = $parsed;
         }
 
@@ -78,7 +77,6 @@ class DataParser
     private function parseResource(array $modes, &$resource, &$root, $fullPropertyPath = '')
     {
         foreach ($modes as $relation => $mode) {
-
             $steps = explode('.', $relation);
 
             $property = array_shift($steps);
@@ -96,18 +94,18 @@ class DataParser
                 $object = &$resource->{$property};
             }
 
-            if (!empty($steps)) {
+            if (! empty($steps)) {
                 // More levels exist in this relation.
                 // We want a drill down and resolve the deepest level first.
 
                 $path = implode('.', $steps);
                 $modes = [
-                    $path => $mode
+                    $path => $mode,
                 ];
 
                 // Add the previous levels to the full path so it can be used
                 // to populate the root level properly.
-                $fullPropertyPath .= $property . '.';
+                $fullPropertyPath .= $property.'.';
 
                 if (self::isCollection($object)) {
                     $object = $this->parseCollection($modes, $object, $root, $fullPropertyPath);
@@ -124,7 +122,6 @@ class DataParser
         return $resource;
     }
 
-
     /**
      * @param $objectOrArray
      * @param $property
@@ -134,7 +131,7 @@ class DataParser
     {
         if ($objectOrArray instanceof Model) {
             if ($property) {
-                if ($objectOrArray->relationLoaded($property) && !self::isPrimitive($value)) {
+                if ($objectOrArray->relationLoaded($property) && ! self::isPrimitive($value)) {
                     $objectOrArray->setRelation($property, $value);
                 } else {
                     unset($objectOrArray[$property]);
@@ -151,17 +148,17 @@ class DataParser
     /**
      * Is the variable a primitive type
      * @param  mixed  $input
-     * @return boolean
+     * @return bool
      */
     public static function isPrimitive($input)
     {
-        return !is_array($input) && !($input instanceof Model) && !($input instanceof Collection);
+        return ! is_array($input) && ! ($input instanceof Model) && ! ($input instanceof Collection);
     }
 
     /**
      * Is the input a collection of resources?
      * @param  mixed  $input
-     * @return boolean
+     * @return bool
      */
     public static function isCollection($input)
     {
