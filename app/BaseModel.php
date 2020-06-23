@@ -971,7 +971,8 @@ class BaseModel extends Eloquent
                 $prev_route_name = app('router')->getRoutes()->match(app('request')->create(\URL::previous()))->getName();
             } catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception) {
                 // Exception is thrown if no mathing route found (e.g. if coming from outside).
-                \Log::warning('Could not determine previous route: '.$exception);
+                \Log::warning('Could not determine previous route');
+                \Log::debug($exception);
 
                 return false;
             }
