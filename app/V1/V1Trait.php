@@ -1,24 +1,22 @@
 <?php
 /**
- * Laravel Controller
+ * V1 Trait
  *
  * @package    App\V1
  * @author     Esben Petersen
  * @link       https://github.com/esbenp/bruno/blob/master/src/LaravelController.php
  */
 
-namespace Optimus\Bruno;
 
-use App\V1\Architect;
-use JsonSerializable;
-use InvalidArgumentException;
+namespace App\V1;
+
+
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Routing\Controller;
-use Illuminate\Routing\Router;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-abstract class LaravelController extends Controller
+trait V1Trait
 {
     /**
      * Defaults
@@ -43,7 +41,7 @@ abstract class LaravelController extends Controller
     }
 
     /**
-     * Parse data using architect
+     * Parse data using Data Parser
      * @param  mixed $data
      * @param  array  $options
      * @param  string $key
@@ -51,9 +49,17 @@ abstract class LaravelController extends Controller
      */
     protected function parseData($data, array $options, $key = null)
     {
-        $architect = new Architect();
+        $dataParser = new DataParser();
+        if($data instanceof LengthAwarePaginator) {
+            $paginationData = $data;
+            $data = collect($paginationData->getIterator() ?? $data);
+            $parsedData = $dataParser->parseData($data, $options['modes'], $key);
+            $paginationData->data = $parsedData;
 
-        return $architect->parseData($data, $options['modes'], $key);
+            return $paginationData;
+        }
+
+        return $dataParser->parseData($data, $options['modes'], $key);
     }
 
     /**
@@ -63,6 +69,9 @@ abstract class LaravelController extends Controller
      */
     protected function parseSort(array $sort) {
         return array_map(function($sort) {
+            if(is_string($sort)){
+                $sort = json_decode($sort, true);
+            }
             if (!isset($sort['direction'])) {
                 $sort['direction'] = 'asc';
             }
@@ -98,17 +107,16 @@ abstract class LaravelController extends Controller
     }
 
     /**
-     * Parse filter group strings into filters
-     * Filters are formatted as key:operator(value)
-     * Example: name:eq(esben)
-     * @param  array  $filter_groups
+     * @param array $filter_groups
      * @return array
      */
     protected function parseFilterGroups(array $filter_groups)
     {
         $return = [];
-
         foreach($filter_groups as $group) {
+            if(is_string($group)){
+                $group = json_decode($group, true);
+            }
             if (!array_key_exists('filters', $group)) {
                 throw new InvalidArgumentException('Filter group does not have the \'filters\' key.');
             }
@@ -131,7 +139,7 @@ abstract class LaravelController extends Controller
     }
 
     /**
-     * Parse GET parameters into resource options
+     * @param null $request
      * @return array
      */
     protected function parseResourceOptions($request = null)
@@ -147,7 +155,7 @@ abstract class LaravelController extends Controller
             'page' => null,
             'mode' => 'embed',
             'filter_groups' => [],
-            'start' => null
+            'paginate'=> false
         ], $this->defaults);
 
         $includes = $this->parseIncludes($request->get('includes', $this->defaults['includes']));
@@ -155,10 +163,10 @@ abstract class LaravelController extends Controller
         $limit = $request->get('limit', $this->defaults['limit']);
         $page = $request->get('page', $this->defaults['page']);
         $filter_groups = $this->parseFilterGroups($request->get('filter_groups', $this->defaults['filter_groups']));
-        $start = $request->get('start', $this->defaults['start']);
+        $paginate = boolval($request->get('paginate', $this->defaults['paginate']));
 
         if ($page !== null && $limit === null) {
-            throw new InvalidArgumentException('Cannot use page option without limit option');
+            throw new BadRequestHttpException('Cannot use page option without limit option');
         }
 
         return [
@@ -168,7 +176,7 @@ abstract class LaravelController extends Controller
             'limit' => $limit,
             'page' => $page,
             'filter_groups' => $filter_groups,
-            'start' => $start,
+            'paginate'=> $paginate
         ];
     }
 }

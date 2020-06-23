@@ -9,14 +9,14 @@
 
 namespace App\V1;
 
-use Illuminate\Database\DatabaseManager;
+use App\BaseModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Query\Builder;
-use App\V1\EloquentBuilderTrait;
 
-abstract class Repository
+class Repository
 {
-    use EloquentBuilderTrait;
+
+    use QueryBuilderTrait;
 
     protected $model;
 
@@ -25,21 +25,30 @@ abstract class Repository
     // 0 = ASC, 1 = DESC
     protected $sortDirection = 0;
 
-    abstract protected function getModel();
-
-    final public function __construct()
+    final public function __construct(BaseModel $model)
     {
-        $this->model = $this->getModel();
+        $this->model = $model;
     }
 
     /**
-     * Get all resources
-     * @param  array $options
-     * @return Collection
+     *
+     * @return BaseModel
+     */
+    public function getModel(): BaseModel{
+        return $this->model;
+    }
+
+    /**
+     * @param array $options
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|Builder[]|Collection
      */
     public function get(array $options = [])
     {
+        $paginate = isset($options['paginate']) ? $options['paginate'] : false;
+        unset($options['paginate']);
         $query = $this->createBaseBuilder($options);
+
+        return $paginate ? $query->paginate($options['limit']) : $query->get();
 
         return $query->get();
     }
@@ -52,9 +61,12 @@ abstract class Repository
      */
     public function getById($id, array $options = [])
     {
+        $options['filter_groups'][] = ["filters" => [
+            ["key" => "id", "value" => $id, "operator" => "eq", 'not' => false]], 'or' => false
+        ];
         $query = $this->createBaseBuilder($options);
 
-        return $query->find($id);
+        return $query->first();
     }
 
     /**
@@ -81,8 +93,6 @@ abstract class Repository
     public function getRecentWhere($column, $value, array $options = [])
     {
         $query = $this->createBaseBuilder($options);
-
-        $query->where($column, $value);
 
         $query->orderBy($this->getCreatedAtColumn(), 'DESC');
 
@@ -113,8 +123,6 @@ abstract class Repository
     public function getLatestWhere($column, $value, array $options = [])
     {
         $query = $this->createBaseBuilder($options);
-
-        $query->where($column, $value);
 
         $query->orderBy($this->getCreatedAtColumn(), 'DESC');
 
@@ -148,17 +156,16 @@ abstract class Repository
     {
         $query = $this->createBaseBuilder($options);
 
-        $this->applyWhereArray($query, $clauses);
+        $query->where($clauses);
 
         return $query->get();
     }
 
     /**
-     * Get resources where a column value exists in array
-     * @param  string $column
-     * @param  array  $values
-     * @param  array $options
-     * @return Collection
+     * @param $column
+     * @param array $values
+     * @param array $options
+     * @return Builder[]|Collection
      */
     public function getWhereIn($column, array $values, array $options = [])
     {
@@ -167,6 +174,32 @@ abstract class Repository
         $query->whereIn($column, $values);
 
         return $query->get();
+    }
+
+    /**
+     * @param array $data
+     * @return BaseModel
+     */
+    public function create(array $data)
+    {
+        $model = $this->getModel();
+        $model->fill($data);
+        $model->save();
+
+        return $model;
+    }
+
+    /**
+     * @param BaseModel $model
+     * @param array $data
+     * @return BaseModel
+     */
+    public function update(BaseModel $model, array $data)
+    {
+        $model->fill($data);
+        $model->save();
+
+        return $model;
     }
 
     /**
@@ -205,12 +238,11 @@ abstract class Repository
     {
         $query = $this->createQueryBuilder();
 
-        $this->applyWhereArray($query, $clauses);
+        $query->whereArray($clauses);
         $query->delete();
     }
 
     /**
-     * Creates a new query builder with Optimus options set
      * @param  array $options
      * @return Builder
      */
@@ -241,7 +273,7 @@ abstract class Repository
      * @param  Builder $query
      * @return string
      */
-    protected function getPrimaryKey($query)
+    protected function getPrimaryKey(Builder $query)
     {
         return $query->getModel()->getKeyName();
     }
@@ -252,7 +284,7 @@ abstract class Repository
      * @param  array  $options
      * @return void
      */
-    protected function defaultSort($query, array $options = [])
+    protected function defaultSort(Builder $query, array $options = [])
     {
         if (isset($this->sortProperty)) {
             $direction = $this->sortDirection === 1 ? 'DESC' : 'ASC';
@@ -260,47 +292,9 @@ abstract class Repository
         }
     }
 
-    /**
-     * Get the name of the "created at" column.
-     * More info to https://laravel.com/docs/5.4/eloquent#defining-models
-     * @return string
-     */
     protected function getCreatedAtColumn()
     {
         $model = $this->model;
         return ($model::CREATED_AT) ? $model::CREATED_AT : 'created_at';
-    }
-
-    protected function applyWhereArray($query, array $clauses)
-    {
-        foreach ($clauses as $key => $value) {
-            preg_match('/NOT\:(.+)/', $key, $matches);
-
-            $not = false;
-            if (isset($matches[1])) {
-                $not = true;
-                $key = $matches[1];
-            }
-
-            if (is_array($value)) {
-                if (!$not) {
-                    $query->whereIn($key, $value);
-                } else {
-                    $query->whereNotIn($key, $value);
-                }
-            } else if (is_null($value)) {
-                if (!$not) {
-                    $query->whereNull($key);
-                } else {
-                    $query->whereNotNull($key);
-                }
-            } else {
-                if (!$not) {
-                    $query->where($key, $value);
-                } else {
-                    $query->where($key, '!=', $value);
-                }
-            }
-        }
     }
 }

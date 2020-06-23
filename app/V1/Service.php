@@ -7,7 +7,6 @@
  * @link       https://github.com/esbenp/larapi/blob/master/api/Users/Services/UserService.php
  */
 
-
 namespace App\V1;
 
 use Illuminate\Events\Dispatcher;
