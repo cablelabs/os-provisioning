@@ -356,9 +356,8 @@ class importTvCustomersCommand extends Command
         $product_id = 0;
         foreach (self::CREDITS_WATT as $watt => $prod_id) {
             if ($watt_amount == $watt) {
-                if (in_array($watt, [7, '16,5'])) {
-                    $this->important_todos .= "\nPlease check if contract $contract->number has correct credit assigned! (multiple possible)";
-                }
+                $this->important_todos .= "\nPlease check if contract $contract->number has correct credit assigned! (multiple possible)";
+
                 $product_id = $prod_id;
                 break;
             }
