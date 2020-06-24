@@ -89,10 +89,16 @@ class ModemController extends \BaseController
             $geopos = trans('messages.geopos_x_y');
         }
 
+        $configfiles = $model->html_list_with_count($model->configfiles(), 'name', false, '', 'configfile_id', 'modem');
+        if (! $model->exists) {
+            $configfiles[null] = null;
+            ksort($configfiles);
+        }
+
         // label has to be the same like column in sql table
         $a = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
-            ['form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list_with_count($model->configfiles(), 'name', ! $model->exists, '', 'configfile_id', 'modem'), 'help' => trans('helper.configfile_count').' '.trans('helper.modem.configfileSelect'), 'select' => $cfIds['all']],
+            ['form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $configfiles, 'help' => trans('helper.configfile_count').' '.trans('helper.modem.configfileSelect'), 'select' => $cfIds['all']],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly'], 'hidden' => 'C', 'space' => 1],
             // TODO: show this dropdown only if necessary (e.g. not if creating a modem from contract context)
             ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')],
@@ -380,7 +386,7 @@ class ModemController extends \BaseController
             $rules['qos_id'] = 'required|exists:qos,id,deleted_at,NULL';
         }
 
-        if (Configfile::find($data['configfile_id'])->device == 'tr069') {
+        if ($data['configfile_id'] && Configfile::find($data['configfile_id'])->device == 'tr069') {
             $id = \Route::current()->hasParameter('Modem') ? \Route::current()->parameters()['Modem'] : 0;
             $rules['serial_num'] = "required|unique:modem,serial_num,$id,id,deleted_at,NULL";
             $rules['ppp_username'] = "required|unique:modem,ppp_username,$id,id,deleted_at,NULL";
