@@ -374,6 +374,7 @@ class Modem extends \BaseModel
      * TODO: use object context instead of parameters (Torsten)
      *
      * @author Nino Ryschawy
+     * @return string
      */
     private function generate_cm_dhcp_entry($server = '')
     {
@@ -381,7 +382,7 @@ class Modem extends \BaseModel
 
         // FF-00-00-00-00 to FF-FF-FF-FF-FF reserved according to RFC7042
         if (stripos($this->mac, 'ff:') === 0) {
-            return;
+            return '';
         }
 
         if (! $this->mac) {
