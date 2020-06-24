@@ -315,6 +315,7 @@ class AbilityController extends Controller
                 'ProvBase',
                 'ProvVoip',
                 'ProvMon',
+                'ProvHA',
                 'OverdueDebts',
                 'Ticketsystem',
             ])
