@@ -25,6 +25,8 @@ class ProvBaseController extends BaseController
      */
     public function view_form_fields($model = null)
     {
+        $hide_provha_stuff = \Module::collections()->has('ProvHA') ? 1 : 0;
+
         // label has to be the same like column in sql table
         return [
             ['form_type' => 'ip', 'name' => 'provisioning_server', 'description' => 'Provisioning Server IP'],
@@ -32,6 +34,7 @@ class ProvBaseController extends BaseController
             ['form_type' => 'text', 'name' => 'rw_community', 'description' => 'SNMP Read Write Community'],
 
             ['form_type' => 'text', 'name' => 'domain_name', 'description' => 'Domain Name for Modems'],
+            ['form_type' => 'text', 'name' => 'dns_password', 'description' => 'DNS update password', 'help' => 'MD5 HMAC; create using: ddns-confgen -a hmac-md5 -r /dev/urandom | grep secret', 'hidden' => $hide_provha_stuff],
             ['form_type' => 'text', 'name' => 'notif_mail', 'description' => 'Notification Email Address'],
             ['form_type' => 'text', 'name' => 'dhcp_def_lease_time', 'description' => 'DHCP Default Lease Time'],
             ['form_type' => 'text', 'name' => 'dhcp_max_lease_time', 'description' => 'DHCP Max Lease Time'],

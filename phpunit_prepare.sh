@@ -5,6 +5,7 @@
 # if that doesn't help try deleting bootstrap/cache/*
 
 declare -a CMDS=(
+	"git submodule update --init --recursive"
 	"mkdir -p /var/www/nmsprime/storage/framework/cache"
 	"mkdir -p /var/www/nmsprime/storage/framework/sessions"
 	"mkdir -p /var/www/nmsprime/storage/framework/views"
