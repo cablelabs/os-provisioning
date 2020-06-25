@@ -1700,6 +1700,7 @@ Arzt für Naturheilverfahren
 Arzt für Nervenheilkunde
 Arzt für Neurochirurgie
 Arzt für Neurologie
+Arzt für Neurologie und Psychiatrie
 Arzt für Neuropathologie
 Arzt für Neurotherapie
 Arzt für Notfallmedizin
@@ -3232,6 +3233,7 @@ Bauabrechnungsbüro
 Bauabrechnungsservice
 Bauamtmann
 Bauamtsleiter
+Bauanwälte
 Bauarbeiten
 Bauarchiv
 Bauartikelvertrieb
@@ -4454,7 +4456,6 @@ Berufsförderungsdienst
 Berufsförderungsinstitut
 Berufsförderungswerk
 Berufsfortbildungsstätte
-BerufsGeschaeftsbezeichnung
 Berufsimkerei
 Berufskleiderfabrikation
 Berufskleidungsmietservice
@@ -12387,6 +12388,7 @@ Freibad
 Freibadcafe
 Freibadkiosk
 Freiberufler
+Freiberufliche Künstlerin
 freiberuflicher Physiotherapeut
 Freie Architekten
 Freie Architekten für Energieberatung
@@ -12728,6 +12730,7 @@ Fußbodenverlegung
 Fußchirug
 Fußchirurgie
 Fußfachpflegepraxis
+Fußheilkunde
 Fußkompetenzzentrum
 Fußmassage
 Fußmattenherstellung
@@ -23616,6 +23619,7 @@ Meisterbetrieb für Innenausbau
 Meisterbetrieb für Isolierungen
 Meisterbetrieb für Kachelbau
 Meisterbetrieb für Kälte- und Klimatechnik
+Meisterbetrieb für Kaminöfen
 Meisterbetrieb für Karosserie- und Fahrzeugbau
 Meisterbetrieb für KFZ
 Meisterbetrieb für KFZ-Technik
@@ -28538,6 +28542,7 @@ Psychologische Praxis für Betreuung
 Psychologische Praxis für Individual- Organisationsberatung
 Psychologische Praxis für Paar- und Familientherapie
 Psychologische Praxis für Psychotherapie
+Psychologische Praxis für Verhaltenstherapie
 Psychologische Privatpraxis
 Psychologische Psychotherapeuten
 Psychologische Psychotherapeutin
@@ -37586,6 +37591,7 @@ vereidigter Übersetzer für Arabisch
 vereidigter Übersetzer für Italienisch
 vereidigter Übersetzer für Polnisch
 vereidigter Übersetzer für Spanisch
+vereidigter Übersetzer für Tschechisch
 Vereidigter Wirtschaftsprüfer
 Vereinsgaststätte
 Vereinsmanagement
