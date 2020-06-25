@@ -242,7 +242,7 @@ class importTvCustomersCommand extends Command
             // Check if name and address differs - could be a different customer
             // Attention: strtolower doesn't work for ÄÖÜ, but i dont know if a street begins with such a char
             if ($contract->firstname != $firstname || $contract->lastname != $lastname || strtolower($contract->street) != strtolower($street)) {
-                $msg = "Vertragsnummer $number existiert bereits, aber Name, Straße oder Stadt weichen ab - Bitte fügen Sie den Vertrag manuell hinzu!";
+                $msg = "Vertragsnummer $number existiert bereits, aber Name, Straße oder Stadt weichen ab - Bitte korrigieren Sie die Daten!";
                 \Log::warning($msg);
                 $this->important_todos .= "\n$msg";
 
@@ -356,9 +356,8 @@ class importTvCustomersCommand extends Command
         $product_id = 0;
         foreach (self::CREDITS_WATT as $watt => $prod_id) {
             if ($watt_amount == $watt) {
-                if (in_array($watt, [7, '16,5'])) {
-                    $this->important_todos .= "\nPlease check if contract $contract->number has correct credit assigned! (multiple possible)";
-                }
+                $this->important_todos .= "\nPlease check if contract $contract->number has correct credit assigned! (multiple possible)";
+
                 $product_id = $prod_id;
                 break;
             }

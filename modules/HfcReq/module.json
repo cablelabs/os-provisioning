@@ -4,7 +4,7 @@
     "description": "HFC",
     "keywords": [],
     "active": 1,
-    "order": 8,
+    "order": 110,
     "providers": [
         "Modules\\HfcReq\\Providers\\HfcReqServiceProvider"
     ],

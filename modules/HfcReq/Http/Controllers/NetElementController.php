@@ -149,6 +149,7 @@ class NetElementController extends HfcBaseController
 
     public function prepare_input($data)
     {
+        $data['name'] = str_replace(['"', '\\'], '', $data['name']);
         $data = parent::prepare_input($data);
 
         // set default offset if none was given
@@ -171,7 +172,7 @@ class NetElementController extends HfcBaseController
     {
         if ($data['netelementtype_id'] == 9) {
             $id = $data['id'] ?? null;
-            $rules['address1'] = 'required|unique:netelement,address1,'.$id.',id,deleted_at,NULL,netelementtype_id,9|regex:/^([0-9A-F]{2}){4}(~\d)+$/';
+            $rules['address1'] = 'required|unique:netelement,address1,'.$id.',id,deleted_at,NULL,netelementtype_id,9|regex:/^([0-9A-F]{2}){4}(~\d)?$/';
         }
 
         return parent::prepare_rules($rules, $data);

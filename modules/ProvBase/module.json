@@ -5,7 +5,7 @@
     "keywords": [],
     "active": 1,
     "icon": "fa-database",
-    "order": 20,
+    "order": 10,
     "providers": [
         "Modules\\ProvBase\\Providers\\ProvBaseServiceProvider"
     ],

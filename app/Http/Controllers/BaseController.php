@@ -839,6 +839,7 @@ class BaseController extends Controller
 
         // Prepare and Validate Input
         $data = $controller->prepare_input(Request::all());
+        $data['id'] = $id;
         $rules = $controller->prepare_rules($obj::rules($id), $data);
         $validator = Validator::make($data, $rules);
 
@@ -910,6 +911,7 @@ class BaseController extends Controller
         // Prepare and Validate Input
         $data = $this->_api_prepopulate_fields($obj, $controller);
         $data = $controller->prepare_input($data);
+        $data['id'] = $id;
         $rules = $controller->prepare_rules($obj::rules($id), $data);
         $validator = Validator::make($data, $rules);
         $data = $controller->prepare_input_post_validation($data);
