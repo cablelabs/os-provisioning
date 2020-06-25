@@ -542,6 +542,16 @@ class ConfigfileObserver
     {
         $this->updateProvision($configfile, true);
         // Actually it's only possible to delete configfiles that are not related to any cm/mta - so no CFs need to be built
+
+        // Make sure that undeleted children still show up in tree
+        $childrenQuery = Configfile::where('parent_id', $configfile->id);
+        $children = $childrenQuery->get();
+
+        $childrenQuery->update(['parent_id' => $configfile->parent_id]);
+
+        foreach ($children as $child) {
+            \Queue::push(new \Modules\ProvBase\Jobs\ConfigfileJob(null, $child->id));
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ class Parameter extends \BaseModel
     public $table = 'parameter';
 
     public $guarded = ['name', 'table'];
+    protected $with = ['oid'];
 
     public static function boot()
     {
@@ -40,12 +41,13 @@ class Parameter extends \BaseModel
     // generates datatable content and classes for model
     public function view_index_label()
     {
-        $header = isset($this->oid) ? $this->oid->name : '';
-        $header .= isset($this->oid) ? ' - '.$this->oid->oid : '';
+        $label = $this->oid ? $this->oid->oid : '';
+        $label .= $this->oid ? ' - '.$this->oid->name : '';
+        $label .= $this->oid && $this->oid->name_gui ? ' - '.$this->oid->name_gui : '';
 
         return ['table' => $this->table,
             'index_header' => ['oid.name', 'oid.oid',  'oid.access'],
-            'header' =>  $header,
+            'header' =>  $label,
             'order_by' => ['1' => 'asc'],
             'bsclass' => $this->get_bsclass(),
             'eager_loading' => ['oid'], ];

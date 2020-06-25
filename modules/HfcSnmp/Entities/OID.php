@@ -46,10 +46,12 @@ class OID extends \BaseModel
     public function view_index_label()
     {
         $bsclass = $this->get_bsclass();
+        $label = $this->oid.' - '.$this->name;
+        $label .= $this->name_gui ? ' - '.$this->name_gui : '';
 
         return ['table' => $this->table,
             'index_header' => [$this->table.'.name', $this->table.'.name_gui',  $this->table.'.oid', $this->table.'.access'],
-            'header' =>  $this->name.' - '.$this->oid,
+            'header' => $label,
             'order_by' => ['2' => 'asc'], ];
     }
 

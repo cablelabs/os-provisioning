@@ -9,9 +9,11 @@
 		$bg_color = $widget_bg_color;
     }
 
-    $link = 'javascript:;';
-    if (isset($link_target)) {
+    $link = '#';
+    $noHover = 'noHover';
+    if (isset($link_target) && $link_target != '#') {
     	$link = $link_target;
+        $noHover = '';
     }
 ?>
 
@@ -27,9 +29,9 @@
         </div>
 
         {{-- reference link --}}
-        <div class="stats-link">
+        <div class="stats-link {{$noHover}}">
             <a href="{{ $link }}">
-                @if($link != 'javascript:;')
+                @if($link != '#')
                     {!! \App\Http\Controllers\BaseViewController::translate_view('LinkDetails', 'Dashboard') !!} <i class="fa fa-arrow-circle-o-right"></i>
                 @else
                     &nbsp;

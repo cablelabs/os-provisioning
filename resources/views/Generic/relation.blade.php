@@ -73,8 +73,8 @@ Relation Blade is used inside a Panel Element to display relational class object
                 </div>
             @endif
         @endcan
-        </div>
     @endif
+    </div>
 @DivClose()
 
 {{-- The Relation Table --}}

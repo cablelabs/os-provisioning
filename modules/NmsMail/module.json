@@ -4,7 +4,7 @@
     "description": "",
     "keywords": [],
     "active": 0,
-    "order": 24,
+    "order": 0,
     "icon": "fa-paper-plane-o",
     "providers": [
         "Modules\\NmsMail\\Providers\\MailServiceProvider"
