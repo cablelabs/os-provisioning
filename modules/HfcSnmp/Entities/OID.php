@@ -143,7 +143,7 @@ class OID extends \BaseModel
         }
 
         if ($this->endvalue) {
-            $this->stepsize = $this->stepsize ?: 1;
+            $this->stepsize = floatval($this->stepsize) == 0 ? 1 : floatval($this->stepsize);
             $arr = range($this->startvalue, $this->endvalue, $this->stepsize);
 
             return array_combine($arr, $arr);
