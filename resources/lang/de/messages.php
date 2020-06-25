@@ -137,7 +137,7 @@ return [
     'cpe_not_reachable'     => 'aber via PING nicht erreichbar (ICMP kann herstellerabhängig vom Router geblockt werden)',
     'cpe_fake_lease'        => 'Der DHCP Server hat kein Lease für den Endpunkt angelegt, weil dessen IP Adresse statisch vergeben ist und der Server diesen somit nicht verfolgen muss. Das folgende Lease wurde lediglich als Referenz manuell generiert:',
     'D'                     => 'Tag|Tage',
-    'dashbrd_ticket'        => 'Neue mir zugewiesene Tickets',
+    'dashboard_ticket'      => 'Neue mir zugewiesene Tickets',
     'device_probably_online' => ':type ist wahrscheinlich online',
     'eom'                   => 'zum Monatsende',
     'envia_no_interaction'  => 'Keine envia-TEL-Aufrträge, die eine Bearbeitung benötigen',

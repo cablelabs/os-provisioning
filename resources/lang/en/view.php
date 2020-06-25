@@ -350,6 +350,8 @@ return [
     // DASHBOARD
     'dashboard' => [
         'contractIndexPage' => 'Contracts',
+        'modemIndexPage' => 'Modems',
+        'netelementIndexPage' => 'Netelements',
         'ticketIndexPage' => 'Tickets',
     ],
     'Dashboard_Contracts'           => 'ACTIVE CONTRACTS',

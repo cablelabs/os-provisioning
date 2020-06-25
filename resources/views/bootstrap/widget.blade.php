@@ -1,14 +1,4 @@
 <?php
-    $icon = 'bars';
-    if (isset($widget_icon)) {
-    	$icon = $widget_icon;
-    }
-
-    $bg_color = 'white';
-    if (isset($widget_bg_color)) {
-		$bg_color = $widget_bg_color;
-    }
-
     $link = '#';
     $noHover = 'noHover';
     if (isset($link_target) && $link_target != '#') {
@@ -17,25 +7,29 @@
     }
 ?>
 
-    <div class="widget widget-stats bg-{{ $bg_color }}">
-        {{-- icon --}}
-        <div class="stats-icon">
-            <i class="fa fa-{{ $icon }}"></i>
-        </div>
-
-        {{-- info/data --}}
-        <div class="stats-info">
-            @yield($content)
-        </div>
-
-        {{-- reference link --}}
-        <div class="stats-link {{$noHover}}">
-            <a href="{{ $link }}">
-                @if($link != '#')
-                    {!! \App\Http\Controllers\BaseViewController::translate_view('LinkDetails', 'Dashboard') !!} <i class="fa fa-arrow-circle-o-right"></i>
-                @else
-                    &nbsp;
-                @endif
-            </a>
-        </div>
+<div class="widget widget-stats bg-{{ $widget_bg_color ?? 'white' }}">
+    <div class="stats-icon">
+        <i class="fa fa-{{ $widget_icon ?? 'bars' }}"></i>
     </div>
+
+    <div class="stats-info">
+        @if (isset($title) && isset($value))
+            <h4>{{ $title }}</h4>
+            <p>{{ $value }}</p>
+        @endif
+        @if (isset($content))
+            @yield($content)
+        @endif
+    </div>
+
+    {{-- reference link --}}
+    <div class="stats-link {{$noHover}}">
+        <a href="{{ $link }}">
+            @if($link != '#')
+                {!! \App\Http\Controllers\BaseViewController::translate_view('LinkDetails', 'Dashboard') !!} <i class="fa fa-arrow-circle-o-right"></i>
+            @else
+                &nbsp;
+            @endif
+        </a>
+    </div>
+</div>

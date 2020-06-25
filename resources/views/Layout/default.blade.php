@@ -43,7 +43,7 @@
 						</div>
 					@endforeach
 				@endif
-			<div class="row">
+			<div>
 				@yield ('content')
 			</div>
 		</div>

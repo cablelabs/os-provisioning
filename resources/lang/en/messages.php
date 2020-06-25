@@ -137,7 +137,7 @@ return [
     'cpe_not_reachable'     => 'but not reachable from WAN-side due to manufacturing reasons (it can be possible to enable ICMP response via modem configfile)',
     'cpe_fake_lease'        => 'The DHCP server has not generated a lease for this endpoint, because the IP address is statically assigned and the server does not need to keep track of it. The following lease has been manually generated for reference only:',
     'D'                     => 'day|days',
-    'dashbrd_ticket'        => 'My New Tickets',
+    'dashboard_ticket'        => 'My New Tickets',
     'device_probably_online' => ':type is probably online',
     'eom'                   => 'to end of month',
     'envia_no_interaction'  => 'No envia TEL orders require interaction',
