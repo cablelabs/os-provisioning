@@ -4,7 +4,7 @@
     "description": "SNMP Module",
     "keywords": [],
     "active": 1,
-    "order": 11,
+    "order": 140,
     "priority": 0,
     "icon": "fa-sliders",
     "providers": [

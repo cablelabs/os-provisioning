@@ -1,3 +1,12 @@
+<?php
+    $link = '#';
+    $noHover = 'noHover';
+    if (isset($link_target) && $link_target != '#') {
+    	$link = $link_target;
+        $noHover = '';
+    }
+?>
+
 <div class="widget widget-stats bg-{{ $widget_bg_color ?? 'white' }}">
     <div class="stats-icon">
         <i class="fa fa-{{ $widget_icon ?? 'bars' }}"></i>
@@ -13,11 +22,13 @@
         @endif
     </div>
 
-    <div class="stats-link">
-        <a href="{{ $link_target ?? 'javascript:;' }}">
-            {{ $linkText ?? App\Http\Controllers\BaseViewController::translate_view('LinkDetails', 'Dashboard') }}
-            @if(isset($link_target))
-                <i class="fa fa-arrow-circle-right"></i>
+    {{-- reference link --}}
+    <div class="stats-link {{$noHover}}">
+        <a href="{{ $link }}">
+            @if($link != '#')
+                {!! \App\Http\Controllers\BaseViewController::translate_view('LinkDetails', 'Dashboard') !!} <i class="fa fa-arrow-circle-o-right"></i>
+            @else
+                &nbsp;
             @endif
         </a>
     </div>

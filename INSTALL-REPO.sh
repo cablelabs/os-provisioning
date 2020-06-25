@@ -12,5 +12,8 @@ curl https://raw.githubusercontent.com/nmsprime/nmsprime/master/nmsprime.repo -L
 # enable software collections, since icingaweb2 depends on php7.1 from there
 yum install -y centos-release-scl
 
+# workaround until next release
+yum install -y rh-php71-php-fpm
+
 # clean & update
 yum clean all && yum update -y

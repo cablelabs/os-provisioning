@@ -245,6 +245,7 @@ class FormBuilder extends CollectiveFormBuilder
     public function open(array $options = [])
     {
         $options['class'] = 'form_open'; // Note: this avoids form input fields with large distances
+
         return parent::open($options);
     }
 

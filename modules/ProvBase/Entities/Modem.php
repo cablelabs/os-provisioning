@@ -29,7 +29,7 @@ class Modem extends \BaseModel
     public static function rules($id = null)
     {
         return [
-            'mac' => 'required|mac|unique:modem,mac,'.$id.',id,deleted_at,NULL',
+            'mac' => 'mac',
             'ppp_username' => 'nullable|unique:modem,ppp_username,'.$id.',id,deleted_at,NULL',
             'birthday' => 'nullable|date',
             'country_code' => 'regex:/^[A-Z]{2}$/',
@@ -107,8 +107,8 @@ class Modem extends \BaseModel
 
     public function label()
     {
-        // return $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : '');
-        $label = $this->mac.($this->name ? ' - '.$this->name : '');
+        $label = $this->mac ?: $this->ppp_username;
+        $label .= $this->name ? ' - '.$this->name : '';
         $label .= $this->firstname ? ' - '.$this->firstname.' '.$this->lastname : '';
 
         return $label;
@@ -162,12 +162,13 @@ class Modem extends \BaseModel
     }
 
     /**
-     * return all Configfile Objects for CMs
+     * return all Configfile Objects for CMs (for Edit view)
      */
     public function configfiles()
     {
-        return DB::table('configfile')->select(['id', 'name'])->whereNull('deleted_at')->whereIn('device', self::TYPES)->where('public', '=', 'yes')->get();
-        // return Configfile::select(['id', 'name'])->where('device', '=', 'CM')->where('public', '=', 'yes')->get();
+        $types = $this->exists ? [$this->configfile->device] : self::TYPES;
+
+        return Configfile::select(['id', 'name'])->where('public', '=', 'yes')->whereIn('device', $types)->get();
     }
 
     /**
@@ -373,6 +374,7 @@ class Modem extends \BaseModel
      * TODO: use object context instead of parameters (Torsten)
      *
      * @author Nino Ryschawy
+     * @return string
      */
     private function generate_cm_dhcp_entry($server = '')
     {
@@ -380,10 +382,14 @@ class Modem extends \BaseModel
 
         // FF-00-00-00-00 to FF-FF-FF-FF-FF reserved according to RFC7042
         if (stripos($this->mac, 'ff:') === 0) {
-            return;
+            return '';
         }
 
-        $ret = 'host cm-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "cm/cm-'.$this->id.'.cfg"; ddns-hostname "cm-'.$this->id.'";';
+        if (! $this->mac) {
+            return '';
+        }
+
+        $ret = 'host '.$this->hostname.' { hardware ethernet '.$this->mac.'; filename "cm/'.$this->hostname.'.cfg"; ddns-hostname "'.$this->hostname.'";';
 
         if (Module::collections()->has('ProvVoip') && $this->mtas()->pluck('mac')->filter(function ($mac) {
             return stripos($mac, 'ff:') !== 0;
@@ -397,6 +403,10 @@ class Modem extends \BaseModel
     private function generate_cm_dhcp_entry_pub()
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
+
+        if (! $this->mac) {
+            return '';
+        }
 
         // FF-00-00-00-00 to FF-FF-FF-FF-FF reserved according to RFC7042
         if (stripos($this->mac, 'ff:') !== 0) {
@@ -475,7 +485,7 @@ class Modem extends \BaseModel
             // get all not deleted modems
             // attention: do not use “where('internet_access', '>', '0')” to shrink the list
             //   ⇒ MTAs shall get IPs even if internet_access is disabled!
-            $modems_raw = DB::select('SELECT hostname, mac FROM modem WHERE deleted_at IS NULL');
+            $modems_raw = self::whereNotNull('mac')->get();
             $modems = [];
             foreach ($modems_raw as $modem) {
                 $modems[\Str::lower($modem->mac)] = $modem->hostname;
@@ -587,7 +597,7 @@ class Modem extends \BaseModel
 
         $conf = file(self::CONF_FILE_PATH);
 
-        // TODO: check for hostname to avoid deleting the wrong entry when mac exists multiple times in DB !?
+        // Check for hostname to avoid deleting the wrong entry when mac exists multiple times in DB !?
         foreach ($conf as $key => $line) {
             if (strpos($line, "$this->hostname {") !== false) {
                 unset($conf[$key]);
@@ -595,7 +605,7 @@ class Modem extends \BaseModel
             }
         }
 
-        if (! $delete) {
+        if (! $delete && $data) {
             $conf[] = $data;
         }
 
@@ -622,8 +632,7 @@ class Modem extends \BaseModel
                 }
             }
 
-            // $conf_pub = str_replace($replace_pub, '', $conf_pub);
-            if (! $delete && $this->public) {
+            if (! $delete && $this->public && $data_pub) {
                 $conf_pub[] = $data_pub;
             }
 
@@ -1745,8 +1754,6 @@ class ModemObserver
 
         $modem->save();  // forces to call the updating() and updated() method of the observer !
 
-        Modem::create_ignore_cpe_dhcp_file();
-
         if (Module::collections()->has('ProvMon')) {
             Log::info("Create cacti diagrams for modem: $modem->hostname");
             \Artisan::call('nms:cacti', ['--netgw-id' => 0, '--modem-id' => $modem->id]);
@@ -1825,11 +1832,9 @@ class ModemObserver
         $diff = $modem->getDirty();
 
         if (multi_array_key_exists(['contract_id', 'public', 'internet_access', 'configfile_id', 'qos_id', 'mac'], $diff)) {
-            if (! $modem->isTR069()) {
-                Modem::create_ignore_cpe_dhcp_file();
-                $modem->make_dhcp_cm();
-                $modem->restart_modem(array_key_exists('mac', $diff));
-            }
+            Modem::create_ignore_cpe_dhcp_file();
+            $modem->make_dhcp_cm();
+            $modem->restart_modem(array_key_exists('mac', $diff));
             $modem->make_configfile();
         }
 
@@ -1858,11 +1863,6 @@ class ModemObserver
 
         $modem->updateRadius();
 
-        if ($modem->isPPP()) {
-            return;
-        }
-
-        // $modem->make_dhcp_cm_all();
         Modem::create_ignore_cpe_dhcp_file();
         $modem->make_dhcp_cm(true);
         $modem->restart_modem();
