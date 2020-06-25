@@ -873,7 +873,7 @@ class Modem extends \BaseModel
 
         foreach (preg_split('/\r\n|\r|\n/', $text) as $line) {
             $vals = str_getcsv(trim($line), ';');
-            if (! count($vals) || ! in_array($vals[0], ['add', 'clr', 'commit', 'del', 'get', 'jmp', 'reboot', 'set', 'fw'])) {
+            if (! count($vals) || ! in_array($vals[0], ['add', 'clr', 'commit', 'del', 'get', 'jmp', 'reboot', 'set', 'fw', 'raw'])) {
                 continue;
             }
 
@@ -921,6 +921,9 @@ class Modem extends \BaseModel
                         $prov[] = "declare('Downloads.[FileType:$vals[1]].FileName', {value: 1}, {value: '$vals[2]'});";
                         $prov[] = "declare('Downloads.[FileType:$vals[1]].Download', {value: 1}, {value: Date.now()});";
                     }
+                    break;
+                case 'raw':
+                    $prov[] = "$vals[1]";
                     break;
             }
         }
@@ -1643,8 +1646,9 @@ class Modem extends \BaseModel
             return;
         }
 
-        // add RadCheck, if it doesn't exist
-        if (! $this->radcheck()->count()) {
+        // renew RadCheck, if non-exisiting or not as expected
+        if ($this->radcheck()->count() != 2) {
+            $this->radcheck()->delete();
             $psw = $this->ppp_password;
             if (! $psw) {
                 $psw = \Acme\php\Password::generate_password();
@@ -1659,6 +1663,13 @@ class Modem extends \BaseModel
             $check->attribute = 'Cleartext-Password';
             $check->op = ':=';
             $check->value = $psw;
+            $check->save();
+
+            $check = new RadCheck;
+            $check->username = $this->ppp_username;
+            $check->attribute = 'Pool-Name';
+            $check->op = ':=';
+            $check->value = $this->public ? 'CPEPub' : 'CPEPriv';
             $check->save();
 
             return;
@@ -1692,7 +1703,10 @@ class Modem extends \BaseModel
             $this->radusergroups()->delete();
 
             // default and QoS-specific group
-            foreach ([RadGroupReply::$defaultGroup, $this->qos_id] as $groupname) {
+            foreach (array_unique([RadGroupReply::$defaultGroup, $this->qos_id]) as $groupname) {
+                if ($groupname === null) {
+                    continue;
+                }
                 $group = new RadUserGroup;
                 $group->username = $this->ppp_username;
                 $group->groupname = $groupname;
@@ -1831,7 +1845,7 @@ class ModemObserver
         // only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
         $diff = $modem->getDirty();
 
-        if (multi_array_key_exists(['contract_id', 'public', 'internet_access', 'configfile_id', 'qos_id', 'mac'], $diff)) {
+        if (multi_array_key_exists(['contract_id', 'public', 'internet_access', 'configfile_id', 'qos_id', 'mac', 'serial_num'], $diff)) {
             Modem::create_ignore_cpe_dhcp_file();
             $modem->make_dhcp_cm();
             $modem->restart_modem(array_key_exists('mac', $diff));

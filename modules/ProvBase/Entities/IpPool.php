@@ -272,49 +272,6 @@ class IpPoolObserver
      */
     private static function updateRadIpPool($pool)
     {
-        if ($pool->netgw->type != 'bras') {
-            return;
-        }
-
-        $now = array_map('long2ip',
-            range(
-                ip2long($pool->ip_pool_start),
-                ip2long($pool->ip_pool_end)
-            )
-        );
-
-        // delete pool
-        if ($pool->deleted_at) {
-            RadIpPool::whereIn('framedipaddress', $now)->delete();
-
-            return;
-        }
-
-        $org = array_map('long2ip',
-            range(
-                ip2long($pool->getOriginal('ip_pool_start')),
-                ip2long($pool->getOriginal('ip_pool_end'))
-            )
-        );
-
-        // update type (CPEPriv, CPEPub) if it was changed
-        if ($pool->isDirty('type')) {
-            RadIpPool::whereIn('framedipaddress', $org)->update(['pool_name' => $pool->type]);
-        }
-
-        // we don't simply delete the old pool and create a new one,
-        // since we would lose important state, such as the expiry_time
-        if (multi_array_key_exists(['ip_pool_start', 'ip_pool_end'], $pool->getDirty())) {
-            RadIpPool::whereIn('framedipaddress', array_diff($org, $now))->delete();
-
-            $insert = [];
-            foreach (array_diff($now, $org) as $ip) {
-                $insert[] = [
-                    'pool_name' => $pool->type,
-                    'framedipaddress' => $ip,
-                ];
-            }
-            RadIpPool::insert($insert);
-        }
+        \Queue::push(new \Modules\ProvBase\Jobs\RadIpPoolJob($pool, $pool->getDirty(), $pool->getOriginal(), $pool->wasRecentlyCreated));
     }
 }
