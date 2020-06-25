@@ -630,7 +630,9 @@ class BaseModel extends Eloquent
         // column is array
         foreach ($array as $a) {
             foreach ($columns as $key => $c) {
-                $desc[$key] = $a->{$c};
+                if ($a->{$c}) {
+                    $desc[$key] = $a->{$c};
+                }
             }
 
             $ret[$a->id] = implode($separator, $desc);

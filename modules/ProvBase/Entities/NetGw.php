@@ -58,7 +58,7 @@ class NetGw extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         $ret = ['table' => $this->table,
-            'index_header' => [$this->table.'.id', $this->table.'.hostname', $this->table.'.ip', $this->table.'.company', $this->table.'.series'],
+            'index_header' => [$this->table.'.id', $this->table.'.hostname', 'type', $this->table.'.ip', $this->table.'.company', $this->table.'.series'],
             'header' =>  $this->hostname,
             'bsclass' => $bsclass,
             'order_by' => ['0' => 'asc'], ];
