@@ -2,7 +2,6 @@
 /**
  * Repository
  *
- * @package    App\V1
  * @author     Esben Petersen
  * @link       https://github.com/esbenp/genie/blob/master/src/Repository.php
  */
@@ -15,7 +14,6 @@ use Illuminate\Database\Eloquent\Collection;
 
 class Repository
 {
-
     use QueryBuilderTrait;
 
     protected $model;
@@ -31,10 +29,10 @@ class Repository
     }
 
     /**
-     *
      * @return BaseModel
      */
-    public function getModel(): BaseModel{
+    public function getModel(): BaseModel
+    {
         return $this->model;
     }
 
@@ -61,8 +59,8 @@ class Repository
      */
     public function getById($id, array $options = [])
     {
-        $options['filter_groups'][] = ["filters" => [
-            ["key" => "id", "value" => $id, "operator" => "eq", 'not' => false]], 'or' => false
+        $options['filter_groups'][] = ['filters' => [
+            ['key' => 'id', 'value' => $id, 'operator' => 'eq', 'not' => false], ], 'or' => false,
         ];
         $query = $this->createBaseBuilder($options);
 
@@ -295,6 +293,7 @@ class Repository
     protected function getCreatedAtColumn()
     {
         $model = $this->model;
+
         return ($model::CREATED_AT) ? $model::CREATED_AT : 'created_at';
     }
 }

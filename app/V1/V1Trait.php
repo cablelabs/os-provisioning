@@ -2,18 +2,15 @@
 /**
  * V1 Trait
  *
- * @package    App\V1
  * @author     Esben Petersen
  * @link       https://github.com/esbenp/bruno/blob/master/src/LaravelController.php
  */
 
-
 namespace App\V1;
 
-
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 trait V1Trait
@@ -27,13 +24,13 @@ trait V1Trait
     /**
      * Create a json response
      * @param  mixed  $data
-     * @param  integer $statusCode
+     * @param  int $statusCode
      * @param  array  $headers
      * @return Illuminate\Http\JsonResponse
      */
     protected function response($data, $statusCode = 200, array $headers = [])
     {
-        if ($data instanceof Arrayable && !$data instanceof JsonSerializable) {
+        if ($data instanceof Arrayable && ! $data instanceof JsonSerializable) {
             $data = $data->toArray();
         }
 
@@ -50,7 +47,7 @@ trait V1Trait
     protected function parseData($data, array $options, $key = null)
     {
         $dataParser = new DataParser();
-        if($data instanceof LengthAwarePaginator) {
+        if ($data instanceof LengthAwarePaginator) {
             $paginationData = $data;
             $data = collect($paginationData->getIterator() ?? $data);
             $parsedData = $dataParser->parseData($data, $options['modes'], $key);
@@ -67,12 +64,13 @@ trait V1Trait
      * @param array $sort
      * @return array
      */
-    protected function parseSort(array $sort) {
-        return array_map(function($sort) {
-            if(is_string($sort)){
+    protected function parseSort(array $sort)
+    {
+        return array_map(function ($sort) {
+            if (is_string($sort)) {
                 $sort = json_decode($sort, true);
             }
-            if (!isset($sort['direction'])) {
+            if (! isset($sort['direction'])) {
                 $sort['direction'] = 'asc';
             }
 
@@ -89,13 +87,13 @@ trait V1Trait
     {
         $return = [
             'includes' => [],
-            'modes' => []
+            'modes' => [],
         ];
 
         foreach ($includes as $include) {
             $explode = explode(':', $include);
 
-            if (!isset($explode[1])) {
+            if (! isset($explode[1])) {
                 $explode[1] = $this->defaults['mode'];
             }
 
@@ -113,16 +111,16 @@ trait V1Trait
     protected function parseFilterGroups(array $filter_groups)
     {
         $return = [];
-        foreach($filter_groups as $group) {
-            if(is_string($group)){
+        foreach ($filter_groups as $group) {
+            if (is_string($group)) {
                 $group = json_decode($group, true);
             }
-            if (!array_key_exists('filters', $group)) {
+            if (! array_key_exists('filters', $group)) {
                 throw new InvalidArgumentException('Filter group does not have the \'filters\' key.');
             }
 
-            $filters = array_map(function($filter){
-                if (!isset($filter['not'])) {
+            $filters = array_map(function ($filter) {
+                if (! isset($filter['not'])) {
                     $filter['not'] = false;
                 }
 
@@ -131,7 +129,7 @@ trait V1Trait
 
             $return[] = [
                 'filters' => $filters,
-                'or' => isset($group['or']) ? $group['or'] : false
+                'or' => isset($group['or']) ? $group['or'] : false,
             ];
         }
 
@@ -155,7 +153,7 @@ trait V1Trait
             'page' => null,
             'mode' => 'embed',
             'filter_groups' => [],
-            'paginate'=> false
+            'paginate'=> false,
         ], $this->defaults);
 
         $includes = $this->parseIncludes($request->get('includes', $this->defaults['includes']));
@@ -176,7 +174,7 @@ trait V1Trait
             'limit' => $limit,
             'page' => $page,
             'filter_groups' => $filter_groups,
-            'paginate'=> $paginate
+            'paginate'=> $paginate,
         ];
     }
 }

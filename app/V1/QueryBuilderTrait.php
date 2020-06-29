@@ -2,7 +2,6 @@
 /**
  * Query Builder Trait
  *
- * @package    App\V1
  * @author     Esben Petersen
  * @link       https://github.com/esbenp/bruno/blob/master/src/EloquentBuilderTrait.php
  */
@@ -10,15 +9,14 @@
 namespace App\V1;
 
 use DB;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-trait QueryBuilderTrait{
-
-
+trait QueryBuilderTrait
+{
     /**
      * Apply resource options to a query builder
      * @param  Builder $queryBuilder
@@ -34,7 +32,7 @@ trait QueryBuilderTrait{
         extract($options);
 
         if (isset($includes)) {
-            if (!is_array($includes)) {
+            if (! is_array($includes)) {
                 throw new InvalidArgumentException('Includes should be an array.');
             }
 
@@ -46,11 +44,11 @@ trait QueryBuilderTrait{
         }
 
         if (isset($sort)) {
-            if (!is_array($sort)) {
+            if (! is_array($sort)) {
                 throw new InvalidArgumentException('Sort should be an array.');
             }
 
-            if (!isset($filterJoins)) {
+            if (! isset($filterJoins)) {
                 $filterJoins = [];
             }
 
@@ -95,7 +93,7 @@ trait QueryBuilderTrait{
             });
         }
 
-        foreach(array_diff($joins, $previouslyJoined) as $join) {
+        foreach (array_diff($joins, $previouslyJoined) as $join) {
             $this->joinRelatedModelIfExists($queryBuilder, $join);
         }
 
@@ -108,7 +106,7 @@ trait QueryBuilderTrait{
      * @param bool|false $or
      * @param array $joins
      */
-    protected function applyFilter(Builder $queryBuilder, array $filter, $or = false, array &$joins)
+    protected function applyFilter(Builder $queryBuilder, array $filter, $or, array &$joins)
     {
         // Destructure Shorthand Filtering Syntax if filter is Shorthand
         if (! array_key_exists('key', $filter) && count($filter) >= 3) {
@@ -135,19 +133,19 @@ trait QueryBuilderTrait{
             $clauseOperator = null;
             $databaseField = null;
 
-            switch($operator) {
+            switch ($operator) {
                 case 'ct':
                 case 'sw':
                 case 'ew':
                     $valueString = [
                         'ct' => '%'.$value.'%', // contains
                         'ew' => '%'.$value, // ends with
-                        'sw' => $value.'%' // starts with
+                        'sw' => $value.'%', // starts with
                     ];
 
                     $castToText = (($dbType === 'postgres') ? 'TEXT' : 'CHAR');
-                    $databaseField = DB::raw(sprintf('CAST(%s.%s AS ' . $castToText . ')', $table, $key));
-                    $clauseOperator = ($not ? 'NOT':'') . (($dbType === 'postgres') ? 'ILIKE' : 'LIKE');
+                    $databaseField = DB::raw(sprintf('CAST(%s.%s AS '.$castToText.')', $table, $key));
+                    $clauseOperator = ($not ? 'NOT' : '').(($dbType === 'postgres') ? 'ILIKE' : 'LIKE');
                     $value = $valueString[$operator];
                     break;
                 case 'eq':
@@ -198,7 +196,7 @@ trait QueryBuilderTrait{
                     $method,
                     $clauseOperator,
                     $value,
-                    $clauseOperator // @deprecated. Here for backwards compatibility
+                    $clauseOperator, // @deprecated. Here for backwards compatibility
                 ]);
 
                 // column to join.
@@ -208,11 +206,11 @@ trait QueryBuilderTrait{
                 // In operations do not have an operator
                 if (in_array($operator, ['in', 'bt'])) {
                     call_user_func_array([$queryBuilder, $method], [
-                        $databaseField, $value
+                        $databaseField, $value,
                     ]);
                 } else {
                     call_user_func_array([$queryBuilder, $method], [
-                        $databaseField, $clauseOperator, $value
+                        $databaseField, $clauseOperator, $value,
                     ]);
                 }
             }
@@ -228,7 +226,7 @@ trait QueryBuilderTrait{
     protected function applySorting(Builder $queryBuilder, array $sorting, array $previouslyJoined = [])
     {
         $joins = [];
-        foreach($sorting as $sortRule) {
+        foreach ($sorting as $sortRule) {
             if (is_array($sortRule)) {
                 $key = $sortRule['key'];
                 $direction = mb_strtolower($sortRule['direction']) === 'asc' ? 'ASC' : 'DESC';
@@ -247,7 +245,7 @@ trait QueryBuilderTrait{
             }
         }
 
-        foreach(array_diff($joins, $previouslyJoined) as $join) {
+        foreach (array_diff($joins, $previouslyJoined) as $join) {
             $this->joinRelatedModelIfExists($queryBuilder, $join);
         }
 

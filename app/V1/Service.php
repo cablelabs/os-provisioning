@@ -2,7 +2,6 @@
 /**
  * Service
  *
- * @package    App\V1
  * @author     Esben Petersen
  * @link       https://github.com/esbenp/larapi/blob/master/api/Users/Services/UserService.php
  */
@@ -20,8 +19,7 @@ class Service
 
     public function __construct(
         Repository $repository
-    )
-    {
+    ) {
         $this->repository = $repository;
     }
 
