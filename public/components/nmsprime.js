@@ -181,7 +181,10 @@ $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
 
 function rezizeTextareas() {
   $('textarea').each(function () {
-    this.setAttribute('style', 'height:' + (this.scrollHeight + 5) + 'px;max-height: 1080px;');
+      $(this).css({
+          "height": this.scrollHeight + 5 + "px",
+          "max-height": "1080px"
+      });
   }).on('input', function () {
     var scrollLeft = window.pageXOffset ||
       (document.documentElement || document.body.parentNode || document.body).scrollLeft;
