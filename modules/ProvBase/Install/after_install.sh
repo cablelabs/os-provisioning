@@ -14,6 +14,8 @@ install -dm750 /etc/dhcp-nmsprime/cmts_gws
 chown -R apache:dhcpd /etc/dhcp-nmsprime
 chown -R apache /tftpboot
 chown -R named:named /var/named/dynamic
+chown apache:dhcpd /etc/named-ddns.sh
+chmod 750 /etc/named-ddns.sh
 
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/dhcp-nmsprime/dhcpd.conf
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/named-nmsprime.conf

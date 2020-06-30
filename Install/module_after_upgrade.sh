@@ -21,11 +21,13 @@ if [ $(rpm -qa nmsprime-* --queryformat '%{VERSION}-%{RELEASE}\n' | sort | uniq 
   /opt/rh/rh-php73/root/usr/bin/php artisan auth:nms
   /opt/rh/rh-php73/root/usr/bin/php artisan route:cache
   /opt/rh/rh-php73/root/usr/bin/php artisan view:clear
+
+  # finally: rebuild dhcpd/named config
+  /opt/rh/rh-php73/root/usr/bin/php artisan nms:dhcp
 fi
 
 systemctl reload httpd
 
 rm -f storage/framework/sessions/*
 chown -R apache storage bootstrap/cache /var/log/nmsprime
-chown -R apache:dhcpd /etc/dhcp-nmsprime
 systemd-tmpfiles --create
