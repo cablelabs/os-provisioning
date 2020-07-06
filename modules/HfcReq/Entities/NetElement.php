@@ -6,7 +6,6 @@ use Auth;
 use Cache;
 use Module;
 use Session;
-use Modules\HfcBase\Entities\IcingaObject;
 
 class NetElement extends \BaseModel
 {
@@ -19,6 +18,13 @@ class NetElement extends \BaseModel
     protected $with = ['netelementtype'];
 
     public $guarded = ['kml_file_upload'];
+
+    /**
+     * The connection name for the model.
+     *
+     * @var string
+     */
+    protected $connection = 'mysql';
 
     public $kml_path = 'app/data/hfcbase/kml_static';
     private $max_parents = 50;
@@ -129,11 +135,11 @@ class NetElement extends \BaseModel
             }
         }
 
-        if (! array_key_exists('icingaobject', $this->relations) && ! IcingaObject::db_exists()) {
+        if (! array_key_exists('icingaObject', $this->relations) && ! \Modules\HfcBase\Entities\IcingaObject::db_exists()) {
             return 'warning';
         }
 
-        $icingaObj = $this->icingaobject;
+        $icingaObj = $this->icingaObject;
         if ($icingaObj && $icingaObj->is_active) {
             $icingaObj = $icingaObj->hoststatus;
             if ($icingaObj) {
@@ -252,12 +258,120 @@ class NetElement extends \BaseModel
      * As Android and Iphone app developers use wrong columns to display object name, we use the relation
      * column to describe the object as well
      */
-    public function icingaobject()
+    public function icingaObject()
     {
         return $this
             ->hasOne(\Modules\HfcBase\Entities\IcingaObject::class, 'name1', 'id_name')
-            ->where('icinga_objects.objecttype_id', '1')
-            ->where('icinga_objects.is_active', '1');
+            ->where('objecttype_id', '1')
+            ->where('is_active', '1');
+    }
+
+    public function getIcingaHostAttribute()
+    {
+        return optional($this->icingaObject)->icingahost;
+    }
+
+    /**
+     * Relation to Objects that refer to IcingaServices.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function icingaServices()
+    {
+        return $this
+            ->hasManyThrough(
+                \Modules\HfcBase\Entities\IcingaServiceStatus::class,
+                \Modules\HfcBase\Entities\IcingaObject::class,
+                'name1', // foreign key on IcingaObject
+                'service_object_id', // Foreign key on IcingaServiceStatus
+                'id_name', // Local Key on Netelement
+                'object_id' // Local Key on IcingaObject
+            )
+            ->where('icinga_objects.is_active', 1);
+    }
+
+    public function getIcingaHostStatusAttribute()
+    {
+        if ($this->hostStatus) {
+            return $this->hostStatus;
+        }
+
+        return $this->icingaObject->hostStatus;
+    }
+
+    /**
+     * Link for this Host in IcingaWeb2
+     *
+     * @return string
+     */
+    public function toIcingaWeb()
+    {
+        if ($this->getRelation('icingaObject')) {
+            return 'https://'.request()->server('HTTP_HOST').'/icingaweb2/monitoring/host/show?host='.$this->icingaObject->name1;
+        }
+
+        return 'https://'.request()->server('HTTP_HOST').'/icingaweb2/monitoring/host/show?host='.$this->id.'_'.$this->name;
+    }
+
+    /**
+     * Link to Controlling page in NMS Prime, if this Host is registered as a
+     * NetElement in NMS Prime.
+     *
+     * @return string|void
+     */
+    public function toControlling()
+    {
+        return route('NetElement.controlling_edit', [
+            'id' => $this->id,
+            'parameter' => 0,
+            'index' => 0,
+        ]);
+    }
+
+    /**
+     * Link to Topo overview. Depending of the information available the
+     * netelement or all netelements are displayed.
+     *
+     * @return string
+     */
+    public function toMap()
+    {
+        if ($this->id) {
+            return route('TreeTopo.show', ['field' => 'id', 'search' => $this->id]);
+        }
+
+        return route('TreeTopo.show', ['field' => 'id', 'search' => 2]);
+    }
+
+    /**
+     * Link to Ticket creation form already prefilled.
+     *
+     * @return string
+     */
+    public function toTicket()
+    {
+        if ($this->icingaObject) {
+            return route('Ticket.create', [
+                'name' => e($this->icingaObject->name1),
+                'description' => '',
+            ]);
+        }
+
+        return route('Ticket.create', [
+            'name' => e($this->name),
+            'description' => '',
+        ]);
+    }
+
+    /**
+     * Tries to get the amount of affected modems of the related NetElement.
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $netelements
+     * @return int
+     */
+    public function affectedModemsCount($netelements)
+    {
+        return $netelements[$this->netelement->id] ?? 0;
     }
 
     public function clusterObj()
