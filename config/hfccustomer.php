@@ -38,6 +38,7 @@ return [
             'percentage' => [
                 'warning' => 70,
                 'critical' => 50,
+                'multipleClusters' => 75
             ],
         ],
     ],
