@@ -575,8 +575,11 @@ class ConfigfileObserver
 
         $prov = [];
         $conf = $configfile->getMonitoringConfig() ?: [];
+
         $prov = array_map(function ($value) {
-            return "declare('$value', {value: Date.now() - (290 * 1000)});";
+            if (\Str::startsWith($value, ['_', 'Device', 'InternetGatewayDevice'])) {
+                return "declare('$value', {value: Date.now() - (290 * 1000)});";
+            }
         }, \Illuminate\Support\Arr::flatten($conf));
 
         Modem::callGenieAcsApi("provisions/mon-$configfile->id", 'PUT', implode("\r\n", $prov));
