@@ -55,7 +55,7 @@ return [
     'Menu_Devices'              => 'Devices',
     'Menu_DeviceTypes'          => 'Devicetypes',
     'Menu_Contracts'            => 'Contracts',
-    'Menu_HfcBase'              => 'HFC',
+    'Menu_HfcBase'              => 'HFC Detect',
     'Menu_ProvBase'             => 'Provisioning',
     'Menu_Modems'               => 'Modems',
     'Menu_Endpoints'            => 'Endpoints',
