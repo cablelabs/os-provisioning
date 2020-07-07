@@ -629,6 +629,7 @@ class BaseModel extends Eloquent
 
         // column is array
         foreach ($array as $a) {
+            $desc = [];
             foreach ($columns as $key => $c) {
                 if ($a->{$c}) {
                     $desc[$key] = $a->{$c};
