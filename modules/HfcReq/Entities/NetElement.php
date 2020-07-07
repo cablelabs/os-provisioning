@@ -337,7 +337,7 @@ class NetElement extends \BaseModel
     public function toMap()
     {
         if ($this->id) {
-            return route('TreeTopo.show', ['field' => 'id', 'search' => $this->id]);
+            return route('CustomerTopo.show', ['field' => 'netelement_id', 'search' => $this->id]);
         }
 
         return route('TreeTopo.show', ['field' => 'id', 'search' => 2]);
