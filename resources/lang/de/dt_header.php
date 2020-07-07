@@ -204,6 +204,7 @@ return [
     'modem.name' => 'Modemname',
     'modem.street' => 'Straße',
     'modem.sw_rev' => 'Firmware-Version',
+    'modem.ppp_username' => 'PPP Nutzername',
     'modem.us_pwr' => 'US Pegel',
     'contract_valid' => 'Vertrag gültig?',
     // Node
