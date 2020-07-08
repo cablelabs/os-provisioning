@@ -285,6 +285,30 @@ class ModemController extends \BaseController
     }
 
     /**
+     * Perform factory reset via TR-069
+     *
+     * @author Ole Ernst
+     */
+    public function factoryReset()
+    {
+        if (! $id = Request::get('id')) {
+            \Session::push('tmp_error_above_form', 'Id not specified');
+
+            return \Redirect::back();
+        }
+
+        if (! $modem = Modem::find($id)) {
+            \Session::push('tmp_error_above_form', 'Modem not found');
+
+            return \Redirect::back();
+        }
+
+        $modem->factoryReset();
+
+        return \Redirect::back();
+    }
+
+    /**
      * Return tree view of all used firmwares
      *
      * @return View

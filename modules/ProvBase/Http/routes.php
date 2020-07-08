@@ -17,6 +17,12 @@ BaseRoute::group([], function () {
         'middleware' => ['can:view,Modules\ProvBase\Entities\Modem'],
     ]);
 
+    BaseRoute::get('modem/factoryreset', [
+        'as' => 'Modem.factoryReset',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@factoryReset',
+        'middleware' => ['can:update,Modules\ProvBase\Entities\Modem'],
+    ]);
+
     Route::group(['prefix' => 'api/v{ver}'], function () {
         Route::get('Modem/{Modem}/restart', [
             'as' => 'Modem.api_restart',
