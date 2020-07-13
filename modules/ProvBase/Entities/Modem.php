@@ -1112,6 +1112,10 @@ class Modem extends \BaseModel
         // Log
         Log::info(($factoryReset ? 'factoryReset' : 'restart').' modem '.$this->hostname);
 
+        if (! $factoryReset && $this->successfulRadiusModemDisconnect()) {
+            return;
+        }
+
         if ($this->isTR069()) {
             $id = $this->getGenieAcsModel('_id');
             if (! $id) {
@@ -1212,6 +1216,55 @@ class Modem extends \BaseModel
                 }
             }
         }
+    }
+
+    /**
+     * Disconnect PPPoE devices via Disconnect Request against NAS
+     *
+     * This is comparable to clear cable modem reset/delete, since only the
+     * session is stopped the devices itself won't reboot, rather just reconnect
+     *
+     * @return true if succesfully disconnected, otherwise false
+     *
+     * @author Ole Ernst
+     */
+    private function successfulRadiusModemDisconnect(): bool
+    {
+        if (! $this->isPPP()) {
+            return false;
+        }
+
+        $cur = $this->radacct()->latest('radacctid')->first();
+
+        // no active PPP session or necessary fields aren't set
+        if (! $cur || $cur->acctstoptime || ! $cur->nasipaddress || ! $cur->acctsessionid || ! $cur->username) {
+            return false;
+        }
+
+        $netgw = NetGw::where('ip', $cur->nasipaddress)->first();
+
+        // no NetGw of PPP session found, NetGw has no NAS assigned, NAS has no secret or Change of Authorization port not set
+        if (! $netgw || ! $netgw->nas || ! $netgw->nas->secret || ! $netgw->coa_port) {
+            \Session::push('tmp_warning_above_form', trans('messages.modem_disconnect_radius_warning'));
+
+            return false;
+        }
+
+        // https://tools.ietf.org/html/rfc5176#section-3
+        // https://wiki.freeradius.org/protocol/Disconnect-Messages#example-disconnect-request
+        $cmd = "echo 'Acct-Session-Id={$cur->acctsessionid}, User-Name={$cur->username}, NAS-IP-Address={$cur->nasipaddress}' | radclient -r1 -t1 -s {$netgw->ip}:{$netgw->coa_port} disconnect {$netgw->nas->secret}";
+
+        exec($cmd, $out, $ret);
+
+        if ($ret !== 0) {
+            \Session::push('tmp_error_above_form', implode('<br>', $out));
+
+            return false;
+        }
+
+        \Session::push('tmp_info_above_form', trans('messages.modem_disconnect_radius_success'));
+
+        return true;
     }
 
     /**

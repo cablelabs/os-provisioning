@@ -29,6 +29,7 @@ class NetGw extends \BaseModel
             'hostname' => 'required|unique:netgw,hostname,'.$id.',id,deleted_at,NULL',  	// unique: table, column, exception , (where clause)
             'company' => 'required',
             'type' => "required|in:$types",
+            'coa_port' => 'nullable|numeric|min:1|max:65535',
         ];
     }
 

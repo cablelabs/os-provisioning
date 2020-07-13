@@ -315,6 +315,8 @@ return [
     'Cost Center (optional)'    => 'Cost Center (optional)',
     'Credit Amount'             => 'Credit Amount',
     'modem_restart_success_direct' => 'Restarted Modem directly via SNMP/TR069',
+    'modem_disconnect_radius_success' => 'Disconnected Modem via RADIUS (Change of Authorization)',
+    'modem_disconnect_radius_warning' => 'Device cannot be restarted via RADIUS, due to one of the following reasons:<ul><li>NetGw of PPP session cannot be determined</li><li>NetGw has no NAS secret set</li><li>NetGw has no Change of Authorization port set.</li></ul>',
     'Item'                      => 'Item',
     'Items'                     => 'Items',
     'modem_save_button_title'   => 'Saves changed data. Determines new geoposition when address data was changed and assigns it to a new MPR (if x/y coordinate was automatically or manually changed). Rebuilds the configfile and restarts the modem if at least one of the following has changed: Public IP, network access, configfile, QoS, MAC-address.',
