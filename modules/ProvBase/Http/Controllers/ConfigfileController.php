@@ -172,19 +172,15 @@ class ConfigfileController extends \BaseController
         $jsonArrayPage = [];
         $listCounter = 0;
 
-        // delete all parameters of the config in the list we got from /devices
-        // so that no parameter is in both lists
-        foreach (json_decode($jsonFromDb, true) as $jsName => $jsonArray) {
-            $jsonArrayPage[$listCounter]['name'] = $jsName;
-            foreach ($jsonArray as $jKey => $jElement) {
-                $jsonArrayPage[$listCounter]['content'][] = ['id' => $jElement, 'name' => $jKey];
-                foreach ($parametersArray as $oKey => $oElement) {
-                    if ($jElement == $oElement['id']) {
-                        unset($parametersArray[$oKey]);
-                    }
+        $jsonDecoded = json_decode($jsonFromDb, true);
+        if ($jsonDecoded !== null) {
+            foreach ($jsonDecoded as $jsName => $jsonArray) {
+                $jsonArrayPage[$listCounter]['name'] = $jsName;
+                foreach ($jsonArray as $jKey => $jElement) {
+                    $jsonArrayPage[$listCounter]['content'][] = ['id' => $jElement, 'name' => $jKey];
                 }
+                $listCounter++;
             }
-            $listCounter++;
         }
 
         array_unshift($jsonArrayPage, ['name' => 'listdevices', 'content' => array_values($parametersArray)]);
