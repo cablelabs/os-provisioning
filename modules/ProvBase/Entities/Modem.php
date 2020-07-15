@@ -1125,6 +1125,13 @@ class Modem extends \BaseModel
             }
 
             $id = rawurlencode($id);
+
+            $route = "tasks/?query={\"device\":\"$id\",\"name\":\"factoryReset\"}";
+            // factoryReset of device has already been scheduled, no need to spawn another task
+            if (json_decode(self::callGenieAcsApi($route, 'GET'))) {
+                return;
+            }
+
             $action = $factoryReset ? 'factoryReset' : 'reboot';
             $success = self::callGenieAcsApi("devices/$id/tasks?timeout=3000&connection_request", 'POST', "{ \"name\" : \"$action\" }");
 
