@@ -198,6 +198,12 @@ class PhonenumberController extends \BaseController
         // a phonenumber can only exist once for the same country_code/prefix_number combination
         $rules['number'] .= '|unique:phonenumber,number,'.$id.',id,deleted_at,NULL,country_code,'.$data['country_code'].',prefix_number,'.$data['prefix_number'];
 
+        if (! \Module::collections()->has('ProvVoipEnvia')) {
+            foreach (['username', 'sipdomain'] as $param) {
+                appendValidationRule($rules, $param, 'required');
+            }
+        }
+
         return parent::prepare_rules($rules, $data);
     }
 
