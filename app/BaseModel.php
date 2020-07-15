@@ -532,6 +532,9 @@ class BaseModel extends Eloquent
      */
     protected function _delete()
     {
+        if (!$this->writeAllowed()) {
+            return false;
+        }
         if ($this->force_delete) {
             return parent::performDeleteOnModel();
         }
@@ -550,6 +553,9 @@ class BaseModel extends Eloquent
      */
     public function delete()
     {
+        if (!$this->writeAllowed()) {
+            return false;
+        }
         if ($this->delete_children) {
             $children = $this->get_all_children();
             // find and delete all children
@@ -600,6 +606,9 @@ class BaseModel extends Eloquent
 
     public static function destroy($ids)
     {
+        if (!$this->writeAllowed()) {
+            return false;
+        }
         $instance = new static;
 
         foreach ($ids as $id => $help) {
@@ -730,8 +739,69 @@ class BaseModel extends Eloquent
 
     public static function getUser()
     {
-        $user = Auth::user();
+        $user = \Auth::user();
 
         return $user ? $user->first_name.' '.$user->last_name : 'cronjob';
+    }
+
+    /**
+     * Helper to check if writing (=changing the database) is allowed
+     * Intercept writing operations on ProvHA slave machines instead of let laravel throw PDO exceptions.
+     *
+     * @author Patrick Reichel
+     */
+    public function writeAllowed()
+    {
+        // in ProvHA environments: Only master is allowed to change the database
+        if (\Module::collections()->has('ProvHA')) {
+            if ('master' != config('provha.hostinfo.own_state')) {
+                $msg = trans('provha::messages.db_change_forbidden_not_master', ['state' => config('provha.hostinfo.own_state')]);
+                $this->addAboveMessage($msg, 'error');
+                \Log::error('Slave tried to write do database in '.(get_class($this)).'::'.(debug_backtrace()[1]['function']).'()');
+                return false;
+            }
+        }
+
+        // default: writing is allowed
+        return true;
+    }
+
+    /**
+     * Overwrite parent to add check if changing database is allowed.
+     *
+     * @author Patrick Reichel
+     */
+    public function save(array $options = [])
+    {
+        if (!$this->writeAllowed()) {
+            return false;
+        }
+        return parent::save($options);
+    }
+
+    /**
+     * Overwrite parent to add check if changing database is allowed.
+     *
+     * @author Patrick Reichel
+     */
+    public function forceDelete()
+    {
+        if (!$this->writeAllowed()) {
+            return false;
+        }
+        return parent::forceDelete();
+    }
+
+    /**
+     * Overwrite parent to add check if changing database is allowed.
+     *
+     * @author Patrick Reichel
+     */
+    public function update(array $attributes = [], array $options = [])
+    {
+        if (!$this->writeAllowed()) {
+            return false;
+        }
+        return parent::update($attributes, $options);
     }
 }

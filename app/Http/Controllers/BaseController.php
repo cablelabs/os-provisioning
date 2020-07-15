@@ -981,22 +981,22 @@ class BaseController extends Controller
 
         // Note: Eloquent Update requires updated_at to either be in the fillable array or to have a guarded field
         //       without updated_at field. So we globally use a guarded field from now, to use the update timestamp
-        $obj->update($data);
+        $updated = $obj->update($data);
 
-        // Add N:M Relations
-        if (isset($this->many_to_many) && is_array($this->many_to_many)) {
-            $this->_set_many_to_many_relations($obj, $data);
+        if ($updated) {
+            // Add N:M Relations
+            if (isset($this->many_to_many) && is_array($this->many_to_many)) {
+                $this->_set_many_to_many_relations($obj, $data);
+            }
         }
 
         // create messages depending on error state created while observer execution
         // TODO: check if giving msg/color to route is still wanted or obsolete by the new tmp_*_above_* messages format
-        if (! Session::has('error')) {
+        if (($updated) && (! Session::has('error'))) {
             $msg = 'Updated!';
-            $color = 'success';
             $obj->addAboveMessage($msg, 'success', 'form');
         } else {
             $msg = Session::get('error');
-            $color = 'warning';
             $obj->addAboveMessage($msg, 'error', 'form');
         }
 
@@ -1006,7 +1006,7 @@ class BaseController extends Controller
             return Redirect::route('Config.index');
         }
 
-        return Redirect::route($route_model.'.edit', $id)->with('message', $msg)->with('message_color', $color);
+        return Redirect::route($route_model.'.edit', $id);
     }
 
     /**
