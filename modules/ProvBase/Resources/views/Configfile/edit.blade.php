@@ -19,18 +19,32 @@
 <script src="{{asset('components/assets-admin/plugins/vuedraggable/dist/vuedraggable.umd.min.js')}}"></script>
 
 <div id="app" class="dragdropfield">
-    <h2>Build your interface:</h2>
+    <h2>{{ trans('view.Header_DragDrop') }}
+        <a data-toggle="popover" data-html="true" data-container="body" data-trigger="hover" title="" data-placement="right"
+            data-content="{{trans('view.Header_DragDrop Infotext')}}"
+            data-original-title="{{trans('view.Header_DragDrop Infoheader')}}">
+            <i class="fa fa-2x p-t-5 fa-question-circle text-info dragdropinfo"></i>
+        </a>
+    </h2>
+
     <div class="box" id="left">
         <draggable v-model="lists" :group="{ name: 'g1' }" class="droplist" :options="{draggable: '.list-group', filter: 'input', preventOnFilter: false}">
             <div v-for="(list, key) in lists" v-if="key != '0'" class="list-group">
                 <div class="listbox">
                     <div class="h">
                         <input type="text" v-model="list.name">
-                        <button class="btn btn-primary" @click="delList(key)">Delete list</button>
+                        <button class="btn btn-primary" @click="delList(key)">{{ trans('view.Button_DragDrop DeleteList') }}</button>
                     </div>
-                    <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone" :options="{draggable: '.listitem', filter: 'input', preventOnFilter: false}">
-                        <div class="listitem" v-for="(item, id) in list.content" :key="item.id">
-                            <div :class="item.id">@{{ item.id }} <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id)"/></div>
+                    <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone" :options="{draggable: '.dragdroplistitem', filter: 'input', preventOnFilter: false}">
+                        <div class="dragdroplistitem" v-for="(item, id) in list.content" :key="item.id">
+                            <div :class="item.id">@{{ item.id }} <i class="fa fa-cog dragdropitembutton" aria-hidden="true" v-on:click="itemmenu($event.target, key, id)"></i>
+                            <div class="dragdropitemmenubox">
+                              <span class="dragdropitemmenubutton" v-for="(listname, listkey) in lists" v-if="listkey != '0' && listkey !=  key" v-on:click="moveItem(key,listkey, id)">{{ trans('view.Button_DragDrop MoveTo') }} @{{ listname.name }}</span>
+                                <span class="dragdropitemmenubutton" v-on:click="moveItem(key, -1, id)">{{ trans('view.Button_DragDrop MoveToNewList') }}</span>
+                                <span class="dragdropitemmenubutton" v-on:click="moveItem(key, 0, id)">{{ trans('view.Button_DragDrop DeleteElement') }}</span>
+                            </div>
+                            <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id)"/>
+                            </div>
                         </div>
                     </draggable>
                 </div>
@@ -38,8 +52,8 @@
         </draggable>
 
         <div class="newlist">
-            <input type="text" v-model="listName" placeholder="Name of new list" />
-            <button class="btn btn-primary" @click="addList()">Add new list</button>
+            <input type="text" v-model="listName" placeholder="{{ trans('view.Header_DragDrop Listname') }}" />
+            <button class="btn btn-primary" @click="addList()">{{ trans('view.Button_DragDrop AddList') }}</button>
         </div>
     </div>
 
@@ -48,11 +62,18 @@
             <div v-for="(list, key) in lists" v-if="key == '0'" class="list-group">
                 <div class="listbox">
                     <div class="h">
-                        <input type="text" value="Parameters for this device" readonly="true">
+                        <input type="text" value="{{ trans('view.Header_DragDrop DeviceParameters') }}" readonly="true"> <a href="{{route('Configfile.refreshGenieAcs', $view_var->id )}}" class="btn btn-primary" >{{ trans('view.Button_DragDrop Refresh') }}</a> 
                     </div>
-                    <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone" :options="{draggable: '.listitem', filter: 'input', preventOnFilter: false}">
-                        <div class="listitem" v-for="(item, id) in list.content" :key="item.id">
-                            <div :class="item.id">@{{ item.id }} <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id)"/></div>
+                    <input type="text" v-on:keyup="ddFilter" id="ddsearch" placeholder="{{ trans('view.Button_DragDrop Search') }}"/>
+                    <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone" :options="{draggable: '.dragdroplistitem', filter: 'input', preventOnFilter: false}">
+                        <div class="dragdroplistitem" v-for="(item, id) in list.content" :key="item.id">
+                            <div :class="item.id">@{{ item.id }} <i class="fa fa-cog dragdropitembutton" aria-hidden="true" v-on:click="itemmenu($event.target, key, id)"></i>
+                            <div class="dragdropitemmenubox">
+                              <span class="dragdropitemmenubutton" v-for="(listname, listkey) in lists" v-if="listkey != '0'" v-on:click="moveItem(key,listkey, id)">{{ trans('view.Button_DragDrop MoveTo') }} @{{ listname.name }}</span>
+                              <span class="dragdropitemmenubutton" v-on:click="moveItem(key,-1, id)">{{ trans('view.Button_DragDrop MoveToNewList') }}</span>
+                            </div>
+                            <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id)"/>
+                            </div>
                         </div>
                     </draggable>
                 </div>
@@ -72,6 +93,30 @@ var app = new Vue({
     methods: {
         onKeyUp: function(newval, key, id) {
             this.lists[key].content[id].name=newval;
+        },
+        itemmenu: function(element, key, id) {
+            targetElement=element.parentNode.getElementsByClassName("dragdropitemmenubox")[0];
+            if (targetElement.style.display!="block"){
+                targetElement.style.display="block";
+            }
+            else {
+                targetElement.style.display="none";
+            }
+        },
+        moveItem: function(olist, key, id) {
+            //for creating a new list
+            if (key==-1) {
+                this.lists.push({
+                    name: '{{ trans('view.Header_DragDrop Listname') }}',
+                    content: []
+                });
+                key=this.lists.length-1;
+            }
+            //move item
+            moveId=this.lists[olist].content[id].id;
+            moveName=this.lists[olist].content[id].name;
+            this.lists[key].content.push({'id': moveId, 'name': moveName});
+            this.lists[olist].content.splice(id, 1);
         },
         addList: function() {
             if (! this.listName) {
@@ -105,6 +150,20 @@ var app = new Vue({
 
             //delete the list
             this.lists.splice(key, 1);
+        },
+        ddFilter: function(key) {
+            var search=document.getElementById("ddsearch").value;
+            if (search != "") {
+                var refThis=this; //xhttps anonymous function overwrites the this-reference
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4) {
+                        refThis.lists[0].content=JSON.parse(this.responseText);
+                    }
+                };
+                xhttp.open("GET", "{{route('Configfile.searchDeviceParams', $view_var->id )}}?search="+search, true);
+                xhttp.send();
+            }
         },
     },
     updated: function () {

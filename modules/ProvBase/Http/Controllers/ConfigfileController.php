@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Modules\ProvBase\Entities\Modem;
@@ -90,6 +91,86 @@ class ConfigfileController extends \BaseController
         return parent::store();
     }
 
+    public function searchDeviceParams($id)
+    {
+        $model = Configfile::find($id);
+
+        $parametersArray = [];
+        $storagefile = 'data/provbase/gacs/'.($model->id).'.json';
+        //take from storage
+        if (Storage::exists($storagefile)) {
+            $parametersArray = json_decode(Storage::get($storagefile), true);
+        }
+
+        //if storage is empty, regenerate storage
+        if (empty($parametersArray)) {
+            $this->refreshGenieAcs($model->id, false);
+            $parametersArray = json_decode(Storage::get($storagefile), true);
+        }
+
+        if (empty($parametersArray)) {
+            return [];
+        }
+
+        $parametersArray = array_values($parametersArray);
+        $returnArray = [];
+        $search = $_GET['search'];
+        if (empty($search)) {
+            return [];
+        }
+
+        $elements = 0;
+        foreach ($parametersArray as $param) {
+            if (stristr($param['id'], $search)) {
+                $returnArray[] = $param;
+                $elements++;
+                if ($elements > 50) {
+                    break;
+                }
+            }
+        }
+
+        return json_encode($returnArray);
+    }
+
+    public function refreshGenieAcs($id, $refresh = true)
+    {
+        $model = Configfile::find($id);
+
+        $query = [
+            '_lastInform' => [
+                '$gt' => \Carbon\Carbon::now('UTC')->subMinute(5)->toIso8601ZuluString(),
+            ],
+        ];
+
+        $query = json_encode($query);
+        $route = "devices/?query=$query&projection=_deviceId._SerialNumber";
+
+        $online = array_map(function ($value) {
+            return $value->_deviceId->_SerialNumber ?? null;
+        }, json_decode(\modules\ProvBase\Entities\Modem::callGenieAcsApi($route, 'GET')));
+
+        $modemSerials = $model->modem()->whereNotNull('serial_num')->distinct()->pluck('serial_num');
+
+        $modemSerialsIntersect = array_values(array_intersect($modemSerials, $online));
+        if (count($modemSerialsIntersect > 0)) {
+            $modemSerial = $modemSerialsIntersect[0];
+            $modem = $model->modem()->where('serial_num', $modemSerial)->first();
+            $modem = Modem::first();
+            \Modules\ProvMon\Http\Controllers\ProvMonController::realtimeTR069($modem, true);
+
+            $modem = Modem::callGenieAcsApi("devices/?query={\"_deviceId._SerialNumber\":\"{$modemSerial}\"}", 'GET');
+            $parametersArray = $this->buildElementList($this->getFromDevices($modem));
+
+            $storagefile = 'data/provbase/gacs/'.($model->id).'.json';
+            Storage::put($storagefile, json_encode($parametersArray));
+        }
+
+        if ($refresh) {
+            return redirect()->back();
+        }
+    }
+
     /**
      * Returns content from devices.json
      *
@@ -120,12 +201,9 @@ class ConfigfileController extends \BaseController
         }
         foreach ($devicesJson as $key => $elementJson) {
             $inPath = $tmpInPath.$key;
-            if (substr($key, 0, 1) != '_') {
-                // elements with underscore that do have subelements should not exist
-                $parametersArray[] = ['id' => $inPath, 'name' => $inPath];
-                if (is_array($elementJson)) {
-                    $parametersArray = array_merge($parametersArray, $this->buildElementList($elementJson, $inPath));
-                }
+            $parametersArray[] = ['id' => $inPath, 'name' => $inPath];
+            if (is_array($elementJson)) {
+                $parametersArray = array_merge($parametersArray, $this->buildElementList($elementJson, $inPath));
             }
         }
 
@@ -154,15 +232,18 @@ class ConfigfileController extends \BaseController
                 break;
             }
         }
-        $modemSerials = $model->modem()->whereNotNull('serial_num')->distinct()->pluck('serial_num');
 
-        foreach ($modemSerials as $modemSerial) {
-            $modem = Modem::callGenieAcsApi("devices/?query={\"_deviceId._SerialNumber\":\"{$modemSerial}\"}", 'GET');
-            $parametersArray = $this->buildElementList($this->getFromDevices($modem));
+        $parametersArray = [];
+        $storagefile = 'data/provbase/gacs/'.($model->id).'.json';
+        //take from storage
+        if (Storage::exists($storagefile)) {
+            $parametersArray = json_decode(Storage::get($storagefile), true);
+        }
 
-            if (! empty($parametersArray)) {
-                break;
-            }
+        //if storage is empty, regenerate storage
+        if (empty($parametersArray)) {
+            $this->refreshGenieAcs($model->id, false);
+            $parametersArray = json_decode(Storage::get($storagefile), true);
         }
 
         if (empty($parametersArray)) {
@@ -183,7 +264,7 @@ class ConfigfileController extends \BaseController
             }
         }
 
-        array_unshift($jsonArrayPage, ['name' => 'listdevices', 'content' => array_values($parametersArray)]);
+        array_unshift($jsonArrayPage, ['name' => 'listdevices', 'content' => array_slice(array_values($parametersArray), 0, 50)]);
 
         foreach ($jsonArrayPage as $jsonArray) {
             if (! array_key_exists('content', $jsonArray)) {
