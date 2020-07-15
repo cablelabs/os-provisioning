@@ -696,4 +696,6 @@ return [
     'contribute_modem_picture'  => 'Default device - Please contribute an image of your device to our GitHub page. Click the image to get redirected.',
     'no_modem_picture'          => 'There is currently no image available.',
     'factory_reset'             => 'Factory Reset',
+    'Default SIP Registrar'     => 'Default SIP Registrar',
+    'Default Country Code'      => 'Default Country Code',
 ];

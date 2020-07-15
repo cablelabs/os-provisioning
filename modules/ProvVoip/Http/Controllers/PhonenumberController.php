@@ -23,11 +23,8 @@ class PhonenumberController extends \BaseController
             $model = new Phonenumber;
         }
 
-        if (\Module::collections()->has('ProvVoipEnvia')) {
-            $login_placeholder = 'Autofilled if empty.';
-        } else {
-            $login_placeholder = '';
-        }
+        $hasProvVoipEnvia = \Module::collections()->has('ProvVoipEnvia');
+        $provVoip = \Modules\ProvVoip\Entities\ProvVoip::first();
 
         // if there is no phonenumbermanagement: make checkbox changeable
         // TODO: should this be the case or do we want to need a management in each case?
@@ -63,7 +60,7 @@ class PhonenumberController extends \BaseController
         }
 
         $reassign_help = 'Can be used to assign the phonenumber (and related data) to another MTA.';
-        if (\Module::collections()->has('ProvVoipEnvia')) {
+        if ($hasProvVoipEnvia) {
             $reassign_help .= 'MTA has to belong to the same contract and modem installation addresses have to be equal.';
         }
 
@@ -96,6 +93,7 @@ class PhonenumberController extends \BaseController
                 'description' => 'International prefix',
                 'help' => 'Usually, 4 digit number required for international calls.',
                 'autocomplete' => [],
+                'init_value' => $provVoip->default_country_code,
             ],
             [
                 'form_type' => 'text',
@@ -114,7 +112,7 @@ class PhonenumberController extends \BaseController
 
         // create the form field for SIP username – envia TEL causes special handling
         $options = [];
-        if (\Module::collections()->has('ProvVoipEnvia')) {
+        if ($hasProvVoipEnvia) {
             if ($model->contract_external_id) {
                 $options = ['readonly'];
             } else {
@@ -132,7 +130,7 @@ class PhonenumberController extends \BaseController
 
         // create the form field for SIP password – envia TEL causes special handling
         $options = [];
-        if (\Module::collections()->has('ProvVoipEnvia')) {
+        if ($hasProvVoipEnvia) {
             $options = ['placeholder' => 'Autofilled if empty.'];
         }
         $password = [
@@ -147,7 +145,7 @@ class PhonenumberController extends \BaseController
 
         // create the form field for SIP domain – envia TEL causes special handling
         $options = [];
-        if (\Module::collections()->has('ProvVoipEnvia')) {
+        if ($hasProvVoipEnvia) {
             if ($model->contract_external_id) {
                 $options = ['readonly'];
             } else {
@@ -159,6 +157,7 @@ class PhonenumberController extends \BaseController
             'name' => 'sipdomain',
             'description' => trans('messages.SIP domain'),
             'autocomplete' => [],
+            'init_value' => $hasProvVoipEnvia ? '' : $provVoip->default_sip_registrar,
         ];
         if ($options) {
             $sipdomain['options'] = $options;
