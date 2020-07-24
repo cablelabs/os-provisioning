@@ -31,9 +31,11 @@ class MtaController extends \BaseController
 //                    if($last_mta = $modem->mtas()->orderBy('updated_at', 'desc')->first()){
 //                        $mac = $last_mta->mac;
 //                    }
-                    $dec_mac = hexdec($mac);
-                    $dec_mac++;
-                    $mac = rtrim(strtoupper(chunk_split(str_pad(dechex($dec_mac), 12, '0', STR_PAD_LEFT), 2, ':')), ':');
+                    if ($mac) {
+                        $dec_mac = hexdec($mac);
+                        $dec_mac++;
+                        $mac = rtrim(strtoupper(chunk_split(str_pad(dechex($dec_mac), 12, '0', STR_PAD_LEFT), 2, ':')), ':');
+                    }
                 }
             }
         }
@@ -75,9 +77,9 @@ class MtaController extends \BaseController
 
         if (\Module::collections()->has('ProvMon') && \Bouncer::can('view_analysis_pages_of', Modem::class)) {
             array_push($tabs,
-                ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => $model->modem_id],
-                ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => $model->modem_id],
-                ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => $model->modem_id]
+                ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $model->modem_id],
+                ['name' => 'CPE-Analysis', 'icon' => 'area-chart', 'route' => 'ProvMon.cpe', 'link' => $model->modem_id],
+                ['name' => 'MTA-Analysis', 'icon' => 'area-chart', 'route' => 'ProvMon.mta', 'link' => $model->modem_id]
             );
         }
 
@@ -111,5 +113,17 @@ class MtaController extends \BaseController
         ->implode(', ');
 
         return response()->json(['ret' => $err ?: 'success']);
+    }
+
+    public function prepare_rules($rules, $data)
+    {
+        $modem = Modem::where('id', $data['modem_id'])->with('configfile')->first();
+
+        if ($modem->configfile->device == 'cm') {
+            $id = $data['id'] ?? null;
+            $rules['mac'] .= '|required|unique:mta,mac,'.$id.',id,deleted_at,NULL'; //|unique:mta,mac',
+        }
+
+        return parent::prepare_rules($rules, $data);
     }
 }

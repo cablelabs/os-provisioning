@@ -11,6 +11,8 @@ use Modules\HfcReq\Entities\NetElementType;
 class NetElementTypeController extends HfcReqController
 {
     protected $index_tree_view = true;
+    protected $edit_left_md_size = 6;
+    protected $edit_right_md_size = 6;
 
     /**
      * defines the formular fields for the edit and create view

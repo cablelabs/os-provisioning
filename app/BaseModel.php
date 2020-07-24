@@ -630,7 +630,9 @@ class BaseModel extends Eloquent
         // column is array
         foreach ($array as $a) {
             foreach ($columns as $key => $c) {
-                $desc[$key] = $a->{$c};
+                if ($a->{$c}) {
+                    $desc[$key] = $a->{$c};
+                }
             }
 
             $ret[$a->id] = implode($separator, $desc);
@@ -971,7 +973,8 @@ class BaseModel extends Eloquent
                 $prev_route_name = app('router')->getRoutes()->match(app('request')->create(\URL::previous()))->getName();
             } catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception) {
                 // Exception is thrown if no mathing route found (e.g. if coming from outside).
-                \Log::warning('Could not determine previous route: '.$exception);
+                \Log::warning('Could not determine previous route');
+                \Log::debug($exception);
 
                 return false;
             }

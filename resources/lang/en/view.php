@@ -341,8 +341,8 @@ return [
     'Button_Create QoS'             => 'Create QoS-Rule',
     'Button_Create Qos'             => 'Create QoS-Rule',
     // //NetGws
-    'Button_Create NetGws'          => 'Create NetGw',
-    'Button_Create Netgws'          => 'Create NetGw',
+    'Button_Create NetGw'          => 'Create NetGateway',
+    'Button_Create NetGws'          => 'Create NetGateways',
     // //IpPool
     'Button_Create IpPool'          => 'Create IpPool', //workaround
     'Button_Create IP-Pools'        => 'Create IpPools',
@@ -350,6 +350,8 @@ return [
     // DASHBOARD
     'dashboard' => [
         'contractIndexPage' => 'Contracts',
+        'modemIndexPage' => 'Modems',
+        'netelementIndexPage' => 'Netelements',
         'ticketIndexPage' => 'Tickets',
     ],
     'Dashboard_Contracts'           => 'ACTIVE CONTRACTS',

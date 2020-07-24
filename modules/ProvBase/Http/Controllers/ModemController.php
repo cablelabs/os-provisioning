@@ -89,18 +89,24 @@ class ModemController extends \BaseController
             $geopos = trans('messages.geopos_x_y');
         }
 
+        $configfiles = $model->html_list_with_count($model->configfiles(), 'name', false, '', 'configfile_id', 'modem');
+        if (! $model->exists) {
+            $configfiles[null] = null;
+            ksort($configfiles);
+        }
+
         // label has to be the same like column in sql table
         $a = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
-            ['form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $model->html_list_with_count($model->configfiles(), 'name', false, '', 'configfile_id', 'modem'), 'help' => trans('helper.configfile_count'), 'select' => $cfIds['all']],
+            ['form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $configfiles, 'help' => trans('helper.configfile_count').' '.trans('helper.modem.configfileSelect'), 'select' => $cfIds['all']],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly'], 'hidden' => 'C', 'space' => 1],
             // TODO: show this dropdown only if necessary (e.g. not if creating a modem from contract context)
             ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')],
-            ['form_type' => 'text', 'name' => 'serial_num', 'description' => trans('messages.Serial Number'), 'select' => $cfIds['tr069']],
+            ['form_type' => 'text', 'name' => 'serial_num', 'description' => trans('messages.Serial Number')],
             ['form_type' => 'text', 'name' => 'ppp_username', 'description' => trans('messages.Username'), 'select' => $cfIds['tr069'], 'options' => [$model->exists ? 'readonly' : '']],
             ['form_type' => 'text', 'name' => 'ppp_password', 'description' => trans('messages.Password'), 'select' => $cfIds['tr069'], 'hidden' => 'C'],
             array_merge(['form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 'E', 'value' => $model->contracts()], $help['contract']),
-            ['form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'],
+            ['form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1', 'options' => [$model->endpoints()->count() ? 'disabled' : '']],
             ['form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1', 'help' => trans('helper.Modem_InternetAccess')],
         ];
 
@@ -205,12 +211,12 @@ class ModemController extends \BaseController
         }
 
         if (\Bouncer::can('view_analysis_pages_of', Modem::class)) {
-            array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.index', 'link' => $model->id],
-                ['name' => 'CPE-Analysis', 'route' => 'ProvMon.cpe', 'link' => $model->id]);
+            array_push($tabs, ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $model->id],
+                ['name' => 'CPE-Analysis', 'icon' => 'area-chart', 'route' => 'ProvMon.cpe', 'link' => $model->id]);
 
             // MTA: only show MTA analysis if Modem has MTA's
             if (isset($model->mtas) && isset($model->mtas[0])) {
-                array_push($tabs, ['name' => 'MTA-Analysis', 'route' => 'ProvMon.mta', 'link' => $model->id]);
+                array_push($tabs, ['name' => 'MTA-Analysis', 'icon' => 'area-chart', 'route' => 'ProvMon.mta', 'link' => $model->id]);
             }
         }
 
@@ -264,7 +270,7 @@ class ModemController extends \BaseController
         }
 
         $tabs = [['name' => 'List', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '0', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]],
-            ['name' => 'Topography', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '1', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]], ];
+            ['name' => 'Topography', 'icon' => 'map', 'route' => 'Modem.fulltextSearch', 'link' => ['topo' => '1', 'scope' => $scope, 'mode' => $mode, 'query' => $query, 'preselect_field' => $pre_f, 'preselect_value' => $pre_v]], ];
 
         $view_var = $modems->get();
         $view_var = $view_var->merge($contracts->get());
@@ -380,10 +386,13 @@ class ModemController extends \BaseController
             $rules['qos_id'] = 'required|exists:qos,id,deleted_at,NULL';
         }
 
-        if (Configfile::find($data['configfile_id'])->device == 'tr069') {
+        if ($data['configfile_id'] && Configfile::find($data['configfile_id'])->device == 'tr069') {
             $id = \Route::current()->hasParameter('Modem') ? \Route::current()->parameters()['Modem'] : 0;
             $rules['serial_num'] = "required|unique:modem,serial_num,$id,id,deleted_at,NULL";
             $rules['ppp_username'] = "required|unique:modem,ppp_username,$id,id,deleted_at,NULL";
+        } else {
+            $id = $data['id'] ?? null;
+            $rules['mac'] .= '|required|unique:modem,mac,'.$id.',id,deleted_at,NULL';
         }
 
         return parent::prepare_rules($rules, $data);

@@ -76,13 +76,17 @@
                     !!}
 
                     {{-- reference link --}}
-                    <div class="stats-link"><a href="#"><br></a></div>
+                    <div class="stats-link noHover"><a href="#"><br></a></div>
 
                 </div>
             @DivClose()
             </div>
                 <div class="col-md-4">
-                    @include('provbase::widgets.documentation')
+                    @include('Generic.widgets.moduleDocu', [ 'urls' => [
+                        'documentation' => 'https://devel.roetzer-engineering.com/confluence/display/NMS/Provisioning',
+                        'youtube' => 'https://youtu.be/RjMlhKQXgU4',
+                        'forum' => 'https://devel.roetzer-engineering.com/confluence/display/nmsprimeforum/Provisioning+General',
+                    ]])
                 </div>
             </div>
         </div>

@@ -7,6 +7,7 @@ return [
     'connected' => 'Angeschlossen',
     'connection_type' => 'Anschlusstyp',
     'deprecated' => 'Veraltet',
+    'district' => 'Ortsteil',
     'email' => 'Email',
     'expansion_degree' => 'Ausbaugrad',
     'floor' => 'Etage',
