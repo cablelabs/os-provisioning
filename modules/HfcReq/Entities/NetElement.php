@@ -228,6 +228,19 @@ class NetElement extends \BaseModel
         return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id');
     }
 
+    /**
+     * Relations
+     */
+    public function geoPosModems()
+    {
+        return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id')
+            ->select('id', 'x', 'y', 'netelement_id')
+            ->selectRaw('COUNT(*) AS count')
+            ->selectRaw('COUNT(CASE WHEN `us_pwr` = 0 THEN 1 END) as offline')
+            ->groupBy('x', 'y')
+            ->havingRaw('max(us_pwr) > 0 and min(us_pwr) = 0 and count > 1');
+    }
+
     // Relation to MPRs Modem Positioning Rules
     public function mprs()
     {
