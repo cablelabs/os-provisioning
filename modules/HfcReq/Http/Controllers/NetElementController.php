@@ -8,7 +8,6 @@ use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcReq\Entities\NetElementType;
 use App\Http\Controllers\BaseViewController;
 use Modules\HfcBase\Http\Controllers\HfcBaseController;
-use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class NetElementController extends HfcBaseController
 {
@@ -189,7 +188,7 @@ class NetElementController extends HfcBaseController
     {
         $defaultTabs = parent::editTabs($netelement);
 
-        $tabs = ProvMonController::checkNetelementtype($netelement);
+        $tabs = $netelement->tabs();
         $tabs[] = $defaultTabs[1];
 
         return $tabs;

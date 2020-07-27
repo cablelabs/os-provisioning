@@ -569,6 +569,53 @@ class NetElement extends \BaseModel
     }
 
     /**
+     * Returns all tabs for the view depending on the NetelementType
+     * Note: 1 = Net, 2 = Cluster, 3 = NetGw, 4 = Amplifier, 5 = Node, 6 = Data, 7 = UPS, 8 = Tap, 9 = Tap-Port
+     *
+     * @author Roy Schneider, Nino Ryschawy
+     * @return array
+     */
+    public function tabs()
+    {
+        if (! $this->netelementtype) {
+            return [];
+        }
+
+        $provmon = Module::collections()->has('ProvMon') ? new \Modules\ProvMon\Http\Controllers\ProvMonController : null;
+        $type = $this->netelementtype->get_base_type();
+
+        $tabs = [['name' => 'Edit', 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
+
+        if (in_array($type, [1, 2, 8])) {
+            $sqlCol = $type == 8 ? 'parent_id' : $this->netelementtype->name;
+
+            array_push($tabs,
+                ['name' => 'Entity Diagram', 'icon' => 'sitemap', 'route' => 'TreeErd.show', 'link' => [$sqlCol, $this->id]],
+                ['name' => 'Topography', 'icon' => 'map', 'route' => 'TreeTopo.show', 'link' => [$sqlCol, $this->id]]
+            );
+        }
+
+        if (! in_array($type, [1, 8, 9])) {
+            array_push($tabs, ['name' => 'Controlling', 'icon' => 'wrench', 'route' => 'NetElement.controlling_edit', 'link' => [$this->id, 0, 0]]);
+        }
+
+        if ($type == 9) {
+            array_push($tabs, ['name' => 'Controlling', 'icon' => 'bar-chart fa-rotate-90', 'route' => 'NetElement.tapControlling', 'link' => [$this->id]]);
+        }
+
+        if ($provmon && ($type == 4 || $type == 5) && \Bouncer::can('view_analysis_pages_of', Modem::class)) {
+            //create Analyses tab (for ORA/VGP) if IP address is no valid IP
+            array_push($tabs, ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $provmon->createAnalysisTab($this->ip)]);
+        }
+
+        if (! in_array($type, [4, 5, 8, 9])) {
+            array_push($tabs, ['name' => 'Diagrams', 'icon' => 'area-chart', 'route' => 'ProvMon.diagram_edit', 'link' => [$this->id]]);
+        }
+
+        return $tabs;
+    }
+
+    /**
      * Get the IP address if set, otherwise return IP address of parent NetGw
      *
      * @author Ole Ernst

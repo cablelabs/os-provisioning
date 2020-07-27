@@ -9,7 +9,6 @@ use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcSnmp\Entities\Parameter;
 use Modules\HfcReq\Entities\NetElementType;
 use App\Http\Controllers\BaseViewController;
-use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class SnmpController extends \BaseController
 {
@@ -106,7 +105,7 @@ class SnmpController extends \BaseController
         $view_var = $netelem;
         $route_name = \NamespaceController::get_route_name();
         $headline = BaseViewController::compute_headline($route_name, $view_header, $view_var).' > controlling';
-        $tabs = ProvMonController::checkNetelementtype($netelem);
+        $tabs = $netelement->tabs();
 
         $view_path = 'hfcsnmp::NetElement.controlling';
         $form_path = 'Generic.form';
