@@ -242,6 +242,26 @@ class BaseController extends Controller
     }
 
     /**
+     * Normalizes numeric values to minimize problems for e.g. German users (using a comma instead a dot in float).
+     *
+     * @param $value the numeric string to normalize
+     *
+     * @author Patrick Reichel
+     */
+    protected function normalizeNumericString($value)
+    {
+        // take care of nullable fields
+        if (is_null($value)) {
+            return;
+        }
+
+        // Germans use comma as decimal separator – replace by dot
+        $value = str_replace(',', '.', $value);
+
+        return $value;
+    }
+
+    /**
      * Returns a default input data array, that shall be overwritten
      * from the appropriate model controller if needed.
      *
@@ -828,6 +848,7 @@ class BaseController extends Controller
 
         // Prepare and Validate Input
         $data = $controller->prepare_input(Request::all());
+        $data['id'] = $id;
         $rules = $controller->prepare_rules($obj::rules($id), $data);
         $validator = Validator::make($data, $rules);
 
