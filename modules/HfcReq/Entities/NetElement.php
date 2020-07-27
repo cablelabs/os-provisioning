@@ -4,6 +4,7 @@ namespace Modules\HfcReq\Entities;
 
 use Auth;
 use Cache;
+use Module;
 use Session;
 use Modules\HfcBase\Entities\IcingaObject;
 
@@ -63,20 +64,20 @@ class NetElement extends \BaseModel
     {
         $ret = [];
 
-        // if (\Module::collections()->has('ProvBase'))
+        // if (Module::collections()->has('ProvBase'))
         // {
         // 	$ret['Edit']['Modem']['class'] 	  = 'Modem';
         // 	$ret['Edit']['Modem']['relation'] = $this->modems;
         // }
 
-        if (\Module::collections()->has('HfcCustomer')) {
+        if (Module::collections()->has('HfcCustomer')) {
             if ($this->netelementtype->get_base_type() != 9) {
                 $ret['Edit']['Mpr']['class'] = 'Mpr';
                 $ret['Edit']['Mpr']['relation'] = $this->mprs;
             }
         }
 
-        if (\Module::collections()->has('HfcSnmp')) {
+        if (Module::collections()->has('HfcSnmp')) {
             if ($this->netelementtype && ($this->netelementtype->id == 2 || $this->netelementtype->parameters()->count())) {
                 $ret['Edit']['Indices']['class'] = 'Indices';
                 $ret['Edit']['Indices']['relation'] = $this->indices;
