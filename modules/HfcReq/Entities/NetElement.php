@@ -178,16 +178,40 @@ class NetElement extends \BaseModel
     public function scopeWithActiveModems($query, $field = 'id', $operator = '>', $id = 2)
     {
         return $query->where($field, $operator, $id)
-        ->orderBy('pos')
-        ->withCount([
-            'modems',
-            'modems as modems_online_count' => function ($query) {
-                $query->where('us_pwr', '>', '0');
-            },
-            'modems as modems_critical_count' => function ($query) {
-                $query->where('us_pwr', '>=', config('hfccustomer.threshhold.single.us.critical'));
-            },
-        ]);
+            ->orderBy('pos')
+            ->withCount([
+                'modems' => function ($query) {
+                    $this->excludeCanceledContractsQuery($query);
+                },
+                'modems as modems_online_count' => function ($query) {
+                    $query->where('us_pwr', '>', '0');
+
+                    $this->excludeCanceledContractsQuery($query);
+                },
+                'modems as modems_critical_count' => function ($query) {
+                    $query->where('us_pwr', '>=', config('hfccustomer.threshhold.single.us.critical'));
+
+                    $this->excludeCanceledContractsQuery($query);
+                },
+            ]);
+    }
+
+    /**
+     * This is an extension of scopeWithActiveModems's withCount() method to exclude all modems of canceled contracts
+     * Note: This is not a scope and can not be used as one - this is because withCount method automatically joins named table (modem) and for a scope it would have to be joined here as well - join it twice doesnt work!
+     *
+     * @param Illuminate\Database\Query\Builder $query
+     * @return Illuminate\Database\Query\Builder
+     */
+    private function excludeCanceledContractsQuery($query)
+    {
+        return $query
+            // ->leftJoin('modem', 'modem.netelement_id', 'netelement.id')
+            ->join('contract', 'contract.id', 'modem.contract_id')
+            ->whereNull('modem.deleted_at')
+            ->whereNull('contract.deleted_at')
+            ->where('contract_start', '<=', date('Y-m-d'))
+            ->where(whereLaterOrEqual('contract_end', date('Y-m-d')));
     }
 
     /**
