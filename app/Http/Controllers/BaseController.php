@@ -14,7 +14,10 @@ use Redirect;
 use BaseModel;
 use Validator;
 use GlobalConfig;
+use App\V1\Service;
+use App\V1\V1Trait;
 use Monolog\Logger;
+use App\V1\Repository;
 use Yajra\DataTables\DataTables;
 
 /*
@@ -22,6 +25,7 @@ use Yajra\DataTables\DataTables;
  */
 class BaseController extends Controller
 {
+    use V1Trait;
     /*
      * Default VIEW styling options
      * NOTE: All these values could be used in the inheritances classes
@@ -104,14 +108,12 @@ class BaseController extends Controller
 
         return [[
             'name' => 'Edit',
-            'icon' => 'pencil',
             // 'route' => $class_name.'.edit',
             // 'link' => ['model_id' => $model->id, 'model' => $class_name],
         ],
             [
                 'name' => 'Logging',
                 'route' => 'GuiLog.filter',
-                'icon' => 'history',
                 'link' => ['model_id' => $model->id, 'model' => $class_name],
             ],
         ];
@@ -757,35 +759,40 @@ class BaseController extends Controller
      */
     public function api_store($ver)
     {
-        if ($ver !== '0') {
+        if ($ver === '0') {
+            $obj = static::get_model_obj();
+            $controller = static::get_controller_obj();
+
+            // Prepare and Validate Input
+            $data = $this->_api_prepopulate_fields($obj, $controller);
+            $data = $controller->prepare_input($data);
+            $rules = $controller->prepare_rules($obj::rules(), $data);
+            $validator = Validator::make($data, $rules);
+
+            if ($validator->fails()) {
+                $ret = [];
+                foreach ($validator->errors()->getMessages() as $field => $error) {
+                    $ret[$field] = $error;
+                }
+
+                return response()->json(['ret' => $ret]);
+            }
+            $data = $controller->prepare_input_post_validation($data);
+
+            $obj = $obj::create($data);
+
+            // Add N:M Relations
+            self::_set_many_to_many_relations($obj, $data);
+
+            return response()->json(['ret' => 'success', 'id' => $obj->id]);
+        } elseif ($ver === '1') {
+            $data = Request::all();
+            $model = (new Service(new Repository(static::get_model_obj())))->create($data);
+
+            return $this->response($model, 200);
+        } else {
             return response()->json(['ret' => "Version $ver not supported"]);
         }
-
-        $obj = static::get_model_obj();
-        $controller = static::get_controller_obj();
-
-        // Prepare and Validate Input
-        $data = $this->_api_prepopulate_fields($obj, $controller);
-        $data = $controller->prepare_input($data);
-        $rules = $controller->prepare_rules($obj::rules(), $data);
-        $validator = Validator::make($data, $rules);
-
-        if ($validator->fails()) {
-            $ret = [];
-            foreach ($validator->errors()->getMessages() as $field => $error) {
-                $ret[$field] = $error;
-            }
-
-            return response()->json(['ret' => $ret]);
-        }
-        $data = $controller->prepare_input_post_validation($data);
-
-        $obj = $obj::create($data);
-
-        // Add N:M Relations
-        self::_set_many_to_many_relations($obj, $data);
-
-        return response()->json(['ret' => 'success', 'id' => $obj->id]);
     }
 
     /**
@@ -903,38 +910,42 @@ class BaseController extends Controller
      */
     public function api_update($ver, $id)
     {
-        if ($ver !== '0') {
-            return response()->json(['ret' => "Version $ver not supported"]);
-        }
+        if ($ver === '0') {
+            $obj = static::get_model_obj()->findOrFail($id);
+            $controller = static::get_controller_obj();
 
-        $obj = static::get_model_obj()->findOrFail($id);
-        $controller = static::get_controller_obj();
+            // Prepare and Validate Input
+            $data = $this->_api_prepopulate_fields($obj, $controller);
+            $data = $controller->prepare_input($data);
+            $rules = $controller->prepare_rules($obj::rules($id), $data);
+            $validator = Validator::make($data, $rules);
+            $data = $controller->prepare_input_post_validation($data);
 
-        // Prepare and Validate Input
-        $data = $this->_api_prepopulate_fields($obj, $controller);
-        $data = $controller->prepare_input($data);
-        $data['id'] = $id;
-        $rules = $controller->prepare_rules($obj::rules($id), $data);
-        $validator = Validator::make($data, $rules);
-        $data = $controller->prepare_input_post_validation($data);
+            if ($validator->fails()) {
+                $ret = [];
+                foreach ($validator->errors()->getMessages() as $field => $error) {
+                    $ret[$field] = $error;
+                }
 
-        if ($validator->fails()) {
-            $ret = [];
-            foreach ($validator->errors()->getMessages() as $field => $error) {
-                $ret[$field] = $error;
+                return response()->json(['ret' => $ret]);
             }
 
-            return response()->json(['ret' => $ret]);
+            $data['updated_at'] = \Carbon\Carbon::now(Config::get('app.timezone'));
+
+            $obj->update($data);
+
+            // Add N:M Relations
+            self::_set_many_to_many_relations($obj, $data);
+
+            return response()->json(['ret' => 'success']);
+        } elseif ($ver === '1') {
+            $data = Request::all();
+            $model = (new Service(new Repository(static::get_model_obj())))->update($id, $data);
+
+            return $this->response($model, 200);
+        } else {
+            return response()->json(['ret' => "Version $ver not supported"]);
         }
-
-        $data['updated_at'] = \Carbon\Carbon::now(Config::get('app.timezone'));
-
-        $obj->update($data);
-
-        // Add N:M Relations
-        self::_set_many_to_many_relations($obj, $data);
-
-        return response()->json(['ret' => 'success']);
     }
 
     /**
@@ -1116,18 +1127,23 @@ class BaseController extends Controller
      */
     public function api_destroy($ver, $id)
     {
-        if ($ver !== '0') {
+        if ($ver === '0') {
+            $obj = static::get_model_obj();
+            if ($obj->findOrFail($id)->delete()) {
+                $ret = 'success';
+            } else {
+                $ret = 'failure';
+            }
+
+            return response()->json(['ret' => $ret]);
+        } elseif ($ver === '1') {
+            $service = new Service(new Repository(static::get_model_obj()));
+            $data = $service->delete($id);
+
+            return $this->response([]);
+        } else {
             return response()->json(['ret' => "Version $ver not supported"]);
         }
-
-        $obj = static::get_model_obj();
-        if ($obj->findOrFail($id)->delete()) {
-            $ret = 'success';
-        } else {
-            $ret = 'failure';
-        }
-
-        return response()->json(['ret' => $ret]);
     }
 
     /**
@@ -1162,6 +1178,13 @@ class BaseController extends Controller
     {
         if ($ver === '0') {
             return static::get_model_obj()->findOrFail($id);
+        } elseif ($ver === '1') {
+            $resourceOptions = $this->parseResourceOptions();
+            $service = new Service(new Repository(static::get_model_obj()));
+            $data = $service->getById($id, $resourceOptions);
+            $parsedData = $this->parseData($data, $resourceOptions);
+
+            return $this->response($parsedData);
         } else {
             return response()->json(['ret' => "Version $ver not supported"]);
         }
@@ -1192,19 +1215,26 @@ class BaseController extends Controller
      */
     public function api_index($ver)
     {
-        if ($ver !== '0') {
+        if ($ver === '0') {
+            $query = static::get_model_obj();
+            foreach (Request::all() as $key => $val) {
+                $query = $query->where($key, $val);
+            }
+
+            try {
+                return $query->get();
+            } catch (\Exception $e) {
+                return response()->json(['ret' => $e]);
+            }
+        } elseif ($ver === '1') {
+            $resourceOptions = $this->parseResourceOptions();
+            $service = new Service(new Repository(static::get_model_obj()));
+            $data = $service->getAll($resourceOptions);
+            $parsedData = $this->parseData($data, $resourceOptions);
+
+            return $this->response($parsedData);
+        } else {
             return response()->json(['ret' => "Version $ver not supported"]);
-        }
-
-        $query = static::get_model_obj();
-        foreach (Request::all() as $key => $val) {
-            $query = $query->where($key, $val);
-        }
-
-        try {
-            return $query->get();
-        } catch (\Exception $e) {
-            return response()->json(['ret' => $e]);
         }
     }
 
