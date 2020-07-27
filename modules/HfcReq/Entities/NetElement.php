@@ -347,13 +347,14 @@ class NetElement extends \BaseModel
      *
      * @return string
      */
-    public function toMap()
+    public function toErd()
     {
-        if ($this->id) {
-            return route('CustomerTopo.show', ['field' => 'netelement_id', 'search' => $this->id]);
+        if ($this->cluster) {
+            $type = 'cluster';
+            $id = $this->cluster;
         }
 
-        return route('TreeTopo.show', ['field' => 'id', 'search' => 2]);
+        return route('TreeErd.show', ['field' => $type ?? 'id','id' => $id ?? $this->id]);
     }
 
     /**
