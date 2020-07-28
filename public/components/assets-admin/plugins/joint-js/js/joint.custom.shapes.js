@@ -27,7 +27,7 @@ joint.shapes.standard.Link.define('custom.Bus', {
 }, {
     create: function (y, label, color) {
         return new this({
-            source: {x: 800, y: y},
+            source: {x: 900, y: y},
             target: {x: 50, y: y},
             attrs: {
                 line: {
