@@ -259,6 +259,11 @@ class Modem extends \BaseModel
         return $this->hasMany(Endpoint::class);
     }
 
+    public function netelement()
+    {
+        return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class);
+    }
+
     public function apartment()
     {
         return $this->belongsTo(\Modules\PropertyManagement\Entities\Apartment::class);

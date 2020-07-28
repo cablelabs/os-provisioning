@@ -4,6 +4,7 @@ namespace Modules\HfcReq\Entities;
 
 use Auth;
 use Cache;
+use Module;
 use Session;
 use Modules\HfcBase\Entities\IcingaObject;
 
@@ -63,20 +64,20 @@ class NetElement extends \BaseModel
     {
         $ret = [];
 
-        // if (\Module::collections()->has('ProvBase'))
+        // if (Module::collections()->has('ProvBase'))
         // {
         // 	$ret['Edit']['Modem']['class'] 	  = 'Modem';
         // 	$ret['Edit']['Modem']['relation'] = $this->modems;
         // }
 
-        if (\Module::collections()->has('HfcCustomer')) {
+        if (Module::collections()->has('HfcCustomer')) {
             if ($this->netelementtype->get_base_type() != 9) {
                 $ret['Edit']['Mpr']['class'] = 'Mpr';
                 $ret['Edit']['Mpr']['relation'] = $this->mprs;
             }
         }
 
-        if (\Module::collections()->has('HfcSnmp')) {
+        if (Module::collections()->has('HfcSnmp')) {
             if ($this->netelementtype && ($this->netelementtype->id == 2 || $this->netelementtype->parameters()->count())) {
                 $ret['Edit']['Indices']['class'] = 'Indices';
                 $ret['Edit']['Indices']['relation'] = $this->indices;
@@ -177,16 +178,40 @@ class NetElement extends \BaseModel
     public function scopeWithActiveModems($query, $field = 'id', $operator = '>', $id = 2)
     {
         return $query->where($field, $operator, $id)
-        ->orderBy('pos')
-        ->withCount([
-            'modems',
-            'modems as modems_online_count' => function ($query) {
-                $query->where('us_pwr', '>', '0');
-            },
-            'modems as modems_critical_count' => function ($query) {
-                $query->where('us_pwr', '>=', config('hfccustomer.threshhold.single.us.critical'));
-            },
-        ]);
+            ->orderBy('pos')
+            ->withCount([
+                'modems' => function ($query) {
+                    $this->excludeCanceledContractsQuery($query);
+                },
+                'modems as modems_online_count' => function ($query) {
+                    $query->where('us_pwr', '>', '0');
+
+                    $this->excludeCanceledContractsQuery($query);
+                },
+                'modems as modems_critical_count' => function ($query) {
+                    $query->where('us_pwr', '>=', config('hfccustomer.threshhold.single.us.critical'));
+
+                    $this->excludeCanceledContractsQuery($query);
+                },
+            ]);
+    }
+
+    /**
+     * This is an extension of scopeWithActiveModems's withCount() method to exclude all modems of canceled contracts
+     * Note: This is not a scope and can not be used as one - this is because withCount method automatically joins named table (modem) and for a scope it would have to be joined here as well - join it twice doesnt work!
+     *
+     * @param Illuminate\Database\Query\Builder $query
+     * @return Illuminate\Database\Query\Builder
+     */
+    private function excludeCanceledContractsQuery($query)
+    {
+        return $query
+            // ->leftJoin('modem', 'modem.netelement_id', 'netelement.id')
+            ->join('contract', 'contract.id', 'modem.contract_id')
+            ->whereNull('modem.deleted_at')
+            ->whereNull('contract.deleted_at')
+            ->where('contract_start', '<=', date('Y-m-d'))
+            ->where(whereLaterOrEqual('contract_end', date('Y-m-d')));
     }
 
     /**
@@ -565,6 +590,53 @@ class NetElement extends \BaseModel
         }
 
         return [];
+    }
+
+    /**
+     * Returns all tabs for the view depending on the NetelementType
+     * Note: 1 = Net, 2 = Cluster, 3 = NetGw, 4 = Amplifier, 5 = Node, 6 = Data, 7 = UPS, 8 = Tap, 9 = Tap-Port
+     *
+     * @author Roy Schneider, Nino Ryschawy
+     * @return array
+     */
+    public function tabs()
+    {
+        if (! $this->netelementtype) {
+            return [];
+        }
+
+        $provmon = Module::collections()->has('ProvMon') ? new \Modules\ProvMon\Http\Controllers\ProvMonController : null;
+        $type = $this->netelementtype->get_base_type();
+
+        $tabs = [['name' => 'Edit', 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
+
+        if (in_array($type, [1, 2, 8])) {
+            $sqlCol = $type == 8 ? 'parent_id' : $this->netelementtype->name;
+
+            array_push($tabs,
+                ['name' => 'Entity Diagram', 'icon' => 'sitemap', 'route' => 'TreeErd.show', 'link' => [$sqlCol, $this->id]],
+                ['name' => 'Topography', 'icon' => 'map', 'route' => 'TreeTopo.show', 'link' => [$sqlCol, $this->id]]
+            );
+        }
+
+        if (! in_array($type, [1, 8, 9])) {
+            array_push($tabs, ['name' => 'Controlling', 'icon' => 'wrench', 'route' => 'NetElement.controlling_edit', 'link' => [$this->id, 0, 0]]);
+        }
+
+        if ($type == 9) {
+            array_push($tabs, ['name' => 'Controlling', 'icon' => 'bar-chart fa-rotate-90', 'route' => 'NetElement.tapControlling', 'link' => [$this->id]]);
+        }
+
+        if ($provmon && ($type == 4 || $type == 5) && \Bouncer::can('view_analysis_pages_of', Modem::class)) {
+            //create Analyses tab (for ORA/VGP) if IP address is no valid IP
+            array_push($tabs, ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $provmon->createAnalysisTab($this->ip)]);
+        }
+
+        if (! in_array($type, [4, 5, 8, 9])) {
+            array_push($tabs, ['name' => 'Diagrams', 'icon' => 'area-chart', 'route' => 'ProvMon.diagram_edit', 'link' => [$this->id]]);
+        }
+
+        return $tabs;
     }
 
     /**

@@ -7,7 +7,6 @@ use Request;
 use NamespaceController;
 use Modules\HfcReq\Entities\NetElement;
 use App\Http\Controllers\BaseViewController;
-use Modules\ProvMon\Http\Controllers\ProvMonController;
 
 class TapController extends \BaseController
 {
@@ -24,7 +23,7 @@ class TapController extends \BaseController
         $view_var = $netelement;
         $route_name = NamespaceController::get_route_name();
         $headline = BaseViewController::compute_headline($route_name, $view_header, $view_var).' > controlling';
-        $tabs = ProvMonController::checkNetelementtype($netelement);
+        $tabs = $netelement->tabs();
         $hfcBaseConf = \Modules\HfcBase\Entities\HfcBase::first();
 
         $view_path = 'hfcreq::NetElement.tapControlling';
