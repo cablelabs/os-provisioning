@@ -9,14 +9,16 @@
                     @php
                         $firstKey = $key == 0 ? $tab['name'] : '';
                     @endphp
+                    <!-- Logging tab -->
                     @if ($tab['name'] == "Logging")
                         <li class="nav-item order-12 ml-auto" role="tab" style="float: right">
                             <a id="loggingtab" class="" href="#logging" data-toggle="tab">
                                 <i class="fa fa-lg fa-{{ $tab['icon'] ?? 'history' }}"></i> Logging
                             </a>
                         </li>
-                    @elseif(isset($tab['route']))
-                        <li class="nav-item" role="tab">
+                    <!-- Link to separate view -->
+                    @elseif (isset($tab['route']))
+                        <li class="nav-item {{ \Route::getCurrentRoute()->action['as'] == $tab['route'] ? 'active' : '' }}" role="tab">
                             <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}">
                                 @if (isset($tab['icon']))
                                     <i class="fa fa-lg fa-{{ $tab['icon'] }}"></i>
@@ -24,6 +26,7 @@
                                 {{ $tab['name'] }}
                             </a>
                         </li>
+                    <!-- Other tabs -->
                     @else
                         {{-- probably the <a> tag must be set to active according to docu --}}
                         <li class="nav-item {{$firstKey == $tab['name'] ? 'show' : ''}}" role="tab">
