@@ -17,7 +17,7 @@
         </span>
 
         {{-- end mobile sidebar expand / collapse button --}}
-      <div class="col tab-overflow p-t-5">
+      <div class="col tab-overflow p-t-5 m-l-5">
         <ul class="nav nav-pills p-t-5">
           <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="m-t-10"><i class="fa fa-arrow-left"></i></a></li>
           @yield('content_top')
