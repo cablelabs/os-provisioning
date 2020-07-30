@@ -184,6 +184,7 @@ class NetElement extends \BaseModel
     public function scopeWithActiveModems($query, $field = 'id', $operator = '>', $id = 2)
     {
         return $query->where($field, $operator, $id)
+            ->select(['id', 'id_name', 'name', 'ip', 'cluster', 'net', 'netelementtype_id', 'netgw_id', 'parent_id', 'link', 'descr', 'pos'])
             ->orderBy('pos')
             ->withCount([
                 'modems' => function ($query) {
