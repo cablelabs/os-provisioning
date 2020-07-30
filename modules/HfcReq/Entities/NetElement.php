@@ -355,7 +355,7 @@ class NetElement extends \BaseModel
             $id = $this->cluster;
         }
 
-        return route('TreeErd.show', ['field' => $type ?? 'id','id' => $id ?? $this->id]);
+        return route('TreeErd.show', ['field' => $type ?? 'id', 'id' => $id ?? $this->id]);
     }
 
     /**
