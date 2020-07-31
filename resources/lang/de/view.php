@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'Diagrams' => 'Diagramme',
     'false' => 'nein',
     'true' => 'ja',
     //SEARCH
