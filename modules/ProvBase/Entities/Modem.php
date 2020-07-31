@@ -1316,7 +1316,7 @@ class Modem extends \BaseModel
 
         $preq = json_decode(file_get_contents($file), true);
 
-        if (empty($preq['raw']) || empty($preq['width']) || (! isset($preq['raw'][199]))) {
+        if (empty($preq['preEqu']) || empty($preq['width']) || (! isset($preq['preEqu'][199]))) {
             return ['No pre-equalization data found'];
         }
 
