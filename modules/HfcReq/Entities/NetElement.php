@@ -181,10 +181,13 @@ class NetElement extends \BaseModel
      * @param Illuminate\Database\Query\Builder $query
      * @return Illuminate\Database\Query\Builder
      */
-    public function scopeWithActiveModems($query, $field = 'id', $operator = '>', $id = 2)
+    public function scopeWithActiveModems($query, $field = 'id', $operator = '>', $id = 2, $minify = false)
     {
+        if ($minify) {
+            $query->select(['id', 'id_name', 'name', 'ip', 'cluster', 'net', 'netelementtype_id', 'netgw_id', 'parent_id', 'link', 'descr', 'pos']);
+        }
+
         return $query->where($field, $operator, $id)
-            ->select(['id', 'id_name', 'name', 'ip', 'cluster', 'net', 'netelementtype_id', 'netgw_id', 'parent_id', 'link', 'descr', 'pos'])
             ->orderBy('pos')
             ->withCount([
                 'modems' => function ($query) {
