@@ -43,7 +43,40 @@
                                 <span class="dragdropitemmenubutton" v-on:click="moveItem(key, -1, id)">{{ trans('view.Button_DragDrop MoveToNewList') }}</span>
                                 <span class="dragdropitemmenubutton" v-on:click="moveItem(key, 0, id)">{{ trans('view.Button_DragDrop DeleteElement') }}</span>
                             </div>
-                            <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id)"/>
+                            <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id, $event.target.name)"/>
+                            <select name="operator" :value="item.operator" v-on:change="onKeyUp($event.target.value, key, id, $event.target.name)">
+                                <option value=""></option>
+                                <option value="+">+</option>
+                                <option value="-">-</option>
+                                <option value="*">*</option>
+                                <option value="/">/</option>
+                                <option value="%">%</option>
+                            </select>
+                            <input type="text" name="opvalue" :value="item.opvalue" v-on:keyup="onKeyUp($event.target.value, key, id, $event.target.name)"/>
+                            <select name="cvalue" :value="item.cvalue" v-on:change="onKeyUp($event.target.value, key, id, $event.target.name)">
+                                <option value=""></option>
+                                <option value="maxDsPow">maxDsPow</option>
+                                <option value="avgUsSNR">avgUsSNR</option>
+                                <option value="T4Timeout">T4Timeout</option>
+                                <option value="maxUsPow">maxUsPow</option>
+                                <option value="avgDsPow">avgDsPow</option>
+                                <option value="T3Timeout">T3Timeout</option>
+                                <option value="Uncorrectable">Uncorrectable</option>
+                                <option value="avgUsPow">avgUsPow</option>
+                                <option value="avgMuRef">avgMuRef</option>
+                                <option value="minDsPow">minDsPow</option>
+                                <option value="maxUsSNR">maxUsSNR</option>
+                                <option value="minMuRef">minMuRef</option>
+                                <option value="maxMuRef">maxMuRef</option>
+                                <option value="minUsPow">minUsPow</option>
+                                <option value="avgDsSNR">avgDsSNR</option>
+                                <option value="minUsSNR">minUsSNR</option>
+                                <option value="Corrected">Corrected</option>
+                                <option value="maxDsSNR">maxDsSNR</option>
+                                <option value="minDsSNR">minDsSNR</option>
+                                <option value="ifHCInOctets">ifHCInOctets</option>
+                                <option value="ifHCOutOctets">ifHCOutOctets</option>
+                            </select>
                             </div>
                         </div>
                     </draggable>
@@ -72,7 +105,7 @@
                               <span class="dragdropitemmenubutton" v-for="(listname, listkey) in lists" v-if="listkey != '0'" v-on:click="moveItem(key,listkey, id)">{{ trans('view.Button_DragDrop MoveTo') }} @{{ listname.name }}</span>
                               <span class="dragdropitemmenubutton" v-on:click="moveItem(key,-1, id)">{{ trans('view.Button_DragDrop MoveToNewList') }}</span>
                             </div>
-                            <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id)"/>
+                            <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id, $event.target.name)"/>
                             </div>
                         </div>
                     </draggable>
@@ -91,8 +124,19 @@ var app = new Vue({
         lists: @json($additional_data['lists'])
     },
     methods: {
-        onKeyUp: function(newval, key, id) {
-            this.lists[key].content[id].name=newval;
+        onKeyUp: function(newval, key, id, field) {console.log(field);
+            if (field == "name") {
+                this.lists[key].content[id].name=newval;
+            }
+            if (field == "operator") {
+                this.lists[key].content[id].operator=newval;
+            }
+            if (field == "opvalue") {
+                this.lists[key].content[id].opvalue=newval;
+            }
+            if (field == "cvalue") {
+                this.lists[key].content[id].cvalue=newval;
+            }
         },
         itemmenu: function(element, key, id) {
             targetElement=element.parentNode.getElementsByClassName("dragdropitemmenubox")[0];
@@ -115,7 +159,10 @@ var app = new Vue({
             //move item
             moveId=this.lists[olist].content[id].id;
             moveName=this.lists[olist].content[id].name;
-            this.lists[key].content.push({'id': moveId, 'name': moveName});
+            moveOperator='';
+            moveOpValue='';
+            moveCValue='';
+            this.lists[key].content.push({'id': moveId, 'name': moveName, 'operator': moveOperator, 'opvalue': moveOpValue, 'cvalue': moveCValue});
             this.lists[olist].content.splice(id, 1);
         },
         addList: function() {
@@ -140,6 +187,7 @@ var app = new Vue({
             for (var i=0;i<this.lists[key].content.length;i++) {
                 moveId=this.lists[key].content[i].id;
                 moveName=this.lists[key].content[i].name;
+                //no operator/opvalue/cvalue
                 this.lists[0].content.push({'id': moveId, 'name': moveName});
             }
 

@@ -682,6 +682,11 @@ ul.nav.nav-pills li {
     box-sizing: border-box;
     width: 100%;
 }
+.dragdropfield .dragdroplistitem select {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+}
 .dragdropfield .dropzone {
     min-height: 50px;
 }
