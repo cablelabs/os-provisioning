@@ -281,7 +281,8 @@ class NetElement extends \BaseModel
 
         return $this->hasMany(self::class, 'net')
             ->where('id', '!=', $this->id)
-            ->where('netelementtype_id', $cluster_id);
+            ->where('netelementtype_id', $cluster_id)
+            ->orderBy('name');
     }
 
     /**
