@@ -637,6 +637,7 @@ return [
         'log' =>[
             'created'       => 'created',
             'deleted'       => 'deleted',
+            'restored'      => 'restored',
             'updated'       => 'updated',
             'updated N:M'   => 'updated',
         ],
