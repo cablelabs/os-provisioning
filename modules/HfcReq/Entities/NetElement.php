@@ -302,6 +302,7 @@ class NetElement extends \BaseModel
                 'id_name', // Local Key on Netelement
                 'object_id' // Local Key on IcingaObject
             )
+            ->select('icinga_objects.name2')
             ->where('icinga_objects.is_active', 1);
     }
 
