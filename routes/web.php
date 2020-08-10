@@ -118,4 +118,9 @@ BaseRoute::group([], function () {
         'as' => 'Sla.clicked_sla',
         'uses' => 'SlaController@clicked_sla',
     ]);
+
+    BaseRoute::post('user/updateGeopos', [
+        'as' => 'user.updateGeopos',
+        'uses' => 'Auth\UserController@updateGeopos',
+    ]);
 });

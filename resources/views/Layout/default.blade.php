@@ -49,6 +49,8 @@
         </div>
     </div>
 
+    @include ('Generic.userGeopos')
+
     @include ('bootstrap.footer')
     @yield ('form-javascript')
     @yield ('javascript')
