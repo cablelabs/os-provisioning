@@ -135,7 +135,7 @@ class Endpoint extends \BaseModel
 
         $ret = file_put_contents($file_ep, $data, LOCK_EX);
         if ($ret === false) {
-            die('Error writing to file');
+            exit('Error writing to file');
         }
 
         // chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
