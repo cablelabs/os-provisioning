@@ -106,7 +106,7 @@ class ModemController extends \BaseController
             ['form_type' => 'text', 'name' => 'ppp_username', 'description' => trans('messages.Username'), 'select' => $cfIds['tr069'], 'options' => [$model->exists ? 'readonly' : '']],
             ['form_type' => 'text', 'name' => 'ppp_password', 'description' => trans('messages.Password'), 'select' => $cfIds['tr069'], 'hidden' => 'C'],
             array_merge(['form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 'E', 'value' => $model->contracts()], $help['contract']),
-            ['form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1', 'options' => [$model->endpoints()->count() ? 'disabled' : '']],
+            ['form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1', 'hidden' => $model->endpoints->count() ? '1' : '0'],
             ['form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1', 'help' => trans('helper.Modem_InternetAccess')],
         ];
 
@@ -282,6 +282,30 @@ class ModemController extends \BaseController
         $preselect_value = Request::get('preselect_value');
 
         return \View::make('provbase::Modem.index', $this->compact_prep_view(compact('tabs', 'view_header_right', 'view_var', 'create_allowed', 'file', 'target', 'route_name', 'view_header', 'body_onload', 'field', 'search', 'preselect_field', 'preselect_value')));
+    }
+
+    /**
+     * Perform factory reset via TR-069
+     *
+     * @author Ole Ernst
+     */
+    public function factoryReset()
+    {
+        if (! $id = Request::get('id')) {
+            \Session::push('tmp_error_above_form', 'Id not specified');
+
+            return \Redirect::back();
+        }
+
+        if (! $modem = Modem::find($id)) {
+            \Session::push('tmp_error_above_form', 'Modem not found');
+
+            return \Redirect::back();
+        }
+
+        $modem->factoryReset();
+
+        return \Redirect::back();
     }
 
     /**

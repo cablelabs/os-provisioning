@@ -315,6 +315,8 @@ return [
     'Cost Center (optional)'    => 'Kostenstelle (optional)',
     'Credit Amount'             => 'Gutschrift - Betrag',
     'modem_restart_success_direct' => 'Das Modem wurde erfolgreich direkt über SNMP/TR069 neu gestartet',
+    'modem_disconnect_radius_success' => 'Das Modem wurde erfolgreich über RADIUS (Change of Authorization) getrennt',
+    'modem_disconnect_radius_warning' => 'Das Modem konnte wegen einer der nachfolgenden Gründe nicht per RADIUS neu gestartet werden:<ul><li>NetGw der PPP Session konnte nich bestimmt werden</li><li>Das NAS Secret des NetGws wurde nicht gesetzt</li><li>Der Change of Authorization Port des NetGws wurde nicht gesetzt</li></ul>',
     'Item'                      => 'Posten',
     'Items'                     => 'Posten',
     'modem_save_button_title'   => 'Speichert geänderte Daten. Berechnet die Geoposition neu, wenn Adressdaten geändert wurden und weist es ggf. einer neuen MPR hinzu (falls sich x/y Koordinate geändert hat oder manuell geändert wurde). Baut das Configfile und startet das Modem neu, wenn sich mindestens eines der folgenden Einträge geändert hat: Öffentliche IP, Netzwerkzugriff, Configfile, QoS, MAC-Adresse.',
@@ -694,4 +696,7 @@ return [
     'span_spectrum'             => 'Frequenzspanne des Spektrums in MHz',
     'contribute_modem_picture'  => 'Sie können ein Bild dieses Gerätes auf GitHub hinzufügen, damit es in der nächsten NMS Prime Version zur Verfügung steht. Klicken sie auf das Bild um umgeleitet zu werden.',
     'no_modem_picture'          => 'Für dieses Modem gibt es aktuell kein Bild.',
+    'factory_reset'             => 'Werksreset',
+    'Default SIP Registrar'     => 'Vorausgefüllter SIP Registrar',
+    'Default Country Code'      => 'Vorausgefüllter Ländercode',
 ];

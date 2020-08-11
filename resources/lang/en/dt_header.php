@@ -205,6 +205,7 @@ return [
     'modem.name' => 'Modem Name',
     'modem.street' => 'Street',
     'modem.sw_rev' => 'Firmware Version',
+    'modem.ppp_username' => 'PPP Username',
     'modem.us_pwr' => 'US level',
     'modem.support_state' => 'Suport State',
     'modem.formatted_support_state' => 'Support State',

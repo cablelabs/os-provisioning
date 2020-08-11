@@ -69,7 +69,7 @@ class Modem extends \BaseModel
         }
 
         $ret = ['table' => $this->table,
-            'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
+            'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.ppp_username', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
             'bsclass' => $bsclass,
             'header' => $this->label(),
             'edit' => ['us_pwr' => 'get_us_pwr', 'contract_valid' => 'get_contract_valid'],
@@ -714,13 +714,15 @@ class Modem extends \BaseModel
         // make text and write to file
         $conf = "\tNetworkAccess $internet_access;\n";
 
+        $text = $this->configfile->text;
+
         // don't use auto generated MaxCPE if it is explicitly set in the configfile
         // see https://stackoverflow.com/a/643136 for stripping multiline comments
-        if (! \Str::contains(preg_replace('!/\*.*?\*/!s', '', $this->configfile->text), 'MaxCPE')) {
+        if (! \Str::contains(preg_replace('!/\*.*?\*/!s', '', $text), 'MaxCPE')) {
             $conf .= "\tMaxCPE $max_cpe;\n";
         }
 
-        if (Module::collections()->has('ProvVoip') && $internet_access) {
+        if (Module::collections()->has('ProvVoip') && $internet_access && ! \Str::contains($text, 'CpeMacAddress skip')) {
             foreach ($this->mtas as $mta) {
                 $conf .= "\tCpeMacAddress $mta->mac;\n";
             }
@@ -1117,6 +1119,10 @@ class Modem extends \BaseModel
         // Log
         Log::info(($factoryReset ? 'factoryReset' : 'restart').' modem '.$this->hostname);
 
+        if (! $factoryReset && $this->successfulRadiusModemDisconnect()) {
+            return;
+        }
+
         if ($this->isTR069()) {
             $id = $this->getGenieAcsModel('_id');
             if (! $id) {
@@ -1126,6 +1132,13 @@ class Modem extends \BaseModel
             }
 
             $id = rawurlencode($id);
+
+            $route = "tasks/?query={\"device\":\"$id\",\"name\":\"factoryReset\"}";
+            // factoryReset of device has already been scheduled, no need to spawn another task
+            if (json_decode(self::callGenieAcsApi($route, 'GET'))) {
+                return;
+            }
+
             $action = $factoryReset ? 'factoryReset' : 'reboot';
             $success = self::callGenieAcsApi("devices/$id/tasks?timeout=3000&connection_request", 'POST', "{ \"name\" : \"$action\" }");
 
@@ -1217,6 +1230,55 @@ class Modem extends \BaseModel
                 }
             }
         }
+    }
+
+    /**
+     * Disconnect PPPoE devices via Disconnect Request against NAS
+     *
+     * This is comparable to clear cable modem reset/delete, since only the
+     * session is stopped the devices itself won't reboot, rather just reconnect
+     *
+     * @return true if succesfully disconnected, otherwise false
+     *
+     * @author Ole Ernst
+     */
+    private function successfulRadiusModemDisconnect(): bool
+    {
+        if (! $this->isPPP()) {
+            return false;
+        }
+
+        $cur = $this->radacct()->latest('radacctid')->first();
+
+        // no active PPP session or necessary fields aren't set
+        if (! $cur || $cur->acctstoptime || ! $cur->nasipaddress || ! $cur->acctsessionid || ! $cur->username) {
+            return false;
+        }
+
+        $netgw = NetGw::where('ip', $cur->nasipaddress)->first();
+
+        // no NetGw of PPP session found, NetGw has no NAS assigned, NAS has no secret or Change of Authorization port not set
+        if (! $netgw || ! $netgw->nas || ! $netgw->nas->secret || ! $netgw->coa_port) {
+            \Session::push('tmp_warning_above_form', trans('messages.modem_disconnect_radius_warning'));
+
+            return false;
+        }
+
+        // https://tools.ietf.org/html/rfc5176#section-3
+        // https://wiki.freeradius.org/protocol/Disconnect-Messages#example-disconnect-request
+        $cmd = "echo 'Acct-Session-Id={$cur->acctsessionid}, User-Name={$cur->username}, NAS-IP-Address={$cur->nasipaddress}' | radclient -r1 -t1 -s {$netgw->ip}:{$netgw->coa_port} disconnect {$netgw->nas->secret}";
+
+        exec($cmd, $out, $ret);
+
+        if ($ret !== 0) {
+            \Session::push('tmp_error_above_form', implode('<br>', $out));
+
+            return false;
+        }
+
+        \Session::push('tmp_info_above_form', trans('messages.modem_disconnect_radius_success'));
+
+        return true;
     }
 
     /**

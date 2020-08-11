@@ -68,6 +68,7 @@ class NetGwController extends \BaseController
             ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'SNMP Private Community String'],
             ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'SNMP Public Community String'],
             ['form_type' => 'text', 'name' => 'nas_secret', 'description' => 'RADIUS Client secret', 'select' => 'BRAS', 'init_value' => $nas_secret],
+            ['form_type' => 'text', 'name' => 'coa_port', 'description' => 'RADIUS Change of Authorization port', 'select' => 'BRAS'],
             ['form_type' => 'checkbox', 'name' => 'ssh_auto_prov', 'description' => 'Auto-Provisioning via SSH', 'value' => '1', 'select' => 'OLT', 'help' => trans('helper.ssh_auto_prov')],
             ['form_type' => 'text', 'name' => 'username', 'description' => 'SSH username', 'checkbox' => 'show_on_ssh_auto_prov'],
             ['form_type' => 'text', 'name' => 'password', 'description' => 'SSH password', 'checkbox' => 'show_on_ssh_auto_prov'],
