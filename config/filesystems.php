@@ -77,6 +77,11 @@ return [
             'driver' => 'local',
             'root' => storage_path('/app/data/dashboard'),
         ],
+
+        'tempfs' => [
+            'driver' => 'local',
+            'root' => '/run/nmsprime',
+        ],
     ],
 
 ];

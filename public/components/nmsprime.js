@@ -91,7 +91,7 @@ var saveTabPillState = function() {
   // Show tab from hash
   // Note: for an URL with hash the function above will not be initialised and therefore will not save the tab state
   if (window.location.hash) {
-    return $(window.location.hash + 'tab').tab('show');
+    return $("a[href='"+ window.location.hash + "']").click()
   }
 
   $(function() {
