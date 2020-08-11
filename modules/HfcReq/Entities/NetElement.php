@@ -348,8 +348,8 @@ class NetElement extends \BaseModel
     }
 
     /**
-     * Link to Topo overview. Depending of the information available the
-     * netelement or all netelements are displayed.
+     * Link to ERD overview. Depending of the information available the
+     * netelement.
      *
      * @return string
      */
