@@ -278,6 +278,7 @@ return [
     'Upstream rate coefficient' => 'Übertragungsratenkoeffizient Rückwärtskanal',
     'Additional modem reset button' => 'Zusätzlicher Modem Reset Button',
     'Allocate PPPoE IPs randomly' => 'Zufällige Vergabe der PPPoE IPs',
+    'Last update of geoposition' => 'Letztes Update der Geoposition',
     'modemAnalysis' => [
         'cfOutdated' => 'Das Modem läuft nicht mit dem aktuellen Configfile! Der letzte Download fand vor dem Erzeugen des Configfiles statt.',
         'cfError' => 'Beim Erstellen des Configfiles gab es einen Fehler! Es existiert daher noch kein Configfile für dieses Modem. Bitte prüfen Sie ob die Generierung des Configfiles für dieses Modem richtig funktioniert. Fügen Sie dazu folgenden Befehl in der Kommandozeile ein:',

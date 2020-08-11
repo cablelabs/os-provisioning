@@ -76,6 +76,7 @@ class UserController extends BaseController
             ['form_type' => 'select', 'name' => 'initial_dashboard', 'description' => 'Default login page',
                 'value' => $dashboard_options,
             ],
+            ['form_type' => 'text', 'name' => 'geopos_updated_at', 'description' => 'Last update of geoposition', 'options' => ['readonly']],
         ];
     }
 

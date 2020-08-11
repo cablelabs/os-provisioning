@@ -32,9 +32,12 @@ return [
         'administration' => 'Administration',
     ],
     // Auth
-    'users.login_name' => 'Login Name',
-    'users.first_name' => 'Given Name',
-    'users.last_name' => 'Family Name',
+    'users' => [
+        'login_name' => 'Login Name',
+        'first_name' => 'Given Name',
+        'last_name' => 'Family Name',
+        'geopos_updated_at' => 'Last geopos update',
+    ],
     'roles.title' => 'Name',
     'roles.rank' => 'Rank',
     'roles.description' => 'Description',
