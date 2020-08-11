@@ -203,7 +203,7 @@ class ExtendedValidator
         $ret = File::put($cf_file, $text);
 
         if ($ret === false) {
-            die('Error writing to file');
+            exit('Error writing to file');
         }
 
         if ($device == 'cm') {

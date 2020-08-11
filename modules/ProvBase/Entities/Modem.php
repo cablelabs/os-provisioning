@@ -462,12 +462,12 @@ class Modem extends \BaseModel
 
         $ret = File::put(self::CONF_FILE_PATH, $data);
         if ($ret === false) {
-            die('Error writing to file');
+            exit('Error writing to file');
         }
 
         $ret = File::append(self::CONF_FILE_PATH_PUB, $data_pub);
         if ($ret === false) {
-            die('Error writing to file');
+            exit('Error writing to file');
         }
 
         // chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
@@ -729,7 +729,7 @@ class Modem extends \BaseModel
         $text = "Main\n{\n".$conf.$this->configfile->text_make($this, 'modem')."\n}";
 
         if (File::put($cf_file, $text) === false) {
-            die('Error writing to file');
+            exit('Error writing to file');
         }
 
         Log::info('Trying to build configfile for modem '.$this->hostname);
