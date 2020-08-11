@@ -416,7 +416,8 @@ class NetElement extends \BaseModel
 
         return $this->hasMany(self::class, 'net')
             ->where('id', '!=', $this->id)
-            ->where('netelementtype_id', $cluster_id);
+            ->where('netelementtype_id', $cluster_id)
+            ->orderBy('name');
     }
 
     /**
@@ -762,7 +763,7 @@ class NetElement extends \BaseModel
             array_push($tabs, ['name' => 'Controlling', 'icon' => 'bar-chart fa-rotate-90', 'route' => 'NetElement.tapControlling', 'link' => [$this->id]]);
         }
 
-        if ($provmon && ($type == 4 || $type == 5) && \Bouncer::can('view_analysis_pages_of', Modem::class)) {
+        if ($provmon && ($type == 4 || $type == 5) && \Bouncer::can('view_analysis_pages_of', \Modules\ProvBase\Entities\Modem::class)) {
             //create Analyses tab (for ORA/VGP) if IP address is no valid IP
             array_push($tabs, ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $provmon->createAnalysisTab($this->ip)]);
         }
