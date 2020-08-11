@@ -708,3 +708,8 @@ ul.nav.nav-pills li {
         word-break: break-all;
     }
 }
+
+.box {
+    border: 1px solid grey;
+    height: 25px;
+}

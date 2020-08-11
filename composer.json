@@ -19,7 +19,8 @@
     "doctrine/dbal": "^2.7",
     "silber/bouncer": "v1.0.0-rc.5",
     "kingsquare/php-mt940": "^1.5",
-    "fideloper/proxy": "~4.0"
+    "fideloper/proxy": "~4.0",
+    "brokencube/fft": "~1.0.1"
   },
   "require-dev": {
     "phpunit/phpunit": "~6.0",

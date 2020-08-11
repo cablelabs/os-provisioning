@@ -6,6 +6,7 @@ use Auth;
 use Cache;
 use Module;
 use Session;
+use Modules\ProvBase\Entities\Modem;
 
 class NetElement extends \BaseModel
 {
@@ -229,7 +230,7 @@ class NetElement extends \BaseModel
      */
     public function modems()
     {
-        return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id');
+        return $this->hasMany(Modem::class, 'netelement_id');
     }
 
     /**
@@ -237,7 +238,7 @@ class NetElement extends \BaseModel
      */
     public function geoPosModems()
     {
-        return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id')
+        return $this->hasMany(Modem::class, 'netelement_id')
             ->select('id', 'x', 'y', 'netelement_id')
             ->selectRaw('COUNT(*) AS count')
             ->selectRaw('COUNT(CASE WHEN `us_pwr` = 0 THEN 1 END) as offline')
@@ -304,6 +305,7 @@ class NetElement extends \BaseModel
                 'id_name', // Local Key on Netelement
                 'object_id' // Local Key on IcingaObject
             )
+            ->select('icinga_objects.name2')
             ->where('icinga_objects.is_active', 1);
     }
 

@@ -1299,6 +1299,54 @@ class Modem extends \BaseModel
         return $ret;
     }
 
+    /**
+     * Get Pre-equalization data of a modem via cacti
+     *
+     * @return: Array
+     * @author: John Adebayo
+     */
+    public function get_preq_data()
+    {
+        $domain = ProvBase::first()->domain_name;
+        $file = "/usr/share/cacti/rra/$this->hostname.$domain.json";
+
+        if (! file_exists($file)) {
+            return ['No pre-equalization data found'];
+        }
+
+        $preq = json_decode(file_get_contents($file), true);
+
+        if (empty($preq['preEqu']) || empty($preq['width']) || (! isset($preq['preEqu'][199]))) {
+            return ['No pre-equalization data found'];
+        }
+
+        $preq['axis'] = $this->_xaxis();
+        $preq['chart'] = $this->_chart($preq['energy']);
+
+        return $preq;
+    }
+
+    private function _chart($ene)
+    {
+        $min = round(min($ene));
+
+        return collect($ene)
+            ->map(function () use ($min) {
+                return $min;
+            })
+            ->toArray();
+    }
+
+    private function _xaxis()
+    {
+        $axis = [];
+        for ($i = -0.5; $i <= 0.5; $i += 0.0078125) {
+            $axis[] = $i;
+        }
+
+        return $axis;
+    }
+
     /*
      * Return actual modem state as string or int
      *
