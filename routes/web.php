@@ -122,5 +122,6 @@ BaseRoute::group([], function () {
     BaseRoute::post('user/updateGeopos', [
         'as' => 'user.updateGeopos',
         'uses' => 'Auth\UserController@updateGeopos',
+        'middleware' => ['can:update,App\User'],
     ]);
 });
