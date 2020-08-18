@@ -84,7 +84,7 @@ class IpPoolController extends \BaseController
         $ret_tmp = [
             ['form_type' => 'select', 'name' => 'netgw_id', 'description' => 'NetGw Hostname', 'value' => $model->html_list($model->netgw_hostnames(), 'hostname'), 'hidden' => 1],
             ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types, 'options' => ['translate' => true]],
-            ['form_type' => 'text', 'name' => 'net', 'description' => 'Net'],
+            ['form_type' => 'text', 'name' => 'net', 'description' => trans('provbase::view.net')],
             ['form_type' => 'text', 'name' => 'netmask', 'description' => 'Netmask'],
             ['form_type' => 'text', 'name' => 'ip_pool_start', 'description' => 'First IP'],
             ['form_type' => 'text', 'name' => 'ip_pool_end', 'description' => 'Last IP'],
