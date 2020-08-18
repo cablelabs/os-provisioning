@@ -110,7 +110,9 @@ return [
     ],
 
     'docsis'               => ':attribute',
-    'ip'                   => 'Dies ist keine gültige IP-Adresse im Format: 192.168.0.255',
+    'ip'                   => 'Dies ist keine gültige IP-Adresse',
+    'ipv4'                 => 'Dies muss eine gültige IPv4 Addresse der Form: 192.168.0.255 sein. (gemäß spezifiziertem Netz)',
+    'ipv6'                 => 'Dies muss eine gültige IPv6 Addresse sein. (gemäß spezifiziertem Netz)',
     'ip_in_range'          => 'Die angege IP-Adresse ist nicht innerhalb des spezifizierten Bereichs',
     'ip_larger'            => 'Die angege IP-Adresse muss aufgrund der Angaben aus anderen Feldern eine höhere Nummer besitzen',
     'mac'                  => ':attribute muss eine gültige MAC-Adresse in der Form \\\'aa:bb:cc:dd:ee:ff\\\' sein',

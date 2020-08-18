@@ -94,23 +94,64 @@ class ExtendedValidator
      * Check if ip ($value) is larger than the one specified in $parameters
      *
      * @author Nino Ryschawy
+     * @return bool
      */
     public function ipLarger($attribute, $value, $parameters)
     {
-        $ip = ip2long($value);
-        $ip2 = ip2long($parameters[0]);
+        // IPv6
+        if (filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            return $this->inetPtoi($value) > $this->inetPtoi($parameters[0]);
+        }
 
-        return $ip > $ip2;
+        // IPv4
+        return ip2long($value) > ip2long($parameters[0]);
     }
 
     /**
-     * Check if ip ($value) is larger than the one specified in $parameters
+     * Converts an IPv6 string to a decimal value as string to be compareable
+     * See https://www.samclarke.com/php-ipv6-to-128bit-int/
+     *
+     * @param string
+     * @return mixed
+     */
+    private function inetPtoi($ip)
+    {
+        if (! function_exists('bcadd')) {
+            throw new \Exception('PHP bcmath package must be installed!');
+        }
+
+        if (! filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            return;
+        }
+
+        $parts = unpack('J*', inet_pton($ip));
+
+        // convert any unsigned ints to signed from unpack
+        foreach ($parts as &$part) {
+            if ($part < 0) {
+                $part = bcadd($part, '18446744073709551616');
+            }
+        }
+
+        return bcadd($parts[2], bcmul($parts[1], '18446744073709551616'));
+    }
+
+    /**
+     * Check if value is a valid IP netmask
      *
      * @author Nino Ryschawy
+     * @return bool
      */
     public function netmask($attribute, $value, $parameters)
     {
-        $netmask = ip2long($value);
+        $netmask = str_replace(' ', '', $value);
+
+        // Allow cidr notation
+        if (\Modules\ProvBase\Entities\IpPool::isCidrNotation($netmask)) {
+            return true;
+        }
+
+        $netmask = ip2long($netmask);
         $base = ip2long('255.255.255.255');
         $prefix = log(($netmask ^ $base) + 1, 2);
 
@@ -119,7 +160,7 @@ class ExtendedValidator
         return is_int($number /= 10000);
     }
 
-    /*
+    /**
      * Validates Sepa Creditor Id
      * see: https://github.com/AbcAeffchen/SepaUtilities/blob/master/src/SepaUtilities.php
      */

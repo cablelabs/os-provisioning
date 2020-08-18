@@ -12,16 +12,19 @@ class IpPool extends \BaseModel
     // Add your validation rules here
     public function rules()
     {
+        // Check out ExtendedValidator.php for own validations! (ip_larger, netmask)
+        // Note: ip rule is added in IpPoolController
+        // TODO: Take care of IpPoolController::prepare_rules() when adding new rules!
         return [
-            'net' => 'required|ip',
-            'netmask' => 'required|ip|netmask',     // netmask must not be in first place!
-            'ip_pool_start' => 'required|ip|ip_in_range:net,netmask|ip_larger:net',   // own validation - see in classes: ExtendedValidator and IpPoolController
-            'ip_pool_end' => 'required|ip|ip_in_range:net,netmask|ip_larger:ip_pool_start',
-            'router_ip' => 'required|ip|ip_in_range:net,netmask',
-            'broadcast_ip' => 'nullable|ip|ip_in_range:net,netmask|ip_larger:ip_pool_end',
-            'dns1_ip' => 'nullable|ip',
-            'dns2_ip' => 'nullable|ip',
-            'dns3_ip' => 'nullable|ip',
+            'net' => 'required',
+            'netmask' => 'required|netmask',     // netmask must not be in first place!
+            'ip_pool_start' => 'required|ip_in_range:net,netmask|ip_larger:net',
+            'ip_pool_end' => 'required|ip_in_range:net,netmask|ip_larger:ip_pool_start',
+            'router_ip' => 'required|ip_in_range:net,netmask',
+            'broadcast_ip' => 'nullable|ip_in_range:net,netmask|ip_larger:ip_pool_end',
+            'dns1_ip' => 'nullable',
+            'dns2_ip' => 'nullable',
+            'dns3_ip' => 'nullable',
         ];
     }
 
@@ -86,6 +89,17 @@ class IpPool extends \BaseModel
         $base = ip2long('255.255.255.255');
 
         return 32 - log(($long ^ $base) + 1, 2);
+    }
+
+    /**
+     * Check if netmask is written in Cidr notation (e.g. /16)
+     *
+     * @param string
+     * @return bool
+     */
+    public static function isCidrNotation($netmask)
+    {
+        return preg_match('/^\/\d{1,3}$/', $netmask);
     }
 
     /*

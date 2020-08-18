@@ -83,9 +83,9 @@ class IpPoolController extends \BaseController
         // label has to be the same like column in sql table
         $ret_tmp = [
             ['form_type' => 'select', 'name' => 'netgw_id', 'description' => 'NetGw Hostname', 'value' => $model->html_list($model->netgw_hostnames(), 'hostname'), 'hidden' => 1],
-            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types, 'options' => ['translate' => true]],
+            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types, 'options' => ['translate' => true], 'help' => trans('provbase::help.type')],
             ['form_type' => 'text', 'name' => 'net', 'description' => trans('provbase::view.net')],
-            ['form_type' => 'text', 'name' => 'netmask', 'description' => 'Netmask'],
+            ['form_type' => 'text', 'name' => 'netmask', 'description' => 'Netmask', 'options' => ['placeholder' => '255.255.0.0 | /16']],
             ['form_type' => 'text', 'name' => 'ip_pool_start', 'description' => 'First IP'],
             ['form_type' => 'text', 'name' => 'ip_pool_end', 'description' => 'Last IP'],
             ['form_type' => 'ip', 'name' => 'router_ip', 'description' => 'Router IP'],
@@ -119,17 +119,27 @@ class IpPoolController extends \BaseController
      */
     public function prepare_rules($rules, $data)
     {
+        $version = $this->getVersion($data['net']);
+
         foreach ($rules as $rkey => $description) {
+            // Replace placeholder in rules by data e.g. net in ip_pool_start rule by $data['net']
             foreach ($data as $key => $value) {
-                // search for key of data array in rule descriptions
                 if (($pos = strpos($description, $key)) && substr($description, $pos - 1, 1) != '|') {
                     $rules[$rkey] = $description = preg_replace("/$key\b/", "$value", $description);
-                    // $rules[$rkey] = substr_replace($description,$value,$pos,strlen($key));	// replaces only once (not like str_replace)
-                    // $rules[$rkey] = str_replace($key, $value, $description);
                 }
             }
+
+            // Add ip rule with version dependent on net to the beginning
+            if ($rkey != 'netmask') {
+                $rule = $version ? 'ipv'.$version : 'ip';
+                $rules[$rkey] = $rule.'|'.$rules[$rkey];
+            }
         }
-        // dd($rules, $data);
+
+        if ($version == '6') {
+            $rules['type'] = 'In:CPEPub';
+        }
+
         return $rules;
     }
 
@@ -153,5 +163,18 @@ class IpPoolController extends \BaseController
         if (filter_var($net, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             return '4';
         }
+    }
+
+    /**
+     * Convert netmask in CIDR notation to dotted decimal notation
+     *
+     * @param string
+     * @return string
+     */
+    public function cidrToMask($netmask)
+    {
+        $int = str_replace('/', '', $netmask);
+
+        return long2ip(-1 << (32 - (int) $int));
     }
 }
