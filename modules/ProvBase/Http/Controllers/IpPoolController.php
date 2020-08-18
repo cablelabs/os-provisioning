@@ -132,4 +132,26 @@ class IpPoolController extends \BaseController
         // dd($rules, $data);
         return $rules;
     }
+
+    public function prepare_input($data)
+    {
+        // Determine version
+        $data['version'] = $this->getVersion($data['net']);
+
+        return parent::prepare_input($data);
+    }
+
+    /**
+     * @return mixed    string 4|6 or null if no valid ip
+     */
+    public function getVersion($net)
+    {
+        if (filter_var($net, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            return '6';
+        }
+
+        if (filter_var($net, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            return '4';
+        }
+    }
 }
