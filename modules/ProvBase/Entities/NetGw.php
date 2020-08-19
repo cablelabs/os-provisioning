@@ -273,6 +273,7 @@ class NetGw extends \BaseModel
         $this->nat_ip = env('NETGW_NAT_IP', '172.20.0.2'); // second server ip is mostlikely NAT
         $this->mgmt_vlan = env('MGMT_VLAN', '100');
         $this->customer_vlan = env('CUSTOMER_VLAN', '101');
+        $this->netmask6 = env('NETGW_IP6_NETMASK', '/116');
 
         $this->snmp_ro = $this->community_ro ?: $conf->ro_community;
         $this->snmp_rw = $this->community_rw ?: $conf->rw_community;

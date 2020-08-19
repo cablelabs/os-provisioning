@@ -78,17 +78,22 @@ class IpPool extends \BaseModel
         return DB::table('netgw')->select('id', 'hostname')->get();
     }
 
-    /*
-     * Return the corresponding network size to the netmask,
-     * e.g. 255.255.255.240 will return 28 as integer – means /28 netmask
+    /**
+     * Convert IpPool netmask to CIDR notation
+     * e.g. 255.255.255.240 will return /28
+     *
+     * @return string
      */
-    public function size()
+    public function maskToCidr()
     {
-        // this is crazy shit from http://php.net/manual/de/function.ip2long.php
+        if (self::isCidrNotation($this->netmask)) {
+            return $this->netmask;
+        }
+
         $long = ip2long($this->netmask);
         $base = ip2long('255.255.255.255');
 
-        return 32 - log(($long ^ $base) + 1, 2);
+        return '/'.(string) (32 - log(($long ^ $base) + 1, 2));
     }
 
     /**
@@ -102,8 +107,10 @@ class IpPool extends \BaseModel
         return preg_match('/^\/\d{1,3}$/', $netmask);
     }
 
-    /*
-     * Returns true if provisioning route to $this pool exists, otherwise false
+    /**
+     * Check if route to this pool exists in provisioning server routing table
+     *
+     * @return bool
      */
     public function ip_route_prov_exists()
     {
@@ -113,7 +120,10 @@ class IpPool extends \BaseModel
             return true;
         }
 
-        return strlen(exec('/usr/sbin/ip route show '.$this->net.'/'.$this->size().' via '.$this->netgw->ip)) == 0 ? false : true;
+        $optionIpv6 = $this->version == '4' ? '' : '-6';
+        $ip = $this->version == '4' ? $this->netgw->ip : $this->netgw->ipv6;
+
+        return strlen(exec("/usr/sbin/ip $optionIpv6 route show ".$this->net.$this->maskToCidr().' via '.$ip)) != 0;
     }
 
     /*
@@ -123,7 +133,9 @@ class IpPool extends \BaseModel
     public function ip_route_online()
     {
         // Ping: Only check if device is online
-        exec('sudo ping -c1 -i0 -w1 '.$this->router_ip, $ping, $ret);
+        $cmd = $this->version == '4' ? 'ping' : 'ping6';
+
+        exec("sudo $cmd -c1 -i0 -w1 ".$this->router_ip, $ping, $ret);
 
         return $ret ? false : true;
     }
@@ -154,11 +166,14 @@ class IpPool extends \BaseModel
      */
     public function is_secondary()
     {
-        $cm_pools = $this->netgw->ippools->filter(function ($item) {
-            return $item->type == 'CM';
-        });
+        if ($this->version == '6') {
+            // d($this, $this->netgw->ippools->where('version', '6')->first());
+            return $this->id == $this->netgw->ippools->where('version', '6')->first()->id ? '' : 'secondary';
+        }
 
-        if ($cm_pools->isEmpty() || $this->id != $cm_pools->first()->id) {
+        $cmPools = $this->netgw->ippools->where('type', 'CM');
+
+        if ($cmPools->isEmpty() || $this->id != $cmPools->first()->id) {
             return 'secondary';
         }
 
