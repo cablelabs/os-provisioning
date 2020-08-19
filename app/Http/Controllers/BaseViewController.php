@@ -249,11 +249,21 @@ class BaseViewController extends Controller
             }
 
             // 5. ip online check
-            if ($field['form_type'] == 'ip' || $field['form_type'] == 'ping') {
+            if ($field['form_type'] == 'ip') {
+                $ping = $offline = null;
+
                 // Ping: Only check if ip is online
                 if ($model[$field['name']]) {
                     // $model[$field['name']] is null e.g. on NetGw/create
-                    exec('sudo ping -c1 -i0 -w1 '.explode(':', $model[$field['name']])[0], $ping, $offline);
+                    if (filter_var($model[$field['name']], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                        $cmd = 'ping6';
+                        $host = $model[$field['name']];
+                    } else {
+                        $cmd = 'ping';
+                        $host = explode(':', $model[$field['name']])[0];
+                    }
+
+                    exec("sudo $cmd -c1 -i0 -w1 ".$host, $ping, $offline);
 
                     if ($offline) {
                         $field['help'] = 'Device seems to be Offline!';

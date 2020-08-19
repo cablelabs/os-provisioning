@@ -65,6 +65,7 @@ class NetGwController extends \BaseController
             ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types, 'select' => $types],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname'],
             ['form_type' => 'ip', 'name' => 'ip', 'description' => 'IP', 'help' => 'Online'],
+            ['form_type' => 'ip', 'name' => 'ipv6', 'description' => 'IPv6', 'help' => 'Online'],
             ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'SNMP Private Community String'],
             ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'SNMP Public Community String'],
             ['form_type' => 'text', 'name' => 'nas_secret', 'description' => 'RADIUS Client secret', 'select' => 'BRAS', 'init_value' => $nas_secret],
