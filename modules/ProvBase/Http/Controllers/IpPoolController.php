@@ -145,12 +145,16 @@ class IpPoolController extends \BaseController
 
     public function prepare_input($data)
     {
-        // Determine version
         $data['version'] = $this->getVersion($data['net']);
 
         // Convert cidr netmask for IPv4
         if ($data['version'] == '4' && self::isCidrNotation($data['netmask'])) {
             $data['netmask'] = IpPool::cidrToMask($data['netmask']);
+        }
+
+        $fields = ['net', 'netmask', 'ip_pool_start', 'ip_pool_end', 'router_ip', 'broadcast_ip', 'dns1_ip', 'dns2_ip', 'dns3_ip'];
+        foreach ($fields as $key) {
+            $data[$key] = str_replace(' ', '', $data[$key]);
         }
 
         return parent::prepare_input($data);
