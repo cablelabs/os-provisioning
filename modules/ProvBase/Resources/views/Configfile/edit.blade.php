@@ -43,8 +43,8 @@
                                 <span class="dragdropitemmenubutton" v-on:click="moveItem(key, -1, id)">{{ trans('view.Button_DragDrop MoveToNewList') }}</span>
                                 <span class="dragdropitemmenubutton" v-on:click="moveItem(key, 0, id)">{{ trans('view.Button_DragDrop DeleteElement') }}</span>
                             </div>
-                            <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id, $event.target.name)"/>
-                            <select name="operator" :value="item.operator" v-on:change="onKeyUp($event.target.value, key, id, $event.target.name)">
+                            <input type="text" name="name" v-model="item.name"/>
+                            <select name="operator" v-model="item.operator" v-dispatchsel2>
                                 <option value=""></option>
                                 <option value="+">+</option>
                                 <option value="-">-</option>
@@ -52,8 +52,8 @@
                                 <option value="/">/</option>
                                 <option value="%">%</option>
                             </select>
-                            <input type="text" name="opvalue" :value="item.opvalue" v-on:keyup="onKeyUp($event.target.value, key, id, $event.target.name)"/>
-                            <select name="cvalue" :value="item.cvalue" v-on:change="onKeyUp($event.target.value, key, id, $event.target.name)">
+                            <input type="number" step="0.0001" name="opvalue" v-model="item.opvalue"/>
+                            <select name="cvalue" v-model="item.cvalue" v-dispatchsel2>
                                 <option value=""></option>
                                 <option value="maxDsPow">maxDsPow</option>
                                 <option value="avgUsSNR">avgUsSNR</option>
@@ -105,7 +105,7 @@
                               <span class="dragdropitemmenubutton" v-for="(listname, listkey) in lists" v-if="listkey != '0'" v-on:click="moveItem(key,listkey, id)">{{ trans('view.Button_DragDrop MoveTo') }} @{{ listname.name }}</span>
                               <span class="dragdropitemmenubutton" v-on:click="moveItem(key,-1, id)">{{ trans('view.Button_DragDrop MoveToNewList') }}</span>
                             </div>
-                            <input type="text" name="name" :value="item.name" v-on:keyup="onKeyUp($event.target.value, key, id, $event.target.name)"/>
+                            <input type="text" name="name" v-model="item.name" v-on:keyup="onKeyUp($event.target.value, key, id, $event.target.name)"/>
                             </div>
                         </div>
                     </draggable>
@@ -115,53 +115,51 @@
     </div>
 
 </div>
+@stop
 
+@section('javascript')
 <script>
-var app = new Vue({
+Vue.directive('dispatchsel2', {
+    inserted: function(app) {
+        $(app).on('select2:select', function() {
+            app.dispatchEvent(new Event('change'));
+        });
+        $(app).on('select2:unselect', function() {
+            app.dispatchEvent(new Event('change'));
+        });
+    }
+});
+var app=new Vue({
     el: '#app',
     data: {
         listName: '',
         lists: @json($additional_data['lists'])
     },
     methods: {
-        onKeyUp: function(newval, key, id, field) {console.log(field);
-            if (field == "name") {
-                this.lists[key].content[id].name=newval;
-            }
-            if (field == "operator") {
-                this.lists[key].content[id].operator=newval;
-            }
-            if (field == "opvalue") {
-                this.lists[key].content[id].opvalue=newval;
-            }
-            if (field == "cvalue") {
-                this.lists[key].content[id].cvalue=newval;
-            }
-        },
         itemmenu: function(element, key, id) {
-            targetElement=element.parentNode.getElementsByClassName("dragdropitemmenubox")[0];
-            if (targetElement.style.display!="block"){
-                targetElement.style.display="block";
+            targetElement = element.parentNode.getElementsByClassName("dragdropitemmenubox")[0];
+            if (targetElement.style.display != "block"){
+                targetElement.style.display = "block";
             }
             else {
-                targetElement.style.display="none";
+                targetElement.style.display = "none";
             }
         },
         moveItem: function(olist, key, id) {
-            //for creating a new list
-            if (key==-1) {
+            // for creating a new list
+            if (key == -1) {
                 this.lists.push({
                     name: '{{ trans('view.Header_DragDrop Listname') }}',
                     content: []
                 });
-                key=this.lists.length-1;
+                key = this.lists.length-1;
             }
-            //move item
-            moveId=this.lists[olist].content[id].id;
-            moveName=this.lists[olist].content[id].name;
-            moveOperator='';
-            moveOpValue='';
-            moveCValue='';
+            // move item
+            moveId = this.lists[olist].content[id].id;
+            moveName = this.lists[olist].content[id].name;
+            moveOperator = '';
+            moveOpValue = '';
+            moveCValue = '';
             this.lists[key].content.push({'id': moveId, 'name': moveName, 'operator': moveOperator, 'opvalue': moveOpValue, 'cvalue': moveCValue});
             this.lists[olist].content.splice(id, 1);
         },
@@ -179,81 +177,95 @@ var app = new Vue({
         },
         delList: function(key) {
             if (key == 0) {
-                //the list on the right side can not be deleted
+                // the list on the right side can not be deleted
                 return;
             }
 
-            //move elements from that list back to the main list
-            for (var i=0;i<this.lists[key].content.length;i++) {
-                moveId=this.lists[key].content[i].id;
-                moveName=this.lists[key].content[i].name;
-                //no operator/opvalue/cvalue
+            // move elements from that list back to the main list
+            for (var i=0;i < this.lists[key].content.length; i++) {
+                moveId = this.lists[key].content[i].id;
+                moveName = this.lists[key].content[i].name;
+                // no operator/opvalue/cvalue
                 this.lists[0].content.push({'id': moveId, 'name': moveName});
             }
 
-            //delete elements in reverse order so that the keys are not regenerated
-            for (var i=this.lists[key].content.length-1;i>=0;i--) {
+            // delete elements in reverse order so that the keys are not regenerated
+            for (var i = this.lists[key].content.length-1; i >= 0; i--) {
                 this.lists[key].content.splice(i, 1);
             }
 
-            //delete the list
+            // delete the list
             this.lists.splice(key, 1);
         },
         ddFilter: function(key) {
-            var search=document.getElementById("ddsearch").value;
-            if (search != "") {
-                var refThis=this; //xhttps anonymous function overwrites the this-reference
-                var xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4) {
-                        refThis.lists[0].content=JSON.parse(this.responseText);
-                    }
-                };
-                xhttp.open("GET", "{{route('Configfile.searchDeviceParams', $view_var->id )}}?search="+search, true);
-                xhttp.send();
+            var search = $("#ddsearch")[0].value;
+            if (search == "") {
+                return null;
             }
-        },
+
+            var refThis = this; // xhttps anonymous function overwrites the this-reference
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    refThis.lists[0].content = JSON.parse(this.responseText);
+                }
+            };
+            xhttp.open("GET", "{{route('Configfile.searchDeviceParams', $view_var->id )}}?search="+search, true);
+            xhttp.send();
+        }
     },
     updated: function () {
         this.$nextTick(function () {
-            json='{';
-            for (var key=1;key<this.lists.length;key++) {
-                if (key>1) {
-                    json+=',';
+            $("select").select2();
+            json = '{';
+            for (var key = 1; key<this.lists.length; key++) {
+                if (key > 1) {
+                    json += ',';
                 }
-                json+='"'+this.lists[key].name.replace('"','\\"')+'":{'
+                json += '"'+this.lists[key].name.replace('"','\\"') + '":{'
 
-                injson='';
+                injson = '';
                 try {
-                    for (var i=0;i<this.lists[key].content.length;i++) {
-                        insertId=this.lists[key].content[i].id.replace('"','\\"');
-                        insertName=this.lists[key].content[i].name.replace('"','\\"');
-                        if (i>0) {
-                            injson+=',';
+                    for (var i = 0; i < this.lists[key].content.length; i++) {
+                        insertId = this.lists[key].content[i].id.replace('"', '\\"');
+                        insertName = this.lists[key].content[i].name.replace('"', '\\"');
+                        insertOperator = '+';
+                        insertOpValue = null;
+                        insertCValue = null;
+                        if (this.lists[key].content[i].operator !== null && this.lists[key].content[i].operator !== '') {
+                            insertOperator = this.lists[key].content[i].operator.replace('"', '\\"');
                         }
-                        injson+='"'+insertName+'":"'+insertId+'"';
+                        if (this.lists[key].content[i].opvalue !== null && this.lists[key].content[i].opvalue !== '') {
+                            insertOpValue = this.lists[key].content[i].opvalue.toString().replace('"', '\\"');
+                        }
+                        if (this.lists[key].content[i].cvalue !== null && this.lists[key].content[i].cvalue !== '') {
+                            insertCValue = '"' + this.lists[key].content[i].cvalue.toString().replace('"', '\\"') + '"';
+                        }
+                        if (i>0) {
+                            injson += ',';
+                        }
+                        injson += '"' + insertName + '":["' + insertId + '",["' + insertOperator + '",' + insertOpValue + '],' + insertCValue + ']';
                     }
                 }
-                catch(err) {}
-                injson+='}';
+                catch(err) {console.log(err);}
+                injson += '}';
 
-                json+=injson;
+                json += injson;
             }
-            json+='}';
+            json += '}';
 
-            json='{{$additional_data['searchFlag']}}'+json;
+            json = '{{$additional_data['searchFlag']}}' + json;
 
-            //appending/replacing
-            if (document.getElementById("text").value.toLowerCase().indexOf("{{$additional_data['searchFlag']}}") === -1) {
-                document.getElementById("text").value=json+"\n\n"+document.getElementById("text").value;
+            // appending/replacing
+            if ($('#text')[0].value.toLowerCase().indexOf("{{$additional_data['searchFlag']}}") === -1) {
+                $('#text')[0].value = json+"\n\n" + $('#text')[0].value;
             }
             else {
-                document.getElementById("text").value=document.getElementById("text").value.replace(/^{{$additional_data['searchFlag']}}(.*)$/mg,json);
+                $('#text')[0].value = $('#text')[0].value.replace(/^{{$additional_data['searchFlag']}}(.*)$/mg, json);
             }
         })
     },
 });
 </script>
-@endif
-
 @stop
+@endif

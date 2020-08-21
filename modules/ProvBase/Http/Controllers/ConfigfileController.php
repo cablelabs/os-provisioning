@@ -235,12 +235,12 @@ class ConfigfileController extends \BaseController
 
         $parametersArray = [];
         $storagefile = 'data/provbase/gacs/'.($model->id).'.json';
-        //take from storage
+        // take from storage
         if (Storage::exists($storagefile)) {
             $parametersArray = json_decode(Storage::get($storagefile), true);
         }
 
-        //if storage is empty, regenerate storage
+        // if storage is empty, regenerate storage
         if (empty($parametersArray)) {
             $this->refreshGenieAcs($model->id, false);
             $parametersArray = json_decode(Storage::get($storagefile), true);
@@ -258,7 +258,10 @@ class ConfigfileController extends \BaseController
             foreach ($jsonDecoded as $jsName => $jsonArray) {
                 $jsonArrayPage[$listCounter]['name'] = $jsName;
                 foreach ($jsonArray as $jKey => $jElement) {
-                    $jsonArrayPage[$listCounter]['content'][] = ['id' => $jElement, 'name' => $jKey];
+                    if (! is_array($jElement)) {
+                        $jElement = [0 => $jElement, 1 => [0 => '+', 1 => null], 2 => null];
+                    }
+                    $jsonArrayPage[$listCounter]['content'][] = ['name' => $jKey, 'id' => $jElement[0], 'operator' => $jElement[1][0], 'opvalue' => $jElement[1][1], 'cvalue' => $jElement[2]];
                 }
                 $listCounter++;
             }
