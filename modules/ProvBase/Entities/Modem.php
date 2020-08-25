@@ -35,6 +35,10 @@ class Modem extends \BaseModel
             'country_code' => 'regex:/^[A-Z]{2}$/',
             'contract_id' => 'required|exists:contract,id,deleted_at,NULL',
             'configfile_id' => 'required|exists:configfile,id,deleted_at,NULL,public,yes',
+            // The following rules will be removed when it's a DOCSIS modem - see ModemController@prepare_rules
+            'ppp_username' => "required|unique:modem,ppp_username,$id,id,deleted_at,NULL",
+            'ppp_password' => 'required',
+
             // Note: realty_id and apartment_id validations are done in ModemController@prepare_rules
             // 'realty_id' => 'nullable|empty_with:apartment_id',
         ];
@@ -1764,20 +1768,12 @@ class Modem extends \BaseModel
         // renew RadCheck, if non-exisiting or not as expected
         if ($this->radcheck()->count() != 2) {
             $this->radcheck()->delete();
-            $psw = $this->ppp_password;
-            if (! $psw) {
-                $psw = \Acme\php\Password::generate_password();
-                // update ppp_password without invoking the observer
-                self::where('id', $this->id)->update(['ppp_password' => $psw]);
-                // set $this->ppp_password as well to keep model in sync, e.g. getDirty()
-                $this->ppp_password = $psw;
-            }
 
             $check = new RadCheck;
             $check->username = $this->ppp_username;
             $check->attribute = 'Cleartext-Password';
             $check->op = ':=';
-            $check->value = $psw;
+            $check->value = $this->ppp_password;
             $check->save();
 
             $check = new RadCheck;

@@ -24,6 +24,13 @@ class ModemController extends \BaseController
     protected $second_button_name = 'Restart via NetGw';
     protected $second_button_title_key = 'modem_force_restart_button_title';
 
+    /**
+     * Contains the configfile of the modem object for the current request to only have one DB query
+     *
+     * @var obj
+     */
+    private $configfile;
+
     public function edit($id)
     {
         if (ProvBase::first()->additional_modem_reset) {
@@ -47,6 +54,10 @@ class ModemController extends \BaseController
         if (! $model->exists) {
             $config = GlobalConfig::find(1);
             $model->country_code = $config->default_country_code;
+
+            if (! $model->ppp_password) {
+                $model->ppp_password = \Acme\php\Password::generate_password();
+            }
         }
 
         $pos = explode(',', Request::get('pos'));
@@ -104,7 +115,7 @@ class ModemController extends \BaseController
             ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')],
             ['form_type' => 'text', 'name' => 'serial_num', 'description' => trans('messages.Serial Number')],
             ['form_type' => 'text', 'name' => 'ppp_username', 'description' => trans('messages.Username'), 'select' => $cfIds['tr069'], 'options' => [$model->exists ? 'readonly' : '']],
-            ['form_type' => 'text', 'name' => 'ppp_password', 'description' => trans('messages.Password'), 'select' => $cfIds['tr069'], 'hidden' => 'C'],
+            ['form_type' => 'text', 'name' => 'ppp_password', 'description' => trans('messages.Password'), 'select' => $cfIds['tr069']],
             array_merge(['form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 'E', 'value' => $model->contracts()], $help['contract']),
             ['form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1', 'hidden' => $model->endpoints->count() ? '1' : '0'],
             ['form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1', 'help' => trans('helper.Modem_InternetAccess')],
@@ -401,6 +412,14 @@ class ModemController extends \BaseController
             $data['serial_num'] = \Str::upper($data['serial_num']);
         }
 
+        if (! $this->configfile) {
+            $this->configfile = Configfile::find($data['configfile_id']);
+        }
+
+        if ($this->configfile->device != 'tr069') {
+            $data['ppp_password'] = null;
+        }
+
         return unify_mac($data);
     }
 
@@ -410,13 +429,17 @@ class ModemController extends \BaseController
             $rules['qos_id'] = 'required|exists:qos,id,deleted_at,NULL';
         }
 
-        if ($data['configfile_id'] && Configfile::find($data['configfile_id'])->device == 'tr069') {
-            $id = \Route::current()->hasParameter('Modem') ? \Route::current()->parameters()['Modem'] : 0;
+        $id = $data['id'] ?? null;
+        if (! $this->configfile) {
+            $this->configfile = Configfile::find($data['configfile_id']);
+        }
+
+        if ($this->configfile->device == 'tr069') {
             $rules['serial_num'] = "required|unique:modem,serial_num,$id,id,deleted_at,NULL";
-            $rules['ppp_username'] = "required|unique:modem,ppp_username,$id,id,deleted_at,NULL";
         } else {
-            $id = $data['id'] ?? null;
             $rules['mac'] .= '|required|unique:modem,mac,'.$id.',id,deleted_at,NULL';
+            $rules['ppp_username'] = '';
+            $rules['ppp_password'] = '';
         }
 
         return parent::prepare_rules($rules, $data);
