@@ -9,14 +9,6 @@ class GuiLog extends \BaseModel
 
     public $index_delete_disabled = false;
 
-    // Add your validation rules here
-    public static function rules($id = null)
-    {
-        return [
-            // 'mail' => 'email',
-        ];
-    }
-
     // Name of View
     public static function view_headline()
     {

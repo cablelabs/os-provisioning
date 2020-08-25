@@ -33,7 +33,7 @@ class NetElement extends \BaseModel
     public $snmpvalues = ['attributes' => [], 'original' => []];
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
         $rules = [
             'name' 			=> 'required|string',

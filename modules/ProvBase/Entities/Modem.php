@@ -26,8 +26,10 @@ class Modem extends \BaseModel
 
     // Add your validation rules here
     // see: http://stackoverflow.com/questions/22405762/laravel-update-model-with-unique-validation-rule-for-attribute
-    public static function rules($id = null)
+    public function rules()
     {
+        $id = $this->id;
+
         return [
             'mac' => 'mac',
             'ppp_username' => 'nullable|unique:modem,ppp_username,'.$id.',id,deleted_at,NULL',

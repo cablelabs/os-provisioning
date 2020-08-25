@@ -24,8 +24,10 @@ class Role extends BaseModel
         'rank',
     ];
 
-    public static function rules($id = null)
+    public function rules()
     {
+        $id = $this->id;
+
         return [
             'name' => 'required|unique:roles,name,'.$id.',id,deleted_at,NULL',
             'rank' => 'required|integer|max:101|min:0',

@@ -11,7 +11,7 @@ class PhonebookEntry extends \BaseModel
 
     // Add your validation rules here
     // Also have a look at PhonebookEntryController::prepare_rules (we replace form names in rules by their value)!
-    public static function rules($id = null)
+    public function rules()
     {
         $ret = [
             'phonenumbermanagement_id' => 'required|exists:phonenumbermanagement,id,deleted_at,NULL|min:1',

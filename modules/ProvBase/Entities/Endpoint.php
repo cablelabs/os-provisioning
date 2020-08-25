@@ -7,8 +7,10 @@ class Endpoint extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'endpoint';
 
-    public static function rules($id = null)
+    public function rules()
     {
+        $id = $this->id;
+
         return [
             'mac' => 'required|mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL',
             'hostname' => 'required|regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/|unique:endpoint,hostname,'.$id.',id,deleted_at,NULL',

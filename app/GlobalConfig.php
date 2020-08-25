@@ -8,7 +8,7 @@ class GlobalConfig extends BaseModel
     protected $table = 'global_config';
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
         return [
             'mail' => 'nullable|email',

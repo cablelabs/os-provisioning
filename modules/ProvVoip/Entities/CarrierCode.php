@@ -9,7 +9,7 @@ class CarrierCode extends \BaseModel
     public $table = 'carriercode';
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
         return [
         ];

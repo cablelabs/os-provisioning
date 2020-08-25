@@ -354,7 +354,10 @@ class ConfigfileController extends \BaseController
         Request::merge(['import' => 'import']);
 
         // only continue if the input would pass the validation
-        if (\Validator::make($configfile, $this->prepare_rules(Configfile::rules(), $configfile))->fails()) {
+        $cf = new Configfile;
+        $cf->id = $configfile['id'];
+
+        if (\Validator::make($configfile, $this->prepare_rules($cf->rules(), $configfile))->fails()) {
             return true;
         }
     }

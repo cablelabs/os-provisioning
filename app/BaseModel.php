@@ -76,7 +76,7 @@ class BaseModel extends Eloquent
     /**
      * Placeholder if specific Model does not have any rules
      */
-    public static function rules($id = null)
+    public function rules()
     {
         return [];
     }

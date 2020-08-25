@@ -20,7 +20,7 @@ class Domain extends \BaseModel
     }
 
     // There are no validation rules
-    public static function rules($id = null)
+    public function rules()
     {
         return [
             'name' => 'required|regex:/^[0-9A-Za-z\.\-\_]+$/',

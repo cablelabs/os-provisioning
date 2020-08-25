@@ -8,8 +8,10 @@ class PhoneTariff extends \BaseModel
     public $table = 'phonetariff';
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
+        $id = $this->id;
+
         // Port unique in the appropriate mta (where mta_id=mta_id and deleted_at=NULL)
 
         return [

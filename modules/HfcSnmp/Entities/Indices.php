@@ -16,8 +16,10 @@ class Indices extends \BaseModel
     }
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
+        $id = $this->id;
+
         if (\Request::filled('netelement_id')) {
             return [
                 // netelement_id & parameter_id combination must be unique

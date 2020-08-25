@@ -10,7 +10,7 @@ class IpPool extends \BaseModel
     public $table = 'ippool';
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
         return [
             'net' => 'required|ip',

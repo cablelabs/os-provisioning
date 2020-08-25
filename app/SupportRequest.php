@@ -6,7 +6,7 @@ class SupportRequest extends BaseModel
 {
     public $table = 'supportrequest';
 
-    public static function rules($id = null)
+    public function rules()
     {
         return [
             'mail' => 'email',
