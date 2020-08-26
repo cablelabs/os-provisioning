@@ -162,6 +162,38 @@ class Endpoint extends \BaseModel
 
         return $ret > 0;
     }
+
+    /**
+     * Get next hostname for a new Endpoint that shall be created via GUI
+     *
+     * @author Nino Ryschawy
+     * @return string  e.g. cpe-100010-2 | null when used in place where Request doesn't contain modem_id
+     */
+    public static function getNewHostname()
+    {
+        if (! Request::has('modem_id')) {
+            return;
+        }
+
+        $modem = Modem::find(Request::get('modem_id'));
+        $default = 'cpe-'.$modem->id;
+
+        if ($modem->endpoints->isEmpty()) {
+            return $default;
+        }
+
+        $lastHostname = $modem->endpoints->filter(function ($item) use ($default) {
+            if (strpos($item->hostname, $default) !== false) {
+                return $item;
+            }
+        })->pluck('hostname')->sort()->last();
+
+        if (! $lastHostname) {
+            return $default;
+        }
+
+        return $default.'-'.(substr(strrchr($lastHostname, '-'), 1) + 1);
+    }
 }
 
 class EndpointObserver
