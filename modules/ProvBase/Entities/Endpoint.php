@@ -2,6 +2,8 @@
 
 namespace Modules\ProvBase\Entities;
 
+use Request;
+
 class Endpoint extends \BaseModel
 {
     // The associated SQL table for this Model
@@ -10,9 +12,11 @@ class Endpoint extends \BaseModel
     public function rules()
     {
         $id = $this->id;
+        $modem = $this->exists ? $this->modem : Modem::with('configfile')->find(Request::get('modem_id'));
+        $macRequiredRule = $modem->configfile->device == 'tr069' ? '' : '|required';
 
         return [
-            'mac' => 'required|mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL',
+            'mac' => 'mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL'.$macRequiredRule,
             'hostname' => 'required|regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/|unique:endpoint,hostname,'.$id.',id,deleted_at,NULL',
             'ip' => 'nullable|required_if:fixed_ip,1|ip|unique:endpoint,ip,'.$id.',id,deleted_at,NULL',
         ];
@@ -35,15 +39,10 @@ class Endpoint extends \BaseModel
     public function view_index_label()
     {
         $bsclass = $this->get_bsclass();
-        if ($this->fixed_ip && $this->ip) {
-            $header = "$this->hostname ($this->mac / $this->ip)";
-        } else {
-            $header = "$this->hostname ($this->mac)";
-        }
 
         return ['table' => $this->table,
             'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.ip', $this->table.'.description'],
-            'header' =>  $header,
+            'header' =>  $this->label(),
             'bsclass' => $bsclass, ];
     }
 
@@ -52,6 +51,24 @@ class Endpoint extends \BaseModel
         $bsclass = 'success';
 
         return $bsclass;
+    }
+
+    public function label()
+    {
+        $label = $this->hostname.' ';
+        $labelExt = [];
+
+        if ($this->mac) {
+            $labelExt[] = $this->mac;
+        }
+
+        if ($this->fixed_ip && $this->ip) {
+            $labelExt[] = $this->ip;
+        }
+
+        $label .= $labelExt ? '('.implode(' / ', $labelExt).')' : '';
+
+        return $label;
     }
 
     public function view_belongs_to()
@@ -127,7 +144,7 @@ class Endpoint extends \BaseModel
 
         $data = '';
 
-        foreach (self::all() as $ep) {
+        foreach (self::whereNotNull('mac')->get() as $ep) {
             $data .= "host $ep->hostname { hardware ethernet $ep->mac; ";
             if ($ep->fixed_ip && $ep->ip) {
                 $data .= "fixed-address $ep->ip; ";
