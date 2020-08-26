@@ -84,6 +84,16 @@ class Endpoint extends \BaseModel
         return $this->belongsTo(Modem::class);
     }
 
+    public function netGw()
+    {
+        $query = NetGw::join('ippool as i', 'netgw.id', 'i.netgw_id')
+            ->where('i.type', 'CPEPub')
+            ->whereRaw('INET_ATON("'.$this->ip.'") BETWEEN INET_ATON(i.ip_pool_start) AND INET_ATON(i.ip_pool_end)')
+            ->select('netgw.*', 'i.net', 'i.netmask', 'i.ip_pool_start', 'i.ip_pool_end');
+
+        return new \Illuminate\Database\Eloquent\Relations\BelongsTo($query, new NetGw, null, 'deleted_at', null);
+    }
+
     public function nsupdate($del = false)
     {
         $cmd = '';
@@ -210,7 +220,9 @@ class EndpointObserver
         self::reserveAddress($endpoint);
 
         $endpoint->make_dhcp();
-        NetGw::make_dhcp_conf_all();
+        if ($endpoint->netGw) {
+            $endpoint->netGw->make_dhcp_conf();
+        }
         $endpoint->nsupdate();
     }
 
@@ -227,7 +239,9 @@ class EndpointObserver
         self::reserveAddress($endpoint);
 
         $endpoint->make_dhcp();
-        NetGw::make_dhcp_conf_all();
+        if ($endpoint->netGw) {
+            $endpoint->netGw->make_dhcp_conf();
+        }
         $endpoint->nsupdate();
     }
 
@@ -236,7 +250,9 @@ class EndpointObserver
         self::reserveAddress($endpoint);
 
         $endpoint->make_dhcp();
-        NetGw::make_dhcp_conf_all();
+        if ($endpoint->netGw) {
+            $endpoint->netGw->make_dhcp_conf();
+        }
         $endpoint->nsupdate(true);
     }
 

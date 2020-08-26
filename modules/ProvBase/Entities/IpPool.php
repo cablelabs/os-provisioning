@@ -162,13 +162,20 @@ class IpPool extends \BaseModel
      */
     public function get_range()
     {
-        $ep_static = Endpoint::where('fixed_ip', '=', '1');
+        $empty = "\t\t\t#pool: $this->type $this->ip_pool_start $this->ip_pool_end\n\t\t\trange $this->ip_pool_start $this->ip_pool_end;\n";
 
-        if ($this->type != 'CPEPub' || $ep_static->count() == 0) {
-            return "\t\t\t#pool: $this->type $this->ip_pool_start $this->ip_pool_end\n\t\t\trange $this->ip_pool_start $this->ip_pool_end;\n";
+        if ($this->type != 'CPEPub') {
+            return $empty;
         }
 
-        foreach ($ep_static->get() as $ep) {
+        // TODO: filter endpoints by DB query with INET_ATON
+        $endpoints = Endpoint::where('fixed_ip', '=', '1')->get();
+
+        if ($endpoints->count() == 0) {
+            return $empty;
+        }
+
+        foreach ($endpoints as $ep) {
             $static[] = ip2long($ep->ip);
         }
 
