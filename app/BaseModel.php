@@ -409,7 +409,7 @@ class BaseModel extends Eloquent
 
     protected function _guess_model_name($s)
     {
-        return current(preg_grep('|.*?'.$s.'$|i', $this->get_models()));
+        return current(preg_grep('|.*?'.str_replace('_', '', $s).'$|i', $this->get_models()));
     }
 
     protected function onlyAllowedModels()
@@ -770,7 +770,7 @@ class BaseModel extends Eloquent
                     }
 
                     // seems to be a n:m relation
-                    $parts = explode('_', $tablename);
+                    $parts = $tablename == 'ticket_type_ticket' ? ['ticket_type', 'ticket'] : explode('_', $tablename);
                     foreach ($parts as $part) {
                         $class_child_name = $this->_guess_model_name($part);
 
