@@ -160,8 +160,8 @@ class Kernel extends ConsoleKernel
         // Automatic Power Control based on measured SNR
         if (\Module::collections()->has('HfcReq')) {
             $schedule->command('nms:agc')->everyMinute();
-            $schedule->command('nms:clusters -o power')->everyMinute();
-            $schedule->command('nms:clusters -o online')->everyMinute();
+            $schedule->command('nms:icingadata -o power')->everyMinute();
+            $schedule->command('nms:icingadata -o online')->everyMinute();
         }
 
         // Clean Up of HFC Base
