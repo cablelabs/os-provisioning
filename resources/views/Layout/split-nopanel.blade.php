@@ -1,15 +1,15 @@
 @extends ('Layout.default')
 
 @section ('content')
-    <div class="row">
+    <div class="row flex-wrap-reverse">
         @if (isset($withHistory))
-            <div class="col-md-4 col-xl-3 p-t-10">
-                <div class="card card-inverse p-l-15 p-r-15 p-t-5 p-b-5 ">
+            <div class="d-flex col-lg-3 col-xl-2">
+                <div class="card card-inverse p-l-15 p-r-15 p-t-5 p-b-5 m-t-10" style="flex:1 auto;">
                     @yield ('historyTable')
                 </div>
             </div>
         @endif
-        <div class="card card-inverse col-md-{{ isset($withHistory) ? 8 : 12 }} col-xl-{{ isset($withHistory) ? 9 : 12 }} p-b-5 p-t-10 m-t-10">
+        <div class="card card-inverse p-b-5 p-t-10 col-lg-{{ isset($withHistory) ? 9 : 12 }} col-xl-{{ isset($withHistory) ? 10 : 12 }} m-t-10">
             @if(isset($tabs))
             <div class="card-header m-b-15">
                 <ul class="nav nav-tabs card-header-tabs d-flex" id='tabs'>
@@ -60,7 +60,7 @@
     </div>
     @if (isset($withHistory))
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 p-t-5">
                 <div class="card card-inverse p-l-15 p-r-15 p-t-5 p-b-5 ">
                     @yield ('historySlider')
                 </div>
