@@ -631,7 +631,7 @@ class Modem extends \BaseModel
             }
 
             foreach ($conf_pub as $key => $line) {
-                if (strpos($line, $replace) !== false) {
+                if ($replace && strpos($line, $replace) !== false) {
                     unset($conf_pub[$key]);
                     break;
                 }
