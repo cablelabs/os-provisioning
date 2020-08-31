@@ -27,6 +27,8 @@ class IpPoolController extends \BaseController
             'MTA' => 'MTA',
         ]);
 
+        $typesKeys = array_keys($types->all());
+
         // create context: calc next free ip pool
         if (! $model->exists) {
             $init_values = [];
@@ -83,7 +85,9 @@ class IpPoolController extends \BaseController
         // label has to be the same like column in sql table
         $ret_tmp = [
             ['form_type' => 'select', 'name' => 'netgw_id', 'description' => 'NetGw Hostname', 'value' => $model->html_list($model->netgw_hostnames(), 'hostname'), 'hidden' => 1],
-            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types, 'options' => ['translate' => true], 'help' => trans('provbase::help.type')],
+            ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types,
+                'options' => ['translate' => true], 'help' => trans('provbase::help.type'),
+                'select' => array_combine($typesKeys, $typesKeys), ],
             ['form_type' => 'text', 'name' => 'net', 'description' => trans('provbase::view.net')],
             ['form_type' => 'text', 'name' => 'netmask', 'description' => 'Netmask', 'options' => ['placeholder' => '255.255.0.0 | /16']],
             ['form_type' => 'text', 'name' => 'ip_pool_start', 'description' => 'First IP'],
@@ -93,6 +97,9 @@ class IpPoolController extends \BaseController
             ['form_type' => 'text', 'name' => 'dns1_ip', 'description' => 'DNS1 IP'],
             ['form_type' => 'text', 'name' => 'dns2_ip', 'description' => 'DNS2 IP'],
             ['form_type' => 'text', 'name' => 'dns3_ip', 'description' => 'DNS3 IP'],
+            ['form_type' => 'text', 'name' => 'prefix', 'description' => 'Prefix (IPv6)', 'select' => 'CPEPub'],
+            ['form_type' => 'text', 'name' => 'prefix_len', 'description' => 'Prefix length (IPv6)', 'select' => 'CPEPub'],
+            ['form_type' => 'text', 'name' => 'delegated_len', 'description' => 'Delegated length (IPv6)', 'select' => 'CPEPub'],
             ['form_type' => 'textarea', 'name' => 'optional', 'description' => 'Additional Options'],
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
@@ -119,25 +126,31 @@ class IpPoolController extends \BaseController
      */
     public function prepare_rules($rules, $data)
     {
-        $version = $this->getVersion($data['net']);
+        // Replace placeholder in rules by data e.g. net in ip_pool_start rule by $data['net']
+        $rulesWithPlaceholders = ['ip_pool_start', 'ip_pool_end', 'router_ip', 'broadcast_ip'];
+        foreach ($rulesWithPlaceholders as $rkey) {
+            $description = $rules[$rkey];
 
-        foreach ($rules as $rkey => $description) {
-            // Replace placeholder in rules by data e.g. net in ip_pool_start rule by $data['net']
             foreach ($data as $key => $value) {
                 if (($pos = strpos($description, $key)) && substr($description, $pos - 1, 1) != '|') {
                     $rules[$rkey] = $description = preg_replace("/$key\b/", "$value", $description);
                 }
             }
-
-            // Add ip rule with version dependent on net to the beginning
-            if ($rkey != 'netmask') {
-                $rule = $version ? 'ipv'.$version : 'ip';
-                $rules[$rkey] = $rule.'|'.$rules[$rkey];
-            }
         }
 
-        if ($version == '6') {
+        // Add ip rule with version dependent on net to the beginning
+        $rulesToAddIpRule = array_merge($rulesWithPlaceholders, ['net', 'dns1_ip', 'dns2_ip', 'dns3_ip', 'prefix']);
+        foreach ($rulesToAddIpRule as $rkey) {
+            $rule = $data['version'] ? 'ipv'.$data['version'] : 'ip';
+            $rules[$rkey] = isset($rules[$rkey]) ? $rule.'|'.$rules[$rkey] : $rule;
+        }
+
+        if ($data['version'] == '6') {
             $rules['type'] = 'In:CPEPub';
+
+            foreach (['prefix', 'prefix_len', 'delegated_len'] as $rkey) {
+                $rules[$rkey] .= '|required';
+            }
         }
 
         return $rules;

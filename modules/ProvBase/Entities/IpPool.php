@@ -25,6 +25,8 @@ class IpPool extends \BaseModel
             'dns1_ip' => 'nullable',
             'dns2_ip' => 'nullable',
             'dns3_ip' => 'nullable',
+            'prefix_len' => 'netmask',
+            'delegated_len' => 'netmask',
         ];
     }
 

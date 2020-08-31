@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 
-class updateIpPoolAddVersion extends BaseMigration
+class updateIpPoolAddV6 extends BaseMigration
 {
     // name of the table to create
     protected $tablename = 'ippool';
@@ -16,6 +16,9 @@ class updateIpPoolAddVersion extends BaseMigration
     {
         Schema::table($this->tablename, function (Blueprint $table) {
             $table->string('version')->sizeof(10)->nullable();
+            $table->string('prefix')->nullable();
+            $table->string('prefix_len')->sizeof(3)->nullable();
+            $table->string('delegated_len')->sizeof(3)->nullable();
         });
 
         \Modules\ProvBase\Entities\IpPool::where('id', '!=', 0)->update(['version' =>  4]);
@@ -29,7 +32,12 @@ class updateIpPoolAddVersion extends BaseMigration
     public function down()
     {
         Schema::table($this->tablename, function (Blueprint $table) {
-            $table->dropColumn('version');
+            $table->dropColumn([
+                'version',
+                'prefix',
+                'prefix_len',
+                'delegated_len',
+            ]);
         });
     }
 }
