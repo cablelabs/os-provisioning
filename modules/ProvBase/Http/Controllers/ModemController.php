@@ -416,7 +416,7 @@ class ModemController extends \BaseController
             $this->configfile = Configfile::find($data['configfile_id']);
         }
 
-        if ($this->configfile->device != 'tr069') {
+        if ($this->configfile && $this->configfile->device != 'tr069') {
             $data['ppp_password'] = null;
         }
 
@@ -430,11 +430,7 @@ class ModemController extends \BaseController
         }
 
         $id = $data['id'] ?? null;
-        if (! $this->configfile) {
-            $this->configfile = Configfile::find($data['configfile_id']);
-        }
-
-        if ($this->configfile->device == 'tr069') {
+        if ($this->configfile && $this->configfile->device == 'tr069') {
             $rules['serial_num'] = "required|unique:modem,serial_num,$id,id,deleted_at,NULL";
         } else {
             $rules['mac'] .= '|required|unique:modem,mac,'.$id.',id,deleted_at,NULL';
