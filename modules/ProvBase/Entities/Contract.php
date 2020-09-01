@@ -27,8 +27,10 @@ class Contract extends \BaseModel
 
     // Add your validation rules here
     // TODO: dependencies of active modules (billing)
-    public static function rules($id = null)
+    public function rules()
     {
+        $id = $this->id;
+
         $rules = [
             'number' => 'string|unique:contract,number,'.$id.',id,deleted_at,NULL',
             'number2' => 'nullable|string|unique:contract,number2,'.$id.',id,deleted_at,NULL',

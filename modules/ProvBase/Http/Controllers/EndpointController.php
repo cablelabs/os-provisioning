@@ -11,6 +11,10 @@ class EndpointController extends \BaseController
      */
     public function view_form_fields($model = null)
     {
+        if (! $model->exists) {
+            $model->hostname = $model->getNewHostname();
+        }
+
         // label has to be the same like column in sql table
         return [
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'help' => '.cpe.'.\Modules\ProvBase\Entities\ProvBase::first()->domain_name],

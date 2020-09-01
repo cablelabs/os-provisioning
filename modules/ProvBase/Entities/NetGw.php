@@ -21,8 +21,10 @@ class NetGw extends \BaseModel
     protected $appends = ['formatted_support_state'];
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
+        $id = $this->id;
+
         $types = implode(self::TYPES, ',');
 
         return [

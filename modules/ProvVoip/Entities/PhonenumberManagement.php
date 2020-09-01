@@ -16,7 +16,7 @@ class PhonenumberManagement extends \BaseModel
     protected $delete_children = false;
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
         return [
             'phonenumber_id' => 'required|exists:phonenumber,id,deleted_at,NULL|min:1',

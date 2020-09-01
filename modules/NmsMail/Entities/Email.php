@@ -22,8 +22,10 @@ class Email extends \BaseModel
     }
 
     // There are no validation rules
-    public static function rules($id = null)
+    public function rules()
     {
+        $id = $this->id;
+
         return [
             'localpart' => 'regex:/^[0-9A-Za-z\.\-\_]+$/|required|max:64|unique:email,localpart,'.$id.',id,deleted_at,NULL',
             'domain_id' => 'required',

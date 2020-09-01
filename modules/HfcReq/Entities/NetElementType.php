@@ -13,7 +13,7 @@ class NetElementType extends \BaseModel
     private $max_parents = 15;
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
         return [
             'name' => 'required',

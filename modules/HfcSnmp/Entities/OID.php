@@ -22,7 +22,7 @@ class OID extends \BaseModel
     public $table = 'oid';
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
         return [
             'oid' => 'required',

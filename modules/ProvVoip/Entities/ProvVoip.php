@@ -13,7 +13,7 @@ class ProvVoip extends \BaseModel
     // protected $fillable = ['startid_mta'];
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
         return [
         ];

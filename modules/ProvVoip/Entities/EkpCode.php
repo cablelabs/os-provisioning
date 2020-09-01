@@ -9,7 +9,7 @@ class EkpCode extends \BaseModel
     public $table = 'ekpcode';
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
         return [
         ];

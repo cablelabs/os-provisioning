@@ -15,8 +15,10 @@ class Configfile extends \BaseModel
     public $guarded = ['firmware_upload', 'import'];
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
+        $id = $this->id;
+
         return [
             'name' => 'required_without:import|unique:configfile,name,'.$id.',id,deleted_at,NULL',
             'text' => 'docsis',

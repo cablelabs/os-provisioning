@@ -14,8 +14,10 @@ class MibFile extends \BaseModel
     const REL_MIB_UPLOAD_PATH = 'app/data/hfcsnmp/mibs/';
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
+        $id = $this->id;
+
         return [
             'filename' => 'unique:mibfile,filename,'.$id.',id,deleted_at,NULL',
         ];

@@ -39,14 +39,6 @@ class Sla extends BaseModel
         });
     }
 
-    public static function rules($id = null)
-    {
-        return [
-            // 'name' => '',
-            // 'license' => '',
-        ];
-    }
-
     public static function view_headline(): string
     {
         return 'SLA';

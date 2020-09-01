@@ -2,15 +2,21 @@
 
 namespace Modules\ProvBase\Entities;
 
+use Request;
+
 class Endpoint extends \BaseModel
 {
     // The associated SQL table for this Model
     public $table = 'endpoint';
 
-    public static function rules($id = null)
+    public function rules()
     {
+        $id = $this->id;
+        $modem = $this->exists ? $this->modem : Modem::with('configfile')->find(Request::get('modem_id'));
+        $macRequiredRule = $modem->configfile->device == 'tr069' ? '' : '|required';
+
         return [
-            'mac' => 'required|mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL',
+            'mac' => 'mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL'.$macRequiredRule,
             'hostname' => 'required|regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/|unique:endpoint,hostname,'.$id.',id,deleted_at,NULL',
             'ip' => 'nullable|required_if:fixed_ip,1|ip|unique:endpoint,ip,'.$id.',id,deleted_at,NULL',
         ];
@@ -33,15 +39,10 @@ class Endpoint extends \BaseModel
     public function view_index_label()
     {
         $bsclass = $this->get_bsclass();
-        if ($this->fixed_ip && $this->ip) {
-            $header = "$this->hostname ($this->mac / $this->ip)";
-        } else {
-            $header = "$this->hostname ($this->mac)";
-        }
 
         return ['table' => $this->table,
             'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.ip', $this->table.'.description'],
-            'header' =>  $header,
+            'header' =>  $this->label(),
             'bsclass' => $bsclass, ];
     }
 
@@ -50,6 +51,24 @@ class Endpoint extends \BaseModel
         $bsclass = 'success';
 
         return $bsclass;
+    }
+
+    public function label()
+    {
+        $label = $this->hostname.' ';
+        $labelExt = [];
+
+        if ($this->mac) {
+            $labelExt[] = $this->mac;
+        }
+
+        if ($this->fixed_ip && $this->ip) {
+            $labelExt[] = $this->ip;
+        }
+
+        $label .= $labelExt ? '('.implode(' / ', $labelExt).')' : '';
+
+        return $label;
     }
 
     public function view_belongs_to()
@@ -63,6 +82,16 @@ class Endpoint extends \BaseModel
     public function modem()
     {
         return $this->belongsTo(Modem::class);
+    }
+
+    public function netGw()
+    {
+        $query = NetGw::join('ippool as i', 'netgw.id', 'i.netgw_id')
+            ->where('i.type', 'CPEPub')
+            ->whereRaw('INET_ATON("'.$this->ip.'") BETWEEN INET_ATON(i.ip_pool_start) AND INET_ATON(i.ip_pool_end)')
+            ->select('netgw.*', 'i.net', 'i.netmask', 'i.ip_pool_start', 'i.ip_pool_end');
+
+        return new \Illuminate\Database\Eloquent\Relations\BelongsTo($query, new NetGw, null, 'deleted_at', null);
     }
 
     public function nsupdate($del = false)
@@ -125,7 +154,7 @@ class Endpoint extends \BaseModel
 
         $data = '';
 
-        foreach (self::all() as $ep) {
+        foreach (self::whereNotNull('mac')->get() as $ep) {
             $data .= "host $ep->hostname { hardware ethernet $ep->mac; ";
             if ($ep->fixed_ip && $ep->ip) {
                 $data .= "fixed-address $ep->ip; ";
@@ -143,6 +172,38 @@ class Endpoint extends \BaseModel
 
         return $ret > 0;
     }
+
+    /**
+     * Get next hostname for a new Endpoint that shall be created via GUI
+     *
+     * @author Nino Ryschawy
+     * @return string  e.g. cpe-100010-2 | null when used in place where Request doesn't contain modem_id
+     */
+    public static function getNewHostname()
+    {
+        if (! Request::has('modem_id')) {
+            return;
+        }
+
+        $modem = Modem::find(Request::get('modem_id'));
+        $default = 'cpe-'.$modem->id;
+
+        if ($modem->endpoints->isEmpty()) {
+            return $default;
+        }
+
+        $lastHostname = $modem->endpoints->filter(function ($item) use ($default) {
+            if (strpos($item->hostname, $default.'-') !== false) {
+                return $item;
+            }
+        })->pluck('hostname')->sort()->last();
+
+        if (! $lastHostname) {
+            return $default.'-2';
+        }
+
+        return $default.'-'.(substr(strrchr($lastHostname, '-'), 1) + 1);
+    }
 }
 
 class EndpointObserver
@@ -159,7 +220,9 @@ class EndpointObserver
         self::reserveAddress($endpoint);
 
         $endpoint->make_dhcp();
-        NetGw::make_dhcp_conf_all();
+        if ($endpoint->netGw) {
+            $endpoint->netGw->make_dhcp_conf();
+        }
         $endpoint->nsupdate();
     }
 
@@ -176,7 +239,9 @@ class EndpointObserver
         self::reserveAddress($endpoint);
 
         $endpoint->make_dhcp();
-        NetGw::make_dhcp_conf_all();
+        if ($endpoint->netGw) {
+            $endpoint->netGw->make_dhcp_conf();
+        }
         $endpoint->nsupdate();
     }
 
@@ -185,7 +250,9 @@ class EndpointObserver
         self::reserveAddress($endpoint);
 
         $endpoint->make_dhcp();
-        NetGw::make_dhcp_conf_all();
+        if ($endpoint->netGw) {
+            $endpoint->netGw->make_dhcp_conf();
+        }
         $endpoint->nsupdate(true);
     }
 

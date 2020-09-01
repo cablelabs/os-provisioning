@@ -82,8 +82,10 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      *
      *  Add your validation rules here
      */
-    public static function rules($id = null)
+    public function rules()
     {
+        $id = $this->id;
+
         return [
             'email' => 'nullable|email',
             'login_name' => 'required|unique:users,login_name,'.$id.',id,deleted_at,NULL',

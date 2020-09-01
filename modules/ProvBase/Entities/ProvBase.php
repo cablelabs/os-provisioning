@@ -17,7 +17,7 @@ class ProvBase extends \BaseModel
     // protected $fillable = ['provisioning_server', 'ro_community', 'rw_community', 'domain_name', 'notif_mail', 'dhcp_def_lease_time', 'dhcp_max_lease_time', 'startid_contract', 'startid_modem', 'startid_endpoint'];
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
         return [
             'provisioning_server' => 'required|ip',

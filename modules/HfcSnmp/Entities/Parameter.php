@@ -17,7 +17,7 @@ class Parameter extends \BaseModel
     }
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
         return [
             'html_frame' => 'numeric|min:1',

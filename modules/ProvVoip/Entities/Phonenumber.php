@@ -11,8 +11,10 @@ class Phonenumber extends \BaseModel
     public $table = 'phonenumber';
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
+        $id = $this->id;
+
         $ret = [
             'country_code' => 'required|numeric',
             'prefix_number' => 'required|numeric',
