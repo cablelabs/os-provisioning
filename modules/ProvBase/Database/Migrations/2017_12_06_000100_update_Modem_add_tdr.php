@@ -15,8 +15,8 @@ class UpdateModemAddTdr extends BaseMigration
     public function up()
     {
         Schema::table($this->tablename, function (Blueprint $table) {
-            $table->float('tdr');
-            $table->float('fft_max');
+            $table->float('tdr')->nullable();
+            $table->float('fft_max')->nullable();
         });
 
         return parent::up();
