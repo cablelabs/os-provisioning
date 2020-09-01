@@ -193,13 +193,13 @@ class Endpoint extends \BaseModel
         }
 
         $lastHostname = $modem->endpoints->filter(function ($item) use ($default) {
-            if (strpos($item->hostname, $default) !== false) {
+            if (strpos($item->hostname, $default.'-') !== false) {
                 return $item;
             }
         })->pluck('hostname')->sort()->last();
 
         if (! $lastHostname) {
-            return $default;
+            return $default.'-2';
         }
 
         return $default.'-'.(substr(strrchr($lastHostname, '-'), 1) + 1);
