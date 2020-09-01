@@ -365,27 +365,3 @@ function negate(int ...$values): array
         return -1 * $value;
     }, $values);
 }
-
-/**
- * Appends a rule for item to the validation ruleset (passed by reference), e.g.
- * appendValidationRule($rules, 'username', 'required');
- *
- * @author Ole Ernst
- */
-function appendValidationRule(array &$ruleset, string $item, string $rule): void
-{
-    // do nothing
-    if (empty($item) || empty($rule)) {
-        return;
-    }
-
-    // item is empty, thus replace instead of append
-    if (empty($ruleset[$item])) {
-        $ruleset[$item] = $rule;
-
-        return;
-    }
-
-    // append rule to item
-    $ruleset[$item] .= '|'.$rule;
-}

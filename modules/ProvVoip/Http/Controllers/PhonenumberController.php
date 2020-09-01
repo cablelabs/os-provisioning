@@ -192,14 +192,14 @@ class PhonenumberController extends \BaseController
         unset($rules['id']);
 
         // verify that the chosen port is unique for this mta
-        $rules['port'] .= '|unique:phonenumber,port,'.$id.',id,deleted_at,NULL,mta_id,'.$data['mta_id'];
+        $rules['port'][] = 'unique:phonenumber,port,'.$id.',id,deleted_at,NULL,mta_id,'.$data['mta_id'];
 
         // a phonenumber can only exist once for the same country_code/prefix_number combination
-        $rules['number'] .= '|unique:phonenumber,number,'.$id.',id,deleted_at,NULL,country_code,'.$data['country_code'].',prefix_number,'.$data['prefix_number'];
+        $rules['number'][] = 'unique:phonenumber,number,'.$id.',id,deleted_at,NULL,country_code,'.$data['country_code'].',prefix_number,'.$data['prefix_number'];
 
         if (! \Module::collections()->has('ProvVoipEnvia')) {
             foreach (['username', 'sipdomain'] as $param) {
-                appendValidationRule($rules, $param, 'required');
+                $rules[$param][] = 'required';
             }
         }
 

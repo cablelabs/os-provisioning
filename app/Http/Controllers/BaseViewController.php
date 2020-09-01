@@ -189,12 +189,14 @@ class BaseViewController extends Controller
             // rule exists for actual field ?
             if (isset($rules[$field['name']])) {
                 // 1. Add a (*) to fields description if validation rule contains required
-                if (preg_match('/(.*?)required(.*?)/', $rules[$field['name']])) {
+                if (is_array($rules[$field['name']]) && in_array('required', $rules[$field['name']]) ||
+                    is_string($rules[$field['name']]) && preg_match('/(.*?)required(.*?)/', $rules[$field['name']])) {
                     $field['description'] = $field['description'].' *';
                 }
 
                 // 2. Add Placeholder YYYY-MM-DD for all date fields if not yet set
-                if (preg_match('/(.*?)date(.*?)/', $rules[$field['name']])) {
+                if (is_array($rules[$field['name']]) && in_array('date', $rules[$field['name']]) ||
+                    is_string($rules[$field['name']]) && preg_match('/(.*?)date(.*?)/', $rules[$field['name']])) {
                     if (! isset($field['options']['placeholder'])) {
                         $field['options']['placeholder'] = 'YYYY-MM-DD';
                     }
