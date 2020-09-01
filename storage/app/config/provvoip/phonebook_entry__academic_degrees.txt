@@ -3775,6 +3775,8 @@ Prof. Dr. LL.M.
 Prof. Dr. M.A.
 Prof. Dr. M.A. Dipl.-Psych.
 Prof. Dr. MAS
+Prof. Dr. med.
+Prof. Dr. Med.
 Prof. Dr. Mr.
 Prof. Dr. PhD
 Prof. Dr. Univ.Prof.
@@ -3830,7 +3832,6 @@ Prof. Dr.jur. M.A
 Prof. Dr.jur.habil.
 Prof. Dr.jur.utr.
 Prof. Dr.LL.M.Eur.
-Prof. Dr.med.
 Prof. Dr.med. Dipl.-Biochem.
 Prof. Dr.med. Dipl.-Biol.
 Prof. Dr.med. Dipl.-Chem.
