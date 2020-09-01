@@ -272,7 +272,7 @@ class IpPoolObserver
         }
 
         // fetch netgw object that is related to the created ippool and make dhcp conf
-        $pool->netgw->make_dhcp_conf();
+        $pool->netgw->makeDhcpConf();
     }
 
     public function updated($pool)
@@ -283,11 +283,11 @@ class IpPoolObserver
             return;
         }
 
-        $pool->netgw->make_dhcp_conf();
+        $pool->netgw->makeDhcpConf();
 
         // make dhcp conf of old netgw if relation got changed
         if ($pool->isDirty('netgw_id')) {
-            NetGw::find($pool->getOriginal('netgw_id'))->make_dhcp_conf();
+            NetGw::find($pool->getOriginal('netgw_id'))->makeDhcpConf();
         }
     }
 
@@ -299,7 +299,7 @@ class IpPoolObserver
             return;
         }
 
-        $pool->netgw->make_dhcp_conf();
+        $pool->netgw->makeDhcpConf();
     }
 
     /**

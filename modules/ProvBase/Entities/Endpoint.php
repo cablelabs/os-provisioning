@@ -221,7 +221,7 @@ class EndpointObserver
 
         $endpoint->make_dhcp();
         if ($endpoint->netGw) {
-            $endpoint->netGw->make_dhcp_conf();
+            $endpoint->netGw->makeDhcp4Conf();
         }
         $endpoint->nsupdate();
     }
@@ -240,7 +240,7 @@ class EndpointObserver
 
         $endpoint->make_dhcp();
         if ($endpoint->netGw) {
-            $endpoint->netGw->make_dhcp_conf();
+            $endpoint->netGw->makeDhcp4Conf();
         }
         $endpoint->nsupdate();
     }
@@ -251,7 +251,7 @@ class EndpointObserver
 
         $endpoint->make_dhcp();
         if ($endpoint->netGw) {
-            $endpoint->netGw->make_dhcp_conf();
+            $endpoint->netGw->makeDhcp4Conf();
         }
         $endpoint->nsupdate(true);
     }
