@@ -32,9 +32,12 @@ return [
         'administration' => 'Hausverwaltung',
     ],
     // Auth
-    'users.login_name' => 'Loginname',
-    'users.first_name' => 'Vorname',
-    'users.last_name' => 'Nachname',
+    'users' => [
+        'login_name' => 'Loginname',
+        'first_name' => 'Vorname',
+        'last_name' => 'Nachname',
+        'geopos_updated_at' => 'Letztes Geopos-Update',
+    ],
     'roles.title' => 'Name',
     'roles.rank' => 'Rang',
     'roles.description' => 'Beschreibung',
