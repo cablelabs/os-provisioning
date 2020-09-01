@@ -438,8 +438,7 @@ class ModemController extends \BaseController
             $rules['serial_num'] = "required|unique:modem,serial_num,$id,id,deleted_at,NULL";
         } else {
             $rules['mac'] .= '|required|unique:modem,mac,'.$id.',id,deleted_at,NULL';
-            $rules['ppp_username'] = '';
-            $rules['ppp_password'] = '';
+            unset($rules['ppp_username'], $rules['ppp_password']);
         }
 
         return parent::prepare_rules($rules, $data);
