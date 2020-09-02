@@ -31,6 +31,17 @@
                 <h3 class="card-title">
                     {!! $model->view_icon().' '.$headline !!}
                 </h3>
+                @if (Request::has('show_filter'))
+                    <div>
+                        <i class="fa fa-filter" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="right" title="{{ trans("messages.hardFilter") }}"></i>
+                        <a class="badge badge-primary" href="{{ Request::url() }}"
+                            style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="right"
+                            title="{{ trans("messages.removeFilter") }}">
+                            {{ trans("messages.onlyNewTickets") }}
+                            <i class="fa fa-close p-l-5"></i>
+                        </a>
+                    </div>
+                @endif
             </div>
         {{-- Create Form --}}
         @can('create', $model)
