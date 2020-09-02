@@ -186,6 +186,10 @@ $(document).ready(function() {
             },
             @endif
             {
+                className: 'nocolvis',
+                targets: {{ (isset($delete_allowed) && $delete_allowed == true) ? '[2]' : '[1]'}},
+            },
+            {
                 targets :  "_all",
                 className : 'ClickableTd',
             } ],
