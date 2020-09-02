@@ -734,7 +734,7 @@ class NetElement extends \BaseModel
 
     /**
      * Returns all tabs for the view depending on the NetelementType
-     * Note: 1 = Net, 2 = Cluster, 3 = NetGw, 4 = Amplifier, 5 = Node, 6 = Data, 7 = UPS, 8 = Tap, 9 = Tap-Port
+     * Note: 1 = Net, 2 = Cluster, 3 = NetGw, 4 = Amplifier, 5 = Node, 6 = Data, 7 = UPS, 8 = Tap, 9 = Tap-Port, 10 = NMSPrime slave
      *
      * @author Roy Schneider, Nino Ryschawy
      * @return array
