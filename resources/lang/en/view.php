@@ -374,6 +374,32 @@ return [
     'Dashboard_Help'                => 'Help',
     'Dashboard_WeeklyCustomers'     => 'Weekly Customer Overview',
 
+    // TroubleDashboard
+    'TroubleDashboard' => [
+        'SystemSummary' => 'System Summary',
+        'TroubleDashboard' => 'Trouble Dashboard',
+        'Summary' => 'Summary',
+        'Modems' => 'Modems',
+        'Netelements' => 'Netelements',
+        'Services' => 'Services',
+        'GoodSignal' => 'with good signal',
+        'OnlineState' => 'are online',
+        'OfflineState' => 'offline',
+        'Services_online' => 'Services online',
+        'WarningState' => 'in warning state',
+        'CriticalState' => 'in critical state',
+        'UnknownState' => 'in unknown state',
+        'Filter' => 'Filter',
+        'Severity' => 'Severity',
+        'Type' => 'Type',
+        'Size' => 'Size',
+        'Host' => 'Host',
+        'Status' => 'Status',
+        'Actions' => 'Actions',
+    ],
+
+    'map action' => 'Kartenaktion',
+    'filter by modem type' => 'Nach Modemtyp filtern',
     //
     // Numberrange
     //
