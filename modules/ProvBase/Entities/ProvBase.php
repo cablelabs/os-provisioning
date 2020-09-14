@@ -23,6 +23,7 @@ class ProvBase extends \BaseModel
             'provisioning_server' => 'required|ip',
             'dhcp_def_lease_time' => 'required|integer|min:1',
             'dhcp_max_lease_time' => 'required|integer|min:1',
+            'ppp_session_timeout' => 'required|integer|min:0',
             'max_cpe' => 'required|integer|min:0|max:254',
         ];
     }
@@ -190,16 +191,16 @@ class ProvBaseObserver
         }
 
         if (array_key_exists('dhcp_def_lease_time', $changes)) {
-            RadGroupReply::where('groupname', RadGroupReply::$defaultGroup)
-                ->where('attribute', 'Session-Timeout')
-                ->update(['value' => $model->dhcp_def_lease_time]);
-
             // adjust radiusd config and restart it
             $sed = storage_path('app/tmp/update-sqlippool.sed');
             file_put_contents($sed, "s/^\s*lease_duration\s*=.*/\tlease_duration = $model->dhcp_def_lease_time/");
             exec("sudo sed -i -f $sed /etc/raddb/mods-available/sqlippool");
             exec('sudo systemctl restart radiusd.service');
             unlink($sed);
+        }
+
+        if (array_key_exists('ppp_session_timeout', $changes)) {
+            $this->updatePPPSessionTimeout($model->ppp_session_timeout);
         }
 
         if (array_key_exists('random_ip_allocation', $changes)) {
@@ -257,5 +258,43 @@ class ProvBaseObserver
             exec('sudo systemctl restart named.service');
             unlink($sed);
         }
+    }
+
+    /**
+     * Update Session-Timeout attribute in radgroupreply table
+     *
+     * Handles both setting and resetting Session-Timeout and
+     * multiple Session-Timeout entries in radgroupreply table,
+     * which shouldn't happen
+     *
+     * @author Ole Ernst
+     */
+    private function updatePPPSessionTimeout($timeout)
+    {
+        $defaultGroup = RadGroupReply::$defaultGroup;
+        $query = RadGroupReply::where('groupname', $defaultGroup)
+            ->where('attribute', 'Session-Timeout');
+
+        if ($timeout && $query->count() == 1) {
+            $query->update(['value' => $timeout]);
+
+            return;
+        }
+
+        $query->delete();
+
+        if (! $timeout) {
+            return;
+        }
+
+        RadGroupReply::where('groupname', $defaultGroup)
+            ->where('attribute', 'Fall-Through')
+            ->delete();
+
+        RadGroupReply::insert([
+            ['groupname' => $defaultGroup, 'attribute' => 'Session-Timeout', 'op' => ':=', 'value' => $timeout],
+            // this (Fall-Through) MUST be the last entry of $defaultGroup
+            ['groupname' => $defaultGroup, 'attribute' => 'Fall-Through', 'op' => '=', 'value' => 'Yes'],
+        ]);
     }
 }
