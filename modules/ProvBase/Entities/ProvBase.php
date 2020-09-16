@@ -12,12 +12,12 @@ class ProvBase extends \BaseModel
     public $name = 'Provisioning Basic Config';
 
     // some variables used if module ProvHA is enabled
-    protected $provha;
-    protected $provha_state;
-    protected $provha_own_ip;
-    protected $provha_peer_ip;
-    protected $provha_own_dns_pw;
-    protected $provha_peer_dns_pw;
+    public $provha;
+    public $provha_state;
+    public $provha_own_ip;
+    public $provha_peer_ip;
+    public $provha_own_dns_pw;
+    public $provha_peer_dns_pw;
 
     protected const DEFAULT_NETWORK_FILE_PATH = '/etc/dhcp-nmsprime/default-network.conf';
 
