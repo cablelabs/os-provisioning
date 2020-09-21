@@ -49,13 +49,6 @@ class NetGw extends \BaseModel
         return '<i class="fa fa-server"></i>';
     }
 
-    public static function make_dhcp_conf_all()
-    {
-        foreach (self::where('type', 'cmts')->get() as $cmts) {
-            $cmts->make_dhcp_conf();
-        }
-    }
-
     // AJAX Index list function
     // generates datatable content and classes for model
     public function view_index_label()
@@ -610,9 +603,6 @@ class NetGw extends \BaseModel
 
         _exit:
         self::make_includes();
-
-        // chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
-        system('/bin/chown -R apache /etc/dhcp-nmsprime/');
     }
 
     /**
