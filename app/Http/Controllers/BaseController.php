@@ -108,12 +108,14 @@ class BaseController extends Controller
 
         return [[
             'name' => 'Edit',
+            'icon' => 'pencil',
             // 'route' => $class_name.'.edit',
             // 'link' => ['model_id' => $model->id, 'model' => $class_name],
         ],
             [
                 'name' => 'Logging',
                 'route' => 'GuiLog.filter',
+                'icon' => 'history',
                 'link' => ['model_id' => $model->id, 'model' => $class_name],
             ],
         ];
