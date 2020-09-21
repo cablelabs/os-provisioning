@@ -21,9 +21,10 @@ return [
     'occupied' => 'Bewohnt',
     'prio'          => 'Priorität',
     'street' => 'Straße',
+    'sum' => 'Summe',
     'type' => 'Typ',
     'zip' => 'PLZ',
-    'sum' => 'Summe',
+    'version' => 'Version',
     'apartment' => [
         'number' => 'Nummer',
         'connected' => 'Angeschlossen',

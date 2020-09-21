@@ -49,7 +49,7 @@ class IpPool extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         return ['table' => $this->table,
-            'index_header' => [$this->table.'.id', 'netgw.hostname', $this->table.'.type', $this->table.'.net', $this->table.'.netmask', $this->table.'.router_ip', $this->table.'.description'],
+            'index_header' => [$this->table.'.id', 'netgw.hostname', $this->table.'.type', 'version', $this->table.'.net', $this->table.'.netmask', $this->table.'.router_ip', $this->table.'.description'],
             'header' =>  $this->type.': '.$this->net.' '.$this->netmask,
             'bsclass' => $bsclass,
             'eager_loading' => ['netgw'], ];
