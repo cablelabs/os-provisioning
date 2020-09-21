@@ -22,6 +22,7 @@ class EndpointController extends \BaseController
             ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')],
             ['form_type' => 'checkbox', 'name' => 'fixed_ip', 'description' => 'Fixed IP', 'value' => '1', 'help' => trans('helper.fixed_ip_warning')],
             ['form_type' => 'text', 'name' => 'ip', 'description' => 'Fixed IP', 'checkbox' => 'show_on_fixed_ip'],
+            ['form_type' => 'text', 'name' => 'prefix', 'description' => 'Prefix (IPv6)', 'checkbox' => 'show_on_fixed_ip', 'options' => ['placeholder' => 'fd00:1::/64']],
             ['form_type' => 'text', 'name' => 'add_reverse', 'description' => 'Additional rDNS record', 'checkbox' => 'show_on_fixed_ip', 'help' => trans('helper.addReverse')],
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
 
@@ -31,6 +32,7 @@ class EndpointController extends \BaseController
     protected function prepare_input($data)
     {
         $data = parent::prepare_input($data);
+        $data['version'] = IpPoolController::getVersion($data['ip']);
 
         // delete possibly existing ip to avoid later collisions in validation rules
         if ($data['fixed_ip'] == 0) {
@@ -38,5 +40,14 @@ class EndpointController extends \BaseController
         }
 
         return unify_mac($data);
+    }
+
+    protected function prepare_rules($rules, $data)
+    {
+        if ($data['version'] == '6') {
+            $rules['prefix'] = 'required';
+        }
+
+        return parent::prepare_rules($rules, $data);
     }
 }

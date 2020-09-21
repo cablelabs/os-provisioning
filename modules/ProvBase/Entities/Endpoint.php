@@ -15,9 +15,12 @@ class Endpoint extends \BaseModel
         $modem = $this->exists ? $this->modem : Modem::with('configfile')->find(Request::get('modem_id'));
         $macRequiredRule = $modem->configfile->device == 'tr069' ? '' : '|required';
 
+        // hostname/mac must be unique only inside all ipv4 or ipv6 endpoints - on creation it must be compared to version=NULL to work
+        $versionFilter = ',version,'.($this->version ?: 'NULL');
+
         return [
-            'mac' => 'mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL'.$macRequiredRule,
-            'hostname' => 'required|regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/|unique:endpoint,hostname,'.$id.',id,deleted_at,NULL',
+            'mac' => 'mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL'.$versionFilter.$macRequiredRule,
+            'hostname' => 'required|regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/|unique:endpoint,hostname,'.$id.',id,deleted_at,NULL'.$versionFilter,
             'ip' => 'nullable|required_if:fixed_ip,1|ip|unique:endpoint,ip,'.$id.',id,deleted_at,NULL',
         ];
     }
@@ -144,17 +147,28 @@ class Endpoint extends \BaseModel
         self::observe(new \App\SystemdObserver);
     }
 
+    public function makeDhcp()
+    {
+        if ($this->version == '4') {
+            self::makeDhcp4All();
+        }
+
+        if ($this->version == '6') {
+            self::makeDhcp6All();
+        }
+    }
+
     /**
-     * Make DHCP config files for EPs
+     * Make DHCP config for EPs
      */
-    public static function make_dhcp()
+    public static function makeDhcp4All()
     {
         $dir = '/etc/dhcp-nmsprime/';
         $file_ep = $dir.'endpoints-host.conf';
 
         $data = '';
 
-        foreach (self::whereNotNull('mac')->get() as $ep) {
+        foreach (self::where('version', '4')->whereNotNull('mac')->get() as $ep) {
             $data .= "host $ep->hostname { hardware ethernet $ep->mac; ";
             if ($ep->fixed_ip && $ep->ip) {
                 $data .= "fixed-address $ep->ip; ";
@@ -171,6 +185,27 @@ class Endpoint extends \BaseModel
         system('/bin/chown -R apache /etc/dhcp-nmsprime/');
 
         return $ret > 0;
+    }
+
+    public static function makeDhcp6All()
+    {
+        $file = '/etc/kea/hosts6.conf';
+
+        $hosts = self::where('version', '6')->whereNotNull('mac')->whereNotNull('ip')->get();
+
+        $reservations = [];
+        foreach ($hosts as $host) {
+            $reservation = "\n{ \"hw-address\": \"".$host->mac.'",';
+            $reservation .= ' "ip-addresses": [ "'.$host->ip.'" ],';
+            $reservation .= ' "prefixes": [ "'.$host->prefix.'" ],';
+            $reservation .= ' "hostname": "'.$host->hostname.'" }';
+
+            $reservations[] = $reservation;
+        }
+
+        $data = '"reservations": ['.implode(',', $reservations)."\n]";
+
+        file_put_contents($file, $data, LOCK_EX);
     }
 
     /**
@@ -219,7 +254,7 @@ class EndpointObserver
     {
         self::reserveAddress($endpoint);
 
-        $endpoint->make_dhcp();
+        $endpoint->makeDhcp();
         if ($endpoint->netGw) {
             $endpoint->netGw->makeDhcp4Conf();
         }
@@ -238,7 +273,7 @@ class EndpointObserver
     {
         self::reserveAddress($endpoint);
 
-        $endpoint->make_dhcp();
+        $endpoint->makeDhcp();
         if ($endpoint->netGw) {
             $endpoint->netGw->makeDhcp4Conf();
         }
@@ -249,7 +284,7 @@ class EndpointObserver
     {
         self::reserveAddress($endpoint);
 
-        $endpoint->make_dhcp();
+        $endpoint->makeDhcp();
         if ($endpoint->netGw) {
             $endpoint->netGw->makeDhcp4Conf();
         }

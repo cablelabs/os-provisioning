@@ -158,7 +158,7 @@ class IpPoolController extends \BaseController
 
     public function prepare_input($data)
     {
-        $data['version'] = $this->getVersion($data['net']);
+        $data['version'] = self::getVersion($data['net']);
 
         // Convert cidr netmask for IPv4
         if ($data['version'] == '4' && self::isCidrNotation($data['netmask'])) {
@@ -176,13 +176,13 @@ class IpPoolController extends \BaseController
     /**
      * @return mixed    string 4|6 or null if no valid ip
      */
-    public function getVersion($net)
+    public static function getVersion($ip)
     {
-        if (filter_var($net, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
             return '6';
         }
 
-        if (filter_var($net, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             return '4';
         }
     }
