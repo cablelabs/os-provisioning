@@ -31,7 +31,7 @@ class AppController extends BaseController
         $apps = [];
         foreach ($installed as $module) {
             $icon = $module->icon;
-            if (is_file('/var/www/nmsprime/public/images/apps/'.$icon)) {
+            if (is_file(public_path('images/apps/').$icon)) {
                 $state = $module->active() ? trans('messages.active_apps') : trans('messages.inactive_apps');
                 $apps[$state][$module->category][] = ['name' => $module->alias, 'icon' => $icon, 'description' => $module->description];
             }
