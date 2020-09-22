@@ -1,10 +1,11 @@
 {
     "name": "ProvBase",
-    "alias": "provbase",
+    "alias": "Provisioning",
     "description": "Provisioning",
     "keywords": [],
     "active": 1,
-    "icon": "fa-database",
+    "icon": "OS_Provisioning_app_icon.png",
+    "category": "Provisioning",
     "order": 10,
     "providers": [
         "Modules\\ProvBase\\Providers\\ProvBaseServiceProvider"

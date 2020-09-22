@@ -538,6 +538,10 @@ table .index_check {
     display: block;
 }
 
+li.expand div img {
+    filter: none !important;
+}
+
 #page-container.page-sidebar-minified .nav li i.fa+span{
   display: none;
 }
@@ -712,4 +716,8 @@ ul.nav.nav-pills li {
 .box {
     border: 1px solid grey;
     height: 25px;
+}
+
+div.recolor:hover img {
+    filter: none !important;
 }

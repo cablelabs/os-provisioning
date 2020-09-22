@@ -1,12 +1,13 @@
 {
     "name": "ProvVoip",
-    "alias": "provvoip",
+    "alias": "VoIP",
     "description": "VOIP",
     "keywords": [],
     "active": 1,
     "order": 30,
     "priority": 0,
-    "icon": "fa-phone",
+    "icon": "OS_VoIP_app_icon.png",
+    "category": "Provisioning",
     "providers": [
         "Modules\\ProvVoip\\Providers\\ProvVoipServiceProvider"
     ],

@@ -1,12 +1,13 @@
 {
     "name": "HfcSnmp",
-    "alias": "hfcsnmp",
+    "alias": "Detect",
     "description": "SNMP Module",
     "keywords": [],
     "active": 1,
     "order": 140,
     "priority": 0,
-    "icon": "fa-sliders",
+    "icon": "Prime_Detect_app_icon.png",
+    "category": "Failure Management",
     "providers": [
         "Modules\\HfcSnmp\\Providers\\HfcSnmpServiceProvider"
     ],
