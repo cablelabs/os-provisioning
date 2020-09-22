@@ -124,4 +124,14 @@ BaseRoute::group([], function () {
         'uses' => 'Auth\UserController@updateGeopos',
         'middleware' => ['can:update,App\User'],
     ]);
+
+    BaseRoute::get('Apps/active', [
+        'as' => 'Apps.active',
+        'uses' => 'AppController@showApps',
+    ]);
+
+    BaseRoute::get('Apps/inactive', [
+        'as' => 'Apps.inactive',
+        'uses' => 'AppController@showApps',
+    ]);
 });
