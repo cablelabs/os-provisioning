@@ -19,18 +19,19 @@
       @foreach ($view_header_links as $module_name => $typearray)
         @if (isset($typearray['submenu']))
         <li id="{{ Str::slug($module_name,'_')}}" class="has-sub {{ ($route_name == $module_name) ? 'active' : ''}}" data-sidebar="level1">
-            <div style="padding: 8px 20px;line-height: 20px;color: #a8acb1;display: flex;justify-content: space-between;align-items: center;" class="">
+            <div style="padding: 8px 20px;line-height: 20px;color: #a8acb1;display: flex;justify-content: space-between;align-items: center;" class="recolor">
               @if (isset($typearray['link']))
                 <a href="{{route($typearray['link'])}}">
-                  <i class="fa fa-fw {{ $typearray['icon'] }}"></i>
-                  <span>{{$typearray['translated_name'] ?? $module_name}}</span>
-                </a>
               @else
                 <a class="caret-link" href="javascript:;">
-                  <i class="fa fa-fw {{ $typearray['icon'] }}"></i>
-                  <span>{{$typearray['translated_name'] ?? $module_name}}</span>
-                </a>
               @endif
+              @if (is_file(public_path('images/apps/').$typearray['icon']))
+                <img src="{{ asset('images/apps/'.$typearray['icon']) }}" style="height: 20px; margin-right: 7px; filter: saturate(25%) brightness(80%);">
+              @else
+                <i class="fa fa-fw {{ $typearray['icon'] }}"></i>
+              @endif
+              <span>{{$typearray['translated_name'] ?? $module_name}}</span>
+              </a>
               <a class="caret-link" href="javascript:;" style="width: 20%; height: 20px; display:block; text-align: right">
                 <b class="caret"></b>
               </a>
