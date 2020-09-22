@@ -15,7 +15,9 @@
 
     {{-- begin sidebar nav --}}
     <ul class="nav">
-      <li class="nav-header">Navigation</li>
+      <li class="nav-header">
+        <a href="{{route('Apps.active')}}">Apps</a>
+      </li>
       @foreach ($view_header_links as $module_name => $typearray)
         @if (isset($typearray['submenu']))
         <li id="{{ Str::slug($module_name,'_')}}" class="has-sub {{ ($route_name == $module_name) ? 'active' : ''}}" data-sidebar="level1">
