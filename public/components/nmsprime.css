@@ -661,6 +661,8 @@ ul.nav.nav-pills li {
     margin: 5px;
     padding: 10px;
     width: 45%;
+    height: auto;
+    border: none;
 }
 .dragdropfield .h {
     cursor: pointer;
