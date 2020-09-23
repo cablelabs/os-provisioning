@@ -198,10 +198,25 @@ class Endpoint extends \BaseModel
         }
 
         foreach ($servers as $server => $password) {
-            $srv_cmd = str_replace('update ', "server $server\nupdate ", $cmd);
+            $server_cmd = str_replace('update ', "server $server\nupdate ", $cmd);
             $handle = popen("/usr/bin/nsupdate -v -y dhcpupdate:$password", 'w');
-            fwrite($handle, $srv_cmd);
+            fwrite($handle, $server_cmd);
             pclose($handle);
+
+            $log = [
+                '',
+                '--------------------------------------------------------------------------------',
+                date('c'),
+                __METHOD__,
+                $server_cmd
+            ];
+            try {
+                file_put_contents($provbase::NSUPDATE_LOGFILE, implode("\n", $log), FILE_APPEND);
+            } catch (\Exception $ex) {
+                $msg = 'Could not write to logfile '.$provbase::NSUPDATE_LOGFILE;
+                $this->addAboveMessage($msg, 'error');
+                \Log::error($msg);
+            }
         }
     }
 

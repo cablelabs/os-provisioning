@@ -9,3 +9,12 @@
         systemctl kill -s HUP rsyslog.service || true
     endscript
 }
+
+/var/log/nmsprime/nsupdate.log {
+    monthly
+    missingok
+    rotate 12
+    compress
+    notifempty
+    create 660 apache dhcpd
+}
