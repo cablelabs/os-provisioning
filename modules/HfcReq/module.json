@@ -1,7 +1,7 @@
 {
     "name": "HfcReq",
     "alias": "hfcreq",
-    "description": "HFC",
+    "description": "HFC Req",
     "keywords": [],
     "active": 1,
     "order": 110,
