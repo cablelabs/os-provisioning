@@ -5,6 +5,7 @@ namespace Modules\HfcCustomer\Entities;
 return [
     'name' => 'HfcBase',
     'link' => 'HfcBase.index',
+    'parent' => 'HfcBase',
     'MenuItems' => [
         'Modem Pos System' => [
             'link'	=> 'Mpr.index',
