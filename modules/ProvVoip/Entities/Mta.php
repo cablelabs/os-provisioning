@@ -20,6 +20,7 @@ class Mta extends \BaseModel
             'mac' => 'mac',
             'modem_id' => 'required|exists:modem,id,deleted_at,NULL|min:1',
             'configfile_id' => 'required|exists:configfile,id,deleted_at,NULL|min:1',
+            'type' => 'required',
             // 'hostname' => 'required|unique:mta,hostname,'.$id,
         ];
     }
