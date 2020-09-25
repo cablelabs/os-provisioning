@@ -32,12 +32,39 @@ class AppController extends BaseController
         foreach ($installed as $module) {
             $icon = $module->icon;
             if (is_file(public_path('images/apps/').$icon)) {
-                $state = $module->isEnabled() ? trans('messages.active_apps') : trans('messages.inactive_apps');
-                $apps[$state][$module->category][] = ['name' => $module->alias, 'icon' => $icon, 'description' => $module->description];
+                $state = $module->active() ? 'active' : 'inactive';
+                $apps[$state][$module->category][] = [
+                    'name' => $module->alias,
+                    'icon' => $icon,
+                    'description' => $module->description,
+                    'link' => $this->getAppLink($module, $state),
+                ];
             }
         }
 
         return $apps;
+    }
+
+    /**
+     * Generate link to dashboard of the Module or to nmsprime.com.
+     *
+     * @author Roy Schneider
+     * @param  Nwidart\Modules $installed
+     * @param  string $state
+     * @return string $route
+     */
+    public function getAppLink($module, $state)
+    {
+        $link = \Str::lower($module->name).'.link';
+        $split = explode('_', $module->icon);
+        $iconName = array_diff($split, array_slice($split, -2));
+        $route = 'https://www.nmsprime.com/'.$module->category.'-apps/#'.\Str::lower(implode('_', $iconName));
+
+        if ($state == 'active') {
+            $route = config()->has($link) ? route(config()->get($link)) : '#';
+        }
+
+        return $route;
     }
 
     /**
