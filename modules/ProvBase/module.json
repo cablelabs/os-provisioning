@@ -1,7 +1,7 @@
 {
     "name": "ProvBase",
     "alias": "Provisioning",
-    "description": "Provisioning",
+    "description": "Automated provisioning/management/configfuration of DOCSIS, FTTH or DSL modems.",
     "keywords": [],
     "active": 1,
     "icon": "OS_Provisioning_app_icon.png",

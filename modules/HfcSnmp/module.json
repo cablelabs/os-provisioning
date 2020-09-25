@@ -1,7 +1,7 @@
 {
     "name": "HfcSnmp",
     "alias": "Control",
-    "description": "SNMP Module",
+    "description": "Configure devices via SNMP.",
     "keywords": [],
     "active": 1,
     "order": 140,
