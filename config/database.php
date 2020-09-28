@@ -195,6 +195,18 @@ return [
             'strict'    => false,
         ],
 
+        'mysql-kea' => [
+            'driver'    => 'mysql',
+            'host'      => env('DB_HOST', 'localhost'),
+            'database'  => 'kea',
+            'username'  => env('DB_USERNAME', 'nmsprime'),
+            'password'  => env('DB_PASSWORD', ''),
+            'charset'   => 'latin1',
+            'collation' => 'latin1_swedish_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],
+
     ],
 
     /*
