@@ -927,7 +927,8 @@ class Modem extends \BaseModel
                     break;
                 case 'set':
                     if (isset($vals[2])) {
-                        $prov[] = "declare('$path', {value: Date.now()} , {value: '$vals[2]'});";
+                        $alias = (empty($vals[3]) || empty($vals[4])) ? '' : ".[$vals[3]].$vals[4]";
+                        $prov[] = "declare('$path$alias', {value: Date.now()} , {value: '$vals[2]'});";
                     }
                     break;
                 case 'fw':
