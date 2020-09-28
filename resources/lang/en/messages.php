@@ -312,6 +312,7 @@ return [
     'modem_restart_error'       => 'Could not restart Modem! (offline?)',
     'Contact Persons'           => 'Contact Persons',
     'modem_restart_success_netgw' => 'Restarted modem via NetGw',
+    'modem_restart_warning_dns' => 'Restart failed, since hostname could not be resolved to determine the responsible NetGw.',
     'Accounting Text (optional)'=> 'Accounting Text (optional)',
     'Cost Center (optional)'    => 'Cost Center (optional)',
     'Credit Amount'             => 'Credit Amount',

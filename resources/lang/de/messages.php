@@ -312,6 +312,7 @@ return [
     'modem_restart_error'       => 'Das Modem konnte nicht neu gestartet werden! (offline?)',
     'Contact Persons'           => 'Antennengemeinschaft/Kontakt',
     'modem_restart_success_netgw' => 'Das Modem wurde erfolgreich über das NetGw neu gestartet',
+    'modem_restart_warning_dns' => 'Neustart des Modems fehlgeschlagen, da der Hostname nicht aufgelöst werden konnte, um das verantwortliches NetGw zu ermitteln.',
     'Accounting Text (optional)'=> 'Verwendungszweck (optional)',
     'Cost Center (optional)'    => 'Kostenstelle (optional)',
     'Credit Amount'             => 'Gutschrift - Betrag',

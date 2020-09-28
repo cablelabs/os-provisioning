@@ -1175,9 +1175,8 @@ class Modem extends \BaseModel
             }
 
             if ($fqdn == $ip) {
-                \Log::error("Could not restart $this->hostname. DNS server can not resolve hostname.");
-
-                return;
+                \Session::push('tmp_warning_above_form', trans('messages.modem_restart_warning_dns'));
+                throw new \Exception(trans('messages.modem_restart_warning_dns'));
             }
 
             if (! $netgw) {
