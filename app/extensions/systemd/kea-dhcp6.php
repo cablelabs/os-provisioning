@@ -13,7 +13,7 @@ if ($ret != 0) {
 }
 
 // only restart when dhcpd configfiles are not locked
-$fn_cm = '/etc/kea/gateways.conf';
+$fn_cm = '/etc/kea/gateways6.conf';
 $fn_mta = '/etc/kea/hosts6.conf';
 
 $fp_cm = fopen($fn_cm, 'r');

@@ -10,7 +10,7 @@ mysql_radius_psw=$(pwgen 12 1)
 
 # create folders
 install -dm750 /etc/dhcp-nmsprime/cmts_gws
-install -dm750 /etc/kea/gateways
+install -dm750 /etc/kea/gateways6
 # create wrong directory due to bug https://gitlab.isc.org/isc-projects/kea/-/issues/1144 - Remove on CentOS 8!
 install -dm750 /var/lib/lib/kea/
 
