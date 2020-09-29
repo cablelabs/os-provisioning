@@ -1048,7 +1048,7 @@ class BaseObserver
 class SystemdObserver
 {
     // insert all services that need to be restarted after a model changed there configuration in that array
-    private $services = ['dhcpd'];
+    private $services = ['dhcpd', 'kea-dhcp6'];
 
     public function created($model)
     {
