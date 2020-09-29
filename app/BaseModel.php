@@ -11,7 +11,6 @@ use Bouncer;
 use Session;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use App\Extensions\Database\EmptyRelation as EmptyRelation;
 
 /**
  *	Class to add functionality – use instead of Eloquent for your models
@@ -113,126 +112,6 @@ class BaseModel extends Eloquent
         return (new \ReflectionClass($class))->getDefaultProperties()[$property];
     }
 
-    /**
-     * Checks if the requested relation is installed and enabled.
-     * If so all is fine – otherwise we return flag to create special empty eloquent relation.
-     *
-     * @return bool
-     *
-     * @author Patrick Reichel
-     */
-    protected function _relationAvailable($related)
-    {
-
-        // remove all leading backslashes
-        $related = ltrim($related, '\\');
-
-        $parts = explode('\\', $related);
-        $context = $parts[0];
-
-        // check if requested relation is in module context
-        if (Str::lower($context) == 'modules') {
-
-            // check if requested module is active
-            $module = $parts[1];
-            if (! \Module::collections()->has($module)) {
-                return false;
-            }
-        }
-
-        // in all other cases: no special handling needed – we can return the standard eloquent relation
-        return true;
-    }
-
-    /**
-     * Extension to original hasMany – returns an empty relation if the related module is not available.
-     *
-     * @param  string  $related
-     * @param  string  $foreignKey
-     * @param  string  $localKey
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany or \App\Extensions\Database\EmptyRelation
-     * @author Patrick Reichel
-     */
-    public function hasMany($related, $foreignKey = null, $localKey = null)
-    {
-        if ($this->_relationAvailable($related)) {
-            return parent::hasMany($related, $foreignKey, $localKey);
-        } else {
-            return new EmptyRelation();
-        }
-    }
-
-    /**
-     * Extension to original hasOne – returns an empty relation if the related module is not available.
-     *
-     * @param  string  $related
-     * @param  string  $foreignKey
-     * @param  string  $localKey
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne or \App\Extensions\Database\EmptyRelation
-     * @author Patrick Reichel
-     */
-    public function hasOne($related, $foreignKey = null, $localKey = null)
-    {
-        if ($this->_relationAvailable($related)) {
-            return parent::hasOne($related, $foreignKey, $localKey);
-        } else {
-            return new EmptyRelation();
-        }
-    }
-
-    /**
-     * Extension to original belongsTo – returns an empty relation if the related module is not available.
-     *
-     * @param  string  $related
-     * @param  string  $foreignKey
-     * @param  string  $localKey
-     * @param  string  $relation
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo or \App\Extensions\Database\EmptyRelation
-     * @author Patrick Reichel
-     */
-    public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null)
-    {
-        if ($this->_relationAvailable($related)) {
-
-            // Patrick Reichel: get $relation if not given (copied from Eloquent/Model.php to get proper backtrace)
-            // If no relation name was given, we will use this debug backtrace to extract
-            // the calling method's name and use that as the relationship name as most
-            // of the time this will be what we desire to use for the relationships.
-            if (is_null($relation)) {
-                [$current, $caller] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-
-                $relation = $caller['function'];
-            }
-
-            return parent::belongsTo($related, $foreignKey, $otherKey, $relation);
-        } else {
-            return new EmptyRelation();
-        }
-    }
-
-    /**
-     * Extension to original belongsToMany – returns an empty relation if the related module is not available.
-     *
-     * @param  string  $related
-     * @param  string  $table
-     * @param  string  $foreignKey
-     * @param  string  $otherKey
-     * @param  string  $relation
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany or \App\Extensions\Database\EmptyRelation
-     * @author Patrick Reichel
-     */
-    public function belongsToMany($related, $table = null, $foreignPivotKey = null,
-                                  $relatedPivotKey = null, $parentKey = null,
-                                  $relatedKey = null, $relation = null)
-    {
-        if ($this->_relationAvailable($related)) {
-            return parent::belongsToMany($related, $table, $foreignPivotKey,
-                                         $relatedPivotKey, $parentKey,
-                                         $relatedKey, $relation);
-        } else {
-            return new EmptyRelation();
-        }
-    }
 
     /**
      * Basefunction to define tabs with associated panels (relation or view) for the models edit page
