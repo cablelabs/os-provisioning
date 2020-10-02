@@ -9,7 +9,7 @@ class NetGw extends \BaseModel
 {
     const TYPES = ['cmts', 'bras', 'olt', 'dslam'];
 
-    private static $_us_snr_path = 'data/provmon/us_snr';
+    private static $usSNRPath = 'data/provmon/us_snr';
     // don't put a trailing slash here!
     public static $netgw_include_path = '/etc/dhcp-nmsprime/cmts_gws';
 
@@ -356,7 +356,7 @@ class NetGw extends \BaseModel
      */
     public function get_us_snr($ip)
     {
-        $fn = self::$_us_snr_path."/$this->id.json";
+        $fn = self::$usSNRPath."/$this->id.json";
 
         if (! \Storage::exists($fn)) {
             \Log::error("Missing Modem US SNR json file of CMTS $this->hostname [$this->id]");
@@ -368,6 +368,23 @@ class NetGw extends \BaseModel
 
         if (array_key_exists($ip, $snrs)) {
             return $snrs[$ip];
+        }
+
+        // L2 CMTSes may share the same IP pools
+        $outdated = time() - 10 * 60;
+        foreach (\Storage::files(self::$usSNRPath) as $file) {
+            // ignore files older than 10 minutes, e.g. from a decommissioned cmts
+            if ($outdated > \Storage::lastModified($file)) {
+                continue;
+            }
+
+            if (($snrs = json_decode(\Storage::get($file), true)) === null) {
+                continue;
+            }
+
+            if (array_key_exists($ip, $snrs)) {
+                return $snrs[$ip];
+            }
         }
     }
 
@@ -458,7 +475,7 @@ class NetGw extends \BaseModel
             return;
         }
 
-        \Storage::put(self::$_us_snr_path."/$this->id.json", json_encode($ret));
+        \Storage::put(self::$usSNRPath."/$this->id.json", json_encode($ret));
     }
 
     /**
