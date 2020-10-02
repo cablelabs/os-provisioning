@@ -259,9 +259,15 @@ class ConfigfileController extends \BaseController
                 $jsonArrayPage[$listCounter]['name'] = $jsName;
                 foreach ($jsonArray as $jKey => $jElement) {
                     if (! is_array($jElement)) {
-                        $jElement = [0 => $jElement, 1 => [0 => '+', 1 => null], 2 => null];
+                        $jElement = [0 => $jElement, 1 => [0 => '+', 1 => null], 2 => [null,'+',null]];
                     }
-                    $jsonArrayPage[$listCounter]['content'][] = ['name' => $jKey, 'id' => $jElement[0], 'operator' => $jElement[1][0], 'opvalue' => $jElement[1][1], 'cvalue' => $jElement[2]];
+                    if (count($jElement)>=1 && ! is_array($jElement[1])) {
+                        $jElement[1]=[0 => '+', 1 => null];
+                    }
+                    if (count($jElement)>=2 && ! is_array($jElement[2])) {
+                        $jElement[2]=[null,'+',null];
+                    }
+                    $jsonArrayPage[$listCounter]['content'][] = ['name' => $jKey, 'id' => $jElement[0], 'operator' => $jElement[1][0], 'opvalue' => $jElement[1][1], 'cvalue' => $jElement[2][0],'coperator' => $jElement[2][1],'copvalue' => $jElement[2][2]];
                 }
                 $listCounter++;
             }

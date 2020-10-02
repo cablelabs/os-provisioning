@@ -240,30 +240,51 @@ var app=new Vue({
                     for (var i = 0; i < this.lists[key].content.length; i++) {
                         insertId = this.lists[key].content[i].id.replace('"', '\\"');
                         insertName = this.lists[key].content[i].name.replace('"', '\\"');
-                        insertOperator = '+';
+                        insertOperator = null;
                         insertOpValue = null;
                         insertCValue = null;
-                        insertCOperator = '+';
+                        insertCOperator = null;
                         insertCOpValue = null;
-                        if (this.lists[key].content[i].operator !== null && this.lists[key].content[i].operator !== '') {
-                            insertOperator = this.lists[key].content[i].operator.replace('"', '\\"');
+                        try {
+                            if (this.lists[key].content[i].operator !== null && this.lists[key].content[i].operator !== '') {
+                                insertOperator = this.lists[key].content[i].operator.replace('"', '\\"');
+                            }
+                        } catch (e) {}
+                        try {
+                            if (this.lists[key].content[i].opvalue !== null && this.lists[key].content[i].opvalue !== '') {
+                                insertOpValue = this.lists[key].content[i].opvalue.toString().replace('"', '\\"');
+                            }
+                        } catch (e) {}
+                        try {
+                            if (this.lists[key].content[i].cvalue !== null && this.lists[key].content[i].cvalue !== '') {
+                                insertCValue = '"' + this.lists[key].content[i].cvalue.toString().replace('"', '\\"') + '"';
+                            }
+                        } catch (e) {}
+                        try {
+                            if (this.lists[key].content[i].coperator !== null && this.lists[key].content[i].coperator !== '') {
+                                insertCOperator = this.lists[key].content[i].coperator.toString().replace('"', '\\"');
+                            }
+                        } catch (e) {}
+                        try {
+                            if (this.lists[key].content[i].copvalue !== null && this.lists[key].content[i].copvalue !== '') {
+                                insertCOpValue = this.lists[key].content[i].copvalue.toString().replace('"', '\\"');
+                            }
+                        } catch (e) {}
+
+                        insertOps='null';
+                        if (insertOperator!==null && insertOpValue!==null) {
+                            insertOps='["' + insertOperator + '",' + insertOpValue + ']';
                         }
-                        if (this.lists[key].content[i].opvalue !== null && this.lists[key].content[i].opvalue !== '') {
-                            insertOpValue = this.lists[key].content[i].opvalue.toString().replace('"', '\\"');
+
+                        insertCOps='null';
+                        if (insertCValue!==null && insertCOperator!==null && insertCOpValue!==null) {
+                            insertCOps='[' + insertCValue + ',"' + insertCOperator + '",' + insertCOpValue + ']';
                         }
-                        if (this.lists[key].content[i].cvalue !== null && this.lists[key].content[i].cvalue !== '') {
-                            insertCValue = '"' + this.lists[key].content[i].cvalue.toString().replace('"', '\\"') + '"';
-                        }
-                        if (this.lists[key].content[i].coperator !== null && this.lists[key].content[i].coperator !== '') {
-                            insertCOperator = this.lists[key].content[i].coperator.toString().replace('"', '\\"');
-                        }
-                        if (this.lists[key].content[i].copvalue !== null && this.lists[key].content[i].copvalue !== '') {
-                            insertCOpValue = this.lists[key].content[i].copvalue.toString().replace('"', '\\"');
-                        }
+
                         if (i>0) {
                             injson += ',';
                         }
-                        injson += '"' + insertName + '":["' + insertId + '",["' + insertOperator + '",' + insertOpValue + '],[' + insertCValue + ',' + insertCOperator + ',' + insertCOpValue + ']]';
+                        injson += '"' + insertName + '":["' + insertId + '",' + insertOps + ',' + insertCOps + ']';
                     }
                 }
                 catch(err) {console.log(err);}
