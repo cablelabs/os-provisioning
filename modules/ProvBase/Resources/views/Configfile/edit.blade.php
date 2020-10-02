@@ -77,6 +77,15 @@
                                 <option value="ifHCInOctets">ifHCInOctets</option>
                                 <option value="ifHCOutOctets">ifHCOutOctets</option>
                             </select>
+                            <select name="coperator" v-model="item.coperator" v-dispatchsel2>
+                                <option value=""></option>
+                                <option value="+">+</option>
+                                <option value="-">-</option>
+                                <option value="*">*</option>
+                                <option value="/">/</option>
+                                <option value="%">%</option>
+                            </select>
+                            <input type="number" step="0.0001" name="copvalue" v-model="item.copvalue"/>
                             </div>
                         </div>
                     </draggable>
@@ -160,7 +169,9 @@ var app=new Vue({
             moveOperator = '';
             moveOpValue = '';
             moveCValue = '';
-            this.lists[key].content.push({'id': moveId, 'name': moveName, 'operator': moveOperator, 'opvalue': moveOpValue, 'cvalue': moveCValue});
+            moveCOperator = '';
+            moveCOpValue = '';
+            this.lists[key].content.push({'id': moveId, 'name': moveName, 'operator': moveOperator, 'opvalue': moveOpValue, 'cvalue': moveCValue, 'coperator': moveCOperator, 'copvalue': moveCOpValue});
             this.lists[olist].content.splice(id, 1);
         },
         addList: function() {
@@ -232,6 +243,8 @@ var app=new Vue({
                         insertOperator = '+';
                         insertOpValue = null;
                         insertCValue = null;
+                        insertCOperator = '+';
+                        insertCOpValue = null;
                         if (this.lists[key].content[i].operator !== null && this.lists[key].content[i].operator !== '') {
                             insertOperator = this.lists[key].content[i].operator.replace('"', '\\"');
                         }
@@ -241,10 +254,16 @@ var app=new Vue({
                         if (this.lists[key].content[i].cvalue !== null && this.lists[key].content[i].cvalue !== '') {
                             insertCValue = '"' + this.lists[key].content[i].cvalue.toString().replace('"', '\\"') + '"';
                         }
+                        if (this.lists[key].content[i].coperator !== null && this.lists[key].content[i].coperator !== '') {
+                            insertCOperator = this.lists[key].content[i].coperator.toString().replace('"', '\\"');
+                        }
+                        if (this.lists[key].content[i].copvalue !== null && this.lists[key].content[i].copvalue !== '') {
+                            insertCOpValue = this.lists[key].content[i].copvalue.toString().replace('"', '\\"');
+                        }
                         if (i>0) {
                             injson += ',';
                         }
-                        injson += '"' + insertName + '":["' + insertId + '",["' + insertOperator + '",' + insertOpValue + '],' + insertCValue + ']';
+                        injson += '"' + insertName + '":["' + insertId + '",["' + insertOperator + '",' + insertOpValue + '],[' + insertCValue + ',' + insertCOperator + ',' + insertCOpValue + ']]';
                     }
                 }
                 catch(err) {console.log(err);}
