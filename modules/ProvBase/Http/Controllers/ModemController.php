@@ -112,7 +112,7 @@ class ModemController extends \BaseController
             ['form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $configfiles, 'help' => trans('helper.configfile_count').' '.trans('helper.modem.configfileSelect'), 'select' => $cfIds['all']],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly'], 'hidden' => 'C', 'space' => 1],
             // TODO: show this dropdown only if necessary (e.g. not if creating a modem from contract context)
-            ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')],
+            ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'autocomplete' => ['modem'], 'help' => trans('helper.mac_formats')],
             ['form_type' => 'text', 'name' => 'serial_num', 'description' => trans('messages.Serial Number')],
             ['form_type' => 'text', 'name' => 'ppp_username', 'description' => trans('messages.Username'), 'select' => $cfIds['tr069'], 'options' => [$model->exists ? 'readonly' : '']],
             ['form_type' => 'text', 'name' => 'ppp_password', 'description' => trans('messages.Password'), 'select' => $cfIds['tr069']],
@@ -334,6 +334,39 @@ class ModemController extends \BaseController
         $create_allowed = false;
 
         return \View::make('Generic.tree', $this->compact_prep_view(compact('headline', 'view_header', 'view_var', 'create_allowed')));
+    }
+
+    /**
+     * Returns MAC addresses of all modems (including the respective CMTS name),
+     * which were denied booting in the last two hours, since they are unknown.
+     * This is used to autocomplete the MAC address field when creating a modem.
+     *
+     * Cache is used, since we don't want to search through the log on every XHR.
+     *
+     * @author Ole Ernst
+     */
+    public static function unknownMACAddresses()
+    {
+        $all = \Cache::remember('unknownMACAddresses', now()->addMinute(), function () {
+            $matches = [];
+
+            exec("sudo /usr/bin/journalctl -udhcpd -p3 -S-2h -ocat | grep 'no free leases$' | sort -u", $lines);
+            // exec("grep 'no free leases$' /var/log/messages | grep -o 'DHCPDISCOVER from.*' | sort -u", $lines);
+
+            foreach ($lines as $line) {
+                if (preg_match('/DHCPDISCOVER from (([[:xdigit:]]{2}:){5}([[:xdigit:]]{2})).*network ([^:]+)/', $line, $match)) {
+                    $matches[] = ['label' => "$match[1] - $match[4]", 'value' => $match[1]];
+                }
+            }
+
+            return $matches;
+        });
+
+        $filter = \Request::get('q');
+
+        return array_filter($all, function ($element) use ($filter) {
+            return stripos($element['value'], $filter) !== false;
+        });
     }
 
     /**

@@ -23,6 +23,12 @@ BaseRoute::group([], function () {
         'middleware' => ['can:update,Modules\ProvBase\Entities\Modem'],
     ]);
 
+    BaseRoute::get('modem/autocomplete/mac', [
+        'as' => 'Modem.unknownMACAddresses',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@unknownMACAddresses',
+        'middleware' => ['can:view,Modules\ProvBase\Entities\Modem'],
+    ]);
+
     Route::group(['prefix' => 'api/v{ver}'], function () {
         Route::get('Modem/{Modem}/restart', [
             'as' => 'Modem.api_restart',
