@@ -19,7 +19,7 @@
 
 @section('content_left')
 
-	{{ Form::open(array('route' => array($route_name.'.store', 0), 'method' => 'POST', 'files' => true)) }}
+	{{ Form::open(['route' => [$route_name.'.store'], 'method' => 'POST', 'files' => true]) }}
 
 		@include($form_path)
 
