@@ -138,6 +138,14 @@ class BaseModel extends Eloquent
         return [];
     }
 
+    public function addViewHasManyTickets(&$ret)
+    {
+        if (Module::collections()->has('Ticketsystem')) {
+            $ret['Edit']['Ticket']['class'] = 'Ticket';
+            $ret['Edit']['Ticket']['relation'] = $this->tickets;
+        }
+    }
+
     /**
      * Basefunction for returning all objects that a model can have a one-to-one relation to
      * Place this function in the model where the edit/create view shall show all related objects
