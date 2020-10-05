@@ -112,6 +112,19 @@ class BaseModel extends Eloquent
         return (new \ReflectionClass($class))->getDefaultProperties()[$property];
     }
 
+    /**
+     * Relation to Ticket if Ticketsystem is present.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany|\Illuminate\Support\Optional
+     */
+    public function tickets()
+    {
+        if (Module::collections()->has('Ticketsystem')) {
+            return  $this->morphMany(\Modules\Ticketsystem\Entities\Ticket::class, 'ticketable');
+        }
+
+        return optional();
+    }
 
     /**
      * Basefunction to define tabs with associated panels (relation or view) for the models edit page

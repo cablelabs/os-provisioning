@@ -413,11 +413,6 @@ class Contract extends \BaseModel
         return $this->hasOne(\Modules\Ccc\Entities\CccUser::class);
     }
 
-    public function tickets()
-    {
-        return $this->hasMany(\Modules\Ticketsystem\Entities\Ticket::class);
-    }
-
     public function realties()
     {
         return $this->hasMany(\Modules\PropertyManagement\Entities\Realty::class)->orderBy('street')->orderBy('house_nr');
