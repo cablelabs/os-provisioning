@@ -112,9 +112,9 @@ class ContractController extends \BaseController
         $b2 = [
             ['form_type' => 'text', 'name' => 'fax', 'description' => 'Fax'],
             ['form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'],
-            ['form_type' => 'text', 'name' => 'birthday', 'description' => 'Birthday', 'create' => ['Modem'], 'space' => '1'],
-            ['form_type' => 'text', 'name' => 'contract_start', 'description' => 'Contract Start'], // TODO: create default 'value' => date("Y-m-d")
-            ['form_type' => 'text', 'name' => 'contract_end', 'description' => 'Contract End'],
+            ['form_type' => 'date', 'name' => 'birthday', 'description' => 'Birthday', 'create' => ['Modem'], 'space' => '1'],
+            ['form_type' => 'date', 'name' => 'contract_start', 'description' => 'Contract Start'],
+            ['form_type' => 'date', 'name' => 'contract_end', 'description' => 'Contract End'],
         ];
 
         if (Module::collections()->has('BillingBase')) {
