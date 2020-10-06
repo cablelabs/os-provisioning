@@ -612,6 +612,7 @@ return [
     'deletedTicketUsers'        => 'Deleted from ticket :id',
     'deletedTicketUsersMessage' => 'You have been removed from a ticket.',
     'ticketUpdatedMessage'      => 'this ticket has been updated.',
+    'isLegacyTicket'            => 'This is a legacy Ticket, that has no relationship.',
     'noReplyMail'               => 'Addresse of noreply E-mail',
     'noReplyName'               => 'Name of noreply E-mail',
     'deleteSettlementRun'       => 'Deleting settlementrun :time...',

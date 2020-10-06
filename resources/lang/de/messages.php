@@ -612,6 +612,7 @@ return [
     'deletedTicketUsers'        => 'Gelöscht von Ticket :id',
     'deletedTicketUsersMessage' => 'Du wurdest aus einem Ticket entfernt.',
     'ticketUpdatedMessage'      => 'das Ticket wurde geändert.',
+    'isLegacyTicket'            => 'Dies ist ein veraltetes Ticket. Es ist mit keiner anderen Entität verknüpft.',
     'noReplyMail'               => 'Adresse der Noreply E-mail',
     'noReplyName'               => 'Name der Noreply E-mail',
     'deleteSettlementRun'       => 'Abrechnungslauf :time wird gelöscht...',
