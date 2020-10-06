@@ -584,8 +584,8 @@ class BaseViewController extends Controller
             $moduleMenuConfig = Config::get($moduleName.'.'.$configMenuItemKey);
 
             if (! empty($moduleMenuConfig)) {
-                $name = Config::get($moduleName.'.name') ?? $module->get('description');
-                $icon = ($module->get('icon') == '' ? '' : $module->get('icon'));
+                $name = Config::get($moduleName.'.name');
+                $icon = $module->get('icon') ?? '';
 
                 $menu[$name]['icon'] = Config::has($moduleName.'.parent') ? Module::find($name)->get('icon') : $icon;
                 $menu[$name]['link'] = Config::get(Str::lower($module->name).'.link');

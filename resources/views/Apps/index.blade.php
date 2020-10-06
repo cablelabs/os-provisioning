@@ -11,7 +11,7 @@
 				<div class="widget row" style="text-align: center;">
 					@foreach ($modules as $attr)
 						<div>
-							<a href="{{ $attr['link']}}">
+							<a href="{{ $attr['link'] }}">
 								<img title="{{ $attr['description'] }}" src="{{ asset('images/apps/'.$attr['icon']) }}" style="height: 100px; margin-right: 10px; margin-left: 10px;">
 							</a>
 							<p style="margin-top: 5px; color: black;">{{ $attr['name'] }}</p>

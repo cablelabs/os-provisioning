@@ -53,11 +53,11 @@ class AppController extends BaseController
      * @param  string $state
      * @return string $route
      */
-    public function getAppLink($module, $state)
+    private function getAppLink($module, $state)
     {
         $link = \Str::lower($module->name).'.link';
         $split = explode('_', $module->icon);
-        $iconName = array_diff($split, array_slice($split, -2));
+        $iconName = array_slice($split, 0, -2);
         $route = 'https://www.nmsprime.com/'.$module->category.'-apps/#'.\Str::lower(implode('_', $iconName));
 
         if ($state == 'active') {
