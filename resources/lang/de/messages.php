@@ -605,6 +605,7 @@ return [
     'hello'                     => 'Hallo',
     'newTicketAssigned'         => 'dir wurde ein neues Ticket zugewiesen.',
     'ticket'                    => 'Ticket',
+    'toTicket'                  => 'zum Ticket',
     'title'                     => 'Titel',
     'description'               => 'Beschreibung',
     'ticketUpdated'             => 'Ticket :id geändert',
