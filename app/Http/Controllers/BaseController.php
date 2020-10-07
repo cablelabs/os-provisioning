@@ -831,8 +831,7 @@ class BaseController extends Controller
             $form_path = NamespaceController::get_view_name().'.form';
         }
 
-        // $config_routes = BaseController::get_config_modules();
-        return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'tabs', 'relations', 'action', 'additional_data')));
+        return View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'tabs', 'relations', 'additional_data')));
     }
 
     /**
