@@ -15,6 +15,9 @@ pkill -f "artisan queue:work"
 /opt/rh/rh-php73/root/usr/bin/php artisan route:cache
 /opt/rh/rh-php73/root/usr/bin/php artisan view:clear
 
+# on HA machines: clean up
+[ -e /var/www/nmsprime/modules/ProvHA/Console/CleanUpSlaveCommand.php ] && /opt/rh/rh-php73/root/usr/bin/php artisan provha:clean_up_slave
+
 systemctl reload httpd
 
 chown -R apache storage bootstrap/cache /var/log/nmsprime
