@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Log;
+
 /**
  * An improved version of laravel's dd() function
  * This will first print some meta information about the caller of dd
@@ -134,14 +136,14 @@ function concat_pdfs($sourcefiles, $target_fn, $multithreaded = false)
         $cnt = count(explode(' ', trim($sourcefiles)));
     }
 
-    ChannelLog::debug('billing', 'Concat '.$cnt.' PDFs to '.$target_fn);
+    Log::channel('billing')->debug('Concat '.$cnt.' PDFs to '.$target_fn);
 
     $cmd_ext = $multithreaded ? '> /dev/null 2>&1 & echo $!' : '';
     exec("gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile='$target_fn' $sourcefiles $cmd_ext", $output, $ret);
 
     // Note: normally output is [] and ret is 0
     if ($ret) {
-        ChannelLog::error('billing', "Error concatenating target file $target_fn", [$ret]);
+        Log::channel('billing')->error("Error concatenating target file $target_fn", [$ret]);
     }
 
     return $multithreaded ? (int) $output[0] : 0;

@@ -124,23 +124,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Logging Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Here you may configure the log settings for your application. Out of
-    | the box, Laravel uses the Monolog PHP logging library. This gives
-    | you a variety of powerful log handlers / formatters to utilize.
-    |
-    | Available Settings: "single", "daily", "syslog", "errorlog"
-    |
-    */
-
-    'log' => env('APP_LOG', 'single'),
-    'log_level' => env('APP_LOG_LEVEL', 'error'),
-    'log_max_files' => env('APP_LOG_MAX_FILES', 30),
-
-    /*
-    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |
@@ -251,7 +234,6 @@ return [
         'NamespaceController' => App\Http\Controllers\NamespaceController::class,
         'BaseModel' => App\BaseModel::class,
         'GlobalConfig' => App\GlobalConfig::class,
-        'ChannelLog' => Acme\log\ChannelLog::class,
     ],
 
     /*
