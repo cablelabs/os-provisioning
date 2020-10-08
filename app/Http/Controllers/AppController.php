@@ -12,7 +12,7 @@ class AppController extends BaseController
      */
     public function showApps()
     {
-        $modules = \Route::currentRouteName() == 'Apps.active' ? \Module::enabled() : \Module::disabled();
+        $modules = \Route::currentRouteName() == 'Apps.active' ? \Module::allEnabled() : \Module::allDisabled();
         $apps = $this->getApps($modules);
         $tabs = $this->prepareTabs();
 
@@ -32,7 +32,7 @@ class AppController extends BaseController
         foreach ($installed as $module) {
             $icon = $module->icon;
             if (is_file(public_path('images/apps/').$icon)) {
-                $state = $module->active() ? trans('messages.active_apps') : trans('messages.inactive_apps');
+                $state = $module->enabled() ? trans('messages.active_apps') : trans('messages.inactive_apps');
                 $apps[$state][$module->category][] = ['name' => $module->alias, 'icon' => $icon, 'description' => $module->description];
             }
         }

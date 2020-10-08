@@ -71,7 +71,7 @@ class GlobalConfigController extends BaseController
         $view_header = BaseViewController::translate_view('Global Configurations', 'Header');
         $route_name = 'Config.index';
 
-        $enabled = Module::enabled();
+        $enabled = Module::allEnabled();
         $module_controller = [0 => $this];
         $module_model = [0 => static::get_model_obj()->first()];
 

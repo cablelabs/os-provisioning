@@ -556,7 +556,7 @@ class BaseViewController extends Controller
         }
 
         $menu = [];
-        $modules = Module::enabled();
+        $modules = Module::allEnabled();
         $configMenuItemKey = 'MenuItems';
 
         $globalPages = Config::get('base.'.$configMenuItemKey);

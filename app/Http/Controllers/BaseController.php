@@ -156,7 +156,7 @@ class BaseController extends Controller
 
     public static function get_config_modules()
     {
-        $modules = \Module::enabled();
+        $modules = \Module::allEnabled();
         $links = ['Global Config' => 'GlobalConfig'];
 
         foreach ($modules as $module) {

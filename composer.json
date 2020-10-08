@@ -15,7 +15,7 @@
     "chumper/zipper": "1.0.*",
     "yajra/laravel-datatables-oracle": "8.*",
     "markrogoyski/ipv4-subnet-calculator": "3.*",
-    "nwidart/laravel-modules": "^2.0",
+    "nwidart/laravel-modules": "^3.0",
     "doctrine/dbal": "^2.7",
     "silber/bouncer": "v1.0.0-rc.5",
     "kingsquare/php-mt940": "^1.5",
