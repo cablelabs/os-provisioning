@@ -23,6 +23,7 @@ return [
     | an easy start NMS Prime already provides default values for you.
     |
     */
+    'geopos' => true,
     'threshhold' => [
         'single' => [
             'us' => [
