@@ -356,14 +356,14 @@ class NetElement extends \BaseModel
     public function toErd()
     {
         if ($this->cluster) {
-            return route('TreeErd.show', ['field' => 'cluster', 'id' => $this->cluster]);
+            return route('TreeErd.show', ['field' => 'cluster', 'search' => $this->cluster]);
         }
 
         if ($this->net) {
-            return route('TreeErd.show', ['field' => 'net', 'id' => $this->net]);
+            return route('TreeErd.show', ['field' => 'net', 'search' => $this->net]);
         }
 
-        return route('TreeErd.show', ['field' => 'id', 'id' => $this->id]);
+        return route('TreeErd.show', ['field' => 'id', 'search' => $this->id]);
     }
 
     /**
