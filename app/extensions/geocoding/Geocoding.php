@@ -5,6 +5,7 @@ namespace App\extensions\geocoding;
 use Log;
 use Session;
 use App\GlobalConfig;
+use Illuminate\Support\Arr;
 
 /**
  * Geocoding API
@@ -174,11 +175,11 @@ trait Geocoding
 
             $matches = ['building', 'house', 'amenity', 'shop', 'tourism'];
             foreach ($geodata_raw as $entry) {
-                $class = array_get($entry, 'class', '');
-                $type = array_get($entry, 'type', '');
-                $display_name = array_get($entry, 'display_name', '');
-                $lat = array_get($entry, 'lat', null);
-                $lon = array_get($entry, 'lon', null);
+                $class = Arr::get($entry, 'class', '');
+                $type = Arr::get($entry, 'type', '');
+                $display_name = Arr::get($entry, 'display_name', '');
+                $lat = Arr::get($entry, 'lat', null);
+                $lon = Arr::get($entry, 'lon', null);
 
                 // check if returned entry is of certain type (e.g. “highway” indicates fuzzy match)
                 if ((in_array($class, $matches) || in_array($type, $matches)) && $lat && $lon) {
@@ -273,17 +274,17 @@ trait Geocoding
 
         $resp = json_decode($resp_json, true);
 
-        $status = array_get($resp, 'status', 'n/a');
+        $status = Arr::get($resp, 'status', 'n/a');
 
         // response status will be 'OK', if able to geocode given address
         if ($status == 'OK') {
 
             // get the important data
-            $lati = array_get($resp, 'results.0.geometry.location.lat', null);
-            $longi = array_get($resp, 'results.0.geometry.location.lng', null);
-            $formatted_address = array_get($resp, 'results.0.formatted_address', null);
-            $location_type = array_get($resp, 'results.0.geometry.location_type', null);
-            $partial_match = array_get($resp, 'results.0.partial_match', null);
+            $lati = Arr::get($resp, 'results.0.geometry.location.lat', null);
+            $longi = Arr::get($resp, 'results.0.geometry.location.lng', null);
+            $formatted_address = Arr::get($resp, 'results.0.formatted_address', null);
+            $location_type = Arr::get($resp, 'results.0.geometry.location_type', null);
+            $partial_match = Arr::get($resp, 'results.0.partial_match', null);
 
             $matches = ['ROOFTOP'];
             $interpolated_matches = ['ROOFTOP', 'RANGE_INTERPOLATED'];

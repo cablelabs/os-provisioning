@@ -227,7 +227,7 @@ class BaseController extends Controller
             if (
                 ($field['form_type'] == 'checkbox')
                 &&
-                (in_array(\Str::lower($data[$field['name']]), ['on', 'checked']))
+                (in_array(Str::lower($data[$field['name']]), ['on', 'checked']))
             ) {
                 $data['active'] = '1';
             }
@@ -1497,7 +1497,7 @@ class BaseController extends Controller
             }
         } else {
             $request_query = $model::with($eager_loading_tables)->select($dt_config['table'].'.*'); //eager loading | select($select_column_data);
-            if (starts_with(head($header_fields), $dt_config['table'])) {
+            if (Str::startsWith(head($header_fields), $dt_config['table'])) {
                 $first_column = substr(head($header_fields), strlen($dt_config['table']) + 1);
             } else {
                 $first_column = head($header_fields);

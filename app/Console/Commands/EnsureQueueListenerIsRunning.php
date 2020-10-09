@@ -60,7 +60,7 @@ class EnsureQueueListenerIsRunning extends Command
             return false;
         }
         $process = exec("ps -p $pid -opid=,cmd=");
-        $processIsQueueListener = str_contains($process, 'queue:work');
+        $processIsQueueListener = \Str::contains($process, 'queue:work');
 
         return $processIsQueueListener;
     }
