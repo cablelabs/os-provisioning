@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\provbase\Console;
+namespace Modules\ProvBase\Console;
 
 use Illuminate\Console\Command;
 use Modules\ProvBase\Entities\Endpoint;
 use Modules\ProvBase\Entities\ProvBase;
 
-class cpeHostnameCommand extends Command
+class CpeHostnameCommand extends Command
 {
     /**
      * The console command name.

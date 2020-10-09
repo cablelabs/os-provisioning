@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\provbase\Console;
+namespace Modules\ProvBase\Console;
 
 use Illuminate\Console\Command;
 use Modules\ProvVoip\Entities\Mta;
@@ -9,7 +9,7 @@ use Modules\ProvBase\Entities\NetGw;
 use Modules\ProvBase\Entities\Endpoint;
 use Modules\ProvBase\Entities\ProvBase;
 
-class dhcpCommand extends Command
+class DhcpCommand extends Command
 {
     /**
      * The console command name.

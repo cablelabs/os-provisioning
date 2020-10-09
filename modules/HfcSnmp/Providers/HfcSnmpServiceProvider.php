@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\hfcsnmp\Providers;
+namespace Modules\HfcSnmp\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

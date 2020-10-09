@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Hfcreq\Http\Controllers;
+namespace Modules\HfcReq\Http\Controllers;
 
 use Request;
 use Modules\HfcSnmp\Entities\OID;

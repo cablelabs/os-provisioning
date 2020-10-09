@@ -14,7 +14,7 @@ class Modem extends \BaseModel
 {
     // get functions for some address select options
     use \App\AddressFunctionsTrait;
-    use \App\Extensions\Geocoding\Geocoding;
+    use \App\extensions\geocoding\Geocoding;
 
     const TYPES = ['cm', 'tr069'];
 
@@ -1046,7 +1046,7 @@ class Modem extends \BaseModel
      */
     public static function get_netgw($ip)
     {
-        $validator = new \Acme\Validators\ExtendedValidator;
+        $validator = new \App\extensions\validators\ExtendedValidator;
 
         $ippools = IpPool::where('type', '=', 'CM')->get();
 

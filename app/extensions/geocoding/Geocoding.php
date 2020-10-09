@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Extensions\Geocoding;
+namespace App\extensions\geocoding;
 
 use Log;
 use Session;

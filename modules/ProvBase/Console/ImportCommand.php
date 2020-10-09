@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\provbase\Console;
+namespace Modules\ProvBase\Console;
 
 use Log;
 use Illuminate\Console\Command;
@@ -17,7 +17,7 @@ use Modules\BillingBase\Entities\SepaMandate;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class importCommand extends Command
+class ImportCommand extends Command
 {
     /**
      * The console command name.
@@ -757,7 +757,7 @@ class importCommand extends Command
         $comps = $db_con->table('tbl_computer')->select('ip')->where('modem', '=', $old_modem->id)->get();
 
         // Determine if Device has a public IP
-        $validator = new \Acme\Validators\ExtendedValidator;
+        $validator = new \App\extensions\validators\ExtendedValidator;
         $privateIps = [['10.0.0.0', '255.0.0.0'], ['192.168.0.0', '255.255.0.0'], ['172.16.0.0', '255.224.0.0'], ['100.64.0.0', '255.192.0.0']];
         $modem->public = 0;
 
