@@ -553,7 +553,7 @@ class NetElement extends \BaseModel
      */
     public static function getNetsWithClusters()
     {
-        return Cache::remember(Auth::user()->login_name.'-Nets', 5, function () {
+        return Cache::remember(Auth::user()->login_name.'-Nets', now()->addMinutes(5), function () {
             $net_id = array_search('Net', NetElementType::$undeletables);
 
             return self::where('netelementtype_id', '=', $net_id)

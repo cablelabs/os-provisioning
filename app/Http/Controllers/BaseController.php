@@ -14,6 +14,7 @@ use Redirect;
 use BaseModel;
 use Validator;
 use GlobalConfig;
+use Carbon\Carbon;
 use App\V1\Service;
 use App\V1\V1Trait;
 use Monolog\Logger;
@@ -488,7 +489,7 @@ class BaseController extends Controller
         $a['save_button_title_key'] = $this->save_button_title_key;
 
         // Get Framework Informations
-        $gc = \Cache::remember('GlobalConfig', 60, function () {
+        $gc = \Cache::remember('GlobalConfig', Carbon::parse('1 hour'), function () {
             return GlobalConfig::first();
         });
         $a['framework']['header1'] = $gc->headline1;
@@ -868,7 +869,7 @@ class BaseController extends Controller
         // Note: calling touch() forces a direct save() which calls all observers before we update $data
         //       when exit in middleware to a new view page (like Modem restart) this kill update process
         //       so the solution is not to run touch(), we set the updated_at field directly
-        $data['updated_at'] = \Carbon\Carbon::now(Config::get('app.timezone'));
+        $data['updated_at'] = now();
 
         // Note: Eloquent Update requires updated_at to either be in the fillable array or to have a guarded field
         //       without updated_at field. So we globally use a guarded field from now, to use the update timestamp
@@ -930,7 +931,7 @@ class BaseController extends Controller
                 return response()->json(['ret' => $ret]);
             }
 
-            $data['updated_at'] = \Carbon\Carbon::now(Config::get('app.timezone'));
+            $data['updated_at'] = now();
 
             $obj->update($data);
 
