@@ -401,8 +401,8 @@ return [
         'major' => 'hoch',
         'minor' => 'gering',
         'info' => 'info',
-        'outage' => 'ausfall',
-        'proactive' => 'proaktiv',
+        'outage' => 'Ausfall',
+        'proactive' => 'Proaktiv',
     ],
 
     'map action' => 'Kartenaktion',

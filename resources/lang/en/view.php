@@ -406,8 +406,8 @@ return [
         'proactive' => 'proactive',
     ],
 
-    'map action' => 'Kartenaktion',
-    'filter by modem type' => 'Nach Modemtyp filtern',
+    'map action' => 'map action',
+    'filter by modem type' => 'filter by modem type',
     //
     // Numberrange
     //
