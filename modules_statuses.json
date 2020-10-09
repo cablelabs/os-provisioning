@@ -1,0 +1,18 @@
+{
+    "BillingBase": true,
+    "Ccc": true,
+    "Dashboard": true,
+    "HfcBase": true,
+    "HfcCustomer": true,
+    "HfcReq": true,
+    "HfcSnmp": true,
+    "NmsMail": false,
+    "OverdueDebts": true,
+    "PropertyManagement": false,
+    "ProvBase": true,
+    "ProvMon": true,
+    "ProvVoip": true,
+    "ProvVoipEnvia": false,
+    "Ticketsystem": true,
+    "VoipMon": false
+}

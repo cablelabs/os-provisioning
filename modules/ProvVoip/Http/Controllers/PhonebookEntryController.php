@@ -183,7 +183,7 @@ class PhonebookEntryController extends \BaseController
      */
     protected function _get_extra_data($view_var)
     {
-        if (\Module::enabled('ProvVoipEnvia')) {
+        if (\Module::isEnabled('ProvVoipEnvia')) {
             return $this->_get_envia_management_jobs($view_var);
         }
 
