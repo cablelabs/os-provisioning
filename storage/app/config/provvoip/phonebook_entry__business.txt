@@ -1455,6 +1455,7 @@ Archäologisches Büro
 Architekt
 Architekt (FH)
 Architekt a.D.
+Architekt BDB
 Architekt für Baukunst
 Architekt für Bauplanung
 Architekt für Bausachverständigung
@@ -3596,6 +3597,7 @@ Bauprojektionsbüro
 Bauprojektmanagement
 Bauprojektplanung
 Baurat
+Baurat a.D.
 Baurechteverlag
 Baurechtskanzlei
 Baureferent
@@ -9510,6 +9512,7 @@ Facharzt für Allgemeinmedizin-Naturheilverfahren
 Facharzt für Allgemeinmedizin-Notfallmedizin
 Facharzt für Allgemeinmedizin-Palliativmedizin
 Facharzt für Allgemeinmedizin-Psychotherapie
+Facharzt für Allgemeinmedizin-Rettungsmedizin
 Facharzt für Allgemeinmedizin-Sportmedizin
 Facharzt für Allgemeinmedizin-Umweltmedizin
 Facharzt für Anästhesiologie
@@ -15197,6 +15200,7 @@ Hauptsekretär
 Haus- und Familienpfleger
 Haus- und Familienpflegerin
 Haus- und Grundstückspflege
+Haus- und Grundstücksservice
 Haus- und Grundstücksverwaltung
 Haus- und Wohungsverwaltung
 Hausagentur
@@ -25297,6 +25301,7 @@ Natursteinvertrieb
 Natursteinwerk
 Natursteinwerke
 Natursteinwerkstatt
+Naturwarenproduktion
 Naturwarenversand
 Naturwerksteinmechaniker
 Naturwerksteinmechanikerin
@@ -26236,6 +26241,7 @@ Optometrist
 Optometristin
 Oralchirurg
 Oralchirurgen
+Oralchirurgie
 Oralchirurgin
 Oralchirurgische Praxis
 Orangerie
@@ -34957,6 +34963,7 @@ Systemmontagebau
 Systemprogrammierer
 Systemprogrammierung
 Systemsoftwareberatung
+Systemsteuerung
 Systemtechnik
 Systemtechniker
 Systemtherapeut
@@ -36200,6 +36207,7 @@ Tierarzt für Kleintiere
 Tierarzt i.R.
 Tierärzte
 Tierärzte für Kleintiere
+Tierärztebedarf
 Tierarzthelfer
 Tierarzthelferin
 Tierärztin
