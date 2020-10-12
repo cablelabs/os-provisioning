@@ -5,7 +5,7 @@
     "keywords": [],
     "active": 0,
     "order": 0,
-    "icon": "OS_Mail_app_icon.png",
+    "icon": "OS_Mail.png",
     "category": "Administration",
     "providers": [
         "Modules\\NmsMail\\Providers\\MailServiceProvider"

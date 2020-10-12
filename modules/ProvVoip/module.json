@@ -5,8 +5,7 @@
     "keywords": [],
     "active": 1,
     "order": 30,
-    "priority": 0,
-    "icon": "OS_VoIP_app_icon.png",
+    "icon": "OS_VoIP.png",
     "category": "Provisioning",
     "providers": [
         "Modules\\ProvVoip\\Providers\\ProvVoipServiceProvider"

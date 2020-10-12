@@ -4,9 +4,9 @@
     "description": "Automated provisioning/management/configuration of DOCSIS, FTTH or DSL modems as well as microwave links and point-to-point devices.",
     "keywords": [],
     "active": 1,
-    "icon": "OS_Provisioning_app_icon.png",
-    "category": "Provisioning",
     "order": 10,
+    "icon": "OS_Provisioning.png",
+    "category": "Provisioning",
     "providers": [
         "Modules\\ProvBase\\Providers\\ProvBaseServiceProvider"
     ],
