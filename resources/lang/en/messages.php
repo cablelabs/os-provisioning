@@ -605,7 +605,7 @@ return [
     'hello'                     => 'Hello',
     'newTicketAssigned'         => 'there is a new Ticket assigned to you.',
     'ticket'                    => 'Ticket',
-    'toTicket'                  => 'zum Ticket',
+    'toTicket'                  => 'go to ticket',
     'title'                     => 'Title',
     'description'               => 'Description',
     'ticketUpdated'             => 'Ticket :id updated',
