@@ -138,6 +138,14 @@ class BaseModel extends Eloquent
         return [];
     }
 
+    /**
+     * Add Ticket relation to an edit view. This method should be called inside
+     * the view_has_many() method and adds a relationship panel to the edit
+     * blade.
+     *
+     * @param array $ret
+     * @return void
+     */
     public function addViewHasManyTickets(&$ret)
     {
         if (Module::collections()->has('Ticketsystem')) {
