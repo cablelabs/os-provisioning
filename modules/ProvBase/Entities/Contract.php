@@ -255,14 +255,11 @@ class Contract extends \BaseModel
             $ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
         }
 
-        if (Module::collections()->has('Ticketsystem')) {
-            $ret['Edit']['Ticket']['class'] = 'Ticket';
-            $ret['Edit']['Ticket']['relation'] = $this->tickets;
-        }
-
         if (Module::collections()->has('Mail')) {
             $ret['Email']['Email'] = $this->emails;
         }
+
+        $this->addViewHasManyTickets($ret);
 
         return $ret;
     }
@@ -411,11 +408,6 @@ class Contract extends \BaseModel
     public function CccUser()
     {
         return $this->hasOne(\Modules\Ccc\Entities\CccUser::class);
-    }
-
-    public function tickets()
-    {
-        return $this->hasMany(\Modules\Ticketsystem\Entities\Ticket::class);
     }
 
     public function realties()

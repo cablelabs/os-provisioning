@@ -98,6 +98,8 @@ class NetElement extends \BaseModel
             $ret['Edit']['SubNetElement']['relation'] = $this->children;
         }
 
+        $this->addViewHasManyTickets($ret);
+
         return $ret;
     }
 

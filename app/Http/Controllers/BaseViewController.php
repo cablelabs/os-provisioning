@@ -429,6 +429,13 @@ class BaseViewController extends Controller
                     $s .= $field['html'];
                     break;
 
+                case 'date':
+                    $options['onchange'] = "$('#{$field['name']}')[0].defaultValue = event.target.value;$('#{$field['name']}')[0].value = event.target.value;";
+                    $options['autocomplete'] = 'off';
+
+                    $s .= Form::date($field['name'], $field['field_value'], $options);
+                    break;
+
                 default:
                     $form = $field['form_type'];
                     $s .= Form::$form($field['name'], $field['field_value'], $options);

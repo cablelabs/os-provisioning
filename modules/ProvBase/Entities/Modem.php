@@ -355,6 +355,8 @@ class Modem extends \BaseModel
             $ret['Edit']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ModemController::_get_envia_management_jobs($this);
         }
 
+        $this->addViewHasManyTickets($ret);
+
         return $ret;
     }
 
