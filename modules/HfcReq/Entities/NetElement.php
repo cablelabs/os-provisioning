@@ -3,10 +3,10 @@
 namespace Modules\HfcReq\Entities;
 
 use Auth;
-use Cache;
 use Module;
 use Session;
 use Modules\ProvBase\Entities\Modem;
+use Illuminate\Support\Facades\Cache;
 
 class NetElement extends \BaseModel
 {

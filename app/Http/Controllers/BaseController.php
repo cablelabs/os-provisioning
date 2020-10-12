@@ -14,7 +14,6 @@ use Redirect;
 use BaseModel;
 use Validator;
 use GlobalConfig;
-use Carbon\Carbon;
 use App\V1\Service;
 use App\V1\V1Trait;
 use Monolog\Logger;
@@ -489,7 +488,7 @@ class BaseController extends Controller
         $a['save_button_title_key'] = $this->save_button_title_key;
 
         // Get Framework Informations
-        $gc = \Cache::remember('GlobalConfig', Carbon::parse('1 hour'), function () {
+        $gc = \Cache::remember('GlobalConfig', now()->addHour(), function () {
             return GlobalConfig::first();
         });
         $a['framework']['header1'] = $gc->headline1;
