@@ -78,7 +78,8 @@ class SetEmptyStringsToNull extends Migration
         foreach ($tables as $tableName) {
             // call rules for model of table
             $modelName = $tableName == 'users' ? 'user' : strtolower(studly_case($tableName));
-            $rules = $models->has($modelName) ? $models[$modelName]::rules() : [];
+            $instance = new $models[$modelName];
+            $rules = $models->has($modelName) ? $instance->rules() : [];
 
             // get rules for this table
             $nullable = [];

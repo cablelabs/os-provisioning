@@ -8,13 +8,11 @@
 </head>
 <body {{ isset($body_onload) ? "onload=$body_onload()" : ""}}>
 
-    <div id="page-container" class="fade page-sidebar-fixed page-header-fixed in">
+    <div id="page-container" class="d-flex flex-column fade page-sidebar-fixed page-header-fixed in" style="min-height:100%;">
+        @include ('Layout.header')
+        @include ('bootstrap.sidebar')
 
-    @include ('Layout.header')
-
-    @include ('bootstrap.sidebar')
-
-        <div id="content" class="content p-t-15">
+        <div id="content" class="d-flex flex-column content p-t-15 p-b-0" style="flex:1;">
             @if(session('GlobalNotification'))
                 @foreach (session('GlobalNotification') as $name => $options)
                     <div class="alert alert-{{ $options['level'] }} alert-dismissible fade show" role="alert">
@@ -31,19 +29,19 @@
                     </div>
                 @endforeach
             @endif
-                @if(session('DashboardNotification'))
-                    @foreach (session('DashboardNotification') as $name => $options)
-                        <div class="alert alert-{{ $options['level'] }} alert-dismissible fade show" role="alert">
-                            <p class="mb-0 text-center">
-                                {{$options['message'] }}
-                            </p>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    @endforeach
-                @endif
-            <div>
+            @if(session('DashboardNotification'))
+                @foreach (session('DashboardNotification') as $name => $options)
+                    <div class="alert alert-{{ $options['level'] }} alert-dismissible fade show" role="alert">
+                        <p class="mb-0 text-center">
+                            {{$options['message'] }}
+                        </p>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endforeach
+            @endif
+            <div class="d-flex flex-column" style="flex: 1;">
                 @yield ('content')
             </div>
         </div>

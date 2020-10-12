@@ -235,17 +235,19 @@ class NetElement extends \BaseModel
         return $this->hasMany(Modem::class, 'netelement_id');
     }
 
-    /**
-     * Relations
-     */
     public function geoPosModems()
     {
         return $this->hasMany(Modem::class, 'netelement_id')
-            ->select('id', 'x', 'y', 'netelement_id')
+            ->select('modem.id', 'modem.x', 'modem.y', 'modem.netelement_id')
             ->selectRaw('COUNT(*) AS count')
             ->selectRaw('COUNT(CASE WHEN `us_pwr` = 0 THEN 1 END) as offline')
-            ->groupBy('x', 'y')
-            ->havingRaw('max(us_pwr) > 0 and min(us_pwr) = 0 and count > 1');
+            ->groupBy('modem.x', 'modem.y')
+            ->havingRaw('max(us_pwr) > 0 AND min(us_pwr) = 0 AND count > 1')
+            ->join('contract', 'contract.id', 'modem.contract_id')
+            ->whereNull('modem.deleted_at')
+            ->whereNull('contract.deleted_at')
+            ->where('contract_start', '<=', date('Y-m-d'))
+            ->where(whereLaterOrEqual('contract_end', date('Y-m-d')));
     }
 
     // Relation to MPRs Modem Positioning Rules
