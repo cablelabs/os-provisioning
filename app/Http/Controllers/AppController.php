@@ -32,7 +32,7 @@ class AppController extends BaseController
         foreach ($installed as $module) {
             $icon = $module->icon;
             if (is_file(public_path('images/apps/').$icon)) {
-                $state = $module->active() ? 'active' : 'inactive';
+                $state = $module->isEnabled() ? 'active' : 'inactive';
                 $apps[$state][$module->category][] = [
                     'name' => $module->alias,
                     'icon' => $icon,
