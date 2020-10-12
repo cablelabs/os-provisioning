@@ -8,7 +8,7 @@
     "providers": [
         "Modules\\HfcReq\\Providers\\HfcReqServiceProvider"
     ],
-    "aliases": [],
+    "aliases": {},
     "icon": "fa-random",
     "files": [
         "start.php"

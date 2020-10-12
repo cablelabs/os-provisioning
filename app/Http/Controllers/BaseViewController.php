@@ -566,9 +566,9 @@ class BaseViewController extends Controller
         $modules = Module::allEnabled();
         $configMenuItemKey = 'MenuItems';
 
-        $globalPages = Config::get('base.'.$configMenuItemKey);
+        $globalPages = config('base.'.$configMenuItemKey);
 
-        $menu['Global']['link'] = Config::get('base.link');
+        $menu['Global']['link'] = config('base.link');
         $menu['Global']['translated_name'] = trans('view.Global');
         foreach ($globalPages as $page => $settings) {
             if (Bouncer::can('view', $settings['class'])) {
@@ -581,14 +581,14 @@ class BaseViewController extends Controller
         foreach ($modules as $module) {
 
             $moduleName = Str::lower($module->name);
-            $moduleMenuConfig = Config::get($moduleName.'.'.$configMenuItemKey);
+            $moduleMenuConfig = config($moduleName.'.'.$configMenuItemKey);
 
             if (! empty($moduleMenuConfig)) {
-                $name = Config::get($moduleName.'.name');
+                $name = config($moduleName.'.name');
                 $icon = $module->get('icon') ?? '';
 
-                $menu[$name]['icon'] = Config::has($moduleName.'.parent') ? Module::find($name)->get('icon') : $icon;
-                $menu[$name]['link'] = Config::get(Str::lower($module->name).'.link');
+                $menu[$name]['icon'] = config($moduleName.'.parent') ? Module::find($name)->get('icon') : $icon;
+                $menu[$name]['link'] = config($moduleName.'.link');
                 $menu[$name]['translated_name'] = static::translate_view($name, 'Menu');
 
                 foreach ($moduleMenuConfig as $page => $settings) {

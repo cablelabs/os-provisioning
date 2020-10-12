@@ -10,6 +10,7 @@
     "providers": [
         "Modules\\ProvBase\\Providers\\ProvBaseServiceProvider"
     ],
+    "aliases": {},
     "files": [
         "start.php"
     ],

@@ -11,6 +11,7 @@
     "providers": [
         "Modules\\HfcSnmp\\Providers\\HfcSnmpServiceProvider"
     ],
+    "aliases": {},
     "files": [
         "start.php"
     ],

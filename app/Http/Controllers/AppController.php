@@ -56,9 +56,7 @@ class AppController extends BaseController
     private function getAppLink($module, $state)
     {
         $link = \Str::lower($module->name).'.link';
-        $split = explode('_', $module->icon);
-        $iconName = array_slice($split, 0, -2);
-        $route = 'https://www.nmsprime.com/'.$module->category.'-apps/#'.\Str::lower(implode('_', $iconName));
+        $route = 'https://www.nmsprime.com/'.$module->category.'-apps/#'.\Str::lower(str_replace('.png', '', $module->icon));
 
         if ($state == 'active') {
             $route = config()->has($link) ? route(config()->get($link)) : '#';

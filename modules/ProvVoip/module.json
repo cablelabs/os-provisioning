@@ -11,6 +11,7 @@
     "providers": [
         "Modules\\ProvVoip\\Providers\\ProvVoipServiceProvider"
     ],
+    "aliases": {},
     "files": [
         "start.php"
     ],
