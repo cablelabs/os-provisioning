@@ -706,4 +706,5 @@ return [
     'factory_reset'             => 'Factory Reset',
     'Default SIP Registrar'     => 'Default SIP Registrar',
     'Default Country Code'      => 'Default Country Code',
+    'mail_not_sent'             => 'Email not delivered.',
 ];

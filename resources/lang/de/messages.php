@@ -705,4 +705,5 @@ return [
     'factory_reset'             => 'Werksreset',
     'Default SIP Registrar'     => 'Vorausgefüllter SIP Registrar',
     'Default Country Code'      => 'Vorausgefüllter Ländercode',
+    'mail_not_sent'             => 'Die E-Mail konnte nicht gesendet werden.',
 ];
