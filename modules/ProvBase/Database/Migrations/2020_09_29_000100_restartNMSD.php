@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
-
 class restartNMSD extends BaseMigration
 {
     /**

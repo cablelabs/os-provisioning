@@ -97,7 +97,6 @@ class Endpoint extends \BaseModel
         return new \Illuminate\Database\Eloquent\Relations\BelongsTo($query, new NetGw, null, 'deleted_at', null);
     }
 
-
     /**
      * BOOT:
      * - init modem observer
@@ -277,7 +276,7 @@ class Endpoint extends \BaseModel
         $unpack = unpack('H*hex', $addr);
         $hex = $unpack['hex'];
 
-        return implode('.', array_reverse(str_split($hex))) . '.ip6.arpa';
+        return implode('.', array_reverse(str_split($hex))).'.ip6.arpa';
     }
 
     /**

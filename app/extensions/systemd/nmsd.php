@@ -13,7 +13,6 @@ $dir = '/var/www/nmsprime/storage/systemd/';
 $dir_scripts = '/var/www/nmsprime/app/extensions/systemd/';
 
 while (1) {
-
     $services = glob("$dir/*");
 
     foreach ($services as $service) {
