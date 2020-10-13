@@ -31,6 +31,7 @@ sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/dhcp-nmsprime/dhcpd.conf
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/named-nmsprime.conf
 sed -i "s/<hostname>/$(hostname | cut -d '.' -f1)/" /var/named/dynamic/{nmsprime.test,in-addr.arpa}.zone
 sed -i "s/kea-dhcp6.conf/dhcp6-nmsprime.conf/" /usr/lib/systemd/system/kea-dhcp6.service
+sed -i "s/kea-dhcp-ddns.conf/dhcp-ddns-nmsprime.conf/" /usr/lib/systemd/system/kea-dhcp6.service
 
 echo $'\ninclude /etc/chrony.d/*.conf' >> /etc/chrony.conf
 
@@ -39,6 +40,7 @@ systemctl daemon-reload
 systemctl enable chronyd
 systemctl enable dhcpd
 systemctl enable kea-dhcp6.service
+# systemctl enable kea-dhcp-ddns.service
 systemctl enable named
 systemctl enable nmsprimed
 systemctl enable xinetd

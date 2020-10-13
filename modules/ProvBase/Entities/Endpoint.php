@@ -97,43 +97,6 @@ class Endpoint extends \BaseModel
         return new \Illuminate\Database\Eloquent\Relations\BelongsTo($query, new NetGw, null, 'deleted_at', null);
     }
 
-    public function nsupdate($del = false)
-    {
-        $cmd = '';
-        $zone = ProvBase::first()->domain_name;
-
-        if ($del) {
-            if ($this->getOriginal('fixed_ip') && $this->getOriginal('ip')) {
-                $rev = implode('.', array_reverse(explode('.', $this->getOriginal('ip'))));
-                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone.\nsend\n";
-                $cmd .= "update delete $rev.in-addr.arpa.\nsend\n";
-            } else {
-                $mangle = exec("echo '{$this->getOriginal('mac')}' | tr -cd '[:xdigit:]' | xxd -r -p | openssl dgst -sha256 -mac hmac -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())'");
-                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone.\nsend\n";
-                $cmd .= "update delete $mangle.cpe.$zone.\nsend\n";
-            }
-        } else {
-            if ($this->fixed_ip && $this->ip) {
-                // endpoints with a fixed-address will get an A and PTR record (ip <-> hostname)
-                $rev = implode('.', array_reverse(explode('.', $this->ip)));
-                $cmd .= "update add $this->hostname.cpe.$zone. 3600 A $this->ip\nsend\n";
-                $cmd .= "update add $rev.in-addr.arpa. 3600 PTR $this->hostname.cpe.$zone.\nsend\n";
-                if ($this->add_reverse) {
-                    $cmd .= "update add $rev.in-addr.arpa. 3600 PTR $this->add_reverse.\nsend\n";
-                }
-            } else {
-                // other endpoints will get a CNAME record (hostname -> mangle)
-                // mangle name is based only on cpe mac address
-                $mangle = exec("echo '$this->mac' | tr -cd '[:xdigit:]' | xxd -r -p | openssl dgst -sha256 -mac hmac -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())'");
-                $cmd .= "update add $this->hostname.cpe.$zone. 3600 CNAME $mangle.cpe.$zone.\nsend\n";
-            }
-        }
-
-        $pw = env('DNS_PASSWORD');
-        $handle = popen("/usr/bin/nsupdate -v -l -y dhcpupdate:$pw", 'w');
-        fwrite($handle, $cmd);
-        pclose($handle);
-    }
 
     /**
      * BOOT:
@@ -173,6 +136,7 @@ class Endpoint extends \BaseModel
             if ($ep->fixed_ip && $ep->ip) {
                 $data .= "fixed-address $ep->ip; ";
             }
+
             $data .= "}\n";
         }
 
@@ -206,6 +170,114 @@ class Endpoint extends \BaseModel
         $data = '"reservations": ['.implode(',', $reservations)."\n]";
 
         file_put_contents($file, $data, LOCK_EX);
+    }
+
+    public function nsupdate($del = false)
+    {
+        if ($this->version == '4') {
+            $cmd = $this->getNsupdate4Cmd($del);
+        } else {
+            $cmd = $this->getNsupdate6Cmd($del);
+        }
+
+        if (! $cmd) {
+            return;
+        }
+
+        $pw = env('DNS_PASSWORD');
+
+        $handle = popen("/usr/bin/nsupdate -v -l -y dhcpupdate:$pw", 'w');
+        fwrite($handle, $cmd);
+        pclose($handle);
+    }
+
+    /**
+     * Generate nsupdate command for IPv4
+     *
+     * @return string
+     */
+    private function getNsupdate4Cmd($del)
+    {
+        $cmd = '';
+        $zone = ProvBase::first()->domain_name;
+
+        if ($del) {
+            if ($this->getOriginal('fixed_ip') && $this->getOriginal('ip')) {
+                $rev = implode('.', array_reverse(explode('.', $this->getOriginal('ip'))));
+                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone. 3600 IN A\nsend\n";
+                $cmd .= "update delete $rev.in-addr.arpa.\nsend\n";
+            } else {
+                $mangle = exec("echo '{$this->getOriginal('mac')}' | tr -cd '[:xdigit:]' | xxd -r -p | openssl dgst -sha256 -mac hmac -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())'");
+                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone.\nsend\n";
+                $cmd .= "update delete $mangle.cpe.$zone.\nsend\n";
+            }
+        } else {
+            if ($this->fixed_ip && $this->ip) {
+                // endpoints with a fixed-address will get an A and PTR record (ip <-> hostname)
+                $rev = implode('.', array_reverse(explode('.', $this->ip)));
+                $cmd .= "update add $this->hostname.cpe.$zone. 3600 A $this->ip\nsend\n";
+                $cmd .= "update add $rev.in-addr.arpa. 3600 PTR $this->hostname.cpe.$zone.\nsend\n";
+                if ($this->add_reverse) {
+                    $cmd .= "update add $rev.in-addr.arpa. 3600 PTR $this->add_reverse.\nsend\n";
+                }
+            } else {
+                // other endpoints will get a CNAME record (hostname -> mangle)
+                // mangle name is based only on cpe mac address
+                $mangle = exec("echo '$this->mac' | tr -cd '[:xdigit:]' | xxd -r -p | openssl dgst -sha256 -mac hmac -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())'");
+                $cmd .= "update add $this->hostname.cpe.$zone. 3600 CNAME $mangle.cpe.$zone.\nsend\n";
+            }
+        }
+
+        return $cmd;
+    }
+
+    /**
+     * Generate nsupdate command for IPv6
+     *
+     * @return string
+     */
+    private function getNsupdate6Cmd($del)
+    {
+        $cmd = '';
+        $zone = ProvBase::first()->domain_name;
+
+        // We currently don't add a CNAME record here
+
+        if ($del) {
+            if ($this->getOriginal('fixed_ip') && $this->getOriginal('ip')) {
+                $arpa = self::getV6Arpa($this->getOriginal('ip'));
+                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone. 3600 IN AAAA\nsend\n";
+                $cmd .= "update delete $arpa.\nsend\n";
+            }
+        } else {
+            if ($this->fixed_ip && $this->ip) {
+                // endpoints with a fixed-address will get an A and PTR record (ip <-> hostname)
+                $arpa = self::getV6Arpa($this->ip);
+                $cmd .= "update add $this->hostname.cpe.$zone. 3600 AAAA $this->ip\nsend\n";
+                $cmd .= "update add $arpa. 3600 PTR $this->hostname.cpe.$zone.\nsend\n";
+                if ($this->add_reverse) {
+                    $cmd .= "update add $arpa. 3600 PTR $this->add_reverse.\nsend\n";
+                }
+            }
+        }
+
+        return $cmd;
+    }
+
+    /**
+     * Generate reverse notation of IPv6 for DNS server
+     *
+     * See https://stackoverflow.com/questions/6619682/convert-ipv6-to-nibble-format-for-ptr-records
+     *
+     * @return string
+     */
+    public static function getV6Arpa($ip)
+    {
+        $addr = inet_pton($ip);
+        $unpack = unpack('H*hex', $addr);
+        $hex = $unpack['hex'];
+
+        return implode('.', array_reverse(str_split($hex))) . '.ip6.arpa';
     }
 
     /**
