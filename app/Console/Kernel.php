@@ -258,7 +258,7 @@ class Kernel extends ConsoleKernel
      */
     protected function scheduleMaster(Schedule $schedule)
     {
-        $schedule->command('provha:sync_ha_master_files')->hourlyAt(04);
+        $schedule->command('provha:sync_ha_master_files')->everyMinute()->withoutOverlapping();
     }
 
     /**

@@ -172,6 +172,10 @@ class Mta extends \BaseModel
         // change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
         system('/bin/chown -R apache /tftpboot/mta');
 
+        // touch flagfile e.g. used in ProvHA
+        Storage::makeDirectory('/data/provbase');
+        Storage::put('/data/provbase/configfiles_changed', null);
+
         return false;
     }
 

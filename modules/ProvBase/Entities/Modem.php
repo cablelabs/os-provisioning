@@ -7,6 +7,7 @@ use File;
 use Module;
 use App\Sla;
 use Request;
+use Storage;
 use Acme\php\ArrayHelper;
 use Illuminate\Support\Facades\Log;
 
@@ -787,6 +788,10 @@ class Modem extends \BaseModel
 
         // change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
         system('/bin/chown -R apache /tftpboot/cm');
+
+        // touch flagfile e.g. used in ProvHA
+        Storage::makeDirectory('/data/provbase');
+        Storage::put('/data/provbase/configfiles_changed', null);
 
         return true;
     }
