@@ -1,18 +1,18 @@
 @extends ('Layout.default')
 
 @section ('contracts_total')
-    <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Contracts', 'Dashboard') }} {{ date('m/Y') }}</h4>
+    <h4>{{ trans('view.dashboard.contracts') }} {{ date('m/Y') }}</h4>
     <p>
         @if ($contracts_data['total'])
             {{ $contracts_data['total'] }}
         @else
-            {{ \App\Http\Controllers\BaseViewController::translate_view('NoContracts', 'Dashboard') }}
+            {{ trans('view.dashboard.noContracts') }}
         @endif
     </p>
 @stop
 
 @section ('date')
-    <h4>{{ \App\Http\Controllers\BaseViewController::translate_view('Date', 'Dashboard') }}</h4>
+    <h4>{{ trans('view.dashboard.date') }}</h4>
     <p>{{ date('d.m.Y') }}</p>
 @stop
 
@@ -71,7 +71,7 @@
                     {!! HTML::decode (HTML::linkRoute('CustomerTopo.show_impaired',
                         '<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
                             <i style="font-size: 25px;" class="img-center fa fa-hdd-o text-danger p-10"></i><br />
-                            <span class="username text-ellipsis text-center">'.trans('view.Dashboard_ImpairedModem').'</span>
+                            <span class="username text-ellipsis text-center">'.trans('view.dashboard.impairedModem').'</span>
                         </span>'))
                     !!}
 

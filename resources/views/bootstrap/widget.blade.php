@@ -26,7 +26,7 @@
     <div class="stats-link {{$noHover}}">
         <a href="{{ $link }}">
             @if($link != '#')
-                {!! \App\Http\Controllers\BaseViewController::translate_view('LinkDetails', 'Dashboard') !!} <i class="fa fa-arrow-circle-o-right"></i>
+                {{ trans('view.dashboard.linkDetails') }} <i class="fa fa-arrow-circle-o-right"></i>
             @else
                 &nbsp;
             @endif

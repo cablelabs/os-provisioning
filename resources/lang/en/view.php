@@ -351,32 +351,29 @@ return [
 
     // DASHBOARD
     'dashboard' => [
-        'contractIndexPage' => 'Contracts',
-        'modemIndexPage' => 'Modems',
-        'netelementIndexPage' => 'Netelements',
-        'ticketIndexPage' => 'Tickets',
+        'netIncome'         => 'NET PROCEEDS',
+        'contracts'         => 'ACTIVE CONTRACTS',
+        'contractAnalytics' => 'Contract Analytics',
+        'noContracts'       => 'No contracts available.',
+        'income'            => 'INCOME',
+        'incomeAnalytics'   => 'Income Details',
+        'date'              => 'DATE',
+        'linkDetails'       => 'View Details',
+        'other'             => 'Other',
+        'tickets'           => 'YOUR NEW TICKETS',
+        'totalTickets'      => 'ALL OPEN TICKETS',
+        'yourTickets'       => 'Your new Tickets',
+        'noTickets'         => 'No new Tickets.',
+        'quickstart'        => 'Quickstart',
+        'impairedModem'     => 'Impaired Modems',
+        'external'          => 'External',
+        'docu'              => 'Documentation',
+        'requestHelp'       => 'Request Help',
+        'help'              => 'Help',
+        'weeklyCustomers'   => 'Weekly Customer Overview',
+        'updates'           => 'Activity log',
+        'news'              => 'News',
     ],
-    'Dashboard_Contracts'           => 'ACTIVE CONTRACTS',
-    'Dashboard_ContractAnalytics'   => 'Contract Analytics',
-    'Dashboard_NoContracts'         => 'No contracts available.',
-    'Dashboard_Income'              => 'INCOME',
-    'Dashboard_IncomeAnalytics'     => 'Income Details',
-    'Dashboard_Date'                => 'DATE',
-    'Dashboard_LinkDetails'         => 'View Details',
-    'Dashboard_Other'               => 'Other',
-    'Dashboard_Tickets'             => 'YOUR NEW TICKETS',
-    'Dashboard_TotalTickets'        => 'ALL OPEN TICKETS',
-    'Dashboard_YourTickets'         => 'Your new Tickets',
-    'Dashboard_NoTickets'           => 'No new Tickets.',
-    'Dashboard_Quickstart'          => 'Quickstart',
-    'Dashboard_ImpairedModem'       => 'Impaired Modems',
-    'Dashboard_External'            => 'External',
-    'Dashboard_Docu'                => 'Documentation',
-    'Dashboard_RequestHelp'         => 'Request Help',
-    'Dashboard_Help'                => 'Help',
-    'Dashboard_WeeklyCustomers'     => 'Weekly Customer Overview',
-    'Dashboard_Updates'             => 'Activity log',
-    'Dashboard_News'                => 'News',
 
     // TroubleDashboard
     'TroubleDashboard' => [
@@ -424,7 +421,6 @@ return [
 
     //
     // Contract
-    'Dashboard_Net Income'          => 'NET PROCEEDS',
     //
     'Contract_Numberrange_Failure' => 'No free contract number for selected costcenter available!',
 

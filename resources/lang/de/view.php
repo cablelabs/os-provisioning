@@ -350,32 +350,29 @@ return [
 
     // DASHBOARD
     'dashboard' => [
-        'contractIndexPage' => 'Verträge',
-        'modemIndexPage' => 'Modems',
-        'netelementIndexPage' => 'Netzelemente',
-        'ticketIndexPage' => 'Tickets',
+        'netIncome'           => 'NETTOERLÖSE',
+        'contracts'           => 'AKTIVE VERTRÄGE',
+        'contractAnalytics'   => 'Vertragsanalyse',
+        'noContracts'         => 'Keine Verträge vorhanden.',
+        'income'              => 'ERLÖSE',
+        'incomeAnalytics'     => 'Einkommensübersicht',
+        'date'                => 'DATUM',
+        'linkDetails'         => 'Zeige Details',
+        'other'               => 'Sonstiges',
+        'tickets'             => 'DEINE NEUEN TICKETS',
+        'totalTickets'        => 'OFFENE TICKETS',
+        'yourTickets'         => 'Deine neuen Tickets',
+        'noTickets'           => 'Keine neuen Tickets.',
+        'quickstart'          => 'Schnellstart',
+        'impairedModem'       => 'Modems mit Störungen',
+        'external'            => 'Extern',
+        'docu'                => 'Dokumentation',
+        'requestHelp'         => 'Hilfe anfordern',
+        'help'                => 'Hilfe',
+        'weeklyCustomers'     => 'Kundenübersicht',
+        'updates'             => 'Aktivitätsübersicht',
+        'news'                => 'Neuigkeiten',
     ],
-    'Dashboard_Contracts'           => 'AKTIVE VERTRÄGE',
-    'Dashboard_ContractAnalytics'   => 'Vertragsanalyse',
-    'Dashboard_NoContracts'         => 'Keine Verträge vorhanden.',
-    'Dashboard_Income'              => 'ERLÖSE',
-    'Dashboard_IncomeAnalytics'     => 'Einkommensübersicht',
-    'Dashboard_Date'                => 'DATUM',
-    'Dashboard_LinkDetails'         => 'Zeige Details',
-    'Dashboard_Other'               => 'Sonstiges',
-    'Dashboard_Tickets'             => 'DEINE NEUEN TICKETS',
-    'Dashboard_TotalTickets'        => 'OFFENE TICKETS',
-    'Dashboard_YourTickets'         => 'Deine neuen Tickets',
-    'Dashboard_NoTickets'           => 'Keine neuen Tickets.',
-    'Dashboard_Quickstart'          => 'Schnellstart',
-    'Dashboard_ImpairedModem'       => 'Modems mit Störungen',
-    'Dashboard_External'            => 'Extern',
-    'Dashboard_Docu'                => 'Dokumentation',
-    'Dashboard_RequestHelp'         => 'Hilfe anfordern',
-    'Dashboard_Help'                => 'Hilfe',
-    'Dashboard_WeeklyCustomers'     => 'Kundenübersicht',
-    'Dashboard_Updates'             => 'Aktivitätsübersicht',
-    'Dashboard_News'                => 'Neuigkeiten',
 
     // TroubleDashboard
     'TroubleDashboard' => [
@@ -423,7 +420,6 @@ return [
 
     //
     // Contract
-    'Dashboard_Net Income'          => 'NETTOERLÖSE',
     //
     'Contract_Numberrange_Failure' => 'Keine freie Vertragsnummer für die gewählte Kostenstelle gefunden.',
 
