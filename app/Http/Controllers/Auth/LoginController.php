@@ -122,6 +122,12 @@ class LoginController extends Controller
 
         self::setDashboardNotifications();
 
+        // do not try to update user on ha slave machines
+        if (\Module::collections()->has('ProvHA')) {
+            if ('master' != config('provha.hostinfo.own_state')) {
+                return;
+            }
+        }
         App\User::where('id', $user->id)->update(['last_login_at' => Carbon::now()]);
     }
 
