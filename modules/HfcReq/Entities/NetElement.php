@@ -380,13 +380,13 @@ class NetElement extends \BaseModel
         if ($this->icingaObject) {
             return route('Ticket.create', [
                 'name' => e($this->icingaObject->name1),
-                'description' => '',
+                'netelement_id' => $this->id,
             ]);
         }
 
         return route('Ticket.create', [
             'name' => e($this->name),
-            'description' => '',
+            'netelement_id' => $this->id,
         ]);
     }
 
