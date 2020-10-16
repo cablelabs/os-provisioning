@@ -370,18 +370,12 @@ class NetGw extends \BaseModel
         }
 
         // L2 CMTSes may share the same IP pools
-        $outdated = time() - 10 * 60;
+        $outdated = now()->subMinutes(10)->timestamp;
         foreach (\Storage::files(self::US_SNR_PATH) as $file) {
             // ignore files older than 10 minutes, e.g. from a decommissioned cmts
-            if ($outdated > \Storage::lastModified($file)) {
-                continue;
-            }
-
-            if (($snrs = json_decode(\Storage::get($file), true)) === null) {
-                continue;
-            }
-
-            if (array_key_exists($ip, $snrs)) {
+            if (\Storage::lastModified($file) > $outdated &&
+                ($snrs = json_decode(\Storage::get($file), true)) !== null &&
+                array_key_exists($ip, $snrs)) {
                 return $snrs[$ip];
             }
         }
