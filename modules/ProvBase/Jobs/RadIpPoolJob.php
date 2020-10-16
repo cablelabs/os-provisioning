@@ -13,7 +13,7 @@ class RadIpPoolJob implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels, Queueable;
 
-    const SLICE_SIZE = 1000;
+    protected const SLICE_SIZE = 1000;
 
     protected $pool;
     protected $dirty;

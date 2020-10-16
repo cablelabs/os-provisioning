@@ -16,7 +16,10 @@ class Modem extends \BaseModel
     use \App\AddressFunctionsTrait;
     use \App\Extensions\Geocoding\Geocoding;
 
-    const TYPES = ['cm', 'tr069'];
+    public const TYPES = ['cm', 'tr069'];
+    protected const CONF_FILE_PATH = '/etc/dhcp-nmsprime/modems-host.conf';
+    protected const CONF_FILE_PATH_PUB = '/etc/dhcp-nmsprime/modems-clients-public.conf';
+    protected const IGNORE_CPE_FILE_PATH = '/etc/dhcp-nmsprime/ignore-cpe.conf';
 
     // The associated SQL table for this Model
     public $table = 'modem';
@@ -373,13 +376,6 @@ class Modem extends \BaseModel
         self::observe(new \App\SystemdObserver);
         self::observe(new ModemObserver);
     }
-
-    /**
-     * Define global constants for dhcp config files of modems (private and public)
-     */
-    const CONF_FILE_PATH = '/etc/dhcp-nmsprime/modems-host.conf';
-    const CONF_FILE_PATH_PUB = '/etc/dhcp-nmsprime/modems-clients-public.conf';
-    const IGNORE_CPE_FILE_PATH = '/etc/dhcp-nmsprime/ignore-cpe.conf';
 
     /**
      * Returns the config file entry string for a cable modem in dependency of private or public ip

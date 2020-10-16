@@ -32,46 +32,46 @@ class importTvCustomersCommand extends Command
     /**
      * Column Number and Description for easy Adaption
      */
-    const C_NR = 0;
-    const C_NAME = 1;
-    const C_STRASSE = 2;
-    const C_ZIP = 3;
-    const C_CITY = 4;
-    const C_TEL = 5;
-    const C_FAX = 6;
-    const C_MAIL = 7;
-    const C_SALUT = 13;		// Anrede (Bemerkung)
-    const C_DESC2 = 14; 		// Zusatz
-    const C_DESC1 = 15;		// Watt
-    const C_DESC3 = 16;		// Sonstiges
-    const C_START = 20; 		// Eintritt
-    const C_END = 21;		// Austritt
+    protected const C_NR = 0;
+    protected const C_NAME = 1;
+    protected const C_STRASSE = 2;
+    protected const C_ZIP = 3;
+    protected const C_CITY = 4;
+    protected const C_TEL = 5;
+    protected const C_FAX = 6;
+    protected const C_MAIL = 7;
+    protected const C_SALUT = 13;   // Anrede (Bemerkung)
+    protected const C_DESC2 = 14;   // Zusatz
+    protected const C_DESC1 = 15;   // Watt
+    protected const C_DESC3 = 16;   // Sonstiges
+    protected const C_START = 20;   // Eintritt
+    protected const C_END = 21;     // Austritt
 
     // Sepa Data
-    const S_REF = 0;
-    const S_HOLDER = 8;
-    const S_INST = 9;
-    const S_BIC = 10;
-    const S_IBAN = 11;
-    const S_VALID = 12; 		// Zahlungsziel (invalid when = "14 Tage")
-    const S_SIGNATURE = 24;
+    protected const S_REF = 0;
+    protected const S_HOLDER = 8;
+    protected const S_INST = 9;
+    protected const S_BIC = 10;
+    protected const S_IBAN = 11;
+    protected const S_VALID = 12;   // Zahlungsziel (invalid when = "14 Tage")
+    protected const S_SIGNATURE = 24;
 
     // Item Data
-    const TARIFF = 17; 		// Umlage
-    const CREDIT = 19;		// Verstärkergeld
+    protected const TARIFF = 17;    // Umlage
+    protected const CREDIT = 19;    // Verstärkergeld
 
     /*
      * Global Variables - need adaption for every import
      * TODO: Change product IDs according to Database and yearly Charges according to CostCenter
      */
-    const TV_CHARGE1 = 60; 		// Umlage in Euro
-    const TV_CHARGE2 = 99999; 	// Umlage in Euro - Set to 99999 to disable second charge/tv-tariff
-    const PRODUCT_ID1 = 66; 		// TV Billig
-    const PRODUCT_ID2 = 0;		// TV Teuer
+    protected const TV_CHARGE1 = 60;    // Umlage in Euro
+    protected const TV_CHARGE2 = 99999; // Umlage in Euro - Set to 99999 to disable second charge/tv-tariff
+    protected const PRODUCT_ID1 = 66;   // TV Billig
+    protected const PRODUCT_ID2 = 0;    // TV Teuer
 
     // mapping of Watt amount to credit
     // Watt amount => product_id
-    const CREDITS_WATT = [
+    protected const CREDITS_WATT = [
         '4,5' 	=> 51,
         5 		=> 64,
         7 		=> 62, 	// & 63

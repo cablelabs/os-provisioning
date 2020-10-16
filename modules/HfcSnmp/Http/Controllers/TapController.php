@@ -10,7 +10,7 @@ use App\Http\Controllers\BaseViewController;
 
 class TapController extends \BaseController
 {
-    const relCookiePath = 'app/tmp/cookie';
+    protected const REL_COOKIE_PATH = 'app/tmp/cookie';
 
     public function show($id)
     {
@@ -99,7 +99,7 @@ class TapController extends \BaseController
      */
     private function loginNecessary()
     {
-        $cookie = storage_path(self::relCookiePath);
+        $cookie = storage_path(self::REL_COOKIE_PATH);
 
         if (file_exists($cookie) && (time() - filemtime($cookie) <= 30 * 60)) {
             return false;
@@ -124,7 +124,7 @@ class TapController extends \BaseController
             CURLOPT_RETURNTRANSFER => true,
             // Use internal memory (RAM) to store cookie
             // CURLOPT_COOKIEFILE => '',
-            CURLOPT_COOKIEJAR => storage_path(self::relCookiePath),
+            CURLOPT_COOKIEJAR => storage_path(self::REL_COOKIE_PATH),
         ];
 
         $ch = curl_init();
@@ -171,7 +171,7 @@ class TapController extends \BaseController
             // CURLOPT_POSTFIELDS => $queryParams,
             // CURLOPT_COOKIELIST => curl_getinfo($ch, CURLINFO_COOKIELIST)[0],
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_COOKIEFILE => storage_path(self::relCookiePath),
+            CURLOPT_COOKIEFILE => storage_path(self::REL_COOKIE_PATH),
         ];
 
         $ch = curl_init();
