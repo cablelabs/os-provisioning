@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Artisan;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateToPhp73 extends Migration
+class InstallUpdateToPhp73 extends Migration
 {
     /**
      * Run the migrations.
@@ -19,6 +20,7 @@ class UpdateToPhp73 extends Migration
         system('systemctl enable rh-php73-php-fpm.service');
 
         Artisan::call('module:v6:migrate');
+        Bouncer::refresh();
     }
 
     /**
@@ -34,6 +36,6 @@ class UpdateToPhp73 extends Migration
         system('systemctl start rh-php71-php-fpm.service');
         system('systemctl enable rh-php71-php-fpm.service');
 
-        system('rm /var/www/nmsprime/modules_statuses.json');
+        unlink('/var/www/nmsprime/modules_statuses.json');
     }
 }
