@@ -11,7 +11,7 @@ columns:[
     @if (isset($index_label_arr['index_header']))
         @foreach ($index_label_arr['index_header'] as $field)
         {
-            @if ( starts_with($field, $index_label_arr["table"].'.'))
+            @if ( Str::startsWith($field, $index_label_arr["table"].'.'))
                 data: '{{ substr($field, strlen($index_label_arr["table"]) + 1) }}',
             @else
                 data: '{{ $field }}',

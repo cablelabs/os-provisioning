@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Hfcreq\Database\Seeders;
+namespace Modules\HfcReq\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;

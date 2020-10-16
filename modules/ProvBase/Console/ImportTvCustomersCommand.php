@@ -1,17 +1,16 @@
 <?php
 
-namespace Modules\provbase\Console;
+namespace Modules\ProvBase\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Modules\BillingBase\Entities\Item;
 use Modules\ProvBase\Entities\Contract;
-// use Log;
-
 use Modules\BillingBase\Entities\SepaMandate;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class importTvCustomersCommand extends Command
+class ImportTvCustomersCommand extends Command
 {
     /**
      * The console command name.
@@ -118,7 +117,7 @@ class importTvCustomersCommand extends Command
         // unset($file_arr[0]);
 
         echo "Import TV customers\n";
-        \Log::info("Import potentially $num TV customers");
+        Log::info("Import potentially $num TV customers");
         $bar->start();
 
         foreach ($file_arr as $line) {
@@ -153,7 +152,7 @@ class importTvCustomersCommand extends Command
         $name = explode(',', $line[self::C_NAME]);
         $firstname = isset($name[1]) ? trim($name[1]) : trim($name[0]);
         $lastname = isset($name[1]) ? trim($name[0]) : '';
-        $ret = importCommand::split_street_housenr($line[self::C_STRASSE]);
+        $ret = ImportCommand::split_street_housenr($line[self::C_STRASSE]);
         $street = $ret[0];
         $housenr = $ret[1];
         $arr = explode(' OT ', $line[self::C_CITY]);
@@ -178,7 +177,7 @@ class importTvCustomersCommand extends Command
 
         // Discard contracts that ended last year
         if ($contract->contract_end && ($contract->contract_end < date('Y-01-01'))) {
-            \Log::info("Contract $number is out of date ($contract->contract_start - $contract->contract_end)");
+            Log::info("Contract $number is out of date ($contract->contract_start - $contract->contract_end)");
 
             return;
         }
@@ -224,7 +223,7 @@ class importTvCustomersCommand extends Command
         $contract->save();
 
         // Log
-        \Log::info("Add Contract $contract->number: $contract->firstname, $contract->lastname");
+        Log::info("Add Contract $contract->number: $contract->firstname, $contract->lastname");
 
         return $contract;
     }
@@ -243,13 +242,13 @@ class importTvCustomersCommand extends Command
             // Attention: strtolower doesn't work for ÄÖÜ, but i dont know if a street begins with such a char
             if ($contract->firstname != $firstname || $contract->lastname != $lastname || strtolower($contract->street) != strtolower($street)) {
                 $msg = "Vertragsnummer $number existiert bereits, aber Name, Straße oder Stadt weichen ab - Bitte korrigieren Sie die Daten!";
-                \Log::warning($msg);
+                Log::warning($msg);
                 $this->important_todos .= "\n$msg";
 
                 return $contract;
             }
 
-            \Log::notice("Vertrag $number existiert bereits übereinstimmend ($firstname $lastname) - füge nur TV Tarif hinzu");
+            Log::notice("Vertrag $number existiert bereits übereinstimmend ($firstname $lastname) - füge nur TV Tarif hinzu");
         } else {
             // TODO: Check if customer/name & address already exists with another contract number
             $contract = Contract::where('firstname', '=', $firstname)->where('lastname', '=', $lastname)
@@ -260,7 +259,7 @@ class importTvCustomersCommand extends Command
             if ($contract) {
                 // $msg = "Customer $number is probably already added with different contract number [$contract->number] (found same name [$firstname $lastname], city & street [$street]). Check this manually!";
                 $msg = "Kunde $number existiert bereits unter der Vertragsnummer $contract->number (selber Name, Stadt, Straße: , $city, $street gefunden). Füge nur TV Tarif hinzu.";
-                \Log::notice($msg);
+                Log::notice($msg);
             }
         }
 
@@ -298,7 +297,7 @@ class importTvCustomersCommand extends Command
         $tariff = $line[self::TARIFF];
 
         if (! $tariff) {
-            \Log::debug("'Umlage' is zero or empty - don't add tariff");
+            Log::debug("'Umlage' is zero or empty - don't add tariff");
 
             return;
         }
@@ -311,7 +310,7 @@ class importTvCustomersCommand extends Command
         }
 
         if ($existing) {
-            \Log::debug("Contract $contract->number already has TV Tariff assigned");
+            Log::debug("Contract $contract->number already has TV Tariff assigned");
 
             return;
         }
@@ -327,7 +326,7 @@ class importTvCustomersCommand extends Command
             default:
                 $msg = "Contract $contract->number is charged with $amount EUR. Please add Tariff manually!";
                 $this->important_todos .= "\n$msg";
-                \Log::warning($msg);
+                Log::warning($msg);
 
                 return;
         }
@@ -341,7 +340,7 @@ class importTvCustomersCommand extends Command
             'valid_to_fixed' 	=> 1,
         ]);
 
-        \Log::info("Add TV Tariff $product_id for Contract $contract->number");
+        Log::info("Add TV Tariff $product_id for Contract $contract->number");
     }
 
     private function _add_Credit($contract, $line)
@@ -375,7 +374,7 @@ class importTvCustomersCommand extends Command
         }
 
         if ($existing) {
-            \Log::debug("Contract $contract->number already has Credit ".$product_id.' assigned');
+            Log::debug("Contract $contract->number already has Credit ".$product_id.' assigned');
 
             return;
         }
@@ -399,7 +398,7 @@ class importTvCustomersCommand extends Command
             'costcenter_id' 	=> $this->option('ccContract'),
         ]);
 
-        \Log::info("Add Credit [Product ID $product_id] for Amplifier to Contract $contract->number");
+        Log::info("Add Credit [Product ID $product_id] for Amplifier to Contract $contract->number");
     }
 
     private function _add_sepa_mandate($contract, $line)
@@ -407,7 +406,7 @@ class importTvCustomersCommand extends Command
         $valid = trim($line[self::S_VALID]) == 'einzug';
 
         if (! $valid) {
-            \Log::debug("Contract $contract->number has no valid SepaMandate");
+            Log::debug("Contract $contract->number has no valid SepaMandate");
 
             // Set CostCenter for current SepaMandate in case customer pays TV charge in cash
             SepaMandate::where('contract_id', '=', $contract->id)
@@ -427,7 +426,7 @@ class importTvCustomersCommand extends Command
 
             foreach ($mandates as $sm) {
                 if ((! $sm->valid_to || ($sm->valid_to > date('Y-m-d')) || ($sm->signature_date > $signature_date))) {
-                    \Log::notice("Contract $contract->number already has SEPA-mandate with IBAN ".$line[self::S_IBAN]);
+                    Log::notice("Contract $contract->number already has SEPA-mandate with IBAN ".$line[self::S_IBAN]);
 
                     return;
                 }
@@ -448,7 +447,7 @@ class importTvCustomersCommand extends Command
             // 'valid_to' 	=> NULL,
         ]);
 
-        \Log::info('Add SepaMandate [IBAN: '.$line[self::S_IBAN]."] for contract $contract->number");
+        Log::info('Add SepaMandate [IBAN: '.$line[self::S_IBAN]."] for contract $contract->number");
     }
 
     /**

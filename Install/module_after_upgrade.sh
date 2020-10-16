@@ -1,5 +1,5 @@
-# source environment variables to use php 7.1
-source scl_source enable rh-php71
+# source environment variables to use php 7.3
+source scl_source enable rh-php73
 
 cd '/var/www/nmsprime'
 
@@ -9,18 +9,18 @@ cd '/var/www/nmsprime'
 if [ $(rpm -qa nmsprime-* --queryformat '%{VERSION}-%{RELEASE}\n' | sort | uniq -c | awk '{print $1}' | sort -u | wc -l) -eq 1 ]; then
   rm -f /var/www/nmsprime/config/excel.php
   rm -rf /var/www/nmsprime/bootstrap/cache/*
-  /opt/rh/rh-php71/root/usr/bin/php artisan config:cache
-  /opt/rh/rh-php71/root/usr/bin/php artisan clear-compiled
-  /opt/rh/rh-php71/root/usr/bin/php artisan optimize
-  /opt/rh/rh-php71/root/usr/bin/php artisan migrate
-  /opt/rh/rh-php71/root/usr/bin/php artisan module:migrate
-  /opt/rh/rh-php71/root/usr/bin/php artisan module:publish
-  #/opt/rh/rh-php71/root/usr/bin/php artisan queue:restart
+  /opt/rh/rh-php73/root/usr/bin/php artisan config:cache
+  /opt/rh/rh-php73/root/usr/bin/php artisan clear-compiled
+  /opt/rh/rh-php73/root/usr/bin/php artisan optimize
+  /opt/rh/rh-php73/root/usr/bin/php artisan migrate
+  /opt/rh/rh-php73/root/usr/bin/php artisan module:migrate
+  /opt/rh/rh-php73/root/usr/bin/php artisan module:publish
+  #/opt/rh/rh-php73/root/usr/bin/php artisan queue:restart
   pkill -f "artisan queue:work"
-  /opt/rh/rh-php71/root/usr/bin/php artisan bouncer:clean
-  /opt/rh/rh-php71/root/usr/bin/php artisan auth:nms
-  /opt/rh/rh-php71/root/usr/bin/php artisan route:cache
-  /opt/rh/rh-php71/root/usr/bin/php artisan view:clear
+  /opt/rh/rh-php73/root/usr/bin/php artisan bouncer:clean
+  /opt/rh/rh-php73/root/usr/bin/php artisan auth:nms
+  /opt/rh/rh-php73/root/usr/bin/php artisan route:cache
+  /opt/rh/rh-php73/root/usr/bin/php artisan view:clear
 fi
 
 systemctl reload httpd

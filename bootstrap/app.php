@@ -12,12 +12,12 @@
 */
 
 $app = new Illuminate\Foundation\Application(
-    realpath(__DIR__.'/../')
+    $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
 
 /*
 |--------------------------------------------------------------------------
-| Read the config files
+| Read the environment files
 |--------------------------------------------------------------------------
 |
 | We use different .env files (e.g. for modules).
@@ -25,26 +25,16 @@ $app = new Illuminate\Foundation\Application(
 | @author Patrick Reichel
 */
 
-// force reading of .env.testing – this seems not be done automatically every time
-if (env('APP_ENV') == 'testing') {
-    $dotenv = new \Dotenv\Dotenv(__DIR__.'/../', '.env.testing');
-    $dotenv->overload();
-}
-
 // directory holding the NMS Prime .env files
 $env_dir = '/etc/nmsprime/env/';
 
-// get all .env files from /etc
-$files = scandir($env_dir);
-
 // read environmental data from files ending with .env
-foreach ($files as $f) {
-    if (substr($f, -4) == '.env' && is_readable("$env_dir/$f")) {
-        $dotenv = new \Dotenv\Dotenv($env_dir, $f);
-        // do not use $dotenv->overload() as this overwrites data from .env.testing
-        // this results e.g. in app.env==local instead of testing
-        $dotenv->load();
+foreach (scandir($env_dir) as $file) {
+    if (! substr($file, -4) == '.env' || ! is_readable("$env_dir/$file")) {
+        continue;
     }
+
+    \Dotenv\Dotenv::create($env_dir, $file)->load();
 }
 
 /*

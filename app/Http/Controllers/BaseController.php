@@ -156,7 +156,7 @@ class BaseController extends Controller
 
     public static function get_config_modules()
     {
-        $modules = \Module::enabled();
+        $modules = \Module::allEnabled();
         $links = ['Global Config' => 'GlobalConfig'];
 
         foreach ($modules as $module) {
@@ -226,7 +226,7 @@ class BaseController extends Controller
             if (
                 ($field['form_type'] == 'checkbox')
                 &&
-                (in_array(\Str::lower($data[$field['name']]), ['on', 'checked']))
+                (in_array(Str::lower($data[$field['name']]), ['on', 'checked']))
             ) {
                 $data['active'] = '1';
             }
@@ -488,7 +488,7 @@ class BaseController extends Controller
         $a['save_button_title_key'] = $this->save_button_title_key;
 
         // Get Framework Informations
-        $gc = \Cache::remember('GlobalConfig', 60, function () {
+        $gc = \Cache::remember('GlobalConfig', now()->addHour(), function () {
             return GlobalConfig::first();
         });
         $a['framework']['header1'] = $gc->headline1;
@@ -831,8 +831,7 @@ class BaseController extends Controller
             $form_path = NamespaceController::get_view_name().'.form';
         }
 
-        // $config_routes = BaseController::get_config_modules();
-        return View::make($view_path, $this->compact_prep_view(compact('model_name', 'view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'tabs', 'relations', 'action', 'additional_data')));
+        return View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'tabs', 'relations', 'additional_data')));
     }
 
     /**
@@ -869,7 +868,7 @@ class BaseController extends Controller
         // Note: calling touch() forces a direct save() which calls all observers before we update $data
         //       when exit in middleware to a new view page (like Modem restart) this kill update process
         //       so the solution is not to run touch(), we set the updated_at field directly
-        $data['updated_at'] = \Carbon\Carbon::now(Config::get('app.timezone'));
+        $data['updated_at'] = now();
 
         // Note: Eloquent Update requires updated_at to either be in the fillable array or to have a guarded field
         //       without updated_at field. So we globally use a guarded field from now, to use the update timestamp
@@ -931,7 +930,7 @@ class BaseController extends Controller
                 return response()->json(['ret' => $ret]);
             }
 
-            $data['updated_at'] = \Carbon\Carbon::now(Config::get('app.timezone'));
+            $data['updated_at'] = now();
 
             $obj->update($data);
 
@@ -1497,7 +1496,7 @@ class BaseController extends Controller
             }
         } else {
             $request_query = $model::with($eager_loading_tables)->select($dt_config['table'].'.*'); //eager loading | select($select_column_data);
-            if (starts_with(head($header_fields), $dt_config['table'])) {
+            if (Str::startsWith(head($header_fields), $dt_config['table'])) {
                 $first_column = substr(head($header_fields), strlen($dt_config['table']) + 1);
             } else {
                 $first_column = head($header_fields);

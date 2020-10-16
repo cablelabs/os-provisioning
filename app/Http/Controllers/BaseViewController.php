@@ -563,7 +563,7 @@ class BaseViewController extends Controller
         }
 
         $menu = [];
-        $modules = Module::enabled();
+        $modules = Module::allEnabled();
         $configMenuItemKey = 'MenuItems';
 
         $globalPages = Config::get('base.'.$configMenuItemKey);
@@ -579,13 +579,14 @@ class BaseViewController extends Controller
         }
 
         foreach ($modules as $module) {
-            $moduleMenuConfig = Config::get(Str::lower($module->name).'.'.$configMenuItemKey);
+            $moduleName = $module->getLowerName();
+            $moduleMenuConfig = Config::get($moduleName.'.'.$configMenuItemKey);
 
             if (! empty($moduleMenuConfig)) {
-                $name = Config::get(Str::lower($module->name).'.'.'name') ?? $module->get('description');
+                $name = Config::get($moduleName.'.'.'name') ?? $module->get('description');
                 $icon = ($module->get('icon') == '' ? '' : $module->get('icon'));
                 $menu[$name]['icon'] = $icon;
-                $menu[$name]['link'] = Config::get(Str::lower($module->name).'.link');
+                $menu[$name]['link'] = Config::get($moduleName.'.link');
                 $menu[$name]['translated_name'] = static::translate_view($name, 'Menu');
 
                 foreach ($moduleMenuConfig as $page => $settings) {

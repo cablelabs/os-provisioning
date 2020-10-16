@@ -53,7 +53,7 @@ class SyncLanguagesCommand extends Command
             $modified = false;
 
             foreach ($foreign as $number => $content) {
-                if (! str_contains($content, '=>')) {
+                if (! \Str::contains($content, '=>')) {
                     continue;
                 }
 

@@ -55,3 +55,6 @@ phpunit/*.txt
 
 # ignore xml files created from template
 phpunit/*.xml
+
+# modules status file
+modules_statuses.json

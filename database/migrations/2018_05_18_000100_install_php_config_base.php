@@ -24,7 +24,7 @@ class InstallPhpConfigBase extends BaseMigration
         }
 
         $tz = date_default_timezone_get();
-        foreach (['/etc/php.ini', '/etc/opt/rh/rh-php71/php.ini'] as $file) {
+        foreach (['/etc/php.ini', '/etc/opt/rh/rh-php73/php.ini'] as $file) {
             if (! is_file($file)) {
                 continue;
             }

@@ -5,8 +5,8 @@ namespace App;
 use App;
 use Bouncer;
 use Session;
-use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Notifications\Notifiable;
 use Modules\Ticketsystem\Entities\Ticket;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
@@ -187,7 +187,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      */
     public function isPasswordExpired(): bool
     {
-        $passwordInterval = \Cache::get('GlobalConfig', function () {
+        $passwordInterval = Cache::get('GlobalConfig', function () {
             return \App\GlobalConfig::first();
         })->passwordResetInterval;
 
@@ -195,7 +195,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
             return false;
         }
 
-        return Carbon::now()
+        return now()
             ->subDays($passwordInterval)
             ->greaterThan($this->password_changed_at);
     }

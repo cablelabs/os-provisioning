@@ -124,7 +124,7 @@
                     <th></th> {{-- Checkbox Column if delete is allowed --}}
                 @endif
                 @foreach ($indexTableInfo['index_header'] as $field)
-                    @if ((!empty($indexTableInfo['disable_sortsearch'])) && ( array_has( $indexTableInfo['disable_sortsearch'] , $field) ) )
+                    @if ((!empty($indexTableInfo['disable_sortsearch'])) && ( Illuminate\Support\Arr::has( $indexTableInfo['disable_sortsearch'] , $field) ) )
                         <th></th>
                     @else
                         <th class="searchable"></th>

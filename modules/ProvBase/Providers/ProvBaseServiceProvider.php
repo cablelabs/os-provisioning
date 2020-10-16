@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\provbase\Providers;
+namespace Modules\ProvBase\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -17,14 +17,14 @@ class ProvBaseServiceProvider extends ServiceProvider
      * The artisan commands provided by this module
      */
     protected $commands = [
-        'Modules\ProvBase\Console\configfileCommand',
-        'Modules\ProvBase\Console\contractCommand',
-        'Modules\ProvBase\Console\cpeHostnameCommand',
-        'Modules\ProvBase\Console\dhcpCommand',
-        'Modules\ProvBase\Console\importCommand',
-        'Modules\ProvBase\Console\importTvCustomersCommand',
-        'Modules\ProvBase\Console\importNetUserCommand',
-        'Modules\ProvBase\Console\geocodeCommand',
+        'Modules\ProvBase\Console\ConfigfileCommand',
+        'Modules\ProvBase\Console\ContractCommand',
+        'Modules\ProvBase\Console\CpeHostnameCommand',
+        'Modules\ProvBase\Console\DhcpCommand',
+        'Modules\ProvBase\Console\ImportCommand',
+        'Modules\ProvBase\Console\ImportTvCustomersCommand',
+        'Modules\ProvBase\Console\ImportNetUserCommand',
+        'Modules\ProvBase\Console\GeocodeCommand',
         'Modules\ProvBase\Console\HardwareSupportCommand',
     ];
 

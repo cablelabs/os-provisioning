@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Str;
 use Module;
 use Bouncer;
+use Illuminate\Support\Arr;
 
 class GlobalConfigController extends BaseController
 {
@@ -71,7 +72,7 @@ class GlobalConfigController extends BaseController
         $view_header = BaseViewController::translate_view('Global Configurations', 'Header');
         $route_name = 'Config.index';
 
-        $enabled = Module::enabled();
+        $enabled = Module::allEnabled();
         $module_controller = [0 => $this];
         $module_model = [0 => static::get_model_obj()->first()];
 
@@ -95,8 +96,8 @@ class GlobalConfigController extends BaseController
                 $module_controller[$i] = $mod_controller;
                 $module_model[$i] = $mod_model->first();
 
-                array_set($links, $i.'.name', (($module->get('description') == '') ? $tmp : $module->get('description')));
-                array_set($links, $i.'.link', $tmp);
+                Arr::set($links, $i.'.name', (($module->get('description') == '') ? $tmp : $module->get('description')));
+                Arr::set($links, $i.'.link', $tmp);
 
                 $i++;
             }

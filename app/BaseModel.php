@@ -288,7 +288,7 @@ class BaseModel extends Eloquent
          */
         $path = base_path('modules');
         $dirs = [];
-        $modules = \Module::enabled();
+        $modules = \Module::allEnabled();
         foreach ($modules as $module) {
             array_push($dirs, $module->getPath().'/Entities');
         }
