@@ -124,7 +124,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     public function view_index_label()
     {
         return ['table' => $this->table,
-            'index_header' => [$this->table.'.login_name', $this->table.'.first_name', $this->table.'.last_name', 'email', $this->table.'.geopos_updated_at'],
+            'index_header' => [$this->table.'.login_name', $this->table.'.first_name', $this->table.'.last_name', 'email', $this->table.'.geopos_updated_at', 'active'],
             'header' => $this->first_name.' '.$this->last_name,
         ];
     }
