@@ -70,6 +70,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     protected $hidden = [
         'password',
         'remember_token',
+        'api_token',
     ];
 
     public function tickets()
@@ -206,6 +207,8 @@ class UserObserver
     public function created($user)
     {
         Bouncer::allow($user)->toOwn(User::class);
+        $user->api_token = $user->api_token = \Illuminate\Support\Str::random(80);
+        $user->save();
     }
 
     public function updating($user)

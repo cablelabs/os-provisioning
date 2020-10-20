@@ -47,6 +47,7 @@ return [
         'api' => [
             'driver'   => 'token',
             'provider' => 'admin',
+            'hash'     => false,
         ],
     ],
 
