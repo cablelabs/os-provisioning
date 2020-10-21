@@ -1803,7 +1803,7 @@ class Modem extends \BaseModel
      */
     private function updateRadUserGroups()
     {
-        if ($this->deleted_at || ! $this->isPPP() || ! $this->internet_access) {
+        if ($this->deleted_at || ! $this->isPPP() || ! $this->internet_access || ! $this->qos_id) {
             $this->radusergroups()->delete();
 
             return;
