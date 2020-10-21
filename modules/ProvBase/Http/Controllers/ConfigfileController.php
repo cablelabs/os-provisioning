@@ -152,12 +152,14 @@ class ConfigfileController extends \BaseController
 
         $modemSerials = $model->modem()->whereNotNull('serial_num')->distinct()->pluck('serial_num');
 
+
         $modemSerialsIntersect = array_values(array_intersect($modemSerials, $online));
         if (count($modemSerialsIntersect > 0)) {
             $modemSerial = $modemSerialsIntersect[0];
             $modem = $model->modem()->where('serial_num', $modemSerial)->first();
             $modem = Modem::first();
             \Modules\ProvMon\Http\Controllers\ProvMonController::realtimeTR069($modem, true);
+
 
             $modem = Modem::callGenieAcsApi("devices/?query={\"_deviceId._SerialNumber\":\"{$modemSerial}\"}", 'GET');
             $parametersArray = $this->buildElementList($this->getFromDevices($modem));
@@ -200,10 +202,12 @@ class ConfigfileController extends \BaseController
             $tmpInPath .= '.';
         }
         foreach ($devicesJson as $key => $elementJson) {
-            $inPath = $tmpInPath.$key;
-            $parametersArray[] = ['id' => $inPath, 'name' => $inPath];
-            if (is_array($elementJson)) {
-                $parametersArray = array_merge($parametersArray, $this->buildElementList($elementJson, $inPath));
+            if (! in_array($key, ['_object', '_value', '_type', '_timestamp'])) {
+                $inPath = $tmpInPath.$key;
+                $parametersArray[] = ['id' => $inPath, 'name' => $inPath];
+                if (is_array($elementJson)) {
+                    $parametersArray = array_merge($parametersArray, $this->buildElementList($elementJson, $inPath));
+                }
             }
         }
 
@@ -258,15 +262,6 @@ class ConfigfileController extends \BaseController
             foreach ($jsonDecoded as $jsName => $jsonArray) {
                 $jsonArrayPage[$listCounter]['name'] = $jsName;
                 foreach ($jsonArray as $jKey => $jElement) {
-                    if (! is_array($jElement)) {
-                        $jElement = [0 => $jElement, 1 => [0 => '+', 1 => null], 2 => [null,'+',null]];
-                    }
-                    if (count($jElement)>=1 && ! is_array($jElement[1])) {
-                        $jElement[1]=[0 => '+', 1 => null];
-                    }
-                    if (count($jElement)>=2 && ! is_array($jElement[2])) {
-                        $jElement[2]=[null,'+',null];
-                    }
                     $jsonArrayPage[$listCounter]['content'][] = ['name' => $jKey, 'id' => $jElement[0], 'operator' => $jElement[1][0], 'opvalue' => $jElement[1][1], 'cvalue' => $jElement[2][0],'coperator' => $jElement[2][1],'copvalue' => $jElement[2][2]];
                 }
                 $listCounter++;
