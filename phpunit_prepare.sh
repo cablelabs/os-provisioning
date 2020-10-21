@@ -4,6 +4,8 @@
 # like ExtendedValidator not found or wrongly built URLs like https://localhost/admin/Contract/create
 # if that doesn't help try deleting bootstrap/cache/*
 
+export COMPOSER_MEMORY_LIMIT=-1
+
 declare -a CMDS=(
 	"git submodule update --init --recursive"
 	"mkdir -p /var/www/nmsprime/storage/framework/cache"
