@@ -39,6 +39,7 @@ class ConfigfileController extends \BaseController
             ['form_type' => 'textarea', 'name' => 'text', 'description' => 'Config File Parameters'],
             ['form_type' => 'select', 'name' => 'firmware', 'description' => 'Choose Firmware File', 'value' => $firmware_files],
             ['form_type' => 'file', 'name' => 'firmware_upload', 'description' => 'or: Upload Firmware File'],
+            ['form_type' => 'text', 'name' => 'monitoring', 'description' => 'Monitoring String'],
 
         ];
 
@@ -230,7 +231,7 @@ class ConfigfileController extends \BaseController
         $jsonFromDb = '{}';
         $searchFlag = '#monitoring:';
 
-        foreach (explode("\n", $model->text) as $line) {
+        foreach (explode("\n", $model->monitoring) as $line) {
             if (substr($line, 0, strlen($searchFlag)) == $searchFlag) {
                 $jsonFromDb = substr($line, strlen($searchFlag));
                 break;
