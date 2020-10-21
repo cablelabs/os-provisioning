@@ -153,14 +153,12 @@ class ConfigfileController extends \BaseController
 
         $modemSerials = $model->modem()->whereNotNull('serial_num')->distinct()->pluck('serial_num');
 
-
         $modemSerialsIntersect = array_values(array_intersect($modemSerials, $online));
         if (count($modemSerialsIntersect > 0)) {
             $modemSerial = $modemSerialsIntersect[0];
             $modem = $model->modem()->where('serial_num', $modemSerial)->first();
             $modem = Modem::first();
             \Modules\ProvMon\Http\Controllers\ProvMonController::realtimeTR069($modem, true);
-
 
             $modem = Modem::callGenieAcsApi("devices/?query={\"_deviceId._SerialNumber\":\"{$modemSerial}\"}", 'GET');
             $parametersArray = $this->buildElementList($this->getFromDevices($modem));
@@ -253,7 +251,7 @@ class ConfigfileController extends \BaseController
             foreach ($jsonDecoded as $jsName => $jsonArray) {
                 $jsonArrayPage[$listCounter]['name'] = $jsName;
                 foreach ($jsonArray as $jKey => $jElement) {
-                    $jsonArrayPage[$listCounter]['content'][] = ['name' => $jKey, 'id' => $jElement[0], 'operator' => $jElement[1][0], 'opvalue' => $jElement[1][1], 'cvalue' => $jElement[2][0],'coperator' => $jElement[2][1],'copvalue' => $jElement[2][2]];
+                    $jsonArrayPage[$listCounter]['content'][] = ['name' => $jKey, 'id' => $jElement[0], 'operator' => $jElement[1][0], 'opvalue' => $jElement[1][1], 'cvalue' => $jElement[2][0], 'coperator' => $jElement[2][1], 'copvalue' => $jElement[2][2]];
                 }
                 $listCounter++;
             }
