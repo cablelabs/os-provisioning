@@ -294,7 +294,7 @@ var app=new Vue({
             }
             json += '}';
 
-            $('#monitoring')[0].value = json;
+            $('input[name=monitoring]')[0].value = json;
         })
     },
 });

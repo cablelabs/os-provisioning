@@ -39,7 +39,7 @@ class ConfigfileController extends \BaseController
             ['form_type' => 'textarea', 'name' => 'text', 'description' => 'Config File Parameters'],
             ['form_type' => 'select', 'name' => 'firmware', 'description' => 'Choose Firmware File', 'value' => $firmware_files],
             ['form_type' => 'file', 'name' => 'firmware_upload', 'description' => 'or: Upload Firmware File'],
-            ['form_type' => 'text', 'name' => 'monitoring', 'description' => 'Monitoring String'],
+            ['form_type' => 'text', 'name' => 'monitoring', 'description' => 'Monitoring String', 'hidden' => true],
 
         ];
 
