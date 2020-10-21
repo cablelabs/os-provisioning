@@ -216,6 +216,15 @@ class AbilityController extends Controller
             'IcingaHostStatus', // has no UI/Route associated
             'IcingaObject',     // has no UI/Route associated
             'SupportRequest',   // authorization makes no sense
+            // FreeRADIUS models
+            'Nas',
+            'RadAcct',
+            'RadCheck',
+            'RadGroupReply',
+            'RadIpPool',
+            'RadPostAuth',
+            'RadReply',
+            'RadUserGroup',
         ];
 
         $modules = Module::collections()->keys();
