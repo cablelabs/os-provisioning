@@ -228,16 +228,6 @@ class ConfigfileController extends \BaseController
             return [];
         }
 
-        $jsonFromDb = '{}';
-        $searchFlag = '#monitoring:';
-
-        foreach (explode("\n", $model->monitoring) as $line) {
-            if (substr($line, 0, strlen($searchFlag)) == $searchFlag) {
-                $jsonFromDb = substr($line, strlen($searchFlag));
-                break;
-            }
-        }
-
         $parametersArray = [];
         $storagefile = 'data/provbase/gacs/'.($model->id).'.json';
         // take from storage
@@ -258,7 +248,7 @@ class ConfigfileController extends \BaseController
         $jsonArrayPage = [];
         $listCounter = 0;
 
-        $jsonDecoded = json_decode($jsonFromDb, true);
+        $jsonDecoded = json_decode($model->monitoring, true);
         if ($jsonDecoded !== null) {
             foreach ($jsonDecoded as $jsName => $jsonArray) {
                 $jsonArrayPage[$listCounter]['name'] = $jsName;
@@ -278,7 +268,7 @@ class ConfigfileController extends \BaseController
             $lists[] = $jsonArray;
         }
 
-        return ['lists' => $lists, 'searchFlag' => $searchFlag];
+        return ['lists' => $lists];
     }
 
     /**

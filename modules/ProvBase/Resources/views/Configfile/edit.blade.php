@@ -13,7 +13,7 @@
 
     {{ Form::close() }}
 
-@if (multi_array_key_exists(['lists', 'searchFlag'], $additional_data))
+@if (multi_array_key_exists(['lists'], $additional_data))
 <script src="{{asset('components/assets-admin/plugins/vue/dist/vue.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/sortable/Sortable.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/vuedraggable/dist/vuedraggable.umd.min.js')}}"></script>
@@ -294,15 +294,7 @@ var app=new Vue({
             }
             json += '}';
 
-            json = '{{$additional_data['searchFlag']}}' + json;
-
-            // appending/replacing
-            if ($('#text')[0].value.toLowerCase().indexOf("{{$additional_data['searchFlag']}}") === -1) {
-                $('#text')[0].value = json+"\n\n" + $('#text')[0].value;
-            }
-            else {
-                $('#text')[0].value = $('#text')[0].value.replace(/^{{$additional_data['searchFlag']}}(.*)$/mg, json);
-            }
+            $('#monitoring')[0].value = json;
         })
     },
 });
