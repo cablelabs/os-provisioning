@@ -32,16 +32,6 @@ class LoginController extends Controller
     private $prefix = 'admin';
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('adminRedirect', ['except' => 'logout']);
-    }
-
-    /**
      * Return a instance of the used guard
      */
     protected function guard()
