@@ -45,14 +45,14 @@ return [
         ],
 
         'billing' => [
-            'driver' => 'daily',
+            'driver' => 'single',
             'path' => storage_path('logs/billing.log'),
             'level' => 'debug',
             'days' => 30,
         ],
 
         'overduedebts' => [
-            'driver' => 'daily',
+            'driver' => 'single',
             'path' =>  storage_path('logs/bank-transactions.log'),
             'level' => 'debug',
             'days' => 30,

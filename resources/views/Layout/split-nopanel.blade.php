@@ -32,7 +32,7 @@
                                         @if (isset($tab['icon']))
                                             <i class="fa fa-lg fa-{{ $tab['icon'] }}"></i>
                                         @endif
-                                        {{ $tab['name'] }}
+                                        {{ \Lang::has('view.tab.'.$tab['name']) ? trans('view.tab.'.$tab['name']) : $tab['name'] }}
                                     </a>
                                 </li>
                             <!-- Other tabs -->
@@ -40,10 +40,11 @@
                                 {{-- probably the <a> tag must be set to active according to docu --}}
                                 <li class="nav-item {{$firstKey == $tab['name'] ? 'show' : ''}}" role="tab">
                                     <a id="{{$tab['name'].'tab'}}" class="{{$firstKey == $tab['name'] ? 'active' : ''}}" href="#{{$tab['name']}}" data-toggle="tab">
-                                    @if (isset($tab['icon']))
-                                        <i class="fa fa-lg fa-{{$tab['icon']}}"></i>
-                                    @endif
-                                    {{$tab['name']}}</a>
+                                        @if (isset($tab['icon']))
+                                            <i class="fa fa-lg fa-{{$tab['icon']}}"></i>
+                                        @endif
+                                        {{ \Lang::has('view.tab.'.$tab['name']) ? trans('view.tab.'.$tab['name']) : $tab['name'] }}
+                                    </a>
                                 </li>
                             @endif
                         @endforeach

@@ -2,6 +2,7 @@
 
 return [
     // Index DataTable Header
+    'active' => 'Active',
     'amount' => 'Amount',
     'city' => 'City',
     'connected' => 'Connected',

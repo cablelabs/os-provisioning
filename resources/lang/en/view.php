@@ -240,6 +240,7 @@ return [
     'Header_EnviaOrder'         => 'envia TEL order|envia TEL orders',
 
     'Header_Contact'            => 'Contacts',
+    'Header_Connection Information' => 'Connection Information',
     'Header_Debt'               => 'Debt history',
     'Header_DebtResult'         => 'Outstanding payments total',
     'Header_Node'               => 'Nodes',
@@ -450,15 +451,53 @@ return [
     'critical' => 'critical',
     'Debit' => 'Debit',
     'Discard' => 'Discard',
+    'Download' => 'Download',
     'Global' => 'Global',
     'Global notification' => 'Global notification',
     'info' => 'info',
     'Level' => 'Level',
     'Message' => 'Message',
     'name' => 'Name',
+    'product' => [
+        'billingCycles' => [
+            'once' => 'once',
+            'monthly' => 'monthly',
+            'quarterly' => 'quarterly',
+            'yearly' => 'yearly',
+        ],
+        'types' => [
+            'credit' => 'Credit',
+            'device' => 'Device',
+            'internet' => 'Internet',
+            'other' => 'Other',
+            'postal' => 'Postal invoice',
+            'tv' => 'TV',
+            'voip' => 'VOIP',
+        ],
+    ],
     'showChanges' => 'Show the change|Show :num changes',
     'SettlementRun' => 'SettlementRun',
+    'tab' => [
+        'Create Connection Infos' => 'Create Connection Infos',
+    ],
+    'ticket' => [
+        'priority' => [
+            'critical' => 'Critical',
+            'major' => 'Major',
+            'minor' => 'Minor',
+            'trivial' => 'Trivial',
+        ],
+        'state' => [
+            'new' => 'New',
+            'in process' => 'In process',
+            'closed' => 'Closed',
+        ],
+    ],
     'Time' => 'Time',
+    'topo' => [
+        'addMpr' => 'Add Modem Positioning Rule',
+        'showCustomers' => 'Show Customer in Rectangle',
+    ],
     'Type' => 'Type',
     'warning' => 'warning',
 ];
