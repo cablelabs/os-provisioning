@@ -30,13 +30,13 @@ class AppController extends BaseController
     {
         $apps = [];
         foreach ($installed as $module) {
-            $icon = $module->icon;
+            $icon = $module->get('icon');
             if (is_file(public_path('images/apps/').$icon)) {
                 $state = $module->isEnabled() ? 'active' : 'inactive';
-                $apps[$state][$module->category][] = [
-                    'name' => $module->alias,
+                $apps[$state][$module->get('category')][] = [
+                    'name' => $module->get('alias'),
                     'icon' => $icon,
-                    'description' => $module->description,
+                    'description' => $module->get('description'),
                     'link' => $this->getAppLink($module, $state),
                 ];
             }
@@ -55,8 +55,8 @@ class AppController extends BaseController
      */
     private function getAppLink($module, $state)
     {
-        $link = \Str::lower($module->name).'.link';
-        $route = 'https://www.nmsprime.com/'.$module->category.'-apps/#'.\Str::lower(str_replace('.png', '', $module->icon));
+        $link = $module->getLowerName().'.link';
+        $route = 'https://www.nmsprime.com/'.$module->get('category').'-apps/#'.\Str::lower(str_replace('.png', '', $module->get('icon')));
 
         if ($state == 'active') {
             $route = config()->has($link) ? route(config()->get($link)) : '#';

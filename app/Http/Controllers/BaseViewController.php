@@ -579,8 +579,7 @@ class BaseViewController extends Controller
         }
 
         foreach ($modules as $module) {
-
-            $moduleName = Str::lower($module->name);
+            $moduleName = $module->getLowerName();
             $moduleMenuConfig = config($moduleName.'.'.$configMenuItemKey);
 
             if (! empty($moduleMenuConfig)) {
