@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Hfcsnmp\Database\Seeders;
+namespace Modules\HfcSnmp\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;

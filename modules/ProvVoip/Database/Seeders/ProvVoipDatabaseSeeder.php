@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Provvoip\Database\Seeders;
+namespace Modules\ProvVoip\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;

@@ -1,1 +1,1 @@
-* * * * * root /usr/bin/scl enable rh-php71 'php /var/www/nmsprime/artisan schedule:run' > /dev/null 2>&1
+* * * * * root /usr/bin/scl enable rh-php73 'php /var/www/nmsprime/artisan schedule:run' > /dev/null 2>&1

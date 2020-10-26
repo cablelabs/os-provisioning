@@ -707,4 +707,5 @@ return [
     'factory_reset'             => 'Factory Reset',
     'Default SIP Registrar'     => 'Default SIP Registrar',
     'Default Country Code'      => 'Default Country Code',
+    'mail_not_sent'             => 'Email could not be delivered - Missing email data in environment file!',
 ];

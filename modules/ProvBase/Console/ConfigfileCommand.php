@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\provbase\Console;
+namespace Modules\ProvBase\Console;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Console\Command;
@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class configfileCommand extends Command implements ShouldQueue
+class ConfigfileCommand extends Command implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 

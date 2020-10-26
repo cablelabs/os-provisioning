@@ -7,7 +7,7 @@ class InstallRemoveSelfHandling extends BaseMigration
     protected $files = [
         '/modules/BillingBase/Console/accountingCommand.php',
         '/modules/HfcCustomer/Console/MpsCommand.php',
-        '/modules/ProvBase/Console/configfileCommand.php',
+        '/modules/ProvBase/Console/ConfigfileCommand.php',
     ];
 
     /**

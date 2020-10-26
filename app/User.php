@@ -5,8 +5,8 @@ namespace App;
 use App;
 use Bouncer;
 use Session;
-use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Notifications\Notifiable;
 use Modules\Ticketsystem\Entities\Ticket;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
@@ -124,7 +124,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     public function view_index_label()
     {
         return ['table' => $this->table,
-            'index_header' => [$this->table.'.login_name', $this->table.'.first_name', $this->table.'.last_name', 'email', $this->table.'.geopos_updated_at'],
+            'index_header' => [$this->table.'.login_name', $this->table.'.first_name', $this->table.'.last_name', 'email', $this->table.'.geopos_updated_at', 'active'],
             'header' => $this->first_name.' '.$this->last_name,
         ];
     }
@@ -187,7 +187,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      */
     public function isPasswordExpired(): bool
     {
-        $passwordInterval = \Cache::get('GlobalConfig', function () {
+        $passwordInterval = Cache::get('GlobalConfig', function () {
             return \App\GlobalConfig::first();
         })->passwordResetInterval;
 
@@ -195,7 +195,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
             return false;
         }
 
-        return Carbon::now()
+        return now()
             ->subDays($passwordInterval)
             ->greaterThan($this->password_changed_at);
     }

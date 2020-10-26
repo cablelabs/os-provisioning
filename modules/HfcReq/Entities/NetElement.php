@@ -3,10 +3,10 @@
 namespace Modules\HfcReq\Entities;
 
 use Auth;
-use Cache;
 use Module;
 use Session;
 use Modules\ProvBase\Entities\Modem;
+use Illuminate\Support\Facades\Cache;
 
 class NetElement extends \BaseModel
 {
@@ -360,14 +360,14 @@ class NetElement extends \BaseModel
     public function toErd()
     {
         if ($this->cluster) {
-            return route('TreeErd.show', ['field' => 'cluster', 'id' => $this->cluster]);
+            return route('TreeErd.show', ['field' => 'cluster', 'search' => $this->cluster]);
         }
 
         if ($this->net) {
-            return route('TreeErd.show', ['field' => 'net', 'id' => $this->net]);
+            return route('TreeErd.show', ['field' => 'net', 'search' => $this->net]);
         }
 
-        return route('TreeErd.show', ['field' => 'id', 'id' => $this->id]);
+        return route('TreeErd.show', ['field' => 'id', 'search' => $this->id]);
     }
 
     /**
@@ -380,13 +380,13 @@ class NetElement extends \BaseModel
         if ($this->icingaObject) {
             return route('Ticket.create', [
                 'name' => e($this->icingaObject->name1),
-                'description' => '',
+                'netelement_id' => $this->id,
             ]);
         }
 
         return route('Ticket.create', [
             'name' => e($this->name),
-            'description' => '',
+            'netelement_id' => $this->id,
         ]);
     }
 
@@ -557,7 +557,7 @@ class NetElement extends \BaseModel
      */
     public static function getNetsWithClusters()
     {
-        return Cache::remember(Auth::user()->login_name.'-Nets', 5, function () {
+        return Cache::remember(Auth::user()->login_name.'-Nets', now()->addMinutes(5), function () {
             $net_id = array_search('Net', NetElementType::$undeletables);
 
             return self::where('netelementtype_id', '=', $net_id)
