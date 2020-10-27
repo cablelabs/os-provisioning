@@ -114,7 +114,6 @@ class ConfigfileController extends \BaseController
             return [];
         }
 
-        $parametersArray = array_values($parametersArray);
         $returnArray = [];
 
         if (! Request::has('search')) {
