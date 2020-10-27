@@ -16,6 +16,7 @@ class ConfigfileController extends \BaseController
     protected $edit_view_second_button = true;
     protected $second_button_name = 'Export';
     protected $second_button_title_key = 'exportConfigfiles';
+    protected const GACSCACHE = 'data/provbase/gacs/';
 
     /**
      * defines the formular fields for the edit and create view
@@ -97,7 +98,7 @@ class ConfigfileController extends \BaseController
         $model = Configfile::find($id);
 
         $parametersArray = [];
-        $storagefile = 'data/provbase/gacs/'.($model->id).'.json';
+        $storagefile = GACSCACHE.($model->id).'.json';
         //take from storage
         if (Storage::exists($storagefile)) {
             $parametersArray = json_decode(Storage::get($storagefile), true);
@@ -151,19 +152,18 @@ class ConfigfileController extends \BaseController
             return $value->_deviceId->_SerialNumber ?? null;
         }, json_decode(\modules\ProvBase\Entities\Modem::callGenieAcsApi($route, 'GET')));
 
-        $modemSerials = $model->modem()->whereNotNull('serial_num')->distinct()->pluck('serial_num');
+        $modemSerials = $model->modem()->whereNotNull('serial_num')->distinct()->pluck('serial_num')->toArray();
 
-        $modemSerialsIntersect = array_values(array_intersect($modemSerials, $online));
-        if (count($modemSerialsIntersect > 0)) {
-            $modemSerial = $modemSerialsIntersect[0];
+        $modemSerialsIntersect = array_intersect($modemSerials, $online);
+        if (count($modemSerialsIntersect)) {
+            $modemSerial = reset($modemSerialsIntersect);
             $modem = $model->modem()->where('serial_num', $modemSerial)->first();
-            $modem = Modem::first();
             \Modules\ProvMon\Http\Controllers\ProvMonController::realtimeTR069($modem, true);
 
             $modem = Modem::callGenieAcsApi("devices/?query={\"_deviceId._SerialNumber\":\"{$modemSerial}\"}", 'GET');
             $parametersArray = $this->buildElementList($this->getFromDevices($modem));
 
-            $storagefile = 'data/provbase/gacs/'.($model->id).'.json';
+            $storagefile = GACSCACHE.($model->id).'.json';
             Storage::put($storagefile, json_encode($parametersArray));
         }
 
@@ -227,7 +227,7 @@ class ConfigfileController extends \BaseController
         }
 
         $parametersArray = [];
-        $storagefile = 'data/provbase/gacs/'.($model->id).'.json';
+        $storagefile = GACSCACHE.($model->id).'.json';
         // take from storage
         if (Storage::exists($storagefile)) {
             $parametersArray = json_decode(Storage::get($storagefile), true);
