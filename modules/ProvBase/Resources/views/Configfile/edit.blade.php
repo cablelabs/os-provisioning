@@ -76,6 +76,8 @@
                                 <option value="minDsSNR">minDsSNR</option>
                                 <option value="ifHCInOctets">ifHCInOctets</option>
                                 <option value="ifHCOutOctets">ifHCOutOctets</option>
+                                <option value="avgDsAttn">avgDsAttn</option>
+                                <option value="avgUsAttn">avgUsAttn</option>
                             </select>
                             <select name="coperator" v-model="item.coperator" v-dispatchsel2>
                                 <option value=""></option>
