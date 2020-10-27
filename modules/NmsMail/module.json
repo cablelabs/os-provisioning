@@ -1,11 +1,12 @@
 {
     "name": "NmsMail",
-    "alias": "nmsmail",
+    "alias": "Mail",
     "description": "",
     "keywords": [],
     "active": 0,
     "order": 0,
-    "icon": "fa-paper-plane-o",
+    "icon": "OS_Mail_app_icon.png",
+    "category": "Administration",
     "providers": [
         "Modules\\NmsMail\\Providers\\MailServiceProvider"
     ],

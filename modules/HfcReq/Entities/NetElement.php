@@ -3,10 +3,10 @@
 namespace Modules\HfcReq\Entities;
 
 use Auth;
-use Cache;
 use Module;
 use Session;
 use Modules\ProvBase\Entities\Modem;
+use Illuminate\Support\Facades\Cache;
 
 class NetElement extends \BaseModel
 {
@@ -97,6 +97,8 @@ class NetElement extends \BaseModel
             $ret['Edit']['SubNetElement']['class'] = 'NetElement';
             $ret['Edit']['SubNetElement']['relation'] = $this->children;
         }
+
+        $this->addViewHasManyTickets($ret);
 
         return $ret;
     }
@@ -233,17 +235,19 @@ class NetElement extends \BaseModel
         return $this->hasMany(Modem::class, 'netelement_id');
     }
 
-    /**
-     * Relations
-     */
     public function geoPosModems()
     {
         return $this->hasMany(Modem::class, 'netelement_id')
-            ->select('id', 'x', 'y', 'netelement_id')
+            ->select('modem.id', 'modem.x', 'modem.y', 'modem.netelement_id')
             ->selectRaw('COUNT(*) AS count')
             ->selectRaw('COUNT(CASE WHEN `us_pwr` = 0 THEN 1 END) as offline')
-            ->groupBy('x', 'y')
-            ->havingRaw('max(us_pwr) > 0 and min(us_pwr) = 0 and count > 1');
+            ->groupBy('modem.x', 'modem.y')
+            ->havingRaw('max(us_pwr) > 0 AND min(us_pwr) = 0 AND count > 1')
+            ->join('contract', 'contract.id', 'modem.contract_id')
+            ->whereNull('modem.deleted_at')
+            ->whereNull('contract.deleted_at')
+            ->where('contract_start', '<=', date('Y-m-d'))
+            ->where(whereLaterOrEqual('contract_end', date('Y-m-d')));
     }
 
     // Relation to MPRs Modem Positioning Rules
@@ -356,14 +360,14 @@ class NetElement extends \BaseModel
     public function toErd()
     {
         if ($this->cluster) {
-            return route('TreeErd.show', ['field' => 'cluster', 'id' => $this->cluster]);
+            return route('TreeErd.show', ['field' => 'cluster', 'search' => $this->cluster]);
         }
 
         if ($this->net) {
-            return route('TreeErd.show', ['field' => 'net', 'id' => $this->net]);
+            return route('TreeErd.show', ['field' => 'net', 'search' => $this->net]);
         }
 
-        return route('TreeErd.show', ['field' => 'id', 'id' => $this->id]);
+        return route('TreeErd.show', ['field' => 'id', 'search' => $this->id]);
     }
 
     /**
@@ -376,13 +380,13 @@ class NetElement extends \BaseModel
         if ($this->icingaObject) {
             return route('Ticket.create', [
                 'name' => e($this->icingaObject->name1),
-                'description' => '',
+                'netelement_id' => $this->id,
             ]);
         }
 
         return route('Ticket.create', [
             'name' => e($this->name),
-            'description' => '',
+            'netelement_id' => $this->id,
         ]);
     }
 
@@ -553,7 +557,7 @@ class NetElement extends \BaseModel
      */
     public static function getNetsWithClusters()
     {
-        return Cache::remember(Auth::user()->login_name.'-Nets', 5, function () {
+        return Cache::remember(Auth::user()->login_name.'-Nets', now()->addMinutes(5), function () {
             $net_id = array_search('Net', NetElementType::$undeletables);
 
             return self::where('netelementtype_id', '=', $net_id)

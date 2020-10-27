@@ -2,8 +2,7 @@
 
 namespace App;
 
-use Cache;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class Sla extends BaseModel
 {
@@ -34,7 +33,7 @@ class Sla extends BaseModel
 
     public static function firstCached()
     {
-        return Cache::remember('sla', Carbon::parse('1 day'), function () {
+        return Cache::remember('sla', now()->addDay(), function () {
             return self::first();
         });
     }
@@ -101,7 +100,7 @@ class Sla extends BaseModel
             return false;
         }
 
-        return Cache::remember('sla_valid', Carbon::parse('1 day'), function () {
+        return Cache::remember('sla_valid', now()->addDay(), function () {
             $this->set_sla_dependent_values();
 
             foreach (self::$threshholds[$this->name] as $key => $value) {

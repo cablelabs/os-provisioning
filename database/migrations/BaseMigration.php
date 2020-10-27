@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Arr;
 use Illuminate\Database\Migrations\Migration;
 
 class BaseMigration extends Migration
@@ -86,7 +87,7 @@ class BaseMigration extends Migration
             // only warn if not rolling back – unfortunately we have to step through the stacktrace…
             $rollback = false;
             foreach (debug_backtrace() as $caller) {
-                if (\Str::contains(array_get($caller, 'class', ''), 'RollbackCommand')) {
+                if (Str::contains(Arr::get($caller, 'class', ''), 'RollbackCommand')) {
                     $rollback = true;
                     break;
                 }

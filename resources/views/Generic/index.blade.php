@@ -31,6 +31,17 @@
                 <h3 class="card-title">
                     {!! $model->view_icon().' '.$headline !!}
                 </h3>
+                @if (Request::has('show_filter'))
+                    <div>
+                        <i class="fa fa-filter" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="right" title="{{ trans("messages.hardFilter") }}"></i>
+                        <a class="badge badge-primary" href="{{ Request::url() }}"
+                            style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="right"
+                            title="{{ trans("messages.removeFilter") }}">
+                            {{ trans("messages.onlyNewTickets") }}
+                            <i class="fa fa-close p-l-5"></i>
+                        </a>
+                    </div>
+                @endif
             </div>
         {{-- Create Form --}}
         @can('create', $model)
@@ -113,7 +124,7 @@
                     <th></th> {{-- Checkbox Column if delete is allowed --}}
                 @endif
                 @foreach ($indexTableInfo['index_header'] as $field)
-                    @if ((!empty($indexTableInfo['disable_sortsearch'])) && ( array_has( $indexTableInfo['disable_sortsearch'] , $field) ) )
+                    @if ((!empty($indexTableInfo['disable_sortsearch'])) && ( Illuminate\Support\Arr::has( $indexTableInfo['disable_sortsearch'] , $field) ) )
                         <th></th>
                     @else
                         <th class="searchable"></th>
@@ -174,6 +185,10 @@ $(document).ready(function() {
                 targets:   [1]
             },
             @endif
+            {
+                className: 'nocolvis',
+                targets: {{ (isset($delete_allowed) && $delete_allowed == true) ? '[2]' : '[1]'}},
+            },
             {
                 targets :  "_all",
                 className : 'ClickableTd',

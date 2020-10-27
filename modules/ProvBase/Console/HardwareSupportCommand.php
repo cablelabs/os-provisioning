@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\provbase\Console;
+namespace Modules\ProvBase\Console;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;

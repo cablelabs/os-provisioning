@@ -1,6 +1,6 @@
 <?php
 
-namespace Acme\Validators;
+namespace App\extensions\validators;
 
 use Log;
 use File;

@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\provbase\Console;
+namespace Modules\ProvBase\Console;
 
 use Illuminate\Console\Command;
 use Modules\ProvBase\Entities\Modem;
 
-class geocodeCommand extends Command
+class GeocodeCommand extends Command
 {
     /**
      * The console command name.

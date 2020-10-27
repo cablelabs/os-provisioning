@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Nmsmail\Providers;
+namespace Modules\NmsMail\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

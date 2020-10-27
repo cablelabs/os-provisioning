@@ -38,7 +38,7 @@ class GuiLogController extends BaseController
         // add link of changed Model in edit view - Note: check if route exists is necessary because CccUser.edit is
         // not available for instance
         if ($models && \Route::getRoutes()->hasNamedRoute($model->model.'.edit') && ! $isModelTrashed) {
-            $route = route($model->model.'.edit', ['id' => $model->model_id]);
+            $route = route($model->model.'.edit', [$model->model_id]);
 
             $fields[] = [
                 'form_type' => 'html',
@@ -52,7 +52,7 @@ class GuiLogController extends BaseController
 
         // addition in edit view to create link for restoring deleted models
         if ($isModelTrashed && $restorable) {
-            $route = route('Guilog.restore', ['id' => $model->id]);
+            $route = route('Guilog.restore', [$model->id]);
 
             $fields[] = [
                 'form_type' => 'html',
@@ -82,7 +82,7 @@ class GuiLogController extends BaseController
         $modelToRestore->restore($guilog->model);
 
         if (\Route::has($guilog->model.'.edit')) {
-            return redirect()->route($guilog->model.'.edit', ['id' => $guilog->model_id]);
+            return redirect()->route($guilog->model.'.edit', [$guilog->model_id]);
         } else {
             return redirect()->route('GuiLog.index');
         }

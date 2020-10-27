@@ -397,7 +397,7 @@ class Phonenumber extends \BaseModel
     public function enviaorders($withTrashed = false, $whereStatement = '1')
     {
         if (! \Module::collections()->has('ProvVoipEnvia')) {
-            return new \App\Extensions\Database\EmptyRelation();
+            return optional();
         }
 
         $orders = $this->belongsToMany(EnviaOrder::class, 'enviaorder_phonenumber',

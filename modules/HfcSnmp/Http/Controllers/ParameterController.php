@@ -29,7 +29,7 @@ class ParameterController extends HfcReqController
 
         if ($oid) {
             // only Info's - don't have to be returned on creation or validation
-            $a[] = ['form_type' => 'link', 'name' => $oid->oid, 'description' => 'OID', 'url' => route('OID.edit', ['id' => $oid->id]), 'help' => trans('helper.oid_link'), 'space' => 1];
+            $a[] = ['form_type' => 'link', 'name' => $oid->oid, 'description' => 'OID', 'url' => route('OID.edit', [$oid->id]), 'help' => trans('helper.oid_link'), 'space' => 1];
 
             if ($oid->oid_table) {
                 $a[] = ['form_type' => 'checkbox', 'name' => 'table', 'description' => 'Table', 'options' => ['disabled' => 'disabled'], 'help' => trans('helper.oid_table')];

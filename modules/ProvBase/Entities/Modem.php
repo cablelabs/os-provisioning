@@ -3,18 +3,18 @@
 namespace Modules\ProvBase\Entities;
 
 use DB;
-use Log;
 use File;
 use Module;
 use App\Sla;
 use Request;
 use Acme\php\ArrayHelper;
+use Illuminate\Support\Facades\Log;
 
 class Modem extends \BaseModel
 {
     // get functions for some address select options
     use \App\AddressFunctionsTrait;
-    use \App\Extensions\Geocoding\Geocoding;
+    use \App\extensions\geocoding\Geocoding;
 
     const TYPES = ['cm', 'tr069'];
 
@@ -355,6 +355,8 @@ class Modem extends \BaseModel
             $ret['Edit']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ModemController::_get_envia_management_jobs($this);
         }
 
+        $this->addViewHasManyTickets($ret);
+
         return $ret;
     }
 
@@ -364,9 +366,9 @@ class Modem extends \BaseModel
      */
     public static function boot()
     {
-        Log::debug(__METHOD__.' started');
-
         parent::boot();
+
+        Log::debug(__METHOD__.' started');
 
         self::observe(new \App\SystemdObserver);
         self::observe(new ModemObserver);
@@ -1046,7 +1048,7 @@ class Modem extends \BaseModel
      */
     public static function get_netgw($ip)
     {
-        $validator = new \Acme\Validators\ExtendedValidator;
+        $validator = new \App\extensions\validators\ExtendedValidator;
 
         $ippools = IpPool::where('type', '=', 'CM')->get();
 
