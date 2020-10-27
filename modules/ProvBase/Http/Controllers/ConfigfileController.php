@@ -98,7 +98,7 @@ class ConfigfileController extends \BaseController
         $model = Configfile::find($id);
 
         $parametersArray = [];
-        $storagefile = GACSCACHE.($model->id).'.json';
+        $storagefile = self::GACSCACHE.($model->id).'.json';
         //take from storage
         if (Storage::exists($storagefile)) {
             $parametersArray = json_decode(Storage::get($storagefile), true);
@@ -163,7 +163,7 @@ class ConfigfileController extends \BaseController
             $modem = Modem::callGenieAcsApi("devices/?query={\"_deviceId._SerialNumber\":\"{$modemSerial}\"}", 'GET');
             $parametersArray = $this->buildElementList($this->getFromDevices($modem));
 
-            $storagefile = GACSCACHE.($model->id).'.json';
+            $storagefile = self::GACSCACHE.($model->id).'.json';
             Storage::put($storagefile, json_encode($parametersArray));
         }
 
@@ -227,7 +227,7 @@ class ConfigfileController extends \BaseController
         }
 
         $parametersArray = [];
-        $storagefile = GACSCACHE.($model->id).'.json';
+        $storagefile = self::GACSCACHE.($model->id).'.json';
         // take from storage
         if (Storage::exists($storagefile)) {
             $parametersArray = json_decode(Storage::get($storagefile), true);
