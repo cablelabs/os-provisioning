@@ -116,10 +116,11 @@ class ConfigfileController extends \BaseController
 
         $parametersArray = array_values($parametersArray);
         $returnArray = [];
-        $search = $_GET['search'];
-        if (empty($search)) {
+
+        if (! Request::has('search')) {
             return [];
         }
+        $search = Request::get('search');
 
         $elements = 0;
         foreach ($parametersArray as $param) {
