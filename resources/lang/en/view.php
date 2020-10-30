@@ -190,6 +190,11 @@ return [
     //Configfiles
     'Header_Configfiles'        => 'Configfile|Configfiles',
     'Header_EditConfigfiles'    => 'Edit Configfile',
+    'Header_DragDrop'           => 'Build your interface',
+    'Header_DragDrop DeviceParameters' => 'Parameters for this device',
+    'Header_DragDrop Listname'  => 'New list name',
+    'Header_DragDrop Infoheader' => 'Interfacecreation:',
+    'Header_DragDrop Infotext'  => 'The lists created here are later shown on the modem analysis page.',
     //QoS
     'Header_QoS'                => 'QoS-Rule|QoS-Rules',
     'Header_Device Type'        => 'Device Type|Device Types',
@@ -337,6 +342,13 @@ return [
     'Button_Create PhoneTariff'     => 'Create Phonetariff',
     // //Configfiles
     'Button_Create Configfile'      => 'Create Configfile',
+    'Button_DragDrop AddList'       => 'Add list',
+    'Button_DragDrop DeleteList'    => 'Delete list',
+    'Button_DragDrop DeleteElement' => 'Delete element',
+    'Button_DragDrop MoveTo'        => 'Move to',
+    'Button_DragDrop MoveToNewList' => 'Move to new list',
+    'Button_DragDrop Refresh'       => 'Refresh',
+    'Button_DragDrop Search'        => 'Search',
     // //QoS
     'Button_create_post_invoices_pdf'  => 'Create Postal Invoices PDF',
     'Button_Create Settlement Run'  => 'Create Settlement Run',

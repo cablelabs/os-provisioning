@@ -189,6 +189,11 @@ return [
     //Configfiles
     'Header_Configfiles'        => 'Konfigurationsdatei|Konfigurationsdateien',
     'Header_EditConfigfiles'    => 'Konfigurationsdatei bearbeiten',
+    'Header_DragDrop'           => 'Gestalte deine Oberfläche',
+    'Header_DragDrop DeviceParameters' => 'Parameter von diesem Gerät',
+    'Header_DragDrop Listname'  => 'Neuer Listenname',
+    'Header_DragDrop Infoheader' => 'Oberflächengestaltung:',
+    'Header_DragDrop Infotext'  => 'Die hier angelegten Listen erscheinen auf der Modem-Analysis Seite.',
     //QoS
     'Header_QoS'                => 'QoS-Regel|QoS-Regeln',
     'Header_Device Type'        => 'Gerätetyp|Gerätetypen',
@@ -336,6 +341,13 @@ return [
     'Button_Create PhoneTariff'     => 'Telefontarif anlegen',
     // //Configfiles
     'Button_Create Configfile'     => 'Konfigurationsdatei erstellen',
+    'Button_DragDrop AddList'      => 'Liste erstellen',
+    'Button_DragDrop DeleteList'   => 'Liste entfernen',
+    'Button_DragDrop DeleteElement' => 'Entferne Element',
+    'Button_DragDrop MoveTo'        => 'Verschiebe zu',
+    'Button_DragDrop MoveToNewList' => 'Verschiebe zu neue Liste',
+    'Button_DragDrop Refresh'       => 'Neu laden',
+    'Button_DragDrop Search'        => 'Suchen',
     // //QoS
     'Button_create_post_invoices_pdf' => 'Erstelle PDF mit postalischen Rechnungen',
     'Button_Create Settlement Run'  => 'Abrechnungslauf erstellen',
