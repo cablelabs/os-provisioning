@@ -955,17 +955,32 @@ class Contract extends \BaseModel
         $last = $count = 0;
         $tariff = null;			// item
 
-        $tariffs = $this->items()
-            ->join('product as p', 'item.product_id', '=', 'p.id')
-            ->select('item.*', 'p.*', 'item.id as id')
-            ->where('type', '=', $type)->where('valid_from', '<=', date('Y-m-d'))
-            ->get();
+        // Dont make a DB request when items are already loaded
+        if ($this->relationLoaded('items')) {
+            $tariffs = $this->items->where('valid_from', '<=', date('Y-m-d'));
+        } else {
+            $tariffs = $this->items()
+                ->join('product as p', 'item.product_id', '=', 'p.id')
+                ->select('item.*', 'p.*', 'item.id as id')
+                ->where('type', '=', $type)->where('valid_from', '<=', date('Y-m-d'))
+                ->where(whereLaterOrEqual('valid_to', date('Y-m-d')));
+
+            if (strtolower($type) == 'voip') {
+                $tariffs->with('product.salestariff');
+            }
+
+            $tariffs = $tariffs->get();
+        }
 
         if ($tariffs->isEmpty()) {
             return ['item' => null, 'count' => 0];
         }
 
         foreach ($tariffs as $item) {
+            if ($item->product->type != $type) {
+                continue;
+            }
+
             if (! $item->isValid('Now')) {
                 continue;
             }
