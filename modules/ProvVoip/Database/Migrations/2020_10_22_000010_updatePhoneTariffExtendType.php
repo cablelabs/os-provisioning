@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Modules\ProvVoip\Entities\Phonetariff;
 
 class UpdatePhoneTariffExtendType extends BaseMigration
@@ -56,6 +55,5 @@ class UpdatePhoneTariffExtendType extends BaseMigration
         Phonetariff::whereIn('type', ['basic', 'landlineflat', 'allnetflat'])->delete();
 
         DB::statement("ALTER TABLE phonetariff MODIFY COLUMN type ENUM('purchase', 'sale') NOT NULL");
-
     }
 }
