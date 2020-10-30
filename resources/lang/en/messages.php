@@ -21,6 +21,11 @@ return [
     'BIC'                       => 'BIC',
     'Bank fee'                  => 'Bank fee',
     'Bank Account Holder'       => 'Bank Account Holder',
+    'billing' => [
+        'cdr' => [
+            'noVoip' => 'Missing voip tariff for contract :contract. Price is calculated with basic tariff and no extra charge is added!',
+        ],
+    ],
     'Birthday'                  => 'Birthday',
     'Business'                  => 'Business',
     'City'                      => 'City',

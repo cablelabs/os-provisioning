@@ -21,6 +21,11 @@ return [
     'BIC'                       => 'BIC',
     'Bank fee'                  => 'Bankgebühr',
     'Bank Account Holder'       => 'Kontoinhaber',
+    'billing' => [
+        'cdr' => [
+            'noVoip' => 'VOIP-Tarif von Kunde :contract fehlt. Betrag wird mit Basic-Tarif und ohne Aufschlag berechnet!',
+        ],
+    ],
     'Birthday'                  => 'Geburtstag',
     'Business'                  => 'Berufs-/Geschäftsbezeichnung',
     'City'                      => 'Stadt',
