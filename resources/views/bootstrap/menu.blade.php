@@ -136,8 +136,6 @@
     {{-- end header navigation right --}}
     <div class="search-form bg-white">
       {!! Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET'), 'simple') !!}
-      {!! Form::hidden('mode', 'simple') !!}
-      {!! Form::hidden('scope', 'all') !!}
       <button class="search-btn" type="submit">
         <i class="fa fa-search fa-2x" aria-hidden="true"></i>
       </button>

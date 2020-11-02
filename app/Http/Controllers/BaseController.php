@@ -519,43 +519,123 @@ class BaseController extends Controller
     }
 
     /**
-     * Perform a fulltext search.
+     * Perform a global search.
      *
-     * @author Patrick Reichel
+     * @return Illuminate\Support\Facades\View
+     * @author Roy Schneider
      */
-    public function fulltextSearch()
+    protected function globalSearch($fromTags = null)
     {
-        // get the search scope
-        $scope = Request::get('scope');
-
-        // get the mode to use and transform to sql syntax
-        $mode = Request::get('mode');
-
-        // get the query to search for
         $query = Request::get('query');
+        $view_header = 'Global Search';
+        $basemodel = new BaseModel;
 
-        if ($scope == 'all') {
-            $view_path = 'Generic.searchglobal';
-            $obj = new BaseModel;
-            $view_header = 'Global Search';
-        } else {
-            $obj = static::get_model_obj();
-            $view_path = 'Generic.index';
+        // search for tags?
+        if ($search = $this->getGlobalSearchQuery($query)) {
+            $query = $search[2];
+        }
 
-            if (View::exists(NamespaceController::get_view_name().'.index')) {
-                $view_path = NamespaceController::get_view_name().'.index';
+        $models = collect($basemodel->get_models())->reject(function ($class) {
+            return Bouncer::cannot('view', $class);
+        })->map(function ($name) {
+            return new $name;
+        });
+
+        $view_var = collect($fromTags);
+        try {
+            foreach ($this->globalSearchResults($query, $models) as $result) {
+                if ($result->isNotEmpty()) {
+                    $view_var = $view_var->merge($result);
+                }
+            }
+        } catch (Exception $e) {
+            //
+        }
+
+        $view_var = $view_var->unique('id');
+        $results = count($view_var);
+
+        return View::make('Generic.searchglobal', $this->compact_prep_view(compact('view_header', 'view_var', 'query', 'results')));
+    }
+
+    /**
+     * Remove tag (like 'ip:') from query and return both.
+     *
+     * @param $query String
+     * @return array|null
+     * @author Roy Schneider
+     */
+    protected function getGlobalSearchQuery($query)
+    {
+        preg_match('/(^[a-zA-Z]+:)(.*)/', $query, $parts);
+
+        if (array_key_exists(2, $parts) && $parts[2] != '') {
+            return $parts;
+        }
+    }
+
+    /**
+     * Get all models where a specific column exists.
+     *
+     * @param $attribute String
+     * @param $name String
+     * @return stdClass
+     * @author Roy Schneider
+     */
+    protected function getTableWithColumn($attribute, $name)
+    {
+        $tables = \DB::select("SELECT table_name, column_name FROM information_schema.columns WHERE column_name='$name';");
+        $devices = [];
+
+        foreach ($tables as $table) {
+            $model = \BaseModel::_guess_model_name($table->table_name);
+            $hasAttribute = $model::where($name, $attribute)->first();
+            if ($hasAttribute) {
+                $devices[] = $hasAttribute;
             }
         }
 
-        $create_allowed = static::get_controller_obj()->index_create_allowed;
-        $delete_allowed = static::get_controller_obj()->index_delete_allowed;
+        return $devices;
+    }
 
-        $view_var = collect();
-        foreach ($obj->getFulltextSearchResults($scope, $mode, $query, Request::get('preselect_field'), Request::get('preselect_value')) as $result) {
-            $view_var = $view_var->merge($result->get());
+    /**
+     * Search for $query in all models.
+     *
+     * @param $query String query to search for
+     * @param $models Illuminate\Support\Collection with models to search in
+     * @return $result array of collections of models with $query in any column
+     * @author Roy Schneider
+     */
+    protected function globalSearchResults($query, $models)
+    {
+        if ($query == '') {
+            return collect();
         }
 
-        return View::make($view_path, $this->compact_prep_view(compact('view_header', 'view_var', 'create_allowed', 'delete_allowed', 'query', 'scope')));
+        // necessary because of the concatenation of all table rows
+        $query = str_replace('*', '%', $query);
+        if (! Str::startsWith($query, '%')) {
+            $query = '%'.$query;
+        }
+
+        if (! Str::endsWith($query, '%')) {
+            $query = $query.'%';
+        }
+
+        $results = [];
+        foreach ($models as $model) {
+            if (! property_exists($model, 'table') || ! \Schema::hasTable($model->getTable())) {
+                continue;
+            }
+
+            $queryResult = $model::whereRaw("CONCAT_WS('|', ".$model::getTableColumns($model->getTable()).') LIKE ?', [$query]);
+
+            if ($queryResult) {
+                $results[] = $queryResult->get();
+            }
+        }
+
+        return $results;
     }
 
     /**
