@@ -38,7 +38,7 @@ systemctl daemon-reload
 
 systemctl enable chronyd
 systemctl enable dhcpd
-systemctl enable kea-dhcp6.service
+systemctl enable kea-dhcp6
 # systemctl enable kea-dhcp-ddns.service
 systemctl enable named
 systemctl enable nmsprimed
