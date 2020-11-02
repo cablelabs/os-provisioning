@@ -59,7 +59,7 @@ return [
     'Product_Number_of_Cycles'      => 'Achtung! Für alle Produkte, die in einem wiederkehrenden Zyklus bezahlt werden steht der Preis für jede einzelne Zahlung. Für Produkte, die einmalig bezahlt werden wird der Preis durch die Anzahl der Zyklen geteilt.',
 
     //SalesmanController
-    'Salesman_ProductList'          => 'Füge alle Produkttypen an, für die eine Provision erzielt werden kann - möglich:',
+    'Salesman_ProductList'          => 'Geben Sie alle Produkttypen an, für die der Verkäufer eine Provision erhalten soll. Möglich sind:',
 
     // SepaMandate
     'sm_cc'                         => 'Tragen Sie hier eine Kostenstelle ein, um über dieses Konto nur Posten/Produkte abzurechnen, die derselben Kostenstelle zugewiesen sind. Dem Konto eines SEPA-Mandats ohne zugewiesene Kostenstelle werden alle entstandenen Kosten abgebucht, die keinem anderen Mandat zugordnet werden können. Anmerkung: Entstehen Kosten, die keinem SEPA-Mandat zugeordnet werden können, wird angenommen, dass diese in bar beglichen werden.',
