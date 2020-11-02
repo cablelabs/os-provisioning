@@ -25,7 +25,7 @@ mysql -u "$ROOT_DB_USERNAME" --password="$ROOT_DB_PASSWORD" << EOF
 CREATE DATABASE kea;
 GRANT ALL ON kea.* TO 'nmsprime'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
 EOF
-/usr/sbin/kea-admin db-init mysql -u "$ROOT_DB_USERNAME" -p "$ROOT_DB_PASSWORD" -n kea
+/usr/sbin/kea-admin db-init mysql -u "$DB_USERNAME" -p "$DB_PASSWORD" -n kea
 
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/dhcp-nmsprime/dhcpd.conf
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/named-nmsprime.conf
