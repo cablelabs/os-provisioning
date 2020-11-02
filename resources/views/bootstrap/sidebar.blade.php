@@ -1,5 +1,5 @@
 {{-- begin #sidebar --}}
-<div id="sidebar" class="sidebar">
+<div id="sidebar" class="sidebar d-print-none">
   {{-- begin sidebar scrollbar --}}
   <div data-scrollbar="true" data-height="100%">
     {{-- begin sidebar user --}}
@@ -103,7 +103,7 @@
 {{-- end sidebar scrollbar --}}
 </div>
 {{-- end #sidebar --}}
-<div class="sidebar-bg"></div>
+<div class="sidebar-bg d-print-none"></div>
 
 
 {{-- java script dynamic panel on right top side under tabs --}}

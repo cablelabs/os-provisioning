@@ -1,5 +1,5 @@
 {{-- begin Navbar --}}
-<nav id="header" class="header navbar navbar-expand navbar-default navbar-fixed-top">
+<nav id="header" class="header navbar navbar-expand navbar-default navbar-fixed-top d-print-none">
   {{-- only one row Navbar --}}
     <div class="row">
       {{-- begin mobile sidebar expand / collapse button --}}

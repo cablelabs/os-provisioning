@@ -12,7 +12,7 @@
         <div class="{{ isset($withHistory) ? 'd-flex' : '' }} col-12 col-lg-{{ isset($withHistory) ? 9 : 12 }} col-xl-{{ isset($withHistory) ? 10 : 12 }} m-t-10">
             <div class="card card-inverse p-b-5 p-t-10" style="display:flex;flex: 1;">
                 @if(isset($tabs))
-                <div class="card-header m-b-15" style="display:flex;">
+                <div class="card-header m-b-15 d-print-none" style="display:flex;">
                     <ul id="tabs" class="nav nav-tabs card-header-tabs d-flex" style="width:100%;">
                         @foreach ($tabs as $key => $tab)
                             @php

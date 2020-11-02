@@ -38,10 +38,14 @@ class BaseController extends Controller
     protected $edit_view_second_button = false;
     protected $second_button_name = 'Missing action name';
     protected $second_button_title_key = null;
+    protected $second_button_icon = null;
 
     protected $edit_view_third_button = false;
     protected $third_button_name = 'Missing action name';
     protected $third_button_title_key = null;
+    protected $third_button_icon = null;
+
+    protected $printButton = false;
 
     protected $relation_create_button = 'Create';
 
@@ -484,10 +488,13 @@ class BaseController extends Controller
         $a['second_button_name'] = $this->second_button_name;
         $a['edit_view_second_button'] = $this->edit_view_second_button;
         $a['second_button_title_key'] = $this->second_button_title_key;
+        $a['second_button_icon'] = $this->second_button_icon;
         $a['third_button_name'] = $this->third_button_name;
+        $a['third_button_icon'] = $this->third_button_icon;
         $a['edit_view_third_button'] = $this->edit_view_third_button;
         $a['third_button_title_key'] = $this->third_button_title_key;
         $a['save_button_title_key'] = $this->save_button_title_key;
+        $a['printButton'] = $this->printButton;
 
         // Get Framework Informations
         $gc = \Cache::remember('GlobalConfig', now()->addHour(), function () {
