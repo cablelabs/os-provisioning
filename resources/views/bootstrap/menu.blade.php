@@ -134,14 +134,48 @@
         </li>
       </ul>
     {{-- end header navigation right --}}
-    <div class="search-form bg-white">
-      {!! Form::model(null, array('route'=>'Base.fulltextSearch', 'method'=>'GET'), 'simple') !!}
-      <button class="search-btn" type="submit">
-        <i class="fa fa-search fa-2x" aria-hidden="true"></i>
-      </button>
-      <input id="globalsearch" type="text" name="query" class="form-control navbar" placeholder="{{\App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search')}}">
-      <a href="#" class="close" data-dismiss="navbar-search"><i class="fa fa-angle-up fa-2x" aria-hidden="true"></i></a>
-      {!! Form::close() !!}
+    <div class="search-form bg-white" style="height: auto;">
+      <form id="globalSearchForm" class="form-open" method="GET" onsubmit="linkTag();">
+        <div class="btn-group search-btn">
+          <div class="input-group-append">
+            <button class="btn btn-primary" onsubmit="linkTag();" for="prefillSearchbar">{{ trans('view.jQuery_sSearch') }}</button>
+          </div>
+          <select class="custom-select" id="prefillSearchbar" onchange="getSearchTag();">
+            <option selected value="" data-route="{{ route('Base.globalSearch') }}">{{ trans('view.jQuery_All') }}</option>
+            <option value="ip:" data-route="{{ route('Ip.globalSearch') }}">IP</option>
+          </select>
+        </div>
+        <input id="globalSearch" type="text" name="query" class="form-control navbar" placeholder="{{ \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search') }}">
+        <a href="#" class="close" data-dismiss="navbar-search"><i class="fa fa-angle-up fa-2x" aria-hidden="true"></i></a>
+      </form>
     </div>
   </div> {{-- End ROW --}}
 </nav>
+
+<script type="text/javascript">
+
+function getSearchTag()
+{
+  var element = document.getElementById('prefillSearchbar');
+  document.getElementById('globalSearch').value = element.options[element.selectedIndex].value;
+}
+
+function linkTag()
+{
+  var element = document.getElementById('prefillSearchbar');
+  var select = element.options[element.selectedIndex];
+  var search = document.getElementById('globalSearch');
+
+  // if you search 'ip:...' in 'all', still use the 'ip:' tag
+  // if there is no tag, you search in 'all'
+  Array.from(element.options).forEach(function(option) {
+    if (search.value.startsWith(option.value) && option.value != '') {
+      var querySelector = `[value='${option.value}']`;
+      document.getElementById('globalSearchForm').action = document.querySelectorAll(querySelector)[0].dataset.route;
+    } else {
+      document.getElementById('globalSearchForm').action = select.dataset.route;
+    }
+  });
+}
+
+</script>
