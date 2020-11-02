@@ -152,7 +152,7 @@ input[type="checkbox"].form-control:checked:after {
 }
 .navbar .search-form .search-btn,
 .navbar .search-form .close {
-    position: absolute;
+    position: relative;
     left: 0;
     top: 0;
     bottom: 0;
@@ -166,6 +166,10 @@ input[type="checkbox"].form-control:checked:after {
     padding: 0;
     outline: none;
 }
+.search-btn {
+    margin-top: 6px;
+    margin-left: 5px;
+}
 .navbar .search-form .search-btn i, .navbar .search-form .close i {
     line-height: 60px;
 }
@@ -175,9 +179,13 @@ input[type="checkbox"].form-control:checked:after {
     box-shadow: none;
     border-radius: 0;
     color: #212121;
-    padding-left: 60px;
+    padding-left: 130px;
     padding-right: 60px;
     font-size: 16px;
+}
+.navbar .search-form .form-open .btn-group,
+.navbar .search-form .form-open .form-control {
+    top: 11px;
 }
 .navbar .search-form .form-control {
     position: absolute;
