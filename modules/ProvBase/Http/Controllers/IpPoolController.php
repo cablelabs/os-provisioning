@@ -190,6 +190,8 @@ class IpPoolController extends \BaseController
     /**
      * Convert netmask in CIDR notation to dotted decimal notation
      *
+     * See https://stackoverflow.com/questions/5710860/php-cidr-prefix-to-netmask
+     *
      * @param string
      * @return string
      */
