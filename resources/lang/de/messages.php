@@ -225,7 +225,7 @@ return [
     'Rank'                      => 'Rang',
     'Assign Users'              => 'Benutzer zuweisen',
     'Invoices'                  => 'Rechnungen',
-    'Ability'                   => 'Fähigkeit',
+    'Ability'                   => 'Berechtigung',
     'Allow'                     => 'Erlauben',
     'Allow to'                  => 'Erlaube',
     'Forbid'                    => 'Verbieten',

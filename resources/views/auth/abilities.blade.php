@@ -10,7 +10,7 @@
                 <h3 class="panel-title" style="flex: 1;">
                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#customAbilities" aria-expanded="false">
                         <i class="fa fa-plus-circle"></i>
-                        {{ App\Http\Controllers\BaseViewController::translate_view('Custom Abilities', 'Ability') }}
+                        {{ trans('view.Ability.Custom Abilities') }}
                     </a>
                 </h3>
                 <div class="d-flex align-items-center mx-1">
@@ -20,7 +20,7 @@
                         <i class="fa fa-lg"
                            :class="loadingSpinner.custom ?'fa-circle-o-notch fa-spin' : 'fa-save'">
                         </i>
-                        {{ App\Http\Controllers\BaseViewController::translate_label('Save All') }}
+                        {{ trans('messages.Save All') }}
                     </button>
                 </div>
             </div>
@@ -29,12 +29,12 @@
                     <table class="table table-hover mb-5">
                         <thead class="text-center">
                           <tr>
-                            <th class="text-left">{{ App\Http\Controllers\BaseViewController::translate_label('Ability') }}</th>
-                            <th>{{ App\Http\Controllers\BaseViewController::translate_label('Allow') }}</th>
-                            <th v-if="allowAll">{{ App\Http\Controllers\BaseViewController::translate_label('Forbid') }}</th>
+                            <th class="text-left">{{ trans('messages.Ability') }}</th>
+                            <th>{{ trans('messages.Allow') }}</th>
+                            <th v-if="allowAll">{{ trans('messages.Forbid') }}</th>
                             <th v-show="!showSaveColumn"></th>
-                            <th v-show="showSaveColumn">{{ App\Http\Controllers\BaseViewController::translate_label('Save Changes') }}</th>
-                            <th>{{ App\Http\Controllers\BaseViewController::translate_label('Help') }}</th>
+                            <th v-show="showSaveColumn">{{ trans('messages.Save Changes') }}</th>
+                            <th>{{ trans('messages.Help') }}</th>
                           </tr>
                         </thead>
                         <tr v-for="(ability, id) in customAbilities">
@@ -65,7 +65,7 @@
                                         <i class="fa fa-save fa-lg"
                                            :class="loadingSpinner.custom ?'fa-circle-o-notch fa-spin' : 'fa-save'">
                                         </i>
-                                        {{ App\Http\Controllers\BaseViewController::translate_label('Save') }}
+                                        {{ trans('messages.Save') }}
                                     </button>
                                 </div>
                             </td>
@@ -92,7 +92,7 @@
                 <h3 class="panel-title" style="flex: 1;">
                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#{{ 'group_'.$module }}" aria-expanded="false">
                         <i class="fa fa-plus-circle"></i>
-                        {{ App\Http\Controllers\BaseViewController::translate_view($module, 'Ability') }}
+                        {{ trans("view.Ability.{$module}") }}
                     </a>
                 </h3>
                 <span class="d-flex align-items-center">
@@ -123,7 +123,7 @@
                                 <span class="d-none d-xl-block" style="pointer-events: none;">
                                     <i class="fa {!! $action['icon'] !!} fa-lg"
                                         :class="[{!! $action['name'] !!}All.{!! $module !!} ? '' : 'text-dark']"></i>
-                                    {{ App\Http\Controllers\BaseViewController::translate_label( Str::title($action['name'])) }}
+                                    {{ trans('messages.'.Str::title($action['name'])) }}
                                 </span>
                             </button>
                         </span>
@@ -143,7 +143,7 @@
                                 <i class="fa fa-lg"
                                    :class="loadingSpinner.{!! $module !!} ?'fa-circle-o-notch fa-spin' : 'fa-save'">
                                 </i>
-                                {{ App\Http\Controllers\BaseViewController::translate_label('Save') }}
+                                {{ trans('messages.Save') }}
                             </span>
                         </button>
                     </span>
@@ -154,24 +154,24 @@
                 <table class="table table-hover">
                     <thead class="text-center">
                       <tr>
-                        <th class="text-left"> {{ App\Http\Controllers\BaseViewController::translate_label('Name') }} </th>
-                        <th > {{ App\Http\Controllers\BaseViewController::translate_label('Allow'). '-'.
-                                 App\Http\Controllers\BaseViewController::translate_label('Forbid') }} </th>
-                        <th > {{ App\Http\Controllers\BaseViewController::translate_label('Manage') }} </th>
+                        <th class="text-left"> {{ trans('messages.Name') }} </th>
+                        <th > {{ trans('messages.Allow'). '-'.
+                                 trans('messages.Forbid') }} </th>
+                        <th > {{ trans('messages.Manage') }} </th>
                         <th v-if="!(manageAll.{!! $module !!}) && allowViewAll == undefined">
-                            {{ App\Http\Controllers\BaseViewController::translate_label('View') }}
+                            {{ trans('messages.View') }}
                         </th>
                         @if ($module != 'GlobalConfig')
                         <th v-if="!(manageAll.{!! $module !!})">
-                            {{ App\Http\Controllers\BaseViewController::translate_label('Create') }}
+                            {{ trans('messages.Create') }}
                         </th>
                         @endif
                         <th v-if="!(manageAll.{!! $module !!})">
-                            {{ App\Http\Controllers\BaseViewController::translate_label('Update') }}
+                            {{ trans('messages.Update') }}
                         </th>
                         @if ($module != 'GlobalConfig')
                         <th v-if="!(manageAll.{!! $module !!})">
-                            {{ App\Http\Controllers\BaseViewController::translate_label('Delete') }}
+                            {{ trans('messages.Delete') }}
                         </th>
                         @endif
                       </tr>
@@ -179,7 +179,7 @@
                 @foreach ($entities as $name => $permission)
                     <tr>
                         <td width="44%">
-                            {{ App\Http\Controllers\BaseViewController::translate_label($name) }}
+                            {{ trans('messages.'.$name) }}
                         </td>
                         <td width="8%" align="center">
                             <span class="badge" :class="[allowAll ? 'badge-danger' : 'badge-success']" >
@@ -278,8 +278,8 @@ new Vue({
         modelAbilities: {!! $modelAbilities->toJson() !!},
         originalModelAbilities: {!! $modelAbilities->toJson() !!},
         button: {
-            allow: '{!! App\Http\Controllers\BaseViewController::translate_label("Allow to") !!}',
-            forbid: '{!! App\Http\Controllers\BaseViewController::translate_label("Forbid to") !!}'
+            allow: '{{ trans("messages.Allow to") }}',
+            forbid: '{{ trans("messages.Forbid to") }}'
             }
     }
   },
