@@ -93,7 +93,7 @@ class ModemController extends \BaseController
 
         $cfIds = $this->dynamicDisplayFormFields();
 
-        if (Module::collections()->has('HfcCustomer')) {
+        if (Module::collections()->has('HfcCustomer') && $model->exists) {
             $rect = [round($model->x, 4) - 0.0001, round($model->x, 4) + 0.0001, round($model->y, 4) - 0.0001, round($model->y, 4) + 0.0001];
             $geopos = link_to_route('CustomerModem.showModems', trans('messages.geopos_x_y'), [$model->id]).'    ('.link_to_route('CustomerRect.show', trans('messages.proximity'), $rect).')';
         } else {
