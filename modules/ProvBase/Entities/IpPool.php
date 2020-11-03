@@ -135,7 +135,10 @@ class IpPool extends \BaseModel
     public function ip_route_online()
     {
         // Ping: Only check if device is online
-        $cmd = $this->version == '4' ? 'ping' : 'ping6';
+        $cmd = 'ping';
+        if ($this->version == '6') {
+            $cmd .= ' -6';
+        }
 
         exec("sudo $cmd -c1 -i0 -w1 ".$this->router_ip, $ping, $ret);
 

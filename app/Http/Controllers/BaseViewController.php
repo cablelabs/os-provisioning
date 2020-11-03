@@ -254,13 +254,14 @@ class BaseViewController extends Controller
 
                 // Ping: Only check if ip is online
                 if ($model[$field['name']]) {
+                    $cmd = 'ping';
                     // $model[$field['name']] is null e.g. on NetGw/create
+                    $host = explode(':', $model[$field['name']])[0];
+
+                    // IPv6
                     if (filter_var($model[$field['name']], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-                        $cmd = 'ping6';
+                        $cmd .= ' -6';
                         $host = $model[$field['name']];
-                    } else {
-                        $cmd = 'ping';
-                        $host = explode(':', $model[$field['name']])[0];
                     }
 
                     exec("sudo $cmd -c1 -i0 -w1 ".$host, $ping, $offline);
