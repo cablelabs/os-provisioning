@@ -29,6 +29,18 @@ BaseRoute::group([], function () {
         'middleware' => ['can:view,Modules\ProvBase\Entities\Modem'],
     ]);
 
+    BaseRoute::get('Configfile/{id}/refreshgenieacs', [
+        'as' => 'Configfile.refreshGenieAcs',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ConfigfileController@refreshGenieAcs',
+        'middleware' => ['can:update,Modules\ProvBase\Entities\Configfile'],
+    ]);
+
+    BaseRoute::get('Configfile/{id}/searchdeviceparams', [
+        'as' => 'Configfile.searchDeviceParams',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ConfigfileController@searchDeviceParams',
+        'middleware' => ['can:update,Modules\ProvBase\Entities\Configfile'],
+    ]);
+
     Route::group(['prefix' => 'api/v{ver}'], function () {
         Route::get('Modem/{Modem}/restart', [
             'as' => 'Modem.api_restart',

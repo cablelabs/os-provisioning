@@ -42,4 +42,5 @@ return [
             'class' => NumberRange::class,
         ],
     ],
+    'OPENNUMBERS_RESELLER_USERNAME' => env('OPENNUMBERS_RESELLER_USERNAME', ''),
 ];

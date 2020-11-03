@@ -21,6 +21,12 @@ return [
     'BIC'                       => 'BIC',
     'Bank fee'                  => 'Bankgebühr',
     'Bank Account Holder'       => 'Kontoinhaber',
+    'billing' => [
+        'cdr' => [
+            'missingONKey' => 'Der private Schlüssel für den Zugang zum Opennumbers SFTP-Server fehlt. EVN konnte nicht geladen werden.',
+            'noVoip' => 'VOIP-Tarif von Kunde :contract fehlt. Betrag wird mit Basic-Tarif und ohne Aufschlag berechnet!',
+        ],
+    ],
     'Birthday'                  => 'Geburtstag',
     'Business'                  => 'Berufs-/Geschäftsbezeichnung',
     'City'                      => 'Stadt',
