@@ -634,8 +634,9 @@ class NetGw extends \BaseModel
 
         if ($this->trashed()) {
             File::delete($file);
+            self::makeIncludesV6();
 
-            goto makeIncludes;
+            return;
         }
 
         $data = "{\n\t".'"name": "'.$this->id.'"';
@@ -690,8 +691,6 @@ class NetGw extends \BaseModel
         $data .= "\n}";
 
         File::put($file, $data, true);
-
-        makeIncludes:
 
         self::makeIncludesV6();
     }
