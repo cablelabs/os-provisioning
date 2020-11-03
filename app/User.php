@@ -78,6 +78,12 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $this->belongsToMany(Ticket::class, 'ticket_user', 'user_id', 'ticket_id');
     }
 
+    public function openTickets()
+    {
+        return $this->belongsToMany(Ticket::class, 'ticket_user', 'user_id', 'ticket_id')
+            ->where('state', '!=', 'closed');
+    }
+
     /**
      * Validation
      *
@@ -199,6 +205,26 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return now()
             ->subDays($passwordInterval)
             ->greaterThan($this->password_changed_at);
+    }
+
+    /**
+     * Optimized algorithm from http://www.codexworld.com
+     *
+     * @param float $latitude
+     * @param float $longitude
+     *
+     * @return float [km]
+     */
+    public function getDistance($latitude, $longitude)
+    {
+        $rad = M_PI / 180;
+        //Calculate distance from latitude and longitude
+        $theta = $this->geopos_x - $longitude;
+        $dist = sin($this->geopos_y * $rad)
+            * sin($latitude * $rad) + cos($this->geopos_y * $rad)
+            * cos($latitude * $rad) * cos($theta * $rad);
+
+        return acos($dist) / $rad * 60 * 1.853;
     }
 }
 
