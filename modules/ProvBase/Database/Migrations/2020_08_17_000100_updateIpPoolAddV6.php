@@ -15,13 +15,11 @@ class updateIpPoolAddV6 extends BaseMigration
     public function up()
     {
         Schema::table($this->tablename, function (Blueprint $table) {
-            $table->string('version')->sizeof(10)->nullable();
+            $table->string('version', 1)->default('4');
             $table->string('prefix')->nullable();
             $table->string('prefix_len')->sizeof(3)->nullable();
             $table->string('delegated_len')->sizeof(3)->nullable();
         });
-
-        \Modules\ProvBase\Entities\IpPool::where('id', '!=', 0)->update(['version' =>  4]);
     }
 
     /**
