@@ -178,7 +178,6 @@ class Endpoint extends \BaseModel
         } else {
             $cmd = $this->getNsupdate6Cmd($del);
         }
-
         if (! $cmd) {
             return;
         }
@@ -203,7 +202,7 @@ class Endpoint extends \BaseModel
         if ($del) {
             if ($this->getOriginal('fixed_ip') && $this->getOriginal('ip')) {
                 $rev = implode('.', array_reverse(explode('.', $this->getOriginal('ip'))));
-                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone. 3600 IN A\nsend\n";
+                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone. IN A\nsend\n";
                 $cmd .= "update delete $rev.in-addr.arpa.\nsend\n";
             } else {
                 $mangle = exec("echo '{$this->getOriginal('mac')}' | tr -cd '[:xdigit:]' | xxd -r -p | openssl dgst -sha256 -mac hmac -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())'");
@@ -245,7 +244,7 @@ class Endpoint extends \BaseModel
         if ($del) {
             if ($this->getOriginal('fixed_ip') && $this->getOriginal('ip')) {
                 $arpa = self::getV6Arpa($this->getOriginal('ip'));
-                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone. 3600 IN AAAA\nsend\n";
+                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone. IN AAAA\nsend\n";
                 $cmd .= "update delete $arpa.\nsend\n";
             }
         } else {
