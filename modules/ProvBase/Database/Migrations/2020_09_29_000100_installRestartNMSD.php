@@ -1,6 +1,6 @@
 <?php
 
-class restartNMSD extends BaseMigration
+class installRestartNMSD extends BaseMigration
 {
     /**
      * Run the migrations.
