@@ -48,6 +48,7 @@ return [
     //ProductController
     'product' => [
         'bundle'                => 'Ist der Tarif mit dem Voip-Tarif gebündelt, wird die Gesamtvertragslaufzeit eines Kunden nur anhand des Internet-Tarifs bestimmt. Anderenfalls bestimmt der Tarif (Voip oder Internet) darüber, der zuletzt begonnen hat.',
+        'markon'                => 'Extra Aufschlag auf die Einzelverbindungen. Der prozentuale Aufschlag wird aktuell nur zu Opennumbers EVNs addiert.',
         'maturity_min'          => 'Beispiele: 14D (14 Tage), 3M (Drei Monate), 1Y (Ein Jahr)',
         'maturity'              => 'Laufzeitverlängerung nach der Mindestlaufzeit. <br> Die Gesamtlaufzeit wird automatisch um diese Zeit verlängert, wenn der Tarif nicht vor der Kündigungsfrist gekündigt wurde. Default: 1 Monat. Wird keine Laufzeit angegeben, wird das Laufzeitende des Tarifs immer auf den letzten Tag des Monats gesetzt. <br><br> Beispiele: 14D (14 Tage), 3M (Drei Monate), 1Y (Ein Jahr)',
         'Name'                  => 'Für Kredite ist es möglich einen Typ zuzuweisen, indem der Typname dem Namen des Kredits angefügt wird - z.B.: \'Kredit Gerät\'',
