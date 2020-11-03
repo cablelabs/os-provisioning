@@ -73,6 +73,6 @@ class DhcpCommand extends Command
         }
         touch($dir.'dhcpd');
 
-        system('/bin/chown -R apache /etc/dhcp-nmsprime/ /etc/kea/');
+        system('/usr/bin/chown -R apache /etc/dhcp-nmsprime/ /etc/kea/');
     }
 }
