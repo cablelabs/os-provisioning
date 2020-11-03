@@ -219,6 +219,7 @@ return [
     'draw polygon'              => 'Polygon einzeichnen',
     'modify'                    => 'Elemente ändern',
     'Header_NetElement'         => 'Netzelemente',
+    'mapsRouteLink'             => 'Routenberechnung via Google Maps',
     //VOIP
     //MTA
     'Header_Mta'                => 'MTA|MTAs',
