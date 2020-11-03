@@ -122,8 +122,13 @@ class IpPool extends \BaseModel
             return true;
         }
 
-        $optionIpv6 = $this->version == '4' ? '' : '-6';
-        $ip = $this->version == '4' ? $this->netgw->ip : $this->netgw->ipv6;
+        $optionIpv6 = '';
+        $ip = $this->netgw->ip;
+
+        if ($this->version == '6') {
+            $optionIpv6 = '-6';
+            $ip = $this->netgw->ipv6;
+        }
 
         return strlen(exec("/usr/sbin/ip $optionIpv6 route show ".$this->net.$this->maskToCidr().' via '.$ip)) != 0;
     }
