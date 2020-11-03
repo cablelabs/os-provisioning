@@ -15,11 +15,9 @@ class updateEndpointAddV6 extends BaseMigration
     public function up()
     {
         Schema::table($this->tablename, function (Blueprint $table) {
-            $table->string('version')->sizeof(10)->nullable();
+            $table->string('version', 1)->default('4');
             $table->string('prefix')->nullable();   // can be multiple comma separated addresses
         });
-
-        \Modules\ProvBase\Entities\Endpoint::withTrashed()->where('id', '!=', 0)->update(['version' =>  4]);
     }
 
     /**
