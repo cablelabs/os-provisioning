@@ -143,16 +143,22 @@ class NetElementType extends \BaseModel
      */
     public static function undeletables()
     {
-        $used = [];
-        $all = self::all();
+        return self::has('netelements')
+            ->orWhereHas('children', function ($query) {
+                $query->whereHas('netelements');
+            })
+            ->pluck('name', 'id')
+            ->union(self::$undeletables)
+            ->keys()
+            ->toArray();
+    }
 
-        foreach ($all as $netelementtype) {
-            if ($netelementtype->netelements()->count()) {
-                $used[] = $netelementtype->id;
-            }
-        }
-
-        return array_unique(array_merge(array_keys(self::$undeletables), $used));
+    public static function scopeRootNodes()
+    {
+        return self::whereIn('id', array_keys(self::$undeletables))
+            ->orWhereDoesntHave('parent')
+            ->pluck('name', 'id')
+            ->toArray();
     }
 
     /**

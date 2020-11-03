@@ -186,6 +186,6 @@ return [
     'mail_env'    => 'Nächster Schritt: Host/Nutzernamen/Passwort in /etc/nmsprime/env/global.env eintragen, um Emails im Bezug auf Tickets zu erhalten.',
     'noReplyMail' => 'Die E-Mail-Adresse, die als Absender angezeigt werden soll, wenn Tickets geändert/erstellt werden. Die Adresse muss nicht existieren. Z.B. example@example.com',
     'noReplyName' => 'Der Name, der als Absender angezeigt werden soll, wenn Tickets geändert/erstellt werden. Z.B: NMS Prime',
-    'ticket_settings' => 'Nächster Schritt: Den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration angeben.',
+    'ticket_settings' => 'Nächster Schritt: Den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration unter dem Reiter Tickets angeben.',
     'carrier_out'      => 'Carriercode des zukünftigen Vertragspartners der Rufnummer. Wenn leer, wird die Rufnummer gelöscht.',
 ];

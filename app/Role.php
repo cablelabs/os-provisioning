@@ -65,7 +65,7 @@ class Role extends BaseModel
 
     public function view_has_many()
     {
-        $ret['Edit']['Abilities']['view']['view'] = 'auth.abilities';
+        $ret['Edit'][trans('view.Abilities')]['view']['view'] = 'auth.abilities';
 
         return $ret;
     }
