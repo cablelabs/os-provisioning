@@ -7,11 +7,10 @@ use App\Sla;
 
 class NetGw extends \BaseModel
 {
-    const TYPES = ['cmts', 'bras', 'olt', 'dslam'];
-
-    private static $_us_snr_path = 'data/provmon/us_snr';
+    public const TYPES = ['cmts', 'bras', 'olt', 'dslam'];
     // don't put a trailing slash here!
-    public static $netgw_include_path = '/etc/dhcp-nmsprime/cmts_gws';
+    public const NETGW_INCLUDE_PATH = '/etc/dhcp-nmsprime/cmts_gws';
+    protected const US_SNR_PATH = 'data/provmon/us_snr';
 
     // The associated SQL table for this Model
     public $table = 'netgw';
@@ -356,7 +355,7 @@ class NetGw extends \BaseModel
      */
     public function get_us_snr($ip)
     {
-        $fn = self::$_us_snr_path."/$this->id.json";
+        $fn = self::US_SNR_PATH."/$this->id.json";
 
         if (! \Storage::exists($fn)) {
             \Log::error("Missing Modem US SNR json file of CMTS $this->hostname [$this->id]");
@@ -368,6 +367,17 @@ class NetGw extends \BaseModel
 
         if (array_key_exists($ip, $snrs)) {
             return $snrs[$ip];
+        }
+
+        // L2 CMTSes may share the same IP pools
+        $outdated = now()->subMinutes(10)->timestamp;
+        foreach (\Storage::files(self::US_SNR_PATH) as $file) {
+            // ignore files older than 10 minutes, e.g. from a decommissioned cmts
+            if (\Storage::lastModified($file) > $outdated &&
+                ($snrs = json_decode(\Storage::get($file), true)) !== null &&
+                array_key_exists($ip, $snrs)) {
+                return $snrs[$ip];
+            }
         }
     }
 
@@ -458,7 +468,7 @@ class NetGw extends \BaseModel
             return;
         }
 
-        \Storage::put(self::$_us_snr_path."/$this->id.json", json_encode($ret));
+        \Storage::put(self::US_SNR_PATH."/$this->id.json", json_encode($ret));
     }
 
     /**
@@ -507,7 +517,7 @@ class NetGw extends \BaseModel
      */
     public function make_dhcp_conf()
     {
-        $file = self::$netgw_include_path."/$this->id.conf";
+        $file = self::NETGW_INCLUDE_PATH."/$this->id.conf";
 
         if ($this->id == 0) {
             return -1;
@@ -622,7 +632,7 @@ class NetGw extends \BaseModel
      */
     public static function make_includes()
     {
-        $path = self::$netgw_include_path;
+        $path = self::NETGW_INCLUDE_PATH;
         $incs = '';
         foreach (self::where('type', 'cmts')->get() as $cmts) {
             $incs .= "include \"$path/$cmts->id.conf\";\n";
@@ -670,7 +680,7 @@ class NetGw extends \BaseModel
  */
 class NetGwObserver
 {
-    public static $netgw_tftp_path = '/tftpboot/cmts';
+    protected const NETGW_TFTP_PATH = '/tftpboot/cmts';
 
     public function created($netgw)
     {
@@ -685,7 +695,7 @@ class NetGwObserver
         }
         $netgw->make_dhcp_conf();
 
-        File::put(self::$netgw_tftp_path."/$netgw->id.cfg", $netgw->get_raw_netgw_config());
+        File::put(self::NETGW_TFTP_PATH."/$netgw->id.cfg", $netgw->get_raw_netgw_config());
     }
 
     public function updated($netgw)
@@ -698,7 +708,7 @@ class NetGwObserver
 
         $netgw->make_dhcp_conf();
 
-        File::put(self::$netgw_tftp_path."/$netgw->id.cfg", $netgw->get_raw_netgw_config());
+        File::put(self::NETGW_TFTP_PATH."/$netgw->id.cfg", $netgw->get_raw_netgw_config());
     }
 
     public function deleted($netgw)
@@ -709,8 +719,8 @@ class NetGwObserver
             return;
         }
 
-        File::delete(NetGw::$netgw_include_path."/$netgw->id.conf");
-        File::delete(self::$netgw_tftp_path."/$netgw->id.cfg");
+        File::delete(NetGw::NETGW_INCLUDE_PATH."/$netgw->id.conf");
+        File::delete(self::NETGW_TFTP_PATH."/$netgw->id.cfg");
 
         NetGw::make_includes();
     }

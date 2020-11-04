@@ -32,16 +32,6 @@ class LoginController extends Controller
     private $prefix = 'admin';
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('adminRedirect', ['except' => 'logout']);
-    }
-
-    /**
      * Return a instance of the used guard
      */
     protected function guard()
@@ -72,6 +62,35 @@ class LoginController extends Controller
         $image = 'main-pic-1.jpg';
 
         return \View::make('auth.login', compact('head1', 'head2', 'prefix', 'image'));
+    }
+
+    /**
+     * Attempt to log the user into the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function attemptLogin(Request $request)
+    {
+        if (! $this->guard()->attempt($this->credentials($request), $request->filled('remember'))) {
+            return false;
+        }
+
+        $user = Auth::user();
+
+        if (! $user->active) {
+            Log::info("User {$user->login_name} denied: User is inactive");
+
+            return false;
+        }
+
+        if (! count($user->roles)) {
+            Log::info("User {$user->login_name} denied: User has no roles assigned");
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -144,12 +163,7 @@ class LoginController extends Controller
     private function redirectTo()
     {
         $user = Auth::user();
-        $roles = $user->roles;
         $activeModules = Module::collections();
-
-        if (! count($roles)) {
-            return \View::make('auth.denied')->with('message', 'No roles assigned. Please contact your administrator.');
-        }
 
         Log::debug($user->login_name.' logged in successfully!');
 
