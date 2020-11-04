@@ -46,7 +46,7 @@ function snmpWrapper($trySessions, $tryOids, $div = null, $callback = null, $arg
             try {
                 $values = $session->walk($oid, true);
 
-                // devide all values with the common divisor if possible
+                // divide all values with the common divisor if possible
                 if (is_numeric($div) && $div != 0) {
                     $values = array_map(function ($value) use ($div) {
                         return $value / $div;
@@ -57,7 +57,7 @@ function snmpWrapper($trySessions, $tryOids, $div = null, $callback = null, $arg
                     return $values;
                 }
 
-                // apply callback it available
+                // apply callback if available
                 if ($arg) {
                     return $callback($values, $arg);
                 } else {
