@@ -156,9 +156,7 @@ class NetElementType extends \BaseModel
     public static function scopeRootNodes()
     {
         return self::whereIn('id', array_keys(self::$undeletables))
-            ->orWhereDoesntHave('parent')
-            ->pluck('name', 'id')
-            ->toArray();
+            ->orWhereDoesntHave('parent');
     }
 
     /**

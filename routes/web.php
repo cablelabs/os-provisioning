@@ -96,6 +96,12 @@ BaseRoute::group([], function () {
         'middleware' => ['can:delete,App\User'],
     ]);
 
+    BaseRoute::post('Role/capability', [
+        'as' => 'capability.update',
+        'uses' => 'Auth\AbilityController@updateCapability',
+        'middleware' => ['can:update,App\Role'],
+    ]);
+
     BaseRoute::post('Role/customAbility', [
         'as' => 'customAbility.update',
         'uses' => 'Auth\AbilityController@updateCustomAbility',

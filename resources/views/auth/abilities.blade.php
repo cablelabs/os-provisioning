@@ -220,6 +220,71 @@
     </form>
     @endforeach
     </div>
+    <div id="accordion2" class="panel-group" style="margin-top: 40px">
+        <div class="panel panel-inverse">
+            <div class="panel-heading d-flex align-items-center flex-row">
+                <h3 class="panel-title" style="flex: 1;">
+                    <a class="accordion-toggle accordion-toggle-styled collapsed"
+                        data-toggle="collapse"
+                        data-parent="#accordion"
+                        href="#customCapabilities"
+                        aria-expanded="false">
+                        <i class="fa fa-plus-circle"></i>
+                        {{ trans('view.Ability.Technical Capabilities') }}
+                    </a>
+                </h3>
+                <div class="d-flex align-items-center mx-1">
+                    <button class="btn btn-sm btn-primary"
+                        v-on:click="capabilityUpdate('all')"
+                        v-show="showCapabilitySaveColumn">
+                        <i class="fa fa-lg"
+                            :class="loadingSpinner.custom ?'fa-circle-o-notch fa-spin' : 'fa-save'">
+                        </i>
+                        {{ trans('messages.Save All') }}
+                    </button>
+                </div>
+            </div>
+            <div id="customCapabilities" class="panel-collapse collapse" aria-expanded="true" style="">
+                <div class="panel-body d-flex flex-column">
+                    <table class="table table-hover mb-5">
+                        <thead class="text-center">
+                            <tr>
+                            <th class="text-left">{{ trans('view.Ability.Capability') }}</th>
+                            <th>{{ trans('view.Ability.Can Maintain') }}</th>
+                            <th v-show="!showCapabilitySaveColumn"></th>
+                            <th v-show="showCapabilitySaveColumn">{{ trans('messages.Save Changes') }}</th>
+                            </tr>
+                        </thead>
+                        <tr v-for="(capability, id) in capabilities">
+                            <td v-text="capability.title"></td>
+                            <td align="center">
+                                <input type="checkbox"
+                                :ref="'capability' + id"
+                                :name="'capability[' + id + ']'"
+                                value="maintain"
+                                :checked="capability.isCapable"
+                                v-on:change="capabilityChange(id)">
+                            </td>
+                            <td class="text-center">
+                                <div v-if="(capability.isCapable != originalCapabilities[id].isCapable) && showCapabilitySaveColumn">
+                                    <button type="submit"
+                                        class="btn btn-primary"
+                                        name="saveAbility"
+                                        :value="id"
+                                        v-on:click="capabilityUpdate(id)">
+                                        <i class="fa fa-save fa-lg"
+                                            :class="loadingSpinner.capabilities ?'fa-circle-o-notch fa-spin' : 'fa-save'">
+                                        </i>
+                                        {{ trans('messages.Save') }}
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @DivClose()
 
@@ -227,7 +292,7 @@
 <script src="{{asset('components/assets-admin/plugins/Abilities/es6-promise.auto.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/vue/dist/vue.min.js')}}"></script>
 {{-- When in Development use this Version
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="{{asset('components/assets-admin/plugins/vue/dist/vue.js')}}"></script>
 --}}
 <script src="{{asset('components/assets-admin/plugins/Abilities/lodash.core.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/Abilities/axios.min.js')}}"></script>
@@ -270,13 +335,16 @@ new Vue({
         spinner: false,
         changed: [],
         showSaveColumn: false,
-        customAbilities: {!! $customAbilities->toJson() !!},
-        roleAbilities: {!! $roleAbilities->toJson() !!},
-        originalRoleAbilities: {!! $roleAbilities->toJson() !!},
-        roleForbiddenAbilities: {!! $roleForbiddenAbilities->toJson() !!},
-        originalForbiddenAbilities: {!! $roleForbiddenAbilities->toJson() !!},
-        modelAbilities: {!! $modelAbilities->toJson() !!},
-        originalModelAbilities: {!! $modelAbilities->toJson() !!},
+        showCapabilitySaveColumn: false,
+        capabilities: @json($capabilities),
+        originalCapabilities: @json($capabilities),
+        customAbilities: @json($customAbilities),
+        roleAbilities: @json($roleAbilities),
+        originalRoleAbilities: @json($roleAbilities),
+        roleForbiddenAbilities: @json($roleForbiddenAbilities),
+        originalForbiddenAbilities: @json($roleForbiddenAbilities),
+        modelAbilities: @json($modelAbilities),
+        originalModelAbilities: @json($modelAbilities),
         button: {
             allow: '{{ trans("messages.Allow to") }}',
             forbid: '{{ trans("messages.Forbid to") }}'
@@ -440,6 +508,39 @@ new Vue({
 
             return check;
     },
+    capabilityChange: function (id) {
+        this.capabilities[id].isCapable = !this.capabilities[id].isCapable
+        this.showCapabilitySaveColumn = this.checkChangedArray(
+            Object.keys(this.capabilities).map(key => this.capabilities[key].isCapable));
+    },
+    capabilityUpdate: function (id) {
+        let self = this;
+        let token = document.querySelector('input[name="_token"]').value;
+
+        this.loadingSpinner.capabilities = true;
+        this.loadingSpinner = _.clone(this.loadingSpinner);
+
+        axios({
+            method: 'post',
+            url: '{!! route("capability.update") !!}',
+            headers: {'X-CSRF-TOKEN': token},
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: {
+                id: id,
+                capabilities: this.capabilities,
+                roleId: '{{ $view_var->id }}'
+            }
+        })
+        .then(function (response) {
+            self.originalCapabilities = response.data.capabilities
+
+            self.loadingSpinner.capabilities = false;
+            self.showCapabilitySaveColumn = self.checkChangedArray(self.changed);
+        })
+        .catch(function (error) {
+            alert(error);
+        });
+    },
     customUpdate : function (id) {
         let self = this;
         let token = document.querySelector('input[name="_token"]').value;
@@ -457,7 +558,7 @@ new Vue({
                 roleAbilities: this.roleAbilities,
                 roleForbiddenAbilities: this.roleForbiddenAbilities,
                 changed: this.changed,
-                roleId: '{!! $view_var->id !!}'
+                roleId: '{{  $view_var->id }}'
             }
         })
         .then(function (response) {
@@ -492,7 +593,7 @@ new Vue({
         let form = document.getElementById(module);
         let formData = new FormData(form);
 
-        formData.append('roleId', {!! $view_var->id !!});
+        formData.append('roleId', {{ $view_var->id }});
         formData.append('allowAll', this.allowAll);
         formData.append('module', module);
 
