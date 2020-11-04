@@ -1382,35 +1382,14 @@ class Modem extends \BaseModel
 
         $preq = json_decode(file_get_contents($file), true);
 
-        if (empty($preq['energy']) || empty($preq['fft']) || empty($preq['tdr'])) {
+        if (empty($preq['energy']) || empty($preq['fft']) || empty($preq['feature'])) {
             return ['No pre-equalization data found'];
         }
 
-        $preq['axis'] = $this->_xaxis();
-        $preq['chart'] = $this->_chart($preq['energy']);
+        $preq['axis'] = range(-0.5, 0.5, 1 / 128);
+        $preq['chart'] = array_fill(0, count($preq['energy']), floor(min($preq['energy'])));
 
         return $preq;
-    }
-
-    private function _chart($ene)
-    {
-        $min = round(min($ene));
-
-        return collect($ene)
-            ->map(function () use ($min) {
-                return $min;
-            })
-            ->toArray();
-    }
-
-    private function _xaxis()
-    {
-        $axis = [];
-        for ($i = -0.5; $i <= 0.5; $i += 0.0078125) {
-            $axis[] = $i;
-        }
-
-        return $axis;
     }
 
     /*
