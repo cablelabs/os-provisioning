@@ -139,6 +139,7 @@ return [
     //Company
     'Header_EditCompany'        => 'Edit Company',
     'Ability' => [
+        'Abilities'         => 'Abilities',
         'Custom Abilities'  => 'Custom Abilities',
         'Authentication'    => 'Authentication',
         'GlobalConfig'      => 'GlobalConfig',
@@ -155,7 +156,6 @@ return [
         'Can Maintain'      => 'Can Maintain',
         'Technical Capabilities' => 'Technical Capabilities',
     ],
-
     //Salesman
     'Header_EditSalesman'       => 'Edit Salesman',
     //Items

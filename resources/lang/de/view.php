@@ -78,6 +78,7 @@ return [
     'Menu_TicketTypes'          => 'Tickettypen',
     'Menu_Nets'                 => 'Netze',
     'Menu_allNets'              => 'Alle Netze',
+    'Menu_VicinityGraph'        => 'Nachbarschaftsdiagramm',
 
     //User Settings
     'Menu_UserSettings'         => 'Nutzereinstellungen',
