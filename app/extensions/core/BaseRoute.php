@@ -150,63 +150,63 @@ class BaseRoute
             Route::get("$name", [
                 'as' => $name.'.api_index',
                 'uses' => $controller.'@api_index',
-                'middleware' => ['api', 'auth.nmsapi', 'can:use api', 'can:view,'.$models[$name]],
+                'middleware' => ['api', 'can:view,'.$models[$name]],
                 $options,
             ]);
 
             Route::post("$name", [
                 'as' => $name.'.api_store',
                 'uses' => $controller.'@api_store',
-                'middleware' => ['api', 'auth.nmsapi', 'can:use api', 'can:create,'.$models[$name]],
+                'middleware' => ['api', 'can:create,'.$models[$name]],
                 $options,
             ]);
 
             Route::get("$name/create", [
                 'as' => $name.'.api_create',
                 'uses' => $controller.'@api_create',
-                'middleware' => ['api', 'auth.nmsapi', 'can:use api', 'can:create,'.$models[$name]],
+                'middleware' => ['api', 'can:create,'.$models[$name]],
                 $options,
             ]);
 
             Route::post("$name/create", [
                 'as' => $name.'.api_create',
                 'uses' => $controller.'@api_create',
-                'middleware' => ['api', 'auth.nmsapi', 'can:use api', 'can:create,'.$models[$name]],
+                'middleware' => ['api', 'can:create,'.$models[$name]],
                 $options,
             ]);
 
             Route::get("$name/{{$name}}", [
                 'as' => $name.'.api_get',
-                //'uses' => $controller.'@api_get',
-                'middleware' => ['api', 'auth.nmsapi', 'can:use api', 'can:view,'.$models[$name]],
+                'uses' => $controller.'@api_get',
+                'middleware' => ['api', 'can:view,'.$models[$name]],
                 $options,
             ]);
 
             Route::get("$name/{{$name}}/status", [
                 'as' => $name.'.api_status',
                 'uses' => $controller.'@api_status',
-                'middleware' => ['api', 'auth.nmsapi', 'can:use api', 'can:view,'.$models[$name]],
+                'middleware' => ['api', 'can:view,'.$models[$name]],
                 $options,
             ]);
 
             Route::patch("$name/{{$name}}", [
                 'as' => $name.'.api_update',
                 'uses' => $controller.'@api_update',
-                'middleware' => ['api', 'auth.nmsapi', 'can:use api', 'can:update,'.$models[$name]],
+                'middleware' => ['api', 'can:update,'.$models[$name]],
                 $options,
             ]);
 
             Route::put("$name/{{$name}}", [
                 'as' => $name.'.api_update',
                 'uses' => $controller.'@api_update',
-                'middleware' => ['api', 'auth.nmsapi', 'can:use api', 'can:update,'.$models[$name]],
+                'middleware' => ['api', 'can:update,'.$models[$name]],
                 $options,
             ]);
 
             Route::delete("$name/{{$name}}", [
                 'as' => $name.'.api_destroy',
                 'uses' => $controller.'@api_destroy',
-                'middleware' =>  ['api', 'auth.nmsapi', 'can:use api', 'can:delete,'.$models[$name]],
+                'middleware' =>  ['api', 'can:delete,'.$models[$name]],
                 $options,
             ]);
         });
