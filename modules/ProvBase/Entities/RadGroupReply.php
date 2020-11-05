@@ -38,38 +38,4 @@ class RadGroupReply extends \BaseModel
     public static function bootSoftDeletes()
     {
     }
-
-    /**
-     * Truncate radgroupreply table and refresh all entries
-     *
-     * This is called during an nmsprime update,
-     * since $radiusAttributes may have changed
-     *
-     * @author Ole Ernst
-     */
-    public static function repopulate()
-    {
-        self::truncate();
-
-        $insert = [
-            ['groupname' => self::$defaultGroup, 'attribute' => 'Port-Limit', 'op' => ':=', 'value' => '1'],
-            ['groupname' => self::$defaultGroup, 'attribute' => 'Framed-MTU', 'op' => ':=', 'value' => '1492'],
-            ['groupname' => self::$defaultGroup, 'attribute' => 'Framed-Protocol', 'op' => ':=', 'value' => 'PPP'],
-            ['groupname' => self::$defaultGroup, 'attribute' => 'Service-Type', 'op' => ':=', 'value' => 'Framed-User'],
-            ['groupname' => self::$defaultGroup, 'attribute' => 'Acct-Interim-Interval', 'op' => ':=', 'value' => self::$defaultInterimIntervall],
-        ];
-
-        if ($sessionTimeout = ProvBase::first()->ppp_session_timeout) {
-            $insert[] = ['groupname' => self::$defaultGroup, 'attribute' => 'Session-Timeout', 'op' => ':=', 'value' => $sessionTimeout];
-        }
-
-        // this (Fall-Through) MUST be the last entry of $defaultGroup
-        $insert[] = ['groupname' => self::$defaultGroup, 'attribute' => 'Fall-Through', 'op' => '=', 'value' => 'Yes'];
-        self::insert($insert);
-
-        $observer = new QosObserver;
-        foreach (Qos::all() as $qos) {
-            $observer->created($qos);
-        }
-    }
 }
