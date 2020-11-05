@@ -273,6 +273,10 @@ class UserObserver
             App::setLocale($userLang);
             Session::put('language', $userLang);
         }
+
+        if ($user->isDirty('password')) {
+            $user->api_token = \Str::random(80);
+        }
     }
 
     public function deleting($user)
