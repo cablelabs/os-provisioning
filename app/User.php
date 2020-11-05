@@ -24,10 +24,25 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 {
     use Authenticatable, Authorizable, HasRolesAndAbilities, Notifiable;
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     public $table = 'users';
 
+    /**
+     * The authentication guard name.
+     *
+     * @var string
+     */
     protected $guard = 'admin';
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
     protected $dates = [
         'last_login_at',
         'geopos_updated_at',
