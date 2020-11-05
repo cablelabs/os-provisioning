@@ -99,10 +99,14 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $this->belongsToMany(Ticket::class, 'ticket_user', 'user_id', 'ticket_id');
     }
 
+    /**
+     * Query for the new and open Tickets only.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function openTickets()
     {
-        return $this->belongsToMany(Ticket::class, 'ticket_user', 'user_id', 'ticket_id')
-            ->where('state', '!=', 'closed');
+        return $this->tickets()->where('state', '!=', 'closed');
     }
 
     /**
