@@ -26,7 +26,8 @@ class AuthenticateNmsPrimeApi
     }
 
     /**
-     * Handle an incoming request.
+     * Handle an incoming request. Copied from the original Laravel middleware
+     * and modified to use basic auth for api v0.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
