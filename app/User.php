@@ -208,7 +208,8 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     }
 
     /**
-     * Optimized algorithm from http://www.codexworld.com
+     * Use NmsPrime Helperfunction to calculate geographical distance between
+     * two coordinates.
      *
      * @param float $latitude
      * @param float $longitude
@@ -217,14 +218,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      */
     public function getDistance($latitude, $longitude)
     {
-        $rad = M_PI / 180;
-        //Calculate distance from latitude and longitude
-        $theta = $this->geopos_x - $longitude;
-        $dist = sin($this->geopos_y * $rad)
-            * sin($latitude * $rad) + cos($this->geopos_y * $rad)
-            * cos($latitude * $rad) * cos($theta * $rad);
-
-        return acos($dist) / $rad * 60 * 1.853;
+        return distanceLatLong($this->geopos_y, $this->geopos_x, $latitude, $longitude) / 1000;
     }
 }
 

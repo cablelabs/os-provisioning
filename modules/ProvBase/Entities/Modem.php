@@ -1504,31 +1504,6 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Calculates the great-circle distance between this and $modem, with
-     * the Haversine formula.
-     *
-     * see https://stackoverflow.com/questions/514673/how-do-i-open-a-file-from-line-x-to-line-y-in-php#tab-top
-     *
-     * @return float Distance between points in [m] (same as earthRadius)
-     */
-    private function _haversine_great_circle_distance($modem)
-    {
-        // convert from degrees to radians
-        $latFrom = deg2rad($this->y);
-        $lonFrom = deg2rad($this->x);
-        $latTo = deg2rad($modem->y);
-        $lonTo = deg2rad($modem->x);
-
-        $latDelta = $latTo - $latFrom;
-        $lonDelta = $lonTo - $lonFrom;
-
-        $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) + cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
-
-        // earth radius
-        return $angle * 6371000;
-    }
-
-    /**
      * Clean modem from all envia TEL related data – call this e.g. if you delete the last number from this modem.
      * We have to do this to avoid problems in case we want to install this modem at another customer
      *
@@ -1554,7 +1529,7 @@ class Modem extends \BaseModel
     {
         $ids = [0];
         foreach (DB::table('modem')->select('id', 'x', 'y')->where('deleted_at', null)->get() as $modem) {
-            if ($this->_haversine_great_circle_distance($modem) < $radius) {
+            if (distanceLatLong($this->y, $this->x, $modem->y, $modem->x) < $radius) {
                 array_push($ids, $modem->id);
             }
         }

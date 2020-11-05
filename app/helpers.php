@@ -387,3 +387,26 @@ function negate(int ...$values): array
         return -1 * $value;
     }, $values);
 }
+
+/**
+ * Optimized algorithm from http://www.codexworld.com
+ * see https://stackoverflow.com/a/40929293
+ *
+ * @param float $latitudeFrom
+ * @param float $longitudeFrom
+ * @param float $latitudeTo
+ * @param float $longitudeTo
+ *
+ * @return float [m]
+ */
+function distanceLatLong($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo)
+{
+    $rad = M_PI / 180;
+    //Calculate distance from latitude and longitude
+    $theta = $longitudeFrom - $longitudeTo;
+    $dist = sin($latitudeFrom * $rad)
+        * sin($latitudeTo * $rad) + cos($latitudeFrom * $rad)
+        * cos($latitudeTo * $rad) * cos($theta * $rad);
+
+    return acos($dist) / $rad * 60 * 1853;
+}
