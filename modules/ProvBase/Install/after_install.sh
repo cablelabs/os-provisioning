@@ -30,6 +30,7 @@ EOF
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/dhcp-nmsprime/dhcpd.conf
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/named-nmsprime.conf
 sed -i "s/<hostname>/$(hostname | cut -d '.' -f1)/" /var/named/dynamic/{nmsprime.test,in-addr.arpa}.zone
+sed -i "s/<DB_USERNAME>/$DB_USERNAME/; s/<DB_PASSWORD>/$DB_PASSWORD/" /etc/kea/dhcp6-nmsprime.conf
 
 echo $'\ninclude /etc/chrony.d/*.conf' >> /etc/chrony.conf
 
