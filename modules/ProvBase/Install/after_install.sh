@@ -10,27 +10,15 @@ mysql_radius_psw=$(pwgen 12 1)
 
 # create folders
 install -dm750 /etc/dhcp-nmsprime/cmts_gws
-install -dm750 /etc/kea/gateways6
-# create wrong directory due to bug https://gitlab.isc.org/isc-projects/kea/-/issues/1144 - Remove on CentOS 8!
-install -dm750 /var/lib/lib/kea/
 
 # change owner
 chown -R apache:dhcpd /etc/dhcp-nmsprime
 chown -R apache /tftpboot
 chown -R named:named /var/named/dynamic
-chown -R apache /etc/kea/
-
-# Create kea DB and grant all permissions to user nmsprime
-mysql -u "$ROOT_DB_USERNAME" --password="$ROOT_DB_PASSWORD" << EOF
-CREATE DATABASE kea;
-GRANT ALL ON kea.* TO 'nmsprime'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
-EOF
-/usr/sbin/kea-admin db-init mysql -u "$DB_USERNAME" -p "$DB_PASSWORD" -n kea
 
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/dhcp-nmsprime/dhcpd.conf
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/named-nmsprime.conf
 sed -i "s/<hostname>/$(hostname | cut -d '.' -f1)/" /var/named/dynamic/{nmsprime.test,in-addr.arpa}.zone
-sed -i "s/<DB_USERNAME>/$DB_USERNAME/; s/<DB_PASSWORD>/$DB_PASSWORD/" /etc/kea/dhcp6-nmsprime.conf
 
 echo $'\ninclude /etc/chrony.d/*.conf' >> /etc/chrony.conf
 
@@ -38,8 +26,6 @@ systemctl daemon-reload
 
 systemctl enable chronyd
 systemctl enable dhcpd
-systemctl enable kea-dhcp6
-# systemctl enable kea-dhcp-ddns.service
 systemctl enable named
 systemctl enable nmsprimed
 systemctl enable xinetd
