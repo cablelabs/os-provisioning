@@ -30,8 +30,14 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
     protected $dates = [
         'last_login_at',
+        'geopos_updated_at',
         'password_changed_at',
     ];
+
+    /**
+     * Expiration duration for the user position data.
+     */
+    public const GEOPOS_EXPIRATION_TIME = '1 day';
 
     /**
      * extending the boot functionality to observe changes
@@ -219,6 +225,16 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     public function getDistance($latitude, $longitude)
     {
         return distanceLatLong($this->geopos_y, $this->geopos_x, $latitude, $longitude) / 1000;
+    }
+
+    /**
+     * Check if the Position of the current user is outdated.
+     *
+     * @return bool
+     */
+    public function isGeoposOutdated()
+    {
+        return $this->geopos_updated_at->lte(now()->sub(self::GEOPOS_EXPIRATION_TIME));
     }
 }
 
