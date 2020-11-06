@@ -27,6 +27,52 @@ function unify_mac($data)
 }
 
 /**
+ * Try retrieving values via SNMP without throwing exceptions.
+ *
+ * Multiple SNMP sessions (e.g v2 and v1) and OIDs can be supplied.
+ * Once a session or OID leads to a non-exception the values will be processed
+ * according to the divisor and the callback function (including its arguments).
+ *
+ * First all sessions will be tried for the first OID, afterwards the next OID
+ * will be tried with all sessions.
+ */
+function snmpWrapper($trySessions, $tryOids, $div = null, $callback = null, $arg = null)
+{
+    // try the first OID with the various SNMP sessions
+    // if none provide a result try the next OID with all sessions
+    // stop on first non-exception
+    foreach ((array) $tryOids as $oid) {
+        foreach (is_array($trySessions) ? $trySessions : [$trySessions] as $session) {
+            try {
+                $values = $session->walk($oid, true);
+
+                // divide all values with the common divisor if possible
+                if (is_numeric($div) && $div != 0) {
+                    $values = array_map(function ($value) use ($div) {
+                        return $value / $div;
+                    }, $values);
+                }
+
+                if (! is_callable($callback)) {
+                    return $values;
+                }
+
+                // apply callback if available
+                if ($arg) {
+                    return $callback($values, $arg);
+                } else {
+                    return $callback($values);
+                }
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+    }
+
+    return [];
+}
+
+/**
  * Simplify string for Filenames
  * Attention: Do not use full path (with directory) as slash is replaced
  *
@@ -340,28 +386,4 @@ function negate(int ...$values): array
     return array_map(function ($value) {
         return -1 * $value;
     }, $values);
-}
-
-/**
- * Appends a rule for item to the validation ruleset (passed by reference), e.g.
- * appendValidationRule($rules, 'username', 'required');
- *
- * @author Ole Ernst
- */
-function appendValidationRule(array &$ruleset, string $item, string $rule): void
-{
-    // do nothing
-    if (empty($item) || empty($rule)) {
-        return;
-    }
-
-    // item is empty, thus replace instead of append
-    if (empty($ruleset[$item])) {
-        $ruleset[$item] = $rule;
-
-        return;
-    }
-
-    // append rule to item
-    $ruleset[$item] .= '|'.$rule;
 }

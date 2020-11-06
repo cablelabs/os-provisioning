@@ -63,7 +63,7 @@ class PhoneTariff extends \BaseModel
      */
     public static function get_purchase_tariffs()
     {
-        return self::__get_tariffs('purchase');
+        return self::__get_tariffs(['purchase', 'basic']);
     }
 
     /**
@@ -75,7 +75,7 @@ class PhoneTariff extends \BaseModel
      */
     public static function get_sale_tariffs()
     {
-        return self::__get_tariffs('sale');
+        return self::__get_tariffs(['sale', 'basic', 'landlineflat', 'allnetflat']);
     }
 
     /**
@@ -87,19 +87,21 @@ class PhoneTariff extends \BaseModel
      *
      * @return array with phonetariff.id=>phonetariff.name
      */
-    private static function __get_tariffs($type)
+    private static function __get_tariffs($types)
     {
-        $supported_types = ['purchase', 'sale'];
+        $supported_types = ['purchase', 'sale', 'basic', 'landlineflat', 'allnetflat'];
 
         $ret = [];
 
         // check if valid type is given
-        if (! in_array($type, $supported_types)) {
-            throw new \InvalidArgumentException('Type must be in ['.implode(', ', $supported_types).']');
+        foreach ($types as $type) {
+            if (! in_array($type, $supported_types)) {
+                throw new \InvalidArgumentException('Type must be in ['.implode(', ', $supported_types).']');
+            }
         }
 
         // can be used in raw statement; $type is well known and not given from user input
-        $tariffs = self::where('type', $type)->where('usable', 1)->get();
+        $tariffs = self::whereIn('type', $types)->where('usable', 1)->get();
 
         foreach ($tariffs as $tariff) {
             $ret[$tariff->id] = $tariff->name;

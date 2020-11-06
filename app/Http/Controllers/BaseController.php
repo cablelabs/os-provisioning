@@ -108,12 +108,14 @@ class BaseController extends Controller
 
         return [[
             'name' => 'Edit',
+            'icon' => 'pencil',
             // 'route' => $class_name.'.edit',
             // 'link' => ['model_id' => $model->id, 'model' => $class_name],
         ],
             [
                 'name' => 'Logging',
                 'route' => 'GuiLog.filter',
+                'icon' => 'history',
                 'link' => ['model_id' => $model->id, 'model' => $class_name],
             ],
         ];
@@ -959,7 +961,7 @@ class BaseController extends Controller
      */
     private function _api_prepopulate_fields($obj, $ctrl)
     {
-        $fields = BaseViewController::prepare_form_fields($ctrl->view_form_fields($obj), $obj);
+        $fields = BaseViewController::prepare_form_fields($ctrl->view_form_fields(clone $obj), $obj);
         $fields = $this->apiHandleHtmlFields($fields);
         $inputs = Request::all();
         $data = [];

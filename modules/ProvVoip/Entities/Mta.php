@@ -10,6 +10,8 @@ use Modules\ProvBase\Entities\Configfile;
 
 class Mta extends \BaseModel
 {
+    protected const CONF_FILE_PATH = '/etc/dhcp-nmsprime/mta.conf';
+
     // The associated SQL table for this Model
     public $table = 'mta';
 
@@ -17,10 +19,11 @@ class Mta extends \BaseModel
     public function rules()
     {
         return [
-            'mac' => 'mac',
-            'modem_id' => 'required|exists:modem,id,deleted_at,NULL|min:1',
-            'configfile_id' => 'required|exists:configfile,id,deleted_at,NULL|min:1',
-            // 'hostname' => 'required|unique:mta,hostname,'.$id,
+            'mac' => ['mac'],
+            'modem_id' => ['required', 'exists:modem,id,deleted_at,NULL', 'min:1'],
+            'configfile_id' => ['required', 'exists:configfile,id,deleted_at,NULL', 'min:1'],
+            'type' => ['required'],
+            // 'hostname' => ['required', "unique:mta,hostname,$id"],
         ];
     }
 
@@ -203,11 +206,6 @@ class Mta extends \BaseModel
         self::observe(new MtaObserver);
         self::observe(new \App\SystemdObserver);
     }
-
-    /**
-     * Define DHCP Config File for MTA's
-     */
-    const CONF_FILE_PATH = '/etc/dhcp-nmsprime/mta.conf';
 
     /**
      * Writes all mta entries to dhcp configfile

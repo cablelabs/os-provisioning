@@ -11,7 +11,7 @@ class MibFile extends \BaseModel
     /**
      * @Const MibFile Upload Path relativ to storage directory
      */
-    const REL_MIB_UPLOAD_PATH = 'app/data/hfcsnmp/mibs/';
+    public const REL_MIB_UPLOAD_PATH = 'app/data/hfcsnmp/mibs/';
 
     // Add your validation rules here
     public function rules()

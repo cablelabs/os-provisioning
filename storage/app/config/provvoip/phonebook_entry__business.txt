@@ -19104,6 +19104,7 @@ KFZ-Betrieb
 KFZ-Betriebswirt
 KFZ-Dienst
 KFZ-Dienstleistungen
+Kfz-Elektrik Meisterin
 KFZ-Elektriker
 KFZ-Elektrikermeister
 KFZ-Elektrikermeisterin
@@ -19247,6 +19248,7 @@ Kieswäscherei
 Kieswerk
 Kinästhetiktrainer
 Kinästhetiktrainerin
+Kinder- u. Jugendlichenpsychotherapeut
 Kinder- u. Jugendlichenpsychotherapeutin
 Kinder- u. Jugendlichenpsychotherapeutinnen
 Kinder- und Jugendarzt
@@ -19414,6 +19416,7 @@ Kindermusikpädagogin
 Kindermusikschule
 Kindermusiktheater
 Kinderneurologische Praxis
+Kinderostheopath
 Kinderpädagogin
 Kinderpark
 Kinderpartyservice
@@ -19425,6 +19428,7 @@ Kinderpsychiater
 Kinderpsychiaterin
 Kinderpsychologin
 Kinderpsychologische Elternberatung
+Kinderpsychotherapie
 Kinderpsychotherapie und Jugendpsychotherapie
 Kinderreisebüro
 Kinderreiterhotel
@@ -27957,6 +27961,7 @@ Praxis für Kinder- und Jugendpsychiatrie
 Praxis für Kinder- und Jugendpsychiatrie und -psychotherapie
 Praxis für Kinder- und Jugendpsychologie
 Praxis für Kinder- und Jugendpsychotherapie
+Praxis für Kinder- und Jugendtherapie
 Praxis für Kinder- und Jugendzahnheilkunde
 Praxis für Kinderchirurgie
 Praxis für Kinderheilkunde
@@ -32448,6 +32453,7 @@ Sendertechniker
 Sendestudio
 Senfmühle
 Senior Master Sergeant
+Senioren Rikschafahrt
 Senioren- und Pflegeheim
 Seniorenbeauftragte
 Seniorenbegegnungsstätte
@@ -37010,6 +37016,7 @@ Typographik
 Übersetzungen für Schwedisch
 Übersetzungen für Slowakisch
 Übersetzungen für Spanisch
+Übersetzungen für Thai
 Übersetzungen für Wirtschaftsfranzösisch
 Übersetzungs- und Dolmetscherdienst
 Übersetzungs- und Dolmetschservice

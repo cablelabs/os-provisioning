@@ -220,6 +220,7 @@ return [
     'draw polygon'              => 'Draw Polygon',
     'modify'                    => 'Modify Elements',
     'Header_NetElement'         => 'Netelements',
+    'mapsRouteLink'             => 'Show route via Google Maps',
     //VOIP
     //MTA
     'Header_Mta'                => 'MTA|MTAs',

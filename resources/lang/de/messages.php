@@ -21,6 +21,12 @@ return [
     'BIC'                       => 'BIC',
     'Bank fee'                  => 'Bankgebühr',
     'Bank Account Holder'       => 'Kontoinhaber',
+    'billing' => [
+        'cdr' => [
+            'missingONKey' => 'Der private Schlüssel für den Zugang zum Opennumbers SFTP-Server fehlt. EVN konnte nicht geladen werden.',
+            'noVoip' => 'VOIP-Tarif von Kunde :contract fehlt. Betrag wird mit Basic-Tarif und ohne Aufschlag berechnet!',
+        ],
+    ],
     'Birthday'                  => 'Geburtstag',
     'Business'                  => 'Berufs-/Geschäftsbezeichnung',
     'City'                      => 'Stadt',
@@ -312,6 +318,7 @@ return [
     'modem_restart_error'       => 'Das Modem konnte nicht neu gestartet werden! (offline?)',
     'Contact Persons'           => 'Antennengemeinschaft/Kontakt',
     'modem_restart_success_netgw' => 'Das Modem wurde erfolgreich über das NetGw neu gestartet',
+    'modem_restart_warning_dns' => 'Neustart des Modems fehlgeschlagen, da der Hostname nicht aufgelöst werden konnte (Modem hat kein aktives DHCP Lease), um das verantwortliche NetGw zu ermitteln.',
     'Accounting Text (optional)'=> 'Verwendungszweck (optional)',
     'Cost Center (optional)'    => 'Kostenstelle (optional)',
     'Credit Amount'             => 'Gutschrift - Betrag',

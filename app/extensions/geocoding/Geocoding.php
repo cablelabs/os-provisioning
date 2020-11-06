@@ -204,7 +204,7 @@ trait Geocoding
             }
 
             // sleep to respect usage policy
-            if (count($housenumber_variants > 1)) {
+            if (count($housenumber_variants) > 1) {
                 sleep(1);
             }
         }

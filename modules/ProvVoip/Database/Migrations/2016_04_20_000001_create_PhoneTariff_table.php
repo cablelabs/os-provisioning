@@ -32,10 +32,6 @@ class CreatePhoneTariffTable extends BaseMigration
             'description',
         ]);
 
-        // add dummy tariffs to be overwritten by user
-        DB::update('INSERT INTO '.$this->tablename." (created_at, external_identifier, name, type, description, usable) VALUES (NOW(), 'n/a purchase', 'Dummy purchase tariff', 'purchase', 'Placeholder: Remove and add your own purchase tariffs', 1);");
-        DB::update('INSERT INTO '.$this->tablename." (created_at, external_identifier, name, type, description, usable) VALUES (NOW(), 'n/a sale', 'Dummy sale tariff', 'sale', 'Placeholder: Remove and add your own sale tariffs', 1);");
-
         return parent::up();
     }
 

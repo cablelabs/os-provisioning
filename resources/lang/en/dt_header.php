@@ -177,7 +177,7 @@ return [
     'contract.house_number' => 'Housenr',
     'contract.id' => 'Contract',
     'contract.lastname' => 'Surname',
-    'contract.number' => 'Number',
+    'contract.number' => 'Contract Number',
     'contract.street' => 'Street',
     'contract.zip' => 'ZIP',
     // Domain

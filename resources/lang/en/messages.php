@@ -21,6 +21,12 @@ return [
     'BIC'                       => 'BIC',
     'Bank fee'                  => 'Bank fee',
     'Bank Account Holder'       => 'Bank Account Holder',
+    'billing' => [
+        'cdr' => [
+            'missingONKey' => 'Missing private key to access Opennumbers SFTP server. CDR could not be loaded.',
+            'noVoip' => 'Missing voip tariff for contract :contract. Price is calculated with basic tariff and no extra charge is added!',
+        ],
+    ],
     'Birthday'                  => 'Birthday',
     'Business'                  => 'Business',
     'City'                      => 'City',
@@ -312,6 +318,7 @@ return [
     'modem_restart_error'       => 'Could not restart Modem! (offline?)',
     'Contact Persons'           => 'Contact Persons',
     'modem_restart_success_netgw' => 'Restarted modem via NetGw',
+    'modem_restart_warning_dns' => 'Restart failed, since hostname could not be resolved (modem as no active DHCP lease) to determine the responsible NetGw.',
     'Accounting Text (optional)'=> 'Accounting Text (optional)',
     'Cost Center (optional)'    => 'Cost Center (optional)',
     'Credit Amount'             => 'Credit Amount',

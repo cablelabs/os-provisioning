@@ -23,6 +23,12 @@ BaseRoute::group([], function () {
         'middleware' => ['can:update,Modules\ProvBase\Entities\Modem'],
     ]);
 
+    BaseRoute::get('modem/autocomplete/mac', [
+        'as' => 'Modem.unknownMACAddresses',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@unknownMACAddresses',
+        'middleware' => ['can:view,Modules\ProvBase\Entities\Modem'],
+    ]);
+
     BaseRoute::get('Configfile/{id}/refreshgenieacs', [
         'as' => 'Configfile.refreshGenieAcs',
         'uses' => 'Modules\ProvBase\Http\Controllers\ConfigfileController@refreshGenieAcs',

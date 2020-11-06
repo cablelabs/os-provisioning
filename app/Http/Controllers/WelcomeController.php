@@ -26,12 +26,16 @@ class WelcomeController extends Controller
         $admin_port = env('HTTPS_ADMIN_PORT', '8080');
         $ccc_port = env('HTTPS_CCC_PORT', '443');
 
-        if ($server_port == $admin_port) {
-            return redirect(route('adminLogin'));
-        }
-
         if ($server_port == $ccc_port) {
             return redirect(route('customerLogin'));
+        }
+
+        if (! empty(auth()->user()->initial_dashboard)) {
+            return redirect(route(auth()->user()->initial_dashboard));
+        }
+
+        if ($server_port == $admin_port) {
+            return redirect(route('adminLogin'));
         }
 
         abort(404);

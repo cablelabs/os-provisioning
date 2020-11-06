@@ -48,6 +48,7 @@ return [
     //ProductController
     'product' => [
         'bundle'                => 'Ist der Tarif mit dem Voip-Tarif gebündelt, wird die Gesamtvertragslaufzeit eines Kunden nur anhand des Internet-Tarifs bestimmt. Anderenfalls bestimmt der Tarif (Voip oder Internet) darüber, der zuletzt begonnen hat.',
+        'markon'                => 'Extra Aufschlag auf die Einzelverbindungen. Der prozentuale Aufschlag wird aktuell nur zu Opennumbers EVNs addiert.',
         'maturity_min'          => 'Beispiele: 14D (14 Tage), 3M (Drei Monate), 1Y (Ein Jahr)',
         'maturity'              => 'Laufzeitverlängerung nach der Mindestlaufzeit. <br> Die Gesamtlaufzeit wird automatisch um diese Zeit verlängert, wenn der Tarif nicht vor der Kündigungsfrist gekündigt wurde. Default: 1 Monat. Wird keine Laufzeit angegeben, wird das Laufzeitende des Tarifs immer auf den letzten Tag des Monats gesetzt. <br><br> Beispiele: 14D (14 Tage), 3M (Drei Monate), 1Y (Ein Jahr)',
         'Name'                  => 'Für Kredite ist es möglich einen Typ zuzuweisen, indem der Typname dem Namen des Kredits angefügt wird - z.B.: \'Kredit Gerät\'',
@@ -115,6 +116,7 @@ return [
     'rate_coefficient'              => 'MaxRateSustained wird mit diesem Wert multipliziert, um den Nutzer eine höhere (> 1.0) Übertragungsrate als gebucht zu gewähren.',
     'additional_modem_reset'           => 'Zeigt einen zusätzlichen Modem Reset Button an, um das Modem ohne Hilfe des NetGws direkt per SNMP neu zu starten.',
     'openning_new_tab_for_modem' => 'Öffnet die Modem-Edit Seite in einem neuen Fenster (Topographie).',
+    'ppp_session_timeout'           => 'In Sekunden. Bei einem Wert von 0 werden die PPP Sessions nicht getrennt.',
     //ModemController
     'Modem_InternetAccess'          => 'Internetzugriff für CPEs. (MTAs werden nicht beachtet und gehen immer online, wenn alle restlich notwendigen Konfigurationen korrekt vorgenommen wurden) - Achtung: Mit Billingmodul wird diese Checkbox während der nächtlichen Prüfung (nur) bei Tarifänderung überschrieben.',
     'Modem_InstallationAddressChangeDate'   => 'Datum der Änderung der Installationsadresse. Wenn nur lesbar existiert bereits ein offener Auftrag.',
