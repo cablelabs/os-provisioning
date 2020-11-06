@@ -17,7 +17,7 @@ class Modem extends \BaseModel
     use \App\extensions\geocoding\Geocoding;
 
     public const TYPES = ['cm', 'tr069'];
-    protected const CONF_FILE_PATH = '/etc/dhcp-nmsprime/modems-host.conf';
+    public const CONF_FILE_PATH = '/etc/dhcp-nmsprime/modems-host.conf';
     protected const CONF_FILE_PATH_PUB = '/etc/dhcp-nmsprime/modems-clients-public.conf';
     protected const IGNORE_CPE_FILE_PATH = '/etc/dhcp-nmsprime/ignore-cpe.conf';
 
