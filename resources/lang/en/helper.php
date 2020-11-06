@@ -188,4 +188,7 @@ return [
     'noReplyName' => 'The name which should be displayed as the sender, while creating/editing tickets. For example: NMS Prime',
     'ticket_settings' => 'Next: Set noreply name and address in Global Ticket Config Page.',
     'carrier_out'      => 'Carrier code of the future contractual partner. If left blank the phonenumber will be deleted.',
+    'ticketDistance' => 'Multiplier for the auto ticket assignment. The higher the value, the more important the distance factor becomes. (default: 1)',
+    'ticketModemcount' => 'Multiplier for the auto ticket assignment. The higher the value, the more important the affected Modem count becomes. (default: 1)',
+    'ticketOpentickets' => 'Multiplier for the auto ticket assignment. The higher the value, the more important the number of new and open Tickets for technicians becomes. (default: 1)',
 ];

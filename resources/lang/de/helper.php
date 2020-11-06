@@ -188,4 +188,7 @@ return [
     'noReplyName' => 'Der Name, der als Absender angezeigt werden soll, wenn Tickets geändert/erstellt werden. Z.B: NMS Prime',
     'ticket_settings' => 'Nächster Schritt: Den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration unter dem Reiter Tickets angeben.',
     'carrier_out'      => 'Carriercode des zukünftigen Vertragspartners der Rufnummer. Wenn leer, wird die Rufnummer gelöscht.',
+    'ticketDistance' => 'Multiplikator für das automatische Zuweisen von Tickets. Je höher dieser Wert ist, umso wichtiger ist die Distanz eines Technikers zur Störstelle. (Standard: 1)',
+    'ticketModemcount' => 'Multiplikator für das automatische Zuweisen von Tickets. Je höher dieser Wert ist, umso wichtiger ist die Anzahl der betroffenen Modems. (Standard: 1)',
+    'ticketOpentickets' => 'Multiplikator für das automatische Zuweisen von Tickets. Je höher dieser Wert ist, umso wichtiger ist die Anzahl der bereits zugewiesenen und in Bearbeitung befindlichen Tickets. (Standard: 1)',
 ];

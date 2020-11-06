@@ -558,7 +558,7 @@ new Vue({
                 roleAbilities: this.roleAbilities,
                 roleForbiddenAbilities: this.roleForbiddenAbilities,
                 changed: this.changed,
-                roleId: '{{  $view_var->id }}'
+                roleId: '{{ $view_var->id }}'
             }
         })
         .then(function (response) {
