@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'commandCenter' => 'Kommandozentrale',
     'Diagrams' => 'Diagramme',
     'false' => 'nein',
     'true' => 'ja',
