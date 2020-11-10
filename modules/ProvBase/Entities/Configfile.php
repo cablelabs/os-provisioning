@@ -495,19 +495,16 @@ class Configfile extends \BaseModel
     }
 
     /**
-     * Get monitoring config based on the json string found in the configfile
+     * Get monitoring config based on the json string found in the monitoring
+     * column of a configfile
      *
      * @author Ole Ernst
      */
-    public function getMonitoringConfig()
+    public function getMonitoringConfig(): array
     {
-        if (! preg_match('/#monitoring:({.*})/', $this->text, $matches)) {
-            return false;
-        }
-
-        $conf = json_decode($matches[1], true);
-        if (! $conf) {
-            return false;
+        $conf = json_decode($this->monitoring, true);
+        if ($conf === null) {
+            return [];
         }
 
         return $conf;
@@ -576,7 +573,7 @@ class ConfigfileObserver
         }
 
         $prov = [];
-        $conf = $configfile->getMonitoringConfig() ?: [];
+        $conf = $configfile->getMonitoringConfig();
 
         $prov = array_map(function ($value) {
             if (\Str::startsWith($value, ['_', 'Device', 'InternetGatewayDevice'])) {
