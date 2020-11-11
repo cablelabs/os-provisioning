@@ -1,10 +1,6 @@
 <?php
 
 return [
-    'commandCenter' => 'Kommandozentrale',
-    'Diagrams' => 'Diagramme',
-    'false' => 'nein',
-    'true' => 'ja',
     //SEARCH
     'Search_EnterKeyword'       => 'Suchbegriff eingeben',
     'Search_MatchesFor'         => 'Ergebnisse für',
@@ -468,12 +464,15 @@ return [
     'error_specify_id'          => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
     'error_ticket_settings'     => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
 
+    'commandCenter' => 'Kommandozentrale',
     'company' => 'Firma',
     'Credit' => 'Gutschrift',
     'critical' => 'kritisch',
     'Debit' => 'Lastschrift',
+    'Diagrams' => 'Diagramme',
     'Discard' => 'Missachte',
     'Download' => 'Herunterladen',
+    'false' => 'nein',
     'Global' => 'Global',
     'Global notification' => 'Globale Benachrichtigung',
     'info' => 'Info',
@@ -520,6 +519,7 @@ return [
         'addMpr' => 'Erstelle Modembereich',
         'showCustomers' => 'Zeige Kunden',
     ],
+    'true' => 'ja',
     'Type' => 'Typ',
     'warning' => 'Warnung',
     'workforce' => [
