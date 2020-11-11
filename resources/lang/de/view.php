@@ -522,4 +522,14 @@ return [
     ],
     'Type' => 'Typ',
     'warning' => 'Warnung',
+    'workforce' => [
+        'available' => 'Frei',
+        'busy' => 'Beschäftigt',
+        'inProcess' => 'In Bearbeitung',
+        'open' => 'Offen / Akzeptiert',
+        'openUnassigned' => 'Offen - nicht zugewiesen',
+        'solved' => 'Heute gelöst',
+        'stacked' => 'haben weitere Tickets',
+        'summary' => 'Übersicht',
+    ],
 ];

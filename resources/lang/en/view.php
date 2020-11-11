@@ -522,4 +522,13 @@ return [
     ],
     'Type' => 'Type',
     'warning' => 'warning',
+    'workforce' => [
+        'available' => 'Available',
+        'busy' => 'Busy',
+        'inProcess' => 'In process',
+        'open' => 'Open',
+        'solved' => 'Solved',
+        'stacked' => 'Have more tickets',
+        'summary' => 'Overview',
+    ],
 ];
