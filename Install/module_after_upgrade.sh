@@ -25,6 +25,9 @@ if [ $(rpm -qa nmsprime-* --queryformat '%{VERSION}-%{RELEASE}\n' | sort | uniq 
   # on HA machines: clean up
   [ -e /var/www/nmsprime/modules/ProvHA/Console/CleanUpSlaveCommand.php ] && /opt/rh/rh-php73/root/usr/bin/php artisan provha:clean_up_slave
 
+  # on HA machines: process migrations
+  [ -e /var/www/nmsprime/modules/ProvHA/Console/MigrateSlaveCommand.php ] && /opt/rh/rh-php73/root/usr/bin/php artisan provha:migrate_slave
+
   # finally: rebuild dhcpd/named config
   /opt/rh/rh-php73/root/usr/bin/php artisan nms:dhcp
 fi

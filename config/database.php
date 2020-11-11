@@ -59,6 +59,7 @@ return [
             'strict' => false,
             'engine' => null,
         ],
+
         // A mysql root connection
         // @NOTE: This could be useful when running special cmds on SQL table
         //       where advanced permissions are required.
