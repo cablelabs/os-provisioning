@@ -57,6 +57,13 @@ class BaseController extends Controller
     protected $index_left_md_size = 12;
     protected $edit_right_md_size = null;
 
+    protected $defaultMdSizes = [
+        'leftLeftLg' => 3,
+        'leftLeftXl' => 2,
+        'rightRightLg' => 3,
+        'rightRightXl' => 2,
+    ];
+
     protected $index_tree_view = false;
 
     /**
@@ -462,6 +469,8 @@ class BaseController extends Controller
         if (! isset($a['index_left_md_size'])) {
             $a['index_left_md_size'] = $this->index_left_md_size;
         }
+
+        $a['mdSizes'] = $a['mdSizes'] ?? $this->defaultMdSizes;
 
         if (! is_null($this->edit_right_md_size) && ! isset($a['edit_right_md_size'])) {
             $a['edit_right_md_size'] = $this->edit_right_md_size;

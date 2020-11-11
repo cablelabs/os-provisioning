@@ -1,15 +1,29 @@
 @extends ('Layout.default')
 
+@php
+    // actually this should be named contentMid now as there are 4 sections from left to right
+    // where you can place content (leftLeft, left, right, rightRight)
+    $leftMdSizeXl = $leftMdSizeLg = 12;
+    $flex = '';
+
+    if (! empty($__env->yieldContent('contentLeftLeft'))) {
+        $leftMdSizeXl -= $mdSizes['leftLeftXl'];
+        $leftMdSizeLg -= $mdSizes['leftLeftLg'];
+        $flex = 'd-flex';
+    }
+
+    if (! empty($__env->yieldContent('contentRightRight'))) {
+        $leftMdSizeXl -= $mdSizes['rightRightXl'];
+        $leftMdSizeLg -= $mdSizes['rightRightLg'];
+    }
+@endphp
+
 @section ('content')
-    <div class="row flex-wrap-reverse" style="flex:1;">
-        @if (isset($withHistory))
-            <div class="d-flex col-lg-3 col-xl-2">
-                <div class="card card-inverse p-l-15 p-r-15 p-t-5 p-b-5 m-t-10" style="flex:1 auto;">
-                    @yield ('historyTable')
-                </div>
-            </div>
-        @endif
-        <div class="{{ isset($withHistory) ? 'd-flex' : '' }} col-12 col-lg-{{ isset($withHistory) ? 9 : 12 }} col-xl-{{ isset($withHistory) ? 10 : 12 }} m-t-10">
+    <div class="row flex-wrap-reverse">
+
+        @yield('contentLeftLeft')
+
+        <div class="{{ $flex }} col-12 col-lg-{{ $leftMdSizeLg }} col-xl-{{ $leftMdSizeXl }} m-t-10">
             <div class="card card-inverse p-b-5 p-t-10" style="display:flex;flex: 1;">
                 @if(isset($tabs))
                 <div class="card-header m-b-15 d-print-none" style="display:flex;">
@@ -59,14 +73,11 @@
                 </div>
             </div>
         </div>
+
+        @yield('contentRightRight')
+
     </div>
-    @if (isset($withHistory))
-        <div class="row">
-            <div class="col-12 p-t-5">
-                <div class="card card-inverse p-l-15 p-r-15 p-t-5 p-b-5 ">
-                    @yield ('historySlider')
-                </div>
-            </div>
-        </div>
-    @endif
+
+    @yield('contentBottom')
+
 @stop
