@@ -38,7 +38,7 @@ class UserController extends BaseController
         $dashboard_options = ['Dashboard.index' => 'Dashboard'];
         foreach ($view_header_links as $module_name => $typearray) {
             if (isset($typearray['link'])) {
-                $dashboard_options[$typearray['link']] = $typearray['translated_name'];
+                $dashboard_options[$typearray['link']] = $typearray['translated_name'] ?? $module_name;
             }
             if (isset($typearray['submenu'])) {
                 foreach ($typearray['submenu'] as $type => $valuearray) {
