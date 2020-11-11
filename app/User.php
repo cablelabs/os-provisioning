@@ -109,6 +109,11 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $this->tickets()->where('state', '!=', 'closed');
     }
 
+    public function inWorkTickets()
+    {
+        return $this->tickets()->where('state', 'in work');
+    }
+
     /**
      * Validation
      *
