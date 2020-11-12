@@ -30,7 +30,7 @@ class InstallKea extends BaseMigration
         $dbUser = $conf['username'];
         $dbPassword = $conf['password'];
 
-        system("mysql -u '$rootDbUser' --password='$rootDbPassword' --exec=\"CREATE DATABASE kea; GRANT ALL ON kea.* TO 'nmsprime'@'localhost' IDENTIFIED BY '$dbPassword';\"");
+        system("mysql -u '$rootDbUser' --password='$rootDbPassword' --exec=\"CREATE DATABASE kea; GRANT ALL ON kea.* TO 'nmsprime'@'localhost'\"");
         system("/usr/sbin/kea-admin db-init mysql -u '$dbUser' -p '$dbPassword' -n kea");
 
         $find = [

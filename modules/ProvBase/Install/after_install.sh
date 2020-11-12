@@ -1,7 +1,6 @@
 dir='/var/www/nmsprime'
 env='/etc/nmsprime/env'
 source "$env/root.env"
-source "$env/global.env"
 
 # unfortunately dhcpd does not support hmacs other than hmac-md5
 # see: https://bugs.centos.org/view.php?id=12107
