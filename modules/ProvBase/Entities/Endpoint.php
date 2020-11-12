@@ -15,9 +15,12 @@ class Endpoint extends \BaseModel
         $modem = $this->exists ? $this->modem : Modem::with('configfile')->find(Request::get('modem_id'));
         $macRequiredRule = $modem->configfile->device == 'tr069' ? '' : '|required';
 
+        // hostname/mac must be unique only inside all ipv4 or ipv6 endpoints - on creation it must be compared to version=NULL to work
+        $versionFilter = ',version,'.($this->version ?: 'NULL');
+
         return [
-            'mac' => 'mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL'.$macRequiredRule,
-            'hostname' => 'required|regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/|unique:endpoint,hostname,'.$id.',id,deleted_at,NULL',
+            'mac' => 'mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL'.$versionFilter.$macRequiredRule,
+            'hostname' => 'required|regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/|unique:endpoint,hostname,'.$id.',id,deleted_at,NULL'.$versionFilter,
             'ip' => 'nullable|required_if:fixed_ip,1|ip|unique:endpoint,ip,'.$id.',id,deleted_at,NULL',
         ];
     }
@@ -94,7 +97,104 @@ class Endpoint extends \BaseModel
         return new \Illuminate\Database\Eloquent\Relations\BelongsTo($query, new NetGw, null, 'deleted_at', null);
     }
 
+    /**
+     * BOOT:
+     * - init modem observer
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        self::observe(new EndpointObserver);
+        self::observe(new \App\SystemdObserver);
+    }
+
+    public function makeDhcp()
+    {
+        if ($this->version == '4') {
+            self::makeDhcp4All();
+        }
+
+        if ($this->version == '6') {
+            self::makeDhcp6All();
+        }
+    }
+
+    /**
+     * Make DHCP config for EPs
+     */
+    public static function makeDhcp4All()
+    {
+        $dir = '/etc/dhcp-nmsprime/';
+        $file_ep = $dir.'endpoints-host.conf';
+
+        $data = '';
+
+        foreach (self::where('version', '4')->whereNotNull('mac')->get() as $ep) {
+            $data .= "host $ep->hostname { hardware ethernet $ep->mac; ";
+            if ($ep->fixed_ip && $ep->ip) {
+                $data .= "fixed-address $ep->ip; ";
+            }
+
+            $data .= "}\n";
+        }
+
+        $ret = file_put_contents($file_ep, $data, LOCK_EX);
+        if ($ret === false) {
+            exit('Error writing to file');
+        }
+
+        // chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
+        system('/bin/chown -R apache /etc/dhcp-nmsprime/');
+
+        return $ret > 0;
+    }
+
+    public static function makeDhcp6All()
+    {
+        $file = '/etc/kea/hosts6.conf';
+
+        $hosts = self::where('version', '6')->whereNotNull('mac')->whereNotNull('ip')->get();
+
+        $reservations = [];
+        foreach ($hosts as $host) {
+            $reservation = "\n{ \"hw-address\": \"".$host->mac.'",';
+            $reservation .= ' "ip-addresses": [ "'.$host->ip.'" ],';
+            $reservation .= ' "prefixes": [ "'.$host->prefix.'" ],';
+            $reservation .= ' "hostname": "'.$host->hostname.'" }';
+
+            $reservations[] = $reservation;
+        }
+
+        $data = '"reservations": ['.implode(',', $reservations)."\n]";
+
+        file_put_contents($file, $data, LOCK_EX);
+    }
+
     public function nsupdate($del = false)
+    {
+        if ($this->version == '4') {
+            $cmd = $this->getNsupdate4Cmd($del);
+        } else {
+            $cmd = $this->getNsupdate6Cmd($del);
+        }
+        if (! $cmd) {
+            return;
+        }
+
+        $pw = env('DNS_PASSWORD');
+
+        $handle = popen("/usr/bin/nsupdate -v -l -y dhcpupdate:$pw", 'w');
+        fwrite($handle, $cmd);
+        pclose($handle);
+    }
+
+    /**
+     * Generate nsupdate command for IPv4
+     *
+     * @return string
+     */
+    private function getNsupdate4Cmd($del)
     {
         $cmd = '';
         $zone = ProvBase::first()->domain_name;
@@ -102,7 +202,7 @@ class Endpoint extends \BaseModel
         if ($del) {
             if ($this->getOriginal('fixed_ip') && $this->getOriginal('ip')) {
                 $rev = implode('.', array_reverse(explode('.', $this->getOriginal('ip'))));
-                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone.\nsend\n";
+                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone. IN A\nsend\n";
                 $cmd .= "update delete $rev.in-addr.arpa.\nsend\n";
             } else {
                 $mangle = exec("echo '{$this->getOriginal('mac')}' | tr -cd '[:xdigit:]' | xxd -r -p | openssl dgst -sha256 -mac hmac -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())'");
@@ -126,51 +226,56 @@ class Endpoint extends \BaseModel
             }
         }
 
-        $pw = env('DNS_PASSWORD');
-        $handle = popen("/usr/bin/nsupdate -v -l -y dhcpupdate:$pw", 'w');
-        fwrite($handle, $cmd);
-        pclose($handle);
+        return $cmd;
     }
 
     /**
-     * BOOT:
-     * - init modem observer
+     * Generate nsupdate command for IPv6
+     *
+     * @return string
      */
-    public static function boot()
+    private function getNsupdate6Cmd($del)
     {
-        parent::boot();
+        $cmd = '';
+        $zone = ProvBase::first()->domain_name;
 
-        self::observe(new EndpointObserver);
-        self::observe(new \App\SystemdObserver);
-    }
+        // We currently don't add a CNAME record here
 
-    /**
-     * Make DHCP config files for EPs
-     */
-    public static function make_dhcp()
-    {
-        $dir = '/etc/dhcp-nmsprime/';
-        $file_ep = $dir.'endpoints-host.conf';
-
-        $data = '';
-
-        foreach (self::whereNotNull('mac')->get() as $ep) {
-            $data .= "host $ep->hostname { hardware ethernet $ep->mac; ";
-            if ($ep->fixed_ip && $ep->ip) {
-                $data .= "fixed-address $ep->ip; ";
+        if ($del) {
+            if ($this->getOriginal('fixed_ip') && $this->getOriginal('ip')) {
+                $arpa = self::getV6Arpa($this->getOriginal('ip'));
+                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone. IN AAAA\nsend\n";
+                $cmd .= "update delete $arpa.\nsend\n";
             }
-            $data .= "}\n";
+        } else {
+            if ($this->fixed_ip && $this->ip) {
+                // endpoints with a fixed-address will get an A and PTR record (ip <-> hostname)
+                $arpa = self::getV6Arpa($this->ip);
+                $cmd .= "update add $this->hostname.cpe.$zone. 3600 AAAA $this->ip\nsend\n";
+                $cmd .= "update add $arpa. 3600 PTR $this->hostname.cpe.$zone.\nsend\n";
+                if ($this->add_reverse) {
+                    $cmd .= "update add $arpa. 3600 PTR $this->add_reverse.\nsend\n";
+                }
+            }
         }
 
-        $ret = file_put_contents($file_ep, $data, LOCK_EX);
-        if ($ret === false) {
-            exit('Error writing to file');
-        }
+        return $cmd;
+    }
 
-        // chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
-        system('/bin/chown -R apache /etc/dhcp-nmsprime/');
+    /**
+     * Generate reverse notation of IPv6 for DNS server
+     *
+     * See https://stackoverflow.com/questions/6619682/convert-ipv6-to-nibble-format-for-ptr-records
+     *
+     * @return string
+     */
+    public static function getV6Arpa($ip)
+    {
+        $addr = inet_pton($ip);
+        $unpack = unpack('H*hex', $addr);
+        $hex = $unpack['hex'];
 
-        return $ret > 0;
+        return implode('.', array_reverse(str_split($hex))).'.ip6.arpa';
     }
 
     /**
@@ -219,9 +324,9 @@ class EndpointObserver
     {
         self::reserveAddress($endpoint);
 
-        $endpoint->make_dhcp();
+        $endpoint->makeDhcp();
         if ($endpoint->netGw) {
-            $endpoint->netGw->make_dhcp_conf();
+            $endpoint->netGw->makeDhcp4Conf();
         }
         $endpoint->nsupdate();
     }
@@ -238,9 +343,9 @@ class EndpointObserver
     {
         self::reserveAddress($endpoint);
 
-        $endpoint->make_dhcp();
+        $endpoint->makeDhcp();
         if ($endpoint->netGw) {
-            $endpoint->netGw->make_dhcp_conf();
+            $endpoint->netGw->makeDhcp4Conf();
         }
         $endpoint->nsupdate();
     }
@@ -249,9 +354,9 @@ class EndpointObserver
     {
         self::reserveAddress($endpoint);
 
-        $endpoint->make_dhcp();
+        $endpoint->makeDhcp();
         if ($endpoint->netGw) {
-            $endpoint->netGw->make_dhcp_conf();
+            $endpoint->netGw->makeDhcp4Conf();
         }
         $endpoint->nsupdate(true);
     }

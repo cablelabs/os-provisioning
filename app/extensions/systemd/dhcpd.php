@@ -26,7 +26,7 @@ if ($ret == 0) {
 
     // Log
     if (file_exists($logfile)) {
-        file_put_contents($logfile, '['.date('Y-m-d H:i:s')."] local.INFO: Restart DHCPD\n", FILE_APPEND);
+        file_put_contents($logfile, '['.date('Y-m-d H:i:s')."] local.INFO: Restart dhcpd.service\n", FILE_APPEND);
     } else {
         syslog(LOG_ERR, $logfile.' does not exist ['.__FILE__.']');
     }

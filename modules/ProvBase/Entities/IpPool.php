@@ -12,16 +12,21 @@ class IpPool extends \BaseModel
     // Add your validation rules here
     public function rules()
     {
+        // Check out ExtendedValidator.php for own validations! (ip_larger, netmask)
+        // Note: ip rule is added in IpPoolController
+        // TODO: Take care of IpPoolController::prepare_rules() when adding new rules!
         return [
-            'net' => 'required|ip',
-            'netmask' => 'required|ip|netmask',     // netmask must not be in first place!
-            'ip_pool_start' => 'required|ip|ip_in_range:net,netmask|ip_larger:net',   // own validation - see in classes: ExtendedValidator and IpPoolController
-            'ip_pool_end' => 'required|ip|ip_in_range:net,netmask|ip_larger:ip_pool_start',
-            'router_ip' => 'required|ip|ip_in_range:net,netmask',
-            'broadcast_ip' => 'nullable|ip|ip_in_range:net,netmask|ip_larger:ip_pool_end',
-            'dns1_ip' => 'nullable|ip',
-            'dns2_ip' => 'nullable|ip',
-            'dns3_ip' => 'nullable|ip',
+            'net' => 'required',
+            'netmask' => 'required|netmask',     // netmask must not be in first place!
+            'ip_pool_start' => 'required|ip_in_range:net,netmask|ip_larger:net',
+            'ip_pool_end' => 'required|ip_in_range:net,netmask|ip_larger:ip_pool_start',
+            'router_ip' => 'required|ip_in_range:net,netmask',
+            'broadcast_ip' => 'nullable|ip_in_range:net,netmask|ip_larger:ip_pool_end',
+            'dns1_ip' => 'nullable',
+            'dns2_ip' => 'nullable',
+            'dns3_ip' => 'nullable',
+            'prefix_len' => 'netmask',
+            'delegated_len' => 'netmask',
         ];
     }
 
@@ -44,8 +49,8 @@ class IpPool extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         return ['table' => $this->table,
-            'index_header' => [$this->table.'.id', 'netgw.hostname', $this->table.'.type', $this->table.'.net', $this->table.'.netmask', $this->table.'.router_ip', $this->table.'.description'],
-            'header' =>  $this->type.': '.$this->net.' / '.$this->netmask,
+            'index_header' => [$this->table.'.id', 'netgw.hostname', $this->table.'.type', 'version', $this->table.'.net', $this->table.'.netmask', $this->table.'.router_ip', $this->table.'.description'],
+            'header' =>  $this->type.': '.$this->net.' '.$this->netmask,
             'bsclass' => $bsclass,
             'eager_loading' => ['netgw'], ];
     }
@@ -75,21 +80,39 @@ class IpPool extends \BaseModel
         return DB::table('netgw')->select('id', 'hostname')->get();
     }
 
-    /*
-     * Return the corresponding network size to the netmask,
-     * e.g. 255.255.255.240 will return 28 as integer – means /28 netmask
+    /**
+     * Convert IpPool netmask to CIDR notation
+     * e.g. 255.255.255.240 will return /28
+     *
+     * @return string
      */
-    public function size()
+    public function maskToCidr()
     {
-        // this is crazy shit from http://php.net/manual/de/function.ip2long.php
+        if (self::isCidrNotation($this->netmask)) {
+            return $this->netmask;
+        }
+
         $long = ip2long($this->netmask);
         $base = ip2long('255.255.255.255');
 
-        return 32 - log(($long ^ $base) + 1, 2);
+        return '/'.(string) (32 - log(($long ^ $base) + 1, 2));
     }
 
-    /*
-     * Returns true if provisioning route to $this pool exists, otherwise false
+    /**
+     * Check if netmask is written in Cidr notation (e.g. /16)
+     *
+     * @param string
+     * @return bool
+     */
+    public static function isCidrNotation($netmask)
+    {
+        return preg_match('/^\/\d{1,3}$/', $netmask);
+    }
+
+    /**
+     * Check if route to this pool exists in provisioning server routing table
+     *
+     * @return bool
      */
     public function ip_route_prov_exists()
     {
@@ -99,7 +122,15 @@ class IpPool extends \BaseModel
             return true;
         }
 
-        return strlen(exec('/usr/sbin/ip route show '.$this->net.'/'.$this->size().' via '.$this->netgw->ip)) == 0 ? false : true;
+        $optionIpv6 = '';
+        $ip = $this->netgw->ip;
+
+        if ($this->version == '6') {
+            $optionIpv6 = '-6';
+            $ip = $this->netgw->ipv6;
+        }
+
+        return strlen(exec("/usr/sbin/ip $optionIpv6 route show ".$this->net.$this->maskToCidr().' via '.$ip)) != 0;
     }
 
     /*
@@ -109,7 +140,12 @@ class IpPool extends \BaseModel
     public function ip_route_online()
     {
         // Ping: Only check if device is online
-        exec('sudo ping -c1 -i0 -w1 '.$this->router_ip, $ping, $ret);
+        $cmd = 'ping';
+        if ($this->version == '6') {
+            $cmd .= ' -6';
+        }
+
+        exec("sudo $cmd -c1 -i0 -w1 ".$this->router_ip, $ping, $ret);
 
         return $ret ? false : true;
     }
@@ -140,11 +176,14 @@ class IpPool extends \BaseModel
      */
     public function is_secondary()
     {
-        $cm_pools = $this->netgw->ippools->filter(function ($item) {
-            return $item->type == 'CM';
-        });
+        if ($this->version == '6') {
+            // d($this, $this->netgw->ippools->where('version', '6')->first());
+            return $this->id == $this->netgw->ippools->where('version', '6')->first()->id ? '' : 'secondary';
+        }
 
-        if ($cm_pools->isEmpty() || $this->id != $cm_pools->first()->id) {
+        $cmPools = $this->netgw->ippools->where('type', 'CM');
+
+        if ($cmPools->isEmpty() || $this->id != $cmPools->first()->id) {
             return 'secondary';
         }
 
@@ -241,7 +280,7 @@ class IpPoolObserver
         }
 
         // fetch netgw object that is related to the created ippool and make dhcp conf
-        $pool->netgw->make_dhcp_conf();
+        $pool->netgw->makeDhcpConf();
     }
 
     public function updated($pool)
@@ -252,11 +291,11 @@ class IpPoolObserver
             return;
         }
 
-        $pool->netgw->make_dhcp_conf();
+        $pool->netgw->makeDhcpConf();
 
         // make dhcp conf of old netgw if relation got changed
         if ($pool->isDirty('netgw_id')) {
-            NetGw::find($pool->getOriginal('netgw_id'))->make_dhcp_conf();
+            NetGw::find($pool->getOriginal('netgw_id'))->makeDhcpConf();
         }
     }
 
@@ -268,7 +307,7 @@ class IpPoolObserver
             return;
         }
 
-        $pool->netgw->make_dhcp_conf();
+        $pool->netgw->makeDhcpConf();
     }
 
     /**

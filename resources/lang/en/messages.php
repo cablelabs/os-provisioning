@@ -560,6 +560,7 @@ return [
     'No'                        => 'No',
     'Has telephony'             => 'Has telephony',
     'preeq_error'               => 'Preequalization data not found',
+    'prefix'                    => 'Prefix',
     'OID for PreConfiguration Setting' => 'OID for PreConfiguration Setting',
     'PreConfiguration Value'    => 'PreConfiguration Value',
     'PreConfiguration Time Offset' => 'PreConfiguration Time Offset',

@@ -47,11 +47,15 @@ class DhcpCommand extends Command
         $prov->make_dhcp_glob_conf();
         $prov->make_dhcp_default_network_conf();
 
+        echo 'Create '.Modem::CONF_FILE_PATH."...\n";
         Modem::make_dhcp_cm_all();
         Modem::create_ignore_cpe_dhcp_file();
-        Endpoint::make_dhcp();
+        echo "Create host/endpoint DHCP config file(s)...\n";
+        Endpoint::makeDhcp4All();
+        Endpoint::makeDhcp6All();
 
         if (\Module::collections()->has('ProvVoip') && \Schema::hasTable('mta')) {
+            echo 'Create '.Mta::CONF_FILE_PATH."...\n";
             Mta::make_dhcp_mta_all();
         }
 
@@ -59,7 +63,10 @@ class DhcpCommand extends Command
         // this is needed, due to cmts to netgw renaming
         $table = (new \ReflectionClass(NetGw::class))->getDefaultProperties()['table'];
         if (\Schema::hasTable($table)) {
-            NetGw::make_dhcp_conf_all();
+            echo "Create NetGw DHCP config file(s)...\n";
+            foreach (NetGw::where('type', 'cmts')->get() as $cmts) {
+                $cmts->makeDhcpConf();
+            }
         }
 
         // Restart dhcp server
@@ -69,5 +76,7 @@ class DhcpCommand extends Command
             chown($dir, 'apache');
         }
         touch($dir.'dhcpd');
+
+        system('/usr/bin/chown -R apache /etc/dhcp-nmsprime/ /etc/kea/');
     }
 }

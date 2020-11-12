@@ -24,6 +24,7 @@ return [
     'sum' => 'Sum',
     'type' => 'Type',
     'zip' => 'ZIP',
+    'version' => 'Version',
     'apartment' => [
         'number' => 'Number',
         'connected' => 'Connected',

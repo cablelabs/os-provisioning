@@ -110,7 +110,9 @@ return [
     ],
 
     'docsis'               => ':attribute',
-    'ip'                   => 'This is not a valid IP address of the form: 192.168.0.255',
+    'ip'                   => 'This is not a valid IP address',
+    'ipv4'                 => 'This must be a valid IPv4 address of the form: 192.168.0.255. (corresponding to specified net)',
+    'ipv6'                 => 'This must be a valid IPv6 address. (corresponding to specified net)',
     'ip_in_range'          => 'The IP address is not inside the previous specified range',
     'ip_larger'            => 'The IP address must have a higher number due to address specification in earlier fields',
     'mac'                  => 'The :attribute must be a valid MAC address in form: aa:bb:cc:dd:ee:ff',

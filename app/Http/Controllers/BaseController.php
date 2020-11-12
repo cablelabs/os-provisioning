@@ -726,6 +726,7 @@ class BaseController extends Controller
         $controller = static::get_controller_obj();
 
         // Prepare and Validate Input
+        // Note: prepare_input must be before prepare_rules as functionality in some controllers depend on it (e.g. IpPoolController@prepare_rules)
         $data = $controller->prepare_input(Request::all());
         $rules = $controller->prepare_rules($obj->rules(), $data);
         $validator = Validator::make($data, $rules);

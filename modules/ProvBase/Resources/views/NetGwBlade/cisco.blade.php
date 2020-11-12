@@ -64,6 +64,7 @@ interface Bundle1
  cable arp filter request-send 3 2
  cable arp filter reply-accept 3 2
  cable helper-address {!!$cb->prov_ip!!}
+ @include('provbase::NetGwBlade.ipv6')
 !
 ip classless
 ip route 0.0.0.0 0.0.0.0 {!!$cb->router_ip!!}

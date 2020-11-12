@@ -560,6 +560,7 @@ return [
     'No'                        => 'Nein',
     'Has telephony'             => 'Hat Telefonie',
     'preeq_error'               => 'Vorverzerrungskoeffizient nicht gefunden',
+    'prefix'                    => 'Präfix',
     'OID for PreConfiguration Setting' => 'OID für Vorkonfiguration',
     'PreConfiguration Value'    => 'Wert für Vorkonfiguration',
     'PreConfiguration Time Offset' => 'Zeitverzögerung zwischen Vorkonfig & SNMP-Abfrage',

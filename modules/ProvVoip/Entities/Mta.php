@@ -10,7 +10,7 @@ use Modules\ProvBase\Entities\Configfile;
 
 class Mta extends \BaseModel
 {
-    protected const CONF_FILE_PATH = '/etc/dhcp-nmsprime/mta.conf';
+    public const CONF_FILE_PATH = '/etc/dhcp-nmsprime/mta.conf';
 
     // The associated SQL table for this Model
     public $table = 'mta';

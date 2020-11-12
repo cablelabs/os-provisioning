@@ -11,6 +11,8 @@ class NetGw extends \BaseModel
     // don't put a trailing slash here!
     public const NETGW_INCLUDE_PATH = '/etc/dhcp-nmsprime/cmts_gws';
     protected const US_SNR_PATH = 'data/provmon/us_snr';
+    protected const DHCP6_GATEWAYS_FILE = '/etc/kea/gateways6.conf';
+    protected const DHCP6_GATEWAYS_DIR = '/etc/kea/gateways6';
 
     // The associated SQL table for this Model
     public $table = 'netgw';
@@ -44,13 +46,6 @@ class NetGw extends \BaseModel
     public static function view_icon()
     {
         return '<i class="fa fa-server"></i>';
-    }
-
-    public static function make_dhcp_conf_all()
-    {
-        foreach (self::where('type', 'cmts')->get() as $cmts) {
-            $cmts->make_dhcp_conf();
-        }
     }
 
     // AJAX Index list function
@@ -272,6 +267,7 @@ class NetGw extends \BaseModel
         $this->nat_ip = env('NETGW_NAT_IP', '172.20.0.2'); // second server ip is mostlikely NAT
         $this->mgmt_vlan = env('MGMT_VLAN', '100');
         $this->customer_vlan = env('CUSTOMER_VLAN', '101');
+        $this->netmask6 = env('NETGW_IP6_NETMASK', '/116');
 
         $this->snmp_ro = $this->community_ro ?: $conf->ro_community;
         $this->snmp_rw = $this->community_rw ?: $conf->rw_community;
@@ -505,9 +501,15 @@ class NetGw extends \BaseModel
         return $mods;
     }
 
+    public function makeDhcpConf()
+    {
+        $this->makeDhcp4Conf();
+        $this->makeDhcp6Conf();
+    }
+
     /**
-     * auto generates the dhcp conf file for a specified cmts and
-     * adds the appropriate include statement in dhcpd.conf
+     * auto generates the dhcp conf file for a specified netgw and
+     * adds the appropriate include statement in cmts_gws.conf
      *
      * (description is automatically taken by phpdoc)
      *
@@ -515,18 +517,14 @@ class NetGw extends \BaseModel
      *
      * @author Nino Ryschawy
      */
-    public function make_dhcp_conf()
+    public function makeDhcp4Conf()
     {
         $file = self::NETGW_INCLUDE_PATH."/$this->id.conf";
 
-        if ($this->id == 0) {
-            return -1;
-        }
-
-        $ippools = $this->ippools;
+        $ippools = $this->ippools->where('version', '4');
 
         // if a cmts doesn't have an ippool the file has to be empty
-        if (! $ippools->has('0')) {
+        if ($ippools->isEmpty()) {
             File::put($file, '');
             goto _exit;
         }
@@ -534,10 +532,6 @@ class NetGw extends \BaseModel
         File::put($file, 'shared-network "'.$this->hostname.'"'."\n".'{'."\n");
 
         foreach ($ippools as $pool) {
-            if ($pool->id == 0) {
-                continue;
-            }
-
             $subnet = $pool->net;
             $netmask = $pool->netmask;
             $broadcast_addr = $pool->broadcast_ip;
@@ -619,9 +613,6 @@ class NetGw extends \BaseModel
 
         _exit:
         self::make_includes();
-
-        // chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
-        system('/bin/chown -R apache /etc/dhcp-nmsprime/');
     }
 
     /**
@@ -638,6 +629,95 @@ class NetGw extends \BaseModel
             $incs .= "include \"$path/$cmts->id.conf\";\n";
         }
         file_put_contents($path.'.conf', $incs);
+    }
+
+    /**
+     * Generates the Kea DHCP configuration file for a NetGw
+     *
+     * @author Nino Ryschawy
+     */
+    public function makeDhcp6Conf()
+    {
+        \Log::debug('Make DHCP6 conf');
+
+        $file = self::DHCP6_GATEWAYS_DIR."/$this->id.conf";
+
+        if ($this->trashed()) {
+            File::delete($file);
+            self::makeIncludesV6();
+
+            return;
+        }
+
+        $data = "{\n\t".'"name": "'.$this->id.'"';
+
+        $pools = $this->ippools->where('version', '6');
+        $subnets = [];
+
+        foreach ($pools as $pool) {
+            $subnet = "\t\t{\n\t\t\t".'"subnet": "'.$pool->net.$pool->netmask.'",';
+            $subnet .= "\n\t\t\t".'"pools": [ { "pool": "'.$pool->ip_pool_start.'-'.$pool->ip_pool_end.'" } ]';
+
+            // Note: Source address of relay forward message (solicit, request) must either be inside the range of the subnet
+            // or specified as relay (global or in a subnet) to be able to select an address from an appropriate subnet
+            if ($pool->router_ip) {
+                $subnet .= ",\n\t\t\t".'"relay": { "ip-addresses": [ "'.$pool->router_ip.'" ] }';
+            }
+
+            $subnet .= ",\n\t\t\t".'"pd-pools" : [{'."\n\t\t\t\t".'"prefix": "'.$pool->prefix.'"';
+            $subnet .= ",\n\t\t\t\t".'"prefix-len": '.str_replace('/', '', $pool->prefix_len);
+            $subnet .= ",\n\t\t\t\t".'"delegated-len": '.str_replace('/', '', $pool->delegated_len)."\n\t\t\t}]";
+
+            // Add DNS servers
+            $dnsServers = [];
+            for ($i = 1; $i <= 3; $i++) {
+                if ($pool->{'dns'.$i.'_ip'}) {
+                    $dnsServers[] = $pool->{'dns'.$i.'_ip'};
+                }
+            }
+
+            if ($dnsServers) {
+                $subnet .= ",\n\t\t\t\"option-data\": [{";
+                $subnet .= "\n\t\t\t\t\"name\": \"dns-servers\"";
+                $subnet .= ",\n\t\t\t\t".'"data": "'.implode(', ', $dnsServers)."\"\n\t\t\t";
+                $subnet .= "\n\t\t\t}]";
+            }
+
+            if ($pool->optional) {
+                $data .= ",\n\t\t\t".$pool->optional;
+            }
+
+            // Make host reservations known to all subnets
+            $subnet .= ",\n\t\t\t".'<?include "/etc/kea/hosts6.conf"?>';
+
+            $subnets[] = $subnet."\n\t\t}";
+        }
+
+        if ($subnets) {
+            $data .= ",\n\t\"subnet6\": [\n".implode(",\n", $subnets)."\n\t]";
+        }
+
+        // end of shared network
+        $data .= "\n}";
+
+        File::put($file, $data, true);
+
+        self::makeIncludesV6();
+    }
+
+    /**
+     * Generates gateways.conf containing includes for the shared-networks of all NetGws for Kea DHCP
+     *
+     * @author Nino Ryschawy
+     */
+    public static function makeIncludesV6()
+    {
+        $incs = [];
+        foreach (self::where('type', 'cmts')->get() as $cmts) {
+            $incs[] = '<?include "'.self::DHCP6_GATEWAYS_DIR."/$cmts->id.conf\"?>";
+        }
+
+        File::put(self::DHCP6_GATEWAYS_FILE, implode(",\n", $incs), true);
     }
 
     /**
@@ -693,7 +773,8 @@ class NetGwObserver
         if (\Module::collections()->has('ProvMon')) {
             \Artisan::call('nms:cacti', ['--modem-id' => 0, '--netgw-id' => $netgw->id]);
         }
-        $netgw->make_dhcp_conf();
+
+        $netgw->makeDhcpConf();
 
         File::put(self::NETGW_TFTP_PATH."/$netgw->id.cfg", $netgw->get_raw_netgw_config());
     }
@@ -706,7 +787,7 @@ class NetGwObserver
             return;
         }
 
-        $netgw->make_dhcp_conf();
+        $netgw->makeDhcpConf();
 
         File::put(self::NETGW_TFTP_PATH."/$netgw->id.cfg", $netgw->get_raw_netgw_config());
     }
@@ -718,6 +799,9 @@ class NetGwObserver
         if ($netgw->type != 'cmts') {
             return;
         }
+
+        // v6 function automatically takes care of deletions
+        $netgw->makeDhcp6Conf();
 
         File::delete(NetGw::NETGW_INCLUDE_PATH."/$netgw->id.conf");
         File::delete(self::NETGW_TFTP_PATH."/$netgw->id.cfg");
