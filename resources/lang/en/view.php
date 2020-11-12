@@ -527,7 +527,7 @@ return [
         'busy' => 'Busy',
         'inProcess' => 'In process',
         'open' => 'Open',
-        'solved' => 'Solved',
+        'solved' => 'Solved today',
         'stacked' => 'Have more tickets',
         'summary' => 'Overview',
     ],
