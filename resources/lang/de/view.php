@@ -523,7 +523,7 @@ return [
     'Type' => 'Typ',
     'warning' => 'Warnung',
     'workforce' => [
-        'available' => 'Frei',
+        'available' => 'Verfügbar',
         'busy' => 'Beschäftigt',
         'inProcess' => 'In Bearbeitung',
         'open' => 'Offen / Akzeptiert',
