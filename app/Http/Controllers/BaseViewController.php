@@ -586,7 +586,8 @@ class BaseViewController extends Controller
                 $name = config($moduleName.'.name');
                 $icon = $module->get('icon') ?? '';
 
-                $menu[$name]['icon'] = config($moduleName.'.parent') ? Module::find($name)->get('icon') : $icon;
+                $parent = config($moduleName.'.parent');
+                $menu[$name]['icon'] = $parent ? $modules[$parent]->get('icon') : $icon;
                 $menu[$name]['link'] = config($moduleName.'.link');
                 $menu[$name]['translated_name'] = static::translate_view($name, 'Menu');
 
