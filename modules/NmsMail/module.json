@@ -10,7 +10,7 @@
     "providers": [
         "Modules\\NmsMail\\Providers\\MailServiceProvider"
     ],
-    "aliases": [],
+    "aliases": {},
     "files": [
         "start.php"
     ],
