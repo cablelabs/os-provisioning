@@ -470,7 +470,9 @@ class BaseController extends Controller
             $a['index_left_md_size'] = $this->index_left_md_size;
         }
 
-        $a['mdSizes'] = $a['mdSizes'] ?? $this->defaultMdSizes;
+        if (! isset($a['mdSizes'])) {
+            $a['mdSizes'] = $this->defaultMdSizes;
+        }
 
         if (! is_null($this->edit_right_md_size) && ! isset($a['edit_right_md_size'])) {
             $a['edit_right_md_size'] = $this->edit_right_md_size;
