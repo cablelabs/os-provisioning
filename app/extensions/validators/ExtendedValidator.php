@@ -4,7 +4,7 @@ namespace App\extensions\validators;
 
 use Log;
 use File;
-use IBAN;
+use PHP_IBAN\IBAN;
 use Modules\BillingBase\Entities\Product;
 use Modules\ProvVoip\Entities\PhonebookEntry;
 
