@@ -563,7 +563,6 @@ class BaseViewController extends Controller
         }
 
         $menu = [];
-        $modules = Module::allEnabled();
         $configMenuItemKey = 'MenuItems';
 
         $globalPages = config('base.'.$configMenuItemKey);
@@ -578,24 +577,27 @@ class BaseViewController extends Controller
             }
         }
 
-        foreach ($modules as $module) {
-            $moduleName = $module->getLowerName();
-            $moduleMenuConfig = config($moduleName.'.'.$configMenuItemKey);
+        $modules = Module::allEnabled();
+        foreach ($modules as $name => $module) {
+            $config = config($module->getLowerName());
 
-            if (! empty($moduleMenuConfig)) {
-                $name = config($moduleName.'.name');
-                $icon = $module->get('icon') ?? '';
+            if (empty($config[$configMenuItemKey])) {
+                continue;
+            }
 
-                $parent = config($moduleName.'.parent');
-                $menu[$name]['icon'] = $parent ? $modules[$parent]->get('icon') : $icon;
-                $menu[$name]['link'] = config($moduleName.'.link');
-                $menu[$name]['translated_name'] = static::translate_view($name, 'Menu');
+            if (! empty($config['parent'])) {
+                $module = $modules[$config['parent']];
+                $name = $module->getName();
+            }
 
-                foreach ($moduleMenuConfig as $page => $settings) {
-                    if (Bouncer::can('view', $settings['class'])) {
-                        $menuItem = static::translate_view($page, 'Menu');
-                        $menu[$name]['submenu'][$menuItem] = $settings;
-                    }
+            $menu[$name]['icon'] = $module->get('icon');
+            $menu[$name]['link'] = $config['link'] ?? null;
+            $menu[$name]['translated_name'] = static::translate_view($name, 'Menu');
+
+            foreach ($config[$configMenuItemKey] as $page => $settings) {
+                if (Bouncer::can('view', $settings['class'])) {
+                    $menuItem = static::translate_view($page, 'Menu');
+                    $menu[$name]['submenu'][$menuItem] = $settings;
                 }
             }
         }
