@@ -1909,11 +1909,12 @@ class ModemObserver
 
         // only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
         $diff = $modem->getDirty();
-
         if (multi_array_key_exists(['contract_id', 'public', 'internet_access', 'configfile_id', 'qos_id', 'mac', 'serial_num'], $diff)) {
             Modem::create_ignore_cpe_dhcp_file();
             $modem->make_dhcp_cm();
-            $modem->restart_modem(array_key_exists('mac', $diff));
+            if (! $modem->wasRecentlyCreated) {
+                $modem->restart_modem(array_key_exists('mac', $diff));
+            }
             $modem->make_configfile();
         }
 
