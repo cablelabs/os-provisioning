@@ -1,9 +1,6 @@
 <?php
 
 return [
-    'Diagrams' => 'Diagrams',
-    'false' => 'false',
-    'true' => 'true',
     //SEARCH
     'Search_EnterKeyword'       => 'Enter Keyword',
     'Search_MatchesFor'         => 'Matches for',
@@ -467,12 +464,15 @@ return [
     'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
     'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
 
+    'commandCenter' => 'Command Center',
     'company' => 'Company',
     'Credit' => 'Credit',
     'critical' => 'critical',
     'Debit' => 'Debit',
+    'Diagrams' => 'Diagrams',
     'Discard' => 'Discard',
     'Download' => 'Download',
+    'false' => 'false',
     'Global' => 'Global',
     'Global notification' => 'Global notification',
     'info' => 'info',
@@ -519,6 +519,17 @@ return [
         'addMpr' => 'Add Modem Positioning Rule',
         'showCustomers' => 'Show Customer in Rectangle',
     ],
+    'true' => 'true',
     'Type' => 'Type',
     'warning' => 'warning',
+    'workforce' => [
+        'available' => 'Available',
+        'busy' => 'Busy',
+        'inProcess' => 'In process',
+        'open' => 'Open / Accepted',
+        'openUnassigned' => 'Open - not assigned',
+        'solved' => 'Solved today',
+        'stacked' => 'Have more tickets',
+        'summary' => 'Overview',
+    ],
 ];

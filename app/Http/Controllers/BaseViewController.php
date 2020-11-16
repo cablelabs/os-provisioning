@@ -609,9 +609,28 @@ class BaseViewController extends Controller
             }
         }
 
+        self::addWorkforceMenuEntry($menu);
+
         Session::put('menu', $menu);
 
         return $menu;
+    }
+
+    /**
+     * Temporary function to add menu entry while code is not outsourced to separate module
+     *
+     * TODO: Remove when workforce module was created
+     */
+    private static function addWorkforceMenuEntry(&$menu)
+    {
+        if (! Module::collections()->has('HfcCustomer')) {
+            return;
+        }
+
+        $name = 'Workforce';
+
+        $menu[$name]['link'] = 'CustomerModem.showWorkforce';
+        $menu[$name]['icon'] = 'icon-workforce.png';
     }
 
     /**
