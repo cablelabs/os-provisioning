@@ -301,5 +301,5 @@ var app=new Vue({
     },
 });
 </script>
-@stop
 @endif
+@stop

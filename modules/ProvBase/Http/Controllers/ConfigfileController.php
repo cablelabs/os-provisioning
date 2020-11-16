@@ -201,7 +201,7 @@ class ConfigfileController extends \BaseController
             $tmpInPath .= '.';
         }
         foreach ($devicesJson as $key => $elementJson) {
-            if (! in_array($key, ['_object', '_value', '_type', '_timestamp'])) {
+            if (! in_array($key, ['_object', '_value', '_type', '_timestamp', '_writable'])) {
                 $inPath = $tmpInPath.$key;
                 $parametersArray[] = ['id' => $inPath, 'name' => $inPath];
                 if (is_array($elementJson)) {
@@ -233,10 +233,12 @@ class ConfigfileController extends \BaseController
             $parametersArray = json_decode(Storage::get($storagefile), true);
         }
 
-        // if storage is empty, regenerate storage
+        // if storage is empty, try to regenerate storage
         if (empty($parametersArray)) {
             $this->refreshGenieAcs($model->id, false);
-            $parametersArray = json_decode(Storage::get($storagefile), true);
+            if (Storage::exists($storagefile)) {
+                $parametersArray = json_decode(Storage::get($storagefile), true);
+            }
         }
 
         if (empty($parametersArray)) {

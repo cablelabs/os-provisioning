@@ -330,24 +330,29 @@ class Configfile extends \BaseModel
         $match = trim($match[0], '{}');
         $ops = explode(',', $match);
 
-        if (count($ops) != 3 || ! in_array($ops[1], ['+', '-', '*', '/', '?'])) {
-            return;
-        }
-
-        /*
-         * overwrite configfile variable {}, which couldn't be resolved
-         * via the database with a default value (i.e. $ops[2])
-         * syntax: {{phonenumber.active.1},?,2};
-         */
-        if ($ops[1] === '?') {
-            $res = \Str::contains($ops[0], '}') ? $ops[2] : $ops[0];
-        } elseif (is_numeric($ops[0]) || is_numeric($ops[2])) {
+        if (count($ops) == 3 &&
+            is_numeric($ops[0]) &&
+            in_array($ops[1], ['+', '-', '*', '/']) &&
+            is_numeric($ops[2])) {
             try {
                 $res = round(eval("return $ops[0] $ops[1] $ops[2];"));
             } catch (\Exception $e) {
                 // e.g. divide by zero
                 return;
             }
+        } elseif (count($ops) == 3 && $ops[1] == '?') {
+            /*
+            * Overwrite configfile variable {}, which couldn't be resolved
+            * via the database with a default value (i.e. $ops[2])
+            * syntax: {{phonenumber.active.1},?,2};
+            */
+            $res = \Str::contains($ops[0], '}') ? $ops[2] : $ops[0];
+        } elseif (count($ops) == 2) {
+            $res = substr($ops[0], intval($ops[1]));
+        } elseif (count($ops) == 3) {
+            $res = substr($ops[0], intval($ops[1]), intval($ops[2]));
+        } else {
+            return;
         }
 
         return preg_replace('/\\{.*\\}/im', $res, $row);
@@ -495,19 +500,16 @@ class Configfile extends \BaseModel
     }
 
     /**
-     * Get monitoring config based on the json string found in the configfile
+     * Get monitoring config based on the json string found in the monitoring
+     * column of a configfile
      *
      * @author Ole Ernst
      */
-    public function getMonitoringConfig()
+    public function getMonitoringConfig(): array
     {
-        if (! preg_match('/#monitoring:({.*})/', $this->text, $matches)) {
-            return false;
-        }
-
-        $conf = json_decode($matches[1], true);
-        if (! $conf) {
-            return false;
+        $conf = json_decode($this->monitoring, true);
+        if ($conf === null) {
+            return [];
         }
 
         return $conf;
@@ -576,7 +578,7 @@ class ConfigfileObserver
         }
 
         $prov = [];
-        $conf = $configfile->getMonitoringConfig() ?: [];
+        $conf = $configfile->getMonitoringConfig();
 
         $prov = array_map(function ($value) {
             if (\Str::startsWith($value, ['_', 'Device', 'InternetGatewayDevice'])) {
