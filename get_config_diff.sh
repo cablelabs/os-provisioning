@@ -9,6 +9,10 @@
 # ./get_config_diff.sh > config.diff
 
 ignore=(
+	'/etc/dhcp-nmsprime/cmts_gws.conf'
+	'/etc/dhcp-nmsprime/endpoints-host.conf'
+	'/etc/dhcp-nmsprime/modems-clients-public.conf'
+	'/etc/dhcp-nmsprime/modems-host.conf'
 	'/etc/dhcp-nmsprime/mta.conf'
 	'/var/log/nmsprime/tftpd-cm.log'
 	'/var/named/dynamic/in-addr.arpa.zone'
