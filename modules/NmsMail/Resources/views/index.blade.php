@@ -1,11 +1,11 @@
 @extends('mail::layouts.master')
 
 @section('content')
-	
+
 	<h1>Hello World</h1>
-	
+
 	<p>
-		This view is loaded from module: {!! config('mail.name') !!}
+		This view is loaded from module: NmsMail
 	</p>
 
 @stop

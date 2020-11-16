@@ -574,12 +574,11 @@ class BaseViewController extends Controller
         }
 
         $menu = [];
-        $modules = Module::allEnabled();
         $configMenuItemKey = 'MenuItems';
 
-        $globalPages = Config::get('base.'.$configMenuItemKey);
+        $globalPages = config('base.'.$configMenuItemKey);
 
-        $menu['Global']['link'] = Config::get('base.link');
+        $menu['Global']['link'] = config('base.link');
         $menu['Global']['translated_name'] = trans('view.Global');
         foreach ($globalPages as $page => $settings) {
             if (Bouncer::can('view', $settings['class'])) {
@@ -589,22 +588,27 @@ class BaseViewController extends Controller
             }
         }
 
-        foreach ($modules as $module) {
-            $moduleName = $module->getLowerName();
-            $moduleMenuConfig = Config::get($moduleName.'.'.$configMenuItemKey);
+        $modules = Module::allEnabled();
+        foreach ($modules as $name => $module) {
+            $config = config($module->getLowerName());
 
-            if (! empty($moduleMenuConfig)) {
-                $name = Config::get($moduleName.'.'.'name') ?? $module->get('description');
-                $icon = ($module->get('icon') == '' ? '' : $module->get('icon'));
-                $menu[$name]['icon'] = $icon;
-                $menu[$name]['link'] = Config::get($moduleName.'.link');
-                $menu[$name]['translated_name'] = static::translate_view($name, 'Menu');
+            if (empty($config[$configMenuItemKey])) {
+                continue;
+            }
 
-                foreach ($moduleMenuConfig as $page => $settings) {
-                    if (Bouncer::can('view', $settings['class'])) {
-                        $menuItem = static::translate_view($page, 'Menu');
-                        $menu[$name]['submenu'][$menuItem] = $settings;
-                    }
+            if (! empty($config['parent'])) {
+                $module = $modules[$config['parent']];
+                $name = $module->getName();
+            }
+
+            $menu[$name]['icon'] = $module->get('icon');
+            $menu[$name]['link'] = $config['link'] ?? null;
+            $menu[$name]['translated_name'] = static::translate_view($name, 'Menu');
+
+            foreach ($config[$configMenuItemKey] as $page => $settings) {
+                if (Bouncer::can('view', $settings['class'])) {
+                    $menuItem = static::translate_view($page, 'Menu');
+                    $menu[$name]['submenu'][$menuItem] = $settings;
                 }
             }
         }

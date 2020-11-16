@@ -134,10 +134,12 @@ BaseRoute::group([], function () {
     BaseRoute::get('Apps/active', [
         'as' => 'Apps.active',
         'uses' => 'AppController@showApps',
+        'middleware' => ['can:view,App\App'],
     ]);
 
     BaseRoute::get('Apps/inactive', [
         'as' => 'Apps.inactive',
         'uses' => 'AppController@showApps',
+        'middleware' => ['can:view,App\App'],
     ]);
 });

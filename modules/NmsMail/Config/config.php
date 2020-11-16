@@ -3,7 +3,6 @@
 namespace Modules\NmsMail\Entities;
 
 return [
-    'name' => 'Mail',
     'MenuItems' => [
         'E-Mail' => [
             'link'	=> 'Email.index',

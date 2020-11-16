@@ -1,16 +1,16 @@
 {
     "name": "HfcSnmp",
-    "alias": "Detect",
-    "description": "SNMP Module",
+    "alias": "Control",
+    "description": "Configure devices via SNMP.",
     "keywords": [],
     "active": 1,
     "order": 140,
-    "priority": 0,
-    "icon": "Prime_Detect_app_icon.png",
+    "icon": "OS_Control.png",
     "category": "Failure Management",
     "providers": [
         "Modules\\HfcSnmp\\Providers\\HfcSnmpServiceProvider"
     ],
+    "aliases": {},
     "files": [
         "start.php"
     ],

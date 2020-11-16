@@ -3,7 +3,6 @@
 namespace Modules\ProvBase\Entities;
 
 return  [
-    'name' => 'ProvBase',
     'link' => 'ProvBase.index',
     'MenuItems' => [
         'Contracts' => [

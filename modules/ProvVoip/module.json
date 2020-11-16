@@ -1,16 +1,16 @@
 {
     "name": "ProvVoip",
     "alias": "VoIP",
-    "description": "VOIP",
+    "description": "Manage DOCSIS VoIP devices with SIP.",
     "keywords": [],
     "active": 1,
     "order": 30,
-    "priority": 0,
-    "icon": "OS_VoIP_app_icon.png",
+    "icon": "OS_VoIP.png",
     "category": "Provisioning",
     "providers": [
         "Modules\\ProvVoip\\Providers\\ProvVoipServiceProvider"
     ],
+    "aliases": {},
     "files": [
         "start.php"
     ],

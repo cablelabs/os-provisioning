@@ -85,7 +85,7 @@ class GlobalConfigController extends BaseController
                 $module_controller[$i] = $mod_controller;
                 $module_model[$i] = $mod_model->first();
 
-                Arr::set($links, $i.'.name', (($module->get('description') == '') ? $tmp : $module->get('description')));
+                Arr::set($links, $i.'.name', (($module->get('alias') == '') ? $tmp : $module->get('alias')));
                 Arr::set($links, $i.'.link', $tmp);
 
                 $i++;

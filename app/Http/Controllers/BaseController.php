@@ -180,7 +180,7 @@ class BaseController extends Controller
             $mod_controller = new $mod_controller_name;
 
             if (method_exists($mod_controller, 'view_form_fields')) {
-                $links[($module->get('description') == '') ? $tmp : $module->get('description')] = $tmp;
+                $links[($module->get('alias') == '') ? $tmp : $module->get('alias')] = $tmp;
             }
         }
         // Sla (service level agreement) is not a separate module, but belongs to GlobalConfig
