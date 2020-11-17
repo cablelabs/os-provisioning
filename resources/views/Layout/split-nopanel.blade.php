@@ -19,7 +19,7 @@
 @endphp
 
 @section ('content')
-    <div class="row flex-wrap-reverse">
+    <div class="row flex-wrap-reverse" style="flex:1">
 
         @yield('contentLeftLeft')
 
