@@ -143,7 +143,7 @@ input[type="checkbox"].form-control:checked:after {
     left: 0;
     right: 0;
     bottom: 100%;
-    height: 54px;
+    height: 60px;
     z-index: 1000;
     transition: all .3s ease;
 }
