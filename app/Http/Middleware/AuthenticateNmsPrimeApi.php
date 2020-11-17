@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 use Illuminate\Contracts\Auth\Factory as Auth;
 
 class AuthenticateNmsPrimeApi
@@ -38,8 +39,12 @@ class AuthenticateNmsPrimeApi
      */
     public function handle($request, Closure $next)
     {
-        if ($request->route()->parameters()['ver'] == 0) {
-            return $this->auth->guard()->basic() ?: $next($request);
+        if ($request->route()->parameters()['ver'] == 0 && ! $this->auth->guard()->basic()) {
+            if (Bouncer::cannot('use api')) {
+                return response()->json(['ret' => 'Unauthorized.'], 401);
+            }
+
+            return $next($request);
         }
 
         if ($this->auth->guard('api')->check()) {
