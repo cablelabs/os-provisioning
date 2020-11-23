@@ -139,7 +139,7 @@ class IpPoolController extends \BaseController
         }
 
         // Add ip rule with version dependent on net to the beginning
-        $rulesToAddIpRule = array_merge($rulesWithPlaceholders, ['net', 'dns1_ip', 'dns2_ip', 'dns3_ip', 'prefix']);
+        $rulesToAddIpRule = array_merge($rulesWithPlaceholders, ['net', 'dns1_ip', 'dns2_ip', 'dns3_ip']);
         foreach ($rulesToAddIpRule as $rkey) {
             $rule = $data['version'] ? 'ipv'.$data['version'] : 'ip';
             $rules[$rkey] = isset($rules[$rkey]) ? $rule.'|'.$rules[$rkey] : $rule;
@@ -161,8 +161,8 @@ class IpPoolController extends \BaseController
         $data['version'] = self::getVersion($data['net']);
 
         // Convert cidr netmask for IPv4
-        if ($data['version'] == '4' && self::isCidrNotation($data['netmask'])) {
-            $data['netmask'] = IpPool::cidrToMask($data['netmask']);
+        if ($data['version'] == '4' && IpPool::isCidrNotation($data['netmask'])) {
+            $data['netmask'] = self::cidrToMask($data['netmask']);
         }
 
         $fields = ['net', 'netmask', 'ip_pool_start', 'ip_pool_end', 'router_ip', 'broadcast_ip', 'dns1_ip', 'dns2_ip', 'dns3_ip'];
@@ -195,7 +195,7 @@ class IpPoolController extends \BaseController
      * @param string
      * @return string
      */
-    public function cidrToMask($netmask)
+    public static function cidrToMask($netmask)
     {
         $int = str_replace('/', '', $netmask);
 
