@@ -1870,18 +1870,15 @@ class ModemObserver
         // Use Updating to set the geopos before a save() is called.
         // Notice: that we can not call save() in update(). This will re-trigger
         //         the Observer and re-call update() -> endless loop is the result.
-        if (
-            ($modem->wasRecentlyCreated)    // new modem
-            ||
-            (multi_array_key_exists(['street', 'house_number', 'zip', 'city'], $diff))  // address changed
-        ) {
+        if ($modem->wasRecentlyCreated && $modem->x && $modem->y) {
+            // do nothing
+        } elseif (multi_array_key_exists(['street', 'house_number', 'zip', 'city'], $diff)) {
             $modem->geocode(false);
-        } elseif (multi_array_key_exists(['x', 'y'], $diff)) {  // manually changed geodata
-            if (! \App::runningInConsole()) {    // change geocode_source only from MVC (and do not overwrite data from geocode command)
-                // set origin to username
-                $user = \Auth::user();
-                $modem->geocode_source = $user->first_name.' '.$user->last_name;
-            }
+        } elseif (multi_array_key_exists(['x', 'y'], $diff) && ! \App::runningInConsole()) {
+            // Manually changed geodata
+            // Change geocode_source only from MVC (and do not overwrite data from geocode command)
+            $user = \Auth::user();
+            $modem->geocode_source = $user->first_name.' '.$user->last_name;
         }
 
         // check if more values have changed – especially “x” and “y” which refreshes MPR
