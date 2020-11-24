@@ -225,7 +225,7 @@ return [
     'draw polygon'              => 'Draw Polygon',
     'modify'                    => 'Modify Elements',
     'Header_NetElement'         => 'Netelements',
-    'mapsRouteLink'             => 'Show route via Google Maps',
+    'mapsRouteLink'             => 'Show route',
     //VOIP
     //MTA
     'Header_Mta'                => 'MTA|MTAs',
