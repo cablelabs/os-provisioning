@@ -41,7 +41,7 @@
                     </div>
                 @endforeach
             @endif
-            <div class="d-flex flex-column d-print-flex" style="flex: 1;">
+            <div class="d-flex flex-column d-print-flex" style="flex:1;">
                 @yield ('content')
             </div>
         </div>

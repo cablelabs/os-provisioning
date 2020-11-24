@@ -9,7 +9,7 @@
     if (! empty($__env->yieldContent('contentLeftLeft'))) {
         $leftMdSizeXl -= $mdSizes['leftLeftXl'];
         $leftMdSizeLg -= $mdSizes['leftLeftLg'];
-        $flex = 'd-flex';
+        $flex = 'flex:1;';
     }
 
     if (! empty($__env->yieldContent('contentRightRight'))) {
@@ -19,11 +19,11 @@
 @endphp
 
 @section ('content')
-    <div class="row flex-wrap-reverse" style="flex:1">
+    <div class="row flex-wrap-reverse" style="{{ $flex }}">
 
         @yield('contentLeftLeft')
 
-        <div class="{{ $flex }} col-12 col-lg-{{ $leftMdSizeLg }} col-xl-{{ $leftMdSizeXl }} m-t-10">
+        <div class="d-flex col-12 col-lg-{{ $leftMdSizeLg }} col-xl-{{ $leftMdSizeXl }} m-t-10">
             <div class="card card-inverse p-b-5 p-t-10" style="display:flex;flex: 1;">
                 @if(isset($tabs))
                 <div class="card-header m-b-15 d-print-none" style="display:flex;">
