@@ -386,10 +386,16 @@ class ModemController extends \BaseController
             return response()->json(['ret' => 'Object not found']);
         }
 
+        $verbose = null;
+        if (Module::collections()->has('ProvMon') && Request::get('verbose') == 'true') {
+            $ctrl = new \Modules\ProvMon\Http\Controllers\ProvMonController();
+            $verbose = $ctrl->analyses($id, true);
+        }
+
         $domain_name = ProvBase::first()->domain_name;
         exec("sudo ping -c1 -i0 -w1 {$modem->hostname}.$domain_name", $ping, $offline);
 
-        return response()->json(['ret' => 'success', 'online' => ! $offline]);
+        return response()->json(['ret' => 'success', 'online' => ! $offline, 'verbose' => $verbose]);
     }
 
     /**
