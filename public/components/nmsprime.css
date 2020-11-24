@@ -791,3 +791,15 @@ div.recolor:hover img {
         padding: 0;
     }
 }
+
+/* Small devices - Smartphones, tablets */
+#mapid, #map {
+    min-height: 80vh;
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    #mapid, #map {
+        min-height: 50vh;
+    }
+}
