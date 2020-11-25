@@ -33,6 +33,21 @@ return [
     'contact' => [
         'administration' => 'Administration',
     ],
+    'contact_id' => 'Group contract',
+    'contract' => [
+        'additional' => 'Additional info',
+        'city' => 'City',
+        'contract_end' => 'Contract End',
+        'contract_start' => 'Contract Start',
+        'district' => 'District',
+        'firstname' => 'Firstname',
+        'house_number' => 'Housenr',
+        'id' => 'Contract',
+        'lastname' => 'Surname',
+        'number' => 'Contract Number',
+        'street' => 'Street',
+        'zip' => 'ZIP',
+    ],
     // Auth
     'users' => [
         'login_name' => 'Login Name',
@@ -167,19 +182,7 @@ return [
     'netgw.formatted_support_state' => 'Support State',
     'netgw.support_state' => 'Support State',
     // Contract
-    'contact_id' => 'Group contract',
-    'contract.city' => 'City',
     'company' => 'Company',
-    'contract.contract_end' => 'Contract End',
-    'contract.contract_start' => 'Contract Start',
-    'district' => 'District',
-    'contract.firstname' => 'Firstname',
-    'contract.house_number' => 'Housenr',
-    'contract.id' => 'Contract',
-    'contract.lastname' => 'Surname',
-    'contract.number' => 'Contract Number',
-    'contract.street' => 'Street',
-    'contract.zip' => 'ZIP',
     // Domain
     'domain.name' => 'Domain',
     'domain.type' => 'Type',

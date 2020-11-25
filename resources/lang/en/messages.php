@@ -10,6 +10,7 @@ return [
     'Academic degree'           => 'Academic degree',
     'Active'                    => 'Active',
     'Active?'                   => 'Active?',
+    'Additional info'           => 'Additional info',
     'Additional Options'        => 'Additional Options',
     'Address'                   => 'Adress',
     'Address Line 1'            => 'Address Line 1',

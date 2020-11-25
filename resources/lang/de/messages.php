@@ -10,6 +10,7 @@ return [
     'Academic degree'           => 'Akademischer Titel',
     'Active'                    => 'Aktiv',
     'Active?'                   => 'Aktiv?',
+    'Additional info'           => 'Zusatz',
     'Additional Options'        => 'Zusätzliche Optionen',
     'Address'                   => 'Adresse',
     'Address Line 1'            => 'Adresszeile 1',

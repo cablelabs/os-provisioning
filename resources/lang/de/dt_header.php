@@ -33,6 +33,21 @@ return [
     'contact' => [
         'administration' => 'Hausverwaltung',
     ],
+    'contact_id' => 'Gruppenvertrag',
+    'contract' => [
+        'additional' => 'Zusatz',
+        'city' => 'Stadt',
+        'contract_end' => 'Vertrags- Ende',
+        'contract_start' => 'Vertrags- Beginn',
+        'district' => 'Bezirk',
+        'firstname' => 'Vorname',
+        'house_number' => 'Hausnr',
+        'id' => 'Vertrag',
+        'lastname' => 'Nachname',
+        'number' => 'Vertrags- Nummer',
+        'street' => 'Straße',
+        'zip' => 'PLZ',
+    ],
     // Auth
     'users' => [
         'login_name' => 'Loginname',
@@ -166,19 +181,7 @@ return [
     'netgw.company' => 'Hersteller',
     'netgw.series' => 'Serie',
     // Contract
-    'contact_id' => 'Gruppenvertrag',
-    'contract.city' => 'Stadt',
     'company' => 'Firma',
-    'contract.contract_end' => 'Vertrags- Ende',
-    'contract.contract_start' => 'Vertrags- Beginn',
-    'contract.district' => 'Bezirk',
-    'contract.firstname' => 'Vorname',
-    'contract.house_number' => 'Hausnr',
-    'contract.id' => 'Vertrag',
-    'contract.lastname' => 'Nachname',
-    'contract.number' => 'Vertrags- Nummer',
-    'contract.street' => 'Straße',
-    'contract.zip' => 'PLZ',
     // Domain
     'domain.name' => 'Domäne',
     'domain.type' => 'Typ',

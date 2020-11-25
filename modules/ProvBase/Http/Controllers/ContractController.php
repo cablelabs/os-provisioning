@@ -95,13 +95,15 @@ class ContractController extends \BaseController
         if (Module::collections()->has('PropertyManagement')) {
             if (! $hasModems) {
                 $a[] = ['form_type' => 'select', 'name' => 'apartment_id', 'value' => $model->getSelectableApartments(), 'select' => 'noContact',  'description' => 'Apartment', 'hidden' => 0];
-                $a[] = ['form_type' => 'select', 'name' => 'contact_id', 'value' => $contactList, 'select' => 'noApartment', 'description' => 'Contact', 'hidden' => 0, 'space' => 1];
+                $a[] = ['form_type' => 'select', 'name' => 'contact_id', 'value' => $contactList, 'select' => 'noApartment', 'description' => 'Contact', 'hidden' => 0];
             } else {
                 $a[14]['space'] = 1;
             }
         } else {
-            $a[] = ['form_type' => 'text', 'name' => 'apartment_nr', 'description' => 'Apartment number', 'space' => 1];
+            $a[] = ['form_type' => 'text', 'name' => 'apartment_nr', 'description' => 'Apartment number'];
         }
+
+        $a[] = ['form_type' => 'text', 'name' => 'additional', 'description' => 'Additional info', 'create' => ['Contract'], 'autocomplete' => [], 'space' => 1];
 
         $b1[] = ['form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'];
 
