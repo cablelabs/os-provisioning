@@ -221,6 +221,7 @@ return [
     'ProvBase'                  => 'ProvBase Config',
     'ProvVoip'                  => 'ProvVoip Config',
     'ProvVoipEnvia'             => 'ProvVoipEnvia Config',
+    'Has a truck'               => 'Has a truck',
     'HFC'                       => 'Detect',
     'Rank'                      => 'Rank',
     'Assign Users'              => 'Assign Users',
