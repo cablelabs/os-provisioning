@@ -77,7 +77,7 @@ class UserController extends BaseController
                 'value' => $dashboard_options,
             ],
             ['form_type' => 'text', 'name' => 'geopos_updated_at', 'description' => 'Last update of geoposition', 'options' => ['readonly']],
-            ['form_type' => 'checkbox', 'name' => 'truck', 'description' => 'Has a truck'],
+            ['form_type' => 'checkbox', 'name' => 'hasTruck', 'description' => 'Has a truck'],
         ];
     }
 

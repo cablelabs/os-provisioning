@@ -13,7 +13,7 @@ class UpdateUsersAddTruckFlag extends Migration
     public function up()
     {
         Schema::table('users', function ($table) {
-            $table->boolean('truck')->default(0);       // has truck
+            $table->boolean('hasTruck')->default(0);       // has truck
         });
     }
 
@@ -25,7 +25,7 @@ class UpdateUsersAddTruckFlag extends Migration
     public function down()
     {
         Schema::table('users', function ($table) {
-            $table->dropColumn('truck');
+            $table->dropColumn('hasTruck');
         });
     }
 }
