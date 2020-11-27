@@ -1870,7 +1870,7 @@ class ModemObserver
         // Use Updating to set the geopos before a save() is called.
         // Notice: that we can not call save() in update(). This will re-trigger
         //         the Observer and re-call update() -> endless loop is the result.
-        if ($modem->wasRecentlyCreated && $modem->x && $modem->y) {
+        if ($modem->wasRecentlyCreated && $modem->x && $modem->y && $modem->geocode_source) {
             // do nothing
         } elseif (multi_array_key_exists(['street', 'house_number', 'zip', 'city'], $diff)) {
             $modem->geocode(false);
