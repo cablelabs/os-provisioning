@@ -17,9 +17,9 @@ BaseRoute::group([], function () {
         'middleware' => ['can:view,Modules\ProvBase\Entities\Modem'],
     ]);
 
-    BaseRoute::get('modem/factoryreset', [
-        'as' => 'Modem.factoryReset',
-        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@factoryReset',
+    BaseRoute::post('Modem/genietask/{id}', [
+        'as' => 'Modem.genieTask',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@genieTask',
         'middleware' => ['can:update,Modules\ProvBase\Entities\Modem'],
     ]);
 

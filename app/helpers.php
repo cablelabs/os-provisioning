@@ -38,7 +38,7 @@ function unify_mac($data)
  */
 function snmpWrapper($trySessions, $tryOids, $div = null, $callback = null, $arg = null)
 {
-    // try the first OID with the various SNMP sessions
+    // Try the first OID with the various SNMP sessions
     // if none provide a result try the next OID with all sessions
     // stop on first non-exception
     foreach ((array) $tryOids as $oid) {
@@ -46,7 +46,13 @@ function snmpWrapper($trySessions, $tryOids, $div = null, $callback = null, $arg
             try {
                 $values = $session->walk($oid, true);
 
-                // divide all values with the common divisor if possible
+                // Only one value was retrieved via SNMP, thus the subtree prefix
+                // couldn't be removed from keys via walk(..., true);
+                if (count($values) == 1 && count($key = explode('.', array_key_first($values))) > 1) {
+                    $values = [end($key) => end($values)];
+                }
+
+                // Divide all values with the common divisor if possible
                 if (is_numeric($div) && $div != 0) {
                     $values = array_map(function ($value) use ($div) {
                         return $value / $div;
@@ -57,7 +63,7 @@ function snmpWrapper($trySessions, $tryOids, $div = null, $callback = null, $arg
                     return $values;
                 }
 
-                // apply callback if available
+                // Apply callback if available
                 if ($arg) {
                     return $callback($values, $arg);
                 } else {

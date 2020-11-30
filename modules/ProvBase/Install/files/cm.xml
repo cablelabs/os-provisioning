@@ -4,6 +4,7 @@
   <description>Only allow cablemodems essential services.</description>
   <source address="10.0.0.0/19"/>
   <service name="dhcp"/>
+  <service name="http"/>
   <service name="tftp"/>
   <port protocol="udp" port="37"/>
 </zone>
