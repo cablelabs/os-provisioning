@@ -274,6 +274,8 @@ return [
     'Button_Force Restart'      => 'Neustart erzwingen',
     'Button_Save'               => 'Speichern',
     'Button_Save / Restart'     => 'Speichern / Neustart',
+    'Button_Search'             => 'Suchen',
+    'Button_Submit'             => 'Senden',
     'Button_manage'             => 'Verwalten, schließt alle Basis und Sonderfähigkeiten mit ein. Schnellauswahl um alle Aktionen auf allen Seiten dieses Moduls auszuführen.',
     'Header_Tree Table'         => 'Baumdiagramm|Baumdiagramme',
     'Header_EditTree Table'     => 'Baumdiagramm bearbeiten',
@@ -354,7 +356,6 @@ return [
     'Button_DragDrop MoveTo'        => 'Verschiebe zu',
     'Button_DragDrop MoveToNewList' => 'Verschiebe zu neue Liste',
     'Button_DragDrop Refresh'       => 'Neu laden',
-    'Button_DragDrop Search'        => 'Suchen',
     // //QoS
     'Button_create_post_invoices_pdf' => 'Erstelle PDF mit postalischen Rechnungen',
     'Button_Create Settlement Run'  => 'Abrechnungslauf erstellen',

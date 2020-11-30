@@ -274,6 +274,8 @@ return [
     'Button_Force Restart'      => 'Force Restart',
     'Button_Save'               => 'Save',
     'Button_Save / Restart'     => 'Save / Restart',
+    'Button_Search'             => 'Search',
+    'Button_Submit'             => 'Submit',
     'Button_manage'             => 'Managing allows or forbids to do everything with each element. This button is a shortcut to manage all entities of this module.',
     'Header_Tree Table'         => 'Tree Table|Tree Tables',
     'Header_EditTree Table'     => 'Edit Tree Table',
@@ -354,7 +356,6 @@ return [
     'Button_DragDrop MoveTo'        => 'Move to',
     'Button_DragDrop MoveToNewList' => 'Move to new list',
     'Button_DragDrop Refresh'       => 'Refresh',
-    'Button_DragDrop Search'        => 'Search',
     // //QoS
     'Button_create_post_invoices_pdf'  => 'Create Postal Invoices PDF',
     'Button_Create Settlement Run'  => 'Create Settlement Run',

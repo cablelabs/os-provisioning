@@ -296,14 +296,15 @@ class ModemController extends \BaseController
     }
 
     /**
-     * Perform factory reset via TR-069
+     * Perform GenieACS task
      *
      * @author Ole Ernst
      */
-    public function factoryReset()
+    public static function genieTask($id)
     {
-        if (! $id = Request::get('id')) {
-            \Session::push('tmp_error_above_form', 'Id not specified');
+        $task = Request::get('task');
+        if (json_decode($task) === null) {
+            \Session::push('tmp_error_above_form', 'JSON decode failed');
 
             return \Redirect::back();
         }
@@ -314,7 +315,8 @@ class ModemController extends \BaseController
             return \Redirect::back();
         }
 
-        $modem->factoryReset();
+        $id = $modem->getGenieAcsModel('_id');
+        $modem->callGenieAcsApi("devices/$id/tasks?connection_request", 'POST', $task);
 
         return \Redirect::back();
     }

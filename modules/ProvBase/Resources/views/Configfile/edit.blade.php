@@ -108,7 +108,7 @@
                     <div class="h">
                         <input type="text" value="{{ trans('view.Header_DragDrop DeviceParameters') }}" readonly="true"> <a href="{{route('Configfile.refreshGenieAcs', $view_var->id )}}" class="btn btn-primary" >{{ trans('view.Button_DragDrop Refresh') }}</a> 
                     </div>
-                    <input type="text" v-on:keyup="ddFilter" id="ddsearch" placeholder="{{ trans('view.Button_DragDrop Search') }}"/>
+                    <input type="text" v-on:keyup="ddFilter" id="ddsearch" placeholder="{{ trans('view.Button_Search') }}"/>
                     <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone" :options="{draggable: '.dragdroplistitem', filter: 'input', preventOnFilter: false}">
                         <div class="dragdroplistitem" v-for="(item, id) in list.content" :key="item.id">
                             <div :class="item.id">@{{ item.id }} <i class="fa fa-cog dragdropitembutton" aria-hidden="true" v-on:click="itemmenu($event.target, key, id)"></i>
