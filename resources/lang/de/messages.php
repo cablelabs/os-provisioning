@@ -222,6 +222,7 @@ return [
     'ProvBase'                  => 'ProvBase Konfiguration',
     'ProvVoip'                  => 'ProvVoip Konfiguration',
     'ProvVoipEnvia'             => 'ProvVoipEnvia Konfiguration',
+    'Has a truck'               => 'Besitzt/Fährt einen Truck',
     'HFC'                       => 'Detect',
     'Rank'                      => 'Rang',
     'Assign Users'              => 'Benutzer zuweisen',
