@@ -20,6 +20,7 @@ class Modem extends \BaseModel
     public const CONF_FILE_PATH = '/etc/dhcp-nmsprime/modems-host.conf';
     protected const CONF_FILE_PATH_PUB = '/etc/dhcp-nmsprime/modems-clients-public.conf';
     protected const IGNORE_CPE_FILE_PATH = '/etc/dhcp-nmsprime/ignore-cpe.conf';
+    protected const BLOCKED_CPE_FILE_PATH = '/etc/dhcp-nmsprime/blocked.conf';
 
     // The associated SQL table for this Model
     public $table = 'modem';
@@ -658,6 +659,21 @@ class Modem extends \BaseModel
         if (File::put($filename, $data) === false) {
             Log::critcal('Failed to modify DHCPD Configfile '.$filename);
         }
+    }
+
+    /**
+     * Create DHCP config file that blocks the CPEs of modems without internet access
+     */
+    public static function createDhcpBlockedCpesFile()
+    {
+        $comment = '# All Modems (remote agent IDs) without internet access';
+        $modems = [];
+
+        foreach (self::where('internet_access', 0)->get() as $modem) {
+            $modems[] = 'subclass "blocked" '.$modem->mac.'; # CM id: '.$modem->id;
+        }
+
+        File::put(self::BLOCKED_CPE_FILE_PATH, $comment."\n".implode("\n", $modems));
     }
 
     /**
@@ -1837,6 +1853,10 @@ class ModemObserver
             Log::info("Create cacti diagrams for modem: $modem->hostname");
             \Artisan::call('nms:cacti', ['--netgw-id' => 0, '--modem-id' => $modem->id]);
         }
+
+        if (! $modem->network_access) {
+            Modem::createDhcpBlockedCpesFile();
+        }
     }
 
     public function updating($modem)
@@ -1904,14 +1924,20 @@ class ModemObserver
             return;
         }
 
-        // only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
+        // Only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
         $diff = $modem->getDirty();
         if (multi_array_key_exists(['contract_id', 'public', 'internet_access', 'configfile_id', 'qos_id', 'mac', 'serial_num'], $diff)) {
             Modem::create_ignore_cpe_dhcp_file();
             $modem->make_dhcp_cm();
+
+            if (array_key_exists('internet_access', $diff)) {
+                Modem::createDhcpBlockedCpesFile();
+            }
+
             if (! $modem->wasRecentlyCreated) {
                 $modem->restart_modem(array_key_exists('mac', $diff));
             }
+
             $modem->make_configfile();
         }
 
@@ -1941,6 +1967,9 @@ class ModemObserver
         $modem->updateRadius();
 
         Modem::create_ignore_cpe_dhcp_file();
+        if (! $modem->network_access) {
+            Modem::createDhcpBlockedCpesFile();
+        }
         $modem->make_dhcp_cm(true);
         $modem->restart_modem();
         $modem->delete_configfile();

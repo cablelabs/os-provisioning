@@ -50,6 +50,8 @@ class DhcpCommand extends Command
         echo 'Create '.Modem::CONF_FILE_PATH."...\n";
         Modem::make_dhcp_cm_all();
         Modem::create_ignore_cpe_dhcp_file();
+        Modem::createDhcpBlockedCpesFile();
+
         echo "Create host/endpoint DHCP config file(s)...\n";
         Endpoint::makeDhcp4All();
         Endpoint::makeDhcp6All();
