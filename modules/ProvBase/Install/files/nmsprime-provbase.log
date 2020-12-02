@@ -5,4 +5,7 @@
     compress
     notifempty
     create 600 apache apache
+    postrotate
+        systemctl kill -s HUP rsyslog.service || true
+    endscript
 }
