@@ -57,16 +57,16 @@ class IpPool extends \BaseModel
 
     public function get_bsclass()
     {
-        $bsclass = 'success';
+        $bsclass = 'info';
 
         if ($this->type == 'CPEPub') {
-            $bsclass = 'warning';
+            $bsclass = 'active';
         }
         if ($this->type == 'CPEPriv') {
-            $bsclass = 'info';
+            $bsclass = '';
         }
         if ($this->type == 'MTA') {
-            $bsclass = 'danger';
+            $bsclass = 'success';
         }
 
         return $bsclass;
