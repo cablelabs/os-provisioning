@@ -1584,7 +1584,7 @@ class BaseController extends Controller
 
         $DT->setRowClass(function ($model) {
             if (method_exists($model, 'get_bsclass')) {
-                return $model->get_bsclass() ?: 'info';
+                return $model->get_bsclass();
             }
 
             return $model->view_index_label()['bsclass'] ?? 'info';
