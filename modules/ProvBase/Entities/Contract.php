@@ -1185,10 +1185,10 @@ class Contract extends \BaseModel
             $modem->internet_access = $this->internet_access;
             $modem->qos_id = $this->qos_id;
             $modem->observer_enabled = false;
+            $modem->updateRadius(false);
+            $modem->make_configfile();
             $modem->save();
             $modem->restart_modem();
-            $modem->make_configfile();
-            $modem->updateRadius(false);
         }
     }
 
