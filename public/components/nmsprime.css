@@ -179,7 +179,7 @@ input[type="checkbox"].form-control:checked:after {
     box-shadow: none;
     border-radius: 0;
     color: #212121;
-    padding-left: 130px;
+    padding-left: 140px;
     padding-right: 60px;
     font-size: 16px;
 }
