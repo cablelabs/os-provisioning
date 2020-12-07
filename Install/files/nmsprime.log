@@ -6,6 +6,9 @@
 #   delaycompress
     notifempty
     create 644 apache apache
+    postrotate
+        pkill -f "artisan queue:work" || true
+    endscript
 }
 
 /var/www/nmsprime/storage/logs/billing.log
@@ -16,4 +19,7 @@
     rotate 6
     notifempty
     create 644 apache apache
+    postrotate
+        pkill -f "artisan queue:work" || true
+    endscript
 }

@@ -21,10 +21,12 @@ class RadGroupReply extends \BaseModel
         'ds_rate_max_help' => [
             ['Ascend-Xmit-Rate', ':=', '%d', '%'],
             ['WISPr-Bandwidth-Max-Down', ':=', '%d', '%'],
+            ['Cisco-Avpair', '+=', 'ip:qos-policy-out=add-class(sub,(SUBSCRIBER),shape(%s))', 'ip:qos-policy-out=%'],
         ],
         'us_rate_max_help' => [
             ['Ascend-Data-Rate', ':=', '%d', '%'],
             ['WISPr-Bandwidth-Max-Up', ':=', '%d', '%'],
+            ['Cisco-Avpair', '+=', 'ip:qos-policy-in=add-class(sub,(SUBSCRIBER),shape(%s))', 'ip:qos-policy-in=%'],
         ],
         'ds_name' => [
             ['Cisco-Avpair', '+=', 'ip:sub-qos-policy-out=%s', 'ip:sub-qos-policy-out=%'],
