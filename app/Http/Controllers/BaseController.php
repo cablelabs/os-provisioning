@@ -628,7 +628,7 @@ class BaseController extends Controller
                 continue;
             }
 
-            $queryResult = $model::whereRaw("CONCAT_WS('|', ".$model::getTableColumns($model->getTable()).') LIKE ?', [$query]);
+            $queryResult = $model::whereRaw("CONCAT_WS('|', ".$model::getTableColumns($model->getTable()).') LIKE ?', [$query])->limit(100);
 
             if ($queryResult) {
                 $results[] = $queryResult->get();
