@@ -315,7 +315,7 @@ class ModemController extends \BaseController
             return \Redirect::back();
         }
 
-        $id = $modem->getGenieAcsModel('_id');
+        $id = rawurlencode($modem->getGenieAcsModel('_id'));
         $taskDecode = json_decode($task, true);
 
         foreach (['factoryReset', 'reboot'] as $action) {

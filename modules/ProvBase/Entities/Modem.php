@@ -1145,13 +1145,12 @@ class Modem extends \BaseModel
         }
 
         if ($this->isTR069()) {
-            $id = $this->getGenieAcsModel('_id');
+            $id = rawurlencode($this->getGenieAcsModel('_id'));
             if (! $id) {
                 \Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
 
                 return;
             }
-            $id = rawurlencode($id);
 
             $action = $factoryReset ? 'factoryReset' : 'reboot';
 
