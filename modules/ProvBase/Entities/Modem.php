@@ -1151,18 +1151,16 @@ class Modem extends \BaseModel
 
                 return;
             }
-
             $id = rawurlencode($id);
 
-            $route = "tasks/?query={\"device\":\"$id\",\"name\":\"factoryReset\"}";
-            // factoryReset of device has already been scheduled, no need to spawn another task
-            if (json_decode(self::callGenieAcsApi($route, 'GET'))) {
+            $action = $factoryReset ? 'factoryReset' : 'reboot';
+
+            if (json_decode(self::callGenieAcsApi("tasks?query={\"device\":\"$id\",\"name\":\"$action\"}", 'GET'))) {
+                // A factoryReset/reboot of device has already been scheduled, no need to spawn another task
                 return;
             }
 
-            $action = $factoryReset ? 'factoryReset' : 'reboot';
             $success = self::callGenieAcsApi("devices/$id/tasks?connection_request", 'POST', "{ \"name\" : \"$action\" }");
-
             if (! $success) {
                 \Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
 
