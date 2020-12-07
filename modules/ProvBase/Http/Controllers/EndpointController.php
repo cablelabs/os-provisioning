@@ -19,7 +19,7 @@ class EndpointController extends \BaseController
         return [
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'help' => '.cpe.'.\Modules\ProvBase\Entities\ProvBase::first()->domain_name],
             ['form_type' => 'text', 'name' => 'modem_id', 'description' => 'Modem', 'hidden' => 1],
-            ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.mac_formats')],
+            ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.endpointMac').' '.trans('helper.mac_formats')],
             ['form_type' => 'checkbox', 'name' => 'fixed_ip', 'description' => 'Fixed IP', 'value' => '1', 'help' => trans('helper.fixed_ip_warning')],
             ['form_type' => 'text', 'name' => 'ip', 'description' => 'Fixed IP', 'checkbox' => 'show_on_fixed_ip'],
             ['form_type' => 'text', 'name' => 'prefix', 'description' => trans('messages.prefix').' (IPv6)', 'checkbox' => 'show_on_fixed_ip', 'options' => ['placeholder' => 'fd00:1::/64']],
@@ -45,7 +45,9 @@ class EndpointController extends \BaseController
     protected function prepare_rules($rules, $data)
     {
         if ($data['version'] == '6') {
-            $rules['prefix'] = 'required';
+            $rules['prefix'][] = 'required';
+        } else {
+            unset($rules['mac'][array_search('required', $rules['mac'])]);
         }
 
         return parent::prepare_rules($rules, $data);

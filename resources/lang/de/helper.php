@@ -191,4 +191,9 @@ return [
     'ticketDistance' => 'Multiplikator für das automatische Zuweisen von Tickets. Je höher dieser Wert ist, umso wichtiger ist die Distanz eines Technikers zur Störstelle. (Standard: 1)',
     'ticketModemcount' => 'Multiplikator für das automatische Zuweisen von Tickets. Je höher dieser Wert ist, umso wichtiger ist die Anzahl der betroffenen Modems. (Standard: 1)',
     'ticketOpentickets' => 'Multiplikator für das automatische Zuweisen von Tickets. Je höher dieser Wert ist, umso wichtiger ist die Anzahl der bereits zugewiesenen und in Bearbeitung befindlichen Tickets. (Standard: 1)',
+
+    /*
+     * Start alphabetical order
+     */
+    'endpointMac' => 'Kann für alle PPPoE provisionierte Modems frei gelassen werden (dann wird der PPP Nutzername statt der MAC genutzt). Mit DHCP kann das Feld für IPv4 frei gelassen werden. Dann bekommen alle Geräte hinter dem Modem die spezifizierte IP, wobei nur das Gerät, dass sich zuletzt gemeldet hat, eine funktionierende IP-Konnektivität erhält. Für IPv6 ist dies noch nicht implementiert - bitte geben Sie hier immer die MAC des CPE an, das eine öffentliche oder feste IP erhalten soll!',
 ];

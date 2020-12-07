@@ -13,16 +13,23 @@ class Endpoint extends \BaseModel
     {
         $id = $this->id;
         $modem = $this->exists ? $this->modem : Modem::with('configfile')->find(Request::get('modem_id'));
-        $macRequiredRule = $modem->configfile->device == 'tr069' ? '' : '|required';
 
-        // hostname/mac must be unique only inside all ipv4 or ipv6 endpoints - on creation it must be compared to version=NULL to work
+        // Hostname/MAC must be unique only inside all ipv4 or ipv6 endpoints - on creation it must be compared to version=NULL to work
         $versionFilter = ',version,'.($this->version ?: 'NULL');
 
-        return [
-            'mac' => 'mac|unique:endpoint,mac,'.$id.',id,deleted_at,NULL'.$versionFilter.$macRequiredRule,
-            'hostname' => 'required|regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/|unique:endpoint,hostname,'.$id.',id,deleted_at,NULL'.$versionFilter,
-            'ip' => 'nullable|required_if:fixed_ip,1|ip|unique:endpoint,ip,'.$id.',id,deleted_at,NULL',
+        $rules = [
+            'mac' => ['nullable', 'mac', 'unique:endpoint,mac,'.$id.',id,deleted_at,NULL'.$versionFilter],
+            'hostname' => ['required', 'regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/',
+                'unique:endpoint,hostname,'.$id.',id,deleted_at,NULL'.$versionFilter, ],
+            'ip' => ['nullable', 'required_if:fixed_ip,1|ip|unique:endpoint,ip,'.$id.',id,deleted_at,NULL'],
         ];
+
+        // Note: For IPv4 this is removed in EndpointController.php
+        if ($modem->configfile->device == 'cm') {
+            $rules['mac'][] = 'required';
+        }
+
+        return $rules;
     }
 
     // Name of View
@@ -129,9 +136,15 @@ class Endpoint extends \BaseModel
         $file_ep = $dir.'endpoints-host.conf';
 
         $data = '';
+        $endpoints = self::where('version', '4')->join('modem as m', 'm.id', 'endpoint.modem_id')
+            ->select('endpoint.*', 'm.mac as modemmac')
+            ->get();
 
-        foreach (self::where('version', '4')->whereNotNull('mac')->get() as $ep) {
-            $data .= "host $ep->hostname { hardware ethernet $ep->mac; ";
+        foreach ($endpoints as $ep) {
+            $data .= "host $ep->hostname { ";
+            $data .= $ep->mac ? "hardware ethernet $ep->mac" : "host-identifier option agent.remote-id $ep->modemmac";
+            $data .= ' ; ';
+
             if ($ep->fixed_ip && $ep->ip) {
                 $data .= "fixed-address $ep->ip; ";
             }
