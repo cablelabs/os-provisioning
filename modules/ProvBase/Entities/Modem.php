@@ -1161,7 +1161,7 @@ class Modem extends \BaseModel
             }
 
             $action = $factoryReset ? 'factoryReset' : 'reboot';
-            $success = self::callGenieAcsApi("devices/$id/tasks?timeout=3000&connection_request", 'POST', "{ \"name\" : \"$action\" }");
+            $success = self::callGenieAcsApi("devices/$id/tasks?connection_request", 'POST', "{ \"name\" : \"$action\" }");
 
             if (! $success) {
                 \Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
