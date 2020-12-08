@@ -826,21 +826,20 @@ class Modem extends \BaseModel
 
         $preset = [
             'weight' => 0,
-            'precondition' => json_encode([
-                '_deviceId._SerialNumber' => $this->serial_num,
-            ]),
+            'precondition' => "DeviceID.SerialNumber = \"{$this->serial_num}\"",
             'events' => [
                 '0 BOOTSTRAP' => true,
             ],
             'configurations' => [
                 [
                     'type' => 'provision',
-                    'name' => $this->id,
+                    'name' => "prov-$this->id",
+                    'args' => null,
                 ],
             ],
         ];
 
-        self::callGenieAcsApi("presets/$this->id", 'PUT', json_encode($preset));
+        self::callGenieAcsApi("presets/prov-$this->id", 'PUT', json_encode($preset));
 
         unset($preset['events']['0 BOOTSTRAP']);
         $preset['events']['2 PERIODIC'] = true;
@@ -956,7 +955,7 @@ class Modem extends \BaseModel
             }
         }
 
-        self::callGenieAcsApi("provisions/$this->id", 'PUT', implode("\r\n", $prov));
+        self::callGenieAcsApi("provisions/prov-$this->id", 'PUT', implode("\r\n", $prov));
     }
 
     /**
@@ -1037,7 +1036,7 @@ class Modem extends \BaseModel
      */
     public function deleteGenieAcsPreset()
     {
-        self::callGenieAcsApi("presets/$this->id", 'DELETE');
+        self::callGenieAcsApi("presets/prov-$this->id", 'DELETE');
         self::callGenieAcsApi("presets/mon-$this->id", 'DELETE');
     }
 
@@ -1048,7 +1047,7 @@ class Modem extends \BaseModel
      */
     public function deleteGenieAcsProvision()
     {
-        self::callGenieAcsApi("provisions/$this->id", 'DELETE');
+        self::callGenieAcsApi("provisions/prov-$this->id", 'DELETE');
     }
 
     /**
