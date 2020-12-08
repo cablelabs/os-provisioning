@@ -63,17 +63,24 @@
 
                     {!! HTML::decode (HTML::linkRoute('Modem.firmware',
                         '<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
-                            <i style="font-size: 25px;" class="img-center fa fa-file-code-o p-10"></i><br />
+                            <i style="font-size: 25px;" class="img-center fa fa-file-code-o p-10"></i><br>
                             <span class="username text-ellipsis text-center">Firmwares</span>
                         </span>'))
                     !!}
 
                     {!! HTML::decode (HTML::linkRoute('CustomerTopo.show_impaired',
                         '<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
-                            <i style="font-size: 25px;" class="img-center fa fa-hdd-o text-danger p-10"></i><br />
+                            <i style="font-size: 25px;" class="img-center fa fa-hdd-o text-danger p-10"></i><br>
                             <span class="username text-ellipsis text-center">'.trans('view.dashboard.impairedModem').'</span>
                         </span>'))
                     !!}
+
+                    <a href="/genieacs/">
+                        <span class="btn btn-dark p-10 m-5 m-r-10 text-center">
+                            <img src="{{asset('images/genieacs.svg')}}" height="45"><br>
+                            <span class="username text-ellipsis text-center">GenieACS</span>
+                        </span>
+                    </a>
 
                     {{-- reference link --}}
                     <div class="stats-link noHover"><a href="#"><br></a></div>
