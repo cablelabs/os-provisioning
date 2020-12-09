@@ -5,20 +5,42 @@ use Illuminate\Database\Migrations\Migration;
 
 class BaseMigration extends Migration
 {
-    protected $caller_classname = null;
-    protected $caller_migration_file = null;
-    protected $called_up_table_generic = false;
+    protected $callerClassname = '';
+    protected $callerMigrationFile = '';
+    protected $calledUpTableGeneric = false;
+
+    /**
+     * Define the migration's scope:
+     *   - “database”: Migration changes database
+     *   - “system”: Changes in configfiles, calling of systemd commands, …
+     * Beginning in 2021 a migration is not allowed ot change database AND system stuff
+     * Write two migrations if needed!
+     */
+    protected $migrationScope = '';
 
     public function __construct()
     {
-        $this->caller_classname = get_class($this);
-        echo 'Migrating '.$this->caller_classname."\n";
+        $this->callerClassname = get_class($this);
+        echo 'Migrating '.$this->callerClassname."\n";
 
         // get the filename of the caller class
-        $reflector = new ReflectionClass($this->caller_classname);
-        $this->caller_migration_file = basename($reflector->getFileName());
+        $reflector = new ReflectionClass($this->callerClassname);
+        $this->callerMigrationFile = basename($reflector->getFileName());
 
-        if ($this->caller_migration_file < '2018_08_07') {
+        // check if scope is set in newer migrations
+        if ($this->callerMigrationFile >= '2021_') {
+            if (! in_array($this->migrationScope, ['database', 'system'])) {
+                // this is meant as a hint for developing and should never be reached in production
+                exit("\nERROR in $this->callerMigrationFile: ".$this->callerClassname."->migrationScope has to be “database” or “system”. Exiting…\n\n");
+            }
+        }
+
+        // check if migration shall be executed
+        if (! $this->migrationShallRun()) {
+            exit(0);
+        }
+
+        if ($this->callerMigrationFile < '2018_08_07') {
             // get and instanciate of index maker
             require_once getcwd().'/app/extensions/database/FulltextIndexMaker.php';
             $this->fim = new FulltextIndexMaker($this->tablename);
@@ -30,13 +52,46 @@ class BaseMigration extends Migration
         Schema::defaultStringLength(191);
     }
 
+    /**
+     * Check if the migration shall be executed.
+     *
+     * @return bool
+     *
+     * @author Patrick Reichel
+     */
+    public function migrationShallRun()
+    {
+        if (\Module::collections()->has('ProvHA')) {
+            // check if called from slave migration command – then force execution
+            $filetrace = [];
+            foreach (debug_backtrace() as $trace) {
+                $filetrace[] = $trace['file'] ?? 'nofile';
+            }
+
+            // run migration if called from wrapper command
+            if (in_array('/var/www/nmsprime/modules/ProvHA/Console/MigrateSlaveCommand.php', $filetrace)) {
+                return true;
+            }
+
+            // do not execute migrations directly on HA slave machines
+            if (config('provha.hostinfo.own_state') == 'slave') {
+                echo '! Ignoring migration '.$this->callerClassname." – this is a slave machine.\n";
+
+                return false;
+            }
+        }
+
+        // default – run the migration
+        return true;
+    }
+
     public function up_table_generic(&$table)
     {
-        $this->called_up_table_generic = true;
+        $this->calledUpTableGeneric = true;
 
         // choose database engine and other stuff depending on date of migration
         // older migrations e.g. used MyISAM to build fulltext indexes
-        if ($this->caller_migration_file < '2018_08_07') {
+        if ($this->callerMigrationFile < '2018_08_07') {
             $table->increments('id');
             $table->engine = 'MyISAM'; // InnoDB doesn't support fulltext index in MariaDB < 10.0.5
             $table->timestamps();
@@ -67,7 +122,7 @@ class BaseMigration extends Migration
     protected function set_fim_fields($fields)
     {
         if (is_null($this->fim)) {
-            throw new \ErrorException('No FulltextIndexMaker in '.$this->caller_classname.'! – Maybe you want to index an InnoDB table?');
+            throw new \ErrorException('No FulltextIndexMaker in '.$this->callerClassname.'! – Maybe you want to index an InnoDB table?');
         }
 
         foreach ($fields as $field) {
@@ -80,9 +135,9 @@ class BaseMigration extends Migration
 
     public function __destruct()
     {
-        if ((! $this->called_up_table_generic)
+        if ((! $this->calledUpTableGeneric)
             &&
-            (substr($this->caller_classname, 0, 6) == 'Create')
+            (substr($this->callerClassname, 0, 6) == 'Create')
         ) {
             // only warn if not rolling back – unfortunately we have to step through the stacktrace…
             $rollback = false;
@@ -93,7 +148,7 @@ class BaseMigration extends Migration
                 }
             }
             if (! $rollback) {
-                echo "\tWARNING: up_table_generic() not called from ".$this->caller_classname.'. Falling back to database defaults.';
+                echo "\tWARNING: up_table_generic() not called from ".$this->callerClassname.'. Falling back to database defaults.';
             }
         }
     }
