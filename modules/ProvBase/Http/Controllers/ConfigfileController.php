@@ -149,7 +149,7 @@ class ConfigfileController extends \BaseController
         ];
 
         $query = json_encode($query);
-        $route = "devices/?query=$query&projection=_deviceId._SerialNumber";
+        $route = "devices?query=$query&projection=_deviceId._SerialNumber";
 
         $online = array_map(function ($value) {
             return $value->_deviceId->_SerialNumber ?? null;
@@ -163,7 +163,7 @@ class ConfigfileController extends \BaseController
             $modem = $model->modem()->where('serial_num', $modemSerial)->first();
             \Modules\ProvMon\Http\Controllers\ProvMonController::realtimeTR069($modem, true);
 
-            $modem = Modem::callGenieAcsApi("devices/?query={\"_deviceId._SerialNumber\":\"{$modemSerial}\"}", 'GET');
+            $modem = Modem::callGenieAcsApi("devices?query={\"_deviceId._SerialNumber\":\"{$modemSerial}\"}", 'GET');
             $parametersArray = $this->buildElementList($this->getFromDevices($modem));
 
             $storagefile = self::GACSCACHE.($model->id).'.json';

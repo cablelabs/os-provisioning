@@ -315,7 +315,18 @@ class ModemController extends \BaseController
             return \Redirect::back();
         }
 
-        $id = $modem->getGenieAcsModel('_id');
+        $id = rawurlencode($modem->getGenieAcsModel('_id'));
+        $taskDecode = json_decode($task, true);
+
+        foreach (['factoryReset', 'reboot'] as $action) {
+            if ($taskDecode === ['name' => $action] &&
+                json_decode($modem->callGenieAcsApi("tasks?query={\"device\":\"$id\",\"name\":\"$action\"}", 'GET'))) {
+                \Session::push('tmp_info_above_form', $action.trans('messages.modemAnalysis.alreadyScheduled'));
+
+                return \Redirect::back();
+            }
+        }
+
         $modem->callGenieAcsApi("devices/$id/tasks?connection_request", 'POST', $task);
 
         return \Redirect::back();

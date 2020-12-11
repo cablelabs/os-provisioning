@@ -288,6 +288,7 @@ return [
     'Allocate PPPoE IPs randomly' => 'Allocate PPPoE IPs randomly',
     'Last update of geoposition' => 'Last update of geoposition',
     'modemAnalysis' => [
+        'alreadyScheduled' => ' is already scheduled.',
         'cfOutdated' => 'The modem doesn\'t run with the actual configfile. The last download was before the built time of the configfile.',
         'cfError' => 'There was an error creating the config file! Please be aware that this modem has currently no config file. Please check if the configfile can be created properly. To Test this, please execute the following command on the command line:',
         'cpeMacMissmatch' => 'The state of internet access and telephony could not be determined as minimum 1 CPE MAC address differs from the MACs of the assigned MTAs.',
