@@ -803,3 +803,15 @@ div.recolor:hover img {
         min-height: 50vh;
     }
 }
+
+
+#nmsprime-brand {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    max-width: 30vh;
+}
+
+#login-img {
+    max-width: initial;
+}

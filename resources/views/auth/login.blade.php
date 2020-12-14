@@ -14,30 +14,36 @@
     {{-- Background Image --}}
     <div class="login-cover">
         <div class="login-cover-image">
-            <img alt=""  data-id="login-cover-image" src="{{asset('images/'.$image)}}">
+            <img id="login-img" data-id="login-cover-image" src="{{asset('images/'.$image)}}">
         </div>
         <div class="login-cover-bg"></div>
+        <div id="nmsprime-brand" class="brand">
+            <img src="{{asset('images/nmsprime-logo-poweredby.png')}}" class="img-fluid">
+        </div>
     </div>
 
     {{-- begin login --}}
     <div class="login login-v2 animated fadeInDown">
-
         <div class="login-content">
-
-        {{-- begin brand --}}
-            <div class="login-header" style="margin-top:120px;">
-                <div class="icon">
-                    <i class="fa fa-sign-in" style="font-color:#b7b7b7;"></i>
+            @if ($logo)
+                <div class="brand">
+                    <img src="{{$logo}}" class="img-fluid">
                 </div>
-            </div>
-            <div class="brand m-b-20">
-                <img src="{{asset('images/nmsprime-logo-white.png')}}" class="img-fluid">
-            </div>
-            <div align="center">
-                <h4>{{ $head1 }}</h4>
-                <h5>{{ $head2 }}</h5>
-            </div>
-            <div>
+            @endif
+
+            @if ($head1 || $head2)
+                <div class="row">
+                    <div class="col-9 d-flex flex-column justify-content-center align-items-center">
+                        <div style="font-size: 18px">{{ $head1 }}</div>
+                        <div style="font-size: 14px">{{ $head2 }}</div>
+                    </div>
+                    <div class="icon col-3" style="font-size: 60px">
+                        <i class="fa fa-sign-in" style="font-color:#b7b7b7;"></i>
+                    </div>
+                </div>
+            @endif
+
+            <div class="m-t-20">
                 {{ Form::open(array('url' => $prefix.'/login')) }}
 
                 {{-- Username --}}
