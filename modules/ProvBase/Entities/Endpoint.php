@@ -193,8 +193,8 @@ class Endpoint extends \BaseModel
         if (! \Module::collections()->has('ProvHA')) {
             $servers['127.0.0.1'] = $provbase->dns_password;
         } else {
-            $servers['127.0.0.1'] = $provbase->provha_own_dns_pw;
-            $servers[$provbase->provha_peer_ip] = $provbase->provha_peer_dns_pw;
+            $servers['127.0.0.1'] = $provbase->provhaOwnDnsPw;
+            $servers[$provbase->provhaPeerIp] = $provbase->provhaPeerDnsPw;
         }
 
         foreach ($servers as $server => $password) {

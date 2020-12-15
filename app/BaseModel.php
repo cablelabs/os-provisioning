@@ -754,8 +754,8 @@ class BaseModel extends Eloquent
     {
         // in ProvHA environments: Only master is allowed to change the database
         if (\Module::collections()->has('ProvHA')) {
-            if ('master' != config('provha.hostinfo.own_state')) {
-                $msg = trans('provha::messages.db_change_forbidden_not_master', ['state' => config('provha.hostinfo.own_state')]);
+            if ('master' != config('provha.hostinfo.ownState')) {
+                $msg = trans('provha::messages.db_change_forbidden_not_master', ['state' => config('provha.hostinfo.ownState')]);
                 $this->addAboveMessage($msg, 'error');
                 \Log::error('Slave tried to write do database in '.(get_class($this)).'::'.(debug_backtrace()[1]['function']).'()');
                 return false;

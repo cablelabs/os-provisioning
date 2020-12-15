@@ -124,7 +124,7 @@ class LoginController extends Controller
 
         // do not try to update user on ha slave machines
         if (\Module::collections()->has('ProvHA')) {
-            if ('master' != config('provha.hostinfo.own_state')) {
+            if ('master' != config('provha.hostinfo.ownState')) {
                 return;
             }
         }

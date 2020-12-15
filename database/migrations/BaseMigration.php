@@ -74,7 +74,7 @@ class BaseMigration extends Migration
             }
 
             // do not execute migrations directly on HA slave machines
-            if (config('provha.hostinfo.own_state') == 'slave') {
+            if (config('provha.hostinfo.ownState') == 'slave') {
                 echo '! Ignoring migration '.$this->callerClassname." – this is a slave machine.\n";
 
                 return false;

@@ -76,9 +76,9 @@ class DhcpCommand extends Command
             (\Module::collections()->has('ProvHA'))
             &&
             // check if master or slave
-            (in_array(config('provha.hostinfo.own_state'), ['master', 'slave']))
+            (in_array(config('provha.hostinfo.ownState'), ['master', 'slave']))
         ) {
-            \Modules\ProvHA\Entities\ProvHA::make_dhcp_failover_conf();
+            \Modules\ProvHA\Entities\ProvHA::makeDhcpFailoverConf();
         }
 
         // Restart dhcp server

@@ -13,11 +13,11 @@ class ProvBase extends \BaseModel
 
     // some variables used if module ProvHA is enabled
     public $provha;
-    public $provha_state;
-    public $provha_own_ip;
-    public $provha_peer_ip;
-    public $provha_own_dns_pw;
-    public $provha_peer_dns_pw;
+    public $provhaState;
+    public $provhaOwnIp;
+    public $provhaPeerIp;
+    public $provhaOwnDnsPw;
+    public $provhaPeerDnsPw;
 
     protected const DEFAULT_NETWORK_FILE_PATH = '/etc/dhcp-nmsprime/default-network.conf';
     const NSUPDATE_LOGFILE = '/var/log/nmsprime/nsupdate.log';
@@ -33,7 +33,7 @@ class ProvBase extends \BaseModel
         parent::__construct();
 
         // set provha related variables
-        $this->set_provha_properties();
+        $this->setProvhaProperties();
     }
 
     /**
@@ -41,23 +41,23 @@ class ProvBase extends \BaseModel
      *
      * @author Patrick Reichel
      */
-    protected function set_provha_properties()
+    protected function setProvhaProperties()
     {
         if (! \Module::collections()->has('ProvHA')) {
             $this->provha = null;
         } else {
             $this->provha = \DB::table('provha')->first();
-            $this->provha_state = config('provha.hostinfo.own_state');
-            if ('master' == $this->provha_state) {
-                $this->provha_own_ip = $this->provha->master;
-                $this->provha_peer_ip = explode(',', $this->provha->slaves)[0];
-                $this->provha_own_dns_pw = $this->provha->master_dns_password;
-                $this->provha_peer_dns_pw = $this->provha->slave_dns_password;
+            $this->provhaState = config('provha.hostinfo.ownState');
+            if ('master' == $this->provhaState) {
+                $this->provhaOwnIp = $this->provha->master;
+                $this->provhaPeerIp = explode(',', $this->provha->slaves)[0];
+                $this->provhaOwnDnsPw = $this->provha->master_dns_password;
+                $this->provhaPeerDnsPw = $this->provha->slave_dns_password;
             } else {
-                $this->provha_own_ip = explode(',', $this->provha->slaves)[0];
-                $this->provha_peer_ip = $this->provha->master;
-                $this->provha_own_dns_pw = $this->provha->slave_dns_password;
-                $this->provha_peer_dns_pw = $this->provha->master_dns_password;
+                $this->provhaOwnIp = explode(',', $this->provha->slaves)[0];
+                $this->provhaPeerIp = $this->provha->master;
+                $this->provhaOwnDnsPw = $this->provha->slave_dns_password;
+                $this->provhaPeerDnsPw = $this->provha->master_dns_password;
             }
         }
     }
@@ -159,26 +159,26 @@ class ProvBase extends \BaseModel
         $file_dhcp_conf = '/etc/dhcp-nmsprime/global.conf';
 
         if (is_null($this->provha)) {
-            $own_ip = $this->provisioning_server;
-            $ip_list = $own_ip;
+            $ownIp = $this->provisioning_server;
+            $ipList = $ownIp;
         } else {
-            $own_ip = $this->provha_own_ip;
-            $peer_ip = $this->provha_peer_ip;
-            $ip_list = "$own_ip,$peer_ip";
+            $ownIp = $this->provhaOwnIp;
+            $peerIp = $this->provhaPeerIp;
+            $ipList = "$ownIp,$peerIp";
         }
 
         $data = 'ddns-domainname "'.$this->domain_name.'.";'."\n";
         $data .= 'option domain-name "'.$this->domain_name.'";'."\n";
-        $data .= 'option domain-name-servers '.$ip_list.";\n";
+        $data .= 'option domain-name-servers '.$ipList.";\n";
         $data .= 'default-lease-time '.$this->dhcp_def_lease_time.";\n";
         $data .= 'max-lease-time '.$this->dhcp_max_lease_time.";\n";
-        $data .= 'next-server '.$own_ip.";\n";
+        $data .= 'next-server '.$ownIp.";\n";
         if (! is_null($this->provha)) {
             $data .= "\n# option vivso.2 (CL_V4OPTION_TFTPSERVERS, see https://www.excentis.com/blog/how-provision-cable-modem-using-isc-dhcp-server)\n";
-            $data .= 'option vivso '.$this->getDHCPOptionVivso2([$own_ip, $peer_ip]).";\n\n";
+            $data .= 'option vivso '.$this->getDHCPOptionVivso2([$ownIp, $peerIp]).";\n\n";
         }
-        $data .= 'option log-servers '.$ip_list.";\n";
-        $data .= 'option time-servers '.$ip_list.";\n";
+        $data .= 'option log-servers '.$ipList.";\n";
+        $data .= 'option time-servers '.$ipList.";\n";
         $data .= 'option time-offset '.date('Z').";\n";
 
         $data .= "\n# zone\nzone ".$this->domain_name." {\n\tprimary 127.0.0.1;\n\tkey dhcpupdate;\n}\n";
@@ -376,7 +376,7 @@ class ProvBase extends \BaseModel
             '127.0.0.1' => $password    // nsupdate does not accept „localhost“ (“response to SOA query was unsuccessful”)!
         ];
         if (! is_null($this->provha)) {
-            $servers[$this->provha_peer_ip] = $this->provha_peer_dns_pw;
+            $servers[$this->provhaPeerIp] = $this->provhaPeerDnsPw;
         }
 
         foreach ($servers as $server=>$pw) {
@@ -431,7 +431,7 @@ class ProvBase extends \BaseModel
      */
     public function make_ddns_conf()
     {
-        $password = $this->provha_own_dns_pw ?: $this->dns_password;
+        $password = $this->provhaOwnDnsPw ?: $this->dns_password;
 
         $success = True;
         // configure named

@@ -413,12 +413,12 @@ class Modem extends \BaseModel
                 $provha = \Modules\ProvHA\Entities\ProvHA::first();
                 $master = $provha->master;
                 $slave = explode(',', $provha->slaves)[0] ?: null;
-                if ('master' == config('provha.hostinfo.own_state')) {
+                if ('master' == config('provha.hostinfo.ownState')) {
                     $ret .= " option ccc.dhcp-server-1 $master;";
                     if ($slave) {
                         $ret .= " option ccc.SecondaryDHCPServer $slave;";
                     }
-                } elseif ('slave' == config('provha.hostinfo.own_state')) {
+                } elseif ('slave' == config('provha.hostinfo.ownState')) {
                     $ret .= " option ccc.dhcp-server-1 $slave;";
                     $ret .= " option ccc.SecondaryDHCPServer $master;";
                 }
