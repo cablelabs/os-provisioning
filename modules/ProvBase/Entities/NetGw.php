@@ -545,6 +545,10 @@ class NetGw extends \BaseModel
 
             $data = "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
             $data .= "\n\t\t".'option routers '.$router.';';
+            if ($type != 'CM') {
+                $data .= "\n\t\t".'next-server '.$router.';';
+                $data .= "\n\t\t".'option dhcp-server-identifier '.$router.';';
+            }
             if ($broadcast_addr != '') {
                 $data .= "\n\t\t".'option broadcast-address '.$broadcast_addr.';';
             }
