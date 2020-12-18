@@ -531,8 +531,8 @@ class BaseController extends Controller
         $basemodel = new BaseModel;
 
         // search for tags?
-        if ($search = $this->getGlobalSearchQuery($query)) {
-            $query = $search[2];
+        if ($searchTag = $this->getGlobalSearchQuery($query)) {
+            $query = $searchTag[2];
         }
 
         $models = collect($basemodel->get_models())->reject(function ($class) {
@@ -542,7 +542,7 @@ class BaseController extends Controller
         });
 
         $view_var = collect($fromTags);
-        if ($view_var->isEmpty()) {
+        if (! $searchTag) {
             try {
                 foreach ($this->globalSearchResults($query, $models) as $result) {
                     if ($result->isNotEmpty()) {
