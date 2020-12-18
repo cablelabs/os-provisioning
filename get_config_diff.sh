@@ -9,17 +9,20 @@
 # ./get_config_diff.sh > config.diff
 
 ignore=(
+	'/etc/dhcp-nmsprime/blocked.conf'
 	'/etc/dhcp-nmsprime/cmts_gws.conf'
 	'/etc/dhcp-nmsprime/endpoints-host.conf'
 	'/etc/dhcp-nmsprime/modems-clients-public.conf'
 	'/etc/dhcp-nmsprime/modems-host.conf'
 	'/etc/dhcp-nmsprime/mta.conf'
+	'/etc/kea/gateways6.conf'
+	'/etc/kea/hosts6.conf'
 	'/var/log/nmsprime/tftpd-cm.log'
 	'/var/named/dynamic/in-addr.arpa.zone'
 	'/var/named/dynamic/nmsprime.test.zone'
 )
 
-for file in $(find /var/www/nmsprime -path "*/Install/config.cfg"); do
+for file in $(find /var/www/nmsprime -maxdepth 4 -path "*/Install/config.cfg"); do
 	while read -r line; do
 		f_from="$(dirname $file)/files/$(echo "$line" | cut -d'=' -f1 | xargs)"
 		f_to=$(echo "$line" | cut -d'=' -f2 | xargs)
