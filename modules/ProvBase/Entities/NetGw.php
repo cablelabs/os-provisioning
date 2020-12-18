@@ -545,7 +545,7 @@ class NetGw extends \BaseModel
 
             $data = "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
             $data .= "\n\t\t".'option routers '.$router.';';
-            if ($type != 'CM') {
+            if ($type == 'CPEPriv' || $type == 'CPEPub') {
                 $data .= "\n\t\t".'next-server '.$router.';';
                 $data .= "\n\t\t".'option dhcp-server-identifier '.$router.';';
             }
