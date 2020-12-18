@@ -960,3 +960,7 @@ table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTabl
     font-size: 13px !important;
     width: 223px;
 }
+
+.divider {
+    border-top: 1px solid;
+}

@@ -20,7 +20,6 @@
 
 @section ('content_left')
 	@foreach ($apps as $app)
-		<h4 style="text-align: center;"></h4>
 		@foreach ($app as $category => $modules)
 			<div class="btn">
 				<span>

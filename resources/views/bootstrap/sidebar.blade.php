@@ -73,7 +73,13 @@
         @endif
         </li>
       @endforeach
+    <li class="nav-header apps divider">
+      <a href="{{route('Apps.active')}}" class="text-success">External Apps
+        <i class="fa fa-plus"></i>
+      </a>
+    </li>
 
+    @can('view', Modules\HfcBase\Entities\TreeErd::class)
     @if(Module::collections()->has('HfcBase') && auth()->user()->can('view', Modules\HfcBase\Entities\TreeErd::class))
       <li class="nav-header">{{ trans('view.Menu_Nets') }}</li>
       <li id="network_overview" class="has-sub" data-sidebar="level1">
