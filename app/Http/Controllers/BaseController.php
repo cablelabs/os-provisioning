@@ -542,14 +542,16 @@ class BaseController extends Controller
         });
 
         $view_var = collect($fromTags);
-        try {
-            foreach ($this->globalSearchResults($query, $models) as $result) {
-                if ($result->isNotEmpty()) {
-                    $view_var = $view_var->merge($result);
+        if ($view_var->isEmpty()) {
+            try {
+                foreach ($this->globalSearchResults($query, $models) as $result) {
+                    if ($result->isNotEmpty()) {
+                        $view_var = $view_var->merge($result);
+                    }
                 }
+            } catch (Exception $e) {
+                //
             }
-        } catch (Exception $e) {
-            //
         }
 
         $view_var = $view_var->unique('id');
