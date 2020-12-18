@@ -38,7 +38,7 @@
       </li>
       @foreach ($view_header_links as $module_name => $typearray)
         <li id="{{ Str::slug($module_name,'_')}}" class="has-sub {{ ($route_name == $module_name) ? 'active' : ''}}" data-sidebar="level1">
-          <div style="padding: 8px 20px;line-height: 20px;color: #a8acb1;display: flex;justify-content: space-between;align-items: center;" class="recolor">
+          <div style="padding: 8px 20px;line-height: 20px;color: #a8acb1;display: flex;justify-content: space-between;align-items: center; white-space: nowrap;" class="recolor">
             @if (isset($typearray['link']))
               <a href="{{route($typearray['link'])}}">
             @else
@@ -53,7 +53,7 @@
             </a>
             @if(isset($typearray['submenu']))
               <a class="caret-link" href="javascript:;" style="width: 20%; height: 20px; display:block; text-align: right">
-                <b class="caret fa-rotate-270"></b>
+                <b class="caret fa-rotate-270" style="right: 5px; top: 14px;"></b>
               </a>
             @endif
           </div>

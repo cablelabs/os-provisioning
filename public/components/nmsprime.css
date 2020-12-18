@@ -566,10 +566,13 @@ li.expand div img {
     filter: none !important;
 }
 
-#page-container.page-sidebar-minified .nav li i.fa+span{
+#page-container.page-sidebar-minified .nav li i.fa+span,
+#page-container.page-sidebar-minified .nav li img + span {
   display: none;
 }
-#page-container.page-sidebar-minified .nav ul.sub-menu li i.fa+span{
+
+#page-container.page-sidebar-minified .nav ul.sub-menu li i.fa+span,
+#page-container.page-sidebar-minified .nav ul.sub-menu li img + span {
   display: inline;
 }
 
@@ -789,6 +792,10 @@ ul.nav.nav-pills li {
 
 div.recolor:hover img {
     filter: none !important;
+}
+
+div.recolor:hover {
+    background: #232a2f;
 }
 
 @media print {
