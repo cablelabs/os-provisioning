@@ -794,7 +794,8 @@ div.recolor:hover img {
     filter: none !important;
 }
 
-div.recolor:hover {
+div.recolor:hover,
+.apps:hover {
     background: #232a2f;
 }
 
@@ -940,8 +941,22 @@ div.recolor:hover {
     }
   }
 
-  table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTable.dtr-column > tbody > tr > th.dtr-control::before, table.dataTable.dtr-column > tbody > tr > td.control::before, table.dataTable.dtr-column > tbody > tr > th.control::before {
+table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTable.dtr-column > tbody > tr > th.dtr-control::before, table.dataTable.dtr-column > tbody > tr > td.control::before, table.dataTable.dtr-column > tbody > tr > th.control::before {
     height: 16px;
     width: 16px;
     line-height: 16px;
+}
+
+.nav-header .text-success {
+    display: inline-block !important;
+    width: 100%;
+}
+
+.nav-header .text-success i {
+    float: right !important;
+}
+
+.apps {
+    font-size: 13px !important;
+    width: 223px;
 }
