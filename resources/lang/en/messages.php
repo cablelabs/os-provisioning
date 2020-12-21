@@ -765,4 +765,6 @@ return [
     'error_writing_file'        => 'Error writing file :0!',
     'error_building_config'     => 'Error building config for :0!',
     'error_restarting_daemon'   => 'Error restarting :0!',
+    'nativeApps'                => 'Native apps',
+    'externalApps'              => 'External apps',
 ];

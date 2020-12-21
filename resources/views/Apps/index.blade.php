@@ -19,7 +19,7 @@
 @extends ('Layout.split-nopanel')
 
 @section ('content_left')
-	<h4 style="text-align: center;">Native Apps</h4>
+	<h4 style="text-align: center;">{{ trans('messages.nativeApps') }}</h4>
 	@foreach ($nativeApps as $nativeApp)
 		@foreach ($nativeApp as $category => $modules)
 			<div class="btn">
@@ -39,5 +39,5 @@
 			</div>
 		@endforeach
 	@endforeach
-	<h4 style="text-align: center;">External Apps</h4>
+	<h4 style="text-align: center;">{{ trans('messages.externalApps') }}</h4>
 @stop

@@ -34,7 +34,7 @@
     {{-- begin sidebar nav --}}
     <ul class="nav">
       <li class="nav-header apps">
-        <a href="{{route('Apps.active')}}" class="text-success">Native Apps
+        <a href="{{route('Apps.active')}}" class="text-success">{{ trans('messages.nativeApps') }}
           <i class="fa fa-plus"></i>
         </a>
       </li>
@@ -74,7 +74,7 @@
         </li>
       @endforeach
     <li class="nav-header apps divider">
-      <a href="{{route('Apps.active')}}" class="text-success">External Apps
+      <a href="{{route('Apps.active')}}" class="text-success">{{ trans('messages.externalApps') }}
         <i class="fa fa-plus"></i>
       </a>
     </li>
