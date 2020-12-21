@@ -19,8 +19,9 @@
 @extends ('Layout.split-nopanel')
 
 @section ('content_left')
-	@foreach ($apps as $app)
-		@foreach ($app as $category => $modules)
+	<h4 style="text-align: center;">Native Apps</h4>
+	@foreach ($nativeApps as $nativeApp)
+		@foreach ($nativeApp as $category => $modules)
 			<div class="btn">
 				<span>
 					<b>{{ $category }}</b>
@@ -38,4 +39,5 @@
 			</div>
 		@endforeach
 	@endforeach
+	<h4 style="text-align: center;">External Apps</h4>
 @stop

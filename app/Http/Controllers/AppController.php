@@ -29,10 +29,10 @@ class AppController extends BaseController
     public function showApps()
     {
         $modules = \Route::currentRouteName() == 'Apps.active' ? \Module::allEnabled() : \Module::allDisabled();
-        $apps = $this->getApps($modules);
+        $nativeApps = $this->getNativeApps($modules);
         $tabs = $this->prepareTabs();
 
-        return \View::make('Apps.index', $this->compact_prep_view(compact('apps', 'tabs')));
+        return \View::make('Apps.index', $this->compact_prep_view(compact('nativeApps', 'tabs')));
     }
 
     /**
@@ -42,7 +42,7 @@ class AppController extends BaseController
      * @param  Nwidart\Modules $installed
      * @return array $apps
      */
-    public function getApps($installed)
+    public function getNativeApps($installed)
     {
         $apps = [];
         foreach ($installed as $module) {
