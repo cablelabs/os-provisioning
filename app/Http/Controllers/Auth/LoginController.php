@@ -60,8 +60,9 @@ class LoginController extends Controller
         $head1 = $globalConfig->headline1;
         $head2 = $globalConfig->headline2;
         $image = 'main-pic-1.jpg';
+        $loginPage = 'admin';
 
-        return \View::make('auth.login', compact('head1', 'head2', 'prefix', 'image'));
+        return \View::make('auth.login', compact('head1', 'head2', 'prefix', 'image', 'loginPage'));
     }
 
     /**

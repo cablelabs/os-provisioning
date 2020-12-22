@@ -11,15 +11,23 @@
 
 <body class="pace-top">
 
+    @php
+        if ($loginPage == 'admin') {
+            $logo = asset('images/nmsprime-logo-white.png');
+        }
+    @endphp
+
     {{-- Background Image --}}
     <div class="login-cover">
         <div class="login-cover-image">
             <img id="login-img" data-id="login-cover-image" src="{{asset('images/'.$image)}}">
         </div>
         <div class="login-cover-bg"></div>
-        <div id="nmsprime-brand" class="brand">
-            <img src="{{asset('images/nmsprime-logo-poweredby.png')}}" class="img-fluid">
-        </div>
+        @if ($loginPage == 'customer')
+            <div id="nmsprime-brand" class="brand">
+                <img src="{{asset('images/nmsprime-logo-poweredby.png')}}" class="img-fluid">
+            </div>
+        @endif
     </div>
 
     {{-- begin login --}}
