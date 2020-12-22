@@ -4155,6 +4155,7 @@ Beratung für Arbeitnehmer aus Mittel- und Osteuropa
 Beratung für Arbeitssicherheit
 Beratung für Arbeitswissenschaft
 Beratung für artgerechte Tiernahrung
+Beratung für Ärzte
 Beratung für Aussiedler
 Beratung für Ayurveda
 Beratung für Baubiologie
@@ -11993,6 +11994,7 @@ Flüssigzuckerwerk
 Folienatelier
 Folienbeschriftung
 Folienbeutelherstellung
+Folienchirurgie
 Foliendesign
 Foliendesignstudio
 Folienfabrikation
@@ -25319,6 +25321,7 @@ Neonherstellung
 Neonlichtwerbung
 Neonwerbetechnik
 Neoprenreparaturen
+Neoprenverarbeitung
 Nephrologe
 Nephrologin
 Nephrologische Ambulanz
@@ -35629,6 +35632,7 @@ Teilbuchbinderin
 Teilebörse
 Teilezurichter
 Teilezurichterin
+Teilstationäre Altenhilfe
 Telebanking
 Telebau
 Teleberatung
