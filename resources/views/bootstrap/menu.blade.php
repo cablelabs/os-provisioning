@@ -1,7 +1,7 @@
 {{-- begin Navbar --}}
 <nav id="header" class="header navbar navbar-expand navbar-default navbar-fixed-top d-print-none">
   {{-- only one row Navbar --}}
-    <div class="row">
+    <div class="d-flex">
       {{-- begin mobile sidebar expand / collapse button --}}
         <button type="button" class="navbar-toggle m-l-20" data-click="sidebar-toggled">
             <span class="icon-bar"></span>
@@ -16,7 +16,7 @@
           </a>
         </span>
 
-        {{-- end mobile sidebar expand / collapse button --}}
+      {{-- end mobile sidebar expand / collapse button --}}
       <div class="col tab-overflow p-t-5 m-l-5 d-none d-md-block">
         <ul class="nav nav-pills p-t-5">
           <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="m-t-10"><i class="fa fa-arrow-left"></i></a></li>
@@ -24,6 +24,7 @@
           <li class="next-button"><a href="javascript:;" data-click="next-tab" class="m-t-10"><i class="fa fa-arrow-right"></i></a></li>
         </ul>
       </div>
+
       <ul class="navbar-nav ml-auto">
         {{-- global search form --}}
         <li class="nav-item d-flex">
@@ -33,7 +34,7 @@
         </li>
 
         {{-- Help Section --}}
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown d-none d-md-block">
           <a id="navbarDropdown"
             class="nav-link dropdown-toggle"
             href="#"
@@ -43,9 +44,6 @@
             aria-expanded="false"
             style="padding: 12px 10x 8px 8px;">
             <i class="fa fa-question fa-2x" aria-hidden="true"></i>
-            <span class="d-none d-sm-none d-md-inline">
-            </span>
-            <b class="caret"></b>
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0;left:auto;">
             <a class="dropdown-item" href="https://devel.roetzer-engineering.com/" target="_blank">
@@ -94,7 +92,12 @@
             </a>
           </li>
         @endif
-        <li class="nav-item dropdown m-r-20">
+
+        {{-- Notification Section --}}
+        @include('bootstrap._navbar-notifications')
+
+        {{-- User Menu --}}
+        <li class="nav-item dropdown m-r-10">
           <a id="navbarDropdown"
             class="nav-link d-flex align-items-center dropdown-toggle"
             href="#"
@@ -103,10 +106,9 @@
             aria-haspopup="true"
             aria-expanded="false">
             <i class="fa fa-user-circle-o fa-2x d-inline" aria-hidden="true"></i>
-            <span class="d-none d-sm-none d-md-inline">
+            <span class="d-none d-md-inline">
               {{ $user->first_name.' '. $user->last_name }}
             </span>
-            <b class="caret"></b>
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0;left:auto;">
             <a class="dropdown-item" href="{{ route('User.profile', $user->id) }}">
