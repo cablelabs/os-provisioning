@@ -410,7 +410,14 @@ class BaseController extends Controller
     {
         $a = func_get_args()[0];
 
-        $a['user'] = Auth::user();
+        $a['user'] = \App\User::where('id', auth()->id())
+            ->withCount('unreadNotifications')
+            ->with([
+                'unreadNotifications' => function ($query) {
+                    $query->orderByDesc('created_at');
+                },
+            ])
+            ->first();
 
         $model = static::get_model_obj();
 
