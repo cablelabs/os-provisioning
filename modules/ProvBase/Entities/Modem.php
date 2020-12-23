@@ -2241,4 +2241,42 @@ class Modem extends \BaseModel
 
         return ['bsclass' => 'info', 'text' => trans('messages.modemAnalysis.onlyVoip')];
     }
+
+    public function getTicketSummary()
+    {
+        if ($this->x != 0 || $this->y != 0) {
+            $navi = [
+                'link' => "https://www.google.com/maps/dir/my+location/{$this->y},{$this->x}",
+                'icon' => 'fa-location-arrow',
+                'title' => trans('messages.Route'),
+            ];
+        }
+
+        return [
+            trans('messages.Personal Contact') => [
+                'text' => "{$this->company} {$this->department} {$this->salutation} {$this->academic_degree} {$this->firstname} {$this->lastname}",
+            ],
+            trans('messages.Address') => [
+                'text' => "{$this->street} {$this->house_number}||{$this->zip} {$this->city} {$this->district}",
+                'action' => $navi ?? null,
+            ],
+            trans('messages.Signal Parameters') => [
+                'text' => "US Pwr: {$this->us_pwr} | US SNR: {$this->us_snr} ||DS Pwr: {$this->ds_pwr} | DS SNR: {$this->ds_snr}",
+                'action' => [
+                    'link' => route('ProvMon.index', [$this->id]),
+                    'icon' => 'fa-area-chart',
+                    'title' => trans('messages.Analysis'),
+                ],
+            ],
+        ];
+    }
+
+    public function reducedFields()
+    {
+        return [
+            'id', 'company', 'department', 'salutation', 'academic_degree', 'firstname', 'lastname',
+            'street', 'house_number', 'zip', 'city', 'district', 'us_pwr', 'us_snr', 'ds_pwr', '
+            ds_snr', 'x', 'y',
+        ];
+    }
 }

@@ -889,4 +889,43 @@ class NetElement extends \BaseModel
             }
         }
     }
+
+    public function getTicketSummary()
+    {
+        if ($this->pos) {
+            $pos = explode(',', $this->pos);
+
+            $navi = [
+                'link' => "https://www.google.com/maps/dir/my+location/{$pos[1]},{$pos[0]}",
+                'icon' => 'fa-location-arrow',
+                'title' => trans('messages.Route'),
+            ];
+        }
+
+        return [
+            trans('messages.Device') => [
+                'text' => "{$this->netelementtype->vendor} {$this->netelementtype->name} {$this->netelementtype->version}",
+            ],
+            trans('messages.Name') => [
+                'text' => $this->name,
+            ],
+            trans('messages.Position') => [
+                'text' => $this->pos,
+                'action' => $navi ?? null,
+            ],
+            trans('messages.CLUSTER') => [
+                'text' => $this->clusterObj()->without('netelementtype')->first()->name ?? $this->cluster,
+                'action' => [
+                    'link' => route('CustomerTopo.show', ['id', $this->id]),
+                    'icon' => 'fa-map',
+                    'title' => trans('view.ticket.View Topography'),
+                ],
+            ],
+        ];
+    }
+
+    public function reducedFields()
+    {
+        return ['id', 'netelementtype', 'name', 'pos', 'cluster'];
+    }
 }

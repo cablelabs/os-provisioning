@@ -1651,4 +1651,47 @@ class Contract extends \BaseModel
 
         return $objList;
     }
+
+    public function getTicketSummary()
+    {
+        if ($this->x != 0 || $this->y != 0) {
+            $navi = [
+                'link' => "https://www.google.com/maps/dir/my+location/{$this->y},{$this->x}",
+                'icon' => 'fa-location-arrow',
+                'title' => trans('messages.Route'),
+            ];
+        }
+
+        return [
+            trans('messages.Personal Contact') => [
+                'text' => "{$this->company} {$this->department} {$this->salutation} {$this->academic_degree} {$this->firstname} {$this->lastname}",
+            ],
+            trans('messages.Address') => [
+                'text' => "{$this->street} {$this->house_number}||{$this->zip} {$this->city} {$this->district}",
+                'action' => $navi ?? null,
+            ],
+            trans('messages.Phone') => [
+                'text' => $this->phone ?? null,
+                'action' => [
+                    'link' => "tel:{$this->phone}",
+                    'icon' => 'fa-phone',
+                ],
+            ],
+            trans('messages.Mail') => [
+                'text' => $this->email ?? null,
+                'action' => [
+                    'link' => "mailto:{$this->email}",
+                    'icon' => 'fa-envelope',
+                ],
+            ],
+        ];
+    }
+
+    public function reducedFields()
+    {
+        return [
+            'id', 'company', 'department', 'salutation', 'academic_degree', 'firstname', 'lastname',
+            'street', 'house_number', 'zip', 'city', 'district', 'phone', 'mail', 'x', 'y',
+        ];
+    }
 }
