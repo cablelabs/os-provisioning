@@ -262,6 +262,22 @@ table .index_check {
 }
 
 /* Table Colors*/
+.table > thead > tr > td.green,
+.table > tbody > tr > td.green,
+.table > tfoot > tr > td.green,
+.table > thead > tr > th.green,
+.table > tbody > tr > th.green,
+.table > tfoot > tr > th.green,
+.table > thead > tr.green > td,
+.table > tbody > tr.green > td,
+.table > tfoot > tr.green > td,
+.table > thead > tr.green > th,
+.table > tbody > tr.green > th,
+.table > tfoot > tr.green > th {
+    background:#D9F99D;
+    border-color:#A3E635;
+}
+
 .table > thead > tr > td.info,
 .table > tbody > tr > td.info,
 .table > tfoot > tr > td.info,
@@ -809,13 +825,33 @@ div.recolor:hover img {
     min-height: 80vh;
 }
 
+.mw-48 {
+    width: 100%;
+    max-width: 12rem;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+    .mw-sm-80 {
+        width: 100%;
+        max-width: 20rem;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .mw-100-md {
+        width: 100%;
+        max-width: 100%;
+    }
+ }
+
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
     #mapid, #map {
         min-height: 50vh;
     }
 }
-
 
 #nmsprime-brand {
     position: absolute;
@@ -838,4 +874,58 @@ div.recolor:hover img {
 
 .sidebar .sub-menu.sub-line:before {
     left: 4px;
+}
+
+.hover-active:hover {
+    background-color: #e2e2e2 !important;
+}
+
+.ticket-infobox {
+    display: flex;
+    border-style: solid;
+    border-color: rgba(0,0,0,.125);
+    border-width: 0 1px 1px 1px;
+    padding-bottom: 12px;
+    position: fixed;
+    top: 0;
+    width: 100% ;
+    height: 100vh;
+    background: white;
+    transition: all .35s ease-in-out;
+    z-index: 10000;
+}
+
+.touchcircle .background {
+    fill: transparent;
+    transform-origin: 50% 50%;
+}
+
+.touchcircle .foreground {
+    fill: transparent;
+    stroke-dasharray: 408;
+    transform-origin: 50% 50%;
+    transform: rotate(-90deg);
+    transition: stroke-dashoffset 1s linear;
+}
+
+.startFadeTop {
+    opacity: 0 !important;
+    top: 0 !important;
+}
+
+.endFadeTop {
+    opacity: 1 !important;
+    top: 30px !important;
+}
+
+.touchcircle:hover {
+    cursor: pointer;
+}
+
+.touchcircle:hover .background {
+    stroke: transparent;
+}
+
+#content::-webkit-scrollbar {
+    width: 12px;
 }
