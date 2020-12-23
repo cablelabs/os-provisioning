@@ -3,8 +3,6 @@
 namespace App;
 
 use App;
-use Bouncer;
-use Session;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Notifications\Notifiable;
@@ -63,7 +61,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     {
         parent::boot();
 
-        self::observe(new UserObserver);
+        self::observe(new \App\Observers\UserObserver);
     }
 
     /**
@@ -260,46 +258,5 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     public function isGeoposOutdated()
     {
         return $this->geopos_updated_at->lte(now()->sub(self::GEOPOS_EXPIRATION_TIME));
-    }
-}
-
-class UserObserver
-{
-    public function created($user)
-    {
-        Bouncer::allow($user)->toOwn(User::class);
-        $user->api_token = $user->api_token = \Illuminate\Support\Str::random(80);
-        $user->save();
-    }
-
-    public function updating($user)
-    {
-        // Rebuild cached sidebar when user changes his language
-        if ($user->isDirty('language')) {
-            Session::forget('menu');
-
-            $userLang = checkLocale($user->language);
-
-            App::setLocale($userLang);
-            Session::put('language', $userLang);
-        }
-
-        if ($user->isDirty('password')) {
-            $user->api_token = \Str::random(80);
-        }
-    }
-
-    public function deleting($user)
-    {
-        $self = \Auth::user();
-        $authRank = $self->getHighestRank();
-
-        if ($authRank == '101') {
-            return;
-        }
-
-        if ($self->hasSameRankAs($user) || $self->hasLowerRankThan($user)) {
-            return false;
-        }
     }
 }
