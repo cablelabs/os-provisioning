@@ -374,7 +374,7 @@ class Modem extends \BaseModel
 
         Log::debug(__METHOD__.' started');
 
-        self::observe(new \App\SystemdObserver);
+        self::observe(new \App\Observers\SystemdObserver);
         self::observe(new ModemObserver);
     }
 

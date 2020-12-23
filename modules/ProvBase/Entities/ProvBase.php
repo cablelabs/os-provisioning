@@ -54,7 +54,7 @@ class ProvBase extends \BaseModel
         parent::boot();
 
         self::observe(new ProvBaseObserver);
-        self::observe(new \App\SystemdObserver);
+        self::observe(new \App\Observers\SystemdObserver);
     }
 
     /*

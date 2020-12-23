@@ -113,7 +113,7 @@ class Endpoint extends \BaseModel
         parent::boot();
 
         self::observe(new EndpointObserver);
-        self::observe(new \App\SystemdObserver);
+        self::observe(new \App\Observers\SystemdObserver);
     }
 
     public function makeDhcp()
