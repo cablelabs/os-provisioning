@@ -47,7 +47,7 @@ class HardwareSupportCommand extends Command
             $support_state = 'not-supported';
             if (! isset($modem->serial_num) || $modem->serial_num === '') {
                 try {
-                    $modem->serial_num = snmpget($hostname, $ro_community, '1.3.6.1.2.1.69.1.1.4.0');
+                    $modem->serial_num = snmpget($hostname, $ro_community, '1.3.6.1.2.1.69.1.1.4.0', 500000, 2);
                 } catch (\Exception $exception) {
                     $this->error("Modem: {$modem->hostname}, snmp Exception: ".$exception->getMessage());
                 }
@@ -72,7 +72,7 @@ class HardwareSupportCommand extends Command
             $support_state = 'not-supported';
 
             try {
-                $cmts_serials = snmpwalk($hostname, $ro_community, '1.3.6.1.2.1.47.1.1.1.1.11');
+                $cmts_serials = snmpwalk($hostname, $ro_community, '1.3.6.1.2.1.47.1.1.1.1.11', 500000, 2);
                 $cmts_serials = array_filter($cmts_serials, 'strlen');
 
                 $count_found = 0;
