@@ -4,7 +4,8 @@ namespace Modules\ProvBase\Console;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
+use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\NetGw;
 use Modules\ProvBase\Entities\ProvBase;
 
 class HardwareSupportCommand extends Command
@@ -37,8 +38,8 @@ class HardwareSupportCommand extends Command
         $provBaseSettings = ProvBase::first();
 
         $this->snmp_def_mode();
-        $modems = DB::table('modem')->whereNull('deleted_at')->get();
-        $cmtses = DB::table('netgw')->whereNull('deleted_at')->where('type', 'cmts')->get();
+        $modems = Modem::whereNull('deleted_at')->get();
+        $cmtses = NetGw::whereNull('deleted_at')->where('type', 'cmts')->get();
         $ro_community = $provBaseSettings->ro_community;
 
         foreach ($modems as $modem) {
@@ -63,7 +64,7 @@ class HardwareSupportCommand extends Command
                 }
             }
 
-            DB::table('modem')->where('id', $modem->id)->update(['serial_num' => $modem->serial_num, 'support_state' => $support_state, 'updated_at' => (Carbon::now())->toDateTimeString()]);
+            Modem::where('id', $modem->id)->update(['serial_num' => $modem->serial_num, 'support_state' => $support_state, 'updated_at' => (Carbon::now())->toDateTimeString()]);
         }
 
         foreach ($cmtses as $cmts) {
@@ -99,7 +100,7 @@ class HardwareSupportCommand extends Command
                     }
                 }
                 $this->info(sprintf('CMTS %s is %s%% supported', $cmts->hostname, $percentage));
-                DB::table('cmts')->where('id', $cmts->id)->update(['support_state' => $support_state, 'updated_at' => (Carbon::now())->toDateTimeString()]);
+                NetGw::where('id', $cmts->id)->update(['support_state' => $support_state, 'updated_at' => (Carbon::now())->toDateTimeString()]);
             } catch (\Exception $exception) {
                 $this->error("CMTS: {$hostname}, error message: ".$exception->getMessage());
             }
