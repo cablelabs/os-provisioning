@@ -32,11 +32,13 @@ class EndpointController extends \BaseController
     protected function prepare_input($data)
     {
         $data = parent::prepare_input($data);
-        $data['version'] = IpPoolController::getVersion($data['ip']);
 
-        // delete possibly existing ip to avoid later collisions in validation rules
         if ($data['fixed_ip'] == 0) {
-            $data['ip'] = null;
+            // delete possibly existing ip to avoid later collisions in validation rules
+            $data['ip'] = $data['prefix'] = null;
+            $data['version'] = '4';
+        } else {
+            $data['version'] = IpPoolController::getVersion($data['ip']);
         }
 
         return unify_mac($data);

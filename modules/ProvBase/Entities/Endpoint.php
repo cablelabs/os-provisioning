@@ -252,7 +252,7 @@ class Endpoint extends \BaseModel
         $cmd = '';
         $zone = ProvBase::first()->domain_name;
 
-        // We currently don't add a CNAME record here
+        // We currently don't add a CNAME record here because there's no automatically created mangle hostname to point to
 
         if ($del) {
             if ($this->getOriginal('fixed_ip') && $this->getOriginal('ip')) {
