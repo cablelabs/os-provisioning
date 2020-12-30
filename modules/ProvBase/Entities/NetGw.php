@@ -396,9 +396,9 @@ class NetGw extends \BaseModel
 
         try {
             try {
-                $freq = [];
+                $freqs = [];
                 foreach (snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.1.2.1.2') as $idx => $f) {
-                    $freq[last(explode('.', $idx))] = strval($f / 1000000);
+                    $freqs[last(explode('.', $idx))] = strval($f / 1000000);
                 }
                 // DOCS-IF3-MIB::docsIf3CmtsCmRegStatusIPv4Addr, ...
                 $ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.3.1.5');
@@ -424,9 +424,10 @@ class NetGw extends \BaseModel
                         if ($snrDeviceId != $ipDeviceId) {
                             continue;
                         }
-                        $idx = last(explode('.', $idx));
 
-                        $ret[$ip][$freq[$idx]] = $snr / 10;
+                        $snrFreqId = last(explode('.', $snrOid));
+
+                        $ret[$ip][$freqs[$snrFreqId]] = $snr / 10;
                     }
                 }
             } catch (\Exception $e) {
