@@ -404,7 +404,7 @@ class NetGw extends \BaseModel
                 $ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.3.1.5');
                 $snrs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.4.1.4');
 
-                foreach ($ips as $ip_idx => $ip) {
+                foreach ($ips as $ipOid => $ip) {
                     // if all hex values of the given ip address can be interpreted as ASCII,
                     // net-snmp won't return as Hex-STRING but STRING, thus we need to adjust
                     // unfortunately via php we can't supply -Ox to force Hex-STRING output
@@ -415,10 +415,13 @@ class NetGw extends \BaseModel
                     if ($ip == '0.0.0.0') {
                         continue;
                     }
-                    $ip_idx = last(explode('.', $ip_idx));
+                    $ipDeviceId = last(explode('.', $ipOid));
 
-                    foreach ($snrs as $idx => $snr) {
-                        if (strpos($idx, $ip_idx) === false) {
+                    foreach ($snrs as $snrOid => $snr) {
+                        $arr = explode('.', $snrOid);
+                        $snrDeviceId = $arr[count($arr) - 2];
+
+                        if ($snrDeviceId != $ipDeviceId) {
                             continue;
                         }
                         $idx = last(explode('.', $idx));
