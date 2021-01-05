@@ -38,7 +38,7 @@ class SupportRequest extends BaseModel
     {
         parent::boot();
 
-        self::observe(new SupportRequestObserver);
+        self::observe(new \App\Observers\SupportRequestObserver);
         self::observe(new \App\Observers\SystemdObserver);
     }
 
