@@ -58,3 +58,7 @@ phpunit/*.xml
 
 # modules status file
 modules_statuses.json
+
+# checksum files to detect changes in CSV files
+storage/app/config/provvoip/carrier_codes__sha1sum
+storage/app/config/provvoip/ekp_codes__sha1sum
