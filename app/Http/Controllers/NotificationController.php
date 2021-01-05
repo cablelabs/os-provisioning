@@ -16,6 +16,11 @@ class NotificationController extends BaseController
         return view('notifications.index')->with($this->compact_prep_view([]));
     }
 
+    /**
+     * Mark all unread Notifications as read.
+     *
+     * @return Redirect
+     */
     public function markAllRead()
     {
         auth()->user()->unreadNotifications->markAsRead();
@@ -23,6 +28,11 @@ class NotificationController extends BaseController
         return redirect()->back();
     }
 
+    /**
+     * Mark a selected Notification as read.
+     *
+     * @return Redirect
+     */
     public function markRead(DatabaseNotification $notification)
     {
         $notification->markAsRead();
@@ -30,6 +40,12 @@ class NotificationController extends BaseController
         return redirect()->back();
     }
 
+    /**
+     * Turbolink - Returns the Notification Navbar partial to replace this part
+     * of the page when an update occurs
+     *
+     * @return View
+     */
     public function navbar()
     {
         $user = \App\User::where('id', auth()->id())

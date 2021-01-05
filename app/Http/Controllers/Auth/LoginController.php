@@ -197,7 +197,12 @@ class LoginController extends Controller
         return route('GlobalConfig.index');
     }
 
-    protected function isMobileDevice()
+    /**
+     * Detect Mobile Device with regular expression from http://detectmobilebrowsers.com/
+     *
+     * @return bool
+     */
+    protected function isMobileDevice(): bool
     {
         $useragent = $_SERVER['HTTP_USER_AGENT'];
 
