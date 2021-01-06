@@ -64,7 +64,7 @@ class HardwareSupportCommand extends Command
                 }
             }
 
-            Modem::where('id', $modem->id)->update(['serial_num' => $modem->serial_num, 'support_state' => $support_state, 'updated_at' => (Carbon::now())->toDateTimeString()]);
+            Modem::where('id', $modem->id)->update(['serial_num' => $modem->serial_num, 'support_state' => $support_state, 'updated_at' => now()]);
         }
 
         foreach ($cmtses as $cmts) {
@@ -100,7 +100,7 @@ class HardwareSupportCommand extends Command
                     }
                 }
                 $this->info(sprintf('CMTS %s is %s%% supported', $cmts->hostname, $percentage));
-                NetGw::where('id', $cmts->id)->update(['support_state' => $support_state, 'updated_at' => (Carbon::now())->toDateTimeString()]);
+                NetGw::where('id', $cmts->id)->update(['support_state' => $support_state, 'updated_at' => now()]);
             } catch (\Exception $exception) {
                 $this->error("CMTS: {$hostname}, error message: ".$exception->getMessage());
             }
