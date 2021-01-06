@@ -766,5 +766,6 @@ return [
     'error_building_config'     => 'Fehler beim Erzeugen den Konfiguration für :0!',
     'error_restarting_daemon'   => 'Fehler beim Neustarten von :0!',
     'nativeApps'                => 'Native Apps',
+    'nativeApps'                => 'Interne Apps',
     'externalApps'              => 'Externe Apps',
 ];
