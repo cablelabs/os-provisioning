@@ -20,17 +20,17 @@
                 <table id="datatable" class="w-100 table table-hover" style="border-bottom: 1px solid rgba(0,0,0,.125);">
                     <thead class="text-dark" style="border-bottom: 3px solid rgba(0,0,0,.125);">
                         <tr>
-                            <th></th>
-                            <th scope="col" style="padding:0.75rem 1.5rem;text-transform:uppercase;letter-spacing:0.05em;background-color: #F8FAFC;">
+                            <th data-priority="1"></th>
+                            <th scope="col" style="padding:0.75rem 1.5rem;text-transform:uppercase;letter-spacing:0.05em;background-color: #F8FAFC;" data-priority="1">
                                 {{ trans('messages.title') }}
                             </th>
                             <th scope="col" style="padding:0.75rem 1.5rem;text-transform:uppercase;letter-spacing:0.05em;background-color: #F8FAFC;">
                                 {{ trans('messages.details') }}
                             </th>
-                            <th scope="col" style="padding:0.75rem 1.5rem;text-transform:uppercase;letter-spacing:0.05em;background-color: #F8FAFC;">
+                            <th scope="col" style="padding:0.75rem 1.5rem;text-transform:uppercase;letter-spacing:0.05em;background-color: #F8FAFC;" data-priority="10">
                                 {{ trans('messages.State') }}
                             </th>
-                            <th scope="col" style="padding:0.75rem 1.5rem;background-color: #F8FAFC;">
+                            <th scope="col" style="padding:0.75rem 1.5rem;background-color: #F8FAFC;" data-priority="1">
                             </th>
                         </tr>
                     </thead>
