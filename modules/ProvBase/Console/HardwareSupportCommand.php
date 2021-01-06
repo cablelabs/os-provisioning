@@ -38,8 +38,8 @@ class HardwareSupportCommand extends Command
         $provBaseSettings = ProvBase::first();
 
         $this->snmp_def_mode();
-        $modems = Modem::whereNull('deleted_at')->get();
-        $cmtses = NetGw::whereNull('deleted_at')->where('type', 'cmts')->get();
+        $modems = Modem::get();
+        $cmtses = NetGw::where('type', 'cmts')->get();
         $ro_community = $provBaseSettings->ro_community;
 
         foreach ($modems as $modem) {
