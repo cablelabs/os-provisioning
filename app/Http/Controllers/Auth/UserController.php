@@ -61,6 +61,7 @@ class UserController extends BaseController
             ['form_type' => 'text', 'name' => 'first_name', 'description' => 'Firstname'],
             ['form_type' => 'text', 'name' => 'last_name', 'description' => 'Lastname'],
             ['form_type' => 'text', 'name' => 'email', 'description' => 'Email'],
+            ['form_type' => 'text', 'name' => 'phonenumber', 'description' => 'Phonenumber'],
             ['form_type' => 'select', 'name' => 'language', 'description' => 'Language',
                 'value' => $languages,
                 'help' => trans('helper.translate').' https://crowdin.com/project/nmsprime', ],
