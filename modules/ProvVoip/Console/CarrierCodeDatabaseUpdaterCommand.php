@@ -206,14 +206,15 @@ class CarrierCodeDatabaseUpdaterCommand extends Command
             $company = $entry[1];
 
             // alter entry if exists, else create new one
-            $cc = CarrierCode::firstOrNew(['carrier_code' => $code]);
-            if ($cc->company != $company) {
+            $cc = CarrierCode::withTrashed()->firstOrNew(['carrier_code' => $code]);
+            if ($cc->deleted_at || ($cc->company != $company)) {
 
                 // disable observer to stop logging of each change
                 $cc->observer_enabled = false;
 
                 $cc->carrier_code = $code;
                 $cc->company = $company;
+                $cc->deleted_at = null;
                 $cc->save();
 
                 $changes++;
