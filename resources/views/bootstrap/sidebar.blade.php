@@ -56,13 +56,23 @@
       <li class="nav-header">{{ trans('view.Menu_Nets') }}</li>
       <li id="network_overview" class="has-sub" data-sidebar="level1">
         <div style="display: flex;justify-content:space-between;padding: 8px 20px;line-height: 20px;">
-          <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}">
-            <i class="fa fa-sitemap"></i>
-            <span>{{ trans('view.Menu_allNets') }}</span>
-          </a>
-          <a class="caret-link" href="javascript:;">
-            <b class="caret"></b>
-          </a>
+          @if (Module::collections()->has('HfcBase'))
+            <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}">
+              <i class="fa fa-sitemap"></i>
+              <span>{{ trans('view.Menu_allNets') }}</span>
+            </a>
+            <a class="caret-link" href="javascript:;">
+              <b class="caret"></b>
+            </a>
+          @else
+            <a class="caret-link" style="flex:1;display: flex;justify-content:space-between;align-items:center;" href="javascript:;">
+              <div>
+                <i class="fa fa-sitemap"></i>
+                <span>{{ trans('view.Menu_allNets') }}</span>
+              </div>
+              <b class="caret"></b>
+            </a>
+          @endif
         </div>
         <ul class="sub-menu" style="display: none;padding-left:21px;">
           @foreach ($networks as $network)
