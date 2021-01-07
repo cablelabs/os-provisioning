@@ -3,11 +3,9 @@
 namespace App;
 
 use DB;
-use Str;
 use Auth;
 use Module;
 use Schema;
-use Bouncer;
 use Session;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -320,101 +318,6 @@ class BaseModel extends Eloquent
         return current(preg_grep('|.*?'.str_replace('_', '', $s).'$|i', $this->get_models()));
     }
 
-    protected function onlyAllowedModels()
-    {
-        return collect($this->get_models())->reject(function ($class) {
-            return Bouncer::cannot('view', $class);
-        });
-    }
-
-    /**
-     * Preselect a sql field while searching
-     *
-     * Note: If $field is 'net' or 'cluster' we perform a net and cluster specific search
-     * This requires the searched model to have a tree_id coloumn
-     *
-     * @param $field sql field for pre selection
-     * @param $field sql search value for pre selection
-     * @return sql search statement, could be included in a normal while()
-     * @author Torsten Schmidt
-     */
-    private function __preselect_search($field, $value, $model)
-    {
-        $ret = '1';
-
-        if ($field && $value) {
-            $ret = $field.'='.$value;
-
-            if (\Module::collections()->has('HfcBase')) {
-                if (($model[0] == 'Modules\ProvBase\Entities\Modem') && ($field == 'net' || $field == 'cluster')) {
-                    $ret = 'tree_id IN(-1';
-                    foreach (Modules\HfcReq\Entities\NetElement::where($field, '=', $value)->get() as $tree) {
-                        $ret .= ','.$tree->id;
-                    }
-                    $ret .= ')';
-                }
-            }
-        }
-
-        return $ret;
-    }
-
-    /**
-     * Performs a fulltext search in simple mode
-     *
-     * @param $array with models to search in
-     * @param $query query to search for
-     * @param $preselect_field sql field for pre selection
-     * @param $preselect_field sql search value for pre selection
-     * @return search result: array of whereRaw() results, this means array of class Illuminate\Database\Quer\Builder objects
-     * @author Patrick Reichel,
-     *         Torsten Schmidt: add preselection, add Model checking
-     */
-    protected function _doSimpleSearch($_models, $query, $preselect_field = null, $preselect_value = null)
-    {
-        $preselect = $this->__preselect_search($preselect_field, $preselect_value, $_models);
-
-        /*
-         * Model Checking: Prepare $models array: skip Models without a valid SQL table
-         */
-        $models = [];
-        foreach ($_models as $model) {
-            if (! class_exists($model)) {
-                continue;
-            }
-
-            $tmp = new $model;
-
-            if (! property_exists($tmp, 'table')) {
-                continue;
-            }
-
-            if (! Schema::hasTable($tmp->table)) {
-                continue;
-            }
-
-            array_push($models, $model);
-        }
-
-        /*
-         * Perform the search
-         */
-        $result = [];
-        foreach ($models as $model) {
-            // get the database table used for given model
-            $tmp = new $model;
-            $table = $tmp->getTable();
-            $cols = $model::getTableColumns($table);
-
-            $tmp_result = $model::whereRaw("($preselect) AND CONCAT_WS('|', ".$cols.') LIKE ?', [$query]);
-            if ($tmp_result) {
-                array_push($result, $tmp_result);
-            }
-        }
-
-        return $result;
-    }
-
     /**
      * Get all database fields
      *
@@ -433,87 +336,6 @@ class BaseModel extends Eloquent
         $fields = implode(',', $tmp_res);
 
         return $fields;
-    }
-
-    /**
-     * Switch to decide with search algo shall be used
-     * Here we can add other conditions (e.g. to force mode simple on mac search or %truncation)
-     */
-    protected function _chooseFulltextSearchAlgo($mode, $query)
-    {
-
-        // search query is left truncated => simple search
-        if ((Str::startsWith($query, '%')) || (Str::startsWith($query, '*'))) {
-            $mode = 'simple';
-        }
-
-        // query contains . or : => IP or MAC => simple search
-        if ((Str::contains($query, ':')) || (Str::contains($query, '.'))) {
-            $mode = 'simple';
-        }
-
-        return $mode;
-    }
-
-    /**
-     * Get results for a fulltext search
-     *
-     * @return search result array of whereRaw() results, this means array of Illuminate\Database\Quer\Builder objects
-     *
-     * @author Patrick Reichel
-     */
-    public function getFulltextSearchResults($scope, $mode, $query, $preselect_field = null, $preselect_value = null)
-    {
-
-        // some searches cannot be performed against fulltext index
-        $mode = $this->_chooseFulltextSearchAlgo($mode, $query);
-
-        if ($mode == 'simple') {
-
-            // replace wildcard chars
-            $query = str_replace('*', '%', $query);
-            // wrap with wildcards (if not given) => necessary because of the concatenation of all table rows
-            if (! Str::startsWith($query, '%')) {
-                $query = '%'.$query;
-            }
-            if (! Str::endsWith($query, '%')) {
-                $query = $query.'%';
-            }
-
-            if ($scope == 'all') {
-                $models = $this->onlyAllowedModels();
-
-                $preselect_field = $preselect_value = null;
-            } else {
-                $models = [get_class($this)];
-            }
-
-            $result = $this->_doSimpleSearch($models, $query, $preselect_field, $preselect_value);
-        } elseif (Str::startsWith($mode, 'index_')) {
-            if ($scope == 'all') {
-                echo 'Implement searching over all database tables';
-            } else {
-                $indexed_cols = $this->_getFulltextIndexColumns($this->getTable());
-
-                // for a description of search modes check https://mariadb.com/kb/en/mariadb/fulltext-index-overview
-                if ('index_natural' == $mode) {
-                    $mode = 'IN NATURAL MODE';
-                } elseif ('index_boolean' == $mode) {
-                    $mode = 'IN BOOLEAN MODE';
-                } else {
-                    $mode = 'IN BOOLEAN MODE';
-                }
-
-                // search is against the fulltext index
-                $result = [$this->whereRaw('MATCH('.$indexed_cols.') AGAINST(? '.$mode.')', [$query])];
-            }
-        } else {
-            $result = null;
-        }
-
-        /* echo "$query at $scope in mode $mode<br><pre>"; */
-        /* dd($result); */
-        return $result;
     }
 
     /**
