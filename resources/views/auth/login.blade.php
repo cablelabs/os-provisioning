@@ -11,12 +11,6 @@
 
 <body class="pace-top">
 
-    @php
-        if ($loginPage == 'admin') {
-            $logo = asset('images/nmsprime-logo-white.png');
-        }
-    @endphp
-
     {{-- Background Image --}}
     <div class="login-cover">
         <div class="login-cover-image">

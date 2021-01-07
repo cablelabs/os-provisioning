@@ -524,6 +524,7 @@ return [
     ],
     'true' => 'true',
     'Type' => 'Type',
+    'users' => 'User',
     'warning' => 'warning',
     'workforce' => [
         'available' => 'Available',
