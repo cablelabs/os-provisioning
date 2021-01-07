@@ -396,15 +396,15 @@ class NetGw extends \BaseModel
 
         try {
             try {
-                $freq = [];
+                $freqs = [];
                 foreach (snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.1.2.1.2') as $idx => $f) {
-                    $freq[last(explode('.', $idx))] = strval($f / 1000000);
+                    $freqs[last(explode('.', $idx))] = strval($f / 1000000);
                 }
                 // DOCS-IF3-MIB::docsIf3CmtsCmRegStatusIPv4Addr, ...
                 $ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.3.1.5');
                 $snrs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.4.1.4');
 
-                foreach ($ips as $ip_idx => $ip) {
+                foreach ($ips as $ipOid => $ip) {
                     // if all hex values of the given ip address can be interpreted as ASCII,
                     // net-snmp won't return as Hex-STRING but STRING, thus we need to adjust
                     // unfortunately via php we can't supply -Ox to force Hex-STRING output
@@ -415,15 +415,19 @@ class NetGw extends \BaseModel
                     if ($ip == '0.0.0.0') {
                         continue;
                     }
-                    $ip_idx = last(explode('.', $ip_idx));
+                    $ipDeviceId = last(explode('.', $ipOid));
 
-                    foreach ($snrs as $idx => $snr) {
-                        if (strpos($idx, $ip_idx) === false) {
+                    foreach ($snrs as $snrOid => $snr) {
+                        $arr = explode('.', $snrOid);
+                        $snrDeviceId = $arr[count($arr) - 2];
+
+                        if ($snrDeviceId != $ipDeviceId) {
                             continue;
                         }
-                        $idx = last(explode('.', $idx));
 
-                        $ret[$ip][$freq[$idx]] = $snr / 10;
+                        $snrFreqId = last(explode('.', $snrOid));
+
+                        $ret[$ip][$freqs[$snrFreqId]] = $snr / 10;
                     }
                 }
             } catch (\Exception $e) {
@@ -545,6 +549,10 @@ class NetGw extends \BaseModel
 
             $data = "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
             $data .= "\n\t\t".'option routers '.$router.';';
+            if ($type == 'CPEPriv' || $type == 'CPEPub') {
+                $data .= "\n\t\t".'next-server '.$router.';';
+                $data .= "\n\t\t".'option dhcp-server-identifier '.$router.';';
+            }
             if ($broadcast_addr != '') {
                 $data .= "\n\t\t".'option broadcast-address '.$broadcast_addr.';';
             }

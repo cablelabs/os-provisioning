@@ -4,7 +4,8 @@ namespace Modules\ProvBase\Console;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
+use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\NetGw;
 use Modules\ProvBase\Entities\ProvBase;
 
 class HardwareSupportCommand extends Command
@@ -37,8 +38,8 @@ class HardwareSupportCommand extends Command
         $provBaseSettings = ProvBase::first();
 
         $this->snmp_def_mode();
-        $modems = DB::table('modem')->whereNull('deleted_at')->get();
-        $cmtses = DB::table('netgw')->whereNull('deleted_at')->where('type', 'cmts')->get();
+        $modems = Modem::get();
+        $cmtses = NetGw::where('type', 'cmts')->get();
         $ro_community = $provBaseSettings->ro_community;
 
         foreach ($modems as $modem) {
@@ -46,7 +47,7 @@ class HardwareSupportCommand extends Command
             $support_state = 'not-supported';
             if (! isset($modem->serial_num) || $modem->serial_num === '') {
                 try {
-                    $modem->serial_num = snmpget($hostname, $ro_community, '1.3.6.1.2.1.69.1.1.4.0');
+                    $modem->serial_num = snmpget($hostname, $ro_community, '1.3.6.1.2.1.69.1.1.4.0', 500000, 2);
                 } catch (\Exception $exception) {
                     $this->error("Modem: {$modem->hostname}, snmp Exception: ".$exception->getMessage());
                 }
@@ -63,7 +64,7 @@ class HardwareSupportCommand extends Command
                 }
             }
 
-            DB::table('modem')->where('id', $modem->id)->update(['serial_num' => $modem->serial_num, 'support_state' => $support_state, 'updated_at' => (Carbon::now())->toDateTimeString()]);
+            Modem::where('id', $modem->id)->update(['serial_num' => $modem->serial_num, 'support_state' => $support_state, 'updated_at' => now()]);
         }
 
         foreach ($cmtses as $cmts) {
@@ -71,7 +72,7 @@ class HardwareSupportCommand extends Command
             $support_state = 'not-supported';
 
             try {
-                $cmts_serials = snmpwalk($hostname, $ro_community, '1.3.6.1.2.1.47.1.1.1.1.11');
+                $cmts_serials = snmpwalk($hostname, $ro_community, '1.3.6.1.2.1.47.1.1.1.1.11', 500000, 2);
                 $cmts_serials = array_filter($cmts_serials, 'strlen');
 
                 $count_found = 0;
@@ -99,7 +100,7 @@ class HardwareSupportCommand extends Command
                     }
                 }
                 $this->info(sprintf('CMTS %s is %s%% supported', $cmts->hostname, $percentage));
-                DB::table('cmts')->where('id', $cmts->id)->update(['support_state' => $support_state, 'updated_at' => (Carbon::now())->toDateTimeString()]);
+                NetGw::where('id', $cmts->id)->update(['support_state' => $support_state, 'updated_at' => now()]);
             } catch (\Exception $exception) {
                 $this->error("CMTS: {$hostname}, error message: ".$exception->getMessage());
             }

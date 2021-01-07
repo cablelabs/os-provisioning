@@ -11,14 +11,6 @@
 
 @section('content_left')
 
-	{{-- Search Field
-	@DivOpen(12)
-		@DivOpen(8)
-			{{ Form::model(null, array('route'=>$route_name.'.fulltextSearch', 'method'=>'GET')) }}
-				@include('Generic.searchform')
-			{{ Form::close() }}
-		@DivClose()
-	@DivClose()  --}}
 	{{-- Headline: means icon followed by headline --}}
 	@DivOpen(12)
 		<h1 class="page-header">

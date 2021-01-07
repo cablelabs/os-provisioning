@@ -68,9 +68,9 @@ BaseRoute::group([], function () {
         'as' => 'SupportRequest.guilog',
     ]);
 
-    BaseRoute::get('base/fulltextSearch', [
-        'as' => 'Base.fulltextSearch',
-        'uses' => 'BaseController@fulltextSearch',
+    BaseRoute::get('globalSearch', [
+        'as' => 'Base.globalSearch',
+        'uses' => 'BaseController@globalSearch',
     ]);
 
     BaseRoute::get('Config', [

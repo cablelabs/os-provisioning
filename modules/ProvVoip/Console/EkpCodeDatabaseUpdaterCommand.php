@@ -205,15 +205,16 @@ class EkpCodeDatabaseUpdaterCommand extends Command
             $company = $entry[1];
 
             // alter entry if exists, else create new one
-            $cc = EkpCode::firstOrNew(['ekp_code' => $code]);
-            if ($cc->company != $company) {
+            $ec = EkpCode::withTrashed()->firstOrNew(['ekp_code' => $code]);
+            if ($ec->deleted_at || ($ec->company != $company)) {
 
                 // disable observer to stop logging of each change
-                $cc->observer_enabled = false;
+                $ec->observer_enabled = false;
 
-                $cc->ekp_code = $code;
-                $cc->company = $company;
-                $cc->save();
+                $ec->ekp_code = $code;
+                $ec->company = $company;
+                $ec->deleted_at = null;
+                $ec->save();
 
                 $changes++;
             }

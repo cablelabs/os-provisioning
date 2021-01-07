@@ -21,7 +21,7 @@ class Endpoint extends \BaseModel
             'mac' => ['nullable', 'mac', 'unique:endpoint,mac,'.$id.',id,deleted_at,NULL'.$versionFilter],
             'hostname' => ['required', 'regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/',
                 'unique:endpoint,hostname,'.$id.',id,deleted_at,NULL'.$versionFilter, ],
-            'ip' => ['nullable', 'required_if:fixed_ip,1|ip|unique:endpoint,ip,'.$id.',id,deleted_at,NULL'],
+            'ip' => ['nullable', 'required_if:fixed_ip,1', 'ip', 'unique:endpoint,ip,'.$id.',id,deleted_at,NULL'],
         ];
 
         // Note: For IPv4 this is removed in EndpointController.php
@@ -252,7 +252,7 @@ class Endpoint extends \BaseModel
         $cmd = '';
         $zone = ProvBase::first()->domain_name;
 
-        // We currently don't add a CNAME record here
+        // We currently don't add a CNAME record here because there's no automatically created mangle hostname to point to
 
         if ($del) {
             if ($this->getOriginal('fixed_ip') && $this->getOriginal('ip')) {

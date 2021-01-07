@@ -1,6 +1,6 @@
 <?php
 
-use Modules\ProvVoip\Entities\Phonetariff;
+use Modules\ProvVoip\Entities\PhoneTariff;
 
 class UpdatePhoneTariffExtendType extends BaseMigration
 {
@@ -10,7 +10,7 @@ class UpdatePhoneTariffExtendType extends BaseMigration
     /**
      * Run the migrations.
      *
-     * @author Patrick Reichel
+     * @author Nino Ryschawy
      *
      * @return void
      */
@@ -36,9 +36,9 @@ class UpdatePhoneTariffExtendType extends BaseMigration
             ],
         ];
 
-        if (! Phonetariff::count()) {
+        if (! PhoneTariff::count()) {
             foreach ($phonetariffs as $pt) {
-                Phonetariff::create($pt);
+                PhoneTariff::create($pt);
             }
         }
     }
@@ -46,13 +46,13 @@ class UpdatePhoneTariffExtendType extends BaseMigration
     /**
      * Reverse the migrations.
      *
-     * @author Patrick Reichel
+     * @author Nino Ryschawy
      *
      * @return void
      */
     public function down()
     {
-        Phonetariff::whereIn('type', ['basic', 'landlineflat', 'allnetflat'])->delete();
+        PhoneTariff::whereIn('type', ['basic', 'landlineflat', 'allnetflat'])->delete();
 
         DB::statement("ALTER TABLE phonetariff MODIFY COLUMN type ENUM('purchase', 'sale') NOT NULL");
     }
