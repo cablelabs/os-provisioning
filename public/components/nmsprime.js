@@ -41,28 +41,28 @@ if (typeof(Storage) !== "undefined") {
     var chitem = localStorage.getItem("clicked-item");
 
     if (ministate == "true") {
-    $('#page-container').addClass('page-sidebar-minified');
+      $('#page-container').addClass('page-sidebar-minified');
     } else {
-    $('#page-container').removeClass('page-sidebar-minified');
+      $('#page-container').removeClass('page-sidebar-minified');
     }
 
-    if (!$('#dashboardsidebar').hasClass('active')) {
-        $('#' + sitem).addClass("expand");
-        $('#' + sitem).addClass("active");
-        $('#' + sitem + ' .sub-menu ').css("display", "block");
-        $('#' + chitem).addClass("active");
-	}
+    $('#' + sitem).addClass("expand");
+    $('#' + sitem).addClass("active");
+    $('#' + sitem + '> .sub-menu ').css("display", "block");
+    $('#' + chitem).addClass("active");
+    $('#' + chitem).parent()[0].style.display = 'block'
+
     $('#sidebar ul > li').click(function (event) {
         localStorage.setItem("sidebar-item", $(this).attr('id'));
         localStorage.setItem("clicked-item", $(this).attr('id'));
     });
 
     $('#sidebar ul > li > div > .caret-link').click(function (event) {
-        var li_item = $(this).closest('[data-sidebar=level1]');
-        if(li_item.hasClass('expand')){
+        var li_item = $(this).closest('[data-sidebar=level1],[data-sidebar=level2]');
+        if (li_item.hasClass('expand')){
             li_item.removeClass('expand');
             li_item.children('.sub-menu').css('display', 'none');
-        }else {
+        } else {
             li_item.children('.sub-menu').css('display', 'block');
             li_item.addClass('expand');
         }
@@ -75,7 +75,7 @@ if (typeof(Storage) !== "undefined") {
     });
 
 } else {
-  console.log("sorry, no Web Storage Support - Cant save State of Sidebar -please update your Browser")
+  console.log("Sorry, no Web Storage Support - Cant save State of Sidebar - please update your Browser")
 }
 
 

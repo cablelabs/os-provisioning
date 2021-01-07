@@ -38,7 +38,7 @@
             </a>
           </div>
         @if (isset($typearray['submenu']))
-          <ul class="sub-menu">
+          <ul class="sub-menu line">
           @foreach ($typearray['submenu'] as $type => $valuearray)
           <li id="menu-{{ Str::slug($type,'_') }}">
             <a href="{{ route($valuearray['link']) }}" style="overflow: hidden; white-space: nowrap;">
@@ -53,43 +53,46 @@
       @endforeach
 
     @can('view', Modules\HfcBase\Entities\TreeErd::class)
-
       <li class="nav-header">{{ trans('view.Menu_Nets') }}</li>
       <li id="network_overview" class="has-sub" data-sidebar="level1">
-        <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}">
-          <i class="fa fa-sitemap"></i>
-        <span>{{ trans('view.Menu_allNets') }}</span>
-        </a>
-      </li>
-      @foreach ($networks as $network)
-        <li id="network_{{$network->id}}" class="has-sub" data-sidebar="level1">
-          <a href="javascript:;">
+        <div style="display: flex;justify-content:space-between;padding: 8px 20px;line-height: 20px;">
+          <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}">
             <i class="fa fa-sitemap"></i>
-            <b class="caret pull-right"></b>
-            <span>{{$network->name}}</span>
+            <span>{{ trans('view.Menu_allNets') }}</span>
           </a>
-          <ul class="sub-menu" style="padding-left:0;list-style:none;">
-            <li id="submenu_network_{{$network->id}}" class="has-sub" data-sidebar="level2">
-              <a href="{{ route('TreeErd.show', ['field' => 'net', 'search' => $network->id]) }}">
-                <i class="fa fa-circle text-success"></i>
-                {{$network->name}}
-              </a>
-            <ul class="sub-menu d-block" style="list-style-position: inside;">
-              {{-- Network-Clusters are Cached for 5 minutes --}}
-              @foreach ($network->clusters as $cluster)
-                <li id="cluster_{{$cluster->id}}" class="has-sub" data-sidebar="level3">
-                  <a href="{{ route('TreeErd.show', ['field' => 'cluster', 'search' => $cluster->id]) }}" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
-                    <i class="fa fa-circle-thin text-info"></i>
-                    {{$cluster->name}}
+          <a class="caret-link" href="javascript:;">
+            <b class="caret"></b>
+          </a>
+        </div>
+        <ul class="sub-menu" style="display: none;padding-left:21px;">
+          @foreach ($networks as $network)
+            <li id="network_{{$network->id}}" class="has-sub" data-sidebar="level2">
+              <div style="display: flex;justify-content:space-between;padding: 0.25rem 1.25rem 0.25rem 0;">
+                <a href="{{ route('TreeErd.show', ['field' => 'net', 'search' => $network->id]) }}" style="color: #889097;">
+                  <i class="fa fa-circle text-success"></i>
+                  <span>{{$network->name}}</span>
+                </a>
+                @if($network->clusters->isNotEmpty())
+                  <a class="caret-link" style="color: #889097;" href="javascript:;">
+                    <b class="caret"></b>
                   </a>
-                </li>
-              @endforeach
-            </ul>
-          </li>
+                @endif
+              </div>
+              <ul class="sub-menu line sub-line" style="display: none;padding: 0;">
+                {{-- Network-Clusters are Cached for 5 minutes --}}
+                @foreach ($network->clusters as $cluster)
+                  <li id="cluster_{{$cluster->id}}">
+                    <a href="{{ route('TreeErd.show', ['field' => 'cluster', 'search' => $cluster->id]) }}" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
+                      <i class="fa fa-circle-thin text-info"></i>
+                      {{$cluster->name}}
+                    </a>
+                  </li>
+                @endforeach
+              </ul>
+            </li>
+          @endforeach
         </ul>
       </li>
-      @endforeach
-
     @endcan
     {{-- sidebar minify button --}}
     <li>
