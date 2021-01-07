@@ -625,6 +625,8 @@ return [
     'ticketUpdatedMessage'      => 'this ticket has been updated.',
     'isLegacyTicket'            => 'This is a legacy Ticket, that has no relationship.',
     'onlyNewTickets'            => 'New tickets only!',
+    'noComments'                => 'Currently, there are no Comments for this ticket',
+    'backToDetails'             => 'Back to Details',
     'hardFilter'                => 'The data is prefiltered by the given condition(s)!',
     'removeFilter'              => 'Remove filter!',
     'noReplyMail'               => 'Addresse of noreply E-mail',

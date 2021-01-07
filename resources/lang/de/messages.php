@@ -625,6 +625,8 @@ return [
     'ticketUpdatedMessage'      => 'das Ticket wurde geändert.',
     'isLegacyTicket'            => 'Dies ist ein veraltetes Ticket. Es ist mit keiner anderen Entität verknüpft.',
     'onlyNewTickets'            => 'Nur neue Tickets!',
+    'noComments'                => 'Für dieses Ticket existieren noch keine Kommentare',
+    'backToDetails'             => 'Zurück zu den Details',
     'hardFilter'                => 'Es wird nur ein Teil der Daten geladen!',
     'removeFilter'              => 'Filter entfernen!',
     'noReplyMail'               => 'Adresse der Noreply E-mail',
