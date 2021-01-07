@@ -5,7 +5,7 @@ namespace Modules\ProvBase\Console;
 use Illuminate\Console\Command;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\ProvBase;
-use Modules\ProvBase\Entities\QosObserver;
+use Modules\ProvBase\Observers\QosObserver;
 use Modules\ProvBase\Entities\RadGroupReply;
 
 class RepopulateRadGroupReplyCommand extends Command

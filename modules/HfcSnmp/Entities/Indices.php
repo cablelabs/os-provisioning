@@ -12,7 +12,7 @@ class Indices extends \BaseModel
     {
         parent::boot();
 
-        self::observe(new IndicesObserver);
+        self::observe(new \Modules\HfcSnmp\Observers\IndicesObserver);
     }
 
     // Add your validation rules here
@@ -70,18 +70,5 @@ class Indices extends \BaseModel
     public function netelement()
     {
         return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class, 'netelement_id');
-    }
-}
-
-class IndicesObserver
-{
-    public function creating($indices)
-    {
-        $indices->indices = str_replace([' ', "\t"], '', $indices->indices);
-    }
-
-    public function updating($indices)
-    {
-        $indices->indices = str_replace([' ', "\t"], '', $indices->indices);
     }
 }

@@ -84,16 +84,6 @@ class MibFile extends \BaseModel
         return $this->hasMany(OID::class, 'mibfile_id')->orderByRaw('LENGTH(oid)')->orderBy('oid');
     }
 
-    /**
-     * Boot: init observer
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        self::observe(new MibFileObserver);
-    }
-
     public function get_full_filepath()
     {
         return storage_path(self::REL_MIB_UPLOAD_PATH).$this->filename;
@@ -261,20 +251,4 @@ class MibFile extends \BaseModel
 
     // 	\DB::statement('DELETE from oid WHERE mibfile_id='.$this->id);
     // }
-}
-
-class MibFileObserver
-{
-    public function created($mibfile)
-    {
-        // create oids was moved to MibFileController@store for better responses on errors
-    }
-
-    public function deleting($mibfile)
-    {
-        // hard delete OIDs as Database becomes huge otherwise
-        // $mibfile->hard_delete_oids();
-
-        // TODO: Unlink file ?? - better not -> in case related mibs need this mib the user must not load it again
-    }
 }

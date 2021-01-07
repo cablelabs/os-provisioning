@@ -13,7 +13,7 @@ class Parameter extends \BaseModel
     {
         parent::boot();
 
-        self::observe(new ParameterObserver);
+        self::observe(new \Modules\HfcSnmp\Observers\ParameterObserver);
     }
 
     // Add your validation rules here
@@ -111,18 +111,5 @@ class Parameter extends \BaseModel
         return $this->children()->where('third_dimension', '=', 1);
 
         return self::where('parent_id', '=', $this->id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all();
-    }
-}
-
-class ParameterObserver
-{
-    public function creating($parameter)
-    {
-        $parameter->divide_by = str_replace([' ', "\t"], '', $parameter->divide_by);
-    }
-
-    public function updating($parameter)
-    {
-        $parameter->divide_by = str_replace([' ', "\t"], '', $parameter->divide_by);
     }
 }
