@@ -495,6 +495,9 @@ class SnmpController extends \BaseController
                 $results = snmp2_real_walk($this->device->ip, $community, $oid_s, $this->timeout, $this->retry);
             } catch (\Exception $e) {
                 try {
+                    // There are devices where querying v1 directly after v2 leads to exception (e.g. kathrein HMS-Transponder)
+                    // usleep(400000);
+
                     $results = snmprealwalk($this->device->ip, $community, $oid_s, $this->timeout, $this->retry);
                 } catch (\Exception $e) {
                     $results = [];
