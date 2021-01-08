@@ -1924,6 +1924,7 @@ class Modem extends \BaseModel
         $this->domainName = ProvBase::first()->domain_name;
         $mac = strtolower($this->mac);
         $eventlog = null;
+        $tickets = $modem->tickets;
 
         $genieCmds[json_encode(['name' => 'factoryReset'])] = trans('messages.factory_reset');
 
@@ -1994,7 +1995,7 @@ class Modem extends \BaseModel
         $modem = $this;
 
         return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip',
-            'floodPing', 'genieCmds', 'modem', 'pills', 'tabs', 'view_header');
+            'floodPing', 'genieCmds', 'modem', 'pills', 'tabs', 'view_header', 'tickets');
     }
 
     /**
