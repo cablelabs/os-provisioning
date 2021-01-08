@@ -2130,7 +2130,7 @@ class Modem extends \BaseModel
      *
      * @return array    of lease entry strings
      */
-    public static function searchLease(string $search): array
+    public static function searchLease(string $search, $findAll = false): array
     {
         $ret = [];
 
@@ -2151,6 +2151,11 @@ class Modem extends \BaseModel
                 // push matching results
                 array_push($ret, preg_replace('/\r|\n/', '<br/>', $s));
             }
+        }
+
+        // return all lease entries
+        if ($findAll) {
+            return $ret;
         }
 
         // handle multiple lease entries
