@@ -882,13 +882,10 @@ div.recolor:hover img {
 
 .ticket-infobox {
     display: flex;
-    border-style: solid;
-    border-color: rgba(0,0,0,.125);
-    border-width: 0 1px 1px 1px;
     position: fixed;
     top: 0;
     width: 100% ;
-    height: 100vh;
+    height: 100%;
     background: white;
     transition: all .35s ease-in-out;
     z-index: 2000;
@@ -928,3 +925,10 @@ div.recolor:hover img {
 #content::-webkit-scrollbar {
     width: 12px;
 }
+
+@media (hover: none) {
+    .btn-outline-dark:hover {
+        background-color: white;
+        color: #6c757d;
+    }
+  }
