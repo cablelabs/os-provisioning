@@ -749,4 +749,5 @@ return [
     'details'                   => 'Details',
     'SnmpAccessException'       => 'Snmp Zugriff Verweigert',
     'flappingDhcp'              => 'Das Gerät kann keine Stabile Verbindung mit dem DHCP Server aufbauen und sendet wiederholt DHCPDISCOVER Nachrichten',
+    'criticalValues'            => 'Einige Werte des Gerätes sind in kritischem Zustand',
 ];
