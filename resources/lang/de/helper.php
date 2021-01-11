@@ -115,6 +115,7 @@ return [
     ],
     'rate_coefficient'              => 'MaxRateSustained wird mit diesem Wert multipliziert, um den Nutzer eine höhere (> 1.0) Übertragungsrate als gebucht zu gewähren.',
     'additional_modem_reset'           => 'Zeigt einen zusätzlichen Modem Reset Button an, um das Modem ohne Hilfe des NetGws direkt per SNMP neu zu starten.',
+    'auto_factory_reset'            => 'Führt für TR-069 CPEs automatisch einen Werksreset nach Änderung relevanter Einstellungen, die eine Neuprovisionierung erfordern, durch. (Änderung der Telefonnummern, PPPoE Zugangsdaten bzw. der Konfigurationsdatei)',
     'openning_new_tab_for_modem' => 'Öffnet die Modem-Edit Seite in einem neuen Fenster (Topographie).',
     'ppp_session_timeout'           => 'In Sekunden. Bei einem Wert von 0 werden die PPP Sessions nicht getrennt.',
     //ModemController

@@ -1304,6 +1304,11 @@ class Modem extends \BaseModel
      */
     public function factoryReset()
     {
+        // Don't perform automatic factory reset
+        if (! ProvBase::first()->auto_factory_reset) {
+            return;
+        }
+
         return $this->restart_modem(false, false, true);
     }
 

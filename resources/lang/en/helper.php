@@ -115,6 +115,7 @@ return [
     ],
     'rate_coefficient'              => 'MaxRateSustained will be multiplied by this value to grant the user more (> 1.0) throughput than subscribed.',
     'additional_modem_reset'        => 'Check if an additional button should be displayed, which resets the modem via SNMP without querying the NetGw.',
+    'auto_factory_reset'            => 'Performs an automatic factory reset for TR-069 CPEs, if relevant configurations have been changed, which reqiure a reprovision. (i.e. change of phonenumbers, PPPoE credentials or configfile)',
     'openning_new_tab_for_modem' => 'Check the box to open the modem edit page in new tab in topography view.',
     'ppp_session_timeout'           => 'In seconds. PPP session will not be terminated when setting the value to zero.',
     //ModemController
