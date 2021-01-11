@@ -11,6 +11,9 @@ class InstallSetFsHostname extends BaseMigration
      */
     public function up()
     {
+        // GenieACS > 1.1.3 uses environment variables instead of config.json
+        return;
+
         $filename = '/lib/node_modules/genieacs/config/config.json';
         $conf = json_decode(file_get_contents($filename));
 
@@ -29,6 +32,9 @@ class InstallSetFsHostname extends BaseMigration
      */
     public function down()
     {
+        // GenieACS > 1.1.3 uses environment variables instead of config.json
+        return;
+
         $filename = '/lib/node_modules/genieacs/config/config.json';
         $conf = json_decode(file_get_contents($filename));
 
