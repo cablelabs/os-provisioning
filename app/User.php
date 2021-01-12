@@ -114,6 +114,16 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     }
 
     /**
+     * Get the user's preferred locale.
+     *
+     * @return string
+     */
+    public function preferredLocale()
+    {
+        return $this->language;
+    }
+
+    /**
      * Validation
      *
      *  Add your validation rules here
