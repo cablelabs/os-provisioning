@@ -55,7 +55,7 @@ class InstallInitRadiusAndAcs extends BaseMigration
         // we can't user php chrgp, since it always dereferences symbolic links
         exec("chgrp -h radiusd $link");
 
-        foreach (['radiusd', 'mongod', 'genieacs-cwmp', 'genieacs-fs', 'genieacs-nbi'] as $service) {
+        foreach (['radiusd', 'mongod', 'genieacs-cwmp', 'genieacs-fs', 'genieacs-nbi', 'genieacs-ui'] as $service) {
             exec("systemctl enable $service.service");
             exec("systemctl start $service.service");
         }
