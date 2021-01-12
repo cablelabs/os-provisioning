@@ -201,17 +201,6 @@ class Kernel extends ConsoleKernel
                 \Modules\BillingBase\Entities\Item::where('payed_month', '!=', '0')->update(['payed_month' => '0', 'updated_at' => date('Y-m-d H:i:s')]);
                 \Log::info('Reset all items payed_month flag to 0');
             })->cron('10 0 1 2 *');
-
-            // wrapping into a check if table billingbase exists (if not that crashes on every “php artisan” command – e.g. on migrations
-            if (\Schema::hasTable('billingbase')) {
-                $schedule->call('\Modules\BillingBase\Entities\Item@yearly_conversion')->yearly();
-
-                // $rcd = \Modules\BillingBase\Entities\BillingBase::select('rcd')->first()->rcd;
-                // $execute = $rcd ? ($rcd - 5 > 0 ? $rcd - 5 : 1) : 15;
-                // This does not consider CDRs because .env file is not read properly in super global var by executing as cron job - adapt cdrCommand!
-                // $schedule->command('nms:accounting')->monthlyOn($execute, '01:00');
-                // TODO: create SettlementRun here!
-            }
         }
 
         if (\Module::collections()->has('ProvVoip')) {
