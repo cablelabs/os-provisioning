@@ -566,6 +566,7 @@ return [
         ],
         'close' => 'Close',
         'pause' => 'Pause',
+        'resume' => 'Resume',
         'accept' => 'Accept',
         'decline' => 'Decline',
         'Status' => 'Status',
