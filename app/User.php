@@ -74,6 +74,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         'last_name',
         'login_name',
         'email',
+        'phonenumber',
         'password',
         'language',
         'active',
@@ -124,6 +125,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
         return [
             'email' => 'nullable|email',
+            'phonenumber' => 'nullable|numeric',
             'login_name' => 'required|unique:users,login_name,'.$id.',id,deleted_at,NULL',
             'password' => 'sometimes|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|confirmed',
             'password_confirmation' => 'min:8|required_with:password|same:password',

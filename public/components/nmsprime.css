@@ -823,3 +823,15 @@ div.recolor:hover img {
 #login-img {
     max-width: initial;
 }
+
+.sidebar .sub-menu:before {
+    background: transparent;
+}
+
+.sidebar .sub-menu.line:before {
+    background: #10181F;
+}
+
+.sidebar .sub-menu.sub-line:before {
+    left: 4px;
+}
