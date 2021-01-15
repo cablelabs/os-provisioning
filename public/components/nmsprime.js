@@ -34,7 +34,7 @@ var makeNavbarSearch = function() {
 /* Keep Sidebar open and Save State and Minify Status of Sidebar
 *  @author: Christian Schramm
 */
-if (typeof(Storage) !== "undefined") {
+if (typeof(Storage) !== "undefined" && $('#sidebar').length) {
     //save minified s_state
     var ministate = localStorage.getItem("minified-state");
     var sitem = localStorage.getItem("sidebar-item");
@@ -46,11 +46,22 @@ if (typeof(Storage) !== "undefined") {
       $('#page-container').removeClass('page-sidebar-minified');
     }
 
-    $('#' + sitem).addClass("expand");
-    $('#' + sitem).addClass("active");
-    $('#' + sitem + '> .sub-menu ').css("display", "block");
-    $('#' + chitem).addClass("active");
-    $('#' + chitem).parent()[0].style.display = 'block'
+    if (sitem !== 'undefined' && sitem !== null && chitem !== 'undefined' && chitem !== null) {
+      $('#' + sitem).addClass("expand");
+      $('#' + sitem).addClass("active");
+      $('#' + sitem + '> .sub-menu ').css("display", "block");
+      $('#' + chitem).addClass("active");
+
+      if ($('#' + chitem).parent().length) {
+        $('#' + chitem).parent()[0].style.display = 'block'
+      }
+
+      if ($('#' + chitem).data('sidebar') == 'level2') {
+        $('#' + chitem).addClass("expand");
+        $('#' + chitem + '> div > a').css("color", "white");
+        $('#' + chitem + '> .sub-menu ').css("display", "block");
+      }
+    }
 
     $('#sidebar ul > li').click(function (event) {
         localStorage.setItem("sidebar-item", $(this).attr('id'));
