@@ -1229,7 +1229,6 @@ class BaseController extends Controller
 
     /**
      * API equivalent of destroy()
-     * Recursive deletion is not implemented, as this should be handled by the client
      *
      * @author Ole Ernst
      *
