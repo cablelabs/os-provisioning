@@ -47,15 +47,17 @@ class RepopulateRadGroupReplyCommand extends Command
 
         RadGroupReply::truncate();
 
+        $provbase = ProvBase::first();
+
         $insert = [
             ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Port-Limit', 'op' => ':=', 'value' => '1'],
             ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Framed-MTU', 'op' => ':=', 'value' => '1492'],
             ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Framed-Protocol', 'op' => ':=', 'value' => 'PPP'],
             ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Service-Type', 'op' => ':=', 'value' => 'Framed-User'],
-            ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Acct-Interim-Interval', 'op' => ':=', 'value' => RadGroupReply::$defaultInterimIntervall],
+            ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Acct-Interim-Interval', 'op' => ':=', 'value' => $provbase->acct_interim_interval],
         ];
 
-        if ($sessionTimeout = ProvBase::first()->ppp_session_timeout) {
+        if ($sessionTimeout = $provbase->ppp_session_timeout) {
             $insert[] = ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Session-Timeout', 'op' => ':=', 'value' => $sessionTimeout];
         }
 

@@ -850,7 +850,7 @@ class Modem extends \BaseModel
 
     /**
      * Refresh the online state of all PPP device by checking if their last
-     * accounting update was within the last $defaultInterimIntervall seconds
+     * accounting update was within the last acct_interim_interval seconds
      *
      * @author Ole Ernst
      */
@@ -861,7 +861,7 @@ class Modem extends \BaseModel
         $online = RadAcct::where(
             'acctupdatetime',
             '>=',
-            \Carbon\Carbon::now()->subSeconds(RadGroupReply::$defaultInterimIntervall)
+            \Carbon\Carbon::now()->subSeconds(ProvBase::first()->acct_interim_interval)
         )->pluck('username');
 
         DB::beginTransaction();
@@ -874,7 +874,7 @@ class Modem extends \BaseModel
             ->update(array_merge(array_combine($hf, [0, 0, 0, 0]), ['modem.updated_at' => now()]));
 
         // set all ppp devices online, which sent us an accounting update
-        // in the last $defaultInterimIntervall seconds
+        // in the last acct_interim_interval seconds
         // for now we set them to a sensible DOCIS US power level to make them green
         self::whereIn('ppp_username', $online)->update(array_combine($hf, [40, 36, 0, 36]));
         DB::commit();

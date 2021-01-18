@@ -25,6 +25,8 @@ class ProvBase extends \BaseModel
             'dhcp_max_lease_time' => 'required|integer|min:1',
             'ppp_session_timeout' => 'required|integer|min:0',
             'max_cpe' => 'required|integer|min:0|max:254',
+            // https://tools.ietf.org/html/rfc2869#section-5.16
+            'acct_interim_interval' => 'required|integer|min:60',
         ];
     }
 

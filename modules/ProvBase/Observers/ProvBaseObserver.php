@@ -46,6 +46,10 @@ class ProvBaseObserver
             $this->updatePPPSessionTimeout($model->ppp_session_timeout);
         }
 
+        if (array_key_exists('acct_interim_interval', $changes)) {
+            \Artisan::call('nms:radgroupreply-repopulate');
+        }
+
         if (array_key_exists('random_ip_allocation', $changes)) {
             $queryPath = storage_path('app/config/provbase/radius/queries.conf');
             if ($model->random_ip_allocation) {
