@@ -81,7 +81,7 @@
             <li id="network_{{$network->id}}" class="has-sub" data-sidebar="level2">
               <div style="display: flex;justify-content:space-between;padding: 0.25rem 1.25rem 0.25rem 0;">
                 <a href="{{ route('TreeErd.show', ['field' => 'net', 'search' => $network->id]) }}" style="color: #889097;">
-                  <i class="fa fa-circle text-success"></i>
+                  <i class="fa fa-circle text-info"></i>
                   <span>{{$network->name}}</span>
                 </a>
                 @if($network->clusters->isNotEmpty())
