@@ -192,12 +192,15 @@ class Configfile extends \BaseModel
 
                 // if there is a specific firmware: add entries for upgrade
                 if ($this->firmware && ! $sw_up) {
-                    // $server_ip = ProvBase::first()['provisioning_server'];
-                    // array_push($config_extensions, "SnmpMibObject docsDevSwServerAddress.0 IPAddress $server_ip ; /* tftp server */");
-                    array_push($config_extensions, 'SnmpMibObject docsDevSwFilename.0 String "fw/'.$this->firmware.'"; /* firmware file to download */');
-                    array_push($config_extensions, 'SnmpMibObject docsDevSwAdminStatus.0 Integer 2; /* allow provisioning upgrade */');
-                    // array_push($config_extensions, 'SwUpgradeServer $server_ip;');
-                    array_push($config_extensions, 'SwUpgradeFilename "fw/'.$this->firmware.'";');
+                    $serverIP = ProvBase::first()['provisioning_server'];
+                    array_push($config_extensions, "SwUpgradeServer $serverIP;");
+                    array_push($config_extensions, "SnmpMibObject docsDevSwServer.0 IPAddress $serverIP;");
+                    $serverIP = dechex(ip2long($serverIP));
+                    array_push($config_extensions, "SnmpMibObject docsDevSwServerAddress.0 HexString 0x$serverIP;");
+                    array_push($config_extensions, 'SnmpMibObject docsDevSwServerAddressType.0 Integer 1;');
+                    array_push($config_extensions, "SwUpgradeFilename \"fw/$this->firmware\";");
+                    array_push($config_extensions, "SnmpMibObject docsDevSwFilename.0 String \"fw/{$this->firmware}\";");
+                    array_push($config_extensions, 'SnmpMibObject docsDevSwAdminStatus.0 Integer 2;');
                     exec("openssl pkcs7 -print_certs -inform DER -in /tftpboot/fw/$this->firmware | openssl x509 -outform DER | xxd -p -c 254 | sed 's/^/MfgCVCData 0x/; s/$/;/'", $config_extensions);
                 }
 

@@ -1,6 +1,0 @@
-[nmsprime]
-name=NMS Prime
-baseurl=https://repo.nmsprime.com/rpm/nmsprime
-enabled=1
-gpgcheck=0
-sslverify=1

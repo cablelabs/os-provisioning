@@ -285,6 +285,7 @@ return [
     'Downstream rate coefficient' => 'Übertragungsratenkoeffizient Vorwärtskanal',
     'Upstream rate coefficient' => 'Übertragungsratenkoeffizient Rückwärtskanal',
     'Additional modem reset button' => 'Zusätzlicher Modem Reset Button',
+    'Automatic factory reset' => 'Automatisierter Werksreset',
     'Allocate PPPoE IPs randomly' => 'Zufällige Vergabe der PPPoE IPs',
     'Last update of geoposition' => 'Letztes Update der Geoposition',
     'modemAnalysis' => [

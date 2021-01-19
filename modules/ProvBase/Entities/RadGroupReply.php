@@ -13,8 +13,6 @@ class RadGroupReply extends \BaseModel
     // this is 0 since nmsprime.qos.id can never be that value
     public static $defaultGroup = 0;
 
-    public static $defaultInterimIntervall = 300;
-
     // https://wiki.mikrotik.com/wiki/Manual:RADIUS_Client
     // https://help.ubnt.com/hc/en-us/articles/204977464-EdgeRouter-PPPoE-Server-Rate-Limiting-Using-WISPr-RADIUS-Attributes
     public static $radiusAttributes = [
