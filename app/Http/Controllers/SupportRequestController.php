@@ -44,7 +44,7 @@ class SupportRequestController extends BaseController
             return \Redirect::route('SupportRequest.create');
         } else {
             // show SLA request with response time table, confluence link and Button to skip SLA agreement and continue with request formular
-            return \View::make('SupportRequest.index', $this->compact_prep_view(compact('headline', 'view_header', 'model', 'create_allowed', 'delete_allowed')));
+            return \View::make('SupportRequest.index', $this->compact_prep_view(compact('headline', 'view_header')));
         }
     }
 }
