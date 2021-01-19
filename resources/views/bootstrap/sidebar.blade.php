@@ -33,9 +33,11 @@
             @endif
             <span>{{$typearray['translated_name'] ?? $module_name}}</span>
             </a>
-            <a class="caret-link" href="javascript:;" style="width: 20%; height: 20px; display:block; text-align: right">
-              <b class="caret"></b>
-            </a>
+            @if(isset($typearray['submenu']))
+              <a class="caret-link" href="javascript:;" style="width: 20%; height: 20px; display:block; text-align: right">
+                <b class="caret"></b>
+              </a>
+            @endif
           </div>
         @if (isset($typearray['submenu']))
           <ul class="sub-menu line">
