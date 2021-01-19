@@ -2,9 +2,9 @@
 
 namespace Modules\HfcReq\Entities;
 
-return [
-    'link' => 'HfcBase.index',
-    'parent' => 'HfcBase',
+$config = [
+    'link' => null,
+    'parent' => 'HfcReq',
     'MenuItems' => [
         'Net Element Types' => [
             'link'	=> 'NetElementType.index',
@@ -24,3 +24,10 @@ return [
         'ds_snr' => 'DS SNR',
     ],
 ];
+
+if (\Module::collections()->has('HfcBase')) {
+    $config['link'] = 'HfcBase.index';
+    $config['parent'] = 'HfcBase';
+}
+
+return $config;

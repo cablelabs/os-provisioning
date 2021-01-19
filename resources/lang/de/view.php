@@ -142,7 +142,7 @@ return [
         'GlobalConfig'      => 'Globale Konfiguration',
         'Ccc'               => 'Kundenkontrollzentrum',
         'BillingBase'       => 'Billing',
-        'HFC'               => 'Detect',
+        'HFC'               => 'HFC',
         'OverdueDebts'      => 'Offene Posten',
         'ProvBase'          => 'Provisionierung Basismodul',
         'ProvVoip'          => 'Provisionierung für VoiP',

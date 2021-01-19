@@ -223,7 +223,7 @@ return [
     'ProvVoip'                  => 'ProvVoip Konfiguration',
     'ProvVoipEnvia'             => 'ProvVoipEnvia Konfiguration',
     'Has a truck'               => 'Besitzt/Fährt einen Truck',
-    'HFC'                       => 'Detect',
+    'HFC'                       => 'HFC',
     'Rank'                      => 'Rang',
     'Assign Users'              => 'Benutzer zuweisen',
     'Invoices'                  => 'Rechnungen',

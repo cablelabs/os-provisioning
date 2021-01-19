@@ -54,11 +54,10 @@
         </li>
       @endforeach
 
-    @can('view', Modules\HfcBase\Entities\TreeErd::class)
+    @if(Module::collections()->has('HfcBase') && auth()->user()->can('view', Modules\HfcBase\Entities\TreeErd::class))
       <li class="nav-header">{{ trans('view.Menu_Nets') }}</li>
       <li id="network_overview" class="has-sub" data-sidebar="level1">
         <div style="display: flex;justify-content:space-between;padding: 8px 20px;line-height: 20px;">
-          @if (Module::collections()->has('HfcBase'))
             <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}">
               <i class="fa fa-sitemap"></i>
               <span>{{ trans('view.Menu_allNets') }}</span>
@@ -66,15 +65,6 @@
             <a class="caret-link" href="javascript:;">
               <b class="caret fa-rotate-90"></b>
             </a>
-          @else
-            <a class="caret-link" style="flex:1;display: flex;justify-content:space-between;align-items:center;" href="javascript:;">
-              <div>
-                <i class="fa fa-sitemap"></i>
-                <span>{{ trans('view.Menu_allNets') }}</span>
-              </div>
-              <b class="caret fa-rotate-90"></b>
-            </a>
-          @endif
         </div>
         <ul class="sub-menu" style="display: none;padding-left:21px;">
           @foreach ($networks as $network)
@@ -105,7 +95,7 @@
           @endforeach
         </ul>
       </li>
-    @endcan
+    @endif
     {{-- sidebar minify button --}}
     <li>
       <a href="javascript:;" class="sidebar-minify-btn hidden-xs" data-click="sidebar-minify">
