@@ -3,7 +3,6 @@
 namespace Modules\ProvVoip\Http\Controllers;
 
 use Bouncer;
-use Modules\ProvVoip\Entities\Mta;
 use Modules\ProvVoip\Entities\Phonenumber;
 
 class PhonenumberController extends \BaseController

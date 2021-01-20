@@ -4,8 +4,6 @@ namespace Modules\HfcReq\Console;
 
 use Illuminate\Console\Command;
 use Modules\HfcReq\Entities\NetElement;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 
 class agcCommand extends Command
 {

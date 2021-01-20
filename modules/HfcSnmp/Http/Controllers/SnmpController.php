@@ -7,7 +7,6 @@ use Session;
 use Modules\HfcSnmp\Entities\OID;
 use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcSnmp\Entities\Parameter;
-use Modules\HfcReq\Entities\NetElementType;
 use App\Http\Controllers\BaseViewController;
 
 class SnmpController extends \BaseController

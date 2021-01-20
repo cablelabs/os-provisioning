@@ -4,7 +4,6 @@ namespace Modules\ProvBase\Console;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Console\Command;
-use Modules\ProvBase\Entities\Modem;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;

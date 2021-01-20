@@ -263,7 +263,7 @@ class ModemController extends \BaseController
         $modems = $obj->getFulltextSearchResults($scope, $mode, $query, $pre_f, $pre_v)[0];
 
         // perform contract search
-        $obj = new \Modules\ProvBase\Entities\Contract;
+        $obj = new Contract;
         $contracts = $obj->getFulltextSearchResults('contract', $mode, $query, $pre_f, $pre_v)[0];
 
         // generate Topography

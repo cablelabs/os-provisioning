@@ -4,8 +4,7 @@ namespace Modules\HfcReq\Http\Controllers;
 
 use Request;
 use Redirect;
-use Modules\HfcSnmp\Entities\OID;
-use Modules\HfcSnmp\Entities\Parameter;
+use Nwidart\Modules\Facades\Module;
 use Modules\HfcReq\Entities\NetElementType;
 
 class NetElementTypeController extends HfcReqController
@@ -66,7 +65,7 @@ class NetElementTypeController extends HfcReqController
             return Redirect::back();
         }
 
-        $params = Parameter::find(Request::input('param_id'));
+        $params = \Modules\HfcSnmp\Entities\Parameter::find(Request::input('param_id'));
 
         // TODO: If this gets slow we could easily optimize it by doing direct sql updates
         foreach ($params as $param) {

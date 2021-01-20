@@ -3,8 +3,6 @@
 namespace Modules\HfcReq\Http\Controllers;
 
 use Request;
-use Modules\HfcSnmp\Entities\OID;
-use Modules\HfcSnmp\Entities\Parameter;
 use App\Http\Controllers\BaseViewController;
 use App\Http\Controllers\NamespaceController;
 
@@ -36,7 +34,7 @@ class HfcReqController extends \BaseController
 
         // Get OIDs to Multiselect from
         $oids = [];
-        $oids_raw = OID::get(['id', 'name', 'oid']);
+        $oids_raw = \Modules\HfcSnmp\Entities\OID::get(['id', 'name', 'oid']);
         foreach ($oids_raw as $key => $oid) {
             $oids[$oid->id] = $oid->name.' - '.$oid->oid;
         }
@@ -69,7 +67,7 @@ class HfcReqController extends \BaseController
             }
 
             // generate list of OIDs and attach to device type (fastest method)
-            $oids = OID::where('mibfile_id', '=', $mibfile_id)->get(['id'])->keyBy('id')->keys()->all();
+            $oids = \Modules\HfcSnmp\Entities\OID::where('mibfile_id', '=', $mibfile_id)->get(['id'])->keyBy('id')->keys()->all();
         }
 
         // List from Textarea
@@ -80,7 +78,7 @@ class HfcReqController extends \BaseController
 
             foreach ($oid_list as $oid) {
                 $oid = trim($oid, "\r.0");
-                $oid_o = OID::where('oid', 'like', '%'.$oid)->get(['id'])->first();
+                $oid_o = \Modules\HfcSnmp\Entities\OID::where('oid', 'like', '%'.$oid)->get(['id'])->first();
                 if ($oid_o) {
                     $oids[] = $oid_o->id;
                 }
@@ -129,7 +127,7 @@ class HfcReqController extends \BaseController
                 $data['parent_id'] = $id;
             }
 
-            Parameter::create($data);
+            \Modules\HfcSnmp\Entities\Parameter::create($data);
         }
     }
 
@@ -141,9 +139,9 @@ class HfcReqController extends \BaseController
         $model = NamespaceController::get_route_name();
 
         if ($model == 'NetElementType') {
-            Parameter::where('netelementtype_id', '=', $id)->delete();
+            \Modules\HfcSnmp\Entities\Parameter::where('netelementtype_id', '=', $id)->delete();
         } else {
-            Parameter::where('parent_id', '=', $id)->delete();
+            \Modules\HfcSnmp\Entities\Parameter::where('parent_id', '=', $id)->delete();
         }
 
         return \Redirect::back();

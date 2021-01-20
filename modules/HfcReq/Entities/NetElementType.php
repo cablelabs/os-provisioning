@@ -2,9 +2,6 @@
 
 namespace Modules\HfcReq\Entities;
 
-use Modules\HfcSnmp\Entities\OID;
-use Modules\HfcSnmp\Entities\Parameter;
-
 class NetElementType extends \BaseModel
 {
     // The associated SQL table for this Model
@@ -112,9 +109,10 @@ class NetElementType extends \BaseModel
 
     public static function param_list($id)
     {
-        $eager_loading_model = new OID;
-        $params = Parameter::where('netelementtype_id', '=', $id)->with($eager_loading_model->table)->get();
         $list = [];
+        $params = \Modules\HfcSnmp\Entities\Parameter::where('netelementtype_id', '=', $id)
+            ->with('oid')
+            ->get();
 
         if (! $params) {
             return $list;

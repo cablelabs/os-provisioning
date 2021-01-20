@@ -2,9 +2,8 @@
 
 namespace Modules\ProvBase\Entities;
 
-use DB;
-use Log;
-use Schema;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Modules\ProvVoip\Entities\Phonenumber;
 
 class Configfile extends \BaseModel

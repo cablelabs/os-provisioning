@@ -3,7 +3,6 @@
 namespace Modules\ProvVoip\Entities;
 
 use Illuminate\Support\Collection;
-use Modules\ProvVoipEnvia\Entities\EnviaOrder;
 
 class Phonenumber extends \BaseModel
 {
@@ -395,10 +394,14 @@ class Phonenumber extends \BaseModel
             return optional();
         }
 
-        $orders = $this->belongsToMany(EnviaOrder::class, 'enviaorder_phonenumber',
-                            'phonenumber_id', 'enviaorder_id')
-                        ->whereRaw($whereStatement)
-                        ->withTimestamps();
+        $orders = $this->belongsToMany(
+            \Modules\ProvVoipEnvia\Entities\EnviaOrder::class,
+            'enviaorder_phonenumber',
+            'phonenumber_id',
+            'enviaorder_id'
+            )
+            ->whereRaw($whereStatement)
+            ->withTimestamps();
 
         if ($withTrashed) {
             return $orders->withTrashed();

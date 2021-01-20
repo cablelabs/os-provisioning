@@ -4,7 +4,6 @@ namespace Modules\HfcReq\Entities;
 
 use Auth;
 use Module;
-use Modules\ProvBase\Entities\Modem;
 use Illuminate\Support\Facades\Cache;
 
 class NetElement extends \BaseModel
@@ -231,12 +230,12 @@ class NetElement extends \BaseModel
      */
     public function modems()
     {
-        return $this->hasMany(Modem::class, 'netelement_id');
+        return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id');
     }
 
     public function geoPosModems()
     {
-        return $this->hasMany(Modem::class, 'netelement_id')
+        return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id')
             ->select('modem.id', 'modem.x', 'modem.y', 'modem.netelement_id')
             ->selectRaw('COUNT(*) AS count')
             ->selectRaw('COUNT(CASE WHEN `us_pwr` = 0 THEN 1 END) as offline')
