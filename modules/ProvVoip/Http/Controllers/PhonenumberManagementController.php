@@ -5,8 +5,8 @@ namespace Modules\ProvVoip\Http\Controllers;
 use Bouncer;
 use Nwidart\Modules\Facades\Module;
 use Modules\ProvVoip\Entities\EkpCode;
-use Modules\ProvVoip\Entities\TRCClass;
 use Illuminate\Support\Facades\Request;
+use Modules\ProvVoip\Entities\TRCClass;
 use Illuminate\Support\Facades\Redirect;
 use Modules\ProvVoip\Entities\CarrierCode;
 use Modules\ProvVoip\Entities\Phonenumber;
@@ -26,19 +26,20 @@ class PhonenumberManagementController extends \BaseController
      */
     public function edit($id)
     {
-        if (\Request::filled('clear_envia_reference')) {
-            if (\Module::collections()->has('ProvVoipEnvia')) {
-                $mgmt = PhonenumberManagement::find($id);
-                $mgmt->phonenumber->contract_external_id = null;
-                $mgmt->phonenumber->save();
-                $msg = trans('provvoipenvia::messages.phonenumbermanagementRemovedEnviaRef');
-                $mgmt->addAboveMessage($msg, 'info', 'form');
-
-                return \Redirect::back();
-            }
+        if (
+            ! Request::filled('clear_envia_reference') &&
+            ! Module::collections()->has('ProvVoipEnvia')
+        ) {
+            return parent::edit($id);
         }
 
-        return parent::edit($id);
+        $mgmt = PhonenumberManagement::find($id);
+        $mgmt->phonenumber->contract_external_id = null;
+        $mgmt->phonenumber->save();
+        $msg = trans('provvoipenvia::messages.phonenumbermanagementRemovedEnviaRef');
+        $mgmt->addAboveMessage($msg, 'info', 'form');
+
+        return Redirect::back();
     }
 
     /**
@@ -54,9 +55,8 @@ class PhonenumberManagementController extends \BaseController
         // in most cases the subscriber is identical to contract partner ⇒ on create we prefill these values with data from contract
         if (! $model->exists) {
             if (
-                (! \Request::filled('phonenumber_id'))
-                ||
-                ! ($phonenumber = Phonenumber::find(\Request::get('phonenumber_id')))
+                ! Request::filled('phonenumber_id') ||
+                ! ($phonenumber = Phonenumber::find(Request::get('phonenumber_id')))
             ) {
                 return [];
             }
@@ -109,7 +109,7 @@ class PhonenumberManagementController extends \BaseController
         }
 
         // help text for carrier/ekp settings
-        if (\Module::collections()->has('ProvVoipEnvia')) {
+        if (Module::collections()->has('ProvVoipEnvia')) {
             $trc_help = trans('helper.PhonenumberManagement_TRCWithEnvia');
             $carrier_in_help = trans('helper.PhonenumberManagement_CarrierInWithEnvia');
             $ekp_in_help = trans('helper.PhonenumberManagement_EkpInWithEnvia');
