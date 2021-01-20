@@ -25,6 +25,8 @@ return [
     'billing' => [
         'cdr' => [
             'missingONKey' => 'Missing private key to access Opennumbers SFTP server. CDR could not be loaded.',
+            'missingProvVoip' => ':provider CDRs can not be assigned to customers without ProvVoip module.',
+            'missingProvVoipEnvia' => 'Without ProvVoip module several checks according to the correct assignment of EnviaTel CDRs to the customer can not be made.',
             'noVoip' => 'Missing voip tariff for contract :contract. Price is calculated with basic tariff and no extra charge is added!',
         ],
     ],
