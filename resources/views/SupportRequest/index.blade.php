@@ -40,13 +40,13 @@
     <div class='row'>
         <div class='col-md-1'>
         </div>
-        <div class='col-md-2'>
+        <div class='col-md-4'>
             <a class="btn btn-info btn-block" target='_blank' id='get_sla' href="https://shop.nmsprime.com">Get SLA</a>
         </div>
         <div class='col-md-2'>
         </div>
-        <div class='col-md-2'>
-            <a class="btn btn-info btn-block" id='request' href="{{route('SupportRequest.create')}}">{{\Session::has('clicked_sla') ? 'Request Support' : 'Get Help without SLA'}}</a>
+        <div class='col-md-4'>
+            <a class="btn btn-secondary btn-block" id='request' href="{{route('SupportRequest.create')}}">{{\Session::has('clicked_sla') ? 'Request Support' : 'Get Help without SLA'}}</a>
         </div>
     </div>
 
