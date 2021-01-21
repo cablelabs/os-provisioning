@@ -34,7 +34,7 @@ class Mta extends \BaseModel
     // Name of View
     public static function view_headline()
     {
-        return 'MTAs';
+        return 'MTA';
     }
 
     // View Icon

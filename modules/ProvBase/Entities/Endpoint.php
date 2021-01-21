@@ -35,7 +35,7 @@ class Endpoint extends \BaseModel
     // Name of View
     public static function view_headline()
     {
-        return 'Endpoints';
+        return 'Endpoint';
     }
 
     // View Icon

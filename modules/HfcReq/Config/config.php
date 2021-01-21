@@ -6,12 +6,12 @@ $config = [
     'link' => null,
     'parent' => 'HfcReq',
     'MenuItems' => [
-        'Net Element Types' => [
+        'NetElementType' => [
             'link'	=> 'NetElementType.index',
             'icon'	=> 'fa-object-group',
             'class' => NetElementType::class,
         ],
-        'Net Elements' => [
+        'NetElement' => [
             'link'	=> 'NetElement.index',
             'icon'	=> 'fa-object-ungroup',
             'class' => NetElement::class,

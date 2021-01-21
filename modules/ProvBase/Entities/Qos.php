@@ -43,7 +43,7 @@ class Qos extends \BaseModel
     // Name of View
     public static function view_headline()
     {
-        return 'QoS';
+        return 'Qos';
     }
 
     // View Icon

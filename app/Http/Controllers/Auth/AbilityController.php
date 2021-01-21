@@ -11,7 +11,6 @@ use App\BaseModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Modules\HfcReq\Entities\NetElementType;
-use App\Http\Controllers\BaseViewController;
 
 class AbilityController extends Controller
 {
@@ -258,7 +257,7 @@ class AbilityController extends Controller
             ->map(function ($title) {
                 return collect([
                     'title' => $title,
-                    'localTitle' => BaseViewController::translate_label($title),
+                    'localTitle' => trans('view.Ability.'.$title),
                     'helperText' => trans('helper.'.$title),
                 ]);
             });
@@ -320,8 +319,8 @@ class AbilityController extends Controller
                     return $modules->contains($name);
                 })
                 ->prepend('GlobalConfig')
-                ->push('GuiLog')
                 ->push('Sla')
+                ->push('GuiLog')
                 ->mapWithKeys(function ($name) use ($models, $allAbilities) {
                     return self::getModelActions($name, $models, $allAbilities);
                 }),

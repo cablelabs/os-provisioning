@@ -5,8 +5,8 @@
 </div>
 <div id="app" style="display:none;">
     <div id="accordion" class="panel-group">
-        <div class="panel panel-inverse">
-            <div class="panel-heading d-flex align-items-center flex-row">
+        <div class="panel-inverse" style="margin-bottom: 0;background-color: #fff;border: 1px solid transparent;">
+            <div class="d-flex align-items-center flex-row" style="padding:0.75rem 1rem;color:#fff;background:#242a30;border: none;border-top-left-radius: 3px;border-top-right-radius: 3px;">
                 <h3 class="panel-title" style="flex: 1;">
                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#customAbilities" aria-expanded="false">
                         <i class="fa fa-plus-circle"></i>
@@ -20,7 +20,7 @@
                         <i class="fa fa-lg"
                            :class="loadingSpinner.custom ?'fa-circle-o-notch fa-spin' : 'fa-save'">
                         </i>
-                        {{ trans('messages.Save All') }}
+                        {{ trans('view.Ability.Save All') }}
                     </button>
                 </div>
             </div>
@@ -29,12 +29,12 @@
                     <table class="table table-hover mb-5">
                         <thead class="text-center">
                           <tr>
-                            <th class="text-left">{{ trans('messages.Ability') }}</th>
-                            <th>{{ trans('messages.Allow') }}</th>
-                            <th v-if="allowAll">{{ trans('messages.Forbid') }}</th>
+                            <th class="text-left">{{ trans('view.Ability.Ability') }}</th>
+                            <th>{{ trans('view.Ability.Allow') }}</th>
+                            <th v-if="allowAll">{{ trans('view.Ability.Forbid') }}</th>
                             <th v-show="!showSaveColumn"></th>
-                            <th v-show="showSaveColumn">{{ trans('messages.Save Changes') }}</th>
-                            <th>{{ trans('messages.Help') }}</th>
+                            <th v-show="showSaveColumn">{{ trans('view.Ability.Save Changes') }}</th>
+                            <th>{{ trans('view.Ability.Help') }}</th>
                           </tr>
                         </thead>
                         <tr v-for="(ability, id) in customAbilities">
@@ -87,8 +87,8 @@
     @foreach ($modelAbilities as $module => $entities)
         <form method="POST" action="{!! route('modelAbility.update') !!}" accept-charset="UTF-8" id="{{ $module }}" class="form_open" enctype="multipart/form-data">
         {{ csrf_field() }}
-        <div class="panel panel-inverse">
-            <div class="panel-heading d-flex align-items-center flex-row">
+        <div class="panel-inverse" style="margin-bottom: 0;background-color: #fff;border: 1px solid transparent;">
+            <div class="d-flex align-items-center flex-row" style="padding:0.5rem 1rem;color:#fff;background:#242a30;border: none;border-top-left-radius: 3px;border-top-right-radius: 3px;">
                 <h3 class="panel-title" style="flex: 1;">
                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#{{ 'group_'.$module }}" aria-expanded="false">
                         <i class="fa fa-plus-circle"></i>
@@ -114,16 +114,16 @@
                                     @if($action['name'] == 'view')
                                     v-if="!(manageAll.{!! $module !!}) && allowViewAll == undefined"
                                     @endif
-                                    title="{{ App\Http\Controllers\BaseViewController::translate_view($action['name'], 'Button' )}}"
+                                    title="{{ trans('view.Button_'.$action['name']) }}"
                                     >
-                                <span class="d-block d-xl-none" style="pointer-events: none;">
+                                <span class="d-block d-wide-none" style="pointer-events: none;">
                                 <i class="fa {!! $action['icon'] !!} fa-lg"
                                     :class="[{!! $action['name'] !!}All.{!! $module !!} ? '' : 'text-dark']"></i>
                                 </span>
-                                <span class="d-none d-xl-block" style="pointer-events: none;">
+                                <span class="d-none d-wide-block" style="pointer-events: none;">
                                     <i class="fa {!! $action['icon'] !!} fa-lg"
                                         :class="[{!! $action['name'] !!}All.{!! $module !!} ? '' : 'text-dark']"></i>
-                                    {{ trans('messages.'.Str::title($action['name'])) }}
+                                    {{ trans('view.Ability.'.ucfirst($action['name'])) }}
                                 </span>
                             </button>
                         </span>
@@ -154,24 +154,24 @@
                 <table class="table table-hover">
                     <thead class="text-center">
                       <tr>
-                        <th class="text-left"> {{ trans('messages.Name') }} </th>
-                        <th > {{ trans('messages.Allow'). '-'.
-                                 trans('messages.Forbid') }} </th>
-                        <th > {{ trans('messages.Manage') }} </th>
+                        <th class="text-left"> {{ trans('view.name') }} </th>
+                        <th > {{ trans('view.Ability.Allow'). '-'.
+                                 trans('view.Ability.Forbid') }} </th>
+                        <th > {{ trans('view.Ability.Manage') }} </th>
                         <th v-if="!(manageAll.{!! $module !!}) && allowViewAll == undefined">
-                            {{ trans('messages.View') }}
+                            {{ trans('view.Ability.View') }}
                         </th>
                         @if ($module != 'GlobalConfig')
                         <th v-if="!(manageAll.{!! $module !!})">
-                            {{ trans('messages.Create') }}
+                            {{ trans('view.Ability.Create') }}
                         </th>
                         @endif
                         <th v-if="!(manageAll.{!! $module !!})">
-                            {{ trans('messages.Update') }}
+                            {{ trans('view.Ability.Update') }}
                         </th>
                         @if ($module != 'GlobalConfig')
                         <th v-if="!(manageAll.{!! $module !!})">
-                            {{ trans('messages.Delete') }}
+                            {{ trans('view.Ability.Delete') }}
                         </th>
                         @endif
                       </tr>
@@ -179,7 +179,11 @@
                 @foreach ($entities as $name => $permission)
                     <tr>
                         <td width="44%">
-                            {{ trans('messages.'.$name) }}
+                            @if(in_array($module, ['GlobalConfig', 'Authentication', 'Ccc']))
+                                {{ trans('messages.'.$name) }}
+                            @else
+                                {{ trans_choice('view.Header_'.$name, 2) }}
+                            @endif
                         </td>
                         <td width="8%" align="center">
                             <span class="badge" :class="[allowAll ? 'badge-danger' : 'badge-success']" >
@@ -221,8 +225,8 @@
     @endforeach
     </div>
     <div id="accordion2" class="panel-group" style="margin-top: 40px">
-        <div class="panel panel-inverse">
-            <div class="panel-heading d-flex align-items-center flex-row">
+        <div class="panel-inverse" style="margin-bottom: 0;background-color: #fff;border: 1px solid transparent;">
+            <div class="d-flex align-items-center flex-row" style="padding:0.75rem 1rem;color:#fff;background:#242a30;border: none;border-top-left-radius: 3px;border-top-right-radius: 3px;">
                 <h3 class="panel-title" style="flex: 1;">
                     <a class="accordion-toggle accordion-toggle-styled collapsed"
                         data-toggle="collapse"
@@ -240,7 +244,7 @@
                         <i class="fa fa-lg"
                             :class="loadingSpinner.custom ?'fa-circle-o-notch fa-spin' : 'fa-save'">
                         </i>
-                        {{ trans('messages.Save All') }}
+                        {{ trans('view.Ability.Save All') }}
                     </button>
                 </div>
             </div>
@@ -346,8 +350,8 @@ new Vue({
         modelAbilities: @json($modelAbilities),
         originalModelAbilities: @json($modelAbilities),
         button: {
-            allow: '{{ trans("messages.Allow to") }}',
-            forbid: '{{ trans("messages.Forbid to") }}'
+            allow: '{{ trans("view.Ability.Allow to") }}',
+            forbid: '{{ trans("view.Ability.Forbid to") }}'
             }
     }
   },
