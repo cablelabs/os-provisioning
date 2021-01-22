@@ -1019,3 +1019,9 @@ table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTabl
     margin-right: 10px;
     margin-left: 10px;
 }
+
+.external-app-mini {
+    height: 20px !important;
+    margin-right: 7px;
+    filter: saturate(25%) brightness(80%);
+}
