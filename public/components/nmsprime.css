@@ -576,6 +576,16 @@ li.expand div img {
   display: inline;
 }
 
+.hover-supported {
+    display: none;
+}
+
+@media (hover: hover) {
+  .hover-supported:hover {
+    display: block;
+  }
+}
+
 span.centerblock {
     display: block;
     text-align: center;
