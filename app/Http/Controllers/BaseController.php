@@ -516,6 +516,10 @@ class BaseController extends Controller
             $a['view_help'] = $this->view_help();
         }
 
+        if (! isset($a['externalApps'])) {
+            $a['externalApps'] = $this->getExternalApps();
+        }
+
         $a['edit_view_save_button'] = $this->edit_view_save_button;
         $a['save_button_name'] = $this->save_button_name;
         $a['second_button_name'] = $this->second_button_name;

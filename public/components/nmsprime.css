@@ -586,6 +586,31 @@ li.expand div img {
   }
 }
 
+.sidebar .nav > li > div > a > svg {
+    height: 20px;
+    width: 20px;
+}
+
+.sidebar .nav > li > div > a > svg,
+.sidebar .nav > li > div > a > i,
+.sidebar .nav > li > div > a > img, {
+    margin-right: 7px;
+}
+
+.sidebar-element {
+    padding: 8px 20px;
+    line-height: 20px;
+    color: #a8acb1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.sidebar-element .recolor > a > img {
+    height: 20px;
+}
+
 span.centerblock {
     display: block;
     text-align: center;

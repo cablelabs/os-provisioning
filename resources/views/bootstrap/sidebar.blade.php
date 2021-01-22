@@ -40,7 +40,7 @@
       </li>
       @foreach ($view_header_links as $module_name => $typearray)
         <li id="{{ Str::slug($module_name,'_')}}" class="has-sub {{ ($route_name == $module_name) ? 'active' : ''}}" data-sidebar="level1">
-          <div style="padding: 8px 20px;line-height: 20px;color: #a8acb1;display: flex;justify-content: space-between;align-items: center; white-space: nowrap;" class="recolor">
+          <div class="recolor sidebar-element">
             @if (isset($typearray['link']))
               <a href="{{route($typearray['link'])}}">
             @else
@@ -78,8 +78,20 @@
         <i class="fa fa-plus"></i>
       </a>
     </li>
+    @foreach ($externalApps as $appName => $externalApp)
+      @if ($externalApp['state'] == 'active' && file_exists(public_path('images/'.$externalApp['icon'])))
+        <li>
+          <div class="sidebar-element recolor">
+            <a href="{{ $externalApp['link'] }}">
+                <img title="{{ $externalApp['description'] }}" src="{{ asset('images/'.$externalApp['icon']) }}" class="external-app-mini">
+                <span>{{ $appName }}</span>
+            </a>
+          </div>
+        </li>
+      @endif
+    @endforeach
 
-    @can('view', Modules\HfcBase\Entities\TreeErd::class)
+
     @if(Module::collections()->has('HfcBase') && auth()->user()->can('view', Modules\HfcBase\Entities\TreeErd::class))
       <li class="nav-header">{{ trans('view.Menu_Nets') }}</li>
       <li id="network_overview" class="has-sub" data-sidebar="level1">
