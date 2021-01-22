@@ -192,12 +192,12 @@ var handleSidebarMinify = function() {
         if ($(targetContainer).hasClass(sidebarClass)) {
             $(targetContainer).removeClass(sidebarClass);
             if ($(targetContainer).hasClass('page-sidebar-fixed')) {
+                generateSlimScroll($('#sidebar [data-scrollbar="true"]'));
                 if ($('#sidebar .slimScrollDiv').length !== 0) {
                     $('#sidebar [data-scrollbar="true"]').slimScroll({destroy: true});
                     $('#sidebar [data-scrollbar="true"]').removeAttr('style');
                     localStorage.setItem("minified-state", "false");
                 }
-                generateSlimScroll($('#sidebar [data-scrollbar="true"]'));
                 $('#sidebar [data-scrollbar=true]').trigger('mouseover');
             } else if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                 if ($('#sidebar .slimScrollDiv').length !== 0) {
