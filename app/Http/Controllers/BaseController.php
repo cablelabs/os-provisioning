@@ -542,6 +542,25 @@ class BaseController extends Controller
     }
 
     /**
+     * Create array of external apps.
+     *
+     * @author Roy Schneider
+     * @return array $apps
+     */
+    public function getExternalApps()
+    {
+        $apps = include '/var/www/nmsprime/storage/app/config/ExternalApps.php';
+
+        foreach ($apps as $name => $value) {
+            $command = 'rpm -q '.escapeshellarg($value['rpmName']);
+            $package = exec($command);
+            $apps[$name]['state'] = \Str::contains($package, 'not installed') ? 'inactive' : 'active';
+        }
+
+        return $apps;
+    }
+
+    /**
      * Perform a global search.
      *
      * @return Illuminate\Support\Facades\View

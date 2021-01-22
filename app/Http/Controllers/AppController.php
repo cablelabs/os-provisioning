@@ -31,8 +31,9 @@ class AppController extends BaseController
         $modules = \Route::currentRouteName() == 'Apps.active' ? \Module::allEnabled() : \Module::allDisabled();
         $nativeApps = $this->getNativeApps($modules);
         $tabs = $this->prepareTabs();
+        $externalApps = $this->getExternalApps();
 
-        return \View::make('Apps.index', $this->compact_prep_view(compact('nativeApps', 'tabs')));
+        return \View::make('Apps.index', $this->compact_prep_view(compact('nativeApps', 'externalApps', 'tabs')));
     }
 
     /**

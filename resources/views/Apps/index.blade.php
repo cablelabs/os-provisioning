@@ -30,9 +30,9 @@
 					@foreach ($modules as $attr)
 						<div>
 							<a href="{{ $attr['link'] }}">
-								<img title="{{ $attr['description'] }}" src="{{ asset('images/apps/'.$attr['icon']) }}" style="height: 100px; margin-right: 10px; margin-left: 10px;">
+								<img title="{{ $attr['description'] }}" src="{{ asset('images/apps/'.$attr['icon']) }}" class="app-image">
 							</a>
-							<p style="margin-top: 5px; color: black;">{{ $attr['name'] }}</p>
+							<p class="app-title">{{ $attr['name'] }}</p>
 						</div>
 					@endforeach
 				</div>
@@ -40,4 +40,18 @@
 		@endforeach
 	@endforeach
 	<h4 style="text-align: center;">{{ trans('messages.externalApps') }}</h4>
+	@foreach ($externalApps as $name => $externalApp)
+		@if (\Route::currentRouteName() == 'Apps.'.$externalApp['state'] && file_exists(public_path('images/'.$externalApp['icon'])))
+			<div class="btn">
+				<div class="widget row" style="text-align: center; padding-bottom: 25px;">
+					<div style="height: 100px;">
+						<a href="{{ $externalApp['link'] }}" style="display: flex;">
+								<img title="{{ $externalApp['description'] }}" src="{{ asset('images/'.$externalApp['icon']) }}" class="app-image">
+						</a>
+						<p class="app-title">{{ $name }}</p>
+					</div>
+				</div>
+			</div>
+		@endif
+	@endforeach
 @stop

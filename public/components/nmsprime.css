@@ -974,3 +974,23 @@ table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTabl
 .divider {
     border-top: 1px solid;
 }
+
+.roundBorder {
+    border-radius: 25px;
+    border: 2px solid #000;
+    padding: 9px;
+    width: 100px;
+    height: 100px;
+    color: #a8acb1;
+}
+
+.app-title {
+    margin-top: 5px;
+    color: black;
+}
+
+.app-image {
+    height: 100px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
