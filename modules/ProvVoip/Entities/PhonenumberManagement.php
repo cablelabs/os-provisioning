@@ -59,7 +59,7 @@ class PhonenumberManagement extends \BaseModel
     // Name of View
     public static function view_headline()
     {
-        return 'Phonenumber Management';
+        return 'PhonenumberManagement';
     }
 
     public static function view_icon()
@@ -71,7 +71,7 @@ class PhonenumberManagement extends \BaseModel
     public function view_index_label()
     {
         $bsclass = $this->get_bsclass();
-        $header = isset($this->phonenumber) ? 'PhonenumberManagement ('.$this->phonenumber->prefix_number.'/'.$this->phonenumber->number.')' : '';
+        $header = isset($this->phonenumber) ? trans_choice('view.Header_PhonenumberManagement', 1)." ({$this->phonenumber->prefix_number}/{$this->phonenumber->number})" : '';
 
         return ['table' => $this->table,
             'index_header' => [$this->table.'.id'],

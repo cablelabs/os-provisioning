@@ -33,9 +33,11 @@
             @endif
             <span>{{$typearray['translated_name'] ?? $module_name}}</span>
             </a>
-            <a class="caret-link" href="javascript:;" style="width: 20%; height: 20px; display:block; text-align: right">
-              <b class="caret"></b>
-            </a>
+            @if(isset($typearray['submenu']))
+              <a class="caret-link" href="javascript:;" style="width: 20%; height: 20px; display:block; text-align: right">
+                <b class="caret fa-rotate-90"></b>
+              </a>
+            @endif
           </div>
         @if (isset($typearray['submenu']))
           <ul class="sub-menu line">
@@ -52,39 +54,29 @@
         </li>
       @endforeach
 
-    @can('view', Modules\HfcBase\Entities\TreeErd::class)
+    @if(Module::collections()->has('HfcBase') && auth()->user()->can('view', Modules\HfcBase\Entities\TreeErd::class))
       <li class="nav-header">{{ trans('view.Menu_Nets') }}</li>
       <li id="network_overview" class="has-sub" data-sidebar="level1">
         <div style="display: flex;justify-content:space-between;padding: 8px 20px;line-height: 20px;">
-          @if (Module::collections()->has('HfcBase'))
             <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}">
               <i class="fa fa-sitemap"></i>
               <span>{{ trans('view.Menu_allNets') }}</span>
             </a>
             <a class="caret-link" href="javascript:;">
-              <b class="caret"></b>
+              <b class="caret fa-rotate-90"></b>
             </a>
-          @else
-            <a class="caret-link" style="flex:1;display: flex;justify-content:space-between;align-items:center;" href="javascript:;">
-              <div>
-                <i class="fa fa-sitemap"></i>
-                <span>{{ trans('view.Menu_allNets') }}</span>
-              </div>
-              <b class="caret"></b>
-            </a>
-          @endif
         </div>
         <ul class="sub-menu" style="display: none;padding-left:21px;">
           @foreach ($networks as $network)
             <li id="network_{{$network->id}}" class="has-sub" data-sidebar="level2">
               <div style="display: flex;justify-content:space-between;padding: 0.25rem 1.25rem 0.25rem 0;">
                 <a href="{{ route('TreeErd.show', ['field' => 'net', 'search' => $network->id]) }}" style="color: #889097;">
-                  <i class="fa fa-circle text-success"></i>
+                  <i class="fa fa-circle text-info"></i>
                   <span>{{$network->name}}</span>
                 </a>
                 @if($network->clusters->isNotEmpty())
                   <a class="caret-link" style="color: #889097;" href="javascript:;">
-                    <b class="caret"></b>
+                    <b class="caret fa-rotate-90"></b>
                   </a>
                 @endif
               </div>
@@ -103,7 +95,7 @@
           @endforeach
         </ul>
       </li>
-    @endcan
+    @endif
     {{-- sidebar minify button --}}
     <li>
       <a href="javascript:;" class="sidebar-minify-btn hidden-xs" data-click="sidebar-minify">

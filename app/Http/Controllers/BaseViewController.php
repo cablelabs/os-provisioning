@@ -558,13 +558,13 @@ class BaseViewController extends Controller
             </div>";
     }
 
-    /*
-     * This Method returns The Menuobjects for the Main Menu
-     * which constist of icon, link and class of the page
+    /**
+     * This Method returns The Menuobjects for the Main Menu which constist of
+     * icon, link and class of the page.
      *
      * NOTE: this function takes care of installed modules and Permissions!
      *
-     * @return: array()
+     * @return array
      * @author: Christian Schramm
      */
     public static function view_main_menus(): array

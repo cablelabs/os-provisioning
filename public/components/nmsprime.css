@@ -712,9 +712,13 @@ ul.nav.nav-pills li {
         width: 100%;
     }
 }
-@media (min-width: 1700px) {
+@media (min-width: 1600px) {
     .d-wide-table-cell {
         display: table-cell !important;
+    }
+
+    .d-wide-block {
+        display: block !important;
     }
 
     .d-wide-none {

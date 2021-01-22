@@ -34,7 +34,7 @@ var makeNavbarSearch = function() {
 /* Keep Sidebar open and Save State and Minify Status of Sidebar
 *  @author: Christian Schramm
 */
-if (typeof(Storage) !== "undefined") {
+if (typeof(Storage) !== "undefined" && $('#sidebar').length) {
     //save minified s_state
     var ministate = localStorage.getItem("minified-state");
     var sitem = localStorage.getItem("sidebar-item");
@@ -46,33 +46,52 @@ if (typeof(Storage) !== "undefined") {
       $('#page-container').removeClass('page-sidebar-minified');
     }
 
-    $('#' + sitem).addClass("expand");
-    $('#' + sitem).addClass("active");
-    $('#' + sitem + '> .sub-menu ').css("display", "block");
-    $('#' + chitem).addClass("active");
-    $('#' + chitem).parent()[0].style.display = 'block'
+    if (sitem !== 'undefined' && sitem !== null && chitem !== 'undefined' && chitem !== null) {
+      $('#' + sitem).addClass("expand");
+      $('#' + sitem).addClass("active");
+      $('#' + sitem).children('div').find('b.caret').removeClass("fa-rotate-90")
+      $('#' + sitem + '> .sub-menu ').css("display", "block");
+      $('#' + chitem).addClass("active");
 
-    $('#sidebar ul > li').click(function (event) {
-        localStorage.setItem("sidebar-item", $(this).attr('id'));
-        localStorage.setItem("clicked-item", $(this).attr('id'));
-    });
+      if ($('#' + chitem).parent().length) {
+        $('#' + chitem).parent()[0].style.display = 'block'
+        $('#' + chitem).parent().siblings().find('b.caret').removeClass("fa-rotate-90")
+      }
+
+      if ($('#' + chitem).data('sidebar') == 'level2') {
+        $('#' + chitem).addClass("expand");
+        $('#' + chitem + '> div > a').css("color", "white");
+        $('#' + chitem + '> .sub-menu ').css("display", "block");
+        $('#' + chitem).find('b.caret').removeClass("fa-rotate-90")
+      }
+    }
 
     $('#sidebar ul > li > div > .caret-link').click(function (event) {
         var li_item = $(this).closest('[data-sidebar=level1],[data-sidebar=level2]');
         if (li_item.hasClass('expand')){
             li_item.removeClass('expand');
+            li_item.children('div').find('b.caret').addClass("fa-rotate-90");
             li_item.children('.sub-menu').css('display', 'none');
         } else {
             li_item.children('.sub-menu').css('display', 'block');
+            li_item.children('div').find('b.caret').removeClass("fa-rotate-90")
             li_item.addClass('expand');
         }
-		});
+    });
 
-    $('#sidebar .sub-menu  li').click(function (event) {
+
+    $('#sidebar ul > li').click(function (event) { //main menu click
+      if(!! $(this).attr('id')) {
+        localStorage.setItem("sidebar-item", $(this).attr('id'));
+        localStorage.setItem("clicked-item", $(this).attr('id'));
+      }
+    })
+
+    $('#sidebar .sub-menu li').click(function (event) { //submenu click
         event.stopPropagation();
         localStorage.setItem("sidebar-item", $(this).closest('[data-sidebar=level1]').attr('id'));
         localStorage.setItem("clicked-item", $(this).attr('id'));
-    });
+    })
 
 } else {
   console.log("Sorry, no Web Storage Support - Cant save State of Sidebar - please update your Browser")

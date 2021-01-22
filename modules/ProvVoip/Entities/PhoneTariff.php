@@ -51,7 +51,7 @@ class PhoneTariff extends \BaseModel
     // Name of View
     public static function get_view_header()
     {
-        return 'PhoneTariffs';
+        return 'PhoneTariff';
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace Modules\HfcSnmp\Entities;
 
-return [
-    'link' => 'HfcBase.index',
-    'parent' => 'HfcBase',
+$config = [
+    'link' => null,
+    'parent' => 'HfcReq',
     'MenuItems' => [
         'MibFile' => [
             'link' => 'MibFile.index',
@@ -16,3 +16,10 @@ return [
         // 	'icon'	=> 'fa-']
     ],
 ];
+
+if (\Module::collections()->has('HfcBase')) {
+    $config['link'] = 'HfcBase.index';
+    $config['parent'] = 'HfcBase';
+}
+
+return $config;

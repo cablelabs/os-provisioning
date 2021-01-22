@@ -29,7 +29,7 @@ class MibFile extends \BaseModel
     // Name of View
     public static function view_headline()
     {
-        return 'MIB-File';
+        return 'MibFile';
     }
 
     // View Icon

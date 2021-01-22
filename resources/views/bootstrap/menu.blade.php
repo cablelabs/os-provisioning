@@ -62,7 +62,7 @@
           </div>
         </li>
 
-        @if (Module::collections()->has('Dashboard'))
+        @if (Module::collections()->has(['Dashboard', 'HfcBase']))
           {{-- Modem Statistics (Online/Offline) --}}
           <li  class='m-t-10' style='font-size: 2em; font-weight: bold'>
             <a href="{{ route('HfcBase.index') }}" style="text-decoration: none;">

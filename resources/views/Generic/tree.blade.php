@@ -4,7 +4,7 @@
 
     <li class="active"><a href={{route($route_name.'.index')}}>
     {!!\App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null) !!}
-    {{ \App\Http\Controllers\BaseViewController::translate_view($route_name.'s', 'Header', 2) }}</a>
+    {{ trans_choice('view.Header_'.$route_name, 2) }}</a>
     </li>
 
 @stop
@@ -15,7 +15,7 @@
 
         <h1 class="page-header">
         {!!\App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null) !!}
-        {{\App\Http\Controllers\BaseViewController::translate_view($route_name.'s', 'Header', 2) }}
+        {{ trans_choice('view.Header_'.$route_name, 2) }}
         </h1>
 
         {{-- we also use this blade for showing the firmware distribution, which doesn't use models --}}

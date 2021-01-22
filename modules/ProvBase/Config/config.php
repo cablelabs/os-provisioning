@@ -20,17 +20,17 @@ return  [
             'icon'	=> 'fa-hdd-o',
             'class' => Modem::class,
         ],
-        'Endpoints' => [
+        'Endpoint' => [
             'link'	=> 'Endpoint.index',
             'icon'	=> 'fa-map-marker',
             'class' => Endpoint::class,
         ],
-        'Configfiles' => [
+        'Configfile' => [
             'link'	=> 'Configfile.index',
             'icon'	=> 'fa-file-code-o',
             'class' => Configfile::class,
         ],
-        'QoS' => [
+        'Qos' => [
             'link'	=> 'Qos.index',
             'icon'	=> 'fa-ticket',
             'class' => Qos::class,
