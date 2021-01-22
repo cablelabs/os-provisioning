@@ -54,7 +54,7 @@
             <span>{{$typearray['translated_name'] ?? $module_name}}</span>
             </a>
             @if(isset($typearray['submenu']))
-              <a class="caret-link" href="javascript:;" style="width: 20%; height: 20px; display:block; text-align: right">
+              <a class="caret-link" href="javascript:;" style="width: 100%; height: 20px; display:block; text-align: right">
                 <b class="caret fa-rotate-270" style="right: 5px; top: 14px;"></b>
               </a>
             @endif
@@ -84,25 +84,35 @@
       <li class="nav-header">{{ trans('view.Menu_Nets') }}</li>
       <li id="network_overview" class="has-sub" data-sidebar="level1">
         <div style="display: flex;justify-content:space-between;padding: 8px 20px;line-height: 20px;">
-            <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}">
+            <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}" style="max-height: 20px; white-space: nowrap;">
               <i class="fa fa-sitemap"></i>
               <span>{{ trans('view.Menu_allNets') }}</span>
             </a>
+<<<<<<< HEAD
             <a class="caret-link" href="javascript:;">
               <b class="caret fa-rotate-270"></b>
+=======
+            <a class="caret-link" href="javascript:;" style="width: 100%; text-align: right;">
+              <b class="caret fa-rotate-90"></b>
+>>>>>>> widen a-tags to improve usability
             </a>
         </div>
         <ul class="sub-menu" style="display: none;padding-left:21px;">
           @foreach ($networks as $network)
             <li id="network_{{$network->id}}" class="has-sub" data-sidebar="level2">
               <div style="display: flex;justify-content:space-between;padding: 0.25rem 1.25rem 0.25rem 0;">
-                <a href="{{ route('TreeErd.show', ['field' => 'net', 'search' => $network->id]) }}" style="color: #889097;">
+                <a href="{{ route('TreeErd.show', ['field' => 'net', 'search' => $network->id]) }}" style="color: #889097; max-height: 20px; white-space: nowrap;">
                   <i class="fa fa-circle text-info"></i>
                   <span>{{$network->name}}</span>
                 </a>
                 @if($network->clusters->isNotEmpty())
+<<<<<<< HEAD
                   <a class="caret-link" style="color: #889097;" href="javascript:;">
                     <b class="caret fa-rotate-270"></b>
+=======
+                  <a class="caret-link" style="color: #889097; width: 100%; text-align: right;" href="javascript:;">
+                    <b class="caret fa-rotate-90"></b>
+>>>>>>> widen a-tags to improve usability
                   </a>
                 @endif
               </div>
