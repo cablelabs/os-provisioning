@@ -226,7 +226,7 @@ return [
     'qos.ds_rate_max' => 'Maximale DS Geschwindigkeit',
     'qos.us_rate_max' => 'Maximale US Geschwindigkeit',
     // Mta
-    'mta.hostname' => 'Server-Name',
+    'mta.hostname' => 'Hostname',
     'mta.mac' => 'MAC-Adresse',
     'mta.type' => 'Provisionierungstyp',
     // Configfile
