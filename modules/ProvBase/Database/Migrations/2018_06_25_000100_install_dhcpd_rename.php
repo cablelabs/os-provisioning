@@ -37,16 +37,7 @@ class InstallDhcpdRename extends BaseMigration
         // remove old folder
         exec("rm -rf $old");
 
-        // regenerate config files in new folder
-        // check if artisan command can safely be called – in case of a fresh installation with enabled
-        // ProvVoip there does not exist a mta table ATM (will be migrated later)
-        if (
-            (! \Module::collections()->has('ProvVoip'))
-            ||
-            (Schema::hasTable('mta'))
-        ) {
-            \Artisan::call('nms:dhcp');
-        }
+        echo "NOTICE: execute 'cd /var/www/nmsprime/; php artisan nms:dhcp' after installation!\n";
 
         // reload systemd because path-dhcpd.conf was changed
         system('systemctl daemon-reload');
