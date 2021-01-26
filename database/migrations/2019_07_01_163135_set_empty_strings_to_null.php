@@ -85,7 +85,11 @@ class SetEmptyStringsToNull extends Migration
             $nullable = [];
             $required = ['sometimes', 'required'];
             foreach ($rules as $field => $rule) {
-                $nullable[$field] = empty(array_intersect($required, explode('|', $rule))) ? true : false;
+                if (is_array($rule)) {
+                    $nullable[$field] = in_array('required', $rule) ? false : true;
+                } else {
+                    $nullable[$field] = empty(array_intersect($required, explode('|', $rule))) ? true : false;
+                }
             }
 
             echo "Set empty strings to null in {$tableName} table.\n";
