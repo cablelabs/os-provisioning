@@ -3,7 +3,7 @@
 namespace Modules\HfcReq\Entities;
 
 use Auth;
-use Module;
+use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\Cache;
 
 class NetElement extends \BaseModel
@@ -772,7 +772,7 @@ class NetElement extends \BaseModel
             array_push($tabs, ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $provmon->createAnalysisTab($this->ip)]);
         }
 
-        if (! in_array($type, [4, 5, 8, 9])) {
+        if ($provmon && Module::collections()->has('HfcCustomer') && ! in_array($type, [4, 5, 8, 9])) {
             array_push($tabs, ['name' => 'Diagrams', 'icon' => 'area-chart', 'route' => 'ProvMon.diagram_edit', 'link' => [$this->id]]);
         }
 
