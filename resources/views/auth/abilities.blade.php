@@ -224,7 +224,7 @@
     </form>
     @endforeach
     </div>
-    <div id="accordion2" class="panel-group" style="margin-top: 40px">
+    <div id="accordion2" class="panel-group" style="margin-top: 40px" v-if="capabilities">
         <div class="panel-inverse" style="margin-bottom: 0;background-color: #fff;border: 1px solid transparent;">
             <div class="d-flex align-items-center flex-row" style="padding:0.75rem 1rem;color:#fff;background:#242a30;border: none;border-top-left-radius: 3px;border-top-right-radius: 3px;">
                 <h3 class="panel-title" style="flex: 1;">
