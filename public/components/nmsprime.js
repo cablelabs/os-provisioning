@@ -49,20 +49,20 @@ if (typeof(Storage) !== "undefined" && $('#sidebar').length) {
     if (sitem !== 'undefined' && sitem !== null && chitem !== 'undefined' && chitem !== null) {
       $('#' + sitem).addClass("expand");
       $('#' + sitem).addClass("active");
-      $('#' + sitem).children('div').find('b.caret').removeClass("fa-rotate-90")
+      $('#' + sitem).children('div').find('b.caret').removeClass("fa-rotate-270")
       $('#' + sitem + '> .sub-menu ').css("display", "block");
       $('#' + chitem).addClass("active");
 
       if ($('#' + chitem).parent().length) {
         $('#' + chitem).parent()[0].style.display = 'block'
-        $('#' + chitem).parent().siblings().find('b.caret').removeClass("fa-rotate-90")
+        $('#' + chitem).parent().siblings().find('b.caret').removeClass("fa-rotate-270")
       }
 
       if ($('#' + chitem).data('sidebar') == 'level2') {
         $('#' + chitem).addClass("expand");
         $('#' + chitem + '> div > a').css("color", "white");
         $('#' + chitem + '> .sub-menu ').css("display", "block");
-        $('#' + chitem).find('b.caret').removeClass("fa-rotate-90")
+        $('#' + chitem).find('b.caret').removeClass("fa-rotate-270")
       }
     }
 
@@ -70,11 +70,11 @@ if (typeof(Storage) !== "undefined" && $('#sidebar').length) {
         var li_item = $(this).closest('[data-sidebar=level1],[data-sidebar=level2]');
         if (li_item.hasClass('expand')){
             li_item.removeClass('expand');
-            li_item.children('div').find('b.caret').addClass("fa-rotate-90");
+            li_item.children('div').find('b.caret').addClass("fa-rotate-270");
             li_item.children('.sub-menu').css('display', 'none');
         } else {
             li_item.children('.sub-menu').css('display', 'block');
-            li_item.children('div').find('b.caret').removeClass("fa-rotate-90")
+            li_item.children('div').find('b.caret').removeClass("fa-rotate-270")
             li_item.addClass('expand');
         }
     });
