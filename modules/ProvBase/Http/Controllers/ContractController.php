@@ -8,7 +8,6 @@ use Bouncer;
 use Session;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\Contract;
-use Modules\ProvVoip\Entities\PhoneTariff;
 
 class ContractController extends \BaseController
 {
@@ -148,8 +147,8 @@ class ContractController extends \BaseController
             ];
 
             if (\Module::collections()->has('ProvVoipEnvia')) {
-                $purchase_tariffs = PhoneTariff::get_purchase_tariffs();
-                $sales_tariffs = PhoneTariff::get_sale_tariffs();
+                $purchase_tariffs = \Modules\ProvVoip\Entities\PhoneTariff::get_purchase_tariffs();
+                $sales_tariffs = \Modules\ProvVoip\Entities\PhoneTariff::get_sale_tariffs();
 
                 $c2 = [
                     ['form_type' => 'select', 'name' => 'purchase_tariff', 'description' => 'Purchase tariff', 'value' => $purchase_tariffs],
