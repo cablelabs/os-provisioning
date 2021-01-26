@@ -3,8 +3,8 @@
 namespace Modules\ProvBase\Http\Controllers;
 
 use View;
+use Nwidart\Modules\Facades\Module;
 use App\Http\Controllers\BaseController;
-use Modules\Dashboard\Entities\BillingAnalysis;
 
 class ProvBaseController extends BaseController
 {
@@ -12,7 +12,10 @@ class ProvBaseController extends BaseController
     {
         $title = 'Provisioning Dashboard';
 
-        $contracts_data = BillingAnalysis::getContractData();
+        $contracts_data = [];
+        if (Module::collections()->has('BillingBase')) {
+            $contracts_data = \Modules\BiilingBase\Helpers\BillingAnalysis::getContractData();
+        }
 
         return View::make('provbase::index', $this->compact_prep_view(compact('title', 'contracts_data')));
     }
