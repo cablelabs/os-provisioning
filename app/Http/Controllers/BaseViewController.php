@@ -7,7 +7,6 @@ use Str;
 use Auth;
 use Form;
 use Route;
-use Config;
 use Module;
 use Bouncer;
 use Request;

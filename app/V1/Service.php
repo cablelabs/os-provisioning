@@ -8,7 +8,6 @@
 
 namespace App\V1;
 
-use Illuminate\Events\Dispatcher;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Service

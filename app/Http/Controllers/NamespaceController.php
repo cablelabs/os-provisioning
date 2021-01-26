@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Route;
-use Module;
 
 /**
  * NamespaceController

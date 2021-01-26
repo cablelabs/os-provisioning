@@ -2,12 +2,13 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Module;
 use App\Sla;
 use Bouncer;
 use Request;
 use App\GlobalConfig;
+use Nwidart\Modules\Facades\Module;
 use Modules\ProvBase\Entities\Modem;
+use Illuminate\Support\Facades\Session;
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\ProvBase;
 use Modules\ProvBase\Entities\Configfile;
@@ -213,7 +214,7 @@ class ModemController extends \BaseController
     protected function editTabs($model)
     {
         // defines which edit page you came from
-        \Session::put('Edit', 'Modem');
+        Session::put('Edit', 'Modem');
 
         $tabs = parent::editTabs($model);
 
@@ -221,7 +222,7 @@ class ModemController extends \BaseController
             return $tabs;
         }
 
-        if (\Bouncer::can('view_analysis_pages_of', Modem::class)) {
+        if (Bouncer::can('view_analysis_pages_of', Modem::class)) {
             array_push($tabs, ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $model->id],
                 ['name' => 'CPE-Analysis', 'icon' => 'area-chart', 'route' => 'ProvMon.cpe', 'link' => $model->id]);
 
@@ -304,13 +305,13 @@ class ModemController extends \BaseController
     {
         $task = Request::get('task');
         if (json_decode($task) === null) {
-            \Session::push('tmp_error_above_form', 'JSON decode failed');
+            Session::push('tmp_error_above_form', 'JSON decode failed');
 
             return \Redirect::back();
         }
 
         if (! $modem = Modem::find($id)) {
-            \Session::push('tmp_error_above_form', 'Modem not found');
+            Session::push('tmp_error_above_form', 'Modem not found');
 
             return \Redirect::back();
         }
@@ -321,14 +322,14 @@ class ModemController extends \BaseController
         foreach (['factoryReset', 'reboot'] as $action) {
             if ($taskDecode === ['name' => $action] &&
                 json_decode($modem->callGenieAcsApi("tasks?query={\"device\":\"$id\",\"name\":\"$action\"}", 'GET'))) {
-                \Session::push('tmp_info_above_form', $action.trans('messages.modemAnalysis.actionAlreadyScheduled'));
+                Session::push('tmp_info_above_form', $action.trans('messages.modemAnalysis.actionAlreadyScheduled'));
 
                 return \Redirect::back();
             }
         }
 
         $modem->callGenieAcsApi("devices/$id/tasks?connection_request", 'POST', $task);
-        \Session::push('tmp_info_above_form', trans('messages.modemAnalysis.actionExecuted'));
+        Session::push('tmp_info_above_form', trans('messages.modemAnalysis.actionExecuted'));
 
         return \Redirect::back();
     }
@@ -376,7 +377,7 @@ class ModemController extends \BaseController
             return $matches;
         });
 
-        $filter = \Request::get('q');
+        $filter = Request::get('q');
 
         return array_filter($all, function ($element) use ($filter) {
             return stripos($element['value'], $filter) !== false;
@@ -432,9 +433,9 @@ class ModemController extends \BaseController
         $modem->restart_modem();
 
         $err = collect([
-            \Session::get('tmp_info_above_form'),
-            \Session::get('tmp_warning_above_form'),
-            \Session::get('tmp_error_above_form'),
+            Session::get('tmp_info_above_form'),
+            Session::get('tmp_warning_above_form'),
+            Session::get('tmp_error_above_form'),
         ])->collapse()
         ->implode(', ');
 
