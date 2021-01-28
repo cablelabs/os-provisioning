@@ -22,9 +22,9 @@
 	<body class="pace-top">
 
         <div class="error">
-            <div class="error-code m-b-10">{{$error}}<i class="fa fa-warning"></i></div>
+            <div class="error-code m-b-10">{{$error}}<i class="fa fa-warning m-l-10"></i></div>
             <div class="error-content">
-                <div class="error-message">{!! $message !!}</div>
+                <div class="error-message mb-4">{!! $message !!}</div>
                 @if ($error == 403)
                 	<div class="error-desc m-b-20">
 						<b>Permission denied!</b> <br />
