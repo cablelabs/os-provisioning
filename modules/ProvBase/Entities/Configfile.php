@@ -2,10 +2,9 @@
 
 namespace Modules\ProvBase\Entities;
 
-use DB;
-use Log;
-use Schema;
-use Modules\ProvVoip\Entities\Phonenumber;
+use Illuminate\Support\Facades\Log;
+use Nwidart\Modules\Facades\Module;
+use Illuminate\Support\Facades\Schema;
 
 class Configfile extends \BaseModel
 {
@@ -144,7 +143,6 @@ class Configfile extends \BaseModel
         // for cfs of type modem, mta or generic
         // get global config - provisioning settings
         $db_schemata ['provbase'][0] = Schema::getColumnListing('provbase');
-        $provbase = ProvBase::get();
 
         // array to extend the configfile; e.g. for firmware
         $config_extensions = [];
@@ -170,8 +168,6 @@ class Configfile extends \BaseModel
 
             // this is for modem's config files
             case 'modem':
-
-                $modem = [$device];
                 $qos = [$device->qos];
 
                 // Set test data rate if no qos is assigned - 250 kbit/s (i.e. VoIP only)
@@ -208,7 +204,9 @@ class Configfile extends \BaseModel
 
             // this is for mtas
             case 'mta':
-
+                if (! Module::collections()->has('ProvVoip')) {
+                    break;
+                }
                 // same as above – arrays for later generic use
                 // they have to match database table names
                 $mta = [$device];
@@ -220,7 +218,7 @@ class Configfile extends \BaseModel
                 $avm = $hit ? true : false;
 
                 // get Phonenumbers to MTA
-                foreach (Phonenumber::where('mta_id', '=', $device->id)->orderBy('port')->get() as $phone) {
+                foreach (\Modules\ProvVoip\Entities\Phonenumber::where('mta_id', '=', $device->id)->orderBy('port')->get() as $phone) {
                     if (! $phone->active) {
                         $phone->active = 2;
 
@@ -243,14 +241,14 @@ class Configfile extends \BaseModel
                 break;
 
             case 'tr069':
-                $modem = [$device];
                 $db_schemata['modem'][0] = Schema::getColumnListing('modem');
                 $qos = [$device->qos];
                 $db_schemata['qos'][0] = Schema::getColumnListing('qos');
 
-                if (! $device->mtas->first()) {
+                if (! Module::collections()->has('ProvVoip') || ! $device->mtas->first()) {
                     break;
                 }
+
                 foreach ($device->mtas->first()->phonenumbers as $phone) {
                     // use the port number as primary index key, so {phonenumber.number.1} will be the phone with port 1, not id 1 !
                     $phonenumber[$phone->port] = $phone;
@@ -473,7 +471,7 @@ class Configfile extends \BaseModel
 
         // MTA
         if (! $filter || $filter == 'mta') {
-            if (! \Module::collections()->has('ProvVoip')) {
+            if (! Module::collections()->has('ProvVoip')) {
                 return;
             }
 

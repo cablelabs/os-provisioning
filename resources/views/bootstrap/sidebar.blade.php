@@ -35,7 +35,7 @@
             </a>
             @if(isset($typearray['submenu']))
               <a class="caret-link" href="javascript:;" style="width: 20%; height: 20px; display:block; text-align: right">
-                <b class="caret fa-rotate-90"></b>
+                <b class="caret fa-rotate-270"></b>
               </a>
             @endif
           </div>
@@ -63,7 +63,7 @@
               <span>{{ trans('view.Menu_allNets') }}</span>
             </a>
             <a class="caret-link" href="javascript:;">
-              <b class="caret fa-rotate-90"></b>
+              <b class="caret fa-rotate-270"></b>
             </a>
         </div>
         <ul class="sub-menu" style="display: none;padding-left:21px;">
@@ -76,7 +76,7 @@
                 </a>
                 @if($network->clusters->isNotEmpty())
                   <a class="caret-link" style="color: #889097;" href="javascript:;">
-                    <b class="caret fa-rotate-90"></b>
+                    <b class="caret fa-rotate-270"></b>
                   </a>
                 @endif
               </div>

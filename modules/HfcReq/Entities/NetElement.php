@@ -3,8 +3,7 @@
 namespace Modules\HfcReq\Entities;
 
 use Auth;
-use Module;
-use Modules\ProvBase\Entities\Modem;
+use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\Cache;
 
 class NetElement extends \BaseModel
@@ -231,12 +230,12 @@ class NetElement extends \BaseModel
      */
     public function modems()
     {
-        return $this->hasMany(Modem::class, 'netelement_id');
+        return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id');
     }
 
     public function geoPosModems()
     {
-        return $this->hasMany(Modem::class, 'netelement_id')
+        return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id')
             ->select('modem.id', 'modem.x', 'modem.y', 'modem.netelement_id')
             ->selectRaw('COUNT(*) AS count')
             ->selectRaw('COUNT(CASE WHEN `us_pwr` = 0 THEN 1 END) as offline')
@@ -773,7 +772,7 @@ class NetElement extends \BaseModel
             array_push($tabs, ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $provmon->createAnalysisTab($this->ip)]);
         }
 
-        if (! in_array($type, [4, 5, 8, 9])) {
+        if ($provmon && Module::collections()->has('HfcCustomer') && ! in_array($type, [4, 5, 8, 9])) {
             array_push($tabs, ['name' => 'Diagrams', 'icon' => 'area-chart', 'route' => 'ProvMon.diagram_edit', 'link' => [$this->id]]);
         }
 

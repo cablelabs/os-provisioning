@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use Str;
-use Module;
 use Bouncer;
 use App\Role;
 use App\Ability;
 use App\BaseModel;
 use Illuminate\Http\Request;
+use Nwidart\Modules\Facades\Module;
 use App\Http\Controllers\Controller;
-use Modules\HfcReq\Entities\NetElementType;
 
 class AbilityController extends Controller
 {
@@ -54,7 +53,7 @@ class AbilityController extends Controller
     protected function updateCapability(Request $requestData)
     {
         $role = Role::find($requestData->roleId);
-        $netElementTypes = NetElementType::rootNodes()->get()->keyBy('id');
+        $netElementTypes = \Modules\HfcReq\Entities\NetElementType::rootNodes()->get()->keyBy('id');
 
         foreach ($requestData->capabilities as $id => $netElementType) {
             if ($netElementType['isCapable']) {
@@ -224,6 +223,10 @@ class AbilityController extends Controller
      */
     public static function getCapabilities(Role $role)
     {
+        if (Module::collections()->has('HfcReq')) {
+            return;
+        }
+
         $rootNetElementTypes = \Modules\HfcReq\Entities\NetElementType::rootNodes()->pluck('name', 'id');
         $capableAbilities = $role->abilities()
             ->where('abilities.entity_type', \Modules\HfcReq\Entities\NetElementType::class)

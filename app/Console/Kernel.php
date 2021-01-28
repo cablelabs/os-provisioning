@@ -49,9 +49,6 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('queue:checkup')->everyMinute();
 
-        $schedule->call('\Modules\Dashboard\Entities\BillingAnalysis@saveIncomeToJson')->dailyAt('00:07');
-        $schedule->call('\Modules\Dashboard\Entities\BillingAnalysis@saveContractsToJson')->hourly();
-
         // Remove all Log Entries older than 90 days
         $schedule->call('\App\GuiLog@cleanup')->weekly();
 
@@ -195,6 +192,9 @@ class Kernel extends ConsoleKernel
         // Create monthly Billing Files and reset flags
         if (\Module::collections()->has('BillingBase')) {
             // Remove all old CDRs & Invoices
+
+            $schedule->call('\Modules\BillingBase\Helpers\BillingAnalysis@saveIncomeToJson')->dailyAt('00:07');
+            $schedule->call('\Modules\BillingBase\Helpers\BillingAnalysis@saveContractsToJson')->hourly();
             $schedule->call('\Modules\BillingBase\Entities\Invoice@cleanup')->monthly();
             // Reset payed_month column for yearly charged items for january settlementrun (in february)
             $schedule->call(function () {

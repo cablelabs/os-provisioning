@@ -4,8 +4,7 @@ namespace Modules\HfcReq\Http\Controllers;
 
 use Request;
 use Redirect;
-use Modules\HfcSnmp\Entities\OID;
-use Modules\HfcSnmp\Entities\Parameter;
+use Nwidart\Modules\Facades\Module;
 use Modules\HfcReq\Entities\NetElementType;
 
 class NetElementTypeController extends HfcReqController
@@ -29,8 +28,14 @@ class NetElementTypeController extends HfcReqController
             ['form_type' => 'text', 'name' => 'vendor', 'description' => 'Vendor', 'hidden' => $hidden4Net],
             ['form_type' => 'text', 'name' => 'version', 'description' => 'Version', 'hidden' => $hidden4Net],
             ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Device Type', 'value' => $parents, 'hidden' => $hidden4Net || $hidden4Tap, 'space' => 1],
+        ];
+
+        if (Module::collections()->has('HfcSnmp')) {
             // possibly load only OIDs from Mibs that are related to this Device/NetElement-Type
-            ['form_type' => 'select', 'name' => 'pre_conf_oid_id', 'description' => 'OID for PreConfiguration Setting', 'hidden' => $hidden4Net || $hidden4Tap, 'value' => OID::oid_list(true)],
+            $a[] = ['form_type' => 'select', 'name' => 'pre_conf_oid_id', 'description' => 'OID for PreConfiguration Setting', 'hidden' => $hidden4Net || $hidden4Tap, 'value' => \Modules\HfcSnmp\Entities\OID::oid_list(true)];
+        }
+
+        $b = [
             ['form_type' => 'text', 'name' => 'pre_conf_value', 'description' => 'PreConfiguration Value', 'hidden' => $hidden4Net || $hidden4Tap],
             ['form_type' => 'text', 'name' => 'pre_conf_time_offset', 'description' => 'PreConfiguration Time Offset', 'hidden' => $hidden4Net || $hidden4Tap, 'space' => 1, 'help' => trans('helper.netelementtype_time_offset')],
             ['form_type' => 'text', 'name' => 'page_reload_time', 'description' => 'Reload Time - Controlling View', 'hidden' => $hidden4Tap, 'help' => trans('helper.netelementtype_reload')],
@@ -42,7 +47,7 @@ class NetElementTypeController extends HfcReqController
             $a[0]['help'] = trans('helper.undeleteables');
         }
 
-        return $a;
+        return array_merge($a, $b);
     }
 
     /**
@@ -55,7 +60,7 @@ class NetElementTypeController extends HfcReqController
      */
     public function settings($id)
     {
-        if (! Request::filled('param_id')) {
+        if (! Request::filled('param_id') || ! Module::collections()->has('HfcSnmp')) {
             return Redirect::back();
         }
 
@@ -66,7 +71,7 @@ class NetElementTypeController extends HfcReqController
             return Redirect::back();
         }
 
-        $params = Parameter::find(Request::input('param_id'));
+        $params = \Modules\HfcSnmp\Entities\Parameter::find(Request::input('param_id'));
 
         // TODO: If this gets slow we could easily optimize it by doing direct sql updates
         foreach ($params as $param) {

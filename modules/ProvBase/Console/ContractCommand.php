@@ -4,7 +4,6 @@ namespace Modules\ProvBase\Console;
 
 use Illuminate\Console\Command;
 use Modules\ProvBase\Entities\Contract;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
 class ContractCommand extends Command

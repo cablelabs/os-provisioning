@@ -6,17 +6,16 @@ use Log;
 use Str;
 use Auth;
 use View;
-use Config;
 use Bouncer;
 use Request;
 use Session;
 use Redirect;
 use BaseModel;
 use Validator;
-use GlobalConfig;
 use App\V1\Service;
 use App\V1\V1Trait;
 use Monolog\Logger;
+use App\GlobalConfig;
 use App\V1\Repository;
 use Yajra\DataTables\DataTables;
 

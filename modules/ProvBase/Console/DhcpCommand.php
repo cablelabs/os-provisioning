@@ -3,7 +3,6 @@
 namespace Modules\ProvBase\Console;
 
 use Illuminate\Console\Command;
-use Modules\ProvVoip\Entities\Mta;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\NetGw;
 use Modules\ProvBase\Entities\Endpoint;
@@ -57,8 +56,8 @@ class DhcpCommand extends Command
         Endpoint::makeDhcp6All();
 
         if (\Module::collections()->has('ProvVoip') && \Schema::hasTable('mta')) {
-            echo 'Create '.Mta::CONF_FILE_PATH."...\n";
-            Mta::make_dhcp_mta_all();
+            echo 'Create '.\Modules\ProvVoip\Entities\Mta::CONF_FILE_PATH."...\n";
+            \Modules\ProvVoip\Entities\Mta::make_dhcp_mta_all();
         }
 
         // don't run this command during a new installation

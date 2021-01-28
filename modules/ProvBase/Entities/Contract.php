@@ -5,7 +5,6 @@ namespace Modules\ProvBase\Entities;
 use DB;
 use Module;
 use Illuminate\Support\Facades\Log;
-use Modules\BillingBase\Entities\SettlementRun;
 
 class Contract extends \BaseModel
 {

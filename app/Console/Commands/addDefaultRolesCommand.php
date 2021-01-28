@@ -7,8 +7,6 @@ use Bouncer;
 use App\Role;
 use App\BaseModel;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * Add default roles

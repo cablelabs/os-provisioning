@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App;
-use Log;
-use Module;
-use Bouncer;
-use GlobalConfig;
 use App\BaseModel;
 use Carbon\Carbon;
+use App\GlobalConfig;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Nwidart\Modules\Facades\Module;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller

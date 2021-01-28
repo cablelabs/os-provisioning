@@ -5,11 +5,11 @@ namespace Modules\HfcReq\Http\Controllers;
 use View;
 use Request;
 use Modules\HfcReq\Entities\NetElement;
+use App\Http\Controllers\BaseController;
 use Modules\HfcReq\Entities\NetElementType;
 use App\Http\Controllers\BaseViewController;
-use Modules\HfcBase\Http\Controllers\HfcBaseController;
 
-class NetElementController extends HfcBaseController
+class NetElementController extends BaseController
 {
     public function index()
     {
