@@ -14,7 +14,7 @@ class ProvBaseController extends BaseController
 
         $contracts_data = [];
         if (Module::collections()->has('BillingBase')) {
-            $contracts_data = \Modules\BiilingBase\Helpers\BillingAnalysis::getContractData();
+            $contracts_data = \Modules\BillingBase\Helpers\BillingAnalysis::getContractData();
         }
 
         return View::make('provbase::index', $this->compact_prep_view(compact('title', 'contracts_data')));
