@@ -13,8 +13,8 @@ class InstallUpdateToPhp73 extends Migration
      */
     public function up()
     {
-        system('systemctl stop rh-php71-php-fpm.service');
-        system('systemctl disable rh-php71-php-fpm.service');
+        system('systemctl cat rh-php71-php-fpm.service &>/dev/null && systemctl stop rh-php71-php-fpm.service');
+        system('systemctl cat rh-php71-php-fpm.service &>/dev/null && systemctl disable rh-php71-php-fpm.service');
 
         system('systemctl start rh-php73-php-fpm.service');
         system('systemctl enable rh-php73-php-fpm.service');
