@@ -31,7 +31,11 @@ class ConfigfileController extends \BaseController
         $parents = Configfile::where('id', '!=', $model->id);
         if ($model->id) {
             // Don't make loops possible - by setting parent_id to a configfile that has THIS configfile as parent
-            $parents->where('parent_id', '!=', $model->id);
+            $parents->where(function ($query) use ($model) {
+                $query
+                    ->where('parent_id', '!=', $model->id)
+                    ->orWhereNull('parent_id');
+            });
         }
         $parents = $model->html_list($parents->get(), ['device', 'name'], true, ': ');
 
