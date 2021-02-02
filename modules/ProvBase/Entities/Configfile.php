@@ -188,12 +188,14 @@ class Configfile extends \BaseModel
 
                 // if there is a specific firmware: add entries for upgrade
                 if ($this->firmware && ! $sw_up) {
+                    /*
                     $serverIP = ProvBase::first()['provisioning_server'];
                     array_push($config_extensions, "SwUpgradeServer $serverIP;");
                     array_push($config_extensions, "SnmpMibObject docsDevSwServer.0 IPAddress $serverIP;");
                     $serverIP = dechex(ip2long($serverIP));
                     array_push($config_extensions, "SnmpMibObject docsDevSwServerAddress.0 HexString 0x$serverIP;");
                     array_push($config_extensions, 'SnmpMibObject docsDevSwServerAddressType.0 Integer 1;');
+                    */
                     array_push($config_extensions, "SwUpgradeFilename \"fw/$this->firmware\";");
                     array_push($config_extensions, "SnmpMibObject docsDevSwFilename.0 String \"fw/{$this->firmware}\";");
                     array_push($config_extensions, 'SnmpMibObject docsDevSwAdminStatus.0 Integer 2;');

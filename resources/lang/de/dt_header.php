@@ -213,7 +213,10 @@ return [
     'modem.street' => 'Straße',
     'modem.sw_rev' => 'Firmware-Version',
     'modem.ppp_username' => 'PPP Nutzername',
-    'modem.us_pwr' => 'US Pegel',
+    'modem.us_pwr' => 'US Pegel / dBmV',
+    'modem.us_snr' => 'US SNR / dB',
+    'modem.ds_pwr' => 'DS Pegel / dBmV',
+    'modem.ds_snr' => 'DS SNR / dB',
     'contract_valid' => 'Vertrag gültig?',
     // Node
     'node' => [

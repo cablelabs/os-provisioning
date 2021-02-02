@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Observers;
 
+use Modules\ProvBase\Entities\RadReply;
 use Modules\ProvBase\Entities\RadIpPool;
 
 class EndpointObserver
