@@ -11,7 +11,7 @@ class Qos extends \BaseModel
     public function rules()
     {
         return [
-            'name' => "required|unique:qos,name,$id,id,deleted_at,NULL",
+            'name' => "required|unique:qos,name,{$this->id},id,deleted_at,NULL",
             'ds_rate_max' => 'required|numeric|min:0',
             'us_rate_max' => 'required|numeric|min:0',
         ];
