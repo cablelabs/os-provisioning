@@ -85,7 +85,11 @@ class SetEmptyStringsToNull extends Migration
             $nullable = [];
             $required = ['sometimes', 'required'];
             foreach ($rules as $field => $rule) {
-                $nullable[$field] = empty(array_intersect($required, explode('|', $rule))) ? true : false;
+                if (is_array($rule)) {
+                    $nullable[$field] = in_array('required', $rule) ? false : true;
+                } else {
+                    $nullable[$field] = empty(array_intersect($required, explode('|', $rule))) ? true : false;
+                }
             }
 
             echo "Set empty strings to null in {$tableName} table.\n";
@@ -108,6 +112,10 @@ class SetEmptyStringsToNull extends Migration
                     $type === 'boolean' ||
                     ($column !== 'parent_id' && $type == 'integer' && Str::endsWith($column, '_id'))
                 ) {
+                    continue;
+                }
+
+                if (in_array($column, ['id_name'])) {
                     continue;
                 }
 

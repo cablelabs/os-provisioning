@@ -25,7 +25,7 @@ class Endpoint extends \BaseModel
         ];
 
         // Note: For IPv4 this is removed in EndpointController.php
-        if ($modem->configfile->device == 'cm') {
+        if ($modem && $modem->configfile->device == 'cm') {
             $rules['mac'][] = 'required';
         }
 
