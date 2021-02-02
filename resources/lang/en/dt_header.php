@@ -37,6 +37,8 @@ return [
     'contract' => [
         'additional' => 'Additional info',
         'city' => 'City',
+        'company' => 'Company',
+        'contact' => 'Contact',
         'contract_end' => 'Contract End',
         'contract_start' => 'Contract Start',
         'district' => 'District',
