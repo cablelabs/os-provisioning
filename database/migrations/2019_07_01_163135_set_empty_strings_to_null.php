@@ -115,6 +115,10 @@ class SetEmptyStringsToNull extends Migration
                     continue;
                 }
 
+                if (in_array($column, ['id_name'])) {
+                    continue;
+                }
+
                 // New Default String length for VarChar should be 191 for future indexing purposes
                 $isDefaultStrLen = $type === 'string' && $tableColumns[$column]['length'][0] == 255;
                 $length = in_array($type, ['integer', 'smallint', 'bigint']) || $isDefaultStrLen ? [] :
