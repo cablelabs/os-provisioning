@@ -463,6 +463,7 @@ return [
     'Global notification' => 'Global notification',
     'info' => 'info',
     'Level' => 'Level',
+    'markon' => 'Mark-On/Extra charge in %',
     'Message' => 'Message',
     'name' => 'Name',
     'Ability' => [

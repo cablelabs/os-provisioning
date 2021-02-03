@@ -42,7 +42,7 @@ return [
     'Menu_Node'                 => 'Übergabepunkte',
     'Menu_Config Page'          => 'Systemkonfiguration',
     'Menu_Log'                  => 'Log',
-    'Menu_Product List'         => 'Produktangebot',
+    'Menu_Product List'         => 'Produktkatalog',
     'Menu_SEPA Accounts'        => 'SEPA-Konten',
     'Menu_SettlementRun'        => 'Abrechnungslauf',
     'Menu_Cost Center'          => 'Kostenstelle',
@@ -116,7 +116,7 @@ return [
     'Header_Roles'              => 'Rolle|Rollen',
     //Billing Base
     //Prduct Entry
-    'Header_Product'            => 'Produkt|Produktangebot',
+    'Header_Product'            => 'Produkt|Produktkatalog',
     'Header_Users'              => 'Benutzer|Benutzer',
     'Header_EditUsers'          => 'Benutzer bearbeiten',
     'Header_EditProduct'        => 'Produkt bearbeiten',
@@ -463,6 +463,7 @@ return [
     'Global notification' => 'Globale Benachrichtigung',
     'info' => 'Info',
     'Level' => 'Level',
+    'markon' => 'Preisaufschlag in %',
     'Message' => 'Nachricht',
     'name' => 'Name',
     'Ability' => [
