@@ -28,26 +28,35 @@ class Modem extends \BaseModel
     public $guarded = ['formatted_support_state'];
     protected $appends = ['formatted_support_state'];
 
-    // Add your validation rules here
-    // see: http://stackoverflow.com/questions/22405762/laravel-update-model-with-unique-validation-rule-for-attribute
     public function rules()
     {
-        $id = $this->id;
-
-        return [
-            'mac' => 'mac',
-            'ppp_username' => 'nullable|unique:modem,ppp_username,'.$id.',id,deleted_at,NULL',
-            'birthday' => 'nullable|date',
-            'country_code' => 'regex:/^[A-Z]{2}$/',
-            'contract_id' => 'required|exists:contract,id,deleted_at,NULL',
-            'configfile_id' => 'required|exists:configfile,id,deleted_at,NULL,public,yes',
-            // The following rules will be removed when it's a DOCSIS modem - see ModemController@prepare_rules
-            'ppp_username' => "required|unique:modem,ppp_username,$id,id,deleted_at,NULL",
-            'ppp_password' => 'required',
-
-            // Note: realty_id and apartment_id validations are done in ModemController@prepare_rules
-            // 'realty_id' => 'nullable|empty_with:apartment_id',
+        $rules = [
+            'mac' => ['mac', "unique:modem,mac,{$this->id},id,deleted_at,NULL"],
+            'birthday' => ['nullable', 'date'],
+            'country_code' => ['regex:/^[A-Z]{2}$/'],
+            'contract_id' => ['required', 'exists:contract,id,deleted_at,NULL'],
+            'configfile_id' => ['required', 'exists:configfile,id,deleted_at,NULL,public,yes'],
+            'serial_num' => ["unique:modem,serial_num,{$this->id},id,deleted_at,NULL"],
+            'ppp_username' => ["unique:modem,ppp_username,{$this->id},id,deleted_at,NULL"],
         ];
+
+        if (! Module::collections()->has('BillingBase')) {
+            $rules['qos_id'] = ['required', 'exists:qos,id,deleted_at,NULL'];
+        }
+
+        $configfile = Configfile::find(Request::get('configfile_id'));
+        if ($configfile && $configfile->device == 'tr069') {
+            $rules['mac'][] = 'nullable';
+            $rules['ppp_password'][] = 'required';
+            // we wan't to show the required rule first, before any other validation error
+            array_unshift($rules['ppp_username'], 'required');
+            array_unshift($rules['serial_num'], 'required');
+        } else {
+            $rules['mac'][] = 'required';
+            $rules['serial_num'][] = 'nullable';
+        }
+
+        return $rules;
     }
 
     // Name of View
