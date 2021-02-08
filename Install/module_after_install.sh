@@ -4,9 +4,9 @@ env='/etc/nmsprime/env'
 
 cd '/var/www/nmsprime'
 rm -rf /var/www/nmsprime/bootstrap/cache/*
+/opt/rh/rh-php73/root/usr/bin/php artisan module:v6:migrate
 /opt/rh/rh-php73/root/usr/bin/php artisan config:cache
 /opt/rh/rh-php73/root/usr/bin/php artisan module:publish
-/opt/rh/rh-php73/root/usr/bin/php artisan module:v6:migrate
 /opt/rh/rh-php73/root/usr/bin/php artisan module:migrate
 #/opt/rh/rh-php73/root/usr/bin/php artisan queue:restart
 pkill -f "artisan queue:work"

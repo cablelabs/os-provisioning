@@ -474,24 +474,7 @@ class ModemController extends \BaseController
             $data['ppp_password'] = null;
         }
 
-        return unify_mac($data);
-    }
-
-    public function prepare_rules($rules, $data)
-    {
-        if (! Module::collections()->has('BillingBase')) {
-            $rules['qos_id'] = 'required|exists:qos,id,deleted_at,NULL';
-        }
-
-        $id = $data['id'] ?? null;
-        if ($this->configfile && $this->configfile->device == 'tr069') {
-            $rules['serial_num'] = "required|unique:modem,serial_num,$id,id,deleted_at,NULL";
-        } else {
-            $rules['mac'] .= '|required|unique:modem,mac,'.$id.',id,deleted_at,NULL';
-            unset($rules['ppp_username'], $rules['ppp_password']);
-        }
-
-        return parent::prepare_rules($rules, $data);
+        return unifyMac($data);
     }
 
     /**

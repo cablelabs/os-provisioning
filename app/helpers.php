@@ -18,8 +18,13 @@ function d()
  *
  * @author Ole Ernst
  */
-function unify_mac($data)
+function unifyMac($data)
 {
+    // return since we don't want to modify null into ''
+    if (! $data['mac']) {
+        return $data;
+    }
+
     $data['mac'] = preg_replace('/[^a-f\d]/i', '', $data['mac']);
     $data['mac'] = wordwrap($data['mac'], 2, ':', true);
 

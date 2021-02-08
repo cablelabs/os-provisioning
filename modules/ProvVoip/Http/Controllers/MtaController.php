@@ -58,7 +58,7 @@ class MtaController extends \BaseController
     {
         $data = parent::prepare_input($data);
 
-        return unify_mac($data);
+        return unifyMac($data);
     }
 
     /**
