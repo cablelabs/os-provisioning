@@ -27,7 +27,7 @@ class PhonenumberManagementController extends \BaseController
     public function edit($id)
     {
         if (
-            ! Request::filled('clear_envia_reference') &&
+            ! Request::filled('clear_envia_reference') ||
             ! Module::collections()->has('ProvVoipEnvia')
         ) {
             return parent::edit($id);

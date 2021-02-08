@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Nwidart\Modules\Facades\Module;
+
 class SupportRequest extends BaseModel
 {
     public $table = 'supportrequest';
@@ -49,6 +51,7 @@ class SupportRequest extends BaseModel
      */
     public static function system_status()
     {
+        $out = [];
         $services = ['dhcpd', 'xinetd', 'ntpd', 'named', 'firewalld'];
         foreach ($services as $service) {
             exec("systemctl status $service", $out[$service]);
@@ -58,8 +61,17 @@ class SupportRequest extends BaseModel
         exec('/usr/sbin/ip r', $out['routes']);
         exec('/usr/sbin/ip a', $out['ip']);
 
+        if (! Module::collections()->has(['Dashboard', 'ProvBase'])) {
+            return $out;
+        }
+
         // thumb of modems
-        $out['modem_statistic'] = \Modules\Dashboard\Http\Controllers\DashboardController::get_modem_statistics();
+        $modemStatistics = \Modules\Dashboard\Http\Controllers\DashboardController::get_modem_statistics();
+        if (! $modemStatistics) {
+            return $out;
+        }
+
+        $out['modem_statistic'] = $modemStatistics;
         foreach (['text', 'state', 'fa'] as $key) {
             unset($out['modem_statistic']->$key);
         }

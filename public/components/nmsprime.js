@@ -97,8 +97,37 @@ if (typeof(Storage) !== "undefined" && $('#sidebar').length) {
   console.log("Sorry, no Web Storage Support - Cant save State of Sidebar - please update your Browser")
 }
 
+$('.jsDateInterval').each(function () {
+  $(this.parentNode).addClass('d-flex')
+  $(this).addClass('h-100')
+  $(this).after(`
+    <div class="btn btn-secondary ml-2 jsToggle jsDate"><i class="fa mr-0 fa-calendar"></i></div>
+    <div class="btn jsToggle jsInterval"><i class="fa mr-0 fa-hourglass-o"></i></div>
+  `)
+})
 
+$('.jsToggle').click(function (event) {
+  let jqEl = $(this)
+  if (jqEl.hasClass('btn-secondary')) {
+    return
+  }
 
+  let jqInputgroup =  jqEl.siblings()
+  let input = jqInputgroup.closest('input')[0]
+  jqInputgroup.closest('.btn-secondary').removeClass('btn-secondary')
+
+  if (jqEl.hasClass('jsDate')) {
+    input.setAttribute('placeholder', '')
+    input.setAttribute('type', 'date')
+  }
+
+  if (jqEl.hasClass('jsInterval')) {
+    input.setAttribute('placeholder', '12M')
+    input.setAttribute('type', 'text')
+  }
+
+  jqEl.addClass('btn-secondary')
+})
 
 /* This bit can be used on the entire app over all pages and will work for both tabs and pills.
 * Also, make sure the tabs or pills are not active by default,

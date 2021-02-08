@@ -37,6 +37,8 @@ return [
     'contract' => [
         'additional' => 'Zusatz',
         'city' => 'Stadt',
+        'company' => 'Firma',
+        'contact' => 'Ansprechpartner',
         'contract_end' => 'Vertrags- Ende',
         'contract_start' => 'Vertrags- Beginn',
         'district' => 'Bezirk',
