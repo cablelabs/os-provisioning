@@ -83,6 +83,7 @@ return [
         'string'  => ':attribute muss :size Zeichen lang sein.',
         'array'   => ':attribute muss genau :size Elemente haben.',
     ],
+    'string' => 'Dieses Feld muss eine Zeichenkette enthalten.',
     'timezone'             => ':attribute muss eine gültige Zeitzone sein.',
     'unique'               => ':attribute ist schon vergeben.',
     'uploaded'             => ':attribute konnte nicht hochgeladen werden.',
