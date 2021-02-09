@@ -53,6 +53,7 @@ class Modem extends \BaseModel
             array_unshift($rules['serial_num'], 'required');
         } else {
             $rules['mac'][] = 'required';
+            $rules['ppp_username'][] = 'nullable';
             $rules['serial_num'][] = 'nullable';
         }
 
