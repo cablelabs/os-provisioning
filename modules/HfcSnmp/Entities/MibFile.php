@@ -8,6 +8,10 @@ class MibFile extends \BaseModel
 
     public $guarded = ['mibfile_upload'];
 
+    protected $withCount = [
+        'oids',
+    ];
+
     /**
      * @Const MibFile Upload Path relativ to storage directory
      */
@@ -52,7 +56,7 @@ class MibFile extends \BaseModel
 
     public function get_bsclass()
     {
-        $bsclass = $this->oids()->count() ? 'success' : 'info';
+        $bsclass = $this->oids_count ? 'success' : 'info';
 
         return $bsclass;
     }
