@@ -640,6 +640,7 @@ return [
             'fail' => 'Could not delete :model :id',
             'failChild' => 'Cannot delete :model :id: :child_model :child_id cannot be deleted',
             'failChildNM' => 'Cannot delete :model :id: n:m relation with :child_model :child_id cannot be deleted',
+            'failUndeleteable' => 'Deletion of :model :id is currenty not allowed because of it\'s dependencies - e.g. children elements of same type or other related objects. Please remove the dependencies first.',
             'noEntry' => 'No entry for deletion specified',
             'multiSuccess' => 'Deleted :deleted out of :to_delete :model',
         ],

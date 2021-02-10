@@ -550,6 +550,13 @@ class BaseModel extends Eloquent
      */
     public function delete()
     {
+        if (in_array($this->id, $this->undeletables())) {
+            $msg = trans('messages.base.delete.failUndeletable', ['model' => $this->get_model_name(), 'id' => $this->id]);
+            $this->addAboveMessage($msg, 'error');
+
+            return false;
+        }
+
         if ($this->delete_children) {
             $children = $this->get_all_children();
             // find and delete all children

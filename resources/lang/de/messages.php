@@ -640,6 +640,7 @@ return [
             'fail' => ':model :id konnte nicht gelöscht werden',
             'failChild' => 'Kann :model :id nicht löschen: :child_model :child_id kann nicht gelöscht werden',
             'failChildNM' => 'Kann :model :id nicht löschen: n:m-Beziehung mit :child_model :child_id kann nicht gelöscht werden',
+            'failUndeleteable' => ':model :id darf wegen seinen Abhängigkeiten - z.B. Kind-Elemente des selben Objekttyps oder andere zugewiesene Objekte - nicht gelöscht werden. Entfernen Sie vorher die Abhängigkeiten.',
             'noEntry' => 'Kein Eintrag zum Löschen ausgewählt',
             'multiSuccess' => ':deleted von :to_delete :model gelöscht',
         ],
