@@ -38,17 +38,21 @@ class Contract extends \BaseModel
             'company' => 'required_if:salutation,placeholder_salutations_institution',
             'firstname' => 'required_if:salutation,placeholder_salutations_person',
             'lastname' => 'required_if:salutation,placeholder_salutations_person',
-
-            'street' => 'required_without_all:realty_id,apartment_id',
-            'house_number' => 'required_without_all:realty_id,apartment_id',
-            'zip' => 'required_without_all:realty_id,apartment_id',
-            'city' => 'required_without_all:realty_id,apartment_id',
             'phone' => 'required',
             'email' => 'nullable|email',
             'birthday' => 'nullable|date',
             'contract_start' => 'date',
             'contract_end' => 'nullable|date', // |after:now -> implies we can not change stuff in an out-dated contract
         ];
+
+        $addressKeys = ['street', 'house_number', 'zip', 'city'];
+        foreach ($addressKeys as $key) {
+            if (Module::collections()->has('PropertyManagement')) {
+                $rules[$key] = 'required_without_all:realty_id,apartment_id';
+            } else {
+                $rules[$key] = 'required';
+            }
+        }
 
         if (Module::collections()->has('BillingBase')) {
             $rules['costcenter_id'] = 'required|numeric|min:1';

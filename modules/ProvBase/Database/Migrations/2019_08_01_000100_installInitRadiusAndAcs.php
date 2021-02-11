@@ -68,5 +68,10 @@ class InstallInitRadiusAndAcs extends BaseMigration
      */
     public function down()
     {
+        $radiusTables = ['radacct', 'radcheck', 'radgroupcheck', 'radgroupreply', 'radreply', 'radusergroup', 'radpostauth', 'nas'];
+
+        foreach ($radiusTables as $table) {
+            Schema::drop($table);
+        }
     }
 }

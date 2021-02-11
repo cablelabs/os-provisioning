@@ -40,7 +40,7 @@ class UpdateContractModemRenameColumns extends BaseMigration
         });
 
         Schema::table('modem', function (Blueprint $table) {
-            $table->renameColumn('network_access', 'internet_access');
+            $table->renameColumn('internet_access', 'network_access');
         });
     }
 }
