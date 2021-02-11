@@ -157,7 +157,7 @@ class ConfigfileController extends \BaseController
 
         $online = array_map(function ($value) {
             return $value->_deviceId->_SerialNumber ?? null;
-        }, json_decode(\modules\ProvBase\Entities\Modem::callGenieAcsApi($route, 'GET')));
+        }, json_decode(\Modules\ProvBase\Entities\Modem::callGenieAcsApi($route, 'GET')));
 
         $modemSerials = $model->modem()->whereNotNull('serial_num')->distinct()->pluck('serial_num')->toArray();
 
