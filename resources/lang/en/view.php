@@ -335,6 +335,7 @@ return [
     'Button_Create Mta'             => 'Create MTA',
     // //Phonenumber
     'Button_Create PhoneTariff'     => 'Create Phonetariffs',
+    'Button_Create PhonenumberManagement' => 'Create PhonenumberManagement',
     // //Configfiles
     'Button_Create Configfile'      => 'Create Configfile',
     'Button_DragDrop AddList'       => 'Add list',

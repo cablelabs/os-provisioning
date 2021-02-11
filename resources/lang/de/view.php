@@ -224,7 +224,7 @@ return [
     'Header_EditMta'            => 'MTA bearbeiten',
     //Phonenumber
     'Header_Phonenumber'        => 'Telefonnummer|Telefonnummern',
-    'Header_PhonenumberManagement' => 'Rufnummereinstellung|Rufnummereinstellungen',
+    'Header_PhonenumberManagement' => 'Rufnummerverwaltung',
     'Header_EditPhonenumber'    => 'Telefonnummer bearbeiten',
     'Header_PhonebookEntry'     => 'Telefonbucheintrag',
     'Header_Tickets'            => 'Ticket|Tickets',
@@ -335,6 +335,7 @@ return [
     'Button_Create Mta'             => 'MTA erstellen',
     // //Phonenumber
     'Button_Create PhoneTariff'     => 'Telefontarif anlegen',
+    'Button_Create PhonenumberManagement' => 'Rufnummerverwaltung anlegen',
     // //Configfiles
     'Button_Create Configfile'      => 'Konfigurationsdatei erstellen',
     'Button_DragDrop AddList'       => 'Liste erstellen',
