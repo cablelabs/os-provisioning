@@ -676,54 +676,47 @@ class ExtendedValidator
 
     /**
      * Checks if a document template is unique for a given company/sepaaccount combination
-     * @param $parameters Has to be set in prepare_rules
+     *
+     * @param string $attribute
+     * @param mixed $value
+     * @param array $parameters Has to be set in prepare_rules
+     * @param Validator $validator see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
+     *      when laravel calls the validation function (validate) they luckily pass "$this"
+     *      that is the Validator instance as 4th argument - so we can get it here
+     * @return void
      *
      * @author Patrick Reichel
      */
-    public function validateDocumentTemplateTypeIsUnique($attribute, $value, $parameters)
+    public function validateDocumentTemplateTypeIsUnique($attribute, $value, $parameters, $validator)
     {
-        // see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
-        // when laravel calls the validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
-        $validator = \func_get_arg(3);
-
-        // check for sepaaccount, first
-        if ($parameters[2] == 'sepaaccount_id') {
-            $template_count = \Modules\ProvBase\Entities\DocumentTemplate::where('sepaaccount_id', '=', $parameters[3])->where($attribute, '=', $value)->where('id', '<>', $parameters[1])->count();
-            if ($template_count) {
-                $validator->setCustomMessages(['template_type_unique' => 'A template of the chosen document type already exists for this SEPA account']);
-                return false;
-            }
-            else {
-                return true;
-            }
+        if (! in_array($parameters[2], ['sepaaccount_id', 'company_id', 'base'])) {
+            return false;
         }
 
-        // then for compan
-        if ($parameters[2] == 'company_id') {
-            $template_count = \Modules\ProvBase\Entities\DocumentTemplate::where('company_id', '=', $parameters[3])->where('sepaaccount_id', '=', 0)->where($attribute, '=', $value)->where('id', '<>', $parameters[1])->count();
-            if ($template_count) {
-                $validator->setCustomMessages(['template_type_unique' => 'A template of the chosen document type already exists for this company']);
-                return false;
-            }
-            else {
-                return true;
-            }
+        $templateQuery = \Modules\ProvBase\Entities\DocumentTemplate::where($attribute, $value)
+            ->where('id', '!=', $parameters[1]);
+
+        $lookup = [
+            'sepaaccount_id' => [
+                'message' => 'A template of the chosen document type already exists for this SEPA account',
+                'query' =>  $templateQuery->where('sepaaccount_id', '=', $parameters[3]),
+            ],
+            'company_id' => [
+                'message' => 'A template of the chosen document type already exists for this company',
+                'query' => $templateQuery->where('company_id', '=', $parameters[3])->whereNull('sepaaccount_id'),
+            ],
+            'base' => [
+                'message' => 'A base template of the chosen document type already exists.',
+                'query' => $templateQuery->whereNull(['company_id', 'sepaaccount_id']),
+            ],
+        ];
+
+        if ($lookup[$parameters[2]]['query']->count()) {
+            $validator->setCustomMessages(['template_type_unique' => $lookup[$parameters[2]]['message']]);
+
+            return false;
         }
 
-        // then for base templates
-        if ($parameters[2] == 'base') {
-            $template_count = \Modules\ProvBase\Entities\DocumentTemplate::where('company_id', '=', 0)->where('sepaaccount_id', '=', 0)->where($attribute, '=', $value)->where('id', '<>', $parameters[1])->count();
-            if ($template_count) {
-                $validator->setCustomMessages(['template_type_unique' => 'A base template of the chosen document type already exists.']);
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
-
-        // everything else is invalid
-        return false;
-
+        return true;
     }
 }
