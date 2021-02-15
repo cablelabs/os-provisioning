@@ -495,6 +495,7 @@ return [
         'ProvVoip'          => 'Provisionierung für VoiP',
         'ProvVoipEnvia'     => 'Provisionierung für envia TEL',
         'Save All'          => 'Alle Speichern',
+        'Save Changes'      => 'Änderungen Speichern',
         'See income chart'  => 'Einkommensdiagramm ansehen',
         'Technical Capabilities' => 'Technische Fähigkeiten',
         'Ticketsystem'      => 'Ticketsystem',
