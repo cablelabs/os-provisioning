@@ -161,11 +161,11 @@ class NetElement extends \BaseModel
     {
         $ret = new \Illuminate\Database\Eloquent\Collection([$this->netelementtype]);
 
-        if ($this->apartment_id) {
+        if ($this->apartment) {
             $ret->add($this->apartment);
         }
 
-        if ($this->parent_id) {
+        if ($this->parent) {
             $ret->add($this->parent);
         }
 

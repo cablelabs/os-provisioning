@@ -335,6 +335,7 @@ return [
     'Button_Create Mta'             => 'Create MTA',
     // //Phonenumber
     'Button_Create PhoneTariff'     => 'Create Phonetariffs',
+    'Button_Create PhonenumberManagement' => 'Create PhonenumberManagement',
     // //Configfiles
     'Button_Create Configfile'      => 'Create Configfile',
     'Button_DragDrop AddList'       => 'Add list',
@@ -450,11 +451,13 @@ return [
     'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
     'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
 
+    'Assign' => 'Assign :model',
     'commandCenter' => 'Command Center',
     'company' => 'Company',
     'Credit' => 'Credit',
     'critical' => 'critical',
     'Debit' => 'Debit',
+    'Detach all' => 'Detach all :model',
     'Diagrams' => 'Diagrams',
     'Discard' => 'Discard',
     'Download' => 'Download',
