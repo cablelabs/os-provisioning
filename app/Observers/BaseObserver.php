@@ -73,7 +73,7 @@ class BaseObserver
             unset($attributes['updated_at']);
         }
 
-        if (empty($attributes)) {
+        if (empty($attributes) && is_null($model->deleted_at)) {
             return;
         }
 

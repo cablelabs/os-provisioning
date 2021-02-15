@@ -495,6 +495,7 @@ return [
         'ProvVoip'          => 'Voip Provisioning',
         'ProvVoipEnvia'     => 'Provisioning for Envia-TEL',
         'Save All'          => 'Save All',
+        'Save Changes'      => 'Save Changes',
         'See income chart'  => 'See Income Chart',
         'Technical Capabilities' => 'Technical Capabilitiesn',
         'Ticketsystem'      => 'Ticket System',
