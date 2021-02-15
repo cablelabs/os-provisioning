@@ -707,6 +707,9 @@ class BaseViewController extends Controller
         // lambda function to extend the current breadcrumb by its predecessor
         // code within this function originally written by Torsten
         $extend_breadcrumb_path = function ($breadcrumb_path, $model, $i) {
+            if (! $model) {
+                return '';
+            }
 
             // following is the original source code written by Torsten
             $tmp = explode('\\', get_class($model));
@@ -766,7 +769,6 @@ class BaseViewController extends Controller
                     $multicrumbs = '';
 
                     foreach ($parent as $p) {
-
                         // get the breadcrumb for the current parent
                         $extended_path = $extend_breadcrumb_path($breadcrumb_path, $p, $i);
                         $breadcrumb = str_replace($breadcrumb_path_before_split, '', $extended_path);
