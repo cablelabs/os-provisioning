@@ -45,11 +45,6 @@ class CreateTreeTable extends BaseMigration
             $table->integer('parent');
         });
 
-        // TODO: should this be moved to seeding ?
-        foreach ([1 => '-unknown parent-', 2 => '-root-'] as $i => $v) {
-            DB::update('INSERT INTO '.$this->tablename." (id,name,parent_id,pos) VALUES($i, '$v', 0, '0,0');");
-        }
-
         return parent::up();
     }
 
