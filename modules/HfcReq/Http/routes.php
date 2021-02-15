@@ -29,7 +29,7 @@ BaseRoute::group([], function () {
     Route::delete('NetElementType/{netelementtype}/detach_all', [
         'as' => 'NetElementType.detach_all',
         'uses' => 'Modules\HfcReq\Http\Controllers\NetElementTypeController@detach_all',
-        'middleware' => ['can:delete,Modules\HfcReq\Entities\NetElementType'],
+        'middleware' => ['web', 'can:delete,Modules\HfcReq\Entities\NetElementType'],
     ]);
 
     BaseRoute::get('NetElement/{id}/delete', [

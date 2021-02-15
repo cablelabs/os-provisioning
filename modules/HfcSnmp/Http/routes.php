@@ -21,7 +21,7 @@ BaseRoute::group([], function () {
     Route::delete('Parameter/{param}/detach_all', [
         'as' => 'Parameter.detach_all',
         'uses' => 'Modules\HfcSnmp\Http\Controllers\ParameterController@detach_all',
-        'middleware' => ['can:delete,Modules\HfcSnmp\Entities\Parameter'],
+        'middleware' => ['web', 'can:delete,Modules\HfcSnmp\Entities\Parameter'],
     ]);
 
     BaseRoute::get('NetElement/{id}/tapControlling', [
