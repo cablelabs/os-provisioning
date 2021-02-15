@@ -451,11 +451,13 @@ return [
     'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
     'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
 
+    'Assign' => 'Assign :model',
     'commandCenter' => 'Command Center',
     'company' => 'Company',
     'Credit' => 'Credit',
     'critical' => 'critical',
     'Debit' => 'Debit',
+    'Detach all' => 'Detach all :model',
     'Diagrams' => 'Diagrams',
     'Discard' => 'Discard',
     'Download' => 'Download',
