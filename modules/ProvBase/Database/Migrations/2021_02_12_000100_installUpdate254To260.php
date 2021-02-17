@@ -3,7 +3,7 @@
 class InstallUpdate254To260 extends BaseMigration
 {
     protected $tablename = '';
-    protected $migrationScope = 'system';
+    public $migrationScope = 'system';
 
     /**
      * Restart GenieACS after configuration has changed from NMS Prime version 2.5.4 to 2.6.0

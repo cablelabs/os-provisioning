@@ -16,7 +16,7 @@ class BaseMigration extends Migration
      * Beginning in 2021 a migration is not allowed ot change database AND system stuff
      * Write two migrations if needed!
      */
-    protected $migrationScope = '';
+    public $migrationScope = '';
 
     public function __construct()
     {

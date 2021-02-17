@@ -4,7 +4,7 @@ use Modules\HfcReq\Entities\NetElement;
 
 class updateNetElementRemoveDeprecatedDummyModels extends RelationshipFixes
 {
-    protected $migrationScope = 'database';
+    public $migrationScope = 'database';
 
     /**
      * Remove deprecated dummy objects - edit page can not be opened anymore on these objects
