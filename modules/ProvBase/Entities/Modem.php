@@ -1151,7 +1151,7 @@ class Modem extends \BaseModel
         if ($this->isTR069()) {
             $id = rawurlencode($this->getGenieAcsModel('_id'));
             if (! $id) {
-                \Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
+                \Session::push('tmp_error_above_form', trans('messages.modem_restart_error'));
 
                 return;
             }
@@ -1165,7 +1165,7 @@ class Modem extends \BaseModel
 
             $success = self::callGenieAcsApi("devices/$id/tasks?connection_request", 'POST', "{ \"name\" : \"$action\" }");
             if (! $success) {
-                \Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
+                \Session::push('tmp_error_above_form', trans('messages.modem_restart_error'));
 
                 return;
             }
@@ -1244,7 +1244,7 @@ class Modem extends \BaseModel
                     (strpos($e->getMessage(), 'snmpset(): No response from') !== false)) ||
                     // this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
                     (strpos($e->getMessage(), 'noSuchName') !== false)) {
-                    \Session::push('tmp_warning_above_form', trans('messages.modem_restart_error'));
+                    \Session::push('tmp_error_above_form', trans('messages.modem_restart_error'));
                 } else {
                     // Inform and log for all other exceptions
                     \Session::push('tmp_error_above_form', \App\Http\Controllers\BaseViewController::translate_label('Unexpected exception').': '.$e->getMessage());
