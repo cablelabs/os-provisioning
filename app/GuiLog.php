@@ -160,10 +160,8 @@ class GuiLogWriter
         // get the latest log message for this model-ID-method
         while ($entry = array_pop($changes_logged)) {
             if (
-                ($entry['model'] == $data['model'])
-                &&
-                ($entry['model_id'] == $data['model_id'])
-                &&
+                ($entry['model'] == $data['model']) &&
+                ($entry['model_id'] == $data['model_id']) &&
                 ($entry['method'] == $data['method'])
             ) {
                 // see if the changes are the same again

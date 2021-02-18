@@ -262,8 +262,7 @@ class PhonenumberObserver
 
         // check what changed the SIP data
         if (
-            (strpos(\URL::current(), 'request/contract_get_voice_data') !== false)
-            ||
+            (strpos(\URL::current(), 'request/contract_get_voice_data') !== false) ||
             (strpos(\URL::current(), 'cron/contract_get_voice_data') !== false)
         ) {
             // changed through API method get_voice_data: do nothing

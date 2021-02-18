@@ -69,8 +69,7 @@ class ModemController extends \BaseController
         $installation_address_change_date_options = ['placeholder' => 'YYYY-MM-DD'];
         // check if installation_address_change_date is readonly (address change has been sent to envia TEL API)
         if (
-            ($model['installation_address_change_date'])
-            &&
+            ($model['installation_address_change_date']) &&
             (Module::collections()->has('ProvVoipEnvia'))
         ) {
             $orders = \Modules\ProvVoipEnvia\Entities\EnviaOrder::
