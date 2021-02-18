@@ -36,6 +36,8 @@ class PhonenumberManagementController extends \BaseController
         $mgmt = PhonenumberManagement::find($id);
         $mgmt->phonenumber->contract_external_id = null;
         $mgmt->phonenumber->save();
+        $mgmt->enviacontract_id = null;
+        $mgmt->save();
         $msg = trans('provvoipenvia::messages.phonenumbermanagementRemovedEnviaRef');
         $mgmt->addAboveMessage($msg, 'info', 'form');
 
