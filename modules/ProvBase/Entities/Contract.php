@@ -38,7 +38,6 @@ class Contract extends \BaseModel
             'company' => 'required_if:salutation,placeholder_salutations_institution',
             'firstname' => 'required_if:salutation,placeholder_salutations_person',
             'lastname' => 'required_if:salutation,placeholder_salutations_person',
-            'phone' => 'required',
             'email' => 'nullable|email',
             'birthday' => 'nullable|date',
             'contract_start' => 'date',
