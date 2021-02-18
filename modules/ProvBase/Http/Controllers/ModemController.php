@@ -69,8 +69,7 @@ class ModemController extends \BaseController
         $installation_address_change_date_options = ['placeholder' => 'YYYY-MM-DD'];
         // check if installation_address_change_date is readonly (address change has been sent to envia TEL API)
         if (
-            ($model['installation_address_change_date'])
-            &&
+            ($model['installation_address_change_date']) &&
             (Module::collections()->has('ProvVoipEnvia'))
         ) {
             $orders = \Modules\ProvVoipEnvia\Entities\EnviaOrder::
@@ -394,23 +393,21 @@ class ModemController extends \BaseController
     public function api_status($ver, $id)
     {
         if ($ver !== '0') {
-            return response()->json(['ret' => "Version $ver not supported"]);
+            return response()->v0ApiReply(['messages' => ['errors' => ["Version $ver not supported"]]]);
         }
 
-        if (! $modem = static::get_model_obj()->find($id)) {
-            return response()->json(['ret' => 'Object not found']);
-        }
+        $modem = static::get_model_obj()->findOrFail($id);
 
-        $verbose = null;
+        $data = [];
         if (Module::collections()->has('ProvMon') && Request::get('verbose') == 'true') {
             $ctrl = new \Modules\ProvMon\Http\Controllers\ProvMonController();
-            $verbose = $ctrl->analyses($id, true);
+            $data['data'] = $ctrl->analyses($id, true);
         }
 
         $domain_name = ProvBase::first()->domain_name;
         exec("sudo ping -c1 -i0 -w1 {$modem->hostname}.$domain_name", $ping, $offline);
 
-        return response()->json(['ret' => 'success', 'online' => ! $offline, 'verbose' => $verbose]);
+        return response()->v0ApiReply($data, ! $offline, $id);
     }
 
     /**
@@ -423,23 +420,13 @@ class ModemController extends \BaseController
     public function api_restart($ver, $id)
     {
         if ($ver !== '0') {
-            return response()->json(['ret' => "Version $ver not supported"]);
+            return response()->v0ApiReply(['messages' => ['errors' => ["Version $ver not supported"]]]);
         }
 
-        if (! $modem = static::get_model_obj()->find($id)) {
-            return response()->json(['ret' => 'Object not found']);
-        }
-
+        $modem = static::get_model_obj()->findOrFail($id);
         $modem->restart_modem();
 
-        $err = collect([
-            Session::get('tmp_info_above_form'),
-            Session::get('tmp_warning_above_form'),
-            Session::get('tmp_error_above_form'),
-        ])->collapse()
-        ->implode(', ');
-
-        return response()->json(['ret' => $err ?: 'success']);
+        return response()->v0ApiReply([], true, $id);
     }
 
     /**

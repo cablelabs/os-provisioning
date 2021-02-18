@@ -884,8 +884,7 @@ class Contract extends \BaseModel
 
         // Tariff: monthly Tariff change – "Tarifwechsel"
         if (
-            ($this->next_qos_id > 0)
-            &&
+            ($this->next_qos_id > 0) &&
             ($this->qos_id != $this->next_qos_id)
         ) {
             Log::info('monthly: contract: change Tariff for '.$this->id.' from '.$this->qos_id.' to '.$this->next_qos_id);

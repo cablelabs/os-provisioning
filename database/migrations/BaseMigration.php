@@ -135,8 +135,7 @@ class BaseMigration extends Migration
 
     public function __destruct()
     {
-        if ((! $this->calledUpTableGeneric)
-            &&
+        if ((! $this->calledUpTableGeneric) &&
             (substr($this->callerClassname, 0, 6) == 'Create')
         ) {
             // only warn if not rolling back – unfortunately we have to step through the stacktrace…

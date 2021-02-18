@@ -183,8 +183,7 @@ class StorageCleaner extends Command
 
             // if element doesn't match one of the regexes: ignore
             if (
-                (preg_match($dir_regex, $element) == 0)
-                &&
+                (preg_match($dir_regex, $element) == 0) &&
                 (preg_match($file_regex, $element) == 0)
             ) {
                 continue;

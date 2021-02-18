@@ -205,14 +205,11 @@ class BaseViewController extends Controller
             //          Hiding in create context will only work with hard coded 'hidden' => 1 entry in view_form_fields()
             if (
                 // does a view relation exists?
-                (is_object($view_belongs_to))
-                &&
+                (is_object($view_belongs_to)) &&
                 // not a n:m relation (in which case we have an pivot table)
-                (! ($view_belongs_to instanceof \Illuminate\Support\Collection))
-                &&
+                (! ($view_belongs_to instanceof \Illuminate\Support\Collection)) &&
                 // view table name (*_id) == field name ?
-                ($view_belongs_to->table.'_id' == $field['name'])
-                &&
+                ($view_belongs_to->table.'_id' == $field['name']) &&
                 // hidden was not explicitly set
                 (! isset($field['hidden']))
             ) {
@@ -742,8 +739,7 @@ class BaseViewController extends Controller
             while ($parent) {
                 if (
                     // if $parent is not a Collection we have a 1:1 or 1:n relation
-                    (! ($parent instanceof \Illuminate\Support\Collection))
-                    ||
+                    (! ($parent instanceof \Illuminate\Support\Collection)) ||
                     // there is a potential n:m relation, but only one model is really connected
                     ($parent->count() == 1)
                 ) {

@@ -327,9 +327,9 @@ class Mta extends \BaseModel
 
             // only ignore error with this error message (catch exception with this string)
             if (((strpos($e->getMessage(), 'php_network_getaddresses: getaddrinfo failed: Name or service not known') !== false) || (strpos($e->getMessage(), 'snmp2_set(): No response from') !== false))) {
-                \Session::push('tmp_warning_above_form', 'Could not restart MTA! (offline?)');
+                \Session::push('tmp_error_above_form', 'Could not restart MTA! (offline?)');
             } elseif (strpos($e->getMessage(), 'noSuchName') !== false) {
-                \Session::push('tmp_info_above_form', 'Could not restart MTA – noSuchName');
+                \Session::push('tmp_error_above_form', 'Could not restart MTA – noSuchName');
             // this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
             } else {
                 \Session::push('tmp_error_above_form', 'Unexpected exception: '.$e->getMessage());
