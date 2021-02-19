@@ -679,7 +679,7 @@ class Modem extends \BaseModel
             $modems[] = 'subclass "blocked" '.$modem->mac.'; # CM id: '.$modem->id;
         }
 
-        File::put(self::BLOCKED_CPE_FILE_PATH, $comment."\n".implode("\n", $modems));
+        File::put(self::BLOCKED_CPE_FILE_PATH, $comment."\n".implode("\n", $modems), true);
     }
 
     /**
