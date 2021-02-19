@@ -24,24 +24,6 @@ BaseRoute::group([], function () {
         'middleware' => ['web', 'can:delete,Modules\HfcSnmp\Entities\Parameter'],
     ]);
 
-    BaseRoute::get('NetElement/{id}/tapControlling', [
-        'as' => 'NetElement.tapControlling',
-        'uses' => 'Modules\HfcSnmp\Http\Controllers\TapController@show',
-        'middleware' => ['can:view,Modules\HfcReq\Entities\NetElement'],
-    ]);
-
-    BaseRoute::post('NetElement/switchTapState', [
-        'as' => 'NetElement.switchTapState',
-        'uses' => 'Modules\HfcSnmp\Http\Controllers\TapController@switchTapState',
-        'middleware' => ['can:update,Modules\HfcReq\Entities\NetElement'],
-    ]);
-
-    BaseRoute::post('NetElement/switchVideoLine', [
-        'as' => 'NetElement.switchVideoLine',
-        'uses' => 'Modules\HfcSnmp\Http\Controllers\TapController@switchVideoLine',
-        'middleware' => ['can:update,Modules\HfcReq\Entities\NetElement'],
-    ]);
-
     BaseRoute::get('NetElement/{id}/controlling/{parameter}/{index}', [
         'as' => 'NetElement.controlling_edit',
         'uses' => 'Modules\HfcSnmp\Http\Controllers\SnmpController@controlling_edit',

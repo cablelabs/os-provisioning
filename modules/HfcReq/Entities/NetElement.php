@@ -763,7 +763,7 @@ class NetElement extends \BaseModel
             array_push($tabs, ['name' => 'Controlling', 'icon' => 'wrench', 'route' => 'NetElement.controlling_edit', 'link' => [$this->id, 0, 0]]);
         }
 
-        if ($type == 9) {
+        if ($type == 9 && Module::collections()->has('Satkabel')) {
             array_push($tabs, ['name' => 'Controlling', 'icon' => 'bar-chart fa-rotate-90', 'route' => 'NetElement.tapControlling', 'link' => [$this->id]]);
         }
 
