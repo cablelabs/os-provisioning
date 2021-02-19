@@ -39,9 +39,9 @@ class Contract extends \BaseModel
             'firstname' => 'required_if:salutation,placeholder_salutations_person',
             'lastname' => 'required_if:salutation,placeholder_salutations_person',
             'email' => 'nullable|email',
-            'birthday' => 'nullable|date',
-            'contract_start' => 'date',
-            'contract_end' => 'nullable|date', // |after:now -> implies we can not change stuff in an out-dated contract
+            'birthday' => 'nullable|date_format:Y-m-d',
+            'contract_start' => 'date_format:Y-m-d',
+            'contract_end' => 'nullable|date_format:Y-m-d', // |after:now -> implies we can not change stuff in an out-dated contract
         ];
 
         $addressKeys = ['street', 'house_number', 'zip', 'city'];
