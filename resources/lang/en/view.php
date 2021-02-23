@@ -452,6 +452,8 @@ return [
     'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
 
     'Assign' => 'Assign :model',
+    'BillingBase' => 'Billing',
+    'Ccc' => 'Customer Control Center',
     'commandCenter' => 'Command Center',
     'company' => 'Company',
     'Credit' => 'Credit',
@@ -464,11 +466,13 @@ return [
     'false' => 'false',
     'Global' => 'Global',
     'Global notification' => 'Global notification',
+    'HfcReq' => 'HFC',
     'info' => 'info',
     'Level' => 'Level',
     'markon' => 'Mark-On/Extra charge in %',
     'Message' => 'Message',
     'name' => 'Name',
+    'OverdueDebts' => 'Overdue Debts',
     'Ability' => [
         'Abilities'         => 'Abilities',
         'Ability'           => 'Ability',
@@ -527,6 +531,9 @@ return [
             'voip' => 'VOIP',
         ],
     ],
+    'ProvBase' => 'Provisioning',
+    'ProvMon' => 'Monitoring',
+    'ProvVoip' => 'VoIP',
     'showChanges' => 'Show the change|Show :num changes',
     'SettlementRun' => 'SettlementRun',
     'tab' => [
@@ -547,6 +554,7 @@ return [
             'In work' => 'In work',
         ],
     ],
+    'Ticketsystem' => 'Ticketsystem',
     'Time' => 'Time',
     'topo' => [
         'addMpr' => 'Add Modem Positioning Rule',

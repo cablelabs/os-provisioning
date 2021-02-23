@@ -20,21 +20,20 @@
 	</h1>
 
 	<ul class="nav nav-pills d-flex nav-fill" id="SettingsTab">
-		@foreach($module_model as $count => $model)
-				<li class="nav-item"><a class="" href="#settings-{{Str::slug($links[$count]['name'],'_')}}" data-toggle="pill">
-					{{ \App\Http\Controllers\BaseViewController::translate_label($links[$count]['name']) }} </a></li>
+		@foreach($moduleModels as $count => $model)
+			<li class="nav-item">
+				<a href="#settings-{{Str::slug($links[$count]['name'],'_')}}" data-toggle="pill"> {{ $links[$count]['name'] }} </a>
+			</li>
 		@endforeach
 	</ul>
 @DivClose()
 
 @DivOpen(12)
 		<div class="tab-content">
-			@foreach($module_model as $count => $model)
+			@foreach($moduleModels as $count => $model)
 				<div class="tab-pane fade in" id="settings-{{Str::slug($links[$count]['name'],'_')}}" role="tabpanel">
 					{!! Form::model($model, array('route' => array($links[$count]['link'].'.update', '1'), 'method' => 'put', 'files' => true) ) !!}
-
-						@include('Generic.form',['view_var' => $model,
-												 'form_fields' => $form_fields[$count],])
+						@include('Generic.form', ['view_var' => $model, 'form_fields' => $form_fields[$count]])
 					{{ Form::close() }}
 				</div>
 			@endforeach

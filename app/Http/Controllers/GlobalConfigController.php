@@ -62,30 +62,30 @@ class GlobalConfigController extends BaseController
         $route_name = 'Config.index';
 
         $enabled = Module::allEnabled();
-        $module_controller = [0 => $this];
-        $module_model = [0 => static::get_model_obj()->first()];
+        $moduleControllers = [0 => $this];
+        $moduleModels = [0 => static::get_model_obj()->first()];
 
         $links = [0 => ['name' => 'Global Config',
             'link' => 'GlobalConfig', ],
         ];
-        $i = 1;
 
+        $i = 1;
         foreach ($enabled as $module) {
             $mod_path = explode('/', $module->getPath());
             $tmp = end($mod_path);
 
-            $mod_controller_name = 'Modules\\'.$tmp.'\\Http\\Controllers\\'.$tmp.'Controller';
-            $mod_model_namespace = 'Modules\\'.$tmp.'\\Entities\\'.$tmp;
-            $mod_controller = new $mod_controller_name;
+            $modControllerName = 'Modules\\'.$tmp.'\\Http\\Controllers\\'.$tmp.'Controller';
+            $modModelNamespace = 'Modules\\'.$tmp.'\\Entities\\'.$tmp;
+            $modController = new $modControllerName;
 
-            if (method_exists($mod_controller, 'view_form_fields') &&
-                Bouncer::can('view', $mod_model_namespace)) {
-                $mod_model = new $mod_model_namespace;
+            if (method_exists($modController, 'view_form_fields') &&
+                Bouncer::can('view', $modModelNamespace)) {
+                $modModel = new $modModelNamespace;
 
-                $module_controller[$i] = $mod_controller;
-                $module_model[$i] = $mod_model->first();
+                $moduleControllers[$i] = $modController;
+                $moduleModels[$i] = $modModel->first();
 
-                Arr::set($links, $i.'.name', (($module->get('alias') == '') ? $tmp : $module->get('alias')));
+                Arr::set($links, $i.'.name', trans("view.$tmp"));
                 Arr::set($links, $i.'.link', $tmp);
 
                 $i++;
@@ -94,18 +94,18 @@ class GlobalConfigController extends BaseController
 
         // Add SLA Tab
         if (Bouncer::can('view', '\App\Sla')) {
-            $module_controller[$i] = new \App\Http\Controllers\SlaController;
+            $moduleControllers[$i] = new \App\Http\Controllers\SlaController;
             $sla_model = new \App\Sla;
-            $module_model[$i] = $sla_model->first();
+            $moduleModels[$i] = $sla_model->first();
             $links[$i] = ['name' => 'SLA', 'link' => 'Sla'];
             $i++;
         }
 
-        for ($j = 0; $j < $i; $j++) {
-            $fields[$j] = BaseViewController::prepare_form_fields($module_controller[$j]->view_form_fields($module_model[$j]), $module_model[$j]);
-            $form_fields[$j] = BaseViewController::add_html_string($fields[$j], 'edit');
+        foreach ($moduleControllers as $key => $controller) {
+            $fields[$key] = BaseViewController::prepare_form_fields($controller->view_form_fields($moduleModels[$key]), $moduleModels[$key]);
+            $form_fields[$key] = BaseViewController::add_html_string($fields[$key], 'edit');
         }
 
-        return \View::make('GlobalConfig.index', $base_controller->compact_prep_view(compact('links', 'view_header', 'route_name', 'module_model', 'form_fields')));
+        return \View::make('GlobalConfig.index', $base_controller->compact_prep_view(compact('links', 'view_header', 'route_name', 'moduleModels', 'form_fields')));
     }
 }
