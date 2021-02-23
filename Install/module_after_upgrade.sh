@@ -16,8 +16,8 @@ if [[ $packages ]]; then
     newVersion=$(grep "nmsprime-base" $tmpFile | cut -d'-' -f3 | tail -1)
 
     for package in $packages; do
-    packageVersion=$(grep $package $tmpFile | cut -d'-' -f3 | tail -1)
-    # echo "$package - new Version: $newVersion - package Version: $packageVersion"
+        packageVersion=$(grep $package $tmpFile | cut -d'-' -f3 | tail -1)
+        # echo "$package - new Version: $newVersion - package Version: $packageVersion"
 
         if [ "$packageVersion" != "$newVersion" ]; then
             lastModule=0
