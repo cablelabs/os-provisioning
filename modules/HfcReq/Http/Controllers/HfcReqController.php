@@ -2,12 +2,58 @@
 
 namespace Modules\HfcReq\Http\Controllers;
 
+use Module;
 use Request;
 use App\Http\Controllers\BaseViewController;
 use App\Http\Controllers\NamespaceController;
 
 class HfcReqController extends \BaseController
 {
+    /**
+     * defines the formular fields for the edit and create view
+     */
+    public function view_form_fields($model = null)
+    {
+        // label has to be the same like column in sql table
+        $a = [
+            ['form_type' => 'text', 'name' => 'ro_community', 'description' => 'SNMP Read Only Community'],
+            ['form_type' => 'text', 'name' => 'rw_community', 'description' => 'SNMP Read Write Community', 'space' => 1],
+        ];
+
+        $b = [];
+        if (Module::collections()->has('Satkabel')) {
+            $b = [
+                ['form_type' => 'text', 'name' => 'rkm_server', 'description' => 'RKM Server '.trans('messages.Address'), 'help' => trans('hfcsnmp::help.rkmServerAddress'), 'options' => ['placeholder' => '172.20.0.10:1700']],
+                ['form_type' => 'text', 'name' => 'rkm_server_username', 'description' => 'RKM Server '.trans('messages.Username')],
+                ['form_type' => 'text', 'name' => 'rkm_server_password', 'description' => 'RKM Server '.trans('messages.Password'), 'space' => 1],
+
+                ['form_type' => 'text', 'name' => 'video_controller', 'description' => 'Video Controlling Server '.trans('messages.Address'), 'options' => ['placeholder' => '172.20.0.11:1701']],
+                ['form_type' => 'text', 'name' => 'video_controller_username', 'description' => 'RKM Server '.trans('messages.Username')],
+                ['form_type' => 'text', 'name' => 'video_controller_password', 'description' => 'RKM Server '.trans('messages.Password'), 'space' => 1],
+
+                ['form_type' => 'text', 'name' => 'video_encoder', 'description' => 'Video Encoding Server '.trans('messages.Address'), 'options' => ['placeholder' => '172.20.0.12:1702'], 'space' => 1],
+            ];
+        }
+
+        $c = [];
+        // if (Module::collections()->has('HfcCustomer')) {
+        //     $c = [
+        //         ['form_type' => 'text', 'name' => 'us_single_warning', 'description' => 'Upstream single warning threshhold', 'options' => ['placeholder' => '50']],
+        //         ['form_type' => 'text', 'name' => 'us_single_critical', 'description' => 'Upstream single critical threshhold', 'options' => ['placeholder' => '55']],
+        //         ['form_type' => 'text', 'name' => 'us_avg_warning', 'description' => 'Upstream average Warning Threshhold', 'options' => ['placeholder' => '45']],
+        //         ['form_type' => 'text', 'name' => 'us_avg_critical', 'description' => 'Upstream average critical Threshhold', 'options' => ['placeholder' => '52'], 'space' => 1],
+        //         ['form_type' => 'text', 'name' => 'online_absolute_minor', 'description' => 'Absolute Modem Offline Threshhold: Minor', 'options' => ['placeholder' => '5']],
+        //         ['form_type' => 'text', 'name' => 'online_absolute_major', 'description' => 'Absolute Modem Offline Threshhold: Major', 'options' => ['placeholder' => '25']],
+        //         ['form_type' => 'text', 'name' => 'online_absolute_critical', 'description' => 'Absolute Modem Offline Threshhold: Critical', 'options' => ['placeholder' => '100'], 'space' => 1],
+        //         ['form_type' => 'text', 'name' => 'online_percentage_minor', 'description' => 'Percentage Modem Offline Threshhold: Minor', 'options' => ['placeholder' => '34']],
+        //         ['form_type' => 'text', 'name' => 'online_percentage_major', 'description' => 'Percentage Modem Offline Threshhold: Major', 'options' => ['placeholder' => '51']],
+        //         ['form_type' => 'text', 'name' => 'online_percentage_critical', 'description' => 'Percentage Modem Offline Threshhold: Critical', 'options' => ['placeholder' => '81']],
+        //     ];
+        // }
+
+        return array_merge($a, $b, $c);
+    }
+
     /**
      * Return the View for Assigning existing OIDs to the NetElementType or Parameter itself (children)
      *

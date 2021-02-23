@@ -4,7 +4,7 @@ namespace Modules\HfcReq\Entities;
 
 $config = [
     'link' => null,
-    'parent' => 'HfcReq',
+    'parent' => '',
     'MenuItems' => [
         'NetElementType' => [
             'link'	=> 'NetElementType.index',
