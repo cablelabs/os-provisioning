@@ -31,15 +31,27 @@ class Kernel extends ConsoleKernel
         // if provha is disabled: run main commands
         if (! \Module::collections()->has('ProvHA')) {
             $this->scheduleMain($schedule);
-        } else {
-            // check if master or slave
-            if ('master' == config('provha.hostinfo.ownState')) {
-                $this->scheduleMain($schedule);
-                $this->scheduleMaster($schedule);
-            } else {
-                $this->scheduleSlave($schedule);
-            }
+
+            return;
         }
+
+        // if master: run main and additional master commands
+        if ('master' == config('provha.hostinfo.ownState')) {
+            $this->scheduleMain($schedule);
+            $this->scheduleMaster($schedule);
+
+            return;
+        }
+
+        // if slave: run slave commands only
+        if ('slave' == config('provha.hostinfo.ownState')) {
+            $this->scheduleSlave($schedule);
+
+            return;
+        }
+
+        // do nothing at unclear states
+
     }
 
 
