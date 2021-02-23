@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Schema\Blueprint;
+use Modules\ProvBase\Entities\ProvBase;
 
 class UpdateProvmonStoreDnsKey extends BaseMigration
 {
@@ -40,7 +41,9 @@ class UpdateProvmonStoreDnsKey extends BaseMigration
         }
 
         // store in database
-        DB::update("UPDATE $this->tablename SET dns_password='$dns_password'");
+        $provha = ProvBase::first();
+        $provha->dns_password = $dns_password;
+        $provha->save();
 
         // remove from .env file to avoid confusion
         $conf = file_get_contents('/etc/nmsprime/env/global.env');
