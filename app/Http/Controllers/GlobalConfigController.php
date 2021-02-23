@@ -56,7 +56,7 @@ class GlobalConfigController extends BaseController
     public function index()
     {
         $tmp = get_parent_class();
-        $base_controller = new $tmp;
+        $base_controller = new $tmp();
 
         $view_header = BaseViewController::translate_view('Global Configurations', 'Header');
         $route_name = 'Config.index';
@@ -76,11 +76,11 @@ class GlobalConfigController extends BaseController
 
             $modControllerName = 'Modules\\'.$tmp.'\\Http\\Controllers\\'.$tmp.'Controller';
             $modModelNamespace = 'Modules\\'.$tmp.'\\Entities\\'.$tmp;
-            $modController = new $modControllerName;
+            $modController = new $modControllerName();
 
             if (method_exists($modController, 'view_form_fields') &&
                 Bouncer::can('view', $modModelNamespace)) {
-                $modModel = new $modModelNamespace;
+                $modModel = new $modModelNamespace();
 
                 $moduleControllers[$i] = $modController;
                 $moduleModels[$i] = $modModel->first();
@@ -94,8 +94,8 @@ class GlobalConfigController extends BaseController
 
         // Add SLA Tab
         if (Bouncer::can('view', '\App\Sla')) {
-            $moduleControllers[$i] = new \App\Http\Controllers\SlaController;
-            $sla_model = new \App\Sla;
+            $moduleControllers[$i] = new \App\Http\Controllers\SlaController();
+            $sla_model = new \App\Sla();
             $moduleModels[$i] = $sla_model->first();
             $links[$i] = ['name' => 'SLA', 'link' => 'Sla'];
             $i++;
