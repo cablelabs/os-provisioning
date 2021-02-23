@@ -14,7 +14,7 @@ class CreateColumnInitialDashboardToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $users) {
-            $users->string('initial_dashboard')->default('Dashboard.index');
+            $users->string('initial_dashboard');
         });
     }
 

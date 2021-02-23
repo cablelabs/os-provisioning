@@ -1,7 +1,7 @@
 <?php
 
-return[
-    'link' => 'Dashboard.index',
+$config = [
+    'link' => null,
     'MenuItems' => [
         'Config Page' => [
             'link' => 'Config.index',
@@ -14,4 +14,17 @@ return[
             'class' => App\GuiLog::class,
         ],
     ],
+
 ];
+
+$modulesListFile = '/var/www/nmsprime/modules_statuses.json';
+if (! is_file($modulesListFile)) {
+    return $config;
+}
+
+$modulesList = json_decode(file_get_contents($modulesListFile));
+if ($modulesList->Dashboard) {
+    $config['link'] = 'Dashboard.index';
+}
+
+return $config;
