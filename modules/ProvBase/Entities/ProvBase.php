@@ -274,24 +274,32 @@ class ProvBase extends \BaseModel
         // https://stackoverflow.com/questions/1251999/how-can-i-replace-a-newline-n-using-sed
         $content = ":a;N;$!ba;s/$old/$new/g";
         file_put_contents($sed, $content);
+
         exec("sudo sed -i -f $sed /etc/named-nmsprime.conf", $out, $ret);
-        if ($ret > 0) {
-            $msg = 'Error building named config';
-            \Session::push('tmp_error_above_form', $msg);
-            \Log::crit($msg);
-            $success = False;
-        } else {
-            exec('sudo systemctl restart named.service &', $out, $ret);
-            if ($ret > 0) {
-                $msg = 'Could not restart named';
-                \Session::push('tmp_error_above_form', $msg);
-                \Log::crit($msg);
-                $success = False;
-            }
-        }
         unlink($sed);
 
-        return $success;
+        // error in creating config file?
+        if ($ret > 0) {
+            $msg = trans('messages.error_building_config', ['named']);
+            \Session::push('tmp_error_above_form', $msg);
+            \Log::critical($msg);
+
+            return False;
+        }
+
+        exec('sudo systemctl restart named.service &', $out, $ret);
+
+        // error in restarting named?
+        if ($ret > 0) {
+            $msg = trans('messages.error_restarting_daemon', ['named']);
+            \Session::push('tmp_error_above_form', $msg);
+            \Log::critical($msg);
+
+            return False;
+        }
+
+        // all went fine
+        return True;
     }
 
     /**

@@ -722,4 +722,6 @@ return [
     'SnmpAccessException'       => 'Snmp Zugriff Verweigert',
     'error_reading_file'        => 'Fehler beim Lesen der Datei :0!',
     'error_writing_file'        => 'Fehler beim Schreiben der Datei :0!',
+    'error_building_config'     => 'Fehler beim Erzeugen den Konfiguration für :0!',
+    'error_restarting_daemon'   => 'Fehler beim Neustarten von :0!',
 ];
