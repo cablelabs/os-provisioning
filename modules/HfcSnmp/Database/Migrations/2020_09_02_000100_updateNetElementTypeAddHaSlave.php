@@ -28,7 +28,7 @@ class UpdateNetElementTypeAddHaSlave extends Migration
             DB::statement("UPDATE netelement SET netelementtype_id=$id WHERE netelementtype_id=10");
         }
 
-        DB::statement("INSERT INTO $this->tablename (id, created_at, updated_at, name) VALUES (10, NOW(), NOW(), 'NMSPrime ProvHA slave')");
+        DB::statement("INSERT INTO $this->tablename (id, created_at, updated_at, name) VALUES (10, NOW(), NOW(), 'NMSPrime HA slave')");
     }
 
     /**
