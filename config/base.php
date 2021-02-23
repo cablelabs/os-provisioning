@@ -23,7 +23,7 @@ if (! is_file($modulesListFile)) {
 }
 
 $modulesList = json_decode(file_get_contents($modulesListFile));
-if ($modulesList->Dashboard) {
+if (isset($modulesList->Dashboard) && $modulesList->Dashboard) {
     $config['link'] = 'Dashboard.index';
 }
 
