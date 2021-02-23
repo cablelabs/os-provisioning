@@ -33,7 +33,7 @@ class PhonenumberManagementController extends \BaseController
             return parent::edit($id);
         }
 
-        $mgmt = PhonenumberManagement::find($id);
+        $mgmt = PhonenumberManagement::with('phonenumber')->find($id);
         $mgmt->phonenumber->contract_external_id = null;
         $mgmt->phonenumber->save();
         $mgmt->enviacontract_id = null;
