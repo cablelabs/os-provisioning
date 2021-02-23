@@ -452,6 +452,8 @@ return [
     'error_ticket_settings'     => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
 
     'Assign' => ':model hinzufügen',
+    'BillingBase' => 'Billing',
+    'Ccc' => 'Kundenkontrollzentrum',
     'commandCenter' => 'Kommandozentrale',
     'company' => 'Firma',
     'Credit' => 'Gutschrift',
@@ -464,6 +466,7 @@ return [
     'false' => 'nein',
     'Global' => 'Global',
     'Global notification' => 'Globale Benachrichtigung',
+    'HfcReq' => 'HFC',
     'info' => 'Info',
     'Level' => 'Level',
     'markon' => 'Preisaufschlag in %',
@@ -510,6 +513,7 @@ return [
         'View everything'   => 'Alle Seiten ansehen',
         'VoipMon'           => 'Voip Monitor',
     ],
+    'OverdueDebts' => 'Offene Posten',
     'product' => [
         'billingCycles' => [
             'once' => 'einmalig',
@@ -527,6 +531,9 @@ return [
             'voip' => 'VOIP',
         ],
     ],
+    'ProvBase' => 'Provisionierung',
+    'ProvMon' => 'Monitoring',
+    'ProvVoip' => 'VoIP',
     'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
     'SettlementRun' => 'Abrechnungslauf',
     'tab' => [
@@ -547,6 +554,7 @@ return [
             'In work' => 'Wird gerade bearbeitet',
         ],
     ],
+    'Ticketsystem' => 'Ticketsystem',
     'Time' => 'Zeit',
     'topo' => [
         'addMpr' => 'Erstelle Modembereich',

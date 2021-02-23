@@ -1,6 +1,7 @@
 <?php
 
 BaseRoute::group([], function () {
+    BaseRoute::resource('HfcReq', 'Modules\HfcReq\Http\Controllers\HfcReqController');
     BaseRoute::resource('NetElementType', 'Modules\HfcReq\Http\Controllers\NetElementTypeController');
     BaseRoute::resource('NetElement', 'Modules\HfcReq\Http\Controllers\NetElementController');
 

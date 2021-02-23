@@ -5,7 +5,6 @@ namespace Modules\HfcSnmp\Http\Controllers;
 use Session;
 use Modules\HfcSnmp\Entities\OID;
 use Illuminate\Support\Facades\Log;
-use Nwidart\Modules\Facades\Module;
 use App\Exceptions\SnmpAccessException;
 use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcSnmp\Entities\Parameter;
@@ -783,17 +782,19 @@ class SnmpController extends \BaseController
      */
     private function _get_community($access = 'ro')
     {
-        if (Module::collections()->has('HfcBase')) {
-            return $this->device->{'community_'.$access} ?: \Modules\HfcBase\Entities\HfcBase::get([$access.'_community'])->first()->{$access.'_community'};
+        $community = $this->device->{'community_'.$access};
+
+        if (! $community) {
+            $community = \Modules\HfcReq\Entities\HfcReq::get([$access.'_community'])->first()->{$access.'_community'};
         }
 
-        if (! $this->device->{'community_'.$access}) {
+        if (! $community) {
             Log::error("community {$access} access for Netelement is not set!", [$this->device]);
 
             throw new SnmpAccessException(trans('messages.NoSnmpAccess', ['access' => $access, 'name' => $this->device->name]));
         }
 
-        return $this->device->{'community_'.$access};
+        return $community;
     }
 
     /**
