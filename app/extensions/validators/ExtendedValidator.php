@@ -480,7 +480,7 @@ class ExtendedValidator
      *
      * @author Patrick Reichel
      */
-    protected function _validateIPv4Address($attribute, $value, $parameters)
+    protected function validateIPv4Address($attribute, $value, $parameters)
     {
         return boolval(filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4));
     }
@@ -492,7 +492,7 @@ class ExtendedValidator
      *
      * @author Patrick Reichel
      */
-    protected function _validateIPv6Address($attribute, $value, $parameters)
+    protected function validateIPv6Address($attribute, $value, $parameters)
     {
         return boolval(filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6));
     }
@@ -504,7 +504,7 @@ class ExtendedValidator
      *
      * @author Patrick Reichel
      */
-    protected function _validateIP4Or6Address($attribute, $value, $parameters)
+    protected function validateIP4Or6Address($attribute, $value, $parameters)
     {
         return (
             $this->validateIPv4Address($attribute, $value, $parameters)
@@ -524,9 +524,9 @@ class ExtendedValidator
         return (
             $this->validateHostname($attribute, $value, $parameters)
             ||
-            $this->_validateIPv4Address($attribute, $value, $parameters)
+            $this->validateIPv4Address($attribute, $value, $parameters)
             ||
-            $this->_validateIPv6Address($attribute, $value, $parameters)
+            $this->validateIPv6Address($attribute, $value, $parameters)
         );
     }
 

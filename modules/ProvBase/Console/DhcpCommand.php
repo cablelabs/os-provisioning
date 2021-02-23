@@ -43,7 +43,7 @@ class DhcpCommand extends Command
     {
         // Global Config part
         $prov = ProvBase::first();
-        $prov->make_ddns_conf();
+        $prov->makeDdnsConf();
         $prov->make_dhcp_glob_conf();
         $prov->make_dhcp_default_network_conf();
 

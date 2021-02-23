@@ -262,7 +262,7 @@ class ProvBase extends \BaseModel
      *
      * @author Patrick Reichel
      */
-    public function make_named_conf($password)
+    public function makeNamedConf($password)
     {
         $password = str_replace('/', '\/', $password);
         $success = True;
@@ -299,7 +299,7 @@ class ProvBase extends \BaseModel
      *
      * @author Patrick Reichel
      */
-    public function make_named_dhcpd_conf($password)
+    public function makeNamedDhcpdConf($password)
     {
         $dhcp_conf_file = '/etc/dhcp-nmsprime/dhcpd.conf';
         try {
@@ -330,7 +330,7 @@ class ProvBase extends \BaseModel
      *
      * @author Patrick Reichel
      */
-    public function make_ddns_update_script($password)
+    public function makeDdnsUpdateScript($password)
     {
         $script_file = '/etc/named-ddns.sh';
 
@@ -429,17 +429,17 @@ class ProvBase extends \BaseModel
      *
      * @author Patrick Reichel
      */
-    public function make_ddns_conf()
+    public function makeDdnsConf()
     {
         $password = $this->provhaOwnDnsPw ?: $this->dns_password;
 
         $success = True;
         // configure named
-        $success = $success && $this->make_named_conf($password);
+        $success = $success && $this->makeNamedConf($password);
         // configure dhcp
-        $success = $success && $this->make_named_dhcpd_conf($password);
+        $success = $success && $this->makeNamedDhcpdConf($password);
         // update update script
-        $success = $success && $this->make_ddns_update_script($password);
+        $success = $success && $this->makeDdnsUpdateScript($password);
 
         /* $this->make_ */
         return $success;

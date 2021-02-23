@@ -133,7 +133,7 @@ class ProvBaseObserver
         }
 
         if (array_key_exists('dns_password', $changes)) {
-            $model->make_ddns_conf();
+            $model->makeDdnsConf();
         }
     }
 
