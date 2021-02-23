@@ -5,7 +5,6 @@ namespace Modules\HfcSnmp\Http\Controllers;
 use Session;
 use Modules\HfcSnmp\Entities\OID;
 use Illuminate\Support\Facades\Log;
-use Nwidart\Modules\Facades\Module;
 use App\Exceptions\SnmpAccessException;
 use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcSnmp\Entities\Parameter;

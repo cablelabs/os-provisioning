@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
-
 class RenameTableHfcBaseToHfcReq extends BaseMigration
 {
     protected $tablename = 'hfcbase';

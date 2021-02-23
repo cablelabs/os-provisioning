@@ -11,9 +11,6 @@ $config = [
             'icon'	=> 'fa-file-o',
             'class' => MibFile::class,
         ],
-        // 	'SnmpValues' =>
-        // 	['link' => 'SnmpValue.index',
-        // 	'icon'	=> 'fa-']
     ],
 ];
 
