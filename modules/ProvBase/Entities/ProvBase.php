@@ -126,7 +126,8 @@ class ProvBase extends \BaseModel
      *
      * @author Patrick Reichel
      */
-    public function getDHCPOptionVivso2($ips) {
+    public function getDHCPOptionVivso2($ips)
+    {
 
         $hex_ips = [];
         foreach ($ips as $ip) {
@@ -158,10 +159,9 @@ class ProvBase extends \BaseModel
     {
         $file_dhcp_conf = '/etc/dhcp-nmsprime/global.conf';
 
-        if (is_null($this->provha)) {
-            $ownIp = $this->provisioning_server;
-            $ipList = $ownIp;
-        } else {
+        $ownIp = $this->provisioning_server;
+        $ipList = $ownIp;
+        if ($this->provha) {
             $ownIp = $this->provhaOwnIp;
             $peerIp = $this->provhaPeerIp;
             $ipList = "$ownIp,$peerIp";
@@ -433,15 +433,8 @@ class ProvBase extends \BaseModel
     {
         $password = $this->provhaOwnDnsPw ?: $this->dns_password;
 
-        $success = True;
-        // configure named
-        $success = $success && $this->makeNamedConf($password);
-        // configure dhcp
-        $success = $success && $this->makeNamedDhcpdConf($password);
-        // update update script
-        $success = $success && $this->makeDdnsUpdateScript($password);
-
-        /* $this->make_ */
-        return $success;
+        return $this->makeNamedConf($password) &&
+            $this->makeNamedDhcpdConf($password) &&
+            $this->makeDdnsUpdateScript($password);
     }
 }
