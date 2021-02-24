@@ -39,7 +39,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            'throttle:60,1',
+            'throttle:'.config('app.apiThrottle'),
             'bindings',
             \App\Http\Middleware\SetLanguage::class,
             'auth.nmsapi',

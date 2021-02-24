@@ -32,12 +32,13 @@ class Modem extends \BaseModel
     {
         $rules = [
             'mac' => ['mac', "unique:modem,mac,{$this->id},id,deleted_at,NULL"],
-            'birthday' => ['nullable', 'date'],
+            'birthday' => ['nullable', 'date_format:Y-m-d'],
             'country_code' => ['regex:/^[A-Z]{2}$/'],
             'contract_id' => ['required', 'exists:contract,id,deleted_at,NULL'],
             'configfile_id' => ['required', 'exists:configfile,id,deleted_at,NULL,public,yes'],
             'serial_num' => ["unique:modem,serial_num,{$this->id},id,deleted_at,NULL"],
             'ppp_username' => ["unique:modem,ppp_username,{$this->id},id,deleted_at,NULL"],
+            'installation_address_change_date' => ['nullable', 'date_format:Y-m-d'],
         ];
 
         if (! Module::collections()->has('BillingBase')) {
