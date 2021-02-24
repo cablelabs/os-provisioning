@@ -11,14 +11,24 @@ class Endpoint extends \BaseModel
 
     public function rules()
     {
+        $id = $this->id;
+        $modem = $this->exists ? $this->modem : Modem::with('configfile')->find(Request::get('modem_id'));
+
         // Hostname/MAC must be unique only inside all ipv4 or ipv6 endpoints - on creation it must be compared to version=NULL to work
         $versionFilter = ',version,'.($this->version ?: 'NULL');
 
         $rules = [
-            'mac' => ['nullable', 'mac', "unique:endpoint,mac,{$this->id},id,deleted_at,NULL{$versionFilter}"],
-            'hostname' => ['required', 'regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/', "unique:endpoint,hostname,{$this->id},id,deleted_at,NULL{$versionFilter}"],
-            'ip' => ['nullable', 'required_if:fixed_ip,1', 'ip', "unique:endpoint,ip,{$this->id},id,deleted_at,NULL"],
+            'mac' => ['nullable', 'mac', 'unique:endpoint,mac,'.$id.',id,deleted_at,NULL'.$versionFilter],
+            'hostname' => ['required', 'regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/',
+                'unique:endpoint,hostname,'.$id.',id,deleted_at,NULL'.$versionFilter, ],
+            'ip' => ['nullable', 'required_if:fixed_ip,1', 'ip', 'unique:endpoint,ip,'.$id.',id,deleted_at,NULL'],
         ];
+
+        // Note: For IPv4 this is removed in EndpointController.php
+        // Note: Don't touch this until the functionality changes as it's more complex than you expect at first
+        if ($modem && $modem->configfile->device == 'cm') {
+            $rules['mac'][] = 'required';
+        }
 
         return $rules;
     }
