@@ -51,16 +51,13 @@ class Kernel extends ConsoleKernel
         }
 
         // do nothing at unclear states
-
     }
-
 
     /**
      * Run scheduled commands for single and master instances.
      *
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
-     *
      */
     protected function scheduleMain(Schedule $schedule)
     {
@@ -254,7 +251,6 @@ class Kernel extends ConsoleKernel
      *
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
-     *
      */
     protected function scheduleSlave(Schedule $schedule)
     {
@@ -266,7 +262,6 @@ class Kernel extends ConsoleKernel
      *
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
-     *
      */
     protected function scheduleMaster(Schedule $schedule)
     {

@@ -407,8 +407,8 @@ class Modem extends \BaseModel
         if (Module::collections()->has('ProvVoip') && $this->mtas()->pluck('mac')->filter(function ($mac) {
             return stripos($mac, 'ff:') !== 0;
         })->count()) {
-            if(! Module::collections()->has('ProvHA')) {
-                $ret .= ' option ccc.dhcp-server-1 ' . ProvBase::first()->provisioning_server . ';';
+            if (! Module::collections()->has('ProvHA')) {
+                $ret .= ' option ccc.dhcp-server-1 '.ProvBase::first()->provisioning_server.';';
             } else {
                 $provha = \Modules\ProvHA\Entities\ProvHA::first();
                 $master = $provha->master;

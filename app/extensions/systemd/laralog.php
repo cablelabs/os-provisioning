@@ -5,7 +5,8 @@
  *
  * @author Patrick Reichel
  */
-function laralog($msg, $level='INFO') {
+function laralog($msg, $level = 'INFO')
+{
     $logfile = '/var/www/nmsprime/storage/logs/laravel.log';
     $levels = [
         'CRITICAL',
@@ -19,6 +20,7 @@ function laralog($msg, $level='INFO') {
     if (! file_exists($logfile)) {
         syslog(LOG_ERR, $logfile.' does not exist ['.__FILE__.']');
         syslog(LOG_ERR, "Could not log '$msg' of level '$level'");
+
         return;
     }
 
@@ -28,5 +30,4 @@ function laralog($msg, $level='INFO') {
     }
 
     file_put_contents($logfile, '['.date('Y-m-d H:i:s')."] local.$level: $msg\n", FILE_APPEND);
-
 }

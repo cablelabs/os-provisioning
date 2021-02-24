@@ -71,7 +71,7 @@ class CpeHostnameCommand extends Command
                     '--------------------------------------------------------------------------------',
                     date('c'),
                     __METHOD__,
-                    $cmd
+                    $cmd,
                 ];
                 try {
                     file_put_contents($provbase::NSUPDATE_LOGFILE, implode("\n", $log), FILE_APPEND);

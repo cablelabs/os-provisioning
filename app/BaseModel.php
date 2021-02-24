@@ -4,7 +4,6 @@ namespace App;
 
 use DB;
 use Str;
-use Auth;
 use Module;
 use Schema;
 use Session;
@@ -532,7 +531,7 @@ class BaseModel extends Eloquent
      */
     protected function _delete()
     {
-        if (!$this->writeAllowed()) {
+        if (! $this->writeAllowed()) {
             return false;
         }
         if ($this->force_delete) {
@@ -553,7 +552,7 @@ class BaseModel extends Eloquent
      */
     public function delete()
     {
-        if (!$this->writeAllowed()) {
+        if (! $this->writeAllowed()) {
             return false;
         }
         if ($this->delete_children) {
@@ -606,7 +605,7 @@ class BaseModel extends Eloquent
 
     public static function destroy($ids)
     {
-        if (!$this->writeAllowed()) {
+        if (! $this->writeAllowed()) {
             return false;
         }
         $instance = new static;
@@ -758,6 +757,7 @@ class BaseModel extends Eloquent
                 $msg = trans('provha::messages.db_change_forbidden_not_master', ['state' => config('provha.hostinfo.ownState')]);
                 $this->addAboveMessage($msg, 'error');
                 \Log::error('Slave tried to write do database in '.(get_class($this)).'::'.(debug_backtrace()[1]['function']).'()');
+
                 return false;
             }
         }
@@ -773,9 +773,10 @@ class BaseModel extends Eloquent
      */
     public function save(array $options = [])
     {
-        if (!$this->writeAllowed()) {
+        if (! $this->writeAllowed()) {
             return false;
         }
+
         return parent::save($options);
     }
 
@@ -786,9 +787,10 @@ class BaseModel extends Eloquent
      */
     public function forceDelete()
     {
-        if (!$this->writeAllowed()) {
+        if (! $this->writeAllowed()) {
             return false;
         }
+
         return parent::forceDelete();
     }
 
@@ -799,9 +801,10 @@ class BaseModel extends Eloquent
      */
     public function update(array $attributes = [], array $options = [])
     {
-        if (!$this->writeAllowed()) {
+        if (! $this->writeAllowed()) {
             return false;
         }
+
         return parent::update($attributes, $options);
     }
 }

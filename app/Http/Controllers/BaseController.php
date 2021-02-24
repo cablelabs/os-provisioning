@@ -236,8 +236,7 @@ class BaseController extends Controller
             // this is e.g. the case for the active checkbox on ProvVoip\Phonenumber
             // the value in $_POST seems to be browser dependend – extend the array if needed
             if (
-                ($field['form_type'] == 'checkbox')
-                &&
+                ($field['form_type'] == 'checkbox') &&
                 (in_array(Str::lower($data[$field['name']]), ['on', 'checked']))
             ) {
                 $data['active'] = '1';

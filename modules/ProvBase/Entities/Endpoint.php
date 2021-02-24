@@ -208,7 +208,7 @@ class Endpoint extends \BaseModel
                 '--------------------------------------------------------------------------------',
                 date('c'),
                 __METHOD__,
-                $server_cmd
+                $server_cmd,
             ];
             try {
                 file_put_contents($provbase::NSUPDATE_LOGFILE, implode("\n", $log), FILE_APPEND);

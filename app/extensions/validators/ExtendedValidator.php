@@ -53,7 +53,6 @@ class ExtendedValidator
         return boolval(filter_var($value, FILTER_VALIDATE_MAC));
     }
 
-
     /**
      * Check if ip ($value) is inside the ip range of a net
      *
@@ -465,14 +464,12 @@ class ExtendedValidator
         return false;
     }
 
-
     public function validateEmpty($attribute, $value, $parameters)
     {
         // d($value, $attribute, $parameters, $this->getValue($parameters[0]));
 
         return $value ? false : true;
     }
-
 
     /**
      * Checks if given string is IPv4 address
@@ -485,7 +482,6 @@ class ExtendedValidator
         return boolval(filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4));
     }
 
-
     /**
      * Checks if given string is IPv6 address
      * Only used as helper – use laravel rule “ipv6” instead
@@ -497,7 +493,6 @@ class ExtendedValidator
         return boolval(filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6));
     }
 
-
     /**
      * Checks if given string is either IPv4 or IPv6 address
      * Only used as helper – use laravel rule “ip” instead
@@ -506,13 +501,10 @@ class ExtendedValidator
      */
     protected function validateIP4Or6Address($attribute, $value, $parameters)
     {
-        return (
-            $this->validateIPv4Address($attribute, $value, $parameters)
-            ||
-            $this->validateIPv6Address($attribute, $value, $parameters)
-        );
+        return
+            $this->validateIPv4Address($attribute, $value, $parameters) ||
+            $this->validateIPv6Address($attribute, $value, $parameters);
     }
-
 
     /**
      * Checks if given string is hostname OR IP address
@@ -521,15 +513,11 @@ class ExtendedValidator
      */
     public function validateHostnameOrIp($attribute, $value, $parameters)
     {
-        return (
-            $this->validateHostname($attribute, $value, $parameters)
-            ||
-            $this->validateIPv4Address($attribute, $value, $parameters)
-            ||
-            $this->validateIPv6Address($attribute, $value, $parameters)
-        );
+        return
+            $this->validateHostname($attribute, $value, $parameters) ||
+            $this->validateIPv4Address($attribute, $value, $parameters) ||
+            $this->validateIPv6Address($attribute, $value, $parameters);
     }
-
 
     /**
      * Checks if given string is a hostname
@@ -545,7 +533,6 @@ class ExtendedValidator
 
         return boolval(filter_var($value, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME));
     }
-
 
     /**
      * Checks if given string is hostname OR IP address
@@ -563,5 +550,4 @@ class ExtendedValidator
 
         return true;
     }
-
 }

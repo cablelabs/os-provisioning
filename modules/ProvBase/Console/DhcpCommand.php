@@ -73,8 +73,7 @@ class DhcpCommand extends Command
 
         // check if we have to build failover conf
         if (
-            (\Module::collections()->has('ProvHA'))
-            &&
+            (\Module::collections()->has('ProvHA')) &&
             // check if master or slave
             (in_array(config('provha.hostinfo.ownState'), ['master', 'slave']))
         ) {

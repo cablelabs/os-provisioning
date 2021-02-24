@@ -128,7 +128,6 @@ class ProvBase extends \BaseModel
      */
     public function getDHCPOptionVivso2($ips)
     {
-
         $hex_ips = [];
         foreach ($ips as $ip) {
             $ip_split = explode('.', $ip);
@@ -265,7 +264,7 @@ class ProvBase extends \BaseModel
     public function makeNamedConf($password)
     {
         $password = str_replace('/', '\/', $password);
-        $success = True;
+        $success = true;
 
         $sed = storage_path('app/tmp/update-domain.sed');   // use the “wrong” filename until it is clear how to update sudoers file in “yum update”…
         $old = 'key dhcpupdate {[^}]*}';
@@ -284,7 +283,7 @@ class ProvBase extends \BaseModel
             \Session::push('tmp_error_above_form', $msg);
             \Log::critical($msg);
 
-            return False;
+            return false;
         }
 
         exec('sudo systemctl restart named.service &', $out, $ret);
@@ -295,11 +294,11 @@ class ProvBase extends \BaseModel
             \Session::push('tmp_error_above_form', $msg);
             \Log::critical($msg);
 
-            return False;
+            return false;
         }
 
         // all went fine
-        return True;
+        return true;
     }
 
     /**
@@ -314,6 +313,7 @@ class ProvBase extends \BaseModel
             $old_conf = file_get_contents($dhcp_conf_file);
         } catch (\Exception $ex) {
             \Log::error('Exception in '.$ex->getFile().', line '.$ex->getLine().': '.$ex->getMessage());
+
             return false;
         }
 
@@ -326,6 +326,7 @@ class ProvBase extends \BaseModel
                 \Log::info('Changed dhcp update key in '.$dhcp_conf_file);
             } catch (\Exception $ex) {
                 \Log::error('Exception in '.$ex->getFile().', line '.$ex->getLine().': '.$ex->getMessage());
+
                 return false;
             }
         }
@@ -346,6 +347,7 @@ class ProvBase extends \BaseModel
             $old_script = file_get_contents($script_file);
         } catch (\Exception $ex) {
             \Log::error('Exception in '.$ex->getFile().', line '.$ex->getLine().': '.$ex->getMessage());
+
             return false;
         }
 
@@ -381,14 +383,13 @@ class ProvBase extends \BaseModel
         ];
 
         $servers = [
-            '127.0.0.1' => $password    // nsupdate does not accept „localhost“ (“response to SOA query was unsuccessful”)!
+            '127.0.0.1' => $password,    // nsupdate does not accept „localhost“ (“response to SOA query was unsuccessful”)!
         ];
         if (! is_null($this->provha)) {
             $servers[$this->provhaPeerIp] = $this->provhaPeerDnsPw;
         }
 
         foreach ($servers as $server=>$pw) {
-
             $update = [
                 'if [ "$3" -ne 0 ]',
                 'then',
@@ -414,7 +415,7 @@ class ProvBase extends \BaseModel
                 '',
             ];
             $lines = array_merge($lines, $update);
-        };
+        }
 
         $new_script = implode("\n", $lines);
 
@@ -424,12 +425,12 @@ class ProvBase extends \BaseModel
                 \Log::info('Changed '.$script_file);
             } catch (\Exception $ex) {
                 \Log::error('Exception in '.$ex->getFile().', line '.$ex->getLine().': '.$ex->getMessage());
+
                 return false;
             }
         }
 
         return true;
-
     }
 
     /**

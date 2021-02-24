@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Modules\ProvBase\Entities\ProvBase;
+use Illuminate\Database\Schema\Blueprint;
 
 class UpdateProvmonStoreDnsKey extends BaseMigration
 {
@@ -28,8 +28,7 @@ class UpdateProvmonStoreDnsKey extends BaseMigration
 
         // or create a new one
         if (
-            (substr($dns_password, -1) != '=')
-            &&
+            (substr($dns_password, -1) != '=') &&
             (preg_match('/secret "?(.*)"?;/', shell_exec('ddns-confgen -a hmac-md5 -r /dev/urandom | grep secret'), $matches))
         ) {
             $dns_password = str_replace('"', '', $matches[1]);
@@ -49,7 +48,6 @@ class UpdateProvmonStoreDnsKey extends BaseMigration
         $conf = file_get_contents('/etc/nmsprime/env/global.env');
         $conf = preg_replace('/\nDNS_PASSWORD=.*$/m', '', $conf);
         file_put_contents('/etc/nmsprime/env/global.env', $conf);
-
     }
 
     /**

@@ -2,8 +2,7 @@
 /**
  * Restarts the dhcpd server after checking for correct syntax of the config
  */
-
-require_once('/var/www/nmsprime/app/extensions/systemd/laralog.php');
+require_once '/var/www/nmsprime/app/extensions/systemd/laralog.php';
 
 // check config
 exec('dhcpd -t -cf /etc/dhcp-nmsprime/dhcpd.conf &>/dev/null', $out, $ret);
