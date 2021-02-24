@@ -13186,6 +13186,7 @@ Gebärdensprachschule
 Gebauchtwarenhandel
 Gebäude-Energieberater (HWK)
 Gebäude-Energieberaterin (HWK)
+Gebäudeautomation
 Gebäudeautomatisierung
 Gebäudebetreuung
 Gebäudebetreuungssysteme
@@ -21337,6 +21338,7 @@ Labordienstleistungen
 Laborfachhandel
 Laborgerätebau
 Laborgerätevertrieb
+Laborgroßhandel
 Laborhandel
 Labormedizinischer Kurierdienst
 Labormeßtechnik
@@ -31860,6 +31862,7 @@ Schreinerei für Naturholzmöbel
 Schreinerei für Treppenbau
 Schreinereiarbeiten
 Schreinereiausstellung
+Schreinereibedarf
 Schreinereibetrieb
 Schreinereifachbetrieb
 Schreinereiinnenausbau
@@ -35127,6 +35130,7 @@ Tankzugreinigungsanlagen
 Tannengroßhandel
 Tannengrünversand
 Tannenhofplantagen
+Tantra Massage
 Tantramassage für Frauen
 Tantramassagen
 Tantramasseur
