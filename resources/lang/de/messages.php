@@ -221,6 +221,7 @@ return [
     'Ccc'                       => 'CCC Konfiguration',
     'HfcBase'                   => 'Detect Konfiguration',
     'ProvBase'                  => 'ProvBase Konfiguration',
+    'ProvHA'                    => 'ProvHA Konfiguration',
     'ProvVoip'                  => 'ProvVoip Konfiguration',
     'ProvVoipEnvia'             => 'ProvVoipEnvia Konfiguration',
     'ProvMon'                   => 'Monitoring Konfiguration',
