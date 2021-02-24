@@ -246,5 +246,4 @@ return [
     |
     */
     'googleApiKey' => env('GOOGLE_API_KEY'),
-    'apiThrottle' => env('API_THROTTLE', '180,1'),
 ];
