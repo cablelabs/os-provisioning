@@ -505,6 +505,7 @@ class BaseController extends Controller
         $a['third_button_title_key'] = $this->third_button_title_key;
         $a['save_button_title_key'] = $this->save_button_title_key;
         $a['printButton'] = $this->printButton;
+        $a['nmsprimeLogoLink'] = Module::collections()->has('Dashboard') ? route('Dashboard.index') : '';
 
         // Get Framework Informations
         $gc = \Cache::remember('GlobalConfig', now()->addHour(), function () {
