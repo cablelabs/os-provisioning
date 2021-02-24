@@ -4,18 +4,18 @@ source scl_source enable rh-php73
 cd '/var/www/nmsprime'
 
 # Run artisan commands only after all installed NMSPrime modules have been upgraded
-tmpFile='/tmp/nmsprime-packages'$(date +%s)
+tmpFile="$(mktemp)"
 lastModule=1
 rpm -qa nmsprime-* --queryformat '%{NAME}-%{VERSION}-%{RELEASE}\n' | sort > $tmpFile
 
 # Get packages that not have been updated yet
-packages=$(cut -d '-' -f1,2 $tmpFile | uniq -c | grep 1 | cut -d '1' -f2 | sed 's/^ *//')
+read -r -a packages <<< $(cut -d '-' -f1,2 $tmpFile | uniq -c | grep 1 | cut -d '1' -f2 | sed 's/^ *//')
 
 # Check if all packages have the newest version (also new manually installed packages)
-if [[ $packages ]]; then
+if [ ${#packages[*]} -ne 0 ]; then
     newVersion=$(grep "nmsprime-base" $tmpFile | cut -d'-' -f3 | tail -1)
 
-    for package in $packages; do
+    for package in ${packages[*]}; do
         packageVersion=$(grep $package $tmpFile | cut -d'-' -f3 | tail -1)
         # echo "$package - new Version: $newVersion - package Version: $packageVersion"
 
