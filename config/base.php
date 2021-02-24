@@ -17,14 +17,4 @@ $config = [
 
 ];
 
-$modulesListFile = '/var/www/nmsprime/modules_statuses.json';
-if (! is_file($modulesListFile)) {
-    return $config;
-}
-
-$modulesList = json_decode(file_get_contents($modulesListFile));
-if (isset($modulesList->Dashboard) && $modulesList->Dashboard) {
-    $config['link'] = 'Dashboard.index';
-}
-
 return $config;
