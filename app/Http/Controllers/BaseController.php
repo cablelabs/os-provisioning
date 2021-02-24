@@ -6,6 +6,7 @@ use Log;
 use Str;
 use Auth;
 use View;
+use Module;
 use Bouncer;
 use Request;
 use Session;
@@ -168,7 +169,7 @@ class BaseController extends Controller
 
     public static function get_config_modules()
     {
-        $modules = \Module::allEnabled();
+        $modules = Module::allEnabled();
         $links = ['Global Config' => 'GlobalConfig'];
 
         foreach ($modules as $module) {
@@ -364,7 +365,7 @@ class BaseController extends Controller
         // place filename as chosen value in Input field
         Request::merge([$base_field => $filename]);
 
-        if (\Module::collections()->has('ProvBase') && $base_field == 'firmware' && Request::get('device') == 'tr069') {
+        if (Module::collections()->has('ProvBase') && $base_field == 'firmware' && Request::get('device') == 'tr069') {
             // file upload using curl_file_create and method PUT adds headers
             // Content-Disposition, Content-Type and boundaries, which corrupts
             // the file to be uploaded, thus call curl from command line
@@ -423,7 +424,7 @@ class BaseController extends Controller
 
         if (! isset($a['networks'])) {
             $a['networks'] = [];
-            if (\Module::collections()->has('HfcReq') && Bouncer::can('view', \Modules\HfcBase\Entities\TreeErd::class)) {
+            if (Module::collections()->has('HfcReq') && Bouncer::can('view', \Modules\HfcBase\Entities\TreeErd::class)) {
                 $a['networks'] = \Modules\HfcReq\Entities\NetElement::getNetsWithClusters();
             }
         }
@@ -480,11 +481,11 @@ class BaseController extends Controller
             $a['html_title'] = 'NMS Prime - '.BaseViewController::translate_view(NamespaceController::module_get_pure_model_name(), 'Header');
         }
 
-        if ((\Module::collections()->has('ProvVoipEnvia')) && (! isset($a['envia_interactioncount']))) {
+        if ((Module::collections()->has('ProvVoipEnvia')) && (! isset($a['envia_interactioncount']))) {
             $a['envia_interactioncount'] = \Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
         }
 
-        if (\Module::collections()->has('Dashboard')) {
+        if (Module::collections()->has('Dashboard')) {
             $a['modem_statistics'] = \Modules\Dashboard\Http\Controllers\DashboardController::get_modem_statistics();
         }
 
