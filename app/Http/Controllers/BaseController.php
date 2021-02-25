@@ -670,7 +670,7 @@ class BaseController extends Controller
      */
     protected function _add_empty_first_element_to_options($options, $first_value = '')
     {
-        $ret = [0 => $first_value];
+        $ret = [null => $first_value];
 
         foreach ($options as $key => $value) {
             $ret[$key] = $value;
