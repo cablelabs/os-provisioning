@@ -9,6 +9,14 @@ class Endpoint extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'endpoint';
 
+    /**
+     * This ruleset is currently very complex and extended in EndpointController.php - please checkout the
+     * documentation under https://devel.roetzer-engineering.com/confluence/display/LAR/Varieties+of+creating+endpoints
+     * if you want to change anything here
+     *
+     * @author Nino Ryschawy
+     * @return array
+     */
     public function rules()
     {
         $id = $this->id;
@@ -24,10 +32,15 @@ class Endpoint extends \BaseModel
             'ip' => ['nullable', 'required_if:fixed_ip,1', 'ip', 'unique:endpoint,ip,'.$id.',id,deleted_at,NULL'],
         ];
 
-        // Note: For IPv4 this is removed in EndpointController.php
-        // Note: Don't touch this until the functionality changes as it's more complex than you expect at first
-        if ($modem && $modem->configfile->device == 'cm') {
-            $rules['mac'][] = 'required';
+        if ($modem) {
+            if ($modem->configfile->device == 'cm') {
+                // Note: For IPv4 this is removed in EndpointController.php
+                $rules['mac'][] = 'required';
+            } else {
+                $rules['fixed_ip'][] = 'In:1';
+                $rules['ip'][] = 'required';
+                array_unshift($rules['ip'], 'ipv4');
+            }
         }
 
         return $rules;

@@ -25,7 +25,6 @@ class EndpointController extends \BaseController
             ['form_type' => 'text', 'name' => 'prefix', 'description' => trans('messages.prefix').' (IPv6)', 'checkbox' => 'show_on_fixed_ip', 'options' => ['placeholder' => 'fd00:1::/64']],
             ['form_type' => 'text', 'name' => 'add_reverse', 'description' => 'Additional rDNS record', 'checkbox' => 'show_on_fixed_ip', 'help' => trans('helper.addReverse')],
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
-
         ];
     }
 
@@ -48,8 +47,8 @@ class EndpointController extends \BaseController
     {
         if ($data['version'] == '6') {
             $rules['prefix'][] = 'required';
-        } else {
-            if (array_key_exists('mac', $rules)) {
+        } elseif ($data['ip']) {
+            if (array_key_exists('mac', $rules) && in_array('required', $rules['mac'])) {
                 unset($rules['mac'][array_search('required', $rules['mac'])]);
             }
         }
