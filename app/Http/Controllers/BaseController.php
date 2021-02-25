@@ -6,7 +6,6 @@ use Log;
 use Str;
 use Auth;
 use View;
-use Module;
 use Bouncer;
 use Request;
 use Session;
@@ -19,6 +18,7 @@ use Monolog\Logger;
 use App\GlobalConfig;
 use App\V1\Repository;
 use Yajra\DataTables\DataTables;
+use Nwidart\Modules\Facades\Module;
 
 /*
  * BaseController: The Basic Controller in our MVC design.
