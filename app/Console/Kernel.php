@@ -177,7 +177,8 @@ class Kernel extends ConsoleKernel
             })->hourly();
 
             // Modem Positioning System
-            $schedule->command('nms:mps')->daily();
+            // TODO: this can be removed in nmsprime > 2.6.0
+            $schedule->command('nms:mps')->dailyAt('00:23');
         }
 
         if (\Module::collections()->has('ProvMon')) {
