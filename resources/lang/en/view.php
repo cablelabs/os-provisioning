@@ -127,16 +127,17 @@ return [
     'Header_Global Configurations' => 'System Configurations',
     'Header_Global Config'      => 'Global Config|Global Configs',
     'Header_EditGlobal Config'  => 'Edit Global Config',
-    'Header_Billing Config'     => 'Modul Configuration for Billing',
-    'Header_EditBilling Config' => 'Edit Modul Configuration for Billing',
-    'Header_ProvVoip'           => 'Modul Configuration for VOIP',
-    'Header_EditProvVoip Config'=> 'Edit Modul Configuration for VOIP',
-    'Header_Ccc Config'         => 'Modul Configuration for Kundenkontrollzentrum',
-    'Header_EditCcc Config'     => 'Edit Modul Configuration for Kundenkontrollzentrum',
-    'Header_Prov Base'          => 'Modul Configuration for Provisioning',
-    'Header_EditProv Base Config'=> 'Edit Modul Configuration for Provisioning',
-    'Header_HfcBase'            => 'Modul Configuration for Detect',
-    'Header_EditHfc Base Config'=> 'Edit Modul Configuration for Detect',
+    'Header_Billing Config'     => 'Module Configuration for Billing',
+    'Header_EditBilling Config' => 'Edit Module Configuration for Billing',
+    'Header_ProvVoip'           => 'Module Configuration for VOIP',
+    'Header_EditProvVoip Config'=> 'Edit Module Configuration for VOIP',
+    'Header_Ccc Config'         => 'Module Configuration for Kundenkontrollzentrum',
+    'Header_EditCcc Config'     => 'Edit Module Configuration for Kundenkontrollzentrum',
+    'Header_Prov Base'          => 'Module Configuration for Provisioning',
+    'Header_EditProv Base Config'=> 'Edit Module Configuration for Provisioning',
+    'Header_HfcBase'            => 'Module Configuration for Detect',
+    'Header_HfcBase'            => 'Module Configuration for Detect',
+    'Header_EditHfc Base Config'=> 'Edit Module Configuration for Detect',
     'Header_CostCenter'         => 'Cost Center|Cost Centers', //Workaround decide which one to use
     'Header_Cost Center'        => 'Cost Center|Cost Centers',
     'Header_EditCost Center'    => 'Edit Cost Center',
@@ -152,7 +153,7 @@ return [
     'Header_Numberranges'        => 'Numberranges',
     'Header_Files'              => 'Files',
     'Header_SepaAccount'        => 'SEPA-Accounts',
-    //SNMP Modul
+    //SNMP Module
     //Device
     'Header_Device'             => 'Device|Devices',
     'Header_EditDevice'         => 'Edit Device',
@@ -295,7 +296,7 @@ return [
     'Button_Create NetElement'     => 'Create NetElement',
     'Button_Create MibFile'     => 'Create Mib-File',
     'Button_Create OID'             => 'Create OID',
-    //SNMP Modul
+    //SNMP Module
     //Device
     'Button_Create Device'          => 'Create Device',
     //Device Type
