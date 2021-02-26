@@ -136,7 +136,8 @@ class NetElement extends \BaseModel
             }
         }
 
-        if (! array_key_exists('icingaObject', $this->relations) && ! \Modules\HfcBase\Entities\IcingaObject::db_exists()) {
+        if (! Module::collections()->has('HfcBase') || (! array_key_exists('icingaObject', $this->relations) &&
+            ! \Modules\HfcBase\Entities\IcingaObject::db_exists())) {
             return 'warning';
         }
 
@@ -161,7 +162,7 @@ class NetElement extends \BaseModel
     {
         $ret = new \Illuminate\Database\Eloquent\Collection([$this->netelementtype]);
 
-        if ($this->apartment) {
+        if (Module::collections()->has('PropertyManagement') && $this->apartment) {
             $ret->add($this->apartment);
         }
 
@@ -750,7 +751,7 @@ class NetElement extends \BaseModel
 
         $tabs = [['name' => 'Edit', 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
 
-        if (in_array($type, [1, 2, 8])) {
+        if (Module::collections()->has('HfcBase') && in_array($type, [1, 2, 8])) {
             $sqlCol = $type == 8 ? 'parent_id' : $this->netelementtype->name;
 
             array_push($tabs,
