@@ -664,7 +664,7 @@ return [
         ],
     ],
     'modem' => [
-        'missingProvMon' => 'ProvMon module is missing',
+        'missingProvMon' => 'Prime Monitoring is missing.',
     ],
     'Modem'                         => 'Modem',
     'PhonenumberManagement'         => 'Phonenumber Management',

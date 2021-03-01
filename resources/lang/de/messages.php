@@ -664,7 +664,7 @@ return [
         ],
     ],
     'modem' => [
-        'missingProvMon' => 'ProvMon Modul fehlt',
+        'missingProvMon' => 'Prime Monitoring ist nicht installiert/aktiviert.',
     ],
     'Modem'                         => 'Modem',
     'PhonenumberManagement'         => 'Nummernverwaltung',
