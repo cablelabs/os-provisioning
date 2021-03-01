@@ -48,4 +48,10 @@ BaseRoute::group([], function () {
             'middleware' => ['api', 'can:update,Modules\ProvBase\Entities\Modem'],
         ]);
     });
+
+    BaseRoute::get('modem/missingProvMon', [
+        'as' => 'Modem.missingProvMon',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@missingProvMon',
+        'middleware' => ['can:view,Modules\ProvBase\Entities\Modem'],
+    ]);
 });

@@ -451,6 +451,7 @@ return [
     'error_specify_id'          => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
     'error_ticket_settings'     => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
 
+    'analysis' => 'Analyse',
     'Assign' => ':model hinzufügen',
     'BillingBase' => 'Billing',
     'Ccc' => 'Kundenkontrollzentrum',

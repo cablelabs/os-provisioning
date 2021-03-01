@@ -53,7 +53,9 @@ class Kernel extends ConsoleKernel
         $schedule->call('\App\GuiLog@cleanup')->weekly();
 
         // Parse News from repo server and save to local JSON file
-        $schedule->call('\Modules\Dashboard\Http\Controllers\DashboardController@newsLoadToFile')->hourly();
+        if (\Module::collections()->has('Dashboard')) {
+            $schedule->call('\Modules\Dashboard\Http\Controllers\DashboardController@newsLoadToFile')->hourly();
+        }
 
         // Command to remove obsolete data in storage
         $schedule->command('main:storage_cleaner')->dailyAt('04:18');
@@ -157,11 +159,12 @@ class Kernel extends ConsoleKernel
         // Automatic Power Control based on measured SNR
         if (\Module::collections()->has('HfcReq')) {
             $schedule->command('nms:agc')->everyMinute();
-            $schedule->command('nms:icingadata')->cron('4-59/5 * * * *');
         }
 
         // Clean Up of HFC Base
         if (\Module::collections()->has('HfcBase')) {
+            $schedule->command('nms:icingadata')->cron('4-59/5 * * * *');
+
             // Rebuid all Configfiles
             $schedule->call(function () {
                 \Storage::deleteDirectory(\Modules\HfcBase\Http\Controllers\TreeTopographyController::$path_rel);

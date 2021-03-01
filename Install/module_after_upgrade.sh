@@ -3,28 +3,49 @@ source scl_source enable rh-php73
 
 cd '/var/www/nmsprime'
 
-# run artisan commands only after the last module has been upgraded
-# TODO: if a new nmsprime- package is installed as a dependency
-#       the migration may not run for the last, but next to last package
-if [ $(rpm -qa nmsprime-* --queryformat '%{VERSION}-%{RELEASE}\n' | sort | uniq -c | awk '{print $1}' | sort -u | wc -l) -eq 1 ]; then
-  rm -f /var/www/nmsprime/config/excel.php
-  rm -rf /var/www/nmsprime/bootstrap/cache/*
-  /opt/rh/rh-php73/root/usr/bin/php artisan config:cache
-  /opt/rh/rh-php73/root/usr/bin/php artisan clear-compiled
-  /opt/rh/rh-php73/root/usr/bin/php artisan optimize
-  /opt/rh/rh-php73/root/usr/bin/php artisan migrate
-  /opt/rh/rh-php73/root/usr/bin/php artisan module:migrate
-  /opt/rh/rh-php73/root/usr/bin/php artisan module:publish
-  #/opt/rh/rh-php73/root/usr/bin/php artisan queue:restart
-  pkill -f "artisan queue:work"
-  /opt/rh/rh-php73/root/usr/bin/php artisan bouncer:clean
-  /opt/rh/rh-php73/root/usr/bin/php artisan auth:nms
-  /opt/rh/rh-php73/root/usr/bin/php artisan route:cache
-  /opt/rh/rh-php73/root/usr/bin/php artisan view:clear
+# Run artisan commands only after all installed NMSPrime modules have been upgraded
+tmpFile="$(mktemp)"
+lastModule=1
+rpm -qa nmsprime-* --queryformat '%{NAME}-%{VERSION}-%{RELEASE}\n' | sort > $tmpFile
+
+# Get packages that not have been updated yet
+read -r -a packages <<< $(cut -d '-' -f1,2 $tmpFile | uniq -c | grep 1 | cut -d '1' -f2 | sed 's/^ *//')
+
+# Check if all packages have the newest version (also new manually installed packages)
+if [ ${#packages[@]} -ne 0 ]; then
+    newVersion=$(grep "nmsprime-base" $tmpFile | cut -d'-' -f3 | tail -1)
+
+    for package in ${packages[@]}; do
+        packageVersion=$(grep $package $tmpFile | cut -d'-' -f3 | tail -1)
+        # echo "$package - new Version: $newVersion - package Version: $packageVersion"
+
+        if [ "$packageVersion" != "$newVersion" ]; then
+            lastModule=0
+        fi
+    done
+fi
+
+# Migrate when all modules are upgraded
+if [ $lastModule -eq 1 ]; then
+    rm -f /var/www/nmsprime/config/excel.php
+    rm -rf /var/www/nmsprime/bootstrap/cache/*
+    /opt/rh/rh-php73/root/usr/bin/php artisan config:cache
+    /opt/rh/rh-php73/root/usr/bin/php artisan clear-compiled
+    /opt/rh/rh-php73/root/usr/bin/php artisan optimize
+    /opt/rh/rh-php73/root/usr/bin/php artisan migrate
+    /opt/rh/rh-php73/root/usr/bin/php artisan module:migrate
+    /opt/rh/rh-php73/root/usr/bin/php artisan module:publish
+    #/opt/rh/rh-php73/root/usr/bin/php artisan queue:restart
+    pkill -f "artisan queue:work"
+    /opt/rh/rh-php73/root/usr/bin/php artisan bouncer:clean
+    /opt/rh/rh-php73/root/usr/bin/php artisan auth:nms
+    /opt/rh/rh-php73/root/usr/bin/php artisan route:cache
+    /opt/rh/rh-php73/root/usr/bin/php artisan view:clear
 fi
 
 systemctl reload httpd
 
+rm -f $tmpFile
 rm -f storage/framework/sessions/*
 chown -R apache storage bootstrap/cache /var/log/nmsprime
 chown -R apache:dhcpd /etc/dhcp-nmsprime

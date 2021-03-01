@@ -180,7 +180,6 @@ class PhonenumberController extends \BaseController
      */
     public function prepare_rules($rules, $data)
     {
-
         // check if there is an phonenumber id (= updating), else set to -1 (a not used database id)
         $id = $rules['id'];
         if (! $id) {
@@ -195,12 +194,6 @@ class PhonenumberController extends \BaseController
 
         // a phonenumber can only exist once for the same country_code/prefix_number combination
         $rules['number'][] = 'unique:phonenumber,number,'.$id.',id,deleted_at,NULL,country_code,'.$data['country_code'].',prefix_number,'.$data['prefix_number'];
-
-        if (! \Module::collections()->has('ProvVoipEnvia')) {
-            foreach (['username', 'sipdomain'] as $param) {
-                $rules[$param][] = 'required';
-            }
-        }
 
         return parent::prepare_rules($rules, $data);
     }

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -9,7 +10,26 @@ use Illuminate\Support\Facades\Log;
  */
 function d()
 {
-    ddd(...func_get_args());
+    $args = func_get_args();
+
+    // write meta information about the caller
+    $td = '<td style="font-size: 11px; font-family:monospace; color:#444">';
+    $bt = debug_backtrace();
+    echo '<table>';
+    echo '<tr>';
+    echo $td.'File: </td>';
+    echo $td.Arr::get($bt[0], 'file', 'n/a').', line '.Arr::get($bt[0], 'line', 'n/a').'</td>';
+    echo '</tr>';
+    echo '<tr>';
+    echo $td.'Method: </td>';
+    echo $td.Arr::get($bt[1], 'class', 'n/a').'::'.Arr::get($bt[1], 'function', 'n/a').'()</td>';
+    echo '</tr>';
+    echo '</table>';
+
+    echo '<hr size="1" noshade>';
+
+    // call laravel's dd function and pass all given params
+    call_user_func_array('dd', $args);
 }
 
 /**

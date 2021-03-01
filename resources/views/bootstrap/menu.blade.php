@@ -11,7 +11,7 @@
 
         {{-- NMSPrime Logo with link to global dashboard --}}
         <span class="navbar-brand d-none d-sm-none d-md-block">
-          <a href="{{route('Dashboard.index')}}">
+          {!! '<a'.($nmsprimeLogoLink ? ' href="'.$nmsprimeLogoLink.'">' : '>') !!}
             <img src="{{asset('images/nmsprime-logo.png')}}" style="width:100%; margin-top:-10px; margin-left:5px" class="">
           </a>
         </span>
@@ -142,7 +142,9 @@
           </div>
           <select class="custom-select" id="prefillSearchbar" onchange="getSearchTag();">
             <option selected value="" data-route="{{ route('Base.globalSearch') }}">{{ trans('view.jQuery_All') }}</option>
-            <option value="ip:" data-route="{{ route('Ip.globalSearch') }}">IP</option>
+            @if (Module::collections()->has('ProvMon')) {
+              <option value="ip:" data-route="{{ route('Ip.globalSearch') }}">IP</option>
+            @endif
           </select>
         </div>
         <input id="globalSearch" type="text" name="query" class="form-control navbar" placeholder="{{ \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search') }}">

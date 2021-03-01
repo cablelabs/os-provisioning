@@ -66,8 +66,11 @@ class SupportRequest extends BaseModel
         }
 
         // thumb of modems
-        $modemStatistics = \Modules\Dashboard\Http\Controllers\DashboardController::get_modem_statistics();
-        if (! $modemStatistics) {
+        if (\Module::collections()->has('Dashboard')) {
+            $modemStatistics = \Modules\Dashboard\Http\Controllers\DashboardController::get_modem_statistics();
+        }
+
+        if (! isset($modemStatistics) || ! $modemStatistics) {
             return $out;
         }
 

@@ -9,16 +9,39 @@ class Endpoint extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'endpoint';
 
+    /**
+     * This ruleset is currently very complex and extended in EndpointController.php - please checkout the
+     * documentation under https://devel.roetzer-engineering.com/confluence/display/LAR/Varieties+of+creating+endpoints
+     * if you want to change anything here
+     *
+     * @author Nino Ryschawy
+     * @return array
+     */
     public function rules()
     {
+        $id = $this->id;
+        $modem = $this->exists ? $this->modem : Modem::with('configfile')->find(Request::get('modem_id'));
+
         // Hostname/MAC must be unique only inside all ipv4 or ipv6 endpoints - on creation it must be compared to version=NULL to work
         $versionFilter = ',version,'.($this->version ?: 'NULL');
 
         $rules = [
-            'mac' => ['nullable', 'mac', "unique:endpoint,mac,{$this->id},id,deleted_at,NULL{$versionFilter}"],
-            'hostname' => ['required', 'regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/', "unique:endpoint,hostname,{$this->id},id,deleted_at,NULL{$versionFilter}"],
-            'ip' => ['nullable', 'required_if:fixed_ip,1', 'ip', "unique:endpoint,ip,{$this->id},id,deleted_at,NULL"],
+            'mac' => ['nullable', 'mac', 'unique:endpoint,mac,'.$id.',id,deleted_at,NULL'.$versionFilter],
+            'hostname' => ['required', 'regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/',
+                'unique:endpoint,hostname,'.$id.',id,deleted_at,NULL'.$versionFilter, ],
+            'ip' => ['nullable', 'required_if:fixed_ip,1', 'ip', 'unique:endpoint,ip,'.$id.',id,deleted_at,NULL'],
         ];
+
+        if ($modem) {
+            if ($modem->configfile->device == 'cm') {
+                // Note: For IPv4 this is removed in EndpointController.php
+                $rules['mac'][] = 'required';
+            } else {
+                $rules['fixed_ip'][] = 'In:1';
+                $rules['ip'][] = 'required';
+                array_unshift($rules['ip'], 'ipv4');
+            }
+        }
 
         return $rules;
     }

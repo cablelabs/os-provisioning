@@ -18,6 +18,7 @@ use Monolog\Logger;
 use App\GlobalConfig;
 use App\V1\Repository;
 use Yajra\DataTables\DataTables;
+use Nwidart\Modules\Facades\Module;
 
 /*
  * BaseController: The Basic Controller in our MVC design.
@@ -168,7 +169,7 @@ class BaseController extends Controller
 
     public static function get_config_modules()
     {
-        $modules = \Module::allEnabled();
+        $modules = Module::allEnabled();
         $links = ['Global Config' => 'GlobalConfig'];
 
         foreach ($modules as $module) {
@@ -364,7 +365,7 @@ class BaseController extends Controller
         // place filename as chosen value in Input field
         Request::merge([$base_field => $filename]);
 
-        if (\Module::collections()->has('ProvBase') && $base_field == 'firmware' && Request::get('device') == 'tr069') {
+        if (Module::collections()->has('ProvBase') && $base_field == 'firmware' && Request::get('device') == 'tr069') {
             // file upload using curl_file_create and method PUT adds headers
             // Content-Disposition, Content-Type and boundaries, which corrupts
             // the file to be uploaded, thus call curl from command line
@@ -423,7 +424,7 @@ class BaseController extends Controller
 
         if (! isset($a['networks'])) {
             $a['networks'] = [];
-            if (\Module::collections()->has('HfcReq') && Bouncer::can('view', \Modules\HfcBase\Entities\TreeErd::class)) {
+            if (Module::collections()->has('HfcBase') && Bouncer::can('view', \Modules\HfcBase\Entities\TreeErd::class)) {
                 $a['networks'] = \Modules\HfcReq\Entities\NetElement::getNetsWithClusters();
             }
         }
@@ -480,11 +481,11 @@ class BaseController extends Controller
             $a['html_title'] = 'NMS Prime - '.BaseViewController::translate_view(NamespaceController::module_get_pure_model_name(), 'Header');
         }
 
-        if ((\Module::collections()->has('ProvVoipEnvia')) && (! isset($a['envia_interactioncount']))) {
+        if ((Module::collections()->has('ProvVoipEnvia')) && (! isset($a['envia_interactioncount']))) {
             $a['envia_interactioncount'] = \Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
         }
 
-        if (\Module::collections()->has('Dashboard')) {
+        if (Module::collections()->has('Dashboard')) {
             $a['modem_statistics'] = \Modules\Dashboard\Http\Controllers\DashboardController::get_modem_statistics();
         }
 
@@ -504,6 +505,7 @@ class BaseController extends Controller
         $a['third_button_title_key'] = $this->third_button_title_key;
         $a['save_button_title_key'] = $this->save_button_title_key;
         $a['printButton'] = $this->printButton;
+        $a['nmsprimeLogoLink'] = Module::collections()->has('Dashboard') ? route('Dashboard.index') : '';
 
         // Get Framework Informations
         $gc = \Cache::remember('GlobalConfig', now()->addHour(), function () {
@@ -668,7 +670,7 @@ class BaseController extends Controller
      */
     protected function _add_empty_first_element_to_options($options, $first_value = '')
     {
-        $ret = [0 => $first_value];
+        $ret = [null => $first_value];
 
         foreach ($options as $key => $value) {
             $ret[$key] = $value;

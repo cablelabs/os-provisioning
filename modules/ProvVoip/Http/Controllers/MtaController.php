@@ -75,15 +75,7 @@ class MtaController extends \BaseController
 
         $tabs = parent::editTabs($model);
 
-        if (\Module::collections()->has('ProvMon') && \Bouncer::can('view_analysis_pages_of', Modem::class)) {
-            array_push($tabs,
-                ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $model->modem_id],
-                ['name' => 'CPE-Analysis', 'icon' => 'area-chart', 'route' => 'ProvMon.cpe', 'link' => $model->modem_id],
-                ['name' => 'MTA-Analysis', 'icon' => 'area-chart', 'route' => 'ProvMon.mta', 'link' => $model->modem_id]
-            );
-        }
-
-        return $tabs;
+        return array_merge($tabs, $model->modem->analysisTabs());
     }
 
     /**

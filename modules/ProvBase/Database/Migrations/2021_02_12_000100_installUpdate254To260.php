@@ -17,6 +17,8 @@ class InstallUpdate254To260 extends BaseMigration
         exec('systemctl restart genieacs-{cwmp,fs,nbi,ui}');
         exec('systemctl restart httpd');
 
+        \Artisan::call('nms:radgroupreply-repopulate');
+
         exec('rm -f storage/framework/sessions/*');
     }
 
