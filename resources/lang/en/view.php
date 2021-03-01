@@ -135,7 +135,7 @@ return [
     'Header_EditCcc Config'     => 'Edit Module Configuration for Kundenkontrollzentrum',
     'Header_Prov Base'          => 'Module Configuration for Provisioning',
     'Header_EditProv Base Config'=> 'Edit Module Configuration for Provisioning',
-    'Header_HfcBase'            => 'Module Configuration for Detect',
+    'Header_HfcReq'             => 'Module Configuration HFC Controlling',
     'Header_HfcBase'            => 'Module Configuration for Detect',
     'Header_EditHfc Base Config'=> 'Edit Module Configuration for Detect',
     'Header_CostCenter'         => 'Cost Center|Cost Centers', //Workaround decide which one to use

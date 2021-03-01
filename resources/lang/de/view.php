@@ -135,6 +135,7 @@ return [
     'Header_EditCcc Config'     => 'Einstellungen für das Kundenkontrollzentrum bearbeiten',
     'Header_Prov Base'          => 'Einstellungen für das Provisionierungsmodul',
     'Header_EditProv Base Config'=> 'Einstellungen für das Provisionierungsmodul bearbeiten',
+    'Header_HfcReq'             => 'Einstellungen für das HFC Modul',
     'Header_HfcBase'            => 'Einstellungen für das Detect Modul',
     'Header_EditHfc Base Config'=> 'Einstellungen für das Detect Modul bearbeiten',
     'Header_CostCenter'         => 'Kostenstelle|Kostenstellen', //Workaround decide which one to use
