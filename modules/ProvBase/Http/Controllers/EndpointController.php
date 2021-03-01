@@ -47,10 +47,8 @@ class EndpointController extends \BaseController
     {
         if ($data['version'] == '6') {
             $rules['prefix'][] = 'required';
-        } elseif ($data['ip']) {
-            if (array_key_exists('mac', $rules) && in_array('required', $rules['mac'])) {
-                unset($rules['mac'][array_search('required', $rules['mac'])]);
-            }
+        } elseif ($data['ip'] && array_key_exists('mac', $rules) && in_array('required', $rules['mac'])) {
+            unset($rules['mac'][array_search('required', $rules['mac'])]);
         }
 
         return parent::prepare_rules($rules, $data);
