@@ -12,7 +12,7 @@ BaseRoute::group([], function () {
         Route::get('Mta/{Mta}/restart', [
             'as' => 'Mta.api_restart',
             'uses' => 'Modules\ProvVoip\Http\Controllers\MtaController@api_restart',
-            'middleware' => ['api', 'auth.basic', 'can:update,Modules\ProvVoip\Entities\Mta'],
+            'middleware' => ['api', 'can:update,Modules\ProvVoip\Entities\Mta'],
         ]);
     });
 });

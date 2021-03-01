@@ -45,7 +45,7 @@ BaseRoute::group([], function () {
         Route::get('Modem/{Modem}/restart', [
             'as' => 'Modem.api_restart',
             'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@api_restart',
-            'middleware' => ['api', 'auth.basic', 'can:update,Modules\ProvBase\Entities\Modem'],
+            'middleware' => ['api', 'can:update,Modules\ProvBase\Entities\Modem'],
         ]);
     });
 });
