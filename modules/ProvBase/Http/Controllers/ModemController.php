@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use View;
 use App\Sla;
 use Bouncer;
 use Request;
@@ -212,26 +213,26 @@ class ModemController extends \BaseController
      */
     protected function editTabs($model)
     {
-        // defines which edit page you came from
+        // Defines which edit page you came from
         Session::put('Edit', 'Modem');
 
         $tabs = parent::editTabs($model);
 
-        if (! Module::collections()->has('ProvMon')) {
-            return $tabs;
-        }
+        return array_merge($tabs, $model->analysisTabs());
+    }
 
-        if (Bouncer::can('view_analysis_pages_of', Modem::class)) {
-            array_push($tabs, ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $model->id],
-                ['name' => 'CPE-Analysis', 'icon' => 'area-chart', 'route' => 'ProvMon.cpe', 'link' => $model->id]);
+    /**
+     * Show error message when user clicks on analysis page and ProvMon module is not installed/active
+     *
+     * @author Nino Ryschawy
+     * @return View
+     */
+    public function missingProvMon()
+    {
+        $error = '501';
+        $message = trans('messages.modem.missingProvMon');
 
-            // MTA: only show MTA analysis if Modem has MTA's
-            if (isset($model->mtas) && isset($model->mtas[0])) {
-                array_push($tabs, ['name' => 'MTA-Analysis', 'icon' => 'area-chart', 'route' => 'ProvMon.mta', 'link' => $model->id]);
-            }
-        }
-
-        return $tabs;
+        return View::make('errors.generic', compact('error', 'message'));
     }
 
     /**

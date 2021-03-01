@@ -452,6 +452,7 @@ return [
     'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
     'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
 
+    'analysis' => 'Analysis',
     'Assign' => 'Assign :model',
     'BillingBase' => 'Billing',
     'Ccc' => 'Customer Control Center',

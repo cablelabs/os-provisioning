@@ -663,6 +663,9 @@ return [
             'updated N:M'   => 'aktualisiert',
         ],
     ],
+    'modem' => [
+        'missingProvMon' => 'ProvMon Modul fehlt',
+    ],
     'Modem'                         => 'Modem',
     'PhonenumberManagement'         => 'Nummernverwaltung',
     'PhonebookEntry_lastExternalUpdateTelekom' => 'Letzte Aktualisierung bei Telekom',

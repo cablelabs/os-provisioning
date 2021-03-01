@@ -769,8 +769,8 @@ class NetElement extends \BaseModel
         }
 
         if ($provmon && ($type == 4 || $type == 5) && \Bouncer::can('view_analysis_pages_of', \Modules\ProvBase\Entities\Modem::class)) {
-            //create Analyses tab (for ORA/VGP) if IP address is no valid IP
-            array_push($tabs, ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $provmon->createAnalysisTab($this->ip)]);
+            // Create Analysis tab (for ORA/VGP) if IP address is no valid IP
+            array_push($tabs, ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $provmon->createAnalysisTab($this->ip)]);
         }
 
         if ($provmon && Module::collections()->has('HfcCustomer') && ! in_array($type, [4, 5, 8, 9])) {

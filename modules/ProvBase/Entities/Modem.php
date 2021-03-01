@@ -326,7 +326,7 @@ class Modem extends \BaseModel
         }
 
         if ($relation) {
-            // Let contract be first as just the first relation is used in modem analyses - see top.blade.php
+            // Let contract be first as just the first relation is used in modem analysis - see top.blade.php
             return collect([$this->contract, $relation]);
         }
 
@@ -368,6 +368,28 @@ class Modem extends \BaseModel
         $this->addViewHasManyTickets($ret);
 
         return $ret;
+    }
+
+    public function analysisTabs()
+    {
+        // Always show analysis tab and return error page when ProvMon is not installed/active
+        $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $this->id];
+
+        if (! Module::collections()->has('ProvMon')) {
+            $tabs[array_key_last($tabs)]['route'] = 'Modem.missingProvMon';
+
+            return $tabs;
+        }
+
+        if ($this->configfile->device == 'cm') {
+            $tabs[] = ['name' => 'CPE-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'ProvMon.cpe', 'link' => $this->id];
+
+            if (isset($this->mtas) && isset($this->mtas[0])) {
+                $tabs[] = ['name' => 'MTA-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'ProvMon.mta', 'link' => $this->id];
+            }
+        }
+
+        return $tabs;
     }
 
     /**
