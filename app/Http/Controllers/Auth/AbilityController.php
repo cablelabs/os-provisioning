@@ -311,6 +311,7 @@ class AbilityController extends Controller
             'GlobalConfig' => collect([
                 'BillingBase',
                 'Ccc',
+                'HfcReq',
                 'HfcBase',
                 'ProvBase',
                 'ProvVoip',

@@ -219,6 +219,7 @@ return [
     'Provisioning'              => 'Provisioning',
     'BillingBase'               => 'BillingBase Config',
     'Ccc'                       => 'Ccc Config',
+    'HfcReq'                    => 'HFC Config',
     'HfcBase'                   => 'Detect Config',
     'ProvBase'                  => 'ProvBase Config',
     'ProvVoip'                  => 'ProvVoip Config',
