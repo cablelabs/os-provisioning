@@ -365,7 +365,7 @@ class Modem extends \BaseModel
 
             // TODO: auth - loading controller from model could be a security issue ?
             $ret['Edit']['EnviaAPI']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-            $ret['Edit']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ModemController::_get_envia_management_jobs($this);
+            $ret['Edit']['EnviaAPI']['view']['vars']['extra_data'] = ModemController::_get_envia_management_jobs($this);
         }
 
         $this->addViewHasManyTickets($ret);
