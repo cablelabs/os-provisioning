@@ -211,12 +211,14 @@ class ModemController extends \BaseController
      * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
      * @author: Torsten Schmidt
      */
-    protected function editTabs($model)
+    public function editTabs($model)
     {
         // Defines which edit page you came from
         Session::put('Edit', 'Modem');
 
         $tabs = parent::editTabs($model);
+
+        $tabs[0] = ['name' => 'Edit', 'icon' => 'pencil', 'route' => 'Modem.edit', 'link' => $model->id];
 
         return array_merge($tabs, $model->analysisTabs());
     }
@@ -479,5 +481,309 @@ class ModemController extends \BaseController
         $modem->restart_modem(false, Request::filled('_3rd_action'));
 
         return \Redirect::back();
+    }
+
+    /**
+     * Show minimum amount of information about modem status
+     *
+     * @return View
+     */
+    public function analysis($id, $api = false)
+    {
+        $modem = Modem::with('configfile')->find($id);
+
+        $data = $modem->getAnalysisBaseData($api);
+
+        if ($api) {
+            return $data;
+        }
+
+        return View::make('provbase::Modem.analysis', $this->compact_prep_view($data));
+    }
+
+
+    /**
+     * Returns view of cpe analysis page
+     */
+    public function cpeAnalysis($id)
+    {
+        $ping = $lease = $log = $dash = $cpeMac = null;
+        $modem = Modem::with('endpoints')->find($id);
+        $type = 'CPE';
+        $modem_mac = strtolower($modem->mac);
+        $modem->help = 'cpe_analysis';
+
+        // Lease
+        $dhcpd_mac = implode(':', array_map(function ($byte) {
+            if ($byte == '00') {
+                return '0';
+            }
+
+            return ltrim($byte, '0');
+        }, explode(':', $modem_mac)));
+
+        $lease['text'] = Modem::searchLease("billing subclass \"Client\" \"$dhcpd_mac\";");
+        $lease = Modem::validateLease($lease, $type);
+
+        $ep = $modem->endpoints->first();
+        if (! $lease['text'] && $ep && $ep->fixed_ip && $ep->ip) {
+            $lease = $this->_fake_lease($modem, $ep);
+        }
+
+        /// get MAC of CPE first
+        $str = $this->getSyslogEntries($modem_mac, '| grep CPE | tail -n 1 | tac');
+
+        if ($str == []) {
+            $mac = $modem_mac;
+            $mac[0] = ' ';
+            $mac = trim($mac);
+            $mac_bug = true;
+            $str = $this->getSyslogEntries($mac, '| grep CPE | tail -n 1 | tac');
+
+            if (! $str && $lease['text']) {
+                // get cpe mac addr from lease - first option tolerates small structural changes in dhcpd.leases and assures that it's a mac address
+                preg_match_all('/(?:[0-9a-fA-F]{2}[:]?){6}/', substr($lease['text'][0], strpos($lease['text'][0], 'hardware ethernet'), 40), $cpeMac);
+            }
+        }
+
+        if (isset($str[0])) {
+            if (isset($mac_bug)) {
+                preg_match_all('/([0-9a-fA-F][:]){1}(?:[0-9a-fA-F]{2}[:]?){5}/', $str[0], $cpeMac);
+            } else {
+                preg_match_all('/(?:[0-9a-fA-F]{2}[:]?){6}/', $str[0], $cpeMac);
+            }
+        }
+
+        // Log
+        if (isset($cpeMac[0][0])) {
+            $cpeMac = $cpeMac[0][0];
+            $log = $this->getSyslogEntries($cpeMac, '| tail -n 20 | tac');
+        }
+
+        $this->addIPv6LeaseInfo($cpeMac, $lease);
+
+        // Ping
+        if (isset($lease['text'][0])) {
+            // get ip first
+            preg_match_all('/\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b/', $lease['text'][0], $ip);
+            if (isset($ip[0][0])) {
+                $ip = $ip[0][0];
+                exec('sudo ping -c3 -i0 -w1 '.$ip, $ping);
+
+                exec("dig -x $ip +short", $fqdns);
+                foreach ($fqdns as $fqdn) {
+                    $dash .= "Hostname: $fqdn<br>";
+                    exec("dig $fqdn ptr +short", $ptrs);
+                    foreach ($ptrs as $ptr) {
+                        $dash .= "Hostname: $ptr<br>";
+                    }
+                }
+            }
+        }
+        if (is_array($ping) && count(array_keys($ping)) <= 7) {
+            $ping = null;
+            if ($lease['state'] == 'green') {
+                $ping[0] = trans('messages.cpe_not_reachable');
+            }
+        }
+
+        $tabs = (new ModemController())->editTabs($modem);
+// d(\Route::getCurrentRoute()->action['as'], $tabs); //$tab['route']
+        $view_header = 'Provmon-CPE';
+
+        return View::make('provbase::Modem.cpeAnalysis', $this->compact_prep_view(compact('modem', 'ping', 'type', 'tabs', 'lease', 'log', 'dash', 'view_header')));
+    }
+
+    /**
+     * Returns view of mta analysis page
+     *
+     * Note: This is never called if ProvVoip Module is not active
+     */
+    public function mtaAnalysis($id)
+    {
+        $ping = $lease = $log = $dash = $realtime = $configfile = null;
+        $modem = Modem::with('mtas')->find($id);
+        $type = 'MTA';
+        $modem->help = 'mta_analysis';
+
+        $mtas = $modem->mtas;       // Note: we should use one-to-one relationship here
+        if (isset($mtas[0])) {
+            $mta = $mtas[0];
+        } else {
+            goto end;
+        }
+
+        // Ping
+        $domain = '';
+        if (Module::collections()->has('ProvVoip')) {
+            $domain = \Modules\ProvVoip\Entities\ProvVoip::first()->mta_domain;
+        }
+        $hostname = $mta->hostname.'.'.($domain ?: ProvBase::first()->domain_name);
+
+        exec('sudo ping -c3 -i0 -w1 '.$hostname, $ping);
+        if (count(array_keys($ping)) <= 7) {
+            $ping = null;
+        }
+
+        $lease['text'] = Modem::searchLease("mta-$mta->id");
+        $lease = Modem::validateLease($lease, $type);
+
+        $configfile = Modem::getConfigfileText("/tftpboot/mta/$mta->hostname");
+
+        // log
+        $ip = gethostbyname($mta->hostname);
+        $ip = $mta->hostname == $ip ? null : $ip;
+        $mac = strtolower($mta->mac);
+        $search = $ip ? "$mac|$mta->hostname|$ip " : "$mac|$mta->hostname";
+        $log = $this->getSyslogEntries($search, '| tail -n 25  | tac');
+
+        end:
+        $tabs = (new ModemController())->editTabs($modem);
+
+        $view_header = 'Provmon-MTA';
+
+        return View::make('provbase::Modem.cpeAnalysis', $this->compact_prep_view(compact('modem', 'ping', 'type', 'tabs', 'lease', 'log', 'dash', 'realtime', 'configfile', 'view_header')));
+    }
+
+    /**
+     * Add IPv6 leases of CPE to lease array
+     *
+     * colorized by expiry and lifetime (red: expired, yellow: half lifetime passed, green: less than half lifetime passed)
+     */
+    private function addIPv6LeaseInfo($cpeMac, &$lease)
+    {
+        if (! $cpeMac) {
+            return;
+        }
+
+        $leases = \DB::connection('mysql-kea')->table('lease6')
+            ->whereRaw('hex(hwaddr) = "'.strtoupper(str_replace(':', '', $cpeMac)).'"')
+            ->get();
+
+        foreach ($leases as $lease6) {
+            $lease6->hwaddr = $cpeMac;
+
+            $lease6->bsclass = 'success';
+            if (strtotime($lease6->expire) < time()) {
+                $lease6->bsclass = 'danger';
+            } elseif (strtotime($lease6->expire) - $lease6->valid_lifetime / 2 < time()) {
+                $lease6->bsclass = 'warning';
+            }
+        }
+
+        $lease['ipv6'] = $leases;
+    }
+
+    /**
+     * Flood ping
+     *
+     * NOTE:
+     * --- add /etc/sudoers.d/nms-nmsprime ---
+     * Defaults:apache        !requiretty
+     * apache  ALL=(root) NOPASSWD: /usr/bin/ping
+     * --- /etc/sudoers.d/nms-nmsprime ---
+     *
+     * @param hostname  the host to send a flood ping
+     * @return flood ping exec result
+     */
+    public static function floodPing($hostname)
+    {
+        if (! \Request::filled('floodPing')) {
+            return;
+        }
+
+        $hostname = escapeshellarg($hostname);
+
+        switch (\Request::get('floodPing')) {
+            case '1':
+                exec("sudo ping -c500 -f $hostname 2>&1", $fp, $ret);
+                break;
+            case '2':
+                exec("sudo ping -c1000 -s736 -f $hostname 2>&1", $fp, $ret);
+                break;
+            case '3':
+                exec("sudo ping -c2500 -f $hostname 2>&1", $fp, $ret);
+                break;
+            case '4':
+                exec("sudo ping -c2500 -s1472 -f $hostname 2>&1", $fp, $ret);
+                break;
+        }
+
+        // remove the flood ping line "....." from result
+        if ($ret == 0) {
+            unset($fp[1]);
+        }
+
+        return $fp;
+    }
+
+    /**
+     * Send output of Ping in real-time to client browser as Stream with Server Sent Events
+     * called in analysis.blade.php in javascript content
+     *
+     * @param   ip          String
+     * @return  response    Stream
+     *
+     * @author Nino Ryschawy
+     */
+    public static function realtimePing($ip)
+    {
+        // \Log::debug(__FUNCTION__. "called with $ip");
+
+        $response = new \Symfony\Component\HttpFoundation\StreamedResponse(function () use ($ip) {
+            $cmd = 'ping -c 5 '.escapeshellarg($ip);
+
+            $handle = popen($cmd, 'r');
+
+            if (! is_resource($handle)) {
+                echo "data: finished\n\n";
+                ob_flush();
+                flush();
+
+                return;
+            }
+
+            while (! feof($handle)) {
+                $line = fgets($handle);
+                $line = str_replace("\n", '', $line);
+                // \Log::debug("$line");
+                // echo 'data: {"message": "'. $line . '"}'."\n";
+                echo "data: <br>$line";
+                echo "\n\n";
+                ob_flush();
+                flush();
+            }
+
+            pclose($handle);
+
+            echo "data: finished\n\n";
+            ob_flush();
+            flush();
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+
+        return $response;
+    }
+
+    private function _fake_lease($modem, $ep)
+    {
+        $lease['state'] = 'green';
+        $lease['forecast'] = trans('messages.cpe_fake_lease').'<br />';
+        $lease['text'][0] = "lease $ep->ip {<br />".
+            "starts 3 $ep->updated_at;<br />".
+            'binding state active;<br />'.
+            'next binding state active;<br />'.
+            'rewind binding state active;<br />'.
+            "billing subclass \"Client\" $modem->mac;<br />".
+            "hardware ethernet $ep->mac;<br />".
+            "set ip = \"$ep->ip\";<br />".
+            "set hw_mac = \"$ep->mac\";<br />".
+            "set cm_mac = \"$modem->mac\";<br />".
+            "option agent.remote-id $modem->mac;<br />".
+            'option agent.unknown-9 0:0:11:8b:6:1:4:1:2:3:0;<br />'.
+            '}<br />';
+
+        return $lease;
     }
 }

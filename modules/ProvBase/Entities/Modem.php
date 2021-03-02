@@ -9,6 +9,8 @@ use App\Sla;
 use Request;
 use Acme\php\ArrayHelper;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\BaseController;
+use Modules\ProvBase\Http\Controllers\ModemController;
 
 class Modem extends \BaseModel
 {
@@ -21,6 +23,7 @@ class Modem extends \BaseModel
     protected const CONF_FILE_PATH_PUB = '/etc/dhcp-nmsprime/modems-clients-public.conf';
     protected const IGNORE_CPE_FILE_PATH = '/etc/dhcp-nmsprime/ignore-cpe.conf';
     protected const BLOCKED_CPE_FILE_PATH = '/etc/dhcp-nmsprime/blocked.conf';
+    protected $domainName = '';
 
     // The associated SQL table for this Model
     public $table = 'modem';
@@ -373,19 +376,17 @@ class Modem extends \BaseModel
     public function analysisTabs()
     {
         // Always show analysis tab and return error page when ProvMon is not installed/active
-        $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $this->id];
+        $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.analysis', 'link' => $this->id];
 
-        if (! Module::collections()->has('ProvMon')) {
-            $tabs[array_key_last($tabs)]['route'] = 'Modem.missingProvMon';
-
-            return $tabs;
+        if (Module::collections()->has('ProvMon')) {
+            $tabs[array_key_last($tabs)]['route'] = 'ProvMon.index';
         }
 
         if ($this->configfile->device == 'cm') {
-            $tabs[] = ['name' => 'CPE-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'ProvMon.cpe', 'link' => $this->id];
+            $tabs[] = ['name' => 'CPE-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.cpeAnalysis', 'link' => $this->id];
 
             if (isset($this->mtas) && isset($this->mtas[0])) {
-                $tabs[] = ['name' => 'MTA-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'ProvMon.mta', 'link' => $this->id];
+                $tabs[] = ['name' => 'MTA-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.mtaAnalysis', 'link' => $this->id];
             }
         }
 
@@ -1418,7 +1419,7 @@ class Modem extends \BaseModel
      */
     public function get_preq_data()
     {
-        $domain = ProvBase::first()->domain_name;
+        $domain = $this->domainName ?: ProvBase::first()->domain_name;
         $file = "/usr/share/cacti/rra/$this->hostname.$domain.json";
 
         if (! file_exists($file)) {
@@ -1846,5 +1847,340 @@ class Modem extends \BaseModel
     {
         $this->updateRadCheck();
         $this->updateRadUserGroups();
+    }
+
+    /**
+     * Get base data for Modem analysis page
+     *
+     * @return array
+     */
+    public function getAnalysisBaseData($api = false)
+    {
+        $this->domainName = ProvBase::first()->domain_name;
+        $mac = strtolower($this->mac);
+        $eventlog = null;
+
+        $genieCmds[json_encode(['name' => 'factoryReset'])] = trans('messages.factory_reset');
+
+        if ($this->isTR069()) {
+            $prov = json_decode(Modem::callGenieAcsApi("provisions/?query={\"_id\":\"prov-{$id}\"}", 'GET'));
+
+            if ($prov && isset($prov[0]->script)) {
+                $configfile['text'] = preg_split('/\r\n|\r|\n/', $prov[0]->script);
+
+                preg_match_all('/^cmd;(.*)$/m', $this->configfile->text, $match);
+                foreach ($match[1] as $match) {
+                    $match = explode(';', trim($match));
+                    if (count($match) != 3) {
+                        continue;
+                    }
+                    $val = array_shift($match);
+                    $key = json_encode([
+                        'name' => 'setParameterValues',
+                        'parameterValues' => [$match],
+                    ]);
+                    $genieCmds[$key] = $val;
+                }
+            } else {
+                $configfile['text'] = [];
+            }
+        } else {
+            $configfile = Modem::getConfigfileText("/tftpboot/cm/$this->hostname");
+        }
+
+        $onlineStatus = $this->onlineStatus();
+        // return $ip and $online
+        foreach ($onlineStatus as $name => $value) {
+            $$name = $value;
+        }
+
+
+        if (\Request::has('offline')) {
+            $online = false;
+        }
+
+        if ($online) {
+            if ($modemConfigfileStatus = $this->configfileStatus()) {
+                $dash['modemConfigfileStatus'] = $modemConfigfileStatus;
+            }
+
+            $eventlog = $this->get_eventlog();
+        }
+
+        // time of this function should be observed - can take a huge time as well
+        $dash['modemServicesStatus'] = $this->servicesStatus($configfile);
+
+        // Log dhcp (discover, ...), tftp (configfile or firmware)
+        // NOTE: This function takes a long time if syslog file is large - 0.4 to 0.6 sec
+        $search = $ip ? "$mac|$this->hostname[^0-9]|$ip " : "$mac|$this->hostname[^0-9]";
+        $log = BaseController::getSyslogEntries($search, '| grep -v MTA | grep -v CPE | tail -n 30  | tac');
+        $lease['text'] = self::searchLease("hardware ethernet $mac");
+        $lease = $this->validateLease($lease);
+
+        if ($api) {
+            return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip');
+        }
+
+        $floodPing = ModemController::floodPing($ip);
+
+        $tabs = (new ModemController())->editTabs($this);
+        $pills = ['log', 'lease', 'configfile', 'eventlog'];
+        $view_header = 'Modem-'.trans('view.analysis');
+        $this->help = 'modem_analysis';
+        $modem = $this;
+
+        return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip',
+            'floodPing', 'genieCmds', 'modem', 'pills', 'tabs', 'view_header');
+    }
+
+    /**
+     * Determine if modem runs with/has already downloaded actual configfile
+     *
+     * @param object Modem
+     */
+    public function configfileStatus()
+    {
+        if (Configfile::where('id', $this->configfile_id)->first()->device == 'tr069') {
+            return;
+        }
+
+        $path = '/var/log/nmsprime/tftpd-cm.log';
+        $ts_cf = filemtime("/tftpboot/cm/$this->hostname.cfg");
+
+        $ts_dl = exec("zgrep $this->hostname $path | tail -1 | cut -d' ' -f1");
+
+        if (! $ts_dl) {
+            // get all but the current logfile, order them descending by file modification time
+            // we assume that logrotate adds "-TIMESTAMP" to the logfiles name
+            $logfiles = glob("$path-*");
+            usort($logfiles, function ($a, $b) {
+                return filemtime($b) - filemtime($a);
+            });
+
+            foreach ($logfiles as $path) {
+                // get the latest line indicating a configfile download
+                $ts_dl = exec("zgrep $this->hostname $path | tail -1 | cut -d' ' -f1");
+
+                if ($ts_dl) {
+                    break;
+                }
+            }
+        }
+
+        if (! $ts_dl) {
+            // inform the user that last download was to long ago to check if the configfile is up-to-date
+            return ['bsclass' => 'info', 'text' => trans('messages.modemAnalysis.missingLD')];
+        }
+
+        if ($ts_dl <= $ts_cf) {
+            return ['bsclass' => 'warning', 'text' => trans('messages.modemAnalysis.cfOutdated')];
+        }
+    }
+
+    /**
+     * Get contents, mtime of configfile and warn if it is outdated
+     *
+     * @author  Ole Ernst
+     * @param   path    String  Path of the configfile excluding its extension
+     * @return  array
+     */
+    public static function getConfigfileText($path)
+    {
+        if (! is_file("$path.conf") || ! is_file("$path.cfg")) {
+            return;
+        }
+
+        if (filemtime("$path.conf") > filemtime("$path.cfg")) {
+            $conf['warn'] = trans('messages.configfile_outdated');
+        }
+
+        $conf['mtime'] = strftime('%c', filemtime("$path.cfg"));
+
+        exec("docsis -d $path.cfg", $conf['text']);
+        $conf['text'] = str_replace("\t", '&nbsp;&nbsp;&nbsp;&nbsp;', $conf['text']);
+
+        return $conf;
+    }
+
+    /**
+     * Get ID of Modem and ping it for Analysis page.
+     *
+     * @author  Roy Schneider
+     * @return  array
+     */
+    public function onlineStatus()
+    {
+        $hostname = $this->hostname.'.'.($this->domainName ?: ProvBase::first()->domain_name);
+        $ip = gethostbyname($hostname);
+        $ip = ($ip == $hostname) ? null : $ip;
+
+        if ($this->isPPP()) {
+            $cur = $this->radacct()->latest('radacctid')->first();
+            if ($cur && ! $cur->acctstoptime) {
+                $ip = $hostname = $cur->framedipaddress;
+            }
+
+            // workaround for tr069 devices, which block ICMP requests,
+            // but listen on the HTTP(s) / SSH ports
+            $con = null;
+            foreach ([80, 443, 22] as $port) {
+                try {
+                    $con = fsockopen($ip, $port, $errno, $errstr, 1);
+                } catch (\Exception $e) {
+                    continue;
+                }
+
+                if ($con) {
+                    fclose($con);
+
+                    return ['ip' => $ip, 'online' => true];
+                }
+            }
+        }
+
+        // Ping: Only check if device is online
+        // takes approx 0.1 sec
+        exec('sudo ping -c1 -i0 -w1 '.$hostname, $ping, $ret);
+
+        return ['ip' => $ip, 'online' => $ret ? false : true];
+    }
+
+    /**
+     * Returns the lease entry that contains the search parameter
+     *
+     * TODO: make a seperate class for dhcpd
+     * lease stuff (search, replace, ..)
+     *
+     * @return array    of lease entry strings
+     */
+    public static function searchLease(string $search): array
+    {
+        $ret = [];
+
+        if (! $search) {
+            return $ret;
+        }
+
+        // parse dhcpd.lease file
+        $file = file_get_contents('/var/lib/dhcpd/dhcpd.leases');
+        // start each lease with a line that begins with "lease" and end with a line that begins with "{"
+        preg_match_all('/^lease(.*?)(^})/ms', $file, $section);
+
+        // fetch all lines matching hw mac
+        foreach (array_unique($section[0]) as $s) {
+            if (strpos($s, $search)) {
+                $s = str_replace('  ', '&nbsp;&nbsp;', $s);
+
+                // push matching results
+                array_push($ret, preg_replace('/\r|\n/', '<br/>', $s));
+            }
+        }
+
+        // handle multiple lease entries
+        // actual strategy: if possible grep active lease, otherwise return all entries
+        //                  in reverse ordered format from dhcpd.leases
+        if (count($ret) > 1) {
+            foreach ($ret as $text) {
+                if (preg_match('/starts \d ([^;]+);.*;binding state active;/', $text, $match)) {
+                    $start[] = $match[1];
+                    $lease[] = $text;
+                }
+            }
+
+            if (isset($start)) {
+                // return the most recent active lease
+                natsort($start);
+                end($start);
+
+                return [$lease[key($start)]];
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Proves if the last found lease is actually valid or has already expired
+     */
+    public static function validateLease($lease, $type = null)
+    {
+        if ($lease['text'] && $lease['text'][0]) {
+            // calculate endtime
+            preg_match('/ends [0-6] (.*?);/', $lease['text'][0], $endtime);
+            $et = explode(',', str_replace([':', '/', ' '], ',', $endtime[1]));
+            $endtime = \Carbon\Carbon::create($et[0], $et[1], $et[2], $et[3], $et[4], $et[5], 'UTC');
+
+            // lease calculation
+            // take care changing the state - it's used under cpe analysis
+            $lease['state'] = 'green';
+            $lease['forecast'] = "$type has a valid lease.";
+            if ($endtime < \Carbon\Carbon::now()) {
+                $lease['state'] = 'red';
+                $lease['forecast'] = 'Lease is out of date';
+            }
+        } else {
+            $lease['state'] = 'red';
+            $lease['forecast'] = trans('messages.modem_lease_error');
+        }
+
+        return $lease;
+    }
+
+    /**
+     * Determine modem status of internet access and telephony for analysis dashboard
+     *
+     * @param array     Lines of Configfile
+     * @return array    Color & status text
+     */
+    public function servicesStatus($config)
+    {
+        if ($this->configfile->device == 'tr069') {
+            return;
+        }
+
+        if (! $config || ! isset($config['text']) || isset($config['warn'])) {
+            return ['bsclass' => 'danger',
+                'text' => $config['warn'] ?? trans('messages.modemAnalysis.cfError'),
+                'instructions' => "docsis -e /tftpboot/cm/{$this->hostname}.conf /tftpboot/keyfile /tftpboot/cm/{$this->hostname}.cfg",
+            ];
+        }
+
+        $networkAccess = preg_grep('/NetworkAccess \d/', $config['text']);
+        preg_match('/NetworkAccess (\d)/', end($networkAccess), $match);
+        $networkAccess = $match[1];
+
+        // Internet and voip blocked
+        if (! $networkAccess) {
+            return ['bsclass' => 'warning', 'text' => trans('messages.modemAnalysis.noNetworkAccess')];
+        }
+
+        $maxCpe = preg_grep('/MaxCPE \d/', $config['text']);
+        preg_match('/MaxCPE (\d)/', end($maxCpe), $match);
+        $maxCpe = $match[1];
+
+        $cpeMacs = preg_grep('/CpeMacAddress (.*?);/', $config['text']);
+
+        // Internet and voip allowed
+        if ($maxCpe > count($cpeMacs)) {
+            return ['bsclass' => 'success', 'text' => trans('messages.modemAnalysis.fullAccess')];
+        }
+
+        // Only voip allowed
+        // Check if configfile contains a different CPE MTA than the MTAs have - this case is actually [2019-03-06] not valid
+        $mtaMacs = $this->mtas->each(function ($mac) {
+            $mac->mac = strtolower($mac->mac);
+        })->pluck('mac')->all();
+
+        foreach ($cpeMacs as $line) {
+            preg_match('/CpeMacAddress (.*?);/', $line, $match);
+
+            $cpeMac = strtolower($match[1]);
+
+            if (! in_array($cpeMac, $mtaMacs)) {
+                return ['bsclass' => 'info', 'text' => trans('messages.modemAnalysis.cpeMacMissmatch')];
+            }
+        }
+
+        return ['bsclass' => 'info', 'text' => trans('messages.modemAnalysis.onlyVoip')];
     }
 }

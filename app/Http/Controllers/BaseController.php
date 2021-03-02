@@ -1699,4 +1699,29 @@ class BaseController extends Controller
 
         return config('documentation.'.strtolower(end($a)));
     }
+
+    /**
+     * Helper to get Syslog entries dependent on what should be searched and discarded
+     *
+     * @param   search      String      to search
+     * @param   grep_pipes  String      restrict matches
+     * @return  array
+     */
+    public static function getSyslogEntries($search, $grep_pipes)
+    {
+        $search = escapeshellarg($search);
+        // $grep_pipes = escapeshellarg($grep_pipes);
+
+        exec("egrep -i $search /var/log/messages $grep_pipes", $log);
+
+        // check if logrotate was done during last hours and consider older logfile (e.g. /var/log/messages-20170904)
+        if (! $log) {
+            $files = glob('/var/log/messages-*');
+            if (! empty($files)) {
+                exec('egrep -i '.$search.' '.max($files).' '.$grep_pipes, $log);
+            }
+        }
+
+        return $log;
+    }
 }

@@ -49,9 +49,33 @@ BaseRoute::group([], function () {
         ]);
     });
 
-    BaseRoute::get('modem/missingProvMon', [
-        'as' => 'Modem.missingProvMon',
-        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@missingProvMon',
+    BaseRoute::get('modem/{id}/analysis', [
+        'as' => 'Modem.analysis',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@analysis',
         'middleware' => ['can:view,Modules\ProvBase\Entities\Modem'],
+    ]);
+
+    BaseRoute::get('modem/{id}/cpeAnalysis', [
+        'as' => 'Modem.cpeAnalysis',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@cpeAnalysis',
+        'middleware' => ['can:view_analysis_pages_of,Modules\ProvBase\Entities\Modem'],
+    ]);
+
+    BaseRoute::get('modem/{id}/mtaAnalysis', [
+        'as' => 'Modem.mtaAnalysis',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@mtaAnalysis',
+        'middleware' => ['can:view_analysis_pages_of,Modules\ProvBase\Entities\Modem'],
+    ]);
+
+    BaseRoute::post('modem/{id}/floodPing', [
+        'as' => 'Modem.floodPing',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@analysis',
+        'middleware' => ['can:view_analysis_pages_of,Modules\ProvBase\Entities\Modem'],
+    ]);
+
+    BaseRoute::get('modem/ping/{ip}', [
+        'as' => 'Modem.realtimePing',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@realtimePing',
+        'middleware' => ['can:view_analysis_pages_of,Modules\ProvBase\Entities\Modem'],
     ]);
 });
