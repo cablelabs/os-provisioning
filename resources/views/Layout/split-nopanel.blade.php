@@ -41,8 +41,8 @@
                                 </li>
                             <!-- Link to separate view -->
                             @elseif (isset($tab['route']))
-                                <li class="nav-item {{ \Route::getCurrentRoute()->action['as'] == $tab['route'] ? 'active' : '' }}" role="tab">
-                                    <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}">
+                                <li class="nav-item" role="tab">
+                                    <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}" class="{{\Route::getCurrentRoute()->action['as'] == $tab['route'] ? 'active' : ''}}">
                                         @if (isset($tab['icon']))
                                             <i class="fa fa-lg fa-{{ $tab['icon'] }}"></i>
                                         @endif
