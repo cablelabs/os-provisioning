@@ -2249,6 +2249,14 @@ class Modem extends \BaseModel
      */
     public function getTicketSummary()
     {
+        if ($this->street && $this->city) {
+            $navi = [
+                'link' => "https://www.google.com/maps/search/{$this->street} {$this->house_number}, {$this->zip} {$this->city}",
+                'icon' => 'fa-globe',
+                'title' => trans('view.Button_Search'),
+            ];
+        }
+
         if ($this->x != 0 || $this->y != 0) {
             $navi = [
                 'link' => "https://www.google.com/maps/dir/my+location/{$this->y},{$this->x}",
@@ -2260,6 +2268,10 @@ class Modem extends \BaseModel
         return [
             trans('messages.Personal Contact') => [
                 'text' => "{$this->company} {$this->department} {$this->salutation} {$this->academic_degree} {$this->firstname} {$this->lastname}",
+                'action' =>[
+                    'link' => 'tel:'.preg_replace(["/\s+/", "/\//"], '', $this->contract()->first('phone')->phone),
+                    'icon' => 'fa-phone',
+                ],
             ],
             trans('messages.Address') => [
                 'text' => "{$this->street} {$this->house_number}||{$this->zip} {$this->city} {$this->district}",

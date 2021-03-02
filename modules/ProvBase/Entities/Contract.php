@@ -1659,6 +1659,14 @@ class Contract extends \BaseModel
      */
     public function getTicketSummary()
     {
+        if ($this->street && $this->city) {
+            $navi = [
+                'link' => "https://www.google.com/maps/search/{$this->street} {$this->house_number}, {$this->zip} {$this->city}",
+                'icon' => 'fa-globe',
+                'title' => trans('view.Button_Search'),
+            ];
+        }
+
         if ($this->x != 0 || $this->y != 0) {
             $navi = [
                 'link' => "https://www.google.com/maps/dir/my+location/{$this->y},{$this->x}",
