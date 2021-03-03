@@ -218,23 +218,10 @@ class ModemController extends \BaseController
 
         $tabs = parent::editTabs($model);
 
-        $tabs[0] = ['name' => 'Edit', 'icon' => 'pencil', 'route' => 'Modem.edit', 'link' => $model->id];
+        $analysisTabs = $model->analysisTabs();
+        unset($analysisTabs[0]);
 
-        return array_merge($tabs, $model->analysisTabs());
-    }
-
-    /**
-     * Show error message when user clicks on analysis page and ProvMon module is not installed/active
-     *
-     * @author Nino Ryschawy
-     * @return View
-     */
-    public function missingProvMon()
-    {
-        $error = '501';
-        $message = trans('messages.modem.missingProvMon');
-
-        return View::make('errors.generic', compact('error', 'message'));
+        return array_merge($tabs, $analysisTabs);
     }
 
     /**
@@ -587,8 +574,7 @@ class ModemController extends \BaseController
             }
         }
 
-        $tabs = (new ModemController())->editTabs($modem);
-// d(\Route::getCurrentRoute()->action['as'], $tabs); //$tab['route']
+        $tabs = $modem->analysisTabs();
         $view_header = 'Provmon-CPE';
 
         return View::make('provbase::Modem.cpeAnalysis', $this->compact_prep_view(compact('modem', 'ping', 'type', 'tabs', 'lease', 'log', 'dash', 'view_header')));
@@ -638,8 +624,8 @@ class ModemController extends \BaseController
         $log = $this->getSyslogEntries($search, '| tail -n 25  | tac');
 
         end:
-        $tabs = (new ModemController())->editTabs($modem);
 
+        $tabs = $modem->analysisTabs();
         $view_header = 'Provmon-MTA';
 
         return View::make('provbase::Modem.cpeAnalysis', $this->compact_prep_view(compact('modem', 'ping', 'type', 'tabs', 'lease', 'log', 'dash', 'realtime', 'configfile', 'view_header')));

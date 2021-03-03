@@ -376,6 +376,7 @@ class Modem extends \BaseModel
     public function analysisTabs()
     {
         // Always show analysis tab and return error page when ProvMon is not installed/active
+        $tabs[] = ['name' => 'Edit', 'icon' => 'pencil', 'route' => 'Modem.edit', 'link' => $this->id];
         $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.analysis', 'link' => $this->id];
 
         if (Module::collections()->has('ProvMon')) {
@@ -1923,7 +1924,7 @@ class Modem extends \BaseModel
 
         $floodPing = ModemController::floodPing($ip);
 
-        $tabs = (new ModemController())->editTabs($this);
+        $tabs = $this->analysisTabs();
         $pills = ['log', 'lease', 'configfile', 'eventlog'];
         $view_header = 'Modem-'.trans('view.analysis');
         $this->help = 'modem_analysis';
