@@ -5,7 +5,8 @@
          */
         $s = '';
 
-        $parent = $modem;
+        $model = $modem ?? $netgw;
+        $parent = $model;
         $classname = explode('\\',get_class($parent));
         $classname = end($classname);
 
@@ -36,11 +37,11 @@
 
             $route .= '.'.($classname == 'Modem' ? 'index' : 'netgw');
 
-            $s .= "<li class='nav-tabs'>".HTML::linkRoute($route, trans('view.analysis'), $modem->id).'</li>';
+            $s .= "<li class='nav-tabs'>".HTML::linkRoute($route, trans('view.analysis'), $model->id).'</li>';
         } elseif ($type == 'CPE') {
-            $s .= "<li class='nav-tabs'>".HTML::linkRoute('Modem.cpeAnalysis', 'CPE-'.trans('view.analysis'), $modem->id).'</li>';
+            $s .= "<li class='nav-tabs'>".HTML::linkRoute('Modem.cpeAnalysis', 'CPE-'.trans('view.analysis'), $model->id).'</li>';
         } elseif ($type == 'MTA') {
-            $s .= "<li class='nav-tabs'>".HTML::linkRoute('Modem.mtaAnalysis', 'MTA-'.trans('view.analysis'), $modem->id).'</li>';
+            $s .= "<li class='nav-tabs'>".HTML::linkRoute('Modem.mtaAnalysis', 'MTA-'.trans('view.analysis'), $model->id).'</li>';
         }
 
         echo "<li class='active'><a href='".route("$classname.index")."'><i class='fa fa-hdd-o'></i>$classname</a></li>".$s;
