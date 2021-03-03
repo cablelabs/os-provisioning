@@ -488,7 +488,6 @@ class ModemController extends \BaseController
         return View::make('provbase::Modem.analysis', $this->compact_prep_view($data));
     }
 
-
     /**
      * Returns view of cpe analysis page
      */

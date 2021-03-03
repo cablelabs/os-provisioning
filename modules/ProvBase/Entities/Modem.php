@@ -1895,7 +1895,6 @@ class Modem extends \BaseModel
             $$name = $value;
         }
 
-
         if (\Request::has('offline')) {
             $online = false;
         }
