@@ -1864,7 +1864,7 @@ class Modem extends \BaseModel
         $genieCmds[json_encode(['name' => 'factoryReset'])] = trans('messages.factory_reset');
 
         if ($this->isTR069()) {
-            $prov = json_decode(Modem::callGenieAcsApi("provisions/?query={\"_id\":\"prov-{$id}\"}", 'GET'));
+            $prov = json_decode(Modem::callGenieAcsApi("provisions/?query={\"_id\":\"prov-{$this->id}\"}", 'GET'));
 
             if ($prov && isset($prov[0]->script)) {
                 $configfile['text'] = preg_split('/\r\n|\r|\n/', $prov[0]->script);
