@@ -1946,7 +1946,9 @@ class Modem extends \BaseModel
         $path = '/var/log/nmsprime/tftpd-cm.log';
         $ts_cf = filemtime("/tftpboot/cm/$this->hostname.cfg");
 
-        $ts_dl = exec("zgrep $this->hostname $path | tail -1 | cut -d' ' -f1");
+        $hostname = escapeshellarg($this->hostname);
+
+        $ts_dl = exec("zgrep $hostname $path | tail -1 | cut -d' ' -f1");
 
         if (! $ts_dl) {
             // get all but the current logfile, order them descending by file modification time
@@ -1958,7 +1960,7 @@ class Modem extends \BaseModel
 
             foreach ($logfiles as $path) {
                 // get the latest line indicating a configfile download
-                $ts_dl = exec("zgrep $this->hostname $path | tail -1 | cut -d' ' -f1");
+                $ts_dl = exec("zgrep $hostname $path | tail -1 | cut -d' ' -f1");
 
                 if ($ts_dl) {
                     break;
