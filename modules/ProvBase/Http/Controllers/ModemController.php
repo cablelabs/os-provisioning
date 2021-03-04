@@ -482,7 +482,7 @@ class ModemController extends \BaseController
         $data = $modem->getAnalysisBaseData($api);
 
         if ($api) {
-            return $data;
+            return response()->v0ApiReply($data, true);
         }
 
         return View::make('provbase::Modem.analysis', $this->compact_prep_view($data));
