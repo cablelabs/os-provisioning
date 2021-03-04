@@ -9,7 +9,6 @@ use App\Sla;
 use Request;
 use Acme\php\ArrayHelper;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\BaseController;
 use Modules\ProvBase\Http\Controllers\ModemController;
 
 class Modem extends \BaseModel
@@ -1913,7 +1912,7 @@ class Modem extends \BaseModel
         // Log dhcp (discover, ...), tftp (configfile or firmware)
         // NOTE: This function takes a long time if syslog file is large - 0.4 to 0.6 sec
         $search = $ip ? "$mac|$this->hostname[^0-9]|$ip " : "$mac|$this->hostname[^0-9]";
-        $log = BaseController::getSyslogEntries($search, '| grep -v MTA | grep -v CPE | tail -n 30  | tac');
+        $log = getSyslogEntries($search, '| grep -v MTA | grep -v CPE | tail -n 30  | tac');
         $lease['text'] = self::searchLease("hardware ethernet $mac");
         $lease = $this->validateLease($lease);
 
