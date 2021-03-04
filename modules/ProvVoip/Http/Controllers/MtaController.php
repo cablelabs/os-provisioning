@@ -74,8 +74,10 @@ class MtaController extends \BaseController
         \Session::put('Edit', 'MTA');
 
         $tabs = parent::editTabs($model);
+        $analysisTabs = $model->modem->analysisTabs();
+        unset($analysisTabs[0]);
 
-        return array_merge($tabs, $model->modem->analysisTabs());
+        return array_merge($tabs, $analysisTabs);
     }
 
     /**

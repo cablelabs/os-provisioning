@@ -441,3 +441,32 @@ function distanceLatLong($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeT
 
     return acos($dist) / $rad * 60 * 1853;
 }
+
+/**
+ * Helper to get Syslog entries dependent on what should be searched and discarded
+ *
+ * @param   search      String      to search
+ * @param   grep_pipes  String      restrict matches
+ * @return  array
+ *
+ * Attention: grep_pipes must not contain user input!
+ */
+function getSyslogEntries($search, $grep_pipes)
+{
+    $search = escapeshellarg($search);
+    // $grep_pipes = escapeshellarg($grep_pipes);
+
+    exec("egrep -i $search /var/log/messages $grep_pipes", $log);
+
+    if ($log) {
+        return $log;
+    }
+
+    // Logrotate was probably done during last hours -> consider older logfiles (e.g. /var/log/messages-20170904)
+    $files = glob('/var/log/messages-*');
+    if (! empty($files)) {
+        exec('egrep -i '.$search.' '.max($files).' '.$grep_pipes, $log);
+    }
+
+    return $log;
+}
