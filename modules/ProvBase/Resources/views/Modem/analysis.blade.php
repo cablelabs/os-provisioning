@@ -20,9 +20,7 @@
                 </div>
             @endforeach
         </div>
-        @else
-            <b>TODO</b>
-        @endif
+    @endif
     </div>
 @stop
 
