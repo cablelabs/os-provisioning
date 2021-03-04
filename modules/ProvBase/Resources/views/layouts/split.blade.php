@@ -18,7 +18,7 @@
         @if (isset($realtime))
             @include ('bootstrap.panel', array ('content' => 'content_realtime', 'view_header' => \App\Http\Controllers\BaseViewController::translate_label('Real Time Values'), 'i' => 2))
         @endif
-        @if (isset($host_id))
+        @if (isset($hostId))
             @include ('bootstrap.panel', array ('content' => 'content_cacti', 'view_header' => 'Monitoring', 'i' => 3))
         @endif
     </div>
