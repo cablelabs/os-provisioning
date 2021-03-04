@@ -188,7 +188,9 @@ return [
     'Salutation'                => 'Anrede',
     'Save'                      => 'Speichern',
     'Save / Restart'            => 'Speichern / Neustart',
-    'Serial Number'             => 'Seriennummer',
+    'Serial Number / CWMP-ID'   => 'Seriennummer / CWMP-ID',
+    'PPP Username'              => 'PPP Nutzername',
+    'PPP Password'              => 'PPP Passwort',
     'Sign me in'                => 'Anmelden',
     'snmp' => [
         'errors_walk' => 'Die Abfrage folgender OIDs schlug fehl: :oids.',

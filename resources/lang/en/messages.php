@@ -188,7 +188,9 @@ return [
     'Salutation'                => 'Salutation',
     'Save'                      => 'Save',
     'Save / Restart'            => 'Save / Restart',
-    'Serial Number'             => 'Serial Number',
+    'Serial Number / CWMP-ID'   => 'Serial Number / CWMP-ID',
+    'PPP Username'              => 'PPP Username',
+    'PPP Password'              => 'PPP Password',
     'Sign me in'                => 'Sign me in',
     'snmp' => [
         'errors_walk' => 'Querying the following OIDs failed: :oids.',

@@ -114,9 +114,9 @@ class ModemController extends \BaseController
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly'], 'hidden' => 'C', 'space' => 1],
             // TODO: show this dropdown only if necessary (e.g. not if creating a modem from contract context)
             ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'autocomplete' => ['modem'], 'help' => trans('helper.mac_formats')],
-            ['form_type' => 'text', 'name' => 'serial_num', 'description' => trans('messages.Serial Number')],
-            ['form_type' => 'text', 'name' => 'ppp_username', 'description' => trans('messages.Username'), 'select' => $cfIds['tr069'], 'options' => [$model->exists ? 'readonly' : '']],
-            ['form_type' => 'text', 'name' => 'ppp_password', 'description' => trans('messages.Password'), 'select' => $cfIds['tr069']],
+            ['form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number / CWMP-ID'],
+            ['form_type' => 'text', 'name' => 'ppp_username', 'description' => 'PPP Username', 'select' => $cfIds['tr069'], 'options' => [$model->exists ? 'readonly' : '']],
+            ['form_type' => 'text', 'name' => 'ppp_password', 'description' => 'PPP Password', 'select' => $cfIds['tr069']],
             array_merge(['form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 'E', 'value' => $model->contracts()], $help['contract']),
             ['form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1', 'hidden' => $model->endpoints->count() ? '1' : '0'],
             ['form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1', 'help' => trans('helper.Modem_InternetAccess')],
