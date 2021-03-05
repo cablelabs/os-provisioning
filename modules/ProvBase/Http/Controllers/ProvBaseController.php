@@ -53,4 +53,18 @@ class ProvBaseController extends BaseController
             ['form_type' => 'checkbox', 'name' => 'auto_factory_reset', 'description' => 'Automatic factory reset', 'help' => trans('helper.auto_factory_reset')],
         ];
     }
+
+    /**
+     * Show error message when user clicks on analysis page and ProvMon module is not installed/active
+     *
+     * @author Nino Ryschawy
+     * @return View
+     */
+    public function missingProvMon()
+    {
+        $error = '501';
+        $message = trans('messages.missingProvMon');
+
+        return \View::make('errors.generic', compact('error', 'message'));
+    }
 }

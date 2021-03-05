@@ -332,6 +332,10 @@ class ModemController extends \BaseController
      */
     public function firmware_view()
     {
+        if (! Module::collections()->has('ProvMon')) {
+            return (new ProvBaseController())->missingProvMon();
+        }
+
         $view_var = Modem::get_firmware_tree();
 
         $headline = $view_header = 'Firmware';

@@ -81,7 +81,6 @@ BaseRoute::group([], function () {
 
     BaseRoute::get('missingProvMon', [
         'as' => 'missingProvMon',
-        'uses' => 'Modules\ProvBase\Http\Controllers\NetGwController@missingProvMon',
-        'middleware' => ['can:view,Modules\ProvBase\Entities\NetGw'],
+        'uses' => 'Modules\ProvBase\Http\Controllers\ProvBaseController@missingProvMon',
     ]);
 });
