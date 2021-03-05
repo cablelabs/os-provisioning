@@ -7,7 +7,7 @@ After=time-sync.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/php -f /var/www/nmsprime/app/extensions/systemd/nmsd.php
+ExecStart=/opt/rh/rh-php73/root/usr/bin/php -f /var/www/nmsprime/app/extensions/systemd/nmsd.php
 
 [Install]
 WantedBy=multi-user.target
