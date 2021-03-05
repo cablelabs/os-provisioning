@@ -1116,6 +1116,11 @@ class Modem extends \BaseModel
     public static function get_firmware_tree($id = null)
     {
         $ret = [];
+
+        if (! Module::collections()->has('ProvMon')) {
+            return $ret;
+        }
+
         foreach (glob("/var/lib/cacti/rra/cm-$id*.json") as $file) {
             if (filemtime($file) < time() - 86400 || // ignore json files, which haven't been updated within a day
                 ! ($json = file_get_contents($file)) ||
