@@ -2004,14 +2004,24 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Get ID of Modem and ping it for Analysis page.
+     * Get IP of Modem and ping it for Analysis page.
      *
+     * @param   object \Modules\Provbase\Entities\Provbase - to reduce amount of DB queries when looping over all modems
      * @author  Roy Schneider
      * @return  array
      */
-    public function onlineStatus()
+    public function onlineStatus($conf = null)
     {
-        $hostname = $this->hostname.'.'.($this->domainName ?: ProvBase::first()->domain_name);
+        $hostname = $this->hostname.'.';
+
+        if ($this->domainName) {
+            $hostname .= $this->domainName;
+        } elseif ($conf) {
+            $hostname .= $conf->domain_name;
+        } else {
+            $hostname .= ProvBase::first()->domain_name;
+        }
+
         $ip = gethostbyname($hostname);
         $ip = ($ip == $hostname) ? null : $ip;
 

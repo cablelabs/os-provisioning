@@ -771,4 +771,23 @@ class ModemController extends \BaseController
 
         return $lease;
     }
+
+    /**
+     * Colorize Modem index table when ProvMon module is missing
+     * only for first 500 modems as this takes a huge amount of time
+     * Use obvious code generated/fixed amount of ds_pwr
+     */
+    public static function setModemsOnlineStatus()
+    {
+        $onlineModems = [];
+        $conf = ProvBase::first();
+
+        foreach (Modem::limit(500)->get() as $key => $modem) {
+            if ($modem->onlineStatus($conf)['online']) {
+                $onlineModems[] = $modem->id;
+            }
+        }
+
+        Modem::whereIn('id', $onlineModems)->update(['ds_pwr' => '44.44']);
+    }
 }
