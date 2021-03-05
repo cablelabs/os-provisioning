@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Observers;
 
+use Artisan;
 use Modules\ProvBase\Entities\Qos;
 use Nwidart\Modules\Facades\Module;
 use Modules\ProvBase\Entities\Modem;
@@ -20,7 +21,8 @@ class ProvBaseObserver
 {
     public function updated($model)
     {
-        $model->make_dhcp_glob_conf();
+        // TODO: Call this as a job
+        Artisan::call('nms:dhcp');
 
         $changes = $model->getDirty();
 
@@ -48,7 +50,7 @@ class ProvBaseObserver
         }
 
         if (array_key_exists('acct_interim_interval', $changes)) {
-            \Artisan::call('nms:radgroupreply-repopulate');
+            Artisan::call('nms:radgroupreply-repopulate');
         }
 
         if (array_key_exists('random_ip_allocation', $changes)) {
