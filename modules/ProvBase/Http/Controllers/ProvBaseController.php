@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Http\Controllers;
 
 use View;
 use Nwidart\Modules\Facades\Module;
+use Modules\ProvBase\Entities\Contract;
 use App\Http\Controllers\BaseController;
 
 class ProvBaseController extends BaseController
@@ -15,6 +16,10 @@ class ProvBaseController extends BaseController
         $contracts_data = [];
         if (Module::collections()->has('BillingBase')) {
             $contracts_data = \Modules\BillingBase\Helpers\BillingAnalysis::getContractData();
+        } else {
+            $contracts_data['total'] = Contract::where('contract_start', '<=', date('Y-m-d'))
+                ->where(whereLaterOrEqual('contract_end', date('Y-m-d')))
+                ->count();
         }
 
         return View::make('provbase::index', $this->compact_prep_view(compact('title', 'contracts_data')));
