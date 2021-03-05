@@ -58,7 +58,7 @@ class ModemController extends \BaseController
             $model->country_code = $config->default_country_code;
 
             if (! $model->ppp_password) {
-                $model->ppp_password = \Acme\php\Password::generate_password();
+                $model->ppp_password = \Acme\php\Password::generatePassword();
             }
         }
 

@@ -13,8 +13,9 @@ class Password
      * @author Torsten Schmidt, Patrick Reichel
      * @param $length length of the password
      * @param $target used for example to use different character sets. (implemented is envia).
+     * @param $except characters to exclude for default target
      */
-    public static function generate_password($length = 10, $target = '')
+    public static function generatePassword(int $length = 10, string $target = '', string $except = 'IOlo01'): string
     {
         $letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $numbers = '0123456789';
@@ -29,19 +30,19 @@ class Password
             $other_chars = $first_chars.$numbers.$specials;
         } else {
             // this creates alphanumerical passwords only
-            $first_chars = $letters.$numbers;
+            $first_chars = str_replace(str_split($except), '', $letters.$numbers);
             $other_chars = $first_chars;
         }
 
         // add first char
         $char_len = strlen($first_chars);
-        $char_idx = mt_rand(0, $char_len - 1);
+        $char_idx = random_int(0, $char_len - 1);
         $password = substr($first_chars, $char_idx, 1);
 
         // add other chars
         $char_len = strlen($other_chars);
         for ($i = 1; $i < $length; $i++) {
-            $char_idx = mt_rand(0, $char_len - 1);
+            $char_idx = random_int(0, $char_len - 1);
             $password .= substr($other_chars, $char_idx, 1);
         }
 
