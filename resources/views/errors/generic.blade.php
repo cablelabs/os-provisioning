@@ -7,24 +7,11 @@
         @include ('bootstrap.header')
     </head>
 
-<?php
-    if (!isset($error))
-        $error = 404;
-
-    if (!isset($message))
-        $message = 'Page not found';
-
-    if (!isset($link))
-        $link = \BaseRoute::getBaseUrl();
-
-?>
-
     <body class="pace-top">
-
         <div class="error">
-            <div class="error-code m-b-10">{{$error}}<i class="fa fa-warning m-l-10"></i></div>
+            <div class="error-code m-b-10">{{ $error ?? 404 }}<i class="fa fa-warning m-l-10"></i></div>
             <div class="error-content">
-                <div class="error-message mb-4">{!! $message !!}</div>
+                <div class="error-message mb-4">{!! $message ?? 'Page not found' !!}</div>
                 @if ($error == 403)
                     <div class="error-desc m-b-20">
                         <b>Permission denied!</b> <br />
@@ -35,13 +22,12 @@
                     </div>
                 @endif
                 <div>
-                    <a href="{{$link}}" class="btn btn-success">Go Back to Home Page</a><br><br>
+                    <a href="{{ $link ?? route('Home') }}" class="btn btn-success">Go Back to Home Page</a><br><br>
                     <a href="{{ URL::previous() }}" class="btn btn-success">Go Back to previous page.</a>
                 </div>
             </div>
         </div>
         <!-- end error -->
-
     </body>
 
     @include ('bootstrap.footer')

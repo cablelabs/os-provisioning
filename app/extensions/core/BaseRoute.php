@@ -17,24 +17,6 @@ class BaseRoute
     public static $admin_prefix = 'admin';
 
     /**
-     * Return the correct base URL
-     * @todo move somewhere else
-     * @return type string the actual base url
-     */
-    public static function getBaseUrl()
-    {
-        if ($_SERVER['SERVER_PORT'] == config('app.adminPort')) {
-            return "https://{$_SERVER['HTTP_HOST']}/admin";
-        }
-
-        if ($_SERVER['SERVER_PORT'] == config('app.cccPort')) {
-            return "https://{$_SERVER['HTTP_HOST']}/customer";
-        }
-
-        return abort(404);
-    }
-
-    /**
      * Our own custom Route function, which generates generic Routes
      * for our Ressources and takes care of authorization and
      * authentication through middlewares

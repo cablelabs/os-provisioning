@@ -29,7 +29,7 @@
                     <br><br>
                 </div>
                 <div>
-                    <a href="{{\BaseRoute::getBaseUrl()}}" class="btn btn-success">Go Back to Home Page</a>
+                    <a href="{{ route('Home') }}" class="btn btn-success">Go Back to Home Page</a>
                 </div>
             </div>
         </div>
