@@ -40,7 +40,7 @@ class BaseRoute
         Route::get($name, [
             'as' => $name.'.index',
             'uses' => $controller.'@index',
-            'middleware' => ['web', 'can:view,'.$models[$name]],
+            'middleware' => ['web', 'auth', 'can:view,'.$models[$name]],
             $options,
         ]);
 
@@ -64,7 +64,7 @@ class BaseRoute
         Route::get("$name/create", [
             'as' => $name.'.create',
             'uses' => $controller.'@create',
-            'middleware' => ['web', 'can:create,'.$models[$name]],
+            'middleware' => ['web', 'auth', 'can:create,'.$models[$name]],
             $options,
         ]);
 
@@ -79,7 +79,7 @@ class BaseRoute
         Route::get("$name/{{$name}}", [
             'as' => $name.'.edit',
             'uses' => $controller.'@edit',
-            'middleware' => ['web', 'can:view,'.$models[$name]],
+            'middleware' => ['web', 'auth', 'can:view,'.$models[$name]],
             $options,
         ]);
 
@@ -210,34 +210,34 @@ class BaseRoute
     /**
      * The following functions are simple helpers to adapt automatic authentication stuff
      */
-    public static function appendMiddleware($action = null)
+    public static function appendMiddleware(&$action = null)
     {
-        if (array_key_exists('middleware', $action)) {
-            array_unshift($action['middleware'], 'web');
-        } else {
-            $action['middleware'] = ['web', 'auth'];
+        if (! array_key_exists('middleware', $action)) {
+            return $action['middleware'] = ['web', 'auth'];
         }
 
-        return $action;
+        return array_unshift($action['middleware'], 'web');
     }
 
     public static function get($uri, $action = null)
     {
-        $action = self::appendMiddleware($action);
+        self::appendMiddleware($action);
+        array_splice($action['middleware'], 1, 0, 'auth');
+        $action['middleware'] = array_unique($action['middleware']);
 
         return Route::get($uri, $action);
     }
 
     public static function post($uri, $action = null)
     {
-        $action = self::appendMiddleware($action);
+        self::appendMiddleware($action);
 
         return Route::post($uri, $action);
     }
 
     public static function put($uri, $action = null)
     {
-        $action = self::appendMiddleware($action);
+        self::appendMiddleware($action);
 
         return Route::put($uri, $action);
     }
