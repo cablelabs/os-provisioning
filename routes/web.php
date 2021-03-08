@@ -142,4 +142,9 @@ BaseRoute::group([], function () {
         'uses' => 'AppController@showApps',
         'middleware' => ['can:view,App\App'],
     ]);
+
+    BaseRoute::get('missingModule/{module}', [
+        'as' => 'missingModule',
+        'uses' => 'BaseController@missingModule',
+    ]);
 });

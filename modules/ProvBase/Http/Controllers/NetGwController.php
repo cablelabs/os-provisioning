@@ -143,7 +143,8 @@ class NetGwController extends \BaseController
         $tabs[] = ['name' => 'Analyses', 'route' => 'ProvMon.netgw', 'link' => $netgw->id];
 
         if (! \Module::collections()->has('ProvMon')) {
-            $tabs[array_key_last($tabs)]['route'] = 'missingProvMon';
+            $tabs[array_key_last($tabs)]['route'] = 'missingModule';
+            $tabs[array_key_last($tabs)]['link'] = 'Prime Monitoring';
         }
 
         return $tabs;

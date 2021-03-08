@@ -78,9 +78,4 @@ BaseRoute::group([], function () {
         'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@realtimePing',
         'middleware' => ['can:view_analysis_pages_of,Modules\ProvBase\Entities\Modem'],
     ]);
-
-    BaseRoute::get('missingProvMon', [
-        'as' => 'missingProvMon',
-        'uses' => 'Modules\ProvBase\Http\Controllers\ProvBaseController@missingProvMon',
-    ]);
 });

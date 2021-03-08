@@ -664,7 +664,7 @@ return [
             'updated N:M'   => 'aktualisiert',
         ],
     ],
-    'missingProvMon' => 'Prime Monitoring ist nicht installiert/aktiviert.',
+    'missingModule' => ':module ist nicht installiert/aktiviert.',
     'Modem'                         => 'Modem',
     'PhonenumberManagement'         => 'Nummernverwaltung',
     'PhonebookEntry_lastExternalUpdateTelekom' => 'Letzte Aktualisierung bei Telekom',

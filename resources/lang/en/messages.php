@@ -664,7 +664,7 @@ return [
             'updated N:M'   => 'updated',
         ],
     ],
-    'missingProvMon' => 'Prime Monitoring is missing.',
+    'missingModule' => ':module is missing.',
     'Modem'                         => 'Modem',
     'PhonenumberManagement'         => 'Phonenumber Management',
     'PhonebookEntry_lastExternalUpdateTelekom' => 'Last update at Telekom',
