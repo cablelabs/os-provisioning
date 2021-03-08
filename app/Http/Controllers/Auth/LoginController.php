@@ -162,7 +162,7 @@ class LoginController extends Controller
      *
      * @return type Redirect
      */
-    private function redirectTo()
+    public function redirectTo()
     {
         $user = Auth::user();
         $activeModules = Module::collections();

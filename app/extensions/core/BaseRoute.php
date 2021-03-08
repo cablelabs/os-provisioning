@@ -2,9 +2,8 @@
 
 namespace Acme\core;
 
-use Route;
-use Request;
 use App\BaseModel;
+use Illuminate\Support\Facades\Route;
 
 /**
  * BaseRoute API
@@ -24,18 +23,15 @@ class BaseRoute
      */
     public static function getBaseUrl()
     {
-        $url = Request::root();
-        $port = Request::getPort();
-
-        if ($port == env('HTTPS_ADMIN_PORT', 8080)) {
-            return $url.'/admin';
+        if ($_SERVER['SERVER_PORT'] == config('app.adminPort')) {
+            return "https://{$_SERVER['HTTP_HOST']}/admin";
         }
 
-        if ($port == env('HTTPS_CCC_PORT', 443)) {
-            return $url.'/customer';
+        if ($_SERVER['SERVER_PORT'] == config('app.cccPort')) {
+            return "https://{$_SERVER['HTTP_HOST']}/customer";
         }
 
-        return $url; // will not work
+        return abort(404);
     }
 
     /**
