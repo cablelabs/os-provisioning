@@ -916,6 +916,42 @@ class Modem extends \BaseModel
     }
 
     /**
+     * Colorize Modem index table when ProvMon module is missing
+     * only for first $count modems as this takes a huge amount of time
+     * Use obvious code generated/fixed amount of ds_pwr
+     *
+     * Status of all other modems is set in refreshPPP()
+     *
+     * @param Integer $count max count of modems to check
+     */
+    public static function setCableModemsOnlineStatus($count = 0)
+    {
+        $onlineModems = [];
+        $conf = ProvBase::first();
+        $hf = array_flip(config('hfcreq.hfParameters'));
+
+        $modemQuery = self::join('configfile as c', 'modem.configfile_id', 'c.id')
+            ->where('c.device', 'cm');
+
+        if ($count) {
+            $modemQuery->limit($count);
+        }
+
+        foreach ($modemQuery->get() as $key => $modem) {
+            if ($modem->onlineStatus($conf)['online']) {
+                $onlineModems[] = $modem->id;
+            }
+        }
+
+        Log::info('Set modems online status');
+
+        DB::beginTransaction();
+        $modemQuery->update(['ds_pwr' => null]);
+        self::whereIn('id', $onlineModems)->update(array_combine($hf, [40, 36, 0, 36]));
+        DB::commit();
+    }
+
+    /**
      * Create Provision from configfile.text.
      *
      * @author Roy Schneider

@@ -187,7 +187,9 @@ class Kernel extends ConsoleKernel
         if (\Module::collections()->has('ProvMon')) {
             $schedule->command('nms:cacti')->daily();
         } else {
-            $schedule->call('\Modules\ProvBase\Http\Controllers\ModemController@setModemsOnlineStatus')->everyFiveMinutes();
+            $schedule->call(function () {
+                \Queue::push(new \Modules\ProvBase\Jobs\SetModemsOnlineStatusJob());
+            })->everyFiveMinutes();
         }
 
         // TODO: improve
