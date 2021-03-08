@@ -477,7 +477,6 @@ return [
     'Deactivation date'     => 'Deactivation date',
     'External deactivation date' => 'External deactivation date',
     'SIP domain'            => 'Registrar',
-    'Created at'            => 'Created at',
     'Last status update'    => 'Last status update',
     'Last user interaction' => 'Last user interaction',
     'Method'                => 'Method',
@@ -723,4 +722,7 @@ return [
     'mail_not_sent'             => 'Email could not be delivered - Missing email data in environment file!',
     'NoSnmpAccess'              => "Please set your community :ACCESS access for Netelement ':name'",
     'SnmpAccessException'       => 'Snmp Access Declined',
+    'Page not found'            => 'Sorry, we could not find that Page',
+    'Back to Home Page'         => 'Go back to Home Page',
+    'Back to previous Page'     => 'Go back to previous Page',
 ];
