@@ -23,7 +23,7 @@ class WelcomeController extends Controller
     public function index()
     {
         if ($_SERVER['SERVER_PORT'] == config('app.cccPort')) {
-            return redirect("https://{$_SERVER['HTTP_HOST']}/customer");
+            return redirect(route('HomeCcc'));
         }
 
         if (auth()->user()) {
@@ -31,7 +31,7 @@ class WelcomeController extends Controller
         }
 
         if ($_SERVER['SERVER_PORT'] == config('app.adminPort')) {
-            return redirect("https://{$_SERVER['HTTP_HOST']}/admin");
+            return redirect(route('adminLogin'));
         }
 
         return abort(404);
