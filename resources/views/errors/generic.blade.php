@@ -9,21 +9,31 @@
 
     <body class="pace-top">
         <div class="error">
-            <div class="error-code m-b-10">{{ $error ?? 404 }}<i class="fa fa-warning m-l-10"></i></div>
+            <div class="error-code mb-3">{{ $error ?? 404 }}<i class="fa fa-warning m-l-10"></i></div>
             <div class="error-content">
-                <div class="error-message mb-4">{!! $message ?? 'Page not found' !!}</div>
                 @if ($error == 403)
-                    <div class="error-desc m-b-20">
-                        <b>Permission denied!</b> <br />
+                    <div class="my-5">
+                        <div class="error-message mb-3">{{ trans('auth.Permission denied') }}!</div>
+                        <div class="error-desc">
+                            <b>{{ trans('auth.'.$message) }}!</b> <br />
+                        </div>
                     </div>
                 @elseif ($error == 404)
-                    <div class="error-desc m-b-20">
-                        The page you're looking for doesn't exist. <br />
-                    </div>
+                    <div class="error-message my-5">{{ trans('messages.Page not found') }}!</div>
+                @else
+                    <div class="error-message my-5">{{ $message }}</div>
                 @endif
-                <div>
-                    <a href="{{ $link ?? route('Home') }}" class="btn btn-success">Go Back to Home Page</a><br><br>
-                    <a href="{{ URL::previous() }}" class="btn btn-success">Go Back to previous page.</a>
+                <div class="mt-4 d-flex flex-column align-items-center">
+                    <a href="{{ $link ?? route('Home') }}" class="btn btn-lg btn-success mb-4">
+                        <i class="fa fa-home"></i>
+                        {{ trans('messages.Back to Home Page') }}
+                    </a>
+                    @if(auth()->user())
+                        <a class="btn btn-lg btn-success" href="{{ URL::previous() }}">
+                            <i class="fa fa-arrow-left"></i>
+                            {{ trans('messages.Back to previous Page') }}
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
