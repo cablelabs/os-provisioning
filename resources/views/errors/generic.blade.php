@@ -15,7 +15,7 @@
 		$message = 'Page not found';
 
 	if (!isset($link))
-		$link = \BaseRoute::get_base_url();
+		$link = \BaseRoute::getBaseUrl();
 
 ?>
 

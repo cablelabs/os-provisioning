@@ -22,7 +22,7 @@ class BaseRoute
      * @todo move somewhere else
      * @return type string the actual base url
      */
-    public static function get_base_url()
+    public static function getBaseUrl()
     {
         $url = Request::root();
         $port = Request::getPort();
