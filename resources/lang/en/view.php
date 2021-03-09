@@ -506,6 +506,11 @@ return [
     'Diagrams' => 'Diagrams',
     'Discard' => 'Discard',
     'Download' => 'Download',
+    'error' => [
+        'pageNotFound'              => 'Sorry, we could not find that Page',
+        'backToHomePage'            => 'Go back to Home Page',
+        'backToPreviousPage'        => 'Go back to previous Page',
+    ],
     'false' => 'false',
     'Global' => 'Global',
     'Global notification' => 'Global notification',

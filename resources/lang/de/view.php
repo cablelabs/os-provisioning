@@ -506,6 +506,11 @@ return [
     'Diagrams' => 'Diagramme',
     'Discard' => 'Missachte',
     'Download' => 'Herunterladen',
+    'error' => [
+        'pageNotFound'              => 'Diese Seite existiert leider nicht',
+        'backToHomePage'            => 'Zurück zur Startseite',
+        'backToPreviousPage'        => 'Zurück zur letzten Seite',
+    ]
     'false' => 'nein',
     'Global' => 'Global',
     'Global notification' => 'Globale Benachrichtigung',

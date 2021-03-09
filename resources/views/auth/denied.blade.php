@@ -12,7 +12,7 @@
     <body class="pace-top">
 
         <div class="error">
-            <div class="error-code m-b-10">{{ trans('auth.Access Denied') }}! <i class="fa fa-warning"></i></div>
+            <div class="error-code m-b-10">{{ trans('auth.accessDenied') }}! <i class="fa fa-warning"></i></div>
             <div class="error-content">
                 <div class="error-message">
                     @if (isset($status))
@@ -29,7 +29,7 @@
                     <br><br>
                 </div>
                 <div>
-                    <a href="{{ route('Home') }}" class="btn btn-success">{{ trans('messages.Back to Home Page') }}</a>
+                    <a href="{{ route('Home') }}" class="btn btn-success">{{ trans('view.error.backToHomePage') }}</a>
                 </div>
             </div>
         </div>
