@@ -946,7 +946,7 @@ class Modem extends \BaseModel
         Log::info('Set modems online status');
 
         DB::beginTransaction();
-        $modemQuery->update(['ds_pwr' => null]);
+        $modemQuery->update(array_merge(array_combine($hf, [0, 0, 0, 0]), ['modem.updated_at' => now()]));
         self::whereIn('id', $onlineModems)->update(array_combine($hf, [40, 36, 0, 36]));
         DB::commit();
     }
