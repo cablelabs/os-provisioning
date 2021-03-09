@@ -22,22 +22,18 @@ class WelcomeController extends Controller
      */
     public function index()
     {
-        $server_port = \Request::getPort();
-        $admin_port = env('HTTPS_ADMIN_PORT', '8080');
-        $ccc_port = env('HTTPS_CCC_PORT', '443');
-
-        if ($server_port == $ccc_port) {
-            return redirect(route('customerLogin'));
+        if ($_SERVER['SERVER_PORT'] == config('app.cccPort')) {
+            return redirect(route('HomeCcc'));
         }
 
-        if (! empty(auth()->user()->initial_dashboard)) {
-            return redirect(route(auth()->user()->initial_dashboard));
+        if (auth()->user()) {
+            return redirect((new Auth\LoginController())->redirectTo());
         }
 
-        if ($server_port == $admin_port) {
+        if ($_SERVER['SERVER_PORT'] == config('app.adminPort')) {
             return redirect(route('adminLogin'));
         }
 
-        abort(404);
+        return abort(404);
     }
 }
