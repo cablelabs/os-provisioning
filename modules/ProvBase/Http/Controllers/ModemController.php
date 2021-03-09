@@ -483,6 +483,10 @@ class ModemController extends \BaseController
     {
         $modem = Modem::with('configfile')->find($id);
 
+        if (! $modem) {
+            return View::make('errors.generic', ['error' => '', 'message' => trans('view.error.specifyId')]);
+        }
+
         $data = $modem->getAnalysisBaseData($api);
 
         if ($api) {
