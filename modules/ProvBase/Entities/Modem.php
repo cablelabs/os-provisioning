@@ -937,7 +937,7 @@ class Modem extends \BaseModel
             $modemQuery->limit($count);
         }
 
-        foreach ($modemQuery->get() as $key => $modem) {
+        foreach ($modemQuery->get() as $modem) {
             if ($modem->onlineStatus($conf)['online']) {
                 $onlineModems[] = $modem->id;
             }
