@@ -47,7 +47,14 @@
 
             <div class="m-t-20">
                 {{ Form::open(array('url' => $prefix.'/login')) }}
-
+                @if (isset($intended) && $intended)
+                    <div class="note note-warning">
+                        <div class="mb-2">
+                            {{ trans('view.redirectNote') }}:
+                        </div>
+                        <div class="badge font-weight-normal" style="font-family: monospace;">{{ $intended }}</div>
+                    </div>
+                @endif
                 {{-- Username --}}
                 <div class="form-group m-b-20">
                     {{ Form::text('login_name', Request::old('login_name'), array('autofocus'=>'autofocus', 'class' => "form-control input-lg", 'placeholder' => \App\Http\Controllers\BaseViewController::translate_label('Username'), 'style' => 'simple')) }}

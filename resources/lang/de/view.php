@@ -545,6 +545,7 @@ return [
     'ProvBase' => 'Provisionierung',
     'ProvMon' => 'Monitoring',
     'ProvVoip' => 'VoIP',
+    'redirectNote' => 'Sie sind nicht eingeloggt und versuchen auf eine interne Seite zuzugreifen.Nach dem Log-In werden Sie direkt weitergeleitet zu',
     'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
     'SettlementRun' => 'Abrechnungslauf',
     'tab' => [

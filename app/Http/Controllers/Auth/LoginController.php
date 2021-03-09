@@ -55,6 +55,7 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
+        $intended = null;
         $prefix = $this->prefix;
         $globalConfig = GlobalConfig::first();
         $head1 = $globalConfig->headline1;
@@ -63,7 +64,11 @@ class LoginController extends Controller
         $loginPage = 'admin';
         $logo = asset('images/nmsprime-logo-white.png');
 
-        return \View::make('auth.login', compact('head1', 'head2', 'prefix', 'image', 'loginPage', 'logo'));
+        if (session()->has('url.intended') && $pos = strpos($url = session('url.intended'), 'admin')) {
+            $intended = substr($url, $pos + 6); // pos + admin/
+        }
+
+        return \View::make('auth.login', compact('head1', 'head2', 'prefix', 'image', 'loginPage', 'logo', 'intended'));
     }
 
     /**
