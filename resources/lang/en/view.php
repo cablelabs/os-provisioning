@@ -511,7 +511,7 @@ return [
         'backToHomePage'        => 'Go back to Home Page',
         'backToPreviousPage'    => 'Go back to previous Page',
         'pageNotFound'          => 'Sorry, we could not find that Page',
-        'SnmpAccessException'   => 'Snmp Access Declined',
+        'snmpAccessException'   => 'Snmp Access Declined',
         'specifyId'             => 'Please specify the hostname instead of the ip address.',
         'ticketSettings'        => 'Please set noreply name and address in Global Config Page.',
     ],

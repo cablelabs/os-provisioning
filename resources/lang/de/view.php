@@ -511,7 +511,7 @@ return [
         'backToHomePage'        => 'Zurück zur Startseite',
         'backToPreviousPage'    => 'Zurück zur letzten Seite',
         'pageNotFound'          => 'Diese Seite existiert leider nicht',
-        'SnmpAccessException'   => 'Snmp Zugriff Verweigert',
+        'snmpAccessException'   => 'Snmp Zugriff Verweigert',
         'specifyId'             => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
         'ticketSettings'        => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
     ],
