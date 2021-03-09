@@ -922,7 +922,7 @@ class Modem extends \BaseModel
      *
      * Status of all other modems is set in refreshPPP()
      *
-     * @param Integer $count max count of modems to check
+     * @param int $count max count of modems to check
      */
     public static function setCableModemsOnlineStatus($count = 0)
     {

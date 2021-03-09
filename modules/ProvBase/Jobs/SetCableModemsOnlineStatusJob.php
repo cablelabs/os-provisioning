@@ -21,7 +21,6 @@ class SetCableModemsOnlineStatusJob implements ShouldQueue
      */
     public function __construct()
     {
-
     }
 
     /**
