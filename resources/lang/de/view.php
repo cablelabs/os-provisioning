@@ -448,10 +448,11 @@ return [
     // VoIP
     'PhonebookEntry' => 'Telefonbucheintrag',
 
-    // Error
-    'error_specify_id'          => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
-    'error_ticket_settings'     => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
-
+    /*
+    * New alphabetically sorted translations. Please add new translations below
+    * or convert existing ones from above to new format of the section below.
+    * Please use whenever possible lower camelCase for all translation keys.
+    */
     'Ability' => [
         'Abilities'         => 'Berechtigungen',
         'Ability'           => 'Berechtigung',
@@ -507,10 +508,13 @@ return [
     'Discard' => 'Missachte',
     'Download' => 'Herunterladen',
     'error' => [
-        'pageNotFound'              => 'Diese Seite existiert leider nicht',
-        'backToHomePage'            => 'Zurück zur Startseite',
-        'backToPreviousPage'        => 'Zurück zur letzten Seite',
-    ]
+        'backToHomePage'        => 'Zurück zur Startseite',
+        'backToPreviousPage'    => 'Zurück zur letzten Seite',
+        'pageNotFound'          => 'Diese Seite existiert leider nicht',
+        'SnmpAccessException'   => 'Snmp Zugriff Verweigert',
+        'specifyId'             => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
+        'ticketSettings'        => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
+    ],
     'false' => 'nein',
     'Global' => 'Global',
     'Global notification' => 'Globale Benachrichtigung',

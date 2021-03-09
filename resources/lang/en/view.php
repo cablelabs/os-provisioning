@@ -448,10 +448,11 @@ return [
     // VoIP
     'PhonebookEntry' => 'Phonebook entry',
 
-    // Error
-    'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
-    'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
-
+    /*
+    * New alphabetically sorted translations. Please add new translations below
+    * or convert existing ones from above to new format of the section below.
+    * Please use whenever possible lower camelCase for new translation keys.
+    */
     'Ability' => [
         'Abilities'         => 'Abilities',
         'Ability'           => 'Ability',
@@ -507,9 +508,12 @@ return [
     'Discard' => 'Discard',
     'Download' => 'Download',
     'error' => [
-        'pageNotFound'              => 'Sorry, we could not find that Page',
-        'backToHomePage'            => 'Go back to Home Page',
-        'backToPreviousPage'        => 'Go back to previous Page',
+        'backToHomePage'        => 'Go back to Home Page',
+        'backToPreviousPage'    => 'Go back to previous Page',
+        'pageNotFound'          => 'Sorry, we could not find that Page',
+        'SnmpAccessException'   => 'Snmp Access Declined',
+        'specifyId'             => 'Please specify the hostname instead of the ip address.',
+        'ticketSettings'        => 'Please set noreply name and address in Global Config Page.',
     ],
     'false' => 'false',
     'Global' => 'Global',

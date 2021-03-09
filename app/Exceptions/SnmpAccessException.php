@@ -16,7 +16,7 @@ class SnmpAccessException extends Exception
     public function render($request)
     {
         return view('errors.generic', [
-            'error' => trans('messages.SnmpAccessException'),
+            'error' => trans('view.error.SnmpAccessException'),
             'message' => $this->getMessage(),
         ]);
     }
