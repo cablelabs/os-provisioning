@@ -27,7 +27,7 @@ class PhonenumberObserver
     {
         if (\Module::collections()->has('ProvVoipEnvia') && ($phonenumber->mta->type == 'sip')) {
             if (! boolval($phonenumber->password)) {
-                $phonenumber->password = \Acme\php\Password::generate_password(15, 'envia');
+                $phonenumber->password = \Acme\php\Password::generatePassword(15, 'envia');
             }
         }
     }
