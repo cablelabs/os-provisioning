@@ -1699,4 +1699,18 @@ class BaseController extends Controller
 
         return config('documentation.'.strtolower(end($a)));
     }
+
+    /**
+     * Show error message when user clicks on analysis page and ProvMon module is not installed/active
+     *
+     * @author Nino Ryschawy
+     * @return View
+     */
+    public function missingModule($module)
+    {
+        $error = '501';
+        $message = trans('messages.missingModule', ['module' => $module]);
+
+        return \View::make('errors.generic', compact('error', 'message'));
+    }
 }

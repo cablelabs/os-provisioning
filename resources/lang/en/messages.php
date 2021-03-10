@@ -477,7 +477,6 @@ return [
     'Deactivation date'     => 'Deactivation date',
     'External deactivation date' => 'External deactivation date',
     'SIP domain'            => 'Registrar',
-    'Created at'            => 'Created at',
     'Last status update'    => 'Last status update',
     'Last user interaction' => 'Last user interaction',
     'Method'                => 'Method',
@@ -664,7 +663,7 @@ return [
             'updated N:M'   => 'updated',
         ],
     ],
-    'missingProvMon' => 'Prime Monitoring is missing.',
+    'missingModule' => ':module is missing.',
     'Modem'                         => 'Modem',
     'PhonenumberManagement'         => 'Phonenumber Management',
     'PhonebookEntry_lastExternalUpdateTelekom' => 'Last update at Telekom',
@@ -722,5 +721,4 @@ return [
     'Default Country Code'      => 'Default Country Code',
     'mail_not_sent'             => 'Email could not be delivered - Missing email data in environment file!',
     'NoSnmpAccess'              => "Please set your community :ACCESS access for Netelement ':name'",
-    'SnmpAccessException'       => 'Snmp Access Declined',
 ];

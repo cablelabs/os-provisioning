@@ -186,6 +186,10 @@ class Kernel extends ConsoleKernel
 
         if (\Module::collections()->has('ProvMon')) {
             $schedule->command('nms:cacti')->daily();
+        } else {
+            $schedule->call(function () {
+                \Queue::push(new \Modules\ProvBase\Jobs\SetModemsOnlineStatusJob());
+            })->everyFiveMinutes();
         }
 
         // TODO: improve

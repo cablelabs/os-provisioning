@@ -448,32 +448,11 @@ return [
     // VoIP
     'PhonebookEntry' => 'Telefonbucheintrag',
 
-    // Error
-    'error_specify_id'          => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
-    'error_ticket_settings'     => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
-
-    'analysis' => 'Analyse',
-    'Assign' => ':model hinzufügen',
-    'BillingBase' => 'Billing',
-    'Ccc' => 'Kundenkontrollzentrum',
-    'commandCenter' => 'Kommandozentrale',
-    'company' => 'Firma',
-    'Credit' => 'Gutschrift',
-    'critical' => 'kritisch',
-    'Debit' => 'Lastschrift',
-    'Detach all' => 'Alle :model entfernen',
-    'Diagrams' => 'Diagramme',
-    'Discard' => 'Missachte',
-    'Download' => 'Herunterladen',
-    'false' => 'nein',
-    'Global' => 'Global',
-    'Global notification' => 'Globale Benachrichtigung',
-    'HfcReq' => 'HFC',
-    'info' => 'Info',
-    'Level' => 'Level',
-    'markon' => 'Preisaufschlag in %',
-    'Message' => 'Nachricht',
-    'name' => 'Name',
+    /*
+    * New alphabetically sorted translations. Please add new translations below
+    * or convert existing ones from above to new format of the section below.
+    * Please use whenever possible lower camelCase for all translation keys.
+    */
     'Ability' => [
         'Abilities'         => 'Berechtigungen',
         'Ability'           => 'Berechtigung',
@@ -515,6 +494,36 @@ return [
         'View everything'   => 'Alle Seiten ansehen',
         'VoipMon'           => 'Voip Monitor',
     ],
+    'analysis' => 'Analyse',
+    'Assign' => ':model hinzufügen',
+    'BillingBase' => 'Billing',
+    'Ccc' => 'Kundenkontrollzentrum',
+    'commandCenter' => 'Kommandozentrale',
+    'company' => 'Firma',
+    'Credit' => 'Gutschrift',
+    'critical' => 'kritisch',
+    'Debit' => 'Lastschrift',
+    'Detach all' => 'Alle :model entfernen',
+    'Diagrams' => 'Diagramme',
+    'Discard' => 'Missachte',
+    'Download' => 'Herunterladen',
+    'error' => [
+        'backToHomePage'        => 'Zurück zur Startseite',
+        'backToPreviousPage'    => 'Zurück zur letzten Seite',
+        'pageNotFound'          => 'Diese Seite existiert leider nicht',
+        'snmpAccessException'   => 'Snmp Zugriff Verweigert',
+        'specifyId'             => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
+        'ticketSettings'        => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
+    ],
+    'false' => 'nein',
+    'Global' => 'Global',
+    'Global notification' => 'Globale Benachrichtigung',
+    'HfcReq' => 'HFC',
+    'info' => 'Info',
+    'Level' => 'Level',
+    'markon' => 'Preisaufschlag in %',
+    'Message' => 'Nachricht',
+    'name' => 'Name',
     'OverdueDebts' => 'Offene Posten',
     'product' => [
         'billingCycles' => [
@@ -536,6 +545,7 @@ return [
     'ProvBase' => 'Provisionierung',
     'ProvMon' => 'Monitoring',
     'ProvVoip' => 'VoIP',
+    'redirectNote' => 'Sie sind nicht eingeloggt und versuchen auf eine interne Seite zuzugreifen.Nach dem Log-In werden Sie direkt weitergeleitet zu',
     'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
     'SettlementRun' => 'Abrechnungslauf',
     'tab' => [

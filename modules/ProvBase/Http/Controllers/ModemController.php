@@ -332,6 +332,10 @@ class ModemController extends \BaseController
      */
     public function firmware_view()
     {
+        if (! Module::collections()->has('ProvMon')) {
+            return $this->missingModule('Prime Monitoring');
+        }
+
         $view_var = Modem::get_firmware_tree();
 
         $headline = $view_header = 'Firmware';
@@ -478,6 +482,10 @@ class ModemController extends \BaseController
     public function analysis($id, $api = false)
     {
         $modem = Modem::with('configfile')->find($id);
+
+        if (! $modem) {
+            return View::make('errors.generic', ['error' => '', 'message' => trans('view.error.specifyId')]);
+        }
 
         $data = $modem->getAnalysisBaseData($api);
 

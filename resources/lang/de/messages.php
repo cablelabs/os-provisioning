@@ -477,7 +477,6 @@ return [
     'Deactivation date'     => 'Deaktivierungsdatum',
     'External deactivation date' => 'Deaktivierungsdatum extern',
     'SIP domain'            => 'Registrar',
-    'Created at'            => 'Erstellt am',
     'Last status update'    => 'Letztes Update',
     'Last user interaction' => 'Letzte Interaktion',
     'Method'                => 'Methode',
@@ -664,7 +663,7 @@ return [
             'updated N:M'   => 'aktualisiert',
         ],
     ],
-    'missingProvMon' => 'Prime Monitoring ist nicht installiert/aktiviert.',
+    'missingModule' => ':module ist nicht installiert/aktiviert.',
     'Modem'                         => 'Modem',
     'PhonenumberManagement'         => 'Nummernverwaltung',
     'PhonebookEntry_lastExternalUpdateTelekom' => 'Letzte Aktualisierung bei Telekom',
@@ -722,5 +721,4 @@ return [
     'Default Country Code'      => 'Vorausgefüllter Ländercode',
     'mail_not_sent'             => 'Die E-Mail konnte nicht gesendet werden - E-Mail Daten in Environment Datei fehlen!',
     'NoSnmpAccess'              => "Bitte setzen Sie den Community :ACCESS String für das Netzelement ':name'",
-    'SnmpAccessException'       => 'Snmp Zugriff Verweigert',
 ];

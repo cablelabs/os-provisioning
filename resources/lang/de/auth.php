@@ -17,5 +17,8 @@ return [
     'throttle' => 'Zu viele Login Versuche. Versuchen Sie es bitte in :seconds Sekunden erneut.',
     'NoRoles' => 'Ihrem Account wurde(n) noch keine Rolle(n) zugewiesen. Bitte Kontaktieren Sie Ihren Administrator.',
 
+    'accessDenied'      => 'Zugriff verweigert',
+    'permissionDenied'  => 'Keine Berechtigung',
+    'This action is unauthorized.' => 'Diese Aktion ist nicht authorisiert',
     'EnviaOrderDocument' => 'Zugriff zu EnviaOrder Dokument ist nicht erlaubt.\\nIhnen fehlt eventuell die Berechtigung für ProvVoipEnvia - Bitte wenden Sie sich an Ihren Administrator.',
 ];

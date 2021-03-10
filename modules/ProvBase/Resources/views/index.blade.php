@@ -68,12 +68,14 @@
                         </span>'))
                     !!}
 
-                    {!! HTML::decode (HTML::linkRoute('CustomerTopo.show_impaired',
-                        '<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
-                            <i style="font-size: 25px;" class="img-center fa fa-hdd-o text-danger p-10"></i><br>
-                            <span class="username text-ellipsis text-center">'.trans('view.dashboard.impairedModem').'</span>
-                        </span>'))
-                    !!}
+                    @if (Module::collections()->has('HfcCustomer'))
+                        {!! HTML::decode (HTML::linkRoute('CustomerTopo.show_impaired',
+                            '<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
+                                <i style="font-size: 25px;" class="img-center fa fa-hdd-o text-danger p-10"></i><br>
+                                <span class="username text-ellipsis text-center">'.trans('view.dashboard.impairedModem').'</span>
+                            </span>'))
+                        !!}
+                    @endif
 
                     <a href="/genieacs/">
                         <span class="btn btn-dark p-10 m-5 m-r-10 text-center">

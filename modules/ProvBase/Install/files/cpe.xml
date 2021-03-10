@@ -2,7 +2,7 @@
 <zone>
   <short>CPE</short>
   <description>Only allow CPE essential services.</description>
-  <source address="100.64.0.0/10"/>
+  <source address="100.64.0.0/11"/>
   <service name="dns"/>
   <service name="dhcpv6"/>
   <port protocol="tcp" port="7547"/>

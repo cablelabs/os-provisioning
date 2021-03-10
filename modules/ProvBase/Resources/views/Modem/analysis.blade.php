@@ -36,7 +36,7 @@
         </div>
 
         <div class="tab-pane fade in" id="flood-ping">
-            <form method="POST">Type:
+            <form method="POST" action="{{ route('Modem.floodPing', ['id' => $modem->id]) }}">Type:
                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                 <select class="select2 form-control m-b-20" name="floodPing" style="width: 100%;">
                     <option value="1">low load: 500 packets of 56 Byte</option> {{-- needs approximately 5 sec --}}
@@ -45,7 +45,7 @@
                     <option value="4">huge load: 2500 packets of 1472 Byte</option> {{-- needs approximately 30 sec --}}
                 </select>
 
-                {{-- Form::open(['route' => ['Modem.floodPing', $modem->id]]) --}}
+                {{-- Result --}}
                 @if (isset($floodPing))
                     <table class="m-t-20">
                     @foreach ($floodPing as $line)

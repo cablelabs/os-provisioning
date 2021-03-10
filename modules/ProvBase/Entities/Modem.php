@@ -92,7 +92,7 @@ class Modem extends \BaseModel
         }
 
         $ret = ['table' => $this->table,
-            'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.ppp_username', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.us_pwr', $this->table.'.us_snr', $this->table.'.ds_pwr', $this->table.'.ds_snr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
+            'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.ppp_username', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
             'bsclass' => $bsclass,
             'header' => $this->label(),
             'edit' => ['contract_valid' => 'get_contract_valid'],
@@ -102,6 +102,12 @@ class Modem extends \BaseModel
             'order_by' => ['0' => 'desc'],
             'where_clauses' => self::_get_where_clause(),
         ];
+
+        if (Module::collections()->has('ProvMon')) {
+            $hfParameters = [$this->table.'.us_pwr', $this->table.'.us_snr', $this->table.'.ds_pwr', $this->table.'.ds_snr'];
+
+            $ret['index_header'] = array_merge($ret['index_header'], $hfParameters);
+        }
 
         if (Sla::firstCached()->valid()) {
             $ret['index_header'][] = $this->table.'.support_state';
@@ -910,6 +916,42 @@ class Modem extends \BaseModel
     }
 
     /**
+     * Colorize Modem index table when ProvMon module is missing
+     * only for first $count modems as this takes a huge amount of time
+     * Use obvious code generated/fixed amount of ds_pwr
+     *
+     * Status of all other modems is set in refreshPPP()
+     *
+     * @param int $count max count of modems to check
+     */
+    public static function setCableModemsOnlineStatus($count = 0)
+    {
+        $onlineModems = [];
+        $conf = ProvBase::first();
+        $hf = array_flip(config('hfcreq.hfParameters'));
+
+        $modemQuery = self::join('configfile as c', 'modem.configfile_id', 'c.id')
+            ->where('c.device', 'cm');
+
+        if ($count) {
+            $modemQuery->limit($count);
+        }
+
+        foreach ($modemQuery->get() as $modem) {
+            if ($modem->onlineStatus($conf)['online']) {
+                $onlineModems[] = $modem->id;
+            }
+        }
+
+        Log::info('Set modems online status');
+
+        DB::beginTransaction();
+        $modemQuery->update(array_merge(array_combine($hf, [0, 0, 0, 0]), ['modem.updated_at' => now()]));
+        self::whereIn('id', $onlineModems)->update(array_combine($hf, [40, 36, 0, 36]));
+        DB::commit();
+    }
+
+    /**
      * Create Provision from configfile.text.
      *
      * @author Roy Schneider
@@ -1116,6 +1158,11 @@ class Modem extends \BaseModel
     public static function get_firmware_tree($id = null)
     {
         $ret = [];
+
+        if (! Module::collections()->has('ProvMon')) {
+            return $ret;
+        }
+
         foreach (glob("/var/lib/cacti/rra/cm-$id*.json") as $file) {
             if (filemtime($file) < time() - 86400 || // ignore json files, which haven't been updated within a day
                 ! ($json = file_get_contents($file)) ||
@@ -2004,14 +2051,24 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Get ID of Modem and ping it for Analysis page.
+     * Get IP of Modem and ping it for Analysis page.
      *
+     * @param   object \Modules\Provbase\Entities\Provbase - to reduce amount of DB queries when looping over all modems
      * @author  Roy Schneider
      * @return  array
      */
-    public function onlineStatus()
+    public function onlineStatus($conf = null)
     {
-        $hostname = $this->hostname.'.'.($this->domainName ?: ProvBase::first()->domain_name);
+        $hostname = $this->hostname.'.';
+
+        if ($this->domainName) {
+            $hostname .= $this->domainName;
+        } elseif ($conf) {
+            $hostname .= $conf->domain_name;
+        } else {
+            $hostname .= ProvBase::first()->domain_name;
+        }
+
         $ip = gethostbyname($hostname);
         $ip = ($ip == $hostname) ? null : $ip;
 

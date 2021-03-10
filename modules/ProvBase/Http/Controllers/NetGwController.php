@@ -143,23 +143,10 @@ class NetGwController extends \BaseController
         $tabs[] = ['name' => 'Analyses', 'route' => 'ProvMon.netgw', 'link' => $netgw->id];
 
         if (! \Module::collections()->has('ProvMon')) {
-            $tabs[array_key_last($tabs)]['route'] = 'missingProvMon';
+            $tabs[array_key_last($tabs)]['route'] = 'missingModule';
+            $tabs[array_key_last($tabs)]['link'] = 'Prime Monitoring';
         }
 
         return $tabs;
-    }
-
-    /**
-     * Show error message when user clicks on analysis page and ProvMon module is not installed/active
-     *
-     * @author Nino Ryschawy
-     * @return View
-     */
-    public function missingProvMon()
-    {
-        $error = '501';
-        $message = trans('messages.missingProvMon');
-
-        return \View::make('errors.generic', compact('error', 'message'));
     }
 }

@@ -746,7 +746,7 @@ class NetElement extends \BaseModel
             return [];
         }
 
-        $provmon = Module::collections()->has('ProvMon') ? new \Modules\ProvMon\Http\Controllers\ProvMonController : null;
+        $provmonEnabled = Module::collections()->has('ProvMon');
         $type = $this->netelementtype->get_base_type();
 
         $tabs = [['name' => 'Edit', 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
@@ -768,16 +768,35 @@ class NetElement extends \BaseModel
             array_push($tabs, ['name' => 'Controlling', 'icon' => 'bar-chart fa-rotate-90', 'route' => 'NetElement.tapControlling', 'link' => [$this->id]]);
         }
 
-        if ($provmon && ($type == 4 || $type == 5) && \Bouncer::can('view_analysis_pages_of', \Modules\ProvBase\Entities\Modem::class)) {
+        if ($type == 4 || $type == 5) {
             // Create Analysis tab (for ORA/VGP) if IP address is no valid IP
-            array_push($tabs, ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $provmon->createAnalysisTab($this->ip)]);
+            $route = $provmonEnabled ? 'ProvMon.index' : 'Modem.analysis';
+            $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => $route, 'link' => $this->getModemIdFromHostname($this->ip)];
         }
 
-        if ($provmon && Module::collections()->has('HfcCustomer') && ! in_array($type, [4, 5, 8, 9])) {
+        if ($provmonEnabled && Module::collections()->has('HfcCustomer') && ! in_array($type, [4, 5, 8, 9])) {
             array_push($tabs, ['name' => 'Diagrams', 'icon' => 'area-chart', 'route' => 'ProvMon.diagram_edit', 'link' => [$this->id]]);
         }
 
         return $tabs;
+    }
+
+    /**
+     * Return number from IP address field if the record is written like: 'cm-...'.
+     *
+     * @author Roy Schneider
+     * @param string
+     * @return string
+     */
+    private function getModemIdFromHostname($hostname)
+    {
+        preg_match('/[c][m]\-\d+/', $hostname, $return);
+
+        if (empty($return)) {
+            return '0';
+        }
+
+        return substr($return[0], 3);
     }
 
     /**

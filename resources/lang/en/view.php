@@ -448,33 +448,11 @@ return [
     // VoIP
     'PhonebookEntry' => 'Phonebook entry',
 
-    // Error
-    'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
-    'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
-
-    'analysis' => 'Analysis',
-    'Assign' => 'Assign :model',
-    'BillingBase' => 'Billing',
-    'Ccc' => 'Customer Control Center',
-    'commandCenter' => 'Command Center',
-    'company' => 'Company',
-    'Credit' => 'Credit',
-    'critical' => 'critical',
-    'Debit' => 'Debit',
-    'Detach all' => 'Detach all :model',
-    'Diagrams' => 'Diagrams',
-    'Discard' => 'Discard',
-    'Download' => 'Download',
-    'false' => 'false',
-    'Global' => 'Global',
-    'Global notification' => 'Global notification',
-    'HfcReq' => 'HFC',
-    'info' => 'info',
-    'Level' => 'Level',
-    'markon' => 'Mark-On/Extra charge in %',
-    'Message' => 'Message',
-    'name' => 'Name',
-    'OverdueDebts' => 'Overdue Debts',
+    /*
+    * New alphabetically sorted translations. Please add new translations below
+    * or convert existing ones from above to new format of the section below.
+    * Please use whenever possible lower camelCase for new translation keys.
+    */
     'Ability' => [
         'Abilities'         => 'Abilities',
         'Ability'           => 'Ability',
@@ -516,6 +494,37 @@ return [
         'View everything'   => 'View Everything',
         'VoipMon'           => 'Voip Monitor',
     ],
+    'analysis' => 'Analysis',
+    'Assign' => 'Assign :model',
+    'BillingBase' => 'Billing',
+    'Ccc' => 'Customer Control Center',
+    'commandCenter' => 'Command Center',
+    'company' => 'Company',
+    'Credit' => 'Credit',
+    'critical' => 'critical',
+    'Debit' => 'Debit',
+    'Detach all' => 'Detach all :model',
+    'Diagrams' => 'Diagrams',
+    'Discard' => 'Discard',
+    'Download' => 'Download',
+    'error' => [
+        'backToHomePage'        => 'Go back to Home Page',
+        'backToPreviousPage'    => 'Go back to previous Page',
+        'pageNotFound'          => 'Sorry, we could not find that Page',
+        'snmpAccessException'   => 'Snmp Access Declined',
+        'specifyId'             => 'Please specify the hostname instead of the ip address.',
+        'ticketSettings'        => 'Please set noreply name and address in Global Config Page.',
+    ],
+    'false' => 'false',
+    'Global' => 'Global',
+    'Global notification' => 'Global notification',
+    'HfcReq' => 'HFC',
+    'info' => 'info',
+    'Level' => 'Level',
+    'markon' => 'Mark-On/Extra charge in %',
+    'Message' => 'Message',
+    'name' => 'Name',
+    'OverdueDebts' => 'Overdue Debts',
     'product' => [
         'billingCycles' => [
             'once' => 'once',
@@ -536,6 +545,7 @@ return [
     'ProvBase' => 'Provisioning',
     'ProvMon' => 'Monitoring',
     'ProvVoip' => 'VoIP',
+    'redirectNote' => 'You are not logged in and tried to access an internal page. After a successful login you are redirected to:',
     'showChanges' => 'Show the change|Show :num changes',
     'SettlementRun' => 'SettlementRun',
     'tab' => [

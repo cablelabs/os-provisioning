@@ -23,6 +23,8 @@ class EndpointObserver
             $endpoint->netGw->makeDhcp4Conf();
         }
         $endpoint->nsupdate();
+
+        $endpoint->modem->restart_modem();
     }
 
     public function updating($endpoint)
@@ -42,6 +44,8 @@ class EndpointObserver
             $endpoint->netGw->makeDhcp4Conf();
         }
         $endpoint->nsupdate();
+
+        $endpoint->modem->restart_modem();
     }
 
     public function deleted($endpoint)
@@ -53,6 +57,8 @@ class EndpointObserver
             $endpoint->netGw->makeDhcp4Conf();
         }
         $endpoint->nsupdate(true);
+
+        $endpoint->modem->restart_modem();
     }
 
     /**
