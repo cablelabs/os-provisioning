@@ -17,7 +17,6 @@ class InstallUpdate254To300 extends BaseMigration
         exec('systemctl restart genieacs-{cwmp,fs,nbi,ui}');
         exec('systemctl restart httpd');
 
-        exec("sed -i 's/ExecStart=\/usr\/bin\/php/ExecStart=\/opt\/rh\/rh-php73\/root\/usr\/bin\/php/' /usr/lib/systemd/system/nmsprimed.service");
         exec('systemctl daemon-reload');
         exec('systemctl restart nmsprimed');
 

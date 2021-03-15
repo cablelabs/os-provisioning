@@ -42,7 +42,7 @@ class BaseMigration extends Migration
 
         if ($this->callerMigrationFile < '2018_08_07') {
             // get and instanciate of index maker
-            require_once getcwd().'/app/extensions/database/FulltextIndexMaker.php';
+            require_once base_path().'/app/extensions/database/FulltextIndexMaker.php';
             $this->fim = new FulltextIndexMaker($this->tablename);
         } else {
             $this->fim = null;	// no indexes build on newer migrations (using InnoDB)
