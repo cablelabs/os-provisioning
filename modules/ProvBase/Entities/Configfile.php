@@ -136,6 +136,7 @@ class Configfile extends \BaseModel
      *   Make Configfile Content for $this Object /
      *   without recursive objects
      *
+     * @todo atm $modem and $provbase is used because of the $$ and should be refactored
      * @param sw_up 	Bool 	true if Software upgrade statement is already set -> then the next one is discarded (child CF has priority)
      */
     private function __text_make($device, $type, $sw_up = false)
@@ -143,6 +144,7 @@ class Configfile extends \BaseModel
         // for cfs of type modem, mta or generic
         // get global config - provisioning settings
         $db_schemata ['provbase'][0] = Schema::getColumnListing('provbase');
+        $provbase = ProvBase::get();
 
         // array to extend the configfile; e.g. for firmware
         $config_extensions = [];
@@ -168,6 +170,7 @@ class Configfile extends \BaseModel
 
             // this is for modem's config files
             case 'modem':
+                $modem = [$device];
                 $qos = [$device->qos];
 
                 // Set test data rate if no qos is assigned - 250 kbit/s (i.e. VoIP only)
@@ -243,6 +246,7 @@ class Configfile extends \BaseModel
                 break;
 
             case 'tr069':
+                $modem = [$device];
                 $db_schemata['modem'][0] = Schema::getColumnListing('modem');
                 $qos = [$device->qos];
                 $db_schemata['qos'][0] = Schema::getColumnListing('qos');
