@@ -339,6 +339,7 @@ return [
     'Button_Create PhonenumberManagement' => 'Rufnummerverwaltung anlegen',
     // //Configfiles
     'Button_Create Configfile'      => 'Konfigurationsdatei erstellen',
+    'Button_Create Configfiles'     => 'Konfigurationsdatei erstellen',
     'Button_DragDrop AddList'       => 'Liste erstellen',
     'Button_DragDrop DeleteList'    => 'Liste entfernen',
     'Button_DragDrop DeleteElement' => 'Entferne Element',

@@ -339,6 +339,7 @@ return [
     'Button_Create PhonenumberManagement' => 'Create PhonenumberManagement',
     // //Configfiles
     'Button_Create Configfile'      => 'Create Configfile',
+    'Button_Create Configfiles'     => 'Create Configfile',
     'Button_DragDrop AddList'       => 'Add list',
     'Button_DragDrop DeleteList'    => 'Delete list',
     'Button_DragDrop DeleteElement' => 'Delete element',
