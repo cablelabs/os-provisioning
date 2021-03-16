@@ -231,6 +231,10 @@ class NetElement extends \BaseModel
      */
     public function modems()
     {
+        if ($this->netelementtype && $this->netelementtype->name === 'Passive Component') { // TODO: tbd / match id
+            return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'next_passive_id');
+        }
+
         return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id');
     }
 
