@@ -866,7 +866,7 @@ class Modem extends \BaseModel
         if ($settings['EVENT']) {
             foreach ($settings['EVENT'] as $value) {
                 if (! $value) {
-                    break;
+                    continue;
                 }
 
                 $events[$value] = true;
