@@ -1,5 +1,5 @@
 <!-- Get users geoposition when last update was more than 10 min ago -->
-@if (time() - strtotime(\Auth::user()->geopos_updated_at) > 10*60)
+@if (\Module::collections()->has('Workforce') && (time() - strtotime(\Auth::user()->geopos_updated_at)) > 10*60)
 
 <script>
 
