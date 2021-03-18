@@ -859,12 +859,26 @@ class Modem extends \BaseModel
 
         $this->createGenieAcsProvisions($text);
 
+        preg_match('/#SETTINGS:(.+)/', $this->configfile->text, $json);
+        $settings = json_decode($json[1] ?? null, true);
+
+        $events = [];
+        if ($settings['EVENT']) {
+            foreach ($settings['EVENT'] as $value) {
+                if (! $value) {
+                    break;
+                }
+
+                $events[$value] = true;
+            }
+        } else {
+            $events['0 BOOTSTRAP'] = true;
+        }
+
         $preset = [
             'weight' => 0,
             'precondition' => "DeviceID.SerialNumber = \"{$this->serial_num}\"",
-            'events' => [
-                '0 BOOTSTRAP' => true,
-            ],
+            'events' => $events,
             'configurations' => [
                 [
                     'type' => 'provision',
@@ -876,7 +890,7 @@ class Modem extends \BaseModel
 
         self::callGenieAcsApi("presets/prov-$this->id", 'PUT', json_encode($preset));
 
-        unset($preset['events']['0 BOOTSTRAP']);
+        unset($preset['events']);
         $preset['events']['2 PERIODIC'] = true;
         $preset['configurations'][0]['name'] = "mon-{$this->configfile->id}";
 
