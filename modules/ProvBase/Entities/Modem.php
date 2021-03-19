@@ -857,8 +857,6 @@ class Modem extends \BaseModel
             return;
         }
 
-        $this->createGenieAcsProvisions($text);
-
         preg_match('/#SETTINGS:(.+)/', $this->configfile->text, $json);
         $settings = json_decode($json[1] ?? null, true);
 
@@ -874,6 +872,8 @@ class Modem extends \BaseModel
         } else {
             $events['0 BOOTSTRAP'] = true;
         }
+
+        $this->createGenieAcsProvisions($text, $events);
 
         $preset = [
             'weight' => 0,
@@ -970,17 +970,21 @@ class Modem extends \BaseModel
      *
      * @author Roy Schneider
      * @param string $text
+     * @param array $events
      * @return bool
      */
-    public function createGenieAcsProvisions($text)
+    public function createGenieAcsProvisions($text, $events = [])
     {
         $prefix = '';
 
         // during bootstrap always clear the info we have about the device
-        $prov = [
-            "clear('Device', Date.now());",
-            "clear('InternetGatewayDevice', Date.now());",
-        ];
+        $prov = [];
+        if (count($events) == 1 && array_key_exists('0 BOOTSTRAP', $events)) {
+            $prov = [
+                "clear('Device', Date.now());",
+                "clear('InternetGatewayDevice', Date.now());",
+            ];
+        }
 
         foreach (preg_split('/\r\n|\r|\n/', $text) as $line) {
             $vals = str_getcsv(trim($line), ';');
