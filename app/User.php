@@ -212,7 +212,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      */
     public function isFirstLogin(): bool
     {
-        return $this->last_login_at == null || $this->password_changed_at == null;
+        return $this->last_login_at == null;
     }
 
     /**
@@ -230,6 +230,10 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
         if ($passwordInterval === 0) {
             return false;
+        }
+
+        if ($this->password_changed_at == null) {
+            return true;
         }
 
         return now()
