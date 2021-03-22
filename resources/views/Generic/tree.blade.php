@@ -29,7 +29,7 @@
             {!! Form::open(array('route' => $route_name.'.create', 'method' => 'GET')) !!}
                 <button class="btn btn-primary m-b-15" style="simple">
                     <i class="fa fa-plus fa-lg m-r-10" aria-hidden="true"></i>
-                    {{ \App\Http\Controllers\BaseViewController::translate_view('Create '.$route_name.'s', 'Button' )}}
+                    {{ \App\Http\Controllers\BaseViewController::translate_view('Create '.$route_name, 'Button' )}}
                 </button>
             {!! Form::close() !!}
         @endif
