@@ -1961,7 +1961,7 @@ class Modem extends \BaseModel
         $search = $ip ? "$mac|$this->hostname[^0-9]|$ip " : "$mac|$this->hostname[^0-9]";
         $log = getSyslogEntries($search, '| grep -v MTA | grep -v CPE | tail -n 30  | tac');
         $lease['text'] = self::searchLease("hardware ethernet $mac");
-        $lease = $this->validateLease($lease);
+        $lease = self::validateLease($lease);
 
         if ($api) {
             return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip');
