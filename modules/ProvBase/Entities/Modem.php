@@ -2261,7 +2261,7 @@ class Modem extends \BaseModel
             $navi = [
                 'link' => "https://www.google.com/maps/dir/my+location/{$this->y},{$this->x}",
                 'icon' => 'fa-location-arrow',
-                'title' => trans('messages.Route'),
+                'title' => trans('messages.route'),
             ];
         }
 
@@ -2282,7 +2282,7 @@ class Modem extends \BaseModel
                 'action' => [
                     'link' => route('ProvMon.index', [$this->id]),
                     'icon' => 'fa-area-chart',
-                    'title' => trans('messages.Analysis'),
+                    'title' => trans('view.analysis'),
                 ],
             ],
         ];

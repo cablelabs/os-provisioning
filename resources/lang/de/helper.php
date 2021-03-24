@@ -193,7 +193,7 @@ return [
     'ticketDistance' => 'Multiplikator für das automatische Zuweisen von Tickets. Je höher dieser Wert ist, umso wichtiger ist die Distanz eines Technikers zur Störstelle. (Standard: 1)',
     'ticketModemcount' => 'Multiplikator für das automatische Zuweisen von Tickets. Je höher dieser Wert ist, umso wichtiger ist die Anzahl der betroffenen Modems. (Standard: 1)',
     'ticketOpentickets' => 'Multiplikator für das automatische Zuweisen von Tickets. Je höher dieser Wert ist, umso wichtiger ist die Anzahl der bereits zugewiesenen und in Bearbeitung befindlichen Tickets. (Standard: 1)',
-    'mail_link' => 'Wenn Sie Schwierigkeiten beim Klicken auf den  \":actionText\" Button haben, kopieren Sie die nachfolgende URL in ihren Webbrowser:',
+    'mailLink' => 'Wenn Sie Schwierigkeiten beim Klicken auf den  \":actionText\" Button haben, kopieren Sie die nachfolgende URL in ihren Webbrowser:',
 
     /*
      * Start alphabetical order

@@ -11,7 +11,7 @@
       <span class="label {{ $user->unreadNotifications->count() ?  '' : 'd-none' }}">{{ $user->unread_notifications_count }}</span>
     </a>
     <div class="dropdown-menu media-list" aria-labelledby="navbarDropdown" style="right: 0;left:auto;">
-        <div class="dropdown-header">{{ Str::upper(trans('messages.Notifications')) }} ({{ $user->unread_notifications_count }})</div>
+        <div class="dropdown-header">{{ Str::upper(trans('messages.notifications')) }} ({{ $user->unread_notifications_count }})</div>
         @forelse($user->unreadNotifications->take(config('notifications.navbarLength')) as $notification)
             <div class="dropdown-item media" style="padding: 0.5rem;">
                 <div class="media-left">

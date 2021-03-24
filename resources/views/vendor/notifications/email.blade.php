@@ -51,7 +51,7 @@
 @isset($actionText)
 @slot('subcopy')
 @lang(
-    'helper.mail_link',
+    'helper.mailLink',
     [
         'actionText' => $actionText,
     ]

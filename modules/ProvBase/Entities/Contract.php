@@ -1671,7 +1671,7 @@ class Contract extends \BaseModel
             $navi = [
                 'link' => "https://www.google.com/maps/dir/my+location/{$this->y},{$this->x}",
                 'icon' => 'fa-location-arrow',
-                'title' => trans('messages.Route'),
+                'title' => trans('messages.route'),
             ];
         }
 
@@ -1690,7 +1690,7 @@ class Contract extends \BaseModel
                     'icon' => 'fa-phone',
                 ],
             ],
-            trans('messages.Mail') => [
+            trans('messages.mail') => [
                 'text' => $this->email ?? null,
                 'action' => [
                     'link' => "mailto:{$this->email}",

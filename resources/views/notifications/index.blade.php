@@ -6,7 +6,7 @@
         <h2 class="card-title d-flex" style="justify-content: space-between;padding:0 1rem;">
             <div class="d-flex align-items-baseline">
               <i class="fa fa-inbox"></i>
-              <div class="">{{ trans('messages.Notifications') }}</div>
+              <div>{{ trans('messages.notifications') }}</div>
             </div>
         </h2>
         <div class="d-flex flex-column-reverse flex-md-column mb-4">
