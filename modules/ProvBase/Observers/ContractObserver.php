@@ -24,7 +24,7 @@ class ContractObserver
 
     public function created($contract)
     {
-        $contract->push_to_modems(); 	// should not run, because a new added contract can not have modems..
+        $contract->pushToModems(); 	// should not run, because a new added contract can not have modems..
 
         $contract->updateAddressFromProperty();
     }
