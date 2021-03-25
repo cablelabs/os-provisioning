@@ -18,7 +18,7 @@ class BaseObserver
             return;
         }
 
-        $this->add_log_entry($model, __FUNCTION__);
+        self::addLogEntry($model, __FUNCTION__);
 
         // TODO: analyze impacts of different return values
         //		without return (= return null): all is running, but multiple log entries are created
@@ -35,7 +35,7 @@ class BaseObserver
             return;
         }
 
-        $this->add_log_entry($model, __FUNCTION__);
+        self::addLogEntry($model, __FUNCTION__);
 
         // TODO: analyze impacts of different return values
         //		⇒ see comment at created
@@ -48,7 +48,7 @@ class BaseObserver
             return;
         }
 
-        $this->add_log_entry($model, __FUNCTION__);
+        self::addLogEntry($model, __FUNCTION__);
 
         // TODO: analyze impacts of different return values
         //		⇒ see comment at created
@@ -58,7 +58,7 @@ class BaseObserver
     /**
      * Create Log Entry on fired Event
      */
-    private function add_log_entry($model, $action)
+    public static function addLogEntry($model, $action)
     {
         $user = Auth::user();
 

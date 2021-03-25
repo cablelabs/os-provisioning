@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Entities;
 
 use DB;
 use Module;
+use App\Observers\BaseObserver;
 use Illuminate\Support\Facades\Log;
 
 class Contract extends \BaseModel
@@ -627,6 +628,8 @@ class Contract extends \BaseModel
         }
 
         if ($this->changes_on_daily_conversion) {
+            // Avoid endless loop by disabling observer but add GuiLog entry
+            BaseObserver::addLogEntry($this, 'updated');
             $this->observer_enabled = false;
             $this->save();
             $this->pushToModems();
@@ -808,6 +811,7 @@ class Contract extends \BaseModel
                     * and to avoid “Multipe valid tariffs active” warning
                 */
                 $item->observer_dailyconversion = false;
+                BaseObserver::addLogEntry($item, 'updated');
                 $item->save();
             }
         }
