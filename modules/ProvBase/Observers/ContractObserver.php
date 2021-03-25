@@ -48,7 +48,7 @@ class ContractObserver
 
         $changed_fields = $contract->getDirty();
 
-        if (isset($changed_fields['number'])) {
+        if (array_key_exists('number', $changed_fields)) {
             // change customer information - take care - this automatically changes login psw of customer
             if ($customer = $contract->CccUser) {
                 $customer->update();
@@ -56,7 +56,7 @@ class ContractObserver
         }
 
         // Set all related items start date to contracts start date if this behaviour is wished via global config
-        if (isset($changed_fields['contract_start']) && Module::collections()->has('BillingBase')) {
+        if (array_key_exists('contract_start', $changed_fields) && Module::collections()->has('BillingBase')) {
             $conf = \Modules\BillingBase\Entities\BillingBase::first();
 
             if ($conf->adapt_item_start) {
@@ -65,10 +65,10 @@ class ContractObserver
             }
         }
 
-        if (isset($changed_fields['contract_start']) || isset($changed_fields['contract_end'])) {
+        if (array_key_exists('contract_start', $changed_fields) || array_key_exists('contract_end', $changed_fields)) {
             $contract->daily_conversion();
 
-            if (Module::collections()->has('BillingBase') && $contract->contract_end && isset($changed_fields['contract_end'])) {
+            if (Module::collections()->has('BillingBase') && $contract->contract_end && array_key_exists('contract_end', $changed_fields)) {
                 // Alert if end is lower than tariffs end of term
                 $ret = $contract->getCancelationDates();
 
@@ -79,7 +79,7 @@ class ContractObserver
         }
 
         // Show alert when contract is canceled and there are yearly payed items that were charged already (by probably full amount) - customer should get a credit then
-        if (isset($changed_fields['contract_end'])) {
+        if (array_key_exists('contract_end', $changed_fields)) {
             $query = $contract->items()->join('product as p', 'item.product_id', '=', 'p.id')
                     ->where('p.billing_cycle', 'Yearly');
 
