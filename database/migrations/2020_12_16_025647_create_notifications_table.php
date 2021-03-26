@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateNotificationsTable extends BaseMigration
 {
-    protected $called_up_table_generic = true; //no soft deletes for notifications
+    protected $called_up_table_generic = true; // avoid console warning as soft deletes not used here
 
     /**
      * Run the migrations.
