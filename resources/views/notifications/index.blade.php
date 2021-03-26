@@ -103,7 +103,6 @@
 @endsection
 
 @section ('javascript_extra')
-<script src="{{asset('components/assets-admin/plugins/vue/dist/vue.js')}}"></script>
 <script>
     $(document).ready(function() {
         let table = $('#datatable').DataTable(
@@ -139,8 +138,5 @@
              ],
     })
 })
-</script>
-<script>
-
 </script>
 @endsection
