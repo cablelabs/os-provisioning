@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Entities;
 
 use DB;
 use Module;
+use App\Observers\BaseObserver;
 use Illuminate\Support\Facades\Log;
 
 class Contract extends \BaseModel
@@ -582,6 +583,10 @@ class Contract extends \BaseModel
      *  2. Check if $this is a new contract and activate it -> enable internet_access
      *  3. Change QoS id and Voip id if actual valid (billing-) tariff changes
      *
+     * Attention: To avoid endless loops the Observers of Contract & Item need to be disabled before calling save()
+     *      as they would call daily_conversion again. Please only adapt this function with testing all cases. See
+     *      https://devel.roetzer-engineering.com/confluence/display/LAR/Contract+-+Daily+conversion for further documentation
+     *
      * @return none
      * @author Torsten Schmidt, Nino Ryschawy, Patrick Reichel
      */
@@ -632,9 +637,11 @@ class Contract extends \BaseModel
         }
 
         if ($this->changes_on_daily_conversion) {
+            // Avoid endless loop by disabling observer but add GuiLog entry
+            BaseObserver::addLogEntry($this, 'updated');
             $this->observer_enabled = false;
             $this->save();
-            $this->push_to_modems();
+            $this->pushToModems();
         }
     }
 
@@ -813,6 +820,7 @@ class Contract extends \BaseModel
                     * and to avoid “Multipe valid tariffs active” warning
                 */
                 $item->observer_dailyconversion = false;
+                BaseObserver::addLogEntry($item, 'updated');
                 $item->save();
             }
         }
@@ -902,7 +910,7 @@ class Contract extends \BaseModel
 
         if ($contract_changed) {
             $this->save();
-            $this->push_to_modems();
+            $this->pushToModems();
         }
     }
 
@@ -1180,26 +1188,13 @@ class Contract extends \BaseModel
      *
      * @author: Torsten Schmidt, Nino Ryschawy
      */
-    public function push_to_modems()
+    public function pushToModems()
     {
-        $internetAccessChanged = false;
-
         foreach ($this->modems as $modem) {
-            if ($modem->internet_access != $this->internet_access) {
-                $internetAccessChanged = true;
-            }
-
             $modem->internet_access = $this->internet_access;
             $modem->qos_id = $this->qos_id;
-            $modem->observer_enabled = false;
-            $modem->updateRadius(false);
-            $modem->make_configfile();
-            $modem->save();
-            $modem->restart_modem();
-        }
 
-        if ($internetAccessChanged) {
-            Modem::createDhcpBlockedCpesFile();
+            $modem->save();
         }
     }
 
