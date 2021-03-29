@@ -49,6 +49,7 @@ return [
         'number' => 'Contract Number',
         'street' => 'Street',
         'zip' => 'ZIP',
+        'ground_for_dismissal' => 'Ground for dismissal',
     ],
     // Auth
     'users' => [

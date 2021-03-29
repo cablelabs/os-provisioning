@@ -110,12 +110,18 @@ class ContractController extends \BaseController
             $b1[] = ['form_type' => 'text', 'name' => 'related_phonenrs', 'description' => trans('provvoip::view.contractRelatedPns'), 'options' => ['readonly']];
         }
 
+        foreach ($model::GROUNDS_FOR_DISMISSAL as $key => $reason) {
+            $reasons[$reason] = trans("view.contract.groundsForDismissal.$reason");
+        }
+
         $b2 = [
             ['form_type' => 'text', 'name' => 'fax', 'description' => 'Fax'],
             ['form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'],
             ['form_type' => 'date', 'name' => 'birthday', 'description' => 'Birthday', 'create' => ['Modem'], 'space' => '1'],
             ['form_type' => 'date', 'name' => 'contract_start', 'description' => 'Contract Start'],
             ['form_type' => 'date', 'name' => 'contract_end', 'description' => 'Contract End'],
+            ['form_type' => 'select', 'name' => 'ground_for_dismissal', 'description' => trans('view.contract.groundForDismissal'),
+                'value' => array_merge([null => null], $reasons), ],
         ];
 
         if (Module::collections()->has('BillingBase')) {

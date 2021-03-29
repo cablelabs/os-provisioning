@@ -586,4 +586,14 @@ return [
         'stacked' => 'Have more tickets',
         'summary' => 'Overview',
     ],
+    'contract' => [
+        'groundForDismissal' => 'Ground for dismissal',
+        'groundsForDismissal' => [
+            'unknown' => 'unknown',
+            'relocation' => 'relocation',
+            'unsatisfied' => 'unsatisfied',
+            'canceled by us' => 'canceled by us',
+            'deceased' => 'deceased',
+        ],
+    ],
 ];

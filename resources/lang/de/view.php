@@ -586,4 +586,14 @@ return [
         'stacked' => 'haben weitere Tickets',
         'summary' => 'Übersicht',
     ],
+    'contract' => [
+        'groundForDismissal' => 'Kündigungsgrund',
+        'groundsForDismissal' => [
+            'unknown' => 'unbekannt',
+            'relocation' => 'Umzug',
+            'unsatisfied' => 'unzufrieden',
+            'canceled by us' => 'von uns gekündigt',
+            'deceased' => 'verstorben',
+        ],
+    ],
 ];

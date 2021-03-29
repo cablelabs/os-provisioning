@@ -49,6 +49,7 @@ return [
         'number' => 'Vertrags- Nummer',
         'street' => 'Straße',
         'zip' => 'PLZ',
+        'ground_for_dismissal' => 'Kündigungsgrund',
     ],
     // Auth
     'users' => [

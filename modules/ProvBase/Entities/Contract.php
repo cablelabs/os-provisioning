@@ -24,6 +24,8 @@ class Contract extends \BaseModel
     // Via modems -> mtas -> phonenumbers assigned Phonenumbers shown as read-only info field in edit view
     public $guarded = ['related_phonenrs'];
 
+    public const GROUNDS_FOR_DISMISSAL = ['unknown', 'relocation', 'unsatisfied', 'canceled by us', 'deceased'];
+
     // Add your validation rules here
     // TODO: dependencies of active modules (billing)
     public function rules()
@@ -85,8 +87,10 @@ class Contract extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         $ret = ['table' => $this->table,
-            'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', 'email', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number',  $this->table.'.additional', $this->table.'.contract_start', $this->table.'.contract_end'],
+            'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', 'email', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number',  $this->table.'.additional', $this->table.'.contract_start', $this->table.'.contract_end', $this->table.'.ground_for_dismissal'],
             'header' =>  self::labelFromData($this),
+            'edit' => ['ground_for_dismissal' => 'getGroundForDismissal'],
+            'disable_sortsearch' => ['ground_for_dismissal' => 'false'],
             'bsclass' => $bsclass,
             'order_by' => ['0' => 'asc'], ];
 
@@ -452,6 +456,11 @@ class Contract extends \BaseModel
             ->whereNull('realty.deleted_at')
             ->select('realty.*')
             ->first();
+    }
+
+    public function getGroundForDismissal()
+    {
+        return $this->ground_for_dismissal ? trans('view.contract.groundsForDismissal.'.$this->ground_for_dismissal) : '';
     }
 
     /**
