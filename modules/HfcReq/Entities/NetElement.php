@@ -907,4 +907,53 @@ class NetElement extends \BaseModel
             }
         }
     }
+
+    /**
+     * Collect the necessary data for TicketReceiver and Notifications.
+     *
+     * @return array
+     */
+    public function getTicketSummary()
+    {
+        if ($this->pos) {
+            $pos = explode(',', $this->pos);
+
+            $navi = [
+                'link' => "https://www.google.com/maps/dir/my+location/{$pos[1]},{$pos[0]}",
+                'icon' => 'fa-location-arrow',
+                'title' => trans('messages.route'),
+            ];
+        }
+
+        return [
+            trans('messages.Device') => [
+                'text' => "{$this->netelementtype->vendor} {$this->netelementtype->name} {$this->netelementtype->version}",
+            ],
+            trans('messages.name') => [
+                'text' => $this->name,
+            ],
+            trans('messages.position') => [
+                'text' => $this->pos,
+                'action' => $navi ?? null,
+            ],
+            trans('messages.CLUSTER') => [
+                'text' => $this->clusterObj()->without('netelementtype')->first()->name ?? $this->cluster,
+                'action' => [
+                    'link' => route('CustomerTopo.show', ['id', $this->id]),
+                    'icon' => 'fa-map',
+                    'title' => trans('view.ticket.viewTopography'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * To reduce AJAX Payload, only this subset is loaded.
+     *
+     * @return array
+     */
+    public function reducedFields()
+    {
+        return ['id', 'netelementtype', 'name', 'pos', 'cluster'];
+    }
 }
