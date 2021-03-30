@@ -1924,7 +1924,7 @@ class Modem extends \BaseModel
         $this->domainName = ProvBase::first()->domain_name;
         $mac = strtolower($this->mac);
         $eventlog = null;
-        $tickets = $modem->tickets;
+        $tickets = $this->tickets;
 
         $genieCmds[json_encode(['name' => 'factoryReset'])] = trans('messages.factory_reset');
 
