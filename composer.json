@@ -23,7 +23,8 @@
         "kingsquare/php-mt940": "^1.5",
         "fideloper/proxy": "^4.4",
         "phpseclib/phpseclib": "~2.0",
-        "intervention/validation": "^2.6"
+        "intervention/validation": "^2.6",
+        "kalnoy/nestedset": "^5.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~9.0",

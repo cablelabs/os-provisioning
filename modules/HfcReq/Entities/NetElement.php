@@ -3,11 +3,15 @@
 namespace Modules\HfcReq\Entities;
 
 use Auth;
+use Kalnoy\Nestedset\NodeTrait;
 use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\Cache;
 
 class NetElement extends \BaseModel
 {
+
+    use NodeTrait;
+
     // Do not delete children (modem, mta, phonenmumber, etc.)!
     protected $delete_children = false;
 
@@ -236,6 +240,10 @@ class NetElement extends \BaseModel
         }
 
         return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id');
+    }
+
+    public function passive_modems(){
+        return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'next_passive_id');
     }
 
     public function geoPosModems()
