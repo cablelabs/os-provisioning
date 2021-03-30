@@ -49,6 +49,7 @@ return [
         'number' => 'Vertrags- Nummer',
         'street' => 'Straße',
         'zip' => 'PLZ',
+        'ground_for_dismissal' => 'Kündigungsgrund',
     ],
     // Auth
     'users' => [
@@ -72,8 +73,11 @@ return [
     'company.phone' => 'Telefonnummer',
     'company.mail' => 'E-Mail',
     // Costcenter
-    'costcenter.name' => 'Kostenstelle',
-    'costcenter.number' => 'Nummer',
+    'costcenter' => [
+        'name' => 'Kostenstelle',
+        'number' => 'Nummer',
+        'billing_month' => 'Abrechnungsmonat',
+    ],
     'debt' => [
         'date' => 'Belegdatum',
         'due_date' => 'Fälligkeitsdatum',

@@ -751,21 +751,34 @@ class NetElement extends \BaseModel
 
         $tabs = [['name' => 'Edit', 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
 
-        if (Module::collections()->has('HfcBase') && in_array($type, [1, 2, 8])) {
-            $sqlCol = $type == 8 ? 'parent_id' : $this->netelementtype->name;
+        $sqlCol = $this->netelementtype->name;
+        $id = $this->id;
+        if (! in_array($type, [1, 2])) {
+            $sqlCol = $this->cluster ? 'Cluster' : 'Net';
+            $id = $this->cluster ? $this->cluster : $this->net;
+        }
 
-            array_push($tabs,
-                ['name' => 'Entity Diagram', 'icon' => 'sitemap', 'route' => 'TreeErd.show', 'link' => [$sqlCol, $this->id]],
-                ['name' => 'Topography', 'icon' => 'map', 'route' => 'TreeTopo.show', 'link' => [$sqlCol, $this->id]]
-            );
+        $tabs[] = ['name' => 'Entity Diagram', 'icon' => 'sitemap', 'route' => 'TreeErd.show', 'link' => [$sqlCol, $id]];
+        $tabs[] = ['name' => 'Topography', 'icon' => 'map', 'route' => 'TreeTopo.show', 'link' => [$sqlCol, $id]];
+
+        if (! Module::collections()->has('HfcBase')) {
+            $tabs[array_key_last($tabs) - 1]['route'] = 'missingModule';
+            $tabs[array_key_last($tabs) - 1]['link'] = 'HfcBase';
+            $tabs[array_key_last($tabs)]['route'] = 'missingModule';
+            $tabs[array_key_last($tabs)]['link'] = 'HfcBase';
         }
 
         if (! in_array($type, [1, 8, 9])) {
-            array_push($tabs, ['name' => 'Controlling', 'icon' => 'wrench', 'route' => 'NetElement.controlling_edit', 'link' => [$this->id, 0, 0]]);
+            $tabs[] = ['name' => 'Controlling', 'icon' => 'wrench', 'route' => 'NetElement.controlling_edit', 'link' => [$this->id, 0, 0]];
         }
 
-        if ($type == 9 && Module::collections()->has('Satkabel')) {
-            array_push($tabs, ['name' => 'Controlling', 'icon' => 'bar-chart fa-rotate-90', 'route' => 'NetElement.tapControlling', 'link' => [$this->id]]);
+        if ($type == 9) {
+            $tabs[] = ['name' => 'Controlling', 'icon' => 'bar-chart fa-rotate-90', 'route' => 'NetElement.tapControlling', 'link' => [$this->id]];
+
+            if (! \Module::collections()->has('Satkabel')) {
+                $tabs[array_key_last($tabs)]['route'] = 'missingModule';
+                $tabs[array_key_last($tabs)]['link'] = 'Satkabel';
+            }
         }
 
         if ($type == 4 || $type == 5) {
@@ -774,8 +787,13 @@ class NetElement extends \BaseModel
             $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => $route, 'link' => $this->getModemIdFromHostname($this->ip)];
         }
 
-        if ($provmonEnabled && Module::collections()->has('HfcCustomer') && ! in_array($type, [4, 5, 8, 9])) {
-            array_push($tabs, ['name' => 'Diagrams', 'icon' => 'area-chart', 'route' => 'ProvMon.diagram_edit', 'link' => [$this->id]]);
+        if (! in_array($type, [4, 5, 8, 9])) {
+            $tabs[] = ['name' => 'Diagrams', 'icon' => 'area-chart', 'route' => 'ProvMon.diagram_edit', 'link' => [$this->id]];
+
+            if (! $provmonEnabled && Module::collections()->has('HfcCustomer')) {
+                $tabs[array_key_last($tabs)]['route'] = 'missingModule';
+                $tabs[array_key_last($tabs)]['link'] = 'Prime Monitoring & Prime Detect';
+            }
         }
 
         return $tabs;
@@ -888,5 +906,54 @@ class NetElement extends \BaseModel
                 \Log::error("Error while setting new exptected us power for cluster $this->name ($idx: $r)");
             }
         }
+    }
+
+    /**
+     * Collect the necessary data for TicketReceiver and Notifications.
+     *
+     * @return array
+     */
+    public function getTicketSummary()
+    {
+        if ($this->pos) {
+            $pos = explode(',', $this->pos);
+
+            $navi = [
+                'link' => "https://www.google.com/maps/dir/my+location/{$pos[1]},{$pos[0]}",
+                'icon' => 'fa-location-arrow',
+                'title' => trans('messages.route'),
+            ];
+        }
+
+        return [
+            trans('messages.Device') => [
+                'text' => "{$this->netelementtype->vendor} {$this->netelementtype->name} {$this->netelementtype->version}",
+            ],
+            trans('messages.name') => [
+                'text' => $this->name,
+            ],
+            trans('messages.position') => [
+                'text' => $this->pos,
+                'action' => $navi ?? null,
+            ],
+            trans('messages.CLUSTER') => [
+                'text' => $this->clusterObj()->without('netelementtype')->first()->name ?? $this->cluster,
+                'action' => [
+                    'link' => route('CustomerTopo.show', ['id', $this->id]),
+                    'icon' => 'fa-map',
+                    'title' => trans('view.ticket.viewTopography'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * To reduce AJAX Payload, only this subset is loaded.
+     *
+     * @return array
+     */
+    public function reducedFields()
+    {
+        return ['id', 'netelementtype', 'name', 'pos', 'cluster'];
     }
 }

@@ -105,12 +105,22 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      */
     public function openTickets()
     {
-        return $this->tickets()->where('state', '!=', 'closed');
+        return $this->tickets()->where('state', '!=', \Modules\Ticketsystem\Entities\Ticket::STATES['Closed']);
     }
 
     public function inWorkTickets()
     {
-        return $this->tickets()->where('state', 'in work');
+        return $this->tickets()->where('state', \Modules\Ticketsystem\Entities\Ticket::STATES['In Progress']);
+    }
+
+    /**
+     * Get the user's preferred locale.
+     *
+     * @return string
+     */
+    public function preferredLocale()
+    {
+        return $this->language;
     }
 
     /**

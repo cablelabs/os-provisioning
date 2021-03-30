@@ -857,14 +857,28 @@ class Modem extends \BaseModel
             return;
         }
 
-        $this->createGenieAcsProvisions($text);
+        preg_match('/#SETTINGS:(.+)/', $this->configfile->text, $json);
+        $settings = json_decode($json[1] ?? null, true);
+
+        $events = [];
+        if ($settings['EVENT']) {
+            foreach ($settings['EVENT'] as $value) {
+                if (! $value) {
+                    continue;
+                }
+
+                $events[$value] = true;
+            }
+        } else {
+            $events['0 BOOTSTRAP'] = true;
+        }
+
+        $this->createGenieAcsProvisions($text, $events);
 
         $preset = [
             'weight' => 0,
             'precondition' => "DeviceID.SerialNumber = \"{$this->serial_num}\"",
-            'events' => [
-                '0 BOOTSTRAP' => true,
-            ],
+            'events' => $events,
             'configurations' => [
                 [
                     'type' => 'provision',
@@ -876,7 +890,7 @@ class Modem extends \BaseModel
 
         self::callGenieAcsApi("presets/prov-$this->id", 'PUT', json_encode($preset));
 
-        unset($preset['events']['0 BOOTSTRAP']);
+        unset($preset['events']);
         $preset['events']['2 PERIODIC'] = true;
         $preset['configurations'][0]['name'] = "mon-{$this->configfile->id}";
 
@@ -956,17 +970,21 @@ class Modem extends \BaseModel
      *
      * @author Roy Schneider
      * @param string $text
+     * @param array $events
      * @return bool
      */
-    public function createGenieAcsProvisions($text)
+    public function createGenieAcsProvisions($text, $events = [])
     {
         $prefix = '';
 
         // during bootstrap always clear the info we have about the device
-        $prov = [
-            "clear('Device', Date.now());",
-            "clear('InternetGatewayDevice', Date.now());",
-        ];
+        $prov = [];
+        if (count($events) == 1 && array_key_exists('0 BOOTSTRAP', $events)) {
+            $prov = [
+                "clear('Device', Date.now());",
+                "clear('InternetGatewayDevice', Date.now());",
+            ];
+        }
 
         foreach (preg_split('/\r\n|\r|\n/', $text) as $line) {
             $vals = str_getcsv(trim($line), ';');
@@ -1961,7 +1979,7 @@ class Modem extends \BaseModel
         $search = $ip ? "$mac|$this->hostname[^0-9]|$ip " : "$mac|$this->hostname[^0-9]";
         $log = getSyslogEntries($search, '| grep -v MTA | grep -v CPE | tail -n 30  | tac');
         $lease['text'] = self::searchLease("hardware ethernet $mac");
-        $lease = $this->validateLease($lease);
+        $lease = self::validateLease($lease);
 
         if ($api) {
             return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip');
@@ -2240,5 +2258,65 @@ class Modem extends \BaseModel
         }
 
         return ['bsclass' => 'info', 'text' => trans('messages.modemAnalysis.onlyVoip')];
+    }
+
+    /**
+     * Collect the necessary data for TicketReceiver and Notifications.
+     *
+     * @return array
+     */
+    public function getTicketSummary()
+    {
+        if ($this->street && $this->city) {
+            $navi = [
+                'link' => "https://www.google.com/maps/search/{$this->street} {$this->house_number}, {$this->zip} {$this->city}",
+                'icon' => 'fa-globe',
+                'title' => trans('view.Button_Search'),
+            ];
+        }
+
+        if ($this->x != 0 || $this->y != 0) {
+            $navi = [
+                'link' => "https://www.google.com/maps/dir/my+location/{$this->y},{$this->x}",
+                'icon' => 'fa-location-arrow',
+                'title' => trans('messages.route'),
+            ];
+        }
+
+        return [
+            trans('messages.Personal Contact') => [
+                'text' => "{$this->company} {$this->department} {$this->salutation} {$this->academic_degree} {$this->firstname} {$this->lastname}",
+                'action' =>[
+                    'link' => 'tel:'.preg_replace(["/\s+/", "/\//"], '', $this->contract()->first('phone')->phone),
+                    'icon' => 'fa-phone',
+                ],
+            ],
+            trans('messages.Address') => [
+                'text' => "{$this->street} {$this->house_number}||{$this->zip} {$this->city} {$this->district}",
+                'action' => $navi ?? null,
+            ],
+            trans('messages.Signal Parameters') => [
+                'text' => "US Pwr: {$this->us_pwr} | US SNR: {$this->us_snr} ||DS Pwr: {$this->ds_pwr} | DS SNR: {$this->ds_snr}",
+                'action' => [
+                    'link' => route('ProvMon.index', [$this->id]),
+                    'icon' => 'fa-area-chart',
+                    'title' => trans('view.analysis'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * To reduce AJAX Payload, only this subset is loaded.
+     *
+     * @return array
+     */
+    public function reducedFields()
+    {
+        return [
+            'id', 'company', 'department', 'salutation', 'academic_degree', 'firstname', 'lastname',
+            'street', 'house_number', 'zip', 'city', 'district', 'us_pwr', 'us_snr', 'ds_pwr', '
+            ds_snr', 'x', 'y',
+        ];
     }
 }

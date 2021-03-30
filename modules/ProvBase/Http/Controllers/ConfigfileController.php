@@ -153,11 +153,15 @@ class ConfigfileController extends \BaseController
         ];
 
         $query = json_encode($query);
-        $route = "devices?query=$query&projection=_deviceId._SerialNumber";
+        $genieResponse = json_decode(\Modules\ProvBase\Entities\Modem::callGenieAcsApi("devices?query=$query&projection=_deviceId._SerialNumber", 'GET'));
+
+        if (! $genieResponse) {
+            return;
+        }
 
         $online = array_map(function ($value) {
             return $value->_deviceId->_SerialNumber ?? null;
-        }, json_decode(\Modules\ProvBase\Entities\Modem::callGenieAcsApi($route, 'GET')));
+        }, $genieResponse);
 
         $modemSerials = $model->modem()->whereNotNull('serial_num')->distinct()->pluck('serial_num')->toArray();
 

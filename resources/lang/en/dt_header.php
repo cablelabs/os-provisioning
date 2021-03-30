@@ -49,6 +49,7 @@ return [
         'number' => 'Contract Number',
         'street' => 'Street',
         'zip' => 'ZIP',
+        'ground_for_dismissal' => 'Ground for dismissal',
     ],
     // Auth
     'users' => [
@@ -72,8 +73,11 @@ return [
     'company.phone' => 'Mobile Number',
     'company.mail' => 'E-Mail',
     // Costcenter
-    'costcenter.name' => 'CostCenter',
-    'costcenter.number' => 'Number',
+    'costcenter' => [
+        'name' => 'CostCenter',
+        'number' => 'Number',
+        'billing_month' => 'Billing month',
+    ],
     'debt' => [
         'date' => 'Date',
         'due_date' => 'Due date',
@@ -257,7 +261,7 @@ return [
     'phonetariff.type' => 'Type',
     'phonetariff.description' => 'Description',
     'phonetariff.voip_protocol' => 'VOIP Protocol',
-    'phonetariff.usable' => 'Usable?',
+    'phonetariff.usable' => 'Usable',
     // ENVIA enviaorder
     'enviaorder.ordertype'  => 'Order Type',
     'enviaorder.orderstatus'  => 'Order Status',
