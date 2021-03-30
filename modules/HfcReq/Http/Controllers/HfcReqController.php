@@ -65,7 +65,7 @@ class HfcReqController extends \BaseController
         $view_var = $model::find($id);
         $view_header = 'Attach single OIDs';
         $model_pure = \NamespaceController::get_route_name();
-        $headline = BaseViewController::compute_headline($model_pure, $view_header, $view_var).' assign';
+        $headline = BaseViewController::compute_headline($model_pure, $view_header, $view_var).'<li><a href="#">assign</a></li>';
 
         // Get Mibs in case all OIDs from one Mib shall be attached
         $mibs = \Modules\HfcSnmp\Entities\MibFile::select(['id', 'name', 'version'])->get();

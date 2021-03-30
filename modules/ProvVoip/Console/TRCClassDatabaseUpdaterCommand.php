@@ -105,7 +105,9 @@ class TRCClassDatabaseUpdaterCommand extends Command
 
         // this has to be done – but ATM there is no need for such behavior
         // you can use EkpCodeDatabaseUpdaterCommand::_update_using_file() as starting point
-        throw new \App\Exceptions\NotImplementedException('Updating TRC classes database from CSV file is not yet implemented!');
+        // throw new \App\Exceptions\NotImplementedException('Updating TRC classes database from CSV file is not yet implemented!');
+        Log::warning('Updating TRC classes database from CSV file is not yet implemented!');
+        $this->warn('Updating TRC classes database from CSV file is not yet implemented!');
     }
 
     /**
