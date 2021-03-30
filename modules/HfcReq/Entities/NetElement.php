@@ -376,6 +376,10 @@ class NetElement extends \BaseModel
      */
     public function toTicket()
     {
+        if (! Module::collections()->has('Ticketsystem')) {
+            return;
+        }
+
         if ($this->icingaObject) {
             return route('Ticket.create', [
                 'name' => e($this->icingaObject->name1),
