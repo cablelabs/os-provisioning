@@ -190,7 +190,7 @@ function concat_pdfs($sourcefiles, $target_fn, $multithreaded = false)
     Log::channel('billing')->debug('Concat '.$cnt.' PDFs to '.$target_fn);
 
     $cmd_ext = $multithreaded ? '> /dev/null 2>&1 & echo $!' : '';
-    exec("gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile='$target_fn' $sourcefiles $cmd_ext", $output, $ret);
+    exec("gs -dNumRenderingThreads=6 -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile='$target_fn' $sourcefiles $cmd_ext", $output, $ret);
 
     // Note: normally output is [] and ret is 0
     if ($ret) {

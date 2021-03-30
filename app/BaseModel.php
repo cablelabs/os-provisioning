@@ -27,6 +27,12 @@ class BaseModel extends Eloquent
 
     protected $fillable = [];
 
+    /**
+     * @var bool
+     *
+     * @TODO: In future we should use this: https://stackoverflow.com/questions/29407818/is-it-possible-to-temporarily-disable-event-in-laravel/51301753#51301753
+     * or with laravel 8 this: https://laravel.com/docs/8.x/eloquent#saving-a-single-model-without-events
+     */
     public $observer_enabled = true;
 
     protected $connection = 'mysql';

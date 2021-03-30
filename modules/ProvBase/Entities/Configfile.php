@@ -407,42 +407,17 @@ class Configfile extends \BaseModel
     }
 
     /**
-     * Recursively add all parents of a used node to the list of used nodes,
-     * we must not delete any of them
+     * Configfile-IDs that must not be deleted because they have children or are
+     * still assigned to a modem or mta
      *
-     * @author Ole Ernst
-     */
-    protected static function _add_parent(&$ids, $cf)
-    {
-        $parent = $cf->parent;
-        if ($parent && ! in_array($parent->id, $ids)) {
-            array_push($ids, $parent->id);
-            self::_add_parent($ids, $parent);
-        }
-    }
-
-    /**
-     * Returns a list of configfiles (incl. all of its parents), which are
-     * still assigned to a modem or mta and thus must not be deleted.
-     *
-     * @author Ole Ernst
-     *
-     * NOTE: DB::table would reduce time again by 30%, setting index_delete_disabled of CFs
-     *       instead of creating used_ids array slows function down
+     * @author Ole Ernst, Nino Ryschawy
+     * @return array
      */
     public static function undeletables()
     {
-        $used_ids = [];
-
-        // only public configfiles can be assigned to a modem or mta
-        foreach (self::where('public', 'yes')->withCount('modem', 'mtas')->with('parent')->get() as $cf) {
-            if ((($cf->device != 'mta') && $cf->modem_count) || (($cf->device == 'mta') && $cf->mtas_count)) {
-                array_push($used_ids, $cf->id);
-                self::_add_parent($used_ids, $cf);
-            }
-        }
-
-        return $used_ids;
+        return self::where('public', 'yes')
+            ->has('modem')->orHas('mtas')->orHas('children')
+            ->pluck('id')->toArray();
     }
 
     /**
