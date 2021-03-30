@@ -857,14 +857,28 @@ class Modem extends \BaseModel
             return;
         }
 
-        $this->createGenieAcsProvisions($text);
+        preg_match('/#SETTINGS:(.+)/', $this->configfile->text, $json);
+        $settings = json_decode($json[1] ?? null, true);
+
+        $events = [];
+        if ($settings['EVENT']) {
+            foreach ($settings['EVENT'] as $value) {
+                if (! $value) {
+                    continue;
+                }
+
+                $events[$value] = true;
+            }
+        } else {
+            $events['0 BOOTSTRAP'] = true;
+        }
+
+        $this->createGenieAcsProvisions($text, $events);
 
         $preset = [
             'weight' => 0,
             'precondition' => "DeviceID.SerialNumber = \"{$this->serial_num}\"",
-            'events' => [
-                '0 BOOTSTRAP' => true,
-            ],
+            'events' => $events,
             'configurations' => [
                 [
                     'type' => 'provision',
@@ -876,7 +890,7 @@ class Modem extends \BaseModel
 
         self::callGenieAcsApi("presets/prov-$this->id", 'PUT', json_encode($preset));
 
-        unset($preset['events']['0 BOOTSTRAP']);
+        unset($preset['events']);
         $preset['events']['2 PERIODIC'] = true;
         $preset['configurations'][0]['name'] = "mon-{$this->configfile->id}";
 
@@ -956,17 +970,21 @@ class Modem extends \BaseModel
      *
      * @author Roy Schneider
      * @param string $text
+     * @param array $events
      * @return bool
      */
-    public function createGenieAcsProvisions($text)
+    public function createGenieAcsProvisions($text, $events = [])
     {
         $prefix = '';
 
         // during bootstrap always clear the info we have about the device
-        $prov = [
-            "clear('Device', Date.now());",
-            "clear('InternetGatewayDevice', Date.now());",
-        ];
+        $prov = [];
+        if (count($events) == 1 && array_key_exists('0 BOOTSTRAP', $events)) {
+            $prov = [
+                "clear('Device', Date.now());",
+                "clear('InternetGatewayDevice', Date.now());",
+            ];
+        }
 
         foreach (preg_split('/\r\n|\r|\n/', $text) as $line) {
             $vals = str_getcsv(trim($line), ';');
