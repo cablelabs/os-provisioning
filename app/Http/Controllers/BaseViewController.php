@@ -574,12 +574,12 @@ class BaseViewController extends Controller
 
         $globalPages = config('base.'.$configMenuItemKey);
 
+        $menu['Global']['icon'] = 'fa-globe';
         $menu['Global']['link'] = config('base.link');
         $menu['Global']['translated_name'] = trans('view.Global');
         foreach ($globalPages as $page => $settings) {
             if (Bouncer::can('view', $settings['class'])) {
                 $menuItem = static::translate_view($page, 'Menu');
-                $menu['Global']['icon'] = 'fa-globe';
                 $menu['Global']['submenu'][$menuItem] = $settings;
             }
         }
