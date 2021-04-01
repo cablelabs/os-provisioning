@@ -623,7 +623,7 @@ class BaseViewController extends Controller
      */
     private static function addWorkforceMenuEntry(&$menu)
     {
-        if (! Module::collections()->has('HfcCustomer')) {
+        if (! Module::collections()->has('HfcCustomer') || ! Module::collections()->has('Ticketsystem')) {
             return;
         }
 
