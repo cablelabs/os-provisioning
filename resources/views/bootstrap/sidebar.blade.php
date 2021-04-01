@@ -33,8 +33,8 @@
 
     {{-- begin sidebar nav --}}
     <ul class="nav">
-      <li class="nav-header apps">
-        <a href="{{route('Apps.active')}}" class="text-success">{{ trans('messages.nativeApps') }}
+      <li class="nav-header apps" style="border-bottom: 1px solid;">
+        <a href="{{route('Apps.active')}}" class="text-success" style="display: inline-block !important; width: 100%;">{{ trans('messages.nativeApps') }}
           <i class="fa fa-plus"></i>
         </a>
       </li>
@@ -73,8 +73,8 @@
         @endif
         </li>
       @endforeach
-    <li class="nav-header apps divider">
-      <a href="{{route('Apps.active')}}" class="text-success">{{ trans('messages.externalApps') }}
+    <li class="nav-header apps" style="border-top: 1px solid;">
+      <a href="{{route('Apps.active')}}" class="text-success" style="display: inline-block !important; width: 100%;">{{ trans('messages.externalApps') }}
         <i class="fa fa-plus"></i>
       </a>
     </li>
@@ -93,20 +93,15 @@
 
 
     @if(Module::collections()->has('HfcBase') && auth()->user()->can('view', Modules\HfcBase\Entities\TreeErd::class))
-      <li class="nav-header">{{ trans('view.Menu_Nets') }}</li>
+      <li class="nav-header" style="border-top: 1px solid;">{{ trans('view.Menu_Nets') }}</li>
       <li id="network_overview" class="has-sub" data-sidebar="level1">
         <div style="display: flex;justify-content:space-between;padding: 8px 20px;line-height: 20px;">
             <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}" style="max-height: 20px; white-space: nowrap;">
               <i class="fa fa-sitemap"></i>
               <span>{{ trans('view.Menu_allNets') }}</span>
             </a>
-<<<<<<< HEAD
-            <a class="caret-link" href="javascript:;">
-              <b class="caret fa-rotate-270"></b>
-=======
             <a class="caret-link" href="javascript:;" style="width: 100%; text-align: right;">
-              <b class="caret fa-rotate-90"></b>
->>>>>>> widen a-tags to improve usability
+              <b class="caret fa-rotate-270"></b>
             </a>
         </div>
         <ul class="sub-menu" style="display: none;padding-left:21px;">
@@ -118,13 +113,8 @@
                   <span>{{$network->name}}</span>
                 </a>
                 @if($network->clusters->isNotEmpty())
-<<<<<<< HEAD
-                  <a class="caret-link" style="color: #889097;" href="javascript:;">
-                    <b class="caret fa-rotate-270"></b>
-=======
                   <a class="caret-link" style="color: #889097; width: 100%; text-align: right;" href="javascript:;">
-                    <b class="caret fa-rotate-90"></b>
->>>>>>> widen a-tags to improve usability
+                    <b class="caret fa-rotate-270"></b>
                   </a>
                 @endif
               </div>

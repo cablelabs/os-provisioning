@@ -996,19 +996,6 @@ table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTabl
     width: 223px;
 }
 
-.divider {
-    border-top: 1px solid;
-}
-
-.roundBorder {
-    border-radius: 25px;
-    border: 2px solid #000;
-    padding: 9px;
-    width: 100px;
-    height: 100px;
-    color: #a8acb1;
-}
-
 .app-title {
     margin-top: 5px;
     color: black;
