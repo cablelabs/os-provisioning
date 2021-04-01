@@ -45,7 +45,7 @@
 			<div class="btn">
 				<div class="widget row" style="text-align: center; padding-bottom: 25px;">
 					<div style="height: 100px;">
-						<a href="{{ $externalApp['link'] }}" style="display: flex;">
+						<a href="{{ $externalApp['state'] == 'active' ? $externalApp['link'] : $externalApp['website'] }}" style="display: flex;">
 								<img title="{{ $externalApp['description'] }}" src="{{ asset('images/'.$externalApp['icon']) }}" class="app-image">
 						</a>
 						<p class="app-title">{{ $name }}</p>

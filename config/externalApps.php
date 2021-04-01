@@ -6,7 +6,8 @@ return [
         'icon'  => 'cacti.svg',
         // source https://cacti.net
         'description' => 'Cacti is a complete network graphing solution.',
-        'link' => 'https://cacti.net',
+        'link' => url('/cacti'),
+        'website' => 'https://cacti.net',
         'rpmName' => 'cacti',
     ],
     'Icinga' => [
@@ -14,14 +15,16 @@ return [
         'icon'  => 'icinga.svg',
         // source https://icinga.com/docs/icinga-2/latest
         'description' => 'Icinga is a monitoring system which checks the availability of your network resources, notifies users of outages, and generates performance data for reporting.',
-        'link' => 'https://icinga.com/docs/icinga-2/latest',
+        'link' => url('/icingaweb2'),
+        'website' => 'https://icinga.com/docs/icinga-2/latest',
         'rpmName' => 'icinga2',
     ],
     'GenieACS' => [
         'icon'  => 'genieacs.svg',
         // source https://genieacs.com
         'description' => 'GenieACS is an open source TR-069 remote management solution with advanced device provisioning capabilities.',
-        'link' => 'https://genieacs.com',
+        'link' => url('/genieacs'),
+        'website' => 'https://genieacs.com',
         'rpmName' => 'genieacs',
     ],
 ];

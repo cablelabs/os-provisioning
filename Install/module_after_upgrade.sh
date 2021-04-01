@@ -31,7 +31,7 @@ if [ $lastModule -eq 1 ]; then
     rm -rf /var/www/nmsprime/bootstrap/cache/*
     /opt/rh/rh-php73/root/usr/bin/php artisan config:cache
     /opt/rh/rh-php73/root/usr/bin/php artisan clear-compiled
-    /opt/rh/rh-php73/root/usr/bin/php artisan optimize
+    /opt/rh/rh-php73/root/usr/bin/php artisan cache:clear
     /opt/rh/rh-php73/root/usr/bin/php artisan migrate
     /opt/rh/rh-php73/root/usr/bin/php artisan module:migrate
     /opt/rh/rh-php73/root/usr/bin/php artisan module:publish

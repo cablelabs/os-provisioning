@@ -553,13 +553,20 @@ class BaseController extends Controller
      */
     public function getExternalApps()
     {
-        $apps = include '/var/www/nmsprime/storage/app/config/ExternalApps.php';
+        $cachedApps = cache('externalApps');
+        if ($cachedApps) {
+            return $cachedApps;
+        }
+
+        $apps = include '/var/www/nmsprime/config/externalApps.php';
 
         foreach ($apps as $name => $value) {
             $command = 'rpm -q '.escapeshellarg($value['rpmName']);
             $package = exec($command);
             $apps[$name]['state'] = \Str::contains($package, 'not installed') ? 'inactive' : 'active';
         }
+
+        \Cache::forever('externalApps', $apps);
 
         return $apps;
     }
