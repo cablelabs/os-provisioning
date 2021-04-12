@@ -15,7 +15,7 @@
 - **OS Provisioning**
 - **OS VoIP Provisioning**
 - **OS Control**<br>
-[.. and more](https://devel.roetzer-engineering.com/confluence/display/NMS/Applications)
+[.. and more](https://devel.nmsprime.com/confluence/display/NMS/Applications)
 
 **Enterprise** Applications
 - PRIME **Monitoring**
@@ -25,41 +25,41 @@
 - PRIME Billing
 - PRIME Dashboard
 - PRIME **VoIP Monitoring**<br>
-[.. and many more](https://devel.roetzer-engineering.com/confluence/display/NMS/Applications)
+[.. and many more](https://devel.nmsprime.com/confluence/display/NMS/Applications)
 
 ## Functionality
 **Provisioning Tool**
 - **DOCSIS** 1.0, 1.1, 2.0, **3.0, 3.1**
-- **FTTH**, **DSL**, WiFi Provisioning, via **TR-69** and **Radius**
+- **FTTH**, **DSL**, WiFi Provisioning, via **TR-069** and **RADIUS**
 - IPv4 / IPv6<br>
 
 **Network Management Platform**
-- **CMTS**, OLT, **Router** and Switch Management via SNMP or TR-69
+- **CMTS**, OLT, **Router** and Switch Management via SNMP or TR-069
 - **Cable ingress detection**
-- Show and manage your IT infrastructure in real-time in **topography MAPs** and Entity Relation Diagrams
-- Auto configuration of **[Icinga](https://icinga.com/)** and **[Cacti](https://www.cacti.net/index.php)** from one database
+- Show and manage your IT infrastructure in real-time in **topographic maps** and entity relation diagrams
+- Auto configuration of **[Icinga2](https://icinga.com/)** and **[Cacti](https://www.cacti.net/index.php)** from one database
 - **Ticket System**
 - Generic **SNMP GUI** creator
-- Basic Billing functionality
-- [more informations..](https://devel.roetzer-engineering.com/confluence/display/NMS/Applications)
+- Basic billing functionality
+- [more informations..](https://devel.nmsprime.com/confluence/display/NMS/Applications)
 
-For more information head over to our [Official Documentation](https://devel.roetzer-engineering.com/confluence/display/NMS/NMS+PRIME)
+For more information head over to our [Official Documentation](https://devel.nmsprime.com/confluence/display/NMS/NMS+PRIME)
 
 
 ## Architectural Concepts
 
-NMS Prime is based on the [Laravel](https://laravel.com/) Framework and uses [PHP 7](https://php.net) for the Back-End and a modern and responsive [Bootstrap](http://getbootstrap.com/) Theme for the Front-End.
+NMS Prime is based on the [Laravel](https://laravel.com/) framework and uses [PHP 7](https://php.net) for the back end and a modern and responsive [Bootstrap](http://getbootstrap.com/) theme for the front end.
 
 It is tested and developed under CentOS 7 (RHEL 7).
 
 NMS Prime is build with standard Linux tools, like
 - [ISC DHCP](https://www.isc.org/downloads/dhcp/) for IPv4
 - [Kea](https://www.isc.org/kea/) for IPv6
-- [Named](https://linux.die.net/man/8/named)
-- [Icinga](https://icinga.com/)
+- [BIND](https://linux.die.net/man/8/named)
+- [Icinga2](https://icinga.com/)
 - [Cacti](https://www.cacti.net/index.php)
 
-These tools are actively developed, approved and used. See [Design Architecture](https://devel.roetzer-engineering.com/confluence/display/NMS/Architecture+Guidelines) for more information.
+These tools are actively developed, approved and used. See [Design Architecture](https://devel.nmsprime.com/confluence/display/NMS/Architecture+Guidelines) for more information.
 
 
 ## Installation
@@ -76,7 +76,7 @@ yum install nmsprime-*
 
 **Enterprise Version**
 
-From version 3.0.0 on - add username & password to repo file before installing full NMSPrime enterprise version
+From version 3.0.0 on: Add username & password to the repository file before installing a full NMSPrime enterprise version
 ```bash
 curl -vsL https://raw.githubusercontent.com/nmsprime/nmsprime/dev/INSTALL-REPO.sh | bash
 sed -i 's/rpm\/nmsprimeOS/rpm\/nmsprimeNG/' /etc/yum.repos.d/nmsprime.repo
@@ -84,7 +84,7 @@ echo $'username=\npassword=' >> /etc/yum.repos.d/nmsprime.repo
 yum install nmsprime-*
 ```
 
-For the full documentation see: [Installation with RPM](https://devel.roetzer-engineering.com/confluence/x/AYFB)
+For the full documentation see: [Installation with RPM](https://devel.nmsprime.com/confluence/x/AYFB)
 
 ### SaaS Cloud hosted
 
@@ -92,7 +92,7 @@ You can run all applications in the cloud here: [Free Trial](https://www.nmsprim
 
 ### From source code:
 
-This is typically only recommanded for developers. For a detailed walk through see: [Installation from Source](https://devel.roetzer-engineering.com/confluence/x/WQBs)
+This is typically only recommended for developers. For a detailed walk-through see: [Installation from Source](https://devel.nmsprime.com/confluence/x/WQBs)
 
 ```bash
 curl -vsL https://raw.githubusercontent.com/nmsprime/nmsprime/dev/INSTALL-REPO.sh | bash
@@ -113,8 +113,8 @@ Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, 
 
 **Write your own Application**
 
-If you want to develop your own open-source or propritary application(s), please refere to [Write your own Application](https://devel.roetzer-engineering.com/confluence/x/qYJJ)
+If you want to develop your own open-source or proprietary application(s), please refer to [Write your own Application](https://devel.nmsprime.com/confluence/x/qYJJ)
 
 **License**
 
-This project is licensed under the GPLv3 License - see the [LICENSE](LICENSE.md) file for details. For more informations: [License Article](https://devel.roetzer-engineering.com/confluence/display/NMS/License)
+This project is licensed under the GPLv3 license - see the [LICENSE](LICENSE.md) file for details. For more information: [License Article](https://devel.nmsprime.com/confluence/display/NMS/License)
