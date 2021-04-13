@@ -268,6 +268,7 @@ return [
     'Button_Save'               => 'Speichern',
     'Button_Save / Restart'     => 'Speichern / Neustart',
     'Button_Search'             => 'Suchen',
+    'Button_SendToEnviaTEL'     => 'An envia TEL senden',
     'Button_Submit'             => 'Senden',
     'Button_manage'             => 'Verwalten, schließt alle Basis und Sonderfähigkeiten mit ein. Schnellauswahl um alle Aktionen auf allen Seiten dieses Moduls auszuführen.',
     'Header_Tree Table'         => 'Baumdiagramm|Baumdiagramme',
