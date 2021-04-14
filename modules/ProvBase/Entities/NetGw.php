@@ -456,7 +456,7 @@ class NetGw extends \BaseModel
                         }, ARRAY_FILTER_USE_KEY);
                         $us_idx = last($us_idx);
 
-                        $ret[$ip][$freq[$us_idx]] = $snr / 10;
+                        $ret[$ip][$freqs[$us_idx]] = $snr / 10;
                     }
                 }
             }
