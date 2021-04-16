@@ -51,8 +51,6 @@ class StorageCleaner extends Command
     public function __construct()
     {
         parent::__construct();
-
-        $this->_prepare_metadata();
     }
 
     /**
@@ -108,6 +106,8 @@ class StorageCleaner extends Command
      */
     public function handle()
     {
+        $this->_prepare_metadata();
+
         Log::info('Storage cleaner started');
 
         // process the folders one by one
