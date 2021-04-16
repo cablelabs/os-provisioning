@@ -124,7 +124,6 @@ class StorageCleaner extends Command
                 }
 
                 Log::error('ERROR cleaning storage folder '.$path.': '.$ex->getMessage());
-                throw $ex;
             }
         }
     }
