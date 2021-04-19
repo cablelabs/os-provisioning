@@ -515,6 +515,7 @@ return [
     'Message' => 'Message',
     'name' => 'Name',
     'OverdueDebts' => 'Overdue Debts',
+    'parentNetelement' => 'Parent netelement',
     'product' => [
         'billingCycles' => [
             'once' => 'once',
