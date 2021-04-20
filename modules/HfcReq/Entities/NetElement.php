@@ -38,12 +38,12 @@ class NetElement extends \BaseModel
     public function rules()
     {
         $rules = [
-            'name' 			=> 'required|string',
-            'pos' 			=> 'nullable|geopos',
-            'community_ro' 	=> 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
-            'community_rw' 	=> 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
-            'netelementtype_id'	=> 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
-            'agc_offset'	=> 'nullable|numeric|between:-99.9,99.9',
+            'name' => 'required|string',
+            'pos' => 'nullable|geopos',
+            'community_ro' => 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
+            'community_rw' => 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
+            'netelementtype_id' => 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
+            'agc_offset' => 'nullable|numeric|between:-99.9,99.9',
         ];
 
         return $rules;
@@ -112,12 +112,12 @@ class NetElement extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         return ['table' => $this->table,
-            'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name',  $this->table.'.ip', $this->table.'.pos', $this->table.'.options'],
-            'header' =>  $this->id.' - '.$this->name,
+            'index_header' => [$this->table . '.id', 'netelementtype.name', $this->table . '.name', $this->table . '.ip', $this->table . '.pos', $this->table . '.options'],
+            'header' => $this->id . ' - ' . $this->name,
             'bsclass' => $bsclass,
             'order_by' => ['0' => 'asc'],
             'eager_loading' => ['netelementtype'],
-            'edit' => ['netelementtype.name' => 'get_elementtype_name'], ];
+            'edit' => ['netelementtype.name' => 'get_elementtype_name'],];
     }
 
     public function get_bsclass()
@@ -140,8 +140,8 @@ class NetElement extends \BaseModel
             }
         }
 
-        if (! Module::collections()->has('HfcBase') || (! array_key_exists('icingaObject', $this->relations) &&
-            ! \Modules\HfcBase\Entities\IcingaObject::db_exists())) {
+        if (!Module::collections()->has('HfcBase') || (!array_key_exists('icingaObject', $this->relations) &&
+                !\Modules\HfcBase\Entities\IcingaObject::db_exists())) {
             return 'warning';
         }
 
@@ -235,14 +235,11 @@ class NetElement extends \BaseModel
      */
     public function modems()
     {
-        if ($this->netelementtype && $this->netelementtype->name === 'Passive Component') { // TODO: tbd / match id
-            return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'next_passive_id');
-        }
-
         return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id');
     }
 
-    public function passive_modems(){
+    public function passive_modems()
+    {
         return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'next_passive_id');
     }
 
@@ -341,10 +338,10 @@ class NetElement extends \BaseModel
     public function toIcingaWeb()
     {
         if ($this->getRelation('icingaObject')) {
-            return 'https://'.request()->server('HTTP_HOST').'/icingaweb2/monitoring/host/show?host='.$this->icingaObject->name1;
+            return 'https://' . request()->server('HTTP_HOST') . '/icingaweb2/monitoring/host/show?host=' . $this->icingaObject->name1;
         }
 
-        return 'https://'.request()->server('HTTP_HOST').'/icingaweb2/monitoring/host/show?host='.$this->id.'_'.$this->name;
+        return 'https://' . request()->server('HTTP_HOST') . '/icingaweb2/monitoring/host/show?host=' . $this->id . '_' . $this->name;
     }
 
     /**
@@ -471,7 +468,7 @@ class NetElement extends \BaseModel
             return round(optional($this->getRelation('modemsUpstreamAndPositionAvg')->first())->us_pwr_avg, 1);
         }
 
-        if (! array_key_exists('modemsUpstreamAvg', $this->relations)) {
+        if (!array_key_exists('modemsUpstreamAvg', $this->relations)) {
             $this->load('modemsUpstreamAvg');
         }
 
@@ -486,7 +483,7 @@ class NetElement extends \BaseModel
      */
     public function getModemsUsPwrPosAvgsAttribute()
     {
-        if (! array_key_exists('modemsUpstreamAndPositionAvg', $this->relations)) {
+        if (!array_key_exists('modemsUpstreamAndPositionAvg', $this->relations)) {
             $this->load('modemsUpstreamAndPositionAvg');
         }
 
@@ -496,7 +493,7 @@ class NetElement extends \BaseModel
     /**
      * Get first parent of type NetGw
      *
-     * @return object NetElement 	(or NULL if there is no parent NetGw)
+     * @return object NetElement    (or NULL if there is no parent NetGw)
      */
     public function get_parent_netgw()
     {
@@ -505,10 +502,10 @@ class NetElement extends \BaseModel
         do {
             $parent = $parent->parent()->with('netelementtype')->first();
 
-            if (! $parent) {
+            if (!$parent) {
                 break;
             }
-        } while (! $parent->netelementtype || $parent->netelementtype->get_base_type() != 3);
+        } while (!$parent->netelementtype || $parent->netelementtype->get_base_type() != 3);
 
         return $parent;
     }
@@ -534,8 +531,8 @@ class NetElement extends \BaseModel
             ->whereNull('n.deleted_at')
             ->where(function ($query) {
                 $query
-                ->whereNull('n.id')
-                ->orWhere('apartment.id', $this->apartment_id);
+                    ->whereNull('n.id')
+                    ->orWhere('apartment.id', $this->apartment_id);
             })
             ->select('apartment.*')
             ->get();
@@ -568,7 +565,7 @@ class NetElement extends \BaseModel
      */
     public static function getNetsWithClusters()
     {
-        return Cache::remember(Auth::user()->login_name.'-Nets', now()->addMinutes(5), function () {
+        return Cache::remember(Auth::user()->login_name . '-Nets', now()->addMinutes(5), function () {
             $net_id = array_search('Net', NetElementType::$undeletables);
 
             return self::where('netelementtype_id', '=', $net_id)
@@ -584,7 +581,7 @@ class NetElement extends \BaseModel
     public function kml_files()
     {
         // get all available files
-        $kml_files_raw = glob(storage_path($this->kml_path.'/*'));
+        $kml_files_raw = glob(storage_path($this->kml_path . '/*'));
         $kml_files = [null => 'None'];
         // extract filename
         foreach ($kml_files_raw as $file) {
@@ -607,11 +604,11 @@ class NetElement extends \BaseModel
         $i = 0;
 
         do {
-            if (! is_object($p)) {
+            if (!is_object($p)) {
                 return 0;
             }
 
-            if ($p->{'is_type_'.strtolower($type)}()) {
+            if ($p->{'is_type_' . strtolower($type)}()) {
                 return $p->id;
             }
 
@@ -664,12 +661,12 @@ class NetElement extends \BaseModel
         $num = count($netelements);
 
         foreach ($netelements as $netelement) {
-            $debug = "nms: netelement - rebuild net and cluster index $i of $num - id ".$netelement->id;
+            $debug = "nms: netelement - rebuild net and cluster index $i of $num - id " . $netelement->id;
             \Log::debug($debug);
 
             $netelement->update(['net' => $netelement->get_native_net(),
                 'cluster' => $netelement->get_native_cluster(),
-                'netgw_id' => $netelement->get_native_netgw(), ]);
+                'netgw_id' => $netelement->get_native_netgw(),]);
 
             if ($call_from_cmd == 1) {
                 echo "$debug\r";
@@ -677,7 +674,7 @@ class NetElement extends \BaseModel
             $i++;
 
             if ($call_from_cmd == 2) {
-                echo "\n$debug - net:".$netelement->net.', clu:'.$netelement->cluster.', netgw:'.$netelement->netgw_id;
+                echo "\n$debug - net:" . $netelement->net . ', clu:' . $netelement->cluster . ', netgw:' . $netelement->netgw_id;
             }
         }
 
@@ -701,7 +698,7 @@ class NetElement extends \BaseModel
 
     public function is_type_netgw()
     {
-        if (! $this->netelementtype) {
+        if (!$this->netelementtype) {
             return false;
         }
 
@@ -749,12 +746,12 @@ class NetElement extends \BaseModel
      * Returns all tabs for the view depending on the NetelementType
      * Note: 1 = Net, 2 = Cluster, 3 = NetGw, 4 = Amplifier, 5 = Node, 6 = Data, 7 = UPS, 8 = Tap, 9 = Tap-Port
      *
-     * @author Roy Schneider, Nino Ryschawy
      * @return array
+     * @author Roy Schneider, Nino Ryschawy
      */
     public function tabs()
     {
-        if (! $this->netelementtype) {
+        if (!$this->netelementtype) {
             return [];
         }
 
@@ -772,7 +769,7 @@ class NetElement extends \BaseModel
             );
         }
 
-        if (! in_array($type, [1, 8, 9])) {
+        if (!in_array($type, [1, 8, 9])) {
             array_push($tabs, ['name' => 'Controlling', 'icon' => 'wrench', 'route' => 'NetElement.controlling_edit', 'link' => [$this->id, 0, 0]]);
         }
 
@@ -786,7 +783,7 @@ class NetElement extends \BaseModel
             $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => $route, 'link' => $this->getModemIdFromHostname($this->ip)];
         }
 
-        if ($provmonEnabled && Module::collections()->has('HfcCustomer') && ! in_array($type, [4, 5, 8, 9])) {
+        if ($provmonEnabled && Module::collections()->has('HfcCustomer') && !in_array($type, [4, 5, 8, 9])) {
             array_push($tabs, ['name' => 'Diagrams', 'icon' => 'area-chart', 'route' => 'ProvMon.diagram_edit', 'link' => [$this->id]]);
         }
 
@@ -796,9 +793,9 @@ class NetElement extends \BaseModel
     /**
      * Return number from IP address field if the record is written like: 'cm-...'.
      *
-     * @author Roy Schneider
      * @param string
      * @return string
+     * @author Roy Schneider
      */
     private function getModemIdFromHostname($hostname)
     {
@@ -814,9 +811,9 @@ class NetElement extends \BaseModel
     /**
      * Get the IP address if set, otherwise return IP address of parent NetGw
      *
+     * @return string: IP address (null if not found)
      * @author Ole Ernst
      *
-     * @return string: IP address (null if not found)
      */
     private function _get_ip()
     {
@@ -824,7 +821,7 @@ class NetElement extends \BaseModel
             return $this->ip;
         }
 
-        if (! $netgw = $this->get_parent_netgw()) {
+        if (!$netgw = $this->get_parent_netgw()) {
             return;
         }
 
@@ -843,7 +840,7 @@ class NetElement extends \BaseModel
             return;
         }
         // ignore cluster if its IP address can't be determined
-        if (! $ip = $this->_get_ip()) {
+        if (!$ip = $this->_get_ip()) {
             return;
         }
 
@@ -865,7 +862,7 @@ class NetElement extends \BaseModel
         foreach ($idxs as $idx) {
             try {
                 $snr = snmp2_get($ip, $com, ".1.3.6.1.2.1.10.127.1.1.4.1.5.$idx");
-                if (! $snr) {
+                if (!$snr) {
                     // continue if snr is zero (i.e. no CM on the channel)
                     continue;
                 }
