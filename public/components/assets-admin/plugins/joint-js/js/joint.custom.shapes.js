@@ -44,60 +44,122 @@ joint.shapes.standard.Link.define('custom.Bus', {
             }]
         });
     },
-    setStart: function(y) {
+    setStart: function (y) {
         console.log('test');
     },
 });
+var headerHeight = 40;
+var buttonSize = 14;
 
 joint.dia.Element.define('custom.Amplifier', {
-    z: 2,
-    size: {
-        width: 30,
-        height: 30
-    },
+    collapsed: false,
     attrs: {
-        label: {
-            fontFamily: 'monospace',
-            fontSize: 12,
-            textVerticalAnchor: 'top',
-            textAnchor: 'middle',
-            refX: 0,
-            refY: -15,
-            stroke: '#333333'
+        root: {
+            magnetSelector: 'buttonIcon'
         },
-        body: {
-            strokeWidth: 2,
+        shadow: {
             refWidth: '100%',
             refHeight: '100%',
-            fill: 'rgba(255,255,255,0)',
-            refPoints: '10,0 20,10 10,20',
-            stroke: '#000'
+            x: 3,
+            y: 3,
+            fill: '#000000',
+            opacity: 0.05
         },
-        magnet: true
-    },
-    anchor: {
-        name: 'center',
-        args: {
-            rotate: true,
-        }
+        body: {
+            width: 25,
+            height: 25,
+            refX: '50%',
+            refX2: 1,
+            refY: -3,
+            strokeWidth: 1,
+            stroke: '#DDDDDD',
+            fill: '#FFFFFF'
+        },
+        header: {
+            // refWidth: '100%',
+            refX: '50%',
+            refY: 0,
+            height: 40,
+            width: 40,
+            strokeWidth: 2,
+            fill: 'rgba(255,255,255,0)',
+            stroke: '#000',
+            points: '10,0 20,10 10,20'
+        },
+        button: {
+            refX: '50%',
+            refX2: 25,
+            refY: 7,
+            cursor: 'pointer',
+            event: 'element:button:pointerdown',
+            title: 'Collapse / Expand',
+        },
+        buttonBorder: {
+            fill: '#4C65DD',
+            stroke: '#FFFFFF',
+            strokeWidth: 0.5,
+            r: 10,
+            cx: 7,
+            cy: 7
+        },
+        buttonIcon: {
+            fill: 'none',
+            stroke: '#FFFFFF',
+            strokeWidth: 1
+        },
     }
 }, {
-    markup: [{
-        tagName: 'polygon',
-        selector: 'body'
-    }, {
-        tagName: 'text',
-        selector: 'label'
-    }]
-}, {
-    create: function (x, y, label) {
-        return new this({
-            position: {x: x, y: y},
-            attrs: {
-                label: {
-                    text: label
-                }
-            }
+
+    markup: [
+        {
+            tagName: 'rect',
+            selector: 'body'
+        }, {
+            tagName: 'polygon',
+            selector: 'header'
+        }, {
+            tagName: 'g',
+            selector: 'button',
+            children: [{
+                tagName: 'circle',
+                selector: 'buttonBorder'
+            }, {
+                tagName: 'path',
+                selector: 'buttonIcon'
+            }]
+        },
+    ],
+
+    toggle: function (shouldCollapse) {
+        var buttonD;
+        var collapsed = (shouldCollapse === undefined) ? !this.get('collapsed') : shouldCollapse;
+        if (collapsed) {
+            buttonD = 'M 2 7 12 7 M 7 2 7 12';
+            // this.resize(30, 30);
+        } else {
+            buttonD = 'M 2 7 12 7';
+            // this.fitChildren();
+        }
+
+
+        this.attr(['buttonIcon', 'd'], buttonD);
+        this.set('collapsed', collapsed);
+    },
+
+    isCollapsed: function () {
+        return Boolean(this.get('collapsed'));
+    },
+
+    fitChildren: function () {
+        var padding = 10;
+        this.fitEmbeds({
+            padding: {
+                top: headerHeight + padding,
+                left: padding,
+                right: padding,
+                bottom: padding
+            },
+            deep: true
         });
     }
 });
@@ -149,29 +211,22 @@ joint.dia.Element.define('custom.House', {
     }, {
         tagName: 'text',
         selector: 'labelHouseNo'
-    }]
-}, {
-    create: function (x, y, label, houseNo) {
-        return new this({
-            position: {x: x, y: y},
-            attrs: {
-                label: {
-                    text: label
-                },
-                labelHouseNo: {
-                    text: houseNo
-                }
-            }
-        });
-    }
+    }],
+    toggle: function (shouldCollapse) {
+        var collapsed = (shouldCollapse === undefined) ? !this.get('collapsed') : shouldCollapse;
+        this.set('collapsed', collapsed);
+    },
+    isCollapsed: function () {
+        return Boolean(this.get('collapsed'));
+    },
 });
 
 joint.shapes.standard.Link.define('custom.LabeledSmoothLine', {
-    connector: { name: 'smooth' },
-    attr: {
-        name: 'smoothed-line'
-    }
-}, {},
+        connector: {name: 'smooth'},
+        attr: {
+            name: 'smoothed-line'
+        }
+    }, {},
     {
         create: function (source, target) {
             var connector = new this();
@@ -188,3 +243,409 @@ joint.shapes.standard.Link.define('custom.LabeledSmoothLine', {
             return connector;
         }
     });
+
+joint.shapes.standard.Link.define('custom.Link', {
+    router: {name: 'manhattan'},
+    connector: {name: 'rounded'},
+    attrs: {
+        line: {
+            stroke: '#222222',
+            strokeWidth: 1,
+            targetMarker: {
+                'd': 'M 4 -4 0 0 4 4 M 7 -4 3 0 7 4 M 10 -4 6 0 10 4',
+                'fill': 'none'
+            }
+        }
+    }
+});
+
+joint.dia.Element.define('custom.Bubble', {
+    collapsed: false,
+    attrs: {
+        root: {
+            magnetSelector: 'buttonIcon'
+        },
+        link: {
+            xlinkShow: 'replace',
+            cursor: 'pointer'
+        },
+        header: {
+            fill: '#186d20',
+            stroke: '#FFFFFF',
+            strokeWidth: 0.5,
+            r: 20,
+            cx: 7,
+            cy: 7
+        }, label: {
+            textVerticalAnchor: 'bottom',
+            textAnchor: 'left',
+            refWidth: '100%',
+            refHeight: '100%',
+            fontSize: 12,
+            fontFamily: 'sans-serif',
+            fill: '#222222'
+        },
+        button: {
+            refX: '50%',
+            refX2: 25,
+            refY: 7,
+            cursor: 'pointer',
+            event: 'element:button:pointerdown',
+            title: 'Collapse / Expand',
+        },
+        buttonBorder: {
+            fill: '#4C65DD',
+            stroke: '#FFFFFF',
+            strokeWidth: 0.5,
+            r: 10,
+            cx: 7,
+            cy: 7
+        },
+        buttonIcon: {
+            fill: 'none',
+            stroke: '#FFFFFF',
+            strokeWidth: 1
+        },
+    }
+}, {
+
+    markup: [
+        {
+            tagName: 'a',
+            selector: 'link',
+            children: [
+                {
+                    tagName: 'circle',
+                    selector: 'header'
+                }, {
+                    tagName: 'text',
+                    selector: 'label'
+                }]
+        }, {
+            tagName: 'g',
+            selector: 'button',
+            children: [{
+                tagName: 'circle',
+                selector: 'buttonBorder'
+            }, {
+                tagName: 'path',
+                selector: 'buttonIcon'
+            }]
+        },
+    ],
+
+    toggle: function (shouldCollapse) {
+        var buttonD;
+        var collapsed = (shouldCollapse === undefined) ? !this.get('collapsed') : shouldCollapse;
+        if (collapsed) {
+            buttonD = 'M 2 7 12 7 M 7 2 7 12';
+            // this.resize(30, 30);
+        } else {
+            buttonD = 'M 2 7 12 7';
+            // this.fitChildren();
+        }
+
+
+        this.attr(['buttonIcon', 'd'], buttonD);
+        this.set('collapsed', collapsed);
+    },
+
+    isCollapsed: function () {
+        return Boolean(this.get('collapsed'));
+    },
+
+    fitChildren: function () {
+        var padding = 10;
+        this.fitEmbeds({
+            padding: {
+                top: headerHeight + padding,
+                left: padding,
+                right: padding,
+                bottom: padding
+            },
+            deep: true
+        });
+    }
+});
+
+joint.dia.Element.define('custom.Cluster', {
+    size: {width: 40, height: 40},
+    collapsed: false,
+    attrs: {
+        root: {
+            magnetSelector: 'buttonIcon'
+        },
+
+        link: {
+            xlinkShow: 'new',
+            cursor: 'pointer'
+        },
+        body: {
+            refWidth: '100%',
+            refHeight: '100%',
+            strokeWidth: 3,
+            stroke: '#000000',
+            fill: '#FFFFFF',
+            strokeLinejoin: 'round'
+        },
+        cluster_dot1: {
+            fill: '#000000',
+            stroke: 'none',
+            strokeWidth: 0.5,
+            r: 4,
+            refX: '20%',
+            refY: 10,
+        },
+
+        cluster_dot2: {
+            fill: '#000000',
+            stroke: 'none',
+            strokeWidth: 0.5,
+            r: 4,
+            refX: '20%',
+            refY: 20,
+        },
+        cluster_dot3: {
+            fill: '#000000',
+            stroke: 'none',
+            strokeWidth: 0.5,
+            r: 4,
+            refX: '20%',
+            refY: 30,
+        },
+        cluster_line1: {
+            refX: '40%',
+            refY: 10,
+            x1: 0, y1: 0, x2: 20, y2: 0, stroke: 'black', strokeWidth: 3
+        },
+        cluster_line2: {
+            refX: '40%',
+            refY: 20,
+            x1: 0, y1: 0, x2: 20, y2: 0, stroke: 'black', strokeWidth: 3
+        },
+        cluster_line3: {
+            refX: '40%',
+            refY: 30,
+            x1: 0, y1: 0, x2: 20, y2: 0, stroke: 'black', strokeWidth: 3
+        },
+        label: {
+            textVerticalAnchor: 'bottom',
+            textAnchor: 'left',
+            fontSize: 12,
+            fontFamily: 'sans-serif',
+            fill: '#222222'
+        },
+        button: {
+            refX: '50%',
+            refX2: 25,
+            refY: 7,
+            cursor: 'pointer',
+            event: 'element:button:pointerdown',
+            title: 'Collapse / Expand',
+        },
+        buttonBorder: {
+            fill: '#4C65DD',
+            stroke: '#FFFFFF',
+            strokeWidth: 0.5,
+            r: 10,
+            cx: 7,
+            cy: 7
+        },
+        buttonIcon: {
+            fill: 'none',
+            stroke: '#FFFFFF',
+            strokeWidth: 1
+        },
+    }
+}, {
+
+    markup: [
+        {
+            tagName: 'a',
+            selector: 'link',
+            children: [
+                {
+                    tagName: 'rect',
+                    selector: 'body'
+                }, {
+                    tagName: 'circle',
+                    selector: 'cluster_dot1'
+
+                }, {
+                    tagName: 'circle',
+                    selector: 'cluster_dot2'
+
+                }, {
+                    tagName: 'circle',
+                    selector: 'cluster_dot3'
+
+                }, {
+                    tagName: 'line',
+                    selector: 'cluster_line1'
+
+                }, {
+                    tagName: 'line',
+                    selector: 'cluster_line2'
+
+                }, {
+                    tagName: 'line',
+                    selector: 'cluster_line3'
+
+                }, {
+                    tagName: 'text',
+                    selector: 'label'
+                }]
+        }, {
+            tagName: 'g',
+            selector: 'button',
+            children: [{
+                tagName: 'circle',
+                selector: 'buttonBorder'
+            }, {
+                tagName: 'path',
+                selector: 'buttonIcon'
+            }]
+        },
+    ],
+
+    toggle: function (shouldCollapse) {
+        var buttonD;
+        var collapsed = (shouldCollapse === undefined) ? !this.get('collapsed') : shouldCollapse;
+        if (collapsed) {
+            buttonD = 'M 2 7 12 7 M 7 2 7 12';
+        } else {
+            buttonD = 'M 2 7 12 7';
+            // this.fitChildren();
+        }
+
+
+        this.attr(['buttonIcon', 'd'], buttonD);
+        this.set('collapsed', collapsed);
+    },
+
+    isCollapsed: function () {
+        return Boolean(this.get('collapsed'));
+    },
+
+    fitChildren: function () {
+        var padding = 10;
+        this.fitEmbeds({
+            padding: {
+                top: headerHeight + padding,
+                left: padding,
+                right: padding,
+                bottom: padding
+            },
+            deep: true
+        });
+    }
+});
+
+joint.dia.Element.define('custom.Block', {
+    size: {width: 100, height: 30},
+    collapsed: false,
+    attrs: {
+        root: {
+            magnetSelector: 'buttonIcon'
+        },
+        link: {
+            xlinkShow: 'new',
+            cursor: 'pointer'
+        },
+        header: {
+            refHeight: '100%',
+            refWidth: '100%',
+            fill: '#ffe900',
+            stroke: '#8f8c8c',
+            strokeWidth: 2,
+        },
+        label: {
+            textVerticalAnchor: 'bottom',
+            textAnchor: 'left',
+            refWidth: '100%',
+            refHeight: '100%',
+            fontSize: 12,
+            fontFamily: 'sans-serif',
+            fill: '#222222'
+        },
+        button: {
+            refX: '100%',
+            refX2: 5,
+            refY: 7,
+            cursor: 'pointer',
+            event: 'element:button:pointerdown',
+            title: 'Collapse / Expand',
+        },
+        buttonBorder: {
+            fill: '#4C65DD',
+            stroke: '#FFFFFF',
+            strokeWidth: 0.5,
+            r: 10,
+            cx: 7,
+            cy: 7
+        },
+        buttonIcon: {
+            fill: 'none',
+            stroke: '#FFFFFF',
+            strokeWidth: 1
+        },
+    }
+}, {
+
+    markup: [
+        {
+            tagName: 'a',
+            selector: 'link',
+            children: [
+                {
+                    tagName: 'rect',
+                    selector: 'header'
+                }, {
+                    tagName: 'text',
+                    selector: 'label'
+                }]
+        }, {
+            tagName: 'g',
+            selector: 'button',
+            children: [{
+                tagName: 'circle',
+                selector: 'buttonBorder'
+            }, {
+                tagName: 'path',
+                selector: 'buttonIcon'
+            }]
+        },
+    ],
+
+    toggle: function (shouldCollapse) {
+        var buttonD;
+        var collapsed = (shouldCollapse === undefined) ? !this.get('collapsed') : shouldCollapse;
+        if (collapsed) {
+            buttonD = 'M 2 7 12 7 M 7 2 7 12';
+        } else {
+            buttonD = 'M 2 7 12 7';
+            // this.fitChildren();
+        }
+
+
+        this.attr(['buttonIcon', 'd'], buttonD);
+        this.set('collapsed', collapsed);
+    },
+
+    isCollapsed: function () {
+        return Boolean(this.get('collapsed'));
+    },
+
+    fitChildren: function () {
+        var padding = 10;
+        this.fitEmbeds({
+            padding: {
+                top: headerHeight + padding,
+                left: padding,
+                right: padding,
+                bottom: padding
+            },
+            deep: true
+        });
+    }
+});
