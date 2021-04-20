@@ -53,16 +53,19 @@ class AddModemsToPassiveElementCommand extends Command
 
         if ($this->netelement->netelementtype->name != 'Passive Component') {
             $this->warn('You have to select a Netelement of Type Passive Component');
+
             return 1;
         }
 
         if ($this->argument('url')) {
             $this->parseURL();
+
             return;
         }
 
         if ($this->option('modems')) {
             $this->parseString();
+
             return;
         }
 
