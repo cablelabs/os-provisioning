@@ -17,6 +17,7 @@ class AddLeftRightToNetelementTable extends Migration
             $table->unsignedInteger('_lft');
             $table->unsignedInteger('_rgt');
         });
+        \Modules\HfcReq\Entities\NetElement::fixTree();
     }
 
     /**
