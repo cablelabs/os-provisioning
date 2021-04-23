@@ -579,18 +579,7 @@ class Modem extends \BaseModel
             $content = implode("\n", $lines);
         }
 
-        // lock
-        $fp = fopen(self::CONF_FILE_PATH, 'r+');
-
-        if (! flock($fp, LOCK_EX)) {
-            Log::error('Could not get exclusive lock for '.self::CONF_FILE_PATH);
-        }
-
         self::_write_dhcp_file(self::IGNORE_CPE_FILE_PATH, $content);
-
-        // unlock
-        flock($fp, LOCK_UN);
-        fclose($fp);
     }
 
     /**
