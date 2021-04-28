@@ -8,10 +8,13 @@
 <script src="{{asset('components/assets-admin/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/select2-v4/vendor/select2/select2/dist/js/select2.min.js')}}"></script>
 
-<script src="{{asset('components/assets-admin/plugins/DataTables/media/js/jquery.dataTables.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/DataTables/media/js/dataTables.bootstrap4.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/FixedHeader/js/dataTables.fixedHeader.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/main/media/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/main/media/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/responsive/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/responsive-bootstrap/js/responsive.bootstrap4.min.js')}}"></script>
+
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/fixedHeader/js/dataTables.fixedHeader.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/fixedHeader-bootstrap/js/fixedHeader.bootstrap4.min.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/plugins/jstree/dist/jstree.min.js')}}"></script>
 
@@ -25,14 +28,16 @@
 <!-- ================== END BASE JS ================== -->
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
-<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/dataTables.buttons.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/buttons.bootstrap.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/buttons.html5.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/buttons.print.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/jszip.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/pdfmake.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/vfs_fonts.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/Buttons/js/buttons.colVis.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons-bootstrap/js/buttons.bootstrap4.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/buttons.print.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/buttons.colVis.min.js')}}"></script>
+
+<script src="{{asset('components/assets-admin/plugins/jszip/dist/jszip.min.js')}}"></script>
+<!-- <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/pdfmake.min.js')}}"></script>
+<!-- <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/vfs_fonts.min.js')}}"></script>  -->
+
 <script src="{{asset('components/assets-admin/plugins/ionRangeSlider/js/ion.rangeSlider.js')}}"></script>
 
 
