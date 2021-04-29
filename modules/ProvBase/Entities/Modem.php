@@ -1887,7 +1887,10 @@ class Modem extends \BaseModel
             $this->radusergroups()
                 ->where('groupname', '!=', RadGroupReply::$defaultGroup)
                 ->update(['groupname' => $this->qos_id]);
-            $this->restart_modem();
+
+            if (! $this->wasRecentlyCreated) {
+                $this->restart_modem();
+            }
         }
     }
 
