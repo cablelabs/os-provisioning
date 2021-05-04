@@ -1921,7 +1921,7 @@ class Modem extends \BaseModel
         $genieCmds[json_encode(['name' => 'factoryReset'])] = trans('messages.factory_reset');
 
         if ($this->isTR069()) {
-            $prov = json_decode(Modem::callGenieAcsApi("provisions/?query={\"_id\":\"prov-{$this->id}\"}", 'GET'));
+            $prov = json_decode(self::callGenieAcsApi("provisions/?query={\"_id\":\"prov-{$this->id}\"}", 'GET'));
 
             if ($prov && isset($prov[0]->script)) {
                 $configfile['text'] = preg_split('/\r\n|\r|\n/', $prov[0]->script);
@@ -1943,7 +1943,7 @@ class Modem extends \BaseModel
                 $configfile['text'] = [];
             }
         } else {
-            $configfile = Modem::getConfigfileText("/tftpboot/cm/$this->hostname");
+            $configfile = self::getConfigfileText("/tftpboot/cm/$this->hostname");
         }
 
         $onlineStatus = $this->onlineStatus();
@@ -2055,7 +2055,7 @@ class Modem extends \BaseModel
 
         $conf['mtime'] = strftime('%c', filemtime("$path.cfg"));
 
-        exec("docsis -d $path.cfg", $conf['text']);
+        exec("cd /tmp; docsis -d $path.cfg", $conf['text']);
         $conf['text'] = str_replace("\t", '&nbsp;&nbsp;&nbsp;&nbsp;', $conf['text']);
 
         return $conf;
