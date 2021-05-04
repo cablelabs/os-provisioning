@@ -143,8 +143,11 @@
 {{-- JS DATATABLE CONFIG --}}
 <script language="javascript">
 $(document).ready(function() {
-    var table = $('table.datatable').DataTable(
-        {
+    // Show Buttons and enable lazy loading
+    window.JSZip = true
+    window.pdfMake = true
+
+    let table = $('table.datatable').DataTable({
     {{-- STANDARD CONFIGURATION --}}
         {{-- Translate Datatables Base --}}
             @include('datatables.lang')

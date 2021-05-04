@@ -34,10 +34,6 @@
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/buttons.print.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/buttons.colVis.min.js')}}"></script>
 
-<script src="{{asset('components/assets-admin/plugins/jszip/dist/jszip.min.js')}}"></script>
-<!-- <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/pdfmake.min.js')}}"></script>
-<!-- <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/vfs_fonts.min.js')}}"></script>  -->
-
 <script src="{{asset('components/assets-admin/plugins/ionRangeSlider/js/ion.rangeSlider.js')}}"></script>
 
 
