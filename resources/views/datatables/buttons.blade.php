@@ -74,8 +74,17 @@ buttons: [
                         doc.pageOrientation = 'landscape';
                     }
                 },
-
             },
+            {
+                extend: 'print',
+                text: "<i class='fa fa-print'></i> {{ trans('view.jQuery_Print') }}",
+                exportOptions: { columns: ':visible.content' },
+            },
+            {
+                extend: 'copy',
+                text: "<i class='fa fa-clipboard'></i> {{ trans('view.jQuery_copyToClipboard') }}",
+                exportOptions: { columns: ':visible.content' },
+            }
         ]
     },
     {
