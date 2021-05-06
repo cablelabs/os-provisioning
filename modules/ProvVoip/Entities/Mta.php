@@ -150,9 +150,11 @@ class Mta extends \BaseModel
             goto _failed;
         }
 
-        Log::info("docsis -eu -p $conf_file $cfg_file");
+        $dialplan = ($cf->firmware) ? "-dialplan \"/tftpboot/dialplan/{$cf->firmware}\"" : '';
+
+        Log::info("docsis -eu $dialplan -p $conf_file $cfg_file");
         // "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
-        exec("docsis -eu -p $conf_file $cfg_file >/dev/null 2>&1 &", $out);
+        exec("docsis -eu $dialplan -p $conf_file $cfg_file >/dev/null 2>&1 &", $out);
 
         // TODO: Error handling missing (see Modem for more information)
 
