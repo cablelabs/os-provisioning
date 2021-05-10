@@ -28,13 +28,12 @@ class EnsureQueueListenerIsRunning extends Command
     protected $description = 'Ensure that the queue listener is running.';
 
     protected $workers = [
-        'low' => [ // handle all low priority tasks - e.g. SettlementRunJob
+        // handle all low priority tasks - e.g. SettlementRunJob
+        'low' => [
             'dependency' => 'BillingBase',
         ],
-        'high,medium' => [], // handle all high and medium priority tasks - queue 'high' is prioritised - e.g. ConfigfileJob
-        'snmpValues' => [ // handle snmp values broadcasting
-            'dependency' => 'HfcSnmp',
-        ],
+        // handle all high and medium priority tasks - queue 'high' is prioritised - e.g. ConfigfileJob
+        'high,medium' => [],
     ];
 
     /**
