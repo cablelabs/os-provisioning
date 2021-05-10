@@ -35,9 +35,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web']], function () {
 });
 
 Broadcast::routes();
-Route::get('/broadcast', function () {
-    broadcast(new \App\Events\NewTestEvent("This is a broadcast"));
-});
 
 // Core Admin API
 BaseRoute::group([], function () {

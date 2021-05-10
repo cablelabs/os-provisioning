@@ -37,7 +37,7 @@ class SnmpController extends \BaseController
     /**
      * If set we only want to show the 3rd dimension parameters of this parameter and index in the controlling view
      *
-     * @var integer
+     * @var int
      */
     private $index = 0;
     private $paramId = 0;

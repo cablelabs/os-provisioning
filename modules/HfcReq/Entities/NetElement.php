@@ -3,7 +3,6 @@
 namespace Modules\HfcReq\Entities;
 
 use Auth;
-use File;
 use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\Cache;
 use App\Exceptions\SnmpAccessException;

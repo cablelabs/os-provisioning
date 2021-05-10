@@ -11,34 +11,6 @@
 
         @include($form_path, $view_var)
 
-
-    <script src="https://demo.nmsprime.com:8080/vendor/pusher-with-encryption.min.js"></script>
-
-    <script type="module">
-    console.log("run");
-
-    import Echo from "https://demo.nmsprime.com:8080/vendor/echo.js";
-    window.echojs = new Echo({
-        broadcaster: 'pusher',
-        key: 'local',
-        wsHost: window.location.hostname,
-        wsPort: 6001,
-        wssPort: 6001,
-        forceTLS: true,
-        disableStats: true,
-    });
-
-    echojs.channel('test')
-        .listen('.newMessage', (message) => {
-            console.log(message);
-            var msgToUser = new Notification('Info:', { body: "Description: " + message.message + "", icon: "/images/nmsprime-logo.png" });
-            setTimeout(function(){ msgToUser.close(); }, 10000);
-        });
-    </script>
-    {{ Form::close() }}
-
-<div onclick="Notification.requestPermission();" style="display: inline-block; margin:10px;padding: 5px;color: #fff;background: #9f0707;">Click here to activate notifications! (<small>A user-interaction is required. This can not be done by simply calling Notification.requestPermission() through script. The browser saves this setting. After clicking and allowing notifications you have to reload the page.</small>)</div>
-
 @if (multi_array_key_exists(['lists'], $additional_data))
 <script src="{{asset('components/assets-admin/plugins/vue/dist/vue.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/sortable/Sortable.min.js')}}"></script>
