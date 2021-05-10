@@ -97,6 +97,21 @@ class StorageCleaner extends Command
 
             array_push($this->thresholds, $envia_api_xml_thresholds);
         }
+
+        // Tmp dir is used for billing & ccc
+        $this->thresholds[] = [
+            'path' => storage_path('app/tmp/'),
+            'function' => 'removeOutdatedFiles',
+            'delete' => '6M',
+        ];
+
+        if (Module::collections()->has('HfcSnmp')) {
+            $this->thresholds[] = [
+                'path' => storage_path('app/data/hfc/snmpvalues/'),
+                'function' => 'removeOutdatedFiles',
+                'delete' => '1M',
+            ];
+        }
     }
 
     /**
@@ -129,6 +144,47 @@ class StorageCleaner extends Command
     }
 
     /**
+     * Simple method to remove files older than specified timeframe in given directory
+     *
+     * @author Nino Ryschawy
+     */
+    protected function removeOutdatedFiles($data)
+    {
+        if (! array_key_exists('path', $data)) {
+            Log::error(__CLASS__.': No path given');
+
+            return;
+        }
+
+        if (! File::isDirectory($data['path'])) {
+            Log::warning('Path '.$data['path'].' not existing or not a directory');
+
+            return;
+        }
+
+        $now = new \DateTime();
+        $threshold = $now->sub(new \DateInterval('P'.$data['delete']))->getTimestamp();
+
+        $files = File::allFiles($data['path']);
+
+        foreach ($files as $file) {
+            if ($file->getMTime() > $threshold) {
+                // echo date('Y-m-d - ', $file->getMTime()).$file->getPathName()."\n";
+                continue;
+            }
+
+            unlink($file->getPathName());
+            $msg = 'Deleted '.$file->getPathName()."\n";
+
+            if ($this->output) {
+                echo $msg;
+            } else {
+                Log::info($msg);
+            }
+        }
+    }
+
+    /**
      * Method for cleanup of monthly folders
      * Processes all directories in given path
      *
@@ -137,7 +193,7 @@ class StorageCleaner extends Command
     protected function _monthly_folders($data)
     {
         if (! array_key_exists('path', $data)) {
-            Log::error('No path given.');
+            Log::error(__CLASS__.': No path given');
 
             return;
         }
