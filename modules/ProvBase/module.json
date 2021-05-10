@@ -1,7 +1,7 @@
 {
     "name": "ProvBase",
     "alias": "Provisioning",
-    "description": "Automated provisioning/management/configuration of DOCSIS, FTTH or DSL modems as well as microwave links and point-to-point devices.",
+    "description": "apps.ProvBase",
     "keywords": [],
     "active": 1,
     "order": 10,

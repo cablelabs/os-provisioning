@@ -1,7 +1,7 @@
 {
     "name": "HfcSnmp",
     "alias": "Control",
-    "description": "Configure devices via SNMP.",
+    "description": "apps.HfcSnmp",
     "keywords": [],
     "active": 1,
     "order": 140,

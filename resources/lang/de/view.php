@@ -385,6 +385,30 @@ return [
         'news'                => 'Neuigkeiten',
     ],
 
+    // apps
+    'apps' => [
+        //interne
+        'BillingBase' => 'Produktangebote verwalten, Rechnungen erstellen und Abrechnungsläufe ausführen.',
+        'Ccc' => 'Kundenportal, in dem Einzelverbindungsnachweise, Rechnungen und Vertragsdetails eingesehen werden können.',
+        'Dashboard' => 'Detaillierte Analyse der NMS Prime Apps.',
+        'HfcBase' => 'Untersuchen und proaktives Beheben von Störstellen und noch vieles mehr. ',
+        'HfcSnmp' => 'Konfigurieren Sie Geräte mit SNMP.',
+        'NmsMail' => 'Automatisiertes Senden von Emails.',
+        'OverdueDebts' => 'Verwalten Sie alle offenen Rechnungen.',
+        'PropertyManagement' => 'Verwaltung von Gebäuden, Liegenschaften, etc.',
+        'ProvBase' => 'Automatisierte Provisionierung/Konfiguration/Verwaltung von DOCSIS, FTTH oder DSL Modems, sowie Richtfunk und Direktverbindung (PTP).',
+        'ProvMon' => 'Überwachen Sie SNMP/TR-069 fähige Geräte durch anpassbare Parameter.',
+        'ProvVoip' => 'Verwaltung von DOCSIS VoIP Geräten via SIP.',
+        'ProvVoipEnvia' => 'Verwalten Sie envia TEL Verträge, Portierung von Telefonnummern und vieles mehr.',
+        'Ticketsystem' => 'Erstellen Sie Tickets um Probleme zu adressieren und zu bewältigen.',
+        'VoipMon' => 'Analysieren Sie den Datenverkehr von Telefongesprächen.',
+
+        //externe
+        'Cacti' => 'Anwendung zur Überwachung und graphischen Darstellung von Netzdaten.',
+        'GenieACS' => 'Anwendung zur Provisionierung und Verwaltung von TR-069 fähigen Geräten.',
+        'Icinga' => 'Anwendung zur System-und Netzwerküberwachung.',
+    ],
+
     // TroubleDashboard
     'troubleDashboard' => [
         'all' => 'Alle Elemente',

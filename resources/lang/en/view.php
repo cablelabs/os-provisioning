@@ -385,6 +385,33 @@ return [
         'news'              => 'News',
     ],
 
+    // apps
+    'apps' => [
+        //native
+        'BillingBase' => 'Manage all products to offer (like tariffs) and assign them to customers, create invoices and charge your customers by executing the settlement run.',
+        'Ccc' => 'Allow your customer to access CDR\'s, invoices and contract details.',
+        'Dashboard' => 'Get a detailed analysis of your NMS Prime applications.',
+        'HfcBase' => 'Investigate impairments, proactively detect flaws and much more.',
+        'HfcSnmp' => 'Configure devices via SNMP.',
+        'NmsMail' => 'Fully automated E-Mail system.',
+        'OverdueDebts' => 'Control all overdue payments.',
+        'PropertyManagement' => 'Administration for buildings/estates/realties of an ISP.',
+        'ProvBase' => 'Automated provisioning/management/configuration of DOCSIS, FTTH or DSL modems as well as microwave links and point-to-point devices.',
+        'ProvMon' => 'Survey adaptable parameters of SNMP/TR-069 compliant devices.',
+        'ProvVoip' => 'Manage DOCSIS VoIP devices with SIP.',
+        'ProvVoipEnvia' => 'Administrate envia TEL contracts, port phone numbers and much more.',
+        'Ticketsystem' => 'Create tickets to manage and address problems.',
+        'VoipMon' => 'Analyze phone call traffic.',
+
+        // extern
+        // source https://cacti.net
+        'Cacti' => 'Cacti is a complete network graphing solution.',
+        // source https://genieacs.com
+        'GenieACS' => 'GenieACS is an open source TR-069 remote management solution with advanced device provisioning capabilities.',
+        // source https://icinga.com/docs/icinga-2/latest
+        'Icinga' => 'Icinga is a monitoring system which checks the availability of your network resources, notifies users of outages, and generates performance data for reporting.',
+    ],
+
     // TroubleDashboard
     'troubleDashboard' => [
         'all' => 'all',

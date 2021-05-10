@@ -558,7 +558,7 @@ class BaseController extends Controller
             return $cachedApps;
         }
 
-        $apps = include '/var/www/nmsprime/config/externalApps.php';
+        $apps = config('externalApps');
 
         foreach ($apps as $name => $value) {
             $command = 'rpm -q '.escapeshellarg($value['rpmName']);

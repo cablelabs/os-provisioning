@@ -1,7 +1,7 @@
 {
     "name": "ProvVoip",
     "alias": "VoIP",
-    "description": "Manage DOCSIS VoIP devices with SIP.",
+    "description": "apps.ProvVoip",
     "keywords": [],
     "active": 1,
     "order": 30,

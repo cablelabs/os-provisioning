@@ -1,7 +1,7 @@
 {
     "name": "NmsMail",
     "alias": "Mail",
-    "description": "Fully automated E-Mail system.",
+    "description": "apps.NmsMail",
     "keywords": [],
     "active": 0,
     "order": 0,
